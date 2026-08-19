@@ -11,6 +11,8 @@ last_reviewed: 2026-08-19
 
 # PlantNexus APS Coding Agent 规则
 
+根目录 `AGENTS.md` 仅为自动发现入口；本文件是 Agent 规则正文。根入口不得复制或另行解释本文件的规范，避免出现两套规则。
+
 ## 开始任务
 
 按顺序读取：
@@ -20,6 +22,8 @@ last_reviewed: 2026-08-19
 3. 当前 Task Card；
 4. Task 引用的 Schema/Contract、Constraint 和 ADR；
 5. 相关代码和测试。
+
+完成上述规范读取后，可以读取根 `README.md` 获取已落地的构建与本地检查命令；`README.md` 不高于 Task Card 或规范正文。
 
 规格版本变化，或修改架构边界、PlanningProblem、SolverBackend、Constraint Catalog、状态机、发布规则或阶段 Exit Gate 时，完整重读 `../core/APS_IMPLEMENTATION_SPEC.md`。
 
@@ -62,3 +66,11 @@ last_reviewed: 2026-08-19
 代码、Schema、Constraint、状态机、Solver、Validator、Simulation、API 或发布行为发生变化，而完成报告没有文档影响结论时，Task 不得标记 Done。
 
 未经阶段 Gate 和用户确认，不更新到下一 Phase。
+
+当前 P0-01 已提供结构性文档检查入口：
+
+```text
+uv run python scripts/check_docs.py
+```
+
+它不替代 TASK-P0-02 计划实现的 ID、traceability 和 Git diff/change-impact 校验。

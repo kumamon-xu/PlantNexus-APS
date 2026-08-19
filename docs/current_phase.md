@@ -15,19 +15,30 @@ last_reviewed: 2026-08-19
 
 先固定“排什么”和“什么算正确”，把总规转换成可追踪、可审查、可由后续代码执行的规格基线。
 
-## 当前子阶段
+## 已完成子阶段
 
 ```text
 P0-DOCS — Documentation Baseline
 ```
 
-本子阶段只生产文档与任务边界，不授权实现应用代码、Schema、Fixture、CI 或基础设施。
+该子阶段只生产文档与任务边界，不授权实现应用代码、Schema、Fixture、CI 或基础设施。
 
-当前状态：`BASELINE_COMPLETE`（2026-08-19）。已生成 107 份仓库内 Markdown 文档及根目录 Agent 薄入口；元数据/ID、Markdown fence、相对链接、Task 必需字段和总规镜像一致性检查均通过。该状态只表示文档基线完成。
+状态：`BASELINE_COMPLETE`（2026-08-19）。已生成 107 份仓库内 Markdown 文档及根目录 Agent 薄入口；元数据/ID、Markdown fence、相对链接、Task 必需字段和总规镜像一致性检查均通过。该状态只表示文档基线完成。
+
+## 最新完成 Task
+
+```text
+TASK-P0-01 — Documentation and Repository Governance
+```
+
+Task 状态：`done`（2026-08-19）。Repository metadata、顶层空目录/包标识、结构性文档检查和明确文档更新均已通过任务卡 Acceptance Commands。
+
+当前没有自动激活的下一 Task；TASK-P0-02 及其他后续 Task 仍保持原状态，须由新的明确指令开始。P0 尚未完成，当前记录不表示通过 P0 Exit Gate，也不授权进入 P1。
 
 ## 当前允许
 
 - 建立 `docs` 文档体系；
+- 维护和验证 TASK-P0-01 已形成的可构建空仓库骨架、Python/uv 元数据和结构性文档检查；
 - 镜像并登记规格版本；
 - 拆分范围、原则、需求、能力、架构、领域、约束和仿真规则；
 - 建立 Agent 规则、Milestone、ADR、注册表和 P0 Task Card；

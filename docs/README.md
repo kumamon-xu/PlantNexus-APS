@@ -70,3 +70,12 @@ last_reviewed: 2026-08-19
 ## 当前范围
 
 当前阶段为 P0。允许建立可执行规格、目录和合同骨架；禁止实现真实 CP-SAT 排程、进入 P1 数据处理能力或猜测生产参数。详见 `current_phase.md`。
+
+## 仓库入口与本地检查
+
+- 项目入口、版本占位和当前可执行命令见 [`../README.md`](../README.md)；
+- 根 [`../AGENTS.md`](../AGENTS.md) 只负责把 Agent 导向规范正文，不复制规则；
+- P0-01 的结构性文档检查运行 `uv run python scripts/check_docs.py`；
+- 该检查验证 metadata、文档 ID、Markdown fence、本地链接、Task 必需字段和本清单完整性。
+
+REQ/NFR/ENG 引用、实际 Git diff 与 change-impact matrix 的完整自动匹配仍属于 TASK-P0-02，不把当前结构性检查描述成完整追踪 Gate。

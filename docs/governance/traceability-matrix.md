@@ -21,7 +21,7 @@ last_reviewed: 2026-08-19
 | REQ-006 | `contracts/export-package.md` | P2/P3 | 不提前创建 | PLANNED |
 | REQ-007 / NFR-HUM-001 | ScheduleVersion state machine | P3 | 不提前创建 | PLANNED |
 | REQ-008 | `planning/replanning.md` | P4 | 不提前创建 | PLANNED |
-| REQ-009 / NFR-TRC-001 | `architecture/provenance-and-versioning.md` | P1 | TASK-P0-02 establishes IDs | PLANNED |
+| REQ-009 / NFR-TRC-001 | `architecture/provenance-and-versioning.md` | P0-P4 | TASK-P0-01 建立 repository provenance 占位；TASK-P0-02 建立完整 ID 校验 | P0-01: [`pyproject.toml`](../../pyproject.toml)、[`uv.lock`](../../uv.lock)、[`backend/app/__init__.py`](../../backend/app/__init__.py)、[Acceptance PASS](../tasks/P0/TASK-P0-01-documentation-and-repository-governance.md#completion-evidence)；端到端 manifest/audit 仍为 PLANNED |
 | REQ-010 | Capability matrix | P6 | 不提前创建 | DEFERRED |
 | REQ-011～REQ-012 | `simulation/` contracts | P0/P1 | TASK-P0-05/06 | Schema/Fixture PLANNED |
 | REQ-013 | Execution Simulator contract | P4 | 不提前创建 | PLANNED |
@@ -29,5 +29,7 @@ last_reviewed: 2026-08-19
 | NFR-COR-001 | Constraint + Validator contracts | P0/P2 | TASK-P0-04/07 | PLANNED |
 | NFR-DET-001 | Snapshot/Problem/Simulation contracts | P0/P1 | TASK-P0-05/06 | PLANNED |
 | NFR-OBS-001 | Observability contract | P0 | TASK-P0-08 | PLANNED |
+| ENG-ARCH-001 | `architecture/repository-layout.md`、ADR-0002 | P0 | TASK-P0-01 | Modular Monolith 目录边界与 package build/import smoke [PASS](../tasks/P0/TASK-P0-01-documentation-and-repository-governance.md#completion-evidence)；API/Worker 行为仍为 PLANNED |
+| ENG-VER-001 | `architecture/provenance-and-versioning.md`、`architecture/technology-stack.md` | P0-P7 | TASK-P0-01 | code/spec/schema 版本占位与 dependency lock [PASS](../tasks/P0/TASK-P0-01-documentation-and-repository-governance.md#completion-evidence)；Schema/Solver/Simulation 版本执行证据仍为 PLANNED |
 
 每个 Task 完成时必须更新本矩阵；只增加真实路径和真实测试结果。

@@ -86,3 +86,15 @@ Traceability updates: explicit IDs/matrix rows
 - Release Gate、Benchmark Profile 或生产边界变化。
 
 具体的代码目录、变更类型和必审文档映射见 `change-impact-matrix.md`。
+
+## P0 结构性文档检查
+
+TASK-P0-01 落地以下仓库级命令：
+
+```text
+uv run python scripts/check_docs.py
+```
+
+当前检查范围为：必需 metadata、唯一文档 ID、与总规一致的 `spec_version`、Markdown fence、本地链接、P0 Task 必需字段，以及 `document-inventory.md` 对 `docs/**/*.md` 的完整覆盖。
+
+该命令尚不解析 REQ/NFR/ENG 引用，也不根据 Git diff 自动匹配变更影响矩阵；这些能力由 TASK-P0-02 实现。在此之前，Task 的追踪与变更影响仍需按本规则和矩阵人工复核并写入 Completion evidence。

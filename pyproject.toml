@@ -1,0 +1,19 @@
+[build-system]
+requires = ["hatchling==1.27.0"]
+build-backend = "hatchling.build"
+
+[project]
+name = "plantnexus-aps"
+version = "0.0.0"
+description = "PlantNexus APS executable-specification skeleton"
+readme = "README.md"
+requires-python = ">=3.12,<3.13"
+dependencies = []
+
+[tool.hatch.build.targets.wheel]
+packages = ["backend/app"]
+
+[tool.plantnexus-aps.versions]
+spec = "0.3.0"
+schema = "unassigned"
+code = "0.0.0"

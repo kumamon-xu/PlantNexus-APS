@@ -123,4 +123,6 @@ last_reviewed: 2026-08-19
 | [tasks/README.md](../tasks/README.md) | DOC-TASK-INDEX | living | Task Card 索引 |
 | [tasks/TASK_TEMPLATE.md](../tasks/TASK_TEMPLATE.md) | TEMPLATE-TASK | baseline | Task Card Template |
 
-更新文档时应同步维护本清单，或由后续文档校验脚本重新生成。文档存在不代表对应代码、Schema、Test 或 Artifact 已经实现。
+更新文档时应同步维护本清单。TASK-P0-01 的 `uv run python scripts/check_docs.py` 会校验本表是否完整覆盖当前 107 份 `docs/**/*.md`，但不会自动改写清单。根 `README.md`、根 `AGENTS.md`、代码和脚本不属于正式文档清单。
+
+文档存在不代表对应代码、Schema、Test 或 Artifact 已经实现。

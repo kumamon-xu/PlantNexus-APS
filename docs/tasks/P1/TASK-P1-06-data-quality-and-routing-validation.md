@@ -1,7 +1,7 @@
 ---
 doc_id: TASK-P1-06
 title: Data Quality and Routing Validation
-status: in_progress
+status: done
 spec_version: 0.3.0
 phase: P1
 normative: true
@@ -75,4 +75,6 @@ Activation evidence（2026-08-19）：唯一依赖TASK-P1-05=`done`；启动时w
 
 Local implementation evidence（2026-08-19）：schema set以additive `2.2.0`发布error registry v2、Error v3与ImportQualityReport v1；Import v2 document version仍为`2.0.0`，unit registry v1仍为`2.1.0`，`pyproject.toml`未增加dependency且`uv.lock` SHA-256仍为`9f13637a7ec8f15fca91bfe9d93353327a8b3ddf01eb3238567093193132a093`。PASS sample report ID=`import-quality-fbea002cbfe06460f3006e10ddfcc0ed9ab0436e896f7a1734557c14ef550da5`、status=`PASS`、error_count=`0`；FAIL sample report ID=`import-quality-2e957d46dcd4746a63058d2e616d800dc6e7cf579b58d3a918ecca341f135d6e`、status=`FAIL`、error_count=`7`，其中包含exact `ROUTE_CYCLE/MISSING_RESOURCE/UNIT_CONVERSION_ERROR/MISSING_DURATION`且均为`DATA_ERROR`。新registry/Error/report/pass/fail artifacts SHA-256依次为`4c868280a1a13d2b244c131127d7447c7dd672d743982ce4a0d340b12c62698b`、`32d6d3cd5db97f8359701f86d1b753071e691ead7e519b2072e6cf155d5222a5`、`2d41fb0afadbc0e73ba6bad60a52dcbfb34ef2e5e9602e1e1612ccc8c540f434`、`7ce681bac45b5a51bbfcef4e27e8bfce8040beeaa3eed0c6735b1428a9505711`、`cdcc08ffcb8d53daedd4deddbe1411692ffcf0a5a7980c37ad25bfc5577e03e8`。
 
-Local acceptance（2026-08-19）：`uv sync --locked`、Task/full Ruff、Task/full Pyright、`git diff --check`和`uv build`全部exit 0；Task-focused pytest=`50 passed`，full repository pytest=`210 passed`。Full docs治理=`PASS`（124 docs、30 roots、30 trace rows、36 tests、15 open、9 sim、10 risks、22 tasks）；Task diff治理=`PASS`（63 changed paths、9 matched impact rows、0 issues），报告为ignored `build/traceability/TASK-P1-06-report.json`。实现未导入或修改Planning/ScheduleValidator/Solver，也未实施Order Expansion、Snapshot/Problem、TASK-P1-07或P2。Task仍保持`in_progress`，等待immutable implementation commit和真实GitHub provider证据后才能关闭。
+Local acceptance（2026-08-19）：`uv sync --locked`、Task/full Ruff、Task/full Pyright、`git diff --check`和`uv build`全部exit 0；Task-focused pytest=`50 passed`，full repository pytest=`210 passed`。Full docs治理=`PASS`（124 docs、30 roots、30 trace rows、36 tests、15 open、9 sim、10 risks、22 tasks）；Task diff治理=`PASS`（63 changed paths、9 matched impact rows、0 issues），报告为ignored `build/traceability/TASK-P1-06-report.json`。实现未导入或修改Planning/ScheduleValidator/Solver，也未实施Order Expansion、Snapshot/Problem、TASK-P1-07或P2。
+
+Implementation/provider evidence（2026-08-19）：implementation commit=`c1ac1077fdd92e012f4050f30bab2aec4638f6ec`，已直接push到受保护的`main`。该精确SHA的GitHub Actions push run [`32257767495`](https://github.com/kumamon-xu/PlantNexus-APS/actions/runs/32257767495)为`completed/success`，required `validate` job [`96083426251`](https://github.com/kumamon-xu/PlantNexus-APS/actions/runs/32257767495/job/96083426251)及全部步骤成功。Artifact `9366988617` / `plantnexus-ci-evidence-32257767495`未过期，size=`6519` bytes，expires_at=`2026-11-17T13:23:00Z`，provider digest=`sha256:a2e38cf942e672a073f5044b936dd2b7b7450204f5d353251566ed8b7352ca98`；下载ZIP的SHA-256完全一致，内含6份machine evidence。其`traceability/ci-current-task-report.json`精确记录task=`TASK-P1-06`、result=`PASS`、git_head=`c1ac1077fdd92e012f4050f30bab2aec4638f6ec`、diff_base=`75d761332204ec779477ba7242c98517cce1b68b`、63 changed paths、9 matched impact rows和0 issues。GitHub公开branch元数据显示`main`受保护且required context为`validate`；因此Completion conditions全部满足，Task标记为`done`。TASK-P1-07仍为`planned`，本次未启动且未进入P2。

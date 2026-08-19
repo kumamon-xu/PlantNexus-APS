@@ -30,7 +30,7 @@ ReferenceFileAdapter是 P1正式、可测试的参考 Adapter，但在 OPEN-002/
 | 3 | TASK-P1-03 | Raw Staging、provenance、idempotent persistence | P1-02 | `done` |
 | 4 | TASK-P1-04 | CSV、XLSX与ReferenceFileAdapter v1 | P1-02/03 | `done` |
 | 5 | TASK-P1-05 | ID/time/unit Normalization与canonical Import bytes | P1-02/03/04 | `done` |
-| 6 | TASK-P1-06 | DAG/reference/capability Data Validation与四类 exact rejection | P1-05 | `in_progress` |
+| 6 | TASK-P1-06 | DAG/reference/capability Data Validation与四类 exact rejection | P1-05 | `done` |
 | 7 | TASK-P1-07 | DemandOrder→Lot→OperationInstance deterministic expansion | P1-06 | `planned` |
 | 8 | TASK-P1-08 | Immutable Snapshot builder/hash/repository | P1-03/06/07 | `planned` |
 | 9 | TASK-P1-09 | Solver-neutral Problem builder/hash，无 Solver | P1-07/08 | `planned` |
@@ -84,4 +84,4 @@ Gate证据还必须覆盖 CSV/XLSX/Reference Adapter、Raw Staging provenance、
 
 ## Current execution boundary
 
-Canonical-records.v1、Import v2、Snapshot v2、Error v1/v2与既有registry均保持原字节；schema set现以additive`2.2.0`加入error registry v2/Error v3/ImportQualityReport v1，Import v2和unit registry document version分别保持`2.0.0/2.1.0`。TASK-P1-03/04/05已分别形成Raw Staging、non-production ReferenceFileAdapter与Normalization证据；TASK-P1-06的本地Data Validation、四类exact error与deterministic report证据已形成，但provider闭环前仍为唯一`in_progress` Task，Diff base=`75d761332204ec779477ba7242c98517cce1b68b`。Expansion、Snapshot/Problem hash与Solver仍须按依赖逐项实施。
+Canonical-records.v1、Import v2、Snapshot v2、Error v1/v2与既有registry均保持原字节；schema set现以additive`2.2.0`加入error registry v2/Error v3/ImportQualityReport v1，Import v2和unit registry document version分别保持`2.0.0/2.1.0`。TASK-P1-03/04/05已分别形成Raw Staging、non-production ReferenceFileAdapter与Normalization证据；TASK-P1-06的Data Validation、四类exact error与deterministic report证据已由implementation commit `c1ac1077fdd92e012f4050f30bab2aec4638f6ec`及GitHub Actions run `32257767495`闭环，Diff base=`75d761332204ec779477ba7242c98517cce1b68b`。TASK-P1-07仍为`planned`，Expansion、Snapshot/Problem hash与Solver仍须按依赖逐项实施。

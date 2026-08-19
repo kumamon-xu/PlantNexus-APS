@@ -1,6 +1,6 @@
 # PlantNexus APS
 
-PlantNexus APS 是一个面向单工厂、多车间场景的高级计划与排程（APS）项目。P0 Exit Gate 已通过，用户已明确授权进入 P1（Data & Snapshot）；TASK-P1-01～05已完成，TASK-P1-06正在实现Solver-independent Data Validation与确定性ImportQualityReport。真实Solver、生产Adapter/参数和P2+能力仍未实现。
+PlantNexus APS 是一个面向单工厂、多车间场景的高级计划与排程（APS）项目。P0 Exit Gate 已通过，用户已明确授权进入 P1（Data & Snapshot）；TASK-P1-01～06已完成，Solver-independent Data Validation与确定性ImportQualityReport已形成并通过provider CI。TASK-P1-07仍为`planned`，真实Solver、生产Adapter/参数和P2+能力仍未实现。
 
 ## 开始之前
 
@@ -54,4 +54,4 @@ scripts/      仓库级校验与自动化脚本
 infra/        P0 开发容器构建配置
 ```
 
-P0-08只形成health-only API、环境配置、日志、lazy DB/Redis connectivity、通用Job reliability/idempotency、Alembic/Compose/CI骨架；它不形成业务pipeline、产品API、真实分布式作业存储、Solver或生产部署。P1的12张有界Task Card已建立，TASK-P1-01～05=`done`、TASK-P1-06=`in_progress`、TASK-P1-07～12=`planned`。P1-06的本地实现现形成`app.data_validation`、error registry v2/error.v3与deterministic ImportQualityReport v1，四类Gate错误分别保持exact code；在provider闭环前Task仍为`in_progress`，且不实施Order Expansion、Snapshot builder、ScheduleValidator或Solver。当前授权范围见[`docs/current_phase.md`](docs/current_phase.md)。
+P0-08只形成health-only API、环境配置、日志、lazy DB/Redis connectivity、通用Job reliability/idempotency、Alembic/Compose/CI骨架；它不形成业务pipeline、产品API、真实分布式作业存储、Solver或生产部署。P1的12张有界Task Card已建立，TASK-P1-01～06=`done`、TASK-P1-07～12=`planned`。P1-06已形成`app.data_validation`、error registry v2/error.v3与deterministic ImportQualityReport v1，四类Gate错误分别保持exact code，并由implementation commit `c1ac1077fdd92e012f4050f30bab2aec4638f6ec`的GitHub Actions run `32257767495`闭环；P1-07未启动，也未实施Order Expansion、Snapshot builder、ScheduleValidator或Solver。当前授权范围见[`docs/current_phase.md`](docs/current_phase.md)。

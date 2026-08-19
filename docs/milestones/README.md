@@ -28,4 +28,4 @@ Milestone 定义 outcome 和 exit gate，不等同 Sprint。只有当前 Phase �
 
 P0 当前状态：TASK-P0-01～10 全部完成；[superseding audit](P0-exit-gate-audit-report.md) 的 Schema、Golden、Validator Rule Sheet、Scenario replay、Repository Build、CI 和 PROD_OPEN registration全部 `PASS`，P0 Gate=`READY`。用户于 2026-08-19 明确批准 phase transition后，P0转为 `completed`，历史失败/修复/provider evidence继续保留。
 
-P1当前状态：[`P1 — Data & Snapshot`](P1-data-and-snapshot.md)为`active`，已创建TASK-P1-01～12；TASK-P1-01～05=`done`、TASK-P1-06=`in_progress`、TASK-P1-07～12=`planned`，最后一项仍是P1 Exit Gate Audit。P1-06的不可变Diff base为`75d761332204ec779477ba7242c98517cce1b68b`；其本地DataValidation/Error/ImportQualityReport实现与定向证据已形成，等待提交/provider闭环，不涉及P2。
+P1当前状态：[`P1 — Data & Snapshot`](P1-data-and-snapshot.md)为`active`，已创建TASK-P1-01～12；TASK-P1-01～06=`done`、TASK-P1-07～12=`planned`，最后一项仍是P1 Exit Gate Audit。P1-06的不可变Diff base为`75d761332204ec779477ba7242c98517cce1b68b`，implementation commit `c1ac1077fdd92e012f4050f30bab2aec4638f6ec`与GitHub Actions run `32257767495`已使DataValidation/Error/ImportQualityReport证据闭环；下一项建议为TASK-P1-07，但尚未启动且不涉及P2。

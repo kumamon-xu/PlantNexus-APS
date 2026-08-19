@@ -55,3 +55,9 @@ Production envelope 禁止携带 `scenario_id`；synthetic envelope 必须携带
 TASK-P0-05 的 `build_empty_import_package` 只生成符合 `import-package.v1` 的 synthetic metadata envelope：`synthetic=true`、显式 `scenario_id`、profile/scenario/generator source versions 和 `records={}`。它用于证明 Generator 终点是 Standard Import contract 以及 canonical serialization/hash 可重放，不生成任何 Factory/Order/Routing 字段，不执行 staging、Normalization、Data Validation、Snapshot 或 PlanningProblem builder。
 
 Scenario manifest 的 `generated_at` 不进入 Import package，因此不参与 `dataset_hash`；相同 Profile/Scenario/Generator version/seed 的 canonical Import bytes 与 hash 相同。P1 填充 canonical records 时仍必须通过权威映射和正式数据质量链路，不能把本空 envelope 当作 pipeline PASS。
+
+## P0 deterministic fixture records
+
+TASK-P0-06 把 `SIM-MINIMAL-001@1.0.0` 的 10 个 non-empty collection、15 个 record 放入同一 `import-package.v1` envelope，以证明 committed correctness dataset 可 canonical replay/import。collection/field vocabulary 明确标为 `sim-minimal-records.v1`，只供 Golden 手算；它没有被加入 JSON Schema/data dictionary，也不是 P1 Factory/Order/Routing canonical contract。
+
+其 hash `sha256:fd8e5af387c7d4197a2664dfa89e93912091647d5809f1b76468d36edab29c10` 只覆盖完整 Import JSON，不覆盖 manifest `generated_at`、Golden Schedule 或 expected artifacts。P1 仍必须从 versioned source package 走 staging/parse/Normalization/reference/capability validation；不得直接把本 fixture vocabulary 提升为生产 mapping 或据此关闭 OPEN-002/013/015。

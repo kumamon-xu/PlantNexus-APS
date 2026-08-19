@@ -1,0 +1,42 @@
+{
+  "scenario_contract_version": "scenario-spec.v1",
+  "scenario_id": "SIM-MINIMAL-001",
+  "scenario_version": "1.0.0",
+  "synthetic_only": true,
+  "factory_profile": {
+    "profile_id": "PROFILE-SIM-MINIMAL-FJSP",
+    "profile_version": "1.0.0"
+  },
+  "generator": {
+    "generator_id": "P0-MANUAL-FIXTURE-ASSEMBLER",
+    "generator_version": "1.0.0"
+  },
+  "seed": 6001,
+  "required_capabilities": [
+    "SINGLE_FACTORY_MULTI_WORKSHOP",
+    "DAG_ROUTING",
+    "ALTERNATIVE_RESOURCE",
+    "MACHINE_CALENDAR",
+    "RELEASE_AND_MATERIAL_GATE"
+  ],
+  "complexity": {
+    "factory_size": "XS",
+    "routing_complexity": "low",
+    "candidate_resource_density": "medium",
+    "bottleneck_level": "low",
+    "due_date_pressure": "medium",
+    "calendar_fragmentation": "low",
+    "material_delay_ratio": 0.3333333333333333,
+    "wip_ratio": 0,
+    "lock_ratio": 0,
+    "cross_workshop_ratio": 0.5,
+    "failure_frequency": "none"
+  },
+  "expected_behavior": {
+    "allowed_results": [
+      "FEASIBLE",
+      "OPTIMAL"
+    ],
+    "validator_status": "PASS"
+  }
+}

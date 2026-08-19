@@ -1,0 +1,31 @@
+{
+  "golden_schedule_version": "golden-schedule.v1",
+  "schedule_id": "SCHEDULE-SIM-MINIMAL-001-GOLDEN-1.0.0",
+  "scenario": {
+    "scenario_id": "SIM-MINIMAL-001",
+    "scenario_version": "1.0.0"
+  },
+  "tick_seconds": 900,
+  "horizon_start_utc": "2026-08-20T08:00:00Z",
+  "horizon_end_utc": "2026-08-20T12:00:00Z",
+  "assignments": [
+    {
+      "operation_id": "OP-CUT-001",
+      "resource_id": "RES-CUT-FAST",
+      "start_tick": 0,
+      "end_tick": 4
+    },
+    {
+      "operation_id": "OP-CUT-002",
+      "resource_id": "RES-CUT-FAST",
+      "start_tick": 4,
+      "end_tick": 6
+    },
+    {
+      "operation_id": "OP-HEAT-001",
+      "resource_id": "RES-HEAT-001",
+      "start_tick": 8,
+      "end_tick": 12
+    }
+  ]
+}

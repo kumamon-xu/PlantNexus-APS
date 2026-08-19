@@ -48,4 +48,10 @@ Expected behavior 可以是允许的 Solver/Product 状态集合、Validator 结
 
 [`scenario-manifest.v1`](../../schemas/scenario/scenario-manifest.schema.json) 强制 `synthetic=true`，目标只允许 Development/Test/Benchmark，记录 Scenario/Profile/Generator/seed/capabilities/generated-at、canonicalization contract、Standard Import package ID 与 dataset hash。`generated_at` 是运行 provenance，不进入 canonical dataset hash；相同确定性输入允许时间戳不同但 Import bytes/hash 必须相同。
 
-`SCHEMA-SCENARIO-P0-05` 和对应 manifest 是 Schema/empty-package sample，不是正式 Scenario，不声称 expected Solver result 已发生。`SIM-MINIMAL-001`、人工 Golden、非空 records 和正式 Scenario catalog 均保持 TASK-P0-06 `PLANNED`。
+`SCHEMA-SCENARIO-P0-05` 和对应 manifest 是 Schema/empty-package sample，不是正式 Scenario，不声称 expected Solver result 已发生。它们与下方 TASK-P0-06 形成的 `SIM-MINIMAL-001` 正式 asset 保持不同 ID/hash，不能互相替代。
+
+## SIM-MINIMAL-001@1.0.0
+
+首个正式 Scenario 资产位于 [`fixtures/deterministic/SIM-MINIMAL-001`](../../fixtures/deterministic/SIM-MINIMAL-001/calculation-note.md)：Profile `PROFILE-SIM-MINIMAL-FJSP@1.0.0`、assembler identity `P0-MANUAL-FIXTURE-ASSEMBLER@1.0.0`、seed 6001、5 个 V1 capability、XS correctness complexity 和允许结果 FEASIBLE/OPTIMAL。人工 Golden 证明本 fixture 的 weighted tardiness 0 与 horizon-relative makespan 10800 秒 lower bound；这不是 Solver status 已发生的声明。
+
+manifest 固定 Import package `SIMPKG-SIM-MINIMAL-001-1.0.0` 与 hash `sha256:fd8e5af387c7d4197a2664dfa89e93912091647d5809f1b76468d36edab29c10`。`generated_at=2026-08-19T00:00:00Z` 只记录 artifact assembly instant，不进入 hash。Profile/Scenario/Assembler/Fixture record vocabulary 任一语义变化必须新建版本；不得覆盖历史 artifact/hash。

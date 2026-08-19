@@ -53,3 +53,9 @@ ScenarioSpec
 [`SeedMaterial`](../../backend/app/simulation/generators/determinism.py) 以 root seed + Generator ID/version + namespace + label/index 通过 SHA-256 派生 63-bit seed/selection index。每层使用命名 child namespace，调用顺序和其他 layer 的采样次数不会移动其 stream；这只是确定性 primitive，不声明任何统计分布或真实工厂概率。
 
 `canonical-json.v1` 使用 UTF-8、stable key sort、compact separators、原 Unicode并拒绝 NaN/Infinity；`dataset_hash` 是完整 Standard Import package canonical bytes 的 lowercase `sha256:`。P0 [`build_empty_import_package`](../../backend/app/simulation/generators/package_contract.py) 只输出 `records={}`，用于证明共同入口和 hash 合同，不猜 P1 canonical fields。TEST-SCENARIO-REPLAY 覆盖 same-input replay、seed/version change 和 layer order independence；Generator 真实分布/records 仍为 P1。
+
+## P0 deterministic fixture assembly
+
+TASK-P0-06 的 `P0-MANUAL-FIXTURE-ASSEMBLER@1.0.0` 是 committed artifact identity，不是新增第八层随机 Generator。它把人工定义的 `SIM-MINIMAL-001@1.0.0` fixture-local records 放入同一 `import-package.v1` envelope，并复用 `canonical-json.v1` / SHA-256 得到 `sha256:fd8e5af387c7d4197a2664dfa89e93912091647d5809f1b76468d36edab29c10`。seed 6001 是完整 provenance 输入；该版本没有随机采样。
+
+[`golden_fixture.py`](../../backend/app/simulation/scenarios/golden_fixture.py) 只能重放 committed bytes/hash，不能构造 PlanningProblem、调用 Solver 或把 `sim-minimal-records.v1` 宣布为 P1 canonical fields。TEST-SCENARIO-REPLAY 因此已有 non-empty committed dataset slice；Topology/Routing/Order 等 protocol 的真实程序化 generation 和共同 Normalization pipeline 仍为 P1。

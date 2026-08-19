@@ -66,6 +66,8 @@ Rule/state/error/capability contract 证据链还必须区分：machine rule/reg
 
 Simulation contract 证据链必须区分：Schema contract version、Profile/Scenario asset version、Generator/canonicalization version、seed、canonical dataset/hash、manifest、Schema sample、formal Fixture、replay/isolation test 与真实 Import/Snapshot/Problem/Benchmark/Execution artifact。`records={}` 或 `.synthetic.json` 只能证明 P0 合同边界，不能替代 Scenario Library、生产隔离设施或性能结果。
 
+Golden Fixture 证据链还必须区分：fixture-local record vocabulary、人工 Schedule、独立直接计算、expected validation/KPI 与正式 PlanningProblem/candidate/ValidationReport/KPI contracts。expected artifact 不能自证 PASS；positive Golden 不能替代 negative mutation 或 reusable ScheduleValidator。`SIM-MINIMAL-001` 的非空 Import hash证明可重放的 committed correctness dataset，不证明 P1 canonical mapping/Normalization 已实现。
+
 ## 自动校验
 
 `scripts/check_docs.py` 执行以下治理检查：

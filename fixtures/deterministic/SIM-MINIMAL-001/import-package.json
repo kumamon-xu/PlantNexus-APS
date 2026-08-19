@@ -1,0 +1,154 @@
+{
+  "import_package_version": "import-package.v1",
+  "package_id": "SIMPKG-SIM-MINIMAL-001-1.0.0",
+  "source_versions": {
+    "factory_profile": "1.0.0",
+    "scenario": "1.0.0",
+    "synthetic_generator": "1.0.0"
+  },
+  "synthetic": true,
+  "scenario_id": "SIM-MINIMAL-001",
+  "records": {
+    "fixture_metadata": [
+      {
+        "fixture_record_contract": "sim-minimal-records.v1",
+        "scenario_version": "1.0.0",
+        "assumption_ids": [
+          "SIM-ASSUMPTION-006",
+          "SIM-ASSUMPTION-007",
+          "SIM-ASSUMPTION-008",
+          "SIM-ASSUMPTION-009"
+        ],
+        "horizon_start_utc": "2026-08-20T08:00:00Z",
+        "horizon_end_utc": "2026-08-20T12:00:00Z",
+        "tick_seconds": 900
+      }
+    ],
+    "workshops": [
+      {
+        "workshop_id": "WS-CUT",
+        "production_line_id": "LINE-CUT"
+      },
+      {
+        "workshop_id": "WS-HEAT",
+        "production_line_id": "LINE-HEAT"
+      }
+    ],
+    "production_lines": [
+      {
+        "production_line_id": "LINE-CUT",
+        "workshop_id": "WS-CUT"
+      },
+      {
+        "production_line_id": "LINE-HEAT",
+        "workshop_id": "WS-HEAT"
+      }
+    ],
+    "resources": [
+      {
+        "resource_id": "RES-CUT-FAST",
+        "workshop_id": "WS-CUT",
+        "capacity": 1
+      },
+      {
+        "resource_id": "RES-CUT-SLOW",
+        "workshop_id": "WS-CUT",
+        "capacity": 1
+      },
+      {
+        "resource_id": "RES-HEAT-001",
+        "workshop_id": "WS-HEAT",
+        "capacity": 1
+      }
+    ],
+    "resource_unavailable_intervals": [
+      {
+        "resource_id": "RES-HEAT-001",
+        "start_utc": "2026-08-20T09:00:00Z",
+        "end_utc": "2026-08-20T10:00:00Z",
+        "reason_code": "MAINTENANCE"
+      }
+    ],
+    "orders": [
+      {
+        "order_id": "ORDER-001",
+        "due_at_utc": "2026-08-20T11:30:00Z",
+        "tardiness_weight": 2
+      }
+    ],
+    "operation_instances": [
+      {
+        "operation_id": "OP-CUT-001",
+        "order_id": "ORDER-001",
+        "workshop_id": "WS-CUT",
+        "status": "NOT_STARTED",
+        "release_at_utc": "2026-08-20T08:00:00Z",
+        "material_ready_at_utc": "2026-08-20T08:00:00Z",
+        "resource_options": [
+          {
+            "resource_id": "RES-CUT-FAST",
+            "final_duration_seconds": 3600
+          },
+          {
+            "resource_id": "RES-CUT-SLOW",
+            "final_duration_seconds": 5400
+          }
+        ]
+      },
+      {
+        "operation_id": "OP-CUT-002",
+        "order_id": "ORDER-001",
+        "workshop_id": "WS-CUT",
+        "status": "NOT_STARTED",
+        "release_at_utc": "2026-08-20T08:00:00Z",
+        "material_ready_at_utc": "2026-08-20T09:00:00Z",
+        "resource_options": [
+          {
+            "resource_id": "RES-CUT-FAST",
+            "final_duration_seconds": 1800
+          },
+          {
+            "resource_id": "RES-CUT-SLOW",
+            "final_duration_seconds": 2700
+          }
+        ]
+      },
+      {
+        "operation_id": "OP-HEAT-001",
+        "order_id": "ORDER-001",
+        "workshop_id": "WS-HEAT",
+        "status": "NOT_STARTED",
+        "release_at_utc": "2026-08-20T08:00:00Z",
+        "material_ready_at_utc": "2026-08-20T08:00:00Z",
+        "resource_options": [
+          {
+            "resource_id": "RES-HEAT-001",
+            "final_duration_seconds": 3600
+          }
+        ]
+      }
+    ],
+    "precedence_edges": [
+      {
+        "edge_id": "EDGE-CUT-001-002",
+        "predecessor_operation_id": "OP-CUT-001",
+        "successor_operation_id": "OP-CUT-002",
+        "min_lag_seconds": 0,
+        "max_lag_seconds": 1800,
+        "transport_lag_seconds": 0,
+        "cross_workshop": false
+      },
+      {
+        "edge_id": "EDGE-CUT-002-HEAT-001",
+        "predecessor_operation_id": "OP-CUT-002",
+        "successor_operation_id": "OP-HEAT-001",
+        "min_lag_seconds": 0,
+        "max_lag_seconds": 1800,
+        "transport_lag_seconds": 900,
+        "cross_workshop": true
+      }
+    ],
+    "execution_facts": [],
+    "locks": []
+  }
+}

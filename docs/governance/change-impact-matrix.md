@@ -111,3 +111,9 @@ PlanningProblem、Backend、Fixture、API、Export/Job implementation 路径均�
 本 Task 实际路径预期命中 `IMPACT-SCHEMA`、`IMPACT-VALIDATOR`、`IMPACT-SIM-PROFILE`、`IMPACT-SIM-SCENARIO`、`IMPACT-SIM-GENERATOR`、`IMPACT-DEPENDENCY`、`IMPACT-VERSION-METADATA`、`IMPACT-TESTS`、`IMPACT-PHASE`、`IMPACT-GOVERNANCE-REGISTRY`、`IMPACT-DOCS`。`pyproject.toml` 只更新 schema metadata但仍按 dependency 行审查；`rule_sheet.py` 只解除旧 set exact-value check但仍按 Validator 行审查。
 
 Fixture、Simulation execution/baseline/benchmark implementation、PlanningProblem/Backend、API、Infra/DB、Export/Job 均不修改，因此不声明对应 Rule ID。现有 machine glob/required-document 表无需改变，registry format version 保持 `1.0.0`；最终以 TASK-P0-05 diff report 的真实 matched rows 为准。
+
+## TASK-P0-06 matrix review
+
+本 Task 预期命中 `IMPACT-SIM-SCENARIO`、`IMPACT-FIXTURE`、`IMPACT-TESTS`、`IMPACT-PHASE`、`IMPACT-GOVERNANCE-REGISTRY`、`IMPACT-DOCS`。`backend/app/simulation/scenarios/golden_fixture.py` 只做 artifact/provenance/hash replay，`backend/tests/golden/**` 承担 test-local direct calculation；没有修改 `planning/validation/**`，因此不声明 `IMPACT-VALIDATOR`。
+
+FactoryProfile artifact 位于 `fixtures/**` 而非 profile code/schema，故由 `IMPACT-FIXTURE` 覆盖，不虚报 `IMPACT-SIM-PROFILE`。Schema、Generator、PlanningProblem、Backend、Benchmark、API、Infra/DB、Export/Job 均不修改；machine rule 表和 registry format version 保持 `1.0.0`，最终以 TASK-P0-06 diff report 的真实 matched rows 为准。

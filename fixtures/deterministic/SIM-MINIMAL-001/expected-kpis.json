@@ -1,0 +1,43 @@
+{
+  "golden_kpi_version": "golden-kpi.v1",
+  "schedule_id": "SCHEDULE-SIM-MINIMAL-001-GOLDEN-1.0.0",
+  "scenario": {
+    "scenario_id": "SIM-MINIMAL-001",
+    "scenario_version": "1.0.0"
+  },
+  "basis": "MANUAL_FIXTURE_CALCULATION",
+  "tick_seconds": 900,
+  "delivery": {
+    "completion_at_utc": "2026-08-20T11:00:00Z",
+    "due_at_utc": "2026-08-20T11:30:00Z",
+    "on_time_order_ratio": 1,
+    "total_tardiness_seconds": 0,
+    "weighted_tardiness": 0,
+    "late_order_count": 0
+  },
+  "planning": {
+    "makespan_seconds": 10800,
+    "scheduled_operation_count": 3,
+    "unscheduled_operation_count": 0
+  },
+  "resources": [
+    {
+      "resource_id": "RES-CUT-FAST",
+      "available_seconds": 14400,
+      "planned_busy_seconds": 5400,
+      "utilization": 0.375
+    },
+    {
+      "resource_id": "RES-CUT-SLOW",
+      "available_seconds": 14400,
+      "planned_busy_seconds": 0,
+      "utilization": 0
+    },
+    {
+      "resource_id": "RES-HEAT-001",
+      "available_seconds": 10800,
+      "planned_busy_seconds": 3600,
+      "utilization": 0.3333333333333333
+    }
+  ]
+}

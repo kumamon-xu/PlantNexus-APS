@@ -46,3 +46,9 @@ utilization = planned_busy_seconds / available_calendar_time
 [`kpi.schema.json`](../../schemas/json/kpi.schema.json) 固定 `kpi_version=kpi.v1`、`problem_hash`、`tick_seconds` 和 Delivery/Planning/Resource/Stability/Solver 五组字段；秒数与计数为非负数，ratio 为 `[0,1]`。`utilization` 允许 `null`，避免在 available time 为零时猜成 0% 或 100%；何时必须为 null 及完整计算校验仍由后续 KPI implementation/contract test 完成。
 
 当前没有 KPI calculator、Solver metrics 或 Benchmark 结果，Schema PASS 不代表这些数值已产生。
+
+## P0 Golden KPI boundary
+
+[`SIM-MINIMAL-001 expected-kpis.json`](../../fixtures/deterministic/SIM-MINIMAL-001/expected-kpis.json) 使用 fixture-local `golden-kpi.v1`，只记录可从人工 Schedule 复算的 Delivery、Planning 和 Resource 子集；它没有 `problem_hash`、Stability 或 Solver metrics，因此故意不冒充 `kpi.v1`。Golden test 从 order/schedule/calendar 重新计算 completion/due/tardiness、`max(end_tick)*tick_seconds` makespan、busy/available/utilization，不信任 expected JSON 自证。
+
+该 fixture 的 synthetic weight 2 与 makespan origin 定义只属于 SIM-ASSUMPTION-009/计算说明，不改变 OBJ/KPI repository-wide 语义或关闭 OPEN-006。正式 KPI calculator、Problem hash、Solver/Stability metrics 和 Benchmark report 仍为后续 Task。

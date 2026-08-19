@@ -21,8 +21,12 @@ Simulation 用于模拟 APS Planning Reality，不代表真实物理工厂。每
 | SIM-ASSUMPTION-003 | 设备故障、延迟、急单等概率只属于 Scenario | ACTIVE | 不得进入 Production Business Policy |
 | SIM-ASSUMPTION-004 | 初始场景库覆盖 Flexible Job Shop、Bottleneck、High-Mix Setup、Assembly DAG、Cross-Workshop | ACTIVE | 不支持能力必须得到明确拒绝结果 |
 | SIM-ASSUMPTION-005 | XS/S/M/L/XL 只表示 Benchmark 复杂度画像 | ACTIVE | 不代表真实生产容量承诺 |
+| SIM-ASSUMPTION-006 | `SIM-MINIMAL-001@1.0.0` topology 仅为 correctness coverage：2 workshops、2 production lines、3 capacity-1 resources、1 order、3 operations | ACTIVE | 只适用于该 fixture version；不得成为真实 topology、通用 XS 或容量默认值 |
+| SIM-ASSUMPTION-007 | `SIM-MINIMAL-001@1.0.0` 使用 `08:00Z`～`12:00Z` horizon、900 秒 tick、heat resource `09:00Z`～`10:00Z` maintenance | ACTIVE | 只验证 UTC/tick/calendar boundary；不得作为生产 timezone/calendar closure evidence 或定义生产班次 |
+| SIM-ASSUMPTION-008 | `SIM-MINIMAL-001@1.0.0` 选中工时为 3600/1800/3600 秒，alternative 为 5400/2700 秒，edge min/max window 为 `[0,1800]` 秒，cross-workshop transport 为 900 秒 | ACTIVE | 只验证 candidate duration、precedence/max-lag/transport；不得作为生产 transport/duration closure evidence 或定义标准工时 |
+| SIM-ASSUMPTION-009 | `SIM-MINIMAL-001@1.0.0` release 为 `08:00Z`，第二工序 material-ready 为 `09:00Z`，due 为 `11:30Z`，synthetic tardiness weight 为 2 | ACTIVE | 只验证 release/material/delivery calculation；不得作为生产 authority/policy closure evidence 或定义生产权重/交期规则 |
 
-具体 workshop 数、resource 数、候选设备密度、故障概率、到期压力等数值尚未在本阶段批准。它们应由后续版本化 FactoryProfile/ScenarioSpec 明确，不能在本文中给出“通用默认工厂”。
+除上表明确绑定到 `SIM-MINIMAL-001@1.0.0` 的 correctness 参数外，具体 workshop/resource 数、候选设备密度、故障概率、到期压力等数值仍未批准为通用 Profile、Benchmark baseline 或生产事实。后续数值必须由各自版本化 FactoryProfile/ScenarioSpec 明确，不能从本 fixture 外推“通用默认工厂”。
 
 本注册表的稳定 ID 前缀为 `SIM-ASSUMPTION-NNN`。总规示例中的 `SIM_ASSUMPTION-003` 是同类标记的上游拼写，校验时规范化为 `SIM-ASSUMPTION-003`；新引用必须使用本表前缀。条目只能为 `ACTIVE` 或 `RETIRED`，不得出现 `OPEN`/`CLOSED` 生产问题状态，也不得用于关闭任何 `OPEN-NNN`。
 
@@ -33,3 +37,5 @@ TASK-P0-03 review：`schemas/samples/*.synthetic.json` 使用显式 `synthetic=t
 TASK-P0-04 review：C-012～C-018 与 unsupported/deferred capability 的 expected result 可以是 `UNSUPPORTED_CAPABILITY`，但本 Task 没有创建 Scenario/Profile、概率、工厂参数或 synthetic fixture。规则正反例只是合同文字，不是 Simulation 事实。没有新增/修改 SIM-ASSUMPTION，五项状态继续为 `ACTIVE`，registry format version 不变。
 
 TASK-P0-05 review：FactoryProfile/ScenarioSpec v1 为 SIM-ASSUMPTION-001/002/004/005 提供 version/seed/capability/complexity 的机器字段；Schema samples 明确 `synthetic_only=true`，其单值 count/ratio 只验证形状，不是正式 Profile/Scenario/Fixture 或通用默认值。没有故障概率、正式 XS baseline 或新假设，五项继续 `ACTIVE`，registry format version 不变。
+
+TASK-P0-06 review：新增 SIM-ASSUMPTION-006～009，并在 [`SIM-MINIMAL-001@1.0.0`](../../fixtures/deterministic/SIM-MINIMAL-001/calculation-note.md) 的 Import metadata、计算说明、Profile/Scenario 与 Golden tests 中逐项引用。新增条目只固定首个小型 correctness fixture 的 topology、time/calendar、routing/duration/lag 和 order/gate/due 数值；derived validation/KPI 不是新假设。SIM-ASSUMPTION-001～009 均为 `ACTIVE`，未改变 ID/状态语义或 registry format version。

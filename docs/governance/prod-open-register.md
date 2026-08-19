@@ -56,3 +56,5 @@ TASK-P0-03 review：Schema/data dictionary 只引用 OPEN-001/002/003/004/007/01
 TASK-P0-04 review：rule sheet 显式引用 OPEN-004（日历）、OPEN-005（lock/freeze）、OPEN-007（material authority）、OPEN-009（transport）并在 state guard 中保留 OPEN-010（审批角色）；OPEN-006/008 只作为相邻业务政策审查，未写入权重或 lot 默认值。没有权威来源、closure record、生产值或状态变化，OPEN-001～015 全部继续为 `OPEN`，registry format version 不变。
 
 TASK-P0-05 review：FactoryProfile/Scenario Schema sample 的 count/range/calendar/complexity 值全部标识 synthetic-only，不成为 OPEN-003/004 的真实拓扑或日历答案；empty Import records 不提供 OPEN-002/013/015 字段权威；manifest/hash 不提供 OPEN-011 历史数据或 OPEN-012 生产阈值。没有权威来源或 closure record，OPEN-001～015 全部继续 `OPEN`，registry format version 不变。
+
+TASK-P0-06 review：本 Task 注册的 synthetic-only assumptions 和 `SIM-MINIMAL-001@1.0.0` 的 2/2/3 topology、900 秒 tick、maintenance、duration/lag、due/weight 都不能作为本注册表的权威证据。fixture-local `records` 不回答 OPEN-002/013/015，数值不回答 OPEN-001/003/004/006/007/009/014，correctness runtime 不回答 OPEN-011/012。没有权威来源或 closure record；OPEN-001～015 全部继续 `OPEN`，registry format version 不变。

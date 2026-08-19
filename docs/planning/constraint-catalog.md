@@ -56,3 +56,9 @@ TASK-P0-03 的 `planning-problem.v1` 只为候选资源、min/max/transport lag�
 最小 data precheck 和 rule-sheet completeness 都不是 ScheduleValidator，也不能作为任何 C-001～C-011 schedule PASS 证据。TASK-P0-07 才使用 Golden/illegal fixtures 建立真实 mutation rejection；P2 才实现完整独立 Validator。Constraint semantics 本次未改变，因此不触发 Solver benchmark，但 P2 首个 baseline 必须包含本 rule version。
 
 TASK-P0-05 仅移除 rule completeness CLI 对全局 schema set `1.1.0` 的硬编码，仍要求 data dictionary 与 `app.SCHEMA_VERSION` 一致。C-001～C-018 YAML、formula、capability mapping、ValidationReport 和 evaluator 边界均未改变；CLI 在 additive `1.2.0` 下回归通过，不把 Scenario Schema 引入解释为 Constraint 或 Validator 实现。
+
+## SIM-MINIMAL-001 positive coverage
+
+TASK-P0-06 的 test-local direct calculations 使用 `constraint-rule-sheet.v1` ID 集但不读取 formula 决定结果：C-001/003 验证三个 assignment/candidate；C-002 验证 0 与 1800 秒 inclusive lag；C-004 验证同机 `[0,4)`/`[4,6)`；C-005/006 验证 maintenance/material exact boundary；C-009 验证 1800 >= 900 秒 transport；C-010/011 验证 duration/horizon。C-007/008 因无 execution fact/lock 明确 N/A。
+
+该 positive Golden 形成 correctness baseline 和 TEST-GOLDEN-FJSP/CALENDAR/MATERIAL/CROSS-WORKSHOP/MAX-LAG 的 positive slice，不输出 violation 或实现 rule evaluator。C-001～C-011 语义、rule sheet/version、ValidationReport contract 和 P2 Solver benchmark 均未改变；TASK-P0-07 仍须以 mutation 证明 rejection。

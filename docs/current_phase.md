@@ -28,16 +28,16 @@ P0-DOCS — Documentation Baseline
 ## 最新完成 Task
 
 ```text
-TASK-P0-05 — Simulation Contracts and Skeleton
+TASK-P0-06 — SIM-MINIMAL-001 and Golden Schedule
 ```
 
-Task 状态：`done`（2026-08-19）。Schema set `1.2.0` additive Simulation release、FactoryProfile/ScenarioSpec/ScenarioManifest v1、七层 Generator Protocol、empty Standard Import deterministic hash、Production isolation guard 和 TEST-SCENARIO-REPLAY/TEST-SIM-ISOLATION 均已通过任务卡 Acceptance Commands。TASK-P0-01～04 继续保持 `done`。
+Task 状态：`done`（2026-08-19）。`SIM-MINIMAL-001@1.0.0` 的 Profile/Scenario、15-record non-empty Standard Import、manifest/hash、人工 Golden、expected validation/KPI、C-001～C-011 direct calculation、TEST-GOLDEN-FJSP/TEST-SCENARIO-REPLAY 与 replay report 均已通过任务卡 Acceptance Commands。TASK-P0-01～05 继续保持 `done`；schema set 保持 `1.2.0`。
 
 P0 尚未完成，当前记录不表示通过 P0 Exit Gate，也不授权进入 P1。
 
 ## 当前 Task
 
-无。TASK-P0-06 继续保持 `planned`；完成 TASK-P0-05 不自动授权或启动下一任务。`SIM-MINIMAL-001` 尚未创建，P0 Exit Gate 尚未通过。
+无。TASK-P0-07 继续保持 `planned`；完成 TASK-P0-06 不自动授权或启动下一任务。通用 Validator evaluator、非法 mutation、Solver 和 P1+ pipeline 均未开始，P0 Exit Gate 尚未通过。
 
 ## 当前允许
 
@@ -49,6 +49,7 @@ P0 尚未完成，当前记录不表示通过 P0 Exit Gate，也不授权进入 
 - 初始化 `REQ / NFR / ENG` 追踪结构；
 - 建立 P0 规则表、状态/错误/capability 纯合同及机器一致性检查；
 - 建立 versioned Simulation Schema、纯 Generator protocols、显式 seed/canonical hash 与 synthetic isolation 合同；
+- 维护 `SIM-MINIMAL-001@1.0.0` deterministic correctness fixture、人工 Golden 与只读 replay/hash evidence；
 - 登记 `PROD_OPEN` 与 `SIM_ASSUMPTION`，但不替业务方关闭问题。
 
 ## 当前禁止

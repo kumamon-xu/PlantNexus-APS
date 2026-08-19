@@ -37,4 +37,12 @@ XS/S/M/L/XL 在 `benchmarks/profiles.yaml` 中定义 operation/resource target�
 
 ScenarioSpec v1 已固定上述矩阵所需的 factory size、routing complexity、candidate density、bottleneck、due pressure、calendar fragmentation、material/WIP/lock/cross-workshop ratios 和 failure frequency 字段；FactoryProfile v1 固定生成范围与 capability/rejection 边界。当前仅有 `SCHEMA-*` samples，五类 Profile、XS/S/M/L/XL baseline 与正式 Scenario catalog 尚未创建，不得把 sample 的单值范围写入本表作为批准参数。
 
-TASK-P0-06 才创建 `SIM-MINIMAL-001` correctness fixture；未来 Profile/Scenario asset 必须各自升 version 并引用 SIM_ASSUMPTION。P0-05 没有关闭 OPEN-003/011/012，也没有产生容量或性能结论。
+TASK-P0-06 已创建下方 `SIM-MINIMAL-001` correctness fixture；未来 Profile/Scenario asset 必须各自升 version 并引用 SIM_ASSUMPTION。该资产没有关闭 OPEN-003/011/012，也没有产生容量或性能结论。
+
+## P0 correctness catalog
+
+| Scenario | Profile | Size / features | Evidence | Scope boundary |
+|---|---|---|---|---|
+| `SIM-MINIMAL-001@1.0.0` | `PROFILE-SIM-MINIMAL-FJSP@1.0.0` | XS correctness；2 workshops、3 resources、3-operation DAG、alternative resources、calendar、cross-workshop | [`calculation-note.md`](../../fixtures/deterministic/SIM-MINIMAL-001/calculation-note.md)、TEST-GOLDEN-FJSP、TEST-SCENARIO-REPLAY | committed deterministic fixture only；不是 performance/production baseline |
+
+该 catalog 行实现 TASK-P0-06 的最小 Scenario；PROFILE-A～E 的正式参数集、XS/S/M/L/XL benchmark profiles、disruption/historical scenarios 仍未创建。`cross_workshop_ratio=0.5`、`material_delay_ratio=1/3` 等值只属于该 asset version，不外推到 Scenario Matrix 的默认分布。

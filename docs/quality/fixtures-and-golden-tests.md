@@ -13,16 +13,17 @@ last_reviewed: 2026-08-19
 
 ## SIM-MINIMAL-001
 
-P0 必须建立最小确定性场景，至少包含：
+P0 首个确定性场景已固定为 [`SIM-MINIMAL-001@1.0.0`](../../fixtures/deterministic/SIM-MINIMAL-001/calculation-note.md)，包含：
 
-- 2 workshops；
-- 3 resources；
-- multiple candidate resources；
-- cross-workshop dependency；
-- maintenance interval；
-- 人工给出的正确 schedule。
+- 2 workshops、2 production lines、3 capacity-1 resources；
+- 1 order、3 operations，前两道 operation 各有快/慢 candidate resource；
+- 同机首尾相接 interval、两条 precedence edge、一个 cross-workshop transport edge；
+- heat resource 的一个 maintenance interval；
+- 15 分钟 tick、4 小时 horizon 和人工给出的正确 schedule。
 
-数据量必须足够小，使评审者能手算或用独立 brute force 验证。
+目录包含 versioned FactoryProfile/ScenarioSpec/Import/ScenarioManifest、人工 Golden Schedule、fixture-local expected validation/KPI 与计算说明。Import 的 canonical hash 为 `sha256:fd8e5af387c7d4197a2664dfa89e93912091647d5809f1b76468d36edab29c10`；只读 [`golden_fixture.py`](../../backend/app/simulation/scenarios/golden_fixture.py) 重放 identity/hash，独立 [`test_sim_minimal_001.py`](../../backend/tests/golden/test_sim_minimal_001.py) 不信任 expected evidence 文本，直接复算 C-001～C-011、KPI 和 objective lower bound。
+
+`golden-validation.v1` / `golden-kpi.v1` 是 fixture-local expected artifacts，不是 `validation-report.v2` / `kpi.v1` 的替代。C-007/C-008 因无 execution facts/locks 明确 `NOT_APPLICABLE`；negative mutation 与 reusable evaluator 仍属 TASK-P0-07。数据量保持足够小，使评审者可按计算说明手算。
 
 ## 目录
 
@@ -39,8 +40,10 @@ fixtures/
 
 断言 feasibility、objective、C-001～C-011 和关键 KPI。不要对完整 operation ordering 或序列化噪声做脆弱快照比较。
 
+TASK-P0-06 使用字段级断言和公式重算，而非比较完整 Gantt JSON。`TEST-GOLDEN-FJSP` 已形成 P0 positive correctness slice；未来 Solver/PlanningProblem integration 仍需 P2 扩展，不得从 committed hand schedule 推断 Solver 已实现。
+
 ## 非法 Fixture
 
 P0 至少创建三类明确非法输入/计划；建议覆盖 no resource、conflicting lock/horizon、route cycle/calendar/precedence。每个 Fixture 包含 expected error/category/Constraint ID，不以“测试失败”作为唯一说明。
 
-Fixture 和 expected artifact 必须版本化并记录来源；Synthetic 与 Historical 目录不得混用。
+Fixture 和 expected artifact 必须版本化并记录来源；Synthetic 与 Historical 目录不得混用。TASK-P0-06 未创建任何 `fixtures/infeasible/**` 内容，P0-07 不得修改正例 `SIM-MINIMAL-001@1.0.0` 来掩盖 mutation 问题。

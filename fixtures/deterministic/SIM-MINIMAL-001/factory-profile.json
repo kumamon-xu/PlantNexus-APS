@@ -1,0 +1,82 @@
+{
+  "profile_contract_version": "factory-profile.v1",
+  "profile_id": "PROFILE-SIM-MINIMAL-FJSP",
+  "profile_version": "1.0.0",
+  "synthetic_only": true,
+  "topology": {
+    "workshop_count": {
+      "minimum": 2,
+      "maximum": 2
+    },
+    "production_line_count": {
+      "minimum": 2,
+      "maximum": 2
+    }
+  },
+  "resources": {
+    "target_count": {
+      "minimum": 3,
+      "maximum": 3
+    },
+    "capacity_per_resource": 1,
+    "capability_pool": [
+      "SINGLE_FACTORY_MULTI_WORKSHOP",
+      "DAG_ROUTING",
+      "ALTERNATIVE_RESOURCE",
+      "MACHINE_CALENDAR",
+      "RELEASE_AND_MATERIAL_GATE"
+    ]
+  },
+  "routing": {
+    "operation_count": {
+      "minimum": 3,
+      "maximum": 3
+    },
+    "candidate_resource_count": {
+      "minimum": 1,
+      "maximum": 2
+    },
+    "routing_depth": {
+      "minimum": 3,
+      "maximum": 3
+    },
+    "cross_workshop_ratio": {
+      "minimum": 0.5,
+      "maximum": 0.5
+    }
+  },
+  "calendar": {
+    "pattern_ids": [
+      "CAL-MAINTENANCE-ONE-BLOCK"
+    ],
+    "fragmentation_count": {
+      "minimum": 1,
+      "maximum": 1
+    }
+  },
+  "orders": {
+    "order_count": {
+      "minimum": 1,
+      "maximum": 1
+    },
+    "due_date_pressure_levels": [
+      "medium"
+    ]
+  },
+  "supported_capabilities": [
+    "SINGLE_FACTORY_MULTI_WORKSHOP",
+    "DAG_ROUTING",
+    "ALTERNATIVE_RESOURCE",
+    "MACHINE_CALENDAR",
+    "RELEASE_AND_MATERIAL_GATE"
+  ],
+  "expected_rejections": [
+    "SECONDARY_CAPACITY",
+    "SEQUENCE_DEPENDENT_SETUP",
+    "BATCH_PROCESSING",
+    "SPLIT_MERGE",
+    "MATERIAL_COMPETITION",
+    "PREEMPTIVE_OPERATION",
+    "BUFFER_CAPACITY"
+  ]
+}

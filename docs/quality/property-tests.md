@@ -30,3 +30,5 @@ Property Test 随机生成合法 V1 PlanningProblem 或合法 canonical input，
 随机失败必须保存最小化 example、seed、Schema/Generator/Problem version 和 Problem hash，确保可回归。
 
 TASK-P0-03 已对两个明确 synthetic sample 执行 JSON serialization round-trip，并验证 UTC/duration/reference 的确定性 helper；这只是 `TEST-CONTRACT-001` 的固定样例证据，不是随机 Property Test、Snapshot/Problem hash replay 或 TEST-PROPERTY 完成。完整性质测试仍为 P1/P2 `PLANNED`。
+
+TASK-P0-06 对固定 `SIM-MINIMAL-001@1.0.0` 复算 canonical non-empty Import round-trip/hash、C-ID 与 KPI；这属于 Golden/Scenario replay，不包含随机生成、shrinking 或多组合不变量，因此不能标记 TEST-PROPERTY 已形成。未来 Property Test 可使用该 fixture 的稳定 ID/hash 作为最小回归种子，但不得改写历史版本。

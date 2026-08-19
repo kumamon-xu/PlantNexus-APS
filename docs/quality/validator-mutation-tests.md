@@ -38,3 +38,5 @@ P0-04 已发布 `constraint-rule-sheet.v1` 与 `validation-report.v2`，固定�
 TASK-P0-07 必须从 SIM-MINIMAL-001 Golden Schedule 独立构造 mutation，至少覆盖本表，并让真实 rule evaluator 输出 v2 violation details。Mutation 生成器不得读取 `positive_example`/`negative_example` 后调用同一判断函数；C-012～C-018 属于 capability precheck rejection，不伪装成 schedule violation。
 
 TASK-P0-05 的 TEST-SIM-ISOLATION 只验证 Production target 与 capability declaration precheck，不注入 candidate schedule mutation。Schema samples/empty Import 不是合法 Golden Schedule，因此没有提前形成 TEST-VALIDATOR-MUTATION；TASK-P0-07 边界不变。
+
+TASK-P0-06 已形成不可覆盖的 `SIM-MINIMAL-001@1.0.0` positive baseline，并在 test-local 代码中直接复算 C-001～C-011；C-007/C-008 因本版本没有 execution facts/locks 明确 N/A。该 positive test 不生成 violation、不实现 reusable evaluator，也不形成 TEST-VALIDATOR-MUTATION。TASK-P0-07 必须从正例复制/受控变异，保留原始 hash 与 Golden 不变，并用不同 mutation construction 路径证明结构化 rejection。

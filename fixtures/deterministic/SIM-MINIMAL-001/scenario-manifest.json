@@ -1,0 +1,32 @@
+{
+  "scenario_manifest_version": "scenario-manifest.v1",
+  "synthetic": true,
+  "target_environment": "test",
+  "scenario": {
+    "scenario_id": "SIM-MINIMAL-001",
+    "scenario_version": "1.0.0"
+  },
+  "factory_profile": {
+    "profile_id": "PROFILE-SIM-MINIMAL-FJSP",
+    "profile_version": "1.0.0"
+  },
+  "generator": {
+    "generator_id": "P0-MANUAL-FIXTURE-ASSEMBLER",
+    "generator_version": "1.0.0"
+  },
+  "seed": 6001,
+  "required_capabilities": [
+    "SINGLE_FACTORY_MULTI_WORKSHOP",
+    "DAG_ROUTING",
+    "ALTERNATIVE_RESOURCE",
+    "MACHINE_CALENDAR",
+    "RELEASE_AND_MATERIAL_GATE"
+  ],
+  "generated_at": "2026-08-19T00:00:00Z",
+  "canonicalization_version": "canonical-json.v1",
+  "import_package": {
+    "import_package_version": "import-package.v1",
+    "package_id": "SIMPKG-SIM-MINIMAL-001-1.0.0"
+  },
+  "dataset_hash": "sha256:fd8e5af387c7d4197a2664dfa89e93912091647d5809f1b76468d36edab29c10"
+}

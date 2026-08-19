@@ -1,0 +1,79 @@
+{
+  "golden_validation_version": "golden-validation.v1",
+  "schedule_id": "SCHEDULE-SIM-MINIMAL-001-GOLDEN-1.0.0",
+  "scenario": {
+    "scenario_id": "SIM-MINIMAL-001",
+    "scenario_version": "1.0.0"
+  },
+  "rule_sheet_version": "constraint-rule-sheet.v1",
+  "status": "PASS",
+  "hard_violation_count": 0,
+  "checks": [
+    {
+      "constraint_id": "C-001",
+      "applicability": "APPLICABLE",
+      "result": "PASS",
+      "evidence": "OP-CUT-001, OP-CUT-002, and OP-HEAT-001 each have exactly one assignment."
+    },
+    {
+      "constraint_id": "C-002",
+      "applicability": "APPLICABLE",
+      "result": "PASS",
+      "evidence": "Observed edge lags are 0 and 1800 seconds; both are inside their inclusive [0,1800] windows."
+    },
+    {
+      "constraint_id": "C-003",
+      "applicability": "APPLICABLE",
+      "result": "PASS",
+      "evidence": "Every assignment selects exactly one listed resource option."
+    },
+    {
+      "constraint_id": "C-004",
+      "applicability": "APPLICABLE",
+      "result": "PASS",
+      "evidence": "RES-CUT-FAST intervals [0,4) and [4,6) meet at a boundary and do not overlap."
+    },
+    {
+      "constraint_id": "C-005",
+      "applicability": "APPLICABLE",
+      "result": "PASS",
+      "evidence": "RES-HEAT-001 runs on [8,12), starting exactly when maintenance [4,8) ends."
+    },
+    {
+      "constraint_id": "C-006",
+      "applicability": "APPLICABLE",
+      "result": "PASS",
+      "evidence": "All starts are at or after release/material gates; OP-CUT-002 starts at its material-ready boundary tick 4."
+    },
+    {
+      "constraint_id": "C-007",
+      "applicability": "NOT_APPLICABLE",
+      "result": "NOT_APPLICABLE",
+      "evidence": "The fixture declares no COMPLETED or RUNNING execution facts; all three operations are NOT_STARTED."
+    },
+    {
+      "constraint_id": "C-008",
+      "applicability": "NOT_APPLICABLE",
+      "result": "NOT_APPLICABLE",
+      "evidence": "The fixture lock collection is empty, so there is no HARD_LOCK tuple to preserve."
+    },
+    {
+      "constraint_id": "C-009",
+      "applicability": "APPLICABLE",
+      "result": "PASS",
+      "evidence": "The cross-workshop edge observes 1800 seconds, meeting its 900-second transport lag."
+    },
+    {
+      "constraint_id": "C-010",
+      "applicability": "APPLICABLE",
+      "result": "PASS",
+      "evidence": "Selected durations are 4, 2, and 4 ticks, matching 3600, 1800, and 3600 seconds at 900 seconds/tick."
+    },
+    {
+      "constraint_id": "C-011",
+      "applicability": "APPLICABLE",
+      "result": "PASS",
+      "evidence": "All half-open assignment intervals lie wholly inside the 16-tick planning horizon [0,16)."
+    }
+  ]
+}

@@ -60,3 +60,9 @@ TASK-P0-04 形成 [`constraint-rule-sheet.v1`](../../schemas/rules/constraint-ru
 TEST-RULE-SHEET-001/TEST-ERROR-MAPPING-001/TEST-CAPABILITY-001/TEST-STATE-TRANSITION-001 是 P0 contract evidence；TEST-VALIDATOR-MUTATION、illegal fixtures、Golden PASS、independent evaluator 和 Property/Benchmark evidence 继续由 TASK-P0-07/P2 负责。
 
 TASK-P0-05 的 rule-sheet 代码变更只允许 additive schema set `1.2.0`，不修改任何 rule、violation、import scan 或候选 schedule 行为；P0-04 tests 全量回归。Scenario expected behavior/manifest 不是 Validator output，empty Import package 不能作为 C-001～C-011 PASS。
+
+## P0-06 positive Golden boundary
+
+`SIM-MINIMAL-001@1.0.0` 提供人工 schedule 与 fixture-local `golden-validation.v1` expected checks；[`test_sim_minimal_001.py`](../../backend/tests/golden/test_sim_minimal_001.py) 从 Import/Schedule 直接复算所有 applicable C-ID，并确认 hard violation count 期望为 0。replay loader 只检查 artifact/provenance/hash，明确不评估 C-ID，且两者均不导入 Planning backend/OR-Tools。
+
+这证明一个已知正例可独立手算，不构成正式 candidate ScheduleValidator PASS：没有 PlanningProblem/candidate schema input、没有 `validation-report.v2` emitter、没有 violation aggregation、没有 negative rejection。TEST-VALIDATOR-MUTATION 和 reusable rule evaluator 仍由 TASK-P0-07 独占；P2 才完成完整独立 Validator 性能实现。

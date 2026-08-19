@@ -50,4 +50,10 @@ FactoryProfile + ScenarioSpec + Seed + GeneratorVersion
 | ScenarioManifest v1 | [`scenario-manifest.schema.json`](../../schemas/scenario/scenario-manifest.schema.json) | empty Standard Import replay/hash formed；run/export audit PLANNED |
 | Generator protocol | [`simulation/generators`](../../backend/app/simulation/generators) | seven layers + named seed + canonical package boundary formed；non-empty records PLANNED |
 
-Schema set 为 additive `1.2.0`。三份 `.synthetic.json` 仅验证合同，不是 Fixture 或生产数据；`SIM-MINIMAL-001` 仍由 TASK-P0-06 创建。TEST-SCENARIO-REPLAY/TEST-SIM-ISOLATION 只证明 empty package 的确定性与 pure isolation guard，不证明 Import pipeline、Execution Simulator、Reference Scheduler、Benchmark 或 Solver 已实现。
+Schema set 为 additive `1.2.0`。三份 `.synthetic.json` 仅验证合同，不是 Fixture 或生产数据；P0-05 的 TEST-SCENARIO-REPLAY/TEST-SIM-ISOLATION 只证明 empty package 的确定性与 pure isolation guard。下方 P0-06 fixture 在不改变 schema set 的前提下增加 non-empty committed correctness evidence，仍不证明 Import pipeline、Execution Simulator、Reference Scheduler、Benchmark 或 Solver 已实现。
+
+## P0-06 deterministic Golden
+
+[`SIM-MINIMAL-001@1.0.0`](../../fixtures/deterministic/SIM-MINIMAL-001/calculation-note.md) 是首个正式 correctness fixture：2 workshops、3 resources、alternative resource、cross-workshop transport、maintenance 和人工 Golden Schedule。它保留 `factory-profile.v1` / `scenario-spec.v1` / `scenario-manifest.v1` / `import-package.v1`，以 `P0-MANUAL-FIXTURE-ASSEMBLER@1.0.0`、seed 6001 和 `canonical-json.v1` 形成稳定 hash。
+
+其 non-empty `records` 只属于 `sim-minimal-records.v1` fixture vocabulary；它证明 committed Standard Import envelope 可重放，不证明 P1字段权威、Normalization/Snapshot/Problem pipeline 或程序化 distribution generator。Golden direct calculations 与 replay loader 均不导入 Planning/Solver；P0-07 才实现 reusable rule evaluator/invalid mutations。

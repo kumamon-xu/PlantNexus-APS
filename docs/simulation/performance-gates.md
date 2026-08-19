@@ -36,3 +36,5 @@ Reality Gap Report 比较 routing depth、candidate density、calendar fragmenta
 在 OPEN-011/012 未关闭前，禁止“5 分钟一定排完”“秒级排程”“99% 最优”“任意规模”等表述。P7 不能成为第一次性能测试。
 
 TASK-P0-05 只形成可供未来 Gate 引用的 versioned Scenario manifest 和 dataset hash；empty Import replay 不包含 operations/resources，不是 XS profile 或性能运行。Gate A/B/C、TEST-BENCHMARK、runtime/memory/quality baseline 和 OPEN-012 production threshold 均未改变。
+
+TASK-P0-06 的 `SIM-MINIMAL-001@1.0.0` 使用 XS 标签只表示三道工序可手算 correctness；验收记录测试通过与 hash，不采集 Solver runtime、gap、memory/model size，也不进入 `benchmarks/**`。因此 Gate A/B/C、TEST-BENCHMARK、OPEN-012 和任何 performance baseline 均未改变。

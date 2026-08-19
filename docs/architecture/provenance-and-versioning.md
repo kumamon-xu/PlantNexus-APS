@@ -62,3 +62,9 @@ Schema set `1.1.0` 在 `1.0.0` 上 additive 增加 error/validation v2、state-t
 Schema set `1.2.0` additive 增加 FactoryProfile/ScenarioSpec/ScenarioManifest v1，并保留 `1.0.0/1.1.0` artifacts。Profile/Scenario contract version、asset version、Generator version、canonicalization version、schema set 和 code commit 是独立维度；任一生成语义变化不得只借其他版本掩盖。
 
 P0 empty package 的确定性输入为 Scenario ID/version、Profile ID/version、Generator ID/version、required capabilities 和 seed；输出为 Standard Import v1 canonical bytes 与 `sha256:` hash。Manifest `generated_at` 记录运行时间但不进入 dataset hash。`simulation-contract-report.v1` 证明同输入 replay、版本变化、命名 layer seed 与 isolation precheck；它不包含生产 source versions/code commit，不是发布 manifest、Snapshot/Problem hash 或历史 Benchmark artifact。
+
+## P0-06 formal fixture provenance
+
+`SIM-MINIMAL-001@1.0.0` 将 Profile `1.0.0`、Assembler `1.0.0`、seed 6001、required capabilities、Import package `SIMPKG-SIM-MINIMAL-001-1.0.0`、`canonical-json.v1`、SIM-ASSUMPTION-006～009 和 hash `sha256:fd8e5af387c7d4197a2664dfa89e93912091647d5809f1b76468d36edab29c10` 连接为首个正式 fixture provenance chain。manifest `generated_at` 继续不进入 hash。
+
+Golden Schedule/expected validation/KPI 各有 fixture-local version，并通过 Scenario/schedule ID 连接但不进入 dataset hash。任务验收的 Git Diff base/HEAD 记录代码来源；这些 artifact 仍不是 production run/export manifest、Snapshot/Problem hash 或 Benchmark baseline。任何语义改动必须发布新 asset version/hash，禁止覆盖 `1.0.0`。

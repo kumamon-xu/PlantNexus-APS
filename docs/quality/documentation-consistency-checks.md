@@ -99,6 +99,14 @@ uv run python -m app.simulation.generators.contract_check --report build/validat
 
 该命令生成 `simulation-contract-report.v1`，验证 empty Standard Import package 的 same-input bytes/hash、generated-at hash exclusion、Generator version change、named layer seed、Production target 和 unsupported capability rejection。Schema/sample 语义由 pytest/jsonschema 补充。报告不验证非空 Factory/Order/Routing records、Import pipeline、Snapshot/Problem、DB/API isolation、Solver 或 Benchmark。
 
+TASK-P0-06 增加 deterministic Golden fixture replay 入口：
+
+```text
+uv run python -m app.simulation.scenarios.golden_fixture --fixture fixtures/deterministic/SIM-MINIMAL-001 --report build/validation/TASK-P0-06-sim-minimal-001.json
+```
+
+该命令生成 `golden-fixture-replay-report.v1`，严格加载 8 个 versioned artifacts，执行既有 Profile/Scenario/Manifest pure precheck、跨文件 identity/source/version/seed/capability/package join、non-empty Import canonical bytes/hash replay，并确认 C-ID expected set 完整。它的 `scope=artifact-integrity-and-replay-only`，不读取 rule formula、不输出 ValidationReport、不替代 [`test_sim_minimal_001.py`](../../backend/tests/golden/test_sim_minimal_001.py) 的独立 C-ID/KPI 计算或 TASK-P0-07 mutation evaluator。
+
 ## Override
 
 不允许用自由文本 CI skip 绕过。确需例外时必须在 Task Card 记录理由，提交 ADR 或明确批准记录，并仍保留检查报告。正确性、状态语义、数据隔离和发布门不得豁免。

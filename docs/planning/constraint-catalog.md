@@ -6,7 +6,7 @@ spec_version: 0.3.0
 phase: P0-P2
 normative: true
 source_sections: [21, 22, 25, 26, 27, 30, 31]
-last_reviewed: 2026-08-19
+last_reviewed: 2026-08-20
 ---
 
 # V1 Constraint Catalog
@@ -74,3 +74,9 @@ Routing DAG、resource option/capability、duration/unit与calendar range检查�
 `order-expansion.v1`只把已通过input-quality Gate的Routing DAG逐lot复制为OperationInstance/edge，并复制candidate duration、release/material gate、transport/max lag、fact与lock引用。它不判断candidate schedule，不选择resource，不验证overlap/precedence/horizon，也不输出Constraint violation；因此未修改C-001～C-018、rule sheet、ValidationReport或独立ScheduleValidator。
 
 请求SPLIT_MERGE仍按C-016 capability边界明确`UNSUPPORTED_CAPABILITY`，多个source-explicit lots不等同系统执行split/merge。P2必须在TASK-P1-09正式Problem/candidate上重新验证全部C-ID；Expansion PASS不能替代ScheduleValidator PASS。
+
+## TASK-P1-09 Problem projection / Constraint separation
+
+`planning-problem-builder.v1`首次把immutable Snapshot投影为正式solver-neutral Problem输入：C-001/003所需active operation与candidate、C-002/009的min/max/transport edge、C-005的horizon-intersecting calendar interval、C-006 release/material gate、C-007 RUNNING remainder、C-010 authoritative duration seconds与explicit tick、C-011 horizon config均被稳定保留。Builder只用ceiling tick检查单个operation不会被配置horizon静默截断，不选择resource、不评估全局可行性，也不产出任何Constraint PASS/violation。
+
+COMPLETED从未来集合排除；若edge跨COMPLETED/active边界，v1无法保留historical end/lag，builder明确拒绝而不丢边。与horizon相交的HARD/SOFT lock同样因v1无字段而拒绝，故本Task没有声称C-008已具备正式Problem输入。C-001～C-018、`constraint-rule-sheet.v1`、P0 fixture evaluator和ScheduleValidator均未修改；P2仍须独立执行全部适用C-ID，Problem build成功不得写成schedule feasible或valid。

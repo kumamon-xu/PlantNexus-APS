@@ -6,7 +6,7 @@ spec_version: 0.3.0
 phase: P0-P2
 normative: true
 source_sections: [16, 20, 21, 22, 26]
-last_reviewed: 2026-08-19
+last_reviewed: 2026-08-20
 ---
 
 # 时间、日历与物料边界
@@ -73,3 +73,9 @@ Product→DemandOrder→ProductionOrder→ProductionLot→ExecutionFact以及Pro
 Expansion不转换或推导时间：每个实例逐字复制Demand due、ProductionOrder release/material-ready UTC以及Routing edge的min/max/transport seconds；candidate duration也只复制P1-06已验证的显式整数秒与source version。RUNNING/COMPLETED的actual/remaining事实留在canonical record并由`execution_fact_id`回链，不把实际开始时间重新排入未来域。
 
 缺duration/source不得以setup+cycle×quantity、平均值或AI fallback补齐；material-ready不得从lot/order状态猜测。OPEN-001/004/007/009/013/014继续OPEN，属性测试中的UTC、300秒transport和duration只属于synthetic test values。
+
+## TASK-P1-09 Problem time/horizon projection
+
+Builder要求horizon start精确等于immutable Snapshot cutoff，start/end为second-precision UTC且end严格更晚，tick为显式正整数。每个duration/remaining仍以权威秒进入Problem；`ceil(seconds/tick_seconds)`只检查RUNNING remainder和至少一个NOT_STARTED candidate可在release/material gate后完整落入horizon，不把秒值替换为tick，也不静默截断。全局precedence/calendar可行性留给P2 Solver/independent Validator，build成功不表示feasible。
+
+Calendar按Resource引用投影所有与当前horizon相交的显式unavailable interval，保留原始start/end，不生成班次、不合并、不clip；完全历史或horizon外interval对当前future domain无效而不进入Problem。与horizon相交的lock因Problem v1无字段而拒绝。OPEN-004/007/009/014继续OPEN；本Task不把synthetic cutoff、tick=60或24小时horizon变成Production默认值。

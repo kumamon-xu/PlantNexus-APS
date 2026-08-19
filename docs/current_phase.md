@@ -47,7 +47,7 @@ CSV / Excel / Reference Adapter / Synthetic Generator
 
 `TASK-P1-07 — Deterministic Order Expansion`已完成：不可变Diff base为`97728521e187f9f50715de4b04a09098bef62ddf`，implementation commit为`5a3dbc14c12a107abf4052cca935e3ef59009d3d`，对应GitHub Actions run `32265257468` / required `validate` job `96108055149`=`success`；artifact `9369917400`的provider/download digest均为`sha256:8aeb7416516f7932436bbf406d800cdbdeb8313ba9249f2709b7df71647e566e`。`order-expansion.v1`、显式Lot×RoutingOperation/edge、candidate duration/source、fact/lock投影、7项unit/2项fixed-seed Hypothesis property与property-aware CI证据已闭环；本Task未修改Schema，也未创建Snapshot/Problem、ScheduleValidator、Solver或P2能力。
 
-`TASK-P1-08 — Immutable PlanningSnapshot and Hash`已完成：不可变Diff base=`8b4fb4c027305d3e3aa68eec0baaf73cd0598189`，implementation commit=`72670d18a29c9a10cb70f7a263c981a2b660e0ee`；GitHub Actions push run [`32310098594`](https://github.com/kumamon-xu/PlantNexus-APS/actions/runs/32310098594) / required `validate` job `96251145353`及全部步骤=`success`。Artifact `9386127863`的provider/download digest同为`sha256:69d68183bad614631df07234a3ca88508379ab89ec715f811ee7f529d6f17e0c`，其中Task report精确记录该SHA、41 committed paths、6 impact rows、0 issues。本地Task suite=`25 passed`、full repository=`238 passed`，PlanningSnapshot v2 canonical projection、deterministic ID/hash、insert-only repository与`0003` migration证据闭环；P1-09仍为`planned`且本次未启动。
+`TASK-P1-08 — Immutable PlanningSnapshot and Hash`已完成：不可变Diff base=`8b4fb4c027305d3e3aa68eec0baaf73cd0598189`，implementation commit=`72670d18a29c9a10cb70f7a263c981a2b660e0ee`；GitHub Actions push run [`32310098594`](https://github.com/kumamon-xu/PlantNexus-APS/actions/runs/32310098594) / required `validate` job `96251145353`及全部步骤=`success`。Artifact `9386127863`的provider/download digest同为`sha256:69d68183bad614631df07234a3ca88508379ab89ec715f811ee7f529d6f17e0c`，其中Task report精确记录该SHA、41 committed paths、6 impact rows、0 issues。本地Task suite=`25 passed`、full repository=`238 passed`，PlanningSnapshot v2 canonical projection、deterministic ID/hash、insert-only repository与`0003` migration证据闭环。`TASK-P1-09 — PlanningProblem Builder and Hash`现为`in_progress`，不可变Diff base=`100e2573a76462ad2a0751e9e4aae7990c9048dd`；solver-neutral builder/hash及本地34 targeted/253 full tests、30-path/5-row治理已PASS，尚待implementation commit、direct push与GitHub required `validate`闭环。
 
 用户于2026-08-19进一步授权：后续每个P1 Task完成本地验收并提交后，可直接push当前`main`并核验对应GitHub CI。该授权只覆盖当前Task完成后的push/provider核验，不自动启动下一Task、不改变Task允许范围，也不授权进入P2。
 
@@ -72,7 +72,7 @@ CSV / Excel / Reference Adapter / Synthetic Generator
 
 ## P1 Task 规划状态
 
-P1共规划12个Task：phase governance/CI、canonical contracts、Raw Staging、CSV/Excel/reference adapter、Normalization、Data Validation、Order Expansion、Snapshot、Problem hash、Synthetic Generator、common-ingress Gate evidence，最后为P1 Exit Gate Audit。TASK-P1-01～08=`done`，TASK-P1-09～12=`planned`；P1 Milestone继续`active`，建议下一项为TASK-P1-09，但本次未启动且不得进入P2。
+P1共规划12个Task：phase governance/CI、canonical contracts、Raw Staging、CSV/Excel/reference adapter、Normalization、Data Validation、Order Expansion、Snapshot、Problem hash、Synthetic Generator、common-ingress Gate evidence，最后为P1 Exit Gate Audit。TASK-P1-01～08=`done`，TASK-P1-09=`in_progress`，TASK-P1-10～12=`planned`；P1 Milestone继续`active`，不得进入P2。
 
 ## 阶段完成条件
 

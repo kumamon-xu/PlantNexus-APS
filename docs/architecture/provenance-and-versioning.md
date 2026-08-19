@@ -118,3 +118,11 @@ Schema set additive `2.2.0`新增`error-code-registry.v2`、Error v3和ImportQua
 Builder验证P1 content-derived Import package ID并重新计算dataset hash，检查PASS report ID/package绑定及Expansion bytes/hash/全部version/provenance引用；相同输入得到byte-identical完整Snapshot，facts/cutoff/version任一变化得到新hash/ID。Repository另外保存完整canonical bytes SHA-256和非业务`created_at`，后者不反向污染Snapshot identity。
 
 `0003_planning_snapshots`与repository形成artifact persistence provenance；implementation commit `72670d18a29c9a10cb70f7a263c981a2b660e0ee`已由GitHub run `32310098594`及其SHA精确匹配的machine artifact闭环。该CI provenance只证明本Task代码/测试/治理重放；本Slice尚无PlanningProblem/code-commit PlanningRun manifest、Solver version、PlanningRun audit或Export manifest，这些不能从Snapshot hash或CI run推断。
+
+## TASK-P1-09 PlanningProblem provenance and identity
+
+`planning-problem-builder.v1`固定Snapshot v2→Problem v1的active-future投影，`planning-problem-hash-projection.v1`固定self/noise exclusion和stable collection ordering，`canonical-json.v1`形成最终bytes。Hash projection覆盖Problem version、content-derived Snapshot ID、builder version、tick/horizon、resources、active operations/candidates/RUNNING facts、edges、relevant calendar intervals与platform capability declarations；Snapshot ID本身已绑定Snapshot hash/rule/facts/upstream versions，故不在Problem schema重复复制整条provenance。
+
+P1 canonical vector以Snapshot `sha256:44f422f81490159c4b0343a52aadd7991191684fa3b25394a0dd8b8a1b7e591a`产生Problem `sha256:6e4afffebf464de5c156094c894dccb5fe3efc712449f8583bcd91e1694dff72`，完整canonical bytes digest为`sha256:1f00ad7a856395328e9eb2c70afe8fe5878d69c3d8618ae7ef45bca34ef08645`。Self hash、generated-at、run ID和runtime nonce不进入projection；tick/horizon/builder或任一合法Snapshot事实变化会改变Problem identity。
+
+该Problem hash不是PlanningRun manifest：code commit、Solver exact version/parameters、candidate solution、Validator、Benchmark、approval/export provenance仍未形成。Builder version/hash语义不得原地重解释；任何字段或投影语义变化必须发布新Problem/builder/hash版本并执行ADR/replay/benchmark review。

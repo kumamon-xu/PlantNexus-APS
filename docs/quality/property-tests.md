@@ -56,3 +56,9 @@ TASK-P1-06以固定canonical sample和显式mutations验证三项deterministic p
 定向property执行4项全部PASS且没有Hypothesis failure，因此没有伪造minimized corpus；如未来失败，必须保留reproduction seed与最小反例。该证据形成P1 `TEST-SNAPSHOT-REPLAY-001`的generated slice，不生成PlanningProblem或candidate Schedule，故P2 `TEST-PROPERTY`继续`PLANNED`。Test值来自P1-02 synthetic schema sample，不成为Profile distribution、Benchmark baseline或Production事实。
 
 Implementation commit `72670d18a29c9a10cb70f7a263c981a2b660e0ee`已由GitHub Actions run `32310098594`的required `validate`成功重放，repository suite实际包含上述property目录；无provider failure或额外minimized corpus。
+
+## TASK-P1-09 generated Problem properties
+
+`test_planning_problem_properties.py`固定seed `20260820/20260821/20260822`与48/32/32 max examples：1～3600秒tick下重复build必须bytes/hash完全一致且260/420秒candidate按整数ceiling可复算；operation/capability/resource/option顺序与self/runtime噪声不得改变canonical bytes/hash；两个不同显式tick config必须产生不同Problem identity。全部性质只使用verified P1 canonical synthetic Snapshot并保留权威秒，不生成candidate schedule。
+
+定向property 3项及其全部examples PASS，无Hypothesis failure/minimized corpus。它形成P1 `TEST-PROBLEM-REPLAY-001`的builder/hash性质证据；P2 `TEST-PROPERTY`仍为`PLANNED`，因为尚未生成/验证合法candidate solution或跨Solver组合。

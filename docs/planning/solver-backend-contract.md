@@ -6,7 +6,7 @@ spec_version: 0.3.0
 phase: P0-P2
 normative: true
 source_sections: [13, 14, 24, 29, 57, 93, 102]
-last_reviewed: 2026-08-19
+last_reviewed: 2026-08-20
 ---
 
 # SolverBackend 合同
@@ -84,3 +84,9 @@ Schema set提升到`2.2.0`只新增Error/ImportQualityReport/Data Validation；r
 `domain.production`与`normalization.order_expansion`只使用JSON-compatible TypedDict/dataclass和标准库，输出OperationInstance/edge facts供未来Snapshot/Problem consumer使用；source scan与全仓回归继续证明无`app.planning`、OR-Tools、CpModel或IntervalVar。COMPLETED实例保留在事实输出，TASK-P1-09才负责从未来Problem排除；Backend不得直接读取Import或Expansion来绕过Snapshot/Problem builder。
 
 新增Hypothesis/sortedcontainers仅为dev/property test lock，不是Solver dependency。没有Backend/version/status/parameter、PlanningProblem hash、model build或BenchmarkReport，因此Solver upgrade/replay Gate不触发；P2首个baseline必须记录`order-expansion.v1`及实际instance/edge/candidate counts。
+
+## TASK-P1-09 executable Problem boundary
+
+`app.planning.problem`现已形成`planning-problem-builder.v1`、`planning-problem-hash-projection.v1`、canonical bytes及immutable value；source scan与dependency lock继续证明没有OR-Tools、CpModel、IntervalVar、ORM、API或Infrastructure import。Builder调用既有pure Problem precheck并检查active DAG，但不会创建decision variable、Backend、solution/status/report或执行Solver。
+
+未来Backend必须消费已通过`verify_problem`的canonical Problem，而不能直接读取Snapshot/Import/Expansion；其版本/参数仍须单独进入SolverReport和Benchmark。当前`planning-problem.v1`对active lock与completed-to-active historical lag表达不足时builder会在solve前拒绝，Backend不得静默忽略或将其映射为INFEASIBLE。本Task未改Solver protocol、依赖、升级策略或Benchmark baseline。

@@ -63,3 +63,9 @@ TASK-P1-06本身不创建Snapshot，也不计算Snapshot schema内的Import data
 `ImmutablePlanningSnapshot`仅保存frozen canonical bytes与identity，`document`每次返回新copy；SQLAlchemy repository按data plane只提供insert/exact replay/read，应用update/delete明确拒绝。`0003_planning_snapshots`以hash主键、ID唯一、canonical bytes digest和SQLite/PostgreSQL mutation trigger固定insert-only语义；downgrade会删除全部Snapshot，必须只在已确认的开发/测试回滚中执行。Schema v1/v2均未修改，PlanningProblem、PlanningRun、ScheduleVersion、API和Solver仍未形成。
 
 上述合同由implementation commit `72670d18a29c9a10cb70f7a263c981a2b660e0ee`及GitHub run `32310098594`的required `validate`/machine artifact重放成功；该provider PASS不扩大Schema、Production或后续Planning能力边界。
+
+## TASK-P1-09 read-only Problem consumer
+
+PlanningProblem builder只接收`ImmutablePlanningSnapshot`并先执行完整identity/bytes/plane验证；它不读取Snapshot repository、Import、Expansion、quality report producer或Raw Staging，也不会改写Snapshot document。Problem hash只保存Snapshot的content-derived ID而不复制整份source chain；该ID已经由TASK-P1-08绑定Snapshot hash、rule、facts和upstream versions。
+
+因此同一Snapshot与同一Problem config可byte-identical replay，Snapshot内任一合法facts/version变化必须先形成新的Snapshot ID，再传播为新的Problem hash。P1-09不改变Snapshot v2 Schema/hash projection/repository，也不允许Problem consumer绕过immutable Snapshot入口。

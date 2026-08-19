@@ -6,7 +6,7 @@ spec_version: 0.3.0
 phase: cross-phase
 normative: true
 source_sections: [97]
-last_reviewed: 2026-08-19
+last_reviewed: 2026-08-20
 ---
 
 # Architecture Decision Records
@@ -34,3 +34,5 @@ TASK-P1-05落实ADR-0001共同入口、ADR-0008 UTC/整数秒/tick边界和ADR-0
 TASK-P1-06落实ADR-0001共同入口中的Data Validation门、ADR-0008 UTC/整数秒边界与ADR-0009统一Production/Simulation canonical evaluator；additive schema set`2.2.0`只新增Error/quality-report合同，未改变Import/Snapshot/PlanningProblem、C-ID、ScheduleValidator独立性、Solver或发布决定，因此不新增ADR。若未来允许Simulation跳过quality Gate、让evaluator修复/默认输入、共享Solver/ScheduleValidator逻辑或改变report hash/版本兼容，必须先提交superseding ADR与对应回放证据。
 
 TASK-P1-07落实ADR-0001的共同入口顺序、ADR-0003的Solver-neutral派生边界、ADR-0007的Snapshot前事实准备、ADR-0008的显式整数秒copy和ADR-0009的Production/Synthetic provenance隔离。`order-expansion.v1`只把DataValidation PASS后的显式Lot/Routing展开为既有Snapshot v2 shape，不改变Schema、PlanningProblem、Constraint、Solver、状态机、发布规则或Data Authority，因此不新增ADR。若未来自动split/merge、重算candidate duration、丢弃COMPLETED事实或改变versioned ID lineage，必须先建立相应ADR/Schema/回放证据。
+
+TASK-P1-09落实ADR-0003的solver-neutral deterministic Problem、ADR-0007的immutable Snapshot consumer和ADR-0008的UTC/权威秒/显式tick决定。`planning-problem.v1` Schema与C-ID不变，builder/hash只在既有可表达slice内工作；active lock、multi-factory和completed-active historical lag不能表达时明确停止，不修改Backend/Strategy/Validator或引入OR-Tools，因此不新增ADR。若未来扩展Problem字段、改变builder/hash语义、隐藏unsupported事实或让Backend绕过canonical Problem，必须先提交相应superseding/new ADR与replay/benchmark证据。

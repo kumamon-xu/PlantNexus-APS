@@ -6,7 +6,7 @@ spec_version: 0.3.0
 phase: P2-P7
 normative: true
 source_sections: [53, 55, 56, 57, 58, 89, 102]
-last_reviewed: 2026-08-19
+last_reviewed: 2026-08-20
 ---
 
 # Benchmark Regression 规则
@@ -72,3 +72,9 @@ Mapping/unit rule version已进入Import hash，未来TASK-P1-09/P2 benchmark必
 本Task新增会决定未来Problem规模的deterministic preprocessing，但当前没有PlanningProblem、Solver、BenchmarkRunner/profile/baseline或历史comparison。Hypothesis positive生成4-operation branch/merge、1～3 lots、2 workshops/resources与每operation 1～2 candidates，对应4～12 instances、4～12 edges，只用于correctness/shrinking；测试耗时不得写成runtime/memory/capacity结论，也不生成零值BenchmarkReport。
 
 P2首次baseline必须记录`order-expansion.v1`、Import/quality/Snapshot/Problem hashes及instance/edge/candidate counts；以后改变ID/过滤/expansion cardinality必须回放固定Scenario Set。当前OR-Tools仍不存在，Solver replay无法执行，OPEN-012保持OPEN。
+
+## TASK-P1-09 review
+
+本Task首次形成真实PlanningProblem preprocessing与fixed Problem hash，但仍无Solver、Backend、BenchmarkRunner/profile、candidate result、runtime/memory threshold或历史Problem baseline comparison。Local Python 3.12.13 informational probe对同一1-resource/2-operation/1-edge/0-interval Snapshot执行200次完整build+verify，观察median `1.090 ms`、p95 `1.177 ms`；该单机微型sample只记录builder counts/time，不是CI gate、capacity、SLA或Production阈值，也不生成BenchmarkReport。
+
+P2首次Solver baseline必须携带Snapshot/Problem hash、builder/hash projection、tick/horizon、instance/edge/candidate/interval counts、Solver exact version/parameters及环境。当前OR-Tools仍不存在，不能执行Solver correctness/quality/runtime/memory replay；OPEN-012继续OPEN，未建立或覆盖任何baseline。

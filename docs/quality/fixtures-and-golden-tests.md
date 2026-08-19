@@ -6,7 +6,7 @@ spec_version: 0.3.0
 phase: P0-P2
 normative: true
 source_sections: [31, 43, 46, 71, 72, 76, 88]
-last_reviewed: 2026-08-19
+last_reviewed: 2026-08-20
 ---
 
 # Fixture 与 Golden Test 规范
@@ -47,3 +47,9 @@ TASK-P0-06 使用字段级断言和公式重算，而非比较完整 Gantt JSON�
 P0 已创建 [`SIM-MINIMAL-001-MUTATIONS@1.0.0`](../../fixtures/infeasible/SIM-MINIMAL-001-MUTATIONS/calculation-note.md)：13 类声明式 mutation 覆盖所有 C-001～C-011，包含 exact expected ValidationReport/Error、coverage matrix 与人工 tick/秒说明。该 bundle 以 repository-relative path 和 base Import hash 引用 Golden，不复制后再覆盖其历史文件。
 
 Fixture 和 expected artifact 必须版本化并记录来源；Synthetic 与 Historical 目录不得混用。mutation materializer 每次 deep-copy base JSON，test 验证输入对象不变；范围 gate 同时禁止 `/fixtures/deterministic/**` diff。该 negative bundle 是 P0 correctness fixture，不是生产数据、P1 canonical input 或 Solver infeasibility proof。
+
+## TASK-P1-09 canonical Problem Golden
+
+`test_p1_problem_replay.py`从P1 canonical Import→PASS report→Expansion→immutable Snapshot正式链重放，不读取P0 hand schedule。固定Snapshot hash `sha256:44f422…e591a`、Problem hash `sha256:6e4aff…dff72`、完整1827-byte canonical payload digest `sha256:1f00ad…08645`及1 resource/2 active operations/1 edge/0 relevant interval counts；重复构建、`verify_problem`、JSON round-trip和published `planning-problem.v1` Schema validation均PASS。
+
+Golden断言固定身份、关键字段/count与Schema，不把完整JSON手工复制为脆弱fixture，也不形成Solver feasibility/objective/KPI结果。P0 `SIM-MINIMAL-001`及mutation bundle均未修改；Problem vector的任何合法语义变化必须通过builder/hash version规则更新并解释，不能覆盖历史hash。

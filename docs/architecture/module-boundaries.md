@@ -82,4 +82,11 @@ TASK-P0-05 已在 `simulation/profiles`、`simulation/scenarios`、`simulation/g
 - `snapshots.canonical`拥有Import/Snapshot排序、dataset digest、Snapshot hash projection/ID和integrity verification；`snapshots.builder`只编排已存在的Import/report/Expansion并返回immutable bytes value，不读取Raw repository、环境或数据库。
 - `snapshots.repository`只定义insert/replay/read protocol；`infrastructure.snapshot_repository`单独拥有SQLAlchemy transaction、plane query和storage integrity，migration只建立internal content-addressed table/trigger。
 - `app.snapshots`保持无ORM/FastAPI/Celery/OR-Tools/PlanningProblem依赖；Infrastructure adapter不得反向成为领域权威或绕过builder接受任意JSON。
-- 当前没有`application/**` common-ingress orchestration、PlanningProblem builder、Worker task、API、ScheduleVersion或Solver；这些边界分别留给TASK-P1-09/11及后续Phase。
+- 当前没有`application/**` common-ingress orchestration、Worker task、API、ScheduleVersion或Solver；这些边界分别留给TASK-P1-11及后续Phase。
+
+## TASK-P1-09 PlanningProblem boundaries
+
+- `planning/problem/contracts.py`只定义JSON TypedDict、module-local error和immutable bytes value；`hashing.py`拥有canonical ordering/hash/integrity与pure precheck，`builder.py`只编排verified immutable Snapshot→Problem；
+- Problem模块不读取Snapshot repository、Import/Expansion producer、DB、environment、API或Job，不持久化、不创建migration，也不导入OR-Tools/CpModel/IntervalVar；
+- Builder保留Snapshot的content-derived ID和可由v1表达的future facts；遇到active lock、multi-factory或completed-active edge明确拒绝，不向Solver藏字段、不把输入错误转成INFEASIBLE；
+- TASK-P1-09未实现Backend、Strategy、ScheduleValidator或candidate solution。P2 consumer只能从canonical Problem继续，不能回读上游对象绕过此边界。

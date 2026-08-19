@@ -6,7 +6,7 @@ spec_version: 0.3.0
 phase: P0-P2
 normative: true
 source_sections: [19, 20, 21, 25, 26]
-last_reviewed: 2026-08-19
+last_reviewed: 2026-08-20
 ---
 
 # OperationInstance 与候选资源语义
@@ -76,3 +76,9 @@ Data Validation在Expansion前要求每个RoutingOperation至少一条显式`rou
 `order-expansion.v1`为每个显式`ProductionLot × RoutingOperation`生成且只生成一个OperationInstance；多lot只有在source已明确给出时才产生，不执行自动拆分/合并。实例复制DemandOrder/ProductionOrder/Lot/RoutingVersion/RoutingOperation IDs、lot quantity/unit、due/release/material UTC与required capabilities。每个candidate按`routing_resource_option_id`排序并逐字段复制resource、setup/cycle/final seconds、duration source及`duration_source_version → source_version`，不按lot quantity重新推算duration。
 
 实例ID的versioned lineage为`[lot_id, routing_operation_id]`，edge ID为`[lot_id, routing_precedence_edge_id]`；canonical JSON SHA-256使输入collection顺序不影响输出。branch/merge、cross-workshop transport lag与max lag只按Routing DAG逐lot复制，不被线性化。RUNNING/COMPLETED绑定唯一fact，NOT_STARTED无fact；locks按同一lot/operation lineage复制。缺candidate/duration或请求SPLIT_MERGE明确失败，不选择资源、不生成Snapshot/Problem。
+
+## TASK-P1-09 future Problem projection
+
+Problem builder以Snapshot `operation_instance_id → operation_id`逐字保留active实例身份、release/material gate和全部candidate六字段；不按quantity重算setup/cycle/final duration。Candidate按resource/duration/source稳定排序，权威`final_duration_seconds`保持整数秒，ceiling tick只用于horizon完整性检查。Data Validation已验证的CUTTING等业务capability通过candidate eligibility体现；Problem顶层只声明platform capability，不混用两类词汇。
+
+RUNNING通过`execution_fact_id`解析actual start、assigned resource和remaining seconds，历史start保留但未来occupancy从horizon start计算。COMPLETED实例不进入未来Problem；两端均completed的edge排除，completed-active edge因v1无法保留historical lag而明确unsupported。Active operation的lock若与horizon相交也明确unsupported；历史/horizon外lock不改变当前Problem。本Task不选择candidate、不改变fact、也不实现C-007/C-008 candidate ScheduleValidator。

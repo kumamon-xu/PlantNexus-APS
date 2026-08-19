@@ -33,7 +33,7 @@ ReferenceFileAdapter是 P1正式、可测试的参考 Adapter，但在 OPEN-002/
 | 6 | TASK-P1-06 | DAG/reference/capability Data Validation与四类 exact rejection | P1-05 | `done` |
 | 7 | TASK-P1-07 | DemandOrder→Lot→OperationInstance deterministic expansion | P1-06 | `done` |
 | 8 | TASK-P1-08 | Immutable Snapshot builder/hash/repository | P1-03/06/07 | `done` |
-| 9 | TASK-P1-09 | Solver-neutral Problem builder/hash，无 Solver | P1-07/08 | `planned` |
+| 9 | TASK-P1-09 | Solver-neutral Problem builder/hash，无 Solver | P1-07/08 | `in_progress` |
 | 10 | TASK-P1-10 | 七层 Synthetic Generator非空 canonical records | P1-02/05/06/07 | `planned` |
 | 11 | TASK-P1-11 | 双通道 common-ingress E2E、machine report与 CI evidence | P1-03～10 | `planned` |
 | 12 | TASK-P1-12 | P1 Exit Gate Audit | P1-01～11 | `planned` |
@@ -84,4 +84,4 @@ Gate证据还必须覆盖 CSV/XLSX/Reference Adapter、Raw Staging provenance、
 
 ## Current execution boundary
 
-Canonical-records.v1、Import v2、Snapshot v2、Error v1/v2与既有registry均保持原字节；schema set现以additive`2.2.0`加入error registry v2/Error v3/ImportQualityReport v1，Import v2和unit registry document version分别保持`2.0.0/2.1.0`。TASK-P1-03/04/05已分别形成Raw Staging、non-production ReferenceFileAdapter与Normalization证据；TASK-P1-06的Data Validation由implementation commit `c1ac1077fdd92e012f4050f30bab2aec4638f6ec` / run `32257767495`闭环。TASK-P1-07的`order-expansion.v1`与fixed-seed generated evidence已由implementation commit `5a3dbc14c12a107abf4052cca935e3ef59009d3d` / run `32265257468`闭环。TASK-P1-08的Snapshot builder/hash/insert-only repository已由implementation commit `72670d18a29c9a10cb70f7a263c981a2b660e0ee` / run `32310098594`闭环，本地25 targeted/238 full tests及provider 41-path/6-row Task report均PASS。P1-09保持`planned`且本次未启动；PlanningProblem hash与Solver仍须按后续依赖逐项实施。
+Canonical-records.v1、Import v2、Snapshot v2、Error v1/v2与既有registry均保持原字节；schema set现以additive`2.2.0`加入error registry v2/Error v3/ImportQualityReport v1，Import v2和unit registry document version分别保持`2.0.0/2.1.0`。TASK-P1-03/04/05已分别形成Raw Staging、non-production ReferenceFileAdapter与Normalization证据；TASK-P1-06的Data Validation由implementation commit `c1ac1077fdd92e012f4050f30bab2aec4638f6ec` / run `32257767495`闭环。TASK-P1-07的`order-expansion.v1`与fixed-seed generated evidence已由implementation commit `5a3dbc14c12a107abf4052cca935e3ef59009d3d` / run `32265257468`闭环。TASK-P1-08的Snapshot builder/hash/insert-only repository已由implementation commit `72670d18a29c9a10cb70f7a263c981a2b660e0ee` / run `32310098594`闭环，本地25 targeted/238 full tests及provider 41-path/6-row Task report均PASS。P1-09现为`in_progress`，不可变Diff base=`100e2573a76462ad2a0751e9e4aae7990c9048dd`；Problem builder/hash本地34 targeted/253 full tests及30-path/5-row治理已PASS，provider closure待提交/CI。Solver仍须按后续阶段逐项实施。

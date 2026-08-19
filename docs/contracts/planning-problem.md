@@ -6,7 +6,7 @@ spec_version: 0.3.0
 phase: P0-P2
 normative: true
 source_sections: [13, 14, 24, 25, 26, 45, 89]
-last_reviewed: 2026-08-19
+last_reviewed: 2026-08-20
 ---
 
 # PlanningProblem 合同
@@ -49,4 +49,16 @@ PlanningProblem 必须可序列化、Solver-neutral、deterministic，不包含 
 
 PlanningProblem 不含数据库 Session、ORM Model、API DTO、CpModel、IntervalVar 或求解过程统计。修改本合同必须 ADR、problem version 更新、contract/golden/scenario replay 和 benchmark comparison。
 
-P0 纯类型位于 `backend/app/planning/problem/contracts.py`；`backend/app/domain/validation.py` 只做 ID 引用、UTC interval、duration 和 lag range 的最小 precheck，不实现 C-001～C-011 或 Solver。PlanningProblem builder/hash、DAG 检查、Constraint rule sheet、Golden/Scenario replay 和 Benchmark 仍为 `PLANNED`。本次首次 skeleton 由既有 ADR-0003 覆盖，没有新增架构决定。
+P0 纯类型位于 `backend/app/planning/problem/contracts.py`；`backend/app/domain/validation.py` 只做 ID 引用、UTC interval、duration 和 lag range 的最小 precheck，不实现 C-001～C-011 或 Solver。TASK-P1-09 已形成 builder/hash、active DAG 和 Golden replay；Constraint rule sheet语义未改，正式 ScheduleValidator、Solver 与 Benchmark仍未形成。
+
+## TASK-P1-09 builder and hash contract
+
+`planning-problem-builder.v1`只接受已通过`verify_snapshot`的immutable PlanningSnapshot v2，并显式接收builder version、正整数`tick_seconds`及second-precision UTC horizon。`horizon_start_utc`必须精确等于Snapshot cutoff；RUNNING remainder和每个NOT_STARTED实例至少一个candidate必须以`ceil(seconds/tick_seconds)`完整落入horizon，Problem仍逐字保留权威秒，不写入派生tick或静默截断。
+
+Builder按operation ID、candidate值、edge端点、resource/time与capability name稳定排序。COMPLETED不进入未来Problem；两端均COMPLETED的edge一并排除，COMPLETED与active之间的edge因v1无法保留历史完成时刻和lag边界而明确`UNSUPPORTED_PROBLEM_FACT`。RUNNING从其`execution_fact_id`解析actual start、assigned resource和positive remaining seconds。Calendar只投影与horizon相交的显式interval并保留原UTC端点；完全历史/未来的interval不进入当前Problem。与horizon相交的HARD/SOFT lock无法由v1表达，必须拒绝；已结束或horizon外lock不改变当前future domain。
+
+顶层`required_capabilities`是从本Problem实际使用的platform能力确定性推导的声明，例如`DAG_ROUTING`、`RELEASE_AND_MATERIAL_GATE`、`RUNNING_OPERATION`、`MACHINE_CALENDAR`和`ALTERNATIVE_RESOURCE`；Operation的CUTTING等业务能力已由Data Validation确定candidate eligibility，不混入platform capability registry。多Factory保持显式unsupported。
+
+`planning-problem-hash-projection.v1`使用`canonical-json.v1 + SHA-256`覆盖除self `problem_hash`外的完整canonical Problem，并加入projection version；不属于Problem合同的generated/run/runtime字段不参与。Snapshot的content-derived `snapshot_id`已绑定Snapshot hash、rule、facts及全部上游版本，因此Problem hash同时绑定Snapshot identity、builder version和tick/horizon config。`ImmutablePlanningProblem`仅保存canonical bytes/hash/metadata，document访问返回copy，`verify_problem`复核exact shape、pure precheck、platform capability、active DAG、bytes与hash。
+
+本Task未修改`planning-problem.v1` Schema、C-ID、ADR-0003或Solver接口。Due/priority、完整Resource facts、active lock字段与completed-to-active historical lag若要成为可求解输入，必须先发布新Problem version并按ADR/replay/benchmark规则升级，不能在v1中藏字段。

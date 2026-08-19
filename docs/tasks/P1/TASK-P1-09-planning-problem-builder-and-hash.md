@@ -1,12 +1,12 @@
 ---
 doc_id: TASK-P1-09
 title: PlanningProblem Builder and Hash
-status: planned
+status: in_progress
 spec_version: 0.3.0
 phase: P1
 normative: true
 source_sections: [13, 14, 24, 26, 73, 74, 89]
-last_reviewed: 2026-08-19
+last_reviewed: 2026-08-20
 ---
 
 # TASK-P1-09 — PlanningProblem Builder and Hash
@@ -21,7 +21,7 @@ Goal: 从 immutable Snapshot v2 构建现有 `planning-problem.v1` 可表达的 
 
 Inputs: PlanningSnapshot v2、PlanningProblem v1 Schema、ADR-0003/0008、C-001～C-011 input requirements、explicit tick/horizon config。
 
-Diff base: 进入 `in_progress` 前记录当时完整 40 字符 HEAD SHA
+Diff base: 100e2573a76462ad2a0751e9e4aae7990c9048dd
 
 Files allowed to change: `backend/app/planning/problem/__init__.py`、`backend/app/planning/problem/contracts.py`、`backend/app/planning/problem/builder.py`、`backend/app/planning/problem/hashing.py`、`backend/tests/unit/test_planning_problem_builder.py`、`backend/tests/property/test_planning_problem_properties.py`、`backend/tests/golden/test_p1_problem_replay.py`、生成但不提交的 `build/validation/TASK-P1-09-engineering.json` 与 `build/traceability/TASK-P1-09-report.json`，以及下方 `Documents to update` 的全部明确路径。
 
@@ -33,7 +33,7 @@ Outputs: solver-neutral builder、problem hash vectors、property/Golden replay 
 
 Documentation impact: required
 
-Documents to update: `docs/current_phase.md`、`docs/contracts/planning-problem.md`、`docs/contracts/planning-snapshot.md`、`docs/planning/constraint-catalog.md`、`docs/planning/solver-backend-contract.md`、`docs/architecture/provenance-and-versioning.md`、`docs/architecture/module-boundaries.md`、`docs/domain/operation-instance-and-resource-options.md`、`docs/domain/time-calendar-and-material-boundaries.md`、`docs/adr/ADR-0003-solver-neutral-planning-problem.md`、`docs/adr/README.md`、`docs/quality/property-tests.md`、`docs/quality/fixtures-and-golden-tests.md`、`docs/quality/benchmark-regression.md`、`docs/quality/test-strategy-and-matrix.md`、`docs/governance/requirements-register.md`、`docs/governance/nfr-and-engineering-register.md`、`docs/governance/traceability-matrix.md`、`docs/governance/risk-register.md`、`docs/governance/document-inventory.md`、`docs/milestones/P1-data-and-snapshot.md`、`docs/tasks/README.md`、`docs/tasks/P1/TASK-P1-09-planning-problem-builder-and-hash.md`。
+Documents to update: `docs/current_phase.md`、`docs/contracts/planning-problem.md`、`docs/contracts/planning-snapshot.md`、`docs/planning/constraint-catalog.md`、`docs/planning/solver-backend-contract.md`、`docs/architecture/provenance-and-versioning.md`、`docs/architecture/module-boundaries.md`、`docs/domain/operation-instance-and-resource-options.md`、`docs/domain/time-calendar-and-material-boundaries.md`、`docs/adr/ADR-0003-solver-neutral-planning-problem.md`、`docs/adr/README.md`、`docs/quality/property-tests.md`、`docs/quality/fixtures-and-golden-tests.md`、`docs/quality/benchmark-regression.md`、`docs/quality/test-strategy-and-matrix.md`、`docs/quality/documentation-consistency-checks.md`、`docs/governance/requirements-register.md`、`docs/governance/nfr-and-engineering-register.md`、`docs/governance/traceability-rules.md`、`docs/governance/traceability-matrix.md`、`docs/governance/prod-open-register.md`、`docs/governance/sim-assumption-register.md`、`docs/governance/risk-register.md`、`docs/governance/change-impact-matrix.md`、`docs/governance/document-inventory.md`、`docs/milestones/README.md`、`docs/milestones/P1-data-and-snapshot.md`、`docs/tasks/README.md`、`docs/tasks/TASK_TEMPLATE.md`、`docs/tasks/P1/TASK-P1-09-planning-problem-builder-and-hash.md`。
 
 Documentation impact rationale: 首次真实 Problem builder/hash实现会固定 Snapshot→Problem映射、replay和后续 P2 consumer边界。
 
@@ -69,4 +69,15 @@ Rollback: builder version/hash不可重解释历史；回退保留旧 version与
 
 ## Completion evidence
 
-执行时填写 builder/version/hash vectors、static scan、changed paths、测试与文档/ADR审查结果。
+### Local implementation evidence（provider pending）
+
+- 时间：2026-08-20（Asia/Hong_Kong）。Task保持`in_progress`；immutable Diff base=`100e2573a76462ad2a0751e9e4aae7990c9048dd`。本地实现与验收已完成，implementation commit/direct push/GitHub provider closure尚待后续步骤，不能提前标记`done`。
+- Builder/hash：`planning-problem.v1`、`planning-problem-builder.v1`、`planning-problem-hash-projection.v1`、`canonical-json.v1`。Builder只接受`verify_snapshot`通过的immutable Snapshot v2及显式version/tick/horizon；horizon start精确等于cutoff。Canonical ordering覆盖resource、active operation/candidate、edge、relevant calendar interval和platform capability；hash排除self与未登记runtime noise，Snapshot content ID绑定rule/facts/upstream versions。
+- 固定向量：Snapshot hash=`sha256:44f422f81490159c4b0343a52aadd7991191684fa3b25394a0dd8b8a1b7e591a`，Problem hash=`sha256:6e4afffebf464de5c156094c894dccb5fe3efc712449f8583bcd91e1694dff72`，canonical bytes=`1827`，bytes digest=`sha256:1f00ad7a856395328e9eb2c70afe8fe5878d69c3d8618ae7ef45bca34ef08645`；counts=`1 resource / 2 active operations / 1 edge / 0 relevant intervals`。
+- Projection/error：RUNNING保留actual start/assigned resource/remaining seconds；权威candidate seconds不改写，integer ceiling只做horizon完整性检查；COMPLETED过滤。Completed-active edge、horizon-intersecting active lock和multi-factory在v1不可表达时返回module-local`UNSUPPORTED_PROBLEM_FACT/UNSUPPORTED_CAPABILITY`；invalid Snapshot/config/fact与built output分别保持DATA_ERROR/MODEL_INVALID，任何路径都不产生INFEASIBLE。Content-hashed active DAG cycle、tampered bytes/hash也明确拒绝。
+- Tests：10 unit + 3 fixed-seed Hypothesis properties + 2 Golden；seeds=`20260820/20260821/20260822`，max examples=`48/32/32`，无failure/minimized corpus。Task-focused suite（含现有TEST-CONTRACT-001）=`34 passed in 1.26s`；full repository regression=`253 passed in 8.50s`。Ruff PASS；Pyright=`0 errors, 0 warnings, 0 informations`；no-OR-Tools/ORM/API/Infrastructure source scan PASS。
+- Informational build probe：Python `3.12.13`，同一small canonical vector执行200次完整build+verify，median=`1.090 ms`、p95=`1.177 ms`；只记录1/2/1/0 entity counts与本机诊断，不设gate/SLA，不形成BenchmarkReport。
+- Acceptance：`uv sync --locked` PASS（63 packages）；Task Ruff/Pyright/Pytest PASS；engineering report PASS（6 checks，`solver=NOT_INSTALLED`、business pipeline/distributed persistence/production deployment均未claim）；full docs PASS（124 docs/30 roots/36 tests/15 OPEN/9 SIM/10 risks/22 tasks）；Task diff PASS（30 paths/5 impact rows/0 issues）；`git diff --check` PASS；`uv build`成功生成sdist与wheel。
+- Trace：REQ-002/003/009、NFR-DET/TRC、ENG-SOL/ERR/VER → TASK-P1-09 → TEST-PROBLEM-REPLAY-001 + TEST-CONTRACT-001 → builder/hash fixed vector/property/Golden/engineering/trace reports。Schema、dependency/lock、Snapshot/Import、C-ID/Objective、Backend/Strategy/Validator/API/Exporter/Benchmark baseline均未修改；ADR-0003/0008 review确认既有决定未变，不新增ADR。
+- Required-document review without edit：`docs/governance/change-impact-matrix.md` machine rules无需变化；`traceability-rules.md`证据链语义未变；`prod-open-register.md`中OPEN-004/005/006/007/009/012/014/015及其余项无closure evidence而保持OPEN；`sim-assumption-register.md`无新增/修改且tick/horizon只来自显式test config；`documentation-consistency-checks.md`的validator/command语义未改；`milestones/README.md`的phase transition规则未改；`TASK_TEMPLATE.md`字段/验收规则未改。它们均已纳入Task允许范围并完成审查。
+- Rollback/边界：不修改Problem v1 Schema或历史hash；语义修复必须发布新builder/Problem/hash version并重放。当前无Solver、candidate schedule、PlanningRun、ScheduleValidator、common ingress、P1-10或P2实现；P1-10不会由本Task自动启动。

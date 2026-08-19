@@ -1,7 +1,7 @@
 ---
 doc_id: TASK-P1-01
 title: P1 Phase Governance and CI Handoff
-status: in_progress
+status: done
 spec_version: 0.3.0
 phase: P1
 normative: true
@@ -80,4 +80,6 @@ Rollback: 恢复到最后一个能识别当前 Phase 且通过 full/diff governa
 - 实际31个tracked changed paths恰为4个实现/测试文件和`Documents to update`列出的27个文档；未修改业务代码、Schema、Fixture、Migration、dependency、Solver、Production配置或P2内容；REQ/NFR/ENG仍为`ALLOCATED`，OPEN-001～015仍为`OPEN`，SIM-ASSUMPTION-001～009保持`ACTIVE`；
 - 未获得单独的push/branch/provider执行授权，因此新的provider run/job/artifact/required-check=`NOT_RUN`；既有P0 provider证据只作历史输入，不冒充本Task结果。Benchmark hook保持conditional，runner/BenchmarkReport=`NOT_RUN`。
 
-当前仍保持`in_progress`，等待implementation commit后的clean-tree full/diff/dynamic replay；只有提交后证据通过才更新为`done`。回滚点为上述Diff base；生成的`build/`与`dist/`产物均不提交。
+implementation commit=`8d8ceced4496bfc7be4651f67eb376993e49ec67`。该commit后working tree clean；full governance=`PASS`，显式与动态diff governance均=`PASS diff_paths=31 impact_rows=6`，targeted tests=`20 passed`。动态报告明确记录`task_discovery_base=430506349ccdc135072e12fc98f7df1744a63e2c`、`git_head=8d8ceced4496bfc7be4651f67eb376993e49ec67`、Task `diff_base=430506349ccdc135072e12fc98f7df1744a63e2c`、`committed_range=31`、`working_tree=0`，证明CI event attribution与Task scope基线没有混用。
+
+上述实现、负向路径、文档/追踪、提交前后治理和明确排除项均满足，故TASK-P1-01标记`done`。本次completion-only文档提交不能自引用其最终SHA；最终clean-tree治理结果在交付中记录。回滚点为Diff base；生成的`build/`与`dist/`产物均不提交，provider仍为`NOT_RUN`。

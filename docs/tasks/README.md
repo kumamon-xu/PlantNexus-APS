@@ -34,7 +34,7 @@ P0 superseding audit=`READY`，用户于 2026-08-19 明确批准进入 P1；历�
 
 | Task | 目标 | 依赖 | 状态 |
 |---|---|---|---|
-| [TASK-P1-01](P1/TASK-P1-01-phase-governance-and-ci-handoff.md) | Phase-aware governance 与 CI handoff | P0-10 | `in_progress` |
+| [TASK-P1-01](P1/TASK-P1-01-phase-governance-and-ci-handoff.md) | Phase-aware governance 与 CI handoff | P0-10 | `done` |
 | [TASK-P1-02](P1/TASK-P1-02-canonical-import-contracts.md) | Canonical records、Import v2、Snapshot v2合同 | P1-01 | `planned` |
 | [TASK-P1-03](P1/TASK-P1-03-raw-staging-and-import-provenance.md) | Raw Staging、provenance、idempotent persistence | P1-02 | `planned` |
 | [TASK-P1-04](P1/TASK-P1-04-csv-excel-reference-adapter.md) | CSV、Excel与ReferenceFileAdapter v1 | P1-02/03 | `planned` |
@@ -55,4 +55,4 @@ Task进入 `in_progress` 时必须先把当时完整 40字符 HEAD SHA写入 `Di
 
 每张 Task Card在开始前完成文档影响分析：`Documentation impact`、明确 `Documents to update`、理由、`IMPACT-*` Rule IDs与`Traceability updates`。`Documents to update`必须包含在允许范围；发现额外文件先停止并修订卡片。
 
-当前唯一 `in_progress` Task为 TASK-P1-01，Diff base=`430506349ccdc135072e12fc98f7df1744a63e2c`；它先消除现有 P0-10-specific CI handoff，再允许启动 canonical contracts。完成一个 Task不会自动启动下一个；P1-12即使审计 `READY`也不自动进入 P2。
+当前没有`in_progress` Task。TASK-P1-01已完成并消除P0-10-specific CI handoff；下一建议项TASK-P1-02仍为`planned`，必须另行按协议启动。完成一个Task不会自动启动下一个；P1-12即使审计`READY`也不自动进入P2。

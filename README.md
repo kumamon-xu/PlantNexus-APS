@@ -1,6 +1,6 @@
 # PlantNexus APS
 
-PlantNexus APS 是一个面向单工厂、多车间场景的高级计划与排程（APS）项目。P0 Exit Gate 已通过，用户已明确授权进入 P1（Data & Snapshot）；TASK-P1-01 正在执行 phase-aware governance与 CI handoff，尚未开始任何 P1数据链业务实现。真实 Solver、生产 Adapter/参数和 P2+能力仍未实现。
+PlantNexus APS 是一个面向单工厂、多车间场景的高级计划与排程（APS）项目。P0 Exit Gate 已通过，用户已明确授权进入 P1（Data & Snapshot）；TASK-P1-01 已完成 phase-aware governance与 CI handoff，尚未开始任何 P1数据链业务实现。真实 Solver、生产 Adapter/参数和 P2+能力仍未实现。
 
 ## 开始之前
 
@@ -54,4 +54,4 @@ scripts/      仓库级校验与自动化脚本
 infra/        P0 开发容器构建配置
 ```
 
-P0-08 只形成 health-only API、环境配置、日志、lazy DB/Redis connectivity、通用 Job reliability/idempotency、Alembic/Compose/CI 骨架；它不形成业务 pipeline、产品 API、真实分布式作业存储、Solver 或生产部署。P1的12张有界 Task Card已建立，TASK-P1-01=`in_progress`且 Diff base=`430506349ccdc135072e12fc98f7df1744a63e2c`。当前授权范围见 [`docs/current_phase.md`](docs/current_phase.md)。
+P0-08 只形成 health-only API、环境配置、日志、lazy DB/Redis connectivity、通用 Job reliability/idempotency、Alembic/Compose/CI 骨架；它不形成业务 pipeline、产品 API、真实分布式作业存储、Solver 或生产部署。P1的12张有界 Task Card已建立，TASK-P1-01=`done`；下一建议项TASK-P1-02仍为`planned`且未启动。当前授权范围见 [`docs/current_phase.md`](docs/current_phase.md)。

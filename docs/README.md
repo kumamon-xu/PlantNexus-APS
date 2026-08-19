@@ -69,7 +69,7 @@ last_reviewed: 2026-08-19
 
 ## 当前范围
 
-当前阶段为 P1。P0 Gate已通过且用户已明确授权 phase transition；TASK-P1-01 正在执行治理/CI handoff，尚未开始数据/快照链业务实现。只允许按当前 Task边界工作，禁止真实 CP-SAT/P2、生产参数猜测或绕过正式入口。详见 `current_phase.md`。
+当前阶段为 P1。P0 Gate已通过且用户已明确授权 phase transition；TASK-P1-01治理/CI handoff已完成，尚未开始数据/快照链业务实现。下一建议项TASK-P1-02仍为`planned`，开始前必须按Task协议激活。禁止真实CP-SAT/P2、生产参数猜测或绕过正式入口。详见`current_phase.md`。
 
 ## 仓库入口与本地检查
 
@@ -79,6 +79,6 @@ last_reviewed: 2026-08-19
 - 该检查验证 metadata、文档 ID、Markdown fence、本地链接、Task、版本化 registry、完整 ID 引用、逐根 traceability 和命名空间隔离；
 - Task 进入 `in_progress` 时记录完整 `Diff base`；`--task <task-card> --check-diff` 对 `Diff base..HEAD` 与 working tree 的并集匹配 change-impact Rule ID，并可用 `--report <path>` 输出 `traceability-report.v1`。
 
-本地检查已经形成，并从 `current_phase.md` 读取 current `Pn`，保留历史 terminal Task且拒绝 future-phase详细卡。TASK-P1-01将继续收敛 P1 provider CI handoff；不能因本命令 PASS而宣称 P1 Gate或生产就绪。
+本地检查已经形成，并从 `current_phase.md` 读取 current `Pn`，保留历史 terminal Task且拒绝 future-phase详细卡。TASK-P1-01已形成repository-local CI handoff；provider结果仍须来自真实授权运行，不能因本地命令PASS而宣称P1 Gate或生产就绪。
 
 CI 可用 `uv run python scripts/check_docs.py --discover-task-from <event-base-sha> --check-diff --report build/traceability/ci-current-task-report.json`从一次 PR/push event range发现唯一 current-phase Task；本地 Task验收仍使用显式 `--task`。两种入口最终都使用 Task Card内的 immutable `Diff base`，不能把 event base当作 Task scope base。

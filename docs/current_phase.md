@@ -35,7 +35,7 @@ CSV / Excel / Reference Adapter / Synthetic Generator
 
 ## 当前 Task
 
-`TASK-P1-01 — P1 Phase Governance and CI Handoff` 已按用户指令进入 `in_progress`，不可变 Diff base为 `430506349ccdc135072e12fc98f7df1744a63e2c`。当前只执行 phase-aware governance与 CI handoff，不执行 P1数据链业务实现。
+当前没有`in_progress` Task。`TASK-P1-01 — P1 Phase Governance and CI Handoff`已完成，implementation commit为`8d8ceced4496bfc7be4651f67eb376993e49ec67`，不可变Diff base为`430506349ccdc135072e12fc98f7df1744a63e2c`；该Task只形成治理/CI合同，未执行P1数据链业务实现。下一建议项TASK-P1-02仍为`planned`，未在本次自动启动。
 
 后续顺序以 [`P1 Milestone`](milestones/P1-data-and-snapshot.md) 与 [`Task Card 索引`](tasks/README.md) 为准；只有依赖为 `done` 后才可启动下一 Task。
 
@@ -58,7 +58,7 @@ CSV / Excel / Reference Adapter / Synthetic Generator
 
 ## P1 Task 规划状态
 
-P1共规划 12 个 Task：phase governance/CI、canonical contracts、Raw Staging、CSV/Excel/reference adapter、Normalization、Data Validation、Order Expansion、Snapshot、Problem hash、Synthetic Generator、common-ingress Gate evidence，最后为 P1 Exit Gate Audit。TASK-P1-01=`in_progress`，其余均为 `planned`。
+P1共规划12个Task：phase governance/CI、canonical contracts、Raw Staging、CSV/Excel/reference adapter、Normalization、Data Validation、Order Expansion、Snapshot、Problem hash、Synthetic Generator、common-ingress Gate evidence，最后为P1 Exit Gate Audit。TASK-P1-01=`done`，TASK-P1-02～12仍为`planned`；P1 Milestone继续`active`，不得进入P2。
 
 ## 阶段完成条件
 

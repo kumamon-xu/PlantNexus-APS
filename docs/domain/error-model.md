@@ -48,8 +48,24 @@ Precheck
 
 除非算法证明，Assumption conflict subset 不得称为 minimal conflict set。诊断不得通过删除硬约束或修改输入事实获得“可行”。
 
-## P0 machine envelopes
+## P0 machine contracts
 
-[`error.schema.json`](../../schemas/json/error.schema.json) 固定七类 category、稳定 `code`、message 与可定位 details envelope；[`validation-report.schema.json`](../../schemas/json/validation-report.schema.json) 固定 PASS/FAIL、problem hash 和 violation 的 `constraint_id`、severity、entity IDs、observed、expected rule、message。PASS 必须没有 violation，FAIL 必须至少一个。
+TASK-P0-03 的 [`error.v1`](../../schemas/json/error.schema.json) 与 [`validation-report.v1`](../../schemas/json/validation-report.schema.json) 原 envelope 保持不变。TASK-P0-04 新增：
 
-TASK-P0-03 只发布顶层 skeleton。具体产品 error code registry、状态映射和每个 C-ID 的规则/正反例仍由 TASK-P0-04 建立；Schedule Validator mutation evidence 仍由 TASK-P0-07 建立。
+- [`error.v2`](../../schemas/json/error.v2.schema.json)：只接受 [`error-code-registry.v1`](../../schemas/rules/error-code-registry.v1.yaml) 中的 19 个 code，并验证每个 code 唯一映射到上述七类；
+- [`validation-report.v2`](../../schemas/json/validation-report.v2.schema.json)：增加 `hard_violation_count`，PASS 必须为 0/空 violations，FAIL 至少 1；violation 只接受 C-001～C-011、severity=`HARD` 与 entity/observed/expected/message；
+- `error.v1`/`validation-report.v1` 与 v2 不互换，consumer 必须显式选择版本。
+
+关键 code family：
+
+| Code | Category | 边界 |
+|---|---|---|
+| `UNSUPPORTED_CAPABILITY` | UNSUPPORTED_CAPABILITY | 已登记但当前禁止/延迟的 capability；不得静默忽略 |
+| `INVALID_CAPABILITY_DECLARATION` / `DUPLICATE_CAPABILITY` | DATA_ERROR | 未登记或重复 capability declaration |
+| `INVALID_STATE_TRANSITION` | DATA_ERROR | 不在 versioned transition table 的 pair；不是第八种顶层 category |
+| `SCHEDULE_VALIDATION_FAILED` | VALIDATION_FAILED | C-001～C-011 violation envelope；不得只返回 false |
+| `MODEL_INVALID` / `INFEASIBLE` / `NO_SOLUTION_WITHIN_LIMIT` | 同名 category | 三种结论保持独立，UNKNOWN 只映射 limit，不映射 infeasible |
+
+`ContractViolation` 现使用同一 code registry 并暴露确定的 category，但仍只是 P0 数据合同 precheck，不是 HTTP mapping。
+
+TEST-ERROR-MAPPING-001 已验证 YAML、纯枚举和 error.v2 code/category 一致。HTTP status、API payload、状态持久化、ScheduleValidator evaluator 和 mutation evidence 仍分别由后续 API/P0-07/P2 Task 建立。

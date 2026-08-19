@@ -40,7 +40,12 @@ last_reviewed: 2026-08-19
 | Tick | Solver 离散时间单位；`duration_ticks = ceil(duration_seconds / tick_seconds)` |
 | Provenance | 从数据源、规则、问题、Solver、Scenario 到代码提交的全链路来源信息 |
 | ADR | Architecture Decision Record；记录需要治理的架构或语义决策 |
-| Schema Set | 同一发布批次的机器合同集合；当前 P0 skeleton 为 `1.0.0`，不替代各 `*.v1` contract ID |
+| Schema Set | 同一发布批次的机器合同集合；当前为 `1.1.0`，保留 `1.0.0` artifacts，且不替代各 document/registry version ID |
 | Canonical ID | 跨合同稳定引用的非空、无空白标识；具体来源映射仍由字段权威规则决定 |
+| Constraint Rule Sheet | C-001～C-018 的版本化机器规则元数据；固定输入、公式、正反例、violation 和 Test ID，但不等于 ScheduleValidator 实现 |
+| Capability Registry | 固定 capability 名称与 V1_SUPPORTED/UNSUPPORTED/DEFERRED 状态；V1_SUPPORTED 不表示当前阶段代码已实现 |
+| State Transition Registry | 固定 PlanningRun、ScheduleVersion、ExportJob 的允许 pair、终态与 guard/evidence；JSON Schema 只验证 state 名称 |
 
 术语新增或语义变化必须同步检查 Schema、Constraint、状态机、测试和追踪矩阵。
+
+当前 Schema Set 为 `1.1.0`；`1.0.0` 是 TASK-P0-03 数据合同发布，`1.1.0` additive 增加 rule/state/error/capability contracts，保留既有 v1 artifact。

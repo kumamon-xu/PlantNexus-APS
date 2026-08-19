@@ -46,3 +46,16 @@ last_reviewed: 2026-08-19
 ## 新增高级能力的最小交付
 
 每项能力必须独立提供 ADR、Schema、Capability Contract、Solver 实现、Validator 实现、正反 Fixture、Benchmark 和 Feature Flag。缺少任一部分不得宣称支持。
+
+## P0 executable registry
+
+[`capability-registry.v1`](../../schemas/rules/capability-registry.v1.yaml) 与 [`backend/app/domain/capabilities.py`](../../backend/app/domain/capabilities.py) 双向固定上述 20 个名称和状态。`implementation_claim: false` 是强制字段：`V1_SUPPORTED` 只表示属于 V1 合同范围，不能被解释成当前 P0 已有 Solver/API/业务实现。
+
+`require_v1_capability_contract` 的行为：
+
+- 已登记 `V1_SUPPORTED` declaration 通过合同边界，但不证明 phase-specific implementation ready；
+- `UNSUPPORTED` 或 `DEFERRED` 返回 code/category `UNSUPPORTED_CAPABILITY`；
+- 未登记名称返回 `INVALID_CAPABILITY_DECLARATION` / `DATA_ERROR`；重复声明返回 `DUPLICATE_CAPABILITY` / `DATA_ERROR`；
+- C-012～C-018 分别映射 Secondary Capacity、Sequence-dependent Setup、Material Balance/Competition、Batch、Split/Merge、Buffer、Preemption，不得近似执行。
+
+TEST-CAPABILITY-001 检查 YAML 与纯枚举一致以及 explicit rejection。它不是能力实现测试。

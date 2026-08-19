@@ -9,6 +9,7 @@ from __future__ import annotations
 
 from datetime import datetime
 
+from app.domain.errors import ProductErrorCategory, ProductErrorCode, category_for_error_code
 from app.domain.types import (
     ContractValueError,
     duration_to_ticks,
@@ -23,8 +24,9 @@ from app.snapshots.contracts import PlanningSnapshotDocument
 class ContractViolation(ValueError):
     """One deterministic semantic rejection from the P0 contract skeleton."""
 
-    def __init__(self, code: str, field: str, message: str) -> None:
-        self.code = code
+    def __init__(self, code: ProductErrorCode, field: str, message: str) -> None:
+        self.code = code.value
+        self.category: ProductErrorCategory = category_for_error_code(code)
         self.field = field
         self.message = message
         super().__init__(f"{code} at {field}: {message}")
@@ -34,13 +36,13 @@ def _utc(value: str, field: str) -> datetime:
     try:
         return parse_utc_instant(value)
     except ContractValueError as error:
-        raise ContractViolation("INVALID_TIME", field, str(error)) from error
+        raise ContractViolation(ProductErrorCode.INVALID_TIME, field, str(error)) from error
 
 
 def _unique(values: list[str], field: str) -> set[str]:
     unique = set(values)
     if len(unique) != len(values):
-        raise ContractViolation("DUPLICATE_ID", field, "IDs must be unique")
+        raise ContractViolation(ProductErrorCode.DUPLICATE_ID, field, "IDs must be unique")
     return unique
 
 
@@ -51,19 +53,21 @@ def validate_snapshot_contract(document: PlanningSnapshotDocument) -> None:
     scenario_id = document.get("scenario_id")
     if document["synthetic"] and not scenario_id:
         raise ContractViolation(
-            "MISSING_SCENARIO_ID",
+            ProductErrorCode.MISSING_SCENARIO_ID,
             "scenario_id",
             "synthetic Snapshot must identify its scenario",
         )
     if not document["synthetic"] and scenario_id is not None:
         raise ContractViolation(
-            "SYNTHETIC_REFERENCE_IN_PRODUCTION",
+            ProductErrorCode.SYNTHETIC_REFERENCE_IN_PRODUCTION,
             "scenario_id",
             "Production Snapshot must not reference a synthetic scenario",
         )
     if any(value < 0 for value in document["entity_counts"].values()):
         raise ContractViolation(
-            "INVALID_ENTITY_COUNT", "entity_counts", "counts must be non-negative"
+            ProductErrorCode.INVALID_ENTITY_COUNT,
+            "entity_counts",
+            "counts must be non-negative",
         )
 
 
@@ -73,13 +77,15 @@ def validate_planning_problem_contract(document: PlanningProblemDocument) -> Non
     try:
         tick_seconds = int(require_tick_seconds(document["tick_seconds"]))
     except ContractValueError as error:
-        raise ContractViolation("INVALID_DURATION", "tick_seconds", str(error)) from error
+        raise ContractViolation(
+            ProductErrorCode.INVALID_DURATION, "tick_seconds", str(error)
+        ) from error
 
     horizon_start = _utc(document["horizon_start_utc"], "horizon_start_utc")
     horizon_end = _utc(document["horizon_end_utc"], "horizon_end_utc")
     if horizon_start >= horizon_end:
         raise ContractViolation(
-            "INVALID_TIME_RANGE",
+            ProductErrorCode.INVALID_TIME_RANGE,
             "horizon_end_utc",
             "horizon end must be after horizon start",
         )
@@ -102,7 +108,7 @@ def validate_planning_problem_contract(document: PlanningProblemDocument) -> Non
             remaining_seconds = operation.get("remaining_seconds")
             if actual_start is None or assigned_resource is None or remaining_seconds is None:
                 raise ContractViolation(
-                    "MISSING_RUNNING_FACT",
+                    ProductErrorCode.MISSING_RUNNING_FACT,
                     f"operation_instances[{operation_index}]",
                     "RUNNING operation requires actual start, assigned resource, and remaining seconds",
                 )
@@ -112,7 +118,7 @@ def validate_planning_problem_contract(document: PlanningProblemDocument) -> Non
             )
             if assigned_resource not in resource_ids:
                 raise ContractViolation(
-                    "INVALID_REFERENCE",
+                    ProductErrorCode.INVALID_REFERENCE,
                     f"operation_instances[{operation_index}].assigned_resource_id",
                     "RUNNING assigned resource is absent from resource_ids",
                 )
@@ -120,7 +126,7 @@ def validate_planning_problem_contract(document: PlanningProblemDocument) -> Non
                 require_duration_seconds(remaining_seconds, allow_zero=False)
             except ContractValueError as error:
                 raise ContractViolation(
-                    "INVALID_DURATION",
+                    ProductErrorCode.INVALID_DURATION,
                     f"operation_instances[{operation_index}].remaining_seconds",
                     str(error),
                 ) from error
@@ -130,7 +136,7 @@ def validate_planning_problem_contract(document: PlanningProblemDocument) -> Non
             option_resource_ids.add(option["resource_id"])
             if option["resource_id"] not in resource_ids:
                 raise ContractViolation(
-                    "INVALID_REFERENCE",
+                    ProductErrorCode.INVALID_REFERENCE,
                     f"{option_field}.resource_id",
                     "candidate resource is absent from resource_ids",
                 )
@@ -141,13 +147,13 @@ def validate_planning_problem_contract(document: PlanningProblemDocument) -> Non
                 duration_to_ticks(option["final_duration_seconds"], tick_seconds)
             except ContractValueError as error:
                 raise ContractViolation(
-                    "INVALID_DURATION", option_field, str(error)
+                    ProductErrorCode.INVALID_DURATION, option_field, str(error)
                 ) from error
         if operation["status"] == "RUNNING":
             assigned_resource = operation.get("assigned_resource_id")
             if assigned_resource not in option_resource_ids:
                 raise ContractViolation(
-                    "INVALID_REFERENCE",
+                    ProductErrorCode.INVALID_REFERENCE,
                     f"operation_instances[{operation_index}].assigned_resource_id",
                     "RUNNING assigned resource must be one of the operation resource options",
                 )
@@ -157,13 +163,15 @@ def validate_planning_problem_contract(document: PlanningProblemDocument) -> Non
         for endpoint in ("predecessor_operation_id", "successor_operation_id"):
             if edge[endpoint] not in operation_ids:
                 raise ContractViolation(
-                    "INVALID_REFERENCE",
+                    ProductErrorCode.INVALID_REFERENCE,
                     f"{edge_field}.{endpoint}",
                     "edge endpoint is absent from operation_instances",
                 )
         if edge["predecessor_operation_id"] == edge["successor_operation_id"]:
             raise ContractViolation(
-                "INVALID_REFERENCE", edge_field, "self-referencing precedence edge is invalid"
+                ProductErrorCode.INVALID_REFERENCE,
+                edge_field,
+                "self-referencing precedence edge is invalid",
             )
         maximum = edge.get("max_lag_seconds")
         try:
@@ -172,10 +180,12 @@ def validate_planning_problem_contract(document: PlanningProblemDocument) -> Non
             if maximum is not None:
                 require_duration_seconds(maximum)
         except ContractValueError as error:
-            raise ContractViolation("INVALID_DURATION", edge_field, str(error)) from error
+            raise ContractViolation(
+                ProductErrorCode.INVALID_DURATION, edge_field, str(error)
+            ) from error
         if maximum is not None and maximum < edge["min_lag_seconds"]:
             raise ContractViolation(
-                "INVALID_LAG_RANGE",
+                ProductErrorCode.INVALID_LAG_RANGE,
                 f"{edge_field}.max_lag_seconds",
                 "max lag must be greater than or equal to min lag",
             )
@@ -184,7 +194,7 @@ def validate_planning_problem_contract(document: PlanningProblemDocument) -> Non
         interval_field = f"resource_unavailable_intervals[{interval_index}]"
         if interval["resource_id"] not in resource_ids:
             raise ContractViolation(
-                "INVALID_REFERENCE",
+                ProductErrorCode.INVALID_REFERENCE,
                 f"{interval_field}.resource_id",
                 "unavailable interval resource is absent from resource_ids",
             )
@@ -192,7 +202,7 @@ def validate_planning_problem_contract(document: PlanningProblemDocument) -> Non
         interval_end = _utc(interval["end_utc"], f"{interval_field}.end_utc")
         if interval_start >= interval_end:
             raise ContractViolation(
-                "INVALID_TIME_RANGE",
+                ProductErrorCode.INVALID_TIME_RANGE,
                 f"{interval_field}.end_utc",
                 "interval end must be after interval start",
             )

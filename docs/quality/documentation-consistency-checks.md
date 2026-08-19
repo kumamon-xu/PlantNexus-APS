@@ -83,6 +83,14 @@ Gate 负责；P0-02 不据此声称任何业务能力已实现。
 
 机器治理检查不解析 JSON Schema 语义或 YAML data dictionary。TASK-P0-03 由 `TEST-CONTRACT-001` 使用锁定的 `jsonschema` Draft 2020-12 validator、PyYAML、Ruff 与 Pyright 补充这层证据；后续 Schema Task 必须同时运行治理检查和对应 contract tests。
 
+TASK-P0-04 增加独立的规则合同入口：
+
+```text
+uv run python -m app.planning.validation.rule_sheet --report build/validation/TASK-P0-04-rule-contracts.json
+```
+
+该命令校验 C-001～C-018 rule sheet、20 capability、七类/19 code、三套 state/42 transitions、三份新增 JSON Schema、schema set version 和 validation package 的 Solver import boundary。报告为 `rule-contract-report.v1`，只证明 metadata/registry/schema 一致，不判断 candidate schedule、业务 guard、持久化或 Solver 正确性。
+
 ## Override
 
 不允许用自由文本 CI skip 绕过。确需例外时必须在 Task Card 记录理由，提交 ADR 或明确批准记录，并仍保留检查报告。正确性、状态语义、数据隔离和发布门不得豁免。

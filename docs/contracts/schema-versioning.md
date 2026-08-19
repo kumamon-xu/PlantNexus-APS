@@ -39,3 +39,14 @@ Schema version、rule version、generator version 和 code commit 是不同维�
 - Unknown/default policy：已定义根对象 `additionalProperties=false`，Schema 不含 `default`。Import 的 `records` 是明确标注的 P1 扩展点，不等于批准任何生产字段。
 
 `*.v1` 的字段或语义后续变化必须分类为 additive/breaking；即使 schema set 版本提升，也不得无痕覆盖本目录下已经发布的 v1 artifact。
+
+## TASK-P0-04 additive set release
+
+- Schema set：`1.1.0`，同步写入 `pyproject.toml`、`app.SCHEMA_VERSION` 与 data dictionary；
+- 保留 `error.v1`、`validation-report.v1` 原文件和 URN；新增 `error.v2`、`validation-report.v2` 与 `state-transition.v1`；
+- 新增四份 `*.v1` YAML rule/registry contract。它们的版本独立于 JSON document version；
+- Set compatibility：添加新合同且保留全部 `1.0.0` artifact，属于 set-level additive；单个 v1/v2 document 仍不互换；
+- Migration：没有数据库、持久化 Error/Validation consumer 或历史 run artifact，因此不执行数据迁移。v2 consumer 必须显式拒绝 v1；未来只能用 adapter/new artifact 迁移，不能 alias 或覆盖 v1；
+- Validation：Draft 2020-12 `jsonschema==4.25.1`、PyYAML `6.0.2`、TEST-CONTRACT-001 与 TASK-P0-04 四项 contract tests；规则表 CLI 只验证完整性/一致性。
+
+本次不修改 PlanningProblem、Snapshot、Import 或 KPI document version，不影响其 hash/serializer 语义。没有正式 sample/Fixture 可迁移；P0-04 tests 使用内联纯合同实例，不把它们声明为 Production 或 Scenario data。

@@ -65,7 +65,10 @@ Solver 排的是 `OperationInstance`，不是 `RoutingOperation`。每个未完�
 
 - `backend/app/domain/types.py` 提供 canonical ID、严格 UTC、integer duration 和 tick ceiling 的纯标准库值语义；
 - `backend/app/domain/contracts.py` 提供 Import/KPI/Error/ValidationReport 的 JSON-compatible `TypedDict` skeleton；
+- `backend/app/domain/errors.py` 固定七类 product category、19 个当前 code 及唯一映射；
+- `backend/app/domain/capabilities.py` 固定 20 个 capability declaration 与显式拒绝 precheck；
+- `backend/app/domain/state_machines/contracts.py` 固定三套 state enum、42 个允许 pair 与终态；
 - `backend/app/snapshots/contracts.py` 与 `backend/app/planning/problem/contracts.py` 分别承载 Snapshot/Problem 顶层类型；
 - `backend/app/domain/validation.py` 只拒绝 skeleton 内的非法引用、UTC、interval、duration 和 lag range。
 
-这些类型不依赖 ORM、FastAPI、Celery、Pydantic 或 OR-Tools，也不展开订单、不构建 Snapshot/Problem、不计算 hash、不执行排程。后续业务字段必须从权威合同进入并按 Schema versioning 升版，不能把 sample 值当默认值。
+`error.v1`/`validation-report.v1` pure types 保留；新增显式 V2 types，不通过 alias 静默升级。规则/状态/capability 类型不依赖 ORM、FastAPI、Celery、Pydantic 或 OR-Tools，也不展开订单、不构建 Snapshot/Problem、不计算 hash、不执行排程、不评估候选 schedule 或执行业务状态动作。后续业务字段必须从权威合同进入并按 Schema versioning 升版，不能把 rule example 当默认值。

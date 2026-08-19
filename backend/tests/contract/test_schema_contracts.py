@@ -40,6 +40,9 @@ SCHEMA_FILES = (
     "kpi.schema.json",
     "error.schema.json",
     "validation-report.schema.json",
+    "error.v2.schema.json",
+    "validation-report.v2.schema.json",
+    "state-transition.schema.json",
 )
 
 
@@ -114,7 +117,7 @@ def test_schemas_do_not_encode_implicit_defaults() -> None:
 
 def test_published_versions_are_consistent() -> None:
     pyproject = tomllib.loads((ROOT / "pyproject.toml").read_text(encoding="utf-8"))
-    assert SCHEMA_VERSION == "1.0.0"
+    assert SCHEMA_VERSION == "1.1.0"
     assert pyproject["tool"]["plantnexus-aps"]["versions"]["schema"] == SCHEMA_VERSION
 
 
@@ -301,7 +304,7 @@ def test_error_validation_and_kpi_envelopes_validate() -> None:
 
 def test_data_dictionary_covers_every_published_schema() -> None:
     dictionary = yaml.safe_load((ROOT / "schemas" / "data_dictionary.yaml").read_text("utf-8"))
-    assert dictionary["schema_set_version"] == "1.0.0"
+    assert dictionary["schema_set_version"] == "1.1.0"
     assert set(dictionary["schemas"]) == {
         "import-package.v1",
         "planning-snapshot.v1",
@@ -309,4 +312,11 @@ def test_data_dictionary_covers_every_published_schema() -> None:
         "kpi.v1",
         "error.v1",
         "validation-report.v1",
+        "error.v2",
+        "validation-report.v2",
+        "state-transition.v1",
+        "constraint-rule-sheet.v1",
+        "capability-registry.v1",
+        "error-code-registry.v1",
+        "state-machines.v1",
     }

@@ -1,0 +1,103 @@
+capability_registry_version: capability-registry.v1
+implementation_claim: false
+capabilities:
+  - capability: SINGLE_FACTORY_MULTI_WORKSHOP
+    status: V1_SUPPORTED
+    phase: P1-P3
+    constraint_ids: [C-009]
+    precheck_behavior: ALLOW_CONTRACT_DECLARATION
+  - capability: DAG_ROUTING
+    status: V1_SUPPORTED
+    phase: P1-P2
+    constraint_ids: [C-002]
+    precheck_behavior: ALLOW_CONTRACT_DECLARATION
+  - capability: ALTERNATIVE_RESOURCE
+    status: V1_SUPPORTED
+    phase: P2
+    constraint_ids: [C-003, C-010]
+    precheck_behavior: ALLOW_CONTRACT_DECLARATION
+  - capability: MACHINE_CALENDAR
+    status: V1_SUPPORTED
+    phase: P2
+    constraint_ids: [C-005]
+    precheck_behavior: ALLOW_CONTRACT_DECLARATION
+  - capability: RELEASE_AND_MATERIAL_GATE
+    status: V1_SUPPORTED
+    phase: P1-P2
+    constraint_ids: [C-006]
+    precheck_behavior: ALLOW_CONTRACT_DECLARATION
+  - capability: RUNNING_OPERATION
+    status: V1_SUPPORTED
+    phase: P2
+    constraint_ids: [C-007]
+    precheck_behavior: ALLOW_CONTRACT_DECLARATION
+  - capability: HARD_SOFT_LOCK
+    status: V1_SUPPORTED
+    phase: P2-P4
+    constraint_ids: [C-008]
+    precheck_behavior: ALLOW_CONTRACT_DECLARATION
+  - capability: APPROVAL_AND_PUBLICATION
+    status: V1_SUPPORTED
+    phase: P3
+    constraint_ids: []
+    precheck_behavior: ALLOW_CONTRACT_DECLARATION
+  - capability: DYNAMIC_REPLANNING
+    status: V1_SUPPORTED
+    phase: P4
+    constraint_ids: []
+    precheck_behavior: ALLOW_CONTRACT_DECLARATION
+  - capability: SECONDARY_CAPACITY
+    status: UNSUPPORTED
+    phase: P5_CANDIDATE
+    constraint_ids: [C-012]
+    precheck_behavior: UNSUPPORTED_CAPABILITY
+  - capability: SEQUENCE_DEPENDENT_SETUP
+    status: UNSUPPORTED
+    phase: P5_CANDIDATE
+    constraint_ids: [C-013]
+    precheck_behavior: UNSUPPORTED_CAPABILITY
+  - capability: BATCH_PROCESSING
+    status: UNSUPPORTED
+    phase: P5_CANDIDATE
+    constraint_ids: [C-015]
+    precheck_behavior: UNSUPPORTED_CAPABILITY
+  - capability: SPLIT_MERGE
+    status: UNSUPPORTED
+    phase: P5_CANDIDATE
+    constraint_ids: [C-016]
+    precheck_behavior: UNSUPPORTED_CAPABILITY
+  - capability: MATERIAL_COMPETITION
+    status: UNSUPPORTED
+    phase: P5_CANDIDATE
+    constraint_ids: [C-014]
+    precheck_behavior: UNSUPPORTED_CAPABILITY
+  - capability: PREEMPTIVE_OPERATION
+    status: UNSUPPORTED
+    phase: P5_CANDIDATE
+    constraint_ids: [C-018]
+    precheck_behavior: UNSUPPORTED_CAPABILITY
+  - capability: BUFFER_CAPACITY
+    status: UNSUPPORTED
+    phase: P5_CANDIDATE
+    constraint_ids: [C-017]
+    precheck_behavior: UNSUPPORTED_CAPABILITY
+  - capability: ALTERNATIVE_MATERIAL
+    status: UNSUPPORTED
+    phase: FUTURE
+    constraint_ids: []
+    precheck_behavior: UNSUPPORTED_CAPABILITY
+  - capability: MULTI_FACTORY
+    status: UNSUPPORTED
+    phase: FUTURE
+    constraint_ids: []
+    precheck_behavior: UNSUPPORTED_CAPABILITY
+  - capability: AI_DURATION_PREDICTION
+    status: DEFERRED
+    phase: P6
+    constraint_ids: []
+    precheck_behavior: UNSUPPORTED_CAPABILITY
+  - capability: REALITY_CALIBRATION
+    status: DEFERRED
+    phase: P7
+    constraint_ids: []
+    precheck_behavior: UNSUPPORTED_CAPABILITY

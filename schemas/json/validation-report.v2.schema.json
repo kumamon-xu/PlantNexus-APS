@@ -1,0 +1,85 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "urn:plantnexus:aps:schema:validation-report:v2",
+  "title": "Schedule ValidationReport v2",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "validation_report_version",
+    "problem_hash",
+    "status",
+    "hard_violation_count",
+    "violations"
+  ],
+  "properties": {
+    "validation_report_version": {"const": "validation-report.v2"},
+    "problem_hash": {"type": "string", "minLength": 1},
+    "status": {"enum": ["PASS", "FAIL"]},
+    "hard_violation_count": {"type": "integer", "minimum": 0},
+    "violations": {
+      "type": "array",
+      "items": {"$ref": "#/$defs/violation"}
+    }
+  },
+  "allOf": [
+    {
+      "if": {
+        "properties": {"status": {"const": "PASS"}},
+        "required": ["status"]
+      },
+      "then": {
+        "properties": {
+          "hard_violation_count": {"const": 0},
+          "violations": {"maxItems": 0}
+        }
+      },
+      "else": {
+        "properties": {
+          "hard_violation_count": {"minimum": 1},
+          "violations": {"minItems": 1}
+        }
+      }
+    }
+  ],
+  "$defs": {
+    "violation": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "constraint_id",
+        "severity",
+        "entity_ids",
+        "observed_value",
+        "expected_rule",
+        "message"
+      ],
+      "properties": {
+        "constraint_id": {
+          "enum": [
+            "C-001",
+            "C-002",
+            "C-003",
+            "C-004",
+            "C-005",
+            "C-006",
+            "C-007",
+            "C-008",
+            "C-009",
+            "C-010",
+            "C-011"
+          ]
+        },
+        "severity": {"const": "HARD"},
+        "entity_ids": {
+          "type": "array",
+          "minItems": 1,
+          "uniqueItems": true,
+          "items": {"type": "string", "minLength": 1}
+        },
+        "observed_value": true,
+        "expected_rule": {"type": "string", "minLength": 1},
+        "message": {"type": "string", "minLength": 1}
+      }
+    }
+  }
+}

@@ -30,3 +30,9 @@ Mutation Test 从一个已知合法计划出发，单次或受控组合地注入
 每个断言至少验证 `validation_passed=false`、正确 `constraint_id`、相关 entity IDs、observed 和 expected。只返回通用 `VALIDATION_FAILED` 而无细节不算通过。
 
 Mutation 生成逻辑不得复用 Validator 的判断公式，以免测试与实现同源。
+
+## P0-04 rule baseline
+
+P0-04 已发布 `constraint-rule-sheet.v1` 与 `validation-report.v2`，固定每个 active C-ID 的 input/formula/example/violation/Test ID，并由 TEST-RULE-SHEET-001 验证元数据完整性。该测试不注入 schedule mutation，不把规则表自检误称为 Validator PASS。
+
+TASK-P0-07 必须从 SIM-MINIMAL-001 Golden Schedule 独立构造 mutation，至少覆盖本表，并让真实 rule evaluator 输出 v2 violation details。Mutation 生成器不得读取 `positive_example`/`negative_example` 后调用同一判断函数；C-012～C-018 属于 capability precheck rejection，不伪装成 schedule violation。

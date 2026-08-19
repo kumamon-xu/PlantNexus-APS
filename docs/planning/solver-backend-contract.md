@@ -44,3 +44,9 @@ Backend/OR-Tools 升级必须经过 ADR、dependency lock、Golden/Scenario repl
 ## P0-03 boundary
 
 `planning-problem.v1` JSON Schema 与 `PlanningProblemDocument` pure type 已形成，满足可序列化、Solver-neutral、无 OR-Tools 类型的输入骨架。Problem builder、PlanningPolicy、SolveLimits、PlanningSolution、Strategy 和任何 Backend 均未实现；没有 Solver status、model size 或 performance artifact。P2 首次实现必须在固定 Scenario Set 上回放本合同并补齐 benchmark evidence。
+
+## P0-04 rule/error boundary
+
+`constraint-rule-sheet.v1` 将 C-001～C-011 validator formula 与 C-012～C-018 rejection metadata 固定下来，但没有新增 Backend、constraint builder 或 solver dependency。`UNSUPPORTED_CAPABILITY` precheck 在 model construction 前拒绝明确未支持/延迟声明；它不得由 Backend 静默忽略。
+
+PlanningRun 的 MODEL_INVALID/INFEASIBLE/NO_SOLUTION_WITHIN_LIMIT 与 error.v2 映射保持原义；P0 没有 Solver status artifact。Rule-sheet completeness module 不导入 `planning.backends`/OR-Tools，也不是 ADR-0005 ScheduleValidator evaluator。

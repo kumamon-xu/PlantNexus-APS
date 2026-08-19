@@ -1,0 +1,67 @@
+error_registry_version: error-code-registry.v1
+categories:
+  - DATA_ERROR
+  - UNSUPPORTED_CAPABILITY
+  - MODEL_INVALID
+  - INFEASIBLE
+  - NO_SOLUTION_WITHIN_LIMIT
+  - VALIDATION_FAILED
+  - SYSTEM_ERROR
+codes:
+  - code: INVALID_TIME
+    category: DATA_ERROR
+    meaning: timestamp is not a valid explicit UTC contract value
+  - code: DUPLICATE_ID
+    category: DATA_ERROR
+    meaning: an identifier required to be unique appears more than once
+  - code: MISSING_SCENARIO_ID
+    category: DATA_ERROR
+    meaning: synthetic data omits its scenario provenance identifier
+  - code: SYNTHETIC_REFERENCE_IN_PRODUCTION
+    category: DATA_ERROR
+    meaning: a production contract carries a synthetic scenario reference
+  - code: INVALID_ENTITY_COUNT
+    category: DATA_ERROR
+    meaning: an entity count is outside the non-negative contract domain
+  - code: INVALID_DURATION
+    category: DATA_ERROR
+    meaning: a duration or tick value violates integer/positivity rules
+  - code: INVALID_TIME_RANGE
+    category: DATA_ERROR
+    meaning: an interval or horizon does not have a strictly increasing range
+  - code: MISSING_RUNNING_FACT
+    category: DATA_ERROR
+    meaning: a running operation lacks required execution facts
+  - code: INVALID_REFERENCE
+    category: DATA_ERROR
+    meaning: an identifier reference cannot be resolved in its contract scope
+  - code: INVALID_LAG_RANGE
+    category: DATA_ERROR
+    meaning: a declared maximum lag is smaller than its minimum lag
+  - code: INVALID_CAPABILITY_DECLARATION
+    category: DATA_ERROR
+    meaning: a required capability name is absent from the versioned registry
+  - code: DUPLICATE_CAPABILITY
+    category: DATA_ERROR
+    meaning: a required capability is declared more than once
+  - code: INVALID_STATE_TRANSITION
+    category: DATA_ERROR
+    meaning: a requested state pair is absent from the versioned transition table
+  - code: UNSUPPORTED_CAPABILITY
+    category: UNSUPPORTED_CAPABILITY
+    meaning: a registered capability is explicitly unavailable for current V1 execution
+  - code: MODEL_INVALID
+    category: MODEL_INVALID
+    meaning: the planning model or model contract is invalid
+  - code: INFEASIBLE
+    category: INFEASIBLE
+    meaning: the current snapshot and model have been proven infeasible
+  - code: NO_SOLUTION_WITHIN_LIMIT
+    category: NO_SOLUTION_WITHIN_LIMIT
+    meaning: no certified conclusion was obtained within configured limits
+  - code: SCHEDULE_VALIDATION_FAILED
+    category: VALIDATION_FAILED
+    meaning: a candidate schedule violates one or more C-001 through C-011 rules
+  - code: SYSTEM_ERROR
+    category: SYSTEM_ERROR
+    meaning: a non-business infrastructure or execution failure occurred

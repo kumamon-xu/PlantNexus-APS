@@ -115,7 +115,7 @@ registry_version: 1.0.0
 | [tasks/P0/TASK-P0-01-documentation-and-repository-governance.md](../tasks/P0/TASK-P0-01-documentation-and-repository-governance.md) | TASK-P0-01 | done | Documentation and Repository Governance |
 | [tasks/P0/TASK-P0-02-requirements-and-traceability.md](../tasks/P0/TASK-P0-02-requirements-and-traceability.md) | TASK-P0-02 | done | Requirements and Traceability |
 | [tasks/P0/TASK-P0-03-domain-and-schema-skeleton.md](../tasks/P0/TASK-P0-03-domain-and-schema-skeleton.md) | TASK-P0-03 | done | Domain and Schema Skeleton |
-| [tasks/P0/TASK-P0-04-constraints-states-errors-capabilities.md](../tasks/P0/TASK-P0-04-constraints-states-errors-capabilities.md) | TASK-P0-04 | planned | Constraints States Errors and Capabilities |
+| [tasks/P0/TASK-P0-04-constraints-states-errors-capabilities.md](../tasks/P0/TASK-P0-04-constraints-states-errors-capabilities.md) | TASK-P0-04 | done | Constraints States Errors and Capabilities |
 | [tasks/P0/TASK-P0-05-simulation-contracts-and-skeleton.md](../tasks/P0/TASK-P0-05-simulation-contracts-and-skeleton.md) | TASK-P0-05 | planned | Simulation Contracts and Skeleton |
 | [tasks/P0/TASK-P0-06-minimal-scenario-and-golden-schedule.md](../tasks/P0/TASK-P0-06-minimal-scenario-and-golden-schedule.md) | TASK-P0-06 | planned | SIM-MINIMAL-001 and Golden Schedule |
 | [tasks/P0/TASK-P0-07-invalid-fixtures-and-validator-rules.md](../tasks/P0/TASK-P0-07-invalid-fixtures-and-validator-rules.md) | TASK-P0-07 | planned | Invalid Fixtures and Validator Rules |

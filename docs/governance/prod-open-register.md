@@ -52,3 +52,5 @@ Migration/replay: required with path | none with reason
 不得以会议印象、Coding Agent 推断或 `SIM_ASSUMPTION` 作为关闭证据。`registry_version` 在字段结构、状态机或关闭证据语义变化时递增；关闭单个条目不改变格式版本。
 
 TASK-P0-03 review：Schema/data dictionary 只引用 OPEN-001/002/003/004/007/013/015 等既有问题来标明未知生产事实；没有提供外部权威、closure record 或生产默认值。OPEN-001～015 全部继续为 `OPEN`，registry version 不变。
+
+TASK-P0-04 review：rule sheet 显式引用 OPEN-004（日历）、OPEN-005（lock/freeze）、OPEN-007（material authority）、OPEN-009（transport）并在 state guard 中保留 OPEN-010（审批角色）；OPEN-006/008 只作为相邻业务政策审查，未写入权重或 lot 默认值。没有权威来源、closure record、生产值或状态变化，OPEN-001～015 全部继续为 `OPEN`，registry format version 不变。

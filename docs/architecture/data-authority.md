@@ -37,3 +37,9 @@ V1 接受上游提供的 `material_ready_at`，并执行 `operation.start >= mat
 ## P0 Schema boundary
 
 `import-package.v1` 只建立 source version、synthetic 标记和 records envelope，记录体保持明确的 P1 扩展点；它没有批准 ERP/MES/WMS/CAM 字段映射。`planning-snapshot.v1` 与 `planning-problem.v1` 只编码总规已经决定的字段和单位。OPEN-002/007/013/015 全部保持 OPEN，sample 中的 source/scenario 值不能成为 Production authority。
+
+## P0 rule/state authority review
+
+`constraint-rule-sheet.v1` 只规定如何验证已经进入正式合同的事实，不成为业务数据权威。C-006 仍消费上游 `material_ready_at`，C-007 仍服从 MES execution facts，C-008 lock/approval actor 与 C-009 transport 来源分别受 OPEN-005/010/009 约束。`capability-registry.v1` 的 V1_SUPPORTED 也不是资源 capability 主数据来源。
+
+规则 example、state guard/evidence 文本和 synthetic expected rejection 都不能关闭 PROD_OPEN、填充 Production 字段或替代 ERP/MES/WMS/CAM/人工审批权威。

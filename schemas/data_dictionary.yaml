@@ -1,5 +1,5 @@
-schema_set_version: 1.0.0
-status: p0_skeleton
+schema_set_version: 1.1.0
+status: p0_rule_contracts
 spec_version: 0.3.0
 rules:
   unknown_root_fields: reject
@@ -60,3 +60,31 @@ schemas:
   validation-report.v1:
     path: schemas/json/validation-report.schema.json
     p0_boundary: top-level and violation envelope only; C-ID rule sheet belongs to TASK-P0-04 and mutation evidence to TASK-P0-07
+  error.v2:
+    path: schemas/json/error.v2.schema.json
+    compatibility: non-interchangeable document version; error.v1 remains unchanged and separately valid
+    codes: schemas/rules/error-code-registry.v1.yaml
+  validation-report.v2:
+    path: schemas/json/validation-report.v2.schema.json
+    compatibility: non-interchangeable document version; validation-report.v1 remains unchanged and separately valid
+    hard_constraints: C-001..C-011
+    rule_sheet: schemas/rules/constraint-rule-sheet.v1.yaml
+    mutation_evidence: planned for TASK-P0-07
+  state-transition.v1:
+    path: schemas/json/state-transition.schema.json
+    transition_authority: schemas/rules/state-machines.v1.yaml
+    p0_boundary: transition authorization only; persistence and business actions are not implemented
+  constraint-rule-sheet.v1:
+    path: schemas/rules/constraint-rule-sheet.v1.yaml
+    active_constraints: C-001..C-011
+    deferred_constraints: C-012..C-018
+    p0_boundary: metadata completeness only; candidate schedule evaluation belongs to TASK-P0-07/P2
+  capability-registry.v1:
+    path: schemas/rules/capability-registry.v1.yaml
+    p0_boundary: V1_SUPPORTED means contract scope, not current implementation evidence
+  error-code-registry.v1:
+    path: schemas/rules/error-code-registry.v1.yaml
+    categories: [DATA_ERROR, UNSUPPORTED_CAPABILITY, MODEL_INVALID, INFEASIBLE, NO_SOLUTION_WITHIN_LIMIT, VALIDATION_FAILED, SYSTEM_ERROR]
+  state-machines.v1:
+    path: schemas/rules/state-machines.v1.yaml
+    machines: [PLANNING_RUN, SCHEDULE_VERSION, EXPORT_JOB]

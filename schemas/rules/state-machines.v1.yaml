@@ -1,0 +1,81 @@
+state_registry_version: state-machines.v1
+invalid_transition_error_code: INVALID_STATE_TRANSITION
+machines:
+  - machine: PLANNING_RUN
+    states:
+      - CREATED
+      - INGESTING
+      - VALIDATING
+      - SNAPSHOTTED
+      - BUILDING
+      - SOLVING
+      - SOLVED
+      - VERIFYING
+      - COMPLETED
+      - DATA_REJECTED
+      - MODEL_INVALID
+      - INFEASIBLE
+      - NO_SOLUTION_WITHIN_LIMIT
+      - VALIDATION_FAILED
+      - CANCELLED
+      - FAILED
+    terminal_states:
+      - COMPLETED
+      - DATA_REJECTED
+      - MODEL_INVALID
+      - INFEASIBLE
+      - NO_SOLUTION_WITHIN_LIMIT
+      - VALIDATION_FAILED
+      - CANCELLED
+      - FAILED
+    transitions:
+      - {from: CREATED, to: INGESTING, guard: import request accepted, evidence: planning run audit event}
+      - {from: CREATED, to: CANCELLED, guard: cancellation accepted before ingestion, evidence: actor/reason/audit}
+      - {from: CREATED, to: FAILED, guard: system execution failed, evidence: structured error/attempt/trace}
+      - {from: INGESTING, to: VALIDATING, guard: ingestion completed, evidence: import artifact reference}
+      - {from: INGESTING, to: DATA_REJECTED, guard: input cannot be ingested, evidence: import quality report}
+      - {from: INGESTING, to: CANCELLED, guard: cancellation accepted, evidence: actor/reason/audit}
+      - {from: INGESTING, to: FAILED, guard: system execution failed, evidence: structured error/attempt/trace}
+      - {from: VALIDATING, to: SNAPSHOTTED, guard: input validation passed and snapshot committed, evidence: snapshot id/hash reference}
+      - {from: VALIDATING, to: DATA_REJECTED, guard: input validation failed, evidence: import quality report}
+      - {from: VALIDATING, to: CANCELLED, guard: cancellation accepted, evidence: actor/reason/audit}
+      - {from: VALIDATING, to: FAILED, guard: system execution failed, evidence: structured error/attempt/trace}
+      - {from: SNAPSHOTTED, to: BUILDING, guard: problem build started, evidence: snapshot and rule versions}
+      - {from: SNAPSHOTTED, to: CANCELLED, guard: cancellation accepted, evidence: actor/reason/audit}
+      - {from: SNAPSHOTTED, to: FAILED, guard: system execution failed, evidence: structured error/attempt/trace}
+      - {from: BUILDING, to: SOLVING, guard: model contract built successfully, evidence: problem id/hash and builder version}
+      - {from: BUILDING, to: MODEL_INVALID, guard: problem or model contract invalid, evidence: model diagnostics and versions}
+      - {from: BUILDING, to: CANCELLED, guard: cancellation accepted, evidence: actor/reason/audit}
+      - {from: BUILDING, to: FAILED, guard: system execution failed, evidence: structured error/attempt/trace}
+      - {from: SOLVING, to: SOLVED, guard: solver returned OPTIMAL or FEASIBLE candidate, evidence: solver report and exact version}
+      - {from: SOLVING, to: MODEL_INVALID, guard: solver certified MODEL_INVALID, evidence: model diagnostics and versions}
+      - {from: SOLVING, to: INFEASIBLE, guard: solver certified INFEASIBLE, evidence: solver report and diagnostics}
+      - {from: SOLVING, to: NO_SOLUTION_WITHIN_LIMIT, guard: solver returned UNKNOWN within limits, evidence: limits/status/elapsed time}
+      - {from: SOLVING, to: CANCELLED, guard: cancellation accepted, evidence: actor/reason/audit}
+      - {from: SOLVING, to: FAILED, guard: system execution failed, evidence: structured error/attempt/trace}
+      - {from: SOLVED, to: VERIFYING, guard: candidate handed to independent validator, evidence: candidate/problem references}
+      - {from: SOLVED, to: CANCELLED, guard: cancellation accepted before verification completion, evidence: actor/reason/audit}
+      - {from: SOLVED, to: FAILED, guard: system execution failed, evidence: structured error/attempt/trace}
+      - {from: VERIFYING, to: COMPLETED, guard: validation-report.v2 PASS with hard_violation_count zero, evidence: validation report reference}
+      - {from: VERIFYING, to: VALIDATION_FAILED, guard: validation-report.v2 FAIL, evidence: independent validation report}
+      - {from: VERIFYING, to: CANCELLED, guard: cancellation accepted, evidence: actor/reason/audit}
+      - {from: VERIFYING, to: FAILED, guard: system execution failed, evidence: structured error/attempt/trace}
+  - machine: SCHEDULE_VERSION
+    states: [DRAFT, READY_FOR_REVIEW, APPROVED, PUBLISHED, SUPERSEDED, REJECTED]
+    terminal_states: [SUPERSEDED, REJECTED]
+    transitions:
+      - {from: DRAFT, to: READY_FOR_REVIEW, guard: independent validation PASS and provenance complete, evidence: validation report and provenance references}
+      - {from: READY_FOR_REVIEW, to: APPROVED, guard: authorized human approval, evidence: actor/decision/audit}
+      - {from: READY_FOR_REVIEW, to: REJECTED, guard: human rejection with reason, evidence: actor/reason/audit}
+      - {from: APPROVED, to: PUBLISHED, guard: idempotent production-safe publish succeeds, evidence: publish audit and target reference}
+      - {from: PUBLISHED, to: SUPERSEDED, guard: a new version becomes the current production reference, evidence: replacement version and audit}
+  - machine: EXPORT_JOB
+    states: [CREATED, EXPORTING, EXPORTED, EXPORT_FAILED, CANCELLED]
+    terminal_states: [EXPORTED, CANCELLED]
+    transitions:
+      - {from: CREATED, to: EXPORTING, guard: idempotency key accepted and attempt starts, evidence: attempt/start/audit}
+      - {from: CREATED, to: CANCELLED, guard: cancellation accepted before export starts, evidence: actor/reason/audit}
+      - {from: EXPORTING, to: EXPORTED, guard: all required artifacts and manifest committed, evidence: artifact manifest and storage commit}
+      - {from: EXPORTING, to: EXPORT_FAILED, guard: export attempt fails without exposing partial success, evidence: structured error and attempt}
+      - {from: EXPORTING, to: CANCELLED, guard: cancellation accepted without partial success exposure, evidence: actor/reason/audit}
+      - {from: EXPORT_FAILED, to: EXPORTING, guard: explicit retry increments attempt under the same idempotency contract, evidence: retry audit and new attempt}

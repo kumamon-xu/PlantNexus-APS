@@ -1,0 +1,311 @@
+rule_sheet_version: constraint-rule-sheet.v1
+spec_version: 0.3.0
+validation_report_contract: validation-report.v2
+active_rules:
+  - constraint_id: C-001
+    title: 必排完整性
+    status: V1_REQUIRED
+    contract_status: P0_PROBLEM_FIELDS_PLUS_P2_CANDIDATE
+    inputs:
+      - problem.operation_instances[].operation_id
+      - problem.operation_instances[].status
+      - candidate.assignments[].operation_id
+      - candidate.assignments[].resource_id
+      - candidate.assignments[].start_tick
+      - candidate.assignments[].end_tick
+    formula: "for each unfinished operation, assignment_count(operation_id) == 1 and exactly one resource/interval is present"
+    positive_example: "each NOT_STARTED or RUNNING operation appears once with one resource and one interval"
+    negative_example: "an unfinished operation is missing or appears more than once"
+    violation:
+      error_category: VALIDATION_FAILED
+      error_code: SCHEDULE_VALIDATION_FAILED
+      severity: HARD
+      observed_value: "assignment count and conflicting assignment identifiers"
+      expected_rule: "exactly one assignment per unfinished operation"
+      message: "operation assignment completeness violated"
+    test_ids: [TEST-RULE-SHEET-001, TEST-VALIDATOR-MUTATION]
+    open_questions: []
+  - constraint_id: C-002
+    title: 工艺时间关系
+    status: V1_REQUIRED
+    contract_status: P0_PROBLEM_FIELDS_PLUS_P2_CANDIDATE
+    inputs:
+      - problem.precedence_edges[].predecessor_operation_id
+      - problem.precedence_edges[].successor_operation_id
+      - problem.precedence_edges[].min_lag_seconds
+      - problem.precedence_edges[].max_lag_seconds
+      - problem.tick_seconds
+      - candidate.assignments[].start_tick
+      - candidate.assignments[].end_tick
+    formula: "lag_seconds_observed = (succ.start_tick - pred.end_tick) * tick_seconds; lag_seconds_observed >= min_lag_seconds and, when max_lag exists, lag_seconds_observed <= max_lag_seconds"
+    positive_example: "successor starts inside the inclusive min/max lag window"
+    negative_example: "successor starts before min lag or after a declared max lag"
+    violation:
+      error_category: VALIDATION_FAILED
+      error_code: SCHEDULE_VALIDATION_FAILED
+      severity: HARD
+      observed_value: "predecessor end, successor start, and computed lag ticks"
+      expected_rule: "successor start remains inside the declared lag window"
+      message: "precedence lag violated"
+    test_ids: [TEST-RULE-SHEET-001, TEST-MAX-LAG]
+    open_questions: []
+  - constraint_id: C-003
+    title: 候选设备唯一选择
+    status: V1_REQUIRED
+    contract_status: P0_PROBLEM_FIELDS_PLUS_P2_CANDIDATE
+    inputs:
+      - problem.operation_instances[].resource_options[].resource_id
+      - candidate.assignments[].operation_id
+      - candidate.assignments[].resource_id
+    formula: "selected_resource_count == 1 and selected_resource_id is in the operation resource option set"
+    positive_example: "operation selects exactly one listed candidate resource"
+    negative_example: "operation selects no resource, multiple resources, or an unlisted resource"
+    violation:
+      error_category: VALIDATION_FAILED
+      error_code: SCHEDULE_VALIDATION_FAILED
+      severity: HARD
+      observed_value: "selected resource identifiers"
+      expected_rule: "exactly one listed candidate resource"
+      message: "candidate resource selection violated"
+    test_ids: [TEST-RULE-SHEET-001, TEST-INF-NO-RESOURCE]
+    open_questions: []
+  - constraint_id: C-004
+    title: 单机互斥
+    status: V1_REQUIRED
+    contract_status: P0_PROBLEM_FIELDS_PLUS_P2_CANDIDATE
+    inputs:
+      - candidate.assignments[].resource_id
+      - candidate.assignments[].start_tick
+      - candidate.assignments[].end_tick
+    formula: "for capacity-1 resources, every pair of assigned half-open intervals [start_tick,end_tick) is non-overlapping"
+    positive_example: "two assignments on one resource meet end-to-start without overlap"
+    negative_example: "two positive-duration assignments overlap on the same resource"
+    violation:
+      error_category: VALIDATION_FAILED
+      error_code: SCHEDULE_VALIDATION_FAILED
+      severity: HARD
+      observed_value: "resource and overlapping interval pair"
+      expected_rule: "capacity-1 resource intervals do not overlap"
+      message: "resource overlap detected"
+    test_ids: [TEST-RULE-SHEET-001, TEST-VALIDATOR-MUTATION]
+    open_questions: []
+  - constraint_id: C-005
+    title: 设备日历
+    status: V1_REQUIRED
+    contract_status: P0_PROBLEM_FIELDS_PLUS_P2_CANDIDATE
+    inputs:
+      - problem.resource_unavailable_intervals[].resource_id
+      - problem.resource_unavailable_intervals[].start_utc
+      - problem.resource_unavailable_intervals[].end_utc
+      - problem.horizon_start_utc
+      - problem.tick_seconds
+      - candidate.assignments[].resource_id
+      - candidate.assignments[].start_tick
+      - candidate.assignments[].end_tick
+    formula: "restore candidate [start_utc,end_utc) from horizon_start and ticks; the non-preemptive interval must not intersect any unavailable [start_utc,end_utc) for its selected resource"
+    positive_example: "assignment ends at an unavailable interval boundary without crossing it"
+    negative_example: "assignment overlaps or crosses a maintenance/unavailable interval"
+    violation:
+      error_category: VALIDATION_FAILED
+      error_code: SCHEDULE_VALIDATION_FAILED
+      severity: HARD
+      observed_value: "assignment interval and conflicting unavailable interval"
+      expected_rule: "non-preemptive assignment avoids all unavailable intervals"
+      message: "resource calendar violated"
+    test_ids: [TEST-RULE-SHEET-001, TEST-CALENDAR]
+    open_questions: [OPEN-004]
+  - constraint_id: C-006
+    title: Release Gate
+    status: V1_REQUIRED
+    contract_status: P0_PROBLEM_FIELDS_PLUS_P2_CANDIDATE
+    inputs:
+      - problem.operation_instances[].release_at_utc
+      - problem.operation_instances[].material_ready_at_utc
+      - problem.horizon_start_utc
+      - problem.tick_seconds
+      - candidate.assignments[].start_tick
+    formula: "candidate_start_utc = horizon_start_utc + start_tick * tick_seconds; candidate_start_utc >= release_at_utc and candidate_start_utc >= material_ready_at_utc"
+    positive_example: "assignment starts at or after both gates"
+    negative_example: "assignment starts before release_at or material_ready_at"
+    violation:
+      error_category: VALIDATION_FAILED
+      error_code: SCHEDULE_VALIDATION_FAILED
+      severity: HARD
+      observed_value: "assignment start and both gate instants"
+      expected_rule: "start >= release_at and start >= material_ready_at"
+      message: "release or material gate violated"
+    test_ids: [TEST-RULE-SHEET-001, TEST-MATERIAL]
+    open_questions: [OPEN-007]
+  - constraint_id: C-007
+    title: Execution Facts
+    status: V1_REQUIRED
+    contract_status: P1_P2_EXECUTION_EXTENSION_REQUIRED
+    inputs:
+      - snapshot.execution_facts[].status
+      - snapshot.execution_facts[].actual_start_at_utc
+      - snapshot.execution_facts[].resource_id
+      - snapshot.execution_facts[].remaining_seconds
+      - problem.horizon_start_utc
+      - problem.tick_seconds
+      - candidate.assignments[]
+    formula: "COMPLETED operations are absent from future assignments; RUNNING resource is fixed and future occupancy from horizon start equals ceil(remaining_seconds/tick_seconds)"
+    positive_example: "completed work is omitted and running work keeps its resource and remaining occupancy"
+    negative_example: "completed work is rescheduled or running resource/remaining occupancy changes"
+    violation:
+      error_category: VALIDATION_FAILED
+      error_code: SCHEDULE_VALIDATION_FAILED
+      severity: HARD
+      observed_value: "execution facts and candidate future assignment"
+      expected_rule: "completed/running execution facts remain authoritative"
+      message: "execution fact preservation violated"
+    test_ids: [TEST-RULE-SHEET-001, TEST-RUNNING]
+    open_questions: []
+  - constraint_id: C-008
+    title: Lock
+    status: V1_REQUIRED
+    contract_status: P1_P2_LOCK_EXTENSION_REQUIRED
+    inputs:
+      - planning_context.locks[].lock_type
+      - planning_context.locks[].operation_id
+      - planning_context.locks[].resource_id
+      - planning_context.locks[].start_tick
+      - planning_context.locks[].end_tick
+      - candidate.assignments[]
+    formula: "HARD_LOCK fixes resource/start/end exactly; SOFT_LOCK is not a hard validation pass condition and is reported through stability semantics"
+    positive_example: "hard-locked assignment is unchanged while soft-lock movement remains reportable"
+    negative_example: "hard-locked resource, start, or end changes"
+    violation:
+      error_category: VALIDATION_FAILED
+      error_code: SCHEDULE_VALIDATION_FAILED
+      severity: HARD
+      observed_value: "hard-lock tuple and candidate assignment tuple"
+      expected_rule: "HARD_LOCK resource/start/end remain fixed"
+      message: "hard lock moved"
+    test_ids: [TEST-RULE-SHEET-001, TEST-INF-LOCK]
+    open_questions: [OPEN-005]
+  - constraint_id: C-009
+    title: 跨车间衔接
+    status: V1_REQUIRED
+    contract_status: P1_P2_WORKSHOP_EDGE_EXTENSION_REQUIRED
+    inputs:
+      - planning_context.cross_workshop_edges[].predecessor_operation_id
+      - planning_context.cross_workshop_edges[].successor_operation_id
+      - problem.precedence_edges[].transport_lag_seconds
+      - problem.tick_seconds
+      - candidate.assignments[].start_tick
+      - candidate.assignments[].end_tick
+    formula: "transport_seconds_observed = (succ.start_tick - pred.end_tick) * tick_seconds; for each identified cross-workshop edge transport_seconds_observed >= transport_lag_seconds, independently of C-002 min-lag checking"
+    positive_example: "cross-workshop successor starts at or after the transport lag boundary"
+    negative_example: "cross-workshop successor starts before transport lag elapses"
+    violation:
+      error_category: VALIDATION_FAILED
+      error_code: SCHEDULE_VALIDATION_FAILED
+      severity: HARD
+      observed_value: "edge workshops, predecessor end, successor start, and transport lag"
+      expected_rule: "cross-workshop transport lag is respected"
+      message: "cross-workshop transport lag violated"
+    test_ids: [TEST-RULE-SHEET-001, TEST-CROSS-WORKSHOP]
+    open_questions: [OPEN-009]
+  - constraint_id: C-010
+    title: 工时一致性
+    status: V1_REQUIRED
+    contract_status: P0_PROBLEM_FIELDS_PLUS_P2_CANDIDATE
+    inputs:
+      - problem.operation_instances[].resource_options[].resource_id
+      - problem.operation_instances[].resource_options[].final_duration_seconds
+      - problem.tick_seconds
+      - candidate.assignments[].resource_id
+      - candidate.assignments[].start_tick
+      - candidate.assignments[].end_tick
+    formula: "end_tick - start_tick == ceil(selected_resource.final_duration_seconds/tick_seconds)"
+    positive_example: "candidate interval length equals the selected resource option duration ticks"
+    negative_example: "candidate uses another resource duration or an altered interval length"
+    violation:
+      error_category: VALIDATION_FAILED
+      error_code: SCHEDULE_VALIDATION_FAILED
+      severity: HARD
+      observed_value: "selected resource, interval length, and expected duration ticks"
+      expected_rule: "interval length equals selected resource duration ticks"
+      message: "operation duration inconsistent with selected resource"
+    test_ids: [TEST-RULE-SHEET-001, TEST-VALIDATOR-MUTATION]
+    open_questions: []
+  - constraint_id: C-011
+    title: Planning Horizon
+    status: V1_REQUIRED
+    contract_status: P0_PROBLEM_FIELDS_PLUS_P2_CANDIDATE
+    inputs:
+      - problem.horizon_start_utc
+      - problem.horizon_end_utc
+      - problem.tick_seconds
+      - problem.operation_instances[].status
+      - candidate.assignments[].start_tick
+      - candidate.assignments[].end_tick
+    formula: "restore candidate start/end UTC from horizon_start and ticks; for NOT_STARTED operations start_utc >= horizon_start_utc and end_utc <= horizon_end_utc; no interval truncation is allowed"
+    positive_example: "not-started assignment is wholly inside the planning horizon"
+    negative_example: "assignment begins before the horizon, ends after it, or is silently truncated"
+    violation:
+      error_category: VALIDATION_FAILED
+      error_code: SCHEDULE_VALIDATION_FAILED
+      severity: HARD
+      observed_value: "assignment interval and horizon bounds"
+      expected_rule: "NOT_STARTED assignment remains wholly inside horizon"
+      message: "planning horizon violated"
+    test_ids: [TEST-RULE-SHEET-001, TEST-INF-HORIZON]
+    open_questions: []
+deferred_rules:
+  - constraint_id: C-012
+    title: Secondary Capacity
+    status: UNSUPPORTED
+    capability: SECONDARY_CAPACITY
+    behavior: "reject during capability precheck; do not approximate with primary-resource capacity"
+    error_category: UNSUPPORTED_CAPABILITY
+    error_code: UNSUPPORTED_CAPABILITY
+    test_ids: [TEST-RULE-SHEET-001, TEST-CAPABILITY-001]
+  - constraint_id: C-013
+    title: Sequence-dependent Setup
+    status: UNSUPPORTED
+    capability: SEQUENCE_DEPENDENT_SETUP
+    behavior: "reject during capability precheck; do not replace with constant setup"
+    error_category: UNSUPPORTED_CAPABILITY
+    error_code: UNSUPPORTED_CAPABILITY
+    test_ids: [TEST-RULE-SHEET-001, TEST-CAPABILITY-001]
+  - constraint_id: C-014
+    title: Material Balance
+    status: UNSUPPORTED
+    capability: MATERIAL_COMPETITION
+    behavior: "reject material competition/balance; V1 only consumes material_ready_at"
+    error_category: UNSUPPORTED_CAPABILITY
+    error_code: UNSUPPORTED_CAPABILITY
+    test_ids: [TEST-RULE-SHEET-001, TEST-CAPABILITY-001]
+  - constraint_id: C-015
+    title: Batch Processing
+    status: UNSUPPORTED
+    capability: BATCH_PROCESSING
+    behavior: "reject during capability precheck; do not schedule batch members independently as an approximation"
+    error_category: UNSUPPORTED_CAPABILITY
+    error_code: UNSUPPORTED_CAPABILITY
+    test_ids: [TEST-RULE-SHEET-001, TEST-CAPABILITY-001]
+  - constraint_id: C-016
+    title: Split / Merge
+    status: UNSUPPORTED
+    capability: SPLIT_MERGE
+    behavior: "reject during capability precheck; do not invent a lot-splitting policy"
+    error_category: UNSUPPORTED_CAPABILITY
+    error_code: UNSUPPORTED_CAPABILITY
+    test_ids: [TEST-RULE-SHEET-001, TEST-CAPABILITY-001]
+  - constraint_id: C-017
+    title: Buffer Capacity
+    status: UNSUPPORTED
+    capability: BUFFER_CAPACITY
+    behavior: "reject during capability precheck; do not treat buffers as unlimited"
+    error_category: UNSUPPORTED_CAPABILITY
+    error_code: UNSUPPORTED_CAPABILITY
+    test_ids: [TEST-RULE-SHEET-001, TEST-CAPABILITY-001]
+  - constraint_id: C-018
+    title: Preemption
+    status: UNSUPPORTED
+    capability: PREEMPTIVE_OPERATION
+    behavior: "reject during capability precheck; V1 operations remain non-preemptive"
+    error_category: UNSUPPORTED_CAPABILITY
+    error_code: UNSUPPORTED_CAPABILITY
+    test_ids: [TEST-RULE-SHEET-001, TEST-CAPABILITY-001]

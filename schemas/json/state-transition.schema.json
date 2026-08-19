@@ -1,0 +1,83 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "urn:plantnexus:aps:schema:state-transition:v1",
+  "title": "APS State Transition v1",
+  "type": "object",
+  "additionalProperties": false,
+  "required": ["state_transition_version", "machine", "from_state", "to_state"],
+  "properties": {
+    "state_transition_version": {"const": "state-transition.v1"},
+    "machine": {"enum": ["PLANNING_RUN", "SCHEDULE_VERSION", "EXPORT_JOB"]},
+    "from_state": {"type": "string", "minLength": 1},
+    "to_state": {"type": "string", "minLength": 1}
+  },
+  "oneOf": [
+    {
+      "properties": {
+        "machine": {"const": "PLANNING_RUN"},
+        "from_state": {
+          "enum": [
+            "CREATED",
+            "INGESTING",
+            "VALIDATING",
+            "SNAPSHOTTED",
+            "BUILDING",
+            "SOLVING",
+            "SOLVED",
+            "VERIFYING",
+            "COMPLETED",
+            "DATA_REJECTED",
+            "MODEL_INVALID",
+            "INFEASIBLE",
+            "NO_SOLUTION_WITHIN_LIMIT",
+            "VALIDATION_FAILED",
+            "CANCELLED",
+            "FAILED"
+          ]
+        },
+        "to_state": {
+          "enum": [
+            "CREATED",
+            "INGESTING",
+            "VALIDATING",
+            "SNAPSHOTTED",
+            "BUILDING",
+            "SOLVING",
+            "SOLVED",
+            "VERIFYING",
+            "COMPLETED",
+            "DATA_REJECTED",
+            "MODEL_INVALID",
+            "INFEASIBLE",
+            "NO_SOLUTION_WITHIN_LIMIT",
+            "VALIDATION_FAILED",
+            "CANCELLED",
+            "FAILED"
+          ]
+        }
+      }
+    },
+    {
+      "properties": {
+        "machine": {"const": "SCHEDULE_VERSION"},
+        "from_state": {
+          "enum": ["DRAFT", "READY_FOR_REVIEW", "APPROVED", "PUBLISHED", "SUPERSEDED", "REJECTED"]
+        },
+        "to_state": {
+          "enum": ["DRAFT", "READY_FOR_REVIEW", "APPROVED", "PUBLISHED", "SUPERSEDED", "REJECTED"]
+        }
+      }
+    },
+    {
+      "properties": {
+        "machine": {"const": "EXPORT_JOB"},
+        "from_state": {
+          "enum": ["CREATED", "EXPORTING", "EXPORTED", "EXPORT_FAILED", "CANCELLED"]
+        },
+        "to_state": {
+          "enum": ["CREATED", "EXPORTING", "EXPORTED", "EXPORT_FAILED", "CANCELLED"]
+        }
+      }
+    }
+  ]
+}

@@ -40,3 +40,19 @@ READY_FOR_REVIEW
 - Reject、Gantt 编辑、Replan 都产生新版本，不复用旧 ID。
 - 发布重试不能 double publish。
 - “Rollback”只表示选择历史版本作为新计划的参考输入；不得直接把历史 PUBLISHED 行改回当前。
+
+## P0 versioned transition table
+
+允许 pair 仅为：
+
+| From | To | Guard/evidence boundary |
+|---|---|---|
+| DRAFT | READY_FOR_REVIEW | independent validation PASS、hard count 0、provenance 完整 |
+| READY_FOR_REVIEW | APPROVED | authorized human actor/decision/audit；角色仍受 OPEN-010 约束 |
+| READY_FOR_REVIEW | REJECTED | actor/reason/audit；修订必须产生新 DRAFT version |
+| APPROVED | PUBLISHED | idempotent、target 明确、Production/Synthetic 安全 |
+| PUBLISHED | SUPERSEDED | 新版本成为当前生产参考，旧版本仍不可变 |
+
+`SUPERSEDED` 与 `REJECTED` 为终态；REJECTED 没有回到 DRAFT 的同实体转移。任何 `DRAFT → PUBLISHED`、PUBLISHED 修改或 REJECTED 复用均返回 `INVALID_STATE_TRANSITION`。
+
+[`state-transition.v1`](../../../schemas/json/state-transition.schema.json) 只验证 machine/state 名称，[`state-machines.v1`](../../../schemas/rules/state-machines.v1.yaml) 和纯状态合同授权 pair。TEST-STATE-TRANSITION-001 不替代 P3 权限、audit、immutability、publish/idempotency tests。

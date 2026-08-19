@@ -32,6 +32,10 @@ registry_version: 1.0.0
 | TEST-TRACEABILITY-VALIDATOR | Registry、reference、Task、diff/impact，以及 clean-tree committed range regression | P0 | [`backend/tests/unit/test_check_docs.py`](../../backend/tests/unit/test_check_docs.py) |
 | TEST-OBS-001 | 日志、运行标识与 Observability 关联 | P0 | PLANNED（TASK-P0-08） |
 | TEST-CONTRACT-001 | Schema meta/positive/negative、版本、UTC/duration/reference、isolation 与 round-trip | P0 | [`backend/tests/contract/test_schema_contracts.py`](../../backend/tests/contract/test_schema_contracts.py) + [TASK-P0-03 Acceptance PASS](../tasks/P0/TASK-P0-03-domain-and-schema-skeleton.md#completion-evidence) |
+| TEST-RULE-SHEET-001 | C-001～C-018 唯一/完整、input/formula/example/violation/Test ID 与 registry cross-check | P0 | [`test_rule_contracts.py`](../../backend/tests/contract/test_rule_contracts.py) + [`constraint-rule-sheet.v1`](../../schemas/rules/constraint-rule-sheet.v1.yaml) + [TASK-P0-04 Acceptance PASS](../tasks/P0/TASK-P0-04-constraints-states-errors-capabilities.md#completion-evidence) |
+| TEST-STATE-TRANSITION-001 | 三套 state enum、42 个 allowed pair、terminal/negative transitions | P0 | [`test_rule_contracts.py`](../../backend/tests/contract/test_rule_contracts.py) + [`state-machines.v1`](../../schemas/rules/state-machines.v1.yaml) formed；persistence/P3 behavior PLANNED |
+| TEST-ERROR-MAPPING-001 | 七类 error、19 code/category 唯一映射与 v1/v2 isolation | P0 | [`test_rule_contracts.py`](../../backend/tests/contract/test_rule_contracts.py) + [`error-code-registry.v1`](../../schemas/rules/error-code-registry.v1.yaml) formed；HTTP mapping PLANNED |
+| TEST-CAPABILITY-001 | 20 capability registry 与 supported declaration/unsupported/unknown/duplicate precheck | P0 | [`test_rule_contracts.py`](../../backend/tests/contract/test_rule_contracts.py) + [`capability-registry.v1`](../../schemas/rules/capability-registry.v1.yaml) formed；capability implementation PLANNED |
 | TEST-GOLDEN-JSSP | 人工可验证 JSSP | P2 | PLANNED |
 | TEST-GOLDEN-FJSP | 人工可验证 FJSP | P2 | PLANNED |
 | TEST-INF-NO-RESOURCE | 无候选资源明确拒绝 | P0-P2 | PLANNED |
@@ -63,4 +67,4 @@ Test ID 一经分配不得复用。链接到真实测试路径才是已形成证
 - 多个同质量解可能都正确，Property/Golden 不固定无意义排序；
 - Benchmark 正确性失败优先于性能结果。
 
-实际测试路径和结果在文件创建后写入追踪矩阵。TEST-CONTRACT-001 已形成 P0 Schema skeleton 证据；其他 `PLANNED` 项仍不能视为实现。
+实际测试路径和结果在文件创建后写入追踪矩阵。TEST-CONTRACT-001 已形成 P0 data Schema skeleton 证据；TASK-P0-04 的四项 contract tests 只形成 rule/state/error/capability 合同证据。TEST-VALIDATOR-MUTATION 等 `PLANNED` 项仍不能视为实现，rule-sheet completeness 不能替代 schedule correctness。

@@ -99,3 +99,9 @@ registry_version: 1.0.0
 - 完成证据列出已审查的矩阵行和不修改理由。
 
 纯格式化也需要记录影响判断，但可以在理由充分时声明 `none`。
+
+## TASK-P0-04 matrix review
+
+本 Task 实际路径预期命中 `IMPACT-SCHEMA`、`IMPACT-DOMAIN`、`IMPACT-VALIDATOR`、`IMPACT-STATE`、`IMPACT-DEPENDENCY`、`IMPACT-VERSION-METADATA`、`IMPACT-TESTS`、`IMPACT-PHASE`、`IMPACT-GOVERNANCE-REGISTRY`、`IMPACT-DOCS`。`schemas/rules/**` 由 IMPACT-SCHEMA 覆盖；rule completeness CLI 位于 `backend/app/planning/validation/**`，由 IMPACT-VALIDATOR 覆盖，不需要无边界新 glob。
+
+PlanningProblem、Backend、Fixture、API、Export/Job implementation 路径均不修改，因此不声明对应 Rule ID。本段记录审查结论，不改变 machine rule 表结构或 registry version；最终以 Task diff report 的真实 matched rows 为准。

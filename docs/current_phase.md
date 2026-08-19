@@ -28,16 +28,16 @@ P0-DOCS — Documentation Baseline
 ## 最新完成 Task
 
 ```text
-TASK-P0-03 — Domain and Schema Skeleton
+TASK-P0-04 — Constraints, States, Errors and Capabilities
 ```
 
-Task 状态：`done`（2026-08-19）。Schema set `1.0.0`、六份 versioned JSON Schema、data dictionary、纯领域合同/最小 precheck、locked quality tooling 和 TEST-CONTRACT-001 均已通过任务卡 Acceptance Commands。TASK-P0-01/02 继续保持 `done`。
+Task 状态：`done`（2026-08-19）。Schema set `1.1.0` additive rule release、C-001～C-018 rule/capability registries、七类/19 error code、三套 state/42 transitions、pure contracts 和四项 contract tests 均已通过任务卡 Acceptance Commands。TASK-P0-01～03 继续保持 `done`。
 
 P0 尚未完成，当前记录不表示通过 P0 Exit Gate，也不授权进入 P1。
 
 ## 当前 Task
 
-无。TASK-P0-04 继续保持 `planned`；完成 TASK-P0-03 不自动授权或启动下一任务。
+无。TASK-P0-05 继续保持 `planned`；完成 TASK-P0-04 不自动授权或启动下一任务。P0 Exit Gate 尚未通过。
 
 ## 当前允许
 
@@ -47,6 +47,7 @@ P0 尚未完成，当前记录不表示通过 P0 Exit Gate，也不授权进入 
 - 拆分范围、原则、需求、能力、架构、领域、约束和仿真规则；
 - 建立 Agent 规则、Milestone、ADR、注册表和 P0 Task Card；
 - 初始化 `REQ / NFR / ENG` 追踪结构；
+- 建立 P0 规则表、状态/错误/capability 纯合同及机器一致性检查；
 - 登记 `PROD_OPEN` 与 `SIM_ASSUMPTION`，但不替业务方关闭问题。
 
 ## 当前禁止

@@ -30,3 +30,5 @@ registry_version: 1.0.0
 状态仅允许 `MONITORED`、`MITIGATED`、`CLOSED`。状态变化必须给出可验证控制或关闭证据；未知责任人继续留空，不能为了表格完整而猜测。修改表结构或状态语义必须提升 `registry_version`。
 
 TASK-P0-03 review：strict unknown-field/no-default policy、Production/Synthetic conditional、Solver-neutral types 和 locked contract tooling 加强 RISK-001/002/007 的早期控制，但尚无真实数据、共同 ingress implementation 或生产隔离环境证据，不能据此标记风险已缓解或关闭。RISK-001～010 全部保持 `MONITORED`。
+
+TASK-P0-04 review：独立 rule metadata、validation package import scan 和未来 mutation boundary 加强 RISK-003；capability registry/explicit rejection 加强 RISK-004；error/status mapping test 加强 RISK-006。尚无 candidate ScheduleValidator、Solver、Scenario mutation、状态持久化或 API evidence，不能据此标记风险已缓解/关闭。RISK-001～010 全部保持 `MONITORED`，registry format version 不变。

@@ -80,6 +80,7 @@ Rollback:
 - 实际更新文档及必审但未修改文档的逐项理由；
 - Requirement/NFR/ENG → Task → Test → Artifact 关系；
 - `scripts/check_docs.py --task <task-card> --check-diff --report <report-path>` 的真实摘要；
+- 若修改 CI，记录 `--discover-task-from <event-base-sha>` 的 Task选择结果、event base与 Task `Diff base`的区别，并证明零/多/历史/未来 Task路径硬失败；
 - PROD_OPEN、SIM_ASSUMPTION、Schema/Migration、Benchmark 和回滚影响。
 
 涉及 Schema 时还必须记录 schema set/contract version、compatibility 分类、migration 或明确 none 理由、机器 validator 版本、positive/negative/round-trip evidence，以及 sample/fixture 的 Production/Synthetic 属性。
@@ -93,5 +94,7 @@ Rollback:
 涉及 engineering infrastructure/API health/Worker/CI 时还必须记录：direct dependency/lock 与明确未安装组件；environment/data-plane/Secret fail-closed boundary；liveness/readiness 的外部依赖与 no-leak 行为；Job heartbeat/lease/attempt/STALLED、idempotency scope/fingerprint、持久化/transaction/side-effect 边界；migration upgrade/downgrade 与测试数据库；structured log/trace context/redaction 和 audit/metrics 缺口；Compose/container/CI 实际执行层级。仓库内 workflow/config/local PASS 不得伪装成 CI provider run、branch protection、Production deployment、distributed crash recovery 或 production security evidence。
 
 涉及 external CI provider 时还必须在开始前固定 provider/repository/branch/workflow 和官方 query 命令，并在完成证据中记录 immutable head SHA、run ID/URL/attempt/event/status/conclusion、required jobs/steps、artifact ID/name/size/digest/expiry 与 required-check/branch-protection 状态。credential 必须由进程外环境或已认证 session 提供，不得记入 Task、日志或 artifact；失败 run 必须保留为反例，不得伪写 PASS。
+
+仓库内 CI workflow应使用 current-phase Task discovery与中性 artifact命名，不得每个 Task手工改写旧 Task路径。没有外部执行授权时 provider结果必须写 `NOT_RUN`，本地 workflow contract、YAML parse或 diff governance不能替代 provider事实。
 
 P1及以后 Task必须单列 `Completion conditions`，把“实现目标、负向路径、文档/追踪、提交前后治理和明确排除项均满足”写成可核验条件；不能只写“测试通过”或重复 Goal。

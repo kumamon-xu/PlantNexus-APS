@@ -1,4 +1,4 @@
-"""P0 reproducible dependency, container, and CI configuration checks."""
+"""Reproducible dependency, container, and phase-aware CI contract checks."""
 
 from __future__ import annotations
 
@@ -22,6 +22,7 @@ EXPECTED_RUNTIME_DEPENDENCIES = {
     "structlog==25.4.0",
     "uvicorn==0.35.0",
 }
+PHASE_GOVERNANCE_TEST_ID = "TEST-PHASE-GOVERNANCE-001"
 
 
 def test_runtime_dependencies_are_exact_and_solver_free() -> None:
@@ -67,18 +68,23 @@ def test_example_environment_is_explicitly_non_production() -> None:
     )
 
 
-def test_ci_runs_all_p0_gates_and_keeps_benchmark_as_a_hook() -> None:
+def test_ci_runs_repository_gates_and_discovers_the_current_task() -> None:
     workflow = (ROOT / ".github" / "workflows" / "ci.yml").read_text(
         encoding="utf-8"
     )
+    normalized_workflow = " ".join(workflow.split())
     required_fragments = (
+        "name: PlantNexus repository gates",
         "uv sync --locked",
         "uv run ruff check .",
         "uv run pyright backend/app backend/tests",
         "backend/tests/integration",
         "app.infrastructure.contract_check",
         "docker compose --env-file .env.example config --quiet",
-        "scripts/check_docs.py --task",
+        "PLANTNEXUS_CI_CHANGE_BASE:",
+        "github.event.pull_request.base.sha || github.event.before",
+        "--discover-task-from",
+        "build/traceability/ci-current-task-report.json",
         "uv build",
         "PLANTNEXUS_BENCHMARK_PROFILE: pr",
     )
@@ -87,13 +93,19 @@ def test_ci_runs_all_p0_gates_and_keeps_benchmark_as_a_hook() -> None:
     assert "ortools" not in workflow.lower()
     assert "scripts/run_benchmark.py" in workflow
     assert "actions/upload-artifact@v4" in workflow
+    assert workflow.count("uv run python scripts/check_docs.py") == 2
     assert (
-        "scripts/check_docs.py --task "
-        "docs/tasks/P0/TASK-P0-10-ci-provider-evidence-remediation.md "
-        "--check-diff --report build/traceability/TASK-P0-10-report.json"
-    ) in workflow
-    assert "p0-exit-gate-evidence-${{ github.run_id }}" in workflow
+        "uv run python scripts/check_docs.py --discover-task-from "
+        '"${PLANTNEXUS_CI_CHANGE_BASE}" --check-diff '
+        "--report build/traceability/ci-current-task-report.json"
+    ) in normalized_workflow
+    assert "plantnexus-ci-evidence-${{ github.run_id }}" in workflow
+    assert "if: always()" in workflow
+    assert "continue-on-error" not in workflow
+    assert "TASK-P0-10" not in workflow
     assert "TASK-P0-08" not in workflow
+    assert "docs/tasks/P0/" not in workflow
+    assert PHASE_GOVERNANCE_TEST_ID == "TEST-PHASE-GOVERNANCE-001"
 
 
 def test_container_build_is_pinned_and_non_root() -> None:

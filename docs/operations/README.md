@@ -25,3 +25,5 @@ P0-08 已形成工程骨架可验证的前三份 Operations baseline：
 现有三份 baseline 只引用仓库内配置、tests 与 machine report，不能被解释为 Production Runbook。Release/Production 文档必须引用真实部署配置、监控指标、backup/restore、平台 run 和责任人后才能创建并转为 `baseline/living`；P0-08 未猜测这些事实。
 
 TASK-P0-10 只补齐 GitHub Actions 运行、job、artifact digest 与 required-check/branch-protection 的 CI 治理证据。provider 历史和 artifact retention 由 GitHub 管理，仓库只保存可核验 ID/URL/SHA/digest 与边界说明，不写入 credential。该证据可用于 P0 CI Exit Gate，但仍不是 release runbook、监控、backup/restore 或 Production readiness。
+
+TASK-P1-01把 workflow从单一 P0-10 handoff改为 phase/task-neutral：CI event base发现唯一 current-phase Task，Task Card `Diff base`继续限定 scope，机器产物采用中性名称。既有 P0 provider成功证据保持历史只读；本 Task没有获得 push/provider查询授权时，新的 run/job/artifact/required-check结果必须记为 `NOT_RUN`，不能从本地测试推断。该变化不形成 release runbook、Production监控或部署能力。

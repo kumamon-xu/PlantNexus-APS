@@ -149,3 +149,9 @@ Schema、Domain、Import/Snapshot/Planning/Validator implementation、Simulation
 2026-08-19 的用户授权使 current phase进入 P1并创建 TASK-P1-01～12。本次 planning baseline只修改 phase/milestone/task/governance/quality/index文档，以及为跨阶段校验所必需的 `scripts/check_docs.py` 与 `backend/tests/unit/test_check_docs.py`；不执行任何 P1业务实现。实际路径预期命中 `IMPACT-GOVERNANCE-VALIDATOR`、`IMPACT-TESTS`、`IMPACT-PHASE`、`IMPACT-GOVERNANCE-REGISTRY`、`IMPACT-DOCS`。
 
 P1-11首次计划在 `backend/app/application/**` 形成 common-ingress orchestration，因此增加稳定 `IMPACT-APPLICATION` 行，避免未来 application path无机器影响规则。该行只建立治理覆盖，不实现 pipeline，也不改变总规模块边界。Schema、Import、Snapshot、Problem、Simulation、Fixture、Infrastructure workflow和dependency均未在本次 planning baseline中修改。
+
+## TASK-P1-01 matrix review
+
+本 Task实际命中 `IMPACT-GOVERNANCE-VALIDATOR`、`IMPACT-INFRA`、`IMPACT-TESTS`、`IMPACT-PHASE`、`IMPACT-GOVERNANCE-REGISTRY`、`IMPACT-DOCS`。治理脚本/单测实现 phase policy与CI Task discovery；workflow/integration test移除P0-10 handoff并保留原 gates；阶段/注册表/文档只同步 TASK-P1-01 状态和真实追踪。
+
+Schema、Domain、Import/Snapshot/Planning/Validator/Simulation/Fixture、dependency/version metadata、API/Job/DB、Solver/P2均未修改，因此不声明其他 Rule ID。现有 machine globs与required-document列足够覆盖，无需新 Rule ID或 `registry_version`提升；最终以 TASK-P1-01 diff report真实 matched rows为准。

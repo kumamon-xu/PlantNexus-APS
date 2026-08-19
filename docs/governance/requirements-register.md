@@ -51,3 +51,5 @@ TASK-P0-09 review：独立审计重新执行 90-test P0 suite、五类 machine c
 TASK-P0-10 review：workflow 的当前 Task diff/report 与 uploaded artifact 引用已有界交接；GitHub baseline run `32227247262` 保留原失败反例，run `32228647627` 则对 immutable implementation commit 形成 job/artifact/required-check PASS。这只加强 REQ-009 的 repository/CI provenance slice，不实现真实 source/Snapshot/Problem/Solver/export manifest 或业务 audit。REQ-001～015 全部继续 `ALLOCATED`，registry format version 不变；P1 Task 未创建。
 
 P1 Task 规划 review：TASK-P1-02～TASK-P1-11 已为 REQ-001/002/003/009/011/012 分配 import contract、raw staging、reference adapter、normalization、data-quality gate、order expansion、Snapshot/Problem hash、synthetic canonical records 与 common-ingress evidence；TASK-P1-12 只负责独立退出门审计。当前仅形成 `PLANNED` 追踪关系，没有执行任何 P1 实现、测试或 Gate，因此 REQ-001～015 全部继续 `ALLOCATED`，registry format version不变。
+
+TASK-P1-01 review：REQ-009获得phase-aware Task attribution、event base与Task Diff base分层、generic CI report/artifact命名和no-stale-P0 workflow contract；该证据属于repository/CI provenance，不是source/Import/Snapshot/Problem/Solver/Export业务provenance。没有改变Requirement语义或完成任何P1数据能力，REQ-001～015全部继续`ALLOCATED`，registry format version不变。

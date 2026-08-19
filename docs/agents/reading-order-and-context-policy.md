@@ -42,4 +42,6 @@ last_reviewed: 2026-08-19
 
 与当前 Task 无关的未来 Phase 设计、Historical 数据、未批准方案或大规模日志，不作为默认上下文。P1+ Milestone 只是路线，不是实施授权。
 
-`scripts/check_docs.py` 会从 `docs/current_phase.md` 读取当前 `Pn`，保留 prior-phase terminal Task、允许 current-phase详细卡并拒绝 future-phase详细卡；同时检查文档结构、注册 ID、Task 引用、逐根 traceability，以及 `--check-diff` 下 `Diff base..HEAD` 与 working tree 并集的 change-impact Rule ID/必审文档覆盖。Agent 必须在 Task 进入 `in_progress` 时先记录完整不可变 `Diff base`。P1及以后卡还必须有 `Completion conditions`。校验器只能验证已经编码的治理规则；Agent 仍须完整读取当前 Task 引用的语义 Contract/Constraint/ADR，并对机器规则未表达的语义影响负责。
+`scripts/check_docs.py` 会从 `docs/current_phase.md` 读取当前 `Pn`，保留 prior-phase terminal Task、允许 current-phase详细卡并拒绝 future-phase详细卡；同时检查文档结构、注册 ID、Task 引用、逐根 traceability，以及 `--check-diff` 下 `Diff base..HEAD` 与 working tree并集的 change-impact Rule ID/必审文档覆盖。Agent 必须在 Task进入 `in_progress` 时先记录完整不可变 `Diff base`。P1及以后卡还必须有 `Completion conditions`。
+
+CI 的 `--discover-task-from <event-base-sha>`只从一次 event range选择唯一 current-phase Task Card，随后仍以卡片 `Diff base`审计真实 Task范围；零个/多个/非 current Task均不得猜测。校验器只能验证已经编码的治理规则；Agent仍须完整读取当前 Task引用的语义 Contract/Constraint/ADR，并对机器规则未表达的语义影响负责。

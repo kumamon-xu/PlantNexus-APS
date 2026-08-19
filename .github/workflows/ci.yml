@@ -1,4 +1,4 @@
-name: P0 engineering gates
+name: PlantNexus repository gates
 
 on:
   pull_request:
@@ -9,7 +9,7 @@ permissions:
   contents: read
 
 concurrency:
-  group: p0-ci-${{ github.workflow }}-${{ github.ref }}
+  group: plantnexus-ci-${{ github.workflow }}-${{ github.ref }}
   cancel-in-progress: true
 
 jobs:
@@ -19,6 +19,7 @@ jobs:
     env:
       PLANTNEXUS_CODE_COMMIT: ${{ github.sha }}
       PLANTNEXUS_POSTGRES_PASSWORD: ci-contract-only-not-a-secret
+      PLANTNEXUS_CI_CHANGE_BASE: ${{ github.event.pull_request.base.sha || github.event.before }}
     steps:
       - uses: actions/checkout@v4
         with:
@@ -42,7 +43,7 @@ jobs:
       - name: Type check
         run: uv run pyright backend/app backend/tests
 
-      - name: P0 test suites
+      - name: Repository test suites
         run: >-
           uv run pytest -q
           backend/tests/unit
@@ -54,16 +55,16 @@ jobs:
 
       - name: Existing executable contracts
         run: |
-          uv run python -m app.planning.validation.rule_sheet --report build/validation/TASK-P0-10-rule-contracts.json
-          uv run python -m app.simulation.generators.contract_check --report build/validation/TASK-P0-10-simulation-contracts.json
-          uv run python -m app.simulation.scenarios.golden_fixture --fixture fixtures/deterministic/SIM-MINIMAL-001 --report build/validation/TASK-P0-10-golden.json
-          uv run python -m app.planning.validation.mutation_check --root . --report build/validation/TASK-P0-10-validator-mutations.json
+          uv run python -m app.planning.validation.rule_sheet --report build/validation/ci-rule-contracts.json
+          uv run python -m app.simulation.generators.contract_check --report build/validation/ci-simulation-contracts.json
+          uv run python -m app.simulation.scenarios.golden_fixture --fixture fixtures/deterministic/SIM-MINIMAL-001 --report build/validation/ci-golden.json
+          uv run python -m app.planning.validation.mutation_check --root . --report build/validation/ci-validator-mutations.json
 
       - name: Engineering contract
         run: >-
           uv run python -m app.infrastructure.contract_check
           --root .
-          --report build/validation/TASK-P0-10-engineering.json
+          --report build/validation/ci-engineering.json
 
       - name: Container configuration
         run: docker compose --env-file .env.example config --quiet
@@ -71,16 +72,16 @@ jobs:
       - name: Documentation and task diff
         run: |
           uv run python scripts/check_docs.py
-          uv run python scripts/check_docs.py --task docs/tasks/P0/TASK-P0-10-ci-provider-evidence-remediation.md --check-diff --report build/traceability/TASK-P0-10-report.json
+          uv run python scripts/check_docs.py --discover-task-from "${PLANTNEXUS_CI_CHANGE_BASE}" --check-diff --report build/traceability/ci-current-task-report.json
 
-      - name: Benchmark hook (P0 contract only)
+      - name: Benchmark hook (deferred until runner exists)
         env:
           PLANTNEXUS_BENCHMARK_PROFILE: pr
         run: |
           if test -f scripts/run_benchmark.py; then
             uv run python scripts/run_benchmark.py --profile "${PLANTNEXUS_BENCHMARK_PROFILE}"
           else
-            echo "Benchmark runner remains deferred; no Solver benchmark runs in TASK-P0-10."
+            echo "Benchmark runner remains deferred; no Solver benchmark is run."
           fi
 
       - name: Build package
@@ -90,7 +91,7 @@ jobs:
         if: always()
         uses: actions/upload-artifact@v4
         with:
-          name: p0-exit-gate-evidence-${{ github.run_id }}
+          name: plantnexus-ci-evidence-${{ github.run_id }}
           path: |
             build/validation/*.json
             build/traceability/*.json

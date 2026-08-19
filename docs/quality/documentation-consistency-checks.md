@@ -30,6 +30,14 @@ uv run python scripts/check_docs.py
 uv run python scripts/check_docs.py --task <task-card> --check-diff --report <report-path>
 ```
 
+CI 从不可变 PR/push event base发现当前 Task并执行同一检查：
+
+```text
+uv run python scripts/check_docs.py --discover-task-from <40-char-event-base> --check-diff --report build/traceability/ci-current-task-report.json
+```
+
+event base只用于Task attribution；实际scope仍来自选中Task Card的`Diff base`。`--task`与`--discover-task-from`互斥，后者必须与`--check-diff`同用。
+
 校验器单元测试：
 
 ```text
@@ -44,6 +52,7 @@ uv run python -m unittest discover -s backend/tests/unit -p "test_check_docs.py"
 - `change-impact-matrix.md`；
 - 文档元数据、治理注册表、追踪矩阵和测试 ID 表；
 - 当前 Phase 和 Milestone。
+- 可选CI event base，以及该range内唯一current-phase Task Card；无changed card时只允许唯一`in_progress` current Task回退。
 
 ## 必须检查
 
@@ -59,6 +68,7 @@ uv run python -m unittest discover -s backend/tests/unit -p "test_check_docs.py"
 10. `PROD_OPEN-*` 关闭时包含权威来源、证据、决定日期、影响面和迁移/回放结论；
 11. `PROD_OPEN-*` 与 `SIM_ASSUMPTION-*` 没有混用，模拟假设不能关闭生产开放项；
 12. 历史 Phase只保留 `done`/`cancelled` Task，当前 Phase允许详细 Task Card，未来 Phase只能保留 Milestone。
+13. CI event base为完整、存在且是HEAD祖先的SHA；range内历史/未来/phase错位/多个Task Card拒绝，不能硬编码旧Task或自由文本skip。
 
 ## CI 分层
 
@@ -70,7 +80,7 @@ uv run python -m unittest discover -s backend/tests/unit -p "test_check_docs.py"
 
 ## 输出
 
-`--report` 写出 `traceability-report.v1` JSON，包含总体状态、Task、Git HEAD、`diff_base`、
+`--report` 写出 `traceability-report.v1` JSON，包含总体状态、Task、可选`task_discovery_base`、Git HEAD、`diff_base`、
 `diff_source_counts`、changed paths、matched matrix rows、expected docs、observed docs、检查统计、
 带 check ID/severity/message/hint 的 issues。
 任一 error 均返回非零退出码；通过时终端输出 `PASS repository governance` 及关键计数。
@@ -138,6 +148,12 @@ provider 层必须额外校验 Actions run `head_sha`、workflow/job conclusion�
 2026-08-19 获得明确 phase transition授权后，validator改为从 `docs/current_phase.md` front matter读取 `Pn`，允许 prior-phase terminal Task与 current-phase detailed Task共存，拒绝 prior-phase non-terminal和future-phase detailed cards，并支持任意 phase内的 Task range依赖。P1及以后卡新增必填 `Completion conditions`；历史 P0卡无需追补。
 
 该调整只使 P1 Task规划可由既有治理命令验证，不实现 canonical Import、Adapter、Snapshot、Problem或任何业务能力。TASK-P1-01仍需把 provider workflow从 P0-10-specific handoff收敛为可持续 P1 CI；本 planning baseline不把 local governance PASS写成 provider PASS。
+
+## TASK-P1-01 changed-task CI handoff
+
+TASK-P1-01新增pure phase-policy/changed-path selector、immutable Git event-range discovery和CLI互斥入口；unit tests覆盖prior terminal/current/future/misaligned、stale historical/multiple/no-card fallback与非完整SHA。workflow integration test固定PR/push event-base来源、中性report/artifact命名、full+diff governance、P0 gate保留和无P0 Task残留。
+
+CI discovery失败返回`PHASE-TASK`/非零，不生成skip PASS。成功报告同时记录`task_discovery_base`与Task `diff_base`，使event attribution和Task scope可分别审计。provider没有实际执行证据时仍为`NOT_RUN`。
 
 ## Override
 

@@ -25,7 +25,7 @@ ReferenceFileAdapter是 P1正式、可测试的参考 Adapter，但在 OPEN-002/
 
 | Order | Task | Outcome | Depends on | Planned state |
 |---:|---|---|---|---|
-| 1 | TASK-P1-01 | Phase-aware governance与可持续 CI handoff | TASK-P0-10 | `ready` |
+| 1 | TASK-P1-01 | Phase-aware governance与可持续 CI handoff | TASK-P0-10 | `in_progress` |
 | 2 | TASK-P1-02 | Canonical records、Import v2、Snapshot v2合同 | P1-01 | `planned` |
 | 3 | TASK-P1-03 | Raw Staging、provenance、idempotent persistence | P1-02 | `planned` |
 | 4 | TASK-P1-04 | CSV、XLSX与ReferenceFileAdapter v1 | P1-02/03 | `planned` |

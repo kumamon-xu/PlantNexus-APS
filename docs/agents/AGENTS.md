@@ -82,6 +82,14 @@ uv run python scripts/check_docs.py
 uv run python scripts/check_docs.py --task <task-card> --check-diff --report <report-path>
 ```
 
+CI 不得把 current phase或 Task路径硬编码在 workflow中。PR/push应传入不可变 event base并运行：
+
+```text
+uv run python scripts/check_docs.py --discover-task-from <event-base-sha> --check-diff --report build/traceability/ci-current-task-report.json
+```
+
+event range必须恰好归属一个 current-phase Task Card；若没有 changed card，只允许回退到仓库中唯一 `in_progress` current Task。历史/未来 Task、多个 current Task、无可归属 Task或非完整 SHA均失败，禁止自由文本 skip。
+
 校验器检查 ID、Task 依赖、traceability，以及 `Diff base..HEAD` 已提交变更与 working tree 并集对应的 change-impact 声明，但不代替业务 Contract、Schema、Solver/Validator correctness、Scenario 或 Phase Gate 验收。
 
-校验器从 `docs/current_phase.md` front matter读取当前 `Pn`：保留 prior-phase terminal Task，允许 current-phase详细卡，拒绝 future-phase详细卡。不得在 Agent、Task或 CI中另建硬编码 current phase事实源。
+校验器从 `docs/current_phase.md` front matter读取当前 `Pn`：保留 prior-phase terminal Task，允许 current-phase详细卡，拒绝 future-phase详细卡。不得在 Agent、Task或 CI中另建硬编码 current phase事实源；CI event base只用于发现 Task，不取代卡片中的 `Diff base`。

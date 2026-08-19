@@ -1,6 +1,6 @@
 # PlantNexus APS
 
-PlantNexus APS 是一个面向单工厂、多车间场景的高级计划与排程（APS）项目。P0 Exit Gate 已通过，用户已明确授权进入 P1（Data & Snapshot）；当前仅完成 P1 Task规划，尚未开始任何 P1实现。真实 Solver、生产 Adapter/参数和 P2+能力仍未实现。
+PlantNexus APS 是一个面向单工厂、多车间场景的高级计划与排程（APS）项目。P0 Exit Gate 已通过，用户已明确授权进入 P1（Data & Snapshot）；TASK-P1-01 正在执行 phase-aware governance与 CI handoff，尚未开始任何 P1数据链业务实现。真实 Solver、生产 Adapter/参数和 P2+能力仍未实现。
 
 ## 开始之前
 
@@ -39,6 +39,8 @@ uv run python scripts/check_docs.py --task docs/tasks/P1/TASK-P1-01-phase-govern
 
 报告使用 `traceability-report.v1`，包含 `diff_base` 与 committed/working-tree source counts，生成到已忽略的 `build/`；Task Card Completion evidence 保存持久结果摘要。[`ci.yml`](.github/workflows/ci.yml) 已编排 exact lock、lint、type、全部 P0 tests、machine contracts、Compose config、文档 diff 和 package build。仓库内只证明 workflow/config 可执行；CI provider run URL/ID 必须来自真实外部运行，不能由本地结果替代。
 
+CI 不再硬编码某个 P0/P1 Task。PR 使用 base SHA、main push 使用 event `before` SHA，通过 `--discover-task-from <40-char-sha>` 找到唯一当前 Phase Task Card，再按该卡自身的 `Diff base`执行完整 scope/impact检查；零个、多个、历史/未来或 phase/path不一致的 Task Card都硬失败。workflow机器报告使用 `ci-*.json`与 `plantnexus-ci-evidence-<run-id>`中性名称；本地实现通过不等于 provider PASS。
+
 ## 仓库结构
 
 ```text
@@ -52,4 +54,4 @@ scripts/      仓库级校验与自动化脚本
 infra/        P0 开发容器构建配置
 ```
 
-P0-08 只形成 health-only API、环境配置、日志、lazy DB/Redis connectivity、通用 Job reliability/idempotency、Alembic/Compose/CI 骨架；它不形成业务 pipeline、产品 API、真实分布式作业存储、Solver 或生产部署。P1的12张有界 Task Card已建立，TASK-P1-01=`ready`且尚无 `in_progress` Task。当前授权范围见 [`docs/current_phase.md`](docs/current_phase.md)。
+P0-08 只形成 health-only API、环境配置、日志、lazy DB/Redis connectivity、通用 Job reliability/idempotency、Alembic/Compose/CI 骨架；它不形成业务 pipeline、产品 API、真实分布式作业存储、Solver 或生产部署。P1的12张有界 Task Card已建立，TASK-P1-01=`in_progress`且 Diff base=`430506349ccdc135072e12fc98f7df1744a63e2c`。当前授权范围见 [`docs/current_phase.md`](docs/current_phase.md)。

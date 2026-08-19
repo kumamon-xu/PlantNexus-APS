@@ -87,3 +87,5 @@ TASK-P0-05 在 `simulation/profiles|scenarios|generators` 中加入纯标准库�
 ## P1 planning baseline
 
 用户于 2026-08-19授权进入 P1后，`docs/tasks/P1/` 新增 TASK-P1-01～12；当前没有 P1业务代码。治理 validator从 `docs/current_phase.md`读取 phase并允许 P0 terminal history + P1 current cards，未来 P2+详细卡仍被拒绝。P1预期在既有 `importers/`、`normalization/`、`data_validation/`、`snapshots/`、`planning/problem/`、`simulation/generators/` 和 `application/`边界内逐 Task落地，不在本 planning baseline创建这些实现。
+
+TASK-P1-01只修改 repository-governance边界：`scripts/check_docs.py`增加 phase policy与CI event-range Task discovery，`.github/workflows/ci.yml`使用中性 report/artifact并保留 P0全部 test/machine/build gates；`backend/tests/unit/test_check_docs.py`和`backend/tests/integration/test_ci_contract.py`覆盖负向路径。没有新增目录、业务模块、Schema、Fixture、Migration、dependency、Solver或 P2代码。

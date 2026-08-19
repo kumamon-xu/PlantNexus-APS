@@ -4,27 +4,43 @@ from __future__ import annotations
 
 import re
 import unittest
+from pathlib import Path
 from unittest.mock import Mock
 
 from scripts.check_docs import (
     ImpactRule,
     RepositoryValidator,
     ROOT_ID_RE,
+    TaskDiscoveryError,
     duplicate_id_issues,
     evaluate_impact_coverage,
     expand_numeric_ranges,
     expand_task_ranges,
     missing_task_fields,
     namespace_separation_issues,
+    normalize_repo_path,
     parse_markdown_tables,
+    select_changed_task_path,
+    task_phase_policy_issue,
     unknown_reference_issues,
 )
 
 
 TEST_ID = "TEST-TRACEABILITY-VALIDATOR"
+PHASE_GOVERNANCE_TEST_ID = "TEST-PHASE-GOVERNANCE-001"
 
 
 class TraceabilityValidatorTests(unittest.TestCase):
+    def test_repository_path_normalization_preserves_hidden_directories(self) -> None:
+        self.assertEqual(
+            normalize_repo_path(".github/workflows/ci.yml"),
+            ".github/workflows/ci.yml",
+        )
+        self.assertEqual(
+            normalize_repo_path("./docs/tasks/P1/TASK-P1-01-phase-governance-and-ci-handoff.md"),
+            "docs/tasks/P1/TASK-P1-01-phase-governance-and-ci-handoff.md",
+        )
+
     def test_registry_table_parse(self) -> None:
         text = """
 | ID | ID status | Requirement |
@@ -157,6 +173,94 @@ class TraceabilityValidatorTests(unittest.TestCase):
             },
         )
 
+    def test_phase_policy_accepts_current_and_terminal_history(self) -> None:
+        self.assertIsNone(
+            task_phase_policy_issue("TASK-P0-10", "P0", "P0", "P1", "done")
+        )
+        self.assertIsNone(
+            task_phase_policy_issue("TASK-P1-01", "P1", "P1", "P1", "in_progress")
+        )
+        self.assertIsNotNone(
+            re.fullmatch(r"TEST-[A-Z0-9-]+", PHASE_GOVERNANCE_TEST_ID)
+        )
+
+    def test_phase_policy_rejects_history_future_and_alignment_errors(self) -> None:
+        historical = task_phase_policy_issue(
+            "TASK-P0-10", "P0", "P0", "P1", "ready"
+        )
+        future_task_id = "TASK-" + "P2-01"
+        future = task_phase_policy_issue(
+            future_task_id, "P2", "P2", "P1", "planned"
+        )
+        misaligned = task_phase_policy_issue(
+            "TASK-P1-01", "P1", "P0", "P1", "in_progress"
+        )
+
+        self.assertIsNotNone(historical)
+        self.assertIn("historical", historical[0] if historical else "")
+        self.assertIsNotNone(future)
+        self.assertIn("future", future[0] if future else "")
+        self.assertIsNotNone(misaligned)
+        self.assertIn(
+            "do not identify the same phase", misaligned[0] if misaligned else ""
+        )
+
+    def test_changed_task_selection_is_current_phase_and_unique(self) -> None:
+        selected = select_changed_task_path(
+            (
+                "README.md",
+                "docs/tasks/P1/TASK-P1-01-phase-governance-and-ci-handoff.md",
+                "docs/quality/ci-gates-and-definition-of-done.md",
+            ),
+            "P1",
+        )
+
+        self.assertEqual(
+            selected,
+            "docs/tasks/P1/TASK-P1-01-phase-governance-and-ci-handoff.md",
+        )
+        self.assertIsNone(select_changed_task_path(("README.md",), "P1"))
+
+    def test_changed_task_selection_rejects_stale_or_multiple_cards(self) -> None:
+        with self.assertRaisesRegex(TaskDiscoveryError, "outside current P1"):
+            select_changed_task_path(
+                (
+                    "docs/tasks/P0/TASK-P0-10-ci-provider-evidence-remediation.md",
+                ),
+                "P1",
+            )
+
+        with self.assertRaisesRegex(TaskDiscoveryError, "multiple current P1"):
+            select_changed_task_path(
+                (
+                    "docs/tasks/P1/TASK-P1-01-phase-governance-and-ci-handoff.md",
+                    "docs/tasks/P1/TASK-P1-02-canonical-import-contracts.md",
+                ),
+                "P1",
+            )
+
+    def test_repository_discovery_uses_an_immutable_event_range(self) -> None:
+        change_base = "a" * 40
+        task_path = "docs/tasks/P1/TASK-P1-01-phase-governance-and-ci-handoff.md"
+        validator = object.__new__(RepositoryValidator)
+        validator.root = Path(__file__).resolve().parents[3]
+        validator.git_output = Mock(side_effect=(change_base, "", f"{task_path}\n"))
+
+        selected = validator.discover_changed_task_path(change_base, "P1")
+
+        self.assertEqual(selected, task_path)
+        self.assertEqual(validator.task_discovery_base, change_base)
+        validator.git_output.assert_any_call(
+            "diff",
+            "--name-only",
+            "--diff-filter=ACDMRTUXB",
+            f"{change_base}..HEAD",
+            "--",
+            "docs/tasks",
+        )
+
+        with self.assertRaisesRegex(TaskDiscoveryError, "40-character"):
+            validator.discover_changed_task_path("HEAD", "P1")
 
 if __name__ == "__main__":
     unittest.main()

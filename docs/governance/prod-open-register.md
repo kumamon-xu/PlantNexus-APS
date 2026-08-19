@@ -68,3 +68,5 @@ TASK-P0-09 review：P0 registration gate 确认 OPEN-001～015 共 15 项全部�
 TASK-P0-10 review：GitHub Actions run/artifact/required-check 仅用于关闭 P0 CI evidence gap，不提供 factory timezone、真实接口/拓扑/日历、业务策略/权威、历史数据或生产 runtime threshold。没有 authority、closure record、production value 或 migration/replay 决定；OPEN-001～015 全部继续 `OPEN`，registry format version 不变。
 
 P1 Task 规划 review：reference adapter 被限定为非生产权威来源，单位/时区/字段缺失必须显式拒绝，任何真实字段映射、接口、日历、策略和规模阈值仍须由 OPEN closure record 授权。当前没有 authority、closure evidence、production default 或 migration/replay 决定；OPEN-001～015 全部继续 `OPEN`，registry format version不变。
+
+TASK-P1-01 review：CI event SHA、Task Diff base、workflow report名称和本地测试不提供任何生产业务权威、接口、字段、参数、阈值或closure record。OPEN-001～015全部继续`OPEN`，registry format version不变。

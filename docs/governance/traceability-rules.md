@@ -90,4 +90,6 @@ TASK-P0-10 的 provider closure 必须同时记录 GitHub repository/workflow/ev
 
 2026-08-19 phase transition后，校验器从 `docs/current_phase.md` front matter读取 current phase，不再硬编码 P0，并支持任意 `TASK-Pn-NN～NN` 依赖范围。P0 `done`历史卡继续参与依赖/引用审计；P1卡必须包含 `Completion conditions`；P2+仍只能保留 Milestone。
 
-结构化报告 schema 为 `traceability-report.v1`，至少包含 Task、Git HEAD、Diff base、committed-range/working-tree source counts、changed paths、matched impact rows、expected/observed documents、missing trace refs、registry counts 和失败明细。失败返回非零退出码，不允许自由文本 skip。
+TASK-P1-01增加 CI changed-task discovery：`--discover-task-from <event-base-sha>`要求完整、存在且为 HEAD祖先的 commit，在该 range的 `docs/tasks/**`中只能出现一个 current-phase Task Card；历史/未来/phase错位/多个卡直接失败。若 range没有 Task Card，仅当仓库恰有一个 current-phase `in_progress` Task时回退。选择完成后仍使用卡片 `Diff base..HEAD` + working tree执行 scope/impact，不把 CI event base混成 Task baseline。
+
+结构化报告 schema 为 `traceability-report.v1`，至少包含 Task、可选 `task_discovery_base`、Git HEAD、Diff base、committed-range/working-tree source counts、changed paths、matched impact rows、expected/observed documents、missing trace refs、registry counts 和失败明细。失败返回非零退出码，不允许自由文本 skip。

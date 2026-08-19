@@ -62,9 +62,11 @@ integration contract 显式断言新 command/artifact 存在且 workflow 不再�
 
 ## P1 planning and CI handoff
 
-P0 Gate通过并获得用户明确 phase transition授权后，current phase已更新为 P1，TASK-P1-01～12已创建但尚未执行。local governance validator现从 `docs/current_phase.md`读取当前 `Pn`，允许历史 P0 terminal cards与当前 P1 cards共存，并要求 P1+ Task具有 `Completion conditions`；这只是 planning validation，不是 provider workflow handoff或业务证据。
+P0 Gate通过并获得用户明确 phase transition授权后，current phase已更新为 P1。TASK-P1-01把local phase policy与provider workflow收敛为同一机制：current phase只读 `docs/current_phase.md`；PR使用base SHA、main push使用event `before` SHA；`--discover-task-from`要求event range唯一归属current-phase Task，再按该卡自身 `Diff base`做scope/impact检查。
 
-现有 provider workflow仍承载 P0-10 immutable evidence语义。为避免每个后续 Task继续硬编码旧 range，TASK-P1-01必须首先收敛 phase/changed-task-aware CI并证明没有削弱 P0 gates；在该 Task形成真实 provider run前，不得把 P1 planning commit的 local PASS写成 P1 CI PASS。
+workflow继续运行 exact lock、Ruff、Pyright、全部既有 unit/contract/simulation/golden/validation/integration tests、五类machine contract、Compose、full/diff governance、conditional Benchmark hook与build；报告改为`ci-*.json`，artifact为`plantnexus-ci-evidence-<run-id>`。integration contract拒绝P0-08/P0-10 Task残留、multiple/stale Task attribution和`continue-on-error`。
+
+这只形成repository-local workflow contract。未实际push/查询provider时，新的run/job/artifact/required-check为`NOT_RUN`；P0既有successful provider evidence保持有效历史，不能拿来冒充P1-01 provider execution。无Solver runner、BenchmarkReport或生产阈值。
 
 ## Task Done
 

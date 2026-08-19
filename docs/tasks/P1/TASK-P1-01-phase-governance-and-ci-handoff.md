@@ -1,7 +1,7 @@
 ---
 doc_id: TASK-P1-01
 title: P1 Phase Governance and CI Handoff
-status: ready
+status: in_progress
 spec_version: 0.3.0
 phase: P1
 normative: true
@@ -21,9 +21,9 @@ Goal: 将文档治理和 CI 从 P0-10 的一次性 handoff 收敛为可识别当
 
 Inputs: `docs/current_phase.md`、`docs/tasks/README.md`、`docs/quality/documentation-consistency-checks.md`、`.github/workflows/ci.yml`、P0 successful provider evidence。
 
-Diff base: 进入 `in_progress` 前记录当时完整 40 字符 HEAD SHA；当前 `ready` 状态不得预填移动引用
+Diff base: 430506349ccdc135072e12fc98f7df1744a63e2c
 
-Files allowed to change: `scripts/check_docs.py`、`backend/tests/unit/test_check_docs.py`、`.github/workflows/ci.yml`、`backend/tests/integration/test_ci_contract.py`、生成但不提交的 `build/traceability/TASK-P1-01-report.json` 与 `build/validation/TASK-P1-01-ci-contract.json`，以及下方 `Documents to update` 的全部明确路径。
+Files allowed to change: `scripts/check_docs.py`、`backend/tests/unit/test_check_docs.py`、`.github/workflows/ci.yml`、`backend/tests/integration/test_ci_contract.py`、生成但不提交的 `build/traceability/TASK-P1-01-report.json`、`build/traceability/ci-current-task-report.json`、`build/validation/ci-rule-contracts.json`、`build/validation/ci-simulation-contracts.json`、`build/validation/ci-golden.json`、`build/validation/ci-validator-mutations.json`、`build/validation/ci-engineering.json` 与 `build/validation/TASK-P1-01-ci-contract.json`，以及下方 `Documents to update` 的全部明确路径。
 
 Files forbidden to change: `backend/app/domain/**`、`backend/app/importers/**`、`backend/app/normalization/**`、`backend/app/data_validation/**`、`backend/app/snapshots/**`、`backend/app/planning/**`、`backend/app/simulation/**`、`schemas/**`、`fixtures/**`、`pyproject.toml`、`uv.lock`、任何 P1 数据实现、Solver 或 Production 配置。
 
@@ -33,7 +33,7 @@ Outputs: current-phase-aware governance validator、不会遗留 P0-10 task rang
 
 Documentation impact: required
 
-Documents to update: `README.md`、`docs/README.md`、`docs/current_phase.md`、`docs/agents/AGENTS.md`、`docs/agents/reading-order-and-context-policy.md`、`docs/architecture/configuration-environments-and-isolation.md`、`docs/architecture/repository-layout.md`、`docs/architecture/technology-stack.md`、`docs/governance/document-control.md`、`docs/governance/nfr-and-engineering-register.md`、`docs/governance/traceability-rules.md`、`docs/governance/traceability-matrix.md`、`docs/governance/change-impact-matrix.md`、`docs/governance/document-inventory.md`、`docs/operations/README.md`、`docs/quality/ci-gates-and-definition-of-done.md`、`docs/quality/documentation-consistency-checks.md`、`docs/quality/test-strategy-and-matrix.md`、`docs/milestones/P1-data-and-snapshot.md`、`docs/tasks/README.md`、`docs/tasks/TASK_TEMPLATE.md`、`docs/tasks/P1/TASK-P1-01-phase-governance-and-ci-handoff.md`。
+Documents to update: `README.md`、`docs/README.md`、`docs/current_phase.md`、`docs/agents/AGENTS.md`、`docs/agents/reading-order-and-context-policy.md`、`docs/architecture/configuration-environments-and-isolation.md`、`docs/architecture/repository-layout.md`、`docs/architecture/technology-stack.md`、`docs/governance/document-control.md`、`docs/governance/requirements-register.md`、`docs/governance/nfr-and-engineering-register.md`、`docs/governance/traceability-rules.md`、`docs/governance/traceability-matrix.md`、`docs/governance/prod-open-register.md`、`docs/governance/sim-assumption-register.md`、`docs/governance/risk-register.md`、`docs/governance/change-impact-matrix.md`、`docs/governance/document-inventory.md`、`docs/operations/README.md`、`docs/quality/ci-gates-and-definition-of-done.md`、`docs/quality/documentation-consistency-checks.md`、`docs/quality/test-strategy-and-matrix.md`、`docs/milestones/README.md`、`docs/milestones/P1-data-and-snapshot.md`、`docs/tasks/README.md`、`docs/tasks/TASK_TEMPLATE.md`、`docs/tasks/P1/TASK-P1-01-phase-governance-and-ci-handoff.md`。
 
 Documentation impact rationale: 治理 validator、Task phase policy 与 CI provider gate 的行为和使用命令都会改变，必须同步 Agent、质量、追踪和阶段文档。
 
@@ -69,4 +69,15 @@ Rollback: 恢复到最后一个能识别当前 Phase 且通过 full/diff governa
 
 ## Completion evidence
 
-执行时填写真实 changed paths、Diff base/HEAD、测试/报告/provider 结果和文档影响；当前不得预填 PASS。
+2026-08-19 已按用户指令启动；启动时 HEAD/`origin/main` 均为 `430506349ccdc135072e12fc98f7df1744a63e2c`，working tree clean，因此该 commit固定为不可变 Diff base。
+
+提交前实现证据：
+
+- phase policy、changed-task selector、immutable event-range discovery、CLI互斥入口、`task_discovery_base`报告字段与hidden-directory路径保真已落地；workflow使用PR base/main-push `before`、中性report/artifact命名，并保留原全部 gates；
+- targeted Ruff=`PASS`，targeted Pyright=`0 errors`，`test_check_docs.py` + `test_ci_contract.py`=`20 passed`；全仓Ruff=`PASS`、全仓Pyright=`0 errors`、完整 unit/contract/simulation/golden/validation/integration=`97 passed`；
+- rule contracts=`PASS active=11 deferred=7 capabilities=20 error_codes=19 machines=3 states=27 transitions=42`，Simulation contracts、Golden replay、13-case Validator mutation、Engineering contract与Compose config均`PASS`；`uv sync --locked`和`uv build`均成功；
+- full governance=`PASS docs=124 roots=30 trace_rows=30 tests=36 open=15 sim=9 risks=10 tasks=22`；显式Task diff governance=`PASS diff_paths=31 impact_rows=6`，命中`IMPACT-GOVERNANCE-VALIDATOR`、`IMPACT-INFRA`、`IMPACT-TESTS`、`IMPACT-PHASE`、`IMPACT-GOVERNANCE-REGISTRY`、`IMPACT-DOCS`，报告位于忽略目录`build/traceability/TASK-P1-01-report.json`；动态event-base入口也选择`TASK-P1-01`并PASS；
+- 实际31个tracked changed paths恰为4个实现/测试文件和`Documents to update`列出的27个文档；未修改业务代码、Schema、Fixture、Migration、dependency、Solver、Production配置或P2内容；REQ/NFR/ENG仍为`ALLOCATED`，OPEN-001～015仍为`OPEN`，SIM-ASSUMPTION-001～009保持`ACTIVE`；
+- 未获得单独的push/branch/provider执行授权，因此新的provider run/job/artifact/required-check=`NOT_RUN`；既有P0 provider证据只作历史输入，不冒充本Task结果。Benchmark hook保持conditional，runner/BenchmarkReport=`NOT_RUN`。
+
+当前仍保持`in_progress`，等待implementation commit后的clean-tree full/diff/dynamic replay；只有提交后证据通过才更新为`done`。回滚点为上述Diff base；生成的`build/`与`dist/`产物均不提交。

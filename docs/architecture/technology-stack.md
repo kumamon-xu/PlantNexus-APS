@@ -82,3 +82,9 @@ P0 工程骨架首次落地以下精确 direct pins；transitive graph 以 `uv.l
 本 Task 不修改 `pyproject.toml`、`uv.lock`、Python/uv pin、Action major tag、Compose image 或 runtime dependency；五类 machine report 只从 TASK-P0-08 文件名交接为 TASK-P0-10，报告 schema 与生成器不变。provider evidence 通过 GitHub Actions 和 GitHub REST 获取，不向项目依赖图引入 GitHub CLI/SDK。
 
 Actions provider PASS 只证明锁定的 P0 repository gates 在 GitHub-hosted runner 上执行；它不将 tag 提升为 digest pin，也不构成 Production supply-chain hardening、deployment 或 Solver/Benchmark evidence。
+
+## TASK-P1-01 CI toolchain review
+
+本 Task不修改 `pyproject.toml`、`uv.lock`、Python/uv pin、Action major tag、Compose image或 runtime/dev dependency。changed-task discovery只使用 Python标准库、Git和既有 workflow context；unit/integration tests继续使用现有 pytest/PyYAML/Ruff/Pyright pins。
+
+五类 P0 machine CLI、Compose、build和conditional Benchmark hook保持执行，只把输出改为中性 `ci-*.json`。OR-Tools、Benchmark runner和新供应链工具仍未安装；provider未在本地执行时保持 `NOT_RUN`。

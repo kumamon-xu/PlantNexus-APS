@@ -30,7 +30,7 @@ registry_version: 1.0.0
 | Test ID | Purpose | Earliest phase | Evidence status |
 |---|---|---|---|
 | TEST-TRACEABILITY-VALIDATOR | Registry、reference、Task、diff/impact，以及 clean-tree committed range regression | P0 | [`backend/tests/unit/test_check_docs.py`](../../backend/tests/unit/test_check_docs.py) |
-| TEST-PHASE-GOVERNANCE-001 | Current/prior/future Phase Task policy与 CI changed-task handoff | P1 | PLANNED / TASK-P1-01 |
+| TEST-PHASE-GOVERNANCE-001 | Current/prior/future Phase Task policy与 CI changed-task handoff | P1 | [`test_check_docs.py`](../../backend/tests/unit/test_check_docs.py) phase/range/discovery negative paths + [`test_ci_contract.py`](../../backend/tests/integration/test_ci_contract.py) generic workflow/no-stale-P0 handoff formed |
 | TEST-OBS-001 | 日志、运行标识与 Observability 关联 | P0 | [`test_logging.py`](../../backend/tests/integration/test_logging.py) JSON/context/trace-ID/redaction P0 slice formed；PlanningRun metrics/audit retention PLANNED |
 | TEST-CONTRACT-001 | Schema meta/positive/negative、版本、UTC/duration/reference、isolation 与 round-trip | P0 | [`backend/tests/contract/test_schema_contracts.py`](../../backend/tests/contract/test_schema_contracts.py) + data/rule Schema baselines formed；Simulation Schema validation also covered by TEST-SCENARIO-REPLAY |
 | TEST-IMPORT-STAGING-001 | Raw batch/row provenance、transaction、migration与 idempotent replay | P1 | PLANNED / TASK-P1-03 |
@@ -92,8 +92,10 @@ TASK-P0-10 不新增 Test ID、test function、fixture 或 assertion 豁免；�
 
 本地 90-test suite 及 GitHub run `32228647627` 的 P0 test/machine-contract steps 均 PASS，且 clean implementation commit 的目标 integration file为 5 passed。该结果只关闭 CI handoff/provider evidence gap；不新增 Solver/Property/Benchmark 或 P1 能力证据，`registry_version` 保持 `1.0.0`。
 
-## P1 planned allocation
+## P1 allocation and TASK-P1-01 evidence
 
-用户于 2026-08-19授权进入 P1后，新增上述9个稳定 Test ID并分配到 TASK-P1-01/03～09/11；TASK-P1-02复用 TEST-CONTRACT-001，TASK-P1-10复用 TEST-SCENARIO-REPLAY/TEST-SIM-ISOLATION，TASK-P1-12重跑全部 P1证据。所有新增行均为 `PLANNED`，没有测试文件、结果或 artifact时不得改写为 formed。
+用户于 2026-08-19授权进入 P1后，新增上述9个稳定 Test ID并分配到 TASK-P1-01/03～09/11；TASK-P1-02复用 TEST-CONTRACT-001，TASK-P1-10复用 TEST-SCENARIO-REPLAY/TEST-SIM-ISOLATION，TASK-P1-12重跑全部 P1证据。除 TEST-PHASE-GOVERNANCE-001 已由 TASK-P1-01形成外，其余新增行仍为 `PLANNED`，没有测试文件、结果或 artifact时不得改写为 formed。
+
+TASK-P1-01扩展治理单测覆盖 current P1/prior terminal P0/future phase/alignment、任意 phase range、唯一 changed Task、stale historical/multiple card、完整 event-base Git range；CI integration contract验证中性 workflow/report/artifact、PR/push base来源、full+diff governance、全部既有 gates、无 P0-08/P0-10 Task残留及无 `continue-on-error`。这些只证明治理/CI contract，不证明 provider执行、P1数据链或 Benchmark/Solver。
 
 P1 Exit Gate至少要求 TEST-P1-COMMON-INGRESS组合证明 same scenario+seed的 Import/Snapshot/Problem bytes/hash一致，并由 TEST-DATA-QUALITY-001分别证明 `ROUTE_CYCLE`、`MISSING_RESOURCE`、`UNIT_CONVERSION_ERROR`、`MISSING_DURATION`。这些都是 data pipeline证据，不能外推为 Solver、ScheduleValidator、Benchmark或 Production readiness。

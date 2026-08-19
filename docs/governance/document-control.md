@@ -108,3 +108,5 @@ uv run python scripts/check_docs.py --task <task-card> --check-diff --report <re
 change-impact matrix 使用稳定 `IMPACT-*` Rule ID。实际 changed path 是 `Diff base..HEAD` 已提交路径与 working tree 路径的并集，必须命中机器规则；Task 必须声明全部命中行并把 Required documentation 列入 `Documents to update`。报告为 `traceability-report.v1`，记录 diff base 和两个来源的计数；机器 PASS 仍须在 Completion evidence 中记录实际文档更新、未修改理由和语义审查结论。
 
 P1及以后 Task Card还必须填写 `Completion conditions`，把实现、负向路径、文档/追踪、治理验收与排除项写成可核验完成门；历史 P0 Task不追补该字段。
+
+CI event attribution使用 `--discover-task-from <40-char-event-base>`：只允许选择唯一 current-phase Task Card，或在没有 changed Task Card时回退到唯一 `in_progress` current Task；event base只负责归属，scope仍由卡片 `Diff base`决定。历史/未来 Task、多个 current Task、无唯一归属、非完整/非祖先 SHA都必须非零失败。

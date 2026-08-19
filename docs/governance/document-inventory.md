@@ -126,7 +126,7 @@ registry_version: 1.0.0
 | [tasks/P0/TASK-P0-08-engineering-and-ci-skeleton.md](../tasks/P0/TASK-P0-08-engineering-and-ci-skeleton.md) | TASK-P0-08 | done | Engineering and CI Skeleton |
 | [tasks/P0/TASK-P0-09-p0-exit-gate-audit.md](../tasks/P0/TASK-P0-09-p0-exit-gate-audit.md) | TASK-P0-09 | done | P0 Exit Gate Audit |
 | [tasks/P0/TASK-P0-10-ci-provider-evidence-remediation.md](../tasks/P0/TASK-P0-10-ci-provider-evidence-remediation.md) | TASK-P0-10 | done | CI Workflow Handoff and Provider Evidence Remediation |
-| [tasks/P1/TASK-P1-01-phase-governance-and-ci-handoff.md](../tasks/P1/TASK-P1-01-phase-governance-and-ci-handoff.md) | TASK-P1-01 | ready | P1 Phase Governance and CI Handoff |
+| [tasks/P1/TASK-P1-01-phase-governance-and-ci-handoff.md](../tasks/P1/TASK-P1-01-phase-governance-and-ci-handoff.md) | TASK-P1-01 | in_progress | P1 Phase Governance and CI Handoff |
 | [tasks/P1/TASK-P1-02-canonical-import-contracts.md](../tasks/P1/TASK-P1-02-canonical-import-contracts.md) | TASK-P1-02 | planned | Canonical Import Contracts |
 | [tasks/P1/TASK-P1-03-raw-staging-and-import-provenance.md](../tasks/P1/TASK-P1-03-raw-staging-and-import-provenance.md) | TASK-P1-03 | planned | Raw Staging and Import Provenance |
 | [tasks/P1/TASK-P1-04-csv-excel-reference-adapter.md](../tasks/P1/TASK-P1-04-csv-excel-reference-adapter.md) | TASK-P1-04 | planned | CSV Excel and Formal Reference Adapter |

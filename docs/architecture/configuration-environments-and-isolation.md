@@ -56,3 +56,9 @@ Production fail-closed rules：runtime=`production` 必须同时 data plane=`pro
 workflow handoff 只更换当前 Task 的 diff/report 引用和 evidence artifact 名称，不改变 runtime environment、data plane、Database/Redis endpoint 或 Simulation/Production guard。GitHub Actions 仍仅有 `contents: read`；CI 中的 PostgreSQL password 是明确标记的 contract-only 非生产值，本 Task 不新增 repository Secret。
 
 Actions run/artifact 允许通过公开 GitHub REST 读取；branch-protection 查询/设置如需认证，只能使用进程外短期 credential 或已认证 GitHub session，不得写入命令记录、文档、日志、artifact 或 repository。这是 CI 治理边界，不是 Production deployment/Secret Manager evidence。
+
+## TASK-P1-01 phase-aware CI boundary
+
+workflow新增 `PLANTNEXUS_CI_CHANGE_BASE`，PR取 base SHA、main push取 event `before` SHA；该值是 Git commit provenance，不是 Secret、runtime environment、data plane或业务配置。它只用于发现唯一 current-phase Task Card，真正 scope仍由 Task Card内的 immutable `Diff base`决定。
+
+CI report/artifact改为 `ci-*.json`、`ci-current-task-report.json`与 `plantnexus-ci-evidence-<run-id>`中性命名，不改变 environment/Database/Redis/Simulation/Production guard。workflow继续 `contents: read`，没有新增 Secret、权限、deployment或 Production connectivity；本地合同 PASS不构成 provider run evidence。

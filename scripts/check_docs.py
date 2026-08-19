@@ -110,6 +110,10 @@ ROOT_ID_RE = re.compile(
 TEST_ID_RE = re.compile(r"(?<![A-Z0-9_-])TEST-[A-Z0-9]+(?:-[A-Z0-9]+)*(?![A-Z0-9_-])")
 TASK_ID_RE = re.compile(r"(?<![A-Z0-9_-])TASK-P\d+-\d{2}(?![A-Z0-9_-])")
 PHASE_ID_RE = re.compile(r"P(?P<number>\d+)")
+TASK_CARD_PATH_RE = re.compile(
+    r"^docs/tasks/(?P<folder_phase>P\d+)/"
+    r"TASK-(?P<id_phase>P\d+)-(?P<number>\d{2})-[^/]+\.md$"
+)
 CONSTRAINT_ID_RE = re.compile(r"(?<![A-Z0-9_-])C-\d{3}(?![A-Z0-9_-])")
 OBJECTIVE_ID_RE = re.compile(r"(?<![A-Z0-9_-])OBJ-\d{3}(?![A-Z0-9_-])")
 ADR_ID_RE = re.compile(r"(?<![A-Z0-9_-])ADR-\d{4}(?![A-Z0-9_-])")
@@ -151,10 +155,17 @@ class ImpactCoverage:
     issues: tuple[Issue, ...]
 
 
+class TaskDiscoveryError(ValueError):
+    """A CI change range cannot be attributed to one current-phase Task."""
+
+
 def normalize_repo_path(value: str) -> str:
     """Normalize a repository path from Markdown or Git output."""
 
-    return value.strip().strip("<>").replace("\\", "/").lstrip("./")
+    normalized = value.strip().strip("<>").replace("\\", "/")
+    while normalized.startswith("./"):
+        normalized = normalized[2:]
+    return normalized.lstrip("/")
 
 
 def parse_front_matter(text: str) -> dict[str, str]:
@@ -438,6 +449,87 @@ def phase_number(value: str) -> int | None:
     return int(match.group("number")) if match is not None else None
 
 
+def task_phase_policy_issue(
+    task_id: str,
+    folder_phase: str,
+    metadata_phase: str,
+    current_phase: str,
+    status: str,
+) -> tuple[str, str] | None:
+    """Return one phase-policy failure for a Task Card, if any."""
+
+    task_match = re.fullmatch(r"TASK-(P\d+)-\d{2}", task_id)
+    task_phase = task_match.group(1) if task_match is not None else ""
+    task_phase_number = phase_number(task_phase)
+    current_phase_number = phase_number(current_phase)
+    if not (
+        task_phase
+        and folder_phase == task_phase
+        and metadata_phase == task_phase
+        and task_phase_number is not None
+    ):
+        return (
+            "Task ID, directory, and phase metadata do not identify the same phase",
+            "align TASK-Pn-NN, docs/tasks/Pn, and front matter phase",
+        )
+    if current_phase_number is None:
+        return None
+    if task_phase_number > current_phase_number:
+        return (
+            f"detailed Task Card belongs to future {task_phase}, current phase is {current_phase}",
+            "keep future phases at Milestone level until explicitly authorized",
+        )
+    if task_phase_number < current_phase_number and status not in TERMINAL_TASK_STATUSES:
+        return (
+            f"historical {task_phase} Task remains non-terminal in current {current_phase}",
+            "finish or cancel prior-phase Tasks before advancing the phase",
+        )
+    return None
+
+
+def select_changed_task_path(
+    changed_paths: Iterable[str], current_phase: str
+) -> str | None:
+    """Select the one current-phase Task Card changed by a CI event range."""
+
+    if phase_number(current_phase) is None:
+        raise TaskDiscoveryError(f"current phase {current_phase!r} is not an exact Pn value")
+
+    candidates: set[str] = set()
+    noncurrent: set[str] = set()
+    misaligned: set[str] = set()
+    for raw_path in changed_paths:
+        path = normalize_repo_path(raw_path)
+        match = TASK_CARD_PATH_RE.fullmatch(path)
+        if match is None:
+            continue
+        folder_phase = match.group("folder_phase")
+        id_phase = match.group("id_phase")
+        if folder_phase != id_phase:
+            misaligned.add(path)
+        elif folder_phase == current_phase:
+            candidates.add(path)
+        else:
+            noncurrent.add(path)
+
+    if misaligned:
+        raise TaskDiscoveryError(
+            "changed Task path has mismatched directory/ID phase: "
+            + ", ".join(sorted(misaligned))
+        )
+    if noncurrent:
+        raise TaskDiscoveryError(
+            f"change range modifies Task Cards outside current {current_phase}: "
+            + ", ".join(sorted(noncurrent))
+        )
+    if len(candidates) > 1:
+        raise TaskDiscoveryError(
+            f"change range contains multiple current {current_phase} Task Cards: "
+            + ", ".join(sorted(candidates))
+        )
+    return next(iter(candidates)) if candidates else None
+
+
 def local_link_target(source: Path, raw_target: str) -> Path | None:
     """Resolve a local Markdown link, ignoring URLs and same-page anchors."""
 
@@ -453,12 +545,18 @@ def local_link_target(source: Path, raw_target: str) -> Path | None:
 class RepositoryValidator:
     """Run structural and traceability validation against one repository root."""
 
-    def __init__(self, repository_root: Path, task_path: Path | None = None) -> None:
+    def __init__(
+        self,
+        repository_root: Path,
+        task_path: Path | None = None,
+        task_discovery_base: str | None = None,
+    ) -> None:
         self.root = repository_root.resolve()
         self.docs_root = self.root / "docs"
         self.source_spec = self.docs_root / "core" / "APS_IMPLEMENTATION_SPEC.md"
         self.inventory = self.docs_root / "governance" / "document-inventory.md"
         self.task_path = task_path.resolve() if task_path else None
+        self.task_discovery_base = task_discovery_base
 
         self.issues: list[Issue] = []
         self.executed_checks: set[str] = set()
@@ -1072,39 +1170,22 @@ class RepositoryValidator:
             task_by_id[task_id] = path
             status_by_id[task_id] = status
 
-            task_match = re.fullmatch(r"TASK-(P\d+)-\d{2}", task_id)
-            task_phase = task_match.group(1) if task_match is not None else ""
             folder_phase = path.parent.name
             metadata_phase = metadata.get("phase", "")
-            task_phase_number = phase_number(task_phase)
-            if not (
-                task_phase
-                and folder_phase == task_phase
-                and metadata_phase == task_phase
-                and task_phase_number is not None
-            ):
+            phase_issue = task_phase_policy_issue(
+                task_id,
+                folder_phase,
+                metadata_phase,
+                current_phase,
+                status,
+            )
+            if phase_issue is not None:
+                message, suggestion = phase_issue
                 self.add_issue(
                     "PHASE-TASK",
                     relative,
-                    "Task ID, directory, and phase metadata do not identify the same phase",
-                    "align TASK-Pn-NN, docs/tasks/Pn, and front matter phase",
-                )
-            elif task_phase_number > current_phase_number:
-                self.add_issue(
-                    "PHASE-TASK",
-                    relative,
-                    f"detailed Task Card belongs to future {task_phase}, current phase is {current_phase}",
-                    "keep future phases at Milestone level until explicitly authorized",
-                )
-            elif (
-                task_phase_number < current_phase_number
-                and status not in TERMINAL_TASK_STATUSES
-            ):
-                self.add_issue(
-                    "PHASE-TASK",
-                    relative,
-                    f"historical {task_phase} Task remains non-terminal in current {current_phase}",
-                    "finish or cancel prior-phase Tasks before advancing the phase",
+                    message,
+                    suggestion,
                 )
 
         self.task_ids = set(task_by_id)
@@ -1270,8 +1351,34 @@ class RepositoryValidator:
                 f"multiple Tasks are in_progress: {', '.join(sorted(current_tasks))}",
                 "keep at most one active Task",
             )
+        if self.task_path is None and self.task_discovery_base is not None:
+            try:
+                discovered = self.discover_changed_task_path(
+                    self.task_discovery_base, current_phase
+                )
+            except (RuntimeError, TaskDiscoveryError) as error:
+                self.add_issue(
+                    "PHASE-TASK",
+                    "Task discovery",
+                    str(error),
+                    "provide an immutable event base whose range changes exactly one current-phase Task Card",
+                )
+            else:
+                if discovered is not None:
+                    self.task_path = (self.root / discovered).resolve()
         if self.task_path is None and len(current_tasks) == 1:
             self.task_path = task_by_id[current_tasks[0]].resolve()
+        if (
+            self.task_path is None
+            and self.task_discovery_base is not None
+            and len(current_tasks) != 1
+        ):
+            self.add_issue(
+                "PHASE-TASK",
+                "Task discovery",
+                f"change range contains no current {current_phase} Task Card and no unique in_progress fallback",
+                "change the current Task Card in the event range or keep exactly one current Task in_progress",
+            )
         self.counts["tasks"] = len(task_paths)
 
     def reference_documents(self) -> dict[str, str]:
@@ -1326,6 +1433,33 @@ class RepositoryValidator:
         if result.returncode != 0:
             raise RuntimeError(result.stderr.strip() or "git command failed")
         return result.stdout
+
+    def discover_changed_task_path(
+        self, change_base: str, current_phase: str
+    ) -> str | None:
+        """Discover a current Task from one immutable CI event range."""
+
+        if COMMIT_SHA_RE.fullmatch(change_base) is None:
+            raise TaskDiscoveryError(
+                "CI Task discovery base is not a full 40-character commit SHA"
+            )
+        resolved_base = self.git_output(
+            "rev-parse", "--verify", f"{change_base}^{{commit}}"
+        ).strip()
+        self.git_output("merge-base", "--is-ancestor", resolved_base, "HEAD")
+        self.task_discovery_base = resolved_base.lower()
+        changed_output = self.git_output(
+            "diff",
+            "--name-only",
+            "--diff-filter=ACDMRTUXB",
+            f"{resolved_base}..HEAD",
+            "--",
+            "docs/tasks",
+        )
+        selected = select_changed_task_path(changed_output.splitlines(), current_phase)
+        if selected is not None and not (self.root / selected).is_file():
+            raise TaskDiscoveryError(f"discovered Task Card does not exist: {selected}")
+        return selected
 
     def git_changed_paths(self, diff_base: str | None = None) -> list[str]:
         """Return the Task range union the current tracked/untracked working tree."""
@@ -1485,6 +1619,7 @@ class RepositoryValidator:
             "generated_at": datetime.now(timezone.utc).isoformat(),
             "result": "PASS" if not self.issues else "FAIL",
             "task": task_id,
+            "task_discovery_base": self.task_discovery_base,
             "git_head": git_head,
             "diff_base": self.diff_base,
             "diff_source_counts": dict(sorted(self.diff_source_counts.items())),
@@ -1555,10 +1690,16 @@ def print_text_report(report: Mapping[str, object], report_path: Path | None) ->
 
 def build_parser() -> argparse.ArgumentParser:
     parser = argparse.ArgumentParser(description=__doc__)
-    parser.add_argument(
+    task_selection = parser.add_mutually_exclusive_group()
+    task_selection.add_argument(
         "--task",
         type=Path,
         help="Current Task Card path; inferred when exactly one Task is in_progress.",
+    )
+    task_selection.add_argument(
+        "--discover-task-from",
+        metavar="COMMIT_SHA",
+        help="Discover one current-phase Task Card changed since an immutable CI event base.",
     )
     parser.add_argument(
         "--check-diff",
@@ -1580,12 +1721,19 @@ def build_parser() -> argparse.ArgumentParser:
 
 
 def main(argv: Sequence[str] | None = None) -> int:
-    args = build_parser().parse_args(argv)
+    parser = build_parser()
+    args = parser.parse_args(argv)
+    if args.discover_task_from is not None and not args.check_diff:
+        parser.error("--discover-task-from requires --check-diff")
     repository_root = Path(__file__).resolve().parents[1]
     task_path = None
     if args.task is not None:
         task_path = args.task if args.task.is_absolute() else repository_root / args.task
-    validator = RepositoryValidator(repository_root, task_path)
+    validator = RepositoryValidator(
+        repository_root,
+        task_path,
+        task_discovery_base=args.discover_task_from,
+    )
     report = validator.run(check_diff=args.check_diff)
 
     report_path = None

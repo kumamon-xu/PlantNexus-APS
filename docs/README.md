@@ -69,7 +69,7 @@ last_reviewed: 2026-08-20
 
 ## 当前范围
 
-当前阶段为P1。P0 Gate已通过且用户已明确授权phase transition；TASK-P1-01～07已完成，当前TASK-P1-08以Diff base `8b4fb4c027305d3e3aa68eec0baaf73cd0598189`实施immutable PlanningSnapshot/hash/repository。PlanningProblem、Synthetic common-ingress Gate、真实CP-SAT/P2、生产参数和Production部署仍未形成；禁止绕过正式入口。详见`current_phase.md`。
+当前阶段为P1。P0 Gate已通过且用户已明确授权phase transition；TASK-P1-01～08已完成，immutable PlanningSnapshot/hash/repository已由implementation commit `72670d18a29c9a10cb70f7a263c981a2b660e0ee` / provider run `32310098594`闭环。TASK-P1-09仍为`planned`且本次未启动；PlanningProblem、Synthetic common-ingress Gate、真实CP-SAT/P2、生产参数和Production部署仍未形成。详见`current_phase.md`。
 
 ## 仓库入口与本地检查
 

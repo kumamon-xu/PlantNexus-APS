@@ -1,6 +1,6 @@
 # PlantNexus APS
 
-PlantNexus APS 是一个面向单工厂、多车间场景的高级计划与排程（APS）项目。P0 Exit Gate 已通过，用户已明确授权进入 P1（Data & Snapshot）；TASK-P1-01～07已完成，Solver-independent Data Validation、确定性ImportQualityReport与Order Expansion均已通过provider CI。TASK-P1-08正在实现immutable PlanningSnapshot/hash，TASK-P1-09～12仍为`planned`；真实Solver、生产Adapter/参数和P2+能力仍未实现。
+PlantNexus APS 是一个面向单工厂、多车间场景的高级计划与排程（APS）项目。P0 Exit Gate 已通过，用户已明确授权进入 P1（Data & Snapshot）；TASK-P1-01～08已完成，Solver-independent Data Validation、Order Expansion及immutable PlanningSnapshot/hash均已通过provider CI。TASK-P1-09～12仍为`planned`；真实Solver、生产Adapter/参数和P2+能力仍未实现。
 
 ## 开始之前
 
@@ -54,4 +54,4 @@ scripts/      仓库级校验与自动化脚本
 infra/        P0 开发容器构建配置
 ```
 
-P0-08只形成health-only API、环境配置、日志、lazy DB/Redis connectivity、通用Job reliability/idempotency、Alembic/Compose/CI骨架；它不形成业务pipeline、产品API、真实分布式作业存储、Solver或生产部署。P1的12张有界Task Card已建立，TASK-P1-01～07=`done`、TASK-P1-08=`in_progress`、TASK-P1-09～12=`planned`。P1-07的`order-expansion.v1`、Hypothesis properties与property-aware CI已由implementation commit `5a3dbc14c12a107abf4052cca935e3ef59009d3d` / GitHub Actions run `32265257468`闭环。P1-08基于不可变Diff base `8b4fb4c027305d3e3aa68eec0baaf73cd0598189`实施Snapshot builder/hash/repository；PlanningProblem、ScheduleValidator、Solver和P2均未开始。当前授权范围见[`docs/current_phase.md`](docs/current_phase.md)。
+P0-08只形成health-only API、环境配置、日志、lazy DB/Redis connectivity、通用Job reliability/idempotency、Alembic/Compose/CI骨架；它不形成业务pipeline、产品API、真实分布式作业存储、Solver或生产部署。P1的12张有界Task Card已建立，TASK-P1-01～08=`done`、TASK-P1-09～12=`planned`。P1-08的Snapshot builder/hash/insert-only repository已由implementation commit `72670d18a29c9a10cb70f7a263c981a2b660e0ee` / GitHub Actions run `32310098594`闭环；建议下一项为TASK-P1-09，但本次未启动。PlanningProblem、ScheduleValidator、Solver和P2均未开始。当前授权范围见[`docs/current_phase.md`](docs/current_phase.md)。

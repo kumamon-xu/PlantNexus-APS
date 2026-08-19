@@ -54,3 +54,5 @@ TASK-P1-06以固定canonical sample和显式mutations验证三项deterministic p
 `test_snapshot_properties.py`复用锁定Hypothesis并固定四组seed：`20260820`以32 max examples重排16个canonical collections及inner capability lists，要求完整Snapshot bytes/hash/ID不变；`20260821`以32 examples改变factory business fact并重新走package/quality/expansion链，要求deterministic replay且hash/ID变化；`20260822`以24 examples改变cutoff秒值，要求facts不变而hash变化；`20260823`以24 examples注入received/generated/runtime/self噪声，要求semantic hash不变。
 
 定向property执行4项全部PASS且没有Hypothesis failure，因此没有伪造minimized corpus；如未来失败，必须保留reproduction seed与最小反例。该证据形成P1 `TEST-SNAPSHOT-REPLAY-001`的generated slice，不生成PlanningProblem或candidate Schedule，故P2 `TEST-PROPERTY`继续`PLANNED`。Test值来自P1-02 synthetic schema sample，不成为Profile distribution、Benchmark baseline或Production事实。
+
+Implementation commit `72670d18a29c9a10cb70f7a263c981a2b660e0ee`已由GitHub Actions run `32310098594`的required `validate`成功重放，repository suite实际包含上述property目录；无provider failure或额外minimized corpus。

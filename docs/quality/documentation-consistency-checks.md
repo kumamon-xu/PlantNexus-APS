@@ -197,7 +197,7 @@ TASK-P1-05 implementation commit `d52aa62d36e8d89eba318cb5fc586311680e030f`已�
 
 本Task继续使用full repository与`Diff base..HEAD + working tree`检查，report路径为`build/traceability/TASK-P1-08-report.json`，不可变Diff base为`8b4fb4c027305d3e3aa68eec0baaf73cd0598189`。启动前先把root/docs入口、端到端链路及`IMPACT-SNAPSHOT/INFRA/TESTS/PHASE/GOVERNANCE-REGISTRY/DOCS`六行全部强制文档纳入卡片；Schema、dependency/version metadata、Import/Expansion和Planning/Solver路径保持只读。
 
-治理检查只证明scope、依赖、文档和追踪，不执行hash projection、frozen value、repository trigger或migration；TEST-SNAPSHOT-REPLAY-001/TEST-SIM-ISOLATION及实际Alembic tests补充这些语义。Ignored report不提交；implementation commit和后续evidence-only completion commit必须各自按精确SHA核验provider required `validate`，本地25 passed不能替代该平台事实。
+治理检查只证明scope、依赖、文档和追踪，不执行hash projection、frozen value、repository trigger或migration；TEST-SNAPSHOT-REPLAY-001/TEST-SIM-ISOLATION及实际Alembic tests补充这些语义。Implementation commit `72670d18a29c9a10cb70f7a263c981a2b660e0ee`的provider artifact `9386127863`内report为41 committed paths、6 matched rows、0 issues且精确匹配SHA；provider/download digest同为`sha256:69d68183bad614631df07234a3ca88508379ab89ec715f811ee7f529d6f17e0c`。Ignored report不提交；evidence-only completion commit仍须按自身精确SHA核验required `validate`。
 
 ## Override
 

@@ -103,7 +103,7 @@ Package ID从不含package ID的semantic envelope SHA-256派生，dataset hash�
 
 Schema set additive `2.2.0`新增`error-code-registry.v2`、Error v3和ImportQualityReport v1；Import v2仍携带document-level `2.0.0`，unit registry v1仍为`2.1.0`。Quality report显式记录package ID、data-quality rule version、error registry version和report canonicalization version；不含generated-at、run ID或随机UUID。
 
-每个issue以canonical entity/source/field定位并按稳定key排序；report ID对除self ID外的全部报告内容做`canonical-json.v1 + SHA-256`。因此相同package ID与相同issue集合得到byte-identical report，输入collection顺序不会改变Error顺序/ID。Snapshot v2仍须由TASK-P1-08把PASS report ID与Import dataset hash一起绑定；当前报告不替代Snapshot/Problem/code commit或publish provenance。
+每个issue以canonical entity/source/field定位并按稳定key排序；report ID对除self ID外的全部报告内容做`canonical-json.v1 + SHA-256`。因此相同package ID与相同issue集合得到byte-identical report，输入collection顺序不会改变Error顺序/ID。TASK-P1-06交由TASK-P1-08把PASS report ID与Import dataset hash一起绑定，当前实现见下节；quality report本身仍不替代Snapshot/Problem/code commit或publish provenance。
 
 ## TASK-P1-07 expansion provenance
 
@@ -117,4 +117,4 @@ Schema set additive `2.2.0`新增`error-code-registry.v2`、Error v3和ImportQua
 
 Builder验证P1 content-derived Import package ID并重新计算dataset hash，检查PASS report ID/package绑定及Expansion bytes/hash/全部version/provenance引用；相同输入得到byte-identical完整Snapshot，facts/cutoff/version任一变化得到新hash/ID。Repository另外保存完整canonical bytes SHA-256和非业务`created_at`，后者不反向污染Snapshot identity。
 
-`0003_planning_snapshots`与repository形成artifact persistence provenance，但Task implementation commit/provider run在提交与CI完成前仍不能预填。本Slice尚无PlanningProblem/code-commit run manifest、Solver version、PlanningRun audit或Export manifest；这些不能从Snapshot hash推断。
+`0003_planning_snapshots`与repository形成artifact persistence provenance；implementation commit `72670d18a29c9a10cb70f7a263c981a2b660e0ee`已由GitHub run `32310098594`及其SHA精确匹配的machine artifact闭环。该CI provenance只证明本Task代码/测试/治理重放；本Slice尚无PlanningProblem/code-commit PlanningRun manifest、Solver version、PlanningRun audit或Export manifest，这些不能从Snapshot hash或CI run推断。

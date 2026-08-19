@@ -41,7 +41,7 @@ P0 superseding audit=`READY`，用户于 2026-08-19 明确批准进入 P1；历�
 | [TASK-P1-05](P1/TASK-P1-05-normalization-and-unit-time-rules.md) | Deterministic ID/time/unit Normalization | P1-02/03/04 | `done` |
 | [TASK-P1-06](P1/TASK-P1-06-data-quality-and-routing-validation.md) | DAG/reference/capability Data Validation | P1-05 | `done` |
 | [TASK-P1-07](P1/TASK-P1-07-deterministic-order-expansion.md) | Deterministic Order/Lot/Operation expansion | P1-06 | `done` |
-| [TASK-P1-08](P1/TASK-P1-08-immutable-snapshot-and-hash.md) | Immutable PlanningSnapshot 与 hash | P1-03/06/07 | `in_progress` |
+| [TASK-P1-08](P1/TASK-P1-08-immutable-snapshot-and-hash.md) | Immutable PlanningSnapshot 与 hash | P1-03/06/07 | `done` |
 | [TASK-P1-09](P1/TASK-P1-09-planning-problem-builder-and-hash.md) | Solver-neutral PlanningProblem builder/hash | P1-07/08 | `planned` |
 | [TASK-P1-10](P1/TASK-P1-10-synthetic-generator-records.md) | 七层 Synthetic Generator非空 canonical records | P1-02/05/06/07 | `planned` |
 | [TASK-P1-11](P1/TASK-P1-11-common-ingress-pipeline-and-gate-evidence.md) | Common-ingress E2E与 P1 Gate evidence | P1-03～10 | `planned` |
@@ -55,6 +55,6 @@ Task进入 `in_progress` 时必须先把当时完整 40字符 HEAD SHA写入 `Di
 
 每张 Task Card在开始前完成文档影响分析：`Documentation impact`、明确 `Documents to update`、理由、`IMPACT-*` Rule IDs与`Traceability updates`。`Documents to update`必须包含在允许范围；发现额外文件先停止并修订卡片。
 
-TASK-P1-05/06/07已分别以implementation commit `d52aa62d36e8d89eba318cb5fc586311680e030f`、`c1ac1077fdd92e012f4050f30bab2aec4638f6ec`、`5a3dbc14c12a107abf4052cca935e3ef59009d3d`及GitHub Actions run `32252308695`、`32257767495`、`32265257468`完成。TASK-P1-08已按依赖启动并固定Diff base `8b4fb4c027305d3e3aa68eec0baaf73cd0598189`；P1-09保持`planned`，P1-12即使审计`READY`也不自动进入P2。
+TASK-P1-05/06/07/08已分别以implementation commit `d52aa62d36e8d89eba318cb5fc586311680e030f`、`c1ac1077fdd92e012f4050f30bab2aec4638f6ec`、`5a3dbc14c12a107abf4052cca935e3ef59009d3d`、`72670d18a29c9a10cb70f7a263c981a2b660e0ee`及GitHub Actions run `32252308695`、`32257767495`、`32265257468`、`32310098594`完成。建议下一项为P1-09，但它保持`planned`；P1-12即使审计`READY`也不自动进入P2。
 
 用户授权完成后直接push`main`与provider核验适用于后续每个已验收Task，但不改变各卡允许范围、依赖或启动状态。

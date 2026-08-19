@@ -46,4 +46,4 @@ TASK-P1-07不新增API、Worker、DB/migration、network、Secret或Runbook行�
 
 TASK-P1-08新增internal PlanningSnapshot persistence：hash主键、ID唯一、full-bytes digest、plane scope、atomic insert/exact replay/read，以及repository与database-trigger双层update/delete拒绝。Migration测试明确验证空库升级、含一个synthetic Snapshot的destructive downgrade至`0002`、re-upgrade后记录为空；历史Snapshot不能用代码rollback原地改写。
 
-这仍不是Production Runbook：独立aps_sim/aps_prod数据库与roles、PostgreSQL trigger/concurrency实跑、retention/legal erasure、backup/restore、access audit、capacity/alert和incident response均未形成。`created_at`只属于storage audit metadata且不进入Snapshot hash；Task provider执行在实际push核验前保持`NOT_RUN`。
+这仍不是Production Runbook：独立aps_sim/aps_prod数据库与roles、PostgreSQL trigger/concurrency实跑、retention/legal erasure、backup/restore、access audit、capacity/alert和incident response均未形成。`created_at`只属于storage audit metadata且不进入Snapshot hash。Implementation commit `72670d18a29c9a10cb70f7a263c981a2b660e0ee`已由GitHub run [`32310098594`](https://github.com/kumamon-xu/PlantNexus-APS/actions/runs/32310098594)的required `validate`成功重放；artifact `9386127863` / digest `sha256:69d68183bad614631df07234a3ca88508379ab89ec715f811ee7f529d6f17e0c`保存机器证据，但不构成上述Production能力。

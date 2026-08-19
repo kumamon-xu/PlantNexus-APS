@@ -1,7 +1,7 @@
 ---
 doc_id: TASK-P1-02
 title: Canonical Import Contracts
-status: in_progress
+status: done
 spec_version: 0.3.0
 phase: P1
 normative: true
@@ -77,4 +77,10 @@ Rollback: 已发布 v2 不原地覆盖；失败时停止 consumer 开发并保�
 
 本地Acceptance真实结果：`uv sync --locked` exit 0（58 packages，`uv.lock`无diff）；Task范围Ruff exit 0、Pyright 0 errors、unit+contract 44 passed；full/diff docs checks exit 0（124 docs、30 roots、36 Test IDs、15 OPEN、9 SIM、10 risks、22 Tasks；diff 50 paths/8 impact rows）；`git diff --check` exit 0；`uv build`生成sdist/wheel并exit 0。额外CI parity回归：repository Ruff/Pyright PASS、全部unit/contract/simulation/golden/validation/integration 103 passed，rule/simulation/golden/mutation/engineering五类machine contracts与Compose config全部exit 0。
 
-新artifact SHA-256：canonical=`fd13b188b7317eb92f14489fdc6c7976cc24b5b03cfcb2fa9d9f1eabdd4b3f9e`、Import v2=`166514c8ea40702c7b42b27956809619396c90d10b1b0cab4c2bd57dd4a75f56`、Snapshot v2=`d30ed42f8e5d1b497e2c41aec8bd840c1530e8a16c8594e22ed8db2dbc676a09`、Import sample=`3b0a1654edb947e3ef1ae2c0a6b00fb4ae782d2d98282ac1b09663fc406eec6e`、Snapshot sample=`9e41ef51a55b765d94264cde00c0a34368af4c8269c47c8dbdf836c738272027`。Compatibility为breaking major且显式拒绝旧consumer；无数据库migration、dependency/lock变化、新ADR、Benchmark/Solver或Production默认值；OPEN列表保持OPEN，sample不新增SIM assumption。当前仍保持`in_progress`，待implementation commit、直接push `main`和GitHub provider CI核验后再闭环。
+新artifact SHA-256：canonical=`fd13b188b7317eb92f14489fdc6c7976cc24b5b03cfcb2fa9d9f1eabdd4b3f9e`、Import v2=`166514c8ea40702c7b42b27956809619396c90d10b1b0cab4c2bd57dd4a75f56`、Snapshot v2=`d30ed42f8e5d1b497e2c41aec8bd840c1530e8a16c8594e22ed8db2dbc676a09`、Import sample=`3b0a1654edb947e3ef1ae2c0a6b00fb4ae782d2d98282ac1b09663fc406eec6e`、Snapshot sample=`9e41ef51a55b765d94264cde00c0a34368af4c8269c47c8dbdf836c738272027`。Compatibility为breaking major且显式拒绝旧consumer；无数据库migration、dependency/lock变化、新ADR、Benchmark/Solver或Production默认值；OPEN列表保持OPEN，sample不新增SIM assumption。
+
+Implementation commit=`64c40b5c21ab0be8955e55edc007e04337cac417`（50 paths、3387 insertions/57 deletions）。提交后full/diff governance再次PASS，report为committed range=50、working tree=0、8 impact rows、0 issues；working tree clean。直接push`main`时GitHub提示required `validate`尚待运行并发生rule bypass，该提示未计为PASS。
+
+真实provider closure：GitHub repository=`kumamon-xu/PlantNexus-APS`、branch=`main`、workflow=`PlantNexus repository gates`；run [`32241366290`](https://github.com/kumamon-xu/PlantNexus-APS/actions/runs/32241366290)，event=`push`、attempt=1、head SHA=`64c40b5c21ab0be8955e55edc007e04337cac417`、status=`completed`、conclusion=`success`。Job `validate` ID=`96032439734`为success，checkout/setup/sync/lint/type/tests/五类contracts/Compose/docs+Task diff/Benchmark deferred hook/build/upload及post steps全部success。Artifact ID=`9360906246`、name=`plantnexus-ci-evidence-32241366290`、size=6333 bytes、digest=`sha256:90484bc64d02458f2fced9d8e7691fa8251149884e6d9f272407b7e50fa83fc3`、expired=false、expires=`2026-11-17T10:10:24Z`。公开branch state为`main.protected=true`，required check=`validate`/app ID=`15368`。
+
+所有Completion conditions满足，Task标记`done`。本evidence-only状态提交自身无法被上述implementation run包含；按治理自引用边界，推送后仍执行同一workflow并在任务交付中报告最终run，不借此启动TASK-P1-03或进入P2。

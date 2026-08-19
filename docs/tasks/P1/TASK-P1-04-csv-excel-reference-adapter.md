@@ -1,7 +1,7 @@
 ---
 doc_id: TASK-P1-04
 title: CSV Excel and Formal Reference Adapter
-status: in_progress
+status: done
 spec_version: 0.3.0
 phase: P1
 normative: true
@@ -85,4 +85,10 @@ Dependency/lock证据：exact direct pins新增`openpyxl==3.1.5`与`defusedxml==
 
 Schema set保持`2.0.0`，无Schema/migration/ADR/正式Scenario/Fixture；全部OPEN仍OPEN，尤其OPEN-002/013/015未关闭；SIM-ASSUMPTION-001～009不变。31项Adapter tests的2-row files全部在pytest temporary directory生成，不提交workbook/真实客户数据/credential，不构成Benchmark/Production throughput/security certification。malware/quarantine/auth/RBAC/encryption/retention、真实system binding、Normalization/DataValidation/canonical Import、Snapshot/Problem/API/Worker/Solver/P2继续`PLANNED`。
 
-本地实现已满足可在提交前验证的Completion conditions；implementation commit、提交后governance与GitHub provider evidence待完成。Rollback为移除Reference Adapter与exact dependencies并同步exact machine contract；无DB migration，既有Raw Staging audit不得被无审计删除，旧文件不得按其他adapter version静默重解释。
+本地实现已满足可在提交前验证的Completion conditions。Rollback为移除Reference Adapter与exact dependencies并同步exact machine contract；无DB migration，既有Raw Staging audit不得被无审计删除，旧文件不得按其他adapter version静默重解释。
+
+Implementation commit=`9391ec021afa9e6f4f881b1538b276c84584df0e`（42 paths、1883 insertions/28 deletions）。提交后full/diff governance再次PASS：committed range=42、working tree=0、8 impact rows、0 issues，working tree clean。直接push`main`时GitHub提示required `validate`尚待运行并发生rule bypass，该提示未计为PASS。
+
+真实provider closure：GitHub repository=`kumamon-xu/PlantNexus-APS`、branch=`main`、workflow=`PlantNexus repository gates`；run [`32247079996`](https://github.com/kumamon-xu/PlantNexus-APS/actions/runs/32247079996)，event=`push`、attempt=1、head SHA=`9391ec021afa9e6f4f881b1538b276c84584df0e`、status=`completed`、conclusion=`success`。Job `validate` ID=`96049843226`为success，checkout/setup/sync/lint/type/tests/五类contracts/Compose/docs+Task diff/Benchmark deferred hook/build/upload及post steps全部success。Artifact ID=`9362999088`、name=`plantnexus-ci-evidence-32247079996`、size=6288 bytes、digest=`sha256:b9ada0b25d12962f5efea51e058cd82778495f4389a240e32aa64c04143b5d4b`、expired=false、expires=`2026-11-17T11:20:19Z`。公开branch state为`main.protected=true`、head与implementation SHA一致、required check=`validate`/app ID=`15368`。
+
+全部Completion conditions满足，Task标记`done`。本evidence-only状态提交无法由上述implementation run自我包含；推送后必须再运行同一workflow并在交付中报告最终run。该闭环不自动启动TASK-P1-05、不进入P2。

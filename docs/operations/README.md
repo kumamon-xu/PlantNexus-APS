@@ -37,3 +37,5 @@ TASK-P1-03 implementation commit`25897393e31dcc0648943ec7e2e7f43dbb0e70e1`已由
 TASK-P1-04在`security.md`形成bounded CSV/XLSX file-root/type/size/shape/archive/active-content控制，并把openpyxl/defusedxml exact pins同步到既有engineering machine contract/CI assertion；OR-Tools forbidden、environment/data-plane fail-closed和既有machine report schema均未弱化。Reference files只在temporary test directory生成，Adapter不创建upload API、Worker或外部connection。
 
 这仍不是Production Runbook或完整file-ingress security：quarantine/malware scanning、RBAC、network file share、rate limit、encryption、retention/erasure、production filesystem permission/audit和incident response均未形成；真实ERP/MES/WMS/CAM binding也仍受OPEN-002/015阻塞。
+
+TASK-P1-04 implementation commit`9391ec021afa9e6f4f881b1538b276c84584df0e`已由GitHub run [`32247079996`](https://github.com/kumamon-xu/PlantNexus-APS/actions/runs/32247079996)的required `validate`成功重放；artifact `9362999088` / digest `sha256:b9ada0b25d12962f5efea51e058cd82778495f4389a240e32aa64c04143b5d4b`保存机器证据。该provider PASS仍不构成Production file-ingress、security certification或真实system binding。

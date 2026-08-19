@@ -6,7 +6,7 @@ spec_version: 0.3.0
 phase: cross-phase
 normative: true
 source_sections: [15, 22, 59, 61, 90]
-last_reviewed: 2026-08-19
+last_reviewed: 2026-08-20
 ---
 
 # 数据权威边界
@@ -85,3 +85,9 @@ Data Validation只判断“显式canonical事实是否自洽”：record source/
 Order Expansion只投影已经明确存在的authority-neutral canonical事实：Demand/ProductionOrder/Lot/Routing lineage、lot quantity/unit、candidate duration/source、release/material gate、execution fact和lock。Derived ID与排序由code version决定，但不创造业务事实；output中的Import/quality/source/synthetic provenance保留回链，OperationInstance字段不足时必须升级合同而不能隐藏数据。
 
 多个显式lot可逐一展开，但服务无权决定lot数、lot size或split/merge；也无权重算duration、选择resource、改变fact/lock或定义transport/material规则。OPEN-007/008/014/015继续OPEN，PASS与Expansion hash均不是Production authority closure evidence。
+
+## TASK-P1-08 Snapshot authority boundary
+
+PlanningSnapshot只冻结已经由Import/PASS/Expansion链显式提供的事实和版本，不把derived ID、entity count、hash或repository row提升为ERP/MES/WMS/CAM authority。Builder核对content-derived package identity和完整provenance，但不选择冲突source、不补timezone/calendar/material/transport/unit/duration/lot规则，也不把synthetic值转换为Production事实。
+
+Snapshot事实被发现错误时必须由权威上游产生新Import/quality/expansion并创建新Snapshot，禁止就地修补历史bytes。OPEN-001/002/004/007/009/015及全部OPEN项继续OPEN；hash一致只证明输入重放一致，不证明业务来源真实、生产批准或校准完成。

@@ -6,7 +6,7 @@ spec_version: 0.3.0
 phase: cross-phase
 normative: true
 source_sections: [98, 99, 100, 111]
-last_reviewed: 2026-08-19
+last_reviewed: 2026-08-20
 ---
 
 # TASK-Px-yy — Title
@@ -108,3 +108,5 @@ P1及以后 Task必须单列 `Completion conditions`，把“实现目标、负�
 涉及canonical Data Validation/quality report时还必须记录：输入document/rule/error/report/canonicalization各自版本、旧Error/registry fingerprint、PASS零Error与FAIL count等式、四类P1 exact code/category、rich source/action evidence、multi-error stable ordering、report ID projection、malformed input不崩溃、capability/resource/DAG边界，以及与Normalization、Expansion、Snapshot/Problem、ScheduleValidator/Solver的依赖隔离。固定sample不得写成Production authority或common-ingress evidence。
 
 涉及Order/Lot/OperationInstance expansion时还必须记录：expansion/canonicalization version、Import与matching PASS report引用、source-explicit lot policy、derived operation/edge ID lineage与排序、candidate duration/source逐项copy、RUNNING/COMPLETED/lock投影、SPLIT_MERGE和missing/fallback拒绝、Hypothesis seed/example/shrinking结果，以及Snapshot/Problem/Constraint/Solver仍未形成的边界。通过Snapshot pure precheck不得写成Snapshot builder/hash/persistence PASS。
+
+涉及PlanningSnapshot builder/hash/persistence时还必须记录：Snapshot/schema/canonicalization/hash-projection版本、semantic allow-list与self/noise exclusion、Import dataset/package identity、matching PASS与Expansion自洽检查、全部collection/inner排序、deterministic full bytes/hash/ID vector、fact/cutoff/version mutation、frozen copy边界、Production/Synthetic provenance/plane guard、insert/exact replay/content conflict、repository及database update/delete拒绝、empty/populated migration upgrade/downgrade与数据损失，以及Problem/common-ingress/independent Production DB/Solver仍未形成。Storage `created_at`不得污染business hash，临时SQLite不得冒充PostgreSQL Production evidence。

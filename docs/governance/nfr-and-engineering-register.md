@@ -6,7 +6,7 @@ spec_version: 0.3.0
 phase: cross-phase
 normative: true
 source_sections: [4, 6, 16, 23, 24, 29, 30, 42, 58, 62, 65, 66, 89, 93, 95]
-last_reviewed: 2026-08-19
+last_reviewed: 2026-08-20
 registry_version: 1.0.0
 ---
 
@@ -67,3 +67,5 @@ TASK-P1-05 review：NFR-DET获得row/input order及volatile staging metadata不�
 TASK-P1-06 review：NFR-COR获得canonical input四类exact拒绝与multi-error negative evidence；NFR-DET获得同issue/重排输入的report bytes/ID replay；NFR-TRC获得Error v3 entity/field/observed/expected/source/action链。ENG-ERR获得additive registry v2/Error v3/ImportQualityReport v1与count/status/identity invariant，ENG-VER获得schema set`2.2.0`、历史artifact fingerprints和显式consumer版本；无ScheduleValidator/Solver/HTTP/persistence/Production声明。全部root继续`ALLOCATED`，registry format version保持`1.0.0`。
 
 TASK-P1-07 review：NFR-DET获得固定version/input与collection重排下相同instance/edge bytes/hash，NFR-TRC获得Import/quality/source/synthetic与lot-operation/edge lineage；ENG-SOL保持pure JSON-compatible output且无Planning/OR-Tools，ENG-ERR获得module-local exact missing/fact/lock/version与SPLIT_MERGE拒绝而产品registry不变，ENG-VER获得`order-expansion.v1`和exact dev-only Hypothesis lock。Snapshot/Problem/common-ingress/P2 Property/Solver/Production仍PLANNED；全部root继续`ALLOCATED`，registry format version保持`1.0.0`。
+
+TASK-P1-08 review：NFR-DET/TRC获得Snapshot complete bytes/hash/ID replay、fact/cutoff/version mutation与full provenance；NFR-ISO获得synthetic conditional和plane-scoped repository负例；NFR-REL获得atomic insert/exact replay、identity conflict和DB mutation trigger。ENG-SOL保持Snapshot无Planning/OR-Tools，ENG-ERR使用module-local stable rejection，ENG-VER获得`snapshot-hash-projection.v1`与`0003_planning_snapshots` reversible migration。独立Production/Simulation DB、PostgreSQL concurrency/roles、Problem/common ingress、Solver/Benchmark仍PLANNED；全部root继续`ALLOCATED`，registry format version保持`1.0.0`。

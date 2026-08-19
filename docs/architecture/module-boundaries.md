@@ -6,7 +6,7 @@ spec_version: 0.3.0
 phase: cross-phase
 normative: true
 source_sections: [12, 13, 14, 30, 41, 47, 51, 65, 70]
-last_reviewed: 2026-08-19
+last_reviewed: 2026-08-20
 ---
 
 # 模块边界与依赖规则
@@ -75,3 +75,11 @@ TASK-P0-05 已在 `simulation/profiles`、`simulation/scenarios`、`simulation/g
 - evaluator只读Import v2 Mapping并总是返回Error v3/ImportQualityReport v1，不修改Normalization output、不访问Raw repository、DB、API、Job或环境配置；
 - package source scan禁止`app.planning`、OR-Tools、CpSat与ScheduleValidator依赖。Input-quality DAG/resource规则不复用P0 fixture-local schedule evaluator或C-001～C-011公式；
 - 本模块不展开订单、不创建Snapshot/Problem、不持久化报告、不映射HTTP。TASK-P1-07 consumer只能接收PASS report与原canonical Import，不能绕过本Gate。
+
+## TASK-P1-07/08 Expansion and Snapshot boundaries
+
+- `domain.production`只定义solver-neutral expansion contract/identity/error，`normalization.order_expansion`只把validated Import/PASS report展开为pure artifact；两者不访问数据库、Snapshot repository、Planning或API。
+- `snapshots.canonical`拥有Import/Snapshot排序、dataset digest、Snapshot hash projection/ID和integrity verification；`snapshots.builder`只编排已存在的Import/report/Expansion并返回immutable bytes value，不读取Raw repository、环境或数据库。
+- `snapshots.repository`只定义insert/replay/read protocol；`infrastructure.snapshot_repository`单独拥有SQLAlchemy transaction、plane query和storage integrity，migration只建立internal content-addressed table/trigger。
+- `app.snapshots`保持无ORM/FastAPI/Celery/OR-Tools/PlanningProblem依赖；Infrastructure adapter不得反向成为领域权威或绕过builder接受任意JSON。
+- 当前没有`application/**` common-ingress orchestration、PlanningProblem builder、Worker task、API、ScheduleVersion或Solver；这些边界分别留给TASK-P1-09/11及后续Phase。

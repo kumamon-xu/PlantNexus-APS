@@ -6,6 +6,7 @@ import json
 from datetime import UTC, datetime
 from hashlib import sha256
 from pathlib import Path
+from typing import cast
 
 from alembic import command
 from alembic.config import Config
@@ -13,12 +14,15 @@ from celery import Celery
 from pydantic import SecretStr
 from sqlalchemy import create_engine, inspect
 
+from app.data_validation import validate_import_package
+from app.domain.canonical_records import ImportPackageDocumentV2
 from app.infrastructure.config import RuntimeEnvironment, Settings
 from app.infrastructure.contract_check import main as engineering_check_main
 from app.infrastructure.database import create_database_client
 from app.infrastructure.import_staging_repository import (
     SqlAlchemyImportStagingRepository,
 )
+from app.infrastructure.snapshot_repository import SqlAlchemySnapshotRepository
 from app.infrastructure.redis_client import create_redis_client
 from app.importers import (
     RawImportRow,
@@ -27,6 +31,12 @@ from app.importers import (
     SyntheticImportProvenance,
 )
 from app.jobs.celery_app import create_celery_app
+from app.normalization.order_expansion import expand_orders
+from app.snapshots import (
+    SnapshotDataPlane,
+    build_planning_snapshot,
+    import_package_id_for,
+)
 
 ROOT = Path(__file__).resolve().parents[3]
 
@@ -54,6 +64,7 @@ def test_empty_database_migration_upgrades_and_downgrades(tmp_path: Path) -> Non
             "alembic_version",
             "engineering_idempotency_records",
             "engineering_job_records",
+            "planning_snapshots",
             "raw_import_batches",
             "raw_import_rows",
         } <= tables
@@ -75,6 +86,12 @@ def test_empty_database_migration_upgrades_and_downgrades(tmp_path: Path) -> Non
         assert {constraint["name"] for constraint in raw_row_unique_constraints} == {
             "uq_raw_import_rows_batch_position"
         }
+        snapshot_unique_constraints = inspect(engine).get_unique_constraints(
+            "planning_snapshots"
+        )
+        assert {
+            constraint["name"] for constraint in snapshot_unique_constraints
+        } == {"uq_planning_snapshots_snapshot_id"}
     finally:
         engine.dispose()
 
@@ -86,6 +103,7 @@ def test_empty_database_migration_upgrades_and_downgrades(tmp_path: Path) -> Non
         assert "engineering_idempotency_records" not in tables_after
         assert "raw_import_batches" not in tables_after
         assert "raw_import_rows" not in tables_after
+        assert "planning_snapshots" not in tables_after
     finally:
         engine.dispose()
 
@@ -158,6 +176,71 @@ def test_populated_raw_staging_migration_downgrade_is_destructive_and_reversible
             data_plane=StagingDataPlane.SIMULATION,
         )
         assert repository.get(batch.batch_id) is None
+    finally:
+        engine.dispose()
+    command.downgrade(configuration, "base")
+
+
+def test_populated_snapshot_migration_downgrade_is_destructive_and_reversible(
+    tmp_path: Path,
+) -> None:
+    database_path = tmp_path / "populated-snapshot.db"
+    database_url = f"sqlite:///{database_path.as_posix()}"
+    configuration = _alembic_config(database_url)
+    command.upgrade(configuration, "0002_raw_import_staging")
+    engine = create_engine(database_url)
+    try:
+        assert "planning_snapshots" not in set(inspect(engine).get_table_names())
+    finally:
+        engine.dispose()
+
+    command.upgrade(configuration, "head")
+    document = cast(
+        dict[str, object],
+        json.loads(
+            (ROOT / "schemas/samples/import-package.v2.synthetic.json").read_text(
+                encoding="utf-8"
+            )
+        ),
+    )
+    document["package_id"] = import_package_id_for(document)
+    quality = validate_import_package(document).document
+    expansion = expand_orders(cast(ImportPackageDocumentV2, document), quality)
+    snapshot = build_planning_snapshot(
+        document,
+        quality,
+        expansion,
+        cutoff_at_utc="2026-08-20T00:00:00Z",
+    )
+    engine = create_engine(database_url)
+    try:
+        repository = SqlAlchemySnapshotRepository(
+            engine,
+            data_plane=SnapshotDataPlane.SIMULATION,
+        )
+        assert repository.put(snapshot).replayed is False
+        assert repository.get_by_hash(snapshot.snapshot_hash) == snapshot
+    finally:
+        engine.dispose()
+
+    command.downgrade(configuration, "0002_raw_import_staging")
+    engine = create_engine(database_url)
+    try:
+        tables_after_downgrade = set(inspect(engine).get_table_names())
+        assert "planning_snapshots" not in tables_after_downgrade
+        assert "raw_import_batches" in tables_after_downgrade
+        assert "raw_import_rows" in tables_after_downgrade
+    finally:
+        engine.dispose()
+
+    command.upgrade(configuration, "head")
+    engine = create_engine(database_url)
+    try:
+        repository = SqlAlchemySnapshotRepository(
+            engine,
+            data_plane=SnapshotDataPlane.SIMULATION,
+        )
+        assert repository.get_by_hash(snapshot.snapshot_hash) is None
     finally:
         engine.dispose()
     command.downgrade(configuration, "base")

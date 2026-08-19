@@ -6,7 +6,7 @@ spec_version: 0.3.0
 phase: cross-phase
 normative: true
 source_sections: [4, 23, 24, 40, 67, 93, 101, 102, 103, 104]
-last_reviewed: 2026-08-19
+last_reviewed: 2026-08-20
 ---
 
 # Provenance 与版本规则
@@ -109,4 +109,12 @@ Schema set additive `2.2.0`新增`error-code-registry.v2`、Error v3和ImportQua
 
 `OrderExpansionDocument`记录`order-expansion.v1`、`canonical-json.v1`、Import document/schema/package/source/normalization/canonicalization/synthetic provenance，以及PASS report的schema/rule/error/canonicalization versions和report ID。Operation/edge identity分别对versioned lot-operation与lot-routing-edge lineage做canonical JSON SHA-256；output canonical bytes再形成`sha256:` expansion hash。该hash只标识pure expansion artifact，不冒充Import dataset、Snapshot或Problem hash。
 
-同一Import/PASS report与expansion version重复运行、或只重排canonical collection/record顺序，必须得到byte-identical实例/edge/hash。未来语义变化发布新expansion version；v1不得原地重解释。TASK-P1-08仍须把Import dataset hash、quality report ID与expansion version绑定进immutable Snapshot，code commit/run provenance则由后续pipeline/CI形成。
+同一Import/PASS report与expansion version重复运行、或只重排canonical collection/record顺序，必须得到byte-identical实例/edge/hash。未来语义变化发布新expansion version；v1不得原地重解释。TASK-P1-07在闭环时把Import dataset hash、quality report ID与expansion version留给TASK-P1-08绑定；下节记录当前已形成的Snapshot provenance，而code commit/run provenance仍须由实际提交与CI形成。
+
+## TASK-P1-08 Snapshot provenance and identity
+
+`snapshot-hash-projection.v1`固定Snapshot v2的semantic allow-list和排序规则，配合`canonical-json.v1`产生`sha256:` digest；ID使用显式`planning-snapshot-v2-<digest>` namespace。Self ID/hash、received/generated/runtime metadata不参与投影，cutoff及canonical business timestamps、facts、entity counts、source/rule/normalization/expansion/schema versions、Import dataset hash、quality report和synthetic provenance全部参与。
+
+Builder验证P1 content-derived Import package ID并重新计算dataset hash，检查PASS report ID/package绑定及Expansion bytes/hash/全部version/provenance引用；相同输入得到byte-identical完整Snapshot，facts/cutoff/version任一变化得到新hash/ID。Repository另外保存完整canonical bytes SHA-256和非业务`created_at`，后者不反向污染Snapshot identity。
+
+`0003_planning_snapshots`与repository形成artifact persistence provenance，但Task implementation commit/provider run在提交与CI完成前仍不能预填。本Slice尚无PlanningProblem/code-commit run manifest、Solver version、PlanningRun audit或Export manifest；这些不能从Snapshot hash推断。

@@ -6,7 +6,7 @@ spec_version: 0.3.0
 phase: P1
 normative: false
 source_sections: [2, 6, 70]
-last_reviewed: 2026-08-19
+last_reviewed: 2026-08-20
 ---
 
 # PlantNexus APS 文档中心
@@ -69,7 +69,7 @@ last_reviewed: 2026-08-19
 
 ## 当前范围
 
-当前阶段为P1。P0 Gate已通过且用户已明确授权phase transition；TASK-P1-02的canonical records、Import v2与PlanningSnapshot v2合同已完成，TASK-P1-03仍为`planned`，尚未开始Adapter/staging/normalization/builder。禁止真实CP-SAT/P2、生产参数猜测或绕过正式入口。详见`current_phase.md`。
+当前阶段为P1。P0 Gate已通过且用户已明确授权phase transition；TASK-P1-01～07已完成，当前TASK-P1-08以Diff base `8b4fb4c027305d3e3aa68eec0baaf73cd0598189`实施immutable PlanningSnapshot/hash/repository。PlanningProblem、Synthetic common-ingress Gate、真实CP-SAT/P2、生产参数和Production部署仍未形成；禁止绕过正式入口。详见`current_phase.md`。
 
 ## 仓库入口与本地检查
 

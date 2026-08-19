@@ -6,7 +6,7 @@ spec_version: 0.3.0
 phase: P0-P1
 normative: true
 source_sections: [0, 2, 10, 15, 16, 62, 63, 73, 74, 91, 95]
-last_reviewed: 2026-08-19
+last_reviewed: 2026-08-20
 ---
 
 # Import 与 Normalization 合同
@@ -107,3 +107,9 @@ Producer生成Import v2固定document字段`schema_set_version=2.0.0`、`canonic
 实例逐项复制Demand/ProductionOrder/Lot/Routing lineage、due/release/material gate、required capabilities、candidate setup/cycle/final duration及duration source version。RUNNING/COMPLETED事实通过`execution_fact_id`保留，NOT_STARTED不伪造事实；lock ID按lineage复制并排序。结果携带Import/source/synthetic provenance、quality rule/error/report versions、canonical bytes与Task-local expansion hash，但不构建或持久化Snapshot/Problem。
 
 缺显式lot、route operation、candidate/duration provenance、冲突fact/lock或错误version均用module-local结构化`DATA_ERROR`拒绝；`SPLIT_MERGE`为`UNSUPPORTED_CAPABILITY`。这些code不加入产品error registry v2，也不替代P1-06 multi-error quality report。Schema set保持`2.2.0`，Import v2 document仍为`2.0.0`；OPEN-007/008/014/015均未关闭。
+
+## TASK-P1-08 Snapshot handoff
+
+Snapshot builder把P1-05的content-derived package ID/canonical Import bytes、P1-06的matching PASS/0 report及P1-07的self-consistent expansion作为不可分割输入。它重新按canonical collection规则复制Import并计算Snapshot引用的dataset hash，核对package ID确实绑定当前facts，同时核对Expansion中的package/source/normalization/synthetic和quality版本引用；任何stale或跨plane组合均拒绝。
+
+该handoff不改变MappingProfile、unit/time Normalization、DataValidation rule/report或Order Expansion语义，也不允许从Raw/Adapter/FAIL report直接创建Snapshot。Raw received-at、source file digest/location和运行生成时间继续留在各自provenance层，不进入Snapshot业务投影；canonical observed/release/material/due/cutoff等业务时间仍完整进入hash。PlanningProblem和common-ingress orchestration继续由后续Task负责。

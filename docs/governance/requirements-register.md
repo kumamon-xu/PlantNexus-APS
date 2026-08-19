@@ -6,7 +6,7 @@ spec_version: 0.3.0
 phase: cross-phase
 normative: true
 source_sections: [3, 4, 5, 6, 107]
-last_reviewed: 2026-08-19
+last_reviewed: 2026-08-20
 registry_version: 1.0.0
 ---
 
@@ -65,3 +65,5 @@ TASK-P1-05 review：REQ-002获得显式ID/time/unit normalization、stable sorti
 TASK-P1-06 review：REQ-001/002获得canonical Import structure/reference/unit/time/duration/resource质量门与PASS/FAIL报告；REQ-003获得Routing DAG/option/lineage pre-expansion拒绝但尚未展开OperationInstance；REQ-009获得rule/error/report/canonicalization版本、稳定source detail与内容派生report ID。Snapshot/Problem/common-ingress/真实source authority与完整run/export audit仍PLANNED；所有Requirement继续`ALLOCATED`，registry format version保持`1.0.0`。
 
 TASK-P1-07 review：REQ-003获得`order-expansion.v1`显式Lot×RoutingOperation实例、逐lot precedence、candidate duration/source、RUNNING/COMPLETED/lock copy及Hypothesis generation/shrinking证据；REQ-009获得Import/PASS report/source/synthetic/expansion version与versioned derived-ID/hash链。该slice不创建lot、不构建/持久化Snapshot或Problem，也不形成common-ingress/Solver/Production证据；所有Requirement继续`ALLOCATED`，registry format version保持`1.0.0`。
+
+TASK-P1-08 review：REQ-002获得`planning-snapshot.v2`canonical builder、`snapshot-hash-projection.v1`、deterministic bytes/hash/ID、frozen value及insert-only persistence/migration证据；REQ-003的expanded OperationInstance/edge与完整canonical facts被不可变绑定；REQ-009获得Import dataset hash、quality report、source/rule/schema/normalization/expansion/synthetic provenance和storage integrity链。该slice尚无PlanningProblem、common-ingress、PlanningRun/code-commit manifest、独立Production deployment或Solver；所有Requirement继续`ALLOCATED`，registry format version保持`1.0.0`。

@@ -6,7 +6,7 @@ spec_version: 0.3.0
 phase: cross-phase
 normative: true
 source_sections: [71, 72, 73, 74, 75, 76, 77, 78, 79, 80, 81, 82, 83, 84]
-last_reviewed: 2026-08-19
+last_reviewed: 2026-08-20
 ---
 
 # Milestone 索引
@@ -28,4 +28,4 @@ Milestone 定义 outcome 和 exit gate，不等同 Sprint。只有当前 Phase �
 
 P0 当前状态：TASK-P0-01～10 全部完成；[superseding audit](P0-exit-gate-audit-report.md) 的 Schema、Golden、Validator Rule Sheet、Scenario replay、Repository Build、CI 和 PROD_OPEN registration全部 `PASS`，P0 Gate=`READY`。用户于 2026-08-19 明确批准 phase transition后，P0转为 `completed`，历史失败/修复/provider evidence继续保留。
 
-P1当前状态：[`P1 — Data & Snapshot`](P1-data-and-snapshot.md)为`active`，已创建TASK-P1-01～12；TASK-P1-01～07=`done`、TASK-P1-08～12=`planned`，最后一项仍是P1 Exit Gate Audit。P1-07的implementation commit `5a3dbc14c12a107abf4052cca935e3ef59009d3d`与GitHub Actions run `32265257468`已使Order Expansion/property/CI证据闭环；下一项建议为TASK-P1-08，但尚未启动且不涉及P2。
+P1当前状态：[`P1 — Data & Snapshot`](P1-data-and-snapshot.md)为`active`，已创建TASK-P1-01～12；TASK-P1-01～07=`done`、TASK-P1-08=`in_progress`、TASK-P1-09～12=`planned`，最后一项仍是P1 Exit Gate Audit。P1-07的implementation commit `5a3dbc14c12a107abf4052cca935e3ef59009d3d`与GitHub Actions run `32265257468`已使Order Expansion/property/CI证据闭环；P1-08已固定Diff base并开始Snapshot实现，不涉及PlanningProblem、Solver或P2。

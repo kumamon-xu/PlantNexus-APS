@@ -6,7 +6,7 @@ spec_version: 0.3.0
 phase: P1-P4
 normative: true
 source_sections: [45, 86, 87]
-last_reviewed: 2026-08-19
+last_reviewed: 2026-08-20
 ---
 
 # Property Test 规范
@@ -47,4 +47,10 @@ TASK-P1-06以固定canonical sample和显式mutations验证三项deterministic p
 
 本Task首次锁定`hypothesis==6.165.10`并使用generation/shrinking。Positive property以replay seed`20260819`和64 max examples生成显式synthetic canonical inputs：1～3 lots、固定4-operation branch/merge DAG、2 workshops/resources、每operation 1～2 candidates、RUNNING/COMPLETED/NONE fact与locks；验证重复运行和collection重排的bytes/hash相同、实例/edge cardinality、ID唯一、同lot edge、candidate duration/source copy与transport lag不丢失。Negative property以seed`20260820`和24 max examples删除随机operation的全部candidate，要求收缩后仍精确`MISSING_RESOURCE_OPTION`。
 
-所有生成输入显式`synthetic=true`并在provenance记录generated scenario seed；无失败，因此没有保存虚构的minimized failure/corpus。失败时Hypothesis会报告最小example和reproduction seed，修复后应把最小反例版本化为回归fixture或保留reproduction metadata。本Task形成P1 TEST-ORDER-EXPANSION-001的property evidence，但没有生成PlanningProblem/candidate schedule，故P2 `TEST-PROPERTY`仍为`PLANNED`；TASK-P1-08 Snapshot replay property也仍未形成。Implementation commit `5a3dbc14c12a107abf4052cca935e3ef59009d3d`已由GitHub Actions run `32265257468`的required `validate`成功重放，包含property目录的repository suite及中性machine evidence artifact均成功。
+所有生成输入显式`synthetic=true`并在provenance记录generated scenario seed；无失败，因此没有保存虚构的minimized failure/corpus。失败时Hypothesis会报告最小example和reproduction seed，修复后应把最小反例版本化为回归fixture或保留reproduction metadata。TASK-P1-07形成P1 TEST-ORDER-EXPANSION-001的property evidence，但没有生成PlanningProblem/candidate schedule，故P2 `TEST-PROPERTY`仍为`PLANNED`；Snapshot replay property当时留给TASK-P1-08并已由下节形成。Implementation commit `5a3dbc14c12a107abf4052cca935e3ef59009d3d`已由GitHub Actions run `32265257468`的required `validate`成功重放，包含property目录的repository suite及中性machine evidence artifact均成功。
+
+## TASK-P1-08 generated Snapshot properties
+
+`test_snapshot_properties.py`复用锁定Hypothesis并固定四组seed：`20260820`以32 max examples重排16个canonical collections及inner capability lists，要求完整Snapshot bytes/hash/ID不变；`20260821`以32 examples改变factory business fact并重新走package/quality/expansion链，要求deterministic replay且hash/ID变化；`20260822`以24 examples改变cutoff秒值，要求facts不变而hash变化；`20260823`以24 examples注入received/generated/runtime/self噪声，要求semantic hash不变。
+
+定向property执行4项全部PASS且没有Hypothesis failure，因此没有伪造minimized corpus；如未来失败，必须保留reproduction seed与最小反例。该证据形成P1 `TEST-SNAPSHOT-REPLAY-001`的generated slice，不生成PlanningProblem或candidate Schedule，故P2 `TEST-PROPERTY`继续`PLANNED`。Test值来自P1-02 synthetic schema sample，不成为Profile distribution、Benchmark baseline或Production事实。

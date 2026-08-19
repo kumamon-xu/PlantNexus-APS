@@ -6,7 +6,7 @@ spec_version: 0.3.0
 phase: P0-P1
 normative: true
 source_sections: [23, 40, 62, 74, 101, 103]
-last_reviewed: 2026-08-19
+last_reviewed: 2026-08-20
 ---
 
 # PlanningSnapshot 合同
@@ -52,4 +52,12 @@ Synthetic v2必须携带scenario/profile/generator/version/seed，Production v2�
 
 `import-quality-report.v1`现在已有真实producer和PASS/FAIL machine contract；只有`status=PASS`且`error_count=0`的报告可满足Snapshot v2既有`import_quality_report`引用语义。报告的`report_id`由版本、package ID、status/count和有序Error v3内容派生，不能引用另一个Import或手工把FAIL改为PASS。
 
-TASK-P1-06不创建Snapshot，也不计算Snapshot schema内的Import dataset hash；TASK-P1-08仍须同时核验报告与目标Import/package hash的绑定并构建immutable payload。当前quality PASS不能替代Expansion、Snapshot entity counts/hash或repository evidence。
+TASK-P1-06本身不创建Snapshot，也不计算Snapshot schema内的Import dataset hash；它交给TASK-P1-08同时核验报告与目标Import/package hash的绑定并构建immutable payload。Quality PASS单独存在仍不能替代Expansion、Snapshot entity counts/hash或repository evidence；下节记录当前实现。
+
+## TASK-P1-08 immutable builder and hash contract
+
+`snapshot-hash-projection.v1`对白名单中的Snapshot v2业务字段做`canonical-json.v1`编码：包含cutoff、全部canonical records、expanded instances/edges、entity counts、source/rule/normalization/expansion/schema/canonicalization versions、Import dataset hash、quality report引用及conditional synthetic provenance；排除self `snapshot_id/snapshot_hash`和不属于Snapshot合同的received/generated/runtime噪声。Canonical record collections、capabilities、calendar intervals、instance candidates/locks和edges按稳定ID/值排序，业务时间字段不会被当作噪声删除。
+
+`snapshot_hash=sha256(canonical projection)`，`snapshot_id=planning-snapshot-v2-<digest>`，因此同facts/cutoff/versions产生相同完整Snapshot bytes/hash/ID，任一投影内事实或版本变化产生新identity。Builder只接受内容派生的Import package ID、匹配该Import的zero-error PASS report和bytes/hash/provenance自洽的`order-expansion.v1`；FAIL、stale package、跨Import/plane expansion、非法cutoff或hash tamper均以module-local稳定错误拒绝。
+
+`ImmutablePlanningSnapshot`仅保存frozen canonical bytes与identity，`document`每次返回新copy；SQLAlchemy repository按data plane只提供insert/exact replay/read，应用update/delete明确拒绝。`0003_planning_snapshots`以hash主键、ID唯一、canonical bytes digest和SQLite/PostgreSQL mutation trigger固定insert-only语义；downgrade会删除全部Snapshot，必须只在已确认的开发/测试回滚中执行。Schema v1/v2均未修改，PlanningProblem、PlanningRun、ScheduleVersion、API和Solver仍未形成。

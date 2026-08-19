@@ -6,7 +6,7 @@ spec_version: 0.3.0
 phase: cross-phase
 normative: true
 source_sections: [0, 9, 10, 23, 24, 30, 32, 33, 35, 57, 67]
-last_reviewed: 2026-08-19
+last_reviewed: 2026-08-20
 ---
 
 # 端到端计划链路
@@ -52,4 +52,8 @@ Replan 不修改旧 ScheduleVersion。它使用旧版本、执行事实、新 Sn
 
 TASK-P1-03/04已形成Raw Staging与ReferenceFileAdapter；TASK-P1-05形成`RawImportRow → explicit MappingProfile/unit registry → canonical Import v2 bytes/hash`；TASK-P1-06形成canonical structure/reference/DAG/resource/capability/time/duration Data Validation与deterministic ImportQualityReport。Import门只有报告PASS/0 errors才通过，四类Gate问题使用exact DATA_ERROR，unsupported capability保持独立category。
 
-TASK-P1-07现只在matching PASS report之后，以`order-expansion.v1`把source-explicit DemandOrder/ProductionOrder/Lot/Routing确定性展开为OperationInstance与逐lot precedence edge，并保留candidate duration/source、fact/lock和versioned lineage。当前链路因此止于纯Order Expansion输出；尚未创建immutable Snapshot、PlanningProblem或Solver。任何consumer不得从Adapter/Raw/Normalization或FAIL report绕过Data Validation进入Expansion，也不得把Expansion hash当作Snapshot/Problem hash；P0/P2 ScheduleValidator仍只验证candidate schedule，与本输入Gate不同。
+TASK-P1-07只在matching PASS report之后，以`order-expansion.v1`把source-explicit DemandOrder/ProductionOrder/Lot/Routing确定性展开为OperationInstance与逐lot precedence edge，并保留candidate duration/source、fact/lock和versioned lineage；该Task本身止于纯Order Expansion输出，不创建Snapshot、Problem或Solver。任何consumer不得从Adapter/Raw/Normalization或FAIL report绕过Data Validation进入Expansion，也不得把Expansion hash当作Snapshot/Problem hash；P0/P2 ScheduleValidator仍只验证candidate schedule，与本输入Gate不同。
+
+TASK-P1-08现把该链路推进到immutable PlanningSnapshot v2：builder验证content-derived Import、matching PASS report与self-consistent Expansion，形成stable bytes/hash/ID和strict entity counts；plane-scoped repository以insert/exact replay/read及DB mutation trigger保留不可变事实。Snapshot Gate的stale package、FAIL、provenance mismatch、invalid cutoff、content conflict和Production/Synthetic混用均明确拒绝。
+
+当前端到端实现边界止于已持久化Snapshot；PlanningProblem、PlanningStrategy、Solver、candidate ScheduleValidator、ScheduleVersion与发布仍未创建。P1-09只能从本Snapshot合同继续构建solver-neutral Problem，不能绕回上游或把Expansion/dataset hash冒充Snapshot hash。

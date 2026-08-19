@@ -6,7 +6,7 @@ spec_version: 0.3.0
 phase: cross-phase
 normative: true
 source_sections: [16, 38, 49, 62, 64, 95, 96]
-last_reviewed: 2026-08-19
+last_reviewed: 2026-08-20
 ---
 
 # 配置、环境与数据隔离
@@ -80,3 +80,9 @@ P1-04只更新既有engineering machine contract中的exact runtime dependency�
 本Task只把`backend/tests/property`加入phase-neutral GitHub repository suite，并由integration contract要求该路径持续存在；没有修改Settings、environment/data-plane、Secret、Compose、Database/Redis connectivity、Simulation API或Production configuration。Hypothesis为dev-only lock，runtime/container的`uv sync --no-dev`不会安装它。
 
 CI重放生成测试只证明synthetic expansion correctness与治理交接，不建立独立Production/Simulation数据库、Production deployment、runtime capacity或外部source authority。Immutable implementation commit `5a3dbc14c12a107abf4052cca935e3ef59009d3d`的provider run `32265257468`已成功重放该边界；这不扩大其Production含义。
+
+## TASK-P1-08 Snapshot isolation slice
+
+每个`SqlAlchemySnapshotRepository`在构造时永久绑定`production`或`simulation`；write先核验Snapshot canonical bytes/hash/ID及synthetic marker，read predicate始终携带data plane。Synthetic Snapshot必须保留完整Scenario/Profile/Generator/version/seed，Production Snapshot不得携带该provenance；跨plane put明确`DATA_PLANE_MISMATCH`，另一plane按ID/hash读取返回不存在。
+
+Migration在同一internal table记录data plane并以CHECK约束取值，应用与数据库trigger共同禁止update/delete。临时SQLite在同库双repository的测试只证明代码/表级negative guard；它不满足ADR-0009要求的独立Production/Simulation Database、role/network/backup/monitoring，也不修改Settings、Compose、Secret或Production endpoint。RISK-007继续`MONITORED`。

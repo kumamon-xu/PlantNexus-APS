@@ -6,7 +6,7 @@ spec_version: 0.3.0
 phase: cross-phase
 normative: true
 source_sections: [6, 97, 98, 99, 100, 101, 102, 103, 104, 111]
-last_reviewed: 2026-08-19
+last_reviewed: 2026-08-20
 registry_version: 1.0.0
 ---
 
@@ -191,3 +191,9 @@ Schema变化只新增unit registry并同步set metadata/data dictionary；Import
 本Task实际命中`IMPACT-DOMAIN`、`IMPACT-IMPORT`、`IMPACT-INFRA`、`IMPACT-DEPENDENCY`、`IMPACT-VERSION-METADATA`、`IMPACT-TESTS`、`IMPACT-PHASE`、`IMPACT-GOVERNANCE-REGISTRY`、`IMPACT-DOCS`。启动前review发现原卡遗漏domain/dependency/version/tests/phase/governance/docs行的强制文档与root README，并在任何业务实现前补入范围；全仓回归随后发现workflow未收集property tests，故在修改CI前再次扩卡加入INFRA文件及configuration/Operations必审文档。Diff base始终固定`97728521e187f9f50715de4b04a09098bef62ddf`。
 
 实际实现只新增pure domain production contract、normalization order expansion、unit/property tests和dev-only Hypothesis lock，并在既有workflow/integration contract追加phase-neutral property suite路径；`pyproject.toml`的schema/code metadata与runtime dependencies不变。Schema/error registry、Adapter/Staging/unit-time Normalizer、DataValidation、Snapshot/Problem、Simulation/API/DB/Worker、Constraint/ScheduleValidator、Solver/Benchmark均未修改，因此不声明其他Rule ID；最终以TASK-P1-07 diff report真实changed paths/九行matched/0 issues为准。
+
+## TASK-P1-08 matrix review
+
+本Task实际路径命中`IMPACT-SNAPSHOT`、`IMPACT-INFRA`、`IMPACT-TESTS`、`IMPACT-PHASE`、`IMPACT-GOVERNANCE-REGISTRY`、`IMPACT-DOCS`。启动前review发现原卡遗漏root/docs入口、端到端当前态及TESTS/PHASE/GOVERNANCE-REGISTRY/DOCS行的强制文档，均已在任何Snapshot业务实现前补入允许范围；Diff base固定为`8b4fb4c027305d3e3aa68eec0baaf73cd0598189`。
+
+实际实现只修改`app.snapshots`、新增Infrastructure repository/`0003` migration及限定unit/property/integration/migration tests。Snapshot v1/v2 Schema、Import/Adapter/Normalization/DataValidation/Expansion、dependency/lock/version metadata、Application/Planning/Solver/Simulation/API/Job均不修改，因此不声明SCHEMA/IMPORT/DEPENDENCY/VERSION/APPLICATION等其他Rule ID；machine rule表和`registry_version`保持`1.0.0`，最终以TASK-P1-08 diff report真实changed paths/六行matched/0 issues为准。

@@ -6,7 +6,7 @@ spec_version: 0.3.0
 phase: cross-phase
 normative: true
 source_sections: [5, 6, 86, 98, 99, 111]
-last_reviewed: 2026-08-19
+last_reviewed: 2026-08-20
 ---
 
 # 需求追踪规则
@@ -117,3 +117,7 @@ TASK-P1-06将REQ-001/002/003/009、NFR-COR/DET/TRC与ENG-ERR/VER链接到`app.da
 Order Expansion evidence链必须区分：source-explicit ProductionLot与系统自动split/merge；Routing definition与derived OperationInstance/edge；candidate duration/source逐字copy与任何重新计算/fallback；RUNNING/COMPLETED fact引用与未来Problem过滤；Import/PASS report/expansion versions与Snapshot hash；固定样例、Hypothesis generation/shrinking、P2 PlanningProblem Property和Benchmark。Output可通过Snapshot v2 pure precheck不等于Snapshot builder/hash/persistence已形成。
 
 TASK-P1-07将REQ-003/009、NFR-DET/TRC与ENG-SOL/ERR/VER链接到`domain.production`、`normalization.order_expansion`、TEST-ORDER-EXPANSION-001和TEST-RUNNING P1 slice。`order-expansion.v1`使用versioned lot-operation/lot-edge SHA-256 identity；schema set仍`2.2.0`，Import/Snapshot v2仍`2.0.0`，product error registry/C-ID不变。SPLIT_MERGE、Snapshot/Problem/common-ingress/P2 Solver均继续明确排除。
+
+PlanningSnapshot evidence链必须区分：Import dataset hash、Expansion hash、Snapshot semantic hash和full canonical-bytes digest；self ID/hash与received/generated/runtime metadata；canonical business timestamps与非业务storage `created_at`；application/table plane guard与独立Production/Simulation Database；exact replay与identity/content conflict；reversible migration与destructive downgrade。任一层不得用另一层digest或本地SQLite替代。
+
+TASK-P1-08将REQ-002/003/009、NFR-DET/TRC/ISO/REL与ENG-SOL/ERR/VER链接到`app.snapshots`、Infrastructure repository、`0003_planning_snapshots`、TEST-SNAPSHOT-REPLAY-001及TEST-SIM-ISOLATION Snapshot slice。Schema set仍`2.2.0`、Snapshot document仍`2.0.0`且Schema字节未改；PlanningProblem/common ingress/PlanningRun manifest/independent Production DB/Solver仍明确排除。

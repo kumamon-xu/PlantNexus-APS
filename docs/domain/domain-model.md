@@ -6,7 +6,7 @@ spec_version: 0.3.0
 phase: P0-P2
 normative: true
 source_sections: [17, 18, 19, 20, 21, 22]
-last_reviewed: 2026-08-19
+last_reviewed: 2026-08-20
 ---
 
 # APS 领域模型
@@ -99,4 +99,10 @@ Snapshot v2额外固定derived OperationInstance/precedence edge与candidate级d
 
 `domain/production.py`现固定`order-expansion.v1`、derived ID算法、JSON-compatible expansion provenance/result和module-local rejection；`normalization/order_expansion.py`消费已验证Import/PASS report，按每个显式ProductionLot复制其RoutingVersion的全部operation与edge。OperationInstance ID由`version + lot ID + routing operation ID`派生，precedence ID由`version + lot ID + routing edge ID`派生，输出按ID稳定排序并保留可回链到全部canonical source record的外键。
 
-该pure service不拥有Production lot sizing、duration calculation、material authority或resource selection。它复制明确candidate duration/source、release/material gate、RUNNING/COMPLETED fact引用和locks；COMPLETED实例留在事实输出，未来Problem过滤仍属TASK-P1-09。Expansion artifact/hash不是PlanningSnapshot/hash，持久化与immutability仍属TASK-P1-08，Solver仍不存在。
+该pure service不拥有Production lot sizing、duration calculation、material authority或resource selection。它复制明确candidate duration/source、release/material gate、RUNNING/COMPLETED fact引用和locks；COMPLETED实例留在事实输出，未来Problem过滤仍属TASK-P1-09。Expansion artifact/hash不是PlanningSnapshot/hash；TASK-P1-07把持久化与immutability交给TASK-P1-08，并由下节记录当前已形成的Snapshot value boundary，Solver仍不存在。
+
+## TASK-P1-08 PlanningSnapshot value boundary
+
+`app.snapshots`现在把PlanningSnapshot v2实现为canonical bytes驱动的frozen value：外部只能取得新document copy，不能通过共享dict改写事实；self ID/hash由versioned semantic projection确定性派生。Builder消费Canonical Import、matching quality PASS和Order Expansion，不拥有字段权威、lot/duration推断或未来Problem过滤。
+
+Snapshot repository protocol只暴露put/exact replay与按ID/hash读取；SQLAlchemy adapter属于Infrastructure并永久绑定单一data plane。Snapshot事实变化必须构建新identity，不存在Domain update/delete。COMPLETED/RUNNING继续作为cutoff事实保存；哪些实例进入未来PlanningProblem仍由TASK-P1-09决定，当前未创建Solver模型或ScheduleVersion。

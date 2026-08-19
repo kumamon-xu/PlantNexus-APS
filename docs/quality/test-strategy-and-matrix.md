@@ -6,7 +6,7 @@ spec_version: 0.3.0
 phase: P0-P7
 normative: true
 source_sections: [31, 57, 72, 74, 76, 78, 80, 86, 87, 88, 89, 100]
-last_reviewed: 2026-08-19
+last_reviewed: 2026-08-20
 registry_version: 1.0.0
 ---
 
@@ -38,7 +38,7 @@ registry_version: 1.0.0
 | TEST-NORMALIZATION-001 | ID/time/unit mapping、canonical bytes、unit error与 missing duration | P1 | [`test_normalization.py`](../../backend/tests/unit/test_normalization.py) formed / TASK-P1-05 |
 | TEST-DATA-QUALITY-001 | DAG/reference/capability/quality report与四类 P1 exact rejection | P1 | [`test_data_validation.py`](../../backend/tests/unit/test_data_validation.py) + [`test_import_validation.py`](../../backend/tests/contract/test_import_validation.py) formed / TASK-P1-06 |
 | TEST-ORDER-EXPANSION-001 | Order/Lot/Routing到 OperationInstance/edge deterministic expansion | P1 | [`test_order_expansion.py`](../../backend/tests/unit/test_order_expansion.py) + [`test_order_expansion_properties.py`](../../backend/tests/property/test_order_expansion_properties.py) formed / TASK-P1-07；provider run `32265257468` PASS |
-| TEST-SNAPSHOT-REPLAY-001 | Snapshot canonical bytes/hash/ID、immutability与 repository replay | P1 | PLANNED / TASK-P1-08 |
+| TEST-SNAPSHOT-REPLAY-001 | Snapshot canonical bytes/hash/ID、immutability与 repository replay | P1 | [`test_snapshot_builder.py`](../../backend/tests/unit/test_snapshot_builder.py) + [`test_snapshot_properties.py`](../../backend/tests/property/test_snapshot_properties.py) + [`test_snapshot_repository.py`](../../backend/tests/integration/test_snapshot_repository.py) formed / TASK-P1-08；provider待implementation push核验 |
 | TEST-PROBLEM-REPLAY-001 | Solver-neutral Problem builder/bytes/hash deterministic replay | P1 | PLANNED / TASK-P1-09 |
 | TEST-P1-COMMON-INGRESS | Reference/Synthetic共同 staging→Problem链路与 Gate report | P1 | PLANNED / TASK-P1-11 |
 | TEST-RULE-SHEET-001 | C-001～C-018 唯一/完整、input/formula/example/violation/Test ID 与 registry cross-check | P0 | [`test_rule_contracts.py`](../../backend/tests/contract/test_rule_contracts.py) + [`constraint-rule-sheet.v1`](../../schemas/rules/constraint-rule-sheet.v1.yaml) + [TASK-P0-04 Acceptance PASS](../tasks/P0/TASK-P0-04-constraints-states-errors-capabilities.md#completion-evidence) |
@@ -60,7 +60,7 @@ registry_version: 1.0.0
 | TEST-OUTPUT | 标准成果包合同 | P2-P3 | PLANNED |
 | TEST-IDEMPOTENCY | Import/Planning/Export/Publish/Event 幂等 | P0-P3 | [`test_job_reliability.py`](../../backend/tests/integration/test_job_reliability.py) generic primitive + P1 [`test_raw_import_staging.py`](../../backend/tests/integration/test_raw_import_staging.py) durable Import staging replay/conflict/rollback formed；Worker/Planning/Export/Publish/Event side effects PLANNED |
 | TEST-SCENARIO-REPLAY | Scenario/Profile/Generator/seed 重放 | P0-P2 | empty Import [`test_simulation_contracts.py`](../../backend/tests/simulation/test_simulation_contracts.py) + non-empty committed [`SIM-MINIMAL-001`](../../backend/tests/golden/test_sim_minimal_001.py) canonical hash replay formed；Snapshot/Problem replay PLANNED |
-| TEST-SIM-ISOLATION | Synthetic/Production 隔离 | P0-P1 | [`test_simulation_contracts.py`](../../backend/tests/simulation/test_simulation_contracts.py) formed for Schema/pure context/Import envelope；separate DB/API/publish guards PLANNED |
+| TEST-SIM-ISOLATION | Synthetic/Production 隔离 | P0-P1 | [`test_simulation_contracts.py`](../../backend/tests/simulation/test_simulation_contracts.py) + Snapshot repository [`test_snapshot_repository.py`](../../backend/tests/integration/test_snapshot_repository.py) app/table plane guard formed；separate DB/API/publish guards PLANNED |
 | TEST-REFERENCE-SCHEDULER | Reference Scheduler baseline | P2 | PLANNED |
 | TEST-BENCHMARK | BenchmarkReport/profile 回归 | P2 | PLANNED |
 | TEST-PROPERTY | 合法 Problem 的通用不变量 | P2 | PLANNED |
@@ -143,3 +143,9 @@ TEST-ORDER-EXPANSION-001现由7项unit与2项Hypothesis property tests形成：s
 Property使用fixed seeds`20260819/20260820`、64 positive与24 negative max examples，生成1～3 lots、4-op branch/merge、2 workshops/resources、1～2 candidates、fact/lock组合并验证重排不变量和可收缩exact rejection。本地为7 unit + 2 property + 5 CI contract=`14 passed`，full repository=`219 passed`，Ruff/Pyright均0问题。Implementation commit `5a3dbc14c12a107abf4052cca935e3ef59009d3d`对应GitHub Actions run `32265257468`、required `validate` job `96108055149`=`success`；artifact `9369917400`的provider/download digest均为`sha256:8aeb7416516f7932436bbf406d800cdbdeb8313ba9249f2709b7df71647e566e`，其中Task report精确匹配该SHA并为`PASS`。TASK-P1-07测试/CI证据据此闭环为`done`。
 
 TEST-RUNNING获得P1 expansion projection slice：RUNNING/COMPLETED绑定唯一fact且COMPLETED保留，NOT_STARTED不引用fact；它不验证未来occupancy/resource immutability或P2 candidate ScheduleValidator。P2 TEST-PROPERTY仍`PLANNED`，因为本Task生成canonical expansion而非合法PlanningProblem/candidate schedule；Test registry表结构/ID不变，`registry_version`保持`1.0.0`。
+
+## TASK-P1-08 PlanningSnapshot evidence
+
+TEST-SNAPSHOT-REPLAY-001现由9项unit、4项fixed-seed Hypothesis properties、5项repository integration与migration suite中的Snapshot upgrade/downgrade形成。覆盖固定hash vector、same-input complete bytes/hash/ID、all collection/candidate/lock ordering、self/received/generated noise exclusion、cutoff/fact/rule/version mutation、fresh-copy immutability、FAIL/stale/mismatch/tamper/invalid-cutoff拒绝、Production/Synthetic conditional、insert/exact replay/read、identity-content conflict，以及application/database update/delete拒绝。
+
+Task-focused suite为`25 passed`，full repository regression为`238 passed`，Ruff/Pyright均0问题；provider结果仍须在implementation commit push后按精确SHA实际核验。TEST-SIM-ISOLATION获得Snapshot application/table plane guard slice，但同库临时SQLite不等于独立Production/Simulation database。Schema/Test ID/registry表结构未改，P1-09 Problem replay、P1-11 common ingress和P2 TEST-PROPERTY/Solver继续`PLANNED`，`registry_version`保持`1.0.0`。

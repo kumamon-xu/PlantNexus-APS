@@ -6,7 +6,7 @@ spec_version: 0.3.0
 phase: cross-phase
 normative: true
 source_sections: [16, 59, 60, 61, 105, 106]
-last_reviewed: 2026-08-19
+last_reviewed: 2026-08-20
 registry_version: 1.0.0
 ---
 
@@ -82,3 +82,5 @@ TASK-P1-05 review：unit registry的`s/min/h`只形成显式数学换算机制�
 TASK-P1-06 review：Data Validation只拒绝显式canonical事实中的route/reference/resource/capability/time/calendar/unit/duration问题；test-local `CUTTING/piece`、interval、lag与duration不是Production authority、默认值或closure evidence。没有Authority/Evidence/closure record，也未决定真实interface、calendar/material/transport/unit/fallback/field precedence；OPEN-002/004/007/009/013/014/015及OPEN-001～015全部继续`OPEN`，registry format version保持`1.0.0`。
 
 TASK-P1-07 review：Expansion只接受source-explicit Lot、material gate、candidate duration/source、fact/lock并拒绝自动SPLIT_MERGE/fallback；property中的1～3 lots、2 workshops/resources、300秒transport与duration均为synthetic test values。没有Authority/Evidence/closure record，也未决定lot policy、material/duration/field authority；OPEN-007/008/014/015及OPEN-001～015全部继续`OPEN`，registry format version保持`1.0.0`。
+
+TASK-P1-08 review：Snapshot只冻结显式facts/cutoff/source/rule/version并以hash证明重放，不定义Factory timezone、真实interface、calendar/material/transport、field authority或Production参数。Schema sample的cutoff/entity count/duration与临时SQLite migration均不是Authority或closure evidence；没有关闭记录或生产默认值。OPEN-001/002/004/007/009/015及OPEN-001～015全部继续`OPEN`，registry format version保持`1.0.0`。

@@ -6,7 +6,7 @@ spec_version: 0.3.0
 phase: cross-phase
 normative: false
 source_sections: [0, 8, 10, 30, 42, 57, 59, 62, 89, 90, 105]
-last_reviewed: 2026-08-19
+last_reviewed: 2026-08-20
 registry_version: 1.0.0
 ---
 
@@ -60,3 +60,5 @@ TASK-P1-05 review：explicit mapping/no-default与OPEN保持约束RISK-001，Ada
 TASK-P1-06 review：明确DAG/resource/capability rejection加强RISK-004，单一canonical evaluator与no-Planning/Solver scan加强RISK-002/003，rich deterministic report加强RISK-001可见性；但尚无Synthetic common ingress、Snapshot/Problem、独立Production DB、真实authority、Solver或Benchmark。该早期控制不足以把任何风险标记`MITIGATED/CLOSED`；RISK-001～010全部保持`MONITORED`，registry format version不变。
 
 TASK-P1-07 review：PASS-gated expansion、versioned lineage/replay和禁止自动lot/duration规则加强RISK-001/002/004，Production/Synthetic provenance copy加强RISK-007，generated branch/merge/cross-workshop properties提升早期correctness可见性。但尚无common ingress、immutable Snapshot/Problem、独立Production DB、Solver/Validator comparison或Benchmark，因此不足以标记任何风险`MITIGATED/CLOSED`；RISK-001～010全部保持`MONITORED`，registry format version不变。
+
+TASK-P1-08 review：PASS/Expansion-gated immutable Snapshot、semantic hash与insert-only trigger加强RISK-001/002，plane-scoped repository和synthetic provenance guard加强RISK-007，atomic exact replay/content conflict加强RISK-008，property mutation提升早期determinism可见性。证据仍限schema sample与临时SQLite，尚无common ingress、independent Production DB/roles、PostgreSQL concurrency、Problem/Solver或Benchmark；不足以把任何风险标记`MITIGATED/CLOSED`。RISK-001～010全部保持`MONITORED`，registry format version不变。

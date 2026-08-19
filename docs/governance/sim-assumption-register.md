@@ -6,7 +6,7 @@ spec_version: 0.3.0
 phase: cross-phase
 normative: true
 source_sections: [37, 38, 39, 43, 44, 49, 59, 62, 96]
-last_reviewed: 2026-08-19
+last_reviewed: 2026-08-20
 registry_version: 1.0.0
 ---
 
@@ -63,3 +63,5 @@ TASK-P1-05 review：tests中的reference mapping、UTC offsets、DST边界、`s/
 TASK-P1-06 review：quality tests只从既有P1-02 schema sample复制canonical records并注入cycle/missing resource/unit/duration及结构负例；它们不是新FactoryProfile/Scenario、概率、规模、capacity或Benchmark baseline。没有新增/修改/retire假设；SIM-ASSUMPTION-001～009全部保持`ACTIVE`，不用于Production default或OPEN closure，registry format version保持`1.0.0`。
 
 TASK-P1-07 review：Hypothesis以fixed replay seeds生成test-local 1～3 explicit lots、4-op branch/merge、2 workshops/resources、candidate/fact/lock组合，并在每个Import保留`synthetic=true`与scenario seed。这些值仅用于generation/shrinking，不是新Profile/Scenario distribution、Benchmark baseline或Production topology/policy。没有新增/修改/retire条目；SIM-ASSUMPTION-001～009全部保持`ACTIVE`，registry format version保持`1.0.0`。
+
+TASK-P1-08 review：Snapshot unit/property/integration tests复用P1-02 synthetic schema sample及其既有scenario/profile/generator/seed，新增的Hypothesis seeds只控制test generation；cutoff、hash、entity counts和单Snapshot migration row均不是新FactoryProfile/Scenario distribution或Benchmark baseline。没有新增/修改/retire条目；SIM-ASSUMPTION-001～009全部保持`ACTIVE`，不用于Production default或OPEN closure，registry format version保持`1.0.0`。

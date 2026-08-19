@@ -6,7 +6,7 @@ spec_version: 0.3.0
 phase: P0-P7
 normative: false
 source_sections: [65, 66, 93, 94, 95, 101, 106]
-last_reviewed: 2026-08-19
+last_reviewed: 2026-08-20
 ---
 
 # Operations 索引与形成边界
@@ -43,3 +43,7 @@ TASK-P1-04 implementation commit`9391ec021afa9e6f4f881b1538b276c84584df0e`已由
 TASK-P1-07不新增API、Worker、DB/migration、network、Secret或Runbook行为；仅把dev-only Hypothesis property directory加入既有repository CI test step，并以`test_ci_contract.py`防止provider遗漏核心expansion evidence。Workflow仍使用current-phase Task discovery、中性artifact名、完整既有gates和conditional Benchmark hook，无`continue-on-error`。
 
 本地workflow contract PASS不等于GitHub provider执行；implementation commit push后必须核验required `validate`、steps与artifact，再以evidence-only commit关闭Task。即使provider PASS，也不构成Production operation、capacity、安全或on-call证据。
+
+TASK-P1-08新增internal PlanningSnapshot persistence：hash主键、ID唯一、full-bytes digest、plane scope、atomic insert/exact replay/read，以及repository与database-trigger双层update/delete拒绝。Migration测试明确验证空库升级、含一个synthetic Snapshot的destructive downgrade至`0002`、re-upgrade后记录为空；历史Snapshot不能用代码rollback原地改写。
+
+这仍不是Production Runbook：独立aps_sim/aps_prod数据库与roles、PostgreSQL trigger/concurrency实跑、retention/legal erasure、backup/restore、access audit、capacity/alert和incident response均未形成。`created_at`只属于storage audit metadata且不进入Snapshot hash；Task provider执行在实际push核验前保持`NOT_RUN`。

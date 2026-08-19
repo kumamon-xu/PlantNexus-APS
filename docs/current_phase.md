@@ -28,16 +28,16 @@ P0-DOCS — Documentation Baseline
 ## 最新完成 Task
 
 ```text
-TASK-P0-09 — P0 Exit Gate Audit
+TASK-P0-10 — CI Workflow Handoff and Provider Evidence Remediation
 ```
 
-Task 状态：`done`（2026-08-19）。独立审计重放 TASK-P0-01～08 evidence、90 tests、五类 machine reports、Compose/build/governance 与 no-Solver gate：五项非 CI Exit Gate均 `PASS`。提交后 exact replay 发现 workflow 硬编码 TASK-P0-08 diff gate并在 P0-09 commit上 exit 1。2026-08-19 后续 GitHub push 产生 run `32227247262`，从 provider 侧再次确认唯一失败点为该 docs step；因此 CI Gate 仍 `FAIL`，总体 `NOT_READY` / `NO_GO`，两项缺口正由 TASK-P0-10 处理。
+Task 状态：`done`（2026-08-19T15:52:57+08:00）。workflow exact docs diff 已从 TASK-P0-08 交接到 TASK-P0-10，integration contract 禁止旧引用；implementation commit `036bc23bc0ac4d60aab131c0d44eda5508e844d4` 的 GitHub run `32228647627`、`validate` job、artifact `9356432918` / digest 全部成功，`main` 已 protected 且 required `validate`。提交前/后本地 acceptance 与 superseding audit 全部 PASS，`P0-GAP-001/002` 已关闭。
 
-TASK-P0-01～09 均为 `done`，但 Task 全部完成不等于 Phase Gate通过。P0 仍未完成、Milestone保持 `active`，不授权进入 P1。
+TASK-P0-01～10 均为 `done`。[P0 superseding audit](milestones/P0-exit-gate-audit-report.md) 将全部 Exit Gate 判定为 `PASS`，P0 Gate 为 `READY`。Milestone 仍保持 `active`、当前 Phase 仍为 P0，因为用户尚未明确批准 phase transition；本 Task 不自动进入 P1。
 
 ## 当前 Task
 
-`TASK-P0-10 — CI Workflow Handoff and Provider Evidence Remediation`，状态 `in_progress`，Diff base `5d8bb51e06add1afc2f53861cf53c7a2ba45a272`。当前只允许修复 P0 workflow handoff、重放本地 gates、对授权 GitHub repository 获取 Actions/artifact/required-check evidence 并重审 Exit Gate。验收完成前 P0 保持 `active` / `NOT_READY`，P1 继续禁止。
+无。TASK-P0-10 已完成；当前只等待用户对 P0 → P1 phase transition 给出另一条明确指令。未经该指令不创建/执行 P1 Task。
 
 ## 当前允许
 
@@ -52,7 +52,7 @@ TASK-P0-01～09 均为 `done`，但 Task 全部完成不等于 Phase Gate通过�
 - 维护 `SIM-MINIMAL-001@1.0.0` deterministic correctness fixture、人工 Golden 与只读 replay/hash evidence；
 - 在不导入 Solver/backend 的边界内维护 P0-07 fixture-local Validator Rule Sheet evaluator 与非法 mutation evidence；
 - 按 TASK-P0-08 明确文件边界建立 health-only API、工程基础设施、通用 Job reliability、CI 与构建骨架；
-- 按 TASK-P0-10 的精确路径边界修复 workflow handoff，并在已授权 GitHub repository 上获取 Actions/artifact/required-check evidence 后重审 P0 Exit Gate；
+- 维护 TASK-P0-10 已形成的 workflow handoff、GitHub Actions/artifact/required-check evidence 和 P0 `READY` audit；
 - 登记 `PROD_OPEN` 与 `SIM_ASSUMPTION`，但不替业务方关闭问题。
 
 ## 当前禁止

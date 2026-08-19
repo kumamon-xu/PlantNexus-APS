@@ -1,7 +1,7 @@
 ---
 doc_id: TASK-P0-10
 title: CI Workflow Handoff and Provider Evidence Remediation
-status: in_progress
+status: done
 spec_version: 0.3.0
 phase: P0
 normative: true
@@ -67,4 +67,56 @@ Rollback: workflow handoff 回滚必须恢复到仍能审计当前 commit 的已
 
 ## Completion evidence
 
-执行中。2026-08-19 已确认 `origin` 为 `git@github-kumamon:kumamon-xu/PlantNexus-APS.git`、`main` 与 `origin/main` 均指向 Diff base `5d8bb51e06add1afc2f53861cf53c7a2ba45a272`且工作树干净；用户明确要求继续 TASK-P0-10。GitHub Actions baseline run [`32227247262`](https://github.com/kumamon-xu/PlantNexus-APS/actions/runs/32227247262) 在该 SHA 上真实 `failure`：`validate` job 仅 `Documentation and task diff` step 失败，其他已执行 gates 成功；artifact `p0-engineering-evidence-32227247262` / ID `9355951091` / digest `sha256:5356e4bdb7ae139bb371f340b34836fc0d74154351cd12dfb0a176682512844f` 已上传。这是 remediation 前的失败基线，不是 completion PASS。
+已于 2026-08-19T15:52:57+08:00 完成。只在将本节和 superseding audit 置于最终 working tree 后，第二轮完整 Acceptance Commands 全部 PASS，才将 front matter 由 `in_progress` 改为 `done`。
+
+### Scope and immutable evidence
+
+- 2026-08-19 开始前工作树干净，`main == origin/main == 5d8bb51e06add1afc2f53861cf53c7a2ba45a272`；该完整 SHA 已记为 Diff base。`origin` 为 `git@github-kumamon:kumamon-xu/PlantNexus-APS.git`。
+- implementation commit 为 `036bc23bc0ac4d60aab131c0d44eda5508e844d4`，由 Diff base 之后 25 个 bounded paths 组成：`.github/workflows/ci.yml`、`backend/tests/integration/test_ci_contract.py`，以及本卡 `Documents to update` 中的 23 个 docs/manifest paths。没有修改 checker、其他 tests、Schema、Fixture、dependency/lock、Solver/P1 或 Secret。
+- workflow 将四个既有 executable contract reports、engineering report、documentation diff report 与 uploaded artifact 命名交接到 TASK-P0-10；full governance、sync/lint/type、全部 P0 tests、Compose、Benchmark hook、build 和 `if: always()` artifact upload 没有删除或弱化。
+- integration contract 保留原有 dependency/container/gate assertions，并新增 exact TASK-P0-10 docs command、artifact 名称和 `TASK-P0-08` 不存在断言；没有改写业务/Validator assertion。
+
+### Documentation and traceability
+
+- 实际 matrix rows 为 `IMPACT-INFRA`、`IMPACT-TESTS`、`IMPACT-PHASE`、`IMPACT-GOVERNANCE-REGISTRY`、`IMPACT-DOCS`；post-implementation report 记录 25 committed-range paths、0 working-tree paths、5 matched rows、17 expected/observed matrix documents、19 checks PASS、0 issues。
+- 本卡列出的 architecture、operations、quality、milestone/audit、task/index/template 和八份 governance registry/matrix/inventory 文档已全部审查并更新；JSON manifest 以 provider 真实 ID/SHA/digest/branch state supersede TASK-P0-09 的 `NOT_READY` snapshot。
+- REQ-009/NFR-TRC-001/NFR-PER-001/ENG-ARCH-001/ENG-VER-001 → TASK-P0-10 → integration/governance/build/GitHub run/artifact/required-check 的 P0 CI slice 已形成；根 ID 状态仍为 `ALLOCATED`，Production/distributed/Benchmark 与 P1/P2+ 边界仍 `PLANNED`。
+- `P0-GAP-002` 由 exact workflow handoff + 提交前/clean post-commit/provider docs step PASS 关闭；`P0-GAP-001` 由 successful GitHub run/job/artifact 和 protected `main` required `validate` 关闭。
+
+### Acceptance results
+
+| Command / evidence | Exit / result | Observed fact |
+|---|---:|---|
+| `uv sync --locked` | 0 | 58 packages resolved/checked |
+| `uv run ruff check .` | 0 | `All checks passed!` |
+| `uv run pyright backend/app backend/tests` | 0 | 0 errors、0 warnings、0 informations |
+| all six P0 pytest directories | 0 | 90 passed；最终轮 1.40s |
+| Rule Sheet report | 0 | 11 active、7 deferred、20 capabilities、19 error codes、3 machines/27 states/42 transitions |
+| Simulation contract report | 0 | 8 checks；hash `sha256:cd0fb164704530e83197ec5cc806acc86dc8430f15e503c5840f898397fa9456` |
+| Golden replay report | 0 | 0 issues；hash `sha256:fd8e5af387c7d4197a2664dfa89e93912091647d5809f1b76468d36edab29c10` |
+| Validator mutation report | 0 | 13 cases、11 constraints、13 classes、15 violations |
+| Engineering report | 0 | 6 checks PASS；`solver=NOT_INSTALLED`、business/distributed/production 边界保留 |
+| `docker compose --env-file .env.example config --quiet` | 0 | config 可解析，未启动容器 |
+| full repository governance | 0 | 112 docs、30 roots、27 tests、15 OPEN、9 assumptions、10 risks、10 tasks |
+| TASK-P0-10 diff governance, pre-commit | 0 | 25 paths、5 impact rows，0 issues |
+| TASK-P0-10 diff governance, clean implementation commit | 0 | `git_head=036bc23...`；25 committed/0 working-tree paths；19 checks PASS、0 issues |
+| TASK-P0-10 final lifecycle governance | 0 | `status=done` 下 full repository 与 task diff 均 PASS；25 paths、5 impact rows、0 issues |
+| static no-Solver gate | 0 | no `CpModel`/`IntervalVar`/OR-Tools import or dependency |
+| `git diff --check` | 0 | PASS |
+| `uv build` | 0 | sdist + wheel built |
+
+首次 diff acceptance 曾真实返回非零：一次因 Diff base 误加 Markdown 反引号，一次因 `IMPACT-GOVERNANCE-REGISTRY` 尚无实际 registry diff。修正 SHA 原始格式并按矩阵同步真实 registry 后才 PASS；没有修改 checker 或删除 Rule ID。
+
+### GitHub provider evidence
+
+- remediation 前 run [`32227247262`](https://github.com/kumamon-xu/PlantNexus-APS/actions/runs/32227247262) 在 Diff base 上 `failure`；`validate` 仅 Documentation/diff step 失败，artifact `9355951091` / digest `sha256:5356e4bdb7ae139bb371f340b34836fc0d74154351cd12dfb0a176682512844f` 保留为反例。
+- implementation commit 的 run [`32228647627`](https://github.com/kumamon-xu/PlantNexus-APS/actions/runs/32228647627) 为 attempt 1 / push / `completed: success`，`head_sha=036bc23bc0ac4d60aab131c0d44eda5508e844d4`；`validate` job ID `95993569251` 与全部核心 steps均 `success`。
+- provider artifact `p0-exit-gate-evidence-32228647627` / ID `9356432918` / 6144 bytes / `expired=false` / expiry `2026-11-17T07:36:55Z` / digest `sha256:d5cb630772f06732251f785a6ee6aff36856c2a2f619c4178f43b01ac3f0214b`。
+- GitHub branch API 确认 `main.protected=true`、required context/check `validate`、GitHub Actions app ID `15368`、enforcement `non_admins`，force push/deletion 均未启用。credential 未读取、回显或写入 repository。
+
+### Boundaries and rollback
+
+- Schema changes: none；Migration: none；dependency/lock: none；Benchmark: P0 hook 执行并明确 deferred，没有 Solver/BenchmarkReport。
+- OPEN-001～015 全部保持 `OPEN`；SIM-ASSUMPTION-001～009 全部保持 `ACTIVE`；RISK-001～010 全部保持 `MONITORED`。
+- superseding audit 将 P0 Exit Gate 判定为 `READY` / `GO_TO_REQUEST_EXPLICIT_P1_PHASE_TRANSITION`；当前 Phase 仍是 P0，`p1_authorized=false`，本 Task 不自动进入 P1或创建下一 Task。
+- 回滚 workflow 必须保持可审计当前 Task range，不得恢复硬编码 TASK-P0-08；GitHub 失败/成功 run 历史和 audit evidence 不删除/改写。branch protection 如需后续改变，必须作为新的明确授权变更并保留 required CI 证据，不在本 Task 内自动回退。

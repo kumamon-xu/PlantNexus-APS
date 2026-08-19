@@ -131,6 +131,8 @@ TASK-P0-10 不修改 `scripts/check_docs.py` 或 `TEST-TRACEABILITY-VALIDATOR`�
 
 provider 层必须额外校验 Actions run `head_sha`、workflow/job conclusion、artifact ID/name/digest 及 `main` branch required check。这些平台事实不由本地 validator 猜测；remediation 前 run `32227247262` 的失败只是反例，不能充当 PASS。
 
+实际 provider closure 为 run `32228647627` / `head_sha=036bc23bc0ac4d60aab131c0d44eda5508e844d4` / `validate=success` / artifact `9356432918` + digest `sha256:d5cb630772f06732251f785a6ee6aff36856c2a2f619c4178f43b01ac3f0214b`；公开 branch state 显示 `main.protected=true`、required `validate` / app ID `15368`。clean implementation commit 的 TASK-P0-10 report 再次得到 25 committed paths、0 working-tree paths、5 impact rows、19 checks PASS、0 issues。这些平台/提交事实与本地 validator 的职责分层保持不变。
+
 ## Override
 
 不允许用自由文本 CI skip 绕过。确需例外时必须在 Task Card 记录理由，提交 ADR 或明确批准记录，并仍保留检查报告。正确性、状态语义、数据隔离和发布门不得豁免。

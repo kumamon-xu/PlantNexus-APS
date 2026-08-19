@@ -80,3 +80,5 @@ TASK-P0-08 新增 26 项 integration tests：environment-only/malformed-value/Pr
 TASK-P0-09 没有增加或修改测试、断言、Test ID 或 registry format；它独立重跑 unit/contract/simulation/golden/validation/integration 共 90 tests，27 个已登记 Test ID 的 formed/`PLANNED` 边界保持不变。五类 machine reports 与 no-Solver gate均 PASS，但 workflow 的旧 Task diff step在 P0-09 commit 上 `FAIL` 且当时 external provider execution `NOT_RUN`，所以该次 CI Gate与 P0 Exit Gate不能通过；两项缺口由 TASK-P0-10 承接，`registry_version` 保持 `1.0.0`。
 
 TASK-P0-10 不新增 Test ID、test function、fixture 或 assertion 豁免；它在既有 `test_ci_runs_all_p0_gates_and_keeps_benchmark_as_a_hook` 中加强 workflow handoff 断言：exact TASK-P0-10 diff command 与 `p0-exit-gate-evidence-${{ github.run_id }}` 必须存在，任何 `TASK-P0-08` workflow 残留必须失败。测试总数仍为 90，已登记 27 个 Test ID 与既有 formed/`PLANNED` 边界不变；provider run/artifact/required-check 是 CI Gate artifact，不是新业务测试。
+
+本地 90-test suite 及 GitHub run `32228647627` 的 P0 test/machine-contract steps 均 PASS，且 clean implementation commit 的目标 integration file为 5 passed。该结果只关闭 CI handoff/provider evidence gap；不新增 Solver/Property/Benchmark 或 P1 能力证据，`registry_version` 保持 `1.0.0`。

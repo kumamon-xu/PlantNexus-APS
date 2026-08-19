@@ -1,17 +1,19 @@
 {
   "manifest_version": "p0-exit-gate-evidence-manifest.v1",
-  "audit_id": "TASK-P0-09",
+  "audit_id": "TASK-P0-10",
   "audit_date": "2026-08-19",
-  "audit_completed_at": "2026-08-19T14:39:20+08:00",
+  "audit_completed_at": "2026-08-19T15:52:57+08:00",
   "audit_task_status": "done",
   "timezone": "Asia/Hong_Kong",
   "auditor": "Codex execution agent",
-  "attestation": "Repository-local commands were executed; missing external evidence is reported as NOT_RUN. This is a non-cryptographic audit attestation.",
-  "diff_base": "50e7cf872a0795d839b06afa025f7427b222d20d",
-  "repository_head_at_execution": "50e7cf872a0795d839b06afa025f7427b222d20d",
+  "attestation": "Repository-local commands and public GitHub provider facts were independently queried against the stated immutable commit. This is a non-cryptographic audit attestation; no credential is stored in the repository.",
+  "supersedes_audit_id": "TASK-P0-09",
+  "diff_base": "5d8bb51e06add1afc2f53861cf53c7a2ba45a272",
+  "repository_head_at_execution": "036bc23bc0ac4d60aab131c0d44eda5508e844d4",
   "spec_version": "0.3.0",
   "schema_set_version": "1.2.0",
   "registry_counts": {
+    "documents": 112,
     "requirements": 15,
     "nfr": 9,
     "engineering": 6,
@@ -20,7 +22,7 @@
     "prod_open": 15,
     "sim_assumptions": 9,
     "risks": 10,
-    "reviewed_completed_tasks": 8
+    "tasks": 10
   },
   "gates": [
     {
@@ -29,7 +31,7 @@
       "blocking": true,
       "evidence": [
         "90-test P0 suite",
-        "build/validation/TASK-P0-09-rule-contracts.json",
+        "build/validation/TASK-P0-10-rule-contracts.json",
         "schema set 1.2.0"
       ],
       "summary": "Draft 2020-12 data, rule, state, error, capability and simulation contracts passed."
@@ -39,7 +41,7 @@
       "status": "PASS",
       "blocking": true,
       "evidence": [
-        "build/validation/TASK-P0-09-golden.json",
+        "build/validation/TASK-P0-10-golden.json",
         "sha256:fd8e5af387c7d4197a2664dfa89e93912091647d5809f1b76468d36edab29c10"
       ],
       "summary": "SIM-MINIMAL-001@1.0.0 replayed with 8 artifacts, 15 records, 3 assignments and 11 constraint expectations."
@@ -49,8 +51,8 @@
       "status": "PASS",
       "blocking": true,
       "evidence": [
-        "build/validation/TASK-P0-09-rule-contracts.json",
-        "build/validation/TASK-P0-09-validator-mutations.json"
+        "build/validation/TASK-P0-10-rule-contracts.json",
+        "build/validation/TASK-P0-10-validator-mutations.json"
       ],
       "summary": "11 active constraints and 13 negative cases covering C-001 through C-011 and 13 required mutation classes passed."
     },
@@ -59,8 +61,8 @@
       "status": "PASS",
       "blocking": true,
       "evidence": [
-        "build/validation/TASK-P0-09-simulation-contracts.json",
-        "build/validation/TASK-P0-09-golden.json"
+        "build/validation/TASK-P0-10-simulation-contracts.json",
+        "build/validation/TASK-P0-10-golden.json"
       ],
       "summary": "Empty contract replay and committed non-empty canonical hash replay passed."
     },
@@ -80,36 +82,38 @@
     },
     {
       "gate_id": "ci",
-      "status": "FAIL",
+      "status": "PASS",
       "blocking": true,
       "evidence": [
-        "ci-workflow-replay: FAIL",
-        "ci-provider: NOT_RUN"
+        "ci-workflow-replay: PASS",
+        "ci-provider: PASS",
+        "required-check: PASS"
       ],
-      "summary": "The workflow is pinned to the previous Task diff gate and no external provider evidence exists."
+      "summary": "The current Task diff gate passed before and after commit; GitHub Actions, uploaded artifact and required branch check are independently verifiable."
     },
     {
       "gate_id": "ci-workflow-replay",
-      "status": "FAIL",
+      "status": "PASS",
       "blocking": true,
       "evidence": [
-        "TASK-P0-08 --check-diff raw exit code: 1",
-        "build/traceability/TASK-P0-08-post-P0-09-report.json",
-        "four expected TASK-SCOPE violations for P0-09 audit/task paths"
+        "TASK-P0-10 exact diff command pre-commit: PASS",
+        "build/traceability/TASK-P0-10-post-implementation-commit-report.json",
+        "25 committed-range paths, 0 working-tree paths, 5 impact rows, 19 checks, 0 issues"
       ],
-      "summary": "The exact workflow documentation step is hard-coded to TASK-P0-08 and fails on the P0-09 audit commit."
+      "summary": "The workflow is handed off to TASK-P0-10 and the integration contract rejects any TASK-P0-08 workflow residue."
     },
     {
       "gate_id": "ci-provider",
-      "status": "NOT_RUN",
+      "status": "PASS",
       "blocking": true,
       "evidence": [
-        "git remote -v exited 0 with empty output",
-        "provider run URL/ID: NOT_RUN",
-        "external uploaded artifact: NOT_RUN",
-        "required branch check: NOT_RUN"
+        "GitHub Actions run 32228647627",
+        "head_sha 036bc23bc0ac4d60aab131c0d44eda5508e844d4",
+        "validate job 95993569251: success",
+        "artifact 9356432918: sha256:d5cb630772f06732251f785a6ee6aff36856c2a2f619c4178f43b01ac3f0214b",
+        "main protected; required check validate; app_id 15368; enforcement non_admins"
       ],
-      "summary": "The workflow is locally validated, but no Git remote or external CI provider evidence exists."
+      "summary": "The push workflow completed successfully for the immutable implementation commit, uploaded evidence, and main requires validate."
     },
     {
       "gate_id": "prod-open-registration",
@@ -132,34 +136,13 @@
       "summary": "No CpModel, IntervalVar, OR-Tools import or OR-Tools dependency/lock entry was found."
     }
   ],
-  "local_artifact_sha256": {
-    "build/validation/TASK-P0-09-rule-contracts.json": "a22d986ac8e5e90cb6432278becedd4f27714e9df991ec839f5dda095f942c42",
-    "build/validation/TASK-P0-09-simulation-contracts.json": "09f169b703552ef24107b5375f7ad6aa053361c79a85b462c95f3ec29ca75167",
-    "build/validation/TASK-P0-09-golden.json": "90c3ad27920ab42a3997928da64a86aedbc120bbe56a1365e5d5d6714dc13cb9",
-    "build/validation/TASK-P0-09-validator-mutations.json": "11376303ff2633aaea8d2e5602d8afd2bd0efbb87362f074a1ea1e84c4dfa762",
-    "build/validation/TASK-P0-09-engineering.json": "19b5be12a7cca38816d752376d7ef7591ceceede21d5cd92cc2aa5dcda8495a2"
-  },
-  "blocking_gaps": [
-    {
-      "gap_id": "P0-GAP-001",
-      "title": "External CI provider evidence unavailable",
-      "remediation_task": "TASK-P0-10",
-      "required_closure": "Successful external provider run and artifact/required-check evidence for the immutable audit commit, followed by re-audit."
-    },
-    {
-      "gap_id": "P0-GAP-002",
-      "title": "CI workflow diff gate is pinned to the previous Task",
-      "remediation_task": "TASK-P0-10",
-      "required_closure": "Handoff the workflow to TASK-P0-10 without weakening the diff gate, prove the exact command before and after commit, then run the external provider."
-    }
-  ],
-  "remediation": {
-    "task": "TASK-P0-10",
-    "status": "IN_PROGRESS",
-    "diff_base": "5d8bb51e06add1afc2f53861cf53c7a2ba45a272",
-    "provider": "GitHub Actions",
+  "provider": {
+    "name": "GitHub Actions",
     "repository": "kumamon-xu/PlantNexus-APS",
+    "repository_url": "https://github.com/kumamon-xu/PlantNexus-APS",
     "branch": "main",
+    "workflow": "P0 engineering gates",
+    "event": "push",
     "pre_remediation_run": {
       "run_id": 32227247262,
       "url": "https://github.com/kumamon-xu/PlantNexus-APS/actions/runs/32227247262",
@@ -175,15 +158,69 @@
         "expires_at": "2026-11-17T07:18:52Z"
       }
     },
-    "workflow_handoff": "IMPLEMENTED_LOCALLY_PENDING_ACCEPTANCE_AND_PROVIDER_SUCCESS",
-    "successful_provider_run": "PENDING",
-    "required_check": "PENDING"
+    "successful_run": {
+      "run_id": 32228647627,
+      "url": "https://github.com/kumamon-xu/PlantNexus-APS/actions/runs/32228647627",
+      "head_sha": "036bc23bc0ac4d60aab131c0d44eda5508e844d4",
+      "run_attempt": 1,
+      "status": "completed",
+      "conclusion": "success",
+      "created_at": "2026-08-19T07:36:55Z",
+      "updated_at": "2026-08-19T07:37:23Z",
+      "job": {
+        "id": 95993569251,
+        "name": "validate",
+        "url": "https://github.com/kumamon-xu/PlantNexus-APS/actions/runs/32228647627/job/95993569251",
+        "conclusion": "success",
+        "core_step_count": 15,
+        "all_steps_success": true
+      },
+      "artifact": {
+        "id": 9356432918,
+        "name": "p0-exit-gate-evidence-32228647627",
+        "size_in_bytes": 6144,
+        "expired": false,
+        "digest": "sha256:d5cb630772f06732251f785a6ee6aff36856c2a2f619c4178f43b01ac3f0214b",
+        "expires_at": "2026-11-17T07:36:55Z"
+      }
+    },
+    "branch_protection": {
+      "protected": true,
+      "required_status_checks": {
+        "enforcement_level": "non_admins",
+        "contexts": [
+          "validate"
+        ],
+        "checks": [
+          {
+            "context": "validate",
+            "app_id": 15368
+          }
+        ]
+      },
+      "force_pushes_allowed": false,
+      "deletions_allowed": false
+    }
   },
+  "closed_gaps": [
+    {
+      "gap_id": "P0-GAP-001",
+      "closed_by": "TASK-P0-10",
+      "evidence": "GitHub run 32228647627, artifact 9356432918, and protected main required validate check"
+    },
+    {
+      "gap_id": "P0-GAP-002",
+      "closed_by": "TASK-P0-10",
+      "evidence": "TASK-P0-10 workflow handoff plus pre-commit, clean post-commit, and provider documentation/diff PASS"
+    }
+  ],
+  "blocking_gaps": [],
   "boundaries": {
-    "p0_milestone": "ACTIVE",
-    "ci_gate": "FAIL",
-    "ci_workflow_replay": "FAIL",
-    "ci_provider": "NOT_RUN",
+    "p0_milestone": "ACTIVE_GATE_READY_AWAITING_USER_PHASE_TRANSITION",
+    "ci_gate": "PASS",
+    "ci_workflow_replay": "PASS",
+    "ci_provider": "PASS",
+    "required_check": "PASS",
     "p1_authorized": false,
     "production_ready": false,
     "solver_installed": false,
@@ -191,6 +228,6 @@
     "production_migration": "NOT_RUN",
     "real_postgres_redis_connectivity": "NOT_RUN"
   },
-  "overall_status": "NOT_READY",
-  "recommendation": "NO_GO"
+  "overall_status": "READY",
+  "recommendation": "GO_TO_REQUEST_EXPLICIT_P1_PHASE_TRANSITION"
 }

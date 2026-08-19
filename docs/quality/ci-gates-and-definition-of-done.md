@@ -58,6 +58,8 @@ uv run python scripts/check_docs.py --task docs/tasks/P0/TASK-P0-10-ci-provider-
 
 integration contract 显式断言新 command/artifact 存在且 workflow 不再含 `TASK-P0-08`；full docs gate、sync/lint/type/tests、Compose、Benchmark hook、build 和 `if: always()` artifact upload 保持。remediation 前 GitHub run `32227247262` 在 Diff base 上真实重现旧 docs step failure，并上传 artifact `9355951091`；这只是 failure baseline。TASK-P0-10 只能在新 immutable commit 的 GitHub job `success`、artifact digest 可读、`main` 的 `validate` required check 可核验且本地提交前/后命令全部 PASS 后标记 done。
 
+上述完成条件现已形成：implementation commit `036bc23bc0ac4d60aab131c0d44eda5508e844d4` 的 GitHub run [`32228647627`](https://github.com/kumamon-xu/PlantNexus-APS/actions/runs/32228647627) 为 `success`，`validate` job 和全部 steps 均成功；artifact `9356432918` 的 provider digest 为 `sha256:d5cb630772f06732251f785a6ee6aff36856c2a2f619c4178f43b01ac3f0214b`；`main.protected=true` 且 required context/check 均为 `validate`。提交前与 clean post-commit diff governance均 PASS，因此 `P0-GAP-001/002` 已关闭，[P0 re-audit](../milestones/P0-exit-gate-audit-report.md) 将 CI Gate 判定为 `PASS`。
+
 ## Task Done
 
 任务完成至少满足：

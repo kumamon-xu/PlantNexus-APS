@@ -471,8 +471,11 @@ def validate_contract_artifacts(root: Path) -> RuleSheetSummary:
     dictionary = _load_yaml(root / "schemas" / "data_dictionary.yaml")
     if dictionary.get("schema_set_version") != SCHEMA_VERSION:
         raise RuleSheetContractError("data dictionary schema set version mismatch")
-    if SCHEMA_VERSION != "1.1.0":
-        raise RuleSheetContractError("package schema set version mismatch")
+    version_parts = SCHEMA_VERSION.split(".")
+    if len(version_parts) != 3 or not all(part.isdigit() for part in version_parts):
+        raise RuleSheetContractError("package schema set version must be SemVer core")
+    if tuple(int(part) for part in version_parts) < (1, 1, 0):
+        raise RuleSheetContractError("rule contracts require schema set 1.1.0 or later")
 
     validation_sources = root / "backend" / "app" / "planning" / "validation"
     backend_module = "app.planning." + "backends"

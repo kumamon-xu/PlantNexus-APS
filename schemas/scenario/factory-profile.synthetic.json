@@ -1,0 +1,69 @@
+{
+  "profile_contract_version": "factory-profile.v1",
+  "profile_id": "SCHEMA-PROFILE-P0-05",
+  "profile_version": "1.0.0",
+  "synthetic_only": true,
+  "topology": {
+    "workshop_count": {
+      "minimum": 1,
+      "maximum": 1
+    },
+    "production_line_count": {
+      "minimum": 1,
+      "maximum": 1
+    }
+  },
+  "resources": {
+    "target_count": {
+      "minimum": 1,
+      "maximum": 1
+    },
+    "capacity_per_resource": 1,
+    "capability_pool": [
+      "MACHINE_CALENDAR"
+    ]
+  },
+  "routing": {
+    "operation_count": {
+      "minimum": 1,
+      "maximum": 1
+    },
+    "candidate_resource_count": {
+      "minimum": 1,
+      "maximum": 1
+    },
+    "routing_depth": {
+      "minimum": 1,
+      "maximum": 1
+    },
+    "cross_workshop_ratio": {
+      "minimum": 0,
+      "maximum": 0
+    }
+  },
+  "calendar": {
+    "pattern_ids": [
+      "SCHEMA-CALENDAR-P0-05"
+    ],
+    "fragmentation_count": {
+      "minimum": 0,
+      "maximum": 0
+    }
+  },
+  "orders": {
+    "order_count": {
+      "minimum": 1,
+      "maximum": 1
+    },
+    "due_date_pressure_levels": [
+      "low"
+    ]
+  },
+  "supported_capabilities": [
+    "DAG_ROUTING",
+    "MACHINE_CALENDAR"
+  ],
+  "expected_rejections": [
+    "SECONDARY_CAPACITY"
+  ]
+}

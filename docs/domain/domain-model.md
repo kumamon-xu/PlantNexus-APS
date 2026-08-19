@@ -72,3 +72,7 @@ Solver 排的是 `OperationInstance`，不是 `RoutingOperation`。每个未完�
 - `backend/app/domain/validation.py` 只拒绝 skeleton 内的非法引用、UTC、interval、duration 和 lag range。
 
 `error.v1`/`validation-report.v1` pure types 保留；新增显式 V2 types，不通过 alias 静默升级。规则/状态/capability 类型不依赖 ORM、FastAPI、Celery、Pydantic 或 OR-Tools，也不展开订单、不构建 Snapshot/Problem、不计算 hash、不执行排程、不评估候选 schedule 或执行业务状态动作。后续业务字段必须从权威合同进入并按 Schema versioning 升版，不能把 rule example 当默认值。
+
+## P0 Simulation contract boundary
+
+`simulation/profiles/contracts.py` 和 `simulation/scenarios/contracts.py` 只承载 synthetic-only Profile/Scenario/Manifest 的 JSON-compatible types、version/seed/range/provenance/isolation precheck；`simulation/generators/**` 只定义七层 Protocol、命名 seed、canonical JSON/SHA-256 与空 Standard Import v1 package。它们不新增 Production Factory/Order/Routing 实体，不成为 ERP/MES/WMS/CAM 权威，不导入 PlanningProblem/Solver，也不把 Schema sample 视为领域事实或正式 Fixture。

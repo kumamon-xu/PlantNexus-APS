@@ -105,3 +105,9 @@ registry_version: 1.0.0
 本 Task 实际路径预期命中 `IMPACT-SCHEMA`、`IMPACT-DOMAIN`、`IMPACT-VALIDATOR`、`IMPACT-STATE`、`IMPACT-DEPENDENCY`、`IMPACT-VERSION-METADATA`、`IMPACT-TESTS`、`IMPACT-PHASE`、`IMPACT-GOVERNANCE-REGISTRY`、`IMPACT-DOCS`。`schemas/rules/**` 由 IMPACT-SCHEMA 覆盖；rule completeness CLI 位于 `backend/app/planning/validation/**`，由 IMPACT-VALIDATOR 覆盖，不需要无边界新 glob。
 
 PlanningProblem、Backend、Fixture、API、Export/Job implementation 路径均不修改，因此不声明对应 Rule ID。本段记录审查结论，不改变 machine rule 表结构或 registry version；最终以 Task diff report 的真实 matched rows 为准。
+
+## TASK-P0-05 matrix review
+
+本 Task 实际路径预期命中 `IMPACT-SCHEMA`、`IMPACT-VALIDATOR`、`IMPACT-SIM-PROFILE`、`IMPACT-SIM-SCENARIO`、`IMPACT-SIM-GENERATOR`、`IMPACT-DEPENDENCY`、`IMPACT-VERSION-METADATA`、`IMPACT-TESTS`、`IMPACT-PHASE`、`IMPACT-GOVERNANCE-REGISTRY`、`IMPACT-DOCS`。`pyproject.toml` 只更新 schema metadata但仍按 dependency 行审查；`rule_sheet.py` 只解除旧 set exact-value check但仍按 Validator 行审查。
+
+Fixture、Simulation execution/baseline/benchmark implementation、PlanningProblem/Backend、API、Infra/DB、Export/Job 均不修改，因此不声明对应 Rule ID。现有 machine glob/required-document 表无需改变，registry format version 保持 `1.0.0`；最终以 TASK-P0-05 diff report 的真实 matched rows 为准。

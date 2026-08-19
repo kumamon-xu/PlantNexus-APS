@@ -55,3 +55,9 @@ Runtime dependencies 继续为空；纯领域合同只使用标准库。`depende
 依赖版本与 runtime dependency 空集保持不变；`pyproject.toml` 只把 schema set metadata 更新到 `1.1.0`。规则 CLI 在 dev/test acceptance 中使用既有 PyYAML/jsonschema，打包后的纯 enum/precheck/state transition 仍只依赖标准库。`uv.lock` 经 `uv sync --locked` 验证无依赖漂移。
 
 未引入 OR-Tools、Pydantic、API/DB/Worker 库或 Solver code，因此不触发 Solver upgrade replay；新增合同测试仍由既有 Ruff/Pyright/pytest pins 执行。
+
+## P0-05 Simulation contract tooling review
+
+Runtime dependencies 与 lock 图保持不变；Simulation Profile/Scenario/Generator package 只使用 Python 3.12 标准库，Schema/测试继续使用既有 jsonschema/PyYAML/pytest/Ruff/Pyright pins。`pyproject.toml` 仅把 schema set metadata 从 `1.1.0` 更新为 additive `1.2.0`，`uv.lock` 不应因该 metadata 变化产生依赖漂移。
+
+未引入随机/数值库、Pydantic、FastAPI、DB、Worker 或 OR-Tools；canonical primitive 使用 `json`/`hashlib`，命名 seed 使用 SHA-256 派生而非全局 RNG。没有 Solver/Benchmark，因此不触发 upgrade replay，也不产生性能承诺。

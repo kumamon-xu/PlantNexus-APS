@@ -19,7 +19,7 @@ last_reviewed: 2026-08-19
 | TASK-P0-02 | Requirements、NFR/ENG 与追踪机制 | P0-01 | `done` |
 | TASK-P0-03 | Domain contract 与 Schema skeleton | P0-01/02 | `done` |
 | TASK-P0-04 | Constraint、State、Error、Capability contracts | P0-02/03 | `done` |
-| TASK-P0-05 | Simulation contracts 与 module skeleton | P0-03/04 | `planned` |
+| TASK-P0-05 | Simulation contracts 与 module skeleton | P0-03/04 | `done` |
 | TASK-P0-06 | SIM-MINIMAL-001 与人工 Golden Schedule | P0-05 | `planned` |
 | TASK-P0-07 | Illegal Fixtures 与 Validator Rule Sheet | P0-04/06 | `planned` |
 | TASK-P0-08 | CI、logging、DB、worker、health skeleton | P0-01/02 | `planned` |

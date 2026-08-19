@@ -36,3 +36,5 @@ Mutation 生成逻辑不得复用 Validator 的判断公式，以免测试与实
 P0-04 已发布 `constraint-rule-sheet.v1` 与 `validation-report.v2`，固定每个 active C-ID 的 input/formula/example/violation/Test ID，并由 TEST-RULE-SHEET-001 验证元数据完整性。该测试不注入 schedule mutation，不把规则表自检误称为 Validator PASS。
 
 TASK-P0-07 必须从 SIM-MINIMAL-001 Golden Schedule 独立构造 mutation，至少覆盖本表，并让真实 rule evaluator 输出 v2 violation details。Mutation 生成器不得读取 `positive_example`/`negative_example` 后调用同一判断函数；C-012～C-018 属于 capability precheck rejection，不伪装成 schedule violation。
+
+TASK-P0-05 的 TEST-SIM-ISOLATION 只验证 Production target 与 capability declaration precheck，不注入 candidate schedule mutation。Schema samples/empty Import 不是合法 Golden Schedule，因此没有提前形成 TEST-VALIDATOR-MUTATION；TASK-P0-07 边界不变。

@@ -32,3 +32,5 @@ registry_version: 1.0.0
 TASK-P0-03 review：strict unknown-field/no-default policy、Production/Synthetic conditional、Solver-neutral types 和 locked contract tooling 加强 RISK-001/002/007 的早期控制，但尚无真实数据、共同 ingress implementation 或生产隔离环境证据，不能据此标记风险已缓解或关闭。RISK-001～010 全部保持 `MONITORED`。
 
 TASK-P0-04 review：独立 rule metadata、validation package import scan 和未来 mutation boundary 加强 RISK-003；capability registry/explicit rejection 加强 RISK-004；error/status mapping test 加强 RISK-006。尚无 candidate ScheduleValidator、Solver、Scenario mutation、状态持久化或 API evidence，不能据此标记风险已缓解/关闭。RISK-001～010 全部保持 `MONITORED`，registry format version 不变。
+
+TASK-P0-05 review：Standard Import-only Generator Protocol/empty package 加强 RISK-002；registry capability rejection 加强 RISK-004；Schema/context/Import Production guard 加强 RISK-007；manifest/version/hash 边界约束 RISK-001/009。尚无非空 pipeline、独立 DB/API/publish guard、历史数据或 Benchmark evidence，不能标记风险已缓解/关闭。RISK-001～010 全部保持 `MONITORED`，registry format version 不变。

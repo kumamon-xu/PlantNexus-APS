@@ -39,3 +39,5 @@ registry_version: 1.0.0
 TASK-P0-03 review：NFR-DET-001/NFR-TRC-001 与 ENG-SOL-001/ENG-VER-001 已链接 Schema `1.0.0`、纯类型和 TEST-CONTRACT-001；canonical hash/replay、run manifest、Problem builder 和 Solver 仍为 `PLANNED`。其余 NFR/ENG 含义和全部 `ALLOCATED` 状态不变。
 
 TASK-P0-04 review：NFR-COR-001/ENG-VAL-001 获得 C-001～C-011 rule metadata、validation-report.v2 与独立 import-boundary/completeness tests，但没有 schedule evaluator/mutation PASS；NFR-REL-001/NFR-HUM-001 只获得 ExportJob/ScheduleVersion transition contract，不是 Worker/审批/发布实现；ENG-ERR-001 获得七类/19 code 唯一映射；ENG-VER-001 获得 additive schema set `1.1.0`、v1 preservation 和 contract tests。全部根 ID 仍为 `ALLOCATED`，registry format version 不变。
+
+TASK-P0-05 review：NFR-DET-001 获得 empty Standard Import canonical bytes/hash 与命名 layer seed replay；NFR-ISO-001 获得 synthetic Schema/context/Import target guard；NFR-TRC-001 获得 ScenarioManifest v1；ENG-VER-001 获得 additive schema set `1.2.0`、独立 Profile/Scenario/Generator versions 与 compatibility tests。非空 dataset、Snapshot/Problem hash、独立 DB/API/publish isolation 和 run/code-commit audit 均仍 `PLANNED`；全部根 ID 保持 `ALLOCATED`，registry format version不变。

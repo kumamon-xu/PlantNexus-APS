@@ -1,0 +1,154 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "urn:plantnexus:aps:schema:scenario-manifest:v1",
+  "title": "PlantNexus APS Scenario Manifest v1",
+  "description": "Run provenance for a synthetic Standard Import package. generated_at is deliberately excluded from dataset_hash.",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "scenario_manifest_version",
+    "synthetic",
+    "target_environment",
+    "scenario",
+    "factory_profile",
+    "generator",
+    "seed",
+    "required_capabilities",
+    "generated_at",
+    "canonicalization_version",
+    "import_package",
+    "dataset_hash"
+  ],
+  "properties": {
+    "scenario_manifest_version": {
+      "const": "scenario-manifest.v1"
+    },
+    "synthetic": {
+      "const": true
+    },
+    "target_environment": {
+      "enum": ["development", "test", "benchmark"]
+    },
+    "scenario": {
+      "$ref": "#/$defs/scenarioReference"
+    },
+    "factory_profile": {
+      "$ref": "#/$defs/factoryProfileReference"
+    },
+    "generator": {
+      "$ref": "#/$defs/generatorReference"
+    },
+    "seed": {
+      "type": "integer",
+      "minimum": 0,
+      "maximum": 9223372036854775807
+    },
+    "required_capabilities": {
+      "type": "array",
+      "uniqueItems": true,
+      "items": {
+        "$ref": "#/$defs/capability"
+      }
+    },
+    "generated_at": {
+      "type": "string",
+      "format": "date-time",
+      "pattern": "Z$"
+    },
+    "canonicalization_version": {
+      "const": "canonical-json.v1"
+    },
+    "import_package": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["import_package_version", "package_id"],
+      "properties": {
+        "import_package_version": {
+          "const": "import-package.v1"
+        },
+        "package_id": {
+          "$ref": "#/$defs/canonicalId"
+        }
+      }
+    },
+    "dataset_hash": {
+      "type": "string",
+      "pattern": "^sha256:[0-9a-f]{64}$"
+    }
+  },
+  "$defs": {
+    "canonicalId": {
+      "type": "string",
+      "minLength": 1,
+      "maxLength": 256,
+      "pattern": "^[^\\s\\u0000-\\u001F\\u007F]+$"
+    },
+    "semanticVersion": {
+      "type": "string",
+      "pattern": "^(0|[1-9][0-9]*)\\.(0|[1-9][0-9]*)\\.(0|[1-9][0-9]*)(?:-[0-9A-Za-z-]+(?:\\.[0-9A-Za-z-]+)*)?(?:\\+[0-9A-Za-z-]+(?:\\.[0-9A-Za-z-]+)*)?$"
+    },
+    "scenarioReference": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["scenario_id", "scenario_version"],
+      "properties": {
+        "scenario_id": {
+          "$ref": "#/$defs/canonicalId"
+        },
+        "scenario_version": {
+          "$ref": "#/$defs/semanticVersion"
+        }
+      }
+    },
+    "factoryProfileReference": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["profile_id", "profile_version"],
+      "properties": {
+        "profile_id": {
+          "$ref": "#/$defs/canonicalId"
+        },
+        "profile_version": {
+          "$ref": "#/$defs/semanticVersion"
+        }
+      }
+    },
+    "generatorReference": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["generator_id", "generator_version"],
+      "properties": {
+        "generator_id": {
+          "$ref": "#/$defs/canonicalId"
+        },
+        "generator_version": {
+          "$ref": "#/$defs/semanticVersion"
+        }
+      }
+    },
+    "capability": {
+      "enum": [
+        "SINGLE_FACTORY_MULTI_WORKSHOP",
+        "DAG_ROUTING",
+        "ALTERNATIVE_RESOURCE",
+        "MACHINE_CALENDAR",
+        "RELEASE_AND_MATERIAL_GATE",
+        "RUNNING_OPERATION",
+        "HARD_SOFT_LOCK",
+        "APPROVAL_AND_PUBLICATION",
+        "DYNAMIC_REPLANNING",
+        "SECONDARY_CAPACITY",
+        "SEQUENCE_DEPENDENT_SETUP",
+        "BATCH_PROCESSING",
+        "SPLIT_MERGE",
+        "MATERIAL_COMPETITION",
+        "PREEMPTIVE_OPERATION",
+        "BUFFER_CAPACITY",
+        "ALTERNATIVE_MATERIAL",
+        "MULTI_FACTORY",
+        "AI_DURATION_PREDICTION",
+        "REALITY_CALIBRATION"
+      ]
+    }
+  }
+}

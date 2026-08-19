@@ -11,7 +11,7 @@ last_reviewed: 2026-08-19
 
 # 合同文档索引
 
-本目录描述机器可执行 Schema 的人类语义。TASK-P0-03 发布 schema set `1.0.0` 的数据合同 skeleton；TASK-P0-04 以 set-level additive 方式发布 `1.1.0` rule/state/error/capability contracts。机器文件位于 `/schemas/json` 与 `/schemas/rules`，data dictionary 位于 `/schemas/data_dictionary.yaml`。Schema 与对应合同必须同 Task、同版本语义更新。
+本目录描述机器可执行 Schema 的人类语义。TASK-P0-03 发布 schema set `1.0.0` 的数据合同 skeleton；TASK-P0-04 以 set-level additive 方式发布 `1.1.0` rule/state/error/capability contracts；TASK-P0-05 再以 additive 方式发布 `1.2.0` FactoryProfile/ScenarioSpec/ScenarioManifest contracts。机器文件位于 `/schemas/json`、`/schemas/rules` 与 `/schemas/scenario`，data dictionary 位于 `/schemas/data_dictionary.yaml`。Schema 与对应合同必须同 Task、同版本语义更新。
 
 ## 当前基线
 
@@ -35,8 +35,11 @@ last_reviewed: 2026-08-19
 - `validation-report.v2`：固定 `hard_violation_count`、C-001～C-011 与 `HARD` violation shape；
 - `state-transition.v1`：固定三套 machine/state 名称；允许转移由 `state-machines.v1` registry 判定；
 - `constraint-rule-sheet.v1`、`capability-registry.v1`、`error-code-registry.v1`、`state-machines.v1`：机器可读 P0 规则合同。
+- `factory-profile.v1`：固定 synthetic-only 工厂分布边界、asset version 与适用/预期拒绝 capability；
+- `scenario-spec.v1`：固定 profile/generator reference、显式 seed、复杂度矩阵与 expected behavior；
+- `scenario-manifest.v1`：固定 synthetic target、Scenario/Profile/Generator/seed/generated-at/Import package/dataset hash provenance。
 
-`1.1.0` 不覆盖 v1；v1/v2 document 不可互换，consumer 必须显式选择版本。所有 JSON 根对象拒绝未知字段且不声明业务默认值。`schemas/samples/` 只包含明确标识的 synthetic schema samples，不是正式 Scenario 或生产数据。规则注册表也不提供生产参数默认值。
+`1.2.0` 保留 `1.0.0/1.1.0` 全部 artifact；v1/v2 document 不可互换，consumer 必须显式选择版本。所有 JSON 根对象拒绝未知字段且不声明业务默认值。`schemas/samples/` 与 `schemas/scenario/*.synthetic.json` 只包含明确标识的 Schema samples，不是正式 Scenario、Fixture 或生产数据。规则/Profile/Scenario 合同均不提供生产参数默认值。
 
 ## 等待实现事实后形成
 

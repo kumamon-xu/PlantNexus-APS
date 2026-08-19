@@ -54,3 +54,5 @@ last_reviewed: 2026-08-19
 TASK-P0-03 的 `planning-problem.v1` 只为候选资源、min/max/transport lag、calendar unavailable interval、release/material gate、部分 RUNNING facts、horizon、duration 和 capability declaration 建立输入字段。COMPLETED execution facts、HARD/SOFT lock、cross-workshop edge identification 与 candidate assignment schema 仍需 P1/P2 合同扩展；规则表用 `contract_status` 明确这些 gap，不虚构字段已发布。OPEN-004/005/007/009/010 均未关闭。
 
 最小 data precheck 和 rule-sheet completeness 都不是 ScheduleValidator，也不能作为任何 C-001～C-011 schedule PASS 证据。TASK-P0-07 才使用 Golden/illegal fixtures 建立真实 mutation rejection；P2 才实现完整独立 Validator。Constraint semantics 本次未改变，因此不触发 Solver benchmark，但 P2 首个 baseline 必须包含本 rule version。
+
+TASK-P0-05 仅移除 rule completeness CLI 对全局 schema set `1.1.0` 的硬编码，仍要求 data dictionary 与 `app.SCHEMA_VERSION` 一致。C-001～C-018 YAML、formula、capability mapping、ValidationReport 和 evaluator 边界均未改变；CLI 在 additive `1.2.0` 下回归通过，不把 Scenario Schema 引入解释为 Constraint 或 Validator 实现。

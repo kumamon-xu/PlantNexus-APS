@@ -41,3 +41,9 @@ orders:
 - 适用和预期拒绝的 capability。
 
 Profile 任意语义变化必须更新 version，否则 Historical Benchmark 无法重放。Profile 不能成为 Production Config 的默认值。
+
+## v1 machine contract
+
+[`factory-profile.v1`](../../schemas/scenario/factory-profile.schema.json) 区分 `profile_contract_version` 与 `profile_version`，根对象强制 `synthetic_only=true`、拒绝未知字段且无 default。v1 固定 topology/workshop/line count ranges、resource target/capability pool、operation/candidate/routing-depth/cross-workshop ranges、calendar pattern/fragmentation、order count/due pressure，以及 `supported_capabilities`/`expected_rejections`。
+
+Schema 只能限制 range 端点类型与上下界域；pure [`validate_factory_profile_contract`](../../backend/app/simulation/profiles/contracts.py) 额外检查 `minimum <= maximum`、stable ID/SemVer、capacity=1 与 capability registry status。`SCHEMA-PROFILE-P0-05` 只是 synthetic Schema sample，其 `1`/`0` 值不批准通用工厂、不关闭 OPEN-003/004，也不属于 Scenario Library。

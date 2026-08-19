@@ -37,3 +37,5 @@ V1 使用 Modular Monolith：一个 FastAPI 应用、PostgreSQL、Redis、独立
 - React Component 不复制约束或直接修改发布计划。
 - Validator 可以共享领域数据类型和规范化时间工具，但不能共享产生同源缺陷的 CP-SAT 约束构建器。
 - Reference Scheduler 实现位于 simulation/baselines 或独立规划基线模块，必须标记非生产 Solver。
+
+TASK-P0-05 已在 `simulation/profiles`、`simulation/scenarios`、`simulation/generators` 落地纯合同。七层 generator Protocol 的最终输出类型是 `GeneratedScenarioPackage`（Standard Import v1 + ScenarioManifest + canonical bytes/hash）；代码扫描与 contract tests 禁止 `app.planning`/OR-Tools import。`execution`、`baselines`、`benchmarks` 仍为空边界，不存在行为实现。

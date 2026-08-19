@@ -50,3 +50,5 @@ Backend/OR-Tools 升级必须经过 ADR、dependency lock、Golden/Scenario repl
 `constraint-rule-sheet.v1` 将 C-001～C-011 validator formula 与 C-012～C-018 rejection metadata 固定下来，但没有新增 Backend、constraint builder 或 solver dependency。`UNSUPPORTED_CAPABILITY` precheck 在 model construction 前拒绝明确未支持/延迟声明；它不得由 Backend 静默忽略。
 
 PlanningRun 的 MODEL_INVALID/INFEASIBLE/NO_SOLUTION_WITHIN_LIMIT 与 error.v2 映射保持原义；P0 没有 Solver status artifact。Rule-sheet completeness module 不导入 `planning.backends`/OR-Tools，也不是 ADR-0005 ScheduleValidator evaluator。
+
+TASK-P0-05 的 Generator protocols 明确终止于 Standard Import package，不导入 PlanningProblem 或 SolverBackend。ScenarioSpec `expected_behavior` 只是未来运行的允许结果合同；Schema sample 中的 FEASIBLE/OPTIMAL 不是 Solver evidence。无 Backend/dependency/parameter/version 变化，因此不触发 Solver upgrade replay。

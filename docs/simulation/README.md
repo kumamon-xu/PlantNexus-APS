@@ -40,3 +40,14 @@ FactoryProfile + ScenarioSpec + Seed + GeneratorVersion
 - unsupported capability 得到明确结果；
 - Synthetic Benchmark 不转化为生产容量承诺；
 - 真实数据进入后使用 Reality Gap 持续校准，而不是废弃 Simulation。
+
+## P0-05 executable contracts
+
+| Contract | Machine artifact | P0 evidence / remaining boundary |
+|---|---|---|
+| FactoryProfile v1 | [`factory-profile.schema.json`](../../schemas/scenario/factory-profile.schema.json) | synthetic ranges/capabilities formed；factory generation PLANNED |
+| ScenarioSpec v1 | [`scenario-spec.schema.json`](../../schemas/scenario/scenario-spec.schema.json) | version/profile/generator/seed/complexity/expected behavior formed；formal library PLANNED |
+| ScenarioManifest v1 | [`scenario-manifest.schema.json`](../../schemas/scenario/scenario-manifest.schema.json) | empty Standard Import replay/hash formed；run/export audit PLANNED |
+| Generator protocol | [`simulation/generators`](../../backend/app/simulation/generators) | seven layers + named seed + canonical package boundary formed；non-empty records PLANNED |
+
+Schema set 为 additive `1.2.0`。三份 `.synthetic.json` 仅验证合同，不是 Fixture 或生产数据；`SIM-MINIMAL-001` 仍由 TASK-P0-06 创建。TEST-SCENARIO-REPLAY/TEST-SIM-ISOLATION 只证明 empty package 的确定性与 pure isolation guard，不证明 Import pipeline、Execution Simulator、Reference Scheduler、Benchmark 或 Solver 已实现。

@@ -26,4 +26,4 @@ last_reviewed: 2026-08-19
 
 Milestone 定义 outcome 和 exit gate，不等同 Sprint。只有当前 Phase 创建详细 Task Card；更新 `current_phase.md` 需要 Gate 的真实证据和用户确认。
 
-P0 当前进度：TASK-P0-01～03 已完成 repository/governance/traceability 与 Schema set `1.0.0` 数据合同；TASK-P0-04 已完成 additive `1.1.0` rule/state/error/capability contracts 和四项 contract tests。TASK-P0-05 仍为 `planned`，未自动启动。该进度不等于 P0 Exit Gate PASS，也不改变 TASK-P0-05～09 或 P1～P7 的 `planned` 状态。
+P0 当前进度：TASK-P0-01～03 已完成 repository/governance/traceability 与 Schema set `1.0.0` 数据合同；TASK-P0-04 已完成 additive `1.1.0` rule/state/error/capability contracts；TASK-P0-05 已完成 additive `1.2.0` Simulation contracts/skeleton、empty Import replay 与 isolation tests。TASK-P0-06～09 和 P1～P7 继续为 `planned`，未自动启动；该进度不等于 P0 Exit Gate PASS。

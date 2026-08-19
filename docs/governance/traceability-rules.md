@@ -64,6 +64,8 @@ Schema skeleton 证据链必须同时包含 versioned machine artifact、human-r
 
 Rule/state/error/capability contract 证据链还必须区分：machine rule/registry artifact、pure enum/precheck、Schema envelope、completeness/negative contract test 与真实业务 evaluator。`V1_SUPPORTED`、allowed transition metadata 或 rule-sheet PASS 不能替代 phase-specific implementation、ScheduleValidator mutation、状态持久化、权限或发布证据。
 
+Simulation contract 证据链必须区分：Schema contract version、Profile/Scenario asset version、Generator/canonicalization version、seed、canonical dataset/hash、manifest、Schema sample、formal Fixture、replay/isolation test 与真实 Import/Snapshot/Problem/Benchmark/Execution artifact。`records={}` 或 `.synthetic.json` 只能证明 P0 合同边界，不能替代 Scenario Library、生产隔离设施或性能结果。
+
 ## 自动校验
 
 `scripts/check_docs.py` 执行以下治理检查：

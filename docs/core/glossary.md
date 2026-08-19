@@ -33,6 +33,8 @@ last_reviewed: 2026-08-19
 | material_ready_at | 上游权威来源提供的物料齐套门，不由 Solver 猜测 |
 | FactoryProfile | 描述一类虚拟工厂的版本化 Simulation 配置，永远 `synthetic_only` |
 | ScenarioSpec | 包含场景、版本、seed、能力、复杂度和期望行为的可重放定义 |
+| ScenarioManifest | 记录 Scenario/Profile/Generator/seed、环境、generated-at、Standard Import package 与 dataset hash 的 synthetic run provenance；时间戳不进入 dataset hash |
+| Generator Version | 生成逻辑的独立版本；不同于 Scenario/Profile asset version、Schema Set 与代码提交 |
 | Reference Scheduler | FCFS、EDD 等非生产启发式基线，用于 sanity check 和 Benchmark |
 | Golden Fixture | 足够小、可人工或暴力验证的确定性测试数据 |
 | PROD_OPEN | 尚未由真实生产业务确认、会阻止生产发布的问题 |
@@ -40,7 +42,7 @@ last_reviewed: 2026-08-19
 | Tick | Solver 离散时间单位；`duration_ticks = ceil(duration_seconds / tick_seconds)` |
 | Provenance | 从数据源、规则、问题、Solver、Scenario 到代码提交的全链路来源信息 |
 | ADR | Architecture Decision Record；记录需要治理的架构或语义决策 |
-| Schema Set | 同一发布批次的机器合同集合；当前为 `1.1.0`，保留 `1.0.0` artifacts，且不替代各 document/registry version ID |
+| Schema Set | 同一发布批次的机器合同集合；当前为 `1.2.0`，保留 `1.0.0/1.1.0` artifacts，且不替代各 document/asset/registry version ID |
 | Canonical ID | 跨合同稳定引用的非空、无空白标识；具体来源映射仍由字段权威规则决定 |
 | Constraint Rule Sheet | C-001～C-018 的版本化机器规则元数据；固定输入、公式、正反例、violation 和 Test ID，但不等于 ScheduleValidator 实现 |
 | Capability Registry | 固定 capability 名称与 V1_SUPPORTED/UNSUPPORTED/DEFERRED 状态；V1_SUPPORTED 不表示当前阶段代码已实现 |
@@ -48,4 +50,4 @@ last_reviewed: 2026-08-19
 
 术语新增或语义变化必须同步检查 Schema、Constraint、状态机、测试和追踪矩阵。
 
-当前 Schema Set 为 `1.1.0`；`1.0.0` 是 TASK-P0-03 数据合同发布，`1.1.0` additive 增加 rule/state/error/capability contracts，保留既有 v1 artifact。
+当前 Schema Set 为 `1.2.0`；`1.0.0` 是 TASK-P0-03 数据合同发布，`1.1.0` additive 增加 rule/state/error/capability contracts，`1.2.0` additive 增加 FactoryProfile/ScenarioSpec/ScenarioManifest v1，全部历史 artifact 保留。

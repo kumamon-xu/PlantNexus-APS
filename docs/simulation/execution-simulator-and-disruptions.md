@@ -33,3 +33,5 @@ ExecutionSimulator 输入 PUBLISHED ScheduleVersion，模拟生产时间推进�
 - 新 ScheduleVersion Validator PASS。
 
 P4 Gate 需要连续模拟 Urgent Order、Machine Failure、Material Delay、Processing Delay 和 Early Completion，而非仅单事件单元测试。
+
+TASK-P0-05 的 ScenarioManifest v1 可作为未来 ExecutionSimulator 输入链的 Scenario/Profile/Generator/seed provenance，但当前没有 `simulation/execution/**` 代码、事件概率、event stream 或 fact-preservation test。`failure_frequency` 只是 Scenario contract 维度，不能替代版本化 disruption 配置或关闭 REQ-013；simulator version 与事件 hash 仍为 P4 `PLANNED`。

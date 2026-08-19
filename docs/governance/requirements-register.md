@@ -37,3 +37,5 @@ registry_version: 1.0.0
 TASK-P0-03 review：REQ-001/002/003/009 已获得 versioned Schema/type/contract-test 落点，但 Import/Normalization、Snapshot/Problem builder、hash 与 end-to-end provenance 均未实现，因此所有根 ID 状态继续为 `ALLOCATED`，没有提升为业务完成状态，也不修改 registry format version。
 
 TASK-P0-04 review：REQ-004/005 获得 C-001～C-018 rule/capability contract、ValidationReport v2 与 completeness tests；REQ-007 获得三套 state transition registry/test；REQ-008 只获得 capability/state contract boundary。没有 Solver、candidate ScheduleValidator、审批/发布持久化、Export worker 或 Replan implementation，因此相关 Requirement 仍为 `ALLOCATED`，registry format version 不变。
+
+TASK-P0-05 review：REQ-011/012 获得 FactoryProfile/ScenarioSpec/ScenarioManifest v1、七层 Generator Protocol、empty Standard Import deterministic hash、TEST-SCENARIO-REPLAY/TEST-SIM-ISOLATION；REQ-013/014/015 只获得未来 execution/benchmark/reference baseline 可引用的 Scenario provenance boundary。没有非空生成、正式 Scenario Library、Execution Simulator、BenchmarkRunner、Reference Scheduler 或 Solver，因此所有 Requirement 继续 `ALLOCATED`，registry format version 不变。

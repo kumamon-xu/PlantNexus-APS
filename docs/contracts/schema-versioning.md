@@ -50,3 +50,14 @@ Schema version、rule version、generator version 和 code commit 是不同维�
 - Validation：Draft 2020-12 `jsonschema==4.25.1`、PyYAML `6.0.2`、TEST-CONTRACT-001 与 TASK-P0-04 四项 contract tests；规则表 CLI 只验证完整性/一致性。
 
 本次不修改 PlanningProblem、Snapshot、Import 或 KPI document version，不影响其 hash/serializer 语义。没有正式 sample/Fixture 可迁移；P0-04 tests 使用内联纯合同实例，不把它们声明为 Production 或 Scenario data。
+
+## TASK-P0-05 additive Simulation set release
+
+- Schema set：`1.2.0`，同步写入 `pyproject.toml`、`app.SCHEMA_VERSION` 与 data dictionary；
+- 保留全部 `1.0.0/1.1.0` JSON/YAML artifact 与稳定 URN；新增 `factory-profile.v1`、`scenario-spec.v1`、`scenario-manifest.v1`；
+- Set compatibility：只添加新 document types，属于 set-level additive；contract version（`*.v1`）、asset version（Profile/Scenario `1.0.0`）与 Generator version 相互独立；
+- Migration：没有 DB、persisted consumer、正式 Fixture 或历史 run artifact，故 none；consumer 必须显式选择 Simulation v1，不通过 alias 吸收未来版本；
+- Hash：`canonical-json.v1` 对 Standard Import envelope 稳定排序/编码并拒绝 NaN/Infinity，`dataset_hash=sha256(canonical_import_bytes)`；manifest `generated_at` 不参与 hash；
+- Validation：Draft 2020-12 `jsonschema==4.25.1`、pure semantic precheck、TEST-CONTRACT-001、TEST-SCENARIO-REPLAY 与 TEST-SIM-ISOLATION。
+
+本次不修改 `import-package.v1`、Snapshot/Problem、rule/state/error/capability artifact 内容。P0 empty package 的 `records={}` 是不猜生产字段的边界，不是 P1 canonical dataset 实现。

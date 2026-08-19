@@ -39,3 +39,5 @@ BenchmarkRunner.run(
 - runtime/memory/quality 显著退化阻止发布或要求 ADR；
 - 报告必须注明硬件和环境；
 - Synthetic 结果不能推导生产 SLA。
+
+TASK-P0-05 的 ScenarioManifest v1 提供未来 report 需要引用的 Scenario/Profile/Generator/seed/dataset hash 边界，ScenarioSpec v1 提供复杂度维度输入；当前没有 `simulation/benchmarks/**` 实现、`benchmarks/profiles.yaml` baseline 变更、Problem/Solver/Validator result 或硬件采集。本 Task 不生成 BenchmarkReport，REQ-014 与 TEST-BENCHMARK 继续 `PLANNED`。

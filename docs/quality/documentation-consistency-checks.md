@@ -91,6 +91,14 @@ uv run python -m app.planning.validation.rule_sheet --report build/validation/TA
 
 该命令校验 C-001～C-018 rule sheet、20 capability、七类/19 code、三套 state/42 transitions、三份新增 JSON Schema、schema set version 和 validation package 的 Solver import boundary。报告为 `rule-contract-report.v1`，只证明 metadata/registry/schema 一致，不判断 candidate schedule、业务 guard、持久化或 Solver 正确性。
 
+TASK-P0-05 增加 Simulation 合同入口：
+
+```text
+uv run python -m app.simulation.generators.contract_check --report build/validation/TASK-P0-05-simulation-contracts.json
+```
+
+该命令生成 `simulation-contract-report.v1`，验证 empty Standard Import package 的 same-input bytes/hash、generated-at hash exclusion、Generator version change、named layer seed、Production target 和 unsupported capability rejection。Schema/sample 语义由 pytest/jsonschema 补充。报告不验证非空 Factory/Order/Routing records、Import pipeline、Snapshot/Problem、DB/API isolation、Solver 或 Benchmark。
+
 ## Override
 
 不允许用自由文本 CI skip 绕过。确需例外时必须在 Task Card 记录理由，提交 ADR 或明确批准记录，并仍保留检查报告。正确性、状态语义、数据隔离和发布门不得豁免。

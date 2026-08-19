@@ -55,3 +55,9 @@ dataset_hash
 - 至少使用独立数据库（推荐 `aps_dev`、`aps_sim`、`aps_prod`）；
 - Production 默认对 `/api/v1/sim/*` 返回 404/disabled；
 - Simulation Config 不能覆盖 Production Business Policy。
+
+## P0 executable boundary
+
+TASK-P0-05 以七层 pure Protocol 固定 Generator 责任，并提供 `build_empty_import_package` 作为最小边界证据。该 primitive 的唯一数据输出是 `import-package.v1` metadata envelope，`records={}`；它不生成 PlanningProblem、Snapshot、CpModel 或任何生产字段。`ScenarioManifest v1` 引用该 Import package 并记录 Profile/Scenario/Generator/seed、目标环境、generated-at 与 dataset hash。
+
+`canonical-json.v1` 的 hash 输入是完整 canonical Import package bytes，不含 manifest `generated_at`。相同 Profile/Scenario/Generator version/seed 得到相同 package/hash；generator version 或 seed 变化会进入 source provenance 并改变 hash。Development/Test/Benchmark 可创建 context，`production` 在 context 建立阶段以 `SYNTHETIC_REFERENCE_IN_PRODUCTION` 拒绝。共同入口的 P1 staging/Normalization/Data Validation 尚未实现。

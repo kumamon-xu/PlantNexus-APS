@@ -1,0 +1,229 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "urn:plantnexus:aps:schema:factory-profile:v1",
+  "title": "PlantNexus APS Synthetic FactoryProfile v1",
+  "description": "Versioned synthetic-only factory distribution boundaries; never a Production configuration default.",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "profile_contract_version",
+    "profile_id",
+    "profile_version",
+    "synthetic_only",
+    "topology",
+    "resources",
+    "routing",
+    "calendar",
+    "orders",
+    "supported_capabilities",
+    "expected_rejections"
+  ],
+  "properties": {
+    "profile_contract_version": {
+      "const": "factory-profile.v1"
+    },
+    "profile_id": {
+      "$ref": "#/$defs/canonicalId"
+    },
+    "profile_version": {
+      "$ref": "#/$defs/semanticVersion"
+    },
+    "synthetic_only": {
+      "const": true
+    },
+    "topology": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["workshop_count", "production_line_count"],
+      "properties": {
+        "workshop_count": {
+          "$ref": "#/$defs/positiveIntegerRange"
+        },
+        "production_line_count": {
+          "$ref": "#/$defs/positiveIntegerRange"
+        }
+      }
+    },
+    "resources": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["target_count", "capacity_per_resource", "capability_pool"],
+      "properties": {
+        "target_count": {
+          "$ref": "#/$defs/positiveIntegerRange"
+        },
+        "capacity_per_resource": {
+          "const": 1
+        },
+        "capability_pool": {
+          "type": "array",
+          "uniqueItems": true,
+          "items": {
+            "$ref": "#/$defs/supportedCapability"
+          }
+        }
+      }
+    },
+    "routing": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "operation_count",
+        "candidate_resource_count",
+        "routing_depth",
+        "cross_workshop_ratio"
+      ],
+      "properties": {
+        "operation_count": {
+          "$ref": "#/$defs/positiveIntegerRange"
+        },
+        "candidate_resource_count": {
+          "$ref": "#/$defs/positiveIntegerRange"
+        },
+        "routing_depth": {
+          "$ref": "#/$defs/positiveIntegerRange"
+        },
+        "cross_workshop_ratio": {
+          "$ref": "#/$defs/ratioRange"
+        }
+      }
+    },
+    "calendar": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["pattern_ids", "fragmentation_count"],
+      "properties": {
+        "pattern_ids": {
+          "type": "array",
+          "minItems": 1,
+          "uniqueItems": true,
+          "items": {
+            "$ref": "#/$defs/canonicalId"
+          }
+        },
+        "fragmentation_count": {
+          "$ref": "#/$defs/nonNegativeIntegerRange"
+        }
+      }
+    },
+    "orders": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["order_count", "due_date_pressure_levels"],
+      "properties": {
+        "order_count": {
+          "$ref": "#/$defs/positiveIntegerRange"
+        },
+        "due_date_pressure_levels": {
+          "type": "array",
+          "minItems": 1,
+          "uniqueItems": true,
+          "items": {
+            "enum": ["low", "medium", "high"]
+          }
+        }
+      }
+    },
+    "supported_capabilities": {
+      "type": "array",
+      "uniqueItems": true,
+      "items": {
+        "$ref": "#/$defs/supportedCapability"
+      }
+    },
+    "expected_rejections": {
+      "type": "array",
+      "uniqueItems": true,
+      "items": {
+        "$ref": "#/$defs/unavailableCapability"
+      }
+    }
+  },
+  "$defs": {
+    "canonicalId": {
+      "type": "string",
+      "minLength": 1,
+      "maxLength": 256,
+      "pattern": "^[^\\s\\u0000-\\u001F\\u007F]+$"
+    },
+    "semanticVersion": {
+      "type": "string",
+      "pattern": "^(0|[1-9][0-9]*)\\.(0|[1-9][0-9]*)\\.(0|[1-9][0-9]*)(?:-[0-9A-Za-z-]+(?:\\.[0-9A-Za-z-]+)*)?(?:\\+[0-9A-Za-z-]+(?:\\.[0-9A-Za-z-]+)*)?$"
+    },
+    "positiveIntegerRange": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["minimum", "maximum"],
+      "properties": {
+        "minimum": {
+          "type": "integer",
+          "minimum": 1
+        },
+        "maximum": {
+          "type": "integer",
+          "minimum": 1
+        }
+      }
+    },
+    "nonNegativeIntegerRange": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["minimum", "maximum"],
+      "properties": {
+        "minimum": {
+          "type": "integer",
+          "minimum": 0
+        },
+        "maximum": {
+          "type": "integer",
+          "minimum": 0
+        }
+      }
+    },
+    "ratioRange": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["minimum", "maximum"],
+      "properties": {
+        "minimum": {
+          "type": "number",
+          "minimum": 0,
+          "maximum": 1
+        },
+        "maximum": {
+          "type": "number",
+          "minimum": 0,
+          "maximum": 1
+        }
+      }
+    },
+    "supportedCapability": {
+      "enum": [
+        "SINGLE_FACTORY_MULTI_WORKSHOP",
+        "DAG_ROUTING",
+        "ALTERNATIVE_RESOURCE",
+        "MACHINE_CALENDAR",
+        "RELEASE_AND_MATERIAL_GATE",
+        "RUNNING_OPERATION",
+        "HARD_SOFT_LOCK",
+        "APPROVAL_AND_PUBLICATION",
+        "DYNAMIC_REPLANNING"
+      ]
+    },
+    "unavailableCapability": {
+      "enum": [
+        "SECONDARY_CAPACITY",
+        "SEQUENCE_DEPENDENT_SETUP",
+        "BATCH_PROCESSING",
+        "SPLIT_MERGE",
+        "MATERIAL_COMPETITION",
+        "PREEMPTIVE_OPERATION",
+        "BUFFER_CAPACITY",
+        "ALTERNATIVE_MATERIAL",
+        "MULTI_FACTORY",
+        "AI_DURATION_PREDICTION",
+        "REALITY_CALIBRATION"
+      ]
+    }
+  }
+}

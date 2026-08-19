@@ -36,3 +36,7 @@ Correctness 退化不能用更快运行时间抵消。显著质量或性能退�
 P0-04 将总规已有 C-001～C-018 semantics 固定为 `constraint-rule-sheet.v1`，没有修改 `planning-problem.v1`、Solver、constraint builder、目标或 Scenario baseline；状态/error/capability contract 也不改变模型规模。因此当前没有可运行的 Solver/Golden/Scenario benchmark，不生成零值或 synthetic 性能结论。
 
 P2 首次 baseline 必须记录 rule sheet/ValidationReport version；以后任何公式、C-ID 语义或 capability 从 UNSUPPORTED 变为支持，都重新匹配本规则并执行 correctness/quality/runtime/memory replay。
+
+## TASK-P0-05 review
+
+P0-05 新增 versioned Profile/Scenario/Manifest 与 empty Import hash，但没有 PlanningProblem、Solver、baseline profile 或 benchmark result；rule-sheet change 只解除全局 schema set exact-value check，C-ID/formula 不变。当前无法产生有效 runtime/memory/quality comparison，不写零值报告。P2 首个 baseline 必须记录 schema set `1.2.0`、Scenario/Profile/Generator versions、dataset/problem hashes 与硬件环境。

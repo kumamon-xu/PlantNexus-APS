@@ -58,3 +58,5 @@ P0 当前机器输出合同为 [`validation-report.v2`](../../schemas/json/valid
 TASK-P0-04 形成 [`constraint-rule-sheet.v1`](../../schemas/rules/constraint-rule-sheet.v1.yaml) 和 completeness CLI。它只检查 C-001～C-018 metadata、code/category/capability/state registry 一致性，并显式扫描 validation contract package 不导入 backend/OR-Tools。它没有 `validate_schedule`、不读取 candidate schedule，也不构成 ADR-0005 的完整 Validator implementation。
 
 TEST-RULE-SHEET-001/TEST-ERROR-MAPPING-001/TEST-CAPABILITY-001/TEST-STATE-TRANSITION-001 是 P0 contract evidence；TEST-VALIDATOR-MUTATION、illegal fixtures、Golden PASS、independent evaluator 和 Property/Benchmark evidence 继续由 TASK-P0-07/P2 负责。
+
+TASK-P0-05 的 rule-sheet 代码变更只允许 additive schema set `1.2.0`，不修改任何 rule、violation、import scan 或候选 schedule 行为；P0-04 tests 全量回归。Scenario expected behavior/manifest 不是 Validator output，empty Import package 不能作为 C-001～C-011 PASS。

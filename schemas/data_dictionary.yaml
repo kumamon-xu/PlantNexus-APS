@@ -1,5 +1,5 @@
-schema_set_version: 1.1.0
-status: p0_rule_contracts
+schema_set_version: 1.2.0
+status: p0_simulation_contracts
 spec_version: 0.3.0
 rules:
   unknown_root_fields: reject
@@ -88,3 +88,22 @@ schemas:
   state-machines.v1:
     path: schemas/rules/state-machines.v1.yaml
     machines: [PLANNING_RUN, SCHEDULE_VERSION, EXPORT_JOB]
+  factory-profile.v1:
+    path: schemas/scenario/factory-profile.schema.json
+    asset_version_field: profile_version
+    isolation: synthetic_only must be true
+    p0_boundary: versioned distribution shape only; no Production defaults or generated factory records
+    simulation_assumptions: [SIM-ASSUMPTION-001, SIM-ASSUMPTION-004]
+  scenario-spec.v1:
+    path: schemas/scenario/scenario-spec.schema.json
+    asset_version_field: scenario_version
+    deterministic_inputs: [factory_profile, generator, seed, required_capabilities]
+    isolation: synthetic_only must be true
+    p0_boundary: expected behavior is a contract, not Solver or Validator execution evidence
+    simulation_assumptions: [SIM-ASSUMPTION-002, SIM-ASSUMPTION-004, SIM-ASSUMPTION-005]
+  scenario-manifest.v1:
+    path: schemas/scenario/scenario-manifest.schema.json
+    provenance_fields: [scenario, factory_profile, generator, seed, generated_at, dataset_hash]
+    hash_rule: generated_at is excluded from canonical Import package dataset_hash
+    target_environments: [development, test, benchmark]
+    p0_boundary: manifest references an empty Standard Import v1 envelope; canonical entity records remain P1

@@ -6,6 +6,6 @@ pipeline, schedule validator, or solver behavior.
 
 CODE_VERSION = "0.0.0"
 SPEC_VERSION = "0.3.0"
-SCHEMA_VERSION = "1.1.0"
+SCHEMA_VERSION = "1.2.0"
 
 __all__ = ["CODE_VERSION", "SCHEMA_VERSION", "SPEC_VERSION"]

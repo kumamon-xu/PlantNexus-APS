@@ -20,3 +20,5 @@ ADR-0001～0009 是从 implementation spec 0.3.0 已明确决定中建立的基�
 TASK-P0-03 的 Schema/type skeleton 落实 ADR-0001（共同入口 envelope）、ADR-0003（Solver-neutral Problem）、ADR-0007（immutable Snapshot）、ADR-0008（UTC/seconds/ticks）和 ADR-0009（Production/Simulation 标识隔离）的既有决定，没有改变这些决定，因此不新增 ADR。Problem builder、hash、Solver 或字段权威若偏离这些决定，必须另建 ADR，不能借 skeleton 隐式修改。
 
 TASK-P0-04 把总规既有 C-001～C-018、ADR-0005 独立 Validator 边界和 ADR-0007 ScheduleVersion 不可变/发布状态固定为 versioned rule/state contracts。没有改变 Constraint semantics、Schedule state machine、PlanningProblem、Solver backend 或发布规则，因此不新增 ADR。`EXPORT_FAILED → EXPORTING` 只是既有“可重试”合同的显式 pair；若未来改变 pair/guard、允许 published mutation、共享 Solver validator logic 或启用高级 capability，必须新建 superseding ADR。
+
+TASK-P0-05 落实 ADR-0001（Generator 终止于 Standard Import）与 ADR-0009（synthetic flag/Production target rejection），没有改变共同入口或环境隔离决定；empty package 不绕过 P1 pipeline。Profile/Scenario/Generator versions、canonical hash 和 manifest 属于总规既定 provenance，不修改 PlanningProblem/Constraint/Solver/状态/Data Authority，因此不新增 ADR。若未来允许 Production target、Generator 直接产 Problem 或改变隔离层级，必须新建 superseding ADR。

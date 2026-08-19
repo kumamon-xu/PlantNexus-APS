@@ -1,0 +1,29 @@
+{
+  "scenario_manifest_version": "scenario-manifest.v1",
+  "synthetic": true,
+  "target_environment": "test",
+  "scenario": {
+    "scenario_id": "SCHEMA-SCENARIO-P0-05",
+    "scenario_version": "1.0.0"
+  },
+  "factory_profile": {
+    "profile_id": "SCHEMA-PROFILE-P0-05",
+    "profile_version": "1.0.0"
+  },
+  "generator": {
+    "generator_id": "P0-EMPTY-IMPORT-GENERATOR",
+    "generator_version": "1.0.0"
+  },
+  "seed": 20260819,
+  "required_capabilities": [
+    "DAG_ROUTING",
+    "MACHINE_CALENDAR"
+  ],
+  "generated_at": "2026-08-19T00:00:00Z",
+  "canonicalization_version": "canonical-json.v1",
+  "import_package": {
+    "import_package_version": "import-package.v1",
+    "package_id": "SIMPKG-D568B22FD1F85896B67F864A"
+  },
+  "dataset_hash": "sha256:cd0fb164704530e83197ec5cc806acc86dc8430f15e503c5840f898397fa9456"
+}

@@ -36,3 +36,9 @@ Production 和 Simulation 至少独立 Database，推荐 `aps_dev`、`aps_sim`�
 ## 时间与 Secret
 
 数据库时间为 UTC `TIMESTAMPTZ`，显示使用 factory timezone。生产 timezone 未确认时阻止生产操作而非阻止开发启动。Secret 只能通过环境/Secret Manager 注入，禁止进入文档示例的真实值、仓库、日志或导出。
+
+## P0 Simulation isolation contract
+
+FactoryProfile/ScenarioSpec Schema 强制 `synthetic_only=true`，ScenarioManifest 强制 `synthetic=true` 且 `target_environment` 只接受 `development/test/benchmark`。pure `GenerationContext.create` 对字符串 `production` 显式返回 `SYNTHETIC_REFERENCE_IN_PRODUCTION`；Generator 输出的 Standard Import envelope 同样必须 `synthetic=true` 并携带 `scenario_id`。
+
+这些是 contract/precheck 证据，不是独立 Database、权限、Simulation API 404、发布/导出 guard 或 Production deployment 证据；相关 infrastructure/API 行为仍为 TASK-P0-08/P1+ `PLANNED`，RISK-007 继续 `MONITORED`。

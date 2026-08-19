@@ -30,3 +30,5 @@ Reference Scheduler 是非生产启发式，用于 Benchmark、Regression 和 Sa
 ## 限制
 
 Reference Scheduler 不证明最优；若无法满足所有硬约束，应返回明确失败并由 Validator 确认，不能输出随机或部分 schedule 冒充结果。
+
+TASK-P0-05 的 ScenarioManifest v1 提供未来 baseline 比较所需的 Scenario/Profile/Generator/seed/dataset hash 引用，但 `simulation/baselines/**` 仍无实现。Empty Import package 没有 operation/resource，不可运行 FCFS/EDD 等，也不能形成 REQ-015 或 TEST-REFERENCE-SCHEDULER evidence。

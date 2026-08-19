@@ -72,6 +72,8 @@ Validator Mutation 证据链必须同时区分：不可变 positive base/hash、
 
 Engineering Skeleton 证据链必须区分：exact direct pin 与 transitive lock、environment/data-plane config、Secret redaction、lazy client 与真实 connectivity、liveness 与 readiness、generic Job primitive 与业务状态机、process-local reference idempotency 与 distributed durable repository、migration structure test 与 Production migration、workflow/config contract 与 CI provider run、conditional Benchmark hook 与真实 BenchmarkReport。local/SQLite/synthetic-probe PASS 不得写成 PostgreSQL/Redis outage、business side-effect、Production security/deployment 或 P0 Exit Gate evidence。
 
+P0 Exit Gate 审计还必须区分“审计 Task 完成”和“Milestone Gate 通过”：审计报告/manifest 完整、命令可复验且忠实记录 `FAIL`/`NOT_RUN` 时，审计 Task 可以 `done`；但任一 §72 必需 Gate 非 `PASS` 时 P0 必须保持 `active`/`NOT_READY`，不得进入 P1。workflow 的 exact command必须能审计当前 immutable Task range，硬编码旧 Task 即使文本 contract test通过也不构成 CI PASS；local command parity、repository build 或空 remote检查不能替代 external provider run。provider、run ID/URL、immutable commit、job conclusion、external artifact 和 required-check evidence必须可核验。
+
 ## 自动校验
 
 `scripts/check_docs.py` 执行以下治理检查：

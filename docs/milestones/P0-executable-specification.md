@@ -35,4 +35,4 @@ last_reviewed: 2026-08-19
 
 Schema PASS、Golden Fixture PASS、Validator Rule Sheet PASS、Scenario deterministic replay PASS、Repository Build PASS、CI PASS。所有 PROD_OPEN 已登记但无需全部关闭。
 
-TASK-P0-01～08 已完成 repository/governance/contracts/Scenario/Golden/Validator 及 exact build、CI workflow、structured logging、health/config、DB/Redis/Celery、job reliability/idempotency、reversible migration skeleton 的本地 evidence。CI provider run/branch protection 仍为 `NOT_RUN`，TASK-P0-09 仍为 planned；因此 P0 Exit Gate 尚未审计/通过，P0 未完成。
+TASK-P0-01～08 已完成 repository/governance/contracts/Scenario/Golden/Validator 及 exact build、CI workflow、structured logging、health/config、DB/Redis/Celery、job reliability/idempotency、reversible migration skeleton 的本地 evidence。TASK-P0-09 于 2026-08-19 独立复验 Schema、Golden、Validator Rule Sheet、Scenario replay 与 Repository Build 均为 `PASS`；但 workflow 的 docs step硬编码 TASK-P0-08，在 P0-09 commit 上 exit 1，同时仓库没有 Git remote，provider run/URL/ID、external artifact 和 required branch-check evidence均为 `NOT_RUN`。因此 [P0 Exit Gate audit](P0-exit-gate-audit-report.md) 的 CI Gate 为 `FAIL`、总体 `NOT_READY` / `NO_GO`，P0 保持 `active`；`P0-GAP-001/002` 由 planned TASK-P0-10 承接，未经重新审计和用户批准不得进入 P1。

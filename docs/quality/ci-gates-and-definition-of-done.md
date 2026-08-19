@@ -42,6 +42,12 @@ uv run python -m app.planning.validation.mutation_check --root . --report build/
 
 workflow 使用 read-only repository permission、并发取消与 20 分钟 job timeout。Action tags、Compose image tags和本地 config validation 尚不等于 supply-chain hardened/digest-pinned Production pipeline；provider run/branch-protection 结果也不能由本地验收填造。TASK-P0-09 仍需用真实 evidence 审计 P0 CI Exit Gate。
 
+## TASK-P0-09 audited result
+
+2026-08-19 的 [P0 Exit Gate audit](../milestones/P0-exit-gate-audit-report.md) 重新执行 exact sync、lint、type、90 tests、五类 machine reports、Compose config、build 与 P0-09 governance gate；这些非 CI 层均 `PASS`。但 workflow 的 Documentation and task diff step仍硬编码 TASK-P0-08，在包含 audit paths 的 P0-09 commit上 raw exit 1；`git remote -v` 也为空，provider run URL/ID、external uploaded artifact 和 required branch-check evidence均为 `NOT_RUN`。因此 CI Gate为 `FAIL`，P0 总体为 `NOT_READY` / `NO_GO`。
+
+planned TASK-P0-10 必须先关闭 `P0-GAP-002`：将 workflow diff gate有界交接到其 immutable Diff base并通过 integration/post-commit replay；再关闭 `P0-GAP-001`：对最终 commit形成可核验 external run/artifact/required-check evidence。两项均完成并重新审计前 CI Gate不能关闭。TASK-P0-09 完成只表示审计真实完整，不表示 Phase Done。
+
 ## Task Done
 
 任务完成至少满足：

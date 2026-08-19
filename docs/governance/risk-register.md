@@ -40,3 +40,5 @@ TASK-P0-06 review：非空 committed Import 与 replay loader 加强 RISK-002，
 TASK-P0-07 review：独立 evaluator、formula-free mutation materializer、expected-artifact separation、backend/OR-Tools import scan 和 13 类负例显著加强 RISK-003 的早期控制；wrong-resource/explicit detail 同时加强 RISK-004。证据仍局限 fixture-local vocabulary，尚无 P1 common ingress、P2 Solver comparison/scale/property/benchmark、生产隔离或真实数据，因此不能标记风险已缓解或关闭。RISK-001～010 全部保持 `MONITORED`，registry format version 不变。
 
 TASK-P0-08 review：Production config/no-Simulation-route/Compose separation boundary 加强 RISK-007，lease/STALLED/atomic replay-conflict primitive 加强 RISK-008，deferred Benchmark hook/OPEN-012 边界加强 RISK-009；但尚无独立 production/simulation DB evidence、durable distributed repository、Export/Publish side effect、crash/outage test、真实 Benchmark 或生产平台，因此不能标记 mitigated/closed。RISK-001～010 全部保持 `MONITORED`，registry format version 不变。
+
+TASK-P0-09 review：本地 Schema/Golden/Validator/Replay/Build evidence 与 no-Solver boundary 均复验通过，未发现需要改变现有十项风险状态的新实现事实；workflow handoff failure 与 provider evidence缺失分别登记为 `P0-GAP-002/001` 并追踪到 planned TASK-P0-10，而不是伪装成已缓解控制。RISK-001～010 全部保持 `MONITORED`，registry format version 不变。

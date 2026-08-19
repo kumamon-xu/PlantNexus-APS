@@ -28,16 +28,16 @@ P0-DOCS — Documentation Baseline
 ## 最新完成 Task
 
 ```text
-TASK-P0-08 — Engineering and CI Skeleton
+TASK-P0-09 — P0 Exit Gate Audit
 ```
 
-Task 状态：`done`（2026-08-19）。exact runtime/lock、environment-only Production fail-closed config、JSON log/trace/redaction、lazy DB/Redis、health live/ready、generic lease/heartbeat/attempt/STALLED/idempotency、reversible engineering migration、Compose/Docker/CI skeleton、26 integration tests 与 `engineering-skeleton-report.v1` 均已通过任务卡 15 条 Acceptance Commands；全量 90 tests PASS。CI provider run 与 Production/distributed/Solver 能力未声称。TASK-P0-01～07 继续保持 `done`；schema set 保持 `1.2.0`。
+Task 状态：`done`（2026-08-19）。独立审计重放 TASK-P0-01～08 evidence、90 tests、五类 machine reports、Compose/build/governance 与 no-Solver gate：五项非 CI Exit Gate均 `PASS`。提交后 exact replay 发现 workflow 硬编码 TASK-P0-08 diff gate并在 P0-09 commit上 exit 1；repository同时没有 Git remote，external provider evidence为 `NOT_RUN`。因此 CI Gate `FAIL`，总体 `NOT_READY` / `NO_GO`，两项缺口均已追踪到 planned TASK-P0-10。
 
-P0 尚未完成，当前记录不表示通过 P0 Exit Gate，也不授权进入 P1。
+TASK-P0-01～09 均为 `done`，但 Task 全部完成不等于 Phase Gate通过。P0 仍未完成、Milestone保持 `active`，不授权进入 P1。
 
 ## 当前 Task
 
-无。TASK-P0-09 继续保持 `planned`；完成 TASK-P0-08 不自动授权或启动 P0 Exit Gate 审计。P0 尚未完成，也不授权进入 P1。
+无。TASK-P0-10 仅为 `planned` remediation card，用于关闭 workflow handoff 与 external provider evidence缺口；当前没有授权开始、修改 workflow/测试/外部系统或执行后续 Task。P0 保持 `active` / `NOT_READY`，P1 继续禁止。
 
 ## 当前允许
 
@@ -52,6 +52,7 @@ P0 尚未完成，当前记录不表示通过 P0 Exit Gate，也不授权进入 
 - 维护 `SIM-MINIMAL-001@1.0.0` deterministic correctness fixture、人工 Golden 与只读 replay/hash evidence；
 - 在不导入 Solver/backend 的边界内维护 P0-07 fixture-local Validator Rule Sheet evaluator 与非法 mutation evidence；
 - 按 TASK-P0-08 明确文件边界建立 health-only API、工程基础设施、通用 Job reliability、CI 与构建骨架；
+- 维护 TASK-P0-09 的 P0 audit report/manifest 与 `NOT_READY` 结论；仅在用户另行授权后细化/执行 TASK-P0-10 external CI remediation；
 - 登记 `PROD_OPEN` 与 `SIM_ASSUMPTION`，但不替业务方关闭问题。
 
 ## 当前禁止

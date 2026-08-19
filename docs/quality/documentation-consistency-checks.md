@@ -125,6 +125,8 @@ uv run python -m app.infrastructure.contract_check --root . --report build/valid
 
 `.github/workflows/ci.yml` 现执行所有既有 machine checks、本文件两种 docs 命令与 artifact upload。仓库 validator 仍只验证 workflow 文本/路径和 Task diff；外部 provider 是否实际运行、分支保护是否 required 及 run URL/ID 必须由平台证据证明，不能写成 local PASS。
 
+TASK-P0-09 将上述边界实际应用于 Exit Gate：P0-09 full/diff validator 与 repository build均 PASS，但 workflow 仍硬编码 TASK-P0-08 diff range，其 exact command在新 audit commit上 exit 1；空 `git remote -v` 还证明 external provider evidence不可得。因此 CI Gate必须为 `FAIL`，不能只写 `NOT_RUN` 或用其他 local PASS 抵消。planned TASK-P0-10 必须先有界交接 workflow/test，再在用户授权后形成 provider evidence；不得修改本 validator 或 Task 文本来放宽 scope。
+
 ## Override
 
 不允许用自由文本 CI skip 绕过。确需例外时必须在 Task Card 记录理由，提交 ADR 或明确批准记录，并仍保留检查报告。正确性、状态语义、数据隔离和发布门不得豁免。

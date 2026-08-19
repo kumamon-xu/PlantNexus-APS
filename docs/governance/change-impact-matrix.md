@@ -129,3 +129,9 @@ Schema、Domain、PlanningProblem、Backend、Simulation code、Golden/其他 te
 本 Task 预期命中 `IMPACT-API`、`IMPACT-JOBS`、`IMPACT-INFRA`、`IMPACT-DEPENDENCY`、`IMPACT-VERSION-METADATA`、`IMPACT-STATE`、`IMPACT-TESTS`、`IMPACT-PHASE`、`IMPACT-GOVERNANCE-REGISTRY`、`IMPACT-DOCS`。`pyproject.toml` 同时触发 dependency/version review；更新 `export-job.md` 触发完整三套 state/ADR/trace review，即使 machine state artifacts 保持只读。首次 diff check 暴露 Alembic/migrations、`.env.example` 与 CI workflow 没有规则覆盖，因此在同一稳定 `IMPACT-INFRA` 行加入这些有界工程路径；required documentation 不变且均已列入 Task。
 
 Schema、Domain、Import/Normalization/Snapshot、Planning/Validator/Backend、Simulation、Exporter、Fixture、Benchmark、Frontend、governance validator 均禁止修改，因此不声明相应 Rule ID。新增路径覆盖没有创建新 Rule ID、没有改变 required-document column/registry table format，`registry_version` 保持 `1.0.0`。最终以 TASK-P0-08 diff report 的真实 matched rows 为准。
+
+## TASK-P0-09 matrix review
+
+本 Task 只修改明确列出的 P0 phase/milestone、governance registry、quality/index/task/audit documents 和 `docs/milestones/P0-exit-gate-evidence-manifest.json`，实际预期命中 `IMPACT-PHASE`、`IMPACT-GOVERNANCE-REGISTRY`、`IMPACT-DOCS`。新建 TASK-P0-10 仅为 planned remediation card；没有执行后续任务或外部操作。
+
+Schema、Domain、Constraint/Validator、Simulation、Fixture、Test、Benchmark、API、Infrastructure/workflow、dependency/version metadata、governance validator 和 P1 path均保持只读，因此不声明对应 Rule ID。machine rule table/required-document column 未修改，`registry_version` 保持 `1.0.0`；最终以 TASK-P0-09 diff report 的真实 matched rows 为准。

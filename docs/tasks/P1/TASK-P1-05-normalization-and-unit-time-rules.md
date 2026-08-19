@@ -1,7 +1,7 @@
 ---
 doc_id: TASK-P1-05
 title: Normalization and Unit Time Rules
-status: in_progress
+status: done
 spec_version: 0.3.0
 phase: P1
 normative: true
@@ -75,4 +75,8 @@ Local implementation evidence（2026-08-19）：schema set从`2.0.0`加法更新
 
 实现形成`mapping-profile.v1`、stable namespaced/cross-authority ID、显式source record provenance、strict offset→UTC Z、integer-only unit conversion、canonical ordering/serialization/package ID/dataset hash及Production/Simulation guard。正向覆盖schema/domain-valid minimal Import、DST/nested interval、same rows在order/batch ID/received-at/file digest/location变化下byte-identical replay、mapping version改变bytes/hash；负向覆盖duplicate JSON/ID、missing/unmapped field、source/profile/version/data-plane/provenance conflict、naive/fractional/unknown offset、missing/unknown/float/non-integral/overflow duration及invalid synthetic/mapping contract。Missing reference可被producer结构化输出但由后续domain precheck拒绝，证明TASK-P1-06边界未被吞并；source scan确认Normalization不导入DataValidation/Snapshot/Planning/OR-Tools且无unit default。
 
-本地Acceptance：Task-focused Ruff/Pyright均0问题，focused pytest=`66 passed`；full repository Ruff/Pyright均0问题，full pytest=`189 passed`；`uv build`成功。文档治理在补录前已达到124 docs、49 changed paths、8 matched impact rows、0 issues；最终report、implementation commit和provider CI将在提交前后再次核验。本Task在provider evidence闭环前继续`in_progress`，不会启动TASK-P1-06。
+本地Acceptance：Task-focused Ruff/Pyright均0问题，focused pytest=`66 passed`；full repository Ruff/Pyright均0问题，full pytest=`189 passed`；`uv build`成功。Full governance=`PASS`（124 docs、30 roots、30 trace rows、36 tests、15 PROD_OPEN、9 SIM assumptions、10 risks、22 tasks）；Task diff governance=`PASS`（49 changed paths、8 matched impact rows、0 issues），`git diff --check`通过。
+
+Implementation/provider evidence（2026-08-19）：implementation commit=`d52aa62d36e8d89eba318cb5fc586311680e030f`，已直接push到受保护的`main`。该精确SHA的GitHub Actions push run [`32252308695`](https://github.com/kumamon-xu/PlantNexus-APS/actions/runs/32252308695)为`completed/success`，required `validate` job [`96065907901`](https://github.com/kumamon-xu/PlantNexus-APS/actions/runs/32252308695/job/96065907901)全部步骤成功。Artifact `9364897397` / `plantnexus-ci-evidence-32252308695`未过期，provider digest=`sha256:5db1ccbb242b555d8a95d36ac9cc1b1373dab95d482dbde17ab7fb369cce2966`；下载ZIP的SHA-256完全一致，内含6份machine evidence。其`traceability/ci-current-task-report.json`精确记录task=`TASK-P1-05`、result=`PASS`、git_head=`d52aa62d36e8d89eba318cb5fc586311680e030f`、diff_base=`d63926f84d9d2b7bc46bbcaff5704612af120a34`、49 changed paths、8 matched impact rows和0 issues。GitHub公开branch元数据显示`main`受保护，direct-push rule反馈明确要求`validate`，且该精确SHA的同名check为`success`。
+
+Completion decision：byte-identical replay、unit/missing-duration exact rejection、无隐式default/float rounding、版本/文档/追踪、提交前后governance和implementation provider CI均已满足，故本Task标记`done`。本次仅追加完成证据的提交仍需在push后对其精确SHA独立核验CI；该非自引用核验不改变上述实现结论。TASK-P1-06保持`planned`且未启动，未进入P2。

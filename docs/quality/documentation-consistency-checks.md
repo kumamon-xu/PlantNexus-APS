@@ -179,6 +179,8 @@ Schema set major release必须在Task Completion evidence记录compatibility、m
 
 完成前必须同时证明global schema set`2.1.0`与Import v2 document`2.0.0`的有意区别、两份immutable Schema hash、`uv.lock`无变化、八行matched impact和0 issues。Ignored `build/` report不提交；implementation与evidence commit均须各自核验provider required `validate`。
 
+TASK-P1-05 implementation commit `d52aa62d36e8d89eba318cb5fc586311680e030f`已由GitHub Actions run `32252308695`的required `validate` job `96065907901`证明成功；artifact `9364897397`内`ci-current-task-report.json`精确记录49 changed paths、8 matched impact rows、0 issues且result=`PASS`。Provider/download ZIP digest均为`sha256:5db1ccbb242b555d8a95d36ac9cc1b1373dab95d482dbde17ab7fb369cce2966`。完成态证据提交仍按其自身精确SHA核验，不以本段自我声明替代provider结果。
+
 ## Override
 
 不允许用自由文本 CI skip 绕过。确需例外时必须在 Task Card 记录理由，提交 ADR 或明确批准记录，并仍保留检查报告。正确性、状态语义、数据隔离和发布门不得豁免。

@@ -47,3 +47,7 @@ Versioned Input Package
 ## Replan
 
 Replan 不修改旧 ScheduleVersion。它使用旧版本、执行事实、新 Snapshot、冻结窗口和原因生成新版本，并输出 ChangeReport。旧计划 Hint 只帮助搜索，不能替代 HARD_LOCK 或稳定性目标。
+
+## P1 implementation status
+
+TASK-P1-03/04已形成Raw Staging与ReferenceFileAdapter；TASK-P1-05现形成`RawImportRow → explicit MappingProfile/unit registry → canonical Import v2 bytes/hash`。该实现只到流程图的Normalization输出，未跨越Data Validation。Route/reference/capability检查、Order Expansion、Snapshot/Problem及Solver仍必须按TASK-P1-06～09顺序进入，任何consumer不得直接从Adapter/Raw payload跳到后续层。

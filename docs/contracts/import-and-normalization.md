@@ -83,3 +83,11 @@ Raw Staging现以immutable `StagedImportBatch`/`RawImportRow`保存batch ID、da
 两种格式的等价输入必须产生相同row identity与raw payload bytes，并保留相同caller source/version/data-plane/synthetic provenance；transport provenance必须忠实不同，包括原文件SHA-256、leaf name、media type、byte length和CSV/XLSX source location。不能为了“对等”伪造相同文件hash或位置。
 
 Reference reader固定4 MiB文件、10000 data rows、3 columns、单sheet、512 archive members和32 MiB uncompressed archive上限；拒绝路径穿越、`.xls/.xlsm`、UTF-8 BOM/非法编码、unknown/missing/duplicate/reordered header、非text XLSX cell、formula-like值、VBA、external link/relationship、DTD/entity及重复/加密/越界archive。该版本是可测试参考入口，`production_binding=false`；不声明ERP/MES/WMS/CAM字段mapping，不关闭OPEN-002/013/015，也不构成malware scanning、authentication或Production security认证。
+
+## TASK-P1-05 deterministic Normalization
+
+`mapping-profile.v1`由调用方显式选择contract/profile/source/unit registry versions，并逐record type声明source field、canonical target、transform、ID namespace、可选跨source ID authority和duration unit field；不支持`latest`、alias、unknown field、required-field fallback或source authority冲突。Reference outer row和`payload_json`均按strict UTF-8 JSON解析，duplicate key、non-finite number、未映射字段和错误root shape直接`DATA_ERROR`，Raw Staging继续保留原始offset/bytes/location。
+
+`unit-conversion-registry.v1`只批准`s/min/h → second`的整数因子。duration必须是显式整数和显式unit，使用multiply/divmod且拒绝missing、unknown、negative、non-integral second与int64 overflow；timestamp必须是second precision且带`Z`或numeric offset，随后转为UTC `Z`。ID由namespace/source system/source value的canonical JSON SHA-256稳定派生；record/collection排序、mapping/unit versions和source versions进入Import bytes。
+
+Producer生成Import v2固定document字段`schema_set_version=2.0.0`、`canonicalization_version=canonical-json.v1`、内容派生package ID及`dataset_hash=sha256(canonical bytes)`。batch ID、received-at、file digest/name/media/location不污染canonical bytes；它们继续留在Raw Staging provenance。Production输出禁止synthetic provenance，Simulation要求各batch完全一致。该producer不调用canonical cross-reference/DAG/capability evaluator；TASK-P1-06仍拥有multi-error Data Validation与route/resource exact rejection。

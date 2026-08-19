@@ -173,6 +173,12 @@ Schema set major release必须在Task Completion evidence记录compatibility、m
 
 治理检查不读取CSV/XLSX、不判断macro/formula/archive guard或semantic parity；TEST-IMPORT-ADAPTER-001与exact locked dependency补充该语义。最终提交前后report必须记录完整changed paths/source counts/matched rows/0 issues，ignored `build/` report不提交；provider CI仍须针对immutable implementation/evidence commit另行核验。
 
+## TASK-P1-05 normalization governance review
+
+本Task沿用full repository与`Diff base..HEAD + working tree`检查，report路径为`build/traceability/TASK-P1-05-report.json`。声明的八行impact覆盖新增rule/schema metadata、Normalization code、既有global version assertions、phase/registries和文档；启动前scope expansion已纳入全部矩阵强制路径。检查器只证明路径/引用/版本治理，不解析unit factor、canonical bytes或error semantics，后者由TEST-NORMALIZATION-001/TEST-CONTRACT-001补充。
+
+完成前必须同时证明global schema set`2.1.0`与Import v2 document`2.0.0`的有意区别、两份immutable Schema hash、`uv.lock`无变化、八行matched impact和0 issues。Ignored `build/` report不提交；implementation与evidence commit均须各自核验provider required `validate`。
+
 ## Override
 
 不允许用自由文本 CI skip 绕过。确需例外时必须在 Task Card 记录理由，提交 ADR 或明确批准记录，并仍保留检查报告。正确性、状态语义、数据隔离和发布门不得豁免。

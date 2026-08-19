@@ -67,3 +67,9 @@ Raw Staging新增的source system/version、content/row digest、row identity/lo
 ReferenceFileAdapter v1只权威记录“调用方声明的source system/version + 实际文件bytes/位置 + transport三列”。`record_type`与opaque `payload_json`不批准canonical collection、业务字段、单位、timezone、冲突优先级或系统权威；即使文件被成功读取并持久化，也不能称为Canonical/DataValidation PASS。
 
 `production_binding=false`表示该实现不是任何真实ERP/MES/WMS/CAM连接器。Adapter可以按调用方显式data plane构造Raw Staging batch，但不能据此授权Production映射；OPEN-002/013/015继续OPEN，冲突和mapping必须由后续versioned Normalization/authority evidence处理。
+
+## TASK-P1-05 explicit mapping authority boundary
+
+MappingProfile只能声明一个精确source system/version的record/field转换，profile/version与unit registry version进入canonical provenance。不同source version、同source多profile、混合data plane或synthetic provenance冲突均拒绝；payload不能覆盖自动注入的`source`，未映射字段也不能被忽略。
+
+这些profile是通用可测试机制，不是Production ERP/MES/WMS/CAM authority配置。仓库未提交任何真实系统mapping、field precedence、timezone或unit default；OPEN-001/002/013/015继续OPEN。Raw Staging保留transport truth，canonical package只承载显式映射结果，两者不能互相伪造。

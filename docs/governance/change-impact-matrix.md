@@ -173,3 +173,9 @@ Adapter/Staging/Normalization/DataValidation/Expansion/Snapshot/Problem builder�
 本Task实际路径命中`IMPACT-IMPORT`、`IMPACT-INFRA`、`IMPACT-DEPENDENCY`、`IMPACT-VERSION-METADATA`、`IMPACT-TESTS`、`IMPACT-PHASE`、`IMPACT-GOVERNANCE-REGISTRY`、`IMPACT-DOCS`。`backend/app/importers/**`形成reader/protocol/Reference Adapter，`pyproject.toml/uv.lock`精确增加openpyxl/defusedxml，限定test文件形成contract/integration evidence；既有Infrastructure machine contract/CI dependency assertion仅同步exact pin集合并保留solver-free断言，阶段、注册表和文档同步真实边界。
 
 启动前检查准确发现原卡遗漏`change-impact-matrix.md`、`traceability-rules.md`、`sim-assumption-register.md`、`milestones/README.md`与`TASK_TEMPLATE.md`，已在激活前加入Documents/allowed scope；首次实际diff检查又发现`pyproject.toml`同时命中`IMPACT-VERSION-METADATA`，因此在继续验收前补入该Rule ID和`schema-versioning.md`。全仓回归随后忠实暴露P0 exact dependency baseline过期，故再次先扩卡，纳入`infrastructure/contract_check.py`、`test_ci_contract.py`、`IMPACT-INFRA`及其configuration/Operations必审文档。Schema、Domain、Application/migration、Normalization/DataValidation、Snapshot/Problem、Simulation/Fixture、API/Job、Solver/Benchmark和governance validator均未修改；machine rule表和`registry_version`保持`1.0.0`，最终以TASK-P1-04 diff report真实matched rows为准。
+
+## TASK-P1-05 matrix review
+
+本Task实际路径命中`IMPACT-SCHEMA`、`IMPACT-IMPORT`、`IMPACT-DEPENDENCY`、`IMPACT-VERSION-METADATA`、`IMPACT-TESTS`、`IMPACT-PHASE`、`IMPACT-GOVERNANCE-REGISTRY`、`IMPACT-DOCS`。启动前先把受global schema断言影响的既有contract tests，以及dependency/phase/governance矩阵强制文档和三份直接architecture说明补入Task Card允许范围；Diff base保持`d63926f84d9d2b7bc46bbcaff5704612af120a34`。
+
+Schema变化只新增unit registry并同步set metadata/data dictionary；Import v2/canonical-records v1原文件、DB/migration、Adapter/Infrastructure、DataValidation/Expansion/Snapshot/Problem、Simulation、API/Job、Solver/Benchmark均未改。`pyproject.toml`无dependency变化，`uv.lock`不变；machine impact rows和registry format version不变，最终以TASK-P1-05 diff report真实matched rows为准。

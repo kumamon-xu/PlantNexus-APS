@@ -28,3 +28,5 @@ TASK-P0-08 落实 ADR-0002 的 health API/Celery Worker 分进程骨架与 heart
 TASK-P1-02以schema set`2.0.0`落实ADR-0007的immutable Snapshot事实边界、ADR-0008的UTC/整数秒语义与ADR-0009的Production/Synthetic provenance隔离，并保留ADR-0003的Solver-neutral consumer边界。它没有改变这些已接受决定，也没有决定外部字段权威、hash算法、persistence或Solver，因此不新增ADR。若后续允许Production携带synthetic provenance、修改UTC/seconds、原地改写Snapshot或隐藏source mapping，必须先建立superseding ADR。
 
 TASK-P1-04落实总规§9/§95和ADR-0001的共同文件入口边界：Reference Adapter只形成Raw Staging，不能绕过后续Normalization/DataValidation；Production/Simulation provenance继续服从ADR-0009。固定三列reference transport、read-only XLSX与安全限额不改变Architecture/Data Authority/PlanningProblem/Solver/状态/发布决定，因此不新增ADR。若未来把它声明为真实系统authority、允许macro/formula/external execution、让Adapter直接产Canonical/Snapshot或降低data-plane隔离，必须先提交相应superseding ADR与授权证据。
+
+TASK-P1-05落实ADR-0001共同入口、ADR-0008 UTC/整数秒/tick边界和ADR-0009 Production/Simulation隔离，并按既有canonical-json/SHA-256决定生成Import bytes/hash。Additive schema set`2.1.0`只新增unit registry，Import v2/canonical-records.v1合同不改；没有改变Architecture、Data Authority、Snapshot/Problem、Solver或发布决定，因此不新增ADR。若未来允许隐式unit/timezone/default、浮点duration rounding、隐藏mapping version或绕过Data Validation，必须先提交superseding ADR与授权证据。

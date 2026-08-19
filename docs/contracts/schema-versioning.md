@@ -84,3 +84,13 @@ Schema set 与 `app.SCHEMA_VERSION` 均保持 `1.2.0`；没有修改 `schemas/**
 本Task只在`pyproject.toml` runtime dependencies增加exact openpyxl/defusedxml并更新`uv.lock`，没有修改`[tool.plantnexus-aps.versions]`、`app.SCHEMA_VERSION`、`schemas/**`、data dictionary、sample、serializer或hash projection。Schema set继续`2.0.0`，JSON/YAML compatibility与migration均为none；Reference Adapter`1.0.0`是独立code-level transport version，不能替代或提升Schema version。
 
 未来改变三列Reference transport或opaque row serialization必须发布新的adapter version并提供replay/compatibility规则，但只有修改machine Schema时才按本文件提升schema set。Dependency lock变化不能无痕改写Import/Snapshot document版本。
+
+## TASK-P1-05 additive normalization-rule release
+
+- Schema set：`2.1.0`，同步更新`pyproject.toml`、`app.SCHEMA_VERSION`和data dictionary；新增`unit-conversion-registry.v1`，不新增或重写JSON document version；
+- Preservation：`canonical-records.v1.schema.json`与`import-package.v2.schema.json`SHA-256继续分别为`fd13b188b7317eb92f14489fdc6c7976cc24b5b03cfcb2fa9d9f1eabdd4b3f9e`、`166514c8ea40702c7b42b27956809619396c90d10b1b0cab4c2bd57dd4a75f56`；Import v2 document内固定`schema_set_version=2.0.0`；
+- Compatibility：set-level只添加独立rule type，属于additive；mapping profile、unit registry与canonicalization version必须显式组合进入normalization rule version，禁止按`latest`重解释历史staged rows；
+- Migration：无数据库迁移、无历史canonical package改写。旧rule version继续只读，consumer rollback必须显式选择旧版本；
+- Validation：unit registry contract、Schema/data-dictionary同步、stable ID/UTC/integer seconds、same-input replay、mapping-version mutation和负向DATA_ERROR均由TEST-CONTRACT-001/TEST-NORMALIZATION-001覆盖。
+
+`pyproject.toml`本次只改版本metadata，没有dependency或lock graph变化；`uv.lock`保持不变。规则版本变化必须发布新registry文件并回放canonical hashes，不能原地更改v1语义。

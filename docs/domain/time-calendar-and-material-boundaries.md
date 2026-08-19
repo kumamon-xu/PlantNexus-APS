@@ -55,3 +55,9 @@ operation.start >= material_ready_at
 Canonical/Import v2与Snapshot v2所有计划instant均使用RFC 3339 UTC `Z`字段，duration/lag/remaining time均为integer seconds；quantity必须同时携带非空unit。Resource calendar只承载显式unavailable intervals及其source，pure precheck要求`end > start`；它不定义班次合并、跨日或重叠处理规则。
 
 ProductionOrder必须显式携带`release_at_utc`与`material_ready_at_utc`，Snapshot OperationInstance只能逐值复制，不得猜测。Factory timezone、calendar processing、material authority和unit conversion继续受OPEN-001/004/007/013约束；contract sample值只验证shape，不是生产默认值。
+
+## TASK-P1-05 executable time/unit rules
+
+Normalization只接受second precision RFC3339及`Z`或显式numeric offset；naive、date-only、fractional-second和非法offset均为`INVALID_TIMEZONE/DATA_ERROR`。Numeric offset消除DST歧义后转UTC `Z`；原offset仍保留在Raw Staging bytes而不进入canonical instant。Calendar nested interval也执行相同转换并按stable interval ID排序，range/overlap业务判断留给Data Validation。
+
+Duration只接受integer source value与同row显式unit。Registry v1精确支持`s/min/h`，以integer numerator/denominator运算并拒绝non-integral second、negative/zero规则冲突和int64 overflow。它不是OPEN-013的Production unit policy closure；任何额外unit、alias或默认值都必须发布新版本并有权威证据。

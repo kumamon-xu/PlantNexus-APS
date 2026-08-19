@@ -95,3 +95,9 @@ Raw Staging分配6个module-local稳定control-flow code：`INVALID_STAGING_META
 `InputAdapterError`把文件入口拒绝稳定归类为`DATA_ERROR`，并携带module-local `AdapterErrorCode`、sanitized `source_location`、`expected_contract`和message。code family区分adapter ID/version、unsafe/missing path、unsupported/oversize file、UTF-8/CSV/workbook/archive、sheet/row/column/header/cell/record以及formula/macro/external-link拒绝；错误文本不包含原始cell、payload、绝对路径或parser exception。
 
 这些module-local code不加入P0的19项产品error registry，也不是HTTP schema或ImportQualityReport。单文件遇到首个结构错误即fail closed；TASK-P1-06仍负责canonical data的deterministic multi-error报告及route/resource/unit/duration exact product code。
+
+## TASK-P1-05 normalization error boundary
+
+`NormalizationError`固定`category=DATA_ERROR`，携带module-local code、sanitized source location、field、expected contract和message。它区分raw JSON/profile/version/source/data-plane/authority问题，以及`INVALID_TIMEZONE`、`MISSING_DURATION`、`UNIT_CONVERSION_ERROR`、`DUPLICATE_CANONICAL_ID`；错误文本不回显payload value或parser exception。
+
+本层首错fail closed并用于控制流，不改写既有19项产品error registry或error.v2。TASK-P1-06仍须把unit/missing-duration等结果映射到确定性ImportQualityReport并同时报告DAG/reference/capability问题；HTTP/status映射仍未实现。

@@ -11,7 +11,7 @@ last_reviewed: 2026-08-19
 
 # 合同文档索引
 
-本目录描述机器可执行 Schema 的人类语义。TASK-P0-03 发布 schema set `1.0.0` 的数据合同 skeleton；TASK-P0-04/05 以 set-level additive 方式发布 `1.1.0/1.2.0` 规则与Simulation合同；TASK-P1-02 以 breaking set release `2.0.0` 新增严格 canonical records、Import v2与Snapshot v2，并逐字保留全部旧artifact。机器文件位于 `/schemas/json`、`/schemas/rules` 与 `/schemas/scenario`，data dictionary 位于 `/schemas/data_dictionary.yaml`。Schema 与对应合同必须同 Task、同版本语义更新。
+本目录描述机器可执行 Schema 的人类语义。TASK-P0-03 发布 schema set `1.0.0` 的数据合同 skeleton；TASK-P0-04/05 以 set-level additive 方式发布 `1.1.0/1.2.0` 规则与Simulation合同；TASK-P1-02 以 breaking set release `2.0.0` 新增严格 canonical records、Import v2与Snapshot v2；TASK-P1-05再以additive `2.1.0`发布unit-conversion-registry.v1，并逐字保留既有JSON合同。机器文件位于 `/schemas/json`、`/schemas/rules` 与 `/schemas/scenario`，data dictionary 位于 `/schemas/data_dictionary.yaml`。Schema 与对应合同必须同 Task、同版本语义更新。
 
 ## 当前基线
 
@@ -41,10 +41,13 @@ last_reviewed: 2026-08-19
 - `factory-profile.v1`：固定 synthetic-only 工厂分布边界、asset version 与适用/预期拒绝 capability；
 - `scenario-spec.v1`：固定 profile/generator reference、显式 seed、复杂度矩阵与 expected behavior；
 - `scenario-manifest.v1`：固定 synthetic target、Scenario/Profile/Generator/seed/generated-at/Import package/dataset hash provenance。
+- `unit-conversion-registry.v1`：只登记`s/min/h`到`second`的精确整数因子，禁止alias、隐式default和浮点舍入。
 
-`2.0.0` 保留 `1.0.0/1.1.0/1.2.0` 全部 artifact；Import/Snapshot v1与v2 document不可互换，consumer必须显式选择版本。v2 strict objects拒绝未知字段且不声明业务默认值。`schemas/samples/` 与 `schemas/scenario/*.synthetic.json` 只包含明确标识的 Schema samples，不是正式 Scenario、Fixture、builder output或生产数据。规则/Profile/Scenario合同和P1 canonical字段均不提供生产mapping或参数默认值。
+`2.1.0` 保留 `1.0.0/1.1.0/1.2.0/2.0.0` 全部 artifact；Import/Snapshot v1与v2 document不可互换，consumer必须显式选择版本。Import v2自身固定的`schema_set_version=2.0.0`不因set-level新增规则而原地改写。v2 strict objects拒绝未知字段且不声明业务默认值。`schemas/samples/` 与 `schemas/scenario/*.synthetic.json` 只包含明确标识的 Schema samples，不是正式 Scenario、Fixture、builder output或生产数据。
 
-TASK-P1-04已形成code-level `ReferenceFileAdapter@1.0.0` transport contract：fixed CSV/XLSX shape安全转换为TASK-P1-03 Raw Staging，manifest明确`production_binding=false`。它没有新增或修改JSON Schema/data dictionary；`payload_json`保持opaque，真正canonical producer和mapping/unit/time规则仍由TASK-P1-05形成。因此下方真实`external-adapters.md`仍受OPEN-002/007/013/015阻塞，不能用Reference Adapter替代。
+TASK-P1-04已形成code-level `ReferenceFileAdapter@1.0.0` transport contract：fixed CSV/XLSX shape安全转换为TASK-P1-03 Raw Staging，manifest明确`production_binding=false`。`payload_json`在Adapter边界保持opaque，由TASK-P1-05的显式MappingProfile消费。因此下方真实`external-adapters.md`仍受OPEN-002/007/013/015阻塞，不能用Reference Adapter替代。
+
+TASK-P1-05形成标准库pure `app.normalization`：批次必须精确绑定source system/version、mapping profile/version和unit registry version；canonical ID、UTC Z、integer seconds、collection ordering、package ID/bytes/dataset hash均可重放。它只生产Import v2，不执行DAG/reference/capability Data Validation、order expansion、Snapshot/Problem或Solver。
 
 ## 等待实现事实后形成
 

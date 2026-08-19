@@ -66,3 +66,9 @@ Canonical records、Import v2与Snapshot v2均为JSON-compatible machine合同/p
 `openpyxl==3.1.5`、`defusedxml==0.7.1`和transitive `et-xmlfile==2.0.0`只用于XLSX transport parsing；lock中仍无OR-Tools。Reference Adapter输出opaque Raw Staging rows，不构建canonical Import、PlanningProblem、tick、CpModel、SolverBackend、PlanningSolution或status，且`importers`不导入`app.planning`。
 
 因此本Task不触发Solver upgrade/ADR/Golden/Scenario/Benchmark Gate。未来Backend不能直接读取CSV/XLSX或绕过Normalization/DataValidation/Snapshot/Problem builder。
+
+## TASK-P1-05 dependency boundary review
+
+Schema metadata提升到`2.1.0`但runtime dependency和`uv.lock`图不变，仍无OR-Tools。`app.normalization`输出Import v2 JSON bytes/hash，不构建PlanningProblem/tick/CpModel/IntervalVar/SolverBackend/PlanningSolution/status，并以source scan禁止`app.planning`/OR-Tools import。
+
+因此Solver upgrade/ADR/Golden/Scenario/Benchmark Gate不触发。未来Backend只能消费TASK-P1-09的solver-neutral PlanningProblem，不能直接读取Normalization result来跳过Data Validation、Expansion与Snapshot。

@@ -61,3 +61,10 @@ TASK-P0-05 已在 `simulation/profiles`、`simulation/scenarios`、`simulation/g
 - `reference_file_adapter.py`验证source root/path、读取一次bounded bytes、计算文件SHA-256并调用TASK-P1-03 assembler；它不持久化、不导入Infrastructure、Domain canonical types、Normalization、Snapshot、Problem或Solver。
 - CSV/XLSX只共享三列transport validation与opaque row serialization；XLSX通过read-only openpyxl读取，macro/formula/external relationship不执行。
 - persistence/idempotency仍由`ImportStagingRepository`承担；TASK-P1-04 integration只证明prepared batch可exact replay/conflict，不把Adapter变成repository或application orchestration。
+
+## TASK-P1-05 Normalization boundaries
+
+- `normalization/contracts.py`定义frozen profile/input/result和sanitized DATA_ERROR；`ids.py`、`time.py`、`units.py`分别拥有单一pure转换；`normalizer.py`只消费`StagedImportBatch`并生产JSON-compatible Import v2 bytes/hash。
+- Runtime unit registry通过mapping注入，不读取文件或数据库；MappingProfile必须精确绑定source/version和registry version，不访问Adapter路径、repository或环境配置。
+- 模块不导入`app.data_validation`、`app.snapshots`、`app.planning`或OR-Tools；测试以source scan固定这一边界。跨实体precheck只在测试中证明后续validator仍能拒绝missing reference，producer本身不调用。
+- Transport metadata继续由`importers`/Infrastructure拥有，Normalization不持久化、不创建migration/API/Job，也不生成Lot/OperationInstance/Snapshot/Problem。

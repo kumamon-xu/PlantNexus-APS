@@ -92,3 +92,9 @@ Schema set`2.0.0`新增strict Import/Snapshot provenance。每条canonical recor
 Reference Adapter manifest固定`adapter_id=plantnexus.reference-file`、`adapter_version=1.0.0`、`staging_contract_version=raw-staging.v1`和`production_binding=false`。Source manifest必须显式给出adapter ID/version、relative path、batch/idempotency、source system/version、UTC received-at、data plane及conditional synthetic provenance；version mismatch在读文件前拒绝。
 
 Adapter从实际bounded bytes计算content SHA-256，并把leaf name/media type/byte length与format-specific source location交给Raw Staging。相同CSV/XLSX业务行的row identity/raw payload可以相同，但文件digest/location不能被规范化成相同值。该版本链不是Import v2 normalization/canonicalization version、dataset hash或真实接口版本；这些仍需后续Task和OPEN closure evidence。
+
+## TASK-P1-05 normalization provenance
+
+Schema set additive `2.1.0`新增unit registry；Import v2 document自身仍固定`2.0.0`。Canonical `normalization_rule_version`确定性组合所有source-bound `profile_id@profile_version`与`unit-conversion-registry.v1`，source versions排序进入envelope；record source reference保留满足canonical identifier约束的显式source record ID，业务canonical ID则由namespace/authority/source value稳定哈希派生。Mapping或unit version变化必然改变bytes/hash。
+
+Package ID从不含package ID的semantic envelope SHA-256派生，dataset hash覆盖最终`canonical-json.v1` bytes。Batch ID、idempotency key、received-at、file digest/name/media/location属于Raw Staging审计事实且不进入canonical hash，因此等价CSV/XLSX或重放批次可产生相同bytes。Simulation provenance必须完全一致并进入hash；Production禁止该字段。

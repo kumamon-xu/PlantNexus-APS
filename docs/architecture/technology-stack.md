@@ -106,3 +106,9 @@ Raw Staging复用已锁定的`sqlalchemy==2.0.43`与`alembic==1.16.5`，未修�
 首次精确锁定`openpyxl==3.1.5`用于read-only XLSX解析，并锁定`defusedxml==0.7.1`使openpyxl XML路径启用防御解析；`et-xmlfile==2.0.0`为lock解析出的transitive dependency。CSV继续只使用Python 3.12标准库，所有direct pins仍为exact并由`uv sync --locked`与contract test验证。
 
 本Task没有引入Polars、OR-Tools、types stub、API/Worker或malware scanner；Schema/code版本metadata保持不变。新增dependency只服务bounded ReferenceFileAdapter，不能外推为Production supply-chain/security认证，也不触发Solver upgrade ADR或Benchmark replay。
+
+## TASK-P1-05 normalization runtime
+
+Normalization runtime只使用Python 3.12标准库`dataclasses/enum/json/hashlib/datetime/decimal`；YAML只由既有dev/test `PyYAML==6.0.2`加载后注入`UnitConversionRegistry.from_mapping`，production module不依赖PyYAML/jsonschema。`pyproject.toml`只把schema metadata改为`2.1.0`，未改变dependency list，故`uv.lock`保持不变并由`uv sync --locked`验证。
+
+没有引入Polars、Pydantic model、ORM/API/Worker、OR-Tools或Benchmark runner。Canonical JSON和integer conversion不使用第三方数值库或float duration rounding；quantity小数只有在JSON文本可无损往返时才接受。

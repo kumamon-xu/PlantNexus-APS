@@ -1,0 +1,25 @@
+unit_conversion_registry_version: unit-conversion-registry.v1
+schema_set_version: 2.1.0
+status: active
+compatibility: additive
+integer_arithmetic_only: true
+implicit_defaults: forbidden
+rules:
+  - rule_id: DURATION-SECOND-TO-SECOND
+    dimension: duration
+    source_unit: s
+    target_unit: second
+    factor_numerator: 1
+    factor_denominator: 1
+  - rule_id: DURATION-MINUTE-TO-SECOND
+    dimension: duration
+    source_unit: min
+    target_unit: second
+    factor_numerator: 60
+    factor_denominator: 1
+  - rule_id: DURATION-HOUR-TO-SECOND
+    dimension: duration
+    source_unit: h
+    target_unit: second
+    factor_numerator: 3600
+    factor_denominator: 1

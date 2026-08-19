@@ -82,3 +82,9 @@ Solver 排的是 `OperationInstance`，不是 `RoutingOperation`。每个未完�
 `canonical-records.v1`现在机器化固定Factory→Resource、Product→Routing、DemandOrder→ProductionOrder→explicit ProductionLot、execution facts与operation locks；所有引用使用稳定canonical ID，每条记录保留source system/version/record ID。`backend/app/domain/canonical_records.py`提供对应JSON-compatible `TypedDict`和pure semantic precheck，检查ID唯一、引用lineage、explicit unit、UTC、duration/lag/interval及synthetic provenance。
 
 Snapshot v2额外固定derived OperationInstance/precedence edge与candidate级duration/source copy shape，但order expansion行为仍由TASK-P1-07实现，Snapshot builder/hash/persistence仍由TASK-P1-08实现。当前代码不检查Routing DAG或capability可用性、不生成lot/instance、不补duration、不导入ORM/API/Solver；这些边界不能因types存在而改写为已实现。
+
+## TASK-P1-05 normalization boundary
+
+`app.normalization`把Raw Staging transport row按显式MappingProfile转换为16个canonical collection中的记录，自动注入稳定source reference并生成Import v2 bytes/hash。Profile字段集由canonical-records.v1 required/optional properties的contract test逐项对齐；必填字段不能标为optional，`source`不能由payload伪造。
+
+该层只负责字段值规范化和deterministic serialization。它不验证跨记录引用是否存在、不判断Routing DAG/capability、execution state组合或calendar range，不生成Lot/OperationInstance，也不构建Snapshot/Problem。上述语义仍分别属于TASK-P1-06/07/08/09。

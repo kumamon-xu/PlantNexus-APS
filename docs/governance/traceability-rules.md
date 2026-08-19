@@ -105,3 +105,7 @@ TASK-P1-03将REQ-001/009、NFR-TRC/REL/ISO/SEC与ENG-ARCH/ERR/VER链接到Raw St
 Reference file evidence链必须区分：adapter ID/version/capability与真实系统binding；fixed transport header与业务field mapping；format-neutral raw payload/row identity与format-specific file digest/media/location；CSV UTF-8/dialect和XLSX read-only/archive/active-content controls；prepared batch与durable repository replay；temporary synthetic files与真实客户数据。单文件首错DATA_ERROR、2-row parity或lock PASS不能替代Normalization/DataValidation、malware/auth review、Production interface authority或common-ingress Gate。
 
 TASK-P1-04将REQ-001/009、NFR-TRC/SEC/REL与ENG-ARCH/ERR/VER链接到`ReferenceFileAdapter@1.0.0`、exact dependency lock、TEST-IMPORT-ADAPTER-001 contract/integration evidence及TASK-P1-03 repository。OPEN-002/013/015、Schema set和产品error registry均不改变；canonical producer与后续pipeline继续`PLANNED`。
+
+Normalization evidence链必须区分：global schema set版本与immutable Import document字段；mapping profile版本与source system/version；unit registry合同与Production unit policy；Raw transport provenance与canonical hash projection；field normalization与跨实体Data Validation。Same-input bytes/hash、unit/time/ID正反测试不能替代DAG/reference/capability quality report、Snapshot/Problem replay或common-ingress Gate。
+
+TASK-P1-05将REQ-002/003/009、NFR-DET/TRC与ENG-ERR/VER链接到`app.normalization`、`unit-conversion-registry.v1`、TEST-NORMALIZATION-001及扩展TEST-CONTRACT-001。`2.1.0`是additive set version，Import v2 document仍固定`2.0.0`且既有Schema hash保留；OPEN-001/002/013/015、产品error registry和后续Data Validation边界均不改变。

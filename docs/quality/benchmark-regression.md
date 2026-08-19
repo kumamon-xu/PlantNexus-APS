@@ -54,3 +54,9 @@ CI workflow 保留 `PLANTNEXUS_BENCHMARK_PROFILE=pr` 的条件 hook：只有未�
 本Task新增openpyxl/defusedxml dependency和bounded file parsing，但没有PlanningProblem、Solver、constraint/preprocessing model、BenchmarkRunner/profile或baseline。2-row temporary CSV/XLSX仅用于contract/integration回归，测试耗时不设门槛且不表示吞吐、内存、factory size或Production capacity；不生成BenchmarkReport。
 
 OR-Tools仍不存在，Solver replay Gate不触发。后续如文件解析成为可观测pipeline阶段，可记录明确环境与rows/bytes/sec诊断，但生产阈值仍由OPEN-012/P7授权。
+
+## TASK-P1-05 review
+
+本Task新增pure Normalization与canonical serialization，但不修改PlanningProblem、constraint、Solver、model-size preprocessing、BenchmarkRunner/profile或baseline；OR-Tools仍不存在。定向测试的小批次records/sec只可作为非门禁诊断，本Task不记录吞吐/内存/Production capacity或零值BenchmarkReport。
+
+Mapping/unit rule version已进入Import hash，未来TASK-P1-09/P2 benchmark必须记录该version与dataset/problem hashes。Production阈值仍由OPEN-012/P7授权，本次不触发Solver replay Gate。

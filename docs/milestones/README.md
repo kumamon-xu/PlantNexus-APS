@@ -28,4 +28,4 @@ Milestone 定义 outcome 和 exit gate，不等同 Sprint。只有当前 Phase �
 
 P0 当前状态：TASK-P0-01～10 全部完成；[superseding audit](P0-exit-gate-audit-report.md) 的 Schema、Golden、Validator Rule Sheet、Scenario replay、Repository Build、CI 和 PROD_OPEN registration全部 `PASS`，P0 Gate=`READY`。用户于 2026-08-19 明确批准 phase transition后，P0转为 `completed`，历史失败/修复/provider evidence继续保留。
 
-P1当前状态：[`P1 — Data & Snapshot`](P1-data-and-snapshot.md)为`active`，已创建TASK-P1-01～12；TASK-P1-01～04=`done`、TASK-P1-05～12=`planned`，当前无`in_progress` Task，最后一项是P1 Exit Gate Audit。P1-02 schema set`2.0.0`合同、P1-03 Raw Staging与P1-04 non-production ReferenceFileAdapter均通过本地验收、commit和provider CI；下一项P1-05尚未启动，不涉及P2。
+P1当前状态：[`P1 — Data & Snapshot`](P1-data-and-snapshot.md)为`active`，已创建TASK-P1-01～12；TASK-P1-01～04=`done`、TASK-P1-05=`in_progress`、TASK-P1-06～12=`planned`，最后一项是P1 Exit Gate Audit。P1-05的不可变Diff base为`d63926f84d9d2b7bc46bbcaff5704612af120a34`，schema set已加法更新到`2.1.0`并形成Normalization本地实现/定向测试，尚待完整验收与provider闭环；不涉及P2。

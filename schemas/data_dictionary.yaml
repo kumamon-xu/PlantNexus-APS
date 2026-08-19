@@ -1,5 +1,5 @@
-schema_set_version: 2.0.0
-status: p1_canonical_contracts
+schema_set_version: 2.1.0
+status: p1_normalization_rules
 spec_version: 0.3.0
 rules:
   unknown_root_fields: reject
@@ -8,6 +8,9 @@ rules:
   durations: integer_seconds
   solver_ticks: ceil_duration_seconds_over_tick_seconds
   canonical_ids: non_empty_whitespace_free_strings
+  normalization_mapping: exact_profile_and_source_version_required
+  unit_conversion_registry: schemas/rules/unit-conversion-registry.v1.yaml
+  schema_set_compatibility: additive_2_1_preserves_import_v2_document_version
 schemas:
   canonical-records.v1:
     path: schemas/json/canonical-records.v1.schema.json
@@ -42,7 +45,7 @@ schemas:
     required_versions: [schema_set_version, source_versions, normalization_rule_version, canonicalization_version]
     synthetic_provenance: required only when synthetic is true
     compatibility: not interchangeable with import-package.v1; v1 remains byte-for-byte preserved
-    p1_boundary: envelope and record contract only; Adapter and common ingress pipeline remain planned
+    p1_boundary: Normalization produces deterministic bytes; cross-entity validation and common-ingress orchestration remain planned
     production_open: [OPEN-002, OPEN-013, OPEN-015]
   planning-snapshot.v1:
     path: schemas/json/planning-snapshot.schema.json
@@ -118,6 +121,14 @@ schemas:
     active_constraints: C-001..C-011
     deferred_constraints: C-012..C-018
     p0_boundary: metadata completeness only; candidate schedule evaluation belongs to TASK-P0-07/P2
+  unit-conversion-registry.v1:
+    path: schemas/rules/unit-conversion-registry.v1.yaml
+    dimension: duration
+    exact_source_units: [s, min, h]
+    canonical_target_unit: second
+    arithmetic: positive integer numerator and denominator; non-integral seconds reject
+    compatibility: additive in schema set 2.1.0; Import v2 document retains schema_set_version 2.0.0
+    production_open: [OPEN-013]
   capability-registry.v1:
     path: schemas/rules/capability-registry.v1.yaml
     p0_boundary: V1_SUPPORTED means contract scope, not current implementation evidence

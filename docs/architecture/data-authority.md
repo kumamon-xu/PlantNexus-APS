@@ -55,3 +55,9 @@ Compose 的 database name、user、network endpoint 和 non-production placehold
 `canonical-records.v1`固定APS内部语义、稳定引用、单位/UTC/duration形状与record-level source provenance；`import-package.v2`要求envelope source versions与record source/version一致。它不声明任何ERP/MES/WMS/CAM列名、系统优先级、冲突解决、单位换算、timezone、lot split、duration fallback或生产日历规则。
 
 Pure precheck只拒绝不一致的ID/reference/unit/time/duration/provenance，不能把“Schema接受”解释为字段权威或DataValidation PASS。OPEN-001/002/003/004/007/008/009/013/014/015均保持OPEN；synthetic sample值不能用于关闭任何条目。
+
+## TASK-P1-03 staging authority boundary
+
+Raw Staging新增的source system/version、content/row digest、row identity/location、received-at、media type与source name只构成接收和审计事实，不决定Order/Execution/Inventory/CAM/Planning字段权威，也不解决来源冲突。repository保存opaque bytes且没有canonical/Snapshot/Problem转换方法；同idempotency scope下的source/version/content差异被拒绝，不能以最后写入覆盖。
+
+`raw_import_*`列是internal persistence schema，不是ERP/MES/WMS/CAM接口或field mapping。SQLite synthetic测试和migration sample不提供OPEN-002/015的权威来源，两个条目继续OPEN；后续Adapter/Normalization必须在本边界之后显式解释来源而不能从staging列名推断生产字段。

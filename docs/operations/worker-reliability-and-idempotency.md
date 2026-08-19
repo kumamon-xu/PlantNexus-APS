@@ -32,3 +32,11 @@ Local Compose 提供 API/Worker 分进程启动与 Redis/PostgreSQL health depen
 [`test_job_reliability.py`](../../backend/tests/integration/test_job_reliability.py) 覆盖 owner、expiry、heartbeat、STALLED/retry、attempt、terminal transition、UTC 与并发 idempotency；[`test_migrations_and_infrastructure.py`](../../backend/tests/integration/test_migrations_and_infrastructure.py) 覆盖 migration/lazy clients/Celery/no business task。
 
 真实 durable repository、row/advisory lock、lease scanner、retry/backoff/dead-letter、worker shutdown/cancel、PostgreSQL/Redis outage/partition、Export manifest/storage commit、double publish/event prevention 和 audit trail 全部 `PLANNED`。NFR-REL-001/TEST-IDEMPOTENCY 只形成 P0 primitive slice。
+
+## TASK-P1-03 durable Import staging slice
+
+Raw Staging新增首个business-specific durable idempotency repository。唯一scope为`data_plane + source_system + idempotency_key`；stored request fingerprint覆盖source/version、content digest、安全metadata、synthetic provenance和ordered row digests。完全一致的retry返回首次batch/received-at并标记`replayed=true`，fingerprint变化返回`IDEMPOTENCY_CONFLICT`，不会覆盖旧行。
+
+batch metadata与全部opaque rows在一个SQLAlchemy transaction插入；integration trigger在第二行故障时证明batch/rows均rollback且原driver detail不泄漏。repository无update/delete，duplicate row identity由immutable contract和DB key双层拒绝；plane-scoped query不暴露另一data plane记录。
+
+该slice没有创建ImportJob/Celery task、lease/heartbeat/scanner、distributed side-effect exactly-once或真实PostgreSQL concurrency/outage测试。P0通用`engineering_idempotency_records`保持独立，未被Raw Staging复用或改写；未来Worker编排必须调用本repository而不能把Job success等同于canonical Import成功。

@@ -27,7 +27,7 @@ ReferenceFileAdapter是 P1正式、可测试的参考 Adapter，但在 OPEN-002/
 |---:|---|---|---|---|
 | 1 | TASK-P1-01 | Phase-aware governance与可持续 CI handoff | TASK-P0-10 | `done` |
 | 2 | TASK-P1-02 | Canonical records、Import v2、Snapshot v2合同 | P1-01 | `done` |
-| 3 | TASK-P1-03 | Raw Staging、provenance、idempotent persistence | P1-02 | `planned` |
+| 3 | TASK-P1-03 | Raw Staging、provenance、idempotent persistence | P1-02 | `in_progress` |
 | 4 | TASK-P1-04 | CSV、XLSX与ReferenceFileAdapter v1 | P1-02/03 | `planned` |
 | 5 | TASK-P1-05 | ID/time/unit Normalization与canonical Import bytes | P1-02/03/04 | `planned` |
 | 6 | TASK-P1-06 | DAG/reference/capability Data Validation与四类 exact rejection | P1-05 | `planned` |
@@ -82,6 +82,6 @@ Gate证据还必须覆盖 CSV/XLSX/Reference Adapter、Raw Staging provenance、
 - OPEN-001～015可继续 OPEN；未关闭问题不阻止 Development/Simulation，但阻止依赖它们的 Production声明。
 - P1 Exit Gate Audit是最后一项。即使 audit `READY`，仍需用户另行批准才可更新到 P2；本 Milestone不自动创建 P2 Task。
 
-## TASK-P1-02 completion boundary
+## Current execution boundary
 
-Canonical-records.v1、Import v2与Snapshot v2的strict Schema/data dictionary/pure type/precheck已以schema set`2.0.0`发布，Import/Snapshot v1由byte fingerprint保护；implementation commit`64c40b5c21ab0be8955e55edc007e04337cac417`的GitHub run`32241366290`为success。该完成状态只覆盖合同deliverable；Adapter/staging/Normalization/DataValidation/Expansion/Snapshot/Problem hash仍必须按上表依赖逐项实现和验收，TASK-P1-03尚未启动。
+Canonical-records.v1、Import v2与Snapshot v2的strict Schema/data dictionary/pure type/precheck已以schema set`2.0.0`发布，Import/Snapshot v1由byte fingerprint保护；implementation commit`64c40b5c21ab0be8955e55edc007e04337cac417`的GitHub run`32241366290`为success。TASK-P1-03现以`d122a1b16dc1b7c91227d587b99fb8a345c7c312`为Diff base实施Raw Staging；该执行不得提前形成Adapter、Normalization、DataValidation、Expansion、Snapshot/Problem hash或Solver。

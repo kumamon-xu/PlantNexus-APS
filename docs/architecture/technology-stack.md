@@ -94,3 +94,9 @@ Actions provider PASS 只证明锁定的 P0 repository gates 在 GitHub-hosted r
 Runtime/dev dependency pins与`uv.lock`图保持不变。新合同继续使用JSON Schema Draft 2020-12、既有`jsonschema==4.25.1`及其`referencing` registry解析跨URN `$ref`；pure types/prechecks只使用Python 3.12标准库和既有domain helpers。`pyproject.toml`仅把schema set metadata从`1.2.0`提升为breaking `2.0.0`，没有dependency resolution变化。
 
 未引入openpyxl/Polars/Pydantic model、DB/Worker、OR-Tools、Hypothesis或Benchmark runner；没有Solver upgrade、migration或性能结论。未来Adapter/Property/Solver首次引入依赖时仍须由各自Task更新lock并执行对应Gate。
+
+## TASK-P1-03 persistence tooling review
+
+Raw Staging复用已锁定的`sqlalchemy==2.0.43`与`alembic==1.16.5`，未修改`pyproject.toml`或`uv.lock`，也未引入ORM model、Adapter parser、openpyxl/Polars、OR-Tools或新test dependency。repository使用SQLAlchemy Core parameter binding，migration revision为`0002_raw_import_staging`。
+
+本地integration以SQLite实际执行empty/populated upgrade/downgrade、insert/replay/rollback/isolation；该dialect只用于可复验开发证据，不等于PostgreSQL并发、权限、性能或Production migration认证。小型synthetic row计数/耗时只作回归观察，不设阈值、不运行Solver Benchmark。

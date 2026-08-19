@@ -161,6 +161,12 @@ CI discovery失败返回`PHASE-TASK`/非零，不生成skip PASS。成功报告�
 
 Schema set major release必须在Task Completion evidence记录compatibility、migration none理由、retained artifacts、pure/runtime边界与所有必审文档review；生成的`build/traceability/TASK-P1-02-report.json`继续忽略不提交。治理PASS只证明scope/trace/document一致，不证明Adapter、pipeline、Snapshot hash或P1 Exit Gate。
 
+## TASK-P1-03 persistence governance review
+
+本Task沿用full repository与`Diff base..HEAD + working tree`检查，report路径为`build/traceability/TASK-P1-03-report.json`。实际计划路径由`IMPACT-IMPORT/INFRA/TESTS/PHASE/GOVERNANCE-REGISTRY/DOCS`覆盖；Task声明的22份文档必须逐项实际更新，migration/internal table不能伪装成Business Schema或外部Contract。
+
+治理检查只验证scope、dependency、changed paths、文档/追踪和impact rows，不执行SQL transaction或判断idempotency correctness。`TEST-IMPORT-STAGING-001`与实际Alembic empty/populated round trip补充该语义；最终提交前后report必须记录完整Diff base、committed/working-tree source counts和0 issues。生成report继续位于ignored `build/`且不提交。
+
 ## Override
 
 不允许用自由文本 CI skip 绕过。确需例外时必须在 Task Card 记录理由，提交 ADR 或明确批准记录，并仍保留检查报告。正确性、状态语义、数据隔离和发布门不得豁免。

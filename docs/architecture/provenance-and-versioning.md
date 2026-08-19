@@ -80,3 +80,9 @@ structured logs 可通过 contextvars 携带 `correlation_id`、可选 `run_id`/
 Schema set`2.0.0`新增strict Import/Snapshot provenance。每条canonical record携带source system/version/record ID；Import v2携带source versions、normalization rule version和canonicalization version；Snapshot v2还携带rule/expansion version、Import package ID/version/dataset hash与quality report ID/version/PASS状态。Synthetic文档必须携带scenario/profile/generator各自版本和seed，Production文档禁止该引用。
 
 这些字段只建立可追溯输入合同。Sample中的digest是符合格式的contract sentinel，不是builder计算结果；dataset hash、Snapshot canonical projection/ID/hash、code commit、persistence与发布manifest仍由后续Task形成。Import/Snapshot v1逐字保留，v1/v2不互换；Schema set、document、normalization、expansion、canonicalization、Scenario/Profile/Generator和code commit继续是独立版本维度。
+
+## TASK-P1-03 staging provenance
+
+`0002_raw_import_staging`持久保存source system/version、content SHA-256、row SHA-256/identity/location、source leaf name/media type/byte length、UTC received-at、data plane和完整synthetic Scenario/Profile/Generator/seed。持久化request fingerprint使用`canonical JSON + SHA-256`覆盖这些稳定字段与行顺序；candidate batch ID/received-at不参与，使相同idempotency request返回首次batch而不伪造新接收事实。source/version/content/row变化则显式conflict。
+
+该fingerprint是Raw Staging幂等身份，不是Standard Import `dataset_hash`、Snapshot hash或Problem hash，也不替代Adapter/normalization/canonicalization/generator version。Migration revision和repository test形成internal persistence provenance；code commit/provider run只在Task完成证据中记录。当前没有成果包、run audit或Production source authority。

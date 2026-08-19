@@ -67,3 +67,11 @@ TASK-P0-06 把 `SIM-MINIMAL-001@1.0.0` 的 10 个 non-empty collection、15 个 
 Schema set `2.0.0` 新增 [`canonical-records.v1`](../../schemas/json/canonical-records.v1.schema.json) 与 [`import-package.v2`](../../schemas/json/import-package.v2.schema.json)。Canonical records固定16个collection、稳定ID/reference、显式quantity unit、UTC instant、integer-second duration与每条记录的`source_system/source_version/source_record_id`；Import v2还要求schema/source/normalization/canonicalization version。未知字段、缺失unit/duration/source/version、非法UTC和Production携带synthetic provenance均拒绝，不补默认值。
 
 这是set-level major release：`import-package.v1`保持逐字不变，v1/v2不可互换，consumer必须显式选择。v2字段是authority-neutral APS语义，不声明ERP/MES/WMS/CAM列映射，不关闭OPEN-002/013/015；`backend/app/domain/canonical_records.py`只做ID、reference、unit、time、duration和provenance的pure semantic precheck，不实现Raw Staging、Normalization、Data Validation或Adapter。Synthetic sample只用于Schema/round-trip测试，不是正式Scenario、生产事实或common-ingress PASS。
+
+## TASK-P1-03 Raw Staging contract
+
+Raw Staging现以immutable `StagedImportBatch`/`RawImportRow`保存batch ID、data plane、source system/version、content SHA-256、leaf source name、media type、byte length、UTC received-at、row identity/location、opaque bytes与逐行SHA-256。Simulation批次必须完整携带Scenario/Profile/Generator各自版本和seed；Production批次禁止这些synthetic字段。该层不读取CSV/XLSX、不解析JSON、不映射字段、不转换单位/时间，也不调用canonical precheck。
+
+持久化幂等scope为`data_plane + source_system + idempotency_key`。request fingerprint覆盖source/version、content digest、安全metadata、synthetic provenance与按序row digest/location，但排除candidate batch ID和received-at；exact replay返回首次持久化的batch，任何fingerprint差异明确返回`IDEMPOTENCY_CONFLICT`。batch与全部rows在同一SQLAlchemy transaction写入，repository只有`stage/get`，没有update/delete/Snapshot/Problem转换入口。
+
+`0002_raw_import_staging`是internal persistence migration，不改变Standard Import v2或外部字段权威。当前reference evidence使用SQLite验证空库、含1个synthetic batch的destructive downgrade/re-upgrade、transaction rollback与data-plane query guard；真实Adapter、文件安全解析、Normalization/DataValidation和独立Production/Simulation数据库部署仍由后续Task/平台证据形成。

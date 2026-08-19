@@ -53,3 +53,5 @@ P1 Task 规划 review：TASK-P1-10 只规划把既有 Generator 输出接入 can
 TASK-P1-01 review：只重放既有Simulation/Golden/Mutation gates并重命名CI输出，不修改Profile、Scenario、Generator、seed、Fixture或定量值。SIM-ASSUMPTION-001～009全部保持`ACTIVE`，不用于生产结论，registry format version不变。
 
 TASK-P1-02 review：两份v2 `.synthetic.json`使用`SCHEMA-SAMPLE-P1-02`、固定seed和小型shape值，只验证Schema/reference/round-trip，不是正式Scenario/Profile/Generator distribution、Fixture或Benchmark。没有新增/修改/retire假设；SIM-ASSUMPTION-001～009全部保持`ACTIVE`，sample数值不得成为生产默认值或OPEN closure evidence，registry format version不变。
+
+TASK-P1-03 review：unit/integration与migration只使用显式synthetic inline bytes、版本、seed和1～2行小批次验证staging/replay/rollback/isolation；这些是test-local values，不是新FactoryProfile/Scenario、分布、容量或Benchmark baseline。没有新增/修改/retire假设；SIM-ASSUMPTION-001～009全部保持`ACTIVE`，不用于Production default或OPEN closure，registry format version保持`1.0.0`。

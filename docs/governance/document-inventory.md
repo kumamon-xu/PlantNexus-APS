@@ -12,7 +12,7 @@ registry_version: 1.0.0
 
 # 文档清单
 
-本清单列出当前仓库已经实际存在的 Markdown 文档。P0退出门已通过并归档为completed；P1已获授权并形成12张Task Card，TASK-P1-01/02已完成，TASK-P1-03～12仍为`planned`。产品API与Production Runbook正文尚未形成并继续由相应索引登记。
+本清单列出当前仓库已经实际存在的 Markdown 文档。P0退出门已通过并归档为completed；P1已获授权并形成12张Task Card，TASK-P1-01/02已完成，TASK-P1-03为`in_progress`，TASK-P1-04～12仍为`planned`。产品API与Production Runbook正文尚未形成并继续由相应索引登记。
 
 | Path | Doc ID | Status | Title |
 |---|---|---|---|
@@ -128,7 +128,7 @@ registry_version: 1.0.0
 | [tasks/P0/TASK-P0-10-ci-provider-evidence-remediation.md](../tasks/P0/TASK-P0-10-ci-provider-evidence-remediation.md) | TASK-P0-10 | done | CI Workflow Handoff and Provider Evidence Remediation |
 | [tasks/P1/TASK-P1-01-phase-governance-and-ci-handoff.md](../tasks/P1/TASK-P1-01-phase-governance-and-ci-handoff.md) | TASK-P1-01 | done | P1 Phase Governance and CI Handoff |
 | [tasks/P1/TASK-P1-02-canonical-import-contracts.md](../tasks/P1/TASK-P1-02-canonical-import-contracts.md) | TASK-P1-02 | done | Canonical Import Contracts |
-| [tasks/P1/TASK-P1-03-raw-staging-and-import-provenance.md](../tasks/P1/TASK-P1-03-raw-staging-and-import-provenance.md) | TASK-P1-03 | planned | Raw Staging and Import Provenance |
+| [tasks/P1/TASK-P1-03-raw-staging-and-import-provenance.md](../tasks/P1/TASK-P1-03-raw-staging-and-import-provenance.md) | TASK-P1-03 | in_progress | Raw Staging and Import Provenance |
 | [tasks/P1/TASK-P1-04-csv-excel-reference-adapter.md](../tasks/P1/TASK-P1-04-csv-excel-reference-adapter.md) | TASK-P1-04 | planned | CSV Excel and Formal Reference Adapter |
 | [tasks/P1/TASK-P1-05-normalization-and-unit-time-rules.md](../tasks/P1/TASK-P1-05-normalization-and-unit-time-rules.md) | TASK-P1-05 | planned | Normalization and Unit Time Rules |
 | [tasks/P1/TASK-P1-06-data-quality-and-routing-validation.md](../tasks/P1/TASK-P1-06-data-quality-and-routing-validation.md) | TASK-P1-06 | planned | Data Quality and Routing Validation |
@@ -147,4 +147,4 @@ registry_version: 1.0.0
 
 文档存在不代表对应代码、Schema、Test 或 Artifact 已经实现。
 
-TASK-P1-02没有新增Markdown路径，因此清单行数仍为124；本次同步只更新P1执行事实和现有文档内容。新增JSON Schema/sample/Python文件由data dictionary、Schema index与Task evidence追踪，不伪装成文档清单条目。下一项TASK-P1-03尚未启动。
+TASK-P1-02没有新增Markdown路径，因此清单行数仍为124；TASK-P1-03也不新增Markdown路径，当前仅把其启动状态同步为`in_progress`。后续新增Python/migration/test文件由Task evidence与追踪矩阵记录，不伪装成文档清单条目。

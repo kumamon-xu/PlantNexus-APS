@@ -36,7 +36,7 @@ P0 superseding audit=`READY`，用户于 2026-08-19 明确批准进入 P1；历�
 |---|---|---|---|
 | [TASK-P1-01](P1/TASK-P1-01-phase-governance-and-ci-handoff.md) | Phase-aware governance 与 CI handoff | P0-10 | `done` |
 | [TASK-P1-02](P1/TASK-P1-02-canonical-import-contracts.md) | Canonical records、Import v2、Snapshot v2合同 | P1-01 | `done` |
-| [TASK-P1-03](P1/TASK-P1-03-raw-staging-and-import-provenance.md) | Raw Staging、provenance、idempotent persistence | P1-02 | `planned` |
+| [TASK-P1-03](P1/TASK-P1-03-raw-staging-and-import-provenance.md) | Raw Staging、provenance、idempotent persistence | P1-02 | `in_progress` |
 | [TASK-P1-04](P1/TASK-P1-04-csv-excel-reference-adapter.md) | CSV、Excel与ReferenceFileAdapter v1 | P1-02/03 | `planned` |
 | [TASK-P1-05](P1/TASK-P1-05-normalization-and-unit-time-rules.md) | Deterministic ID/time/unit Normalization | P1-02/03/04 | `planned` |
 | [TASK-P1-06](P1/TASK-P1-06-data-quality-and-routing-validation.md) | DAG/reference/capability Data Validation | P1-05 | `planned` |
@@ -55,6 +55,6 @@ Task进入 `in_progress` 时必须先把当时完整 40字符 HEAD SHA写入 `Di
 
 每张 Task Card在开始前完成文档影响分析：`Documentation impact`、明确 `Documents to update`、理由、`IMPACT-*` Rule IDs与`Traceability updates`。`Documents to update`必须包含在允许范围；发现额外文件先停止并修订卡片。
 
-当前没有`in_progress` Task。TASK-P1-02已以Diff base`ac1ca00d0ecf770c24e4fe4ab1683fb32728d6ce`、implementation commit`64c40b5c21ab0be8955e55edc007e04337cac417`和GitHub run`32241366290`完成；下一项TASK-P1-03保持`planned`。完成一个Task不会自动启动下一个；P1-12即使审计`READY`也不自动进入P2。
+TASK-P1-03是当前唯一`in_progress` Task，Diff base为`d122a1b16dc1b7c91227d587b99fb8a345c7c312`；TASK-P1-02已以implementation commit`64c40b5c21ab0be8955e55edc007e04337cac417`和GitHub run`32241366290`完成。P1-04～12保持`planned`；完成一个Task不会自动启动下一个，P1-12即使审计`READY`也不自动进入P2。
 
 用户授权完成后直接push`main`与provider核验适用于后续每个已验收Task，但不改变各卡允许范围、依赖或启动状态。

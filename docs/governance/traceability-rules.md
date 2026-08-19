@@ -97,3 +97,7 @@ TASK-P1-01增加 CI changed-task discovery：`--discover-task-from <event-base-s
 结构化报告 schema 为 `traceability-report.v1`，至少包含 Task、可选 `task_discovery_base`、Git HEAD、Diff base、committed-range/working-tree source counts、changed paths、matched impact rows、expected/observed documents、missing trace refs、registry counts 和失败明细。失败返回非零退出码，不允许自由文本 skip。
 
 TASK-P1-02将REQ-001/002/003/009、NFR-DET/TRC与ENG-SOL/ERR/VER链接到canonical-records.v1、Import v2、Snapshot v2、data dictionary、pure types/prechecks及TEST-CONTRACT-001。当前artifact state只标记contract formed；Adapter/staging/Normalization/DataValidation/Expansion/Snapshot/Problem builder/hash与P1 Gate继续`PLANNED`。
+
+Raw Staging evidence链必须区分：opaque immutable batch/row contract、source/version/content与row digest/location/UTC provenance、data-plane/synthetic conditional、idempotency scope/fingerprint、exact replay/conflict、atomic transaction rollback、internal migration empty/populated round trip、raw-not-canonical dependency scan，以及真实Adapter/Normalization/DataValidation/independent Production database仍`PLANNED`。SQLite测试不得写成PostgreSQL concurrency、Production security或common-ingress PASS。
+
+TASK-P1-03将REQ-001/009、NFR-TRC/REL/ISO/SEC与ENG-ARCH/ERR/VER链接到Raw Staging contracts/repository、`0002_raw_import_staging`、TEST-IMPORT-STAGING-001和TEST-IDEMPOTENCY durable Import slice。它不改变Schema set、产品error registry或外部field authority；后续链路继续`PLANNED`。

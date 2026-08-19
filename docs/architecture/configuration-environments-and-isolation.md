@@ -62,3 +62,9 @@ Actions run/artifact 允许通过公开 GitHub REST 读取；branch-protection �
 workflow新增 `PLANTNEXUS_CI_CHANGE_BASE`，PR取 base SHA、main push取 event `before` SHA；该值是 Git commit provenance，不是 Secret、runtime environment、data plane或业务配置。它只用于发现唯一 current-phase Task Card，真正 scope仍由 Task Card内的 immutable `Diff base`决定。
 
 CI report/artifact改为 `ci-*.json`、`ci-current-task-report.json`与 `plantnexus-ci-evidence-<run-id>`中性命名，不改变 environment/Database/Redis/Simulation/Production guard。workflow继续 `contents: read`，没有新增 Secret、权限、deployment或 Production connectivity；本地合同 PASS不构成 provider run evidence。
+
+## TASK-P1-03 Raw Staging isolation slice
+
+每个SQLAlchemy staging repository实例在构造时固定为`production`或`simulation`，所有write/read predicate都携带该plane；batch contract与数据库CHECK同时要求Production无synthetic provenance、Simulation完整携带Scenario/Profile/Generator/seed。复合batch/row identity及idempotency unique scope包含data plane，因此相同业务ID不能通过另一plane repository读取或被另一plane replay覆盖。
+
+integration test可在同一临时SQLite中同时创建两种repository以证明应用/表级guard，但这只是negative isolation evidence，不满足ADR-0009要求的独立Production/Simulation Database、roles、network policy、backup或monitoring。真实部署仍必须为不同data plane注入不同database endpoint；本Task没有修改`Settings`、Compose、Secret或Production connectivity。

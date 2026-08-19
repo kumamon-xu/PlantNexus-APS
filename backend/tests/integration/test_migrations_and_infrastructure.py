@@ -3,6 +3,8 @@
 from __future__ import annotations
 
 import json
+from datetime import UTC, datetime
+from hashlib import sha256
 from pathlib import Path
 
 from alembic import command
@@ -14,7 +16,16 @@ from sqlalchemy import create_engine, inspect
 from app.infrastructure.config import RuntimeEnvironment, Settings
 from app.infrastructure.contract_check import main as engineering_check_main
 from app.infrastructure.database import create_database_client
+from app.infrastructure.import_staging_repository import (
+    SqlAlchemyImportStagingRepository,
+)
 from app.infrastructure.redis_client import create_redis_client
+from app.importers import (
+    RawImportRow,
+    StagedImportBatch,
+    StagingDataPlane,
+    SyntheticImportProvenance,
+)
 from app.jobs.celery_app import create_celery_app
 
 ROOT = Path(__file__).resolve().parents[3]
@@ -43,12 +54,26 @@ def test_empty_database_migration_upgrades_and_downgrades(tmp_path: Path) -> Non
             "alembic_version",
             "engineering_idempotency_records",
             "engineering_job_records",
+            "raw_import_batches",
+            "raw_import_rows",
         } <= tables
         unique_constraints = inspect(engine).get_unique_constraints(
             "engineering_idempotency_records"
         )
         assert {constraint["name"] for constraint in unique_constraints} == {
             "uq_engineering_idempotency_scope_key"
+        }
+        raw_batch_unique_constraints = inspect(engine).get_unique_constraints(
+            "raw_import_batches"
+        )
+        assert {
+            constraint["name"] for constraint in raw_batch_unique_constraints
+        } == {"uq_raw_import_batches_plane_source_idempotency"}
+        raw_row_unique_constraints = inspect(engine).get_unique_constraints(
+            "raw_import_rows"
+        )
+        assert {constraint["name"] for constraint in raw_row_unique_constraints} == {
+            "uq_raw_import_rows_batch_position"
         }
     finally:
         engine.dispose()
@@ -59,8 +84,83 @@ def test_empty_database_migration_upgrades_and_downgrades(tmp_path: Path) -> Non
         tables_after = set(inspect(engine).get_table_names())
         assert "engineering_job_records" not in tables_after
         assert "engineering_idempotency_records" not in tables_after
+        assert "raw_import_batches" not in tables_after
+        assert "raw_import_rows" not in tables_after
     finally:
         engine.dispose()
+
+
+def test_populated_raw_staging_migration_downgrade_is_destructive_and_reversible(
+    tmp_path: Path,
+) -> None:
+    database_path = tmp_path / "populated-staging.db"
+    database_url = f"sqlite:///{database_path.as_posix()}"
+    configuration = _alembic_config(database_url)
+    command.upgrade(configuration, "0001_engineering_job_metadata")
+
+    engine = create_engine(database_url)
+    try:
+        assert "raw_import_batches" not in set(inspect(engine).get_table_names())
+    finally:
+        engine.dispose()
+
+    command.upgrade(configuration, "head")
+    payload = b'{"opaque":"migration-sample"}'
+    batch = StagedImportBatch(
+        batch_id="MIGRATION-BATCH-001",
+        idempotency_key="MIGRATION-IDEMPOTENCY-001",
+        source_system="migration-synthetic",
+        source_version="1.0.0",
+        content_sha256=sha256(payload).hexdigest(),
+        source_name="migration-sample.bin",
+        media_type="application/octet-stream",
+        content_length_bytes=len(payload),
+        received_at=datetime(2026, 8, 19, tzinfo=UTC),
+        data_plane=StagingDataPlane.SIMULATION,
+        rows=(RawImportRow("ROW-001", "inline:1", payload),),
+        synthetic_provenance=SyntheticImportProvenance(
+            scenario_id="SIM-MIGRATION-001",
+            scenario_version="1.0.0",
+            seed=3103,
+            factory_profile_id="PROFILE-MIGRATION-001",
+            profile_version="1.0.0",
+            generator_id="GENERATOR-MIGRATION",
+            generator_version="1.0.0",
+        ),
+    )
+    engine = create_engine(database_url)
+    try:
+        repository = SqlAlchemyImportStagingRepository(
+            engine,
+            data_plane=StagingDataPlane.SIMULATION,
+        )
+        assert repository.stage(batch).replayed is False
+        assert repository.get(batch.batch_id) == batch
+    finally:
+        engine.dispose()
+
+    command.downgrade(configuration, "0001_engineering_job_metadata")
+    engine = create_engine(database_url)
+    try:
+        tables_after_downgrade = set(inspect(engine).get_table_names())
+        assert "engineering_job_records" in tables_after_downgrade
+        assert "engineering_idempotency_records" in tables_after_downgrade
+        assert "raw_import_batches" not in tables_after_downgrade
+        assert "raw_import_rows" not in tables_after_downgrade
+    finally:
+        engine.dispose()
+
+    command.upgrade(configuration, "head")
+    engine = create_engine(database_url)
+    try:
+        repository = SqlAlchemyImportStagingRepository(
+            engine,
+            data_plane=StagingDataPlane.SIMULATION,
+        )
+        assert repository.get(batch.batch_id) is None
+    finally:
+        engine.dispose()
+    command.downgrade(configuration, "base")
 
 
 def test_database_engine_does_not_connect_until_probe(tmp_path: Path) -> None:

@@ -93,6 +93,8 @@ Rollback:
 
 涉及 engineering infrastructure/API health/Worker/CI 时还必须记录：direct dependency/lock 与明确未安装组件；environment/data-plane/Secret fail-closed boundary；liveness/readiness 的外部依赖与 no-leak 行为；Job heartbeat/lease/attempt/STALLED、idempotency scope/fingerprint、持久化/transaction/side-effect 边界；migration upgrade/downgrade 与测试数据库；structured log/trace context/redaction 和 audit/metrics 缺口；Compose/container/CI 实际执行层级。仓库内 workflow/config/local PASS 不得伪装成 CI provider run、branch protection、Production deployment、distributed crash recovery 或 production security evidence。
 
+涉及Raw Staging时还必须记录：batch/row immutable fields、source/version/content与row digest/location/received-at、Production/Simulation conditional、idempotency scope/fingerprint与exact replay/conflict、batch+rows transaction rollback、empty/populated migration upgrade/downgrade及明确数据损失、raw-not-canonical/Snapshot/Problem/Solver边界。临时SQLite不得伪装成PostgreSQL concurrency、独立Production数据库或Production security；Adapter/Normalization/DataValidation未形成时继续标记`PLANNED`。
+
 涉及 external CI provider 时还必须在开始前固定 provider/repository/branch/workflow 和官方 query 命令，并在完成证据中记录 immutable head SHA、run ID/URL/attempt/event/status/conclusion、required jobs/steps、artifact ID/name/size/digest/expiry 与 required-check/branch-protection 状态。credential 必须由进程外环境或已认证 session 提供，不得记入 Task、日志或 artifact；失败 run 必须保留为反例，不得伪写 PASS。
 
 仓库内 CI workflow应使用 current-phase Task discovery与中性 artifact命名，不得每个 Task手工改写旧 Task路径。没有外部执行授权时 provider结果必须写 `NOT_RUN`，本地 workflow contract、YAML parse或 diff governance不能替代 provider事实。

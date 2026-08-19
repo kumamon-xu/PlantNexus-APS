@@ -33,7 +33,7 @@ registry_version: 1.0.0
 | TEST-PHASE-GOVERNANCE-001 | Current/prior/future Phase Task policy与 CI changed-task handoff | P1 | [`test_check_docs.py`](../../backend/tests/unit/test_check_docs.py) phase/range/discovery negative paths + [`test_ci_contract.py`](../../backend/tests/integration/test_ci_contract.py) generic workflow/no-stale-P0 handoff formed |
 | TEST-OBS-001 | 日志、运行标识与 Observability 关联 | P0 | [`test_logging.py`](../../backend/tests/integration/test_logging.py) JSON/context/trace-ID/redaction P0 slice formed；PlanningRun metrics/audit retention PLANNED |
 | TEST-CONTRACT-001 | Schema meta/positive/negative、版本、UTC/duration/reference、isolation 与 round-trip | P0 | [`backend/tests/contract/test_schema_contracts.py`](../../backend/tests/contract/test_schema_contracts.py) + P0 baselines + P1 [`canonical-records.v1`](../../schemas/json/canonical-records.v1.schema.json)/[Import v2](../../schemas/json/import-package.v2.schema.json)/[Snapshot v2](../../schemas/json/planning-snapshot.v2.schema.json) contract evidence formed；producer/pipeline/builder仍PLANNED |
-| TEST-IMPORT-STAGING-001 | Raw batch/row provenance、transaction、migration与 idempotent replay | P1 | PLANNED / TASK-P1-03 |
+| TEST-IMPORT-STAGING-001 | Raw batch/row provenance、transaction、migration与 idempotent replay | P1 | [`test_import_staging.py`](../../backend/tests/unit/test_import_staging.py) + [`test_raw_import_staging.py`](../../backend/tests/integration/test_raw_import_staging.py) + [`test_migrations_and_infrastructure.py`](../../backend/tests/integration/test_migrations_and_infrastructure.py) formed / TASK-P1-03 |
 | TEST-IMPORT-ADAPTER-001 | CSV/XLSX/ReferenceFileAdapter semantic parity与文件安全拒绝 | P1 | PLANNED / TASK-P1-04 |
 | TEST-NORMALIZATION-001 | ID/time/unit mapping、canonical bytes、unit error与 missing duration | P1 | PLANNED / TASK-P1-05 |
 | TEST-DATA-QUALITY-001 | DAG/reference/capability/quality report与四类 P1 exact rejection | P1 | PLANNED / TASK-P1-06 |
@@ -58,7 +58,7 @@ registry_version: 1.0.0
 | TEST-VALIDATOR-MUTATION | 独立 Validator 拒绝人工错误计划 | P0-P2 | [`test_schedule_validator_mutations.py`](../../backend/tests/validation/test_schedule_validator_mutations.py) + [`SIM-MINIMAL-001-MUTATIONS@1.0.0`](../../fixtures/infeasible/SIM-MINIMAL-001-MUTATIONS/coverage-matrix.json) P0 fixture-local slice formed；production/performance P2 PLANNED |
 | TEST-REPLAN | Replan 事实、锁与变化报告 | P4 | PLANNED |
 | TEST-OUTPUT | 标准成果包合同 | P2-P3 | PLANNED |
-| TEST-IDEMPOTENCY | Import/Planning/Export/Publish/Event 幂等 | P0-P3 | [`test_job_reliability.py`](../../backend/tests/integration/test_job_reliability.py) generic replay/conflict/lease/STALLED P0 primitive formed；业务 durable side effects PLANNED |
+| TEST-IDEMPOTENCY | Import/Planning/Export/Publish/Event 幂等 | P0-P3 | [`test_job_reliability.py`](../../backend/tests/integration/test_job_reliability.py) generic primitive + P1 [`test_raw_import_staging.py`](../../backend/tests/integration/test_raw_import_staging.py) durable Import staging replay/conflict/rollback formed；Worker/Planning/Export/Publish/Event side effects PLANNED |
 | TEST-SCENARIO-REPLAY | Scenario/Profile/Generator/seed 重放 | P0-P2 | empty Import [`test_simulation_contracts.py`](../../backend/tests/simulation/test_simulation_contracts.py) + non-empty committed [`SIM-MINIMAL-001`](../../backend/tests/golden/test_sim_minimal_001.py) canonical hash replay formed；Snapshot/Problem replay PLANNED |
 | TEST-SIM-ISOLATION | Synthetic/Production 隔离 | P0-P1 | [`test_simulation_contracts.py`](../../backend/tests/simulation/test_simulation_contracts.py) formed for Schema/pure context/Import envelope；separate DB/API/publish guards PLANNED |
 | TEST-REFERENCE-SCHEDULER | Reference Scheduler baseline | P2 | PLANNED |
@@ -105,3 +105,9 @@ P1 Exit Gate至少要求 TEST-P1-COMMON-INGRESS组合证明 same scenario+seed�
 TEST-CONTRACT-001新增canonical/Import v2/Snapshot v2的Draft 2020-12跨URN `$ref` registry、synthetic positive samples/JSON round-trip、v1/v2 non-interchangeability、v1 byte fingerprint、unknown/no-default、Production/Synthetic conditional、UTC/unit/duration/source/reference/count及expanded option copy负例，并以Pyright/Ruff覆盖pure JSON-compatible types/prechecks。固定sample不做随机generation/shrinking，sentinel digest不验证hash builder，单异常precheck不替代TASK-P1-06 multi-error quality evaluator。
 
 本Task不新增Test ID或改变registry表结构，`registry_version`保持`1.0.0`。TEST-IMPORT-STAGING-001、TEST-NORMALIZATION-001、TEST-DATA-QUALITY-001、TEST-ORDER-EXPANSION-001、TEST-SNAPSHOT-REPLAY-001、TEST-PROBLEM-REPLAY-001与TEST-P1-COMMON-INGRESS继续`PLANNED`。
+
+## TASK-P1-03 Raw Staging evidence
+
+TEST-IMPORT-STAGING-001现覆盖frozen batch/row/provenance、opaque non-UTF-8 bytes、deterministic request fingerprint、missing source/version/digest/UTC/path与duplicate row identity拒绝、Production/Simulation conditional、raw-not-canonical AST boundary、SQLAlchemy round-trip、exact replay/conflict、真实transaction rollback/no-leak、plane-scoped read/write，以及empty/populated Alembic upgrade/downgrade/re-upgrade。TEST-IDEMPOTENCY因此获得durable Import staging slice。
+
+定向suite为23 passed，full repository regression为121 passed；测试数据库/records均为显式synthetic，migration downgrade删除1 batch/1 row的开发数据。没有真实PostgreSQL race/outage、Adapter file security、Normalization/DataValidation、Snapshot/Problem/Solver、Property或Benchmark evidence。Test ID/表结构未变，`registry_version`保持`1.0.0`。

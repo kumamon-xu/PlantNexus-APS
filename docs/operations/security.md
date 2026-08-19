@@ -29,3 +29,12 @@ last_reviewed: 2026-08-19
 P0-08 没有 authentication/authorization、Import size/type/macro controls、network policy、TLS/mTLS、secret manager integration/rotation、container/image vulnerability scan、SBOM/signing、digest-pinned actions/images、database roles、backup/restore、production incident response 或第三方 threat assessment。Action/image patch tags与 read-only GitHub permission 是工程起点，不是 supply-chain/production security certification。
 
 真实 Import/API/Publish/Production Task 必须补充其威胁模型、negative tests、权限和平台 evidence；不得用本文件关闭 OPEN-002/010/015 或声称 NFR-SEC-001 已全阶段完成。
+
+## TASK-P1-03 Raw Staging controls
+
+- source name只接受leaf name，禁止路径片段；digest必须为lowercase SHA-256，received-at必须显式UTC，row payload必须为immutable bytes。
+- SQLAlchemy Core使用静态table/parameterized statement；没有拼接SQL、shell command、文件执行、macro或formula evaluation。
+- raw bytes可以合法包含非UTF-8或敏感业务内容，因此异常统一为稳定sanitized code并从driver exception断链；rollback test用含secret-like文本的数据库错误验证不泄漏。
+- repository按data plane过滤所有读写，数据库CHECK同步约束synthetic provenance；raw payload没有直接Canonical/Snapshot/Problem/Solver入口。
+
+本Task没有实现上传格式/大小上限、malware scanning、CSV injection/XLSX macro/external formula防护、authentication/authorization、encryption、retention/erasure、database role或Production audit。这些控制不能从`media_type/content_length` metadata存在推断，文件入口由TASK-P1-04继续形成。

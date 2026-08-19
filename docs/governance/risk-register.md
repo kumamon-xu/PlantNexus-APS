@@ -50,3 +50,5 @@ P1 Task 规划 review：共同 ingress、明确 capability/data-quality rejectio
 TASK-P1-01 review：phase/task-neutral CI减少stale handoff与错误归属风险，但没有真实provider run、业务pipeline、生产隔离、Solver、Benchmark或side-effect证据，不能将任何风险标记`MITIGATED/CLOSED`。RISK-001～010全部保持`MONITORED`，registry format version不变。
 
 TASK-P1-02 review：strict canonical source/version/no-default与Production/Synthetic conditional加强RISK-001/002/007的早期控制，version/fingerprint/rejection tests加强错误consumer可见性；但尚无真实source、共同ingress、独立生产数据面、builder/hash或Benchmark。任何风险均无充分mitigation/closure evidence，RISK-001～010全部保持`MONITORED`，registry format version不变。
+
+TASK-P1-03 review：opaque Raw Staging与raw-not-canonical scan加强RISK-002，repository/DB plane guard加强RISK-007，durable replay/conflict和atomic rollback加强RISK-008；source provenance/no-default边界也继续约束RISK-001。证据仍限临时SQLite与synthetic rows，尚无真实Adapter、共同ingress、独立Production数据库、PostgreSQL并发/故障、Snapshot/Problem或Benchmark，因此不足以标记任何风险`MITIGATED/CLOSED`。RISK-001～010全部保持`MONITORED`，registry format version不变。

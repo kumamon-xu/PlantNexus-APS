@@ -83,3 +83,9 @@ Job primitives 以 `JobTransitionError`、`LeaseOwnershipError`、`LeaseExpiredE
 `CanonicalContractError`复用既有`ProductErrorCode`表达`DUPLICATE_ID`、`INVALID_REFERENCE`、`INVALID_TIME`、`INVALID_TIME_RANGE`、`INVALID_DURATION`、`INVALID_LAG_RANGE`、`INVALID_ENTITY_COUNT`、`MISSING_RUNNING_FACT`和synthetic isolation；没有新增或重解释error registry code。JSON Schema先拒绝missing/unknown/type/conditional shape，pure precheck再拒绝跨记录reference/unit/source/count/copy不一致。
 
 本Task不是TASK-P1-06的deterministic multi-error DataValidation，也未分配`ROUTE_CYCLE`、`MISSING_RESOURCE`、`UNIT_CONVERSION_ERROR`、`MISSING_DURATION`新code/report。HTTP mapping、row/source-location quality details和完整ImportQualityReport仍为`PLANNED`；不能把单一exception precheck写成P1 DataValidation Gate PASS。
+
+## TASK-P1-03 staging error boundary
+
+Raw Staging分配6个module-local稳定control-flow code：`INVALID_STAGING_METADATA`、`INVALID_CONTENT_DIGEST`、`DUPLICATE_ROW_IDENTITY`、`IDEMPOTENCY_CONFLICT`、`DATA_PLANE_MISMATCH`、`STAGING_TRANSACTION_FAILED`。它们由`ImportStagingError`携带，错误文本只描述字段/合同，不包含raw payload、source observed value、driver exception、endpoint或Secret；transaction/query异常统一从原异常断链后返回sanitized code。
+
+这些code不加入或重解释P0的19项`ProductErrorCode` registry，不是HTTP error schema，也不替代TASK-P1-06的multi-error ImportQualityReport。DB持久化失败属于staging system control，source/digest/row/plane conflict属于import precondition；未来API mapping必须另行版本化并保持七类产品错误语义。

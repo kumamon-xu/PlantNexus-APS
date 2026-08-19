@@ -161,3 +161,9 @@ Schema、Domain、Import/Snapshot/Planning/Validator/Simulation/Fixture、depend
 本Task实际路径命中`IMPACT-SCHEMA`、`IMPACT-DOMAIN`、`IMPACT-DEPENDENCY`、`IMPACT-VERSION-METADATA`、`IMPACT-TESTS`、`IMPACT-PHASE`、`IMPACT-GOVERNANCE-REGISTRY`、`IMPACT-DOCS`。`pyproject.toml`仅改变schema metadata但仍按dependency/version行审查；Schema、data dictionary、domain pure types、contract tests及所有required docs均在有界清单内。
 
 Adapter/Staging/Normalization/DataValidation/Expansion/Snapshot/Problem builder、Migration/DB、API/Job、Simulation Generator/Fixture、Validator、Backend/Solver、Benchmark、Frontend与governance validator均未修改，因此不声明其Rule ID。现有machine globs/required-document列足够覆盖，无需新Rule或`registry_version`提升；最终以TASK-P1-02 diff report真实matched rows为准。
+
+## TASK-P1-03 matrix review
+
+本Task实际路径预期命中`IMPACT-IMPORT`、`IMPACT-INFRA`、`IMPACT-TESTS`、`IMPACT-PHASE`、`IMPACT-GOVERNANCE-REGISTRY`、`IMPACT-DOCS`。`backend/app/importers/**`只形成Raw Staging pure contract/protocol/assembler；Infrastructure与migration只形成SQLAlchemy insert-only persistence；测试/阶段/注册表同步真实证据。
+
+首次diff check准确暴露原Task卡遗漏的5份phase/governance必审文档，现已先修订卡片并纳入完整review。Schema、Domain、Application orchestration、Adapter reader、Normalization/DataValidation、Snapshot/Problem、Simulation、Fixture、API/Job/Worker、dependency/version metadata、Solver/Benchmark和governance validator均不修改，因此不声明其他Rule ID。machine rule表无需改变，`registry_version`保持`1.0.0`；最终以TASK-P1-03 diff report真实matched rows为准。

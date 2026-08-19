@@ -37,7 +37,7 @@ registry_version: 1.0.0
 | TEST-IMPORT-ADAPTER-001 | CSV/XLSX/ReferenceFileAdapter semantic parity与文件安全拒绝 | P1 | [`test_input_adapters.py`](../../backend/tests/contract/test_input_adapters.py) + [`test_reference_file_adapter.py`](../../backend/tests/integration/test_reference_file_adapter.py) formed / TASK-P1-04 |
 | TEST-NORMALIZATION-001 | ID/time/unit mapping、canonical bytes、unit error与 missing duration | P1 | [`test_normalization.py`](../../backend/tests/unit/test_normalization.py) formed / TASK-P1-05 |
 | TEST-DATA-QUALITY-001 | DAG/reference/capability/quality report与四类 P1 exact rejection | P1 | [`test_data_validation.py`](../../backend/tests/unit/test_data_validation.py) + [`test_import_validation.py`](../../backend/tests/contract/test_import_validation.py) formed / TASK-P1-06 |
-| TEST-ORDER-EXPANSION-001 | Order/Lot/Routing到 OperationInstance/edge deterministic expansion | P1 | PLANNED / TASK-P1-07 |
+| TEST-ORDER-EXPANSION-001 | Order/Lot/Routing到 OperationInstance/edge deterministic expansion | P1 | [`test_order_expansion.py`](../../backend/tests/unit/test_order_expansion.py) + [`test_order_expansion_properties.py`](../../backend/tests/property/test_order_expansion_properties.py) formed / TASK-P1-07；provider evidence pending |
 | TEST-SNAPSHOT-REPLAY-001 | Snapshot canonical bytes/hash/ID、immutability与 repository replay | P1 | PLANNED / TASK-P1-08 |
 | TEST-PROBLEM-REPLAY-001 | Solver-neutral Problem builder/bytes/hash deterministic replay | P1 | PLANNED / TASK-P1-09 |
 | TEST-P1-COMMON-INGRESS | Reference/Synthetic共同 staging→Problem链路与 Gate report | P1 | PLANNED / TASK-P1-11 |
@@ -135,3 +135,11 @@ TEST-DATA-QUALITY-001现覆盖合法Import PASS/0、四项P1 exact `DATA_ERROR`�
 TEST-CONTRACT-001扩展验证Draft 2020-12 Error v3/ImportQualityReport跨URN显式registry、registry v2与Python映射、v1 19项保留、Error v1/v2/v3不互换、PASS/FAIL samples exact evaluator replay、global/document/registry版本分层及六份immutable artifact fingerprint。固定mutations不是Hypothesis Property或candidate ScheduleValidator；Expansion/Snapshot/Problem/common-ingress/P2 Solver和Production evidence继续`PLANNED`，Test registry format/version保持`1.0.0`。
 
 本地证据为Task-focused `50 passed`、full repository `210 passed`，Task/full Ruff与Pyright均0问题，`uv sync --locked`无lock漂移、`git diff --check`与build成功。Full/diff docs治理为124 docs、63 changed paths、9 impact rows、0 issues。Implementation commit `c1ac1077fdd92e012f4050f30bab2aec4638f6ec`对应GitHub Actions run `32257767495`、required `validate` job `96083426251`=`success`；artifact `9366988617`的provider/download digest均为`sha256:a2e38cf942e672a073f5044b936dd2b7b7450204f5d353251566ed8b7352ca98`，其中Task report精确匹配该SHA并为`PASS`。Data Validation只消费canonical Import并生成deterministic report，不导入Planning/ScheduleValidator/Solver，也不形成Order Expansion、Snapshot/Problem或P2证据；TASK-P1-06据此闭环为`done`。
+
+## TASK-P1-07 Order Expansion evidence
+
+TEST-ORDER-EXPANSION-001现由7项unit与2项Hypothesis property tests形成：serial与branch/merge DAG、cross-workshop transport、multi-candidate exact copy、explicit multi-lot cardinality、stable versioned IDs/order/bytes/hash、Import/quality/synthetic/source lineage、RUNNING/COMPLETED/locks，以及quality mismatch、missing lot/route/option/duration、duplicate fact、SPLIT_MERGE与version拒绝。Expanded payload还注入Snapshot v2 pure precheck验证既有shape，不构建Snapshot hash。
+
+Property使用fixed seeds`20260819/20260820`、64 positive与24 negative max examples，生成1～3 lots、4-op branch/merge、2 workshops/resources、1～2 candidates、fact/lock组合并验证重排不变量和可收缩exact rejection。当前功能定向为`9 passed`，另有CI contract`5 passed`，full repository为`219 passed`，Ruff/Pyright均0问题；workflow已显式加入property目录但provider CI仍pending，完成证据以Task Card为准。
+
+TEST-RUNNING获得P1 expansion projection slice：RUNNING/COMPLETED绑定唯一fact且COMPLETED保留，NOT_STARTED不引用fact；它不验证未来occupancy/resource immutability或P2 candidate ScheduleValidator。P2 TEST-PROPERTY仍`PLANNED`，因为本Task生成canonical expansion而非合法PlanningProblem/candidate schedule；Test registry表结构/ID不变，`registry_version`保持`1.0.0`。

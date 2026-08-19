@@ -61,3 +61,5 @@ TASK-P1-04 review：temporary 2-row CSV/XLSX使用显式synthetic source/provena
 TASK-P1-05 review：tests中的reference mapping、UTC offsets、DST边界、`s/min/h`、small quantities与synthetic provenance只验证determinism/rejection，不是新FactoryProfile/Scenario distribution、Production timezone/unit policy或Benchmark baseline。没有新增/修改/retire假设；SIM-ASSUMPTION-001～009全部保持`ACTIVE`，不用于Production default或OPEN closure，registry format version保持`1.0.0`。
 
 TASK-P1-06 review：quality tests只从既有P1-02 schema sample复制canonical records并注入cycle/missing resource/unit/duration及结构负例；它们不是新FactoryProfile/Scenario、概率、规模、capacity或Benchmark baseline。没有新增/修改/retire假设；SIM-ASSUMPTION-001～009全部保持`ACTIVE`，不用于Production default或OPEN closure，registry format version保持`1.0.0`。
+
+TASK-P1-07 review：Hypothesis以fixed replay seeds生成test-local 1～3 explicit lots、4-op branch/merge、2 workshops/resources、candidate/fact/lock组合，并在每个Import保留`synthetic=true`与scenario seed。这些值仅用于generation/shrinking，不是新Profile/Scenario distribution、Benchmark baseline或Production topology/policy。没有新增/修改/retire条目；SIM-ASSUMPTION-001～009全部保持`ACTIVE`，registry format version保持`1.0.0`。

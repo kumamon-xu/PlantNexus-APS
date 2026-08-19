@@ -1,7 +1,7 @@
 ---
 doc_id: TASK-P1-07
 title: Deterministic Order Expansion
-status: planned
+status: in_progress
 spec_version: 0.3.0
 phase: P1
 normative: true
@@ -21,27 +21,27 @@ Goal: 将已验证的 DemandOrder/ProductionOrder/显式 ProductionLot 与 Routi
 
 Inputs: valid canonical Import v2、domain/operation contracts、OPEN-008/014、P1 DataValidation PASS report。
 
-Diff base: 进入 `in_progress` 前记录当时完整 40 字符 HEAD SHA
+Diff base: 97728521e187f9f50715de4b04a09098bef62ddf
 
-Files allowed to change: `backend/app/domain/production.py`、`backend/app/normalization/order_expansion.py`、`backend/app/normalization/__init__.py`、`backend/tests/unit/test_order_expansion.py`、`backend/tests/property/test_order_expansion_properties.py`、`pyproject.toml`、`uv.lock`、生成但不提交的 `build/traceability/TASK-P1-07-report.json`，以及下方 `Documents to update` 的全部明确路径。
+Files allowed to change: `backend/app/domain/production.py`、`backend/app/normalization/order_expansion.py`、`backend/app/normalization/__init__.py`、`backend/tests/unit/test_order_expansion.py`、`backend/tests/property/test_order_expansion_properties.py`、`backend/tests/integration/test_ci_contract.py`、`.github/workflows/ci.yml`、`pyproject.toml`、`uv.lock`、`README.md`、生成但不提交的 `build/traceability/TASK-P1-07-report.json`，以及下方 `Documents to update` 的全部明确路径。
 
 Files forbidden to change: Schema/error registry、Adapter/Staging、unit/time Normalizer、DataValidation rules、Snapshot/Problem builder、Simulation、API、Solver、自动 lot split/merge或 duration预测。
 
-Implementation steps: 只接受 source明确提供的 ProductionLot/quantity与 RoutingVersion；按稳定 ID algorithm实例化 operation和 edge；复制 candidate级 final duration/source version、release/material gates、COMPLETED/RUNNING facts与locks；COMPLETED保留在 Snapshot事实但不进入未来 Problem；同输入/版本输出稳定排序；property tests覆盖 DAG分支/汇合、跨车间和多候选。
+Implementation steps: 只接受 source明确提供的 ProductionLot/quantity与 RoutingVersion；按稳定 ID algorithm实例化 operation和 edge；复制 candidate级 final duration/source version、release/material gates、COMPLETED/RUNNING facts与locks；COMPLETED保留在 Snapshot事实但不进入未来 Problem；同输入/版本输出稳定排序；以exact dev-only Hypothesis pin提供generation/shrinking，property tests覆盖 DAG分支/汇合、跨车间和多候选，runtime dependency集合保持不变；把`backend/tests/property`加入phase-neutral repository CI suite并以integration contract防止后续丢失。
 
 Outputs: pure order-expansion service、versioned expansion provenance、unit/property evidence。
 
 Documentation impact: required
 
-Documents to update: `docs/current_phase.md`、`docs/contracts/import-and-normalization.md`、`docs/domain/domain-model.md`、`docs/domain/operation-instance-and-resource-options.md`、`docs/domain/execution-facts-locks-and-replan.md`、`docs/domain/time-calendar-and-material-boundaries.md`、`docs/domain/error-model.md`、`docs/architecture/data-authority.md`、`docs/architecture/provenance-and-versioning.md`、`docs/architecture/technology-stack.md`、`docs/planning/constraint-catalog.md`、`docs/quality/test-strategy-and-matrix.md`、`docs/quality/property-tests.md`、`docs/governance/requirements-register.md`、`docs/governance/nfr-and-engineering-register.md`、`docs/governance/traceability-matrix.md`、`docs/governance/prod-open-register.md`、`docs/governance/risk-register.md`、`docs/governance/document-inventory.md`、`docs/milestones/P1-data-and-snapshot.md`、`docs/tasks/README.md`、`docs/tasks/P1/TASK-P1-07-deterministic-order-expansion.md`。
+Documents to update: `README.md`、`docs/current_phase.md`、`docs/adr/README.md`、`docs/contracts/import-and-normalization.md`、`docs/contracts/schema-versioning.md`、`docs/core/glossary.md`、`docs/domain/domain-model.md`、`docs/domain/operation-instance-and-resource-options.md`、`docs/domain/execution-facts-locks-and-replan.md`、`docs/domain/time-calendar-and-material-boundaries.md`、`docs/domain/error-model.md`、`docs/architecture/configuration-environments-and-isolation.md`、`docs/architecture/data-authority.md`、`docs/architecture/provenance-and-versioning.md`、`docs/architecture/technology-stack.md`、`docs/operations/README.md`、`docs/planning/constraint-catalog.md`、`docs/planning/solver-backend-contract.md`、`docs/quality/benchmark-regression.md`、`docs/quality/test-strategy-and-matrix.md`、`docs/quality/property-tests.md`、`docs/quality/documentation-consistency-checks.md`、`docs/governance/requirements-register.md`、`docs/governance/nfr-and-engineering-register.md`、`docs/governance/traceability-rules.md`、`docs/governance/traceability-matrix.md`、`docs/governance/prod-open-register.md`、`docs/governance/sim-assumption-register.md`、`docs/governance/risk-register.md`、`docs/governance/change-impact-matrix.md`、`docs/governance/document-inventory.md`、`docs/milestones/README.md`、`docs/milestones/P1-data-and-snapshot.md`、`docs/tasks/README.md`、`docs/tasks/TASK_TEMPLATE.md`、`docs/tasks/P1/TASK-P1-07-deterministic-order-expansion.md`。
 
 Documentation impact rationale: Order/Lot/OperationInstance lineage与执行事实进入正式 P1行为，影响 Domain、Import、Problem输入和 Property测试口径。
 
-Change-impact matrix rows reviewed: `IMPACT-DOMAIN`、`IMPACT-IMPORT`、`IMPACT-DEPENDENCY`、`IMPACT-TESTS`、`IMPACT-PHASE`、`IMPACT-GOVERNANCE-REGISTRY`、`IMPACT-DOCS`
+Change-impact matrix rows reviewed: `IMPACT-DOMAIN`、`IMPACT-IMPORT`、`IMPACT-INFRA`、`IMPACT-DEPENDENCY`、`IMPACT-VERSION-METADATA`、`IMPACT-TESTS`、`IMPACT-PHASE`、`IMPACT-GOVERNANCE-REGISTRY`、`IMPACT-DOCS`
 
 Traceability updates: REQ-003/009、NFR-DET/TRC、ENG-SOL/ERR/VER → TASK-P1-07 → TEST-ORDER-EXPANSION-001/TEST-RUNNING → OperationInstance/edge artifacts和 property regressions。
 
-Schema changes: none；消费 TASK-P1-02 canonical contract，若发现字段不足必须停止并先升版，禁止在代码内藏字段。
+Schema changes: none；消费 TASK-P1-02 canonical contract；`pyproject.toml`只增加dev-only property-test dependency，不改变schema set `2.2.0`或任何document version。若发现字段不足必须停止并先升版，禁止在代码内藏字段。
 
 Migration: none。
 
@@ -53,7 +53,7 @@ Benchmark impact: property样例记录 entity counts但不声称性能；无 Sol
 
 Simulation scenarios: 使用合法 synthetic canonical inputs；随机失败保存 seed/minimized example/version/hash，不修改正式 P0 fixture。
 
-Acceptance commands: `uv sync --locked`；`uv run ruff check backend/app/domain/production.py backend/app/normalization backend/tests/unit/test_order_expansion.py backend/tests/property/test_order_expansion_properties.py`；`uv run pyright backend/app/domain/production.py backend/app/normalization backend/tests/unit/test_order_expansion.py backend/tests/property/test_order_expansion_properties.py`；`uv run pytest -q backend/tests/unit/test_order_expansion.py backend/tests/property/test_order_expansion_properties.py`；`uv run python scripts/check_docs.py`；`uv run python scripts/check_docs.py --task docs/tasks/P1/TASK-P1-07-deterministic-order-expansion.md --check-diff --report build/traceability/TASK-P1-07-report.json`；`git diff --check`；`uv build`。
+Acceptance commands: `uv sync --locked`；`uv run ruff check backend/app/domain/production.py backend/app/normalization backend/tests/unit/test_order_expansion.py backend/tests/property/test_order_expansion_properties.py backend/tests/integration/test_ci_contract.py`；`uv run pyright backend/app/domain/production.py backend/app/normalization backend/tests/unit/test_order_expansion.py backend/tests/property/test_order_expansion_properties.py backend/tests/integration/test_ci_contract.py`；`uv run pytest -q backend/tests/unit/test_order_expansion.py backend/tests/property/test_order_expansion_properties.py backend/tests/integration/test_ci_contract.py`；`uv run python scripts/check_docs.py`；`uv run python scripts/check_docs.py --task docs/tasks/P1/TASK-P1-07-deterministic-order-expansion.md --check-diff --report build/traceability/TASK-P1-07-report.json`；`git diff --check`；`uv build`。
 
 Artifacts: expansion test/property corpus、seed/minimized failures（如有）、traceability report。
 
@@ -69,4 +69,16 @@ Rollback: expansion version不可重解释历史 output；回退 consumer时保�
 
 ## Completion evidence
 
-执行时填写 expansion version、property seeds/cases、changed paths、命令结果、开放问题和文档影响。
+### Local implementation candidate — provider evidence pending
+
+- 时间：2026-08-19（Asia/Hong_Kong）。Task保持`in_progress`，等待immutable implementation commit的GitHub required`validate`和artifact核验；本段不预填provider PASS。
+- Diff：immutable base=`97728521e187f9f50715de4b04a09098bef62ddf`；本地验收时Git HEAD仍为该base，report记录committed-range sources=`0`、working-tree sources=`45`、changed paths=`45`。
+- 实际changed paths：`.github/workflows/ci.yml`、`README.md`、`backend/app/domain/production.py`、`backend/app/normalization/{__init__.py,order_expansion.py}`、`backend/tests/{unit/test_order_expansion.py,property/test_order_expansion_properties.py,integration/test_ci_contract.py}`、`pyproject.toml`、`uv.lock`，以及本卡`Documents to update`列出的36份已登记文档；没有范围外路径。
+- 版本/输出：`order-expansion.v1` + `canonical-json.v1`；Operation ID basis=`version + lot ID + routing operation ID`，edge ID basis=`version + lot ID + routing edge ID`，均为canonical JSON SHA-256。`OrderExpansionResult`携带Import/PASS-report/source/synthetic provenance、sorted instances/edges、canonical bytes和独立`sha256:` expansion hash；它不是Snapshot/Problem hash。
+- 行为：只展开source-explicit ProductionLot；branch/merge/cross-workshop edge逐lot复制；candidate setup/cycle/final duration/source version、due/release/material gates、RUNNING/COMPLETED事实与locks逐项保留；NOT_STARTED不伪造fact，COMPLETED不从事实层丢弃。Missing lot/route/option/duration、quality mismatch、duplicate fact、fact/lock lineage和version错误明确`DATA_ERROR`；SPLIT_MERGE明确`UNSUPPORTED_CAPABILITY`，无fallback/AI/Solver。
+- Property：exact dev pin=`hypothesis==6.165.10`，transitive=`sortedcontainers==2.4.0`，`uv.lock` SHA-256=`7ae68d242b1f80ad05a2ae51b09552ca9e19214d33ef8380bc74ff4c87ee64dd`。Positive seed=`20260819`/64 max examples，negative seed=`20260820`/24 max examples；生成1～3 lots、4-op branch/merge、2 workshops/resources、1～2 candidates及fact/lock组合。无失败，故无minimized failure/corpus可记录；shrinking路径由generated missing-candidate property实际启用。
+- CI handoff：全仓检查发现旧workflow未收集`backend/tests/property`；在修改CI前已扩卡纳入`IMPACT-INFRA`及强制文档。现有phase-neutral repository suite已加入property目录，`test_ci_contract.py`固定该路径，既有gates/中性artifact/Task discovery未弱化。
+- Trace：REQ-003/009、NFR-DET/TRC、ENG-SOL/ERR/VER → TASK-P1-07 → TEST-ORDER-EXPANSION-001 + TEST-RUNNING P1 slice → `domain.production`/`normalization.order_expansion`/unit/property tests。P2 TEST-PROPERTY、Snapshot/Problem/common ingress/Solver仍`PLANNED`；所有root ID继续`ALLOCATED`。
+- Schema/Migration：none。`schemas/**`、product error registry、`app.SCHEMA_VERSION`和`pyproject` schema metadata未改；schema set=`2.2.0`，Import/Snapshot v2 document=`2.0.0`。无DB/migration/data rewrite；dev dependency rollback只移除Hypothesis pin/lock和property CI path，历史expansion output必须仍按v1解释。
+- 文档：本卡列出的36份文档全部实际更新；没有必审但未更新项。实际matrix rows=`IMPACT-DOMAIN/IMPORT/INFRA/DEPENDENCY/VERSION-METADATA/TESTS/PHASE/GOVERNANCE-REGISTRY/DOCS`；machine report=`PASS`、45 paths、9 rows、0 issues。PROD_OPEN-007/008/014/015继续OPEN；SIM-ASSUMPTION-001～009保持ACTIVE；property值不成为Production default或Benchmark baseline。
+- 本地命令：`uv sync --locked` PASS（63 packages）；Task Ruff PASS；Task Pyright PASS（0 errors）；Task pytest PASS（14 passed：7 unit + 2 property + 5 CI contract）；extra full repository pytest PASS（219 passed）；full docs PASS（124 docs/30 roots/36 tests/22 tasks）；Task diff docs PASS（45 paths/9 rows/0 issues）；`git diff --check` PASS；`uv build` PASS（sdist + wheel）。提交前会按最终working tree再完整重跑。

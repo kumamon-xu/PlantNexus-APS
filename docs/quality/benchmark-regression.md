@@ -66,3 +66,9 @@ Mapping/unit rule version已进入Import hash，未来TASK-P1-09/P2 benchmark必
 本Task新增标准库DAG/reference/resource/capability/time/duration evaluator，但不修改PlanningProblem、Constraint、Solver或model-size preprocessing，也没有BenchmarkRunner/profile/baseline。定向small synthetic package只用于correctness；不记录rows/sec、runtime、memory、factory scale或Production capacity，不生成零值BenchmarkReport。
 
 未来TASK-P1-11/P2 benchmark应把data-quality-rules.v1、error registry v2与PASS report ID纳入input provenance，并在correctness失败时先停止。OR-Tools仍不存在，Solver replay Gate不触发，OPEN-012保持OPEN。
+
+## TASK-P1-07 review
+
+本Task新增会决定未来Problem规模的deterministic preprocessing，但当前没有PlanningProblem、Solver、BenchmarkRunner/profile/baseline或历史comparison。Hypothesis positive生成4-operation branch/merge、1～3 lots、2 workshops/resources与每operation 1～2 candidates，对应4～12 instances、4～12 edges，只用于correctness/shrinking；测试耗时不得写成runtime/memory/capacity结论，也不生成零值BenchmarkReport。
+
+P2首次baseline必须记录`order-expansion.v1`、Import/quality/Snapshot/Problem hashes及instance/edge/candidate counts；以后改变ID/过滤/expansion cardinality必须回放固定Scenario Set。当前OR-Tools仍不存在，Solver replay无法执行，OPEN-012保持OPEN。

@@ -43,7 +43,11 @@ CSV / Excel / Reference Adapter / Synthetic Generator
 
 `TASK-P1-05 — Normalization and Unit Time Rules`已完成：不可变Diff base为`d63926f84d9d2b7bc46bbcaff5704612af120a34`，implementation commit为`d52aa62d36e8d89eba318cb5fc586311680e030f`，对应GitHub Actions run `32252308695`/required `validate` job `96065907901`=`success`，artifact `9364897397`的provider/download digest均为`sha256:5db1ccbb242b555d8a95d36ac9cc1b1373dab95d482dbde17ab7fb369cce2966`。Additive schema set`2.1.0`、unit registry、显式MappingProfile、ID/time/unit Normalization与canonical Import bytes/hash证据闭环；validation、expansion、Snapshot/Problem builder、Solver或P2均未开始。
 
-`TASK-P1-06 — Data Quality and Routing Validation`已完成：不可变Diff base为`75d761332204ec779477ba7242c98517cce1b68b`，implementation commit为`c1ac1077fdd92e012f4050f30bab2aec4638f6ec`，对应GitHub Actions run `32257767495`/required `validate` job `96083426251`=`success`，artifact `9366988617`的provider/download digest均为`sha256:a2e38cf942e672a073f5044b936dd2b7b7450204f5d353251566ed8b7352ca98`。Schema set`2.2.0`、error registry v2/Error v3/ImportQualityReport v1、canonical structure/reference/DAG/resource/capability/time/duration/unit evaluator及四类P1 exact rejection证据已闭环。TASK-P1-07仍为`planned`；Order Expansion、Snapshot/Problem builder、P2 ScheduleValidator与Solver均未开始。
+`TASK-P1-06 — Data Quality and Routing Validation`已完成：不可变Diff base为`75d761332204ec779477ba7242c98517cce1b68b`，implementation commit为`c1ac1077fdd92e012f4050f30bab2aec4638f6ec`，对应GitHub Actions run `32257767495`/required `validate` job `96083426251`=`success`，artifact `9366988617`的provider/download digest均为`sha256:a2e38cf942e672a073f5044b936dd2b7b7450204f5d353251566ed8b7352ca98`。Schema set`2.2.0`、error registry v2/Error v3/ImportQualityReport v1、canonical structure/reference/DAG/resource/capability/time/duration/unit evaluator及四类P1 exact rejection证据已闭环。
+
+`TASK-P1-07 — Deterministic Order Expansion`现为`in_progress`，不可变Diff base固定为`97728521e187f9f50715de4b04a09098bef62ddf`。启动前已核验本地/远端`main`一致、P1-06 closure run `32258207160`为`success`且branch protection仍要求`validate`；本Task只实现DataValidation PASS之后的pure Order/Lot/OperationInstance expansion与属性测试，不修改Schema、Snapshot/Problem builder、ScheduleValidator、Solver或P2能力。
+
+本地implementation candidate现已形成`order-expansion.v1`、7项unit/2项fixed-seed Hypothesis property、property-aware CI handoff与9行impact治理；功能+CI contract定向14 passed、full repository 219 passed、docs diff为45 paths/9 rows/0 issues且build成功。Task仍等待implementation commit push后的GitHub required`validate`/artifact核验，因此尚未`done`，P1-08也未启动。
 
 用户于2026-08-19进一步授权：后续每个P1 Task完成本地验收并提交后，可直接push当前`main`并核验对应GitHub CI。该授权只覆盖当前Task完成后的push/provider核验，不自动启动下一Task、不改变Task允许范围，也不授权进入P2。
 
@@ -68,7 +72,7 @@ CSV / Excel / Reference Adapter / Synthetic Generator
 
 ## P1 Task 规划状态
 
-P1共规划12个Task：phase governance/CI、canonical contracts、Raw Staging、CSV/Excel/reference adapter、Normalization、Data Validation、Order Expansion、Snapshot、Problem hash、Synthetic Generator、common-ingress Gate evidence，最后为P1 Exit Gate Audit。TASK-P1-01～06=`done`，TASK-P1-07～12=`planned`；P1 Milestone继续`active`，建议下一项为TASK-P1-07，但本次没有启动；不得进入P2。
+P1共规划12个Task：phase governance/CI、canonical contracts、Raw Staging、CSV/Excel/reference adapter、Normalization、Data Validation、Order Expansion、Snapshot、Problem hash、Synthetic Generator、common-ingress Gate evidence，最后为P1 Exit Gate Audit。TASK-P1-01～06=`done`，TASK-P1-07=`in_progress`，TASK-P1-08～12=`planned`；P1 Milestone继续`active`，当前只执行TASK-P1-07，不自动启动P1-08且不得进入P2。
 
 ## 阶段完成条件
 

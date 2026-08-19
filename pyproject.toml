@@ -26,6 +26,7 @@ dependencies = [
 [dependency-groups]
 dev = [
   "httpx==0.28.1",
+  "hypothesis==6.165.10",
   "jsonschema==4.25.1",
   "pyright==1.1.411",
   "pytest==8.4.1",

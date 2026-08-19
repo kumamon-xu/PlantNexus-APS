@@ -74,3 +74,9 @@ integration test可在同一临时SQLite中同时创建两种repository以证明
 ReferenceFileAdapter不新增environment variable、`.env`、Compose service、endpoint或Business Policy。调用方必须显式传入source root与`SourceFileManifest`，manifest继续使用TASK-P1-03的data plane/synthetic conditional；`production_binding=false`不能被config覆盖。4 MiB/10000 rows等limit是versioned reference security capability，不是Factory/Simulation/Production业务参数或容量承诺。
 
 P1-04只更新既有engineering machine contract中的exact runtime dependency集合以包含openpyxl/defusedxml，并保留OR-Tools forbidden断言；`Settings`、Production fail-closed、Database/Redis/Secret/Simulation API行为完全不变。独立Production/Simulation数据库和Production file-root/permission部署仍未形成。
+
+## TASK-P1-07 CI property-suite boundary
+
+本Task只把`backend/tests/property`加入phase-neutral GitHub repository suite，并由integration contract要求该路径持续存在；没有修改Settings、environment/data-plane、Secret、Compose、Database/Redis connectivity、Simulation API或Production configuration。Hypothesis为dev-only lock，runtime/container的`uv sync --no-dev`不会安装它。
+
+CI重放生成测试只证明synthetic expansion correctness与治理交接，不建立独立Production/Simulation数据库、Production deployment、runtime capacity或外部source authority。Provider run在immutable implementation commit完成前保持pending。

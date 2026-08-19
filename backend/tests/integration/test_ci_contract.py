@@ -81,6 +81,7 @@ def test_ci_runs_repository_gates_and_discovers_the_current_task() -> None:
         "uv run ruff check .",
         "uv run pyright backend/app backend/tests",
         "backend/tests/integration",
+        "backend/tests/property",
         "app.infrastructure.contract_check",
         "docker compose --env-file .env.example config --quiet",
         "PLANTNEXUS_CI_CHANGE_BASE:",

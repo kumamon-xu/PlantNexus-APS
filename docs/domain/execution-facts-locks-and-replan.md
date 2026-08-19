@@ -45,3 +45,9 @@ Replan 必须保留 completed/running facts 和 HARD_LOCK，对 SOFT_LOCK 计价
 ## UI 编辑
 
 拖拽操作必须转成 UI Command，经服务端验证后产生新 DRAFT，再由 Validator 检查。任何 `UPDATE published_schedule` 路径均禁止。
+
+## TASK-P1-07 execution-fact projection
+
+Order Expansion按`production_lot_id + routing_operation_id`查找唯一current ExecutionFact：无fact为NOT_STARTED；RUNNING/COMPLETED逐字保留status并写入`execution_fact_id`，不把实际历史时刻改写成未来排程时刻。COMPLETED OperationInstance继续存在于expansion/Snapshot事实层，未来PlanningProblem是否排除由TASK-P1-09单独实现和测试。
+
+OperationLock同样只按lot/operation lineage附加稳定排序的`lock_ids`；跨RoutingVersion的fact/lock或同一实例多个fact明确拒绝，不做自动选择/修复。实际start/resource/remaining quantity/seconds仍保留在canonical ExecutionFact中，由引用回链；本Task不实现Replan、freeze policy、lock目标或ScheduleValidator。

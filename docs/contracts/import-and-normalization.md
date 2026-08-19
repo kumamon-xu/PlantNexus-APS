@@ -99,3 +99,11 @@ Producer生成Import v2固定document字段`schema_set_version=2.0.0`、`canonic
 四类P1 Gate固定为`ROUTE_CYCLE`、`MISSING_RESOURCE`、`UNIT_CONVERSION_ERROR`、`MISSING_DURATION`，均属于`DATA_ERROR`。`import-quality-report.v1`绑定package ID、`data-quality-rules.v1`、`error-code-registry.v2`与`canonical-json.v1`，按code/entity/field/source/observed稳定排序，不含时间戳；Error v3逐项携带entity type/ID、field、observed、expected、source location和action。合法sample为PASS/0，结构不完整输入也返回可验证FAIL报告而不是首错崩溃。
 
 该Gate不证明真实Production source authority，也不执行Order/Lot/OperationInstance expansion、Snapshot/Problem hash、C-001～C-011 candidate ScheduleValidator、infeasibility或Solver。Normalization的module-local首错仍保留；只有进入canonical evaluator后的结果使用产品error registry v2/report v1。
+
+## TASK-P1-07 deterministic Order Expansion
+
+`order-expansion.v1`只接受`import-package.v2`、匹配同一package ID且内容派生ID自洽的`import-quality-report.v1` PASS/0，以及`lot_mode=EXPLICIT_LOTS`。每个ProductionOrder必须已有显式ProductionLot；service不创建lot、不调整quantity，也不允许`SPLIT_MERGE`。RoutingVersion内每个RoutingOperation按`ProductionLot + RoutingOperation`派生稳定OperationInstance ID，每条precedence按`ProductionLot + RoutingPrecedenceEdge`派生稳定edge ID；两类ID均把expansion version纳入canonical JSON SHA-256基值。
+
+实例逐项复制Demand/ProductionOrder/Lot/Routing lineage、due/release/material gate、required capabilities、candidate setup/cycle/final duration及duration source version。RUNNING/COMPLETED事实通过`execution_fact_id`保留，NOT_STARTED不伪造事实；lock ID按lineage复制并排序。结果携带Import/source/synthetic provenance、quality rule/error/report versions、canonical bytes与Task-local expansion hash，但不构建或持久化Snapshot/Problem。
+
+缺显式lot、route operation、candidate/duration provenance、冲突fact/lock或错误version均用module-local结构化`DATA_ERROR`拒绝；`SPLIT_MERGE`为`UNSUPPORTED_CAPABILITY`。这些code不加入产品error registry v2，也不替代P1-06 multi-error quality report。Schema set保持`2.2.0`，Import v2 document仍为`2.0.0`；OPEN-007/008/014/015均未关闭。

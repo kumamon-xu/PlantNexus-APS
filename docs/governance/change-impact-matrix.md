@@ -185,3 +185,9 @@ Schema变化只新增unit registry并同步set metadata/data dictionary；Import
 本Task实际命中`IMPACT-SCHEMA`、`IMPACT-DOMAIN`、`IMPACT-IMPORT`、`IMPACT-DEPENDENCY`、`IMPACT-VERSION-METADATA`、`IMPACT-TESTS`、`IMPACT-PHASE`、`IMPACT-GOVERNANCE-REGISTRY`、`IMPACT-DOCS`。启动前review发现原卡遗漏`IMPACT-DOMAIN/DEPENDENCY/VERSION-METADATA/PHASE/GOVERNANCE-REGISTRY`的若干强制文档、两个受global schema version影响的既有contract tests和Task已要求但未分配路径的ImportQualityReport samples，均已在任何业务实现前补入范围；Diff base固定为`75d761332204ec779477ba7242c98517cce1b68b`。
 
 本Task只新增error registry v2、error.v3、ImportQualityReport v1和`backend/app/data_validation/**`，同步domain pure error/types、schema set metadata与限定测试；旧error/import/canonical/unit artifacts由固定SHA-256证明只读。`pyproject.toml`只改schema metadata、dependency与`uv.lock`不变。Planning ScheduleValidator/constraint formula、Adapter/Staging/Normalization、Expansion/Snapshot/Problem、Simulation、API/HTTP、Solver/Benchmark实现均未修改，因此不声明其他Rule ID；最终以TASK-P1-06 diff report真实changed paths/九行matched/0 issues为准。
+
+## TASK-P1-07 matrix review
+
+本Task实际命中`IMPACT-DOMAIN`、`IMPACT-IMPORT`、`IMPACT-INFRA`、`IMPACT-DEPENDENCY`、`IMPACT-VERSION-METADATA`、`IMPACT-TESTS`、`IMPACT-PHASE`、`IMPACT-GOVERNANCE-REGISTRY`、`IMPACT-DOCS`。启动前review发现原卡遗漏domain/dependency/version/tests/phase/governance/docs行的强制文档与root README，并在任何业务实现前补入范围；全仓回归随后发现workflow未收集property tests，故在修改CI前再次扩卡加入INFRA文件及configuration/Operations必审文档。Diff base始终固定`97728521e187f9f50715de4b04a09098bef62ddf`。
+
+实际实现只新增pure domain production contract、normalization order expansion、unit/property tests和dev-only Hypothesis lock，并在既有workflow/integration contract追加phase-neutral property suite路径；`pyproject.toml`的schema/code metadata与runtime dependencies不变。Schema/error registry、Adapter/Staging/unit-time Normalizer、DataValidation、Snapshot/Problem、Simulation/API/DB/Worker、Constraint/ScheduleValidator、Solver/Benchmark均未修改，因此不声明其他Rule ID；最终以TASK-P1-07 diff report真实changed paths/九行matched/0 issues为准。

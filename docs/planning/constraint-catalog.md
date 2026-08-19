@@ -68,3 +68,9 @@ TASK-P0-06 的 test-local direct calculations 使用 `constraint-rule-sheet.v1` 
 Routing DAG、resource option/capability、duration/unit与calendar range检查发生在PlanningProblem和candidate schedule之前，输出ImportQualityReport/Error v3而非Constraint violation。`ROUTE_CYCLE`不等同C-002 candidate precedence violation，`MISSING_RESOURCE`不等同C-003 assignment violation，`MISSING_DURATION`/`INVALID_DURATION`不等同C-010 selected duration violation；它们阻止非法输入进入Expansion/Problem。
 
 本Task没有修改C-001～C-018、constraint-rule-sheet.v1、P0 fixture evaluator或ValidationReport v2。新增四个P1 error code不触发Constraint/Solver benchmark；P2仍须在正式Problem/candidate上独立验证全部C-ID。
+
+## TASK-P1-07 expansion/constraint separation
+
+`order-expansion.v1`只把已通过input-quality Gate的Routing DAG逐lot复制为OperationInstance/edge，并复制candidate duration、release/material gate、transport/max lag、fact与lock引用。它不判断candidate schedule，不选择resource，不验证overlap/precedence/horizon，也不输出Constraint violation；因此未修改C-001～C-018、rule sheet、ValidationReport或独立ScheduleValidator。
+
+请求SPLIT_MERGE仍按C-016 capability边界明确`UNSUPPORTED_CAPABILITY`，多个source-explicit lots不等同系统执行split/merge。P2必须在TASK-P1-09正式Problem/candidate上重新验证全部C-ID；Expansion PASS不能替代ScheduleValidator PASS。

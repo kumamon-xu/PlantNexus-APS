@@ -67,3 +67,9 @@ Duration只接受integer source value与同row显式unit。Registry v1精确支�
 Data Validation复核所有canonical instant为UTC `Z`、calendar/lock/execution interval严格递增，并拒绝同一Calendar内显式unavailable intervals重叠；它不猜测OPEN-004的班次合并、跨日或生产日历语义。Routing lag必须为非负整数秒且`max >= min`；execution status-specific事实、positive remaining/completed quantity与remaining duration必须完整。
 
 Product→DemandOrder→ProductionOrder→ProductionLot→ExecutionFact以及Product→RoutingResourceOption的quantity unit必须逐级相等；missing/blank/mismatch输出`UNIT_CONVERSION_ERROR`，但不在Data Validation中转换。Required duration缺失输出`MISSING_DURATION`，非法duration保持`INVALID_DURATION`。OPEN-001/004/007/013/014继续OPEN，test-local时刻与unit不成为生产默认值。
+
+## TASK-P1-07 copied time/material boundaries
+
+Expansion不转换或推导时间：每个实例逐字复制Demand due、ProductionOrder release/material-ready UTC以及Routing edge的min/max/transport seconds；candidate duration也只复制P1-06已验证的显式整数秒与source version。RUNNING/COMPLETED的actual/remaining事实留在canonical record并由`execution_fact_id`回链，不把实际开始时间重新排入未来域。
+
+缺duration/source不得以setup+cycle×quantity、平均值或AI fallback补齐；material-ready不得从lot/order状态猜测。OPEN-001/004/007/009/013/014继续OPEN，属性测试中的UTC、300秒transport和duration只属于synthetic test values。

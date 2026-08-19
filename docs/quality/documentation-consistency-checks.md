@@ -187,6 +187,12 @@ TASK-P1-05 implementation commit `d52aa62d36e8d89eba318cb5fc586311680e030f`已�
 
 治理检查只证明scope、版本、文档和追踪，不执行DAG/SCC、resource eligibility、Error排序/count/report ID或四类Gate语义；TEST-DATA-QUALITY-001与TEST-CONTRACT-001补充这些事实。完成前必须证明global `2.2.0`、Import v2 `2.0.0`、unit registry `2.1.0`的有意区别、六份历史artifact hash、`uv.lock`无变化、九行matched impact与0 issues；ignored report不提交，implementation/evidence commit分别核验provider required `validate`。
 
+## TASK-P1-07 expansion governance review
+
+本Task继续使用full repository与`Diff base..HEAD + working tree`检查，report路径为`build/traceability/TASK-P1-07-report.json`，不可变Diff base为`97728521e187f9f50715de4b04a09098bef62ddf`。实际路径由`IMPACT-DOMAIN/IMPORT/INFRA/DEPENDENCY/VERSION-METADATA/TESTS/PHASE/GOVERNANCE-REGISTRY/DOCS`九行覆盖；启动前已先补齐初始矩阵强制文档和root README，发现CI未收集property后又在修改workflow前扩卡纳入INFRA范围及两份强制文档。
+
+治理检查只证明scope、dependency/version、追踪和文档一致，不执行derived ID、fact/lock/candidate copy或Hypothesis shrinking；TEST-ORDER-EXPANSION-001补充这些语义。完成前必须记录dev-only lock变化、schema set仍为`2.2.0`、Import/Snapshot v2仍为`2.0.0`、九行matched/0 issues及真实source counts；ignored report不提交，implementation/evidence commit各自核验provider required`validate`。
+
 ## Override
 
 不允许用自由文本 CI skip 绕过。确需例外时必须在 Task Card 记录理由，提交 ADR 或明确批准记录，并仍保留检查报告。正确性、状态语义、数据隔离和发布门不得豁免。

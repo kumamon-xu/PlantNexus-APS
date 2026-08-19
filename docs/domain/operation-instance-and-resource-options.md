@@ -70,3 +70,9 @@ Snapshot v2的OperationInstance显式引用DemandOrder、ProductionOrder、Produ
 Data Validation在Expansion前要求每个RoutingOperation至少一条显式`routing_resource_option`；option的resource必须存在，operation/resource logical pair唯一，setup/cycle为非负整数秒、final duration为正整数秒，且duration source/version非空。缺少duration字段或provenance返回`MISSING_DURATION`，非法数值返回`INVALID_DURATION`，不得补guess或统一工时。
 
 普通设备required capability必须由至少一个候选Resource完整满足；无option、orphan resource或零capability-eligible option返回`MISSING_RESOURCE`。ExecutionFact/OperationLock resource还必须属于其routing operation的显式option。该Gate不选择资源、不计算实例duration、不做C-003/C-010 schedule判定；TASK-P1-07仍负责确定性实例展开。
+
+## TASK-P1-07 expansion semantics
+
+`order-expansion.v1`为每个显式`ProductionLot × RoutingOperation`生成且只生成一个OperationInstance；多lot只有在source已明确给出时才产生，不执行自动拆分/合并。实例复制DemandOrder/ProductionOrder/Lot/RoutingVersion/RoutingOperation IDs、lot quantity/unit、due/release/material UTC与required capabilities。每个candidate按`routing_resource_option_id`排序并逐字段复制resource、setup/cycle/final seconds、duration source及`duration_source_version → source_version`，不按lot quantity重新推算duration。
+
+实例ID的versioned lineage为`[lot_id, routing_operation_id]`，edge ID为`[lot_id, routing_precedence_edge_id]`；canonical JSON SHA-256使输入collection顺序不影响输出。branch/merge、cross-workshop transport lag与max lag只按Routing DAG逐lot复制，不被线性化。RUNNING/COMPLETED绑定唯一fact，NOT_STARTED无fact；locks按同一lot/operation lineage复制。缺candidate/duration或请求SPLIT_MERGE明确失败，不选择资源、不生成Snapshot/Problem。

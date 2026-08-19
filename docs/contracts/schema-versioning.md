@@ -104,3 +104,9 @@ Schema set 与 `app.SCHEMA_VERSION` 均保持 `1.2.0`；没有修改 `schemas/**
 - Replay：同package与相同issue集合得到同排序、canonical bytes和report ID，PASS/FAIL sample与正反Schema/count/identity tests固定该行为。
 
 本次没有dependency变化，`uv.lock`保持不变；也没有Snapshot/Problem/Solver/HTTP contract。未来改变四类Gate映射、detail必填字段、排序或report ID projection必须发布新registry/document version并提供兼容与重放证据。
+
+## TASK-P1-07 code-level expansion version review
+
+本Task发布独立`order-expansion.v1`行为版本，但不修改`schemas/**`、`app.SCHEMA_VERSION`或`[tool.plantnexus-aps.versions].schema`；全局schema set继续`2.2.0`，Import/Snapshot v2 document继续各自固定`2.0.0`。`pyproject.toml`只增加exact dev-only `hypothesis==6.165.10`，`uv.lock`增加Hypothesis及transitive `sortedcontainers==2.4.0`，runtime dependency集合和Business Schema metadata均不变。
+
+Compatibility为code-level additive consumer：stable derived ID把expansion version纳入hash，consumer必须显式保存/选择版本，禁止把未来实现标成v1重解释历史输出。没有DB migration、Schema sample或历史artifact改写；Snapshot builder仍由TASK-P1-08负责。若expanded shape字段不足，必须另发Schema set/document version，而不能在本service隐藏字段。

@@ -109,3 +109,9 @@ Raw Staging分配6个module-local稳定control-flow code：`INVALID_STAGING_META
 `error.v3`要求每个detail完整携带entity type/ID、field、observed value、expected contract、稳定source location和action；`import-quality-report.v1`收集多个Error、精确校验count/status、稳定排序并用除self ID外的canonical content派生report ID。`UNSUPPORTED_CAPABILITY`仍属于独立category，不能降格为DATA_ERROR或合并成SYSTEM_ERROR。
 
 该报告只属于canonical input gate，不是HTTP contract、PlanningRun persistence、infeasibility proof或`validation-report.v2`。Normalization/Adapter/Staging的module-local首错仍按各自边界存在；Error v1/v2与registry v1逐字保留且不可与v3互换。
+
+## TASK-P1-07 expansion rejection boundary
+
+Expansion继续要求匹配同package且content-derived ID自洽的ImportQualityReport PASS/0；FAIL、错误package/version或错误report ID在展开前拒绝。服务的module-local `OrderExpansionError`区分quality mismatch、missing explicit lot/route/option/duration、fact/lock lineage、derived-ID collision和expansion version mismatch；这些属于单请求边界错误，不修改`error-code-registry.v2`或Error v3 Schema。
+
+`lot_mode=SPLIT_MERGE`固定返回`UNSUPPORTED_CAPABILITY/UNSUPPORTED_SPLIT_MERGE`；其他输入缺失为`DATA_ERROR`，均不改写为INFEASIBLE、VALIDATION_FAILED或SYSTEM_ERROR。该边界不声称HTTP mapping、multi-error aggregation、ScheduleValidator result或Solver diagnosis。

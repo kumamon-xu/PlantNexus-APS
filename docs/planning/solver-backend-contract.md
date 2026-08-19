@@ -78,3 +78,9 @@ Schema metadata提升到`2.1.0`但runtime dependency和`uv.lock`图不变，仍�
 Schema set提升到`2.2.0`只新增Error/ImportQualityReport/Data Validation；runtime dependency和`uv.lock`图不变且仍无OR-Tools。Evaluator终止于PASS/FAIL report，不构建OperationInstance、PlanningProblem/tick/CpModel/IntervalVar/SolverBackend/PlanningSolution/status，也以source scan禁止Planning/Solver/ScheduleValidator import。
 
 因此本Task不触发Solver upgrade、ADR、Golden/Scenario或Benchmark replay。未来Backend仍只能消费TASK-P1-09的Problem，并且上游必须已有与同一Import绑定的PASS quality report；Backend不得把FAIL输入解释为INFEASIBLE或尝试“修复”。
+
+## TASK-P1-07 solver-neutral expansion review
+
+`domain.production`与`normalization.order_expansion`只使用JSON-compatible TypedDict/dataclass和标准库，输出OperationInstance/edge facts供未来Snapshot/Problem consumer使用；source scan与全仓回归继续证明无`app.planning`、OR-Tools、CpModel或IntervalVar。COMPLETED实例保留在事实输出，TASK-P1-09才负责从未来Problem排除；Backend不得直接读取Import或Expansion来绕过Snapshot/Problem builder。
+
+新增Hypothesis/sortedcontainers仅为dev/property test lock，不是Solver dependency。没有Backend/version/status/parameter、PlanningProblem hash、model build或BenchmarkReport，因此Solver upgrade/replay Gate不触发；P2首个baseline必须记录`order-expansion.v1`及实际instance/edge/candidate counts。

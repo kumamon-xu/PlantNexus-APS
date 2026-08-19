@@ -39,3 +39,7 @@ TASK-P1-04在`security.md`形成bounded CSV/XLSX file-root/type/size/shape/archi
 这仍不是Production Runbook或完整file-ingress security：quarantine/malware scanning、RBAC、network file share、rate limit、encryption、retention/erasure、production filesystem permission/audit和incident response均未形成；真实ERP/MES/WMS/CAM binding也仍受OPEN-002/015阻塞。
 
 TASK-P1-04 implementation commit`9391ec021afa9e6f4f881b1538b276c84584df0e`已由GitHub run [`32247079996`](https://github.com/kumamon-xu/PlantNexus-APS/actions/runs/32247079996)的required `validate`成功重放；artifact `9362999088` / digest `sha256:b9ada0b25d12962f5efea51e058cd82778495f4389a240e32aa64c04143b5d4b`保存机器证据。该provider PASS仍不构成Production file-ingress、security certification或真实system binding。
+
+TASK-P1-07不新增API、Worker、DB/migration、network、Secret或Runbook行为；仅把dev-only Hypothesis property directory加入既有repository CI test step，并以`test_ci_contract.py`防止provider遗漏核心expansion evidence。Workflow仍使用current-phase Task discovery、中性artifact名、完整既有gates和conditional Benchmark hook，无`continue-on-error`。
+
+本地workflow contract PASS不等于GitHub provider执行；implementation commit push后必须核验required `validate`、steps与artifact，再以evidence-only commit关闭Task。即使provider PASS，也不构成Production operation、capacity、安全或on-call证据。

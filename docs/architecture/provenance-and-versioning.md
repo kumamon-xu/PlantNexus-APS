@@ -104,3 +104,9 @@ Package ID从不含package ID的semantic envelope SHA-256派生，dataset hash�
 Schema set additive `2.2.0`新增`error-code-registry.v2`、Error v3和ImportQualityReport v1；Import v2仍携带document-level `2.0.0`，unit registry v1仍为`2.1.0`。Quality report显式记录package ID、data-quality rule version、error registry version和report canonicalization version；不含generated-at、run ID或随机UUID。
 
 每个issue以canonical entity/source/field定位并按稳定key排序；report ID对除self ID外的全部报告内容做`canonical-json.v1 + SHA-256`。因此相同package ID与相同issue集合得到byte-identical report，输入collection顺序不会改变Error顺序/ID。Snapshot v2仍须由TASK-P1-08把PASS report ID与Import dataset hash一起绑定；当前报告不替代Snapshot/Problem/code commit或publish provenance。
+
+## TASK-P1-07 expansion provenance
+
+`OrderExpansionDocument`记录`order-expansion.v1`、`canonical-json.v1`、Import document/schema/package/source/normalization/canonicalization/synthetic provenance，以及PASS report的schema/rule/error/canonicalization versions和report ID。Operation/edge identity分别对versioned lot-operation与lot-routing-edge lineage做canonical JSON SHA-256；output canonical bytes再形成`sha256:` expansion hash。该hash只标识pure expansion artifact，不冒充Import dataset、Snapshot或Problem hash。
+
+同一Import/PASS report与expansion version重复运行、或只重排canonical collection/record顺序，必须得到byte-identical实例/edge/hash。未来语义变化发布新expansion version；v1不得原地重解释。TASK-P1-08仍须把Import dataset hash、quality report ID与expansion version绑定进immutable Snapshot，code commit/run provenance则由后续pipeline/CI形成。

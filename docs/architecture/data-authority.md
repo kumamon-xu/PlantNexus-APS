@@ -79,3 +79,9 @@ MappingProfile只能声明一个精确source system/version的record/field转换
 Data Validation只判断“显式canonical事实是否自洽”：record source/version必须出现在Import envelope，引用与order/routing/fact/lock lineage必须闭合，单位逐级一致，route必须为DAG，resource option必须存在且能力匹配。Error v3的source location由record source reference与canonical field组合，不用数组位置或推测原始文件坐标。
 
 该Gate没有资格选择冲突source、定义真实machine capability、转换新增unit、补duration、合并calendar或决定material/transport authority；它只能拒绝不完整/不一致事实。OPEN-001/002/004/007/009/013/014/015全部继续OPEN，PASS报告不构成Production authority批准。
+
+## TASK-P1-07 expansion authority
+
+Order Expansion只投影已经明确存在的authority-neutral canonical事实：Demand/ProductionOrder/Lot/Routing lineage、lot quantity/unit、candidate duration/source、release/material gate、execution fact和lock。Derived ID与排序由code version决定，但不创造业务事实；output中的Import/quality/source/synthetic provenance保留回链，OperationInstance字段不足时必须升级合同而不能隐藏数据。
+
+多个显式lot可逐一展开，但服务无权决定lot数、lot size或split/merge；也无权重算duration、选择resource、改变fact/lock或定义transport/material规则。OPEN-007/008/014/015继续OPEN，PASS与Expansion hash均不是Production authority closure evidence。

@@ -52,6 +52,7 @@ jobs:
           backend/tests/golden
           backend/tests/validation
           backend/tests/integration
+          backend/tests/property
 
       - name: Existing executable contracts
         run: |

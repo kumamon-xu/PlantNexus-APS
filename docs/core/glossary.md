@@ -31,6 +31,8 @@ last_reviewed: 2026-08-19
 | Canonical Records | authority-neutral、严格版本化的APS实体集合；稳定ID与source provenance已固定，但外部系统字段mapping仍由Adapter/OPEN决定 |
 | Standard Import | Production Adapter与Synthetic Generator共同输出的版本化canonical envelope；不是Raw Staging或Data Validation的替代品 |
 | ImportQualityReport | Data Validation对一个Import v2产生的确定性PASS/FAIL报告；包含有序Error v3、精确计数和内容派生report ID，不是ScheduleValidator结果 |
+| Order Expansion | DataValidation PASS后把显式ProductionLot与Routing DAG确定性映射为OperationInstance/precedence edge的纯步骤；不自动拆批、补工时或构建Solver模型 |
+| Expansion Version | 控制derived instance/edge ID和展开语义的独立code-level版本；`order-expansion.v1`不得被未来实现原地重解释 |
 | HARD_LOCK | 资源、开始和结束均固定的硬锁 |
 | SOFT_LOCK | 通过稳定性目标施加变化成本的软锁 |
 | material_ready_at | 上游权威来源提供的物料齐套门，不由 Solver 猜测 |

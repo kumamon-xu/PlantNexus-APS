@@ -106,3 +106,5 @@ P1及以后 Task必须单列 `Completion conditions`，把“实现目标、负�
 若Task做set-level additive schema release但保留既有document版本，`Schema changes`和completion evidence必须分别记录global set version、各document内固定version、preserved artifact hash和consumer compatibility；不得用全局版本搜索替换改写immutable旧合同。Versioned mapping/rule还必须说明历史rows如何显式选择版本及禁止`latest`重解释。
 
 涉及canonical Data Validation/quality report时还必须记录：输入document/rule/error/report/canonicalization各自版本、旧Error/registry fingerprint、PASS零Error与FAIL count等式、四类P1 exact code/category、rich source/action evidence、multi-error stable ordering、report ID projection、malformed input不崩溃、capability/resource/DAG边界，以及与Normalization、Expansion、Snapshot/Problem、ScheduleValidator/Solver的依赖隔离。固定sample不得写成Production authority或common-ingress evidence。
+
+涉及Order/Lot/OperationInstance expansion时还必须记录：expansion/canonicalization version、Import与matching PASS report引用、source-explicit lot policy、derived operation/edge ID lineage与排序、candidate duration/source逐项copy、RUNNING/COMPLETED/lock投影、SPLIT_MERGE和missing/fallback拒绝、Hypothesis seed/example/shrinking结果，以及Snapshot/Problem/Constraint/Solver仍未形成的边界。通过Snapshot pure precheck不得写成Snapshot builder/hash/persistence PASS。

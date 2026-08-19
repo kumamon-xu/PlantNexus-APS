@@ -94,3 +94,9 @@ Snapshot v2额外固定derived OperationInstance/precedence edge与candidate级d
 `domain/contracts.py`新增Error v3 rich detail与ImportQualityReport v1的JSON-compatible types；`domain/errors.py`保留原`ProductErrorCode`/v1 mapping，同时以独立`ProductErrorCodeV2`/mapping additive登记四项P1 DATA_ERROR。历史19项类型和consumer没有alias或重解释。
 
 `app.data_validation`在Canonical Records之上形成best-effort multi-error evaluator，按source identity而非数组位置报告结构、lineage、DAG、resource/capability、time/duration/unit/fact/lock问题。它不修改canonical records、不创建OperationInstance、不依赖ORM/API/Planning/OR-Tools，也不是P0/P2 candidate ScheduleValidator。
+
+## TASK-P1-07 production expansion boundary
+
+`domain/production.py`现固定`order-expansion.v1`、derived ID算法、JSON-compatible expansion provenance/result和module-local rejection；`normalization/order_expansion.py`消费已验证Import/PASS report，按每个显式ProductionLot复制其RoutingVersion的全部operation与edge。OperationInstance ID由`version + lot ID + routing operation ID`派生，precedence ID由`version + lot ID + routing edge ID`派生，输出按ID稳定排序并保留可回链到全部canonical source record的外键。
+
+该pure service不拥有Production lot sizing、duration calculation、material authority或resource selection。它复制明确candidate duration/source、release/material gate、RUNNING/COMPLETED fact引用和locks；COMPLETED实例留在事实输出，未来Problem过滤仍属TASK-P1-09。Expansion artifact/hash不是PlanningSnapshot/hash，持久化与immutability仍属TASK-P1-08，Solver仍不存在。

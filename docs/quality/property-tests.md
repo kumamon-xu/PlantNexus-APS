@@ -42,3 +42,9 @@ TASK-P1-05以固定构造覆盖三项deterministic properties：row/input order�
 TASK-P1-06以固定canonical sample和显式mutations验证三项deterministic properties：合法输入重复运行得到同report bytes/ID；collection/record/list顺序重排不改变有序Error/report；四类Gate与多错误组合保持exact code/category/source evidence。另覆盖DAG SCC、orphan/duplicate、calendar/lag/fact和capability/resource负例。
 
 这些属于TEST-DATA-QUALITY-001的固定property-style evidence，不使用Hypothesis/random generator/shrinking，也不生成合法PlanningProblem或candidate schedule。P1-07/08的Expansion/Snapshot property与P2 TEST-PROPERTY继续`PLANNED`。
+
+## TASK-P1-07 generated expansion properties
+
+本Task首次锁定`hypothesis==6.165.10`并使用generation/shrinking。Positive property以replay seed`20260819`和64 max examples生成显式synthetic canonical inputs：1～3 lots、固定4-operation branch/merge DAG、2 workshops/resources、每operation 1～2 candidates、RUNNING/COMPLETED/NONE fact与locks；验证重复运行和collection重排的bytes/hash相同、实例/edge cardinality、ID唯一、同lot edge、candidate duration/source copy与transport lag不丢失。Negative property以seed`20260820`和24 max examples删除随机operation的全部candidate，要求收缩后仍精确`MISSING_RESOURCE_OPTION`。
+
+所有生成输入显式`synthetic=true`并在provenance记录generated scenario seed；无失败，因此没有保存虚构的minimized failure/corpus。失败时Hypothesis会报告最小example和reproduction seed，修复后应把最小反例版本化为回归fixture或保留reproduction metadata。本Task形成P1 TEST-ORDER-EXPANSION-001的property evidence，但没有生成PlanningProblem/candidate schedule，故P2 `TEST-PROPERTY`仍为`PLANNED`；TASK-P1-08 Snapshot replay property也仍未形成。

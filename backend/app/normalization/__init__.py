@@ -20,6 +20,7 @@ from .normalizer import (
     canonical_json_bytes,
     normalize_import,
 )
+from .order_expansion import expand_orders
 from .time import normalize_utc_instant
 from .units import MAX_DURATION_SECONDS, UnitConversionRegistry, UnitConversionRule
 
@@ -41,6 +42,7 @@ __all__ = [
     "UnitConversionRegistry",
     "UnitConversionRule",
     "canonical_json_bytes",
+    "expand_orders",
     "normalize_import",
     "normalize_utc_instant",
     "stable_canonical_id",

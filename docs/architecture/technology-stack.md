@@ -118,3 +118,11 @@ Normalization runtime只使用Python 3.12标准库`dataclasses/enum/json/hashlib
 Data Validation runtime继续只使用Python 3.12标准库`dataclasses/hashlib/json/datetime/math/collections`及既有pure domain helpers；YAML/jsonschema仍仅由已锁定dev/test工具验证registry和Draft 2020-12跨URN `$ref`。`pyproject.toml`只把schema metadata从`2.1.0`提升到additive `2.2.0`，dependency list不变，`uv.lock`应保持原SHA-256。
 
 没有引入graph库、Hypothesis、Pydantic model、DB/API/Worker、OR-Tools或Benchmark runner。DAG使用确定性标准库SCC遍历，report canonicalization使用JSON/SHA-256；source scan固定无Planning/Solver/ScheduleValidator依赖，因此不触发Solver upgrade ADR/replay。
+
+## TASK-P1-07 property-test tooling
+
+Order Expansion runtime继续只使用Python 3.12标准库`collections/dataclasses/enum/hashlib/json`与pure domain contracts；runtime direct dependency精确集合不变，仍无OR-Tools、graph库、ORM/API/Worker或Benchmark runner。`pyproject.toml`的dev group精确增加`hypothesis==6.165.10`，lock解析增加其transitive `sortedcontainers==2.4.0`；`uv sync --locked`固定完整图。
+
+属性测试使用Hypothesis generation/shrinking、固定replay seeds `20260819/20260820`、64个positive与24个negative上限样例；无失败时不伪造minimized corpus。Hypothesis仅进入test path，不进入wheel runtime行为、Schema version或Production dependency claim。
+
+GitHub workflow的phase-neutral repository suite现显式包含`backend/tests/property`，integration contract固定该交接；既有Python/uv/Action/Compose pins和runtime container安装方式不变。Provider evidence须来自push后的真实run，不能由本地targeted test替代。

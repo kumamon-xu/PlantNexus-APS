@@ -60,3 +60,5 @@ TASK-P0-05 review：FactoryProfile/Scenario Schema sample 的 count/range/calend
 TASK-P0-06 review：本 Task 注册的 synthetic-only assumptions 和 `SIM-MINIMAL-001@1.0.0` 的 2/2/3 topology、900 秒 tick、maintenance、duration/lag、due/weight 都不能作为本注册表的权威证据。fixture-local `records` 不回答 OPEN-002/013/015，数值不回答 OPEN-001/003/004/006/007/009/014，correctness runtime 不回答 OPEN-011/012。没有权威来源或 closure record；OPEN-001～015 全部继续 `OPEN`，registry format version 不变。
 
 TASK-P0-07 review：calendar/material/transport/lock/duration/horizon mutation 只是在 `SIM-MINIMAL-001@1.0.0` synthetic facts 上制造明确非法反例，不提供 OPEN-004/005/007/009/014 的生产语义或权威值；fixture evaluator runtime 也不回答 OPEN-011/012。没有外部权威、closure record、production default 或迁移结论；OPEN-001～015 全部继续 `OPEN`，registry format version 不变。
+
+TASK-P0-08 review：environment/data-plane/Production config guard、development Compose database name/credentials placeholder、health timeout、heartbeat=30/lease=120 与 conditional PR Benchmark hook 全是工程/本地测试值，不回答 OPEN-001/002/003/010/011/012/015，也不是生产 topology、SLA、角色、接口或字段权威。没有 CI provider、Production deployment、外部权威或 closure record；OPEN-001～015 全部继续 `OPEN`，registry format version 不变。

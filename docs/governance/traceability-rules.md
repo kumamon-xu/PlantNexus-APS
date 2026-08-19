@@ -70,6 +70,8 @@ Golden Fixture 证据链还必须区分：fixture-local record vocabulary、人�
 
 Validator Mutation 证据链必须同时区分：不可变 positive base/hash、与 evaluator 分离且不含判断公式的 mutation construction、独立 evaluator、Rule Sheet metadata、exact ValidationReport/Error、Schema validation、C-ID/required-mutation coverage、deterministic replay 与 backend/Solver dependency boundary。fixture-local evaluator 可以形成 P0 correctness evidence，但没有正式 PlanningProblem/candidate、Solver comparison、Property/Benchmark 或状态集成时，必须把 P2 production/performance completion 保持为 `PLANNED`。
 
+Engineering Skeleton 证据链必须区分：exact direct pin 与 transitive lock、environment/data-plane config、Secret redaction、lazy client 与真实 connectivity、liveness 与 readiness、generic Job primitive 与业务状态机、process-local reference idempotency 与 distributed durable repository、migration structure test 与 Production migration、workflow/config contract 与 CI provider run、conditional Benchmark hook 与真实 BenchmarkReport。local/SQLite/synthetic-probe PASS 不得写成 PostgreSQL/Redis outage、business side-effect、Production security/deployment 或 P0 Exit Gate evidence。
+
 ## 自动校验
 
 `scripts/check_docs.py` 执行以下治理检查：

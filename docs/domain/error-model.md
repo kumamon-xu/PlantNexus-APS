@@ -71,3 +71,9 @@ TASK-P0-03 的 [`error.v1`](../../schemas/json/error.schema.json) 与 [`validati
 TEST-ERROR-MAPPING-001 已验证 YAML、纯枚举和 error.v2 code/category 一致。TASK-P0-07 的 fixture-local evaluator 对 FAIL report 逐 violation 映射 `error.v2`：category=`VALIDATION_FAILED`、code=`SCHEDULE_VALIDATION_FAILED`，detail 保留首要 entity、完整 entity IDs、constraint ID、observed value、expected contract 和 candidate source location；PASS 不生成 Error。13 个 mutation 的 exact Error 与 ValidationReport 均经现有 JSON Schema 验证。
 
 该映射只覆盖 `SIM-MINIMAL-001-MUTATIONS@1.0.0` 的 P0 correctness 边界。HTTP status/API payload、状态持久化、正式 PlanningProblem/candidate 错误入口以及 Solver status/diagnostics 集成仍由后续 API/P2 Task 建立。
+
+## TASK-P0-08 engineering health/error boundary
+
+health-only API 不发布产品 `error.v2`：liveness 永远只判断 process；readiness 对 database/redis probe failure 返回 HTTP 503 与 `DATABASE_UNAVAILABLE`/`REDIS_UNAVAILABLE`，未知 probe 使用 `DEPENDENCY_UNAVAILABLE`，不返回 driver exception、endpoint 或 Secret。配置无效在创建 app/client 前以 sanitized `ConfigurationError` fail closed。
+
+Job primitives 以 `JobTransitionError`、`LeaseOwnershipError`、`LeaseExpiredError`、`IdempotencyConflictError` 区分工程控制流；FAILED record 只保存 stable `failure_code`，不保存/回显原始 Secret-bearing exception。这些名称不是 `error-code-registry.v1` 新 code，也不改变七类产品 Error 或 Solver mapping。产品 HTTP mapping、ExportJob persistence 和 SYSTEM_ERROR audit 继续 `PLANNED`。

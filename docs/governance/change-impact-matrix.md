@@ -50,7 +50,7 @@ registry_version: 1.0.0
 | IMPACT-FRONTEND | `frontend/**` | `docs/frontend/README.md`、`docs/domain/state-machines/schedule-version.md`、`docs/planning/replanning.md`、`docs/planning/schedule-validator.md`、`docs/quality/test-strategy-and-matrix.md` |
 | IMPACT-EXPORT | `backend/app/exporters/**` | `docs/contracts/export-package.md`、`docs/domain/state-machines/export-job.md`、`docs/domain/state-machines/schedule-version.md`、`docs/architecture/provenance-and-versioning.md`、`docs/governance/traceability-matrix.md` |
 | IMPACT-JOBS | `backend/app/jobs/**` | `docs/domain/state-machines/export-job.md`、`docs/domain/error-model.md`、`docs/architecture/module-boundaries.md`、`docs/governance/nfr-and-engineering-register.md`、`docs/quality/test-strategy-and-matrix.md` |
-| IMPACT-INFRA | `infra/**`、`backend/app/infrastructure/**`、`docker-compose.yml` | `docs/architecture/configuration-environments-and-isolation.md`、`docs/architecture/technology-stack.md`、`docs/operations/README.md`、`docs/governance/nfr-and-engineering-register.md` |
+| IMPACT-INFRA | `infra/**`、`backend/app/infrastructure/**`、`backend/migrations/**`、`alembic.ini`、`.env.example`、`.github/workflows/**`、`docker-compose.yml` | `docs/architecture/configuration-environments-and-isolation.md`、`docs/architecture/technology-stack.md`、`docs/operations/README.md`、`docs/governance/nfr-and-engineering-register.md` |
 | IMPACT-DEPENDENCY | `pyproject.toml`、`uv.lock` | `docs/architecture/technology-stack.md`、`docs/planning/solver-backend-contract.md`、`docs/quality/benchmark-regression.md`、`docs/adr/README.md` |
 | IMPACT-VERSION-METADATA | `backend/app/__init__.py`、`pyproject.toml` | `docs/contracts/schema-versioning.md`、`docs/architecture/provenance-and-versioning.md`、`docs/architecture/technology-stack.md`、`docs/governance/traceability-matrix.md` |
 | IMPACT-PHASE | `docs/milestones/**`、`docs/current_phase.md` | `docs/milestones/README.md`、`docs/tasks/README.md`、`docs/governance/traceability-matrix.md`、`docs/governance/document-inventory.md` |
@@ -123,3 +123,9 @@ FactoryProfile artifact 位于 `fixtures/**` 而非 profile code/schema，故由
 本 Task 预期命中 `IMPACT-VALIDATOR`、`IMPACT-FIXTURE`、`IMPACT-TESTS`、`IMPACT-PHASE`、`IMPACT-GOVERNANCE-REGISTRY`、`IMPACT-DOCS`。`backend/app/planning/validation/**` 只新增 fixture-local independent evaluator/mutation runner；`fixtures/infeasible/SIM-MINIMAL-001-MUTATIONS/**` 与 `backend/tests/validation/**` 固定 negative evidence；阶段/注册表只同步 P0-07 状态和真实追踪。
 
 Schema、Domain、PlanningProblem、Backend、Simulation code、Golden/其他 tests、dependency/version metadata、Benchmark、API、Infra/DB、Export/Job 均禁止修改，因此不声明对应 Rule ID。现有 machine globs/required-document 列无需改变，registry format version 保持 `1.0.0`；最终以 TASK-P0-07 diff report 的真实 matched rows 为准。
+
+## TASK-P0-08 matrix review
+
+本 Task 预期命中 `IMPACT-API`、`IMPACT-JOBS`、`IMPACT-INFRA`、`IMPACT-DEPENDENCY`、`IMPACT-VERSION-METADATA`、`IMPACT-STATE`、`IMPACT-TESTS`、`IMPACT-PHASE`、`IMPACT-GOVERNANCE-REGISTRY`、`IMPACT-DOCS`。`pyproject.toml` 同时触发 dependency/version review；更新 `export-job.md` 触发完整三套 state/ADR/trace review，即使 machine state artifacts 保持只读。首次 diff check 暴露 Alembic/migrations、`.env.example` 与 CI workflow 没有规则覆盖，因此在同一稳定 `IMPACT-INFRA` 行加入这些有界工程路径；required documentation 不变且均已列入 Task。
+
+Schema、Domain、Import/Normalization/Snapshot、Planning/Validator/Backend、Simulation、Exporter、Fixture、Benchmark、Frontend、governance validator 均禁止修改，因此不声明相应 Rule ID。新增路径覆盖没有创建新 Rule ID、没有改变 required-document column/registry table format，`registry_version` 保持 `1.0.0`。最终以 TASK-P0-08 diff report 的真实 matched rows 为准。

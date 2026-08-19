@@ -1,0 +1,86 @@
+name: plantnexus-aps-dev
+
+services:
+  database:
+    image: postgres:17.6-alpine3.22
+    environment:
+      POSTGRES_DB: plantnexus_dev
+      POSTGRES_PASSWORD: ${PLANTNEXUS_POSTGRES_PASSWORD:?set PLANTNEXUS_POSTGRES_PASSWORD}
+      POSTGRES_USER: plantnexus
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U plantnexus -d plantnexus_dev"]
+      interval: 5s
+      timeout: 3s
+      retries: 12
+    volumes:
+      - plantnexus_postgres_data:/var/lib/postgresql/data
+
+  redis:
+    image: redis:8.2.1-alpine3.22
+    command: ["redis-server", "--save", "60", "1", "--appendonly", "yes"]
+    healthcheck:
+      test: ["CMD", "redis-cli", "ping"]
+      interval: 5s
+      timeout: 3s
+      retries: 12
+    volumes:
+      - plantnexus_redis_data:/data
+
+  api:
+    build:
+      context: .
+      dockerfile: infra/Dockerfile
+    environment: &plantnexus_environment
+      PLANTNEXUS_CELERY_BROKER_URL: ${PLANTNEXUS_CELERY_BROKER_URL:?set PLANTNEXUS_CELERY_BROKER_URL}
+      PLANTNEXUS_CELERY_RESULT_BACKEND_URL: ${PLANTNEXUS_CELERY_RESULT_BACKEND_URL:?set PLANTNEXUS_CELERY_RESULT_BACKEND_URL}
+      PLANTNEXUS_CODE_COMMIT: ${PLANTNEXUS_CODE_COMMIT:-uncommitted}
+      PLANTNEXUS_DATABASE_URL: ${PLANTNEXUS_DATABASE_URL:?set PLANTNEXUS_DATABASE_URL}
+      PLANTNEXUS_DATA_PLANE: development
+      PLANTNEXUS_JOB_HEARTBEAT_SECONDS: ${PLANTNEXUS_JOB_HEARTBEAT_SECONDS:-30}
+      PLANTNEXUS_JOB_LEASE_SECONDS: ${PLANTNEXUS_JOB_LEASE_SECONDS:-120}
+      PLANTNEXUS_LOG_LEVEL: ${PLANTNEXUS_LOG_LEVEL:-INFO}
+      PLANTNEXUS_READINESS_TIMEOUT_SECONDS: ${PLANTNEXUS_READINESS_TIMEOUT_SECONDS:-2}
+      PLANTNEXUS_REDIS_URL: ${PLANTNEXUS_REDIS_URL:?set PLANTNEXUS_REDIS_URL}
+      PLANTNEXUS_RUNTIME_ENVIRONMENT: development
+      PLANTNEXUS_SIMULATION_API_ENABLED: "false"
+    depends_on:
+      database:
+        condition: service_healthy
+      redis:
+        condition: service_healthy
+    healthcheck:
+      test:
+        [
+          "CMD",
+          "python",
+          "-c",
+          "import urllib.request; urllib.request.urlopen('http://127.0.0.1:8000/health/live', timeout=2)",
+        ]
+      interval: 10s
+      timeout: 3s
+      retries: 6
+    ports:
+      - "127.0.0.1:8000:8000"
+
+  worker:
+    build:
+      context: .
+      dockerfile: infra/Dockerfile
+    command:
+      [
+        "celery",
+        "-A",
+        "app.jobs.celery_app:celery_app",
+        "worker",
+        "--loglevel=INFO",
+      ]
+    environment: *plantnexus_environment
+    depends_on:
+      database:
+        condition: service_healthy
+      redis:
+        condition: service_healthy
+
+volumes:
+  plantnexus_postgres_data:
+  plantnexus_redis_data:

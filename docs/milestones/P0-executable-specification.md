@@ -35,4 +35,4 @@ last_reviewed: 2026-08-19
 
 Schema PASS、Golden Fixture PASS、Validator Rule Sheet PASS、Scenario deterministic replay PASS、Repository Build PASS、CI PASS。所有 PROD_OPEN 已登记但无需全部关闭。
 
-当前 `P0-DOCS` 只完成文档基线，不等于本 Milestone 完成。
+TASK-P0-01～08 已完成 repository/governance/contracts/Scenario/Golden/Validator 及 exact build、CI workflow、structured logging、health/config、DB/Redis/Celery、job reliability/idempotency、reversible migration skeleton 的本地 evidence。CI provider run/branch protection 仍为 `NOT_RUN`，TASK-P0-09 仍为 planned；因此 P0 Exit Gate 尚未审计/通过，P0 未完成。

@@ -14,7 +14,7 @@ last_reviewed: 2026-08-19
 本文件定义由 TASK-P0-02 建立的文档/追踪校验器合同。实现入口为
 [`scripts/check_docs.py`](../../scripts/check_docs.py)，负向和回归测试入口为
 [`TEST-TRACEABILITY-VALIDATOR`](../../backend/tests/unit/test_check_docs.py)。该检查器只使用 Python
-标准库；P0-02 提供本地/Task acceptance 能力，PR 与 Release 自动执行仍分别由 P0-08、P0-09 接入。
+标准库；P0-02 提供本地/Task acceptance 能力，P0-08 已编排 PR/push 自动执行，Release/P0 Exit Gate 仍由 P0-09 审计。
 
 ## 命令接口
 
@@ -114,6 +114,16 @@ uv run python -m app.planning.validation.mutation_check --root . --report build/
 ```
 
 该命令生成 `validator-mutation-report.v1`，检查 positive Golden、13 个声明式 negative mutations、exact `validation-report.v2`/`error.v2`、Draft 2020-12 Schema、deterministic replay、Rule Sheet violation metadata、C-001～C-011 与 13 required mutation classes 无缺口。其 scope 明确为 P0 fixture-local evaluator，不判断 PlanningProblem/Solver、性能、API/persistence 或 Phase Gate。当前 Task 仍须同时运行 rule-contract CLI、validation pytest 和 `check_docs.py --task ... --check-diff`；任一报告不能替代其他层。
+
+TASK-P0-08 增加 engineering contract 入口：
+
+```text
+uv run python -m app.infrastructure.contract_check --root . --report build/validation/TASK-P0-08-engineering.json
+```
+
+该命令生成 `engineering-skeleton-report.v1`，检查 exact runtime pins/无 OR-Tools、environment isolation/Production fail closed、live/ready sanitized payload、recursive log redaction、job lease/STALLED/retry 与 idempotency replay/conflict，以及 migration/Compose/Dockerfile/CI artifact layout。它使用 synthetic probes 与 process-local store，不连接真实 PostgreSQL/Redis、不执行 migration、不验证 distributed crash recovery、业务 pipeline、production deployment 或 Solver。对应语义由 integration tests、Alembic empty-DB round trip、Compose config 和独立 acceptance commands 补充。
+
+`.github/workflows/ci.yml` 现执行所有既有 machine checks、本文件两种 docs 命令与 artifact upload。仓库 validator 仍只验证 workflow 文本/路径和 Task diff；外部 provider 是否实际运行、分支保护是否 required 及 run URL/ID 必须由平台证据证明，不能写成 local PASS。
 
 ## Override
 

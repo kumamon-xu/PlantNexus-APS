@@ -12,7 +12,7 @@ Coding Agent 必须从 [`AGENTS.md`](AGENTS.md) 进入项目规则。项目规�
 |---|---|---|
 | Implementation spec | `0.3.0` | 当前权威实施规格版本 |
 | Code | `0.0.0` | P0 工程骨架占位，不代表发布版本 |
-| Business schema | `unassigned` | 将由后续获准的 Schema Task 建立 |
+| Business schema set | `1.2.0` | P0 data/rule/state/error/simulation contracts；本 Task 不修改 Schema |
 | Python | `3.12` | `.python-version` 与 `pyproject.toml` 固定的运行时系列 |
 
 ## 本地验收
@@ -21,31 +21,35 @@ Coding Agent 必须从 [`AGENTS.md`](AGENTS.md) 进入项目规则。项目规�
 
 ```powershell
 uv sync --locked
+uv run ruff check .
+uv run pyright backend/app backend/tests
+uv run pytest -q backend/tests/unit backend/tests/contract backend/tests/simulation backend/tests/golden backend/tests/validation backend/tests/integration
+uv run python -m app.infrastructure.contract_check --root . --report build/validation/TASK-P0-08-engineering.json
+docker compose --env-file .env.example config --quiet
 uv run python scripts/check_docs.py
-uv run python -m unittest discover -s backend/tests/unit -p "test_check_docs.py"
 uv build
-uv run python -c "import app; assert app.CODE_VERSION == '0.0.0'; assert app.SPEC_VERSION == '0.3.0'; assert app.SCHEMA_VERSION == 'unassigned'"
+uv run python -c "import app; assert app.CODE_VERSION == '0.0.0'; assert app.SPEC_VERSION == '0.3.0'; assert app.SCHEMA_VERSION == '1.2.0'"
 ```
 
 `scripts/check_docs.py` 当前同时检查结构性 Markdown、版本化 registries、REQ/NFR/ENG/TEST 等引用、Task 依赖、逐根 traceability 和 PROD_OPEN/SIM_ASSUMPTION 隔离。Task 进入 `in_progress` 时须把当时完整 HEAD SHA 写入 `Diff base`；影响覆盖检查使用 `Diff base..HEAD` 的已提交变更与当前 working tree 的并集，因此提交前后可用同一命令复验：
 
 ```powershell
-uv run python scripts/check_docs.py --task docs/tasks/P0/TASK-P0-02-requirements-and-traceability.md --check-diff --report build/traceability/TASK-P0-02-report.json
+uv run python scripts/check_docs.py --task docs/tasks/P0/TASK-P0-08-engineering-and-ci-skeleton.md --check-diff --report build/traceability/TASK-P0-08-report.json
 ```
 
-报告使用 `traceability-report.v1`，包含 `diff_base` 与 committed/working-tree source counts，生成到已忽略的 `build/`；Task Card Completion evidence 保存持久结果摘要。CI 强制集成仍属于 TASK-P0-08。
+报告使用 `traceability-report.v1`，包含 `diff_base` 与 committed/working-tree source counts，生成到已忽略的 `build/`；Task Card Completion evidence 保存持久结果摘要。[`ci.yml`](.github/workflows/ci.yml) 已编排 exact lock、lint、type、全部 P0 tests、machine contracts、Compose config、文档 diff 和 package build。仓库内只证明 workflow/config 可执行；CI provider run URL/ID 必须来自真实外部运行，不能由本地结果替代。
 
 ## 仓库结构
 
 ```text
-backend/      Python 应用包、迁移与测试的预留边界
+backend/      Python 应用包、工程 migration 与 P0 测试
 frontend/     前端工作区预留边界
 schemas/      可执行 Schema 预留边界
 fixtures/     确定性、非法、仿真与历史 Fixture 预留边界
 benchmarks/   Benchmark profile 与 baseline 预留边界
 docs/         唯一实质性开发文档中心
 scripts/      仓库级校验与自动化脚本
-infra/        基础设施配置预留边界
+infra/        P0 开发容器构建配置
 ```
 
-目录存在只表示路径已预留，不表示对应能力已经实现。当前授权范围见 [`docs/current_phase.md`](docs/current_phase.md)。
+P0-08 只形成 health-only API、环境配置、日志、lazy DB/Redis connectivity、通用 Job reliability/idempotency、Alembic/Compose/CI 骨架；它不形成业务 pipeline、产品 API、真实分布式作业存储、Solver 或生产部署。当前授权范围见 [`docs/current_phase.md`](docs/current_phase.md)。

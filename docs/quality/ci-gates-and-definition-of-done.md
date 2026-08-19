@@ -17,7 +17,7 @@ Backend：Ruff、type check、unit/contract/integration tests。Frontend：test 
 
 具体命令以仓库脚本和 lockfile 落地为准；在这些文件不存在前不宣称已运行。
 
-文档/traceability 本地检查由 `scripts/check_docs.py` 实现，合同见 `documentation-consistency-checks.md`。Task 进入 `in_progress` 时记录完整 `Diff base`；acceptance 至少运行全仓检查、带 `--check-diff` 的当前 Task 基线范围检查和 `TEST-TRACEABILITY-VALIDATOR`，并确认提交前后均可复验。把它接入 PR/Release CI 属于 TASK-P0-08。
+文档/traceability 本地检查由 `scripts/check_docs.py` 实现，合同见 `documentation-consistency-checks.md`。Task 进入 `in_progress` 时记录完整 `Diff base`；acceptance 至少运行全仓检查、带 `--check-diff` 的当前 Task 基线范围检查和 `TEST-TRACEABILITY-VALIDATOR`，并确认提交前后均可复验。P0-08 已将它接入 PR/push workflow；P0 Release Gate 仍由 TASK-P0-09 审计。
 
 P0-07 增加可本地复验的 fixture Validator gate：
 
@@ -25,7 +25,22 @@ P0-07 增加可本地复验的 fixture Validator gate：
 uv run python -m app.planning.validation.mutation_check --root . --report build/validation/TASK-P0-07-validator-mutations.json
 ```
 
-该 gate 必须同时得到 positive PASS、13 negative FAIL、C-001～C-011/required mutation 无缺口、exact v2 report/error、deterministic replay 和无 backend/OR-Tools 依赖；它尚未接入 CI，仍由 TASK-P0-08 负责自动化。
+该 gate 必须同时得到 positive PASS、13 negative FAIL、C-001～C-011/required mutation 无缺口、exact v2 report/error、deterministic replay 和无 backend/OR-Tools 依赖；P0-08 workflow 已连同 rule/simulation/Golden contracts 一起执行。
+
+## TASK-P0-08 executable workflow
+
+`.github/workflows/ci.yml` 在 pull request 和 main push 上以 Python 3.12、`uv==0.11.32` 执行：
+
+1. `uv sync --locked`；
+2. `ruff check .` 与 Pyright；
+3. unit/contract/simulation/golden/validation/integration 全部 P0 tests；
+4. Rule Sheet、Simulation、Golden、Validator Mutation、Engineering 五类 machine reports；
+5. `docker compose --env-file .env.example config --quiet`；
+6. repository docs + TASK-P0-08 immutable diff-base check；
+7. conditional PR Benchmark hook（当前无 runner/Solver，明确 deferred）；
+8. `uv build` 与 machine evidence artifact upload。
+
+workflow 使用 read-only repository permission、并发取消与 20 分钟 job timeout。Action tags、Compose image tags和本地 config validation 尚不等于 supply-chain hardened/digest-pinned Production pipeline；provider run/branch-protection 结果也不能由本地验收填造。TASK-P0-09 仍需用真实 evidence 审计 P0 CI Exit Gate。
 
 ## Task Done
 

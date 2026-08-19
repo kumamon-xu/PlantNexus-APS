@@ -40,3 +40,7 @@ P2 首次 baseline 必须记录 rule sheet/ValidationReport version；以后任�
 ## TASK-P0-05 review
 
 P0-05 新增 versioned Profile/Scenario/Manifest 与 empty Import hash，但没有 PlanningProblem、Solver、baseline profile 或 benchmark result；rule-sheet change 只解除全局 schema set exact-value check，C-ID/formula 不变。当前无法产生有效 runtime/memory/quality comparison，不写零值报告。P2 首个 baseline 必须记录 schema set `1.2.0`、Scenario/Profile/Generator versions、dataset/problem hashes 与硬件环境。
+
+## TASK-P0-08 review
+
+CI workflow 保留 `PLANTNEXUS_BENCHMARK_PROFILE=pr` 的条件 hook：只有未来获准 Task 真实创建 `scripts/run_benchmark.py` 后才调用；当前明确输出 deferred 信息。P0-08 没有 OR-Tools、Solver/Problem change、BenchmarkRunner/profile/baseline 或 runtime/memory/quality 数值，不生成伪 BenchmarkReport，也不把 CI/health latency当成 Solver 性能。OPEN-012 保持 OPEN。

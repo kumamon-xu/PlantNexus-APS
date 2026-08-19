@@ -61,3 +61,18 @@ Runtime dependencies 继续为空；纯领域合同只使用标准库。`depende
 Runtime dependencies 与 lock 图保持不变；Simulation Profile/Scenario/Generator package 只使用 Python 3.12 标准库，Schema/测试继续使用既有 jsonschema/PyYAML/pytest/Ruff/Pyright pins。`pyproject.toml` 仅把 schema set metadata 从 `1.1.0` 更新为 additive `1.2.0`，`uv.lock` 不应因该 metadata 变化产生依赖漂移。
 
 未引入随机/数值库、Pydantic、FastAPI、DB、Worker 或 OR-Tools；canonical primitive 使用 `json`/`hashlib`，命名 seed 使用 SHA-256 派生而非全局 RNG。没有 Solver/Benchmark，因此不触发 upgrade replay，也不产生性能承诺。
+
+## TASK-P0-08 engineering runtime
+
+P0 工程骨架首次落地以下精确 direct pins；transitive graph 以 `uv.lock` 为唯一可复验来源：
+
+| Area | Exact direct dependency |
+|---|---|
+| API/config | `fastapi==0.116.1`、`pydantic-settings==2.10.1`、`uvicorn==0.35.0` |
+| Database/migration | `sqlalchemy==2.0.43`、`alembic==1.16.5`、`psycopg[binary]==3.2.9` |
+| Queue/cache | `redis==6.4.0`、`celery==5.5.3` |
+| Logging/trace context | `structlog==25.4.0`、`opentelemetry-api==1.36.0` |
+| Integration test client | dev-only `httpx==0.28.1` |
+| Container build tool | `uv==0.11.32` in `infra/Dockerfile` and CI setup |
+
+`pyproject.toml` 中全部 direct runtime/dev dependencies 使用 exact pin，`uv sync --locked` 禁止解析漂移。PostgreSQL/Redis Compose images 使用 patch-level tag；尚未形成 digest-pinned production deployment。OR-Tools、Polars、openpyxl、Hypothesis、Frontend/Playwright 均未安装；没有 Solver dependency/upgrade/Benchmark evidence，ADR Solver gate 不触发。

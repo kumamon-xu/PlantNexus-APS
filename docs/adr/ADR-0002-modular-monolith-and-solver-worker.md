@@ -22,3 +22,7 @@ V1 需要快速形成端到端闭环，同时长时间求解不能阻塞 API Pro
 ## Consequences
 
 领域与事务仍在单一产品边界内，降低早期分布式复杂度；计算故障与 API 隔离。未来拆服务需基于性能/组织证据提交新 ADR，不能预先微服务化。
+
+## TASK-P0-08 implementation evidence
+
+同一 Python package/container image 现在可用不同 command 启动 health-only FastAPI process 与 JSON-only Celery process；通用 Job pure contract 固定 heartbeat、lease、attempt、STALLED 和 idempotency reference semantics。API 不导入/执行 Planning，Celery 不注册业务或 Solver task；因此这里只形成 process/config/reliability skeleton，不证明 Solver Worker、distributed persistence、crash recovery 或业务事务已经实现。Decision 未改变。

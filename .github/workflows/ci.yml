@@ -1,0 +1,97 @@
+name: P0 engineering gates
+
+on:
+  pull_request:
+  push:
+    branches: [main]
+
+permissions:
+  contents: read
+
+concurrency:
+  group: p0-ci-${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  validate:
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    env:
+      PLANTNEXUS_CODE_COMMIT: ${{ github.sha }}
+      PLANTNEXUS_POSTGRES_PASSWORD: ci-contract-only-not-a-secret
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+
+      - uses: astral-sh/setup-uv@v6
+        with:
+          version: "0.11.32"
+          enable-cache: true
+
+      - name: Sync exact lock
+        run: uv sync --locked
+
+      - name: Lint
+        run: uv run ruff check .
+
+      - name: Type check
+        run: uv run pyright backend/app backend/tests
+
+      - name: P0 test suites
+        run: >-
+          uv run pytest -q
+          backend/tests/unit
+          backend/tests/contract
+          backend/tests/simulation
+          backend/tests/golden
+          backend/tests/validation
+          backend/tests/integration
+
+      - name: Existing executable contracts
+        run: |
+          uv run python -m app.planning.validation.rule_sheet --report build/validation/TASK-P0-08-rule-contracts.json
+          uv run python -m app.simulation.generators.contract_check --report build/validation/TASK-P0-08-simulation-contracts.json
+          uv run python -m app.simulation.scenarios.golden_fixture --fixture fixtures/deterministic/SIM-MINIMAL-001 --report build/validation/TASK-P0-08-golden.json
+          uv run python -m app.planning.validation.mutation_check --root . --report build/validation/TASK-P0-08-validator-mutations.json
+
+      - name: Engineering contract
+        run: >-
+          uv run python -m app.infrastructure.contract_check
+          --root .
+          --report build/validation/TASK-P0-08-engineering.json
+
+      - name: Container configuration
+        run: docker compose --env-file .env.example config --quiet
+
+      - name: Documentation and task diff
+        run: |
+          uv run python scripts/check_docs.py
+          uv run python scripts/check_docs.py --task docs/tasks/P0/TASK-P0-08-engineering-and-ci-skeleton.md --check-diff --report build/traceability/TASK-P0-08-report.json
+
+      - name: Benchmark hook (P0 contract only)
+        env:
+          PLANTNEXUS_BENCHMARK_PROFILE: pr
+        run: |
+          if test -f scripts/run_benchmark.py; then
+            uv run python scripts/run_benchmark.py --profile "${PLANTNEXUS_BENCHMARK_PROFILE}"
+          else
+            echo "Benchmark runner remains deferred; no Solver benchmark runs in TASK-P0-08."
+          fi
+
+      - name: Build package
+        run: uv build
+
+      - name: Upload machine evidence
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: p0-engineering-evidence-${{ github.run_id }}
+          path: |
+            build/validation/*.json
+            build/traceability/*.json
+          if-no-files-found: error

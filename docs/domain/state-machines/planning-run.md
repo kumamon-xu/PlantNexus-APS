@@ -64,3 +64,7 @@ CREATED
 `COMPLETED`、`DATA_REJECTED`、`MODEL_INVALID`、`INFEASIBLE`、`NO_SOLUTION_WITHIN_LIMIT`、`VALIDATION_FAILED`、`CANCELLED`、`FAILED` 均为终态且无 outgoing pair。`SOLVING → SOLVED` 只接受 OPTIMAL/FEASIBLE candidate；UNKNOWN 只能进入 NO_SOLUTION_WITHIN_LIMIT。`VERIFYING → COMPLETED` 的 guard 是独立 `validation-report.v2` PASS 且 hard count 为 0。
 
 `state-transition.v1` JSON Schema 验证 machine/state 名称；纯 transition table 与 TEST-STATE-TRANSITION-001 才授权 pair。本 Task 不持久化 PlanningRun，也不实现 Worker cancellation 或 Solver status ingestion。
+
+## TASK-P0-08 generic worker review
+
+`jobs/contracts.py` 的 `QUEUED/RUNNING/STALLED/SUCCEEDED/FAILED` 是通用执行诊断，不是 PlanningRun 状态扩展。lease 到期只把 Job 标成 STALLED；不得把 PlanningRun 推到 COMPLETED、FAILED、INFEASIBLE 或其他业务状态。P0-08 没有 PlanningRun persistence/task、Solver status 或 cancellation，因此 `state-machines.v1`、27 states/42 transitions 与 TEST-STATE-TRANSITION-001 均保持不变。

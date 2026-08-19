@@ -61,3 +61,9 @@ Schema version、rule version、generator version 和 code commit 是不同维�
 - Validation：Draft 2020-12 `jsonschema==4.25.1`、pure semantic precheck、TEST-CONTRACT-001、TEST-SCENARIO-REPLAY 与 TEST-SIM-ISOLATION。
 
 本次不修改 `import-package.v1`、Snapshot/Problem、rule/state/error/capability artifact 内容。P0 empty package 的 `records={}` 是不猜生产字段的边界，不是 P1 canonical dataset 实现。
+
+## TASK-P0-08 engineering metadata review
+
+Schema set 与 `app.SCHEMA_VERSION` 均保持 `1.2.0`；没有修改 `schemas/**`、JSON/YAML contract、sample、Fixture、hash 或 serializer。`engineering_job_records` 与 `engineering_idempotency_records` 是 Alembic 管理的通用关系型工程 metadata，不是 Business Schema set；其 compatibility 由 revision `0001_engineering_job_metadata` 的空库 upgrade/downgrade test 管理。
+
+因此本 Task 的 JSON Schema compatibility/migration 为 none；新增 runtime dependencies/lock 和 build commit metadata 不能借机提升或覆盖 schema set。未来若 Job/health payload 成为跨系统产品合同，必须由单独 Task 建立 versioned Schema，而不能把本 P0 Python/DB skeleton 当作已发布业务合同。

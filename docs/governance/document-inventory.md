@@ -12,7 +12,7 @@ registry_version: 1.0.0
 
 # 文档清单
 
-本清单列出当前仓库已经实际存在的 Markdown 文档。计划但尚未形成的 API、Operations 和 Runbook 正文不在表中；它们由相应目录的 README 登记。
+本清单列出当前仓库已经实际存在的 Markdown 文档。P0-08 已形成三份 engineering Operations baseline；产品 API 与 Production Runbook 正文尚未形成并继续由相应索引登记。
 
 | Path | Doc ID | Status | Title |
 |---|---|---|---|
@@ -86,7 +86,10 @@ registry_version: 1.0.0
 | [milestones/P6-ai-duration-prediction.md](../milestones/P6-ai-duration-prediction.md) | MILESTONE-P6 | planned | P6 — AI Duration Prediction |
 | [milestones/P7-reality-calibration.md](../milestones/P7-reality-calibration.md) | MILESTONE-P7 | planned | P7 — Reality Calibration |
 | [milestones/README.md](../milestones/README.md) | DOC-MILESTONE-INDEX | baseline | Milestone 索引 |
-| [operations/README.md](../operations/README.md) | DOC-OPS-INDEX | planned | Operations 文档形成计划 |
+| [operations/observability-and-audit.md](../operations/observability-and-audit.md) | DOC-OPS-002 | baseline | P0 Observability 与 Audit 边界 |
+| [operations/README.md](../operations/README.md) | DOC-OPS-INDEX | baseline | Operations 索引与形成边界 |
+| [operations/security.md](../operations/security.md) | DOC-OPS-001 | baseline | P0 工程安全边界 |
+| [operations/worker-reliability-and-idempotency.md](../operations/worker-reliability-and-idempotency.md) | DOC-OPS-003 | baseline | P0 Worker Reliability 与 Idempotency |
 | [planning/constraint-catalog.md](../planning/constraint-catalog.md) | DOC-PLAN-003 | baseline | V1 Constraint Catalog |
 | [planning/infeasibility-diagnostics.md](../planning/infeasibility-diagnostics.md) | DOC-PLAN-006 | baseline | 无解与失败诊断 |
 | [planning/objective-policy.md](../planning/objective-policy.md) | DOC-PLAN-004 | baseline | Objective Policy |
@@ -119,12 +122,12 @@ registry_version: 1.0.0
 | [tasks/P0/TASK-P0-05-simulation-contracts-and-skeleton.md](../tasks/P0/TASK-P0-05-simulation-contracts-and-skeleton.md) | TASK-P0-05 | done | Simulation Contracts and Skeleton |
 | [tasks/P0/TASK-P0-06-minimal-scenario-and-golden-schedule.md](../tasks/P0/TASK-P0-06-minimal-scenario-and-golden-schedule.md) | TASK-P0-06 | done | SIM-MINIMAL-001 and Golden Schedule |
 | [tasks/P0/TASK-P0-07-invalid-fixtures-and-validator-rules.md](../tasks/P0/TASK-P0-07-invalid-fixtures-and-validator-rules.md) | TASK-P0-07 | done | Invalid Fixtures and Validator Rules |
-| [tasks/P0/TASK-P0-08-engineering-and-ci-skeleton.md](../tasks/P0/TASK-P0-08-engineering-and-ci-skeleton.md) | TASK-P0-08 | planned | Engineering and CI Skeleton |
+| [tasks/P0/TASK-P0-08-engineering-and-ci-skeleton.md](../tasks/P0/TASK-P0-08-engineering-and-ci-skeleton.md) | TASK-P0-08 | done | Engineering and CI Skeleton |
 | [tasks/P0/TASK-P0-09-p0-exit-gate-audit.md](../tasks/P0/TASK-P0-09-p0-exit-gate-audit.md) | TASK-P0-09 | planned | P0 Exit Gate Audit |
 | [tasks/README.md](../tasks/README.md) | DOC-TASK-INDEX | living | Task Card 索引 |
 | [tasks/TASK_TEMPLATE.md](../tasks/TASK_TEMPLATE.md) | TEMPLATE-TASK | baseline | Task Card Template |
 
-更新文档时应同步维护本清单。`uv run python scripts/check_docs.py` 会校验本表是否完整覆盖当前 107 份 `docs/**/*.md`，并核对 Doc ID、status 和 title，但不会自动改写清单。根 `README.md`、根 `AGENTS.md`、代码和脚本不属于正式文档清单。
+更新文档时应同步维护本清单。`uv run python scripts/check_docs.py` 会校验本表是否完整覆盖当前 110 份 `docs/**/*.md`，并核对 Doc ID、status 和 title，但不会自动改写清单。根 `README.md`、根 `AGENTS.md`、代码和脚本不属于正式文档清单。
 
 本清单格式为 `registry_version: 1.0.0`；列结构或状态比较语义变化时提升版本。
 

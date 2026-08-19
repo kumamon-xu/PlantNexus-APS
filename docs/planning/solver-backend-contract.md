@@ -52,3 +52,7 @@ Backend/OR-Tools 升级必须经过 ADR、dependency lock、Golden/Scenario repl
 PlanningRun 的 MODEL_INVALID/INFEASIBLE/NO_SOLUTION_WITHIN_LIMIT 与 error.v2 映射保持原义；P0 没有 Solver status artifact。Rule-sheet completeness module 不导入 `planning.backends`/OR-Tools，也不是 ADR-0005 ScheduleValidator evaluator。
 
 TASK-P0-05 的 Generator protocols 明确终止于 Standard Import package，不导入 PlanningProblem 或 SolverBackend。ScenarioSpec `expected_behavior` 只是未来运行的允许结果合同；Schema sample 中的 FEASIBLE/OPTIMAL 不是 Solver evidence。无 Backend/dependency/parameter/version 变化，因此不触发 Solver upgrade replay。
+
+## TASK-P0-08 dependency and worker review
+
+新增 FastAPI/DB/Redis/Celery/logging/trace runtime pins 不含 OR-Tools，`uv.lock` 与 integration tests 明确检查 solver-free dependency graph。Celery `worker` 目前不注册 Planning/Solver task；JobRecord 也不包含 PlanningProblem 或 OR-Tools object。没有 Backend、CpModel、IntervalVar、Solver status/parameter/report 或 performance artifact，因此不触发 Solver upgrade ADR/replay，P2 首次 Solver gate 保持原要求。

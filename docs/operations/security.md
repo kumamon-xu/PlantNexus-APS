@@ -1,0 +1,31 @@
+---
+doc_id: DOC-OPS-001
+title: P0 工程安全边界
+status: baseline
+spec_version: 0.3.0
+phase: P0-P7
+normative: true
+source_sections: [58, 62, 93, 95, 100]
+last_reviewed: 2026-08-19
+---
+
+# P0 工程安全边界
+
+## 已形成控制
+
+- `Settings` 只从显式参数与 `PLANTNEXUS_*` environment 读取；不隐式载入 `.env`，Secret endpoints 使用 `SecretStr`。
+- Production runtime/data plane 必须同时选择且 Simulation API 必须 disabled；Production 还要求 PostgreSQL 与不可变 40 字符 code commit。配置错误在连接外部服务前 fail closed。
+- structured log processor 递归屏蔽 password/token/authorization/API key/credential、DB/Redis URL 字段，并移除 URL userinfo 和 free-text secret assignment；health/readiness 不回显 driver exception 或 endpoint。
+- SQLAlchemy probe 使用固定 `SELECT 1`，Alembic 使用静态 migration；当前没有用户输入 SQL、shell 拼接、上传文件、宏/公式执行或外部 command adapter。
+- direct dependencies 与 dev tools 在 `pyproject.toml` exact pin，并由 `uv.lock`、CI contract test 和 `uv sync --locked` 验证；OR-Tools 不在 dependency graph。
+- Compose 只接受外部注入的 PostgreSQL password；`.env.example` 的 `replace-me-local-only` 是非生产 placeholder，应用不会自动读取它。
+
+## 验证证据
+
+[`test_config_and_health.py`](../../backend/tests/integration/test_config_and_health.py) 验证 Production/config fail closed、Secret repr/summary 与 readiness no-leak；[`test_logging.py`](../../backend/tests/integration/test_logging.py) 验证 recursive/free-text/URL redaction；[`test_ci_contract.py`](../../backend/tests/integration/test_ci_contract.py) 验证 exact dependency、solver-free lock、development-only Compose 和 non-root container。`engineering-skeleton-report.v1` 另提供 machine summary。
+
+## 尚未形成
+
+P0-08 没有 authentication/authorization、Import size/type/macro controls、network policy、TLS/mTLS、secret manager integration/rotation、container/image vulnerability scan、SBOM/signing、digest-pinned actions/images、database roles、backup/restore、production incident response 或第三方 threat assessment。Action/image patch tags与 read-only GitHub permission 是工程起点，不是 supply-chain/production security certification。
+
+真实 Import/API/Publish/Production Task 必须补充其威胁模型、negative tests、权限和平台 evidence；不得用本文件关闭 OPEN-002/010/015 或声称 NFR-SEC-001 已全阶段完成。

@@ -16,15 +16,15 @@ registry_version: 1.0.0
 
 | Root | Kind | Normative landing | Planned milestone / first task | Evidence state |
 |---|---|---|---|---|
-| REQ-001 | REQ | `docs/contracts/import-and-normalization.md` | P1 / P1 Task 未创建 | REGISTERED；implementation PLANNED |
-| REQ-002 | REQ | `docs/contracts/import-and-normalization.md`、`docs/contracts/planning-snapshot.md` | P1 / P1 Task 未创建 | REGISTERED；implementation PLANNED |
-| REQ-003 | REQ | `docs/contracts/import-and-normalization.md`、`docs/domain/operation-instance-and-resource-options.md` | P1 / P1 Task 未创建 | REGISTERED；implementation PLANNED |
+| REQ-001 | REQ | `docs/contracts/import-and-normalization.md` | P0-P1 / TASK-P0-03 schema；P1 Task 未创建 | [`import-package.v1`](../../schemas/json/import-package.schema.json) + [`TEST-CONTRACT-001`](../../backend/tests/contract/test_schema_contracts.py) formed；import pipeline PLANNED |
+| REQ-002 | REQ | `docs/contracts/import-and-normalization.md`、`docs/contracts/planning-snapshot.md` | P0-P1 / TASK-P0-03 schema；P1 Task 未创建 | [`planning-snapshot.v1`](../../schemas/json/planning-snapshot.schema.json) + pure type + contract test formed；normalization/builder/hash PLANNED |
+| REQ-003 | REQ | `docs/contracts/import-and-normalization.md`、`docs/domain/operation-instance-and-resource-options.md` | P0-P1 / TASK-P0-03 schema；P1 Task 未创建 | [`planning-problem.v1` Operation skeleton](../../schemas/json/planning-problem.schema.json) + reference/duration precheck formed；order/lot/routing expansion PLANNED |
 | REQ-004 | REQ | `docs/architecture/end-to-end-planning-flow.md`、`docs/planning/constraint-catalog.md` | P2 / TASK-P0-04（contract） | REGISTERED；solver implementation PLANNED |
 | REQ-005 | REQ | `docs/planning/schedule-validator.md` | P0-P2 / TASK-P0-07 | REGISTERED；Rule Sheet/Validator PLANNED |
 | REQ-006 | REQ | `docs/contracts/export-package.md` | P2-P3 / P1+ Task 未创建 | REGISTERED；implementation PLANNED |
 | REQ-007 | REQ | `docs/domain/state-machines/schedule-version.md` | P3 / P1+ Task 未创建 | REGISTERED；implementation PLANNED |
 | REQ-008 | REQ | `docs/planning/replanning.md` | P4 / P1+ Task 未创建 | REGISTERED；implementation PLANNED |
-| REQ-009 | REQ | `docs/architecture/provenance-and-versioning.md` | P0-P4 / TASK-P0-01、TASK-P0-02 | Repository provenance [PASS](../tasks/P0/TASK-P0-01-documentation-and-repository-governance.md#completion-evidence)；end-to-end manifest/audit PLANNED |
+| REQ-009 | REQ | `docs/architecture/provenance-and-versioning.md` | P0-P4 / TASK-P0-01、TASK-P0-02、TASK-P0-03 | Repository provenance [PASS](../tasks/P0/TASK-P0-01-documentation-and-repository-governance.md#completion-evidence)；schema IDs/version/data dictionary formed；real hash/manifest/audit PLANNED |
 | REQ-010 | REQ | `docs/core/capability-matrix.md` | P6 / P1+ Task 未创建 | REGISTERED；capability DEFERRED |
 | REQ-011 | REQ | `docs/simulation/synthetic-generator-and-determinism.md` | P0-P1 / TASK-P0-05 | REGISTERED；Schema/generator PLANNED |
 | REQ-012 | REQ | `docs/simulation/scenario-spec-and-provenance.md` | P0-P2 / TASK-P0-05、TASK-P0-06 | REGISTERED；Schema/Fixture PLANNED |
@@ -32,8 +32,8 @@ registry_version: 1.0.0
 | REQ-014 | REQ | `docs/simulation/benchmark-harness.md` | P2 / P1+ Task 未创建 | REGISTERED；implementation PLANNED |
 | REQ-015 | REQ | `docs/planning/reference-schedulers.md` | P2 / P1+ Task 未创建 | REGISTERED；implementation PLANNED |
 | NFR-COR-001 | NFR | `docs/planning/constraint-catalog.md`、`docs/planning/schedule-validator.md` | P0-P2 / TASK-P0-04、TASK-P0-07 | REGISTERED；validation evidence PLANNED |
-| NFR-DET-001 | NFR | `docs/contracts/planning-snapshot.md`、`docs/contracts/planning-problem.md`、`docs/simulation/synthetic-generator-and-determinism.md` | P0-P1 / TASK-P0-03、TASK-P0-05、TASK-P0-06 | REGISTERED；replay evidence PLANNED |
-| NFR-TRC-001 | NFR | `docs/architecture/provenance-and-versioning.md`、`docs/governance/traceability-rules.md` | P0-P4 / TASK-P0-01、TASK-P0-02 | Repository metadata PASS；registry/diff validator [`script`](../../scripts/check_docs.py)、[`unit test`](../../backend/tests/unit/test_check_docs.py) 与 [Acceptance PASS](../tasks/P0/TASK-P0-02-requirements-and-traceability.md#completion-evidence) |
+| NFR-DET-001 | NFR | `docs/contracts/planning-snapshot.md`、`docs/contracts/planning-problem.md`、`docs/simulation/synthetic-generator-and-determinism.md` | P0-P1 / TASK-P0-03、TASK-P0-05、TASK-P0-06 | Strict UTC/duration + JSON round-trip [`TEST-CONTRACT-001`](../../backend/tests/contract/test_schema_contracts.py) formed；canonical hash/scenario replay PLANNED |
+| NFR-TRC-001 | NFR | `docs/architecture/provenance-and-versioning.md`、`docs/governance/traceability-rules.md` | P0-P4 / TASK-P0-01、TASK-P0-02、TASK-P0-03 | Repository metadata/registry validator PASS；schema URN/version/data dictionary/contract-test chain formed；run manifest/audit PLANNED |
 | NFR-ISO-001 | NFR | `docs/architecture/configuration-environments-and-isolation.md` | P0-P1 / TASK-P0-05、TASK-P0-08 | REGISTERED；isolation tests PLANNED |
 | NFR-REL-001 | NFR | `docs/domain/state-machines/export-job.md` | P0-P3 / TASK-P0-08 | REGISTERED；worker/idempotency tests PLANNED |
 | NFR-SEC-001 | NFR | `docs/architecture/configuration-environments-and-isolation.md` | P0-P3 / TASK-P0-08 | REGISTERED；security tests/review PLANNED |
@@ -41,10 +41,12 @@ registry_version: 1.0.0
 | NFR-PER-001 | NFR | `docs/simulation/performance-gates.md`、`docs/quality/benchmark-regression.md` | P0-P7 / TASK-P0-08 | REGISTERED；production threshold remains OPEN-012 |
 | NFR-HUM-001 | NFR | `docs/domain/state-machines/schedule-version.md` | P3 / P1+ Task 未创建 | REGISTERED；approval tests PLANNED |
 | ENG-ARCH-001 | ENG | `docs/architecture/repository-layout.md`、`docs/architecture/module-boundaries.md`、`docs/adr/ADR-0002-modular-monolith-and-solver-worker.md` | P0 / TASK-P0-01 | Repository build/import smoke [PASS](../tasks/P0/TASK-P0-01-documentation-and-repository-governance.md#completion-evidence)；API/Worker behavior PLANNED |
-| ENG-SOL-001 | ENG | `docs/contracts/planning-problem.md`、`docs/planning/solver-backend-contract.md`、`docs/adr/ADR-0003-solver-neutral-planning-problem.md` | P0-P2 / TASK-P0-03 | REGISTERED；Solver-neutral contract/code PLANNED |
+| ENG-SOL-001 | ENG | `docs/contracts/planning-problem.md`、`docs/planning/solver-backend-contract.md`、`docs/adr/ADR-0003-solver-neutral-planning-problem.md` | P0-P2 / TASK-P0-03 | Solver-neutral [`Schema`](../../schemas/json/planning-problem.schema.json) / [`pure type`](../../backend/app/planning/problem/contracts.py) formed；builder/backend/Solver PLANNED |
 | ENG-VAL-001 | ENG | `docs/planning/schedule-validator.md`、`docs/adr/ADR-0005-independent-schedule-validator.md` | P0-P2 / TASK-P0-07 | REGISTERED；Rule Sheet/Mutation tests PLANNED |
 | ENG-ERR-001 | ENG | `docs/domain/error-model.md`、`docs/planning/infeasibility-diagnostics.md` | P0-P2 / TASK-P0-04 | REGISTERED；contract tests PLANNED |
-| ENG-VER-001 | ENG | `docs/architecture/provenance-and-versioning.md`、`docs/contracts/schema-versioning.md`、`docs/architecture/technology-stack.md` | P0-P7 / TASK-P0-01、TASK-P0-02 | code/spec/schema placeholders + lock PASS；registry format v1 [`validator`](../../scripts/check_docs.py) 与 [Acceptance PASS](../tasks/P0/TASK-P0-02-requirements-and-traceability.md#completion-evidence) |
+| ENG-VER-001 | ENG | `docs/architecture/provenance-and-versioning.md`、`docs/contracts/schema-versioning.md`、`docs/architecture/technology-stack.md` | P0-P7 / TASK-P0-01、TASK-P0-02、TASK-P0-03 | code/spec lock PASS；schema set `1.0.0` in [`pyproject`](../../pyproject.toml)、[`package metadata`](../../backend/app/__init__.py)、[`data dictionary`](../../schemas/data_dictionary.yaml) + locked contract tooling formed |
 | ENG-LOG-001 | ENG | `docs/architecture/technology-stack.md`、`docs/architecture/provenance-and-versioning.md` | P0 / TASK-P0-08 | REGISTERED；logging implementation PLANNED |
 
 TASK-P0-02 的 validator 已证明本表 Roots 与两个根注册表完全相等，并已将 `TEST-TRACEABILITY-VALIDATOR`、脚本、unit test 和报告摘要链接回 NFR-TRC-001 / ENG-VER-001；[Completion evidence](../tasks/P0/TASK-P0-02-requirements-and-traceability.md#completion-evidence) 记录真实命令结果。每个后续 Task 完成时只增加真实路径和真实结果；计划项继续保留 `PLANNED`。
+
+TASK-P0-03 已形成上述 Schema/type/test 路径并通过 [Completion evidence](../tasks/P0/TASK-P0-03-domain-and-schema-skeleton.md#completion-evidence) 中的真实 Acceptance Commands。该 PASS 只覆盖 P0 contract skeleton；REQ-001/002/003 的 P1 pipeline、NFR-DET 的 hash/replay、ENG-SOL 的 builder/backend 均继续保持 `PLANNED`。

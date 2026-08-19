@@ -1,0 +1,146 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "urn:plantnexus:aps:schema:kpi:v1",
+  "title": "APS KPI v1 Skeleton",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "kpi_version",
+    "problem_hash",
+    "tick_seconds",
+    "delivery",
+    "planning",
+    "resources",
+    "stability",
+    "solver"
+  ],
+  "properties": {
+    "kpi_version": {"const": "kpi.v1"},
+    "problem_hash": {"type": "string", "minLength": 1},
+    "tick_seconds": {"type": "integer", "minimum": 1},
+    "delivery": {"$ref": "#/$defs/delivery"},
+    "planning": {"$ref": "#/$defs/planning"},
+    "resources": {
+      "type": "array",
+      "items": {"$ref": "#/$defs/resource"}
+    },
+    "stability": {"$ref": "#/$defs/stability"},
+    "solver": {"$ref": "#/$defs/solver"}
+  },
+  "$defs": {
+    "ratio": {"type": "number", "minimum": 0, "maximum": 1},
+    "nonNegativeInteger": {"type": "integer", "minimum": 0},
+    "nonNegativeNumber": {"type": "number", "minimum": 0},
+    "nullableNumber": {
+      "anyOf": [
+        {"type": "number"},
+        {"type": "null"}
+      ]
+    },
+    "delivery": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "on_time_order_ratio",
+        "total_tardiness_seconds",
+        "weighted_tardiness",
+        "late_order_count"
+      ],
+      "properties": {
+        "on_time_order_ratio": {"$ref": "#/$defs/ratio"},
+        "total_tardiness_seconds": {"$ref": "#/$defs/nonNegativeInteger"},
+        "weighted_tardiness": {"$ref": "#/$defs/nonNegativeNumber"},
+        "late_order_count": {"$ref": "#/$defs/nonNegativeInteger"}
+      }
+    },
+    "planning": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "makespan_seconds",
+        "scheduled_operation_count",
+        "unscheduled_operation_count"
+      ],
+      "properties": {
+        "makespan_seconds": {"$ref": "#/$defs/nonNegativeInteger"},
+        "scheduled_operation_count": {"$ref": "#/$defs/nonNegativeInteger"},
+        "unscheduled_operation_count": {"$ref": "#/$defs/nonNegativeInteger"}
+      }
+    },
+    "resource": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "resource_id",
+        "available_seconds",
+        "planned_busy_seconds",
+        "utilization"
+      ],
+      "properties": {
+        "resource_id": {"type": "string", "minLength": 1},
+        "available_seconds": {"$ref": "#/$defs/nonNegativeInteger"},
+        "planned_busy_seconds": {"$ref": "#/$defs/nonNegativeInteger"},
+        "utilization": {
+          "anyOf": [
+            {"$ref": "#/$defs/ratio"},
+            {"type": "null"}
+          ]
+        }
+      }
+    },
+    "stability": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "changed_operation_count",
+        "resource_changed_count",
+        "start_shift_seconds",
+        "schedule_stability_ratio"
+      ],
+      "properties": {
+        "changed_operation_count": {"$ref": "#/$defs/nonNegativeInteger"},
+        "resource_changed_count": {"$ref": "#/$defs/nonNegativeInteger"},
+        "start_shift_seconds": {"$ref": "#/$defs/nonNegativeInteger"},
+        "schedule_stability_ratio": {"$ref": "#/$defs/ratio"}
+      }
+    },
+    "solver": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "model_build_seconds",
+        "first_feasible_seconds",
+        "solve_seconds",
+        "objective",
+        "best_bound",
+        "relative_gap",
+        "variables",
+        "constraints",
+        "optional_intervals",
+        "memory_peak_mb"
+      ],
+      "properties": {
+        "model_build_seconds": {"$ref": "#/$defs/nonNegativeNumber"},
+        "first_feasible_seconds": {
+          "anyOf": [
+            {"$ref": "#/$defs/nonNegativeNumber"},
+            {"type": "null"}
+          ]
+        },
+        "solve_seconds": {"$ref": "#/$defs/nonNegativeNumber"},
+        "objective": {"$ref": "#/$defs/nullableNumber"},
+        "best_bound": {"$ref": "#/$defs/nullableNumber"},
+        "relative_gap": {
+          "anyOf": [
+            {"$ref": "#/$defs/nonNegativeNumber"},
+            {"type": "null"}
+          ]
+        },
+        "variables": {"$ref": "#/$defs/nonNegativeInteger"},
+        "constraints": {"$ref": "#/$defs/nonNegativeInteger"},
+        "optional_intervals": {"$ref": "#/$defs/nonNegativeInteger"},
+        "memory_peak_mb": {"$ref": "#/$defs/nonNegativeNumber"}
+      }
+    }
+  }
+}

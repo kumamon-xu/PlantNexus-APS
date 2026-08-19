@@ -1,0 +1,16 @@
+{
+  "snapshot_version": "planning-snapshot.v1",
+  "snapshot_id": "SNAPSHOT-SCHEMA-SAMPLE-P0-03",
+  "cutoff_at": "2026-08-19T00:00:00Z",
+  "source_versions": {
+    "schema_sample": "1.0.0"
+  },
+  "rule_version": "rules.unassigned",
+  "snapshot_hash": "sample-not-a-production-hash",
+  "entity_counts": {
+    "operations": 0,
+    "resources": 0
+  },
+  "synthetic": true,
+  "scenario_id": "SCHEMA-SAMPLE-P0-03"
+}

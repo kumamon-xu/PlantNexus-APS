@@ -43,3 +43,9 @@ Raw Staging 应保留来源系统、来源版本、导入批次、文件 hash、
 至少包括：route cycle、missing resource、invalid candidate resource、unit error、missing duration、unsupported capability、引用孤儿、非法时间区间。
 
 错误必须包含 code、entity/row、field、observed value、expected contract、source location 和可操作说明。接口的真实字段映射由 OPEN-002/013/015 关闭。
+
+## P0 executable skeleton
+
+[`import-package.schema.json`](../../schemas/json/import-package.schema.json) 只固定 `import_package_version`、`package_id`、`source_versions`、`synthetic`、conditional `scenario_id` 与 `records` envelope。`records` 内字段在 P0 明确保持 opaque，因为 Adapter/单位/字段权威仍受 OPEN-002/013/015 阻塞；这不是允许输入绕过 P1 Normalization/Data Validation。
+
+Production envelope 禁止携带 `scenario_id`；synthetic envelope 必须携带。Import pipeline、字段映射、单位转换实现和 canonical entity validation 仍为 P1 `PLANNED`。

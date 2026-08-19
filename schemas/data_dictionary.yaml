@@ -1,0 +1,62 @@
+schema_set_version: 1.0.0
+status: p0_skeleton
+spec_version: 0.3.0
+rules:
+  unknown_root_fields: reject
+  implicit_business_defaults: forbidden
+  timestamps: RFC3339_UTC_Z
+  durations: integer_seconds
+  solver_ticks: ceil_duration_seconds_over_tick_seconds
+  canonical_ids: non_empty_whitespace_free_strings
+schemas:
+  import-package.v1:
+    path: schemas/json/import-package.schema.json
+    purpose: versioned import metadata envelope
+    p0_boundary: canonical record fields remain opaque until P1 authority mapping
+    production_open: [OPEN-002, OPEN-013, OPEN-015]
+  planning-snapshot.v1:
+    path: schemas/json/planning-snapshot.schema.json
+    required_fields:
+      - snapshot_version
+      - snapshot_id
+      - cutoff_at
+      - source_versions
+      - rule_version
+      - snapshot_hash
+      - entity_counts
+      - synthetic
+    conditional_fields:
+      scenario_id: required only when synthetic is true
+    production_open: [OPEN-001, OPEN-015]
+  planning-problem.v1:
+    path: schemas/json/planning-problem.schema.json
+    required_fields:
+      - problem_version
+      - snapshot_id
+      - problem_builder_version
+      - problem_hash
+      - tick_seconds
+      - horizon_start_utc
+      - horizon_end_utc
+      - resource_ids
+      - operation_instances
+      - precedence_edges
+      - resource_unavailable_intervals
+      - required_capabilities
+    operation_duration_fields:
+      - setup_seconds
+      - cycle_seconds_per_unit
+      - final_duration_seconds
+      - duration_source
+      - source_version
+    production_open: [OPEN-004, OPEN-007, OPEN-009, OPEN-014, OPEN-015]
+  kpi.v1:
+    path: schemas/json/kpi.schema.json
+    groups: [delivery, planning, resources, stability, solver]
+    production_open: [OPEN-006, OPEN-012]
+  error.v1:
+    path: schemas/json/error.schema.json
+    p0_boundary: category and envelope only; concrete code registry belongs to TASK-P0-04
+  validation-report.v1:
+    path: schemas/json/validation-report.schema.json
+    p0_boundary: top-level and violation envelope only; C-ID rule sheet belongs to TASK-P0-04 and mutation evidence to TASK-P0-07

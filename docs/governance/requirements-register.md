@@ -33,3 +33,5 @@ registry_version: 1.0.0
 本表定义需求根 ID，不代替详细 Contract。任何生产代码应能通过 `REQ / NFR / ENG → SCHEMA / ARCH / CONSTRAINT → TASK → TEST → ARTIFACT` 链路解释其存在理由。
 
 `ALLOCATED` 只表示 ID 已稳定分配，不表示功能已经实现。ID 不得删除或复用；需求被取代时保留原行并改为 `RETIRED`，同时链接替代 Requirement/ADR 和迁移影响。修改表结构或 ID 生命周期语义必须提升 `registry_version`。
+
+TASK-P0-03 review：REQ-001/002/003/009 已获得 versioned Schema/type/contract-test 落点，但 Import/Normalization、Snapshot/Problem builder、hash 与 end-to-end provenance 均未实现，因此所有根 ID 状态继续为 `ALLOCATED`，没有提升为业务完成状态，也不修改 registry format version。

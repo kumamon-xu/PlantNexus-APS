@@ -1,0 +1,61 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "urn:plantnexus:aps:schema:validation-report:v1",
+  "title": "Schedule ValidationReport v1 Skeleton",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "validation_report_version",
+    "problem_hash",
+    "status",
+    "violations"
+  ],
+  "properties": {
+    "validation_report_version": {"const": "validation-report.v1"},
+    "problem_hash": {"type": "string", "minLength": 1},
+    "status": {"enum": ["PASS", "FAIL"]},
+    "violations": {
+      "type": "array",
+      "items": {"$ref": "#/$defs/violation"}
+    }
+  },
+  "allOf": [
+    {
+      "if": {
+        "properties": {"status": {"const": "PASS"}},
+        "required": ["status"]
+      },
+      "then": {
+        "properties": {"violations": {"maxItems": 0}}
+      },
+      "else": {
+        "properties": {"violations": {"minItems": 1}}
+      }
+    }
+  ],
+  "$defs": {
+    "violation": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "constraint_id",
+        "severity",
+        "entity_ids",
+        "observed_value",
+        "expected_rule",
+        "message"
+      ],
+      "properties": {
+        "constraint_id": {"type": "string", "pattern": "^C-[0-9]{3}$"},
+        "severity": {"type": "string", "minLength": 1},
+        "entity_ids": {
+          "type": "array",
+          "items": {"type": "string", "minLength": 1}
+        },
+        "observed_value": true,
+        "expected_rule": {"type": "string", "minLength": 1},
+        "message": {"type": "string", "minLength": 1}
+      }
+    }
+  }
+}

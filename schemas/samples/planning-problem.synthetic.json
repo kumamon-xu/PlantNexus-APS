@@ -1,0 +1,14 @@
+{
+  "problem_version": "planning-problem.v1",
+  "snapshot_id": "SNAPSHOT-SCHEMA-SAMPLE-P0-03",
+  "problem_builder_version": "builder.unimplemented",
+  "problem_hash": "sample-not-a-production-hash",
+  "tick_seconds": 60,
+  "horizon_start_utc": "2026-08-19T00:00:00Z",
+  "horizon_end_utc": "2026-08-20T00:00:00Z",
+  "resource_ids": [],
+  "operation_instances": [],
+  "precedence_edges": [],
+  "resource_unavailable_intervals": [],
+  "required_capabilities": []
+}

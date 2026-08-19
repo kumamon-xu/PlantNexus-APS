@@ -30,7 +30,7 @@ pytest、Hypothesis、Ruff、Pyright 或 mypy、Playwright、Contract/Golden/Pro
 - 禁止直接执行 `pip install -U ortools` 后合并。
 - Secret 只能来自环境或 Secret Manager，不能进入仓库、日志或导出包。
 
-本文件记录总规推荐栈，不代表所有库已经安装。首次依赖落地应由 Task Card 和 lockfile 提供实现证据。
+本文件记录总规推荐栈；已安装范围以下方锁定表为准，未列入的推荐库不能声称已落地。首次依赖落地必须由 Task Card 和 lockfile 提供实现证据。
 
 ## P0-01 已落地基线
 
@@ -43,3 +43,9 @@ pytest、Hypothesis、Ruff、Pyright 或 mypy、Playwright、Contract/Golden/Pro
 | Lock | `uv.lock` 已形成并锁定当前空运行时依赖图与 Python 3.12 系列 |
 
 当前可执行基线为 `uv sync --locked`、`uv build` 和包导入烟雾。OR-Tools 未进入 `pyproject.toml` 或 `uv.lock`，因此本 Task 不触发 Solver upgrade replay/ADR Gate；未来首次引入或升级仍必须遵守上方精确锁定规则。
+
+## P0-03 quality toolchain
+
+Runtime dependencies 继续为空；纯领域合同只使用标准库。`dependency-groups.dev` 精确锁定 `jsonschema==4.25.1`、`PyYAML==6.0.2`、`pytest==8.4.1`、`ruff==0.12.10`、`pyright==1.1.411` 及其 transitive dependencies，用于 Draft 2020-12 Schema、data dictionary、test/lint/type acceptance。Schema set version 为 `1.0.0`。
+
+本次未引入 Pydantic、FastAPI、SQLAlchemy 或 OR-Tools；因此没有 Solver upgrade、runtime behavior 或生产依赖声明。质量工具升级仍需更新 lock 并重跑对应 acceptance。

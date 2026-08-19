@@ -1,0 +1,93 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "urn:plantnexus:aps:schema:planning-snapshot:v1",
+  "title": "PlanningSnapshot v1 Skeleton",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "snapshot_version",
+    "snapshot_id",
+    "cutoff_at",
+    "source_versions",
+    "rule_version",
+    "snapshot_hash",
+    "entity_counts",
+    "synthetic"
+  ],
+  "properties": {
+    "snapshot_version": {
+      "const": "planning-snapshot.v1"
+    },
+    "snapshot_id": {
+      "$ref": "#/$defs/canonicalId"
+    },
+    "cutoff_at": {
+      "$ref": "#/$defs/utcInstant"
+    },
+    "source_versions": {
+      "$ref": "#/$defs/sourceVersions"
+    },
+    "rule_version": {
+      "type": "string",
+      "minLength": 1
+    },
+    "snapshot_hash": {
+      "type": "string",
+      "minLength": 1
+    },
+    "entity_counts": {
+      "type": "object",
+      "additionalProperties": {
+        "type": "integer",
+        "minimum": 0
+      }
+    },
+    "synthetic": {
+      "type": "boolean"
+    },
+    "scenario_id": {
+      "$ref": "#/$defs/canonicalId"
+    }
+  },
+  "allOf": [
+    {
+      "if": {
+        "properties": {
+          "synthetic": {
+            "const": true
+          }
+        },
+        "required": ["synthetic"]
+      },
+      "then": {
+        "required": ["scenario_id"]
+      },
+      "else": {
+        "not": {
+          "required": ["scenario_id"]
+        }
+      }
+    }
+  ],
+  "$defs": {
+    "canonicalId": {
+      "type": "string",
+      "minLength": 1,
+      "maxLength": 256,
+      "pattern": "^[^\\s\\u0000-\\u001F\\u007F]+$"
+    },
+    "utcInstant": {
+      "type": "string",
+      "format": "date-time",
+      "pattern": "Z$"
+    },
+    "sourceVersions": {
+      "type": "object",
+      "minProperties": 1,
+      "additionalProperties": {
+        "type": "string",
+        "minLength": 1
+      }
+    }
+  }
+}

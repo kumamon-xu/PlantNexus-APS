@@ -21,6 +21,8 @@ last_reviewed: 2026-08-19
 
 Production 的 factory timezone 未确认时返回 `BLOCK_PRODUCTION`，但不应阻止 Development/Simulation 启动。
 
+P0 machine contracts 要求所有计划 instant 使用 RFC 3339 UTC 且以 `Z` 结尾；非 UTC offset 不会在合同层静默转换。`domain/types.py` 对 naive/non-UTC datetime、负 duration、非整数 duration 和非正 tick 明确抛出 `ContractValueError`，并用整数运算实现 ceiling tick。
+
 ## Planning Horizon
 
 NOT_STARTED Operation 必须满足：
@@ -45,3 +47,5 @@ operation.start >= material_ready_at
 ```
 
 `material_ready_at` 必须来自上游权威或未来 `MaterialReadinessProvider`。缺失必填值应产生数据错误，不能由 Solver、AI 或 Simulation 默认值补猜。
+
+在 `planning-problem.v1` 中字段名为 `material_ready_at_utc` 并为必填 UTC instant；P0 sample 使用显式 synthetic 时间，仅用于 Schema validation，不构成 OPEN-001/004/007 的生产决定。

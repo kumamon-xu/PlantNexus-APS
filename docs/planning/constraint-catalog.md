@@ -50,3 +50,5 @@ last_reviewed: 2026-08-19
 ## P0 验证规则表
 
 P0 不实现 Solver，但必须为 C-001～C-011 固定输入字段、判定公式、正例、反例、错误码和 Test ID。TASK-P0-04 建规则表，TASK-P0-07 用人工非法计划验证规则完整性。
+
+TASK-P0-03 的 `planning-problem.v1` 只为候选资源、min/max/transport lag、calendar unavailable interval、release/material gate、RUNNING facts、horizon、duration 和 capability declaration 建立输入字段。最小 precheck 只检查引用、时间区间、duration 与 lag range；它不是 ScheduleValidator，也不能作为任何 C-001～C-011 PASS 证据。

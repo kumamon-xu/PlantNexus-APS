@@ -27,3 +27,5 @@ Simulation 用于模拟 APS Planning Reality，不代表真实物理工厂。每
 本注册表的稳定 ID 前缀为 `SIM-ASSUMPTION-NNN`。总规示例中的 `SIM_ASSUMPTION-003` 是同类标记的上游拼写，校验时规范化为 `SIM-ASSUMPTION-003`；新引用必须使用本表前缀。条目只能为 `ACTIVE` 或 `RETIRED`，不得出现 `OPEN`/`CLOSED` 生产问题状态，也不得用于关闭任何 `OPEN-NNN`。
 
 修改表结构、ID 前缀或状态语义必须提升 `registry_version`；具体 Scenario/Profile 参数变化由对应资产版本管理。
+
+TASK-P0-03 review：`schemas/samples/*.synthetic.json` 使用显式 `synthetic=true` 和 `SCHEMA-SAMPLE-P0-03`，只验证 Schema，不定义 workshop/resource 数、概率或正式 Scenario/Profile。没有新增或修改 SIM-ASSUMPTION，五项状态继续为 `ACTIVE`。

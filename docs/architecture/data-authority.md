@@ -33,3 +33,7 @@ V1 接受上游提供的 `material_ready_at`，并执行 `operation.start >= mat
 ## 冲突处理
 
 来源冲突不得由最后写入或 AI 推断解决。应在 Raw Staging/Normalization 阶段保留来源、版本和冲突诊断，根据字段权威规则拒绝或等待业务决策。
+
+## P0 Schema boundary
+
+`import-package.v1` 只建立 source version、synthetic 标记和 records envelope，记录体保持明确的 P1 扩展点；它没有批准 ERP/MES/WMS/CAM 字段映射。`planning-snapshot.v1` 与 `planning-problem.v1` 只编码总规已经决定的字段和单位。OPEN-002/007/013/015 全部保持 OPEN，sample 中的 source/scenario 值不能成为 Production authority。

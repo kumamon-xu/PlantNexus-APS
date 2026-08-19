@@ -40,5 +40,7 @@ last_reviewed: 2026-08-19
 | Tick | Solver 离散时间单位；`duration_ticks = ceil(duration_seconds / tick_seconds)` |
 | Provenance | 从数据源、规则、问题、Solver、Scenario 到代码提交的全链路来源信息 |
 | ADR | Architecture Decision Record；记录需要治理的架构或语义决策 |
+| Schema Set | 同一发布批次的机器合同集合；当前 P0 skeleton 为 `1.0.0`，不替代各 `*.v1` contract ID |
+| Canonical ID | 跨合同稳定引用的非空、无空白标识；具体来源映射仍由字段权威规则决定 |
 
 术语新增或语义变化必须同步检查 Schema、Constraint、状态机、测试和追踪矩阵。

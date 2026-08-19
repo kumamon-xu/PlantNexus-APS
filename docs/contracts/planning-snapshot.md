@@ -38,4 +38,6 @@ Snapshot 创建后不允许就地修改。输入事实变化、执行事件或�
 
 ## P0 Schema 骨架要求
 
-Schema 应先固定元数据、实体集合、版本和 hash 语义；具体生产字段受 `PROD_OPEN` 影响时允许扩展占位，但不得填入猜测默认值。
+[`planning-snapshot.schema.json`](../../schemas/json/planning-snapshot.schema.json) 已固定 `snapshot_version=planning-snapshot.v1`、最小元数据、严格 UTC `Z`、根对象未知字段拒绝和 synthetic/scenario 条件。Production (`synthetic=false`) 禁止携带 `scenario_id`；synthetic Snapshot 必须携带。
+
+P0 sample 明确标记 synthetic，且 hash/builder 值标明不是生产结果。Snapshot builder、canonical serialization、hash 计算和 entity payload 仍为 P1 `PLANNED`；当前 skeleton PASS 不等于 REQ-002 实现完成。

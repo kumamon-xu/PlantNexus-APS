@@ -47,3 +47,9 @@ Precheck
 ```
 
 除非算法证明，Assumption conflict subset 不得称为 minimal conflict set。诊断不得通过删除硬约束或修改输入事实获得“可行”。
+
+## P0 machine envelopes
+
+[`error.schema.json`](../../schemas/json/error.schema.json) 固定七类 category、稳定 `code`、message 与可定位 details envelope；[`validation-report.schema.json`](../../schemas/json/validation-report.schema.json) 固定 PASS/FAIL、problem hash 和 violation 的 `constraint_id`、severity、entity IDs、observed、expected rule、message。PASS 必须没有 violation，FAIL 必须至少一个。
+
+TASK-P0-03 只发布顶层 skeleton。具体产品 error code registry、状态映射和每个 C-ID 的规则/正反例仍由 TASK-P0-04 建立；Schedule Validator mutation evidence 仍由 TASK-P0-07 建立。

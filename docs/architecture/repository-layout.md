@@ -11,7 +11,7 @@ last_reviewed: 2026-08-19
 
 # 目标仓库结构
 
-TASK-P0-01 已建立可构建的顶层仓库边界；TASK-P0-02 在该边界内扩展 `scripts/check_docs.py` 并新增唯一的治理 unit test。以下树继续定义 P0 的目标责任结构，不因治理脚本而提前创建业务模块实现。
+TASK-P0-01 已建立可构建的顶层仓库边界，TASK-P0-02 建立治理 validator；TASK-P0-03 在既有边界内加入 Schema、纯合同类型和 contract tests，仍未创建业务数据管道或 Solver。
 
 ```text
 /
@@ -50,9 +50,14 @@ TASK-P0-01 已建立可构建的顶层仓库边界；TASK-P0-02 在该边界内�
 │  │  └─ jobs/
 │  ├─ migrations/
 │  └─ tests/
-│     └─ unit/test_check_docs.py
+│     ├─ unit/test_check_docs.py
+│     └─ contract/test_schema_contracts.py
 ├─ frontend/
-├─ schemas/{json,scenario}/
+├─ schemas/
+│  ├─ json/{import-package,planning-snapshot,planning-problem,kpi,error,validation-report}.schema.json
+│  ├─ samples/*.synthetic.json
+│  ├─ data_dictionary.yaml
+│  └─ scenario/                         # TASK-P0-05 planned
 ├─ fixtures/{deterministic,infeasible,synthetic,future_capabilities,historical}/
 ├─ benchmarks/{profiles.yaml,baselines/}
 ├─ docs/
@@ -67,9 +72,10 @@ TASK-P0-01 已建立可构建的顶层仓库边界；TASK-P0-02 在该边界内�
 
 | 路径 | P0-01 状态 | 后续边界 |
 |---|---|---|
-| `backend/app/` | 可安装的空应用包；只登记 code/spec/schema 占位版本 | Domain、API、Planning、Simulation 行为由各自 Task 实现 |
-| `backend/tests/` | 已有治理 validator unit test；其他测试类型仍为占位 | 业务/Contract/Golden 等测试由交付对应行为的 Task 增加 |
-| `frontend/`、`schemas/`、`fixtures/`、`benchmarks/`、`infra/` | 目录占位 | 不表示 Frontend、Schema、Fixture、Benchmark 或基础设施已形成 |
+| `backend/app/domain/`、`snapshots/contracts.py`、`planning/problem/contracts.py` | 纯标准库值语义、JSON-compatible type skeleton 和最小 contract precheck | Builder、hash、normalization、C-ID Validator 与 Solver 仍为后续 Task |
+| `backend/tests/` | 治理 unit test + `TEST-CONTRACT-001` Schema contract tests | Integration/Golden/Property/Simulation/Benchmark 证据仍为后续 Task |
+| `schemas/` | schema set `1.0.0` 的六份 JSON Schema、data dictionary 和明确 synthetic samples | Scenario/Profile Schema、正式 Fixture 和 builder output 尚未形成 |
+| `frontend/`、`fixtures/`、`benchmarks/`、`infra/` | 目录占位 | 不表示 Frontend、Fixture、Benchmark 或基础设施已形成 |
 | `scripts/check_docs.py` | 文档结构、registry/reference、Task、traceability，以及 `Diff base..HEAD` + working tree 的 diff/impact 检查 | CI 强制集成与更高 Gate 属于 TASK-P0-08/09 |
 | `docker-compose.yml` | 尚未创建 | 工程与基础设施骨架由 TASK-P0-08 处理 |
 

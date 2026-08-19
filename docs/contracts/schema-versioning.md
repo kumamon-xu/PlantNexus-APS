@@ -29,3 +29,13 @@ last_reviewed: 2026-08-19
 - Ordering-only serialization change：若影响 hash，必须作为版本变化治理。
 
 Schema version、rule version、generator version 和 code commit 是不同维度，不能互相替代。
+
+## 当前发布基线
+
+- Schema set：`1.0.0`；`pyproject.toml` 与 `app.SCHEMA_VERSION` 一致；
+- Contract IDs：`import-package.v1`、`planning-snapshot.v1`、`planning-problem.v1`、`kpi.v1`、`error.v1`、`validation-report.v1`；
+- Dialect：JSON Schema Draft 2020-12，使用稳定 URN `$id`；
+- Compatibility：这是从 `unassigned` 到首次 skeleton 的发布，此前没有已发布 consumer、历史 artifact 或数据库数据，因此 migration 为 none；
+- Unknown/default policy：已定义根对象 `additionalProperties=false`，Schema 不含 `default`。Import 的 `records` 是明确标注的 P1 扩展点，不等于批准任何生产字段。
+
+`*.v1` 的字段或语义后续变化必须分类为 additive/breaking；即使 schema set 版本提升，也不得无痕覆盖本目录下已经发布的 v1 artifact。

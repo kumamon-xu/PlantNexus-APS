@@ -60,3 +60,12 @@ Solver 排的是 `OperationInstance`，不是 `RoutingOperation`。每个未完�
 - 不同 Resource 可以产生不同 duration；
 - COMPLETED 不进入未来排程；RUNNING 保留历史事实和未来剩余占用；
 - 任何 unsupported capability 在 Problem 构建前或明确预检阶段被识别。
+
+## P0 executable type boundary
+
+- `backend/app/domain/types.py` 提供 canonical ID、严格 UTC、integer duration 和 tick ceiling 的纯标准库值语义；
+- `backend/app/domain/contracts.py` 提供 Import/KPI/Error/ValidationReport 的 JSON-compatible `TypedDict` skeleton；
+- `backend/app/snapshots/contracts.py` 与 `backend/app/planning/problem/contracts.py` 分别承载 Snapshot/Problem 顶层类型；
+- `backend/app/domain/validation.py` 只拒绝 skeleton 内的非法引用、UTC、interval、duration 和 lag range。
+
+这些类型不依赖 ORM、FastAPI、Celery、Pydantic 或 OR-Tools，也不展开订单、不构建 Snapshot/Problem、不计算 hash、不执行排程。后续业务字段必须从权威合同进入并按 Schema versioning 升版，不能把 sample 值当默认值。

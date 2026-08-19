@@ -31,7 +31,7 @@ registry_version: 1.0.0
 |---|---|---|---|
 | TEST-TRACEABILITY-VALIDATOR | Registry、reference、Task、diff/impact，以及 clean-tree committed range regression | P0 | [`backend/tests/unit/test_check_docs.py`](../../backend/tests/unit/test_check_docs.py) |
 | TEST-OBS-001 | 日志、运行标识与 Observability 关联 | P0 | PLANNED（TASK-P0-08） |
-| TEST-CONTRACT-001 | 基础 Contract 结构与兼容性 | P0 | PLANNED |
+| TEST-CONTRACT-001 | Schema meta/positive/negative、版本、UTC/duration/reference、isolation 与 round-trip | P0 | [`backend/tests/contract/test_schema_contracts.py`](../../backend/tests/contract/test_schema_contracts.py) + [TASK-P0-03 Acceptance PASS](../tasks/P0/TASK-P0-03-domain-and-schema-skeleton.md#completion-evidence) |
 | TEST-GOLDEN-JSSP | 人工可验证 JSSP | P2 | PLANNED |
 | TEST-GOLDEN-FJSP | 人工可验证 FJSP | P2 | PLANNED |
 | TEST-INF-NO-RESOURCE | 无候选资源明确拒绝 | P0-P2 | PLANNED |
@@ -63,4 +63,4 @@ Test ID 一经分配不得复用。链接到真实测试路径才是已形成证
 - 多个同质量解可能都正确，Property/Golden 不固定无意义排序；
 - Benchmark 正确性失败优先于性能结果。
 
-实际测试路径和结果在文件创建后写入追踪矩阵，当前只登记合同 ID。
+实际测试路径和结果在文件创建后写入追踪矩阵。TEST-CONTRACT-001 已形成 P0 Schema skeleton 证据；其他 `PLANNED` 项仍不能视为实现。

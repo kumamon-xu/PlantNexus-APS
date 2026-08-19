@@ -1,0 +1,45 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "urn:plantnexus:aps:schema:error:v1",
+  "title": "APS Error v1 Skeleton",
+  "type": "object",
+  "additionalProperties": false,
+  "required": ["error_version", "category", "code", "message", "details"],
+  "properties": {
+    "error_version": {"const": "error.v1"},
+    "category": {
+      "enum": [
+        "DATA_ERROR",
+        "UNSUPPORTED_CAPABILITY",
+        "MODEL_INVALID",
+        "INFEASIBLE",
+        "NO_SOLUTION_WITHIN_LIMIT",
+        "VALIDATION_FAILED",
+        "SYSTEM_ERROR"
+      ]
+    },
+    "code": {
+      "type": "string",
+      "pattern": "^[A-Z][A-Z0-9_]*$"
+    },
+    "message": {"type": "string", "minLength": 1},
+    "details": {
+      "type": "array",
+      "items": {"$ref": "#/$defs/detail"}
+    }
+  },
+  "$defs": {
+    "detail": {
+      "type": "object",
+      "additionalProperties": false,
+      "minProperties": 1,
+      "properties": {
+        "entity_id": {"type": "string", "minLength": 1},
+        "field": {"type": "string", "minLength": 1},
+        "observed_value": true,
+        "expected_contract": {"type": "string", "minLength": 1},
+        "source_location": {"type": "string", "minLength": 1}
+      }
+    }
+  }
+}

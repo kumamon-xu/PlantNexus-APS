@@ -40,3 +40,7 @@ PlanningSolution 至少包含状态、assignments、目标阶段结果、best bo
 ## 升级
 
 Backend/OR-Tools 升级必须经过 ADR、dependency lock、Golden/Scenario replay、Benchmark comparison 和状态合同测试。显著正确性或性能退化阻止发布，除非有批准 ADR。
+
+## P0-03 boundary
+
+`planning-problem.v1` JSON Schema 与 `PlanningProblemDocument` pure type 已形成，满足可序列化、Solver-neutral、无 OR-Tools 类型的输入骨架。Problem builder、PlanningPolicy、SolveLimits、PlanningSolution、Strategy 和任何 Backend 均未实现；没有 Solver status、model size 或 performance artifact。P2 首次实现必须在固定 Scenario Set 上回放本合同并补齐 benchmark evidence。

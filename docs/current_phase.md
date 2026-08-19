@@ -28,16 +28,16 @@ P0-DOCS — Documentation Baseline
 ## 最新完成 Task
 
 ```text
-TASK-P0-02 — Requirements and Traceability
+TASK-P0-03 — Domain and Schema Skeleton
 ```
 
-Task 状态：`done`（2026-08-19，完成后复核修正）。版本化治理注册表、逐根追踪矩阵、基于不可变 Diff base 的提交前后可复验 diff/impact validator、负向/回归测试和机器可读报告均已通过任务卡 Acceptance Commands。TASK-P0-01 继续保持 `done`。
+Task 状态：`done`（2026-08-19）。Schema set `1.0.0`、六份 versioned JSON Schema、data dictionary、纯领域合同/最小 precheck、locked quality tooling 和 TEST-CONTRACT-001 均已通过任务卡 Acceptance Commands。TASK-P0-01/02 继续保持 `done`。
 
 P0 尚未完成，当前记录不表示通过 P0 Exit Gate，也不授权进入 P1。
 
 ## 当前 Task
 
-无。TASK-P0-03 继续保持 `planned`；完成 TASK-P0-02 不自动授权或启动下一任务。
+无。TASK-P0-04 继续保持 `planned`；完成 TASK-P0-03 不自动授权或启动下一任务。
 
 ## 当前允许
 

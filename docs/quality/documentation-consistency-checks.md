@@ -81,6 +81,8 @@ uv run python -m unittest discover -s backend/tests/unit -p "test_check_docs.py"
 兼容性、Solver 正确性、迁移回放或 benchmark 结果。上述语义验证由对应 Task 和后续 CI/Release
 Gate 负责；P0-02 不据此声称任何业务能力已实现。
 
+机器治理检查不解析 JSON Schema 语义或 YAML data dictionary。TASK-P0-03 由 `TEST-CONTRACT-001` 使用锁定的 `jsonschema` Draft 2020-12 validator、PyYAML、Ruff 与 Pyright 补充这层证据；后续 Schema Task 必须同时运行治理检查和对应 contract tests。
+
 ## Override
 
 不允许用自由文本 CI skip 绕过。确需例外时必须在 Task Card 记录理由，提交 ADR 或明确批准记录，并仍保留检查报告。正确性、状态语义、数据隔离和发布门不得豁免。

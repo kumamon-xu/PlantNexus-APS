@@ -28,3 +28,5 @@ Property Test 随机生成合法 V1 PlanningProblem 或合法 canonical input，
 不要求相同 schedule ordering、相同 Solver search path 或相同 runtime，因为多个同质量解可能正确。
 
 随机失败必须保存最小化 example、seed、Schema/Generator/Problem version 和 Problem hash，确保可回归。
+
+TASK-P0-03 已对两个明确 synthetic sample 执行 JSON serialization round-trip，并验证 UTC/duration/reference 的确定性 helper；这只是 `TEST-CONTRACT-001` 的固定样例证据，不是随机 Property Test、Snapshot/Problem hash replay 或 TEST-PROPERTY 完成。完整性质测试仍为 P1/P2 `PLANNED`。

@@ -1,0 +1,78 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "urn:plantnexus:aps:schema:import-package:v1",
+  "title": "PlantNexus APS Import Package v1 Skeleton",
+  "description": "Versioned metadata envelope. Canonical record fields remain intentionally opaque until P1 authority mapping is approved.",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "import_package_version",
+    "package_id",
+    "source_versions",
+    "synthetic",
+    "records"
+  ],
+  "properties": {
+    "import_package_version": {
+      "const": "import-package.v1"
+    },
+    "package_id": {
+      "$ref": "#/$defs/canonicalId"
+    },
+    "source_versions": {
+      "$ref": "#/$defs/sourceVersions"
+    },
+    "synthetic": {
+      "type": "boolean"
+    },
+    "scenario_id": {
+      "$ref": "#/$defs/canonicalId"
+    },
+    "records": {
+      "type": "object",
+      "description": "Explicit extension point for P1 canonical entity collections; P0 does not guess production fields.",
+      "additionalProperties": {
+        "type": "array",
+        "items": {
+          "type": "object"
+        }
+      }
+    }
+  },
+  "allOf": [
+    {
+      "if": {
+        "properties": {
+          "synthetic": {
+            "const": true
+          }
+        },
+        "required": ["synthetic"]
+      },
+      "then": {
+        "required": ["scenario_id"]
+      },
+      "else": {
+        "not": {
+          "required": ["scenario_id"]
+        }
+      }
+    }
+  ],
+  "$defs": {
+    "canonicalId": {
+      "type": "string",
+      "minLength": 1,
+      "maxLength": 256,
+      "pattern": "^[^\\s\\u0000-\\u001F\\u007F]+$"
+    },
+    "sourceVersions": {
+      "type": "object",
+      "minProperties": 1,
+      "additionalProperties": {
+        "type": "string",
+        "minLength": 1
+      }
+    }
+  }
+}

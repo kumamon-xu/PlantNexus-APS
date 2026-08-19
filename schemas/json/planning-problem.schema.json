@@ -1,0 +1,246 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "urn:plantnexus:aps:schema:planning-problem:v1",
+  "title": "Solver-neutral PlanningProblem v1 Skeleton",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "problem_version",
+    "snapshot_id",
+    "problem_builder_version",
+    "problem_hash",
+    "tick_seconds",
+    "horizon_start_utc",
+    "horizon_end_utc",
+    "resource_ids",
+    "operation_instances",
+    "precedence_edges",
+    "resource_unavailable_intervals",
+    "required_capabilities"
+  ],
+  "properties": {
+    "problem_version": {
+      "const": "planning-problem.v1"
+    },
+    "snapshot_id": {
+      "$ref": "#/$defs/canonicalId"
+    },
+    "problem_builder_version": {
+      "type": "string",
+      "minLength": 1
+    },
+    "problem_hash": {
+      "type": "string",
+      "minLength": 1
+    },
+    "tick_seconds": {
+      "type": "integer",
+      "minimum": 1
+    },
+    "horizon_start_utc": {
+      "$ref": "#/$defs/utcInstant"
+    },
+    "horizon_end_utc": {
+      "$ref": "#/$defs/utcInstant"
+    },
+    "resource_ids": {
+      "type": "array",
+      "uniqueItems": true,
+      "items": {
+        "$ref": "#/$defs/canonicalId"
+      }
+    },
+    "operation_instances": {
+      "type": "array",
+      "items": {
+        "$ref": "#/$defs/operationInstance"
+      }
+    },
+    "precedence_edges": {
+      "type": "array",
+      "items": {
+        "$ref": "#/$defs/precedenceEdge"
+      }
+    },
+    "resource_unavailable_intervals": {
+      "type": "array",
+      "items": {
+        "$ref": "#/$defs/resourceUnavailableInterval"
+      }
+    },
+    "required_capabilities": {
+      "type": "array",
+      "uniqueItems": true,
+      "items": {
+        "type": "string",
+        "minLength": 1
+      }
+    }
+  },
+  "$defs": {
+    "canonicalId": {
+      "type": "string",
+      "minLength": 1,
+      "maxLength": 256,
+      "pattern": "^[^\\s\\u0000-\\u001F\\u007F]+$"
+    },
+    "utcInstant": {
+      "type": "string",
+      "format": "date-time",
+      "pattern": "Z$"
+    },
+    "resourceOption": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "resource_id",
+        "setup_seconds",
+        "cycle_seconds_per_unit",
+        "final_duration_seconds",
+        "duration_source",
+        "source_version"
+      ],
+      "properties": {
+        "resource_id": {
+          "$ref": "#/$defs/canonicalId"
+        },
+        "setup_seconds": {
+          "type": "integer",
+          "minimum": 0
+        },
+        "cycle_seconds_per_unit": {
+          "type": "integer",
+          "minimum": 0
+        },
+        "final_duration_seconds": {
+          "type": "integer",
+          "minimum": 1
+        },
+        "duration_source": {
+          "type": "string",
+          "minLength": 1
+        },
+        "source_version": {
+          "type": "string",
+          "minLength": 1
+        }
+      }
+    },
+    "operationInstance": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "operation_id",
+        "status",
+        "release_at_utc",
+        "material_ready_at_utc",
+        "resource_options"
+      ],
+      "properties": {
+        "operation_id": {
+          "$ref": "#/$defs/canonicalId"
+        },
+        "status": {
+          "enum": ["NOT_STARTED", "RUNNING"]
+        },
+        "release_at_utc": {
+          "$ref": "#/$defs/utcInstant"
+        },
+        "material_ready_at_utc": {
+          "$ref": "#/$defs/utcInstant"
+        },
+        "resource_options": {
+          "type": "array",
+          "minItems": 1,
+          "items": {
+            "$ref": "#/$defs/resourceOption"
+          }
+        },
+        "actual_start_at_utc": {
+          "$ref": "#/$defs/utcInstant"
+        },
+        "assigned_resource_id": {
+          "$ref": "#/$defs/canonicalId"
+        },
+        "remaining_seconds": {
+          "type": "integer",
+          "minimum": 1
+        }
+      },
+      "allOf": [
+        {
+          "if": {
+            "properties": {
+              "status": {
+                "const": "RUNNING"
+              }
+            },
+            "required": ["status"]
+          },
+          "then": {
+            "required": [
+              "actual_start_at_utc",
+              "assigned_resource_id",
+              "remaining_seconds"
+            ]
+          },
+          "else": {
+            "not": {
+              "anyOf": [
+                {"required": ["actual_start_at_utc"]},
+                {"required": ["assigned_resource_id"]},
+                {"required": ["remaining_seconds"]}
+              ]
+            }
+          }
+        }
+      ]
+    },
+    "precedenceEdge": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "predecessor_operation_id",
+        "successor_operation_id",
+        "min_lag_seconds",
+        "transport_lag_seconds"
+      ],
+      "properties": {
+        "predecessor_operation_id": {
+          "$ref": "#/$defs/canonicalId"
+        },
+        "successor_operation_id": {
+          "$ref": "#/$defs/canonicalId"
+        },
+        "min_lag_seconds": {
+          "type": "integer",
+          "minimum": 0
+        },
+        "max_lag_seconds": {
+          "type": "integer",
+          "minimum": 0
+        },
+        "transport_lag_seconds": {
+          "type": "integer",
+          "minimum": 0
+        }
+      }
+    },
+    "resourceUnavailableInterval": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["resource_id", "start_utc", "end_utc"],
+      "properties": {
+        "resource_id": {
+          "$ref": "#/$defs/canonicalId"
+        },
+        "start_utc": {
+          "$ref": "#/$defs/utcInstant"
+        },
+        "end_utc": {
+          "$ref": "#/$defs/utcInstant"
+        }
+      }
+    }
+  }
+}

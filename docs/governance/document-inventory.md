@@ -114,7 +114,7 @@ registry_version: 1.0.0
 | [simulation/synthetic-generator-and-determinism.md](../simulation/synthetic-generator-and-determinism.md) | DOC-SIM-003 | baseline | Synthetic Generator 与确定性 |
 | [tasks/P0/TASK-P0-01-documentation-and-repository-governance.md](../tasks/P0/TASK-P0-01-documentation-and-repository-governance.md) | TASK-P0-01 | done | Documentation and Repository Governance |
 | [tasks/P0/TASK-P0-02-requirements-and-traceability.md](../tasks/P0/TASK-P0-02-requirements-and-traceability.md) | TASK-P0-02 | done | Requirements and Traceability |
-| [tasks/P0/TASK-P0-03-domain-and-schema-skeleton.md](../tasks/P0/TASK-P0-03-domain-and-schema-skeleton.md) | TASK-P0-03 | planned | Domain and Schema Skeleton |
+| [tasks/P0/TASK-P0-03-domain-and-schema-skeleton.md](../tasks/P0/TASK-P0-03-domain-and-schema-skeleton.md) | TASK-P0-03 | done | Domain and Schema Skeleton |
 | [tasks/P0/TASK-P0-04-constraints-states-errors-capabilities.md](../tasks/P0/TASK-P0-04-constraints-states-errors-capabilities.md) | TASK-P0-04 | planned | Constraints States Errors and Capabilities |
 | [tasks/P0/TASK-P0-05-simulation-contracts-and-skeleton.md](../tasks/P0/TASK-P0-05-simulation-contracts-and-skeleton.md) | TASK-P0-05 | planned | Simulation Contracts and Skeleton |
 | [tasks/P0/TASK-P0-06-minimal-scenario-and-golden-schedule.md](../tasks/P0/TASK-P0-06-minimal-scenario-and-golden-schedule.md) | TASK-P0-06 | planned | SIM-MINIMAL-001 and Golden Schedule |

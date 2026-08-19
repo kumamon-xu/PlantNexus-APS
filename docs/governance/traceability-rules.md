@@ -60,6 +60,8 @@ REQ / NFR / ENG
 - 没有 ARTIFACT/manifest 的发布不能视为可追溯发布。
 - 当前尚不存在的代码、测试和产物在矩阵中标记 `PLANNED`，不能填造链接。
 
+Schema skeleton 证据链必须同时包含 versioned machine artifact、human-readable contract、data dictionary、contract test 和 Task acceptance。它只证明合同结构可执行；Import/Snapshot/Problem builder、hash、Solver 或业务能力没有实现证据时必须继续标记 `PLANNED`。
+
 ## 自动校验
 
 `scripts/check_docs.py` 执行以下治理检查：

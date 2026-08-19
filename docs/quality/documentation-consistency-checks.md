@@ -127,6 +127,10 @@ uv run python -m app.infrastructure.contract_check --root . --report build/valid
 
 TASK-P0-09 将上述边界实际应用于 Exit Gate：P0-09 full/diff validator 与 repository build均 PASS，但 workflow 仍硬编码 TASK-P0-08 diff range，其 exact command在新 audit commit上 exit 1；空 `git remote -v` 还证明 external provider evidence不可得。因此 CI Gate必须为 `FAIL`，不能只写 `NOT_RUN` 或用其他 local PASS 抵消。planned TASK-P0-10 必须先有界交接 workflow/test，再在用户授权后形成 provider evidence；不得修改本 validator 或 Task 文本来放宽 scope。
 
+TASK-P0-10 不修改 `scripts/check_docs.py` 或 `TEST-TRACEABILITY-VALIDATOR`，只把 workflow exact command 交接为当前 Task Card/`TASK-P0-10-report.json`，并在既有 integration test 内断言完整 command、artifact 名称与旧 `TASK-P0-08` 引用不存在。Diff base `5d8bb51e06add1afc2f53861cf53c7a2ba45a272` 定义 committed range，working tree 仍与该 range 取并集；full repository check 没有删除。
+
+provider 层必须额外校验 Actions run `head_sha`、workflow/job conclusion、artifact ID/name/digest 及 `main` branch required check。这些平台事实不由本地 validator 猜测；remediation 前 run `32227247262` 的失败只是反例，不能充当 PASS。
+
 ## Override
 
 不允许用自由文本 CI skip 绕过。确需例外时必须在 Task Card 记录理由，提交 ADR 或明确批准记录，并仍保留检查报告。正确性、状态语义、数据隔离和发布门不得豁免。

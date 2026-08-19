@@ -153,6 +153,32 @@
       "required_closure": "Handoff the workflow to TASK-P0-10 without weakening the diff gate, prove the exact command before and after commit, then run the external provider."
     }
   ],
+  "remediation": {
+    "task": "TASK-P0-10",
+    "status": "IN_PROGRESS",
+    "diff_base": "5d8bb51e06add1afc2f53861cf53c7a2ba45a272",
+    "provider": "GitHub Actions",
+    "repository": "kumamon-xu/PlantNexus-APS",
+    "branch": "main",
+    "pre_remediation_run": {
+      "run_id": 32227247262,
+      "url": "https://github.com/kumamon-xu/PlantNexus-APS/actions/runs/32227247262",
+      "head_sha": "5d8bb51e06add1afc2f53861cf53c7a2ba45a272",
+      "status": "completed",
+      "conclusion": "failure",
+      "failed_step": "Documentation and task diff",
+      "artifact": {
+        "id": 9355951091,
+        "name": "p0-engineering-evidence-32227247262",
+        "size_in_bytes": 6805,
+        "digest": "sha256:5356e4bdb7ae139bb371f340b34836fc0d74154351cd12dfb0a176682512844f",
+        "expires_at": "2026-11-17T07:18:52Z"
+      }
+    },
+    "workflow_handoff": "IMPLEMENTED_LOCALLY_PENDING_ACCEPTANCE_AND_PROVIDER_SUCCESS",
+    "successful_provider_run": "PENDING",
+    "required_check": "PENDING"
+  },
   "boundaries": {
     "p0_milestone": "ACTIVE",
     "ci_gate": "FAIL",

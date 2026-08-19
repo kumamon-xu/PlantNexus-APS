@@ -1,7 +1,7 @@
 ---
 doc_id: TASK-P0-10
 title: CI Workflow Handoff and Provider Evidence Remediation
-status: planned
+status: in_progress
 spec_version: 0.3.0
 phase: P0
 normative: true
@@ -17,17 +17,17 @@ NFR / ENG IDs: NFR-TRC-001, NFR-PER-001, ENG-ARCH-001, ENG-VER-001
 
 Depends on: TASK-P0-09
 
-Goal: 关闭 `P0-GAP-001` 与 `P0-GAP-002`：先把 CI workflow 的文档 diff gate 从硬编码 TASK-P0-08 有界交接到本 Task 的 immutable Diff base，并用 integration/governance tests 证明最终 P0 commit 可执行；再在用户明确选择并授权的 Git/CI provider 上执行未弱化 workflow，保存 run/commit/artifact/required-check evidence并重新审计 P0 CI Exit Gate。本卡当前只由 TASK-P0-09 创建为 `planned`，没有开始执行。
+Goal: 关闭 `P0-GAP-001` 与 `P0-GAP-002`：先把 CI workflow 的文档 diff gate 从硬编码 TASK-P0-08 有界交接到本 Task 的 immutable Diff base，并用 integration/governance tests 证明最终 P0 commit 可执行；再在用户明确选择并授权的 GitHub provider 上执行未弱化 workflow，保存 run/commit/artifact/required-check evidence并重新审计 P0 CI Exit Gate。
 
-Inputs: `docs/milestones/P0-exit-gate-audit-report.md`、`docs/milestones/P0-exit-gate-evidence-manifest.json`、`.github/workflows/ci.yml`、`backend/tests/integration/test_ci_contract.py`、provider/remote choice 和用户对外部 push/provider/branch-setting 变更的明确授权。
+Inputs: `docs/milestones/P0-exit-gate-audit-report.md`、`docs/milestones/P0-exit-gate-evidence-manifest.json`、`.github/workflows/ci.yml`、`backend/tests/integration/test_ci_contract.py`、GitHub repository `kumamon-xu/PlantNexus-APS`、`origin` SSH remote、`main` branch，以及用户于 2026-08-19 对继续 TASK-P0-10 和必要 push/provider evidence 操作的明确授权。
 
-Diff base: 在本 Task 经用户授权切换为 `in_progress` 前记录当时完整 40 字符 HEAD；当前 `planned` 状态不得预填。
+Diff base: 5d8bb51e06add1afc2f53861cf53c7a2ba45a272
 
-Files allowed to change: `/.github/workflows/ci.yml`、`/backend/tests/integration/test_ci_contract.py`、下方 `Documents to update` 的全部明确路径，以及用户授权后由 provider 产生、在本卡进入 `in_progress` 前补成精确引用的 external evidence。当前 `planned` 状态不授权实际修改这些路径或任何外部系统；开始前仍须记录 Diff base 和 provider-specific commands。
+Files allowed to change: `/.github/workflows/ci.yml`、`/backend/tests/integration/test_ci_contract.py`、`/docs/milestones/P0-exit-gate-evidence-manifest.json`、下方 `Documents to update` 的全部明确 Markdown 路径，以及 GitHub repository `kumamon-xu/PlantNexus-APS` 的 `main` push-triggered Actions runs/artifacts 与该 branch 的 required-check/branch-protection evidence。JSON manifest 需要在 Files allowed 中单独列出，因为文档清单扩展只处理 Markdown；该路径已在 Task 开始前的 `Documents to update` 中声明，本次只消除机器边界表达歧义。凭证只可由进程外环境或已认证 provider session 提供，不得写入 repository。
 
 Files forbidden to change: 除上述精确路径外的全部 repository files；`/scripts/check_docs.py`、其他 tests、Schema、Fixture、dependency/lock、Solver/P1 implementation 和 Production Secret；任何 Test assertion/required check 弱化、伪造 run URL/ID/artifact 或把 local command 写成 provider PASS。用户授权前还禁止 push、provider/branch-setting/Secret 等 external state change。
 
-Implementation steps: 开始时记录 immutable Diff base；把 workflow 的 docs/diff step 有界切换为 TASK-P0-10，保持 full governance check、artifact upload 和其他 gates不弱化；更新 integration contract test，先在提交前及提交后证明 workflow exact command 对最终 P0-10 range PASS；等待用户选择 remote/provider 并授权必要外部操作；补齐 provider-specific query/branch-protection commands 和 credentials boundary；对不可变 commit 触发 provider run；核验全部 required jobs success、artifact upload/commit SHA 与 required check/branch-protection state；保存可引用 evidence并重新审计 P0。若需要修改 checker 或其他路径，必须先修订本卡边界。
+Implementation steps: 开始时记录 immutable Diff base；把 workflow 的 docs/diff step 有界切换为 TASK-P0-10，保持 full governance check、artifact upload 和其他 gates不弱化；更新 integration contract test，先在提交前及提交后证明 workflow exact command 对最终 P0-10 range PASS；对不可变 commit push 后以 GitHub REST 查询 provider run；核验全部 required jobs success、artifact upload/commit SHA 与 required check/branch-protection state；保存可引用 evidence并重新审计 P0。若需要修改 checker 或其他路径，必须先修订本卡边界。
 
 Outputs: 可在最终 P0 commit 上 PASS 的 workflow handoff/integration evidence；provider、repository、run ID/URL、immutable commit、job conclusions、external artifact identity/digest、required-check/branch-protection evidence；superseding P0 Exit Gate audit decision。
 
@@ -53,11 +53,11 @@ Benchmark impact: P0 conditional hook 可保持 deferred；不得安装 Solver�
 
 Simulation scenarios: 只由现有 workflow 重放 `SIM-MINIMAL-001` 和 mutation suite；不改场景或 Fixture。
 
-Acceptance commands: `uv sync --locked`；`uv run ruff check .`；`uv run pyright backend/app backend/tests`；全部 P0 pytest suites；五类 machine reports；`docker compose --env-file .env.example config --quiet`；`uv run python scripts/check_docs.py`；`uv run python scripts/check_docs.py --task docs/tasks/P0/TASK-P0-10-ci-provider-evidence-remediation.md --check-diff --report build/traceability/TASK-P0-10-report.json`；`git diff --check`；`uv build`。当前 provider 未选择，不能安全填写 provider-specific run/query/branch-protection 命令；本卡进入 `in_progress` 前必须补入用户所选 provider 的官方命令，否则不得开始。
+Acceptance commands: `uv sync --locked`；`uv run ruff check .`；`uv run pyright backend/app backend/tests`；全部 P0 pytest suites；五类 machine reports；`docker compose --env-file .env.example config --quiet`；`uv run python scripts/check_docs.py`；`uv run python scripts/check_docs.py --task docs/tasks/P0/TASK-P0-10-ci-provider-evidence-remediation.md --check-diff --report build/traceability/TASK-P0-10-report.json`；`git diff --check`；`uv build`。GitHub provider commands：`git push origin main`；`git ls-remote origin refs/heads/main`；以 PowerShell `Invoke-RestMethod` 读取 `https://api.github.com/repos/kumamon-xu/PlantNexus-APS/actions/workflows/ci.yml/runs?event=push&branch=main&per_page=20`，并按当次 immutable HEAD 选择唯一 run；读取 `/actions/runs/{run_id}`、`/actions/runs/{run_id}/jobs?per_page=100`、`/actions/runs/{run_id}/artifacts?per_page=100`；使用短期进程外 `GITHUB_TOKEN` 或已认证 GitHub session 读取 `/repos/kumamon-xu/PlantNexus-APS/branches/main/protection`，确认 `validate` 为 required check。GitHub REST headers 固定包含 `Accept: application/vnd.github+json`、`X-GitHub-Api-Version: 2022-11-28` 与非敏感 `User-Agent`；任何 token 不得回显、写入命令记录或 repository。
 
 Artifacts: workflow handoff diff report/integration evidence；external run URL/ID、commit SHA、job conclusion、uploaded evidence artifact identity/digest、required-check/branch-protection evidence；更新后的 audit report/manifest。
 
-Explicitly excluded: 当前执行、未授权 push/provider/branch-setting 操作、超出明列路径的 checker/refactor、P1 Task/implementation、弱化 CI、真实 Solver/Benchmark、Production readiness。
+Explicitly excluded: 超出 GitHub repository `kumamon-xu/PlantNexus-APS` / `main` / `P0 engineering gates` 的外部操作，超出明列路径的 checker/refactor、P1 Task/implementation、弱化 CI、真实 Solver/Benchmark、Production readiness。
 
 PROD_OPEN: 不关闭 OPEN-001～015；CI provider 选择不是生产业务事实。
 
@@ -67,4 +67,4 @@ Rollback: workflow handoff 回滚必须恢复到仍能审计当前 commit 的已
 
 ## Completion evidence
 
-未执行。由 TASK-P0-09 于 2026-08-19 因 `P0-GAP-001`（provider evidence unavailable）与 `P0-GAP-002`（workflow hard-coded TASK-P0-08 diff gate fails on the audit commit）创建/收敛为 `planned`；workflow/test尚未修改，provider、remote、授权、Diff base、provider-specific commands、run/URL/ID/artifact 与 branch-protection evidence 均待后续确认，不得填造。
+执行中。2026-08-19 已确认 `origin` 为 `git@github-kumamon:kumamon-xu/PlantNexus-APS.git`、`main` 与 `origin/main` 均指向 Diff base `5d8bb51e06add1afc2f53861cf53c7a2ba45a272`且工作树干净；用户明确要求继续 TASK-P0-10。GitHub Actions baseline run [`32227247262`](https://github.com/kumamon-xu/PlantNexus-APS/actions/runs/32227247262) 在该 SHA 上真实 `failure`：`validate` job 仅 `Documentation and task diff` step 失败，其他已执行 gates 成功；artifact `p0-engineering-evidence-32227247262` / ID `9355951091` / digest `sha256:5356e4bdb7ae139bb371f340b34836fc0d74154351cd12dfb0a176682512844f` 已上传。这是 remediation 前的失败基线，不是 completion PASS。

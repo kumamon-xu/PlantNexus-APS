@@ -24,7 +24,7 @@ last_reviewed: 2026-08-19
 | TASK-P0-07 | Illegal Fixtures 与 Validator Rule Sheet | P0-04/06 | `done` |
 | TASK-P0-08 | CI、logging、DB、worker、health skeleton | P0-01/02 | `done` |
 | TASK-P0-09 | P0 Exit Gate 审计 | P0-01～08 | `done` |
-| TASK-P0-10 | CI workflow handoff + provider evidence remediation | P0-09 | `planned` |
+| TASK-P0-10 | CI workflow handoff + provider evidence remediation | P0-09 | `in_progress` |
 
 状态由 Task front matter 记录：`planned`、`ready`、`in_progress`、`blocked`、`done`、`cancelled`。只有真实验收证据存在时才能标记 done。
 
@@ -32,6 +32,6 @@ Task 进入 `in_progress` 时必须把切换前的完整 40 字符 HEAD commit S
 
 每张 Task Card 必须在开始前完成文档影响分析：填写 `Documentation impact`、明确的 `Documents to update`、理由、匹配的 change-impact matrix 行和 `Traceability updates`。禁止使用“相关 docs”作为路径；没有文档变化也必须提交有依据的 `none` 结论。
 
-TASK-P0-09 已确认 workflow 的 TASK-P0-08 diff handoff 在新 audit commit 上 `FAIL`，external provider evidence 同时为阻塞性 `NOT_RUN`；TASK-P0-10 只是一张 planned remediation 卡，在记录 Diff base、由用户选择/授权 remote/provider 并补齐 provider-specific commands 前不得开始。它不是 P1 Task，也不改变当前 Phase。
+TASK-P0-09 已确认 workflow 的 TASK-P0-08 diff handoff 在新 audit commit 上 `FAIL`；GitHub baseline run `32227247262` 又在 provider 侧重现同一失败。TASK-P0-10 已以 immutable Diff base `5d8bb51e06add1afc2f53861cf53c7a2ba45a272` 进入 `in_progress`，只处理 workflow handoff、GitHub Actions/artifact/required-check evidence 和 P0 重审；它不是 P1 Task，也不预先改变当前 Phase Gate。
 
 本表是导航摘要；发生差异时以对应 Task Card front matter 为准。完成一个 Task 不会自动把下一个 Task 改为 `ready` 或开始执行。

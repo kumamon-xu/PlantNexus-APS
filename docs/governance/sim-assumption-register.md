@@ -45,3 +45,5 @@ TASK-P0-07 review：mutation suite 只引用 `SIM-MINIMAL-001@1.0.0` 和 SIM-ASS
 TASK-P0-08 review：未修改 Simulation code/Schema/Profile/Scenario/Fixture/Benchmark；development/test/benchmark/production environment enum、data-plane guard、health synthetic probes、Compose service count 与 job timeout 只属于 engineering config/test，不是工厂或 Scenario 定量假设。没有新增/修改条目；SIM-ASSUMPTION-001～009 全部保持 `ACTIVE`，registry format version 不变。
 
 TASK-P0-09 review：deterministic replay、Golden 与 mutation gates 复核了 SIM-ASSUMPTION-001～009 的 Scenario/Profile/version/seed/hash 链和 Production isolation boundary；所有值仍只属于 synthetic correctness evidence，没有用于关闭任何 production-open entry 或建立生产默认值。没有新增、修改或 retire 条目，九项全部保持 `ACTIVE`，registry format version 不变。
+
+TASK-P0-10 review：本 Task 只重放既有 Simulation/Golden/Mutation machine gates 并交接 report 文件名，不修改 Profile、Scenario、Generator、Fixture、seed、canonical hash 或任何定量值。没有新增、修改或 retire 条目；SIM-ASSUMPTION-001～009 全部保持 `ACTIVE`，不用于关闭 production-open entry，registry format version 不变。

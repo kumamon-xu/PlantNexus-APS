@@ -76,3 +76,9 @@ P0 工程骨架首次落地以下精确 direct pins；transitive graph 以 `uv.l
 | Container build tool | `uv==0.11.32` in `infra/Dockerfile` and CI setup |
 
 `pyproject.toml` 中全部 direct runtime/dev dependencies 使用 exact pin，`uv sync --locked` 禁止解析漂移。PostgreSQL/Redis Compose images 使用 patch-level tag；尚未形成 digest-pinned production deployment。OR-Tools、Polars、openpyxl、Hypothesis、Frontend/Playwright 均未安装；没有 Solver dependency/upgrade/Benchmark evidence，ADR Solver gate 不触发。
+
+## TASK-P0-10 CI toolchain review
+
+本 Task 不修改 `pyproject.toml`、`uv.lock`、Python/uv pin、Action major tag、Compose image 或 runtime dependency；五类 machine report 只从 TASK-P0-08 文件名交接为 TASK-P0-10，报告 schema 与生成器不变。provider evidence 通过 GitHub Actions 和 GitHub REST 获取，不向项目依赖图引入 GitHub CLI/SDK。
+
+Actions provider PASS 只证明锁定的 P0 repository gates 在 GitHub-hosted runner 上执行；它不将 tag 提升为 digest pin，也不构成 Production supply-chain hardening、deployment 或 Solver/Benchmark evidence。

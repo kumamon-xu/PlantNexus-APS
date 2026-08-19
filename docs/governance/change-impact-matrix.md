@@ -135,3 +135,9 @@ Schema、Domain、Import/Normalization/Snapshot、Planning/Validator/Backend、S
 本 Task 只修改明确列出的 P0 phase/milestone、governance registry、quality/index/task/audit documents 和 `docs/milestones/P0-exit-gate-evidence-manifest.json`，实际预期命中 `IMPACT-PHASE`、`IMPACT-GOVERNANCE-REGISTRY`、`IMPACT-DOCS`。新建 TASK-P0-10 仅为 planned remediation card；没有执行后续任务或外部操作。
 
 Schema、Domain、Constraint/Validator、Simulation、Fixture、Test、Benchmark、API、Infrastructure/workflow、dependency/version metadata、governance validator 和 P1 path均保持只读，因此不声明对应 Rule ID。machine rule table/required-document column 未修改，`registry_version` 保持 `1.0.0`；最终以 TASK-P0-09 diff report 的真实 matched rows 为准。
+
+## TASK-P0-10 matrix review
+
+本 Task 实际路径命中 `IMPACT-INFRA`、`IMPACT-TESTS`、`IMPACT-PHASE`、`IMPACT-GOVERNANCE-REGISTRY`、`IMPACT-DOCS`。`.github/workflows/ci.yml` 只交接当前 Task diff/report 和 artifact 引用；`backend/tests/integration/test_ci_contract.py` 增加 exact handoff/no-stale-reference 断言；phase/audit/registry/docs 只同步 GitHub provider 真实证据与 Gate 状态。
+
+Schema、Domain、Import/Snapshot/Planning/Validator implementation、Simulation code/Fixture、Benchmark、API/Job/DB、dependency/version metadata、governance validator、Solver/P1 path 均禁止修改，因此不声明其他 Rule ID。machine rule table/required-document column 与 registry format 不变，`registry_version` 保持 `1.0.0`；最终以 TASK-P0-10 diff report 的真实 matched rows 为准。

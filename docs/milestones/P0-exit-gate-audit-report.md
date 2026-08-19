@@ -29,6 +29,12 @@ P0 的六项必需 Exit Gate 中五项已有本次独立复验的本地 `PASS`�
 
 机器可读结论见 [`P0-exit-gate-evidence-manifest.json`](P0-exit-gate-evidence-manifest.json)。本报告不授权 P1，也不声称 Production readiness。
 
+## TASK-P0-10 remediation update (in progress)
+
+2026-08-19 用户已将本地 repository 推送到 GitHub `kumamon-xu/PlantNexus-APS`，`main` / `origin/main` 在 TASK-P0-10 开始时均指向 `5d8bb51e06add1afc2f53861cf53c7a2ba45a272`。GitHub Actions baseline run [`32227247262`](https://github.com/kumamon-xu/PlantNexus-APS/actions/runs/32227247262) 对该 SHA 执行 `P0 engineering gates`；`validate` job 仅 `Documentation and task diff` 为 `failure`，其他已执行 gates 为 `success`，与本报告原诊断一致。run 上传 artifact `p0-engineering-evidence-32227247262` / ID `9355951091` / digest `sha256:5356e4bdb7ae139bb371f340b34836fc0d74154351cd12dfb0a176682512844f`；失败 run/artifact 只是 remediation 前反例，不是 CI PASS。
+
+TASK-P0-10 已记录该 SHA 为 Diff base，并将 workflow machine reports、exact docs diff command 和 artifact 引用交接到 TASK-P0-10；integration contract 禁止任何 `TASK-P0-08` workflow 残留。直到新 immutable commit 的 successful provider run、artifact digest、required `validate` branch check 与全部本地/post-commit acceptance 都形成并重新审计前，本报告的 `NOT_READY` / `NO_GO` 结论仍然有效。
+
 ## Gate evidence manifest
 
 | Gate | Result | Evidence actually observed | Boundary |

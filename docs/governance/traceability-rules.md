@@ -74,6 +74,8 @@ Engineering Skeleton 证据链必须区分：exact direct pin 与 transitive loc
 
 P0 Exit Gate 审计还必须区分“审计 Task 完成”和“Milestone Gate 通过”：审计报告/manifest 完整、命令可复验且忠实记录 `FAIL`/`NOT_RUN` 时，审计 Task 可以 `done`；但任一 §72 必需 Gate 非 `PASS` 时 P0 必须保持 `active`/`NOT_READY`，不得进入 P1。workflow 的 exact command必须能审计当前 immutable Task range，硬编码旧 Task 即使文本 contract test通过也不构成 CI PASS；local command parity、repository build 或空 remote检查不能替代 external provider run。provider、run ID/URL、immutable commit、job conclusion、external artifact 和 required-check evidence必须可核验。
 
+TASK-P0-10 的 provider closure 必须同时记录 GitHub repository/workflow/event、run ID/URL、`head_sha`、run attempt/status/conclusion、required job 及 step conclusions、artifact ID/name/size/digest/expiry，以及 `main` 的 protected/required-check 状态。run 必须指向本 Task Diff base 之后的不可变 commit，job 必须 `success`；只有失败 run 或 artifact upload 不能关闭 CI Gate。证据文档对已完成 implementation run 的引用不能自我包含后续 evidence-only commit，因此后续 commit 仍必须执行同一 workflow，并在任务交付中记录其结果；不得用这一自引用边界跳过最终 CI。
+
 ## 自动校验
 
 `scripts/check_docs.py` 执行以下治理检查：

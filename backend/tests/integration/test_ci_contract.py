@@ -1,4 +1,4 @@
-"""TASK-P0-08 reproducible dependency, container, and CI configuration checks."""
+"""P0 reproducible dependency, container, and CI configuration checks."""
 
 from __future__ import annotations
 
@@ -87,6 +87,13 @@ def test_ci_runs_all_p0_gates_and_keeps_benchmark_as_a_hook() -> None:
     assert "ortools" not in workflow.lower()
     assert "scripts/run_benchmark.py" in workflow
     assert "actions/upload-artifact@v4" in workflow
+    assert (
+        "scripts/check_docs.py --task "
+        "docs/tasks/P0/TASK-P0-10-ci-provider-evidence-remediation.md "
+        "--check-diff --report build/traceability/TASK-P0-10-report.json"
+    ) in workflow
+    assert "p0-exit-gate-evidence-${{ github.run_id }}" in workflow
+    assert "TASK-P0-08" not in workflow
 
 
 def test_container_build_is_pinned_and_non_root() -> None:

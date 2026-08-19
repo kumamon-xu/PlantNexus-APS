@@ -60,3 +60,9 @@ TASK-P0-05 的 Generator protocols 明确终止于 Standard Import package，不
 ## TASK-P1-02 contract boundary review
 
 Canonical records、Import v2与Snapshot v2均为JSON-compatible machine合同/pure types，不导入`planning.backends`或OR-Tools。Snapshot v2的OperationInstance/resource option payload保留未来PlanningProblem builder所需的candidate级seconds/source version，但本Task不构建Problem、tick、CpModel、SolverBackend、PlanningSolution或status。Solver-neutral边界未改变，OR-Tools upgrade/Benchmark replay Gate不触发。
+
+## TASK-P1-04 dependency boundary review
+
+`openpyxl==3.1.5`、`defusedxml==0.7.1`和transitive `et-xmlfile==2.0.0`只用于XLSX transport parsing；lock中仍无OR-Tools。Reference Adapter输出opaque Raw Staging rows，不构建canonical Import、PlanningProblem、tick、CpModel、SolverBackend、PlanningSolution或status，且`importers`不导入`app.planning`。
+
+因此本Task不触发Solver upgrade/ADR/Golden/Scenario/Benchmark Gate。未来Backend不能直接读取CSV/XLSX或绕过Normalization/DataValidation/Snapshot/Problem builder。

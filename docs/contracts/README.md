@@ -44,6 +44,8 @@ last_reviewed: 2026-08-19
 
 `2.0.0` 保留 `1.0.0/1.1.0/1.2.0` 全部 artifact；Import/Snapshot v1与v2 document不可互换，consumer必须显式选择版本。v2 strict objects拒绝未知字段且不声明业务默认值。`schemas/samples/` 与 `schemas/scenario/*.synthetic.json` 只包含明确标识的 Schema samples，不是正式 Scenario、Fixture、builder output或生产数据。规则/Profile/Scenario合同和P1 canonical字段均不提供生产mapping或参数默认值。
 
+TASK-P1-04已形成code-level `ReferenceFileAdapter@1.0.0` transport contract：fixed CSV/XLSX shape安全转换为TASK-P1-03 Raw Staging，manifest明确`production_binding=false`。它没有新增或修改JSON Schema/data dictionary；`payload_json`保持opaque，真正canonical producer和mapping/unit/time规则仍由TASK-P1-05形成。因此下方真实`external-adapters.md`仍受OPEN-002/007/013/015阻塞，不能用Reference Adapter替代。
+
 ## 等待实现事实后形成
 
 - `api.md`：当前总规只有 endpoint inventory，payload/status/auth 尚未形成。

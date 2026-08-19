@@ -167,6 +167,12 @@ Schema set major release必须在Task Completion evidence记录compatibility、m
 
 治理检查只验证scope、dependency、changed paths、文档/追踪和impact rows，不执行SQL transaction或判断idempotency correctness。`TEST-IMPORT-STAGING-001`与实际Alembic empty/populated round trip补充该语义；最终提交前后report必须记录完整Diff base、committed/working-tree source counts和0 issues。生成report继续位于ignored `build/`且不提交。
 
+## TASK-P1-04 adapter governance review
+
+本Task沿用full repository与`Diff base..HEAD + working tree`检查，report路径为`build/traceability/TASK-P1-04-report.json`。最终路径由`IMPACT-IMPORT/INFRA/DEPENDENCY/VERSION-METADATA/TESTS/PHASE/GOVERNANCE-REGISTRY/DOCS`覆盖；启动前补齐5份治理文档，首次diff补齐version metadata审查，全仓回归再驱动有界engineering exact-pin baseline更新；Diff base始终固定为`6c259e172be4bf3cde72a56212df3a1bad427372`。
+
+治理检查不读取CSV/XLSX、不判断macro/formula/archive guard或semantic parity；TEST-IMPORT-ADAPTER-001与exact locked dependency补充该语义。最终提交前后report必须记录完整changed paths/source counts/matched rows/0 issues，ignored `build/` report不提交；provider CI仍须针对immutable implementation/evidence commit另行核验。
+
 ## Override
 
 不允许用自由文本 CI skip 绕过。确需例外时必须在 Task Card 记录理由，提交 ADR 或明确批准记录，并仍保留检查报告。正确性、状态语义、数据隔离和发布门不得豁免。

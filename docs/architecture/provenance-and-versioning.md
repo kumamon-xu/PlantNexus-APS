@@ -86,3 +86,9 @@ Schema set`2.0.0`新增strict Import/Snapshot provenance。每条canonical recor
 `0002_raw_import_staging`持久保存source system/version、content SHA-256、row SHA-256/identity/location、source leaf name/media type/byte length、UTC received-at、data plane和完整synthetic Scenario/Profile/Generator/seed。持久化request fingerprint使用`canonical JSON + SHA-256`覆盖这些稳定字段与行顺序；candidate batch ID/received-at不参与，使相同idempotency request返回首次batch而不伪造新接收事实。source/version/content/row变化则显式conflict。
 
 该fingerprint是Raw Staging幂等身份，不是Standard Import `dataset_hash`、Snapshot hash或Problem hash，也不替代Adapter/normalization/canonicalization/generator version。Migration revision和repository test形成internal persistence provenance；code commit/provider run只在Task完成证据中记录。当前没有成果包、run audit或Production source authority。
+
+## TASK-P1-04 adapter provenance
+
+Reference Adapter manifest固定`adapter_id=plantnexus.reference-file`、`adapter_version=1.0.0`、`staging_contract_version=raw-staging.v1`和`production_binding=false`。Source manifest必须显式给出adapter ID/version、relative path、batch/idempotency、source system/version、UTC received-at、data plane及conditional synthetic provenance；version mismatch在读文件前拒绝。
+
+Adapter从实际bounded bytes计算content SHA-256，并把leaf name/media type/byte length与format-specific source location交给Raw Staging。相同CSV/XLSX业务行的row identity/raw payload可以相同，但文件digest/location不能被规范化成相同值。该版本链不是Import v2 normalization/canonicalization version、dataset hash或真实接口版本；这些仍需后续Task和OPEN closure evidence。

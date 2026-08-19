@@ -39,7 +39,7 @@ CSV / Excel / Reference Adapter / Synthetic Generator
 
 `TASK-P1-03 — Raw Staging and Import Provenance`已完成：不可变Diff base为`d122a1b16dc1b7c91227d587b99fb8a345c7c312`，implementation commit为`25897393e31dcc0648943ec7e2e7f43dbb0e70e1`，对应GitHub Actions run `32243895717`/`validate=success`。Immutable raw batch/row、durable repository、`0002` migration、幂等/事务/provenance和data-plane guard证据闭环。
 
-当前没有`in_progress` Task；按依赖顺序建议下一项为`TASK-P1-04 — CSV Excel and Formal Reference Adapter`，仍保持`planned`且未启动。P1-03没有实现Adapter、normalization、validation、expansion、Snapshot/Problem builder、Solver或P2，这些边界不因Task完成而改变。
+当前唯一`in_progress` Task为`TASK-P1-04 — CSV Excel and Formal Reference Adapter`，不可变Diff base为`6c259e172be4bf3cde72a56212df3a1bad427372`。本Task只形成安全CSV/XLSX读取、versioned non-production ReferenceFileAdapter v1和Raw Staging输出，不实现normalization、validation、expansion、Snapshot/Problem builder、Solver或P2。
 
 用户于2026-08-19进一步授权：后续每个P1 Task完成本地验收并提交后，可直接push当前`main`并核验对应GitHub CI。该授权只覆盖当前Task完成后的push/provider核验，不自动启动下一Task、不改变Task允许范围，也不授权进入P2。
 
@@ -64,7 +64,7 @@ CSV / Excel / Reference Adapter / Synthetic Generator
 
 ## P1 Task 规划状态
 
-P1共规划12个Task：phase governance/CI、canonical contracts、Raw Staging、CSV/Excel/reference adapter、Normalization、Data Validation、Order Expansion、Snapshot、Problem hash、Synthetic Generator、common-ingress Gate evidence，最后为P1 Exit Gate Audit。TASK-P1-01～03=`done`，TASK-P1-04～12仍为`planned`；P1 Milestone继续`active`，不得进入P2。
+P1共规划12个Task：phase governance/CI、canonical contracts、Raw Staging、CSV/Excel/reference adapter、Normalization、Data Validation、Order Expansion、Snapshot、Problem hash、Synthetic Generator、common-ingress Gate evidence，最后为P1 Exit Gate Audit。TASK-P1-01～03=`done`，TASK-P1-04=`in_progress`，TASK-P1-05～12仍为`planned`；P1 Milestone继续`active`，不得进入P2。
 
 ## 阶段完成条件
 

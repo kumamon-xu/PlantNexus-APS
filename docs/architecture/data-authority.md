@@ -61,3 +61,9 @@ Pure precheck只拒绝不一致的ID/reference/unit/time/duration/provenance，�
 Raw Staging新增的source system/version、content/row digest、row identity/location、received-at、media type与source name只构成接收和审计事实，不决定Order/Execution/Inventory/CAM/Planning字段权威，也不解决来源冲突。repository保存opaque bytes且没有canonical/Snapshot/Problem转换方法；同idempotency scope下的source/version/content差异被拒绝，不能以最后写入覆盖。
 
 `raw_import_*`列是internal persistence schema，不是ERP/MES/WMS/CAM接口或field mapping。SQLite synthetic测试和migration sample不提供OPEN-002/015的权威来源，两个条目继续OPEN；后续Adapter/Normalization必须在本边界之后显式解释来源而不能从staging列名推断生产字段。
+
+## TASK-P1-04 reference adapter authority boundary
+
+ReferenceFileAdapter v1只权威记录“调用方声明的source system/version + 实际文件bytes/位置 + transport三列”。`record_type`与opaque `payload_json`不批准canonical collection、业务字段、单位、timezone、冲突优先级或系统权威；即使文件被成功读取并持久化，也不能称为Canonical/DataValidation PASS。
+
+`production_binding=false`表示该实现不是任何真实ERP/MES/WMS/CAM连接器。Adapter可以按调用方显式data plane构造Raw Staging batch，但不能据此授权Production映射；OPEN-002/013/015继续OPEN，冲突和mapping必须由后续versioned Normalization/authority evidence处理。

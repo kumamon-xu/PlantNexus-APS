@@ -33,3 +33,7 @@ TASK-P1-03在既有Operations baseline上增加Raw Staging持久化证据：inse
 这仍不是Production Runbook：真实PostgreSQL并发/lock、独立数据库与roles、retention/erasure、backup/restore、access audit、容量/告警和incident response均未形成。migration downgrade只在临时开发SQLite明确删除1个synthetic sample batch/row，不能作为生产数据清理策略。
 
 TASK-P1-03 implementation commit`25897393e31dcc0648943ec7e2e7f43dbb0e70e1`已由GitHub run [`32243895717`](https://github.com/kumamon-xu/PlantNexus-APS/actions/runs/32243895717)的required `validate`成功重放；artifact `9361846475` / digest `sha256:75aa68daf5bd4308a4f9143c0ae72746f540d103d6a937d472d6a7d5c3c5160b`保存机器证据。该provider PASS仍不构成Production DB、migration runbook或安全认证。
+
+TASK-P1-04在`security.md`形成bounded CSV/XLSX file-root/type/size/shape/archive/active-content控制，并把openpyxl/defusedxml exact pins同步到既有engineering machine contract/CI assertion；OR-Tools forbidden、environment/data-plane fail-closed和既有machine report schema均未弱化。Reference files只在temporary test directory生成，Adapter不创建upload API、Worker或外部connection。
+
+这仍不是Production Runbook或完整file-ingress security：quarantine/malware scanning、RBAC、network file share、rate limit、encryption、retention/erasure、production filesystem permission/audit和incident response均未形成；真实ERP/MES/WMS/CAM binding也仍受OPEN-002/015阻塞。

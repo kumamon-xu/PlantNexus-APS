@@ -48,3 +48,9 @@ CI workflow 保留 `PLANTNEXUS_BENCHMARK_PROFILE=pr` 的条件 hook：只有未�
 ## TASK-P1-02 review
 
 本Task新增canonical Import/Snapshot合同但没有PlanningProblem builder、Solver、preprocessing runtime、BenchmarkRunner/profile/baseline或历史comparison。Schema/sample/entity counts只用于contract correctness，不能被解释为规模、吞吐、runtime或memory结果；不生成零值BenchmarkReport。未来TASK-P1-09/P2 consumer必须记录schema set`2.0.0`、document/builder/hash versions并按本规则回放，OPEN-012保持OPEN。
+
+## TASK-P1-04 review
+
+本Task新增openpyxl/defusedxml dependency和bounded file parsing，但没有PlanningProblem、Solver、constraint/preprocessing model、BenchmarkRunner/profile或baseline。2-row temporary CSV/XLSX仅用于contract/integration回归，测试耗时不设门槛且不表示吞吐、内存、factory size或Production capacity；不生成BenchmarkReport。
+
+OR-Tools仍不存在，Solver replay Gate不触发。后续如文件解析成为可观测pipeline阶段，可记录明确环境与rows/bytes/sec诊断，但生产阈值仍由OPEN-012/P7授权。

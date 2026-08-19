@@ -78,3 +78,9 @@ Schema set 与 `app.SCHEMA_VERSION` 均保持 `1.2.0`；没有修改 `schemas/**
 - Validation：JSON Schema Draft 2020-12/jsonschema `4.25.1`跨URN registry、positive/negative/round-trip、unknown/no-default、UTC/unit/duration/reference、synthetic isolation、v1 byte fingerprint及pure semantic precheck均由TEST-CONTRACT-001覆盖。
 
 本release落实ADR-0007/0008/0009既有决定，不改变PlanningProblem、rule/state/error/capability/Simulation artifact，也不引入dependency、DB migration、Adapter、DataValidation、Builder或Solver。`uv.lock`依赖图因此保持不变。
+
+## TASK-P1-04 metadata review
+
+本Task只在`pyproject.toml` runtime dependencies增加exact openpyxl/defusedxml并更新`uv.lock`，没有修改`[tool.plantnexus-aps.versions]`、`app.SCHEMA_VERSION`、`schemas/**`、data dictionary、sample、serializer或hash projection。Schema set继续`2.0.0`，JSON/YAML compatibility与migration均为none；Reference Adapter`1.0.0`是独立code-level transport version，不能替代或提升Schema version。
+
+未来改变三列Reference transport或opaque row serialization必须发布新的adapter version并提供replay/compatibility规则，但只有修改machine Schema时才按本文件提升schema set。Dependency lock变化不能无痕改写Import/Snapshot document版本。

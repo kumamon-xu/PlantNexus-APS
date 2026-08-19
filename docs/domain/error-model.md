@@ -89,3 +89,9 @@ Job primitives 以 `JobTransitionError`、`LeaseOwnershipError`、`LeaseExpiredE
 Raw Staging分配6个module-local稳定control-flow code：`INVALID_STAGING_METADATA`、`INVALID_CONTENT_DIGEST`、`DUPLICATE_ROW_IDENTITY`、`IDEMPOTENCY_CONFLICT`、`DATA_PLANE_MISMATCH`、`STAGING_TRANSACTION_FAILED`。它们由`ImportStagingError`携带，错误文本只描述字段/合同，不包含raw payload、source observed value、driver exception、endpoint或Secret；transaction/query异常统一从原异常断链后返回sanitized code。
 
 这些code不加入或重解释P0的19项`ProductErrorCode` registry，不是HTTP error schema，也不替代TASK-P1-06的multi-error ImportQualityReport。DB持久化失败属于staging system control，source/digest/row/plane conflict属于import precondition；未来API mapping必须另行版本化并保持七类产品错误语义。
+
+## TASK-P1-04 adapter error boundary
+
+`InputAdapterError`把文件入口拒绝稳定归类为`DATA_ERROR`，并携带module-local `AdapterErrorCode`、sanitized `source_location`、`expected_contract`和message。code family区分adapter ID/version、unsafe/missing path、unsupported/oversize file、UTF-8/CSV/workbook/archive、sheet/row/column/header/cell/record以及formula/macro/external-link拒绝；错误文本不包含原始cell、payload、绝对路径或parser exception。
+
+这些module-local code不加入P0的19项产品error registry，也不是HTTP schema或ImportQualityReport。单文件遇到首个结构错误即fail closed；TASK-P1-06仍负责canonical data的deterministic multi-error报告及route/resource/unit/duration exact product code。

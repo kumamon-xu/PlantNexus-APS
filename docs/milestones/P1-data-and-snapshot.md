@@ -28,7 +28,7 @@ ReferenceFileAdapter是 P1正式、可测试的参考 Adapter，但在 OPEN-002/
 | 1 | TASK-P1-01 | Phase-aware governance与可持续 CI handoff | TASK-P0-10 | `done` |
 | 2 | TASK-P1-02 | Canonical records、Import v2、Snapshot v2合同 | P1-01 | `done` |
 | 3 | TASK-P1-03 | Raw Staging、provenance、idempotent persistence | P1-02 | `done` |
-| 4 | TASK-P1-04 | CSV、XLSX与ReferenceFileAdapter v1 | P1-02/03 | `planned` |
+| 4 | TASK-P1-04 | CSV、XLSX与ReferenceFileAdapter v1 | P1-02/03 | `in_progress` |
 | 5 | TASK-P1-05 | ID/time/unit Normalization与canonical Import bytes | P1-02/03/04 | `planned` |
 | 6 | TASK-P1-06 | DAG/reference/capability Data Validation与四类 exact rejection | P1-05 | `planned` |
 | 7 | TASK-P1-07 | DemandOrder→Lot→OperationInstance deterministic expansion | P1-06 | `planned` |
@@ -84,4 +84,4 @@ Gate证据还必须覆盖 CSV/XLSX/Reference Adapter、Raw Staging provenance、
 
 ## Current execution boundary
 
-Canonical-records.v1、Import v2与Snapshot v2的strict Schema/data dictionary/pure type/precheck已以schema set`2.0.0`发布。TASK-P1-03现以implementation commit`25897393e31dcc0648943ec7e2e7f43dbb0e70e1`和GitHub run`32243895717`形成Raw Staging/repository/migration/replay/rollback/isolation evidence并标记`done`。TASK-P1-04仍未启动；Adapter、Normalization、DataValidation、Expansion、Snapshot/Problem hash与Solver必须继续按依赖逐项实施。
+Canonical-records.v1、Import v2与Snapshot v2的strict Schema/data dictionary/pure type/precheck已以schema set`2.0.0`发布。TASK-P1-03现以implementation commit`25897393e31dcc0648943ec7e2e7f43dbb0e70e1`和GitHub run`32243895717`形成Raw Staging/repository/migration/replay/rollback/isolation evidence并标记`done`。TASK-P1-04已从HEAD`6c259e172be4bf3cde72a56212df3a1bad427372`启动，只实施non-production ReferenceFileAdapter与文件安全边界；Normalization、DataValidation、Expansion、Snapshot/Problem hash与Solver仍须按依赖逐项实施。

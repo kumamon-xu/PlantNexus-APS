@@ -75,3 +75,11 @@ Raw Staging现以immutable `StagedImportBatch`/`RawImportRow`保存batch ID、da
 持久化幂等scope为`data_plane + source_system + idempotency_key`。request fingerprint覆盖source/version、content digest、安全metadata、synthetic provenance与按序row digest/location，但排除candidate batch ID和received-at；exact replay返回首次持久化的batch，任何fingerprint差异明确返回`IDEMPOTENCY_CONFLICT`。batch与全部rows在同一SQLAlchemy transaction写入，repository只有`stage/get`，没有update/delete/Snapshot/Problem转换入口。
 
 `0002_raw_import_staging`是internal persistence migration，不改变Standard Import v2或外部字段权威。当前reference evidence使用SQLite验证空库、含1个synthetic batch的destructive downgrade/re-upgrade、transaction rollback与data-plane query guard；真实Adapter、文件安全解析、Normalization/DataValidation和独立Production/Simulation数据库部署仍由后续Task/平台证据形成。
+
+## TASK-P1-04 ReferenceFileAdapter v1
+
+`plantnexus.reference-file@1.0.0`定义严格三列transport contract：`record_type,source_record_id,payload_json`；CSV只接受无BOM的strict UTF-8、固定comma/double-quote dialect，XLSX只接受单一`records` sheet和text cells。Adapter不解析`payload_json`字段语义，而是把三列按sorted compact JSON编码为opaque `RawImportRow.raw_payload`；`record_type + source_record_id`的canonical projection产生稳定row identity。Normalization仍由TASK-P1-05负责。
+
+两种格式的等价输入必须产生相同row identity与raw payload bytes，并保留相同caller source/version/data-plane/synthetic provenance；transport provenance必须忠实不同，包括原文件SHA-256、leaf name、media type、byte length和CSV/XLSX source location。不能为了“对等”伪造相同文件hash或位置。
+
+Reference reader固定4 MiB文件、10000 data rows、3 columns、单sheet、512 archive members和32 MiB uncompressed archive上限；拒绝路径穿越、`.xls/.xlsm`、UTF-8 BOM/非法编码、unknown/missing/duplicate/reordered header、非text XLSX cell、formula-like值、VBA、external link/relationship、DTD/entity及重复/加密/越界archive。该版本是可测试参考入口，`production_binding=false`；不声明ERP/MES/WMS/CAM字段mapping，不关闭OPEN-002/013/015，也不构成malware scanning、authentication或Production security认证。

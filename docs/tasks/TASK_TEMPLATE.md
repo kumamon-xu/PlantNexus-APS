@@ -95,6 +95,8 @@ Rollback:
 
 涉及Raw Staging时还必须记录：batch/row immutable fields、source/version/content与row digest/location/received-at、Production/Simulation conditional、idempotency scope/fingerprint与exact replay/conflict、batch+rows transaction rollback、empty/populated migration upgrade/downgrade及明确数据损失、raw-not-canonical/Snapshot/Problem/Solver边界。临时SQLite不得伪装成PostgreSQL concurrency、独立Production数据库或Production security；Adapter/Normalization/DataValidation未形成时继续标记`PLANNED`。
 
+涉及外部文件Adapter时还必须记录：adapter ID/version/capabilities/production binding、固定encoding/dialect/header/sheet合同、root/path/type/file-row-column-cell/archive limits、macro/formula/external-link/XML拒绝、exact parser/security dependency lock、format-neutral semantic rows与format-specific digest/media/location的区别、temporary/real data边界、sanitized error、Raw Staging replay，以及Normalization/DataValidation/malware/auth/Production interface仍未形成的范围。
+
 涉及 external CI provider 时还必须在开始前固定 provider/repository/branch/workflow 和官方 query 命令，并在完成证据中记录 immutable head SHA、run ID/URL/attempt/event/status/conclusion、required jobs/steps、artifact ID/name/size/digest/expiry 与 required-check/branch-protection 状态。credential 必须由进程外环境或已认证 session 提供，不得记入 Task、日志或 artifact；失败 run 必须保留为反例，不得伪写 PASS。
 
 仓库内 CI workflow应使用 current-phase Task discovery与中性 artifact命名，不得每个 Task手工改写旧 Task路径。没有外部执行授权时 provider结果必须写 `NOT_RUN`，本地 workflow contract、YAML parse或 diff governance不能替代 provider事实。

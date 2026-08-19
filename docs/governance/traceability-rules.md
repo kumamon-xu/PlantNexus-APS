@@ -101,3 +101,7 @@ TASK-P1-02将REQ-001/002/003/009、NFR-DET/TRC与ENG-SOL/ERR/VER链接到canonic
 Raw Staging evidence链必须区分：opaque immutable batch/row contract、source/version/content与row digest/location/UTC provenance、data-plane/synthetic conditional、idempotency scope/fingerprint、exact replay/conflict、atomic transaction rollback、internal migration empty/populated round trip、raw-not-canonical dependency scan，以及真实Adapter/Normalization/DataValidation/independent Production database仍`PLANNED`。SQLite测试不得写成PostgreSQL concurrency、Production security或common-ingress PASS。
 
 TASK-P1-03将REQ-001/009、NFR-TRC/REL/ISO/SEC与ENG-ARCH/ERR/VER链接到Raw Staging contracts/repository、`0002_raw_import_staging`、TEST-IMPORT-STAGING-001和TEST-IDEMPOTENCY durable Import slice。它不改变Schema set、产品error registry或外部field authority；后续链路继续`PLANNED`。
+
+Reference file evidence链必须区分：adapter ID/version/capability与真实系统binding；fixed transport header与业务field mapping；format-neutral raw payload/row identity与format-specific file digest/media/location；CSV UTF-8/dialect和XLSX read-only/archive/active-content controls；prepared batch与durable repository replay；temporary synthetic files与真实客户数据。单文件首错DATA_ERROR、2-row parity或lock PASS不能替代Normalization/DataValidation、malware/auth review、Production interface authority或common-ingress Gate。
+
+TASK-P1-04将REQ-001/009、NFR-TRC/SEC/REL与ENG-ARCH/ERR/VER链接到`ReferenceFileAdapter@1.0.0`、exact dependency lock、TEST-IMPORT-ADAPTER-001 contract/integration evidence及TASK-P1-03 repository。OPEN-002/013/015、Schema set和产品error registry均不改变；canonical producer与后续pipeline继续`PLANNED`。

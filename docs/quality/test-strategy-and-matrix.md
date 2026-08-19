@@ -34,7 +34,7 @@ registry_version: 1.0.0
 | TEST-OBS-001 | 日志、运行标识与 Observability 关联 | P0 | [`test_logging.py`](../../backend/tests/integration/test_logging.py) JSON/context/trace-ID/redaction P0 slice formed；PlanningRun metrics/audit retention PLANNED |
 | TEST-CONTRACT-001 | Schema meta/positive/negative、版本、UTC/duration/reference、isolation 与 round-trip | P0 | [`backend/tests/contract/test_schema_contracts.py`](../../backend/tests/contract/test_schema_contracts.py) + P0 baselines + P1 [`canonical-records.v1`](../../schemas/json/canonical-records.v1.schema.json)/[Import v2](../../schemas/json/import-package.v2.schema.json)/[Snapshot v2](../../schemas/json/planning-snapshot.v2.schema.json) contract evidence formed；producer/pipeline/builder仍PLANNED |
 | TEST-IMPORT-STAGING-001 | Raw batch/row provenance、transaction、migration与 idempotent replay | P1 | [`test_import_staging.py`](../../backend/tests/unit/test_import_staging.py) + [`test_raw_import_staging.py`](../../backend/tests/integration/test_raw_import_staging.py) + [`test_migrations_and_infrastructure.py`](../../backend/tests/integration/test_migrations_and_infrastructure.py) formed / TASK-P1-03 |
-| TEST-IMPORT-ADAPTER-001 | CSV/XLSX/ReferenceFileAdapter semantic parity与文件安全拒绝 | P1 | PLANNED / TASK-P1-04 |
+| TEST-IMPORT-ADAPTER-001 | CSV/XLSX/ReferenceFileAdapter semantic parity与文件安全拒绝 | P1 | [`test_input_adapters.py`](../../backend/tests/contract/test_input_adapters.py) + [`test_reference_file_adapter.py`](../../backend/tests/integration/test_reference_file_adapter.py) formed / TASK-P1-04 |
 | TEST-NORMALIZATION-001 | ID/time/unit mapping、canonical bytes、unit error与 missing duration | P1 | PLANNED / TASK-P1-05 |
 | TEST-DATA-QUALITY-001 | DAG/reference/capability/quality report与四类 P1 exact rejection | P1 | PLANNED / TASK-P1-06 |
 | TEST-ORDER-EXPANSION-001 | Order/Lot/Routing到 OperationInstance/edge deterministic expansion | P1 | PLANNED / TASK-P1-07 |
@@ -111,3 +111,9 @@ TEST-CONTRACT-001新增canonical/Import v2/Snapshot v2的Draft 2020-12跨URN `$r
 TEST-IMPORT-STAGING-001现覆盖frozen batch/row/provenance、opaque non-UTF-8 bytes、deterministic request fingerprint、missing source/version/digest/UTC/path与duplicate row identity拒绝、Production/Simulation conditional、raw-not-canonical AST boundary、SQLAlchemy round-trip、exact replay/conflict、真实transaction rollback/no-leak、plane-scoped read/write，以及empty/populated Alembic upgrade/downgrade/re-upgrade。TEST-IDEMPOTENCY因此获得durable Import staging slice。
 
 定向suite为23 passed，full repository regression为121 passed；测试数据库/records均为显式synthetic，migration downgrade删除1 batch/1 row的开发数据。没有真实PostgreSQL race/outage、Adapter file security、Normalization/DataValidation、Snapshot/Problem/Solver、Property或Benchmark evidence。Test ID/表结构未变，`registry_version`保持`1.0.0`。
+
+## TASK-P1-04 Reference Adapter evidence
+
+TEST-IMPORT-ADAPTER-001现以31项定向tests覆盖manifest ID/version/non-production binding、CSV/XLSX semantic row parity与truthful file/location provenance、strict UTF-8/BOM/dialect、unknown/missing/duplicate/reordered header、file/row/column/cell/sheet/archive limits、path traversal、legacy/macro-enabled extension、formula/non-text cell、VBA/external link/DTD/entity，以及通过TASK-P1-03 repository的create/exact replay/conflict和CSV/XLSX durable parity。
+
+全部文件在pytest temporary directory动态生成，不提交workbook/客户数据；2-row sample不构成Scenario/Benchmark或Production scale。测试不解析`payload_json`业务语义，不证明Normalization/DataValidation/canonical Import/Snapshot/Problem/common ingress、malware/auth或真实system binding。Test ID/表结构未变，`registry_version`保持`1.0.0`。

@@ -74,3 +74,5 @@ TASK-P1-01 review：CI event SHA、Task Diff base、workflow report名称和本�
 TASK-P1-02 review：canonical-records.v1中的timezone/unit/duration/calendar/lot/source字段只固定“必须显式提供”的authority-neutral shape；synthetic samples与pure consistency precheck不提供真实interface、topology、conversion、field authority或fallback决策。没有Authority/Evidence/closure record/migration决定，OPEN-001/002/003/004/007/008/009/013/014/015及其余条目全部继续`OPEN`，registry format version不变。
 
 TASK-P1-03 review：Raw Staging的source system/version、source name/media type、digest、row location和internal table列只保存调用方明确提供的接收事实，不定义ERP/MES/WMS/CAM接口或字段mapping，也不解决field authority conflict。SQLite synthetic migration/replay不是外部Authority或Production deployment；没有closure record、生产默认值或历史migration决定。OPEN-002/015及OPEN-001～015全部继续`OPEN`，registry format version保持`1.0.0`。
+
+TASK-P1-04 review：`plantnexus.reference-file@1.0.0`的三列transport、文件安全limits和`production_binding=false`只建立参考文件入口，不定义真实ERP/MES/WMS/CAM endpoint/auth/version/field mapping；opaque `payload_json`不定义单位转换或字段权威。Temporary synthetic CSV/XLSX、openpyxl dependency和positive/negative tests均不是Authority/Evidence closure record。OPEN-002/013/015及OPEN-001～015全部继续`OPEN`，registry format version保持`1.0.0`。

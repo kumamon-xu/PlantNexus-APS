@@ -55,3 +55,5 @@ TASK-P1-01 review：只重放既有Simulation/Golden/Mutation gates并重命名C
 TASK-P1-02 review：两份v2 `.synthetic.json`使用`SCHEMA-SAMPLE-P1-02`、固定seed和小型shape值，只验证Schema/reference/round-trip，不是正式Scenario/Profile/Generator distribution、Fixture或Benchmark。没有新增/修改/retire假设；SIM-ASSUMPTION-001～009全部保持`ACTIVE`，sample数值不得成为生产默认值或OPEN closure evidence，registry format version不变。
 
 TASK-P1-03 review：unit/integration与migration只使用显式synthetic inline bytes、版本、seed和1～2行小批次验证staging/replay/rollback/isolation；这些是test-local values，不是新FactoryProfile/Scenario、分布、容量或Benchmark baseline。没有新增/修改/retire假设；SIM-ASSUMPTION-001～009全部保持`ACTIVE`，不用于Production default或OPEN closure，registry format version保持`1.0.0`。
+
+TASK-P1-04 review：temporary 2-row CSV/XLSX使用显式synthetic source/provenance只验证transport parity、安全拒绝与staging replay；4 MiB/10000-row/archive limits是reference security bounds，不是FactoryProfile规模、Benchmark baseline或Production capacity。没有新增/修改/retire假设；SIM-ASSUMPTION-001～009全部保持`ACTIVE`，不用于Production default或OPEN closure，registry format version保持`1.0.0`。

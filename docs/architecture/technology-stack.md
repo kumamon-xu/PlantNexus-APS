@@ -100,3 +100,9 @@ Runtime/dev dependency pins与`uv.lock`图保持不变。新合同继续使用JS
 Raw Staging复用已锁定的`sqlalchemy==2.0.43`与`alembic==1.16.5`，未修改`pyproject.toml`或`uv.lock`，也未引入ORM model、Adapter parser、openpyxl/Polars、OR-Tools或新test dependency。repository使用SQLAlchemy Core parameter binding，migration revision为`0002_raw_import_staging`。
 
 本地integration以SQLite实际执行empty/populated upgrade/downgrade、insert/replay/rollback/isolation；该dialect只用于可复验开发证据，不等于PostgreSQL并发、权限、性能或Production migration认证。小型synthetic row计数/耗时只作回归观察，不设阈值、不运行Solver Benchmark。
+
+## TASK-P1-04 file-reader runtime
+
+首次精确锁定`openpyxl==3.1.5`用于read-only XLSX解析，并锁定`defusedxml==0.7.1`使openpyxl XML路径启用防御解析；`et-xmlfile==2.0.0`为lock解析出的transitive dependency。CSV继续只使用Python 3.12标准库，所有direct pins仍为exact并由`uv sync --locked`与contract test验证。
+
+本Task没有引入Polars、OR-Tools、types stub、API/Worker或malware scanner；Schema/code版本metadata保持不变。新增dependency只服务bounded ReferenceFileAdapter，不能外推为Production supply-chain/security认证，也不触发Solver upgrade ADR或Benchmark replay。

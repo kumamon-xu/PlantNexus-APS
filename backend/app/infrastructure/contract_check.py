@@ -22,7 +22,9 @@ REPORT_VERSION = "engineering-skeleton-report.v1"
 _EXPECTED_RUNTIME_DEPENDENCIES = {
     "alembic==1.16.5",
     "celery==5.5.3",
+    "defusedxml==0.7.1",
     "fastapi==0.116.1",
+    "openpyxl==3.1.5",
     "opentelemetry-api==1.36.0",
     "psycopg[binary]==3.2.9",
     "pydantic-settings==2.10.1",

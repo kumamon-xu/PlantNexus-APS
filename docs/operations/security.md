@@ -38,3 +38,12 @@ P0-08 没有 authentication/authorization、Import size/type/macro controls、ne
 - repository按data plane过滤所有读写，数据库CHECK同步约束synthetic provenance；raw payload没有直接Canonical/Snapshot/Problem/Solver入口。
 
 本Task没有实现上传格式/大小上限、malware scanning、CSV injection/XLSX macro/external formula防护、authentication/authorization、encryption、retention/erasure、database role或Production audit。这些控制不能从`media_type/content_length` metadata存在推断，文件入口由TASK-P1-04继续形成。
+
+## TASK-P1-04 file import controls
+
+- 只接受source root内可解析的relative `.csv/.xlsx` regular file；拒绝absolute/`..`/symlink escape、legacy `.xls`、macro-enabled `.xlsm`和其他extension，读取最多4 MiB+1 byte后fail closed。
+- CSV固定strict UTF-8无BOM和comma/double-quote dialect；header/order/column、row与cell length显式限界，formula-like prefix不进入staging。
+- XLSX先检查OOXML ZIP member count/total expansion、duplicate/traversal/encryption、DTD/entity、VBA content type/member和external links/relationships，再以`openpyxl==3.1.5` read-only、`data_only=false`读取单一`records` sheet；`defusedxml==0.7.1`已锁定并由测试确认启用。
+- source异常统一返回sanitized DATA_ERROR，不拼SQL/shell、不加载macro、不取formula cached value；测试文件只在temporary directory生成。
+
+这些控制仍不包含antivirus/content disarm、MIME magic/signature policy、upload quarantine、auth/RBAC、rate limit、encryption、retention/erasure、production audit或第三方安全评估。Reference Adapter的`production_binding=false`和negative tests不能声称NFR-SEC-001全阶段完成。

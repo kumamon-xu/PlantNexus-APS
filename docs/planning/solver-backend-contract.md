@@ -56,3 +56,7 @@ TASK-P0-05 的 Generator protocols 明确终止于 Standard Import package，不
 ## TASK-P0-08 dependency and worker review
 
 新增 FastAPI/DB/Redis/Celery/logging/trace runtime pins 不含 OR-Tools，`uv.lock` 与 integration tests 明确检查 solver-free dependency graph。Celery `worker` 目前不注册 Planning/Solver task；JobRecord 也不包含 PlanningProblem 或 OR-Tools object。没有 Backend、CpModel、IntervalVar、Solver status/parameter/report 或 performance artifact，因此不触发 Solver upgrade ADR/replay，P2 首次 Solver gate 保持原要求。
+
+## TASK-P1-02 contract boundary review
+
+Canonical records、Import v2与Snapshot v2均为JSON-compatible machine合同/pure types，不导入`planning.backends`或OR-Tools。Snapshot v2的OperationInstance/resource option payload保留未来PlanningProblem builder所需的candidate级seconds/source version，但本Task不构建Problem、tick、CpModel、SolverBackend、PlanningSolution或status。Solver-neutral边界未改变，OR-Tools upgrade/Benchmark replay Gate不触发。

@@ -155,3 +155,9 @@ P1-11首次计划在 `backend/app/application/**` 形成 common-ingress orchestr
 本 Task实际命中 `IMPACT-GOVERNANCE-VALIDATOR`、`IMPACT-INFRA`、`IMPACT-TESTS`、`IMPACT-PHASE`、`IMPACT-GOVERNANCE-REGISTRY`、`IMPACT-DOCS`。治理脚本/单测实现 phase policy与CI Task discovery；workflow/integration test移除P0-10 handoff并保留原 gates；阶段/注册表/文档只同步 TASK-P1-01 状态和真实追踪。
 
 Schema、Domain、Import/Snapshot/Planning/Validator/Simulation/Fixture、dependency/version metadata、API/Job/DB、Solver/P2均未修改，因此不声明其他 Rule ID。现有 machine globs与required-document列足够覆盖，无需新 Rule ID或 `registry_version`提升；最终以 TASK-P1-01 diff report真实 matched rows为准。
+
+## TASK-P1-02 matrix review
+
+本Task实际路径命中`IMPACT-SCHEMA`、`IMPACT-DOMAIN`、`IMPACT-DEPENDENCY`、`IMPACT-VERSION-METADATA`、`IMPACT-TESTS`、`IMPACT-PHASE`、`IMPACT-GOVERNANCE-REGISTRY`、`IMPACT-DOCS`。`pyproject.toml`仅改变schema metadata但仍按dependency/version行审查；Schema、data dictionary、domain pure types、contract tests及所有required docs均在有界清单内。
+
+Adapter/Staging/Normalization/DataValidation/Expansion/Snapshot/Problem builder、Migration/DB、API/Job、Simulation Generator/Fixture、Validator、Backend/Solver、Benchmark、Frontend与governance validator均未修改，因此不声明其Rule ID。现有machine globs/required-document列足够覆盖，无需新Rule或`registry_version`提升；最终以TASK-P1-02 diff report真实matched rows为准。

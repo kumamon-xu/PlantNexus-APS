@@ -77,3 +77,9 @@ TEST-ERROR-MAPPING-001 已验证 YAML、纯枚举和 error.v2 code/category 一�
 health-only API 不发布产品 `error.v2`：liveness 永远只判断 process；readiness 对 database/redis probe failure 返回 HTTP 503 与 `DATABASE_UNAVAILABLE`/`REDIS_UNAVAILABLE`，未知 probe 使用 `DEPENDENCY_UNAVAILABLE`，不返回 driver exception、endpoint 或 Secret。配置无效在创建 app/client 前以 sanitized `ConfigurationError` fail closed。
 
 Job primitives 以 `JobTransitionError`、`LeaseOwnershipError`、`LeaseExpiredError`、`IdempotencyConflictError` 区分工程控制流；FAILED record 只保存 stable `failure_code`，不保存/回显原始 Secret-bearing exception。这些名称不是 `error-code-registry.v1` 新 code，也不改变七类产品 Error 或 Solver mapping。产品 HTTP mapping、ExportJob persistence 和 SYSTEM_ERROR audit 继续 `PLANNED`。
+
+## TASK-P1-02 canonical precheck boundary
+
+`CanonicalContractError`复用既有`ProductErrorCode`表达`DUPLICATE_ID`、`INVALID_REFERENCE`、`INVALID_TIME`、`INVALID_TIME_RANGE`、`INVALID_DURATION`、`INVALID_LAG_RANGE`、`INVALID_ENTITY_COUNT`、`MISSING_RUNNING_FACT`和synthetic isolation；没有新增或重解释error registry code。JSON Schema先拒绝missing/unknown/type/conditional shape，pure precheck再拒绝跨记录reference/unit/source/count/copy不一致。
+
+本Task不是TASK-P1-06的deterministic multi-error DataValidation，也未分配`ROUTE_CYCLE`、`MISSING_RESOURCE`、`UNIT_CONVERSION_ERROR`、`MISSING_DURATION`新code/report。HTTP mapping、row/source-location quality details和完整ImportQualityReport仍为`PLANNED`；不能把单一exception precheck写成P1 DataValidation Gate PASS。

@@ -58,3 +58,9 @@ OperationInstance 没有合法候选资源时必须在 Precheck/Data Validation 
 来源必须版本化。未来 AI DurationPrediction 只能提供候选 duration/risk/confidence；低置信度回退规则取决于 OPEN-014，不能在 P0 猜测。
 
 P0 semantic precheck 会拒绝不存在的 candidate/assigned resource，但不实现 resource capability、routing expansion、DAG 或 C-001～C-011 判定；这些仍由 P1/P0-04/07 后续证据完成。
+
+## TASK-P1-02 v2 contract
+
+`canonical-records.v1`要求每个`routing_resource_option`显式提供routing operation/resource引用、quantity unit、setup/cycle/final seconds、duration source及其version；`final_duration_seconds > 0`，不含default。`planning-snapshot.v2`的expanded option用`source_version`保留该duration source version，并由pure precheck验证所有candidate字段与canonical option逐项一致。
+
+Snapshot v2的OperationInstance显式引用DemandOrder、ProductionOrder、ProductionLot、RoutingVersion和RoutingOperation，并要求status、quantity/unit、due/release/material UTC、required capabilities、至少一个candidate与lock IDs；RUNNING/COMPLETED必须引用execution fact，NOT_STARTED禁止该引用。Schema/precheck只固定形状和copy不变量；stable ID算法、DAG expansion、completed过滤、capability/data-quality判定与future Problem投影仍分别属于TASK-P1-06/07/09。

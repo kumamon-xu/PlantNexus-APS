@@ -1,4 +1,4 @@
-"""Pure domain contract types for the P0 executable specification."""
+"""Pure domain contract types for the executable specification."""
 
 from .capabilities import (
     CAPABILITY_STATUS_BY_NAME,
@@ -12,6 +12,21 @@ from .errors import (
     ProductErrorCategory,
     ProductErrorCode,
     category_for_error_code,
+)
+from .canonical_records import (
+    COLLECTION_ID_FIELDS,
+    CanonicalContractError,
+    CanonicalRecordsDocument,
+    ImportPackageDocumentV2,
+    OperationInstanceDocument,
+    OperationPrecedenceEdgeDocument,
+    OperationResourceOptionDocument,
+    PlanningSnapshotDocumentV2,
+    SourceReference,
+    SyntheticProvenance,
+    validate_canonical_records,
+    validate_import_package_v2,
+    validate_planning_snapshot_v2,
 )
 from .types import (
     CanonicalId,
@@ -34,7 +49,10 @@ from .validation import (
 
 __all__ = [
     "CAPABILITY_STATUS_BY_NAME",
+    "COLLECTION_ID_FIELDS",
     "CanonicalId",
+    "CanonicalContractError",
+    "CanonicalRecordsDocument",
     "ContractValueError",
     "ContractViolation",
     "CapabilityContractError",
@@ -42,9 +60,16 @@ __all__ = [
     "CapabilityStatus",
     "DurationSeconds",
     "ERROR_CATEGORY_BY_CODE",
+    "ImportPackageDocumentV2",
+    "OperationInstanceDocument",
+    "OperationPrecedenceEdgeDocument",
+    "OperationResourceOptionDocument",
+    "PlanningSnapshotDocumentV2",
     "ProductErrorCategory",
     "ProductErrorCode",
     "TickSeconds",
+    "SourceReference",
+    "SyntheticProvenance",
     "canonical_id",
     "category_for_error_code",
     "duration_to_ticks",
@@ -54,6 +79,9 @@ __all__ = [
     "require_tick_seconds",
     "require_utc",
     "require_v1_capability_contract",
+    "validate_canonical_records",
+    "validate_import_package_v2",
     "validate_planning_problem_contract",
+    "validate_planning_snapshot_v2",
     "validate_snapshot_contract",
 ]

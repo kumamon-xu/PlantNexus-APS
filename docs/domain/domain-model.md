@@ -76,3 +76,9 @@ Solver 排的是 `OperationInstance`，不是 `RoutingOperation`。每个未完�
 ## P0 Simulation contract boundary
 
 `simulation/profiles/contracts.py` 和 `simulation/scenarios/contracts.py` 只承载 synthetic-only Profile/Scenario/Manifest 的 JSON-compatible types、version/seed/range/provenance/isolation precheck；`simulation/generators/**` 只定义七层 Protocol、命名 seed、canonical JSON/SHA-256 与空 Standard Import v1 package。它们不新增 Production Factory/Order/Routing 实体，不成为 ERP/MES/WMS/CAM 权威，不导入 PlanningProblem/Solver，也不把 Schema sample 视为领域事实或正式 Fixture。
+
+## TASK-P1-02 canonical type boundary
+
+`canonical-records.v1`现在机器化固定Factory→Resource、Product→Routing、DemandOrder→ProductionOrder→explicit ProductionLot、execution facts与operation locks；所有引用使用稳定canonical ID，每条记录保留source system/version/record ID。`backend/app/domain/canonical_records.py`提供对应JSON-compatible `TypedDict`和pure semantic precheck，检查ID唯一、引用lineage、explicit unit、UTC、duration/lag/interval及synthetic provenance。
+
+Snapshot v2额外固定derived OperationInstance/precedence edge与candidate级duration/source copy shape，但order expansion行为仍由TASK-P1-07实现，Snapshot builder/hash/persistence仍由TASK-P1-08实现。当前代码不检查Routing DAG或capability可用性、不生成lot/instance、不补duration、不导入ORM/API/Solver；这些边界不能因types存在而改写为已实现。

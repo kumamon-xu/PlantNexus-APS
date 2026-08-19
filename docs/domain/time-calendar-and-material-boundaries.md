@@ -49,3 +49,9 @@ operation.start >= material_ready_at
 `material_ready_at` 必须来自上游权威或未来 `MaterialReadinessProvider`。缺失必填值应产生数据错误，不能由 Solver、AI 或 Simulation 默认值补猜。
 
 在 `planning-problem.v1` 中字段名为 `material_ready_at_utc` 并为必填 UTC instant；P0 sample 使用显式 synthetic 时间，仅用于 Schema validation，不构成 OPEN-001/004/007 的生产决定。
+
+## TASK-P1-02 canonical time/unit boundary
+
+Canonical/Import v2与Snapshot v2所有计划instant均使用RFC 3339 UTC `Z`字段，duration/lag/remaining time均为integer seconds；quantity必须同时携带非空unit。Resource calendar只承载显式unavailable intervals及其source，pure precheck要求`end > start`；它不定义班次合并、跨日或重叠处理规则。
+
+ProductionOrder必须显式携带`release_at_utc`与`material_ready_at_utc`，Snapshot OperationInstance只能逐值复制，不得猜测。Factory timezone、calendar processing、material authority和unit conversion继续受OPEN-001/004/007/013约束；contract sample值只验证shape，不是生产默认值。

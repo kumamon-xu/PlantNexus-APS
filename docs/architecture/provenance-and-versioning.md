@@ -74,3 +74,9 @@ Golden Schedule/expected validation/KPI 各有 fixture-local version，并通过
 `Settings.build_metadata()` 与 `health-report.v1` 固定公开 code/spec/schema/code-commit 四元组；Production 配置拒绝 `uncommitted` 或非 40 字符 commit。CI 将 `github.sha` 注入 code commit，local/development 可以显式使用 `uncommitted`。该字段使 API/Worker build 可关联，但不是 Snapshot/Problem/Solver/Scenario/Export manifest。
 
 structured logs 可通过 contextvars 携带 `correlation_id`、可选 `run_id`/`job_id`，并从当前有效 OpenTelemetry span 注入 trace/span ID。日志不作为唯一 provenance 或 audit store；P0-08 没有 PlanningRun metric/audit persistence、source version、Snapshot/Problem hash、Solver version 或成果 manifest。Schema set 保持 `1.2.0`，code/spec/schema metadata 文件未改。
+
+## TASK-P1-02 canonical provenance contract
+
+Schema set`2.0.0`新增strict Import/Snapshot provenance。每条canonical record携带source system/version/record ID；Import v2携带source versions、normalization rule version和canonicalization version；Snapshot v2还携带rule/expansion version、Import package ID/version/dataset hash与quality report ID/version/PASS状态。Synthetic文档必须携带scenario/profile/generator各自版本和seed，Production文档禁止该引用。
+
+这些字段只建立可追溯输入合同。Sample中的digest是符合格式的contract sentinel，不是builder计算结果；dataset hash、Snapshot canonical projection/ID/hash、code commit、persistence与发布manifest仍由后续Task形成。Import/Snapshot v1逐字保留，v1/v2不互换；Schema set、document、normalization、expansion、canonicalization、Scenario/Profile/Generator和code commit继续是独立版本维度。

@@ -49,3 +49,9 @@ V1 接受上游提供的 `material_ready_at`，并执行 `operation.start >= mat
 health payload 只公开 service/build metadata 与 database/redis availability code，不读取或返回 Order/BOM/Execution/Inventory/Planning Decision。`engineering_job_records`、`engineering_idempotency_records` 是通用执行元数据，不成为业务事实、Schedule 状态或发布权威；process-local idempotency reference store 也不能授权任何业务副作用。
 
 Compose 的 database name、user、network endpoint 和 non-production placeholder 只用于 development skeleton，不回答 OPEN-002/003/015，也不成为生产字段或系统权威。P0-08 未建立任何产品 API 或外部 adapter。
+
+## TASK-P1-02 canonical authority boundary
+
+`canonical-records.v1`固定APS内部语义、稳定引用、单位/UTC/duration形状与record-level source provenance；`import-package.v2`要求envelope source versions与record source/version一致。它不声明任何ERP/MES/WMS/CAM列名、系统优先级、冲突解决、单位换算、timezone、lot split、duration fallback或生产日历规则。
+
+Pure precheck只拒绝不一致的ID/reference/unit/time/duration/provenance，不能把“Schema接受”解释为字段权威或DataValidation PASS。OPEN-001/002/003/004/007/008/009/013/014/015均保持OPEN；synthetic sample值不能用于关闭任何条目。

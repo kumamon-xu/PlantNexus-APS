@@ -44,3 +44,7 @@ P0-05 新增 versioned Profile/Scenario/Manifest 与 empty Import hash，但没�
 ## TASK-P0-08 review
 
 CI workflow 保留 `PLANTNEXUS_BENCHMARK_PROFILE=pr` 的条件 hook：只有未来获准 Task 真实创建 `scripts/run_benchmark.py` 后才调用；当前明确输出 deferred 信息。P0-08 没有 OR-Tools、Solver/Problem change、BenchmarkRunner/profile/baseline 或 runtime/memory/quality 数值，不生成伪 BenchmarkReport，也不把 CI/health latency当成 Solver 性能。OPEN-012 保持 OPEN。
+
+## TASK-P1-02 review
+
+本Task新增canonical Import/Snapshot合同但没有PlanningProblem builder、Solver、preprocessing runtime、BenchmarkRunner/profile/baseline或历史comparison。Schema/sample/entity counts只用于contract correctness，不能被解释为规模、吞吐、runtime或memory结果；不生成零值BenchmarkReport。未来TASK-P1-09/P2 consumer必须记录schema set`2.0.0`、document/builder/hash versions并按本规则回放，OPEN-012保持OPEN。

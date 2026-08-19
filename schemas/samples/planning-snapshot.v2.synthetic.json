@@ -1,0 +1,213 @@
+{
+  "snapshot_version": "planning-snapshot.v2",
+  "schema_set_version": "2.0.0",
+  "snapshot_id": "SNAPSHOT-SCHEMA-SAMPLE-P1-02",
+  "cutoff_at_utc": "2026-08-19T00:00:00Z",
+  "source_versions": {
+    "schema_sample": "1.0.0"
+  },
+  "rule_version": "data-quality.schema-sample.v1",
+  "normalization_rule_version": "normalization.schema-sample.v1",
+  "expansion_version": "order-expansion.schema-sample.v1",
+  "canonicalization_version": "canonical-json.v1",
+  "import_package": {
+    "import_package_version": "import-package.v2",
+    "package_id": "IMPORT-SCHEMA-SAMPLE-P1-02",
+    "dataset_hash": "sha256:1111111111111111111111111111111111111111111111111111111111111111"
+  },
+  "import_quality_report": {
+    "report_version": "import-quality-report.v1",
+    "report_id": "QUALITY-SCHEMA-SAMPLE-P1-02",
+    "status": "PASS"
+  },
+  "snapshot_hash": "sha256:2222222222222222222222222222222222222222222222222222222222222222",
+  "entity_counts": {
+    "factories": 1,
+    "workshops": 1,
+    "production_lines": 1,
+    "resource_groups": 1,
+    "resources": 1,
+    "calendars": 1,
+    "products": 1,
+    "routing_versions": 1,
+    "routing_operations": 1,
+    "routing_precedence_edges": 0,
+    "routing_resource_options": 1,
+    "demand_orders": 1,
+    "production_orders": 1,
+    "production_lots": 1,
+    "execution_facts": 0,
+    "operation_locks": 0,
+    "operation_instances": 1,
+    "operation_precedence_edges": 0
+  },
+  "synthetic": true,
+  "synthetic_provenance": {
+    "scenario_id": "SCHEMA-SAMPLE-P1-02",
+    "scenario_version": "1.0.0",
+    "seed": 20260819,
+    "factory_profile_id": "SCHEMA-PROFILE-P1-02",
+    "profile_version": "1.0.0",
+    "generator_id": "SCHEMA-CONTRACT-GENERATOR",
+    "generator_version": "1.0.0"
+  },
+  "records": {
+    "canonical_records_version": "canonical-records.v1",
+    "factories": [
+      {
+        "factory_id": "FACTORY-001",
+        "factory_code": "F001",
+        "factory_timezone": "Asia/Hong_Kong",
+        "source": {"source_system": "schema_sample", "source_version": "1.0.0", "source_record_id": "SRC-FACTORY-001"}
+      }
+    ],
+    "workshops": [
+      {
+        "workshop_id": "WORKSHOP-001",
+        "workshop_code": "W001",
+        "factory_id": "FACTORY-001",
+        "source": {"source_system": "schema_sample", "source_version": "1.0.0", "source_record_id": "SRC-WORKSHOP-001"}
+      }
+    ],
+    "production_lines": [
+      {
+        "production_line_id": "LINE-001",
+        "production_line_code": "L001",
+        "workshop_id": "WORKSHOP-001",
+        "source": {"source_system": "schema_sample", "source_version": "1.0.0", "source_record_id": "SRC-LINE-001"}
+      }
+    ],
+    "resource_groups": [
+      {
+        "resource_group_id": "GROUP-001",
+        "resource_group_code": "G001",
+        "production_line_id": "LINE-001",
+        "source": {"source_system": "schema_sample", "source_version": "1.0.0", "source_record_id": "SRC-GROUP-001"}
+      }
+    ],
+    "resources": [
+      {
+        "resource_id": "RESOURCE-001",
+        "resource_code": "R001",
+        "resource_type": "MACHINE",
+        "status": "AVAILABLE",
+        "resource_group_id": "GROUP-001",
+        "calendar_id": "CALENDAR-001",
+        "capabilities": ["CUTTING"],
+        "source": {"source_system": "schema_sample", "source_version": "1.0.0", "source_record_id": "SRC-RESOURCE-001"}
+      }
+    ],
+    "calendars": [
+      {
+        "calendar_id": "CALENDAR-001",
+        "timezone": "Asia/Hong_Kong",
+        "unavailable_intervals": [],
+        "source": {"source_system": "schema_sample", "source_version": "1.0.0", "source_record_id": "SRC-CALENDAR-001"}
+      }
+    ],
+    "products": [
+      {
+        "product_id": "PRODUCT-001",
+        "product_code": "P001",
+        "quantity_unit": "piece",
+        "source": {"source_system": "schema_sample", "source_version": "1.0.0", "source_record_id": "SRC-PRODUCT-001"}
+      }
+    ],
+    "routing_versions": [
+      {
+        "routing_version_id": "ROUTING-001-V1",
+        "routing_code": "ROUTING-001",
+        "version": "1.0.0",
+        "product_id": "PRODUCT-001",
+        "source": {"source_system": "schema_sample", "source_version": "1.0.0", "source_record_id": "SRC-ROUTING-001-V1"}
+      }
+    ],
+    "routing_operations": [
+      {
+        "routing_operation_id": "ROUTING-OP-001",
+        "routing_version_id": "ROUTING-001-V1",
+        "operation_code": "CUT",
+        "required_capabilities": ["CUTTING"],
+        "source": {"source_system": "schema_sample", "source_version": "1.0.0", "source_record_id": "SRC-ROUTING-OP-001"}
+      }
+    ],
+    "routing_precedence_edges": [],
+    "routing_resource_options": [
+      {
+        "routing_resource_option_id": "ROUTING-OPTION-001",
+        "routing_operation_id": "ROUTING-OP-001",
+        "resource_id": "RESOURCE-001",
+        "quantity_unit": "piece",
+        "setup_seconds": 120,
+        "cycle_seconds_per_unit": 30,
+        "final_duration_seconds": 420,
+        "duration_source": "schema_sample_explicit_duration",
+        "duration_source_version": "1.0.0",
+        "source": {"source_system": "schema_sample", "source_version": "1.0.0", "source_record_id": "SRC-ROUTING-OPTION-001"}
+      }
+    ],
+    "demand_orders": [
+      {
+        "demand_order_id": "DEMAND-001",
+        "product_id": "PRODUCT-001",
+        "quantity": 10,
+        "quantity_unit": "piece",
+        "due_at_utc": "2026-08-20T00:00:00Z",
+        "source": {"source_system": "schema_sample", "source_version": "1.0.0", "source_record_id": "SRC-DEMAND-001"}
+      }
+    ],
+    "production_orders": [
+      {
+        "production_order_id": "PRODUCTION-ORDER-001",
+        "demand_order_id": "DEMAND-001",
+        "routing_version_id": "ROUTING-001-V1",
+        "quantity": 10,
+        "quantity_unit": "piece",
+        "release_at_utc": "2026-08-18T00:00:00Z",
+        "material_ready_at_utc": "2026-08-18T00:00:00Z",
+        "source": {"source_system": "schema_sample", "source_version": "1.0.0", "source_record_id": "SRC-PRODUCTION-ORDER-001"}
+      }
+    ],
+    "production_lots": [
+      {
+        "production_lot_id": "LOT-001",
+        "production_order_id": "PRODUCTION-ORDER-001",
+        "quantity": 10,
+        "quantity_unit": "piece",
+        "source": {"source_system": "schema_sample", "source_version": "1.0.0", "source_record_id": "SRC-LOT-001"}
+      }
+    ],
+    "execution_facts": [],
+    "operation_locks": []
+  },
+  "operation_instances": [
+    {
+      "operation_instance_id": "OPERATION-INSTANCE-001",
+      "demand_order_id": "DEMAND-001",
+      "production_order_id": "PRODUCTION-ORDER-001",
+      "production_lot_id": "LOT-001",
+      "routing_version_id": "ROUTING-001-V1",
+      "routing_operation_id": "ROUTING-OP-001",
+      "status": "NOT_STARTED",
+      "quantity": 10,
+      "quantity_unit": "piece",
+      "due_at_utc": "2026-08-20T00:00:00Z",
+      "release_at_utc": "2026-08-18T00:00:00Z",
+      "material_ready_at_utc": "2026-08-18T00:00:00Z",
+      "required_capabilities": ["CUTTING"],
+      "resource_options": [
+        {
+          "routing_resource_option_id": "ROUTING-OPTION-001",
+          "resource_id": "RESOURCE-001",
+          "setup_seconds": 120,
+          "cycle_seconds_per_unit": 30,
+          "final_duration_seconds": 420,
+          "duration_source": "schema_sample_explicit_duration",
+          "source_version": "1.0.0"
+        }
+      ],
+      "lock_ids": []
+    }
+  ],
+  "operation_precedence_edges": []
+}

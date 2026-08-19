@@ -1,5 +1,5 @@
-schema_set_version: 1.2.0
-status: p0_simulation_contracts
+schema_set_version: 2.0.0
+status: p1_canonical_contracts
 spec_version: 0.3.0
 rules:
   unknown_root_fields: reject
@@ -9,10 +9,40 @@ rules:
   solver_ticks: ceil_duration_seconds_over_tick_seconds
   canonical_ids: non_empty_whitespace_free_strings
 schemas:
+  canonical-records.v1:
+    path: schemas/json/canonical-records.v1.schema.json
+    collections:
+      - factories
+      - workshops
+      - production_lines
+      - resource_groups
+      - resources
+      - calendars
+      - products
+      - routing_versions
+      - routing_operations
+      - routing_precedence_edges
+      - routing_resource_options
+      - demand_orders
+      - production_orders
+      - production_lots
+      - execution_facts
+      - operation_locks
+    required_provenance: [source_system, source_version, source_record_id]
+    p1_boundary: strict authority-neutral record shapes; no source mapping, normalization, validation, expansion, or builder behavior
+    production_open: [OPEN-001, OPEN-002, OPEN-003, OPEN-004, OPEN-007, OPEN-008, OPEN-009, OPEN-013, OPEN-014, OPEN-015]
   import-package.v1:
     path: schemas/json/import-package.schema.json
     purpose: versioned import metadata envelope
     p0_boundary: canonical record fields remain opaque until P1 authority mapping
+    production_open: [OPEN-002, OPEN-013, OPEN-015]
+  import-package.v2:
+    path: schemas/json/import-package.v2.schema.json
+    records: canonical-records.v1
+    required_versions: [schema_set_version, source_versions, normalization_rule_version, canonicalization_version]
+    synthetic_provenance: required only when synthetic is true
+    compatibility: not interchangeable with import-package.v1; v1 remains byte-for-byte preserved
+    p1_boundary: envelope and record contract only; Adapter and common ingress pipeline remain planned
     production_open: [OPEN-002, OPEN-013, OPEN-015]
   planning-snapshot.v1:
     path: schemas/json/planning-snapshot.schema.json
@@ -28,6 +58,15 @@ schemas:
     conditional_fields:
       scenario_id: required only when synthetic is true
     production_open: [OPEN-001, OPEN-015]
+  planning-snapshot.v2:
+    path: schemas/json/planning-snapshot.v2.schema.json
+    payloads: [canonical-records.v1, operation_instances, operation_precedence_edges]
+    provenance: [source_versions, rule_version, normalization_rule_version, expansion_version, canonicalization_version, import_package, import_quality_report]
+    synthetic_provenance: required only when synthetic is true
+    hash_format: sha256 lowercase hexadecimal; construction is owned by TASK-P1-08
+    compatibility: not interchangeable with planning-snapshot.v1; v1 remains byte-for-byte preserved
+    p1_boundary: immutable payload shape only; validation, expansion, hash builder, and persistence remain planned
+    production_open: [OPEN-001, OPEN-002, OPEN-004, OPEN-007, OPEN-009, OPEN-015]
   planning-problem.v1:
     path: schemas/json/planning-problem.schema.json
     required_fields:

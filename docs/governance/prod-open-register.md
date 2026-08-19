@@ -70,3 +70,5 @@ TASK-P0-10 review：GitHub Actions run/artifact/required-check 仅用于关闭 P
 P1 Task 规划 review：reference adapter 被限定为非生产权威来源，单位/时区/字段缺失必须显式拒绝，任何真实字段映射、接口、日历、策略和规模阈值仍须由 OPEN closure record 授权。当前没有 authority、closure evidence、production default 或 migration/replay 决定；OPEN-001～015 全部继续 `OPEN`，registry format version不变。
 
 TASK-P1-01 review：CI event SHA、Task Diff base、workflow report名称和本地测试不提供任何生产业务权威、接口、字段、参数、阈值或closure record。OPEN-001～015全部继续`OPEN`，registry format version不变。
+
+TASK-P1-02 review：canonical-records.v1中的timezone/unit/duration/calendar/lot/source字段只固定“必须显式提供”的authority-neutral shape；synthetic samples与pure consistency precheck不提供真实interface、topology、conversion、field authority或fallback决策。没有Authority/Evidence/closure record/migration决定，OPEN-001/002/003/004/007/008/009/013/014/015及其余条目全部继续`OPEN`，registry format version不变。

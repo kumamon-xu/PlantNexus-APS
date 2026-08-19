@@ -26,7 +26,7 @@ ReferenceFileAdapter是 P1正式、可测试的参考 Adapter，但在 OPEN-002/
 | Order | Task | Outcome | Depends on | Planned state |
 |---:|---|---|---|---|
 | 1 | TASK-P1-01 | Phase-aware governance与可持续 CI handoff | TASK-P0-10 | `done` |
-| 2 | TASK-P1-02 | Canonical records、Import v2、Snapshot v2合同 | P1-01 | `planned` |
+| 2 | TASK-P1-02 | Canonical records、Import v2、Snapshot v2合同 | P1-01 | `in_progress` |
 | 3 | TASK-P1-03 | Raw Staging、provenance、idempotent persistence | P1-02 | `planned` |
 | 4 | TASK-P1-04 | CSV、XLSX与ReferenceFileAdapter v1 | P1-02/03 | `planned` |
 | 5 | TASK-P1-05 | ID/time/unit Normalization与canonical Import bytes | P1-02/03/04 | `planned` |
@@ -81,3 +81,7 @@ Gate证据还必须覆盖 CSV/XLSX/Reference Adapter、Raw Staging provenance、
 - Simulation不得绕过 staging/normalization/validation；Reference Adapter不得冒充真实 factory integration。
 - OPEN-001～015可继续 OPEN；未关闭问题不阻止 Development/Simulation，但阻止依赖它们的 Production声明。
 - P1 Exit Gate Audit是最后一项。即使 audit `READY`，仍需用户另行批准才可更新到 P2；本 Milestone不自动创建 P2 Task。
+
+## TASK-P1-02 progress boundary
+
+Canonical-records.v1、Import v2与Snapshot v2的strict Schema/data dictionary/pure type/precheck工作版本已形成，schema set候选为`2.0.0`，Import/Snapshot v1由byte fingerprint保护。该进度尚不等于Task done或任何pipeline deliverable；Adapter/staging/Normalization/DataValidation/Expansion/Snapshot/Problem hash仍必须按上表依赖逐项实现和验收。

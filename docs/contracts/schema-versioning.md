@@ -67,3 +67,14 @@ Schema version、rule version、generator version 和 code commit 是不同维�
 Schema set 与 `app.SCHEMA_VERSION` 均保持 `1.2.0`；没有修改 `schemas/**`、JSON/YAML contract、sample、Fixture、hash 或 serializer。`engineering_job_records` 与 `engineering_idempotency_records` 是 Alembic 管理的通用关系型工程 metadata，不是 Business Schema set；其 compatibility 由 revision `0001_engineering_job_metadata` 的空库 upgrade/downgrade test 管理。
 
 因此本 Task 的 JSON Schema compatibility/migration 为 none；新增 runtime dependencies/lock 和 build commit metadata 不能借机提升或覆盖 schema set。未来若 Job/health payload 成为跨系统产品合同，必须由单独 Task 建立 versioned Schema，而不能把本 P0 Python/DB skeleton 当作已发布业务合同。
+
+## TASK-P1-02 canonical major set release
+
+- Schema set：`2.0.0`，同步写入`pyproject.toml`、`app.SCHEMA_VERSION`与data dictionary；
+- 新增`canonical-records.v1`、`import-package.v2`、`planning-snapshot.v2`及两份明确synthetic sample；所有`1.0.0/1.1.0/1.2.0` artifact、稳定URN和尤其Import/Snapshot v1文件逐字保留；
+- Compatibility：从opaque Import v1/metadata-only Snapshot v1到strict required canonical payload属于set-level major与document-level breaking change。v1/v2前后均不互换，禁止alias、默认填充或静默upgrade；
+- Migration：没有数据库或已发布v2 consumer，故无数据migration。v1 fixture/history保持只读；后续producer必须显式产出v2，旧consumer必须拒绝v2直到升级；
+- Hash/replay：v2只固定`sha256:`格式、provenance和payload；dataset/Snapshot hash projection与builder仍由TASK-P1-05/08实现。Schema sample digest不构成hash evidence；
+- Validation：JSON Schema Draft 2020-12/jsonschema `4.25.1`跨URN registry、positive/negative/round-trip、unknown/no-default、UTC/unit/duration/reference、synthetic isolation、v1 byte fingerprint及pure semantic precheck均由TEST-CONTRACT-001覆盖。
+
+本release落实ADR-0007/0008/0009既有决定，不改变PlanningProblem、rule/state/error/capability/Simulation artifact，也不引入dependency、DB migration、Adapter、DataValidation、Builder或Solver。`uv.lock`依赖图因此保持不变。

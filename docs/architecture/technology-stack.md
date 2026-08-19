@@ -88,3 +88,9 @@ Actions provider PASS 只证明锁定的 P0 repository gates 在 GitHub-hosted r
 本 Task不修改 `pyproject.toml`、`uv.lock`、Python/uv pin、Action major tag、Compose image或 runtime/dev dependency。changed-task discovery只使用 Python标准库、Git和既有 workflow context；unit/integration tests继续使用现有 pytest/PyYAML/Ruff/Pyright pins。
 
 五类 P0 machine CLI、Compose、build和conditional Benchmark hook保持执行，只把输出改为中性 `ci-*.json`。OR-Tools、Benchmark runner和新供应链工具仍未安装；provider未在本地执行时保持 `NOT_RUN`。
+
+## TASK-P1-02 contract tooling review
+
+Runtime/dev dependency pins与`uv.lock`图保持不变。新合同继续使用JSON Schema Draft 2020-12、既有`jsonschema==4.25.1`及其`referencing` registry解析跨URN `$ref`；pure types/prechecks只使用Python 3.12标准库和既有domain helpers。`pyproject.toml`仅把schema set metadata从`1.2.0`提升为breaking `2.0.0`，没有dependency resolution变化。
+
+未引入openpyxl/Polars/Pydantic model、DB/Worker、OR-Tools、Hypothesis或Benchmark runner；没有Solver upgrade、migration或性能结论。未来Adapter/Property/Solver首次引入依赖时仍须由各自Task更新lock并执行对应Gate。

@@ -61,3 +61,9 @@ Scenario manifest 的 `generated_at` 不进入 Import package，因此不参与 
 TASK-P0-06 把 `SIM-MINIMAL-001@1.0.0` 的 10 个 non-empty collection、15 个 record 放入同一 `import-package.v1` envelope，以证明 committed correctness dataset 可 canonical replay/import。collection/field vocabulary 明确标为 `sim-minimal-records.v1`，只供 Golden 手算；它没有被加入 JSON Schema/data dictionary，也不是 P1 Factory/Order/Routing canonical contract。
 
 其 hash `sha256:fd8e5af387c7d4197a2664dfa89e93912091647d5809f1b76468d36edab29c10` 只覆盖完整 Import JSON，不覆盖 manifest `generated_at`、Golden Schedule 或 expected artifacts。P1 仍必须从 versioned source package 走 staging/parse/Normalization/reference/capability validation；不得直接把本 fixture vocabulary 提升为生产 mapping 或据此关闭 OPEN-002/013/015。
+
+## TASK-P1-02 canonical contract release
+
+Schema set `2.0.0` 新增 [`canonical-records.v1`](../../schemas/json/canonical-records.v1.schema.json) 与 [`import-package.v2`](../../schemas/json/import-package.v2.schema.json)。Canonical records固定16个collection、稳定ID/reference、显式quantity unit、UTC instant、integer-second duration与每条记录的`source_system/source_version/source_record_id`；Import v2还要求schema/source/normalization/canonicalization version。未知字段、缺失unit/duration/source/version、非法UTC和Production携带synthetic provenance均拒绝，不补默认值。
+
+这是set-level major release：`import-package.v1`保持逐字不变，v1/v2不可互换，consumer必须显式选择。v2字段是authority-neutral APS语义，不声明ERP/MES/WMS/CAM列映射，不关闭OPEN-002/013/015；`backend/app/domain/canonical_records.py`只做ID、reference、unit、time、duration和provenance的pure semantic precheck，不实现Raw Staging、Normalization、Data Validation或Adapter。Synthetic sample只用于Schema/round-trip测试，不是正式Scenario、生产事实或common-ingress PASS。

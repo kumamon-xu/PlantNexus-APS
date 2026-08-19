@@ -62,6 +62,8 @@ REQ / NFR / ENG
 
 Schema skeleton 证据链必须同时包含 versioned machine artifact、human-readable contract、data dictionary、contract test 和 Task acceptance。它只证明合同结构可执行；Import/Snapshot/Problem builder、hash、Solver 或业务能力没有实现证据时必须继续标记 `PLANNED`。
 
+Breaking canonical release还必须保留旧artifact的byte fingerprint、为跨document `$ref`建立显式validator registry、提供v1/v2 rejection与positive/negative/round-trip evidence，并区分Schema hash字段格式和真实builder hash结果。Pure types/precheck只能作为合同证据；没有producer、quality report evaluator、builder或persistence时，相应链路继续`PLANNED`。
+
 Rule/state/error/capability contract 证据链还必须区分：machine rule/registry artifact、pure enum/precheck、Schema envelope、completeness/negative contract test 与真实业务 evaluator。`V1_SUPPORTED`、allowed transition metadata 或 rule-sheet PASS 不能替代 phase-specific implementation、ScheduleValidator mutation、状态持久化、权限或发布证据。
 
 Simulation contract 证据链必须区分：Schema contract version、Profile/Scenario asset version、Generator/canonicalization version、seed、canonical dataset/hash、manifest、Schema sample、formal Fixture、replay/isolation test 与真实 Import/Snapshot/Problem/Benchmark/Execution artifact。`records={}` 或 `.synthetic.json` 只能证明 P0 合同边界，不能替代 Scenario Library、生产隔离设施或性能结果。
@@ -93,3 +95,5 @@ TASK-P0-10 的 provider closure 必须同时记录 GitHub repository/workflow/ev
 TASK-P1-01增加 CI changed-task discovery：`--discover-task-from <event-base-sha>`要求完整、存在且为 HEAD祖先的 commit，在该 range的 `docs/tasks/**`中只能出现一个 current-phase Task Card；历史/未来/phase错位/多个卡直接失败。若 range没有 Task Card，仅当仓库恰有一个 current-phase `in_progress` Task时回退。选择完成后仍使用卡片 `Diff base..HEAD` + working tree执行 scope/impact，不把 CI event base混成 Task baseline。
 
 结构化报告 schema 为 `traceability-report.v1`，至少包含 Task、可选 `task_discovery_base`、Git HEAD、Diff base、committed-range/working-tree source counts、changed paths、matched impact rows、expected/observed documents、missing trace refs、registry counts 和失败明细。失败返回非零退出码，不允许自由文本 skip。
+
+TASK-P1-02将REQ-001/002/003/009、NFR-DET/TRC与ENG-SOL/ERR/VER链接到canonical-records.v1、Import v2、Snapshot v2、data dictionary、pure types/prechecks及TEST-CONTRACT-001。当前artifact state只标记contract formed；Adapter/staging/Normalization/DataValidation/Expansion/Snapshot/Problem builder/hash与P1 Gate继续`PLANNED`。

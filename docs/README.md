@@ -69,7 +69,7 @@ last_reviewed: 2026-08-19
 
 ## 当前范围
 
-当前阶段为 P1。P0 Gate已通过且用户已明确授权 phase transition；TASK-P1-01治理/CI handoff已完成，尚未开始数据/快照链业务实现。下一建议项TASK-P1-02仍为`planned`，开始前必须按Task协议激活。禁止真实CP-SAT/P2、生产参数猜测或绕过正式入口。详见`current_phase.md`。
+当前阶段为P1。P0 Gate已通过且用户已明确授权phase transition；TASK-P1-02正在执行canonical records、Import v2与PlanningSnapshot v2合同发布，尚未开始Adapter/staging/normalization/builder。禁止真实CP-SAT/P2、生产参数猜测或绕过正式入口。详见`current_phase.md`。
 
 ## 仓库入口与本地检查
 

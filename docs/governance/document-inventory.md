@@ -12,7 +12,7 @@ registry_version: 1.0.0
 
 # 文档清单
 
-本清单列出当前仓库已经实际存在的 Markdown 文档。P0 退出门已通过并归档为 completed；P1 已获授权并形成 12 张 Task Card，但尚未执行任何 P1 实现。产品 API 与 Production Runbook 正文尚未形成并继续由相应索引登记。
+本清单列出当前仓库已经实际存在的 Markdown 文档。P0退出门已通过并归档为completed；P1已获授权并形成12张Task Card，TASK-P1-01已完成，TASK-P1-02正在执行canonical machine contracts且仍为`in_progress`。产品API与Production Runbook正文尚未形成并继续由相应索引登记。
 
 | Path | Doc ID | Status | Title |
 |---|---|---|---|
@@ -127,7 +127,7 @@ registry_version: 1.0.0
 | [tasks/P0/TASK-P0-09-p0-exit-gate-audit.md](../tasks/P0/TASK-P0-09-p0-exit-gate-audit.md) | TASK-P0-09 | done | P0 Exit Gate Audit |
 | [tasks/P0/TASK-P0-10-ci-provider-evidence-remediation.md](../tasks/P0/TASK-P0-10-ci-provider-evidence-remediation.md) | TASK-P0-10 | done | CI Workflow Handoff and Provider Evidence Remediation |
 | [tasks/P1/TASK-P1-01-phase-governance-and-ci-handoff.md](../tasks/P1/TASK-P1-01-phase-governance-and-ci-handoff.md) | TASK-P1-01 | done | P1 Phase Governance and CI Handoff |
-| [tasks/P1/TASK-P1-02-canonical-import-contracts.md](../tasks/P1/TASK-P1-02-canonical-import-contracts.md) | TASK-P1-02 | planned | Canonical Import Contracts |
+| [tasks/P1/TASK-P1-02-canonical-import-contracts.md](../tasks/P1/TASK-P1-02-canonical-import-contracts.md) | TASK-P1-02 | in_progress | Canonical Import Contracts |
 | [tasks/P1/TASK-P1-03-raw-staging-and-import-provenance.md](../tasks/P1/TASK-P1-03-raw-staging-and-import-provenance.md) | TASK-P1-03 | planned | Raw Staging and Import Provenance |
 | [tasks/P1/TASK-P1-04-csv-excel-reference-adapter.md](../tasks/P1/TASK-P1-04-csv-excel-reference-adapter.md) | TASK-P1-04 | planned | CSV Excel and Formal Reference Adapter |
 | [tasks/P1/TASK-P1-05-normalization-and-unit-time-rules.md](../tasks/P1/TASK-P1-05-normalization-and-unit-time-rules.md) | TASK-P1-05 | planned | Normalization and Unit Time Rules |
@@ -146,3 +146,5 @@ registry_version: 1.0.0
 本清单格式为 `registry_version: 1.0.0`；列结构或状态比较语义变化时提升版本。
 
 文档存在不代表对应代码、Schema、Test 或 Artifact 已经实现。
+
+TASK-P1-02没有新增Markdown路径，因此清单行数仍为124；本次同步只更新P1执行事实和现有文档内容。新增JSON Schema/sample/Python文件由data dictionary、Schema index与Task evidence追踪，不伪装成文档清单条目。

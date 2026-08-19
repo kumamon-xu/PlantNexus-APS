@@ -1,0 +1,443 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "urn:plantnexus:aps:schema:planning-snapshot:v2",
+  "title": "PlantNexus APS PlanningSnapshot v2",
+  "description": "Immutable, replayable Snapshot contract over validated canonical records and deterministic order expansion. Hash construction and persistence are implemented by later P1 tasks.",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "snapshot_version",
+    "schema_set_version",
+    "snapshot_id",
+    "cutoff_at_utc",
+    "source_versions",
+    "rule_version",
+    "normalization_rule_version",
+    "expansion_version",
+    "canonicalization_version",
+    "import_package",
+    "import_quality_report",
+    "snapshot_hash",
+    "entity_counts",
+    "synthetic",
+    "records",
+    "operation_instances",
+    "operation_precedence_edges"
+  ],
+  "properties": {
+    "snapshot_version": {
+      "const": "planning-snapshot.v2"
+    },
+    "schema_set_version": {
+      "const": "2.0.0"
+    },
+    "snapshot_id": {
+      "$ref": "#/$defs/canonicalId"
+    },
+    "cutoff_at_utc": {
+      "$ref": "#/$defs/utcInstant"
+    },
+    "source_versions": {
+      "$ref": "#/$defs/sourceVersions"
+    },
+    "rule_version": {
+      "$ref": "#/$defs/nonEmptyString"
+    },
+    "normalization_rule_version": {
+      "$ref": "#/$defs/nonEmptyString"
+    },
+    "expansion_version": {
+      "$ref": "#/$defs/nonEmptyString"
+    },
+    "canonicalization_version": {
+      "$ref": "#/$defs/nonEmptyString"
+    },
+    "import_package": {
+      "$ref": "#/$defs/importPackageReference"
+    },
+    "import_quality_report": {
+      "$ref": "#/$defs/importQualityReportReference"
+    },
+    "snapshot_hash": {
+      "$ref": "#/$defs/sha256Digest"
+    },
+    "entity_counts": {
+      "$ref": "#/$defs/entityCounts"
+    },
+    "synthetic": {
+      "type": "boolean"
+    },
+    "synthetic_provenance": {
+      "$ref": "#/$defs/syntheticProvenance"
+    },
+    "records": {
+      "$ref": "urn:plantnexus:aps:schema:canonical-records:v1"
+    },
+    "operation_instances": {
+      "type": "array",
+      "uniqueItems": true,
+      "items": {
+        "$ref": "#/$defs/operationInstance"
+      }
+    },
+    "operation_precedence_edges": {
+      "type": "array",
+      "uniqueItems": true,
+      "items": {
+        "$ref": "#/$defs/operationPrecedenceEdge"
+      }
+    }
+  },
+  "allOf": [
+    {
+      "if": {
+        "properties": {
+          "synthetic": {
+            "const": true
+          }
+        },
+        "required": ["synthetic"]
+      },
+      "then": {
+        "required": ["synthetic_provenance"]
+      },
+      "else": {
+        "not": {
+          "required": ["synthetic_provenance"]
+        }
+      }
+    }
+  ],
+  "$defs": {
+    "canonicalId": {
+      "type": "string",
+      "minLength": 1,
+      "maxLength": 256,
+      "pattern": "^[^\\s\\u0000-\\u001F\\u007F]+$"
+    },
+    "nonEmptyString": {
+      "type": "string",
+      "minLength": 1
+    },
+    "utcInstant": {
+      "type": "string",
+      "format": "date-time",
+      "pattern": "Z$"
+    },
+    "sha256Digest": {
+      "type": "string",
+      "pattern": "^sha256:[0-9a-f]{64}$"
+    },
+    "semanticVersion": {
+      "type": "string",
+      "pattern": "^(0|[1-9][0-9]*)\\.(0|[1-9][0-9]*)\\.(0|[1-9][0-9]*)(?:-[0-9A-Za-z-]+(?:\\.[0-9A-Za-z-]+)*)?(?:\\+[0-9A-Za-z-]+(?:\\.[0-9A-Za-z-]+)*)?$"
+    },
+    "sourceVersions": {
+      "type": "object",
+      "minProperties": 1,
+      "propertyNames": {
+        "$ref": "#/$defs/canonicalId"
+      },
+      "additionalProperties": {
+        "$ref": "#/$defs/nonEmptyString"
+      }
+    },
+    "importPackageReference": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["import_package_version", "package_id", "dataset_hash"],
+      "properties": {
+        "import_package_version": {
+          "const": "import-package.v2"
+        },
+        "package_id": {
+          "$ref": "#/$defs/canonicalId"
+        },
+        "dataset_hash": {
+          "$ref": "#/$defs/sha256Digest"
+        }
+      }
+    },
+    "importQualityReportReference": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["report_version", "report_id", "status"],
+      "properties": {
+        "report_version": {
+          "const": "import-quality-report.v1"
+        },
+        "report_id": {
+          "$ref": "#/$defs/canonicalId"
+        },
+        "status": {
+          "const": "PASS"
+        }
+      }
+    },
+    "syntheticProvenance": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "scenario_id",
+        "scenario_version",
+        "seed",
+        "factory_profile_id",
+        "profile_version",
+        "generator_id",
+        "generator_version"
+      ],
+      "properties": {
+        "scenario_id": {
+          "$ref": "#/$defs/canonicalId"
+        },
+        "scenario_version": {
+          "$ref": "#/$defs/semanticVersion"
+        },
+        "seed": {
+          "type": "integer",
+          "minimum": 0,
+          "maximum": 9223372036854775807
+        },
+        "factory_profile_id": {
+          "$ref": "#/$defs/canonicalId"
+        },
+        "profile_version": {
+          "$ref": "#/$defs/semanticVersion"
+        },
+        "generator_id": {
+          "$ref": "#/$defs/canonicalId"
+        },
+        "generator_version": {
+          "$ref": "#/$defs/semanticVersion"
+        }
+      }
+    },
+    "operationResourceOption": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "routing_resource_option_id",
+        "resource_id",
+        "setup_seconds",
+        "cycle_seconds_per_unit",
+        "final_duration_seconds",
+        "duration_source",
+        "source_version"
+      ],
+      "properties": {
+        "routing_resource_option_id": {
+          "$ref": "#/$defs/canonicalId"
+        },
+        "resource_id": {
+          "$ref": "#/$defs/canonicalId"
+        },
+        "setup_seconds": {
+          "type": "integer",
+          "minimum": 0
+        },
+        "cycle_seconds_per_unit": {
+          "type": "integer",
+          "minimum": 0
+        },
+        "final_duration_seconds": {
+          "type": "integer",
+          "minimum": 1
+        },
+        "duration_source": {
+          "$ref": "#/$defs/nonEmptyString"
+        },
+        "source_version": {
+          "$ref": "#/$defs/nonEmptyString"
+        }
+      }
+    },
+    "operationInstance": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "operation_instance_id",
+        "demand_order_id",
+        "production_order_id",
+        "production_lot_id",
+        "routing_version_id",
+        "routing_operation_id",
+        "status",
+        "quantity",
+        "quantity_unit",
+        "due_at_utc",
+        "release_at_utc",
+        "material_ready_at_utc",
+        "required_capabilities",
+        "resource_options",
+        "lock_ids"
+      ],
+      "properties": {
+        "operation_instance_id": {
+          "$ref": "#/$defs/canonicalId"
+        },
+        "demand_order_id": {
+          "$ref": "#/$defs/canonicalId"
+        },
+        "production_order_id": {
+          "$ref": "#/$defs/canonicalId"
+        },
+        "production_lot_id": {
+          "$ref": "#/$defs/canonicalId"
+        },
+        "routing_version_id": {
+          "$ref": "#/$defs/canonicalId"
+        },
+        "routing_operation_id": {
+          "$ref": "#/$defs/canonicalId"
+        },
+        "status": {
+          "enum": ["NOT_STARTED", "RUNNING", "COMPLETED"]
+        },
+        "quantity": {
+          "type": "number",
+          "exclusiveMinimum": 0
+        },
+        "quantity_unit": {
+          "$ref": "#/$defs/nonEmptyString"
+        },
+        "due_at_utc": {
+          "$ref": "#/$defs/utcInstant"
+        },
+        "release_at_utc": {
+          "$ref": "#/$defs/utcInstant"
+        },
+        "material_ready_at_utc": {
+          "$ref": "#/$defs/utcInstant"
+        },
+        "required_capabilities": {
+          "type": "array",
+          "minItems": 1,
+          "uniqueItems": true,
+          "items": {
+            "$ref": "#/$defs/nonEmptyString"
+          }
+        },
+        "resource_options": {
+          "type": "array",
+          "minItems": 1,
+          "uniqueItems": true,
+          "items": {
+            "$ref": "#/$defs/operationResourceOption"
+          }
+        },
+        "execution_fact_id": {
+          "$ref": "#/$defs/canonicalId"
+        },
+        "lock_ids": {
+          "type": "array",
+          "uniqueItems": true,
+          "items": {
+            "$ref": "#/$defs/canonicalId"
+          }
+        }
+      },
+      "allOf": [
+        {
+          "if": {
+            "properties": {
+              "status": {
+                "enum": ["RUNNING", "COMPLETED"]
+              }
+            },
+            "required": ["status"]
+          },
+          "then": {
+            "required": ["execution_fact_id"]
+          },
+          "else": {
+            "not": {
+              "required": ["execution_fact_id"]
+            }
+          }
+        }
+      ]
+    },
+    "operationPrecedenceEdge": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "operation_precedence_edge_id",
+        "routing_precedence_edge_id",
+        "predecessor_operation_instance_id",
+        "successor_operation_instance_id",
+        "min_lag_seconds",
+        "transport_lag_seconds"
+      ],
+      "properties": {
+        "operation_precedence_edge_id": {
+          "$ref": "#/$defs/canonicalId"
+        },
+        "routing_precedence_edge_id": {
+          "$ref": "#/$defs/canonicalId"
+        },
+        "predecessor_operation_instance_id": {
+          "$ref": "#/$defs/canonicalId"
+        },
+        "successor_operation_instance_id": {
+          "$ref": "#/$defs/canonicalId"
+        },
+        "min_lag_seconds": {
+          "type": "integer",
+          "minimum": 0
+        },
+        "max_lag_seconds": {
+          "type": "integer",
+          "minimum": 0
+        },
+        "transport_lag_seconds": {
+          "type": "integer",
+          "minimum": 0
+        }
+      }
+    },
+    "entityCounts": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "factories",
+        "workshops",
+        "production_lines",
+        "resource_groups",
+        "resources",
+        "calendars",
+        "products",
+        "routing_versions",
+        "routing_operations",
+        "routing_precedence_edges",
+        "routing_resource_options",
+        "demand_orders",
+        "production_orders",
+        "production_lots",
+        "execution_facts",
+        "operation_locks",
+        "operation_instances",
+        "operation_precedence_edges"
+      ],
+      "properties": {
+        "factories": {"type": "integer", "minimum": 0},
+        "workshops": {"type": "integer", "minimum": 0},
+        "production_lines": {"type": "integer", "minimum": 0},
+        "resource_groups": {"type": "integer", "minimum": 0},
+        "resources": {"type": "integer", "minimum": 0},
+        "calendars": {"type": "integer", "minimum": 0},
+        "products": {"type": "integer", "minimum": 0},
+        "routing_versions": {"type": "integer", "minimum": 0},
+        "routing_operations": {"type": "integer", "minimum": 0},
+        "routing_precedence_edges": {"type": "integer", "minimum": 0},
+        "routing_resource_options": {"type": "integer", "minimum": 0},
+        "demand_orders": {"type": "integer", "minimum": 0},
+        "production_orders": {"type": "integer", "minimum": 0},
+        "production_lots": {"type": "integer", "minimum": 0},
+        "execution_facts": {"type": "integer", "minimum": 0},
+        "operation_locks": {"type": "integer", "minimum": 0},
+        "operation_instances": {"type": "integer", "minimum": 0},
+        "operation_precedence_edges": {"type": "integer", "minimum": 0}
+      }
+    }
+  }
+}

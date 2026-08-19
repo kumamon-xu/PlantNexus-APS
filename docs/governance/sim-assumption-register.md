@@ -51,3 +51,5 @@ TASK-P0-10 review：本 Task 只重放既有 Simulation/Golden/Mutation machine 
 P1 Task 规划 review：TASK-P1-10 只规划把既有 Generator 输出接入 canonical import records，TASK-P1-11 规划以同一 ingress 对比 reference/synthetic 来源；执行中如需新增定量 Profile/Scenario 假设，必须另行注册并版本化。本次没有新增、修改或 retire 条目；SIM-ASSUMPTION-001～009 全部保持 `ACTIVE`，不用于关闭 production-open entry，registry format version不变。
 
 TASK-P1-01 review：只重放既有Simulation/Golden/Mutation gates并重命名CI输出，不修改Profile、Scenario、Generator、seed、Fixture或定量值。SIM-ASSUMPTION-001～009全部保持`ACTIVE`，不用于生产结论，registry format version不变。
+
+TASK-P1-02 review：两份v2 `.synthetic.json`使用`SCHEMA-SAMPLE-P1-02`、固定seed和小型shape值，只验证Schema/reference/round-trip，不是正式Scenario/Profile/Generator distribution、Fixture或Benchmark。没有新增/修改/retire假设；SIM-ASSUMPTION-001～009全部保持`ACTIVE`，sample数值不得成为生产默认值或OPEN closure evidence，registry format version不变。

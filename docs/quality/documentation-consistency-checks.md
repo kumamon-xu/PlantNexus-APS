@@ -155,6 +155,12 @@ TASK-P1-01新增pure phase-policy/changed-path selector、immutable Git event-ra
 
 CI discovery失败返回`PHASE-TASK`/非零，不生成skip PASS。成功报告同时记录`task_discovery_base`与Task `diff_base`，使event attribution和Task scope可分别审计。provider没有实际执行证据时仍为`NOT_RUN`。
 
+## TASK-P1-02 schema governance review
+
+本Task沿用full repository与`Diff base..HEAD + working tree`双检查，并由`IMPACT-SCHEMA/DOMAIN/DEPENDENCY/VERSION-METADATA/TESTS/PHASE/GOVERNANCE-REGISTRY/DOCS`驱动明确文档清单。机器治理仍不解释JSON Schema；TEST-CONTRACT-001补充Draft 2020-12跨URN registry、v1固定fingerprint、positive/negative/round-trip及data dictionary coverage。
+
+Schema set major release必须在Task Completion evidence记录compatibility、migration none理由、retained artifacts、pure/runtime边界与所有必审文档review；生成的`build/traceability/TASK-P1-02-report.json`继续忽略不提交。治理PASS只证明scope/trace/document一致，不证明Adapter、pipeline、Snapshot hash或P1 Exit Gate。
+
 ## Override
 
 不允许用自由文本 CI skip 绕过。确需例外时必须在 Task Card 记录理由，提交 ADR 或明确批准记录，并仍保留检查报告。正确性、状态语义、数据隔离和发布门不得豁免。

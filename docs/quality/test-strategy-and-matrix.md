@@ -32,7 +32,7 @@ registry_version: 1.0.0
 | TEST-TRACEABILITY-VALIDATOR | Registry、reference、Task、diff/impact，以及 clean-tree committed range regression | P0 | [`backend/tests/unit/test_check_docs.py`](../../backend/tests/unit/test_check_docs.py) |
 | TEST-PHASE-GOVERNANCE-001 | Current/prior/future Phase Task policy与 CI changed-task handoff | P1 | [`test_check_docs.py`](../../backend/tests/unit/test_check_docs.py) phase/range/discovery negative paths + [`test_ci_contract.py`](../../backend/tests/integration/test_ci_contract.py) generic workflow/no-stale-P0 handoff formed |
 | TEST-OBS-001 | 日志、运行标识与 Observability 关联 | P0 | [`test_logging.py`](../../backend/tests/integration/test_logging.py) JSON/context/trace-ID/redaction P0 slice formed；PlanningRun metrics/audit retention PLANNED |
-| TEST-CONTRACT-001 | Schema meta/positive/negative、版本、UTC/duration/reference、isolation 与 round-trip | P0 | [`backend/tests/contract/test_schema_contracts.py`](../../backend/tests/contract/test_schema_contracts.py) + data/rule Schema baselines formed；Simulation Schema validation also covered by TEST-SCENARIO-REPLAY |
+| TEST-CONTRACT-001 | Schema meta/positive/negative、版本、UTC/duration/reference、isolation 与 round-trip | P0 | [`backend/tests/contract/test_schema_contracts.py`](../../backend/tests/contract/test_schema_contracts.py) + P0 baselines + P1 [`canonical-records.v1`](../../schemas/json/canonical-records.v1.schema.json)/[Import v2](../../schemas/json/import-package.v2.schema.json)/[Snapshot v2](../../schemas/json/planning-snapshot.v2.schema.json) contract evidence formed；producer/pipeline/builder仍PLANNED |
 | TEST-IMPORT-STAGING-001 | Raw batch/row provenance、transaction、migration与 idempotent replay | P1 | PLANNED / TASK-P1-03 |
 | TEST-IMPORT-ADAPTER-001 | CSV/XLSX/ReferenceFileAdapter semantic parity与文件安全拒绝 | P1 | PLANNED / TASK-P1-04 |
 | TEST-NORMALIZATION-001 | ID/time/unit mapping、canonical bytes、unit error与 missing duration | P1 | PLANNED / TASK-P1-05 |
@@ -99,3 +99,9 @@ TASK-P0-10 不新增 Test ID、test function、fixture 或 assertion 豁免；�
 TASK-P1-01扩展治理单测覆盖 current P1/prior terminal P0/future phase/alignment、任意 phase range、唯一 changed Task、stale historical/multiple card、完整 event-base Git range；CI integration contract验证中性 workflow/report/artifact、PR/push base来源、full+diff governance、全部既有 gates、无 P0-08/P0-10 Task残留及无 `continue-on-error`。这些只证明治理/CI contract，不证明 provider执行、P1数据链或 Benchmark/Solver。
 
 P1 Exit Gate至少要求 TEST-P1-COMMON-INGRESS组合证明 same scenario+seed的 Import/Snapshot/Problem bytes/hash一致，并由 TEST-DATA-QUALITY-001分别证明 `ROUTE_CYCLE`、`MISSING_RESOURCE`、`UNIT_CONVERSION_ERROR`、`MISSING_DURATION`。这些都是 data pipeline证据，不能外推为 Solver、ScheduleValidator、Benchmark或 Production readiness。
+
+## TASK-P1-02 contract evidence
+
+TEST-CONTRACT-001新增canonical/Import v2/Snapshot v2的Draft 2020-12跨URN `$ref` registry、synthetic positive samples/JSON round-trip、v1/v2 non-interchangeability、v1 byte fingerprint、unknown/no-default、Production/Synthetic conditional、UTC/unit/duration/source/reference/count及expanded option copy负例，并以Pyright/Ruff覆盖pure JSON-compatible types/prechecks。固定sample不做随机generation/shrinking，sentinel digest不验证hash builder，单异常precheck不替代TASK-P1-06 multi-error quality evaluator。
+
+本Task不新增Test ID或改变registry表结构，`registry_version`保持`1.0.0`。TEST-IMPORT-STAGING-001、TEST-NORMALIZATION-001、TEST-DATA-QUALITY-001、TEST-ORDER-EXPANSION-001、TEST-SNAPSHOT-REPLAY-001、TEST-PROBLEM-REPLAY-001与TEST-P1-COMMON-INGRESS继续`PLANNED`。

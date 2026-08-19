@@ -4,6 +4,17 @@ from __future__ import annotations
 
 from typing import Literal, NotRequired, TypedDict
 
+from app.domain.canonical_records import (
+    CanonicalRecordsDocument,
+    ImportPackageDocumentV2,
+    OperationInstanceDocument,
+    OperationPrecedenceEdgeDocument,
+    OperationResourceOptionDocument,
+    PlanningSnapshotDocumentV2,
+    SourceReference,
+    SyntheticProvenance,
+)
+
 
 type JsonValue = (
     None | bool | int | float | str | list["JsonValue"] | dict[str, "JsonValue"]
@@ -162,11 +173,19 @@ class ValidationReportDocumentV2(TypedDict):
 
 
 __all__ = [
+    "CanonicalRecordsDocument",
     "ErrorDocument",
     "ErrorDocumentV2",
     "ImportPackageDocument",
+    "ImportPackageDocumentV2",
     "JsonValue",
     "KpiDocument",
+    "OperationInstanceDocument",
+    "OperationPrecedenceEdgeDocument",
+    "OperationResourceOptionDocument",
+    "PlanningSnapshotDocumentV2",
+    "SourceReference",
+    "SyntheticProvenance",
     "ValidationReportDocument",
     "ValidationReportDocumentV2",
 ]

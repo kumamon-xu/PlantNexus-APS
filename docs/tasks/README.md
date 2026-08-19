@@ -39,7 +39,7 @@ P0 superseding audit=`READY`，用户于 2026-08-19 明确批准进入 P1；历�
 | [TASK-P1-03](P1/TASK-P1-03-raw-staging-and-import-provenance.md) | Raw Staging、provenance、idempotent persistence | P1-02 | `done` |
 | [TASK-P1-04](P1/TASK-P1-04-csv-excel-reference-adapter.md) | CSV、Excel与ReferenceFileAdapter v1 | P1-02/03 | `done` |
 | [TASK-P1-05](P1/TASK-P1-05-normalization-and-unit-time-rules.md) | Deterministic ID/time/unit Normalization | P1-02/03/04 | `done` |
-| [TASK-P1-06](P1/TASK-P1-06-data-quality-and-routing-validation.md) | DAG/reference/capability Data Validation | P1-05 | `planned` |
+| [TASK-P1-06](P1/TASK-P1-06-data-quality-and-routing-validation.md) | DAG/reference/capability Data Validation | P1-05 | `in_progress` |
 | [TASK-P1-07](P1/TASK-P1-07-deterministic-order-expansion.md) | Deterministic Order/Lot/Operation expansion | P1-06 | `planned` |
 | [TASK-P1-08](P1/TASK-P1-08-immutable-snapshot-and-hash.md) | Immutable PlanningSnapshot 与 hash | P1-03/06/07 | `planned` |
 | [TASK-P1-09](P1/TASK-P1-09-planning-problem-builder-and-hash.md) | Solver-neutral PlanningProblem builder/hash | P1-07/08 | `planned` |
@@ -55,6 +55,6 @@ Task进入 `in_progress` 时必须先把当时完整 40字符 HEAD SHA写入 `Di
 
 每张 Task Card在开始前完成文档影响分析：`Documentation impact`、明确 `Documents to update`、理由、`IMPACT-*` Rule IDs与`Traceability updates`。`Documents to update`必须包含在允许范围；发现额外文件先停止并修订卡片。
 
-TASK-P1-05已以implementation commit `d52aa62d36e8d89eba318cb5fc586311680e030f`及GitHub Actions run `32252308695`/required `validate=success`完成；当前没有`in_progress` Task。下一项TASK-P1-06依赖已满足但仍为`planned`，不会因P1-05完成而自动启动；P1-12即使审计`READY`也不自动进入P2。
+TASK-P1-05已以implementation commit `d52aa62d36e8d89eba318cb5fc586311680e030f`及GitHub Actions run `32252308695`/required `validate=success`完成。TASK-P1-06现为唯一`in_progress` Task，不可变Diff base=`75d761332204ec779477ba7242c98517cce1b68b`；本地Data Validation/四类Gate/report evidence已形成，仍须完成提交与provider闭环。其完成不会自动启动TASK-P1-07，P1-12即使审计`READY`也不自动进入P2。
 
 用户授权完成后直接push`main`与provider核验适用于后续每个已验收Task，但不改变各卡允许范围、依赖或启动状态。

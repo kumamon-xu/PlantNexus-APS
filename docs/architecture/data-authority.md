@@ -73,3 +73,9 @@ ReferenceFileAdapter v1只权威记录“调用方声明的source system/version
 MappingProfile只能声明一个精确source system/version的record/field转换，profile/version与unit registry version进入canonical provenance。不同source version、同source多profile、混合data plane或synthetic provenance冲突均拒绝；payload不能覆盖自动注入的`source`，未映射字段也不能被忽略。
 
 这些profile是通用可测试机制，不是Production ERP/MES/WMS/CAM authority配置。仓库未提交任何真实系统mapping、field precedence、timezone或unit default；OPEN-001/002/013/015继续OPEN。Raw Staging保留transport truth，canonical package只承载显式映射结果，两者不能互相伪造。
+
+## TASK-P1-06 validation authority boundary
+
+Data Validation只判断“显式canonical事实是否自洽”：record source/version必须出现在Import envelope，引用与order/routing/fact/lock lineage必须闭合，单位逐级一致，route必须为DAG，resource option必须存在且能力匹配。Error v3的source location由record source reference与canonical field组合，不用数组位置或推测原始文件坐标。
+
+该Gate没有资格选择冲突source、定义真实machine capability、转换新增unit、补duration、合并calendar或决定material/transport authority；它只能拒绝不完整/不一致事实。OPEN-001/002/004/007/009/013/014/015全部继续OPEN，PASS报告不构成Production authority批准。

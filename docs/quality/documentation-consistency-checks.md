@@ -181,6 +181,12 @@ Schema set major release必须在Task Completion evidence记录compatibility、m
 
 TASK-P1-05 implementation commit `d52aa62d36e8d89eba318cb5fc586311680e030f`已由GitHub Actions run `32252308695`的required `validate` job `96065907901`证明成功；artifact `9364897397`内`ci-current-task-report.json`精确记录49 changed paths、8 matched impact rows、0 issues且result=`PASS`。Provider/download ZIP digest均为`sha256:5db1ccbb242b555d8a95d36ac9cc1b1373dab95d482dbde17ab7fb369cce2966`。完成态证据提交仍按其自身精确SHA核验，不以本段自我声明替代provider结果。
 
+## TASK-P1-06 data-quality governance review
+
+本Task沿用full repository与`Diff base..HEAD + working tree`检查，report路径为`build/traceability/TASK-P1-06-report.json`。声明的九行impact覆盖additive Schema/error registry、domain types、Data Validation import layer、global version metadata、限定tests、phase/registries和全部矩阵强制文档；Diff base固定`75d761332204ec779477ba7242c98517cce1b68b`。
+
+治理检查只证明scope、版本、文档和追踪，不执行DAG/SCC、resource eligibility、Error排序/count/report ID或四类Gate语义；TEST-DATA-QUALITY-001与TEST-CONTRACT-001补充这些事实。完成前必须证明global `2.2.0`、Import v2 `2.0.0`、unit registry `2.1.0`的有意区别、六份历史artifact hash、`uv.lock`无变化、九行matched impact与0 issues；ignored report不提交，implementation/evidence commit分别核验provider required `validate`。
+
 ## Override
 
 不允许用自由文本 CI skip 绕过。确需例外时必须在 Task Card 记录理由，提交 ADR 或明确批准记录，并仍保留检查报告。正确性、状态语义、数据隔离和发布门不得豁免。

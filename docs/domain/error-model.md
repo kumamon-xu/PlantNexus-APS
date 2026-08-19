@@ -101,3 +101,11 @@ Raw Staging分配6个module-local稳定control-flow code：`INVALID_STAGING_META
 `NormalizationError`固定`category=DATA_ERROR`，携带module-local code、sanitized source location、field、expected contract和message。它区分raw JSON/profile/version/source/data-plane/authority问题，以及`INVALID_TIMEZONE`、`MISSING_DURATION`、`UNIT_CONVERSION_ERROR`、`DUPLICATE_CANONICAL_ID`；错误文本不回显payload value或parser exception。
 
 本层首错fail closed并用于控制流，不改写既有19项产品error registry或error.v2。TASK-P1-06仍须把unit/missing-duration等结果映射到确定性ImportQualityReport并同时报告DAG/reference/capability问题；HTTP/status映射仍未实现。
+
+## TASK-P1-06 Error v3 and ImportQualityReport
+
+`error-code-registry.v2`是对v1的additive successor：七类category和既有19项code/category映射逐项保留，只增加`ROUTE_CYCLE`、`MISSING_RESOURCE`、`UNIT_CONVERSION_ERROR`、`MISSING_DURATION`四项`DATA_ERROR`。Python以独立`ProductErrorCodeV2`暴露新集合，原`ProductErrorCode`仍为19项，防止旧consumer被静默扩展。
+
+`error.v3`要求每个detail完整携带entity type/ID、field、observed value、expected contract、稳定source location和action；`import-quality-report.v1`收集多个Error、精确校验count/status、稳定排序并用除self ID外的canonical content派生report ID。`UNSUPPORTED_CAPABILITY`仍属于独立category，不能降格为DATA_ERROR或合并成SYSTEM_ERROR。
+
+该报告只属于canonical input gate，不是HTTP contract、PlanningRun persistence、infeasibility proof或`validation-report.v2`。Normalization/Adapter/Staging的module-local首错仍按各自边界存在；Error v1/v2与registry v1逐字保留且不可与v3互换。

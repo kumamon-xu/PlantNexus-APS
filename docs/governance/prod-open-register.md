@@ -78,3 +78,5 @@ TASK-P1-03 review：Raw Staging的source system/version、source name/media type
 TASK-P1-04 review：`plantnexus.reference-file@1.0.0`的三列transport、文件安全limits和`production_binding=false`只建立参考文件入口，不定义真实ERP/MES/WMS/CAM endpoint/auth/version/field mapping；opaque `payload_json`不定义单位转换或字段权威。Temporary synthetic CSV/XLSX、openpyxl dependency和positive/negative tests均不是Authority/Evidence closure record。OPEN-002/013/015及OPEN-001～015全部继续`OPEN`，registry format version保持`1.0.0`。
 
 TASK-P1-05 review：unit registry的`s/min/h`只形成显式数学换算机制，MappingProfile与test-local source/timezone/unit值不构成真实interface、Factory timezone、字段权威或Production默认单位。没有Authority/Evidence/closure record，`production_binding=false`边界不变；OPEN-001/002/013/015及OPEN-001～015全部继续`OPEN`，registry format version保持`1.0.0`。
+
+TASK-P1-06 review：Data Validation只拒绝显式canonical事实中的route/reference/resource/capability/time/calendar/unit/duration问题；test-local `CUTTING/piece`、interval、lag与duration不是Production authority、默认值或closure evidence。没有Authority/Evidence/closure record，也未决定真实interface、calendar/material/transport/unit/fallback/field precedence；OPEN-002/004/007/009/013/014/015及OPEN-001～015全部继续`OPEN`，registry format version保持`1.0.0`。

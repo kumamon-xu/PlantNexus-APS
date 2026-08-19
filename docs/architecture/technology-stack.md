@@ -112,3 +112,9 @@ Raw Staging复用已锁定的`sqlalchemy==2.0.43`与`alembic==1.16.5`，未修�
 Normalization runtime只使用Python 3.12标准库`dataclasses/enum/json/hashlib/datetime/decimal`；YAML只由既有dev/test `PyYAML==6.0.2`加载后注入`UnitConversionRegistry.from_mapping`，production module不依赖PyYAML/jsonschema。`pyproject.toml`只把schema metadata改为`2.1.0`，未改变dependency list，故`uv.lock`保持不变并由`uv sync --locked`验证。
 
 没有引入Polars、Pydantic model、ORM/API/Worker、OR-Tools或Benchmark runner。Canonical JSON和integer conversion不使用第三方数值库或float duration rounding；quantity小数只有在JSON文本可无损往返时才接受。
+
+## TASK-P1-06 data-validation runtime
+
+Data Validation runtime继续只使用Python 3.12标准库`dataclasses/hashlib/json/datetime/math/collections`及既有pure domain helpers；YAML/jsonschema仍仅由已锁定dev/test工具验证registry和Draft 2020-12跨URN `$ref`。`pyproject.toml`只把schema metadata从`2.1.0`提升到additive `2.2.0`，dependency list不变，`uv.lock`应保持原SHA-256。
+
+没有引入graph库、Hypothesis、Pydantic model、DB/API/Worker、OR-Tools或Benchmark runner。DAG使用确定性标准库SCC遍历，report canonicalization使用JSON/SHA-256；source scan固定无Planning/Solver/ScheduleValidator依赖，因此不触发Solver upgrade ADR/replay。

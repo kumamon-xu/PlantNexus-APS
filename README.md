@@ -1,6 +1,6 @@
 # PlantNexus APS
 
-PlantNexus APS 是一个面向单工厂、多车间场景的高级计划与排程（APS）项目。P0 Exit Gate 已通过，用户已明确授权进入 P1（Data & Snapshot）；TASK-P1-01～05已完成，显式版本化的Normalization与canonical Import bytes已有本地及provider证据，TASK-P1-06仍为下一项`planned`任务。真实Solver、生产Adapter/参数和P2+能力仍未实现。
+PlantNexus APS 是一个面向单工厂、多车间场景的高级计划与排程（APS）项目。P0 Exit Gate 已通过，用户已明确授权进入 P1（Data & Snapshot）；TASK-P1-01～05已完成，TASK-P1-06正在实现Solver-independent Data Validation与确定性ImportQualityReport。真实Solver、生产Adapter/参数和P2+能力仍未实现。
 
 ## 开始之前
 
@@ -28,13 +28,13 @@ uv run python -m app.infrastructure.contract_check --root . --report build/valid
 docker compose --env-file .env.example config --quiet
 uv run python scripts/check_docs.py
 uv build
-uv run python -c "import app; assert app.CODE_VERSION == '0.0.0'; assert app.SPEC_VERSION == '0.3.0'; assert app.SCHEMA_VERSION == '2.1.0'"
+uv run python -c "import app; assert app.CODE_VERSION == '0.0.0'; assert app.SPEC_VERSION == '0.3.0'; assert app.SCHEMA_VERSION == '2.2.0'"
 ```
 
 `scripts/check_docs.py` 当前同时检查结构性 Markdown、版本化 registries、REQ/NFR/ENG/TEST 等引用、Task 依赖、逐根 traceability 和 PROD_OPEN/SIM_ASSUMPTION 隔离。Task 进入 `in_progress` 时须把当时完整 HEAD SHA 写入 `Diff base`；影响覆盖检查使用 `Diff base..HEAD` 的已提交变更与当前 working tree 的并集，因此提交前后可用同一命令复验：
 
 ```powershell
-uv run python scripts/check_docs.py --task docs/tasks/P1/TASK-P1-05-normalization-and-unit-time-rules.md --check-diff --report build/traceability/TASK-P1-05-report.json
+uv run python scripts/check_docs.py --task docs/tasks/P1/TASK-P1-06-data-quality-and-routing-validation.md --check-diff --report build/traceability/TASK-P1-06-report.json
 ```
 
 报告使用 `traceability-report.v1`，包含 `diff_base` 与 committed/working-tree source counts，生成到已忽略的 `build/`；Task Card Completion evidence 保存持久结果摘要。[`ci.yml`](.github/workflows/ci.yml) 已编排 exact lock、lint、type、全部 P0 tests、machine contracts、Compose config、文档 diff 和 package build。仓库内只证明 workflow/config 可执行；CI provider run URL/ID 必须来自真实外部运行，不能由本地结果替代。
@@ -54,4 +54,4 @@ scripts/      仓库级校验与自动化脚本
 infra/        P0 开发容器构建配置
 ```
 
-P0-08只形成health-only API、环境配置、日志、lazy DB/Redis connectivity、通用Job reliability/idempotency、Alembic/Compose/CI骨架；它不形成业务pipeline、产品API、真实分布式作业存储、Solver或生产部署。P1的12张有界Task Card已建立，TASK-P1-01～05=`done`、TASK-P1-06～12=`planned`，当前没有`in_progress` Task；P1-05只实现Normalization与canonical Import producer，DataValidation/Expansion/Snapshot builder仍由后续Task实现。当前授权范围见[`docs/current_phase.md`](docs/current_phase.md)。
+P0-08只形成health-only API、环境配置、日志、lazy DB/Redis connectivity、通用Job reliability/idempotency、Alembic/Compose/CI骨架；它不形成业务pipeline、产品API、真实分布式作业存储、Solver或生产部署。P1的12张有界Task Card已建立，TASK-P1-01～05=`done`、TASK-P1-06=`in_progress`、TASK-P1-07～12=`planned`。P1-06的本地实现现形成`app.data_validation`、error registry v2/error.v3与deterministic ImportQualityReport v1，四类Gate错误分别保持exact code；在provider闭环前Task仍为`in_progress`，且不实施Order Expansion、Snapshot builder、ScheduleValidator或Solver。当前授权范围见[`docs/current_phase.md`](docs/current_phase.md)。

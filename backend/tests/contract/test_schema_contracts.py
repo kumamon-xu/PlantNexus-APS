@@ -1,4 +1,4 @@
-"""TEST-CONTRACT-001: executable P0 schema and domain contract evidence."""
+"""TEST-CONTRACT-001: executable versioned schema and domain evidence."""
 
 from __future__ import annotations
 
@@ -54,6 +54,8 @@ SCHEMA_FILES = (
     "error.schema.json",
     "validation-report.schema.json",
     "error.v2.schema.json",
+    "error.v3.schema.json",
+    "import-quality-report.schema.json",
     "validation-report.v2.schema.json",
     "state-transition.schema.json",
 )
@@ -153,7 +155,7 @@ def test_schemas_do_not_encode_implicit_defaults() -> None:
 
 def test_published_versions_are_consistent() -> None:
     pyproject = tomllib.loads((ROOT / "pyproject.toml").read_text(encoding="utf-8"))
-    assert SCHEMA_VERSION == "2.1.0"
+    assert SCHEMA_VERSION == "2.2.0"
     assert pyproject["tool"]["plantnexus-aps"]["versions"]["schema"] == SCHEMA_VERSION
 
 
@@ -164,13 +166,15 @@ def test_v1_import_and_snapshot_artifacts_are_byte_for_byte_preserved() -> None:
 
 
 def test_synthetic_samples_validate_and_round_trip() -> None:
-    samples = {
-        "import-package.v2.schema.json": "import-package.v2.synthetic.json",
-        "planning-snapshot.schema.json": "planning-snapshot.synthetic.json",
-        "planning-snapshot.v2.schema.json": "planning-snapshot.v2.synthetic.json",
-        "planning-problem.schema.json": "planning-problem.synthetic.json",
-    }
-    for schema_name, sample_name in samples.items():
+    samples = (
+        ("import-package.v2.schema.json", "import-package.v2.synthetic.json"),
+        ("planning-snapshot.schema.json", "planning-snapshot.synthetic.json"),
+        ("planning-snapshot.v2.schema.json", "planning-snapshot.v2.synthetic.json"),
+        ("planning-problem.schema.json", "planning-problem.synthetic.json"),
+        ("import-quality-report.schema.json", "import-quality-report.v1.pass.json"),
+        ("import-quality-report.schema.json", "import-quality-report.v1.fail.json"),
+    )
+    for schema_name, sample_name in samples:
         sample = load_json(SAMPLE_ROOT / sample_name)
         validator(schema_name).validate(sample)
         serialized = json.dumps(sample, sort_keys=True, separators=(",", ":"))
@@ -490,7 +494,7 @@ def test_data_dictionary_covers_every_published_schema() -> None:
     dictionary = yaml.safe_load(
         (ROOT / "schemas" / "data_dictionary.yaml").read_text("utf-8")
     )
-    assert dictionary["schema_set_version"] == "2.1.0"
+    assert dictionary["schema_set_version"] == "2.2.0"
     assert set(dictionary["schemas"]) == {
         "canonical-records.v1",
         "import-package.v1",
@@ -502,12 +506,15 @@ def test_data_dictionary_covers_every_published_schema() -> None:
         "error.v1",
         "validation-report.v1",
         "error.v2",
+        "error.v3",
+        "import-quality-report.v1",
         "validation-report.v2",
         "state-transition.v1",
         "constraint-rule-sheet.v1",
         "unit-conversion-registry.v1",
         "capability-registry.v1",
         "error-code-registry.v1",
+        "error-code-registry.v2",
         "state-machines.v1",
         "factory-profile.v1",
         "scenario-spec.v1",

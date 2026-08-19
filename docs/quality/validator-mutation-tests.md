@@ -48,3 +48,9 @@ TASK-P0-06 已形成不可覆盖的 `SIM-MINIMAL-001@1.0.0` positive baseline，
 [`coverage-matrix.json`](../../fixtures/infeasible/SIM-MINIMAL-001-MUTATIONS/coverage-matrix.json) 对 C-001～C-011 和 missing/duplicate/wrong-resource/overlap/calendar/material/completed/running/lock/max-lag/transport/duration/horizon 13 类 mutation 全量列举，两个 uncovered 数组均为空。[`test_schedule_validator_mutations.py`](../../backend/tests/validation/test_schedule_validator_mutations.py) 独立手写 case→C-ID 与关键秒/tick 算术；[`mutation_check.py`](../../backend/app/planning/validation/mutation_check.py) 再检查 exact artifacts、v2 Schema、determinism、metadata、coverage 和 backend/OR-Tools dependency boundary。
 
 这形成 TEST-VALIDATOR-MUTATION 的 P0 fixture-local correctness evidence。随机生成/shrinking、正式 PlanningProblem/candidate contract、Solver result comparison、规模/性能 Benchmark 和 P2 production Validator 仍 `PLANNED`。
+
+## TASK-P1-06 non-overlap review
+
+TASK-P1-06的negative inputs从canonical Import sample复制后只注入route cycle、orphan/duplicate、resource/capability、unit/duration、calendar/lag/fact/lock错误，输出ImportQualityReport/Error v3。它们不是从合法candidate Schedule产生的C-ID mutation，未读取或改写`SIM-MINIMAL-001-MUTATIONS`、expected outcomes、P0 evaluator或ValidationReport v2。
+
+因此本Task只形成TEST-DATA-QUALITY-001/TEST-INF-NO-RESOURCE/TEST-CAPABILITY-001的input-gate evidence，不能把四个exact data error写成TEST-VALIDATOR-MUTATION新增coverage。P0 positive fixture/hash和13-case mutation资产保持不变；P2 production/performance边界继续`PLANNED`。

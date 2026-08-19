@@ -109,3 +109,7 @@ TASK-P1-04将REQ-001/009、NFR-TRC/SEC/REL与ENG-ARCH/ERR/VER链接到`Reference
 Normalization evidence链必须区分：global schema set版本与immutable Import document字段；mapping profile版本与source system/version；unit registry合同与Production unit policy；Raw transport provenance与canonical hash projection；field normalization与跨实体Data Validation。Same-input bytes/hash、unit/time/ID正反测试不能替代DAG/reference/capability quality report、Snapshot/Problem replay或common-ingress Gate。
 
 TASK-P1-05将REQ-002/003/009、NFR-DET/TRC与ENG-ERR/VER链接到`app.normalization`、`unit-conversion-registry.v1`、TEST-NORMALIZATION-001及扩展TEST-CONTRACT-001。`2.1.0`是additive set version，Import v2 document仍固定`2.0.0`且既有Schema hash保留；OPEN-001/002/013/015、产品error registry和后续Data Validation边界均不改变。
+
+Data Validation evidence链必须区分：Import v2 document/package identity、data-quality rule/error registry/error/report/canonicalization各版本；structure/reference/DAG/resource/capability/time/duration/unit evaluator；PASS零Error与FAIL count等式；rich source/action detail；stable multi-error ordering/report ID；以及仍未形成的Expansion/Snapshot/Problem/common-ingress/ScheduleValidator/Solver/Production authority。固定negative builder不得复用expected report或C-ID公式，也不得把input quality错误写成candidate schedule violation。
+
+TASK-P1-06将REQ-001/002/003/009、NFR-COR/DET/TRC与ENG-ERR/VER链接到`app.data_validation`、error registry v2/Error v3/ImportQualityReport v1、TEST-DATA-QUALITY-001/TEST-INF-NO-RESOURCE/TEST-CAPABILITY-001及扩展TEST-CONTRACT-001。`2.2.0`为additive set release，Import v2=`2.0.0`、unit registry v1=`2.1.0`和历史Error artifacts保持不变；OPEN项、Constraint/ScheduleValidator/Solver边界均未改变。

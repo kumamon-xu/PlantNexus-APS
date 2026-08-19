@@ -76,3 +76,9 @@ TASK-P0-05 的 rule-sheet 代码变更只允许 additive schema set `1.2.0`，�
 [`mutation_check.py`](../../backend/app/planning/validation/mutation_check.py) 以无公式的声明式操作在内存副本上构造 mutation，验证：positive Golden PASS、13 个 negative case FAIL、15 个 hard violations 的 exact report/error、两份 v2 Schema、deterministic replay、Rule Sheet metadata、全部 C-ID 与 required mutation coverage。生成的 `validator-mutation-report.v1` 为 ignored build evidence。
 
 这是 ADR-0005 的 P0 correctness slice，但明确不是 P2 production/performance completion：fixture-local vocabulary 尚未替换为正式 PlanningProblem/candidate contract，未做 Solver comparison、规模/耗时/内存 Benchmark、API/persistence 或 READY_FOR_REVIEW 状态集成。TEST-PROPERTY 和 P2 全链路 Validator 仍 `PLANNED`。
+
+## TASK-P1-06 boundary review
+
+`app.data_validation`是Import输入质量evaluator，不消费PlanningProblem或candidate assignment，也不输出`validation-report.v2`/C-ID。它检查route图本身、canonical references、resource eligibility、unit/duration/time/fact/lock输入自洽；P0 `planning/validation/schedule_validator.py`仍只消费fixture-local schedule并检查C-001～C-011，两者没有import或公式共享。
+
+因此TEST-DATA-QUALITY-001的route/resource/unit/duration负例不能计入TEST-VALIDATOR-MUTATION或READY_FOR_REVIEW Gate。Task的source scan确认Data Validation不导入Planning/backend/OR-Tools/ScheduleValidator；P2 production Validator、Property和Benchmark仍`PLANNED`。

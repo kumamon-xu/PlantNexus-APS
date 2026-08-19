@@ -47,3 +47,9 @@ P0 sample 明确标记 synthetic，且 hash/builder 值标明不是生产结果�
 [`planning-snapshot.v2`](../../schemas/json/planning-snapshot.v2.schema.json)要求schema/source/rule/normalization/expansion/canonicalization versions、Import v2 dataset hash、`import-quality-report.v1` PASS reference、严格entity counts、canonical records、expanded `operation_instances`与`operation_precedence_edges`。实例显式保留DemandOrder→ProductionOrder→ProductionLot→RoutingVersion/Operation lineage、release/material/due、required capabilities、candidate级duration/source version、execution fact和lock引用；COMPLETED可作为Snapshot事实保留。
 
 Synthetic v2必须携带scenario/profile/generator/version/seed，Production v2禁止该provenance。Schema中的`sha256:`字段只固定格式；本Task的contract sample digest是形状占位，不是hash builder证据。canonical serialization、hash projection、deterministic snapshot ID、insert-only repository与immutability测试仍由TASK-P1-08实现，不能从v2 Schema存在推断REQ-002已完成。
+
+## TASK-P1-06 quality-report handoff
+
+`import-quality-report.v1`现在已有真实producer和PASS/FAIL machine contract；只有`status=PASS`且`error_count=0`的报告可满足Snapshot v2既有`import_quality_report`引用语义。报告的`report_id`由版本、package ID、status/count和有序Error v3内容派生，不能引用另一个Import或手工把FAIL改为PASS。
+
+TASK-P1-06不创建Snapshot，也不计算Snapshot schema内的Import dataset hash；TASK-P1-08仍须同时核验报告与目标Import/package hash的绑定并构建immutable payload。当前quality PASS不能替代Expansion、Snapshot entity counts/hash或repository evidence。

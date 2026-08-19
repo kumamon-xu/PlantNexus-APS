@@ -61,3 +61,9 @@ ProductionOrder必须显式携带`release_at_utc`与`material_ready_at_utc`，Sn
 Normalization只接受second precision RFC3339及`Z`或显式numeric offset；naive、date-only、fractional-second和非法offset均为`INVALID_TIMEZONE/DATA_ERROR`。Numeric offset消除DST歧义后转UTC `Z`；原offset仍保留在Raw Staging bytes而不进入canonical instant。Calendar nested interval也执行相同转换并按stable interval ID排序，range/overlap业务判断留给Data Validation。
 
 Duration只接受integer source value与同row显式unit。Registry v1精确支持`s/min/h`，以integer numerator/denominator运算并拒绝non-integral second、negative/zero规则冲突和int64 overflow。它不是OPEN-013的Production unit policy closure；任何额外unit、alias或默认值都必须发布新版本并有权威证据。
+
+## TASK-P1-06 canonical time/calendar/unit validation
+
+Data Validation复核所有canonical instant为UTC `Z`、calendar/lock/execution interval严格递增，并拒绝同一Calendar内显式unavailable intervals重叠；它不猜测OPEN-004的班次合并、跨日或生产日历语义。Routing lag必须为非负整数秒且`max >= min`；execution status-specific事实、positive remaining/completed quantity与remaining duration必须完整。
+
+Product→DemandOrder→ProductionOrder→ProductionLot→ExecutionFact以及Product→RoutingResourceOption的quantity unit必须逐级相等；missing/blank/mismatch输出`UNIT_CONVERSION_ERROR`，但不在Data Validation中转换。Required duration缺失输出`MISSING_DURATION`，非法duration保持`INVALID_DURATION`。OPEN-001/004/007/013/014继续OPEN，test-local时刻与unit不成为生产默认值。

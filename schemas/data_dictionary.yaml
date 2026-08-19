@@ -1,5 +1,5 @@
-schema_set_version: 2.1.0
-status: p1_normalization_rules
+schema_set_version: 2.2.0
+status: p1_data_quality_gate
 spec_version: 0.3.0
 rules:
   unknown_root_fields: reject
@@ -10,7 +10,9 @@ rules:
   canonical_ids: non_empty_whitespace_free_strings
   normalization_mapping: exact_profile_and_source_version_required
   unit_conversion_registry: schemas/rules/unit-conversion-registry.v1.yaml
-  schema_set_compatibility: additive_2_1_preserves_import_v2_document_version
+  data_quality_rule_version: data-quality-rules.v1
+  error_registry: schemas/rules/error-code-registry.v2.yaml
+  schema_set_compatibility: additive_2_2_preserves_import_v2_and_unit_registry_document_versions
 schemas:
   canonical-records.v1:
     path: schemas/json/canonical-records.v1.schema.json
@@ -106,6 +108,19 @@ schemas:
     path: schemas/json/error.v2.schema.json
     compatibility: non-interchangeable document version; error.v1 remains unchanged and separately valid
     codes: schemas/rules/error-code-registry.v1.yaml
+  error.v3:
+    path: schemas/json/error.v3.schema.json
+    compatibility: non-interchangeable document version; error.v1/v2 remain unchanged and separately valid
+    codes: schemas/rules/error-code-registry.v2.yaml
+    required_detail_fields: [entity_type, entity_id, field, observed_value, expected_contract, source_location, action]
+  import-quality-report.v1:
+    path: schemas/json/import-quality-report.schema.json
+    input: import-package.v2
+    rule_version: data-quality-rules.v1
+    error_document: error.v3
+    error_registry: error-code-registry.v2
+    determinism: stable issue ordering and content-derived report_id; no generated_at
+    p1_boundary: canonical structure/reference/DAG/resource/capability/time/duration/unit evaluation only; no expansion, Snapshot, Problem, ScheduleValidator, or Solver
   validation-report.v2:
     path: schemas/json/validation-report.v2.schema.json
     compatibility: non-interchangeable document version; validation-report.v1 remains unchanged and separately valid
@@ -135,6 +150,10 @@ schemas:
   error-code-registry.v1:
     path: schemas/rules/error-code-registry.v1.yaml
     categories: [DATA_ERROR, UNSUPPORTED_CAPABILITY, MODEL_INVALID, INFEASIBLE, NO_SOLUTION_WITHIN_LIMIT, VALIDATION_FAILED, SYSTEM_ERROR]
+  error-code-registry.v2:
+    path: schemas/rules/error-code-registry.v2.yaml
+    compatibility: additive; retains all 19 v1 mappings and adds four P1 data-quality codes
+    p1_gate_codes: [ROUTE_CYCLE, MISSING_RESOURCE, UNIT_CONVERSION_ERROR, MISSING_DURATION]
   state-machines.v1:
     path: schemas/rules/state-machines.v1.yaml
     machines: [PLANNING_RUN, SCHEDULE_VERSION, EXPORT_JOB]

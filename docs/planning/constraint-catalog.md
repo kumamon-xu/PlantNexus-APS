@@ -62,3 +62,9 @@ TASK-P0-05 仅移除 rule completeness CLI 对全局 schema set `1.1.0` 的硬�
 TASK-P0-06 的 test-local direct calculations 使用 `constraint-rule-sheet.v1` ID 集但不读取 formula 决定结果：C-001/003 验证三个 assignment/candidate；C-002 验证 0 与 1800 秒 inclusive lag；C-004 验证同机 `[0,4)`/`[4,6)`；C-005/006 验证 maintenance/material exact boundary；C-009 验证 1800 >= 900 秒 transport；C-010/011 验证 duration/horizon。C-007/008 因无 execution fact/lock 明确 N/A。
 
 该 positive Golden 形成 correctness baseline 和 TEST-GOLDEN-FJSP/CALENDAR/MATERIAL/CROSS-WORKSHOP/MAX-LAG 的 positive slice，不输出 violation 或实现 rule evaluator。TASK-P0-07 以独立 [`schedule_validator.py`](../../backend/app/planning/validation/schedule_validator.py) 和 [`SIM-MINIMAL-001-MUTATIONS@1.0.0`](../../fixtures/infeasible/SIM-MINIMAL-001-MUTATIONS/coverage-matrix.json) 形成所有 C-ID 的 negative fixture slice；duplicate case 按独立命题同时定位 C-001/C-003/C-004，其余 case 均隔离到单一 C-ID。C-001～C-011 语义、rule sheet/version、Schema 和 P2 Solver benchmark 均未改变。
+
+## TASK-P1-06 input-quality review
+
+Routing DAG、resource option/capability、duration/unit与calendar range检查发生在PlanningProblem和candidate schedule之前，输出ImportQualityReport/Error v3而非Constraint violation。`ROUTE_CYCLE`不等同C-002 candidate precedence violation，`MISSING_RESOURCE`不等同C-003 assignment violation，`MISSING_DURATION`/`INVALID_DURATION`不等同C-010 selected duration violation；它们阻止非法输入进入Expansion/Problem。
+
+本Task没有修改C-001～C-018、constraint-rule-sheet.v1、P0 fixture evaluator或ValidationReport v2。新增四个P1 error code不触发Constraint/Solver benchmark；P2仍须在正式Problem/candidate上独立验证全部C-ID。

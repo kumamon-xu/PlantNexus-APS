@@ -1,0 +1,59 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "urn:plantnexus:aps:schema:import-quality-report:v1",
+  "title": "Import Quality Report v1",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "report_version",
+    "schema_set_version",
+    "report_id",
+    "import_package_version",
+    "package_id",
+    "data_quality_rule_version",
+    "error_registry_version",
+    "report_canonicalization_version",
+    "status",
+    "error_count",
+    "errors"
+  ],
+  "properties": {
+    "report_version": {"const": "import-quality-report.v1"},
+    "schema_set_version": {"const": "2.2.0"},
+    "report_id": {
+      "type": "string",
+      "pattern": "^import-quality-[0-9a-f]{64}$"
+    },
+    "import_package_version": {"const": "import-package.v2"},
+    "package_id": {"type": "string", "minLength": 1, "pattern": "^\\S+$"},
+    "data_quality_rule_version": {"const": "data-quality-rules.v1"},
+    "error_registry_version": {"const": "error-code-registry.v2"},
+    "report_canonicalization_version": {"const": "canonical-json.v1"},
+    "status": {"enum": ["PASS", "FAIL"]},
+    "error_count": {"type": "integer", "minimum": 0},
+    "errors": {
+      "type": "array",
+      "items": {"$ref": "urn:plantnexus:aps:schema:error:v3"}
+    }
+  },
+  "allOf": [
+    {
+      "if": {
+        "properties": {"status": {"const": "PASS"}},
+        "required": ["status"]
+      },
+      "then": {
+        "properties": {
+          "error_count": {"const": 0},
+          "errors": {"maxItems": 0}
+        }
+      },
+      "else": {
+        "properties": {
+          "error_count": {"minimum": 1},
+          "errors": {"minItems": 1}
+        }
+      }
+    }
+  ]
+}

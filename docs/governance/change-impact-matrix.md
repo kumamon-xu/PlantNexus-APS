@@ -179,3 +179,9 @@ Adapter/Staging/Normalization/DataValidation/Expansion/Snapshot/Problem builder�
 本Task实际路径命中`IMPACT-SCHEMA`、`IMPACT-IMPORT`、`IMPACT-DEPENDENCY`、`IMPACT-VERSION-METADATA`、`IMPACT-TESTS`、`IMPACT-PHASE`、`IMPACT-GOVERNANCE-REGISTRY`、`IMPACT-DOCS`。启动前先把受global schema断言影响的既有contract tests，以及dependency/phase/governance矩阵强制文档和三份直接architecture说明补入Task Card允许范围；Diff base保持`d63926f84d9d2b7bc46bbcaff5704612af120a34`。
 
 Schema变化只新增unit registry并同步set metadata/data dictionary；Import v2/canonical-records v1原文件、DB/migration、Adapter/Infrastructure、DataValidation/Expansion/Snapshot/Problem、Simulation、API/Job、Solver/Benchmark均未改。`pyproject.toml`无dependency变化，`uv.lock`不变；machine impact rows和registry format version不变，最终以TASK-P1-05 diff report真实matched rows为准。
+
+## TASK-P1-06 matrix review
+
+本Task实际命中`IMPACT-SCHEMA`、`IMPACT-DOMAIN`、`IMPACT-IMPORT`、`IMPACT-DEPENDENCY`、`IMPACT-VERSION-METADATA`、`IMPACT-TESTS`、`IMPACT-PHASE`、`IMPACT-GOVERNANCE-REGISTRY`、`IMPACT-DOCS`。启动前review发现原卡遗漏`IMPACT-DOMAIN/DEPENDENCY/VERSION-METADATA/PHASE/GOVERNANCE-REGISTRY`的若干强制文档、两个受global schema version影响的既有contract tests和Task已要求但未分配路径的ImportQualityReport samples，均已在任何业务实现前补入范围；Diff base固定为`75d761332204ec779477ba7242c98517cce1b68b`。
+
+本Task只新增error registry v2、error.v3、ImportQualityReport v1和`backend/app/data_validation/**`，同步domain pure error/types、schema set metadata与限定测试；旧error/import/canonical/unit artifacts由固定SHA-256证明只读。`pyproject.toml`只改schema metadata、dependency与`uv.lock`不变。Planning ScheduleValidator/constraint formula、Adapter/Staging/Normalization、Expansion/Snapshot/Problem、Simulation、API/HTTP、Solver/Benchmark实现均未修改，因此不声明其他Rule ID；最终以TASK-P1-06 diff report真实changed paths/九行matched/0 issues为准。

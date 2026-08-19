@@ -64,3 +64,9 @@ P0 semantic precheck 会拒绝不存在的 candidate/assigned resource，但不�
 `canonical-records.v1`要求每个`routing_resource_option`显式提供routing operation/resource引用、quantity unit、setup/cycle/final seconds、duration source及其version；`final_duration_seconds > 0`，不含default。`planning-snapshot.v2`的expanded option用`source_version`保留该duration source version，并由pure precheck验证所有candidate字段与canonical option逐项一致。
 
 Snapshot v2的OperationInstance显式引用DemandOrder、ProductionOrder、ProductionLot、RoutingVersion和RoutingOperation，并要求status、quantity/unit、due/release/material UTC、required capabilities、至少一个candidate与lock IDs；RUNNING/COMPLETED必须引用execution fact，NOT_STARTED禁止该引用。Schema/precheck只固定形状和copy不变量；stable ID算法、DAG expansion、completed过滤、capability/data-quality判定与future Problem投影仍分别属于TASK-P1-06/07/09。
+
+## TASK-P1-06 candidate-input gate
+
+Data Validation在Expansion前要求每个RoutingOperation至少一条显式`routing_resource_option`；option的resource必须存在，operation/resource logical pair唯一，setup/cycle为非负整数秒、final duration为正整数秒，且duration source/version非空。缺少duration字段或provenance返回`MISSING_DURATION`，非法数值返回`INVALID_DURATION`，不得补guess或统一工时。
+
+普通设备required capability必须由至少一个候选Resource完整满足；无option、orphan resource或零capability-eligible option返回`MISSING_RESOURCE`。ExecutionFact/OperationLock resource还必须属于其routing operation的显式option。该Gate不选择资源、不计算实例duration、不做C-003/C-010 schedule判定；TASK-P1-07仍负责确定性实例展开。

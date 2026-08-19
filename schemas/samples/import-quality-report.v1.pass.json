@@ -1,0 +1,13 @@
+{
+  "report_id": "import-quality-fbea002cbfe06460f3006e10ddfcc0ed9ab0436e896f7a1734557c14ef550da5",
+  "report_version": "import-quality-report.v1",
+  "schema_set_version": "2.2.0",
+  "import_package_version": "import-package.v2",
+  "package_id": "IMPORT-SCHEMA-SAMPLE-P1-02",
+  "data_quality_rule_version": "data-quality-rules.v1",
+  "error_registry_version": "error-code-registry.v2",
+  "report_canonicalization_version": "canonical-json.v1",
+  "status": "PASS",
+  "error_count": 0,
+  "errors": []
+}

@@ -88,3 +88,9 @@ Snapshot v2额外固定derived OperationInstance/precedence edge与candidate级d
 `app.normalization`把Raw Staging transport row按显式MappingProfile转换为16个canonical collection中的记录，自动注入稳定source reference并生成Import v2 bytes/hash。Profile字段集由canonical-records.v1 required/optional properties的contract test逐项对齐；必填字段不能标为optional，`source`不能由payload伪造。
 
 该层只负责字段值规范化和deterministic serialization。它不验证跨记录引用是否存在、不判断Routing DAG/capability、execution state组合或calendar range，不生成Lot/OperationInstance，也不构建Snapshot/Problem。上述语义仍分别属于TASK-P1-06/07/08/09。
+
+## TASK-P1-06 data-quality type boundary
+
+`domain/contracts.py`新增Error v3 rich detail与ImportQualityReport v1的JSON-compatible types；`domain/errors.py`保留原`ProductErrorCode`/v1 mapping，同时以独立`ProductErrorCodeV2`/mapping additive登记四项P1 DATA_ERROR。历史19项类型和consumer没有alias或重解释。
+
+`app.data_validation`在Canonical Records之上形成best-effort multi-error evaluator，按source identity而非数组位置报告结构、lineage、DAG、resource/capability、time/duration/unit/fact/lock问题。它不修改canonical records、不创建OperationInstance、不依赖ORM/API/Planning/OR-Tools，也不是P0/P2 candidate ScheduleValidator。

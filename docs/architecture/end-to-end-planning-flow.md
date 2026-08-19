@@ -50,4 +50,6 @@ Replan 不修改旧 ScheduleVersion。它使用旧版本、执行事实、新 Sn
 
 ## P1 implementation status
 
-TASK-P1-03/04已形成Raw Staging与ReferenceFileAdapter；TASK-P1-05现形成`RawImportRow → explicit MappingProfile/unit registry → canonical Import v2 bytes/hash`。该实现只到流程图的Normalization输出，未跨越Data Validation。Route/reference/capability检查、Order Expansion、Snapshot/Problem及Solver仍必须按TASK-P1-06～09顺序进入，任何consumer不得直接从Adapter/Raw payload跳到后续层。
+TASK-P1-03/04已形成Raw Staging与ReferenceFileAdapter；TASK-P1-05形成`RawImportRow → explicit MappingProfile/unit registry → canonical Import v2 bytes/hash`；TASK-P1-06现形成canonical structure/reference/DAG/resource/capability/time/duration Data Validation与deterministic ImportQualityReport。Import门只有报告PASS/0 errors才通过，四类Gate问题使用exact DATA_ERROR，unsupported capability保持独立category。
+
+当前链路止于Data Validation输出：尚未将DemandOrder/Lot/Routing展开为OperationInstance，也未创建Snapshot/Problem/Solver。任何consumer不得从Adapter/Raw/Normalization或FAIL report跳到TASK-P1-07～09后续层；P0/P2 ScheduleValidator仍只验证candidate schedule，与本输入Gate不同。

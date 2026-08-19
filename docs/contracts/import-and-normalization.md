@@ -91,3 +91,11 @@ Reference reader固定4 MiB文件、10000 data rows、3 columns、单sheet、512
 `unit-conversion-registry.v1`只批准`s/min/h → second`的整数因子。duration必须是显式整数和显式unit，使用multiply/divmod且拒绝missing、unknown、negative、non-integral second与int64 overflow；timestamp必须是second precision且带`Z`或numeric offset，随后转为UTC `Z`。ID由namespace/source system/source value的canonical JSON SHA-256稳定派生；record/collection排序、mapping/unit versions和source versions进入Import bytes。
 
 Producer生成Import v2固定document字段`schema_set_version=2.0.0`、`canonicalization_version=canonical-json.v1`、内容派生package ID及`dataset_hash=sha256(canonical bytes)`。batch ID、received-at、file digest/name/media/location不污染canonical bytes；它们继续留在Raw Staging provenance。Production输出禁止synthetic provenance，Simulation要求各batch完全一致。该producer不调用canonical cross-reference/DAG/capability evaluator；TASK-P1-06仍拥有multi-error Data Validation与route/resource exact rejection。
+
+## TASK-P1-06 deterministic Data Validation
+
+`app.data_validation`只消费Import v2 JSON-compatible document，以稳定ID/record fingerprint建立不依赖数组位置的view，收集严格root/collection/record/source、16类引用和lineage、route-local DAG、logical duplicate、calendar interval、UTC、lag、duration、quantity unit、execution fact、lock及resource option问题。每个RoutingOperation必须至少有一个可解析且满足ordinary machine capability的候选资源；capability registry中UNSUPPORTED/DEFERRED名称独立返回`UNSUPPORTED_CAPABILITY`，不得被当作普通设备标签静默执行。
+
+四类P1 Gate固定为`ROUTE_CYCLE`、`MISSING_RESOURCE`、`UNIT_CONVERSION_ERROR`、`MISSING_DURATION`，均属于`DATA_ERROR`。`import-quality-report.v1`绑定package ID、`data-quality-rules.v1`、`error-code-registry.v2`与`canonical-json.v1`，按code/entity/field/source/observed稳定排序，不含时间戳；Error v3逐项携带entity type/ID、field、observed、expected、source location和action。合法sample为PASS/0，结构不完整输入也返回可验证FAIL报告而不是首错崩溃。
+
+该Gate不证明真实Production source authority，也不执行Order/Lot/OperationInstance expansion、Snapshot/Problem hash、C-001～C-011 candidate ScheduleValidator、infeasibility或Solver。Normalization的module-local首错仍保留；只有进入canonical evaluator后的结果使用产品error registry v2/report v1。

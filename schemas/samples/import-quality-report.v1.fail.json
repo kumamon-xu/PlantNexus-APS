@@ -1,0 +1,142 @@
+{
+  "report_id": "import-quality-2e957d46dcd4746a63058d2e616d800dc6e7cf579b58d3a918ecca341f135d6e",
+  "report_version": "import-quality-report.v1",
+  "schema_set_version": "2.2.0",
+  "import_package_version": "import-package.v2",
+  "package_id": "IMPORT-SCHEMA-SAMPLE-P1-02",
+  "data_quality_rule_version": "data-quality-rules.v1",
+  "error_registry_version": "error-code-registry.v2",
+  "report_canonicalization_version": "canonical-json.v1",
+  "status": "FAIL",
+  "error_count": 7,
+  "errors": [
+    {
+      "error_version": "error.v3",
+      "category": "DATA_ERROR",
+      "code": "MISSING_DURATION",
+      "message": "Required RoutingResourceOption field is missing",
+      "details": [
+        {
+          "entity_type": "RoutingResourceOption",
+          "entity_id": "ROUTING-OPTION-001",
+          "field": "final_duration_seconds",
+          "observed_value": null,
+          "expected_contract": "required canonical-records.v1 field final_duration_seconds",
+          "source_location": "schema_sample@1.0.0:SRC-ROUTING-OPTION-001#routing_resource_options.final_duration_seconds",
+          "action": "provide explicit final_duration_seconds; no default is allowed"
+        }
+      ]
+    },
+    {
+      "error_version": "error.v3",
+      "category": "DATA_ERROR",
+      "code": "MISSING_RESOURCE",
+      "message": "Fact or lock resource is not eligible for its routing operation",
+      "details": [
+        {
+          "entity_type": "ExecutionFact",
+          "entity_id": "EXECUTION-FACT-001",
+          "field": "resource_id",
+          "observed_value": "RESOURCE-001",
+          "expected_contract": "resource is an explicit option for the routing operation",
+          "source_location": "schema_sample@1.0.0:SRC-EXECUTION-FACT-001#execution_facts.resource_id",
+          "action": "repair the fact/lock resource or the authoritative routing option"
+        }
+      ]
+    },
+    {
+      "error_version": "error.v3",
+      "category": "DATA_ERROR",
+      "code": "MISSING_RESOURCE",
+      "message": "Fact or lock resource is not eligible for its routing operation",
+      "details": [
+        {
+          "entity_type": "OperationLock",
+          "entity_id": "LOCK-001",
+          "field": "resource_id",
+          "observed_value": "RESOURCE-001",
+          "expected_contract": "resource is an explicit option for the routing operation",
+          "source_location": "schema_sample@1.0.0:SRC-LOCK-001#operation_locks.resource_id",
+          "action": "repair the fact/lock resource or the authoritative routing option"
+        }
+      ]
+    },
+    {
+      "error_version": "error.v3",
+      "category": "DATA_ERROR",
+      "code": "MISSING_RESOURCE",
+      "message": "Routing operation has no capability-eligible resource",
+      "details": [
+        {
+          "entity_type": "RoutingOperation",
+          "entity_id": "ROUTING-OP-001",
+          "field": "required_capabilities/resource_options",
+          "observed_value": [
+            {
+              "missing_capabilities": ["CUTTING"],
+              "resolvable": false,
+              "resource_id": "RESOURCE-MISSING"
+            }
+          ],
+          "expected_contract": "at least one resolvable resource option satisfies all operational capabilities",
+          "source_location": "schema_sample@1.0.0:SRC-ROUTING-OP-001#routing_operations.required_capabilities/resource_options",
+          "action": "add a capability-eligible resource option or repair resource capabilities"
+        }
+      ]
+    },
+    {
+      "error_version": "error.v3",
+      "category": "DATA_ERROR",
+      "code": "MISSING_RESOURCE",
+      "message": "Canonical resource_id reference cannot be resolved",
+      "details": [
+        {
+          "entity_type": "RoutingResourceOption",
+          "entity_id": "ROUTING-OPTION-001",
+          "field": "resource_id",
+          "observed_value": "RESOURCE-MISSING",
+          "expected_contract": "reference to an existing Resource",
+          "source_location": "schema_sample@1.0.0:SRC-ROUTING-OPTION-001#routing_resource_options.resource_id",
+          "action": "provide the referenced resources record or correct resource_id"
+        }
+      ]
+    },
+    {
+      "error_version": "error.v3",
+      "category": "DATA_ERROR",
+      "code": "ROUTE_CYCLE",
+      "message": "Routing version contains a directed cycle",
+      "details": [
+        {
+          "entity_type": "RoutingVersion",
+          "entity_id": "ROUTING-001-V1",
+          "field": "routing_precedence_edges",
+          "observed_value": {
+            "cycle_operation_ids": ["ROUTING-OP-001", "ROUTING-OP-002"],
+            "routing_version_id": "ROUTING-001-V1"
+          },
+          "expected_contract": "directed acyclic graph per routing version",
+          "source_location": "schema_sample@1.0.0:SRC-ROUTING-001-V1#routing_versions.routing_precedence_edges",
+          "action": "remove or redirect at least one edge in the reported cycle"
+        }
+      ]
+    },
+    {
+      "error_version": "error.v3",
+      "category": "DATA_ERROR",
+      "code": "UNIT_CONVERSION_ERROR",
+      "message": "Canonical quantity unit is inconsistent with its lineage",
+      "details": [
+        {
+          "entity_type": "RoutingResourceOption",
+          "entity_id": "ROUTING-OPTION-001",
+          "field": "quantity_unit",
+          "observed_value": {"expected": "piece", "observed": "kg"},
+          "expected_contract": "quantity unit exactly matches its canonical lineage authority",
+          "source_location": "schema_sample@1.0.0:SRC-ROUTING-OPTION-001#routing_resource_options.quantity_unit",
+          "action": "apply an explicit versioned unit conversion before validation"
+        }
+      ]
+    }
+  ]
+}

@@ -38,3 +38,7 @@ TASK-P0-07 的 13 个声明式 mutation 验证 deterministic replay、base immut
 TASK-P1-02对两份固定synthetic v2 sample执行serialization round-trip，并对canonical reference/unit/time/duration/provenance与Snapshot count/copy不变量做明确mutation负例。这只形成TEST-CONTRACT-001的deterministic contract evidence；没有Hypothesis/random generator、shrinking、seed corpus或Snapshot/Problem hash性质，因此TASK-P1-07/08的P1 property tests与P2 TEST-PROPERTY仍为`PLANNED`。
 
 TASK-P1-05以固定构造覆盖三项deterministic properties：row/input order与volatile batch metadata不改变canonical bytes/hash；mapping profile version改变必然改变bytes/hash；namespaced source identity稳定派生ID且不同namespace/authority不碰撞。另以枚举负例覆盖unit integer arithmetic、DST offsets和schema field-set invariant。这些是TEST-NORMALIZATION-001/TEST-CONTRACT-001的固定property-style evidence，不含随机生成、shrinking或seed corpus；P1-07/08与P2 TEST-PROPERTY继续`PLANNED`。
+
+TASK-P1-06以固定canonical sample和显式mutations验证三项deterministic properties：合法输入重复运行得到同report bytes/ID；collection/record/list顺序重排不改变有序Error/report；四类Gate与多错误组合保持exact code/category/source evidence。另覆盖DAG SCC、orphan/duplicate、calendar/lag/fact和capability/resource负例。
+
+这些属于TEST-DATA-QUALITY-001的固定property-style evidence，不使用Hypothesis/random generator/shrinking，也不生成合法PlanningProblem或candidate schedule。P1-07/08的Expansion/Snapshot property与P2 TEST-PROPERTY继续`PLANNED`。

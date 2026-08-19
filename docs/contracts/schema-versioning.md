@@ -94,3 +94,13 @@ Schema set 与 `app.SCHEMA_VERSION` 均保持 `1.2.0`；没有修改 `schemas/**
 - Validation：unit registry contract、Schema/data-dictionary同步、stable ID/UTC/integer seconds、same-input replay、mapping-version mutation和负向DATA_ERROR均由TEST-CONTRACT-001/TEST-NORMALIZATION-001覆盖。
 
 `pyproject.toml`本次只改版本metadata，没有dependency或lock graph变化；`uv.lock`保持不变。规则版本变化必须发布新registry文件并回放canonical hashes，不能原地更改v1语义。
+
+## TASK-P1-06 additive data-quality release
+
+- Schema set：`2.2.0`，同步更新`pyproject.toml`、`app.SCHEMA_VERSION`与data dictionary；新增`error-code-registry.v2`、`error.v3`、`import-quality-report.v1`和明确PASS/FAIL samples；
+- Preservation：canonical-records.v1、Import v2、error.v1、error.v2、error registry v1与unit registry v1的固定SHA-256继续逐字不变。Import v2 document仍固定`2.0.0`，unit registry v1仍固定`2.1.0`；
+- Compatibility：registry v2只在保留19项code/category映射后增加四项DATA_ERROR；Error v3和Report v1是显式新consumer合同，Error v1/v2不得alias为v3。Report跨URN引用Error v3，validator必须使用显式registry而非网络解析；
+- Migration：无数据库migration、无历史Error/Import改写。旧consumer显式停留v1/v2，新Data Validation consumer选择registry v2/Error v3/report v1；禁止`latest`重解释历史Error；
+- Replay：同package与相同issue集合得到同排序、canonical bytes和report ID，PASS/FAIL sample与正反Schema/count/identity tests固定该行为。
+
+本次没有dependency变化，`uv.lock`保持不变；也没有Snapshot/Problem/Solver/HTTP contract。未来改变四类Gate映射、detail必填字段、排序或report ID projection必须发布新registry/document version并提供兼容与重放证据。

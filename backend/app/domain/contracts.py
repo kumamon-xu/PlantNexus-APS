@@ -143,6 +143,46 @@ class ErrorDocumentV2(TypedDict):
     details: list[ErrorDetailDocument]
 
 
+class ErrorDetailDocumentV3(TypedDict):
+    entity_type: str
+    entity_id: str
+    field: str
+    observed_value: JsonValue
+    expected_contract: str
+    source_location: str
+    action: str
+
+
+class ErrorDocumentV3(TypedDict):
+    error_version: Literal["error.v3"]
+    category: Literal[
+        "DATA_ERROR",
+        "UNSUPPORTED_CAPABILITY",
+        "MODEL_INVALID",
+        "INFEASIBLE",
+        "NO_SOLUTION_WITHIN_LIMIT",
+        "VALIDATION_FAILED",
+        "SYSTEM_ERROR",
+    ]
+    code: str
+    message: str
+    details: list[ErrorDetailDocumentV3]
+
+
+class ImportQualityReportDocument(TypedDict):
+    report_version: Literal["import-quality-report.v1"]
+    schema_set_version: Literal["2.2.0"]
+    report_id: str
+    import_package_version: Literal["import-package.v2"]
+    package_id: str
+    data_quality_rule_version: Literal["data-quality-rules.v1"]
+    error_registry_version: Literal["error-code-registry.v2"]
+    report_canonicalization_version: Literal["canonical-json.v1"]
+    status: Literal["PASS", "FAIL"]
+    error_count: int
+    errors: list[ErrorDocumentV3]
+
+
 class ValidationViolationDocumentV2(TypedDict):
     constraint_id: Literal[
         "C-001",
@@ -176,8 +216,11 @@ __all__ = [
     "CanonicalRecordsDocument",
     "ErrorDocument",
     "ErrorDocumentV2",
+    "ErrorDocumentV3",
+    "ErrorDetailDocumentV3",
     "ImportPackageDocument",
     "ImportPackageDocumentV2",
+    "ImportQualityReportDocument",
     "JsonValue",
     "KpiDocument",
     "OperationInstanceDocument",

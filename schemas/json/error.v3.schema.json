@@ -1,0 +1,154 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "urn:plantnexus:aps:schema:error:v3",
+  "title": "APS Error v3",
+  "type": "object",
+  "additionalProperties": false,
+  "required": ["error_version", "category", "code", "message", "details"],
+  "properties": {
+    "error_version": {"const": "error.v3"},
+    "category": {
+      "enum": [
+        "DATA_ERROR",
+        "UNSUPPORTED_CAPABILITY",
+        "MODEL_INVALID",
+        "INFEASIBLE",
+        "NO_SOLUTION_WITHIN_LIMIT",
+        "VALIDATION_FAILED",
+        "SYSTEM_ERROR"
+      ]
+    },
+    "code": {
+      "enum": [
+        "INVALID_TIME",
+        "DUPLICATE_ID",
+        "MISSING_SCENARIO_ID",
+        "SYNTHETIC_REFERENCE_IN_PRODUCTION",
+        "INVALID_ENTITY_COUNT",
+        "INVALID_DURATION",
+        "INVALID_TIME_RANGE",
+        "MISSING_RUNNING_FACT",
+        "INVALID_REFERENCE",
+        "INVALID_LAG_RANGE",
+        "INVALID_CAPABILITY_DECLARATION",
+        "DUPLICATE_CAPABILITY",
+        "INVALID_STATE_TRANSITION",
+        "ROUTE_CYCLE",
+        "MISSING_RESOURCE",
+        "UNIT_CONVERSION_ERROR",
+        "MISSING_DURATION",
+        "UNSUPPORTED_CAPABILITY",
+        "MODEL_INVALID",
+        "INFEASIBLE",
+        "NO_SOLUTION_WITHIN_LIMIT",
+        "SCHEDULE_VALIDATION_FAILED",
+        "SYSTEM_ERROR"
+      ]
+    },
+    "message": {"type": "string", "minLength": 1},
+    "details": {
+      "type": "array",
+      "minItems": 1,
+      "items": {"$ref": "#/$defs/detail"}
+    }
+  },
+  "allOf": [
+    {
+      "oneOf": [
+        {
+          "properties": {
+            "category": {"const": "DATA_ERROR"},
+            "code": {
+              "enum": [
+                "INVALID_TIME",
+                "DUPLICATE_ID",
+                "MISSING_SCENARIO_ID",
+                "SYNTHETIC_REFERENCE_IN_PRODUCTION",
+                "INVALID_ENTITY_COUNT",
+                "INVALID_DURATION",
+                "INVALID_TIME_RANGE",
+                "MISSING_RUNNING_FACT",
+                "INVALID_REFERENCE",
+                "INVALID_LAG_RANGE",
+                "INVALID_CAPABILITY_DECLARATION",
+                "DUPLICATE_CAPABILITY",
+                "INVALID_STATE_TRANSITION",
+                "ROUTE_CYCLE",
+                "MISSING_RESOURCE",
+                "UNIT_CONVERSION_ERROR",
+                "MISSING_DURATION"
+              ]
+            }
+          },
+          "required": ["category", "code"]
+        },
+        {
+          "properties": {
+            "category": {"const": "UNSUPPORTED_CAPABILITY"},
+            "code": {"const": "UNSUPPORTED_CAPABILITY"}
+          },
+          "required": ["category", "code"]
+        },
+        {
+          "properties": {
+            "category": {"const": "MODEL_INVALID"},
+            "code": {"const": "MODEL_INVALID"}
+          },
+          "required": ["category", "code"]
+        },
+        {
+          "properties": {
+            "category": {"const": "INFEASIBLE"},
+            "code": {"const": "INFEASIBLE"}
+          },
+          "required": ["category", "code"]
+        },
+        {
+          "properties": {
+            "category": {"const": "NO_SOLUTION_WITHIN_LIMIT"},
+            "code": {"const": "NO_SOLUTION_WITHIN_LIMIT"}
+          },
+          "required": ["category", "code"]
+        },
+        {
+          "properties": {
+            "category": {"const": "VALIDATION_FAILED"},
+            "code": {"const": "SCHEDULE_VALIDATION_FAILED"}
+          },
+          "required": ["category", "code"]
+        },
+        {
+          "properties": {
+            "category": {"const": "SYSTEM_ERROR"},
+            "code": {"const": "SYSTEM_ERROR"}
+          },
+          "required": ["category", "code"]
+        }
+      ]
+    }
+  ],
+  "$defs": {
+    "detail": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "entity_type",
+        "entity_id",
+        "field",
+        "observed_value",
+        "expected_contract",
+        "source_location",
+        "action"
+      ],
+      "properties": {
+        "entity_type": {"type": "string", "minLength": 1},
+        "entity_id": {"type": "string", "minLength": 1},
+        "field": {"type": "string", "minLength": 1},
+        "observed_value": true,
+        "expected_contract": {"type": "string", "minLength": 1},
+        "source_location": {"type": "string", "minLength": 1},
+        "action": {"type": "string", "minLength": 1}
+      }
+    }
+  }
+}

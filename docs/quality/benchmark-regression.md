@@ -60,3 +60,9 @@ OR-Tools仍不存在，Solver replay Gate不触发。后续如文件解析成为
 本Task新增pure Normalization与canonical serialization，但不修改PlanningProblem、constraint、Solver、model-size preprocessing、BenchmarkRunner/profile或baseline；OR-Tools仍不存在。定向测试的小批次records/sec只可作为非门禁诊断，本Task不记录吞吐/内存/Production capacity或零值BenchmarkReport。
 
 Mapping/unit rule version已进入Import hash，未来TASK-P1-09/P2 benchmark必须记录该version与dataset/problem hashes。Production阈值仍由OPEN-012/P7授权，本次不触发Solver replay Gate。
+
+## TASK-P1-06 review
+
+本Task新增标准库DAG/reference/resource/capability/time/duration evaluator，但不修改PlanningProblem、Constraint、Solver或model-size preprocessing，也没有BenchmarkRunner/profile/baseline。定向small synthetic package只用于correctness；不记录rows/sec、runtime、memory、factory scale或Production capacity，不生成零值BenchmarkReport。
+
+未来TASK-P1-11/P2 benchmark应把data-quality-rules.v1、error registry v2与PASS report ID纳入input provenance，并在correctness失败时先停止。OR-Tools仍不存在，Solver replay Gate不触发，OPEN-012保持OPEN。

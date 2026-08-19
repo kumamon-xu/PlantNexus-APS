@@ -68,3 +68,10 @@ TASK-P0-05 已在 `simulation/profiles`、`simulation/scenarios`、`simulation/g
 - Runtime unit registry通过mapping注入，不读取文件或数据库；MappingProfile必须精确绑定source/version和registry version，不访问Adapter路径、repository或环境配置。
 - 模块不导入`app.data_validation`、`app.snapshots`、`app.planning`或OR-Tools；测试以source scan固定这一边界。跨实体precheck只在测试中证明后续validator仍能拒绝missing reference，producer本身不调用。
 - Transport metadata继续由`importers`/Infrastructure拥有，Normalization不持久化、不创建migration/API/Job，也不生成Lot/OperationInstance/Snapshot/Problem。
+
+## TASK-P1-06 Data Validation boundaries
+
+- `data_validation/contracts.py`只定义report/version、canonical serializer和有序issue collector；`references.py`建立非位置化view并检查structure/source/reference/lineage；`routing.py`检查DAG/time/calendar/unit/duration/fact/lock；`capabilities.py`检查platform declaration与resource eligibility；
+- evaluator只读Import v2 Mapping并总是返回Error v3/ImportQualityReport v1，不修改Normalization output、不访问Raw repository、DB、API、Job或环境配置；
+- package source scan禁止`app.planning`、OR-Tools、CpSat与ScheduleValidator依赖。Input-quality DAG/resource规则不复用P0 fixture-local schedule evaluator或C-001～C-011公式；
+- 本模块不展开订单、不创建Snapshot/Problem、不持久化报告、不映射HTTP。TASK-P1-07 consumer只能接收PASS report与原canonical Import，不能绕过本Gate。

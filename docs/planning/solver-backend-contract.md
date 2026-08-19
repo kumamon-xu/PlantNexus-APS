@@ -72,3 +72,9 @@ Canonical records、Import v2与Snapshot v2均为JSON-compatible machine合同/p
 Schema metadata提升到`2.1.0`但runtime dependency和`uv.lock`图不变，仍无OR-Tools。`app.normalization`输出Import v2 JSON bytes/hash，不构建PlanningProblem/tick/CpModel/IntervalVar/SolverBackend/PlanningSolution/status，并以source scan禁止`app.planning`/OR-Tools import。
 
 因此Solver upgrade/ADR/Golden/Scenario/Benchmark Gate不触发。未来Backend只能消费TASK-P1-09的solver-neutral PlanningProblem，不能直接读取Normalization result来跳过Data Validation、Expansion与Snapshot。
+
+## TASK-P1-06 dependency boundary review
+
+Schema set提升到`2.2.0`只新增Error/ImportQualityReport/Data Validation；runtime dependency和`uv.lock`图不变且仍无OR-Tools。Evaluator终止于PASS/FAIL report，不构建OperationInstance、PlanningProblem/tick/CpModel/IntervalVar/SolverBackend/PlanningSolution/status，也以source scan禁止Planning/Solver/ScheduleValidator import。
+
+因此本Task不触发Solver upgrade、ADR、Golden/Scenario或Benchmark replay。未来Backend仍只能消费TASK-P1-09的Problem，并且上游必须已有与同一Import绑定的PASS quality report；Backend不得把FAIL输入解释为INFEASIBLE或尝试“修复”。

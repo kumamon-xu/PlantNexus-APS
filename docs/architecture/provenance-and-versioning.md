@@ -98,3 +98,9 @@ Adapter从实际bounded bytes计算content SHA-256，并把leaf name/media type/
 Schema set additive `2.1.0`新增unit registry；Import v2 document自身仍固定`2.0.0`。Canonical `normalization_rule_version`确定性组合所有source-bound `profile_id@profile_version`与`unit-conversion-registry.v1`，source versions排序进入envelope；record source reference保留满足canonical identifier约束的显式source record ID，业务canonical ID则由namespace/authority/source value稳定哈希派生。Mapping或unit version变化必然改变bytes/hash。
 
 Package ID从不含package ID的semantic envelope SHA-256派生，dataset hash覆盖最终`canonical-json.v1` bytes。Batch ID、idempotency key、received-at、file digest/name/media/location属于Raw Staging审计事实且不进入canonical hash，因此等价CSV/XLSX或重放批次可产生相同bytes。Simulation provenance必须完全一致并进入hash；Production禁止该字段。
+
+## TASK-P1-06 quality provenance
+
+Schema set additive `2.2.0`新增`error-code-registry.v2`、Error v3和ImportQualityReport v1；Import v2仍携带document-level `2.0.0`，unit registry v1仍为`2.1.0`。Quality report显式记录package ID、data-quality rule version、error registry version和report canonicalization version；不含generated-at、run ID或随机UUID。
+
+每个issue以canonical entity/source/field定位并按稳定key排序；report ID对除self ID外的全部报告内容做`canonical-json.v1 + SHA-256`。因此相同package ID与相同issue集合得到byte-identical report，输入collection顺序不会改变Error顺序/ID。Snapshot v2仍须由TASK-P1-08把PASS report ID与Import dataset hash一起绑定；当前报告不替代Snapshot/Problem/code commit或publish provenance。

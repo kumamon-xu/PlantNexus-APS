@@ -104,3 +104,5 @@ Rollback:
 P1及以后 Task必须单列 `Completion conditions`，把“实现目标、负向路径、文档/追踪、提交前后治理和明确排除项均满足”写成可核验条件；不能只写“测试通过”或重复 Goal。
 
 若Task做set-level additive schema release但保留既有document版本，`Schema changes`和completion evidence必须分别记录global set version、各document内固定version、preserved artifact hash和consumer compatibility；不得用全局版本搜索替换改写immutable旧合同。Versioned mapping/rule还必须说明历史rows如何显式选择版本及禁止`latest`重解释。
+
+涉及canonical Data Validation/quality report时还必须记录：输入document/rule/error/report/canonicalization各自版本、旧Error/registry fingerprint、PASS零Error与FAIL count等式、四类P1 exact code/category、rich source/action evidence、multi-error stable ordering、report ID projection、malformed input不崩溃、capability/resource/DAG边界，以及与Normalization、Expansion、Snapshot/Problem、ScheduleValidator/Solver的依赖隔离。固定sample不得写成Production authority或common-ingress evidence。

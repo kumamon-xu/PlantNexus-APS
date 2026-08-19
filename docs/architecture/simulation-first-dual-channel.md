@@ -62,4 +62,6 @@ TASK-P0-05 以七层 pure Protocol 固定 Generator 责任，并提供 `build_em
 
 `canonical-json.v1` 的 hash 输入是完整 canonical Import package bytes，不含 manifest `generated_at`。相同 Profile/Scenario/Generator version/seed 得到相同 package/hash；generator version 或 seed 变化会进入 source provenance 并改变 hash。Development/Test/Benchmark 可创建 context，`production` 在 context 建立阶段以 `SYNTHETIC_REFERENCE_IN_PRODUCTION` 拒绝。
 
-TASK-P1-03～05已形成双方共用的Raw Staging、Reference transport和Normalization primitive：Simulation batch必须携带一致Scenario/Profile/Generator/seed，Production batch禁止这些字段；两者随后使用同一MappingProfile/unit/time/ID/canonical serializer。当前仍没有Synthetic Generator→staging orchestration或Data Validation/Snapshot/Problem common-ingress Gate，因此不能把单元测试视为完整双通道闭环。
+TASK-P1-03～05已形成双方共用的Raw Staging、Reference transport和Normalization primitive：Simulation batch必须携带一致Scenario/Profile/Generator/seed，Production batch禁止这些字段；两者随后使用同一MappingProfile/unit/time/ID/canonical serializer。TASK-P1-06新增单一`app.data_validation` evaluator，既不读取data plane也不提供synthetic-only规则；Production/Simulation canonical Import必须得到相同结构/reference/DAG/resource/capability/time/unit/duration判定。
+
+当前仍没有Synthetic Generator→staging orchestration、Order Expansion、Snapshot/Problem或TASK-P1-11 common-ingress Gate，因此固定schema sample的quality PASS不能视为完整双通道闭环或独立数据库隔离证据。Simulation不得直接伪造PASS report或绕过Data Validation。

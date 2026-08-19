@@ -28,4 +28,4 @@ Milestone 定义 outcome 和 exit gate，不等同 Sprint。只有当前 Phase �
 
 P0 当前状态：TASK-P0-01～10 全部完成；[superseding audit](P0-exit-gate-audit-report.md) 的 Schema、Golden、Validator Rule Sheet、Scenario replay、Repository Build、CI 和 PROD_OPEN registration全部 `PASS`，P0 Gate=`READY`。用户于 2026-08-19 明确批准 phase transition后，P0转为 `completed`，历史失败/修复/provider evidence继续保留。
 
-P1当前状态：[`P1 — Data & Snapshot`](P1-data-and-snapshot.md)为`active`，已创建TASK-P1-01～12；TASK-P1-01～06=`done`、TASK-P1-07=`in_progress`、TASK-P1-08～12=`planned`，最后一项仍是P1 Exit Gate Audit。P1-06的implementation commit `c1ac1077fdd92e012f4050f30bab2aec4638f6ec`与GitHub Actions run `32257767495`已使DataValidation证据闭环；P1-07以`97728521e187f9f50715de4b04a09098bef62ddf`为Diff base形成本地order-expansion/property/CI候选并通过14 targeted/219 full tests，provider evidence pending，不涉及P2。
+P1当前状态：[`P1 — Data & Snapshot`](P1-data-and-snapshot.md)为`active`，已创建TASK-P1-01～12；TASK-P1-01～07=`done`、TASK-P1-08～12=`planned`，最后一项仍是P1 Exit Gate Audit。P1-07的implementation commit `5a3dbc14c12a107abf4052cca935e3ef59009d3d`与GitHub Actions run `32265257468`已使Order Expansion/property/CI证据闭环；下一项建议为TASK-P1-08，但尚未启动且不涉及P2。

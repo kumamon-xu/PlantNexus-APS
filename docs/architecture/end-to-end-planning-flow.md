@@ -50,6 +50,6 @@ Replan 不修改旧 ScheduleVersion。它使用旧版本、执行事实、新 Sn
 
 ## P1 implementation status
 
-TASK-P1-03/04已形成Raw Staging与ReferenceFileAdapter；TASK-P1-05形成`RawImportRow → explicit MappingProfile/unit registry → canonical Import v2 bytes/hash`；TASK-P1-06现形成canonical structure/reference/DAG/resource/capability/time/duration Data Validation与deterministic ImportQualityReport。Import门只有报告PASS/0 errors才通过，四类Gate问题使用exact DATA_ERROR，unsupported capability保持独立category。
+TASK-P1-03/04已形成Raw Staging与ReferenceFileAdapter；TASK-P1-05形成`RawImportRow → explicit MappingProfile/unit registry → canonical Import v2 bytes/hash`；TASK-P1-06形成canonical structure/reference/DAG/resource/capability/time/duration Data Validation与deterministic ImportQualityReport。Import门只有报告PASS/0 errors才通过，四类Gate问题使用exact DATA_ERROR，unsupported capability保持独立category。
 
-当前链路止于Data Validation输出：尚未将DemandOrder/Lot/Routing展开为OperationInstance，也未创建Snapshot/Problem/Solver。任何consumer不得从Adapter/Raw/Normalization或FAIL report跳到TASK-P1-07～09后续层；P0/P2 ScheduleValidator仍只验证candidate schedule，与本输入Gate不同。
+TASK-P1-07现只在matching PASS report之后，以`order-expansion.v1`把source-explicit DemandOrder/ProductionOrder/Lot/Routing确定性展开为OperationInstance与逐lot precedence edge，并保留candidate duration/source、fact/lock和versioned lineage。当前链路因此止于纯Order Expansion输出；尚未创建immutable Snapshot、PlanningProblem或Solver。任何consumer不得从Adapter/Raw/Normalization或FAIL report绕过Data Validation进入Expansion，也不得把Expansion hash当作Snapshot/Problem hash；P0/P2 ScheduleValidator仍只验证candidate schedule，与本输入Gate不同。

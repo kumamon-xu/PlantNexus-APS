@@ -189,9 +189,9 @@ TASK-P1-05 implementation commit `d52aa62d36e8d89eba318cb5fc586311680e030f`已�
 
 ## TASK-P1-07 expansion governance review
 
-本Task继续使用full repository与`Diff base..HEAD + working tree`检查，report路径为`build/traceability/TASK-P1-07-report.json`，不可变Diff base为`97728521e187f9f50715de4b04a09098bef62ddf`。实际路径由`IMPACT-DOMAIN/IMPORT/INFRA/DEPENDENCY/VERSION-METADATA/TESTS/PHASE/GOVERNANCE-REGISTRY/DOCS`九行覆盖；启动前已先补齐初始矩阵强制文档和root README，发现CI未收集property后又在修改workflow前扩卡纳入INFRA范围及两份强制文档。
+本Task继续使用full repository与`Diff base..HEAD + working tree`检查，report路径为`build/traceability/TASK-P1-07-report.json`，不可变Diff base为`97728521e187f9f50715de4b04a09098bef62ddf`。实际路径由`IMPACT-DOMAIN/IMPORT/INFRA/DEPENDENCY/VERSION-METADATA/TESTS/PHASE/GOVERNANCE-REGISTRY/DOCS`九行覆盖；启动前已先补齐初始矩阵强制文档和root README，发现CI未收集property后又在修改workflow前扩卡纳入INFRA范围及两份强制文档。Provider closure review发现端到端链路当前态仍停在P1-06，已在修改前再扩卡纳入该已登记文档；最终base-range union为46 paths。
 
-治理检查只证明scope、dependency/version、追踪和文档一致，不执行derived ID、fact/lock/candidate copy或Hypothesis shrinking；TEST-ORDER-EXPANSION-001补充这些语义。完成前必须记录dev-only lock变化、schema set仍为`2.2.0`、Import/Snapshot v2仍为`2.0.0`、九行matched/0 issues及真实source counts；ignored report不提交，implementation/evidence commit各自核验provider required`validate`。
+治理检查只证明scope、dependency/version、追踪和文档一致，不执行derived ID、fact/lock/candidate copy或Hypothesis shrinking；TEST-ORDER-EXPANSION-001补充这些语义。Implementation commit `5a3dbc14c12a107abf4052cca935e3ef59009d3d`的provider artifact `9369917400`内report为45 committed paths、9 matched rows、0 issues且精确匹配SHA；provider/download digest同为`sha256:8aeb7416516f7932436bbf406d800cdbdeb8313ba9249f2709b7df71647e566e`。Closure治理继续证明46-path union、schema set=`2.2.0`、Import/Snapshot v2=`2.0.0`与0 issues；ignored report不提交，完成态提交仍按自身精确SHA核验required`validate`。
 
 ## Override
 

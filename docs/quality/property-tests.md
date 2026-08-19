@@ -35,16 +35,16 @@ TASK-P0-06 对固定 `SIM-MINIMAL-001@1.0.0` 复算 canonical non-empty Import r
 
 TASK-P0-07 的 13 个声明式 mutation 验证 deterministic replay、base immutability、C-001～C-011 完整负例 coverage 与固定关键算术；它们仍是枚举的 Mutation Test，不是随机 Property Test。`SIM-MINIMAL-001-MUTATIONS@1.0.0` 可作为未来 generator/shrinker 的固定 regression corpus，但 TEST-PROPERTY 和合法 PlanningProblem 跨组合生成仍为 P2 `PLANNED`。
 
-TASK-P1-02对两份固定synthetic v2 sample执行serialization round-trip，并对canonical reference/unit/time/duration/provenance与Snapshot count/copy不变量做明确mutation负例。这只形成TEST-CONTRACT-001的deterministic contract evidence；没有Hypothesis/random generator、shrinking、seed corpus或Snapshot/Problem hash性质，因此TASK-P1-07/08的P1 property tests与P2 TEST-PROPERTY仍为`PLANNED`。
+TASK-P1-02对两份固定synthetic v2 sample执行serialization round-trip，并对canonical reference/unit/time/duration/provenance与Snapshot count/copy不变量做明确mutation负例。这只形成TEST-CONTRACT-001的deterministic contract evidence；在该Task完成时没有Hypothesis/random generator、shrinking、seed corpus或Snapshot/Problem hash性质，因此当时TASK-P1-07/08的P1 property tests与P2 TEST-PROPERTY均为`PLANNED`。
 
-TASK-P1-05以固定构造覆盖三项deterministic properties：row/input order与volatile batch metadata不改变canonical bytes/hash；mapping profile version改变必然改变bytes/hash；namespaced source identity稳定派生ID且不同namespace/authority不碰撞。另以枚举负例覆盖unit integer arithmetic、DST offsets和schema field-set invariant。这些是TEST-NORMALIZATION-001/TEST-CONTRACT-001的固定property-style evidence，不含随机生成、shrinking或seed corpus；P1-07/08与P2 TEST-PROPERTY继续`PLANNED`。
+TASK-P1-05以固定构造覆盖三项deterministic properties：row/input order与volatile batch metadata不改变canonical bytes/hash；mapping profile version改变必然改变bytes/hash；namespaced source identity稳定派生ID且不同namespace/authority不碰撞。另以枚举负例覆盖unit integer arithmetic、DST offsets和schema field-set invariant。这些是TEST-NORMALIZATION-001/TEST-CONTRACT-001的固定property-style evidence，不含随机生成、shrinking或seed corpus；截至该Task完成时P1-07/08与P2 TEST-PROPERTY继续`PLANNED`。
 
 TASK-P1-06以固定canonical sample和显式mutations验证三项deterministic properties：合法输入重复运行得到同report bytes/ID；collection/record/list顺序重排不改变有序Error/report；四类Gate与多错误组合保持exact code/category/source evidence。另覆盖DAG SCC、orphan/duplicate、calendar/lag/fact和capability/resource负例。
 
-这些属于TEST-DATA-QUALITY-001的固定property-style evidence，不使用Hypothesis/random generator/shrinking，也不生成合法PlanningProblem或candidate schedule。P1-07/08的Expansion/Snapshot property与P2 TEST-PROPERTY继续`PLANNED`。
+这些属于TEST-DATA-QUALITY-001的固定property-style evidence，不使用Hypothesis/random generator/shrinking，也不生成合法PlanningProblem或candidate schedule。截至TASK-P1-06完成时，P1-07/08的Expansion/Snapshot property与P2 TEST-PROPERTY继续`PLANNED`。
 
 ## TASK-P1-07 generated expansion properties
 
 本Task首次锁定`hypothesis==6.165.10`并使用generation/shrinking。Positive property以replay seed`20260819`和64 max examples生成显式synthetic canonical inputs：1～3 lots、固定4-operation branch/merge DAG、2 workshops/resources、每operation 1～2 candidates、RUNNING/COMPLETED/NONE fact与locks；验证重复运行和collection重排的bytes/hash相同、实例/edge cardinality、ID唯一、同lot edge、candidate duration/source copy与transport lag不丢失。Negative property以seed`20260820`和24 max examples删除随机operation的全部candidate，要求收缩后仍精确`MISSING_RESOURCE_OPTION`。
 
-所有生成输入显式`synthetic=true`并在provenance记录generated scenario seed；无失败，因此没有保存虚构的minimized failure/corpus。失败时Hypothesis会报告最小example和reproduction seed，修复后应把最小反例版本化为回归fixture或保留reproduction metadata。本Task形成P1 TEST-ORDER-EXPANSION-001的property evidence，但没有生成PlanningProblem/candidate schedule，故P2 `TEST-PROPERTY`仍为`PLANNED`；TASK-P1-08 Snapshot replay property也仍未形成。
+所有生成输入显式`synthetic=true`并在provenance记录generated scenario seed；无失败，因此没有保存虚构的minimized failure/corpus。失败时Hypothesis会报告最小example和reproduction seed，修复后应把最小反例版本化为回归fixture或保留reproduction metadata。本Task形成P1 TEST-ORDER-EXPANSION-001的property evidence，但没有生成PlanningProblem/candidate schedule，故P2 `TEST-PROPERTY`仍为`PLANNED`；TASK-P1-08 Snapshot replay property也仍未形成。Implementation commit `5a3dbc14c12a107abf4052cca935e3ef59009d3d`已由GitHub Actions run `32265257468`的required `validate`成功重放，包含property目录的repository suite及中性machine evidence artifact均成功。

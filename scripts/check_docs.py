@@ -16,7 +16,7 @@ import sys
 from dataclasses import asdict, dataclass
 from datetime import datetime, timezone
 from pathlib import Path
-from typing import Callable, Iterable, Mapping, Sequence
+from typing import Callable, Iterable, Mapping, Sequence, cast
 from urllib.parse import unquote
 
 
@@ -62,6 +62,8 @@ REQUIRED_TASK_FIELDS = (
     "Rollback",
 )
 TASK_STATUSES = {"planned", "ready", "in_progress", "blocked", "done", "cancelled"}
+TERMINAL_TASK_STATUSES = {"done", "cancelled"}
+P1_REQUIRED_TASK_FIELDS = ("Completion conditions",)
 
 VERSIONED_REGISTRIES = (
     "docs/governance/requirements-register.md",
@@ -107,6 +109,7 @@ ROOT_ID_RE = re.compile(
 )
 TEST_ID_RE = re.compile(r"(?<![A-Z0-9_-])TEST-[A-Z0-9]+(?:-[A-Z0-9]+)*(?![A-Z0-9_-])")
 TASK_ID_RE = re.compile(r"(?<![A-Z0-9_-])TASK-P\d+-\d{2}(?![A-Z0-9_-])")
+PHASE_ID_RE = re.compile(r"P(?P<number>\d+)")
 CONSTRAINT_ID_RE = re.compile(r"(?<![A-Z0-9_-])C-\d{3}(?![A-Z0-9_-])")
 OBJECTIVE_ID_RE = re.compile(r"(?<![A-Z0-9_-])OBJ-\d{3}(?![A-Z0-9_-])")
 ADR_ID_RE = re.compile(r"(?<![A-Z0-9_-])ADR-\d{4}(?![A-Z0-9_-])")
@@ -406,6 +409,35 @@ def expand_numeric_ranges(text: str, prefix: str, digits: int) -> set[str]:
     return identifiers
 
 
+def expand_task_ranges(text: str) -> set[str]:
+    """Extract Task IDs and expand ranges within one numbered phase."""
+
+    identifiers = set(TASK_ID_RE.findall(text))
+    range_re = re.compile(
+        r"TASK-P(?P<phase>\d+)-(?P<start>\d{2})\s*～\s*"
+        r"(?:TASK-P(?P<end_phase>\d+)-)?(?P<end>\d{2})"
+    )
+    for match in range_re.finditer(text):
+        phase = match.group("phase")
+        end_phase = match.group("end_phase")
+        if end_phase is not None and end_phase != phase:
+            continue
+        start = int(match.group("start"))
+        end = int(match.group("end"))
+        if start <= end:
+            identifiers.update(
+                f"TASK-P{phase}-{value:02d}" for value in range(start, end + 1)
+            )
+    return identifiers
+
+
+def phase_number(value: str) -> int | None:
+    """Return the numeric phase for an exact Pn identifier."""
+
+    match = PHASE_ID_RE.fullmatch(value)
+    return int(match.group("number")) if match is not None else None
+
+
 def local_link_target(source: Path, raw_target: str) -> Path | None:
     """Resolve a local Markdown link, ignoring URLs and same-page anchors."""
 
@@ -440,6 +472,7 @@ class RepositoryValidator:
         self.observed_docs: list[str] = []
         self.diff_base: str | None = None
         self.diff_source_counts: dict[str, int] = {}
+        self.current_phase: str | None = None
         self.missing_trace_refs: set[str] = set()
         self.counts: dict[str, int] = {}
 
@@ -1007,6 +1040,18 @@ class RepositoryValidator:
         task_by_id: dict[str, Path] = {}
         status_by_id: dict[str, str] = {}
 
+        current_phase = self.metadata.get("docs/current_phase.md", {}).get("phase", "")
+        current_phase_number = phase_number(current_phase)
+        if current_phase_number is None:
+            self.add_issue(
+                "PHASE-TASK",
+                "docs/current_phase.md",
+                f"invalid current phase {current_phase!r}",
+                "set front matter phase to an exact Pn identifier",
+            )
+            current_phase_number = 0
+        self.current_phase = current_phase
+
         for path in task_paths:
             relative = self.relative(path)
             text = self.doc_texts[relative]
@@ -1026,12 +1071,40 @@ class RepositoryValidator:
                 )
             task_by_id[task_id] = path
             status_by_id[task_id] = status
-            if path.parent.name != "P0" or metadata.get("phase") != "P0":
+
+            task_match = re.fullmatch(r"TASK-(P\d+)-\d{2}", task_id)
+            task_phase = task_match.group(1) if task_match is not None else ""
+            folder_phase = path.parent.name
+            metadata_phase = metadata.get("phase", "")
+            task_phase_number = phase_number(task_phase)
+            if not (
+                task_phase
+                and folder_phase == task_phase
+                and metadata_phase == task_phase
+                and task_phase_number is not None
+            ):
                 self.add_issue(
                     "PHASE-TASK",
                     relative,
-                    "detailed Task Card exists outside current P0",
+                    "Task ID, directory, and phase metadata do not identify the same phase",
+                    "align TASK-Pn-NN, docs/tasks/Pn, and front matter phase",
+                )
+            elif task_phase_number > current_phase_number:
+                self.add_issue(
+                    "PHASE-TASK",
+                    relative,
+                    f"detailed Task Card belongs to future {task_phase}, current phase is {current_phase}",
                     "keep future phases at Milestone level until explicitly authorized",
+                )
+            elif (
+                task_phase_number < current_phase_number
+                and status not in TERMINAL_TASK_STATUSES
+            ):
+                self.add_issue(
+                    "PHASE-TASK",
+                    relative,
+                    f"historical {task_phase} Task remains non-terminal in current {current_phase}",
+                    "finish or cancel prior-phase Tasks before advancing the phase",
                 )
 
         self.task_ids = set(task_by_id)
@@ -1040,6 +1113,10 @@ class RepositoryValidator:
             relative = self.relative(path)
             text = self.doc_texts[relative]
             status = status_by_id[task_id]
+            task_match = re.fullmatch(r"TASK-(P\d+)-\d{2}", task_id)
+            task_phase_number = (
+                phase_number(task_match.group(1)) if task_match is not None else None
+            )
             if status == "in_progress":
                 current_tasks.append(task_id)
                 diff_base = extract_task_field(text, "Diff base")
@@ -1059,6 +1136,12 @@ class RepositoryValidator:
                     )
 
             missing = missing_task_fields(text)
+            if task_phase_number is not None and task_phase_number >= 1:
+                missing.extend(
+                    field
+                    for field in P1_REQUIRED_TASK_FIELDS
+                    if not extract_task_field(text, field)
+                )
             if missing:
                 self.add_issue(
                     "TASK-FIELDS",
@@ -1092,8 +1175,7 @@ class RepositoryValidator:
                     )
 
             dependency_field = extract_task_field(text, "Depends on")
-            dependency_ids = set(TASK_ID_RE.findall(dependency_field))
-            dependency_ids.update(expand_numeric_ranges(dependency_field, "TASK-P0-", 2))
+            dependency_ids = expand_task_ranges(dependency_field)
             unknown_dependencies = sorted(dependency_ids - self.task_ids)
             if unknown_dependencies:
                 self.add_issue(
@@ -1184,7 +1266,7 @@ class RepositoryValidator:
         if len(current_tasks) > 1:
             self.add_issue(
                 "PHASE-TASK",
-                "docs/tasks/P0",
+                f"docs/tasks/{current_phase}",
                 f"multiple Tasks are in_progress: {', '.join(sorted(current_tasks))}",
                 "keep at most one active Task",
             )
@@ -1300,7 +1382,7 @@ class RepositoryValidator:
                 "DIFF-IMPACT",
                 task_relative,
                 "selected Task Card was not parsed",
-                "select a current P0 Task Card",
+                f"select a current {self.current_phase or 'phase'} Task Card",
             )
             return
 
@@ -1354,7 +1436,7 @@ class RepositoryValidator:
                 "no working-tree changes and no Diff base are available for Task impact validation",
                 "record the immutable pre-Task commit in the Task Card as Diff base",
             )
-        documents = set(task_record["documents"])
+        documents = set(cast(set[str], task_record["documents"]))
         coverage = evaluate_impact_coverage(
             changed_paths, self.impact_rules, declared_rule_ids, documents
         )
@@ -1364,7 +1446,7 @@ class RepositoryValidator:
         self.expected_docs = list(coverage.expected_docs)
         self.observed_docs = sorted(set(changed_paths) & set(coverage.expected_docs))
 
-        allowed = set(task_record["allowed"])
+        allowed = set(cast(set[str], task_record["allowed"]))
         allowed.update(documents)
         allowed.add(task_relative)
         for changed_path in changed_paths:
@@ -1452,9 +1534,11 @@ def print_text_report(report: Mapping[str, object], report_path: Path | None) ->
         f"task={report.get('task') or 'none'}"
     )
     if report.get("diff_checked"):
+        changed_paths = cast(Sequence[object], report.get("changed_paths", []))
+        matched_rows = cast(Sequence[object], report.get("matched_impact_rows", []))
         summary += (
-            f" diff_paths={len(report.get('changed_paths', []))}"
-            f" impact_rows={len(report.get('matched_impact_rows', []))}"
+            f" diff_paths={len(changed_paths)}"
+            f" impact_rows={len(matched_rows)}"
         )
     print(summary)
     issues = report.get("issues", [])

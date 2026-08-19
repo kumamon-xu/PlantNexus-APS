@@ -87,6 +87,8 @@ Traceability updates: explicit IDs/matrix rows
 
 具体的代码目录、变更类型和必审文档映射见 `change-impact-matrix.md`。
 
+进入新 Phase后，已完成的历史 Task Card继续保留并保持 terminal状态；当前 Phase可创建详细 Task；未来 Phase仍只能保留 Milestone。`docs/current_phase.md` 的 front matter `phase` 是机器校验的当前阶段来源，不能在校验器或 CI中另行硬编码。
+
 ## 仓库治理检查
 
 基础全仓检查：
@@ -104,3 +106,5 @@ uv run python scripts/check_docs.py --task <task-card> --check-diff --report <re
 ```
 
 change-impact matrix 使用稳定 `IMPACT-*` Rule ID。实际 changed path 是 `Diff base..HEAD` 已提交路径与 working tree 路径的并集，必须命中机器规则；Task 必须声明全部命中行并把 Required documentation 列入 `Documents to update`。报告为 `traceability-report.v1`，记录 diff base 和两个来源的计数；机器 PASS 仍须在 Completion evidence 中记录实际文档更新、未修改理由和语义审查结论。
+
+P1及以后 Task Card还必须填写 `Completion conditions`，把实现、负向路径、文档/追踪、治理验收与排除项写成可核验完成门；历史 P0 Task不追补该字段。

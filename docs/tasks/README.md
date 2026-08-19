@@ -3,15 +3,17 @@ doc_id: DOC-TASK-INDEX
 title: Task Card 索引
 status: living
 spec_version: 0.3.0
-phase: P0
+phase: P1
 normative: true
-source_sections: [2, 6, 71, 98, 99, 100]
+source_sections: [2, 6, 73, 74, 98, 99, 100]
 last_reviewed: 2026-08-19
 ---
 
 # Task Card 索引
 
-当前只允许建立和执行 P0 Task。P1～P7 只有 Milestone，不提前创建 Task Card。
+当前 Phase为 P1。P0 Task作为 terminal历史保留；只允许创建/执行 P1详细 Task Card，P2～P7继续只保留 Milestone。
+
+## P0 history
 
 | Task | 目标 | 依赖 | 状态 |
 |---|---|---|---|
@@ -23,15 +25,34 @@ last_reviewed: 2026-08-19
 | TASK-P0-06 | SIM-MINIMAL-001 与人工 Golden Schedule | P0-05 | `done` |
 | TASK-P0-07 | Illegal Fixtures 与 Validator Rule Sheet | P0-04/06 | `done` |
 | TASK-P0-08 | CI、logging、DB、worker、health skeleton | P0-01/02 | `done` |
-| TASK-P0-09 | P0 Exit Gate 审计 | P0-01～08 | `done` |
-| TASK-P0-10 | CI workflow handoff + provider evidence remediation | P0-09 | `done` |
+| TASK-P0-09 | P0 Exit Gate audit | P0-01～08 | `done` |
+| TASK-P0-10 | CI workflow/provider evidence remediation | P0-09 | `done` |
 
-状态由 Task front matter 记录：`planned`、`ready`、`in_progress`、`blocked`、`done`、`cancelled`。只有真实验收证据存在时才能标记 done。
+P0 superseding audit=`READY`，用户于 2026-08-19 明确批准进入 P1；历史 Task/失败 run/evidence不删除或重写。
 
-Task 进入 `in_progress` 时必须把切换前的完整 40 字符 HEAD commit SHA 写入 `Diff base`。验收器用 `Diff base..HEAD` 与 working tree 的路径并集检查范围和文档影响，使同一 Task 在提交前后都能复验。
+## P1 execution order
 
-每张 Task Card 必须在开始前完成文档影响分析：填写 `Documentation impact`、明确的 `Documents to update`、理由、匹配的 change-impact matrix 行和 `Traceability updates`。禁止使用“相关 docs”作为路径；没有文档变化也必须提交有依据的 `none` 结论。
+| Task | 目标 | 依赖 | 状态 |
+|---|---|---|---|
+| [TASK-P1-01](P1/TASK-P1-01-phase-governance-and-ci-handoff.md) | Phase-aware governance 与 CI handoff | P0-10 | `ready` |
+| [TASK-P1-02](P1/TASK-P1-02-canonical-import-contracts.md) | Canonical records、Import v2、Snapshot v2合同 | P1-01 | `planned` |
+| [TASK-P1-03](P1/TASK-P1-03-raw-staging-and-import-provenance.md) | Raw Staging、provenance、idempotent persistence | P1-02 | `planned` |
+| [TASK-P1-04](P1/TASK-P1-04-csv-excel-reference-adapter.md) | CSV、Excel与ReferenceFileAdapter v1 | P1-02/03 | `planned` |
+| [TASK-P1-05](P1/TASK-P1-05-normalization-and-unit-time-rules.md) | Deterministic ID/time/unit Normalization | P1-02/03/04 | `planned` |
+| [TASK-P1-06](P1/TASK-P1-06-data-quality-and-routing-validation.md) | DAG/reference/capability Data Validation | P1-05 | `planned` |
+| [TASK-P1-07](P1/TASK-P1-07-deterministic-order-expansion.md) | Deterministic Order/Lot/Operation expansion | P1-06 | `planned` |
+| [TASK-P1-08](P1/TASK-P1-08-immutable-snapshot-and-hash.md) | Immutable PlanningSnapshot 与 hash | P1-03/06/07 | `planned` |
+| [TASK-P1-09](P1/TASK-P1-09-planning-problem-builder-and-hash.md) | Solver-neutral PlanningProblem builder/hash | P1-07/08 | `planned` |
+| [TASK-P1-10](P1/TASK-P1-10-synthetic-generator-records.md) | 七层 Synthetic Generator非空 canonical records | P1-02/05/06/07 | `planned` |
+| [TASK-P1-11](P1/TASK-P1-11-common-ingress-pipeline-and-gate-evidence.md) | Common-ingress E2E与 P1 Gate evidence | P1-03～10 | `planned` |
+| [TASK-P1-12](P1/TASK-P1-12-p1-exit-gate-audit.md) | P1 Exit Gate Audit | P1-01～11 | `planned` |
 
-TASK-P0-09 已确认 workflow 的 TASK-P0-08 diff handoff 在新 audit commit 上 `FAIL`；GitHub baseline run `32227247262` 又在 provider 侧重现同一失败。TASK-P0-10 随后以 immutable Diff base `5d8bb51e06add1afc2f53861cf53c7a2ba45a272` 完成 workflow handoff、GitHub run `32228647627` / artifact `9356432918` 证据、protected `main` required `validate` 与 P0 re-audit，现为 `done`。P0 Gate 为 `READY`，但它不是 P1 Task，也不自动改变当前 Phase。
+## Lifecycle rules
 
-本表是导航摘要；发生差异时以对应 Task Card front matter 为准。完成一个 Task 不会自动把下一个 Task 改为 `ready` 或开始执行。
+状态由 Task front matter记录：`planned`、`ready`、`in_progress`、`blocked`、`done`、`cancelled`。只有真实验收证据存在时才能标记 `done`。
+
+Task进入 `in_progress` 时必须先把当时完整 40字符 HEAD SHA写入 `Diff base`。验收器使用 `Diff base..HEAD`与 working tree路径并集检查范围和change-impact；P1 Task还必须有明确 `Completion conditions`。
+
+每张 Task Card在开始前完成文档影响分析：`Documentation impact`、明确 `Documents to update`、理由、`IMPACT-*` Rule IDs与`Traceability updates`。`Documents to update`必须包含在允许范围；发现额外文件先停止并修订卡片。
+
+当前没有 `in_progress` Task。建议首先执行 TASK-P1-01，以先消除现有 P0-10-specific CI handoff，再开始 canonical contracts。完成一个 Task不会自动启动下一个；P1-12即使审计 `READY`也不自动进入 P2。

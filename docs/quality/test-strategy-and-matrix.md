@@ -30,8 +30,17 @@ registry_version: 1.0.0
 | Test ID | Purpose | Earliest phase | Evidence status |
 |---|---|---|---|
 | TEST-TRACEABILITY-VALIDATOR | Registry、reference、Task、diff/impact，以及 clean-tree committed range regression | P0 | [`backend/tests/unit/test_check_docs.py`](../../backend/tests/unit/test_check_docs.py) |
+| TEST-PHASE-GOVERNANCE-001 | Current/prior/future Phase Task policy与 CI changed-task handoff | P1 | PLANNED / TASK-P1-01 |
 | TEST-OBS-001 | 日志、运行标识与 Observability 关联 | P0 | [`test_logging.py`](../../backend/tests/integration/test_logging.py) JSON/context/trace-ID/redaction P0 slice formed；PlanningRun metrics/audit retention PLANNED |
 | TEST-CONTRACT-001 | Schema meta/positive/negative、版本、UTC/duration/reference、isolation 与 round-trip | P0 | [`backend/tests/contract/test_schema_contracts.py`](../../backend/tests/contract/test_schema_contracts.py) + data/rule Schema baselines formed；Simulation Schema validation also covered by TEST-SCENARIO-REPLAY |
+| TEST-IMPORT-STAGING-001 | Raw batch/row provenance、transaction、migration与 idempotent replay | P1 | PLANNED / TASK-P1-03 |
+| TEST-IMPORT-ADAPTER-001 | CSV/XLSX/ReferenceFileAdapter semantic parity与文件安全拒绝 | P1 | PLANNED / TASK-P1-04 |
+| TEST-NORMALIZATION-001 | ID/time/unit mapping、canonical bytes、unit error与 missing duration | P1 | PLANNED / TASK-P1-05 |
+| TEST-DATA-QUALITY-001 | DAG/reference/capability/quality report与四类 P1 exact rejection | P1 | PLANNED / TASK-P1-06 |
+| TEST-ORDER-EXPANSION-001 | Order/Lot/Routing到 OperationInstance/edge deterministic expansion | P1 | PLANNED / TASK-P1-07 |
+| TEST-SNAPSHOT-REPLAY-001 | Snapshot canonical bytes/hash/ID、immutability与 repository replay | P1 | PLANNED / TASK-P1-08 |
+| TEST-PROBLEM-REPLAY-001 | Solver-neutral Problem builder/bytes/hash deterministic replay | P1 | PLANNED / TASK-P1-09 |
+| TEST-P1-COMMON-INGRESS | Reference/Synthetic共同 staging→Problem链路与 Gate report | P1 | PLANNED / TASK-P1-11 |
 | TEST-RULE-SHEET-001 | C-001～C-018 唯一/完整、input/formula/example/violation/Test ID 与 registry cross-check | P0 | [`test_rule_contracts.py`](../../backend/tests/contract/test_rule_contracts.py) + [`constraint-rule-sheet.v1`](../../schemas/rules/constraint-rule-sheet.v1.yaml) + [TASK-P0-04 Acceptance PASS](../tasks/P0/TASK-P0-04-constraints-states-errors-capabilities.md#completion-evidence) |
 | TEST-STATE-TRANSITION-001 | 三套 state enum、42 个 allowed pair、terminal/negative transitions | P0 | [`test_rule_contracts.py`](../../backend/tests/contract/test_rule_contracts.py) + [`state-machines.v1`](../../schemas/rules/state-machines.v1.yaml) formed；persistence/P3 behavior PLANNED |
 | TEST-ERROR-MAPPING-001 | 七类 error、19 code/category 唯一映射与 v1/v2 isolation | P0 | [`test_rule_contracts.py`](../../backend/tests/contract/test_rule_contracts.py) + [`error-code-registry.v1`](../../schemas/rules/error-code-registry.v1.yaml) formed；HTTP mapping PLANNED |
@@ -82,3 +91,9 @@ TASK-P0-09 没有增加或修改测试、断言、Test ID 或 registry format；
 TASK-P0-10 不新增 Test ID、test function、fixture 或 assertion 豁免；它在既有 `test_ci_runs_all_p0_gates_and_keeps_benchmark_as_a_hook` 中加强 workflow handoff 断言：exact TASK-P0-10 diff command 与 `p0-exit-gate-evidence-${{ github.run_id }}` 必须存在，任何 `TASK-P0-08` workflow 残留必须失败。测试总数仍为 90，已登记 27 个 Test ID 与既有 formed/`PLANNED` 边界不变；provider run/artifact/required-check 是 CI Gate artifact，不是新业务测试。
 
 本地 90-test suite 及 GitHub run `32228647627` 的 P0 test/machine-contract steps 均 PASS，且 clean implementation commit 的目标 integration file为 5 passed。该结果只关闭 CI handoff/provider evidence gap；不新增 Solver/Property/Benchmark 或 P1 能力证据，`registry_version` 保持 `1.0.0`。
+
+## P1 planned allocation
+
+用户于 2026-08-19授权进入 P1后，新增上述9个稳定 Test ID并分配到 TASK-P1-01/03～09/11；TASK-P1-02复用 TEST-CONTRACT-001，TASK-P1-10复用 TEST-SCENARIO-REPLAY/TEST-SIM-ISOLATION，TASK-P1-12重跑全部 P1证据。所有新增行均为 `PLANNED`，没有测试文件、结果或 artifact时不得改写为 formed。
+
+P1 Exit Gate至少要求 TEST-P1-COMMON-INGRESS组合证明 same scenario+seed的 Import/Snapshot/Problem bytes/hash一致，并由 TEST-DATA-QUALITY-001分别证明 `ROUTE_CYCLE`、`MISSING_RESOURCE`、`UNIT_CONVERSION_ERROR`、`MISSING_DURATION`。这些都是 data pipeline证据，不能外推为 Solver、ScheduleValidator、Benchmark或 Production readiness。

@@ -26,4 +26,6 @@ last_reviewed: 2026-08-19
 
 Milestone 定义 outcome 和 exit gate，不等同 Sprint。只有当前 Phase 创建详细 Task Card；更新 `current_phase.md` 需要 Gate 的真实证据和用户确认。
 
-P0 当前进度：TASK-P0-01～08 已完成 executable contracts、Simulation/Golden/Validator 和 engineering/CI skeleton；TASK-P0-09 的原 [独立审计](P0-exit-gate-audit-report.md) 忠实发现旧 Task diff handoff/provider evidence 缺口。TASK-P0-10 已交接 workflow/test，并以 implementation commit `036bc23bc0ac4d60aab131c0d44eda5508e844d4`、GitHub run `32228647627`、artifact `9356432918` digest 和 protected `main` required `validate` 证据关闭两项 gap。superseding audit 的 Schema、Golden、Validator Rule Sheet、Scenario replay、Repository Build、CI 和 PROD_OPEN registration 全部 `PASS`，P0 Gate 为 `READY`。P0 Milestone 仍保持 `active`、P1～P7 保持 `planned`，直到用户另行确认 phase transition；不自动进入 P1。
+P0 当前状态：TASK-P0-01～10 全部完成；[superseding audit](P0-exit-gate-audit-report.md) 的 Schema、Golden、Validator Rule Sheet、Scenario replay、Repository Build、CI 和 PROD_OPEN registration全部 `PASS`，P0 Gate=`READY`。用户于 2026-08-19 明确批准 phase transition后，P0转为 `completed`，历史失败/修复/provider evidence继续保留。
+
+P1 当前状态：[`P1 — Data & Snapshot`](P1-data-and-snapshot.md) 为 `active`，已创建 TASK-P1-01～12；TASK-P1-01=`ready`，其余=`planned`，最后一项是 P1 Exit Gate Audit。当前没有 P1 Task处于 `in_progress`，没有执行 P1实现，也不创建 P2 Task。

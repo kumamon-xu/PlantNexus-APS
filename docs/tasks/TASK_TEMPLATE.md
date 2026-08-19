@@ -59,6 +59,8 @@ Acceptance commands:
 
 Artifacts:
 
+Completion conditions: 使用可二值判断的目标、范围、测试、文档、追踪和边界条件；P1+ Task必填
+
 Explicitly excluded:
 
 PROD_OPEN:
@@ -91,3 +93,5 @@ Rollback:
 涉及 engineering infrastructure/API health/Worker/CI 时还必须记录：direct dependency/lock 与明确未安装组件；environment/data-plane/Secret fail-closed boundary；liveness/readiness 的外部依赖与 no-leak 行为；Job heartbeat/lease/attempt/STALLED、idempotency scope/fingerprint、持久化/transaction/side-effect 边界；migration upgrade/downgrade 与测试数据库；structured log/trace context/redaction 和 audit/metrics 缺口；Compose/container/CI 实际执行层级。仓库内 workflow/config/local PASS 不得伪装成 CI provider run、branch protection、Production deployment、distributed crash recovery 或 production security evidence。
 
 涉及 external CI provider 时还必须在开始前固定 provider/repository/branch/workflow 和官方 query 命令，并在完成证据中记录 immutable head SHA、run ID/URL/attempt/event/status/conclusion、required jobs/steps、artifact ID/name/size/digest/expiry 与 required-check/branch-protection 状态。credential 必须由进程外环境或已认证 session 提供，不得记入 Task、日志或 artifact；失败 run 必须保留为反例，不得伪写 PASS。
+
+P1及以后 Task必须单列 `Completion conditions`，把“实现目标、负向路径、文档/追踪、提交前后治理和明确排除项均满足”写成可核验条件；不能只写“测试通过”或重复 Goal。

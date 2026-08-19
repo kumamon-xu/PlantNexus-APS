@@ -83,3 +83,7 @@ TASK-P0-01 已建立可构建的顶层仓库边界，TASK-P0-02 建立治理 val
 TASK-P0-05 在 `simulation/profiles|scenarios|generators` 中加入纯标准库合同、七层 Protocol、seed/canonical package primitive 和 contract-check CLI；在 `schemas/scenario` 加入三份 v1 Schema 与三份 `.synthetic.json` sample。`simulation/execution|baselines|benchmarks`、`fixtures/**` 和 P1 pipeline 仍没有实现；Schema samples 不是 `SIM-MINIMAL-001`。
 
 构建与烟雾命令以根 `README.md` 和当前 Task Card 为准。当前结构保持 Modular Monolith：health API 与通用 Celery Worker 可由同一 image 分进程启动，但没有产品 API、业务 Worker task、Solver Worker 或 CP-SAT 实现。
+
+## P1 planning baseline
+
+用户于 2026-08-19授权进入 P1后，`docs/tasks/P1/` 新增 TASK-P1-01～12；当前没有 P1业务代码。治理 validator从 `docs/current_phase.md`读取 phase并允许 P0 terminal history + P1 current cards，未来 P2+详细卡仍被拒绝。P1预期在既有 `importers/`、`normalization/`、`data_validation/`、`snapshots/`、`planning/problem/`、`simulation/generators/` 和 `application/`边界内逐 Task落地，不在本 planning baseline创建这些实现。

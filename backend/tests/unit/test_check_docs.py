@@ -13,6 +13,7 @@ from scripts.check_docs import (
     duplicate_id_issues,
     evaluate_impact_coverage,
     expand_numeric_ranges,
+    expand_task_ranges,
     missing_task_fields,
     namespace_separation_issues,
     parse_markdown_tables,
@@ -138,6 +139,23 @@ class TraceabilityValidatorTests(unittest.TestCase):
         self.assertEqual(requirements, {"REQ-001", "REQ-002", "REQ-003"})
         self.assertEqual(opens, {"OPEN-001", "OPEN-002", "OPEN-003"})
         self.assertIsNotNone(re.fullmatch(r"TEST-[A-Z0-9-]+", TEST_ID))
+
+    def test_task_ranges_expand_for_any_phase(self) -> None:
+        tasks = expand_task_ranges(
+            "TASK-P0-09, TASK-P1-01～03, TASK-P1-04～TASK-P1-05"
+        )
+
+        self.assertEqual(
+            tasks,
+            {
+                "TASK-P0-09",
+                "TASK-P1-01",
+                "TASK-P1-02",
+                "TASK-P1-03",
+                "TASK-P1-04",
+                "TASK-P1-05",
+            },
+        )
 
 
 if __name__ == "__main__":

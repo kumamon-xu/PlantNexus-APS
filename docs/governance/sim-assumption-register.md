@@ -47,3 +47,5 @@ TASK-P0-08 review：未修改 Simulation code/Schema/Profile/Scenario/Fixture/Be
 TASK-P0-09 review：deterministic replay、Golden 与 mutation gates 复核了 SIM-ASSUMPTION-001～009 的 Scenario/Profile/version/seed/hash 链和 Production isolation boundary；所有值仍只属于 synthetic correctness evidence，没有用于关闭任何 production-open entry 或建立生产默认值。没有新增、修改或 retire 条目，九项全部保持 `ACTIVE`，registry format version 不变。
 
 TASK-P0-10 review：本 Task 只重放既有 Simulation/Golden/Mutation machine gates 并交接 report 文件名，不修改 Profile、Scenario、Generator、Fixture、seed、canonical hash 或任何定量值。没有新增、修改或 retire 条目；SIM-ASSUMPTION-001～009 全部保持 `ACTIVE`，不用于关闭 production-open entry，registry format version 不变。
+
+P1 Task 规划 review：TASK-P1-10 只规划把既有 Generator 输出接入 canonical import records，TASK-P1-11 规划以同一 ingress 对比 reference/synthetic 来源；执行中如需新增定量 Profile/Scenario 假设，必须另行注册并版本化。本次没有新增、修改或 retire 条目；SIM-ASSUMPTION-001～009 全部保持 `ACTIVE`，不用于关闭 production-open entry，registry format version不变。

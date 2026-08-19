@@ -60,6 +60,12 @@ integration contract 显式断言新 command/artifact 存在且 workflow 不再�
 
 上述完成条件现已形成：implementation commit `036bc23bc0ac4d60aab131c0d44eda5508e844d4` 的 GitHub run [`32228647627`](https://github.com/kumamon-xu/PlantNexus-APS/actions/runs/32228647627) 为 `success`，`validate` job 和全部 steps 均成功；artifact `9356432918` 的 provider digest 为 `sha256:d5cb630772f06732251f785a6ee6aff36856c2a2f619c4178f43b01ac3f0214b`；`main.protected=true` 且 required context/check 均为 `validate`。提交前与 clean post-commit diff governance均 PASS，因此 `P0-GAP-001/002` 已关闭，[P0 re-audit](../milestones/P0-exit-gate-audit-report.md) 将 CI Gate 判定为 `PASS`。
 
+## P1 planning and CI handoff
+
+P0 Gate通过并获得用户明确 phase transition授权后，current phase已更新为 P1，TASK-P1-01～12已创建但尚未执行。local governance validator现从 `docs/current_phase.md`读取当前 `Pn`，允许历史 P0 terminal cards与当前 P1 cards共存，并要求 P1+ Task具有 `Completion conditions`；这只是 planning validation，不是 provider workflow handoff或业务证据。
+
+现有 provider workflow仍承载 P0-10 immutable evidence语义。为避免每个后续 Task继续硬编码旧 range，TASK-P1-01必须首先收敛 phase/changed-task-aware CI并证明没有削弱 P0 gates；在该 Task形成真实 provider run前，不得把 P1 planning commit的 local PASS写成 P1 CI PASS。
+
 ## Task Done
 
 任务完成至少满足：
@@ -74,6 +80,7 @@ integration contract 显式断言新 command/artifact 存在且 workflow 不再�
 - 文档与实现一致；
 - 文档一致性检查通过；
 - 验收命令实际通过并记录结果。
+- P1及以后 Task的 `Completion conditions`逐项满足并有真实证据。
 
 ## Phase Done
 

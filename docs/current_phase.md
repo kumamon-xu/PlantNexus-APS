@@ -3,85 +3,71 @@ doc_id: DOC-PHASE-CURRENT
 title: 当前阶段
 status: living
 spec_version: 0.3.0
-phase: P0
+phase: P1
 normative: true
-source_sections: [71, 72, 110]
+source_sections: [73, 74, 110, 111]
 last_reviewed: 2026-08-19
 ---
 
-# 当前阶段：P0 — Executable Specification
+# 当前阶段：P1 — Data & Snapshot
+
+## 阶段授权与前提
+
+用户已于 2026-08-19 明确授权项目从 P0 进入 P1，并要求先完成 P1 Task 规划。切换前重新核对：TASK-P0-01～10 全部 `done`；[`P0 Exit Gate Audit`](milestones/P0-exit-gate-audit-report.md) 与 machine manifest 的全部必需 Gate 为 `PASS`、overall=`READY`、blocking gaps为空；仓库 HEAD包含该 superseding evidence且规划开始时 working tree干净。前提一致，因此阶段切换成立。
+
+P0 Milestone现为 `completed`。这只表示 P0 executable-specification Gate完成，不表示任何 P1业务能力、Solver或 Production readiness已形成。
 
 ## 当前目标
 
-先固定“排什么”和“什么算正确”，把总规转换成可追踪、可审查、可由后续代码执行的规格基线。
-
-## 已完成子阶段
+建立一条确定、可追溯、双通道共用的数据链：
 
 ```text
-P0-DOCS — Documentation Baseline
+CSV / Excel / Reference Adapter / Synthetic Generator
+→ Raw Staging
+→ Normalization
+→ Data Validation
+→ Order Expansion
+→ immutable PlanningSnapshot + hash
+→ solver-neutral PlanningProblem + hash
 ```
 
-该子阶段只生产文档与任务边界，不授权实现应用代码、Schema、Fixture、CI 或基础设施。
-
-状态：`BASELINE_COMPLETE`（2026-08-19）。已生成 107 份仓库内 Markdown 文档及根目录 Agent 薄入口；元数据/ID、Markdown fence、相对链接、Task 必需字段和总规镜像一致性检查均通过。该状态只表示文档基线完成。
-
-## 最新完成 Task
-
-```text
-TASK-P0-10 — CI Workflow Handoff and Provider Evidence Remediation
-```
-
-Task 状态：`done`（2026-08-19T15:52:57+08:00）。workflow exact docs diff 已从 TASK-P0-08 交接到 TASK-P0-10，integration contract 禁止旧引用；implementation commit `036bc23bc0ac4d60aab131c0d44eda5508e844d4` 的 GitHub run `32228647627`、`validate` job、artifact `9356432918` / digest 全部成功，`main` 已 protected 且 required `validate`。提交前/后本地 acceptance 与 superseding audit 全部 PASS，`P0-GAP-001/002` 已关闭。
-
-TASK-P0-01～10 均为 `done`。[P0 superseding audit](milestones/P0-exit-gate-audit-report.md) 将全部 Exit Gate 判定为 `PASS`，P0 Gate 为 `READY`。Milestone 仍保持 `active`、当前 Phase 仍为 P0，因为用户尚未明确批准 phase transition；本 Task 不自动进入 P1。
+同 Scenario/Profile/Generator version/seed必须产生相同 Import package、Snapshot hash与Problem hash；route cycle、missing resource、unit error、missing duration必须分别明确拒绝。
 
 ## 当前 Task
 
-无。TASK-P0-10 已完成；当前只等待用户对 P0 → P1 phase transition 给出另一条明确指令。未经该指令不创建/执行 P1 Task。
+`TASK-P1-01 — P1 Phase Governance and CI Handoff` 状态为 `ready`。尚无 P1 Task处于 `in_progress`，尚未记录 Diff base，也未执行任何 P1实现。
+
+后续顺序以 [`P1 Milestone`](milestones/P1-data-and-snapshot.md) 与 [`Task Card 索引`](tasks/README.md) 为准；只有依赖为 `done` 后才可启动下一 Task。
 
 ## 当前允许
 
-- 建立 `docs` 文档体系；
-- 维护和验证 TASK-P0-01 已形成的可构建空仓库骨架、Python/uv 元数据和结构性文档检查；
-- 镜像并登记规格版本；
-- 拆分范围、原则、需求、能力、架构、领域、约束和仿真规则；
-- 建立 Agent 规则、Milestone、ADR、注册表和 P0 Task Card；
-- 初始化 `REQ / NFR / ENG` 追踪结构；
-- 建立 P0 规则表、状态/错误/capability 纯合同及机器一致性检查；
-- 建立 versioned Simulation Schema、纯 Generator protocols、显式 seed/canonical hash 与 synthetic isolation 合同；
-- 维护 `SIM-MINIMAL-001@1.0.0` deterministic correctness fixture、人工 Golden 与只读 replay/hash evidence；
-- 在不导入 Solver/backend 的边界内维护 P0-07 fixture-local Validator Rule Sheet evaluator 与非法 mutation evidence；
-- 按 TASK-P0-08 明确文件边界建立 health-only API、工程基础设施、通用 Job reliability、CI 与构建骨架；
-- 维护 TASK-P0-10 已形成的 workflow handoff、GitHub Actions/artifact/required-check evidence 和 P0 `READY` audit；
-- 登记 `PROD_OPEN` 与 `SIM_ASSUMPTION`，但不替业务方关闭问题。
+- 仅按 P1 Task Card建立 canonical Import、Raw Staging、CSV/XLSX Reference Adapter、Normalization、Data Validation、Order Expansion、Snapshot/Problem builder与 hash；
+- 让 Synthetic Generator输出非空 Standard Import并从 staging后走相同产品链；
+- 创建 P1所需 versioned Schema/error/report/fixture/test/migration和机器证据；
+- 使用明确 synthetic Profile/Scenario/seed继续开发，即使 PROD_OPEN未关闭；
+- 更新 P1 CI、追踪、文档和 Exit Gate audit，但必须保留 P0回归和失败证据。
 
 ## 当前禁止
 
-- 创建 `CpModel`、`IntervalVar` 或真实 Solver；
-- 实现 P1 及以后能力；
-- 将仿真假设写成生产默认值；
-- 猜工厂拓扑、班次、冻结窗口、运输时间、标准工时、库存或接口字段；
-- 创建看似完整但没有实现证据的 API、Runbook、性能承诺或生产就绪声明；
-- 修改总规语义以适配实现偏好。
+- 在未开始对应 Task前修改其业务代码，或修改 Task允许范围外文件；
+- 创建 `CpModel`、`IntervalVar`、OR-Tools依赖、真实 Solver/Strategy/Solution、ScheduleValidator P2集成或任何 P2 Task Card；
+- 绕过 Raw Staging、Normalization或Data Validation，让 Simulation直接构造 Snapshot/Problem/Solver；
+- 猜 ERP/MES/WMS/CAM字段、生产单位、timezone、lot split、duration fallback、transport、calendar或其他 PROD_OPEN答案；
+- 将 ReferenceFileAdapter、synthetic fixture或测试数据库声明为真实生产 Adapter/数据/容量；
+- 创建产品 API、审批/发布、Replan、Benchmark Solver或 Production deployment，除非后续 Milestone另行授权。
 
-## 当前交付
+## P1 Task 规划状态
 
-1. 文档入口和文档控制规则；
-2. 核心规范、需求与追踪注册表；
-3. 架构、领域、规划、仿真和测试基线；
-4. P0-P7 Milestone 初版，其中 P0 为详细执行基线；
-5. P0 Task Card；
-6. 基础 ADR；
-7. 文档一致性检查结果。
+P1共规划 12 个 Task：phase governance/CI、canonical contracts、Raw Staging、CSV/Excel/reference adapter、Normalization、Data Validation、Order Expansion、Snapshot、Problem hash、Synthetic Generator、common-ingress Gate evidence，最后为 P1 Exit Gate Audit。除 TASK-P1-01=`ready` 外均为 `planned`。
 
-## 子阶段退出条件
+## 阶段完成条件
 
-- 总规已进入仓库并可追溯到 `spec_version: 0.3.0`；
-- `docs/README.md` 能导航到所有已生成文档；
-- 所有规范性拆分文档声明来源章节；
-- P0 Task Card 的修改范围、测试和排除项明确；
-- `PROD_OPEN` 与 `SIM_ASSUMPTION` 分开登记；
-- 没有提前建立 P1+ Task Card；
-- 没有把未知生产事实写成默认值。
+- CSV、Excel和一个正式 versioned Reference Adapter均通过合同/安全测试；
+- Raw Staging、Normalization、Data Validation和Order Expansion具有可复验实现证据；
+- PlanningSnapshot immutable且 hash可重放；
+- Synthetic Generator与Reference Adapter从 staging后使用同一产品链；
+- same scenario+seed的 import bytes/hash、snapshot hash、problem bytes/hash一致；
+- route cycle、missing resource、unit error、missing duration exact rejection全部通过；
+- 全部 P1 Task完成，P1 Exit Gate Audit给出真实 `READY` 且用户再次明确批准后，才允许请求进入 P2。
 
-完成 P0-DOCS 不等于完成 P0，也不授权进入 P1。
+Task全部 `done` 不自动等于 Phase Done；P1 Exit Gate Audit失败时保持 P1并创建有界 remediation Task。

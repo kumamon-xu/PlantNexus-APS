@@ -12,7 +12,7 @@ registry_version: 1.0.0
 
 # 文档清单
 
-本清单列出当前仓库已经实际存在的 Markdown 文档。P0-08 已形成三份 engineering Operations baseline；TASK-P0-10 的 CI provider evidence remediation 已完成。产品 API 与 Production Runbook 正文尚未形成并继续由相应索引登记。
+本清单列出当前仓库已经实际存在的 Markdown 文档。P0 退出门已通过并归档为 completed；P1 已获授权并形成 12 张 Task Card，但尚未执行任何 P1 实现。产品 API 与 Production Runbook 正文尚未形成并继续由相应索引登记。
 
 | Path | Doc ID | Status | Title |
 |---|---|---|---|
@@ -77,9 +77,9 @@ registry_version: 1.0.0
 | [governance/sim-assumption-register.md](../governance/sim-assumption-register.md) | DOC-GOV-007 | living | SIM_ASSUMPTION 注册表 |
 | [governance/traceability-matrix.md](../governance/traceability-matrix.md) | DOC-GOV-005 | living | 追踪矩阵 |
 | [governance/traceability-rules.md](../governance/traceability-rules.md) | DOC-GOV-004 | baseline | 需求追踪规则 |
-| [milestones/P0-executable-specification.md](../milestones/P0-executable-specification.md) | MILESTONE-P0 | active | P0 — Executable Specification |
+| [milestones/P0-executable-specification.md](../milestones/P0-executable-specification.md) | MILESTONE-P0 | completed | P0 — Executable Specification |
 | [milestones/P0-exit-gate-audit-report.md](../milestones/P0-exit-gate-audit-report.md) | MILESTONE-P0-AUDIT-001 | baseline | P0 Exit Gate Audit Report |
-| [milestones/P1-data-and-snapshot.md](../milestones/P1-data-and-snapshot.md) | MILESTONE-P1 | planned | P1 — Data & Snapshot |
+| [milestones/P1-data-and-snapshot.md](../milestones/P1-data-and-snapshot.md) | MILESTONE-P1 | active | P1 — Data & Snapshot |
 | [milestones/P2-cp-sat-vertical-slice.md](../milestones/P2-cp-sat-vertical-slice.md) | MILESTONE-P2 | planned | P2 — CP-SAT Vertical Slice |
 | [milestones/P3-planning-workspace.md](../milestones/P3-planning-workspace.md) | MILESTONE-P3 | planned | P3 — Planning Workspace |
 | [milestones/P4-dynamic-replanning.md](../milestones/P4-dynamic-replanning.md) | MILESTONE-P4 | planned | P4 — Dynamic Replanning |
@@ -126,10 +126,22 @@ registry_version: 1.0.0
 | [tasks/P0/TASK-P0-08-engineering-and-ci-skeleton.md](../tasks/P0/TASK-P0-08-engineering-and-ci-skeleton.md) | TASK-P0-08 | done | Engineering and CI Skeleton |
 | [tasks/P0/TASK-P0-09-p0-exit-gate-audit.md](../tasks/P0/TASK-P0-09-p0-exit-gate-audit.md) | TASK-P0-09 | done | P0 Exit Gate Audit |
 | [tasks/P0/TASK-P0-10-ci-provider-evidence-remediation.md](../tasks/P0/TASK-P0-10-ci-provider-evidence-remediation.md) | TASK-P0-10 | done | CI Workflow Handoff and Provider Evidence Remediation |
+| [tasks/P1/TASK-P1-01-phase-governance-and-ci-handoff.md](../tasks/P1/TASK-P1-01-phase-governance-and-ci-handoff.md) | TASK-P1-01 | ready | P1 Phase Governance and CI Handoff |
+| [tasks/P1/TASK-P1-02-canonical-import-contracts.md](../tasks/P1/TASK-P1-02-canonical-import-contracts.md) | TASK-P1-02 | planned | Canonical Import Contracts |
+| [tasks/P1/TASK-P1-03-raw-staging-and-import-provenance.md](../tasks/P1/TASK-P1-03-raw-staging-and-import-provenance.md) | TASK-P1-03 | planned | Raw Staging and Import Provenance |
+| [tasks/P1/TASK-P1-04-csv-excel-reference-adapter.md](../tasks/P1/TASK-P1-04-csv-excel-reference-adapter.md) | TASK-P1-04 | planned | CSV Excel and Formal Reference Adapter |
+| [tasks/P1/TASK-P1-05-normalization-and-unit-time-rules.md](../tasks/P1/TASK-P1-05-normalization-and-unit-time-rules.md) | TASK-P1-05 | planned | Normalization and Unit Time Rules |
+| [tasks/P1/TASK-P1-06-data-quality-and-routing-validation.md](../tasks/P1/TASK-P1-06-data-quality-and-routing-validation.md) | TASK-P1-06 | planned | Data Quality and Routing Validation |
+| [tasks/P1/TASK-P1-07-deterministic-order-expansion.md](../tasks/P1/TASK-P1-07-deterministic-order-expansion.md) | TASK-P1-07 | planned | Deterministic Order Expansion |
+| [tasks/P1/TASK-P1-08-immutable-snapshot-and-hash.md](../tasks/P1/TASK-P1-08-immutable-snapshot-and-hash.md) | TASK-P1-08 | planned | Immutable PlanningSnapshot and Hash |
+| [tasks/P1/TASK-P1-09-planning-problem-builder-and-hash.md](../tasks/P1/TASK-P1-09-planning-problem-builder-and-hash.md) | TASK-P1-09 | planned | PlanningProblem Builder and Hash |
+| [tasks/P1/TASK-P1-10-synthetic-generator-records.md](../tasks/P1/TASK-P1-10-synthetic-generator-records.md) | TASK-P1-10 | planned | Synthetic Generator Canonical Records |
+| [tasks/P1/TASK-P1-11-common-ingress-pipeline-and-gate-evidence.md](../tasks/P1/TASK-P1-11-common-ingress-pipeline-and-gate-evidence.md) | TASK-P1-11 | planned | Common Ingress Pipeline and P1 Gate Evidence |
+| [tasks/P1/TASK-P1-12-p1-exit-gate-audit.md](../tasks/P1/TASK-P1-12-p1-exit-gate-audit.md) | TASK-P1-12 | planned | P1 Exit Gate Audit |
 | [tasks/README.md](../tasks/README.md) | DOC-TASK-INDEX | living | Task Card 索引 |
 | [tasks/TASK_TEMPLATE.md](../tasks/TASK_TEMPLATE.md) | TEMPLATE-TASK | baseline | Task Card Template |
 
-更新文档时应同步维护本清单。`uv run python scripts/check_docs.py` 会校验本表是否完整覆盖当前 112 份 `docs/**/*.md`，并核对 Doc ID、status 和 title，但不会自动改写清单。根 `README.md`、根 `AGENTS.md`、非 Markdown evidence manifest、代码和脚本不属于正式文档清单。
+更新文档时应同步维护本清单。`uv run python scripts/check_docs.py` 会校验本表是否完整覆盖当前 124 份 `docs/**/*.md`，并核对 Doc ID、status 和 title，但不会自动改写清单。根 `README.md`、根 `AGENTS.md`、非 Markdown evidence manifest、代码和脚本不属于正式文档清单。
 
 本清单格式为 `registry_version: 1.0.0`；列结构或状态比较语义变化时提升版本。
 

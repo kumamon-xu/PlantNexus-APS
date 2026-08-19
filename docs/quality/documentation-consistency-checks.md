@@ -3,7 +3,7 @@ doc_id: DOC-QUAL-007
 title: 文档一致性自动检查合同
 status: baseline
 spec_version: 0.3.0
-phase: P0
+phase: cross-phase
 normative: true
 source_sections: [6, 98, 99, 100, 101, 103, 104]
 last_reviewed: 2026-08-19
@@ -55,10 +55,10 @@ uv run python -m unittest discover -s backend/tests/unit -p "test_check_docs.py"
 6. 文档 metadata、唯一 doc ID、source sections、相对链接和 Markdown fence 有效；
 7. `registry_version: 1.0.0` 存在，注册表 ID 唯一，Requirement/NFR/ENG/C/OBJ/TASK/TEST/ADR/OPEN/SIM/RISK 引用可解析；
 8. 追踪矩阵对所有 Requirement/NFR/ENG 根 ID 一一覆盖，且只链接真实存在的代码、测试和 artifact；
-9. 当前 Task 的 dependency、Phase、状态和当前阶段约束一致；
+9. 当前 Task 的 dependency、ID/目录/front matter Phase、状态和当前阶段约束一致；P1+ Task还必须包含 `Completion conditions`；
 10. `PROD_OPEN-*` 关闭时包含权威来源、证据、决定日期、影响面和迁移/回放结论；
 11. `PROD_OPEN-*` 与 `SIM_ASSUMPTION-*` 没有混用，模拟假设不能关闭生产开放项；
-12. 只有当前 Phase 存在详细 Task Card，其他阶段只能保留计划级条目。
+12. 历史 Phase只保留 `done`/`cancelled` Task，当前 Phase允许详细 Task Card，未来 Phase只能保留 Milestone。
 
 ## CI 分层
 
@@ -132,6 +132,12 @@ TASK-P0-10 不修改 `scripts/check_docs.py` 或 `TEST-TRACEABILITY-VALIDATOR`�
 provider 层必须额外校验 Actions run `head_sha`、workflow/job conclusion、artifact ID/name/digest 及 `main` branch required check。这些平台事实不由本地 validator 猜测；remediation 前 run `32227247262` 的失败只是反例，不能充当 PASS。
 
 实际 provider closure 为 run `32228647627` / `head_sha=036bc23bc0ac4d60aab131c0d44eda5508e844d4` / `validate=success` / artifact `9356432918` + digest `sha256:d5cb630772f06732251f785a6ee6aff36856c2a2f619c4178f43b01ac3f0214b`；公开 branch state 显示 `main.protected=true`、required `validate` / app ID `15368`。clean implementation commit 的 TASK-P0-10 report 再次得到 25 committed paths、0 working-tree paths、5 impact rows、19 checks PASS、0 issues。这些平台/提交事实与本地 validator 的职责分层保持不变。
+
+## P1 phase-aware planning baseline
+
+2026-08-19 获得明确 phase transition授权后，validator改为从 `docs/current_phase.md` front matter读取 `Pn`，允许 prior-phase terminal Task与 current-phase detailed Task共存，拒绝 prior-phase non-terminal和future-phase detailed cards，并支持任意 phase内的 Task range依赖。P1及以后卡新增必填 `Completion conditions`；历史 P0卡无需追补。
+
+该调整只使 P1 Task规划可由既有治理命令验证，不实现 canonical Import、Adapter、Snapshot、Problem或任何业务能力。TASK-P1-01仍需把 provider workflow从 P0-10-specific handoff收敛为可持续 P1 CI；本 planning baseline不把 local governance PASS写成 provider PASS。
 
 ## Override
 

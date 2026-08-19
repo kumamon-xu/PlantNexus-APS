@@ -34,6 +34,7 @@ Task 从 `planned`/`ready` 进入 `in_progress` 时，必须先把当时的完�
 - 只修改 Task Card 的 `Files allowed to change`。
 - 需要额外文件时停止，说明原因并先修订 Task Card。
 - Task Card 必须显式填写 `Documentation impact`、`Documents to update` 和 `Traceability updates`；缺少任一字段不得开始实施。
+- P1及以后 Task Card还必须填写可核验的 `Completion conditions`；历史 Phase Task必须已是 terminal状态。
 - `Documents to update` 中的文件必须同时出现在 `Files allowed to change`，否则先修订任务卡。
 - 不得提前实施当前 Phase 以后的能力。
 - 不得把 SIM_ASSUMPTION 写入 Production Business Policy。
@@ -82,3 +83,5 @@ uv run python scripts/check_docs.py --task <task-card> --check-diff --report <re
 ```
 
 校验器检查 ID、Task 依赖、traceability，以及 `Diff base..HEAD` 已提交变更与 working tree 并集对应的 change-impact 声明，但不代替业务 Contract、Schema、Solver/Validator correctness、Scenario 或 Phase Gate 验收。
+
+校验器从 `docs/current_phase.md` front matter读取当前 `Pn`：保留 prior-phase terminal Task，允许 current-phase详细卡，拒绝 future-phase详细卡。不得在 Agent、Task或 CI中另建硬编码 current phase事实源。

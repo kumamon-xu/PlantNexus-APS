@@ -49,7 +49,7 @@ REQ / NFR / ENG
 
 ## Task Card 要求
 
-每张任务卡必须列出 Requirement/NFR/ENG、依赖、目标、输入、允许/禁止修改文件、输出、Schema/Migration、错误行为、测试、Benchmark、Scenario、验收命令、明确排除项、开放问题、假设和回滚。Task 进入 `in_progress` 时还必须记录当时完整 40 字符 HEAD SHA 作为不可变 `Diff base`。
+每张任务卡必须列出 Requirement/NFR/ENG、依赖、目标、输入、允许/禁止修改文件、输出、Schema/Migration、错误行为、测试、Benchmark、Scenario、验收命令、明确排除项、开放问题、假设和回滚。P1及以后 Task还必须列出可二值判断的 `Completion conditions`。Task 进入 `in_progress` 时必须记录当时完整 40字符 HEAD SHA作为不可变 `Diff base`。
 
 任务过程中如果必须修改允许范围以外的文件，应停止，说明原因并先更新任务卡。禁止通过无边界重构完成局部任务。
 
@@ -83,9 +83,11 @@ TASK-P0-10 的 provider closure 必须同时记录 GitHub repository/workflow/ev
 1. registry 表结构、版本、ID 格式和定义唯一性；
 2. 文档与测试代码中的 REQ/NFR/ENG/TEST/OPEN/SIM_ASSUMPTION/RISK 引用存在；
 3. 每个已登记 REQ/NFR/ENG 在 traceability matrix 中恰有一行；
-4. Task 的 Requirement/NFR/ENG、依赖、文档影响字段和创建路径有效；
+4. Task 的 Requirement/NFR/ENG、依赖、文档影响字段和创建路径有效；Task ID/目录/front matter phase一致，历史 Phase只保留 terminal Task，当前 Phase允许详细 Task，未来 Phase禁止详细卡；
 5. traceability matrix 中的规范路径和实际 Artifact 链接存在，`PLANNED` 不被当成实现证据；
 6. 使用 `--check-diff` 时，以 Task 的 `Diff base..HEAD` 已提交路径和当前 working tree 路径并集作为实际 Git diff；命中的 change-impact Rule ID 已在当前 Task 声明，且必审文档已列入 `Documents to update`；
 7. `OPEN` 关闭记录字段完整，PROD_OPEN 与 SIM_ASSUMPTION 命名空间没有混用。
+
+2026-08-19 phase transition后，校验器从 `docs/current_phase.md` front matter读取 current phase，不再硬编码 P0，并支持任意 `TASK-Pn-NN～NN` 依赖范围。P0 `done`历史卡继续参与依赖/引用审计；P1卡必须包含 `Completion conditions`；P2+仍只能保留 Milestone。
 
 结构化报告 schema 为 `traceability-report.v1`，至少包含 Task、Git HEAD、Diff base、committed-range/working-tree source counts、changed paths、matched impact rows、expected/observed documents、missing trace refs、registry counts 和失败明细。失败返回非零退出码，不允许自由文本 skip。

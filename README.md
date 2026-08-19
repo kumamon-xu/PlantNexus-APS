@@ -1,6 +1,6 @@
 # PlantNexus APS
 
-PlantNexus APS 是一个面向单工厂、多车间场景的高级计划与排程（APS）项目。项目当前处于 P0（Executable Specification），本仓库只建立可构建的工程与治理骨架；真实 Solver、业务 Adapter、生产参数和 P1+ 能力尚未实现。
+PlantNexus APS 是一个面向单工厂、多车间场景的高级计划与排程（APS）项目。P0 Exit Gate 已通过，用户已明确授权进入 P1（Data & Snapshot）；当前仅完成 P1 Task规划，尚未开始任何 P1实现。真实 Solver、生产 Adapter/参数和 P2+能力仍未实现。
 
 ## 开始之前
 
@@ -34,7 +34,7 @@ uv run python -c "import app; assert app.CODE_VERSION == '0.0.0'; assert app.SPE
 `scripts/check_docs.py` 当前同时检查结构性 Markdown、版本化 registries、REQ/NFR/ENG/TEST 等引用、Task 依赖、逐根 traceability 和 PROD_OPEN/SIM_ASSUMPTION 隔离。Task 进入 `in_progress` 时须把当时完整 HEAD SHA 写入 `Diff base`；影响覆盖检查使用 `Diff base..HEAD` 的已提交变更与当前 working tree 的并集，因此提交前后可用同一命令复验：
 
 ```powershell
-uv run python scripts/check_docs.py --task docs/tasks/P0/TASK-P0-08-engineering-and-ci-skeleton.md --check-diff --report build/traceability/TASK-P0-08-report.json
+uv run python scripts/check_docs.py --task docs/tasks/P1/TASK-P1-01-phase-governance-and-ci-handoff.md --check-diff --report build/traceability/TASK-P1-01-report.json
 ```
 
 报告使用 `traceability-report.v1`，包含 `diff_base` 与 committed/working-tree source counts，生成到已忽略的 `build/`；Task Card Completion evidence 保存持久结果摘要。[`ci.yml`](.github/workflows/ci.yml) 已编排 exact lock、lint、type、全部 P0 tests、machine contracts、Compose config、文档 diff 和 package build。仓库内只证明 workflow/config 可执行；CI provider run URL/ID 必须来自真实外部运行，不能由本地结果替代。
@@ -52,4 +52,4 @@ scripts/      仓库级校验与自动化脚本
 infra/        P0 开发容器构建配置
 ```
 
-P0-08 只形成 health-only API、环境配置、日志、lazy DB/Redis connectivity、通用 Job reliability/idempotency、Alembic/Compose/CI 骨架；它不形成业务 pipeline、产品 API、真实分布式作业存储、Solver 或生产部署。当前授权范围见 [`docs/current_phase.md`](docs/current_phase.md)。
+P0-08 只形成 health-only API、环境配置、日志、lazy DB/Redis connectivity、通用 Job reliability/idempotency、Alembic/Compose/CI 骨架；它不形成业务 pipeline、产品 API、真实分布式作业存储、Solver 或生产部署。P1的12张有界 Task Card已建立，TASK-P1-01=`ready`且尚无 `in_progress` Task。当前授权范围见 [`docs/current_phase.md`](docs/current_phase.md)。

@@ -1,7 +1,7 @@
 ---
 doc_id: MILESTONE-P0
 title: P0 — Executable Specification
-status: active
+status: completed
 spec_version: 0.3.0
 phase: P0
 normative: true
@@ -37,4 +37,6 @@ Schema PASS、Golden Fixture PASS、Validator Rule Sheet PASS、Scenario determi
 
 TASK-P0-01～08 已完成 repository/governance/contracts/Scenario/Golden/Validator 及 exact build、CI workflow、structured logging、health/config、DB/Redis/Celery、job reliability/idempotency、reversible migration skeleton 的本地 evidence。TASK-P0-09 于 2026-08-19 独立复验 Schema、Golden、Validator Rule Sheet、Scenario replay 与 Repository Build 均为 `PASS`；但 workflow 的 docs step硬编码 TASK-P0-08，在 P0-09 commit 上 exit 1，当时 provider evidence 为 `NOT_RUN`，故审计结论为 CI `FAIL`、总体 `NOT_READY` / `NO_GO`。
 
-TASK-P0-10 以 Diff base `5d8bb51e06add1afc2f53861cf53c7a2ba45a272` 执行 remediation；GitHub baseline run `32227247262` 保留旧 docs step failure，workflow/test 随后交接到 TASK-P0-10。implementation commit `036bc23bc0ac4d60aab131c0d44eda5508e844d4` 的 run `32228647627` / `validate` job / artifact `9356432918` 全部成功，`main` 已 protected 并 required `validate`；提交前/后本地 acceptance 也均 PASS。[P0 re-audit](P0-exit-gate-audit-report.md) 因此将全部 Exit Gate 判定为 `PASS`，P0 Gate 状态为 `READY`。Milestone 仍保持 `active` 且 current phase 仍为 P0，只因用户尚未明确授权 phase transition；本 Task 不自动进入 P1。
+TASK-P0-10 以 Diff base `5d8bb51e06add1afc2f53861cf53c7a2ba45a272` 执行 remediation；GitHub baseline run `32227247262` 保留旧 docs step failure，workflow/test 随后交接到 TASK-P0-10。implementation commit `036bc23bc0ac4d60aab131c0d44eda5508e844d4` 的 run `32228647627` / `validate` job / artifact `9356432918` 全部成功，`main` 已 protected 并 required `validate`；提交前/后本地 acceptance 也均 PASS。[P0 re-audit](P0-exit-gate-audit-report.md) 因此将全部 Exit Gate 判定为 `PASS`，P0 Gate 状态为 `READY`。
+
+用户已于 2026-08-19 在重新核对上述证据与无 blocking gap后明确授权进入 P1。P0 Milestone因此转为 `completed`；历史 audit/run/failure baseline全部保留，不因 phase transition改写。该状态不表示 P1能力、Solver或 Production readiness已经形成。

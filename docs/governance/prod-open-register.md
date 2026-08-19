@@ -66,3 +66,5 @@ TASK-P0-08 review：environment/data-plane/Production config guard、development
 TASK-P0-09 review：P0 registration gate 确认 OPEN-001～015 共 15 项全部存在，且没有任何条目被 SIM_ASSUMPTION、本地测试值、Compose/config 或 audit 推断关闭；因此“全部登记”Gate 为 `PASS`。本审计没有 authority、closure record、生产值或 migration/replay 决定，15 项全部继续 `OPEN`，registry format version不变；`P0-GAP-001/002` 是 CI 审计缺口，不是新的生产业务开放项。
 
 TASK-P0-10 review：GitHub Actions run/artifact/required-check 仅用于关闭 P0 CI evidence gap，不提供 factory timezone、真实接口/拓扑/日历、业务策略/权威、历史数据或生产 runtime threshold。没有 authority、closure record、production value 或 migration/replay 决定；OPEN-001～015 全部继续 `OPEN`，registry format version 不变。
+
+P1 Task 规划 review：reference adapter 被限定为非生产权威来源，单位/时区/字段缺失必须显式拒绝，任何真实字段映射、接口、日历、策略和规模阈值仍须由 OPEN closure record 授权。当前没有 authority、closure evidence、production default 或 migration/replay 决定；OPEN-001～015 全部继续 `OPEN`，registry format version不变。

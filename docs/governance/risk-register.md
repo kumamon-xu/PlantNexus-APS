@@ -44,3 +44,5 @@ TASK-P0-08 review：Production config/no-Simulation-route/Compose separation bou
 TASK-P0-09 review：本地 Schema/Golden/Validator/Replay/Build evidence 与 no-Solver boundary 均复验通过，未发现需要改变现有十项风险状态的新实现事实；workflow handoff failure 与 provider evidence缺失分别登记为 `P0-GAP-002/001` 并追踪到 planned TASK-P0-10，而不是伪装成已缓解控制。RISK-001～010 全部保持 `MONITORED`，registry format version 不变。
 
 TASK-P0-10 review：未弱化 workflow handoff、immutable successful run/artifact 追踪与 protected `main` required `validate` 已关闭 CI evidence gap 并加强工程回归可见性，但不改变 RISK-001～010 的业务、Solver、生产隔离、幂等性或性能事实。这些 P0 CI 证据不足以将任何风险标记 `MITIGATED/CLOSED`。RISK-001～010 全部保持 `MONITORED`，registry format version 不变。
+
+P1 Task 规划 review：共同 ingress、明确 capability/data-quality rejection、独立 canonical builder、Production/Synthetic source guard 和 replay/hash evidence 已分配给 TASK-P1-02～TASK-P1-11，可在执行后分别加强 RISK-001/002/004/007/009 的控制；当前仅为计划，没有 implementation 或 Gate evidence，RISK-001～010 全部保持 `MONITORED`，registry format version不变。

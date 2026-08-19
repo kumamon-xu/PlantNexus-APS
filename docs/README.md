@@ -3,7 +3,7 @@ doc_id: DOC-INDEX-001
 title: PlantNexus APS 文档中心
 status: baseline
 spec_version: 0.3.0
-phase: P0
+phase: P1
 normative: false
 source_sections: [2, 6, 70]
 last_reviewed: 2026-08-19
@@ -69,7 +69,7 @@ last_reviewed: 2026-08-19
 
 ## 当前范围
 
-当前阶段为 P0。允许建立可执行规格、目录和合同骨架；禁止实现真实 CP-SAT 排程、进入 P1 数据处理能力或猜测生产参数。详见 `current_phase.md`。
+当前阶段为 P1。P0 Gate已通过且用户已明确授权 phase transition；P1 Task Card已规划但尚未开始实现。只允许按当前 Task边界建设数据/快照链，禁止真实 CP-SAT/P2、生产参数猜测或绕过正式入口。详见 `current_phase.md`。
 
 ## 仓库入口与本地检查
 
@@ -79,4 +79,4 @@ last_reviewed: 2026-08-19
 - 该检查验证 metadata、文档 ID、Markdown fence、本地链接、Task、版本化 registry、完整 ID 引用、逐根 traceability 和命名空间隔离；
 - Task 进入 `in_progress` 时记录完整 `Diff base`；`--task <task-card> --check-diff` 对 `Diff base..HEAD` 与 working tree 的并集匹配 change-impact Rule ID，并可用 `--report <path>` 输出 `traceability-report.v1`。
 
-本地检查已经形成；PR/Release CI 强制、Artifact/manifest 和 Phase Gate 集成仍由后续获准 Task 提供，不能因本命令 PASS 而宣称 P0 或生产就绪。
+本地检查已经形成，并从 `current_phase.md` 读取 current `Pn`，保留历史 terminal Task且拒绝 future-phase详细卡。TASK-P1-01将继续收敛 P1 provider CI handoff；不能因本命令 PASS而宣称 P1 Gate或生产就绪。

@@ -31,6 +31,7 @@ registry_version: 1.0.0
 |---|---|---|
 | IMPACT-SCHEMA | `schemas/**` | `docs/contracts/README.md`、`docs/contracts/schema-index.md`、`docs/contracts/schema-versioning.md`、`docs/domain/domain-model.md`、`docs/governance/traceability-matrix.md` |
 | IMPACT-DOMAIN | `backend/app/domain/**` | `docs/domain/domain-model.md`、`docs/core/glossary.md`、`docs/architecture/data-authority.md`、`docs/governance/traceability-matrix.md` |
+| IMPACT-APPLICATION | `backend/app/application/**` | `docs/architecture/end-to-end-planning-flow.md`、`docs/architecture/module-boundaries.md`、`docs/architecture/data-authority.md`、`docs/domain/error-model.md`、`docs/quality/test-strategy-and-matrix.md`、`docs/governance/traceability-matrix.md` |
 | IMPACT-IMPORT | `backend/app/importers/**`、`backend/app/normalization/**`、`backend/app/data_validation/**` | `docs/contracts/import-and-normalization.md`、`docs/architecture/data-authority.md`、`docs/domain/error-model.md`、`docs/governance/prod-open-register.md` |
 | IMPACT-SNAPSHOT | `backend/app/snapshots/**` | `docs/contracts/planning-snapshot.md`、`docs/architecture/provenance-and-versioning.md`、`docs/quality/property-tests.md`、`docs/governance/traceability-matrix.md` |
 | IMPACT-PROBLEM | `backend/app/planning/problem/**` | `docs/contracts/planning-problem.md`、`docs/planning/constraint-catalog.md`、`docs/architecture/provenance-and-versioning.md`、`docs/adr/README.md` |
@@ -65,6 +66,7 @@ registry_version: 1.0.0
 |---|---|---|---|
 | `schemas/**`、领域 DTO/值对象 | 对应 `contracts/*.md`、`contracts/schema-index.md`、`contracts/schema-versioning.md`、`domain/domain-model.md` | Schema version、REQ/NFR、contract tests、fixtures | 不兼容变更需 migration/compatibility rule |
 | `domain/**` 的实体关系或不变量 | `domain/domain-model.md`、相关领域专题、`core/glossary.md`、`architecture/data-authority.md` | REQ、Schema、state/constraint refs | 语义变化可能需要 ADR |
+| `application/**` 的跨模块用例/事务编排 | `architecture/end-to-end-planning-flow.md`、`architecture/module-boundaries.md`、`architecture/data-authority.md`、`domain/error-model.md` | REQ/NFR/ENG、integration tests、artifact provenance | 不得复制领域规则或绕过阶段门 |
 | `importers/**`、`normalization/**`、`data_validation/**` | `contracts/import-and-normalization.md`、`architecture/data-authority.md`、`domain/error-model.md` | REQ-001～003、OPEN-002/013/015、contract tests | 禁止补猜生产默认值 |
 | `snapshots/**`、snapshot hash | `contracts/planning-snapshot.md`、`architecture/provenance-and-versioning.md`、`quality/property-tests.md` | Snapshot/schema/rule version、replay tests | hash 语义变化需兼容说明 |
 | `planning/problem/**` | `contracts/planning-problem.md`、`planning/constraint-catalog.md`、`architecture/provenance-and-versioning.md` | Problem version/hash、Golden/Scenario/Benchmark | 必须 ADR 与 replay |
@@ -141,3 +143,9 @@ Schema、Domain、Constraint/Validator、Simulation、Fixture、Test、Benchmark
 本 Task 实际路径命中 `IMPACT-INFRA`、`IMPACT-TESTS`、`IMPACT-PHASE`、`IMPACT-GOVERNANCE-REGISTRY`、`IMPACT-DOCS`。`.github/workflows/ci.yml` 只交接当前 Task diff/report 和 artifact 引用；`backend/tests/integration/test_ci_contract.py` 增加 exact handoff/no-stale-reference 断言；phase/audit/registry/docs 只同步 GitHub provider 真实证据与 Gate 状态。
 
 Schema、Domain、Import/Snapshot/Planning/Validator implementation、Simulation code/Fixture、Benchmark、API/Job/DB、dependency/version metadata、governance validator、Solver/P1 path 均禁止修改，因此不声明其他 Rule ID。machine rule table/required-document column 与 registry format 不变，`registry_version` 保持 `1.0.0`；最终以 TASK-P0-10 diff report 的真实 matched rows 为准。
+
+## P1 planning baseline review
+
+2026-08-19 的用户授权使 current phase进入 P1并创建 TASK-P1-01～12。本次 planning baseline只修改 phase/milestone/task/governance/quality/index文档，以及为跨阶段校验所必需的 `scripts/check_docs.py` 与 `backend/tests/unit/test_check_docs.py`；不执行任何 P1业务实现。实际路径预期命中 `IMPACT-GOVERNANCE-VALIDATOR`、`IMPACT-TESTS`、`IMPACT-PHASE`、`IMPACT-GOVERNANCE-REGISTRY`、`IMPACT-DOCS`。
+
+P1-11首次计划在 `backend/app/application/**` 形成 common-ingress orchestration，因此增加稳定 `IMPACT-APPLICATION` 行，避免未来 application path无机器影响规则。该行只建立治理覆盖，不实现 pipeline，也不改变总规模块边界。Schema、Import、Snapshot、Problem、Simulation、Fixture、Infrastructure workflow和dependency均未在本次 planning baseline中修改。

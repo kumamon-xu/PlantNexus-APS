@@ -1,0 +1,33 @@
+---
+doc_id: DOC-ARCH-006
+title: 推荐技术栈与锁定规则
+status: baseline
+spec_version: 0.3.0
+phase: cross-phase
+normative: false
+source_sections: [11, 12, 65, 95, 100, 102]
+last_reviewed: 2026-08-19
+---
+
+# 推荐技术栈与锁定规则
+
+## Backend
+
+Python 3.12、uv、FastAPI、Pydantic v2、SQLAlchemy 2、Alembic、PostgreSQL、Redis、Celery、Google OR-Tools CP-SAT、Polars、openpyxl、structlog、OpenTelemetry。
+
+## Frontend
+
+React、TypeScript、Ant Design、TanStack Query、支持虚拟滚动的 Gantt、Playwright。
+
+## Quality
+
+pytest、Hypothesis、Ruff、Pyright 或 mypy、Playwright、Contract/Golden/Property/Benchmark Regression tests。
+
+## 依赖规则
+
+- OR-Tools 必须固定精确版本并写入 `uv.lock` 和每次 `solver_report`。
+- OR-Tools 升级必须提交 ADR、更新 lock、执行 Golden/Scenario replay、Benchmark comparison 和 Solver status contract tests。
+- 禁止直接执行 `pip install -U ortools` 后合并。
+- Secret 只能来自环境或 Secret Manager，不能进入仓库、日志或导出包。
+
+本文件记录总规推荐栈，不代表所有库已经安装。首次依赖落地应由 Task Card 和 lockfile 提供实现证据。

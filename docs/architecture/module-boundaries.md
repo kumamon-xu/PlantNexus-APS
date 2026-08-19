@@ -1,0 +1,39 @@
+---
+doc_id: DOC-ARCH-003
+title: 模块边界与依赖规则
+status: baseline
+spec_version: 0.3.0
+phase: cross-phase
+normative: true
+source_sections: [12, 13, 14, 30, 41, 47, 51, 65, 70]
+last_reviewed: 2026-08-19
+---
+
+# 模块边界与依赖规则
+
+V1 使用 Modular Monolith：一个 FastAPI 应用、PostgreSQL、Redis、独立 Solver Worker 和 React Frontend。Solver 计算不得运行在 API Process 中。
+
+## 后端模块职责
+
+| 模块 | 职责 | 禁止依赖/行为 |
+|---|---|---|
+| `api/` | HTTP contract、认证上下文、DTO 调用 | CP-SAT 建模、业务规则复制 |
+| `application/` | 用例编排、事务和状态迁移 | OR-Tools 对象 |
+| `domain/` | 实体、值对象、不变量和协议 | ORM、FastAPI、Celery、OR-Tools |
+| `infrastructure/` | DB、消息、外部 Adapter | 决定业务权威和约束语义 |
+| `importers/` | 读取版本化输入 | 绕过 staging/validation |
+| `normalization/` | 单位/字段规范化 | 猜缺失业务值 |
+| `data_validation/` | 输入质量和能力预检 | 静默忽略 unsupported capability |
+| `snapshots/` | immutable Snapshot 与 hash | 引入求解器类型 |
+| `planning/problem/` | 构建 Solver-neutral Problem | OR-Tools 类型 |
+| `planning/strategies/` | 组织求解方式 | 将策略固化到 Controller/UI |
+| `planning/backends/cp_sat/` | CP-SAT 模型和映射 | 向 domain 泄漏 OR-Tools 对象 |
+| `planning/validation/` | 独立验证计划 | 导入/复用 CpSatBackend 约束实现 |
+| `simulation/` | Profile、Scenario、Generator、Execution、Benchmark | 直接构造 CpModel 或绕过正式入口 |
+
+## 跨模块不变量
+
+- ORM Model 不承载 Solver 建模逻辑。
+- React Component 不复制约束或直接修改发布计划。
+- Validator 可以共享领域数据类型和规范化时间工具，但不能共享产生同源缺陷的 CP-SAT 约束构建器。
+- Reference Scheduler 实现位于 simulation/baselines 或独立规划基线模块，必须标记非生产 Solver。

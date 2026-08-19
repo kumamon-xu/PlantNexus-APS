@@ -1,0 +1,36 @@
+---
+doc_id: DOC-PLAN-004
+title: Objective Policy
+status: baseline
+spec_version: 0.3.0
+phase: P0-P4
+normative: true
+source_sections: [28, 35, 50, 52, 53]
+last_reviewed: 2026-08-19
+---
+
+# Objective Policy
+
+硬约束可行性优先于所有目标。目标采用词典序分轮，禁止用未经论证的浮点权重混合。
+
+## OBJ-001 Delivery
+
+首先最小化 weighted tardiness。权重和迟交业务含义受 OPEN-006 约束；在关闭前可用明确版本化的 Simulation Policy 测试，但不能称为生产规则。
+
+## OBJ-002 Stability
+
+仅 Replan 阶段使用，在 Delivery 等价的候选中最小化计划变化，包括：
+
+- resource change；
+- start time deviation；
+- changed operation count/movement。
+
+HARD_LOCK 是约束，不属于 OBJ-002；SOFT_LOCK 通过本目标体现。旧计划 Hint 不保证稳定性。
+
+## OBJ-003 Makespan
+
+只在 Delivery 和 Stability 等价时作为 tie breaker。
+
+## 报告
+
+SolverReport 必须分阶段记录每一轮目标值、bound、停止原因和求解预算，不能只输出一个无法解释的混合分数。Reference Scheduler 比较至少报告 feasibility、weighted tardiness、makespan 和 runtime。

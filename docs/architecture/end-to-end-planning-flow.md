@@ -1,0 +1,49 @@
+---
+doc_id: DOC-ARCH-002
+title: 端到端计划链路
+status: baseline
+spec_version: 0.3.0
+phase: cross-phase
+normative: true
+source_sections: [0, 9, 10, 23, 24, 30, 32, 33, 35, 57, 67]
+last_reviewed: 2026-08-19
+---
+
+# 端到端计划链路
+
+```text
+Versioned Input Package
+→ Raw Staging
+→ Normalization
+→ Data Validation
+→ immutable PlanningSnapshot
+→ deterministic PlanningProblem
+→ PlanningStrategy
+→ SolverBackend
+→ PlanningSolution
+→ independent ScheduleValidator
+→ DRAFT ScheduleVersion
+→ READY_FOR_REVIEW
+→ Human APPROVED
+→ PUBLISHED
+→ MES / Export Package
+→ Execution Facts & Disruptions
+→ new Snapshot / ReplanRequest
+→ new ScheduleVersion
+```
+
+## 关键门
+
+| 门 | 输入 | 通过条件 | 失败语义 |
+|---|---|---|---|
+| Import | 外部/仿真输入包 | 合同、单位和引用完整 | DATA_ERROR / DATA_REJECTED |
+| Snapshot | 规范化数据 | immutable、hashable、provenance 完整 | MODEL_INVALID 或系统错误 |
+| Problem | Snapshot + rules | deterministic、serializable、solver-neutral | MODEL_INVALID |
+| Solve | Problem + Policy + Limits | 合法 Solver 状态与候选解 | INFEASIBLE / NO_SOLUTION_WITHIN_LIMIT / FAILED |
+| Verify | PlanningSolution | C-001～C-011 全部独立验证 | VALIDATION_FAILED |
+| Review | 已验证 ScheduleVersion | 人工批准 | REJECTED 或保留评审状态 |
+| Publish | APPROVED version | 幂等、审计、不可变 | Publish/Export 明确失败状态 |
+
+## Replan
+
+Replan 不修改旧 ScheduleVersion。它使用旧版本、执行事实、新 Snapshot、冻结窗口和原因生成新版本，并输出 ChangeReport。旧计划 Hint 只帮助搜索，不能替代 HARD_LOCK 或稳定性目标。

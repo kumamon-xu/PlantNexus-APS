@@ -70,7 +70,7 @@ TASK-P0-01 已建立可构建的顶层仓库边界；TASK-P0-02 在该边界内�
 | `backend/app/` | 可安装的空应用包；只登记 code/spec/schema 占位版本 | Domain、API、Planning、Simulation 行为由各自 Task 实现 |
 | `backend/tests/` | 已有治理 validator unit test；其他测试类型仍为占位 | 业务/Contract/Golden 等测试由交付对应行为的 Task 增加 |
 | `frontend/`、`schemas/`、`fixtures/`、`benchmarks/`、`infra/` | 目录占位 | 不表示 Frontend、Schema、Fixture、Benchmark 或基础设施已形成 |
-| `scripts/check_docs.py` | 文档结构、registry/reference、Task、traceability 和 diff/impact 检查 | CI 强制集成与更高 Gate 属于 TASK-P0-08/09 |
+| `scripts/check_docs.py` | 文档结构、registry/reference、Task、traceability，以及 `Diff base..HEAD` + working tree 的 diff/impact 检查 | CI 强制集成与更高 Gate 属于 TASK-P0-08/09 |
 | `docker-compose.yml` | 尚未创建 | 工程与基础设施骨架由 TASK-P0-08 处理 |
 
 构建与烟雾命令以根 `README.md` 和当前 Task Card 为准。当前结构保持 Modular Monolith 边界，并未创建 API Process、Solver Worker 或 CP-SAT 实现。

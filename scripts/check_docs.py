@@ -116,6 +116,7 @@ SIM_ID_RE = re.compile(
 )
 RISK_ID_RE = re.compile(r"(?<![A-Z0-9_-])RISK-\d{3}(?![A-Z0-9_-])")
 IMPACT_ID_RE = re.compile(r"(?<![A-Z0-9_-])IMPACT-[A-Z0-9]+(?:-[A-Z0-9]+)*(?![A-Z0-9_-])")
+COMMIT_SHA_RE = re.compile(r"[0-9a-fA-F]{40}")
 
 
 @dataclass(frozen=True)
@@ -437,6 +438,8 @@ class RepositoryValidator:
         self.matched_impact_rows: list[str] = []
         self.expected_docs: list[str] = []
         self.observed_docs: list[str] = []
+        self.diff_base: str | None = None
+        self.diff_source_counts: dict[str, int] = {}
         self.missing_trace_refs: set[str] = set()
         self.counts: dict[str, int] = {}
 
@@ -1039,6 +1042,21 @@ class RepositoryValidator:
             status = status_by_id[task_id]
             if status == "in_progress":
                 current_tasks.append(task_id)
+                diff_base = extract_task_field(text, "Diff base")
+                if not diff_base:
+                    self.add_issue(
+                        "TASK-FIELDS",
+                        relative,
+                        "in_progress Task has no Diff base",
+                        "record the full immutable HEAD commit before implementation",
+                    )
+                elif COMMIT_SHA_RE.fullmatch(diff_base) is None:
+                    self.add_issue(
+                        "TASK-FIELDS",
+                        relative,
+                        "in_progress Task Diff base is not a full 40-character commit SHA",
+                        "record the full immutable HEAD commit before implementation",
+                    )
 
             missing = missing_task_fields(text)
             if missing:
@@ -1227,17 +1245,41 @@ class RepositoryValidator:
             raise RuntimeError(result.stderr.strip() or "git command failed")
         return result.stdout
 
-    def git_changed_paths(self) -> list[str]:
-        output = self.git_output("status", "--porcelain=v1", "--untracked-files=all")
-        paths: set[str] = set()
-        for line in output.splitlines():
+    def git_changed_paths(self, diff_base: str | None = None) -> list[str]:
+        """Return the Task range union the current tracked/untracked working tree."""
+
+        committed_paths: set[str] = set()
+        if diff_base is not None:
+            committed_output = self.git_output(
+                "diff",
+                "--name-only",
+                "--diff-filter=ACDMRTUXB",
+                f"{diff_base}..HEAD",
+                "--",
+            )
+            committed_paths = {
+                normalize_repo_path(line)
+                for line in committed_output.splitlines()
+                if line.strip()
+            }
+
+        working_output = self.git_output(
+            "status", "--porcelain=v1", "--untracked-files=all"
+        )
+        working_paths: set[str] = set()
+        for line in working_output.splitlines():
             if len(line) < 4:
                 continue
             value = line[3:]
             if " -> " in value:
                 value = value.split(" -> ", 1)[1]
-            paths.add(normalize_repo_path(value.strip('"')))
-        return sorted(paths)
+            working_paths.add(normalize_repo_path(value.strip('"')))
+
+        self.diff_source_counts = {
+            "committed_range": len(committed_paths),
+            "working_tree": len(working_paths),
+        }
+        return sorted(committed_paths | working_paths)
 
     def validate_diff(self) -> None:
         self.mark("DIFF-IMPACT", "TASK-SCOPE")
@@ -1276,7 +1318,42 @@ class RepositoryValidator:
                 "use Rule IDs from change-impact-matrix.md",
             )
 
-        changed_paths = self.git_changed_paths()
+        diff_base_value = extract_task_field(text, "Diff base")
+        valid_diff_base: str | None = None
+        if diff_base_value:
+            self.diff_base = diff_base_value.lower()
+            if COMMIT_SHA_RE.fullmatch(diff_base_value) is None:
+                self.add_issue(
+                    "DIFF-IMPACT",
+                    task_relative,
+                    "Diff base is not a full 40-character Git commit SHA",
+                    "record the immutable HEAD commit from immediately before the Task started",
+                )
+            else:
+                try:
+                    resolved_base = self.git_output(
+                        "rev-parse", "--verify", f"{diff_base_value}^{{commit}}"
+                    ).strip()
+                    self.git_output("merge-base", "--is-ancestor", resolved_base, "HEAD")
+                except RuntimeError as error:
+                    self.add_issue(
+                        "DIFF-IMPACT",
+                        task_relative,
+                        f"Diff base cannot define a valid ancestor range: {error}",
+                        "use the immutable commit that was HEAD immediately before the Task started",
+                    )
+                else:
+                    valid_diff_base = resolved_base.lower()
+                    self.diff_base = valid_diff_base
+
+        changed_paths = self.git_changed_paths(valid_diff_base)
+        if not changed_paths and not diff_base_value:
+            self.add_issue(
+                "DIFF-IMPACT",
+                task_relative,
+                "no working-tree changes and no Diff base are available for Task impact validation",
+                "record the immutable pre-Task commit in the Task Card as Diff base",
+            )
         documents = set(task_record["documents"])
         coverage = evaluate_impact_coverage(
             changed_paths, self.impact_rules, declared_rule_ids, documents
@@ -1327,6 +1404,8 @@ class RepositoryValidator:
             "result": "PASS" if not self.issues else "FAIL",
             "task": task_id,
             "git_head": git_head,
+            "diff_base": self.diff_base,
+            "diff_source_counts": dict(sorted(self.diff_source_counts.items())),
             "diff_checked": check_diff,
             "changed_paths": self.changed_paths,
             "matched_impact_rows": self.matched_impact_rows,
@@ -1400,7 +1479,7 @@ def build_parser() -> argparse.ArgumentParser:
     parser.add_argument(
         "--check-diff",
         action="store_true",
-        help="Match the actual working-tree diff to machine-readable impact rules.",
+        help="Match the Task's Diff base..HEAD plus working tree to impact rules.",
     )
     parser.add_argument(
         "--report",

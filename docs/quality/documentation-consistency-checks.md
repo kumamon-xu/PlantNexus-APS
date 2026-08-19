@@ -24,7 +24,7 @@ last_reviewed: 2026-08-19
 uv run python scripts/check_docs.py
 ```
 
-当前 Task 与 working tree diff 的影响矩阵检查，并生成机器可读报告：
+当前 Task 从不可变基线至 HEAD、再联合 working tree 的影响矩阵检查，并生成机器可读报告：
 
 ```text
 uv run python scripts/check_docs.py --task <task-card> --check-diff --report <report-path>
@@ -38,8 +38,9 @@ uv run python -m unittest discover -s backend/tests/unit -p "test_check_docs.py"
 
 ## 输入
 
-- `--task` 指定的当前 Task Card；
-- `git status --porcelain` 相对 `HEAD` 的 tracked/untracked working tree diff；
+- `--task` 指定的当前 Task Card及其中在进入 `in_progress` 时记录的完整 `Diff base`；
+- `git diff --name-only Diff-base..HEAD` 的已提交路径；
+- `git status --porcelain` 相对 `HEAD` 的 tracked/untracked working tree 路径；
 - `change-impact-matrix.md`；
 - 文档元数据、治理注册表、追踪矩阵和测试 ID 表；
 - 当前 Phase 和 Milestone。
@@ -49,7 +50,7 @@ uv run python -m unittest discover -s backend/tests/unit -p "test_check_docs.py"
 1. Task Card 包含非空 `Documentation impact`、`Documents to update`、`Traceability updates`；
 2. `required` 时文档路径明确存在或由本 Task 创建，并包含在 Files allowed to change；
 3. `none` 时有非空理由和已审查的 impact-matrix 行；
-4. 实际 diff 命中的 `IMPACT-*` 行已在 Task 声明，规则要求的文档已列入 Documents to update；
+4. `Diff base` 是存在且为当前 HEAD 祖先的完整 40 字符 commit SHA；已提交范围与 working tree 并集命中的 `IMPACT-*` 行已在 Task 声明，规则要求的文档已列入 Documents to update；
 5. 实际 changed paths 全部位于 Task 允许范围；`.gitkeep` 由矩阵显式忽略；
 6. 文档 metadata、唯一 doc ID、source sections、相对链接和 Markdown fence 有效；
 7. `registry_version: 1.0.0` 存在，注册表 ID 唯一，Requirement/NFR/ENG/C/OBJ/TASK/TEST/ADR/OPEN/SIM/RISK 引用可解析；
@@ -63,14 +64,15 @@ uv run python -m unittest discover -s backend/tests/unit -p "test_check_docs.py"
 
 | 层 | 行为 |
 |---|---|
-| Local/Task acceptance | 对当前 Task 与 working diff 运行，失败不得标记 Done |
+| Local/Task acceptance | 对当前 Task 的 `Diff base..HEAD` + working tree 运行；提交前后均须可复验，失败不得标记 Done |
 | Pull Request | P0-08 接入后成为必需检查；阻止缺失文档影响、断链、版本漏更和越阶段任务 |
 | Release | P0-09 接入后在 PR 检查上增加 Artifact/manifest、Milestone Gate 和 production readiness 一致性 |
 
 ## 输出
 
-`--report` 写出 `traceability-report.v1` JSON，包含总体状态、Task、changed paths、matched
-matrix rows、expected docs、observed docs、检查统计、带 check ID/severity/message/hint 的 issues。
+`--report` 写出 `traceability-report.v1` JSON，包含总体状态、Task、Git HEAD、`diff_base`、
+`diff_source_counts`、changed paths、matched matrix rows、expected docs、observed docs、检查统计、
+带 check ID/severity/message/hint 的 issues。
 任一 error 均返回非零退出码；通过时终端输出 `PASS repository governance` 及关键计数。
 
 ## 已知边界

@@ -25,6 +25,8 @@ last_reviewed: 2026-08-19
 
 完成上述规范读取后，可以读取根 `README.md` 获取已落地的构建与本地检查命令；`README.md` 不高于 Task Card 或规范正文。
 
+Task 从 `planned`/`ready` 进入 `in_progress` 时，必须先把当时的完整 40 字符 HEAD commit SHA 记录为 Task Card 的 `Diff base`。后续 diff acceptance 以该不可变基线联合当前 working tree，不能依赖尚未提交的改动长期存在。
+
 规格版本变化，或修改架构边界、PlanningProblem、SolverBackend、Constraint Catalog、状态机、发布规则或阶段 Exit Gate 时，完整重读 `../core/APS_IMPLEMENTATION_SPEC.md`。
 
 ## 执行边界
@@ -79,4 +81,4 @@ uv run python scripts/check_docs.py
 uv run python scripts/check_docs.py --task <task-card> --check-diff --report <report-path>
 ```
 
-校验器检查 ID、Task 依赖、traceability 和实际 Git diff/change-impact 声明，但不代替业务 Contract、Schema、Solver/Validator correctness、Scenario 或 Phase Gate 验收。
+校验器检查 ID、Task 依赖、traceability，以及 `Diff base..HEAD` 已提交变更与 working tree 并集对应的 change-impact 声明，但不代替业务 Contract、Schema、Solver/Validator correctness、Scenario 或 Phase Gate 验收。

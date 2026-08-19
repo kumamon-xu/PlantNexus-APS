@@ -97,10 +97,10 @@ uv run python scripts/check_docs.py
 
 当前检查范围为：必需 metadata、唯一文档 ID、与总规一致的 `spec_version`、Markdown fence、本地链接、inventory metadata、版本化 registry、完整 ID 引用、Task 依赖、逐根 traceability、OPEN closure 证据和 PROD_OPEN/SIM_ASSUMPTION 隔离。
 
-当前 Task 的 diff 检查：
+Task 进入 `in_progress` 时先记录当时完整 40 字符 HEAD SHA 为 `Diff base`。当前 Task 的 diff 检查：
 
 ```text
 uv run python scripts/check_docs.py --task <task-card> --check-diff --report <report-path>
 ```
 
-change-impact matrix 使用稳定 `IMPACT-*` Rule ID。实际 changed path 必须命中机器规则，Task 必须声明全部命中行并把 Required documentation 列入 `Documents to update`。报告为 `traceability-report.v1`；机器 PASS 仍须在 Completion evidence 中记录实际文档更新、未修改理由和语义审查结论。
+change-impact matrix 使用稳定 `IMPACT-*` Rule ID。实际 changed path 是 `Diff base..HEAD` 已提交路径与 working tree 路径的并集，必须命中机器规则；Task 必须声明全部命中行并把 Required documentation 列入 `Documents to update`。报告为 `traceability-report.v1`，记录 diff base 和两个来源的计数；机器 PASS 仍须在 Completion evidence 中记录实际文档更新、未修改理由和语义审查结论。

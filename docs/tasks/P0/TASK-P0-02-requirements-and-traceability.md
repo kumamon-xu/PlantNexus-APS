@@ -21,6 +21,8 @@ Goal: 固定 REQ/NFR/ENG 根 ID、追踪规则、开放问题/假设/风险注�
 
 Inputs: `docs/governance/*`、Milestone、Task Template。
 
+Diff base: cf781531d135824ec4bf2ad4b0b9a652545af0b5
+
 Files allowed to change: `/scripts/check_docs.py`、`/backend/tests/unit/test_check_docs.py`、生成但不提交的 `/build/traceability/TASK-P0-02-report.json`，以及下方 `Documents to update` 的明确文档路径。
 
 Files forbidden to change: Backend/Frontend 业务实现、Schema 语义、Solver。
@@ -45,7 +47,7 @@ Migration: 无。
 
 Error behavior: duplicate/missing ID、不存在路径或非法状态导致 validation fail。
 
-Tests: TEST-TRACEABILITY-VALIDATOR；覆盖 registry parse、duplicate ID、broken reference、缺失文档影响字段、diff/impact matrix 不匹配、PROD_OPEN/SIM_ASSUMPTION 混用负例。
+Tests: TEST-TRACEABILITY-VALIDATOR；覆盖 registry parse、duplicate ID、broken reference、缺失文档影响字段、diff/impact matrix 不匹配、clean-tree committed range、PROD_OPEN/SIM_ASSUMPTION 混用负例。
 
 Benchmark impact: 无。
 
@@ -65,23 +67,27 @@ Rollback: 恢复到上一个 registry version，保留已经分配的 ID 不复�
 
 ## Completion evidence
 
+Post-commit audit: 提交 `d2a7131` 后在 clean working tree 复跑第三条 Acceptance Command，真实结果为 exit code `1`：旧校验器只读取 working tree，得到 `diff_paths=0`，无法复现已提交 Task 的影响矩阵证据。任务因此重开；现已用不可变 `Diff base` + `Diff base..HEAD` committed range + working tree union 修复，并加入 clean-tree regression test。
+
 Completed at: `2026-08-19T09:48:58+08:00`
+
+Revalidated at: `2026-08-19T10:05:47+08:00`
 
 ### Delivered artifacts
 
 - Governance registries: `registry_version: 1.0.0`；15 个 REQ、9 个 NFR、6 个 ENG 根 ID，15 个 `PROD_OPEN-*`、5 个 `SIM_ASSUMPTION-*` 和 10 个 `RISK-*` 均可机器解析且无重复。
 - Traceability baseline: 30 个 REQ/NFR/ENG 根 ID 在追踪矩阵中恰好各一行；`REGISTERED` 与 `PLANNED` 语义分离，未把计划能力标成已实现。
-- Validator: `scripts/check_docs.py` 提供全仓库治理检查、Task/diff 范围检查、`IMPACT-*` 规则匹配及 `traceability-report.v1` JSON 报告。
-- Tests: `backend/tests/unit/test_check_docs.py` 的 7 个用例覆盖 registry parse、重复 ID、断裂引用、缺失 Task 文档影响字段、diff/impact 不匹配、生产开放项与模拟假设混用，以及 ID range 展开。
-- Validation report: `build/traceability/TASK-P0-02-report.json`（由 `.gitignore` 排除）记录基线提交 `cf781531d135824ec4bf2ad4b0b9a652545af0b5`、25 个 changed paths、5 个 matched impact rows、21 个 expected/observed documents、0 个 missing trace refs 和 0 个 issues。
+- Validator: `scripts/check_docs.py` 提供全仓库治理检查、Task/diff 范围检查、`IMPACT-*` 规则匹配及 `traceability-report.v1` JSON 报告；Task diff 为 `Diff base..HEAD` 已提交路径与 working tree 路径的并集。
+- Tests: `backend/tests/unit/test_check_docs.py` 的 8 个用例覆盖 registry parse、重复 ID、断裂引用、缺失 Task 文档影响字段、diff/impact 不匹配、clean-tree committed range、生产开放项与模拟假设混用，以及 ID range 展开。
+- Validation report: `build/traceability/TASK-P0-02-report.json`（由 `.gitignore` 排除）记录 `diff_base=cf781531d135824ec4bf2ad4b0b9a652545af0b5`、验收时 `git_head=d2a713118f576477e4b1979325f661a2add72011`、25 个 committed-range paths、18 个 working-tree paths、合并后 25 个 changed paths、5 个 matched impact rows、21 个 expected/observed documents、0 个 missing trace refs 和 0 个 issues。
 
 ### Acceptance results
 
 | Command | Exit code | Result |
 |---|---:|---|
-| `uv run python -m unittest discover -s backend/tests/unit -p "test_check_docs.py"` | 0 | PASS；运行 7 个测试，全部通过。 |
+| `uv run python -m unittest discover -s backend/tests/unit -p "test_check_docs.py"` | 0 | PASS；运行 8 个测试，全部通过；包含 clean working tree 从 committed range 恢复路径的回归测试。 |
 | `uv run python scripts/check_docs.py` | 0 | PASS；107 docs、30 root IDs、30 trace rows、23 test IDs、15 open IDs、5 simulation assumptions、10 risks、9 Tasks 均通过。 |
-| `uv run python scripts/check_docs.py --task docs/tasks/P0/TASK-P0-02-requirements-and-traceability.md --check-diff --report build/traceability/TASK-P0-02-report.json` | 0 | PASS；25 个 changed paths 命中 5 个 impact rows；报告写入指定 ignored path，issues 为空。 |
+| `uv run python scripts/check_docs.py --task docs/tasks/P0/TASK-P0-02-requirements-and-traceability.md --check-diff --report build/traceability/TASK-P0-02-report.json` | 0 | PASS；从 `Diff base..HEAD` 与 working tree 合并得到 25 个 changed paths，命中 5 个 impact rows；报告写入指定 ignored path，issues 为空。 |
 
 以上命令在完成状态、证据和追踪链接写入后再次执行，结果保持 PASS。
 

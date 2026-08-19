@@ -27,13 +27,13 @@ uv build
 uv run python -c "import app; assert app.CODE_VERSION == '0.0.0'; assert app.SPEC_VERSION == '0.3.0'; assert app.SCHEMA_VERSION == 'unassigned'"
 ```
 
-`scripts/check_docs.py` 当前同时检查结构性 Markdown、版本化 registries、REQ/NFR/ENG/TEST 等引用、Task 依赖、逐根 traceability 和 PROD_OPEN/SIM_ASSUMPTION 隔离。对当前 Task 的实际 Git diff 运行影响覆盖检查：
+`scripts/check_docs.py` 当前同时检查结构性 Markdown、版本化 registries、REQ/NFR/ENG/TEST 等引用、Task 依赖、逐根 traceability 和 PROD_OPEN/SIM_ASSUMPTION 隔离。Task 进入 `in_progress` 时须把当时完整 HEAD SHA 写入 `Diff base`；影响覆盖检查使用 `Diff base..HEAD` 的已提交变更与当前 working tree 的并集，因此提交前后可用同一命令复验：
 
 ```powershell
 uv run python scripts/check_docs.py --task docs/tasks/P0/TASK-P0-02-requirements-and-traceability.md --check-diff --report build/traceability/TASK-P0-02-report.json
 ```
 
-报告使用 `traceability-report.v1`，生成到已忽略的 `build/`；Task Card Completion evidence 保存持久结果摘要。CI 强制集成仍属于 TASK-P0-08。
+报告使用 `traceability-report.v1`，包含 `diff_base` 与 committed/working-tree source counts，生成到已忽略的 `build/`；Task Card Completion evidence 保存持久结果摘要。CI 强制集成仍属于 TASK-P0-08。
 
 ## 仓库结构
 

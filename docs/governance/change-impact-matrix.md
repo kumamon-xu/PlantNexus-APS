@@ -21,7 +21,7 @@ registry_version: 1.0.0
 3. 把 Requirement/Test/Artifact/Registry 变化写入 `Traceability updates`；
 4. 将这些文档路径加入 `Files allowed to change`；
 5. 实施中出现新影响时先修订 Task Card；
-6. 完成时按实际 diff 再匹配一次，防止计划与实际偏离。
+6. Task 进入 `in_progress` 时记录完整 HEAD SHA 为 `Diff base`；完成时按 `Diff base..HEAD` 已提交路径与 working tree 路径并集再匹配一次，防止计划、提交前验收和提交后验收相互偏离。
 
 `Change-impact matrix rows reviewed` 必须使用下方稳定 Rule ID。校验器忽略纯 `.gitkeep`，其他 changed path 可以同时命中多条规则；每条命中的 Rule ID 都必须在当前 Task 声明，其 `Required documentation` 必须进入 `Documents to update`。
 

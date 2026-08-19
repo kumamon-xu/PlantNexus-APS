@@ -4,9 +4,11 @@ from __future__ import annotations
 
 import re
 import unittest
+from unittest.mock import Mock
 
 from scripts.check_docs import (
     ImpactRule,
+    RepositoryValidator,
     ROOT_ID_RE,
     duplicate_id_issues,
     evaluate_impact_coverage,
@@ -85,6 +87,35 @@ class TraceabilityValidatorTests(unittest.TestCase):
         self.assertEqual(coverage.matched_rule_ids, ("IMPACT-DOCS",))
         self.assertEqual(len(coverage.issues), 2)
         self.assertTrue(all(issue.check_id == "DIFF-IMPACT" for issue in coverage.issues))
+
+    def test_diff_base_recovers_committed_paths_in_clean_tree(self) -> None:
+        diff_base = "a" * 40
+        validator = object.__new__(RepositoryValidator)
+        validator.diff_source_counts = {}
+        validator.git_output = Mock(
+            side_effect=(
+                "docs/governance/traceability-rules.md\nscripts/check_docs.py\n",
+                "",
+            )
+        )
+
+        paths = validator.git_changed_paths(diff_base)
+
+        self.assertEqual(
+            paths,
+            ["docs/governance/traceability-rules.md", "scripts/check_docs.py"],
+        )
+        self.assertEqual(
+            validator.diff_source_counts,
+            {"committed_range": 2, "working_tree": 0},
+        )
+        validator.git_output.assert_any_call(
+            "diff",
+            "--name-only",
+            "--diff-filter=ACDMRTUXB",
+            f"{diff_base}..HEAD",
+            "--",
+        )
 
     def test_prod_open_and_sim_assumption_mixing_is_rejected(self) -> None:
         concrete_sim_id = "SIM-" + "ASSUMPTION-001"

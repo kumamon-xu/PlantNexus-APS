@@ -77,6 +77,6 @@ last_reviewed: 2026-08-19
 - 根 [`../AGENTS.md`](../AGENTS.md) 只负责把 Agent 导向规范正文，不复制规则；
 - 仓库治理检查运行 `uv run python scripts/check_docs.py`；
 - 该检查验证 metadata、文档 ID、Markdown fence、本地链接、Task、版本化 registry、完整 ID 引用、逐根 traceability 和命名空间隔离；
-- 当前 Task 的实际 diff 使用 `--task <task-card> --check-diff` 匹配 change-impact Rule ID，并可用 `--report <path>` 输出 `traceability-report.v1`。
+- Task 进入 `in_progress` 时记录完整 `Diff base`；`--task <task-card> --check-diff` 对 `Diff base..HEAD` 与 working tree 的并集匹配 change-impact Rule ID，并可用 `--report <path>` 输出 `traceability-report.v1`。
 
 本地检查已经形成；PR/Release CI 强制、Artifact/manifest 和 Phase Gate 集成仍由后续获准 Task 提供，不能因本命令 PASS 而宣称 P0 或生产就绪。

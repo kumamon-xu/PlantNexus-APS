@@ -31,7 +31,7 @@ P0-DOCS — Documentation Baseline
 TASK-P0-02 — Requirements and Traceability
 ```
 
-Task 状态：`done`（2026-08-19）。版本化治理注册表、逐根追踪矩阵、本地 diff/impact validator、负向测试和机器可读报告均已通过任务卡 Acceptance Commands。TASK-P0-01 继续保持 `done`。
+Task 状态：`done`（2026-08-19，完成后复核修正）。版本化治理注册表、逐根追踪矩阵、基于不可变 Diff base 的提交前后可复验 diff/impact validator、负向/回归测试和机器可读报告均已通过任务卡 Acceptance Commands。TASK-P0-01 继续保持 `done`。
 
 P0 尚未完成，当前记录不表示通过 P0 Exit Gate，也不授权进入 P1。
 

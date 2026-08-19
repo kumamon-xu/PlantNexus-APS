@@ -27,6 +27,8 @@ last_reviewed: 2026-08-19
 
 状态由 Task front matter 记录：`planned`、`ready`、`in_progress`、`blocked`、`done`、`cancelled`。只有真实验收证据存在时才能标记 done。
 
+Task 进入 `in_progress` 时必须把切换前的完整 40 字符 HEAD commit SHA 写入 `Diff base`。验收器用 `Diff base..HEAD` 与 working tree 的路径并集检查范围和文档影响，使同一 Task 在提交前后都能复验。
+
 每张 Task Card 必须在开始前完成文档影响分析：填写 `Documentation impact`、明确的 `Documents to update`、理由、匹配的 change-impact matrix 行和 `Traceability updates`。禁止使用“相关 docs”作为路径；没有文档变化也必须提交有依据的 `none` 结论。
 
 本表是导航摘要；发生差异时以对应 Task Card front matter 为准。完成一个 Task 不会自动把下一个 Task 改为 `ready` 或开始执行。

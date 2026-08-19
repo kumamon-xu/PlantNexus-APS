@@ -29,7 +29,7 @@ registry_version: 1.0.0
 
 | Test ID | Purpose | Earliest phase | Evidence status |
 |---|---|---|---|
-| TEST-TRACEABILITY-VALIDATOR | Registry、reference、Task 与 diff/impact governance validation | P0 | [`backend/tests/unit/test_check_docs.py`](../../backend/tests/unit/test_check_docs.py) |
+| TEST-TRACEABILITY-VALIDATOR | Registry、reference、Task、diff/impact，以及 clean-tree committed range regression | P0 | [`backend/tests/unit/test_check_docs.py`](../../backend/tests/unit/test_check_docs.py) |
 | TEST-OBS-001 | 日志、运行标识与 Observability 关联 | P0 | PLANNED（TASK-P0-08） |
 | TEST-CONTRACT-001 | 基础 Contract 结构与兼容性 | P0 | PLANNED |
 | TEST-GOLDEN-JSSP | 人工可验证 JSSP | P2 | PLANNED |

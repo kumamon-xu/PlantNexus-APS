@@ -23,6 +23,8 @@ Goal:
 
 Inputs:
 
+Diff base: Task 进入 `in_progress` 前的完整 40 字符 HEAD commit SHA；不得使用会移动的 branch/tag
+
 Files allowed to change:
 
 Files forbidden to change:
@@ -72,6 +74,7 @@ Rollback:
 至少记录：
 
 - 完成时间和实际 changed paths；
+- Diff base、验收时 Git HEAD，以及 committed-range/working-tree source counts；
 - 实际更新文档及必审但未修改文档的逐项理由；
 - Requirement/NFR/ENG → Task → Test → Artifact 关系；
 - `scripts/check_docs.py --task <task-card> --check-diff --report <report-path>` 的真实摘要；

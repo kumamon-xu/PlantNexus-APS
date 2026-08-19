@@ -84,4 +84,6 @@ Rollback:
 
 涉及 Constraint rule、capability/error registry 或状态机时还必须记录：稳定 artifact/version、所有 C-ID/state/code 的完整性、允许与拒绝路径、guard/evidence、对应 Test ID、是否仅为 contract metadata、真实 evaluator/persistence/权限/业务动作是否仍为 `PLANNED`，以及是否需要 ADR/Benchmark replay。不得把 rule-sheet completeness 写成 ScheduleValidator PASS。
 
+涉及 Validator evaluator 或 mutation 时还必须记录：正例来源/hash 保持不变、evaluator 与 Solver/backend/expected artifact 的依赖边界、mutation construction 与判断公式分离、每个 mutation 的目标及实际 C-ID、ValidationReport/Error exact/schema evidence、C-ID/required mutation coverage、deterministic replay、fixture-local 与 production/performance 边界，以及 Property/Benchmark/Solver comparison 是否仍为 `PLANNED`。
+
 涉及 Simulation Profile/Scenario/Generator 时还必须记录：contract/asset/generator/canonicalization 各自版本、seed 与随机源控制、canonical dataset/hash 定义、`generated_at` 等非 hash provenance、Standard Import 共同入口、Production target rejection、TEST-SCENARIO-REPLAY/TEST-SIM-ISOLATION 证据，以及 sample/Fixture/Benchmark/Execution 行为哪些仍为 `PLANNED`。不得把 empty package 或 Schema sample 写成正式 Scenario/性能证据。

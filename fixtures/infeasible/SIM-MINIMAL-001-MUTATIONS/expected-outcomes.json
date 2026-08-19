@@ -1,0 +1,908 @@
+{
+  "expected_outcomes_version": "validator-expected-outcomes.v1",
+  "suite_id": "SIM-MINIMAL-001-MUTATIONS@1.0.0",
+  "positive": {
+    "validation_report": {
+      "validation_report_version": "validation-report.v2",
+      "problem_hash": "fixture-problem:sha256:fd8e5af387c7d4197a2664dfa89e93912091647d5809f1b76468d36edab29c10",
+      "status": "PASS",
+      "hard_violation_count": 0,
+      "violations": []
+    },
+    "error": null
+  },
+  "cases": [
+    {
+      "case_id": "MUT-C001-MISSING-OPERATION",
+      "validation_report": {
+        "validation_report_version": "validation-report.v2",
+        "problem_hash": "fixture-problem:sha256:fd8e5af387c7d4197a2664dfa89e93912091647d5809f1b76468d36edab29c10",
+        "status": "FAIL",
+        "hard_violation_count": 1,
+        "violations": [
+          {
+            "constraint_id": "C-001",
+            "severity": "HARD",
+            "entity_ids": [
+              "OP-CUT-002"
+            ],
+            "observed_value": {
+              "operation_id": "OP-CUT-002",
+              "assignment_count": 0,
+              "assignments": []
+            },
+            "expected_rule": "exactly one assignment per unfinished operation",
+            "message": "operation assignment completeness violated"
+          }
+        ]
+      },
+      "error": {
+        "error_version": "error.v2",
+        "category": "VALIDATION_FAILED",
+        "code": "SCHEDULE_VALIDATION_FAILED",
+        "message": "candidate schedule has 1 hard constraint violation(s)",
+        "details": [
+          {
+            "entity_id": "OP-CUT-002",
+            "field": "candidate_schedule",
+            "observed_value": {
+              "constraint_id": "C-001",
+              "entity_ids": [
+                "OP-CUT-002"
+              ],
+              "value": {
+                "operation_id": "OP-CUT-002",
+                "assignment_count": 0,
+                "assignments": []
+              }
+            },
+            "expected_contract": "exactly one assignment per unfinished operation",
+            "source_location": "candidate.assignments"
+          }
+        ]
+      }
+    },
+    {
+      "case_id": "MUT-C001-DUPLICATE-OPERATION",
+      "validation_report": {
+        "validation_report_version": "validation-report.v2",
+        "problem_hash": "fixture-problem:sha256:fd8e5af387c7d4197a2664dfa89e93912091647d5809f1b76468d36edab29c10",
+        "status": "FAIL",
+        "hard_violation_count": 3,
+        "violations": [
+          {
+            "constraint_id": "C-001",
+            "severity": "HARD",
+            "entity_ids": [
+              "OP-CUT-001"
+            ],
+            "observed_value": {
+              "operation_id": "OP-CUT-001",
+              "assignment_count": 2,
+              "assignments": [
+                {
+                  "operation_id": "OP-CUT-001",
+                  "resource_id": "RES-CUT-FAST",
+                  "start_tick": 0,
+                  "end_tick": 4
+                },
+                {
+                  "operation_id": "OP-CUT-001",
+                  "resource_id": "RES-CUT-FAST",
+                  "start_tick": 0,
+                  "end_tick": 4
+                }
+              ]
+            },
+            "expected_rule": "exactly one assignment per unfinished operation",
+            "message": "operation assignment completeness violated"
+          },
+          {
+            "constraint_id": "C-003",
+            "severity": "HARD",
+            "entity_ids": [
+              "OP-CUT-001",
+              "RES-CUT-FAST"
+            ],
+            "observed_value": {
+              "operation_id": "OP-CUT-001",
+              "selected_resource_count": 2,
+              "selected_resource_ids": [
+                "RES-CUT-FAST",
+                "RES-CUT-FAST"
+              ],
+              "allowed_resource_ids": [
+                "RES-CUT-FAST",
+                "RES-CUT-SLOW"
+              ]
+            },
+            "expected_rule": "exactly one listed candidate resource",
+            "message": "candidate resource selection violated"
+          },
+          {
+            "constraint_id": "C-004",
+            "severity": "HARD",
+            "entity_ids": [
+              "RES-CUT-FAST",
+              "OP-CUT-001"
+            ],
+            "observed_value": {
+              "resource_id": "RES-CUT-FAST",
+              "first": {
+                "operation_id": "OP-CUT-001",
+                "resource_id": "RES-CUT-FAST",
+                "start_tick": 0,
+                "end_tick": 4
+              },
+              "second": {
+                "operation_id": "OP-CUT-001",
+                "resource_id": "RES-CUT-FAST",
+                "start_tick": 0,
+                "end_tick": 4
+              }
+            },
+            "expected_rule": "capacity-1 resource intervals do not overlap",
+            "message": "resource overlap detected"
+          }
+        ]
+      },
+      "error": {
+        "error_version": "error.v2",
+        "category": "VALIDATION_FAILED",
+        "code": "SCHEDULE_VALIDATION_FAILED",
+        "message": "candidate schedule has 3 hard constraint violation(s)",
+        "details": [
+          {
+            "entity_id": "OP-CUT-001",
+            "field": "candidate_schedule",
+            "observed_value": {
+              "constraint_id": "C-001",
+              "entity_ids": [
+                "OP-CUT-001"
+              ],
+              "value": {
+                "operation_id": "OP-CUT-001",
+                "assignment_count": 2,
+                "assignments": [
+                  {
+                    "operation_id": "OP-CUT-001",
+                    "resource_id": "RES-CUT-FAST",
+                    "start_tick": 0,
+                    "end_tick": 4
+                  },
+                  {
+                    "operation_id": "OP-CUT-001",
+                    "resource_id": "RES-CUT-FAST",
+                    "start_tick": 0,
+                    "end_tick": 4
+                  }
+                ]
+              }
+            },
+            "expected_contract": "exactly one assignment per unfinished operation",
+            "source_location": "candidate.assignments"
+          },
+          {
+            "entity_id": "OP-CUT-001",
+            "field": "candidate_schedule",
+            "observed_value": {
+              "constraint_id": "C-003",
+              "entity_ids": [
+                "OP-CUT-001",
+                "RES-CUT-FAST"
+              ],
+              "value": {
+                "operation_id": "OP-CUT-001",
+                "selected_resource_count": 2,
+                "selected_resource_ids": [
+                  "RES-CUT-FAST",
+                  "RES-CUT-FAST"
+                ],
+                "allowed_resource_ids": [
+                  "RES-CUT-FAST",
+                  "RES-CUT-SLOW"
+                ]
+              }
+            },
+            "expected_contract": "exactly one listed candidate resource",
+            "source_location": "candidate.assignments"
+          },
+          {
+            "entity_id": "RES-CUT-FAST",
+            "field": "candidate_schedule",
+            "observed_value": {
+              "constraint_id": "C-004",
+              "entity_ids": [
+                "RES-CUT-FAST",
+                "OP-CUT-001"
+              ],
+              "value": {
+                "resource_id": "RES-CUT-FAST",
+                "first": {
+                  "operation_id": "OP-CUT-001",
+                  "resource_id": "RES-CUT-FAST",
+                  "start_tick": 0,
+                  "end_tick": 4
+                },
+                "second": {
+                  "operation_id": "OP-CUT-001",
+                  "resource_id": "RES-CUT-FAST",
+                  "start_tick": 0,
+                  "end_tick": 4
+                }
+              }
+            },
+            "expected_contract": "capacity-1 resource intervals do not overlap",
+            "source_location": "candidate.assignments"
+          }
+        ]
+      }
+    },
+    {
+      "case_id": "MUT-C003-WRONG-RESOURCE",
+      "validation_report": {
+        "validation_report_version": "validation-report.v2",
+        "problem_hash": "fixture-problem:sha256:fd8e5af387c7d4197a2664dfa89e93912091647d5809f1b76468d36edab29c10",
+        "status": "FAIL",
+        "hard_violation_count": 1,
+        "violations": [
+          {
+            "constraint_id": "C-003",
+            "severity": "HARD",
+            "entity_ids": [
+              "OP-HEAT-001",
+              "RES-CUT-SLOW"
+            ],
+            "observed_value": {
+              "operation_id": "OP-HEAT-001",
+              "selected_resource_count": 1,
+              "selected_resource_ids": [
+                "RES-CUT-SLOW"
+              ],
+              "allowed_resource_ids": [
+                "RES-HEAT-001"
+              ]
+            },
+            "expected_rule": "exactly one listed candidate resource",
+            "message": "candidate resource selection violated"
+          }
+        ]
+      },
+      "error": {
+        "error_version": "error.v2",
+        "category": "VALIDATION_FAILED",
+        "code": "SCHEDULE_VALIDATION_FAILED",
+        "message": "candidate schedule has 1 hard constraint violation(s)",
+        "details": [
+          {
+            "entity_id": "OP-HEAT-001",
+            "field": "candidate_schedule",
+            "observed_value": {
+              "constraint_id": "C-003",
+              "entity_ids": [
+                "OP-HEAT-001",
+                "RES-CUT-SLOW"
+              ],
+              "value": {
+                "operation_id": "OP-HEAT-001",
+                "selected_resource_count": 1,
+                "selected_resource_ids": [
+                  "RES-CUT-SLOW"
+                ],
+                "allowed_resource_ids": [
+                  "RES-HEAT-001"
+                ]
+              }
+            },
+            "expected_contract": "exactly one listed candidate resource",
+            "source_location": "candidate.assignments"
+          }
+        ]
+      }
+    },
+    {
+      "case_id": "MUT-C004-MACHINE-OVERLAP",
+      "validation_report": {
+        "validation_report_version": "validation-report.v2",
+        "problem_hash": "fixture-problem:sha256:a238f4cfa0e5a03ae8110d783acf2c8383a5634018f458760428cf92cb38def6",
+        "status": "FAIL",
+        "hard_violation_count": 1,
+        "violations": [
+          {
+            "constraint_id": "C-004",
+            "severity": "HARD",
+            "entity_ids": [
+              "RES-CUT-FAST",
+              "OP-CUT-001",
+              "OP-MUTATION-OVERLAP"
+            ],
+            "observed_value": {
+              "resource_id": "RES-CUT-FAST",
+              "first": {
+                "operation_id": "OP-CUT-001",
+                "resource_id": "RES-CUT-FAST",
+                "start_tick": 0,
+                "end_tick": 4
+              },
+              "second": {
+                "operation_id": "OP-MUTATION-OVERLAP",
+                "resource_id": "RES-CUT-FAST",
+                "start_tick": 2,
+                "end_tick": 4
+              }
+            },
+            "expected_rule": "capacity-1 resource intervals do not overlap",
+            "message": "resource overlap detected"
+          }
+        ]
+      },
+      "error": {
+        "error_version": "error.v2",
+        "category": "VALIDATION_FAILED",
+        "code": "SCHEDULE_VALIDATION_FAILED",
+        "message": "candidate schedule has 1 hard constraint violation(s)",
+        "details": [
+          {
+            "entity_id": "RES-CUT-FAST",
+            "field": "candidate_schedule",
+            "observed_value": {
+              "constraint_id": "C-004",
+              "entity_ids": [
+                "RES-CUT-FAST",
+                "OP-CUT-001",
+                "OP-MUTATION-OVERLAP"
+              ],
+              "value": {
+                "resource_id": "RES-CUT-FAST",
+                "first": {
+                  "operation_id": "OP-CUT-001",
+                  "resource_id": "RES-CUT-FAST",
+                  "start_tick": 0,
+                  "end_tick": 4
+                },
+                "second": {
+                  "operation_id": "OP-MUTATION-OVERLAP",
+                  "resource_id": "RES-CUT-FAST",
+                  "start_tick": 2,
+                  "end_tick": 4
+                }
+              }
+            },
+            "expected_contract": "capacity-1 resource intervals do not overlap",
+            "source_location": "candidate.assignments"
+          }
+        ]
+      }
+    },
+    {
+      "case_id": "MUT-C005-CALENDAR-OVERLAP",
+      "validation_report": {
+        "validation_report_version": "validation-report.v2",
+        "problem_hash": "fixture-problem:sha256:fd8e5af387c7d4197a2664dfa89e93912091647d5809f1b76468d36edab29c10",
+        "status": "FAIL",
+        "hard_violation_count": 1,
+        "violations": [
+          {
+            "constraint_id": "C-005",
+            "severity": "HARD",
+            "entity_ids": [
+              "OP-HEAT-001",
+              "RES-HEAT-001"
+            ],
+            "observed_value": {
+              "assignment_start_utc": "2026-08-20T09:45:00Z",
+              "assignment_end_utc": "2026-08-20T10:45:00Z",
+              "unavailable_start_utc": "2026-08-20T09:00:00Z",
+              "unavailable_end_utc": "2026-08-20T10:00:00Z"
+            },
+            "expected_rule": "non-preemptive assignment avoids all unavailable intervals",
+            "message": "resource calendar violated"
+          }
+        ]
+      },
+      "error": {
+        "error_version": "error.v2",
+        "category": "VALIDATION_FAILED",
+        "code": "SCHEDULE_VALIDATION_FAILED",
+        "message": "candidate schedule has 1 hard constraint violation(s)",
+        "details": [
+          {
+            "entity_id": "OP-HEAT-001",
+            "field": "candidate_schedule",
+            "observed_value": {
+              "constraint_id": "C-005",
+              "entity_ids": [
+                "OP-HEAT-001",
+                "RES-HEAT-001"
+              ],
+              "value": {
+                "assignment_start_utc": "2026-08-20T09:45:00Z",
+                "assignment_end_utc": "2026-08-20T10:45:00Z",
+                "unavailable_start_utc": "2026-08-20T09:00:00Z",
+                "unavailable_end_utc": "2026-08-20T10:00:00Z"
+              }
+            },
+            "expected_contract": "non-preemptive assignment avoids all unavailable intervals",
+            "source_location": "candidate.assignments"
+          }
+        ]
+      }
+    },
+    {
+      "case_id": "MUT-C006-MATERIAL-EARLY",
+      "validation_report": {
+        "validation_report_version": "validation-report.v2",
+        "problem_hash": "fixture-problem:sha256:cb70708d404ba5b8011667f2b38f0b015316aa313bc14319bbd9b4e531fce830",
+        "status": "FAIL",
+        "hard_violation_count": 1,
+        "violations": [
+          {
+            "constraint_id": "C-006",
+            "severity": "HARD",
+            "entity_ids": [
+              "OP-CUT-002"
+            ],
+            "observed_value": {
+              "assignment_start_utc": "2026-08-20T09:00:00Z",
+              "release_at_utc": "2026-08-20T08:00:00Z",
+              "material_ready_at_utc": "2026-08-20T09:15:00Z"
+            },
+            "expected_rule": "start >= release_at and start >= material_ready_at",
+            "message": "release or material gate violated"
+          }
+        ]
+      },
+      "error": {
+        "error_version": "error.v2",
+        "category": "VALIDATION_FAILED",
+        "code": "SCHEDULE_VALIDATION_FAILED",
+        "message": "candidate schedule has 1 hard constraint violation(s)",
+        "details": [
+          {
+            "entity_id": "OP-CUT-002",
+            "field": "candidate_schedule",
+            "observed_value": {
+              "constraint_id": "C-006",
+              "entity_ids": [
+                "OP-CUT-002"
+              ],
+              "value": {
+                "assignment_start_utc": "2026-08-20T09:00:00Z",
+                "release_at_utc": "2026-08-20T08:00:00Z",
+                "material_ready_at_utc": "2026-08-20T09:15:00Z"
+              }
+            },
+            "expected_contract": "start >= release_at and start >= material_ready_at",
+            "source_location": "candidate.assignments"
+          }
+        ]
+      }
+    },
+    {
+      "case_id": "MUT-C007-COMPLETED-RESCHEDULED",
+      "validation_report": {
+        "validation_report_version": "validation-report.v2",
+        "problem_hash": "fixture-problem:sha256:9fd530d084b980ea5a3428af1eda76a9146a4ad9557548e81aa65364e50f580c",
+        "status": "FAIL",
+        "hard_violation_count": 1,
+        "violations": [
+          {
+            "constraint_id": "C-007",
+            "severity": "HARD",
+            "entity_ids": [
+              "OP-CUT-001"
+            ],
+            "observed_value": {
+              "execution_status": "COMPLETED",
+              "assignments": [
+                {
+                  "operation_id": "OP-CUT-001",
+                  "resource_id": "RES-CUT-FAST",
+                  "start_tick": 0,
+                  "end_tick": 4
+                }
+              ]
+            },
+            "expected_rule": "completed/running execution facts remain authoritative",
+            "message": "execution fact preservation violated"
+          }
+        ]
+      },
+      "error": {
+        "error_version": "error.v2",
+        "category": "VALIDATION_FAILED",
+        "code": "SCHEDULE_VALIDATION_FAILED",
+        "message": "candidate schedule has 1 hard constraint violation(s)",
+        "details": [
+          {
+            "entity_id": "OP-CUT-001",
+            "field": "candidate_schedule",
+            "observed_value": {
+              "constraint_id": "C-007",
+              "entity_ids": [
+                "OP-CUT-001"
+              ],
+              "value": {
+                "execution_status": "COMPLETED",
+                "assignments": [
+                  {
+                    "operation_id": "OP-CUT-001",
+                    "resource_id": "RES-CUT-FAST",
+                    "start_tick": 0,
+                    "end_tick": 4
+                  }
+                ]
+              }
+            },
+            "expected_contract": "completed/running execution facts remain authoritative",
+            "source_location": "candidate.assignments"
+          }
+        ]
+      }
+    },
+    {
+      "case_id": "MUT-C007-RUNNING-MOVED",
+      "validation_report": {
+        "validation_report_version": "validation-report.v2",
+        "problem_hash": "fixture-problem:sha256:84322f289e9abcdd90dfe3f3bbfc1366bd8c12787f9583d4ea5f66b235d53982",
+        "status": "FAIL",
+        "hard_violation_count": 1,
+        "violations": [
+          {
+            "constraint_id": "C-007",
+            "severity": "HARD",
+            "entity_ids": [
+              "OP-CUT-001",
+              "RES-CUT-SLOW"
+            ],
+            "observed_value": {
+              "execution_status": "RUNNING",
+              "expected_resource_id": "RES-CUT-SLOW",
+              "remaining_seconds": 5400,
+              "expected_start_tick": 0,
+              "expected_end_tick": 6,
+              "assignments": [
+                {
+                  "operation_id": "OP-CUT-001",
+                  "resource_id": "RES-CUT-FAST",
+                  "start_tick": 0,
+                  "end_tick": 4
+                }
+              ]
+            },
+            "expected_rule": "completed/running execution facts remain authoritative",
+            "message": "execution fact preservation violated"
+          }
+        ]
+      },
+      "error": {
+        "error_version": "error.v2",
+        "category": "VALIDATION_FAILED",
+        "code": "SCHEDULE_VALIDATION_FAILED",
+        "message": "candidate schedule has 1 hard constraint violation(s)",
+        "details": [
+          {
+            "entity_id": "OP-CUT-001",
+            "field": "candidate_schedule",
+            "observed_value": {
+              "constraint_id": "C-007",
+              "entity_ids": [
+                "OP-CUT-001",
+                "RES-CUT-SLOW"
+              ],
+              "value": {
+                "execution_status": "RUNNING",
+                "expected_resource_id": "RES-CUT-SLOW",
+                "remaining_seconds": 5400,
+                "expected_start_tick": 0,
+                "expected_end_tick": 6,
+                "assignments": [
+                  {
+                    "operation_id": "OP-CUT-001",
+                    "resource_id": "RES-CUT-FAST",
+                    "start_tick": 0,
+                    "end_tick": 4
+                  }
+                ]
+              }
+            },
+            "expected_contract": "completed/running execution facts remain authoritative",
+            "source_location": "candidate.assignments"
+          }
+        ]
+      }
+    },
+    {
+      "case_id": "MUT-C008-HARD-LOCK-MOVED",
+      "validation_report": {
+        "validation_report_version": "validation-report.v2",
+        "problem_hash": "fixture-problem:sha256:5ed9bc70b685b667d3b79ceadf800f6076b29129dfb87428c97ea6a68ffc673f",
+        "status": "FAIL",
+        "hard_violation_count": 1,
+        "violations": [
+          {
+            "constraint_id": "C-008",
+            "severity": "HARD",
+            "entity_ids": [
+              "OP-CUT-001",
+              "RES-CUT-SLOW"
+            ],
+            "observed_value": {
+              "hard_lock": {
+                "resource_id": "RES-CUT-SLOW",
+                "start_tick": 0,
+                "end_tick": 6
+              },
+              "assignments": [
+                {
+                  "operation_id": "OP-CUT-001",
+                  "resource_id": "RES-CUT-FAST",
+                  "start_tick": 0,
+                  "end_tick": 4
+                }
+              ]
+            },
+            "expected_rule": "HARD_LOCK resource/start/end remain fixed",
+            "message": "hard lock moved"
+          }
+        ]
+      },
+      "error": {
+        "error_version": "error.v2",
+        "category": "VALIDATION_FAILED",
+        "code": "SCHEDULE_VALIDATION_FAILED",
+        "message": "candidate schedule has 1 hard constraint violation(s)",
+        "details": [
+          {
+            "entity_id": "OP-CUT-001",
+            "field": "candidate_schedule",
+            "observed_value": {
+              "constraint_id": "C-008",
+              "entity_ids": [
+                "OP-CUT-001",
+                "RES-CUT-SLOW"
+              ],
+              "value": {
+                "hard_lock": {
+                  "resource_id": "RES-CUT-SLOW",
+                  "start_tick": 0,
+                  "end_tick": 6
+                },
+                "assignments": [
+                  {
+                    "operation_id": "OP-CUT-001",
+                    "resource_id": "RES-CUT-FAST",
+                    "start_tick": 0,
+                    "end_tick": 4
+                  }
+                ]
+              }
+            },
+            "expected_contract": "HARD_LOCK resource/start/end remain fixed",
+            "source_location": "candidate.assignments"
+          }
+        ]
+      }
+    },
+    {
+      "case_id": "MUT-C002-MAX-LAG",
+      "validation_report": {
+        "validation_report_version": "validation-report.v2",
+        "problem_hash": "fixture-problem:sha256:fd8e5af387c7d4197a2664dfa89e93912091647d5809f1b76468d36edab29c10",
+        "status": "FAIL",
+        "hard_violation_count": 1,
+        "violations": [
+          {
+            "constraint_id": "C-002",
+            "severity": "HARD",
+            "entity_ids": [
+              "EDGE-CUT-002-HEAT-001",
+              "OP-CUT-002",
+              "OP-HEAT-001"
+            ],
+            "observed_value": {
+              "predecessor_end_tick": 6,
+              "successor_start_tick": 9,
+              "lag_seconds": 2700,
+              "min_lag_seconds": 0,
+              "max_lag_seconds": 1800
+            },
+            "expected_rule": "successor start remains inside the declared lag window",
+            "message": "precedence lag violated"
+          }
+        ]
+      },
+      "error": {
+        "error_version": "error.v2",
+        "category": "VALIDATION_FAILED",
+        "code": "SCHEDULE_VALIDATION_FAILED",
+        "message": "candidate schedule has 1 hard constraint violation(s)",
+        "details": [
+          {
+            "entity_id": "EDGE-CUT-002-HEAT-001",
+            "field": "candidate_schedule",
+            "observed_value": {
+              "constraint_id": "C-002",
+              "entity_ids": [
+                "EDGE-CUT-002-HEAT-001",
+                "OP-CUT-002",
+                "OP-HEAT-001"
+              ],
+              "value": {
+                "predecessor_end_tick": 6,
+                "successor_start_tick": 9,
+                "lag_seconds": 2700,
+                "min_lag_seconds": 0,
+                "max_lag_seconds": 1800
+              }
+            },
+            "expected_contract": "successor start remains inside the declared lag window",
+            "source_location": "candidate.assignments"
+          }
+        ]
+      }
+    },
+    {
+      "case_id": "MUT-C009-TRANSPORT-LAG",
+      "validation_report": {
+        "validation_report_version": "validation-report.v2",
+        "problem_hash": "fixture-problem:sha256:4886962674f58b1b4d99205f1f9054404cd6e3cb1fd629d955fbd7d98894dab6",
+        "status": "FAIL",
+        "hard_violation_count": 1,
+        "violations": [
+          {
+            "constraint_id": "C-009",
+            "severity": "HARD",
+            "entity_ids": [
+              "EDGE-CUT-002-HEAT-001",
+              "OP-CUT-002",
+              "OP-HEAT-001"
+            ],
+            "observed_value": {
+              "predecessor_end_tick": 6,
+              "successor_start_tick": 8,
+              "transport_seconds_observed": 1800,
+              "transport_lag_seconds": 2700
+            },
+            "expected_rule": "cross-workshop transport lag is respected",
+            "message": "cross-workshop transport lag violated"
+          }
+        ]
+      },
+      "error": {
+        "error_version": "error.v2",
+        "category": "VALIDATION_FAILED",
+        "code": "SCHEDULE_VALIDATION_FAILED",
+        "message": "candidate schedule has 1 hard constraint violation(s)",
+        "details": [
+          {
+            "entity_id": "EDGE-CUT-002-HEAT-001",
+            "field": "candidate_schedule",
+            "observed_value": {
+              "constraint_id": "C-009",
+              "entity_ids": [
+                "EDGE-CUT-002-HEAT-001",
+                "OP-CUT-002",
+                "OP-HEAT-001"
+              ],
+              "value": {
+                "predecessor_end_tick": 6,
+                "successor_start_tick": 8,
+                "transport_seconds_observed": 1800,
+                "transport_lag_seconds": 2700
+              }
+            },
+            "expected_contract": "cross-workshop transport lag is respected",
+            "source_location": "candidate.assignments"
+          }
+        ]
+      }
+    },
+    {
+      "case_id": "MUT-C010-WRONG-DURATION",
+      "validation_report": {
+        "validation_report_version": "validation-report.v2",
+        "problem_hash": "fixture-problem:sha256:fd8e5af387c7d4197a2664dfa89e93912091647d5809f1b76468d36edab29c10",
+        "status": "FAIL",
+        "hard_violation_count": 1,
+        "violations": [
+          {
+            "constraint_id": "C-010",
+            "severity": "HARD",
+            "entity_ids": [
+              "OP-HEAT-001",
+              "RES-HEAT-001"
+            ],
+            "observed_value": {
+              "resource_id": "RES-HEAT-001",
+              "interval_ticks": 5,
+              "duration_seconds": 3600,
+              "expected_duration_ticks": 4
+            },
+            "expected_rule": "interval length equals selected resource duration ticks",
+            "message": "operation duration inconsistent with selected resource"
+          }
+        ]
+      },
+      "error": {
+        "error_version": "error.v2",
+        "category": "VALIDATION_FAILED",
+        "code": "SCHEDULE_VALIDATION_FAILED",
+        "message": "candidate schedule has 1 hard constraint violation(s)",
+        "details": [
+          {
+            "entity_id": "OP-HEAT-001",
+            "field": "candidate_schedule",
+            "observed_value": {
+              "constraint_id": "C-010",
+              "entity_ids": [
+                "OP-HEAT-001",
+                "RES-HEAT-001"
+              ],
+              "value": {
+                "resource_id": "RES-HEAT-001",
+                "interval_ticks": 5,
+                "duration_seconds": 3600,
+                "expected_duration_ticks": 4
+              }
+            },
+            "expected_contract": "interval length equals selected resource duration ticks",
+            "source_location": "candidate.assignments"
+          }
+        ]
+      }
+    },
+    {
+      "case_id": "MUT-C011-HORIZON-OVERFLOW",
+      "validation_report": {
+        "validation_report_version": "validation-report.v2",
+        "problem_hash": "fixture-problem:sha256:045e8f7d7d16cf34b557e6745fdd7867d3883683c274b00e5df070a056f0982a",
+        "status": "FAIL",
+        "hard_violation_count": 1,
+        "violations": [
+          {
+            "constraint_id": "C-011",
+            "severity": "HARD",
+            "entity_ids": [
+              "OP-HEAT-001"
+            ],
+            "observed_value": {
+              "start_tick": 8,
+              "end_tick": 12,
+              "horizon_start_tick": 0,
+              "horizon_end_tick": 11
+            },
+            "expected_rule": "NOT_STARTED assignment remains wholly inside horizon",
+            "message": "planning horizon violated"
+          }
+        ]
+      },
+      "error": {
+        "error_version": "error.v2",
+        "category": "VALIDATION_FAILED",
+        "code": "SCHEDULE_VALIDATION_FAILED",
+        "message": "candidate schedule has 1 hard constraint violation(s)",
+        "details": [
+          {
+            "entity_id": "OP-HEAT-001",
+            "field": "candidate_schedule",
+            "observed_value": {
+              "constraint_id": "C-011",
+              "entity_ids": [
+                "OP-HEAT-001"
+              ],
+              "value": {
+                "start_tick": 8,
+                "end_tick": 12,
+                "horizon_start_tick": 0,
+                "horizon_end_tick": 11
+              }
+            },
+            "expected_contract": "NOT_STARTED assignment remains wholly inside horizon",
+            "source_location": "candidate.assignments"
+          }
+        ]
+      }
+    }
+  ]
+}

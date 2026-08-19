@@ -35,8 +35,16 @@ Mutation 生成逻辑不得复用 Validator 的判断公式，以免测试与实
 
 P0-04 已发布 `constraint-rule-sheet.v1` 与 `validation-report.v2`，固定每个 active C-ID 的 input/formula/example/violation/Test ID，并由 TEST-RULE-SHEET-001 验证元数据完整性。该测试不注入 schedule mutation，不把规则表自检误称为 Validator PASS。
 
-TASK-P0-07 必须从 SIM-MINIMAL-001 Golden Schedule 独立构造 mutation，至少覆盖本表，并让真实 rule evaluator 输出 v2 violation details。Mutation 生成器不得读取 `positive_example`/`negative_example` 后调用同一判断函数；C-012～C-018 属于 capability precheck rejection，不伪装成 schedule violation。
+TASK-P0-07 已从 SIM-MINIMAL-001 Golden Schedule 独立构造 [`SIM-MINIMAL-001-MUTATIONS@1.0.0`](../../fixtures/infeasible/SIM-MINIMAL-001-MUTATIONS/calculation-note.md)。[`mutation-suite.json`](../../fixtures/infeasible/SIM-MINIMAL-001-MUTATIONS/mutation-suite.json) 用 remove/duplicate/replace/append 等声明式操作构造 13 个 case；materializer 不含 constraint ID、Rule Sheet metadata 或 duration/lag 判断公式。C-012～C-018 仍属于 capability precheck rejection，不伪装成 schedule violation。
 
 TASK-P0-05 的 TEST-SIM-ISOLATION 只验证 Production target 与 capability declaration precheck，不注入 candidate schedule mutation。Schema samples/empty Import 不是合法 Golden Schedule，因此没有提前形成 TEST-VALIDATOR-MUTATION；TASK-P0-07 边界不变。
 
-TASK-P0-06 已形成不可覆盖的 `SIM-MINIMAL-001@1.0.0` positive baseline，并在 test-local 代码中直接复算 C-001～C-011；C-007/C-008 因本版本没有 execution facts/locks 明确 N/A。该 positive test 不生成 violation、不实现 reusable evaluator，也不形成 TEST-VALIDATOR-MUTATION。TASK-P0-07 必须从正例复制/受控变异，保留原始 hash 与 Golden 不变，并用不同 mutation construction 路径证明结构化 rejection。
+TASK-P0-06 已形成不可覆盖的 `SIM-MINIMAL-001@1.0.0` positive baseline，并在 test-local 代码中直接复算 C-001～C-011；C-007/C-008 因本版本没有 execution facts/locks 明确 N/A。TASK-P0-07 保持该目录/hash 不变，并由不同 mutation construction 路径证明结构化 rejection。
+
+## P0-07 executable evidence
+
+[`expected-outcomes.json`](../../fixtures/infeasible/SIM-MINIMAL-001-MUTATIONS/expected-outcomes.json) 固定 positive PASS 与每个 negative case 的 exact `validation-report.v2` / `error.v2`。13 个 case 共 15 个 hard violations：duplicate operation 同时违反 C-001、C-003、C-004，其余 12 个 case 各产生一个目标 C-ID。每条 violation 均包含 constraint、unique entity IDs、observed value、Rule Sheet expected rule 和 message；Error 映射保留相同诊断信息。
+
+[`coverage-matrix.json`](../../fixtures/infeasible/SIM-MINIMAL-001-MUTATIONS/coverage-matrix.json) 对 C-001～C-011 和 missing/duplicate/wrong-resource/overlap/calendar/material/completed/running/lock/max-lag/transport/duration/horizon 13 类 mutation 全量列举，两个 uncovered 数组均为空。[`test_schedule_validator_mutations.py`](../../backend/tests/validation/test_schedule_validator_mutations.py) 独立手写 case→C-ID 与关键秒/tick 算术；[`mutation_check.py`](../../backend/app/planning/validation/mutation_check.py) 再检查 exact artifacts、v2 Schema、determinism、metadata、coverage 和 backend/OR-Tools dependency boundary。
+
+这形成 TEST-VALIDATOR-MUTATION 的 P0 fixture-local correctness evidence。随机生成/shrinking、正式 PlanningProblem/candidate contract、Solver result comparison、规模/性能 Benchmark 和 P2 production Validator 仍 `PLANNED`。

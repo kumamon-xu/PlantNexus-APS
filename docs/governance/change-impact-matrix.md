@@ -117,3 +117,9 @@ Fixture、Simulation execution/baseline/benchmark implementation、PlanningProbl
 本 Task 预期命中 `IMPACT-SIM-SCENARIO`、`IMPACT-FIXTURE`、`IMPACT-TESTS`、`IMPACT-PHASE`、`IMPACT-GOVERNANCE-REGISTRY`、`IMPACT-DOCS`。`backend/app/simulation/scenarios/golden_fixture.py` 只做 artifact/provenance/hash replay，`backend/tests/golden/**` 承担 test-local direct calculation；没有修改 `planning/validation/**`，因此不声明 `IMPACT-VALIDATOR`。
 
 FactoryProfile artifact 位于 `fixtures/**` 而非 profile code/schema，故由 `IMPACT-FIXTURE` 覆盖，不虚报 `IMPACT-SIM-PROFILE`。Schema、Generator、PlanningProblem、Backend、Benchmark、API、Infra/DB、Export/Job 均不修改；machine rule 表和 registry format version 保持 `1.0.0`，最终以 TASK-P0-06 diff report 的真实 matched rows 为准。
+
+## TASK-P0-07 matrix review
+
+本 Task 预期命中 `IMPACT-VALIDATOR`、`IMPACT-FIXTURE`、`IMPACT-TESTS`、`IMPACT-PHASE`、`IMPACT-GOVERNANCE-REGISTRY`、`IMPACT-DOCS`。`backend/app/planning/validation/**` 只新增 fixture-local independent evaluator/mutation runner；`fixtures/infeasible/SIM-MINIMAL-001-MUTATIONS/**` 与 `backend/tests/validation/**` 固定 negative evidence；阶段/注册表只同步 P0-07 状态和真实追踪。
+
+Schema、Domain、PlanningProblem、Backend、Simulation code、Golden/其他 tests、dependency/version metadata、Benchmark、API、Infra/DB、Export/Job 均禁止修改，因此不声明对应 Rule ID。现有 machine globs/required-document 列无需改变，registry format version 保持 `1.0.0`；最终以 TASK-P0-07 diff report 的真实 matched rows 为准。

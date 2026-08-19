@@ -19,6 +19,14 @@ Backend：Ruff、type check、unit/contract/integration tests。Frontend：test 
 
 文档/traceability 本地检查由 `scripts/check_docs.py` 实现，合同见 `documentation-consistency-checks.md`。Task 进入 `in_progress` 时记录完整 `Diff base`；acceptance 至少运行全仓检查、带 `--check-diff` 的当前 Task 基线范围检查和 `TEST-TRACEABILITY-VALIDATOR`，并确认提交前后均可复验。把它接入 PR/Release CI 属于 TASK-P0-08。
 
+P0-07 增加可本地复验的 fixture Validator gate：
+
+```text
+uv run python -m app.planning.validation.mutation_check --root . --report build/validation/TASK-P0-07-validator-mutations.json
+```
+
+该 gate 必须同时得到 positive PASS、13 negative FAIL、C-001～C-011/required mutation 无缺口、exact v2 report/error、deterministic replay 和无 backend/OR-Tools 依赖；它尚未接入 CI，仍由 TASK-P0-08 负责自动化。
+
 ## Task Done
 
 任务完成至少满足：

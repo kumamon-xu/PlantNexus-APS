@@ -32,3 +32,5 @@ Property Test 随机生成合法 V1 PlanningProblem 或合法 canonical input，
 TASK-P0-03 已对两个明确 synthetic sample 执行 JSON serialization round-trip，并验证 UTC/duration/reference 的确定性 helper；这只是 `TEST-CONTRACT-001` 的固定样例证据，不是随机 Property Test、Snapshot/Problem hash replay 或 TEST-PROPERTY 完成。完整性质测试仍为 P1/P2 `PLANNED`。
 
 TASK-P0-06 对固定 `SIM-MINIMAL-001@1.0.0` 复算 canonical non-empty Import round-trip/hash、C-ID 与 KPI；这属于 Golden/Scenario replay，不包含随机生成、shrinking 或多组合不变量，因此不能标记 TEST-PROPERTY 已形成。未来 Property Test 可使用该 fixture 的稳定 ID/hash 作为最小回归种子，但不得改写历史版本。
+
+TASK-P0-07 的 13 个声明式 mutation 验证 deterministic replay、base immutability、C-001～C-011 完整负例 coverage 与固定关键算术；它们仍是枚举的 Mutation Test，不是随机 Property Test。`SIM-MINIMAL-001-MUTATIONS@1.0.0` 可作为未来 generator/shrinker 的固定 regression corpus，但 TEST-PROPERTY 和合法 PlanningProblem 跨组合生成仍为 P2 `PLANNED`。

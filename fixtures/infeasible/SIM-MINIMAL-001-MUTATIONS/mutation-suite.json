@@ -1,0 +1,238 @@
+{
+  "mutation_suite_version": "validator-mutation-suite.v1",
+  "suite_id": "SIM-MINIMAL-001-MUTATIONS@1.0.0",
+  "base_fixture": {
+    "import_package": "fixtures/deterministic/SIM-MINIMAL-001/import-package.json",
+    "candidate_schedule": "fixtures/deterministic/SIM-MINIMAL-001/golden-schedule.json",
+    "canonical_dataset_hash": "sha256:fd8e5af387c7d4197a2664dfa89e93912091647d5809f1b76468d36edab29c10"
+  },
+  "cases": [
+    {
+      "case_id": "MUT-C001-MISSING-OPERATION",
+      "title": "unfinished operation is absent from the candidate",
+      "mutation_class": "missing_operation",
+      "target_constraint_ids": ["C-001"],
+      "operations": [
+        {
+          "kind": "remove_assignment",
+          "operation_id": "OP-CUT-002"
+        }
+      ]
+    },
+    {
+      "case_id": "MUT-C001-DUPLICATE-OPERATION",
+      "title": "unfinished operation is assigned twice",
+      "mutation_class": "duplicate_operation",
+      "target_constraint_ids": ["C-001", "C-003", "C-004"],
+      "operations": [
+        {
+          "kind": "duplicate_assignment",
+          "operation_id": "OP-CUT-001"
+        }
+      ]
+    },
+    {
+      "case_id": "MUT-C003-WRONG-RESOURCE",
+      "title": "operation selects a resource outside its candidate set",
+      "mutation_class": "wrong_resource",
+      "target_constraint_ids": ["C-003"],
+      "operations": [
+        {
+          "kind": "replace_assignment",
+          "operation_id": "OP-HEAT-001",
+          "changes": {
+            "resource_id": "RES-CUT-SLOW"
+          }
+        }
+      ]
+    },
+    {
+      "case_id": "MUT-C004-MACHINE-OVERLAP",
+      "title": "two positive-duration operations overlap on a capacity-one resource",
+      "mutation_class": "machine_overlap",
+      "target_constraint_ids": ["C-004"],
+      "operations": [
+        {
+          "kind": "append_record",
+          "collection": "operation_instances",
+          "record": {
+            "operation_id": "OP-MUTATION-OVERLAP",
+            "order_id": "ORDER-001",
+            "workshop_id": "WS-CUT",
+            "status": "NOT_STARTED",
+            "release_at_utc": "2026-08-20T08:00:00Z",
+            "material_ready_at_utc": "2026-08-20T08:00:00Z",
+            "resource_options": [
+              {
+                "resource_id": "RES-CUT-FAST",
+                "final_duration_seconds": 1800
+              }
+            ]
+          }
+        },
+        {
+          "kind": "append_assignment",
+          "assignment": {
+            "operation_id": "OP-MUTATION-OVERLAP",
+            "resource_id": "RES-CUT-FAST",
+            "start_tick": 2,
+            "end_tick": 4
+          }
+        }
+      ]
+    },
+    {
+      "case_id": "MUT-C005-CALENDAR-OVERLAP",
+      "title": "heat operation crosses the maintenance interval",
+      "mutation_class": "calendar_overlap",
+      "target_constraint_ids": ["C-005"],
+      "operations": [
+        {
+          "kind": "replace_assignment",
+          "operation_id": "OP-HEAT-001",
+          "changes": {
+            "start_tick": 7,
+            "end_tick": 11
+          }
+        }
+      ]
+    },
+    {
+      "case_id": "MUT-C006-MATERIAL-EARLY",
+      "title": "operation starts before material readiness",
+      "mutation_class": "material_early_start",
+      "target_constraint_ids": ["C-006"],
+      "operations": [
+        {
+          "kind": "replace_record_field",
+          "collection": "operation_instances",
+          "record_id_field": "operation_id",
+          "record_id": "OP-CUT-002",
+          "field": "material_ready_at_utc",
+          "value": "2026-08-20T09:15:00Z"
+        }
+      ]
+    },
+    {
+      "case_id": "MUT-C007-COMPLETED-RESCHEDULED",
+      "title": "completed work remains in future assignments",
+      "mutation_class": "completed_operation_rescheduled",
+      "target_constraint_ids": ["C-007"],
+      "operations": [
+        {
+          "kind": "append_record",
+          "collection": "execution_facts",
+          "record": {
+            "operation_id": "OP-CUT-001",
+            "status": "COMPLETED"
+          }
+        }
+      ]
+    },
+    {
+      "case_id": "MUT-C007-RUNNING-MOVED",
+      "title": "running work changes fixed resource and remaining occupancy",
+      "mutation_class": "running_fact_changed",
+      "target_constraint_ids": ["C-007"],
+      "operations": [
+        {
+          "kind": "append_record",
+          "collection": "execution_facts",
+          "record": {
+            "operation_id": "OP-CUT-001",
+            "status": "RUNNING",
+            "actual_start_at_utc": "2026-08-20T07:30:00Z",
+            "resource_id": "RES-CUT-SLOW",
+            "remaining_seconds": 5400
+          }
+        }
+      ]
+    },
+    {
+      "case_id": "MUT-C008-HARD-LOCK-MOVED",
+      "title": "hard-locked tuple differs from the candidate assignment",
+      "mutation_class": "hard_lock_movement",
+      "target_constraint_ids": ["C-008"],
+      "operations": [
+        {
+          "kind": "append_record",
+          "collection": "locks",
+          "record": {
+            "operation_id": "OP-CUT-001",
+            "lock_type": "HARD_LOCK",
+            "resource_id": "RES-CUT-SLOW",
+            "start_tick": 0,
+            "end_tick": 6
+          }
+        }
+      ]
+    },
+    {
+      "case_id": "MUT-C002-MAX-LAG",
+      "title": "successor starts after the inclusive maximum lag",
+      "mutation_class": "max_lag_violation",
+      "target_constraint_ids": ["C-002"],
+      "operations": [
+        {
+          "kind": "replace_assignment",
+          "operation_id": "OP-HEAT-001",
+          "changes": {
+            "start_tick": 9,
+            "end_tick": 13
+          }
+        }
+      ]
+    },
+    {
+      "case_id": "MUT-C009-TRANSPORT-LAG",
+      "title": "cross-workshop transport lag exceeds observed transition time",
+      "mutation_class": "cross_workshop_transport_lag",
+      "target_constraint_ids": ["C-009"],
+      "operations": [
+        {
+          "kind": "replace_record_field",
+          "collection": "precedence_edges",
+          "record_id_field": "edge_id",
+          "record_id": "EDGE-CUT-002-HEAT-001",
+          "field": "transport_lag_seconds",
+          "value": 2700
+        }
+      ]
+    },
+    {
+      "case_id": "MUT-C010-WRONG-DURATION",
+      "title": "assignment length differs from selected resource duration",
+      "mutation_class": "wrong_duration",
+      "target_constraint_ids": ["C-010"],
+      "operations": [
+        {
+          "kind": "replace_assignment",
+          "operation_id": "OP-HEAT-001",
+          "changes": {
+            "end_tick": 13
+          }
+        }
+      ]
+    },
+    {
+      "case_id": "MUT-C011-HORIZON-OVERFLOW",
+      "title": "assignment ends after a shortened planning horizon",
+      "mutation_class": "horizon_overflow",
+      "target_constraint_ids": ["C-011"],
+      "operations": [
+        {
+          "kind": "replace_record_field",
+          "collection": "fixture_metadata",
+          "record_index": 0,
+          "field": "horizon_end_utc",
+          "value": "2026-08-20T10:45:00Z"
+        },
+        {
+          "kind": "replace_schedule_field",
+          "field": "horizon_end_utc",
+          "value": "2026-08-20T10:45:00Z"
+        }
+      ]
+    }
+  ]
+}

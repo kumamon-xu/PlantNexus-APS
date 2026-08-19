@@ -38,15 +38,15 @@ registry_version: 1.0.0
 | TEST-CAPABILITY-001 | 20 capability registry 与 supported declaration/unsupported/unknown/duplicate precheck | P0 | [`test_rule_contracts.py`](../../backend/tests/contract/test_rule_contracts.py) + [`capability-registry.v1`](../../schemas/rules/capability-registry.v1.yaml) formed；capability implementation PLANNED |
 | TEST-GOLDEN-JSSP | 人工可验证 JSSP | P2 | PLANNED |
 | TEST-GOLDEN-FJSP | 人工可验证 FJSP | P0-P2 | [`SIM-MINIMAL-001` positive Golden](../../backend/tests/golden/test_sim_minimal_001.py) formed；P2 Solver/Problem integration PLANNED |
-| TEST-INF-NO-RESOURCE | 无候选资源明确拒绝 | P0-P2 | PLANNED |
-| TEST-INF-LOCK | Lock 导致的不可行性 | P0-P2 | PLANNED |
-| TEST-INF-HORIZON | Horizon 不允许静默截断 | P0-P2 | PLANNED |
-| TEST-CALENDAR | 设备日历约束 | P0-P2 | [`SIM-MINIMAL-001` maintenance-boundary positive calculation](../../backend/tests/golden/test_sim_minimal_001.py) formed；negative mutation/Solver integration PLANNED |
-| TEST-MATERIAL | material_ready_at gate | P0-P2 | [`SIM-MINIMAL-001` exact-boundary positive calculation](../../backend/tests/golden/test_sim_minimal_001.py) formed；negative mutation/Solver integration PLANNED |
-| TEST-RUNNING | 运行中事实保护 | P0-P2 | PLANNED |
-| TEST-CROSS-WORKSHOP | 跨车间 precedence/transport lag | P0-P2 | [`SIM-MINIMAL-001` 1800 >= 900 seconds positive calculation](../../backend/tests/golden/test_sim_minimal_001.py) formed；negative mutation/Solver integration PLANNED |
-| TEST-MAX-LAG | max_lag 不被忽略 | P0-P2 | [`SIM-MINIMAL-001` inclusive 1800-second boundary positive calculation](../../backend/tests/golden/test_sim_minimal_001.py) formed；negative mutation/Solver integration PLANNED |
-| TEST-VALIDATOR-MUTATION | 独立 Validator 拒绝人工错误计划 | P0-P2 | PLANNED |
+| TEST-INF-NO-RESOURCE | 无候选资源明确拒绝 | P0-P2 | [P0 wrong-resource/multiple-selection mutation](../../backend/tests/validation/test_schedule_validator_mutations.py) formed；zero-option Problem/Solver infeasibility P2 PLANNED |
+| TEST-INF-LOCK | Lock 导致的不可行性 | P0-P2 | [P0 HARD_LOCK movement mutation](../../backend/tests/validation/test_schedule_validator_mutations.py) formed；Solver infeasibility P2 PLANNED |
+| TEST-INF-HORIZON | Horizon 不允许静默截断 | P0-P2 | [P0 horizon-overflow mutation](../../backend/tests/validation/test_schedule_validator_mutations.py) formed；Solver integration P2 PLANNED |
+| TEST-CALENDAR | 设备日历约束 | P0-P2 | Golden positive + [calendar-overlap negative mutation](../../backend/tests/validation/test_schedule_validator_mutations.py) formed；Solver integration PLANNED |
+| TEST-MATERIAL | material_ready_at gate | P0-P2 | Golden positive + [material-early negative mutation](../../backend/tests/validation/test_schedule_validator_mutations.py) formed；Solver integration PLANNED |
+| TEST-RUNNING | 运行中事实保护 | P0-P2 | [completed/running fact negative mutations](../../backend/tests/validation/test_schedule_validator_mutations.py) formed；P1 fact contract/P2 integration PLANNED |
+| TEST-CROSS-WORKSHOP | 跨车间 precedence/transport lag | P0-P2 | Golden positive + [transport-lag negative mutation](../../backend/tests/validation/test_schedule_validator_mutations.py) formed；Solver integration PLANNED |
+| TEST-MAX-LAG | max_lag 不被忽略 | P0-P2 | Golden inclusive-boundary positive + [2700>1800 negative mutation](../../backend/tests/validation/test_schedule_validator_mutations.py) formed；Solver integration PLANNED |
+| TEST-VALIDATOR-MUTATION | 独立 Validator 拒绝人工错误计划 | P0-P2 | [`test_schedule_validator_mutations.py`](../../backend/tests/validation/test_schedule_validator_mutations.py) + [`SIM-MINIMAL-001-MUTATIONS@1.0.0`](../../fixtures/infeasible/SIM-MINIMAL-001-MUTATIONS/coverage-matrix.json) P0 fixture-local slice formed；production/performance P2 PLANNED |
 | TEST-REPLAN | Replan 事实、锁与变化报告 | P4 | PLANNED |
 | TEST-OUTPUT | 标准成果包合同 | P2-P3 | PLANNED |
 | TEST-IDEMPOTENCY | Import/Planning/Export/Publish/Event 幂等 | P0-P3 | PLANNED |
@@ -67,8 +67,10 @@ Test ID 一经分配不得复用。链接到真实测试路径才是已形成证
 - 多个同质量解可能都正确，Property/Golden 不固定无意义排序；
 - Benchmark 正确性失败优先于性能结果。
 
-实际测试路径和结果在文件创建后写入追踪矩阵。TEST-CONTRACT-001 已形成 P0 data Schema skeleton 证据；TASK-P0-04 的四项 contract tests 只形成 rule/state/error/capability 合同证据。TEST-VALIDATOR-MUTATION 等 `PLANNED` 项仍不能视为实现，rule-sheet completeness 不能替代 schedule correctness。
+实际测试路径和结果在文件创建后写入追踪矩阵。TEST-CONTRACT-001 已形成 P0 data Schema skeleton 证据；TASK-P0-04 的四项 contract tests 只形成 rule/state/error/capability 合同证据。Rule-sheet completeness 不能替代 schedule correctness；TEST-VALIDATOR-MUTATION 当前只形成 P0 fixture-local slice，不能外推为 P2 production completion。
 
 TASK-P0-05 新增 10 项 Simulation tests，覆盖三份 Draft 2020-12 Schema/sample、strict version/seed/unknown-field rejection、Profile range semantic check、same-input canonical Import/hash replay、generated-at exclusion、seed/version/capability declaration order、命名 layer seed、Production/unknown/duplicate/unsupported rejection，以及 Generator 不导入 Planning/Solver 的边界。其 `records={}`，因此只形成 TEST-SCENARIO-REPLAY/TEST-SIM-ISOLATION 的 P0 contract slice；Golden、non-empty generator、DB/API isolation、Benchmark/Execution/Reference Scheduler 仍为 `PLANNED`。
 
 TASK-P0-06 新增 5 项 Golden tests：四份既有 Schema + pure contract、15-record non-empty Import hash replay、2/2/3 topology/profile/assumption trace、C-001～C-011 独立直接计算、Delivery/Planning/Resource KPI 与 objective lower bound、loader 无 Planning/Solver/evaluator import boundary。它形成 TEST-GOLDEN-FJSP 和 TEST-SCENARIO-REPLAY 的 P0 correctness slice，以及 TEST-CALENDAR/MATERIAL/CROSS-WORKSHOP/MAX-LAG 的 positive slice；negative mutation、正式 Validator/Solver/Problem/KPI、TEST-PROPERTY 和性能证据仍 `PLANNED`。
+
+TASK-P0-07 新增 18 项 Validator tests：positive Golden PASS；13 个 mutation 的 exact C-ID/report/error 与 v2 Schema；max-lag/calendar/running/transport/duration/horizon 手算；deep-copy/materializer formula separation；Rule Sheet metadata/11 C-ID/13 mutation-class coverage；candidate envelope rejection和 validation package backend/OR-Tools dependency scan。它形成 13 cases/15 hard violations 的 TEST-VALIDATOR-MUTATION P0 evidence；正式 PlanningProblem/candidate、Solver comparison、random Property、Benchmark 和 READY_FOR_REVIEW integration 仍 `PLANNED`。Test registry 格式与 ID 生命周期未变，`registry_version` 保持 `1.0.0`。

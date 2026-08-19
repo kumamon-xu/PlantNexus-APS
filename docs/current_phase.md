@@ -28,16 +28,16 @@ P0-DOCS — Documentation Baseline
 ## 最新完成 Task
 
 ```text
-TASK-P0-06 — SIM-MINIMAL-001 and Golden Schedule
+TASK-P0-07 — Invalid Fixtures and Validator Rules
 ```
 
-Task 状态：`done`（2026-08-19）。`SIM-MINIMAL-001@1.0.0` 的 Profile/Scenario、15-record non-empty Standard Import、manifest/hash、人工 Golden、expected validation/KPI、C-001～C-011 direct calculation、TEST-GOLDEN-FJSP/TEST-SCENARIO-REPLAY 与 replay report 均已通过任务卡 Acceptance Commands。TASK-P0-01～05 继续保持 `done`；schema set 保持 `1.2.0`。
+Task 状态：`done`（2026-08-19）。基于未修改的 `SIM-MINIMAL-001@1.0.0`，fixture-local independent evaluator、13 类 mutation/15 hard violations、exact ValidationReport/Error、C-001～C-011/13-class coverage、18 Validator tests、Rule Sheet/Mutation/trace reports 均已通过任务卡 Acceptance Commands。TASK-P0-01～06 继续保持 `done`；schema set 保持 `1.2.0`。
 
 P0 尚未完成，当前记录不表示通过 P0 Exit Gate，也不授权进入 P1。
 
 ## 当前 Task
 
-无。TASK-P0-07 继续保持 `planned`；完成 TASK-P0-06 不自动授权或启动下一任务。通用 Validator evaluator、非法 mutation、Solver 和 P1+ pipeline 均未开始，P0 Exit Gate 尚未通过。
+无。TASK-P0-08 继续保持 `planned`；完成 TASK-P0-07 不自动授权或启动下一任务。CI/logging/DB/worker/health skeleton、Solver 和 P1+ pipeline 均未开始，P0 Exit Gate 尚未通过。
 
 ## 当前允许
 
@@ -50,6 +50,7 @@ P0 尚未完成，当前记录不表示通过 P0 Exit Gate，也不授权进入 
 - 建立 P0 规则表、状态/错误/capability 纯合同及机器一致性检查；
 - 建立 versioned Simulation Schema、纯 Generator protocols、显式 seed/canonical hash 与 synthetic isolation 合同；
 - 维护 `SIM-MINIMAL-001@1.0.0` deterministic correctness fixture、人工 Golden 与只读 replay/hash evidence；
+- 在不导入 Solver/backend 的边界内维护 P0-07 fixture-local Validator Rule Sheet evaluator 与非法 mutation evidence；
 - 登记 `PROD_OPEN` 与 `SIM_ASSUMPTION`，但不替业务方关闭问题。
 
 ## 当前禁止

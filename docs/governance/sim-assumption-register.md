@@ -39,3 +39,5 @@ TASK-P0-04 review：C-012～C-018 与 unsupported/deferred capability 的 expect
 TASK-P0-05 review：FactoryProfile/ScenarioSpec v1 为 SIM-ASSUMPTION-001/002/004/005 提供 version/seed/capability/complexity 的机器字段；Schema samples 明确 `synthetic_only=true`，其单值 count/ratio 只验证形状，不是正式 Profile/Scenario/Fixture 或通用默认值。没有故障概率、正式 XS baseline 或新假设，五项继续 `ACTIVE`，registry format version 不变。
 
 TASK-P0-06 review：新增 SIM-ASSUMPTION-006～009，并在 [`SIM-MINIMAL-001@1.0.0`](../../fixtures/deterministic/SIM-MINIMAL-001/calculation-note.md) 的 Import metadata、计算说明、Profile/Scenario 与 Golden tests 中逐项引用。新增条目只固定首个小型 correctness fixture 的 topology、time/calendar、routing/duration/lag 和 order/gate/due 数值；derived validation/KPI 不是新假设。SIM-ASSUMPTION-001～009 均为 `ACTIVE`，未改变 ID/状态语义或 registry format version。
+
+TASK-P0-07 review：mutation suite 只引用 `SIM-MINIMAL-001@1.0.0` 和 SIM-ASSUMPTION-006～009 的 base facts；09:15 material gate、2700 秒 transport lag、10:45 shortened horizon、running/lock tuples 等值是刻意使约束失败的 test mutations，不是新增 Scenario/Profile 假设、通用 baseline 或生产默认值。没有新增/修改条目；SIM-ASSUMPTION-001～009 全部保持 `ACTIVE`，registry format version 不变。

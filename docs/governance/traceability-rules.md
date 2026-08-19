@@ -68,6 +68,8 @@ Simulation contract 证据链必须区分：Schema contract version、Profile/Sc
 
 Golden Fixture 证据链还必须区分：fixture-local record vocabulary、人工 Schedule、独立直接计算、expected validation/KPI 与正式 PlanningProblem/candidate/ValidationReport/KPI contracts。expected artifact 不能自证 PASS；positive Golden 不能替代 negative mutation 或 reusable ScheduleValidator。`SIM-MINIMAL-001` 的非空 Import hash证明可重放的 committed correctness dataset，不证明 P1 canonical mapping/Normalization 已实现。
 
+Validator Mutation 证据链必须同时区分：不可变 positive base/hash、与 evaluator 分离且不含判断公式的 mutation construction、独立 evaluator、Rule Sheet metadata、exact ValidationReport/Error、Schema validation、C-ID/required-mutation coverage、deterministic replay 与 backend/Solver dependency boundary。fixture-local evaluator 可以形成 P0 correctness evidence，但没有正式 PlanningProblem/candidate、Solver comparison、Property/Benchmark 或状态集成时，必须把 P2 production/performance completion 保持为 `PLANNED`。
+
 ## 自动校验
 
 `scripts/check_docs.py` 执行以下治理检查：

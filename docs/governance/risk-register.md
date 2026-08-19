@@ -36,3 +36,5 @@ TASK-P0-04 review：独立 rule metadata、validation package import scan 和未
 TASK-P0-05 review：Standard Import-only Generator Protocol/empty package 加强 RISK-002；registry capability rejection 加强 RISK-004；Schema/context/Import Production guard 加强 RISK-007；manifest/version/hash 边界约束 RISK-001/009。尚无非空 pipeline、独立 DB/API/publish guard、历史数据或 Benchmark evidence，不能标记风险已缓解/关闭。RISK-001～010 全部保持 `MONITORED`，registry format version 不变。
 
 TASK-P0-06 review：非空 committed Import 与 replay loader 加强 RISK-002，fixture-local direct C-ID calculation 与 P0-07 evaluator boundary 加强 RISK-003，manifest/assumption/version chain 加强 RISK-001/004/009。由于仍无 P1共同 ingress、通用 Validator mutation、独立 DB/API/publish guard、历史数据或 Benchmark evidence，RISK-001～010 全部保持 `MONITORED`，registry format version 不变。
+
+TASK-P0-07 review：独立 evaluator、formula-free mutation materializer、expected-artifact separation、backend/OR-Tools import scan 和 13 类负例显著加强 RISK-003 的早期控制；wrong-resource/explicit detail 同时加强 RISK-004。证据仍局限 fixture-local vocabulary，尚无 P1 common ingress、P2 Solver comparison/scale/property/benchmark、生产隔离或真实数据，因此不能标记风险已缓解或关闭。RISK-001～010 全部保持 `MONITORED`，registry format version 不变。

@@ -1,0 +1,118 @@
+{
+  "coverage_matrix_version": "validator-coverage-matrix.v1",
+  "suite_id": "SIM-MINIMAL-001-MUTATIONS@1.0.0",
+  "constraint_coverage": [
+    {
+      "constraint_id": "C-001",
+      "case_ids": [
+        "MUT-C001-MISSING-OPERATION",
+        "MUT-C001-DUPLICATE-OPERATION"
+      ]
+    },
+    {
+      "constraint_id": "C-002",
+      "case_ids": ["MUT-C002-MAX-LAG"]
+    },
+    {
+      "constraint_id": "C-003",
+      "case_ids": [
+        "MUT-C001-DUPLICATE-OPERATION",
+        "MUT-C003-WRONG-RESOURCE"
+      ]
+    },
+    {
+      "constraint_id": "C-004",
+      "case_ids": [
+        "MUT-C001-DUPLICATE-OPERATION",
+        "MUT-C004-MACHINE-OVERLAP"
+      ]
+    },
+    {
+      "constraint_id": "C-005",
+      "case_ids": ["MUT-C005-CALENDAR-OVERLAP"]
+    },
+    {
+      "constraint_id": "C-006",
+      "case_ids": ["MUT-C006-MATERIAL-EARLY"]
+    },
+    {
+      "constraint_id": "C-007",
+      "case_ids": [
+        "MUT-C007-COMPLETED-RESCHEDULED",
+        "MUT-C007-RUNNING-MOVED"
+      ]
+    },
+    {
+      "constraint_id": "C-008",
+      "case_ids": ["MUT-C008-HARD-LOCK-MOVED"]
+    },
+    {
+      "constraint_id": "C-009",
+      "case_ids": ["MUT-C009-TRANSPORT-LAG"]
+    },
+    {
+      "constraint_id": "C-010",
+      "case_ids": ["MUT-C010-WRONG-DURATION"]
+    },
+    {
+      "constraint_id": "C-011",
+      "case_ids": ["MUT-C011-HORIZON-OVERFLOW"]
+    }
+  ],
+  "required_mutation_coverage": [
+    {
+      "mutation_class": "missing_operation",
+      "case_ids": ["MUT-C001-MISSING-OPERATION"]
+    },
+    {
+      "mutation_class": "duplicate_operation",
+      "case_ids": ["MUT-C001-DUPLICATE-OPERATION"]
+    },
+    {
+      "mutation_class": "wrong_resource",
+      "case_ids": ["MUT-C003-WRONG-RESOURCE"]
+    },
+    {
+      "mutation_class": "machine_overlap",
+      "case_ids": ["MUT-C004-MACHINE-OVERLAP"]
+    },
+    {
+      "mutation_class": "calendar_overlap",
+      "case_ids": ["MUT-C005-CALENDAR-OVERLAP"]
+    },
+    {
+      "mutation_class": "material_early_start",
+      "case_ids": ["MUT-C006-MATERIAL-EARLY"]
+    },
+    {
+      "mutation_class": "completed_operation_rescheduled",
+      "case_ids": ["MUT-C007-COMPLETED-RESCHEDULED"]
+    },
+    {
+      "mutation_class": "running_fact_changed",
+      "case_ids": ["MUT-C007-RUNNING-MOVED"]
+    },
+    {
+      "mutation_class": "hard_lock_movement",
+      "case_ids": ["MUT-C008-HARD-LOCK-MOVED"]
+    },
+    {
+      "mutation_class": "max_lag_violation",
+      "case_ids": ["MUT-C002-MAX-LAG"]
+    },
+    {
+      "mutation_class": "cross_workshop_transport_lag",
+      "case_ids": ["MUT-C009-TRANSPORT-LAG"]
+    },
+    {
+      "mutation_class": "wrong_duration",
+      "case_ids": ["MUT-C010-WRONG-DURATION"]
+    },
+    {
+      "mutation_class": "horizon_overflow",
+      "case_ids": ["MUT-C011-HORIZON-OVERFLOW"]
+    }
+  ],
+  "uncovered_constraints": [],
+  "uncovered_required_mutations": []
+}

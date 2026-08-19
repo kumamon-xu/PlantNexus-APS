@@ -107,6 +107,14 @@ uv run python -m app.simulation.scenarios.golden_fixture --fixture fixtures/dete
 
 该命令生成 `golden-fixture-replay-report.v1`，严格加载 8 个 versioned artifacts，执行既有 Profile/Scenario/Manifest pure precheck、跨文件 identity/source/version/seed/capability/package join、non-empty Import canonical bytes/hash replay，并确认 C-ID expected set 完整。它的 `scope=artifact-integrity-and-replay-only`，不读取 rule formula、不输出 ValidationReport、不替代 [`test_sim_minimal_001.py`](../../backend/tests/golden/test_sim_minimal_001.py) 的独立 C-ID/KPI 计算或 TASK-P0-07 mutation evaluator。
 
+TASK-P0-07 增加 fixture-local Validator mutation 入口：
+
+```text
+uv run python -m app.planning.validation.mutation_check --root . --report build/validation/TASK-P0-07-validator-mutations.json
+```
+
+该命令生成 `validator-mutation-report.v1`，检查 positive Golden、13 个声明式 negative mutations、exact `validation-report.v2`/`error.v2`、Draft 2020-12 Schema、deterministic replay、Rule Sheet violation metadata、C-001～C-011 与 13 required mutation classes 无缺口。其 scope 明确为 P0 fixture-local evaluator，不判断 PlanningProblem/Solver、性能、API/persistence 或 Phase Gate。当前 Task 仍须同时运行 rule-contract CLI、validation pytest 和 `check_docs.py --task ... --check-diff`；任一报告不能替代其他层。
+
 ## Override
 
 不允许用自由文本 CI skip 绕过。确需例外时必须在 Task Card 记录理由，提交 ADR 或明确批准记录，并仍保留检查报告。正确性、状态语义、数据隔离和发布门不得豁免。

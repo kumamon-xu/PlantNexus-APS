@@ -68,4 +68,6 @@ TASK-P0-03 的 [`error.v1`](../../schemas/json/error.schema.json) 与 [`validati
 
 `ContractViolation` 现使用同一 code registry 并暴露确定的 category，但仍只是 P0 数据合同 precheck，不是 HTTP mapping。
 
-TEST-ERROR-MAPPING-001 已验证 YAML、纯枚举和 error.v2 code/category 一致。HTTP status、API payload、状态持久化、ScheduleValidator evaluator 和 mutation evidence 仍分别由后续 API/P0-07/P2 Task 建立。
+TEST-ERROR-MAPPING-001 已验证 YAML、纯枚举和 error.v2 code/category 一致。TASK-P0-07 的 fixture-local evaluator 对 FAIL report 逐 violation 映射 `error.v2`：category=`VALIDATION_FAILED`、code=`SCHEDULE_VALIDATION_FAILED`，detail 保留首要 entity、完整 entity IDs、constraint ID、observed value、expected contract 和 candidate source location；PASS 不生成 Error。13 个 mutation 的 exact Error 与 ValidationReport 均经现有 JSON Schema 验证。
+
+该映射只覆盖 `SIM-MINIMAL-001-MUTATIONS@1.0.0` 的 P0 correctness 边界。HTTP status/API payload、状态持久化、正式 PlanningProblem/candidate 错误入口以及 Solver status/diagnostics 集成仍由后续 API/P2 Task 建立。

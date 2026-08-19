@@ -65,6 +65,6 @@ TASK-P0-10 把 workflow diff/report 交接到其 immutable range，并以 integr
 
 P1 planning baseline于 2026-08-19在用户明确授权后分配 TASK-P1-01～12与9个新增 Test ID。REQ-001/002/003/009/011/012及相关 NFR/ENG已映射到 canonical contracts、staging/adapter、normalization/validation/expansion、Snapshot/Problem hash、Synthetic common ingress和最终 audit；所有新链路均为 `PLANNED`，因为本次没有修改业务代码、Schema、migration、fixture或执行任何 P1 test/artifact。根 ID继续为 `ALLOCATED`。
 
-TASK-P1-01 已形成 phase policy、CI changed-task discovery、generic `ci-*.json`/artifact naming和 workflow integration contract。真实证据路径为 `scripts/check_docs.py`、两份 governance/CI tests与 `.github/workflows/ci.yml`；local acceptance不能替代 provider run，本次无外部授权时 provider为 `NOT_RUN`。该 Task不实现 P1 canonical/Adapter/Snapshot/Problem或改变任何 root `ALLOCATED`状态。
+TASK-P1-01 已形成 phase policy、CI changed-task discovery、generic `ci-*.json`/artifact naming和workflow integration contract。真实repository证据路径为`scripts/check_docs.py`、两份governance/CI tests与`.github/workflows/ci.yml`；后续授权下，completion commit `2d2a4432aa42e4f38ee8ae736e2acf2df1c694b9`的GitHub run [`32237649319`](https://github.com/kumamon-xu/PlantNexus-APS/actions/runs/32237649319)、successful `validate` job与artifact `9359554539` / digest `sha256:bdd08f01ea23e8fe93f82c199274afc0aa5e9343ea7fa70adfb6df6a950d1216`形成provider PASS。该Task不实现P1 canonical/Adapter/Snapshot/Problem或改变任何root `ALLOCATED`状态。
 
 P1-12必须最后执行并只在全部 Gate有真实证据时给出 `READY`。P1 audit即使 READY也不自动创建 P2 Task或改变 current phase。

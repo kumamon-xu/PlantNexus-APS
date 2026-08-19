@@ -66,7 +66,7 @@ P0 Gate通过并获得用户明确 phase transition授权后，current phase已�
 
 workflow继续运行 exact lock、Ruff、Pyright、全部既有 unit/contract/simulation/golden/validation/integration tests、五类machine contract、Compose、full/diff governance、conditional Benchmark hook与build；报告改为`ci-*.json`，artifact为`plantnexus-ci-evidence-<run-id>`。integration contract拒绝P0-08/P0-10 Task残留、multiple/stale Task attribution和`continue-on-error`。
 
-这只形成repository-local workflow contract。未实际push/查询provider时，新的run/job/artifact/required-check为`NOT_RUN`；P0既有successful provider evidence保持有效历史，不能拿来冒充P1-01 provider execution。无Solver runner、BenchmarkReport或生产阈值。
+repository-local workflow contract完成后，用户追加了直接push `main`与provider核验授权。completion commit `2d2a4432aa42e4f38ee8ae736e2acf2df1c694b9`对应GitHub run [`32237649319`](https://github.com/kumamon-xu/PlantNexus-APS/actions/runs/32237649319)为`success`，`validate` job `96021094432`及全部steps均`success`；artifact `9359554539`名为`plantnexus-ci-evidence-32237649319`，digest=`sha256:bdd08f01ea23e8fe93f82c199274afc0aa5e9343ea7fa70adfb6df6a950d1216`且未过期。该证据只把P1-01 provider execution从`NOT_RUN`更新为`PASS`；无Solver runner、BenchmarkReport、生产阈值或P1数据能力。
 
 ## Task Done
 

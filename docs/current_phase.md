@@ -37,6 +37,8 @@ CSV / Excel / Reference Adapter / Synthetic Generator
 
 当前没有`in_progress` Task。`TASK-P1-01 — P1 Phase Governance and CI Handoff`已完成，implementation commit为`8d8ceced4496bfc7be4651f67eb376993e49ec67`，不可变Diff base为`430506349ccdc135072e12fc98f7df1744a63e2c`；该Task只形成治理/CI合同，未执行P1数据链业务实现。下一建议项TASK-P1-02仍为`planned`，未在本次自动启动。
 
+用户于2026-08-19进一步授权：后续每个P1 Task完成本地验收并提交后，可直接push当前`main`并核验对应GitHub CI。该授权只覆盖当前Task完成后的push/provider核验，不自动启动下一Task、不改变Task允许范围，也不授权进入P2。
+
 后续顺序以 [`P1 Milestone`](milestones/P1-data-and-snapshot.md) 与 [`Task Card 索引`](tasks/README.md) 为准；只有依赖为 `done` 后才可启动下一 Task。
 
 ## 当前允许

@@ -11,40 +11,73 @@ last_reviewed: 2026-08-19
 
 # 文档一致性自动检查合同
 
-本文件定义 TASK-P0-02 应实现的文档/追踪校验器。当前仅有合同，尚无脚本或 CI PASS 证据。
+本文件定义由 TASK-P0-02 建立的文档/追踪校验器合同。实现入口为
+[`scripts/check_docs.py`](../../scripts/check_docs.py)，负向和回归测试入口为
+[`TEST-TRACEABILITY-VALIDATOR`](../../backend/tests/unit/test_check_docs.py)。该检查器只使用 Python
+标准库；P0-02 提供本地/Task acceptance 能力，PR 与 Release 自动执行仍分别由 P0-08、P0-09 接入。
+
+## 命令接口
+
+仓库全量一致性检查：
+
+```text
+uv run python scripts/check_docs.py
+```
+
+当前 Task 与 working tree diff 的影响矩阵检查，并生成机器可读报告：
+
+```text
+uv run python scripts/check_docs.py --task <task-card> --check-diff --report <report-path>
+```
+
+校验器单元测试：
+
+```text
+uv run python -m unittest discover -s backend/tests/unit -p "test_check_docs.py"
+```
 
 ## 输入
 
-- 当前 Task Card；
-- base/head 或 staged Git diff；
+- `--task` 指定的当前 Task Card；
+- `git status --porcelain` 相对 `HEAD` 的 tracked/untracked working tree diff；
 - `change-impact-matrix.md`；
-- 文档元数据、注册表、Schema/Fixture/Benchmark manifests；
+- 文档元数据、治理注册表、追踪矩阵和测试 ID 表；
 - 当前 Phase 和 Milestone。
 
 ## 必须检查
 
 1. Task Card 包含非空 `Documentation impact`、`Documents to update`、`Traceability updates`；
-2. `required` 时文档路径明确存在或由本 Task 创建，并包含在 allowed files；
+2. `required` 时文档路径明确存在或由本 Task 创建，并包含在 Files allowed to change；
 3. `none` 时有非空理由和已审查的 impact-matrix 行；
-4. 实际 diff 命中的矩阵行均已处理，不能只相信 Task 的预先声明；
-5. 文档 metadata、doc ID、source sections、相对链接和 Markdown fence 有效；
-6. Requirement/NFR/ENG/C/OBJ/TASK/TEST/ADR 引用存在且不重复；
-7. Schema/Problem/Solver/Profile/Scenario/Generator 变化伴随相应版本和测试影响；
-8. PROD_OPEN 与 SIM_ASSUMPTION 没有混用；
-9. 只有当前 Phase 存在详细 Task Card；
-10. 追踪矩阵只链接真实存在的代码、测试和 artifact。
+4. 实际 diff 命中的 `IMPACT-*` 行已在 Task 声明，规则要求的文档已列入 Documents to update；
+5. 实际 changed paths 全部位于 Task 允许范围；`.gitkeep` 由矩阵显式忽略；
+6. 文档 metadata、唯一 doc ID、source sections、相对链接和 Markdown fence 有效；
+7. `registry_version: 1.0.0` 存在，注册表 ID 唯一，Requirement/NFR/ENG/C/OBJ/TASK/TEST/ADR/OPEN/SIM/RISK 引用可解析；
+8. 追踪矩阵对所有 Requirement/NFR/ENG 根 ID 一一覆盖，且只链接真实存在的代码、测试和 artifact；
+9. 当前 Task 的 dependency、Phase、状态和当前阶段约束一致；
+10. `PROD_OPEN-*` 关闭时包含权威来源、证据、决定日期、影响面和迁移/回放结论；
+11. `PROD_OPEN-*` 与 `SIM_ASSUMPTION-*` 没有混用，模拟假设不能关闭生产开放项；
+12. 只有当前 Phase 存在详细 Task Card，其他阶段只能保留计划级条目。
 
 ## CI 分层
 
 | 层 | 行为 |
 |---|---|
 | Local/Task acceptance | 对当前 Task 与 working diff 运行，失败不得标记 Done |
-| Pull Request | 必需检查；阻止缺失文档影响、断链、版本漏更和越阶段任务 |
-| Release | 在 PR 检查上增加 Artifact/manifest、Milestone Gate 和 production readiness 一致性 |
+| Pull Request | P0-08 接入后成为必需检查；阻止缺失文档影响、断链、版本漏更和越阶段任务 |
+| Release | P0-09 接入后在 PR 检查上增加 Artifact/manifest、Milestone Gate 和 production readiness 一致性 |
 
 ## 输出
 
-结构化报告至少包含 check ID、severity、Task、changed paths、matched matrix rows、expected docs、observed docs、missing trace refs 和修复建议。
+`--report` 写出 `traceability-report.v1` JSON，包含总体状态、Task、changed paths、matched
+matrix rows、expected docs、observed docs、检查统计、带 check ID/severity/message/hint 的 issues。
+任一 error 均返回非零退出码；通过时终端输出 `PASS repository governance` 及关键计数。
+
+## 已知边界
+
+校验器验证治理结构、引用、范围和影响同步，不判断业务规则是否正确，也不替代 Schema
+兼容性、Solver 正确性、迁移回放或 benchmark 结果。上述语义验证由对应 Task 和后续 CI/Release
+Gate 负责；P0-02 不据此声称任何业务能力已实现。
 
 ## Override
 

@@ -67,10 +67,16 @@ last_reviewed: 2026-08-19
 
 未经阶段 Gate 和用户确认，不更新到下一 Phase。
 
-当前 P0-01 已提供结构性文档检查入口：
+当前仓库治理检查入口：
 
 ```text
 uv run python scripts/check_docs.py
 ```
 
-它不替代 TASK-P0-02 计划实现的 ID、traceability 和 Git diff/change-impact 校验。
+当前 Task 还必须运行：
+
+```text
+uv run python scripts/check_docs.py --task <task-card> --check-diff --report <report-path>
+```
+
+校验器检查 ID、Task 依赖、traceability 和实际 Git diff/change-impact 声明，但不代替业务 Contract、Schema、Solver/Validator correctness、Scenario 或 Phase Gate 验收。

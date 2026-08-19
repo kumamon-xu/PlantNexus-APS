@@ -17,7 +17,7 @@ Backend：Ruff、type check、unit/contract/integration tests。Frontend：test 
 
 具体命令以仓库脚本和 lockfile 落地为准；在这些文件不存在前不宣称已运行。
 
-文档一致性自动检查的实现合同见 `documentation-consistency-checks.md`；其目标实现任务为 TASK-P0-02。
+文档/traceability 本地检查由 `scripts/check_docs.py` 实现，合同见 `documentation-consistency-checks.md`。当前 Task acceptance 至少运行全仓检查、带 `--check-diff` 的当前 Task 检查和 `TEST-TRACEABILITY-VALIDATOR`；把它接入 PR/Release CI 属于 TASK-P0-08。
 
 ## Task Done
 

@@ -75,7 +75,8 @@ last_reviewed: 2026-08-19
 
 - 项目入口、版本占位和当前可执行命令见 [`../README.md`](../README.md)；
 - 根 [`../AGENTS.md`](../AGENTS.md) 只负责把 Agent 导向规范正文，不复制规则；
-- P0-01 的结构性文档检查运行 `uv run python scripts/check_docs.py`；
-- 该检查验证 metadata、文档 ID、Markdown fence、本地链接、Task 必需字段和本清单完整性。
+- 仓库治理检查运行 `uv run python scripts/check_docs.py`；
+- 该检查验证 metadata、文档 ID、Markdown fence、本地链接、Task、版本化 registry、完整 ID 引用、逐根 traceability 和命名空间隔离；
+- 当前 Task 的实际 diff 使用 `--task <task-card> --check-diff` 匹配 change-impact Rule ID，并可用 `--report <path>` 输出 `traceability-report.v1`。
 
-REQ/NFR/ENG 引用、实际 Git diff 与 change-impact matrix 的完整自动匹配仍属于 TASK-P0-02，不把当前结构性检查描述成完整追踪 Gate。
+本地检查已经形成；PR/Release CI 强制、Artifact/manifest 和 Phase Gate 集成仍由后续获准 Task 提供，不能因本命令 PASS 而宣称 P0 或生产就绪。

@@ -7,6 +7,7 @@ phase: cross-phase
 normative: false
 source_sections: []
 last_reviewed: 2026-08-19
+registry_version: 1.0.0
 ---
 
 # 文档清单
@@ -111,8 +112,8 @@ last_reviewed: 2026-08-19
 | [simulation/scenario-library-and-matrix.md](../simulation/scenario-library-and-matrix.md) | DOC-SIM-004 | baseline | Scenario Library 与复杂度矩阵 |
 | [simulation/scenario-spec-and-provenance.md](../simulation/scenario-spec-and-provenance.md) | DOC-SIM-002 | baseline | ScenarioSpec 与 Provenance |
 | [simulation/synthetic-generator-and-determinism.md](../simulation/synthetic-generator-and-determinism.md) | DOC-SIM-003 | baseline | Synthetic Generator 与确定性 |
-| [tasks/P0/TASK-P0-01-documentation-and-repository-governance.md](../tasks/P0/TASK-P0-01-documentation-and-repository-governance.md) | TASK-P0-01 | ready | Documentation and Repository Governance |
-| [tasks/P0/TASK-P0-02-requirements-and-traceability.md](../tasks/P0/TASK-P0-02-requirements-and-traceability.md) | TASK-P0-02 | planned | Requirements and Traceability |
+| [tasks/P0/TASK-P0-01-documentation-and-repository-governance.md](../tasks/P0/TASK-P0-01-documentation-and-repository-governance.md) | TASK-P0-01 | done | Documentation and Repository Governance |
+| [tasks/P0/TASK-P0-02-requirements-and-traceability.md](../tasks/P0/TASK-P0-02-requirements-and-traceability.md) | TASK-P0-02 | done | Requirements and Traceability |
 | [tasks/P0/TASK-P0-03-domain-and-schema-skeleton.md](../tasks/P0/TASK-P0-03-domain-and-schema-skeleton.md) | TASK-P0-03 | planned | Domain and Schema Skeleton |
 | [tasks/P0/TASK-P0-04-constraints-states-errors-capabilities.md](../tasks/P0/TASK-P0-04-constraints-states-errors-capabilities.md) | TASK-P0-04 | planned | Constraints States Errors and Capabilities |
 | [tasks/P0/TASK-P0-05-simulation-contracts-and-skeleton.md](../tasks/P0/TASK-P0-05-simulation-contracts-and-skeleton.md) | TASK-P0-05 | planned | Simulation Contracts and Skeleton |
@@ -123,6 +124,8 @@ last_reviewed: 2026-08-19
 | [tasks/README.md](../tasks/README.md) | DOC-TASK-INDEX | living | Task Card 索引 |
 | [tasks/TASK_TEMPLATE.md](../tasks/TASK_TEMPLATE.md) | TEMPLATE-TASK | baseline | Task Card Template |
 
-更新文档时应同步维护本清单。TASK-P0-01 的 `uv run python scripts/check_docs.py` 会校验本表是否完整覆盖当前 107 份 `docs/**/*.md`，但不会自动改写清单。根 `README.md`、根 `AGENTS.md`、代码和脚本不属于正式文档清单。
+更新文档时应同步维护本清单。`uv run python scripts/check_docs.py` 会校验本表是否完整覆盖当前 107 份 `docs/**/*.md`，并核对 Doc ID、status 和 title，但不会自动改写清单。根 `README.md`、根 `AGENTS.md`、代码和脚本不属于正式文档清单。
+
+本清单格式为 `registry_version: 1.0.0`；列结构或状态比较语义变化时提升版本。
 
 文档存在不代表对应代码、Schema、Test 或 Artifact 已经实现。

@@ -87,14 +87,20 @@ Traceability updates: explicit IDs/matrix rows
 
 具体的代码目录、变更类型和必审文档映射见 `change-impact-matrix.md`。
 
-## P0 结构性文档检查
+## 仓库治理检查
 
-TASK-P0-01 落地以下仓库级命令：
+基础全仓检查：
 
 ```text
 uv run python scripts/check_docs.py
 ```
 
-当前检查范围为：必需 metadata、唯一文档 ID、与总规一致的 `spec_version`、Markdown fence、本地链接、P0 Task 必需字段，以及 `document-inventory.md` 对 `docs/**/*.md` 的完整覆盖。
+当前检查范围为：必需 metadata、唯一文档 ID、与总规一致的 `spec_version`、Markdown fence、本地链接、inventory metadata、版本化 registry、完整 ID 引用、Task 依赖、逐根 traceability、OPEN closure 证据和 PROD_OPEN/SIM_ASSUMPTION 隔离。
 
-该命令尚不解析 REQ/NFR/ENG 引用，也不根据 Git diff 自动匹配变更影响矩阵；这些能力由 TASK-P0-02 实现。在此之前，Task 的追踪与变更影响仍需按本规则和矩阵人工复核并写入 Completion evidence。
+当前 Task 的 diff 检查：
+
+```text
+uv run python scripts/check_docs.py --task <task-card> --check-diff --report <report-path>
+```
+
+change-impact matrix 使用稳定 `IMPACT-*` Rule ID。实际 changed path 必须命中机器规则，Task 必须声明全部命中行并把 Required documentation 列入 `Documents to update`。报告为 `traceability-report.v1`；机器 PASS 仍须在 Completion evidence 中记录实际文档更新、未修改理由和语义审查结论。

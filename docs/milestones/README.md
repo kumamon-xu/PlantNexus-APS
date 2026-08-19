@@ -25,3 +25,5 @@ last_reviewed: 2026-08-19
 | P7 | Reality Calibration | 历史重放、现实差距与生产边界 |
 
 Milestone 定义 outcome 和 exit gate，不等同 Sprint。只有当前 Phase 创建详细 Task Card；更新 `current_phase.md` 需要 Gate 的真实证据和用户确认。
+
+P0 当前进度：TASK-P0-01 已完成 repository/document governance skeleton；TASK-P0-02 已完成版本化 registries、逐根 traceability 与本地 diff/impact validator。TASK-P0-03 仍为 `planned`，未自动启动。该进度不等于 P0 Exit Gate PASS，也不改变 P1～P7 的 `planned` 状态。

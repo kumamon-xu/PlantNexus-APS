@@ -42,4 +42,4 @@ last_reviewed: 2026-08-19
 
 与当前 Task 无关的未来 Phase 设计、Historical 数据、未批准方案或大规模日志，不作为默认上下文。P1+ Milestone 只是路线，不是实施授权。
 
-P0-01 的 `scripts/check_docs.py` 只提供文档结构检查；读取策略、引用 ID 与实际 diff 是否完整匹配，仍必须按 Task 手工审查，直到 TASK-P0-02 的追踪校验器形成真实证据。
+`scripts/check_docs.py` 会自动检查文档结构、注册 ID、Task 引用、逐根 traceability，以及 `--check-diff` 下的 change-impact Rule ID/必审文档覆盖。它只能验证已经编码的治理规则；Agent 仍须完整读取当前 Task 引用的语义 Contract/Constraint/ADR，并对机器规则未表达的语义影响负责。

@@ -28,12 +28,16 @@ P0-DOCS — Documentation Baseline
 ## 最新完成 Task
 
 ```text
-TASK-P0-01 — Documentation and Repository Governance
+TASK-P0-02 — Requirements and Traceability
 ```
 
-Task 状态：`done`（2026-08-19）。Repository metadata、顶层空目录/包标识、结构性文档检查和明确文档更新均已通过任务卡 Acceptance Commands。
+Task 状态：`done`（2026-08-19）。版本化治理注册表、逐根追踪矩阵、本地 diff/impact validator、负向测试和机器可读报告均已通过任务卡 Acceptance Commands。TASK-P0-01 继续保持 `done`。
 
-当前没有自动激活的下一 Task；TASK-P0-02 及其他后续 Task 仍保持原状态，须由新的明确指令开始。P0 尚未完成，当前记录不表示通过 P0 Exit Gate，也不授权进入 P1。
+P0 尚未完成，当前记录不表示通过 P0 Exit Gate，也不授权进入 P1。
+
+## 当前 Task
+
+无。TASK-P0-03 继续保持 `planned`；完成 TASK-P0-02 不自动授权或启动下一任务。
 
 ## 当前允许
 

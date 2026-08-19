@@ -7,6 +7,7 @@ phase: cross-phase
 normative: true
 source_sections: [37, 38, 39, 43, 44, 49, 59, 62, 96]
 last_reviewed: 2026-08-19
+registry_version: 1.0.0
 ---
 
 # SIM_ASSUMPTION 注册表
@@ -22,3 +23,7 @@ Simulation 用于模拟 APS Planning Reality，不代表真实物理工厂。每
 | SIM-ASSUMPTION-005 | XS/S/M/L/XL 只表示 Benchmark 复杂度画像 | ACTIVE | 不代表真实生产容量承诺 |
 
 具体 workshop 数、resource 数、候选设备密度、故障概率、到期压力等数值尚未在本阶段批准。它们应由后续版本化 FactoryProfile/ScenarioSpec 明确，不能在本文中给出“通用默认工厂”。
+
+本注册表的稳定 ID 前缀为 `SIM-ASSUMPTION-NNN`。总规示例中的 `SIM_ASSUMPTION-003` 是同类标记的上游拼写，校验时规范化为 `SIM-ASSUMPTION-003`；新引用必须使用本表前缀。条目只能为 `ACTIVE` 或 `RETIRED`，不得出现 `OPEN`/`CLOSED` 生产问题状态，也不得用于关闭任何 `OPEN-NNN`。
+
+修改表结构、ID 前缀或状态语义必须提升 `registry_version`；具体 Scenario/Profile 参数变化由对应资产版本管理。

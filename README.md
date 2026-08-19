@@ -22,11 +22,18 @@ Coding Agent 必须从 [`AGENTS.md`](AGENTS.md) 进入项目规则。项目规�
 ```powershell
 uv sync --locked
 uv run python scripts/check_docs.py
+uv run python -m unittest discover -s backend/tests/unit -p "test_check_docs.py"
 uv build
 uv run python -c "import app; assert app.CODE_VERSION == '0.0.0'; assert app.SPEC_VERSION == '0.3.0'; assert app.SCHEMA_VERSION == 'unassigned'"
 ```
 
-文档检查只覆盖 P0-01 已落地的 metadata、文档 ID、Markdown fence、本地链接、Task 必需字段和文档清单完整性。REQ/NFR/ENG 引用、Git diff 与变更影响矩阵的完整自动校验属于 TASK-P0-02。
+`scripts/check_docs.py` 当前同时检查结构性 Markdown、版本化 registries、REQ/NFR/ENG/TEST 等引用、Task 依赖、逐根 traceability 和 PROD_OPEN/SIM_ASSUMPTION 隔离。对当前 Task 的实际 Git diff 运行影响覆盖检查：
+
+```powershell
+uv run python scripts/check_docs.py --task docs/tasks/P0/TASK-P0-02-requirements-and-traceability.md --check-diff --report build/traceability/TASK-P0-02-report.json
+```
+
+报告使用 `traceability-report.v1`，生成到已忽略的 `build/`；Task Card Completion evidence 保存持久结果摘要。CI 强制集成仍属于 TASK-P0-08。
 
 ## 仓库结构
 

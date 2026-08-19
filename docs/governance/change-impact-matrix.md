@@ -7,6 +7,7 @@ phase: cross-phase
 normative: true
 source_sections: [6, 97, 98, 99, 100, 101, 102, 103, 104, 111]
 last_reviewed: 2026-08-19
+registry_version: 1.0.0
 ---
 
 # 变更影响与必审文档矩阵
@@ -21,6 +22,41 @@ last_reviewed: 2026-08-19
 4. 将这些文档路径加入 `Files allowed to change`；
 5. 实施中出现新影响时先修订 Task Card；
 6. 完成时按实际 diff 再匹配一次，防止计划与实际偏离。
+
+`Change-impact matrix rows reviewed` 必须使用下方稳定 Rule ID。校验器忽略纯 `.gitkeep`，其他 changed path 可以同时命中多条规则；每条命中的 Rule ID 都必须在当前 Task 声明，其 `Required documentation` 必须进入 `Documents to update`。
+
+## Machine-checkable rules
+
+| Rule ID | Changed path globs | Required documentation |
+|---|---|---|
+| IMPACT-SCHEMA | `schemas/**` | `docs/contracts/README.md`、`docs/contracts/schema-index.md`、`docs/contracts/schema-versioning.md`、`docs/domain/domain-model.md`、`docs/governance/traceability-matrix.md` |
+| IMPACT-DOMAIN | `backend/app/domain/**` | `docs/domain/domain-model.md`、`docs/core/glossary.md`、`docs/architecture/data-authority.md`、`docs/governance/traceability-matrix.md` |
+| IMPACT-IMPORT | `backend/app/importers/**`、`backend/app/normalization/**`、`backend/app/data_validation/**` | `docs/contracts/import-and-normalization.md`、`docs/architecture/data-authority.md`、`docs/domain/error-model.md`、`docs/governance/prod-open-register.md` |
+| IMPACT-SNAPSHOT | `backend/app/snapshots/**` | `docs/contracts/planning-snapshot.md`、`docs/architecture/provenance-and-versioning.md`、`docs/quality/property-tests.md`、`docs/governance/traceability-matrix.md` |
+| IMPACT-PROBLEM | `backend/app/planning/problem/**` | `docs/contracts/planning-problem.md`、`docs/planning/constraint-catalog.md`、`docs/architecture/provenance-and-versioning.md`、`docs/adr/README.md` |
+| IMPACT-POLICY | `backend/app/planning/policy/**` | `docs/contracts/planning-policy-and-solve-limits.md`、`docs/planning/objective-policy.md`、`docs/domain/kpi-contract.md`、`docs/adr/README.md` |
+| IMPACT-STRATEGY | `backend/app/planning/strategies/**` | `docs/planning/planning-strategies.md`、`docs/planning/solver-backend-contract.md`、`docs/simulation/performance-gates.md`、`docs/adr/README.md` |
+| IMPACT-BACKEND | `backend/app/planning/backends/**` | `docs/planning/solver-backend-contract.md`、`docs/planning/planning-strategies.md`、`docs/planning/constraint-catalog.md`、`docs/planning/objective-policy.md`、`docs/quality/benchmark-regression.md`、`docs/architecture/technology-stack.md`、`docs/adr/README.md` |
+| IMPACT-VALIDATOR | `backend/app/planning/validation/**` | `docs/planning/schedule-validator.md`、`docs/planning/constraint-catalog.md`、`docs/quality/validator-mutation-tests.md`、`docs/quality/test-strategy-and-matrix.md`、`docs/governance/traceability-matrix.md` |
+| IMPACT-DIAGNOSTICS | `backend/app/planning/diagnostics/**` | `docs/planning/infeasibility-diagnostics.md`、`docs/domain/error-model.md`、`docs/planning/solver-backend-contract.md`、`docs/quality/test-strategy-and-matrix.md` |
+| IMPACT-STATE | `backend/app/domain/state_machines/**`、`docs/domain/state-machines/**` | `docs/domain/state-machines/planning-run.md`、`docs/domain/state-machines/schedule-version.md`、`docs/domain/state-machines/export-job.md`、`docs/adr/README.md`、`docs/governance/traceability-matrix.md` |
+| IMPACT-SIM-PROFILE | `backend/app/simulation/profiles/**`、`schemas/scenario/factory-profile*` | `docs/simulation/factory-profile.md`、`docs/simulation/scenario-library-and-matrix.md`、`docs/governance/sim-assumption-register.md`、`docs/architecture/provenance-and-versioning.md` |
+| IMPACT-SIM-SCENARIO | `backend/app/simulation/scenarios/**`、`schemas/scenario/scenario*` | `docs/simulation/scenario-spec-and-provenance.md`、`docs/simulation/scenario-library-and-matrix.md`、`docs/simulation/performance-gates.md`、`docs/governance/traceability-matrix.md` |
+| IMPACT-SIM-GENERATOR | `backend/app/simulation/generators/**` | `docs/simulation/synthetic-generator-and-determinism.md`、`docs/architecture/simulation-first-dual-channel.md`、`docs/architecture/provenance-and-versioning.md`、`docs/quality/test-strategy-and-matrix.md` |
+| IMPACT-SIM-EXECUTION | `backend/app/simulation/execution/**` | `docs/simulation/execution-simulator-and-disruptions.md`、`docs/contracts/execution-events-and-replan-request.md`、`docs/planning/replanning.md`、`docs/quality/test-strategy-and-matrix.md` |
+| IMPACT-BENCHMARK | `backend/app/simulation/benchmarks/**`、`benchmarks/**` | `docs/simulation/benchmark-harness.md`、`docs/simulation/performance-gates.md`、`docs/quality/benchmark-regression.md`、`docs/domain/kpi-contract.md`、`docs/governance/traceability-matrix.md` |
+| IMPACT-FIXTURE | `fixtures/**` | `docs/quality/fixtures-and-golden-tests.md`、`docs/quality/validator-mutation-tests.md`、`docs/quality/property-tests.md`、`docs/governance/traceability-matrix.md` |
+| IMPACT-API | `backend/app/api/**` | `docs/domain/error-model.md`、`docs/architecture/data-authority.md`、`docs/governance/prod-open-register.md`、`docs/quality/test-strategy-and-matrix.md` |
+| IMPACT-FRONTEND | `frontend/**` | `docs/frontend/README.md`、`docs/domain/state-machines/schedule-version.md`、`docs/planning/replanning.md`、`docs/planning/schedule-validator.md`、`docs/quality/test-strategy-and-matrix.md` |
+| IMPACT-EXPORT | `backend/app/exporters/**` | `docs/contracts/export-package.md`、`docs/domain/state-machines/export-job.md`、`docs/domain/state-machines/schedule-version.md`、`docs/architecture/provenance-and-versioning.md`、`docs/governance/traceability-matrix.md` |
+| IMPACT-JOBS | `backend/app/jobs/**` | `docs/domain/state-machines/export-job.md`、`docs/domain/error-model.md`、`docs/architecture/module-boundaries.md`、`docs/governance/nfr-and-engineering-register.md`、`docs/quality/test-strategy-and-matrix.md` |
+| IMPACT-INFRA | `infra/**`、`backend/app/infrastructure/**`、`docker-compose.yml` | `docs/architecture/configuration-environments-and-isolation.md`、`docs/architecture/technology-stack.md`、`docs/operations/README.md`、`docs/governance/nfr-and-engineering-register.md` |
+| IMPACT-DEPENDENCY | `pyproject.toml`、`uv.lock` | `docs/architecture/technology-stack.md`、`docs/planning/solver-backend-contract.md`、`docs/quality/benchmark-regression.md`、`docs/adr/README.md` |
+| IMPACT-PHASE | `docs/milestones/**`、`docs/current_phase.md` | `docs/milestones/README.md`、`docs/tasks/README.md`、`docs/governance/traceability-matrix.md`、`docs/governance/document-inventory.md` |
+| IMPACT-GOVERNANCE-REGISTRY | `docs/governance/requirements-register.md`、`docs/governance/nfr-and-engineering-register.md`、`docs/governance/traceability-rules.md`、`docs/governance/traceability-matrix.md`、`docs/governance/prod-open-register.md`、`docs/governance/sim-assumption-register.md`、`docs/governance/risk-register.md`、`docs/governance/change-impact-matrix.md` | `docs/governance/requirements-register.md`、`docs/governance/nfr-and-engineering-register.md`、`docs/governance/traceability-rules.md`、`docs/governance/traceability-matrix.md`、`docs/governance/prod-open-register.md`、`docs/governance/sim-assumption-register.md`、`docs/governance/risk-register.md`、`docs/governance/change-impact-matrix.md`、`docs/governance/document-inventory.md`、`docs/quality/documentation-consistency-checks.md`、`docs/tasks/TASK_TEMPLATE.md` |
+| IMPACT-GOVERNANCE-VALIDATOR | `scripts/check_docs.py`、`backend/tests/unit/test_check_docs.py` | `README.md`、`docs/README.md`、`docs/agents/AGENTS.md`、`docs/agents/reading-order-and-context-policy.md`、`docs/architecture/repository-layout.md`、`docs/governance/document-control.md`、`docs/governance/traceability-rules.md`、`docs/governance/change-impact-matrix.md`、`docs/quality/documentation-consistency-checks.md`、`docs/quality/ci-gates-and-definition-of-done.md`、`docs/quality/test-strategy-and-matrix.md`、`docs/tasks/TASK_TEMPLATE.md` |
+| IMPACT-TESTS | `backend/tests/**` | `docs/quality/test-strategy-and-matrix.md`、`docs/quality/documentation-consistency-checks.md`、`docs/governance/traceability-matrix.md` |
+| IMPACT-DOCS | `docs/**`、`README.md`、`AGENTS.md` | `docs/governance/document-inventory.md`、`docs/quality/documentation-consistency-checks.md` |
 
 ## 路径与行为映射
 

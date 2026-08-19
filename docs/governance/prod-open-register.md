@@ -7,6 +7,7 @@ phase: cross-phase
 normative: true
 source_sections: [16, 59, 60, 61, 105, 106]
 last_reviewed: 2026-08-19
+registry_version: 1.0.0
 ---
 
 # PROD_OPEN 注册表
@@ -34,3 +35,18 @@ last_reviewed: 2026-08-19
 ## 关闭记录要求
 
 关闭一项问题时必须记录：权威人/系统、原始证据、决策值或规则、适用版本、受影响 Contract/Schema/ADR/Task/Test，以及是否需要迁移或历史重放。
+
+关闭记录必须在本文件使用以下机器可检查的字段；表中状态只有在记录完整且引用路径存在后才能从 `OPEN` 改为 `CLOSED`：
+
+```text
+### OPEN-NNN closure
+Authority: person-role or authoritative-system
+Evidence: repository path or approved external reference
+Decision date: YYYY-MM-DD
+Decision: approved value or rule
+Applies to: version/scope
+Affected artifacts: Contract/Schema/ADR/Task/Test paths or IDs
+Migration/replay: required with path | none with reason
+```
+
+不得以会议印象、Coding Agent 推断或 `SIM_ASSUMPTION` 作为关闭证据。`registry_version` 在字段结构、状态机或关闭证据语义变化时递增；关闭单个条目不改变格式版本。

@@ -31,3 +31,5 @@ TASK-P1-01把 workflow从单一 P0-10 handoff改为 phase/task-neutral：CI even
 TASK-P1-03在既有Operations baseline上增加Raw Staging持久化证据：insert-only batch/row、source/version/digest/location/UTC provenance、plane-scoped idempotency、atomic rollback与destructive migration downgrade均由unit/integration tests复验。错误不回显raw/driver detail，repository不创建Worker task或业务副作用。
 
 这仍不是Production Runbook：真实PostgreSQL并发/lock、独立数据库与roles、retention/erasure、backup/restore、access audit、容量/告警和incident response均未形成。migration downgrade只在临时开发SQLite明确删除1个synthetic sample batch/row，不能作为生产数据清理策略。
+
+TASK-P1-03 implementation commit`25897393e31dcc0648943ec7e2e7f43dbb0e70e1`已由GitHub run [`32243895717`](https://github.com/kumamon-xu/PlantNexus-APS/actions/runs/32243895717)的required `validate`成功重放；artifact `9361846475` / digest `sha256:75aa68daf5bd4308a4f9143c0ae72746f540d103d6a937d472d6a7d5c3c5160b`保存机器证据。该provider PASS仍不构成Production DB、migration runbook或安全认证。

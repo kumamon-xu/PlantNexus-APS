@@ -27,7 +27,7 @@ ReferenceFileAdapter是 P1正式、可测试的参考 Adapter，但在 OPEN-002/
 |---:|---|---|---|---|
 | 1 | TASK-P1-01 | Phase-aware governance与可持续 CI handoff | TASK-P0-10 | `done` |
 | 2 | TASK-P1-02 | Canonical records、Import v2、Snapshot v2合同 | P1-01 | `done` |
-| 3 | TASK-P1-03 | Raw Staging、provenance、idempotent persistence | P1-02 | `in_progress` |
+| 3 | TASK-P1-03 | Raw Staging、provenance、idempotent persistence | P1-02 | `done` |
 | 4 | TASK-P1-04 | CSV、XLSX与ReferenceFileAdapter v1 | P1-02/03 | `planned` |
 | 5 | TASK-P1-05 | ID/time/unit Normalization与canonical Import bytes | P1-02/03/04 | `planned` |
 | 6 | TASK-P1-06 | DAG/reference/capability Data Validation与四类 exact rejection | P1-05 | `planned` |
@@ -84,4 +84,4 @@ Gate证据还必须覆盖 CSV/XLSX/Reference Adapter、Raw Staging provenance、
 
 ## Current execution boundary
 
-Canonical-records.v1、Import v2与Snapshot v2的strict Schema/data dictionary/pure type/precheck已以schema set`2.0.0`发布，Import/Snapshot v1由byte fingerprint保护；implementation commit`64c40b5c21ab0be8955e55edc007e04337cac417`的GitHub run`32241366290`为success。TASK-P1-03现以`d122a1b16dc1b7c91227d587b99fb8a345c7c312`为Diff base实施Raw Staging；该执行不得提前形成Adapter、Normalization、DataValidation、Expansion、Snapshot/Problem hash或Solver。
+Canonical-records.v1、Import v2与Snapshot v2的strict Schema/data dictionary/pure type/precheck已以schema set`2.0.0`发布。TASK-P1-03现以implementation commit`25897393e31dcc0648943ec7e2e7f43dbb0e70e1`和GitHub run`32243895717`形成Raw Staging/repository/migration/replay/rollback/isolation evidence并标记`done`。TASK-P1-04仍未启动；Adapter、Normalization、DataValidation、Expansion、Snapshot/Problem hash与Solver必须继续按依赖逐项实施。

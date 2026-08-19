@@ -1,7 +1,7 @@
 ---
 doc_id: TASK-P1-03
 title: Raw Staging and Import Provenance
-status: in_progress
+status: done
 spec_version: 0.3.0
 phase: P1
 normative: true
@@ -80,3 +80,9 @@ Implementation candidate共36个changed paths（committed range=0、working tree
 Migration数据影响：空库upgrade创建`raw_import_batches/raw_import_rows`；含1个explicit synthetic batch/1 row的临时SQLite downgrade到`0001`会删除两表及该样例，re-upgrade后为空，再downgrade base成功。该destructive evidence只作用于pytest临时目录，没有删除用户、真实或Production数据；Production downgrade必须另行确认范围/备份。Schema set/产品error registry/dependency/lock保持不变，OPEN-002/015及全部15项OPEN继续OPEN，SIM-ASSUMPTION-001～009不变，无新ADR。
 
 追踪已更新为REQ-001/009、NFR-TRC/REL/SEC/ISO、ENG-ARCH/ERR/VER→TASK-P1-03→TEST-IMPORT-STAGING-001/TEST-IDEMPOTENCY→raw contracts/repository/migration/tests。实际impact rows为`IMPACT-DOCS/GOVERNANCE-REGISTRY/IMPORT/INFRA/PHASE/TESTS`；Adapter、Normalization/DataValidation、independent Production DB、PostgreSQL race/outage、Worker编排、Snapshot/Problem/Solver和P2继续`PLANNED`。本地实现已满足Completion conditions；implementation commit、提交后governance和provider evidence待完成。
+
+Implementation commit=`25897393e31dcc0648943ec7e2e7f43dbb0e70e1`（36 paths、1528 insertions/26 deletions）。提交后full/diff governance再次PASS：committed range=36、working tree=0、6 impact rows、0 issues，working tree clean。直接push`main`时GitHub提示required `validate`尚待运行并发生rule bypass，该提示未计为PASS。
+
+真实provider closure：GitHub repository=`kumamon-xu/PlantNexus-APS`、branch=`main`、workflow=`PlantNexus repository gates`；run [`32243895717`](https://github.com/kumamon-xu/PlantNexus-APS/actions/runs/32243895717)，event=`push`、attempt=1、head SHA=`25897393e31dcc0648943ec7e2e7f43dbb0e70e1`、status=`completed`、conclusion=`success`。Job `validate` ID=`96040166509`为success，checkout/setup/sync/lint/type/tests/五类contracts/Compose/docs+Task diff/Benchmark deferred hook/build/upload及post steps全部success。Artifact ID=`9361846475`、name=`plantnexus-ci-evidence-32243895717`、size=6204 bytes、digest=`sha256:75aa68daf5bd4308a4f9143c0ae72746f540d103d6a937d472d6a7d5c3c5160b`、expired=false、expires=`2026-11-17T10:41:21Z`。公开branch state为`main.protected=true`、required check=`validate`/app ID=`15368`。
+
+全部Completion conditions满足，Task标记`done`。本evidence-only状态提交无法由上述implementation run自我包含；推送后必须再运行同一workflow并在交付中报告最终run。该闭环不自动启动TASK-P1-04、不进入P2。

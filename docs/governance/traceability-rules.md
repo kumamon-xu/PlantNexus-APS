@@ -136,4 +136,4 @@ P1 Exit Gate evidence链必须区分：P1-01～11 implementation commit/provider
 
 TASK-P1-12将全部P1 roots→TASK-P1-01～12→36个registered Test IDs/七类machine reports→11组implementation provider artifacts→P1 audit report/manifest闭环。`READY`只关闭P1 Data & Snapshot Gate，不改变root `ALLOCATED`状态、15项PROD_OPEN、10项SIM_ASSUMPTION、10项风险或P2/Production `PLANNED`边界；current phase必须等待用户明确授权。
 
-用户于2026-08-20批准transition后，TASK-P2-00把P1 Milestone关闭为completed、P2激活，并分配TASK-P2-01～14。计划链为合同缺口→机器合同→Backend/Validator→C-001～C-011→OBJ-001→correctness/reference/export/benchmark→vertical Gate→Exit Audit。所有P2实现Test/Artifact仍为`PLANNED`，root ID继续`ALLOCATED`，C-012～C-018、OBJ-002、P3/P4与Production边界不变。
+用户于2026-08-20批准transition后，TASK-P2-00把P1 Milestone关闭为completed、P2激活，并分配TASK-P2-01～14。Implementation `3298229fae89a54e0641f5907ad90c4fa81569bf` / run `32332003608` / artifact `9393345593`证明32 paths/5 rows/19 checks/0 issues，phase-planning batch归属闭环。计划链为合同缺口→机器合同→Backend/Validator→C-001～C-011→OBJ-001→correctness/reference/export/benchmark→vertical Gate→Exit Audit。所有P2业务Test/Artifact仍为`PLANNED`，root ID继续`ALLOCATED`，C-012～C-018、OBJ-002、P3/P4与Production边界不变。

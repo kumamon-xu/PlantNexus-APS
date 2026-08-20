@@ -221,7 +221,7 @@ Full检查的最终基线为125份`docs/**/*.md`、30 roots、36 Test IDs、15 O
 
 普通CI range的唯一Task规则不变。只有同一range首次新增完整阶段计划时，才可由唯一新建`TASK-Pn-00`/`phase-planning-owner`归属；所有成员必须同range新建、role=`phase-plan-member`、status=`planned/ready`且无implementation SHA。existing/active/done member、多个owner、错误owner ID或non-current card均负向失败。选择owner后仍使用owner Diff base检查全部changed paths、exact allowed scope与Impact Rules，不能以batch名义实现多个Task。
 
-本次新增15张P2卡使inventory从125增至140；TEST-PHASE-GOVERNANCE-001与TEST-TRACEABILITY-VALIDATOR只增加batch selector正反证据。P2业务Test IDs全部保持`PLANNED`。Full governance与`--task ...P2-00... --check-diff`必须在working tree、implementation commit clean tree和provider artifact中分别为PASS。
+本次新增15张P2卡使inventory从125增至140；TEST-PHASE-GOVERNANCE-001与TEST-TRACEABILITY-VALIDATOR只增加batch selector正反证据。P2业务Test IDs全部保持`PLANNED`。Implementation `3298229fae89a54e0641f5907ad90c4fa81569bf`在local explicit/event-discovery clean checks及provider run `32332003608` / artifact `9393345593`中均选择TASK-P2-00并得到32 committed/0 working paths、5 rows、19 checks、0 issues；Task据此由evidence-only closure标记done。
 
 ## Override
 

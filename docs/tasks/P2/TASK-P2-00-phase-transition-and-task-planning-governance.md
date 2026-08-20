@@ -1,7 +1,7 @@
 ---
 doc_id: TASK-P2-00
 title: P2 Phase Transition and Task Planning Governance
-status: in_progress
+status: done
 spec_version: 0.3.0
 phase: P2
 normative: true
@@ -114,4 +114,7 @@ Rollback: 在push前回退本Task全部文档/治理变更并保持P1 active；p
 - Schema/migration/dependency=`none`；schema set保持`2.2.0`，`pyproject.toml`/`uv.lock`仍无OR-Tools。ADR技术决定=`none`；P2-01/03只登记未来启动门。
 - Test registry仍为36项/`registry_version=1.0.0`；只有TEST-PHASE-GOVERNANCE-001与TEST-TRACEABILITY-VALIDATOR增加当前代码证据，全部P2业务Test/Artifact仍`PLANNED`。
 - OPEN-001～015、SIM-ASSUMPTION-001～010与RISK-001～010状态未变；没有Production/性能/容量结论。
-- Provider evidence在implementation commit push后填写；该证据形成前Task保持`in_progress`。若provider失败，保留run/artifact并保持P2-00未关闭；回滚只撤销本次治理范围，不改写P1 audit或force-push历史。
+- Implementation commit=`3298229fae89a54e0641f5907ad90c4fa81569bf`。GitHub push run [`32332003608`](https://github.com/kumamon-xu/PlantNexus-APS/actions/runs/32332003608)为attempt 1/completed/success；required `validate` job `96314305102`的20个steps全部success。Artifact `9393345593`=`plantnexus-ci-evidence-32332003608`，size=9103 bytes，digest=`sha256:847f2299969bc47fc1cc49024fc1f3a51a6bca06db41fc63eccb909aa7dd5e7c`且`expired=false`；required context=`validate`/app ID `15368`，exact commit check-run=`completed/success`。
+- 下载artifact内`traceability/ci-current-task-report.json`精确绑定TASK-P2-00、head=`3298229fae89a54e0641f5907ad90c4fa81569bf`、discovery base/Diff base=`098c44059856e3203d95d046fea44894b5cf414b`，记录32 committed/0 working paths、5 impact rows、19/19 checks PASS、0 issues。其余六份既有P1/P0 machine reports均随job成功上传；Benchmark hook明确deferred，未运行Solver。
+- Evidence-only closure提交前再次运行targeted tests=22 passed、full docs=140/30/36/15/10/10/37且0 issues；explicit Task report在implementation HEAD上记录32 committed + 12 working source paths的并集仍为32 unique paths、5 rows、19/19 checks PASS、0 issues，`git diff --check` exit 0。
+- Task在本evidence-only closure标记`done`；closure自身的exact required run/artifact将在提交/推送后作为最终外部交付证据核验，不可能由本commit自我包含。若closure provider失败，保留失败run并追加有界修复，不改写P1 audit或force-push历史。

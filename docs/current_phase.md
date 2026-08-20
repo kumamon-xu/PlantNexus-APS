@@ -38,7 +38,7 @@ PlanningSnapshot
 
 ## 当前Task与启动边界
 
-`TASK-P2-00 — P2 Phase Transition and Task Planning Governance`正在执行本次阶段切换、Task拆分和治理更新。TASK-P2-01～14均只创建为`planned`，本次不启动任何P2业务实现。P2-00完成并获得自身exact provider证据后，建议首先另行授权并启动`TASK-P2-01 — PlanningProblem v2 Contract Gap Closure`。
+`TASK-P2-00 — P2 Phase Transition and Task Planning Governance`已完成：implementation commit=`3298229fae89a54e0641f5907ad90c4fa81569bf`，GitHub run `32332003608` / required job `96314305102` / artifact `9393345593`均success，artifact内Task report为32 paths/5 Impact Rules/19 checks/0 issues。TASK-P2-01～14均只创建为`planned`，没有启动任何P2业务实现。建议首先另行授权并启动`TASK-P2-01 — PlanningProblem v2 Contract Gap Closure`。
 
 TASK-P2-01之所以先行，是因为P1的`planning-problem.v1`尚不能表达active locks、due/priority以及COMPLETED→active历史lag；Backend不得在未版本化合同中隐藏这些事实。完整顺序和分支见[P2 Milestone](milestones/P2-cp-sat-vertical-slice.md)与[Task索引](tasks/README.md)。
 

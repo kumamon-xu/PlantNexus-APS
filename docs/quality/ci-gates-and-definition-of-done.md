@@ -105,4 +105,4 @@ P1-12在Diff base `8830a6dc566df8093b601a82c87c74a9cfd97b59`上独立重跑locke
 
 P2 phase planning一次新增TASK-P2-00～14。CI仍使用PR base或push event `before`做event attribution；新增严格batch规则只允许唯一新建`TASK-Pn-00` owner和同range新建的planned/ready成员，拒绝既有/active/done成员、多个owner、预填SHA与历史/future卡。归属后仍用P2-00的immutable Diff base检查全部scope/impact，workflow命令和中性artifact命名不变。
 
-本次不激活Benchmark hook、不安装OR-Tools、不增加P2 machine report。P2-00 implementation commit必须先通过locked sync、targeted/full regression、full/diff governance与exact provider required `validate`/artifact，再由evidence-only closure标记done。P2-01～14保持planned；P2-13以后才允许接入完整P2 Gate，P2-14最后独立审计。
+本次不激活Benchmark hook、不安装OR-Tools、不增加P2 machine report。P2-00 implementation `3298229fae89a54e0641f5907ad90c4fa81569bf`已通过locked sync、273 full tests、full/diff governance与exact provider run `32332003608` / required job `96314305102` / artifact `9393345593`；artifact Task report为32 paths/5 rows/19 checks/0 issues，Task由evidence-only closure标记done。P2-01～14保持planned；P2-13以后才允许接入完整P2 Gate，P2-14最后独立审计。

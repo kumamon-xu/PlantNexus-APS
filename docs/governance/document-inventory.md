@@ -12,7 +12,7 @@ registry_version: 1.0.0
 
 # 文档清单
 
-本清单列出当前仓库已经实际存在的Markdown文档。P0/P1均已归档为completed；P1 Gate=`READY`后用户明确批准P1→P2。P2现为active，TASK-P2-00执行阶段/规划治理，P2-01～14仅为planned。产品API与Production Runbook正文尚未形成并继续由相应索引登记。
+本清单列出当前仓库已经实际存在的Markdown文档。P0/P1均已归档为completed；P1 Gate=`READY`后用户明确批准P1→P2。P2现为active，TASK-P2-00阶段/规划治理已done，P2-01～14仅为planned。产品API与Production Runbook正文尚未形成并继续由相应索引登记。
 
 | Path | Doc ID | Status | Title |
 |---|---|---|---|
@@ -139,7 +139,7 @@ registry_version: 1.0.0
 | [tasks/P1/TASK-P1-10-synthetic-generator-records.md](../tasks/P1/TASK-P1-10-synthetic-generator-records.md) | TASK-P1-10 | done | Synthetic Generator Canonical Records |
 | [tasks/P1/TASK-P1-11-common-ingress-pipeline-and-gate-evidence.md](../tasks/P1/TASK-P1-11-common-ingress-pipeline-and-gate-evidence.md) | TASK-P1-11 | done | Common Ingress Pipeline and P1 Gate Evidence |
 | [tasks/P1/TASK-P1-12-p1-exit-gate-audit.md](../tasks/P1/TASK-P1-12-p1-exit-gate-audit.md) | TASK-P1-12 | done | P1 Exit Gate Audit |
-| [tasks/P2/TASK-P2-00-phase-transition-and-task-planning-governance.md](../tasks/P2/TASK-P2-00-phase-transition-and-task-planning-governance.md) | TASK-P2-00 | in_progress | P2 Phase Transition and Task Planning Governance |
+| [tasks/P2/TASK-P2-00-phase-transition-and-task-planning-governance.md](../tasks/P2/TASK-P2-00-phase-transition-and-task-planning-governance.md) | TASK-P2-00 | done | P2 Phase Transition and Task Planning Governance |
 | [tasks/P2/TASK-P2-01-planning-problem-v2-contract-gap-closure.md](../tasks/P2/TASK-P2-01-planning-problem-v2-contract-gap-closure.md) | TASK-P2-01 | planned | PlanningProblem v2 Contract Gap Closure |
 | [tasks/P2/TASK-P2-02-planning-machine-contracts-and-status.md](../tasks/P2/TASK-P2-02-planning-machine-contracts-and-status.md) | TASK-P2-02 | planned | Planning Machine Contracts and Status |
 | [tasks/P2/TASK-P2-03-ortools-backend-foundation.md](../tasks/P2/TASK-P2-03-ortools-backend-foundation.md) | TASK-P2-03 | planned | OR-Tools and SolverBackend Foundation |
@@ -175,4 +175,4 @@ TASK-P1-11不新增Markdown路径，清单仍完整覆盖124份`docs/**/*.md`。
 
 TASK-P1-12新增唯一正式Markdown `docs/milestones/P1-exit-gate-audit-report.md`，因此清单从历史124份增至125份；同目录JSON evidence manifest、ignored `build/validation`/`build/traceability` reports与下载到系统临时目录的provider artifacts不进入清单。Audit report现为`baseline`；implementation commit `a5d7e4a68dc12d48e36cb692500f59446f8097b4`的run `32326616525` / artifact `9391591718`成功后Task为`done`。P1 Gate=`READY`不创建P2文档。
 
-TASK-P2-00在用户明确授权后一次新增15张P2 Task Card，因此清单由125份增至140份。只有P2-00为phase-planning owner/in_progress；P2-01～14为新建planned member，没有Diff base、实现或artifact。P1/P2 Milestone状态分别更新为completed/active；ignored Task report与provider artifact不进入清单。
+TASK-P2-00在用户明确授权后一次新增15张P2 Task Card，因此清单由125份增至140份。P2-00为唯一phase-planning owner，implementation `3298229fae89a54e0641f5907ad90c4fa81569bf` / run `32332003608` / artifact `9393345593`成功后已done；P2-01～14为planned member，没有Diff base、实现或artifact。P1/P2 Milestone状态分别为completed/active；ignored Task report与provider artifact不进入清单。

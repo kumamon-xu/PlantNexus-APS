@@ -22,7 +22,7 @@ last_reviewed: 2026-08-20
 
 | Task | 目标 | 依赖 | 状态 |
 |---|---|---|---|
-| [TASK-P2-00](P2/TASK-P2-00-phase-transition-and-task-planning-governance.md) | Phase transition、Task plan与batch CI治理 | P1-12 | `in_progress` |
+| [TASK-P2-00](P2/TASK-P2-00-phase-transition-and-task-planning-governance.md) | Phase transition、Task plan与batch CI治理 | P1-12 | `done` |
 | [TASK-P2-01](P2/TASK-P2-01-planning-problem-v2-contract-gap-closure.md) | PlanningProblem v2合同缺口闭环 | P2-00 | `planned` |
 | [TASK-P2-02](P2/TASK-P2-02-planning-machine-contracts-and-status.md) | Planning机器合同与status | P2-01 | `planned` |
 | [TASK-P2-03](P2/TASK-P2-03-ortools-backend-foundation.md) | OR-Tools与Backend foundation | P2-02 | `planned` |
@@ -44,4 +44,4 @@ last_reviewed: 2026-08-20
 
 普通CI event range仍只能变更一张current-phase Task Card。唯一例外是初始phase-planning batch：必须由新建`TASK-Pn-00`、`Task batch role: phase-planning-owner`、有效Diff base且`in_progress/done`的唯一owner归属；其他卡必须同range新建、role=`phase-plan-member`、保持`planned/ready`且不得预填implementation SHA。历史卡、既有成员、多个owner或active/done成员均硬失败。选择owner后仍按owner Diff base检查全部scope/Impact Rule。
 
-TASK-P2-00只完成本次治理工作；P2-01～14未获本次实现授权且均为`planned`。P2-00 closure后建议首先另行授权P2-01。每个后续Task完成本地验收、提交并直接push当前`main`后，必须核验exact required `validate`和artifact；失败run保留且阻断closure。
+TASK-P2-00只完成本次治理工作，implementation `3298229fae89a54e0641f5907ad90c4fa81569bf` / run `32332003608` / artifact `9393345593`已闭环；P2-01～14未获本次实现授权且均为`planned`。建议首先另行授权P2-01。每个后续Task完成本地验收、提交并直接push当前`main`后，必须核验exact required `validate`和artifact；失败run保留且阻断closure。

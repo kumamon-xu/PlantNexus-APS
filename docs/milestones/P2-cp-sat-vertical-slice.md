@@ -21,9 +21,9 @@ P1 Exit Gate=`READY`且blocking gaps为空；用户于2026-08-20明确批准P1�
 
 ## Ordered Task plan
 
-| Order | Task | Outcome | Depends on | Initial state |
+| Order | Task | Outcome | Depends on | Current state |
 |---:|---|---|---|---|
-| 0 | TASK-P2-00 | Phase transition、完整Task规划与batch CI治理 | TASK-P1-12 | `in_progress` |
+| 0 | TASK-P2-00 | Phase transition、完整Task规划与batch CI治理 | TASK-P1-12 | `done` |
 | 1 | TASK-P2-01 | PlanningProblem v2合同缺口闭环 | P2-00 | `planned` |
 | 2 | TASK-P2-02 | Policy/Limits/Solution/SolverReport/status机器合同 | P2-01 | `planned` |
 | 3 | TASK-P2-03 | OR-Tools exact pin与Backend foundation | P2-02 | `planned` |
@@ -68,4 +68,4 @@ P2-03与P2-04在合同固定后可并行准备，但P2-05必须同时等待Backe
 
 ## Current execution boundary
 
-本次仅执行TASK-P2-00。P2-01～14没有Diff base、实现、测试结果或provider artifact，均为`planned`。首先应执行P2-01，因为v1 Problem无法承载C-008与OBJ-001所需全部事实；任何Backend绕过合同的实现都不接受。
+TASK-P2-00已由implementation `3298229fae89a54e0641f5907ad90c4fa81569bf` / run `32332003608` / artifact `9393345593`闭环为`done`。P2-01～14没有Diff base、实现、测试结果或provider artifact，均为`planned`。首先应执行P2-01，因为v1 Problem无法承载C-008与OBJ-001所需全部事实；任何Backend绕过合同的实现都不接受。

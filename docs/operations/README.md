@@ -53,3 +53,9 @@ TASK-P1-08新增internal PlanningSnapshot persistence：hash主键、ID唯一、
 本地/CI可运行`python -m app.application.p1_gate_report --root . --scenario fixtures/synthetic/SIM-P1-INGRESS-001 --repeat 2 --report <path>`生成`p1-data-pipeline-report.v1`。返回码0只表示双入口parity、两次hash replay、quality PASS、四类exact rejection与Problem终止边界均通过；返回码非0必须保留report/CI failure并阻断Task闭环。
 
 Report本身不写业务数据库，temporary CSV随进程回收，`build/validation/*.json`保持ignored并由CI artifact托管。这不是Production Runbook、SLA、capacity、backup或incident evidence。
+
+## TASK-P2-01 operator-facing contract evidence
+
+本地/CI可运行`python -m app.planning.problem.contract_check --root . --report <path>`生成`planning-problem-contract-report.v1`。PASS同时验证v1 Schema/sample bytes、v1 fixed replay、v2 Schema/sample replay、两类lock和historical/delivery/resource字段计数；CI固定输出`build/validation/ci-planning-problem-contracts.json`并上传中性evidence artifact。非零返回码必须保留FAIL report并阻断Task closure。
+
+该命令只读repository输入并写machine evidence，不写数据库、调用Solver或建立service endpoint。`code_commit=uncommitted`的本地报告不构成provider证据；只有exact GitHub SHA/run/job/artifact可关闭Task。本段不是Production操作手册、priority/lock policy、SLA或on-call能力。

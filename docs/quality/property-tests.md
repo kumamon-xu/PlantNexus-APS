@@ -80,3 +80,9 @@ P1-11用固定Scenario/Profile/Generator/seed和显式cutoff/horizon/tick验证�
 审计没有新增Hypothesis strategy或改变seed/example数；full 271项回归重新执行P1-07 Expansion、P1-08 Snapshot和P1-09 Problem generated properties且全部PASS。另以P1 gate CLI `repeat=2`复核同Scenario/Profile/Generator/seed的Import/Snapshot/Problem完整bytes/hash，并以Reference transport验证业务artifact parity；四类source mutation均精确终止。
 
 未出现property failure，因此没有虚构minimized corpus。P1 property evidence足以支持Data & Snapshot Gate=`READY`，但没有candidate Schedule/Solver output，故P2 `TEST-PROPERTY`仍为`PLANNED`。
+
+## TASK-P2-01 generated Problem v2 properties
+
+P2-01扩展`test_planning_problem_properties.py`，保留v1 seeds `20260820/21/22`并新增v2 seeds `20260823/24`。32 examples随机反转operation/edge/anchor/lock/resource/capability与nested option顺序并注入runtime nonce，要求v2 canonical bytes/hash不变；另32 examples选择两个不相等的正整数priority weight，要求Problem identity必然变化。固定unit mutation还覆盖due、Resource status、historical end和lock end的hash sensitivity。
+
+当前property文件5项PASS且无Hypothesis failure/minimized corpus。该证据只形成Problem input/canonicalization的`TEST-PROPERTY` slice，不生成candidate solution、不运行Solver/Validator，也不形成P2-04/09完整schedule property证据；后继Task仍须保留seed、shrinking和最小反例。

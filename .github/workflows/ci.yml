@@ -69,6 +69,12 @@ jobs:
           --repeat 2
           --report build/validation/ci-p1-data-pipeline.json
 
+      - name: PlanningProblem v1 and v2 contract evidence
+        run: >-
+          uv run python -m app.planning.problem.contract_check
+          --root .
+          --report build/validation/ci-planning-problem-contracts.json
+
       - name: Engineering contract
         run: >-
           uv run python -m app.infrastructure.contract_check

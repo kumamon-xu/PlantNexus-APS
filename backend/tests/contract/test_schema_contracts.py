@@ -33,9 +33,13 @@ from app.domain.types import (
 from app.domain.validation import (
     ContractViolation,
     validate_planning_problem_contract,
+    validate_planning_problem_v2_contract,
     validate_snapshot_contract,
 )
-from app.planning.problem.contracts import PlanningProblemDocument
+from app.planning.problem.contracts import (
+    PlanningProblemDocument,
+    PlanningProblemDocumentV2,
+)
 from app.snapshots.contracts import PlanningSnapshotDocument
 
 
@@ -50,6 +54,7 @@ SCHEMA_FILES = (
     "planning-snapshot.schema.json",
     "planning-snapshot.v2.schema.json",
     "planning-problem.schema.json",
+    "planning-problem.v2.schema.json",
     "kpi.schema.json",
     "error.schema.json",
     "validation-report.schema.json",
@@ -127,6 +132,10 @@ def valid_snapshot_v2() -> dict[str, Any]:
     return load_json(SAMPLE_ROOT / "planning-snapshot.v2.synthetic.json")
 
 
+def valid_problem_v2() -> dict[str, Any]:
+    return load_json(SAMPLE_ROOT / "planning-problem.v2.synthetic.json")
+
+
 def walk_json(value: Any):  # type: ignore[no-untyped-def]
     if isinstance(value, dict):
         yield value
@@ -155,7 +164,7 @@ def test_schemas_do_not_encode_implicit_defaults() -> None:
 
 def test_published_versions_are_consistent() -> None:
     pyproject = tomllib.loads((ROOT / "pyproject.toml").read_text(encoding="utf-8"))
-    assert SCHEMA_VERSION == "2.2.0"
+    assert SCHEMA_VERSION == "2.3.0"
     assert pyproject["tool"]["plantnexus-aps"]["versions"]["schema"] == SCHEMA_VERSION
 
 
@@ -171,6 +180,7 @@ def test_synthetic_samples_validate_and_round_trip() -> None:
         ("planning-snapshot.schema.json", "planning-snapshot.synthetic.json"),
         ("planning-snapshot.v2.schema.json", "planning-snapshot.v2.synthetic.json"),
         ("planning-problem.schema.json", "planning-problem.synthetic.json"),
+        ("planning-problem.v2.schema.json", "planning-problem.v2.synthetic.json"),
         ("import-quality-report.schema.json", "import-quality-report.v1.pass.json"),
         ("import-quality-report.schema.json", "import-quality-report.v1.fail.json"),
     )
@@ -390,6 +400,55 @@ def test_planning_problem_schema_rejects_invalid_duration_and_running_facts() ->
         validator("planning-problem.schema.json").validate(unknown_nested_field)
 
 
+def test_planning_problem_v2_is_strict_sourced_and_non_interchangeable() -> None:
+    problem = valid_problem_v2()
+    validator("planning-problem.v2.schema.json").validate(problem)
+    validate_planning_problem_v2_contract(cast(PlanningProblemDocumentV2, problem))
+
+    with pytest.raises(ValidationError):
+        validator("planning-problem.schema.json").validate(problem)
+    with pytest.raises(ValidationError):
+        validator("planning-problem.v2.schema.json").validate(valid_problem())
+
+    invalid_priority = copy.deepcopy(problem)
+    invalid_priority["delivery_demands"][0]["priority_weight"] = 0
+    with pytest.raises(ValidationError):
+        validator("planning-problem.v2.schema.json").validate(invalid_priority)
+
+    boolean_priority = copy.deepcopy(problem)
+    boolean_priority["delivery_demands"][0]["priority_weight"] = True
+    with pytest.raises(ValidationError):
+        validator("planning-problem.v2.schema.json").validate(boolean_priority)
+
+    missing_priority_source = copy.deepcopy(problem)
+    del missing_priority_source["delivery_demands"][0]["priority_source_version"]
+    with pytest.raises(ValidationError):
+        validator("planning-problem.v2.schema.json").validate(
+            missing_priority_source
+        )
+
+    invalid_capacity = copy.deepcopy(problem)
+    invalid_capacity["resources"][0]["capacity"] = 2
+    with pytest.raises(ValidationError):
+        validator("planning-problem.v2.schema.json").validate(invalid_capacity)
+
+    missing_anchor = copy.deepcopy(problem)
+    missing_anchor["historical_completion_anchors"] = []
+    with pytest.raises(ContractViolation, match="INVALID_REFERENCE"):
+        validate_planning_problem_v2_contract(
+            cast(PlanningProblemDocumentV2, missing_anchor)
+        )
+
+    expired_lock = copy.deepcopy(problem)
+    expired_lock["operation_locks"][0]["end_at_utc"] = (
+        expired_lock["horizon_start_utc"]
+    )
+    with pytest.raises(ContractViolation, match="INVALID_TIME_RANGE"):
+        validate_planning_problem_v2_contract(
+            cast(PlanningProblemDocumentV2, expired_lock)
+        )
+
+
 def test_semantic_precheck_rejects_broken_references_and_time_ranges() -> None:
     problem = valid_problem()
     validate_planning_problem_contract(cast(PlanningProblemDocument, problem))
@@ -494,7 +553,7 @@ def test_data_dictionary_covers_every_published_schema() -> None:
     dictionary = yaml.safe_load(
         (ROOT / "schemas" / "data_dictionary.yaml").read_text("utf-8")
     )
-    assert dictionary["schema_set_version"] == "2.2.0"
+    assert dictionary["schema_set_version"] == "2.3.0"
     assert set(dictionary["schemas"]) == {
         "canonical-records.v1",
         "import-package.v1",
@@ -502,6 +561,7 @@ def test_data_dictionary_covers_every_published_schema() -> None:
         "planning-snapshot.v1",
         "planning-snapshot.v2",
         "planning-problem.v1",
+        "planning-problem.v2",
         "kpi.v1",
         "error.v1",
         "validation-report.v1",

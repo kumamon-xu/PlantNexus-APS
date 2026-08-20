@@ -32,8 +32,8 @@ Schema version、rule version、generator version 和 code commit 是不同维�
 
 ## 当前发布基线
 
-- Schema set：`2.2.0`；`pyproject.toml` 与 `app.SCHEMA_VERSION` 一致；`1.0.0/1.1.0/1.2.0/2.0.0/2.1.0` artifacts全部保留；
-- Current contract IDs：历史v1 skeleton、`canonical-records.v1`、`import-package.v2`、`planning-snapshot.v2`、`unit-conversion-registry.v1`、`error-code-registry.v2`、`error.v3`与`import-quality-report.v1`；单个document/version不得因set版本提升而重解释；
+- Schema set：`2.3.0`；`pyproject.toml` 与 `app.SCHEMA_VERSION` 一致；`1.0.0/1.1.0/1.2.0/2.0.0/2.1.0/2.2.0` artifacts全部保留；
+- Current contract IDs：历史v1 skeleton、`canonical-records.v1`、`import-package.v2`、`planning-snapshot.v2`、`planning-problem.v2`、`unit-conversion-registry.v1`、`error-code-registry.v2`、`error.v3`与`import-quality-report.v1`；单个document/version不得因set版本提升而重解释；
 - Dialect：JSON Schema Draft 2020-12，使用稳定 URN `$id`；
 - Compatibility：当前set包含P1-02 major release和P1-05/06 additive releases；具体兼容、migration与固定fingerprint见下方各release记录；
 - Unknown/default policy：strict contracts使用`additionalProperties=false`且Schema不含业务`default`；Production authority仍必须显式提供，不能从synthetic/sample推断。
@@ -116,3 +116,14 @@ Compatibility为code-level additive consumer：stable derived ID把expansion ver
 本审计没有修改`schemas/**`、data dictionary、`pyproject.toml`、`uv.lock`、migration或任一serializer/hash projection。Full contract/regression、Snapshot/Problem replay与provider artifacts确认global schema set仍为`2.2.0`，Import/Snapshot v2 document仍显式`2.0.0`，unit registry v1仍显式`2.1.0`；历史release/fingerprint没有被`latest`重解释。
 
 因此compatibility=`none`、Schema migration=`none`、database migration change=`none`。P1 Gate=`READY`是既有版本链的审计结果，不是新Schema release；PlanningSolution/Solver/P2合同仍须由后续显式版本与迁移规则形成。
+
+## TASK-P2-01 additive PlanningProblem v2 release
+
+- Global schema set提升到`2.3.0`，同步`pyproject.toml`、`app.SCHEMA_VERSION`与data dictionary；新建`planning-problem.v2`及其synthetic replay sample；
+- Compatibility：这是set-level additive、Problem consumer层breaking/non-interchangeable release。v1 Schema/sample/default builder/API/hash projection和fixed bytes/hash保持原样；v2只能由version-specific opt-in API产生和消费；
+- Preservation：v1 Schema/sample SHA-256分别为`41b01bfbcdfdb0a6dc52da1121383f630ac3f08ca7db4d21c0b66dea3a96e943`、`aa31fbb20b862b7ef51a0e1ed781cddca07c00a0d2724d9ea34e6a75d08a4093`，fixed Problem/canonical bytes digest保持`sha256:6e4aff...ff72`/`1f00ad...8645`；Import/Snapshot v2=`2.0.0`、unit registry=`2.1.0`、quality/error release=`2.2.0`均不原地改写；
+- Migration：PlanningProblem没有持久化表或已发布v2 consumer，因此database/data migration为none。v2被后继消费后只能通过新Problem version/ADR迁移，不得覆盖历史v2 bytes；rollback在P2-01边界内回到v1默认API；
+- Hash/replay：v2显式记录builder/canonicalization/hash-projection版本，projection覆盖全部新增事实。Schema/sample正反/round-trip、same-input/reordering/mutation/property、v1 fingerprint与machine report固定兼容行为；
+- Dependency：无新增或变更dependency，`uv.lock`逐字保持；OR-Tools仍禁止。
+
+ADR-0010记录due/priority来源、capacity=1、active lock cutoff、historical anchor与v1兼容策略。该release只形成Solver-neutral输入合同，不形成Solution、Solver、Validator、OBJ-001计算或Production authority。

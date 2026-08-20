@@ -32,7 +32,7 @@ PlanningProblem 必须可序列化、Solver-neutral、deterministic，不包含 
 }
 ```
 
-[`planning-problem.schema.json`](../../schemas/json/planning-problem.schema.json) 已表达 candidate options、NOT_STARTED/RUNNING execution facts、min/max/transport lag、resource unavailable intervals、provenance 和 capability declarations。HARD/SOFT lock、due/priority 和完整 Resource 事实仍由后续合同 Task 在不改变 ADR-0003 边界的前提下升版补充。
+[`planning-problem.schema.json`](../../schemas/json/planning-problem.schema.json)继续固定v1 candidate options、NOT_STARTED/RUNNING execution facts、min/max/transport lag、resource unavailable intervals和capability declarations。TASK-P2-01另行发布[`planning-problem.v2.schema.json`](../../schemas/json/planning-problem.v2.schema.json)，不在v1对象中追加字段或重解释既有hash。
 
 ## 不变量
 
@@ -74,3 +74,18 @@ Common ingress的最后一步仅调用`planning-problem-builder.v1`，并以Snap
 P1-12以同一Snapshot/cutoff/60秒tick/24小时fixture-local horizon重放两次Synthetic和一次Reference入口，完整Problem bytes digest均为`sha256:c3ff3f0cc810007da4dc251642896b0d8b6fab1f98d4d5bced743752904e9233`，problem hash均为`sha256:71c0b729dd2b08ba1d14d5a281029b8d9bc13596a90a5189fb20176e19f690da`。Builder/hash/ordering/fact/config property与unsupported边界在271项回归中PASS。
 
 依赖/code扫描再次确认没有OR-Tools、CpModel或IntervalVar，且没有P2 Task。P1 Gate=`READY`只证明solver-neutral Problem可确定性形成，不证明可解性、candidate Schedule、ScheduleValidator、目标值、性能或Production readiness。
+
+## TASK-P2-01 PlanningProblem v2 contract
+
+`planning-problem.v2`固定`schema_set_version=2.3.0`、`planning-problem-builder.v2`、`canonical-json.v1`和`planning-problem-hash-projection.v2`。它以opt-in `build_planning_problem_v2`消费verified Snapshot v2与一份精确覆盖active DemandOrder的priority fact mapping；既有`build_planning_problem`仍只产v1。两个document互不兼容，consumer必须按`problem_version`显式选择，禁止alias或latest升级。
+
+v2新增四类P2输入事实：
+
+- `delivery_demands`逐字复制DemandOrder `due_at_utc`及其source system/version/record ID；`priority_weight`必须是非boolean正整数，并携带独立source三元组。缺失、额外、零/负数、boolean或无版本来源均在Solver前以`INVALID_PRIORITY_FACT/DATA_ERROR`拒绝，不提供Production default；
+- `resources`完整投影resource code/type/status、Factory→Workshop→Line→Group拓扑、calendar、business capabilities与`capacity=1`。该capacity只表达C-003 primary unary resource，不启用C-012 secondary capacity；
+- referenced OperationLock只要`end_at_utc > horizon_start_utc`就以原始完整interval/source保留，已过期lock排除，跨越或完全位于horizon end之后的lock不裁剪；HARD/SOFT保持不同类型，合同形成不等于C-008 Solver或OBJ-002实现；
+- COMPLETED operation仍不进入future instances；COMPLETED→active edge保留edge ID/lag并增加包含fact/resource/actual start/end/source的historical completion anchor，completed→completed edge排除，active→completed以`INVALID_HISTORICAL_FACT`拒绝。
+
+Operation v2增加`demand_order_id`和business `required_capabilities`，calendar interval增加`calendar_id`。hash projection覆盖版本、Snapshot、due/priority、resources、operations/options、anchors、edges、locks、calendar与required platform capabilities，只排除self hash和非合同runtime噪声。固定v2向量为Problem hash `sha256:9927418a446dd046ddd1d835643da03fbf5cdcf8ca246ba22c3700563a17e9e8`、canonical bytes SHA-256 `2dbe06907952d6aba303977d67a7f5d7a6ef89c4be5ac5a6ac8d74e3f95d720a`、3366 bytes；v1固定向量和Schema/sample SHA-256保持不变。
+
+本Task不安装OR-Tools，不建立Policy/Solution/status、Backend/Strategy、C-ID公式、formal ScheduleValidator、OBJ-001计算、Benchmark或DB migration。Production due/priority/lock authority继续受OPEN-004/005/006/007/009/010/015约束；synthetic priority只允许使用显式versioned Simulation policy。

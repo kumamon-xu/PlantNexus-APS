@@ -34,3 +34,9 @@ HARD_LOCK 是约束，不属于 OBJ-002；SOFT_LOCK 通过本目标体现。旧�
 ## 报告
 
 SolverReport 必须分阶段记录每一轮目标值、bound、停止原因和求解预算，不能只输出一个无法解释的混合分数。Reference Scheduler 比较至少报告 feasibility、weighted tardiness、makespan 和 runtime。
+
+## TASK-P2-01 OBJ-001 input contract
+
+`planning-problem.v2.delivery_demands`现在为每个active DemandOrder显式保存`due_at_utc`及其source三元组、非boolean正整数`priority_weight`及独立priority source三元组。Builder要求priority mapping与active demand集合精确相等；缺失、额外、零/负、boolean或无版本来源均拒绝，不猜Production weight。
+
+该字段使OBJ-001输入可表达，但本Task不计算tardiness、weighted sum、lexicographic stages或SolverReport，也不宣称目标形成。P2-08才可实现Delivery objective；OPEN-006关闭前Production policy仍阻断。SOFT_LOCK不会借本合同启用OBJ-002，OBJ-003也未实现。

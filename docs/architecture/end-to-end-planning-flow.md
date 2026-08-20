@@ -63,3 +63,9 @@ TASK-P1-08现把该链路推进到immutable PlanningSnapshot v2：builder验证c
 当前已形成一条单一application调用链：`StagedImportBatch → normalize_import → validate_import_package(PASS) → expand_orders → build_planning_snapshot → build_planning_problem`。Synthetic Generator和ReferenceFileAdapter只在Raw Staging前不同，之后使用同一`CommonIngressPipeline.run()`。固定Scenario两次重放与reference parity均得到Import `24a74b…`、Snapshot `090e0e…`、Problem `71c0b7…`。
 
 数据质量FAIL和Normalization首错均在所属stage终止，不会调用后续builder。链路到PlanningProblem终止；Solve、Verify、ScheduleVersion、Publish、Export、Execution/Replan仍是后续Phase边界。
+
+## TASK-P2-01 handoff
+
+P2的第一段现在固定为`verified PlanningSnapshot v2 + explicit versioned priority facts → build_planning_problem_v2 → immutable planning-problem.v2`。v2 output包含DeliveryDemand、complete primary Resource facts、active OperationInstances、HistoricalCompletionAnchors、precedence edges、active locks、calendar intervals与required platform capabilities；机器report同时重放v1默认路径。
+
+该handoff终止于verified Problem。Application common ingress尚未切换默认v2，PlanningPolicy/SolveLimits/Solution、Backend/Strategy、ScheduleValidator、KPI/Export/Benchmark均未调用；这些只能从P2-02起按依赖链逐Task接入。

@@ -80,3 +80,9 @@ Routing DAG、resource option/capability、duration/unit与calendar range检查�
 `planning-problem-builder.v1`首次把immutable Snapshot投影为正式solver-neutral Problem输入：C-001/003所需active operation与candidate、C-002/009的min/max/transport edge、C-005的horizon-intersecting calendar interval、C-006 release/material gate、C-007 RUNNING remainder、C-010 authoritative duration seconds与explicit tick、C-011 horizon config均被稳定保留。Builder只用ceiling tick检查单个operation不会被配置horizon静默截断，不选择resource、不评估全局可行性，也不产出任何Constraint PASS/violation。
 
 COMPLETED从未来集合排除；若edge跨COMPLETED/active边界，v1无法保留historical end/lag，builder明确拒绝而不丢边。与horizon相交的HARD/SOFT lock同样因v1无字段而拒绝，故本Task没有声称C-008已具备正式Problem输入。C-001～C-018、`constraint-rule-sheet.v1`、P0 fixture evaluator和ScheduleValidator均未修改；P2仍须独立执行全部适用C-ID，Problem build成功不得写成schedule feasible或valid。
+
+## TASK-P2-01 v2 Constraint input boundary
+
+Problem v2补齐C-003的完整primary Resource/capacity=1事实、C-005的resource/calendar引用、C-008的active HARD/SOFT lock字段以及C-002/009跨COMPLETED→active边界所需historical completion end/source/lag。C-001/006/007/010/011既有active operation、gates、RUNNING、duration/tick/horizon语义继续保留；due/priority为OBJ-001输入。
+
+这只把input contract标记为formed。C-008 HARD enforcement、所有C-ID的CP-SAT约束与formal independent ScheduleValidator仍未实现；SOFT_LOCK属于未授权OBJ-002而不会被P2-01执行。C-012～C-018继续unsupported，Problem verify PASS不等于candidate schedule feasible/valid。

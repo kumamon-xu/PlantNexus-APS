@@ -15,7 +15,7 @@ ADR 记录 Architecture、Solver Backend、Constraint semantics、Objective hier
 
 ADR 状态：`proposed`、`accepted`、`rejected`、`superseded`。Accepted ADR 不重写历史；变更通过新 ADR `supersedes` 旧记录。
 
-ADR-0001～0009 是从 implementation spec 0.3.0 已明确决定中建立的基线记录。它们不表示对应代码已经实现。
+ADR-0001～0009 是从 implementation spec 0.3.0 已明确决定中建立的基线记录。ADR-0010是TASK-P2-01对PlanningProblem v2合同演进的新增决定。Accepted状态不表示Solver或后继能力已经实现。
 
 TASK-P0-03 的 Schema/type skeleton 落实 ADR-0001（共同入口 envelope）、ADR-0003（Solver-neutral Problem）、ADR-0007（immutable Snapshot）、ADR-0008（UTC/seconds/ticks）和 ADR-0009（Production/Simulation 标识隔离）的既有决定，没有改变这些决定，因此不新增 ADR。Problem builder、hash、Solver 或字段权威若偏离这些决定，必须另建 ADR，不能借 skeleton 隐式修改。
 
@@ -37,4 +37,4 @@ TASK-P1-07落实ADR-0001的共同入口顺序、ADR-0003的Solver-neutral派生�
 
 TASK-P1-09落实ADR-0003的solver-neutral deterministic Problem、ADR-0007的immutable Snapshot consumer和ADR-0008的UTC/权威秒/显式tick决定。`planning-problem.v1` Schema与C-ID不变，builder/hash只在既有可表达slice内工作；active lock、multi-factory和completed-active historical lag不能表达时明确停止，不修改Backend/Strategy/Validator或引入OR-Tools，因此不新增ADR。若未来扩展Problem字段、改变builder/hash语义、隐藏unsupported事实或让Backend绕过canonical Problem，必须先提交相应superseding/new ADR与replay/benchmark证据。
 
-TASK-P2-00只批准阶段与Task治理，不作技术决定。P2-01在修改PlanningProblem版本/字段/hash前必须建立新ADR，记录v2对active locks、due/priority、completed-active historical lag与v1兼容策略，同时保持ADR-0003的solver-neutral边界。P2-03在首次安装OR-Tools前必须建立exact-version/upgrade-replay ADR；后续Task严格实施ADR-0004/0005/0006/0008。规划卡中的ADR影响不是已接受决定，未完成相应启动门不得实现。
+TASK-P2-00只批准阶段与Task治理，不作技术决定。TASK-P2-01已接受[ADR-0010](ADR-0010-planning-problem-v2-contract-evolution.md)：新增非互换Problem v2，明确active locks、sourced due/priority、capacity=1 Resources、completed-active historical anchor及v1默认兼容/hash策略，同时保持ADR-0003 solver-neutral边界。它不决定Solver/Validator行为或Production authority。P2-03在首次安装OR-Tools前仍必须建立exact-version/upgrade-replay ADR；后续Task严格实施ADR-0004/0005/0006/0008。

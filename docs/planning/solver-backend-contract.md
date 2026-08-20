@@ -90,3 +90,9 @@ Schema set提升到`2.2.0`只新增Error/ImportQualityReport/Data Validation；r
 `app.planning.problem`现已形成`planning-problem-builder.v1`、`planning-problem-hash-projection.v1`、canonical bytes及immutable value；source scan与dependency lock继续证明没有OR-Tools、CpModel、IntervalVar、ORM、API或Infrastructure import。Builder调用既有pure Problem precheck并检查active DAG，但不会创建decision variable、Backend、solution/status/report或执行Solver。
 
 未来Backend必须消费已通过`verify_problem`的canonical Problem，而不能直接读取Snapshot/Import/Expansion；其版本/参数仍须单独进入SolverReport和Benchmark。当前`planning-problem.v1`对active lock与completed-to-active historical lag表达不足时builder会在solve前拒绝，Backend不得静默忽略或将其映射为INFEASIBLE。本Task未改Solver protocol、依赖、升级策略或Benchmark baseline。
+
+## TASK-P2-01 v2 Backend handoff boundary
+
+P2 Backend的未来输入版本现固定为通过`verify_problem_v2`的immutable `planning-problem.v2`，其中due/priority、complete primary Resources、active locks和historical anchors均进入versioned hash projection。Backend不得继续以v1缺口为由读取Snapshot旁路补字段，也不得忽略v2 required fact或把contract rejection映射为INFEASIBLE。
+
+P2-01没有创建Backend/Strategy protocol实现、Solver status、variables/constraints、OR-Tools依赖或参数。v1仍是Application默认builder，v2为version-specific opt-in；真正consumer切换及Policy/Limits/Solution合同必须等待P2-02，OR-Tools必须等待P2-03和独立ADR。

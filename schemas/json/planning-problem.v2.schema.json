@@ -1,0 +1,483 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "urn:plantnexus:aps:schema:planning-problem:v2",
+  "title": "Solver-neutral PlanningProblem v2",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "problem_version",
+    "schema_set_version",
+    "snapshot_id",
+    "problem_builder_version",
+    "problem_hash",
+    "canonicalization_version",
+    "problem_hash_projection_version",
+    "tick_seconds",
+    "horizon_start_utc",
+    "horizon_end_utc",
+    "delivery_demands",
+    "resources",
+    "operation_instances",
+    "historical_completion_anchors",
+    "precedence_edges",
+    "operation_locks",
+    "resource_unavailable_intervals",
+    "required_capabilities"
+  ],
+  "properties": {
+    "problem_version": {
+      "const": "planning-problem.v2"
+    },
+    "schema_set_version": {
+      "const": "2.3.0"
+    },
+    "snapshot_id": {
+      "$ref": "#/$defs/canonicalId"
+    },
+    "problem_builder_version": {
+      "const": "planning-problem-builder.v2"
+    },
+    "problem_hash": {
+      "type": "string",
+      "pattern": "^sha256:[0-9a-f]{64}$"
+    },
+    "canonicalization_version": {
+      "const": "canonical-json.v1"
+    },
+    "problem_hash_projection_version": {
+      "const": "planning-problem-hash-projection.v2"
+    },
+    "tick_seconds": {
+      "type": "integer",
+      "minimum": 1
+    },
+    "horizon_start_utc": {
+      "$ref": "#/$defs/utcInstant"
+    },
+    "horizon_end_utc": {
+      "$ref": "#/$defs/utcInstant"
+    },
+    "delivery_demands": {
+      "type": "array",
+      "items": {
+        "$ref": "#/$defs/deliveryDemand"
+      }
+    },
+    "resources": {
+      "type": "array",
+      "items": {
+        "$ref": "#/$defs/resource"
+      }
+    },
+    "operation_instances": {
+      "type": "array",
+      "items": {
+        "$ref": "#/$defs/operationInstance"
+      }
+    },
+    "historical_completion_anchors": {
+      "type": "array",
+      "items": {
+        "$ref": "#/$defs/historicalCompletionAnchor"
+      }
+    },
+    "precedence_edges": {
+      "type": "array",
+      "items": {
+        "$ref": "#/$defs/precedenceEdge"
+      }
+    },
+    "operation_locks": {
+      "type": "array",
+      "items": {
+        "$ref": "#/$defs/operationLock"
+      }
+    },
+    "resource_unavailable_intervals": {
+      "type": "array",
+      "items": {
+        "$ref": "#/$defs/resourceUnavailableInterval"
+      }
+    },
+    "required_capabilities": {
+      "type": "array",
+      "uniqueItems": true,
+      "items": {
+        "$ref": "#/$defs/nonEmptyText"
+      }
+    }
+  },
+  "$defs": {
+    "canonicalId": {
+      "type": "string",
+      "minLength": 1,
+      "maxLength": 256,
+      "pattern": "^[^\\s\\u0000-\\u001F\\u007F]+$"
+    },
+    "nonEmptyText": {
+      "type": "string",
+      "minLength": 1,
+      "pattern": ".*\\S.*"
+    },
+    "utcInstant": {
+      "type": "string",
+      "format": "date-time",
+      "pattern": "Z$"
+    },
+    "deliveryDemand": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "demand_order_id",
+        "due_at_utc",
+        "due_source_system",
+        "due_source_version",
+        "due_source_record_id",
+        "priority_weight",
+        "priority_source_system",
+        "priority_source_version",
+        "priority_source_record_id"
+      ],
+      "properties": {
+        "demand_order_id": {
+          "$ref": "#/$defs/canonicalId"
+        },
+        "due_at_utc": {
+          "$ref": "#/$defs/utcInstant"
+        },
+        "due_source_system": {
+          "$ref": "#/$defs/nonEmptyText"
+        },
+        "due_source_version": {
+          "$ref": "#/$defs/nonEmptyText"
+        },
+        "due_source_record_id": {
+          "$ref": "#/$defs/nonEmptyText"
+        },
+        "priority_weight": {
+          "type": "integer",
+          "minimum": 1
+        },
+        "priority_source_system": {
+          "$ref": "#/$defs/nonEmptyText"
+        },
+        "priority_source_version": {
+          "$ref": "#/$defs/nonEmptyText"
+        },
+        "priority_source_record_id": {
+          "$ref": "#/$defs/nonEmptyText"
+        }
+      }
+    },
+    "resource": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "resource_id",
+        "resource_code",
+        "resource_type",
+        "status",
+        "factory_id",
+        "workshop_id",
+        "production_line_id",
+        "resource_group_id",
+        "calendar_id",
+        "capabilities",
+        "capacity"
+      ],
+      "properties": {
+        "resource_id": {
+          "$ref": "#/$defs/canonicalId"
+        },
+        "resource_code": {
+          "$ref": "#/$defs/nonEmptyText"
+        },
+        "resource_type": {
+          "$ref": "#/$defs/nonEmptyText"
+        },
+        "status": {
+          "$ref": "#/$defs/nonEmptyText"
+        },
+        "factory_id": {
+          "$ref": "#/$defs/canonicalId"
+        },
+        "workshop_id": {
+          "$ref": "#/$defs/canonicalId"
+        },
+        "production_line_id": {
+          "$ref": "#/$defs/canonicalId"
+        },
+        "resource_group_id": {
+          "$ref": "#/$defs/canonicalId"
+        },
+        "calendar_id": {
+          "$ref": "#/$defs/canonicalId"
+        },
+        "capabilities": {
+          "type": "array",
+          "uniqueItems": true,
+          "items": {
+            "$ref": "#/$defs/nonEmptyText"
+          }
+        },
+        "capacity": {
+          "const": 1
+        }
+      }
+    },
+    "resourceOption": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "resource_id",
+        "setup_seconds",
+        "cycle_seconds_per_unit",
+        "final_duration_seconds",
+        "duration_source",
+        "source_version"
+      ],
+      "properties": {
+        "resource_id": {
+          "$ref": "#/$defs/canonicalId"
+        },
+        "setup_seconds": {
+          "type": "integer",
+          "minimum": 0
+        },
+        "cycle_seconds_per_unit": {
+          "type": "integer",
+          "minimum": 0
+        },
+        "final_duration_seconds": {
+          "type": "integer",
+          "minimum": 1
+        },
+        "duration_source": {
+          "$ref": "#/$defs/nonEmptyText"
+        },
+        "source_version": {
+          "$ref": "#/$defs/nonEmptyText"
+        }
+      }
+    },
+    "operationInstance": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "operation_id",
+        "demand_order_id",
+        "status",
+        "release_at_utc",
+        "material_ready_at_utc",
+        "required_capabilities",
+        "resource_options"
+      ],
+      "properties": {
+        "operation_id": {
+          "$ref": "#/$defs/canonicalId"
+        },
+        "demand_order_id": {
+          "$ref": "#/$defs/canonicalId"
+        },
+        "status": {
+          "enum": ["NOT_STARTED", "RUNNING"]
+        },
+        "release_at_utc": {
+          "$ref": "#/$defs/utcInstant"
+        },
+        "material_ready_at_utc": {
+          "$ref": "#/$defs/utcInstant"
+        },
+        "required_capabilities": {
+          "type": "array",
+          "uniqueItems": true,
+          "items": {
+            "$ref": "#/$defs/nonEmptyText"
+          }
+        },
+        "resource_options": {
+          "type": "array",
+          "minItems": 1,
+          "items": {
+            "$ref": "#/$defs/resourceOption"
+          }
+        },
+        "actual_start_at_utc": {
+          "$ref": "#/$defs/utcInstant"
+        },
+        "assigned_resource_id": {
+          "$ref": "#/$defs/canonicalId"
+        },
+        "remaining_seconds": {
+          "type": "integer",
+          "minimum": 1
+        }
+      },
+      "allOf": [
+        {
+          "if": {
+            "properties": {
+              "status": {
+                "const": "RUNNING"
+              }
+            },
+            "required": ["status"]
+          },
+          "then": {
+            "required": [
+              "actual_start_at_utc",
+              "assigned_resource_id",
+              "remaining_seconds"
+            ]
+          },
+          "else": {
+            "not": {
+              "anyOf": [
+                {"required": ["actual_start_at_utc"]},
+                {"required": ["assigned_resource_id"]},
+                {"required": ["remaining_seconds"]}
+              ]
+            }
+          }
+        }
+      ]
+    },
+    "historicalCompletionAnchor": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "operation_id",
+        "execution_fact_id",
+        "resource_id",
+        "actual_start_at_utc",
+        "actual_end_at_utc",
+        "source_system",
+        "source_version",
+        "source_record_id"
+      ],
+      "properties": {
+        "operation_id": {
+          "$ref": "#/$defs/canonicalId"
+        },
+        "execution_fact_id": {
+          "$ref": "#/$defs/canonicalId"
+        },
+        "resource_id": {
+          "$ref": "#/$defs/canonicalId"
+        },
+        "actual_start_at_utc": {
+          "$ref": "#/$defs/utcInstant"
+        },
+        "actual_end_at_utc": {
+          "$ref": "#/$defs/utcInstant"
+        },
+        "source_system": {
+          "$ref": "#/$defs/nonEmptyText"
+        },
+        "source_version": {
+          "$ref": "#/$defs/nonEmptyText"
+        },
+        "source_record_id": {
+          "$ref": "#/$defs/nonEmptyText"
+        }
+      }
+    },
+    "precedenceEdge": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "precedence_edge_id",
+        "predecessor_operation_id",
+        "successor_operation_id",
+        "min_lag_seconds",
+        "transport_lag_seconds"
+      ],
+      "properties": {
+        "precedence_edge_id": {
+          "$ref": "#/$defs/canonicalId"
+        },
+        "predecessor_operation_id": {
+          "$ref": "#/$defs/canonicalId"
+        },
+        "successor_operation_id": {
+          "$ref": "#/$defs/canonicalId"
+        },
+        "min_lag_seconds": {
+          "type": "integer",
+          "minimum": 0
+        },
+        "max_lag_seconds": {
+          "type": "integer",
+          "minimum": 0
+        },
+        "transport_lag_seconds": {
+          "type": "integer",
+          "minimum": 0
+        }
+      }
+    },
+    "operationLock": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "lock_id",
+        "operation_id",
+        "lock_type",
+        "resource_id",
+        "start_at_utc",
+        "end_at_utc",
+        "source_system",
+        "source_version",
+        "source_record_id"
+      ],
+      "properties": {
+        "lock_id": {
+          "$ref": "#/$defs/canonicalId"
+        },
+        "operation_id": {
+          "$ref": "#/$defs/canonicalId"
+        },
+        "lock_type": {
+          "enum": ["HARD_LOCK", "SOFT_LOCK"]
+        },
+        "resource_id": {
+          "$ref": "#/$defs/canonicalId"
+        },
+        "start_at_utc": {
+          "$ref": "#/$defs/utcInstant"
+        },
+        "end_at_utc": {
+          "$ref": "#/$defs/utcInstant"
+        },
+        "source_system": {
+          "$ref": "#/$defs/nonEmptyText"
+        },
+        "source_version": {
+          "$ref": "#/$defs/nonEmptyText"
+        },
+        "source_record_id": {
+          "$ref": "#/$defs/nonEmptyText"
+        }
+      }
+    },
+    "resourceUnavailableInterval": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["calendar_id", "resource_id", "start_utc", "end_utc"],
+      "properties": {
+        "calendar_id": {
+          "$ref": "#/$defs/canonicalId"
+        },
+        "resource_id": {
+          "$ref": "#/$defs/canonicalId"
+        },
+        "start_utc": {
+          "$ref": "#/$defs/utcInstant"
+        },
+        "end_utc": {
+          "$ref": "#/$defs/utcInstant"
+        }
+      }
+    }
+  }
+}

@@ -1,0 +1,116 @@
+{
+  "canonicalization_version": "canonical-json.v1",
+  "delivery_demands": [
+    {
+      "demand_order_id": "DEMAND-001",
+      "due_at_utc": "2026-08-20T00:00:00Z",
+      "due_source_record_id": "SRC-DEMAND-001",
+      "due_source_system": "schema_sample",
+      "due_source_version": "1.0.0",
+      "priority_source_record_id": "SIM-P2-DELIVERY-PRIORITY-001",
+      "priority_source_system": "plantnexus-synthetic-policy",
+      "priority_source_version": "1.0.0",
+      "priority_weight": 2
+    }
+  ],
+  "historical_completion_anchors": [
+    {
+      "actual_end_at_utc": "2026-08-19T00:05:00Z",
+      "actual_start_at_utc": "2026-08-18T23:55:00Z",
+      "execution_fact_id": "EXECUTION-FACT-001",
+      "operation_id": "operation-instance-102867bdfa8197c397c3d56d7d5c4265d46d111d21002b927d8a28db77520a82",
+      "resource_id": "RESOURCE-001",
+      "source_record_id": "SRC-EXECUTION-FACT-001",
+      "source_system": "schema_sample",
+      "source_version": "1.0.0"
+    }
+  ],
+  "horizon_end_utc": "2026-08-21T00:00:00Z",
+  "horizon_start_utc": "2026-08-20T00:00:00Z",
+  "operation_instances": [
+    {
+      "demand_order_id": "DEMAND-001",
+      "material_ready_at_utc": "2026-08-18T00:00:00Z",
+      "operation_id": "operation-instance-589fdac40920239e8c7b5baa23c7b02145922f3de558f26eb9d16aeeb7ad17a0",
+      "release_at_utc": "2026-08-18T00:00:00Z",
+      "required_capabilities": [
+        "CUTTING"
+      ],
+      "resource_options": [
+        {
+          "cycle_seconds_per_unit": 20,
+          "duration_source": "schema_sample_explicit_duration",
+          "final_duration_seconds": 260,
+          "resource_id": "RESOURCE-001",
+          "setup_seconds": 60,
+          "source_version": "1.0.0"
+        }
+      ],
+      "status": "NOT_STARTED"
+    }
+  ],
+  "operation_locks": [
+    {
+      "end_at_utc": "2026-08-20T02:00:00Z",
+      "lock_id": "LOCK-001",
+      "lock_type": "HARD_LOCK",
+      "operation_id": "operation-instance-589fdac40920239e8c7b5baa23c7b02145922f3de558f26eb9d16aeeb7ad17a0",
+      "resource_id": "RESOURCE-001",
+      "source_record_id": "SRC-LOCK-001",
+      "source_system": "schema_sample",
+      "source_version": "1.0.0",
+      "start_at_utc": "2026-08-20T00:00:00Z"
+    },
+    {
+      "end_at_utc": "2026-08-22T02:00:00Z",
+      "lock_id": "LOCK-002",
+      "lock_type": "SOFT_LOCK",
+      "operation_id": "operation-instance-589fdac40920239e8c7b5baa23c7b02145922f3de558f26eb9d16aeeb7ad17a0",
+      "resource_id": "RESOURCE-001",
+      "source_record_id": "SRC-LOCK-002",
+      "source_system": "schema_sample",
+      "source_version": "1.0.0",
+      "start_at_utc": "2026-08-20T03:00:00Z"
+    }
+  ],
+  "precedence_edges": [
+    {
+      "max_lag_seconds": 3600,
+      "min_lag_seconds": 0,
+      "precedence_edge_id": "operation-precedence-edge-a450605c2f8e17d2f4eca3eb4aab8ff867ca3e85c6505ed23477032ca19326e8",
+      "predecessor_operation_id": "operation-instance-102867bdfa8197c397c3d56d7d5c4265d46d111d21002b927d8a28db77520a82",
+      "successor_operation_id": "operation-instance-589fdac40920239e8c7b5baa23c7b02145922f3de558f26eb9d16aeeb7ad17a0",
+      "transport_lag_seconds": 60
+    }
+  ],
+  "problem_builder_version": "planning-problem-builder.v2",
+  "problem_hash": "sha256:9927418a446dd046ddd1d835643da03fbf5cdcf8ca246ba22c3700563a17e9e8",
+  "problem_hash_projection_version": "planning-problem-hash-projection.v2",
+  "problem_version": "planning-problem.v2",
+  "required_capabilities": [
+    "DAG_ROUTING",
+    "HARD_SOFT_LOCK",
+    "RELEASE_AND_MATERIAL_GATE"
+  ],
+  "resource_unavailable_intervals": [],
+  "resources": [
+    {
+      "calendar_id": "CALENDAR-001",
+      "capabilities": [
+        "CUTTING"
+      ],
+      "capacity": 1,
+      "factory_id": "FACTORY-001",
+      "production_line_id": "LINE-001",
+      "resource_code": "R001",
+      "resource_group_id": "GROUP-001",
+      "resource_id": "RESOURCE-001",
+      "resource_type": "MACHINE",
+      "status": "AVAILABLE",
+      "workshop_id": "WORKSHOP-001"
+    }
+  ],
+  "schema_set_version": "2.3.0",
+  "snapshot_id": "planning-snapshot-v2-902955a43b9e80f272138980b5d42b7df1fc1024a624dd451e1f131d39e2bb5f",
+  "tick_seconds": 60
+}

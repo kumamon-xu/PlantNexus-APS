@@ -106,3 +106,9 @@ P1-12在Diff base `8830a6dc566df8093b601a82c87c74a9cfd97b59`上独立重跑locke
 P2 phase planning一次新增TASK-P2-00～14。CI仍使用PR base或push event `before`做event attribution；新增严格batch规则只允许唯一新建`TASK-Pn-00` owner和同range新建的planned/ready成员，拒绝既有/active/done成员、多个owner、预填SHA与历史/future卡。归属后仍用P2-00的immutable Diff base检查全部scope/impact，workflow命令和中性artifact命名不变。
 
 本次不激活Benchmark hook、不安装OR-Tools、不增加P2 machine report。P2-00 implementation `3298229fae89a54e0641f5907ad90c4fa81569bf`已通过locked sync、273 full tests、full/diff governance与exact provider run `32332003608` / required job `96314305102` / artifact `9393345593`；artifact Task report为32 paths/5 rows/19 checks/0 issues，Task由evidence-only closure标记done。P2-01～14保持planned；P2-13以后才允许接入完整P2 Gate，P2-14最后独立审计。
+
+## TASK-P2-01 contract CI gate
+
+Workflow在repository suites与P1 common-ingress之后运行`app.planning.problem.contract_check`，生成`build/validation/ci-planning-problem-contracts.json`。报告必须为`planning-problem-contract-report.v1`、4/4 checks PASS，且同时包含v1 byte preservation/fixed replay与v2 Schema/sample/hash/field evidence；该step不得`continue-on-error`，artifact glob必须上传报告与current Task diff report。
+
+本地89项focused PASS、Ruff/Pyright和uncommitted machine report只能进入implementation commit，不能自我满足Provider evidence。Task只有在exact commit的required `validate`与未过期artifact成功、artifact内commit/report一致后才可由evidence-only revision标记`done`。这不是P2 vertical Gate，P2-02～14仍不得启动或提前标记。

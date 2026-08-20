@@ -70,3 +70,5 @@ TASK-P1-10 review：七层Generator必须经过Raw/Normalization/Data Validation
 TASK-P1-11 review：单一staging→Problem application链与no-shortcut scan加强RISK-002，exact stage rejection加强RISK-004/006，三层hash/parity/report提高RISK-001可见性，expected-plane guard加强RISK-007，CI machine artifact加强RISK-008的回放可见性。证据仍限49-record synthetic/reference temporary input和同进程pure chain，无真实Production binding/独立DB、Solver/Validator、Benchmark或校准，RISK-001～010全部保持`MONITORED`，registry format version不变。
 
 TASK-P1-12 review：独立audit及provider artifacts确认P1-02～11控制未被回归，P1 Gate=`READY`且无实现blocking gap；这加强RISK-001/002/004/006/007/008的可见控制，但没有真实数据、独立Production DB/roles、Solver/Validator、Benchmark、历史校准、发布side effect或生产阈值证据。故不足以将任何风险改为`MITIGATED/CLOSED`；RISK-001～010全部保持`MONITORED`，registry format version不变。
+
+TASK-P2-01 review：versioned complete Problem facts和Backend旁路禁止加强RISK-002，priority/lock/history稳定拒绝加强RISK-004/006，v1/v2 replay/machine artifact提高RISK-001/008可见性，synthetic priority provenance加强RISK-007。证据仍是单一small synthetic contract vector，无Solver/formal Validator/Benchmark/真实authority/Production provider运行，不能把任何风险标记`MITIGATED/CLOSED`；RISK-001～010继续`MONITORED`，registry format version保持`1.0.0`。

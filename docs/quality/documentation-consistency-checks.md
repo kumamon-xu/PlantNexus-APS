@@ -223,6 +223,12 @@ Full检查的最终基线为125份`docs/**/*.md`、30 roots、36 Test IDs、15 O
 
 本次新增15张P2卡使inventory从125增至140；TEST-PHASE-GOVERNANCE-001与TEST-TRACEABILITY-VALIDATOR只增加batch selector正反证据。P2业务Test IDs全部保持`PLANNED`。Implementation `3298229fae89a54e0641f5907ad90c4fa81569bf`在local explicit/event-discovery clean checks及provider run `32332003608` / artifact `9393345593`中均选择TASK-P2-00并得到32 committed/0 working paths、5 rows、19 checks、0 issues；Task据此由evidence-only closure标记done。
 
+## TASK-P2-01 contract governance
+
+P2-01在任何业务实现前固定Diff base、验证依赖/授权/v1 hashes并扩充allowed paths/Documents/Impact Rules；新增ADR-0010使inventory从140增至141。Diff必须只落在卡片明确列出的Problem v2 Schema/sample/code/tests/workflow/version metadata与治理文档，且`uv.lock`、v1 Problem Schema/sample、Application、Backend/Strategy/Validator/Benchmark/P3路径保持无差异。
+
+Full与Task diff检查必须同时识别`IMPACT-SCHEMA/PROBLEM/DOMAIN/INFRA/DEPENDENCY/VERSION-METADATA/TESTS/PHASE/GOVERNANCE-REGISTRY/DOCS`，并验证global set`2.3.0`与immutable document versions/bytes并存。Implementation provider evidence未产生前只能记录local PASS和`in_progress`，不得预填run/artifact或关闭Task；evidence-only closure只回填真实exact SHA/provider事实。
+
 ## Override
 
 不允许用自由文本 CI skip 绕过。确需例外时必须在 Task Card 记录理由，提交 ADR 或明确批准记录，并仍保留检查报告。正确性、状态语义、数据隔离和发布门不得豁免。

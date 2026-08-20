@@ -82,3 +82,9 @@ Data Validation在Expansion前要求每个RoutingOperation至少一条显式`rou
 Problem builder以Snapshot `operation_instance_id → operation_id`逐字保留active实例身份、release/material gate和全部candidate六字段；不按quantity重算setup/cycle/final duration。Candidate按resource/duration/source稳定排序，权威`final_duration_seconds`保持整数秒，ceiling tick只用于horizon完整性检查。Data Validation已验证的CUTTING等业务capability通过candidate eligibility体现；Problem顶层只声明platform capability，不混用两类词汇。
 
 RUNNING通过`execution_fact_id`解析actual start、assigned resource和remaining seconds，历史start保留但未来occupancy从horizon start计算。COMPLETED实例不进入未来Problem；两端均completed的edge排除，completed-active edge因v1无法保留historical lag而明确unsupported。Active operation的lock若与horizon相交也明确unsupported；历史/horizon外lock不改变当前Problem。本Task不选择candidate、不改变fact、也不实现C-007/C-008 candidate ScheduleValidator。
+
+## TASK-P2-01 v2 operation and resource facts
+
+Problem v2的active OperationInstance保留`demand_order_id`与`required_capabilities`，candidate option六字段和ceiling-tick horizon检查仍沿用v1确定性语义。完整Resource fact不再只是一组ID：每项必须包含code/type/status、Factory/Workshop/Line/Group IDs、calendar、capabilities和整数`capacity=1`。Builder仍不选择candidate或重算duration；capacity=1只为后续C-003提供primary unary input，不代表C-012 secondary capacity。
+
+Completed实例只在其为active successor的前驱时以HistoricalCompletionAnchor表达，不重新成为可排程OperationInstance。v2 Schema、semantic precheck与hash验证active/anchor集合互斥、candidate/resource引用完整、RUNNING assigned resource属于candidate。Solver、presence变量、NoOverlap和C-010仍由后续Task实现。

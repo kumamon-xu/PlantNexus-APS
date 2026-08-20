@@ -28,6 +28,8 @@ last_reviewed: 2026-08-19
 | OperationInstance | Solver 实际排程对象，由订单、批次和工艺展开而来 |
 | RoutingOperation | 工艺定义，不是直接排程实例 |
 | OperationResourceOption | 某 OperationInstance 在候选 Resource 上的 setup、cycle、final duration 等参数 |
+| DeliveryDemand | PlanningProblem v2中绑定DemandOrder due/source与显式priority/source的Solver-neutral交付需求事实 |
+| HistoricalCompletionAnchor | 已完成前驱跨入active precedence边界时保留fact/resource/actual times/source的只读历史锚点；不是future OperationInstance |
 | Canonical Records | authority-neutral、严格版本化的APS实体集合；稳定ID与source provenance已固定，但外部系统字段mapping仍由Adapter/OPEN决定 |
 | Standard Import | Production Adapter与Synthetic Generator共同输出的版本化canonical envelope；不是Raw Staging或Data Validation的替代品 |
 | ImportQualityReport | Data Validation对一个Import v2产生的确定性PASS/FAIL报告；包含有序Error v3、精确计数和内容派生report ID，不是ScheduleValidator结果 |
@@ -47,7 +49,7 @@ last_reviewed: 2026-08-19
 | Tick | Solver 离散时间单位；`duration_ticks = ceil(duration_seconds / tick_seconds)` |
 | Provenance | 从数据源、规则、问题、Solver、Scenario 到代码提交的全链路来源信息 |
 | ADR | Architecture Decision Record；记录需要治理的架构或语义决策 |
-| Schema Set | 同一发布批次的机器合同集合；当前为 `2.2.0`，保留 `1.0.0/1.1.0/1.2.0/2.0.0/2.1.0` artifacts，且不替代各 document/asset/registry version ID |
+| Schema Set | 同一发布批次的机器合同集合；当前为 `2.3.0`，保留 `1.0.0/1.1.0/1.2.0/2.0.0/2.1.0/2.2.0` artifacts，且不替代各 document/asset/registry version ID |
 | Canonical ID | 跨合同稳定引用的非空、无空白标识；具体来源映射仍由字段权威规则决定 |
 | Constraint Rule Sheet | C-001～C-018 的版本化机器规则元数据；固定输入、公式、正反例、violation 和 Test ID，但不等于 ScheduleValidator 实现 |
 | Capability Registry | 固定 capability 名称与 V1_SUPPORTED/UNSUPPORTED/DEFERRED 状态；V1_SUPPORTED 不表示当前阶段代码已实现 |

@@ -51,3 +51,9 @@ Replan 必须保留 completed/running facts 和 HARD_LOCK，对 SOFT_LOCK 计价
 Order Expansion按`production_lot_id + routing_operation_id`查找唯一current ExecutionFact：无fact为NOT_STARTED；RUNNING/COMPLETED逐字保留status并写入`execution_fact_id`，不把实际历史时刻改写成未来排程时刻。COMPLETED OperationInstance继续存在于expansion/Snapshot事实层，未来PlanningProblem是否排除由TASK-P1-09单独实现和测试。
 
 OperationLock同样只按lot/operation lineage附加稳定排序的`lock_ids`；跨RoutingVersion的fact/lock或同一实例多个fact明确拒绝，不做自动选择/修复。实际start/resource/remaining quantity/seconds仍保留在canonical ExecutionFact中，由引用回链；本Task不实现Replan、freeze policy、lock目标或ScheduleValidator。
+
+## TASK-P2-01 Problem v2 fact and lock boundary
+
+v2 builder把COMPLETED→active precedence前驱解析成HistoricalCompletionAnchor：保存operation/fact/resource、actual start/end和source三元组，并要求completion不晚于Snapshot cutoff。COMPLETED→COMPLETED edge排除；active→COMPLETED说明事实状态与routing order冲突，按`INVALID_HISTORICAL_FACT`在Solver前拒绝。
+
+active OperationInstance引用的lock只要`end_at_utc`严格晚于cutoff/horizon start即完整进入Problem；刚好结束或更早的lock为expired并排除。Builder不按horizon end裁剪或丢弃未来lock，且保留`HARD_LOCK`/`SOFT_LOCK`和source。该合同只让后续C-008输入可表达：HARD enforcement属于P2-07，SOFT cost/OBJ-002仍明确排除，Replan/P4状态不启动。

@@ -98,3 +98,9 @@ Generator context只接受Development/Test/Benchmark，`production`在生成任�
 Common ingress所需unit registry、data plane、cutoff、horizon、tick与Problem builder version全部由调用方显式传入，不从environment选择`latest`或猜默认。Gate CLI的`2026-11-06T12:30:00Z`到`2026-11-07T12:30:00Z`/60秒只绑定`SIM-P1-INGRESS-001@1.0.0`测试回放，不是Production policy。
 
 CI只新增一条repository-local machine command并复用现有`PLANTNEXUS_CODE_COMMIT`；没有新Secret、service、port、database URL或environment variable。该运行不证明独立Production/Simulation deployment。
+
+## TASK-P2-01 isolation review
+
+Problem v2本身不增加environment、database、API route或persistence；Snapshot的`synthetic`/plane隔离继续由上游identity与调用边界负责。synthetic priority fact必须携带versioned source reference，样例使用`plantnexus-synthetic-policy@1.0.0`，不得复制为Production default。
+
+Machine report只读取仓库Schema/sample并重放deterministic builders，写入ignored `build/validation`或CI artifact；它不连接Production数据库或外部系统。P2-01输出不能跨plane复用为正式Schedule，后继Task仍须在report/export manifest中保留synthetic与data-plane provenance。

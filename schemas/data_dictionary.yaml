@@ -1,5 +1,5 @@
-schema_set_version: 2.2.0
-status: p1_data_quality_gate
+schema_set_version: 2.3.0
+status: p2_planning_problem_v2_contract
 spec_version: 0.3.0
 rules:
   unknown_root_fields: reject
@@ -12,7 +12,7 @@ rules:
   unit_conversion_registry: schemas/rules/unit-conversion-registry.v1.yaml
   data_quality_rule_version: data-quality-rules.v1
   error_registry: schemas/rules/error-code-registry.v2.yaml
-  schema_set_compatibility: additive_2_2_preserves_import_v2_and_unit_registry_document_versions
+  schema_set_compatibility: additive_2_3_preserves_all_v1_bytes_and_import_snapshot_quality_unit_document_versions
 schemas:
   canonical-records.v1:
     path: schemas/json/canonical-records.v1.schema.json
@@ -94,6 +94,19 @@ schemas:
       - duration_source
       - source_version
     production_open: [OPEN-004, OPEN-007, OPEN-009, OPEN-014, OPEN-015]
+  planning-problem.v2:
+    path: schemas/json/planning-problem.v2.schema.json
+    schema_set_version: 2.3.0
+    builder_version: planning-problem-builder.v2
+    canonicalization_version: canonical-json.v1
+    hash_projection_version: planning-problem-hash-projection.v2
+    payloads: [delivery_demands, resources, operation_instances, historical_completion_anchors, precedence_edges, operation_locks, resource_unavailable_intervals]
+    explicit_priority_provenance: required; missing, extra, boolean, non-positive, and unversioned values reject
+    primary_resource_capacity: exactly 1; secondary capacity remains outside this contract
+    lock_boundary: referenced lock retained when end_at_utc is after horizon_start_utc; expired lock excluded; interval is never clipped
+    historical_boundary: completed predecessor to active successor retains an edge and a sourced completion anchor
+    compatibility: not interchangeable with planning-problem.v1; v1 Schema, sample, default builder API, and fixed hash vectors remain preserved
+    production_open: [OPEN-004, OPEN-005, OPEN-006, OPEN-007, OPEN-009, OPEN-010, OPEN-014, OPEN-015]
   kpi.v1:
     path: schemas/json/kpi.schema.json
     groups: [delivery, planning, resources, stability, solver]

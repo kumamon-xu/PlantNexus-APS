@@ -38,9 +38,9 @@ PlanningSnapshot
 
 ## 当前Task与启动边界
 
-`TASK-P2-00 — P2 Phase Transition and Task Planning Governance`已完成：implementation commit=`3298229fae89a54e0641f5907ad90c4fa81569bf`，GitHub run `32332003608` / required job `96314305102` / artifact `9393345593`均success，artifact内Task report为32 paths/5 Impact Rules/19 checks/0 issues。TASK-P2-01～14均只创建为`planned`，没有启动任何P2业务实现。建议首先另行授权并启动`TASK-P2-01 — PlanningProblem v2 Contract Gap Closure`。
+`TASK-P2-00 — P2 Phase Transition and Task Planning Governance`已完成：implementation commit=`3298229fae89a54e0641f5907ad90c4fa81569bf`，GitHub run `32332003608` / required job `96314305102` / artifact `9393345593`均success，artifact内Task report为32 paths/5 Impact Rules/19 checks/0 issues。用户随后明确授权执行`TASK-P2-01 — PlanningProblem v2 Contract Gap Closure`；其Diff base固定为`617dd0fb8d6543dc2c9be6ac1e868f751763603d`，状态为`in_progress`，TASK-P2-02～14仍为`planned`且不得启动。
 
-TASK-P2-01之所以先行，是因为P1的`planning-problem.v1`尚不能表达active locks、due/priority以及COMPLETED→active历史lag；Backend不得在未版本化合同中隐藏这些事实。完整顺序和分支见[P2 Milestone](milestones/P2-cp-sat-vertical-slice.md)与[Task索引](tasks/README.md)。
+P2-01已以ADR-0010和additive schema set`2.3.0`建立opt-in `planning-problem.v2`：显式表达sourced due/priority、capacity=1完整Resource事实、active HARD/SOFT locks及COMPLETED→active历史完成锚点/lag；v1 Schema/sample/default API/fixed hashes保持不变。本地合同、replay与property证据已形成，Task仍须等待implementation commit的exact provider `validate`和artifact后才能关闭。
 
 ## 当前允许
 
@@ -52,7 +52,7 @@ TASK-P2-01之所以先行，是因为P1的`planning-problem.v1`尚不能表达ac
 
 ## 当前禁止
 
-- 未经另行指令启动TASK-P2-01或任何P2实现；
+- 未经另行指令启动TASK-P2-02或任何后续P2实现；
 - 修改Task允许范围外文件、预填PASS/provider evidence或跳过独立Validator；
 - 实现C-012～C-018、OBJ-002 Stability、动态Replan、ExecutionSimulator、P3 Workspace/审批/发布状态；
 - 把UNKNOWN写成INFEASIBLE、FEASIBLE写成OPTIMAL，或以hint代替Execution Fact/HARD lock；

@@ -78,3 +78,9 @@ P2首次baseline必须记录`order-expansion.v1`、Import/quality/Snapshot/Probl
 本Task首次形成真实PlanningProblem preprocessing与fixed Problem hash，但仍无Solver、Backend、BenchmarkRunner/profile、candidate result、runtime/memory threshold或历史Problem baseline comparison。Local Python 3.12.13 informational probe对同一1-resource/2-operation/1-edge/0-interval Snapshot执行200次完整build+verify，观察median `1.090 ms`、p95 `1.177 ms`；该单机微型sample只记录builder counts/time，不是CI gate、capacity、SLA或Production阈值，也不生成BenchmarkReport。
 
 P2首次Solver baseline必须携带Snapshot/Problem hash、builder/hash projection、tick/horizon、instance/edge/candidate/interval counts、Solver exact version/parameters及环境。当前OR-Tools仍不存在，不能执行Solver correctness/quality/runtime/memory replay；OPEN-012继续OPEN，未建立或覆盖任何baseline。
+
+## TASK-P2-01 review
+
+本Task改变未来model input cardinality：v2固定sample包含1 delivery demand、1 capacity=1 Resource、1 active operation、1 historical anchor、1 precedence edge、2 active locks和0 calendar intervals；Problem hash/bytes digest已固定。它没有model variables/constraints、Solver、Reference Scheduler、BenchmarkRunner或runtime/memory/quality baseline，测试耗时不得解释为性能证据。
+
+P2-12首次XS/S/M benchmark必须记录`planning-problem.v2`、builder/hash projection、Snapshot/Problem hashes及上述全部fact counts；任何后续Problem字段或projection变化触发fixed Scenario correctness与benchmark replay。OPEN-012继续OPEN，conditional CI hook仍deferred。

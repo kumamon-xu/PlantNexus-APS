@@ -12,7 +12,7 @@ registry_version: 1.0.0
 
 # 文档清单
 
-本清单列出当前仓库已经实际存在的Markdown文档。P0/P1均已归档为completed；P1 Gate=`READY`后用户明确批准P1→P2。P2现为active，TASK-P2-00阶段/规划治理已done，P2-01～14仅为planned。产品API与Production Runbook正文尚未形成并继续由相应索引登记。
+本清单列出当前仓库已经实际存在的Markdown文档。P0/P1均已归档为completed；P1 Gate=`READY`后用户明确批准P1→P2。P2现为active，TASK-P2-00阶段/规划治理已done，TASK-P2-01为`in_progress`，P2-02～14仍为planned。产品API与Production Runbook正文尚未形成并继续由相应索引登记。
 
 | Path | Doc ID | Status | Title |
 |---|---|---|---|
@@ -26,6 +26,7 @@ registry_version: 1.0.0
 | [adr/ADR-0007-immutable-snapshot-and-schedule-version.md](../adr/ADR-0007-immutable-snapshot-and-schedule-version.md) | ADR-0007 | accepted | 不可变 Snapshot 与版本化计划发布 |
 | [adr/ADR-0008-utc-seconds-and-solver-ticks.md](../adr/ADR-0008-utc-seconds-and-solver-ticks.md) | ADR-0008 | accepted | UTC、整数秒与可配置 Solver Tick |
 | [adr/ADR-0009-production-simulation-data-isolation.md](../adr/ADR-0009-production-simulation-data-isolation.md) | ADR-0009 | accepted | Production 与 Simulation 数据隔离 |
+| [adr/ADR-0010-planning-problem-v2-contract-evolution.md](../adr/ADR-0010-planning-problem-v2-contract-evolution.md) | ADR-0010 | accepted | PlanningProblem v2 合同演进 |
 | [adr/README.md](../adr/README.md) | DOC-ADR-INDEX | baseline | Architecture Decision Records |
 | [agents/AGENTS.md](../agents/AGENTS.md) | DOC-AGENT-001 | baseline | PlantNexus APS Coding Agent 规则 |
 | [agents/reading-order-and-context-policy.md](../agents/reading-order-and-context-policy.md) | DOC-AGENT-002 | baseline | Agent 读取顺序与上下文策略 |
@@ -140,7 +141,7 @@ registry_version: 1.0.0
 | [tasks/P1/TASK-P1-11-common-ingress-pipeline-and-gate-evidence.md](../tasks/P1/TASK-P1-11-common-ingress-pipeline-and-gate-evidence.md) | TASK-P1-11 | done | Common Ingress Pipeline and P1 Gate Evidence |
 | [tasks/P1/TASK-P1-12-p1-exit-gate-audit.md](../tasks/P1/TASK-P1-12-p1-exit-gate-audit.md) | TASK-P1-12 | done | P1 Exit Gate Audit |
 | [tasks/P2/TASK-P2-00-phase-transition-and-task-planning-governance.md](../tasks/P2/TASK-P2-00-phase-transition-and-task-planning-governance.md) | TASK-P2-00 | done | P2 Phase Transition and Task Planning Governance |
-| [tasks/P2/TASK-P2-01-planning-problem-v2-contract-gap-closure.md](../tasks/P2/TASK-P2-01-planning-problem-v2-contract-gap-closure.md) | TASK-P2-01 | planned | PlanningProblem v2 Contract Gap Closure |
+| [tasks/P2/TASK-P2-01-planning-problem-v2-contract-gap-closure.md](../tasks/P2/TASK-P2-01-planning-problem-v2-contract-gap-closure.md) | TASK-P2-01 | in_progress | PlanningProblem v2 Contract Gap Closure |
 | [tasks/P2/TASK-P2-02-planning-machine-contracts-and-status.md](../tasks/P2/TASK-P2-02-planning-machine-contracts-and-status.md) | TASK-P2-02 | planned | Planning Machine Contracts and Status |
 | [tasks/P2/TASK-P2-03-ortools-backend-foundation.md](../tasks/P2/TASK-P2-03-ortools-backend-foundation.md) | TASK-P2-03 | planned | OR-Tools and SolverBackend Foundation |
 | [tasks/P2/TASK-P2-04-formal-independent-schedule-validator.md](../tasks/P2/TASK-P2-04-formal-independent-schedule-validator.md) | TASK-P2-04 | planned | Formal Independent ScheduleValidator |
@@ -157,7 +158,7 @@ registry_version: 1.0.0
 | [tasks/README.md](../tasks/README.md) | DOC-TASK-INDEX | living | Task Card 索引 |
 | [tasks/TASK_TEMPLATE.md](../tasks/TASK_TEMPLATE.md) | TEMPLATE-TASK | baseline | Task Card Template |
 
-更新文档时应同步维护本清单。`uv run python scripts/check_docs.py`会校验本表是否完整覆盖当前140份`docs/**/*.md`，并核对Doc ID、status和title，但不会自动改写清单。根`README.md`、根`AGENTS.md`、非Markdown evidence manifest、代码和脚本不属于正式文档清单。
+更新文档时应同步维护本清单。`uv run python scripts/check_docs.py`会校验本表是否完整覆盖当前141份`docs/**/*.md`，并核对Doc ID、status和title，但不会自动改写清单。根`README.md`、根`AGENTS.md`、非Markdown evidence manifest、代码和脚本不属于正式文档清单。
 
 本清单格式为 `registry_version: 1.0.0`；列结构或状态比较语义变化时提升版本。
 
@@ -176,3 +177,5 @@ TASK-P1-11不新增Markdown路径，清单仍完整覆盖124份`docs/**/*.md`。
 TASK-P1-12新增唯一正式Markdown `docs/milestones/P1-exit-gate-audit-report.md`，因此清单从历史124份增至125份；同目录JSON evidence manifest、ignored `build/validation`/`build/traceability` reports与下载到系统临时目录的provider artifacts不进入清单。Audit report现为`baseline`；implementation commit `a5d7e4a68dc12d48e36cb692500f59446f8097b4`的run `32326616525` / artifact `9391591718`成功后Task为`done`。P1 Gate=`READY`不创建P2文档。
 
 TASK-P2-00在用户明确授权后一次新增15张P2 Task Card，因此清单由125份增至140份。P2-00为唯一phase-planning owner，implementation `3298229fae89a54e0641f5907ad90c4fa81569bf` / run `32332003608` / artifact `9393345593`成功后已done；P2-01～14为planned member，没有Diff base、实现或artifact。P1/P2 Milestone状态分别为completed/active；ignored Task report与provider artifact不进入清单。
+
+TASK-P2-01新增唯一正式Markdown `ADR-0010-planning-problem-v2-contract-evolution.md`，清单由140增至141份；Schema/sample/code/tests和ignored machine/trace reports不作为Markdown行。P2-01已获授权并为`in_progress`，本地合同证据形成但implementation provider run/artifact尚未回填；P2-02～14继续planned。

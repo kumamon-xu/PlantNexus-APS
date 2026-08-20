@@ -72,3 +72,5 @@ TASK-P1-10 review：新增SIM-ASSUMPTION-010并绑定`PROFILE-SIM-P1-INGRESS-001
 TASK-P1-11 review：重用SIM-ASSUMPTION-010的原Profile/Scenario/generator/seed和49-record dataset，没有修改生成分布或新增asset。Gate的cutoff/horizon/tick只是让既有RUNNING/lock facts在Problem v1可表达的fixture-local replay configuration，已记入machine report和Scenario文档，不传播为Production default。SIM-ASSUMPTION-001～010全部保持`ACTIVE`，registry format version不变。
 
 TASK-P1-12 review：审计以原`SIM-P1-INGRESS-001@1.0.0`、Profile/Generator`1.0.0`、seed`20260820`和SIM-ASSUMPTION-010重放两次，并复验P0 Golden/Mutation assumptions；没有修改asset、version、seed、分布、cutoff/horizon/tick或新增定量值。SIM-ASSUMPTION-001～010全部保持`ACTIVE`，不用于关闭PROD_OPEN、建立Benchmark baseline或Production default，registry format version不变。
+
+TASK-P2-01 review：v2 fixed replay从P1-02 synthetic Schema sample派生，并显式使用`plantnexus-synthetic-policy@1.0.0`、priority weight 2、两个测试lock及一个completed→active历史边界；这些只验证字段/时间/hash语义，不是新Scenario asset、分布、Benchmark profile或Production policy。未新增/修改/retire注册项；SIM-ASSUMPTION-001～010继续`ACTIVE`，不得关闭任何Production authority问题，registry format version保持`1.0.0`。

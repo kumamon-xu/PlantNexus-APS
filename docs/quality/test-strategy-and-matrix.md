@@ -179,3 +179,9 @@ Audit还核验P1-01～11各CI artifact内`traceability-report.v1`的Task/head/pa
 用户于2026-08-20批准P1→P2后，既有36个Test ID不新增、不复用，只把P2 planned slices分配到TASK-P2-01～14：P2-01/02覆盖contract/problem replay；P2-03覆盖solver upgrade/status boundary；P2-04覆盖formal Validator/mutation/property；P2-05～08覆盖C-001～C-011与OBJ-001；P2-09覆盖Golden JSSP/FJSP及Cross/Calendar/Material/Running/Hard Lock；P2-10覆盖Reference Scheduler；P2-11覆盖Output；P2-12覆盖Benchmark/XS/S/M；P2-13形成vertical Gate；P2-14独立重跑audit。
 
 TASK-P2-00本身只扩展TEST-PHASE-GOVERNANCE-001与TEST-TRACEABILITY-VALIDATOR，验证合法phase-planning batch及existing/active-member拒绝；targeted=22 passed、full=273 passed，implementation `3298229fae89a54e0641f5907ad90c4fa81569bf`的provider run `32332003608` / artifact `9393345593`成功。没有业务测试、Solver运行或P2 artifact。TEST-GOLDEN-JSSP、TEST-REFERENCE-SCHEDULER、TEST-BENCHMARK、TEST-PROPERTY、TEST-SOLVER-UPGRADE及所有P2 integration slice继续`PLANNED`，直到对应Task存在真实路径、结果与provider artifact。Registry表结构/状态语义不变，`registry_version=1.0.0`。
+
+## TASK-P2-01 PlanningProblem v2 evidence
+
+扩展TEST-CONTRACT-001、TEST-PROBLEM-REPLAY-001与TEST-PROPERTY，覆盖v2 Draft 2020-12 strict/non-interchangeable Schema、priority正反与source、capacity=1、Resource topology、COMPLETED→active anchor/lag、expired/active/cross-horizon HARD/SOFT locks、same-input/order/noise replay、due/priority/resource/anchor/lock mutation、tamper/verify及v1 bytes/hash preservation。Golden v2 vector为Problem hash`sha256:9927418a446dd046ddd1d835643da03fbf5cdcf8ca246ba22c3700563a17e9e8`、canonical bytes digest`sha256:2dbe06907952d6aba303977d67a7f5d7a6ef89c4be5ac5a6ac8d74e3f95d720a`。
+
+Task-focused八文件suite当前`89 passed`，full repository=`286 passed`，Ruff/Pyright均0问题；`planning-problem-contract-report.v1`为4/4 PASS并记录v1/v2 fingerprints/vectors及no-Solver边界。Provider evidence仍待exact implementation push，因此Task保持`in_progress`。本slice不形成TEST-GOLDEN-JSSP、formal Validator、Solver Upgrade、Reference Scheduler或Benchmark；registry table/status与`registry_version=1.0.0`不变。

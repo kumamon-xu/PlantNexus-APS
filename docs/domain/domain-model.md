@@ -106,3 +106,9 @@ Snapshot v2额外固定derived OperationInstance/precedence edge与candidate级d
 `app.snapshots`现在把PlanningSnapshot v2实现为canonical bytes驱动的frozen value：外部只能取得新document copy，不能通过共享dict改写事实；self ID/hash由versioned semantic projection确定性派生。Builder消费Canonical Import、matching quality PASS和Order Expansion，不拥有字段权威、lot/duration推断或未来Problem过滤。
 
 Snapshot repository protocol只暴露put/exact replay与按ID/hash读取；SQLAlchemy adapter属于Infrastructure并永久绑定单一data plane。Snapshot事实变化必须构建新identity，不存在Domain update/delete。COMPLETED/RUNNING继续作为cutoff事实保存；哪些实例进入未来PlanningProblem仍由TASK-P1-09决定，当前未创建Solver模型或ScheduleVersion。
+
+## TASK-P2-01 PlanningProblem v2 domain projection
+
+`app.planning.problem`新增独立JSON-compatible v2 types，而不修改canonical entities或Snapshot v2。DeliveryDemand把DemandOrder due/source与外部显式priority/source投影到future Problem；Resource投影保留Factory→Workshop→ProductionLine→ResourceGroup拓扑、calendar、capabilities与primary `capacity=1`；active OperationInstance增加DemandOrder和business capability引用。
+
+COMPLETED OperationInstance本体继续留在Snapshot事实层且不进入future operation set。只有作为active successor前驱时，Problem v2创建sourced HistoricalCompletionAnchor并保留edge/lag；OperationLock按Snapshot引用与cutoff活动性投影。上述都是immutable input facts，不是Schedule、Solver variable、ORM/API DTO或P3 business state。

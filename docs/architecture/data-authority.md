@@ -103,3 +103,9 @@ P1 Generator只对`SIM-P1-INGRESS-001@1.0.0`及其版本化Profile/Scenario/seed
 Common ingress不新建authority层：ReferenceFileAdapter仅读取同一synthetic source rows的temporary CSV，并保留`production_binding=false`。Application只校验所选data plane、传递明确versions和组合既有artifacts；PASS、hash和双入口parity均不使synthetic values成为Production权威数据。
 
 所有PROD_OPEN继续OPEN，未决定ERP/MES/WMS/CAM binding、field precedence、unit/timezone、lock/freeze、horizon或真实分布。
+
+## TASK-P2-01 Problem v2 authority projection
+
+DemandOrder `due_at_utc`及source三元组从Snapshot canonical record逐字进入DeliveryDemand；priority不是Snapshot已有权威字段，因此v2 builder要求调用方为每个active demand提供非boolean正整数权重和独立source system/version/record ID，禁止默认`1`、缺省排序或把Scenario值冒充Production authority。OPEN-006/015未关闭时Production使用继续阻断；Simulation只允许显式versioned policy。
+
+Resource topology/status/calendar/capabilities、ExecutionFact和OperationLock仍只由Snapshot canonical facts提供，Problem builder不成为数据owner。`capacity=1`是C-003 primary unary contract语义，不推断人数/模具/工装或secondary capacity。真实lock owner、due/priority policy、resource/calendar/transport authority继续受OPEN-004/005/007/009/010约束。

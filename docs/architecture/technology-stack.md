@@ -138,3 +138,9 @@ GitHub run `32310098594`对implementation commit `72670d18a29c9a10cb70f7a263c981
 ## TASK-P1-11 stack review
 
 Application pipeline和Gate CLI只使用Python 3.12标准库及已锁定的PyYAML/Reference Adapter依赖，不修改`pyproject.toml`或`uv.lock`。Workflow仍使用已锁定Python/uv/Actions版本，只增加P1 report命令和artifact glob中的JSON。仓库仍无OR-Tools、Solver backend、新数据库驱动或Production部署组件。
+
+## TASK-P2-01 stack review
+
+本Task只使用既有Python 3.12标准库、`jsonschema==4.25.1`开发验证能力与既有pytest/Hypothesis工具；runtime/dev dependency pins和`uv.lock`均不变，OR-Tools仍不存在。`app.planning.problem`保持TypedDict/dataclass/canonical JSON/SHA-256且无ORM/API/Infrastructure/Solver类型。
+
+CI在既有full suites之后新增`python -m app.planning.problem.contract_check`，产出`ci-planning-problem-contracts.json`并由中性artifact glob上传。它不是新service/worker、数据库migration或Production endpoint；P2-03的Solver dependency ADR/Gate仍未触发。

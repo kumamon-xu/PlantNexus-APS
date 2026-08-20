@@ -127,3 +127,9 @@ Production target继续由Scenario context返回`SYNTHETIC_REFERENCE_IN_PRODUCTI
 Application层不捕获并改写Normalization、Expansion、Snapshot或Problem的结构化异常。Canonical Data Validation不抛异常，因此`DataQualityGateRejected`只从确定性有序Error v3列表透出首个`category/code`并保留完整quality report；不生成新product code或`SYSTEM_ERROR`。
 
 P1四类Gate实际经同一入口得到`DATA_ERROR/ROUTE_CYCLE`、`DATA_ERROR/MISSING_RESOURCE`、`DATA_ERROR/UNIT_CONVERSION_ERROR`、`DATA_ERROR/MISSING_DURATION`，且每个失败均在所属stage停止下游。它们不是`INFEASIBLE`、Solver status或HTTP mapping。
+
+## TASK-P2-01 PlanningProblem v2 rejection boundary
+
+Problem module继续使用module-local稳定code，不修改`error-code-registry.v2`或Error v3 Schema。v2新增`INVALID_PRIORITY_FACT`、`INVALID_LOCK_FACT`和`INVALID_HISTORICAL_FACT`，均归`DATA_ERROR`；版本/config/snapshot/reference缺口继续使用既有code，canonical shape/semantic/hash tamper归`MODEL_INVALID`或`HASH_MISMATCH`。`UNSUPPORTED_PROBLEM_FACT`仍单独归`UNSUPPORTED_CAPABILITY`。
+
+这些错误全部发生在Backend/Solver之前，不能写成`INFEASIBLE`、`NO_SOLUTION_WITHIN_LIMIT`、ScheduleValidator violation或HTTP状态。CLI machine report失败只输出error type，不回显输入值或内部异常；完整产品错误注册表如需新增必须由独立合同Task升版。

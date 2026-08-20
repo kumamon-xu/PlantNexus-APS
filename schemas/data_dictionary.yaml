@@ -1,5 +1,5 @@
-schema_set_version: 2.3.0
-status: p2_planning_problem_v2_contract
+schema_set_version: 2.4.0
+status: p2_planning_machine_contracts
 spec_version: 0.3.0
 rules:
   unknown_root_fields: reject
@@ -12,7 +12,7 @@ rules:
   unit_conversion_registry: schemas/rules/unit-conversion-registry.v1.yaml
   data_quality_rule_version: data-quality-rules.v1
   error_registry: schemas/rules/error-code-registry.v2.yaml
-  schema_set_compatibility: additive_2_3_preserves_all_v1_bytes_and_import_snapshot_quality_unit_document_versions
+  schema_set_compatibility: additive_2_4_preserves_all_prior_schema_bytes_and_import_snapshot_quality_unit_problem_document_versions
 schemas:
   canonical-records.v1:
     path: schemas/json/canonical-records.v1.schema.json
@@ -107,6 +107,42 @@ schemas:
     historical_boundary: completed predecessor to active successor retains an edge and a sourced completion anchor
     compatibility: not interchangeable with planning-problem.v1; v1 Schema, sample, default builder API, and fixed hash vectors remain preserved
     production_open: [OPEN-004, OPEN-005, OPEN-006, OPEN-007, OPEN-009, OPEN-010, OPEN-014, OPEN-015]
+  planning-policy.v1:
+    path: schemas/json/planning-policy.schema.json
+    schema_set_version: 2.4.0
+    data_plane: explicit SIMULATION or PRODUCTION; no inferred policy defaults
+    hard_constraints: ordered C-001..C-011
+    objective_stages: exactly OBJ-001 weighted tardiness minimization in P2
+    provenance: [policy_id, policy_revision, policy_source, constraint_contract_version, objective_policy_version, canonicalization_version]
+    p2_boundary: pure immutable policy contract only; no solver, constraint implementation, persistence, API, or Production policy values
+    production_open: [OPEN-005, OPEN-006, OPEN-009, OPEN-010, OPEN-012, OPEN-015]
+  solve-limits.v1:
+    path: schemas/json/solve-limits.schema.json
+    schema_set_version: 2.4.0
+    data_plane: explicit SIMULATION or PRODUCTION; no implicit limits
+    required_limits: [max_wall_time_seconds, max_workers, random_seed]
+    provenance: [limits_id, limits_revision, limits_source, canonicalization_version]
+    p2_boundary: pure immutable budget contract only; published sample is Simulation-only and is not a Production default or SLA
+    production_open: [OPEN-006, OPEN-010, OPEN-011, OPEN-012, OPEN-015]
+  planning-solution.v1:
+    path: schemas/json/planning-solution.schema.json
+    schema_set_version: 2.4.0
+    statuses: [OPTIMAL, FEASIBLE, INFEASIBLE, UNKNOWN, MODEL_INVALID, CANCELLED, FAILED]
+    p2_objective: exactly one OBJ-001 weighted-tardiness stage; OBJ-002 and OBJ-003 remain deferred
+    assignment_time_contract: integer solver ticks plus RFC3339 UTC instants and integer duration seconds
+    evidence_kind: distinguishes CONTRACT_SAMPLE from SOLVER_RUN
+    provenance: exact Problem v2, PlanningPolicy v1, and SolveLimits v1 references with fingerprints
+    p2_boundary: candidate carrier and status contract only; no candidate is certified by this schema sample and ScheduleValidator remains later work
+    production_open: [OPEN-004, OPEN-005, OPEN-006, OPEN-009, OPEN-010, OPEN-011, OPEN-012, OPEN-014, OPEN-015]
+  solver-report.v1:
+    path: schemas/json/solver-report.schema.json
+    schema_set_version: 2.4.0
+    statuses: [OPTIMAL, FEASIBLE, INFEASIBLE, UNKNOWN, MODEL_INVALID, CANCELLED, FAILED]
+    required_metrics: [objective_stage_results, timings, model_metrics, memory_peak_mb]
+    required_versions: [spec_version, schema_set_version, canonicalization_version, constraint_contract_version, objective_policy_version, state_machine_contract_version, error_registry_version]
+    evidence_kind: distinguishes CONTRACT_SAMPLE from SOLVER_RUN
+    p2_boundary: solver-neutral report/provenance contract only; no backend execution, benchmark, candidate validation, or Production evidence
+    production_open: [OPEN-006, OPEN-009, OPEN-010, OPEN-011, OPEN-012, OPEN-015]
   kpi.v1:
     path: schemas/json/kpi.schema.json
     groups: [delivery, planning, resources, stability, solver]

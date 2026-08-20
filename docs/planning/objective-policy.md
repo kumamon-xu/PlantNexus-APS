@@ -40,3 +40,9 @@ SolverReport 必须分阶段记录每一轮目标值、bound、停止原因和�
 `planning-problem.v2.delivery_demands`现在为每个active DemandOrder显式保存`due_at_utc`及其source三元组、非boolean正整数`priority_weight`及独立priority source三元组。Builder要求priority mapping与active demand集合精确相等；缺失、额外、零/负、boolean或无版本来源均拒绝，不猜Production weight。
 
 该字段使OBJ-001输入可表达，但本Task不计算tardiness、weighted sum、lexicographic stages或SolverReport，也不宣称目标形成。P2-08才可实现Delivery objective；OPEN-006关闭前Production policy仍阻断。SOFT_LOCK不会借本合同启用OBJ-002，OBJ-003也未实现。
+
+## TASK-P2-02 objective-stage contract
+
+PlanningPolicy v1在当前P2 slice只允许一个stage：`stage_index=1`、`OBJ-001`、`WEIGHTED_TARDINESS`、`MINIMIZE`。PlanningSolution/SolverReport逐字引用该stage，并按status约束objective/bound/gap；非负整数Delivery objective使用`(objective-best_bound)/max(1, objective)`报告relative gap。SolveLimits的显式wall-time是该stage预算上限。此处固定的是报告和consumer machine contract，不是tardiness计算或CP-SAT objective实现。
+
+总规的Delivery→Stability（Replan）→Makespan顺序继续有效，但OBJ-002/OBJ-003在本合同版本中explicit deferred，不能作为额外stage或混合权重加入。P2-08实现OBJ-001时必须消费此版本合同；未来启用OBJ-002/003需要独立Task/version，且OPEN-006关闭前仍不得生成Production权重。

@@ -28,3 +28,11 @@ SolveLimits 描述计算预算，例如 wall time、worker/resource limit 和允
 ## 状态语义
 
 Limits 到期且 Solver 不能给出认证结论时返回 UNKNOWN，并映射 `NO_SOLUTION_WITHIN_LIMIT`。有已认证可行解时可以返回 FEASIBLE，但不得描述为最优。
+
+## TASK-P2-02 machine contract
+
+[`planning-policy.v1`](../../schemas/json/planning-policy.schema.json)要求`schema_set_version=2.4.0`、显式`SIMULATION/PRODUCTION` data plane、policy ID/revision/source、`canonical-json.v1`、`constraint-rule-sheet.v1`和`objective-policy.v1`。P2 slice的硬约束列表必须按C-001～C-011完整有序出现，且只允许一个`OBJ-001/WEIGHTED_TARDINESS/MINIMIZE` stage；硬约束不能由policy关闭，OBJ-002/003不能提前混入。
+
+[`solve-limits.v1`](../../schemas/json/solve-limits.schema.json)要求limits ID/revision/source与显式`max_wall_time_seconds`、`max_workers`、`random_seed`。Schema不含`default`；仓库sample的30秒/1 worker/seed只属于`SIMULATION`合同样例，不是Production默认、SLA或推荐参数。Solution和Report必须逐值复制这三个limit并引用完整Policy/Limits canonical fingerprint，任何缺失、类型漂移或来源不一致均在执行边界拒绝。
+
+四份sample通过稳定URN离线解析；pure validation进一步固定跨文档fingerprint、OBJ-001和limit budget一致性。它们的`CONTRACT_SAMPLE`标识明确说明没有Solver执行，不能用于声明可行性、最优性或性能。

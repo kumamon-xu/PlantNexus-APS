@@ -51,6 +51,12 @@ Backend/OR-Tools 升级必须经过 ADR、dependency lock、Golden/Scenario repl
 
 PlanningRun 的 MODEL_INVALID/INFEASIBLE/NO_SOLUTION_WITHIN_LIMIT 与 error.v2 映射保持原义；P0 没有 Solver status artifact。Rule-sheet completeness module 不导入 `planning.backends`/OR-Tools，也不是 ADR-0005 ScheduleValidator evaluator。
 
+## TASK-P2-02 protocol and report contract
+
+`app.planning.contracts.SolverBackend`现以Protocol固定Problem v2、PlanningPolicy v1、SolveLimits v1到PlanningSolution v1的solver-neutral调用边界，但没有任何实现实例。Policy/Limits/Solution/Report均为JSON-compatible TypedDict与pure validation；source/dependency扫描禁止CpModel、IntervalVar、OR-Tools、ORM、FastAPI和later-layer imports。
+
+SolverReport v1保存exact backend/solver name+version、按name有序参数、Problem/Policy/Limits/Solution引用、七种status的唯一PlanningRun/error outcome、OBJ-001 stage、model build/first feasible/solve/validation/total timing、variables/constraints/optional intervals、memory与完整version/code-commit provenance。`CONTRACT_SAMPLE`报告使用not-installed solver、零模型规模和UNKNOWN，只证明字段合同；P2-03才可安装Backend依赖并产生真实`SOLVER_RUN`，且不得绕过P2-04独立Validator。
+
 TASK-P0-05 的 Generator protocols 明确终止于 Standard Import package，不导入 PlanningProblem 或 SolverBackend。ScenarioSpec `expected_behavior` 只是未来运行的允许结果合同；Schema sample 中的 FEASIBLE/OPTIMAL 不是 Solver evidence。无 Backend/dependency/parameter/version 变化，因此不触发 Solver upgrade replay。
 
 ## TASK-P0-08 dependency and worker review

@@ -1,0 +1,153 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "urn:plantnexus:aps:schema:planning-policy:v1",
+  "title": "PlanningPolicy v1",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "planning_policy_version",
+    "schema_set_version",
+    "policy_id",
+    "policy_revision",
+    "data_plane",
+    "policy_source",
+    "canonicalization_version",
+    "constraint_contract_version",
+    "objective_policy_version",
+    "hard_constraint_ids",
+    "objective_stages"
+  ],
+  "properties": {
+    "planning_policy_version": {
+      "const": "planning-policy.v1"
+    },
+    "schema_set_version": {
+      "const": "2.4.0"
+    },
+    "policy_id": {
+      "$ref": "#/$defs/canonicalId"
+    },
+    "policy_revision": {
+      "$ref": "#/$defs/nonEmptyText"
+    },
+    "data_plane": {
+      "enum": ["SIMULATION", "PRODUCTION"]
+    },
+    "policy_source": {
+      "$ref": "#/$defs/sourceReference"
+    },
+    "canonicalization_version": {
+      "const": "canonical-json.v1"
+    },
+    "constraint_contract_version": {
+      "const": "constraint-rule-sheet.v1"
+    },
+    "objective_policy_version": {
+      "const": "objective-policy.v1"
+    },
+    "hard_constraint_ids": {
+      "type": "array",
+      "minItems": 11,
+      "maxItems": 11,
+      "uniqueItems": true,
+      "prefixItems": [
+        {"const": "C-001"},
+        {"const": "C-002"},
+        {"const": "C-003"},
+        {"const": "C-004"},
+        {"const": "C-005"},
+        {"const": "C-006"},
+        {"const": "C-007"},
+        {"const": "C-008"},
+        {"const": "C-009"},
+        {"const": "C-010"},
+        {"const": "C-011"}
+      ],
+      "items": false
+    },
+    "objective_stages": {
+      "type": "array",
+      "minItems": 1,
+      "maxItems": 1,
+      "items": {
+        "$ref": "#/$defs/objectiveStagePolicy"
+      }
+    }
+  },
+  "$defs": {
+    "canonicalId": {
+      "type": "string",
+      "minLength": 1,
+      "maxLength": 256,
+      "pattern": "^[^\\s\\u0000-\\u001F\\u007F]+$"
+    },
+    "nonEmptyText": {
+      "type": "string",
+      "minLength": 1,
+      "pattern": ".*\\S.*"
+    },
+    "sha256Fingerprint": {
+      "type": "string",
+      "pattern": "^sha256:[0-9a-f]{64}$"
+    },
+    "sourceReference": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["source_system", "source_version", "source_record_id"],
+      "properties": {
+        "source_system": {
+          "$ref": "#/$defs/nonEmptyText"
+        },
+        "source_version": {
+          "$ref": "#/$defs/nonEmptyText"
+        },
+        "source_record_id": {
+          "$ref": "#/$defs/nonEmptyText"
+        }
+      }
+    },
+    "objectiveStagePolicy": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["stage_index", "objective_id", "metric", "sense"],
+      "properties": {
+        "stage_index": {
+          "const": 1
+        },
+        "objective_id": {
+          "const": "OBJ-001"
+        },
+        "metric": {
+          "const": "WEIGHTED_TARDINESS"
+        },
+        "sense": {
+          "const": "MINIMIZE"
+        }
+      }
+    },
+    "policyReference": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "planning_policy_version",
+        "policy_id",
+        "policy_revision",
+        "policy_fingerprint"
+      ],
+      "properties": {
+        "planning_policy_version": {
+          "const": "planning-policy.v1"
+        },
+        "policy_id": {
+          "$ref": "#/$defs/canonicalId"
+        },
+        "policy_revision": {
+          "$ref": "#/$defs/nonEmptyText"
+        },
+        "policy_fingerprint": {
+          "$ref": "#/$defs/sha256Fingerprint"
+        }
+      }
+    }
+  }
+}

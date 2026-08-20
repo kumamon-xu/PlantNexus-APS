@@ -10,6 +10,7 @@ from typing import Any, cast
 import yaml
 
 from app.planning.problem.contract_check import main as problem_contract_main
+from app.planning.policy.contract_check import main as machine_contract_main
 
 ROOT = Path(__file__).resolve().parents[3]
 
@@ -91,6 +92,8 @@ def test_ci_runs_repository_gates_and_discovers_the_current_task() -> None:
         "build/validation/ci-p1-data-pipeline.json",
         "app.planning.problem.contract_check",
         "build/validation/ci-planning-problem-contracts.json",
+        "app.planning.policy.contract_check",
+        "build/validation/ci-planning-machine-contracts.json",
         "app.infrastructure.contract_check",
         "docker compose --env-file .env.example config --quiet",
         "PLANTNEXUS_CI_CHANGE_BASE:",
@@ -136,7 +139,7 @@ def test_ci_planning_problem_contract_report_is_machine_checkable(
     assert report["report_version"] == "planning-problem-contract-report.v1"
     assert report["status"] == "PASS"
     assert report["task_id"] == "TASK-P2-01"
-    assert report["schema_set_version"] == "2.3.0"
+    assert report["schema_set_version"] == "2.4.0"
     assert report["check_count"] == 4
     assert {check["name"] for check in report["checks"]} == {
         "v1-byte-preservation",
@@ -147,6 +150,36 @@ def test_ci_planning_problem_contract_report_is_machine_checkable(
     assert report["boundaries"]["v1_default_api"] == "PRESERVED"
     assert report["boundaries"]["v2_api"] == "OPT_IN"
     assert report["boundaries"]["solver"] == "NOT_IMPLEMENTED_BY_TASK"
+
+
+def test_ci_planning_machine_contract_report_is_machine_checkable(
+    tmp_path: Path,
+) -> None:
+    report_path = tmp_path / "planning-machine-contracts.json"
+    assert (
+        machine_contract_main(
+            ["--root", str(ROOT), "--report", str(report_path)]
+        )
+        == 0
+    )
+    report = json.loads(report_path.read_text(encoding="utf-8"))
+
+    assert report["report_version"] == "planning-machine-contract-report.v1"
+    assert report["status"] == "PASS"
+    assert report["task_id"] == "TASK-P2-02"
+    assert report["schema_set_version"] == "2.4.0"
+    assert report["check_count"] == 5
+    assert {check["name"] for check in report["checks"]} == {
+        "fixed-schema-and-sample-artifacts",
+        "planning-policy-and-solve-limits",
+        "seven-status-product-mapping",
+        "cross-document-fingerprint-and-replay",
+        "task-boundary",
+    }
+    assert report["boundaries"]["sample_solver_execution"] == "NONE"
+    assert report["boundaries"]["p2_objective_scope"] == "OBJ-001_ONLY"
+    assert report["boundaries"]["solver_backend"] == "NOT_IMPLEMENTED_BY_TASK"
+    assert report["boundaries"]["schedule_validator"] == "NOT_IMPLEMENTED_BY_TASK"
 
 
 def test_container_build_is_pinned_and_non_root() -> None:

@@ -52,3 +52,9 @@ utilization = planned_busy_seconds / available_calendar_time
 [`SIM-MINIMAL-001 expected-kpis.json`](../../fixtures/deterministic/SIM-MINIMAL-001/expected-kpis.json) 使用 fixture-local `golden-kpi.v1`，只记录可从人工 Schedule 复算的 Delivery、Planning 和 Resource 子集；它没有 `problem_hash`、Stability 或 Solver metrics，因此故意不冒充 `kpi.v1`。Golden test 从 order/schedule/calendar 重新计算 completion/due/tardiness、`max(end_tick)*tick_seconds` makespan、busy/available/utilization，不信任 expected JSON 自证。
 
 该 fixture 的 synthetic weight 2 与 makespan origin 定义只属于 SIM-ASSUMPTION-009/计算说明，不改变 OBJ/KPI repository-wide 语义或关闭 OPEN-006。正式 KPI calculator、Problem hash、Solver/Stability metrics 和 Benchmark report 仍为后续 Task。
+
+## TASK-P2-02 SolverReport metric carrier
+
+SolverReport v1现在固定model build、first feasible、solve、validation、total seconds，variables/constraints/optional intervals、memory MB以及OBJ-001 objective/bound/gap的字段与非负/status条件；PlanningSolution同时保留stage级预算、solve time和stop reason。该工作只建立NFR-OBS-001所需的carrier contract，不计算KPI，也没有真实model或performance sample。
+
+发布样例明确`CONTRACT_SAMPLE`、UNKNOWN、零model metrics/timing和not-installed solver。它不能作为Benchmark baseline、capacity、SLA或Production值；P2-11才负责真实SolverReport/KPI计算与一致性，P2-12才形成XS/S/M证据。OPEN-006/012继续OPEN。

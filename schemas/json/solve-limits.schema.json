@@ -1,0 +1,126 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "urn:plantnexus:aps:schema:solve-limits:v1",
+  "title": "SolveLimits v1",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "solve_limits_version",
+    "schema_set_version",
+    "limits_id",
+    "limits_revision",
+    "data_plane",
+    "limits_source",
+    "canonicalization_version",
+    "max_wall_time_seconds",
+    "max_workers",
+    "random_seed"
+  ],
+  "properties": {
+    "solve_limits_version": {
+      "const": "solve-limits.v1"
+    },
+    "schema_set_version": {
+      "const": "2.4.0"
+    },
+    "limits_id": {
+      "$ref": "#/$defs/canonicalId"
+    },
+    "limits_revision": {
+      "$ref": "#/$defs/nonEmptyText"
+    },
+    "data_plane": {
+      "enum": ["SIMULATION", "PRODUCTION"]
+    },
+    "limits_source": {
+      "$ref": "#/$defs/sourceReference"
+    },
+    "canonicalization_version": {
+      "const": "canonical-json.v1"
+    },
+    "max_wall_time_seconds": {
+      "type": "number",
+      "exclusiveMinimum": 0
+    },
+    "max_workers": {
+      "type": "integer",
+      "minimum": 1
+    },
+    "random_seed": {
+      "type": "integer",
+      "minimum": 0
+    }
+  },
+  "$defs": {
+    "canonicalId": {
+      "type": "string",
+      "minLength": 1,
+      "maxLength": 256,
+      "pattern": "^[^\\s\\u0000-\\u001F\\u007F]+$"
+    },
+    "nonEmptyText": {
+      "type": "string",
+      "minLength": 1,
+      "pattern": ".*\\S.*"
+    },
+    "sha256Fingerprint": {
+      "type": "string",
+      "pattern": "^sha256:[0-9a-f]{64}$"
+    },
+    "sourceReference": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["source_system", "source_version", "source_record_id"],
+      "properties": {
+        "source_system": {
+          "$ref": "#/$defs/nonEmptyText"
+        },
+        "source_version": {
+          "$ref": "#/$defs/nonEmptyText"
+        },
+        "source_record_id": {
+          "$ref": "#/$defs/nonEmptyText"
+        }
+      }
+    },
+    "limitsReference": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "solve_limits_version",
+        "limits_id",
+        "limits_revision",
+        "limits_fingerprint",
+        "max_wall_time_seconds",
+        "max_workers",
+        "random_seed"
+      ],
+      "properties": {
+        "solve_limits_version": {
+          "const": "solve-limits.v1"
+        },
+        "limits_id": {
+          "$ref": "#/$defs/canonicalId"
+        },
+        "limits_revision": {
+          "$ref": "#/$defs/nonEmptyText"
+        },
+        "limits_fingerprint": {
+          "$ref": "#/$defs/sha256Fingerprint"
+        },
+        "max_wall_time_seconds": {
+          "type": "number",
+          "exclusiveMinimum": 0
+        },
+        "max_workers": {
+          "type": "integer",
+          "minimum": 1
+        },
+        "random_seed": {
+          "type": "integer",
+          "minimum": 0
+        }
+      }
+    }
+  }
+}

@@ -32,8 +32,8 @@ Schema version、rule version、generator version 和 code commit 是不同维�
 
 ## 当前发布基线
 
-- Schema set：`2.3.0`；`pyproject.toml` 与 `app.SCHEMA_VERSION` 一致；`1.0.0/1.1.0/1.2.0/2.0.0/2.1.0/2.2.0` artifacts全部保留；
-- Current contract IDs：历史v1 skeleton、`canonical-records.v1`、`import-package.v2`、`planning-snapshot.v2`、`planning-problem.v2`、`unit-conversion-registry.v1`、`error-code-registry.v2`、`error.v3`与`import-quality-report.v1`；单个document/version不得因set版本提升而重解释；
+- Schema set：`2.4.0`；`pyproject.toml` 与 `app.SCHEMA_VERSION` 一致；`1.0.0/1.1.0/1.2.0/2.0.0/2.1.0/2.2.0/2.3.0` artifacts全部保留；
+- Current contract IDs：历史v1 skeleton、`canonical-records.v1`、`import-package.v2`、`planning-snapshot.v2`、`planning-problem.v2`、`planning-policy.v1`、`solve-limits.v1`、`planning-solution.v1`、`solver-report.v1`、`unit-conversion-registry.v1`、`error-code-registry.v2`、`error.v3`与`import-quality-report.v1`；单个document/version不得因set版本提升而重解释；
 - Dialect：JSON Schema Draft 2020-12，使用稳定 URN `$id`；
 - Compatibility：当前set包含P1-02 major release和P1-05/06 additive releases；具体兼容、migration与固定fingerprint见下方各release记录；
 - Unknown/default policy：strict contracts使用`additionalProperties=false`且Schema不含业务`default`；Production authority仍必须显式提供，不能从synthetic/sample推断。
@@ -127,3 +127,14 @@ Compatibility为code-level additive consumer：stable derived ID把expansion ver
 - Dependency：无新增或变更dependency，`uv.lock`逐字保持；OR-Tools仍禁止。
 
 ADR-0010记录due/priority来源、capacity=1、active lock cutoff、historical anchor与v1兼容策略。该release只形成Solver-neutral输入合同，不形成Solution、Solver、Validator、OBJ-001计算或Production authority。
+
+## TASK-P2-02 additive planning-machine contract release
+
+- Global schema set提升到`2.4.0`，同步`pyproject.toml`、`app.SCHEMA_VERSION`与data dictionary；新增PlanningPolicy/SolveLimits/PlanningSolution/SolverReport四个v1 document和四份explicit synthetic samples；
+- Compatibility：set-level additive，新document之间通过稳定URN与exact version/fingerprint引用；Problem v1/v2、Import/Snapshot、quality/error/unit及所有历史sample/registry不改。Consumer必须显式选择四个v1 ID，不得用`latest`或推断字段补齐；
+- Migration：没有PlanningRun/Solution/Report持久化表或已发布consumer，database/data migration为none。新合同被消费后，只能通过显式新document version迁移，不能原地重解释v1；未消费时rollback可删除四份additive artifact并恢复global metadata；
+- Defaults：四份Schema全部strict且没有`default`。Policy和Limits必须携带data plane/source/version；仓库中的Simulation值不得成为Production policy、weight、limit或SLA；
+- Replay：Schema/sample原始bytes和canonical fingerprints由`planning-machine-contract-report.v1`固定，跨URN round-trip、七种status、非法组合、tick/UTC、timing/model/memory、provenance与cross-document mismatch由TEST-CONTRACT-001/TEST-ERROR-MAPPING-001覆盖；
+- Dependency：runtime/development dependencies和`uv.lock`不变，OR-Tools仍未安装。该release没有Backend、Constraint、ScheduleValidator、Benchmark、DB/API/Worker或P3动作。
+
+Problem v1/v2 Schema/sample及`uv.lock`启动fingerprint在Task卡中固定；后继consumer若要求修改status语义、目标顺序、time unit或fingerprint projection，必须先停止并以新version/ADR处理。

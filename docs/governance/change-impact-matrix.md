@@ -224,3 +224,9 @@ Schema变化只新增unit registry并同步set metadata/data dictionary；Import
 本Task实际路径预期命中`IMPACT-SCHEMA`、`IMPACT-PROBLEM`、`IMPACT-DOMAIN`、`IMPACT-INFRA`、`IMPACT-DEPENDENCY`、`IMPACT-VERSION-METADATA`、`IMPACT-TESTS`、`IMPACT-PHASE`、`IMPACT-GOVERNANCE-REGISTRY`、`IMPACT-DOCS`。Dependency row是强制review而非lock变化：`pyproject.toml`只提升schema metadata，runtime/dev pins与`uv.lock`必须无diff。INFRA只新增通用CI machine command，不改变service/Compose/deployment。
 
 Schema/Problem/Domain实现限定为additive Problem v2、version-specific APIs、pure precheck与tests；v1 bytes/default API保留。Phase/Governance在exact implementation provider成功后只把P2-01闭环为`done`并同步formed/PLANNED边界，不激活P2-02。Machine rule table/required-document columns与`registry_version=1.0.0`不变；implementation provider Task report为60 paths、10 matched rows和0 issues，最终docs-overview有界更正使完整Task range为61 unique paths并保持相同10 rows/0 issues。
+
+## TASK-P2-02 matrix review
+
+本Task实际路径预期命中`IMPACT-SCHEMA`、`IMPACT-PLANNING-CONTRACTS`、`IMPACT-POLICY`、`IMPACT-STATE`、`IMPACT-INFRA`、`IMPACT-DEPENDENCY`、`IMPACT-VERSION-METADATA`、`IMPACT-TESTS`、`IMPACT-PHASE`、`IMPACT-GOVERNANCE-REGISTRY`、`IMPACT-DOCS`。Dependency row只因`pyproject.toml`提升schema metadata触发；runtime/dev pins和`uv.lock`无diff。INFRA只增加CI contract-report step，不改变service/deployment。实现中含current schema-set值的glossary在修改前已扩入allow-list；planning-run mapping审查触发STATE后也在修改其余state文档前补齐Rule与required docs。
+
+实现限定为四份Schema/sample、pure JSON-compatible contracts/status/fingerprint checks、测试和CI report；Problem v1/v2、Backend/Constraint/Validator/DB/API/Worker/P3均只读。STATE只同步既有status mapping并确认ScheduleVersion/ExportJob无行为变化。Phase/Governance只记录P2-02 `in_progress`及后续exact provider closure，不激活P2-03。Machine rule table/required-document columns与`registry_version=1.0.0`不变；本地TASK-P2-02 diff report为63 actual paths、11 matched rows、19 checks和0 issues。

@@ -112,3 +112,9 @@ Snapshot repository protocol只暴露put/exact replay与按ID/hash读取；SQLAl
 `app.planning.problem`新增独立JSON-compatible v2 types，而不修改canonical entities或Snapshot v2。DeliveryDemand把DemandOrder due/source与外部显式priority/source投影到future Problem；Resource投影保留Factory→Workshop→ProductionLine→ResourceGroup拓扑、calendar、capabilities与primary `capacity=1`；active OperationInstance增加DemandOrder和business capability引用。
 
 COMPLETED OperationInstance本体继续留在Snapshot事实层且不进入future operation set。只有作为active successor前驱时，Problem v2创建sourced HistoricalCompletionAnchor并保留edge/lag；OperationLock按Snapshot引用与cutoff活动性投影。上述都是immutable input facts，不是Schedule、Solver variable、ORM/API DTO或P3 business state。
+
+## TASK-P2-02 planning-machine value boundary
+
+PlanningPolicy与SolveLimits是显式version/source/data-plane的输入值；PlanningSolution是引用Problem/Policy/Limits并携带候选assignment或无candidate outcome的输出值；SolverReport再引用Solution并承载backend参数、metrics、timing和provenance。四者以canonical JSON fingerprint形成单向identity链，不新增canonical entity、数据库aggregate或可变business state。
+
+`SolverBackend`仅为Domain可消费的Protocol，没有实现或OR-Tools类型。PlanningSolution不等于validated Schedule，SolverReport不等于PlanningRun persistence，`CONTRACT_SAMPLE`更不产生ScheduleVersion。后继层必须保留这些边界，不得让ORM/API/Worker对象或Solver native object进入机器合同。

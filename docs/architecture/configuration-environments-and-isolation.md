@@ -104,3 +104,9 @@ CI只新增一条repository-local machine command并复用现有`PLANTNEXUS_CODE
 Problem v2本身不增加environment、database、API route或persistence；Snapshot的`synthetic`/plane隔离继续由上游identity与调用边界负责。synthetic priority fact必须携带versioned source reference，样例使用`plantnexus-synthetic-policy@1.0.0`，不得复制为Production default。
 
 Machine report只读取仓库Schema/sample并重放deterministic builders，写入ignored `build/validation`或CI artifact；它不连接Production数据库或外部系统。P2-01输出不能跨plane复用为正式Schedule，后继Task仍须在report/export manifest中保留synthetic与data-plane provenance。
+
+## TASK-P2-02 policy/limits isolation review
+
+PlanningPolicy/SolveLimits要求调用方显式提供`SIMULATION`或`PRODUCTION`及source/version，不从environment、数据库或代码推断latest/default。仓库样例只使用SIMULATION source；30秒、1 worker、seed `20260820`均是合同回放值，不是Production配置。Solution/Report必须以fingerprint保留相同Policy/Limits，防止跨plane或隐式参数漂移。
+
+新增CLI只读仓库并写ignored machine report；workflow没有新增Secret、service、port、database、environment variable或Production route。P2-02不形成独立Production/Simulation deployment，也不允许将sample或provider CI当成Production authority。

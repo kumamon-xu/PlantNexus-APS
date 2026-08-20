@@ -133,3 +133,9 @@ P1四类Gate实际经同一入口得到`DATA_ERROR/ROUTE_CYCLE`、`DATA_ERROR/MI
 Problem module继续使用module-local稳定code，不修改`error-code-registry.v2`或Error v3 Schema。v2新增`INVALID_PRIORITY_FACT`、`INVALID_LOCK_FACT`和`INVALID_HISTORICAL_FACT`，均归`DATA_ERROR`；版本/config/snapshot/reference缺口继续使用既有code，canonical shape/semantic/hash tamper归`MODEL_INVALID`或`HASH_MISMATCH`。`UNSUPPORTED_PROBLEM_FACT`仍单独归`UNSUPPORTED_CAPABILITY`。
 
 这些错误全部发生在Backend/Solver之前，不能写成`INFEASIBLE`、`NO_SOLUTION_WITHIN_LIMIT`、ScheduleValidator violation或HTTP状态。CLI machine report失败只输出error type，不回显输入值或内部异常；完整产品错误注册表如需新增必须由独立合同Task升版。
+
+## TASK-P2-02 seven-status machine mapping
+
+PlanningSolution与SolverReport对七种status使用唯一映射：OPTIMAL/FEASIBLE→PlanningRun `SOLVED`且无product error；INFEASIBLE→`INFEASIBLE/INFEASIBLE`；UNKNOWN→`NO_SOLUTION_WITHIN_LIMIT/NO_SOLUTION_WITHIN_LIMIT`；MODEL_INVALID→`MODEL_INVALID/MODEL_INVALID`；CANCELLED→`CANCELLED`且无product error；FAILED→`FAILED/SYSTEM_ERROR`。只有前两者允许candidate，FEASIBLE不得伪装成OPTIMAL，UNKNOWN不得伪装成INFEASIBLE。
+
+Machine contract自身的shape/version/reference/time/metric/provenance拒绝使用module-local`PlanningContractReason`并稳定归`MODEL_INVALID`，不扩展`error-code-registry.v2`。该pure rejection不是HTTP mapping、Solver诊断或ScheduleValidator violation；FAILED与CANCELLED的持久化/audit动作仍未实现。

@@ -1,0 +1,424 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "urn:plantnexus:aps:schema:solver-report:v1",
+  "title": "SolverReport v1",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "solver_report_version",
+    "schema_set_version",
+    "report_id",
+    "evidence_kind",
+    "planning_run_id",
+    "started_at_utc",
+    "finished_at_utc",
+    "problem",
+    "policy",
+    "limits",
+    "solution",
+    "solver_status",
+    "planning_run_outcome",
+    "solver",
+    "objective_stage_results",
+    "timings",
+    "model_metrics",
+    "memory_peak_mb",
+    "diagnostics",
+    "provenance"
+  ],
+  "properties": {
+    "solver_report_version": {"const": "solver-report.v1"},
+    "schema_set_version": {"const": "2.4.0"},
+    "report_id": {"$ref": "#/$defs/canonicalId"},
+    "evidence_kind": {"enum": ["CONTRACT_SAMPLE", "SOLVER_RUN"]},
+    "planning_run_id": {"$ref": "#/$defs/canonicalId"},
+    "started_at_utc": {"$ref": "#/$defs/utcInstant"},
+    "finished_at_utc": {"$ref": "#/$defs/utcInstant"},
+    "problem": {
+      "$ref": "urn:plantnexus:aps:schema:planning-solution:v1#/$defs/problemReference"
+    },
+    "policy": {
+      "$ref": "urn:plantnexus:aps:schema:planning-policy:v1#/$defs/policyReference"
+    },
+    "limits": {
+      "$ref": "urn:plantnexus:aps:schema:solve-limits:v1#/$defs/limitsReference"
+    },
+    "solution": {
+      "$ref": "urn:plantnexus:aps:schema:planning-solution:v1#/$defs/solutionReference"
+    },
+    "solver_status": {
+      "$ref": "urn:plantnexus:aps:schema:planning-solution:v1#/$defs/solverStatus"
+    },
+    "planning_run_outcome": {
+      "$ref": "urn:plantnexus:aps:schema:planning-solution:v1#/$defs/planningRunOutcome"
+    },
+    "solver": {"$ref": "#/$defs/solverIdentity"},
+    "objective_stage_results": {
+      "type": "array",
+      "minItems": 1,
+      "maxItems": 1,
+      "items": {
+        "$ref": "urn:plantnexus:aps:schema:planning-solution:v1#/$defs/objectiveStageResult"
+      }
+    },
+    "timings": {"$ref": "#/$defs/timings"},
+    "model_metrics": {"$ref": "#/$defs/modelMetrics"},
+    "memory_peak_mb": {"type": "number", "minimum": 0},
+    "diagnostics": {
+      "type": "array",
+      "items": {
+        "$ref": "urn:plantnexus:aps:schema:planning-solution:v1#/$defs/diagnostic"
+      }
+    },
+    "provenance": {"$ref": "#/$defs/provenance"}
+  },
+  "allOf": [
+    {
+      "if": {
+        "properties": {
+          "solver_status": {"enum": ["OPTIMAL", "FEASIBLE"]}
+        },
+        "required": ["solver_status"]
+      },
+      "then": {
+        "properties": {
+          "planning_run_outcome": {
+            "properties": {
+              "state": {"const": "SOLVED"},
+              "product_error": {"type": "null"}
+            }
+          },
+          "timings": {
+            "properties": {
+              "first_feasible_seconds": {"type": "number"}
+            }
+          }
+        }
+      },
+      "else": {
+        "properties": {
+          "diagnostics": {"minItems": 1},
+          "timings": {
+            "properties": {
+              "first_feasible_seconds": {"type": "null"}
+            }
+          }
+        }
+      }
+    },
+    {
+      "if": {
+        "properties": {"solver_status": {"const": "INFEASIBLE"}},
+        "required": ["solver_status"]
+      },
+      "then": {
+        "properties": {
+          "planning_run_outcome": {
+            "properties": {
+              "state": {"const": "INFEASIBLE"},
+              "product_error": {
+                "type": "object",
+                "properties": {
+                  "category": {"const": "INFEASIBLE"},
+                  "code": {"const": "INFEASIBLE"}
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    {
+      "if": {
+        "properties": {"solver_status": {"const": "UNKNOWN"}},
+        "required": ["solver_status"]
+      },
+      "then": {
+        "properties": {
+          "planning_run_outcome": {
+            "properties": {
+              "state": {"const": "NO_SOLUTION_WITHIN_LIMIT"},
+              "product_error": {
+                "type": "object",
+                "properties": {
+                  "category": {"const": "NO_SOLUTION_WITHIN_LIMIT"},
+                  "code": {"const": "NO_SOLUTION_WITHIN_LIMIT"}
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    {
+      "if": {
+        "properties": {"solver_status": {"const": "MODEL_INVALID"}},
+        "required": ["solver_status"]
+      },
+      "then": {
+        "properties": {
+          "planning_run_outcome": {
+            "properties": {
+              "state": {"const": "MODEL_INVALID"},
+              "product_error": {
+                "type": "object",
+                "properties": {
+                  "category": {"const": "MODEL_INVALID"},
+                  "code": {"const": "MODEL_INVALID"}
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    {
+      "if": {
+        "properties": {"solver_status": {"const": "CANCELLED"}},
+        "required": ["solver_status"]
+      },
+      "then": {
+        "properties": {
+          "planning_run_outcome": {
+            "properties": {
+              "state": {"const": "CANCELLED"},
+              "product_error": {"type": "null"}
+            }
+          }
+        }
+      }
+    },
+    {
+      "if": {
+        "properties": {"solver_status": {"const": "FAILED"}},
+        "required": ["solver_status"]
+      },
+      "then": {
+        "properties": {
+          "planning_run_outcome": {
+            "properties": {
+              "state": {"const": "FAILED"},
+              "product_error": {
+                "type": "object",
+                "properties": {
+                  "category": {"const": "SYSTEM_ERROR"},
+                  "code": {"const": "SYSTEM_ERROR"}
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    {
+      "if": {
+        "properties": {"solver_status": {"const": "OPTIMAL"}},
+        "required": ["solver_status"]
+      },
+      "then": {
+        "properties": {
+          "objective_stage_results": {
+            "items": {"properties": {"status": {"const": "OPTIMAL"}}}
+          },
+          "solution": {"properties": {"solver_status": {"const": "OPTIMAL"}}}
+        }
+      }
+    },
+    {
+      "if": {
+        "properties": {"solver_status": {"const": "FEASIBLE"}},
+        "required": ["solver_status"]
+      },
+      "then": {
+        "properties": {
+          "objective_stage_results": {
+            "items": {"properties": {"status": {"const": "FEASIBLE"}}}
+          },
+          "solution": {"properties": {"solver_status": {"const": "FEASIBLE"}}}
+        }
+      }
+    },
+    {
+      "if": {
+        "properties": {"solver_status": {"const": "INFEASIBLE"}},
+        "required": ["solver_status"]
+      },
+      "then": {
+        "properties": {
+          "objective_stage_results": {
+            "items": {"properties": {"status": {"const": "INFEASIBLE"}}}
+          },
+          "solution": {"properties": {"solver_status": {"const": "INFEASIBLE"}}}
+        }
+      }
+    },
+    {
+      "if": {
+        "properties": {"solver_status": {"const": "UNKNOWN"}},
+        "required": ["solver_status"]
+      },
+      "then": {
+        "properties": {
+          "objective_stage_results": {
+            "items": {"properties": {"status": {"const": "UNKNOWN"}}}
+          },
+          "solution": {"properties": {"solver_status": {"const": "UNKNOWN"}}}
+        }
+      }
+    },
+    {
+      "if": {
+        "properties": {"solver_status": {"const": "MODEL_INVALID"}},
+        "required": ["solver_status"]
+      },
+      "then": {
+        "properties": {
+          "objective_stage_results": {
+            "items": {"properties": {"status": {"const": "MODEL_INVALID"}}}
+          },
+          "solution": {"properties": {"solver_status": {"const": "MODEL_INVALID"}}}
+        }
+      }
+    },
+    {
+      "if": {
+        "properties": {"solver_status": {"const": "CANCELLED"}},
+        "required": ["solver_status"]
+      },
+      "then": {
+        "properties": {
+          "objective_stage_results": {
+            "items": {"properties": {"status": {"const": "CANCELLED"}}}
+          },
+          "solution": {"properties": {"solver_status": {"const": "CANCELLED"}}}
+        }
+      }
+    },
+    {
+      "if": {
+        "properties": {"solver_status": {"const": "FAILED"}},
+        "required": ["solver_status"]
+      },
+      "then": {
+        "properties": {
+          "objective_stage_results": {
+            "items": {"properties": {"status": {"const": "FAILED"}}}
+          },
+          "solution": {"properties": {"solver_status": {"const": "FAILED"}}}
+        }
+      }
+    }
+  ],
+  "$defs": {
+    "canonicalId": {
+      "type": "string",
+      "minLength": 1,
+      "maxLength": 256,
+      "pattern": "^[^\\s\\u0000-\\u001F\\u007F]+$"
+    },
+    "nonEmptyText": {
+      "type": "string",
+      "minLength": 1,
+      "pattern": ".*\\S.*"
+    },
+    "utcInstant": {
+      "type": "string",
+      "format": "date-time",
+      "pattern": "Z$"
+    },
+    "parameter": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["name", "value", "source"],
+      "properties": {
+        "name": {"$ref": "#/$defs/canonicalId"},
+        "value": {
+          "type": ["string", "number", "boolean"]
+        },
+        "source": {"enum": ["SOLVE_LIMITS", "BACKEND"]}
+      }
+    },
+    "solverIdentity": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "backend_id",
+        "backend_version",
+        "solver_name",
+        "solver_version",
+        "parameters"
+      ],
+      "properties": {
+        "backend_id": {"$ref": "#/$defs/canonicalId"},
+        "backend_version": {"$ref": "#/$defs/nonEmptyText"},
+        "solver_name": {"$ref": "#/$defs/canonicalId"},
+        "solver_version": {"$ref": "#/$defs/nonEmptyText"},
+        "parameters": {
+          "type": "array",
+          "minItems": 3,
+          "items": {"$ref": "#/$defs/parameter"},
+          "allOf": [
+            {"contains": {"properties": {"name": {"const": "max_wall_time_seconds"}}}},
+            {"contains": {"properties": {"name": {"const": "max_workers"}}}},
+            {"contains": {"properties": {"name": {"const": "random_seed"}}}}
+          ]
+        }
+      }
+    },
+    "timings": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "model_build_seconds",
+        "first_feasible_seconds",
+        "solve_seconds",
+        "validation_seconds",
+        "total_seconds"
+      ],
+      "properties": {
+        "model_build_seconds": {"type": "number", "minimum": 0},
+        "first_feasible_seconds": {"type": ["number", "null"], "minimum": 0},
+        "solve_seconds": {"type": "number", "minimum": 0},
+        "validation_seconds": {"type": ["number", "null"], "minimum": 0},
+        "total_seconds": {"type": "number", "minimum": 0}
+      }
+    },
+    "modelMetrics": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["variables", "constraints", "optional_intervals"],
+      "properties": {
+        "variables": {"type": "integer", "minimum": 0},
+        "constraints": {"type": "integer", "minimum": 0},
+        "optional_intervals": {"type": "integer", "minimum": 0}
+      }
+    },
+    "provenance": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "code_commit",
+        "spec_version",
+        "schema_set_version",
+        "canonicalization_version",
+        "constraint_contract_version",
+        "objective_policy_version",
+        "state_machine_contract_version",
+        "error_registry_version"
+      ],
+      "properties": {
+        "code_commit": {
+          "type": "string",
+          "pattern": "^(uncommitted|[0-9a-f]{40})$"
+        },
+        "spec_version": {"const": "0.3.0"},
+        "schema_set_version": {"const": "2.4.0"},
+        "canonicalization_version": {"const": "canonical-json.v1"},
+        "constraint_contract_version": {"const": "constraint-rule-sheet.v1"},
+        "objective_policy_version": {"const": "objective-policy.v1"},
+        "state_machine_contract_version": {"const": "state-machines.v1"},
+        "error_registry_version": {"const": "error-code-registry.v2"}
+      }
+    }
+  }
+}

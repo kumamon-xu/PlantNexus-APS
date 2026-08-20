@@ -34,7 +34,7 @@ uv run python -c "import app; assert app.CODE_VERSION == '0.0.0'; assert app.SPE
 `scripts/check_docs.py` 当前同时检查结构性 Markdown、版本化 registries、REQ/NFR/ENG/TEST 等引用、Task 依赖、逐根 traceability 和 PROD_OPEN/SIM_ASSUMPTION 隔离。Task 进入 `in_progress` 时须把当时完整 HEAD SHA 写入 `Diff base`；影响覆盖检查使用 `Diff base..HEAD` 的已提交变更与当前 working tree 的并集，因此提交前后可用同一命令复验：
 
 ```powershell
-uv run python scripts/check_docs.py --task docs/tasks/P1/TASK-P1-08-immutable-snapshot-and-hash.md --check-diff --report build/traceability/TASK-P1-08-report.json
+uv run python scripts/check_docs.py --task docs/tasks/P2/TASK-P2-02-planning-machine-contracts-and-status.md --check-diff --report build/traceability/TASK-P2-02-report.json
 ```
 
 报告使用 `traceability-report.v1`，包含 `diff_base` 与 committed/working-tree source counts，生成到已忽略的 `build/`；Task Card Completion evidence 保存持久结果摘要。[`ci.yml`](.github/workflows/ci.yml) 已编排 exact lock、lint、type、全部 P0 tests、machine contracts、Compose config、文档 diff 和 package build。仓库内只证明 workflow/config 可执行；CI provider run URL/ID 必须来自真实外部运行，不能由本地结果替代。
@@ -54,4 +54,4 @@ scripts/      仓库级校验与自动化脚本
 infra/        P0 开发容器构建配置
 ```
 
-P0-08只形成health-only API、环境配置、日志、lazy DB/Redis connectivity、通用Job reliability/idempotency、Alembic/Compose/CI骨架；它不形成业务pipeline、产品API、真实分布式作业存储、Solver或生产部署。P1的12张有界Task Card已建立，TASK-P1-01～08=`done`、TASK-P1-09～12=`planned`。P1-08的Snapshot builder/hash/insert-only repository已由implementation commit `72670d18a29c9a10cb70f7a263c981a2b660e0ee` / GitHub Actions run `32310098594`闭环；建议下一项为TASK-P1-09，但本次未启动。PlanningProblem、ScheduleValidator、Solver和P2均未开始。当前授权范围见[`docs/current_phase.md`](docs/current_phase.md)。
+P1 Data & Snapshot已通过Exit Gate并关闭，当前阶段为P2。TASK-P2-01的PlanningProblem v2合同已闭环；TASK-P2-02正在形成PlanningPolicy、SolveLimits、PlanningSolution、SolverReport与七种Solver status的`2.4.0`机器合同。该合同层仍不安装或执行OR-Tools，不实现C-ID、独立ScheduleValidator、DB/API/Worker，也不授权P2-03或P3。当前授权范围见[`docs/current_phase.md`](docs/current_phase.md)。

@@ -75,6 +75,12 @@ jobs:
           --root .
           --report build/validation/ci-planning-problem-contracts.json
 
+      - name: Planning machine contract evidence
+        run: >-
+          uv run python -m app.planning.policy.contract_check
+          --root .
+          --report build/validation/ci-planning-machine-contracts.json
+
       - name: Engineering contract
         run: >-
           uv run python -m app.infrastructure.contract_check

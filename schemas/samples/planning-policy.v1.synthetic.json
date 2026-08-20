@@ -1,0 +1,36 @@
+{
+  "canonicalization_version": "canonical-json.v1",
+  "constraint_contract_version": "constraint-rule-sheet.v1",
+  "data_plane": "SIMULATION",
+  "hard_constraint_ids": [
+    "C-001",
+    "C-002",
+    "C-003",
+    "C-004",
+    "C-005",
+    "C-006",
+    "C-007",
+    "C-008",
+    "C-009",
+    "C-010",
+    "C-011"
+  ],
+  "objective_policy_version": "objective-policy.v1",
+  "objective_stages": [
+    {
+      "metric": "WEIGHTED_TARDINESS",
+      "objective_id": "OBJ-001",
+      "sense": "MINIMIZE",
+      "stage_index": 1
+    }
+  ],
+  "planning_policy_version": "planning-policy.v1",
+  "policy_id": "POLICY-SAMPLE-P2-DELIVERY-ONLY-001",
+  "policy_revision": "1.0.0",
+  "policy_source": {
+    "source_record_id": "SCHEMA-SAMPLE-P2-02-POLICY",
+    "source_system": "plantnexus-synthetic-policy",
+    "source_version": "1.0.0"
+  },
+  "schema_set_version": "2.4.0"
+}

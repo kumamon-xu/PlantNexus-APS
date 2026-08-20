@@ -3,7 +3,7 @@ doc_id: DOC-CONTRACT-008
 title: Schema 计划索引
 status: living
 spec_version: 0.3.0
-phase: P1
+phase: P0-P2
 normative: true
 source_sections: [36, 38, 39, 70, 71, 103]
 last_reviewed: 2026-08-20
@@ -11,7 +11,7 @@ last_reviewed: 2026-08-20
 
 # Schema 计划索引
 
-当前 schema set 为additive `2.3.0`。`CONTRACT_V1/V2/V3`表示机器可验证的合同已形成，不表示Solver、KPI计算、ScheduleValidator、状态持久化或业务动作已完成。`1.0.0/1.1.0/1.2.0/2.0.0/2.1.0/2.2.0` artifact均保留，未被原地覆盖。
+当前 schema set 为additive `2.4.0`。`CONTRACT_V1/V2/V3`表示机器可验证的合同已形成，不表示Solver、KPI计算、ScheduleValidator、状态持久化或业务动作已完成。`1.0.0/1.1.0/1.2.0/2.0.0/2.1.0/2.2.0/2.3.0` artifact均保留，未被原地覆盖。
 
 | Schema | 目标路径 | 首个 Task | 状态 |
 |---|---|---|---|
@@ -23,7 +23,10 @@ last_reviewed: 2026-08-20
 | PlanningSnapshot v2 | [`/schemas/json/planning-snapshot.v2.schema.json`](../../schemas/json/planning-snapshot.v2.schema.json) | TASK-P1-02 | CONTRACT_V2；builder/hash/insert-only persistence formed |
 | PlanningProblem v1 | [`/schemas/json/planning-problem.schema.json`](../../schemas/json/planning-problem.schema.json) | TASK-P0-03；TASK-P1-09 | CONTRACT_V1；default builder/hash/fixed replay preserved，Solver PLANNED |
 | PlanningProblem v2 | [`/schemas/json/planning-problem.v2.schema.json`](../../schemas/json/planning-problem.v2.schema.json) | TASK-P2-01 | CONTRACT_V2；opt-in builder/hash、due/priority/resource/lock/historical-anchor input formed，Solver/Validator PLANNED |
-| PlanningSolution | `/schemas/json/planning-solution.schema.json` | later P2 | PLANNED |
+| PlanningPolicy v1 | [`/schemas/json/planning-policy.schema.json`](../../schemas/json/planning-policy.schema.json) | TASK-P2-02 | CONTRACT_V1；C-001～C-011 + OBJ-001 + explicit policy provenance formed；Production defaults PLANNED |
+| SolveLimits v1 | [`/schemas/json/solve-limits.schema.json`](../../schemas/json/solve-limits.schema.json) | TASK-P2-02 | CONTRACT_V1；explicit wall time/workers/seed + provenance formed；Production limits/SLA PLANNED |
+| PlanningSolution v1 | [`/schemas/json/planning-solution.schema.json`](../../schemas/json/planning-solution.schema.json) | TASK-P2-02 | CONTRACT_V1；status/assignment/tick/UTC/objective/fingerprint carrier formed；Solver/Validator PLANNED |
+| SolverReport v1 | [`/schemas/json/solver-report.schema.json`](../../schemas/json/solver-report.schema.json) | TASK-P2-02 | CONTRACT_V1；status/parameters/timing/model/memory/provenance carrier formed；real run/benchmark PLANNED |
 | KPI | [`/schemas/json/kpi.schema.json`](../../schemas/json/kpi.schema.json) | TASK-P0-03 skeleton | SKELETON_V1；calculation PLANNED |
 | ValidationReport v1 | [`/schemas/json/validation-report.schema.json`](../../schemas/json/validation-report.schema.json) | TASK-P0-03 | SKELETON_V1 retained |
 | ValidationReport v2 | [`/schemas/json/validation-report.v2.schema.json`](../../schemas/json/validation-report.v2.schema.json) | TASK-P0-04 rules；TASK-P0-07 mutations | SKELETON_V2 + C-ID shape formed；schedule evaluation PLANNED |
@@ -38,6 +41,6 @@ last_reviewed: 2026-08-20
 | ScenarioSpec | [`/schemas/scenario/scenario-spec.schema.json`](../../schemas/scenario/scenario-spec.schema.json) | TASK-P0-05 | SKELETON_V1；P0 fixture与`SIM-P1-INGRESS-001` formed；broader Scenario library PLANNED |
 | Scenario manifest | [`/schemas/scenario/scenario-manifest.schema.json`](../../schemas/scenario/scenario-manifest.schema.json) | TASK-P0-05 | SKELETON_V1 + empty Import replay formed；run/export audit PLANNED |
 
-[`/schemas/data_dictionary.yaml`](../../schemas/data_dictionary.yaml) 登记 schema set、canonical collections、版本/provenance、未知字段/默认值策略、兼容边界和 PROD_OPEN/SIM_ASSUMPTION 关联。Set-level `2.3.0`只新增Problem v2合同；Import/Snapshot v2 JSON document继续固定`2.0.0`、unit registry v1固定`2.1.0`、quality合同固定`2.2.0`且历史artifact hash不变。Problem v2 sample证明contract replay，不是Solver/Validator/Benchmark或Production证据。
+[`/schemas/data_dictionary.yaml`](../../schemas/data_dictionary.yaml) 登记 schema set、canonical collections、版本/provenance、未知字段/默认值策略、兼容边界和 PROD_OPEN/SIM_ASSUMPTION 关联。Set-level `2.4.0`在Problem v2之后新增四个planning-machine document；Import/Snapshot v2 JSON document继续固定`2.0.0`、unit registry v1固定`2.1.0`、quality合同固定`2.2.0`、Problem v2固定`2.3.0`且历史artifact hash不变。P2-02 samples只证明合同shape/replay，不是Solver/Validator/Benchmark或Production证据。
 
-TASK-P2-01新增Problem v2 Schema/sample并将global set提升到`2.3.0`；v1 Schema/sample SHA-256仍为`41b01f...e943`/`aa31fb...4093`，Import/Snapshot/quality/unit document版本不改。PlanningSolution、Solver、Validator、Benchmark和Production合同继续`PLANNED`。
+TASK-P2-02新增四份Schema/sample并将global set提升到`2.4.0`；Problem v1/v2 Schema/sample、builders与fixed replay不改，Import/Snapshot/quality/unit document版本也不改。Planning machine类型、pure cross-document checks与status mapping已形成；Solver backend、C-ID、ScheduleValidator、Benchmark和Production authority继续`PLANNED`。

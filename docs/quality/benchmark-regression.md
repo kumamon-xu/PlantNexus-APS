@@ -84,3 +84,9 @@ P2首次Solver baseline必须携带Snapshot/Problem hash、builder/hash projecti
 本Task改变未来model input cardinality：v2固定sample包含1 delivery demand、1 capacity=1 Resource、1 active operation、1 historical anchor、1 precedence edge、2 active locks和0 calendar intervals；Problem hash/bytes digest已固定。它没有model variables/constraints、Solver、Reference Scheduler、BenchmarkRunner或runtime/memory/quality baseline，测试耗时不得解释为性能证据。
 
 P2-12首次XS/S/M benchmark必须记录`planning-problem.v2`、builder/hash projection、Snapshot/Problem hashes及上述全部fact counts；任何后续Problem字段或projection变化触发fixed Scenario correctness与benchmark replay。OPEN-012继续OPEN，conditional CI hook仍deferred。
+
+## TASK-P2-02 review
+
+SolverReport v1固定未来Benchmark可引用的objective/bound/gap、model build/first feasible/solve/validation/total timing、variables/constraints/optional intervals、memory、exact solver parameters/version和完整input fingerprints。字段合同不包含阈值、baseline comparison或性能判定。
+
+发布样例的零metrics/timing与not-installed solver只证明JSON/status条件，绝非一次benchmark。没有运行Solver/Reference Scheduler、没有新增profile或`run_benchmark.py`、conditional hook继续deferred，OPEN-012保持OPEN。P2-12必须用真实`SOLVER_RUN`、同一Problem/Validator/KPI和XS/S/M环境另行形成provider evidence。

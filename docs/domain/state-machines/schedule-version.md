@@ -60,3 +60,7 @@ READY_FOR_REVIEW
 ## TASK-P0-08 generic idempotency review
 
 process-local `InMemoryIdempotencyStore` 只固定“同 scope/key + 同 request hash 返回原 logical ID；不同 hash 冲突”的工程原语，不注册 Publish/Export task，也不授权 `APPROVED → PUBLISHED`。ScheduleVersion pair、guard、权限、不可变与发布副作用全部未实现且未改变；business publish idempotency 继续 `PLANNED`。
+
+## TASK-P2-02 review
+
+PlanningSolution v1仍只是未验证candidate carrier；`CONTRACT_SAMPLE`的UNKNOWN没有candidate。P2-02不创建DRAFT ScheduleVersion、不执行`DRAFT → READY_FOR_REVIEW`，也不修改`state-machines.v1`的pair/guard。后继P2-04必须先产出independent validation PASS，P3权限/审批/发布仍未授权。

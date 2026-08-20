@@ -49,7 +49,7 @@ last_reviewed: 2026-08-19
 | Tick | Solver 离散时间单位；`duration_ticks = ceil(duration_seconds / tick_seconds)` |
 | Provenance | 从数据源、规则、问题、Solver、Scenario 到代码提交的全链路来源信息 |
 | ADR | Architecture Decision Record；记录需要治理的架构或语义决策 |
-| Schema Set | 同一发布批次的机器合同集合；当前为 `2.3.0`，保留 `1.0.0/1.1.0/1.2.0/2.0.0/2.1.0/2.2.0` artifacts，且不替代各 document/asset/registry version ID |
+| Schema Set | 同一发布批次的机器合同集合；当前为 `2.4.0`，保留 `1.0.0/1.1.0/1.2.0/2.0.0/2.1.0/2.2.0/2.3.0` artifacts，且不替代各 document/asset/registry version ID |
 | Canonical ID | 跨合同稳定引用的非空、无空白标识；具体来源映射仍由字段权威规则决定 |
 | Constraint Rule Sheet | C-001～C-018 的版本化机器规则元数据；固定输入、公式、正反例、violation 和 Test ID，但不等于 ScheduleValidator 实现 |
 | Capability Registry | 固定 capability 名称与 V1_SUPPORTED/UNSUPPORTED/DEFERRED 状态；V1_SUPPORTED 不表示当前阶段代码已实现 |

@@ -69,3 +69,7 @@ error
 P0-08 形成 business-neutral `JobRecord` pure transitions：新任务 QUEUED，claim 后 RUNNING/attempt+1/lease，合法 owner heartbeat 延长 lease，lease 到期由 scanner-style `mark_stalled` 变为 STALLED，STALLED 可被新 worker claim 且 attempt 再增；成功/失败 completion 需要未过期 owner lease。owner mismatch、expired lease、invalid transition 和 failure-code 缺失均为不同 Python exception/validation path。
 
 `IdempotencyStore` protocol 与 thread-safe process-local reference implementation 固定 replay/conflict 语义；Alembic baseline 建立 generic metadata tables。但当前没有 ExportJob repository、`CREATED/EXPORTING/EXPORTED/EXPORT_FAILED/CANCELLED` persistence、manifest/storage commit、distributed lock、crash scanner、retry scheduler、Export/Publish task 或业务副作用。因此 P0-08 只形成 NFR-REL-001/TEST-IDEMPOTENCY 的 primitive slice，不能宣称 ExportJob 实现；`state-machines.v1` 未改变。
+
+## TASK-P2-02 review
+
+PlanningSolution/SolverReport v1没有ExportJob字段、storage side effect或publish action。P2-02不创建internal Export package、不执行任何ExportJob transition，也不修改`state-machines.v1`；P2-11和P3的export/publish边界继续`PLANNED`。

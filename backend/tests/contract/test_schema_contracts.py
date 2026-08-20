@@ -55,6 +55,10 @@ SCHEMA_FILES = (
     "planning-snapshot.v2.schema.json",
     "planning-problem.schema.json",
     "planning-problem.v2.schema.json",
+    "planning-policy.schema.json",
+    "solve-limits.schema.json",
+    "planning-solution.schema.json",
+    "solver-report.schema.json",
     "kpi.schema.json",
     "error.schema.json",
     "validation-report.schema.json",
@@ -164,7 +168,7 @@ def test_schemas_do_not_encode_implicit_defaults() -> None:
 
 def test_published_versions_are_consistent() -> None:
     pyproject = tomllib.loads((ROOT / "pyproject.toml").read_text(encoding="utf-8"))
-    assert SCHEMA_VERSION == "2.3.0"
+    assert SCHEMA_VERSION == "2.4.0"
     assert pyproject["tool"]["plantnexus-aps"]["versions"]["schema"] == SCHEMA_VERSION
 
 
@@ -181,6 +185,10 @@ def test_synthetic_samples_validate_and_round_trip() -> None:
         ("planning-snapshot.v2.schema.json", "planning-snapshot.v2.synthetic.json"),
         ("planning-problem.schema.json", "planning-problem.synthetic.json"),
         ("planning-problem.v2.schema.json", "planning-problem.v2.synthetic.json"),
+        ("planning-policy.schema.json", "planning-policy.v1.synthetic.json"),
+        ("solve-limits.schema.json", "solve-limits.v1.synthetic.json"),
+        ("planning-solution.schema.json", "planning-solution.v1.synthetic.json"),
+        ("solver-report.schema.json", "solver-report.v1.synthetic.json"),
         ("import-quality-report.schema.json", "import-quality-report.v1.pass.json"),
         ("import-quality-report.schema.json", "import-quality-report.v1.fail.json"),
     )
@@ -553,7 +561,7 @@ def test_data_dictionary_covers_every_published_schema() -> None:
     dictionary = yaml.safe_load(
         (ROOT / "schemas" / "data_dictionary.yaml").read_text("utf-8")
     )
-    assert dictionary["schema_set_version"] == "2.3.0"
+    assert dictionary["schema_set_version"] == "2.4.0"
     assert set(dictionary["schemas"]) == {
         "canonical-records.v1",
         "import-package.v1",
@@ -562,6 +570,10 @@ def test_data_dictionary_covers_every_published_schema() -> None:
         "planning-snapshot.v2",
         "planning-problem.v1",
         "planning-problem.v2",
+        "planning-policy.v1",
+        "solve-limits.v1",
+        "planning-solution.v1",
+        "solver-report.v1",
         "kpi.v1",
         "error.v1",
         "validation-report.v1",

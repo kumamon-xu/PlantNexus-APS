@@ -1,0 +1,16 @@
+{
+  "canonicalization_version": "canonical-json.v1",
+  "data_plane": "SIMULATION",
+  "limits_id": "LIMITS-SAMPLE-P2-02-001",
+  "limits_revision": "1.0.0",
+  "limits_source": {
+    "source_record_id": "SCHEMA-SAMPLE-P2-02-LIMITS",
+    "source_system": "plantnexus-synthetic-policy",
+    "source_version": "1.0.0"
+  },
+  "max_wall_time_seconds": 30,
+  "max_workers": 1,
+  "random_seed": 20260820,
+  "schema_set_version": "2.4.0",
+  "solve_limits_version": "solve-limits.v1"
+}

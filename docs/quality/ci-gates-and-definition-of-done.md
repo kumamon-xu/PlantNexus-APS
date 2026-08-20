@@ -112,3 +112,9 @@ P2 phase planning一次新增TASK-P2-00～14。CI仍使用PR base或push event `
 Workflow在repository suites与P1 common-ingress之后运行`app.planning.problem.contract_check`，生成`build/validation/ci-planning-problem-contracts.json`。报告必须为`planning-problem-contract-report.v1`、4/4 checks PASS，且同时包含v1 byte preservation/fixed replay与v2 Schema/sample/hash/field evidence；该step不得`continue-on-error`，artifact glob必须上传报告与current Task diff report。
 
 本地89项focused、286项full、Ruff/Pyright和4/4 machine report均PASS。Implementation `c64284685f37ef0d03eacade5699076146653333`的exact run `32336812748`、required `validate` job `96327855244`和未过期artifact `9394931377`均success；artifact内Task report精确记录该SHA、60 paths/10 rows/0 issues，Problem report精确记录同一SHA与4/4 checks，因此P2-01由evidence-only revision标记`done`。这不是P2 vertical Gate，P2-02～14仍不得启动或提前标记。
+
+## TASK-P2-02 contract CI gate
+
+Workflow在PlanningProblem evidence之后运行`app.planning.policy.contract_check`，生成`build/validation/ci-planning-machine-contracts.json`。报告必须为`planning-machine-contract-report.v1`、5/5 PASS并绑定`PLANTNEXUS_CODE_COMMIT`；检查同时覆盖fixed artifacts、Policy/Limits、seven-status mapping、cross-document replay与implementation boundary。Step不得`continue-on-error`，现有`build/validation/*.json`和`build/traceability/*.json`artifact glob必须同时上传该报告与current Task diff report。
+
+本地54项指定suite、311项full、Ruff/Pyright、5/5 machine report、Compose/build与63-path/11-row/0-issue governance均PASS，但只能允许提交，不能关闭Task。提交后必须验证exact head的push run、required `validate` job及全部step，下载未过期artifact并核对machine report/task report中的commit、status、check count、paths/rows/issues；随后仅以evidence-only revision回填事实。任何失败或head不一致保持P2-02 `in_progress`，不得启动P2-03。

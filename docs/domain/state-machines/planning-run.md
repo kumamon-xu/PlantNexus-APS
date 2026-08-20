@@ -68,3 +68,9 @@ CREATED
 ## TASK-P0-08 generic worker review
 
 `jobs/contracts.py` 的 `QUEUED/RUNNING/STALLED/SUCCEEDED/FAILED` 是通用执行诊断，不是 PlanningRun 状态扩展。lease 到期只把 Job 标成 STALLED；不得把 PlanningRun 推到 COMPLETED、FAILED、INFEASIBLE 或其他业务状态。P0-08 没有 PlanningRun persistence/task、Solver status 或 cancellation，因此 `state-machines.v1`、27 states/42 transitions 与 TEST-STATE-TRANSITION-001 均保持不变。
+
+## TASK-P2-02 status outcome contract
+
+Pure mapping把OPTIMAL/FEASIBLE送往`SOLVED`，INFEASIBLE送往`INFEASIBLE`，UNKNOWN送往`NO_SOLUTION_WITHIN_LIMIT`，MODEL_INVALID送往`MODEL_INVALID`，CANCELLED送往`CANCELLED`，FAILED送往`FAILED`。该映射与`state-machines.v1`现有状态一致，没有增加state或transition；候选存在性与product error同时机器校验。
+
+本Task不执行`SOLVING → ...` transition、不持久化PlanningRun，也不实现cancel actor/reason或failure audit。`CONTRACT_SAMPLE`中的UNKNOWN只是映射样例，不能证明真实limits耗尽；后继Worker/Backend仍须把真实status和evidence写入持久化transition guard。

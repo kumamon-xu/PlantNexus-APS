@@ -144,3 +144,9 @@ Application pipeline和Gate CLI只使用Python 3.12标准库及已锁定的PyYAM
 本Task只使用既有Python 3.12标准库、`jsonschema==4.25.1`开发验证能力与既有pytest/Hypothesis工具；runtime/dev dependency pins和`uv.lock`均不变，OR-Tools仍不存在。`app.planning.problem`保持TypedDict/dataclass/canonical JSON/SHA-256且无ORM/API/Infrastructure/Solver类型。
 
 CI在既有full suites之后新增`python -m app.planning.problem.contract_check`，产出`ci-planning-problem-contracts.json`并由中性artifact glob上传。它不是新service/worker、数据库migration或Production endpoint；P2-03的Solver dependency ADR/Gate仍未触发。
+
+## TASK-P2-02 stack review
+
+Global schema metadata提升到`2.4.0`，实现仍只使用Python 3.12标准库、既有`jsonschema==4.25.1`开发验证和pytest。runtime/dev dependency列表没有增删，`uv.lock`保持启动SHA-256 `7ae68d242b1f80ad05a2ae51b09552ca9e19214d33ef8380bc74ff4c87ee64dd`；OR-Tools/CpModel/IntervalVar仍不存在。
+
+Workflow新增`app.planning.policy.contract_check`机器步骤并由既有artifact glob上传JSON，没有新service、container、migration、API或Worker。P2-03首次Solver dependency仍必须单独exact pin、ADR、lock/replay与upgrade Gate；不能把本Task的Protocol当成Backend implementation。

@@ -152,3 +152,9 @@ P1 Exit Gate audit把Diff base `8830a6dc566df8093b601a82c87c74a9cfd97b59`、P1-0
 v2 identity链为`Snapshot ID/hash → problem_version=planning-problem.v2 → schema_set=2.3.0 → builder=planning-problem-builder.v2 → canonicalization=canonical-json.v1 → hash_projection=planning-problem-hash-projection.v2 → problem_hash`。projection覆盖DeliveryDemand due/priority各自source、Resource拓扑/calendar/capabilities/capacity、Operation/options、historical fact source/times、lock source/interval/type、edge/lag及tick/horizon/config；self hash和runtime noise排除。
 
 固定report同时记录v1 immutable Schema/sample fingerprints及v1/v2 replay hash/bytes digest。Provider artifact必须绑定exact implementation commit和`PLANTNEXUS_CODE_COMMIT`；本地`uncommitted`report不替代GitHub evidence。Problem v2被后继consumer使用后不得用`latest`重解释，必须显式保存全部version IDs。
+
+## TASK-P2-02 planning-machine provenance chain
+
+新增链为`Problem v2 hash/reference → PlanningPolicy v1 canonical fingerprint → SolveLimits v1 canonical fingerprint → PlanningSolution v1 canonical fingerprint → SolverReport v1`。Policy/Limits分别保存ID/revision/source/data plane，Solution保存Problem builder/hash projection/tick/horizon与Policy/Limits exact refs，Report再保存Solution fingerprint、backend/solver exact versions/parameters、code commit、spec/schema/canonicalization/constraint/objective/state/error versions及metrics。
+
+Global schema set为`2.4.0`，但Problem v2 document仍固定`2.3.0`，Import/Snapshot/quality/unit的历史版本也不改。所有fingerprint使用sorted finite JSON的`canonical-json.v1`；完整document参与且没有self fingerprint字段。四份published samples固定shape/canonical replay，但只有future `SOLVER_RUN` report和exact provider artifact能证明运行；当前`CONTRACT_SAMPLE`/`uncommitted`不能替代Solver、Validator、Benchmark或Production provenance。

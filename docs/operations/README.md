@@ -59,3 +59,9 @@ Report本身不写业务数据库，temporary CSV随进程回收，`build/valida
 本地/CI可运行`python -m app.planning.problem.contract_check --root . --report <path>`生成`planning-problem-contract-report.v1`。PASS同时验证v1 Schema/sample bytes、v1 fixed replay、v2 Schema/sample replay、两类lock和historical/delivery/resource字段计数；CI固定输出`build/validation/ci-planning-problem-contracts.json`并上传中性evidence artifact。非零返回码必须保留FAIL report并阻断Task closure。
 
 该命令只读repository输入并写machine evidence，不写数据库、调用Solver或建立service endpoint。`code_commit=uncommitted`的本地报告不构成provider证据；只有exact GitHub SHA/run/job/artifact可关闭Task。本段不是Production操作手册、priority/lock policy、SLA或on-call能力。
+
+## TASK-P2-02 operator-facing contract evidence
+
+本地/CI运行`python -m app.planning.policy.contract_check --root . --report <path>`生成`planning-machine-contract-report.v1`。PASS必须包含fixed Schema/sample bytes、Policy/Limits无默认值、七种status唯一映射、四文档fingerprint/replay与no-Solver/no-Validator scope共5项检查；CI路径为`build/validation/ci-planning-machine-contracts.json`。非零返回码保留FAIL report并阻断closure。
+
+命令不连接数据库或外部系统、不加载Solver、不生成candidate，也不执行Benchmark/Validator。local `uncommitted`只用于验收；Task关闭必须查询exact pushed SHA的required `validate`步骤和未过期artifact。该命令不是Production runbook、SLA、capacity或incident evidence。

@@ -38,9 +38,11 @@ PlanningSnapshot
 
 ## 当前Task与启动边界
 
-`TASK-P2-00 — P2 Phase Transition and Task Planning Governance`已完成。用户随后明确授权的`TASK-P2-01 — PlanningProblem v2 Contract Gap Closure`也已闭环为`done`：Diff base=`617dd0fb8d6543dc2c9be6ac1e868f751763603d`，implementation=`c64284685f37ef0d03eacade5699076146653333`，GitHub run `32336812748` / required job `96327855244` / artifact `9394931377`均success；artifact Task report为60 paths/10 Impact Rules/0 issues，Problem report为4/4 PASS。TASK-P2-02～14仍为`planned`且未获启动授权。
+`TASK-P2-00 — P2 Phase Transition and Task Planning Governance`与`TASK-P2-01 — PlanningProblem v2 Contract Gap Closure`均已闭环为`done`。用户于2026-08-20明确授权执行`TASK-P2-02 — Planning Machine Contracts and Status`；启动时clean `main=origin/main=3cf4966481e4e8cb6e075a3305472e0f0a93b99c`，该SHA对应P2-01最终GitHub run `32337439199` / required job `96329607133` / artifact `9395135532`的success证据。P2-02以该SHA为immutable Diff base进入`in_progress`；P2-03～14仍为`planned`且未获启动授权。
 
-P2-01以ADR-0010和additive schema set`2.3.0`建立opt-in `planning-problem.v2`：显式表达sourced due/priority、capacity=1完整Resource事实、active HARD/SOFT locks及COMPLETED→active历史完成锚点/lag；v1 Schema/sample/default API/fixed hashes保持不变。下一依赖节点是TASK-P2-02，但必须另行明确授权并在clean HEAD上固定其Diff base后才可进入`in_progress`。
+P2-02只负责PlanningPolicy、SolveLimits、PlanningSolution、SolverReport和七种Solver status的版本化机器合同、pure precheck/canonicalization、fixed synthetic samples与CI machine evidence。它不得安装或调用OR-Tools，不实现Backend、C-ID、ScheduleValidator判定、DB/API/Worker或P2-03；Problem v1/v2既有字节与fixed replay继续只读。
+
+当前实现基线把global schema set additive提升到`2.4.0`，新增四个互相离线解析的v1 document contract，并以`CONTRACT_SAMPLE`/`SOLVER_RUN`显式区分shape样例与真实运行。发布样例仅为versioned Simulation policy/limits和`UNKNOWN`无candidate报告，`model_metrics=0`且Solver标识为not-installed；它不是求解、正确性、性能或Production证据。本地54项指定suite、311项full、5/5 report、build/docs/diff均已通过，但exact provider closure完成前P2-02继续保持`in_progress`。
 
 ## 当前允许
 
@@ -52,7 +54,7 @@ P2-01以ADR-0010和additive schema set`2.3.0`建立opt-in `planning-problem.v2`�
 
 ## 当前禁止
 
-- 未经另行指令启动TASK-P2-02或任何后续P2实现；
+- 越过当前TASK-P2-02启动TASK-P2-03或任何后续P2实现；
 - 修改Task允许范围外文件、预填PASS/provider evidence或跳过独立Validator；
 - 实现C-012～C-018、OBJ-002 Stability、动态Replan、ExecutionSimulator、P3 Workspace/审批/发布状态；
 - 把UNKNOWN写成INFEASIBLE、FEASIBLE写成OPTIMAL，或以hint代替Execution Fact/HARD lock；

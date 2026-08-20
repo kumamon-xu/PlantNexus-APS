@@ -89,3 +89,7 @@ v2新增四类P2输入事实：
 Operation v2增加`demand_order_id`和business `required_capabilities`，calendar interval增加`calendar_id`。hash projection覆盖版本、Snapshot、due/priority、resources、operations/options、anchors、edges、locks、calendar与required platform capabilities，只排除self hash和非合同runtime噪声。固定v2向量为Problem hash `sha256:9927418a446dd046ddd1d835643da03fbf5cdcf8ca246ba22c3700563a17e9e8`、canonical bytes SHA-256 `2dbe06907952d6aba303977d67a7f5d7a6ef89c4be5ac5a6ac8d74e3f95d720a`、3366 bytes；v1固定向量和Schema/sample SHA-256保持不变。
 
 本Task不安装OR-Tools，不建立Policy/Solution/status、Backend/Strategy、C-ID公式、formal ScheduleValidator、OBJ-001计算、Benchmark或DB migration。Production due/priority/lock authority继续受OPEN-004/005/006/007/009/010/015约束；synthetic priority只允许使用显式versioned Simulation policy。
+
+## TASK-P2-02 downstream reference boundary
+
+PlanningSolution/SolverReport v1只以`problem_version`、builder/hash-projection version、Problem hash、Snapshot ID、tick与horizon形成对Problem v2的精确引用，不复制或重算Problem事实。P2-02没有修改上述v1/v2 Schema/sample/builder/hash；Problem v2固定Schema/sample和builder replay继续由P2-01 machine report单独证明。Policy/Limits/Solution/Report合同存在不表示Problem已经被Backend消费，也不产生candidate、C-ID或Validator证据。

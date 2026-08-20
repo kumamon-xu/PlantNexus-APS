@@ -6,7 +6,7 @@ spec_version: 0.3.0
 phase: P2-P7
 normative: true
 source_sections: [57, 58, 76, 80, 84, 85, 89, 105, 106]
-last_reviewed: 2026-08-19
+last_reviewed: 2026-08-20
 ---
 
 # 性能与现实校准门
@@ -38,3 +38,5 @@ Reality Gap Report 比较 routing depth、candidate density、calendar fragmenta
 TASK-P0-05 只形成可供未来 Gate 引用的 versioned Scenario manifest 和 dataset hash；empty Import replay 不包含 operations/resources，不是 XS profile 或性能运行。Gate A/B/C、TEST-BENCHMARK、runtime/memory/quality baseline 和 OPEN-012 production threshold 均未改变。
 
 TASK-P0-06 的 `SIM-MINIMAL-001@1.0.0` 使用 XS 标签只表示三道工序可手算 correctness；验收记录测试通过与 hash，不采集 Solver runtime、gap、memory/model size，也不进入 `benchmarks/**`。因此 Gate A/B/C、TEST-BENCHMARK、OPEN-012 和任何 performance baseline 均未改变。
+
+TASK-P1-10的`SIM-P1-INGRESS-001@1.0.0`同样只验证49条canonical record的生成/Normalization/Data Validation replay；没有调用Problem/Solver、采集runtime/gap/memory/model size或修改`benchmarks/**`。因此它不是Gate A的XS run，也不改变Gate A/B/C、TEST-BENCHMARK、OPEN-011/012或任何容量/SLA结论。

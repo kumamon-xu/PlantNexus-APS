@@ -113,3 +113,9 @@ Producer生成Import v2固定document字段`schema_set_version=2.0.0`、`canonic
 Snapshot builder把P1-05的content-derived package ID/canonical Import bytes、P1-06的matching PASS/0 report及P1-07的self-consistent expansion作为不可分割输入。它重新按canonical collection规则复制Import并计算Snapshot引用的dataset hash，核对package ID确实绑定当前facts，同时核对Expansion中的package/source/normalization/synthetic和quality版本引用；任何stale或跨plane组合均拒绝。
 
 该handoff不改变MappingProfile、unit/time Normalization、DataValidation rule/report或Order Expansion语义，也不允许从Raw/Adapter/FAIL report直接创建Snapshot。Raw received-at、source file digest/location和运行生成时间继续留在各自provenance层，不进入Snapshot业务投影；canonical observed/release/material/due/cutoff等业务时间仍完整进入hash。PlanningProblem和common-ingress orchestration继续由后续Task负责。
+
+## TASK-P1-10 generated-source ingress
+
+`PLANTNEXUS-P1-CANONICAL-IMPORT-GENERATOR@1.0.0`先生成带显式source ID、UTC instant、quantity unit与duration value/unit的16类source records，再编码为ReferenceFileAdapter-v1三列outer row并构造Simulation Raw Staging batch。`P1-SYNTHETIC-SOURCE-MAPPING@1.0.0`和调用方注入的`unit-conversion-registry.v1`随后进入同一公开`normalize_import`，最终Import v2再由同一`validate_import_package`得到PASS/0；Generator不直接写canonical `source`、package ID或quality report。
+
+首次端到端调用发现normalizer兼容表遗漏`cycle_seconds_per_unit`：该字段在既有canonical DTO、Schema和Data Validation中一直是integer duration，却因名称不以`_seconds`结尾被错误要求TEXT。本Task仅把该字段加入显式duration transform分类，并以`min→second`直接回归证明整数转换；字段/Schema、unit registry、其他mapping和错误行为不变。Synthetic Generator的mapping不构成Production authority，OPEN-002/013/015继续OPEN。

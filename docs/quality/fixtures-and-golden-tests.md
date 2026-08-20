@@ -53,3 +53,9 @@ Fixture 和 expected artifact 必须版本化并记录来源；Synthetic 与 His
 `test_p1_problem_replay.py`从P1 canonical Import→PASS report→Expansion→immutable Snapshot正式链重放，不读取P0 hand schedule。固定Snapshot hash `sha256:44f422…e591a`、Problem hash `sha256:6e4aff…dff72`、完整1827-byte canonical payload digest `sha256:1f00ad…08645`及1 resource/2 active operations/1 edge/0 relevant interval counts；重复构建、`verify_problem`、JSON round-trip和published `planning-problem.v1` Schema validation均PASS。
 
 Golden断言固定身份、关键字段/count与Schema，不把完整JSON手工复制为脆弱fixture，也不形成Solver feasibility/objective/KPI结果。P0 `SIM-MINIMAL-001`及mutation bundle均未修改；Problem vector的任何合法语义变化必须通过builder/hash version规则更新并解释，不能覆盖历史hash。
+
+## TASK-P1-10 generated ingress fixture
+
+[`fixtures/synthetic/SIM-P1-INGRESS-001`](../../fixtures/synthetic/SIM-P1-INGRESS-001/calculation-note.md)只提交FactoryProfile、ScenarioSpec和人工可审查的生成说明；canonical Import由generator在测试/contract check中重放，不提交易漂移的完整JSON副本。固定evidence为16个非空collections、49 records、PASS/0、package ID `import-9eea9bd41216b3a2b337a83f2b6f5438a287f219251168ce8d574f4b9fb6b2c6`和hash `sha256:24a74b4f43b0ba42ed458983e0c4776613911924ae5250d9df8ae9e4f14cb1c4`。
+
+该fixture不是Golden Schedule，不断言feasibility/objective/KPI，也不覆盖P0 deterministic/infeasible目录。生成语义变化必须新建generator/asset version并更新SIM assumption；P1-11 common ingress和P2 Solver Golden仍未形成。

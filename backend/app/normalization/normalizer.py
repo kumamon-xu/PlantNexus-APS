@@ -374,7 +374,7 @@ def _validate_transform_compatibility(mapping: FieldMapping) -> None:
         expected = FieldTransform.CANONICAL_ID
     elif target.endswith("_at_utc"):
         expected = FieldTransform.UTC_INSTANT
-    elif target.endswith("_seconds"):
+    elif target.endswith("_seconds") or target == "cycle_seconds_per_unit":
         expected = (
             FieldTransform.POSITIVE_DURATION_SECONDS
             if target in {"final_duration_seconds", "remaining_seconds"}

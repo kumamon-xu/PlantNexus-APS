@@ -6,7 +6,7 @@ spec_version: 0.3.0
 phase: P0-P2
 normative: true
 source_sections: [30, 31, 86]
-last_reviewed: 2026-08-19
+last_reviewed: 2026-08-20
 ---
 
 # Validator Mutation Test 规范
@@ -54,3 +54,9 @@ TASK-P0-06 已形成不可覆盖的 `SIM-MINIMAL-001@1.0.0` positive baseline，
 TASK-P1-06的negative inputs从canonical Import sample复制后只注入route cycle、orphan/duplicate、resource/capability、unit/duration、calendar/lag/fact/lock错误，输出ImportQualityReport/Error v3。它们不是从合法candidate Schedule产生的C-ID mutation，未读取或改写`SIM-MINIMAL-001-MUTATIONS`、expected outcomes、P0 evaluator或ValidationReport v2。
 
 因此本Task只形成TEST-DATA-QUALITY-001/TEST-INF-NO-RESOURCE/TEST-CAPABILITY-001的input-gate evidence，不能把四个exact data error写成TEST-VALIDATOR-MUTATION新增coverage。P0 positive fixture/hash和13-case mutation资产保持不变；P2 production/performance边界继续`PLANNED`。
+
+## TASK-P1-10 non-overlap review
+
+Generator tests注入unknown lock resource以证明生成后Data Validation FAIL会被结构化拒绝，并用wrong unit-registry version证明Normalization失败；这些是source/canonical input gate负例，不是candidate Schedule mutation或C-001～C-011 evaluator evidence。P0 `SIM-MINIMAL-001-MUTATIONS@1.0.0`及13-case expected artifacts保持只读，TEST-VALIDATOR-MUTATION coverage不变。
+
+生成的RUNNING fact/lock只证明canonical reference/resource-option自洽，不证明未来Solver保持事实或lock约束。P2 independent Validator/Solver comparison继续`PLANNED`。

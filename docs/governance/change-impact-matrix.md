@@ -197,3 +197,9 @@ Schema变化只新增unit registry并同步set metadata/data dictionary；Import
 本Task实际路径命中`IMPACT-SNAPSHOT`、`IMPACT-INFRA`、`IMPACT-TESTS`、`IMPACT-PHASE`、`IMPACT-GOVERNANCE-REGISTRY`、`IMPACT-DOCS`。启动前review发现原卡遗漏root/docs入口、端到端当前态及TESTS/PHASE/GOVERNANCE-REGISTRY/DOCS行的强制文档，均已在任何Snapshot业务实现前补入允许范围；Diff base固定为`8b4fb4c027305d3e3aa68eec0baaf73cd0598189`。
 
 实际实现只修改`app.snapshots`、新增Infrastructure repository/`0003` migration及限定unit/property/integration/migration tests。Snapshot v1/v2 Schema、Import/Adapter/Normalization/DataValidation/Expansion、dependency/lock/version metadata、Application/Planning/Solver/Simulation/API/Job均不修改，因此不声明SCHEMA/IMPORT/DEPENDENCY/VERSION/APPLICATION等其他Rule ID；machine rule表和`registry_version`保持`1.0.0`。Implementation artifact内TASK-P1-08 diff report精确记录SHA `72670d18a29c9a10cb70f7a263c981a2b660e0ee`、41 changed paths、六行matched、0 issues并由run `32310098594`重放成功。
+
+## TASK-P1-10 matrix review
+
+本Task实际路径命中`IMPACT-IMPORT`、`IMPACT-SIM-GENERATOR`、`IMPACT-FIXTURE`、`IMPACT-TESTS`、`IMPACT-PHASE`、`IMPACT-GOVERNANCE-REGISTRY`、`IMPACT-DOCS`。启动前已先补入验收所需contract check和各行强制文档；真实生成调用发现`cycle_seconds_per_unit`既有duration合同与normalizer分类矛盾后，按治理规则先停并扩卡加入唯一normalizer/unit regression及IMPORT强制文档。Diff base始终为`11c6ca97882a3be5bf6eb25bab84f69d1dfe469c`。
+
+实际实现仅修复该字段transform分类、新增七层Generator/package/contract check、一个versioned synthetic asset和限定unit/simulation tests。Schema、domain DTO、Adapter/Staging/DataValidation、Snapshot/Problem、Application/API/DB/Worker、dependency/version metadata、Solver/Benchmark及governance validator均不修改；machine rule表和`registry_version`保持`1.0.0`，最终以TASK-P1-10 diff report真实changed paths/七行matched/0 issues为准。

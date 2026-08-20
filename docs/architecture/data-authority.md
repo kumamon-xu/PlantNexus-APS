@@ -91,3 +91,9 @@ Order Expansion只投影已经明确存在的authority-neutral canonical事实�
 PlanningSnapshot只冻结已经由Import/PASS/Expansion链显式提供的事实和版本，不把derived ID、entity count、hash或repository row提升为ERP/MES/WMS/CAM authority。Builder核对content-derived package identity和完整provenance，但不选择冲突source、不补timezone/calendar/material/transport/unit/duration/lot规则，也不把synthetic值转换为Production事实。
 
 Snapshot事实被发现错误时必须由权威上游产生新Import/quality/expansion并创建新Snapshot，禁止就地修补历史bytes。OPEN-001/002/004/007/009/015及全部OPEN项继续OPEN；hash一致只证明输入重放一致，不证明业务来源真实、生产批准或校准完成。
+
+## TASK-P1-10 synthetic-source authority boundary
+
+P1 Generator只对`SIM-P1-INGRESS-001@1.0.0`及其版本化Profile/Scenario/seed负责；source system `plantnexus-synthetic`、mapping和生成的quantity/duration/time/calendar值都是合成provenance，不是ERP/MES/WMS/CAM或人工业务权威。Normalization仍只按显式mapping/unit规则转换，Data Validation仍只判断canonical自洽；PASS/hash不把synthetic值升级为Production事实。
+
+`cycle_seconds_per_unit`分类修复只恢复既有integer-duration authority链，不批准新unit、default或source precedence。OPEN-002/004/013/015及全部PROD_OPEN保持OPEN；真实系统binding、冲突优先级和校准仍须外部authority evidence。

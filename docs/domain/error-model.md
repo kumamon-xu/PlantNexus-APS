@@ -6,7 +6,7 @@ spec_version: 0.3.0
 phase: P0-P4
 normative: true
 source_sections: [29, 32, 34, 60, 65, 91, 92]
-last_reviewed: 2026-08-19
+last_reviewed: 2026-08-20
 ---
 
 # 错误与求解状态模型
@@ -115,3 +115,9 @@ Raw Staging分配6个module-local稳定control-flow code：`INVALID_STAGING_META
 Expansion继续要求匹配同package且content-derived ID自洽的ImportQualityReport PASS/0；FAIL、错误package/version或错误report ID在展开前拒绝。服务的module-local `OrderExpansionError`区分quality mismatch、missing explicit lot/route/option/duration、fact/lock lineage、derived-ID collision和expansion version mismatch；这些属于单请求边界错误，不修改`error-code-registry.v2`或Error v3 Schema。
 
 `lot_mode=SPLIT_MERGE`固定返回`UNSUPPORTED_CAPABILITY/UNSUPPORTED_SPLIT_MERGE`；其他输入缺失为`DATA_ERROR`，均不改写为INFEASIBLE、VALIDATION_FAILED或SYSTEM_ERROR。该边界不声称HTTP mapping、multi-error aggregation、ScheduleValidator result或Solver diagnosis。
+
+## TASK-P1-10 generator rejection boundary
+
+`SyntheticGeneratorError`固定`category=DATA_ERROR`，以module-local code区分invalid Profile/Scenario、Profile/Scenario mismatch、generator version mismatch、unsupported Profile shape、Normalization rejection、Data Validation rejection和package integrity failure。包装Normalization时只保留稳定code，包装quality FAIL时只给出error count，不回显source payload；任何拒绝都不得改写为INFEASIBLE、Solver status或Production error response。
+
+Production target继续由Scenario context返回`SYNTHETIC_REFERENCE_IN_PRODUCTION`，unsupported platform capability继续由既有capability contract拒绝。Generator错误不新增`error-code-registry.v2`成员，不替代Error v3/ImportQualityReport，也不声称HTTP/status mapping形成。

@@ -6,7 +6,7 @@ spec_version: 0.3.0
 phase: P0-P7
 normative: true
 source_sections: [43, 44, 45, 46, 56]
-last_reviewed: 2026-08-19
+last_reviewed: 2026-08-20
 ---
 
 # Scenario Library 与复杂度矩阵
@@ -44,5 +44,8 @@ TASK-P0-06 已创建下方 `SIM-MINIMAL-001` correctness fixture；未来 Profil
 | Scenario | Profile | Size / features | Evidence | Scope boundary |
 |---|---|---|---|---|
 | `SIM-MINIMAL-001@1.0.0` | `PROFILE-SIM-MINIMAL-FJSP@1.0.0` | XS correctness；2 workshops、3 resources、3-operation DAG、alternative resources、calendar、cross-workshop | [`calculation-note.md`](../../fixtures/deterministic/SIM-MINIMAL-001/calculation-note.md)、TEST-GOLDEN-FJSP、TEST-SCENARIO-REPLAY | committed deterministic fixture only；不是 performance/production baseline |
+| `SIM-P1-INGRESS-001@1.0.0` | `PROFILE-SIM-P1-INGRESS-001@1.0.0` | ingress correctness；2 workshops、4 resources、2 orders×3 operations、2 candidates、calendar/material/WIP/lock/cross-workshop | [`calculation-note.md`](../../fixtures/synthetic/SIM-P1-INGRESS-001/calculation-note.md)、TEST-SCENARIO-REPLAY、TEST-SIM-ISOLATION | generated Import v2/PASS gate only；不是 Solver/Benchmark/production baseline |
 
 该 catalog 行实现 TASK-P0-06 的最小 Scenario；PROFILE-A～E 的正式参数集、XS/S/M/L/XL benchmark profiles、disruption/historical scenarios 仍未创建。`cross_workshop_ratio=0.5`、`material_delay_ratio=1/3` 等值只属于该 asset version，不外推到 Scenario Matrix 的默认分布。
+
+P1 ingress行以`SIM-ASSUMPTION-010`逐项登记生成值；49条canonical records是correctness规模，不定义XS target或容量。PROFILE-A～E、performance baseline和broader catalog继续`PLANNED`。

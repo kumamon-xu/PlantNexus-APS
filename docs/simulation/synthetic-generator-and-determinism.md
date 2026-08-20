@@ -6,7 +6,7 @@ spec_version: 0.3.0
 phase: P0-P1
 normative: true
 source_sections: [10, 41, 42, 73, 74, 104]
-last_reviewed: 2026-08-19
+last_reviewed: 2026-08-20
 ---
 
 # Synthetic Generator 与确定性
@@ -59,3 +59,11 @@ ScenarioSpec
 TASK-P0-06 的 `P0-MANUAL-FIXTURE-ASSEMBLER@1.0.0` 是 committed artifact identity，不是新增第八层随机 Generator。它把人工定义的 `SIM-MINIMAL-001@1.0.0` fixture-local records 放入同一 `import-package.v1` envelope，并复用 `canonical-json.v1` / SHA-256 得到 `sha256:fd8e5af387c7d4197a2664dfa89e93912091647d5809f1b76468d36edab29c10`。seed 6001 是完整 provenance 输入；该版本没有随机采样。
 
 [`golden_fixture.py`](../../backend/app/simulation/scenarios/golden_fixture.py) 只能重放 committed bytes/hash，不能构造 PlanningProblem、调用 Solver 或把 `sim-minimal-records.v1` 宣布为 P1 canonical fields。TEST-SCENARIO-REPLAY 因此已有 non-empty committed dataset slice；Topology/Routing/Order 等 protocol 的真实程序化 generation 和共同 Normalization pipeline 仍为 P1。
+
+## P1 canonical generator v1
+
+七个frozen pure layer现分别生成topology、routing、orders、calendars、material readiness、RUNNING execution facts与operation locks。每层使用`root/<layer>`命名child seed；scale selection、permutation、ratio quota和synthetic timeline均无global RNG或调用顺序状态。Profile提供count/range，Scenario提供ratio/complexity，其他合成数值由`SIM-ASSUMPTION-010`和generator version限定。
+
+Package layer把primary/source references保留为source IDs，补齐显式UTC、quantity和duration unit，编码为ReferenceFileAdapter-v1 outer rows，经公开Normalization得到stable canonical ID/source/package bytes，再经Data Validation要求PASS/0。`synthetic-generation-manifest.v1`的generated-at不进入hash；本asset重放hash为`sha256:24a74b4f43b0ba42ed458983e0c4776613911924ae5250d9df8ae9e4f14cb1c4`。Generator exact version mismatch、Production target、unsupported capability/Profile shape、Normalization或quality失败均显式拒绝。
+
+Isolation test扫描所有Generator AST imports，禁止Application/Snapshot/Planning/OR-Tools/ORM。该实现不生成Snapshot、Problem、Schedule或Solver，不建立P1-11 common-ingress，也不把synthetic distribution称为Production事实。

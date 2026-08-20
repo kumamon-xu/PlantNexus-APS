@@ -6,7 +6,7 @@ spec_version: 0.3.0
 phase: P0-P1
 normative: true
 source_sections: [38, 43, 44, 45, 56, 104]
-last_reviewed: 2026-08-19
+last_reviewed: 2026-08-20
 ---
 
 # FactoryProfile 合同
@@ -53,3 +53,9 @@ Schema 只能限制 range 端点类型与上下界域；pure [`validate_factory_
 [`PROFILE-SIM-MINIMAL-FJSP@1.0.0`](../../fixtures/deterministic/SIM-MINIMAL-001/factory-profile.json) 是首个正式、但仅供 correctness 的 Profile asset：range 精确绑定到 2 workshops、2 lines、3 resources、3 operations、candidate count 1～2、routing depth 3、cross-workshop ratio 0.5 和一个 maintenance fragment。它引用 SIM-ASSUMPTION-006～009 并声明 `synthetic_only=true`。
 
 这些单值 range 只保证 `SIM-MINIMAL-001@1.0.0` 的手算规模，不定义初始 Scenario Library 五类 Profile 的通用参数、XS benchmark baseline 或生产容量；Profile 语义变化必须发布新 asset version，不能覆盖本 `1.0.0`。
+
+## SIM-P1-INGRESS-001 profile asset
+
+[`PROFILE-SIM-P1-INGRESS-001@1.0.0`](../../fixtures/synthetic/SIM-P1-INGRESS-001/factory-profile.json)固定2 workshops/lines、4 capacity-1 resources、2 orders、3-operation chain、2 candidates、1 calendar fragment和0.5 cross-workshop range，并声明七项已支持capability。Generator先冻结全部消费字段，再以命名seed从range选择；mutable JSON在运行中不能改变layer结果。
+
+duration/quantity/timeline值不是Profile v1字段，故由`PLANTNEXUS-P1-CANONICAL-IMPORT-GENERATOR@1.0.0`的版本化算法和`SIM-ASSUMPTION-010`明确限定，而不伪造Profile schema default。该小型asset不是通用XS/Benchmark或Production Profile；任何range或算法变化都必须提升相应asset/generator version。

@@ -6,7 +6,7 @@ spec_version: 0.3.0
 phase: P0-P7
 normative: true
 source_sections: [0, 10, 37, 46, 57, 84, 85, 112]
-last_reviewed: 2026-08-19
+last_reviewed: 2026-08-20
 ---
 
 # Simulation 子系统
@@ -57,3 +57,9 @@ Schema set 为 additive `1.2.0`。三份 `.synthetic.json` 仅验证合同，不
 [`SIM-MINIMAL-001@1.0.0`](../../fixtures/deterministic/SIM-MINIMAL-001/calculation-note.md) 是首个正式 correctness fixture：2 workshops、3 resources、alternative resource、cross-workshop transport、maintenance 和人工 Golden Schedule。它保留 `factory-profile.v1` / `scenario-spec.v1` / `scenario-manifest.v1` / `import-package.v1`，以 `P0-MANUAL-FIXTURE-ASSEMBLER@1.0.0`、seed 6001 和 `canonical-json.v1` 形成稳定 hash。
 
 其 non-empty `records` 只属于 `sim-minimal-records.v1` fixture vocabulary；它证明 committed Standard Import envelope 可重放，不证明 P1字段权威、Normalization/Snapshot/Problem pipeline 或程序化 distribution generator。Golden direct calculations 与 replay loader 均不导入 Planning/Solver；P0-07 才实现 reusable rule evaluator/invalid mutations。
+
+## P1-10 canonical generator
+
+[`SIM-P1-INGRESS-001@1.0.0`](../../fixtures/synthetic/SIM-P1-INGRESS-001/calculation-note.md)现由七层`PLANTNEXUS-P1-CANONICAL-IMPORT-GENERATOR@1.0.0`程序化生成。它使用FactoryProfile/ScenarioSpec/seed，经source-shaped Raw Staging、`P1-SYNTHETIC-SOURCE-MAPPING@1.0.0`、unit registry、Normalization和Data Validation产生16个非空canonical collections、49 records与PASS/0报告；canonical hash为`sha256:24a74b4f43b0ba42ed458983e0c4776613911924ae5250d9df8ae9e4f14cb1c4`。
+
+该asset只验证correctness/replay/common-format ingress的一侧，不是Solver/Benchmark、Execution Simulator、Production capacity或P1-11双来源application Gate证据。P0 manual fixture保持只读且使用Import v1/fixture-local vocabulary。

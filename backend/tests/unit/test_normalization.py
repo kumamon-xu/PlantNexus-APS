@@ -512,6 +512,85 @@ def test_record_mapping_normalizes_offsets_durations_and_nested_intervals() -> N
     }
 
 
+def test_cycle_seconds_per_unit_uses_explicit_duration_conversion() -> None:
+    option_mapping = RecordMapping(
+        record_type="routing_option",
+        collection="routing_resource_options",
+        fields=(
+            FieldMapping(
+                "$source_record_id",
+                "routing_resource_option_id",
+                FieldTransform.CANONICAL_ID,
+                id_namespace="routing-option",
+            ),
+            FieldMapping(
+                "operation_ref",
+                "routing_operation_id",
+                FieldTransform.CANONICAL_ID,
+                id_namespace="routing-operation",
+            ),
+            FieldMapping(
+                "resource_ref",
+                "resource_id",
+                FieldTransform.CANONICAL_ID,
+                id_namespace="resource",
+            ),
+            FieldMapping("quantity_unit", "quantity_unit", FieldTransform.TEXT),
+            FieldMapping(
+                "setup",
+                "setup_seconds",
+                FieldTransform.NONNEGATIVE_DURATION_SECONDS,
+                unit_field="setup_unit",
+            ),
+            FieldMapping(
+                "cycle",
+                "cycle_seconds_per_unit",
+                FieldTransform.NONNEGATIVE_DURATION_SECONDS,
+                unit_field="cycle_unit",
+            ),
+            FieldMapping(
+                "final",
+                "final_duration_seconds",
+                FieldTransform.POSITIVE_DURATION_SECONDS,
+                unit_field="final_unit",
+            ),
+            FieldMapping("duration_source", "duration_source", FieldTransform.TEXT),
+            FieldMapping(
+                "duration_version",
+                "duration_source_version",
+                FieldTransform.TEXT,
+            ),
+        ),
+    )
+    row = reference_row(
+        "routing_option",
+        "OPT-001",
+        {
+            "operation_ref": "OP-001",
+            "resource_ref": "RES-001",
+            "quantity_unit": "piece",
+            "setup": 2,
+            "setup_unit": "min",
+            "cycle": 3,
+            "cycle_unit": "min",
+            "final": 4,
+            "final_unit": "min",
+            "duration_source": "synthetic-test",
+            "duration_version": "1.0.0",
+        },
+    )
+    result = normalize_import(
+        (NormalizationInput(staged_batch((row,)), profile(option_mapping)),),
+        unit_registry=registry(),
+    )
+    option = cast(dict[str, Any], result.document["records"])[
+        "routing_resource_options"
+    ][0]
+    assert option["setup_seconds"] == 120
+    assert option["cycle_seconds_per_unit"] == 180
+    assert option["final_duration_seconds"] == 240
+
+
 @pytest.mark.parametrize(
     ("payload", "expected_code"),
     [

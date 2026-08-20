@@ -6,7 +6,7 @@ spec_version: 0.3.0
 phase: cross-phase
 normative: true
 source_sections: [0, 10, 37, 40, 41, 42, 62, 74]
-last_reviewed: 2026-08-19
+last_reviewed: 2026-08-20
 ---
 
 # Simulation-First 双通道架构
@@ -65,3 +65,9 @@ TASK-P0-05 以七层 pure Protocol 固定 Generator 责任，并提供 `build_em
 TASK-P1-03～05已形成双方共用的Raw Staging、Reference transport和Normalization primitive：Simulation batch必须携带一致Scenario/Profile/Generator/seed，Production batch禁止这些字段；两者随后使用同一MappingProfile/unit/time/ID/canonical serializer。TASK-P1-06新增单一`app.data_validation` evaluator，既不读取data plane也不提供synthetic-only规则；Production/Simulation canonical Import必须得到相同结构/reference/DAG/resource/capability/time/unit/duration判定。
 
 当前仍没有Synthetic Generator→staging orchestration、Order Expansion、Snapshot/Problem或TASK-P1-11 common-ingress Gate，因此固定schema sample的quality PASS不能视为完整双通道闭环或独立数据库隔离证据。Simulation不得直接伪造PASS report或绕过Data Validation。
+
+## TASK-P1-10 executable synthetic channel
+
+七层Generator现从frozen FactoryProfile/ScenarioSpec context与命名child seed生成source-shaped topology/routing/orders/calendars/material/execution/locks records，再进入Simulation StagedImportBatch、公开Normalization和Data Validation，形成非空Import v2及PASS/0 quality evidence。Canonical package hash覆盖Import完整bytes，不覆盖generator-local manifest的`generated_at`；同Profile/Scenario/generator/seed得到相同bytes/hash。
+
+本Slice只形成synthetic channel到canonical Import gate；没有把Production source接入同一application use case，也没有构建Snapshot/Problem/Solver。TASK-P1-11 common-ingress evidence、独立Production/Simulation数据库和Production connector仍未形成，不能因source形状相同而宣布双通道Exit Gate完成。

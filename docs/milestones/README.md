@@ -28,4 +28,4 @@ Milestone 定义 outcome 和 exit gate，不等同 Sprint。只有当前 Phase �
 
 P0 当前状态：TASK-P0-01～10 全部完成；[superseding audit](P0-exit-gate-audit-report.md) 的 Schema、Golden、Validator Rule Sheet、Scenario replay、Repository Build、CI 和 PROD_OPEN registration全部 `PASS`，P0 Gate=`READY`。用户于 2026-08-19 明确批准 phase transition后，P0转为 `completed`，历史失败/修复/provider evidence继续保留。
 
-P1当前状态：[`P1 — Data & Snapshot`](P1-data-and-snapshot.md)为`active`，已创建TASK-P1-01～12；TASK-P1-01～08=`done`、TASK-P1-09～12=`planned`，最后一项仍是P1 Exit Gate Audit。P1-08的implementation commit `72670d18a29c9a10cb70f7a263c981a2b660e0ee`与GitHub Actions run `32310098594`已使immutable Snapshot/hash/repository/CI证据闭环；建议下一项为P1-09，但本次未启动，也不涉及Solver或P2。
+P1当前状态：[`P1 — Data & Snapshot`](P1-data-and-snapshot.md)为`active`，已创建TASK-P1-01～12；TASK-P1-01～09=`done`、TASK-P1-10=`in_progress`、TASK-P1-11～12=`planned`，最后一项仍是P1 Exit Gate Audit。P1-09的implementation commit `e8c59547857d2eeace1c9f8b453a5a294cca5ef7`与GitHub Actions run `32315513504`已使Problem builder/hash证据闭环；P1-10现以Diff base `11c6ca97882a3be5bf6eb25bab84f69d1dfe469c`实现Synthetic Generator→Import v2/PASS边界，provider证据未闭环前保持`in_progress`，不启动P1-11、Solver或P2。

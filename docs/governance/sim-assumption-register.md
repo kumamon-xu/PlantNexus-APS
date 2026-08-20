@@ -25,8 +25,9 @@ Simulation 用于模拟 APS Planning Reality，不代表真实物理工厂。每
 | SIM-ASSUMPTION-007 | `SIM-MINIMAL-001@1.0.0` 使用 `08:00Z`～`12:00Z` horizon、900 秒 tick、heat resource `09:00Z`～`10:00Z` maintenance | ACTIVE | 只验证 UTC/tick/calendar boundary；不得作为生产 timezone/calendar closure evidence 或定义生产班次 |
 | SIM-ASSUMPTION-008 | `SIM-MINIMAL-001@1.0.0` 选中工时为 3600/1800/3600 秒，alternative 为 5400/2700 秒，edge min/max window 为 `[0,1800]` 秒，cross-workshop transport 为 900 秒 | ACTIVE | 只验证 candidate duration、precedence/max-lag/transport；不得作为生产 transport/duration closure evidence 或定义标准工时 |
 | SIM-ASSUMPTION-009 | `SIM-MINIMAL-001@1.0.0` release 为 `08:00Z`，第二工序 material-ready 为 `09:00Z`，due 为 `11:30Z`，synthetic tardiness weight 为 2 | ACTIVE | 只验证 release/material/delivery calculation；不得作为生产 authority/policy closure evidence 或定义生产权重/交期规则 |
+| SIM-ASSUMPTION-010 | `SIM-P1-INGRESS-001@1.0.0`固定2 workshops/lines、4 resources、2 orders、3 operations、2 candidates、1 calendar fragment和0.5 material/WIP/lock/cross-workshop quota；generator v1限定10～50 piece、0～600 s setup、300～900 s cycle、0/600 s transport、90 min material delay、30 min calendar fragment/3 h spacing、12 h medium due window、running与lock时间offset及seed-derived 2026 UTC origin | ACTIVE | 只验证P1 source→canonical ingress/replay；不得成为通用XS、生产拓扑/工时/日历/交期/WIP/lock分布或容量默认值 |
 
-除上表明确绑定到 `SIM-MINIMAL-001@1.0.0` 的 correctness 参数外，具体 workshop/resource 数、候选设备密度、故障概率、到期压力等数值仍未批准为通用 Profile、Benchmark baseline 或生产事实。后续数值必须由各自版本化 FactoryProfile/ScenarioSpec 明确，不能从本 fixture 外推“通用默认工厂”。
+除上表明确绑定到versioned synthetic asset的correctness参数外，具体workshop/resource数、候选设备密度、故障概率、到期压力等数值仍未批准为通用Profile、Benchmark baseline或生产事实。后续数值必须由各自版本化FactoryProfile/ScenarioSpec/Generator明确，不能从任一fixture外推“通用默认工厂”。
 
 本注册表的稳定 ID 前缀为 `SIM-ASSUMPTION-NNN`。总规示例中的 `SIM_ASSUMPTION-003` 是同类标记的上游拼写，校验时规范化为 `SIM-ASSUMPTION-003`；新引用必须使用本表前缀。条目只能为 `ACTIVE` 或 `RETIRED`，不得出现 `OPEN`/`CLOSED` 生产问题状态，也不得用于关闭任何 `OPEN-NNN`。
 
@@ -65,3 +66,5 @@ TASK-P1-06 review：quality tests只从既有P1-02 schema sample复制canonical 
 TASK-P1-07 review：Hypothesis以fixed replay seeds生成test-local 1～3 explicit lots、4-op branch/merge、2 workshops/resources、candidate/fact/lock组合，并在每个Import保留`synthetic=true`与scenario seed。这些值仅用于generation/shrinking，不是新Profile/Scenario distribution、Benchmark baseline或Production topology/policy。没有新增/修改/retire条目；SIM-ASSUMPTION-001～009全部保持`ACTIVE`，registry format version保持`1.0.0`。
 
 TASK-P1-08 review：Snapshot unit/property/integration tests复用P1-02 synthetic schema sample及其既有scenario/profile/generator/seed，新增的Hypothesis seeds只控制test generation；cutoff、hash、entity counts和单Snapshot migration row均不是新FactoryProfile/Scenario distribution或Benchmark baseline。没有新增/修改/retire条目；SIM-ASSUMPTION-001～009全部保持`ACTIVE`，不用于Production default或OPEN closure，registry format version保持`1.0.0`。
+
+TASK-P1-10 review：新增SIM-ASSUMPTION-010并绑定`PROFILE-SIM-P1-INGRESS-001@1.0.0`、`SIM-P1-INGRESS-001@1.0.0`、generator `1.0.0`和seed `20260820`；Profile/Scenario可表达的counts/ratios与generator-only quantity/duration/time算法均逐项限定。该条目只支持49-record correctness/replay，不用于关闭任何PROD_OPEN或形成Benchmark/Production default；SIM-ASSUMPTION-001～010均保持`ACTIVE`，registry format version不变。

@@ -90,3 +90,10 @@ TASK-P0-05 已在 `simulation/profiles`、`simulation/scenarios`、`simulation/g
 - Problem模块不读取Snapshot repository、Import/Expansion producer、DB、environment、API或Job，不持久化、不创建migration，也不导入OR-Tools/CpModel/IntervalVar；
 - Builder保留Snapshot的content-derived ID和可由v1表达的future facts；遇到active lock、multi-factory或completed-active edge明确拒绝，不向Solver藏字段、不把输入错误转成INFEASIBLE；
 - TASK-P1-09未实现Backend、Strategy、ScheduleValidator或candidate solution。P2 consumer只能从canonical Problem继续，不能回读上游对象绕过此边界。
+
+## TASK-P1-10 Synthetic Generator boundaries
+
+- `simulation/generators`七个layer只消费frozen GenerationContext和上游JSON-compatible source collections，不访问repository、Settings、API、Worker或数据库；package layer负责稳定组合。
+- Package layer构造ReferenceFileAdapter-v1形状Raw rows与Simulation staging provenance，然后只调用公开`normalize_import`和`validate_import_package`；它不调用Snapshot/Problem builder，不伪造canonical source/package ID/report。
+- AST isolation test禁止Generator导入`app.application`、`app.planning`、`app.snapshots`、OR-Tools或SQLAlchemy；Normalization只做`cycle_seconds_per_unit`既有duration分类修复，没有反向依赖Generator。
+- 本Task不实现P1-11 common-ingress application orchestration、Execution Simulator、Benchmark、Solver或Production connector；后续consumer不得直接读取layer source records绕过Import quality Gate。

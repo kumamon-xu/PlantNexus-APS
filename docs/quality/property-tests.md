@@ -62,3 +62,9 @@ Implementation commit `72670d18a29c9a10cb70f7a263c981a2b660e0ee`已由GitHub Act
 `test_planning_problem_properties.py`固定seed `20260820/20260821/20260822`与48/32/32 max examples：1～3600秒tick下重复build必须bytes/hash完全一致且260/420秒candidate按整数ceiling可复算；operation/capability/resource/option顺序与self/runtime噪声不得改变canonical bytes/hash；两个不同显式tick config必须产生不同Problem identity。全部性质只使用verified P1 canonical synthetic Snapshot并保留权威秒，不生成candidate schedule。
 
 定向property 3项及其全部examples PASS，无Hypothesis failure/minimized corpus。它形成P1 `TEST-PROBLEM-REPLAY-001`的builder/hash性质证据；P2 `TEST-PROPERTY`仍为`PLANNED`，因为尚未生成/验证合法candidate solution或跨Solver组合。
+
+## TASK-P1-10 generator replay properties
+
+P1-10以版本化asset和固定seed `20260820`执行deterministic property-style checks：相同Profile/Scenario/generator/seed在不同generated-at下产生byte-identical Import/hash；seed或Profile version改变使hash变化，unknown generator version明确拒绝；unrelated child-seed调用不改变topology，orders/calendars及execution/locks以相反调用顺序生成时各自collection相同。Profile ranges与0.5 quota确保七层都有非空回归记录。
+
+本Task没有新增Hypothesis策略或candidate Schedule/Problem随机生成，因此没有shrinking failure/minimized corpus，也不改变P2 `TEST-PROPERTY=PLANNED`。若未来生成失败，必须保存Scenario/Profile/generator version、seed和最小source/canonical反例，而不能改变约束使其通过。

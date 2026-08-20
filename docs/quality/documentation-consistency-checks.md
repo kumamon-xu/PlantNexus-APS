@@ -199,6 +199,12 @@ TASK-P1-05 implementation commit `d52aa62d36e8d89eba318cb5fc586311680e030f`已�
 
 治理检查只证明scope、依赖、文档和追踪，不执行hash projection、frozen value、repository trigger或migration；TEST-SNAPSHOT-REPLAY-001/TEST-SIM-ISOLATION及实际Alembic tests补充这些语义。Implementation commit `72670d18a29c9a10cb70f7a263c981a2b660e0ee`的provider artifact `9386127863`内report为41 committed paths、6 matched rows、0 issues且精确匹配SHA；provider/download digest同为`sha256:69d68183bad614631df07234a3ca88508379ab89ec715f811ee7f529d6f17e0c`。Ignored report不提交；evidence-only completion commit仍须按自身精确SHA核验required `validate`。
 
+## TASK-P1-10 generator governance review
+
+本Task以immutable Diff base `11c6ca97882a3be5bf6eb25bab84f69d1dfe469c`运行full与`--task ... --check-diff`检查，report路径为`build/traceability/TASK-P1-10-report.json`。实际范围声明`IMPACT-IMPORT/SIM-GENERATOR/FIXTURE/TESTS/PHASE/GOVERNANCE-REGISTRY/DOCS`；启动时补齐contract-check与矩阵强制文档，真实调用发现Normalization字段分类矛盾后再次先扩卡加入唯一normalizer/test路径及IMPORT强制文档。Schema、dependency、Snapshot/Problem、Solver/Benchmark和governance validator保持只读。
+
+当前`python -m app.simulation.generators.contract_check` CLI已升级为`synthetic-generator-report.v1`，验证P1非空Import replay/PASS；历史P0 `run_contract_checks()`仍保留供既有P0测试直接调用，不能把当前CLI报告伪写成P0-05 artifact。治理报告只证明scope/docs/trace，不执行生成/Normalization/DataValidation语义；P1 generator tests和machine report补充该证据。Ignored build reports不提交，provider closure必须绑定真实implementation SHA。
+
 ## Override
 
 不允许用自由文本 CI skip 绕过。确需例外时必须在 Task Card 记录理由，提交 ADR 或明确批准记录，并仍保留检查报告。正确性、状态语义、数据隔离和发布门不得豁免。

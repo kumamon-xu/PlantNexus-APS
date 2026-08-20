@@ -86,3 +86,9 @@ CI重放生成测试只证明synthetic expansion correctness与治理交接，�
 每个`SqlAlchemySnapshotRepository`在构造时永久绑定`production`或`simulation`；write先核验Snapshot canonical bytes/hash/ID及synthetic marker，read predicate始终携带data plane。Synthetic Snapshot必须保留完整Scenario/Profile/Generator/version/seed，Production Snapshot不得携带该provenance；跨plane put明确`DATA_PLANE_MISMATCH`，另一plane按ID/hash读取返回不存在。
 
 Migration在同一internal table记录data plane并以CHECK约束取值，应用与数据库trigger共同禁止update/delete。临时SQLite在同库双repository的测试只证明代码/表级negative guard；它不满足ADR-0009要求的独立Production/Simulation Database、role/network/backup/monitoring，也不修改Settings、Compose、Secret或Production endpoint。RISK-007继续`MONITORED`。
+
+## TASK-P1-10 generator isolation slice
+
+Generator context只接受Development/Test/Benchmark，`production`在生成任何row前明确拒绝；生成的StagedImportBatch固定Simulation plane并携带完整Scenario/Profile/Generator/seed provenance。Task没有新增environment variable、Secret、Settings、Compose service、Database endpoint、API或Production binding；unit registry由调用方显式注入，不能从环境选择`latest`。
+
+本地同进程调用证明synthetic provenance/target negative guard与no-Planning import，不证明独立Simulation数据库、Production network/role/backup或common-ingress deployment。ADR-0009和RISK-007继续生效。

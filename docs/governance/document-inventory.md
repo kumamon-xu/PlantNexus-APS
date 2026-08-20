@@ -12,7 +12,7 @@ registry_version: 1.0.0
 
 # 文档清单
 
-本清单列出当前仓库已经实际存在的 Markdown 文档。P0退出门已通过并归档为completed；P1已获授权并形成12张Task Card，TASK-P1-01～10已完成，TASK-P1-11为`in_progress`，TASK-P1-12仍为`planned`。产品API与Production Runbook正文尚未形成并继续由相应索引登记。
+本清单列出当前仓库已经实际存在的 Markdown 文档。P0退出门已通过并归档为completed；P1已获授权并形成12张Task Card，TASK-P1-01～11已完成，TASK-P1-12仍为`planned`。产品API与Production Runbook正文尚未形成并继续由相应索引登记。
 
 | Path | Doc ID | Status | Title |
 |---|---|---|---|
@@ -136,7 +136,7 @@ registry_version: 1.0.0
 | [tasks/P1/TASK-P1-08-immutable-snapshot-and-hash.md](../tasks/P1/TASK-P1-08-immutable-snapshot-and-hash.md) | TASK-P1-08 | done | Immutable PlanningSnapshot and Hash |
 | [tasks/P1/TASK-P1-09-planning-problem-builder-and-hash.md](../tasks/P1/TASK-P1-09-planning-problem-builder-and-hash.md) | TASK-P1-09 | done | PlanningProblem Builder and Hash |
 | [tasks/P1/TASK-P1-10-synthetic-generator-records.md](../tasks/P1/TASK-P1-10-synthetic-generator-records.md) | TASK-P1-10 | done | Synthetic Generator Canonical Records |
-| [tasks/P1/TASK-P1-11-common-ingress-pipeline-and-gate-evidence.md](../tasks/P1/TASK-P1-11-common-ingress-pipeline-and-gate-evidence.md) | TASK-P1-11 | in_progress | Common Ingress Pipeline and P1 Gate Evidence |
+| [tasks/P1/TASK-P1-11-common-ingress-pipeline-and-gate-evidence.md](../tasks/P1/TASK-P1-11-common-ingress-pipeline-and-gate-evidence.md) | TASK-P1-11 | done | Common Ingress Pipeline and P1 Gate Evidence |
 | [tasks/P1/TASK-P1-12-p1-exit-gate-audit.md](../tasks/P1/TASK-P1-12-p1-exit-gate-audit.md) | TASK-P1-12 | planned | P1 Exit Gate Audit |
 | [tasks/README.md](../tasks/README.md) | DOC-TASK-INDEX | living | Task Card 索引 |
 | [tasks/TASK_TEMPLATE.md](../tasks/TASK_TEMPLATE.md) | TEMPLATE-TASK | baseline | Task Card Template |
@@ -155,4 +155,4 @@ TASK-P1-08未新增Markdown路径，清单继续覆盖124份`docs/**/*.md`；新
 
 TASK-P1-10未新增`docs/**/*.md`路径，清单继续完整覆盖124份正式文档；fixture下的`calculation-note.md`、JSON资产、generator/test Python及ignored machine reports均不进入本清单。Implementation commit `5ac08183dd03049ad02c77e6cba80c4621847e0f`的run `32319530217`成功，provider Task report为52 paths/7 rows/0 issues，Task现为`done`。
 
-TASK-P1-11不新增Markdown路径，清单仍完整覆盖124份`docs/**/*.md`。新增application/generator/test Python、workflow及ignored `build/validation`/`build/traceability` JSON都不进入文档清单；Task当前为`in_progress`，provider证据尚待implementation commit后回填。
+TASK-P1-11不新增Markdown路径，清单仍完整覆盖124份`docs/**/*.md`。新增application/generator/test Python、workflow及ignored `build/validation`/`build/traceability` JSON都不进入文档清单；implementation commit `fa6c4c1159972a30ea683ad4e6eba98342d3c344`的run `32322511227`成功，provider Task report为43 paths/7 rows/0 issues，Task现为`done`。

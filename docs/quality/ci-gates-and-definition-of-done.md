@@ -92,4 +92,4 @@ repository-local workflow contract完成后，用户追加了直接push `main`�
 
 Repository workflow在完整pytest与既有machine contracts之后必须运行P1 common-ingress CLI，输出`build/validation/ci-p1-data-pipeline.json`，并由中性`plantnexus-ci-evidence-${{ github.run_id }}` artifact上传。Gate必须是14/14 checks PASS，四项exact `DATA_ERROR`、Import/Snapshot/Problem replay和Reference/Synthetic parity任一失败都使job失败，不允许`continue-on-error`。
 
-本地PASS、workflow text contract与未提交report不是provider evidence；Task只能在implementation SHA的required `validate`和artifact成功后回填。P1-11完成后仍必须由P1-12独立审计，不自动进入P2。
+本地PASS、workflow text contract与未提交report不是provider evidence。P1-11 implementation commit `fa6c4c1159972a30ea683ad4e6eba98342d3c344`的push run `32322511227`、required `validate` job `96287321281`与artifact `9390250284`已成功并精确绑定43-path/7-row/0-issue Task report及14/14 pipeline report，因此该Task provider Gate闭环。P1-11完成后仍必须由P1-12独立审计，不自动进入P2。

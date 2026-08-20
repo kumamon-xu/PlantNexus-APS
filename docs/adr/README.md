@@ -15,7 +15,7 @@ ADR 记录 Architecture、Solver Backend、Constraint semantics、Objective hier
 
 ADR 状态：`proposed`、`accepted`、`rejected`、`superseded`。Accepted ADR 不重写历史；变更通过新 ADR `supersedes` 旧记录。
 
-ADR-0001～0009 是从 implementation spec 0.3.0 已明确决定中建立的基线记录。ADR-0010是TASK-P2-01对PlanningProblem v2合同演进的新增决定。Accepted状态不表示Solver或后继能力已经实现。
+ADR-0001～0009 是从 implementation spec 0.3.0 已明确决定中建立的基线记录。ADR-0010是TASK-P2-01对PlanningProblem v2合同演进的新增决定；[ADR-0011](ADR-0011-ortools-9-15-cp-sat-backend-version-policy.md)是TASK-P2-03在首次Solver dependency前接受的OR-Tools exact-version、namespace与upgrade/replay决定。Accepted状态不表示后继约束、Validator或业务可行性已经实现。
 
 TASK-P0-03 的 Schema/type skeleton 落实 ADR-0001（共同入口 envelope）、ADR-0003（Solver-neutral Problem）、ADR-0007（immutable Snapshot）、ADR-0008（UTC/seconds/ticks）和 ADR-0009（Production/Simulation 标识隔离）的既有决定，没有改变这些决定，因此不新增 ADR。Problem builder、hash、Solver 或字段权威若偏离这些决定，必须另建 ADR，不能借 skeleton 隐式修改。
 
@@ -40,3 +40,5 @@ TASK-P1-09落实ADR-0003的solver-neutral deterministic Problem、ADR-0007的imm
 TASK-P2-00只批准阶段与Task治理，不作技术决定。TASK-P2-01已接受[ADR-0010](ADR-0010-planning-problem-v2-contract-evolution.md)：新增非互换Problem v2，明确active locks、sourced due/priority、capacity=1 Resources、completed-active historical anchor及v1默认兼容/hash策略，同时保持ADR-0003 solver-neutral边界。它不决定Solver/Validator行为或Production authority。P2-03在首次安装OR-Tools前仍必须建立exact-version/upgrade-replay ADR；后续Task严格实施ADR-0004/0005/0006/0008。
 
 TASK-P2-02严格实施ADR-0003的solver-neutral Protocol、ADR-0006的Delivery-first阶段边界、ADR-0008的UTC/seconds/ticks和既有PlanningRun/error语义；只固定Policy/Limits/Solution/Report v1与status mapping，没有改变目标顺序、状态含义、time unit或Backend/Validator职责，因此不新增ADR。OBJ-002/003继续deferred，OR-Tools仍未安装。若后继实现改变七种status映射、混合目标、默认limits、fingerprint语义或让Solver contract绕过independent Validator，必须停止并建立superseding/new ADR。
+
+TASK-P2-03在任何dependency变更前接受ADR-0011：选择官方稳定`ortools==9.15.6755` binary wheel/exact lock，把OR-Tools对象限定于`planning/backends/cp_sat`，固定SolveLimits参数来源、native/adapter status映射、engineering smoke非业务可行性及后续upgrade Gate。该决定落实ADR-0003/0004，不修改P2-02合同字节，也不授权C-ID、OBJ-001 execution、Validator、Benchmark baseline或Production SLA。

@@ -30,4 +30,4 @@ P0 当前状态：TASK-P0-01～10 全部完成；[superseding audit](P0-exit-gat
 
 P1当前状态：[`P1 — Data & Snapshot`](P1-data-and-snapshot.md)为`completed`，TASK-P1-01～12全部`done`。[P1 audit](P1-exit-gate-audit-report.md)的271项回归、14/14 pipeline、全部machine/build/docs/provider证据均PASS；TASK-P1-12 implementation `a5d7e4a68dc12d48e36cb692500f59446f8097b4` / run `32326616525` / artifact `9391591718`已闭环，Gate=`READY`且无blocking gap。用户于2026-08-20明确批准transition。
 
-P2当前状态：[`P2 — CP-SAT Vertical Slice`](P2-cp-sat-vertical-slice.md)为`active`。TASK-P2-00/P2-01/P2-02均已闭环为`done`；P2-02 implementation `2661598ecb592942e50c9a13dd41ff5b2535ca0d` / run `32342489997` / required job `96344226221` / artifact `9396828326`形成planning-machine合同的exact provider closure。TASK-P2-03～14仍为`planned`且未获启动授权；P2-14必须为最后的Exit Gate Audit，不得自动进入P3。
+P2当前状态：[`P2 — CP-SAT Vertical Slice`](P2-cp-sat-vertical-slice.md)为`active`。TASK-P2-00/P2-01/P2-02均已闭环为`done`；用户已授权TASK-P2-03，其Diff base=`f73f8c90af94d3c9b05ecc10b6c999594a3b7d66`且ADR-0011已在依赖变更前接受，当前为`in_progress`。TASK-P2-04～14仍为`planned`且未获启动授权；P2-14必须为最后的Exit Gate Audit，不得自动进入P3。

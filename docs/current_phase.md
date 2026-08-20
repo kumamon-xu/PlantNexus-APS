@@ -51,9 +51,9 @@ CSV / Excel / Reference Adapter / Synthetic Generator
 
 `TASK-P1-09 — PlanningProblem Builder and Hash`已完成：不可变Diff base=`100e2573a76462ad2a0751e9e4aae7990c9048dd`，implementation commit=`e8c59547857d2eeace1c9f8b453a5a294cca5ef7`；GitHub Actions push run [`32315513504`](https://github.com/kumamon-xu/PlantNexus-APS/actions/runs/32315513504) / required `validate` job `96266776018`及全部步骤=`success`。Artifact `9387907707`的provider/download digest同为`sha256:1ede296252bb04e9015240e13222eaf4ee783bc6e7582012cac0a441fd624568`，Task report精确记录该SHA、30 committed paths、5 impact rows、0 issues。本地Task suite=`34 passed`、full repository=`253 passed`；solver-neutral builder/hash、fixed replay vector和unsupported-boundary证据闭环。
 
-`TASK-P1-10 — Synthetic Generator Canonical Records`现为`in_progress`，不可变Diff base=`11c6ca97882a3be5bf6eb25bab84f69d1dfe469c`。本Task只实现七层deterministic source generation、公开Normalization/Data Validation handoff、non-empty Import v2/manifest/hash和`SIM-P1-INGRESS-001`资产；不构建Snapshot/Problem/Solver，不启动P1-11或进入P2。
+`TASK-P1-10 — Synthetic Generator Canonical Records`已完成：不可变Diff base=`11c6ca97882a3be5bf6eb25bab84f69d1dfe469c`，implementation commit=`5ac08183dd03049ad02c77e6cba80c4621847e0f`；GitHub Actions push run [`32319530217`](https://github.com/kumamon-xu/PlantNexus-APS/actions/runs/32319530217) / required `validate` job `96278754755`及全部步骤=`success`。Artifact `9389283489`的provider/download digest均为`sha256:2b04b7bd134810c7d37d6130a2ba84911b6f672fb8a95ef83c761496370b73cf`，Task report精确记录52 committed paths、7 impact rows、0 issues。
 
-P1-10本地实现与验收已完成：`SIM-P1-INGRESS-001@1.0.0`以generator `1.0.0`/seed `20260820`生成16个非空canonical collections、49条records，dataset hash=`sha256:24a74b4f43b0ba42ed458983e0c4776613911924ae5250d9df8ae9e4f14cb1c4`且quality=`PASS/0 errors`；Task suites、262项全仓回归、7/7 machine checks、52-path/7-row文档治理和build均PASS。implementation commit与精确provider run尚待生成，因此状态仍为`in_progress`且P1-11未启动。
+`SIM-P1-INGRESS-001@1.0.0`以generator `1.0.0`/seed `20260820`生成16个非空canonical collections、49条records，dataset hash=`sha256:24a74b4f43b0ba42ed458983e0c4776613911924ae5250d9df8ae9e4f14cb1c4`且quality=`PASS/0 errors`；Task suites、262项全仓回归、7/7 machine checks、文档治理和build均PASS。实现未构建Snapshot/Problem/Solver；P1-11仍为`planned`且未启动，不进入P2。
 
 用户于2026-08-19进一步授权：后续每个P1 Task完成本地验收并提交后，可直接push当前`main`并核验对应GitHub CI。该授权只覆盖当前Task完成后的push/provider核验，不自动启动下一Task、不改变Task允许范围，也不授权进入P2。
 
@@ -78,7 +78,7 @@ P1-10本地实现与验收已完成：`SIM-P1-INGRESS-001@1.0.0`以generator `1.
 
 ## P1 Task 规划状态
 
-P1共规划12个Task：phase governance/CI、canonical contracts、Raw Staging、CSV/Excel/reference adapter、Normalization、Data Validation、Order Expansion、Snapshot、Problem hash、Synthetic Generator、common-ingress Gate evidence，最后为P1 Exit Gate Audit。TASK-P1-01～09=`done`，TASK-P1-10=`in_progress`，TASK-P1-11～12=`planned`；P1 Milestone继续`active`，不得进入P2。
+P1共规划12个Task：phase governance/CI、canonical contracts、Raw Staging、CSV/Excel/reference adapter、Normalization、Data Validation、Order Expansion、Snapshot、Problem hash、Synthetic Generator、common-ingress Gate evidence，最后为P1 Exit Gate Audit。TASK-P1-01～10=`done`，TASK-P1-11～12=`planned`；P1 Milestone继续`active`，建议下一项执行TASK-P1-11，但本次未启动且不得进入P2。
 
 ## 阶段完成条件
 

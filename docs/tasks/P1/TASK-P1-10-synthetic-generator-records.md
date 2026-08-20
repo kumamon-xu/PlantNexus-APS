@@ -1,7 +1,7 @@
 ---
 doc_id: TASK-P1-10
 title: Synthetic Generator Canonical Records
-status: in_progress
+status: done
 spec_version: 0.3.0
 phase: P1
 normative: true
@@ -76,12 +76,14 @@ Rollback: 保留旧 generator/asset/hash；失败修复发布新 version，禁�
 - 首次真实source-shaped package调用暴露既有Normalization合同缺口：`cycle_seconds_per_unit`在canonical DTO、Import Schema和DataValidation中均为integer duration，但normalizer兼容表因字段不以`_seconds`结尾而错误要求`TEXT`；因此无法在原范围内同时通过公开normalization与validation。按治理规则先停止实现并记录证据，再把唯一兼容修复文件、直接unit regression、`IMPACT-IMPORT`及其强制文档加入范围；不改变Schema、字段、unit registry、其他Normalization行为或Task Diff base。
 - 完成时填写generator/profile/scenario versions、seed/hash、collection counts、tests、changed paths、assumption与文档结果；在provider证据闭环前保持`in_progress`。
 
-### Local implementation evidence (provider pending)
+### Implementation and provider closure
 
-- 2026-08-20（Asia/Hong_Kong）：七层generator、source-shaped `ReferenceFileAdapter v1` rows、公开Normalization/Data Validation handoff、P1 package/manifest验证与`SIM-P1-INGRESS-001@1.0.0`资产已实现；Task仍为`in_progress`，因为implementation commit与对应GitHub provider evidence尚未产生。P1-11未启动。
+- 2026-08-20（Asia/Hong_Kong）：七层generator、source-shaped `ReferenceFileAdapter v1` rows、公开Normalization/Data Validation handoff、P1 package/manifest验证与`SIM-P1-INGRESS-001@1.0.0`资产已实现；implementation commit=`5ac08183dd03049ad02c77e6cba80c4621847e0f`，已按用户授权直接push受保护的`main`。P1-11未启动。
 - Replay identity：`PROFILE-SIM-P1-INGRESS-001@1.0.0`、`SIM-P1-INGRESS-001@1.0.0`、generator `PLANTNEXUS-P1-CANONICAL-IMPORT-GENERATOR@1.0.0`、seed=`20260820`、generation manifest=`synthetic-generation-manifest.v1`、Import=`import-package.v2`、schema set=`2.2.0`。16个canonical collections全部非空，共49条记录；dataset hash=`sha256:24a74b4f43b0ba42ed458983e0c4776613911924ae5250d9df8ae9e4f14cb1c4`，package ID=`import-9eea9bd41216b3a2b337a83f2b6f5438a287f219251168ce8d574f4b9fb6b2c6`，quality report ID=`import-quality-600341c55f6f8511bd25387fcf2a9f3ff62d2c72901f8bb454df32636b4cafbe`且`PASS/0 errors`。
 - Determinism/isolation：same input产生byte-identical canonical package/hash，`generated_at`不进入dataset hash；seed/profile version变化改变结果，generator version mismatch显式拒绝；每层仅使用immutable context与命名child seed，测试证明purity及调用顺序独立。AST isolation证明无PlanningSnapshot/PlanningProblem/Solver/Application/ORM import；Production target、unsupported capability、Profile/Scenario mismatch及公开Normalization/Data Validation失败均结构化拒绝。
 - Normalization scope correction只把`cycle_seconds_per_unit`按已发布duration合同纳入显式unit transform分类，并增加`min → second`直接回归；未改变Schema、字段、unit registry或其他Normalization行为。P0 empty generator contract与既有Simulation contract tests保持通过。
 - Local acceptance：`uv sync --locked` PASS；Task Ruff PASS；Pyright=`0 errors, 0 warnings, 0 informations`；direct Normalization regression=`1 passed`；P1 generator + P0 Simulation contract suite=`18 passed`；no-Planning/Solver import slice=`1 passed`；generator machine report=`PASS`（7/7 checks）；full repository=`262 passed`；full docs governance=`PASS`（124 docs/30 roots/36 tests/15 OPEN/10 SIM/10 risks/22 tasks）；Task diff governance=`PASS`（52 paths/7 impact rows/0 issues）；`git diff --check` PASS；`uv build`成功生成sdist与wheel。以上命令已在格式化后的最终working tree重放。
 - Trace/assumptions：REQ-001/003/009/011/012、NFR-DET/TRC/ISO、ENG-ARCH/ERR/VER → TASK-P1-10 → TEST-SCENARIO-REPLAY/TEST-SIM-ISOLATION → generator/asset/package/manifest/hash/machine reports。新增`SIM-ASSUMPTION-010`只绑定本asset的49-record correctness/replay；SIM-ASSUMPTION-001～010保持`ACTIVE`，全部PROD_OPEN与风险状态保持原状，不能据此声明Benchmark、容量或Production readiness。
 - Scope/rollback：当前Task union diff为52条允许路径，匹配`IMPACT-DOCS/FIXTURE/GOVERNANCE-REGISTRY/IMPORT/PHASE/SIM-GENERATOR/TESTS`七行且无越界。无Schema、migration、dependency/lock、Snapshot/Problem、Solver、Benchmark baseline、API或P2变更；历史generator/fixture/hash不重解释，语义变更必须发布新generator/asset version。
+- Provider：GitHub Actions push run [`32319530217`](https://github.com/kumamon-xu/PlantNexus-APS/actions/runs/32319530217)，attempt=`1`、event=`push`、head SHA=`5ac08183dd03049ad02c77e6cba80c4621847e0f`、status/conclusion=`completed/success`；required `validate` job [`96278754755`](https://github.com/kumamon-xu/PlantNexus-APS/actions/runs/32319530217/job/96278754755)及全部步骤成功。Artifact `9389283489` / `plantnexus-ci-evidence-32319530217`未过期，size=`6698` bytes，expires_at=`2026-11-18T01:01:59Z`；provider与下载ZIP digest均为`sha256:2b04b7bd134810c7d37d6130a2ba84911b6f672fb8a95ef83c761496370b73cf`。Artifact内`synthetic-generator-report.v1`为7/7 PASS并重现49 records及固定hash；`traceability/ci-current-task-report.json`精确记录本Task、implementation SHA、Diff base、52 committed paths、7 matched impact rows、0 issues。公开branch metadata确认`main`受保护且required context为`validate`。
+- Completion decision：replay、七层purity/isolation、公开Normalization/Data Validation、duration compatibility regression、版本/error/assumption/文档治理、本地全仓回归、build及精确implementation provider CI均已满足，故Task标记`done`。本次只追加完成证据的closure commit仍需在push后按其精确SHA独立核验CI；该非自引用核验不改变implementation结论。建议下一项执行TASK-P1-11，但本Task闭环不自动启动它，也不进入P2。

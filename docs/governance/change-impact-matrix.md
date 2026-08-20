@@ -223,4 +223,4 @@ Schema变化只新增unit registry并同步set metadata/data dictionary；Import
 
 本Task实际路径预期命中`IMPACT-SCHEMA`、`IMPACT-PROBLEM`、`IMPACT-DOMAIN`、`IMPACT-INFRA`、`IMPACT-DEPENDENCY`、`IMPACT-VERSION-METADATA`、`IMPACT-TESTS`、`IMPACT-PHASE`、`IMPACT-GOVERNANCE-REGISTRY`、`IMPACT-DOCS`。Dependency row是强制review而非lock变化：`pyproject.toml`只提升schema metadata，runtime/dev pins与`uv.lock`必须无diff。INFRA只新增通用CI machine command，不改变service/Compose/deployment。
 
-Schema/Problem/Domain实现限定为additive Problem v2、version-specific APIs、pure precheck与tests；v1 bytes/default API保留。Phase/Governance在exact implementation provider成功后只把P2-01闭环为`done`并同步formed/PLANNED边界，不激活P2-02。Machine rule table/required-document columns与`registry_version=1.0.0`不变；provider Task report实际为60 paths、10 matched rows和0 issues。
+Schema/Problem/Domain实现限定为additive Problem v2、version-specific APIs、pure precheck与tests；v1 bytes/default API保留。Phase/Governance在exact implementation provider成功后只把P2-01闭环为`done`并同步formed/PLANNED边界，不激活P2-02。Machine rule table/required-document columns与`registry_version=1.0.0`不变；implementation provider Task report为60 paths、10 matched rows和0 issues，最终docs-overview有界更正使完整Task range为61 unique paths并保持相同10 rows/0 issues。

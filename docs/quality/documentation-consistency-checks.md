@@ -227,7 +227,7 @@ Full检查的最终基线为125份`docs/**/*.md`、30 roots、36 Test IDs、15 O
 
 P2-01在任何业务实现前固定Diff base、验证依赖/授权/v1 hashes并扩充allowed paths/Documents/Impact Rules；新增ADR-0010使inventory从140增至141。Diff必须只落在卡片明确列出的Problem v2 Schema/sample/code/tests/workflow/version metadata与治理文档，且`uv.lock`、v1 Problem Schema/sample、Application、Backend/Strategy/Validator/Benchmark/P3路径保持无差异。
 
-Full与Task diff检查必须同时识别`IMPACT-SCHEMA/PROBLEM/DOMAIN/INFRA/DEPENDENCY/VERSION-METADATA/TESTS/PHASE/GOVERNANCE-REGISTRY/DOCS`，并验证global set`2.3.0`与immutable document versions/bytes并存。Implementation provider evidence未产生前只能记录local PASS和`in_progress`，不得预填run/artifact或关闭Task；evidence-only closure只回填真实exact SHA/provider事实。
+Full与Task diff检查同时识别`IMPACT-SCHEMA/PROBLEM/DOMAIN/INFRA/DEPENDENCY/VERSION-METADATA/TESTS/PHASE/GOVERNANCE-REGISTRY/DOCS`，并验证global set`2.3.0`与immutable document versions/bytes并存。Implementation `c64284685f37ef0d03eacade5699076146653333`的provider artifact `9394931377`内Task report精确绑定该SHA、60 paths/10 rows/0 issues，Problem report为4/4 PASS；evidence-only closure据此只回填真实provider事实并标记Task `done`，不改变机器规则或启动P2-02。
 
 ## Override
 

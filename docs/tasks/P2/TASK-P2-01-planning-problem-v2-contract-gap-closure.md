@@ -1,7 +1,7 @@
 ---
 doc_id: TASK-P2-01
 title: PlanningProblem v2 Contract Gap Closure
-status: in_progress
+status: done
 spec_version: 0.3.0
 phase: P2
 normative: true
@@ -79,10 +79,16 @@ SIM_ASSUMPTIONS: 可用既有versioned synthetic facts验证，但不得改变�
 
 Rollback: 保留v1默认consumer和固定hash；v2未被后继消费前可回退新增artifact；一旦被消费只能通过新版本/ADR迁移，禁止覆盖v2历史bytes。
 
-## Local implementation evidence（provider pending）
+## Completion evidence
 
 已形成ADR-0010、global schema set`2.3.0`、`planning-problem.v2` Schema/sample、version-specific types/builder/hash/verify与CI machine report。v2 fixed Problem hash=`sha256:9927418a446dd046ddd1d835643da03fbf5cdcf8ca246ba22c3700563a17e9e8`，canonical bytes SHA-256=`2dbe06907952d6aba303977d67a7f5d7a6ef89c4be5ac5a6ac8d74e3f95d720a`/3366 bytes；v2 Schema/sample file SHA-256分别为`e6e4a9843c08dbb191c57baede8c81cc3f6d738b971780e6db8f8ded75db87c8`、`f655f9da0e97ede115ffe128eeabdc6e61bcb74412acfac4d7d0ccb8766d92ad`。
 
 v1 Schema/sample bytes、default `build_planning_problem`及fixed Problem/canonical digests均保持启动门记录值。八文件focused suite=`89 passed`，full repository suite=`286 passed`，v2 property文件5项PASS，Ruff/Pyright=`0 issues`，`planning-problem-contract-report.v1`=`4/4 PASS`。Full docs governance=`141 docs/30 roots/36 tests/15 OPEN/10 SIM/10 risks/37 tasks` PASS；Task diff governance=`60 paths/10 impact rows/0 issues` PASS；locked sync、immutable v1/`uv.lock` diff和`git diff --check`均exit 0。
 
-没有DB migration、dependency/`uv.lock`变化、OR-Tools、Backend/Strategy、Application切换、ScheduleValidator、candidate schedule、Solver、Benchmark或P3实现。以上为working-tree本地证据；implementation SHA、required `validate` job和artifact尚未产生，因此Task保持`in_progress`，不得预填provider PASS或启动P2-02。
+没有DB migration、dependency/`uv.lock`变化、OR-Tools、Backend/Strategy、Application切换、ScheduleValidator、candidate schedule、Solver、Benchmark或P3实现。
+
+Implementation commit=`c64284685f37ef0d03eacade5699076146653333`，其唯一父提交正是Diff base `617dd0fb8d6543dc2c9be6ac1e868f751763603d`。GitHub push run [`32336812748`](https://github.com/kumamon-xu/PlantNexus-APS/actions/runs/32336812748)与required `validate` job `96327855244`均为`completed/success`；locked sync、lint、type check、repository tests、既有machine contracts、P1 common ingress、PlanningProblem v1/v2 evidence、engineering、Compose、docs/Task diff、build与artifact upload全部success。Branch protection required context仍为`validate`、app ID `15368`。
+
+Artifact `9394931377`=`plantnexus-ci-evidence-32336812748`，size=`10378` bytes，digest=`sha256:8cad686b05b396d49f64fc0f71d8ccecd90759926aaa4a86423bd2a6f3cfc6ca`，`expired=false`。下载后核验：`traceability/ci-current-task-report.json` SHA-256=`e9ded77771eae2c31ab33d9b5e03964a18e762143745012820987f98571ed9f4`，精确记录本Task/head/Diff base、60 committed paths、10 impact rows、0 issues、result=`PASS`；`validation/ci-planning-problem-contracts.json` SHA-256=`f9bb0bce6dcd6b52f0dc68ae00d68a7a30f7b98188039d3fb9d8c5f10cd8a94a`，`code_commit`精确匹配、4/4 PASS、v1=`PRESERVED`、v2=`OPT_IN`、Solver/Validator=`NOT_IMPLEMENTED_BY_TASK`。
+
+因此本Task全部Completion conditions满足并标记`done`。P2保持`active`；TASK-P2-02～14仍为`planned`，本closure不构成后续Task启动授权，也不进入P3。Evidence-only closure自身的exact provider结果只能在该提交推送后核验；若失败则保留失败run并追加有界修复，不重写历史或force-push。

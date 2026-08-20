@@ -111,4 +111,4 @@ P2 phase planning一次新增TASK-P2-00～14。CI仍使用PR base或push event `
 
 Workflow在repository suites与P1 common-ingress之后运行`app.planning.problem.contract_check`，生成`build/validation/ci-planning-problem-contracts.json`。报告必须为`planning-problem-contract-report.v1`、4/4 checks PASS，且同时包含v1 byte preservation/fixed replay与v2 Schema/sample/hash/field evidence；该step不得`continue-on-error`，artifact glob必须上传报告与current Task diff report。
 
-本地89项focused PASS、Ruff/Pyright和uncommitted machine report只能进入implementation commit，不能自我满足Provider evidence。Task只有在exact commit的required `validate`与未过期artifact成功、artifact内commit/report一致后才可由evidence-only revision标记`done`。这不是P2 vertical Gate，P2-02～14仍不得启动或提前标记。
+本地89项focused、286项full、Ruff/Pyright和4/4 machine report均PASS。Implementation `c64284685f37ef0d03eacade5699076146653333`的exact run `32336812748`、required `validate` job `96327855244`和未过期artifact `9394931377`均success；artifact内Task report精确记录该SHA、60 paths/10 rows/0 issues，Problem report精确记录同一SHA与4/4 checks，因此P2-01由evidence-only revision标记`done`。这不是P2 vertical Gate，P2-02～14仍不得启动或提前标记。

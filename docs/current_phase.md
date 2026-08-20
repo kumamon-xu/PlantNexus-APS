@@ -6,7 +6,7 @@ spec_version: 0.3.0
 phase: P2
 normative: true
 source_sections: [73, 74, 75, 76, 110, 111]
-last_reviewed: 2026-08-20
+last_reviewed: 2026-08-21
 ---
 
 # 当前阶段：P2 — CP-SAT Vertical Slice
@@ -42,7 +42,7 @@ PlanningSnapshot
 
 用户于2026-08-20明确授权执行`TASK-P2-03 — OR-Tools and SolverBackend Foundation`；该Task以clean、provider-verified `f73f8c90af94d3c9b05ecc10b6c999594a3b7d66`启动，并在依赖变更前接受ADR-0011。现已由implementation `9268b88ca7ce90a8f72023241f87e2d3676fd58a`的GitHub run `32346208046` / required job `96355386111` / artifact `9398128763`闭环为`done`。Problem/Policy/Solution/Report合同字节和语义保持只读。
 
-P2-02把global schema set additive提升到`2.4.0`，新增四个互相离线解析的v1 document contract，并以`CONTRACT_SAMPLE`/`SOLVER_RUN`显式区分shape样例与真实运行。该发布样例的`not-installed`是P2-02历史shape证据，不随P2-03安装依赖而改写。用户于2026-08-20明确授权执行TASK-P2-04与随后TASK-P2-05；两者均已由exact implementation provider evidence闭环。TASK-P2-00～05现均`done`；P2-06～14未获授权。
+P2-02把global schema set additive提升到`2.4.0`，新增四个互相离线解析的v1 document contract，并以`CONTRACT_SAMPLE`/`SOLVER_RUN`显式区分shape样例与真实运行。该发布样例的`not-installed`是P2-02历史shape证据，不随P2-03安装依赖而改写。用户于2026-08-20明确授权执行TASK-P2-04与随后TASK-P2-05；两者均已由exact implementation provider evidence闭环。TASK-P2-00～05现均`done`；用户于2026-08-21明确授权TASK-P2-06，它以clean、provider-verified `c55aa294977a6cafad85741f425d46cd36e9af1a`为Diff base并处于`in_progress`。P2-07～14未获授权。
 
 ## 当前允许
 
@@ -54,7 +54,7 @@ P2-02把global schema set additive提升到`2.4.0`，新增四个互相离线解
 
 ## 当前禁止
 
-- 未经用户另行明确授权启动任何P2-06～14实现；TASK-P2-05完成不构成P2-06自动授权；
+- 未经用户另行明确授权启动任何P2-07～14实现；TASK-P2-06仅按已冻结的temporal/calendar/material范围执行；
 - 修改Task允许范围外文件、预填PASS/provider evidence或跳过独立Validator；
 - 实现C-012～C-018、OBJ-002 Stability、动态Replan、ExecutionSimulator、P3 Workspace/审批/发布状态；
 - 把UNKNOWN写成INFEASIBLE、FEASIBLE写成OPTIMAL，或以hint代替Execution Fact/HARD lock；
@@ -76,7 +76,7 @@ Task全部完成或audit READY都不自动切换P3；失败时保持P2并建立�
 
 `ortools==9.15.6755`、`cp-sat-backend.v1`、七状态adapter、SolveLimits参数映射、namespace/serialization隔离与6-check machine report已形成；本地39 focused、319 full、Ruff/Pyright、P2-02/P0历史兼容、Compose和build均PASS。Provider artifact精确复现Linux/x86_64、6/6 foundation及50 paths/9 rows/0 issues，因此TASK-P2-03=`done`。
 
-该foundation在TASK-P2-03关闭时没有business model builder，真实`solve()`以稳定MODEL_INVALID边界停止；empty model的OPTIMAL不表示PlanningProblem可行。该历史边界已由TASK-P2-05的bounded core consumer取代，但P2-06～14仍未授权，current phase保持P2且不进入P3。
+该foundation在TASK-P2-03关闭时没有business model builder，真实`solve()`以稳定MODEL_INVALID边界停止；empty model的OPTIMAL不表示PlanningProblem可行。该历史边界已由TASK-P2-05的bounded core consumer取代，TASK-P2-06现按明确授权扩展temporal/calendar/material约束；P2-07～14仍未授权，current phase保持P2且不进入P3。
 
 ## TASK-P2-04 启动边界
 
@@ -100,4 +100,10 @@ Core builder现使用master/optional intervals、exact-one candidate、candidate
 
 本地验收：focused `64 passed`、full repository `360 passed`、Ruff/Pyright 0、`cp-sat-core-model-report.v1` 6/6、formal report 6/6、治理142 docs且Task diff 49 paths/6 rows/19 checks/0 issues、compose/build/immutable diff PASS。
 
-Implementation `df706786e0ec1c54bf60cd43261a92ef6aa53cc7`的GitHub run `32354050257` / required `validate` job `96379299455` / artifact `9400957897`均success；artifact digest=`sha256:c40c20dcc09e2beb38e85bbead96b83e624c8badc25c88bf78cc5a3990c7d46c`，core/formal/Task报告均绑定该SHA并分别为6/6、6/6、49 committed/0 working/6 rows/19 checks/0 issues。TASK-P2-05=`done`。Current phase保持P2，P2-06依赖已满足但仍未授权，P2-06～14保持`planned`。
+Implementation `df706786e0ec1c54bf60cd43261a92ef6aa53cc7`的GitHub run `32354050257` / required `validate` job `96379299455` / artifact `9400957897`均success；artifact digest=`sha256:c40c20dcc09e2beb38e85bbead96b83e624c8badc25c88bf78cc5a3990c7d46c`，core/formal/Task报告均绑定该SHA并分别为6/6、6/6、49 committed/0 working/6 rows/19 checks/0 issues。TASK-P2-05=`done`。Current phase保持P2；TASK-P2-06的启动来自用户新的明确授权，不是依赖完成后的自动过渡。
+
+## TASK-P2-06 启动边界
+
+用户于2026-08-21明确授权执行TASK-P2-06。启动复核确认`main=origin/main=c55aa294977a6cafad85741f425d46cd36e9af1a`、working tree clean，且该SHA的GitHub run `32354521904` / required `validate` job `96380738933` / artifact `9401134902`精确成功，artifact digest=`sha256:03f304162e1d862ecc320cf592a27ca1c41282cbcc9ea7c060718bcc69842fe9`。P2-05 implementation是该基线祖先；Problem/Policy/Solution Schema、constraint-rule-sheet、formal Validator、Problem builder/hash、OR-Tools pin与`uv.lock`全部冻结。
+
+本Task只把C-002/005/006/009加入现有bounded CP-SAT模型：min使用ceil tick、max使用floor tick，calendar保持秒级half-open与tick-grid等价，release/material分别形成下界，transport只按实际选择资源的workshop独立判定。C-007/008、OBJ-001搜索、Strategy、Benchmark threshold、DB/API/Worker和P3均不在范围；native OPTIMAL仍只映射为业务FEASIBLE，UNKNOWN不得改写为INFEASIBLE。P2-07及以后保持`planned`且未获授权。

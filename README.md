@@ -1,6 +1,6 @@
 # PlantNexus APS
 
-PlantNexus APS 是一个面向单工厂、多车间场景的高级计划与排程（APS）项目。P1 Data & Snapshot 已通过 Exit Gate 并关闭，当前阶段为 P2（CP-SAT Vertical Slice）。TASK-P2-01～05 已闭环；当前已形成 exact-pinned OR-Tools/CP-SAT Backend、独立重算 C-001～C-011 的正式 Validator，以及 C-001/003/004/010/011 core assignment/resource model。OBJ-001 搜索、C-002/005～009、Benchmark、Production 和 P2-06+ 均未启动。
+PlantNexus APS 是一个面向单工厂、多车间场景的高级计划与排程（APS）项目。P1 Data & Snapshot 已通过 Exit Gate 并关闭，当前阶段为 P2（CP-SAT Vertical Slice）。TASK-P2-01～05 已闭环，TASK-P2-06 已获明确授权并进入 temporal/calendar/material model 实施；当前已形成 exact-pinned OR-Tools/CP-SAT Backend、独立重算 C-001～C-011 的正式 Validator，以及 C-001/003/004/010/011 core assignment/resource model。在 P2-06 验收闭环前，不声称 C-002/005/006/009 Solver、OBJ-001、Benchmark 或 Production 能力已经形成。
 
 ## 开始之前
 
@@ -36,7 +36,7 @@ uv run python -c "import app; assert app.CODE_VERSION == '0.0.0'; assert app.SPE
 `scripts/check_docs.py` 当前同时检查结构性 Markdown、版本化 registries、REQ/NFR/ENG/TEST 等引用、Task 依赖、逐根 traceability 和 PROD_OPEN/SIM_ASSUMPTION 隔离。Task 进入 `in_progress` 时须把当时完整 HEAD SHA 写入 `Diff base`；影响覆盖检查使用 `Diff base..HEAD` 的已提交变更与当前 working tree 的并集，因此提交前后可用同一命令复验：
 
 ```powershell
-uv run python scripts/check_docs.py --task docs/tasks/P2/TASK-P2-04-formal-independent-schedule-validator.md --check-diff --report build/traceability/TASK-P2-04-report.json
+uv run python scripts/check_docs.py --task docs/tasks/P2/TASK-P2-06-cp-sat-temporal-calendar-material-model.md --check-diff --report build/traceability/TASK-P2-06-report.json
 ```
 
 报告使用 `traceability-report.v1`，包含 `diff_base` 与 committed/working-tree source counts，生成到已忽略的 `build/`；Task Card Completion evidence 保存持久结果摘要。[`ci.yml`](.github/workflows/ci.yml) 已编排 exact lock、lint、type、全部 P0 tests、machine contracts、Compose config、文档 diff 和 package build。仓库内只证明 workflow/config 可执行；CI provider run URL/ID 必须来自真实外部运行，不能由本地结果替代。
@@ -56,6 +56,6 @@ scripts/      仓库级校验与自动化脚本
 infra/        P0 开发容器构建配置
 ```
 
-P1 Data & Snapshot已通过Exit Gate并关闭，当前阶段为P2。TASK-P2-01～05均已闭环；P2-03形成`ortools==9.15.6755`与Backend foundation，P2-04形成formal independent Validator，P2-05形成C-001/003/004/010/011 core model、candidate/Validator交叉证据与telemetry。OBJ-001搜索、C-002/005～009、Benchmark、DB/API/Worker、P2-06～14和P3仍未实现或未获授权。当前边界见[`docs/current_phase.md`](docs/current_phase.md)。
+P1 Data & Snapshot已通过Exit Gate并关闭，当前阶段为P2。TASK-P2-01～05均已闭环；P2-03形成`ortools==9.15.6755`与Backend foundation，P2-04形成formal independent Validator，P2-05形成C-001/003/004/010/011 core model、candidate/Validator交叉证据与telemetry。用户已明确授权TASK-P2-06；本Task仅实施C-002/005/006/009 temporal/calendar/material约束与证据，OBJ-001搜索、C-007/008、Benchmark、DB/API/Worker、P2-07～14和P3仍未实现或未获授权。当前边界见[`docs/current_phase.md`](docs/current_phase.md)。
 
-TASK-P2-05本地验收与implementation `df706786e0ec1c54bf60cd43261a92ef6aa53cc7`的GitHub required `validate` / artifact均已闭环，Task=`done`。P2-06启动依赖已满足，但仍须新的明确授权，当前未启动。
+TASK-P2-05本地验收与implementation `df706786e0ec1c54bf60cd43261a92ef6aa53cc7`的GitHub required `validate` / artifact均已闭环，Task=`done`。TASK-P2-06以clean、provider-verified `c55aa294977a6cafad85741f425d46cd36e9af1a`为不可变Diff base，当前为`in_progress`；P2-07及以后不会自动启动。

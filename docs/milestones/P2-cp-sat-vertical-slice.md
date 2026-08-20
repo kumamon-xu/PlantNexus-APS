@@ -6,7 +6,7 @@ spec_version: 0.3.0
 phase: P2
 normative: true
 source_sections: [75, 76]
-last_reviewed: 2026-08-20
+last_reviewed: 2026-08-21
 ---
 
 # P2 — CP-SAT Vertical Slice
@@ -29,7 +29,7 @@ P1 Exit Gate=`READY`且blocking gaps为空；用户于2026-08-20明确批准P1�
 | 3 | TASK-P2-03 | OR-Tools exact pin与Backend foundation | P2-02 | `done` |
 | 4 | TASK-P2-04 | 正式Problem/Solution独立ScheduleValidator | P2-01/02 | `done` |
 | 5 | TASK-P2-05 | C-001/003/004/010/011 core model | P2-03/04 | `done` |
-| 6 | TASK-P2-06 | C-002/005/006/009 temporal/calendar/material | P2-05 | `planned` |
+| 6 | TASK-P2-06 | C-002/005/006/009 temporal/calendar/material | P2-05 | `in_progress` |
 | 7 | TASK-P2-07 | C-007/008 execution facts/HARD lock | P2-06 | `planned` |
 | 8 | TASK-P2-08 | OBJ-001 Delivery与GlobalCpSatStrategy | P2-02/05/06/07 | `planned` |
 | 9 | TASK-P2-09 | Golden/scenario/property/mutation integration | P2-04～08 | `planned` |
@@ -78,4 +78,4 @@ P2-04的授权范围仅包含formal independent Validator及其机器证据。�
 
 TASK-P2-05本地实现已形成five-C-ID core model、candidate-specific duration、unary NoOverlap、horizon、complete mapping、formal Validator gate、tiny exhaustive oracle和真实telemetry；64 focused、360 full、Ruff/Pyright、core/formal机器报告、49-path/6-row治理、compose/build/immutable均PASS。下方exact provider证据已完成闭环；Milestone仍为P2 active，OBJ-001与C-002/005～009仍未形成，P2-06不自动启动。
 
-Implementation `df706786e0ec1c54bf60cd43261a92ef6aa53cc7`的run `32354050257` / required job `96379299455` / artifact `9400957897`均success；artifact core/formal报告绑定同一SHA并各6/6，Task report为49 committed/0 working paths、6 rows、19 checks、0 issues。因此TASK-P2-05=`done`。P2保持`active`；P2-06依赖满足但未获执行授权，OBJ-001、C-002/005～009、Benchmark和P3仍未形成。
+Implementation `df706786e0ec1c54bf60cd43261a92ef6aa53cc7`的run `32354050257` / required job `96379299455` / artifact `9400957897`均success；artifact core/formal报告绑定同一SHA并各6/6，Task report为49 committed/0 working paths、6 rows、19 checks、0 issues。因此TASK-P2-05=`done`。用户于2026-08-21明确授权TASK-P2-06；启动时`main=origin/main=c55aa294977a6cafad85741f425d46cd36e9af1a`、working tree clean，该SHA的run `32354521904` / required job `96380738933` / artifact `9401134902`均success。P2保持`active`；P2-06仅启动C-002/005/006/009与对应证据，OBJ-001、C-007/008、Benchmark、P2-07～14和P3仍未形成或未获授权。

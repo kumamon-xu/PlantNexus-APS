@@ -6,7 +6,7 @@ spec_version: 0.3.0
 phase: P2
 normative: false
 source_sections: [2, 6, 70]
-last_reviewed: 2026-08-20
+last_reviewed: 2026-08-21
 ---
 
 # PlantNexus APS 文档中心
@@ -69,7 +69,7 @@ last_reviewed: 2026-08-20
 
 ## 当前范围
 
-当前阶段为P2。P1 Milestone为`completed`，P2为`active`；TASK-P2-00～05均已闭环为`done`。正式Problem/Solution Validator独立重算C-001～C-011，P2-05 core Solver已实现C-001/003/004/010/011并由exact provider证据闭环；OBJ-001搜索、C-002/005～009、Benchmark、P2-06～14和P3均未启动，详见`current_phase.md`。
+当前阶段为P2。P1 Milestone为`completed`，P2为`active`；TASK-P2-00～05均已闭环为`done`，TASK-P2-06已获用户明确授权并以`c55aa294977a6cafad85741f425d46cd36e9af1a`为Diff base处于`in_progress`。正式Problem/Solution Validator独立重算C-001～C-011，P2-05 core Solver已实现C-001/003/004/010/011并由exact provider证据闭环；P2-06只实施C-002/005/006/009，OBJ-001搜索、C-007/008、Benchmark、P2-07～14和P3均未启动，详见`current_phase.md`。
 
 ## 仓库入口与本地检查
 
@@ -87,4 +87,4 @@ TASK-P2-03本地39项聚焦、319项全量和6/6 foundation均PASS；exact GitHu
 
 TASK-P2-04本地证据为6/6 formal machine checks、13个mutation、11个C-ID、14个hard violations和6个duration/order examples；implementation `9b532e2c054b02e1692f345a252922ec7fd469e4`的exact GitHub run `32350068318` / required job `96367085099` / artifact `9399519368`复现该报告和38-path/6-row/0-issue Task report，故Task=`done`。本Task未修改Backend、合同Schema、fixture bytes、dependency、objective或Benchmark。
 
-TASK-P2-05已形成C-001/003/004/010/011 core CP-SAT、完整candidate映射、future-fact fail-closed、formal Validator consumer、fixed-seed property与独立tiny oracle。Local acceptance为64 focused、360 full、Ruff/Pyright 0、core/formal各6/6、治理49 paths/6 rows/0 issues、compose/build/immutable PASS；implementation `df706786e0ec1c54bf60cd43261a92ef6aa53cc7`的run `32354050257` / job `96379299455` / artifact `9400957897`精确复现证据，Task=`done`。P2-06未获授权。
+TASK-P2-05已形成C-001/003/004/010/011 core CP-SAT、完整candidate映射、formal Validator consumer、fixed-seed property与独立tiny oracle。Local acceptance为64 focused、360 full、Ruff/Pyright 0、core/formal各6/6、治理49 paths/6 rows/0 issues、compose/build/immutable PASS；implementation `df706786e0ec1c54bf60cd43261a92ef6aa53cc7`的run `32354050257` / job `96379299455` / artifact `9400957897`精确复现证据，Task=`done`。TASK-P2-06现已明确授权，只把precedence/calendar/release/material/transport从历史fail-closed边界提升为C-002/005/006/009模型；RUNNING/HARD lock、objective与后续Task仍保持fail closed或未启动。

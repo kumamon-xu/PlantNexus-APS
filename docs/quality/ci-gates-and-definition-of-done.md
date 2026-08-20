@@ -98,4 +98,4 @@ Repository workflow在完整pytest与既有machine contracts之后必须运行P1
 
 P1-12在Diff base `8830a6dc566df8093b601a82c87c74a9cfd97b59`上独立重跑locked sync、Ruff、Pyright、271项full tests、11项migration/exit-rejection focused tests、P1 pipeline 14/14、Rule/Generator/Golden/Mutation/Engineering reports、Compose、full/diff governance和`uv build`，全部exit 0。下载并解析P1-01～11的provider artifacts后，所有实现Task报告均绑定exact head/result=`PASS`/0 issues；P1-11 closure run `32322871271`进一步证明audit起点本身已经provider验证。
 
-因此§74 P1 Gate=`READY`、blocking gaps为空。TASK-P1-12自身仍需先提交本报告并由exact GitHub `validate`/artifact成功，再以evidence-only revision闭环Task lifecycle；该自引用边界不改变已基于P1-11 closure和本地独立命令形成的Gate判断。即使Task `done`，current phase仍为P1，必须等待用户明确批准后才可进入P2。
+因此§74 P1 Gate=`READY`、blocking gaps为空。TASK-P1-12 implementation commit `a5d7e4a68dc12d48e36cb692500f59446f8097b4`的exact GitHub run `32326616525`、required `validate` job `96299073525`和artifact `9391591718`均成功；artifact精确记录30 paths、3 impact rows、0 issues与pipeline 14/14，Task lifecycle已闭环为`done`。evidence-only revision只回填已发生事实，不改变已基于P1-11 closure和本地独立命令形成的Gate判断。current phase仍为P1，必须等待用户明确批准后才可进入P2。

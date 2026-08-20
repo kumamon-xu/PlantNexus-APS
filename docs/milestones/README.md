@@ -28,4 +28,4 @@ Milestone 定义 outcome 和 exit gate，不等同 Sprint。只有当前 Phase �
 
 P0 当前状态：TASK-P0-01～10 全部完成；[superseding audit](P0-exit-gate-audit-report.md) 的 Schema、Golden、Validator Rule Sheet、Scenario replay、Repository Build、CI 和 PROD_OPEN registration全部 `PASS`，P0 Gate=`READY`。用户于 2026-08-19 明确批准 phase transition后，P0转为 `completed`，历史失败/修复/provider evidence继续保留。
 
-P1当前状态：[`P1 — Data & Snapshot`](P1-data-and-snapshot.md)为`active`，已创建TASK-P1-01～12；TASK-P1-01～11=`done`，最后一项TASK-P1-12以`8830a6dc566df8093b601a82c87c74a9cfd97b59`为Diff base处于`in_progress`。P1-12独立审计的271项回归、14/14 pipeline、全部machine/build/docs/provider前置证据均PASS，[audit](P1-exit-gate-audit-report.md)给出Gate=`READY`且无blocking gap；待Task自身provider closure后才能标记`done`。Milestone保持P1 active并等待用户明确P1→P2授权，未启动Solver或P2。
+P1当前状态：[`P1 — Data & Snapshot`](P1-data-and-snapshot.md)为`active`，TASK-P1-01～12全部`done`。[P1 audit](P1-exit-gate-audit-report.md)的271项回归、14/14 pipeline、全部machine/build/docs/provider证据均PASS；TASK-P1-12 implementation `a5d7e4a68dc12d48e36cb692500f59446f8097b4` / run `32326616525` / artifact `9391591718`已闭环，Gate=`READY`且无blocking gap。Milestone等待用户明确P1→P2授权，未启动Solver或P2。

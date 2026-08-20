@@ -1,7 +1,7 @@
 ---
 doc_id: TASK-P1-12
 title: P1 Exit Gate Audit
-status: in_progress
+status: done
 spec_version: 0.3.0
 phase: P1
 normative: true
@@ -73,8 +73,8 @@ Rollback: Audit是历史记录，不覆盖失败为 PASS；事实错误用更正
 
 - Audit date/time: 2026-08-20T10:42:46～10:58:36+08:00；auditor=Codex execution agent。
 - Immutable Diff base and audit execution HEAD: `8830a6dc566df8093b601a82c87c74a9cfd97b59`；Task激活前`main=origin/main`且working tree clean。
-- [Audit report](../../milestones/P1-exit-gate-audit-report.md)与[machine manifest](../../milestones/P1-exit-gate-evidence-manifest.json)给出overall=`READY`、`blocking_gaps=[]`，recommendation=`REQUEST_EXPLICIT_P2_PHASE_TRANSITION_AFTER_TASK_PROVIDER_CLOSURE`。
-- Task lifecycle仍为`in_progress`：本地审计与decision已完成，但本次30-path documentation implementation尚未提交/形成自身provider run。只有该commit的exact CI与后续evidence-only closure均成功回填后才改`done`。
+- [Audit report](../../milestones/P1-exit-gate-audit-report.md)与[machine manifest](../../milestones/P1-exit-gate-evidence-manifest.json)给出overall=`READY`、`blocking_gaps=[]`，recommendation=`REQUEST_EXPLICIT_P2_PHASE_TRANSITION`。
+- Task lifecycle=`done` at 2026-08-20T11:01:39+08:00：30-path audit implementation commit `a5d7e4a68dc12d48e36cb692500f59446f8097b4`已形成exact successful provider run/artifact；本revision为evidence-only closure，其自身exact CI按治理规则在提交/推送后形成外部交付证据，不是改变Task decision的前置条件。
 - Current phase保持P1，P1 Milestone保持`active`（Gate ready / awaiting user decision）；未创建`docs/tasks/P2`、Solver、candidate Schedule或Production state。
 
 ### Scope and documentation
@@ -96,6 +96,7 @@ Pre-commit governance report=`traceability-report.v1/PASS`：Git HEAD=Diff base�
 - P1-01～11的11组Diff base/implementation commit均存在，base先于implementation，implementation均为当前HEAD祖先；所有Task front matter=`done`。
 - 下载并解析每个implementation artifact：`traceability-report.v1`逐项绑定exact Task/head/result=`PASS`，changed paths/impact rows分别为31/6、50/8、36/6、42/8、49/8、63/9、45/9、41/6、30/5、52/7、43/7，issues均为0。
 - P1-11 closure head `8830a6dc566df8093b601a82c87c74a9cfd97b59`的run `32322871271` / job `96288301743` / artifact `9390358424`再次得到14/14 pipeline和43 paths/7 rows/0 issues；因此audit baseline本身已由provider验证。
+- TASK-P1-12 implementation head `a5d7e4a68dc12d48e36cb692500f59446f8097b4`的run `32326616525` / required job `96299073525` / artifact `9391591718`=`plantnexus-ci-evidence-32326616525`为attempt 1 push、`success`、未过期，provider digest=`sha256:7e2a5e08f80b018355d0ce8f8f164cd51e93bc755f10cfb68746d1ef0e97a3db`。下载内容绑定30 committed/0 working paths、3 rows、19/19 checks、0 issues以及clean-head 14/14 pipeline。
 
 ### Local acceptance commands
 
@@ -126,7 +127,7 @@ P1-12本地machine artifact SHA-256分别为pipeline `0b57578eca2e624becfa64cb62
 ### Provider facts and boundaries
 
 - GitHub repository/branch/workflow=`kumamon-xu/PlantNexus-APS`/`main`/`.github/workflows/ci.yml`；P1-01～11实现run均`push`/attempt 1/`completed success`，required `validate`全部success且artifact未过期。详细run/job/artifact/digest逐项见audit report和manifest。
-- `main.protected=true`，required `validate`/app ID `15368`；force push/deletion disabled。P1-12自身provider为`PENDING_IMPLEMENTATION_COMMIT`，未伪写run ID。
+- `main.protected=true`，required `validate`/app ID `15368`；force push/deletion disabled。P1-12 implementation provider为run `32326616525`/job `96299073525`/artifact `9391591718`，全部精确绑定`a5d7e4a68dc12d48e36cb692500f59446f8097b4`。GitHub Node 20 deprecation annotation是runner强制Node 24的非阻断平台提示，job conclusion仍为`success`。
 - Schema changes=`none`；schema set保持`2.2.0`，Import/Snapshot v2 document保持`2.0.0`，unit registry保持`2.1.0`。Migration changes=`none`；只重跑`0001/0002/0003`测试。Dependency/lock=`none`。
 - Benchmark=`NOT_APPLICABLE` for P1；无Solver/runner/BenchmarkReport，不关闭OPEN-012。No OR-Tools dependency/import、CpModel或IntervalVar。
 - OPEN-001～015全部`OPEN`；SIM-ASSUMPTION-001～010全部`ACTIVE`；RISK-001～010全部`MONITORED`。Reference input为temporary synthetic CSV且`production_binding=false`，不声称真实数据、接口、容量或Production readiness。

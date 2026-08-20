@@ -45,7 +45,7 @@ P0 superseding audit=`READY`，用户于 2026-08-19 明确批准进入 P1；历�
 | [TASK-P1-09](P1/TASK-P1-09-planning-problem-builder-and-hash.md) | Solver-neutral PlanningProblem builder/hash | P1-07/08 | `done` |
 | [TASK-P1-10](P1/TASK-P1-10-synthetic-generator-records.md) | 七层 Synthetic Generator非空 canonical records | P1-02/05/06/07 | `done` |
 | [TASK-P1-11](P1/TASK-P1-11-common-ingress-pipeline-and-gate-evidence.md) | Common-ingress E2E与 P1 Gate evidence | P1-03～10 | `done` |
-| [TASK-P1-12](P1/TASK-P1-12-p1-exit-gate-audit.md) | P1 Exit Gate Audit | P1-01～11 | `in_progress` |
+| [TASK-P1-12](P1/TASK-P1-12-p1-exit-gate-audit.md) | P1 Exit Gate Audit | P1-01～11 | `done` |
 
 ## Lifecycle rules
 
@@ -55,6 +55,6 @@ Task进入 `in_progress` 时必须先把当时完整 40字符 HEAD SHA写入 `Di
 
 每张 Task Card在开始前完成文档影响分析：`Documentation impact`、明确 `Documents to update`、理由、`IMPACT-*` Rule IDs与`Traceability updates`。`Documents to update`必须包含在允许范围；发现额外文件先停止并修订卡片。
 
-TASK-P1-05/06/07/08/09/10/11已分别以implementation commit `d52aa62d36e8d89eba318cb5fc586311680e030f`、`c1ac1077fdd92e012f4050f30bab2aec4638f6ec`、`5a3dbc14c12a107abf4052cca935e3ef59009d3d`、`72670d18a29c9a10cb70f7a263c981a2b660e0ee`、`e8c59547857d2eeace1c9f8b453a5a294cca5ef7`、`5ac08183dd03049ad02c77e6cba80c4621847e0f`、`fa6c4c1159972a30ea683ad4e6eba98342d3c344`及GitHub Actions run `32252308695`、`32257767495`、`32265257468`、`32310098594`、`32315513504`、`32319530217`、`32322511227`完成。P1-11的双入口staging→Problem、271项全仓回归、14/14 pipeline checks和provider 43-path/7-row/0-issue报告均PASS。P1-12已从同步的`8830a6dc566df8093b601a82c87c74a9cfd97b59`激活并完成本地独立审计，Gate=`READY`、blocking gaps为空；Task仍等待自身provider closure，且即使`done`也不自动进入P2。
+TASK-P1-05～11的implementation/provider证据见各卡。P1-12以Diff base `8830a6dc566df8093b601a82c87c74a9cfd97b59`完成独立审计，implementation commit `a5d7e4a68dc12d48e36cb692500f59446f8097b4`的run `32326616525` / job `96299073525` / artifact `9391591718`成功，artifact内Task report为30 paths/3 rows/0 issues、pipeline为14/14。TASK-P1-01～12现全部`done`，P1 Gate=`READY`且blocking gaps为空；不得自动进入P2。
 
 用户授权完成后直接push`main`与provider核验适用于后续每个已验收Task，但不改变各卡允许范围、依赖或启动状态。

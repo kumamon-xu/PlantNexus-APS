@@ -16,16 +16,19 @@ last_reviewed: 2026-08-20
 | Field | Audited value |
 |---|---|
 | Audit Task | TASK-P1-12 |
-| Task lifecycle at decision | `in_progress`；只有本报告提交后的 exact GitHub provider run成功并回填时才改为`done` |
+| Task lifecycle | `done`；审计实现提交及其 exact GitHub provider run 已成功，证据已回填 |
 | Audit date | 2026-08-20 (Asia/Hong_Kong) |
 | Audit execution time | 2026-08-20T10:42:46～10:58:36+08:00 |
 | Diff base | `8830a6dc566df8093b601a82c87c74a9cfd97b59` |
 | Audited repository head | `8830a6dc566df8093b601a82c87c74a9cfd97b59`；审计文档尚未提交，业务代码/Schema/test均未改 |
 | Schema set | `2.2.0`；Import/Snapshot v2 document仍为`2.0.0`，unit registry v1为`2.1.0` |
 | Provider baseline | GitHub Actions / `kumamon-xu/PlantNexus-APS` / `main` / `.github/workflows/ci.yml` |
-| Latest audited successful run | [`32322871271`](https://github.com/kumamon-xu/PlantNexus-APS/actions/runs/32322871271), exact head `8830a6dc566df8093b601a82c87c74a9cfd97b59`, attempt 1, push, `success` |
-| Required job | [`validate`](https://github.com/kumamon-xu/PlantNexus-APS/actions/runs/32322871271/job/96288301743), 20/20 steps successful or intentionally skipped |
-| Uploaded evidence | `plantnexus-ci-evidence-32322871271`, artifact ID `9390358424`, size 9154 bytes, digest `sha256:740b5f0a5e8d4fb0d7df2585422b3be7a74079a4ba531db8b8fb45edfe89ea24`, not expired |
+| Audit execution baseline run | [`32322871271`](https://github.com/kumamon-xu/PlantNexus-APS/actions/runs/32322871271), exact head `8830a6dc566df8093b601a82c87c74a9cfd97b59`, attempt 1, push, `success` |
+| Baseline required job/artifact | [`validate`](https://github.com/kumamon-xu/PlantNexus-APS/actions/runs/32322871271/job/96288301743), 20/20 steps successful or intentionally skipped；artifact `9390358424`, digest `sha256:740b5f0a5e8d4fb0d7df2585422b3be7a74079a4ba531db8b8fb45edfe89ea24`, not expired |
+| Audit implementation commit | `a5d7e4a68dc12d48e36cb692500f59446f8097b4` |
+| Audit Task provider run | [`32326616525`](https://github.com/kumamon-xu/PlantNexus-APS/actions/runs/32326616525), exact implementation head, attempt 1, push, `success` |
+| Audit Task required job | [`validate`](https://github.com/kumamon-xu/PlantNexus-APS/actions/runs/32326616525/job/96299073525), 20/20 steps successful or intentionally skipped |
+| Audit Task uploaded evidence | `plantnexus-ci-evidence-32326616525`, artifact ID `9391591718`, size 8826 bytes, digest `sha256:7e2a5e08f80b018355d0ce8f8f164cd51e93bc755f10cfb68746d1ef0e97a3db`, not expired |
 | Branch protection | `main.protected=true`；required check `validate` / GitHub Actions app ID `15368`；force-push/deletion disabled |
 | Auditor | Codex execution agent |
 | Attestation | 本地命令、Git提交拓扑、下载后的CI JSON和GitHub API事实分别核验；这是透明的非密码学审计声明，credential未写入仓库或artifact |
@@ -58,7 +61,7 @@ ScheduleValidator P2 integration、Benchmark或发布能力已经形成。
 | Isolation and phase boundary | `PASS` | Production target/data-plane guards与AST no-shortcut tests在271项回归中通过；代码/dependency扫描无OR-Tools import/dependency、CpModel或IntervalVar；无`docs/tasks/P2`且current phase仍P1 | 独立aps_prod/aps_sim数据库、network/role隔离仍未形成 |
 | Migration, Compose and build | `PASS` | migration/rejection聚焦11项通过；`docker compose ... config --quiet` exit 0；`uv build`成功产生sdist+wheel | 本地build/Compose不是Production deployment |
 | Documentation and traceability | `PASS` | full governance最终要求125份Markdown、30 roots、36 Test IDs、15 OPEN、10 assumptions、10 risks、22 Tasks全部一致；P1-12 diff gate匹配3行impact、0 issues | ignored build reports不进入文档清单 |
-| External CI provider | `PASS` | P1-01～11的11个实现run及P1-11 closure run均exact SHA、push/attempt 1、`validate=success`、artifact未过期；下载内容的Task/head/result/path/row/issue facts与API一致 | P1-12自身提交后的run属于Task关闭证据，将在evidence-only revision回填 |
+| External CI provider | `PASS` | P1-01～11的11个实现run、P1-11 closure run及P1-12 implementation run均exact SHA、push/attempt 1、`validate=success`、artifact未过期；P1-12 artifact绑定`a5d7e4a…`并记录30 paths/3 rows/0 issues、pipeline 14/14 | evidence-only revision只回填已发生provider事实，不改变Gate判断 |
 | PROD_OPEN / Simulation truthfulness | `PASS` | OPEN-001～015均保持`OPEN`；SIM-ASSUMPTION-001～010均保持`ACTIVE`且只绑定versioned synthetic assets；RISK-001～010均保持`MONITORED` | P1 READY不关闭任何生产未知项或风险 |
 
 ## Local acceptance record
@@ -115,8 +118,8 @@ artifact `9390358424`，因此P1-12审计开始时的远端基线不是未验证
 | `TASK-P1-12-engineering.json` | 3805 | `7e06e5abc8b5677a531601d5f8236962492d55b4e370cd9754c3f983a924a31f` |
 
 这些报告位于ignored `build/validation`，不会伪装成已提交产品artifact；同一CLI由
-GitHub workflow在P1-11基线上重放。P1-12提交后的CI artifact将构成审计Task自己的
-provider closure。
+GitHub workflow在P1-11基线和P1-12 implementation commit上重放。后者的run
+`32326616525`与artifact `9391591718`已形成审计Task自己的provider closure。
 
 ## Gaps, boundaries and recommendation
 
@@ -128,6 +131,6 @@ workflow或文档治理缺口。
 manifest、Solver/Strategy/Solution、P2 ScheduleValidator integration、Benchmark/OPEN-012
 阈值、审批发布、Replan和Production deployment。
 
-因此建议的唯一下一动作是：在TASK-P1-12自身provider closure完成后，向用户报告
-P1 Gate=`READY`并等待明确的P1→P2授权。未经该授权，`docs/current_phase.md`继续为P1，
+因此建议的唯一下一动作是：向用户报告P1 Gate=`READY`并等待明确的P1→P2授权。
+未经该授权，`docs/current_phase.md`继续为P1，
 P1 Milestone继续`active`（Gate ready / awaiting decision），不得创建或执行P2 Task。

@@ -36,7 +36,7 @@ ReferenceFileAdapter是 P1正式、可测试的参考 Adapter，但在 OPEN-002/
 | 9 | TASK-P1-09 | Solver-neutral Problem builder/hash，无 Solver | P1-07/08 | `done` |
 | 10 | TASK-P1-10 | 七层 Synthetic Generator非空 canonical records | P1-02/05/06/07 | `done` |
 | 11 | TASK-P1-11 | 双通道 common-ingress E2E、machine report与 CI evidence | P1-03～10 | `done` |
-| 12 | TASK-P1-12 | P1 Exit Gate Audit | P1-01～11 | `in_progress` |
+| 12 | TASK-P1-12 | P1 Exit Gate Audit | P1-01～11 | `done` |
 
 任务依赖是开始门，不是建议顺序。任何 Task若需要扩大文件范围、改变合同/ADR或关闭 PROD_OPEN，必须先停止并修订 Task Card。
 
@@ -79,7 +79,7 @@ Gate证据还必须覆盖 CSV/XLSX/Reference Adapter、Raw Staging provenance、
 
 TASK-P1-12已在P1-01～11全部`done`后执行独立审计。[Audit report](P1-exit-gate-audit-report.md)与[machine manifest](P1-exit-gate-evidence-manifest.json)记录271项full tests、11项focused migration/rejection、14/14 common-ingress、全部machine/Compose/build/docs gates及11组implementation provider artifacts均PASS，blocking gaps为空；因此P1 Exit Gate=`READY`。
 
-TASK-P1-12在其documentation implementation commit与exact GitHub provider artifact回填前仍为`in_progress`。即使该Task闭环为`done`，Milestone仍保持`active`并等待用户明确批准P1→P2；审计没有创建P2 Task或Solver。
+TASK-P1-12 documentation implementation commit `a5d7e4a68dc12d48e36cb692500f59446f8097b4`已由GitHub run `32326616525` / job `96299073525` / artifact `9391591718`精确验证，Task现为`done`。Milestone仍保持`active`并等待用户明确批准P1→P2；审计没有创建P2 Task或Solver。
 
 ## Boundaries
 
@@ -90,4 +90,4 @@ TASK-P1-12在其documentation implementation commit与exact GitHub provider arti
 
 ## Current execution boundary
 
-Canonical-records.v1、Import v2、Snapshot v2、Error v1/v2与既有registry均保持原字节；schema set现以additive`2.2.0`加入error registry v2/Error v3/ImportQualityReport v1，Import v2和unit registry document version分别保持`2.0.0/2.1.0`。TASK-P1-03/04/05已分别形成Raw Staging、non-production ReferenceFileAdapter与Normalization证据；TASK-P1-06的Data Validation由implementation commit `c1ac1077fdd92e012f4050f30bab2aec4638f6ec` / run `32257767495`闭环。TASK-P1-07的`order-expansion.v1`与fixed-seed generated evidence已由implementation commit `5a3dbc14c12a107abf4052cca935e3ef59009d3d` / run `32265257468`闭环。TASK-P1-08的Snapshot builder/hash/insert-only repository已由implementation commit `72670d18a29c9a10cb70f7a263c981a2b660e0ee` / run `32310098594`闭环。TASK-P1-09的Problem builder/hash由implementation commit `e8c59547857d2eeace1c9f8b453a5a294cca5ef7` / run `32315513504`闭环。TASK-P1-10的七层generator与49-record replay由implementation commit `5ac08183dd03049ad02c77e6cba80c4621847e0f` / run `32319530217`闭环。P1-11以Diff base `ea56c3867651c0f03306e66936fd649526049319`实现双入口唯一common-ingress chain，implementation commit `fa6c4c1159972a30ea683ad4e6eba98342d3c344` / run `32322511227` / artifact `9390250284`与closure run `32322871271`形成精确provider evidence。TASK-P1-12以`8830a6dc566df8093b601a82c87c74a9cfd97b59`为Diff base完成本地独立Gate审计并给出`READY`，现等待自身provider closure；Solver仍须按后续阶段另行授权实施。
+Canonical-records.v1、Import v2、Snapshot v2、Error v1/v2与既有registry均保持原字节；schema set现为additive`2.2.0`。TASK-P1-03～11的Raw→Problem实现/provider链已闭环。TASK-P1-12以`8830a6dc566df8093b601a82c87c74a9cfd97b59`为Diff base完成独立Gate审计，implementation commit `a5d7e4a68dc12d48e36cb692500f59446f8097b4` / run `32326616525` / artifact `9391591718`形成自身provider closure并给出`READY`。TASK-P1-01～12全部`done`；Solver仍须按后续阶段另行授权实施。

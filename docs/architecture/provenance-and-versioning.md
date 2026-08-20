@@ -143,6 +143,6 @@ Report的`generated_at`和working-tree/provider状态是run provenance，不进�
 
 ## TASK-P1-12 audit provenance
 
-P1 Exit Gate audit把Diff base `8830a6dc566df8093b601a82c87c74a9cfd97b59`、P1-01～11 exact implementation commits/runs/artifacts、P1-12本地命令和machine report SHA-256、branch protection/required-check事实汇总到versioned audit report与`p1-exit-gate-evidence-manifest.v1`。审计execution head与随后提交的audit documentation commit必须分开记录，避免报告自我包含不存在的provider run；Task自身run成功后以evidence-only revision回填。
+P1 Exit Gate audit把Diff base `8830a6dc566df8093b601a82c87c74a9cfd97b59`、P1-01～11 exact implementation commits/runs/artifacts、P1-12本地命令和machine report SHA-256、branch protection/required-check事实汇总到versioned audit report与`p1-exit-gate-evidence-manifest.v1`。审计execution head与随后提交的audit documentation commit分开记录，避免报告自我包含不存在的provider run；implementation commit `a5d7e4a68dc12d48e36cb692500f59446f8097b4`的run `32326616525`/artifact `9391591718`成功后，本evidence-only revision才回填其30 paths/3 impact rows/0 issues和pipeline 14/14事实。
 
 该audit manifest不是PlanningRun、Solver或Export manifest，也不改变任何业务artifact hash。P1 Gate=`READY`仍要求current phase保持P1直至用户明确批准，不把CI provenance解释成Production authority或P2授权。

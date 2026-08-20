@@ -27,7 +27,7 @@ Inputs: Problem v2、backend protocol、formal Validator、constraint-rule-sheet
 
 Diff base: c75f7a0e96b7591ffa9220d0de942f8841283093
 
-Files allowed to change: `.github/workflows/ci.yml`、`backend/app/planning/backends/cp_sat/__init__.py`、`backend/app/planning/backends/cp_sat/model.py`、`backend/app/planning/backends/cp_sat/core_constraints.py`、`backend/app/planning/backends/cp_sat/backend.py`、`backend/app/planning/backends/cp_sat/solution_mapper.py`、`backend/app/planning/backends/cp_sat/core_model_check.py`、`backend/tests/unit/test_cp_sat_core_model.py`、`backend/tests/property/test_cp_sat_core_properties.py`、`backend/tests/integration/test_ci_contract.py`及`Documents to update`；上述新增exact路径已在进入`in_progress`时冻结。
+Files allowed to change: `.github/workflows/ci.yml`、`backend/app/planning/backends/cp_sat/__init__.py`、`backend/app/planning/backends/cp_sat/model.py`、`backend/app/planning/backends/cp_sat/core_constraints.py`、`backend/app/planning/backends/cp_sat/backend.py`、`backend/app/planning/backends/cp_sat/solution_mapper.py`、`backend/app/planning/backends/cp_sat/core_model_check.py`、`backend/app/planning/backends/cp_sat/contract_check.py`、`backend/tests/unit/test_cp_sat_core_model.py`、`backend/tests/unit/test_solver_backend_contract.py`、`backend/tests/property/test_cp_sat_core_properties.py`、`backend/tests/integration/test_ci_contract.py`及`Documents to update`；新增exact路径已在进入`in_progress`时冻结，后续两条历史兼容路径依下方scope review在修改前补充。
 
 Files forbidden to change: Problem/Policy/Solution schema语义、Validator formulas、temporal/calendar/material/fact/lock constraints、objective/Strategy、fixtures/benchmarks/export/P3。
 
@@ -84,3 +84,5 @@ Rollback: 回退core builder/mapper并保持Backend protocol；已生成candidat
 启动冻结SHA-256：Problem v2/Solution/Policy/Limits Schema=`e6e4a984…87c8`/`4344468e…8df4`/`62624424…1bda`/`8caff522…1d95`，rule sheet=`83fc3663…f1e2`，formal Validator=`e120cc65…48d9`，Planning contracts=`d5f7a7e4…ae630`，Problem hashing=`ec2b98ed…76b4e`，Backend/status=`e6fb5017…bf01`/`b03e5cfb…a636`，`uv.lock=8b13617f…7a82`。Local runtime为CPython `3.12.13` / Windows，installed OR-Tools=`9.15.6755`。本Task不修改上述Schema/rule/Validator/Problem/lock字节。
 
 实现边界在任何Backend代码修改前固定：仅对C-001/003/004/010/011建模；含precedence/calendar/release-material gate/RUNNING/HARD-SOFT lock等P2-06/07事实的Problem必须在build前稳定拒绝，不得静默忽略。Core solve不添加`Minimize/Maximize`或Strategy；即使native纯可行模型返回OPTIMAL，在OBJ-001未实现时也只能输出诚实的业务`FEASIBLE`及已测量candidate metric/0 lower bound，不声称最优。新增machine CLI、workflow、integration contract和PHASE/INFRA必审文档路径已在进入`in_progress`时冻结；P2-06+与P3不在授权范围。
+
+实现前scope review发现：P2-03的`contract_check.py`与`test_solver_backend_contract.py`仍把`CpSatBackend.solve()`永久拒绝、OR-Tools只出现在原两个文件作为current-repository断言，与P2-05被规划的consumer形成必然冲突。因此在触碰这两个文件前补入exact allow-list，仅允许把断言更新为“foundation smoke历史边界保留、current core consumer由TASK-P2-05负责”并扩展CP-SAT package namespace集合；不改P2-03历史artifact、status/parameter/version映射或任何Schema/rule/Validator。

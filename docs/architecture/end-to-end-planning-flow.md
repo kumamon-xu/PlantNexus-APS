@@ -57,3 +57,9 @@ TASK-P1-07只在matching PASS report之后，以`order-expansion.v1`把source-ex
 TASK-P1-08现把该链路推进到immutable PlanningSnapshot v2：builder验证content-derived Import、matching PASS report与self-consistent Expansion，形成stable bytes/hash/ID和strict entity counts；plane-scoped repository以insert/exact replay/read及DB mutation trigger保留不可变事实。Snapshot Gate的stale package、FAIL、provenance mismatch、invalid cutoff、content conflict和Production/Synthetic混用均明确拒绝。
 
 当前端到端实现边界止于已持久化Snapshot；PlanningProblem、PlanningStrategy、Solver、candidate ScheduleValidator、ScheduleVersion与发布仍未创建。P1-09只能从本Snapshot合同继续构建solver-neutral Problem，不能绕回上游或把Expansion/dataset hash冒充Snapshot hash。
+
+## TASK-P1-11 executable common ingress
+
+当前已形成一条单一application调用链：`StagedImportBatch → normalize_import → validate_import_package(PASS) → expand_orders → build_planning_snapshot → build_planning_problem`。Synthetic Generator和ReferenceFileAdapter只在Raw Staging前不同，之后使用同一`CommonIngressPipeline.run()`。固定Scenario两次重放与reference parity均得到Import `24a74b…`、Snapshot `090e0e…`、Problem `71c0b7…`。
+
+数据质量FAIL和Normalization首错均在所属stage终止，不会调用后续builder。链路到PlanningProblem终止；Solve、Verify、ScheduleVersion、Publish、Export、Execution/Replan仍是后续Phase边界。

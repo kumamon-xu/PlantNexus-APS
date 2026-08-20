@@ -68,3 +68,5 @@ TASK-P1-07 review：Hypothesis以fixed replay seeds生成test-local 1～3 explic
 TASK-P1-08 review：Snapshot unit/property/integration tests复用P1-02 synthetic schema sample及其既有scenario/profile/generator/seed，新增的Hypothesis seeds只控制test generation；cutoff、hash、entity counts和单Snapshot migration row均不是新FactoryProfile/Scenario distribution或Benchmark baseline。没有新增/修改/retire条目；SIM-ASSUMPTION-001～009全部保持`ACTIVE`，不用于Production default或OPEN closure，registry format version保持`1.0.0`。
 
 TASK-P1-10 review：新增SIM-ASSUMPTION-010并绑定`PROFILE-SIM-P1-INGRESS-001@1.0.0`、`SIM-P1-INGRESS-001@1.0.0`、generator `1.0.0`和seed `20260820`；Profile/Scenario可表达的counts/ratios与generator-only quantity/duration/time算法均逐项限定。该条目只支持49-record correctness/replay，不用于关闭任何PROD_OPEN或形成Benchmark/Production default；SIM-ASSUMPTION-001～010均保持`ACTIVE`，registry format version不变。
+
+TASK-P1-11 review：重用SIM-ASSUMPTION-010的原Profile/Scenario/generator/seed和49-record dataset，没有修改生成分布或新增asset。Gate的cutoff/horizon/tick只是让既有RUNNING/lock facts在Problem v1可表达的fixture-local replay configuration，已记入machine report和Scenario文档，不传播为Production default。SIM-ASSUMPTION-001～010全部保持`ACTIVE`，registry format version不变。

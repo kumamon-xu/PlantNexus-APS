@@ -97,3 +97,9 @@ Snapshot事实被发现错误时必须由权威上游产生新Import/quality/exp
 P1 Generator只对`SIM-P1-INGRESS-001@1.0.0`及其版本化Profile/Scenario/seed负责；source system `plantnexus-synthetic`、mapping和生成的quantity/duration/time/calendar值都是合成provenance，不是ERP/MES/WMS/CAM或人工业务权威。Normalization仍只按显式mapping/unit规则转换，Data Validation仍只判断canonical自洽；PASS/hash不把synthetic值升级为Production事实。
 
 `cycle_seconds_per_unit`分类修复只恢复既有integer-duration authority链，不批准新unit、default或source precedence。OPEN-002/004/013/015及全部PROD_OPEN保持OPEN；真实系统binding、冲突优先级和校准仍须外部authority evidence。
+
+## TASK-P1-11 authority preservation
+
+Common ingress不新建authority层：ReferenceFileAdapter仅读取同一synthetic source rows的temporary CSV，并保留`production_binding=false`。Application只校验所选data plane、传递明确versions和组合既有artifacts；PASS、hash和双入口parity均不使synthetic values成为Production权威数据。
+
+所有PROD_OPEN继续OPEN，未决定ERP/MES/WMS/CAM binding、field precedence、unit/timezone、lock/freeze、horizon或真实分布。

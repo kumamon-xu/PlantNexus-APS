@@ -62,3 +62,9 @@ Builder按operation ID、candidate值、edge端点、resource/time与capability 
 `planning-problem-hash-projection.v1`使用`canonical-json.v1 + SHA-256`覆盖除self `problem_hash`外的完整canonical Problem，并加入projection version；不属于Problem合同的generated/run/runtime字段不参与。Snapshot的content-derived `snapshot_id`已绑定Snapshot hash、rule、facts及全部上游版本，因此Problem hash同时绑定Snapshot identity、builder version和tick/horizon config。`ImmutablePlanningProblem`仅保存canonical bytes/hash/metadata，document访问返回copy，`verify_problem`复核exact shape、pure precheck、platform capability、active DAG、bytes与hash。
 
 本Task未修改`planning-problem.v1` Schema、C-ID、ADR-0003或Solver接口。Due/priority、完整Resource facts、active lock字段与completed-to-active historical lag若要成为可求解输入，必须先发布新Problem version并按ADR/replay/benchmark规则升级，不能在v1中藏字段。
+
+## TASK-P1-11 terminal application artifact
+
+Common ingress的最后一步仅调用`planning-problem-builder.v1`，并以Snapshot cutoff、60秒tick和24小时fixture-local horizon产生Problem hash `sha256:71c0b729dd2b08ba1d14d5a281029b8d9bc13596a90a5189fb20176e19f690da`。两次Synthetic replay与ReferenceFileAdapter输入的Problem canonical bytes/hash完全一致。
+
+`p1-data-pipeline-report.v1`明确记录terminal artifact为PlanningProblem，`solver_executed/candidate_schedule_created/schedule_validator_executed/p2_entered=false`。本Task不修改Problem Schema/builder/hash语义，也不将Problem replay写成feasibility、Solver或Validator证据。

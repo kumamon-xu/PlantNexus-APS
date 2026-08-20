@@ -68,3 +68,9 @@ Implementation commit `72670d18a29c9a10cb70f7a263c981a2b660e0ee`已由GitHub Act
 P1-10以版本化asset和固定seed `20260820`执行deterministic property-style checks：相同Profile/Scenario/generator/seed在不同generated-at下产生byte-identical Import/hash；seed或Profile version改变使hash变化，unknown generator version明确拒绝；unrelated child-seed调用不改变topology，orders/calendars及execution/locks以相反调用顺序生成时各自collection相同。Profile ranges与0.5 quota确保七层都有非空回归记录。
 
 本Task没有新增Hypothesis策略或candidate Schedule/Problem随机生成，因此没有shrinking failure/minimized corpus，也不改变P2 `TEST-PROPERTY=PLANNED`。若未来生成失败，必须保存Scenario/Profile/generator version、seed和最小source/canonical反例，而不能改变约束使其通过。
+
+## TASK-P1-11 end-to-end replay properties
+
+P1-11用固定Scenario/Profile/Generator/seed和显式cutoff/horizon/tick验证三项跨层性质：两次公开staging generation得到相同batch与Import/Snapshot/Problem完整bytes/hash；同义Reference CSV的transport bytes/provenance不同但三个业务artifact相同；四类source mutation都在首个所属stage以exact code终止。
+
+这些是fixed deterministic replay/negative properties，没有新Hypothesis strategy、shrinking、candidate Schedule或Solver输出；P2 `TEST-PROPERTY`继续`PLANNED`。

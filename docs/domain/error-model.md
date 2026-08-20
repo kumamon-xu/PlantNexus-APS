@@ -121,3 +121,9 @@ Expansion继续要求匹配同package且content-derived ID自洽的ImportQuality
 `SyntheticGeneratorError`固定`category=DATA_ERROR`，以module-local code区分invalid Profile/Scenario、Profile/Scenario mismatch、generator version mismatch、unsupported Profile shape、Normalization rejection、Data Validation rejection和package integrity failure。包装Normalization时只保留稳定code，包装quality FAIL时只给出error count，不回显source payload；任何拒绝都不得改写为INFEASIBLE、Solver status或Production error response。
 
 Production target继续由Scenario context返回`SYNTHETIC_REFERENCE_IN_PRODUCTION`，unsupported platform capability继续由既有capability contract拒绝。Generator错误不新增`error-code-registry.v2`成员，不替代Error v3/ImportQualityReport，也不声称HTTP/status mapping形成。
+
+## TASK-P1-11 application error propagation
+
+Application层不捕获并改写Normalization、Expansion、Snapshot或Problem的结构化异常。Canonical Data Validation不抛异常，因此`DataQualityGateRejected`只从确定性有序Error v3列表透出首个`category/code`并保留完整quality report；不生成新product code或`SYSTEM_ERROR`。
+
+P1四类Gate实际经同一入口得到`DATA_ERROR/ROUTE_CYCLE`、`DATA_ERROR/MISSING_RESOURCE`、`DATA_ERROR/UNIT_CONVERSION_ERROR`、`DATA_ERROR/MISSING_DURATION`，且每个失败均在所属stage停止下游。它们不是`INFEASIBLE`、Solver status或HTTP mapping。

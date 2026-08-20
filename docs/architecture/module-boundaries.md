@@ -97,3 +97,10 @@ TASK-P0-05 已在 `simulation/profiles`、`simulation/scenarios`、`simulation/g
 - Package layer构造ReferenceFileAdapter-v1形状Raw rows与Simulation staging provenance，然后只调用公开`normalize_import`和`validate_import_package`；它不调用Snapshot/Problem builder，不伪造canonical source/package ID/report。
 - AST isolation test禁止Generator导入`app.application`、`app.planning`、`app.snapshots`、OR-Tools或SQLAlchemy；Normalization只做`cycle_seconds_per_unit`既有duration分类修复，没有反向依赖Generator。
 - 本Task不实现P1-11 common-ingress application orchestration、Execution Simulator、Benchmark、Solver或Production connector；后续consumer不得直接读取layer source records绕过Import quality Gate。
+
+## TASK-P1-11 Application boundaries
+
+- `application/import_pipeline.py`只编排已有public函数，不复制ID/unit/DAG/duration/expansion/hash规则，也不导入API、Infrastructure、Solver Backend/Strategy、ScheduleValidator、OR-Tools或SQLAlchemy。
+- `simulation/generators.prepare_batch()`只暴露既有source-shaped Staging边界；Generator仍禁止导入Application/Snapshot/Planning，所以依赖方向为Application向内编排而非Generator反向调用。
+- `application/p1_gate_report.py`是验收CLI，使用temporary reference CSV与ignored machine report；它不是产品API、Worker、repository或Production connector。
+- AST边界测试覆盖上述禁止依赖，链路在immutable PlanningProblem终止。

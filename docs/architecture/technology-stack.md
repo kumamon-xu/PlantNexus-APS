@@ -134,3 +134,7 @@ Snapshot builder/hash只使用Python 3.12标准库`dataclasses/enum/json/hashlib
 `0003_planning_snapshots`在SQLite与PostgreSQL dialect分别建立insert-only mutation trigger；当前自动化只在临时SQLite实际执行empty/populated upgrade/downgrade、repository replay/conflict/isolation和trigger负例，不能声明PostgreSQL并发、权限、性能或Production migration认证。仍无OR-Tools、Planning backend、Benchmark runner或新供应链工具，因此不触发Solver upgrade ADR/replay。
 
 GitHub run `32310098594`对implementation commit `72670d18a29c9a10cb70f7a263c981a2b660e0ee`完成exact lock sync、lint/type/test/build和machine evidence上传；该结果确认无dependency/lock漂移，不新增供应链或Production runtime声明。
+
+## TASK-P1-11 stack review
+
+Application pipeline和Gate CLI只使用Python 3.12标准库及已锁定的PyYAML/Reference Adapter依赖，不修改`pyproject.toml`或`uv.lock`。Workflow仍使用已锁定Python/uv/Actions版本，只增加P1 report命令和artifact glob中的JSON。仓库仍无OR-Tools、Solver backend、新数据库驱动或Production部署组件。

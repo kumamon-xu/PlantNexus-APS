@@ -92,3 +92,9 @@ Migration在同一internal table记录data plane并以CHECK约束取值，应用
 Generator context只接受Development/Test/Benchmark，`production`在生成任何row前明确拒绝；生成的StagedImportBatch固定Simulation plane并携带完整Scenario/Profile/Generator/seed provenance。Task没有新增environment variable、Secret、Settings、Compose service、Database endpoint、API或Production binding；unit registry由调用方显式注入，不能从环境选择`latest`。
 
 本地同进程调用证明synthetic provenance/target negative guard与no-Planning import，不证明独立Simulation数据库、Production network/role/backup或common-ingress deployment。ADR-0009和RISK-007继续生效。
+
+## TASK-P1-11 application/CI configuration review
+
+Common ingress所需unit registry、data plane、cutoff、horizon、tick与Problem builder version全部由调用方显式传入，不从environment选择`latest`或猜默认。Gate CLI的`2026-11-06T12:30:00Z`到`2026-11-07T12:30:00Z`/60秒只绑定`SIM-P1-INGRESS-001@1.0.0`测试回放，不是Production policy。
+
+CI只新增一条repository-local machine command并复用现有`PLANTNEXUS_CODE_COMMIT`；没有新Secret、service、port、database URL或environment variable。该运行不证明独立Production/Simulation deployment。

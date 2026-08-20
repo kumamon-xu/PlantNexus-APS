@@ -69,3 +69,9 @@ TASK-P1-06本身不创建Snapshot，也不计算Snapshot schema内的Import data
 PlanningProblem builder只接收`ImmutablePlanningSnapshot`并先执行完整identity/bytes/plane验证；它不读取Snapshot repository、Import、Expansion、quality report producer或Raw Staging，也不会改写Snapshot document。Problem hash只保存Snapshot的content-derived ID而不复制整份source chain；该ID已经由TASK-P1-08绑定Snapshot hash、rule、facts和upstream versions。
 
 因此同一Snapshot与同一Problem config可byte-identical replay，Snapshot内任一合法facts/version变化必须先形成新的Snapshot ID，再传播为新的Problem hash。P1-09不改变Snapshot v2 Schema/hash projection/repository，也不允许Problem consumer绕过immutable Snapshot入口。
+
+## TASK-P1-11 common-ingress replay
+
+Common ingress在matching PASS report和`order-expansion.v1`之后仍只调用既有`build_planning_snapshot`；没有修改Snapshot v2 Schema、hash projection、repository或persistence。`SIM-P1-INGRESS-001@1.0.0`以cutoff `2026-11-06T12:30:00Z`得到固定Snapshot hash `sha256:090e0e08e05bb569d0aae00461803cebd56f87444243484a3696126bfe510409`；Synthetic与Reference transport及两次Synthetic replay的完整bytes/hash/ID均相同。
+
+该cutoff/horizon只是versioned Scenario Gate配置，使fixture内既有lock在Problem horizon前结束；不是Production时钟、冻结窗或运行默认。Machine report不持久化Snapshot，既有insert-only repository证据仍由TASK-P1-08提供。

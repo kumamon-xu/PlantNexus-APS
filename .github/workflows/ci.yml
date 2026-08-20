@@ -61,6 +61,14 @@ jobs:
           uv run python -m app.simulation.scenarios.golden_fixture --fixture fixtures/deterministic/SIM-MINIMAL-001 --report build/validation/ci-golden.json
           uv run python -m app.planning.validation.mutation_check --root . --report build/validation/ci-validator-mutations.json
 
+      - name: P1 common ingress gate
+        run: >-
+          uv run python -m app.application.p1_gate_report
+          --root .
+          --scenario fixtures/synthetic/SIM-P1-INGRESS-001
+          --repeat 2
+          --report build/validation/ci-p1-data-pipeline.json
+
       - name: Engineering contract
         run: >-
           uv run python -m app.infrastructure.contract_check

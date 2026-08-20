@@ -82,6 +82,10 @@ def test_ci_runs_repository_gates_and_discovers_the_current_task() -> None:
         "uv run pyright backend/app backend/tests",
         "backend/tests/integration",
         "backend/tests/property",
+        "app.application.p1_gate_report",
+        "--scenario fixtures/synthetic/SIM-P1-INGRESS-001",
+        "--repeat 2",
+        "build/validation/ci-p1-data-pipeline.json",
         "app.infrastructure.contract_check",
         "docker compose --env-file .env.example config --quiet",
         "PLANTNEXUS_CI_CHANGE_BASE:",
@@ -96,6 +100,7 @@ def test_ci_runs_repository_gates_and_discovers_the_current_task() -> None:
     assert "ortools" not in workflow.lower()
     assert "scripts/run_benchmark.py" in workflow
     assert "actions/upload-artifact@v4" in workflow
+    assert "name: P1 common ingress gate" in workflow
     assert workflow.count("uv run python scripts/check_docs.py") == 2
     assert (
         "uv run python scripts/check_docs.py --discover-task-from "

@@ -134,3 +134,9 @@ Implementation commit `e8c59547857d2eeace1c9f8b453a5a294cca5ef7`已由GitHub Act
 `synthetic-generation-manifest.v1`记录Scenario/Profile/Generator ID+version、seed、target、capabilities、generated-at、canonicalization、normalization rule、unit registry、Import v2/package ID、quality report引用和dataset hash。发布的`scenario-manifest.v1`仍只引用Import v1，本Task没有用局部consumer重新解释其Schema；P1 manifest因此是generator-local versioned contract。
 
 Hash只覆盖Normalization产生的完整canonical Import v2 bytes。Raw received-at/content/source location和manifest generated-at不进入hash；synthetic provenance、mapping/unit/source versions与全部canonical业务值进入。`SIM-P1-INGRESS-001@1.0.0`当前本地replay hash为`sha256:24a74b4f43b0ba42ed458983e0c4776613911924ae5250d9df8ae9e4f14cb1c4`，package ID为`import-9eea9bd41216b3a2b337a83f2b6f5438a287f219251168ce8d574f4b9fb6b2c6`；更改生成语义必须发布新generator/asset version，不得覆盖该identity。Provider commit/run provenance将在真实CI完成后追加，当前本地证据不冒充外部执行。
+
+## TASK-P1-11 pipeline provenance
+
+`p1-data-pipeline-report.v1`同时记录repository commit/dirty state、Scenario/Profile/Generator/seed、Raw/Adapter/mapping/unit/quality/expansion/Snapshot/Problem各版本、planning cutoff/horizon/tick、entity counts、Import/quality/expansion/Snapshot/Problem的ID、canonical-byte digest与内容hash。当前固定vectors为Import `sha256:24a74b…`、Snapshot `sha256:090e0e…`、Problem `sha256:71c0b7…`。
+
+Report的`generated_at`和working-tree/provider状态是run provenance，不进入业务artifact hash。本地运行只记录当前HEAD+未提交diff；只有push后GitHub run/artifact才能记为provider evidence。

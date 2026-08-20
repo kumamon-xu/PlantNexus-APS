@@ -71,3 +71,9 @@ TASK-P1-03～05已形成双方共用的Raw Staging、Reference transport和Norma
 七层Generator现从frozen FactoryProfile/ScenarioSpec context与命名child seed生成source-shaped topology/routing/orders/calendars/material/execution/locks records，再进入Simulation StagedImportBatch、公开Normalization和Data Validation，形成非空Import v2及PASS/0 quality evidence。Canonical package hash覆盖Import完整bytes，不覆盖generator-local manifest的`generated_at`；同Profile/Scenario/generator/seed得到相同bytes/hash。
 
 本Slice只形成synthetic channel到canonical Import gate；没有把Production source接入同一application use case，也没有构建Snapshot/Problem/Solver。TASK-P1-11 common-ingress evidence、独立Production/Simulation数据库和Production connector仍未形成，不能因source形状相同而宣布双通道Exit Gate完成。
+
+## TASK-P1-11 shared application channel
+
+Generator公开`prepare_batch()`和ReferenceFileAdapter现分别产生Simulation `StagedImportBatch`，然后同时进入唯一`CommonIngressPipeline`直到PlanningProblem。Reference侧使用temporary CSV表达同一synthetic source semantics，因此证明的是adapter/generator双入口共用产品链路，不是真实Production connector。
+
+Application在Normalization前比对explicit expected plane，交叉输入以`DATA_PLANE_MISMATCH`拒绝。独立aps_sim/aps_prod数据库、network/role、Production API与发布隔离仍未形成；ADR-0009与RISK-007仍然有效。

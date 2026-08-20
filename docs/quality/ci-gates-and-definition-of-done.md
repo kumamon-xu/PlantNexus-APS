@@ -87,3 +87,9 @@ repository-local workflow contract完成后，用户追加了直接push `main`�
 ## Phase Done
 
 只有对应 Milestone 的全部 Exit Gate 有真实 Artifact 证明时才能更新 `current_phase.md`。任务全部关闭不自动等于 Phase 通过，未经确认不得进入下一阶段。
+
+## TASK-P1-11 CI gate
+
+Repository workflow在完整pytest与既有machine contracts之后必须运行P1 common-ingress CLI，输出`build/validation/ci-p1-data-pipeline.json`，并由中性`plantnexus-ci-evidence-${{ github.run_id }}` artifact上传。Gate必须是14/14 checks PASS，四项exact `DATA_ERROR`、Import/Snapshot/Problem replay和Reference/Synthetic parity任一失败都使job失败，不允许`continue-on-error`。
+
+本地PASS、workflow text contract与未提交report不是provider evidence；Task只能在implementation SHA的required `validate`和artifact成功后回填。P1-11完成后仍必须由P1-12独立审计，不自动进入P2。

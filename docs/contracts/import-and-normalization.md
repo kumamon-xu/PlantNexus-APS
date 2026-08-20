@@ -119,3 +119,9 @@ Snapshot builder把P1-05的content-derived package ID/canonical Import bytes、P
 `PLANTNEXUS-P1-CANONICAL-IMPORT-GENERATOR@1.0.0`先生成带显式source ID、UTC instant、quantity unit与duration value/unit的16类source records，再编码为ReferenceFileAdapter-v1三列outer row并构造Simulation Raw Staging batch。`P1-SYNTHETIC-SOURCE-MAPPING@1.0.0`和调用方注入的`unit-conversion-registry.v1`随后进入同一公开`normalize_import`，最终Import v2再由同一`validate_import_package`得到PASS/0；Generator不直接写canonical `source`、package ID或quality report。
 
 首次端到端调用发现normalizer兼容表遗漏`cycle_seconds_per_unit`：该字段在既有canonical DTO、Schema和Data Validation中一直是integer duration，却因名称不以`_seconds`结尾被错误要求TEXT。本Task仅把该字段加入显式duration transform分类，并以`min→second`直接回归证明整数转换；字段/Schema、unit registry、其他mapping和错误行为不变。Synthetic Generator的mapping不构成Production authority，OPEN-002/013/015继续OPEN。
+
+## TASK-P1-11 common-ingress handoff
+
+`CommonIngressPipeline.run()`只接收`NormalizationInput(StagedImportBatch, MappingProfile)`和显式planning configuration，按唯一顺序调用Normalization、Data Validation、Order Expansion、Snapshot与Problem公开边界。Generator新增公开`prepare_batch()`并让原`generate()`复用同一staged batch；ReferenceFileAdapter把同义CSV准备为不同transport provenance的batch，二者从staging后得到字节级相同的Import v2。
+
+Quality FAIL在Expansion前以`DataQualityGateRejected`保留Error v3的首个exact category/code及完整有序report；Normalization的`UNIT_CONVERSION_ERROR/MISSING_DURATION`原异常直接传递。该application层不修复、补猜或重新分类任何数据错误，Schema/mapping/unit/quality版本均未变。

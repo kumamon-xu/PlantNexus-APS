@@ -61,3 +61,5 @@ manifest 固定 Import package `SIMPKG-SIM-MINIMAL-001-1.0.0` 与 hash `sha256:f
 P1 regression Scenario引用`PROFILE-SIM-P1-INGRESS-001@1.0.0`、generator `PLANTNEXUS-P1-CANONICAL-IMPORT-GENERATOR@1.0.0`和seed `20260820`，声明七项V1 capability及material/WIP/lock/cross-workshop比例0.5。两条order/lot lineage使quota各选择一条material delay、RUNNING fact和operation lock；expected FEASIBLE/OPTIMAL仍只是未来Solver允许结果，不代表本Task执行了求解。
 
 P1 Import v2使用generator-local `synthetic-generation-manifest.v1`记录quality/normalization/unit引用，因为发布的`scenario-manifest.v1`固定Import v1且保持不变。相同输入重放hash为`sha256:24a74b4f43b0ba42ed458983e0c4776613911924ae5250d9df8ae9e4f14cb1c4`；generated-at不同不影响hash。
+
+TASK-P1-11又将该固定asset从公开Raw Staging连续重放到Snapshot/Problem：Gate配置cutoff=`2026-11-06T12:30:00Z`、horizon end=`2026-11-07T12:30:00Z`、tick=60s，得到Snapshot hash `sha256:090e0e08e05bb569d0aae00461803cebd56f87444243484a3696126bfe510409`和Problem hash `sha256:71c0b729dd2b08ba1d14d5a281029b8d9bc13596a90a5189fb20176e19f690da`。该配置只是asset-local correctness replay，不变更ScenarioSpec/manifest版本、expected Solver results或Production policy。

@@ -44,7 +44,7 @@ P0 superseding audit=`READY`，用户于 2026-08-19 明确批准进入 P1；历�
 | [TASK-P1-08](P1/TASK-P1-08-immutable-snapshot-and-hash.md) | Immutable PlanningSnapshot 与 hash | P1-03/06/07 | `done` |
 | [TASK-P1-09](P1/TASK-P1-09-planning-problem-builder-and-hash.md) | Solver-neutral PlanningProblem builder/hash | P1-07/08 | `done` |
 | [TASK-P1-10](P1/TASK-P1-10-synthetic-generator-records.md) | 七层 Synthetic Generator非空 canonical records | P1-02/05/06/07 | `done` |
-| [TASK-P1-11](P1/TASK-P1-11-common-ingress-pipeline-and-gate-evidence.md) | Common-ingress E2E与 P1 Gate evidence | P1-03～10 | `planned` |
+| [TASK-P1-11](P1/TASK-P1-11-common-ingress-pipeline-and-gate-evidence.md) | Common-ingress E2E与 P1 Gate evidence | P1-03～10 | `in_progress` |
 | [TASK-P1-12](P1/TASK-P1-12-p1-exit-gate-audit.md) | P1 Exit Gate Audit | P1-01～11 | `planned` |
 
 ## Lifecycle rules
@@ -55,6 +55,6 @@ Task进入 `in_progress` 时必须先把当时完整 40字符 HEAD SHA写入 `Di
 
 每张 Task Card在开始前完成文档影响分析：`Documentation impact`、明确 `Documents to update`、理由、`IMPACT-*` Rule IDs与`Traceability updates`。`Documents to update`必须包含在允许范围；发现额外文件先停止并修订卡片。
 
-TASK-P1-05/06/07/08/09/10已分别以implementation commit `d52aa62d36e8d89eba318cb5fc586311680e030f`、`c1ac1077fdd92e012f4050f30bab2aec4638f6ec`、`5a3dbc14c12a107abf4052cca935e3ef59009d3d`、`72670d18a29c9a10cb70f7a263c981a2b660e0ee`、`e8c59547857d2eeace1c9f8b453a5a294cca5ef7`、`5ac08183dd03049ad02c77e6cba80c4621847e0f`及GitHub Actions run `32252308695`、`32257767495`、`32265257468`、`32310098594`、`32315513504`、`32319530217`完成。P1-10的49-record generator replay、262项全仓回归、7/7 machine checks和provider 52-path/7-row/0-issue报告均PASS。P1-11仍为`planned`且不得在本次闭环中自动启动，P1-12即使审计`READY`也不自动进入P2。
+TASK-P1-05/06/07/08/09/10已分别以implementation commit `d52aa62d36e8d89eba318cb5fc586311680e030f`、`c1ac1077fdd92e012f4050f30bab2aec4638f6ec`、`5a3dbc14c12a107abf4052cca935e3ef59009d3d`、`72670d18a29c9a10cb70f7a263c981a2b660e0ee`、`e8c59547857d2eeace1c9f8b453a5a294cca5ef7`、`5ac08183dd03049ad02c77e6cba80c4621847e0f`及GitHub Actions run `32252308695`、`32257767495`、`32265257468`、`32310098594`、`32315513504`、`32319530217`完成。P1-10的49-record generator replay、262项全仓回归、7/7 machine checks和provider 52-path/7-row/0-issue报告均PASS。P1-11已以Diff base `ea56c3867651c0f03306e66936fd649526049319`进入`in_progress`；P1-12保持`planned`，即使审计`READY`也不自动进入P2。
 
 用户授权完成后直接push`main`与provider核验适用于后续每个已验收Task，但不改变各卡允许范围、依赖或启动状态。

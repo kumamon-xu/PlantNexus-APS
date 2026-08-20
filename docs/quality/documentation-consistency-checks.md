@@ -205,6 +205,10 @@ TASK-P1-05 implementation commit `d52aa62d36e8d89eba318cb5fc586311680e030f`已�
 
 当前`python -m app.simulation.generators.contract_check` CLI已升级为`synthetic-generator-report.v1`，验证P1非空Import replay/PASS；历史P0 `run_contract_checks()`仍保留供既有P0测试直接调用，不能把当前CLI报告伪写成P0-05 artifact。治理报告只证明scope/docs/trace，不执行生成/Normalization/DataValidation语义；P1 generator tests和machine report补充该证据。Ignored build reports不提交，provider closure必须绑定真实implementation SHA。
 
+TASK-P1-11的diff应精确命中`IMPACT-APPLICATION`、`IMPACT-SIM-GENERATOR`、`IMPACT-INFRA`、`IMPACT-TESTS`、`IMPACT-PHASE`、`IMPACT-GOVERNANCE-REGISTRY`、`IMPACT-DOCS`七行，且Task Card必须列入每行强制文档。启动前预检已补入Generator公开staging路径、`technology-stack.md`、`milestones/README.md`与`TASK_TEMPLATE.md`；未经先扩卡不得越界修改。
+
+P1-11验收继续原样重放P0 `engineering-skeleton-report.v1`。其`business_pipeline=NOT_IMPLEMENTED`是该P0工程报告“不执行/验证业务链”的冻结scope sentinel，不是对当前仓库能力的全局否定。P1 common-ingress的权威machine evidence是独立`p1-data-pipeline-report.v1`；不得重写历史P0 report version以伪装它验证了新pipeline。
+
 ## Override
 
 不允许用自由文本 CI skip 绕过。确需例外时必须在 Task Card 记录理由，提交 ADR 或明确批准记录，并仍保留检查报告。正确性、状态语义、数据隔离和发布门不得豁免。

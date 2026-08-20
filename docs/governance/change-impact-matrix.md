@@ -203,3 +203,9 @@ Schema变化只新增unit registry并同步set metadata/data dictionary；Import
 本Task实际路径命中`IMPACT-IMPORT`、`IMPACT-SIM-GENERATOR`、`IMPACT-FIXTURE`、`IMPACT-TESTS`、`IMPACT-PHASE`、`IMPACT-GOVERNANCE-REGISTRY`、`IMPACT-DOCS`。启动前已先补入验收所需contract check和各行强制文档；真实生成调用发现`cycle_seconds_per_unit`既有duration合同与normalizer分类矛盾后，按治理规则先停并扩卡加入唯一normalizer/unit regression及IMPORT强制文档。Diff base始终为`11c6ca97882a3be5bf6eb25bab84f69d1dfe469c`。
 
 实际实现仅修复该字段transform分类、新增七层Generator/package/contract check、一个versioned synthetic asset和限定unit/simulation tests。Schema、domain DTO、Adapter/Staging/DataValidation、Snapshot/Problem、Application/API/DB/Worker、dependency/version metadata、Solver/Benchmark及governance validator均不修改；machine rule表和`registry_version`保持`1.0.0`，最终以TASK-P1-10 diff report真实changed paths/七行matched/0 issues为准。
+
+## TASK-P1-11 matrix review
+
+本Task实际路径预期命中`IMPACT-APPLICATION`、`IMPACT-SIM-GENERATOR`、`IMPACT-INFRA`、`IMPACT-TESTS`、`IMPACT-PHASE`、`IMPACT-GOVERNANCE-REGISTRY`、`IMPACT-DOCS`。启动前review发现原卡缺少Generator公开Raw Staging路径及INFRA/PHASE/GOVERNANCE行强制的`technology-stack.md`、`milestones/README.md`、`TASK_TEMPLATE.md`，均在任何业务代码前扩入允许范围；Diff base固定为`ea56c3867651c0f03306e66936fd649526049319`。
+
+实现只新增application orchestration/report、Generator公开`prepare_batch()`、限定contract/integration/simulation tests和CI report命令，不改Schema/registry、Domain/Import/Normalization/DataValidation/Expansion/Snapshot/Problem语义、migration/dependency、API/Worker、Solver/Validator/Benchmark/P2。Machine impact rules和`registry_version`不变，最终以TASK-P1-11 diff report真实paths/7 rows/0 issues为准。

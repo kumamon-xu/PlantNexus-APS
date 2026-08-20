@@ -67,3 +67,9 @@ TASK-P0-06 的 `P0-MANUAL-FIXTURE-ASSEMBLER@1.0.0` 是 committed artifact identi
 Package layer把primary/source references保留为source IDs，补齐显式UTC、quantity和duration unit，编码为ReferenceFileAdapter-v1 outer rows，经公开Normalization得到stable canonical ID/source/package bytes，再经Data Validation要求PASS/0。`synthetic-generation-manifest.v1`的generated-at不进入hash；本asset重放hash为`sha256:24a74b4f43b0ba42ed458983e0c4776613911924ae5250d9df8ae9e4f14cb1c4`。Generator exact version mismatch、Production target、unsupported capability/Profile shape、Normalization或quality失败均显式拒绝。
 
 Isolation test扫描所有Generator AST imports，禁止Application/Snapshot/Planning/OR-Tools/ORM。该实现不生成Snapshot、Problem、Schedule或Solver，不建立P1-11 common-ingress，也不把synthetic distribution称为Production事实。
+
+## TASK-P1-11 public staging handoff
+
+`DeterministicSyntheticPackageGenerator.prepare_batch(context)`现是受支持的公开Raw Staging边界：它复用原七层版本检查与组合，返回immutable Simulation batch而不执行Normalization。原`generate()`改为先调用该方法，再执行既有Normalization/Data Validation/package manifest；因此不存在两套source-row构造逻辑，原Import bytes/hash保持不变。
+
+Application作为下游consumer调用`prepare_batch()`并进入common pipeline；Generator本身仍无Application/Snapshot/Planning导入。TEST-SCENARIO-REPLAY现增加staging、Snapshot、Problem重放，但不改变Generator distribution/version或SIM-ASSUMPTION-010。

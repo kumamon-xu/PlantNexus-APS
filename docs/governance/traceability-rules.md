@@ -125,3 +125,7 @@ TASK-P1-08将REQ-002/003/009、NFR-DET/TRC/ISO/REL与ENG-SOL/ERR/VER链接到`ap
 Synthetic Generator evidence链必须区分：FactoryProfile/ScenarioSpec/Generator/mapping/manifest各自version；root/named child seed与调用顺序；source-shaped Raw row、Normalization结果与quality report；canonical Import bytes/hash与non-hash generated-at/transport metadata；asset correctness规模与Benchmark/Production distribution；P1 generator slice与P1-11 common ingress。局部manifest不得重解释已发布ScenarioManifest Schema，PASS不得替代Production authority或Solver evidence。
 
 TASK-P1-10将REQ-001/003/009/011/012、NFR-DET/TRC/ISO与ENG-ARCH/ERR/VER链接到七层generator、`SIM-P1-INGRESS-001@1.0.0`、TEST-SCENARIO-REPLAY/TEST-SIM-ISOLATION、Normalization cycle-duration regression及`synthetic-generator-report.v1`。Schema set/Import/Profile/Scenario发布合同不变；common ingress、Snapshot/Problem orchestration、Solver/Benchmark/Production继续明确排除。
+
+Common-ingress evidence链必须同时记录：two source forms到Raw Staging的差异；staging后唯一函数链与quality PASS先后顺序；Import/Snapshot/Problem的complete bytes/hash/ID replay；四类exact rejection的stage/category/code和无下游调用；data-plane/no-shortcut边界；report的commit/version/config/count与provider artifact。Reference temporary synthetic input不得写成Production connector，Problem终止不得写成Solver/Validator/feasibility。
+
+TASK-P1-11将REQ-001/002/003/009/011/012、NFR-COR/DET/TRC/ISO/REL/SEC与ENG-ARCH/SOL/ERR/VER链接到`app.application`、Generator公开staging、TEST-P1-COMMON-INGRESS/SCENARIO/SNAPSHOT/PROBLEM/DATA-QUALITY/SIM-ISOLATION及`p1-data-pipeline-report.v1`。Schema/registry/migration/dependency未变，P1-12 audit、Solver/P2、Production authority/deployment仍明确排除。

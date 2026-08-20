@@ -454,12 +454,9 @@ class DeterministicSyntheticPackageGenerator:
     def generator_version(self) -> str:
         return P1_GENERATOR_VERSION
 
-    def generate(
-        self,
-        context: GenerationContext,
-        *,
-        generated_at: datetime | None = None,
-    ) -> GeneratedScenarioPackage:
+    def prepare_batch(self, context: GenerationContext) -> StagedImportBatch:
+        """Generate source-shaped records and stop at the public Raw Staging boundary."""
+
         require_p1_generator_context(context)
         for layer in (
             self.topology,
@@ -483,7 +480,15 @@ class DeterministicSyntheticPackageGenerator:
         records = self.materials.generate_material_readiness(context, records)
         records = self.execution_states.generate_execution_states(context, records)
         records = self.locks.generate_locks(context, records)
-        batch = _staged_batch(context, records)
+        return _staged_batch(context, records)
+
+    def generate(
+        self,
+        context: GenerationContext,
+        *,
+        generated_at: datetime | None = None,
+    ) -> GeneratedScenarioPackage:
+        batch = self.prepare_batch(context)
         try:
             normalized = normalize_import(
                 (NormalizationInput(batch, p1_mapping_profile(context)),),

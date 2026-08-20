@@ -139,3 +139,9 @@ Problem module继续使用module-local稳定code，不修改`error-code-registry
 PlanningSolution与SolverReport对七种status使用唯一映射：OPTIMAL/FEASIBLE→PlanningRun `SOLVED`且无product error；INFEASIBLE→`INFEASIBLE/INFEASIBLE`；UNKNOWN→`NO_SOLUTION_WITHIN_LIMIT/NO_SOLUTION_WITHIN_LIMIT`；MODEL_INVALID→`MODEL_INVALID/MODEL_INVALID`；CANCELLED→`CANCELLED`且无product error；FAILED→`FAILED/SYSTEM_ERROR`。只有前两者允许candidate，FEASIBLE不得伪装成OPTIMAL，UNKNOWN不得伪装成INFEASIBLE。
 
 Machine contract自身的shape/version/reference/time/metric/provenance拒绝使用module-local`PlanningContractReason`并稳定归`MODEL_INVALID`，不扩展`error-code-registry.v2`。该pure rejection不是HTTP mapping、Solver诊断或ScheduleValidator violation；FAILED与CANCELLED的持久化/audit动作仍未实现。
+
+## TASK-P2-04 formal validation failure
+
+Formal candidate的schedule违反继续使用既有`error.v2`映射：`VALIDATION_FAILED/SCHEDULE_VALIDATION_FAILED`，每个detail保存首个entity、`candidate.assignments`字段、C-ID/entity/value、expected rule与`planning_solution.assignments`来源。PASS不生成Error；多条violation按稳定report顺序产生等量details。
+
+权威PlanningProblem v2 shape/hash错误属于Validator输入合同缺陷，由`ProblemScheduleValidationInputError`在C-ID执行前fail closed，不改写成INFEASIBLE或candidate validation failure。Candidate reference/assignment结构问题可在现有C-001/C-003/C-007/C-008/C-010/C-011语义内稳定聚合；本Task不新增error code/registry/schema/HTTP mapping或Solver diagnostics。

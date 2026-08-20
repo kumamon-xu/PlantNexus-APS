@@ -86,3 +86,9 @@ P1-11用固定Scenario/Profile/Generator/seed和显式cutoff/horizon/tick验证�
 P2-01扩展`test_planning_problem_properties.py`，保留v1 seeds `20260820/21/22`并新增v2 seeds `20260823/24`。32 examples随机反转operation/edge/anchor/lock/resource/capability与nested option顺序并注入runtime nonce，要求v2 canonical bytes/hash不变；另32 examples选择两个不相等的正整数priority weight，要求Problem identity必然变化。固定unit mutation还覆盖due、Resource status、historical end和lock end的hash sensitivity。
 
 当前property文件5项PASS且无Hypothesis failure/minimized corpus。该证据只形成Problem input/canonicalization的`TEST-PROPERTY` slice，不生成candidate solution、不运行Solver/Validator，也不形成P2-04/09完整schedule property证据；后继Task仍须保留seed、shrinking和最小反例。
+
+## TASK-P2-04 generated formal Validator properties
+
+[`test_schedule_validator_properties.py`](../../backend/tests/property/test_schedule_validator_properties.py) 固定seed `20260820/21/22`。48个examples生成1～600秒权威duration与tick 6～300的合法NOT_STARTED interval，验证整数ceiling、UTC projection、calendar/resource/horizon边界和formal report PASS；另48个examples从12类C-ID mutation中采样，要求至少一个hard violation；32个examples反转Problem六类collection及candidate assignments，要求报告完全相同。
+
+机器检查另用显式表`(1,1)/(59,1)/(60,1)/(61,2)/(119,2)/(120,2)`复核duration ceiling与reordered replay，避免把随机生成本身作为唯一oracle。当前没有Hypothesis failure，因此没有伪造minimized corpus；若后续出现失败，必须保存seed、Problem hash、candidate和最小反例。该证据形成formal Validator的TEST-PROPERTY slice，不包含Solver生成candidate、objective equivalence、XS/S/M runtime/memory或Production distribution；这些仍由P2-09/P2-12承接。

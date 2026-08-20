@@ -73,3 +73,5 @@ TASK-P2-00～03均已闭环为`done`。P2-03以clean/provider-verified Diff base
 P2-02已形成global schema set`2.4.0`、PlanningPolicy/SolveLimits/PlanningSolution/SolverReport v1、七种status与pure fingerprint/precheck/CI report。P2-03未修改这些合同字节；empty/model-invalid smoke不构成业务可行性或candidate。用户已授权TASK-P2-04，它以clean/provider-verified `4c66dce3b919a53816005c4aebf4983db19a6108`启动并固定P0/P2合同与fixture hashes；P2-05～14仍为`planned`且未获启动授权。
 
 P2-04当前只授权实现formal independent Validator及其机器证据。它必须逐项独立重算C-001～C-011、忽略solver status的可信声明并保持Backend/OR-Tools/expected artifact隔离；P2-05 core model、OBJ-001、Benchmark和P3均不在本次范围。
+
+本地实现已形成`formal-schedule-validator-report.v1`：6/6 checks、13个mutation、11个C-ID、14个hard violations及6个duration/order examples均PASS，且Problem/Solution/Validation Schema、P0 fixture/evaluator、`uv.lock`和Backend保持不变。该结果尚待完整local Gate和exact implementation provider evidence，故TASK-P2-04仍为`in_progress`；P2-05及以后继续`planned`。

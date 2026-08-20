@@ -96,3 +96,5 @@ TASK-P2-01 review：Problem v2允许显式传入due/priority、Resource topology
 TASK-P2-02 review：Policy/Limits明确要求Production调用方自行提供versioned source，但没有提供任何真实authority；published 30秒/1 worker/seed、OBJ-001 stage和UNKNOWN report均为Simulation `CONTRACT_SAMPLE`。没有决定真实priority weight、freeze/lock policy、Solver limit/default/SLA、规模、角色或field precedence，也没有closure record。尤其OPEN-006/011/012继续`OPEN`，OPEN-001～015全部保持`OPEN`；registry format version保持`1.0.0`。
 
 TASK-P2-03 review：exact solver/version/adapter只形成工程依赖，不决定Production参数、运行时限制、平台规模、worker并发、SLA或安全批准。Smoke复用显式Simulation limit vector但不产生业务schedule；没有closure record。OPEN-011/012及OPEN-001～015全部继续`OPEN`，registry format version保持`1.0.0`。
+
+TASK-P2-04 review：formal Validator只判断Problem/Solution显式事实，不推断真实calendar/material/transport/lock owner、priority policy、field authority或solve limits。Fresh positive/mutation vector与provider CI均不是Authority/Evidence closure record；尤其OPEN-004/005/007/009/010继续`OPEN`，OPEN-001～015全部保持`OPEN`。本Task不引入Production default或关闭记录，registry format version保持`1.0.0`。

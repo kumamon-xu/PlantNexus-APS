@@ -81,3 +81,9 @@ Task全部完成或audit READY都不自动切换P3；失败时保持P2并建立�
 ## TASK-P2-04 启动边界
 
 TASK-P2-04以`4c66dce3b919a53816005c4aebf4983db19a6108`为不可变Diff base，复用且不修改Problem v2、PlanningSolution、ValidationReport/Error v2与constraint-rule-sheet v1。正式Validator必须独立重算C-001～C-011，不能导入Backend/OR-Tools、复用CP-SAT constraint builder、读取expected outcome决定结果或信任solver status。P0 fixture-local evaluator与全部历史asset bytes保持只读；P2-05 core model、OBJ-001、Benchmark、DB/API/Worker和P3仍未启动。
+
+## TASK-P2-04 本地实现结果
+
+正式`ProblemScheduleValidator`现直接消费Problem v2与candidate PlanningSolution，按稳定顺序独立判定C-001～C-011，并把失败映射为`validation-report.v2`与`error.v2`。本地machine report为6/6 PASS，覆盖13个声明式mutation、11个C-ID、14个hard violations、一个positive/status-contradiction replay和6个duration/order examples；AST证据确认无Backend/OR-Tools/expected outcome决策依赖。
+
+这只表示实现和本地correctness证据已形成。TASK-P2-04继续保持`in_progress`，直至完整本地Gate、exact implementation SHA的required `validate`和artifact均成功并由evidence-only closure记录；P2-05～14没有因本结果自动获得授权。

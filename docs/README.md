@@ -69,7 +69,7 @@ last_reviewed: 2026-08-20
 
 ## 当前范围
 
-当前阶段为P2。P1 Milestone为`completed`，P2为`active`；TASK-P2-00～03均已闭环为`done`。P2-03的accepted ADR、OR-Tools exact lock、Backend foundation、本地与provider证据完整；C-ID、OBJ-001 execution、Validator、Benchmark、P2-04～14和P3均未启动，详见`current_phase.md`。
+当前阶段为P2。P1 Milestone为`completed`，P2为`active`；TASK-P2-00～03均已闭环为`done`，TASK-P2-04=`in_progress`。正式Problem/Solution Validator已在本地独立重算C-001～C-011并通过mutation/property/schema/error/independence证据，exact implementation provider Gate仍待执行；CP-SAT业务C-ID/OBJ-001、Benchmark、P2-05～14和P3均未启动，详见`current_phase.md`。
 
 ## 仓库入口与本地检查
 
@@ -84,3 +84,5 @@ last_reviewed: 2026-08-20
 CI 可用 `uv run python scripts/check_docs.py --discover-task-from <event-base-sha> --check-diff --report build/traceability/ci-current-task-report.json`从一次 PR/push event range发现唯一 current-phase Task；本地 Task验收仍使用显式 `--task`。两种入口最终都使用 Task Card内的 immutable `Diff base`，不能把 event base当作 Task scope base。
 
 TASK-P2-03本地39项聚焦、319项全量和6/6 foundation均PASS；exact GitHub required `validate`与artifact也已核验，Task=`done`。工程smoke仍不是业务Solver/Validator/Benchmark证据。
+
+TASK-P2-04当前本地证据为6/6 formal machine checks、13个mutation、11个C-ID、14个hard violations和6个duration/order examples；完整suite、文档diff以及exact GitHub provider artifact是关闭前置条件。本Task不修改Backend、合同Schema、fixture bytes、dependency、objective或Benchmark。

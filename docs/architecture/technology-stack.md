@@ -158,3 +158,9 @@ ADR-0011先于dependency变更接受。Runtime现exact pin `ortools==9.15.6755`�
 OR-Tools import只允许出现在`backend/app/planning/backends/cp_sat/`。本Task没有引入service、container、migration、DB/API/Worker、Strategy、业务constraint/objective、Validator或Benchmark runner。Point-in-time `pip-audit==2.10.1`检查显示新增OR-Tools依赖子树无记录；既有`pytest==8.4.1`与`starlette==0.47.3`存在上游advisory，登记为RISK-011且不在本Task越界升级。该结果不是持续供应链监控或Production安全认证。
 
 GitHub implementation run `32346208046`在Linux/x86_64、CPython 3.12.13以exact lock安装OR-Tools`9.15.6755`并通过全部Gate；artifact `9398128763`保存该平台identity和wheel/lock证据。该provider replay关闭P2-03，不改变后续Golden/Benchmark升级门。
+
+## TASK-P2-04 validator stack review
+
+正式Validator只使用Python 3.12标准库和既有solver-neutral Planning合同；测试复用pytest、Hypothesis与既有`jsonschema==4.25.1`验证能力。`pyproject.toml`、`uv.lock`、Schema metadata和所有dependency pins均不变，Validator namespace没有OR-Tools import。
+
+Workflow只增加`app.planning.validation.problem_validator_check`机器步骤并由既有artifact glob上传JSON；没有新service、container、database、migration、API、Worker或Benchmark runtime。P2-03的OR-Tools仍只存在于CP-SAT Backend namespace，P2-04不把Validator变成Solver组件。

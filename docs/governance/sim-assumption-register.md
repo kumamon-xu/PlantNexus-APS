@@ -78,3 +78,5 @@ TASK-P2-01 review：v2 fixed replay从P1-02 synthetic Schema sample派生，并�
 TASK-P2-02 review：四份sample使用explicit Simulation policy/limits source，30秒、1 worker、seed `20260820`、UNKNOWN/no-candidate/zero metrics仅用于Schema、status与fingerprint replay。它们不新增FactoryProfile/Scenario、distribution或Benchmark baseline，也不描述一次Solver执行。未新增/修改/retire注册项；SIM-ASSUMPTION-001～010继续`ACTIVE`，不得作为Production default或PROD_OPEN closure，registry format version保持`1.0.0`。
 
 TASK-P2-03 review：parameter smoke复用P2-02显式30秒/1 worker/seed vector，只验证字段到native参数映射；empty/model-invalid model不是Scenario或Factory假设。未新增、修改或retire任何SIM项；SIM-ASSUMPTION-001～010继续`ACTIVE`，不得作为Production default、业务feasibility或Benchmark evidence，registry format version保持`1.0.0`。
+
+TASK-P2-04 review：formal validator check在进程内构造fresh synthetic Problem/Solution与13个声明式mutation，property seeds只控制测试生成；它们不新增FactoryProfile/Scenario、distribution、size profile或Benchmark baseline，也不修改P0 fixture bytes。未新增、修改或retire任何SIM项；SIM-ASSUMPTION-001～010继续`ACTIVE`，仅支持correctness，不得用于Production default、容量推断或PROD_OPEN closure，registry format version保持`1.0.0`。

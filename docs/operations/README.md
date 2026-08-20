@@ -71,3 +71,9 @@ Report本身不写业务数据库，temporary CSV随进程回收，`build/valida
 本地/CI运行`python -m app.planning.backends.cp_sat.contract_check --root . --report <path>`生成`solver-backend-foundation-report.v1`。PASS要求exact dependency/lock、平台identity、namespace/Protocol、七状态、参数及两类engineering smoke共6项全部通过；CI固定路径为`build/validation/ci-solver-backend-foundation.json`。非零返回码必须保留FAIL report并阻断closure。
 
 命令只调用空/故意invalid的native CP-SAT model，不读取业务数据、不连接DB/API/Worker、不生成candidate、不运行Validator/Benchmark，也不声明Production readiness。升级OR-Tools时必须按ADR-0011重新执行lock/platform/status/Golden/Scenario/Benchmark Gate；本段不是solver生产Runbook、SLA或incident流程。
+
+## TASK-P2-04 operator-facing validator evidence
+
+本地/CI运行`python -m app.planning.validation.problem_validator_check --root . --report <path>`生成`formal-schedule-validator-report.v1`。PASS要求6项检查全部成功，并显示13个声明式mutation覆盖C-001～C-011、14个hard violations、6个duration/order examples、status contradiction identical replay及Backend/OR-Tools/expected-outcome隔离；CI固定路径为`build/validation/ci-formal-schedule-validator.json`。
+
+非零返回码必须保留FAIL report并阻断closure。该命令只验证synthetic correctness与合同/hash边界，不连接Production系统、不执行CP-SAT business model、objective或Benchmark；local `uncommitted`报告不替代exact GitHub SHA的required `validate`与artifact，也不是Production runbook、capacity或SLA证据。

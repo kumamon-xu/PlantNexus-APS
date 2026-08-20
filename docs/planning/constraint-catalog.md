@@ -90,3 +90,9 @@ Problem v2补齐C-003的完整primary Resource/capacity=1事实、C-005的resour
 ## TASK-P2-03 no-business-model review
 
 CP-SAT namespace仅构造零约束empty model和一个故意清空domain的invalid engineering model；没有C-001～C-011 builder、interval、NoOverlap、precedence、calendar、material、running、lock或transport表达。`OPTIMAL` smoke只描述空native model，明确不代表任何PlanningProblem可行。C-001～C-011实现与formal Validator仍保持PLANNED，C-012～C-018继续unsupported。
+
+## TASK-P2-04 independent evaluation status
+
+C-001～C-011现在均有正式PlanningProblem v2/PlanningSolution evaluator的positive、exact mutation和property证据；rule IDs、formula、severity、expected/message与`constraint-rule-sheet.v1`保持不变。C-002包含inclusive min/max lag并支持historical predecessor end，C-009使用selected/historical resource的workshop独立判断transport，C-004/C-005使用half-open interval，C-008只hard-enforce HARD_LOCK。
+
+RUNNING仍由C-007固定resource、horizon-start和remaining occupancy；为避免把已执行历史重新排程，C-010对RUNNING复算`ceil(remaining_seconds/tick_seconds)`，NOT_STARTED复算selected option `final_duration_seconds`。这是C-007权威执行事实对C-010一般工时的既有特化，不改变rule-sheet或Problem/Solution Schema。Formal PASS不表示CP-SAT已经建模任何C-ID；P2-05～07的Backend constraints与P2-09 Solver/Validator integration继续`PLANNED`，C-012～C-018继续unsupported。

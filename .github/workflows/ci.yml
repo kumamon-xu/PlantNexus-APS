@@ -87,6 +87,12 @@ jobs:
           --root .
           --report build/validation/ci-solver-backend-foundation.json
 
+      - name: Formal independent schedule validator evidence
+        run: >-
+          uv run python -m app.planning.validation.problem_validator_check
+          --root .
+          --report build/validation/ci-formal-schedule-validator.json
+
       - name: Engineering contract
         run: >-
           uv run python -m app.infrastructure.contract_check

@@ -84,3 +84,13 @@ Rollback: 保留fixture-local evaluator与历史报告；formal validator尚无c
 不可变positive/mutation基线固定为：SIM-MINIMAL-001 import package SHA-256=`6299921cb58866fba8c66a7f8c6adfb47c3de50122d49fde4c20014e7bf0c112`、Golden schedule=`44885e64f477167e08f3146e02546d43780ce5c0fa5db26d82b8b268a2005d5a`、expected validation=`28ecb8cf41fd376f04e916e3c3bea6a026ecb393202257fce8eff2a38a012f9b`；mutation suite=`27914614496f2784f9d3a339a58814b2c0344b864592569b33949e8e22f8c51a`、expected outcomes=`d3a9a16236c39aed55badd0aff46e85d48d78fc5d01be9ffd7c7af8c55069086`、coverage matrix=`a00138aeb672bd18f06d413a84a9e65193536ff4a6767a29df8f0fc52fc46327`。Problem v2/Solution/Validation Schema、rule sheet与`uv.lock`分别固定为`e6e4a984…87c8`、`4344468e…df4`、`1da63e93…353`、`83fc3663…f1e2`、`8b13617f…7a82`；历史fixture evaluator与runner固定为`2b7369d9…8cd2`、`9843bbdd…7dd`且本Task只读。
 
 独立性边界固定为：正式Validator只消费solver-neutral Problem v2与PlanningSolution JSON，不导入`app.planning.backends`、`ortools`、`CpModel`或任何backend constraint builder，不读取expected outcome决定结果，也不信任`solver_status`作为schedule PASS；每个C-ID由Problem/Solution事实独立重算。Scope review在实现前增加独立machine CLI、CI workflow和integration contract路径；不新增Schema/fixture/dependency/ADR，也不修改P0历史bytes。
+
+## Implementation candidate evidence
+
+本地实现已形成`ProblemScheduleValidator`、函数入口、ValidationReport→Error映射与`formal-schedule-validator-report.v1` CLI。正式positive vector为PASS；13个声明式mutation覆盖C-001～C-011并产生14个exact hard violations；6个duration/order examples及三组fixed-seed Hypothesis properties通过。把candidate声明状态改为FAILED并删除run outcome/objective metadata后报告保持完全相同；AST/source evidence确认无Backend、OR-Tools、P0 evaluator/runner、expected outcome或`solver_status`决策依赖。
+
+Task卡Acceptance Commands已在格式化后的工作树执行：`uv sync --locked` PASS；指定validation/property/golden/CI integration suite=`59 passed`；full repository suite=`343 passed`；formal machine=`6/6 PASS`、13 mutations/11 constraints/14 violations/6 examples；历史P0 mutation=`13 cases/11 constraints/13 classes/15 violations PASS`；P2-02=`5/5`、P2-03=`6/6`、P0-08=`6/6`兼容报告PASS；Ruff PASS；Pyright=`0 errors, 0 warnings`；Compose config、`uv build`、版本断言、`git diff --check`均PASS。
+
+Full文档治理为142 docs/30 roots/36 Test IDs/15 OPEN/10 SIM assumptions/11 risks/37 Tasks；Task diff报告为38 paths、6 matched Impact Rules、19 checks、0 issues，Diff base保持`4c66dce3b919a53816005c4aebf4983db19a6108`。`uv.lock`、`schemas/**`、`fixtures/**`与`backend/app/planning/backends/**`相对Diff base无差异；`docs/tasks/TASK_TEMPLATE.md`经review确认既有字段足够，故保持字节不变。
+
+以上仍是implementation candidate本地证据。Implementation SHA及其exact GitHub required `validate`、job、artifact内容/digest/expiry尚待commit/push后核验；在这些provider证据形成前Task保持`in_progress`，不得启动P2-05。

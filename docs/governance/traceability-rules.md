@@ -149,3 +149,9 @@ TASK-P2-02 evidence链必须区分：global schema set`2.4.0`与Problem v2=`2.3.
 ## TASK-P2-03 trace slice
 
 REQ-004/009、NFR-COR/TRC/SEC/OBS/PER与ENG-ARCH/SOL/ERR/VER链接到ADR-0011、exact dependency/lock、`planning/backends`代码、TEST-CONTRACT-001/TEST-SOLVER-UPGRADE、CI integration及`solver-backend-foundation-report.v1`。只有dependency/namespace/status/parameter/engineering-smoke从PLANNED变为formed；C-ID、OBJ-001 execution、candidate/formal Validator、Golden/Scenario/Benchmark/Export/P3继续PLANNED。Exact implementation run `32346208046` / artifact `9398128763`已闭环，Task=`done`；root生命周期与registry版本不变。
+
+## TASK-P2-04 trace slice
+
+REQ-004/005/009、NFR-COR/DET/TRC与ENG-VAL/ERR/VER链接到ADR-0005/0008、`problem_schedule_validator.py`、TEST-VALIDATOR-MUTATION及C-specific/Hypothesis tests、CI integration和`formal-schedule-validator-report.v1`。Problem/Solution→independent C-ID evaluation→ValidationReport/Error链已在本地formed；CP-SAT business candidate、OBJ-001、consumer integration、Golden/Scenario/Reference/Benchmark/Export/P3继续PLANNED。
+
+证据链必须区分authoritative Problem input rejection与candidate schedule violation、candidate solver status与独立validation result、P0 immutable fixture evaluator与formal Problem/Solution Validator、local `uncommitted` report与exact provider artifact。Expected mutation outcome只用于test assertion，不得进入Validator决策。Provider closure前TASK-P2-04保持`in_progress`，root生命周期与registry版本不变。

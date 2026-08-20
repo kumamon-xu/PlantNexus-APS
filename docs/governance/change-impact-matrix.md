@@ -238,3 +238,11 @@ Schema/Problem/Domain实现限定为additive Problem v2、version-specific APIs�
 首次solver依赖由ADR-0011和dependency/security review闭环；RISK-011是登记未消除的风险，不改变registry格式。Implementation provider artifact `9398128763`内Task report确认50 actual paths、9 matched rows、19 checks、0 issues，故Task=`done`；P2-04不自动激活。
 
 本地Task diff实际为50 paths、9 matched rows、19 checks和0 issues；provider必须对exact implementation SHA复现该范围。
+
+## TASK-P2-04 matrix review
+
+本Task实际预期命中`IMPACT-VALIDATOR/INFRA/TESTS/PHASE/GOVERNANCE-REGISTRY/DOCS`六行。VALIDATOR覆盖formal evaluator、machine CLI和公开导出；INFRA仅增加CI machine command；TESTS覆盖contract/mutation/property/integration；其余三行同步Task/Milestone/trace/register/inventory及说明文档。
+
+Problem/Solution/Validation/Error Schema、fixture历史bytes、`pyproject.toml`/`uv.lock`、Backend/Strategy/constraint model、objective、Benchmark、migration、DB/API/Worker和P3均无差异，故不声明SCHEMA/DEPENDENCY/BACKEND等其他Rule ID。Machine rule table、required-document columns与`registry_version=1.0.0`不变；最终actual paths/checks必须由Task diff和exact provider artifact记录，在此之前TASK-P2-04保持`in_progress`。
+
+本地Task diff实际为38 paths、6 matched rows、19 checks和0 issues；provider必须对exact implementation SHA复现该范围后才能关闭Task。

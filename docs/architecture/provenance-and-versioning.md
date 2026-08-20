@@ -166,3 +166,9 @@ Backend identity固定为`cp-sat` / `cp-sat-backend.v1` / `Google OR-Tools CP-SA
 本地report的`code_commit=uncommitted`只证明工作树验收；push后CI必须以`PLANTNEXUS_CODE_COMMIT`绑定exact implementation SHA。Empty model的OPTIMAL与intentional invalid model的MODEL_INVALID均标记`business_feasibility=NOT_EVALUATED`、`candidate_produced=false`，不进入PlanningSolution/SolverReport业务provenance，也不形成Benchmark baseline。
 
 Implementation `9268b88ca7ce90a8f72023241f87e2d3676fd58a`的GitHub run `32346208046` / required job `96355386111` / artifact `9398128763`已形成provider provenance。下载的foundation report绑定同一commit、Linux/x86_64、exact solver/lock且6/6 PASS；Task report绑定同一commit与Diff base、50 paths/9 rows/0 issues。该链只证明Backend foundation，不生成业务PlanningRun provenance。
+
+## TASK-P2-04 formal validation provenance
+
+正式链为`Problem v2 identity/hash + PlanningSolution fingerprint/assignments → independent C-001～C-011 evaluation → validation-report.v2 → optional error.v2 mapping`。稳定report保存Problem/Solution引用、constraint-rule-sheet版本、每个violation的C-ID/entity/observed/expected；candidate solver status不参与判定，输入Problem的合同/hash失败与schedule violation保持不同错误边界。
+
+`formal-schedule-validator-report.v1`记录固定Schema/rule/fixture/lock hashes、positive与status contradiction replay、13个mutation的exact C-ID、6个duration/order examples、报告/schema determinism和source isolation。Local `code_commit=uncommitted`只证明工作树；关闭Task仍须用`PLANTNEXUS_CODE_COMMIT`绑定exact implementation SHA，并在GitHub artifact中同时核验formal report与Task trace report。本链不生成Solver/Benchmark/Production provenance。

@@ -48,4 +48,6 @@ TASK-P2-00～03已`done`。P2-03的Diff base固定为`f73f8c90af94d3c9b05ecc10b6
 
 P2-04限定为正式Problem/Solution独立C-001～C-011判定、stable ValidationReport/Error、mutation/property/independence machine evidence及CI handoff；不得修改Backend、合同Schema、fixture历史bytes、dependency、objective、Benchmark或P3。P2-05及以后不会由本Task自动启动。
 
+P2-04本地实现已通过6/6 machine checks、13个mutation、11个C-ID、14个hard violations及6个duration/order examples；Task在完整local Gate与exact implementation provider artifact闭环前仍为`in_progress`。P2-05依赖本Task=`done`且必须另获用户授权。
+
 P2-03本地39 focused、319 full、Ruff/Pyright、6/6 foundation、5/5 P2-02 compatibility及6/6 historical Engineering均PASS；provider artifact再次证明6/6与50 paths/9 rows/0 issues，因此索引状态为`done`。

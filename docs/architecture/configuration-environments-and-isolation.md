@@ -116,3 +116,9 @@ PlanningPolicy/SolveLimits要求调用方显式提供`SIMULATION`或`PRODUCTION`
 OR-Tools是进程内runtime dependency，但没有新增environment variable、Secret、network、service、port、database、container或Worker registration。`CpSatBackend`只消费显式Problem/Policy/Limits对象；sample的30秒/1 worker/seed不读取环境且不是Production default。CP-SAT engineering smoke仅在local/CI进程执行，报告不含model对象并保持JSON serialization边界。
 
 Production/Simulation data-plane隔离、独立数据库与solver worker deployment仍未形成。Provider Linux runner只证明repository CI环境的locked replay，不能当成Production环境或容量认证。
+
+## TASK-P2-04 validator isolation review
+
+正式Validator只消费调用方显式提供的Problem v2与PlanningSolution JSON；不读取environment、数据库、API、Worker、Backend或OR-Tools，也不以candidate声明的solver status决定PASS。Simulation/Production plane及Policy/Limits provenance继续由输入合同保存，Validator只重算显式schedule facts。
+
+CI新增的formal validator command只读仓库合同与固定hash、在进程内构造synthetic correctness vector并写ignored machine report；没有新增Secret、environment variable、service、port、container、migration或Production route。Provider replay仅证明repository correctness，不是Production deployment、容量或SLA证据。

@@ -60,3 +60,11 @@ TASK-P1-06的negative inputs从canonical Import sample复制后只注入route cy
 Generator tests注入unknown lock resource以证明生成后Data Validation FAIL会被结构化拒绝，并用wrong unit-registry version证明Normalization失败；这些是source/canonical input gate负例，不是candidate Schedule mutation或C-001～C-011 evaluator evidence。P0 `SIM-MINIMAL-001-MUTATIONS@1.0.0`及13-case expected artifacts保持只读，TEST-VALIDATOR-MUTATION coverage不变。
 
 生成的RUNNING fact/lock只证明canonical reference/resource-option自洽，不证明未来Solver保持事实或lock约束。P2 independent Validator/Solver comparison继续`PLANNED`。
+
+## TASK-P2-04 formal contract mutation evidence
+
+P2-04保留`SIM-MINIMAL-001@1.0.0`与`SIM-MINIMAL-001-MUTATIONS@1.0.0`全部历史bytes，不改写P0 exact outcomes。新的机器检查在内存中构造一个valid `planning-problem.v2`与schema-valid `planning-solution.v1` correctness vector，再通过只做remove/duplicate/field replacement/explicit interval replacement的materializer产生13类负例；materializer不读取`FORMAL_RULE_METADATA`、expected report或Validator判断结果。
+
+Formal cases为missing、duplicate、wrong resource、machine overlap、calendar overlap、material early、completed rescheduled、running moved、hard lock moved、max/min precedence lag、cross-workshop transport lag、wrong duration和horizon overflow。它们产生14个hard violations：duplicate同时命中C-001/C-003，其余case各精确命中一个目标C-ID；C-001～C-011全集覆盖，重复执行报告字节语义相同。每个FAIL同时通过`validation-report.v2`和`error.v2` Schema，Error保持constraint/entity/observed/expected/source detail。
+
+[`test_problem_schedule_validator.py`](../../backend/tests/validation/test_problem_schedule_validator.py) 固定case→exact C-ID、positive/status-independence、malformed/reference、RUNNING remainder、Schema/error与source AST边界；历史[`test_schedule_validator_mutations.py`](../../backend/tests/validation/test_schedule_validator_mutations.py)继续原样重放P0 13 cases/15 violations。Formal machine report不把历史expected outcome当决策输入，也不构成Solver comparison、性能或Production证据。

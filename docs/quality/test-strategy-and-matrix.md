@@ -47,15 +47,15 @@ registry_version: 1.0.0
 | TEST-CAPABILITY-001 | 20 capability registry 与 supported declaration/unsupported/unknown/duplicate precheck | P0 | [`test_rule_contracts.py`](../../backend/tests/contract/test_rule_contracts.py) registry contract + [`test_data_validation.py`](../../backend/tests/unit/test_data_validation.py) platform rejection/ordinary resource matching formed；Solver capability implementation PLANNED |
 | TEST-GOLDEN-JSSP | 人工可验证 JSSP | P2 | PLANNED |
 | TEST-GOLDEN-FJSP | 人工可验证 FJSP | P0-P2 | [`SIM-MINIMAL-001` positive Golden](../../backend/tests/golden/test_sim_minimal_001.py) formed；P2 Solver/Problem integration PLANNED |
-| TEST-INF-NO-RESOURCE | 无候选资源明确拒绝 | P0-P2 | [P0 wrong-resource/multiple-selection mutation](../../backend/tests/validation/test_schedule_validator_mutations.py) + [P1 canonical zero/missing/capability-ineligible resource gate](../../backend/tests/unit/test_data_validation.py) formed；Problem/Solver infeasibility P2 PLANNED |
-| TEST-INF-LOCK | Lock 导致的不可行性 | P0-P2 | [P0 HARD_LOCK movement mutation](../../backend/tests/validation/test_schedule_validator_mutations.py) formed；Solver infeasibility P2 PLANNED |
-| TEST-INF-HORIZON | Horizon 不允许静默截断 | P0-P2 | [P0 horizon-overflow mutation](../../backend/tests/validation/test_schedule_validator_mutations.py) formed；Solver integration P2 PLANNED |
-| TEST-CALENDAR | 设备日历约束 | P0-P2 | Golden positive + [calendar-overlap negative mutation](../../backend/tests/validation/test_schedule_validator_mutations.py) formed；Solver integration PLANNED |
-| TEST-MATERIAL | material_ready_at gate | P0-P2 | Golden positive + [material-early negative mutation](../../backend/tests/validation/test_schedule_validator_mutations.py) formed；Solver integration PLANNED |
-| TEST-RUNNING | 运行中事实保护 | P0-P2 | [completed/running fact negative mutations](../../backend/tests/validation/test_schedule_validator_mutations.py) + P1 [`test_order_expansion.py`](../../backend/tests/unit/test_order_expansion.py) fact/lock projection formed；P2 integration PLANNED |
-| TEST-CROSS-WORKSHOP | 跨车间 precedence/transport lag | P0-P2 | Golden positive + [transport-lag negative mutation](../../backend/tests/validation/test_schedule_validator_mutations.py) formed；Solver integration PLANNED |
-| TEST-MAX-LAG | max_lag 不被忽略 | P0-P2 | Golden inclusive-boundary positive + [2700>1800 negative mutation](../../backend/tests/validation/test_schedule_validator_mutations.py) formed；Solver integration PLANNED |
-| TEST-VALIDATOR-MUTATION | 独立 Validator 拒绝人工错误计划 | P0-P2 | [`test_schedule_validator_mutations.py`](../../backend/tests/validation/test_schedule_validator_mutations.py) + [`SIM-MINIMAL-001-MUTATIONS@1.0.0`](../../fixtures/infeasible/SIM-MINIMAL-001-MUTATIONS/coverage-matrix.json) P0 fixture-local slice formed；production/performance P2 PLANNED |
+| TEST-INF-NO-RESOURCE | 无候选资源明确拒绝 | P0-P2 | P0/P1 input slices + [formal wrong-resource mutation](../../backend/tests/validation/test_problem_schedule_validator.py) formed；Solver infeasibility P2 PLANNED |
+| TEST-INF-LOCK | Lock 导致的不可行性 | P0-P2 | P0 + formal HARD_LOCK exact movement mutation formed；Solver infeasibility P2 PLANNED |
+| TEST-INF-HORIZON | Horizon 不允许静默截断 | P0-P2 | P0 + formal Problem/Solution horizon overflow/UTC projection formed；Solver integration P2 PLANNED |
+| TEST-CALENDAR | 设备日历约束 | P0-P2 | Golden/P0 + formal half-open calendar positive/negative formed；Solver integration PLANNED |
+| TEST-MATERIAL | material_ready_at gate | P0-P2 | Golden/P0 + formal material-early negative formed；Solver integration PLANNED |
+| TEST-RUNNING | 运行中事实保护 | P0-P2 | P0/P1 facts + formal COMPLETED exclusion/RUNNING resource/remainder/UTC occupancy formed；Solver integration PLANNED |
+| TEST-CROSS-WORKSHOP | 跨车间 precedence/transport lag | P0-P2 | Golden/P0 + formal selected/historical workshop transport negative formed；Solver integration PLANNED |
+| TEST-MAX-LAG | max_lag 不被忽略 | P0-P2 | Golden/P0 + formal inclusive min/max lag negative formed；Solver integration PLANNED |
+| TEST-VALIDATOR-MUTATION | 独立 Validator 拒绝人工错误计划 | P0-P2 | P0 13-case historical suite + [formal Problem/Solution 13-case suite](../../backend/tests/validation/test_problem_schedule_validator.py) / `formal-schedule-validator-report.v1` formed；Solver/performance integration PLANNED |
 | TEST-REPLAN | Replan 事实、锁与变化报告 | P4 | PLANNED |
 | TEST-OUTPUT | 标准成果包合同 | P2-P3 | PLANNED |
 | TEST-IDEMPOTENCY | Import/Planning/Export/Publish/Event 幂等 | P0-P3 | [`test_job_reliability.py`](../../backend/tests/integration/test_job_reliability.py) generic primitive + P1 [`test_raw_import_staging.py`](../../backend/tests/integration/test_raw_import_staging.py) durable Import staging replay/conflict/rollback formed；Worker/Planning/Export/Publish/Event side effects PLANNED |
@@ -63,7 +63,7 @@ registry_version: 1.0.0
 | TEST-SIM-ISOLATION | Synthetic/Production 隔离 | P0-P1 | generator Production/no-Planning + Raw/Snapshot plane guards + [application expected-plane/no-shortcut](../../backend/tests/integration/test_p1_common_ingress.py) formed；separate DB/API/publish guards PLANNED |
 | TEST-REFERENCE-SCHEDULER | Reference Scheduler baseline | P2 | PLANNED |
 | TEST-BENCHMARK | BenchmarkReport/profile 回归 | P2 | PLANNED |
-| TEST-PROPERTY | 合法 Problem 的通用不变量 | P2 | PLANNED |
+| TEST-PROPERTY | 合法 Problem 的通用不变量 | P2 | Problem v2 hash slice + [formal ScheduleValidator generated properties](../../backend/tests/property/test_schedule_validator_properties.py) formed；Solver-generated/XS-S-M properties PLANNED |
 | TEST-SOLVER-UPGRADE | Solver 升级 replay/status contract | P2+ | PLANNED |
 
 Test ID 一经分配不得复用。链接到真实测试路径才是已形成证据；`PLANNED` 只登记合同。表结构或状态语义变化必须提升 `registry_version`。
@@ -197,3 +197,9 @@ Task-focused八文件suite=`89 passed`，full repository=`286 passed`，Ruff/Pyr
 TEST-SOLVER-UPGRADE与TEST-CONTRACT-001新增slice覆盖exact pin/lock/wheels、identity/version drift、Protocol re-export、native五状态+CANCELLED/FAILED、未知native code、SolveLimits四参数、empty/model-invalid smoke、JSON serialization、real `solve()` bounded refusal及全`backend/app` AST namespace isolation。CI integration还要求6/6 `solver-backend-foundation-report.v1`和non-continue step。
 
 本地聚焦suite=`39 passed`、full repository=`319 passed`，Ruff/Pyright均0问题，foundation report=`6/6 PASS`；P2-02 report继续`5/5 PASS`，P0-08 historical report继续`6/6 PASS`。Implementation `9268b88ca7ce90a8f72023241f87e2d3676fd58a`的run `32346208046` / job `96355386111` / artifact `9398128763`均success，artifact再次记录6/6及50 paths/9 rows/0 issues。没有新增Test ID或改变registry版本；formal Validator mutation、C-ID/OBJ-001、Golden/Reference/Benchmark tests仍PLANNED。
+
+## TASK-P2-04 formal Validator evidence
+
+P2-04新增`test_problem_schedule_validator.py`与`test_schedule_validator_properties.py`，并扩展CI integration contract。Formal suite覆盖schema-valid positive、declared status independence、13 exact mutations/14 violations/C-001～C-011、malformed/reference、RUNNING remainder、ValidationReport/Error v2、AST import/token isolation、fixed asset hashes和6-check machine report；Hypothesis seeds `20260820/21/22`覆盖legal duration/horizon、sampled corruption与collection ordering。
+
+本地formal+P0 validation/golden focused=`50 passed`，CI integration=`9 passed`，Task指定合并suite=`59 passed`，full repository=`343 passed`，Ruff/Pyright均0问题，formal machine report=`6/6 PASS`。P0 mutation CLI仍为13 cases/15 violations PASS，固定Problem/Solution/Validation Schema、P0 assets、Backend与lockfile无差异。没有新增Test ID或改变registry版本；测试表只把formal Validator slice从PLANNED改为formed，Solver C-ID implementation、OBJ-001、Golden/Reference/Benchmark/P3继续PLANNED。Exact provider evidence在implementation push后回填。

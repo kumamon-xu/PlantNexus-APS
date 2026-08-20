@@ -48,3 +48,9 @@ ScheduleVersion 必须引用 source PlanningRun、Snapshot、Problem、base vers
 P2只允许一个OBJ-001 stage。由于weighted tardiness与bound均为非负整数，`relative_gap=(objective_value-best_bound)/max(1, objective_value)`且范围为`[0,1]`；bound不得大于minimization candidate objective。OPTIMAL还要求objective等于best bound且gap为0；FEASIBLE要求objective/bound/gap存在但不冒充最优；UNKNOWN不得携带candidate objective/gap；INFEASIBLE/MODEL_INVALID/CANCELLED/FAILED均不得携带objective/bound/gap。Stage solve time不得超过显式stage budget，所有非candidate结果必须提供sanitized diagnostics。
 
 本合同是candidate carrier，不是独立ScheduleValidator结果。只有未来`SOLVER_RUN`且通过独立ValidationReport的candidate才能进入后续ScheduleVersion流程；本Task发布的UNKNOWN `CONTRACT_SAMPLE`没有candidate，也不创建DRAFT、READY_FOR_REVIEW或任何P3状态。
+
+## TASK-P2-04 Validator consumption
+
+正式Validator现直接消费`planning-solution.v1`的Problem reference与assignments，并逐项对照权威PlanningProblem v2；Policy/Limits/objective/declared solver status不参与schedule validity。Schema-valid positive vector先通过`validate_planning_solution`，随后由独立Evaluator重算C-001～C-011；status矛盾测试故意绕过machine-contract precheck，只用于证明Validator不把status当oracle，不能作为可持久化PlanningSolution。
+
+Assignment的tick/seconds/UTC在formal边界重新核对。NOT_STARTED duration来自selected option；RUNNING future occupancy与`duration_seconds`来自Problem的`remaining_seconds`。Validation FAIL映射Error v2，不创建或迁移ScheduleVersion，也不改变四份P2-02 Schema/sample bytes、global schema set或canonical fingerprint规则。

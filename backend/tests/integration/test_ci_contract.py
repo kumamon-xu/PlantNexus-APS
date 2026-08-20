@@ -14,6 +14,9 @@ from app.planning.backends.cp_sat.contract_check import (
 )
 from app.planning.problem.contract_check import main as problem_contract_main
 from app.planning.policy.contract_check import main as machine_contract_main
+from app.planning.validation.problem_validator_check import (
+    main as formal_validator_main,
+)
 
 ROOT = Path(__file__).resolve().parents[3]
 
@@ -64,9 +67,10 @@ def test_compose_has_health_checked_development_services_and_no_prod_defaults() 
     assert api_environment["PLANTNEXUS_DATA_PLANE"] == "development"
     assert api_environment["PLANTNEXUS_RUNTIME_ENVIRONMENT"] == "development"
     assert api_environment["PLANTNEXUS_SIMULATION_API_ENABLED"] == "false"
-    assert "PLANTNEXUS_POSTGRES_PASSWORD" in services["database"]["environment"][
-        "POSTGRES_PASSWORD"
-    ]
+    assert (
+        "PLANTNEXUS_POSTGRES_PASSWORD"
+        in services["database"]["environment"]["POSTGRES_PASSWORD"]
+    )
 
 
 def test_example_environment_is_explicitly_non_production() -> None:
@@ -81,9 +85,7 @@ def test_example_environment_is_explicitly_non_production() -> None:
 
 
 def test_ci_runs_repository_gates_and_discovers_the_current_task() -> None:
-    workflow = (ROOT / ".github" / "workflows" / "ci.yml").read_text(
-        encoding="utf-8"
-    )
+    workflow = (ROOT / ".github" / "workflows" / "ci.yml").read_text(encoding="utf-8")
     normalized_workflow = " ".join(workflow.split())
     required_fragments = (
         "name: PlantNexus repository gates",
@@ -102,6 +104,8 @@ def test_ci_runs_repository_gates_and_discovers_the_current_task() -> None:
         "build/validation/ci-planning-machine-contracts.json",
         "app.planning.backends.cp_sat.contract_check",
         "build/validation/ci-solver-backend-foundation.json",
+        "app.planning.validation.problem_validator_check",
+        "build/validation/ci-formal-schedule-validator.json",
         "app.infrastructure.contract_check",
         "docker compose --env-file .env.example config --quiet",
         "PLANTNEXUS_CI_CHANGE_BASE:",
@@ -136,10 +140,7 @@ def test_ci_planning_problem_contract_report_is_machine_checkable(
 ) -> None:
     report_path = tmp_path / "planning-problem-contracts.json"
     assert (
-        problem_contract_main(
-            ["--root", str(ROOT), "--report", str(report_path)]
-        )
-        == 0
+        problem_contract_main(["--root", str(ROOT), "--report", str(report_path)]) == 0
     )
     report = json.loads(report_path.read_text(encoding="utf-8"))
 
@@ -164,10 +165,7 @@ def test_ci_planning_machine_contract_report_is_machine_checkable(
 ) -> None:
     report_path = tmp_path / "planning-machine-contracts.json"
     assert (
-        machine_contract_main(
-            ["--root", str(ROOT), "--report", str(report_path)]
-        )
-        == 0
+        machine_contract_main(["--root", str(ROOT), "--report", str(report_path)]) == 0
     )
     report = json.loads(report_path.read_text(encoding="utf-8"))
 
@@ -194,10 +192,7 @@ def test_ci_solver_backend_foundation_report_is_machine_checkable(
 ) -> None:
     report_path = tmp_path / "solver-backend-foundation.json"
     assert (
-        backend_contract_main(
-            ["--root", str(ROOT), "--report", str(report_path)]
-        )
-        == 0
+        backend_contract_main(["--root", str(ROOT), "--report", str(report_path)]) == 0
     )
     report = json.loads(report_path.read_text(encoding="utf-8"))
 
@@ -217,6 +212,41 @@ def test_ci_solver_backend_foundation_report_is_machine_checkable(
     assert report["boundaries"]["candidate_solution"] == "NONE"
     assert report["boundaries"]["business_feasibility"] == "NOT_EVALUATED"
     assert report["boundaries"]["benchmark"] == "NOT_APPLICABLE_FOUNDATION_ONLY"
+
+
+def test_ci_formal_schedule_validator_report_is_machine_checkable(
+    tmp_path: Path,
+) -> None:
+    report_path = tmp_path / "formal-schedule-validator.json"
+    assert (
+        formal_validator_main(["--root", str(ROOT), "--report", str(report_path)]) == 0
+    )
+    report = json.loads(report_path.read_text(encoding="utf-8"))
+
+    assert report["report_version"] == "formal-schedule-validator-report.v1"
+    assert report["status"] == "PASS"
+    assert report["task_id"] == "TASK-P2-04"
+    assert report["check_count"] == 6
+    assert report["counts"] == {
+        "positive_cases": 1,
+        "mutation_cases": 13,
+        "constraints_covered": 11,
+        "required_mutation_classes": 13,
+        "hard_violations": 14,
+        "property_examples": 6,
+    }
+    assert {check["name"] for check in report["checks"]} == {
+        "fixed-contract-and-fixture-fingerprints",
+        "formal-positive-and-status-independence",
+        "c001-c011-declarative-mutations",
+        "report-error-schema-and-determinism",
+        "duration-and-ordering-properties",
+        "independent-source-boundary",
+    }
+    assert report["boundaries"]["backend_constraint_reuse"] == "NONE"
+    assert report["boundaries"]["solver_status_trusted"] is False
+    assert report["boundaries"]["p0_fixture_and_mutation_bytes"] == "PRESERVED"
+    assert report["boundaries"]["cp_sat_business_model"] == "NOT_MODIFIED_BY_TASK"
 
 
 def test_container_build_is_pinned_and_non_root() -> None:

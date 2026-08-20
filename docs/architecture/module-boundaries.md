@@ -111,3 +111,10 @@ TASK-P0-05 已在 `simulation/profiles`、`simulation/scenarios`、`simulation/g
 - `planning/backends/cp_sat/`是唯一允许导入OR-Tools的namespace，拥有exact identity、native status适配、SolveLimits参数转换及engineering smoke；AST检查覆盖整个`backend/app`并拒绝越界import。
 - `CpSatBackend.solve()`在验证Problem/Policy/Limits后以稳定`MODEL_BUILDER_NOT_IMPLEMENTED`停止，不构造C-001～C-011、OBJ-001，不返回candidate，也不调用Validator。
 - `contract_check.py`只读repository、构造empty与intentional-invalid native model并写ignored JSON；它不访问DB/API/Worker、fixture/benchmark/export或Production配置。
+
+## TASK-P2-04 formal Validator boundaries
+
+- `planning/validation/problem_schedule_validator.py`只依赖solver-neutral domain/Problem合同，直接从Problem v2与candidate assignment重算C-001～C-011；不得导入`planning.backends`、OR-Tools或constraint builder。
+- Solver status、expected mutation outcome和P0 fixture-local evaluator均不是判定输入；candidate缺失、重复、非法reference与每个C-ID violation按稳定顺序输出。
+- `problem_validator_check.py`拥有fresh synthetic formal vector、声明式mutation、schema/error replay、固定fingerprints与AST isolation evidence，但不复用expected artifact作为oracle。
+- Validator不构造CP-SAT model、objective、KPI、Benchmark、DB/API/Worker或P3 state。后继Solver consumer必须把candidate交给该独立边界，不能以Backend status替代验证。

@@ -6,7 +6,7 @@ spec_version: 0.3.0
 phase: P0-P2
 normative: true
 source_sections: [30, 31, 50, 75, 86, 87]
-last_reviewed: 2026-08-19
+last_reviewed: 2026-08-20
 ---
 
 # 独立 ScheduleValidator 合同
@@ -82,3 +82,13 @@ TASK-P0-05 的 rule-sheet 代码变更只允许 additive schema set `1.2.0`，�
 `app.data_validation`是Import输入质量evaluator，不消费PlanningProblem或candidate assignment，也不输出`validation-report.v2`/C-ID。它检查route图本身、canonical references、resource eligibility、unit/duration/time/fact/lock输入自洽；P0 `planning/validation/schedule_validator.py`仍只消费fixture-local schedule并检查C-001～C-011，两者没有import或公式共享。
 
 因此TEST-DATA-QUALITY-001的route/resource/unit/duration负例不能计入TEST-VALIDATOR-MUTATION或READY_FOR_REVIEW Gate。Task的source scan确认Data Validation不导入Planning/backend/OR-Tools/ScheduleValidator；P2 production Validator、Property和Benchmark仍`PLANNED`。
+
+## TASK-P2-04 formal Problem/Solution validator
+
+[`problem_schedule_validator.py`](../../backend/app/planning/validation/problem_schedule_validator.py) 是正式、无状态的 `PlanningProblem v2 + candidate PlanningSolution → validation-report.v2` evaluator。入口 `ProblemScheduleValidator.validate` 与 `validate_problem_schedule` 先验证权威 Problem v2 的shape/reference/hash，再独立materialize candidate assignments；candidate的Problem reference不一致、missing/duplicate/unknown operation或非法assignment字段均以稳定C-ID failure返回。权威Problem本身非法则在规则判定前以`ProblemScheduleValidationInputError`拒绝，避免把坏输入伪装成schedule infeasible。
+
+判定顺序为candidate/reference materialization、C-001 completeness、C-002 lag、C-003 resource、C-004 capacity-1 overlap、C-005 calendar、C-006 release/material、C-007 completed/running、C-008 HARD lock、C-009 cross-workshop transport、C-010 duration和C-011 horizon/UTC projection；violations最终按C-ID/entity/observed canonical JSON排序。RUNNING的未来assignment从horizon start占用`ceil(remaining_seconds/tick_seconds)`，因此C-007与C-010对RUNNING均使用权威remainder；NOT_STARTED继续使用selected resource option的`final_duration_seconds`。SOFT lock不作为hard validation pass condition。
+
+正式Evaluator源文件不读取`solver_status`，也不导入`app.planning.backends`、OR-Tools、P0 evaluator/mutation runner或expected outcome。机器向量把声明状态改成FAILED并删除run outcome/objective metadata后仍得到完全相同报告，证明PASS/FAIL只来自Problem/Solution assignment事实。该行为不批准Solver结果；后继consumer仍必须在正式生命周期中先获得candidate再调用Validator。
+
+[`problem_validator_check.py`](../../backend/app/planning/validation/problem_validator_check.py) 生成`formal-schedule-validator-report.v1`：1个formal positive、13个formula-free declarative mutations、C-001～C-011全覆盖、14个hard violations、6个duration/order property examples、ValidationReport/Error v2 Schema重放及AST independence scan。P0 positive/mutation目录、Problem/Solution/Validation Schema、rule sheet、历史fixture evaluator/runner与`uv.lock`均由固定SHA-256证明只读。本Task不运行CP-SAT业务model、OBJ-001、Benchmark、API/persistence或READY_FOR_REVIEW transition。

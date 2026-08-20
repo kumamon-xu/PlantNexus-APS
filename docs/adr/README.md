@@ -44,3 +44,5 @@ TASK-P2-02严格实施ADR-0003的solver-neutral Protocol、ADR-0006的Delivery-f
 TASK-P2-03在任何dependency变更前接受ADR-0011：选择官方稳定`ortools==9.15.6755` binary wheel/exact lock，把OR-Tools对象限定于`planning/backends/cp_sat`，固定SolveLimits参数来源、native/adapter status映射、engineering smoke非业务可行性及后续upgrade Gate。该决定落实ADR-0003/0004，不修改P2-02合同字节，也不授权C-ID、OBJ-001 execution、Validator、Benchmark baseline或Production SLA。
 
 TASK-P2-04严格实施ADR-0005的独立ScheduleValidator与ADR-0008的UTC/整数秒/tick语义：Validator直接从Problem/Solution事实重算C-001～C-011，禁止Backend/OR-Tools/constraint builder共享和solver status信任。实现未改变Schema、C-ID语义、dependency、objective或状态机，因此不新增ADR；若后继工作共享Solver约束逻辑、改变RUNNING/lock/duration语义或允许status绕过Validator，必须先提交superseding/new ADR。
+
+TASK-P2-05按ADR-0003/0004/0005/0008/0011实现bounded core：OR-Tools仍exact-pinned且限定于CP-SAT namespace，five-C-ID模型与formal Validator保持独立，UTC/tick/duration沿既有合同，纯可行native OPTIMAL不升格为业务最优。没有Schema、rule语义、dependency、Strategy或objective policy变化，因此不新增ADR；若后续允许静默忽略future facts、共享Validator/solver constraint实现、改变capacity/tick语义或在P2-08前引入目标搜索，必须先提交新ADR。

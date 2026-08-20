@@ -118,3 +118,9 @@ TASK-P0-05 已在 `simulation/profiles`、`simulation/scenarios`、`simulation/g
 - Solver status、expected mutation outcome和P0 fixture-local evaluator均不是判定输入；candidate缺失、重复、非法reference与每个C-ID violation按稳定顺序输出。
 - `problem_validator_check.py`拥有fresh synthetic formal vector、声明式mutation、schema/error replay、固定fingerprints与AST isolation evidence，但不复用expected artifact作为oracle。
 - Validator不构造CP-SAT model、objective、KPI、Benchmark、DB/API/Worker或P3 state。后继Solver consumer必须把candidate交给该独立边界，不能以Backend status替代验证。
+
+## TASK-P2-05 core Backend boundary
+
+- `planning/backends/cp_sat/core_constraints.py`拥有P2-05输入预检，只允许C-001/003/004/010/011所需事实；`model.py`拥有master/optional interval、exact-one与capacity-1 `NoOverlap`；`solution_mapper.py`只把完整native candidate映射到solver-neutral合同。
+- `CpSatBackend`负责exact-pinned求解、状态降级、telemetry与调用formal Validator；Validator仍不得反向导入Backend、OR-Tools或模型变量。Validator FAIL时Backend必须丢弃assignments并返回FAILED边界。
+- `core_model_check.py`拥有独立tiny choice/load枚举oracle、固定hash和机器报告，不是Production Scheduler或Benchmark runner。C-002/005～009、OBJ-001搜索、Strategy、DB/API/Worker及P3均不进入这些模块。

@@ -4,6 +4,7 @@ from __future__ import annotations
 
 import ast
 import copy
+import inspect
 import json
 from pathlib import Path
 from typing import Any, cast
@@ -178,25 +179,15 @@ def test_empty_and_model_invalid_smokes_are_json_only_and_not_feasibility() -> N
         assert "CpSolver" not in payload
 
 
-def test_foundation_backend_validates_inputs_then_refuses_business_solve() -> None:
-    problem, policy, limits = _samples()
+def test_foundation_protocol_remains_stable_after_core_model_activation() -> None:
     backend = CpSatBackend()
     assert backend.identity == backend_identity()
-
-    with pytest.raises(SolverBackendError) as captured:
-        backend.solve(problem, policy, limits)
-    assert (
-        captured.value.reason
-        is BackendFailureReason.MODEL_BUILDER_NOT_IMPLEMENTED
+    assert tuple(inspect.signature(CpSatBackend.solve).parameters) == (
+        "self",
+        "problem",
+        "policy",
+        "limits",
     )
-    assert captured.value.solver_status is SolverStatus.MODEL_INVALID
-    assert captured.value.diagnostic() == {
-        "code": "SOLVER_BACKEND_ERROR_MODEL_BUILDER_NOT_IMPLEMENTED",
-        "message": (
-            "CP-SAT business model construction is outside TASK-P2-03 and "
-            "remains unavailable"
-        ),
-    }
 
 
 def test_ortools_imports_are_confined_to_cp_sat_backend_package() -> None:
@@ -218,5 +209,7 @@ def test_ortools_imports_are_confined_to_cp_sat_backend_package() -> None:
                     assert relative.startswith(allowed_prefix)
     assert set(observed) == {
         "backend/app/planning/backends/cp_sat/backend.py",
+        "backend/app/planning/backends/cp_sat/model.py",
+        "backend/app/planning/backends/cp_sat/solution_mapper.py",
         "backend/app/planning/backends/cp_sat/status.py",
     }

@@ -164,3 +164,9 @@ GitHub implementation run `32346208046`在Linux/x86_64、CPython 3.12.13以exact
 正式Validator只使用Python 3.12标准库和既有solver-neutral Planning合同；测试复用pytest、Hypothesis与既有`jsonschema==4.25.1`验证能力。`pyproject.toml`、`uv.lock`、Schema metadata和所有dependency pins均不变，Validator namespace没有OR-Tools import。
 
 Workflow只增加`app.planning.validation.problem_validator_check`机器步骤并由既有artifact glob上传JSON；没有新service、container、database、migration、API、Worker或Benchmark runtime。P2-03的OR-Tools仍只存在于CP-SAT Backend namespace，P2-04不把Validator变成Solver组件。
+
+## TASK-P2-05 technology use
+
+Core model使用既有exact pin `ortools==9.15.6755`的`cp_model` API构造IntVar、BoolVar、optional interval、`AddExactlyOne`与`AddNoOverlap`；没有修改`pyproject.toml`或`uv.lock`，也没有新Schema、migration、service或runtime dependency。Native对象继续只存在于`planning/backends/cp_sat`，对外仍返回JSON-compatible PlanningSolution与machine report。
+
+测试复用既有pytest/Hypothesis，并以单worker、显式seed和SolveLimits时间上限保证可重放边界。CI增加core machine CLI但不启用Benchmark runner或Production Solver入口。

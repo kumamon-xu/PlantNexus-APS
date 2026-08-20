@@ -93,3 +93,9 @@ TASK-P2-04以`4c66dce3b919a53816005c4aebf4983db19a6108`为不可变Diff base，�
 用户于2026-08-20明确授权执行TASK-P2-05。启动复核确认`main=origin/main=c75f7a0e96b7591ffa9220d0de942f8841283093`、working tree clean，且该SHA的GitHub run `32350571302` / required job `96368639237` / artifact `9399702868`精确成功。Problem/Solution/Policy/Limits Schema、constraint-rule-sheet v1、formal Validator、Planning contracts、Problem builder/hash、OR-Tools exact pin与`uv.lock`均作为不可变启动基线。
 
 本Task只建模C-001/003/004/010/011，必须在build前拒绝任何需要C-002/005～009的非空事实，并用formal independent Validator复验candidate。不实现OBJ-001搜索目标、Strategy、Benchmark threshold、DB/API/Worker或P3；纯可行模型的native OPTIMAL不能升格为业务最优声明。P2-06及以后仍为`planned`且未获授权，current phase继续为P2。
+
+## TASK-P2-05 本地实现状态
+
+Core builder现使用master/optional intervals、exact-one candidate、candidate-specific duration、capacity-1 NoOverlap和horizon域；Backend把完整candidate映射为诚实FEASIBLE并强制formal Validator PASS，zero/overflow与P2-06/07非空事实在build前fail closed。模型不含objective，OBJ-001 stage仅为post-solve measurement。
+
+本地验收：focused `64 passed`、full repository `360 passed`、Ruff/Pyright 0、`cp-sat-core-model-report.v1` 6/6、formal report 6/6、治理142 docs且Task diff 49 paths/6 rows/19 checks/0 issues、compose/build/immutable diff PASS。Task在exact implementation GitHub required `validate`和artifact核验前继续`in_progress`；P2-06～14仍未授权。

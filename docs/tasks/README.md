@@ -51,3 +51,5 @@ P2-04限定为正式Problem/Solution独立C-001～C-011判定、stable Validatio
 P2-04本地实现已通过6/6 machine checks、13个mutation、11个C-ID、14个hard violations及6个duration/order examples；implementation `9b532e2c054b02e1692f345a252922ec7fd469e4`的exact required `validate`与artifact复现同一证据，故Task=`done`。用户于2026-08-20明确授权TASK-P2-05；它以clean/provider-verified `c75f7a0e96b7591ffa9220d0de942f8841283093`为Diff base启动并为唯一`in_progress` Task。P2-06～14仍为`planned`且未获授权。
 
 P2-03本地39 focused、319 full、Ruff/Pyright、6/6 foundation、5/5 P2-02 compatibility及6/6 historical Engineering均PASS；provider artifact再次证明6/6与50 paths/9 rows/0 issues，因此索引状态为`done`。
+
+P2-05 core implementation本地已通过64 focused、360 full、Ruff/Pyright、core/formal各6/6、49 paths/6 rows/19 checks/0 issues、compose/build与immutable boundary；索引暂保持唯一`in_progress`，等待exact implementation provider evidence。P2-06～14继续`planned`且未获授权。

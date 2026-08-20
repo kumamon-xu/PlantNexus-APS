@@ -75,3 +75,5 @@ P2-02已形成global schema set`2.4.0`、PlanningPolicy/SolveLimits/PlanningSolu
 P2-04的授权范围仅包含formal independent Validator及其机器证据。它已逐项独立重算C-001～C-011、忽略solver status的可信声明并保持Backend/OR-Tools/expected artifact隔离；P2-05 core model、OBJ-001、Benchmark和P3均不在本次范围。
 
 本地实现已形成`formal-schedule-validator-report.v1`：6/6 checks、13个mutation、11个C-ID、14个hard violations及6个duration/order examples均PASS，且Problem/Solution/Validation Schema、P0 fixture/evaluator、`uv.lock`和Backend保持不变。Implementation `9b532e2c054b02e1692f345a252922ec7fd469e4`的exact run `32350068318` / required job `96367085099` / artifact `9399519368`成功并复现同一SHA的formal与38-path/6-row/0-issue治理报告，故TASK-P2-04=`done`。用户已明确授权TASK-P2-05；它以clean/provider-verified `c75f7a0e96b7591ffa9220d0de942f8841283093`为不可变Diff base，仅启动C-001/003/004/010/011 core model与对应证据。P2-06～14继续`planned`且未获授权。
+
+TASK-P2-05本地实现已形成five-C-ID core model、candidate-specific duration、unary NoOverlap、horizon、complete mapping、formal Validator gate、tiny exhaustive oracle和真实telemetry；64 focused、360 full、Ruff/Pyright、core/formal机器报告、49-path/6-row治理、compose/build/immutable均PASS。Milestone仍为P2 active，Task等待exact provider闭环；OBJ-001与C-002/005～009仍未形成，P2-06不自动启动。

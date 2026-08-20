@@ -68,3 +68,9 @@ P2-04保留`SIM-MINIMAL-001@1.0.0`与`SIM-MINIMAL-001-MUTATIONS@1.0.0`全部历�
 Formal cases为missing、duplicate、wrong resource、machine overlap、calendar overlap、material early、completed rescheduled、running moved、hard lock moved、max/min precedence lag、cross-workshop transport lag、wrong duration和horizon overflow。它们产生14个hard violations：duplicate同时命中C-001/C-003，其余case各精确命中一个目标C-ID；C-001～C-011全集覆盖，重复执行报告字节语义相同。每个FAIL同时通过`validation-report.v2`和`error.v2` Schema，Error保持constraint/entity/observed/expected/source detail。
 
 [`test_problem_schedule_validator.py`](../../backend/tests/validation/test_problem_schedule_validator.py) 固定case→exact C-ID、positive/status-independence、malformed/reference、RUNNING remainder、Schema/error与source AST边界；历史[`test_schedule_validator_mutations.py`](../../backend/tests/validation/test_schedule_validator_mutations.py)继续原样重放P0 13 cases/15 violations。Formal machine report不把历史expected outcome当决策输入，也不构成Solver comparison、性能或Production证据。
+
+## TASK-P2-05 Solver-consumer mutations
+
+Core candidate先由formal Validator PASS；随后机器检查复制candidate并分别删除一条assignment与篡改selected duration，要求稳定命中C-001与C-010。它证明Solver status或native OPTIMAL不能绕过独立重算，同时不复用CP-SAT变量、constraint builder或预期结果作为Validator输入。
+
+P2-05不修改formal 13类mutation corpus、P0 fixture bytes或Validator公式；C-003/C-004/C-011及P2-06/07相关C-ID仍由既有formal suite覆盖，后续完整Solver mutation/integration由P2-09承接。

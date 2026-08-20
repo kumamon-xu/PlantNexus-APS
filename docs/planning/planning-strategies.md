@@ -35,3 +35,7 @@ GlobalCpSatStrategy
 ## TASK-P2-03 foundation boundary
 
 本Task只建立`CpSatBackend` adapter，不创建`GlobalCpSatStrategy`、decomposition、rolling horizon或任何Reference Scheduler。Empty/model-invalid smoke不选择策略、不消费业务Problem facts，也不产生可比较schedule。P2-08仍负责唯一Global strategy与OBJ-001接线；任何分解策略仍需独立ADR和同口径Validator/Benchmark证据。
+
+## TASK-P2-05 no-strategy core execution
+
+Backend现可直接执行bounded core feasibility model，但仍未创建或选择`GlobalCpSatStrategy`，也没有decomposition、rolling horizon、warm start或Reference Scheduler。该直接调用只验证底层可行域与solution mapping，不构成策略层入口。P2-08继续独占Global strategy与OBJ-001搜索接线；P2-05不得被上层发布流程调用。

@@ -96,3 +96,9 @@ CP-SAT namespace仅构造零约束empty model和一个故意清空domain的inval
 C-001～C-011现在均有正式PlanningProblem v2/PlanningSolution evaluator的positive、exact mutation和property证据；rule IDs、formula、severity、expected/message与`constraint-rule-sheet.v1`保持不变。C-002包含inclusive min/max lag并支持historical predecessor end，C-009使用selected/historical resource的workshop独立判断transport，C-004/C-005使用half-open interval，C-008只hard-enforce HARD_LOCK。
 
 RUNNING仍由C-007固定resource、horizon-start和remaining occupancy；为避免把已执行历史重新排程，C-010对RUNNING复算`ceil(remaining_seconds/tick_seconds)`，NOT_STARTED复算selected option `final_duration_seconds`。这是C-007权威执行事实对C-010一般工时的既有特化，不改变rule-sheet或Problem/Solution Schema。Formal PASS不表示CP-SAT已经建模任何C-ID；P2-05～07的Backend constraints与P2-09 Solver/Validator integration继续`PLANNED`，C-012～C-018继续unsupported。
+
+## TASK-P2-05 implemented core constraint slice
+
+CP-SAT现实现C-001完整且唯一assignment、C-003合法candidate resource、C-004同resource half-open unary NoOverlap、C-010 selected candidate seconds到ceiling tick duration、C-011完整horizon containment。Tight JSSP证明back-to-back区间合法，FJSP证明不同resource option使用各自duration；independent formal Validator对正例及C-001/C-010 mutation复验。
+
+C-002与C-005～009仍未进入Solver。任何非空precedence/transport、calendar、late release/material、RUNNING或lock事实必须在model build前拒绝，不能被当作vacuous或忽略；C-012～018继续unsupported。Rule sheet、公式与severity均未修改。

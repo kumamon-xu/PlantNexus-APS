@@ -86,3 +86,5 @@ CI 可用 `uv run python scripts/check_docs.py --discover-task-from <event-base-
 TASK-P2-03本地39项聚焦、319项全量和6/6 foundation均PASS；exact GitHub required `validate`与artifact也已核验，Task=`done`。工程smoke仍不是业务Solver/Validator/Benchmark证据。
 
 TASK-P2-04本地证据为6/6 formal machine checks、13个mutation、11个C-ID、14个hard violations和6个duration/order examples；implementation `9b532e2c054b02e1692f345a252922ec7fd469e4`的exact GitHub run `32350068318` / required job `96367085099` / artifact `9399519368`复现该报告和38-path/6-row/0-issue Task report，故Task=`done`。本Task未修改Backend、合同Schema、fixture bytes、dependency、objective或Benchmark。
+
+TASK-P2-05已形成C-001/003/004/010/011 core CP-SAT、完整candidate映射、future-fact fail-closed、formal Validator consumer、fixed-seed property与独立tiny oracle。Local acceptance为64 focused、360 full、Ruff/Pyright 0、core/formal各6/6、治理49 paths/6 rows/0 issues、compose/build/immutable PASS；等待exact implementation provider evidence，Task暂为`in_progress`，P2-06未获授权。

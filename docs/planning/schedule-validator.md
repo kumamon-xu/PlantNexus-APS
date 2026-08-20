@@ -94,3 +94,9 @@ TASK-P0-05 的 rule-sheet 代码变更只允许 additive schema set `1.2.0`，�
 [`problem_validator_check.py`](../../backend/app/planning/validation/problem_validator_check.py) 生成`formal-schedule-validator-report.v1`：1个formal positive、13个formula-free declarative mutations、C-001～C-011全覆盖、14个hard violations、6个duration/order property examples、ValidationReport/Error v2 Schema重放及AST independence scan。P0 positive/mutation目录、Problem/Solution/Validation Schema、rule sheet、历史fixture evaluator/runner与`uv.lock`均由固定SHA-256证明只读。本Task不运行CP-SAT业务model、OBJ-001、Benchmark、API/persistence或READY_FOR_REVIEW transition。
 
 Implementation `9b532e2c054b02e1692f345a252922ec7fd469e4`的GitHub run `32350068318` / required job `96367085099` / artifact `9399519368`已精确复现6/6 formal report及38-path/6-row/0-issue治理报告，TASK-P2-04据此`done`。后继P2-05+ Solver candidate仍必须经过本Validator；Task关闭不等于已有business candidate或Production validation。
+
+## TASK-P2-05 consumer integration
+
+`CpSatBackend.solve_with_evidence()`现把每个core candidate送入既有`validate_problem_schedule()`；PASS时保留完整assignments，FAIL时丢弃assignments并映射稳定FAILED diagnostic。Validator源码、Schema、rule sheet、公式和import boundary均保持字节不变，Backend只消费它的solver-neutral报告。
+
+Core machine evidence同时验证JSSP/FJSP positive、missing assignment→C-001与wrong selected duration→C-010；原13类formal mutation仍是C-001～011完整独立覆盖。该接线只形成P2-05 bounded consumer，不表示P2-06/07事实已由Solver建模，也不是P2-09 vertical-slice integration或Production publish gate。

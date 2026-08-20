@@ -93,3 +93,9 @@ Operation v2增加`demand_order_id`和business `required_capabilities`，calenda
 ## TASK-P2-02 downstream reference boundary
 
 PlanningSolution/SolverReport v1只以`problem_version`、builder/hash-projection version、Problem hash、Snapshot ID、tick与horizon形成对Problem v2的精确引用，不复制或重算Problem事实。P2-02没有修改上述v1/v2 Schema/sample/builder/hash；Problem v2固定Schema/sample和builder replay继续由P2-01 machine report单独证明。Policy/Limits/Solution/Report合同存在不表示Problem已经被Backend消费，也不产生candidate、C-ID或Validator证据。
+
+## TASK-P2-05 core consumer boundary
+
+CP-SAT Backend现以Problem v2的operation/resource/options、`final_duration_seconds`、tick与horizon实现C-001/003/004/010/011。每个operation必须有至少一个显式candidate，所有candidate duration必须完整落入horizon；不允许通过删除overflow option改变输入可行域。
+
+Problem v2 Schema、sample、builder、hash projection和canonicalization均未修改。P2-05只接受precedence/calendar/locks为空、NOT_STARTED且release/material gate不晚于horizon start的bounded slice；非空未来事实稳定拒绝并留给P2-06/07，不能据此声称Problem合同不支持这些事实。

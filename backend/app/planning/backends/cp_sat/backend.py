@@ -1,8 +1,11 @@
-"""Bounded CP-SAT adapter foundation without business model construction."""
+"""Pinned CP-SAT adapter with the bounded TASK-P2-05 core model."""
 
 from __future__ import annotations
 
-from typing import Literal, NoReturn
+from dataclasses import dataclass
+from time import perf_counter
+import tracemalloc
+from typing import Literal, TypedDict
 
 import ortools
 from ortools.sat.python import cp_model
@@ -18,6 +21,14 @@ from app.planning.backends.cp_sat.status import (
     native_status_name,
     solver_status_from_cp_sat,
 )
+from app.planning.backends.cp_sat.model import (
+    CoreModelMetricsDocument,
+    build_core_model,
+)
+from app.planning.backends.cp_sat.solution_mapper import (
+    map_core_candidate_solution,
+    map_core_non_candidate_solution,
+)
 from app.planning.contracts import (
     PlanningSolutionDocument,
     SolverParameterDocument,
@@ -30,13 +41,46 @@ from app.planning.policy.contracts import (
     validate_solve_limits,
 )
 from app.planning.problem.contracts import PlanningProblemDocumentV2
-from app.planning.problem.hashing import validate_built_problem_v2
+from app.planning.validation.problem_schedule_validator import (
+    validate_problem_schedule,
+)
+from app.domain.contracts import ValidationReportDocumentV2
 
 
 BACKEND_ID = "cp-sat"
 BACKEND_VERSION = "cp-sat-backend.v1"
 SOLVER_NAME = "Google OR-Tools CP-SAT"
 ORTOOLS_VERSION = "9.15.6755"
+
+
+class CoreSolveTelemetryDocument(TypedDict):
+    native_status: str
+    solver_status: str
+    model_build_seconds: float
+    first_feasible_seconds: float | None
+    solve_seconds: float
+    solver_wall_time_seconds: float
+    python_memory_peak_mb: float
+    model_metrics: CoreModelMetricsDocument
+    validator_status: str | None
+    objective_optimized: bool
+
+
+@dataclass(frozen=True)
+class CoreSolveResult:
+    solution: PlanningSolutionDocument
+    validation_report: ValidationReportDocumentV2 | None
+    telemetry: CoreSolveTelemetryDocument
+
+
+class _FirstFeasibleObserver(cp_model.CpSolverSolutionCallback):
+    def __init__(self) -> None:
+        super().__init__()
+        self.first_feasible_seconds: float | None = None
+
+    def on_solution_callback(self) -> None:
+        if self.first_feasible_seconds is None:
+            self.first_feasible_seconds = max(0.0, float(self.wall_time))
 
 
 def backend_identity() -> BackendIdentityDocument:
@@ -201,7 +245,7 @@ def probe_model_invalid(
 
 
 class CpSatBackend:
-    """Structural SolverBackend adapter reserved for later model builders."""
+    """SolverBackend implementation for the bounded core feasibility slice."""
 
     def __init__(self) -> None:
         self._identity = backend_identity()
@@ -221,28 +265,120 @@ class CpSatBackend:
         policy: PlanningPolicyDocument,
         limits: SolveLimitsDocument,
     ) -> PlanningSolutionDocument:
-        """Validate the boundary, then fail closed until P2 model construction."""
+        """Return the core PlanningSolution while retaining detailed evidence."""
 
-        validate_built_problem_v2(problem)
+        return self.solve_with_evidence(problem, policy, limits).solution
+
+    def solve_with_evidence(
+        self,
+        problem: PlanningProblemDocumentV2,
+        policy: PlanningPolicyDocument,
+        limits: SolveLimitsDocument,
+    ) -> CoreSolveResult:
+        """Solve, map, and independently validate the bounded core model."""
+
         validate_planning_policy(policy)
         validate_solve_limits(limits)
-        self._model_builder_not_implemented()
+        backend_identity()
 
-    @staticmethod
-    def _model_builder_not_implemented() -> NoReturn:
-        raise SolverBackendError(
-            BackendFailureReason.MODEL_BUILDER_NOT_IMPLEMENTED,
-            solver_status=SolverStatus.MODEL_INVALID,
-            message=(
-                "CP-SAT business model construction is outside TASK-P2-03 and "
-                "remains unavailable"
-            ),
-        )
+        owns_trace = not tracemalloc.is_tracing()
+        if owns_trace:
+            tracemalloc.start()
+        baseline_peak = tracemalloc.get_traced_memory()[1]
+        try:
+            core_model = build_core_model(problem)
+            solver = _configured_solver(limits)
+            observer = _FirstFeasibleObserver()
+            solve_started = perf_counter()
+            native_status = solver.solve(core_model.model, observer)
+            solve_seconds = max(0.0, perf_counter() - solve_started)
+            native_name = native_status_name(native_status)
+            mapped_status = solver_status_from_cp_sat(native_status)
+            first_feasible = observer.first_feasible_seconds
+            if mapped_status in {SolverStatus.OPTIMAL, SolverStatus.FEASIBLE}:
+                if first_feasible is None:
+                    first_feasible = min(
+                        max(0.0, float(solver.wall_time)), solve_seconds
+                    )
+                solution = map_core_candidate_solution(
+                    problem,
+                    policy,
+                    limits,
+                    core_model,
+                    solver,
+                    native_status=native_name,
+                    solve_seconds=float(solver.wall_time),
+                )
+                validation_report = validate_problem_schedule(problem, solution)
+                if validation_report["status"] != "PASS":
+                    product_status = SolverStatus.FAILED
+                    solution = map_core_non_candidate_solution(
+                        problem,
+                        policy,
+                        limits,
+                        status=product_status,
+                        diagnostic={
+                            "code": "CP_SAT_CORE_CANDIDATE_VALIDATION_FAILED",
+                            "message": (
+                                "Independent validation rejected the core candidate; "
+                                "assignments were discarded"
+                            ),
+                        },
+                        solve_seconds=float(solver.wall_time),
+                    )
+                else:
+                    product_status = SolverStatus.FEASIBLE
+            else:
+                product_status = mapped_status
+                validation_report = None
+                solution = map_core_non_candidate_solution(
+                    problem,
+                    policy,
+                    limits,
+                    status=product_status,
+                    diagnostic={
+                        "code": f"CP_SAT_CORE_{product_status.value}",
+                        "message": (
+                            "Pinned CP-SAT completed the bounded core model without "
+                            "an accepted candidate"
+                        ),
+                    },
+                    solve_seconds=float(solver.wall_time),
+                )
+            observed_peak = tracemalloc.get_traced_memory()[1]
+            telemetry: CoreSolveTelemetryDocument = {
+                "native_status": native_name,
+                "solver_status": product_status.value,
+                "model_build_seconds": core_model.model_build_seconds,
+                "first_feasible_seconds": first_feasible,
+                "solve_seconds": solve_seconds,
+                "solver_wall_time_seconds": max(0.0, float(solver.wall_time)),
+                "python_memory_peak_mb": max(
+                    0.0, (observed_peak - baseline_peak) / (1024 * 1024)
+                ),
+                "model_metrics": core_model.metrics,
+                "validator_status": (
+                    None
+                    if validation_report is None
+                    else str(validation_report["status"])
+                ),
+                "objective_optimized": False,
+            }
+            return CoreSolveResult(
+                solution=solution,
+                validation_report=validation_report,
+                telemetry=telemetry,
+            )
+        finally:
+            if owns_trace:
+                tracemalloc.stop()
 
 
 __all__ = [
     "BACKEND_ID",
     "BACKEND_VERSION",
+    "CoreSolveResult",
+    "CoreSolveTelemetryDocument",
     "CpSatBackend",
     "ORTOOLS_VERSION",
     "SOLVER_NAME",

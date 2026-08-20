@@ -50,3 +50,9 @@ PlanningPolicy v1在当前P2 slice只允许一个stage：`stage_index=1`、`OBJ-
 ## TASK-P2-03 no-objective review
 
 Foundation不调用`Minimize`/`Maximize`，不读取OBJ-001 weight，也不计算objective/bound/gap。Empty native model的OPTIMAL没有业务objective，不能作为OBJ-001 execution或quality evidence。P2-08边界、OBJ-002/003 deferred状态和OPEN-006均不变。
+
+## TASK-P2-05 feasibility-only objective boundary
+
+Core model仍不调用`Minimize`/`Maximize`，不按OBJ-001引导搜索。为满足既有PlanningSolution stage shape，只在candidate产生后计算weighted tardiness，记录通用0 lower bound、相应gap与`OBJECTIVE_NOT_OPTIMIZED` stop reason；native OPTIMAL降级为业务FEASIBLE。
+
+因此OBJ-001 execution仍由P2-08形成，OBJ-002/003继续deferred，不能比较候选质量或声称最优。OPEN-006及objective policy版本均不变。

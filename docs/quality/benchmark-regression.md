@@ -94,3 +94,9 @@ SolverReport v1固定未来Benchmark可引用的objective/bound/gap、model buil
 ## TASK-P2-03 foundation replay classification
 
 首次solver exact pin触发ADR、lock、platform、status与API replay，但由于没有业务model/candidate/Validator，Benchmark结论为`NOT_APPLICABLE_FOUNDATION_ONLY`，不得记录零runtime baseline或quality comparison。Empty/model-invalid wall time只用于adapter diagnostics。Golden/Scenario/Reference Scheduler/XS/S/M、memory/quality regression和conditional benchmark hook仍由后续Task形成；OPEN-012保持OPEN。
+
+## TASK-P2-05 core telemetry classification
+
+Core report为tiny JSSP/FJSP记录variables、constraints、optional intervals、build/solve/native wall/first-feasible与Python traced peak memory；这些是correctness diagnostics，不是warm-up后的统计样本，不含XS/S/M、Reference Scheduler、quality delta或阈值。因此不得写入Benchmark baseline或触发regression判定。
+
+CI中的conditional benchmark hook保持deferred。P2-12仍负责正式runner、profiles、runtime/memory/quality口径与回归门；OPEN-012保持OPEN。

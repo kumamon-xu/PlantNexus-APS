@@ -172,3 +172,9 @@ Implementation `9268b88ca7ce90a8f72023241f87e2d3676fd58a`的GitHub run `32346208
 正式链为`Problem v2 identity/hash + PlanningSolution fingerprint/assignments → independent C-001～C-011 evaluation → validation-report.v2 → optional error.v2 mapping`。稳定report保存Problem/Solution引用、constraint-rule-sheet版本、每个violation的C-ID/entity/observed/expected；candidate solver status不参与判定，输入Problem的合同/hash失败与schedule violation保持不同错误边界。
 
 `formal-schedule-validator-report.v1`记录固定Schema/rule/fixture/lock hashes、positive与status contradiction replay、13个mutation的exact C-ID、6个duration/order examples、报告/schema determinism和source isolation。Local `code_commit=uncommitted`只证明工作树；implementation `9b532e2c054b02e1692f345a252922ec7fd469e4`的run `32350068318` / required job `96367085099` / artifact `9399519368`已绑定exact SHA，formal/Task report文件SHA-256分别为`1126e8ca…d669b`与`15c20fa5…b78a`。本链不生成Solver/Benchmark/Production provenance。
+
+## TASK-P2-05 core solve provenance
+
+Core solve链固定为`Problem hash + Policy fingerprint + Limits fingerprint + cp-sat-backend.v1/OR-Tools 9.15.6755 + parameters → native outcome → complete assignments → independent validation`。PlanningSolution ID由规范化输入fingerprint、assignments和诚实的业务`FEASIBLE`状态确定；纯可行模型的native OPTIMAL被降级为业务FEASIBLE，不能形成OBJ-001 optimality provenance。
+
+`cp-sat-core-model-report.v1`记录五个implemented C-ID、模型变量/约束/optional interval计数、build/solve/first-feasible/solver-wall/Python-memory诊断、Validator状态、tiny oracle与冻结合同hash。Objective stage仅记录candidate的post-solve weighted tardiness、通用0 lower bound及`OBJECTIVE_NOT_OPTIMIZED` stop reason；local `uncommitted`仍须由exact GitHub SHA artifact替代后才能关闭Task。

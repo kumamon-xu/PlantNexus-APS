@@ -15,10 +15,6 @@ import sys
 import tomllib
 from typing import Any, cast
 
-from app.planning.backends.contracts import (
-    BackendFailureReason,
-    SolverBackendError,
-)
 from app.planning.backends.cp_sat.backend import (
     ORTOOLS_VERSION,
     CpSatBackend,
@@ -185,30 +181,19 @@ def _sample_documents(
 
 
 def _protocol_evidence(root: Path) -> dict[str, object]:
-    problem, policy, limits = _sample_documents(root)
+    del root
     backend = CpSatBackend()
     signature = inspect.signature(CpSatBackend.solve)
     if tuple(signature.parameters) != ("self", "problem", "policy", "limits"):
         raise ValueError("CpSatBackend.solve differs from SolverBackend protocol")
-    try:
-        backend.solve(problem, policy, limits)
-    except SolverBackendError as error:
-        if (
-            error.reason is not BackendFailureReason.MODEL_BUILDER_NOT_IMPLEMENTED
-            or error.solver_status is not SolverStatus.MODEL_INVALID
-        ):
-            raise ValueError("foundation solve rejection changed") from error
-        rejection = {
-            "reason": error.reason.value,
-            "solver_status": error.solver_status.value,
-            "diagnostic": error.diagnostic(),
-        }
-    else:
-        raise ValueError("foundation unexpectedly produced a PlanningSolution")
     return {
         "solve_parameters": list(signature.parameters),
         "identity": backend.identity,
-        "foundation_rejection": rejection,
+        "foundation_rejection": {
+            "status": "SUPERSEDED_BY_TASK_P2_05_CORE_MODEL",
+            "historical_task": TASK_ID,
+            "current_business_solve_owner": "TASK-P2-05",
+        },
         "candidate_produced": False,
     }
 
@@ -299,12 +284,14 @@ def run_contract_checks(root: Path) -> dict[str, object]:
         "checks": checks,
         "boundaries": {
             "schema_change": "NONE",
-            "business_constraints": "NOT_IMPLEMENTED",
+            "business_constraints": "CORE_P2_05_PRESENT",
             "objective_execution": "NOT_IMPLEMENTED",
-            "candidate_solution": "NONE",
-            "schedule_validator": "NOT_IMPLEMENTED_BY_TASK",
+            "candidate_solution": "CORE_SLICE_ONLY",
+            "schedule_validator": "TASK_P2_04_PRESENT",
             "benchmark": "NOT_APPLICABLE_FOUNDATION_ONLY",
-            "business_feasibility": "NOT_EVALUATED",
+            "business_feasibility": (
+                "EVALUATED_BY_TASK_P2_05_NOT_FOUNDATION_SMOKES"
+            ),
             "database_api_worker": "NOT_IMPLEMENTED",
             "production_readiness": "NOT_CLAIMED",
             "security_review": "POINT_IN_TIME_2026-08-20_NOT_CONTINUOUS_MONITORING",

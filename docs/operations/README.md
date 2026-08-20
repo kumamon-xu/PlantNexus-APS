@@ -77,3 +77,9 @@ Report本身不写业务数据库，temporary CSV随进程回收，`build/valida
 本地/CI运行`python -m app.planning.validation.problem_validator_check --root . --report <path>`生成`formal-schedule-validator-report.v1`。PASS要求6项检查全部成功，并显示13个声明式mutation覆盖C-001～C-011、14个hard violations、6个duration/order examples、status contradiction identical replay及Backend/OR-Tools/expected-outcome隔离；CI固定路径为`build/validation/ci-formal-schedule-validator.json`。
 
 非零返回码必须保留FAIL report并阻断closure。该命令只验证synthetic correctness与合同/hash边界，不连接Production系统、不执行CP-SAT business model、objective或Benchmark；local `uncommitted`报告不替代exact GitHub SHA的required `validate`与artifact，也不是Production runbook、capacity或SLA证据。
+
+## TASK-P2-05 core model evidence command
+
+本地/CI运行`python -m app.planning.backends.cp_sat.core_model_check --root . --report <path>`生成`cp-sat-core-model-report.v1`。PASS要求6项检查全部成功：冻结合同/rule/Validator/lock hash、five-C-ID model shape、tiny JSSP/FJSP candidate、unary infeasible与zero/overflow precheck、formal Validator正反例、独立穷举oracle与真实telemetry；CI固定路径为`build/validation/ci-cp-sat-core-model.json`。
+
+非零返回必须保留sanitized FAIL report并阻断Task closure。该命令不读取Production数据、不发布ScheduleVersion、不运行OBJ-001搜索、Strategy或Benchmark；含P2-06/07事实的Problem应视为当前core slice不支持并稳定拒绝，而不是改写输入或忽略事实。

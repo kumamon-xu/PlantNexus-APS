@@ -86,3 +86,9 @@ Rollback: 回退core builder/mapper并保持Backend protocol；已生成candidat
 实现边界在任何Backend代码修改前固定：仅对C-001/003/004/010/011建模；含precedence/calendar/release-material gate/RUNNING/HARD-SOFT lock等P2-06/07事实的Problem必须在build前稳定拒绝，不得静默忽略。Core solve不添加`Minimize/Maximize`或Strategy；即使native纯可行模型返回OPTIMAL，在OBJ-001未实现时也只能输出诚实的业务`FEASIBLE`及已测量candidate metric/0 lower bound，不声称最优。新增machine CLI、workflow、integration contract和PHASE/INFRA必审文档路径已在进入`in_progress`时冻结；P2-06+与P3不在授权范围。
 
 实现前scope review发现：P2-03的`contract_check.py`与`test_solver_backend_contract.py`仍把`CpSatBackend.solve()`永久拒绝、OR-Tools只出现在原两个文件作为current-repository断言，与P2-05被规划的consumer形成必然冲突。因此在触碰这两个文件前补入exact allow-list，仅允许把断言更新为“foundation smoke历史边界保留、current core consumer由TASK-P2-05负责”并扩展CP-SAT package namespace集合；不改P2-03历史artifact、status/parameter/version映射或任何Schema/rule/Validator。
+
+## Local implementation evidence
+
+实现形成C-001/003/004/010/011 master/optional interval、exact-one、candidate-specific duration、capacity-1 NoOverlap与horizon model；Problem含precedence/calendar/late release-material/RUNNING/lock时build前稳定拒绝。完整native candidate被诚实降级为业务FEASIBLE、映射seconds/ticks/UTC，并仅在formal Validator PASS后保留；模型无objective，Solution stage只作post-solve weighted-tardiness measurement。
+
+2026-08-20本地验收：`uv sync --locked` PASS；指定focused suite=`64 passed`；全仓suite=`360 passed`；Ruff/Pyright均0；core machine report=`6/6 PASS`，counts=`5 constraints/2 candidates/1 infeasible/2 prechecks/2 validator mutations/4 oracle cases`；formal report=`6/6 PASS`；治理full=`142 docs/30 roots/36 tests/15 OPEN/10 SIM/11 risks/37 tasks`，Task diff=`49 paths/6 impact rows/19 checks/0 issues`；compose config、`uv build`、immutable contract/lock/schema/rule/Validator/fixture/benchmark diff及`git diff --check`均PASS。Local report仍为`code_commit=uncommitted`，Task在exact implementation provider evidence前保持`in_progress`。

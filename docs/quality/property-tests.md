@@ -92,3 +92,9 @@ P2-01扩展`test_planning_problem_properties.py`，保留v1 seeds `20260820/21/2
 [`test_schedule_validator_properties.py`](../../backend/tests/property/test_schedule_validator_properties.py) 固定seed `20260820/21/22`。48个examples生成1～600秒权威duration与tick 6～300的合法NOT_STARTED interval，验证整数ceiling、UTC projection、calendar/resource/horizon边界和formal report PASS；另48个examples从12类C-ID mutation中采样，要求至少一个hard violation；32个examples反转Problem六类collection及candidate assignments，要求报告完全相同。
 
 机器检查另用显式表`(1,1)/(59,1)/(60,1)/(61,2)/(119,2)/(120,2)`复核duration ceiling与reordered replay，避免把随机生成本身作为唯一oracle。当前没有Hypothesis failure，因此没有伪造minimized corpus；若后续出现失败，必须保存seed、Problem hash、candidate和最小反例。该证据形成formal Validator的TEST-PROPERTY slice，不包含Solver生成candidate、objective equivalence、XS/S/M runtime/memory或Production distribution；这些仍由P2-09/P2-12承接。
+
+## TASK-P2-05 core model properties
+
+[`test_cp_sat_core_properties.py`](../../backend/tests/property/test_cp_sat_core_properties.py) 使用固定seed `20260820`生成36个1～5 operations、1～3 resources、horizon 1～10 ticks的tiny cases，并与不导入OR-Tools的candidate-choice/unary-load穷举oracle逐例比较可行性。seed `20260821`用24例证明任一candidate duration超过horizon都会在build前拒绝；seed `20260822`用24例证明每条accepted assignment使用所选resource option的duration并完整落入horizon。
+
+这些properties只覆盖C-001/003/004/010/011的有限正确性，不采样precedence/calendar/material/RUNNING/lock、objective质量、XS/S/M或Production distribution。若出现失败，必须保存seed、Problem hash、options/horizon与Hypothesis最小反例；不得扩大为未注册fixture或Benchmark基线。

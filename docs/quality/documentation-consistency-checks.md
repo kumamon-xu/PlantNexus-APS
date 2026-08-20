@@ -256,3 +256,11 @@ P2-04在实现前固定Diff base、P0/Problem/Solution/Validation/rule/lock hash
 Full治理预期保持142 docs、30 roots、36 Test IDs、15 OPEN、10 SIM assumptions、11 risks和37 Tasks。Task diff必须匹配`IMPACT-VALIDATOR/INFRA/TESTS/PHASE/GOVERNANCE-REGISTRY/DOCS`六行并为0 issues；machine report必须为6/6且覆盖13 mutations、11 C-IDs、14 hard violations和6 property examples。Ignored machine/trace/provider下载不进入inventory；actual local与provider counts在验收后回填，不能预写。
 
 格式化后本地full治理实际PASS为142 docs/30 roots/36 Test IDs/15 OPEN/10 SIM assumptions/11 risks/37 Tasks；Task diff实际为38 paths、6 matched rows、19 checks、0 issues。Implementation artifact `9399519368`内`traceability-report.v1`精确绑定`9b532e2c054b02e1692f345a252922ec7fd469e4`与Diff base，复现38 committed/0 working paths、6 rows、19 checks、0 issues并PASS；TASK-P2-04治理Gate闭环。Evidence-only closure仍须由自身exact provider run复核，不能预写其ID。
+
+## TASK-P2-05 governance expectations
+
+Full治理仍须保持142 docs、30 roots、36 Test IDs、15 OPEN、10 SIM assumptions、11 risks和37 Tasks。Task diff必须只匹配`IMPACT-BACKEND/INFRA/TESTS/PHASE/GOVERNANCE-REGISTRY/DOCS`六行、覆盖Task卡exact allow-list与全部required documents并为0 issues；core machine report必须6/6并保留five-C-ID、future/objective/benchmark/production boundaries。
+
+Problem/Policy/Solution Schema、rule sheet、formal Validator、fixtures/benchmarks、dependency/lock的immutable diff必须为空。实际paths/checks与provider IDs只在命令和exact artifact通过后回填；P2-05完成只使P2-06启动依赖满足，不构成授权。
+
+本地实际full治理PASS为142 docs/30 roots/36 Test IDs/15 OPEN/10 SIM assumptions/11 risks/37 Tasks；TASK-P2-05 diff为49 paths、6 matched rows、19 checks、0 issues。Exact provider artifact尚待implementation提交后复验，故Task仍为`in_progress`。

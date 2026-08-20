@@ -62,3 +62,9 @@ SolverReport v1现在固定model build、first feasible、solve、validation、t
 ## TASK-P2-03 engineering timing boundary
 
 Foundation report可记录empty/model-invalid native wall time与变量/约束计数，仅用于证明adapter可调用和JSON serialization；这些值受local平台及空模型影响，不是Planning KPI、solver quality、first-feasible、validation timing、Benchmark baseline、capacity或SLA。没有candidate，因此不计算weighted tardiness、makespan或任何OBJ/KPI；OPEN-006/012保持OPEN。
+
+## TASK-P2-05 diagnostic and KPI boundary
+
+Core report现记录真实model build、external solve、native wall、first feasible、Python traced peak memory及variables/constraints/optional intervals；这些只用于correctness可观测性，尚无XS/S/M profile、warm-up、分位数或回归阈值，因此不是性能KPI或SLA。
+
+Candidate weighted tardiness按交付需求最大completion在solve后测量，用于满足既有Solution stage合同；CP-SAT没有`Minimize/Maximize`，该值不能视为OBJ-001 execution、质量最优性或Benchmark基线。OPEN-006/012及Production KPI口径保持未关闭。

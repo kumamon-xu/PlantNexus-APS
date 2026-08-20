@@ -246,3 +246,11 @@ Schema/Problem/Domain实现限定为additive Problem v2、version-specific APIs�
 Problem/Solution/Validation/Error Schema、fixture历史bytes、`pyproject.toml`/`uv.lock`、Backend/Strategy/constraint model、objective、Benchmark、migration、DB/API/Worker和P3均无差异，故不声明SCHEMA/DEPENDENCY/BACKEND等其他Rule ID。Machine rule table、required-document columns与`registry_version=1.0.0`不变；implementation provider artifact已记录actual paths/checks，TASK-P2-04据此为`done`。
 
 本地Task diff实际为38 paths、6 matched rows、19 checks和0 issues；implementation artifact `9399519368`对exact SHA复现38 committed/0 working paths、相同6 rows/19 checks/0 issues，故影响治理闭环。
+
+## TASK-P2-05 impact review
+
+实际范围必须命中`IMPACT-BACKEND`（CP-SAT model/mapper/consumer）、`IMPACT-INFRA`（required validate machine step）、`IMPACT-TESTS`（unit/property/integration）、`IMPACT-PHASE`（唯一active Task与边界）、`IMPACT-GOVERNANCE-REGISTRY`（REQ/NFR/trace/open/sim/risk review）和`IMPACT-DOCS`（合同/规划/质量/运维同步）六行。Problem/Policy/Solution Schema、rule sheet、formal Validator、dependency/lock、fixture/benchmark、migration、DB/API/Worker和P3无差异，因此不命中SCHEMA/DEPENDENCY/MIGRATION等额外Rule ID。
+
+最终path/check/issue计数必须由TASK-P2-05 diff report和exact provider artifact回填；在验收前不得预写。Registry table与`registry_version=1.0.0`均不修改。
+
+本地TASK-P2-05 report实际为49 paths、6 matched rows、19 checks、0 issues，六行与上方预期完全一致。该数字仍须由exact implementation provider artifact重放后才能闭环。

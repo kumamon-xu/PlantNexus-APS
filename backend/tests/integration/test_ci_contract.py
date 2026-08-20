@@ -12,6 +12,7 @@ import yaml
 from app.planning.backends.cp_sat.contract_check import (
     main as backend_contract_main,
 )
+from app.planning.backends.cp_sat.core_model_check import main as core_model_main
 from app.planning.problem.contract_check import main as problem_contract_main
 from app.planning.policy.contract_check import main as machine_contract_main
 from app.planning.validation.problem_validator_check import (
@@ -106,6 +107,8 @@ def test_ci_runs_repository_gates_and_discovers_the_current_task() -> None:
         "build/validation/ci-solver-backend-foundation.json",
         "app.planning.validation.problem_validator_check",
         "build/validation/ci-formal-schedule-validator.json",
+        "app.planning.backends.cp_sat.core_model_check",
+        "build/validation/ci-cp-sat-core-model.json",
         "app.infrastructure.contract_check",
         "docker compose --env-file .env.example config --quiet",
         "PLANTNEXUS_CI_CHANGE_BASE:",
@@ -208,10 +211,58 @@ def test_ci_solver_backend_foundation_report_is_machine_checkable(
         "solve-limits-parameter-capture",
         "engineering-smoke-and-serialization-isolation",
     }
-    assert report["boundaries"]["business_constraints"] == "NOT_IMPLEMENTED"
-    assert report["boundaries"]["candidate_solution"] == "NONE"
-    assert report["boundaries"]["business_feasibility"] == "NOT_EVALUATED"
+    assert report["boundaries"]["business_constraints"] == "CORE_P2_05_PRESENT"
+    assert report["boundaries"]["candidate_solution"] == "CORE_SLICE_ONLY"
+    assert report["boundaries"]["schedule_validator"] == "TASK_P2_04_PRESENT"
+    assert report["boundaries"]["business_feasibility"] == (
+        "EVALUATED_BY_TASK_P2_05_NOT_FOUNDATION_SMOKES"
+    )
     assert report["boundaries"]["benchmark"] == "NOT_APPLICABLE_FOUNDATION_ONLY"
+
+
+def test_ci_cp_sat_core_model_report_is_machine_checkable(tmp_path: Path) -> None:
+    report_path = tmp_path / "cp-sat-core-model.json"
+    assert core_model_main(["--root", str(ROOT), "--report", str(report_path)]) == 0
+    report = json.loads(report_path.read_text(encoding="utf-8"))
+
+    assert report["report_version"] == "cp-sat-core-model-report.v1"
+    assert report["status"] == "PASS"
+    assert report["task_id"] == "TASK-P2-05"
+    assert report["check_count"] == 6
+    assert report["counts"] == {
+        "core_constraint_ids": 5,
+        "candidate_cases": 2,
+        "infeasible_cases": 1,
+        "precheck_rejections": 2,
+        "validator_mutations": 2,
+        "brute_force_cases": 4,
+    }
+    assert report["boundaries"] == {
+        "problem_policy_solution_schema_changes": "NONE",
+        "constraint_rule_changes": "NONE",
+        "formal_validator_changes": "NONE",
+        "dependency_changes": "NONE",
+        "implemented_constraints": [
+            "C-001",
+            "C-003",
+            "C-004",
+            "C-010",
+            "C-011",
+        ],
+        "deferred_constraints": [
+            "C-002",
+            "C-005",
+            "C-006",
+            "C-007",
+            "C-008",
+            "C-009",
+        ],
+        "objective": "POSTSOLVE_MEASUREMENT_ONLY_NOT_OPTIMIZED",
+        "strategy": "NOT_IMPLEMENTED",
+        "benchmark": "TINY_CORRECTNESS_ONLY_NO_XS_S_M_BASELINE",
+        "candidate_publishability": "TEST_ARTIFACT_ONLY",
+        "production_readiness": "NOT_CLAIMED",
+    }
 
 
 def test_ci_formal_schedule_validator_report_is_machine_checkable(

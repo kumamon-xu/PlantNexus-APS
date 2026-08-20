@@ -54,3 +54,9 @@ P2只允许一个OBJ-001 stage。由于weighted tardiness与bound均为非负整
 正式Validator现直接消费`planning-solution.v1`的Problem reference与assignments，并逐项对照权威PlanningProblem v2；Policy/Limits/objective/declared solver status不参与schedule validity。Schema-valid positive vector先通过`validate_planning_solution`，随后由独立Evaluator重算C-001～C-011；status矛盾测试故意绕过machine-contract precheck，只用于证明Validator不把status当oracle，不能作为可持久化PlanningSolution。
 
 Assignment的tick/seconds/UTC在formal边界重新核对。NOT_STARTED duration来自selected option；RUNNING future occupancy与`duration_seconds`来自Problem的`remaining_seconds`。Validation FAIL映射Error v2，不创建或迁移ScheduleVersion，也不改变四份P2-02 Schema/sample bytes、global schema set或canonical fingerprint规则。
+
+## TASK-P2-05 core candidate mapping
+
+完整native candidate被映射为每operation恰一条assignment，保存selected resource的原始seconds、ceiling ticks及由horizon start还原的UTC；只有formal Validator PASS时才保留assignments。INFEASIBLE/UNKNOWN/MODEL_INVALID/FAILED等非candidate状态必须输出空assignments，不能泄漏部分解。
+
+PlanningSolution v1要求的OBJ-001 stage在本Task只承载post-solve measurement：状态为FEASIBLE、best bound为通用0、gap按已测值计算，并以`CORE_FEASIBILITY_ONLY_*_OBJECTIVE_NOT_OPTIMIZED`明确未运行目标搜索。Schema、ScheduleVersion迁移与publishability均不变；所有candidate只作为测试artifact。

@@ -132,3 +132,11 @@ Workflow在P2-03 foundation evidence后运行`app.planning.validation.problem_va
 Repository suite同时执行formal unit/mutation/property与历史P0 validation，integration contract要求workflow exact CLI/report路径和机器报告counts/boundaries。该Gate不调用业务CP-SAT solve、不实现OBJ-001、不设置性能阈值，也不把synthetic correctness写成Production readiness。
 
 Implementation `9b532e2c054b02e1692f345a252922ec7fd469e4`的exact push run `32350068318`与required `validate` job `96367085099`均`completed/success`；未过期artifact `9399519368` / digest `sha256:e67b8ca8bbb2690eca62a2df406b275876dda074dbea5855fccd9516c5d09a8f`内formal report绑定同一SHA并6/6 PASS，Task report绑定同一SHA且为38 paths/6 rows/0 issues。P2-04据此闭环为`done`；P2-05仍须另行授权。
+
+## TASK-P2-05 required validate additions
+
+Required `validate`在P2-03 foundation与P2-04 formal步骤之后运行`app.planning.backends.cp_sat.core_model_check --root . --report build/validation/ci-cp-sat-core-model.json`。Integration contract要求报告为`cp-sat-core-model-report.v1`、6/6 PASS、五个implemented C-ID、2 candidate/1 infeasible/2 precheck/2 Validator mutation/4 oracle cases，并明确objective未优化、future constraints deferred、candidate仅测试用途。
+
+Artifact glob必须上传core、formal与Task diff报告且各自`code_commit`绑定exact GitHub SHA；step不得`continue-on-error`。Local PASS、provider run/job/artifact/digest及closure SHA均未核验前，TASK-P2-05不得标记`done`，也不得自动激活P2-06。
+
+当前local Gate已通过64 focused、360 full、Ruff/Pyright、core/formal各6/6、49-path/6-row/0-issue治理、compose、build及immutable checks。下一门仅为implementation exact SHA的required `validate`与artifact；通过前Task保持`in_progress`。

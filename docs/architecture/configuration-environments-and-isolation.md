@@ -122,3 +122,9 @@ Production/Simulation data-plane隔离、独立数据库与solver worker deploym
 正式Validator只消费调用方显式提供的Problem v2与PlanningSolution JSON；不读取environment、数据库、API、Worker、Backend或OR-Tools，也不以candidate声明的solver status决定PASS。Simulation/Production plane及Policy/Limits provenance继续由输入合同保存，Validator只重算显式schedule facts。
 
 CI新增的formal validator command只读仓库合同与固定hash、在进程内构造synthetic correctness vector并写ignored machine report；没有新增Secret、environment variable、service、port、container、migration或Production route。Provider replay仅证明repository correctness，不是Production deployment、容量或SLA证据。
+
+## TASK-P2-05 core Solver isolation
+
+Core Backend只消费调用方显式传入的Problem v2、PlanningPolicy v1与SolveLimits v1；唯一运行参数来自已验证的Limits映射，不读取额外environment、数据库、API、Worker或Production配置。含precedence/transport、calendar、非空release/material gate、RUNNING或lock事实的输入在CP-SAT model创建前以稳定`MODEL_INVALID`边界拒绝，避免把尚未实现的P2-06/07语义静默降级。
+
+CI新增`app.planning.backends.cp_sat.core_model_check`，只构造内存tiny correctness vectors并写ignored JSON。它不新增Secret、service、port、container或deployment route；candidate均为不可发布测试artifact，P2-05证据不能外推Production容量或SLA。

@@ -57,3 +57,5 @@ infra/        P0 开发容器构建配置
 ```
 
 P1 Data & Snapshot已通过Exit Gate并关闭，当前阶段为P2。TASK-P2-01～04均已闭环；P2-03形成`ortools==9.15.6755`与Backend foundation，P2-04在正式Problem/Solution合同上独立重算C-001～C-011，并以exact implementation GitHub required `validate`和artifact闭环mutation/property/schema/error/independence证据。P2-05已启动，且只授权C-001/003/004/010/011 core model、candidate/Validator交叉证据与telemetry；OBJ-001搜索、C-002/005～009、Benchmark、DB/API/Worker、P2-06～14和P3仍未实现或未获授权。当前边界见[`docs/current_phase.md`](docs/current_phase.md)。
+
+TASK-P2-05本地实现现已通过64项focused、360项全仓测试、Ruff/Pyright、6/6 core/formal机器证据、49路径/6影响行/0问题治理、compose、build及不可变合同检查；在exact GitHub implementation SHA的required `validate`与artifact闭环前仍保持`in_progress`。P2-06尚未启动。

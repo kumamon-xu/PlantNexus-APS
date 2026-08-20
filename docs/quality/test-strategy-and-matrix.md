@@ -203,3 +203,11 @@ TEST-SOLVER-UPGRADE与TEST-CONTRACT-001新增slice覆盖exact pin/lock/wheels、
 P2-04新增`test_problem_schedule_validator.py`与`test_schedule_validator_properties.py`，并扩展CI integration contract。Formal suite覆盖schema-valid positive、declared status independence、13 exact mutations/14 violations/C-001～C-011、malformed/reference、RUNNING remainder、ValidationReport/Error v2、AST import/token isolation、fixed asset hashes和6-check machine report；Hypothesis seeds `20260820/21/22`覆盖legal duration/horizon、sampled corruption与collection ordering。
 
 本地formal+P0 validation/golden focused=`50 passed`，CI integration=`9 passed`，Task指定合并suite=`59 passed`，full repository=`343 passed`，Ruff/Pyright均0问题，formal machine report=`6/6 PASS`。P0 mutation CLI仍为13 cases/15 violations PASS，固定Problem/Solution/Validation Schema、P0 assets、Backend与lockfile无差异。Implementation `9b532e2c054b02e1692f345a252922ec7fd469e4`的run `32350068318` / job `96367085099` / artifact `9399519368`精确复现6/6 formal与38-path/6-row/0-issue Task report，故Task=`done`。没有新增Test ID或改变registry版本；Solver C-ID implementation、OBJ-001、Golden/Reference/Benchmark/P3继续PLANNED。
+
+## TASK-P2-05 core Solver test slices
+
+`test_cp_sat_core_model.py`覆盖exact five-C-ID model shape/no objective、tight JSSP、alternative-duration FJSP、native OPTIMAL→business FEASIBLE、unary overload、zero/overflow build rejection、future-fact fail-closed、formal Validator mutation与machine report。`test_cp_sat_core_properties.py`用三个固定seed及独立穷举oracle覆盖feasibility、duration和horizon invariants；既有P2-03 contract测试改为验证历史smoke与当前consumer兼容，CI integration固定core CLI/report路径和完整boundary。
+
+本Task复用TEST-GOLDEN-JSSP/FJSP、TEST-INF-NO-RESOURCE/HORIZON、TEST-PROPERTY、TEST-VALIDATOR-MUTATION、TEST-CONTRACT-001与TEST-SOLVER-UPGRADE的新增slice，不新增Test ID或改变36项registry。验收必须同时运行focused、全仓pytest、Ruff、Pyright、core/formal machine CLI、治理、compose与build；实际总数和provider evidence仅在运行后回填。
+
+本地实际验收为focused `64 passed`、full repository `360 passed`、Ruff/Pyright 0问题、core/formal machine report各6/6 PASS。Core counts为5个C-ID、2个candidate、1个infeasible、2个precheck、2个Validator mutation与4个oracle cases；immutable contracts/rules/Validator/fixtures/benchmarks保持无差异。Exact provider evidence待implementation SHA生成后回填。

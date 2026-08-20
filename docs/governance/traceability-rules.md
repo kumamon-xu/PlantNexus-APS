@@ -155,3 +155,9 @@ REQ-004/009、NFR-COR/TRC/SEC/OBS/PER与ENG-ARCH/SOL/ERR/VER链接到ADR-0011、
 REQ-004/005/009、NFR-COR/DET/TRC与ENG-VAL/ERR/VER链接到ADR-0005/0008、`problem_schedule_validator.py`、TEST-VALIDATOR-MUTATION及C-specific/Hypothesis tests、CI integration和`formal-schedule-validator-report.v1`。Problem/Solution→independent C-ID evaluation→ValidationReport/Error链已在本地formed；CP-SAT business candidate、OBJ-001、consumer integration、Golden/Scenario/Reference/Benchmark/Export/P3继续PLANNED。
 
 证据链必须区分authoritative Problem input rejection与candidate schedule violation、candidate solver status与独立validation result、P0 immutable fixture evaluator与formal Problem/Solution Validator、local `uncommitted` report与exact provider artifact。Expected mutation outcome只用于test assertion，不得进入Validator决策。Implementation run `32350068318` / artifact `9399519368`已精确绑定同一SHA并闭环，TASK-P2-04=`done`；root生命周期与registry版本不变，P2-05不自动激活。
+
+## TASK-P2-05 trace formation rule
+
+形成链为`REQ-004/005/009 → TASK-P2-05 → C-001/003/004/010/011 → core builder/mapper + formal Validator → TEST-GOLDEN-JSSP/FJSP、TEST-INF-NO-RESOURCE/HORIZON、TEST-PROPERTY、TEST-VALIDATOR-MUTATION → cp-sat-core-model-report.v1 + Task report + exact provider artifact`。只有这五个C-ID的bounded Solver slice可从PLANNED提升为formed；其他C-ID、OBJ-001 execution、Strategy、Reference/Benchmark/Export/P3继续PLANNED。
+
+必须区分native OPTIMAL与无objective的业务FEASIBLE、post-solve metric与objective optimization、formal Validator PASS与Production publishability、tiny oracle与Benchmark。Provider artifact未绑定exact implementation/closure SHA前只能记录local evidence；完成P2-05也只满足P2-06依赖，不自动授权其启动。

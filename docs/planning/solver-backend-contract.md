@@ -110,3 +110,9 @@ ADR-0011固定`ortools==9.15.6755`和`cp-sat-backend.v1`。Canonical `SolverBack
 Native `UNKNOWN/MODEL_INVALID/FEASIBLE/INFEASIBLE/OPTIMAL`显式映射同名合同状态；adapter cancellation映射CANCELLED，version/native-status/adapter failure映射稳定FAILED错误。未知native code不猜测；identity version drift和invalid parameters fail closed，detail经过固定sanitized message。
 
 Empty/model-invalid smoke分别验证native调用与MODEL_INVALID路径，但两者都不产生candidate且不评估业务可行性。真实`solve()`故意以`MODEL_BUILDER_NOT_IMPLEMENTED`停止，C-001～C-011、OBJ-001、Strategy、formal Validator、Golden/Scenario和Benchmark仍由P2-04～12形成。
+
+## TASK-P2-05 core solve activation
+
+上一段的永久拒绝边界仅是TASK-P2-03历史状态；当前`solve()`已由TASK-P2-05接入C-001/003/004/010/011 bounded core model。它构造master/optional intervals、exact-one candidate、candidate-specific duration、capacity-1 NoOverlap和horizon域，并把任何完整native candidate交给TASK-P2-04 formal Validator复验。
+
+纯可行模型没有objective，native OPTIMAL必须映射为业务FEASIBLE；Validator FAIL则丢弃assignments并映射FAILED。zero option、overflow或任何需要P2-06/07约束的非空事实在model build前稳定拒绝为MODEL_INVALID边界；INFEASIBLE与MODEL_INVALID不得互换。P2-03 empty/model-invalid smoke仍保持`business_feasibility=NOT_EVALUATED`，与当前业务core solve分开。

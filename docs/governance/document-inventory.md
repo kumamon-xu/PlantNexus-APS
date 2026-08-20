@@ -190,3 +190,7 @@ TASK-P2-03启动新增唯一Markdown `ADR-0011-ortools-9-15-cp-sat-backend-versi
 TASK-P2-04启动与实现均未新增或删除Markdown路径，inventory继续完整覆盖142份`docs/**/*.md`。Formal validator/CLI/tests/workflow与ignored `build/validation`/`build/traceability` JSON不作为inventory行；现有说明与治理文档只同步formed/PLANNED边界。Implementation `9b532e2c054b02e1692f345a252922ec7fd469e4`的run `32350068318` / artifact `9399519368`成功且Task report为38 paths/6 rows/0 issues，故Task=`done`；P2-05～14继续`planned`且未获授权。
 
 TASK-P2-05启动不新增或删除Markdown路径，inventory继续完整覆盖142份`docs/**/*.md`；只将已获用户明确授权的该Task同步为`in_progress`。预计新增的core model/mapper/machine CLI/tests与workflow修改均不是正式Markdown inventory条目，`build/validation`/`build/traceability`报告继续ignored；P2-06～14仍为`planned`。
+
+TASK-P2-05实现继续不新增、删除或重命名Markdown路径，inventory应保持142份`docs/**/*.md`完整覆盖。Core builder/mapper/check/tests与ignored JSON不是inventory行；现有文档同步five-C-ID formed、future constraints/objective/Benchmark/Production deferred边界。最终Task/provider报告通过后只更新状态与证据，不改变inventory format version或自动激活P2-06。
+
+本地full治理已确认142份docs与142条inventory entries完整一致，TASK-P2-05 Task diff为49 paths/6 rows/0 issues；provider replay尚待implementation SHA。Registry与inventory format version保持不变。

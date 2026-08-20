@@ -27,7 +27,7 @@ last_reviewed: 2026-08-20
 | [TASK-P2-02](P2/TASK-P2-02-planning-machine-contracts-and-status.md) | Planning机器合同与status | P2-01 | `done` |
 | [TASK-P2-03](P2/TASK-P2-03-ortools-backend-foundation.md) | OR-Tools与Backend foundation | P2-02 | `done` |
 | [TASK-P2-04](P2/TASK-P2-04-formal-independent-schedule-validator.md) | 正式独立ScheduleValidator | P2-01/02 | `done` |
-| [TASK-P2-05](P2/TASK-P2-05-cp-sat-core-assignment-resource-model.md) | CP-SAT core assignment/resource | P2-03/04 | `planned` |
+| [TASK-P2-05](P2/TASK-P2-05-cp-sat-core-assignment-resource-model.md) | CP-SAT core assignment/resource | P2-03/04 | `in_progress` |
 | [TASK-P2-06](P2/TASK-P2-06-cp-sat-temporal-calendar-material-model.md) | temporal/calendar/material | P2-05 | `planned` |
 | [TASK-P2-07](P2/TASK-P2-07-execution-facts-and-hard-lock-model.md) | execution facts/HARD lock | P2-06 | `planned` |
 | [TASK-P2-08](P2/TASK-P2-08-delivery-objective-and-global-strategy.md) | OBJ-001与Global Strategy | P2-02/05/06/07 | `planned` |
@@ -48,6 +48,6 @@ TASK-P2-00～04已`done`。P2-03的Diff base固定为`f73f8c90af94d3c9b05ecc10b6
 
 P2-04限定为正式Problem/Solution独立C-001～C-011判定、stable ValidationReport/Error、mutation/property/independence machine evidence及CI handoff；不得修改Backend、合同Schema、fixture历史bytes、dependency、objective、Benchmark或P3。P2-05及以后不会由本Task自动启动。
 
-P2-04本地实现已通过6/6 machine checks、13个mutation、11个C-ID、14个hard violations及6个duration/order examples；implementation `9b532e2c054b02e1692f345a252922ec7fd469e4`的exact required `validate`与artifact复现同一证据，故Task=`done`。P2-05依赖已满足但仍必须另获用户授权。
+P2-04本地实现已通过6/6 machine checks、13个mutation、11个C-ID、14个hard violations及6个duration/order examples；implementation `9b532e2c054b02e1692f345a252922ec7fd469e4`的exact required `validate`与artifact复现同一证据，故Task=`done`。用户于2026-08-20明确授权TASK-P2-05；它以clean/provider-verified `c75f7a0e96b7591ffa9220d0de942f8841283093`为Diff base启动并为唯一`in_progress` Task。P2-06～14仍为`planned`且未获授权。
 
 P2-03本地39 focused、319 full、Ruff/Pyright、6/6 foundation、5/5 P2-02 compatibility及6/6 historical Engineering均PASS；provider artifact再次证明6/6与50 paths/9 rows/0 issues，因此索引状态为`done`。

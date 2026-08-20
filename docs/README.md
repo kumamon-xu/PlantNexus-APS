@@ -69,7 +69,7 @@ last_reviewed: 2026-08-20
 
 ## 当前范围
 
-当前阶段为P2。P1 Milestone为`completed`，P2为`active`；TASK-P2-00～04均已闭环为`done`。正式Problem/Solution Validator独立重算C-001～C-011，且local/exact-provider mutation/property/schema/error/independence证据完整；CP-SAT业务C-ID/OBJ-001、Benchmark、P2-05～14和P3均未启动，详见`current_phase.md`。
+当前阶段为P2。P1 Milestone为`completed`，P2为`active`；TASK-P2-00～04均已闭环为`done`，TASK-P2-05已经用户明确授权并以`c75f7a0e96b7591ffa9220d0de942f8841283093`为Diff base处于`in_progress`。正式Problem/Solution Validator独立重算C-001～C-011，且local/exact-provider mutation/property/schema/error/independence证据完整；P2-05只实施C-001/003/004/010/011 core model，OBJ-001搜索、C-002/005～009、Benchmark、P2-06～14和P3均未启动，详见`current_phase.md`。
 
 ## 仓库入口与本地检查
 

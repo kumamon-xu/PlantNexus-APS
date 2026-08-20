@@ -1,6 +1,6 @@
 # PlantNexus APS
 
-PlantNexus APS 是一个面向单工厂、多车间场景的高级计划与排程（APS）项目。P1 Data & Snapshot 已通过 Exit Gate 并关闭，当前阶段为 P2（CP-SAT Vertical Slice）。TASK-P2-01～04 已闭环；当前已形成 exact-pinned OR-Tools/CP-SAT Backend 工程基础，以及独立重算 C-001～C-011 的正式 Problem/Solution Validator。Validator 的 local/provider evidence 均绑定精确实现提交，但这些证据不代表业务 Solver、Benchmark 或 Production 能力。
+PlantNexus APS 是一个面向单工厂、多车间场景的高级计划与排程（APS）项目。P1 Data & Snapshot 已通过 Exit Gate 并关闭，当前阶段为 P2（CP-SAT Vertical Slice）。TASK-P2-01～04 已闭环，TASK-P2-05 已获明确授权并进入 core assignment/resource model 实施；当前已形成 exact-pinned OR-Tools/CP-SAT Backend 工程基础，以及独立重算 C-001～C-011 的正式 Problem/Solution Validator。在 P2-05 验收闭环前，不声称任何业务 Solver、OBJ-001、Benchmark 或 Production 能力。
 
 ## 开始之前
 
@@ -56,4 +56,4 @@ scripts/      仓库级校验与自动化脚本
 infra/        P0 开发容器构建配置
 ```
 
-P1 Data & Snapshot已通过Exit Gate并关闭，当前阶段为P2。TASK-P2-01～04均已闭环；P2-03形成`ortools==9.15.6755`与Backend foundation，P2-04在正式Problem/Solution合同上独立重算C-001～C-011，并以exact implementation GitHub required `validate`和artifact闭环mutation/property/schema/error/independence证据。CP-SAT业务约束与OBJ-001、Benchmark、DB/API/Worker、P2-05～14和P3仍未实现或未获授权。当前边界见[`docs/current_phase.md`](docs/current_phase.md)。
+P1 Data & Snapshot已通过Exit Gate并关闭，当前阶段为P2。TASK-P2-01～04均已闭环；P2-03形成`ortools==9.15.6755`与Backend foundation，P2-04在正式Problem/Solution合同上独立重算C-001～C-011，并以exact implementation GitHub required `validate`和artifact闭环mutation/property/schema/error/independence证据。P2-05已启动，且只授权C-001/003/004/010/011 core model、candidate/Validator交叉证据与telemetry；OBJ-001搜索、C-002/005～009、Benchmark、DB/API/Worker、P2-06～14和P3仍未实现或未获授权。当前边界见[`docs/current_phase.md`](docs/current_phase.md)。

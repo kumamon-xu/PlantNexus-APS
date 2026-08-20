@@ -146,7 +146,7 @@ registry_version: 1.0.0
 | [tasks/P2/TASK-P2-02-planning-machine-contracts-and-status.md](../tasks/P2/TASK-P2-02-planning-machine-contracts-and-status.md) | TASK-P2-02 | done | Planning Machine Contracts and Status |
 | [tasks/P2/TASK-P2-03-ortools-backend-foundation.md](../tasks/P2/TASK-P2-03-ortools-backend-foundation.md) | TASK-P2-03 | done | OR-Tools and SolverBackend Foundation |
 | [tasks/P2/TASK-P2-04-formal-independent-schedule-validator.md](../tasks/P2/TASK-P2-04-formal-independent-schedule-validator.md) | TASK-P2-04 | done | Formal Independent ScheduleValidator |
-| [tasks/P2/TASK-P2-05-cp-sat-core-assignment-resource-model.md](../tasks/P2/TASK-P2-05-cp-sat-core-assignment-resource-model.md) | TASK-P2-05 | planned | CP-SAT Core Assignment and Resource Model |
+| [tasks/P2/TASK-P2-05-cp-sat-core-assignment-resource-model.md](../tasks/P2/TASK-P2-05-cp-sat-core-assignment-resource-model.md) | TASK-P2-05 | in_progress | CP-SAT Core Assignment and Resource Model |
 | [tasks/P2/TASK-P2-06-cp-sat-temporal-calendar-material-model.md](../tasks/P2/TASK-P2-06-cp-sat-temporal-calendar-material-model.md) | TASK-P2-06 | planned | CP-SAT Temporal Calendar and Material Model |
 | [tasks/P2/TASK-P2-07-execution-facts-and-hard-lock-model.md](../tasks/P2/TASK-P2-07-execution-facts-and-hard-lock-model.md) | TASK-P2-07 | planned | Execution Facts and Hard Lock Model |
 | [tasks/P2/TASK-P2-08-delivery-objective-and-global-strategy.md](../tasks/P2/TASK-P2-08-delivery-objective-and-global-strategy.md) | TASK-P2-08 | planned | Delivery Objective and Global Strategy |
@@ -188,3 +188,5 @@ P2-02实现仍不新增或删除Markdown路径，清单保持141份。四份JSON
 TASK-P2-03启动新增唯一Markdown `ADR-0011-ortools-9-15-cp-sat-backend-version-policy.md`，inventory从141增至142份。Backend代码、tests、dependency lock、workflow和ignored machine/trace/audit reports不作为Markdown行。Implementation `9268b88ca7ce90a8f72023241f87e2d3676fd58a`的run `32346208046` / artifact `9398128763`成功且Task report为50 paths/9 rows/0 issues，故Task=`done`；其关闭时P2-04～14尚未启动。
 
 TASK-P2-04启动与实现均未新增或删除Markdown路径，inventory继续完整覆盖142份`docs/**/*.md`。Formal validator/CLI/tests/workflow与ignored `build/validation`/`build/traceability` JSON不作为inventory行；现有说明与治理文档只同步formed/PLANNED边界。Implementation `9b532e2c054b02e1692f345a252922ec7fd469e4`的run `32350068318` / artifact `9399519368`成功且Task report为38 paths/6 rows/0 issues，故Task=`done`；P2-05～14继续`planned`且未获授权。
+
+TASK-P2-05启动不新增或删除Markdown路径，inventory继续完整覆盖142份`docs/**/*.md`；只将已获用户明确授权的该Task同步为`in_progress`。预计新增的core model/mapper/machine CLI/tests与workflow修改均不是正式Markdown inventory条目，`build/validation`/`build/traceability`报告继续ignored；P2-06～14仍为`planned`。

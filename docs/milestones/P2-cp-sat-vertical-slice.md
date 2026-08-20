@@ -28,7 +28,7 @@ P1 Exit Gate=`READY`且blocking gaps为空；用户于2026-08-20明确批准P1�
 | 2 | TASK-P2-02 | Policy/Limits/Solution/SolverReport/status机器合同 | P2-01 | `done` |
 | 3 | TASK-P2-03 | OR-Tools exact pin与Backend foundation | P2-02 | `done` |
 | 4 | TASK-P2-04 | 正式Problem/Solution独立ScheduleValidator | P2-01/02 | `done` |
-| 5 | TASK-P2-05 | C-001/003/004/010/011 core model | P2-03/04 | `planned` |
+| 5 | TASK-P2-05 | C-001/003/004/010/011 core model | P2-03/04 | `in_progress` |
 | 6 | TASK-P2-06 | C-002/005/006/009 temporal/calendar/material | P2-05 | `planned` |
 | 7 | TASK-P2-07 | C-007/008 execution facts/HARD lock | P2-06 | `planned` |
 | 8 | TASK-P2-08 | OBJ-001 Delivery与GlobalCpSatStrategy | P2-02/05/06/07 | `planned` |
@@ -74,4 +74,4 @@ P2-02已形成global schema set`2.4.0`、PlanningPolicy/SolveLimits/PlanningSolu
 
 P2-04的授权范围仅包含formal independent Validator及其机器证据。它已逐项独立重算C-001～C-011、忽略solver status的可信声明并保持Backend/OR-Tools/expected artifact隔离；P2-05 core model、OBJ-001、Benchmark和P3均不在本次范围。
 
-本地实现已形成`formal-schedule-validator-report.v1`：6/6 checks、13个mutation、11个C-ID、14个hard violations及6个duration/order examples均PASS，且Problem/Solution/Validation Schema、P0 fixture/evaluator、`uv.lock`和Backend保持不变。Implementation `9b532e2c054b02e1692f345a252922ec7fd469e4`的exact run `32350068318` / required job `96367085099` / artifact `9399519368`成功并复现同一SHA的formal与38-path/6-row/0-issue治理报告，故TASK-P2-04=`done`；P2-05及以后继续`planned`且未获授权。
+本地实现已形成`formal-schedule-validator-report.v1`：6/6 checks、13个mutation、11个C-ID、14个hard violations及6个duration/order examples均PASS，且Problem/Solution/Validation Schema、P0 fixture/evaluator、`uv.lock`和Backend保持不变。Implementation `9b532e2c054b02e1692f345a252922ec7fd469e4`的exact run `32350068318` / required job `96367085099` / artifact `9399519368`成功并复现同一SHA的formal与38-path/6-row/0-issue治理报告，故TASK-P2-04=`done`。用户已明确授权TASK-P2-05；它以clean/provider-verified `c75f7a0e96b7591ffa9220d0de942f8841283093`为不可变Diff base，仅启动C-001/003/004/010/011 core model与对应证据。P2-06～14继续`planned`且未获授权。

@@ -42,7 +42,7 @@ PlanningSnapshot
 
 用户于2026-08-20明确授权执行`TASK-P2-03 — OR-Tools and SolverBackend Foundation`；该Task以clean、provider-verified `f73f8c90af94d3c9b05ecc10b6c999594a3b7d66`启动，并在依赖变更前接受ADR-0011。现已由implementation `9268b88ca7ce90a8f72023241f87e2d3676fd58a`的GitHub run `32346208046` / required job `96355386111` / artifact `9398128763`闭环为`done`。Problem/Policy/Solution/Report合同字节和语义保持只读。
 
-P2-02把global schema set additive提升到`2.4.0`，新增四个互相离线解析的v1 document contract，并以`CONTRACT_SAMPLE`/`SOLVER_RUN`显式区分shape样例与真实运行。该发布样例的`not-installed`是P2-02历史shape证据，不随P2-03安装依赖而改写。用户于2026-08-20明确授权执行TASK-P2-04；该Task以clean/provider-verified `4c66dce3b919a53816005c4aebf4983db19a6108`启动，现由implementation `9b532e2c054b02e1692f345a252922ec7fd469e4`的run `32350068318` / required job `96367085099` / artifact `9399519368`闭环为`done`。TASK-P2-00～04现均`done`；P2-05～14未获授权。
+P2-02把global schema set additive提升到`2.4.0`，新增四个互相离线解析的v1 document contract，并以`CONTRACT_SAMPLE`/`SOLVER_RUN`显式区分shape样例与真实运行。该发布样例的`not-installed`是P2-02历史shape证据，不随P2-03安装依赖而改写。用户于2026-08-20明确授权执行TASK-P2-04；该Task以clean/provider-verified `4c66dce3b919a53816005c4aebf4983db19a6108`启动，现由implementation `9b532e2c054b02e1692f345a252922ec7fd469e4`的run `32350068318` / required job `96367085099` / artifact `9399519368`闭环为`done`。TASK-P2-00～04现均`done`；用户已明确授权TASK-P2-05，它以clean/provider-verified `c75f7a0e96b7591ffa9220d0de942f8841283093`为Diff base并处于`in_progress`。P2-06～14未获授权。
 
 ## 当前允许
 
@@ -54,7 +54,7 @@ P2-02把global schema set additive提升到`2.4.0`，新增四个互相离线解
 
 ## 当前禁止
 
-- 未经用户另行明确授权启动任何P2-05～14实现；
+- 未经用户另行明确授权启动任何P2-06～14实现；TASK-P2-05仅按已冻结的core model范围执行；
 - 修改Task允许范围外文件、预填PASS/provider evidence或跳过独立Validator；
 - 实现C-012～C-018、OBJ-002 Stability、动态Replan、ExecutionSimulator、P3 Workspace/审批/发布状态；
 - 把UNKNOWN写成INFEASIBLE、FEASIBLE写成OPTIMAL，或以hint代替Execution Fact/HARD lock；
@@ -88,4 +88,8 @@ TASK-P2-04以`4c66dce3b919a53816005c4aebf4983db19a6108`为不可变Diff base，�
 
 本地指定suite=`59 passed`、full=`343 passed`，Ruff/Pyright、历史machine compatibility、Compose、build与38-path/6-row/0-issue治理均PASS。Exact implementation provider artifact内formal report绑定同一SHA并为6/6 PASS，Task report为38 committed/0 working paths、19 checks、0 issues；因此TASK-P2-04=`done`。
 
-P2-05的P2-03/P2-04依赖现已满足，但它仍为`planned`且必须由用户另行明确授权。本结果不实现CP-SAT business constraints、OBJ-001、Benchmark、DB/API/Worker或P3，current phase继续为P2。
+## TASK-P2-05 启动边界
+
+用户于2026-08-20明确授权执行TASK-P2-05。启动复核确认`main=origin/main=c75f7a0e96b7591ffa9220d0de942f8841283093`、working tree clean，且该SHA的GitHub run `32350571302` / required job `96368639237` / artifact `9399702868`精确成功。Problem/Solution/Policy/Limits Schema、constraint-rule-sheet v1、formal Validator、Planning contracts、Problem builder/hash、OR-Tools exact pin与`uv.lock`均作为不可变启动基线。
+
+本Task只建模C-001/003/004/010/011，必须在build前拒绝任何需要C-002/005～009的非空事实，并用formal independent Validator复验candidate。不实现OBJ-001搜索目标、Strategy、Benchmark threshold、DB/API/Worker或P3；纯可行模型的native OPTIMAL不能升格为业务最优声明。P2-06及以后仍为`planned`且未获授权，current phase继续为P2。

@@ -126,3 +126,5 @@ Builder验证P1 content-derived Import package ID并重新计算dataset hash，�
 P1 canonical vector以Snapshot `sha256:44f422f81490159c4b0343a52aadd7991191684fa3b25394a0dd8b8a1b7e591a`产生Problem `sha256:6e4afffebf464de5c156094c894dccb5fe3efc712449f8583bcd91e1694dff72`，完整canonical bytes digest为`sha256:1f00ad7a856395328e9eb2c70afe8fe5878d69c3d8618ae7ef45bca34ef08645`。Self hash、generated-at、run ID和runtime nonce不进入projection；tick/horizon/builder或任一合法Snapshot事实变化会改变Problem identity。
 
 该Problem hash不是PlanningRun manifest：code commit、Solver exact version/parameters、candidate solution、Validator、Benchmark、approval/export provenance仍未形成。Builder version/hash语义不得原地重解释；任何字段或投影语义变化必须发布新Problem/builder/hash版本并执行ADR/replay/benchmark review。
+
+Implementation commit `e8c59547857d2eeace1c9f8b453a5a294cca5ef7`已由GitHub Actions push run `32315513504`、successful required `validate` job `96266776018`及digest匹配的machine artifact `9387907707`闭环；artifact Task report绑定immutable Diff base、该implementation SHA、30 committed paths、5 impact rows与0 issues。该provider provenance只证明TASK-P1-09 builder/hash代码、测试与治理重放，不扩张为PlanningRun/Solver/Production provenance。

@@ -173,3 +173,9 @@ TEST-PROBLEM-REPLAY-001由10项unit、3项fixed-seed Hypothesis properties与2�
 P1-12不新增或修改test代码/Test ID；它独立执行全部已登记目录，实际结果为`271 passed`，并执行`test_migrations_and_infrastructure.py + test_p1_exit_rejections.py`得到`11 passed`。P1 pipeline报告14/14、Generator 7/7、Rule/Golden/13-class Mutation/6-check Engineering报告均PASS，四类exact rejection的stage/category/code与P1-11保持一致。
 
 Audit还核验P1-01～11各CI artifact内`traceability-report.v1`的Task/head/path/impact/issues，并确认required `validate`成功。该evidence关闭P1 Data & Snapshot Exit Gate，不将P2 `TEST-PROPERTY`、Solver/Validator comparison、Benchmark或Production test标为完成；Test registry仍为36项，`registry_version=1.0.0`。
+
+## P2 allocation baseline
+
+用户于2026-08-20批准P1→P2后，既有36个Test ID不新增、不复用，只把P2 planned slices分配到TASK-P2-01～14：P2-01/02覆盖contract/problem replay；P2-03覆盖solver upgrade/status boundary；P2-04覆盖formal Validator/mutation/property；P2-05～08覆盖C-001～C-011与OBJ-001；P2-09覆盖Golden JSSP/FJSP及Cross/Calendar/Material/Running/Hard Lock；P2-10覆盖Reference Scheduler；P2-11覆盖Output；P2-12覆盖Benchmark/XS/S/M；P2-13形成vertical Gate；P2-14独立重跑audit。
+
+TASK-P2-00本身只扩展TEST-PHASE-GOVERNANCE-001与TEST-TRACEABILITY-VALIDATOR，验证合法phase-planning batch及existing/active-member拒绝；没有业务测试、Solver运行或P2 artifact。TEST-GOLDEN-JSSP、TEST-REFERENCE-SCHEDULER、TEST-BENCHMARK、TEST-PROPERTY、TEST-SOLVER-UPGRADE及所有P2 integration slice继续`PLANNED`，直到对应Task存在真实路径、结果与provider artifact。Registry表结构/状态语义不变，`registry_version=1.0.0`。

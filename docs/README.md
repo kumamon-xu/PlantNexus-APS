@@ -3,7 +3,7 @@ doc_id: DOC-INDEX-001
 title: PlantNexus APS 文档中心
 status: baseline
 spec_version: 0.3.0
-phase: P1
+phase: P2
 normative: false
 source_sections: [2, 6, 70]
 last_reviewed: 2026-08-20
@@ -69,7 +69,7 @@ last_reviewed: 2026-08-20
 
 ## 当前范围
 
-当前阶段为P1。P0 Gate已通过且用户已明确授权phase transition；TASK-P1-01～08已完成，immutable PlanningSnapshot/hash/repository已由implementation commit `72670d18a29c9a10cb70f7a263c981a2b660e0ee` / provider run `32310098594`闭环。TASK-P1-09仍为`planned`且本次未启动；PlanningProblem、Synthetic common-ingress Gate、真实CP-SAT/P2、生产参数和Production部署仍未形成。详见`current_phase.md`。
+当前阶段为P2。P1 Exit Gate=`READY`且用户已明确批准transition；P1 Milestone为`completed`，P2为`active`。TASK-P2-00只进行阶段切换与完整Task规划，TASK-P2-01～14仍为`planned`，没有安装OR-Tools、执行Solver/Validator/Benchmark或进入P3。详见`current_phase.md`。
 
 ## 仓库入口与本地检查
 
@@ -79,6 +79,6 @@ last_reviewed: 2026-08-20
 - 该检查验证 metadata、文档 ID、Markdown fence、本地链接、Task、版本化 registry、完整 ID 引用、逐根 traceability 和命名空间隔离；
 - Task 进入 `in_progress` 时记录完整 `Diff base`；`--task <task-card> --check-diff` 对 `Diff base..HEAD` 与 working tree 的并集匹配 change-impact Rule ID，并可用 `--report <path>` 输出 `traceability-report.v1`。
 
-本地检查已经形成，并从 `current_phase.md` 读取 current `Pn`，保留历史 terminal Task且拒绝 future-phase详细卡。TASK-P1-01已形成repository-local CI handoff；provider结果仍须来自真实授权运行，不能因本地命令PASS而宣称P1 Gate或生产就绪。
+本地检查从`current_phase.md`读取current `Pn`，保留历史terminal Task且拒绝future-phase详细卡。普通CI range只能归属一张current-phase Task；初始phase-planning batch仅允许唯一新建`TASK-Pn-00` owner加同range新建的`planned/ready`成员卡，之后仍按owner Diff base执行scope/impact。Provider结果必须来自真实授权运行，不能由本地PASS推断。
 
 CI 可用 `uv run python scripts/check_docs.py --discover-task-from <event-base-sha> --check-diff --report build/traceability/ci-current-task-report.json`从一次 PR/push event range发现唯一 current-phase Task；本地 Task验收仍使用显式 `--task`。两种入口最终都使用 Task Card内的 immutable `Diff base`，不能把 event base当作 Task scope base。

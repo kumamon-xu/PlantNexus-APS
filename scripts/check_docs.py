@@ -64,6 +64,14 @@ REQUIRED_TASK_FIELDS = (
 TASK_STATUSES = {"planned", "ready", "in_progress", "blocked", "done", "cancelled"}
 TERMINAL_TASK_STATUSES = {"done", "cancelled"}
 P1_REQUIRED_TASK_FIELDS = ("Completion conditions",)
+P2_REQUIRED_TASK_FIELDS = (
+    "Start gate",
+    "Dependency changes",
+    "ADR impact",
+    "Provider evidence",
+)
+PHASE_PLANNING_OWNER_ROLE = "phase-planning-owner"
+PHASE_PLAN_MEMBER_ROLE = "phase-plan-member"
 
 VERSIONED_REGISTRIES = (
     "docs/governance/requirements-register.md",
@@ -488,7 +496,11 @@ def task_phase_policy_issue(
 
 
 def select_changed_task_path(
-    changed_paths: Iterable[str], current_phase: str
+    changed_paths: Iterable[str],
+    current_phase: str,
+    *,
+    added_paths: Iterable[str] = (),
+    task_texts: Mapping[str, str] | None = None,
 ) -> str | None:
     """Select the one current-phase Task Card changed by a CI event range."""
 
@@ -523,10 +535,64 @@ def select_changed_task_path(
             + ", ".join(sorted(noncurrent))
         )
     if len(candidates) > 1:
-        raise TaskDiscoveryError(
-            f"change range contains multiple current {current_phase} Task Cards: "
-            + ", ".join(sorted(candidates))
-        )
+        if task_texts is None:
+            raise TaskDiscoveryError(
+                f"change range contains multiple current {current_phase} Task Cards: "
+                + ", ".join(sorted(candidates))
+            )
+
+        normalized_added = {normalize_repo_path(path) for path in added_paths}
+        if not candidates.issubset(normalized_added):
+            existing = sorted(candidates - normalized_added)
+            raise TaskDiscoveryError(
+                "phase-planning batch may contain only newly added Task Cards; "
+                f"existing cards changed: {', '.join(existing)}"
+            )
+
+        owners: list[str] = []
+        for candidate in sorted(candidates):
+            text = task_texts.get(candidate, "")
+            metadata = parse_front_matter(text)
+            if extract_task_field(text, "Task batch role") != PHASE_PLANNING_OWNER_ROLE:
+                continue
+            expected_owner = f"TASK-{current_phase}-00"
+            if metadata.get("doc_id") != expected_owner:
+                raise TaskDiscoveryError(
+                    "phase-planning owner must be the current phase TASK-Pn-00 card"
+                )
+            if metadata.get("status") not in {"in_progress", "done"}:
+                raise TaskDiscoveryError(
+                    "phase-planning owner must be in_progress or done"
+                )
+            if COMMIT_SHA_RE.fullmatch(extract_task_field(text, "Diff base")) is None:
+                raise TaskDiscoveryError(
+                    "phase-planning owner must have a full immutable Diff base"
+                )
+            owners.append(candidate)
+
+        if len(owners) != 1:
+            raise TaskDiscoveryError(
+                "multiple-card change range requires exactly one TASK-Pn-00 "
+                f"{PHASE_PLANNING_OWNER_ROLE!r}; found {len(owners)}"
+            )
+
+        owner = owners[0]
+        for candidate in sorted(candidates - {owner}):
+            text = task_texts.get(candidate, "")
+            metadata = parse_front_matter(text)
+            if extract_task_field(text, "Task batch role") != PHASE_PLAN_MEMBER_ROLE:
+                raise TaskDiscoveryError(
+                    f"phase-plan member lacks role {PHASE_PLAN_MEMBER_ROLE!r}: {candidate}"
+                )
+            if metadata.get("status") not in {"planned", "ready"}:
+                raise TaskDiscoveryError(
+                    f"phase-plan member must remain planned or ready: {candidate}"
+                )
+            if COMMIT_SHA_RE.fullmatch(extract_task_field(text, "Diff base")) is not None:
+                raise TaskDiscoveryError(
+                    f"phase-plan member must not pre-allocate an implementation Diff base: {candidate}"
+                )
+        return owner
     return next(iter(candidates)) if candidates else None
 
 
@@ -1223,6 +1289,12 @@ class RepositoryValidator:
                     for field in P1_REQUIRED_TASK_FIELDS
                     if not extract_task_field(text, field)
                 )
+            if task_phase_number is not None and task_phase_number >= 2:
+                missing.extend(
+                    field
+                    for field in P2_REQUIRED_TASK_FIELDS
+                    if not extract_task_field(text, field)
+                )
             if missing:
                 self.add_issue(
                     "TASK-FIELDS",
@@ -1456,7 +1528,30 @@ class RepositoryValidator:
             "--",
             "docs/tasks",
         )
-        selected = select_changed_task_path(changed_output.splitlines(), current_phase)
+        added_output = self.git_output(
+            "diff",
+            "--name-only",
+            "--diff-filter=A",
+            f"{resolved_base}..HEAD",
+            "--",
+            "docs/tasks",
+        )
+        changed_task_paths = [
+            normalize_repo_path(path)
+            for path in changed_output.splitlines()
+            if path.strip()
+        ]
+        task_texts = {
+            path: (self.root / path).read_text(encoding="utf-8")
+            for path in changed_task_paths
+            if (self.root / path).is_file()
+        }
+        selected = select_changed_task_path(
+            changed_task_paths,
+            current_phase,
+            added_paths=added_output.splitlines(),
+            task_texts=task_texts,
+        )
         if selected is not None and not (self.root / selected).is_file():
             raise TaskDiscoveryError(f"discovered Task Card does not exist: {selected}")
         return selected

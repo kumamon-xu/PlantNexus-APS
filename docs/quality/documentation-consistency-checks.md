@@ -215,6 +215,14 @@ P1-12只修改卡片声明的phase/milestone/contract/architecture/quality/gover
 
 Full检查的最终基线为125份`docs/**/*.md`、30 roots、36 Test IDs、15 OPEN、10 SIM assumptions、10 risks和22 Tasks。新增JSON evidence manifest不进入Markdown inventory；ignored machine/trace reports也不提交。Audit report的`READY`必须与manifest一致；Task自身provider run在implementation提交前不能自我包含，因此只在run `32326616525`、job `96299073525`与artifact `9391591718`真实成功后，由本evidence-only revision回填，不能预写或伪造。
 
+## TASK-P2-00 phase-planning batch governance
+
+用户明确批准P1→P2后，current phase切为P2，P0/P1仅允许terminal历史卡。P2+ Task除`Completion conditions`外还必须具有`Start gate`、`Dependency changes`、`ADR impact`与`Provider evidence`。TASK-P2-00的Diff base固定为`098c44059856e3203d95d046fea44894b5cf414b`；本Task只改phase/milestone/task/trace/inventory/quality docs与governance validator/tests，不修改业务代码、Schema、fixture、dependency、workflow或P3路径。
+
+普通CI range的唯一Task规则不变。只有同一range首次新增完整阶段计划时，才可由唯一新建`TASK-Pn-00`/`phase-planning-owner`归属；所有成员必须同range新建、role=`phase-plan-member`、status=`planned/ready`且无implementation SHA。existing/active/done member、多个owner、错误owner ID或non-current card均负向失败。选择owner后仍使用owner Diff base检查全部changed paths、exact allowed scope与Impact Rules，不能以batch名义实现多个Task。
+
+本次新增15张P2卡使inventory从125增至140；TEST-PHASE-GOVERNANCE-001与TEST-TRACEABILITY-VALIDATOR只增加batch selector正反证据。P2业务Test IDs全部保持`PLANNED`。Full governance与`--task ...P2-00... --check-diff`必须在working tree、implementation commit clean tree和provider artifact中分别为PASS。
+
 ## Override
 
 不允许用自由文本 CI skip 绕过。确需例外时必须在 Task Card 记录理由，提交 ADR 或明确批准记录，并仍保留检查报告。正确性、状态语义、数据隔离和发布门不得豁免。

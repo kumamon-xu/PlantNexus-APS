@@ -1,7 +1,7 @@
 ---
 doc_id: MILESTONE-P1
 title: P1 — Data & Snapshot
-status: active
+status: completed
 spec_version: 0.3.0
 phase: P1
 normative: true
@@ -13,7 +13,7 @@ last_reviewed: 2026-08-20
 
 ## Authorization
 
-P0 superseding audit已给出 `READY`，用户于 2026-08-19 明确批准 P0→P1 phase transition。P1现为当前 active Milestone；该授权允许创建并依序执行 P1 Task，不授权 P2或 Production release。
+P0 superseding audit已给出 `READY`，用户于2026-08-19明确批准P0→P1。P1 Task与Exit Gate已全部完成；用户于2026-08-20核验前提后明确批准P1→P2，因此P1现为`completed`历史Milestone，P2为`active`。这不表示P2或Production能力已形成。
 
 ## Outcome
 
@@ -79,15 +79,15 @@ Gate证据还必须覆盖 CSV/XLSX/Reference Adapter、Raw Staging provenance、
 
 TASK-P1-12已在P1-01～11全部`done`后执行独立审计。[Audit report](P1-exit-gate-audit-report.md)与[machine manifest](P1-exit-gate-evidence-manifest.json)记录271项full tests、11项focused migration/rejection、14/14 common-ingress、全部machine/Compose/build/docs gates及11组implementation provider artifacts均PASS，blocking gaps为空；因此P1 Exit Gate=`READY`。
 
-TASK-P1-12 documentation implementation commit `a5d7e4a68dc12d48e36cb692500f59446f8097b4`已由GitHub run `32326616525` / job `96299073525` / artifact `9391591718`精确验证，Task现为`done`。Milestone仍保持`active`并等待用户明确批准P1→P2；审计没有创建P2 Task或Solver。
+TASK-P1-12 documentation implementation commit `a5d7e4a68dc12d48e36cb692500f59446f8097b4`已由GitHub run `32326616525` / job `96299073525` / artifact `9391591718`精确验证，Task现为`done`。用户于2026-08-20明确批准P1→P2后，本Milestone关闭为`completed`；后续P2 Task规划不改写P1审计或声称当时已存在Solver。
 
 ## Boundaries
 
 - P1不创建 CpModel、IntervalVar、OR-Tools dependency、SolverBackend实现、PlanningSolution或P2 ScheduleValidator integration。
 - Simulation不得绕过 staging/normalization/validation；Reference Adapter不得冒充真实 factory integration。
 - OPEN-001～015可继续 OPEN；未关闭问题不阻止 Development/Simulation，但阻止依赖它们的 Production声明。
-- P1 Exit Gate Audit是最后一项。即使 audit `READY`，仍需用户另行批准才可更新到 P2；本 Milestone不自动创建 P2 Task。
+- P1 Exit Gate Audit是最后一项；用户后续明确批准已满足transition gate。P2范围仍必须由独立Task控制。
 
 ## Current execution boundary
 
-Canonical-records.v1、Import v2、Snapshot v2、Error v1/v2与既有registry均保持原字节；schema set现为additive`2.2.0`。TASK-P1-03～11的Raw→Problem实现/provider链已闭环。TASK-P1-12以`8830a6dc566df8093b601a82c87c74a9cfd97b59`为Diff base完成独立Gate审计，implementation commit `a5d7e4a68dc12d48e36cb692500f59446f8097b4` / run `32326616525` / artifact `9391591718`形成自身provider closure并给出`READY`。TASK-P1-01～12全部`done`；Solver仍须按后续阶段另行授权实施。
+Canonical-records.v1、Import v2、Snapshot v2、Error v1/v2与既有registry均保持原字节；schema set现为additive`2.2.0`。TASK-P1-03～11的Raw→Problem实现/provider链已闭环。TASK-P1-12以`8830a6dc566df8093b601a82c87c74a9cfd97b59`为Diff base完成独立Gate审计，implementation commit `a5d7e4a68dc12d48e36cb692500f59446f8097b4` / run `32326616525` / artifact `9391591718`形成自身provider closure并给出`READY`。TASK-P1-01～12全部`done`，P1现为`completed`；Solver只能按P2 Task另行授权实施。

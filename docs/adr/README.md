@@ -36,3 +36,5 @@ TASK-P1-06落实ADR-0001共同入口中的Data Validation门、ADR-0008 UTC/整�
 TASK-P1-07落实ADR-0001的共同入口顺序、ADR-0003的Solver-neutral派生边界、ADR-0007的Snapshot前事实准备、ADR-0008的显式整数秒copy和ADR-0009的Production/Synthetic provenance隔离。`order-expansion.v1`只把DataValidation PASS后的显式Lot/Routing展开为既有Snapshot v2 shape，不改变Schema、PlanningProblem、Constraint、Solver、状态机、发布规则或Data Authority，因此不新增ADR。若未来自动split/merge、重算candidate duration、丢弃COMPLETED事实或改变versioned ID lineage，必须先建立相应ADR/Schema/回放证据。
 
 TASK-P1-09落实ADR-0003的solver-neutral deterministic Problem、ADR-0007的immutable Snapshot consumer和ADR-0008的UTC/权威秒/显式tick决定。`planning-problem.v1` Schema与C-ID不变，builder/hash只在既有可表达slice内工作；active lock、multi-factory和completed-active historical lag不能表达时明确停止，不修改Backend/Strategy/Validator或引入OR-Tools，因此不新增ADR。若未来扩展Problem字段、改变builder/hash语义、隐藏unsupported事实或让Backend绕过canonical Problem，必须先提交相应superseding/new ADR与replay/benchmark证据。
+
+TASK-P2-00只批准阶段与Task治理，不作技术决定。P2-01在修改PlanningProblem版本/字段/hash前必须建立新ADR，记录v2对active locks、due/priority、completed-active historical lag与v1兼容策略，同时保持ADR-0003的solver-neutral边界。P2-03在首次安装OR-Tools前必须建立exact-version/upgrade-replay ADR；后续Task严格实施ADR-0004/0005/0006/0008。规划卡中的ADR影响不是已接受决定，未完成相应启动门不得实现。

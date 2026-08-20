@@ -90,9 +90,11 @@ TASK-P0-10 的 provider closure 必须同时记录 GitHub repository/workflow/ev
 6. 使用 `--check-diff` 时，以 Task 的 `Diff base..HEAD` 已提交路径和当前 working tree 路径并集作为实际 Git diff；命中的 change-impact Rule ID 已在当前 Task 声明，且必审文档已列入 `Documents to update`；
 7. `OPEN` 关闭记录字段完整，PROD_OPEN 与 SIM_ASSUMPTION 命名空间没有混用。
 
-2026-08-19 phase transition后，校验器从 `docs/current_phase.md` front matter读取 current phase，不再硬编码 P0，并支持任意 `TASK-Pn-NN～NN` 依赖范围。P0 `done`历史卡继续参与依赖/引用审计；P1卡必须包含 `Completion conditions`；P2+仍只能保留 Milestone。
+2026-08-20用户明确批准P1→P2后，校验器继续从`docs/current_phase.md` front matter读取current phase并支持任意`TASK-Pn-NN～NN`依赖范围。P0/P1 `done`历史卡继续参与依赖/引用审计；P1+必须包含`Completion conditions`，P2+还必须包含`Start gate`、`Dependency changes`、`ADR impact`与`Provider evidence`；P3+仍只能保留Milestone。
 
-TASK-P1-01增加 CI changed-task discovery：`--discover-task-from <event-base-sha>`要求完整、存在且为 HEAD祖先的 commit，在该 range的 `docs/tasks/**`中只能出现一个 current-phase Task Card；历史/未来/phase错位/多个卡直接失败。若 range没有 Task Card，仅当仓库恰有一个 current-phase `in_progress` Task时回退。选择完成后仍使用卡片 `Diff base..HEAD` + working tree执行 scope/impact，不把 CI event base混成 Task baseline。
+TASK-P1-01建立的CI changed-task discovery仍要求`--discover-task-from <event-base-sha>`为完整、存在且为HEAD祖先的commit。普通range在`docs/tasks/**`中只能出现一个current-phase Task Card；历史/未来/phase错位/多个卡直接失败。若range没有Task Card，仅当仓库恰有一个current-phase `in_progress` Task时回退。选择完成后仍使用卡片`Diff base..HEAD`+working tree执行scope/impact，不把event base混成Task baseline。
+
+TASK-P2-00只为“首次创建完整阶段计划”增加严格batch例外：range中所有Task卡必须为本次新增；唯一owner必须是`TASK-Pn-00`、role=`phase-planning-owner`、status=`in_progress/done`并有完整Diff base；每个其余成员必须role=`phase-plan-member`、status=`planned/ready`且不得预填implementation SHA。既有成员、多个/错误owner、active/done成员、历史/future卡均硬失败。Batch选择owner后，全部range仍受owner精确allowed scope、Impact Rule和文档检查约束；该规则不允许批量实现或修改既有Task。
 
 结构化报告 schema 为 `traceability-report.v1`，至少包含 Task、可选 `task_discovery_base`、Git HEAD、Diff base、committed-range/working-tree source counts、changed paths、matched impact rows、expected/observed documents、missing trace refs、registry counts 和失败明细。失败返回非零退出码，不允许自由文本 skip。
 
@@ -133,3 +135,5 @@ TASK-P1-11将REQ-001/002/003/009/011/012、NFR-COR/DET/TRC/ISO/REL/SEC与ENG-ARC
 P1 Exit Gate evidence链必须区分：P1-01～11 implementation commit/provider artifact、P1-11 closure head、P1-12本地audit execution head、P1-12 documentation implementation commit及其后续evidence-only closure。Audit report可基于已验证P1 baseline和本地独立命令作出§74 decision，但不得自我包含尚未push的run；Task lifecycle只有在自身exact provider run/artifact回填后才为`done`。
 
 TASK-P1-12将全部P1 roots→TASK-P1-01～12→36个registered Test IDs/七类machine reports→11组implementation provider artifacts→P1 audit report/manifest闭环。`READY`只关闭P1 Data & Snapshot Gate，不改变root `ALLOCATED`状态、15项PROD_OPEN、10项SIM_ASSUMPTION、10项风险或P2/Production `PLANNED`边界；current phase必须等待用户明确授权。
+
+用户于2026-08-20批准transition后，TASK-P2-00把P1 Milestone关闭为completed、P2激活，并分配TASK-P2-01～14。计划链为合同缺口→机器合同→Backend/Validator→C-001～C-011→OBJ-001→correctness/reference/export/benchmark→vertical Gate→Exit Audit。所有P2实现Test/Artifact仍为`PLANNED`，root ID继续`ALLOCATED`，C-012～C-018、OBJ-002、P3/P4与Production边界不变。

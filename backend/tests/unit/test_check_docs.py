@@ -9,6 +9,8 @@ from unittest.mock import Mock
 
 from scripts.check_docs import (
     ImpactRule,
+    PHASE_PLAN_MEMBER_ROLE,
+    PHASE_PLANNING_OWNER_ROLE,
     RepositoryValidator,
     ROOT_ID_RE,
     TaskDiscoveryError,
@@ -239,12 +241,74 @@ class TraceabilityValidatorTests(unittest.TestCase):
                 "P1",
             )
 
+    def test_phase_planning_batch_selects_one_explicit_owner(self) -> None:
+        owner = "docs/tasks/P2/TASK-P2-00-phase-transition-and-task-planning.md"
+        first = "docs/tasks/P2/TASK-P2-01-planning-problem-v2.md"
+        second = "docs/tasks/P2/TASK-P2-02-planning-machine-contracts.md"
+        texts = {
+            owner: (
+                "---\ndoc_id: TASK-P2-00\nstatus: in_progress\n---\n"
+                f"Task batch role: {PHASE_PLANNING_OWNER_ROLE}\n"
+                f"Diff base: {'a' * 40}\n"
+            ),
+            first: (
+                "---\ndoc_id: TASK-P2-01\nstatus: planned\n---\n"
+                f"Task batch role: {PHASE_PLAN_MEMBER_ROLE}\n"
+                "Diff base: set only when the Task enters in_progress\n"
+            ),
+            second: (
+                "---\ndoc_id: TASK-P2-02\nstatus: ready\n---\n"
+                f"Task batch role: {PHASE_PLAN_MEMBER_ROLE}\n"
+                "Diff base: set only when the Task enters in_progress\n"
+            ),
+        }
+
+        selected = select_changed_task_path(
+            texts,
+            "P2",
+            added_paths=texts,
+            task_texts=texts,
+        )
+
+        self.assertEqual(selected, owner)
+
+    def test_phase_planning_batch_rejects_existing_or_active_members(self) -> None:
+        owner = "docs/tasks/P2/TASK-P2-00-phase-transition-and-task-planning.md"
+        member = "docs/tasks/P2/TASK-P2-01-planning-problem-v2.md"
+        owner_text = (
+            "---\ndoc_id: TASK-P2-00\nstatus: done\n---\n"
+            f"Task batch role: {PHASE_PLANNING_OWNER_ROLE}\n"
+            f"Diff base: {'a' * 40}\n"
+        )
+        member_text = (
+            "---\ndoc_id: TASK-P2-01\nstatus: in_progress\n---\n"
+            f"Task batch role: {PHASE_PLAN_MEMBER_ROLE}\n"
+            "Diff base: set only when the Task enters in_progress\n"
+        )
+
+        with self.assertRaisesRegex(TaskDiscoveryError, "newly added"):
+            select_changed_task_path(
+                (owner, member),
+                "P2",
+                added_paths=(owner,),
+                task_texts={owner: owner_text, member: member_text},
+            )
+        with self.assertRaisesRegex(TaskDiscoveryError, "planned or ready"):
+            select_changed_task_path(
+                (owner, member),
+                "P2",
+                added_paths=(owner, member),
+                task_texts={owner: owner_text, member: member_text},
+            )
+
     def test_repository_discovery_uses_an_immutable_event_range(self) -> None:
         change_base = "a" * 40
         task_path = "docs/tasks/P1/TASK-P1-01-phase-governance-and-ci-handoff.md"
         validator = object.__new__(RepositoryValidator)
         validator.root = Path(__file__).resolve().parents[3]
-        validator.git_output = Mock(side_effect=(change_base, "", f"{task_path}\n"))
+        validator.git_output = Mock(
+            side_effect=(change_base, "", f"{task_path}\n", f"{task_path}\n")
+        )
 
         selected = validator.discover_changed_task_path(change_base, "P1")
 
@@ -254,6 +318,14 @@ class TraceabilityValidatorTests(unittest.TestCase):
             "diff",
             "--name-only",
             "--diff-filter=ACDMRTUXB",
+            f"{change_base}..HEAD",
+            "--",
+            "docs/tasks",
+        )
+        validator.git_output.assert_any_call(
+            "diff",
+            "--name-only",
+            "--diff-filter=A",
             f"{change_base}..HEAD",
             "--",
             "docs/tasks",

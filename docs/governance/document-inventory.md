@@ -12,7 +12,7 @@ registry_version: 1.0.0
 
 # 文档清单
 
-本清单列出当前仓库已经实际存在的 Markdown 文档。P0退出门已通过并归档为completed；P1已获授权并形成12张Task Card，TASK-P1-01～12现全部`done`，P1 Gate=`READY`并等待用户phase transition决定。产品API与Production Runbook正文尚未形成并继续由相应索引登记。
+本清单列出当前仓库已经实际存在的Markdown文档。P0/P1均已归档为completed；P1 Gate=`READY`后用户明确批准P1→P2。P2现为active，TASK-P2-00执行阶段/规划治理，P2-01～14仅为planned。产品API与Production Runbook正文尚未形成并继续由相应索引登记。
 
 | Path | Doc ID | Status | Title |
 |---|---|---|---|
@@ -79,9 +79,9 @@ registry_version: 1.0.0
 | [governance/traceability-rules.md](../governance/traceability-rules.md) | DOC-GOV-004 | baseline | 需求追踪规则 |
 | [milestones/P0-executable-specification.md](../milestones/P0-executable-specification.md) | MILESTONE-P0 | completed | P0 — Executable Specification |
 | [milestones/P0-exit-gate-audit-report.md](../milestones/P0-exit-gate-audit-report.md) | MILESTONE-P0-AUDIT-001 | baseline | P0 Exit Gate Audit Report |
-| [milestones/P1-data-and-snapshot.md](../milestones/P1-data-and-snapshot.md) | MILESTONE-P1 | active | P1 — Data & Snapshot |
+| [milestones/P1-data-and-snapshot.md](../milestones/P1-data-and-snapshot.md) | MILESTONE-P1 | completed | P1 — Data & Snapshot |
 | [milestones/P1-exit-gate-audit-report.md](../milestones/P1-exit-gate-audit-report.md) | MILESTONE-P1-AUDIT-001 | baseline | P1 Exit Gate Audit Report |
-| [milestones/P2-cp-sat-vertical-slice.md](../milestones/P2-cp-sat-vertical-slice.md) | MILESTONE-P2 | planned | P2 — CP-SAT Vertical Slice |
+| [milestones/P2-cp-sat-vertical-slice.md](../milestones/P2-cp-sat-vertical-slice.md) | MILESTONE-P2 | active | P2 — CP-SAT Vertical Slice |
 | [milestones/P3-planning-workspace.md](../milestones/P3-planning-workspace.md) | MILESTONE-P3 | planned | P3 — Planning Workspace |
 | [milestones/P4-dynamic-replanning.md](../milestones/P4-dynamic-replanning.md) | MILESTONE-P4 | planned | P4 — Dynamic Replanning |
 | [milestones/P5-advanced-capabilities.md](../milestones/P5-advanced-capabilities.md) | MILESTONE-P5 | planned | P5 — Advanced Capabilities |
@@ -139,10 +139,25 @@ registry_version: 1.0.0
 | [tasks/P1/TASK-P1-10-synthetic-generator-records.md](../tasks/P1/TASK-P1-10-synthetic-generator-records.md) | TASK-P1-10 | done | Synthetic Generator Canonical Records |
 | [tasks/P1/TASK-P1-11-common-ingress-pipeline-and-gate-evidence.md](../tasks/P1/TASK-P1-11-common-ingress-pipeline-and-gate-evidence.md) | TASK-P1-11 | done | Common Ingress Pipeline and P1 Gate Evidence |
 | [tasks/P1/TASK-P1-12-p1-exit-gate-audit.md](../tasks/P1/TASK-P1-12-p1-exit-gate-audit.md) | TASK-P1-12 | done | P1 Exit Gate Audit |
+| [tasks/P2/TASK-P2-00-phase-transition-and-task-planning-governance.md](../tasks/P2/TASK-P2-00-phase-transition-and-task-planning-governance.md) | TASK-P2-00 | in_progress | P2 Phase Transition and Task Planning Governance |
+| [tasks/P2/TASK-P2-01-planning-problem-v2-contract-gap-closure.md](../tasks/P2/TASK-P2-01-planning-problem-v2-contract-gap-closure.md) | TASK-P2-01 | planned | PlanningProblem v2 Contract Gap Closure |
+| [tasks/P2/TASK-P2-02-planning-machine-contracts-and-status.md](../tasks/P2/TASK-P2-02-planning-machine-contracts-and-status.md) | TASK-P2-02 | planned | Planning Machine Contracts and Status |
+| [tasks/P2/TASK-P2-03-ortools-backend-foundation.md](../tasks/P2/TASK-P2-03-ortools-backend-foundation.md) | TASK-P2-03 | planned | OR-Tools and SolverBackend Foundation |
+| [tasks/P2/TASK-P2-04-formal-independent-schedule-validator.md](../tasks/P2/TASK-P2-04-formal-independent-schedule-validator.md) | TASK-P2-04 | planned | Formal Independent ScheduleValidator |
+| [tasks/P2/TASK-P2-05-cp-sat-core-assignment-resource-model.md](../tasks/P2/TASK-P2-05-cp-sat-core-assignment-resource-model.md) | TASK-P2-05 | planned | CP-SAT Core Assignment and Resource Model |
+| [tasks/P2/TASK-P2-06-cp-sat-temporal-calendar-material-model.md](../tasks/P2/TASK-P2-06-cp-sat-temporal-calendar-material-model.md) | TASK-P2-06 | planned | CP-SAT Temporal Calendar and Material Model |
+| [tasks/P2/TASK-P2-07-execution-facts-and-hard-lock-model.md](../tasks/P2/TASK-P2-07-execution-facts-and-hard-lock-model.md) | TASK-P2-07 | planned | Execution Facts and Hard Lock Model |
+| [tasks/P2/TASK-P2-08-delivery-objective-and-global-strategy.md](../tasks/P2/TASK-P2-08-delivery-objective-and-global-strategy.md) | TASK-P2-08 | planned | Delivery Objective and Global Strategy |
+| [tasks/P2/TASK-P2-09-golden-scenario-property-integration.md](../tasks/P2/TASK-P2-09-golden-scenario-property-integration.md) | TASK-P2-09 | planned | Golden Scenario and Property Integration |
+| [tasks/P2/TASK-P2-10-reference-schedulers.md](../tasks/P2/TASK-P2-10-reference-schedulers.md) | TASK-P2-10 | planned | Reference Schedulers |
+| [tasks/P2/TASK-P2-11-kpi-solver-report-and-export-closure.md](../tasks/P2/TASK-P2-11-kpi-solver-report-and-export-closure.md) | TASK-P2-11 | planned | KPI SolverReport and Export Closure |
+| [tasks/P2/TASK-P2-12-benchmark-runner-xs-s-m.md](../tasks/P2/TASK-P2-12-benchmark-runner-xs-s-m.md) | TASK-P2-12 | planned | BenchmarkRunner and XS S M Profiles |
+| [tasks/P2/TASK-P2-13-p2-vertical-slice-gate-evidence.md](../tasks/P2/TASK-P2-13-p2-vertical-slice-gate-evidence.md) | TASK-P2-13 | planned | P2 Vertical Slice Gate Evidence |
+| [tasks/P2/TASK-P2-14-p2-exit-gate-audit.md](../tasks/P2/TASK-P2-14-p2-exit-gate-audit.md) | TASK-P2-14 | planned | P2 Exit Gate Audit |
 | [tasks/README.md](../tasks/README.md) | DOC-TASK-INDEX | living | Task Card 索引 |
 | [tasks/TASK_TEMPLATE.md](../tasks/TASK_TEMPLATE.md) | TEMPLATE-TASK | baseline | Task Card Template |
 
-更新文档时应同步维护本清单。`uv run python scripts/check_docs.py` 会校验本表是否完整覆盖当前 125 份 `docs/**/*.md`，并核对 Doc ID、status 和 title，但不会自动改写清单。根 `README.md`、根 `AGENTS.md`、非 Markdown evidence manifest、代码和脚本不属于正式文档清单。
+更新文档时应同步维护本清单。`uv run python scripts/check_docs.py`会校验本表是否完整覆盖当前140份`docs/**/*.md`，并核对Doc ID、status和title，但不会自动改写清单。根`README.md`、根`AGENTS.md`、非Markdown evidence manifest、代码和脚本不属于正式文档清单。
 
 本清单格式为 `registry_version: 1.0.0`；列结构或状态比较语义变化时提升版本。
 
@@ -159,3 +174,5 @@ TASK-P1-10未新增`docs/**/*.md`路径，清单继续完整覆盖124份正式�
 TASK-P1-11不新增Markdown路径，清单仍完整覆盖124份`docs/**/*.md`。新增application/generator/test Python、workflow及ignored `build/validation`/`build/traceability` JSON都不进入文档清单；implementation commit `fa6c4c1159972a30ea683ad4e6eba98342d3c344`的run `32322511227`成功，provider Task report为43 paths/7 rows/0 issues，Task现为`done`。
 
 TASK-P1-12新增唯一正式Markdown `docs/milestones/P1-exit-gate-audit-report.md`，因此清单从历史124份增至125份；同目录JSON evidence manifest、ignored `build/validation`/`build/traceability` reports与下载到系统临时目录的provider artifacts不进入清单。Audit report现为`baseline`；implementation commit `a5d7e4a68dc12d48e36cb692500f59446f8097b4`的run `32326616525` / artifact `9391591718`成功后Task为`done`。P1 Gate=`READY`不创建P2文档。
+
+TASK-P2-00在用户明确授权后一次新增15张P2 Task Card，因此清单由125份增至140份。只有P2-00为phase-planning owner/in_progress；P2-01～14为新建planned member，没有Diff base、实现或artifact。P1/P2 Milestone状态分别更新为completed/active；ignored Task report与provider artifact不进入清单。

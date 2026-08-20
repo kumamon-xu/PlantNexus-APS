@@ -83,6 +83,7 @@ repository-local workflow contract完成后，用户追加了直接push `main`�
 - 文档一致性检查通过；
 - 验收命令实际通过并记录结果。
 - P1及以后 Task的 `Completion conditions`逐项满足并有真实证据。
+- P2及以后Task的`Start gate`、`Dependency changes`、`ADR impact`和`Provider evidence`逐项满足；planned卡不得预填implementation SHA或PASS。
 
 ## Phase Done
 
@@ -98,4 +99,10 @@ Repository workflow在完整pytest与既有machine contracts之后必须运行P1
 
 P1-12在Diff base `8830a6dc566df8093b601a82c87c74a9cfd97b59`上独立重跑locked sync、Ruff、Pyright、271项full tests、11项migration/exit-rejection focused tests、P1 pipeline 14/14、Rule/Generator/Golden/Mutation/Engineering reports、Compose、full/diff governance和`uv build`，全部exit 0。下载并解析P1-01～11的provider artifacts后，所有实现Task报告均绑定exact head/result=`PASS`/0 issues；P1-11 closure run `32322871271`进一步证明audit起点本身已经provider验证。
 
-因此§74 P1 Gate=`READY`、blocking gaps为空。TASK-P1-12 implementation commit `a5d7e4a68dc12d48e36cb692500f59446f8097b4`的exact GitHub run `32326616525`、required `validate` job `96299073525`和artifact `9391591718`均成功；artifact精确记录30 paths、3 impact rows、0 issues与pipeline 14/14，Task lifecycle已闭环为`done`。evidence-only revision只回填已发生事实，不改变已基于P1-11 closure和本地独立命令形成的Gate判断。current phase仍为P1，必须等待用户明确批准后才可进入P2。
+因此§74 P1 Gate=`READY`、blocking gaps为空。TASK-P1-12 implementation commit `a5d7e4a68dc12d48e36cb692500f59446f8097b4`的exact GitHub run `32326616525`、required `validate` job `96299073525`和artifact `9391591718`均成功；artifact精确记录30 paths、3 impact rows、0 issues与pipeline 14/14，Task lifecycle已闭环为`done`。用户于2026-08-20明确批准后，P1关闭为completed并进入P2；该后续授权不改写P1 audit发生时的边界。
+
+## TASK-P2-00 phase planning CI handoff
+
+P2 phase planning一次新增TASK-P2-00～14。CI仍使用PR base或push event `before`做event attribution；新增严格batch规则只允许唯一新建`TASK-Pn-00` owner和同range新建的planned/ready成员，拒绝既有/active/done成员、多个owner、预填SHA与历史/future卡。归属后仍用P2-00的immutable Diff base检查全部scope/impact，workflow命令和中性artifact命名不变。
+
+本次不激活Benchmark hook、不安装OR-Tools、不增加P2 machine report。P2-00 implementation commit必须先通过locked sync、targeted/full regression、full/diff governance与exact provider required `validate`/artifact，再由evidence-only closure标记done。P2-01～14保持planned；P2-13以后才允许接入完整P2 Gate，P2-14最后独立审计。

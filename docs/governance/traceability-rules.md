@@ -148,4 +148,4 @@ TASK-P2-02 evidence链必须区分：global schema set`2.4.0`与Problem v2=`2.3.
 
 ## TASK-P2-03 trace slice
 
-REQ-004/009、NFR-COR/TRC/SEC/OBS/PER与ENG-ARCH/SOL/ERR/VER链接到ADR-0011、exact dependency/lock、`planning/backends`代码、TEST-CONTRACT-001/TEST-SOLVER-UPGRADE、CI integration及`solver-backend-foundation-report.v1`。只有dependency/namespace/status/parameter/engineering-smoke从PLANNED变为formed；C-ID、OBJ-001 execution、candidate/formal Validator、Golden/Scenario/Benchmark/Export/P3继续PLANNED。Provider结果在exact implementation push前保持PENDING，不能由319项本地PASS推断。
+REQ-004/009、NFR-COR/TRC/SEC/OBS/PER与ENG-ARCH/SOL/ERR/VER链接到ADR-0011、exact dependency/lock、`planning/backends`代码、TEST-CONTRACT-001/TEST-SOLVER-UPGRADE、CI integration及`solver-backend-foundation-report.v1`。只有dependency/namespace/status/parameter/engineering-smoke从PLANNED变为formed；C-ID、OBJ-001 execution、candidate/formal Validator、Golden/Scenario/Benchmark/Export/P3继续PLANNED。Exact implementation run `32346208046` / artifact `9398128763`已闭环，Task=`done`；root生命周期与registry版本不变。

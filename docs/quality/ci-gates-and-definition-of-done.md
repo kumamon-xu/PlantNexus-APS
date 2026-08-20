@@ -123,4 +123,4 @@ Workflow在PlanningProblem evidence之后运行`app.planning.policy.contract_che
 
 Workflow在P2-02 machine evidence后运行`app.planning.backends.cp_sat.contract_check`，输出`build/validation/ci-solver-backend-foundation.json`并由既有中性artifact glob上传。Step不得`continue-on-error`；报告必须为`solver-backend-foundation-report.v1`、6/6 PASS、exact OR-Tools identity/lock、零namespace violation、七状态总映射、显式参数以及empty/model-invalid serialization boundary。
 
-本地39 focused、319 full、Ruff/Pyright、6/6 foundation、5/5 P2-02、6/6 historical Engineering、Compose/build均PASS。Local report仍是`uncommitted`，因此Task保持`in_progress`；只有implementation exact SHA的GitHub required `validate`和artifact成功并解析一致后，才允许evidence-only closure。该Gate不运行C-ID/OBJ-001/formal Validator/Benchmark，也不授权P2-04。
+本地39 focused、319 full、Ruff/Pyright、6/6 foundation、5/5 P2-02、6/6 historical Engineering、Compose/build均PASS。Implementation `9268b88ca7ce90a8f72023241f87e2d3676fd58a`的exact push run `32346208046`和required `validate` job `96355386111`均success；artifact `9398128763`内foundation绑定同一SHA/Linux x86_64并6/6 PASS，Task report为50 paths/9 rows/0 issues。P2-03据此闭环为`done`。该Gate不运行C-ID/OBJ-001/formal Validator/Benchmark，也不授权P2-04。

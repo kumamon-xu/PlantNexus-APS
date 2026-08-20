@@ -40,7 +40,7 @@ PlanningSnapshot
 
 `TASK-P2-00 — P2 Phase Transition and Task Planning Governance`、`TASK-P2-01 — PlanningProblem v2 Contract Gap Closure`与`TASK-P2-02 — Planning Machine Contracts and Status`均已闭环为`done`。P2-02 implementation `2661598ecb592942e50c9a13dd41ff5b2535ca0d`的GitHub push run `32342489997`、required `validate` job `96344226221`与artifact `9396828326`均精确绑定该SHA并为success；closure HEAD `f73f8c90af94d3c9b05ecc10b6c999594a3b7d66`的run `32342949743` / job `96345556588` / artifact `9396984310`也成功并作为P2-03 Diff base。
 
-用户已于2026-08-20明确授权执行`TASK-P2-03 — OR-Tools and SolverBackend Foundation`；该Task以clean、provider-verified `f73f8c90af94d3c9b05ecc10b6c999594a3b7d66`进入`in_progress`，并在依赖变更前接受ADR-0011。范围只允许exact-pin OR-Tools、`planning/backends/cp_sat` adapter/status/parameter/version engineering foundation、机器报告、测试与治理兼容；Problem/Policy/Solution/Report合同字节和语义继续只读。
+用户于2026-08-20明确授权执行`TASK-P2-03 — OR-Tools and SolverBackend Foundation`；该Task以clean、provider-verified `f73f8c90af94d3c9b05ecc10b6c999594a3b7d66`启动，并在依赖变更前接受ADR-0011。现已由implementation `9268b88ca7ce90a8f72023241f87e2d3676fd58a`的GitHub run `32346208046` / required job `96355386111` / artifact `9398128763`闭环为`done`。Problem/Policy/Solution/Report合同字节和语义保持只读。
 
 P2-02把global schema set additive提升到`2.4.0`，新增四个互相离线解析的v1 document contract，并以`CONTRACT_SAMPLE`/`SOLVER_RUN`显式区分shape样例与真实运行。该发布样例的`not-installed`是P2-02历史shape证据，不随P2-03安装依赖而改写。P2-03的empty/model-invalid smoke只证明binary/API/status/parameter边界，必须标记business feasibility未评估；不实现C-001～C-011、OBJ-001、candidate、Validator或Benchmark baseline。P2-04及P2-05～14仍为`planned`且未获启动授权。
 
@@ -72,8 +72,8 @@ P2-02把global schema set additive提升到`2.4.0`，新增四个互相离线解
 
 Task全部完成或audit READY都不自动切换P3；失败时保持P2并建立有界remediation Task。
 
-## TASK-P2-03 本地执行状态
+## TASK-P2-03 执行结果
 
-`ortools==9.15.6755`、`cp-sat-backend.v1`、七状态adapter、SolveLimits参数映射、namespace/serialization隔离与6-check machine report已形成；本地39 focused、319 full、Ruff/Pyright、P2-02/P0历史兼容、Compose和build均PASS。Exact GitHub implementation SHA的required `validate`与artifact仍待push后核验，因此TASK-P2-03保持`in_progress`。
+`ortools==9.15.6755`、`cp-sat-backend.v1`、七状态adapter、SolveLimits参数映射、namespace/serialization隔离与6-check machine report已形成；本地39 focused、319 full、Ruff/Pyright、P2-02/P0历史兼容、Compose和build均PASS。Provider artifact精确复现Linux/x86_64、6/6 foundation及50 paths/9 rows/0 issues，因此TASK-P2-03=`done`。
 
 该foundation没有business model builder，真实`solve()`以稳定MODEL_INVALID边界停止；empty model的OPTIMAL不表示PlanningProblem可行。P2-04～14仍未授权，current phase保持P2且不进入P3。

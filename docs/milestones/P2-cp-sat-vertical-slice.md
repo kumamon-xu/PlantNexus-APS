@@ -26,7 +26,7 @@ P1 Exit Gate=`READY`且blocking gaps为空；用户于2026-08-20明确批准P1�
 | 0 | TASK-P2-00 | Phase transition、完整Task规划与batch CI治理 | TASK-P1-12 | `done` |
 | 1 | TASK-P2-01 | PlanningProblem v2合同缺口闭环 | P2-00 | `done` |
 | 2 | TASK-P2-02 | Policy/Limits/Solution/SolverReport/status机器合同 | P2-01 | `done` |
-| 3 | TASK-P2-03 | OR-Tools exact pin与Backend foundation | P2-02 | `in_progress` |
+| 3 | TASK-P2-03 | OR-Tools exact pin与Backend foundation | P2-02 | `done` |
 | 4 | TASK-P2-04 | 正式Problem/Solution独立ScheduleValidator | P2-01/02 | `planned` |
 | 5 | TASK-P2-05 | C-001/003/004/010/011 core model | P2-03/04 | `planned` |
 | 6 | TASK-P2-06 | C-002/005/006/009 temporal/calendar/material | P2-05 | `planned` |
@@ -68,8 +68,8 @@ P2-03与P2-04在合同固定后可并行准备，但P2-05必须同时等待Backe
 
 ## Current execution boundary
 
-TASK-P2-00/P2-01/P2-02均已闭环为`done`。用户已明确授权P2-03；其clean/provider-verified Diff base为`f73f8c90af94d3c9b05ecc10b6c999594a3b7d66`，依赖变更前已接受ADR-0011，当前状态为`in_progress`。P2-03只形成exact Solver dependency与Backend engineering foundation，不执行业务constraint/Validator/Benchmark；P2保持`active`且不进入P3。
+TASK-P2-00～03均已闭环为`done`。P2-03以clean/provider-verified Diff base `f73f8c90af94d3c9b05ecc10b6c999594a3b7d66`启动，依赖变更前接受ADR-0011；implementation `9268b88ca7ce90a8f72023241f87e2d3676fd58a`的required run `32346208046` / job `96355386111` / artifact `9398128763`均success。P2-03只形成exact Solver dependency与Backend engineering foundation，不执行业务constraint/Validator/Benchmark；P2保持`active`且不进入P3。
 
 P2-02已形成global schema set`2.4.0`、PlanningPolicy/SolveLimits/PlanningSolution/SolverReport v1、七种status与pure fingerprint/precheck/CI report。P2-03不得修改这些合同字节；empty/model-invalid smoke不构成业务可行性或candidate。P2-04及P2-05～14仍为`planned`，必须获得用户另行明确授权并重新固定启动证据，不能由P2-03自动激活。
 
-P2-03本地实现现已形成exact OR-Tools lock、isolated CP-SAT adapter、显式status/parameter映射与6-check report，并通过39 focused/319 full tests；GitHub exact implementation SHA证据仍PENDING，所以Task和Milestone分别保持`in_progress`/`active`。该结果不满足任何C-ID、OBJ-001、Validator、Benchmark或P2 Exit Gate条件。
+P2-03已形成exact OR-Tools lock、isolated CP-SAT adapter、显式status/parameter映射与6-check report；本地39 focused/319 full及GitHub exact implementation provider Gate均PASS，Task=`done`、Milestone仍=`active`。该结果不满足任何C-ID、OBJ-001、Validator、Benchmark或P2 Exit Gate条件。

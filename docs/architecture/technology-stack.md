@@ -156,3 +156,5 @@ Workflow新增`app.planning.policy.contract_check`机器步骤并由既有artifa
 ADR-0011先于dependency变更接受。Runtime现exact pin `ortools==9.15.6755`，`uv.lock` SHA-256为`8b13617f31aa6a933347fc7b8ba010330cbb3f2d764f75c306dd9b6d77387a82`；锁内固定`absl-py==2.5.0`、`immutabledict==4.3.1`、`numpy==2.5.2`、`pandas==3.0.5`、`protobuf==6.33.6`和既有`typing-extensions==4.16.0`，并保存CPython 3.12 Windows amd64、manylinux x86-64/aarch64及macOS x86-64/arm64 wheel hashes。Local replay为CPython 3.12.13/Windows AMD64；Linux provider仍必须由exact pushed SHA的locked install和artifact证明。
 
 OR-Tools import只允许出现在`backend/app/planning/backends/cp_sat/`。本Task没有引入service、container、migration、DB/API/Worker、Strategy、业务constraint/objective、Validator或Benchmark runner。Point-in-time `pip-audit==2.10.1`检查显示新增OR-Tools依赖子树无记录；既有`pytest==8.4.1`与`starlette==0.47.3`存在上游advisory，登记为RISK-011且不在本Task越界升级。该结果不是持续供应链监控或Production安全认证。
+
+GitHub implementation run `32346208046`在Linux/x86_64、CPython 3.12.13以exact lock安装OR-Tools`9.15.6755`并通过全部Gate；artifact `9398128763`保存该平台identity和wheel/lock证据。该provider replay关闭P2-03，不改变后续Golden/Benchmark升级门。

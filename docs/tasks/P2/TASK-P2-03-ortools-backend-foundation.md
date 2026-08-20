@@ -1,7 +1,7 @@
 ---
 doc_id: TASK-P2-03
 title: OR-Tools and SolverBackend Foundation
-status: in_progress
+status: done
 spec_version: 0.3.0
 phase: P2
 normative: true
@@ -95,6 +95,16 @@ ADR-0011以独立先行commit `ba7efc1`接受后才修改dependency。`pyproject
 
 本地结果：`uv lock --check`与`uv sync --locked` PASS；focused=`39 passed`；full=`319 passed`；Ruff/Pyright=0；foundation=`6/6 PASS`，report SHA-256=`f9444d8602d66dd7d280ac3400675db3179f7beab38826f524247ca79c07315d`/7545 bytes；P2-02 compatibility=`5/5 PASS`；historical Engineering=`6/6 PASS`；Compose、`uv build`与`git diff --check` PASS。
 
-Point-in-time `pip-audit==2.10.1 --skip-editable`报告SHA-256=`45dfe31d6873211b1851c25ad3bd4247884ec45ba02db0db773fed04853494f2`/17722 bytes：新增OR-Tools依赖子树0 findings；Diff base已存在pytest 1个与starlette 6个唯一advisory，登记RISK-011且本Task不越界升级。该审查不是持续监控或Production认证。Provider implementation SHA/run/job/artifact仍为PENDING，Task保持`in_progress`。
+Point-in-time `pip-audit==2.10.1 --skip-editable`报告SHA-256=`45dfe31d6873211b1851c25ad3bd4247884ec45ba02db0db773fed04853494f2`/17722 bytes：新增OR-Tools依赖子树0 findings；Diff base已存在pytest 1个与starlette 6个唯一advisory，登记RISK-011且本Task不越界升级。该审查不是持续监控或Production认证。
 
 文档治理full PASS为142 docs/30 roots/36 tests/15 OPEN/10 SIM/11 risks/37 Tasks；Task diff PASS为50 actual paths、9 matched Impact rows、19 checks、0 issues。Ignored report不提交；provider必须在clean Linux runner重建同类machine/task evidence。
+
+## Completion evidence
+
+提交拓扑为Diff base `f73f8c90af94d3c9b05ecc10b6c999594a3b7d66` →先行accepted ADR commit `ba7efc1aef67c8d1aa651d28cda9449e2ba1d6d7` → implementation commit `9268b88ca7ce90a8f72023241f87e2d3676fd58a`；ADR先于dependency/lock变更且两者已直接推送`main`。Implementation diff与本地验收事实保持上述50 paths/9 rows/0 issues、39 focused/319 full、6/6 foundation及无业务model/candidate边界。
+
+GitHub push run [`32346208046`](https://github.com/kumamon-xu/PlantNexus-APS/actions/runs/32346208046)为`event=push`、`attempt=1`、`head_sha=9268b88ca7ce90a8f72023241f87e2d3676fd58a`、`completed/success`。Required `validate` job [`96355386111`](https://github.com/kumamon-xu/PlantNexus-APS/actions/runs/32346208046/job/96355386111)在clean Linux runner完成23个steps，locked sync、lint、type、repository suites、全部machine contracts、新CP-SAT foundation、Compose、docs/Task diff、build和artifact upload均success。Branch protection required context精确为`validate`、GitHub Actions app ID `15368`；唯一非阻塞annotation为GitHub runner将部分Node 20 actions强制运行于Node 24，纳入RISK-011持续监测而不改变本次成功结论。
+
+Artifact `9398128763`=`plantnexus-ci-evidence-32346208046`，size=`14747` bytes，digest=`sha256:d706f0bda6e8612531b107d5b0c28d3575913d81bd4a9b9e013bed6202f1f087`，`expired=false`，expires=`2026-11-18T07:54:35Z`。下载后`validation/ci-solver-backend-foundation.json` SHA-256=`09542b81c6eaac50857ad97c00ec02640e5af2acd8e77fc8973dfaee9142ae2e`：精确绑定implementation SHA、Linux/x86_64、OR-Tools`9.15.6755`、lock SHA `8b13617f…87a82`、6/6 PASS和全部NOT_EVALUATED/NOT_IMPLEMENTED边界；`traceability/ci-current-task-report.json` SHA-256=`f434bf72427bc5170e8b9c1b201dde66f2be763fc032beb9fb2f14eaa211518b`：绑定同一head、Diff base、TASK-P2-03、50 paths、9 impact rows、19 checks、0 issues和`result=PASS`。
+
+因此全部Completion conditions满足并标记`done`。P2继续`active`；TASK-P2-04～14保持`planned`且未获启动授权，C-001～C-011、OBJ-001、candidate/formal Validator、Benchmark/DB/API/Worker/P3仍未实现。Evidence-only closure自身的exact provider结果只能在本提交推送后核验；若失败则保留失败run并追加有界修复，不重写历史或force-push。

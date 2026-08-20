@@ -235,6 +235,6 @@ Schema/Problem/Domain实现限定为additive Problem v2、version-specific APIs�
 
 本Task实际命中`IMPACT-POLICY/BACKEND/INFRA/DEPENDENCY/VERSION-METADATA/TESTS/PHASE/GOVERNANCE-REGISTRY/DOCS`九行。实现限定exact dependency/lock、CP-SAT namespace、historical report compatibility、tests/workflow和Task声明文档；Problem/Policy/Solution/Report Schema/sample及canonical合同、Strategy/C-ID/objective/Validator/fixture/benchmark/export/DB/API/Worker/P3均无差异。
 
-首次solver依赖由ADR-0011和dependency/security review闭环；RISK-011是登记未消除的风险，不改变registry格式。最终actual paths/rows/issues以TASK-P2-03 `traceability-report.v1`和provider artifact为准；provider成功前Task保持`in_progress`且不激活P2-04。
+首次solver依赖由ADR-0011和dependency/security review闭环；RISK-011是登记未消除的风险，不改变registry格式。Implementation provider artifact `9398128763`内Task report确认50 actual paths、9 matched rows、19 checks、0 issues，故Task=`done`；P2-04不自动激活。
 
 本地Task diff实际为50 paths、9 matched rows、19 checks和0 issues；provider必须对exact implementation SHA复现该范围。

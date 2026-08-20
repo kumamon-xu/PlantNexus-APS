@@ -30,6 +30,6 @@ P0 当前状态：TASK-P0-01～10 全部完成；[superseding audit](P0-exit-gat
 
 P1当前状态：[`P1 — Data & Snapshot`](P1-data-and-snapshot.md)为`completed`，TASK-P1-01～12全部`done`。[P1 audit](P1-exit-gate-audit-report.md)的271项回归、14/14 pipeline、全部machine/build/docs/provider证据均PASS；TASK-P1-12 implementation `a5d7e4a68dc12d48e36cb692500f59446f8097b4` / run `32326616525` / artifact `9391591718`已闭环，Gate=`READY`且无blocking gap。用户于2026-08-20明确批准transition。
 
-P2当前状态：[`P2 — CP-SAT Vertical Slice`](P2-cp-sat-vertical-slice.md)为`active`。TASK-P2-00/P2-01/P2-02均已闭环为`done`；用户已授权TASK-P2-03，其Diff base=`f73f8c90af94d3c9b05ecc10b6c999594a3b7d66`且ADR-0011已在依赖变更前接受，当前为`in_progress`。TASK-P2-04～14仍为`planned`且未获启动授权；P2-14必须为最后的Exit Gate Audit，不得自动进入P3。
+P2当前状态：[`P2 — CP-SAT Vertical Slice`](P2-cp-sat-vertical-slice.md)为`active`。TASK-P2-00～03均已闭环为`done`；P2-03的ADR/dependency/backend/local/provider证据完整。TASK-P2-04～14仍为`planned`且未获启动授权；P2-14必须为最后的Exit Gate Audit，不得自动进入P3。
 
-TASK-P2-03已通过本地foundation验收但仍等待exact provider required `validate`/artifact，因此尚未关闭；P2 phase与后续Task状态不变。
+TASK-P2-03 implementation `9268b88ca7ce90a8f72023241f87e2d3676fd58a`的run `32346208046`、required job `96355386111`和artifact `9398128763`均success；P2 phase保持active，后续Task不自动启动。

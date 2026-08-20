@@ -164,3 +164,5 @@ Global schema set为`2.4.0`，但Problem v2 document仍固定`2.3.0`，Import/Sn
 Backend identity固定为`cp-sat` / `cp-sat-backend.v1` / `Google OR-Tools CP-SAT` / `9.15.6755`，并与direct pin、lock SHA-256和平台信息一起写入`solver-backend-foundation-report.v1`。四个SolveLimits/Backend参数逐项记录name/source/value；native status使用显式0～4映射，CANCELLED/FAILED只来自adapter控制或错误路径，未知native code fail closed。
 
 本地report的`code_commit=uncommitted`只证明工作树验收；push后CI必须以`PLANTNEXUS_CODE_COMMIT`绑定exact implementation SHA。Empty model的OPTIMAL与intentional invalid model的MODEL_INVALID均标记`business_feasibility=NOT_EVALUATED`、`candidate_produced=false`，不进入PlanningSolution/SolverReport业务provenance，也不形成Benchmark baseline。
+
+Implementation `9268b88ca7ce90a8f72023241f87e2d3676fd58a`的GitHub run `32346208046` / required job `96355386111` / artifact `9398128763`已形成provider provenance。下载的foundation report绑定同一commit、Linux/x86_64、exact solver/lock且6/6 PASS；Task report绑定同一commit与Diff base、50 paths/9 rows/0 issues。该链只证明Backend foundation，不生成业务PlanningRun provenance。

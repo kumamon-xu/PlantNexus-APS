@@ -255,4 +255,4 @@ P2-04在实现前固定Diff base、P0/Problem/Solution/Validation/rule/lock hash
 
 Full治理预期保持142 docs、30 roots、36 Test IDs、15 OPEN、10 SIM assumptions、11 risks和37 Tasks。Task diff必须匹配`IMPACT-VALIDATOR/INFRA/TESTS/PHASE/GOVERNANCE-REGISTRY/DOCS`六行并为0 issues；machine report必须为6/6且覆盖13 mutations、11 C-IDs、14 hard violations和6 property examples。Ignored machine/trace/provider下载不进入inventory；actual local与provider counts在验收后回填，不能预写。
 
-格式化后本地full治理实际PASS为142 docs/30 roots/36 Test IDs/15 OPEN/10 SIM assumptions/11 risks/37 Tasks；Task diff实际为38 paths、6 matched rows、19 checks、0 issues。Exact provider artifact仍须在implementation push后复现，evidence-only closure不得预填尚未发生的run/job/artifact。
+格式化后本地full治理实际PASS为142 docs/30 roots/36 Test IDs/15 OPEN/10 SIM assumptions/11 risks/37 Tasks；Task diff实际为38 paths、6 matched rows、19 checks、0 issues。Implementation artifact `9399519368`内`traceability-report.v1`精确绑定`9b532e2c054b02e1692f345a252922ec7fd469e4`与Diff base，复现38 committed/0 working paths、6 rows、19 checks、0 issues并PASS；TASK-P2-04治理Gate闭环。Evidence-only closure仍须由自身exact provider run复核，不能预写其ID。

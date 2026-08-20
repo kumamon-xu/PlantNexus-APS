@@ -27,7 +27,7 @@ P1 Exit Gate=`READY`且blocking gaps为空；用户于2026-08-20明确批准P1�
 | 1 | TASK-P2-01 | PlanningProblem v2合同缺口闭环 | P2-00 | `done` |
 | 2 | TASK-P2-02 | Policy/Limits/Solution/SolverReport/status机器合同 | P2-01 | `done` |
 | 3 | TASK-P2-03 | OR-Tools exact pin与Backend foundation | P2-02 | `done` |
-| 4 | TASK-P2-04 | 正式Problem/Solution独立ScheduleValidator | P2-01/02 | `in_progress` |
+| 4 | TASK-P2-04 | 正式Problem/Solution独立ScheduleValidator | P2-01/02 | `done` |
 | 5 | TASK-P2-05 | C-001/003/004/010/011 core model | P2-03/04 | `planned` |
 | 6 | TASK-P2-06 | C-002/005/006/009 temporal/calendar/material | P2-05 | `planned` |
 | 7 | TASK-P2-07 | C-007/008 execution facts/HARD lock | P2-06 | `planned` |
@@ -68,10 +68,10 @@ P2-03与P2-04在合同固定后可并行准备，但P2-05必须同时等待Backe
 
 ## Current execution boundary
 
-TASK-P2-00～03均已闭环为`done`。P2-03以clean/provider-verified Diff base `f73f8c90af94d3c9b05ecc10b6c999594a3b7d66`启动，依赖变更前接受ADR-0011；implementation `9268b88ca7ce90a8f72023241f87e2d3676fd58a`的required run `32346208046` / job `96355386111` / artifact `9398128763`均success。P2-03只形成exact Solver dependency与Backend engineering foundation，不执行业务constraint/Validator/Benchmark；P2保持`active`且不进入P3。
+TASK-P2-00～04均已闭环为`done`。P2-03以clean/provider-verified Diff base `f73f8c90af94d3c9b05ecc10b6c999594a3b7d66`启动，依赖变更前接受ADR-0011；implementation `9268b88ca7ce90a8f72023241f87e2d3676fd58a`的required run `32346208046` / job `96355386111` / artifact `9398128763`均success。P2-03只形成exact Solver dependency与Backend engineering foundation，P2-04形成formal independent Validator；业务constraint/OBJ-001/Benchmark仍未实现，P2保持`active`且不进入P3。
 
 P2-02已形成global schema set`2.4.0`、PlanningPolicy/SolveLimits/PlanningSolution/SolverReport v1、七种status与pure fingerprint/precheck/CI report。P2-03未修改这些合同字节；empty/model-invalid smoke不构成业务可行性或candidate。用户已授权TASK-P2-04，它以clean/provider-verified `4c66dce3b919a53816005c4aebf4983db19a6108`启动并固定P0/P2合同与fixture hashes；P2-05～14仍为`planned`且未获启动授权。
 
-P2-04当前只授权实现formal independent Validator及其机器证据。它必须逐项独立重算C-001～C-011、忽略solver status的可信声明并保持Backend/OR-Tools/expected artifact隔离；P2-05 core model、OBJ-001、Benchmark和P3均不在本次范围。
+P2-04的授权范围仅包含formal independent Validator及其机器证据。它已逐项独立重算C-001～C-011、忽略solver status的可信声明并保持Backend/OR-Tools/expected artifact隔离；P2-05 core model、OBJ-001、Benchmark和P3均不在本次范围。
 
-本地实现已形成`formal-schedule-validator-report.v1`：6/6 checks、13个mutation、11个C-ID、14个hard violations及6个duration/order examples均PASS，且Problem/Solution/Validation Schema、P0 fixture/evaluator、`uv.lock`和Backend保持不变。该结果尚待完整local Gate和exact implementation provider evidence，故TASK-P2-04仍为`in_progress`；P2-05及以后继续`planned`。
+本地实现已形成`formal-schedule-validator-report.v1`：6/6 checks、13个mutation、11个C-ID、14个hard violations及6个duration/order examples均PASS，且Problem/Solution/Validation Schema、P0 fixture/evaluator、`uv.lock`和Backend保持不变。Implementation `9b532e2c054b02e1692f345a252922ec7fd469e4`的exact run `32350068318` / required job `96367085099` / artifact `9399519368`成功并复现同一SHA的formal与38-path/6-row/0-issue治理报告，故TASK-P2-04=`done`；P2-05及以后继续`planned`且未获授权。

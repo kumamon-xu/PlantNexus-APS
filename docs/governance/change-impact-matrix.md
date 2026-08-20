@@ -243,6 +243,6 @@ Schema/Problem/Domain实现限定为additive Problem v2、version-specific APIs�
 
 本Task实际预期命中`IMPACT-VALIDATOR/INFRA/TESTS/PHASE/GOVERNANCE-REGISTRY/DOCS`六行。VALIDATOR覆盖formal evaluator、machine CLI和公开导出；INFRA仅增加CI machine command；TESTS覆盖contract/mutation/property/integration；其余三行同步Task/Milestone/trace/register/inventory及说明文档。
 
-Problem/Solution/Validation/Error Schema、fixture历史bytes、`pyproject.toml`/`uv.lock`、Backend/Strategy/constraint model、objective、Benchmark、migration、DB/API/Worker和P3均无差异，故不声明SCHEMA/DEPENDENCY/BACKEND等其他Rule ID。Machine rule table、required-document columns与`registry_version=1.0.0`不变；最终actual paths/checks必须由Task diff和exact provider artifact记录，在此之前TASK-P2-04保持`in_progress`。
+Problem/Solution/Validation/Error Schema、fixture历史bytes、`pyproject.toml`/`uv.lock`、Backend/Strategy/constraint model、objective、Benchmark、migration、DB/API/Worker和P3均无差异，故不声明SCHEMA/DEPENDENCY/BACKEND等其他Rule ID。Machine rule table、required-document columns与`registry_version=1.0.0`不变；implementation provider artifact已记录actual paths/checks，TASK-P2-04据此为`done`。
 
-本地Task diff实际为38 paths、6 matched rows、19 checks和0 issues；provider必须对exact implementation SHA复现该范围后才能关闭Task。
+本地Task diff实际为38 paths、6 matched rows、19 checks和0 issues；implementation artifact `9399519368`对exact SHA复现38 committed/0 working paths、相同6 rows/19 checks/0 issues，故影响治理闭环。

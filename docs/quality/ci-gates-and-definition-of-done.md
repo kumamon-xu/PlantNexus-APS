@@ -129,4 +129,6 @@ Workflow在P2-02 machine evidence后运行`app.planning.backends.cp_sat.contract
 
 Workflow在P2-03 foundation evidence后运行`app.planning.validation.problem_validator_check`，输出`build/validation/ci-formal-schedule-validator.json`并由既有中性artifact glob上传。Step不得`continue-on-error`；报告必须为`formal-schedule-validator-report.v1`、6/6 PASS，包含fixed artifact fingerprints、formal positive/status independence、13 mutations/C-001～C-011、ValidationReport/Error schema+determinism、6 property examples和independent source boundary。
 
-Repository suite同时执行formal unit/mutation/property与历史P0 validation，integration contract要求workflow exact CLI/report路径和机器报告counts/boundaries。该Gate不调用业务CP-SAT solve、不实现OBJ-001、不设置性能阈值，也不把synthetic correctness写成Production readiness。Implementation exact GitHub run/job/artifact只在提交push后回填；本地PASS不能替代provider evidence。
+Repository suite同时执行formal unit/mutation/property与历史P0 validation，integration contract要求workflow exact CLI/report路径和机器报告counts/boundaries。该Gate不调用业务CP-SAT solve、不实现OBJ-001、不设置性能阈值，也不把synthetic correctness写成Production readiness。
+
+Implementation `9b532e2c054b02e1692f345a252922ec7fd469e4`的exact push run `32350068318`与required `validate` job `96367085099`均`completed/success`；未过期artifact `9399519368` / digest `sha256:e67b8ca8bbb2690eca62a2df406b275876dda074dbea5855fccd9516c5d09a8f`内formal report绑定同一SHA并6/6 PASS，Task report绑定同一SHA且为38 paths/6 rows/0 issues。P2-04据此闭环为`done`；P2-05仍须另行授权。

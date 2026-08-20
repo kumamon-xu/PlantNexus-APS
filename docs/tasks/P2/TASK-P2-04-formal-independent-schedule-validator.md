@@ -1,7 +1,7 @@
 ---
 doc_id: TASK-P2-04
 title: Formal Independent ScheduleValidator
-status: in_progress
+status: done
 spec_version: 0.3.0
 phase: P2
 normative: true
@@ -93,4 +93,10 @@ Task卡Acceptance Commands已在格式化后的工作树执行：`uv sync --lock
 
 Full文档治理为142 docs/30 roots/36 Test IDs/15 OPEN/10 SIM assumptions/11 risks/37 Tasks；Task diff报告为38 paths、6 matched Impact Rules、19 checks、0 issues，Diff base保持`4c66dce3b919a53816005c4aebf4983db19a6108`。`uv.lock`、`schemas/**`、`fixtures/**`与`backend/app/planning/backends/**`相对Diff base无差异；`docs/tasks/TASK_TEMPLATE.md`经review确认既有字段足够，故保持字节不变。
 
-以上仍是implementation candidate本地证据。Implementation SHA及其exact GitHub required `validate`、job、artifact内容/digest/expiry尚待commit/push后核验；在这些provider证据形成前Task保持`in_progress`，不得启动P2-05。
+## Provider closure evidence
+
+Implementation commit为`9b532e2c054b02e1692f345a252922ec7fd469e4`。其GitHub push run [`32350068318`](https://github.com/kumamon-xu/PlantNexus-APS/actions/runs/32350068318)与required `validate` job `96367085099`均`completed/success`；branch protection仍要求context=`validate`、GitHub Actions app ID=`15368`，该SHA唯一check-run与之匹配。全部workflow steps成功，包括formal validator evidence、repository suites、docs/task diff和artifact upload。
+
+未过期artifact `9399519368`=`plantnexus-ci-evidence-32350068318`，digest=`sha256:e67b8ca8bbb2690eca62a2df406b275876dda074dbea5855fccd9516c5d09a8f`、expires=`2026-11-18T08:41:31Z`。下载后formal report精确绑定implementation SHA并为6/6 PASS、13 mutations/11 constraints/14 violations/6 examples，文件SHA-256=`1126e8caf0e85d138f869f430b11e72c88b5a5568c1bba1ab7be1beac47d669b`；Task report绑定同一SHA/Diff base，记录38 committed、0 working paths、6 impact rows、19 checks、0 issues，文件SHA-256=`15c20fa5bebc30acbc324992ad7935eceed8bdff4925df28db4e11c71cd2b78a`。
+
+Local与provider、scope/impact、immutable boundary及文档追踪全部一致，Completion conditions满足，TASK-P2-04据此关闭为`done`。这不授权P2-05、不实现业务CP-SAT constraints/OBJ-001/Benchmark，也不进入P3；本evidence-only closure提交自身的provider结果将在push后另行核验而不形成自引用。

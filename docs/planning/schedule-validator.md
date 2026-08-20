@@ -92,3 +92,5 @@ TASK-P0-05 的 rule-sheet 代码变更只允许 additive schema set `1.2.0`，�
 正式Evaluator源文件不读取`solver_status`，也不导入`app.planning.backends`、OR-Tools、P0 evaluator/mutation runner或expected outcome。机器向量把声明状态改成FAILED并删除run outcome/objective metadata后仍得到完全相同报告，证明PASS/FAIL只来自Problem/Solution assignment事实。该行为不批准Solver结果；后继consumer仍必须在正式生命周期中先获得candidate再调用Validator。
 
 [`problem_validator_check.py`](../../backend/app/planning/validation/problem_validator_check.py) 生成`formal-schedule-validator-report.v1`：1个formal positive、13个formula-free declarative mutations、C-001～C-011全覆盖、14个hard violations、6个duration/order property examples、ValidationReport/Error v2 Schema重放及AST independence scan。P0 positive/mutation目录、Problem/Solution/Validation Schema、rule sheet、历史fixture evaluator/runner与`uv.lock`均由固定SHA-256证明只读。本Task不运行CP-SAT业务model、OBJ-001、Benchmark、API/persistence或READY_FOR_REVIEW transition。
+
+Implementation `9b532e2c054b02e1692f345a252922ec7fd469e4`的GitHub run `32350068318` / required job `96367085099` / artifact `9399519368`已精确复现6/6 formal report及38-path/6-row/0-issue治理报告，TASK-P2-04据此`done`。后继P2-05+ Solver candidate仍必须经过本Validator；Task关闭不等于已有business candidate或Production validation。

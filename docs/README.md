@@ -69,7 +69,7 @@ last_reviewed: 2026-08-20
 
 ## 当前范围
 
-当前阶段为P2。P1 Milestone为`completed`，P2为`active`；TASK-P2-00～03均已闭环为`done`，TASK-P2-04=`in_progress`。正式Problem/Solution Validator已在本地独立重算C-001～C-011并通过mutation/property/schema/error/independence证据，exact implementation provider Gate仍待执行；CP-SAT业务C-ID/OBJ-001、Benchmark、P2-05～14和P3均未启动，详见`current_phase.md`。
+当前阶段为P2。P1 Milestone为`completed`，P2为`active`；TASK-P2-00～04均已闭环为`done`。正式Problem/Solution Validator独立重算C-001～C-011，且local/exact-provider mutation/property/schema/error/independence证据完整；CP-SAT业务C-ID/OBJ-001、Benchmark、P2-05～14和P3均未启动，详见`current_phase.md`。
 
 ## 仓库入口与本地检查
 
@@ -85,4 +85,4 @@ CI 可用 `uv run python scripts/check_docs.py --discover-task-from <event-base-
 
 TASK-P2-03本地39项聚焦、319项全量和6/6 foundation均PASS；exact GitHub required `validate`与artifact也已核验，Task=`done`。工程smoke仍不是业务Solver/Validator/Benchmark证据。
 
-TASK-P2-04当前本地证据为6/6 formal machine checks、13个mutation、11个C-ID、14个hard violations和6个duration/order examples；完整suite、文档diff以及exact GitHub provider artifact是关闭前置条件。本Task不修改Backend、合同Schema、fixture bytes、dependency、objective或Benchmark。
+TASK-P2-04本地证据为6/6 formal machine checks、13个mutation、11个C-ID、14个hard violations和6个duration/order examples；implementation `9b532e2c054b02e1692f345a252922ec7fd469e4`的exact GitHub run `32350068318` / required job `96367085099` / artifact `9399519368`复现该报告和38-path/6-row/0-issue Task report，故Task=`done`。本Task未修改Backend、合同Schema、fixture bytes、dependency、objective或Benchmark。

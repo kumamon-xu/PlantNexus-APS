@@ -42,7 +42,7 @@ PlanningSnapshot
 
 用户于2026-08-20明确授权执行`TASK-P2-03 — OR-Tools and SolverBackend Foundation`；该Task以clean、provider-verified `f73f8c90af94d3c9b05ecc10b6c999594a3b7d66`启动，并在依赖变更前接受ADR-0011。现已由implementation `9268b88ca7ce90a8f72023241f87e2d3676fd58a`的GitHub run `32346208046` / required job `96355386111` / artifact `9398128763`闭环为`done`。Problem/Policy/Solution/Report合同字节和语义保持只读。
 
-P2-02把global schema set additive提升到`2.4.0`，新增四个互相离线解析的v1 document contract，并以`CONTRACT_SAMPLE`/`SOLVER_RUN`显式区分shape样例与真实运行。该发布样例的`not-installed`是P2-02历史shape证据，不随P2-03安装依赖而改写。用户于2026-08-20明确授权执行TASK-P2-04；启动时clean `main=origin/main=4c66dce3b919a53816005c4aebf4983db19a6108`，exact required `validate`与artifact均success，故P2-04进入`in_progress`。本Task只形成正式独立Validator，不授权P2-05～14。
+P2-02把global schema set additive提升到`2.4.0`，新增四个互相离线解析的v1 document contract，并以`CONTRACT_SAMPLE`/`SOLVER_RUN`显式区分shape样例与真实运行。该发布样例的`not-installed`是P2-02历史shape证据，不随P2-03安装依赖而改写。用户于2026-08-20明确授权执行TASK-P2-04；该Task以clean/provider-verified `4c66dce3b919a53816005c4aebf4983db19a6108`启动，现由implementation `9b532e2c054b02e1692f345a252922ec7fd469e4`的run `32350068318` / required job `96367085099` / artifact `9399519368`闭环为`done`。TASK-P2-00～04现均`done`；P2-05～14未获授权。
 
 ## 当前允许
 
@@ -82,8 +82,10 @@ Task全部完成或audit READY都不自动切换P3；失败时保持P2并建立�
 
 TASK-P2-04以`4c66dce3b919a53816005c4aebf4983db19a6108`为不可变Diff base，复用且不修改Problem v2、PlanningSolution、ValidationReport/Error v2与constraint-rule-sheet v1。正式Validator必须独立重算C-001～C-011，不能导入Backend/OR-Tools、复用CP-SAT constraint builder、读取expected outcome决定结果或信任solver status。P0 fixture-local evaluator与全部历史asset bytes保持只读；P2-05 core model、OBJ-001、Benchmark、DB/API/Worker和P3仍未启动。
 
-## TASK-P2-04 本地实现结果
+## TASK-P2-04 执行结果
 
 正式`ProblemScheduleValidator`现直接消费Problem v2与candidate PlanningSolution，按稳定顺序独立判定C-001～C-011，并把失败映射为`validation-report.v2`与`error.v2`。本地machine report为6/6 PASS，覆盖13个声明式mutation、11个C-ID、14个hard violations、一个positive/status-contradiction replay和6个duration/order examples；AST证据确认无Backend/OR-Tools/expected outcome决策依赖。
 
-这只表示实现和本地correctness证据已形成。TASK-P2-04继续保持`in_progress`，直至完整本地Gate、exact implementation SHA的required `validate`和artifact均成功并由evidence-only closure记录；P2-05～14没有因本结果自动获得授权。
+本地指定suite=`59 passed`、full=`343 passed`，Ruff/Pyright、历史machine compatibility、Compose、build与38-path/6-row/0-issue治理均PASS。Exact implementation provider artifact内formal report绑定同一SHA并为6/6 PASS，Task report为38 committed/0 working paths、19 checks、0 issues；因此TASK-P2-04=`done`。
+
+P2-05的P2-03/P2-04依赖现已满足，但它仍为`planned`且必须由用户另行明确授权。本结果不实现CP-SAT business constraints、OBJ-001、Benchmark、DB/API/Worker或P3，current phase继续为P2。

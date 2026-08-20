@@ -12,7 +12,7 @@ registry_version: 1.0.0
 
 # 文档清单
 
-本清单列出当前仓库已经实际存在的Markdown文档。P0/P1均已归档为completed；P2现为active，TASK-P2-00～03已done，用户已授权TASK-P2-04并将其置为in_progress。P2-05～14仍为planned且未获启动授权。产品API与Production Runbook正文尚未形成并继续由相应索引登记。
+本清单列出当前仓库已经实际存在的Markdown文档。P0/P1均已归档为completed；P2现为active，TASK-P2-00～04已done。P2-05～14仍为planned且未获启动授权。产品API与Production Runbook正文尚未形成并继续由相应索引登记。
 
 | Path | Doc ID | Status | Title |
 |---|---|---|---|
@@ -145,7 +145,7 @@ registry_version: 1.0.0
 | [tasks/P2/TASK-P2-01-planning-problem-v2-contract-gap-closure.md](../tasks/P2/TASK-P2-01-planning-problem-v2-contract-gap-closure.md) | TASK-P2-01 | done | PlanningProblem v2 Contract Gap Closure |
 | [tasks/P2/TASK-P2-02-planning-machine-contracts-and-status.md](../tasks/P2/TASK-P2-02-planning-machine-contracts-and-status.md) | TASK-P2-02 | done | Planning Machine Contracts and Status |
 | [tasks/P2/TASK-P2-03-ortools-backend-foundation.md](../tasks/P2/TASK-P2-03-ortools-backend-foundation.md) | TASK-P2-03 | done | OR-Tools and SolverBackend Foundation |
-| [tasks/P2/TASK-P2-04-formal-independent-schedule-validator.md](../tasks/P2/TASK-P2-04-formal-independent-schedule-validator.md) | TASK-P2-04 | in_progress | Formal Independent ScheduleValidator |
+| [tasks/P2/TASK-P2-04-formal-independent-schedule-validator.md](../tasks/P2/TASK-P2-04-formal-independent-schedule-validator.md) | TASK-P2-04 | done | Formal Independent ScheduleValidator |
 | [tasks/P2/TASK-P2-05-cp-sat-core-assignment-resource-model.md](../tasks/P2/TASK-P2-05-cp-sat-core-assignment-resource-model.md) | TASK-P2-05 | planned | CP-SAT Core Assignment and Resource Model |
 | [tasks/P2/TASK-P2-06-cp-sat-temporal-calendar-material-model.md](../tasks/P2/TASK-P2-06-cp-sat-temporal-calendar-material-model.md) | TASK-P2-06 | planned | CP-SAT Temporal Calendar and Material Model |
 | [tasks/P2/TASK-P2-07-execution-facts-and-hard-lock-model.md](../tasks/P2/TASK-P2-07-execution-facts-and-hard-lock-model.md) | TASK-P2-07 | planned | Execution Facts and Hard Lock Model |
@@ -185,6 +185,6 @@ TASK-P2-02在用户明确授权后以clean、provider-verified `3cf4966481e4e8cb
 
 P2-02实现仍不新增或删除Markdown路径，清单保持141份。四份JSON Schema、四份JSON sample、Python contracts/tests、workflow及ignored `build/validation`/`build/traceability`报告均不作为Markdown inventory行；glossary只同步current schema set并保持原Doc ID/path。Implementation `2661598ecb592942e50c9a13dd41ff5b2535ca0d`的run `32342489997` / artifact `9396828326`成功，Task report为63 paths/11 rows/0 issues，故P2-02现为`done`；P2-03～14保持`planned`且未获启动授权。
 
-TASK-P2-03启动新增唯一Markdown `ADR-0011-ortools-9-15-cp-sat-backend-version-policy.md`，inventory从141增至142份。Backend代码、tests、dependency lock、workflow和ignored machine/trace/audit reports不作为Markdown行。Implementation `9268b88ca7ce90a8f72023241f87e2d3676fd58a`的run `32346208046` / artifact `9398128763`成功且Task report为50 paths/9 rows/0 issues，故Task=`done`；P2-04～14未启动。
+TASK-P2-03启动新增唯一Markdown `ADR-0011-ortools-9-15-cp-sat-backend-version-policy.md`，inventory从141增至142份。Backend代码、tests、dependency lock、workflow和ignored machine/trace/audit reports不作为Markdown行。Implementation `9268b88ca7ce90a8f72023241f87e2d3676fd58a`的run `32346208046` / artifact `9398128763`成功且Task report为50 paths/9 rows/0 issues，故Task=`done`；其关闭时P2-04～14尚未启动。
 
-TASK-P2-04启动与实现均未新增或删除Markdown路径，inventory继续完整覆盖142份`docs/**/*.md`。Formal validator/CLI/tests/workflow与ignored `build/validation`/`build/traceability` JSON不作为inventory行；现有说明与治理文档只同步formed/PLANNED边界。Task在exact implementation provider evidence前保持`in_progress`，P2-05～14继续`planned`且未获授权。
+TASK-P2-04启动与实现均未新增或删除Markdown路径，inventory继续完整覆盖142份`docs/**/*.md`。Formal validator/CLI/tests/workflow与ignored `build/validation`/`build/traceability` JSON不作为inventory行；现有说明与治理文档只同步formed/PLANNED边界。Implementation `9b532e2c054b02e1692f345a252922ec7fd469e4`的run `32350068318` / artifact `9399519368`成功且Task report为38 paths/6 rows/0 issues，故Task=`done`；P2-05～14继续`planned`且未获授权。

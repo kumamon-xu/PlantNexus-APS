@@ -68,3 +68,9 @@ Builder按operation ID、candidate值、edge端点、resource/time与capability 
 Common ingress的最后一步仅调用`planning-problem-builder.v1`，并以Snapshot cutoff、60秒tick和24小时fixture-local horizon产生Problem hash `sha256:71c0b729dd2b08ba1d14d5a281029b8d9bc13596a90a5189fb20176e19f690da`。两次Synthetic replay与ReferenceFileAdapter输入的Problem canonical bytes/hash完全一致。
 
 `p1-data-pipeline-report.v1`明确记录terminal artifact为PlanningProblem，`solver_executed/candidate_schedule_created/schedule_validator_executed/p2_entered=false`。本Task不修改Problem Schema/builder/hash语义，也不将Problem replay写成feasibility、Solver或Validator证据。
+
+## TASK-P1-12 Exit Gate audit
+
+P1-12以同一Snapshot/cutoff/60秒tick/24小时fixture-local horizon重放两次Synthetic和一次Reference入口，完整Problem bytes digest均为`sha256:c3ff3f0cc810007da4dc251642896b0d8b6fab1f98d4d5bced743752904e9233`，problem hash均为`sha256:71c0b729dd2b08ba1d14d5a281029b8d9bc13596a90a5189fb20176e19f690da`。Builder/hash/ordering/fact/config property与unsupported边界在271项回归中PASS。
+
+依赖/code扫描再次确认没有OR-Tools、CpModel或IntervalVar，且没有P2 Task。P1 Gate=`READY`只证明solver-neutral Problem可确定性形成，不证明可解性、candidate Schedule、ScheduleValidator、目标值、性能或Production readiness。

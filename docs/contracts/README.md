@@ -6,7 +6,7 @@ spec_version: 0.3.0
 phase: P1
 normative: false
 source_sections: [24, 36, 38, 39, 63, 64, 67, 103]
-last_reviewed: 2026-08-19
+last_reviewed: 2026-08-20
 ---
 
 # 合同文档索引
@@ -29,10 +29,10 @@ last_reviewed: 2026-08-19
 
 - `canonical-records.v1`：严格固定 Factory/Resource、Product/Routing、Order/Lot、execution fact与lock collections，每条记录携带source/version/record ID；
 - `import-package.v2`：固定schema/source/normalization/canonicalization versions、strict records与synthetic provenance；
-- `planning-snapshot.v2`：固定validated Import/quality provenance、canonical records、expanded OperationInstance/edge payload与entity counts；hash构建和immutability persistence仍由TASK-P1-08实现；
+- `planning-snapshot.v2`：固定validated Import/quality provenance、canonical records、expanded OperationInstance/edge payload与entity counts；TASK-P1-08已形成hash构建、immutable value和insert-only persistence；
 - `import-package.v1`：只固定版本化 metadata envelope；Canonical records 字段仍由 P1 authority mapping 决定；
 - `planning-snapshot.v1`：固定不可变快照元数据与 Production/Simulation provenance 分离；
-- `planning-problem.v1`：固定 Solver-neutral 顶层、Operation/Option/Edge/Calendar interval skeleton；
+- `planning-problem.v1`：固定 Solver-neutral 顶层、Operation/Option/Edge/Calendar interval skeleton；TASK-P1-09已形成builder/hash与immutable replay，Solver仍未形成；
 - `kpi.v1`、`error.v1`、`validation-report.v1`：TASK-P0-03 的原始顶层 envelope，原文件保持不变；
 - `error.v2`：固定 19 个当前已分配 code 与七类 category 的唯一映射；
 - `error.v3`：使用error registry v2并要求entity type/ID、field、observed、expected、source location和action的完整诊断；
@@ -53,6 +53,8 @@ TASK-P1-04已形成code-level `ReferenceFileAdapter@1.0.0` transport contract：
 TASK-P1-05形成标准库pure `app.normalization`：批次必须精确绑定source system/version、mapping profile/version和unit registry version；canonical ID、UTC Z、integer seconds、collection ordering、package ID/bytes/dataset hash均可重放。它只生产Import v2，不执行DAG/reference/capability Data Validation、order expansion、Snapshot/Problem或Solver。
 
 TASK-P1-06形成标准库pure `app.data_validation`：消费Import v2并收集structure/reference/lineage、routing DAG、resource/capability、unit/duration、UTC/calendar/fact/lock问题；Error按稳定诊断键去重排序，报告不含`generated_at`且report ID由其余字段的canonical bytes派生。PASS必须零Error，FAIL的count必须与数组相等。它不展开订单、不构建Snapshot/Problem，也不导入Planning/Solver/ScheduleValidator。
+
+TASK-P1-12独立审计已重放全部合同、迁移、Generator和common-ingress gates：schema set保持`2.2.0`且没有Schema修改；Import/Snapshot/Problem的发布版本和hash边界均与实现证据一致。P1 Gate=`READY`只证明Data & Snapshot链，不形成PlanningSolution、Solver、Production Adapter或外部API合同。
 
 ## 等待实现事实后形成
 

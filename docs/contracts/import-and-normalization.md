@@ -125,3 +125,9 @@ Snapshot builder把P1-05的content-derived package ID/canonical Import bytes、P
 `CommonIngressPipeline.run()`只接收`NormalizationInput(StagedImportBatch, MappingProfile)`和显式planning configuration，按唯一顺序调用Normalization、Data Validation、Order Expansion、Snapshot与Problem公开边界。Generator新增公开`prepare_batch()`并让原`generate()`复用同一staged batch；ReferenceFileAdapter把同义CSV准备为不同transport provenance的batch，二者从staging后得到字节级相同的Import v2。
 
 Quality FAIL在Expansion前以`DataQualityGateRejected`保留Error v3的首个exact category/code及完整有序report；Normalization的`UNIT_CONVERSION_ERROR/MISSING_DURATION`原异常直接传递。该application层不修复、补猜或重新分类任何数据错误，Schema/mapping/unit/quality版本均未变。
+
+## TASK-P1-12 Exit Gate audit
+
+审计以两次Synthetic staging和同义Reference CSV重放完整链路，49条records的Import v2 canonical bytes/hash完全一致，dataset hash固定为`sha256:24a74b4f43b0ba42ed458983e0c4776613911924ae5250d9df8ae9e4f14cb1c4`；quality始终`PASS/0`后才进入Expansion。route cycle、missing resource、unit error、missing duration分别以`ROUTE_CYCLE`、`MISSING_RESOURCE`、`UNIT_CONVERSION_ERROR`、`MISSING_DURATION`和`DATA_ERROR`在所属stage终止。
+
+P1 Gate=`READY`不改变本合同的authority边界：Reference Adapter仍`production_binding=false`，不存在真实ERP/MES/WMS/CAM mapping、默认unit/timezone、field precedence、lot split或duration fallback；OPEN-001/002/008/013/014/015继续OPEN。

@@ -88,3 +88,5 @@ TASK-P1-08 review：Snapshot只冻结显式facts/cutoff/source/rule/version并�
 TASK-P1-10 review：P1 ingress asset的topology、piece quantity、duration、UTC timeline、calendar/material/WIP/lock/cross-workshop值已在独立Simulation注册表登记；source system/mapping也固定`synthetic`且无Production binding。Normalization PASS、quality PASS和stable hash均不是Authority/Evidence closure record，不决定真实interface、topology、calendar、unit、duration、field precedence或规模阈值。OPEN-003/004/011/012/013/015及OPEN-001～015全部继续`OPEN`，registry format version保持`1.0.0`。
 
 TASK-P1-11 review：ReferenceFileAdapter parity使用temporary synthetic CSV且manifest明确`production_binding=false`；application data-plane guard、Import/Snapshot/Problem hash和exact rejection都只证明通用链路correctness。没有Authority/Evidence closure record，不决定真实source binding、unit/timezone、lot/lock/horizon、字段优先级、容量或SLA。OPEN-001～015全部保持`OPEN`，registry format version不变。
+
+TASK-P1-12 review：P1 Exit Gate的`READY`来自versioned synthetic/reference correctness replay、测试/build/docs与CI provider证据，不是生产业务Authority。审计没有收到任何closure record、真实接口/字段/拓扑/日历/策略/历史数据/SLA或migration decision；因此OPEN-001～015共15项全部继续`OPEN`，并继续阻止依赖这些事实的Production声明。Registry格式与`registry_version=1.0.0`不变。

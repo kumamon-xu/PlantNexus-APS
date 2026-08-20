@@ -209,6 +209,12 @@ TASK-P1-11的diff应精确命中`IMPACT-APPLICATION`、`IMPACT-SIM-GENERATOR`、
 
 P1-11验收继续原样重放P0 `engineering-skeleton-report.v1`。其`business_pipeline=NOT_IMPLEMENTED`是该P0工程报告“不执行/验证业务链”的冻结scope sentinel，不是对当前仓库能力的全局否定。P1 common-ingress的权威machine evidence是独立`p1-data-pipeline-report.v1`；不得重写历史P0 report version以伪装它验证了新pipeline。
 
+## TASK-P1-12 audit governance
+
+P1-12只修改卡片声明的phase/milestone/contract/architecture/quality/governance文档并新增audit report/manifest；业务代码、Schema、fixture、test、migration、workflow、dependency和P2路径均保持只读。最终diff必须仅命中`IMPACT-PHASE`、`IMPACT-GOVERNANCE-REGISTRY`、`IMPACT-DOCS`，且`traceability-report.v1`记录完整Diff base、actual paths、3 matched rows和0 issues。
+
+Full检查的最终基线为125份`docs/**/*.md`、30 roots、36 Test IDs、15 OPEN、10 SIM assumptions、10 risks和22 Tasks。新增JSON evidence manifest不进入Markdown inventory；ignored machine/trace reports也不提交。Audit report的`READY`必须与manifest一致，但Task自身provider run在提交前不能自我包含，故由后续evidence-only revision回填，不得伪造。
+
 ## Override
 
 不允许用自由文本 CI skip 绕过。确需例外时必须在 Task Card 记录理由，提交 ADR 或明确批准记录，并仍保留检查报告。正确性、状态语义、数据隔离和发布门不得豁免。

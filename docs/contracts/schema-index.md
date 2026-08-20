@@ -6,7 +6,7 @@ spec_version: 0.3.0
 phase: P1
 normative: true
 source_sections: [36, 38, 39, 70, 71, 103]
-last_reviewed: 2026-08-19
+last_reviewed: 2026-08-20
 ---
 
 # Schema 计划索引
@@ -15,13 +15,13 @@ last_reviewed: 2026-08-19
 
 | Schema | 目标路径 | 首个 Task | 状态 |
 |---|---|---|---|
-| Canonical records | [`/schemas/json/canonical-records.v1.schema.json`](../../schemas/json/canonical-records.v1.schema.json) | TASK-P1-02 | CONTRACT_V1；Normalization/Data Validation formed，expansion PLANNED |
+| Canonical records | [`/schemas/json/canonical-records.v1.schema.json`](../../schemas/json/canonical-records.v1.schema.json) | TASK-P1-02 | CONTRACT_V1；Normalization/Data Validation/Expansion formed |
 | Canonical import v1 | [`/schemas/json/import-package.schema.json`](../../schemas/json/import-package.schema.json) | TASK-P0-03 skeleton | SKELETON_V1 retained |
-| Canonical import v2 | [`/schemas/json/import-package.v2.schema.json`](../../schemas/json/import-package.v2.schema.json) | TASK-P1-02 | CONTRACT_V2；Reference Adapter + Normalization + Data Validation formed，common pipeline PLANNED |
+| Canonical import v2 | [`/schemas/json/import-package.v2.schema.json`](../../schemas/json/import-package.v2.schema.json) | TASK-P1-02 | CONTRACT_V2；Reference/Synthetic common-ingress pipeline formed；Production binding PLANNED |
 | Unit conversion registry | [`/schemas/rules/unit-conversion-registry.v1.yaml`](../../schemas/rules/unit-conversion-registry.v1.yaml) | TASK-P1-05 | RULE_V1；explicit integer duration conversion formed，Production default forbidden |
 | PlanningSnapshot v1 | [`/schemas/json/planning-snapshot.schema.json`](../../schemas/json/planning-snapshot.schema.json) | TASK-P0-03 | SKELETON_V1 retained |
-| PlanningSnapshot v2 | [`/schemas/json/planning-snapshot.v2.schema.json`](../../schemas/json/planning-snapshot.v2.schema.json) | TASK-P1-02 | CONTRACT_V2；builder/hash/persistence PLANNED |
-| PlanningProblem | [`/schemas/json/planning-problem.schema.json`](../../schemas/json/planning-problem.schema.json) | TASK-P0-03 | SKELETON_V1；builder/Solver PLANNED |
+| PlanningSnapshot v2 | [`/schemas/json/planning-snapshot.v2.schema.json`](../../schemas/json/planning-snapshot.v2.schema.json) | TASK-P1-02 | CONTRACT_V2；builder/hash/insert-only persistence formed |
+| PlanningProblem | [`/schemas/json/planning-problem.schema.json`](../../schemas/json/planning-problem.schema.json) | TASK-P0-03 | SKELETON_V1；builder/hash formed，Solver PLANNED |
 | PlanningSolution | `/schemas/json/planning-solution.schema.json` | later P2 | PLANNED |
 | KPI | [`/schemas/json/kpi.schema.json`](../../schemas/json/kpi.schema.json) | TASK-P0-03 skeleton | SKELETON_V1；calculation PLANNED |
 | ValidationReport v1 | [`/schemas/json/validation-report.schema.json`](../../schemas/json/validation-report.schema.json) | TASK-P0-03 | SKELETON_V1 retained |
@@ -29,12 +29,14 @@ last_reviewed: 2026-08-19
 | Error v1 | [`/schemas/json/error.schema.json`](../../schemas/json/error.schema.json) | TASK-P0-03 | SKELETON_V1 retained |
 | Error v2 | [`/schemas/json/error.v2.schema.json`](../../schemas/json/error.v2.schema.json) | TASK-P0-04 | SKELETON_V2 + code/category registry formed |
 | Error v3 | [`/schemas/json/error.v3.schema.json`](../../schemas/json/error.v3.schema.json) | TASK-P1-06 | CONTRACT_V3；rich deterministic Data Validation detail formed |
-| ImportQualityReport v1 | [`/schemas/json/import-quality-report.schema.json`](../../schemas/json/import-quality-report.schema.json) | TASK-P1-06 | CONTRACT_V1 + deterministic evaluator/sample formed；Snapshot handoff PLANNED |
+| ImportQualityReport v1 | [`/schemas/json/import-quality-report.schema.json`](../../schemas/json/import-quality-report.schema.json) | TASK-P1-06 | CONTRACT_V1 + deterministic evaluator/sample + Snapshot handoff formed |
 | StateTransition | [`/schemas/json/state-transition.schema.json`](../../schemas/json/state-transition.schema.json) | TASK-P0-04 | SKELETON_V1；machine/state names formed，business persistence PLANNED |
-| Constraint Rule Sheet | [`/schemas/rules/constraint-rule-sheet.v1.yaml`](../../schemas/rules/constraint-rule-sheet.v1.yaml) | TASK-P0-04 | C-001～C-018 machine contract formed；evaluator/mutation PLANNED |
+| Constraint Rule Sheet | [`/schemas/rules/constraint-rule-sheet.v1.yaml`](../../schemas/rules/constraint-rule-sheet.v1.yaml) | TASK-P0-04 | C-001～C-018 machine contract + fixture-local evaluator/mutations formed；P2 integration PLANNED |
 | Capability/Error/State registries | [`/schemas/rules/`](../../schemas/rules/) | TASK-P0-04；TASK-P1-06 error v2 | versioned registry contracts formed；error v2 additive，capability implementation claims remain false |
-| FactoryProfile | [`/schemas/scenario/factory-profile.schema.json`](../../schemas/scenario/factory-profile.schema.json) | TASK-P0-05 | SKELETON_V1；synthetic distribution generation PLANNED |
-| ScenarioSpec | [`/schemas/scenario/scenario-spec.schema.json`](../../schemas/scenario/scenario-spec.schema.json) | TASK-P0-05 | SKELETON_V1；formal Scenario library/Fixture PLANNED |
+| FactoryProfile | [`/schemas/scenario/factory-profile.schema.json`](../../schemas/scenario/factory-profile.schema.json) | TASK-P0-05 | SKELETON_V1；versioned P1 synthetic generator asset formed；Production distribution PLANNED |
+| ScenarioSpec | [`/schemas/scenario/scenario-spec.schema.json`](../../schemas/scenario/scenario-spec.schema.json) | TASK-P0-05 | SKELETON_V1；P0 fixture与`SIM-P1-INGRESS-001` formed；broader Scenario library PLANNED |
 | Scenario manifest | [`/schemas/scenario/scenario-manifest.schema.json`](../../schemas/scenario/scenario-manifest.schema.json) | TASK-P0-05 | SKELETON_V1 + empty Import replay formed；run/export audit PLANNED |
 
 [`/schemas/data_dictionary.yaml`](../../schemas/data_dictionary.yaml) 登记 schema set、canonical collections、版本/provenance、未知字段/默认值策略、兼容边界和 PROD_OPEN/SIM_ASSUMPTION 关联。Set-level `2.2.0`只新增Error/quality-report合同；Import v2 JSON document继续固定`2.0.0`、unit registry v1固定`2.1.0`且历史artifact hash不变。quality report `.pass/.fail.json`只证明Data Validation machine contract，不是Snapshot/Problem/Benchmark/Solver或Production证据。
+
+TASK-P1-12审计未修改任何Schema、sample、registry、data dictionary或version metadata；271项回归、14/14 common-ingress与P1-01～11 provider artifacts确认上表formed/PLANNED边界。P1 Gate=`READY`不把PlanningSolution、Solver、Benchmark或Production合同从`PLANNED`提升。

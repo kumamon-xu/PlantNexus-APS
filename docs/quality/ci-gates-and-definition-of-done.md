@@ -6,7 +6,7 @@ spec_version: 0.3.0
 phase: P0-P7
 normative: true
 source_sections: [58, 72, 74, 76, 78, 80, 89, 100, 101]
-last_reviewed: 2026-08-19
+last_reviewed: 2026-08-20
 ---
 
 # CI Gate 与 Definition of Done
@@ -93,3 +93,9 @@ repository-local workflow contract完成后，用户追加了直接push `main`�
 Repository workflow在完整pytest与既有machine contracts之后必须运行P1 common-ingress CLI，输出`build/validation/ci-p1-data-pipeline.json`，并由中性`plantnexus-ci-evidence-${{ github.run_id }}` artifact上传。Gate必须是14/14 checks PASS，四项exact `DATA_ERROR`、Import/Snapshot/Problem replay和Reference/Synthetic parity任一失败都使job失败，不允许`continue-on-error`。
 
 本地PASS、workflow text contract与未提交report不是provider evidence。P1-11 implementation commit `fa6c4c1159972a30ea683ad4e6eba98342d3c344`的push run `32322511227`、required `validate` job `96287321281`与artifact `9390250284`已成功并精确绑定43-path/7-row/0-issue Task report及14/14 pipeline report，因此该Task provider Gate闭环。P1-11完成后仍必须由P1-12独立审计，不自动进入P2。
+
+## TASK-P1-12 Exit Gate result
+
+P1-12在Diff base `8830a6dc566df8093b601a82c87c74a9cfd97b59`上独立重跑locked sync、Ruff、Pyright、271项full tests、11项migration/exit-rejection focused tests、P1 pipeline 14/14、Rule/Generator/Golden/Mutation/Engineering reports、Compose、full/diff governance和`uv build`，全部exit 0。下载并解析P1-01～11的provider artifacts后，所有实现Task报告均绑定exact head/result=`PASS`/0 issues；P1-11 closure run `32322871271`进一步证明audit起点本身已经provider验证。
+
+因此§74 P1 Gate=`READY`、blocking gaps为空。TASK-P1-12自身仍需先提交本报告并由exact GitHub `validate`/artifact成功，再以evidence-only revision闭环Task lifecycle；该自引用边界不改变已基于P1-11 closure和本地独立命令形成的Gate判断。即使Task `done`，current phase仍为P1，必须等待用户明确批准后才可进入P2。

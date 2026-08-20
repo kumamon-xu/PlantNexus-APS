@@ -6,7 +6,7 @@ spec_version: 0.3.0
 phase: cross-phase
 normative: true
 source_sections: [23, 24, 40, 101, 103, 104]
-last_reviewed: 2026-08-19
+last_reviewed: 2026-08-20
 ---
 
 # Schema 版本与兼容规则
@@ -32,11 +32,11 @@ Schema version、rule version、generator version 和 code commit 是不同维�
 
 ## 当前发布基线
 
-- Schema set：`1.0.0`；`pyproject.toml` 与 `app.SCHEMA_VERSION` 一致；
-- Contract IDs：`import-package.v1`、`planning-snapshot.v1`、`planning-problem.v1`、`kpi.v1`、`error.v1`、`validation-report.v1`；
+- Schema set：`2.2.0`；`pyproject.toml` 与 `app.SCHEMA_VERSION` 一致；`1.0.0/1.1.0/1.2.0/2.0.0/2.1.0` artifacts全部保留；
+- Current contract IDs：历史v1 skeleton、`canonical-records.v1`、`import-package.v2`、`planning-snapshot.v2`、`unit-conversion-registry.v1`、`error-code-registry.v2`、`error.v3`与`import-quality-report.v1`；单个document/version不得因set版本提升而重解释；
 - Dialect：JSON Schema Draft 2020-12，使用稳定 URN `$id`；
-- Compatibility：这是从 `unassigned` 到首次 skeleton 的发布，此前没有已发布 consumer、历史 artifact 或数据库数据，因此 migration 为 none；
-- Unknown/default policy：已定义根对象 `additionalProperties=false`，Schema 不含 `default`。Import 的 `records` 是明确标注的 P1 扩展点，不等于批准任何生产字段。
+- Compatibility：当前set包含P1-02 major release和P1-05/06 additive releases；具体兼容、migration与固定fingerprint见下方各release记录；
+- Unknown/default policy：strict contracts使用`additionalProperties=false`且Schema不含业务`default`；Production authority仍必须显式提供，不能从synthetic/sample推断。
 
 `*.v1` 的字段或语义后续变化必须分类为 additive/breaking；即使 schema set 版本提升，也不得无痕覆盖本目录下已经发布的 v1 artifact。
 
@@ -110,3 +110,9 @@ Schema set 与 `app.SCHEMA_VERSION` 均保持 `1.2.0`；没有修改 `schemas/**
 本Task发布独立`order-expansion.v1`行为版本，但不修改`schemas/**`、`app.SCHEMA_VERSION`或`[tool.plantnexus-aps.versions].schema`；全局schema set继续`2.2.0`，Import/Snapshot v2 document继续各自固定`2.0.0`。`pyproject.toml`只增加exact dev-only `hypothesis==6.165.10`，`uv.lock`增加Hypothesis及transitive `sortedcontainers==2.4.0`，runtime dependency集合和Business Schema metadata均不变。
 
 Compatibility为code-level additive consumer：stable derived ID把expansion version纳入hash，consumer必须显式保存/选择版本，禁止把未来实现标成v1重解释历史输出。没有DB migration、Schema sample或历史artifact改写；Snapshot builder仍由TASK-P1-08负责。若expanded shape字段不足，必须另发Schema set/document version，而不能在本service隐藏字段。
+
+## TASK-P1-12 Exit Gate version audit
+
+本审计没有修改`schemas/**`、data dictionary、`pyproject.toml`、`uv.lock`、migration或任一serializer/hash projection。Full contract/regression、Snapshot/Problem replay与provider artifacts确认global schema set仍为`2.2.0`，Import/Snapshot v2 document仍显式`2.0.0`，unit registry v1仍显式`2.1.0`；历史release/fingerprint没有被`latest`重解释。
+
+因此compatibility=`none`、Schema migration=`none`、database migration change=`none`。P1 Gate=`READY`是既有版本链的审计结果，不是新Schema release；PlanningSolution/Solver/P2合同仍须由后续显式版本与迁移规则形成。

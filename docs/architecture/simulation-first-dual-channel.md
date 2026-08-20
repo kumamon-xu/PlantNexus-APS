@@ -64,7 +64,7 @@ TASK-P0-05 以七层 pure Protocol 固定 Generator 责任，并提供 `build_em
 
 TASK-P1-03～05已形成双方共用的Raw Staging、Reference transport和Normalization primitive：Simulation batch必须携带一致Scenario/Profile/Generator/seed，Production batch禁止这些字段；两者随后使用同一MappingProfile/unit/time/ID/canonical serializer。TASK-P1-06新增单一`app.data_validation` evaluator，既不读取data plane也不提供synthetic-only规则；Production/Simulation canonical Import必须得到相同结构/reference/DAG/resource/capability/time/unit/duration判定。
 
-当前仍没有Synthetic Generator→staging orchestration、Order Expansion、Snapshot/Problem或TASK-P1-11 common-ingress Gate，因此固定schema sample的quality PASS不能视为完整双通道闭环或独立数据库隔离证据。Simulation不得直接伪造PASS report或绕过Data Validation。
+TASK-P1-06完成时仍没有Synthetic Generator→staging orchestration、Order Expansion、Snapshot/Problem或common-ingress Gate；该历史边界解释为什么固定schema sample的quality PASS不能单独视为双通道闭环。后续TASK-P1-10/11已按下节形成对应实现，但Simulation仍不得伪造PASS report或绕过Data Validation。
 
 ## TASK-P1-10 executable synthetic channel
 
@@ -77,3 +77,9 @@ TASK-P1-03～05已形成双方共用的Raw Staging、Reference transport和Norma
 Generator公开`prepare_batch()`和ReferenceFileAdapter现分别产生Simulation `StagedImportBatch`，然后同时进入唯一`CommonIngressPipeline`直到PlanningProblem。Reference侧使用temporary CSV表达同一synthetic source semantics，因此证明的是adapter/generator双入口共用产品链路，不是真实Production connector。
 
 Application在Normalization前比对explicit expected plane，交叉输入以`DATA_PLANE_MISMATCH`拒绝。独立aps_sim/aps_prod数据库、network/role、Production API与发布隔离仍未形成；ADR-0009与RISK-007仍然有效。
+
+## TASK-P1-12 Exit Gate audit
+
+独立审计以`SIM-P1-INGRESS-001@1.0.0`/generator`1.0.0`/seed`20260820`执行两次Synthetic replay并用同义Reference CSV进入同一application链，Import/Snapshot/Problem完整bytes/hash parity与14/14 checks均PASS。Import、Snapshot和Problem hashes分别为`sha256:24a74b4f43b0ba42ed458983e0c4776613911924ae5250d9df8ae9e4f14cb1c4`、`sha256:090e0e08e05bb569d0aae00461803cebd56f87444243484a3696126bfe510409`、`sha256:71c0b729dd2b08ba1d14d5a281029b8d9bc13596a90a5189fb20176e19f690da`。
+
+该PASS使总规§74的共同数据链Gate=`READY`，但Reference文件仍为synthetic temporary input、`production_binding=false`；独立Production/Simulation数据库与角色、真实connector、Solver/Validator/Export链仍未形成。P1-12没有进入P2。

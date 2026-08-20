@@ -75,3 +75,9 @@ PlanningProblem builder只接收`ImmutablePlanningSnapshot`并先执行完整ide
 Common ingress在matching PASS report和`order-expansion.v1`之后仍只调用既有`build_planning_snapshot`；没有修改Snapshot v2 Schema、hash projection、repository或persistence。`SIM-P1-INGRESS-001@1.0.0`以cutoff `2026-11-06T12:30:00Z`得到固定Snapshot hash `sha256:090e0e08e05bb569d0aae00461803cebd56f87444243484a3696126bfe510409`；Synthetic与Reference transport及两次Synthetic replay的完整bytes/hash/ID均相同。
 
 该cutoff/horizon只是versioned Scenario Gate配置，使fixture内既有lock在Problem horizon前结束；不是Production时钟、冻结窗或运行默认。Machine report不持久化Snapshot，既有insert-only repository证据仍由TASK-P1-08提供。
+
+## TASK-P1-12 Exit Gate audit
+
+P1-12的repeat=2和Reference parity再次得到完整Snapshot bytes digest `sha256:dec4302f3606ef450b5f6fd70373ddfd018100fc8fe8f67f8c60779f8ccaab55`、Snapshot hash `sha256:090e0e08e05bb569d0aae00461803cebd56f87444243484a3696126bfe510409`与content-derived ID完全一致。271项回归和focused migration suite同时复验frozen copy、fact/cutoff/version sensitivity、plane guard、insert/exact replay/content conflict及`0003` upgrade/downgrade。
+
+审计没有修改Snapshot v1/v2 Schema、hash projection、repository或migration。P1 Gate=`READY`不等于独立Production数据库、PlanningRun、ScheduleVersion、Solver或发布能力形成。

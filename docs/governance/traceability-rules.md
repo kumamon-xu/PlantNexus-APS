@@ -129,3 +129,7 @@ TASK-P1-10将REQ-001/003/009/011/012、NFR-DET/TRC/ISO与ENG-ARCH/ERR/VER链接�
 Common-ingress evidence链必须同时记录：two source forms到Raw Staging的差异；staging后唯一函数链与quality PASS先后顺序；Import/Snapshot/Problem的complete bytes/hash/ID replay；四类exact rejection的stage/category/code和无下游调用；data-plane/no-shortcut边界；report的commit/version/config/count与provider artifact。Reference temporary synthetic input不得写成Production connector，Problem终止不得写成Solver/Validator/feasibility。
 
 TASK-P1-11将REQ-001/002/003/009/011/012、NFR-COR/DET/TRC/ISO/REL/SEC与ENG-ARCH/SOL/ERR/VER链接到`app.application`、Generator公开staging、TEST-P1-COMMON-INGRESS/SCENARIO/SNAPSHOT/PROBLEM/DATA-QUALITY/SIM-ISOLATION及`p1-data-pipeline-report.v1`。Schema/registry/migration/dependency未变，P1-12 audit、Solver/P2、Production authority/deployment仍明确排除。
+
+P1 Exit Gate evidence链必须区分：P1-01～11 implementation commit/provider artifact、P1-11 closure head、P1-12本地audit execution head、P1-12 documentation implementation commit及其后续evidence-only closure。Audit report可基于已验证P1 baseline和本地独立命令作出§74 decision，但不得自我包含尚未push的run；Task lifecycle只有在自身exact provider run/artifact回填后才为`done`。
+
+TASK-P1-12将全部P1 roots→TASK-P1-01～12→36个registered Test IDs/七类machine reports→11组implementation provider artifacts→P1 audit report/manifest闭环。`READY`只关闭P1 Data & Snapshot Gate，不改变root `ALLOCATED`状态、15项PROD_OPEN、10项SIM_ASSUMPTION、10项风险或P2/Production `PLANNED`边界；current phase必须等待用户明确授权。

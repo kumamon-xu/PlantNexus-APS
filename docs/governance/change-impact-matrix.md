@@ -209,3 +209,9 @@ Schema变化只新增unit registry并同步set metadata/data dictionary；Import
 本Task实际路径预期命中`IMPACT-APPLICATION`、`IMPACT-SIM-GENERATOR`、`IMPACT-INFRA`、`IMPACT-TESTS`、`IMPACT-PHASE`、`IMPACT-GOVERNANCE-REGISTRY`、`IMPACT-DOCS`。启动前review发现原卡缺少Generator公开Raw Staging路径及INFRA/PHASE/GOVERNANCE行强制的`technology-stack.md`、`milestones/README.md`、`TASK_TEMPLATE.md`，均在任何业务代码前扩入允许范围；Diff base固定为`ea56c3867651c0f03306e66936fd649526049319`。
 
 实现只新增application orchestration/report、Generator公开`prepare_batch()`、限定contract/integration/simulation tests和CI report命令，不改Schema/registry、Domain/Import/Normalization/DataValidation/Expansion/Snapshot/Problem语义、migration/dependency、API/Worker、Solver/Validator/Benchmark/P2。Machine impact rules和`registry_version`不变，最终以TASK-P1-11 diff report真实paths/7 rows/0 issues为准。
+
+## TASK-P1-12 matrix review
+
+本Task实际路径只命中`IMPACT-PHASE`、`IMPACT-GOVERNANCE-REGISTRY`、`IMPACT-DOCS`：新增P1 audit report/JSON manifest并同步current phase、Milestone/Task索引、合同/架构/质量审计结论、根注册表、traceability和文档清单。JSON manifest位于`docs/milestones/**`，由PHASE行覆盖但按文档清单规则不作为Markdown inventory条目。
+
+业务代码、Schema/fixture、test、migration、workflow/infra、dependency/version metadata、governance validator、Solver/P2路径均保持只读，因此不声明其他Rule ID。Machine rule table/required-document列与`registry_version=1.0.0`不变；最终以TASK-P1-12 diff report的actual paths/3 matched rows/0 issues为准。

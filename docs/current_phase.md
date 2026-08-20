@@ -55,7 +55,9 @@ CSV / Excel / Reference Adapter / Synthetic Generator
 
 `SIM-P1-INGRESS-001@1.0.0`以generator `1.0.0`/seed `20260820`生成16个非空canonical collections、49条records，dataset hash=`sha256:24a74b4f43b0ba42ed458983e0c4776613911924ae5250d9df8ae9e4f14cb1c4`且quality=`PASS/0 errors`。
 
-`TASK-P1-11 — Common Ingress Pipeline and P1 Gate Evidence`已完成：不可变Diff base=`ea56c3867651c0f03306e66936fd649526049319`，implementation commit=`fa6c4c1159972a30ea683ad4e6eba98342d3c344`；GitHub Actions push run [`32322511227`](https://github.com/kumamon-xu/PlantNexus-APS/actions/runs/32322511227) / required `validate` job `96287321281`及全部步骤=`success`。Artifact `9390250284`的provider/download digest均为`sha256:77e0389e2902021c419e8ec2fcf99d88c02c19d96a69304791693b822498bd6e`，Task report精确记录43 committed paths、7 impact rows、0 issues。双入口唯一staging→Problem链的Import/Snapshot/Problem hashes分别为`sha256:24a74b4f43b0ba42ed458983e0c4776613911924ae5250d9df8ae9e4f14cb1c4`、`sha256:090e0e08e05bb569d0aae00461803cebd56f87444243484a3696126bfe510409`、`sha256:71c0b729dd2b08ba1d14d5a281029b8d9bc13596a90a5189fb20176e19f690da`；本地17项聚焦、271项全仓、14/14 pipeline checks、四类exact rejection、六份既有machine checks、文档治理与build均PASS。未构建Solver，P1-12仍未启动且不进入P2。
+`TASK-P1-11 — Common Ingress Pipeline and P1 Gate Evidence`已完成：不可变Diff base=`ea56c3867651c0f03306e66936fd649526049319`，implementation commit=`fa6c4c1159972a30ea683ad4e6eba98342d3c344`；GitHub Actions push run [`32322511227`](https://github.com/kumamon-xu/PlantNexus-APS/actions/runs/32322511227) / required `validate` job `96287321281`及全部步骤=`success`。Artifact `9390250284`的provider/download digest均为`sha256:77e0389e2902021c419e8ec2fcf99d88c02c19d96a69304791693b822498bd6e`，Task report精确记录43 committed paths、7 impact rows、0 issues。双入口唯一staging→Problem链的Import/Snapshot/Problem hashes分别为`sha256:24a74b4f43b0ba42ed458983e0c4776613911924ae5250d9df8ae9e4f14cb1c4`、`sha256:090e0e08e05bb569d0aae00461803cebd56f87444243484a3696126bfe510409`、`sha256:71c0b729dd2b08ba1d14d5a281029b8d9bc13596a90a5189fb20176e19f690da`；本地17项聚焦、271项全仓、14/14 pipeline checks、四类exact rejection、六份既有machine checks、文档治理与build均PASS。该Task未构建Solver；其闭环时P1-12尚未启动，也未进入P2。
+
+`TASK-P1-12 — P1 Exit Gate Audit`现为`in_progress`：以`8830a6dc566df8093b601a82c87c74a9cfd97b59`为不可变Diff base，已独立复核P1-01～11 commit/provider链并重跑271项full、11项focused、14/14 pipeline、全部machine/Compose/build/docs gates；[audit report](milestones/P1-exit-gate-audit-report.md)与[machine manifest](milestones/P1-exit-gate-evidence-manifest.json)给出P1 Gate=`READY`、blocking gaps为空。Task自身documentation commit/provider closure仍待完成，因此尚未标记`done`；current phase继续P1，未构建Solver且未进入P2。
 
 用户于2026-08-19进一步授权：后续每个P1 Task完成本地验收并提交后，可直接push当前`main`并核验对应GitHub CI。该授权只覆盖当前Task完成后的push/provider核验，不自动启动下一Task、不改变Task允许范围，也不授权进入P2。
 
@@ -80,7 +82,7 @@ CSV / Excel / Reference Adapter / Synthetic Generator
 
 ## P1 Task 规划状态
 
-P1共规划12个Task：phase governance/CI、canonical contracts、Raw Staging、CSV/Excel/reference adapter、Normalization、Data Validation、Order Expansion、Snapshot、Problem hash、Synthetic Generator、common-ingress Gate evidence，最后为P1 Exit Gate Audit。TASK-P1-01～11=`done`，TASK-P1-12=`planned`；P1 Milestone继续`active`，建议下一项执行TASK-P1-12，但本次未启动它且不得进入P2。
+P1共规划12个Task：phase governance/CI、canonical contracts、Raw Staging、CSV/Excel/reference adapter、Normalization、Data Validation、Order Expansion、Snapshot、Problem hash、Synthetic Generator、common-ingress Gate evidence，最后为P1 Exit Gate Audit。TASK-P1-01～11=`done`；TASK-P1-12为`in_progress`，本地独立审计已给出Gate=`READY`且无blocking gap，等待自身implementation/provider closure后才能`done`。P1 Milestone继续`active`（Gate ready / awaiting user decision），不得自动进入P2。
 
 ## 阶段完成条件
 

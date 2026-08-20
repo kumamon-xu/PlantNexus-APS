@@ -74,3 +74,9 @@ P1-10以版本化asset和固定seed `20260820`执行deterministic property-style
 P1-11用固定Scenario/Profile/Generator/seed和显式cutoff/horizon/tick验证三项跨层性质：两次公开staging generation得到相同batch与Import/Snapshot/Problem完整bytes/hash；同义Reference CSV的transport bytes/provenance不同但三个业务artifact相同；四类source mutation都在首个所属stage以exact code终止。
 
 这些是fixed deterministic replay/negative properties，没有新Hypothesis strategy、shrinking、candidate Schedule或Solver输出；P2 `TEST-PROPERTY`继续`PLANNED`。
+
+## TASK-P1-12 property audit
+
+审计没有新增Hypothesis strategy或改变seed/example数；full 271项回归重新执行P1-07 Expansion、P1-08 Snapshot和P1-09 Problem generated properties且全部PASS。另以P1 gate CLI `repeat=2`复核同Scenario/Profile/Generator/seed的Import/Snapshot/Problem完整bytes/hash，并以Reference transport验证业务artifact parity；四类source mutation均精确终止。
+
+未出现property failure，因此没有虚构minimized corpus。P1 property evidence足以支持Data & Snapshot Gate=`READY`，但没有candidate Schedule/Solver output，故P2 `TEST-PROPERTY`仍为`PLANNED`。

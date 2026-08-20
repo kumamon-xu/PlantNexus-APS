@@ -69,7 +69,7 @@ last_reviewed: 2026-08-20
 
 ## 当前范围
 
-当前阶段为P2。P1 Exit Gate=`READY`且用户已明确批准transition；P1 Milestone为`completed`，P2为`active`。TASK-P2-00阶段切换/完整Task规划与TASK-P2-01 PlanningProblem v2合同均已闭环为`done`；TASK-P2-02已在clean provider-verified HEAD上固定Diff base并进入`in_progress`，正在发布schema set`2.4.0`的Policy/Limits/Solution/Report纯机器合同与CI证据。TASK-P2-03～14仍为`planned`；当前仍没有安装OR-Tools、执行Solver/Validator/Benchmark或进入P3，详见`current_phase.md`。
+当前阶段为P2。P1 Exit Gate=`READY`且用户已明确批准transition；P1 Milestone为`completed`，P2为`active`。TASK-P2-00阶段切换/完整Task规划、TASK-P2-01 PlanningProblem v2合同与TASK-P2-02 Planning机器合同均已闭环为`done`；P2-02 exact implementation run/artifact已证明schema set`2.4.0`的Policy/Limits/Solution/Report纯合同与CI证据。TASK-P2-03～14仍为`planned`且未获启动授权；当前仍没有安装OR-Tools、执行Solver/Validator/Benchmark或进入P3，详见`current_phase.md`。
 
 ## 仓库入口与本地检查
 

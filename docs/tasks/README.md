@@ -24,7 +24,7 @@ last_reviewed: 2026-08-20
 |---|---|---|---|
 | [TASK-P2-00](P2/TASK-P2-00-phase-transition-and-task-planning-governance.md) | Phase transition、Task plan与batch CI治理 | P1-12 | `done` |
 | [TASK-P2-01](P2/TASK-P2-01-planning-problem-v2-contract-gap-closure.md) | PlanningProblem v2合同缺口闭环 | P2-00 | `done` |
-| [TASK-P2-02](P2/TASK-P2-02-planning-machine-contracts-and-status.md) | Planning机器合同与status | P2-01 | `in_progress` |
+| [TASK-P2-02](P2/TASK-P2-02-planning-machine-contracts-and-status.md) | Planning机器合同与status | P2-01 | `done` |
 | [TASK-P2-03](P2/TASK-P2-03-ortools-backend-foundation.md) | OR-Tools与Backend foundation | P2-02 | `planned` |
 | [TASK-P2-04](P2/TASK-P2-04-formal-independent-schedule-validator.md) | 正式独立ScheduleValidator | P2-01/02 | `planned` |
 | [TASK-P2-05](P2/TASK-P2-05-cp-sat-core-assignment-resource-model.md) | CP-SAT core assignment/resource | P2-03/04 | `planned` |
@@ -44,6 +44,6 @@ last_reviewed: 2026-08-20
 
 普通CI event range仍只能变更一张current-phase Task Card。唯一例外是初始phase-planning batch：必须由新建`TASK-Pn-00`、`Task batch role: phase-planning-owner`、有效Diff base且`in_progress/done`的唯一owner归属；其他卡必须同range新建、role=`phase-plan-member`、保持`planned/ready`且不得预填implementation SHA。历史卡、既有成员、多个owner或active/done成员均硬失败。选择owner后仍按owner Diff base检查全部scope/Impact Rule。
 
-TASK-P2-00/P2-01已`done`。用户于2026-08-20明确授权执行P2-02；clean `main=origin/main=3cf4966481e4e8cb6e075a3305472e0f0a93b99c`及其run `32337439199`、required job `96329607133`、artifact `9395135532`均已核验，P2-02固定该SHA后进入`in_progress`。P2-03～14继续`planned`且不得启动。P2-02完成本地验收、提交并直接push当前`main`后，必须核验exact required `validate`和artifact；失败run保留且阻断closure。
+TASK-P2-00/P2-01/P2-02已`done`。P2-02 implementation `2661598ecb592942e50c9a13dd41ff5b2535ca0d`的run `32342489997`、required job `96344226221`和artifact `9396828326`均success，artifact精确记录5/5 machine checks及63 paths/11 rows/0 issues。P2-03～14继续`planned`且未获启动授权。
 
-P2-02 implementation slice限定为schema set`2.4.0`的Policy/Limits/Solution/Report v1纯合同、fixed `CONTRACT_SAMPLE`、status/fingerprint tests和CI machine report；无OR-Tools/Backend/C-ID/Validator/DB/API/Worker。只有其implementation与evidence-only closure均获得exact provider核验后才改为`done`；依赖其合同的P2-03/P2-04不会由本索引自动启动。
+P2-02 implementation slice限定为schema set`2.4.0`的Policy/Limits/Solution/Report v1纯合同、fixed `CONTRACT_SAMPLE`、status/fingerprint tests和CI machine report；无OR-Tools/Backend/C-ID/Validator/DB/API/Worker。P2-03/P2-04虽已满足依赖门，但不会由本索引自动启动；执行任一后续Task仍需用户明确授权、clean provider-verified HEAD和新的Diff base。

@@ -233,7 +233,7 @@ Full与Task diff检查同时识别`IMPACT-SCHEMA/PROBLEM/DOMAIN/INFRA/DEPENDENCY
 
 P2-02在实现前固定P2-01 verified closure、Problem v1/v2与`uv.lock`fingerprints、Diff base和exact allow-list；实现中在修改前把含current schema-set值的glossary补入范围。Diff必须命中并声明`IMPACT-SCHEMA/PLANNING-CONTRACTS/POLICY/INFRA/DEPENDENCY/VERSION-METADATA/TESTS/PHASE/GOVERNANCE-REGISTRY/DOCS`，且`uv.lock`、Problem v1/v2、Backend/Constraint/Validator/DB/API/Worker/P3路径无差异。
 
-Full与Task diff检查验证global set`2.4.0`和旧document内固定`2.0.0/2.1.0/2.2.0/2.3.0`并存、四个新Schema/sample登记完整、所有Documents/Impact rows闭合、唯一active Task仍是P2-02；结果为141 docs、30 roots、36 tests、37 tasks，Task diff=63 paths/11 rows/19 checks/0 issues。Ignored machine/trace reports不进入document inventory；exact provider事实只能在成功run/artifact后回填。
+Full与Task diff检查验证global set`2.4.0`和旧document内固定`2.0.0/2.1.0/2.2.0/2.3.0`并存、四个新Schema/sample登记完整、所有Documents/Impact rows闭合；结果为141 docs、30 roots、36 tests、37 tasks，Task diff=63 paths/11 rows/19 checks/0 issues。Ignored machine/trace reports不进入document inventory。Implementation `2661598ecb592942e50c9a13dd41ff5b2535ca0d`的run `32342489997` / artifact `9396828326`精确复现上述Task结果与5/5 machine checks，故P2-02现为`done`，且没有自动激活后续Task。
 
 ## Override
 

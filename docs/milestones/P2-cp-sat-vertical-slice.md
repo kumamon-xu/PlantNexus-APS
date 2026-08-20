@@ -25,7 +25,7 @@ P1 Exit Gate=`READY`且blocking gaps为空；用户于2026-08-20明确批准P1�
 |---:|---|---|---|---|
 | 0 | TASK-P2-00 | Phase transition、完整Task规划与batch CI治理 | TASK-P1-12 | `done` |
 | 1 | TASK-P2-01 | PlanningProblem v2合同缺口闭环 | P2-00 | `done` |
-| 2 | TASK-P2-02 | Policy/Limits/Solution/SolverReport/status机器合同 | P2-01 | `in_progress` |
+| 2 | TASK-P2-02 | Policy/Limits/Solution/SolverReport/status机器合同 | P2-01 | `done` |
 | 3 | TASK-P2-03 | OR-Tools exact pin与Backend foundation | P2-02 | `planned` |
 | 4 | TASK-P2-04 | 正式Problem/Solution独立ScheduleValidator | P2-01/02 | `planned` |
 | 5 | TASK-P2-05 | C-001/003/004/010/011 core model | P2-03/04 | `planned` |
@@ -68,6 +68,6 @@ P2-03与P2-04在合同固定后可并行准备，但P2-05必须同时等待Backe
 
 ## Current execution boundary
 
-TASK-P2-00/P2-01均已闭环为`done`。用户于2026-08-20明确授权P2-02，且P2-01最终closure `3cf4966481e4e8cb6e075a3305472e0f0a93b99c`的required GitHub证据已重新核验；P2-02据此固定该SHA为Diff base并进入`in_progress`。当前只形成机器合同，不安装/执行Solver或Validator；P2-03～14不得启动，P2保持`active`且不进入P3。
+TASK-P2-00/P2-01/P2-02均已闭环为`done`。P2-02 implementation `2661598ecb592942e50c9a13dd41ff5b2535ca0d`的exact push run `32342489997`、required `validate` job `96344226221`和artifact `9396828326`均success；artifact内machine report为5/5 PASS，Task report为63 paths/11 rows/0 issues。当前只形成机器合同，没有安装/执行Solver或Validator；P2保持`active`且不进入P3。
 
-P2-02当前形成global schema set`2.4.0`、PlanningPolicy/SolveLimits/PlanningSolution/SolverReport v1、七种status与pure fingerprint/precheck/CI report。发布sample明确无Solver执行，Problem v1/v2与`uv.lock`保持启动fingerprint。只有local full gates和exact provider artifact均完成后才可把P2-02标记`done`；该结果只打开P2-03/P2-04的依赖门，不自动启动任一Task。
+P2-02已形成global schema set`2.4.0`、PlanningPolicy/SolveLimits/PlanningSolution/SolverReport v1、七种status与pure fingerprint/precheck/CI report。发布sample明确无Solver执行，Problem v1/v2与`uv.lock`保持启动fingerprint。P2-03/P2-04的依赖门现已满足，但二者及P2-05～14仍为`planned`；必须获得用户另行明确授权并重新固定启动证据，不能由本closure自动激活。

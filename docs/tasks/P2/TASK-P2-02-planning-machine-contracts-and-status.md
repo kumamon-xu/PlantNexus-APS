@@ -1,7 +1,7 @@
 ---
 doc_id: TASK-P2-02
 title: Planning Machine Contracts and Status
-status: in_progress
+status: done
 spec_version: 0.3.0
 phase: P2
 normative: true
@@ -96,4 +96,8 @@ Implementation slice已形成四个Draft 2020-12 strict v1 document、四份expl
 
 启动冻结的Problem v1 Schema/sample、Problem v2 Schema/sample、`uv.lock` SHA-256复核仍分别为`41b01fb...e943`/`aa31fbb...4093`、`e6e4a98...b87c8`/`f655f9d...d92ad`、`7ae68d2...64dd`。Dependency/migration为none，`uv.lock`无diff；ADR review结论为no new ADR。无OR-Tools、Backend implementation、C-ID、ScheduleValidator、DB/API/Worker、Benchmark或P3行为；rollback边界保持Task卡定义。
 
-Provider evidence当前为`PENDING_IMPLEMENTATION_PUSH`，因此Task仍为`in_progress`。下一步只允许提交并push当前implementation、核验exact required `validate`和artifact，再以evidence-only revision回填immutable provider facts；在此之前不得标记`done`或启动P2-03。
+Implementation commit=`2661598ecb592942e50c9a13dd41ff5b2535ca0d`，其唯一父提交正是Diff base `3cf4966481e4e8cb6e075a3305472e0f0a93b99c`。GitHub push run [`32342489997`](https://github.com/kumamon-xu/PlantNexus-APS/actions/runs/32342489997)为`event=push`、`attempt=1`、`head_sha=2661598ecb592942e50c9a13dd41ff5b2535ca0d`、`completed/success`；required `validate` job [`96344226221`](https://github.com/kumamon-xu/PlantNexus-APS/actions/runs/32342489997/job/96344226221)及其22个steps均无失败。`main.protected=true`，required context仍为`validate` / GitHub Actions app ID `15368`。
+
+Artifact `9396828326`=`plantnexus-ci-evidence-32342489997`，size=`12419` bytes，digest=`sha256:970b583c0504648784f9b157bb97b6f86fa7ce462499faeab3d83753bc80fe33`，`expired=false`，expires=`2026-11-18T07:06:32Z`。下载后核验：`validation/ci-planning-machine-contracts.json` SHA-256=`2e9597c0151a8f68456d77947cd0e5230d0d60e201272ff8bb75cbec74739052`，精确绑定implementation SHA、`TASK-P2-02`、schema set `2.4.0`且5/5 PASS；`traceability/ci-current-task-report.json` SHA-256=`7815669f8a59ee65f667078d9dd0fb2e657e59aee454c0a0efbba0c007a2c6ee`，精确记录本Task、同一head、Diff base、63 paths、11 impact rows、0 issues和`result=PASS`。
+
+因此本Task全部Completion conditions满足并标记`done`。P2保持`active`；P2-03与P2-04的依赖门已满足，但二者及P2-05～14仍为`planned`且未获启动授权；本closure不安装/执行Solver或Validator，不进入P3。Evidence-only closure自身的exact provider结果只能在该提交推送后核验；若失败则保留失败run并追加有界修复，不重写历史或force-push。

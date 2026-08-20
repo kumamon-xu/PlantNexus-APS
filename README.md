@@ -54,4 +54,4 @@ scripts/      仓库级校验与自动化脚本
 infra/        P0 开发容器构建配置
 ```
 
-P1 Data & Snapshot已通过Exit Gate并关闭，当前阶段为P2。TASK-P2-01的PlanningProblem v2合同已闭环；TASK-P2-02正在形成PlanningPolicy、SolveLimits、PlanningSolution、SolverReport与七种Solver status的`2.4.0`机器合同。该合同层仍不安装或执行OR-Tools，不实现C-ID、独立ScheduleValidator、DB/API/Worker，也不授权P2-03或P3。当前授权范围见[`docs/current_phase.md`](docs/current_phase.md)。
+P1 Data & Snapshot已通过Exit Gate并关闭，当前阶段为P2。TASK-P2-01的PlanningProblem v2合同与TASK-P2-02的PlanningPolicy、SolveLimits、PlanningSolution、SolverReport及七种Solver status `2.4.0`机器合同均已闭环。P2-03～14仍为`planned`且未获启动授权；当前仍未安装或执行OR-Tools，不实现C-ID、独立ScheduleValidator、DB/API/Worker，也不进入P3。当前边界见[`docs/current_phase.md`](docs/current_phase.md)。

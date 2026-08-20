@@ -12,7 +12,7 @@ registry_version: 1.0.0
 
 # 文档清单
 
-本清单列出当前仓库已经实际存在的Markdown文档。P0/P1均已归档为completed；P1 Gate=`READY`后用户明确批准P1→P2。P2现为active，TASK-P2-00阶段/规划治理与TASK-P2-01 Problem v2合同均已done；用户已授权P2-02且其状态为in_progress，P2-03～14仍为planned。产品API与Production Runbook正文尚未形成并继续由相应索引登记。
+本清单列出当前仓库已经实际存在的Markdown文档。P0/P1均已归档为completed；P1 Gate=`READY`后用户明确批准P1→P2。P2现为active，TASK-P2-00阶段/规划治理、TASK-P2-01 Problem v2合同与TASK-P2-02 Planning机器合同均已done；P2-03～14仍为planned且未获启动授权。产品API与Production Runbook正文尚未形成并继续由相应索引登记。
 
 | Path | Doc ID | Status | Title |
 |---|---|---|---|
@@ -142,7 +142,7 @@ registry_version: 1.0.0
 | [tasks/P1/TASK-P1-12-p1-exit-gate-audit.md](../tasks/P1/TASK-P1-12-p1-exit-gate-audit.md) | TASK-P1-12 | done | P1 Exit Gate Audit |
 | [tasks/P2/TASK-P2-00-phase-transition-and-task-planning-governance.md](../tasks/P2/TASK-P2-00-phase-transition-and-task-planning-governance.md) | TASK-P2-00 | done | P2 Phase Transition and Task Planning Governance |
 | [tasks/P2/TASK-P2-01-planning-problem-v2-contract-gap-closure.md](../tasks/P2/TASK-P2-01-planning-problem-v2-contract-gap-closure.md) | TASK-P2-01 | done | PlanningProblem v2 Contract Gap Closure |
-| [tasks/P2/TASK-P2-02-planning-machine-contracts-and-status.md](../tasks/P2/TASK-P2-02-planning-machine-contracts-and-status.md) | TASK-P2-02 | in_progress | Planning Machine Contracts and Status |
+| [tasks/P2/TASK-P2-02-planning-machine-contracts-and-status.md](../tasks/P2/TASK-P2-02-planning-machine-contracts-and-status.md) | TASK-P2-02 | done | Planning Machine Contracts and Status |
 | [tasks/P2/TASK-P2-03-ortools-backend-foundation.md](../tasks/P2/TASK-P2-03-ortools-backend-foundation.md) | TASK-P2-03 | planned | OR-Tools and SolverBackend Foundation |
 | [tasks/P2/TASK-P2-04-formal-independent-schedule-validator.md](../tasks/P2/TASK-P2-04-formal-independent-schedule-validator.md) | TASK-P2-04 | planned | Formal Independent ScheduleValidator |
 | [tasks/P2/TASK-P2-05-cp-sat-core-assignment-resource-model.md](../tasks/P2/TASK-P2-05-cp-sat-core-assignment-resource-model.md) | TASK-P2-05 | planned | CP-SAT Core Assignment and Resource Model |
@@ -180,6 +180,6 @@ TASK-P2-00在用户明确授权后一次新增15张P2 Task Card，因此清单�
 
 TASK-P2-01新增唯一正式Markdown `ADR-0010-planning-problem-v2-contract-evolution.md`，清单由140增至141份；Schema/sample/code/tests和ignored machine/trace reports不作为Markdown行。Implementation `c64284685f37ef0d03eacade5699076146653333`的run `32336812748` / artifact `9394931377`成功且Task report为60 paths/10 rows/0 issues，P2-01现为`done`；P2-02～14继续planned。
 
-TASK-P2-02在用户明确授权后以clean、provider-verified `3cf4966481e4e8cb6e075a3305472e0f0a93b99c`为Diff base进入`in_progress`。激活没有新增Markdown路径，清单继续覆盖141份`docs/**/*.md`；P2-03～14保持planned，机器Schema/sample/report和ignored build evidence不进入本清单。
+TASK-P2-02在用户明确授权后以clean、provider-verified `3cf4966481e4e8cb6e075a3305472e0f0a93b99c`为Diff base启动。激活没有新增Markdown路径，清单继续覆盖141份`docs/**/*.md`；机器Schema/sample/report和ignored build evidence不进入本清单。
 
-P2-02实现仍不新增或删除Markdown路径，清单保持141份。四份JSON Schema、四份JSON sample、Python contracts/tests、workflow及ignored `build/validation`/`build/traceability`报告均不作为Markdown inventory行；glossary只同步current schema set并保持原Doc ID/path。Exact provider closure前Task仍为`in_progress`，P2-03～14不变。
+P2-02实现仍不新增或删除Markdown路径，清单保持141份。四份JSON Schema、四份JSON sample、Python contracts/tests、workflow及ignored `build/validation`/`build/traceability`报告均不作为Markdown inventory行；glossary只同步current schema set并保持原Doc ID/path。Implementation `2661598ecb592942e50c9a13dd41ff5b2535ca0d`的run `32342489997` / artifact `9396828326`成功，Task report为63 paths/11 rows/0 issues，故P2-02现为`done`；P2-03～14保持`planned`且未获启动授权。

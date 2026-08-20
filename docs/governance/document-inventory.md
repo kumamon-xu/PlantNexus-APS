@@ -184,3 +184,5 @@ TASK-P2-01新增唯一正式Markdown `ADR-0010-planning-problem-v2-contract-evol
 TASK-P2-02在用户明确授权后以clean、provider-verified `3cf4966481e4e8cb6e075a3305472e0f0a93b99c`为Diff base启动。激活没有新增Markdown路径，清单继续覆盖141份`docs/**/*.md`；机器Schema/sample/report和ignored build evidence不进入本清单。
 
 P2-02实现仍不新增或删除Markdown路径，清单保持141份。四份JSON Schema、四份JSON sample、Python contracts/tests、workflow及ignored `build/validation`/`build/traceability`报告均不作为Markdown inventory行；glossary只同步current schema set并保持原Doc ID/path。Implementation `2661598ecb592942e50c9a13dd41ff5b2535ca0d`的run `32342489997` / artifact `9396828326`成功，Task report为63 paths/11 rows/0 issues，故P2-02现为`done`；P2-03～14保持`planned`且未获启动授权。
+
+TASK-P2-03启动新增唯一Markdown `ADR-0011-ortools-9-15-cp-sat-backend-version-policy.md`，inventory从141增至142份。Backend代码、tests、dependency lock、workflow和ignored machine/trace/audit reports不作为Markdown行。当前Task仍为`in_progress`并等待exact provider evidence；P2-04～14未启动。

@@ -238,3 +238,11 @@ Full与Task diff检查验证global set`2.4.0`和旧document内固定`2.0.0/2.1.0
 ## Override
 
 不允许用自由文本 CI skip 绕过。确需例外时必须在 Task Card 记录理由，提交 ADR 或明确批准记录，并仍保留检查报告。正确性、状态语义、数据隔离和发布门不得豁免。
+
+## TASK-P2-03 solver-foundation governance
+
+P2-03在dependency变更前固定Diff base、启动hash、exact allow-list和accepted ADR-0011。Diff必须只命中卡内dependency/backend/compatibility tests/workflow及Documents路径；Problem/Policy/Solution/Report Schema/sample和canonical合同、C-ID/Strategy/objective/Validator/fixture/benchmark/export/DB/API/Worker/P3保持无差异。Full检查预期为142 docs、30 roots、36 Test IDs、15 OPEN、10 SIM assumptions、11 risks、37 Tasks。
+
+Task diff必须匹配`IMPACT-POLICY/BACKEND/INFRA/DEPENDENCY/VERSION-METADATA/TESTS/PHASE/GOVERNANCE-REGISTRY/DOCS`九行并为0 issues；ignored foundation/pip-audit/trace reports不进入inventory。Historical P0-08 report的`solver=NOT_INSTALLED`是冻结Task边界，不得改写为current capability；P2-03独立6-check report才是当前solver foundation machine evidence。
+
+本地full治理PASS为142 docs/30 roots/36 tests/15 OPEN/10 SIM/11 risks/37 Tasks；Task diff报告为50 actual paths、9 matched rows、19 checks、0 issues。Exact provider artifact仍需在implementation push后复核。

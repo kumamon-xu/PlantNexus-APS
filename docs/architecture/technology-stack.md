@@ -150,3 +150,9 @@ CI在既有full suites之后新增`python -m app.planning.problem.contract_check
 Global schema metadata提升到`2.4.0`，实现仍只使用Python 3.12标准库、既有`jsonschema==4.25.1`开发验证和pytest。runtime/dev dependency列表没有增删，`uv.lock`保持启动SHA-256 `7ae68d242b1f80ad05a2ae51b09552ca9e19214d33ef8380bc74ff4c87ee64dd`；OR-Tools/CpModel/IntervalVar仍不存在。
 
 Workflow新增`app.planning.policy.contract_check`机器步骤并由既有artifact glob上传JSON，没有新service、container、migration、API或Worker。P2-03首次Solver dependency仍必须单独exact pin、ADR、lock/replay与upgrade Gate；不能把本Task的Protocol当成Backend implementation。
+
+## TASK-P2-03 OR-Tools lock
+
+ADR-0011先于dependency变更接受。Runtime现exact pin `ortools==9.15.6755`，`uv.lock` SHA-256为`8b13617f31aa6a933347fc7b8ba010330cbb3f2d764f75c306dd9b6d77387a82`；锁内固定`absl-py==2.5.0`、`immutabledict==4.3.1`、`numpy==2.5.2`、`pandas==3.0.5`、`protobuf==6.33.6`和既有`typing-extensions==4.16.0`，并保存CPython 3.12 Windows amd64、manylinux x86-64/aarch64及macOS x86-64/arm64 wheel hashes。Local replay为CPython 3.12.13/Windows AMD64；Linux provider仍必须由exact pushed SHA的locked install和artifact证明。
+
+OR-Tools import只允许出现在`backend/app/planning/backends/cp_sat/`。本Task没有引入service、container、migration、DB/API/Worker、Strategy、业务constraint/objective、Validator或Benchmark runner。Point-in-time `pip-audit==2.10.1`检查显示新增OR-Tools依赖子树无记录；既有`pytest==8.4.1`与`starlette==0.47.3`存在上游advisory，登记为RISK-011且不在本Task越界升级。该结果不是持续供应链监控或Production安全认证。

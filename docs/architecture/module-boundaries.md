@@ -104,3 +104,10 @@ TASK-P0-05 已在 `simulation/profiles`、`simulation/scenarios`、`simulation/g
 - `simulation/generators.prepare_batch()`只暴露既有source-shaped Staging边界；Generator仍禁止导入Application/Snapshot/Planning，所以依赖方向为Application向内编排而非Generator反向调用。
 - `application/p1_gate_report.py`是验收CLI，使用temporary reference CSV与ignored machine report；它不是产品API、Worker、repository或Production connector。
 - AST边界测试覆盖上述禁止依赖，链路在immutable PlanningProblem终止。
+
+## TASK-P2-03 CP-SAT Backend boundaries
+
+- `planning/backends/contracts.py`只提供solver-neutral Protocol re-export、稳定Backend错误和JSON-compatible evidence types，不导入OR-Tools；canonical `app.planning.contracts.SolverBackend`签名不变。
+- `planning/backends/cp_sat/`是唯一允许导入OR-Tools的namespace，拥有exact identity、native status适配、SolveLimits参数转换及engineering smoke；AST检查覆盖整个`backend/app`并拒绝越界import。
+- `CpSatBackend.solve()`在验证Problem/Policy/Limits后以稳定`MODEL_BUILDER_NOT_IMPLEMENTED`停止，不构造C-001～C-011、OBJ-001，不返回candidate，也不调用Validator。
+- `contract_check.py`只读repository、构造empty与intentional-invalid native model并写ignored JSON；它不访问DB/API/Worker、fixture/benchmark/export或Production配置。

@@ -230,3 +230,11 @@ Schema/Problem/Domain实现限定为additive Problem v2、version-specific APIs�
 本Task实际路径预期命中`IMPACT-SCHEMA`、`IMPACT-PLANNING-CONTRACTS`、`IMPACT-POLICY`、`IMPACT-STATE`、`IMPACT-INFRA`、`IMPACT-DEPENDENCY`、`IMPACT-VERSION-METADATA`、`IMPACT-TESTS`、`IMPACT-PHASE`、`IMPACT-GOVERNANCE-REGISTRY`、`IMPACT-DOCS`。Dependency row只因`pyproject.toml`提升schema metadata触发；runtime/dev pins和`uv.lock`无diff。INFRA只增加CI contract-report step，不改变service/deployment。实现中含current schema-set值的glossary在修改前已扩入allow-list；planning-run mapping审查触发STATE后也在修改其余state文档前补齐Rule与required docs。
 
 实现限定为四份Schema/sample、pure JSON-compatible contracts/status/fingerprint checks、测试和CI report；Problem v1/v2、Backend/Constraint/Validator/DB/API/Worker/P3均只读。STATE只同步既有status mapping并确认ScheduleVersion/ExportJob无行为变化。Phase/Governance在exact implementation provider成功后把P2-02闭环为`done`，不激活P2-03/P2-04。Machine rule table/required-document columns与`registry_version=1.0.0`不变；implementation artifact内TASK-P2-02 diff report为63 actual paths、11 matched rows、19 checks和0 issues。
+
+## TASK-P2-03 matrix review
+
+本Task实际命中`IMPACT-POLICY/BACKEND/INFRA/DEPENDENCY/VERSION-METADATA/TESTS/PHASE/GOVERNANCE-REGISTRY/DOCS`九行。实现限定exact dependency/lock、CP-SAT namespace、historical report compatibility、tests/workflow和Task声明文档；Problem/Policy/Solution/Report Schema/sample及canonical合同、Strategy/C-ID/objective/Validator/fixture/benchmark/export/DB/API/Worker/P3均无差异。
+
+首次solver依赖由ADR-0011和dependency/security review闭环；RISK-011是登记未消除的风险，不改变registry格式。最终actual paths/rows/issues以TASK-P2-03 `traceability-report.v1`和provider artifact为准；provider成功前Task保持`in_progress`且不激活P2-04。
+
+本地Task diff实际为50 paths、9 matched rows、19 checks和0 issues；provider必须对exact implementation SHA复现该范围。

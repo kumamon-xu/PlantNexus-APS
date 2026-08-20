@@ -24,6 +24,7 @@ registry_version: 1.0.0
 | RISK-008 | MONITORED | 重试导致重复发布或事件 | Worker crash 后重复副作用 | idempotency key、lease、audit trail |
 | RISK-009 | MONITORED | 过早性能或最优性承诺 | 没有历史数据却设置 SLA | OPEN-012、Benchmark 环境声明、P7 Gate |
 | RISK-010 | MONITORED | P5 高级能力大爆炸 | 多个高级约束同时进入一个迭代 | 每能力独立 ADR/Schema/Validator/Fixture/Benchmark |
+| RISK-011 | MONITORED | 依赖漏洞或Solver供应链漂移 | lock/advisory/wheel变化，SCA发现未处置记录 | exact pin/lock/wheel hash、namespace isolation、point-in-time audit；后续持续SCA/SBOM与有界升级 |
 
 风险状态、责任人和日期将在团队角色与仓库工作流确认后补充，当前不猜测人员归属。
 
@@ -74,3 +75,5 @@ TASK-P1-12 review：独立audit及provider artifacts确认P1-02～11控制未被
 TASK-P2-01 review：versioned complete Problem facts和Backend旁路禁止加强RISK-002，priority/lock/history稳定拒绝加强RISK-004/006，v1/v2 replay/machine artifact提高RISK-001/008可见性，synthetic priority provenance加强RISK-007。证据仍是单一small synthetic contract vector，无Solver/formal Validator/Benchmark/真实authority/Production provider运行，不能把任何风险标记`MITIGATED/CLOSED`；RISK-001～010继续`MONITORED`，registry format version保持`1.0.0`。
 
 TASK-P2-02 review：versioned four-document fingerprint chain与no-default/data-plane source加强RISK-001/007，strict status/candidate/time/metric/provenance rejection加强RISK-004/006，no-Solver/no-later-layer scan加强RISK-002，CI machine report提高RISK-008可见性。证据仍是shape-only synthetic sample，无Solver/formal Validator/Benchmark/真实authority/Production运行，不足以将任何风险标记`MITIGATED/CLOSED`；RISK-001～010继续`MONITORED`，registry format version保持`1.0.0`。
+
+TASK-P2-03 review：exact OR-Tools lock、native namespace scan、version fail-closed与显式status mapping加强RISK-002/004/006；新增RISK-011追踪dependency/supply-chain drift。2026-08-20 point-in-time审计中新增OR-Tools子树无记录，但既有pytest/starlette advisories仍未升级处理，且无持续SCA/SBOM/签名；因此RISK-001～011全部保持`MONITORED`，不能声明Production安全或将任何风险标记`MITIGATED/CLOSED`，registry format version保持`1.0.0`。

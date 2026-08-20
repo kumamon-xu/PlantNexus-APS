@@ -94,3 +94,5 @@ TASK-P1-12 review：P1 Exit Gate的`READY`来自versioned synthetic/reference co
 TASK-P2-01 review：Problem v2允许显式传入due/priority、Resource topology/calendar/capability、historical fact和locks，但Schema/sample/synthetic policy不是Production Authority或closure evidence。没有决定真实material/calendar/transport/lock owner、priority weight、field precedence或fallback；OPEN-004/005/006/007/009/010/015及OPEN-001～015全部继续`OPEN`。`capacity=1`只固定primary unary contract，不关闭secondary capacity/规模项；registry format version保持`1.0.0`。
 
 TASK-P2-02 review：Policy/Limits明确要求Production调用方自行提供versioned source，但没有提供任何真实authority；published 30秒/1 worker/seed、OBJ-001 stage和UNKNOWN report均为Simulation `CONTRACT_SAMPLE`。没有决定真实priority weight、freeze/lock policy、Solver limit/default/SLA、规模、角色或field precedence，也没有closure record。尤其OPEN-006/011/012继续`OPEN`，OPEN-001～015全部保持`OPEN`；registry format version保持`1.0.0`。
+
+TASK-P2-03 review：exact solver/version/adapter只形成工程依赖，不决定Production参数、运行时限制、平台规模、worker并发、SLA或安全批准。Smoke复用显式Simulation limit vector但不产生业务schedule；没有closure record。OPEN-011/012及OPEN-001～015全部继续`OPEN`，registry format version保持`1.0.0`。

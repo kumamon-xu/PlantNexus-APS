@@ -46,3 +46,7 @@ SolverReport 必须分阶段记录每一轮目标值、bound、停止原因和�
 PlanningPolicy v1在当前P2 slice只允许一个stage：`stage_index=1`、`OBJ-001`、`WEIGHTED_TARDINESS`、`MINIMIZE`。PlanningSolution/SolverReport逐字引用该stage，并按status约束objective/bound/gap；非负整数Delivery objective使用`(objective-best_bound)/max(1, objective)`报告relative gap。SolveLimits的显式wall-time是该stage预算上限。此处固定的是报告和consumer machine contract，不是tardiness计算或CP-SAT objective实现。
 
 总规的Delivery→Stability（Replan）→Makespan顺序继续有效，但OBJ-002/OBJ-003在本合同版本中explicit deferred，不能作为额外stage或混合权重加入。P2-08实现OBJ-001时必须消费此版本合同；未来启用OBJ-002/003需要独立Task/version，且OPEN-006关闭前仍不得生成Production权重。
+
+## TASK-P2-03 no-objective review
+
+Foundation不调用`Minimize`/`Maximize`，不读取OBJ-001 weight，也不计算objective/bound/gap。Empty native model的OPTIMAL没有业务objective，不能作为OBJ-001 execution或quality evidence。P2-08边界、OBJ-002/003 deferred状态和OPEN-006均不变。

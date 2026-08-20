@@ -118,3 +118,9 @@ Workflow在repository suites与P1 common-ingress之后运行`app.planning.proble
 Workflow在PlanningProblem evidence之后运行`app.planning.policy.contract_check`，生成`build/validation/ci-planning-machine-contracts.json`。报告必须为`planning-machine-contract-report.v1`、5/5 PASS并绑定`PLANTNEXUS_CODE_COMMIT`；检查同时覆盖fixed artifacts、Policy/Limits、seven-status mapping、cross-document replay与implementation boundary。Step不得`continue-on-error`，现有`build/validation/*.json`和`build/traceability/*.json`artifact glob必须同时上传该报告与current Task diff report。
 
 本地54项指定suite、311项full、Ruff/Pyright、5/5 machine report、Compose/build与63-path/11-row/0-issue governance均PASS。Implementation `2661598ecb592942e50c9a13dd41ff5b2535ca0d`的exact push run `32342489997`与required `validate` job `96344226221`为`completed/success`且22个steps无失败；未过期artifact `9396828326`内machine report精确绑定该SHA并5/5 PASS，Task report精确绑定同一SHA、63 paths/11 rows/0 issues。P2-02据此由evidence-only revision闭环为`done`；P2-03/P2-04仍需用户另行明确授权，不能自动启动。
+
+## TASK-P2-03 solver foundation CI gate
+
+Workflow在P2-02 machine evidence后运行`app.planning.backends.cp_sat.contract_check`，输出`build/validation/ci-solver-backend-foundation.json`并由既有中性artifact glob上传。Step不得`continue-on-error`；报告必须为`solver-backend-foundation-report.v1`、6/6 PASS、exact OR-Tools identity/lock、零namespace violation、七状态总映射、显式参数以及empty/model-invalid serialization boundary。
+
+本地39 focused、319 full、Ruff/Pyright、6/6 foundation、5/5 P2-02、6/6 historical Engineering、Compose/build均PASS。Local report仍是`uncommitted`，因此Task保持`in_progress`；只有implementation exact SHA的GitHub required `validate`和artifact成功并解析一致后，才允许evidence-only closure。该Gate不运行C-ID/OBJ-001/formal Validator/Benchmark，也不授权P2-04。

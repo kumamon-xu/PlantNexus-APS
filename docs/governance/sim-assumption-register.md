@@ -76,3 +76,5 @@ TASK-P1-12 review：审计以原`SIM-P1-INGRESS-001@1.0.0`、Profile/Generator`1
 TASK-P2-01 review：v2 fixed replay从P1-02 synthetic Schema sample派生，并显式使用`plantnexus-synthetic-policy@1.0.0`、priority weight 2、两个测试lock及一个completed→active历史边界；这些只验证字段/时间/hash语义，不是新Scenario asset、分布、Benchmark profile或Production policy。未新增/修改/retire注册项；SIM-ASSUMPTION-001～010继续`ACTIVE`，不得关闭任何Production authority问题，registry format version保持`1.0.0`。
 
 TASK-P2-02 review：四份sample使用explicit Simulation policy/limits source，30秒、1 worker、seed `20260820`、UNKNOWN/no-candidate/zero metrics仅用于Schema、status与fingerprint replay。它们不新增FactoryProfile/Scenario、distribution或Benchmark baseline，也不描述一次Solver执行。未新增/修改/retire注册项；SIM-ASSUMPTION-001～010继续`ACTIVE`，不得作为Production default或PROD_OPEN closure，registry format version保持`1.0.0`。
+
+TASK-P2-03 review：parameter smoke复用P2-02显式30秒/1 worker/seed vector，只验证字段到native参数映射；empty/model-invalid model不是Scenario或Factory假设。未新增、修改或retire任何SIM项；SIM-ASSUMPTION-001～010继续`ACTIVE`，不得作为Production default、业务feasibility或Benchmark evidence，registry format version保持`1.0.0`。

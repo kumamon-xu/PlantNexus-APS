@@ -58,3 +58,7 @@ utilization = planned_busy_seconds / available_calendar_time
 SolverReport v1现在固定model build、first feasible、solve、validation、total seconds，variables/constraints/optional intervals、memory MB以及OBJ-001 objective/bound/gap的字段与非负/status条件；PlanningSolution同时保留stage级预算、solve time和stop reason。该工作只建立NFR-OBS-001所需的carrier contract，不计算KPI，也没有真实model或performance sample。
 
 发布样例明确`CONTRACT_SAMPLE`、UNKNOWN、零model metrics/timing和not-installed solver。它不能作为Benchmark baseline、capacity、SLA或Production值；P2-11才负责真实SolverReport/KPI计算与一致性，P2-12才形成XS/S/M证据。OPEN-006/012继续OPEN。
+
+## TASK-P2-03 engineering timing boundary
+
+Foundation report可记录empty/model-invalid native wall time与变量/约束计数，仅用于证明adapter可调用和JSON serialization；这些值受local平台及空模型影响，不是Planning KPI、solver quality、first-feasible、validation timing、Benchmark baseline、capacity或SLA。没有candidate，因此不计算weighted tardiness、makespan或任何OBJ/KPI；OPEN-006/012保持OPEN。

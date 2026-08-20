@@ -27,12 +27,7 @@ Inputs: Problem/Policy/Limits/Solution contracts、ADR-0002/0003/0004、SolverBa
 
 Diff base: f73f8c90af94d3c9b05ecc10b6c999594a3b7d66
 
-Files allowed to change: 下列精确路径及`Documents to update`中的全部明确文档。
-
-- dependency/CI compatibility: `pyproject.toml`、`uv.lock`、`.github/workflows/ci.yml`、`backend/app/infrastructure/contract_check.py`、`backend/app/planning/policy/contract_check.py`；
-- Backend foundation: `backend/app/planning/backends/__init__.py`、`backend/app/planning/backends/contracts.py`、`backend/app/planning/backends/cp_sat/__init__.py`、`backend/app/planning/backends/cp_sat/backend.py`、`backend/app/planning/backends/cp_sat/status.py`、`backend/app/planning/backends/cp_sat/contract_check.py`；
-- bounded tests: `backend/tests/unit/test_solver_backend_contract.py`、`backend/tests/contract/test_planning_machine_contracts.py`、`backend/tests/integration/test_ci_contract.py`；
-- every exact path listed in `Documents to update` below.
+Files allowed to change: `pyproject.toml`、`uv.lock`、`.github/workflows/ci.yml`、`backend/app/infrastructure/contract_check.py`、`backend/app/planning/policy/contract_check.py`、`backend/app/planning/backends/__init__.py`、`backend/app/planning/backends/contracts.py`、`backend/app/planning/backends/cp_sat/__init__.py`、`backend/app/planning/backends/cp_sat/backend.py`、`backend/app/planning/backends/cp_sat/status.py`、`backend/app/planning/backends/cp_sat/contract_check.py`、`backend/tests/unit/test_solver_backend_contract.py`、`backend/tests/contract/test_planning_machine_contracts.py`、`backend/tests/integration/test_ci_contract.py`及`Documents to update`中的全部明确文档。
 
 Files forbidden to change: `backend/app/planning/contracts.py`、`backend/app/planning/policy/contracts.py`及Problem/Policy/Solution/Report Schema/sample/语义；constraint builders、Strategy/objective、Validator evaluator、fixtures/benchmarks/export、DB/migration/API/Worker/P3；上列allow-list之外的任何路径。
 
@@ -91,3 +86,15 @@ Rollback: 回退dependency/lock和backend namespace；保留ADR为rejected/super
 官方PyPI与Google release资料确认`9.15.6755`是启动日最新稳定版，并提供CPython 3.12 Windows x86-64、manylinux x86-64/aarch64和macOS wheels；`v10.0 Beta`不进入本Task。官方GitHub repository-level security advisories查询为空；release已知Python wrapper问题包括`status_name()`调用异常，因此foundation使用显式enum/name映射而不依赖该API。上述审查不等于持续漏洞监控或Production安全认证。
 
 Scope review在任何dependency/Backend修改前补入新ADR、machine report CLI、P2-02/P0 historical report兼容更新、contract test、workflow，以及POLICY/INFRA/PHASE等Impact Rule要求的强制文档。Problem/Policy/Solution/Report合同语义、Schema/sample、C-ID、Strategy/objective、Validator、fixture/benchmark/export、DB/API/Worker/P3全部保持禁止。
+
+## Local implementation evidence
+
+ADR-0011以独立先行commit `ba7efc1`接受后才修改dependency。`pyproject.toml`现exact pin `ortools==9.15.6755`；`uv.lock` SHA-256=`8b13617f31aa6a933347fc7b8ba010330cbb3f2d764f75c306dd9b6d77387a82`，固定CPython 3.12 Windows/Linux/macOS wheels及transitive versions。Local runtime为CPython 3.12.13 / Windows AMD64 / OR-Tools 9.15.6755。
+
+实现形成`cp-sat` / `cp-sat-backend.v1` identity、canonical Protocol neutral re-export、native five-status + CANCELLED/FAILED adapter、unknown/version fail-closed、四项显式参数、empty/model-invalid engineering smoke与AST namespace scan。真实`solve()`对已验证合同返回稳定`MODEL_BUILDER_NOT_IMPLEMENTED`/MODEL_INVALID且无candidate，未实现任何C-ID、OBJ-001、Strategy、Validator、fixture/benchmark/export、DB/API/Worker或P3路径。
+
+本地结果：`uv lock --check`与`uv sync --locked` PASS；focused=`39 passed`；full=`319 passed`；Ruff/Pyright=0；foundation=`6/6 PASS`，report SHA-256=`f9444d8602d66dd7d280ac3400675db3179f7beab38826f524247ca79c07315d`/7545 bytes；P2-02 compatibility=`5/5 PASS`；historical Engineering=`6/6 PASS`；Compose、`uv build`与`git diff --check` PASS。
+
+Point-in-time `pip-audit==2.10.1 --skip-editable`报告SHA-256=`45dfe31d6873211b1851c25ad3bd4247884ec45ba02db0db773fed04853494f2`/17722 bytes：新增OR-Tools依赖子树0 findings；Diff base已存在pytest 1个与starlette 6个唯一advisory，登记RISK-011且本Task不越界升级。该审查不是持续监控或Production认证。Provider implementation SHA/run/job/artifact仍为PENDING，Task保持`in_progress`。
+
+文档治理full PASS为142 docs/30 roots/36 tests/15 OPEN/10 SIM/11 risks/37 Tasks；Task diff PASS为50 actual paths、9 matched Impact rows、19 checks、0 issues。Ignored report不提交；provider必须在clean Linux runner重建同类machine/task evidence。

@@ -82,3 +82,5 @@ last_reviewed: 2026-08-20
 本地检查从`current_phase.md`读取current `Pn`，保留历史terminal Task且拒绝future-phase详细卡。普通CI range只能归属一张current-phase Task；初始phase-planning batch仅允许唯一新建`TASK-Pn-00` owner加同range新建的`planned/ready`成员卡，之后仍按owner Diff base执行scope/impact。Provider结果必须来自真实授权运行，不能由本地PASS推断。
 
 CI 可用 `uv run python scripts/check_docs.py --discover-task-from <event-base-sha> --check-diff --report build/traceability/ci-current-task-report.json`从一次 PR/push event range发现唯一 current-phase Task；本地 Task验收仍使用显式 `--task`。两种入口最终都使用 Task Card内的 immutable `Diff base`，不能把 event base当作 Task scope base。
+
+TASK-P2-03本地实现已通过39项聚焦、319项全量测试与6/6 solver-foundation机器检查；Task仍等待exact GitHub required `validate`和artifact，因而保持`in_progress`。工程smoke不是业务Solver/Validator/Benchmark证据。

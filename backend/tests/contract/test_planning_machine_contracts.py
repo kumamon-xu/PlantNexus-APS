@@ -413,9 +413,7 @@ def test_canonical_fingerprints_are_key_order_independent_and_fixed() -> None:
         assert contract_fingerprint(document) == expected
 
 
-def test_machine_contract_scope_remains_solver_and_infrastructure_free() -> None:
-    pyproject = (ROOT / "pyproject.toml").read_text(encoding="utf-8").lower()
-    lock = (ROOT / "uv.lock").read_text(encoding="utf-8").lower()
+def test_machine_contract_modules_remain_solver_and_infrastructure_free() -> None:
     sources = "\n".join(
         path.read_text(encoding="utf-8").lower()
         for path in (
@@ -423,8 +421,6 @@ def test_machine_contract_scope_remains_solver_and_infrastructure_free() -> None
             ROOT / "backend" / "app" / "planning" / "policy" / "contracts.py",
         )
     )
-    assert "ortools" not in pyproject
-    assert 'name = "ortools"' not in lock
     for forbidden in (
         "cpmodel",
         "cp_model",

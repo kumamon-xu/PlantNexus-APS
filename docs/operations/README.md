@@ -65,3 +65,9 @@ Report本身不写业务数据库，temporary CSV随进程回收，`build/valida
 本地/CI运行`python -m app.planning.policy.contract_check --root . --report <path>`生成`planning-machine-contract-report.v1`。PASS必须包含fixed Schema/sample bytes、Policy/Limits无默认值、七种status唯一映射、四文档fingerprint/replay与no-Solver/no-Validator scope共5项检查；CI路径为`build/validation/ci-planning-machine-contracts.json`。非零返回码保留FAIL report并阻断closure。
 
 命令不连接数据库或外部系统、不加载Solver、不生成candidate，也不执行Benchmark/Validator。local `uncommitted`只用于验收；Task关闭必须查询exact pushed SHA的required `validate`步骤和未过期artifact。该命令不是Production runbook、SLA、capacity或incident evidence。
+
+## TASK-P2-03 operator-facing foundation evidence
+
+本地/CI运行`python -m app.planning.backends.cp_sat.contract_check --root . --report <path>`生成`solver-backend-foundation-report.v1`。PASS要求exact dependency/lock、平台identity、namespace/Protocol、七状态、参数及两类engineering smoke共6项全部通过；CI固定路径为`build/validation/ci-solver-backend-foundation.json`。非零返回码必须保留FAIL report并阻断closure。
+
+命令只调用空/故意invalid的native CP-SAT model，不读取业务数据、不连接DB/API/Worker、不生成candidate、不运行Validator/Benchmark，也不声明Production readiness。升级OR-Tools时必须按ADR-0011重新执行lock/platform/status/Golden/Scenario/Benchmark Gate；本段不是solver生产Runbook、SLA或incident流程。

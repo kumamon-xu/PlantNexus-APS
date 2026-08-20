@@ -47,3 +47,5 @@ last_reviewed: 2026-08-20
 TASK-P2-00/P2-01/P2-02已`done`。用户已明确授权P2-03；其Diff base固定为`f73f8c90af94d3c9b05ecc10b6c999594a3b7d66`，启动时`main=origin/main`且P2-02 closure run/job/artifact均success。P2-03在依赖变更前接受ADR-0011并进入`in_progress`；P2-04～14继续`planned`且未获启动授权。
 
 P2-03限定为`ortools==9.15.6755` exact lock、CP-SAT namespace/status/parameter/version foundation和engineering smoke/report；无C-ID、OBJ-001 execution、candidate、Validator、DB/API/Worker或Benchmark baseline。P2-04及以后不会由本Task自动启动，仍需用户明确授权、clean provider-verified HEAD和新的Diff base。
+
+P2-03本地39 focused、319 full、Ruff/Pyright、6/6 foundation、5/5 P2-02 compatibility及6/6 historical Engineering均已PASS；provider evidence尚未形成，因此索引状态继续`in_progress`。

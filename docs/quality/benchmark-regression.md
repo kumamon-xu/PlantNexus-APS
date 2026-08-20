@@ -90,3 +90,7 @@ P2-12首次XS/S/M benchmark必须记录`planning-problem.v2`、builder/hash proj
 SolverReport v1固定未来Benchmark可引用的objective/bound/gap、model build/first feasible/solve/validation/total timing、variables/constraints/optional intervals、memory、exact solver parameters/version和完整input fingerprints。字段合同不包含阈值、baseline comparison或性能判定。
 
 发布样例的零metrics/timing与not-installed solver只证明JSON/status条件，绝非一次benchmark。没有运行Solver/Reference Scheduler、没有新增profile或`run_benchmark.py`、conditional hook继续deferred，OPEN-012保持OPEN。P2-12必须用真实`SOLVER_RUN`、同一Problem/Validator/KPI和XS/S/M环境另行形成provider evidence。
+
+## TASK-P2-03 foundation replay classification
+
+首次solver exact pin触发ADR、lock、platform、status与API replay，但由于没有业务model/candidate/Validator，Benchmark结论为`NOT_APPLICABLE_FOUNDATION_ONLY`，不得记录零runtime baseline或quality comparison。Empty/model-invalid wall time只用于adapter diagnostics。Golden/Scenario/Reference Scheduler/XS/S/M、memory/quality regression和conditional benchmark hook仍由后续Task形成；OPEN-012保持OPEN。

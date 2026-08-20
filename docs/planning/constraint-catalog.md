@@ -86,3 +86,7 @@ COMPLETED从未来集合排除；若edge跨COMPLETED/active边界，v1无法保�
 Problem v2补齐C-003的完整primary Resource/capacity=1事实、C-005的resource/calendar引用、C-008的active HARD/SOFT lock字段以及C-002/009跨COMPLETED→active边界所需historical completion end/source/lag。C-001/006/007/010/011既有active operation、gates、RUNNING、duration/tick/horizon语义继续保留；due/priority为OBJ-001输入。
 
 这只把input contract标记为formed。C-008 HARD enforcement、所有C-ID的CP-SAT约束与formal independent ScheduleValidator仍未实现；SOFT_LOCK属于未授权OBJ-002而不会被P2-01执行。C-012～C-018继续unsupported，Problem verify PASS不等于candidate schedule feasible/valid。
+
+## TASK-P2-03 no-business-model review
+
+CP-SAT namespace仅构造零约束empty model和一个故意清空domain的invalid engineering model；没有C-001～C-011 builder、interval、NoOverlap、precedence、calendar、material、running、lock或transport表达。`OPTIMAL` smoke只描述空native model，明确不代表任何PlanningProblem可行。C-001～C-011实现与formal Validator仍保持PLANNED，C-012～C-018继续unsupported。

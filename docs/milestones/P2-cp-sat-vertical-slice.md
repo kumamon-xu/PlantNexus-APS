@@ -71,3 +71,5 @@ P2-03与P2-04在合同固定后可并行准备，但P2-05必须同时等待Backe
 TASK-P2-00/P2-01/P2-02均已闭环为`done`。用户已明确授权P2-03；其clean/provider-verified Diff base为`f73f8c90af94d3c9b05ecc10b6c999594a3b7d66`，依赖变更前已接受ADR-0011，当前状态为`in_progress`。P2-03只形成exact Solver dependency与Backend engineering foundation，不执行业务constraint/Validator/Benchmark；P2保持`active`且不进入P3。
 
 P2-02已形成global schema set`2.4.0`、PlanningPolicy/SolveLimits/PlanningSolution/SolverReport v1、七种status与pure fingerprint/precheck/CI report。P2-03不得修改这些合同字节；empty/model-invalid smoke不构成业务可行性或candidate。P2-04及P2-05～14仍为`planned`，必须获得用户另行明确授权并重新固定启动证据，不能由P2-03自动激活。
+
+P2-03本地实现现已形成exact OR-Tools lock、isolated CP-SAT adapter、显式status/parameter映射与6-check report，并通过39 focused/319 full tests；GitHub exact implementation SHA证据仍PENDING，所以Task和Milestone分别保持`in_progress`/`active`。该结果不满足任何C-ID、OBJ-001、Validator、Benchmark或P2 Exit Gate条件。

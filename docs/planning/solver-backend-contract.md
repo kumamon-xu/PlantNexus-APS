@@ -102,3 +102,11 @@ Schema set提升到`2.2.0`只新增Error/ImportQualityReport/Data Validation；r
 P2 Backend的未来输入版本现固定为通过`verify_problem_v2`的immutable `planning-problem.v2`，其中due/priority、complete primary Resources、active locks和historical anchors均进入versioned hash projection。Backend不得继续以v1缺口为由读取Snapshot旁路补字段，也不得忽略v2 required fact或把contract rejection映射为INFEASIBLE。
 
 P2-01没有创建Backend/Strategy protocol实现、Solver status、variables/constraints、OR-Tools依赖或参数。v1仍是Application默认builder，v2为version-specific opt-in；真正consumer切换及Policy/Limits/Solution合同必须等待P2-02，OR-Tools必须等待P2-03和独立ADR。
+
+## TASK-P2-03 CP-SAT foundation
+
+ADR-0011固定`ortools==9.15.6755`和`cp-sat-backend.v1`。Canonical `SolverBackend` Protocol继续保持Problem v2 + PlanningPolicy v1 + SolveLimits v1 → PlanningSolution v1；neutral re-export不含native类型。OR-Tools、CpModel与CpSolver只存在于`planning/backends/cp_sat/`，返回的identity、parameter、status和smoke evidence均为JSON-compatible值。
+
+Native `UNKNOWN/MODEL_INVALID/FEASIBLE/INFEASIBLE/OPTIMAL`显式映射同名合同状态；adapter cancellation映射CANCELLED，version/native-status/adapter failure映射稳定FAILED错误。未知native code不猜测；identity version drift和invalid parameters fail closed，detail经过固定sanitized message。
+
+Empty/model-invalid smoke分别验证native调用与MODEL_INVALID路径，但两者都不产生candidate且不评估业务可行性。真实`solve()`故意以`MODEL_BUILDER_NOT_IMPLEMENTED`停止，C-001～C-011、OBJ-001、Strategy、formal Validator、Golden/Scenario和Benchmark仍由P2-04～12形成。

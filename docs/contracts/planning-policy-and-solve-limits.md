@@ -36,3 +36,9 @@ Limits 到期且 Solver 不能给出认证结论时返回 UNKNOWN，并映射 `N
 [`solve-limits.v1`](../../schemas/json/solve-limits.schema.json)要求limits ID/revision/source与显式`max_wall_time_seconds`、`max_workers`、`random_seed`。Schema不含`default`；仓库sample的30秒/1 worker/seed只属于`SIMULATION`合同样例，不是Production默认、SLA或推荐参数。Solution和Report必须逐值复制这三个limit并引用完整Policy/Limits canonical fingerprint，任何缺失、类型漂移或来源不一致均在执行边界拒绝。
 
 四份sample通过稳定URN离线解析；pure validation进一步固定跨文档fingerprint、OBJ-001和limit budget一致性。它们的`CONTRACT_SAMPLE`标识明确说明没有Solver执行，不能用于声明可行性、最优性或性能。
+
+## TASK-P2-03 CP-SAT parameter mapping
+
+Adapter精确映射`max_wall_time_seconds→max_time_in_seconds`、`max_workers→num_search_workers`、`random_seed→random_seed`，并固定Backend-owned `log_search_progress=false`。参数报告按name稳定排序并记录`SOLVE_LIMITS`或`BACKEND`来源；不读取环境、不补默认值、不改变P2-02 sample或fingerprint。
+
+本Task只验证参数可写入native solver。`CpSatBackend.solve()`尚无业务model builder，因此不会把Policy内C-ID/OBJ-001转成约束或目标，也不会生成`SOLVER_RUN` PlanningSolution/SolverReport。

@@ -26,6 +26,7 @@ _EXPECTED_RUNTIME_DEPENDENCIES = {
     "fastapi==0.116.1",
     "openpyxl==3.1.5",
     "opentelemetry-api==1.36.0",
+    "ortools==9.15.6755",
     "psycopg[binary]==3.2.9",
     "pydantic-settings==2.10.1",
     "redis==6.4.0",
@@ -47,9 +48,7 @@ def run_contract_checks(root: Path) -> dict[str, object]:
     )
     dependencies = set(cast(list[str], project_data["project"]["dependencies"]))
     if dependencies != _EXPECTED_RUNTIME_DEPENDENCIES:
-        raise ValueError("runtime dependency pins do not match the P0-08 contract")
-    if any("ortools" in dependency.lower() for dependency in dependencies):
-        raise ValueError("OR-Tools is forbidden in TASK-P0-08")
+        raise ValueError("runtime dependency pins do not match the repository contract")
     checks.append(_pass("exact-runtime-dependencies", sorted(dependencies)))
 
     settings = Settings()
@@ -211,6 +210,8 @@ def run_contract_checks(root: Path) -> dict[str, object]:
         "boundaries": {
             "business_pipeline": "NOT_IMPLEMENTED",
             "distributed_persistence": "NOT_IMPLEMENTED",
+            # Frozen P0-08 historical boundary; current solver evidence lives in
+            # the TASK-P2-03 machine report.
             "solver": "NOT_INSTALLED",
             "production_deployment": "NOT_CLAIMED",
         },

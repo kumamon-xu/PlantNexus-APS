@@ -158,3 +158,9 @@ v2 identity链为`Snapshot ID/hash → problem_version=planning-problem.v2 → s
 新增链为`Problem v2 hash/reference → PlanningPolicy v1 canonical fingerprint → SolveLimits v1 canonical fingerprint → PlanningSolution v1 canonical fingerprint → SolverReport v1`。Policy/Limits分别保存ID/revision/source/data plane，Solution保存Problem builder/hash projection/tick/horizon与Policy/Limits exact refs，Report再保存Solution fingerprint、backend/solver exact versions/parameters、code commit、spec/schema/canonicalization/constraint/objective/state/error versions及metrics。
 
 Global schema set为`2.4.0`，但Problem v2 document仍固定`2.3.0`，Import/Snapshot/quality/unit的历史版本也不改。所有fingerprint使用sorted finite JSON的`canonical-json.v1`；完整document参与且没有self fingerprint字段。四份published samples固定shape/canonical replay，但只有future `SOLVER_RUN` report和exact provider artifact能证明运行；当前`CONTRACT_SAMPLE`/`uncommitted`不能替代Solver、Validator、Benchmark或Production provenance。
+
+## TASK-P2-03 solver foundation provenance
+
+Backend identity固定为`cp-sat` / `cp-sat-backend.v1` / `Google OR-Tools CP-SAT` / `9.15.6755`，并与direct pin、lock SHA-256和平台信息一起写入`solver-backend-foundation-report.v1`。四个SolveLimits/Backend参数逐项记录name/source/value；native status使用显式0～4映射，CANCELLED/FAILED只来自adapter控制或错误路径，未知native code fail closed。
+
+本地report的`code_commit=uncommitted`只证明工作树验收；push后CI必须以`PLANTNEXUS_CODE_COMMIT`绑定exact implementation SHA。Empty model的OPTIMAL与intentional invalid model的MODEL_INVALID均标记`business_feasibility=NOT_EVALUATED`、`candidate_produced=false`，不进入PlanningSolution/SolverReport业务provenance，也不形成Benchmark baseline。

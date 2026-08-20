@@ -81,6 +81,12 @@ jobs:
           --root .
           --report build/validation/ci-planning-machine-contracts.json
 
+      - name: CP-SAT backend foundation evidence
+        run: >-
+          uv run python -m app.planning.backends.cp_sat.contract_check
+          --root .
+          --report build/validation/ci-solver-backend-foundation.json
+
       - name: Engineering contract
         run: >-
           uv run python -m app.infrastructure.contract_check

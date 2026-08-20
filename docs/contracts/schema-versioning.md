@@ -138,3 +138,7 @@ ADR-0010记录due/priority来源、capacity=1、active lock cutoff、historical 
 - Dependency：runtime/development dependencies和`uv.lock`不变，OR-Tools仍未安装。该release没有Backend、Constraint、ScheduleValidator、Benchmark、DB/API/Worker或P3动作。
 
 Problem v1/v2 Schema/sample及`uv.lock`启动fingerprint在Task卡中固定；后继consumer若要求修改status语义、目标顺序、time unit或fingerprint projection，必须先停止并以新version/ADR处理。
+
+## TASK-P2-03 dependency-only review
+
+本Task不修改Schema、sample、`app.SCHEMA_VERSION`或任何document语义；global schema set继续`2.4.0`。启动冻结的四份P2-02 Schema SHA-256与Problem v1/v2 artifacts保持原字节。`cp-sat-backend.v1`是Backend implementation identity，不是JSON Schema release，也不允许改写七种status、Policy/Limits或Solution/Report合同。未来solver/backend版本升级按ADR-0011执行lock、status、Golden/Scenario和Benchmark replay。

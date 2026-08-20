@@ -145,3 +145,7 @@ TASK-P2-01 evidence链必须同时区分：v1 immutable Schema/sample fingerprin
 TASK-P2-02 evidence链必须区分：global schema set`2.4.0`与Problem v2=`2.3.0`及更早document固定版本；Schema/sample原始bytes digest与canonical document fingerprint；Policy/Limits明确Simulation source/value与Production authority；`CONTRACT_SAMPLE`与`SOLVER_RUN`；七种status mapping与真实Solver结论；PlanningSolution candidate与independent ValidationReport；local `uncommitted` report与exact provider artifact。任一项不得互相替代。
 
 本Task把REQ-004/005/009、NFR-COR/DET/TRC/OBS与ENG-SOL/ERR/VER链接到四份Schema/sample、pure contracts、TEST-CONTRACT-001/TEST-ERROR-MAPPING-001、CI integration contract及`planning-machine-contract-report.v1`。只把机器shape/status/provenance carrier从PLANNED更新为formed；Backend/C-ID/OBJ-001计算/formal Validator/KPI/Benchmark/P3仍为PLANNED。Exact implementation provider已按run `32342489997` / required job `96344226221` / artifact `9396828326`闭环，Task现为`done`；root生命周期与registry版本不变，后续Task不自动激活。
+
+## TASK-P2-03 trace slice
+
+REQ-004/009、NFR-COR/TRC/SEC/OBS/PER与ENG-ARCH/SOL/ERR/VER链接到ADR-0011、exact dependency/lock、`planning/backends`代码、TEST-CONTRACT-001/TEST-SOLVER-UPGRADE、CI integration及`solver-backend-foundation-report.v1`。只有dependency/namespace/status/parameter/engineering-smoke从PLANNED变为formed；C-ID、OBJ-001 execution、candidate/formal Validator、Golden/Scenario/Benchmark/Export/P3继续PLANNED。Provider结果在exact implementation push前保持PENDING，不能由319项本地PASS推断。

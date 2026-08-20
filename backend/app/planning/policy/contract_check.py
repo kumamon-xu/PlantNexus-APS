@@ -65,6 +65,7 @@ _EXPECTED_RUNTIME_DEPENDENCIES = {
     "fastapi==0.116.1",
     "openpyxl==3.1.5",
     "opentelemetry-api==1.36.0",
+    "ortools==9.15.6755",
     "psycopg[binary]==3.2.9",
     "pydantic-settings==2.10.1",
     "redis==6.4.0",
@@ -81,7 +82,7 @@ _EXPECTED_DEV_DEPENDENCIES = {
     "PyYAML==6.0.2",
     "ruff==0.12.10",
 }
-_EXPECTED_UV_LOCK_SHA256 = (
+_P2_02_UV_LOCK_SHA256 = (
     "7ae68d242b1f80ad05a2ae51b09552ca9e19214d33ef8380bc74ff4c87ee64dd"
 )
 
@@ -112,7 +113,7 @@ def _schema_registry(root: Path) -> Registry:
     return registry
 
 
-def _check_solver_free_boundary(root: Path) -> dict[str, object]:
+def _check_solver_neutral_contract_boundary(root: Path) -> dict[str, object]:
     pyproject_text = (root / "pyproject.toml").read_text(encoding="utf-8")
     lock_content = (root / "uv.lock").read_bytes()
     lock_sha256 = sha256(lock_content).hexdigest()
@@ -125,15 +126,11 @@ def _check_solver_free_boundary(root: Path) -> dict[str, object]:
         raise ValueError("TASK-P2-02 changed runtime dependencies")
     if dev_dependencies != _EXPECTED_DEV_DEPENDENCIES:
         raise ValueError("TASK-P2-02 changed development dependencies")
-    if lock_sha256 != _EXPECTED_UV_LOCK_SHA256:
-        raise ValueError("TASK-P2-02 changed uv.lock")
     source_paths = (
         root / "backend" / "app" / "planning" / "contracts.py",
         root / "backend" / "app" / "planning" / "policy" / "contracts.py",
     )
     sources = "\n".join(path.read_text(encoding="utf-8") for path in source_paths)
-    if "ortools" in pyproject_text.lower() or b"ortools" in lock_content.lower():
-        raise ValueError("TASK-P2-02 added an OR-Tools dependency")
     for forbidden in (
         "CpModel",
         "cp_model",
@@ -146,14 +143,15 @@ def _check_solver_free_boundary(root: Path) -> dict[str, object]:
         if forbidden in sources:
             raise ValueError(f"implementation boundary crossed: {forbidden}")
     return {
-        "runtime_dependency_change": "NONE",
+        "runtime_dependency_change": "POST_P2_02_EXACT_SOLVER_PIN_BY_TASK_P2_03",
         "development_dependency_change": "NONE",
         "runtime_dependency_count": len(runtime_dependencies),
         "development_dependency_count": len(dev_dependencies),
-        "lockfile_change": "NONE",
-        "uv_lock_sha256": lock_sha256,
-        "ortools": "NOT_INSTALLED",
+        "p2_02_uv_lock_sha256": _P2_02_UV_LOCK_SHA256,
+        "current_uv_lock_sha256": lock_sha256,
+        "ortools": "OUTSIDE_P2_02_CONTRACT_MODULES_INSTALLED_BY_TASK_P2_03",
         "solver_backend_implementation": "NOT_IMPLEMENTED_BY_TASK",
+        "current_repository_solver_foundation": "TASK-P2-03",
         "constraint_implementation": "NOT_IMPLEMENTED_BY_TASK",
         "schedule_validator": "NOT_IMPLEMENTED_BY_TASK",
         "persistence_api_worker": "NOT_IMPLEMENTED_BY_TASK",
@@ -238,7 +236,7 @@ def run_contract_checks(root: Path) -> dict[str, object]:
                 ],
             },
         ),
-        _pass("task-boundary", _check_solver_free_boundary(root)),
+        _pass("task-boundary", _check_solver_neutral_contract_boundary(root)),
     ]
     return {
         "report_version": REPORT_VERSION,

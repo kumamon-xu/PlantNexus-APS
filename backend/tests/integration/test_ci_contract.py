@@ -9,6 +9,9 @@ from typing import Any, cast
 
 import yaml
 
+from app.planning.backends.cp_sat.contract_check import (
+    main as backend_contract_main,
+)
 from app.planning.problem.contract_check import main as problem_contract_main
 from app.planning.policy.contract_check import main as machine_contract_main
 
@@ -21,6 +24,7 @@ EXPECTED_RUNTIME_DEPENDENCIES = {
     "fastapi==0.116.1",
     "openpyxl==3.1.5",
     "opentelemetry-api==1.36.0",
+    "ortools==9.15.6755",
     "psycopg[binary]==3.2.9",
     "pydantic-settings==2.10.1",
     "redis==6.4.0",
@@ -31,16 +35,18 @@ EXPECTED_RUNTIME_DEPENDENCIES = {
 PHASE_GOVERNANCE_TEST_ID = "TEST-PHASE-GOVERNANCE-001"
 
 
-def test_runtime_dependencies_are_exact_and_solver_free() -> None:
+def test_runtime_dependencies_are_exact_and_solver_is_exact_pinned() -> None:
     project = cast(
         dict[str, Any],
         tomllib.loads((ROOT / "pyproject.toml").read_text(encoding="utf-8")),
     )
     dependencies = set(cast(list[str], project["project"]["dependencies"]))
     assert dependencies == EXPECTED_RUNTIME_DEPENDENCIES
-    assert all("ortools" not in dependency.lower() for dependency in dependencies)
     lock_text = (ROOT / "uv.lock").read_text(encoding="utf-8").lower()
-    assert "name = \"ortools\"" not in lock_text
+    assert 'name = "ortools"' in lock_text
+    assert 'version = "9.15.6755"' in lock_text
+    assert "cp312-cp312-win_amd64" in lock_text
+    assert "cp312-cp312-manylinux_2_27_x86_64" in lock_text
 
 
 def test_compose_has_health_checked_development_services_and_no_prod_defaults() -> None:
@@ -94,6 +100,8 @@ def test_ci_runs_repository_gates_and_discovers_the_current_task() -> None:
         "build/validation/ci-planning-problem-contracts.json",
         "app.planning.policy.contract_check",
         "build/validation/ci-planning-machine-contracts.json",
+        "app.planning.backends.cp_sat.contract_check",
+        "build/validation/ci-solver-backend-foundation.json",
         "app.infrastructure.contract_check",
         "docker compose --env-file .env.example config --quiet",
         "PLANTNEXUS_CI_CHANGE_BASE:",
@@ -105,7 +113,6 @@ def test_ci_runs_repository_gates_and_discovers_the_current_task() -> None:
     )
     for fragment in required_fragments:
         assert fragment in workflow
-    assert "ortools" not in workflow.lower()
     assert "scripts/run_benchmark.py" in workflow
     assert "actions/upload-artifact@v4" in workflow
     assert "name: P1 common ingress gate" in workflow
@@ -180,6 +187,36 @@ def test_ci_planning_machine_contract_report_is_machine_checkable(
     assert report["boundaries"]["p2_objective_scope"] == "OBJ-001_ONLY"
     assert report["boundaries"]["solver_backend"] == "NOT_IMPLEMENTED_BY_TASK"
     assert report["boundaries"]["schedule_validator"] == "NOT_IMPLEMENTED_BY_TASK"
+
+
+def test_ci_solver_backend_foundation_report_is_machine_checkable(
+    tmp_path: Path,
+) -> None:
+    report_path = tmp_path / "solver-backend-foundation.json"
+    assert (
+        backend_contract_main(
+            ["--root", str(ROOT), "--report", str(report_path)]
+        )
+        == 0
+    )
+    report = json.loads(report_path.read_text(encoding="utf-8"))
+
+    assert report["report_version"] == "solver-backend-foundation-report.v1"
+    assert report["status"] == "PASS"
+    assert report["task_id"] == "TASK-P2-03"
+    assert report["check_count"] == 6
+    assert {check["name"] for check in report["checks"]} == {
+        "exact-dependency-and-lock",
+        "solver-identity-and-platform",
+        "namespace-and-protocol-boundary",
+        "seven-status-adapter-contract",
+        "solve-limits-parameter-capture",
+        "engineering-smoke-and-serialization-isolation",
+    }
+    assert report["boundaries"]["business_constraints"] == "NOT_IMPLEMENTED"
+    assert report["boundaries"]["candidate_solution"] == "NONE"
+    assert report["boundaries"]["business_feasibility"] == "NOT_EVALUATED"
+    assert report["boundaries"]["benchmark"] == "NOT_APPLICABLE_FOUNDATION_ONLY"
 
 
 def test_container_build_is_pinned_and_non_root() -> None:

@@ -110,3 +110,9 @@ Machine report只读取仓库Schema/sample并重放deterministic builders，写�
 PlanningPolicy/SolveLimits要求调用方显式提供`SIMULATION`或`PRODUCTION`及source/version，不从environment、数据库或代码推断latest/default。仓库样例只使用SIMULATION source；30秒、1 worker、seed `20260820`均是合同回放值，不是Production配置。Solution/Report必须以fingerprint保留相同Policy/Limits，防止跨plane或隐式参数漂移。
 
 新增CLI只读仓库并写ignored machine report；workflow没有新增Secret、service、port、database、environment variable或Production route。P2-02不形成独立Production/Simulation deployment，也不允许将sample或provider CI当成Production authority。
+
+## TASK-P2-03 solver isolation review
+
+OR-Tools是进程内runtime dependency，但没有新增environment variable、Secret、network、service、port、database、container或Worker registration。`CpSatBackend`只消费显式Problem/Policy/Limits对象；sample的30秒/1 worker/seed不读取环境且不是Production default。CP-SAT engineering smoke仅在local/CI进程执行，报告不含model对象并保持JSON serialization边界。
+
+Production/Simulation data-plane隔离、独立数据库与solver worker deployment仍未形成。Provider Linux runner只证明repository CI环境的locked replay，不能当成Production环境或容量认证。

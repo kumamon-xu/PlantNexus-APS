@@ -17,7 +17,7 @@ last_reviewed: 2026-08-19
 - Production runtime/data plane 必须同时选择且 Simulation API 必须 disabled；Production 还要求 PostgreSQL 与不可变 40 字符 code commit。配置错误在连接外部服务前 fail closed。
 - structured log processor 递归屏蔽 password/token/authorization/API key/credential、DB/Redis URL 字段，并移除 URL userinfo 和 free-text secret assignment；health/readiness 不回显 driver exception 或 endpoint。
 - SQLAlchemy probe 使用固定 `SELECT 1`，Alembic 使用静态 migration；当前没有用户输入 SQL、shell 拼接、上传文件、宏/公式执行或外部 command adapter。
-- direct dependencies 与 dev tools 在 `pyproject.toml` exact pin，并由 `uv.lock`、CI contract test 和 `uv sync --locked` 验证；OR-Tools 不在 dependency graph。
+- direct dependencies 与 dev tools 在 `pyproject.toml` exact pin，并由 `uv.lock`、CI contract test 和 `uv sync --locked` 验证；TASK-P2-03新增的OR-Tools也必须exact pin并限制在CP-SAT namespace。
 - Compose 只接受外部注入的 PostgreSQL password；`.env.example` 的 `replace-me-local-only` 是非生产 placeholder，应用不会自动读取它。
 
 ## 验证证据
@@ -47,3 +47,9 @@ P0-08 没有 authentication/authorization、Import size/type/macro controls、ne
 - source异常统一返回sanitized DATA_ERROR，不拼SQL/shell、不加载macro、不取formula cached value；测试文件只在temporary directory生成。
 
 这些控制仍不包含antivirus/content disarm、MIME magic/signature policy、upload quarantine、auth/RBAC、rate limit、encryption、retention/erasure、production audit或第三方安全评估。Reference Adapter的`production_binding=false`和negative tests不能声称NFR-SEC-001全阶段完成。
+
+## TASK-P2-03 solver dependency review
+
+`ortools==9.15.6755`由accepted ADR-0011、exact direct pin、`uv.lock` transitive versions和CPython 3.12多平台wheel SHA-256共同约束；AST检查确认native import只存在于`planning/backends/cp_sat/`。Repository-level upstream advisory查询在2026-08-20为空，`pip-audit==2.10.1 --skip-editable`的point-in-time结果中，新增OR-Tools依赖子树无记录。
+
+同一次全环境审计仍检出Diff base已存在的`pytest==8.4.1`一个advisory和`starlette==0.47.3`六个唯一advisory（原始记录含alias/duplicate共8条）；两者不在OR-Tools依赖子树，本Task不越界升级FastAPI/Starlette或pytest。该债务登记为RISK-011并阻止Production安全认证，但不否定P2-03新增solver子树的有界审查。仓库尚无持续SCA、SBOM/signing、binary provenance attestation或Production threat assessment。

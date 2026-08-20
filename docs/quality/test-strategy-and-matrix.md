@@ -191,3 +191,9 @@ Task-focused八文件suite=`89 passed`，full repository=`286 passed`，Ruff/Pyr
 扩展TEST-CONTRACT-001与TEST-ERROR-MAPPING-001，覆盖四份Draft 2020-12 Schema的stable URN离线解析、strict/no-default、sample round-trip、Policy C-001～C-011/OBJ-001、显式Limits、七种status到PlanningRun/product error的总映射、candidate/non-candidate组合、OPTIMAL/FEASIBLE objective-bound-gap、duration seconds/ticks/UTC还原、timing/model/memory、parameter/version/code-commit provenance、canonical order/fingerprint与cross-document drift。Integration contract还要求CI生成5/5 planning-machine report并上传artifact。
 
 负向测试覆盖missing objective/limit、boolean limit、non-candidate assignment、伪optimal/错误relative gap、stage budget、UTC/tick和duration不一致、Policy/Limits跨plane、Solution/Report evidence-kind、limit参数与timing漂移、negative timing、非法commit与fingerprint mismatch。Source/dependency scan证明新增代码无OR-Tools/CpModel/IntervalVar/ORM/API/later validator import。Task指定suite=`54 passed`、full repository=`311 passed`、Ruff/Pyright为0问题、machine report=5/5 PASS；implementation `2661598ecb592942e50c9a13dd41ff5b2535ca0d`的provider artifact `9396828326`再次记录5/5及Task diff 63 paths/11 rows/0 issues。这仍不是formal ScheduleValidator mutation、Solver Upgrade、Golden、Reference Scheduler或Benchmark evidence；Test registry结构和`registry_version=1.0.0`不变。
+
+## TASK-P2-03 solver foundation local evidence
+
+TEST-SOLVER-UPGRADE与TEST-CONTRACT-001新增slice覆盖exact pin/lock/wheels、identity/version drift、Protocol re-export、native五状态+CANCELLED/FAILED、未知native code、SolveLimits四参数、empty/model-invalid smoke、JSON serialization、real `solve()` bounded refusal及全`backend/app` AST namespace isolation。CI integration还要求6/6 `solver-backend-foundation-report.v1`和non-continue step。
+
+本地聚焦suite=`39 passed`、full repository=`319 passed`，Ruff/Pyright均0问题，foundation report=`6/6 PASS`；P2-02 report继续`5/5 PASS`，P0-08 historical report继续`6/6 PASS`。Provider evidence在implementation push前仍为PENDING。没有新增Test ID或改变registry版本；formal Validator mutation、C-ID/OBJ-001、Golden/Reference/Benchmark tests仍PLANNED。

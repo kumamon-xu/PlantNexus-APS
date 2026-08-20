@@ -30,10 +30,10 @@ P0 当前状态：TASK-P0-01～10 全部完成；[superseding audit](P0-exit-gat
 
 P1当前状态：[`P1 — Data & Snapshot`](P1-data-and-snapshot.md)为`completed`，TASK-P1-01～12全部`done`。[P1 audit](P1-exit-gate-audit-report.md)的271项回归、14/14 pipeline、全部machine/build/docs/provider证据均PASS；TASK-P1-12 implementation `a5d7e4a68dc12d48e36cb692500f59446f8097b4` / run `32326616525` / artifact `9391591718`已闭环，Gate=`READY`且无blocking gap。用户于2026-08-20明确批准transition。
 
-P2当前状态：[`P2 — CP-SAT Vertical Slice`](P2-cp-sat-vertical-slice.md)为`active`。TASK-P2-00～04均已闭环为`done`；P2-03的ADR/dependency/backend证据与P2-04的formal Validator local/provider证据完整。用户已明确授权TASK-P2-05，该Task以`c75f7a0e96b7591ffa9220d0de942f8841283093`为Diff base并处于`in_progress`；P2-06～14仍为`planned`且未获启动授权。P2-14必须为最后的Exit Gate Audit，不得自动进入P3。
+P2当前状态：[`P2 — CP-SAT Vertical Slice`](P2-cp-sat-vertical-slice.md)为`active`。TASK-P2-00～05均已闭环为`done`；P2-03的ADR/dependency/backend、P2-04 formal Validator及P2-05 five-C-ID core Solver local/provider证据完整。P2-06～14仍为`planned`且未获启动授权。P2-14必须为最后的Exit Gate Audit，不得自动进入P3。
 
 TASK-P2-03 implementation `9268b88ca7ce90a8f72023241f87e2d3676fd58a`的run `32346208046`、required job `96355386111`和artifact `9398128763`均success；P2 phase保持active，后续Task不自动启动。
 
 TASK-P2-04 implementation `9b532e2c054b02e1692f345a252922ec7fd469e4`的run `32350068318`、required job `96367085099`与artifact `9399519368`均success；artifact formal report为6/6且Task report为38 paths/6 rows/0 issues，故Task=`done`。P2-05的启动来自用户新的明确授权，不是依赖完成后的自动过渡。
 
-TASK-P2-05本地实现和治理验收均PASS：64 focused、360 full、core/formal各6/6、Task diff 49 paths/6 rows/0 issues及compose/build/immutable。它在exact GitHub SHA evidence完成前仍为`in_progress`；完成后只满足P2-06 start dependency，新的执行仍须用户明确授权。
+TASK-P2-05本地实现和治理验收均PASS：64 focused、360 full、core/formal各6/6、Task diff 49 paths/6 rows/0 issues及compose/build/immutable。Implementation `df706786e0ec1c54bf60cd43261a92ef6aa53cc7`的run `32354050257` / job `96379299455` / artifact `9400957897`也精确PASS，故Task=`done`。这只满足P2-06 start dependency，新的执行仍须用户明确授权。

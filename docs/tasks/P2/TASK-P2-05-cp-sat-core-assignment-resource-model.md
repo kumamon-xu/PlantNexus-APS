@@ -1,7 +1,7 @@
 ---
 doc_id: TASK-P2-05
 title: CP-SAT Core Assignment and Resource Model
-status: in_progress
+status: done
 spec_version: 0.3.0
 phase: P2
 normative: true
@@ -92,3 +92,11 @@ Rollback: 回退core builder/mapper并保持Backend protocol；已生成candidat
 实现形成C-001/003/004/010/011 master/optional interval、exact-one、candidate-specific duration、capacity-1 NoOverlap与horizon model；Problem含precedence/calendar/late release-material/RUNNING/lock时build前稳定拒绝。完整native candidate被诚实降级为业务FEASIBLE、映射seconds/ticks/UTC，并仅在formal Validator PASS后保留；模型无objective，Solution stage只作post-solve weighted-tardiness measurement。
 
 2026-08-20本地验收：`uv sync --locked` PASS；指定focused suite=`64 passed`；全仓suite=`360 passed`；Ruff/Pyright均0；core machine report=`6/6 PASS`，counts=`5 constraints/2 candidates/1 infeasible/2 prechecks/2 validator mutations/4 oracle cases`；formal report=`6/6 PASS`；治理full=`142 docs/30 roots/36 tests/15 OPEN/10 SIM/11 risks/37 tasks`，Task diff=`49 paths/6 impact rows/19 checks/0 issues`；compose config、`uv build`、immutable contract/lock/schema/rule/Validator/fixture/benchmark diff及`git diff --check`均PASS。Local report仍为`code_commit=uncommitted`，Task在exact implementation provider evidence前保持`in_progress`。
+
+## Provider and completion evidence
+
+Implementation `df706786e0ec1c54bf60cd43261a92ef6aa53cc7`已直接push `main`。GitHub run `32354050257`与required `validate` job `96379299455`均`completed/success`，required context=`validate`、GitHub Actions app ID=`15368`；全部repository/core/formal/governance/build steps及artifact upload成功。
+
+Artifact `9400957897`=`plantnexus-ci-evidence-32354050257`，digest=`sha256:c40c20dcc09e2beb38e85bbead96b83e624c8badc25c88bf78cc5a3990c7d46c`、`expired=false`、expires=`2026-11-18T09:28:25Z`。其中core report SHA-256=`9986bd6a35d80dc42d688ad91c6b68d0073c8c59c677ef8f720d76610e91e44f`，绑定implementation SHA并复现6/6及全部counts/boundaries；formal report SHA-256=`6f0f67c71f53f1a5b86d5b4d447cef2a47f6f7ce2b2b4d4aeeb0a7eb2b5a3a28`，绑定同SHA且6/6；Task report SHA-256=`16cc614705fe24e9d964e64f2914f6e09f4cc44a1ddd315127f16b4f14f32a36`，绑定同SHA/Diff base并为49 committed、0 working、6 impact rows、19 checks、0 issues。
+
+Completion conditions全部满足，TASK-P2-05=`done`。回滚边界仍为仅回退core builder/mapper/consumer/CI与对应文档；合同Schema、rule sheet、formal Validator、dependency/lock、fixtures/benchmarks均未变化。P2-06 start dependency现已满足，但没有执行授权，仍为`planned`；P2-07～14与P3均未启动。

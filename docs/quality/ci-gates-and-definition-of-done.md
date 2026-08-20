@@ -140,3 +140,5 @@ Required `validate`在P2-03 foundation与P2-04 formal步骤之后运行`app.plan
 Artifact glob必须上传core、formal与Task diff报告且各自`code_commit`绑定exact GitHub SHA；step不得`continue-on-error`。Local PASS、provider run/job/artifact/digest及closure SHA均未核验前，TASK-P2-05不得标记`done`，也不得自动激活P2-06。
 
 当前local Gate已通过64 focused、360 full、Ruff/Pyright、core/formal各6/6、49-path/6-row/0-issue治理、compose、build及immutable checks。下一门仅为implementation exact SHA的required `validate`与artifact；通过前Task保持`in_progress`。
+
+Implementation provider Gate现已通过：SHA `df706786e0ec1c54bf60cd43261a92ef6aa53cc7`、run `32354050257`、required `validate` job `96379299455`均success；artifact `9400957897`未过期且digest=`sha256:c40c20dcc09e2beb38e85bbead96b83e624c8badc25c88bf78cc5a3990c7d46c`，core/formal/Task报告绑定同一SHA并复现6/6、6/6及49 paths/6 rows/0 issues。TASK-P2-05 DoD完成；closure提交本身仍须另行核验exact provider，不自动授权P2-06。

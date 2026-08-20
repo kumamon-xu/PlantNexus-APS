@@ -264,3 +264,5 @@ Full治理仍须保持142 docs、30 roots、36 Test IDs、15 OPEN、10 SIM assum
 Problem/Policy/Solution Schema、rule sheet、formal Validator、fixtures/benchmarks、dependency/lock的immutable diff必须为空。实际paths/checks与provider IDs只在命令和exact artifact通过后回填；P2-05完成只使P2-06启动依赖满足，不构成授权。
 
 本地实际full治理PASS为142 docs/30 roots/36 Test IDs/15 OPEN/10 SIM assumptions/11 risks/37 Tasks；TASK-P2-05 diff为49 paths、6 matched rows、19 checks、0 issues。Exact provider artifact尚待implementation提交后复验，故Task仍为`in_progress`。
+
+Implementation artifact `9400957897`内`traceability-report.v1`精确绑定`df706786e0ec1c54bf60cd43261a92ef6aa53cc7`与Diff base `c75f7a0e96b7591ffa9220d0de942f8841283093`，复现49 committed/0 working paths、6 rows、19 checks、0 issues并PASS；TASK-P2-05治理Gate据此闭环为`done`。Evidence-only closure仍须由自身exact provider run复核，不能在本提交中预写其ID。

@@ -161,3 +161,5 @@ REQ-004/005/009、NFR-COR/DET/TRC与ENG-VAL/ERR/VER链接到ADR-0005/0008、`pro
 形成链为`REQ-004/005/009 → TASK-P2-05 → C-001/003/004/010/011 → core builder/mapper + formal Validator → TEST-GOLDEN-JSSP/FJSP、TEST-INF-NO-RESOURCE/HORIZON、TEST-PROPERTY、TEST-VALIDATOR-MUTATION → cp-sat-core-model-report.v1 + Task report + exact provider artifact`。只有这五个C-ID的bounded Solver slice可从PLANNED提升为formed；其他C-ID、OBJ-001 execution、Strategy、Reference/Benchmark/Export/P3继续PLANNED。
 
 必须区分native OPTIMAL与无objective的业务FEASIBLE、post-solve metric与objective optimization、formal Validator PASS与Production publishability、tiny oracle与Benchmark。Provider artifact未绑定exact implementation/closure SHA前只能记录local evidence；完成P2-05也只满足P2-06依赖，不自动授权其启动。
+
+Implementation `df706786e0ec1c54bf60cd43261a92ef6aa53cc7`的required run `32354050257`与artifact `9400957897`已精确绑定并复现core/formal/Task链，因此TASK-P2-05从formed转为`done`。C-002/005～009、OBJ-001 execution、Strategy、Benchmark/Export/P3仍为PLANNED；P2-06没有自动激活。

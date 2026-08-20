@@ -211,3 +211,5 @@ P2-04新增`test_problem_schedule_validator.py`与`test_schedule_validator_prope
 本Task复用TEST-GOLDEN-JSSP/FJSP、TEST-INF-NO-RESOURCE/HORIZON、TEST-PROPERTY、TEST-VALIDATOR-MUTATION、TEST-CONTRACT-001与TEST-SOLVER-UPGRADE的新增slice，不新增Test ID或改变36项registry。验收必须同时运行focused、全仓pytest、Ruff、Pyright、core/formal machine CLI、治理、compose与build；实际总数和provider evidence仅在运行后回填。
 
 本地实际验收为focused `64 passed`、full repository `360 passed`、Ruff/Pyright 0问题、core/formal machine report各6/6 PASS。Core counts为5个C-ID、2个candidate、1个infeasible、2个precheck、2个Validator mutation与4个oracle cases；immutable contracts/rules/Validator/fixtures/benchmarks保持无差异。Exact provider evidence待implementation SHA生成后回填。
+
+Exact provider已复现：implementation `df706786e0ec1c54bf60cd43261a92ef6aa53cc7`的run `32354050257` / required job `96379299455`全步骤success；artifact `9400957897`中的core/formal报告各6/6，Task report为49 committed/0 working、6 rows、19 checks、0 issues。TASK-P2-05测试证据闭环为`done`。

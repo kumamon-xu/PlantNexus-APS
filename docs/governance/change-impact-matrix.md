@@ -254,3 +254,5 @@ Problem/Solution/Validation/Error Schema、fixture历史bytes、`pyproject.toml`
 最终path/check/issue计数必须由TASK-P2-05 diff report和exact provider artifact回填；在验收前不得预写。Registry table与`registry_version=1.0.0`均不修改。
 
 本地TASK-P2-05 report实际为49 paths、6 matched rows、19 checks、0 issues，六行与上方预期完全一致。该数字仍须由exact implementation provider artifact重放后才能闭环。
+
+Implementation artifact `9400957897`已对exact SHA重放49 committed/0 working paths、`IMPACT-BACKEND/DOCS/GOVERNANCE-REGISTRY/INFRA/PHASE/TESTS`六行、19 checks与0 issues，影响治理闭环。未出现额外SCHEMA/DEPENDENCY/MIGRATION影响。

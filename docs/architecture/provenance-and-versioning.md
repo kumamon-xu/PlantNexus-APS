@@ -178,3 +178,5 @@ Implementation `9268b88ca7ce90a8f72023241f87e2d3676fd58a`的GitHub run `32346208
 Core solve链固定为`Problem hash + Policy fingerprint + Limits fingerprint + cp-sat-backend.v1/OR-Tools 9.15.6755 + parameters → native outcome → complete assignments → independent validation`。PlanningSolution ID由规范化输入fingerprint、assignments和诚实的业务`FEASIBLE`状态确定；纯可行模型的native OPTIMAL被降级为业务FEASIBLE，不能形成OBJ-001 optimality provenance。
 
 `cp-sat-core-model-report.v1`记录五个implemented C-ID、模型变量/约束/optional interval计数、build/solve/first-feasible/solver-wall/Python-memory诊断、Validator状态、tiny oracle与冻结合同hash。Objective stage仅记录candidate的post-solve weighted tardiness、通用0 lower bound及`OBJECTIVE_NOT_OPTIMIZED` stop reason；local `uncommitted`仍须由exact GitHub SHA artifact替代后才能关闭Task。
+
+Implementation `df706786e0ec1c54bf60cd43261a92ef6aa53cc7`的run `32354050257` / job `96379299455` / artifact `9400957897`已完成exact绑定；artifact digest=`sha256:c40c20dcc09e2beb38e85bbead96b83e624c8badc25c88bf78cc5a3990c7d46c`。Core/formal/Task report文件SHA-256分别为`9986bd6a…1e44f`、`6f0f67c7…a3a28`、`16cc6147…32a36`，全部记录同一implementation SHA；TASK-P2-05 provenance据此闭环。

@@ -12,7 +12,7 @@ registry_version: 1.0.0
 
 # 文档清单
 
-本清单列出当前仓库已经实际存在的Markdown文档。P0/P1均已归档为completed；P2现为active，TASK-P2-00～04已done。P2-05～14仍为planned且未获启动授权。产品API与Production Runbook正文尚未形成并继续由相应索引登记。
+本清单列出当前仓库已经实际存在的Markdown文档。P0/P1均已归档为completed；P2现为active，TASK-P2-00～05已done。P2-06～14仍为planned且未获启动授权。产品API与Production Runbook正文尚未形成并继续由相应索引登记。
 
 | Path | Doc ID | Status | Title |
 |---|---|---|---|
@@ -146,7 +146,7 @@ registry_version: 1.0.0
 | [tasks/P2/TASK-P2-02-planning-machine-contracts-and-status.md](../tasks/P2/TASK-P2-02-planning-machine-contracts-and-status.md) | TASK-P2-02 | done | Planning Machine Contracts and Status |
 | [tasks/P2/TASK-P2-03-ortools-backend-foundation.md](../tasks/P2/TASK-P2-03-ortools-backend-foundation.md) | TASK-P2-03 | done | OR-Tools and SolverBackend Foundation |
 | [tasks/P2/TASK-P2-04-formal-independent-schedule-validator.md](../tasks/P2/TASK-P2-04-formal-independent-schedule-validator.md) | TASK-P2-04 | done | Formal Independent ScheduleValidator |
-| [tasks/P2/TASK-P2-05-cp-sat-core-assignment-resource-model.md](../tasks/P2/TASK-P2-05-cp-sat-core-assignment-resource-model.md) | TASK-P2-05 | in_progress | CP-SAT Core Assignment and Resource Model |
+| [tasks/P2/TASK-P2-05-cp-sat-core-assignment-resource-model.md](../tasks/P2/TASK-P2-05-cp-sat-core-assignment-resource-model.md) | TASK-P2-05 | done | CP-SAT Core Assignment and Resource Model |
 | [tasks/P2/TASK-P2-06-cp-sat-temporal-calendar-material-model.md](../tasks/P2/TASK-P2-06-cp-sat-temporal-calendar-material-model.md) | TASK-P2-06 | planned | CP-SAT Temporal Calendar and Material Model |
 | [tasks/P2/TASK-P2-07-execution-facts-and-hard-lock-model.md](../tasks/P2/TASK-P2-07-execution-facts-and-hard-lock-model.md) | TASK-P2-07 | planned | Execution Facts and Hard Lock Model |
 | [tasks/P2/TASK-P2-08-delivery-objective-and-global-strategy.md](../tasks/P2/TASK-P2-08-delivery-objective-and-global-strategy.md) | TASK-P2-08 | planned | Delivery Objective and Global Strategy |
@@ -194,3 +194,5 @@ TASK-P2-05启动不新增或删除Markdown路径，inventory继续完整覆盖14
 TASK-P2-05实现继续不新增、删除或重命名Markdown路径，inventory应保持142份`docs/**/*.md`完整覆盖。Core builder/mapper/check/tests与ignored JSON不是inventory行；现有文档同步five-C-ID formed、future constraints/objective/Benchmark/Production deferred边界。最终Task/provider报告通过后只更新状态与证据，不改变inventory format version或自动激活P2-06。
 
 本地full治理已确认142份docs与142条inventory entries完整一致，TASK-P2-05 Task diff为49 paths/6 rows/0 issues；provider replay尚待implementation SHA。Registry与inventory format version保持不变。
+
+Implementation artifact `9400957897`已复现142 docs inventory与49-path/6-row/0-issue Task report，TASK-P2-05=`done`。没有新增、删除或重命名Markdown；P2-06～14保持`planned`，inventory与registry版本不变。

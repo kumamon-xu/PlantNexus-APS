@@ -93,3 +93,5 @@ TASK-P2-08 local review：machine/unit/property checks使用代码内固定的`P
 TASK-P2-08 provider closure：required run/artifact精确重放相同in-memory tiny vectors，没有新增、修改或retire任何SIM项。SIM-ASSUMPTION-001～010继续`ACTIVE`；provider执行不把测试值提升为Scenario distribution、XS/S/M baseline或Production default，registry format version保持`1.0.0`。
 
 TASK-P2-09 local review：新增SIM-ASSUMPTION-011并绑定七个`1.0.0` Scenario、三份Profile、assembler `PLANTNEXUS-P2-CORRECTNESS-ASSEMBLER@1.0.0`、approved Simulation Delivery Policy及固定seed。所有输入值在Profile/Scenario/blueprint/calculation note中显式保存，并由manifest固定对象hash和Import/Snapshot/Problem hash；它们只形成Golden/Scenario/property/mutation correctness，不形成XS/S/M baseline、Production default或PROD_OPEN closure。SIM-ASSUMPTION-001～011均保持`ACTIVE`，registry format version保持`1.0.0`。
+
+TASK-P2-09 provider closure：required run/artifact精确重放同一批versioned assets、seeds与hashes，没有修改或retire任何assumption。SIM-ASSUMPTION-001～011继续`ACTIVE`；provider执行不把tiny correctness值提升为XS/S/M distribution、Production default或SLA，registry format version保持`1.0.0`。

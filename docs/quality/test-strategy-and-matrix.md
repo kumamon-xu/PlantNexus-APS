@@ -70,6 +70,8 @@ Test ID 一经分配不得复用。链接到真实测试路径才是已形成证
 
 TASK-P2-09未新增或复用Test ID；它把TEST-GOLDEN-JSSP/FJSP、CALENDAR/MATERIAL/RUNNING/CROSS-WORKSHOP/INF类、VALIDATOR-MUTATION、SCENARIO-REPLAY与PROPERTY链接到四个新focused files。Focused=45 passed、full repository=427 passed，覆盖2 Golden、5 matrix、7 row-order/fresh Validator properties、11 exact Solver-candidate mutations及CI machine contract；`p2-correctness-report.v1`为8/8。XS/S/M、Reference、Export、P2 Gate与Production测试仍为`PLANNED`，registry format version保持`1.0.0`。
 
+Implementation provider run `32442651322` / artifact `9432982306`精确复现上述427 tests与8/8 correctness report；TASK-P2-09=`done`。这不改变Test ID集合或表结构，XS/S/M、Reference、Export、P2 Gate与Production测试仍为`PLANNED`，registry format version保持`1.0.0`。
+
 ## 原则
 
 - 测试失败不能通过删除硬约束或修改断言规避；

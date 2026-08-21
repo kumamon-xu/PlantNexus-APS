@@ -1,7 +1,7 @@
 ---
 doc_id: TASK-P2-09
 title: Golden Scenario and Property Integration
-status: in_progress
+status: done
 spec_version: 0.3.0
 phase: P2
 normative: true
@@ -90,3 +90,11 @@ Rollback: 新asset不可原地改写；错误使用新version/superseding manife
 已提交准备两份独立Golden与五例shared matrix资产，固定Profile/Scenario/assembler/pipeline/policy/backend/solver version、seed、四类对象hash及Import/Snapshot/Problem hash。Fixture-local assembler仅产生source-shaped Raw rows；七例全部经公开P1/P2链取得OPTIMAL、OBJ-001=0和formal Validator PASS，正向集合合计覆盖C-001～C-011。SIM-ASSUMPTION-011明确所有tiny数值只用于correctness。
 
 Row-order Hypothesis replay保持Import/Snapshot/Problem/assignment/report一致，fresh independent Validator property为7/7 PASS；11个formula-free Solver-candidate mutation各自稳定只命中同名C-ID。`p2-correctness-report.v1`为8/8 PASS并复核P0/P1 immutable asset manifest及Schema/Problem/Strategy/Validator/Policy/Generator/lock fingerprints。Focused=`45 passed`、full repository=`427 passed`、Ruff/Pyright=0；全部P0/P1/P2 machine reports、142-doc治理、58 paths/7 rows/19 checks/0 issues、Compose、`uv build`、version smoke、`git diff --check`和禁止路径核验均PASS。Exact provider尚未形成，Task保持`in_progress`。
+
+## Provider evidence and completion — 2026-08-21
+
+Implementation `20e49c92306128b47313059fabe31534814dbe3d`已直接push到`main`。GitHub push run [`32442651322`](https://github.com/kumamon-xu/PlantNexus-APS/actions/runs/32442651322)（attempt 1）为`completed/success`；required [`validate` job/check `96656224252`](https://github.com/kumamon-xu/PlantNexus-APS/actions/runs/32442651322/job/96656224252)由GitHub Actions app `15368`执行，25个主步骤/全部post步骤均success。Branch protection仍精确要求`validate`/app `15368`。
+
+Artifact `9432982306`（`plantnexus-ci-evidence-32442651322`，33761 bytes）未过期，digest=`sha256:c736a2f029f119850f8a0c9b40b0dbbd0898383f10ddbc798f7182ff5ec90e09`、expiry=`2026-11-19T03:14:03Z`。下载复核确认16/16 JSON reports全部PASS；`ci-p2-correctness.json`的`code_commit`精确绑定implementation SHA并为8/8 checks、7 scenarios/Validator passes/property replays、11 mutations、C-001～C-011正负覆盖；`ci-current-task-report.json`绑定同一SHA和Diff base，记录58 committed/0 working paths、7 Impact Rules、19 checks、0 issues。
+
+因此Goal、测试、hash/version、文档/追踪、provider和回滚边界全部满足，TASK-P2-09=`done`。XS/S/M Benchmark、Reference Scheduler、Export、P2 Exit Audit、Production与P3/P4仍明确排除；P2保持`active`，本次关闭不授权或启动TASK-P2-10。

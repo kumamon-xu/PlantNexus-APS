@@ -292,3 +292,5 @@ Implementation artifact `9431673977`已绑定`b1ec83ed96120357ecadd41d3f52018183
 实际差异命中`IMPACT-SIM-SCENARIO/FIXTURE/TESTS/INFRA/PHASE/GOVERNANCE-REGISTRY/DOCS`七行；Task卡已在首个asset产生前展开全部实际路径，并在activation提交后、实现前切换为完整Impact Rule。发布Schema、Planning/Application/Generator、Dependency/Version Metadata、Migration、Benchmark/Reference/Export/API/Jobs均未命中，故对应规则不得虚报。
 
 所有七行required documents已进入本Task `Documents to update`并同步review。本地`TASK-P2-09-report.json`精确为58 paths、7 rows、19 checks、0 issues；provider artifact须重现58 committed/0 working paths并绑定implementation SHA，provider前Task保持`in_progress`。
+
+Implementation artifact `9432982306`已绑定`20e49c92306128b47313059fabe31534814dbe3d`并复现58 committed/0 working paths、上述七行、19 checks与0 issues；TASK-P2-09据此关闭为`done`。Schema/Planning/Application/Generator/Dependency/Migration/Benchmark/Reference/Export规则继续未命中，P2-10不自动启动。

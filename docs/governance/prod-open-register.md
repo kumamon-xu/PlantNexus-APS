@@ -110,3 +110,5 @@ TASK-P2-08 local review：唯一获准的`POLICY-P2-SIM-DELIVERY-OBJ001-001@1.0.
 TASK-P2-08 provider closure：GitHub required run/artifact只复现Simulation policy/limits与OBJ-001 correctness，不是业务Authority或closure record。OPEN-006/011/012及OPEN-001～015全部继续`OPEN`，没有Production default、SLA、capacity或发布决定，registry format version保持`1.0.0`。
 
 TASK-P2-09 local review：七个Scenario/Profile/blueprint及其已登记synthetic assumption均明确synthetic-only，60秒tick、tiny topology、due/calendar/material/fact/lock/transport值只用于correctness。它们不提供真实source authority、priority/calendar/transport/default limits、capacity、SLA或独立Production infrastructure evidence；OPEN-006/011/012及OPEN-001～015全部继续`OPEN`，registry format version保持`1.0.0`。
+
+TASK-P2-09 provider closure：GitHub required run/artifact只复现versioned Simulation correctness，不是业务Authority或closure record。OPEN-001～015全部继续`OPEN`，没有Production source/default/SLA/capacity/infrastructure或发布决定，registry format version保持`1.0.0`。

@@ -105,3 +105,11 @@ Problem v2 Schema、sample、builder、hash projection和canonicalization均未�
 CP-SAT Backend现消费Problem v2既有`precedence_edges`、historical completion anchors、resource unavailable intervals及operation release/material-ready gates。全部权威instant必须保持canonical whole-second UTC；min/transport下界向上取tick、max上界向下取tick，calendar原始half-open interval投影为与tick-grid精确等价的固定占用。
 
 Problem v2 Schema/sample、builder、canonicalization与hash projection仍字节不变；Solver不得裁剪或改写Problem事实。RUNNING与operation locks仍在build前拒绝并留给P2-07，合同支持这些字段不等于当前Solver已经实现它们。
+
+## TASK-P2-07 execution fact and lock consumer boundary
+
+CP-SAT Backend现消费Problem v2既有RUNNING `actual_start_at_utc`、`assigned_resource_id`、`remaining_seconds`、historical completion anchors与operation locks。RUNNING从horizon start占用`ceil(remaining_seconds/tick_seconds)`且只允许assigned resource；COMPLETED仍只以historical anchor参与active successor lag，不进入future assignments。
+
+HARD lock start/end必须位于exact tick grid且interval ticks与该resource权威duration（RUNNING时为remainder）一致；同operation多个冲突HARD lock或RUNNING/HARD tuple冲突在model build前MODEL_INVALID。Grid-aligned但与calendar/resource/horizon冲突的完整事实进入模型并由native solver认证INFEASIBLE。SOFT lock不形成硬约束或hint，只作为稳定排序metadata reference保留。
+
+Problem v2 Schema/sample、builder、canonicalization与hash projection仍字节不变。RUNNING Problem记录不含execution fact ID，Backend不得从operation/source猜造；事实历史由Problem hash和actual/resource/remainder字段绑定。OBJ-001、OBJ-002、dynamic Replan与Production authority均不由本Task形成。

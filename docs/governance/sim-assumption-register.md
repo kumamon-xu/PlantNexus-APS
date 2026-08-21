@@ -84,3 +84,5 @@ TASK-P2-04 review：formal validator check在进程内构造fresh synthetic Prob
 TASK-P2-05 review：machine CLI在进程内构造versioned tiny JSSP/FJSP、unary overload与四个choice/load oracle cases；Hypothesis seeds只控制bounded生成，不新增仓库fixture、FactoryProfile、Scenario、distribution或XS/S/M baseline。未新增、修改或retire任何SIM项；SIM-ASSUMPTION-001～010继续`ACTIVE`，这些case只证明core correctness，不得外推Production容量、default或关闭PROD_OPEN，registry format version保持`1.0.0`。
 
 TASK-P2-06 review：machine/property checks仅在进程内派生precedence、historical anchor、fragmented calendar、release/material与transport values，不新增仓库fixture、FactoryProfile、Scenario、distribution或XS/S/M baseline。未新增、修改或retire任何SIM项；SIM-ASSUMPTION-001～010继续`ACTIVE`，synthetic值只证明temporal correctness，不得外推Production日历、物料、运输或容量，registry format version保持`1.0.0`。
+
+TASK-P2-07 review：machine/property checks仅在进程内派生RUNNING remainder/resource、COMPLETED anchor、HARD/SOFT locks及calendar/resource/horizon conflict values，不新增仓库fixture、FactoryProfile、Scenario、distribution或XS/S/M baseline。未新增、修改或retire任何SIM项；SIM-ASSUMPTION-001～010继续`ACTIVE`，synthetic lock比例/值只证明bounded correctness，不得外推Production事实频率、freeze policy、容量或default，registry format version保持`1.0.0`。

@@ -1,4 +1,4 @@
-"""Fail-closed input boundary for the bounded P2-05/P2-06 model slice."""
+"""Fail-closed input boundary for the bounded P2-05 through P2-07 model."""
 
 from __future__ import annotations
 
@@ -7,6 +7,7 @@ from enum import StrEnum
 from typing import NoReturn, TypedDict, cast
 
 from app.domain.types import duration_to_ticks, format_utc_instant, parse_utc_instant
+from app.planning.backends.cp_sat.fact_lock_constraints import exact_tick_offset
 from app.planning.backends.cp_sat.temporal_constraints import (
     ceil_seconds_to_ticks,
     floor_seconds_to_ticks,
@@ -31,6 +32,8 @@ class CoreModelReason(StrEnum):
     UNSUPPORTED_RELEASE_MATERIAL_FACT = "UNSUPPORTED_RELEASE_MATERIAL_FACT"
     UNSUPPORTED_RUNNING_FACT = "UNSUPPORTED_RUNNING_FACT"
     UNSUPPORTED_LOCK_FACT = "UNSUPPORTED_LOCK_FACT"
+    FACT_LOCK_SELF_CONFLICT = "FACT_LOCK_SELF_CONFLICT"
+    HARD_LOCK_NOT_TICK_ALIGNED = "HARD_LOCK_NOT_TICK_ALIGNED"
     TEMPORAL_INSTANT_NOT_SECOND_PRECISION = "TEMPORAL_INSTANT_NOT_SECOND_PRECISION"
     TICK_VALUE_OUT_OF_RANGE = "TICK_VALUE_OUT_OF_RANGE"
 
@@ -144,7 +147,7 @@ def _require_cp_sat_tick(
 def precheck_core_problem(
     problem: Mapping[str, object],
 ) -> CorePrecheckDocument:
-    """Validate represented facts and reject still-deferred P2-07 facts."""
+    """Validate all represented P2-05/P2-06/P2-07 facts before model creation."""
 
     _reject_zero_options_before_contract(problem)
     validate_built_problem_v2(problem)
@@ -173,23 +176,54 @@ def precheck_core_problem(
             message="Planning horizon contains no complete positive solver tick",
         )
 
-    if typed_problem["operation_locks"]:
-        _reject(
-            CoreModelReason.UNSUPPORTED_LOCK_FACT,
-            field="operation_locks",
-            entity_id=snapshot_id,
-            message="HARD and SOFT lock constraints are reserved for TASK-P2-07",
-        )
-
     option_count = 0
+    operation_by_id = {
+        operation["operation_id"]: operation
+        for operation in typed_problem["operation_instances"]
+    }
+    running_signatures: dict[str, tuple[str, int, int]] = {}
     for operation_index, operation in enumerate(typed_problem["operation_instances"]):
         operation_id = operation["operation_id"]
         if operation["status"] == "RUNNING":
-            _reject(
-                CoreModelReason.UNSUPPORTED_RUNNING_FACT,
-                field=f"operation_instances[{operation_index}].status",
+            actual_start = operation.get("actual_start_at_utc")
+            assigned_resource = operation.get("assigned_resource_id")
+            remaining_seconds = operation.get("remaining_seconds")
+            assert isinstance(actual_start, str)
+            assert isinstance(assigned_resource, str)
+            assert isinstance(remaining_seconds, int) and not isinstance(
+                remaining_seconds, bool
+            )
+            _require_second_precision(
+                actual_start,
+                field=f"operation_instances[{operation_index}].actual_start_at_utc",
                 entity_id=operation_id,
-                message="RUNNING execution facts are reserved for TASK-P2-07",
+            )
+            if parse_utc_instant(actual_start) > horizon_start:
+                _reject(
+                    CoreModelReason.FACT_LOCK_SELF_CONFLICT,
+                    field=(
+                        f"operation_instances[{operation_index}].actual_start_at_utc"
+                    ),
+                    entity_id=operation_id,
+                    message="RUNNING actual start cannot be after the planning cutoff",
+                )
+            remaining_ticks = duration_to_ticks(
+                remaining_seconds, tick_seconds
+            )
+            if remaining_ticks > horizon_ticks:
+                _reject(
+                    CoreModelReason.DURATION_EXCEEDS_HORIZON,
+                    field=f"operation_instances[{operation_index}].remaining_seconds",
+                    entity_id=operation_id,
+                    message=(
+                        "The full ceiled RUNNING remainder must fit inside the "
+                        "authoritative Problem horizon"
+                    ),
+                )
+            running_signatures[operation_id] = (
+                assigned_resource,
+                0,
+                remaining_ticks,
             )
         _require_second_precision(
             operation["release_at_utc"],
@@ -204,6 +238,8 @@ def precheck_core_problem(
         options = operation["resource_options"]
         option_count += len(options)
         for option_index, option in enumerate(options):
+            if operation["status"] == "RUNNING":
+                continue
             duration_ticks = duration_to_ticks(
                 option["final_duration_seconds"], tick_seconds
             )
@@ -220,6 +256,89 @@ def precheck_core_problem(
                         "horizon; silent truncation or option removal is forbidden"
                     ),
                 )
+
+    hard_signatures: dict[str, tuple[str, int, int]] = {}
+    for lock_index, lock in enumerate(typed_problem["operation_locks"]):
+        if lock["lock_type"] != "HARD_LOCK":
+            continue
+        lock_id = lock["lock_id"]
+        operation_id = lock["operation_id"]
+        for field_name in ("start_at_utc", "end_at_utc"):
+            _require_second_precision(
+                lock[field_name],
+                field=f"operation_locks[{lock_index}].{field_name}",
+                entity_id=lock_id,
+            )
+        try:
+            start_tick = exact_tick_offset(
+                lock["start_at_utc"], typed_problem["horizon_start_utc"], tick_seconds
+            )
+            end_tick = exact_tick_offset(
+                lock["end_at_utc"], typed_problem["horizon_start_utc"], tick_seconds
+            )
+        except ValueError:
+            _reject(
+                CoreModelReason.HARD_LOCK_NOT_TICK_ALIGNED,
+                field=f"operation_locks[{lock_index}]",
+                entity_id=lock_id,
+                message=(
+                    "HARD lock start and end must both align exactly to the "
+                    "authoritative solver tick grid"
+                ),
+            )
+        _require_cp_sat_tick(
+            start_tick,
+            field=f"operation_locks[{lock_index}].start_at_utc",
+            entity_id=lock_id,
+        )
+        _require_cp_sat_tick(
+            end_tick,
+            field=f"operation_locks[{lock_index}].end_at_utc",
+            entity_id=lock_id,
+        )
+        operation = operation_by_id[operation_id]
+        expected_ticks = (
+            running_signatures[operation_id][2]
+            if operation["status"] == "RUNNING"
+            else duration_to_ticks(
+                next(
+                    option["final_duration_seconds"]
+                    for option in operation["resource_options"]
+                    if option["resource_id"] == lock["resource_id"]
+                ),
+                tick_seconds,
+            )
+        )
+        signature = (lock["resource_id"], start_tick, end_tick)
+        if end_tick - start_tick != expected_ticks:
+            _reject(
+                CoreModelReason.FACT_LOCK_SELF_CONFLICT,
+                field=f"operation_locks[{lock_index}]",
+                entity_id=lock_id,
+                message=(
+                    "HARD lock interval contradicts the authoritative operation "
+                    "duration or RUNNING remainder"
+                ),
+            )
+        previous = hard_signatures.get(operation_id)
+        if previous is not None and previous != signature:
+            _reject(
+                CoreModelReason.FACT_LOCK_SELF_CONFLICT,
+                field=f"operation_locks[{lock_index}]",
+                entity_id=lock_id,
+                message="Multiple HARD locks for one operation contradict each other",
+            )
+        hard_signatures[operation_id] = signature
+
+    for operation_id, running_signature in running_signatures.items():
+        hard_signature = hard_signatures.get(operation_id)
+        if hard_signature is not None and hard_signature != running_signature:
+            _reject(
+                CoreModelReason.FACT_LOCK_SELF_CONFLICT,
+                field="operation_locks",
+                entity_id=operation_id,
+                message="RUNNING execution fact and HARD lock tuples contradict",
+            )
 
     for anchor_index, anchor in enumerate(
         typed_problem["historical_completion_anchors"]

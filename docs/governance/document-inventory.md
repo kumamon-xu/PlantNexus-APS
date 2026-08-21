@@ -206,3 +206,5 @@ TASK-P2-06实现继续不新增、删除或重命名Markdown路径，inventory�
 Implementation artifact `9429579311`已复现142 docs inventory与53-path/6-row/19-check/0-issue Task report，TASK-P2-06=`done`。没有新增、删除或重命名Markdown；P2-07～14保持`planned`，inventory与registry版本不变。
 
 TASK-P2-07启动不新增、删除或重命名Markdown路径，inventory继续完整覆盖142份`docs/**/*.md`；只将已获2026-08-21明确授权的该Task同步为`in_progress`。预计新增的fact/lock builder、machine CLI、tests与workflow修改均不是正式Markdown inventory条目，`build/validation`/`build/traceability`报告继续ignored；P2-08～14仍为`planned`。
+
+TASK-P2-07本地实现继续不新增、删除或重命名Markdown路径；full治理确认142份docs与142条inventory entries一致，完整Task range为54 paths/6 rows/19 checks/0 issues。新增Python/tests与ignored JSON不属于inventory；exact provider关闭前TASK-P2-07仍为`in_progress`且P2-08不启动。

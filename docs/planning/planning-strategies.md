@@ -45,3 +45,9 @@ Backend现可直接执行bounded core feasibility model，但仍未创建或选�
 Temporal约束直接组合进同一bounded Backend model，没有创建`GlobalCpSatStrategy`、分解、rolling horizon、warm start或Reference Scheduler。Calendar/precedence/material/transport correctness只证明底层可行域，不能作为策略选择或上层发布入口。
 
 P2-08继续独占Global strategy与OBJ-001搜索接线；P2-06不得被Production workflow调用，也不提供策略质量比较。
+
+## TASK-P2-07 strategy boundary
+
+C-007/C-008直接组合进同一bounded Backend model，没有创建`GlobalCpSatStrategy`、freeze/replan strategy、warm start或Reference Scheduler。HARD lock是可行域等式，SOFT lock不被用作hint或cost；因此本Task不产生稳定性策略或计划变更比较。
+
+P2-08继续独占Global strategy与OBJ-001搜索接线；P2-07不得被Production workflow调用，也不提供策略质量、动态Replan或publishability声明。

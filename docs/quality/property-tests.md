@@ -104,3 +104,9 @@ P2-01扩展`test_planning_problem_properties.py`，保留v1 seeds `20260820/21/2
 [`test_cp_sat_temporal_properties.py`](../../backend/tests/property/test_cp_sat_temporal_properties.py)使用固定seed：80例验证任意signed seconds的ceil/floor包络；36例把CP-SAT exact min/max lag窗口与不导入OR-Tools的tick oracle逐一比较；60例比较原始秒级half-open calendar相交与grid projection固定interval判定。
 
 属性范围只覆盖C-002/005/006/009的整数边界，不采样RUNNING/lock、objective质量、XS/S/M或Production distribution。失败时必须保留seed、tick/offset、Problem hash和Hypothesis最小反例；当前in-memory cases不得注册为Golden或Benchmark baseline。
+
+## TASK-P2-07 fact/lock properties
+
+[`test_cp_sat_fact_lock_properties.py`](../../backend/tests/property/test_cp_sat_fact_lock_properties.py)使用固定seed：36例生成任意tick/remainder/assigned resource并验证RUNNING exact tuple；36例生成grid-aligned start/duration/resource与non-integral authoritative seconds并验证HARD exact tuple；24例生成shifted RUNNING/HARD冲突并要求稳定MODEL_INVALID。Hypothesis generation/shrinking与Problem hash均可重放。
+
+属性范围只覆盖C-007/C-008的bounded整数事实，不采样OBJ-001/002质量、事件流、freeze policy、XS/S/M或Production distribution。失败时必须保留seed、tick/remainder/lock tuple、Problem hash和最小反例；in-memory cases不得注册为Golden或Benchmark baseline。

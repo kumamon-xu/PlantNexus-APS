@@ -122,3 +122,9 @@ Empty/model-invalid smoke分别验证native调用与MODEL_INVALID路径，但两
 Current `solve()`在core模型上组合C-002/005/006/009：signed exact rounding、inclusive min/max lag、historical anchors、calendar fixed intervals、release/material gates及按option presence条件化的cross-workshop transport。需要这些约束的合法Problem现在进入模型；sub-second/overflow与仍未实现的RUNNING/lock在build前返回MODEL_INVALID。
 
 Certified native INFEASIBLE才映射业务INFEASIBLE；time/limit导致的UNKNOWN保持UNKNOWN。模型仍无objective，native OPTIMAL降级为FEASIBLE；完整candidate必须通过formal Validator，否则丢弃assignments并返回FAILED。Strategy、C-007/008、Benchmark和Production入口未形成。
+
+## TASK-P2-07 execution fact and lock Backend
+
+Current `solve()`在core/temporal模型上组合C-007/C-008：RUNNING option interval统一改用权威remaining seconds并固定resource/start/end；HARD lock增加exact resource/start/end equality；SOFT lock只进入assignment metadata。完成历史继续只以anchor参与temporal constraints。
+
+Precheck区分HARD grid/权威duration/多lock/RUNNING tuple自冲突的MODEL_INVALID，与calendar、capacity-1 overlap或horizon冲突的certified INFEASIBLE。完整candidate稳定回写lock IDs并强制formal Validator PASS；Validator FAIL仍丢弃assignments。模型无objective，native OPTIMAL降级为FEASIBLE，UNKNOWN不升级。Global Strategy、OBJ-001搜索、dynamic Replan、Benchmark和Production入口未形成。

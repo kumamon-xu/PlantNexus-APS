@@ -152,3 +152,11 @@ Step不得`continue-on-error`；artifact必须同时上传temporal/core/formal�
 Local Gate已通过87 focused、367 full、Ruff/Pyright 0、foundation/core/formal/temporal 6/6、6/6、6/6、7/7、53-path/6-row/19-check/0-issue治理、Compose、build与immutable checks。下一门仅为implementation exact SHA的required `validate`与artifact；通过前状态不变。
 
 Implementation provider Gate现已通过：SHA `ba6dd2cdc2eeaae3b60714314bc3d2c155a2d81c`、run `32432482739`、required `validate` job/check `96626844156`（app `15368`）均success；artifact `9429579311`未过期且digest=`sha256:3d1dce2dad986669d5709d7f8cf3900287773863cdda430e791e007495d5259c`，temporal/core/formal/Task报告绑定同一SHA并复现7/7、6/6、6/6及53 paths/6 rows/19 checks/0 issues。TASK-P2-06 DoD完成；closure提交本身仍须另行核验exact provider，不自动授权P2-07。
+
+## TASK-P2-07 required validate additions
+
+Required `validate`新增不可跳过的`CP-SAT execution fact and hard lock model evidence`步骤，运行`app.planning.backends.cp_sat.fact_lock_model_check`并输出`build/validation/ci-cp-sat-fact-lock-model.json`。PASS要求7/7 checks、C-007/C-008、4 candidate、3 certified INFEASIBLE、4 precheck、2 independent Validator mutation、6 tiny oracle、fixed fingerprints与real telemetry全部成立；历史foundation/core/temporal/formal steps继续PASS。
+
+Step不得`continue-on-error`；artifact必须同时上传fact-lock/temporal/core/formal与Task diff reports，且`code_commit`绑定exact pushed SHA。Local PASS不替代required `validate`、artifact digest/expiry与内容复核；完成这些证据前TASK-P2-07保持`in_progress`，也不得自动激活P2-08。
+
+Local Gate已通过93 focused、382 full、Ruff/Pyright 0、foundation/core/formal 6/6与temporal/fact-lock 7/7、54-path/6-row/19-check/0-issue治理、Compose、build、`git diff --check`和immutable checks。下一门仅为implementation exact SHA的required `validate`与artifact；通过前状态不变。

@@ -176,3 +176,9 @@ Core model使用既有exact pin `ortools==9.15.6755`的`cp_model` API构造IntVa
 Temporal model复用exact-pinned `ortools==9.15.6755`的linear constraints、fixed/optional intervals、`AddNoOverlap`与`OnlyEnforceIf`；signed integer rounding由Python整数运算完成，不使用浮点或隐式timezone转换。`pyproject.toml`、`uv.lock`及所有transitive pins不变。
 
 没有新增Schema、migration、service、container、database、API、Worker或runtime dependency。OR-Tools import仍被限制在`planning/backends/cp_sat`，CI只新增temporal machine evidence步骤，不启用Strategy、objective或Benchmark runner。
+
+## TASK-P2-07 technology use
+
+Fact/lock模型复用exact-pinned `ortools==9.15.6755`的linear equality、optional interval、`AddExactlyOne`与`AddNoOverlap`；没有修改`pyproject.toml`、`uv.lock`或transitive pins。新增OR-Tools import只位于既有`planning/backends/cp_sat/fact_lock_constraints.py`，namespace scan同步覆盖该路径。
+
+没有新增Schema、migration、service、container、database、API、Worker或runtime dependency。CI只增加fact/lock machine evidence步骤并沿用既有artifact glob；不启用OBJ-001搜索、Strategy、dynamic Replan或Benchmark runner。

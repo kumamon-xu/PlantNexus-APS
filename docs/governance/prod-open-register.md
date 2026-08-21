@@ -102,3 +102,5 @@ TASK-P2-04 review：formal Validator只判断Problem/Solution显式事实，不�
 TASK-P2-05 review：tiny core solve只验证synthetic assignment/resource可行域，不决定真实resource/calendar/material/transport/lock authority、priority policy、solve limits、规模或发布流程。OPEN-007/009/010/011/012按Task卡明确保持`OPEN`，OPEN-001～015全部继续`OPEN`；没有Authority/Evidence closure record、Production default或状态变更，registry format version保持`1.0.0`。
 
 TASK-P2-06 review：temporal Solver只消费Problem中显式versioned calendar/material/transport/anchor事实，不猜测班次、物料状态、跨车间时长、solve limit或发布权限。OPEN-004/009/010/011/012及OPEN-001～015全部继续`OPEN`；in-memory temporal cases、rounding规则和telemetry不是Authority/Evidence closure、Production default、capacity或SLA，registry format version保持`1.0.0`。
+
+TASK-P2-07 review：fact/lock Solver只消费Problem中显式RUNNING/anchor/HARD/SOFT事实，不猜测execution fact ID、freeze window、lock优先级、稳定性权重、事实authority或发布权限。OPEN-005/007及OPEN-001～015全部继续`OPEN`；in-memory Running/Hard Lock cases、precheck与telemetry不是Authority/Evidence closure、Production default、capacity或SLA，registry format version保持`1.0.0`。

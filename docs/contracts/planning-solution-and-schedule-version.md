@@ -66,3 +66,9 @@ PlanningSolution v1要求的OBJ-001 stage在本Task只承载post-solve measureme
 Candidate继续使用既有assignment seconds/ticks/UTC字段，不新增temporal字段；C-002/005/006/009只约束这些assignment在Problem权威事实下的合法性。完整candidate仍须经formal Validator PASS后保留，任何Validator FAIL、MODEL_INVALID、INFEASIBLE或UNKNOWN均不得泄漏partial assignments。
 
 PlanningSolution Schema、fingerprint和ScheduleVersion状态机不变。Native OPTIMAL仍映射为业务FEASIBLE，OBJ-001只做post-solve measurement；temporal正确性不能升级为objective最优、可发布ScheduleVersion或Production结果。
+
+## TASK-P2-07 fact/lock candidate mapping
+
+RUNNING assignment的resource来自Problem `assigned_resource_id`，`start_tick=0`，`end_tick=ceil(remaining_seconds/tick_seconds)`，`duration_seconds=remaining_seconds`；不再使用selected option的原始duration。HARD lock candidate精确匹配resource/start/end，SOFT lock可以移动；assignment仍稳定回写该operation全部HARD/SOFT `lock_ids`以保持metadata provenance。
+
+Problem v2没有向active RUNNING operation暴露execution fact ID，因此`execution_fact_ids`保持空数组，禁止用operation ID或source record猜造；actual start/resource/remainder由candidate引用的Problem hash保存。PlanningSolution Schema/fingerprint与ScheduleVersion状态机不变，完整candidate仍须formal Validator PASS；INFEASIBLE/MODEL_INVALID/UNKNOWN/FAILED均不得泄漏partial assignments。Native OPTIMAL继续降级为业务FEASIBLE，OBJ-001仅post-solve measurement。

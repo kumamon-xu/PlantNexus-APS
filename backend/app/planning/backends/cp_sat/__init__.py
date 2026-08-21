@@ -19,6 +19,11 @@ from app.planning.backends.cp_sat.core_constraints import (
     CoreModelReason,
     precheck_core_problem,
 )
+from app.planning.backends.cp_sat.fact_lock_constraints import (
+    FACT_LOCK_CONSTRAINT_IDS,
+    FactLockConstraintMetricsDocument,
+    exact_tick_offset,
+)
 from app.planning.backends.cp_sat.model import build_core_model
 from app.planning.backends.cp_sat.status import (
     native_status_contract,
@@ -36,6 +41,8 @@ __all__ = [
     "BACKEND_ID",
     "BACKEND_VERSION",
     "CORE_CONSTRAINT_IDS",
+    "FACT_LOCK_CONSTRAINT_IDS",
+    "FactLockConstraintMetricsDocument",
     "CoreModelInputError",
     "CoreModelReason",
     "CoreSolveResult",
@@ -49,6 +56,7 @@ __all__ = [
     "calendar_tick_blocks",
     "ceil_seconds_to_ticks",
     "floor_seconds_to_ticks",
+    "exact_tick_offset",
     "native_status_contract",
     "native_status_name",
     "parameters_for_limits",

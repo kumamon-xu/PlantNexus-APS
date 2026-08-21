@@ -188,3 +188,11 @@ Implementation `df706786e0ec1c54bf60cd43261a92ef6aa53cc7`的run `32354050257` / 
 Local report的`code_commit=uncommitted`只用于工作树验收；Task关闭前必须由exact pushed implementation SHA的required `validate`与artifact替代。该链不改变Schema/Problem identity，也不产生OBJ-001 optimality、Benchmark baseline、ScheduleVersion或Production provenance。
 
 Implementation `ba6dd2cdc2eeaae3b60714314bc3d2c155a2d81c`的run `32432482739` / job `96626844156` / artifact `9429579311`完成exact绑定；artifact digest=`sha256:3d1dce2dad986669d5709d7f8cf3900287773863cdda430e791e007495d5259c`。Temporal/core/formal/Task report文件SHA-256分别为`014cbfe2…d1611`、`d338300d…d523`、`af575341…ebb5`、`06ebb6c7…9661`，全部记录同一implementation SHA；TASK-P2-06 provenance据此闭环。
+
+## TASK-P2-07 fact/lock solve provenance
+
+当前链扩展为`Problem hash（RUNNING actual/resource/remainder + anchors + locks）+ Policy/Limits fingerprints + exact solver identity + fact/lock metrics → complete assignments/lock references → independent C-007/C-008 validation`。COMPLETED anchor不产生future assignment；RUNNING历史字段和SOFT metadata由Problem identity保存，Solver不得猜造Problem未暴露的RUNNING execution fact ID。
+
+`cp-sat-fact-lock-model-report.v1`冻结Problem/Solution Schema、rule sheet、formal Validator、Problem builder/hash、ADR-0007与`uv.lock`指纹，并记录4 candidate、3 certified INFEASIBLE、4 precheck、2 Validator mutation、6 tiny oracle及real model delta/telemetry。Local `code_commit=uncommitted`只用于工作树验收；Task关闭前必须由exact pushed implementation SHA的required `validate`与artifact替代。该链不产生OBJ-001 optimality、dynamic Replan、Benchmark baseline、ScheduleVersion或Production provenance。
+
+本地工作树报告已7/7 PASS并与93 focused、382 full及54-path/6-row/19-check/0-issue治理相互印证；它仍不是可发布provenance。实现提交后必须以`PLANTNEXUS_CODE_COMMIT=<exact SHA>`重生成并由GitHub artifact验证，随后才允许写入closure evidence。

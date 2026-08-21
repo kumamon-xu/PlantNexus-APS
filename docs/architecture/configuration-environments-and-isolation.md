@@ -134,3 +134,9 @@ CI新增`app.planning.backends.cp_sat.core_model_check`，只构造内存tiny co
 Backend仍只消费显式Problem v2、PlanningPolicy v1与SolveLimits v1；precedence、calendar、release/material gate和transport均来自Problem，不读取environment、Secret、DB、API、Worker或Production配置。P2-05对这些事实的拒绝是历史边界；当前build只对sub-second/overflow、RUNNING和lock保持fail closed，后两者继续归P2-07。
 
 `temporal_model_check`仅在进程内构造versioned synthetic vectors并写ignored JSON；没有新service、port、container、migration或deployment route。其model delta与timing只证明correctness可观察性，不构成Production容量、SLA或发布权限。
+
+## TASK-P2-07 execution fact and lock isolation
+
+Backend继续只消费显式Problem v2、PlanningPolicy v1与SolveLimits v1，不读取environment、Secret、DB、API、Worker或Production配置。RUNNING actual/resource/remainder和operation locks均来自Problem hash绑定的权威输入；HARD lock必须exact grid表示，SOFT lock只保留metadata reference，不读取freeze window或稳定性默认值。
+
+`fact_lock_model_check`只构造in-memory synthetic correctness vectors并写ignored JSON；workflow未新增service、port、container、migration或deployment route。Fact/lock model delta、timing与memory只证明repository correctness，不构成Production authority、容量、SLA或发布权限。

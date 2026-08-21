@@ -80,3 +80,9 @@ P2-05不修改formal 13类mutation corpus、P0 fixture bytes或Validator公式�
 Temporal machine evidence先取得四类formal PASS candidate，再分别构造precedence lag、calendar overlap、release/material early与cross-workshop transport violation，要求formal Validator稳定命中C-002/C-005/C-006/C-009。Expected C-ID只用于test assertion，不进入Validator决策。
 
 Formal 13类mutation corpus、Validator公式、rule sheet和P0 fixture bytes均未修改。该证据不覆盖RUNNING/HARD lock，完整Solver/Validator Scenario矩阵仍由P2-09承接。
+
+## TASK-P2-07 C-007/C-008 Solver mutations
+
+Fact/lock machine evidence先取得formal PASS candidates，再保持duration/reference自洽地移动RUNNING future interval和HARD lock tuple，要求formal Validator分别且仅命中C-007、C-008；另以SOFT lock指定资源整段不可用证明movement仍PASS。Expected C-ID只用于test assertion，不进入Validator决策。
+
+Formal 13类mutation corpus、Validator公式、rule sheet和P0 fixture bytes均未修改。该证据形成RUNNING/HARD lock Solver交叉，但完整Golden/Scenario matrix仍由P2-09承接。

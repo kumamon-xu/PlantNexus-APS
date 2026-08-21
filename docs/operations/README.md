@@ -89,3 +89,9 @@ Report本身不写业务数据库，temporary CSV随进程回收，`build/valida
 本地/CI运行`python -m app.planning.backends.cp_sat.temporal_model_check --root . --report <path>`生成`cp-sat-temporal-model-report.v1`。PASS要求7项检查全部成功，并显示4个temporal C-ID、5 candidate、3 infeasible、2 precheck、4 independent Validator mutation、8 tiny oracle cases、冻结合同/Builder/Validator/lock fingerprints和真实model delta；CI固定路径为`build/validation/ci-cp-sat-temporal-model.json`。
 
 非零返回必须保留sanitized FAIL report并阻断closure。该命令仅使用in-memory synthetic data，不读取Production系统、不发布ScheduleVersion、不运行C-007/008、OBJ-001、Strategy或Benchmark；local `uncommitted`结果不替代exact GitHub provider evidence。
+
+## TASK-P2-07 fact/lock model evidence command
+
+本地/CI运行`python -m app.planning.backends.cp_sat.fact_lock_model_check --root . --report <path>`生成`cp-sat-fact-lock-model-report.v1`。PASS要求7项检查全部成功，并显示2个fact/lock C-ID、4 candidate、3 certified INFEASIBLE、4 precheck、2 independent Validator mutation、6 tiny oracle、冻结合同/Builder/Validator/rule/ADR/lock fingerprints与real model delta/telemetry；CI固定路径为`build/validation/ci-cp-sat-fact-lock-model.json`。
+
+非零返回必须保留sanitized FAIL report并阻断closure。该命令仅使用in-memory synthetic data，不读取Production系统、不发布ScheduleVersion、不运行OBJ-001/002、Strategy、dynamic Replan或Benchmark；local `uncommitted`结果不替代exact GitHub provider evidence。

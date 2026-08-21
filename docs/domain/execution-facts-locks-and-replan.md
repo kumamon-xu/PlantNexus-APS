@@ -57,3 +57,11 @@ OperationLock同样只按lot/operation lineage附加稳定排序的`lock_ids`；
 v2 builder把COMPLETED→active precedence前驱解析成HistoricalCompletionAnchor：保存operation/fact/resource、actual start/end和source三元组，并要求completion不晚于Snapshot cutoff。COMPLETED→COMPLETED edge排除；active→COMPLETED说明事实状态与routing order冲突，按`INVALID_HISTORICAL_FACT`在Solver前拒绝。
 
 active OperationInstance引用的lock只要`end_at_utc`严格晚于cutoff/horizon start即完整进入Problem；刚好结束或更早的lock为expired并排除。Builder不按horizon end裁剪或丢弃未来lock，且保留`HARD_LOCK`/`SOFT_LOCK`和source。该合同只让后续C-008输入可表达：HARD enforcement属于P2-07，SOFT cost/OBJ-002仍明确排除，Replan/P4状态不启动。
+
+## TASK-P2-07 Solver preservation boundary
+
+COMPLETED继续不进入future assignment；其historical anchor仍可约束active successor。RUNNING保留actual start在Problem identity中，固定assigned resource，并把完整ceiled remainder从horizon start作为future occupancy；不得重选资源、按option duration重算、裁剪或移动该区间。
+
+HARD lock精确固定resource/start/end。若HARD interval不在tick grid、与权威duration不一致、多个HARD互相冲突或与RUNNING tuple冲突，输入在model build前以稳定MODEL_INVALID拒绝；与calendar、其他固定占用或horizon的合法冲突由CP-SAT认证INFEASIBLE。SOFT lock只回写metadata reference，不形成hard constraint、hint或稳定性成本。
+
+本Task不产生ExecutionEvent、ReplanRequest、freeze window、ChangeReport或ScheduleVersion变更；OBJ-002和P4仍未启动。Production fact/lock authority及freeze policy继续由OPEN-005/007约束。

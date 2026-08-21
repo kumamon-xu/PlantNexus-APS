@@ -197,49 +197,46 @@ def test_zero_candidate_and_horizon_overflow_fail_before_model_construction() ->
     )
 
 
-@pytest.mark.parametrize(
-    ("mutation", "expected_reason"),
-    [
-        ("running", CoreModelReason.UNSUPPORTED_RUNNING_FACT),
-        ("lock", CoreModelReason.UNSUPPORTED_LOCK_FACT),
-    ],
-)
-def test_still_deferred_p2_07_facts_are_rejected_not_silently_ignored(
-    mutation: str, expected_reason: CoreModelReason
-) -> None:
+def test_p2_07_extension_supersedes_legacy_running_and_lock_rejections() -> None:
     problem = synthetic_core_problem(
         [[("RESOURCE-001", 1)], [("RESOURCE-001", 1)]],
         horizon_ticks=6,
-        tag=f"UNIT-FUTURE-{mutation}",
+        tag="UNIT-P2-07-COMPATIBILITY",
     )
     first = cast(dict[str, Any], problem["operation_instances"][0])
-    if mutation == "running":
-        first.update(
-            {
-                "status": "RUNNING",
-                "actual_start_at_utc": "2026-08-19T23:59:00Z",
-                "assigned_resource_id": "RESOURCE-001",
-                "remaining_seconds": 60,
-            }
-        )
-    else:
-        problem["operation_locks"] = [
-            {
-                "lock_id": "LOCK-001",
-                "operation_id": "OP-000",
-                "lock_type": "HARD_LOCK",
-                "resource_id": "RESOURCE-001",
-                "start_at_utc": "2026-08-20T00:00:00Z",
-                "end_at_utc": "2026-08-20T00:01:00Z",
-                "source_system": "TASK-P2-05-TEST",
-                "source_version": "1.0.0",
-                "source_record_id": "LOCK-001",
-            }
-        ]
+    first.update(
+        {
+            "status": "RUNNING",
+            "actual_start_at_utc": "2026-08-19T23:59:00Z",
+            "assigned_resource_id": "RESOURCE-001",
+            "remaining_seconds": 60,
+        }
+    )
+    problem["operation_locks"] = [
+        {
+            "lock_id": "LOCK-001",
+            "operation_id": "OP-001",
+            "lock_type": "HARD_LOCK",
+            "resource_id": "RESOURCE-001",
+            "start_at_utc": "2026-08-20T00:01:00Z",
+            "end_at_utc": "2026-08-20T00:02:00Z",
+            "source_system": "TASK-P2-07-TEST",
+            "source_version": "1.0.0",
+            "source_record_id": "LOCK-001",
+        }
+    ]
+    problem["required_capabilities"] = ["HARD_SOFT_LOCK", "RUNNING_OPERATION"]
+    problem["problem_hash"] = problem_v2_hash_for(cast(dict[str, object], problem))
 
-    with pytest.raises(CoreModelInputError) as captured:
-        build_core_model(problem)
-    assert captured.value.reason is expected_reason
+    built = build_core_model(problem)
+    result = CpSatBackend().solve_with_evidence(
+        problem, synthetic_core_policy(), synthetic_core_limits()
+    )
+
+    assert built.fact_lock_metrics["fixed_operation_intervals"] == 2
+    assert result.solution["solver_status"] == "FEASIBLE"
+    assert result.validation_report is not None
+    assert result.validation_report["status"] == "PASS"
 
 
 def test_independent_validator_rejects_missing_and_wrong_duration_mutations() -> None:

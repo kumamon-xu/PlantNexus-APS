@@ -266,3 +266,11 @@ Problem/Policy/Solution Schema、rule sheet、formal Validator、Problem builder
 本地TASK-P2-06 report实际为53 paths、`IMPACT-BACKEND/DOCS/GOVERNANCE-REGISTRY/INFRA/PHASE/TESTS`六行、19 checks与0 issues，和预期完全一致；exact provider artifact通过前只作为local evidence。
 
 Implementation artifact `9429579311`已对exact SHA `ba6dd2cdc2eeaae3b60714314bc3d2c155a2d81c`重放53 committed/0 working paths、六行、19 checks与0 issues，影响治理闭环。未出现额外SCHEMA/DEPENDENCY/MIGRATION影响。
+
+## TASK-P2-07 impact review
+
+实际范围必须命中`IMPACT-BACKEND`（fact/lock builder、precheck、model/mapper/consumer）、`IMPACT-INFRA`（required validate machine step）、`IMPACT-TESTS`（unit/property/integration）、`IMPACT-PHASE`（唯一active Task与边界）、`IMPACT-GOVERNANCE-REGISTRY`（REQ/NFR/trace/open/sim/risk review）和`IMPACT-DOCS`（合同/领域/规划/质量/运维同步）六行。
+
+Problem/Policy/Solution Schema、rule sheet、formal Validator、Problem builder/hash、dependency/lock、fixture/benchmark implementation、migration、DB/API/Worker和P3无差异，因此不命中SCHEMA/VALIDATOR/PROBLEM/DEPENDENCY/MIGRATION等额外Rule ID。最终path/check/issue计数必须由TASK-P2-07 diff report与exact provider artifact回填；registry tables及`registry_version=1.0.0`保持不变。
+
+本地Task diff已精确命中上述六行：54 changed paths、19 checks、0 issues；禁止路径相对Diff base无变化。Exact provider artifact仍需在implementation SHA push后复现同一range与Impact Rule集合，Task才可关闭。

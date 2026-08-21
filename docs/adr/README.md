@@ -48,3 +48,5 @@ TASK-P2-04严格实施ADR-0005的独立ScheduleValidator与ADR-0008的UTC/整数
 TASK-P2-05按ADR-0003/0004/0005/0008/0011实现bounded core：OR-Tools仍exact-pinned且限定于CP-SAT namespace，five-C-ID模型与formal Validator保持独立，UTC/tick/duration沿既有合同，纯可行native OPTIMAL不升格为业务最优。没有Schema、rule语义、dependency、Strategy或objective policy变化，因此不新增ADR；若后续允许静默忽略future facts、共享Validator/solver constraint实现、改变capacity/tick语义或在P2-08前引入目标搜索，必须先提交新ADR。
 
 TASK-P2-06严格落实ADR-0003/0004/0005/0008/0011：权威整数秒到tick分别使用exact ceil/floor，calendar保持half-open grid equivalence，transport按selected/historical workshop独立条件化，Solver与formal Validator继续隔离。Problem/Solution Schema、rule公式、Builder/hash、dependency与objective policy均未改变，因此不新增ADR；若未来改为浮点/隐式rounding、把min与transport相加、改变calendar/lag语义或共享Validator builder，必须停止并提交superseding/new ADR。
+
+TASK-P2-07严格落实ADR-0003/0004/0005/0007/0008/0011：immutable Problem identity保存execution/lock facts，RUNNING/HARD tuple不可移动，SOFT不硬化，Solver与formal Validator继续隔离。Problem/Solution Schema、rule公式、Builder/hash、dependency、objective policy与ScheduleVersion状态均未改变，因此不新增ADR；若未来猜造execution fact ID、移动RUNNING/HARD、把SOFT当constraint/hint、引入freeze/stability/dynamic Replan语义或共享Validator builder，必须停止并提交superseding/new ADR。

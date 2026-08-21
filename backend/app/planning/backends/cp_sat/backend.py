@@ -1,4 +1,4 @@
-"""Pinned CP-SAT adapter with the bounded P2-05/P2-06 feasibility model."""
+"""Pinned CP-SAT adapter with the bounded P2-05 through P2-07 model."""
 
 from __future__ import annotations
 
@@ -10,6 +10,7 @@ from typing import Literal, TypedDict
 import ortools
 from ortools.sat.python import cp_model
 
+from app.domain.contracts import ValidationReportDocumentV2
 from app.planning.backends.contracts import (
     BackendFailureReason,
     BackendIdentityDocument,
@@ -17,9 +18,8 @@ from app.planning.backends.contracts import (
     BackendSmokeResultDocument,
     SolverBackendError,
 )
-from app.planning.backends.cp_sat.status import (
-    native_status_name,
-    solver_status_from_cp_sat,
+from app.planning.backends.cp_sat.fact_lock_constraints import (
+    FactLockConstraintMetricsDocument,
 )
 from app.planning.backends.cp_sat.model import (
     CoreModelMetricsDocument,
@@ -28,6 +28,10 @@ from app.planning.backends.cp_sat.model import (
 from app.planning.backends.cp_sat.solution_mapper import (
     map_core_candidate_solution,
     map_core_non_candidate_solution,
+)
+from app.planning.backends.cp_sat.status import (
+    native_status_name,
+    solver_status_from_cp_sat,
 )
 from app.planning.contracts import (
     PlanningSolutionDocument,
@@ -44,7 +48,6 @@ from app.planning.problem.contracts import PlanningProblemDocumentV2
 from app.planning.validation.problem_schedule_validator import (
     validate_problem_schedule,
 )
-from app.domain.contracts import ValidationReportDocumentV2
 
 
 BACKEND_ID = "cp-sat"
@@ -62,6 +65,7 @@ class CoreSolveTelemetryDocument(TypedDict):
     solver_wall_time_seconds: float
     python_memory_peak_mb: float
     model_metrics: CoreModelMetricsDocument
+    fact_lock_metrics: FactLockConstraintMetricsDocument
     validator_status: str | None
     objective_optimized: bool
 
@@ -245,7 +249,7 @@ def probe_model_invalid(
 
 
 class CpSatBackend:
-    """SolverBackend for the bounded core plus temporal feasibility slice."""
+    """SolverBackend for bounded core, temporal, and fact/lock feasibility."""
 
     def __init__(self) -> None:
         self._identity = backend_identity()
@@ -275,7 +279,7 @@ class CpSatBackend:
         policy: PlanningPolicyDocument,
         limits: SolveLimitsDocument,
     ) -> CoreSolveResult:
-        """Solve, map, and independently validate the bounded P2-06 model."""
+        """Solve, map, and independently validate the bounded P2-07 model."""
 
         validate_planning_policy(policy)
         validate_solve_limits(limits)
@@ -339,7 +343,7 @@ class CpSatBackend:
                     diagnostic={
                         "code": f"CP_SAT_BOUNDED_{product_status.value}",
                         "message": (
-                            "Pinned CP-SAT completed the bounded P2-06 model without "
+                            "Pinned CP-SAT completed the bounded P2-07 model without "
                             "an accepted candidate"
                         ),
                     },
@@ -357,6 +361,7 @@ class CpSatBackend:
                     0.0, (observed_peak - baseline_peak) / (1024 * 1024)
                 ),
                 "model_metrics": core_model.metrics,
+                "fact_lock_metrics": core_model.fact_lock_metrics,
                 "validator_status": (
                     None
                     if validation_report is None

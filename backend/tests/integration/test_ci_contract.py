@@ -13,6 +13,9 @@ from app.planning.backends.cp_sat.contract_check import (
     main as backend_contract_main,
 )
 from app.planning.backends.cp_sat.core_model_check import main as core_model_main
+from app.planning.backends.cp_sat.fact_lock_model_check import (
+    main as fact_lock_model_main,
+)
 from app.planning.backends.cp_sat.temporal_model_check import (
     main as temporal_model_main,
 )
@@ -114,6 +117,8 @@ def test_ci_runs_repository_gates_and_discovers_the_current_task() -> None:
         "build/validation/ci-cp-sat-core-model.json",
         "app.planning.backends.cp_sat.temporal_model_check",
         "build/validation/ci-cp-sat-temporal-model.json",
+        "app.planning.backends.cp_sat.fact_lock_model_check",
+        "build/validation/ci-cp-sat-fact-lock-model.json",
         "app.infrastructure.contract_check",
         "docker compose --env-file .env.example config --quiet",
         "PLANTNEXUS_CI_CHANGE_BASE:",
@@ -217,12 +222,12 @@ def test_ci_solver_backend_foundation_report_is_machine_checkable(
         "engineering-smoke-and-serialization-isolation",
     }
     assert report["boundaries"]["business_constraints"] == (
-        "CORE_P2_05_AND_TEMPORAL_P2_06_PRESENT"
+        "CORE_P2_05_TEMPORAL_P2_06_FACT_LOCK_P2_07_PRESENT"
     )
-    assert report["boundaries"]["candidate_solution"] == "BOUNDED_P2_06_SLICE_ONLY"
+    assert report["boundaries"]["candidate_solution"] == "BOUNDED_P2_07_SLICE_ONLY"
     assert report["boundaries"]["schedule_validator"] == "TASK_P2_04_PRESENT"
     assert report["boundaries"]["business_feasibility"] == (
-        "EVALUATED_BY_TASK_P2_05_P2_06_NOT_FOUNDATION_SMOKES"
+        "EVALUATED_BY_TASK_P2_05_P2_06_P2_07_NOT_FOUNDATION_SMOKES"
     )
     assert report["boundaries"]["benchmark"] == "NOT_APPLICABLE_FOUNDATION_ONLY"
 
@@ -321,6 +326,53 @@ def test_ci_cp_sat_temporal_model_report_is_machine_checkable(
     )
     assert report["boundaries"]["benchmark"] == (
         "MODEL_DELTA_ONLY_NO_XS_S_M_BASELINE"
+    )
+
+
+def test_ci_cp_sat_fact_lock_model_report_is_machine_checkable(
+    tmp_path: Path,
+) -> None:
+    report_path = tmp_path / "cp-sat-fact-lock-model.json"
+    assert (
+        fact_lock_model_main(["--root", str(ROOT), "--report", str(report_path)])
+        == 0
+    )
+    report = json.loads(report_path.read_text(encoding="utf-8"))
+
+    assert report["report_version"] == "cp-sat-fact-lock-model-report.v1"
+    assert report["status"] == "PASS"
+    assert report["task_id"] == "TASK-P2-07"
+    assert report["check_count"] == 7
+    assert report["counts"] == {
+        "fact_lock_constraint_ids": 2,
+        "candidate_cases": 4,
+        "infeasible_cases": 3,
+        "precheck_rejections": 4,
+        "validator_mutations": 2,
+        "tiny_oracle_cases": 6,
+    }
+    assert {check["name"] for check in report["checks"]} == {
+        "fixed-contract-builder-validator-rule-adr-and-lock-fingerprints",
+        "c007-running-remainder-resource-and-completed-anchor",
+        "c008-hard-exact-and-soft-metadata-only",
+        "calendar-resource-overlap-and-horizon-certified-infeasible",
+        "fact-lock-self-conflict-and-grid-prechecks",
+        "independent-validator-c007-c008-mutations",
+        "tiny-exact-oracle-model-delta-and-real-telemetry",
+    }
+    assert report["boundaries"]["implemented_constraints"] == [
+        f"C-{index:03d}" for index in range(1, 12)
+    ]
+    assert report["boundaries"]["deferred_constraints"] == []
+    assert report["boundaries"]["formal_validator_changes"] == "NONE"
+    assert report["boundaries"]["soft_lock"] == (
+        "METADATA_REFERENCE_ONLY_STABILITY_OBJECTIVE_NOT_EXECUTED"
+    )
+    assert report["boundaries"]["objective"] == (
+        "POSTSOLVE_MEASUREMENT_ONLY_NOT_OPTIMIZED"
+    )
+    assert report["boundaries"]["benchmark"] == (
+        "TINY_CORRECTNESS_ONLY_NO_XS_S_M_BASELINE"
     )
 
 

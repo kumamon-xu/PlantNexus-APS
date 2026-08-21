@@ -62,3 +62,9 @@ Core model仍不调用`Minimize`/`Maximize`，不按OBJ-001引导搜索。为满
 Temporal constraints只收紧可行域；模型仍不调用`Minimize`/`Maximize`，precedence/calendar/material/transport telemetry也不是objective component。Candidate产生后仍按既有合同测量weighted tardiness、使用通用0 lower bound并明确`OBJECTIVE_NOT_OPTIMIZED`。
 
 OBJ-001 execution继续由P2-08形成，OBJ-002/003保持deferred；不得把native OPTIMAL、temporal feasibility或较小makespan表述为目标最优。OPEN-006与Policy版本不变。
+
+## TASK-P2-07 objective boundary
+
+RUNNING与HARD lock只收紧可行域；SOFT lock明确不进入本Task模型、hint或post-solve stability cost。Candidate仍只后测weighted tardiness、使用通用0 lower bound并标记`OBJECTIVE_NOT_OPTIMIZED`。
+
+OBJ-001 execution继续由P2-08形成，OBJ-002 Stability与OBJ-003保持deferred；不得把native OPTIMAL、fact/lock preservation或SOFT metadata reference表述为目标最优。OPEN-005/006与Policy版本不变。

@@ -34,3 +34,9 @@ ReplanRequest 引用 base ScheduleVersion、新 PlanningSnapshot、reason 和 fr
 Execution Simulator 连续注入 Urgent Order、Machine Failure、Material Delay、Processing Delay、Early Completion，检查 Facts Preserved、Locks Preserved、Validator PASS 和 ChangeReport Complete。
 
 freeze window 的生产语义由 OPEN-005 决定；仿真值必须标记 SIM_ASSUMPTION。
+
+## TASK-P2-07 static fact/lock boundary
+
+本Task只在单次immutable Problem求解中保护COMPLETED/RUNNING facts与HARD lock；SOFT lock只保留metadata reference。它不接收ExecutionEvent，不生成ReplanRequest/ChangeReport，不执行freeze window或稳定性目标，也不改变ScheduleVersion。
+
+因此C-007/C-008 correctness不能声明动态Replan已形成。P4事件幂等、事实演进、lock policy与change comparison仍须独立Task/Scenario/ADR证据；OPEN-005及现有SIM assumptions保持不变。

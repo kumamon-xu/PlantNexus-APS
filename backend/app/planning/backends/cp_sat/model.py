@@ -1,4 +1,4 @@
-"""CP-SAT model construction for the bounded P2-05/P2-06 constraint slice."""
+"""CP-SAT construction for the bounded P2-05/P2-06/P2-07 constraint slice."""
 
 from __future__ import annotations
 
@@ -10,6 +10,12 @@ from ortools.sat.python import cp_model
 
 from app.domain.types import duration_to_ticks
 from app.planning.backends.cp_sat.core_constraints import precheck_core_problem
+from app.planning.backends.cp_sat.fact_lock_constraints import (
+    FactLockConstraintMetricsDocument,
+    FactLockOperationBinding,
+    FactLockOptionBinding,
+    add_fact_lock_constraints,
+)
 from app.planning.backends.cp_sat.temporal_constraints import (
     TemporalConstraintMetricsDocument,
     TemporalOperationBinding,
@@ -49,6 +55,7 @@ class CoreCpSatModel:
     horizon_ticks: int
     model_build_seconds: float
     temporal_metrics: TemporalConstraintMetricsDocument
+    fact_lock_metrics: FactLockConstraintMetricsDocument
 
     @property
     def metrics(self) -> CoreModelMetricsDocument:
@@ -82,6 +89,12 @@ def build_core_model(problem: PlanningProblemDocumentV2) -> CoreCpSatModel:
         options: list[CoreOptionVariables] = []
         for option_index, option in enumerate(operation["resource_options"]):
             duration_seconds = option["final_duration_seconds"]
+            if operation["status"] == "RUNNING":
+                remaining_seconds = operation.get("remaining_seconds")
+                assert isinstance(remaining_seconds, int) and not isinstance(
+                    remaining_seconds, bool
+                )
+                duration_seconds = remaining_seconds
             duration_ticks = duration_to_ticks(duration_seconds, tick_seconds)
             presence = model.new_bool_var(
                 f"op_{operation_index:06d}_option_{option_index:04d}_present"
@@ -127,6 +140,26 @@ def build_core_model(problem: PlanningProblemDocumentV2) -> CoreCpSatModel:
         )
         for operation in operations
     )
+    fact_lock_bindings = tuple(
+        FactLockOperationBinding(
+            operation_id=operation.operation_id,
+            start=operation.start,
+            end=operation.end,
+            options=tuple(
+                FactLockOptionBinding(
+                    resource_id=option.resource_id,
+                    presence=option.presence,
+                )
+                for option in operation.options
+            ),
+        )
+        for operation in operations
+    )
+    fact_lock_metrics = add_fact_lock_constraints(
+        model,
+        problem,
+        fact_lock_bindings,
+    )
     temporal_metrics = add_temporal_constraints(
         model,
         problem,
@@ -149,6 +182,7 @@ def build_core_model(problem: PlanningProblemDocumentV2) -> CoreCpSatModel:
         horizon_ticks=horizon_ticks,
         model_build_seconds=max(0.0, perf_counter() - started),
         temporal_metrics=temporal_metrics,
+        fact_lock_metrics=fact_lock_metrics,
     )
 
 

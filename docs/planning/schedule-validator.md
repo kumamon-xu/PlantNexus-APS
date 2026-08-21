@@ -106,3 +106,9 @@ Core machine evidence同时验证JSSP/FJSP positive、missing assignment→C-001
 Backend生成的precedence、calendar、release/material与transport candidates继续交给同一formal Validator；Evaluator从Problem/Solution seconds/ticks/UTC独立重算C-002/005/006/009，不导入`temporal_constraints.py`或OR-Tools。Temporal machine evidence分别构造四类positive candidate，并对min/max lag、calendar、gate与cross-workshop transport做独立mutation复验。
 
 Formal Validator源码、公式、Schema、rule sheet和13-case corpus保持字节不变。该交叉证据不覆盖C-007/008，也不是P2-09完整Scenario integration、objective correctness或Production publish gate。
+
+## TASK-P2-07 Solver/Validator cross-check
+
+Backend生成的RUNNING/HARD/SOFT candidates继续交给同一formal Validator；Evaluator从Problem/Solution独立重算COMPLETED exclusion、RUNNING resource/start/remainder occupancy及HARD resource/start/end，不导入`fact_lock_constraints.py`或OR-Tools。Machine evidence分别把合法candidate移动RUNNING与HARD tuple，稳定命中C-007和C-008；SOFT movement保持PASS。
+
+Formal Validator源码、公式、Schema、rule sheet和13-case corpus保持字节不变。该证据形成C-007/C-008 Solver/Validator交叉，但不是P2-09完整Golden/Scenario integration、OBJ-001 correctness或Production publish gate。

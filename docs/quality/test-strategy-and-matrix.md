@@ -48,11 +48,11 @@ registry_version: 1.0.0
 | TEST-GOLDEN-JSSP | 人工可验证 JSSP | P2 | PLANNED |
 | TEST-GOLDEN-FJSP | 人工可验证 FJSP | P0-P2 | [`SIM-MINIMAL-001` positive Golden](../../backend/tests/golden/test_sim_minimal_001.py) formed；P2 Solver/Problem integration PLANNED |
 | TEST-INF-NO-RESOURCE | 无候选资源明确拒绝 | P0-P2 | P0/P1 input slices + [formal wrong-resource mutation](../../backend/tests/validation/test_problem_schedule_validator.py) formed；Solver infeasibility P2 PLANNED |
-| TEST-INF-LOCK | Lock 导致的不可行性 | P0-P2 | P0 + formal HARD_LOCK exact movement mutation formed；Solver infeasibility P2 PLANNED |
+| TEST-INF-LOCK | Lock 导致的不可行性 | P0-P2 | P0 + formal HARD_LOCK exact mutation + P2-07 calendar/resource/horizon certified INFEASIBLE formed |
 | TEST-INF-HORIZON | Horizon 不允许静默截断 | P0-P2 | P0 + formal Problem/Solution horizon overflow/UTC projection formed；Solver integration P2 PLANNED |
 | TEST-CALENDAR | 设备日历约束 | P0-P2 | Golden/P0 + formal half-open calendar positive/negative formed；Solver integration PLANNED |
 | TEST-MATERIAL | material_ready_at gate | P0-P2 | Golden/P0 + formal material-early negative formed；Solver integration PLANNED |
-| TEST-RUNNING | 运行中事实保护 | P0-P2 | P0/P1 facts + formal COMPLETED exclusion/RUNNING resource/remainder/UTC occupancy formed；Solver integration PLANNED |
+| TEST-RUNNING | 运行中事实保护 | P0-P2 | P0/P1 facts + formal check + P2-07 completed anchor/RUNNING resource/remainder Solver integration formed |
 | TEST-CROSS-WORKSHOP | 跨车间 precedence/transport lag | P0-P2 | Golden/P0 + formal selected/historical workshop transport negative formed；Solver integration PLANNED |
 | TEST-MAX-LAG | max_lag 不被忽略 | P0-P2 | Golden/P0 + formal inclusive min/max lag negative formed；Solver integration PLANNED |
 | TEST-VALIDATOR-MUTATION | 独立 Validator 拒绝人工错误计划 | P0-P2 | P0 13-case historical suite + [formal Problem/Solution 13-case suite](../../backend/tests/validation/test_problem_schedule_validator.py) / `formal-schedule-validator-report.v1` formed；Solver/performance integration PLANNED |
@@ -221,3 +221,9 @@ Exact provider已复现：implementation `df706786e0ec1c54bf60cd43261a92ef6aa53c
 本Task复用TEST-MAX-LAG、TEST-CALENDAR、TEST-MATERIAL、TEST-CROSS-WORKSHOP、TEST-PROPERTY、TEST-VALIDATOR-MUTATION、TEST-CONTRACT-001与TEST-SOLVER-UPGRADE，不新增Test ID或改变36项registry。本地实际验收为focused `87 passed`、full repository `367 passed`、Ruff/Pyright 0；foundation/core/formal/temporal分别6/6、6/6、6/6、7/7 PASS。Temporal counts为4个C-ID、5 candidate、3 infeasible、2 precheck、4 Validator mutation和8 oracle cases；治理53 paths/6 rows/19 checks/0 issues，compose/build/immutable PASS。Exact provider结果仍待implementation SHA。
 
 Exact provider已复现：implementation `ba6dd2cdc2eeaae3b60714314bc3d2c155a2d81c`的run `32432482739` / required job `96626844156`全步骤success；artifact `9429579311`中的temporal/core/formal报告为7/7、6/6、6/6，Task report为53 committed/0 working paths、6 rows、19 checks、0 issues。TASK-P2-06测试证据闭环为`done`。
+
+## TASK-P2-07 test evidence
+
+本Task复用TEST-RUNNING、TEST-INF-LOCK、TEST-PROPERTY、TEST-VALIDATOR-MUTATION、TEST-CONTRACT-001与TEST-SOLVER-UPGRADE，不新增Test ID或改变36项registry。新增unit/property/integration覆盖COMPLETED anchor exclusion、RUNNING resource/remainder、HARD exact tuple、SOFT movement、grid/duration/multi-source self-conflict、calendar/resource/horizon INFEASIBLE、stable lock references与formal mutations。
+
+`cp-sat-fact-lock-model-report.v1`当前为7/7：2个C-ID、4 candidate、3 infeasible、4 precheck、2 Validator mutation及6 oracle cases；foundation/core/temporal/formal历史machine reports保持6/6、6/6、7/7、6/6。本地focused=`93 passed`、full repository=`382 passed`且Ruff/Pyright为0问题。Exact provider evidence仍待implementation SHA形成；P2-09 Golden integration、P2-12 Benchmark和Production仍未形成。

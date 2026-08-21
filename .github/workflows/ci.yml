@@ -105,6 +105,12 @@ jobs:
           --root .
           --report build/validation/ci-cp-sat-temporal-model.json
 
+      - name: CP-SAT execution fact and hard lock model evidence
+        run: >-
+          uv run python -m app.planning.backends.cp_sat.fact_lock_model_check
+          --root .
+          --report build/validation/ci-cp-sat-fact-lock-model.json
+
       - name: Engineering contract
         run: >-
           uv run python -m app.infrastructure.contract_check

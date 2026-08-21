@@ -74,3 +74,9 @@ Candidate weighted tardiness按交付需求最大completion在solve后测量，�
 Temporal report新增constraint、calendar fixed interval、gate、conditional transport等model delta及build/solve/memory观测值，只用于证明C-002/005/006/009已实际进入模型。它没有warm-up、profile、percentile、threshold或Reference comparison，不是KPI baseline、capacity或SLA。
 
 Weighted tardiness仍仅为post-solve合同值，CP-SAT模型不含objective。OPEN-006/012及全部Production KPI口径保持不变。
+
+## TASK-P2-07 KPI boundary
+
+Fact/lock report新增RUNNING/HARD/SOFT数量、fixed operation interval、resource/start/end equality、constraint delta及build/solve/first-feasible/memory telemetry，只证明C-007/C-008实际进入模型。它没有warm-up、profile、percentile、Reference comparison、stability cost或threshold，不是KPI/Benchmark baseline、capacity或SLA。
+
+Weighted tardiness仍只在candidate后测量，CP-SAT模型不含objective；SOFT lock movement不计入OBJ-002。OPEN-005/006/012及全部Production KPI口径保持不变。

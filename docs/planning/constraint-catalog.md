@@ -108,3 +108,9 @@ C-002与C-005～009仍未进入Solver。任何非空precedence/transport、calen
 CP-SAT现新增C-002 precedence inclusive min/max lag、C-005 resource calendar half-open exclusion、C-006 release/material-ready lower bounds与C-009 selected-resource cross-workshop transport。Min与transport分别向上取tick且独立施加，max向下取tick；calendar用grid-equivalent fixed intervals，historical completed predecessor由absolute end anchor约束active successor。
 
 这些约束与既有C-001/003/004/010/011共同形成当前bounded model，并由formal Validator独立复验。C-007 RUNNING与C-008 HARD lock仍fail closed并由P2-07承接；C-012～018继续unsupported，OBJ-001仍未进入搜索。Rule sheet、C-ID公式、severity和Problem/Solution Schema均未修改。
+
+## TASK-P2-07 execution fact and lock model
+
+CP-SAT现实现C-007/C-008：COMPLETED不产生future assignment但historical anchor继续参与lag；RUNNING固定assigned resource、`start_tick=0`与`end_tick=ceil(remaining_seconds/tick_seconds)`；HARD lock exact固定resource/start/end。SOFT lock只保留metadata reference，不属于hard validation pass condition，也不形成hint/objective。
+
+Fact/lock self-conflict或grid不可表示性在model build前MODEL_INVALID；grid-aligned lock与calendar、capacity-1 resource或C-011 horizon冲突由solver认证INFEASIBLE。当前bounded model至此覆盖C-001～C-011并继续由formal Validator独立复验；OBJ-001搜索仍未实现，C-012～018继续unsupported。Rule sheet、C-ID公式、severity、Problem/Solution Schema与Validator源码均未修改。

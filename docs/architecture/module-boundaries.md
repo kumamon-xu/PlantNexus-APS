@@ -130,3 +130,10 @@ TASK-P0-05 已在 `simulation/profiles`、`simulation/scenarios`、`simulation/g
 - `temporal_constraints.py`独占signed seconds→ticks取整、calendar grid projection/merge、precedence、historical anchor、release/material和conditional transport表达；`core_constraints.py`只负责输入可表示性和deferred-fact fail-closed，`model.py`只负责组合core与temporal bindings。
 - min lag与transport各自条件化后形成独立下界，cross-workshop的有效下界为二者最大值而非相加；max lag使用独立上界。Calendar fixed intervals只进入对应resource的`NoOverlap`。
 - `solution_mapper.py`仍只映射完整candidate，formal Validator仍不导入Backend/OR-Tools。`temporal_model_check.py`拥有in-memory oracle、mutation和telemetry；不拥有Problem builder/hash、规则公式、objective、Strategy、Benchmark或Production入口。
+
+## TASK-P2-07 fact/lock Backend boundary
+
+- `fact_lock_constraints.py`独占RUNNING future master interval/resource固定与HARD lock resource/start/end等式；它不读取环境、freeze policy或objective，也不把SOFT lock转成constraint/hint。
+- `core_constraints.py`在CP-SAT对象创建前区分unrepresentable/self-conflicting fact/lock的MODEL_INVALID，与calendar/resource/horizon等合法约束冲突的certified INFEASIBLE；`model.py`只组合core/temporal/fact-lock bindings。
+- `solution_mapper.py`使用RUNNING `remaining_seconds`映射duration，并稳定回写该operation全部lock IDs；Problem v2未暴露RUNNING execution fact ID，因此不得猜造`execution_fact_ids`，历史事实由Problem hash与actual/resource/remainder字段保持。
+- Formal Validator继续独立重算C-007/C-008且不导入Backend/OR-Tools。`fact_lock_model_check.py`拥有synthetic oracle、mutation、model delta与telemetry，不拥有Problem builder/hash、rule formula、OBJ-001、Strategy、dynamic Replan、Benchmark或Production入口。

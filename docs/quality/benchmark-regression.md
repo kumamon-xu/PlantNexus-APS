@@ -106,3 +106,9 @@ CI中的conditional benchmark hook保持deferred。P2-12仍负责正式runner、
 Temporal report记录precedence、min/max、calendar input/fixed blocks、gate、conditional transport等constraint/model delta，以及tiny solve的build/solve/native wall/Python memory。数据仅说明约束确已进入模型并可观测，不经过warm-up、重复统计或Reference comparison。
 
 因此不建立XS/S/M baseline、threshold、quality delta或conditional regression Gate。P2-12职责与OPEN-012保持不变。
+
+## TASK-P2-07 fact/lock model delta only
+
+Fact/lock report记录RUNNING/HARD/SOFT counts、fixed operation intervals、resource/start/end equality counts与相对无事实模型的6条constraint delta，并保存tiny solve build/solve/first-feasible/native wall/Python memory。6-case oracle只核对grid/horizon/calendar half-open feasibility。
+
+这些值没有warm-up、重复统计、Reference comparison、stability objective或profile，不建立XS/S/M baseline、threshold、quality delta或conditional regression Gate。P2-12职责与OPEN-012保持不变。

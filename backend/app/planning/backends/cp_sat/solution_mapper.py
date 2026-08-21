@@ -79,6 +79,13 @@ def _assignments(
 ) -> list[OperationAssignmentDocument]:
     horizon_start = parse_utc_instant(problem["horizon_start_utc"])
     tick_seconds = problem["tick_seconds"]
+    lock_ids_by_operation: dict[str, list[str]] = {}
+    for lock in problem["operation_locks"]:
+        lock_ids_by_operation.setdefault(lock["operation_id"], []).append(
+            lock["lock_id"]
+        )
+    for lock_ids in lock_ids_by_operation.values():
+        lock_ids.sort()
     assignments: list[OperationAssignmentDocument] = []
     for operation in core_model.operations:
         selected = [
@@ -103,7 +110,7 @@ def _assignments(
                     horizon_start + timedelta(seconds=end_tick * tick_seconds)
                 ),
                 "duration_seconds": option.duration_seconds,
-                "lock_ids": [],
+                "lock_ids": list(lock_ids_by_operation.get(operation.operation_id, [])),
                 "execution_fact_ids": [],
             }
         )
@@ -223,7 +230,7 @@ def map_core_candidate_solution(
                 {
                     "code": "CP_SAT_BOUNDED_FEASIBILITY_ONLY",
                     "message": (
-                        "Candidate satisfies the bounded P2-06 model; OBJ-001 was "
+                        "Candidate satisfies the bounded P2-07 model; OBJ-001 was "
                         "measured after solve but was not optimized"
                     ),
                 }

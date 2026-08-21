@@ -121,3 +121,9 @@ Implementation `ba6dd2cdc2eeaae3b60714314bc3d2c155a2d81c`的GitHub run `32432482
 用户于2026-08-21明确授权执行TASK-P2-07。启动复核确认`main=origin/main=33cc3282ead23a4cc1bb214190191e116b095119`、working tree clean，且该SHA的GitHub run `32432843343` / required `validate` job/check `96627943272`（app `15368`）/ artifact `9429703054`精确成功，artifact digest=`sha256:de371e743b27881ea7901e1252a2c3465256d797e54736e95cf225e05eef065c`、expiry=`2026-11-19T00:29:15Z`。P2-06 implementation是该基线祖先；Problem/Policy/Solution Schema、constraint-rule-sheet、formal Validator、Problem builder/hash、OR-Tools pin与`uv.lock`全部冻结。
 
 本Task只把C-007/008加入现有bounded CP-SAT模型：COMPLETED继续不生成未来assignment且historical anchor仍可参与lag；RUNNING固定已分配资源，并从horizon start按`ceil(remaining_seconds/tick_seconds)`占用未来区间；HARD lock精确固定resource/start/end；SOFT lock只保留metadata/reference，不作为硬约束或hint。事实/lock自相矛盾必须在model build前稳定拒绝，真实constraint冲突才返回certified INFEASIBLE。OBJ-001搜索、Strategy、动态Replan、Benchmark threshold、DB/API/Worker和P3均不在范围；native OPTIMAL仍只映射为业务FEASIBLE，UNKNOWN不得改写为INFEASIBLE。P2-08及以后保持`planned`且未获授权。
+
+## TASK-P2-07 本地实现边界
+
+Fact/lock builder现已组合进bounded CP-SAT model并由formal Validator独立复验。Mapper稳定输出Problem中可追溯的全部lock references；Problem v2没有暴露active RUNNING execution fact ID，因此不得猜造，`execution_fact_ids`保持空集合，而actual/resource/remaining仍由Problem hash与model evidence保存。
+
+本地验收为focused `93 passed`、full repository `382 passed`、Ruff/Pyright 0；foundation/core/formal machine reports各6/6、temporal/fact-lock各7/7 PASS。治理为142 docs且Task diff 54 paths/6 rows/19 checks/0 issues，Compose、build、`git diff --check`与禁止路径diff均PASS。Exact implementation SHA的required `validate`及artifact复核仍是关闭门，完成前TASK-P2-07保持`in_progress`且P2-08不启动。

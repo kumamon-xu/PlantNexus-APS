@@ -1,6 +1,6 @@
 # PlantNexus APS
 
-PlantNexus APS 是一个面向单工厂、多车间场景的高级计划与排程（APS）项目。P1 Data & Snapshot 已通过 Exit Gate并关闭，当前阶段为P2（CP-SAT Vertical Slice）。TASK-P2-01～12已由local/exact provider闭环；Production能力、P2-13/14和P3仍未形成或未获启动授权。
+PlantNexus APS 是一个面向单工厂、多车间场景的高级计划与排程（APS）项目。P1 Data & Snapshot 已通过 Exit Gate并关闭，当前阶段为P2（CP-SAT Vertical Slice）。TASK-P2-01～12已由local/exact provider闭环；TASK-P2-13已获授权并只执行Vertical Slice Gate evidence，Production能力、P2-14和P3仍未形成或未获启动授权。
 
 ## 开始之前
 
@@ -60,7 +60,7 @@ scripts/      仓库级校验与自动化脚本
 infra/        P0 开发容器构建配置
 ```
 
-P1 Data & Snapshot已通过Exit Gate并关闭，当前阶段为P2。TASK-P2-01～12均已由local与exact provider evidence闭环为`done`。DB/API/Worker、Production capacity/SLA、P2-13/14和P3仍未实现或未获授权。当前边界见[`docs/current_phase.md`](docs/current_phase.md)。
+P1 Data & Snapshot已通过Exit Gate并关闭，当前阶段为P2。TASK-P2-01～12均已由local与exact provider evidence闭环为`done`；TASK-P2-13已获授权并为`in_progress`。DB/API/Worker、Production capacity/SLA、P2-14和P3仍未实现或未获授权。当前边界见[`docs/current_phase.md`](docs/current_phase.md)。
 
 TASK-P2-05本地验收与implementation `df706786e0ec1c54bf60cd43261a92ef6aa53cc7`的GitHub required `validate` / artifact均已闭环。TASK-P2-06 implementation `ba6dd2cdc2eeaae3b60714314bc3d2c155a2d81c`及TASK-P2-07 implementation `5ab65f36d532fd8786eb7ecad3cce406f4d9fb70`的required `validate`与artifact也已闭环，二者均=`done`；TASK-P2-08/09亦已闭环，TASK-P2-10是之后另获授权启动。
 
@@ -83,3 +83,5 @@ TASK-P2-11新增`kpi.v2`、`export-manifest.v1`和`p2-internal-export.v1`：所�
 用户于2026-08-21明确授权TASK-P2-12。启动门复核确认`main=origin/main=58db14e8f18fb50866fb757d4c89e76fef1141f1`，其required `validate` run `32455399561` / job `96691604529` / artifact `9437086153`精确成功并复现P2-11 closure证据。当前只允许versioned XS/S/M profile/baseline、BenchmarkRunner、共享但不改变输出的schedule KPI pure calculation、CLI/CI/test与治理文档；L/XL、Production threshold、P2-13/14及P3不会自动启动。
 
 TASK-P2-12已形成`benchmark-profile-set/report/baseline.v1`、`benchmark-runner.v1`和SIM-ASSUMPTION-013。XS/S/M分别固定8/24/48 operations，同一正式Raw→Problem链上运行Global与五个Reference，各完成1次warm-up和3次measured replay；三份报告均8/8 PASS、formal Validator与共享KPI一致，baseline comparison无warning。Implementation `01e7f4bdca88fc903e7caa771f875fc1a70ff357`的required run `32460861563` / artifact `9438899443`精确复现19/19 reports、XS 8/8及49 committed/0 working治理证据，故Task=`done`；P2-13/14与P3未启动。
+
+用户于2026-08-21明确授权TASK-P2-13。启动门复核确认`main=origin/main=59f3b013a4be7bd11d054e8464886b3cde791602`且working tree clean，P2-01～12 implementation与exact provider evidence均位于可追溯祖先链；closure run `32461665177` / required job `96709654227` / artifact `9439159396`精确success。当前只允许聚合公开边界形成可重放`p2-vertical-slice-report.v1`、四类负例、测试/CI evidence及治理文档；不修复既有实现、不作P2 Exit结论，也不启动P2-14或P3。

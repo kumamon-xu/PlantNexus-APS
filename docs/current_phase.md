@@ -42,7 +42,7 @@ PlanningSnapshot
 
 用户于2026-08-20明确授权执行`TASK-P2-03 — OR-Tools and SolverBackend Foundation`；该Task以clean、provider-verified `f73f8c90af94d3c9b05ecc10b6c999594a3b7d66`启动，并在依赖变更前接受ADR-0011。现已由implementation `9268b88ca7ce90a8f72023241f87e2d3676fd58a`的GitHub run `32346208046` / required job `96355386111` / artifact `9398128763`闭环为`done`。Problem/Policy/Solution/Report合同字节和语义保持只读。
 
-P2-02把global schema set additive提升到`2.4.0`，新增四个互相离线解析的v1 document contract，并以`CONTRACT_SAMPLE`/`SOLVER_RUN`显式区分shape样例与真实运行。该发布样例的`not-installed`是P2-02历史shape证据，不随P2-03安装依赖而改写。TASK-P2-11再以additive `2.5.0`新增KPI v2与ExportManifest v1，而PlanningSolution/SolverReport仍保留document内的`2.4.0`。TASK-P2-00～12现均由exact implementation provider evidence闭环为`done`；P2-13/14未授权。
+P2-02把global schema set additive提升到`2.4.0`，新增四个互相离线解析的v1 document contract，并以`CONTRACT_SAMPLE`/`SOLVER_RUN`显式区分shape样例与真实运行。该发布样例的`not-installed`是P2-02历史shape证据，不随P2-03安装依赖而改写。TASK-P2-11再以additive `2.5.0`新增KPI v2与ExportManifest v1，而PlanningSolution/SolverReport仍保留document内的`2.4.0`。TASK-P2-00～12现均由exact implementation provider evidence闭环为`done`；TASK-P2-13已获授权并为`in_progress`，P2-14未授权。
 
 ## 当前允许
 
@@ -54,7 +54,7 @@ P2-02把global schema set additive提升到`2.4.0`，新增四个互相离线解
 
 ## 当前禁止
 
-- TASK-P2-09～12均已关闭且不得扩展其correctness/reference/output/benchmark范围；未经另行授权不得启动P2-13/14，TASK-P2-08也不再扩展OBJ-001/Global Strategy范围；
+- TASK-P2-09～12均已关闭且不得扩展其correctness/reference/output/benchmark范围；TASK-P2-13只可编排冻结公开边界并形成Gate machine/provider evidence，未经另行授权不得启动P2-14，TASK-P2-08也不再扩展OBJ-001/Global Strategy范围；
 - 修改Task允许范围外文件、预填PASS/provider evidence或跳过独立Validator；
 - 实现C-012～C-018、OBJ-002 Stability、动态Replan、ExecutionSimulator、P3 Workspace/审批/发布状态；
 - 把UNKNOWN写成INFEASIBLE、FEASIBLE写成OPTIMAL，或以hint代替Execution Fact/HARD lock；
@@ -219,3 +219,9 @@ Implementation `546292831c3bd52185687a4c646c10ae10541ae2`的GitHub push run `324
 Implementation `01e7f4bdca88fc903e7caa771f875fc1a70ff357`的GitHub push run `32460861563` / required `validate` job/check `96707353990`（app `15368`）全部success；artifact `9438899443`（45692 bytes）未过期，digest=`sha256:caeb61fbbbd100c301725073398410e50e4b79f979f0b72df08d32a28fc2874e`、expiry=`2026-11-19T07:56:26Z`。Branch protection仍精确要求`validate`/app `15368`。
 
 下载复核19/19 JSON全部PASS；`benchmarks/ci-xs.json`绑定implementation SHA并为8/8、0 warning及固定XS Problem hash，`ci-current-task-report.json`绑定同一SHA/Diff base并为49 committed/0 working paths、7 rows、19 checks、0 issues。因此TASK-P2-12=`done`，current phase仍为P2；P2-13/14未获授权，P3仍禁止，L/XL与Production capacity/SLA保持未形成。
+
+## TASK-P2-13 启动边界
+
+用户于2026-08-21明确授权执行TASK-P2-13。启动复核确认`main=origin/main=59f3b013a4be7bd11d054e8464886b3cde791602`且working tree clean，P2-01～12均`done`，十二个implementation均位于当前HEAD祖先链且各自exact required `validate` / artifact可取；closure HEAD的run `32461665177` / required `validate` job/check `96709654227`（app `15368`）/ artifact `9439159396`均success，artifact digest=`sha256:007e7a3107d06d7d629f519a87a7e8e0c54143863d422413664d857659e38cb1`且未过期。Diff base据此冻结。
+
+本Task只编排Snapshot→Problem→Policy/Limits→Global CP-SAT→independent Validator→KPI/SolverReport→internal Export公开边界，至少两次完整replay七类correctness与XS/S/M，形成versioned Gate report、四类unsupported/invalid/limit拒绝、CI exact artifact及blocking gap列表。既有Solver/Validator/合同/fixture/benchmark只读；任何失败诚实返回FAIL且不在本Task修复。P2-14 Exit Gate Audit、P3及Production readiness全部禁止，current phase保持P2。

@@ -12,7 +12,7 @@ registry_version: 1.0.0
 
 # 文档清单
 
-本清单列出当前仓库已经实际存在的Markdown文档。P0/P1均已归档为completed；P2现为active，TASK-P2-00～12已done。P2-13/14仍为planned且未获启动授权。产品API与Production Runbook正文尚未形成并继续由相应索引登记。
+本清单列出当前仓库已经实际存在的Markdown文档。P0/P1均已归档为completed；P2现为active，TASK-P2-00～12已done，TASK-P2-13已获授权并为in_progress。P2-14仍为planned且未获启动授权。产品API与Production Runbook正文尚未形成并继续由相应索引登记。
 
 | Path | Doc ID | Status | Title |
 |---|---|---|---|
@@ -154,7 +154,7 @@ registry_version: 1.0.0
 | [tasks/P2/TASK-P2-10-reference-schedulers.md](../tasks/P2/TASK-P2-10-reference-schedulers.md) | TASK-P2-10 | done | Reference Schedulers |
 | [tasks/P2/TASK-P2-11-kpi-solver-report-and-export-closure.md](../tasks/P2/TASK-P2-11-kpi-solver-report-and-export-closure.md) | TASK-P2-11 | done | KPI SolverReport and Export Closure |
 | [tasks/P2/TASK-P2-12-benchmark-runner-xs-s-m.md](../tasks/P2/TASK-P2-12-benchmark-runner-xs-s-m.md) | TASK-P2-12 | done | BenchmarkRunner and XS S M Profiles |
-| [tasks/P2/TASK-P2-13-p2-vertical-slice-gate-evidence.md](../tasks/P2/TASK-P2-13-p2-vertical-slice-gate-evidence.md) | TASK-P2-13 | planned | P2 Vertical Slice Gate Evidence |
+| [tasks/P2/TASK-P2-13-p2-vertical-slice-gate-evidence.md](../tasks/P2/TASK-P2-13-p2-vertical-slice-gate-evidence.md) | TASK-P2-13 | in_progress | P2 Vertical Slice Gate Evidence |
 | [tasks/P2/TASK-P2-14-p2-exit-gate-audit.md](../tasks/P2/TASK-P2-14-p2-exit-gate-audit.md) | TASK-P2-14 | planned | P2 Exit Gate Audit |
 | [tasks/README.md](../tasks/README.md) | DOC-TASK-INDEX | living | Task Card 索引 |
 | [tasks/TASK_TEMPLATE.md](../tasks/TASK_TEMPLATE.md) | TEMPLATE-TASK | baseline | Task Card Template |
@@ -240,3 +240,5 @@ TASK-P2-12启动不新增、删除或重命名`docs/**/*.md`路径，inventory�
 TASK-P2-12本地实现仍未新增、删除或重命名`docs/**/*.md`，inventory保持142份；新增profiles/baselines/Python/tests/workflow与ignored Benchmark/Task JSON均不进入Markdown清单。Roots=30、Test IDs=36、OPEN=15、risks=11、Tasks=37不变，SIM assumptions由12增至13且全部`ACTIVE`；full/diff治理实际为49 paths、7 rows、19 checks、0 issues并PASS，registry format version保持`1.0.0`。
 
 Implementation artifact `9438899443`已复现142-doc inventory与49 committed/0 working paths、7 rows、19 checks、0 issues，TASK-P2-12=`done`。没有新增、删除或重命名正式Markdown；P2-13/14保持`planned`，inventory与registry版本不变。
+
+TASK-P2-13启动不新增、删除或重命名`docs/**/*.md`路径，inventory继续完整覆盖142份文档；只将已获2026-08-21明确授权的该Task同步为`in_progress`。新增Gate Python/tests/workflow及ignored machine/Task JSON不是正式Markdown inventory条目；P2-14保持`planned`，registry format version不变。

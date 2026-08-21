@@ -36,7 +36,7 @@ P1 Exit Gate=`READY`且blocking gaps为空；用户于2026-08-20明确批准P1�
 | 10 | TASK-P2-10 | 五个Reference Schedulers | P2-01/02/04 | `done` |
 | 11 | TASK-P2-11 | KPI/SolverReport/internal Export closure | P2-08/09 | `done` |
 | 12 | TASK-P2-12 | BenchmarkRunner与XS/S/M profiles | P2-08～11 | `done` |
-| 13 | TASK-P2-13 | 完整vertical-slice Gate report与CI evidence | P2-01～12 | `planned` |
+| 13 | TASK-P2-13 | 完整vertical-slice Gate report与CI evidence | P2-01～12 | `in_progress` |
 | 14 | TASK-P2-14 | P2 Exit Gate Audit | P2-01～13 | `planned` |
 
 ## Dependency graph
@@ -68,9 +68,9 @@ P2-03与P2-04在合同固定后可并行准备，但P2-05必须同时等待Backe
 
 ## Current execution boundary
 
-TASK-P2-00～12均已由local/exact provider闭环为`done`。P2-03形成exact Solver dependency与Backend engineering foundation，P2-04形成formal independent Validator，P2-05～07形成完整C-001～C-011 hard model，P2-08形成唯一OBJ-001与Global Strategy，P2-09形成七类correctness integration，P2-10形成五个non-production Reference Schedulers，P2-11形成不可发布internal Export闭环，P2-12形成versioned XS/S/M BenchmarkRunner。P2保持`active`；P2-13/14未获授权且不进入P3。
+TASK-P2-00～12均已由local/exact provider闭环为`done`。P2-03形成exact Solver dependency与Backend engineering foundation，P2-04形成formal independent Validator，P2-05～07形成完整C-001～C-011 hard model，P2-08形成唯一OBJ-001与Global Strategy，P2-09形成七类correctness integration，P2-10形成五个non-production Reference Schedulers，P2-11形成不可发布internal Export闭环，P2-12形成versioned XS/S/M BenchmarkRunner。P2保持`active`；TASK-P2-13已获授权并为`in_progress`，P2-14未获授权且不进入P3。
 
-P2-02已形成global schema set`2.4.0`、PlanningPolicy/SolveLimits/PlanningSolution/SolverReport v1、七种status与pure fingerprint/precheck/CI report。P2-03未修改这些合同字节；empty/model-invalid smoke不构成业务可行性或candidate。TASK-P2-11以additive set`2.5.0`新增KPI/manifest合同且保留所有历史artifact。TASK-P2-04～12现均已完成，P2-13/14仍为`planned`且未获启动授权。
+P2-02已形成global schema set`2.4.0`、PlanningPolicy/SolveLimits/PlanningSolution/SolverReport v1、七种status与pure fingerprint/precheck/CI report。P2-03未修改这些合同字节；empty/model-invalid smoke不构成业务可行性或candidate。TASK-P2-11以additive set`2.5.0`新增KPI/manifest合同且保留所有历史artifact。TASK-P2-04～12现均已完成，TASK-P2-13为`in_progress`，P2-14仍为`planned`且未获启动授权。
 
 P2-04的授权范围仅包含formal independent Validator及其机器证据。它已逐项独立重算C-001～C-011、忽略solver status的可信声明并保持Backend/OR-Tools/expected artifact隔离；P2-05 core model、OBJ-001、Benchmark和P3均不在本次范围。
 
@@ -117,3 +117,5 @@ Implementation `546292831c3bd52185687a4c646c10ae10541ae2`的run `32454693799` / 
 本地实现已形成`benchmark-runner.v1`及严格Profile/Report/Baseline v1；XS/S/M分别为8/24/48 operations，并各自完成Global加五Reference的1次warm-up、3次measured run、fresh Validator和共享KPI交叉。报告覆盖problem/model counts、build/first/solve/validation/total、objective/bound/gap、memory、环境和export evidence，三份均8/8 PASS且无warning；27 focused、466 full、全部历史machine reports、Ruff/Pyright、Compose/build及49 paths/7 rows治理均PASS，CI PR slice真实执行XS。
 
 Implementation `01e7f4bdca88fc903e7caa771f875fc1a70ff357`的run `32460861563` / required job `96707353990` / artifact `9438899443`均success；artifact digest=`sha256:caeb61fbbbd100c301725073398410e50e4b79f979f0b72df08d32a28fc2874e`并精确复现19/19 reports、XS 8/8、0 warning及49 committed/0 working paths、7 rows、19 checks、0 issues。因此TASK-P2-12=`done`；Milestone保持`active`，P2-13 Gate整合与P2-14 Audit均未启动。
+
+用户于2026-08-21明确授权TASK-P2-13；clean/provider-verified启动基线为`59f3b013a4be7bd11d054e8464886b3cde791602`，run `32461665177` / required job `96709654227` / artifact `9439159396`精确success。TASK-P2-13只聚合P2-01～12公开边界为至少两次replay的versioned Gate report、四类拒绝、blocking gap和CI artifact；不做remediation或Exit READY。P2-14仍须最后另行授权，P3不自动启动。

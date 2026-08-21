@@ -35,7 +35,7 @@ last_reviewed: 2026-08-21
 | [TASK-P2-10](P2/TASK-P2-10-reference-schedulers.md) | 五个Reference Schedulers | P2-01/02/04 | `done` |
 | [TASK-P2-11](P2/TASK-P2-11-kpi-solver-report-and-export-closure.md) | KPI/report/internal Export | P2-08/09 | `done` |
 | [TASK-P2-12](P2/TASK-P2-12-benchmark-runner-xs-s-m.md) | BenchmarkRunner与XS/S/M | P2-08～11 | `done` |
-| [TASK-P2-13](P2/TASK-P2-13-p2-vertical-slice-gate-evidence.md) | Vertical Slice Gate evidence | P2-01～12 | `planned` |
+| [TASK-P2-13](P2/TASK-P2-13-p2-vertical-slice-gate-evidence.md) | Vertical Slice Gate evidence | P2-01～12 | `in_progress` |
 | [TASK-P2-14](P2/TASK-P2-14-p2-exit-gate-audit.md) | P2 Exit Gate Audit | P2-01～13 | `planned` |
 
 ## Lifecycle and planning-batch rules
@@ -44,7 +44,7 @@ last_reviewed: 2026-08-21
 
 普通CI event range仍只能变更一张current-phase Task Card。唯一例外是初始phase-planning batch：必须由新建`TASK-Pn-00`、`Task batch role: phase-planning-owner`、有效Diff base且`in_progress/done`的唯一owner归属；其他卡必须同range新建、role=`phase-plan-member`、保持`planned/ready`且不得预填implementation SHA。历史卡、既有成员、多个owner或active/done成员均硬失败。选择owner后仍按owner Diff base检查全部scope/Impact Rule。
 
-TASK-P2-00～12已`done`。P2-03的Diff base固定为`f73f8c90af94d3c9b05ecc10b6c999594a3b7d66`且ADR-0011先于dependency变更接受；P2-04～12的implementation及exact provider evidence均已闭环。P2-13/14继续`planned`且未获授权。
+TASK-P2-00～12已`done`。P2-03的Diff base固定为`f73f8c90af94d3c9b05ecc10b6c999594a3b7d66`且ADR-0011先于dependency变更接受；P2-04～12的implementation及exact provider evidence均已闭环。TASK-P2-13已获授权并为`in_progress`；P2-14继续`planned`且未获授权。
 
 P2-04限定为正式Problem/Solution独立C-001～C-011判定、stable ValidationReport/Error、mutation/property/independence machine evidence及CI handoff；不得修改Backend、合同Schema、fixture历史bytes、dependency、objective、Benchmark或P3。P2-05及以后不会由本Task自动启动。
 
@@ -77,3 +77,5 @@ TASK-P2-11已形成additive schema set`2.5.0`、validated-solution KPI/SolverRep
 用户于2026-08-21授权TASK-P2-12。启动门确认P2-08～11均`done`，closure HEAD `58db14e8f18fb50866fb757d4c89e76fef1141f1`的required `validate` run `32455399561` / job `96691604529` / artifact `9437086153`一致；当前只允许XS/S/M BenchmarkRunner/profile/baseline、共享schedule KPI pure calculation、测试/CI evidence和治理文档，P2-13/14不会自动启动。
 
 TASK-P2-12已形成严格XS/S/M profile/baseline、同Problem的Global/五Reference比较、formal Validator/共享KPI、warm-up/repetition/percentile、environment capture、CLI和CI XS artifact路径；27项指定、466项全仓测试及三份8/8报告均PASS。Implementation `01e7f4bdca88fc903e7caa771f875fc1a70ff357`的run `32460861563` / required job `96707353990` / artifact `9438899443`精确复现19/19 reports及49 committed/0 working paths、7 rows、19 checks、0 issues，故索引=`done`；P2-13/14不自动启动。
+
+用户于2026-08-21授权TASK-P2-13。启动门确认P2-01～12均`done`，closure HEAD `59f3b013a4be7bd11d054e8464886b3cde791602`的required `validate` run `32461665177` / job `96709654227` / artifact `9439159396`一致；当前只允许公开边界Gate report、correctness/XS/S/M replay、四类拒绝、测试/CI evidence和治理文档，P2-14与P3不会自动启动。

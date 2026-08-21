@@ -30,7 +30,7 @@ P0 当前状态：TASK-P0-01～10 全部完成；[superseding audit](P0-exit-gat
 
 P1当前状态：[`P1 — Data & Snapshot`](P1-data-and-snapshot.md)为`completed`，TASK-P1-01～12全部`done`。[P1 audit](P1-exit-gate-audit-report.md)的271项回归、14/14 pipeline、全部machine/build/docs/provider证据均PASS；TASK-P1-12 implementation `a5d7e4a68dc12d48e36cb692500f59446f8097b4` / run `32326616525` / artifact `9391591718`已闭环，Gate=`READY`且无blocking gap。用户于2026-08-20明确批准transition。
 
-P2当前状态：[`P2 — CP-SAT Vertical Slice`](P2-cp-sat-vertical-slice.md)为`active`。TASK-P2-00～12均已闭环为`done`；P2-13/14仍为`planned`且未获启动授权，P2-14必须为最后的Exit Gate Audit，不得自动进入P3。
+P2当前状态：[`P2 — CP-SAT Vertical Slice`](P2-cp-sat-vertical-slice.md)为`active`。TASK-P2-00～12均已闭环为`done`；TASK-P2-13已获授权并为`in_progress`，P2-14仍为`planned`且未获启动授权。P2-14必须为最后的Exit Gate Audit，不得自动进入P3。
 
 TASK-P2-03 implementation `9268b88ca7ce90a8f72023241f87e2d3676fd58a`的run `32346208046`、required job `96355386111`和artifact `9398128763`均success；P2 phase保持active，后续Task不自动启动。
 
@@ -61,3 +61,5 @@ TASK-P2-11已形成`kpi.v2`、`export-manifest.v1`与`p2-internal-export.v1`，�
 用户于2026-08-21明确授权TASK-P2-12；Diff base `58db14e8f18fb50866fb757d4c89e76fef1141f1`的run `32455399561`、required job `96691604529`与artifact `9437086153`精确success。当前只启动versioned XS/S/M BenchmarkRunner、同Problem/Validator/KPI比较、环境/规模/性能/质量报告及CI XS artifact；L/XL、Production threshold、P2-13/14及P3不自动启动。
 
 TASK-P2-12现已对XS/S/M固定Problem完成Global+五Reference、fresh Validator、共享KPI、1+3 repetition、环境/规模/时间/质量/内存采集与immutable baseline比较；三份报告均8/8 PASS且无warning。Implementation `01e7f4bdca88fc903e7caa771f875fc1a70ff357`的run `32460861563` / required job `96707353990` / artifact `9438899443`精确复现19/19 reports与49-path治理，故Task=`done`。Milestone继续`active`；P2-13/14与P3不自动启动。
+
+用户于2026-08-21明确授权TASK-P2-13；Diff base `59f3b013a4be7bd11d054e8464886b3cde791602`的run `32461665177`、required job `96709654227`与artifact `9439159396`精确success。当前只启动公开边界Gate编排、至少两次correctness/XS/S/M replay、四类拒绝、CI machine evidence与治理同步；P2-14 Audit和P3不自动启动。

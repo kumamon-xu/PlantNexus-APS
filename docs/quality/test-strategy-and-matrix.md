@@ -76,7 +76,7 @@ TASK-P2-10不新增或复用Test ID；它把TEST-REFERENCE-SCHEDULER与TEST-PROP
 
 TASK-P2-11不新增或复用Test ID；它把TEST-OUTPUT、TEST-CONTRACT-001与TEST-IDEMPOTENCY的internal slice链接到两份新focused files和`p2-output-contract-report.v1`。Contract tests覆盖KPI/manifest Schema/sample、KPI v1 byte preservation、metric formulas、SolverReport freeze及mixed/Validator failures；integration覆盖same-input bytes、file/hash/count/CSV lineage、tamper/missing、synthetic provenance、exact replay/conflict与partial-write cleanup。P3 ExportJob/publish side effects和P2-12 TEST-BENCHMARK继续PLANNED，registry format version保持`1.0.0`。
 
-本地指定验收=`49 passed`、full repository=`455 passed`，其中新增task-specific测试13项；Ruff/Pyright为0问题，output machine report为8/8。首次full准确暴露3个旧global schema-set断言并在先扩allow-list后修正为`2.5.0`，其document-level版本与历史fingerprint断言保持。Exact provider仍待implementation push，因此Test evidence为local formed，Task不提前关闭。
+本地指定验收=`49 passed`、full repository=`455 passed`，其中新增task-specific测试13项；Ruff/Pyright为0问题，output machine report为8/8。首次full准确暴露3个旧global schema-set断言并在先扩allow-list后修正为`2.5.0`，其document-level版本与历史fingerprint断言保持。Implementation provider run `32454693799` / artifact `9436863185`精确复现455 tests、output 8/8、18/18 reports及58-path治理，故TASK-P2-11=`done`；TEST-BENCHMARK、P2 Gate与Production测试继续PLANNED，registry format version保持`1.0.0`。
 
 ## 原则
 

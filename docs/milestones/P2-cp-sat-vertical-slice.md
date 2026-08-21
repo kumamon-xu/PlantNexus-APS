@@ -34,7 +34,7 @@ P1 Exit Gate=`READY`且blocking gaps为空；用户于2026-08-20明确批准P1�
 | 8 | TASK-P2-08 | OBJ-001 Delivery与GlobalCpSatStrategy | P2-02/05/06/07 | `done` |
 | 9 | TASK-P2-09 | Golden/scenario/property/mutation integration | P2-04～08 | `done` |
 | 10 | TASK-P2-10 | 五个Reference Schedulers | P2-01/02/04 | `done` |
-| 11 | TASK-P2-11 | KPI/SolverReport/internal Export closure | P2-08/09 | `in_progress` |
+| 11 | TASK-P2-11 | KPI/SolverReport/internal Export closure | P2-08/09 | `done` |
 | 12 | TASK-P2-12 | BenchmarkRunner与XS/S/M profiles | P2-08～11 | `planned` |
 | 13 | TASK-P2-13 | 完整vertical-slice Gate report与CI evidence | P2-01～12 | `planned` |
 | 14 | TASK-P2-14 | P2 Exit Gate Audit | P2-01～13 | `planned` |
@@ -68,9 +68,9 @@ P2-03与P2-04在合同固定后可并行准备，但P2-05必须同时等待Backe
 
 ## Current execution boundary
 
-TASK-P2-00～10均已由local/exact provider闭环为`done`。P2-03形成exact Solver dependency与Backend engineering foundation，P2-04形成formal independent Validator，P2-05～07形成完整C-001～C-011 hard model，P2-08形成唯一OBJ-001与Global Strategy，P2-09形成七类correctness integration，P2-10形成五个non-production Reference Schedulers。P2保持`active`；TASK-P2-11已获授权并为`in_progress`，P2-12～14未获授权且不进入P3。
+TASK-P2-00～11均已由local/exact provider闭环为`done`。P2-03形成exact Solver dependency与Backend engineering foundation，P2-04形成formal independent Validator，P2-05～07形成完整C-001～C-011 hard model，P2-08形成唯一OBJ-001与Global Strategy，P2-09形成七类correctness integration，P2-10形成五个non-production Reference Schedulers，P2-11形成不可发布internal Export闭环。P2保持`active`；P2-12～14未获授权且不进入P3。
 
-P2-02已形成global schema set`2.4.0`、PlanningPolicy/SolveLimits/PlanningSolution/SolverReport v1、七种status与pure fingerprint/precheck/CI report。P2-03未修改这些合同字节；empty/model-invalid smoke不构成业务可行性或candidate。TASK-P2-11以additive set`2.5.0`新增KPI/manifest合同且保留所有历史artifact。TASK-P2-04～10现均已完成，TASK-P2-11为`in_progress`，P2-12～14仍为`planned`且未获启动授权。
+P2-02已形成global schema set`2.4.0`、PlanningPolicy/SolveLimits/PlanningSolution/SolverReport v1、七种status与pure fingerprint/precheck/CI report。P2-03未修改这些合同字节；empty/model-invalid smoke不构成业务可行性或candidate。TASK-P2-11以additive set`2.5.0`新增KPI/manifest合同且保留所有历史artifact。TASK-P2-04～11现均已完成，P2-12～14仍为`planned`且未获启动授权。
 
 P2-04的授权范围仅包含formal independent Validator及其机器证据。它已逐项独立重算C-001～C-011、忽略solver status的可信声明并保持Backend/OR-Tools/expected artifact隔离；P2-05 core model、OBJ-001、Benchmark和P3均不在本次范围。
 
@@ -108,4 +108,6 @@ Implementation `8ca62bbb1105a1dfae2ee2600ae7e4e62a5bef6c`的run `32449742281` / 
 
 用户于2026-08-21明确授权TASK-P2-11；clean/provider-verified启动基线为`41e958b771f2664b1ac50867903a30b73627878d`，run `32450216908` / required job `96677202782` / artifact `9435421360`精确success。TASK-P2-11只形成KPI v2、固化SolverReport、不可发布的`p2-internal-export.v1`及hash/count/lineage/atomic-write machine evidence；ChangeReport、BenchmarkRunner、ScheduleVersion/ExportJob、approval/publish/external transfer、P2-12～14与P3不自动启动。
 
-本地实现已完成上述有界slice：KPI对交付/排程/resource/solver指标独立复算，manifest固定9个payload与同run全链血缘，纯内存构建和同文件系统原子目录提交支持exact replay并拒绝partial/tampered/mixed lineage。指定验收49项、全仓455项与`p2-output-contract-report.v1` 8/8均PASS。Exact implementation provider evidence尚待push，因此Milestone状态仍为`active`、TASK-P2-11仍为`in_progress`、TASK-P2-12仍为`planned`。
+本地实现已完成上述有界slice：KPI对交付/排程/resource/solver指标独立复算，manifest固定9个payload与同run全链血缘，纯内存构建和同文件系统原子目录提交支持exact replay并拒绝partial/tampered/mixed lineage。指定验收49项、全仓455项与`p2-output-contract-report.v1` 8/8均PASS。
+
+Implementation `546292831c3bd52185687a4c646c10ae10541ae2`的run `32454693799` / required job `96689627030` / artifact `9436863185`均success；artifact digest=`sha256:77dfadb425f1c3f47d21494127785c81357351aeee6ecbdd4f00386516db054b`并精确复现output 8/8、18/18 reports及58 committed/0 working paths、11 rows、19 checks、0 issues。因此TASK-P2-11=`done`；Milestone保持`active`，P2-12～14和P3不自动启动。

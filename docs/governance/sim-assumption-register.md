@@ -102,3 +102,5 @@ TASK-P2-10 local review：新增SIM-ASSUMPTION-012并绑定`reference-scheduler-
 TASK-P2-10 provider closure：required run/artifact精确重放同一policy、algorithm identities、Problem hashes与failure boundary，没有修改或retire任何assumption。SIM-ASSUMPTION-001～012继续`ACTIVE`；provider执行不把tiny timing提升为XS/S/M baseline、Production fallback/default或SLA，registry format version保持`1.0.0`。
 
 TASK-P2-11 local review：内部包复用SIM-ASSUMPTION-011的P2 correctness Scenario/Profile/seed与manifest，并保留SIM-ASSUMPTION-012的Reference边界不变；KPI/manifest/sample只是既有synthetic run的派生产物，不新增topology、distribution、权重、calendar、capacity或Benchmark假设。未新增、修改或retire任何条目；SIM-ASSUMPTION-001～012继续`ACTIVE`，internal package不得作为Production或XS/S/M事实，registry format version保持`1.0.0`。
+
+TASK-P2-11 provider closure：required run/artifact精确重放同一synthetic Scenario/Profile/seed、KPI与package lineage，没有新增、修改或retire任何assumption。SIM-ASSUMPTION-001～012继续`ACTIVE`；provider执行不把internal package或single-run telemetry提升为Production事实、XS/S/M baseline或SLA，registry format version保持`1.0.0`。

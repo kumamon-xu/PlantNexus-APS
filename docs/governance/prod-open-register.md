@@ -118,3 +118,5 @@ TASK-P2-10 local review：五个Reference algorithms、tie-break、tiny runtime�
 TASK-P2-10 provider closure：GitHub required run/artifact只复现versioned Simulation reference correctness，不是业务Authority或closure record。OPEN-001～015全部继续`OPEN`，没有Production priority/default/fallback/SLA/capacity或发布决定，registry format version保持`1.0.0`。
 
 TASK-P2-11 local review：KPI/manifest/sample/package全部标记synthetic且`publishable=false`，只消费既有P2 correctness authority。它不决定真实外部接口（OPEN-002）、priority/KPI权重（OPEN-006）、审批角色（OPEN-010）或生产输入契约（OPEN-015），也不创建ScheduleVersion/ExportJob/publish。没有Authority/Evidence closure record；OPEN-001～015全部继续`OPEN`，registry format version保持`1.0.0`。
+
+TASK-P2-11 provider closure：GitHub required run/artifact只复现synthetic、non-publishable internal package和确定性输出控制，不是业务Authority、审批、发布或closure record。OPEN-001～015全部继续`OPEN`，没有Production interface/default/KPI weight/role/input或发布决定，registry format version保持`1.0.0`。

@@ -316,3 +316,5 @@ Implementation artifact `9435264655`内`traceability-report.v1`精确绑定`8ca6
 Diff base固定为`41e958b771f2664b1ac50867903a30b73627878d`；完整activation/implementation范围必须命中`IMPACT-SCHEMA/REPORTING/EXPORT/STATE/TESTS/INFRA/DEPENDENCY/VERSION-METADATA/PHASE/GOVERNANCE-REGISTRY/DOCS`。`pyproject.toml`仅提升schema metadata，runtime/dev dependency和`uv.lock`不得变化；State行只审查并声明无transition/persistence，不能把文档更新解释为状态实现。
 
 本Task不新增、删除或重命名`docs/**/*.md`，inventory继续为142；roots=30、Test IDs=36、OPEN=15、SIM assumptions=12、risks=11、Tasks=37，所有registry format version保持`1.0.0`。本地Task diff已覆盖58 paths、11个真实Impact rows、19项governance checks且0 issues；implementation提交后provider artifact还必须复现58 committed/0 working paths。
+
+Implementation artifact `9436863185`内`traceability-report.v1`精确绑定`546292831c3bd52185687a4c646c10ae10541ae2`与Diff base `41e958b771f2664b1ac50867903a30b73627878d`，复现58 committed/0 working paths、11 rows、19 checks、0 issues并PASS；TASK-P2-11治理Gate据此闭环为`done`。Closure提交仍须由自身exact provider复核，不在本提交预写其ID。

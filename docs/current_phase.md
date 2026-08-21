@@ -42,7 +42,7 @@ PlanningSnapshot
 
 用户于2026-08-20明确授权执行`TASK-P2-03 — OR-Tools and SolverBackend Foundation`；该Task以clean、provider-verified `f73f8c90af94d3c9b05ecc10b6c999594a3b7d66`启动，并在依赖变更前接受ADR-0011。现已由implementation `9268b88ca7ce90a8f72023241f87e2d3676fd58a`的GitHub run `32346208046` / required job `96355386111` / artifact `9398128763`闭环为`done`。Problem/Policy/Solution/Report合同字节和语义保持只读。
 
-P2-02把global schema set additive提升到`2.4.0`，新增四个互相离线解析的v1 document contract，并以`CONTRACT_SAMPLE`/`SOLVER_RUN`显式区分shape样例与真实运行。该发布样例的`not-installed`是P2-02历史shape证据，不随P2-03安装依赖而改写。TASK-P2-11再以additive `2.5.0`新增KPI v2与ExportManifest v1，而PlanningSolution/SolverReport仍保留document内的`2.4.0`。TASK-P2-00～10现均由exact implementation provider evidence闭环为`done`；TASK-P2-11为`in_progress`，P2-12～14未授权。
+P2-02把global schema set additive提升到`2.4.0`，新增四个互相离线解析的v1 document contract，并以`CONTRACT_SAMPLE`/`SOLVER_RUN`显式区分shape样例与真实运行。该发布样例的`not-installed`是P2-02历史shape证据，不随P2-03安装依赖而改写。TASK-P2-11再以additive `2.5.0`新增KPI v2与ExportManifest v1，而PlanningSolution/SolverReport仍保留document内的`2.4.0`。TASK-P2-00～11现均由exact implementation provider evidence闭环为`done`；P2-12～14未授权。
 
 ## 当前允许
 
@@ -54,7 +54,7 @@ P2-02把global schema set additive提升到`2.4.0`，新增四个互相离线解
 
 ## 当前禁止
 
-- TASK-P2-09/10均已关闭且不得扩展其correctness/reference范围；TASK-P2-11只可在冻结allow-list内形成KPI v2/SolverReport/internal Export，未经另行授权不得启动P2-12～14，TASK-P2-08也不再扩展OBJ-001/Global Strategy范围；
+- TASK-P2-09～11均已关闭且不得扩展其correctness/reference/output范围；未经另行授权不得启动P2-12～14，TASK-P2-08也不再扩展OBJ-001/Global Strategy范围；
 - 修改Task允许范围外文件、预填PASS/provider evidence或跳过独立Validator；
 - 实现C-012～C-018、OBJ-002 Stability、动态Replan、ExecutionSimulator、P3 Workspace/审批/发布状态；
 - 把UNKNOWN写成INFEASIBLE、FEASIBLE写成OPTIMAL，或以hint代替Execution Fact/HARD lock；
@@ -194,4 +194,10 @@ Implementation `8ca62bbb1105a1dfae2ee2600ae7e4e62a5bef6c`的GitHub push run `324
 
 当前本地实现已从P2-09首个validated synthetic replay生成immutable KPI与10文件目录（`manifest.json`加9个payload）。KPI独立复算逐订单交付、OBJ-001、makespan、完整排程计数与calendar-denominator resource utilization；无base ScheduleVersion时Stability固定为`NOT_APPLICABLE_NO_BASE_SCHEDULE`。SolverReport保持真实`SOLVER_RUN`字节，不用样例或重写timing代替。
 
-Package verifier重新校验全部canonical JSON、manifest/package/KPI identity、每文件hash/size/CSV row count、同一planning run和Problem/Snapshot/Solution/Validation/Solver/Quality lineage、fresh SolverReport binding以及synthetic provenance。目录写入使用同父目录临时目录、manifest last和原子rename；exact replay幂等，冲突和partial I/O均稳定拒绝且不留下成功目录。指定验收49项、全仓455项、Ruff/Pyright及machine report 8/8均PASS；exact implementation SHA的GitHub required `validate`与artifact尚未形成，因此TASK-P2-11继续`in_progress`且P2-12不启动。
+Package verifier重新校验全部canonical JSON、manifest/package/KPI identity、每文件hash/size/CSV row count、同一planning run和Problem/Snapshot/Solution/Validation/Solver/Quality lineage、fresh SolverReport binding以及synthetic provenance。目录写入使用同父目录临时目录、manifest last和原子rename；exact replay幂等，冲突和partial I/O均稳定拒绝且不留下成功目录。指定验收49项、全仓455项、Ruff/Pyright及machine report 8/8均PASS；全部历史machine reports、Compose、build、schema metadata、immutable/forbidden-path与`git diff --check`也均PASS。
+
+## TASK-P2-11 执行结果
+
+Implementation `546292831c3bd52185687a4c646c10ae10541ae2`的GitHub push run `32454693799`（attempt 1）/ required `validate` job/check `96689627030`（GitHub Actions app `15368`）全部success；branch protection仍精确要求`validate`/app `15368`。Artifact `9436863185`（41084 bytes）未过期，digest=`sha256:77dfadb425f1c3f47d21494127785c81357351aeee6ecbdd4f00386516db054b`、expiry=`2026-11-19T06:30:51Z`。
+
+下载复核18份JSON全部PASS；`ci-p2-output-contracts.json`绑定implementation SHA并为8/8、9 package payloads、2 deterministic replays及3 rejection cases；`ci-current-task-report.json`绑定同一SHA/Diff base并为58 committed/0 working paths、11 rows、19 checks、0 issues。因此TASK-P2-11=`done`，current phase仍为P2；P2-12～14未获授权，P3仍禁止。

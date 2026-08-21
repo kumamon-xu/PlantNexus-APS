@@ -30,7 +30,7 @@ P0 当前状态：TASK-P0-01～10 全部完成；[superseding audit](P0-exit-gat
 
 P1当前状态：[`P1 — Data & Snapshot`](P1-data-and-snapshot.md)为`completed`，TASK-P1-01～12全部`done`。[P1 audit](P1-exit-gate-audit-report.md)的271项回归、14/14 pipeline、全部machine/build/docs/provider证据均PASS；TASK-P1-12 implementation `a5d7e4a68dc12d48e36cb692500f59446f8097b4` / run `32326616525` / artifact `9391591718`已闭环，Gate=`READY`且无blocking gap。用户于2026-08-20明确批准transition。
 
-P2当前状态：[`P2 — CP-SAT Vertical Slice`](P2-cp-sat-vertical-slice.md)为`active`。TASK-P2-00～10均已闭环为`done`；TASK-P2-11已获授权并为`in_progress`，其KPI/report/internal Export已形成本地证据但仍待exact provider闭环。P2-12～14仍为`planned`且未获启动授权，P2-14必须为最后的Exit Gate Audit，不得自动进入P3。
+P2当前状态：[`P2 — CP-SAT Vertical Slice`](P2-cp-sat-vertical-slice.md)为`active`。TASK-P2-00～11均已闭环为`done`；P2-12～14仍为`planned`且未获启动授权，P2-14必须为最后的Exit Gate Audit，不得自动进入P3。
 
 TASK-P2-03 implementation `9268b88ca7ce90a8f72023241f87e2d3676fd58a`的run `32346208046`、required job `96355386111`和artifact `9398128763`均success；P2 phase保持active，后续Task不自动启动。
 
@@ -56,4 +56,4 @@ TASK-P2-10已通过13个Task-specific、441个full tests、Ruff/Pyright与refere
 
 用户于2026-08-21明确授权TASK-P2-11；Diff base `41e958b771f2664b1ac50867903a30b73627878d`的run `32450216908`、required job `96677202782`与artifact `9435421360`精确success。当前只启动additive KPI/manifest合同、validated-solution KPI/SolverReport和不可发布internal package；ChangeReport/BenchmarkRunner、P3 state/persistence/approval/publish及P2-12～14不自动启动。
 
-TASK-P2-11已形成本地`kpi.v2`、`export-manifest.v1`与`p2-internal-export.v1`，包括9个payload的canonical bytes/hash/count/lineage、8项machine checks以及idempotent/atomic failure边界。该包明确`publishable=false`、ScheduleVersion/ExportJob=`NOT_CREATED`、ChangeReport延后P4、BenchmarkReport延后P2-12；P2 Milestone继续`active`，Task在exact provider闭环前保持`in_progress`。
+TASK-P2-11已形成`kpi.v2`、`export-manifest.v1`与`p2-internal-export.v1`，包括9个payload的canonical bytes/hash/count/lineage、8项machine checks以及idempotent/atomic failure边界。该包明确`publishable=false`、ScheduleVersion/ExportJob=`NOT_CREATED`、ChangeReport延后P4、BenchmarkReport延后P2-12。Implementation `546292831c3bd52185687a4c646c10ae10541ae2`的run `32454693799` / required job `96689627030` / artifact `9436863185`精确success并复现18/18 reports与58-path治理证据，故Task=`done`；P2 Milestone继续`active`，P2-12不自动启动。

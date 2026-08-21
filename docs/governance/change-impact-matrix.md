@@ -308,3 +308,5 @@ Implementation artifact `9432982306`已绑定`20e49c92306128b47313059fabe3153481
 完整Diff base范围必须命中`IMPACT-SCHEMA`（KPI/manifest/data dictionary）、`IMPACT-REPORTING`（KPI/SolverReport）、`IMPACT-EXPORT`（internal package）、`IMPACT-STATE`（明确零ScheduleVersion/ExportJob transition）、`IMPACT-TESTS`、`IMPACT-INFRA`（CI machine step）、`IMPACT-DEPENDENCY`与`IMPACT-VERSION-METADATA`（`pyproject.toml`仅schema metadata）、`IMPACT-PHASE`、`IMPACT-GOVERNANCE-REGISTRY`和`IMPACT-DOCS`十一行。
 
 Dependency行是强制review，runtime/dev pins及`uv.lock`必须零差异；State行只审查状态合同且`state-machines.v1`/migration/persistence不得修改。Planning/Strategy/Backend/Validator/Problem/Snapshot/Import/Simulation/P2-09 assets、Benchmark/API/DB/Worker/P3+保持零差异。Machine rule table和`registry_version=1.0.0`不变，最终path/count以Task report为准。
+
+Implementation artifact `9436863185`已绑定`546292831c3bd52185687a4c646c10ae10541ae2`并复现58 committed/0 working paths、上述十一行、19 checks与0 issues；TASK-P2-11据此关闭为`done`。Runtime/dev dependency、`uv.lock`、state persistence、Planning/Strategy/Backend/Validator/Scenario/Benchmark/API/DB/Worker/P3+禁止边界保持零差异，P2-12不自动启动。

@@ -206,6 +206,6 @@ Implementation `8ca62bbb1105a1dfae2ee2600ae7e4e62a5bef6c`的required run `324497
 
 形成链为`REQ-004/005/006/009 + NFR-COR/DET/TRC/REL/OBS + ENG-ARCH/SOL/VAL/ERR/VER → TASK-P2-11 → kpi.v2/export-manifest.v1 + reporting/exporters → validated P2-09 replay → TEST-OUTPUT/CONTRACT-001/IDEMPOTENCY → p2-output-contract-report.v1 + Task report + exact provider artifact`。
 
-只有validated synthetic KPI、真实SolverReport freeze和不可发布9-payload internal package可提升为local formed。证据必须区分set version与document version、KPI/package ID与exact-byte fingerprint、PlanningSolution与ScheduleVersion、directory replay与ExportJob idempotency、formal PASS与approval、single-run telemetry与Benchmark。ChangeReport=P4、BenchmarkReport=P2-12，二者不得伪造；P3 state/persistence/publish继续PLANNED。
+只有validated synthetic KPI、真实SolverReport freeze和不可发布9-payload internal package可提升为formed。证据必须区分set version与document version、KPI/package ID与exact-byte fingerprint、PlanningSolution与ScheduleVersion、directory replay与ExportJob idempotency、formal PASS与approval、single-run telemetry与Benchmark。ChangeReport=P4、BenchmarkReport=P2-12，二者不得伪造；P3 state/persistence/publish继续PLANNED。
 
-Implementation provider artifact绑定exact SHA前TASK-P2-11保持`in_progress`。Provider必须复现output report 8/8、全部历史reports和Task diff，并确认`uv.lock`、Planning/Strategy/Backend/Validator/Scenario/Benchmark/API/DB/Worker/P3禁止边界无差异；完成也不自动授权P2-12。
+Implementation `546292831c3bd52185687a4c646c10ae10541ae2`的required run `32454693799`与artifact `9436863185`已精确绑定并复现output 8/8、18 reports及58 committed/0 working paths、11 rows、19 checks、0 issues，因此TASK-P2-11=`done`。`uv.lock`、Planning/Strategy/Backend/Validator/Scenario/Benchmark/API/DB/Worker/P3禁止边界保持无差异；完成不自动授权P2-12。

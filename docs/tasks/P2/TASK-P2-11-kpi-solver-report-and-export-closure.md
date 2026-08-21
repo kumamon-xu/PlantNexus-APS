@@ -1,7 +1,7 @@
 ---
 doc_id: TASK-P2-11
 title: KPI SolverReport and Export Closure
-status: in_progress
+status: done
 spec_version: 0.3.0
 phase: P2
 normative: true
@@ -89,6 +89,14 @@ Scope review确认原卡遗漏schema set metadata/sample注册、machine report�
 
 已形成`kpi.v2`、`export-manifest.v1`、immutable SolverReport freeze与`p2-internal-export.v1`。KPI从同一validated replay独立计算逐Demand交付/OBJ-001、makespan、完整assignment counts、calendar-denominator resource utilization及明确no-base stability；SolverReport只接受真实`SOLVER_RUN`、formal PASS和Global Strategy identity，保持原timing/metrics字节。Package固定manifest加9个payload，全部JSON canonical、CSV为UTF-8 RFC4180 LF，逐文件保存role/media/hash/bytes/rows并交叉验证run/Problem/Snapshot/Solution/Validation/Solver/Quality/KPI/Scenario血缘与content identities。
 
-纯内存package在返回前完整复验；目录writer在同父目录临时构建、manifest last、原子rename，exact byte replay幂等，conflict/I/O/partial write稳定失败且清理临时目录。Manifest固定`publishable=false`、ScheduleVersion/ExportJob=`NOT_CREATED`、approval/publication=`NOT_STARTED`，并将ChangeReport延后P4、BenchmarkReport延后P2-12。新增task-specific 13项、指定验收49项、全仓455项、Ruff/Pyright、全部历史machine和output report 8/8均PASS；治理为142 docs、58 paths、11 rows、19 checks、0 issues。Compose/build/immutable与exact provider证据仍由后续验收完成，因此Task保持`in_progress`。
+纯内存package在返回前完整复验；目录writer在同父目录临时构建、manifest last、原子rename，exact byte replay幂等，conflict/I/O/partial write稳定失败且清理临时目录。Manifest固定`publishable=false`、ScheduleVersion/ExportJob=`NOT_CREATED`、approval/publication=`NOT_STARTED`，并将ChangeReport延后P4、BenchmarkReport延后P2-12。新增task-specific 13项、指定验收49项、全仓455项、Ruff/Pyright、全部历史machine和output report 8/8均PASS；治理为142 docs、58 paths、11 rows、19 checks、0 issues。Compose/build/schema metadata/immutable/forbidden-path与`git diff --check`均PASS，`uv.lock`保持精确摘要`8b13617f31aa6a933347fc7b8ba010330cbb3f2d764f75c306dd9b6d77387a82`。
 
 首次全量回归为`452 passed / 3 failed`，仅暴露`test_import_validation.py`、`test_rule_contracts.py`与`test_unit_conversion_registry.py`仍精确断言旧global set`2.4.0`。按本卡范围协议，在修改这三处前先将其加入allow-list；修复只同步set-level metadata到`2.5.0`，不弱化Import/Unit/Rule document版本或任何历史fingerprint断言。
+
+## Provider evidence and completion — 2026-08-21
+
+Implementation `546292831c3bd52185687a4c646c10ae10541ae2`已直接push到`main`。GitHub push run [`32454693799`](https://github.com/kumamon-xu/PlantNexus-APS/actions/runs/32454693799)（attempt 1）为`completed/success`；required [`validate` job/check `96689627030`](https://github.com/kumamon-xu/PlantNexus-APS/actions/runs/32454693799/job/96689627030)由GitHub Actions app `15368`执行并success。Branch protection仍精确要求`validate`/app `15368`。
+
+Artifact `9436863185`（`plantnexus-ci-evidence-32454693799`，41084 bytes）未过期，digest=`sha256:77dfadb425f1c3f47d21494127785c81357351aeee6ecbdd4f00386516db054b`、expiry=`2026-11-19T06:30:51Z`。下载复核确认18/18 JSON reports全部PASS且各report的`code_commit`精确绑定implementation SHA；`ci-p2-output-contracts.json`为8/8 checks，并记录4 assignments、2 demands、2 deterministic replays、9 package payloads、3 rejection cases和2 resources；`ci-current-task-report.json`绑定同一SHA和Diff base，记录58 committed/0 working paths、11 Impact Rules、19 checks、0 issues。
+
+因此Goal、测试、Schema/版本/指纹、文档/追踪、provider和回滚边界全部满足，TASK-P2-11=`done`。BenchmarkRunner/XS-S-M/threshold、ChangeReport/dynamic Replan、ScheduleVersion/ExportJob persistence、approval/publish/external transfer、P2 Exit Audit与P3/P4仍明确排除；P2保持`active`，本次关闭不授权或启动TASK-P2-12。

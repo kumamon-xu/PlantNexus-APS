@@ -193,4 +193,6 @@ Implementation provider Gate已通过：SHA `8ca62bbb1105a1dfae2ee2600ae7e4e62a5
 
 Workflow在reference evidence后执行`python -m app.exporters.contract_check --root . --report build/validation/ci-p2-output-contracts.json`，不得`continue-on-error`。Integration contract要求`p2-output-contract-report.v1`为8/8 PASS并验证schema/sample、frozen inputs、deterministic package、lineage、negative cases、atomic replay/cleanup及non-publishable boundaries；报告随既有`plantnexus-ci-evidence-<run-id>`上传。
 
-Local code Gate已通过指定49项、全仓455项、Ruff/Pyright零问题、output report 8/8及全部历史machine reports；full/diff文档治理为142 docs、58 paths、11 rows、19 checks、0 issues。Compose、build、schema metadata、immutable/forbidden-path和`git diff --check`仍须在最终本地收口复验。Implementation commit push后，只有exact SHA的required `validate`/app `15368`成功且下载artifact复核output/Task reports后，TASK-P2-11才能关闭；本地PASS不自动启动P2-12。
+Local code Gate已通过指定49项、全仓455项、Ruff/Pyright零问题、output report 8/8及全部历史machine reports；full/diff文档治理为142 docs、58 paths、11 rows、19 checks、0 issues。Compose、build、schema metadata、immutable/forbidden-path和`git diff --check`也均PASS。
+
+Implementation provider Gate已通过：SHA `546292831c3bd52185687a4c646c10ae10541ae2`、run `32454693799`、required `validate` job/check `96689627030`（app `15368`）均success；artifact `9436863185`未过期且digest=`sha256:77dfadb425f1c3f47d21494127785c81357351aeee6ecbdd4f00386516db054b`。18/18 reports、output 8/8及Task 58 committed/0 working paths、11 rows、19 checks、0 issues均绑定同一SHA；TASK-P2-11 DoD完成，不自动授权P2-12。

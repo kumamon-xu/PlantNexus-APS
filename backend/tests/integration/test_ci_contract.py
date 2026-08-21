@@ -13,6 +13,9 @@ from app.planning.backends.cp_sat.contract_check import (
     main as backend_contract_main,
 )
 from app.planning.backends.cp_sat.core_model_check import main as core_model_main
+from app.planning.backends.cp_sat.temporal_model_check import (
+    main as temporal_model_main,
+)
 from app.planning.problem.contract_check import main as problem_contract_main
 from app.planning.policy.contract_check import main as machine_contract_main
 from app.planning.validation.problem_validator_check import (
@@ -109,6 +112,8 @@ def test_ci_runs_repository_gates_and_discovers_the_current_task() -> None:
         "build/validation/ci-formal-schedule-validator.json",
         "app.planning.backends.cp_sat.core_model_check",
         "build/validation/ci-cp-sat-core-model.json",
+        "app.planning.backends.cp_sat.temporal_model_check",
+        "build/validation/ci-cp-sat-temporal-model.json",
         "app.infrastructure.contract_check",
         "docker compose --env-file .env.example config --quiet",
         "PLANTNEXUS_CI_CHANGE_BASE:",
@@ -211,11 +216,13 @@ def test_ci_solver_backend_foundation_report_is_machine_checkable(
         "solve-limits-parameter-capture",
         "engineering-smoke-and-serialization-isolation",
     }
-    assert report["boundaries"]["business_constraints"] == "CORE_P2_05_PRESENT"
-    assert report["boundaries"]["candidate_solution"] == "CORE_SLICE_ONLY"
+    assert report["boundaries"]["business_constraints"] == (
+        "CORE_P2_05_AND_TEMPORAL_P2_06_PRESENT"
+    )
+    assert report["boundaries"]["candidate_solution"] == "BOUNDED_P2_06_SLICE_ONLY"
     assert report["boundaries"]["schedule_validator"] == "TASK_P2_04_PRESENT"
     assert report["boundaries"]["business_feasibility"] == (
-        "EVALUATED_BY_TASK_P2_05_NOT_FOUNDATION_SMOKES"
+        "EVALUATED_BY_TASK_P2_05_P2_06_NOT_FOUNDATION_SMOKES"
     )
     assert report["boundaries"]["benchmark"] == "NOT_APPLICABLE_FOUNDATION_ONLY"
 
@@ -263,6 +270,58 @@ def test_ci_cp_sat_core_model_report_is_machine_checkable(tmp_path: Path) -> Non
         "candidate_publishability": "TEST_ARTIFACT_ONLY",
         "production_readiness": "NOT_CLAIMED",
     }
+
+
+def test_ci_cp_sat_temporal_model_report_is_machine_checkable(
+    tmp_path: Path,
+) -> None:
+    report_path = tmp_path / "cp-sat-temporal-model.json"
+    assert (
+        temporal_model_main(["--root", str(ROOT), "--report", str(report_path)])
+        == 0
+    )
+    report = json.loads(report_path.read_text(encoding="utf-8"))
+
+    assert report["report_version"] == "cp-sat-temporal-model-report.v1"
+    assert report["status"] == "PASS"
+    assert report["task_id"] == "TASK-P2-06"
+    assert report["check_count"] == 7
+    assert report["counts"] == {
+        "temporal_constraint_ids": 4,
+        "candidate_cases": 5,
+        "infeasible_cases": 3,
+        "precheck_rejections": 2,
+        "validator_mutations": 4,
+        "tiny_oracle_cases": 8,
+    }
+    assert {check["name"] for check in report["checks"]} == {
+        "fixed-contract-builder-validator-rule-and-lock-fingerprints",
+        "exact-signed-rounding-and-half-open-calendar-projection",
+        "c002-c005-c006-c009-positive-candidates",
+        "max-lag-calendar-gate-infeasible-and-precheck-boundaries",
+        "independent-validator-temporal-mutations",
+        "tiny-exact-window-oracle",
+        "model-delta-and-real-telemetry",
+    }
+    assert report["boundaries"]["implemented_constraints"] == [
+        "C-001",
+        "C-002",
+        "C-003",
+        "C-004",
+        "C-005",
+        "C-006",
+        "C-009",
+        "C-010",
+        "C-011",
+    ]
+    assert report["boundaries"]["deferred_constraints"] == ["C-007", "C-008"]
+    assert report["boundaries"]["formal_validator_changes"] == "NONE"
+    assert report["boundaries"]["objective"] == (
+        "POSTSOLVE_MEASUREMENT_ONLY_NOT_OPTIMIZED"
+    )
+    assert report["boundaries"]["benchmark"] == (
+        "MODEL_DELTA_ONLY_NO_XS_S_M_BASELINE"
+    )
 
 
 def test_ci_formal_schedule_validator_report_is_machine_checkable(

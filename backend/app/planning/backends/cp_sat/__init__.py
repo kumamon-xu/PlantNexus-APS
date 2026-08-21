@@ -25,6 +25,12 @@ from app.planning.backends.cp_sat.status import (
     native_status_name,
     solver_status_from_cp_sat,
 )
+from app.planning.backends.cp_sat.temporal_constraints import (
+    TEMPORAL_CONSTRAINT_IDS,
+    calendar_tick_blocks,
+    ceil_seconds_to_ticks,
+    floor_seconds_to_ticks,
+)
 
 __all__ = [
     "BACKEND_ID",
@@ -37,8 +43,12 @@ __all__ = [
     "CpSatBackend",
     "ORTOOLS_VERSION",
     "SOLVER_NAME",
+    "TEMPORAL_CONSTRAINT_IDS",
     "backend_identity",
     "build_core_model",
+    "calendar_tick_blocks",
+    "ceil_seconds_to_ticks",
+    "floor_seconds_to_ticks",
     "native_status_contract",
     "native_status_name",
     "parameters_for_limits",

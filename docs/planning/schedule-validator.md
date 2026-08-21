@@ -6,7 +6,7 @@ spec_version: 0.3.0
 phase: P0-P2
 normative: true
 source_sections: [30, 31, 50, 75, 86, 87]
-last_reviewed: 2026-08-20
+last_reviewed: 2026-08-21
 ---
 
 # 独立 ScheduleValidator 合同
@@ -100,3 +100,9 @@ Implementation `9b532e2c054b02e1692f345a252922ec7fd469e4`的GitHub run `32350068
 `CpSatBackend.solve_with_evidence()`现把每个core candidate送入既有`validate_problem_schedule()`；PASS时保留完整assignments，FAIL时丢弃assignments并映射稳定FAILED diagnostic。Validator源码、Schema、rule sheet、公式和import boundary均保持字节不变，Backend只消费它的solver-neutral报告。
 
 Core machine evidence同时验证JSSP/FJSP positive、missing assignment→C-001与wrong selected duration→C-010；原13类formal mutation仍是C-001～011完整独立覆盖。该接线只形成P2-05 bounded consumer，不表示P2-06/07事实已由Solver建模，也不是P2-09 vertical-slice integration或Production publish gate。
+
+## TASK-P2-06 temporal consumer integration
+
+Backend生成的precedence、calendar、release/material与transport candidates继续交给同一formal Validator；Evaluator从Problem/Solution seconds/ticks/UTC独立重算C-002/005/006/009，不导入`temporal_constraints.py`或OR-Tools。Temporal machine evidence分别构造四类positive candidate，并对min/max lag、calendar、gate与cross-workshop transport做独立mutation复验。
+
+Formal Validator源码、公式、Schema、rule sheet和13-case corpus保持字节不变。该交叉证据不覆盖C-007/008，也不是P2-09完整Scenario integration、objective correctness或Production publish gate。

@@ -6,7 +6,7 @@ spec_version: 0.3.0
 phase: P0-P5
 normative: true
 source_sections: [14, 75, 81, 82]
-last_reviewed: 2026-08-19
+last_reviewed: 2026-08-21
 ---
 
 # PlanningStrategy 规则
@@ -39,3 +39,9 @@ GlobalCpSatStrategy
 ## TASK-P2-05 no-strategy core execution
 
 Backend现可直接执行bounded core feasibility model，但仍未创建或选择`GlobalCpSatStrategy`，也没有decomposition、rolling horizon、warm start或Reference Scheduler。该直接调用只验证底层可行域与solution mapping，不构成策略层入口。P2-08继续独占Global strategy与OBJ-001搜索接线；P2-05不得被上层发布流程调用。
+
+## TASK-P2-06 no-strategy temporal execution
+
+Temporal约束直接组合进同一bounded Backend model，没有创建`GlobalCpSatStrategy`、分解、rolling horizon、warm start或Reference Scheduler。Calendar/precedence/material/transport correctness只证明底层可行域，不能作为策略选择或上层发布入口。
+
+P2-08继续独占Global strategy与OBJ-001搜索接线；P2-06不得被Production workflow调用，也不提供策略质量比较。

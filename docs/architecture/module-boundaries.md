@@ -6,7 +6,7 @@ spec_version: 0.3.0
 phase: cross-phase
 normative: true
 source_sections: [12, 13, 14, 30, 41, 47, 51, 65, 70]
-last_reviewed: 2026-08-20
+last_reviewed: 2026-08-21
 ---
 
 # 模块边界与依赖规则
@@ -124,3 +124,9 @@ TASK-P0-05 已在 `simulation/profiles`、`simulation/scenarios`、`simulation/g
 - `planning/backends/cp_sat/core_constraints.py`拥有P2-05输入预检，只允许C-001/003/004/010/011所需事实；`model.py`拥有master/optional interval、exact-one与capacity-1 `NoOverlap`；`solution_mapper.py`只把完整native candidate映射到solver-neutral合同。
 - `CpSatBackend`负责exact-pinned求解、状态降级、telemetry与调用formal Validator；Validator仍不得反向导入Backend、OR-Tools或模型变量。Validator FAIL时Backend必须丢弃assignments并返回FAILED边界。
 - `core_model_check.py`拥有独立tiny choice/load枚举oracle、固定hash和机器报告，不是Production Scheduler或Benchmark runner。C-002/005～009、OBJ-001搜索、Strategy、DB/API/Worker及P3均不进入这些模块。
+
+## TASK-P2-06 temporal Backend boundary
+
+- `temporal_constraints.py`独占signed seconds→ticks取整、calendar grid projection/merge、precedence、historical anchor、release/material和conditional transport表达；`core_constraints.py`只负责输入可表示性和deferred-fact fail-closed，`model.py`只负责组合core与temporal bindings。
+- min lag与transport各自条件化后形成独立下界，cross-workshop的有效下界为二者最大值而非相加；max lag使用独立上界。Calendar fixed intervals只进入对应resource的`NoOverlap`。
+- `solution_mapper.py`仍只映射完整candidate，formal Validator仍不导入Backend/OR-Tools。`temporal_model_check.py`拥有in-memory oracle、mutation和telemetry；不拥有Problem builder/hash、规则公式、objective、Strategy、Benchmark或Production入口。

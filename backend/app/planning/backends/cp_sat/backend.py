@@ -1,4 +1,4 @@
-"""Pinned CP-SAT adapter with the bounded TASK-P2-05 core model."""
+"""Pinned CP-SAT adapter with the bounded P2-05/P2-06 feasibility model."""
 
 from __future__ import annotations
 
@@ -245,7 +245,7 @@ def probe_model_invalid(
 
 
 class CpSatBackend:
-    """SolverBackend implementation for the bounded core feasibility slice."""
+    """SolverBackend for the bounded core plus temporal feasibility slice."""
 
     def __init__(self) -> None:
         self._identity = backend_identity()
@@ -265,7 +265,7 @@ class CpSatBackend:
         policy: PlanningPolicyDocument,
         limits: SolveLimitsDocument,
     ) -> PlanningSolutionDocument:
-        """Return the core PlanningSolution while retaining detailed evidence."""
+        """Return a bounded PlanningSolution while retaining detailed evidence."""
 
         return self.solve_with_evidence(problem, policy, limits).solution
 
@@ -275,7 +275,7 @@ class CpSatBackend:
         policy: PlanningPolicyDocument,
         limits: SolveLimitsDocument,
     ) -> CoreSolveResult:
-        """Solve, map, and independently validate the bounded core model."""
+        """Solve, map, and independently validate the bounded P2-06 model."""
 
         validate_planning_policy(policy)
         validate_solve_limits(limits)
@@ -318,9 +318,9 @@ class CpSatBackend:
                         limits,
                         status=product_status,
                         diagnostic={
-                            "code": "CP_SAT_CORE_CANDIDATE_VALIDATION_FAILED",
+                            "code": "CP_SAT_BOUNDED_CANDIDATE_VALIDATION_FAILED",
                             "message": (
-                                "Independent validation rejected the core candidate; "
+                                "Independent validation rejected the bounded candidate; "
                                 "assignments were discarded"
                             ),
                         },
@@ -337,9 +337,9 @@ class CpSatBackend:
                     limits,
                     status=product_status,
                     diagnostic={
-                        "code": f"CP_SAT_CORE_{product_status.value}",
+                        "code": f"CP_SAT_BOUNDED_{product_status.value}",
                         "message": (
-                            "Pinned CP-SAT completed the bounded core model without "
+                            "Pinned CP-SAT completed the bounded P2-06 model without "
                             "an accepted candidate"
                         ),
                     },

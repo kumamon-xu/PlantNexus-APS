@@ -6,7 +6,7 @@ spec_version: 0.3.0
 phase: P0-P3
 normative: true
 source_sections: [36, 45, 53, 55, 93]
-last_reviewed: 2026-08-19
+last_reviewed: 2026-08-21
 ---
 
 # KPI 合同
@@ -68,3 +68,9 @@ Foundation report可记录empty/model-invalid native wall time与变量/约束�
 Core report现记录真实model build、external solve、native wall、first feasible、Python traced peak memory及variables/constraints/optional intervals；这些只用于correctness可观测性，尚无XS/S/M profile、warm-up、分位数或回归阈值，因此不是性能KPI或SLA。
 
 Candidate weighted tardiness按交付需求最大completion在solve后测量，用于满足既有Solution stage合同；CP-SAT没有`Minimize/Maximize`，该值不能视为OBJ-001 execution、质量最优性或Benchmark基线。OPEN-006/012及Production KPI口径保持未关闭。
+
+## TASK-P2-06 temporal telemetry boundary
+
+Temporal report新增constraint、calendar fixed interval、gate、conditional transport等model delta及build/solve/memory观测值，只用于证明C-002/005/006/009已实际进入模型。它没有warm-up、profile、percentile、threshold或Reference comparison，不是KPI baseline、capacity或SLA。
+
+Weighted tardiness仍仅为post-solve合同值，CP-SAT模型不含objective。OPEN-006/012及全部Production KPI口径保持不变。

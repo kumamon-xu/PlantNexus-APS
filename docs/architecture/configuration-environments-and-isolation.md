@@ -6,7 +6,7 @@ spec_version: 0.3.0
 phase: cross-phase
 normative: true
 source_sections: [16, 38, 49, 62, 64, 95, 96]
-last_reviewed: 2026-08-20
+last_reviewed: 2026-08-21
 ---
 
 # 配置、环境与数据隔离
@@ -128,3 +128,9 @@ CI新增的formal validator command只读仓库合同与固定hash、在进程�
 Core Backend只消费调用方显式传入的Problem v2、PlanningPolicy v1与SolveLimits v1；唯一运行参数来自已验证的Limits映射，不读取额外environment、数据库、API、Worker或Production配置。含precedence/transport、calendar、非空release/material gate、RUNNING或lock事实的输入在CP-SAT model创建前以稳定`MODEL_INVALID`边界拒绝，避免把尚未实现的P2-06/07语义静默降级。
 
 CI新增`app.planning.backends.cp_sat.core_model_check`，只构造内存tiny correctness vectors并写ignored JSON。它不新增Secret、service、port、container或deployment route；candidate均为不可发布测试artifact，P2-05证据不能外推Production容量或SLA。
+
+## TASK-P2-06 temporal Solver isolation
+
+Backend仍只消费显式Problem v2、PlanningPolicy v1与SolveLimits v1；precedence、calendar、release/material gate和transport均来自Problem，不读取environment、Secret、DB、API、Worker或Production配置。P2-05对这些事实的拒绝是历史边界；当前build只对sub-second/overflow、RUNNING和lock保持fail closed，后两者继续归P2-07。
+
+`temporal_model_check`仅在进程内构造versioned synthetic vectors并写ignored JSON；没有新service、port、container、migration或deployment route。其model delta与timing只证明correctness可观察性，不构成Production容量、SLA或发布权限。

@@ -6,7 +6,7 @@ spec_version: 0.3.0
 phase: cross-phase
 normative: true
 source_sections: [6, 98, 99, 100, 101, 103, 104]
-last_reviewed: 2026-08-20
+last_reviewed: 2026-08-21
 ---
 
 # 文档一致性自动检查合同
@@ -266,3 +266,11 @@ Problem/Policy/Solution Schema、rule sheet、formal Validator、fixtures/benchm
 本地实际full治理PASS为142 docs/30 roots/36 Test IDs/15 OPEN/10 SIM assumptions/11 risks/37 Tasks；TASK-P2-05 diff为49 paths、6 matched rows、19 checks、0 issues。Exact provider artifact尚待implementation提交后复验，故Task仍为`in_progress`。
 
 Implementation artifact `9400957897`内`traceability-report.v1`精确绑定`df706786e0ec1c54bf60cd43261a92ef6aa53cc7`与Diff base `c75f7a0e96b7591ffa9220d0de942f8841283093`，复现49 committed/0 working paths、6 rows、19 checks、0 issues并PASS；TASK-P2-05治理Gate据此闭环为`done`。Evidence-only closure仍须由自身exact provider run复核，不能在本提交中预写其ID。
+
+## TASK-P2-06 governance expectations
+
+Full治理继续要求142 docs、30 roots、36 Test IDs、15 OPEN、10 SIM assumptions、11 risks与37 Tasks。Task diff必须只匹配`IMPACT-BACKEND/INFRA/TESTS/PHASE/GOVERNANCE-REGISTRY/DOCS`六行，覆盖exact allow-list与全部required documents且0 issues；temporal machine report必须7/7并保留four-C-ID、C-007/008、objective/benchmark/production边界。
+
+Problem/Policy/Solution Schema、rule sheet、formal Validator、Problem builder/hash、fixtures/benchmarks及dependency/lock immutable diff必须为空。实际paths/checks和provider IDs只能在相应命令与exact artifact通过后回填；TASK-P2-06完成只满足P2-07依赖，不构成启动授权。
+
+本地实际full治理PASS为142 docs/30 roots/36 Test IDs/15 OPEN/10 SIM assumptions/11 risks/37 Tasks；TASK-P2-06 diff为53 paths、6 matched rows、19 checks、0 issues。Immutable paths、Compose与build均PASS；exact provider artifact尚待implementation提交后复验，故Task仍为`in_progress`。

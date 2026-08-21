@@ -6,7 +6,7 @@ spec_version: 0.3.0
 phase: cross-phase
 normative: true
 source_sections: [37, 38, 39, 43, 44, 49, 59, 62, 96]
-last_reviewed: 2026-08-20
+last_reviewed: 2026-08-21
 registry_version: 1.0.0
 ---
 
@@ -82,3 +82,5 @@ TASK-P2-03 review：parameter smoke复用P2-02显式30秒/1 worker/seed vector�
 TASK-P2-04 review：formal validator check在进程内构造fresh synthetic Problem/Solution与13个声明式mutation，property seeds只控制测试生成；它们不新增FactoryProfile/Scenario、distribution、size profile或Benchmark baseline，也不修改P0 fixture bytes。未新增、修改或retire任何SIM项；SIM-ASSUMPTION-001～010继续`ACTIVE`，仅支持correctness，不得用于Production default、容量推断或PROD_OPEN closure，registry format version保持`1.0.0`。
 
 TASK-P2-05 review：machine CLI在进程内构造versioned tiny JSSP/FJSP、unary overload与四个choice/load oracle cases；Hypothesis seeds只控制bounded生成，不新增仓库fixture、FactoryProfile、Scenario、distribution或XS/S/M baseline。未新增、修改或retire任何SIM项；SIM-ASSUMPTION-001～010继续`ACTIVE`，这些case只证明core correctness，不得外推Production容量、default或关闭PROD_OPEN，registry format version保持`1.0.0`。
+
+TASK-P2-06 review：machine/property checks仅在进程内派生precedence、historical anchor、fragmented calendar、release/material与transport values，不新增仓库fixture、FactoryProfile、Scenario、distribution或XS/S/M baseline。未新增、修改或retire任何SIM项；SIM-ASSUMPTION-001～010继续`ACTIVE`，synthetic值只证明temporal correctness，不得外推Production日历、物料、运输或容量，registry format version保持`1.0.0`。

@@ -6,7 +6,7 @@ spec_version: 0.3.0
 phase: P0-P2
 normative: true
 source_sections: [31, 43, 46, 71, 72, 76, 88]
-last_reviewed: 2026-08-20
+last_reviewed: 2026-08-21
 ---
 
 # Fixture 与 Golden Test 规范
@@ -59,3 +59,9 @@ Golden断言固定身份、关键字段/count与Schema，不把完整JSON手工�
 [`fixtures/synthetic/SIM-P1-INGRESS-001`](../../fixtures/synthetic/SIM-P1-INGRESS-001/calculation-note.md)只提交FactoryProfile、ScenarioSpec和人工可审查的生成说明；canonical Import由generator在测试/contract check中重放，不提交易漂移的完整JSON副本。固定evidence为16个非空collections、49 records、PASS/0、package ID `import-9eea9bd41216b3a2b337a83f2b6f5438a287f219251168ce8d574f4b9fb6b2c6`和hash `sha256:24a74b4f43b0ba42ed458983e0c4776613911924ae5250d9df8ae9e4f14cb1c4`。
 
 该fixture不是Golden Schedule，不断言feasibility/objective/KPI，也不覆盖P0 deterministic/infeasible目录。生成语义变化必须新建generator/asset version并更新SIM assumption；P1-11 common ingress和P2 Solver Golden仍未形成。
+
+## TASK-P2-06 derived temporal vectors
+
+本Task不修改或新增committed fixture。Temporal unit/property/machine检查从versioned in-memory Problem v2构造precedence、historical anchor、fragmented calendar、release/material和cross-workshop cases；`SIM-MINIMAL-001`及其mutation bundle所有历史bytes保持只读。
+
+这些derived vectors只证明边界correctness，不是TASK-P2-09 Golden Scenario或TASK-P2-12 Benchmark profile。任何未来持久化asset都必须新建版本、记录calculation note/hash/来源并更新SIM assumption，不能覆盖本Task证据。

@@ -200,14 +200,11 @@ def test_zero_candidate_and_horizon_overflow_fail_before_model_construction() ->
 @pytest.mark.parametrize(
     ("mutation", "expected_reason"),
     [
-        ("precedence", CoreModelReason.UNSUPPORTED_PRECEDENCE_FACT),
-        ("calendar", CoreModelReason.UNSUPPORTED_CALENDAR_FACT),
-        ("release", CoreModelReason.UNSUPPORTED_RELEASE_MATERIAL_FACT),
         ("running", CoreModelReason.UNSUPPORTED_RUNNING_FACT),
         ("lock", CoreModelReason.UNSUPPORTED_LOCK_FACT),
     ],
 )
-def test_future_constraint_facts_are_rejected_not_silently_ignored(
+def test_still_deferred_p2_07_facts_are_rejected_not_silently_ignored(
     mutation: str, expected_reason: CoreModelReason
 ) -> None:
     problem = synthetic_core_problem(
@@ -216,28 +213,7 @@ def test_future_constraint_facts_are_rejected_not_silently_ignored(
         tag=f"UNIT-FUTURE-{mutation}",
     )
     first = cast(dict[str, Any], problem["operation_instances"][0])
-    if mutation == "precedence":
-        problem["precedence_edges"] = [
-            {
-                "precedence_edge_id": "EDGE-001",
-                "predecessor_operation_id": "OP-000",
-                "successor_operation_id": "OP-001",
-                "min_lag_seconds": 0,
-                "transport_lag_seconds": 0,
-            }
-        ]
-    elif mutation == "calendar":
-        problem["resource_unavailable_intervals"] = [
-            {
-                "calendar_id": "CAL-RESOURCE-001",
-                "resource_id": "RESOURCE-001",
-                "start_utc": "2026-08-20T00:01:00Z",
-                "end_utc": "2026-08-20T00:02:00Z",
-            }
-        ]
-    elif mutation == "release":
-        first["release_at_utc"] = "2026-08-20T00:01:00Z"
-    elif mutation == "running":
+    if mutation == "running":
         first.update(
             {
                 "status": "RUNNING",

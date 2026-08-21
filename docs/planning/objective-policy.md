@@ -6,7 +6,7 @@ spec_version: 0.3.0
 phase: P0-P4
 normative: true
 source_sections: [28, 35, 50, 52, 53]
-last_reviewed: 2026-08-19
+last_reviewed: 2026-08-21
 ---
 
 # Objective Policy
@@ -56,3 +56,9 @@ Foundation不调用`Minimize`/`Maximize`，不读取OBJ-001 weight，也不计�
 Core model仍不调用`Minimize`/`Maximize`，不按OBJ-001引导搜索。为满足既有PlanningSolution stage shape，只在candidate产生后计算weighted tardiness，记录通用0 lower bound、相应gap与`OBJECTIVE_NOT_OPTIMIZED` stop reason；native OPTIMAL降级为业务FEASIBLE。
 
 因此OBJ-001 execution仍由P2-08形成，OBJ-002/003继续deferred，不能比较候选质量或声称最优。OPEN-006及objective policy版本均不变。
+
+## TASK-P2-06 objective boundary
+
+Temporal constraints只收紧可行域；模型仍不调用`Minimize`/`Maximize`，precedence/calendar/material/transport telemetry也不是objective component。Candidate产生后仍按既有合同测量weighted tardiness、使用通用0 lower bound并明确`OBJECTIVE_NOT_OPTIMIZED`。
+
+OBJ-001 execution继续由P2-08形成，OBJ-002/003保持deferred；不得把native OPTIMAL、temporal feasibility或较小makespan表述为目标最优。OPEN-006与Policy版本不变。

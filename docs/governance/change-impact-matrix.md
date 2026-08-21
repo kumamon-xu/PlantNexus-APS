@@ -6,7 +6,7 @@ spec_version: 0.3.0
 phase: cross-phase
 normative: true
 source_sections: [6, 97, 98, 99, 100, 101, 102, 103, 104, 111]
-last_reviewed: 2026-08-20
+last_reviewed: 2026-08-21
 registry_version: 1.0.0
 ---
 
@@ -256,3 +256,11 @@ Problem/Solution/Validation/Error Schema、fixture历史bytes、`pyproject.toml`
 本地TASK-P2-05 report实际为49 paths、6 matched rows、19 checks、0 issues，六行与上方预期完全一致。该数字仍须由exact implementation provider artifact重放后才能闭环。
 
 Implementation artifact `9400957897`已对exact SHA重放49 committed/0 working paths、`IMPACT-BACKEND/DOCS/GOVERNANCE-REGISTRY/INFRA/PHASE/TESTS`六行、19 checks与0 issues，影响治理闭环。未出现额外SCHEMA/DEPENDENCY/MIGRATION影响。
+
+## TASK-P2-06 impact review
+
+实际范围必须命中`IMPACT-BACKEND`（temporal builder/model/mapper/consumer）、`IMPACT-INFRA`（required validate machine step）、`IMPACT-TESTS`（unit/property/integration）、`IMPACT-PHASE`（唯一active Task与阶段边界）、`IMPACT-GOVERNANCE-REGISTRY`（REQ/NFR/trace/open/sim/risk review）和`IMPACT-DOCS`（合同/规划/质量/运维同步）六行。
+
+Problem/Policy/Solution Schema、rule sheet、formal Validator、Problem builder/hash、dependency/lock、fixture/benchmark、migration、DB/API/Worker和P3无差异，因此不命中SCHEMA/DEPENDENCY/MIGRATION等额外Rule ID。最终path/check/issue计数必须由TASK-P2-06 diff report与exact provider artifact回填；registry tables及`registry_version=1.0.0`保持不变。
+
+本地TASK-P2-06 report实际为53 paths、`IMPACT-BACKEND/DOCS/GOVERNANCE-REGISTRY/INFRA/PHASE/TESTS`六行、19 checks与0 issues，和预期完全一致；exact provider artifact通过前只作为local evidence。

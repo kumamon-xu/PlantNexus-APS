@@ -6,7 +6,7 @@ spec_version: 0.3.0
 phase: cross-phase
 normative: true
 source_sections: [4, 23, 24, 40, 67, 93, 101, 102, 103, 104]
-last_reviewed: 2026-08-20
+last_reviewed: 2026-08-21
 ---
 
 # Provenance 与版本规则
@@ -180,3 +180,9 @@ Core solve链固定为`Problem hash + Policy fingerprint + Limits fingerprint + 
 `cp-sat-core-model-report.v1`记录五个implemented C-ID、模型变量/约束/optional interval计数、build/solve/first-feasible/solver-wall/Python-memory诊断、Validator状态、tiny oracle与冻结合同hash。Objective stage仅记录candidate的post-solve weighted tardiness、通用0 lower bound及`OBJECTIVE_NOT_OPTIMIZED` stop reason；local `uncommitted`仍须由exact GitHub SHA artifact替代后才能关闭Task。
 
 Implementation `df706786e0ec1c54bf60cd43261a92ef6aa53cc7`的run `32354050257` / job `96379299455` / artifact `9400957897`已完成exact绑定；artifact digest=`sha256:c40c20dcc09e2beb38e85bbead96b83e624c8badc25c88bf78cc5a3990c7d46c`。Core/formal/Task report文件SHA-256分别为`9986bd6a…1e44f`、`6f0f67c7…a3a28`、`16cc6147…32a36`，全部记录同一implementation SHA；TASK-P2-05 provenance据此闭环。
+
+## TASK-P2-06 temporal solve provenance
+
+当前链扩展为`Problem hash + Policy/Limits fingerprints + exact solver identity + temporal constraint metrics → complete candidate → independent formal validation`。Temporal report冻结Problem/Solution/Policy/Limits Schema、rule sheet、formal Validator、Planning contracts、Problem builder/hash与`uv.lock`指纹，并记录C-002/005/006/009 candidate、infeasible/precheck、Validator mutation、tiny oracle和真实model delta。
+
+Local report的`code_commit=uncommitted`只用于工作树验收；Task关闭前必须由exact pushed implementation SHA的required `validate`与artifact替代。该链不改变Schema/Problem identity，也不产生OBJ-001 optimality、Benchmark baseline、ScheduleVersion或Production provenance。

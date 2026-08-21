@@ -6,7 +6,7 @@ spec_version: 0.3.0
 phase: cross-phase
 normative: false
 source_sections: [0, 8, 10, 30, 42, 57, 59, 62, 89, 90, 105]
-last_reviewed: 2026-08-20
+last_reviewed: 2026-08-21
 registry_version: 1.0.0
 ---
 
@@ -81,3 +81,5 @@ TASK-P2-03 review：exact OR-Tools lock、native namespace scan、version fail-c
 TASK-P2-04 review：独立C-ID重算、solver-status contradiction replay与Backend/OR-Tools import scan加强RISK-002/006，stable report/mutation/property replay加强RISK-001/004/008，synthetic/Production边界加强RISK-007。证据尚无真实Solver candidate、Golden/Scenario consumer integration、Benchmark、Production authority或独立deployment，因此不足以把任何风险标记`MITIGATED/CLOSED`；RISK-001～011全部保持`MONITORED`，registry format version保持`1.0.0`。
 
 TASK-P2-05 review：fail-closed future-fact precheck、independent Validator consumer和tiny exhaustive oracle加强RISK-001/002/004/006/008；exact pin与namespace isolation继续约束RISK-011，telemetry但无阈值只提供观察数据。尚缺C-002/005～009、OBJ-001、Golden/Scenario vertical slice、Reference、XS/S/M Benchmark、Production authority与deployment，因此不能将任何风险标记`MITIGATED/CLOSED`；RISK-001～011全部保持`MONITORED`，registry format version保持`1.0.0`。
+
+TASK-P2-06 review：exact signed rounding、calendar grid equivalence、independent transport/min bounds、formal Validator mutations、tiny oracle与deferred-fact fail-closed加强RISK-001/002/004/006/008；telemetry仍无性能阈值，exact pin/namespace继续约束RISK-011。尚缺C-007/008、OBJ-001、Golden/Scenario vertical slice、Reference、XS/S/M Benchmark、Production authority与deployment，因此任何风险均不得标记`MITIGATED/CLOSED`；RISK-001～011全部保持`MONITORED`，registry format version保持`1.0.0`。

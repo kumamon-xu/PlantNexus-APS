@@ -6,7 +6,7 @@ spec_version: 0.3.0
 phase: cross-phase
 normative: true
 source_sections: [4, 6, 16, 23, 24, 29, 30, 42, 58, 62, 65, 66, 89, 93, 95]
-last_reviewed: 2026-08-20
+last_reviewed: 2026-08-21
 registry_version: 1.0.0
 ---
 
@@ -87,3 +87,5 @@ TASK-P2-03 review：NFR-COR只获得native status/fail-closed adapter slice而�
 TASK-P2-04 review：NFR-COR获得正式Problem/Solution的C-001～C-011独立正反判定、malformed/reference fail-closed及RUNNING/lock/time语义；NFR-DET/TRC获得稳定violation ordering、identical status-contradiction replay、fixed hashes、versioned machine report与exact provider replay。ENG-VAL形成不导入Backend/OR-Tools且不信任status的formal Validator，ENG-ERR形成`validation-report.v2`→`error.v2`稳定映射，ENG-VER记录`formal-schedule-validator-report.v1`且不改Schema set。无业务Solver candidate、OBJ-001、Benchmark或Production证据；所有NFR/ENG根ID继续`ALLOCATED`，registry format version保持`1.0.0`。
 
 TASK-P2-05 review：NFR-COR获得five-C-ID Solver/independent Validator正反交叉与tiny exhaustive oracle；NFR-TRC/OBS获得fingerprints、native/product status、参数、model counts、build/solve/first-feasible/wall/memory及Validator状态；NFR-DET由单worker、显式seed、canonical assignment/solution ID和fixed-seed properties约束。ENG-SOL形成bounded core builder/mapper，ENG-VAL形成mandatory consumer gate，ENG-ERR形成zero/overflow/future-fact MODEL_INVALID与Validator FAIL边界，ENG-VER保持`cp-sat-backend.v1`/OR-Tools 9.15.6755。无objective optimality、Benchmark或Production证据；所有根ID继续`ALLOCATED`，registry format version保持`1.0.0`。
+
+TASK-P2-06 review：NFR-COR获得signed rounding、lag/calendar/gate/transport正反例、formal mutation与tiny oracle；NFR-DET/TRC获得固定seed、冻结fingerprints、canonical candidate和versioned machine report。ENG-SOL形成独立temporal builder并组合进bounded model，ENG-VAL保持solver-neutral独立复算，ENG-ERR形成sub-second/overflow/RUNNING/lock MODEL_INVALID、certified INFEASIBLE和UNKNOWN不升级边界，ENG-VER保持Problem/Solution/rule/Backend/dependency版本不变。无objective optimality、Benchmark或Production证据；所有NFR/ENG根ID继续`ALLOCATED`，registry format version保持`1.0.0`。

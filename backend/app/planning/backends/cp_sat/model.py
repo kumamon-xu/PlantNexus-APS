@@ -1,4 +1,4 @@
-"""CP-SAT model construction for C-001/C-003/C-004/C-010/C-011."""
+"""CP-SAT model construction for the bounded P2-05/P2-06 constraint slice."""
 
 from __future__ import annotations
 
@@ -10,6 +10,12 @@ from ortools.sat.python import cp_model
 
 from app.domain.types import duration_to_ticks
 from app.planning.backends.cp_sat.core_constraints import precheck_core_problem
+from app.planning.backends.cp_sat.temporal_constraints import (
+    TemporalConstraintMetricsDocument,
+    TemporalOperationBinding,
+    TemporalOptionBinding,
+    add_temporal_constraints,
+)
 from app.planning.problem.contracts import PlanningProblemDocumentV2
 
 
@@ -42,6 +48,7 @@ class CoreCpSatModel:
     operations: tuple[CoreOperationVariables, ...]
     horizon_ticks: int
     model_build_seconds: float
+    temporal_metrics: TemporalConstraintMetricsDocument
 
     @property
     def metrics(self) -> CoreModelMetricsDocument:
@@ -55,7 +62,7 @@ class CoreCpSatModel:
 
 
 def build_core_model(problem: PlanningProblemDocumentV2) -> CoreCpSatModel:
-    """Build the complete bounded core model without adding an objective."""
+    """Build the complete bounded core and temporal model without an objective."""
 
     started = perf_counter()
     precheck = precheck_core_problem(cast(dict[str, object], problem))
@@ -105,6 +112,29 @@ def build_core_model(problem: PlanningProblemDocumentV2) -> CoreCpSatModel:
             )
         )
 
+    temporal_bindings = tuple(
+        TemporalOperationBinding(
+            operation_id=operation.operation_id,
+            start=operation.start,
+            end=operation.end,
+            options=tuple(
+                TemporalOptionBinding(
+                    resource_id=option.resource_id,
+                    presence=option.presence,
+                )
+                for option in operation.options
+            ),
+        )
+        for operation in operations
+    )
+    temporal_metrics = add_temporal_constraints(
+        model,
+        problem,
+        temporal_bindings,
+        intervals_by_resource,
+        horizon_ticks=horizon_ticks,
+    )
+
     for resource_id in sorted(intervals_by_resource):
         intervals = intervals_by_resource[resource_id]
         if intervals:
@@ -118,6 +148,7 @@ def build_core_model(problem: PlanningProblemDocumentV2) -> CoreCpSatModel:
         operations=tuple(operations),
         horizon_ticks=horizon_ticks,
         model_build_seconds=max(0.0, perf_counter() - started),
+        temporal_metrics=temporal_metrics,
     )
 
 

@@ -53,3 +53,5 @@ P2-04本地实现已通过6/6 machine checks、13个mutation、11个C-ID、14个
 P2-03本地39 focused、319 full、Ruff/Pyright、6/6 foundation、5/5 P2-02 compatibility及6/6 historical Engineering均PASS；provider artifact再次证明6/6与50 paths/9 rows/0 issues，因此索引状态为`done`。
 
 P2-05 core implementation本地已通过64 focused、360 full、Ruff/Pyright、core/formal各6/6、49 paths/6 rows/19 checks/0 issues、compose/build与immutable boundary；implementation `df706786e0ec1c54bf60cd43261a92ef6aa53cc7`的run `32354050257` / required job `96379299455` / artifact `9400957897`精确复现同一证据，故索引状态为`done`。P2-06启动基线`c55aa294977a6cafad85741f425d46cd36e9af1a`的run `32354521904` / required job `96380738933` / artifact `9401134902`精确成功；本Task当前只执行C-002/005/006/009，P2-07～14继续`planned`。
+
+P2-06本地实现现覆盖exact precedence min/max、historical anchor、calendar fixed intervals、release/material gates与conditional transport；87 focused、367 full、Ruff/Pyright 0、temporal 7/7、治理53 paths/6 rows/19 checks/0 issues、compose/build/immutable均PASS。Implementation exact provider evidence尚待提交后生成，故索引继续`in_progress`；P2-07不会因依赖代码完成而自动启动。

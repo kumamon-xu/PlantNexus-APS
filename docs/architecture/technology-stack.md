@@ -6,7 +6,7 @@ spec_version: 0.3.0
 phase: cross-phase
 normative: false
 source_sections: [11, 12, 65, 95, 100, 102]
-last_reviewed: 2026-08-20
+last_reviewed: 2026-08-21
 ---
 
 # 推荐技术栈与锁定规则
@@ -170,3 +170,9 @@ Workflow只增加`app.planning.validation.problem_validator_check`机器步骤�
 Core model使用既有exact pin `ortools==9.15.6755`的`cp_model` API构造IntVar、BoolVar、optional interval、`AddExactlyOne`与`AddNoOverlap`；没有修改`pyproject.toml`或`uv.lock`，也没有新Schema、migration、service或runtime dependency。Native对象继续只存在于`planning/backends/cp_sat`，对外仍返回JSON-compatible PlanningSolution与machine report。
 
 测试复用既有pytest/Hypothesis，并以单worker、显式seed和SolveLimits时间上限保证可重放边界。CI增加core machine CLI但不启用Benchmark runner或Production Solver入口。
+
+## TASK-P2-06 technology use
+
+Temporal model复用exact-pinned `ortools==9.15.6755`的linear constraints、fixed/optional intervals、`AddNoOverlap`与`OnlyEnforceIf`；signed integer rounding由Python整数运算完成，不使用浮点或隐式timezone转换。`pyproject.toml`、`uv.lock`及所有transitive pins不变。
+
+没有新增Schema、migration、service、container、database、API、Worker或runtime dependency。OR-Tools import仍被限制在`planning/backends/cp_sat`，CI只新增temporal machine evidence步骤，不启用Strategy、objective或Benchmark runner。

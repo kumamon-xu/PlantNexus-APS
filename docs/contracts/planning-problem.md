@@ -6,7 +6,7 @@ spec_version: 0.3.0
 phase: P0-P2
 normative: true
 source_sections: [13, 14, 24, 25, 26, 45, 89]
-last_reviewed: 2026-08-20
+last_reviewed: 2026-08-21
 ---
 
 # PlanningProblem 合同
@@ -99,3 +99,9 @@ PlanningSolution/SolverReport v1只以`problem_version`、builder/hash-projectio
 CP-SAT Backend现以Problem v2的operation/resource/options、`final_duration_seconds`、tick与horizon实现C-001/003/004/010/011。每个operation必须有至少一个显式candidate，所有candidate duration必须完整落入horizon；不允许通过删除overflow option改变输入可行域。
 
 Problem v2 Schema、sample、builder、hash projection和canonicalization均未修改。P2-05只接受precedence/calendar/locks为空、NOT_STARTED且release/material gate不晚于horizon start的bounded slice；非空未来事实稳定拒绝并留给P2-06/07，不能据此声称Problem合同不支持这些事实。
+
+## TASK-P2-06 temporal consumer boundary
+
+CP-SAT Backend现消费Problem v2既有`precedence_edges`、historical completion anchors、resource unavailable intervals及operation release/material-ready gates。全部权威instant必须保持canonical whole-second UTC；min/transport下界向上取tick、max上界向下取tick，calendar原始half-open interval投影为与tick-grid精确等价的固定占用。
+
+Problem v2 Schema/sample、builder、canonicalization与hash projection仍字节不变；Solver不得裁剪或改写Problem事实。RUNNING与operation locks仍在build前拒绝并留给P2-07，合同支持这些字段不等于当前Solver已经实现它们。

@@ -6,7 +6,7 @@ spec_version: 0.3.0
 phase: P0-P7
 normative: true
 source_sections: [58, 72, 74, 76, 78, 80, 89, 100, 101]
-last_reviewed: 2026-08-20
+last_reviewed: 2026-08-21
 ---
 
 # CI Gate 与 Definition of Done
@@ -142,3 +142,11 @@ Artifact glob必须上传core、formal与Task diff报告且各自`code_commit`�
 当前local Gate已通过64 focused、360 full、Ruff/Pyright、core/formal各6/6、49-path/6-row/0-issue治理、compose、build及immutable checks。下一门仅为implementation exact SHA的required `validate`与artifact；通过前Task保持`in_progress`。
 
 Implementation provider Gate现已通过：SHA `df706786e0ec1c54bf60cd43261a92ef6aa53cc7`、run `32354050257`、required `validate` job `96379299455`均success；artifact `9400957897`未过期且digest=`sha256:c40c20dcc09e2beb38e85bbead96b83e624c8badc25c88bf78cc5a3990c7d46c`，core/formal/Task报告绑定同一SHA并复现6/6、6/6及49 paths/6 rows/0 issues。TASK-P2-05 DoD完成；closure提交本身仍须另行核验exact provider，不自动授权P2-06。
+
+## TASK-P2-06 required validate additions
+
+Required `validate`在foundation/core/formal evidence后运行`app.planning.backends.cp_sat.temporal_model_check --root . --report build/validation/ci-cp-sat-temporal-model.json`。Integration contract要求`cp-sat-temporal-model-report.v1`为7/7 PASS，记录C-002/005/006/009、5 candidate、3 infeasible、2 precheck、4 Validator mutation、8 oracle cases、冻结fingerprints及objective/deferred boundary。
+
+Step不得`continue-on-error`；artifact必须同时上传temporal/core/formal与Task diff reports，且`code_commit`绑定exact pushed SHA。Local PASS不替代required `validate`、artifact digest/expiry与内容复核；这些证据完成前TASK-P2-06保持`in_progress`，也不得自动激活P2-07。
+
+Local Gate已通过87 focused、367 full、Ruff/Pyright 0、foundation/core/formal/temporal 6/6、6/6、6/6、7/7、53-path/6-row/19-check/0-issue治理、Compose、build与immutable checks。下一门仅为implementation exact SHA的required `validate`与artifact；通过前状态不变。

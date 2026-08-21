@@ -6,7 +6,7 @@ spec_version: 0.3.0
 phase: P2-P7
 normative: true
 source_sections: [53, 55, 56, 57, 58, 89, 102]
-last_reviewed: 2026-08-20
+last_reviewed: 2026-08-21
 ---
 
 # Benchmark Regression 规则
@@ -100,3 +100,9 @@ SolverReport v1固定未来Benchmark可引用的objective/bound/gap、model buil
 Core report为tiny JSSP/FJSP记录variables、constraints、optional intervals、build/solve/native wall/first-feasible与Python traced peak memory；这些是correctness diagnostics，不是warm-up后的统计样本，不含XS/S/M、Reference Scheduler、quality delta或阈值。因此不得写入Benchmark baseline或触发regression判定。
 
 CI中的conditional benchmark hook保持deferred。P2-12仍负责正式runner、profiles、runtime/memory/quality口径与回归门；OPEN-012保持OPEN。
+
+## TASK-P2-06 temporal telemetry classification
+
+Temporal report记录precedence、min/max、calendar input/fixed blocks、gate、conditional transport等constraint/model delta，以及tiny solve的build/solve/native wall/Python memory。数据仅说明约束确已进入模型并可观测，不经过warm-up、重复统计或Reference comparison。
+
+因此不建立XS/S/M baseline、threshold、quality delta或conditional regression Gate。P2-12职责与OPEN-012保持不变。

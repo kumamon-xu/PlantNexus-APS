@@ -6,7 +6,7 @@ spec_version: 0.3.0
 phase: P0-P7
 normative: true
 source_sections: [31, 57, 72, 74, 76, 78, 80, 86, 87, 88, 89, 100]
-last_reviewed: 2026-08-20
+last_reviewed: 2026-08-21
 registry_version: 1.0.0
 ---
 
@@ -213,3 +213,9 @@ P2-04新增`test_problem_schedule_validator.py`与`test_schedule_validator_prope
 本地实际验收为focused `64 passed`、full repository `360 passed`、Ruff/Pyright 0问题、core/formal machine report各6/6 PASS。Core counts为5个C-ID、2个candidate、1个infeasible、2个precheck、2个Validator mutation与4个oracle cases；immutable contracts/rules/Validator/fixtures/benchmarks保持无差异。Exact provider evidence待implementation SHA生成后回填。
 
 Exact provider已复现：implementation `df706786e0ec1c54bf60cd43261a92ef6aa53cc7`的run `32354050257` / required job `96379299455`全步骤success；artifact `9400957897`中的core/formal报告各6/6，Task report为49 committed/0 working、6 rows、19 checks、0 issues。TASK-P2-05测试证据闭环为`done`。
+
+## TASK-P2-06 temporal Solver test slices
+
+`test_cp_sat_temporal_model.py`覆盖signed rounding、calendar projection/merge、exact min ceil/max floor、impossible window、release/material、half-open calendar、independent non-summed transport、same-workshop、historical anchor、formal mutations及sub-second/overflow precheck。`test_cp_sat_temporal_properties.py`用固定seed和独立oracle覆盖rounding/lag/calendar；integration contract固定temporal CLI/report及boundary。
+
+本Task复用TEST-MAX-LAG、TEST-CALENDAR、TEST-MATERIAL、TEST-CROSS-WORKSHOP、TEST-PROPERTY、TEST-VALIDATOR-MUTATION、TEST-CONTRACT-001与TEST-SOLVER-UPGRADE，不新增Test ID或改变36项registry。本地实际验收为focused `87 passed`、full repository `367 passed`、Ruff/Pyright 0；foundation/core/formal/temporal分别6/6、6/6、6/6、7/7 PASS。Temporal counts为4个C-ID、5 candidate、3 infeasible、2 precheck、4 Validator mutation和8 oracle cases；治理53 paths/6 rows/19 checks/0 issues，compose/build/immutable PASS。Exact provider结果仍待implementation SHA。

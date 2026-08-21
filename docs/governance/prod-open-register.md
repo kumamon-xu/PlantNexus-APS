@@ -6,7 +6,7 @@ spec_version: 0.3.0
 phase: cross-phase
 normative: true
 source_sections: [16, 59, 60, 61, 105, 106]
-last_reviewed: 2026-08-20
+last_reviewed: 2026-08-21
 registry_version: 1.0.0
 ---
 
@@ -100,3 +100,5 @@ TASK-P2-03 review：exact solver/version/adapter只形成工程依赖，不决�
 TASK-P2-04 review：formal Validator只判断Problem/Solution显式事实，不推断真实calendar/material/transport/lock owner、priority policy、field authority或solve limits。Fresh positive/mutation vector与provider CI均不是Authority/Evidence closure record；尤其OPEN-004/005/007/009/010继续`OPEN`，OPEN-001～015全部保持`OPEN`。本Task不引入Production default或关闭记录，registry format version保持`1.0.0`。
 
 TASK-P2-05 review：tiny core solve只验证synthetic assignment/resource可行域，不决定真实resource/calendar/material/transport/lock authority、priority policy、solve limits、规模或发布流程。OPEN-007/009/010/011/012按Task卡明确保持`OPEN`，OPEN-001～015全部继续`OPEN`；没有Authority/Evidence closure record、Production default或状态变更，registry format version保持`1.0.0`。
+
+TASK-P2-06 review：temporal Solver只消费Problem中显式versioned calendar/material/transport/anchor事实，不猜测班次、物料状态、跨车间时长、solve limit或发布权限。OPEN-004/009/010/011/012及OPEN-001～015全部继续`OPEN`；in-memory temporal cases、rounding规则和telemetry不是Authority/Evidence closure、Production default、capacity或SLA，registry format version保持`1.0.0`。

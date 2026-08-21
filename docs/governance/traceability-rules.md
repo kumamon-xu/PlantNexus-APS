@@ -6,7 +6,7 @@ spec_version: 0.3.0
 phase: cross-phase
 normative: true
 source_sections: [5, 6, 86, 98, 99, 111]
-last_reviewed: 2026-08-20
+last_reviewed: 2026-08-21
 ---
 
 # 需求追踪规则
@@ -163,3 +163,9 @@ REQ-004/005/009、NFR-COR/DET/TRC与ENG-VAL/ERR/VER链接到ADR-0005/0008、`pro
 必须区分native OPTIMAL与无objective的业务FEASIBLE、post-solve metric与objective optimization、formal Validator PASS与Production publishability、tiny oracle与Benchmark。Provider artifact未绑定exact implementation/closure SHA前只能记录local evidence；完成P2-05也只满足P2-06依赖，不自动授权其启动。
 
 Implementation `df706786e0ec1c54bf60cd43261a92ef6aa53cc7`的required run `32354050257`与artifact `9400957897`已精确绑定并复现core/formal/Task链，因此TASK-P2-05从formed转为`done`。C-002/005～009、OBJ-001 execution、Strategy、Benchmark/Export/P3仍为PLANNED；P2-06没有自动激活。
+
+## TASK-P2-06 trace formation rule
+
+形成链为`REQ-004/005/009/012 → TASK-P2-06 → C-002/005/006/009 → temporal builder + independent formal Validator → TEST-MAX-LAG/CALENDAR/MATERIAL/CROSS-WORKSHOP/PROPERTY/VALIDATOR-MUTATION → cp-sat-temporal-model-report.v1 + Task report + exact provider artifact`。只把这四个temporal C-ID的bounded Solver slice提升为formed；C-007/008、OBJ-001 execution、Strategy、Reference/Benchmark/Export/P3继续PLANNED。
+
+证据必须区分seconds权威值与tick projection、min/transport独立下界与错误相加、grid-equivalent calendar与输入改写、MODEL_INVALID与certified INFEASIBLE、local `uncommitted`与exact provider SHA。Formal Validator公式、Problem builder/hash和rule sheet保持独立且冻结；provider artifact未绑定implementation SHA前Task保持`in_progress`，完成也不自动授权P2-07。

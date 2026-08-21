@@ -107,3 +107,9 @@ Implementation `df706786e0ec1c54bf60cd43261a92ef6aa53cc7`的GitHub run `32354050
 用户于2026-08-21明确授权执行TASK-P2-06。启动复核确认`main=origin/main=c55aa294977a6cafad85741f425d46cd36e9af1a`、working tree clean，且该SHA的GitHub run `32354521904` / required `validate` job `96380738933` / artifact `9401134902`精确成功，artifact digest=`sha256:03f304162e1d862ecc320cf592a27ca1c41282cbcc9ea7c060718bcc69842fe9`。P2-05 implementation是该基线祖先；Problem/Policy/Solution Schema、constraint-rule-sheet、formal Validator、Problem builder/hash、OR-Tools pin与`uv.lock`全部冻结。
 
 本Task只把C-002/005/006/009加入现有bounded CP-SAT模型：min使用ceil tick、max使用floor tick，calendar保持秒级half-open与tick-grid等价，release/material分别形成下界，transport只按实际选择资源的workshop独立判定。C-007/008、OBJ-001搜索、Strategy、Benchmark threshold、DB/API/Worker和P3均不在范围；native OPTIMAL仍只映射为业务FEASIBLE，UNKNOWN不得改写为INFEASIBLE。P2-07及以后保持`planned`且未获授权。
+
+## TASK-P2-06 本地实现边界
+
+Temporal builder现组合signed exact rounding、inclusive min/max lag、historical completion anchor、calendar fixed intervals、release/material gates及selected-option conditional transport；min与transport独立施加而非相加。Core precheck只对sub-second/overflow及仍属P2-07的RUNNING/lock fail closed；所有完整candidate继续强制formal Validator PASS。
+
+本地验收为focused `87 passed`、full repository `367 passed`、Ruff/Pyright 0；foundation/core/formal/temporal machine reports分别6/6、6/6、6/6、7/7 PASS，temporal报告含4个C-ID、5 candidate、3 infeasible、2 precheck、4 Validator mutation与8 oracle cases。治理为142 docs且Task diff 53 paths/6 rows/19 checks/0 issues，Compose、build、`git diff --check`与禁止路径diff均PASS。Exact provider仍待implementation SHA，故TASK-P2-06保持`in_progress`；P2-07未激活，current phase仍为P2。

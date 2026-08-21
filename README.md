@@ -1,6 +1,6 @@
 # PlantNexus APS
 
-PlantNexus APS 是一个面向单工厂、多车间场景的高级计划与排程（APS）项目。P1 Data & Snapshot 已通过 Exit Gate 并关闭，当前阶段为 P2（CP-SAT Vertical Slice）。TASK-P2-01～05 已闭环，TASK-P2-06 已获明确授权并进入 temporal/calendar/material model 实施；当前已形成 exact-pinned OR-Tools/CP-SAT Backend、独立重算 C-001～C-011 的正式 Validator，以及 C-001/003/004/010/011 core assignment/resource model。在 P2-06 验收闭环前，不声称 C-002/005/006/009 Solver、OBJ-001、Benchmark 或 Production 能力已经形成。
+PlantNexus APS 是一个面向单工厂、多车间场景的高级计划与排程（APS）项目。P1 Data & Snapshot 已通过 Exit Gate 并关闭，当前阶段为 P2（CP-SAT Vertical Slice）。TASK-P2-01～05 已闭环，TASK-P2-06 已获明确授权并进入验收；当前已形成 exact-pinned OR-Tools/CP-SAT Backend、独立重算 C-001～C-011 的正式 Validator，以及 C-001/002/003/004/005/006/009/010/011 bounded model。在 P2-06 exact provider 证据闭环前，Task保持`in_progress`；不声称 C-007/008、OBJ-001、Benchmark 或 Production 能力已经形成。
 
 ## 开始之前
 
@@ -56,6 +56,8 @@ scripts/      仓库级校验与自动化脚本
 infra/        P0 开发容器构建配置
 ```
 
-P1 Data & Snapshot已通过Exit Gate并关闭，当前阶段为P2。TASK-P2-01～05均已闭环；P2-03形成`ortools==9.15.6755`与Backend foundation，P2-04形成formal independent Validator，P2-05形成C-001/003/004/010/011 core model、candidate/Validator交叉证据与telemetry。用户已明确授权TASK-P2-06；本Task仅实施C-002/005/006/009 temporal/calendar/material约束与证据，OBJ-001搜索、C-007/008、Benchmark、DB/API/Worker、P2-07～14和P3仍未实现或未获授权。当前边界见[`docs/current_phase.md`](docs/current_phase.md)。
+P1 Data & Snapshot已通过Exit Gate并关闭，当前阶段为P2。TASK-P2-01～05均已闭环；P2-03形成`ortools==9.15.6755`与Backend foundation，P2-04形成formal independent Validator，P2-05形成core model。TASK-P2-06现已实现C-002/005/006/009的exact lag、calendar、release/material与conditional transport及机器证据，正进行完整验收与provider闭环；OBJ-001搜索、C-007/008、Benchmark、DB/API/Worker、P2-07～14和P3仍未实现或未获授权。当前边界见[`docs/current_phase.md`](docs/current_phase.md)。
 
 TASK-P2-05本地验收与implementation `df706786e0ec1c54bf60cd43261a92ef6aa53cc7`的GitHub required `validate` / artifact均已闭环，Task=`done`。TASK-P2-06以clean、provider-verified `c55aa294977a6cafad85741f425d46cd36e9af1a`为不可变Diff base，当前为`in_progress`；P2-07及以后不会自动启动。
+
+TASK-P2-06 temporal machine evidence当前为7/7 PASS：4个implemented C-ID、5个positive candidate、3个certified infeasible、2个precheck、4个formal Validator mutation与8个tiny oracle cases。该local结果不替代exact GitHub required `validate`与artifact，故状态暂不提升为`done`。

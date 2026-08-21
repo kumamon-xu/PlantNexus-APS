@@ -1,4 +1,4 @@
-"""Fail-closed input boundary for the TASK-P2-05 core constraint slice."""
+"""Fail-closed input boundary for the bounded P2-05/P2-06 model slice."""
 
 from __future__ import annotations
 
@@ -6,13 +6,18 @@ from collections.abc import Mapping
 from enum import StrEnum
 from typing import NoReturn, TypedDict, cast
 
-from app.domain.types import duration_to_ticks, parse_utc_instant
+from app.domain.types import duration_to_ticks, format_utc_instant, parse_utc_instant
+from app.planning.backends.cp_sat.temporal_constraints import (
+    ceil_seconds_to_ticks,
+    floor_seconds_to_ticks,
+)
 from app.planning.contracts import DiagnosticDocument, SolverStatus
 from app.planning.problem.contracts import PlanningProblemDocumentV2
 from app.planning.problem.hashing import validate_built_problem_v2
 
 
 CORE_CONSTRAINT_IDS = ("C-001", "C-003", "C-004", "C-010", "C-011")
+_CP_SAT_INT_MAX = (1 << 63) - 1
 
 
 class CoreModelReason(StrEnum):
@@ -26,6 +31,8 @@ class CoreModelReason(StrEnum):
     UNSUPPORTED_RELEASE_MATERIAL_FACT = "UNSUPPORTED_RELEASE_MATERIAL_FACT"
     UNSUPPORTED_RUNNING_FACT = "UNSUPPORTED_RUNNING_FACT"
     UNSUPPORTED_LOCK_FACT = "UNSUPPORTED_LOCK_FACT"
+    TEMPORAL_INSTANT_NOT_SECOND_PRECISION = "TEMPORAL_INSTANT_NOT_SECOND_PRECISION"
+    TICK_VALUE_OUT_OF_RANGE = "TICK_VALUE_OUT_OF_RANGE"
 
 
 class CoreModelInputError(ValueError):
@@ -100,15 +107,59 @@ def _reject_zero_options_before_contract(problem: Mapping[str, object]) -> None:
             )
 
 
+def _require_second_precision(
+    value: str,
+    *,
+    field: str,
+    entity_id: str,
+) -> None:
+    parsed = parse_utc_instant(value)
+    if format_utc_instant(parsed) != value:
+        _reject(
+            CoreModelReason.TEMPORAL_INSTANT_NOT_SECOND_PRECISION,
+            field=field,
+            entity_id=entity_id,
+            message=(
+                "CP-SAT temporal projection requires canonical whole-second UTC "
+                "instants; sub-second values cannot be rounded silently"
+            ),
+        )
+
+
+def _require_cp_sat_tick(
+    value: int,
+    *,
+    field: str,
+    entity_id: str,
+) -> None:
+    if value < -_CP_SAT_INT_MAX or value > _CP_SAT_INT_MAX:
+        _reject(
+            CoreModelReason.TICK_VALUE_OUT_OF_RANGE,
+            field=field,
+            entity_id=entity_id,
+            message="A temporal bound exceeds the pinned CP-SAT integer domain",
+        )
+
+
 def precheck_core_problem(
     problem: Mapping[str, object],
 ) -> CorePrecheckDocument:
-    """Validate the Problem and reject every non-vacuous P2-06/P2-07 fact."""
+    """Validate represented facts and reject still-deferred P2-07 facts."""
 
     _reject_zero_options_before_contract(problem)
     validate_built_problem_v2(problem)
     typed_problem = cast(PlanningProblemDocumentV2, problem)
     snapshot_id = typed_problem["snapshot_id"]
+    _require_second_precision(
+        typed_problem["horizon_start_utc"],
+        field="horizon_start_utc",
+        entity_id=snapshot_id,
+    )
+    _require_second_precision(
+        typed_problem["horizon_end_utc"],
+        field="horizon_end_utc",
+        entity_id=snapshot_id,
+    )
     horizon_start = parse_utc_instant(typed_problem["horizon_start_utc"])
     horizon_end = parse_utc_instant(typed_problem["horizon_end_utc"])
     tick_seconds = typed_problem["tick_seconds"]
@@ -122,20 +173,6 @@ def precheck_core_problem(
             message="Planning horizon contains no complete positive solver tick",
         )
 
-    if typed_problem["precedence_edges"]:
-        _reject(
-            CoreModelReason.UNSUPPORTED_PRECEDENCE_FACT,
-            field="precedence_edges",
-            entity_id=snapshot_id,
-            message="Precedence and transport facts are reserved for TASK-P2-06",
-        )
-    if typed_problem["resource_unavailable_intervals"]:
-        _reject(
-            CoreModelReason.UNSUPPORTED_CALENDAR_FACT,
-            field="resource_unavailable_intervals",
-            entity_id=snapshot_id,
-            message="Resource calendar constraints are reserved for TASK-P2-06",
-        )
     if typed_problem["operation_locks"]:
         _reject(
             CoreModelReason.UNSUPPORTED_LOCK_FACT,
@@ -154,18 +191,16 @@ def precheck_core_problem(
                 entity_id=operation_id,
                 message="RUNNING execution facts are reserved for TASK-P2-07",
             )
-        release_at = parse_utc_instant(operation["release_at_utc"])
-        material_at = parse_utc_instant(operation["material_ready_at_utc"])
-        if release_at > horizon_start or material_at > horizon_start:
-            _reject(
-                CoreModelReason.UNSUPPORTED_RELEASE_MATERIAL_FACT,
-                field=f"operation_instances[{operation_index}]",
-                entity_id=operation_id,
-                message=(
-                    "Non-vacuous release or material gates are reserved for "
-                    "TASK-P2-06"
-                ),
-            )
+        _require_second_precision(
+            operation["release_at_utc"],
+            field=f"operation_instances[{operation_index}].release_at_utc",
+            entity_id=operation_id,
+        )
+        _require_second_precision(
+            operation["material_ready_at_utc"],
+            field=f"operation_instances[{operation_index}].material_ready_at_utc",
+            entity_id=operation_id,
+        )
         options = operation["resource_options"]
         option_count += len(options)
         for option_index, option in enumerate(options):
@@ -185,6 +220,46 @@ def precheck_core_problem(
                         "horizon; silent truncation or option removal is forbidden"
                     ),
                 )
+
+    for anchor_index, anchor in enumerate(
+        typed_problem["historical_completion_anchors"]
+    ):
+        for field_name in ("actual_start_at_utc", "actual_end_at_utc"):
+            _require_second_precision(
+                anchor[field_name],
+                field=f"historical_completion_anchors[{anchor_index}].{field_name}",
+                entity_id=anchor["operation_id"],
+            )
+
+    for edge_index, edge in enumerate(typed_problem["precedence_edges"]):
+        edge_id = edge["precedence_edge_id"]
+        _require_cp_sat_tick(
+            ceil_seconds_to_ticks(edge["min_lag_seconds"], tick_seconds),
+            field=f"precedence_edges[{edge_index}].min_lag_seconds",
+            entity_id=edge_id,
+        )
+        _require_cp_sat_tick(
+            ceil_seconds_to_ticks(edge["transport_lag_seconds"], tick_seconds),
+            field=f"precedence_edges[{edge_index}].transport_lag_seconds",
+            entity_id=edge_id,
+        )
+        maximum = edge.get("max_lag_seconds")
+        if maximum is not None:
+            _require_cp_sat_tick(
+                floor_seconds_to_ticks(maximum, tick_seconds),
+                field=f"precedence_edges[{edge_index}].max_lag_seconds",
+                entity_id=edge_id,
+            )
+
+    for interval_index, interval in enumerate(
+        typed_problem["resource_unavailable_intervals"]
+    ):
+        for field_name in ("start_utc", "end_utc"):
+            _require_second_precision(
+                interval[field_name],
+                field=f"resource_unavailable_intervals[{interval_index}].{field_name}",
+                entity_id=interval["resource_id"],
+            )
 
     return {
         "horizon_ticks": horizon_ticks,

@@ -6,7 +6,7 @@ spec_version: 0.3.0
 phase: cross-phase
 normative: true
 source_sections: [3, 4, 5, 6, 107]
-last_reviewed: 2026-08-20
+last_reviewed: 2026-08-21
 registry_version: 1.0.0
 ---
 
@@ -85,3 +85,5 @@ TASK-P2-03 review：REQ-004获得exact CP-SAT binary、solver-neutral Protocol�
 TASK-P2-04 review：REQ-004获得正式Problem/Solution上C-001～C-011独立判定，但尚无CP-SAT business candidate、OBJ-001或vertical slice；REQ-005获得formal Validator、stable violation ordering、ValidationReport/Error v2、13类mutation与property/independence证据；REQ-009获得Problem/Solution→constraint result→report/error及exact implementation provider artifact链。证据限synthetic correctness；所有Requirement根ID继续`ALLOCATED`，registry format version保持`1.0.0`。
 
 TASK-P2-05 review：REQ-004获得C-001/003/004/010/011的exact-pinned CP-SAT实现、完整candidate与INFEASIBLE边界；REQ-005获得candidate必须经formal Validator PASS、失败即丢弃assignments的consumer gate；REQ-009获得Problem/Policy/Limits fingerprints、solver identity/status、model/timing/memory与machine report链。C-002/005～009、OBJ-001搜索、Strategy、完整vertical slice与Production仍未形成；所有Requirement根ID继续`ALLOCATED`，registry format version保持`1.0.0`。
+
+TASK-P2-06 review：REQ-004获得C-002/005/006/009的exact precedence/calendar/release/material/transport CP-SAT slice；REQ-005获得四类temporal candidate必须经独立formal Validator PASS及mutation交叉；REQ-009获得冻结合同/Builder/Validator/lock fingerprints、constraint/model delta与machine report链；REQ-012获得仅限versioned in-memory synthetic的temporal correctness vectors。C-007/008、OBJ-001搜索、Strategy、完整vertical slice、Benchmark与Production仍未形成；所有Requirement根ID继续`ALLOCATED`，registry format version保持`1.0.0`。

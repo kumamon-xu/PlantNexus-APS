@@ -6,7 +6,7 @@ spec_version: 0.3.0
 phase: P1-P4
 normative: true
 source_sections: [45, 86, 87]
-last_reviewed: 2026-08-20
+last_reviewed: 2026-08-21
 ---
 
 # Property Test 规范
@@ -98,3 +98,9 @@ P2-01扩展`test_planning_problem_properties.py`，保留v1 seeds `20260820/21/2
 [`test_cp_sat_core_properties.py`](../../backend/tests/property/test_cp_sat_core_properties.py) 使用固定seed `20260820`生成36个1～5 operations、1～3 resources、horizon 1～10 ticks的tiny cases，并与不导入OR-Tools的candidate-choice/unary-load穷举oracle逐例比较可行性。seed `20260821`用24例证明任一candidate duration超过horizon都会在build前拒绝；seed `20260822`用24例证明每条accepted assignment使用所选resource option的duration并完整落入horizon。
 
 这些properties只覆盖C-001/003/004/010/011的有限正确性，不采样precedence/calendar/material/RUNNING/lock、objective质量、XS/S/M或Production distribution。若出现失败，必须保存seed、Problem hash、options/horizon与Hypothesis最小反例；不得扩大为未注册fixture或Benchmark基线。
+
+## TASK-P2-06 temporal model properties
+
+[`test_cp_sat_temporal_properties.py`](../../backend/tests/property/test_cp_sat_temporal_properties.py)使用固定seed：80例验证任意signed seconds的ceil/floor包络；36例把CP-SAT exact min/max lag窗口与不导入OR-Tools的tick oracle逐一比较；60例比较原始秒级half-open calendar相交与grid projection固定interval判定。
+
+属性范围只覆盖C-002/005/006/009的整数边界，不采样RUNNING/lock、objective质量、XS/S/M或Production distribution。失败时必须保留seed、tick/offset、Problem hash和Hypothesis最小反例；当前in-memory cases不得注册为Golden或Benchmark baseline。

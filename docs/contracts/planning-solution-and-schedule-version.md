@@ -6,7 +6,7 @@ spec_version: 0.3.0
 phase: P0-P3
 normative: true
 source_sections: [29, 30, 32, 33, 67, 78]
-last_reviewed: 2026-08-19
+last_reviewed: 2026-08-21
 ---
 
 # PlanningSolution 与 ScheduleVersion 合同
@@ -60,3 +60,9 @@ Assignment的tick/seconds/UTC在formal边界重新核对。NOT_STARTED duration�
 完整native candidate被映射为每operation恰一条assignment，保存selected resource的原始seconds、ceiling ticks及由horizon start还原的UTC；只有formal Validator PASS时才保留assignments。INFEASIBLE/UNKNOWN/MODEL_INVALID/FAILED等非candidate状态必须输出空assignments，不能泄漏部分解。
 
 PlanningSolution v1要求的OBJ-001 stage在本Task只承载post-solve measurement：状态为FEASIBLE、best bound为通用0、gap按已测值计算，并以`CORE_FEASIBILITY_ONLY_*_OBJECTIVE_NOT_OPTIMIZED`明确未运行目标搜索。Schema、ScheduleVersion迁移与publishability均不变；所有candidate只作为测试artifact。
+
+## TASK-P2-06 temporal candidate mapping
+
+Candidate继续使用既有assignment seconds/ticks/UTC字段，不新增temporal字段；C-002/005/006/009只约束这些assignment在Problem权威事实下的合法性。完整candidate仍须经formal Validator PASS后保留，任何Validator FAIL、MODEL_INVALID、INFEASIBLE或UNKNOWN均不得泄漏partial assignments。
+
+PlanningSolution Schema、fingerprint和ScheduleVersion状态机不变。Native OPTIMAL仍映射为业务FEASIBLE，OBJ-001只做post-solve measurement；temporal正确性不能升级为objective最优、可发布ScheduleVersion或Production结果。

@@ -6,7 +6,7 @@ spec_version: 0.3.0
 phase: P0-P2
 normative: true
 source_sections: [13, 14, 24, 29, 57, 93, 102]
-last_reviewed: 2026-08-20
+last_reviewed: 2026-08-21
 ---
 
 # SolverBackend 合同
@@ -116,3 +116,9 @@ Empty/model-invalid smoke分别验证native调用与MODEL_INVALID路径，但两
 上一段的永久拒绝边界仅是TASK-P2-03历史状态；当前`solve()`已由TASK-P2-05接入C-001/003/004/010/011 bounded core model。它构造master/optional intervals、exact-one candidate、candidate-specific duration、capacity-1 NoOverlap和horizon域，并把任何完整native candidate交给TASK-P2-04 formal Validator复验。
 
 纯可行模型没有objective，native OPTIMAL必须映射为业务FEASIBLE；Validator FAIL则丢弃assignments并映射FAILED。zero option、overflow或任何需要P2-06/07约束的非空事实在model build前稳定拒绝为MODEL_INVALID边界；INFEASIBLE与MODEL_INVALID不得互换。P2-03 empty/model-invalid smoke仍保持`business_feasibility=NOT_EVALUATED`，与当前业务core solve分开。
+
+## TASK-P2-06 temporal solve activation
+
+Current `solve()`在core模型上组合C-002/005/006/009：signed exact rounding、inclusive min/max lag、historical anchors、calendar fixed intervals、release/material gates及按option presence条件化的cross-workshop transport。需要这些约束的合法Problem现在进入模型；sub-second/overflow与仍未实现的RUNNING/lock在build前返回MODEL_INVALID。
+
+Certified native INFEASIBLE才映射业务INFEASIBLE；time/limit导致的UNKNOWN保持UNKNOWN。模型仍无objective，native OPTIMAL降级为FEASIBLE；完整candidate必须通过formal Validator，否则丢弃assignments并返回FAILED。Strategy、C-007/008、Benchmark和Production入口未形成。

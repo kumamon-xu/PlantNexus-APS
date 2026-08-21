@@ -6,7 +6,7 @@ spec_version: 0.3.0
 phase: P0-P7
 normative: false
 source_sections: [65, 66, 93, 94, 95, 101, 106]
-last_reviewed: 2026-08-20
+last_reviewed: 2026-08-21
 ---
 
 # Operations 索引与形成边界
@@ -83,3 +83,9 @@ Report本身不写业务数据库，temporary CSV随进程回收，`build/valida
 本地/CI运行`python -m app.planning.backends.cp_sat.core_model_check --root . --report <path>`生成`cp-sat-core-model-report.v1`。PASS要求6项检查全部成功：冻结合同/rule/Validator/lock hash、five-C-ID model shape、tiny JSSP/FJSP candidate、unary infeasible与zero/overflow precheck、formal Validator正反例、独立穷举oracle与真实telemetry；CI固定路径为`build/validation/ci-cp-sat-core-model.json`。
 
 非零返回必须保留sanitized FAIL report并阻断Task closure。该命令不读取Production数据、不发布ScheduleVersion、不运行OBJ-001搜索、Strategy或Benchmark；含P2-06/07事实的Problem应视为当前core slice不支持并稳定拒绝，而不是改写输入或忽略事实。
+
+## TASK-P2-06 temporal model evidence command
+
+本地/CI运行`python -m app.planning.backends.cp_sat.temporal_model_check --root . --report <path>`生成`cp-sat-temporal-model-report.v1`。PASS要求7项检查全部成功，并显示4个temporal C-ID、5 candidate、3 infeasible、2 precheck、4 independent Validator mutation、8 tiny oracle cases、冻结合同/Builder/Validator/lock fingerprints和真实model delta；CI固定路径为`build/validation/ci-cp-sat-temporal-model.json`。
+
+非零返回必须保留sanitized FAIL report并阻断closure。该命令仅使用in-memory synthetic data，不读取Production系统、不发布ScheduleVersion、不运行C-007/008、OBJ-001、Strategy或Benchmark；local `uncommitted`结果不替代exact GitHub provider evidence。

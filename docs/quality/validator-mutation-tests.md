@@ -6,7 +6,7 @@ spec_version: 0.3.0
 phase: P0-P2
 normative: true
 source_sections: [30, 31, 86]
-last_reviewed: 2026-08-20
+last_reviewed: 2026-08-21
 ---
 
 # Validator Mutation Test 规范
@@ -74,3 +74,9 @@ Formal cases为missing、duplicate、wrong resource、machine overlap、calendar
 Core candidate先由formal Validator PASS；随后机器检查复制candidate并分别删除一条assignment与篡改selected duration，要求稳定命中C-001与C-010。它证明Solver status或native OPTIMAL不能绕过独立重算，同时不复用CP-SAT变量、constraint builder或预期结果作为Validator输入。
 
 P2-05不修改formal 13类mutation corpus、P0 fixture bytes或Validator公式；C-003/C-004/C-011及P2-06/07相关C-ID仍由既有formal suite覆盖，后续完整Solver mutation/integration由P2-09承接。
+
+## TASK-P2-06 temporal Solver-consumer mutations
+
+Temporal machine evidence先取得四类formal PASS candidate，再分别构造precedence lag、calendar overlap、release/material early与cross-workshop transport violation，要求formal Validator稳定命中C-002/C-005/C-006/C-009。Expected C-ID只用于test assertion，不进入Validator决策。
+
+Formal 13类mutation corpus、Validator公式、rule sheet和P0 fixture bytes均未修改。该证据不覆盖RUNNING/HARD lock，完整Solver/Validator Scenario矩阵仍由P2-09承接。

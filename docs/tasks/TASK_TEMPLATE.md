@@ -6,7 +6,7 @@ spec_version: 0.3.0
 phase: cross-phase
 normative: true
 source_sections: [98, 99, 100, 111]
-last_reviewed: 2026-08-20
+last_reviewed: 2026-08-21
 ---
 
 # TASK-Px-yy — Title
@@ -132,3 +132,5 @@ P2及以后Task还必须单列`Start gate`、`Dependency changes`、`ADR impact`
 涉及首次Solver dependency或Backend foundation时还必须记录：先行accepted ADR、exact direct/transitive lock与多平台wheel hashes、官方version/advisory审查日期、允许native import的唯一namespace、Protocol与serialization隔离、native/adapter七状态总映射、每个参数的source/value、version/unknown-status/adapter失败语义、point-in-time dependency audit及未处置风险。Empty/model-invalid smoke必须显式`business_feasibility=NOT_EVALUATED`且不得产生candidate、KPI或Benchmark baseline；业务C-ID/objective/Strategy/Validator仍按后续Task治理。
 
 涉及首个或增量Solver constraint model时还必须记录：精确implemented/deferred C-ID、每类future fact的fail-closed build gate、master/optional变量与resource-capacity语义、candidate-specific duration/tick/horizon规则、zero/overflow/MODEL_INVALID与INFEASIBLE区别、native与业务status诚实映射、完整candidate/partial-solution边界、independent Validator consumer及失败回滚、固定seed property与independent oracle、model/build/solve/first-feasible/memory diagnostics。若Solution合同要求objective stage但Task不优化objective，必须明确post-solve measurement、合法lower bound、gap和`OBJECTIVE_NOT_OPTIMIZED`，且禁止最优性、Benchmark或Production声明。
+
+涉及temporal/calendar/material增量时还必须记录：signed seconds→ticks的ceil/floor公式、min/max inclusive边界、calendar原始half-open与tick-grid投影等价、overlap/touching fixed-block merge、release/material独立gate、selected/historical workshop transport条件及其与min lag取最大值而非相加。还必须冻结Problem/Validator/rule/Builder/lock fingerprints，以formal independent mutation和tiny oracle复验，并记录sub-second/overflow、MODEL_INVALID/INFEASIBLE/UNKNOWN边界；任何公式偏差必须先通过ADR。

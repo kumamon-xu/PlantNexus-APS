@@ -1,4 +1,4 @@
-"""Map CP-SAT core outcomes to the solver-neutral PlanningSolution contract."""
+"""Map bounded CP-SAT outcomes to the solver-neutral PlanningSolution contract."""
 
 from __future__ import annotations
 
@@ -166,7 +166,7 @@ def _candidate_stage(
             max(0.0, solve_seconds), float(limits["max_wall_time_seconds"])
         ),
         "stop_reason": (
-            f"CORE_FEASIBILITY_ONLY_NATIVE_{native_status}_OBJECTIVE_NOT_OPTIMIZED"
+            f"BOUNDED_FEASIBILITY_ONLY_NATIVE_{native_status}_OBJECTIVE_NOT_OPTIMIZED"
         ),
     }
 
@@ -221,9 +221,9 @@ def map_core_candidate_solution(
             "objective_stage_results": [stage],
             "diagnostics": [
                 {
-                    "code": "CP_SAT_CORE_FEASIBILITY_ONLY",
+                    "code": "CP_SAT_BOUNDED_FEASIBILITY_ONLY",
                     "message": (
-                        "Candidate satisfies the bounded core model; OBJ-001 was "
+                        "Candidate satisfies the bounded P2-06 model; OBJ-001 was "
                         "measured after solve but was not optimized"
                     ),
                 }
@@ -262,7 +262,7 @@ def map_core_non_candidate_solution(
             "solve_seconds": min(
                 max(0.0, solve_seconds), float(limits["max_wall_time_seconds"])
             ),
-            "stop_reason": f"CORE_SOLVE_{status.value}",
+            "stop_reason": f"BOUNDED_SOLVE_{status.value}",
         },
     )
     diagnostics = sorted([diagnostic], key=lambda item: (item["code"], item["message"]))

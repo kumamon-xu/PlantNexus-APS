@@ -6,7 +6,7 @@ spec_version: 0.3.0
 phase: P2
 normative: true
 source_sections: [5, 6, 71, 86]
-last_reviewed: 2026-08-20
+last_reviewed: 2026-08-21
 registry_version: 1.0.0
 ---
 
@@ -102,3 +102,5 @@ TASK-P2-04已形成正式`ProblemScheduleValidator`、稳定ValidationReport/Err
 TASK-P2-05现链接REQ-004/005/009与NFR-COR/TRC/OBS、ENG-SOL/VAL/ERR/VER到`core_constraints.py`、`model.py`、`backend.py`、`solution_mapper.py`、formal Validator consumer、unit/property/integration tests及`cp-sat-core-model-report.v1`。C-001/003/004/010/011由exact-one/alternative duration/unary NoOverlap/horizon模型形成，TEST-GOLDEN-JSSP/FJSP、TEST-INF-NO-RESOURCE/HORIZON、TEST-PROPERTY和TEST-VALIDATOR-MUTATION复验candidate、infeasible、precheck与oracle。Provider exact SHA尚待验收回填；C-002/005～009、OBJ-001、Benchmark/P3和所有root生命周期状态不变。
 
 TASK-P2-05 implementation `df706786e0ec1c54bf60cd43261a92ef6aa53cc7`的run [`32354050257`](https://github.com/kumamon-xu/PlantNexus-APS/actions/runs/32354050257)、required job `96379299455`、artifact `9400957897` / digest `sha256:c40c20dcc09e2beb38e85bbead96b83e624c8badc25c88bf78cc5a3990c7d46c`精确复现core/formal各6/6与49 paths/6 rows/0 issues，因此Task=`done`。C-002/005～009、OBJ-001、Benchmark/P3和所有root状态不变；P2-06仍未授权。
+
+TASK-P2-06现把REQ-004/005/009/012与NFR-COR/DET/TRC、ENG-SOL/VAL/ERR/VER链接到`temporal_constraints.py`、core/model/backend/mapper组合、formal Validator consumer、unit/property/integration tests及`cp-sat-temporal-model-report.v1`。C-002/005/006/009由exact lag bounds、grid-equivalent calendar fixed intervals、release/material gates和selected-resource conditional transport形成；TEST-MAX-LAG/CALENDAR/MATERIAL/CROSS-WORKSHOP/PROPERTY/VALIDATOR-MUTATION覆盖positive、infeasible、precheck、mutation和tiny oracle。Local report为7/7，exact provider SHA尚待验收回填；C-007/008、OBJ-001、Benchmark/P3和所有root生命周期状态不变。

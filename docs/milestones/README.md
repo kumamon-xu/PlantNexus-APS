@@ -37,3 +37,5 @@ TASK-P2-03 implementation `9268b88ca7ce90a8f72023241f87e2d3676fd58a`的run `3234
 TASK-P2-04 implementation `9b532e2c054b02e1692f345a252922ec7fd469e4`的run `32350068318`、required job `96367085099`与artifact `9399519368`均success；artifact formal report为6/6且Task report为38 paths/6 rows/0 issues，故Task=`done`。P2-05的启动来自用户新的明确授权，不是依赖完成后的自动过渡。
 
 TASK-P2-05本地实现和治理验收均PASS：64 focused、360 full、core/formal各6/6、Task diff 49 paths/6 rows/0 issues及compose/build/immutable。Implementation `df706786e0ec1c54bf60cd43261a92ef6aa53cc7`的run `32354050257` / job `96379299455` / artifact `9400957897`也精确PASS，故Task=`done`。TASK-P2-06的启动来自用户新的明确授权；其启动基线run `32354521904` / job `96380738933` / artifact `9401134902`精确绑定Diff base并成功，不会自动启动P2-07。
+
+TASK-P2-06已在本地形成C-002/005/006/009 bounded temporal model与7/7 machine evidence，exact provider证据尚待implementation提交后核验，故仍为`in_progress`。P2保持`active`；该进展不自动授权P2-07，也不改变P2-14必须最后执行的Exit Gate边界。

@@ -6,7 +6,7 @@ spec_version: 0.3.0
 phase: P0-P2
 normative: true
 source_sections: [21, 22, 25, 26, 27, 30, 31]
-last_reviewed: 2026-08-20
+last_reviewed: 2026-08-21
 ---
 
 # V1 Constraint Catalog
@@ -102,3 +102,9 @@ RUNNING仍由C-007固定resource、horizon-start和remaining occupancy；为避�
 CP-SAT现实现C-001完整且唯一assignment、C-003合法candidate resource、C-004同resource half-open unary NoOverlap、C-010 selected candidate seconds到ceiling tick duration、C-011完整horizon containment。Tight JSSP证明back-to-back区间合法，FJSP证明不同resource option使用各自duration；independent formal Validator对正例及C-001/C-010 mutation复验。
 
 C-002与C-005～009仍未进入Solver。任何非空precedence/transport、calendar、late release/material、RUNNING或lock事实必须在model build前拒绝，不能被当作vacuous或忽略；C-012～018继续unsupported。Rule sheet、公式与severity均未修改。
+
+## TASK-P2-06 implemented temporal constraint slice
+
+CP-SAT现新增C-002 precedence inclusive min/max lag、C-005 resource calendar half-open exclusion、C-006 release/material-ready lower bounds与C-009 selected-resource cross-workshop transport。Min与transport分别向上取tick且独立施加，max向下取tick；calendar用grid-equivalent fixed intervals，historical completed predecessor由absolute end anchor约束active successor。
+
+这些约束与既有C-001/003/004/010/011共同形成当前bounded model，并由formal Validator独立复验。C-007 RUNNING与C-008 HARD lock仍fail closed并由P2-07承接；C-012～018继续unsupported，OBJ-001仍未进入搜索。Rule sheet、C-ID公式、severity和Problem/Solution Schema均未修改。

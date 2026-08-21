@@ -6,7 +6,7 @@ spec_version: 0.3.0
 phase: P0-P2
 normative: true
 source_sections: [16, 20, 21, 22, 26]
-last_reviewed: 2026-08-20
+last_reviewed: 2026-08-21
 ---
 
 # 时间、日历与物料边界
@@ -79,3 +79,9 @@ Expansion不转换或推导时间：每个实例逐字复制Demand due、Product
 Builder要求horizon start精确等于immutable Snapshot cutoff，start/end为second-precision UTC且end严格更晚，tick为显式正整数。每个duration/remaining仍以权威秒进入Problem；`ceil(seconds/tick_seconds)`只检查RUNNING remainder和至少一个NOT_STARTED candidate可在release/material gate后完整落入horizon，不把秒值替换为tick，也不静默截断。全局precedence/calendar可行性留给P2 Solver/independent Validator，build成功不表示feasible。
 
 Calendar按Resource引用投影所有与当前horizon相交的显式unavailable interval，保留原始start/end，不生成班次、不合并、不clip；完全历史或horizon外interval对当前future domain无效而不进入Problem。与horizon相交的lock因Problem v1无字段而拒绝。OPEN-004/007/009/014继续OPEN；本Task不把synthetic cutoff、tick=60或24小时horizon变成Production默认值。
+
+## TASK-P2-06 exact Solver projection
+
+设tick为正整数秒。任意signed秒偏移`x`的下界使用`ceil(x/tick)`，上界使用`floor(x/tick)`；precedence min与cross-workshop transport分别形成下界，因此有效约束为`start-successor - end-predecessor >= max(ceil(min/tick), ceil(transport/tick))`，不得相加。Max lag独立使用`<= floor(max/tick)`，historical predecessor使用其权威完成时刻作绝对anchor。
+
+原始calendar unavailable half-open interval`[a,b)`投影为`[floor(a/tick), ceil(b/tick))`，裁到horizon后合并overlap/touching blocks并作为对应resource固定interval加入`NoOverlap`。这对tick-grid assignment与原始秒级相交判定等价；release/material各自使用ceiling下界。所有instant必须是canonical whole-second UTC，sub-second输入fail closed而非静默取整。OPEN-004/009/010/011/012继续OPEN；synthetic值不成为Production默认。

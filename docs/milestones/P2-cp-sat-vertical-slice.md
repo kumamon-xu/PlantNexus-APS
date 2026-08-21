@@ -30,7 +30,7 @@ P1 Exit Gate=`READY`且blocking gaps为空；用户于2026-08-20明确批准P1�
 | 4 | TASK-P2-04 | 正式Problem/Solution独立ScheduleValidator | P2-01/02 | `done` |
 | 5 | TASK-P2-05 | C-001/003/004/010/011 core model | P2-03/04 | `done` |
 | 6 | TASK-P2-06 | C-002/005/006/009 temporal/calendar/material | P2-05 | `done` |
-| 7 | TASK-P2-07 | C-007/008 execution facts/HARD lock | P2-06 | `planned` |
+| 7 | TASK-P2-07 | C-007/008 execution facts/HARD lock | P2-06 | `in_progress` |
 | 8 | TASK-P2-08 | OBJ-001 Delivery与GlobalCpSatStrategy | P2-02/05/06/07 | `planned` |
 | 9 | TASK-P2-09 | Golden/scenario/property/mutation integration | P2-04～08 | `planned` |
 | 10 | TASK-P2-10 | 五个Reference Schedulers | P2-01/02/04 | `planned` |
@@ -82,4 +82,4 @@ Implementation `df706786e0ec1c54bf60cd43261a92ef6aa53cc7`的run `32354050257` / 
 
 TASK-P2-06已形成C-002/005/006/009：exact min/max lag、historical anchor、calendar half-open grid projection、release/material gates与selected-resource conditional transport，并保留independent Validator、no-objective和C-007/008 fail-closed边界。Focused=`87 passed`、full=`367 passed`、Ruff/Pyright 0、四份machine reports PASS、治理53 paths/6 rows/0 issues且compose/build/immutable均PASS。
 
-Implementation `ba6dd2cdc2eeaae3b60714314bc3d2c155a2d81c`的run `32432482739` / required job `96626844156` / artifact `9429579311`均success，artifact digest=`sha256:3d1dce2dad986669d5709d7f8cf3900287773863cdda430e791e007495d5259c`且精确复现temporal/core/formal/Task报告。因此TASK-P2-06=`done`；P2仍`active`，P2-07～14继续`planned`且未获授权。
+Implementation `ba6dd2cdc2eeaae3b60714314bc3d2c155a2d81c`的run `32432482739` / required job `96626844156` / artifact `9429579311`均success，artifact digest=`sha256:3d1dce2dad986669d5709d7f8cf3900287773863cdda430e791e007495d5259c`且精确复现temporal/core/formal/Task报告。因此TASK-P2-06=`done`。用户于2026-08-21明确授权TASK-P2-07；启动时`main=origin/main=33cc3282ead23a4cc1bb214190191e116b095119`且working tree clean，该SHA的run `32432843343` / required job `96627943272` / artifact `9429703054`均success。P2仍`active`；P2-07只启动C-007/008，OBJ-001、Benchmark、P2-08～14和P3仍未形成或未获授权。

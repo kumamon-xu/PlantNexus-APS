@@ -69,7 +69,7 @@ last_reviewed: 2026-08-21
 
 ## 当前范围
 
-当前阶段为P2。P1 Milestone为`completed`，P2为`active`；TASK-P2-00～12均已闭环为`done`，TASK-P2-13已获授权并为`in_progress`。当前只执行Vertical Slice Gate evidence；P2-14和P3均未启动，详见`current_phase.md`。
+当前阶段为P2。P1 Milestone为`completed`，P2为`active`；TASK-P2-00～13均已闭环为`done`。P2-14 Exit Gate Audit和P3均未启动，详见`current_phase.md`。
 
 ## 仓库入口与本地检查
 
@@ -112,3 +112,5 @@ TASK-P2-12已形成严格Profile/Report/Baseline v1、确定性source-shaped gen
 用户于2026-08-21明确授权TASK-P2-13；clean/provider-verified Diff base为`59f3b013a4be7bd11d054e8464886b3cde791602`，其run `32461665177` / required job `96709654227` / artifact `9439159396`均success。当前只编排已发布的P2公开边界，重放correctness与XS/S/M并聚合Validator/KPI/SolverReport/Export、四类拒绝和CI artifact；不得混入remediation、Exit READY、P2-14或P3。
 
 TASK-P2-13本地已形成`p2-vertical-slice-report.v1`与`p2-gate-semantic-projection.v1`：两次完整replay均PASS，七场景、XS/S/M、Global+五Reference、formal Validator、KPI/SolverReport、internal Export和四类拒绝全部闭环。聚焦30项与全仓476项测试PASS，11项Gate checks全部PASS且无blocking gap；exact implementation provider形成前Task仍为`in_progress`，P2-14/P3保持未启动。
+
+Implementation `dc2e5cd41080603606090ebfc4bc6162941c5f7f`的required run `32465737712` / job `96721819879` / artifact `9440650646`已精确复现20/20 JSON、Gate 11/11与37-path治理证据，故TASK-P2-13=`done`。P2仍为`active`，P2-14仍是未授权的唯一最后Exit Audit，P3未进入。

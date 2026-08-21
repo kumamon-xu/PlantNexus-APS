@@ -115,3 +115,5 @@ Resource topology/status/calendar/capabilities、ExecutionFact和OperationLock�
 Vertical Gate只重放已版本化的synthetic Profile/Scenario/Policy/Limits和已有canonical lineage，不新增、选择或覆盖任何业务权威。四类边界明确拒绝unsupported capability、invalid Problem、invalid SolveLimits，并把UNKNOWN保持为无candidate的`NO_SOLUTION_WITHIN_LIMIT`；这些machine结论既不是Production数据权威，也不能把缺失事实补成默认值。
 
 报告中的due/priority、resource/calendar/material/transport、fact/lock、runtime与memory仍分别受原Scenario/Problem/baseline provenance约束。全部PROD_OPEN继续OPEN，尤其OPEN-006/011/012/015没有Authority/Evidence closure record；Gate PASS只证明Simulation链路可重放，不批准Production binding、capacity、SLA或发布。
+
+Provider artifact `9440650646`精确复现相同Simulation-only authority boundary；20份报告均未引入Production source/default/closure record。TASK-P2-13=`done`不改变任何PROD_OPEN或Production publishability。

@@ -253,3 +253,5 @@ Exact provider已复现：implementation `5ab65f36d532fd8786eb7ecad3cce406f4d9fb
 本Task不新增或复用Test ID；它把TEST-GOLDEN-JSSP/FJSP、全部C-specific、TEST-VALIDATOR-MUTATION/PROPERTY/OUTPUT/SCENARIO-REPLAY/REFERENCE-SCHEDULER/BENCHMARK/SOLVER-UPGRADE及CI contract链接到`test_p2_vertical_slice.py`、`test_p2_exit_rejections.py`和`p2-vertical-slice-report.v1`。实际Gate两次重跑全部公开边界，而非读取stale build report。
 
 Integration覆盖完整链、七Scenario/C-ID、XS/S/M status/objective/model/timing/memory、五Reference、fresh Validator、KPI/Export、semantic projection和no-Exit/P3边界；contract覆盖unsupported/invalid/limit与repeat<2非零失败；CI contract固定required workflow命令、report counts和artifact路径。P1 application AST test只新增唯一`p2_gate_report.py → app.exporters.contract_check` exact evidence例外，其他捷径禁令不变。既有36个Test ID和registry format version保持不变；P2-14仍须独立重跑audit。
+
+本地30 focused/476 full与provider required run全部PASS；artifact Gate复现2 replays、11/11、14 scenarios、108 Benchmark Validator passes、4 rejections和0 gaps。TASK-P2-13测试DoD已闭环；P2-14仍须独立审计而不能复用本Task结论。

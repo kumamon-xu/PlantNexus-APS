@@ -157,3 +157,5 @@ Independent Validator拒绝optimized candidate时映射FAILED/SYSTEM_ERROR语义
 Gate新增的四项evidence只调用既有public contracts：`SECONDARY_CAPACITY`稳定为`UNSUPPORTED_CAPABILITY`并在Planning前拒绝；空/invalid PlanningProblem稳定为`MODEL_INVALID/MODEL_INVALID`并在Solver前拒绝；`max_wall_time_seconds=0`稳定为Planning contract `MODEL_INVALID/INVALID_METRIC`；Solver `UNKNOWN`稳定映射无candidate的`NO_SOLUTION_WITHIN_LIMIT`且明确不是INFEASIBLE。
 
 任一correctness/benchmark/Validator/export/rejection/semantic-hash stage异常都会生成`p2-vertical-slice-report.v1` `FAIL`、blocking gap与非零exit；成功阶段不能抵消失败，也不在Gate中修复。该编排不增加error-code registry、Schema、HTTP/status/persistence mapping；P2 Exit decision始终`NOT_PERFORMED`。
+
+Required run `32465737712`精确复验四类rejection与FAIL/nonzero contract测试，artifact内Gate仍为0 blocking gaps且Exit=`NOT_PERFORMED`。没有新增error code或Production mapping。

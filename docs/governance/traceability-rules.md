@@ -225,3 +225,5 @@ Implementation `01e7f4bdca88fc903e7caa771f875fc1a70ff357`的required run `324608
 Gate必须至少执行两次完整replay；每次都保存七场景correctness、三profile Global/五Reference原始报告、formal Validator/KPI/Export结果、环境/timing/memory与内容hash。`p2-gate-semantic-projection.v1`只能排除运行时噪声和由该噪声派生的identity，用于验证业务语义一致；不得删除、改写或把原始运行字段声明为相同。任一sub-report、投影、拒绝、边界或治理检查失败必须生成`FAIL`、blocking gap并以非零退出。
 
 四类退出边界必须分别追踪`UNSUPPORTED_CAPABILITY`、`INVALID_PLANNING_PROBLEM`、`INVALID_SOLVE_LIMITS`和`NO_SOLUTION_WITHIN_LIMIT`，不得合并为成功、INFEASIBLE证书或Production fallback。Gate仅形成P2 Simulation/development readiness aggregation；`Exit Gate Audit=NOT_PERFORMED`、P2-14/P3=`NOT_STARTED`、Production publishability=false。Exact implementation provider artifact形成前只能记录local formed evidence，完成TASK-P2-13也只满足P2-14依赖，不自动授权P2-14或P3。
+
+Implementation `dc2e5cd41080603606090ebfc4bc6162941c5f7f`的required run `32465737712`与artifact `9440650646`已精确绑定并复现20/20 reports、Gate 11/11及37 committed/0 working paths、6 rows、19 checks、0 issues，因此TASK-P2-13=`done`。Artifact内每个sub-report均绑定同一SHA且Exit仍`NOT_PERFORMED`；完成只满足P2-14依赖，不自动授权P2-14或P3。

@@ -1,7 +1,7 @@
 ---
 doc_id: TASK-P2-13
 title: P2 Vertical Slice Gate Evidence
-status: in_progress
+status: done
 spec_version: 0.3.0
 phase: P2
 normative: true
@@ -90,3 +90,9 @@ Activation implementation `00ba68d59b883599bf1182d055faf53684ba8d64`的push run 
 指定聚焦命令为`30 passed in 37.68s`，完整仓库回归为`476 passed in 50.60s`；Gate CLI exit 0并得到11/11 PASS、14次correctness scenario executions、6次benchmark profile executions、108次benchmark Validator passes、4次exit rejection、2次explicit output contract与0 blocking gap。边界固定为P2/Simulation-only、Exit Audit=`NOT_PERFORMED`、P2-14/P3=`NOT_STARTED`、Production readiness=`NOT_CLAIMED`。其余lint/type/build/machine/governance检查和exact implementation provider evidence仍待下述验收完成，故Task保持`in_progress`。
 
 其余本地验收也已完成：Ruff=`All checks passed`，Pyright=`0 errors`；Rule/Generator/Golden/Mutation、P1 Gate、Problem/Machine/Backend/Formal Validator、Core/Temporal/Fact-Lock/Objective、Correctness/Reference/Output/Engineering全部machine reports为PASS；独立XS/S/M各8/8且0 warning；Compose config、`uv build`与`git diff --check`退出0。Full docs治理为142 docs/30 roots/36 Tests/15 OPEN/13 SIM/11 risks/37 Tasks；Task diff为37 paths（8 committed-range、37 working-tree union）、6 Impact rows、19 checks、0 issues并PASS。Schema/migration/dependency/lock/ADR以及冻结的Planning/Strategy/Backend/Validator/Reference/Scenario/Benchmark/Exporter实现均零差异。Exact implementation SHA的required `validate` / artifact仍待push后核验，故Task继续`in_progress`。
+
+Implementation `dc2e5cd41080603606090ebfc4bc6162941c5f7f`的push run [`32465737712`](https://github.com/kumamon-xu/PlantNexus-APS/actions/runs/32465737712)（attempt 1）/ required `validate` job/check `96721819879`（GitHub Actions app `15368`）全部success；branch protection精确要求`validate`/app `15368`。Artifact `9440650646`（`plantnexus-ci-evidence-32465737712`，86029 bytes）未过期，digest=`sha256:35e67191d1026169d9acd2a64f50e93bd8d2704df9f8ba1a2297f2dd2a00ca4d`、expiry=`2026-11-19T08:59:32Z`。
+
+下载复核20份JSON全部PASS；Gate与每个correctness/XS/S/M/export sub-report均绑定implementation SHA，复现11/11 checks、2 replays、14 scenarios、6 profiles、108 Benchmark Validator passes、4 rejections、0 blocking gaps及Exit=`NOT_PERFORMED`。Task report精确绑定同一SHA和Diff base，记录37 committed/0 working paths、6 rows、19 checks、0 issues；XS为8/8且0 warning。因此所有Completion conditions在有界non-Exit范围内满足，TASK-P2-13=`done`。P2-14仍为`planned`且未授权，P3/Production仍禁止；本evidence-only closure还须由自身exact provider复核。
+
+Evidence-only closure本地治理再次PASS：142 docs、30 roots/trace rows、36 Tests、15 OPEN、13 SIM、11 risks、37 Tasks；固定Diff base范围为37 committed paths与30 working documentation paths的37-path union、6 Impact rows、19 checks、0 issues，`git diff --check`退出0。Closure只修改已允许的治理/生命周期文档，不修改业务代码、workflow、Schema、dependency或P2-14/P3内容。

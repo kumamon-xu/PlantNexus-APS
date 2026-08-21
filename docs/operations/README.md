@@ -131,3 +131,5 @@ Report本身不写业务数据库，temporary CSV随进程回收，`build/valida
 运行`uv run python -m app.application.p2_gate_report --root . --repeat 2 --report build/validation/TASK-P2-13-p2-gate.json`。成功必须为`p2-vertical-slice-report.v1`、2 full replays、11/11 checks、7 scenarios×2、C-001～C-011正负覆盖、XS/S/M×2、108 benchmark Validator passes、四类rejection、stable projection unique=`1`和0 blocking gaps；Exit decision必须仍为`NOT_PERFORMED`。
 
 任一stage失败时CLI仍写包含stage/error/blocking gap的FAIL report并返回非零；不得在本Task内修改Solver/Validator/fixture/baseline来“让Gate变绿”。命令不连接业务服务、不创建状态或可发布artifact。CI使用同一命令与`--repeat 2`输出`build/validation/ci-p2-vertical-slice-gate.json`，exact provider SHA/required job/artifact必须在实现提交后另行核验。
+
+该provider验收已完成：implementation `dc2e5cd41080603606090ebfc4bc6162941c5f7f`、run `32465737712`、required job `96721819879`和artifact `9440650646`全部success；artifact 20/20 JSON PASS。命令仍是evidence-only，不是Production runbook或P2 Exit audit。

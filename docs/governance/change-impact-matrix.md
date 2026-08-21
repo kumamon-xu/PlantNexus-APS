@@ -326,3 +326,5 @@ Implementation artifact `9438899443`已绑定`01e7f4bdca88fc903e7caa771f875fc1a7
 Schema/global set、migration/database、runtime/dev dependency与`uv.lock`、ADR、Planning/Strategy/Backend/Validator/Reference/Scenario/Benchmark/Exporter实现、API/Worker/P3+均零差异，故不声明对应Rule ID。Gate只消费这些冻结的公开能力；`backend/tests/integration/test_p1_common_ingress.py`的例外只能允许`p2_gate_report.py`直接导入`app.exporters.contract_check`，不得扩大application→exporter反向依赖。Machine rule table与`registry_version=1.0.0`不变；最终path/check/issue计数由Task diff report与exact provider artifact回填。
 
 本地完整Diff治理已实际覆盖37 paths（activation 8 committed、当前37 working-tree union）、上述六行、19 checks与0 issues并PASS。Implementation exact provider artifact形成前不得把该本地结果写成外部required evidence或关闭Task。
+
+Implementation artifact `9440650646`已绑定`dc2e5cd41080603606090ebfc4bc6162941c5f7f`并复现37 committed/0 working paths、上述六行、19 checks与0 issues；TASK-P2-13据此关闭为`done`。Schema/migration/dependency/lock/ADR及冻结业务实现边界保持零差异，P2-14/P3不自动启动。

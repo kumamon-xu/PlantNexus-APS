@@ -176,3 +176,5 @@ CI只通过非秘密变量选择XS并写ignored artifact，不新增service/port
 Gate CLI只有`--root`、`--repeat >= 2`和`--report`三个显式参数；所有profile/policy/limits继续从版本化仓库合同读取，没有环境默认。`PLANTNEXUS_CODE_COMMIT`只接受`uncommitted`或40位小写SHA并传递到全部子报告；CI由`${{ github.sha }}`提供。报告复用Benchmark的去hostname/username/secret环境签名，不读取credential、DB、Redis、API、Worker或网络配置。
 
 Required workflow在既有XS step后真实执行两次七类correctness、XS/S/M和output contract，并把单一Gate JSON纳入现有artifact glob。Local与provider运行都保持Simulation-only；相对baseline仍按各Benchmark报告环境规则判定，Gate不会把GitHub runner或本机值转成Production部署规格。
+
+Required run `32465737712`已在GitHub Linux runner精确执行该Gate并上传artifact `9440650646`；Gate及全部sub-report绑定同一SHA，未泄漏secret或建立Production配置。跨环境执行结果仍仅属development evidence。

@@ -80,3 +80,5 @@ P2-12 BenchmarkReport是独立machine evidence，不被追加入P2-11 package；
 Gate每次full replay既重放P2-11独立output contract，也验证XS/S/M各自已有embedded internal package，因此`repeat=2`记录2个显式package contract executions和6个Benchmark embedded Export executions。每个原始package ID、manifest/file hash、bytes/rows、KPI/SolverReport/Validation lineage和atomic/non-publishable boundary均原样嵌入Gate report。
 
 SolverReport时间和timing-dependent KPI会使跨完整run的package identity合法变化；Gate只对不含这些run-specific identity的versioned business projection要求一致，并诚实保留所有原始hash。Exporter实现/Schema/bytes规则未修改，Gate不把自身报告装入package，不创建ScheduleVersion/ExportJob，也不改变`publishable=false`。
+
+Provider artifact `9440650646`内两次显式output与六次embedded Export证据均PASS并绑定implementation SHA；package仍不可发布，ScheduleVersion/ExportJob仍未创建。TASK-P2-13闭环不改变P3合同或状态边界。

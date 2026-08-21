@@ -12,7 +12,7 @@ registry_version: 1.0.0
 
 # 文档清单
 
-本清单列出当前仓库已经实际存在的Markdown文档。P0/P1均已归档为completed；P2现为active，TASK-P2-00～12已done，TASK-P2-13已获授权并为in_progress。P2-14仍为planned且未获启动授权。产品API与Production Runbook正文尚未形成并继续由相应索引登记。
+本清单列出当前仓库已经实际存在的Markdown文档。P0/P1均已归档为completed；P2现为active，TASK-P2-00～13已done。P2-14仍为planned且未获启动授权。产品API与Production Runbook正文尚未形成并继续由相应索引登记。
 
 | Path | Doc ID | Status | Title |
 |---|---|---|---|
@@ -154,7 +154,7 @@ registry_version: 1.0.0
 | [tasks/P2/TASK-P2-10-reference-schedulers.md](../tasks/P2/TASK-P2-10-reference-schedulers.md) | TASK-P2-10 | done | Reference Schedulers |
 | [tasks/P2/TASK-P2-11-kpi-solver-report-and-export-closure.md](../tasks/P2/TASK-P2-11-kpi-solver-report-and-export-closure.md) | TASK-P2-11 | done | KPI SolverReport and Export Closure |
 | [tasks/P2/TASK-P2-12-benchmark-runner-xs-s-m.md](../tasks/P2/TASK-P2-12-benchmark-runner-xs-s-m.md) | TASK-P2-12 | done | BenchmarkRunner and XS S M Profiles |
-| [tasks/P2/TASK-P2-13-p2-vertical-slice-gate-evidence.md](../tasks/P2/TASK-P2-13-p2-vertical-slice-gate-evidence.md) | TASK-P2-13 | in_progress | P2 Vertical Slice Gate Evidence |
+| [tasks/P2/TASK-P2-13-p2-vertical-slice-gate-evidence.md](../tasks/P2/TASK-P2-13-p2-vertical-slice-gate-evidence.md) | TASK-P2-13 | done | P2 Vertical Slice Gate Evidence |
 | [tasks/P2/TASK-P2-14-p2-exit-gate-audit.md](../tasks/P2/TASK-P2-14-p2-exit-gate-audit.md) | TASK-P2-14 | planned | P2 Exit Gate Audit |
 | [tasks/README.md](../tasks/README.md) | DOC-TASK-INDEX | living | Task Card 索引 |
 | [tasks/TASK_TEMPLATE.md](../tasks/TASK_TEMPLATE.md) | TEMPLATE-TASK | baseline | Task Card Template |
@@ -246,3 +246,5 @@ TASK-P2-13启动不新增、删除或重命名`docs/**/*.md`路径，inventory�
 TASK-P2-13本地实现仍未新增、删除或重命名`docs/**/*.md`，inventory保持142份；新增Gate Python/tests/workflow与ignored Gate/Task JSON均不进入Markdown清单。Roots=30、Test IDs=36、OPEN=15、SIM assumptions=13、risks=11、Tasks=37不变，全部registry format version保持`1.0.0`；P2-14继续`planned`且P3未进入。
 
 本地full/diff治理实际为37 paths、6 rows、19 checks、0 issues并PASS；Diff base范围中activation为8 committed paths、当前working-tree union为37 paths。Exact implementation provider尚待形成，inventory与生命周期不据此提前关闭。
+
+Implementation artifact `9440650646`已复现142-doc inventory与37 committed/0 working paths、6 rows、19 checks、0 issues，TASK-P2-13=`done`。没有新增、删除或重命名正式Markdown；P2-14保持`planned`，inventory与registry版本不变。

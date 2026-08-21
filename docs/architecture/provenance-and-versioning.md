@@ -228,3 +228,5 @@ Synthetic provenance从Snapshot与P2 correctness manifest逐字段交叉，Scena
 `p2-vertical-slice-report.v1`绑定exact code commit、`p2-gate-semantic-projection.v1`、correctness/benchmark/output报告版本、全部嵌套子报告、两次replay index/stage/time、四类rejection、11项aggregate check、counts、blocking gaps和phase boundary。Provider时Gate及每个子报告的`code_commit`必须等于同一`${{ github.sha }}`；local仅允许`uncommitted`。
 
 Correctness projection只排除`generated_at/code_commit`；Benchmark projection保留Profile/Scenario/Problem/environment、candidate fingerprints、model/quality/Validator/Reference/baseline而排除timing/memory与由SolverReport时间产生的KPI/package identities；Output projection保留frozen inputs、file roles/counts、stable lineage和state boundary而排除run-specific identities。原始timing、memory、KPI/SolverReport/package/file hashes仍逐replay完整保存，不伪称这些时间敏感hash必须相等；只有versioned business projection必须两次一致且本地unique count=`1`。
+
+Provider run `32465737712` / job `96721819879` / artifact `9440650646`把Gate、每个nested correctness/XS/S/M/export report及Task report全部绑定`dc2e5cd41080603606090ebfc4bc6162941c5f7f`；20/20 JSON PASS，artifact未过期。该exact lineage关闭TASK-P2-13，不生成Exit READY。

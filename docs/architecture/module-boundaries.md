@@ -177,3 +177,5 @@ Planning reporting新增的`calculate_schedule_kpi_metrics`只提取已有pure s
 `application/p2_gate_report.py`是唯一跨越到`app.exporters.contract_check`的application文件，且只为TASK-P2-13 machine evidence重跑既有公开output boundary；它不导入Exporter实现、API、Infrastructure、Backend/Strategy/Validator native modules、OR-Tools或SQLAlchemy，不承载产品用例、事务或持久化。P1 CommonIngress仍终止于Problem，其他`application/*.py`继续禁止Exporter及Solver/Validator/API/Infrastructure捷径。
 
 该例外由AST integration test按“精确文件→精确module”固定为`p2_gate_report.py → app.exporters.contract_check`，不能扩展为通配或dynamic import。Gate对Simulation correctness/benchmark/export的依赖方向仍是evidence consumer单向下游；Domain/Planning/Validator/Exporter均不反向依赖Gate，因此无需新ADR。
+
+Required run `32465737712`的Lint/Type/full tests、Gate与artifact全部success，provider精确复验该单文件例外及其余application禁令；未出现API/ORM/Worker/native反向依赖。TASK-P2-13据此闭环，不改变P2-14/P3架构边界。

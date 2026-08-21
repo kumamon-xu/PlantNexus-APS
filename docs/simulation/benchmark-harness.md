@@ -61,3 +61,5 @@ TASK-P0-05 的 ScenarioManifest v1 提供未来 report 需要引用的 Scenario/
 Gate不修改Profile/Report/Baseline、threshold或runner；它用public `run_benchmark`在每个full replay内按XS/S/M各调用一次，所以`repeat=2`产生6份完整BenchmarkReport、18个Global measured runs与90个Reference measured runs。每份报告仍独立执行strict validation、baseline comparison与warning规则，任何warning或FAIL均阻断Gate。
 
 Aggregate report完整嵌入六份原始报告并另算`p2-gate-semantic-projection.v1`：比较Profile/Problem/environment/candidate/model/quality/Validator/Reference/baseline语义，排除本来就会变化的time/memory和由SolverReport timing派生的KPI/package identity。此投影不替换原Benchmark合同或原始测量；L/XL、Nightly与Production threshold继续不在范围。
+
+Provider artifact `9440650646`精确包含六份nested XS/S/M BenchmarkReport、全部108次Validator PASS及同SHA Gate aggregation；required Gate step success。Profile/Baseline/runner仍无变化，L/XL、Nightly和Production threshold继续未形成。

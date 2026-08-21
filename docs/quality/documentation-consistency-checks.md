@@ -334,3 +334,5 @@ Diff base固定为`59f3b013a4be7bd11d054e8464886b3cde791602`；完整activation/
 本Task不新增Markdown，inventory继续142；roots=30、Test IDs=36、OPEN=15、SIM assumptions=13、risks=11、Tasks=37，所有registry format version保持`1.0.0`。本地full/diff治理及最终path/count/check/issue须在完整验收后记录；implementation provider artifact形成前不得预写其SHA/run/artifact或关闭Task。
 
 本地full治理实际为142 docs、30 roots/trace rows、36 Test IDs、15 OPEN、13 SIM assumptions、11 risks、37 Tasks并PASS；Task diff实际为37 paths（8 committed-range、37 working-tree union）、六个Impact rows、19 checks、0 issues并PASS。`git diff --check`退出0，仅报告Windows工作区预期的LF→CRLF提示；exact implementation provider形成前TASK-P2-13继续`in_progress`。
+
+Implementation artifact `9440650646`内`traceability-report.v1`精确绑定`dc2e5cd41080603606090ebfc4bc6162941c5f7f`与Diff base `59f3b013a4be7bd11d054e8464886b3cde791602`，复现37 committed/0 working paths、6 rows、19 checks、0 issues并PASS；TASK-P2-13治理Gate据此闭环为`done`。本evidence-only closure仍须由自身exact provider复核，不在提交前预写其ID。

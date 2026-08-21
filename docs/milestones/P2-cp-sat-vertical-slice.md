@@ -121,3 +121,5 @@ Implementation `01e7f4bdca88fc903e7caa771f875fc1a70ff357`的run `32460861563` / 
 用户于2026-08-21明确授权TASK-P2-13；clean/provider-verified启动基线为`59f3b013a4be7bd11d054e8464886b3cde791602`，run `32461665177` / required job `96709654227` / artifact `9439159396`精确success。TASK-P2-13只聚合P2-01～12公开边界为至少两次replay的versioned Gate report、四类拒绝、blocking gap和CI artifact；不做remediation或Exit READY。P2-14仍须最后另行授权，P3不自动启动。
 
 TASK-P2-13本地已形成两次完整Vertical Slice Gate replay：七场景correctness、XS/S/M Global+五Reference、fresh formal Validator、公共KPI/SolverReport及internal Export全部PASS，四类unsupported/invalid/limit退出均fail-closed。聚焦30项、全仓476项测试及11/11 Gate checks PASS，14次correctness场景、6次profile、108次Benchmark Validator、0 blocking gap；原始运行证据与稳定语义投影同时保留。Exact implementation provider尚待验收，故Task继续`in_progress`、Milestone继续`active`；这不是P2 Exit Gate Audit或P3授权。
+
+Implementation `dc2e5cd41080603606090ebfc4bc6162941c5f7f`的required run `32465737712` / job `96721819879` / artifact `9440650646`精确success并复现20/20 reports、Gate 11/11与37 committed/0 working paths、6 rows、19 checks、0 issues，故TASK-P2-13=`done`。Milestone继续`active`；只有P2-14独立审计可给出Exit结论，且其仍为`planned`、未授权，P3不自动启动。

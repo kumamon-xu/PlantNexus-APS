@@ -62,3 +62,5 @@ XS/S/M三个versioned profile现已各自在正式source→Problem链上运行Gl
 `p2-vertical-slice-report.v1`现把Golden JSSP/FJSP、Cross Workshop、Calendar、Material Delay、Running、Hard Lock与XS/S/M组合为两次完整replay；每个XS/S/M再次运行Global+五Reference的1 warm-up/3 measured、fresh Validator、共享KPI和internal Export，并保留build/first/solve/validation/total、objective/bound/gap、memory、model/Problem scale、environment及package hashes。两次versioned business projection一致且11/11 aggregate checks PASS。
 
 这构成TASK-P2-13本地Gate A aggregate evidence，不是TASK-P2-14 Exit audit或Production performance Gate。Run-specific SolverReport/KPI/package hash包含时间证据并逐次保留，不错误要求相等；Problem/candidate/业务投影必须一致。OPEN-011/012、L/XL、Nightly schedule、Production capacity/SLA仍未形成。
+
+Required run `32465737712` / artifact `9440650646`已在provider精确复现两次Gate A aggregate且无warning/gap，故TASK-P2-13=`done`。该结果仍不关闭OPEN-011/012，不形成L/XL、Nightly或Production SLA，也不替代P2-14 Audit。

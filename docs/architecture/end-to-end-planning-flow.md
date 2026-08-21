@@ -75,3 +75,5 @@ P2的第一段现在固定为`verified PlanningSnapshot v2 + explicit versioned 
 `app.application.p2_gate_report`现只通过P2-09/P2-12/P2-11公开machine boundaries聚合`Snapshot → PlanningProblem v2 → PlanningPolicy/SolveLimits → GlobalCpSatStrategy → independent Validator → KPI/SolverReport → p2-internal-export.v1`。每个完整replay依次运行七类correctness、XS/S/M Global+五Reference与独立output contract；本地`repeat=2`形成14个correctness scenario executions、6个benchmark profile executions、108个benchmark Validator passes、8个显式/嵌入Export executions及四类fail-closed边界，11/11 checks PASS。
 
 该入口是无状态、in-process、Simulation-only验收编排，不创建PlanningRun/ScheduleVersion/ExportJob，不连接API/DB/Worker/queue，也不批准或发布。`p2-vertical-slice-report.v1`保留每次完整子报告、timing/memory/hash/export evidence，并只对排除generated/timing的versioned业务语义投影要求跨replay一致；P2-14才可独立审计Exit。
+
+Implementation `dc2e5cd41080603606090ebfc4bc6162941c5f7f`的required run `32465737712` / artifact `9440650646`已精确复现该完整链与两次replay，Gate 11/11且0 blocking gap。该provider证据仍明确Exit=`NOT_PERFORMED`，只满足P2-14启动依赖。

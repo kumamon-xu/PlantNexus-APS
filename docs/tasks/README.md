@@ -29,7 +29,7 @@ last_reviewed: 2026-08-21
 | [TASK-P2-04](P2/TASK-P2-04-formal-independent-schedule-validator.md) | 正式独立ScheduleValidator | P2-01/02 | `done` |
 | [TASK-P2-05](P2/TASK-P2-05-cp-sat-core-assignment-resource-model.md) | CP-SAT core assignment/resource | P2-03/04 | `done` |
 | [TASK-P2-06](P2/TASK-P2-06-cp-sat-temporal-calendar-material-model.md) | temporal/calendar/material | P2-05 | `done` |
-| [TASK-P2-07](P2/TASK-P2-07-execution-facts-and-hard-lock-model.md) | execution facts/HARD lock | P2-06 | `in_progress` |
+| [TASK-P2-07](P2/TASK-P2-07-execution-facts-and-hard-lock-model.md) | execution facts/HARD lock | P2-06 | `done` |
 | [TASK-P2-08](P2/TASK-P2-08-delivery-objective-and-global-strategy.md) | OBJ-001与Global Strategy | P2-02/05/06/07 | `planned` |
 | [TASK-P2-09](P2/TASK-P2-09-golden-scenario-property-integration.md) | Golden/scenario/property integration | P2-04～08 | `planned` |
 | [TASK-P2-10](P2/TASK-P2-10-reference-schedulers.md) | 五个Reference Schedulers | P2-01/02/04 | `planned` |
@@ -44,7 +44,7 @@ last_reviewed: 2026-08-21
 
 普通CI event range仍只能变更一张current-phase Task Card。唯一例外是初始phase-planning batch：必须由新建`TASK-Pn-00`、`Task batch role: phase-planning-owner`、有效Diff base且`in_progress/done`的唯一owner归属；其他卡必须同range新建、role=`phase-plan-member`、保持`planned/ready`且不得预填implementation SHA。历史卡、既有成员、多个owner或active/done成员均硬失败。选择owner后仍按owner Diff base检查全部scope/Impact Rule。
 
-TASK-P2-00～06已`done`。P2-03的Diff base固定为`f73f8c90af94d3c9b05ecc10b6c999594a3b7d66`且ADR-0011先于dependency变更接受；P2-04～06的implementation及exact provider evidence均已闭环。用户于2026-08-21明确授权TASK-P2-07，它以clean/provider-verified `33cc3282ead23a4cc1bb214190191e116b095119`为Diff base并处于`in_progress`；P2-08～14继续`planned`且未获启动授权。
+TASK-P2-00～07已`done`。P2-03的Diff base固定为`f73f8c90af94d3c9b05ecc10b6c999594a3b7d66`且ADR-0011先于dependency变更接受；P2-04～07的implementation及exact provider evidence均已闭环。P2-08～14继续`planned`且未获启动授权。
 
 P2-04限定为正式Problem/Solution独立C-001～C-011判定、stable ValidationReport/Error、mutation/property/independence machine evidence及CI handoff；不得修改Backend、合同Schema、fixture历史bytes、dependency、objective、Benchmark或P3。P2-05及以后不会由本Task自动启动。
 
@@ -57,3 +57,5 @@ P2-05 core implementation本地已通过64 focused、360 full、Ruff/Pyright、c
 P2-06覆盖exact precedence min/max、historical anchor、calendar fixed intervals、release/material gates与conditional transport；87 focused、367 full、Ruff/Pyright 0、temporal 7/7、治理53 paths/6 rows/19 checks/0 issues、compose/build/immutable均PASS。Implementation `ba6dd2cdc2eeaae3b60714314bc3d2c155a2d81c`的run `32432482739` / job `96626844156` / artifact `9429579311`精确复现证据，故索引为`done`。TASK-P2-07的启动来自新的明确授权；其Diff base `33cc3282ead23a4cc1bb214190191e116b095119`的run `32432843343` / job `96627943272` / artifact `9429703054`精确成功。
 
 TASK-P2-07已完成本地实现验收：93 focused、382 full、Ruff/Pyright 0、fact-lock 7/7，治理54 paths/6 rows/19 checks/0 issues，Compose/build/immutable均PASS。Exact implementation provider evidence形成前索引继续为`in_progress`；P2-08～14不因本地PASS自动启动。
+
+TASK-P2-07 implementation `5ab65f36d532fd8786eb7ecad3cce406f4d9fb70`的run `32435395744` / required job `96635463577` / artifact `9430579117`精确复现fact-lock 7/7及54 committed/0 working/6 rows/19 checks/0 issues，故索引状态为`done`。P2-08～14仍不因依赖完成自动启动。

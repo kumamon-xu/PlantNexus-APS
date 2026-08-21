@@ -227,3 +227,5 @@ Exact provider已复现：implementation `ba6dd2cdc2eeaae3b60714314bc3d2c155a2d8
 本Task复用TEST-RUNNING、TEST-INF-LOCK、TEST-PROPERTY、TEST-VALIDATOR-MUTATION、TEST-CONTRACT-001与TEST-SOLVER-UPGRADE，不新增Test ID或改变36项registry。新增unit/property/integration覆盖COMPLETED anchor exclusion、RUNNING resource/remainder、HARD exact tuple、SOFT movement、grid/duration/multi-source self-conflict、calendar/resource/horizon INFEASIBLE、stable lock references与formal mutations。
 
 `cp-sat-fact-lock-model-report.v1`当前为7/7：2个C-ID、4 candidate、3 infeasible、4 precheck、2 Validator mutation及6 oracle cases；foundation/core/temporal/formal历史machine reports保持6/6、6/6、7/7、6/6。本地focused=`93 passed`、full repository=`382 passed`且Ruff/Pyright为0问题。Exact provider evidence仍待implementation SHA形成；P2-09 Golden integration、P2-12 Benchmark和Production仍未形成。
+
+Exact provider已复现：implementation `5ab65f36d532fd8786eb7ecad3cce406f4d9fb70`的run `32435395744` / required job `96635463577`全步骤success；artifact `9430579117`中的fact-lock/temporal/core/formal报告分别7/7、7/7、6/6、6/6，Task report为54 committed/0 working paths、6 rows、19 checks、0 issues。TASK-P2-07测试证据闭环为`done`；P2-08及以后不自动启动。

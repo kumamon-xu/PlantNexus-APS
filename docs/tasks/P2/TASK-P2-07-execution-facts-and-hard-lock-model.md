@@ -1,7 +1,7 @@
 ---
 doc_id: TASK-P2-07
 title: Execution Facts and Hard Lock Model
-status: in_progress
+status: done
 spec_version: 0.3.0
 phase: P2
 normative: true
@@ -82,3 +82,5 @@ Activation evidence: 2026-08-21启动复核确认`main=origin/main=33cc3282ead23
 Scope review: P2-06的`core_constraints.py`仍显式拒绝本Task必须消费的RUNNING/lock事实，`model.py`仍按option duration建模，`solution_mapper.py`未映射RUNNING remaining或lock references；历史core测试锁定旧拒绝。正式provider evidence还要求新增machine report并接入workflow/integration contract，foundation current boundary与Backend诊断也必须同步。上述路径因此在任何业务代码修改前补入允许范围；Problem/Policy/Solution Schema、formal Validator、Problem builder/hash、constraint-rule-sheet、OR-Tools pin与`uv.lock`保持不可变。
 
 Local implementation evidence: C-007/C-008已由独立fact/lock builder与现有core/temporal model组合形成；COMPLETED只保留historical anchor，RUNNING固定资源并从horizon start占用ceil-rounded remaining interval，HARD固定resource/start/end，SOFT仅保留metadata/reference。Focused suite=`93 passed`，full repository=`382 passed`，Ruff/Pyright为0问题；foundation/core/formal machine reports各6/6、temporal/fact-lock各7/7 PASS，fact-lock counts为2个C-ID、4 candidate、3 certified INFEASIBLE、4 precheck、2 Validator mutation及6 tiny oracle。Full治理为142 docs/30 roots/36 Test IDs/15 OPEN/10 SIM/11 risks/37 Tasks；Task diff为54 paths、6 matched Impact Rules、19 checks、0 issues，Compose、build、`git diff --check`与禁止路径复核均PASS。Exact implementation SHA的required `validate`与artifact尚未形成，因此本Task继续`in_progress`，P2-08未启动。
+
+Provider closure: implementation `5ab65f36d532fd8786eb7ecad3cce406f4d9fb70`已直接push `main`。GitHub push run `32435395744`、required `validate` job/check `96635463577`（GitHub Actions app `15368`）均`completed/success`，包括新增fact-lock step在内的全部步骤成功。Artifact `9430579117`=`plantnexus-ci-evidence-32435395744`，`expired=false`、expiry=`2026-11-19T01:11:01Z`、digest=`sha256:a6b6ff7413b8010a8012ddd351a2a194b89b1a13cdf71c6dada5d6afa53a44ab`；foundation/core/formal报告各6/6、temporal/fact-lock各7/7且全部绑定同一SHA，fact-lock counts与本地一致，Task report绑定同一SHA/Diff base并为54 committed/0 working paths、6 rows、19 checks、0 issues。Completion conditions全部满足，Task=`done`；P2保持`active`，P2-08～14仍为`planned`且未获启动授权，不进入P3。

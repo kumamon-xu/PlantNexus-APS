@@ -160,3 +160,5 @@ Required `validate`新增不可跳过的`CP-SAT execution fact and hard lock mod
 Step不得`continue-on-error`；artifact必须同时上传fact-lock/temporal/core/formal与Task diff reports，且`code_commit`绑定exact pushed SHA。Local PASS不替代required `validate`、artifact digest/expiry与内容复核；完成这些证据前TASK-P2-07保持`in_progress`，也不得自动激活P2-08。
 
 Local Gate已通过93 focused、382 full、Ruff/Pyright 0、foundation/core/formal 6/6与temporal/fact-lock 7/7、54-path/6-row/19-check/0-issue治理、Compose、build、`git diff --check`和immutable checks。下一门仅为implementation exact SHA的required `validate`与artifact；通过前状态不变。
+
+Implementation provider Gate现已通过：SHA `5ab65f36d532fd8786eb7ecad3cce406f4d9fb70`、run `32435395744`、required `validate` job/check `96635463577`（app `15368`）均success；artifact `9430579117`未过期且digest=`sha256:a6b6ff7413b8010a8012ddd351a2a194b89b1a13cdf71c6dada5d6afa53a44ab`，fact-lock/temporal/core/formal/Task报告绑定同一SHA并复现7/7、7/7、6/6、6/6及54 paths/6 rows/19 checks/0 issues。TASK-P2-07 DoD完成；closure提交本身仍须另行核验exact provider，不自动授权P2-08。

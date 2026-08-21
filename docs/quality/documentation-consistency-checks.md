@@ -284,3 +284,5 @@ Full治理继续要求142 docs、30 roots、36 Test IDs、15 OPEN、10 SIM assum
 Diff base固定为`33cc3282ead23a4cc1bb214190191e116b095119`；activation commit也属于完整Task range。最终local path/check/issue counts只由`TASK-P2-07-report.json`回填，provider artifact还必须对exact implementation SHA复现相同结果；不得预写run/artifact或把local PASS当Task closure。
 
 本地实际full治理PASS为142 docs/30 roots/36 Test IDs/15 OPEN/10 SIM assumptions/11 risks/37 Tasks；TASK-P2-07完整range为54 paths、6 matched rows、19 checks、0 issues。Immutable paths、Compose、build与`git diff --check`均PASS；exact provider artifact尚待实现提交后复现。
+
+Implementation artifact `9430579117`内`traceability-report.v1`精确绑定`5ab65f36d532fd8786eb7ecad3cce406f4d9fb70`与Diff base `33cc3282ead23a4cc1bb214190191e116b095119`，复现54 committed/0 working paths、6 rows、19 checks、0 issues并PASS；TASK-P2-07治理Gate据此闭环为`done`。Evidence-only closure仍须由自身exact provider run复核，不能在本提交中预写其ID。

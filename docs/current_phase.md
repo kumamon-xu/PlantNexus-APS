@@ -42,7 +42,7 @@ PlanningSnapshot
 
 用户于2026-08-20明确授权执行`TASK-P2-03 — OR-Tools and SolverBackend Foundation`；该Task以clean、provider-verified `f73f8c90af94d3c9b05ecc10b6c999594a3b7d66`启动，并在依赖变更前接受ADR-0011。现已由implementation `9268b88ca7ce90a8f72023241f87e2d3676fd58a`的GitHub run `32346208046` / required job `96355386111` / artifact `9398128763`闭环为`done`。Problem/Policy/Solution/Report合同字节和语义保持只读。
 
-P2-02把global schema set additive提升到`2.4.0`，新增四个互相离线解析的v1 document contract，并以`CONTRACT_SAMPLE`/`SOLVER_RUN`显式区分shape样例与真实运行。该发布样例的`not-installed`是P2-02历史shape证据，不随P2-03安装依赖而改写。TASK-P2-00～06现均由exact implementation provider evidence闭环为`done`；用户于2026-08-21明确授权TASK-P2-07，它以clean、provider-verified `33cc3282ead23a4cc1bb214190191e116b095119`为Diff base并处于`in_progress`。P2-08～14未获授权。
+P2-02把global schema set additive提升到`2.4.0`，新增四个互相离线解析的v1 document contract，并以`CONTRACT_SAMPLE`/`SOLVER_RUN`显式区分shape样例与真实运行。该发布样例的`not-installed`是P2-02历史shape证据，不随P2-03安装依赖而改写。TASK-P2-00～07现均由exact implementation provider evidence闭环为`done`；P2-08～14未获授权。
 
 ## 当前允许
 
@@ -54,7 +54,7 @@ P2-02把global schema set additive提升到`2.4.0`，新增四个互相离线解
 
 ## 当前禁止
 
-- 未经用户另行明确授权启动任何P2-08～14实现；TASK-P2-07仅按冻结的execution facts/HARD lock范围执行；
+- 未经用户另行明确授权启动任何P2-08～14实现；TASK-P2-07已关闭，不再扩展其execution facts/HARD lock范围；
 - 修改Task允许范围外文件、预填PASS/provider evidence或跳过独立Validator；
 - 实现C-012～C-018、OBJ-002 Stability、动态Replan、ExecutionSimulator、P3 Workspace/审批/发布状态；
 - 把UNKNOWN写成INFEASIBLE、FEASIBLE写成OPTIMAL，或以hint代替Execution Fact/HARD lock；
@@ -76,7 +76,7 @@ Task全部完成或audit READY都不自动切换P3；失败时保持P2并建立�
 
 `ortools==9.15.6755`、`cp-sat-backend.v1`、七状态adapter、SolveLimits参数映射、namespace/serialization隔离与6-check machine report已形成；本地39 focused、319 full、Ruff/Pyright、P2-02/P0历史兼容、Compose和build均PASS。Provider artifact精确复现Linux/x86_64、6/6 foundation及50 paths/9 rows/0 issues，因此TASK-P2-03=`done`。
 
-该foundation在TASK-P2-03关闭时没有business model builder，真实`solve()`以稳定MODEL_INVALID边界停止；empty model的OPTIMAL不表示PlanningProblem可行。该历史边界已由TASK-P2-05的bounded core consumer取代，TASK-P2-06已扩展temporal/calendar/material约束，TASK-P2-07现按明确授权实现execution facts/HARD lock；P2-08～14仍未授权，current phase保持P2且不进入P3。
+该foundation在TASK-P2-03关闭时没有business model builder，真实`solve()`以稳定MODEL_INVALID边界停止；empty model的OPTIMAL不表示PlanningProblem可行。该历史边界已由TASK-P2-05～07的bounded C-001～C-011 consumer取代；P2-08～14仍未授权，current phase保持P2且不进入P3。
 
 ## TASK-P2-04 启动边界
 
@@ -127,3 +127,7 @@ Implementation `ba6dd2cdc2eeaae3b60714314bc3d2c155a2d81c`的GitHub run `32432482
 Fact/lock builder现已组合进bounded CP-SAT model并由formal Validator独立复验。Mapper稳定输出Problem中可追溯的全部lock references；Problem v2没有暴露active RUNNING execution fact ID，因此不得猜造，`execution_fact_ids`保持空集合，而actual/resource/remaining仍由Problem hash与model evidence保存。
 
 本地验收为focused `93 passed`、full repository `382 passed`、Ruff/Pyright 0；foundation/core/formal machine reports各6/6、temporal/fact-lock各7/7 PASS。治理为142 docs且Task diff 54 paths/6 rows/19 checks/0 issues，Compose、build、`git diff --check`与禁止路径diff均PASS。Exact implementation SHA的required `validate`及artifact复核仍是关闭门，完成前TASK-P2-07保持`in_progress`且P2-08不启动。
+
+## TASK-P2-07 执行结果
+
+Implementation `5ab65f36d532fd8786eb7ecad3cce406f4d9fb70`的GitHub run `32435395744` / required `validate` job/check `96635463577`（app `15368`）均success；artifact `9430579117`未过期，digest=`sha256:a6b6ff7413b8010a8012ddd351a2a194b89b1a13cdf71c6dada5d6afa53a44ab`、expiry=`2026-11-19T01:11:01Z`。Foundation/core/formal/temporal/fact-lock及Task reports全部绑定该SHA，分别为6/6、6/6、6/6、7/7、7/7及54 committed/0 working/6 rows/19 checks/0 issues。TASK-P2-07=`done`；current phase仍为P2，P2-08保持`planned`且未获启动授权。

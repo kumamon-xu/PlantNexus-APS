@@ -69,7 +69,7 @@ last_reviewed: 2026-08-21
 
 ## 当前范围
 
-当前阶段为P2。P1 Milestone为`completed`，P2为`active`；TASK-P2-00～11均已闭环为`done`。BenchmarkRunner、P2-12～14和P3均未启动，详见`current_phase.md`。
+当前阶段为P2。P1 Milestone为`completed`，P2为`active`；TASK-P2-00～11均已闭环为`done`，TASK-P2-12已获授权并为`in_progress`。当前只执行BenchmarkRunner与XS/S/M；P2-13/14和P3均未启动，详见`current_phase.md`。
 
 ## 仓库入口与本地检查
 
@@ -104,3 +104,5 @@ TASK-P2-10实现为5个versioned deterministic algorithms、35/35 complete candi
 用户于2026-08-21明确授权TASK-P2-11；clean/provider-verified Diff base为`41e958b771f2664b1ac50867903a30b73627878d`，其run `32450216908` / required job `96677202782` / artifact `9435421360`均success。当前只启动additive KPI/manifest合同、validated solution reporting和不可发布internal package；ChangeReport/BenchmarkRunner、P3 state/persistence/approval/publish及P2-12～14保持冻结。
 
 TASK-P2-11链路为`Snapshot/Problem → validated PlanningSolution + ValidationReport + SolverReport + ImportQualityReport → KPI v2 → p2-internal-export.v1`。Machine report执行8项确定性、Schema/sample、血缘、tamper/mixed-run、原子写入/清理和状态边界检查；它不创建ScheduleVersion或ExportJob，也不产生可发布artifact。Global schema set现为additive `2.5.0`，既有document版本与bytes不改。Implementation `546292831c3bd52185687a4c646c10ae10541ae2`的required run `32454693799` / artifact `9436863185`已精确复现output 8/8、18/18 reports与58 committed/0 working paths，Task=`done`；P2-12不自动启动。
+
+用户于2026-08-21明确授权TASK-P2-12；clean/provider-verified Diff base为`58db14e8f18fb50866fb757d4c89e76fef1141f1`，其run `32455399561` / required job `96691604529` / artifact `9437086153`均success。当前只启动versioned XS/S/M benchmark profile/baseline、同Problem/Validator/KPI的Global与五Reference比较、环境/规模/时间/质量/内存报告和CI XS artifact；L/XL、Production capacity/SLA、P2-13/14与P3保持冻结。

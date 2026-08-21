@@ -294,3 +294,9 @@ Task以`9c55df993b12ae0bdd3d4d38c900d601324c05d2`为immutable Diff base；activa
 新增Python/CI/ignored JSON不增加Markdown inventory；本地最终为142 docs、30 roots、36 Test IDs、15 OPEN、10 SIM assumptions、11 risks、37 Tasks，完整range为52 paths、8 matched rows、19 checks、0 issues。Exact implementation SHA provider artifact必须包含`ci-objective-strategy.json`与`ci-current-task-report.json`；未push前不得预填run/job/artifact。
 
 Implementation artifact `9431673977`内`traceability-report.v1`精确绑定`b1ec83ed96120357ecadd41d3f520181838f17c6`与Diff base `9c55df993b12ae0bdd3d4d38c900d601324c05d2`，复现52 committed/0 working paths、8 rows、19 checks、0 issues并PASS；TASK-P2-08治理Gate据此闭环为`done`。Closure提交仍须由自身exact provider run复核，不能在本提交预写其ID。
+
+## TASK-P2-09 governance application
+
+Diff base固定为`15c298f343a47db2a922544944ff5e02e4ca72d9`；范围检查必须联合activation/implementation commits与working tree，命中`IMPACT-SIM-SCENARIO/FIXTURE/TESTS/INFRA/PHASE/GOVERNANCE-REGISTRY/DOCS`。Task卡在首个asset前已展开全部路径；Schema、Planning/Application/Generator、dependency/lock、migration、Benchmark/Reference/Export与P3禁止路径应为零差异。
+
+本Task不新增`docs/**/*.md`，文档inventory仍为142；roots=30、Test IDs=36、OPEN=15、risks=11、Tasks=37保持不变，新增SIM-ASSUMPTION-011使active Simulation assumptions=11。本地`traceability-report.v1`为58 paths/7 rows/19 checks/0 issues并PASS；provider报告须把58 committed/0 working paths绑定implementation SHA，未push前不得预填run/job/artifact。

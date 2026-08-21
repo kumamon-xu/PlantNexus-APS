@@ -94,3 +94,5 @@ TASK-P2-06已把precedence/calendar/release/material/transport提升为C-002/005
 TASK-P2-08把唯一OBJ-001精确建模为priority-weighted tardiness seconds，并由GlobalCpSatStrategy以显式Simulation Policy/Limits一次调用完整Backend；所有candidate必须经formal Validator PASS。70 focused、395 full及`objective-strategy-report.v1` 7/7本地PASS，implementation `b1ec83ed96120357ecadd41d3f520181838f17c6`的run `32438785162` / job `96645152864` / artifact `9431673977`精确复现并闭环为`done`；tiny timing不得作为Benchmark或SLA。
 
 TASK-P2-09以`15c298f343a47db2a922544944ff5e02e4ca72d9`为Diff base启动。七个Scenario/Profile/assembler/policy/solver version及P0/P1 asset清单摘要已冻结；允许范围只覆盖新correctness assets、`simulation.scenarios`编排、四类测试、CI evidence和治理文档。Planning/Application/Generator、Problem/Solver/Validator语义、Schema、dependency、Benchmark与P3保持只读。
+
+本地correctness实现现已使2个Golden和5个matrix case全部OPTIMAL且formal Validator PASS，固定7组Import/Snapshot/Problem hash；Hypothesis row-order/fresh Validator property与11个formula-free exact C-ID mutation均PASS。45 focused、427 full、8/8 machine、Ruff/Pyright、全部历史reports、Compose/build及58-path治理均PASS；该状态仍不能替代exact GitHub required `validate`和artifact，也不授权P2-10或P3。

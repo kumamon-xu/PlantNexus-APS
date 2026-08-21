@@ -51,3 +51,17 @@ TASK-P0-06 已创建下方 `SIM-MINIMAL-001` correctness fixture；未来 Profil
 P1 ingress行以`SIM-ASSUMPTION-010`逐项登记生成值；49条canonical records是correctness规模，不定义XS target或容量。PROFILE-A～E、performance baseline和broader catalog继续`PLANNED`。
 
 TASK-P1-11只为该既有catalog row增加common-ingress machine evidence，没有新建Scenario/Profile、修改complexity或声称FEASIBLE/OPTIMAL已由Solver产生。
+
+## P2 correctness catalog
+
+| Scenario | Profile | Seed / correctness focus | Evidence | Scope boundary |
+|---|---|---|---|---|
+| `P2-GOLDEN-JSSP@1.0.0` | `PROFILE-P2-GOLDEN-JSSP@1.0.0` | `20260901` / opposite two-machine routes | [manual optimum](../../fixtures/deterministic/P2-GOLDEN-JSSP/calculation-note.md)、TEST-GOLDEN-JSSP | Solver/Validator correctness only |
+| `P2-GOLDEN-FJSP@1.0.0` | `PROFILE-P2-GOLDEN-FJSP@1.0.0` | `20260902` / alternative-resource choice | [manual optimum](../../fixtures/deterministic/P2-GOLDEN-FJSP/calculation-note.md)、TEST-GOLDEN-FJSP | Solver/Validator correctness only |
+| `P2-CROSS-WORKSHOP@1.0.0` | `PROFILE-P2-CORRECTNESS-MATRIX@1.0.0` | `20260903` / transport lag | [matrix note](../../fixtures/synthetic/P2-CORRECTNESS-MATRIX/calculation-note.md)、TEST-CROSS-WORKSHOP | shared matrix Profile；not distribution |
+| `P2-CALENDAR@1.0.0` | `PROFILE-P2-CORRECTNESS-MATRIX@1.0.0` | `20260904` / unavailable interval | matrix note、TEST-CALENDAR | correctness only |
+| `P2-MATERIAL-DELAY@1.0.0` | `PROFILE-P2-CORRECTNESS-MATRIX@1.0.0` | `20260905` / material gate | matrix note、TEST-MATERIAL | correctness only |
+| `P2-RUNNING@1.0.0` | `PROFILE-P2-CORRECTNESS-MATRIX@1.0.0` | `20260906` / running remainder/resource | matrix note、TEST-RUNNING | correctness only |
+| `P2-HARD-LOCK@1.0.0` | `PROFILE-P2-CORRECTNESS-MATRIX@1.0.0` | `20260907` / exact hard tuple | matrix note、TEST-INF-LOCK | correctness only |
+
+全部七例由`PLANTNEXUS-P2-CORRECTNESS-ASSEMBLER@1.0.0`、approved Simulation Policy、exact Backend/Solver identity、manifest object/artifact hashes和SIM-ASSUMPTION-011固定，并已走正式Raw→Import→Snapshot→Problem→Strategy→Validator路径。`XS`仅表示可手算；PROFILE-A～E、XS/S/M performance baseline、Reference/Export与Production catalog仍未形成。

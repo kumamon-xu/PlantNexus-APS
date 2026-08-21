@@ -1,0 +1,33 @@
+{
+  "scenario_contract_version": "scenario-spec.v1",
+  "scenario_id": "P2-GOLDEN-JSSP",
+  "scenario_version": "1.0.0",
+  "synthetic_only": true,
+  "factory_profile": {
+    "profile_id": "PROFILE-P2-GOLDEN-JSSP",
+    "profile_version": "1.0.0"
+  },
+  "generator": {
+    "generator_id": "PLANTNEXUS-P2-CORRECTNESS-ASSEMBLER",
+    "generator_version": "1.0.0"
+  },
+  "seed": 20260901,
+  "required_capabilities": ["DAG_ROUTING"],
+  "complexity": {
+    "factory_size": "XS",
+    "routing_complexity": "low",
+    "candidate_resource_density": "sparse",
+    "bottleneck_level": "medium",
+    "due_date_pressure": "high",
+    "calendar_fragmentation": "low",
+    "material_delay_ratio": 0,
+    "wip_ratio": 0,
+    "lock_ratio": 0,
+    "cross_workshop_ratio": 0,
+    "failure_frequency": "none"
+  },
+  "expected_behavior": {
+    "allowed_results": ["OPTIMAL"],
+    "validator_status": "PASS"
+  }
+}

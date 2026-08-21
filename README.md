@@ -26,6 +26,7 @@ uv run ruff check .
 uv run pyright backend/app backend/tests
 uv run pytest -q backend/tests/unit backend/tests/contract backend/tests/simulation backend/tests/golden backend/tests/validation backend/tests/integration backend/tests/property
 uv run python -m app.planning.validation.problem_validator_check --root . --report build/validation/TASK-P2-04-formal-schedule-validator.json
+uv run python -m app.simulation.scenarios.p2_correctness --root . --report build/validation/TASK-P2-09-correctness.json
 uv run python -m app.infrastructure.contract_check --root . --report build/validation/TASK-P0-08-engineering.json
 docker compose --env-file .env.example config --quiet
 uv run python scripts/check_docs.py
@@ -58,10 +59,12 @@ infra/        P0 开发容器构建配置
 
 P1 Data & Snapshot已通过Exit Gate并关闭，当前阶段为P2。TASK-P2-01～08均已由local与exact provider evidence闭环；P2-03形成`ortools==9.15.6755`与Backend foundation，P2-04形成formal independent Validator，P2-05～07形成C-001～C-011 hard model，P2-08形成versioned Simulation OBJ-001/Global Strategy。TASK-P2-09现以冻结基线启动correctness catalog；Benchmark、DB/API/Worker、P2-10～14和P3仍未实现或未获授权。当前边界见[`docs/current_phase.md`](docs/current_phase.md)。
 
-TASK-P2-05本地验收与implementation `df706786e0ec1c54bf60cd43261a92ef6aa53cc7`的GitHub required `validate` / artifact均已闭环。TASK-P2-06 implementation `ba6dd2cdc2eeaae3b60714314bc3d2c155a2d81c`及TASK-P2-07 implementation `5ab65f36d532fd8786eb7ecad3cce406f4d9fb70`的required `validate`与artifact也已闭环，二者均=`done`；用户已另行授权TASK-P2-08，P2-09及以后不会自动启动。
+TASK-P2-05本地验收与implementation `df706786e0ec1c54bf60cd43261a92ef6aa53cc7`的GitHub required `validate` / artifact均已闭环。TASK-P2-06 implementation `ba6dd2cdc2eeaae3b60714314bc3d2c155a2d81c`及TASK-P2-07 implementation `5ab65f36d532fd8786eb7ecad3cce406f4d9fb70`的required `validate`与artifact也已闭环，二者均=`done`；TASK-P2-08亦已闭环，当前只有另行获授权的TASK-P2-09在执行，P2-10及以后不会自动启动。
 
 TASK-P2-08形成`POLICY-P2-SIM-DELIVERY-OBJ001-001@1.0.0`、显式SolveLimits、priority-weighted tardiness seconds目标、single-call GlobalCpSatStrategy、诚实status/bound/gap与mandatory formal Validator gate；70 focused、395 full与7/7 local machine PASS，implementation `b1ec83ed96120357ecadd41d3f520181838f17c6`的required run `32438785162` / artifact `9431673977`精确复现证据，Task=`done`。该证据不构成XS/S/M baseline或Production policy，P2-09不会自动启动。
 
 用户于2026-08-21明确授权TASK-P2-09。Diff base固定为clean且provider-verified的`15c298f343a47db2a922544944ff5e02e4ca72d9`；本Task只新增七类versioned correctness assets、正式Ingress→Problem→Global Strategy→Validator replay、property/mutation与CI machine evidence，不修改Planning/Solver/Validator语义，不建立XS/S/M/Production baseline，也不启动P2-10或P3。
+
+TASK-P2-09本地已形成`P2-GOLDEN-JSSP/FJSP`与五例correctness matrix、`PLANTNEXUS-P2-CORRECTNESS-ASSEMBLER@1.0.0`、固定object/Import/Snapshot/Problem hashes、7次Solver→Validator replay、7次row-order property及11个exact C-ID mutation；45 focused、427 full、8/8 correctness及全部历史machine/build/governance checks均PASS。Exact implementation provider闭环前Task保持`in_progress`，P2-10+与P3仍未启动。
 
 TASK-P2-06 exact run `32432482739` / required job `96626844156` / artifact `9429579311`精确复现temporal 7/7、4个implemented C-ID、5个positive candidate、3个certified infeasible、2个precheck、4个formal Validator mutation、8个tiny oracle及53 paths/6 rows/0 issues，Task已闭环。

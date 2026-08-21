@@ -47,3 +47,5 @@ TASK-P2-07已形成C-007/008 fact/lock model与7/7 machine evidence；implementa
 TASK-P2-08本地已形成explicit Simulation policy/limits、exact OBJ-001、single-call Global Strategy、honest seven-status/objective/bound/gap/report与mandatory Validator gate；70 focused、395 full和7/7 machine checks均PASS。Implementation `b1ec83ed96120357ecadd41d3f520181838f17c6`的run `32438785162` / required job `96645152864` / artifact `9431673977`精确复现全部证据，故Task=`done`；Milestone保持`active`且不启动P2-09。
 
 用户于2026-08-21明确授权TASK-P2-09；clean/provider-verified Diff base为`15c298f343a47db2a922544944ff5e02e4ca72d9`。本Task只启动七类correctness Scenario/Golden/property/mutation integration及machine evidence，不启动Benchmark、P2-10～14或P3；P2 Milestone继续`active`。
+
+TASK-P2-09本地已使7/7 versioned scenarios通过正式Raw→Problem→Global Strategy→formal Validator链，并形成7次property replay、11个exact C-ID mutation与8/8 machine checks；45 focused、427 full、Ruff/Pyright、全部历史reports、58-path治理、Compose/build均PASS。Exact implementation SHA的required `validate`和artifact尚未闭环，因此Task保持`in_progress`；P2-10～14及P3不会自动启动。

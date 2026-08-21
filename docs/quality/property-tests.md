@@ -116,3 +116,9 @@ P2-01扩展`test_planning_problem_properties.py`，保留v1 seeds `20260820/21/2
 [`test_delivery_objective_properties.py`](../../backend/tests/property/test_delivery_objective_properties.py)使用deterministic Hypothesis生成2～5个单资源单工序Demand、1～3 tick duration、显式due tick与1～5正整数priority；每例枚举全部permutation并要求Global Strategy的OPTIMAL value/bound与独立oracle完全相等、gap=0且formal Validator PASS。另生成单Demand duration/slack/weight缩放，并固定非grid due的exact秒级例。
 
 这些值只属于test-local shrinkable correctness vectors，不新增Scenario/Profile/fixture或Production weight distribution。属性不覆盖OBJ-002/003、Reference、XS/S/M或动态Replan；失败必须保留Hypothesis反例、Problem hash、Policy/Limits版本及SolverReport。
+
+## TASK-P2-09 versioned Scenario properties
+
+[`test_p2_solver_properties.py`](../../backend/tests/property/test_p2_solver_properties.py)对七个固定Scenario以Hypothesis布尔row-order选择重放source rows，要求Import dataset、Snapshot、Problem、assignment与ValidationReport完全一致；另一属性从Scenario ID集合生成Solver candidate，并再次调用formal independent Validator，要求PASS且零hard violation。`derandomize=True`、固定asset seed与Hypothesis shrinking确保反例可复现。
+
+该属性集只覆盖七个tiny correctness assets。XS/S/M随机规模、性能分布、Reference比较和Production默认仍由P2-12+承担。

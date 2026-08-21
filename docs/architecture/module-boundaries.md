@@ -144,3 +144,9 @@ TASK-P0-05 已在 `simulation/profiles`、`simulation/scenarios`、`simulation/g
 - `planning/strategies/global_cp_sat.py`拥有单PlanningRun编排、显式run/commit provenance和SolverReport组装；每次只调用一次`solve_delivery_with_evidence`，不分解、不rolling、不fallback、不批准或发布。
 - `planning/backends/cp_sat/objectives.py`是新增OR-Tools import的唯一目标模块，拥有每Demand completion max、exact tardiness seconds、priority integer sum、int64 precheck与`Minimize`；C-ID builder、Problem、Policy和Validator均不依赖它。
 - `backend.py`保留P2-07 feasibility-only diagnostic入口，并为Global Strategy新增objective-aware evidence入口；两条路径都强制formal independent Validator，candidate FAIL即丢弃。`objective_strategy_check.py`只拥有tiny correctness/provenance evidence，不是BenchmarkRunner。
+
+## TASK-P2-09 Scenario orchestration boundary
+
+`simulation/scenarios/p2_correctness.py`只拥有fixture-local blueprint解析、Raw row assembly、正式pipeline编排、expected/hash核验、row-order property与formula-free candidate mutation。它调用公开Normalization/Data Validation/Expansion/Snapshot/Problem/Strategy/Validator接口，不直接构造PlanningProblem或CpModel，也不复用Backend/Validator公式。`simulation/scenarios/__init__.py`以lazy export避免CLI module预加载。
+
+本Task没有修改`application/**`、`planning/**`、`simulation/generators/**`、Schema、DB/API/Worker或Export/Benchmark边界；P2-10 Reference Schedulers保持未启动。

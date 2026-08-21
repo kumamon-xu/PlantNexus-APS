@@ -1,0 +1,16 @@
+{
+  "expected_outcome_version": "p2-correctness-expected.v1",
+  "scenario_id": "P2-GOLDEN-JSSP",
+  "solver_status": "OPTIMAL",
+  "validator_status": "PASS",
+  "objective_value": 0,
+  "best_bound": 0,
+  "relative_gap": 0.0,
+  "assignments": [
+    {"job_code": "J1", "operation_code": "O1", "resource_code": "R1", "start_tick": 0, "end_tick": 2},
+    {"job_code": "J1", "operation_code": "O2", "resource_code": "R2", "start_tick": 2, "end_tick": 3},
+    {"job_code": "J2", "operation_code": "O1", "resource_code": "R2", "start_tick": 0, "end_tick": 2},
+    {"job_code": "J2", "operation_code": "O2", "resource_code": "R1", "start_tick": 2, "end_tick": 3}
+  ],
+  "positive_constraint_ids": ["C-001", "C-002", "C-003", "C-004", "C-010", "C-011"]
+}

@@ -27,6 +27,7 @@ from app.planning.policy.contract_check import main as machine_contract_main
 from app.planning.validation.problem_validator_check import (
     main as formal_validator_main,
 )
+from app.simulation.scenarios.p2_correctness import main as p2_correctness_main
 
 ROOT = Path(__file__).resolve().parents[3]
 
@@ -124,6 +125,8 @@ def test_ci_runs_repository_gates_and_discovers_the_current_task() -> None:
         "build/validation/ci-cp-sat-fact-lock-model.json",
         "app.planning.backends.cp_sat.objective_strategy_check",
         "build/validation/ci-objective-strategy.json",
+        "app.simulation.scenarios.p2_correctness",
+        "build/validation/ci-p2-correctness.json",
         "app.infrastructure.contract_check",
         "docker compose --env-file .env.example config --quiet",
         "PLANTNEXUS_CI_CHANGE_BASE:",
@@ -426,6 +429,58 @@ def test_ci_objective_strategy_report_is_machine_checkable(tmp_path: Path) -> No
         "dependency_changes": "NONE",
         "benchmark": "TINY_CORRECTNESS_ONLY_NO_XS_S_M_BASELINE",
         "publishability": "INTERNAL_TEST_EVIDENCE_ONLY",
+    }
+
+
+def test_ci_p2_correctness_report_is_machine_checkable(tmp_path: Path) -> None:
+    report_path = tmp_path / "p2-correctness.json"
+    assert (
+        p2_correctness_main(
+            ["--root", str(ROOT), "--report", str(report_path)]
+        )
+        == 0
+    )
+    report = json.loads(report_path.read_text(encoding="utf-8"))
+
+    assert report["report_version"] == "p2-correctness-report.v1"
+    assert report["status"] == "PASS"
+    assert report["task_id"] == "TASK-P2-09"
+    assert report["check_count"] == 8
+    assert report["counts"] == {
+        "scenario_cases": 7,
+        "golden_cases": 2,
+        "matrix_cases": 5,
+        "solver_candidates": 7,
+        "independent_validator_passes": 7,
+        "property_replays": 7,
+        "mutation_cases": 11,
+        "constraints_positive_covered": 11,
+        "constraints_negative_covered": 11,
+    }
+    assert {check["name"] for check in report["checks"]} == {
+        "frozen-schema-problem-strategy-validator-policy-generator-and-lock",
+        "p0-p1-immutable-asset-manifest",
+        "seven-versioned-profile-scenario-blueprint-manifest-assets",
+        "formal-ingress-snapshot-problem-replay",
+        "golden-jssp-fjsp-manual-optimum-and-validator",
+        "five-scenario-correctness-matrix",
+        "solver-generated-property-and-reordering-replay",
+        "formula-free-exact-c001-c011-validator-mutations",
+    }
+    assert report["boundaries"] == {
+        "data_plane": "SIMULATION_ONLY",
+        "formal_path": (
+            "RAW_STAGING_TO_IMPORT_V2_TO_QUALITY_TO_EXPANSION_TO_"
+            "SNAPSHOT_V2_TO_PROBLEM_V2_TO_GLOBAL_STRATEGY_TO_VALIDATOR"
+        ),
+        "direct_problem_or_cp_model_construction": "NONE",
+        "schema_contract_changes": "NONE",
+        "planning_solver_validator_semantic_changes": "NONE",
+        "dependency_changes": "NONE",
+        "performance_baseline": "NONE_NO_XS_S_M",
+        "production_authority": "NOT_CLAIMED",
+        "reference_export_benchmark": "NOT_IMPLEMENTED_BY_TASK",
+        "p2_10_plus_or_p3": "NOT_STARTED",
     }
 
 

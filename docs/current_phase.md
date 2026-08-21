@@ -42,7 +42,7 @@ PlanningSnapshot
 
 用户于2026-08-20明确授权执行`TASK-P2-03 — OR-Tools and SolverBackend Foundation`；该Task以clean、provider-verified `f73f8c90af94d3c9b05ecc10b6c999594a3b7d66`启动，并在依赖变更前接受ADR-0011。现已由implementation `9268b88ca7ce90a8f72023241f87e2d3676fd58a`的GitHub run `32346208046` / required job `96355386111` / artifact `9398128763`闭环为`done`。Problem/Policy/Solution/Report合同字节和语义保持只读。
 
-P2-02把global schema set additive提升到`2.4.0`，新增四个互相离线解析的v1 document contract，并以`CONTRACT_SAMPLE`/`SOLVER_RUN`显式区分shape样例与真实运行。该发布样例的`not-installed`是P2-02历史shape证据，不随P2-03安装依赖而改写。TASK-P2-00～08现均由exact implementation provider evidence闭环为`done`；P2-09～14未获授权。
+P2-02把global schema set additive提升到`2.4.0`，新增四个互相离线解析的v1 document contract，并以`CONTRACT_SAMPLE`/`SOLVER_RUN`显式区分shape样例与真实运行。该发布样例的`not-installed`是P2-02历史shape证据，不随P2-03安装依赖而改写。TASK-P2-00～08现均由exact implementation provider evidence闭环为`done`；TASK-P2-09已获授权并为`in_progress`，P2-10～14未获授权。
 
 ## 当前允许
 
@@ -153,3 +153,9 @@ Implementation `b1ec83ed96120357ecadd41d3f520181838f17c6`的GitHub run `32438785
 用户于2026-08-21明确授权执行TASK-P2-09。启动复核确认`main=origin/main=15c298f343a47db2a922544944ff5e02e4ca72d9`、working tree clean，P2-08 implementation位于祖先链；该SHA的run `32439301758` / required `validate` job `96646617379`（app `15368`）/ artifact `9431840946`均精确success，artifact digest=`sha256:b7de66a574d81ce959bbaf290b3b0d80e67fdb72460e8d4a1cf2989d219f6974`、expiry=`2026-11-19T02:16:54Z`。Diff base据此冻结；P0/P1三组既有fixture逐文件清单摘要固定为`sha256:cab42c498ad74607d8e7bb172b6daf3f320626eb0e08b2d155e1b31cb8b45df4`。
 
 本Task只新增Golden JSSP/FJSP及Cross Workshop、Calendar、Material Delay、Running、Hard Lock七类`1.0.0` correctness assets，使用`PLANTNEXUS-P2-CORRECTNESS-ASSEMBLER@1.0.0`逐例走Raw Staging→Normalization/Import v2→Data Validation→Expansion→Snapshot v2→Problem v2→approved OBJ-001 Global Strategy→formal Validator，并形成formula-free C-001～C-011 mutations、deterministic/property replay和CI machine report。Scenario/Profile published Schema、Planning/Application/Generator、Problem/Solver/Validator/C-ID/Objective、dependency/lock、Benchmark/Reference/Export、DB/API/Worker和P3+均冻结；P2-10～14未启动。
+
+## TASK-P2-09 本地实现边界
+
+七个versioned case均已从source-shaped Raw rows进入正式pipeline并取得OPTIMAL/OBJ-001=0/formal Validator PASS；每例manifest固定Profile/Scenario/blueprint/expected对象hash及Import/Snapshot/Problem hash。两份Golden有手算零目标下界，五例分别覆盖Cross Workshop、Calendar、Material、Running与Hard Lock，合计覆盖C-001～C-011 positive set。
+
+Row-order replay保持全部business artifacts/assignments/report不变；fresh independent Validator property覆盖7例，11个formula-free Solver-candidate mutation各自只命中同名C-ID。Focused=`45 passed`、full=`427 passed`，Ruff/Pyright=0；correctness 8/8及全部历史machine reports、142-doc治理、58 paths/7 rows/19 checks/0 issues、Compose/build/`git diff --check`与冻结边界均PASS。Exact implementation provider尚待push后闭环，故Task保持`in_progress`；P2-10～14/P3未启动。

@@ -63,3 +63,5 @@ TASK-P2-07 implementation `5ab65f36d532fd8786eb7ecad3cce406f4d9fb70`的run `3243
 TASK-P2-08本地实现已通过70 focused、395 full、Ruff/Pyright 0、objective/strategy 7/7及全部历史machine checks，治理为142 docs、52 paths/8 rows/19 checks/0 issues，Compose/build/immutable均PASS；implementation `b1ec83ed96120357ecadd41d3f520181838f17c6`的run `32438785162` / required job `96645152864` / artifact `9431673977`精确复现7/7及52 committed/0 working/8 rows/19 checks/0 issues，故索引=`done`。P2-09～14保持`planned`且未授权。
 
 用户于2026-08-21授权TASK-P2-09。启动门确认P2-04～08均`done`、closure HEAD/required check/artifact一致，且P0/P1 asset逐文件摘要、Scenario/Profile/assembler/policy/solver版本均已固定；当前只允许correctness assets、Scenario orchestration、四类测试、CI evidence及治理文档，P2-10～14不会自动启动。
+
+TASK-P2-09本地实现已形成七个`1.0.0` correctness Scenario、SIM-ASSUMPTION-011、正式Raw→Problem→Strategy→Validator replay、row-order/fresh Validator property、C-001～C-011 exact mutations及`p2-correctness-report.v1` 8/8 PASS。45 focused、427 full、Ruff/Pyright、全部历史machine、58 paths/7 rows/19 checks/0 issues、Compose/build/immutable均PASS；exact implementation provider尚待push后核验，因此索引继续为`in_progress`。P2-10～14保持`planned`且未授权。

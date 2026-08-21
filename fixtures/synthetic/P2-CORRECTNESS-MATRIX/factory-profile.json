@@ -1,0 +1,59 @@
+{
+  "profile_contract_version": "factory-profile.v1",
+  "profile_id": "PROFILE-P2-CORRECTNESS-MATRIX",
+  "profile_version": "1.0.0",
+  "synthetic_only": true,
+  "topology": {
+    "workshop_count": {"minimum": 1, "maximum": 2},
+    "production_line_count": {"minimum": 1, "maximum": 2}
+  },
+  "resources": {
+    "target_count": {"minimum": 1, "maximum": 2},
+    "capacity_per_resource": 1,
+    "capability_pool": [
+      "SINGLE_FACTORY_MULTI_WORKSHOP",
+      "DAG_ROUTING",
+      "ALTERNATIVE_RESOURCE",
+      "MACHINE_CALENDAR",
+      "RELEASE_AND_MATERIAL_GATE",
+      "RUNNING_OPERATION",
+      "HARD_SOFT_LOCK"
+    ]
+  },
+  "routing": {
+    "operation_count": {"minimum": 1, "maximum": 2},
+    "candidate_resource_count": {"minimum": 1, "maximum": 2},
+    "routing_depth": {"minimum": 1, "maximum": 2},
+    "cross_workshop_ratio": {"minimum": 0, "maximum": 1}
+  },
+  "calendar": {
+    "pattern_ids": ["P2-CORRECTNESS-ALWAYS-AVAILABLE", "P2-CORRECTNESS-MAINTENANCE"],
+    "fragmentation_count": {"minimum": 0, "maximum": 1}
+  },
+  "orders": {
+    "order_count": {"minimum": 1, "maximum": 1},
+    "due_date_pressure_levels": ["high", "medium"]
+  },
+  "supported_capabilities": [
+    "SINGLE_FACTORY_MULTI_WORKSHOP",
+    "DAG_ROUTING",
+    "ALTERNATIVE_RESOURCE",
+    "MACHINE_CALENDAR",
+    "RELEASE_AND_MATERIAL_GATE",
+    "RUNNING_OPERATION",
+    "HARD_SOFT_LOCK"
+  ],
+  "expected_rejections": [
+    "SECONDARY_CAPACITY",
+    "SEQUENCE_DEPENDENT_SETUP",
+    "BATCH_PROCESSING",
+    "SPLIT_MERGE",
+    "MATERIAL_COMPETITION",
+    "PREEMPTIVE_OPERATION",
+    "BUFFER_CAPACITY",
+    "ALTERNATIVE_MATERIAL",
+    "MULTI_FACTORY",
+    "AI_DURATION_PREDICTION",
+    "REALITY_CALIBRATION"
+  ]
+}

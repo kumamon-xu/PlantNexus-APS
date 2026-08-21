@@ -188,3 +188,7 @@ Fact/lock模型复用exact-pinned `ortools==9.15.6755`的linear equality、optio
 OBJ-001复用exact-pinned `ortools==9.15.6755`，使用IntVar、`AddMaxEquality`、整数线性和与`Minimize`表达Demand completion和priority-weighted tardiness seconds；先检查每项及总和可落入CP-SAT int64。`pyproject.toml`、`uv.lock`、wheel hashes、Backend identity/version与所有Schema均不变，namespace scan新增且只允许`objectives.py`的OR-Tools import。
 
 CI新增`app.planning.backends.cp_sat.objective_strategy_check`并沿用`build/validation/*.json`/中性artifact；没有新Action、service、container、migration、database、API、Worker或BenchmarkRunner。Timing/memory/model metrics只作tiny correctness可观测性，不形成Production hardware/SLA结论。
+
+## TASK-P2-09 stack review
+
+Correctness orchestration只使用现有Python 3.12、JSON/YAML、jsonschema/Hypothesis/pytest和exact-pinned OR-Tools `9.15.6755`；`pyproject.toml`与`uv.lock`字节保持不变。CI新增`python -m app.simulation.scenarios.p2_correctness`步骤并复用既有artifact upload，不增加Action、service、container、Secret、migration或runtime dependency。

@@ -89,3 +89,5 @@ TASK-P2-07 review：fact/lock self-conflict precheck、HARD/SOFT分离、indepen
 TASK-P2-08 local review：exact OBJ-001、tiny exhaustive optimum、no-default Simulation policy、诚实status/bound/gap与mandatory independent Validator加强RISK-001/002/004/006/007/008；exact pin/namespace继续约束RISK-011。Tiny timing没有阈值，且尚缺P2-09 Golden/scenario integration、Reference、XS/S/M Benchmark、Production authority与deployment，因此任何风险均不得标记`MITIGATED/CLOSED`；RISK-001～011全部保持`MONITORED`，registry format version保持`1.0.0`。
 
 TASK-P2-08 provider closure：required run/artifact确认上述控制在Linux provider重放成功，但仍无P2-09 Golden/scenario integration、Reference、XS/S/M Benchmark、Production authority或deployment。该证据不足以把任何风险标记`MITIGATED/CLOSED`；RISK-001～011全部保持`MONITORED`，registry format version保持`1.0.0`。
+
+TASK-P2-09 local review：versioned assets与SIM-ASSUMPTION-011、public Raw→Problem chain、P0/P1 immutable manifest、independent row-order replay和formula-free Validator mutations加强RISK-001/002/003/004；synthetic-only/data-plane guards加强RISK-007；fixed hashes/status加强RISK-006/009，exact solver/lock冻结继续约束RISK-011。仍无Reference、XS/S/M Benchmark、Production authority/deployment，因此RISK-001～011全部保持`MONITORED`，registry format version保持`1.0.0`。

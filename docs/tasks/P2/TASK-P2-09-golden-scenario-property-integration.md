@@ -41,7 +41,7 @@ Documents to update: `README.md`、`docs/README.md`、`docs/current_phase.md`、
 
 Documentation impact rationale: Gate correctness assets必须可手算、版本化、重放并与性能profile/Production数据明确隔离。
 
-Change-impact matrix rows reviewed: `IMPACT-PHASE`、`IMPACT-DOCS`
+Change-impact matrix rows reviewed: `IMPACT-SIM-SCENARIO`、`IMPACT-FIXTURE`、`IMPACT-TESTS`、`IMPACT-INFRA`、`IMPACT-PHASE`、`IMPACT-GOVERNANCE-REGISTRY`、`IMPACT-DOCS`
 
 Traceability updates: REQ-004/005/009/012→TASK-P2-09→全部C-ID/OBJ-001→TEST-GOLDEN-JSSP/FJSP、CALENDAR/MATERIAL/RUNNING/CROSS-WORKSHOP/INF-LOCK/PROPERTY/VALIDATOR-MUTATION/SCENARIO-REPLAY→versioned assets/reports。
 
@@ -84,3 +84,9 @@ Rollback: 新asset不可原地改写；错误使用新version/superseding manife
 既有`SIM-MINIMAL-001`、`SIM-MINIMAL-001-MUTATIONS`与`SIM-P1-INGRESS-001`共15个文件的逐路径SHA-256已按repository-relative path排序；`UTF-8(path + space + digest)`逐行以LF连接后的清单摘要固定为`sha256:cab42c498ad74607d8e7bb172b6daf3f320626eb0e08b2d155e1b31cb8b45df4`。同时冻结Scenario/Profile/Manifest Schema=`79c0ee97…5f10`/`391d5b02…ff50`/`67ba4835…07ef`、Problem v2 Schema=`e6e4a984…87c8`、Solution Schema=`4344468e…df4`、rule sheet=`83fc3663…1e2`、Problem builder/hash=`c96a55a8…f291`/`ec2b98ed…76b4e`、Global Strategy=`c3c5f057…4133`、formal Validator=`e120cc65…8d9f`、Simulation policy=`437e4876…b558`、P1 generator=`44c9cf4b…c370`及`uv.lock=8b13617f…7a82`。版本边界固定为`planning-problem-builder.v2`、`global-cp-sat-strategy.v1`、`cp-sat-backend.v1`、OR-Tools `9.15.6755`、`constraint-rule-sheet.v1`、`objective-policy.v1`及approved Simulation Delivery Policy `POLICY-P2-SIM-DELIVERY-OBJ001-001@1.0.0`。
 
 启动前scope review确认原卡未展开fixture-local blueprint/catalog/manifest实际路径，也遗漏Scenario package export、correctness machine CLI、CI workflow/integration contract及Task lifecycle/Impact Rule必审文档；故在任何新asset或实现文件产生前先冻结上述allow-list。新证据合同固定为`p2-correctness-blueprint.v1`、`p2-correctness-catalog.v1`、`p2-correctness-manifest.v1`与assembler `PLANTNEXUS-P2-CORRECTNESS-ASSEMBLER@1.0.0`；七个Scenario分别为`P2-GOLDEN-JSSP`、`P2-GOLDEN-FJSP`、`P2-CROSS-WORKSHOP`、`P2-CALENDAR`、`P2-MATERIAL-DELAY`、`P2-RUNNING`、`P2-HARD-LOCK`，asset/profile version均固定`1.0.0`。它们是fixture-local evidence contract，不修改发布Schema；正式链必须逐例走Raw Staging→Normalization/Import v2→Data Validation→Expansion→Snapshot v2→Problem v2→Global Strategy→formal Validator。当前activation-only差异只命中`IMPACT-PHASE`/`IMPACT-DOCS`；实现完成时按完整Diff base range复算上述七行Impact Rule。P2-10～14、P3与性能/Production范围均未启动。
+
+## Local implementation evidence — 2026-08-21
+
+已提交准备两份独立Golden与五例shared matrix资产，固定Profile/Scenario/assembler/pipeline/policy/backend/solver version、seed、四类对象hash及Import/Snapshot/Problem hash。Fixture-local assembler仅产生source-shaped Raw rows；七例全部经公开P1/P2链取得OPTIMAL、OBJ-001=0和formal Validator PASS，正向集合合计覆盖C-001～C-011。SIM-ASSUMPTION-011明确所有tiny数值只用于correctness。
+
+Row-order Hypothesis replay保持Import/Snapshot/Problem/assignment/report一致，fresh independent Validator property为7/7 PASS；11个formula-free Solver-candidate mutation各自稳定只命中同名C-ID。`p2-correctness-report.v1`为8/8 PASS并复核P0/P1 immutable asset manifest及Schema/Problem/Strategy/Validator/Policy/Generator/lock fingerprints。Focused=`45 passed`、full repository=`427 passed`、Ruff/Pyright=0；全部P0/P1/P2 machine reports、142-doc治理、58 paths/7 rows/19 checks/0 issues、Compose、`uv build`、version smoke、`git diff --check`和禁止路径核验均PASS。Exact provider尚未形成，Task保持`in_progress`。

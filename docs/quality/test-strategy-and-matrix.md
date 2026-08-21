@@ -45,28 +45,30 @@ registry_version: 1.0.0
 | TEST-STATE-TRANSITION-001 | 三套 state enum、42 个 allowed pair、terminal/negative transitions | P0 | [`test_rule_contracts.py`](../../backend/tests/contract/test_rule_contracts.py) + [`state-machines.v1`](../../schemas/rules/state-machines.v1.yaml) formed；persistence/P3 behavior PLANNED |
 | TEST-ERROR-MAPPING-001 | 七类 error、19 code/category 唯一映射与 v1/v2 isolation | P0 | [`test_rule_contracts.py`](../../backend/tests/contract/test_rule_contracts.py) + [`error-code-registry.v1`](../../schemas/rules/error-code-registry.v1.yaml) formed；HTTP mapping PLANNED |
 | TEST-CAPABILITY-001 | 20 capability registry 与 supported declaration/unsupported/unknown/duplicate precheck | P0 | [`test_rule_contracts.py`](../../backend/tests/contract/test_rule_contracts.py) registry contract + [`test_data_validation.py`](../../backend/tests/unit/test_data_validation.py) platform rejection/ordinary resource matching formed；Solver capability implementation PLANNED |
-| TEST-GOLDEN-JSSP | 人工可验证 JSSP | P2 | PLANNED |
-| TEST-GOLDEN-FJSP | 人工可验证 FJSP | P0-P2 | [`SIM-MINIMAL-001` positive Golden](../../backend/tests/golden/test_sim_minimal_001.py) formed；P2 Solver/Problem integration PLANNED |
-| TEST-INF-NO-RESOURCE | 无候选资源明确拒绝 | P0-P2 | P0/P1 input slices + [formal wrong-resource mutation](../../backend/tests/validation/test_problem_schedule_validator.py) formed；Solver infeasibility P2 PLANNED |
-| TEST-INF-LOCK | Lock 导致的不可行性 | P0-P2 | P0 + formal HARD_LOCK exact mutation + P2-07 calendar/resource/horizon certified INFEASIBLE formed |
-| TEST-INF-HORIZON | Horizon 不允许静默截断 | P0-P2 | P0 + formal Problem/Solution horizon overflow/UTC projection formed；Solver integration P2 PLANNED |
-| TEST-CALENDAR | 设备日历约束 | P0-P2 | Golden/P0 + formal half-open calendar positive/negative formed；Solver integration PLANNED |
-| TEST-MATERIAL | material_ready_at gate | P0-P2 | Golden/P0 + formal material-early negative formed；Solver integration PLANNED |
-| TEST-RUNNING | 运行中事实保护 | P0-P2 | P0/P1 facts + formal check + P2-07 completed anchor/RUNNING resource/remainder Solver integration formed |
-| TEST-CROSS-WORKSHOP | 跨车间 precedence/transport lag | P0-P2 | Golden/P0 + formal selected/historical workshop transport negative formed；Solver integration PLANNED |
-| TEST-MAX-LAG | max_lag 不被忽略 | P0-P2 | Golden/P0 + formal inclusive min/max lag negative formed；Solver integration PLANNED |
-| TEST-VALIDATOR-MUTATION | 独立 Validator 拒绝人工错误计划 | P0-P2 | P0 13-case historical suite + [formal Problem/Solution 13-case suite](../../backend/tests/validation/test_problem_schedule_validator.py) / `formal-schedule-validator-report.v1` formed；Solver/performance integration PLANNED |
+| TEST-GOLDEN-JSSP | 人工可验证 JSSP | P2 | [`P2-GOLDEN-JSSP@1.0.0`](../../backend/tests/golden/test_p2_golden_solver.py) fixed Solver→Validator optimum/hash replay formed / TASK-P2-09 |
+| TEST-GOLDEN-FJSP | 人工可验证 FJSP | P0-P2 | [`SIM-MINIMAL-001` positive Golden](../../backend/tests/golden/test_sim_minimal_001.py) + [`P2-GOLDEN-FJSP@1.0.0` Solver integration](../../backend/tests/golden/test_p2_golden_solver.py) formed |
+| TEST-INF-NO-RESOURCE | 无候选资源明确拒绝 | P0-P2 | P0/P1 input slices + formal wrong-resource + [Solver-candidate exact C-003 mutation](../../backend/tests/validation/test_p2_solver_mutations.py) formed |
+| TEST-INF-LOCK | Lock 导致的不可行性 | P0-P2 | P0/formal/P2-07 infeasible slices + [P2 Hard Lock positive and exact C-008 mutation](../../backend/tests/validation/test_p2_solver_mutations.py) formed |
+| TEST-INF-HORIZON | Horizon 不允许静默截断 | P0-P2 | P0/formal horizon slices + [Solver-candidate exact C-011 mutation](../../backend/tests/validation/test_p2_solver_mutations.py) formed |
+| TEST-CALENDAR | 设备日历约束 | P0-P2 | Golden/formal slices + [`P2-CALENDAR@1.0.0` Solver replay](../../backend/tests/simulation/test_p2_scenario_matrix.py) and C-005 mutation formed |
+| TEST-MATERIAL | material_ready_at gate | P0-P2 | Golden/formal slices + [`P2-MATERIAL-DELAY@1.0.0` Solver replay](../../backend/tests/simulation/test_p2_scenario_matrix.py) and C-006 mutation formed |
+| TEST-RUNNING | 运行中事实保护 | P0-P2 | P0/P1/formal/P2-07 slices + [`P2-RUNNING@1.0.0` Solver replay](../../backend/tests/simulation/test_p2_scenario_matrix.py) and C-007 mutation formed |
+| TEST-CROSS-WORKSHOP | 跨车间 precedence/transport lag | P0-P2 | Golden/formal slices + [`P2-CROSS-WORKSHOP@1.0.0` Solver replay](../../backend/tests/simulation/test_p2_scenario_matrix.py) and C-009 mutation formed |
+| TEST-MAX-LAG | max_lag 不被忽略 | P0-P2 | Golden/formal inclusive min/max lag + P2 versioned JSSP/Scenario complete-edge Solver replay formed |
+| TEST-VALIDATOR-MUTATION | 独立 Validator 拒绝人工错误计划 | P0-P2 | P0/formal suites + [11 formula-free mutations of Solver-produced candidates](../../backend/tests/validation/test_p2_solver_mutations.py) formed；performance integration PLANNED |
 | TEST-REPLAN | Replan 事实、锁与变化报告 | P4 | PLANNED |
 | TEST-OUTPUT | 标准成果包合同 | P2-P3 | PLANNED |
 | TEST-IDEMPOTENCY | Import/Planning/Export/Publish/Event 幂等 | P0-P3 | [`test_job_reliability.py`](../../backend/tests/integration/test_job_reliability.py) generic primitive + P1 [`test_raw_import_staging.py`](../../backend/tests/integration/test_raw_import_staging.py) durable Import staging replay/conflict/rollback formed；Worker/Planning/Export/Publish/Event side effects PLANNED |
-| TEST-SCENARIO-REPLAY | Scenario/Profile/Generator/seed 重放 | P0-P2 | empty/P0 fixture + P1 generated Import + [common-ingress Import/Snapshot/Problem replay](../../backend/tests/simulation/test_p1_pipeline_replay.py) formed；Solver replay PLANNED |
+| TEST-SCENARIO-REPLAY | Scenario/Profile/Generator/seed 重放 | P0-P2 | empty/P0 + P1 ingress + [seven versioned Solver/Validator replays](../../backend/tests/property/test_p2_solver_properties.py) with fixed hashes and row-order invariance formed |
 | TEST-SIM-ISOLATION | Synthetic/Production 隔离 | P0-P1 | generator Production/no-Planning + Raw/Snapshot plane guards + [application expected-plane/no-shortcut](../../backend/tests/integration/test_p1_common_ingress.py) formed；separate DB/API/publish guards PLANNED |
 | TEST-REFERENCE-SCHEDULER | Reference Scheduler baseline | P2 | PLANNED |
 | TEST-BENCHMARK | BenchmarkReport/profile 回归 | P2 | PLANNED |
-| TEST-PROPERTY | 合法 Problem 的通用不变量 | P2 | Problem v2 hash slice + [formal ScheduleValidator generated properties](../../backend/tests/property/test_schedule_validator_properties.py) formed；Solver-generated/XS-S-M properties PLANNED |
+| TEST-PROPERTY | 合法 Problem 的通用不变量 | P2 | Problem v2/formal properties + [Solver-generated candidate, row-order and independent Validator properties](../../backend/tests/property/test_p2_solver_properties.py) formed；XS/S/M properties PLANNED |
 | TEST-SOLVER-UPGRADE | Solver 升级 replay/status contract | P2+ | PLANNED |
 
 Test ID 一经分配不得复用。链接到真实测试路径才是已形成证据；`PLANNED` 只登记合同。表结构或状态语义变化必须提升 `registry_version`。
+
+TASK-P2-09未新增或复用Test ID；它把TEST-GOLDEN-JSSP/FJSP、CALENDAR/MATERIAL/RUNNING/CROSS-WORKSHOP/INF类、VALIDATOR-MUTATION、SCENARIO-REPLAY与PROPERTY链接到四个新focused files。Focused=45 passed、full repository=427 passed，覆盖2 Golden、5 matrix、7 row-order/fresh Validator properties、11 exact Solver-candidate mutations及CI machine contract；`p2-correctness-report.v1`为8/8。XS/S/M、Reference、Export、P2 Gate与Production测试仍为`PLANNED`，registry format version保持`1.0.0`。
 
 ## 原则
 

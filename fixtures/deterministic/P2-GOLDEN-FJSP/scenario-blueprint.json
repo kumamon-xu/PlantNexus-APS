@@ -1,0 +1,39 @@
+{
+  "blueprint_version": "p2-correctness-blueprint.v1",
+  "scenario_id": "P2-GOLDEN-FJSP",
+  "cutoff_at_utc": "2026-09-02T00:00:00Z",
+  "tick_seconds": 60,
+  "horizon_ticks": 4,
+  "resources": [
+    {"resource_code": "R1", "workshop_code": "W1", "unavailable": []},
+    {"resource_code": "R2", "workshop_code": "W1", "unavailable": []}
+  ],
+  "jobs": [
+    {
+      "job_code": "J1",
+      "priority_weight": 2,
+      "due_tick": 1,
+      "release_tick": 0,
+      "material_ready_tick": 0,
+      "operations": [
+        {"operation_code": "O1", "candidates": [{"resource_code": "R1", "duration_ticks": 1}, {"resource_code": "R2", "duration_ticks": 3}]}
+      ],
+      "edges": [],
+      "execution_facts": [],
+      "locks": []
+    },
+    {
+      "job_code": "J2",
+      "priority_weight": 1,
+      "due_tick": 1,
+      "release_tick": 0,
+      "material_ready_tick": 0,
+      "operations": [
+        {"operation_code": "O1", "candidates": [{"resource_code": "R1", "duration_ticks": 2}, {"resource_code": "R2", "duration_ticks": 1}]}
+      ],
+      "edges": [],
+      "execution_facts": [],
+      "locks": []
+    }
+  ]
+}

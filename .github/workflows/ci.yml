@@ -117,6 +117,12 @@ jobs:
           --root .
           --report build/validation/ci-objective-strategy.json
 
+      - name: P2 Golden scenario property and mutation correctness evidence
+        run: >-
+          uv run python -m app.simulation.scenarios.p2_correctness
+          --root .
+          --report build/validation/ci-p2-correctness.json
+
       - name: Engineering contract
         run: >-
           uv run python -m app.infrastructure.contract_check

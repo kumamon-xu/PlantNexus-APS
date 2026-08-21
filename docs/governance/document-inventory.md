@@ -12,7 +12,7 @@ registry_version: 1.0.0
 
 # 文档清单
 
-本清单列出当前仓库已经实际存在的Markdown文档。P0/P1均已归档为completed；P2现为active，TASK-P2-00～08已done。P2-09～14仍为planned且未获启动授权。产品API与Production Runbook正文尚未形成并继续由相应索引登记。
+本清单列出当前仓库已经实际存在的Markdown文档。P0/P1均已归档为completed；P2现为active，TASK-P2-00～08已done，TASK-P2-09已获授权并为`in_progress`。P2-10～14仍为planned且未获启动授权。产品API与Production Runbook正文尚未形成并继续由相应索引登记。
 
 | Path | Doc ID | Status | Title |
 |---|---|---|---|
@@ -218,3 +218,5 @@ TASK-P2-08本地实现继续不新增、删除或重命名Markdown路径；full�
 Implementation artifact `9431673977`已复现142-doc inventory与52 committed/0 working paths、8 rows、19 checks、0 issues，TASK-P2-08=`done`。没有新增、删除或重命名Markdown；P2-09～14保持`planned`，inventory与registry版本不变。
 
 TASK-P2-09启动不新增、删除或重命名`docs/**/*.md`路径，inventory继续完整覆盖142份文档；只将已获2026-08-21明确授权的该Task同步为`in_progress`。新fixture calculation notes位于`fixtures/**`并由asset manifest/hash治理，不属于本inventory；新增Python/tests与ignored machine JSON同样不是正式Markdown inventory条目。P2-10～14保持`planned`。
+
+TASK-P2-09本地实现仍未新增、删除或重命名`docs/**/*.md`；inventory继续覆盖142份文档。两份Golden和matrix calculation notes位于`fixtures/**`，由asset/manifest hash与SIM-ASSUMPTION-011治理；Python/tests/workflow和ignored JSON不进入inventory。Registry format version及30个trace roots、36个Test IDs、15个OPEN、11个risks、37张Task卡不变；SIM assumptions由10增至11且全部`ACTIVE`。

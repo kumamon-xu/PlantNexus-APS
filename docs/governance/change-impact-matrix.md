@@ -286,3 +286,9 @@ Planning Schema/contracts、Problem builder/hash、formal Validator、core model
 本地machine report已形成7/7 objective/strategy checks与70 focused/395 full tests；最终Task diff精确为52 changed paths、`IMPACT-BACKEND/DOCS/GOVERNANCE-REGISTRY/INFRA/PHASE/POLICY/STRATEGY/TESTS`八行、19 checks、0 issues。禁止路径相对Diff base无变化；exact provider artifact绑定implementation SHA前TASK-P2-08保持`in_progress`，P2-09不自动启动。
 
 Implementation artifact `9431673977`已绑定`b1ec83ed96120357ecadd41d3f520181838f17c6`并复现52 committed/0 working paths、上述八行、19 checks与0 issues；TASK-P2-08据此关闭为`done`。Schema/Planning contracts/Problem/Validator/Dependency/Migration Rule继续未命中，P2-09不自动启动。
+
+## TASK-P2-09 local impact review
+
+实际差异命中`IMPACT-SIM-SCENARIO/FIXTURE/TESTS/INFRA/PHASE/GOVERNANCE-REGISTRY/DOCS`七行；Task卡已在首个asset产生前展开全部实际路径，并在activation提交后、实现前切换为完整Impact Rule。发布Schema、Planning/Application/Generator、Dependency/Version Metadata、Migration、Benchmark/Reference/Export/API/Jobs均未命中，故对应规则不得虚报。
+
+所有七行required documents已进入本Task `Documents to update`并同步review。本地`TASK-P2-09-report.json`精确为58 paths、7 rows、19 checks、0 issues；provider artifact须重现58 committed/0 working paths并绑定implementation SHA，provider前Task保持`in_progress`。

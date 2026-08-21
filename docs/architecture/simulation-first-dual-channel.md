@@ -83,3 +83,9 @@ Application在Normalization前比对explicit expected plane，交叉输入以`DA
 独立审计以`SIM-P1-INGRESS-001@1.0.0`/generator`1.0.0`/seed`20260820`执行两次Synthetic replay并用同义Reference CSV进入同一application链，Import/Snapshot/Problem完整bytes/hash parity与14/14 checks均PASS。Import、Snapshot和Problem hashes分别为`sha256:24a74b4f43b0ba42ed458983e0c4776613911924ae5250d9df8ae9e4f14cb1c4`、`sha256:090e0e08e05bb569d0aae00461803cebd56f87444243484a3696126bfe510409`、`sha256:71c0b729dd2b08ba1d14d5a281029b8d9bc13596a90a5189fb20176e19f690da`。
 
 该PASS使总规§74的共同数据链Gate=`READY`，但Reference文件仍为synthetic temporary input、`production_binding=false`；独立Production/Simulation数据库与角色、真实connector、Solver/Validator/Export链仍未形成。P1-12没有进入P2。
+
+## TASK-P2-09 Simulation correctness channel
+
+新Scenario assembler从versioned blueprint产生source-shaped Raw rows，并复用P1 mapping/Normalization/Data Validation/Expansion/Snapshot/Problem公开边界；随后才调用P2 Global Strategy和formal Validator。它不允许直接Problem/CpModel构造，也不改写P1 Generator或Reference channel，因此新证据验证真实模块边界而不是测试捷径。
+
+七例全部属于Simulation correctness；它们不会绑定Production source、修改Production policy、生成Reference Scheduler/Benchmark/Export或进入P3。真实双通道Production authority仍由后续OPEN closure和Task治理。

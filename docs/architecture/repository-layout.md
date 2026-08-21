@@ -95,3 +95,7 @@ TASK-P1-02在既有`schemas/json`/`schemas/samples`边界新增canonical-records
 ## TASK-P2-08 layout delta
 
 新增`backend/app/planning/strategies/{__init__,global_cp_sat}.py`、`planning/policy/delivery.py`、`planning/backends/cp_sat/{objectives,objective_strategy_check}.py`及对应unit/property/integration tests；既有Backend/mapper/foundation check与CI workflow仅做有界接线。没有新增Schema、fixture、benchmark profile、migration、DB/API/Worker、exporter或P3/P4目录；OR-Tools仍只存在于`planning/backends/cp_sat/`。
+
+## TASK-P2-09 layout delta
+
+新增`simulation/scenarios/p2_correctness.py`、四个聚焦测试文件、两组deterministic Golden目录和一个五例synthetic correctness matrix目录；CI与既有integration contract只增加machine evidence接线。Fixture目录只保存versioned JSON与calculation note，不新增Schema、dependency、migration、Benchmark/Reference/Export、DB/API/Worker或P3目录。

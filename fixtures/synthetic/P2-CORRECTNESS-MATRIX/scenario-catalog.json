@@ -1,0 +1,95 @@
+{
+  "catalog_version": "p2-correctness-catalog.v1",
+  "factory_profile": {"profile_id": "PROFILE-P2-CORRECTNESS-MATRIX", "profile_version": "1.0.0"},
+  "assembler": {"generator_id": "PLANTNEXUS-P2-CORRECTNESS-ASSEMBLER", "generator_version": "1.0.0"},
+  "pipeline": {
+    "mapping_profile": "P1-SYNTHETIC-SOURCE-MAPPING@1.0.0",
+    "unit_registry": "unit-conversion-registry.v1",
+    "normalization": "normalization.v1",
+    "import_package": "import-package.v2",
+    "data_quality_rules": "data-quality-rules.v1",
+    "expansion": "order-expansion.v1",
+    "snapshot": "planning-snapshot.v2",
+    "problem": "planning-problem.v2",
+    "problem_builder": "planning-problem-builder.v2"
+  },
+  "policy": {
+    "policy_id": "POLICY-P2-SIM-DELIVERY-OBJ001-001",
+    "policy_revision": "1.0.0",
+    "source_system": "plantnexus-synthetic-policy",
+    "source_version": "1.0.0"
+  },
+  "solver": {"backend_version": "cp-sat-backend.v1", "solver_version": "9.15.6755"},
+  "scenarios": [
+    {
+      "scenario_spec": {
+        "scenario_contract_version": "scenario-spec.v1",
+        "scenario_id": "P2-CROSS-WORKSHOP",
+        "scenario_version": "1.0.0",
+        "synthetic_only": true,
+        "factory_profile": {"profile_id": "PROFILE-P2-CORRECTNESS-MATRIX", "profile_version": "1.0.0"},
+        "generator": {"generator_id": "PLANTNEXUS-P2-CORRECTNESS-ASSEMBLER", "generator_version": "1.0.0"},
+        "seed": 20260903,
+        "required_capabilities": ["SINGLE_FACTORY_MULTI_WORKSHOP", "DAG_ROUTING"],
+        "complexity": {"factory_size": "XS", "routing_complexity": "low", "candidate_resource_density": "sparse", "bottleneck_level": "low", "due_date_pressure": "high", "calendar_fragmentation": "low", "material_delay_ratio": 0, "wip_ratio": 0, "lock_ratio": 0, "cross_workshop_ratio": 1, "failure_frequency": "none"},
+        "expected_behavior": {"allowed_results": ["OPTIMAL"], "validator_status": "PASS"}
+      },
+      "correctness_manifest": {
+        "correctness_manifest_version": "p2-correctness-manifest.v1",
+        "scenario": {"scenario_id": "P2-CROSS-WORKSHOP", "scenario_version": "1.0.0"},
+        "seed": 20260903,
+        "asset_hashes": {"factory_profile": "sha256:192df2d93a11a9e6755ce42cf5987c0d48569148657895e2e7832657cf05c6a8", "scenario_spec": "sha256:103f338fc8b54a367a917af03b82b7a0531b96ff7f20a70483e5a3bbbe23fe00", "scenario_blueprint": "sha256:7756ae9e31ac64a97913d867985bc20a595749a951865670edccdcd95891d2c2", "expected_outcome": "sha256:981d6d77a12bb203ba4b5fd82ee00ebada54c34bdd5d19cf5514ee19c37e527c"},
+        "expected_artifacts": {"import_dataset_hash": "sha256:37df82f4f8bcc51a84a73c5b135d9f7ce0810bb57949d2f2540f560daa517bf1", "snapshot_hash": "sha256:e33931f23c1ccf240ffb82e18d9240ab5ffd537bdbab91d67b8e2c9914f77656", "problem_hash": "sha256:31c40f42811cbfea96f3af66e6de590e1a1e0650a5af6aa7383218765180aa72"}
+      },
+      "expected_outcome": {
+        "expected_outcome_version": "p2-correctness-expected.v1", "scenario_id": "P2-CROSS-WORKSHOP", "solver_status": "OPTIMAL", "validator_status": "PASS", "objective_value": 0, "best_bound": 0, "relative_gap": 0.0,
+        "assignments": [{"job_code": "J1", "operation_code": "O1", "resource_code": "R1", "start_tick": 0, "end_tick": 1}, {"job_code": "J1", "operation_code": "O2", "resource_code": "R2", "start_tick": 3, "end_tick": 4}],
+        "positive_constraint_ids": ["C-001", "C-002", "C-003", "C-009", "C-010", "C-011"]
+      }
+    },
+    {
+      "scenario_spec": {
+        "scenario_contract_version": "scenario-spec.v1", "scenario_id": "P2-CALENDAR", "scenario_version": "1.0.0", "synthetic_only": true,
+        "factory_profile": {"profile_id": "PROFILE-P2-CORRECTNESS-MATRIX", "profile_version": "1.0.0"}, "generator": {"generator_id": "PLANTNEXUS-P2-CORRECTNESS-ASSEMBLER", "generator_version": "1.0.0"}, "seed": 20260904,
+        "required_capabilities": ["MACHINE_CALENDAR"],
+        "complexity": {"factory_size": "XS", "routing_complexity": "low", "candidate_resource_density": "sparse", "bottleneck_level": "low", "due_date_pressure": "high", "calendar_fragmentation": "high", "material_delay_ratio": 0, "wip_ratio": 0, "lock_ratio": 0, "cross_workshop_ratio": 0, "failure_frequency": "none"},
+        "expected_behavior": {"allowed_results": ["OPTIMAL"], "validator_status": "PASS"}
+      },
+      "correctness_manifest": {"correctness_manifest_version": "p2-correctness-manifest.v1", "scenario": {"scenario_id": "P2-CALENDAR", "scenario_version": "1.0.0"}, "seed": 20260904, "asset_hashes": {"factory_profile": "sha256:192df2d93a11a9e6755ce42cf5987c0d48569148657895e2e7832657cf05c6a8", "scenario_spec": "sha256:0998581766135cfd6f0be5dc9ee250933a708f45f11770330269bfe2dfb2aa91", "scenario_blueprint": "sha256:000cfac5a7fa782e699894fe72eb189bcc776c22486688aff18f627e0f2f70cb", "expected_outcome": "sha256:bd052b891fc2681ebae59fa4b085892bd55243bf4849f0b96a16e4192e414abe"}, "expected_artifacts": {"import_dataset_hash": "sha256:41c1f12b40e7d41394eee833e0e7f4a704aa526670065e1d55fb495deab31a73", "snapshot_hash": "sha256:15c066699c16da046903507cc392c0251cb59c2775bbb0ffa02c10a2de5e6c35", "problem_hash": "sha256:615353515bae1d9503701db7b1971c02200a538f98d0ea66104b6d59a57f8333"}},
+      "expected_outcome": {"expected_outcome_version": "p2-correctness-expected.v1", "scenario_id": "P2-CALENDAR", "solver_status": "OPTIMAL", "validator_status": "PASS", "objective_value": 0, "best_bound": 0, "relative_gap": 0.0, "assignments": [{"job_code": "J1", "operation_code": "O1", "resource_code": "R1", "start_tick": 2, "end_tick": 4}], "positive_constraint_ids": ["C-001", "C-003", "C-005", "C-010", "C-011"]}
+    },
+    {
+      "scenario_spec": {
+        "scenario_contract_version": "scenario-spec.v1", "scenario_id": "P2-MATERIAL-DELAY", "scenario_version": "1.0.0", "synthetic_only": true,
+        "factory_profile": {"profile_id": "PROFILE-P2-CORRECTNESS-MATRIX", "profile_version": "1.0.0"}, "generator": {"generator_id": "PLANTNEXUS-P2-CORRECTNESS-ASSEMBLER", "generator_version": "1.0.0"}, "seed": 20260905,
+        "required_capabilities": ["RELEASE_AND_MATERIAL_GATE"],
+        "complexity": {"factory_size": "XS", "routing_complexity": "low", "candidate_resource_density": "sparse", "bottleneck_level": "low", "due_date_pressure": "high", "calendar_fragmentation": "low", "material_delay_ratio": 1, "wip_ratio": 0, "lock_ratio": 0, "cross_workshop_ratio": 0, "failure_frequency": "none"},
+        "expected_behavior": {"allowed_results": ["OPTIMAL"], "validator_status": "PASS"}
+      },
+      "correctness_manifest": {"correctness_manifest_version": "p2-correctness-manifest.v1", "scenario": {"scenario_id": "P2-MATERIAL-DELAY", "scenario_version": "1.0.0"}, "seed": 20260905, "asset_hashes": {"factory_profile": "sha256:192df2d93a11a9e6755ce42cf5987c0d48569148657895e2e7832657cf05c6a8", "scenario_spec": "sha256:ceb3de58d900578eb4d02c357bbf12e15c9d1e8f3a4f4118b33d8e80b7e557af", "scenario_blueprint": "sha256:22dba6ff197aaafe99550138f8de3e9028e246d911921ecab7e65a3f9929c14b", "expected_outcome": "sha256:65e559fa675be2d69b283ca2e5dc1dcf6560fa042c9be39e5d1fb792e0522151"}, "expected_artifacts": {"import_dataset_hash": "sha256:01029548cfaab4e1571f587505007431d8fe7cf5a21d4f65829b9375a6773393", "snapshot_hash": "sha256:0204cfa2fd5e68094aacf4df72662fba4df335396d79ecd1233dce191f8de2de", "problem_hash": "sha256:967ac1df76322ca3b7d49250fa5dbfa8dfad943bdebb18bba0fa6e6d2346af00"}},
+      "expected_outcome": {"expected_outcome_version": "p2-correctness-expected.v1", "scenario_id": "P2-MATERIAL-DELAY", "solver_status": "OPTIMAL", "validator_status": "PASS", "objective_value": 0, "best_bound": 0, "relative_gap": 0.0, "assignments": [{"job_code": "J1", "operation_code": "O1", "resource_code": "R1", "start_tick": 2, "end_tick": 3}], "positive_constraint_ids": ["C-001", "C-003", "C-006", "C-010", "C-011"]}
+    },
+    {
+      "scenario_spec": {
+        "scenario_contract_version": "scenario-spec.v1", "scenario_id": "P2-RUNNING", "scenario_version": "1.0.0", "synthetic_only": true,
+        "factory_profile": {"profile_id": "PROFILE-P2-CORRECTNESS-MATRIX", "profile_version": "1.0.0"}, "generator": {"generator_id": "PLANTNEXUS-P2-CORRECTNESS-ASSEMBLER", "generator_version": "1.0.0"}, "seed": 20260906,
+        "required_capabilities": ["DAG_ROUTING", "ALTERNATIVE_RESOURCE", "RUNNING_OPERATION"],
+        "complexity": {"factory_size": "XS", "routing_complexity": "low", "candidate_resource_density": "dense", "bottleneck_level": "low", "due_date_pressure": "high", "calendar_fragmentation": "low", "material_delay_ratio": 0, "wip_ratio": 1, "lock_ratio": 0, "cross_workshop_ratio": 0, "failure_frequency": "none"},
+        "expected_behavior": {"allowed_results": ["OPTIMAL"], "validator_status": "PASS"}
+      },
+      "correctness_manifest": {"correctness_manifest_version": "p2-correctness-manifest.v1", "scenario": {"scenario_id": "P2-RUNNING", "scenario_version": "1.0.0"}, "seed": 20260906, "asset_hashes": {"factory_profile": "sha256:192df2d93a11a9e6755ce42cf5987c0d48569148657895e2e7832657cf05c6a8", "scenario_spec": "sha256:447e59ad951796be13d9013a18bb0eadc9b88e4e7049b07c6977e4d2f8cdfb27", "scenario_blueprint": "sha256:b6ea2a6642b867d4f4084b1a9cf7b5faaeb79b9f934ebaf40ceedfd82550545b", "expected_outcome": "sha256:ed2b10faacd34aa99133b4a6a1db332f037b0f9ed09fe6c44f11fc72a61706fe"}, "expected_artifacts": {"import_dataset_hash": "sha256:daf143b4c0cabdecd26b61bc0446f623d4dbe90b5c8efec4c73967cd776a9c2d", "snapshot_hash": "sha256:98fc38cc631c6cc7c08601de73a9a0a001da10eecfdde07e3ee9046245f34363", "problem_hash": "sha256:e78fe99217e9a4263d61f34c935051a8f97777467e6b435b6fc58edd81635e34"}},
+      "expected_outcome": {"expected_outcome_version": "p2-correctness-expected.v1", "scenario_id": "P2-RUNNING", "solver_status": "OPTIMAL", "validator_status": "PASS", "objective_value": 0, "best_bound": 0, "relative_gap": 0.0, "assignments": [{"job_code": "J1", "operation_code": "O1", "resource_code": "R1", "start_tick": 0, "end_tick": 2}, {"job_code": "J1", "operation_code": "O2", "resource_code": "R2", "start_tick": 2, "end_tick": 3}], "positive_constraint_ids": ["C-001", "C-002", "C-003", "C-004", "C-007", "C-010", "C-011"]}
+    },
+    {
+      "scenario_spec": {
+        "scenario_contract_version": "scenario-spec.v1", "scenario_id": "P2-HARD-LOCK", "scenario_version": "1.0.0", "synthetic_only": true,
+        "factory_profile": {"profile_id": "PROFILE-P2-CORRECTNESS-MATRIX", "profile_version": "1.0.0"}, "generator": {"generator_id": "PLANTNEXUS-P2-CORRECTNESS-ASSEMBLER", "generator_version": "1.0.0"}, "seed": 20260907,
+        "required_capabilities": ["ALTERNATIVE_RESOURCE", "HARD_SOFT_LOCK"],
+        "complexity": {"factory_size": "XS", "routing_complexity": "low", "candidate_resource_density": "dense", "bottleneck_level": "low", "due_date_pressure": "high", "calendar_fragmentation": "low", "material_delay_ratio": 0, "wip_ratio": 0, "lock_ratio": 1, "cross_workshop_ratio": 0, "failure_frequency": "none"},
+        "expected_behavior": {"allowed_results": ["OPTIMAL"], "validator_status": "PASS"}
+      },
+      "correctness_manifest": {"correctness_manifest_version": "p2-correctness-manifest.v1", "scenario": {"scenario_id": "P2-HARD-LOCK", "scenario_version": "1.0.0"}, "seed": 20260907, "asset_hashes": {"factory_profile": "sha256:192df2d93a11a9e6755ce42cf5987c0d48569148657895e2e7832657cf05c6a8", "scenario_spec": "sha256:86c85b7e99252ad05bb9bc5cdf7948d64c0308a4a82294764057d6df9802dee0", "scenario_blueprint": "sha256:47c97ebdcc1bf602988a737f14053b86ffadd2a4e26a96ad5c542c026ee6d599", "expected_outcome": "sha256:e403db9be81a0dd8c3343d25ddd992727c3d7befa71c169cc8e7b530bcf9ae46"}, "expected_artifacts": {"import_dataset_hash": "sha256:d9f33ceda8a1bc17ed73676d5dd58178a79073653412027b94f506317ba1c799", "snapshot_hash": "sha256:a394153969d19ee7b08f817aee54c2f98fa7cbbad4944cfd49cfdf3479df77dc", "problem_hash": "sha256:d41e5e19ff6ebadd399acf7425fee40ed6bef98fa0ab4cb61cd7cf0a4f9fe075"}},
+      "expected_outcome": {"expected_outcome_version": "p2-correctness-expected.v1", "scenario_id": "P2-HARD-LOCK", "solver_status": "OPTIMAL", "validator_status": "PASS", "objective_value": 0, "best_bound": 0, "relative_gap": 0.0, "assignments": [{"job_code": "J1", "operation_code": "O1", "resource_code": "R1", "start_tick": 1, "end_tick": 3}], "positive_constraint_ids": ["C-001", "C-003", "C-008", "C-010", "C-011"]}
+    }
+  ]
+}

@@ -1,0 +1,36 @@
+{
+  "correctness_manifest_version": "p2-correctness-manifest.v1",
+  "scenario": {"scenario_id": "P2-GOLDEN-JSSP", "scenario_version": "1.0.0"},
+  "factory_profile": {"profile_id": "PROFILE-P2-GOLDEN-JSSP", "profile_version": "1.0.0"},
+  "assembler": {"generator_id": "PLANTNEXUS-P2-CORRECTNESS-ASSEMBLER", "generator_version": "1.0.0"},
+  "seed": 20260901,
+  "asset_hashes": {
+    "factory_profile": "sha256:a667564c5de5c444c490aad721d29d9d22c981dcccb23d5076aa899490657096",
+    "scenario_spec": "sha256:47a4fc3c82515096cb3f4347bbd5ca09ad2fb936e08aff16b7de3822477b6a1b",
+    "scenario_blueprint": "sha256:ad89e043bc99bebeccd39e8400d7476cc39bd86f57a09e609816c676811c4880",
+    "expected_outcome": "sha256:3d5a42bc3c2b29b892637998739e686fe20b3f0112d60db6bdfe9abb6a7ac5c7"
+  },
+  "pipeline": {
+    "mapping_profile": "P1-SYNTHETIC-SOURCE-MAPPING@1.0.0",
+    "unit_registry": "unit-conversion-registry.v1",
+    "normalization": "normalization.v1",
+    "import_package": "import-package.v2",
+    "data_quality_rules": "data-quality-rules.v1",
+    "expansion": "order-expansion.v1",
+    "snapshot": "planning-snapshot.v2",
+    "problem": "planning-problem.v2",
+    "problem_builder": "planning-problem-builder.v2"
+  },
+  "policy": {
+    "policy_id": "POLICY-P2-SIM-DELIVERY-OBJ001-001",
+    "policy_revision": "1.0.0",
+    "source_system": "plantnexus-synthetic-policy",
+    "source_version": "1.0.0"
+  },
+  "solver": {"backend_version": "cp-sat-backend.v1", "solver_version": "9.15.6755"},
+  "expected_artifacts": {
+    "import_dataset_hash": "sha256:d095a418b184a9e4ef681a4388690536da46bcd91923271ac95cdf3a0aefc92b",
+    "snapshot_hash": "sha256:9d12f4151e596ee8d2cbfce23e7fcf7819cd29f9d538df9ad4309bd7db45b8cd",
+    "problem_hash": "sha256:e5c5bc18d12e45a79f435d9c550e428b199644908e73a1d96536b7e882747a34"
+  }
+}

@@ -1,0 +1,43 @@
+{
+  "profile_contract_version": "factory-profile.v1",
+  "profile_id": "PROFILE-P2-GOLDEN-JSSP",
+  "profile_version": "1.0.0",
+  "synthetic_only": true,
+  "topology": {
+    "workshop_count": {"minimum": 1, "maximum": 1},
+    "production_line_count": {"minimum": 1, "maximum": 1}
+  },
+  "resources": {
+    "target_count": {"minimum": 2, "maximum": 2},
+    "capacity_per_resource": 1,
+    "capability_pool": ["DAG_ROUTING"]
+  },
+  "routing": {
+    "operation_count": {"minimum": 2, "maximum": 2},
+    "candidate_resource_count": {"minimum": 1, "maximum": 1},
+    "routing_depth": {"minimum": 2, "maximum": 2},
+    "cross_workshop_ratio": {"minimum": 0, "maximum": 0}
+  },
+  "calendar": {
+    "pattern_ids": ["P2-CORRECTNESS-ALWAYS-AVAILABLE"],
+    "fragmentation_count": {"minimum": 0, "maximum": 0}
+  },
+  "orders": {
+    "order_count": {"minimum": 2, "maximum": 2},
+    "due_date_pressure_levels": ["high"]
+  },
+  "supported_capabilities": ["DAG_ROUTING"],
+  "expected_rejections": [
+    "SECONDARY_CAPACITY",
+    "SEQUENCE_DEPENDENT_SETUP",
+    "BATCH_PROCESSING",
+    "SPLIT_MERGE",
+    "MATERIAL_COMPETITION",
+    "PREEMPTIVE_OPERATION",
+    "BUFFER_CAPACITY",
+    "ALTERNATIVE_MATERIAL",
+    "MULTI_FACTORY",
+    "AI_DURATION_PREDICTION",
+    "REALITY_CALIBRATION"
+  ]
+}

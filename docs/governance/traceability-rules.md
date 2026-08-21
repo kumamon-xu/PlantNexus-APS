@@ -185,3 +185,9 @@ Implementation `ba6dd2cdc2eeaae3b60714314bc3d2c155a2d81c`的required run `324324
 证据必须区分hard feasibility与objective optimality、native best bound与candidate objective、OPTIMAL/FEASIBLE/UNKNOWN/INFEASIBLE、solver candidate与formal Validator接受、explicit Simulation value与Production authority、tiny correctness timing与XS/S/M baseline、local `uncommitted` report与exact provider SHA。Validator FAIL必须丢弃candidate；UNKNOWN不得冒充INFEASIBLE，FEASIBLE不得冒充OPTIMAL。Provider artifact未绑定implementation SHA前TASK-P2-08保持`in_progress`，完成也不自动授权P2-09。
 
 Implementation `b1ec83ed96120357ecadd41d3f520181838f17c6`的required run `32438785162`与artifact `9431673977`已精确绑定并复现objective/strategy 7/7及52 committed/0 working paths、8 rows、19 checks、0 issues，因此TASK-P2-08=`done`。OBJ-002/003、P2-09 Golden/scenario、Reference/Export/Benchmark/Gate/P3继续PLANNED；P2-09没有自动激活。
+
+## TASK-P2-09 traceability rule application
+
+形成链为`REQ-004/005/009/012 + NFR-COR/DET/TRC/ISO + ENG-ARCH/SOL/VAL/VER → TASK-P2-09 → seven versioned Scenario/Profile/blueprint/manifest assets → public Raw/Import/Snapshot/Problem → Global Strategy → formal Validator → TEST-GOLDEN-JSSP/FJSP、CALENDAR/MATERIAL/RUNNING/CROSS-WORKSHOP/INF-LOCK、TEST-PROPERTY/VALIDATOR-MUTATION/SCENARIO-REPLAY → p2-correctness-report.v1 + Task report + exact provider artifact`。
+
+只有七类correctness、7个property replay和C-001～C-011 formula-free negative integration可提升为local formed。证据必须固定version/seed/hash，区分fixture-local manifest与发布Schema、local `uncommitted`与provider SHA、correctness `XS`与性能profile；不得更新expected掩盖回归。P2-10 Reference、P2-11 Export、P2-12 XS/S/M Benchmark、P2 Gate/P3仍PLANNED，provider完成前TASK-P2-09保持`in_progress`。

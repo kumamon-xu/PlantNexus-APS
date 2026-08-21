@@ -46,3 +46,7 @@ TASK-P1-10的`SIM-P1-INGRESS-001@1.0.0`同样只验证49条canonical record的�
 `objective-strategy-report.v1`开始记录真实build/first-feasible/solve/validation/total、objective/bound/gap、model size与memory，并以4个至多3-operation的in-memory vectors证明OBJ-001数值/状态/Validator correctness。它没有使用`benchmarks/profiles.yaml`、正式Scenario Library、Reference Scheduler、warm-up/repetition/percentile或XS/S/M，因此不是Gate A/B/C performance run。
 
 CI新增该correctness report只为防止objective/strategy/status回归；任何runtime或memory单值不得转成threshold、capacity或SLA。P2-12仍独占XS/S/M Benchmark，OPEN-011/012继续OPEN。
+
+## TASK-P2-09 performance boundary
+
+七个新Scenario均标记`XS`只是表达可手算correctness，报告虽透传model size/timing/memory，但不执行warm-up、repeat、percentile、Reference comparison或`benchmarks/profiles.yaml`。CI中的`ci-p2-correctness.json`只是一致性Gate，不能形成Gate A/B/C baseline、threshold、capacity或SLA；P2-12与OPEN-011/012保持不变。

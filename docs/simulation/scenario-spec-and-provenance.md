@@ -63,3 +63,9 @@ P1 regression Scenario引用`PROFILE-SIM-P1-INGRESS-001@1.0.0`、generator `PLAN
 P1 Import v2使用generator-local `synthetic-generation-manifest.v1`记录quality/normalization/unit引用，因为发布的`scenario-manifest.v1`固定Import v1且保持不变。相同输入重放hash为`sha256:24a74b4f43b0ba42ed458983e0c4776613911924ae5250d9df8ae9e4f14cb1c4`；generated-at不同不影响hash。
 
 TASK-P1-11又将该固定asset从公开Raw Staging连续重放到Snapshot/Problem：Gate配置cutoff=`2026-11-06T12:30:00Z`、horizon end=`2026-11-07T12:30:00Z`、tick=60s，得到Snapshot hash `sha256:090e0e08e05bb569d0aae00461803cebd56f87444243484a3696126bfe510409`和Problem hash `sha256:71c0b729dd2b08ba1d14d5a281029b8d9bc13596a90a5189fb20176e19f690da`。该配置只是asset-local correctness replay，不变更ScenarioSpec/manifest版本、expected Solver results或Production policy。
+
+## TASK-P2-09 resolved correctness manifests
+
+两份Golden以独立`factory-profile.json`、`scenario-spec.json`、`scenario-blueprint.json`、`correctness-manifest.json`、`expected-outcome.json`和手算说明发布；五例矩阵以共享Profile、catalog和blueprint-set发布。`p2-correctness-manifest.v1`是fixture-local resolved evidence contract，固定asset对象hash、pipeline versions、approved policy、Backend/Solver identity与Import/Snapshot/Problem expected hash；它不取代或修改`scenario-manifest.v1`发布Schema。
+
+Assembler `PLANTNEXUS-P2-CORRECTNESS-ASSEMBLER@1.0.0`只把小型blueprint扩展为source-shaped Raw records，随后使用公开P1/P2链路。Scenario expected只允许OPTIMAL且Validator PASS；任何version/reference/hash/status漂移都会在求解前后hard fail。新数值绑定SIM-ASSUMPTION-011，不构成Benchmark/Production default。

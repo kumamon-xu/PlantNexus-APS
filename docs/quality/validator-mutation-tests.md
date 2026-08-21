@@ -86,3 +86,9 @@ Formal 13类mutation corpus、Validator公式、rule sheet和P0 fixture bytes均
 Fact/lock machine evidence先取得formal PASS candidates，再保持duration/reference自洽地移动RUNNING future interval和HARD lock tuple，要求formal Validator分别且仅命中C-007、C-008；另以SOFT lock指定资源整段不可用证明movement仍PASS。Expected C-ID只用于test assertion，不进入Validator决策。
 
 Formal 13类mutation corpus、Validator公式、rule sheet和P0 fixture bytes均未修改。该证据形成RUNNING/HARD lock Solver交叉，但完整Golden/Scenario matrix仍由P2-09承接。
+
+## TASK-P2-09 Solver-produced mutation integration
+
+新suite先从七个正式replay取得Validator PASS的Solver candidate，再以不调用Solver/Backend约束公式的字段级变异分别命中C-001～C-011。每例执行两次formal Validator，必须稳定得到`FAIL`、`hard_violation_count=1`和唯一相同C-ID，并通过`validation-report.v2` Schema；任一额外/缺失C-ID均hard fail。
+
+P0 13-case与P2-04 formal corpus、rule sheet、Validator实现及历史fixture均未修改。该证据属于correctness，不是Benchmark、Production authority或新的constraint semantics。

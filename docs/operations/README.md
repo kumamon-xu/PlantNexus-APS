@@ -101,3 +101,9 @@ Report本身不写业务数据库，temporary CSV随进程回收，`build/valida
 本地/CI运行`python -m app.planning.backends.cp_sat.objective_strategy_check --root . --report <path>`生成`objective-strategy-report.v1`；CI固定路径为`build/validation/ci-objective-strategy.json`。PASS必须为7/7，并包含冻结fingerprints、approved Simulation Policy/Limits、exact OBJ-001 model、4个tiny exhaustive optimum/Validator PASS、hard INFEASIBLE、七状态/report/provenance与Production deferred边界。
 
 非零返回保留sanitized FAIL report并阻断closure。命令只使用in-memory synthetic vectors，不读取Production source、不设置默认limits、不运行Reference/XS/S/M Benchmark、不创建ScheduleVersion/Export/approval/publish。Provider核验时必须确认report `code_commit`等于exact pushed SHA，local `uncommitted`不算external evidence。
+
+## TASK-P2-09 correctness evidence command
+
+运行`uv run python -m app.simulation.scenarios.p2_correctness --root . --report <path>`生成`p2-correctness-report.v1`；CI固定为`build/validation/ci-p2-correctness.json`。PASS必须为8/8 checks、7 scenarios/Validator passes/property replays、11 exact mutations及C-001～C-011正负全覆盖，并验证P0/P1 immutable assets和冻结输入fingerprints。
+
+命令只读versioned synthetic fixtures并写ignored report；不连接DB/Redis/API/Worker，不运行Reference/Benchmark/Export或Production。Provider closure必须复核report `code_commit`、hash/status/counts和同一artifact中的current Task report。

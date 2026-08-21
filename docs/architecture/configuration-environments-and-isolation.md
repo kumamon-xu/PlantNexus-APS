@@ -146,3 +146,9 @@ Backend继续只消费显式Problem v2、PlanningPolicy v1与SolveLimits v1，�
 `GlobalCpSatStrategy`只接受代码内固定版本的`POLICY-P2-SIM-DELIVERY-OBJ001-001@1.0.0`、显式传入且同为`SIMULATION`的SolveLimits，以及Problem中`plantnexus-synthetic-policy@1.0.0`来源的priority weight；不读取environment、Secret、DB、API、Worker或隐式默认值。`planning_run_id`与`code_commit`也是显式调用参数，local允许`uncommitted`，CI由`PLANTNEXUS_CODE_COMMIT`只注入machine evidence。
 
 Workflow只新增in-memory `objective_strategy_check`与ignored JSON上传，不新增service、port、container、migration或deployment route。OPEN-006/011/012未关闭时Production Policy/weight/limit均在solve前拒绝；tiny timing/memory不是容量、SLA或Production readiness。
+
+## TASK-P2-09 correctness isolation
+
+七个`1.0.0`资产均由`synthetic_only=true`的ScenarioSpec、Simulation-only Profile和`StagingDataPlane.SIMULATION`固定；fixture-local assembler只产生source-shaped Raw rows，再进入公开Normalization/Data Validation链。它不读取环境变量、Secret、DB、API、Worker或Production connector，也不改变既有Production guard。CI仅新增本地文件读取与ignored JSON report，GitHub权限仍为`contents: read`。
+
+`XS`仅表示可手算correctness，不能解释为`benchmarks/profiles.yaml`的性能级别。OPEN-006/011/012及独立Production/Simulation Database/API边界均未关闭，P2-10+不在本Task内。

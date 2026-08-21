@@ -204,3 +204,9 @@ Provider provenance现已形成：implementation `5ab65f36d532fd8786eb7ecad3cce4
 每次Global Strategy运行同时绑定Problem hash、approved Policy/Limits canonical fingerprints、PlanningSolution fingerprint、`planning_run_id`、exact backend/solver/version/parameters、OBJ-001 value/bound/gap、build/first-feasible/solve/validation/total、model size、memory与显式`code_commit`。SolverReport与Solution的problem/policy/limits/status/objective/diagnostics必须逐字一致并通过bundle replay；local `uncommitted`不能冒充provider SHA。
 
 `objective-strategy-report.v1`冻结Problem/Solution/Report/Policy/Limits Schema、Planning contracts、core model、Problem hashing、formal Validator、rule sheet、ADR-0004/0006与`uv.lock` fingerprints，并记录4个tiny optimum/Validator及完整报告。它是correctness provenance，不创建ScheduleVersion/Export/approval/publish或Production authority；implementation exact provider evidence仍须在push后核验。
+
+## TASK-P2-09 correctness provenance
+
+每个新case固定Scenario/Profile/assembler version、seed、pipeline/policy/backend/solver identity、四个asset object hash以及Import dataset/Snapshot/Problem hash。两份Golden使用独立manifest；五例矩阵由catalog共享Profile和provenance并在加载时解析成同等完整manifest。任何expected、blueprint或identity漂移均hard fail，不能通过重写expected隐藏回归。
+
+`p2-correctness-report.v1`同时冻结P0/P1历史asset逐路径manifest、Schema/Problem/Strategy/Validator/Policy/Generator/lock fingerprints，并记录7次Solver/Validator、7次row-order replay与11次exact C-ID mutation。Local `code_commit=uncommitted`只作本地证据；provider必须绑定exact implementation SHA。

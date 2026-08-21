@@ -71,3 +71,9 @@ Golden断言固定身份、关键字段/count与Schema，不把完整JSON手工�
 本Task不修改或新增committed fixture。Unit/property/machine checks从versioned in-memory Problem v2构造COMPLETED anchor、RUNNING remainder、HARD/SOFT locks、calendar/resource/horizon conflicts及self-conflict cases；`SIM-MINIMAL-001`和P0 mutation bundle历史bytes保持只读。
 
 这些vectors形成C-007/C-008 bounded correctness evidence，但不是TASK-P2-09 Golden Scenario或TASK-P2-12 Benchmark profile。未来若持久化Running/Hard Lock asset，必须新建version、calculation note/hash/source并更新SIM assumption，不得把本Task随机或tiny值外推为Production分布。
+
+## TASK-P2-09 committed correctness assets
+
+[`P2-GOLDEN-JSSP`](../../fixtures/deterministic/P2-GOLDEN-JSSP/calculation-note.md)与[`P2-GOLDEN-FJSP`](../../fixtures/deterministic/P2-GOLDEN-FJSP/calculation-note.md)分别手算零迟交下界/最优解；[`P2-CORRECTNESS-MATRIX`](../../fixtures/synthetic/P2-CORRECTNESS-MATRIX/calculation-note.md)固定Cross Workshop、Calendar、Material Delay、Running与Hard Lock五例。全部asset/Profile/Scenario为`1.0.0`，seed为`20260901`～`20260907`，并由SIM-ASSUMPTION-011限定。
+
+测试按字段断言assignment、status、objective/bound/gap、Validator与三层artifact hash，不比较无意义Gantt排序。P0/P1 assets保持逐字不变；任何新资产更正必须发布新version或superseding manifest，不能原地覆盖。

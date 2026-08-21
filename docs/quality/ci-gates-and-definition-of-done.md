@@ -172,3 +172,9 @@ Step不得`continue-on-error`；artifact必须同时上传objective-strategy及�
 Local Gate现已通过70 focused、395 full、Ruff/Pyright 0、objective/strategy 7/7及全部历史machine reports、142-doc治理与52-path/8-row/19-check/0-issue Task report、Compose、build、`git diff --check`和冻结路径检查。下一门仅为implementation exact SHA的required `validate`与artifact；通过前状态不变。
 
 Implementation provider Gate现已通过：SHA `b1ec83ed96120357ecadd41d3f520181838f17c6`、run `32438785162`、required `validate` job/check `96645152864`（app `15368`）均success；artifact `9431673977`未过期且digest=`sha256:843c036ffa3e133a9bceee1ca3b3320ce42a790cc955f01e94acab135f8fab5d`，14份validation reports、objective/strategy 7/7与Task 52 committed/0 working/8 rows/19 checks/0 issues均绑定同一SHA。TASK-P2-08 DoD完成；evidence-only closure仍须由自身exact provider复核，不自动授权P2-09。
+
+## TASK-P2-09 correctness CI Gate
+
+Workflow在完整repository tests之后执行`python -m app.simulation.scenarios.p2_correctness`并上传`ci-p2-correctness.json`。该step不得`continue-on-error`；报告必须为8/8、7 scenarios/Validator/property、11 mutations、C-001～C-011正负覆盖，并复核历史asset/frozen input hashes。Integration contract同时断言命令、report路径、counts/check names和全部scope boundaries。
+
+Local Gate现已通过45 focused、427 full、Ruff/Pyright 0、correctness 8/8及全部历史machine reports、142-doc/58-path/7-row/19-check/0-issue治理、Compose、build、version smoke、`git diff --check`和immutable checks。Push后required `validate`、artifact digest/expiry、report `code_commit`及Task report必须绑定exact implementation SHA；完成前TASK-P2-09保持`in_progress`，不启动P2-10。

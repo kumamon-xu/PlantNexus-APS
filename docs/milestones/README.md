@@ -30,7 +30,7 @@ P0 当前状态：TASK-P0-01～10 全部完成；[superseding audit](P0-exit-gat
 
 P1当前状态：[`P1 — Data & Snapshot`](P1-data-and-snapshot.md)为`completed`，TASK-P1-01～12全部`done`。[P1 audit](P1-exit-gate-audit-report.md)的271项回归、14/14 pipeline、全部machine/build/docs/provider证据均PASS；TASK-P1-12 implementation `a5d7e4a68dc12d48e36cb692500f59446f8097b4` / run `32326616525` / artifact `9391591718`已闭环，Gate=`READY`且无blocking gap。用户于2026-08-20明确批准transition。
 
-P2当前状态：[`P2 — CP-SAT Vertical Slice`](P2-cp-sat-vertical-slice.md)为`active`。TASK-P2-00～09均已闭环为`done`；P2-03的ADR/dependency/backend、P2-04 formal Validator、P2-05～07完整C-001～C-011 hard Solver、P2-08 OBJ-001/Global Strategy及P2-09 correctness integration的local/provider证据完整。P2-10～14仍为`planned`且未获启动授权，P2-14必须为最后的Exit Gate Audit，不得自动进入P3。
+P2当前状态：[`P2 — CP-SAT Vertical Slice`](P2-cp-sat-vertical-slice.md)为`active`。TASK-P2-00～09均已闭环为`done`；TASK-P2-10已获授权并为`in_progress`，只形成五个Reference Schedulers及同Problem/Validator/KPI证据。P2-11～14仍为`planned`且未获启动授权，P2-14必须为最后的Exit Gate Audit，不得自动进入P3。
 
 TASK-P2-03 implementation `9268b88ca7ce90a8f72023241f87e2d3676fd58a`的run `32346208046`、required job `96355386111`和artifact `9398128763`均success；P2 phase保持active，后续Task不自动启动。
 
@@ -49,3 +49,5 @@ TASK-P2-08本地已形成explicit Simulation policy/limits、exact OBJ-001、sin
 用户于2026-08-21明确授权TASK-P2-09；clean/provider-verified Diff base为`15c298f343a47db2a922544944ff5e02e4ca72d9`。本Task只启动七类correctness Scenario/Golden/property/mutation integration及machine evidence，不启动Benchmark、P2-10～14或P3；P2 Milestone继续`active`。
 
 TASK-P2-09本地已使7/7 versioned scenarios通过正式Raw→Problem→Global Strategy→formal Validator链，并形成7次property replay、11个exact C-ID mutation与8/8 machine checks；45 focused、427 full、Ruff/Pyright、全部历史reports、58-path治理、Compose/build均PASS。Implementation `20e49c92306128b47313059fabe31534814dbe3d`的run `32442651322` / required job `96656224252` / artifact `9432982306`精确复现全部证据，故Task=`done`；P2-10～14及P3不会自动启动。
+
+用户于2026-08-21明确授权TASK-P2-10；Diff base `0e4f6630412889254a7bef41f487c24dc274ca9c`的run `32443067388`、required job `96657446617`与artifact `9433118755`精确success。当前只启动五个versioned non-production baseline、deterministic tie-break、fresh Validator/KPI与machine evidence；P2-11～14及P3不自动启动，P2-14仍必须最后执行。

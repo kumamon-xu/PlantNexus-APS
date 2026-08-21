@@ -69,7 +69,7 @@ last_reviewed: 2026-08-21
 
 ## 当前范围
 
-当前阶段为P2。P1 Milestone为`completed`，P2为`active`；TASK-P2-00～09均已闭环为`done`。正式Problem/Solution Validator独立重算C-001～C-011，P2-05～07 Solver已形成全部hard domain，P2-08的OBJ-001/Global Strategy及P2-09 correctness integration均有exact provider证据；Benchmark、P2-10～14和P3均未启动，详见`current_phase.md`。
+当前阶段为P2。P1 Milestone为`completed`，P2为`active`；TASK-P2-00～09均已闭环为`done`，TASK-P2-10已获授权并为`in_progress`。本Task只形成五个deterministic non-production Reference Schedulers及相同Problem/formal Validator/KPI证据；Benchmark、P2-11～14和P3均未启动，详见`current_phase.md`。
 
 ## 仓库入口与本地检查
 
@@ -95,4 +95,6 @@ TASK-P2-08把唯一OBJ-001精确建模为priority-weighted tardiness seconds，�
 
 TASK-P2-09以`15c298f343a47db2a922544944ff5e02e4ca72d9`为Diff base启动。七个Scenario/Profile/assembler/policy/solver version及P0/P1 asset清单摘要已冻结；允许范围只覆盖新correctness assets、`simulation.scenarios`编排、四类测试、CI evidence和治理文档。Planning/Application/Generator、Problem/Solver/Validator语义、Schema、dependency、Benchmark与P3保持只读。
 
-本地correctness实现使2个Golden和5个matrix case全部OPTIMAL且formal Validator PASS，固定7组Import/Snapshot/Problem hash；Hypothesis row-order/fresh Validator property与11个formula-free exact C-ID mutation均PASS。45 focused、427 full、8/8 machine、Ruff/Pyright、全部历史reports、Compose/build及58-path治理均PASS；implementation exact required run/artifact已复现同一证据并闭环为`done`，但不授权P2-10或P3。
+本地correctness实现使2个Golden和5个matrix case全部OPTIMAL且formal Validator PASS，固定7组Import/Snapshot/Problem hash；Hypothesis row-order/fresh Validator property与11个formula-free exact C-ID mutation均PASS。45 focused、427 full、8/8 machine、Ruff/Pyright、全部历史reports、Compose/build及58-path治理均PASS；implementation exact required run/artifact已复现同一证据并闭环为`done`。
+
+用户于2026-08-21明确授权TASK-P2-10；clean/provider-verified Diff base为`0e4f6630412889254a7bef41f487c24dc274ca9c`，其run `32443067388` / required job `96657446617` / artifact `9433118755`均success。当前只启动五算法identity/tie-break、完整candidate或明确heuristic failure、fresh formal Validator和CI report；既有Schema/Planning/Validator/correctness assets/dependency与Benchmark/Production/P2-11+保持冻结。

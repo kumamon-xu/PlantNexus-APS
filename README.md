@@ -1,6 +1,6 @@
 # PlantNexus APS
 
-PlantNexus APS 是一个面向单工厂、多车间场景的高级计划与排程（APS）项目。P1 Data & Snapshot 已通过 Exit Gate 并关闭，当前阶段为 P2（CP-SAT Vertical Slice）。TASK-P2-01～09 已由local/exact provider闭环；当前已形成 exact-pinned OR-Tools/CP-SAT Backend、独立重算 C-001～C-011 的正式 Validator、完整 hard model、唯一OBJ-001/Global Strategy，以及七类versioned correctness integration。Benchmark、Production能力、P2-10～14和P3仍未形成或未获启动授权。
+PlantNexus APS 是一个面向单工厂、多车间场景的高级计划与排程（APS）项目。P1 Data & Snapshot 已通过 Exit Gate并关闭，当前阶段为P2（CP-SAT Vertical Slice）。TASK-P2-01～09已由local/exact provider闭环；TASK-P2-10现已获授权并处于`in_progress`，只形成五个非生产Reference Schedulers及同Problem/Validator/KPI证据。Benchmark、Production能力、P2-11～14和P3仍未形成或未获启动授权。
 
 ## 开始之前
 
@@ -57,7 +57,7 @@ scripts/      仓库级校验与自动化脚本
 infra/        P0 开发容器构建配置
 ```
 
-P1 Data & Snapshot已通过Exit Gate并关闭，当前阶段为P2。TASK-P2-01～09均已由local与exact provider evidence闭环；P2-03形成`ortools==9.15.6755`与Backend foundation，P2-04形成formal independent Validator，P2-05～07形成C-001～C-011 hard model，P2-08形成versioned Simulation OBJ-001/Global Strategy，P2-09形成七类correctness catalog/replay/mutation/property evidence。Benchmark、DB/API/Worker、P2-10～14和P3仍未实现或未获授权。当前边界见[`docs/current_phase.md`](docs/current_phase.md)。
+P1 Data & Snapshot已通过Exit Gate并关闭，当前阶段为P2。TASK-P2-01～09均已由local与exact provider evidence闭环；TASK-P2-10以`0e4f6630412889254a7bef41f487c24dc274ca9c`为Diff base启动，只实现五个deterministic non-production baseline并复用相同Problem/formal Validator/KPI。Benchmark、DB/API/Worker、P2-11～14和P3仍未实现或未获授权。当前边界见[`docs/current_phase.md`](docs/current_phase.md)。
 
 TASK-P2-05本地验收与implementation `df706786e0ec1c54bf60cd43261a92ef6aa53cc7`的GitHub required `validate` / artifact均已闭环。TASK-P2-06 implementation `ba6dd2cdc2eeaae3b60714314bc3d2c155a2d81c`及TASK-P2-07 implementation `5ab65f36d532fd8786eb7ecad3cce406f4d9fb70`的required `validate`与artifact也已闭环，二者均=`done`；TASK-P2-08/09亦已闭环，P2-10及以后不会自动启动。
 
@@ -68,3 +68,5 @@ TASK-P2-08形成`POLICY-P2-SIM-DELIVERY-OBJ001-001@1.0.0`、显式SolveLimits、
 TASK-P2-09本地已形成`P2-GOLDEN-JSSP/FJSP`与五例correctness matrix、`PLANTNEXUS-P2-CORRECTNESS-ASSEMBLER@1.0.0`、固定object/Import/Snapshot/Problem hashes、7次Solver→Validator replay、7次row-order property及11个exact C-ID mutation；45 focused、427 full、8/8 correctness及全部历史machine/build/governance checks均PASS。Implementation `20e49c92306128b47313059fabe31534814dbe3d`的required run `32442651322` / artifact `9432982306`精确复现16/16 reports和58 committed/0 working治理证据，Task=`done`；P2-10+与P3仍未启动。
 
 TASK-P2-06 exact run `32432482739` / required job `96626844156` / artifact `9429579311`精确复现temporal 7/7、4个implemented C-ID、5个positive candidate、3个certified infeasible、2个precheck、4个formal Validator mutation、8个tiny oracle及53 paths/6 rows/0 issues，Task已闭环。
+
+用户于2026-08-21明确授权TASK-P2-10。启动门复核确认`main=origin/main=0e4f6630412889254a7bef41f487c24dc274ca9c`、P2-01/02/04=`done`，且该SHA的required `validate` run `32443067388` / job `96657446617` / artifact `9433118755`精确成功。当前只允许五个versioned baseline、测试、CI machine evidence与治理文档；P2-11～14、BenchmarkRunner/XS-S-M、Production fallback及P3不会自动启动。

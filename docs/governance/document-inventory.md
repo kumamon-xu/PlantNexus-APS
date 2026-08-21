@@ -12,7 +12,7 @@ registry_version: 1.0.0
 
 # 文档清单
 
-本清单列出当前仓库已经实际存在的Markdown文档。P0/P1均已归档为completed；P2现为active，TASK-P2-00～09已done。P2-10～14仍为planned且未获启动授权。产品API与Production Runbook正文尚未形成并继续由相应索引登记。
+本清单列出当前仓库已经实际存在的Markdown文档。P0/P1均已归档为completed；P2现为active，TASK-P2-00～09已done，TASK-P2-10已获授权并为in_progress。P2-11～14仍为planned且未获启动授权。产品API与Production Runbook正文尚未形成并继续由相应索引登记。
 
 | Path | Doc ID | Status | Title |
 |---|---|---|---|
@@ -151,7 +151,7 @@ registry_version: 1.0.0
 | [tasks/P2/TASK-P2-07-execution-facts-and-hard-lock-model.md](../tasks/P2/TASK-P2-07-execution-facts-and-hard-lock-model.md) | TASK-P2-07 | done | Execution Facts and Hard Lock Model |
 | [tasks/P2/TASK-P2-08-delivery-objective-and-global-strategy.md](../tasks/P2/TASK-P2-08-delivery-objective-and-global-strategy.md) | TASK-P2-08 | done | Delivery Objective and Global Strategy |
 | [tasks/P2/TASK-P2-09-golden-scenario-property-integration.md](../tasks/P2/TASK-P2-09-golden-scenario-property-integration.md) | TASK-P2-09 | done | Golden Scenario and Property Integration |
-| [tasks/P2/TASK-P2-10-reference-schedulers.md](../tasks/P2/TASK-P2-10-reference-schedulers.md) | TASK-P2-10 | planned | Reference Schedulers |
+| [tasks/P2/TASK-P2-10-reference-schedulers.md](../tasks/P2/TASK-P2-10-reference-schedulers.md) | TASK-P2-10 | in_progress | Reference Schedulers |
 | [tasks/P2/TASK-P2-11-kpi-solver-report-and-export-closure.md](../tasks/P2/TASK-P2-11-kpi-solver-report-and-export-closure.md) | TASK-P2-11 | planned | KPI SolverReport and Export Closure |
 | [tasks/P2/TASK-P2-12-benchmark-runner-xs-s-m.md](../tasks/P2/TASK-P2-12-benchmark-runner-xs-s-m.md) | TASK-P2-12 | planned | BenchmarkRunner and XS S M Profiles |
 | [tasks/P2/TASK-P2-13-p2-vertical-slice-gate-evidence.md](../tasks/P2/TASK-P2-13-p2-vertical-slice-gate-evidence.md) | TASK-P2-13 | planned | P2 Vertical Slice Gate Evidence |
@@ -222,3 +222,5 @@ TASK-P2-09启动不新增、删除或重命名`docs/**/*.md`路径，inventory�
 TASK-P2-09本地实现仍未新增、删除或重命名`docs/**/*.md`；inventory继续覆盖142份文档。两份Golden和matrix calculation notes位于`fixtures/**`，由asset/manifest hash与SIM-ASSUMPTION-011治理；Python/tests/workflow和ignored JSON不进入inventory。Registry format version及30个trace roots、36个Test IDs、15个OPEN、11个risks、37张Task卡不变；SIM assumptions由10增至11且全部`ACTIVE`。
 
 Implementation artifact `9432982306`已复现142-doc inventory与58 committed/0 working paths、7 rows、19 checks、0 issues，TASK-P2-09=`done`。没有新增、删除或重命名正式Markdown；P2-10～14保持`planned`，inventory与registry版本不变。
+
+TASK-P2-10启动不新增、删除或重命名`docs/**/*.md`路径，inventory继续完整覆盖142份文档；只将已获2026-08-21明确授权的该Task同步为`in_progress`。新增baseline Python/tests/workflow和ignored `reference-scheduler-report.v1`/Task JSON不是正式Markdown inventory条目；P2-11～14保持`planned`，registry format version不变。

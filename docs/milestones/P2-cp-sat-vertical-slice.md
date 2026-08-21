@@ -33,7 +33,7 @@ P1 Exit Gate=`READY`且blocking gaps为空；用户于2026-08-20明确批准P1�
 | 7 | TASK-P2-07 | C-007/008 execution facts/HARD lock | P2-06 | `done` |
 | 8 | TASK-P2-08 | OBJ-001 Delivery与GlobalCpSatStrategy | P2-02/05/06/07 | `done` |
 | 9 | TASK-P2-09 | Golden/scenario/property/mutation integration | P2-04～08 | `done` |
-| 10 | TASK-P2-10 | 五个Reference Schedulers | P2-01/02/04 | `planned` |
+| 10 | TASK-P2-10 | 五个Reference Schedulers | P2-01/02/04 | `in_progress` |
 | 11 | TASK-P2-11 | KPI/SolverReport/internal Export closure | P2-08/09 | `planned` |
 | 12 | TASK-P2-12 | BenchmarkRunner与XS/S/M profiles | P2-08～11 | `planned` |
 | 13 | TASK-P2-13 | 完整vertical-slice Gate report与CI evidence | P2-01～12 | `planned` |
@@ -68,7 +68,7 @@ P2-03与P2-04在合同固定后可并行准备，但P2-05必须同时等待Backe
 
 ## Current execution boundary
 
-TASK-P2-00～09均已由local/exact provider闭环为`done`。P2-03形成exact Solver dependency与Backend engineering foundation，P2-04形成formal independent Validator，P2-05～07形成完整C-001～C-011 hard model，P2-08形成唯一OBJ-001与Global Strategy，P2-09形成七类correctness integration。P2保持`active`，P2-10～14未获授权且不进入P3。
+TASK-P2-00～09均已由local/exact provider闭环为`done`。P2-03形成exact Solver dependency与Backend engineering foundation，P2-04形成formal independent Validator，P2-05～07形成完整C-001～C-011 hard model，P2-08形成唯一OBJ-001与Global Strategy，P2-09形成七类correctness integration。P2保持`active`；TASK-P2-10已获授权并为`in_progress`，P2-11～14未获授权且不进入P3。
 
 P2-02已形成global schema set`2.4.0`、PlanningPolicy/SolveLimits/PlanningSolution/SolverReport v1、七种status与pure fingerprint/precheck/CI report。P2-03未修改这些合同字节；empty/model-invalid smoke不构成业务可行性或candidate。TASK-P2-04随后以clean/provider-verified `4c66dce3b919a53816005c4aebf4983db19a6108`启动并固定P0/P2合同与fixture hashes；TASK-P2-04～09现均已完成，P2-10～14仍为`planned`且未获启动授权。
 
@@ -99,3 +99,5 @@ Implementation `b1ec83ed96120357ecadd41d3f520181838f17c6`的run `32438785162` / 
 TASK-P2-09本地已形成2个手算Golden、5个feature matrix、7次正式pipeline Solver/Validator PASS、7次row-order/fresh Validator property与11个C-ID exact mutation；45 focused、427 full、machine 8/8、全部历史reports、治理58 paths/7 rows/19 checks/0 issues、Compose/build/immutable均PASS。
 
 Implementation `20e49c92306128b47313059fabe31534814dbe3d`的run `32442651322` / required job `96656224252` / artifact `9432982306`均success；artifact digest=`sha256:c736a2f029f119850f8a0c9b40b0dbbd0898383f10ddbc798f7182ff5ec90e09`并精确复现correctness 8/8、16/16 reports及58 committed/0 working paths、7 rows、19 checks、0 issues。因此TASK-P2-09=`done`；Milestone保持`active`，P2-10～14和P3不自动启动。
+
+用户于2026-08-21明确授权TASK-P2-10；clean/provider-verified启动基线为`0e4f6630412889254a7bef41f487c24dc274ca9c`，run `32443067388` / required job `96657446617` / artifact `9433118755`精确success。TASK-P2-10只形成五个non-production reference algorithms、deterministic tie-break、完整candidate/明确heuristic failure及相同Validator/KPI machine evidence；P2-11～14、BenchmarkRunner/XS-S-M、Production与P3不自动启动。

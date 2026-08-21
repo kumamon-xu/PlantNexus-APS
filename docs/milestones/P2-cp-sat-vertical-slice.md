@@ -32,7 +32,7 @@ P1 Exit Gate=`READY`且blocking gaps为空；用户于2026-08-20明确批准P1�
 | 6 | TASK-P2-06 | C-002/005/006/009 temporal/calendar/material | P2-05 | `done` |
 | 7 | TASK-P2-07 | C-007/008 execution facts/HARD lock | P2-06 | `done` |
 | 8 | TASK-P2-08 | OBJ-001 Delivery与GlobalCpSatStrategy | P2-02/05/06/07 | `done` |
-| 9 | TASK-P2-09 | Golden/scenario/property/mutation integration | P2-04～08 | `planned` |
+| 9 | TASK-P2-09 | Golden/scenario/property/mutation integration | P2-04～08 | `in_progress` |
 | 10 | TASK-P2-10 | 五个Reference Schedulers | P2-01/02/04 | `planned` |
 | 11 | TASK-P2-11 | KPI/SolverReport/internal Export closure | P2-08/09 | `planned` |
 | 12 | TASK-P2-12 | BenchmarkRunner与XS/S/M profiles | P2-08～11 | `planned` |
@@ -93,3 +93,5 @@ Implementation `5ab65f36d532fd8786eb7ecad3cce406f4d9fb70`的run `32435395744` / 
 TASK-P2-08本地已形成explicit Simulation-only Delivery Policy/SolveLimits、priority-weighted tardiness seconds、single-call GlobalCpSatStrategy、诚实七状态/objective/bound/gap/report与mandatory formal Validator gate。Focused=`70 passed`、full=`395 passed`、Ruff/Pyright=0、objective/strategy machine=`7/7 PASS`，全部历史machine、治理52 paths/8 rows/19 checks/0 issues、Compose/build/immutable均PASS；Schema/contracts、Problem/Validator/C-ID/dependency/lock无变化。Exact provider闭环前TASK-P2-08仍为`in_progress`，Milestone保持`active`且不启动P2-09。
 
 Implementation `b1ec83ed96120357ecadd41d3f520181838f17c6`的run `32438785162` / required job `96645152864` / artifact `9431673977`均success；artifact digest=`sha256:843c036ffa3e133a9bceee1ca3b3320ce42a790cc955f01e94acab135f8fab5d`并精确复现objective/strategy 7/7与52 committed/0 working paths、8 rows、19 checks、0 issues。因此TASK-P2-08=`done`；P2 Milestone保持`active`，P2-09～14和P3不自动启动。
+
+用户于2026-08-21明确授权TASK-P2-09；启动基线`15c298f343a47db2a922544944ff5e02e4ca72d9`的run `32439301758` / required job `96646617379` / artifact `9431840946`均success且working tree clean。新assembler/catalog/manifest版本、七个Scenario及P0/P1 immutable asset digest已冻结；本Task只形成correctness integration，P2-10～14和P3不自动启动。

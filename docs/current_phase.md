@@ -54,7 +54,7 @@ P2-02把global schema set additive提升到`2.4.0`，新增四个互相离线解
 
 ## 当前禁止
 
-- 未经用户另行明确授权启动任何P2-09～14实现；TASK-P2-08已关闭，不再扩展其OBJ-001/Global Strategy范围；
+- TASK-P2-09已获用户明确授权并进入`in_progress`；未经另行授权不得启动P2-10～14，TASK-P2-08已关闭且不再扩展其OBJ-001/Global Strategy范围；
 - 修改Task允许范围外文件、预填PASS/provider evidence或跳过独立Validator；
 - 实现C-012～C-018、OBJ-002 Stability、动态Replan、ExecutionSimulator、P3 Workspace/审批/发布状态；
 - 把UNKNOWN写成INFEASIBLE、FEASIBLE写成OPTIMAL，或以hint代替Execution Fact/HARD lock；
@@ -147,3 +147,9 @@ Implementation `5ab65f36d532fd8786eb7ecad3cce406f4d9fb70`的GitHub run `32435395
 ## TASK-P2-08 执行结果
 
 Implementation `b1ec83ed96120357ecadd41d3f520181838f17c6`的GitHub run `32438785162` / required `validate` job/check `96645152864`（app `15368`）全部success；artifact `9431673977`未过期，digest=`sha256:843c036ffa3e133a9bceee1ca3b3320ce42a790cc955f01e94acab135f8fab5d`、expiry=`2026-11-19T02:08:20Z`。下载复核确认14份validation report全部PASS，objective/strategy为7/7，Task report为52 committed/0 working paths、8 rows、19 checks、0 issues且均绑定同一SHA。因此TASK-P2-08=`done`；current phase保持P2，P2-09～14未获授权且不会自动启动，P3仍禁止。
+
+## TASK-P2-09 启动边界
+
+用户于2026-08-21明确授权执行TASK-P2-09。启动复核确认`main=origin/main=15c298f343a47db2a922544944ff5e02e4ca72d9`、working tree clean，P2-08 implementation位于祖先链；该SHA的run `32439301758` / required `validate` job `96646617379`（app `15368`）/ artifact `9431840946`均精确success，artifact digest=`sha256:b7de66a574d81ce959bbaf290b3b0d80e67fdb72460e8d4a1cf2989d219f6974`、expiry=`2026-11-19T02:16:54Z`。Diff base据此冻结；P0/P1三组既有fixture逐文件清单摘要固定为`sha256:cab42c498ad74607d8e7bb172b6daf3f320626eb0e08b2d155e1b31cb8b45df4`。
+
+本Task只新增Golden JSSP/FJSP及Cross Workshop、Calendar、Material Delay、Running、Hard Lock七类`1.0.0` correctness assets，使用`PLANTNEXUS-P2-CORRECTNESS-ASSEMBLER@1.0.0`逐例走Raw Staging→Normalization/Import v2→Data Validation→Expansion→Snapshot v2→Problem v2→approved OBJ-001 Global Strategy→formal Validator，并形成formula-free C-001～C-011 mutations、deterministic/property replay和CI machine report。Scenario/Profile published Schema、Planning/Application/Generator、Problem/Solver/Validator/C-ID/Objective、dependency/lock、Benchmark/Reference/Export、DB/API/Worker和P3+均冻结；P2-10～14未启动。

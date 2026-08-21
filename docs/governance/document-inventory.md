@@ -150,7 +150,7 @@ registry_version: 1.0.0
 | [tasks/P2/TASK-P2-06-cp-sat-temporal-calendar-material-model.md](../tasks/P2/TASK-P2-06-cp-sat-temporal-calendar-material-model.md) | TASK-P2-06 | done | CP-SAT Temporal Calendar and Material Model |
 | [tasks/P2/TASK-P2-07-execution-facts-and-hard-lock-model.md](../tasks/P2/TASK-P2-07-execution-facts-and-hard-lock-model.md) | TASK-P2-07 | done | Execution Facts and Hard Lock Model |
 | [tasks/P2/TASK-P2-08-delivery-objective-and-global-strategy.md](../tasks/P2/TASK-P2-08-delivery-objective-and-global-strategy.md) | TASK-P2-08 | done | Delivery Objective and Global Strategy |
-| [tasks/P2/TASK-P2-09-golden-scenario-property-integration.md](../tasks/P2/TASK-P2-09-golden-scenario-property-integration.md) | TASK-P2-09 | planned | Golden Scenario and Property Integration |
+| [tasks/P2/TASK-P2-09-golden-scenario-property-integration.md](../tasks/P2/TASK-P2-09-golden-scenario-property-integration.md) | TASK-P2-09 | in_progress | Golden Scenario and Property Integration |
 | [tasks/P2/TASK-P2-10-reference-schedulers.md](../tasks/P2/TASK-P2-10-reference-schedulers.md) | TASK-P2-10 | planned | Reference Schedulers |
 | [tasks/P2/TASK-P2-11-kpi-solver-report-and-export-closure.md](../tasks/P2/TASK-P2-11-kpi-solver-report-and-export-closure.md) | TASK-P2-11 | planned | KPI SolverReport and Export Closure |
 | [tasks/P2/TASK-P2-12-benchmark-runner-xs-s-m.md](../tasks/P2/TASK-P2-12-benchmark-runner-xs-s-m.md) | TASK-P2-12 | planned | BenchmarkRunner and XS S M Profiles |
@@ -216,3 +216,5 @@ TASK-P2-08启动不新增、删除或重命名Markdown路径，inventory继续�
 TASK-P2-08本地实现继续不新增、删除或重命名Markdown路径；full治理确认inventory完整覆盖142份`docs/**/*.md`，Task range为52 paths/8 rows/19 checks/0 issues。新增Policy/Strategy/objective/check/tests与ignored JSON不属于inventory；现有文档只同步OBJ-001/Global Strategy local formed、exact provider pending及P2-09～14未授权边界。Provider关闭不会改变inventory/registry format version。
 
 Implementation artifact `9431673977`已复现142-doc inventory与52 committed/0 working paths、8 rows、19 checks、0 issues，TASK-P2-08=`done`。没有新增、删除或重命名Markdown；P2-09～14保持`planned`，inventory与registry版本不变。
+
+TASK-P2-09启动不新增、删除或重命名`docs/**/*.md`路径，inventory继续完整覆盖142份文档；只将已获2026-08-21明确授权的该Task同步为`in_progress`。新fixture calculation notes位于`fixtures/**`并由asset manifest/hash治理，不属于本inventory；新增Python/tests与ignored machine JSON同样不是正式Markdown inventory条目。P2-10～14保持`planned`。

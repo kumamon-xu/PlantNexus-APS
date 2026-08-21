@@ -1,12 +1,12 @@
 ---
 doc_id: TASK-P2-09
 title: Golden Scenario and Property Integration
-status: planned
+status: in_progress
 spec_version: 0.3.0
 phase: P2
 normative: true
 source_sections: [43, 44, 45, 46, 56, 75, 86, 87]
-last_reviewed: 2026-08-20
+last_reviewed: 2026-08-21
 ---
 
 # TASK-P2-09 — Golden Scenario and Property Integration
@@ -25,11 +25,11 @@ Goal: 建立正式P2 correctness场景集，覆盖Golden JSSP/FJSP、Cross Works
 
 Inputs: P0/P1 assets、complete P2 pipeline、Scenario contracts、C-001～C-011、OBJ-001、existing mutation set。
 
-Diff base: set only when this Task enters in_progress; must be the immediate full 40-character HEAD
+Diff base: 15c298f343a47db2a922544944ff5e02e4ca72d9
 
-Files allowed to change: `fixtures/deterministic/P2-GOLDEN-JSSP/**`、`fixtures/deterministic/P2-GOLDEN-FJSP/**`、`fixtures/synthetic/P2-CORRECTNESS-MATRIX/**`、`backend/app/simulation/scenarios/p2_correctness.py`、`backend/tests/golden/test_p2_golden_solver.py`、`backend/tests/simulation/test_p2_scenario_matrix.py`、`backend/tests/property/test_p2_solver_properties.py`、`backend/tests/validation/test_p2_solver_mutations.py`及`Documents to update`；所有实际新增路径/asset versions在进入in_progress前展开为精确清单。
+Files allowed to change: `.github/workflows/ci.yml`、`backend/app/simulation/scenarios/__init__.py`、`backend/app/simulation/scenarios/p2_correctness.py`、`backend/tests/golden/test_p2_golden_solver.py`、`backend/tests/simulation/test_p2_scenario_matrix.py`、`backend/tests/property/test_p2_solver_properties.py`、`backend/tests/validation/test_p2_solver_mutations.py`、`backend/tests/integration/test_ci_contract.py`、`fixtures/deterministic/P2-GOLDEN-JSSP/factory-profile.json`、`fixtures/deterministic/P2-GOLDEN-JSSP/scenario-spec.json`、`fixtures/deterministic/P2-GOLDEN-JSSP/scenario-blueprint.json`、`fixtures/deterministic/P2-GOLDEN-JSSP/correctness-manifest.json`、`fixtures/deterministic/P2-GOLDEN-JSSP/expected-outcome.json`、`fixtures/deterministic/P2-GOLDEN-JSSP/calculation-note.md`、`fixtures/deterministic/P2-GOLDEN-FJSP/factory-profile.json`、`fixtures/deterministic/P2-GOLDEN-FJSP/scenario-spec.json`、`fixtures/deterministic/P2-GOLDEN-FJSP/scenario-blueprint.json`、`fixtures/deterministic/P2-GOLDEN-FJSP/correctness-manifest.json`、`fixtures/deterministic/P2-GOLDEN-FJSP/expected-outcome.json`、`fixtures/deterministic/P2-GOLDEN-FJSP/calculation-note.md`、`fixtures/synthetic/P2-CORRECTNESS-MATRIX/factory-profile.json`、`fixtures/synthetic/P2-CORRECTNESS-MATRIX/scenario-catalog.json`、`fixtures/synthetic/P2-CORRECTNESS-MATRIX/scenario-blueprints.json`、`fixtures/synthetic/P2-CORRECTNESS-MATRIX/calculation-note.md`及`Documents to update`；以上为进入`in_progress`前冻结的全部实际新增路径。
 
-Files forbidden to change: P0/P1 immutable asset bytes/hashes、production data、XS/S/M performance profiles、Reference Scheduler/Export/CI Gate、Solver constraint语义、P3+。
+Files forbidden to change: `fixtures/deterministic/SIM-MINIMAL-001/**`、`fixtures/infeasible/SIM-MINIMAL-001-MUTATIONS/**`、`fixtures/synthetic/SIM-P1-INGRESS-001/**`及其他P0/P1 immutable asset bytes/hashes、`schemas/**`、`backend/app/planning/**`、`backend/app/application/**`、`backend/app/simulation/generators/**`、`pyproject.toml`、`uv.lock`、migration、production data、`benchmarks/**`与XS/S/M performance profiles、Reference Scheduler/Export、Solver/Validator/Constraint/Objective语义、DB/API/Worker、P3+。
 
 Implementation steps: 人工计算JSSP/FJSP optimum/allowed outcomes；创建六类versioned scenarios/manifests；走正式Import→Snapshot→Problem；运行Strategy→Validator；构造formula-free mutations/property reordering；固定hash与machine report。
 
@@ -37,11 +37,11 @@ Outputs: versioned P2 correctness catalog、Golden calculations、solver/validat
 
 Documentation impact: required
 
-Documents to update: `docs/quality/fixtures-and-golden-tests.md`、`docs/quality/validator-mutation-tests.md`、`docs/quality/property-tests.md`、`docs/quality/test-strategy-and-matrix.md`、`docs/simulation/scenario-library-and-matrix.md`、`docs/simulation/scenario-spec-and-provenance.md`、`docs/simulation/performance-gates.md`、`docs/architecture/provenance-and-versioning.md`、`docs/governance/requirements-register.md`、`docs/governance/nfr-and-engineering-register.md`、`docs/governance/traceability-rules.md`、`docs/governance/traceability-matrix.md`、`docs/governance/prod-open-register.md`、`docs/governance/sim-assumption-register.md`、`docs/governance/risk-register.md`、`docs/governance/change-impact-matrix.md`、`docs/governance/document-inventory.md`、`docs/quality/documentation-consistency-checks.md`、`docs/tasks/TASK_TEMPLATE.md`、本Task卡。
+Documents to update: `README.md`、`docs/README.md`、`docs/current_phase.md`、`docs/milestones/README.md`、`docs/milestones/P2-cp-sat-vertical-slice.md`、`docs/tasks/README.md`、`docs/tasks/TASK_TEMPLATE.md`、`docs/architecture/configuration-environments-and-isolation.md`、`docs/architecture/module-boundaries.md`、`docs/architecture/provenance-and-versioning.md`、`docs/architecture/repository-layout.md`、`docs/architecture/simulation-first-dual-channel.md`、`docs/architecture/technology-stack.md`、`docs/quality/fixtures-and-golden-tests.md`、`docs/quality/validator-mutation-tests.md`、`docs/quality/property-tests.md`、`docs/quality/test-strategy-and-matrix.md`、`docs/quality/ci-gates-and-definition-of-done.md`、`docs/quality/documentation-consistency-checks.md`、`docs/simulation/scenario-library-and-matrix.md`、`docs/simulation/scenario-spec-and-provenance.md`、`docs/simulation/performance-gates.md`、`docs/operations/README.md`、`docs/governance/requirements-register.md`、`docs/governance/nfr-and-engineering-register.md`、`docs/governance/traceability-rules.md`、`docs/governance/traceability-matrix.md`、`docs/governance/prod-open-register.md`、`docs/governance/sim-assumption-register.md`、`docs/governance/risk-register.md`、`docs/governance/change-impact-matrix.md`、`docs/governance/document-inventory.md`、`docs/adr/README.md`、本Task卡。
 
 Documentation impact rationale: Gate correctness assets必须可手算、版本化、重放并与性能profile/Production数据明确隔离。
 
-Change-impact matrix rows reviewed: `IMPACT-FIXTURE`、`IMPACT-SIM-SCENARIO`、`IMPACT-TESTS`、`IMPACT-GOVERNANCE-REGISTRY`、`IMPACT-DOCS`
+Change-impact matrix rows reviewed: `IMPACT-PHASE`、`IMPACT-DOCS`
 
 Traceability updates: REQ-004/005/009/012→TASK-P2-09→全部C-ID/OBJ-001→TEST-GOLDEN-JSSP/FJSP、CALENDAR/MATERIAL/RUNNING/CROSS-WORKSHOP/INF-LOCK/PROPERTY/VALIDATOR-MUTATION/SCENARIO-REPLAY→versioned assets/reports。
 
@@ -61,7 +61,7 @@ Benchmark impact: correctness only；可记录运行诊断但不成为XS/S/M/Pro
 
 Simulation scenarios: Golden JSSP/FJSP + Cross Workshop + Calendar + Material Delay + Running + Hard Lock，均固定ID/version/seed/policy/expected behavior。
 
-Acceptance commands: `uv run pytest -q backend/tests/golden/test_p2_golden_solver.py backend/tests/simulation/test_p2_scenario_matrix.py backend/tests/property/test_p2_solver_properties.py backend/tests/validation/test_p2_solver_mutations.py`；`uv run ruff check .`；`uv run pyright backend/app backend/tests`；`uv run python scripts/check_docs.py`；`uv run python scripts/check_docs.py --task docs/tasks/P2/TASK-P2-09-golden-scenario-property-integration.md --check-diff --report build/traceability/TASK-P2-09-report.json`；`git diff --check`。
+Acceptance commands: `uv run pytest -q backend/tests/golden/test_p2_golden_solver.py backend/tests/simulation/test_p2_scenario_matrix.py backend/tests/property/test_p2_solver_properties.py backend/tests/validation/test_p2_solver_mutations.py backend/tests/integration/test_ci_contract.py`；`uv run pytest -q backend/tests/unit backend/tests/contract backend/tests/simulation backend/tests/golden backend/tests/validation backend/tests/integration backend/tests/property`；`uv run python -m app.simulation.scenarios.p2_correctness --root . --report build/validation/TASK-P2-09-correctness.json`及全部既有P2/P1/P0 machine reports；`uv run ruff check .`；`uv run pyright backend/app backend/tests`；`docker compose --env-file .env.example config --quiet`；`uv build`；`uv run python scripts/check_docs.py`；`uv run python scripts/check_docs.py --task docs/tasks/P2/TASK-P2-09-golden-scenario-property-integration.md --check-diff --report build/traceability/TASK-P2-09-report.json`；`git diff --check`；以Diff base核验Schema、Planning/Application/Generator、Solver/Validator/C-ID/Objective、dependency/lock、P0/P1 assets、Benchmark、migration与P3+禁止路径无差异。
 
 Artifacts: committed versioned assets/calculation notes、correctness replay/mutation/property reports和Task report。
 
@@ -76,3 +76,11 @@ PROD_OPEN: OPEN-001～015状态不因synthetic correctness关闭。
 SIM_ASSUMPTIONS: 每个非显式输入值引用active/versioned assumption；变化必须升asset/generator/policy version。
 
 Rollback: 新asset不可原地改写；错误使用新version/superseding manifest；失败evidence保留，Solver回退需重跑全catalog。
+
+## Activation evidence — 2026-08-21
+
+用户明确授权执行TASK-P2-09。启动时`main=origin/main=15c298f343a47db2a922544944ff5e02e4ca72d9`且working tree clean；P2-08 implementation `b1ec83ed96120357ecadd41d3f520181838f17c6`为该HEAD祖先。基线push run `32439301758`、required `validate` job/check `96646617379`（GitHub Actions app `15368`）均`completed/success`；artifact `9431840946`未过期，digest=`sha256:b7de66a574d81ce959bbaf290b3b0d80e67fdb72460e8d4a1cf2989d219f6974`、expiry=`2026-11-19T02:16:54Z`。因此P2-04～08依赖、formal Validator、完整C-001～C-011与OBJ-001启动链一致，Diff base冻结为上述HEAD。
+
+既有`SIM-MINIMAL-001`、`SIM-MINIMAL-001-MUTATIONS`与`SIM-P1-INGRESS-001`共15个文件的逐路径SHA-256已按repository-relative path排序；`UTF-8(path + space + digest)`逐行以LF连接后的清单摘要固定为`sha256:cab42c498ad74607d8e7bb172b6daf3f320626eb0e08b2d155e1b31cb8b45df4`。同时冻结Scenario/Profile/Manifest Schema=`79c0ee97…5f10`/`391d5b02…ff50`/`67ba4835…07ef`、Problem v2 Schema=`e6e4a984…87c8`、Solution Schema=`4344468e…df4`、rule sheet=`83fc3663…1e2`、Problem builder/hash=`c96a55a8…f291`/`ec2b98ed…76b4e`、Global Strategy=`c3c5f057…4133`、formal Validator=`e120cc65…8d9f`、Simulation policy=`437e4876…b558`、P1 generator=`44c9cf4b…c370`及`uv.lock=8b13617f…7a82`。版本边界固定为`planning-problem-builder.v2`、`global-cp-sat-strategy.v1`、`cp-sat-backend.v1`、OR-Tools `9.15.6755`、`constraint-rule-sheet.v1`、`objective-policy.v1`及approved Simulation Delivery Policy `POLICY-P2-SIM-DELIVERY-OBJ001-001@1.0.0`。
+
+启动前scope review确认原卡未展开fixture-local blueprint/catalog/manifest实际路径，也遗漏Scenario package export、correctness machine CLI、CI workflow/integration contract及Task lifecycle/Impact Rule必审文档；故在任何新asset或实现文件产生前先冻结上述allow-list。新证据合同固定为`p2-correctness-blueprint.v1`、`p2-correctness-catalog.v1`、`p2-correctness-manifest.v1`与assembler `PLANTNEXUS-P2-CORRECTNESS-ASSEMBLER@1.0.0`；七个Scenario分别为`P2-GOLDEN-JSSP`、`P2-GOLDEN-FJSP`、`P2-CROSS-WORKSHOP`、`P2-CALENDAR`、`P2-MATERIAL-DELAY`、`P2-RUNNING`、`P2-HARD-LOCK`，asset/profile version均固定`1.0.0`。它们是fixture-local evidence contract，不修改发布Schema；正式链必须逐例走Raw Staging→Normalization/Import v2→Data Validation→Expansion→Snapshot v2→Problem v2→Global Strategy→formal Validator。当前activation-only差异只命中`IMPACT-PHASE`/`IMPACT-DOCS`；实现完成时按完整Diff base range复算上述七行Impact Rule。P2-10～14、P3与性能/Production范围均未启动。

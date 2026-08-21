@@ -69,7 +69,7 @@ last_reviewed: 2026-08-21
 
 ## 当前范围
 
-当前阶段为P2。P1 Milestone为`completed`，P2为`active`；TASK-P2-00～08均已闭环为`done`。正式Problem/Solution Validator独立重算C-001～C-011，P2-05～07 Solver已形成全部hard domain，P2-08的OBJ-001/Global Strategy也已有exact provider证据；Benchmark、P2-09～14和P3均未启动，详见`current_phase.md`。
+当前阶段为P2。P1 Milestone为`completed`，P2为`active`；TASK-P2-00～08均已闭环为`done`，TASK-P2-09已获明确授权并为`in_progress`。正式Problem/Solution Validator独立重算C-001～C-011，P2-05～07 Solver已形成全部hard domain，P2-08的OBJ-001/Global Strategy也已有exact provider证据；P2-09仅形成correctness integration，Benchmark、P2-10～14和P3均未启动，详见`current_phase.md`。
 
 ## 仓库入口与本地检查
 
@@ -92,3 +92,5 @@ TASK-P2-05已形成C-001/003/004/010/011 core CP-SAT、完整candidate映射、f
 TASK-P2-06已把precedence/calendar/release/material/transport提升为C-002/005/006/009模型；TASK-P2-07再形成COMPLETED/RUNNING facts、HARD exact lock、SOFT metadata-only的C-007/008模型。Implementation `5ab65f36d532fd8786eb7ecad3cce406f4d9fb70`的exact provider evidence已闭环，Task=`done`；TASK-P2-08已在closure基线上启动，后续Task仍未授权。
 
 TASK-P2-08把唯一OBJ-001精确建模为priority-weighted tardiness seconds，并由GlobalCpSatStrategy以显式Simulation Policy/Limits一次调用完整Backend；所有candidate必须经formal Validator PASS。70 focused、395 full及`objective-strategy-report.v1` 7/7本地PASS，implementation `b1ec83ed96120357ecadd41d3f520181838f17c6`的run `32438785162` / job `96645152864` / artifact `9431673977`精确复现并闭环为`done`；tiny timing不得作为Benchmark或SLA。
+
+TASK-P2-09以`15c298f343a47db2a922544944ff5e02e4ca72d9`为Diff base启动。七个Scenario/Profile/assembler/policy/solver version及P0/P1 asset清单摘要已冻结；允许范围只覆盖新correctness assets、`simulation.scenarios`编排、四类测试、CI evidence和治理文档。Planning/Application/Generator、Problem/Solver/Validator语义、Schema、dependency、Benchmark与P3保持只读。

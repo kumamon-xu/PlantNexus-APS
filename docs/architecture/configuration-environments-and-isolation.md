@@ -164,3 +164,9 @@ Workflow只新增in-process reference evidence命令并写ignored JSON；未新�
 Internal package builder只接受`synthetic=true`且携带P2 correctness provenance的Snapshot；Production或缺失Scenario manifest会fail closed。它不读取环境变量、网络、数据库、queue或external storage。可选目录写入只面向调用方提供的本地路径，并在同一父目录临时构建后原子rename；该能力不注册Production route或publish target。
 
 Manifest固定`publishable=false`及所有P3状态未启动，synthetic package不得进入Production publish plane。没有新增配置项、service或secret；现有environment/data-plane隔离规则保持不变。
+
+## TASK-P2-12 benchmark environment review
+
+Benchmark profile来自versioned YAML而非环境默认；CLI只接受`xs|s|m`并经synthetic-only Profile/Scenario与Simulation Raw Staging进入正式pipeline。报告采集OS/release/machine/processor、Python、logical CPU、OR-Tools、timer、local/GitHub provider及其SHA-256 environment signature，不采集hostname、username、secret、数据库或网络地址。
+
+CI只通过非秘密变量选择XS并写ignored artifact，不新增service/port/container/migration/credential或Production route。跨环境baseline明确跳过相对性能判定；L/XL和Production capacity/SLA禁止。独立Production/Simulation DB仍未由本Task实现。

@@ -62,9 +62,9 @@ registry_version: 1.0.0
 | TEST-SCENARIO-REPLAY | Scenario/Profile/Generator/seed 重放 | P0-P2 | empty/P0 + P1 ingress + [seven versioned Solver/Validator replays](../../backend/tests/property/test_p2_solver_properties.py) with fixed hashes and row-order invariance formed |
 | TEST-SIM-ISOLATION | Synthetic/Production 隔离 | P0-P1 | generator Production/no-Planning + Raw/Snapshot plane guards + [application expected-plane/no-shortcut](../../backend/tests/integration/test_p1_common_ingress.py) formed；separate DB/API/publish guards PLANNED |
 | TEST-REFERENCE-SCHEDULER | Reference Scheduler baseline | P2 | [five algorithms / 35 complete candidates / explicit failure](../../backend/tests/unit/test_reference_schedulers.py) and [shrinkable properties](../../backend/tests/property/test_reference_scheduler_properties.py) provider-verified |
-| TEST-BENCHMARK | BenchmarkReport/profile 回归 | P2 | PLANNED |
-| TEST-PROPERTY | 合法 Problem 的通用不变量 | P2 | Problem v2/formal/Solver properties + [Reference gate/duration/due and authoritative Problem properties](../../backend/tests/property/test_reference_scheduler_properties.py) formed；XS/S/M properties PLANNED |
-| TEST-SOLVER-UPGRADE | Solver 升级 replay/status contract | P2+ | PLANNED |
+| TEST-BENCHMARK | BenchmarkReport/profile 回归 | P2 | [`test_benchmark_contract.py`](../../backend/tests/contract/test_benchmark_contract.py) + [`test_benchmark_runner.py`](../../backend/tests/integration/test_benchmark_runner.py) strict Profile/Report/Baseline、XS/S/M replay、Global/Reference/Validator/KPI、warning/threshold与CI XS artifact formed；exact provider evidence PENDING |
+| TEST-PROPERTY | 合法 Problem 的通用不变量 | P2 | Problem v2/formal/Solver properties + [Reference gate/duration/due and authoritative Problem properties](../../backend/tests/property/test_reference_scheduler_properties.py) + [generated XS/S/M formal pipeline replay](../../backend/tests/integration/test_benchmark_runner.py) formed |
+| TEST-SOLVER-UPGRADE | Solver 升级 replay/status contract | P2+ | Benchmark baseline固定Python/OR-Tools/environment signature并拒绝profile/problem/complexity drift的P2 development slice formed；实际upgrade重建新版本baseline/compatibility evidence仍PLANNED |
 
 Test ID 一经分配不得复用。链接到真实测试路径才是已形成证据；`PLANNED` 只登记合同。表结构或状态语义变化必须提升 `registry_version`。
 
@@ -77,6 +77,8 @@ TASK-P2-10不新增或复用Test ID；它把TEST-REFERENCE-SCHEDULER与TEST-PROP
 TASK-P2-11不新增或复用Test ID；它把TEST-OUTPUT、TEST-CONTRACT-001与TEST-IDEMPOTENCY的internal slice链接到两份新focused files和`p2-output-contract-report.v1`。Contract tests覆盖KPI/manifest Schema/sample、KPI v1 byte preservation、metric formulas、SolverReport freeze及mixed/Validator failures；integration覆盖same-input bytes、file/hash/count/CSV lineage、tamper/missing、synthetic provenance、exact replay/conflict与partial-write cleanup。P3 ExportJob/publish side effects和P2-12 TEST-BENCHMARK继续PLANNED，registry format version保持`1.0.0`。
 
 本地指定验收=`49 passed`、full repository=`455 passed`，其中新增task-specific测试13项；Ruff/Pyright为0问题，output machine report为8/8。首次full准确暴露3个旧global schema-set断言并在先扩allow-list后修正为`2.5.0`，其document-level版本与历史fingerprint断言保持。Implementation provider run `32454693799` / artifact `9436863185`精确复现455 tests、output 8/8、18/18 reports及58-path治理，故TASK-P2-11=`done`；TEST-BENCHMARK、P2 Gate与Production测试继续PLANNED，registry format version保持`1.0.0`。
+
+TASK-P2-12不新增或复用Test ID；它把TEST-BENCHMARK、TEST-REFERENCE-SCHEDULER、TEST-SCENARIO-REPLAY、TEST-PROPERTY和TEST-SOLVER-UPGRADE的P2 development slice链接到strict `benchmark-profile-set/report/baseline.v1`、两份新focused test及真实CI XS命令。本地指定验收=`27 passed`、full repository=`466 passed`，XS/S/M三份report均为8/8且所有Global/Reference candidate经fresh formal Validator；全部历史machine reports、Ruff/Pyright、Compose/build和治理diff均PASS。S/M由本地policy运行，required provider只运行XS；exact implementation provider仍PENDING，故TASK-P2-12保持`in_progress`。L/XL、Production SLA/capacity、P2 Gate/audit与P3继续PLANNED，registry format version保持`1.0.0`。
 
 ## 原则
 

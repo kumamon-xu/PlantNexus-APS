@@ -68,3 +68,9 @@ P2还要求重新验证所有JSON canonical bytes、package/KPI自身份、文�
 ## 写入与回滚边界
 
 纯内存package先完整验证；目录materialization只允许在目标同一父目录创建临时目录，先写payload、最后写manifest，再用同文件系统原子rename提交。已存在且exact byte-for-byte等价的目录是幂等replay；任何差异是destination conflict。I/O失败必须映射为稳定错误、清理临时目录且不得留下可解释为成功的目标目录或manifest。该机制不是ExportJob retry/persistence，也不授权外部storage或publish。
+
+## TASK-P2-12 regression boundary
+
+BenchmarkRunner对每个profile的正式replay构建并验证一次既有`p2-internal-export.v1`，报告package ID、manifest fingerprint、9个payload count和KPI version，用于证明Snapshot→validated Solution→KPI/Export链未回归。Exporter代码、manifest Schema、package bytes规则和state boundary均未修改。
+
+P2-12 BenchmarkReport是独立machine evidence，不被追加入P2-11 package；该历史profile仍明确声明`benchmark_report.json=DEFERRED_P2_12`以保持已发布manifest语义与bytes，不应被解释为P2-12未执行。把BenchmarkReport纳入可发布成果包属于新合同/Task，当前禁止。

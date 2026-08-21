@@ -1,0 +1,56 @@
+"""Versioned P2 synthetic BenchmarkRunner public boundary."""
+
+from app.simulation.benchmarks.reporting import (
+    BENCHMARK_BASELINE_VERSION,
+    BENCHMARK_GENERATOR_ID,
+    BENCHMARK_GENERATOR_VERSION,
+    BENCHMARK_REPORT_VERSION,
+    BENCHMARK_RUNNER_VERSION,
+    PROFILE_SET_VERSION,
+    THRESHOLD_POLICY_VERSION,
+    BenchmarkContractError,
+    BenchmarkContractErrorCode,
+    BenchmarkProfile,
+    BenchmarkProfileSet,
+    aggregate_samples,
+    load_baseline,
+    load_profile_set,
+    make_baseline_document,
+    validate_baseline_document,
+    validate_benchmark_report,
+)
+from app.simulation.benchmarks.runner import (
+    BenchmarkExecutionError,
+    BenchmarkExecutionErrorCode,
+    compare_scheduler_quality,
+    generate_benchmark_case,
+    run_benchmark,
+    run_benchmark_profile,
+)
+
+
+__all__ = [
+    "BENCHMARK_BASELINE_VERSION",
+    "BENCHMARK_GENERATOR_ID",
+    "BENCHMARK_GENERATOR_VERSION",
+    "BENCHMARK_REPORT_VERSION",
+    "BENCHMARK_RUNNER_VERSION",
+    "PROFILE_SET_VERSION",
+    "THRESHOLD_POLICY_VERSION",
+    "BenchmarkContractError",
+    "BenchmarkContractErrorCode",
+    "BenchmarkExecutionError",
+    "BenchmarkExecutionErrorCode",
+    "BenchmarkProfile",
+    "BenchmarkProfileSet",
+    "aggregate_samples",
+    "compare_scheduler_quality",
+    "generate_benchmark_case",
+    "load_baseline",
+    "load_profile_set",
+    "make_baseline_document",
+    "run_benchmark",
+    "run_benchmark_profile",
+    "validate_baseline_document",
+    "validate_benchmark_report",
+]

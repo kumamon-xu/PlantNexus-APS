@@ -207,3 +207,9 @@ Implementation `546292831c3bd52185687a4c646c10ae10541ae2`的GitHub push run `324
 用户于2026-08-21明确授权执行TASK-P2-12。启动复核确认`main=origin/main=58db14e8f18fb50866fb757d4c89e76fef1141f1`且working tree clean，P2-11 implementation位于祖先链；该SHA的run `32455399561` / required `validate` job/check `96691604529`（app `15368`）/ artifact `9437086153`均精确success，artifact digest=`sha256:1da721655426224cf9dae4f3ee9cc16c4fbe1433e4c601ace3aef61f32f91156`、expiry=`2026-11-19T06:41:15Z`。下载复核18/18 JSON全部PASS，P2-11 output为8/8，Task报告为58 committed/0 working paths、11 rows、19 checks、0 issues；Diff base据此冻结。
 
 本Task只形成strict internal Benchmark Profile/Report/Baseline v1、versioned deterministic XS/S/M输入、相同Problem/formal Validator/schedule KPI上的Global与五Reference比较、环境/规模/时间/质量/内存采集、local CLI与PR XS artifact。Global schema set保持`2.5.0`；Reporting只允许抽取不改变KPI v2/Export字节的公共pure calculation。P2-09 assets、P2-10算法、P2-11 exporter、Planning/Strategy/Backend/Validator语义、dependency/lock、L/XL、Production capacity/SLA、P2-13/14与P3全部冻结；current phase保持P2。
+
+## TASK-P2-12 本地实现边界
+
+`benchmark-profile-set.v1`固定XS/S/M为8/24/48 operations、3/6/8 resources、1/2/4 calendar fragments、60秒tick、显式seed与1 warm-up + 3 measured runs；三个immutable v1 baseline绑定Problem hashes `a70a0549…7b04`、`42ee217e…5bb4`、`a49ee150…26aa`。Runner对每个profile经正式source-shaped Raw→Import→Quality→Expansion→Snapshot→Problem链生成一次verified replay，再在同一Problem运行Global和五Reference；所有candidate均fresh formal PASS，并用`calculate_schedule_kpi_metrics`公共pure函数交叉KPI v2/P2-10 metric carrier。
+
+本地27项指定测试与full repository `466 passed`，Ruff/Pyright为0问题，XS/S/M三份`benchmark-report.v1`各8/8 checks且无warning，P2-11 output 8/8及全部历史machine reports保持PASS。142-doc full治理与Task diff为49 paths/7 rows/19 checks/0 issues，Compose、build、`git diff --check`和冻结禁止路径均PASS；CI已把deferred hook改为required XS并上传benchmark JSON。以上只形成development/simulation baseline，不关闭OPEN-011/012或完整Gate A；exact implementation SHA的required `validate`/artifact尚未形成，因此TASK-P2-12保持`in_progress`，P2-13/14与P3仍禁止。

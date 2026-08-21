@@ -209,3 +209,9 @@ Implementation `8ca62bbb1105a1dfae2ee2600ae7e4e62a5bef6c`的required run `324497
 只有validated synthetic KPI、真实SolverReport freeze和不可发布9-payload internal package可提升为formed。证据必须区分set version与document version、KPI/package ID与exact-byte fingerprint、PlanningSolution与ScheduleVersion、directory replay与ExportJob idempotency、formal PASS与approval、single-run telemetry与Benchmark。ChangeReport=P4、BenchmarkReport=P2-12，二者不得伪造；P3 state/persistence/publish继续PLANNED。
 
 Implementation `546292831c3bd52185687a4c646c10ae10541ae2`的required run `32454693799`与artifact `9436863185`已精确绑定并复现output 8/8、18 reports及58 committed/0 working paths、11 rows、19 checks、0 issues，因此TASK-P2-11=`done`。`uv.lock`、Planning/Strategy/Backend/Validator/Scenario/Benchmark/API/DB/Worker/P3禁止边界保持无差异；完成不自动授权P2-12。
+
+## TASK-P2-12 traceability rule application
+
+形成链为`REQ-004/005/009/012/014/015 + NFR-COR/DET/TRC/ISO/OBS/PER + ENG-ARCH/SOL/VAL/ERR/VER → TASK-P2-12 → benchmark-profile-set/report/baseline.v1 + generator/assembler → formal Raw/Import/Snapshot/Problem → Global + five References → fresh Validator + common schedule KPI → TEST-BENCHMARK/REFERENCE-SCHEDULER/SCENARIO-REPLAY/CONTRACT → XS/S/M reports + CI XS/Task/provider artifact`。
+
+只有versioned development XS/S/M、真实环境测量、immutable baseline和同Problem comparison可提升为local formed。证据必须区分correctness hard failure与warning、raw sample与median/p95、local与provider commit、同环境相对判定与跨环境ceiling、development profile与Production capacity/SLA。P2-09/10/11资产和合同保持冻结；L/XL、OPEN-011/012、P2-13/14与P3继续PLANNED。Exact provider形成前Task保持`in_progress`。

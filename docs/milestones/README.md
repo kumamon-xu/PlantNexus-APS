@@ -59,3 +59,5 @@ TASK-P2-10已通过13个Task-specific、441个full tests、Ruff/Pyright与refere
 TASK-P2-11已形成`kpi.v2`、`export-manifest.v1`与`p2-internal-export.v1`，包括9个payload的canonical bytes/hash/count/lineage、8项machine checks以及idempotent/atomic failure边界。该包明确`publishable=false`、ScheduleVersion/ExportJob=`NOT_CREATED`、ChangeReport延后P4、BenchmarkReport延后P2-12。Implementation `546292831c3bd52185687a4c646c10ae10541ae2`的run `32454693799` / required job `96689627030` / artifact `9436863185`精确success并复现18/18 reports与58-path治理证据，故Task=`done`；P2 Milestone继续`active`，P2-12不自动启动。
 
 用户于2026-08-21明确授权TASK-P2-12；Diff base `58db14e8f18fb50866fb757d4c89e76fef1141f1`的run `32455399561`、required job `96691604529`与artifact `9437086153`精确success。当前只启动versioned XS/S/M BenchmarkRunner、同Problem/Validator/KPI比较、环境/规模/性能/质量报告及CI XS artifact；L/XL、Production threshold、P2-13/14及P3不自动启动。
+
+TASK-P2-12本地实现现已对XS/S/M固定Problem完成Global+五Reference、fresh Validator、共享KPI、1+3 repetition、环境/规模/时间/质量/内存采集与immutable baseline比较；三份报告均8/8 PASS且无warning。CI XS hook已激活，但implementation exact provider evidence尚待push，因此Milestone继续`active`、Task仍`in_progress`；P2-13/14与P3不自动启动。

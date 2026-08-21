@@ -1,0 +1,73 @@
+profile_set_version: benchmark-profile-set.v1
+task_id: TASK-P2-12
+schema_set_version: 2.5.0
+runner_version: benchmark-runner.v1
+report_version: benchmark-report.v1
+threshold_policy_version: benchmark-threshold-policy.p2-development.v1
+generator:
+  generator_id: PLANTNEXUS-P2-BENCHMARK-GENERATOR
+  generator_version: 1.0.0
+assembler:
+  generator_id: PLANTNEXUS-P2-CORRECTNESS-ASSEMBLER
+  generator_version: 1.0.0
+profiles:
+  xs:
+    profile_id: P2-BENCHMARK-XS
+    profile_version: 1.0.0
+    size: XS
+    seed: 20261201
+    tick_seconds: 60
+    horizon_ticks: 180
+    workshop_count: 1
+    resource_count: 3
+    order_count: 4
+    operations_per_order: 2
+    candidate_resource_count: 2
+    calendar_fragment_count: 1
+    material_delay_every: 4
+    due_tick_base: 8
+    due_tick_stride: 2
+    max_wall_time_seconds: 3.0
+    warmup_runs: 1
+    measured_runs: 3
+    baseline_path: benchmarks/baselines/p2-xs.v1.json
+  s:
+    profile_id: P2-BENCHMARK-S
+    profile_version: 1.0.0
+    size: S
+    seed: 20261202
+    tick_seconds: 60
+    horizon_ticks: 480
+    workshop_count: 2
+    resource_count: 6
+    order_count: 8
+    operations_per_order: 3
+    candidate_resource_count: 2
+    calendar_fragment_count: 2
+    material_delay_every: 4
+    due_tick_base: 12
+    due_tick_stride: 2
+    max_wall_time_seconds: 5.0
+    warmup_runs: 1
+    measured_runs: 3
+    baseline_path: benchmarks/baselines/p2-s.v1.json
+  m:
+    profile_id: P2-BENCHMARK-M
+    profile_version: 1.0.0
+    size: M
+    seed: 20261203
+    tick_seconds: 60
+    horizon_ticks: 900
+    workshop_count: 2
+    resource_count: 8
+    order_count: 12
+    operations_per_order: 4
+    candidate_resource_count: 2
+    calendar_fragment_count: 4
+    material_delay_every: 4
+    due_tick_base: 24
+    due_tick_stride: 2
+    max_wall_time_seconds: 4.0
+    warmup_runs: 1
+    measured_runs: 3
+    baseline_path: benchmarks/baselines/p2-m.v1.json

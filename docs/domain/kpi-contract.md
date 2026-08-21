@@ -100,3 +100,9 @@ Global Strategy的真实SolverReport现记录OBJ-001 weighted tardiness seconds�
 Delivery逐Demand以其active operations的最大end tick为completion，按Problem的horizon origin/tick换算UTC与秒级tardiness，priority-weighted总和必须等于OBJ-001 stage carrier。Planning makespan为最大end tick乘tick seconds，scheduled count必须覆盖全部Problem operation，unscheduled为零。Resource available seconds按horizon减去合并后的不可用calendar half-open区间，busy seconds来自assignment interval；分母为零时utilization严格为`null`，否则按12位小数稳定舍入。
 
 当前没有base ScheduleVersion，Stability必须为`NOT_APPLICABLE_NO_BASE_SCHEDULE`且四个变化指标均为`null`；不得伪造ChangeReport或把zero当稳定性。Solver部分复制已校验的objective/bound/gap、timing/model/memory carrier，不把tiny single-run值解释为Benchmark或SLA。KPI ID与fingerprint绑定canonical内容，输入对象不被修改。OPEN-005/006/012仍OPEN，P2-12负责XS/S/M。
+
+## TASK-P2-12 common schedule KPI boundary
+
+`calculate_schedule_kpi_metrics(problem, assignments)`现把既有delivery/planning/resource公式抽为无I/O、无Solver trust、无输入修改的public pure calculation；`build_kpi_v2`直接消费该结果，因此KPI v2 document、ID、Schema和Export语义不变。Benchmark Global行同时要求完整KPI v2与该projection逐字段一致；五个Reference行用同一函数重算并与P2-10 metric carrier核对。
+
+共享口径只包含schedule-level weighted tardiness、makespan、counts、on-time与resource utilization；Solver build/bound/gap/timing/memory仍来自真实SolverReport，Reference runtime由其versioned carrier记录。该抽取不授权Reference写KPI v2、不改变OBJ-001或Production weight，P2-11 package回归8/8保持PASS。

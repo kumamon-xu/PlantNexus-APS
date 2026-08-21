@@ -75,3 +75,5 @@ TASK-P2-10实现已形成五个`reference-*.v1` algorithms、SIM-ASSUMPTION-012�
 TASK-P2-11已形成additive schema set`2.5.0`、validated-solution KPI/SolverReport、9-payload不可发布internal package及8/8 machine evidence；same-input bytes、cross-file lineage、tamper/missing/mixed-run、exact replay和partial-write cleanup均有测试。Implementation `546292831c3bd52185687a4c646c10ae10541ae2`的run `32454693799` / required job `96689627030` / artifact `9436863185`精确复现18/18 reports及58 committed/0 working paths、11 rows、19 checks、0 issues，故索引=`done`。P2-12～14保持`planned`且未获授权。
 
 用户于2026-08-21授权TASK-P2-12。启动门确认P2-08～11均`done`，closure HEAD `58db14e8f18fb50866fb757d4c89e76fef1141f1`的required `validate` run `32455399561` / job `96691604529` / artifact `9437086153`一致；当前只允许XS/S/M BenchmarkRunner/profile/baseline、共享schedule KPI pure calculation、测试/CI evidence和治理文档，P2-13/14不会自动启动。
+
+TASK-P2-12本地实现已形成严格XS/S/M profile/baseline、同Problem的Global/五Reference比较、formal Validator/共享KPI、warm-up/repetition/percentile、environment capture、CLI和CI XS artifact路径；27项指定测试及三份8/8报告均PASS。Implementation provider evidence形成前索引继续为`in_progress`；P2-13/14不自动启动。

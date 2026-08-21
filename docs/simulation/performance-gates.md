@@ -50,3 +50,9 @@ CI新增该correctness report只为防止objective/strategy/status回归；任�
 ## TASK-P2-09 performance boundary
 
 七个新Scenario均标记`XS`只是表达可手算correctness，报告虽透传model size/timing/memory，但不执行warm-up、repeat、percentile、Reference comparison或`benchmarks/profiles.yaml`。CI中的`ci-p2-correctness.json`只是一致性Gate，不能形成Gate A/B/C baseline、threshold、capacity或SLA；P2-12与OPEN-011/012保持不变。
+
+## TASK-P2-12 Gate A scale slice
+
+XS/S/M三个versioned profile现已各自在正式source→Problem链上运行Global和五Reference，并记录build/first feasible/solve/validation/total、objective/bound/gap、memory、model/Problem complexity与Validator结果。每个scheduler执行1次warm-up和3次measured repetition；本地三份`benchmark-report.v1`均8/8 PASS且无warning，CI PR slice真实执行XS。
+
+这只关闭Gate A的XS/S/M scale-measurement子项，不替代P2-09 Golden/Cross/Calendar/Material/Running/Hard Lock evidence整合，也不形成完整Gate report。TASK-P2-13仍须把所有子项、exact provider artifact与phase trace组合后判定；TASK-P2-14才可审计。Development ceiling和same-environment factor不是Production SLA，OPEN-011/012继续OPEN。

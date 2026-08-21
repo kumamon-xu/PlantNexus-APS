@@ -29,6 +29,7 @@ uv run python -m app.planning.validation.problem_validator_check --root . --repo
 uv run python -m app.simulation.scenarios.p2_correctness --root . --report build/validation/TASK-P2-09-correctness.json
 uv run python -m app.simulation.baselines.reference_schedulers --root . --report build/validation/TASK-P2-10-reference-schedulers.json
 uv run python -m app.exporters.contract_check --root . --report build/validation/TASK-P2-11-output-contracts.json
+uv run python scripts/run_benchmark.py --profile xs --report build/benchmarks/TASK-P2-12-xs.json
 uv run python -m app.infrastructure.contract_check --root . --report build/validation/TASK-P0-08-engineering.json
 docker compose --env-file .env.example config --quiet
 uv run python scripts/check_docs.py
@@ -80,3 +81,5 @@ TASK-P2-10已形成`reference-scheduler-contracts/policy/result/report.v1`及五
 TASK-P2-11新增`kpi.v2`、`export-manifest.v1`和`p2-internal-export.v1`：所有JSON采用`canonical-json.v1`，CSV采用UTF-8/RFC 4180 LF，manifest固定9个payload的hash/bytes/rows与同一run lineage。包只承载validated PlanningSolution，显式声明`publishable=false`及P3/P4 deferred边界；原子目录写入支持exact replay并在失败时不留下成功manifest。指定验收49项、全仓455项和output machine 8/8均PASS；implementation `546292831c3bd52185687a4c646c10ae10541ae2`的required run `32454693799` / artifact `9436863185`精确复现18/18 reports与58-path治理证据，故Task=`done`。P2-12仍为`planned`且未获启动授权。
 
 用户于2026-08-21明确授权TASK-P2-12。启动门复核确认`main=origin/main=58db14e8f18fb50866fb757d4c89e76fef1141f1`，其required `validate` run `32455399561` / job `96691604529` / artifact `9437086153`精确成功并复现P2-11 closure证据。当前只允许versioned XS/S/M profile/baseline、BenchmarkRunner、共享但不改变输出的schedule KPI pure calculation、CLI/CI/test与治理文档；L/XL、Production threshold、P2-13/14及P3不会自动启动。
+
+TASK-P2-12本地实现已形成`benchmark-profile-set/report/baseline.v1`、`benchmark-runner.v1`和SIM-ASSUMPTION-013。XS/S/M分别固定8/24/48 operations，同一正式Raw→Problem链上运行Global与五个Reference，各完成1次warm-up和3次measured replay；三份报告均8/8 PASS、formal Validator与共享KPI一致，baseline comparison无warning。CI由deferred hook切换为required XS report并上传`build/benchmarks/*.json`；exact implementation provider evidence仍待push，故Task保持`in_progress`，P2-13/14与P3未启动。

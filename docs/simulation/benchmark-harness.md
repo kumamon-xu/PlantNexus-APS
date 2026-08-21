@@ -47,3 +47,11 @@ TASK-P0-05 的 ScenarioManifest v1 提供未来 report 需要引用的 Scenario/
 五个`reference-*.v1`算法及`reference-scheduler-report.v1`现已形成：七个P2-09 Problem各自产生五个完整Validator-PASS candidate，并记录weighted tardiness、makespan和single-run runtime。该报告证明Reference侧算法身份、determinism、hard-feasibility和metric carrier可用，但没有运行BenchmarkRunner，也没有把Global Strategy结果与Reference结果组成comparison row。
 
 `simulation/benchmarks/**`、`benchmarks/profiles.yaml`、warm-up/repetition/percentile/hardware environment、quality warning与threshold继续零变化，REQ-014/TEST-BENCHMARK仍`PLANNED`。TASK-P2-12必须从相同Problem、formal Validator和KPI读取本版本Reference结果；不得把P2-10 tiny correctness timings追认为XS/S/M baseline。
+
+## TASK-P2-12 BenchmarkRunner implementation
+
+`benchmark-profile-set.v1`只注册XS/S/M；每项固定Profile/Scenario/generator/assembler/version/seed、60秒tick、horizon、订单/资源/工序/候选/日历/material参数、1次warm-up、3次measured run及不可覆盖baseline路径。XS=`4 orders/3 resources/8 operations/16 options/1 fragment/180 ticks`，S=`8/6/24/48/2/480`，M=`12/8/48/96/4/900`。L/XL不被loader或CLI接受。
+
+`benchmark-report.v1`为strict exact-key internal machine contract，记录source→Problem与KPI/Export耗时、Problem/Snapshot hashes、全部复杂度指标、环境签名、Global exact solver/parameters/status/model counts、build/first/solve/validation/total raw samples/median/nearest-rank p95、objective/bound/gap/memory、五Reference的相同统计、formal Validator、共享schedule KPI、deterministic fingerprints、comparison、baseline checks和phase boundaries。任何correctness/KPI/determinism失败hard fail；Global weighted tardiness高于最佳Reference产生`BENCHMARK_WARNING`但不得篡改结果。
+
+三个`benchmark-baseline.v1`绑定固定Problem hash/complexity和一次真实Windows AMD64/Python 3.12.13/OR-Tools 9.15.6755观测。跨环境仍执行宽松development ceiling，但跳过相对性能结论；同环境才使用2.5倍diagnostic regression factor。历史v1不得覆盖，变化必须发布新版本。命令为`uv run python scripts/run_benchmark.py --profile <xs|s|m> --report <path>`；PR CI只执行XS并上传报告，Nightly S/M调度仍未创建。全部结果synthetic-only，OPEN-011/012保持OPEN。

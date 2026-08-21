@@ -216,3 +216,9 @@ Provider provenance现已形成：implementation `5ab65f36d532fd8786eb7ecad3cce4
 `kpi.v2`同时引用Snapshot ID/hash、Problem hash、PlanningSolution ID/fingerprint、ValidationReport fingerprint/status、SolverReport ID/fingerprint及ImportQualityReport ID/fingerprint，并以`planning_run_id`绑定同一运行。`export-manifest.v1`重复保存该lineage、entity counts和逐payload exact-byte SHA-256/size/row count；KPI ID、package ID和manifest fingerprint均由canonical内容确定性派生。
 
 Synthetic provenance从Snapshot与P2 correctness manifest逐字段交叉，Scenario/Profile/version/seed不允许漂移。Global schema set为`2.5.0`，但PlanningSolution/SolverReport等历史documents保持自身`2.4.0`；版本轴与content identity不得混用。Package不生成ScheduleVersion/ExportJob/publish authority，ChangeReport和BenchmarkReport只记录deferred状态。
+
+## TASK-P2-12 benchmark provenance
+
+`benchmark-report.v1`绑定`benchmark-profile-set.v1`、`benchmark-runner.v1`、generator/assembler `1.0.0`、Scenario/Profile/seed、pipeline versions、Import/Snapshot/Problem hashes、Global strategy/backend/solver/parameters、五个Reference algorithm IDs、raw measurement samples、assignment/KPI fingerprints、environment signature、baseline version/path和code commit。Local可写`uncommitted`；provider必须是exact 40字符SHA。
+
+三个`benchmark-baseline.v1`把Profile/Generator/Problem hash/complexity与一次真实环境观测固定为immutable v1；profile或观测语义变化发布新版本，不覆盖历史。Benchmark内部合同不进入global JSON Schema set，故schema set仍`2.5.0`；若未来成为外部/持久化consumer，必须另行发布Schema与compatibility plan。

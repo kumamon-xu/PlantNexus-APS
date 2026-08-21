@@ -196,3 +196,9 @@ Workflow在reference evidence后执行`python -m app.exporters.contract_check --
 Local code Gate已通过指定49项、全仓455项、Ruff/Pyright零问题、output report 8/8及全部历史machine reports；full/diff文档治理为142 docs、58 paths、11 rows、19 checks、0 issues。Compose、build、schema metadata、immutable/forbidden-path和`git diff --check`也均PASS。
 
 Implementation provider Gate已通过：SHA `546292831c3bd52185687a4c646c10ae10541ae2`、run `32454693799`、required `validate` job/check `96689627030`（app `15368`）均success；artifact `9436863185`未过期且digest=`sha256:77dfadb425f1c3f47d21494127785c81357351aeee6ecbdd4f00386516db054b`。18/18 reports、output 8/8及Task 58 committed/0 working paths、11 rows、19 checks、0 issues均绑定同一SHA；TASK-P2-11 DoD完成，不自动授权P2-12。
+
+## TASK-P2-12 Benchmark CI Gate
+
+Workflow中的deferred conditional hook已替换为不可跳过的`P2 XS BenchmarkRunner evidence`步骤：固定`PLANTNEXUS_BENCHMARK_PROFILE=xs`并写`build/benchmarks/ci-xs.json`。Artifact upload在`if: always()`下同时收集validation、traceability与benchmark JSON；integration contract禁止deferred文案、S/M进入PR步骤或遗漏baseline binding。
+
+本地Gate已通过27项指定测试、full repository `466 passed`、Ruff/Pyright 0、XS/S/M三份8/8 BenchmarkReport、P2-11 output 8/8及全部历史machine reports。Compose、build、142-doc治理与49 paths/7 rows/19 checks/0 issues的Task diff同样PASS；implementation exact provider run/artifact尚待push，所以Task DoD未关闭。CI XS是development regression，不是Production capacity/SLA或完整P2 Gate。

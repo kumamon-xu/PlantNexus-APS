@@ -165,3 +165,9 @@ PlanningProblem/Solution Schema、Backend/Strategy/Validator公式与P2-09 asset
 `app.planning.reporting`位于Planning output consumer层：只依赖solver-neutral contracts、formal Validator与Snapshot/Problem pure verification，负责冻结SolverReport和构建KPI；它不导入API/ORM/Worker或修改Backend/Strategy。`app.exporters`再单向依赖reporting并把已验证document编码成immutable package；Planning/Domain不得反向导入exporter。
 
 Exporter核心不依赖`jsonschema`或外部I/O服务；Schema validation只存在于tests和CI machine check。目录writer是有界filesystem adapter，不是ExportJob repository/publisher。该分层保持Modular Monolith与Solver-neutral边界，无需新ADR。
+
+## TASK-P2-12 benchmark boundary
+
+`app.simulation.benchmarks`位于Simulation evidence层，单向依赖versioned Profile/Scenario assembler、public Planning Strategy/Problem/Reporting、Reference Scheduler和internal Exporter。它不得被Domain/Planning/Backend/Validator反向导入，不接触API/ORM/Worker/DB/queue，也不直接导入OR-Tools；solver identity经`planning.backends.cp_sat`公共常量和SolverReport取得。
+
+Planning reporting新增的`calculate_schedule_kpi_metrics`只提取已有pure schedule公式，继续不依赖Simulation。Benchmark用它交叉Global KPI v2和Reference carrier，不复制KPI公式。该拓扑已由P2总规预留`simulation/benchmarks`模块，无新依赖或架构决策，ADR不新增。

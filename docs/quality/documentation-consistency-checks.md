@@ -318,3 +318,9 @@ Diff base固定为`41e958b771f2664b1ac50867903a30b73627878d`；完整activation/
 本Task不新增、删除或重命名`docs/**/*.md`，inventory继续为142；roots=30、Test IDs=36、OPEN=15、SIM assumptions=12、risks=11、Tasks=37，所有registry format version保持`1.0.0`。本地Task diff已覆盖58 paths、11个真实Impact rows、19项governance checks且0 issues；implementation提交后provider artifact还必须复现58 committed/0 working paths。
 
 Implementation artifact `9436863185`内`traceability-report.v1`精确绑定`546292831c3bd52185687a4c646c10ae10541ae2`与Diff base `41e958b771f2664b1ac50867903a30b73627878d`，复现58 committed/0 working paths、11 rows、19 checks、0 issues并PASS；TASK-P2-11治理Gate据此闭环为`done`。Closure提交仍须由自身exact provider复核，不在本提交预写其ID。
+
+## TASK-P2-12 governance application
+
+Diff base固定为`58db14e8f18fb50866fb757d4c89e76fef1141f1`；完整范围必须命中`IMPACT-BENCHMARK/REPORTING/TESTS/INFRA/PHASE/GOVERNANCE-REGISTRY/DOCS`。Benchmark内部合同不提升schema set；Planning/Strategy/Backend/Validator/Reference/Exporter/dependency/lock和P2-09 assets必须零差异。
+
+本Task不新增Markdown，inventory继续142；roots=30、Test IDs=36、OPEN=15、risks=11、Tasks=37，SIM assumptions=13，所有registry format version保持`1.0.0`。本地full/diff治理实际记录49 paths、七个Impact rows、19 checks和0 issues并PASS；implementation provider artifact形成前不得预写其SHA/run/artifact或关闭Task。

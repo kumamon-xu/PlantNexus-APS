@@ -130,3 +130,9 @@ Fact/lock report记录RUNNING/HARD/SOFT counts、fixed operation intervals、res
 KPI v2和冻结SolverReport保存同一validated run的objective/bound/gap、model build/first feasible/solve/validation/total、model size与memory；internal manifest固定这些payload的bytes和lineage。这只使单run输出可复验，不增加warm-up、repeat、percentile、hardware profile、Global/Reference comparison或threshold。
 
 Manifest明确`benchmark_report.json=DEFERRED_P2_12`且文件不存在，禁止以空报告或单次timing冒充Benchmark。`simulation/benchmarks/**`、`benchmarks/**`及TEST-BENCHMARK均未修改，REQ-014、OPEN-011/012和P2-12职责保持不变。
+
+## TASK-P2-12 versioned regression baseline
+
+首次正式baseline为`p2-xs/s/m.v1.json`，分别绑定Problem hash `a70a0549…7b04`、`42ee217e…5bb4`、`a49ee150…26aa`、完整complexity projection、环境签名、Global objective/bound与runtime/memory观测、五Reference quality和development ceilings。文件只允许首次创建；更新profile/generator/Problem/KPI或观测基线必须新建版本，禁止CLI原地覆盖。
+
+判定严格遵循correctness→status/feasibility→quality→runtime/memory→diagnostics。Problem/complexity漂移hard fail；所有Global/Reference candidate必须fresh Validator PASS且共享KPI一致；CP-SAT质量劣于Reference产生`BENCHMARK_WARNING`。跨环境不做相对性能回归，只应用非生产宽松ceiling；同一环境才比较2.5倍factor。当前XS/S/M本地报告均8/8 PASS、无warning，但这不关闭历史生产数据OPEN-011或生产阈值OPEN-012。

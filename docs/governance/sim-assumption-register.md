@@ -28,8 +28,9 @@ Simulation 用于模拟 APS Planning Reality，不代表真实物理工厂。每
 | SIM-ASSUMPTION-010 | `SIM-P1-INGRESS-001@1.0.0`固定2 workshops/lines、4 resources、2 orders、3 operations、2 candidates、1 calendar fragment和0.5 material/WIP/lock/cross-workshop quota；generator v1限定10～50 piece、0～600 s setup、300～900 s cycle、0/600 s transport、90 min material delay、30 min calendar fragment/3 h spacing、12 h medium due window、running与lock时间offset及seed-derived 2026 UTC origin | ACTIVE | 只验证P1 source→canonical ingress/replay；不得成为通用XS、生产拓扑/工时/日历/交期/WIP/lock分布或容量默认值 |
 | SIM-ASSUMPTION-011 | `P2-GOLDEN-JSSP/FJSP`与`P2-CROSS-WORKSHOP/CALENDAR/MATERIAL-DELAY/RUNNING/HARD-LOCK@1.0.0`固定tiny topology、60秒tick、显式duration/due/calendar/material/fact/lock/transport值及seed `20260901`～`20260907` | ACTIVE | 只验证P2 C-001～C-011、OBJ-001、replay与Validator correctness；`XS`只表示可手算，不是Benchmark profile、Production分布、容量、策略默认值或SLA |
 | SIM-ASSUMPTION-012 | `reference-scheduler-policy.v1`固定FCFS/EDD/SPT/Priority+EDD/Greedy Earliest Available Machine的operation/resource deterministic total-order tie-break，并只消费Problem显式priority | ACTIVE | 只验证Simulation baseline correctness/replay；不得成为Production dispatch、fallback、weight、capacity、optimality或SLA策略，也不得关闭任何production-open问题 |
+| SIM-ASSUMPTION-013 | `benchmark-profile-set.v1`固定XS/S/M为4/8/12 orders、3/6/8 resources、2/3/4 operations per order、2 candidates、1/2/4 calendar fragments、180/480/900 ticks、seed `20261201`～`20261203`、1 warm-up + 3 measured runs及显式due/material/solve-limit；三个baseline绑定一次Windows AMD64/Python 3.12.13/OR-Tools 9.15.6755观测 | ACTIVE | 只用于P2 development synthetic scale/comparison；不得成为Production topology/distribution/capacity/SLA、L/XL、历史生产数据或部署预算 |
 
-除上表明确绑定到versioned synthetic asset的correctness参数外，具体workshop/resource数、候选设备密度、故障概率、到期压力等数值仍未批准为通用Profile、Benchmark baseline或生产事实。后续数值必须由各自版本化FactoryProfile/ScenarioSpec/Generator明确，不能从任一fixture外推“通用默认工厂”。
+除SIM-ASSUMPTION-013明确绑定的P2 development XS/S/M profile外，具体workshop/resource数、候选设备密度、故障概率、到期压力等数值仍未批准为其他Profile或生产事实。后续数值必须由各自版本化FactoryProfile/ScenarioSpec/Generator明确，不能从任一fixture或本次baseline外推“通用默认工厂”。
 
 本注册表的稳定 ID 前缀为 `SIM-ASSUMPTION-NNN`。总规示例中的 `SIM_ASSUMPTION-003` 是同类标记的上游拼写，校验时规范化为 `SIM-ASSUMPTION-003`；新引用必须使用本表前缀。条目只能为 `ACTIVE` 或 `RETIRED`，不得出现 `OPEN`/`CLOSED` 生产问题状态，也不得用于关闭任何 `OPEN-NNN`。
 
@@ -104,3 +105,5 @@ TASK-P2-10 provider closure：required run/artifact精确重放同一policy、al
 TASK-P2-11 local review：内部包复用SIM-ASSUMPTION-011的P2 correctness Scenario/Profile/seed与manifest，并保留SIM-ASSUMPTION-012的Reference边界不变；KPI/manifest/sample只是既有synthetic run的派生产物，不新增topology、distribution、权重、calendar、capacity或Benchmark假设。未新增、修改或retire任何条目；SIM-ASSUMPTION-001～012继续`ACTIVE`，internal package不得作为Production或XS/S/M事实，registry format version保持`1.0.0`。
 
 TASK-P2-11 provider closure：required run/artifact精确重放同一synthetic Scenario/Profile/seed、KPI与package lineage，没有新增、修改或retire任何assumption。SIM-ASSUMPTION-001～012继续`ACTIVE`；provider执行不把internal package或single-run telemetry提升为Production事实、XS/S/M baseline或SLA，registry format version保持`1.0.0`。
+
+TASK-P2-12 local review：新增SIM-ASSUMPTION-013并绑定strict profile set、generator `1.0.0`、三个Problem hash、warm-up/repetition和真实baseline environment；XS/S/M全部经formal pipeline/Validator/KPI，但只构成development synthetic evidence。SIM-ASSUMPTION-001～013均`ACTIVE`；任何profile变更必须新版本，数值不得用于Production topology/distribution/capacity/SLA、L/XL，也不得关闭相邻的历史数据或生产运行阈值问题，registry format version保持`1.0.0`。

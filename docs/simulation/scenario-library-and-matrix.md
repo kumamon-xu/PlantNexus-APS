@@ -65,3 +65,13 @@ TASK-P1-11只为该既有catalog row增加common-ingress machine evidence，没�
 | `P2-HARD-LOCK@1.0.0` | `PROFILE-P2-CORRECTNESS-MATRIX@1.0.0` | `20260907` / exact hard tuple | matrix note、TEST-INF-LOCK | correctness only |
 
 全部七例由`PLANTNEXUS-P2-CORRECTNESS-ASSEMBLER@1.0.0`、approved Simulation Policy、exact Backend/Solver identity、manifest object/artifact hashes和SIM-ASSUMPTION-011固定，并已走正式Raw→Import→Snapshot→Problem→Strategy→Validator路径。`XS`仅表示可手算；PROFILE-A～E、XS/S/M performance baseline、Reference/Export与Production catalog仍未形成。
+
+## TASK-P2-12 generated benchmark scenarios
+
+| Scenario | Profile | Seed | Problem规模 | 用途 |
+|---|---|---:|---|---|
+| `P2-BENCHMARK-XS@1.0.0` | `P2-BENCHMARK-XS@1.0.0` | `20261201` | 4 orders / 8 operations / 3 resources | PR development benchmark |
+| `P2-BENCHMARK-S@1.0.0` | `P2-BENCHMARK-S@1.0.0` | `20261202` | 8 / 24 / 6 | local/nightly-ready benchmark |
+| `P2-BENCHMARK-M@1.0.0` | `P2-BENCHMARK-M@1.0.0` | `20261203` | 12 / 48 / 8 | local/nightly-ready benchmark |
+
+三例由`benchmark-profile-set.v1`与`PLANTNEXUS-P2-BENCHMARK-GENERATOR@1.0.0`生成、经P2 correctness assembler进入正式pipeline，并以Problem hash和SIM-ASSUMPTION-013固定；它们是运行时可重建的versioned benchmark inputs，不新增或改写P2-09 correctness fixtures。PROFILE-A～E、L/XL、disruption/现实分布与Production catalog仍未形成。

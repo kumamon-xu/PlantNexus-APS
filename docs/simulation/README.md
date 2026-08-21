@@ -63,3 +63,9 @@ Schema set 为 additive `1.2.0`。三份 `.synthetic.json` 仅验证合同，不
 [`SIM-P1-INGRESS-001@1.0.0`](../../fixtures/synthetic/SIM-P1-INGRESS-001/calculation-note.md)现由七层`PLANTNEXUS-P1-CANONICAL-IMPORT-GENERATOR@1.0.0`程序化生成。它使用FactoryProfile/ScenarioSpec/seed，经source-shaped Raw Staging、`P1-SYNTHETIC-SOURCE-MAPPING@1.0.0`、unit registry、Normalization和Data Validation产生16个非空canonical collections、49 records与PASS/0报告；canonical hash为`sha256:24a74b4f43b0ba42ed458983e0c4776613911924ae5250d9df8ae9e4f14cb1c4`。
 
 该asset只验证correctness/replay/common-format ingress的一侧，不是Solver/Benchmark、Execution Simulator、Production capacity或P1-11双来源application Gate证据。P0 manual fixture保持只读且使用Import v1/fixture-local vocabulary。
+
+## P2-12 Benchmark profiles
+
+[`benchmarks/profiles.yaml`](../../benchmarks/profiles.yaml)发布strict internal `benchmark-profile-set.v1`，只包含XS/S/M。`PLANTNEXUS-P2-BENCHMARK-GENERATOR@1.0.0`确定性生成source-shaped blueprint，再复用`PLANTNEXUS-P2-CORRECTNESS-ASSEMBLER@1.0.0`进入正式Raw→Problem链；它不会直接构造Problem或CpModel。XS/S/M分别固定8/24/48 operations及对应immutable v1 baseline，全部参数由SIM-ASSUMPTION-013登记。
+
+Runner只用于development/test/benchmark data plane。L/XL、故障分布、Production topology/capacity/SLA均不在当前profile set；不得从本地或CI结果外推真实工厂能力。

@@ -41,7 +41,7 @@ Documents to update: `README.md`、`docs/README.md`、`docs/current_phase.md`、
 
 Documentation impact rationale: P2 Gate的XS/S/M和provider artifact必须有版本化profile、环境、报告字段及不外推Production的判定规则。
 
-Change-impact matrix rows reviewed: `IMPACT-PHASE`、`IMPACT-DOCS`
+Change-impact matrix rows reviewed: `IMPACT-BENCHMARK`、`IMPACT-REPORTING`、`IMPACT-TESTS`、`IMPACT-INFRA`、`IMPACT-PHASE`、`IMPACT-GOVERNANCE-REGISTRY`、`IMPACT-DOCS`
 
 Traceability updates: REQ-004/005/009/012/014/015→TASK-P2-12→TEST-BENCHMARK/REFERENCE-SCHEDULER/SCENARIO-REPLAY/SOLVER-UPGRADE→XS/S/M reports/baselines/provider artifacts。
 
@@ -73,7 +73,7 @@ Explicitly excluded: L/XL/stress release gate、Production SLA/capacity、dynami
 
 PROD_OPEN: OPEN-011/012保持OPEN；结果不得关闭规模/性能生产阈值。
 
-SIM_ASSUMPTIONS: profile/size/distribution/hardware assumptions显式versioned并登记，不能成为Production defaults。
+SIM_ASSUMPTIONS: `SIM-ASSUMPTION-013`精确登记profile/size/distribution/seed/repetition/environment与development-only边界；不能成为Production defaults。
 
 Rollback: baseline不覆盖；runner/profile错误发布新version并保留旧结果；CI regression保留失败artifact，禁止删除或降低correctness Gate。
 
@@ -82,3 +82,9 @@ Rollback: baseline不覆盖；runner/profile错误发布新version并保留旧�
 用户明确授权执行TASK-P2-12。启动时`main=origin/main=58db14e8f18fb50866fb757d4c89e76fef1141f1`且working tree clean；P2-11 implementation `546292831c3bd52185687a4c646c10ae10541ae2`及其evidence closure均为该HEAD祖先。基线push run `32455399561`、required `validate` job/check `96691604529`（GitHub Actions app `15368`）均`completed/success`；branch protection精确要求`validate`/app `15368`。Artifact `9437086153`（`plantnexus-ci-evidence-32455399561`，41110 bytes）未过期，digest=`sha256:1da721655426224cf9dae4f3ee9cc16c4fbe1433e4c601ace3aef61f32f91156`、expiry=`2026-11-19T06:41:15Z`；其中P2-11 output report为8/8，Task report为58 committed/0 working paths、11 rows、19 checks、0 issues，全部18份machine/trace JSON为PASS。故P2-08/09/10/11依赖、提交拓扑与provider证据一致，Diff base冻结为上述HEAD。
 
 启动范围审查确认原计划卡需要补齐两项：Task lifecycle会修改current phase/Milestone/index，故加入`IMPACT-PHASE`及其required documents；“同一KPI”不能依靠Benchmark层复制公式，故加入`IMPACT-REPORTING`与两份既有KPI Python路径，只允许抽取公共pure schedule metrics并以P2-11回归证明KPI v2/Export字节不变。`benchmarks/baselines/**`在首个实现文件前展开为三个精确v1路径；不引入Schema/dependency/ADR，不修改P2-09 assets、P2-10 algorithms、P2-11 exporter或任何Solver/Validator语义。Activation-only差异只允许命中`IMPACT-PHASE/IMPACT-DOCS`；完整实现最终按七个声明Impact Rule重新计算。P2-13/14与P3未启动。
+
+## Local implementation evidence — 2026-08-21
+
+已形成strict `benchmark-profile-set.v1`、`benchmark-report.v1`、`benchmark-baseline.v1`、deterministic source-shaped generator、正式Raw→Import→Quality→Expansion→Snapshot→Problem assembler、Global与五个Reference同Problem比较及公共pure schedule KPI。XS/S/M固定为1次warm-up加3次measured replay，三个不可覆盖v1 baseline记录environment/problem/complexity/quality/timing/memory；correctness/Validator/baseline drift硬失败，CP-SAT劣于reference只产生`BENCHMARK_WARNING`，跨环境只适用absolute development ceiling。
+
+本地focused=`27 passed`、full repository=`466 passed`，XS/S/M BenchmarkReport均为8/8 PASS；P2-11 KPI v2/export回归为8/8且历史输出不变，全部历史machine reports PASS，Ruff/Pyright为0问题，Compose与build成功。Full docs与Task diff治理为142 docs、49 paths、7 rows、19 checks、0 issues，`git diff --check`及冻结/禁止路径复核PASS。CI已用真实`run_benchmark.py --profile xs`替代deferred hook并将report纳入artifact，S/M按本地policy保留。Exact implementation provider evidence尚待本Task收口，因此status仍为`in_progress`；P2-13/14、P3、L/XL与Production阈值均未启动。

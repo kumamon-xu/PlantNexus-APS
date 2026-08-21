@@ -3,7 +3,7 @@
 from __future__ import annotations
 
 from collections import defaultdict
-from collections.abc import Mapping
+from collections.abc import Mapping, Sequence
 from dataclasses import dataclass
 from datetime import datetime, timedelta
 from hashlib import sha256
@@ -51,6 +51,51 @@ class ImmutableKpiV2:
     @property
     def document(self) -> JsonObject:
         return cast(JsonObject, json.loads(self.canonical_bytes))
+
+
+@dataclass(frozen=True, slots=True)
+class ScheduleKpiMetrics:
+    """Pure schedule-level KPI projection shared by Solver and benchmark paths."""
+
+    delivery_rows: tuple[JsonObject, ...]
+    resource_rows: tuple[JsonObject, ...]
+    order_count: int
+    on_time_order_count: int
+    total_tardiness_seconds: int
+    priority_weighted_tardiness_seconds: int
+    makespan_seconds: int
+    scheduled_operation_count: int
+    unscheduled_operation_count: int
+
+    @property
+    def delivery_document(self) -> JsonObject:
+        return {
+            "order_count": self.order_count,
+            "on_time_order_count": self.on_time_order_count,
+            "on_time_order_ratio": (
+                None
+                if self.order_count == 0
+                else round(self.on_time_order_count / self.order_count, 12)
+            ),
+            "late_order_count": self.order_count - self.on_time_order_count,
+            "total_tardiness_seconds": self.total_tardiness_seconds,
+            "priority_weighted_tardiness_seconds": (
+                self.priority_weighted_tardiness_seconds
+            ),
+            "demands": [dict(row) for row in self.delivery_rows],
+        }
+
+    @property
+    def planning_document(self) -> JsonObject:
+        return {
+            "makespan_seconds": self.makespan_seconds,
+            "scheduled_operation_count": self.scheduled_operation_count,
+            "unscheduled_operation_count": self.unscheduled_operation_count,
+        }
+
+    @property
+    def resource_documents(self) -> list[JsonObject]:
+        return [dict(row) for row in self.resource_rows]
 
 
 def _reject(code: ReportingContractErrorCode, field: str, message: str) -> Never:
@@ -188,6 +233,53 @@ def _delivery_rows(
     return rows
 
 
+def calculate_schedule_kpi_metrics(
+    problem: Mapping[str, object],
+    assignments: Sequence[Mapping[str, object]],
+) -> ScheduleKpiMetrics:
+    """Recompute delivery, planning, and resource metrics without solver trust.
+
+    The function consumes only a PlanningProblem and a complete assignment set.
+    It performs no I/O, does not mutate either input, and is therefore the common
+    schedule-quality boundary for KPI v2, Global CP-SAT benchmark rows, and all
+    five Reference Scheduler benchmark rows.
+    """
+
+    problem_document = cast(PlanningProblemDocumentV2, problem)
+    assignment_documents = [cast(JsonObject, dict(value)) for value in assignments]
+    delivery_rows = _delivery_rows(problem_document, assignment_documents)
+    resource_rows = _resource_rows(problem_document, assignment_documents)
+    order_count = len(delivery_rows)
+    on_time_count = sum(1 for row in delivery_rows if row["on_time"] is True)
+    total_tardiness = sum(
+        cast(int, row["tardiness_seconds"]) for row in delivery_rows
+    )
+    weighted_tardiness = sum(
+        cast(int, row["priority_weighted_tardiness_seconds"])
+        for row in delivery_rows
+    )
+    makespan = (
+        max(cast(int, assignment["end_tick"]) for assignment in assignment_documents)
+        * problem_document["tick_seconds"]
+        if assignment_documents
+        else 0
+    )
+    return ScheduleKpiMetrics(
+        delivery_rows=tuple(delivery_rows),
+        resource_rows=tuple(resource_rows),
+        order_count=order_count,
+        on_time_order_count=on_time_count,
+        total_tardiness_seconds=total_tardiness,
+        priority_weighted_tardiness_seconds=weighted_tardiness,
+        makespan_seconds=makespan,
+        scheduled_operation_count=len(assignment_documents),
+        unscheduled_operation_count=(
+            len(problem_document["operation_instances"])
+            - len(assignment_documents)
+        ),
+    )
+
+
 def _validate_inputs(
     snapshot: Mapping[str, object],
     problem: Mapping[str, object],
@@ -281,21 +373,16 @@ def build_kpi_v2(
         validation_report,
         import_quality_report,
     )
-    problem_document = cast(PlanningProblemDocumentV2, problem)
     assignments = cast(list[JsonObject], solution["assignments"])
-    delivery_rows = _delivery_rows(problem_document, assignments)
-    resource_rows = _resource_rows(problem_document, assignments)
-    order_count = len(delivery_rows)
-    on_time_count = sum(1 for row in delivery_rows if row["on_time"] is True)
-    total_tardiness = sum(
-        cast(int, row["tardiness_seconds"]) for row in delivery_rows
-    )
-    weighted_tardiness = sum(
-        cast(int, row["priority_weighted_tardiness_seconds"])
-        for row in delivery_rows
+    schedule_metrics = calculate_schedule_kpi_metrics(
+        problem,
+        cast(list[Mapping[str, object]], assignments),
     )
     stage = cast(list[JsonObject], solution["objective_stage_results"])[0]
-    if stage["objective_value"] != weighted_tardiness:
+    if (
+        stage["objective_value"]
+        != schedule_metrics.priority_weighted_tardiness_seconds
+    ):
         _reject(
             ReportingContractErrorCode.MIXED_LINEAGE,
             "solution.objective_stage_results[0].objective_value",
@@ -304,12 +391,6 @@ def build_kpi_v2(
     report_document = frozen_report.document
     timings = cast(JsonObject, report_document["timings"])
     model_metrics = cast(JsonObject, report_document["model_metrics"])
-    makespan = (
-        max(cast(int, assignment["end_tick"]) for assignment in assignments)
-        * problem_document["tick_seconds"]
-        if assignments
-        else 0
-    )
     validation_fingerprint = contract_fingerprint(validation_report)
     quality_fingerprint = contract_fingerprint(import_quality_report)
     basis: JsonObject = {
@@ -351,25 +432,9 @@ def build_kpi_v2(
                 "status": import_quality_report["status"],
             },
         },
-        "delivery": {
-            "order_count": order_count,
-            "on_time_order_count": on_time_count,
-            "on_time_order_ratio": (
-                None if order_count == 0 else round(on_time_count / order_count, 12)
-            ),
-            "late_order_count": order_count - on_time_count,
-            "total_tardiness_seconds": total_tardiness,
-            "priority_weighted_tardiness_seconds": weighted_tardiness,
-            "demands": delivery_rows,
-        },
-        "planning": {
-            "makespan_seconds": makespan,
-            "scheduled_operation_count": len(assignments),
-            "unscheduled_operation_count": (
-                len(problem_document["operation_instances"]) - len(assignments)
-            ),
-        },
-        "resources": resource_rows,
+        "delivery": schedule_metrics.delivery_document,
+        "planning": schedule_metrics.planning_document,
+        "resources": schedule_metrics.resource_documents,
         "stability": {
             "status": STABILITY_STATUS,
             "changed_operation_count": None,
@@ -412,6 +477,8 @@ __all__ = [
     "KPI_CANONICALIZATION_VERSION",
     "KPI_SCHEMA_SET_VERSION",
     "KPI_VERSION",
+    "ScheduleKpiMetrics",
     "STABILITY_STATUS",
     "build_kpi_v2",
+    "calculate_schedule_kpi_metrics",
 ]

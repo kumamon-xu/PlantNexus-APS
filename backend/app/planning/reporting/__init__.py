@@ -5,8 +5,10 @@ from app.planning.reporting.kpi import (
     KPI_CANONICALIZATION_VERSION,
     KPI_SCHEMA_SET_VERSION,
     KPI_VERSION,
+    ScheduleKpiMetrics,
     STABILITY_STATUS,
     build_kpi_v2,
+    calculate_schedule_kpi_metrics,
 )
 from app.planning.reporting.solver_report import (
     FrozenSolverReport,
@@ -23,7 +25,9 @@ __all__ = [
     "KPI_VERSION",
     "ReportingContractError",
     "ReportingContractErrorCode",
+    "ScheduleKpiMetrics",
     "STABILITY_STATUS",
     "build_kpi_v2",
+    "calculate_schedule_kpi_metrics",
     "freeze_solver_report",
 ]

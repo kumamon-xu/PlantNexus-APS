@@ -1,0 +1,73 @@
+{
+  "benchmark_baseline_version": "benchmark-baseline.v1",
+  "boundaries": {
+    "overwrite_policy": "IMMUTABLE_CREATE_NEW_VERSION",
+    "production_sla": "NOT_ESTABLISHED_OPEN_012",
+    "synthetic_only": true
+  },
+  "ceilings": {
+    "global_memory_peak_mb_p95": 1024.0,
+    "global_total_seconds_p95": 20.0,
+    "pipeline_seconds": 60.0,
+    "reference_total_seconds_p95": 20.0,
+    "same_environment_regression_factor": 2.5
+  },
+  "environment": {
+    "captured_at_utc": "2026-08-21T07:29:23Z",
+    "environment_signature": "sha256:7ae89489d67298d025f752890204570db02d49154425a8f5388e66aad6303514",
+    "machine": "AMD64",
+    "python_version": "3.12.13",
+    "solver_version": "9.15.6755",
+    "system": "Windows"
+  },
+  "generator": {
+    "generator_id": "PLANTNEXUS-P2-BENCHMARK-GENERATOR",
+    "generator_version": "1.0.0"
+  },
+  "observed": {
+    "global": {
+      "best_bound": 360,
+      "memory_peak_mb_p95": 0.155621529,
+      "objective": 360,
+      "solve_seconds_median": 0.1024184,
+      "total_seconds_p95": 0.1242671
+    },
+    "reference_quality": {
+      "EDD": 2220,
+      "FCFS": 3600,
+      "GREEDY_EARLIEST_AVAILABLE_MACHINE": 2340,
+      "PRIORITY_EDD": 2460,
+      "SPT": 2520
+    }
+  },
+  "problem": {
+    "complexity": {
+      "average_candidate_resource_count": 2.0,
+      "bottleneck_utilization": 0.033333333333,
+      "calendar_fragment_count": 2,
+      "candidate_option_count": 48,
+      "cross_workshop_ratio": 1.0,
+      "hard_lock_count": 0,
+      "historical_anchor_count": 0,
+      "horizon_ticks": 480,
+      "lock_ratio": 0.0,
+      "lot_count": 8,
+      "material_delay_ratio": 0.25,
+      "operation_count": 24,
+      "order_count": 8,
+      "precedence_edge_count": 16,
+      "resource_count": 6,
+      "routing_depth": 3,
+      "wip_ratio": 0.0
+    },
+    "problem_hash": "sha256:42ee217e95dc406a9feb5bf7813a3b73c8a5c6cca028905b0cfad68ffff75bb4"
+  },
+  "profile": {
+    "profile_id": "P2-BENCHMARK-S",
+    "profile_version": "1.0.0",
+    "size": "S"
+  },
+  "runner_version": "benchmark-runner.v1",
+  "task_id": "TASK-P2-12",
+  "threshold_policy_version": "benchmark-threshold-policy.p2-development.v1"
+}

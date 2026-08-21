@@ -40,3 +40,9 @@ TASK-P0-05 的 ScenarioManifest v1 提供未来 baseline 比较所需的 Scenari
 五算法消费未改写的PlanningProblem v2，在共享hard-feasibility helper中处理C-001～C-011要求的候选资源、capacity-1、precedence min/max、calendar、release/material、RUNNING、HARD lock、conditional transport、duration与horizon。每次成功必须输出全部active operation且由新建`ProblemScheduleValidator`得到PASS；失败只返回`HEURISTIC_FAILURE`并丢弃内部partial state，不得升级为`INFEASIBLE`证明。Invalid Problem与Validator rejection另以`INVALID_PROBLEM`/`VALIDATION_FAILED`区分。
 
 `reference-scheduler-report.v1`在七个P2-09 Problem上形成35个完整candidate、35次fresh Validator PASS与35次deterministic replay，并以5个blocked-calendar case证明失败零candidate。报告同口径给出priority-weighted tardiness seconds、从horizon origin计算的makespan seconds与单次runtime；所有结果均`non_production=true`、`optimality_claim=NONE`。Global Strategy比较、warning、XS/S/M与threshold仍由TASK-P2-12形成，不能把本报告称为Benchmark baseline或生产fallback。
+
+## TASK-P2-12 benchmark consumption
+
+BenchmarkRunner未修改五个算法、tie-break、failure/status或候选构建。它在XS/S/M各对每算法执行1次warm-up和3次measured run，要求每次`FEASIBLE`、完整candidate、fresh Validator PASS与assignment fingerprint稳定；再用Planning reporting的公共schedule KPI函数独立核对P2-10 weighted tardiness/makespan carrier。所有comparison row绑定同一Problem hash。
+
+Global weighted tardiness高于最佳Reference时只记录`BENCHMARK_WARNING`，不得把Reference提升为Production fallback或最优性证明。三个本地profile均未触发该warning；Reference仍`non_production=true`、`optimality_claim=NONE`。

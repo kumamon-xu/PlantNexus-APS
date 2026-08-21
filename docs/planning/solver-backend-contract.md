@@ -140,3 +140,9 @@ Objective路径如实保留native OPTIMAL/FEASIBLE/INFEASIBLE/UNKNOWN；最佳bo
 `app.planning.reporting.freeze_solver_report`不调用Backend或重写测量值；它验证PlanningSolution/SolverReport/ValidationReport合同、`SOLVER_RUN` evidence kind、candidate status、PASS validation、Problem/Policy/Limits/status/stage/diagnostics/solution fingerprint完全一致，并按Global Strategy identity projection重新计算report ID。通过后只返回canonical bytes/fingerprint和planning run ID。
 
 KPI与Export consumer必须使用这份已冻结的真实report，不得用P2-02 `CONTRACT_SAMPLE`、伪造timing或跨run report补齐package。Backend/Strategy/Validator代码、OR-Tools exact pin、parameters/status mapping和`uv.lock`均未改变；报告冻结不是BenchmarkRunner或PlanningRun persistence。
+
+## TASK-P2-12 Benchmark consumption
+
+BenchmarkRunner只通过`GlobalCpSatStrategy`/solver-neutral documents消费Backend；每次run使用显式Simulation Policy、single worker、seed和profile wall limit，并从真实SolverReport读取exact solver identity/parameters、status、model build/first feasible/solve/validation/total、model counts、objective/bound/gap及Python peak memory。它不导入OR-Tools native types、不调用constraint builder或改写telemetry。
+
+Backend/Strategy/Validator/Problem、C-ID/OBJ-001与dependency/lock零变化。XS/S/M观测是development synthetic evidence，不能成为默认SolveLimits、Worker capacity或Production SLA。

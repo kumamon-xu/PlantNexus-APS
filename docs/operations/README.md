@@ -119,3 +119,9 @@ Report本身不写业务数据库，temporary CSV随进程回收，`build/valida
 运行`uv run python -m app.exporters.contract_check --root . --report <path>`生成`p2-output-contract-report.v1`；CI固定为`build/validation/ci-p2-output-contracts.json`。PASS必须为8/8 checks，覆盖两份新Schema/sample、冻结input hashes、同一validated correctness run的确定性package、cross-file lineage/count/hash、mixed/tamper/missing负例、exact replay以及partial-write cleanup/state boundary。
 
 命令只在进程内构建synthetic bytes并可使用临时目录；不创建业务ExportJob/ScheduleVersion、不连接外部storage/network/DB/queue，也不publish。Provider验收必须下载同一artifact，确认report `code_commit`、8/8 checks和current Task report均绑定exact implementation SHA；local `uncommitted` report不是发布或Production runbook。
+
+## TASK-P2-12 benchmark commands
+
+运行`uv run python scripts/run_benchmark.py --profile <xs|s|m> --report build/benchmarks/<name>.json`。CLI必须读取versioned profile与对应immutable baseline；成功报告为`benchmark-report.v1`/8 checks，失败写`benchmark-failure-report.v1`并返回非零。PR CI固定只执行XS；S/M是local/nightly-ready命令，仓库尚未创建Nightly scheduler，L/XL不接受。
+
+命令只使用synthetic data并在进程内运行正式pipeline/Solver/Validator/Reference/KPI/Export；不连接DB/Redis/API/Worker、不写业务ScheduleVersion/ExportJob、不publish，也不会覆盖baseline。Provider closure必须确认exact SHA report、required `validate`、benchmark artifact和Task diff同一提交；结果不得作为Production capacity/SLA runbook。

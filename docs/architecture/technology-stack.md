@@ -204,3 +204,9 @@ Reference实现只使用Python 3.12标准库、既有solver-neutral Planning typ
 Reporting/export实现继续使用Python 3.12标准库的`dataclasses`、`hashlib`、`json`、`csv`、`tempfile`与`os.replace`；runtime/development dependency和`uv.lock`均无变化。JSON Schema Draft 2020-12验证沿用既有`jsonschema` dev tool，Ruff/Pyright/Pytest/CI技术选择不变。
 
 Global schema metadata additive提升为`2.5.0`。CI新增`app.exporters.contract_check`机器步骤并上传同一evidence artifact；没有新service、container、database、queue、network或external storage provider，也没有技术栈ADR触发。
+
+## TASK-P2-12 technology review
+
+Benchmark实现使用Python 3.12标准库`dataclasses/statistics/platform/tracemalloc/perf_counter/hashlib/json`与已有dev pin `PyYAML==6.0.2`读取profile；Solver仍为exact `ortools==9.15.6755`且仅CP-SAT namespace直接导入。`pyproject.toml`、`uv.lock`、runtime/dev dependency、schema/code metadata均零变化，因此无dependency ADR或migration。
+
+CI把既有deferred shell hook替换为直接Python CLI XS调用，并把`build/benchmarks/*.json`加入同一artifact；没有新Action、service/container/database/queue/network/provider。Baseline环境值只用于可比性，不是部署规格。

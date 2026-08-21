@@ -31,6 +31,7 @@ from app.planning.validation.problem_validator_check import (
 from app.simulation.baselines.reference_schedulers import (
     main as reference_scheduler_main,
 )
+from app.simulation.benchmarks import load_baseline, load_profile_set
 from app.simulation.scenarios.p2_correctness import main as p2_correctness_main
 
 ROOT = Path(__file__).resolve().parents[3]
@@ -142,11 +143,16 @@ def test_ci_runs_repository_gates_and_discovers_the_current_task() -> None:
         "--discover-task-from",
         "build/traceability/ci-current-task-report.json",
         "uv build",
-        "PLANTNEXUS_BENCHMARK_PROFILE: pr",
+        "PLANTNEXUS_BENCHMARK_PROFILE: xs",
+        "--report build/benchmarks/ci-xs.json",
+        "build/benchmarks/*.json",
     )
     for fragment in required_fragments:
         assert fragment in workflow
     assert "scripts/run_benchmark.py" in workflow
+    assert "name: P2 XS BenchmarkRunner evidence" in workflow
+    assert "Benchmark hook (deferred until runner exists)" not in workflow
+    assert "Benchmark runner remains deferred" not in workflow
     assert "actions/upload-artifact@v4" in workflow
     assert "name: P1 common ingress gate" in workflow
     assert workflow.count("uv run python scripts/check_docs.py") == 2
@@ -162,6 +168,29 @@ def test_ci_runs_repository_gates_and_discovers_the_current_task() -> None:
     assert "TASK-P0-08" not in workflow
     assert "docs/tasks/P0/" not in workflow
     assert PHASE_GOVERNANCE_TEST_ID == "TEST-PHASE-GOVERNANCE-001"
+
+
+def test_ci_benchmark_contract_is_xs_only_and_baseline_bound() -> None:
+    workflow = (ROOT / ".github" / "workflows" / "ci.yml").read_text(
+        encoding="utf-8"
+    )
+    assert workflow.count("scripts/run_benchmark.py") == 1
+    assert '--profile "${PLANTNEXUS_BENCHMARK_PROFILE}"' in workflow
+    assert "PLANTNEXUS_BENCHMARK_PROFILE: xs" in workflow
+    assert "--profile s" not in workflow
+    assert "--profile m" not in workflow
+    profile_set = load_profile_set(ROOT / "benchmarks" / "profiles.yaml")
+    xs = profile_set.select("xs")
+    baseline = load_baseline(ROOT / xs.baseline_path)
+    assert xs.size == "XS"
+    assert baseline["profile"] == {
+        "profile_id": xs.profile_id,
+        "profile_version": xs.profile_version,
+        "size": xs.size,
+    }
+    assert baseline["boundaries"]["production_sla"] == (
+        "NOT_ESTABLISHED_OPEN_012"
+    )
 
 
 def test_ci_planning_problem_contract_report_is_machine_checkable(

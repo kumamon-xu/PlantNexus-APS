@@ -150,3 +150,12 @@ TASK-P0-05 已在 `simulation/profiles`、`simulation/scenarios`、`simulation/g
 `simulation/scenarios/p2_correctness.py`只拥有fixture-local blueprint解析、Raw row assembly、正式pipeline编排、expected/hash核验、row-order property与formula-free candidate mutation。它调用公开Normalization/Data Validation/Expansion/Snapshot/Problem/Strategy/Validator接口，不直接构造PlanningProblem或CpModel，也不复用Backend/Validator公式。`simulation/scenarios/__init__.py`以lazy export避免CLI module预加载。
 
 本Task没有修改`application/**`、`planning/**`、`simulation/generators/**`、Schema、DB/API/Worker或Export/Benchmark边界；P2-10 Reference Schedulers保持未启动。
+
+## TASK-P2-10 Reference Scheduler boundary
+
+- `simulation/baselines/contracts.py`独占五个algorithm identity、policy/result/report版本与honest status；没有Production fallback或最优性status。
+- `simulation/baselines/reference_schedulers.py`只依赖solver-neutral Problem/assignment types、Problem hash precheck、UTC helpers和formal Validator；AST/source tests禁止直接导入`planning.backends`或native Solver package。
+- 共享feasibility helper拥有deterministic ready/resource scan、RUNNING/HARD fixed tuple与C-001～C-011 candidate construction，但formal acceptance仍只来自fresh Validator；失败必须丢弃partial state。
+- Evidence CLI仅在`run_reference_checks`内部使用P2-09公开orchestrator取得冻结Problem，明确不读取其solution/report；它不实现BenchmarkRunner、Global comparison、Export、API/DB/Worker或P3。
+
+PlanningProblem/Solution Schema、Backend/Strategy/Validator公式与P2-09 assets均未修改。P2-11～14不会由该模块导入或自动启动。

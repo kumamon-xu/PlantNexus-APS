@@ -180,3 +180,9 @@ Workflow在完整repository tests之后执行`python -m app.simulation.scenarios
 Local Gate现已通过45 focused、427 full、Ruff/Pyright 0、correctness 8/8及全部历史machine reports、142-doc/58-path/7-row/19-check/0-issue治理、Compose、build、version smoke、`git diff --check`和immutable checks。Push后required `validate`、artifact digest/expiry、report `code_commit`及Task report必须绑定exact implementation SHA；完成前TASK-P2-09保持`in_progress`，不启动P2-10。
 
 Implementation provider Gate已通过：SHA `20e49c92306128b47313059fabe31534814dbe3d`、run `32442651322`、required `validate` job/check `96656224252`（app `15368`）均success；artifact `9432982306`未过期且digest=`sha256:c736a2f029f119850f8a0c9b40b0dbbd0898383f10ddbc798f7182ff5ec90e09`。16/16 reports、correctness 8/8及Task 58 committed/0 working/7 rows/19 checks/0 issues均绑定同一SHA；TASK-P2-09 DoD完成，不自动授权P2-10。
+
+## TASK-P2-10 Reference Scheduler CI Gate
+
+Workflow在P2 correctness evidence后执行`python -m app.simulation.baselines.reference_schedulers --root . --report build/validation/ci-reference-schedulers.json`。该step不得`continue-on-error`；Integration contract要求`reference-scheduler-report.v1`为7/7 PASS，包含5 identities、7 Problems、35 complete candidates/independent Validator passes/deterministic replays、5 heuristic failures及完整scope boundaries。
+
+Local code Gate当前为13个Task-specific tests、441个full repository tests、Ruff/Pyright零问题与reference report 7/7。最终还必须通过全部历史machine reports、Task差异治理、Compose、build、冻结hash和`git diff --check`。Push后required `validate`、artifact digest/expiry、reference report `code_commit`与Task report必须绑定exact implementation SHA；完成前TASK-P2-10保持`in_progress`，不得启动P2-11。

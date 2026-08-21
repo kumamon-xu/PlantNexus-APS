@@ -112,3 +112,9 @@ Formal Validator源码、公式、Schema、rule sheet和13-case corpus保持字�
 Backend生成的RUNNING/HARD/SOFT candidates继续交给同一formal Validator；Evaluator从Problem/Solution独立重算COMPLETED exclusion、RUNNING resource/start/remainder occupancy及HARD resource/start/end，不导入`fact_lock_constraints.py`或OR-Tools。Machine evidence分别把合法candidate移动RUNNING与HARD tuple，稳定命中C-007和C-008；SOFT movement保持PASS。
 
 Formal Validator源码、公式、Schema、rule sheet和13-case corpus保持字节不变。该证据形成C-007/C-008 Solver/Validator交叉，但不是P2-09完整Golden/Scenario integration、OBJ-001 correctness或Production publish gate。
+
+## TASK-P2-10 Reference candidate validation
+
+五个Reference Scheduler不复制或修改Validator公式。共享heuristic只生成solver-neutral`problem + assignments`候选；成功路径每次实例化fresh `ProblemScheduleValidator`并要求C-001～C-011全PASS，Validator FAIL时立即丢弃candidate并返回`VALIDATION_FAILED`。机器报告又对35个成功candidate进行第二次fresh validation，得到35/35 PASS、零hard violation。
+
+`HEURISTIC_FAILURE`表示确定性构造过程没有找到完整hard-feasible placement，不是formal `INFEASIBLE`证书；失败路径不提交partial assignment给Validator，也不伪造PASS report。PlanningProblem本身非法继续在规则计算前拒绝。Validator源码、ValidationReport Schema、rule sheet、P2-09 assets与Solver backend均保持冻结；该交叉证据只形成TEST-REFERENCE-SCHEDULER，不形成Production publish gate或P2-12策略比较。

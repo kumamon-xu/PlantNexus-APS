@@ -28,7 +28,7 @@ registry_version: 1.0.0
 | REQ-012 | ALLOCATED | Scenario Library | Versioned scenario catalog and replay | P0-P2 |
 | REQ-013 | ALLOCATED | Execution / Disruption Simulator | Deterministic event stream and fact preservation | P4 |
 | REQ-014 | ALLOCATED | Benchmark Harness | Versioned BenchmarkReport and profiles | P2 |
-| REQ-015 | ALLOCATED | Reference Scheduler Baseline | Baseline comparison and warning behavior | P2 |
+| REQ-015 | ALLOCATED | Reference Scheduler Baseline | Five deterministic baselines；comparison and warning behavior | P2 |
 
 本表定义需求根 ID，不代替详细 Contract。任何生产代码应能通过 `REQ / NFR / ENG → SCHEMA / ARCH / CONSTRAINT → TASK → TEST → ARTIFACT` 链路解释其存在理由。
 
@@ -87,6 +87,8 @@ TASK-P2-04 review：REQ-004获得正式Problem/Solution上C-001～C-011独立判
 TASK-P2-05 review：REQ-004获得C-001/003/004/010/011的exact-pinned CP-SAT实现、完整candidate与INFEASIBLE边界；REQ-005获得candidate必须经formal Validator PASS、失败即丢弃assignments的consumer gate；REQ-009获得Problem/Policy/Limits fingerprints、solver identity/status、model/timing/memory与machine report链。C-002/005～009、OBJ-001搜索、Strategy、完整vertical slice与Production仍未形成；所有Requirement根ID继续`ALLOCATED`，registry format version保持`1.0.0`。
 
 TASK-P2-06 review：REQ-004获得C-002/005/006/009的exact precedence/calendar/release/material/transport CP-SAT slice；REQ-005获得四类temporal candidate必须经独立formal Validator PASS及mutation交叉；REQ-009获得冻结合同/Builder/Validator/lock fingerprints、constraint/model delta与machine report链；REQ-012获得仅限versioned in-memory synthetic的temporal correctness vectors。C-007/008、OBJ-001搜索、Strategy、完整vertical slice、Benchmark与Production仍未形成；所有Requirement根ID继续`ALLOCATED`，registry format version保持`1.0.0`。
+
+TASK-P2-10 local review：REQ-015获得五个`reference-*.v1` deterministic non-production algorithms、完整candidate/explicit failure、同Problem/formal Validator/KPI及`reference-scheduler-report.v1`；REQ-004/005获得35个七场景candidate的fresh C-001～C-011 PASS，REQ-009获得algorithm/policy/problem/candidate/report fingerprints与CI carrier。Global comparison/warning、XS/S/M Benchmark、Production fallback和P2 Gate仍未形成；所有Requirement根ID继续`ALLOCATED`，registry format version保持`1.0.0`。
 
 TASK-P2-07 review：REQ-004获得C-007/C-008的RUNNING remaining/resource、COMPLETED anchor与HARD exact tuple CP-SAT slice；REQ-005获得candidate mandatory formal PASS、C-007/C-008 mutation与SOFT non-hard交叉；REQ-009获得Problem identity、lock references、冻结fingerprints、fact/lock metrics与machine report链；REQ-012获得仅限versioned in-memory synthetic的Running/Hard Lock correctness vectors。OBJ-001/002搜索、Strategy、dynamic Replan、完整vertical slice、Benchmark与Production仍未形成；所有Requirement根ID继续`ALLOCATED`，registry format version保持`1.0.0`。
 

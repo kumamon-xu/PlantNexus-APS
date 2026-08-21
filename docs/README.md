@@ -98,3 +98,5 @@ TASK-P2-09以`15c298f343a47db2a922544944ff5e02e4ca72d9`为Diff base启动。七�
 本地correctness实现使2个Golden和5个matrix case全部OPTIMAL且formal Validator PASS，固定7组Import/Snapshot/Problem hash；Hypothesis row-order/fresh Validator property与11个formula-free exact C-ID mutation均PASS。45 focused、427 full、8/8 machine、Ruff/Pyright、全部历史reports、Compose/build及58-path治理均PASS；implementation exact required run/artifact已复现同一证据并闭环为`done`。
 
 用户于2026-08-21明确授权TASK-P2-10；clean/provider-verified Diff base为`0e4f6630412889254a7bef41f487c24dc274ca9c`，其run `32443067388` / required job `96657446617` / artifact `9433118755`均success。当前只启动五算法identity/tie-break、完整candidate或明确heuristic failure、fresh formal Validator和CI report；既有Schema/Planning/Validator/correctness assets/dependency与Benchmark/Production/P2-11+保持冻结。
+
+TASK-P2-10本地实现现为5个versioned deterministic algorithms、35/35 complete candidate/fresh Validator/deterministic replay及5个zero-partial explicit failures；`reference-scheduler-report.v1`为7/7 PASS。13个Task-specific与441个full tests、Ruff/Pyright均PASS；Global comparison/XS-S-M/threshold、Export、Production fallback和P2-11+仍未启动，exact provider形成前Task保持`in_progress`。

@@ -193,3 +193,9 @@ Implementation `b1ec83ed96120357ecadd41d3f520181838f17c6`的required run `324387
 只有七类correctness、7个property replay和C-001～C-011 formula-free negative integration可提升为local formed。证据必须固定version/seed/hash，区分fixture-local manifest与发布Schema、local `uncommitted`与provider SHA、correctness `XS`与性能profile；不得更新expected掩盖回归。P2-10 Reference、P2-11 Export、P2-12 XS/S/M Benchmark、P2 Gate/P3仍PLANNED，provider完成前TASK-P2-09保持`in_progress`。
 
 Implementation `20e49c92306128b47313059fabe31534814dbe3d`的required run `32442651322`与artifact `9432982306`已精确绑定并复现correctness 8/8、16 reports及58 committed/0 working paths、7 rows、19 checks、0 issues，因此TASK-P2-09=`done`。Reference/Export/XS-S-M Benchmark/Gate/P3继续PLANNED；P2-10没有自动激活。
+
+## TASK-P2-10 traceability rule application
+
+形成链为`REQ-004/005/009/015 + NFR-COR/DET/TRC/PER + ENG-ARCH/SOL/VAL/ERR/VER → TASK-P2-10 → reference-scheduler-contracts/policy + five algorithm IDs → PlanningProblem v2 → complete candidate → fresh formal Validator → weighted tardiness/makespan/runtime → TEST-REFERENCE-SCHEDULER/PROPERTY → reference-scheduler-report.v1 + Task report + exact provider artifact`。
+
+只有五个deterministic non-production baseline、35个七场景完整candidate、fresh Validator与explicit failure可提升为local formed。证据必须区分heuristic failure与INFEASIBLE certificate、complete/discard与partial schedule、single-run runtime与XS/S/M baseline、Reference measurement与OBJ optimality、local `uncommitted`与provider SHA。Planning/Validator公式、Schema、P2-09 assets、dependency与Benchmark路径保持冻结；Global comparison/warning、Export、P2 Gate和P3继续PLANNED，provider完成前TASK-P2-10保持`in_progress`。

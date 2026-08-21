@@ -118,3 +118,9 @@ Fact/lock report记录RUNNING/HARD/SOFT counts、fixed operation intervals、res
 新machine report对4个tiny vectors同时运行Global Strategy与独立穷举oracle，要求objective=value=bound、gap=0并由formal Validator PASS；另有一个complete hard-domain certified INFEASIBLE。报告也保存单次build/first-feasible/solve/validation/model/memory值。
 
 这些case未使用Reference Scheduler或versioned XS/S/M profile，未做warm-up、重复、分位数、hardware normalization、threshold或升级比较，因此只构成OBJ-001 correctness regression，不构成Benchmark baseline。P2-12与TEST-BENCHMARK仍PLANNED，OPEN-012不变。
+
+## TASK-P2-10 Reference correctness, not comparison baseline
+
+`reference-scheduler-report.v1`对五个versioned algorithms在七个tiny P2-09 Problem上记录35个Validator-PASS candidate及weighted tardiness/makespan/single-run runtime；另以5个blocked-calendar case证明`HEURISTIC_FAILURE`不泄漏partial schedule或不可行证书。该证据使Reference算法本身可回归，但没有Global Strategy comparison row。
+
+没有修改`simulation/benchmarks/**`、`benchmarks/**`或`run_benchmark.py`，也没有warm-up、repeat、percentile、hardware normalization、XS/S/M profile、threshold或`BENCHMARK_WARNING`判定。因此TEST-BENCHMARK与REQ-014继续PLANNED，P2-12职责及OPEN-011/012保持不变；P2-10 runtime不得被追认为性能baseline。

@@ -107,3 +107,9 @@ Report本身不写业务数据库，temporary CSV随进程回收，`build/valida
 运行`uv run python -m app.simulation.scenarios.p2_correctness --root . --report <path>`生成`p2-correctness-report.v1`；CI固定为`build/validation/ci-p2-correctness.json`。PASS必须为8/8 checks、7 scenarios/Validator passes/property replays、11 exact mutations及C-001～C-011正负全覆盖，并验证P0/P1 immutable assets和冻结输入fingerprints。
 
 命令只读versioned synthetic fixtures并写ignored report；不连接DB/Redis/API/Worker，不运行Reference/Benchmark/Export或Production。Provider closure必须复核report `code_commit`、hash/status/counts和同一artifact中的current Task report。
+
+## TASK-P2-10 Reference Scheduler evidence command
+
+运行`uv run python -m app.simulation.baselines.reference_schedulers --root . --report <path>`生成`reference-scheduler-report.v1`；CI固定为`build/validation/ci-reference-schedulers.json`。PASS必须为7/7 checks、5个versioned identity、7个冻结Problem、35个完整candidate/fresh Validator/deterministic replay及5个explicit heuristic failure，并保持零partial、零infeasibility certificate claim。
+
+命令只读synthetic correctness assets并写ignored report，不连接DB/Redis/API/Worker、不创建PlanningRun/ScheduleVersion/Export、不建立XS/S/M或Production fallback。Provider验收必须确认report `code_commit`等于exact pushed SHA、required `validate`成功，并与同一artifact的Task report一起下载复核；local `uncommitted` PASS不是外部证据或Production runbook。

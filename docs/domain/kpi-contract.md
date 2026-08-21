@@ -86,3 +86,9 @@ Weighted tardiness仍只在candidate后测量，CP-SAT模型不含objective；SO
 Global Strategy的真实SolverReport现记录OBJ-001 weighted tardiness seconds、certified best bound/relative gap、model build、first feasible、solve、independent validation、total、variables/constraints/optional intervals与Python traced peak MB，并绑定tick/Problem/Policy/Limits/Solver/commit。Objective由neutral assignments独立复算并必须等于native objective carrier。
 
 这些字段只证明tiny correctness/observability；没有KPI calculator、makespan/Resource/Stability计算、warm-up、percentile、hardware profile、Reference comparison或XS/S/M baseline。OPEN-006/012继续OPEN，不形成Production KPI、capacity或SLA。
+
+## TASK-P2-10 Reference metric slice
+
+`reference-scheduler-report.v1`对每个Validator-PASS完整candidate记录`weighted_tardiness_seconds`、`makespan_seconds`、`runtime_seconds`、scheduled/unscheduled counts和Problem hash。Weighted tardiness逐Demand取active operation最大completion tick，保留非grid due的exact秒偏移并乘Problem显式priority；makespan从horizon origin取最大end tick，成功结果unscheduled恒为0。失败结果不暴露partial candidate，quality/makespan为null且scheduled为0。
+
+这些字段是同Problem/Validator口径的Reference correctness measurement，不是完整`kpi.v1` calculator、SolverReport、Benchmark统计、hardware-normalized baseline、capacity或SLA。Runtime只是一轮本地/CI evidence timing；P2-11仍负责正式KPI/SolverReport一致性，P2-12负责XS/S/M比较，OPEN-006/012保持OPEN。

@@ -101,3 +101,5 @@ TASK-P2-09本地已形成2个手算Golden、5个feature matrix、7次正式pipel
 Implementation `20e49c92306128b47313059fabe31534814dbe3d`的run `32442651322` / required job `96656224252` / artifact `9432982306`均success；artifact digest=`sha256:c736a2f029f119850f8a0c9b40b0dbbd0898383f10ddbc798f7182ff5ec90e09`并精确复现correctness 8/8、16/16 reports及58 committed/0 working paths、7 rows、19 checks、0 issues。因此TASK-P2-09=`done`；Milestone保持`active`，P2-10～14和P3不自动启动。
 
 用户于2026-08-21明确授权TASK-P2-10；clean/provider-verified启动基线为`0e4f6630412889254a7bef41f487c24dc274ca9c`，run `32443067388` / required job `96657446617` / artifact `9433118755`精确success。TASK-P2-10只形成五个non-production reference algorithms、deterministic tie-break、完整candidate/明确heuristic failure及相同Validator/KPI machine evidence；P2-11～14、BenchmarkRunner/XS-S-M、Production与P3不自动启动。
+
+TASK-P2-10本地已形成五算法identity/tie-break、35个七场景完整candidate/fresh Validator/deterministic replay、5个zero-partial explicit failures及`reference-scheduler-report.v1` 7/7；13 task-specific、441 full、Ruff/Pyright均PASS。Exact provider闭环前Milestone保持`active`且Task=`in_progress`；P2-11～14和P3不会自动启动。

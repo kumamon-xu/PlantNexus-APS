@@ -74,3 +74,9 @@ OBJ-001 execution继续由P2-08形成，OBJ-002 Stability与OBJ-003保持deferre
 OBJ-001现在以每个Demand全部active operation的最大`end_tick`作为completion，并计算`max(0, completion_tick*tick_seconds-due_offset_seconds)`；因此非tick-grid due也保留exact迟交秒数。每项乘显式正整数`priority_weight`后求和，单位固定为`priority_weighted_tardiness_seconds`，并在建模前检查CP-SAT int64上界。
 
 模型只调用一次`Minimize`且不混入makespan、SOFT lock movement或浮点权重。OPTIMAL必须有value=bound/gap=0，FEASIBLE不得称最优，UNKNOWN不得称无解；4个tiny exhaustive cases与generated properties复核数值。Policy仍为`objective-policy.v1`单stage，OBJ-002/003继续deferred；OPEN-006未关闭，只有approved versioned Simulation source可执行。
+
+## TASK-P2-10 Reference measurement boundary
+
+Reference Scheduler不执行或声称OBJ-001优化；它在完整candidate通过formal Validator后，复用同一公式按Demand最大`end_tick`、exact due offset和Problem显式正整数priority计算`weighted_tardiness_seconds`，同时报告`max(end_tick) * tick_seconds` makespan与runtime。五种ordering只决定heuristic选择，不增加目标stage、浮点混合权重、SOFT stability或makespan优化。
+
+因此`FEASIBLE`只表示Validator接受的完整candidate，`optimality_claim=NONE`；`HEURISTIC_FAILURE`也不得解释为不可行证明。Reference与Global Strategy的质量比较、warning及回归阈值仍由TASK-P2-12负责。SIM-ASSUMPTION-012只固定Simulation tie-break，OPEN-006仍OPEN，Production weight与dispatch policy没有形成。

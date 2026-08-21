@@ -51,3 +51,5 @@ TASK-P2-08本地已形成explicit Simulation policy/limits、exact OBJ-001、sin
 TASK-P2-09本地已使7/7 versioned scenarios通过正式Raw→Problem→Global Strategy→formal Validator链，并形成7次property replay、11个exact C-ID mutation与8/8 machine checks；45 focused、427 full、Ruff/Pyright、全部历史reports、58-path治理、Compose/build均PASS。Implementation `20e49c92306128b47313059fabe31534814dbe3d`的run `32442651322` / required job `96656224252` / artifact `9432982306`精确复现全部证据，故Task=`done`；P2-10～14及P3不会自动启动。
 
 用户于2026-08-21明确授权TASK-P2-10；Diff base `0e4f6630412889254a7bef41f487c24dc274ca9c`的run `32443067388`、required job `96657446617`与artifact `9433118755`精确success。当前只启动五个versioned non-production baseline、deterministic tie-break、fresh Validator/KPI与machine evidence；P2-11～14及P3不自动启动，P2-14仍必须最后执行。
+
+TASK-P2-10本地已通过13个Task-specific、441个full tests、Ruff/Pyright与reference machine 7/7，形成35 complete/fresh Validator/deterministic candidates和5 explicit failures。Exact provider证据尚待implementation push，故Task继续`in_progress`、P2 Milestone继续`active`；P2-11～14不自动启动。

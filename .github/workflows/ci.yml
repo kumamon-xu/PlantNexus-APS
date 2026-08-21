@@ -123,6 +123,12 @@ jobs:
           --root .
           --report build/validation/ci-p2-correctness.json
 
+      - name: P2 deterministic reference scheduler evidence
+        run: >-
+          uv run python -m app.simulation.baselines.reference_schedulers
+          --root .
+          --report build/validation/ci-reference-schedulers.json
+
       - name: Engineering contract
         run: >-
           uv run python -m app.infrastructure.contract_check

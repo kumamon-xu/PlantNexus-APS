@@ -122,3 +122,9 @@ P2-01扩展`test_planning_problem_properties.py`，保留v1 seeds `20260820/21/2
 [`test_p2_solver_properties.py`](../../backend/tests/property/test_p2_solver_properties.py)对七个固定Scenario以Hypothesis布尔row-order选择重放source rows，要求Import dataset、Snapshot、Problem、assignment与ValidationReport完全一致；另一属性从Scenario ID集合生成Solver candidate，并再次调用formal independent Validator，要求PASS且零hard violation。`derandomize=True`、固定asset seed与Hypothesis shrinking确保反例可复现。
 
 该属性集只覆盖七个tiny correctness assets。XS/S/M随机规模、性能分布、Reference比较和Production默认仍由P2-12+承担。
+
+## TASK-P2-10 Reference Scheduler properties
+
+[`test_reference_scheduler_properties.py`](../../backend/tests/property/test_reference_scheduler_properties.py)使用seed `20260821`生成60组可收缩的duration、release/material gate、non-grid due、priority和algorithm组合，逐例验证ceil tick placement、exact weighted tardiness/makespan、完整candidate、deterministic replay与fresh formal Validator PASS。另从七个冻结Scenario ID×五algorithm中生成35组sampled replay，要求active operation集合精确完整且零hard violation。
+
+Unit边界同时固定五种primary/resource tie-break、calendar/transport/RUNNING/HARD facts、invalid hash与blocked-horizon failure。Generated值只属于test-local correctness，不新增Profile/Scenario/fixture或Production distribution；它不采样XS/S/M规模、runtime分布或Global comparison。失败必须保留Hypothesis反例、Problem hash、algorithm/policy version及candidate/Validator report。

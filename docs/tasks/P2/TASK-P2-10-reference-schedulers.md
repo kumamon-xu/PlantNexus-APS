@@ -41,7 +41,7 @@ Documents to update: `README.md`、`docs/README.md`、`docs/current_phase.md`、
 
 Documentation impact rationale: baseline算法是P2 quality sanity check，必须使用相同事实/Validator/KPI且明确非生产fallback。
 
-Change-impact matrix rows reviewed: `IMPACT-PHASE`、`IMPACT-DOCS`
+Change-impact matrix rows reviewed: `IMPACT-REFERENCE-SCHEDULER`、`IMPACT-TESTS`、`IMPACT-INFRA`、`IMPACT-PHASE`、`IMPACT-GOVERNANCE-REGISTRY`、`IMPACT-DOCS`
 
 Traceability updates: REQ-004/005/009/015→TASK-P2-10→TEST-REFERENCE-SCHEDULER/PROPERTY→五算法/validator/KPI report；Global CP-SAT比较留P2-12。
 
@@ -53,7 +53,7 @@ Dependency changes: none；baseline禁止OR-Tools import。
 
 ADR impact: none；如用作Production fallback或简化hard constraints必须新ADR并另行授权。
 
-Error behavior: 无法构造完整合法计划返回明确failure并保留Validator结果；不得输出partial schedule或把heuristic failure写成Problem INFEASIBLE。
+Error behavior: 无法构造完整计划时返回明确`HEURISTIC_FAILURE`并丢弃内部partial state；完整candidate若被formal Validator拒绝则返回`VALIDATION_FAILED`并保留Validator report；不得输出partial schedule或把heuristic failure写成Problem INFEASIBLE。
 
 Tests: TEST-REFERENCE-SCHEDULER、TEST-PROPERTY、TEST-GOLDEN-JSSP/FJSP、TEST-VALIDATOR-MUTATION；算法identity/tie-break/replay、hard constraints和无OR-Tools scan。
 
@@ -73,7 +73,7 @@ Explicitly excluded: CP-SAT修改、benchmark profiles/thresholds、Export、API
 
 PROD_OPEN: OPEN-006/011/012保持OPEN。
 
-SIM_ASSUMPTIONS: 完成前在canonical register分配并登记下一可用SIM assumption ID，用于固定`reference-scheduler-policy.v1`的deterministic tie-break；priority只消费Problem中的versioned positive integer，不新增或猜测权重。二者均不得解释为Production dispatch/fallback policy。
+SIM_ASSUMPTIONS: SIM-ASSUMPTION-012固定`reference-scheduler-policy.v1`的deterministic tie-break；priority只消费Problem中的versioned positive integer，不新增或猜测权重。二者均不得解释为Production dispatch/fallback policy。
 
 Rollback: 删除baseline实现不影响Global Strategy；保留comparison artifacts；任何已发布benchmark必须标注baseline version不可重解释。
 
@@ -84,3 +84,9 @@ Rollback: 删除baseline实现不影响Global Strategy；保留comparison artifa
 启动前冻结16个P2-09 correctness asset的repository-relative path+SHA-256清单摘要为`sha256:2f1ebe2362d53f193c0edb649f14e4b6673d7f3bd2e61b5f88b282a534d8cadd`；Problem v2/Solution/KPI/Validation Schema分别为`e6e4a984…87c8`、`4344468e…df4`、`be3dfbcd…9426`、`1da63e93…d353`，rule sheet=`83fc3663…1e2`，Problem contracts=`ff9eaf88…b3a`，planning contracts=`d5f7a7e4…e630`，formal Validator=`e120cc65…8d9f`，P2 correctness orchestrator=`316aee9c…f3e2`，`uv.lock=8b13617f…7a82`。上述文件与语义全部只读。
 
 Scope review确认原卡未包含machine report的CI step/integration contract及Task lifecycle/Impact Rule文档；故在任何baseline实现文件产生前先冻结完整allow-list。新合同固定为`reference-scheduler-contracts.v1`、`reference-scheduler-policy.v1`与`reference-scheduler-report.v1`；算法identity固定为`reference-fcfs.v1`、`reference-edd.v1`、`reference-spt.v1`、`reference-priority-edd.v1`、`reference-greedy-earliest-available-machine.v1`，tie-break逐字使用本卡Implementation steps。本activation-only差异只命中`IMPACT-PHASE/IMPACT-DOCS`；实现完成后按完整Diff base范围重算`IMPACT-REFERENCE-SCHEDULER/TESTS/INFRA/PHASE/GOVERNANCE-REGISTRY/DOCS`。P2-11～14、BenchmarkRunner、XS/S/M、Export、Production fallback与P3均未启动。
+
+## Local implementation evidence — 2026-08-21
+
+新增`simulation.baselines` contracts/implementation与unit/property tests，并把`reference-scheduler-report.v1`接入required workflow/integration contract。五算法在七个冻结P2-09 Problem上形成35个complete candidate、35次fresh formal Validator PASS及35次deterministic replay；blocked-calendar对五算法均返回`HEURISTIC_FAILURE`、零candidate、零scheduled count且不声明INFEASIBLE。成功结果逐例记录相同priority-weighted tardiness、makespan与runtime，全部`non_production=true`、`optimality_claim=NONE`。
+
+Task-specific unit/property=`13 passed`；包含全部unit/contract/simulation/golden/validation/integration/property的full repository=`441 passed`；Ruff/Pyright均0问题，machine report=`7/7 PASS`。文档治理为142 docs、30 roots、36 Tests、15 OPEN、12 SIM、11 risks、37 Tasks；Task range为38 paths/6 rows/19 checks/0 issues（此时8 committed-range、38 working-tree，union 38）并PASS。Schema、Planning/Validator、P2-09 assets、dependency/lock、Benchmark/Export/API/DB/Worker/P3禁止路径均未修改；Schema/Migration/Dependency/ADR均为none，SIM-ASSUMPTION-012已登记。完整历史machine reports、Compose/build及exact implementation provider仍须在提交/push前后复验，因此Task保持`in_progress`且不启动P2-11。

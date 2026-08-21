@@ -152,3 +152,9 @@ Workflow只新增in-memory `objective_strategy_check`与ignored JSON上传，不
 七个`1.0.0`资产均由`synthetic_only=true`的ScenarioSpec、Simulation-only Profile和`StagingDataPlane.SIMULATION`固定；fixture-local assembler只产生source-shaped Raw rows，再进入公开Normalization/Data Validation链。它不读取环境变量、Secret、DB、API、Worker或Production connector，也不改变既有Production guard。CI仅新增本地文件读取与ignored JSON report，GitHub权限仍为`contents: read`。
 
 `XS`仅表示可手算correctness，不能解释为`benchmarks/profiles.yaml`的性能级别。OPEN-006/011/012及独立Production/Simulation Database/API边界均未关闭，P2-10+不在本Task内。
+
+## TASK-P2-10 Reference isolation
+
+`simulation.baselines`只接受调用方显式PlanningProblem v2与algorithm ID；它不读取environment、Secret、DB、Redis、API、Worker、Planning policy default或Production connector。`reference-scheduler-policy.v1`及SIM-ASSUMPTION-012只固定Simulation tie-break，所有结果显式`non_production=true`且禁止作为Global Strategy fallback。
+
+Workflow只新增in-process reference evidence命令并写ignored JSON；未新增service、port、container、migration、credential或deployment route。Evidence provider为Problem取得而重放既有P2-09 synthetic pipeline，但scheduler不消费其Solver result。OPEN-006/011/012、独立data-plane infrastructure与Production runtime threshold均未关闭。

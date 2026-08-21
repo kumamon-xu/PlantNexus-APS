@@ -105,6 +105,12 @@ registry_version: 1.0.0
 
 纯格式化也需要记录影响判断，但可以在理由充分时声明 `none`。
 
+## TASK-P2-10 matrix review
+
+完整Diff base范围命中`IMPACT-REFERENCE-SCHEDULER`、`IMPACT-TESTS`、`IMPACT-INFRA`、`IMPACT-PHASE`、`IMPACT-GOVERNANCE-REGISTRY`、`IMPACT-DOCS`。Baseline代码触发Reference必审文档；unit/property/integration触发test matrix/docs/trace；workflow触发configuration/technology/operations/NFR；Task lifecycle与SIM-ASSUMPTION-012触发Phase/registry/docs行。
+
+Schema、Planning/Validator、P2-09 Scenario/fixture、dependency/lock、Benchmark implementation/profile、API/DB/Worker、Export与P3路径均为零差异，因此不声明对应Rule ID。Machine rule表无需新增glob或改变`registry_version`；最终path/count以Task governance report真实结果为准。
+
 ## TASK-P0-04 matrix review
 
 本 Task 实际路径预期命中 `IMPACT-SCHEMA`、`IMPACT-DOMAIN`、`IMPACT-VALIDATOR`、`IMPACT-STATE`、`IMPACT-DEPENDENCY`、`IMPACT-VERSION-METADATA`、`IMPACT-TESTS`、`IMPACT-PHASE`、`IMPACT-GOVERNANCE-REGISTRY`、`IMPACT-DOCS`。`schemas/rules/**` 由 IMPACT-SCHEMA 覆盖；rule completeness CLI 位于 `backend/app/planning/validation/**`，由 IMPACT-VALIDATOR 覆盖，不需要无边界新 glob。

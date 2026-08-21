@@ -67,3 +67,5 @@ TASK-P2-08本地实现已通过70 focused、395 full、Ruff/Pyright 0、objectiv
 TASK-P2-09本地实现已形成七个`1.0.0` correctness Scenario、SIM-ASSUMPTION-011、正式Raw→Problem→Strategy→Validator replay、row-order/fresh Validator property、C-001～C-011 exact mutations及`p2-correctness-report.v1` 8/8 PASS。45 focused、427 full、Ruff/Pyright、全部历史machine、58 paths/7 rows/19 checks/0 issues、Compose/build/immutable均PASS；implementation `20e49c92306128b47313059fabe31534814dbe3d`的run `32442651322` / required job `96656224252` / artifact `9432982306`精确复现并闭环，故索引=`done`。P2-10～14保持`planned`且未授权。
 
 用户于2026-08-21授权TASK-P2-10。启动门确认P2-01/02/04及P2-09均`done`，closure HEAD `0e4f6630412889254a7bef41f487c24dc274ca9c`的required `validate` run `32443067388` / job `96657446617` / artifact `9433118755`一致；当前只允许五个reference algorithms、测试/CI evidence和治理文档，P2-11～14不会自动启动。
+
+TASK-P2-10本地实现已形成五个`reference-*.v1` algorithms、SIM-ASSUMPTION-012、complete-or-discard/fresh Validator与`reference-scheduler-report.v1` 7/7。13 task-specific、441 full、Ruff/Pyright均PASS；exact implementation provider尚待push，故索引保持`in_progress`。P2-11～14保持`planned`且未授权。

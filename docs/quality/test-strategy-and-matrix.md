@@ -61,9 +61,9 @@ registry_version: 1.0.0
 | TEST-IDEMPOTENCY | Import/Planning/Export/Publish/Event 幂等 | P0-P3 | [`test_job_reliability.py`](../../backend/tests/integration/test_job_reliability.py) generic primitive + P1 [`test_raw_import_staging.py`](../../backend/tests/integration/test_raw_import_staging.py) durable Import staging replay/conflict/rollback formed；Worker/Planning/Export/Publish/Event side effects PLANNED |
 | TEST-SCENARIO-REPLAY | Scenario/Profile/Generator/seed 重放 | P0-P2 | empty/P0 + P1 ingress + [seven versioned Solver/Validator replays](../../backend/tests/property/test_p2_solver_properties.py) with fixed hashes and row-order invariance formed |
 | TEST-SIM-ISOLATION | Synthetic/Production 隔离 | P0-P1 | generator Production/no-Planning + Raw/Snapshot plane guards + [application expected-plane/no-shortcut](../../backend/tests/integration/test_p1_common_ingress.py) formed；separate DB/API/publish guards PLANNED |
-| TEST-REFERENCE-SCHEDULER | Reference Scheduler baseline | P2 | PLANNED |
+| TEST-REFERENCE-SCHEDULER | Reference Scheduler baseline | P2 | [five algorithms / 35 complete candidates / explicit failure](../../backend/tests/unit/test_reference_schedulers.py) and [shrinkable properties](../../backend/tests/property/test_reference_scheduler_properties.py) locally formed；exact provider pending |
 | TEST-BENCHMARK | BenchmarkReport/profile 回归 | P2 | PLANNED |
-| TEST-PROPERTY | 合法 Problem 的通用不变量 | P2 | Problem v2/formal properties + [Solver-generated candidate, row-order and independent Validator properties](../../backend/tests/property/test_p2_solver_properties.py) formed；XS/S/M properties PLANNED |
+| TEST-PROPERTY | 合法 Problem 的通用不变量 | P2 | Problem v2/formal/Solver properties + [Reference gate/duration/due and authoritative Problem properties](../../backend/tests/property/test_reference_scheduler_properties.py) formed；XS/S/M properties PLANNED |
 | TEST-SOLVER-UPGRADE | Solver 升级 replay/status contract | P2+ | PLANNED |
 
 Test ID 一经分配不得复用。链接到真实测试路径才是已形成证据；`PLANNED` 只登记合同。表结构或状态语义变化必须提升 `registry_version`。
@@ -71,6 +71,8 @@ Test ID 一经分配不得复用。链接到真实测试路径才是已形成证
 TASK-P2-09未新增或复用Test ID；它把TEST-GOLDEN-JSSP/FJSP、CALENDAR/MATERIAL/RUNNING/CROSS-WORKSHOP/INF类、VALIDATOR-MUTATION、SCENARIO-REPLAY与PROPERTY链接到四个新focused files。Focused=45 passed、full repository=427 passed，覆盖2 Golden、5 matrix、7 row-order/fresh Validator properties、11 exact Solver-candidate mutations及CI machine contract；`p2-correctness-report.v1`为8/8。XS/S/M、Reference、Export、P2 Gate与Production测试仍为`PLANNED`，registry format version保持`1.0.0`。
 
 Implementation provider run `32442651322` / artifact `9432982306`精确复现上述427 tests与8/8 correctness report；TASK-P2-09=`done`。这不改变Test ID集合或表结构，XS/S/M、Reference、Export、P2 Gate与Production测试仍为`PLANNED`，registry format version保持`1.0.0`。
+
+TASK-P2-10不新增或复用Test ID；它把TEST-REFERENCE-SCHEDULER与TEST-PROPERTY链接到五个exact algorithm identity、unit/property/integration tests和`reference-scheduler-report.v1`。新增Task-specific tests=`13 passed`，full repository=`441 passed`，machine report为7/7、35 complete/fresh Validator/deterministic、5 explicit failures；Ruff/Pyright均0问题。Exact implementation provider尚待push后核验，故该slice仅为local formed；TEST-BENCHMARK、Export、P2 Gate与Production继续PLANNED，registry format version保持`1.0.0`。
 
 ## 原则
 

@@ -171,3 +171,9 @@ Implementation `20e49c92306128b47313059fabe31534814dbe3d`的GitHub push run `324
 用户于2026-08-21明确授权执行TASK-P2-10。启动复核确认`main=origin/main=0e4f6630412889254a7bef41f487c24dc274ca9c`且working tree clean，P2-09 implementation位于祖先链；该SHA的run `32443067388` / required `validate` job `96657446617`（app `15368`）/ artifact `9433118755`均精确success，artifact digest=`sha256:f258604cd24d9c68f66f2b9b20b23d438014d46d4e746dfe04f3231686179f10`、expiry=`2026-11-19T03:21:06Z`。下载复核16/16 JSON均PASS，Task报告为58 committed/0 working paths、7 rows、19 checks、0 issues；Diff base据此冻结。
 
 本Task只实现FCFS、EDD、SPT、Priority+EDD和Greedy Earliest Available Machine五个versioned deterministic non-production baseline；输入复用七个P2-09 Problem，输出必须是完整candidate或明确`HEURISTIC_FAILURE`，并由fresh formal Validator与相同weighted tardiness/makespan/runtime口径复验。Planning/Solver/Validator语义、Schema、P2-09 assets、dependency/lock、BenchmarkRunner/XS-S-M/threshold、Production fallback、P2-11～14及P3全部冻结；current phase保持P2。
+
+## TASK-P2-10 本地实现边界
+
+`reference-scheduler-contracts.v1`、`reference-scheduler-policy.v1`与五个`reference-*.v1` identity已形成；共享deterministic hard-feasibility helper覆盖C-001～C-011候选构造，成功必须complete且fresh Validator PASS，失败只返回`HEURISTIC_FAILURE`并丢弃partial state。七Problem×五算法形成35个candidate/Validator/replay，5个blocked-calendar failure不声明INFEASIBLE；report同口径记录weighted tardiness、makespan和runtime且显式non-production/no-optimality。
+
+Task-specific=`13 passed`、full repository=`441 passed`，Ruff/Pyright均0问题，reference machine report=`7/7 PASS`。Schema、Planning/Validator、P2-09 assets、dependency/lock、Benchmark/Export/API/DB/Worker禁止路径保持零差异；exact implementation required `validate`/artifact仍待push后形成，因此TASK-P2-10继续`in_progress`。Current phase仍为P2，P2-11～14与P3均未启动。

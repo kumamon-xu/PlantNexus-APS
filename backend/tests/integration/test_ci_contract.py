@@ -27,6 +27,9 @@ from app.planning.policy.contract_check import main as machine_contract_main
 from app.planning.validation.problem_validator_check import (
     main as formal_validator_main,
 )
+from app.simulation.baselines.reference_schedulers import (
+    main as reference_scheduler_main,
+)
 from app.simulation.scenarios.p2_correctness import main as p2_correctness_main
 
 ROOT = Path(__file__).resolve().parents[3]
@@ -127,6 +130,8 @@ def test_ci_runs_repository_gates_and_discovers_the_current_task() -> None:
         "build/validation/ci-objective-strategy.json",
         "app.simulation.scenarios.p2_correctness",
         "build/validation/ci-p2-correctness.json",
+        "app.simulation.baselines.reference_schedulers",
+        "build/validation/ci-reference-schedulers.json",
         "app.infrastructure.contract_check",
         "docker compose --env-file .env.example config --quiet",
         "PLANTNEXUS_CI_CHANGE_BASE:",
@@ -481,6 +486,67 @@ def test_ci_p2_correctness_report_is_machine_checkable(tmp_path: Path) -> None:
         "production_authority": "NOT_CLAIMED",
         "reference_export_benchmark": "NOT_IMPLEMENTED_BY_TASK",
         "p2_10_plus_or_p3": "NOT_STARTED",
+    }
+
+
+def test_ci_reference_scheduler_report_is_machine_checkable(tmp_path: Path) -> None:
+    report_path = tmp_path / "reference-schedulers.json"
+    assert (
+        reference_scheduler_main(
+            ["--root", str(ROOT), "--report", str(report_path)]
+        )
+        == 0
+    )
+    report = json.loads(report_path.read_text(encoding="utf-8"))
+
+    assert report["report_version"] == "reference-scheduler-report.v1"
+    assert report["status"] == "PASS"
+    assert report["task_id"] == "TASK-P2-10"
+    assert report["contract_version"] == "reference-scheduler-contracts.v1"
+    assert report["policy_version"] == "reference-scheduler-policy.v1"
+    assert report["check_count"] == 7
+    assert report["counts"] == {
+        "algorithms": 5,
+        "scenario_cases": 7,
+        "complete_candidates": 35,
+        "independent_validator_passes": 35,
+        "deterministic_replays": 35,
+        "heuristic_failure_cases": 5,
+    }
+    assert {check["name"] for check in report["checks"]} == {
+        "frozen-problem-solution-kpi-validator-rule-correctness-and-lock",
+        "five-versioned-algorithm-identities-and-exact-tie-breaks",
+        "seven-authoritative-p2-correctness-problems",
+        "complete-candidates-across-all-reference-algorithms",
+        "fresh-formal-validator-and-shared-kpi-measurement",
+        "deterministic-replay-and-explicit-heuristic-failure",
+        "non-production-and-comparison-boundary",
+    }
+    assert [value["algorithm_id"] for value in report["algorithms"]] == [
+        "reference-fcfs.v1",
+        "reference-edd.v1",
+        "reference-spt.v1",
+        "reference-priority-edd.v1",
+        "reference-greedy-earliest-available-machine.v1",
+    ]
+    assert len(report["scenario_results"]) == 35
+    assert all(value["status"] == "FEASIBLE" for value in report["scenario_results"])
+    assert all(
+        value["validation_status"] == "PASS"
+        and value["hard_violation_count"] == 0
+        for value in report["scenario_results"]
+    )
+    assert report["boundaries"] == {
+        "data_plane": "SIMULATION_ONLY",
+        "problem_contract": "PLANNING_PROBLEM_V2_UNCHANGED",
+        "hard_constraints": "C_001_THROUGH_C_011_FORMAL_VALIDATOR",
+        "candidate_policy": "COMPLETE_OR_DISCARDED",
+        "random_or_partial_schedule": "PROHIBITED",
+        "heuristic_failure_is_infeasibility_certificate": False,
+        "production_fallback": "PROHIBITED",
+        "global_comparison": "DEFERRED_TO_TASK_P2_12",
+        "benchmark_profiles_thresholds": "NOT_STARTED",
+        "p2_11_plus_or_p3": "NOT_STARTED",
     }
 
 

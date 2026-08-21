@@ -192,3 +192,9 @@ CI新增`app.planning.backends.cp_sat.objective_strategy_check`并沿用`build/v
 ## TASK-P2-09 stack review
 
 Correctness orchestration只使用现有Python 3.12、JSON/YAML、jsonschema/Hypothesis/pytest和exact-pinned OR-Tools `9.15.6755`；`pyproject.toml`与`uv.lock`字节保持不变。CI新增`python -m app.simulation.scenarios.p2_correctness`步骤并复用既有artifact upload，不增加Action、service、container、Secret、migration或runtime dependency。
+
+## TASK-P2-10 reference technology review
+
+Reference实现只使用Python 3.12标准库、既有solver-neutral Planning typed contracts与formal Validator；baseline namespace不直接导入native Solver package或`planning.backends`。Unit/property tests复用既有pytest/Hypothesis，CI复用既有Python/uv/Actions与`build/validation/*.json` artifact glob。
+
+`pyproject.toml`、`uv.lock`、Schema/code metadata、exact Solver pin及全部transitive dependency字节不变；没有新Action、service、container、database、migration、API、Worker或Benchmark dependency。因此不触发dependency ADR/upgrade Gate，single-run runtime也不形成hardware或SLA结论。

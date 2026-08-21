@@ -30,7 +30,7 @@ last_reviewed: 2026-08-21
 | [TASK-P2-05](P2/TASK-P2-05-cp-sat-core-assignment-resource-model.md) | CP-SAT core assignment/resource | P2-03/04 | `done` |
 | [TASK-P2-06](P2/TASK-P2-06-cp-sat-temporal-calendar-material-model.md) | temporal/calendar/material | P2-05 | `done` |
 | [TASK-P2-07](P2/TASK-P2-07-execution-facts-and-hard-lock-model.md) | execution facts/HARD lock | P2-06 | `done` |
-| [TASK-P2-08](P2/TASK-P2-08-delivery-objective-and-global-strategy.md) | OBJ-001与Global Strategy | P2-02/05/06/07 | `in_progress` |
+| [TASK-P2-08](P2/TASK-P2-08-delivery-objective-and-global-strategy.md) | OBJ-001与Global Strategy | P2-02/05/06/07 | `done` |
 | [TASK-P2-09](P2/TASK-P2-09-golden-scenario-property-integration.md) | Golden/scenario/property integration | P2-04～08 | `planned` |
 | [TASK-P2-10](P2/TASK-P2-10-reference-schedulers.md) | 五个Reference Schedulers | P2-01/02/04 | `planned` |
 | [TASK-P2-11](P2/TASK-P2-11-kpi-solver-report-and-export-closure.md) | KPI/report/internal Export | P2-08/09 | `planned` |
@@ -44,7 +44,7 @@ last_reviewed: 2026-08-21
 
 普通CI event range仍只能变更一张current-phase Task Card。唯一例外是初始phase-planning batch：必须由新建`TASK-Pn-00`、`Task batch role: phase-planning-owner`、有效Diff base且`in_progress/done`的唯一owner归属；其他卡必须同range新建、role=`phase-plan-member`、保持`planned/ready`且不得预填implementation SHA。历史卡、既有成员、多个owner或active/done成员均硬失败。选择owner后仍按owner Diff base检查全部scope/Impact Rule。
 
-TASK-P2-00～07已`done`。P2-03的Diff base固定为`f73f8c90af94d3c9b05ecc10b6c999594a3b7d66`且ADR-0011先于dependency变更接受；P2-04～07的implementation及exact provider evidence均已闭环。TASK-P2-08由用户于2026-08-21明确授权，以`9c55df993b12ae0bdd3d4d38c900d601324c05d2`为Diff base进入`in_progress`；P2-09～14继续`planned`且未获授权。
+TASK-P2-00～08已`done`。P2-03的Diff base固定为`f73f8c90af94d3c9b05ecc10b6c999594a3b7d66`且ADR-0011先于dependency变更接受；P2-04～08的implementation及exact provider evidence均已闭环。P2-09～14继续`planned`且未获授权。
 
 P2-04限定为正式Problem/Solution独立C-001～C-011判定、stable ValidationReport/Error、mutation/property/independence machine evidence及CI handoff；不得修改Backend、合同Schema、fixture历史bytes、dependency、objective、Benchmark或P3。P2-05及以后不会由本Task自动启动。
 
@@ -60,4 +60,4 @@ TASK-P2-07已完成本地实现验收：93 focused、382 full、Ruff/Pyright 0�
 
 TASK-P2-07 implementation `5ab65f36d532fd8786eb7ecad3cce406f4d9fb70`的run `32435395744` / required job `96635463577` / artifact `9430579117`精确复现fact-lock 7/7及54 committed/0 working/6 rows/19 checks/0 issues，故索引状态为`done`。TASK-P2-08的启动基线run `32435755901` / job `96636509174` / artifact `9430697910`精确成功；本Task仅执行OBJ-001/Global Strategy，P2-09～14不会自动启动。
 
-TASK-P2-08本地实现已通过70 focused、395 full、Ruff/Pyright 0、objective/strategy 7/7及全部历史machine checks，治理为142 docs、52 paths/8 rows/19 checks/0 issues，Compose/build/immutable均PASS；已形成explicit Simulation policy/limits、exact OBJ-001、single-call Global Strategy、honest status/report与Validator fail-discard。Exact implementation SHA的required `validate`和artifact尚未核验，因此索引继续为`in_progress`；P2-09～14保持`planned`且未授权。
+TASK-P2-08本地实现已通过70 focused、395 full、Ruff/Pyright 0、objective/strategy 7/7及全部历史machine checks，治理为142 docs、52 paths/8 rows/19 checks/0 issues，Compose/build/immutable均PASS；implementation `b1ec83ed96120357ecadd41d3f520181838f17c6`的run `32438785162` / required job `96645152864` / artifact `9431673977`精确复现7/7及52 committed/0 working/8 rows/19 checks/0 issues，故索引=`done`。P2-09～14保持`planned`且未授权。

@@ -284,3 +284,5 @@ Implementation artifact `9430579117`已绑定`5ab65f36d532fd8786eb7ecad3cce406f4
 Planning Schema/contracts、Problem builder/hash、formal Validator、core model/C-ID formulas、dependency/lock、fixture/benchmark implementation、migration、DB/API/Worker和P3/P4无差异，因此不命中SCHEMA/PLANNING-CONTRACTS/PROBLEM/VALIDATOR/DEPENDENCY/MIGRATION等额外Rule ID。最终path/check/issue计数必须由TASK-P2-08 diff report与exact provider artifact回填；registry tables及`registry_version=1.0.0`保持不变。
 
 本地machine report已形成7/7 objective/strategy checks与70 focused/395 full tests；最终Task diff精确为52 changed paths、`IMPACT-BACKEND/DOCS/GOVERNANCE-REGISTRY/INFRA/PHASE/POLICY/STRATEGY/TESTS`八行、19 checks、0 issues。禁止路径相对Diff base无变化；exact provider artifact绑定implementation SHA前TASK-P2-08保持`in_progress`，P2-09不自动启动。
+
+Implementation artifact `9431673977`已绑定`b1ec83ed96120357ecadd41d3f520181838f17c6`并复现52 committed/0 working paths、上述八行、19 checks与0 issues；TASK-P2-08据此关闭为`done`。Schema/Planning contracts/Problem/Validator/Dependency/Migration Rule继续未命中，P2-09不自动启动。

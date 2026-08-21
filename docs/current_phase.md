@@ -42,7 +42,7 @@ PlanningSnapshot
 
 用户于2026-08-20明确授权执行`TASK-P2-03 — OR-Tools and SolverBackend Foundation`；该Task以clean、provider-verified `f73f8c90af94d3c9b05ecc10b6c999594a3b7d66`启动，并在依赖变更前接受ADR-0011。现已由implementation `9268b88ca7ce90a8f72023241f87e2d3676fd58a`的GitHub run `32346208046` / required job `96355386111` / artifact `9398128763`闭环为`done`。Problem/Policy/Solution/Report合同字节和语义保持只读。
 
-P2-02把global schema set additive提升到`2.4.0`，新增四个互相离线解析的v1 document contract，并以`CONTRACT_SAMPLE`/`SOLVER_RUN`显式区分shape样例与真实运行。该发布样例的`not-installed`是P2-02历史shape证据，不随P2-03安装依赖而改写。TASK-P2-00～07现均由exact implementation provider evidence闭环为`done`；用户于2026-08-21明确授权TASK-P2-08，已在clean/provider-verified基线`9c55df993b12ae0bdd3d4d38c900d601324c05d2`上启动。P2-09～14未获授权。
+P2-02把global schema set additive提升到`2.4.0`，新增四个互相离线解析的v1 document contract，并以`CONTRACT_SAMPLE`/`SOLVER_RUN`显式区分shape样例与真实运行。该发布样例的`not-installed`是P2-02历史shape证据，不随P2-03安装依赖而改写。TASK-P2-00～08现均由exact implementation provider evidence闭环为`done`；P2-09～14未获授权。
 
 ## 当前允许
 
@@ -54,7 +54,7 @@ P2-02把global schema set additive提升到`2.4.0`，新增四个互相离线解
 
 ## 当前禁止
 
-- 未经用户另行明确授权启动任何P2-09～14实现；TASK-P2-07已关闭，不再扩展其execution facts/HARD lock范围，TASK-P2-08只执行OBJ-001与Global Strategy；
+- 未经用户另行明确授权启动任何P2-09～14实现；TASK-P2-08已关闭，不再扩展其OBJ-001/Global Strategy范围；
 - 修改Task允许范围外文件、预填PASS/provider evidence或跳过独立Validator；
 - 实现C-012～C-018、OBJ-002 Stability、动态Replan、ExecutionSimulator、P3 Workspace/审批/发布状态；
 - 把UNKNOWN写成INFEASIBLE、FEASIBLE写成OPTIMAL，或以hint代替Execution Fact/HARD lock；
@@ -143,3 +143,7 @@ Implementation `5ab65f36d532fd8786eb7ecad3cce406f4d9fb70`的GitHub run `32435395
 `POLICY-P2-SIM-DELIVERY-OBJ001-001@1.0.0`现以source `plantnexus-synthetic-policy@1.0.0`和显式SolveLimits保护Simulation-only入口；GlobalCpSatStrategy对完整Problem只调用一次Backend，OBJ-001严格计算`sum(priority_weight × max(0, demand_completion_seconds - due_offset_seconds))`，支持非tick-grid due offset且先执行int64域检查。Candidate仅在native OPTIMAL/FEASIBLE且formal independent Validator PASS后保留；UNKNOWN不冒充INFEASIBLE、FEASIBLE不冒充OPTIMAL，validator失败映射FAILED并丢弃assignment/objective。
 
 本地focused=`70 passed`、full repository=`395 passed`，Ruff/Pyright均0问题；`objective-strategy-report.v1`为7/7 PASS，覆盖4个tiny brute-force optimum、4次independent Validator PASS、1个certified infeasible、7种status及Production rejection。全部历史machine reports、142-doc治理、52 paths/8 rows/19 checks/0 issues、Compose、build、`git diff --check`与冻结边界均PASS。Exact implementation provider仍需在push后闭环，因此TASK-P2-08保持`in_progress`；P2-09～14仍未授权，P2不进入P3。
+
+## TASK-P2-08 执行结果
+
+Implementation `b1ec83ed96120357ecadd41d3f520181838f17c6`的GitHub run `32438785162` / required `validate` job/check `96645152864`（app `15368`）全部success；artifact `9431673977`未过期，digest=`sha256:843c036ffa3e133a9bceee1ca3b3320ce42a790cc955f01e94acab135f8fab5d`、expiry=`2026-11-19T02:08:20Z`。下载复核确认14份validation report全部PASS，objective/strategy为7/7，Task report为52 committed/0 working paths、8 rows、19 checks、0 issues且均绑定同一SHA。因此TASK-P2-08=`done`；current phase保持P2，P2-09～14未获授权且不会自动启动，P3仍禁止。

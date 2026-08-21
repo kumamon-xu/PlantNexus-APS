@@ -1,7 +1,7 @@
 ---
 doc_id: TASK-P2-08
 title: Delivery Objective and Global Strategy
-status: in_progress
+status: done
 spec_version: 0.3.0
 phase: P2
 normative: true
@@ -88,3 +88,11 @@ Rollback: 回退Strategy/objective后Backend仅可作内部constraint test，不
 已形成`POLICY-P2-SIM-DELIVERY-OBJ001-001@1.0.0`、no-default explicit SolveLimits、OBJ-001 integer objective builder、objective-aware Backend/mapper、single-call `GlobalCpSatStrategy`与`objective-strategy-report.v1`。Objective单位固定为priority-weighted tardiness seconds；demand completion取其active operations最大end tick，due offset保持权威seconds，int64 upper bound在建模前检查。Global Strategy只接受Simulation及approved policy/source，并对每个candidate强制formal independent Validator PASS；失败即返回FAILED且不泄漏assignment/objective。
 
 本地focused suite=`70 passed`、full repository=`395 passed`、Ruff/Pyright=0，machine report=`7/7 PASS`：4个tiny exhaustive optimum、4次Validator PASS、1个certified infeasible、7种status与1个Production rejection均形成；全部历史machine reports亦PASS。治理为142 docs、52 changed paths、8 matched rows、19 checks、0 issues，Compose、`uv build`、`git diff --check`和冻结/禁止路径0差异均PASS。OBJ-002/003、Production default、Reference/Export/Benchmark/P3/P4均未实现；Schema/contracts、Problem builder/hash、formal Validator、core model/C-ID、dependency/lock和migration保持冻结。Exact implementation provider仍须在push后闭环，故Task状态保持`in_progress`。
+
+## Provider evidence and completion — 2026-08-21
+
+Implementation `b1ec83ed96120357ecadd41d3f520181838f17c6`已直接push到`main`。GitHub push run [`32438785162`](https://github.com/kumamon-xu/PlantNexus-APS/actions/runs/32438785162)（attempt 1）为`completed/success`；required `validate` job/check `96645152864`由GitHub Actions app `15368`执行且全部步骤success，branch protection仍精确要求`validate`/app `15368`。
+
+Artifact `9431673977`（`plantnexus-ci-evidence-32438785162`，27945 bytes）未过期，digest=`sha256:843c036ffa3e133a9bceee1ca3b3320ce42a790cc955f01e94acab135f8fab5d`、expiry=`2026-11-19T02:08:20Z`。下载复核确认14份validation report全部PASS；`ci-objective-strategy.json`绑定上述SHA并为7/7、4 tiny optimum、4 Validator PASS、1 certified infeasible、7 status、1 Production rejection；`ci-current-task-report.json`绑定相同SHA/Diff base并为52 committed/0 working paths、8 Impact Rules、19 checks、0 issues。
+
+因此Goal、负向路径、local/provider、文档/追踪、完成条件与回滚边界全部满足，TASK-P2-08=`done`。OBJ-002/003、Production policy/default、P2-09 Golden/scenario integration、Reference/Export/Benchmark、P3/P4仍明确排除；P2保持`active`，本次关闭不授权或启动P2-09。

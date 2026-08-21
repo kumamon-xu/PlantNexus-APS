@@ -106,3 +106,5 @@ TASK-P2-06 review：temporal Solver只消费Problem中显式versioned calendar/m
 TASK-P2-07 review：fact/lock Solver只消费Problem中显式RUNNING/anchor/HARD/SOFT事实，不猜测execution fact ID、freeze window、lock优先级、稳定性权重、事实authority或发布权限。OPEN-005/007及OPEN-001～015全部继续`OPEN`；in-memory Running/Hard Lock cases、precheck与telemetry不是Authority/Evidence closure、Production default、capacity或SLA，registry format version保持`1.0.0`。
 
 TASK-P2-08 local review：唯一获准的`POLICY-P2-SIM-DELIVERY-OBJ001-001@1.0.0`及显式SolveLimits只用于Simulation correctness，代码会拒绝Production data plane、未知policy/source与隐式limits。它不决定真实priority weight、Production solve defaults、runtime/SLA、容量或发布权限；因此OPEN-006/011/012及OPEN-001～015全部继续`OPEN`。Tiny objective/timing与本地PASS不是Authority/Evidence closure，registry format version保持`1.0.0`。
+
+TASK-P2-08 provider closure：GitHub required run/artifact只复现Simulation policy/limits与OBJ-001 correctness，不是业务Authority或closure record。OPEN-006/011/012及OPEN-001～015全部继续`OPEN`，没有Production default、SLA、capacity或发布决定，registry format version保持`1.0.0`。

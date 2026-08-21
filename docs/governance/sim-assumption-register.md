@@ -88,3 +88,5 @@ TASK-P2-06 review：machine/property checks仅在进程内派生precedence、his
 TASK-P2-07 review：machine/property checks仅在进程内派生RUNNING remainder/resource、COMPLETED anchor、HARD/SOFT locks及calendar/resource/horizon conflict values，不新增仓库fixture、FactoryProfile、Scenario、distribution或XS/S/M baseline。未新增、修改或retire任何SIM项；SIM-ASSUMPTION-001～010继续`ACTIVE`，synthetic lock比例/值只证明bounded correctness，不得外推Production事实频率、freeze policy、容量或default，registry format version保持`1.0.0`。
 
 TASK-P2-08 local review：machine/unit/property checks使用代码内固定的`POLICY-P2-SIM-DELIVERY-OBJ001-001@1.0.0`、source `plantnexus-synthetic-policy@1.0.0`、显式limits/seed及2～5 job tiny due/priority vectors；这些值只验证OBJ-001/Global Strategy/status/Validator correctness，不形成仓库Scenario/Profile、distribution或XS/S/M baseline。未新增、修改或retire任何SIM项；SIM-ASSUMPTION-001～010继续`ACTIVE`，不得外推Production weight/default/capacity/SLA或关闭PROD_OPEN，registry format version保持`1.0.0`。
+
+TASK-P2-08 provider closure：required run/artifact精确重放相同in-memory tiny vectors，没有新增、修改或retire任何SIM项。SIM-ASSUMPTION-001～010继续`ACTIVE`；provider执行不把测试值提升为Scenario distribution、XS/S/M baseline或Production default，registry format version保持`1.0.0`。

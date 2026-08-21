@@ -170,3 +170,5 @@ Required `validate`在foundation/core/temporal/fact-lock/formal evidence后运�
 Step不得`continue-on-error`；artifact必须同时上传objective-strategy及全部历史machine/Task reports且`code_commit`绑定exact pushed SHA。Local `70 focused`/`395 full`与7/7 machine PASS不替代required `validate`、artifact digest/expiry和内容复核；这些证据形成前TASK-P2-08保持`in_progress`，P2-09不自动启动。
 
 Local Gate现已通过70 focused、395 full、Ruff/Pyright 0、objective/strategy 7/7及全部历史machine reports、142-doc治理与52-path/8-row/19-check/0-issue Task report、Compose、build、`git diff --check`和冻结路径检查。下一门仅为implementation exact SHA的required `validate`与artifact；通过前状态不变。
+
+Implementation provider Gate现已通过：SHA `b1ec83ed96120357ecadd41d3f520181838f17c6`、run `32438785162`、required `validate` job/check `96645152864`（app `15368`）均success；artifact `9431673977`未过期且digest=`sha256:843c036ffa3e133a9bceee1ca3b3320ce42a790cc955f01e94acab135f8fab5d`，14份validation reports、objective/strategy 7/7与Task 52 committed/0 working/8 rows/19 checks/0 issues均绑定同一SHA。TASK-P2-08 DoD完成；evidence-only closure仍须由自身exact provider复核，不自动授权P2-09。

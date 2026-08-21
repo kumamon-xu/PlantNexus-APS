@@ -32,8 +32,8 @@ Schema version、rule version、generator version 和 code commit 是不同维�
 
 ## 当前发布基线
 
-- Schema set：`2.4.0`；`pyproject.toml` 与 `app.SCHEMA_VERSION` 一致；`1.0.0/1.1.0/1.2.0/2.0.0/2.1.0/2.2.0/2.3.0` artifacts全部保留；
-- Current contract IDs：历史v1 skeleton、`canonical-records.v1`、`import-package.v2`、`planning-snapshot.v2`、`planning-problem.v2`、`planning-policy.v1`、`solve-limits.v1`、`planning-solution.v1`、`solver-report.v1`、`unit-conversion-registry.v1`、`error-code-registry.v2`、`error.v3`与`import-quality-report.v1`；单个document/version不得因set版本提升而重解释；
+- Schema set：`2.5.0`；`pyproject.toml` 与 `app.SCHEMA_VERSION` 一致；此前全部set artifacts保留；
+- Current contract IDs：历史v1 skeleton、`canonical-records.v1`、`import-package.v2`、`planning-snapshot.v2`、`planning-problem.v2`、`planning-policy.v1`、`solve-limits.v1`、`planning-solution.v1`、`solver-report.v1`、`kpi.v2`、`export-manifest.v1`、`unit-conversion-registry.v1`、`error-code-registry.v2`、`error.v3`与`import-quality-report.v1`；单个document/version不得因set版本提升而重解释；
 - Dialect：JSON Schema Draft 2020-12，使用稳定 URN `$id`；
 - Compatibility：当前set包含P1-02 major release和P1-05/06 additive releases；具体兼容、migration与固定fingerprint见下方各release记录；
 - Unknown/default policy：strict contracts使用`additionalProperties=false`且Schema不含业务`default`；Production authority仍必须显式提供，不能从synthetic/sample推断。
@@ -142,3 +142,12 @@ Problem v1/v2 Schema/sample及`uv.lock`启动fingerprint在Task卡中固定；�
 ## TASK-P2-03 dependency-only review
 
 本Task不修改Schema、sample、`app.SCHEMA_VERSION`或任何document语义；global schema set继续`2.4.0`。启动冻结的四份P2-02 Schema SHA-256与Problem v1/v2 artifacts保持原字节。`cp-sat-backend.v1`是Backend implementation identity，不是JSON Schema release，也不允许改写七种status、Policy/Limits或Solution/Report合同。未来solver/backend版本升级按ADR-0011执行lock、status、Golden/Scenario和Benchmark replay。
+
+## TASK-P2-11 additive output-contract release
+
+- Global schema set提升到`2.5.0`，同步`pyproject.toml`、`app.SCHEMA_VERSION`与data dictionary；新增`kpi.v2`、`export-manifest.v1`及各自synthetic sample；
+- Compatibility：set-level additive；KPI v1、PlanningSolution/SolverReport v1及全部历史Schema/sample bytes保持不变。新consumer必须显式选择KPI v2和`p2-internal-export.v1`，不得用`latest`或原地解释旧artifact；
+- Identity：JSON使用`canonical-json.v1`；KPI ID和package ID均由排除自身ID字段后的canonical内容派生，文件fingerprint绑定exact bytes；CSV固定UTF-8、RFC 4180、LF、稳定列序；
+- Migration：没有KPI/ExportJob/ScheduleVersion persistence或已发布consumer，database/data migration为none。未发布internal package可丢弃重建，合同回滚只能移除新增additive类型并恢复set metadata，不能改写历史artifact；
+- Validation：Schema positive/sample round-trip、KPI v1 fingerprint preservation、same-input bytes、formal run lineage、hash/size/row count、mixed/tamper/missing/partial-write negatives及8-check machine report；
+- Dependency/ADR：runtime/dev pins与`uv.lock`不变；internal immutable package未改变架构或状态语义，因此不新增ADR。若进入persistence/publish/external storage必须停止并由P3 Task/ADR治理。

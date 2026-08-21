@@ -124,3 +124,9 @@ Fact/lock report记录RUNNING/HARD/SOFT counts、fixed operation intervals、res
 `reference-scheduler-report.v1`对五个versioned algorithms在七个tiny P2-09 Problem上记录35个Validator-PASS candidate及weighted tardiness/makespan/single-run runtime；另以5个blocked-calendar case证明`HEURISTIC_FAILURE`不泄漏partial schedule或不可行证书。该证据使Reference算法本身可回归，但没有Global Strategy comparison row。
 
 没有修改`simulation/benchmarks/**`、`benchmarks/**`或`run_benchmark.py`，也没有warm-up、repeat、percentile、hardware normalization、XS/S/M profile、threshold或`BENCHMARK_WARNING`判定。因此TEST-BENCHMARK与REQ-014继续PLANNED，P2-12职责及OPEN-011/012保持不变；P2-10 runtime不得被追认为性能baseline。
+
+## TASK-P2-11 output telemetry, not BenchmarkReport
+
+KPI v2和冻结SolverReport保存同一validated run的objective/bound/gap、model build/first feasible/solve/validation/total、model size与memory；internal manifest固定这些payload的bytes和lineage。这只使单run输出可复验，不增加warm-up、repeat、percentile、hardware profile、Global/Reference comparison或threshold。
+
+Manifest明确`benchmark_report.json=DEFERRED_P2_12`且文件不存在，禁止以空报告或单次timing冒充Benchmark。`simulation/benchmarks/**`、`benchmarks/**`及TEST-BENCHMARK均未修改，REQ-014、OPEN-011/012和P2-12职责保持不变。

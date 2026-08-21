@@ -158,3 +158,9 @@ Workflow只新增in-memory `objective_strategy_check`与ignored JSON上传，不
 `simulation.baselines`只接受调用方显式PlanningProblem v2与algorithm ID；它不读取environment、Secret、DB、Redis、API、Worker、Planning policy default或Production connector。`reference-scheduler-policy.v1`及SIM-ASSUMPTION-012只固定Simulation tie-break，所有结果显式`non_production=true`且禁止作为Global Strategy fallback。
 
 Workflow只新增in-process reference evidence命令并写ignored JSON；未新增service、port、container、migration、credential或deployment route。Evidence provider为Problem取得而重放既有P2-09 synthetic pipeline，但scheduler不消费其Solver result。OPEN-006/011/012、独立data-plane infrastructure与Production runtime threshold均未关闭。
+
+## TASK-P2-11 isolation review
+
+Internal package builder只接受`synthetic=true`且携带P2 correctness provenance的Snapshot；Production或缺失Scenario manifest会fail closed。它不读取环境变量、网络、数据库、queue或external storage。可选目录写入只面向调用方提供的本地路径，并在同一父目录临时构建后原子rename；该能力不注册Production route或publish target。
+
+Manifest固定`publishable=false`及所有P3状态未启动，synthetic package不得进入Production publish plane。没有新增配置项、service或secret；现有environment/data-plane隔离规则保持不变。

@@ -159,3 +159,9 @@ TASK-P0-05 已在 `simulation/profiles`、`simulation/scenarios`、`simulation/g
 - Evidence CLI仅在`run_reference_checks`内部使用P2-09公开orchestrator取得冻结Problem，明确不读取其solution/report；它不实现BenchmarkRunner、Global comparison、Export、API/DB/Worker或P3。
 
 PlanningProblem/Solution Schema、Backend/Strategy/Validator公式与P2-09 assets均未修改。P2-11～14不会由该模块导入或自动启动。
+
+## TASK-P2-11 reporting and exporter boundary
+
+`app.planning.reporting`位于Planning output consumer层：只依赖solver-neutral contracts、formal Validator与Snapshot/Problem pure verification，负责冻结SolverReport和构建KPI；它不导入API/ORM/Worker或修改Backend/Strategy。`app.exporters`再单向依赖reporting并把已验证document编码成immutable package；Planning/Domain不得反向导入exporter。
+
+Exporter核心不依赖`jsonschema`或外部I/O服务；Schema validation只存在于tests和CI machine check。目录writer是有界filesystem adapter，不是ExportJob repository/publisher。该分层保持Modular Monolith与Solver-neutral边界，无需新ADR。

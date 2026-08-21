@@ -129,6 +129,12 @@ jobs:
           --root .
           --report build/validation/ci-reference-schedulers.json
 
+      - name: P2 KPI SolverReport and internal export evidence
+        run: >-
+          uv run python -m app.exporters.contract_check
+          --root .
+          --report build/validation/ci-p2-output-contracts.json
+
       - name: Engineering contract
         run: >-
           uv run python -m app.infrastructure.contract_check

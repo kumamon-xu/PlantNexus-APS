@@ -13,7 +13,7 @@ last_reviewed: 2026-08-21
 
 ## Delivery
 
-`on_time_order_ratio`、`total_tardiness_seconds`、`weighted_tardiness`、`late_order_count`。
+`on_time_order_ratio`、`total_tardiness_seconds`、`priority_weighted_tardiness_seconds`、`late_order_count`及逐Demand completion/due/tardiness明细。
 
 ## Planning
 
@@ -92,3 +92,11 @@ Global Strategy的真实SolverReport现记录OBJ-001 weighted tardiness seconds�
 `reference-scheduler-report.v1`对每个Validator-PASS完整candidate记录`weighted_tardiness_seconds`、`makespan_seconds`、`runtime_seconds`、scheduled/unscheduled counts和Problem hash。Weighted tardiness逐Demand取active operation最大completion tick，保留非grid due的exact秒偏移并乘Problem显式priority；makespan从horizon origin取最大end tick，成功结果unscheduled恒为0。失败结果不暴露partial candidate，quality/makespan为null且scheduled为0。
 
 这些字段是同Problem/Validator口径的Reference correctness measurement，不是完整`kpi.v1` calculator、SolverReport、Benchmark统计、hardware-normalized baseline、capacity或SLA。Runtime只是一轮本地/CI evidence timing；P2-11仍负责正式KPI/SolverReport一致性，P2-12负责XS/S/M比较，OPEN-006/012保持OPEN。
+
+## TASK-P2-11 KPI v2
+
+[`kpi.v2.schema.json`](../../schemas/json/kpi.v2.schema.json)与`app.planning.reporting.build_kpi_v2`形成validated synthetic run的immutable calculator。输入必须是同一Snapshot v2、Problem v2、`SOLVER_RUN` PlanningSolution/SolverReport、fresh exact PASS ValidationReport v2与PASS ImportQualityReport v1；任一hash/version/report/run漂移均拒绝。
+
+Delivery逐Demand以其active operations的最大end tick为completion，按Problem的horizon origin/tick换算UTC与秒级tardiness，priority-weighted总和必须等于OBJ-001 stage carrier。Planning makespan为最大end tick乘tick seconds，scheduled count必须覆盖全部Problem operation，unscheduled为零。Resource available seconds按horizon减去合并后的不可用calendar half-open区间，busy seconds来自assignment interval；分母为零时utilization严格为`null`，否则按12位小数稳定舍入。
+
+当前没有base ScheduleVersion，Stability必须为`NOT_APPLICABLE_NO_BASE_SCHEDULE`且四个变化指标均为`null`；不得伪造ChangeReport或把zero当稳定性。Solver部分复制已校验的objective/bound/gap、timing/model/memory carrier，不把tiny single-run值解释为Benchmark或SLA。KPI ID与fingerprint绑定canonical内容，输入对象不被修改。OPEN-005/006/012仍OPEN，P2-12负责XS/S/M。

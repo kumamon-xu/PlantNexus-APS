@@ -11,7 +11,7 @@ last_reviewed: 2026-08-20
 
 # Schema 计划索引
 
-当前 schema set 为additive `2.4.0`。`CONTRACT_V1/V2/V3`表示机器可验证的合同已形成，不表示Solver、KPI计算、ScheduleValidator、状态持久化或业务动作已完成。`1.0.0/1.1.0/1.2.0/2.0.0/2.1.0/2.2.0/2.3.0` artifact均保留，未被原地覆盖。
+当前 schema set 为additive `2.5.0`。`CONTRACT_V1/V2/V3`表示机器可验证的合同已形成，不表示ScheduleVersion/ExportJob状态持久化、审批、发布或Production业务动作已完成。此前所有set artifact均保留，未被原地覆盖。
 
 | Schema | 目标路径 | 首个 Task | 状态 |
 |---|---|---|---|
@@ -27,7 +27,9 @@ last_reviewed: 2026-08-20
 | SolveLimits v1 | [`/schemas/json/solve-limits.schema.json`](../../schemas/json/solve-limits.schema.json) | TASK-P2-02 | CONTRACT_V1；explicit wall time/workers/seed + provenance formed；Production limits/SLA PLANNED |
 | PlanningSolution v1 | [`/schemas/json/planning-solution.schema.json`](../../schemas/json/planning-solution.schema.json) | TASK-P2-02 | CONTRACT_V1；status/assignment/tick/UTC/objective/fingerprint carrier formed；Solver/Validator PLANNED |
 | SolverReport v1 | [`/schemas/json/solver-report.schema.json`](../../schemas/json/solver-report.schema.json) | TASK-P2-02 | CONTRACT_V1；status/parameters/timing/model/memory/provenance carrier formed；real run/benchmark PLANNED |
-| KPI | [`/schemas/json/kpi.schema.json`](../../schemas/json/kpi.schema.json) | TASK-P0-03 skeleton | SKELETON_V1；calculation PLANNED |
+| KPI v1 | [`/schemas/json/kpi.schema.json`](../../schemas/json/kpi.schema.json) | TASK-P0-03 skeleton | SKELETON_V1 retained；不原地升级 |
+| KPI v2 | [`/schemas/json/kpi.v2.schema.json`](../../schemas/json/kpi.v2.schema.json) | TASK-P2-11 | CONTRACT_V2；validated synthetic run calculator/lineage formed，Production口径PLANNED |
+| Export manifest v1 | [`/schemas/json/export-manifest.schema.json`](../../schemas/json/export-manifest.schema.json) | TASK-P2-11 | CONTRACT_V1；9-payload internal non-publishable profile formed，P3 state/publish PLANNED |
 | ValidationReport v1 | [`/schemas/json/validation-report.schema.json`](../../schemas/json/validation-report.schema.json) | TASK-P0-03 | SKELETON_V1 retained |
 | ValidationReport v2 | [`/schemas/json/validation-report.v2.schema.json`](../../schemas/json/validation-report.v2.schema.json) | TASK-P0-04 rules；TASK-P0-07 mutations | SKELETON_V2 + C-ID shape formed；schedule evaluation PLANNED |
 | Error v1 | [`/schemas/json/error.schema.json`](../../schemas/json/error.schema.json) | TASK-P0-03 | SKELETON_V1 retained |
@@ -41,6 +43,8 @@ last_reviewed: 2026-08-20
 | ScenarioSpec | [`/schemas/scenario/scenario-spec.schema.json`](../../schemas/scenario/scenario-spec.schema.json) | TASK-P0-05 | SKELETON_V1；P0 fixture与`SIM-P1-INGRESS-001` formed；broader Scenario library PLANNED |
 | Scenario manifest | [`/schemas/scenario/scenario-manifest.schema.json`](../../schemas/scenario/scenario-manifest.schema.json) | TASK-P0-05 | SKELETON_V1 + empty Import replay formed；run/export audit PLANNED |
 
-[`/schemas/data_dictionary.yaml`](../../schemas/data_dictionary.yaml) 登记 schema set、canonical collections、版本/provenance、未知字段/默认值策略、兼容边界和 PROD_OPEN/SIM_ASSUMPTION 关联。Set-level `2.4.0`在Problem v2之后新增四个planning-machine document；Import/Snapshot v2 JSON document继续固定`2.0.0`、unit registry v1固定`2.1.0`、quality合同固定`2.2.0`、Problem v2固定`2.3.0`且历史artifact hash不变。P2-02 samples只证明合同shape/replay，不是Solver/Validator/Benchmark或Production证据。
+[`/schemas/data_dictionary.yaml`](../../schemas/data_dictionary.yaml) 登记 schema set、canonical collections、版本/provenance、未知字段/默认值策略、兼容边界和 PROD_OPEN/SIM_ASSUMPTION 关联。Set-level `2.5.0`在planning-machine contracts之后新增KPI v2和ExportManifest v1；Import/Snapshot/quality/Problem/PlanningSolution/SolverReport均保持各自原set版本且历史artifact hash不变。P2-11 samples只证明合同shape/replay；真实calculator/package也只限validated synthetic internal evidence。
 
 TASK-P2-02新增四份Schema/sample并将global set提升到`2.4.0`；Problem v1/v2 Schema/sample、builders与fixed replay不改，Import/Snapshot/quality/unit document版本也不改。Planning machine类型、pure cross-document checks与status mapping已形成；Solver backend、C-ID、ScheduleValidator、Benchmark和Production authority继续`PLANNED`。
+
+TASK-P2-11新增两份strict Draft 2020-12 Schema和两份synthetic sample，将global set additive提升到`2.5.0`。KPI v1及全部既有Schema/sample bytes由fingerprint regression保护；没有migration或dependency变化。`export-manifest.v1`只描述P2 internal profile，不是ScheduleVersion、ExportJob或publish合同。

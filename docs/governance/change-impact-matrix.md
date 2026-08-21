@@ -302,3 +302,9 @@ Implementation artifact `9431673977`已绑定`b1ec83ed96120357ecadd41d3f52018183
 所有七行required documents已进入本Task `Documents to update`并同步review。本地`TASK-P2-09-report.json`精确为58 paths、7 rows、19 checks、0 issues；provider artifact须重现58 committed/0 working paths并绑定implementation SHA，provider前Task保持`in_progress`。
 
 Implementation artifact `9432982306`已绑定`20e49c92306128b47313059fabe31534814dbe3d`并复现58 committed/0 working paths、上述七行、19 checks与0 issues；TASK-P2-09据此关闭为`done`。Schema/Planning/Application/Generator/Dependency/Migration/Benchmark/Reference/Export规则继续未命中，P2-10不自动启动。
+
+## TASK-P2-11 impact review
+
+完整Diff base范围必须命中`IMPACT-SCHEMA`（KPI/manifest/data dictionary）、`IMPACT-REPORTING`（KPI/SolverReport）、`IMPACT-EXPORT`（internal package）、`IMPACT-STATE`（明确零ScheduleVersion/ExportJob transition）、`IMPACT-TESTS`、`IMPACT-INFRA`（CI machine step）、`IMPACT-DEPENDENCY`与`IMPACT-VERSION-METADATA`（`pyproject.toml`仅schema metadata）、`IMPACT-PHASE`、`IMPACT-GOVERNANCE-REGISTRY`和`IMPACT-DOCS`十一行。
+
+Dependency行是强制review，runtime/dev pins及`uv.lock`必须零差异；State行只审查状态合同且`state-machines.v1`/migration/persistence不得修改。Planning/Strategy/Backend/Validator/Problem/Snapshot/Import/Simulation/P2-09 assets、Benchmark/API/DB/Worker/P3+保持零差异。Machine rule table和`registry_version=1.0.0`不变，最终path/count以Task report为准。

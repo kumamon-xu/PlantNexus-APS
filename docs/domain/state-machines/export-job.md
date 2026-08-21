@@ -73,3 +73,9 @@ P0-08 形成 business-neutral `JobRecord` pure transitions：新任务 QUEUED，
 ## TASK-P2-02 review
 
 PlanningSolution/SolverReport v1没有ExportJob字段、storage side effect或publish action。P2-02不创建internal Export package、不执行任何ExportJob transition，也不修改`state-machines.v1`；P2-11和P3的export/publish边界继续`PLANNED`。
+
+## TASK-P2-11 internal package boundary
+
+`p2-internal-export.v1`只提供纯内存构建和本地同文件系统原子目录materialization。Manifest固定`export_job=NOT_CREATED`、`publication=NOT_STARTED`与`publishable=false`；实现没有ExportJob ID/idempotency key/attempt/lease/heartbeat、repository、storage target或外部副作用，也没有执行`CREATED → EXPORTING → EXPORTED`。
+
+同一目标的exact byte replay仅验证文件级确定性；目标内容不同则返回conflict，I/O失败清理临时目录且不留下成功manifest。这是NFR-REL-001的P2 internal consistency slice，不等于business ExportJob retry或double-publish控制。状态机和`state-machines.v1`保持不变，P3实现仍须提供持久化、audit、target、lease/retry与发布隔离。

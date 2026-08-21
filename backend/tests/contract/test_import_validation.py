@@ -218,10 +218,10 @@ def test_additive_schema_set_versions_and_dictionary_are_explicit() -> None:
     import_schema = load_json(SCHEMA_ROOT / "import-package.v2.schema.json")
     unit_registry = load_yaml(RULE_ROOT / "unit-conversion-registry.v1.yaml")
 
-    assert SCHEMA_VERSION == "2.4.0"
+    assert SCHEMA_VERSION == "2.5.0"
     assert SCHEMA_SET_VERSION == "2.2.0"
-    assert pyproject["tool"]["plantnexus-aps"]["versions"]["schema"] == "2.4.0"
-    assert dictionary["schema_set_version"] == "2.4.0"
+    assert pyproject["tool"]["plantnexus-aps"]["versions"]["schema"] == "2.5.0"
+    assert dictionary["schema_set_version"] == "2.5.0"
     assert import_schema["properties"]["schema_set_version"]["const"] == "2.0.0"
     assert unit_registry["schema_set_version"] == "2.1.0"
     assert {
@@ -232,6 +232,8 @@ def test_additive_schema_set_versions_and_dictionary_are_explicit() -> None:
         "solve-limits.v1",
         "planning-solution.v1",
         "solver-report.v1",
+        "kpi.v2",
+        "export-manifest.v1",
     }.issubset(dictionary["schemas"])
 
 

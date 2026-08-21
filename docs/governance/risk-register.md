@@ -97,3 +97,5 @@ TASK-P2-09 provider closure：required run/artifact确认上述correctness控制
 TASK-P2-10 local review：五个deterministic baseline、fresh Validator、complete-or-discard和no-optimality/no-certificate边界加强RISK-002/003/004/006/009；baseline namespace无direct Solver dependency继续约束共同缺陷，single-run timing明确非threshold。仍无Global comparison、XS/S/M、historical baseline、Production authority/deployment或P2 Gate，因此RISK-001～011全部保持`MONITORED`，registry format version保持`1.0.0`。
 
 TASK-P2-10 provider closure：required run/artifact精确复现五算法、35个Validator-PASS candidate、5个explicit failures及冻结边界，没有降低或关闭任何风险。Global comparison、XS/S/M、historical baseline、Production与P2 Gate仍未形成；RISK-001～011继续`MONITORED`，registry format version保持`1.0.0`。
+
+TASK-P2-11 local review：fresh Validator/lineage/self-identity/tamper检查加强RISK-002/003/004/006；synthetic/non-publishable状态加强RISK-007；exact replay/conflict/atomic cleanup加强RISK-008；明确deferred Benchmark与single-run telemetry边界加强RISK-009；依赖/lock零变化继续约束RISK-011。尚无ExportJob/publish side effect、Production authority、XS/S/M或P2 Gate，因此任何风险均不得标记`MITIGATED/CLOSED`；RISK-001～011继续`MONITORED`，registry format version保持`1.0.0`。

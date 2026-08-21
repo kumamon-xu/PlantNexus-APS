@@ -74,3 +74,7 @@ CREATED
 Pure mapping把OPTIMAL/FEASIBLE送往`SOLVED`，INFEASIBLE送往`INFEASIBLE`，UNKNOWN送往`NO_SOLUTION_WITHIN_LIMIT`，MODEL_INVALID送往`MODEL_INVALID`，CANCELLED送往`CANCELLED`，FAILED送往`FAILED`。该映射与`state-machines.v1`现有状态一致，没有增加state或transition；候选存在性与product error同时机器校验。
 
 本Task不执行`SOLVING → ...` transition、不持久化PlanningRun，也不实现cancel actor/reason或failure audit。`CONTRACT_SAMPLE`中的UNKNOWN只是映射样例，不能证明真实limits耗尽；后继Worker/Backend仍须把真实status和evidence写入持久化transition guard。
+
+## TASK-P2-11 reporting review
+
+KPI v2与internal manifest只引用既有`planning_run_id`，并要求该ID与真实SolverReport完全一致；它们不创建、claim、完成或重试PlanningRun。`generated_at_utc`取同一SolverReport的finished time，只是immutable provenance，不是状态转移时间写入。PlanningRun state registry、repository、worker lease/heartbeat和failure audit均未修改。

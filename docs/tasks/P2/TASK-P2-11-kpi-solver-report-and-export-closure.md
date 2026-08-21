@@ -27,7 +27,7 @@ Inputs: Snapshot/Problem hashes、PlanningSolution/ValidationReport、ImportQual
 
 Diff base: 41e958b771f2664b1ac50867903a30b73627878d
 
-Files allowed to change: `.github/workflows/ci.yml`、`pyproject.toml`、`backend/app/__init__.py`、`schemas/data_dictionary.yaml`、`schemas/json/kpi.v2.schema.json`、`schemas/json/export-manifest.schema.json`、`schemas/samples/kpi.v2.synthetic.json`、`schemas/samples/export-manifest.v1.synthetic.json`、`backend/app/planning/reporting/__init__.py`、`backend/app/planning/reporting/kpi.py`、`backend/app/planning/reporting/solver_report.py`、`backend/app/exporters/__init__.py`、`backend/app/exporters/package.py`、`backend/app/exporters/contract_check.py`、`backend/tests/contract/test_schema_contracts.py`、`backend/tests/contract/test_p2_output_contracts.py`、`backend/tests/integration/test_p2_export_package.py`、`backend/tests/integration/test_ci_contract.py`及`Documents to update`；以上为进入`in_progress`前冻结的全部实现/测试/CI路径，新增路径先修订本卡。
+Files allowed to change: `.github/workflows/ci.yml`、`pyproject.toml`、`backend/app/__init__.py`、`schemas/data_dictionary.yaml`、`schemas/json/kpi.v2.schema.json`、`schemas/json/export-manifest.schema.json`、`schemas/samples/kpi.v2.synthetic.json`、`schemas/samples/export-manifest.v1.synthetic.json`、`backend/app/planning/reporting/__init__.py`、`backend/app/planning/reporting/kpi.py`、`backend/app/planning/reporting/solver_report.py`、`backend/app/exporters/__init__.py`、`backend/app/exporters/package.py`、`backend/app/exporters/contract_check.py`、`backend/tests/contract/test_schema_contracts.py`、`backend/tests/contract/test_import_validation.py`、`backend/tests/contract/test_rule_contracts.py`、`backend/tests/contract/test_unit_conversion_registry.py`、`backend/tests/contract/test_p2_output_contracts.py`、`backend/tests/integration/test_p2_export_package.py`、`backend/tests/integration/test_ci_contract.py`及`Documents to update`；前三个补充的历史contract test只允许把global schema set assertion提升到`2.5.0`，其document-level版本/immutable bytes断言不得改变；新增路径先修订本卡。
 
 Files forbidden to change: `uv.lock`、既有Schema/sample bytes、`backend/app/planning/contracts.py`、Strategy/Backend/Validator/Problem/Snapshot/Import/Simulation实现与P2-09 assets、ScheduleVersion/ExportJob persistence/state actions、approval/publish/API/DB/Worker、external storage/network、P3 UI/workspace、dynamic Replan/ChangeReport计算、BenchmarkRunner/XS-S-M/threshold及P3+。
 
@@ -41,7 +41,7 @@ Documents to update: `README.md`、`docs/README.md`、`docs/current_phase.md`、
 
 Documentation impact rationale: P2 Gate要求Snapshot→Export，必须固定报告/manifest/文件一致性并清楚隔离P3状态/publish。
 
-Change-impact matrix rows reviewed: `IMPACT-PHASE`、`IMPACT-DOCS`
+Change-impact matrix rows reviewed: `IMPACT-SCHEMA`、`IMPACT-REPORTING`、`IMPACT-EXPORT`、`IMPACT-STATE`、`IMPACT-TESTS`、`IMPACT-INFRA`、`IMPACT-DEPENDENCY`、`IMPACT-VERSION-METADATA`、`IMPACT-PHASE`、`IMPACT-GOVERNANCE-REGISTRY`、`IMPACT-DOCS`
 
 Traceability updates: REQ-004/005/006/009→TASK-P2-11→TEST-OUTPUT/CONTRACT/IDEMPOTENCY→KPI/SolverReport/Validation/manifest package artifacts；P3 publish remains PLANNED。
 
@@ -84,3 +84,11 @@ Rollback: 未发布internal package可丢弃重建；合同artifact不原地改�
 启动前冻结P2-09 correctness asset清单摘要=`sha256:2f1ebe2362d53f193c0edb649f14e4b6673d7f3bd2e61b5f88b282a534d8cadd`；Snapshot v2=`d30ed42f…6a09`、Problem v2=`e6e4a984…87c8`、PlanningSolution v1=`4344468e…8df4`、SolverReport v1=`64feacd0…7b2a`、ValidationReport v2=`1da63e93…d353`、ImportQualityReport v1=`2d41fb0a…f434`、KPI v1=`be3dfbcd…9426`，planning contracts=`d5f7a7e4…e630`、Global Strategy=`c3c5f057…4133`、formal Validator=`e120cc65…8d9f`、P2 correctness orchestrator=`316aee9c…f3e2`、`uv.lock=8b13617f…7a82`。这些既有artifact及语义全部只读。
 
 Scope review确认原卡遗漏schema set metadata/sample注册、machine report的CI step/integration contract以及Task lifecycle/Impact Rule强制文档，故在任何实现文件产生前冻结上述完整allow-list。新合同固定为`kpi.v2`、`export-manifest.v1`与`p2-internal-export.v1`；P2内部包以validated PlanningSolution承载`schedule.json`，不是ScheduleVersion，不创建ExportJob，不可审批/发布。由于ChangeReport属于P4 dynamic Replan、benchmark report属于P2-12，二者只在manifest中以deferred状态显式登记，不伪造内容；因此该profile完整但不冒充P3可发布标准包。本activation-only差异只命中`IMPACT-PHASE/IMPACT-DOCS`；实现完成后按完整Diff base范围重算`IMPACT-SCHEMA/REPORTING/EXPORT/STATE/TESTS/INFRA/DEPENDENCY/VERSION-METADATA/PHASE/GOVERNANCE-REGISTRY/DOCS`。P2-12～14与P3均未启动。
+
+## Local implementation evidence — 2026-08-21
+
+已形成`kpi.v2`、`export-manifest.v1`、immutable SolverReport freeze与`p2-internal-export.v1`。KPI从同一validated replay独立计算逐Demand交付/OBJ-001、makespan、完整assignment counts、calendar-denominator resource utilization及明确no-base stability；SolverReport只接受真实`SOLVER_RUN`、formal PASS和Global Strategy identity，保持原timing/metrics字节。Package固定manifest加9个payload，全部JSON canonical、CSV为UTF-8 RFC4180 LF，逐文件保存role/media/hash/bytes/rows并交叉验证run/Problem/Snapshot/Solution/Validation/Solver/Quality/KPI/Scenario血缘与content identities。
+
+纯内存package在返回前完整复验；目录writer在同父目录临时构建、manifest last、原子rename，exact byte replay幂等，conflict/I/O/partial write稳定失败且清理临时目录。Manifest固定`publishable=false`、ScheduleVersion/ExportJob=`NOT_CREATED`、approval/publication=`NOT_STARTED`，并将ChangeReport延后P4、BenchmarkReport延后P2-12。新增task-specific 13项、指定验收49项、全仓455项、Ruff/Pyright、全部历史machine和output report 8/8均PASS；治理为142 docs、58 paths、11 rows、19 checks、0 issues。Compose/build/immutable与exact provider证据仍由后续验收完成，因此Task保持`in_progress`。
+
+首次全量回归为`452 passed / 3 failed`，仅暴露`test_import_validation.py`、`test_rule_contracts.py`与`test_unit_conversion_registry.py`仍精确断言旧global set`2.4.0`。按本卡范围协议，在修改这三处前先将其加入allow-list；修复只同步set-level metadata到`2.5.0`，不弱化Import/Unit/Rule document版本或任何历史fingerprint断言。

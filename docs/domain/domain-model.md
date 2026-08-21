@@ -118,3 +118,9 @@ COMPLETED OperationInstance本体继续留在Snapshot事实层且不进入future
 PlanningPolicy与SolveLimits是显式version/source/data-plane的输入值；PlanningSolution是引用Problem/Policy/Limits并携带候选assignment或无candidate outcome的输出值；SolverReport再引用Solution并承载backend参数、metrics、timing和provenance。四者以canonical JSON fingerprint形成单向identity链，不新增canonical entity、数据库aggregate或可变business state。
 
 `SolverBackend`仅为Domain可消费的Protocol，没有实现或OR-Tools类型。PlanningSolution不等于validated Schedule，SolverReport不等于PlanningRun persistence，`CONTRACT_SAMPLE`更不产生ScheduleVersion。后继层必须保留这些边界，不得让ORM/API/Worker对象或Solver native object进入机器合同。
+
+## TASK-P2-11 reporting/export value boundary
+
+KPI v2是从已验证的Snapshot/Problem/Solution/Validation/Solver/Quality bundle派生的immutable value；internal Export package是canonical bytes与manifest identity的值集合。二者都不是新的Factory/Order/Operation领域实体，也不拥有事实权威。Reporting只复算指标与校验血缘，不修改Solution、Problem或上游document。
+
+`schedule.json`继续是validated PlanningSolution，不是ScheduleVersion；目录写入也不是ExportJob aggregate或状态转移。Package manifest显式保存`NOT_CREATED/NOT_STARTED`边界和`publishable=false`，因此P2实现不会把计算结果提升为可评审、已审批或已发布计划。P3 persistence、actor/audit、external target与publish idempotency仍须由独立Task形成。

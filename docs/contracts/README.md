@@ -11,7 +11,7 @@ last_reviewed: 2026-08-20
 
 # 合同文档索引
 
-本目录描述机器可执行 Schema 的人类语义。TASK-P0-03 发布 schema set `1.0.0` 的数据合同 skeleton；TASK-P0-04/05 以 set-level additive 方式发布 `1.1.0/1.2.0` 规则与Simulation合同；TASK-P1-02 以 breaking set release `2.0.0` 新增严格 canonical records、Import v2与Snapshot v2；TASK-P1-05/06再以additive `2.1.0/2.2.0`发布unit registry与Data Validation/error/report合同；TASK-P2-01以additive set `2.3.0`新增非互换的`planning-problem.v2`；TASK-P2-02再以additive set `2.4.0`新增Policy/Limits/Solution/SolverReport v1。机器文件位于 `/schemas/json`、`/schemas/rules` 与 `/schemas/scenario`，data dictionary 位于 `/schemas/data_dictionary.yaml`。Schema 与对应合同必须同 Task、同版本语义更新。
+本目录描述机器可执行 Schema 的人类语义。TASK-P0-03 发布 schema set `1.0.0` 的数据合同 skeleton；TASK-P0-04/05 以 set-level additive 方式发布 `1.1.0/1.2.0` 规则与Simulation合同；TASK-P1-02 以 breaking set release `2.0.0` 新增严格 canonical records、Import v2与Snapshot v2；TASK-P1-05/06再以additive `2.1.0/2.2.0`发布unit registry与Data Validation/error/report合同；TASK-P2-01以additive set `2.3.0`新增非互换的`planning-problem.v2`；TASK-P2-02以`2.4.0`新增Policy/Limits/Solution/SolverReport v1；TASK-P2-11再以additive `2.5.0`新增`kpi.v2`和`export-manifest.v1`。机器文件位于 `/schemas/json`、`/schemas/rules` 与 `/schemas/scenario`，data dictionary 位于 `/schemas/data_dictionary.yaml`。Schema 与对应合同必须同 Task、同版本语义更新。
 
 ## 当前基线
 
@@ -48,8 +48,10 @@ last_reviewed: 2026-08-20
 - `error-code-registry.v2`：additive保留v1全部19项映射，并增加`ROUTE_CYCLE`、`MISSING_RESOURCE`、`UNIT_CONVERSION_ERROR`、`MISSING_DURATION`四项DATA_ERROR。
 - `planning-policy.v1`、`solve-limits.v1`：显式数据平面、来源、版本、C-001～C-011、OBJ-001及wall-time/worker/seed，不提供Production默认值；
 - `planning-solution.v1`、`solver-report.v1`：七种status、Problem/Policy/Limits/Solution指纹、tick/UTC、objective/bound/gap、timing/model/memory/version provenance，并区分合同样例与未来真实Solver run。
+- `kpi.v2`：绑定同一Snapshot/Problem/validated Solution/Validation/Solver/ImportQuality run，独立计算Delivery/Planning/Resource并显式声明无base ScheduleVersion时Stability不适用；
+- `export-manifest.v1`：固定`p2-internal-export.v1`的9个payload、逐文件hash/bytes/rows、entity counts、完整lineage、synthetic/non-publishable状态及P2-12/P4 deferred artifacts。
 
-`2.4.0` 保留 `1.0.0/1.1.0/1.2.0/2.0.0/2.1.0/2.2.0/2.3.0` 全部 artifact；Import/Snapshot/Problem v1与v2、Error v1/v2/v3以及四个新v1 document均须由consumer显式选择版本。Import/Snapshot v2自身固定的`schema_set_version=2.0.0`、unit registry v1固定的`2.1.0`、quality合同固定的`2.2.0`、Problem v2固定的`2.3.0`均不因set-level新增合同而原地改写。strict objects拒绝未知字段且不声明业务默认值。Problem v2 sample是TASK-P2-01 builder固定回放输出；P2-02四份样例是`CONTRACT_SAMPLE` shape/replay evidence，不是实际Solver、Validator、Benchmark或生产数据。
+`2.5.0`保留此前全部artifact；consumer必须显式选择document版本。Import/Snapshot v2固定`2.0.0`、unit registry固定`2.1.0`、quality固定`2.2.0`、Problem v2固定`2.3.0`，PlanningSolution/SolverReport固定`2.4.0`，均不因set-level新增合同而改写。strict objects拒绝未知字段且不声明业务默认值。P2-11两份sample只证明Schema shape/canonical round-trip；正式machine evidence来自validated synthetic replay，不是Production或发布证据。
 
 TASK-P1-04已形成code-level `ReferenceFileAdapter@1.0.0` transport contract：fixed CSV/XLSX shape安全转换为TASK-P1-03 Raw Staging，manifest明确`production_binding=false`。`payload_json`在Adapter边界保持opaque，由TASK-P1-05的显式MappingProfile消费。因此下方真实`external-adapters.md`仍受OPEN-002/007/013/015阻塞，不能用Reference Adapter替代。
 

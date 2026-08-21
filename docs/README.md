@@ -69,7 +69,7 @@ last_reviewed: 2026-08-21
 
 ## 当前范围
 
-当前阶段为P2。P1 Milestone为`completed`，P2为`active`；TASK-P2-00～10均已闭环为`done`，TASK-P2-11已获授权并为`in_progress`。当前只形成KPI/SolverReport/internal Export closure；BenchmarkRunner、P2-12～14和P3均未启动，详见`current_phase.md`。
+当前阶段为P2。P1 Milestone为`completed`，P2为`active`；TASK-P2-00～10均已闭环为`done`，TASK-P2-11已获授权并为`in_progress`。KPI v2、SolverReport冻结和不可发布internal Export已形成本地证据，但尚未取得exact implementation provider闭环；BenchmarkRunner、P2-12～14和P3均未启动，详见`current_phase.md`。
 
 ## 仓库入口与本地检查
 
@@ -102,3 +102,5 @@ TASK-P2-09以`15c298f343a47db2a922544944ff5e02e4ca72d9`为Diff base启动。七�
 TASK-P2-10实现为5个versioned deterministic algorithms、35/35 complete candidate/fresh Validator/deterministic replay及5个zero-partial explicit failures；`reference-scheduler-report.v1`为7/7 PASS。13个Task-specific与441个full tests、Ruff/Pyright均PASS；implementation exact required run/artifact已精确复现17/17 reports并闭环为`done`。Global comparison/XS-S-M/threshold、Export、Production fallback和P2-11+仍未启动。
 
 用户于2026-08-21明确授权TASK-P2-11；clean/provider-verified Diff base为`41e958b771f2664b1ac50867903a30b73627878d`，其run `32450216908` / required job `96677202782` / artifact `9435421360`均success。当前只启动additive KPI/manifest合同、validated solution reporting和不可发布internal package；ChangeReport/BenchmarkRunner、P3 state/persistence/approval/publish及P2-12～14保持冻结。
+
+TASK-P2-11本地链路为`Snapshot/Problem → validated PlanningSolution + ValidationReport + SolverReport + ImportQualityReport → KPI v2 → p2-internal-export.v1`。Machine report执行8项确定性、Schema/sample、血缘、tamper/mixed-run、原子写入/清理和状态边界检查；它不创建ScheduleVersion或ExportJob，也不产生可发布artifact。Global schema set现为additive `2.5.0`，既有document版本与bytes不改。

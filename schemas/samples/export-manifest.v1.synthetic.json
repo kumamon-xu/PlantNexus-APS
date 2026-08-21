@@ -1,0 +1,87 @@
+{
+  "package_id": "export-package-1111111111111111111111111111111111111111111111111111111111111111",
+  "export_manifest_version": "export-manifest.v1",
+  "schema_set_version": "2.5.0",
+  "package_profile": "p2-internal-export.v1",
+  "canonicalization_version": "canonical-json.v1",
+  "csv_dialect_version": "rfc4180-lf.v1",
+  "planning_run_id": "RUN-EXPORT-MANIFEST-SAMPLE",
+  "generated_at_utc": "2026-08-21T00:00:00Z",
+  "publishable": false,
+  "state_boundary": {
+    "schedule_version": "NOT_CREATED",
+    "export_job": "NOT_CREATED",
+    "approval": "NOT_STARTED",
+    "publication": "NOT_STARTED"
+  },
+  "lineage": {
+    "snapshot": {
+      "snapshot_version": "planning-snapshot.v2",
+      "snapshot_id": "SNAPSHOT-EXPORT-SAMPLE",
+      "snapshot_hash": "sha256:1111111111111111111111111111111111111111111111111111111111111111"
+    },
+    "problem": {
+      "problem_version": "planning-problem.v2",
+      "problem_hash": "sha256:2222222222222222222222222222222222222222222222222222222222222222"
+    },
+    "solution": {
+      "planning_solution_version": "planning-solution.v1",
+      "solution_id": "SOLUTION-EXPORT-SAMPLE",
+      "solution_fingerprint": "sha256:3333333333333333333333333333333333333333333333333333333333333333"
+    },
+    "validation_report": {
+      "validation_report_version": "validation-report.v2",
+      "validation_report_fingerprint": "sha256:4444444444444444444444444444444444444444444444444444444444444444",
+      "status": "PASS"
+    },
+    "solver_report": {
+      "solver_report_version": "solver-report.v1",
+      "report_id": "SOLVER-REPORT-EXPORT-SAMPLE",
+      "solver_report_fingerprint": "sha256:5555555555555555555555555555555555555555555555555555555555555555"
+    },
+    "import_quality_report": {
+      "report_version": "import-quality-report.v1",
+      "report_id": "IMPORT-QUALITY-EXPORT-SAMPLE",
+      "import_quality_report_fingerprint": "sha256:6666666666666666666666666666666666666666666666666666666666666666",
+      "status": "PASS"
+    },
+    "kpi": {
+      "kpi_version": "kpi.v2",
+      "kpi_id": "kpi-7777777777777777777777777777777777777777777777777777777777777777",
+      "kpi_fingerprint": "sha256:7777777777777777777777777777777777777777777777777777777777777777"
+    }
+  },
+  "entity_counts": {
+    "snapshot_operation_count": 1,
+    "problem_operation_count": 1,
+    "assignment_count": 1,
+    "demand_count": 1,
+    "resource_count": 1
+  },
+  "file_count": 9,
+  "files": [
+    {"path": "import_quality_report.json", "role": "IMPORT_QUALITY_REPORT", "media_type": "application/json", "sha256": "sha256:0000000000000000000000000000000000000000000000000000000000000001", "size_bytes": 101, "row_count": null},
+    {"path": "kpi.json", "role": "KPI", "media_type": "application/json", "sha256": "sha256:0000000000000000000000000000000000000000000000000000000000000002", "size_bytes": 102, "row_count": null},
+    {"path": "order_summary.csv", "role": "ORDER_SUMMARY", "media_type": "text/csv; charset=utf-8", "sha256": "sha256:0000000000000000000000000000000000000000000000000000000000000003", "size_bytes": 103, "row_count": 1},
+    {"path": "resource_load.csv", "role": "RESOURCE_LOAD", "media_type": "text/csv; charset=utf-8", "sha256": "sha256:0000000000000000000000000000000000000000000000000000000000000004", "size_bytes": 104, "row_count": 1},
+    {"path": "scenario_manifest.json", "role": "P2_CORRECTNESS_SCENARIO_MANIFEST", "media_type": "application/json", "sha256": "sha256:0000000000000000000000000000000000000000000000000000000000000005", "size_bytes": 105, "row_count": null},
+    {"path": "schedule.json", "role": "VALIDATED_PLANNING_SOLUTION", "media_type": "application/json", "sha256": "sha256:0000000000000000000000000000000000000000000000000000000000000006", "size_bytes": 106, "row_count": null},
+    {"path": "schedule_operations.csv", "role": "SCHEDULE_OPERATIONS", "media_type": "text/csv; charset=utf-8", "sha256": "sha256:0000000000000000000000000000000000000000000000000000000000000007", "size_bytes": 107, "row_count": 1},
+    {"path": "solver_report.json", "role": "SOLVER_REPORT", "media_type": "application/json", "sha256": "sha256:0000000000000000000000000000000000000000000000000000000000000008", "size_bytes": 108, "row_count": null},
+    {"path": "validation_report.json", "role": "VALIDATION_REPORT", "media_type": "application/json", "sha256": "sha256:0000000000000000000000000000000000000000000000000000000000000009", "size_bytes": 109, "row_count": null}
+  ],
+  "deferred_artifacts": [
+    {"path": "benchmark_report.json", "status": "DEFERRED_P2_12"},
+    {"path": "change_report.json", "status": "DEFERRED_P4_DYNAMIC_REPLAN"}
+  ],
+  "synthetic": true,
+  "synthetic_provenance": {
+    "scenario_id": "SCENARIO-EXPORT-SAMPLE",
+    "scenario_version": "1.0.0",
+    "seed": 20260821,
+    "factory_profile_id": "PROFILE-EXPORT-SAMPLE",
+    "profile_version": "1.0.0",
+    "generator_id": "GENERATOR-EXPORT-SAMPLE",
+    "generator_version": "1.0.0"
+  }
+}

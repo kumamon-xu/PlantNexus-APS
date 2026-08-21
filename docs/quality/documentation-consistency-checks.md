@@ -310,3 +310,9 @@ Diff base固定为`0e4f6630412889254a7bef41f487c24dc274ca9c`；范围检查必�
 本Task不新增`docs/**/*.md`，inventory仍为142；roots=30、Test IDs=36、OPEN=15、risks=11、Tasks=37不变，新增SIM-ASSUMPTION-012使active Simulation assumptions=12。本地`traceability-report.v1`为38 paths/6 matched rows/19 checks/0 issues并PASS；提交前source counts为8 committed-range与38 working-tree paths（union仍为38）。
 
 Implementation artifact `9435264655`内`traceability-report.v1`精确绑定`8ca62bbb1105a1dfae2ee2600ae7e4e62a5bef6c`与Diff base `0e4f6630412889254a7bef41f487c24dc274ca9c`，复现38 committed/0 working paths、6 rows、19 checks、0 issues并PASS；TASK-P2-10治理Gate据此闭环为`done`。Closure提交仍须由自身exact provider复核。
+
+## TASK-P2-11 governance application
+
+Diff base固定为`41e958b771f2664b1ac50867903a30b73627878d`；完整activation/implementation范围必须命中`IMPACT-SCHEMA/REPORTING/EXPORT/STATE/TESTS/INFRA/DEPENDENCY/VERSION-METADATA/PHASE/GOVERNANCE-REGISTRY/DOCS`。`pyproject.toml`仅提升schema metadata，runtime/dev dependency和`uv.lock`不得变化；State行只审查并声明无transition/persistence，不能把文档更新解释为状态实现。
+
+本Task不新增、删除或重命名`docs/**/*.md`，inventory继续为142；roots=30、Test IDs=36、OPEN=15、SIM assumptions=12、risks=11、Tasks=37，所有registry format version保持`1.0.0`。本地Task diff已覆盖58 paths、11个真实Impact rows、19项governance checks且0 issues；implementation提交后provider artifact还必须复现58 committed/0 working paths。

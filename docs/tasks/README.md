@@ -71,3 +71,5 @@ TASK-P2-09本地实现已形成七个`1.0.0` correctness Scenario、SIM-ASSUMPTI
 TASK-P2-10实现已形成五个`reference-*.v1` algorithms、SIM-ASSUMPTION-012、complete-or-discard/fresh Validator与`reference-scheduler-report.v1` 7/7。13 task-specific、441 full、Ruff/Pyright均PASS；implementation `8ca62bbb1105a1dfae2ee2600ae7e4e62a5bef6c`的run `32449742281` / required job `96675839685` / artifact `9435264655`精确复现17/17 reports及38 committed/0 working/6 rows/19 checks/0 issues，故索引=`done`。P2-11～14保持`planned`且未授权。
 
 用户于2026-08-21授权TASK-P2-11。启动门确认P2-08/09均`done`，closure HEAD `41e958b771f2664b1ac50867903a30b73627878d`的required `validate` run `32450216908` / job `96677202782` / artifact `9435421360`一致；当前只允许KPI v2/manifest、deterministic reporting/internal package、测试/CI evidence和治理文档，P2-12～14不会自动启动。
+
+TASK-P2-11本地已形成additive schema set`2.5.0`、validated-solution KPI/SolverReport、9-payload不可发布internal package及8/8 machine evidence；same-input bytes、cross-file lineage、tamper/missing/mixed-run、exact replay和partial-write cleanup均有测试。Exact implementation provider闭环前索引继续为`in_progress`，P2-12～14保持`planned`。

@@ -6,6 +6,6 @@ while preserving the P1 canonical-data boundary and historical replay vectors.
 
 CODE_VERSION = "0.0.0"
 SPEC_VERSION = "0.3.0"
-SCHEMA_VERSION = "2.4.0"
+SCHEMA_VERSION = "2.5.0"
 
 __all__ = ["CODE_VERSION", "SCHEMA_VERSION", "SPEC_VERSION"]

@@ -113,3 +113,9 @@ Report本身不写业务数据库，temporary CSV随进程回收，`build/valida
 运行`uv run python -m app.simulation.baselines.reference_schedulers --root . --report <path>`生成`reference-scheduler-report.v1`；CI固定为`build/validation/ci-reference-schedulers.json`。PASS必须为7/7 checks、5个versioned identity、7个冻结Problem、35个完整candidate/fresh Validator/deterministic replay及5个explicit heuristic failure，并保持零partial、零infeasibility certificate claim。
 
 命令只读synthetic correctness assets并写ignored report，不连接DB/Redis/API/Worker、不创建PlanningRun/ScheduleVersion/Export、不建立XS/S/M或Production fallback。Provider验收必须确认report `code_commit`等于exact pushed SHA、required `validate`成功，并与同一artifact的Task report一起下载复核；local `uncommitted` PASS不是外部证据或Production runbook。
+
+## TASK-P2-11 output-contract evidence command
+
+运行`uv run python -m app.exporters.contract_check --root . --report <path>`生成`p2-output-contract-report.v1`；CI固定为`build/validation/ci-p2-output-contracts.json`。PASS必须为8/8 checks，覆盖两份新Schema/sample、冻结input hashes、同一validated correctness run的确定性package、cross-file lineage/count/hash、mixed/tamper/missing负例、exact replay以及partial-write cleanup/state boundary。
+
+命令只在进程内构建synthetic bytes并可使用临时目录；不创建业务ExportJob/ScheduleVersion、不连接外部storage/network/DB/queue，也不publish。Provider验收必须下载同一artifact，确认report `code_commit`、8/8 checks和current Task report均绑定exact implementation SHA；local `uncommitted` report不是发布或Production runbook。

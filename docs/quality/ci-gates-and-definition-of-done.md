@@ -188,3 +188,9 @@ Workflow在P2 correctness evidence后执行`python -m app.simulation.baselines.r
 Local code Gate为13个Task-specific tests、441个full repository tests、Ruff/Pyright零问题与reference report 7/7；全部历史machine reports、Task差异治理、Compose、build、冻结hash和`git diff --check`也均PASS。
 
 Implementation provider Gate已通过：SHA `8ca62bbb1105a1dfae2ee2600ae7e4e62a5bef6c`、run `32449742281`、required `validate` job/check `96675839685`（app `15368`）均success；artifact `9435264655`未过期且digest=`sha256:db250a86929c7e2c50ef0c24a2cbf74940a7b244e5d9499e42e087f4cd94c784`。17/17 reports、reference 7/7及Task 38 committed/0 working/6 rows/19 checks/0 issues均绑定同一SHA；TASK-P2-10 DoD完成，不自动授权P2-11。
+
+## TASK-P2-11 output-contract CI Gate
+
+Workflow在reference evidence后执行`python -m app.exporters.contract_check --root . --report build/validation/ci-p2-output-contracts.json`，不得`continue-on-error`。Integration contract要求`p2-output-contract-report.v1`为8/8 PASS并验证schema/sample、frozen inputs、deterministic package、lineage、negative cases、atomic replay/cleanup及non-publishable boundaries；报告随既有`plantnexus-ci-evidence-<run-id>`上传。
+
+Local code Gate已通过指定49项、全仓455项、Ruff/Pyright零问题、output report 8/8及全部历史machine reports；full/diff文档治理为142 docs、58 paths、11 rows、19 checks、0 issues。Compose、build、schema metadata、immutable/forbidden-path和`git diff --check`仍须在最终本地收口复验。Implementation commit push后，只有exact SHA的required `validate`/app `15368`成功且下载artifact复核output/Task reports后，TASK-P2-11才能关闭；本地PASS不自动启动P2-12。

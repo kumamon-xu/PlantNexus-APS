@@ -201,3 +201,11 @@ Implementation `20e49c92306128b47313059fabe31534814dbe3d`的required run `324426
 只有五个deterministic non-production baseline、35个七场景完整candidate、fresh Validator与explicit failure可提升为formed。证据必须区分heuristic failure与INFEASIBLE certificate、complete/discard与partial schedule、single-run runtime与XS/S/M baseline、Reference measurement与OBJ optimality、local `uncommitted`与provider SHA。Planning/Validator公式、Schema、P2-09 assets、dependency与Benchmark路径保持冻结；Global comparison/warning、Export、P2 Gate和P3继续PLANNED。
 
 Implementation `8ca62bbb1105a1dfae2ee2600ae7e4e62a5bef6c`的required run `32449742281`与artifact `9435264655`已精确绑定并复现reference 7/7、17 reports及38 committed/0 working paths、6 rows、19 checks、0 issues，因此TASK-P2-10=`done`。Global comparison/Benchmark/Export/Gate/P3继续PLANNED；P2-11没有自动激活。
+
+## TASK-P2-11 traceability rule application
+
+形成链为`REQ-004/005/006/009 + NFR-COR/DET/TRC/REL/OBS + ENG-ARCH/SOL/VAL/ERR/VER → TASK-P2-11 → kpi.v2/export-manifest.v1 + reporting/exporters → validated P2-09 replay → TEST-OUTPUT/CONTRACT-001/IDEMPOTENCY → p2-output-contract-report.v1 + Task report + exact provider artifact`。
+
+只有validated synthetic KPI、真实SolverReport freeze和不可发布9-payload internal package可提升为local formed。证据必须区分set version与document version、KPI/package ID与exact-byte fingerprint、PlanningSolution与ScheduleVersion、directory replay与ExportJob idempotency、formal PASS与approval、single-run telemetry与Benchmark。ChangeReport=P4、BenchmarkReport=P2-12，二者不得伪造；P3 state/persistence/publish继续PLANNED。
+
+Implementation provider artifact绑定exact SHA前TASK-P2-11保持`in_progress`。Provider必须复现output report 8/8、全部历史reports和Task diff，并确认`uv.lock`、Planning/Strategy/Backend/Validator/Scenario/Benchmark/API/DB/Worker/P3禁止边界无差异；完成也不自动授权P2-12。

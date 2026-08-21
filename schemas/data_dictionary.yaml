@@ -1,5 +1,5 @@
-schema_set_version: 2.4.0
-status: p2_planning_machine_contracts
+schema_set_version: 2.5.0
+status: p2_validated_output_contracts
 spec_version: 0.3.0
 rules:
   unknown_root_fields: reject
@@ -12,7 +12,7 @@ rules:
   unit_conversion_registry: schemas/rules/unit-conversion-registry.v1.yaml
   data_quality_rule_version: data-quality-rules.v1
   error_registry: schemas/rules/error-code-registry.v2.yaml
-  schema_set_compatibility: additive_2_4_preserves_all_prior_schema_bytes_and_import_snapshot_quality_unit_problem_document_versions
+  schema_set_compatibility: additive_2_5_preserves_all_prior_schema_bytes_and_import_snapshot_quality_unit_problem_planning_machine_document_versions
 schemas:
   canonical-records.v1:
     path: schemas/json/canonical-records.v1.schema.json
@@ -147,6 +147,28 @@ schemas:
     path: schemas/json/kpi.schema.json
     groups: [delivery, planning, resources, stability, solver]
     production_open: [OPEN-006, OPEN-012]
+  kpi.v2:
+    path: schemas/json/kpi.v2.schema.json
+    schema_set_version: 2.5.0
+    lineage: [planning_run_id, snapshot, problem, solution, validation_report, solver_report, import_quality_report]
+    groups: [delivery, planning, resources, stability, solver]
+    delivery_metric: priority_weighted_tardiness_seconds is exact integer OBJ-001 measurement
+    utilization_denominator: horizon available calendar seconds after union of unavailable intervals
+    zero_available_representation: utilization is null
+    stability_boundary: NOT_APPLICABLE_NO_BASE_SCHEDULE with null metrics; no ChangeReport or dynamic Replan
+    synthetic_provenance: required only when synthetic is true
+    compatibility: non-interchangeable with kpi.v1; kpi.v1 bytes and semantics remain unchanged
+    production_open: [OPEN-006, OPEN-010, OPEN-012, OPEN-015]
+  export-manifest.v1:
+    path: schemas/json/export-manifest.schema.json
+    schema_set_version: 2.5.0
+    package_profile: p2-internal-export.v1
+    publishable: false
+    required_payloads: [schedule.json, schedule_operations.csv, order_summary.csv, resource_load.csv, kpi.json, validation_report.json, solver_report.json, import_quality_report.json, scenario_manifest.json]
+    deferred_payloads: [benchmark_report.json, change_report.json]
+    state_boundary: no ScheduleVersion, ExportJob, approval, publication, or external transfer
+    identity: content-derived package_id plus per-file SHA-256, bytes, and CSV row counts
+    production_open: [OPEN-002, OPEN-006, OPEN-010, OPEN-015]
   error.v1:
     path: schemas/json/error.schema.json
     p0_boundary: category and envelope only; concrete code registry belongs to TASK-P0-04

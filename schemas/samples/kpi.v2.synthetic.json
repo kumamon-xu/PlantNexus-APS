@@ -1,0 +1,106 @@
+{
+  "kpi_id": "kpi-1111111111111111111111111111111111111111111111111111111111111111",
+  "kpi_version": "kpi.v2",
+  "schema_set_version": "2.5.0",
+  "canonicalization_version": "canonical-json.v1",
+  "planning_run_id": "RUN-KPI-V2-SAMPLE",
+  "inputs": {
+    "snapshot": {
+      "snapshot_version": "planning-snapshot.v2",
+      "snapshot_id": "SNAPSHOT-KPI-V2-SAMPLE",
+      "snapshot_hash": "sha256:1111111111111111111111111111111111111111111111111111111111111111"
+    },
+    "problem": {
+      "problem_version": "planning-problem.v2",
+      "problem_hash": "sha256:2222222222222222222222222222222222222222222222222222222222222222"
+    },
+    "solution": {
+      "planning_solution_version": "planning-solution.v1",
+      "solution_id": "SOLUTION-KPI-V2-SAMPLE",
+      "solution_fingerprint": "sha256:3333333333333333333333333333333333333333333333333333333333333333"
+    },
+    "validation_report": {
+      "validation_report_version": "validation-report.v2",
+      "validation_report_fingerprint": "sha256:4444444444444444444444444444444444444444444444444444444444444444",
+      "status": "PASS"
+    },
+    "solver_report": {
+      "solver_report_version": "solver-report.v1",
+      "report_id": "SOLVER-REPORT-KPI-V2-SAMPLE",
+      "solver_report_fingerprint": "sha256:5555555555555555555555555555555555555555555555555555555555555555"
+    },
+    "import_quality_report": {
+      "report_version": "import-quality-report.v1",
+      "report_id": "IMPORT-QUALITY-KPI-V2-SAMPLE",
+      "import_quality_report_fingerprint": "sha256:6666666666666666666666666666666666666666666666666666666666666666",
+      "status": "PASS"
+    }
+  },
+  "delivery": {
+    "order_count": 1,
+    "on_time_order_count": 1,
+    "on_time_order_ratio": 1.0,
+    "late_order_count": 0,
+    "total_tardiness_seconds": 0,
+    "priority_weighted_tardiness_seconds": 0,
+    "demands": [
+      {
+        "demand_order_id": "DEMAND-KPI-V2-SAMPLE",
+        "due_at_utc": "2026-08-21T01:00:00Z",
+        "priority_weight": 2,
+        "completion_tick": 1,
+        "completion_at_utc": "2026-08-21T00:01:00Z",
+        "tardiness_seconds": 0,
+        "priority_weighted_tardiness_seconds": 0,
+        "on_time": true
+      }
+    ]
+  },
+  "planning": {
+    "makespan_seconds": 60,
+    "scheduled_operation_count": 1,
+    "unscheduled_operation_count": 0
+  },
+  "resources": [
+    {
+      "resource_id": "RESOURCE-KPI-V2-SAMPLE",
+      "resource_code": "R-KPI-V2-SAMPLE",
+      "calendar_id": "CALENDAR-KPI-V2-SAMPLE",
+      "available_seconds": 3600,
+      "planned_busy_seconds": 60,
+      "utilization": 0.016666666667
+    }
+  ],
+  "stability": {
+    "status": "NOT_APPLICABLE_NO_BASE_SCHEDULE",
+    "changed_operation_count": null,
+    "resource_changed_count": null,
+    "start_shift_seconds": null,
+    "schedule_stability_ratio": null
+  },
+  "solver": {
+    "solver_status": "OPTIMAL",
+    "objective_value": 0,
+    "best_bound": 0,
+    "relative_gap": 0.0,
+    "model_build_seconds": 0.001,
+    "first_feasible_seconds": 0.001,
+    "solve_seconds": 0.002,
+    "validation_seconds": 0.001,
+    "total_seconds": 0.004,
+    "variables": 3,
+    "constraints": 4,
+    "optional_intervals": 1,
+    "memory_peak_mb": 1.0
+  },
+  "synthetic": true,
+  "synthetic_provenance": {
+    "scenario_id": "SCENARIO-KPI-V2-SAMPLE",
+    "scenario_version": "1.0.0",
+    "seed": 20260821,
+    "factory_profile_id": "PROFILE-KPI-V2-SAMPLE",
+    "profile_version": "1.0.0",
+    "generator_id": "GENERATOR-KPI-V2-SAMPLE",
+    "generator_version": "1.0.0"
+  }
+}

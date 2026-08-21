@@ -9,6 +9,7 @@ from typing import Any, cast
 
 import yaml
 
+from app.exporters.contract_check import main as output_contract_main
 from app.planning.backends.cp_sat.contract_check import (
     main as backend_contract_main,
 )
@@ -132,6 +133,8 @@ def test_ci_runs_repository_gates_and_discovers_the_current_task() -> None:
         "build/validation/ci-p2-correctness.json",
         "app.simulation.baselines.reference_schedulers",
         "build/validation/ci-reference-schedulers.json",
+        "app.exporters.contract_check",
+        "build/validation/ci-p2-output-contracts.json",
         "app.infrastructure.contract_check",
         "docker compose --env-file .env.example config --quiet",
         "PLANTNEXUS_CI_CHANGE_BASE:",
@@ -173,7 +176,7 @@ def test_ci_planning_problem_contract_report_is_machine_checkable(
     assert report["report_version"] == "planning-problem-contract-report.v1"
     assert report["status"] == "PASS"
     assert report["task_id"] == "TASK-P2-01"
-    assert report["schema_set_version"] == "2.4.0"
+    assert report["schema_set_version"] == "2.5.0"
     assert report["check_count"] == 4
     assert {check["name"] for check in report["checks"]} == {
         "v1-byte-preservation",
@@ -198,7 +201,7 @@ def test_ci_planning_machine_contract_report_is_machine_checkable(
     assert report["report_version"] == "planning-machine-contract-report.v1"
     assert report["status"] == "PASS"
     assert report["task_id"] == "TASK-P2-02"
-    assert report["schema_set_version"] == "2.4.0"
+    assert report["schema_set_version"] == "2.5.0"
     assert report["check_count"] == 5
     assert {check["name"] for check in report["checks"]} == {
         "fixed-schema-and-sample-artifacts",
@@ -547,6 +550,49 @@ def test_ci_reference_scheduler_report_is_machine_checkable(tmp_path: Path) -> N
         "global_comparison": "DEFERRED_TO_TASK_P2_12",
         "benchmark_profiles_thresholds": "NOT_STARTED",
         "p2_11_plus_or_p3": "NOT_STARTED",
+    }
+
+
+def test_ci_p2_output_contract_report_is_machine_checkable(tmp_path: Path) -> None:
+    report_path = tmp_path / "p2-output-contracts.json"
+    assert (
+        output_contract_main(["--root", str(ROOT), "--report", str(report_path)])
+        == 0
+    )
+    report = json.loads(report_path.read_text(encoding="utf-8"))
+
+    assert report["report_version"] == "p2-output-contract-report.v1"
+    assert report["status"] == "PASS"
+    assert report["task_id"] == "TASK-P2-11"
+    assert report["schema_set_version"] == "2.5.0"
+    assert report["package_profile"] == "p2-internal-export.v1"
+    assert report["check_count"] == 8
+    assert report["counts"] == {
+        "package_files_excluding_manifest": 9,
+        "assignments": 4,
+        "demands": 2,
+        "resources": 2,
+        "rejection_cases": 3,
+        "deterministic_replays": 2,
+    }
+    assert {check["name"] for check in report["checks"]} == {
+        "frozen-input-contracts-new-schemas-samples-and-lock",
+        "kpi-v2-and-export-manifest-draft-2020-12-roundtrip",
+        "validated-solution-kpi-and-solver-report-freeze",
+        "deterministic-package-bytes-file-hashes-and-row-counts",
+        "cross-file-run-hash-version-and-entity-count-lineage",
+        "validator-fail-mixed-lineage-and-tamper-rejections",
+        "atomic-write-exact-replay-and-partial-cleanup",
+        "p2-internal-non-publishable-state-and-deferred-boundary",
+    }
+    assert report["boundaries"] == {
+        "data_plane": "SIMULATION_ONLY",
+        "schedule_carrier": "VALIDATED_PLANNING_SOLUTION_NOT_SCHEDULE_VERSION",
+        "export_job": "NOT_CREATED",
+        "approval_publish_external_transfer": "PROHIBITED",
+        "change_report": "DEFERRED_P4_DYNAMIC_REPLAN",
+        "benchmark_report": "DEFERRED_P2_12",
+        "p2_12_plus_or_p3": "NOT_STARTED",
     }
 
 

@@ -134,3 +134,9 @@ Precheck区分HARD grid/权威duration/多lock/RUNNING tuple自冲突的MODEL_IN
 Backend新增`solve_delivery_with_evidence`供Global Strategy：在既有完整C-001～C-011模型上加入每Demand active-operation最大completion、exact tardiness seconds与priority integer sum并Minimize；int64溢出在search前拒绝。历史`solve_with_evidence`继续保留feasibility-only诊断语义，不能作为可接受策略入口。
 
 Objective路径如实保留native OPTIMAL/FEASIBLE/INFEASIBLE/UNKNOWN；最佳bound从native carrier保守转换为整数，OPTIMAL强制value=bound/gap=0。所有candidate仍经formal independent Validator；失败转FAILED且清空assignments。Global Strategy报告exact parameters、timing/model/memory/provenance；Schema、Protocol signature、Backend/OR-Tools version、C-ID、Validator、dependency均未改变。
+
+## TASK-P2-11 report freeze boundary
+
+`app.planning.reporting.freeze_solver_report`不调用Backend或重写测量值；它验证PlanningSolution/SolverReport/ValidationReport合同、`SOLVER_RUN` evidence kind、candidate status、PASS validation、Problem/Policy/Limits/status/stage/diagnostics/solution fingerprint完全一致，并按Global Strategy identity projection重新计算report ID。通过后只返回canonical bytes/fingerprint和planning run ID。
+
+KPI与Export consumer必须使用这份已冻结的真实report，不得用P2-02 `CONTRACT_SAMPLE`、伪造timing或跨run report补齐package。Backend/Strategy/Validator代码、OR-Tools exact pin、parameters/status mapping和`uv.lock`均未改变；报告冻结不是BenchmarkRunner或PlanningRun persistence。

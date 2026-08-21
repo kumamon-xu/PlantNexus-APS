@@ -198,3 +198,9 @@ Correctness orchestration只使用现有Python 3.12、JSON/YAML、jsonschema/Hyp
 Reference实现只使用Python 3.12标准库、既有solver-neutral Planning typed contracts与formal Validator；baseline namespace不直接导入native Solver package或`planning.backends`。Unit/property tests复用既有pytest/Hypothesis，CI复用既有Python/uv/Actions与`build/validation/*.json` artifact glob。
 
 `pyproject.toml`、`uv.lock`、Schema/code metadata、exact Solver pin及全部transitive dependency字节不变；没有新Action、service、container、database、migration、API、Worker或Benchmark dependency。因此不触发dependency ADR/upgrade Gate，single-run runtime也不形成hardware或SLA结论。
+
+## TASK-P2-11 technology review
+
+Reporting/export实现继续使用Python 3.12标准库的`dataclasses`、`hashlib`、`json`、`csv`、`tempfile`与`os.replace`；runtime/development dependency和`uv.lock`均无变化。JSON Schema Draft 2020-12验证沿用既有`jsonschema` dev tool，Ruff/Pyright/Pytest/CI技术选择不变。
+
+Global schema metadata additive提升为`2.5.0`。CI新增`app.exporters.contract_check`机器步骤并上传同一evidence artifact；没有新service、container、database、queue、network或external storage provider，也没有技术栈ADR触发。

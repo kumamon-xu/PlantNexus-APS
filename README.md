@@ -1,6 +1,6 @@
 # PlantNexus APS
 
-PlantNexus APS 是一个面向单工厂、多车间场景的高级计划与排程（APS）项目。P1 Data & Snapshot 已通过 Exit Gate并关闭，当前阶段为P2（CP-SAT Vertical Slice）。TASK-P2-01～10已由local/exact provider闭环；五个非生产Reference Schedulers及同Problem/Validator/KPI证据现已形成。Benchmark、Production能力、P2-11～14和P3仍未形成或未获启动授权。
+PlantNexus APS 是一个面向单工厂、多车间场景的高级计划与排程（APS）项目。P1 Data & Snapshot 已通过 Exit Gate并关闭，当前阶段为P2（CP-SAT Vertical Slice）。TASK-P2-01～10已由local/exact provider闭环；TASK-P2-11的KPI v2、SolverReport冻结与不可发布内部成果包已形成本地实现，仍待exact provider闭环。Benchmark、Production能力、P2-12～14和P3仍未形成或未获启动授权。
 
 ## 开始之前
 
@@ -12,7 +12,7 @@ Coding Agent 必须从 [`AGENTS.md`](AGENTS.md) 进入项目规则。项目规�
 |---|---|---|
 | Implementation spec | `0.3.0` | 当前权威实施规格版本 |
 | Code | `0.0.0` | P0 工程骨架占位，不代表发布版本 |
-| Business schema set | `2.4.0` | 加法包含 PlanningProblem v2 与 Policy/Limits/Solution/Report v1；历史 document 版本和字节保持不变 |
+| Business schema set | `2.5.0` | 加法包含`kpi.v2`与`export-manifest.v1`；既有document版本和历史字节保持不变 |
 | Python | `3.12` | `.python-version` 与 `pyproject.toml` 固定的运行时系列 |
 | OR-Tools | `9.15.6755` | TASK-P2-03 exact runtime pin；只允许在 `planning/backends/cp_sat/` 使用 |
 
@@ -28,11 +28,12 @@ uv run pytest -q backend/tests/unit backend/tests/contract backend/tests/simulat
 uv run python -m app.planning.validation.problem_validator_check --root . --report build/validation/TASK-P2-04-formal-schedule-validator.json
 uv run python -m app.simulation.scenarios.p2_correctness --root . --report build/validation/TASK-P2-09-correctness.json
 uv run python -m app.simulation.baselines.reference_schedulers --root . --report build/validation/TASK-P2-10-reference-schedulers.json
+uv run python -m app.exporters.contract_check --root . --report build/validation/TASK-P2-11-output-contracts.json
 uv run python -m app.infrastructure.contract_check --root . --report build/validation/TASK-P0-08-engineering.json
 docker compose --env-file .env.example config --quiet
 uv run python scripts/check_docs.py
 uv build
-uv run python -c "import app; assert app.CODE_VERSION == '0.0.0'; assert app.SPEC_VERSION == '0.3.0'; assert app.SCHEMA_VERSION == '2.4.0'"
+uv run python -c "import app; assert app.CODE_VERSION == '0.0.0'; assert app.SPEC_VERSION == '0.3.0'; assert app.SCHEMA_VERSION == '2.5.0'"
 ```
 
 `scripts/check_docs.py` 当前同时检查结构性 Markdown、版本化 registries、REQ/NFR/ENG/TEST 等引用、Task 依赖、逐根 traceability 和 PROD_OPEN/SIM_ASSUMPTION 隔离。Task 进入 `in_progress` 时须把当时完整 HEAD SHA 写入 `Diff base`；影响覆盖检查使用 `Diff base..HEAD` 的已提交变更与当前 working tree 的并集，因此提交前后可用同一命令复验：
@@ -75,3 +76,5 @@ TASK-P2-06 exact run `32432482739` / required job `96626844156` / artifact `9429
 TASK-P2-10已形成`reference-scheduler-contracts/policy/result/report.v1`及五个exact algorithm identity；七个冻结Problem×五算法得到35个完整candidate、35次fresh Validator PASS和35次deterministic replay，blocked-calendar得到5个零partial `HEURISTIC_FAILURE`。Task-specific=`13 passed`、full=`441 passed`且Ruff/Pyright为0；implementation `8ca62bbb1105a1dfae2ee2600ae7e4e62a5bef6c`的required run `32449742281` / artifact `9435264655`精确复现17/17 reports和38 committed/0 working治理证据，Task=`done`，不自动启动P2-11。
 
 用户于2026-08-21明确授权TASK-P2-11。启动门复核确认`main=origin/main=41e958b771f2664b1ac50867903a30b73627878d`，该SHA的required `validate` run `32450216908` / job `96677202782` / artifact `9435421360`精确成功。当前只允许additive KPI/manifest、deterministic reporting/internal package、测试/CI与治理文档；ScheduleVersion/ExportJob、approval/publish/external transfer、ChangeReport、BenchmarkRunner、P2-12+及P3不会自动启动。
+
+TASK-P2-11本地实现新增`kpi.v2`、`export-manifest.v1`和`p2-internal-export.v1`：所有JSON采用`canonical-json.v1`，CSV采用UTF-8/RFC 4180 LF，manifest固定9个payload的hash/bytes/rows与同一run lineage。包只承载validated PlanningSolution，显式声明`publishable=false`及P3/P4 deferred边界；原子目录写入支持exact replay并在失败时不留下成功manifest。指定验收49项、全仓455项和output machine 8/8均PASS；exact implementation provider证据形成前Task仍为`in_progress`，P2-12未启动。

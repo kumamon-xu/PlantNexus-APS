@@ -60,6 +60,8 @@ SCHEMA_FILES = (
     "planning-solution.schema.json",
     "solver-report.schema.json",
     "kpi.schema.json",
+    "kpi.v2.schema.json",
+    "export-manifest.schema.json",
     "error.schema.json",
     "validation-report.schema.json",
     "error.v2.schema.json",
@@ -72,6 +74,7 @@ SCHEMA_FILES = (
 V1_SCHEMA_SHA256 = {
     "import-package.schema.json": "ceab72f8f2adc3008a8489050372912a0bb6798751a0cedec9bbaa3a83f59621",
     "planning-snapshot.schema.json": "d3b68f330c54df8c0e35f72e8058e60c981cfd5b58103d78c03c55fdf1876c0d",
+    "kpi.schema.json": "be3dfbcd06e9fb7887df699c2ba0fc8bb229d603b0d55a75268a72bc2cdc9426",
 }
 
 
@@ -168,7 +171,7 @@ def test_schemas_do_not_encode_implicit_defaults() -> None:
 
 def test_published_versions_are_consistent() -> None:
     pyproject = tomllib.loads((ROOT / "pyproject.toml").read_text(encoding="utf-8"))
-    assert SCHEMA_VERSION == "2.4.0"
+    assert SCHEMA_VERSION == "2.5.0"
     assert pyproject["tool"]["plantnexus-aps"]["versions"]["schema"] == SCHEMA_VERSION
 
 
@@ -189,6 +192,8 @@ def test_synthetic_samples_validate_and_round_trip() -> None:
         ("solve-limits.schema.json", "solve-limits.v1.synthetic.json"),
         ("planning-solution.schema.json", "planning-solution.v1.synthetic.json"),
         ("solver-report.schema.json", "solver-report.v1.synthetic.json"),
+        ("kpi.v2.schema.json", "kpi.v2.synthetic.json"),
+        ("export-manifest.schema.json", "export-manifest.v1.synthetic.json"),
         ("import-quality-report.schema.json", "import-quality-report.v1.pass.json"),
         ("import-quality-report.schema.json", "import-quality-report.v1.fail.json"),
     )
@@ -561,7 +566,7 @@ def test_data_dictionary_covers_every_published_schema() -> None:
     dictionary = yaml.safe_load(
         (ROOT / "schemas" / "data_dictionary.yaml").read_text("utf-8")
     )
-    assert dictionary["schema_set_version"] == "2.4.0"
+    assert dictionary["schema_set_version"] == "2.5.0"
     assert set(dictionary["schemas"]) == {
         "canonical-records.v1",
         "import-package.v1",
@@ -575,6 +580,8 @@ def test_data_dictionary_covers_every_published_schema() -> None:
         "planning-solution.v1",
         "solver-report.v1",
         "kpi.v1",
+        "kpi.v2",
+        "export-manifest.v1",
         "error.v1",
         "validation-report.v1",
         "error.v2",

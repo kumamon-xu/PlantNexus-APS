@@ -1,12 +1,12 @@
 ---
 doc_id: TASK-P2-11
 title: KPI SolverReport and Export Closure
-status: planned
+status: in_progress
 spec_version: 0.3.0
 phase: P2
 normative: true
 source_sections: [4, 34, 36, 40, 55, 67, 75, 93]
-last_reviewed: 2026-08-20
+last_reviewed: 2026-08-21
 ---
 
 # TASK-P2-11 — KPI SolverReport and Export Closure
@@ -19,33 +19,33 @@ NFR / ENG IDs: NFR-COR-001, NFR-DET-001, NFR-TRC-001, NFR-REL-001, NFR-OBS-001, 
 
 Depends on: TASK-P2-08, TASK-P2-09
 
-Start gate: complete validated Strategy/Scenario evidence formed；P2-02 report contracts固定；明确P2内部Export与P3 approval/publish边界并记录Diff base。
+Start gate: complete validated Strategy/Scenario evidence formed；P2-02 report contracts固定；明确P2内部Export与P3 approval/publish边界并记录Diff base。启动复核还必须确认P2-10 closure HEAD的required `validate`/artifact精确成功，P2-09 correctness输入与既有Snapshot/Problem/Solution/SolverReport/Validation/ImportQuality/KPI v1合同指纹未漂移。
 
 Goal: 形成deterministic KPI/SolverReport并完成Snapshot→Problem→validated Solution→标准内部Export package闭环，所有文件同一run/version/hash；不实现审批、发布或外部传输。
 
 Inputs: Snapshot/Problem hashes、PlanningSolution/ValidationReport、ImportQualityReport、solver/policy versions、OBJ-001、export-package contract。
 
-Diff base: set only when this Task enters in_progress; must be the immediate full 40-character HEAD
+Diff base: 41e958b771f2664b1ac50867903a30b73627878d
 
-Files allowed to change: `schemas/json/kpi.v2.schema.json`、`schemas/json/export-manifest.schema.json`、`backend/app/planning/reporting/__init__.py`、`backend/app/planning/reporting/kpi.py`、`backend/app/planning/reporting/solver_report.py`、`backend/app/exporters/__init__.py`、`backend/app/exporters/package.py`、`backend/tests/contract/test_p2_output_contracts.py`、`backend/tests/integration/test_p2_export_package.py`及`Documents to update`；新增路径先精确登记。
+Files allowed to change: `.github/workflows/ci.yml`、`pyproject.toml`、`backend/app/__init__.py`、`schemas/data_dictionary.yaml`、`schemas/json/kpi.v2.schema.json`、`schemas/json/export-manifest.schema.json`、`schemas/samples/kpi.v2.synthetic.json`、`schemas/samples/export-manifest.v1.synthetic.json`、`backend/app/planning/reporting/__init__.py`、`backend/app/planning/reporting/kpi.py`、`backend/app/planning/reporting/solver_report.py`、`backend/app/exporters/__init__.py`、`backend/app/exporters/package.py`、`backend/app/exporters/contract_check.py`、`backend/tests/contract/test_schema_contracts.py`、`backend/tests/contract/test_p2_output_contracts.py`、`backend/tests/integration/test_p2_export_package.py`、`backend/tests/integration/test_ci_contract.py`及`Documents to update`；以上为进入`in_progress`前冻结的全部实现/测试/CI路径，新增路径先修订本卡。
 
-Files forbidden to change: ScheduleVersion/ExportJob persistence/state actions、approval/publish/API、external storage/network、P3 UI/workspace、dynamic Replan、benchmark thresholds。
+Files forbidden to change: `uv.lock`、既有Schema/sample bytes、`backend/app/planning/contracts.py`、Strategy/Backend/Validator/Problem/Snapshot/Import/Simulation实现与P2-09 assets、ScheduleVersion/ExportJob persistence/state actions、approval/publish/API/DB/Worker、external storage/network、P3 UI/workspace、dynamic Replan/ChangeReport计算、BenchmarkRunner/XS-S-M/threshold及P3+。
 
-Implementation steps: 定义KPI v2与manifest版本；从同一validated solution计算weighted tardiness/makespan/resource load；固化solver report；生成JSON/CSV/package hashes；验证entity counts/cross-file lineage/synthetic extras；拒绝Validator FAIL/mixed run；测试deterministic logical equivalence。
+Implementation steps: 以additive global schema set `2.5.0`新增`kpi.v2`与`export-manifest.v1`并逐字保留既有artifact；固定`p2-internal-export.v1` profile和canonical JSON/RFC 4180 LF字节规则；从同一validated solution计算priority-weighted tardiness、makespan、schedule counts与按可用日历时间为分母的resource load；校验并固化同run SolverReport；生成`manifest.json`、`schedule.json`、三份CSV、KPI/Validation/Solver/ImportQuality JSON与synthetic `scenario_manifest.json`；manifest逐文件记录hash/bytes/rows及lineage/count，明确`change_report.json`=`DEFERRED_P4_DYNAMIC_REPLAN`、`benchmark_report.json`=`DEFERRED_P2_12`且`publishable=false`；拒绝Validator FAIL/mixed run/version/hash/count、tamper与缺失；通过纯内存构建和同文件系统临时目录原子rename测试deterministic logical equivalence与partial-write边界。
 
 Outputs: KPI/report emitters、internal standard export package、manifest/file hash/consistency tests和machine report。
 
 Documentation impact: required
 
-Documents to update: `docs/contracts/export-package.md`、`docs/contracts/README.md`、`docs/contracts/schema-index.md`、`docs/contracts/schema-versioning.md`、`docs/domain/domain-model.md`、`docs/domain/kpi-contract.md`、`docs/domain/state-machines/planning-run.md`、`docs/domain/state-machines/export-job.md`、`docs/domain/state-machines/schedule-version.md`、`docs/planning/solver-backend-contract.md`、`docs/architecture/provenance-and-versioning.md`、`docs/quality/test-strategy-and-matrix.md`、`docs/governance/requirements-register.md`、`docs/governance/nfr-and-engineering-register.md`、`docs/governance/traceability-rules.md`、`docs/governance/traceability-matrix.md`、`docs/governance/prod-open-register.md`、`docs/governance/sim-assumption-register.md`、`docs/governance/risk-register.md`、`docs/governance/change-impact-matrix.md`、`docs/governance/document-inventory.md`、`docs/quality/documentation-consistency-checks.md`、`docs/tasks/TASK_TEMPLATE.md`、`docs/adr/README.md`、本Task卡。
+Documents to update: `README.md`、`docs/README.md`、`docs/current_phase.md`、`docs/milestones/README.md`、`docs/milestones/P2-cp-sat-vertical-slice.md`、`docs/tasks/README.md`、`docs/tasks/TASK_TEMPLATE.md`、`docs/contracts/export-package.md`、`docs/contracts/README.md`、`docs/contracts/schema-index.md`、`docs/contracts/schema-versioning.md`、`docs/domain/domain-model.md`、`docs/domain/kpi-contract.md`、`docs/domain/state-machines/planning-run.md`、`docs/domain/state-machines/export-job.md`、`docs/domain/state-machines/schedule-version.md`、`docs/planning/solver-backend-contract.md`、`docs/architecture/configuration-environments-and-isolation.md`、`docs/architecture/module-boundaries.md`、`docs/architecture/provenance-and-versioning.md`、`docs/architecture/technology-stack.md`、`docs/operations/README.md`、`docs/quality/benchmark-regression.md`、`docs/quality/ci-gates-and-definition-of-done.md`、`docs/quality/test-strategy-and-matrix.md`、`docs/quality/documentation-consistency-checks.md`、`docs/governance/requirements-register.md`、`docs/governance/nfr-and-engineering-register.md`、`docs/governance/traceability-rules.md`、`docs/governance/traceability-matrix.md`、`docs/governance/prod-open-register.md`、`docs/governance/sim-assumption-register.md`、`docs/governance/risk-register.md`、`docs/governance/change-impact-matrix.md`、`docs/governance/document-inventory.md`、`docs/adr/README.md`、本Task卡。
 
 Documentation impact rationale: P2 Gate要求Snapshot→Export，必须固定报告/manifest/文件一致性并清楚隔离P3状态/publish。
 
-Change-impact matrix rows reviewed: `IMPACT-SCHEMA`、`IMPACT-REPORTING`、`IMPACT-EXPORT`、`IMPACT-STATE`、`IMPACT-TESTS`、`IMPACT-GOVERNANCE-REGISTRY`、`IMPACT-DOCS`
+Change-impact matrix rows reviewed: `IMPACT-PHASE`、`IMPACT-DOCS`
 
 Traceability updates: REQ-004/005/006/009→TASK-P2-11→TEST-OUTPUT/CONTRACT/IDEMPOTENCY→KPI/SolverReport/Validation/manifest package artifacts；P3 publish remains PLANNED。
 
-Schema changes: required；additive KPI/manifest versions，保留kpi.v1 bytes，提供positive/negative/round-trip/cross-file validation。
+Schema changes: required；global schema set additive提升为`2.5.0`并新增`kpi.v2`/`export-manifest.v1`，保留kpi.v1及全部既有Schema/sample bytes，提供positive/negative/round-trip/cross-file validation。PlanningSolution/SolverReport等既有document仍固定其原`schema_set_version=2.4.0`，不得随set-level release改写。
 
 Migration: none；只生成in-memory/temp-dir artifacts，不创建ExportJob/ScheduleVersion持久化。
 
@@ -61,7 +61,7 @@ Benchmark impact: export/report耗时只作诊断；benchmark report由P2-12提�
 
 Simulation scenarios: 使用P2-09已验证scenario生成synthetic export；不使用真实生产数据。
 
-Acceptance commands: `uv run pytest -q backend/tests/contract/test_p2_output_contracts.py backend/tests/integration/test_p2_export_package.py`；`uv run ruff check .`；`uv run pyright backend/app backend/tests`；`uv run python scripts/check_docs.py`；`uv run python scripts/check_docs.py --task docs/tasks/P2/TASK-P2-11-kpi-solver-report-and-export-closure.md --check-diff --report build/traceability/TASK-P2-11-report.json`；`git diff --check`。
+Acceptance commands: `uv run pytest -q backend/tests/contract/test_p2_output_contracts.py backend/tests/integration/test_p2_export_package.py backend/tests/contract/test_schema_contracts.py backend/tests/integration/test_ci_contract.py`；`uv run pytest -q backend/tests/unit backend/tests/contract backend/tests/simulation backend/tests/golden backend/tests/validation backend/tests/integration backend/tests/property`；`uv run python -m app.exporters.contract_check --root . --report build/validation/TASK-P2-11-output-contracts.json`及全部既有P0/P1/P2 machine reports；`uv run ruff check .`；`uv run pyright backend/app backend/tests`；`docker compose --env-file .env.example config --quiet`；`uv build`；`uv run python scripts/check_docs.py`；`uv run python scripts/check_docs.py --task docs/tasks/P2/TASK-P2-11-kpi-solver-report-and-export-closure.md --check-diff --report build/traceability/TASK-P2-11-report.json`；`git diff --check`；以Diff base核验既有Schema/sample、Planning/Strategy/Backend/Validator/Problem/Snapshot/Import/Simulation/P2-09 assets、`uv.lock`、Benchmark/API/DB/Worker与P3+禁止路径无差异。
 
 Artifacts: deterministic export package samples/hashes、KPI/Solver/Validation reports、Task report。
 
@@ -76,3 +76,11 @@ PROD_OPEN: OPEN-002/006/010/015保持OPEN；输出不代表真实系统接口或
 SIM_ASSUMPTIONS: synthetic export必须携带scenario/benchmark provenance并保持synthetic标识。
 
 Rollback: 未发布internal package可丢弃重建；合同artifact不原地改写；若partial write保留failure evidence并使用新logical job retry，禁止double publish声明。
+
+## Activation evidence — 2026-08-21
+
+用户明确授权执行TASK-P2-11。启动时`main=origin/main=41e958b771f2664b1ac50867903a30b73627878d`且working tree clean；P2-10 implementation `8ca62bbb1105a1dfae2ee2600ae7e4e62a5bef6c`是该closure HEAD的直接父提交。基线push run `32450216908`、required `validate` job/check `96677202782`（GitHub Actions app `15368`）均`completed/success`，branch protection精确要求`validate`/app `15368`；artifact `9435421360`（`plantnexus-ci-evidence-32450216908`，37227 bytes）未过期，digest=`sha256:f38a8deb00610bd98a43dca3f9a6c12ae936aec127787db9f24b5b84a0fe9b01`、expiry=`2026-11-19T05:20:58Z`。下载复核17/17 JSON全部PASS；Task报告为38 committed/0 working paths、6 rows、19 checks、0 issues，reference report为7/7且包含5 algorithms、7 scenarios、35 complete candidates/fresh Validator passes/deterministic replays和5 explicit failures。因此P2-08/09依赖、P2-10 closure拓扑与provider证据一致，Diff base冻结为上述HEAD。
+
+启动前冻结P2-09 correctness asset清单摘要=`sha256:2f1ebe2362d53f193c0edb649f14e4b6673d7f3bd2e61b5f88b282a534d8cadd`；Snapshot v2=`d30ed42f…6a09`、Problem v2=`e6e4a984…87c8`、PlanningSolution v1=`4344468e…8df4`、SolverReport v1=`64feacd0…7b2a`、ValidationReport v2=`1da63e93…d353`、ImportQualityReport v1=`2d41fb0a…f434`、KPI v1=`be3dfbcd…9426`，planning contracts=`d5f7a7e4…e630`、Global Strategy=`c3c5f057…4133`、formal Validator=`e120cc65…8d9f`、P2 correctness orchestrator=`316aee9c…f3e2`、`uv.lock=8b13617f…7a82`。这些既有artifact及语义全部只读。
+
+Scope review确认原卡遗漏schema set metadata/sample注册、machine report的CI step/integration contract以及Task lifecycle/Impact Rule强制文档，故在任何实现文件产生前冻结上述完整allow-list。新合同固定为`kpi.v2`、`export-manifest.v1`与`p2-internal-export.v1`；P2内部包以validated PlanningSolution承载`schedule.json`，不是ScheduleVersion，不创建ExportJob，不可审批/发布。由于ChangeReport属于P4 dynamic Replan、benchmark report属于P2-12，二者只在manifest中以deferred状态显式登记，不伪造内容；因此该profile完整但不冒充P3可发布标准包。本activation-only差异只命中`IMPACT-PHASE/IMPACT-DOCS`；实现完成后按完整Diff base范围重算`IMPACT-SCHEMA/REPORTING/EXPORT/STATE/TESTS/INFRA/DEPENDENCY/VERSION-METADATA/PHASE/GOVERNANCE-REGISTRY/DOCS`。P2-12～14与P3均未启动。

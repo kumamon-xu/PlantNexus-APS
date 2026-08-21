@@ -79,3 +79,5 @@ TASK-P2-11已形成additive schema set`2.5.0`、validated-solution KPI/SolverRep
 TASK-P2-12已形成严格XS/S/M profile/baseline、同Problem的Global/五Reference比较、formal Validator/共享KPI、warm-up/repetition/percentile、environment capture、CLI和CI XS artifact路径；27项指定、466项全仓测试及三份8/8报告均PASS。Implementation `01e7f4bdca88fc903e7caa771f875fc1a70ff357`的run `32460861563` / required job `96707353990` / artifact `9438899443`精确复现19/19 reports及49 committed/0 working paths、7 rows、19 checks、0 issues，故索引=`done`；P2-13/14不自动启动。
 
 用户于2026-08-21授权TASK-P2-13。启动门确认P2-01～12均`done`，closure HEAD `59f3b013a4be7bd11d054e8464886b3cde791602`的required `validate` run `32461665177` / job `96709654227` / artifact `9439159396`一致；当前只允许公开边界Gate report、correctness/XS/S/M replay、四类拒绝、测试/CI evidence和治理文档，P2-14与P3不会自动启动。
+
+TASK-P2-13本地已形成两次完整Gate replay、11/11 checks、14次correctness场景、6次benchmark profile、108次Benchmark Validator PASS、4类exact rejection与0 blocking gap；30项聚焦和476项全仓测试PASS。Exact implementation provider闭环前索引继续为`in_progress`；P2-14保持`planned`且未授权，P3未进入。

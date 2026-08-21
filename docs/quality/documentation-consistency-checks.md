@@ -326,3 +326,11 @@ Diff base固定为`58db14e8f18fb50866fb757d4c89e76fef1141f1`；完整范围必�
 本Task不新增Markdown，inventory继续142；roots=30、Test IDs=36、OPEN=15、risks=11、Tasks=37，SIM assumptions=13，所有registry format version保持`1.0.0`。本地full/diff治理实际记录49 paths、七个Impact rows、19 checks和0 issues并PASS；implementation provider artifact形成前不得预写其SHA/run/artifact或关闭Task。
 
 Implementation artifact `9438899443`内`traceability-report.v1`精确绑定`01e7f4bdca88fc903e7caa771f875fc1a70ff357`与Diff base `58db14e8f18fb50866fb757d4c89e76fef1141f1`，复现49 committed/0 working paths、7 rows、19 checks、0 issues并PASS；TASK-P2-12治理Gate据此闭环为`done`。Closure提交仍须由自身exact provider复核，不在本提交预写其ID。
+
+## TASK-P2-13 governance application
+
+Diff base固定为`59f3b013a4be7bd11d054e8464886b3cde791602`；完整activation/implementation范围必须命中`IMPACT-APPLICATION/TESTS/INFRA/PHASE/GOVERNANCE-REGISTRY/DOCS`。新增Gate实现、三份测试文件（含既有application boundary精确例外）、workflow及全部治理文档都必须显式列入Task allow-list；Schema/migration/dependency/lock/ADR、Planning/Strategy/Backend/Validator/Reference/Scenario/Benchmark/Exporter实现及P2-14/P3必须零差异。
+
+本Task不新增Markdown，inventory继续142；roots=30、Test IDs=36、OPEN=15、SIM assumptions=13、risks=11、Tasks=37，所有registry format version保持`1.0.0`。本地full/diff治理及最终path/count/check/issue须在完整验收后记录；implementation provider artifact形成前不得预写其SHA/run/artifact或关闭Task。
+
+本地full治理实际为142 docs、30 roots/trace rows、36 Test IDs、15 OPEN、13 SIM assumptions、11 risks、37 Tasks并PASS；Task diff实际为37 paths（8 committed-range、37 working-tree union）、六个Impact rows、19 checks、0 issues并PASS。`git diff --check`退出0，仅报告Windows工作区预期的LF→CRLF提示；exact implementation provider形成前TASK-P2-13继续`in_progress`。

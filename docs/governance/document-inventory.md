@@ -242,3 +242,7 @@ TASK-P2-12本地实现仍未新增、删除或重命名`docs/**/*.md`，inventor
 Implementation artifact `9438899443`已复现142-doc inventory与49 committed/0 working paths、7 rows、19 checks、0 issues，TASK-P2-12=`done`。没有新增、删除或重命名正式Markdown；P2-13/14保持`planned`，inventory与registry版本不变。
 
 TASK-P2-13启动不新增、删除或重命名`docs/**/*.md`路径，inventory继续完整覆盖142份文档；只将已获2026-08-21明确授权的该Task同步为`in_progress`。新增Gate Python/tests/workflow及ignored machine/Task JSON不是正式Markdown inventory条目；P2-14保持`planned`，registry format version不变。
+
+TASK-P2-13本地实现仍未新增、删除或重命名`docs/**/*.md`，inventory保持142份；新增Gate Python/tests/workflow与ignored Gate/Task JSON均不进入Markdown清单。Roots=30、Test IDs=36、OPEN=15、SIM assumptions=13、risks=11、Tasks=37不变，全部registry format version保持`1.0.0`；P2-14继续`planned`且P3未进入。
+
+本地full/diff治理实际为37 paths、6 rows、19 checks、0 issues并PASS；Diff base范围中activation为8 committed paths、当前working-tree union为37 paths。Exact implementation provider尚待形成，inventory与生命周期不据此提前关闭。

@@ -318,3 +318,11 @@ Implementation artifact `9436863185`已绑定`546292831c3bd52185687a4c646c10ae10
 Schema/global set、Planning Problem/Policy/Strategy/Backend/Validator、Reference算法、P2-09 assets、P2-11 Exporter、dependency/lock、migration/DB/API/Worker和P3+零差异，故不声明对应Rule ID。Machine rule table与`registry_version=1.0.0`不变；最终path/check/issue计数须由Task diff report和exact provider artifact回填，provider前Task保持`in_progress`。
 
 Implementation artifact `9438899443`已绑定`01e7f4bdca88fc903e7caa771f875fc1a70ff357`并复现49 committed/0 working paths、上述七行、19 checks与0 issues；TASK-P2-12据此关闭为`done`。Schema/dependency、Planning/Strategy/Backend/Validator/Reference/Scenario/Exporter/API/DB/Worker/P3+禁止边界保持零差异，P2-13不自动启动。
+
+## TASK-P2-13 impact review
+
+完整Diff base范围命中`IMPACT-APPLICATION`（新增只读Gate orchestrator及精确Exporter合同检查例外）、`IMPACT-TESTS`（Gate/exit/CI与既有application boundary）、`IMPACT-INFRA`（required validate新增Gate命令）、`IMPACT-PHASE`、`IMPACT-GOVERNANCE-REGISTRY`和`IMPACT-DOCS`六行。所有实现和文档路径必须在Task allow-list内，P2-14/P3不得因Gate PASS自动激活。
+
+Schema/global set、migration/database、runtime/dev dependency与`uv.lock`、ADR、Planning/Strategy/Backend/Validator/Reference/Scenario/Benchmark/Exporter实现、API/Worker/P3+均零差异，故不声明对应Rule ID。Gate只消费这些冻结的公开能力；`backend/tests/integration/test_p1_common_ingress.py`的例外只能允许`p2_gate_report.py`直接导入`app.exporters.contract_check`，不得扩大application→exporter反向依赖。Machine rule table与`registry_version=1.0.0`不变；最终path/check/issue计数由Task diff report与exact provider artifact回填。
+
+本地完整Diff治理已实际覆盖37 paths（activation 8 committed、当前37 working-tree union）、上述六行、19 checks与0 issues并PASS。Implementation exact provider artifact形成前不得把该本地结果写成外部required evidence或关闭Task。

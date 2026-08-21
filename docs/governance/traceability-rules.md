@@ -217,3 +217,11 @@ Implementation `546292831c3bd52185687a4c646c10ae10541ae2`的required run `324546
 只有versioned development XS/S/M、真实环境测量、immutable baseline和同Problem comparison可提升为formed。证据必须区分correctness hard failure与warning、raw sample与median/p95、local与provider commit、同环境相对判定与跨环境ceiling、development profile与Production capacity/SLA。P2-09/10/11资产和合同保持冻结；L/XL、OPEN-011/012、P2-13/14与P3继续PLANNED。
 
 Implementation `01e7f4bdca88fc903e7caa771f875fc1a70ff357`的required run `32460861563`与artifact `9438899443`已精确绑定并复现XS 8/8、19 reports及49 committed/0 working paths、7 rows、19 checks、0 issues，因此TASK-P2-12=`done`。S/M各8/8保留为local policy evidence；Planning/Strategy/Backend/Validator/Reference/Scenario/Exporter/dependency/lock/P3禁止边界保持无差异，完成不自动授权P2-13。
+
+## TASK-P2-13 traceability rule application
+
+形成链为`REQ-004/005/006/009/012/014/015 + NFR-COR/DET/TRC/ISO/REL/SEC/OBS/PER + ENG-ARCH/SOL/VAL/ERR/VER → TASK-P2-13 → p2_gate_report application orchestrator → P2 correctness + XS/S/M Benchmark + formal output contract + four exit rejections → focused integration/contract/CI tests → p2-vertical-slice-report.v1 + Task report + exact provider artifact`。
+
+Gate必须至少执行两次完整replay；每次都保存七场景correctness、三profile Global/五Reference原始报告、formal Validator/KPI/Export结果、环境/timing/memory与内容hash。`p2-gate-semantic-projection.v1`只能排除运行时噪声和由该噪声派生的identity，用于验证业务语义一致；不得删除、改写或把原始运行字段声明为相同。任一sub-report、投影、拒绝、边界或治理检查失败必须生成`FAIL`、blocking gap并以非零退出。
+
+四类退出边界必须分别追踪`UNSUPPORTED_CAPABILITY`、`INVALID_PLANNING_PROBLEM`、`INVALID_SOLVE_LIMITS`和`NO_SOLUTION_WITHIN_LIMIT`，不得合并为成功、INFEASIBLE证书或Production fallback。Gate仅形成P2 Simulation/development readiness aggregation；`Exit Gate Audit=NOT_PERFORMED`、P2-14/P3=`NOT_STARTED`、Production publishability=false。Exact implementation provider artifact形成前只能记录local formed evidence，完成TASK-P2-13也只满足P2-14依赖，不自动授权P2-14或P3。

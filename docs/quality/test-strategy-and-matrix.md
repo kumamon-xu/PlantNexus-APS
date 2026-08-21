@@ -247,3 +247,9 @@ Exact provider已复现：implementation `5ab65f36d532fd8786eb7ecad3cce406f4d9fb
 `test_global_cp_sat_strategy.py`覆盖approved/no-default Simulation Policy/Limits、priority sequence、zero tardiness、hard INFEASIBLE、受控UNKNOWN/FEASIBLE、Validator FAIL、Production/data-plane/limits-source/priority-source rejection、int64 overflow、single global call与SolverReport replay；`test_delivery_objective_properties.py`覆盖16个exhaustive scheduling examples、12个priority scaling examples及non-grid due。既有Solver namespace、formal Validator与全部历史suite保持回归。
 
 `objective-strategy-report.v1`固定7/7 checks、4 tiny optimality、4 Validator PASS、1 certified INFEASIBLE、7 status与1 Production rejection；CI integration contract固定CLI、report counts/boundaries与artifact路径。本地focused=`70 passed`、full repository=`395 passed`、Ruff/Pyright=0，全部历史machine reports亦PASS。Implementation `b1ec83ed96120357ecadd41d3f520181838f17c6`的required run `32438785162` / artifact `9431673977`精确复现全部报告，故Task=`done`；这不是P2-09 Golden/scenario integration或P2-12 Benchmark。
+
+## TASK-P2-13 vertical Gate coverage
+
+本Task不新增或复用Test ID；它把TEST-GOLDEN-JSSP/FJSP、全部C-specific、TEST-VALIDATOR-MUTATION/PROPERTY/OUTPUT/SCENARIO-REPLAY/REFERENCE-SCHEDULER/BENCHMARK/SOLVER-UPGRADE及CI contract链接到`test_p2_vertical_slice.py`、`test_p2_exit_rejections.py`和`p2-vertical-slice-report.v1`。实际Gate两次重跑全部公开边界，而非读取stale build report。
+
+Integration覆盖完整链、七Scenario/C-ID、XS/S/M status/objective/model/timing/memory、五Reference、fresh Validator、KPI/Export、semantic projection和no-Exit/P3边界；contract覆盖unsupported/invalid/limit与repeat<2非零失败；CI contract固定required workflow命令、report counts和artifact路径。P1 application AST test只新增唯一`p2_gate_report.py → app.exporters.contract_check` exact evidence例外，其他捷径禁令不变。既有36个Test ID和registry format version保持不变；P2-14仍须独立重跑audit。

@@ -6,7 +6,7 @@ spec_version: 0.3.0
 phase: P0-P2
 normative: true
 source_sections: [45, 51, 52, 53, 54, 55, 56, 58, 89]
-last_reviewed: 2026-08-19
+last_reviewed: 2026-08-21
 ---
 
 # Benchmark Harness 合同
@@ -55,3 +55,9 @@ TASK-P0-05 的 ScenarioManifest v1 提供未来 report 需要引用的 Scenario/
 `benchmark-report.v1`为strict exact-key internal machine contract，记录source→Problem与KPI/Export耗时、Problem/Snapshot hashes、全部复杂度指标、环境签名、Global exact solver/parameters/status/model counts、build/first/solve/validation/total raw samples/median/nearest-rank p95、objective/bound/gap/memory、五Reference的相同统计、formal Validator、共享schedule KPI、deterministic fingerprints、comparison、baseline checks和phase boundaries。任何correctness/KPI/determinism失败hard fail；Global weighted tardiness高于最佳Reference产生`BENCHMARK_WARNING`但不得篡改结果。
 
 三个`benchmark-baseline.v1`绑定固定Problem hash/complexity和一次真实Windows AMD64/Python 3.12.13/OR-Tools 9.15.6755观测。跨环境仍执行宽松development ceiling，但跳过相对性能结论；同环境才使用2.5倍diagnostic regression factor。历史v1不得覆盖，变化必须发布新版本。命令为`uv run python scripts/run_benchmark.py --profile <xs|s|m> --report <path>`；PR CI只执行XS并上传报告，Nightly S/M调度仍未创建。全部结果synthetic-only，OPEN-011/012保持OPEN。
+
+## TASK-P2-13 aggregate replay consumer
+
+Gate不修改Profile/Report/Baseline、threshold或runner；它用public `run_benchmark`在每个full replay内按XS/S/M各调用一次，所以`repeat=2`产生6份完整BenchmarkReport、18个Global measured runs与90个Reference measured runs。每份报告仍独立执行strict validation、baseline comparison与warning规则，任何warning或FAIL均阻断Gate。
+
+Aggregate report完整嵌入六份原始报告并另算`p2-gate-semantic-projection.v1`：比较Profile/Problem/environment/candidate/model/quality/Validator/Reference/baseline语义，排除本来就会变化的time/memory和由SolverReport timing派生的KPI/package identity。此投影不替换原Benchmark合同或原始测量；L/XL、Nightly与Production threshold继续不在范围。

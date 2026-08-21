@@ -74,3 +74,9 @@ P2还要求重新验证所有JSON canonical bytes、package/KPI自身份、文�
 BenchmarkRunner对每个profile的正式replay构建并验证一次既有`p2-internal-export.v1`，报告package ID、manifest fingerprint、9个payload count和KPI version，用于证明Snapshot→validated Solution→KPI/Export链未回归。Exporter代码、manifest Schema、package bytes规则和state boundary均未修改。
 
 P2-12 BenchmarkReport是独立machine evidence，不被追加入P2-11 package；该历史profile仍明确声明`benchmark_report.json=DEFERRED_P2_12`以保持已发布manifest语义与bytes，不应被解释为P2-12未执行。把BenchmarkReport纳入可发布成果包属于新合同/Task，当前禁止。
+
+## TASK-P2-13 Gate aggregation boundary
+
+Gate每次full replay既重放P2-11独立output contract，也验证XS/S/M各自已有embedded internal package，因此`repeat=2`记录2个显式package contract executions和6个Benchmark embedded Export executions。每个原始package ID、manifest/file hash、bytes/rows、KPI/SolverReport/Validation lineage和atomic/non-publishable boundary均原样嵌入Gate report。
+
+SolverReport时间和timing-dependent KPI会使跨完整run的package identity合法变化；Gate只对不含这些run-specific identity的versioned business projection要求一致，并诚实保留所有原始hash。Exporter实现/Schema/bytes规则未修改，Gate不把自身报告装入package，不创建ScheduleVersion/ExportJob，也不改变`publishable=false`。

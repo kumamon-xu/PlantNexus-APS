@@ -204,3 +204,9 @@ Workflow中的deferred conditional hook已替换为不可跳过的`P2 XS Benchma
 本地Gate已通过27项指定测试、full repository `466 passed`、Ruff/Pyright 0、XS/S/M三份8/8 BenchmarkReport、P2-11 output 8/8及全部历史machine reports。Compose、build、142-doc治理与49 paths/7 rows/19 checks/0 issues的Task diff同样PASS。CI XS是development regression，不是Production capacity/SLA或完整P2 Gate。
 
 Implementation provider Gate已通过：SHA `01e7f4bdca88fc903e7caa771f875fc1a70ff357`、run `32460861563`、required `validate` job/check `96707353990`（app `15368`）均success；artifact `9438899443`未过期且digest=`sha256:caeb61fbbbd100c301725073398410e50e4b79f979f0b72df08d32a28fc2874e`。19/19 reports、XS benchmark 8/8/0 warning及Task 49 committed/0 working paths、7 rows、19 checks、0 issues均绑定同一SHA；TASK-P2-12 DoD完成，不自动授权P2-13。
+
+## TASK-P2-13 Vertical Slice CI Gate
+
+Workflow在既有P2 XS Benchmark step后新增不可跳过的`P2 vertical slice Gate evidence`：执行`python -m app.application.p2_gate_report --root . --repeat 2 --report build/validation/ci-p2-vertical-slice-gate.json`。该命令内部再次完整运行七类correctness、XS/S/M、Global+五Reference、fresh Validator、KPI/SolverReport/internal Export与四类fail-closed边界；单一Gate report随既有validation/traceability/benchmark glob上传。
+
+Local Gate现为2 replays、11/11 checks、14 correctness scenarios、22 mutations、6 benchmark profiles、108 benchmark Validator passes、8 Export executions、4 rejections、stable semantic hash unique=`1`、0 blocking gaps。FAIL report必须非零，workflow不得`continue-on-error`。这只形成TASK-P2-13 implementation candidate；exact implementation SHA required `validate`/artifact尚须push后核验，且本Task绝不产生P2 Exit READY。

@@ -125,3 +125,9 @@ Report本身不写业务数据库，temporary CSV随进程回收，`build/valida
 运行`uv run python scripts/run_benchmark.py --profile <xs|s|m> --report build/benchmarks/<name>.json`。CLI必须读取versioned profile与对应immutable baseline；成功报告为`benchmark-report.v1`/8 checks，失败写`benchmark-failure-report.v1`并返回非零。PR CI固定只执行XS；S/M是local/nightly-ready命令，仓库尚未创建Nightly scheduler，L/XL不接受。
 
 命令只使用synthetic data并在进程内运行正式pipeline/Solver/Validator/Reference/KPI/Export；不连接DB/Redis/API/Worker、不写业务ScheduleVersion/ExportJob、不publish，也不会覆盖baseline。Provider closure必须确认exact SHA report、required `validate`、benchmark artifact和Task diff同一提交；结果不得作为Production capacity/SLA runbook。
+
+## TASK-P2-13 vertical Gate command
+
+运行`uv run python -m app.application.p2_gate_report --root . --repeat 2 --report build/validation/TASK-P2-13-p2-gate.json`。成功必须为`p2-vertical-slice-report.v1`、2 full replays、11/11 checks、7 scenarios×2、C-001～C-011正负覆盖、XS/S/M×2、108 benchmark Validator passes、四类rejection、stable projection unique=`1`和0 blocking gaps；Exit decision必须仍为`NOT_PERFORMED`。
+
+任一stage失败时CLI仍写包含stage/error/blocking gap的FAIL report并返回非零；不得在本Task内修改Solver/Validator/fixture/baseline来“让Gate变绿”。命令不连接业务服务、不创建状态或可发布artifact。CI使用同一命令与`--repeat 2`输出`build/validation/ci-p2-vertical-slice-gate.json`，exact provider SHA/required job/artifact必须在实现提交后另行核验。

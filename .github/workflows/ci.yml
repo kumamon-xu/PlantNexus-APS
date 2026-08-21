@@ -157,6 +157,13 @@ jobs:
           --profile "${PLANTNEXUS_BENCHMARK_PROFILE}"
           --report build/benchmarks/ci-xs.json
 
+      - name: P2 vertical slice Gate evidence
+        run: >-
+          uv run python -m app.application.p2_gate_report
+          --root .
+          --repeat 2
+          --report build/validation/ci-p2-vertical-slice-gate.json
+
       - name: Build package
         run: uv build
 

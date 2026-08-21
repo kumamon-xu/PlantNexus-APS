@@ -6,7 +6,7 @@ spec_version: 0.3.0
 phase: P0-P4
 normative: true
 source_sections: [29, 32, 34, 60, 65, 91, 92]
-last_reviewed: 2026-08-20
+last_reviewed: 2026-08-21
 ---
 
 # 错误与求解状态模型
@@ -151,3 +151,9 @@ Formal candidate的schedule违反继续使用既有`error.v2`映射：`VALIDATIO
 Strategy precheck对Production/未批准Simulation Policy或priority source显式抛出`DeliveryPolicyError`，objective demand映射/priority/int64不可表达显式抛出`DeliveryObjectiveError`，不得进入INFEASIBLE。Search无candidate且无证明保持UNKNOWN并映射`NO_SOLUTION_WITHIN_LIMIT`；只有complete hard model证明才为INFEASIBLE；有candidate未证明最优为FEASIBLE。
 
 Independent Validator拒绝optimized candidate时映射FAILED/SYSTEM_ERROR语义、丢弃assignments与objective candidate，并保留sanitized diagnostic；不新增error registry code、Schema、HTTP/API mapping或诊断子系统。Production authority未批准不是可重试Solver结论。
+
+## TASK-P2-13 Gate rejection behavior
+
+Gate新增的四项evidence只调用既有public contracts：`SECONDARY_CAPACITY`稳定为`UNSUPPORTED_CAPABILITY`并在Planning前拒绝；空/invalid PlanningProblem稳定为`MODEL_INVALID/MODEL_INVALID`并在Solver前拒绝；`max_wall_time_seconds=0`稳定为Planning contract `MODEL_INVALID/INVALID_METRIC`；Solver `UNKNOWN`稳定映射无candidate的`NO_SOLUTION_WITHIN_LIMIT`且明确不是INFEASIBLE。
+
+任一correctness/benchmark/Validator/export/rejection/semantic-hash stage异常都会生成`p2-vertical-slice-report.v1` `FAIL`、blocking gap与非零exit；成功阶段不能抵消失败，也不在Gate中修复。该编排不增加error-code registry、Schema、HTTP/status/persistence mapping；P2 Exit decision始终`NOT_PERFORMED`。

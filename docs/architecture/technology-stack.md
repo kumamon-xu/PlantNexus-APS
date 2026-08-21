@@ -210,3 +210,9 @@ Global schema metadata additive提升为`2.5.0`。CI新增`app.exporters.contrac
 Benchmark实现使用Python 3.12标准库`dataclasses/statistics/platform/tracemalloc/perf_counter/hashlib/json`与已有dev pin `PyYAML==6.0.2`读取profile；Solver仍为exact `ortools==9.15.6755`且仅CP-SAT namespace直接导入。`pyproject.toml`、`uv.lock`、runtime/dev dependency、schema/code metadata均零变化，因此无dependency ADR或migration。
 
 CI把既有deferred shell hook替换为直接Python CLI XS调用，并把`build/benchmarks/*.json`加入同一artifact；没有新Action、service/container/database/queue/network/provider。Baseline环境值只用于可比性，不是部署规格。
+
+## TASK-P2-13 technology review
+
+Gate实现只使用Python 3.12标准库`argparse/datetime/hashlib/json/pathlib/perf_counter`与已有public application/planning/simulation/export boundaries；没有新增runtime/dev dependency、Action、service、container、database、queue或network provider。`pyproject.toml`、`uv.lock`、Schema set`2.5.0`、OR-Tools exact pin和所有migration保持字节不变，因此Dependency/Schema/Migration/ADR impact均为none。
+
+`p2-vertical-slice-report.v1`是严格internal Python-validated machine contract，未发布外部JSON Schema；若未来持久化、API或第三方consumer使用，必须另立Task发布Schema/compatibility/retention。当前workflow仅新增不可跳过的CLI step并复用`actions/upload-artifact@v4`既有路径。

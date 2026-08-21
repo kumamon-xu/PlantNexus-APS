@@ -9,6 +9,7 @@ from typing import Any, cast
 
 import yaml
 
+from app.application.p2_gate_report import main as p2_gate_main
 from app.exporters.contract_check import main as output_contract_main
 from app.planning.backends.cp_sat.contract_check import (
     main as backend_contract_main,
@@ -145,12 +146,16 @@ def test_ci_runs_repository_gates_and_discovers_the_current_task() -> None:
         "uv build",
         "PLANTNEXUS_BENCHMARK_PROFILE: xs",
         "--report build/benchmarks/ci-xs.json",
+        "name: P2 vertical slice Gate evidence",
+        "app.application.p2_gate_report",
+        "build/validation/ci-p2-vertical-slice-gate.json",
         "build/benchmarks/*.json",
     )
     for fragment in required_fragments:
         assert fragment in workflow
     assert "scripts/run_benchmark.py" in workflow
     assert "name: P2 XS BenchmarkRunner evidence" in workflow
+    assert "name: P2 vertical slice Gate evidence" in workflow
     assert "Benchmark hook (deferred until runner exists)" not in workflow
     assert "Benchmark runner remains deferred" not in workflow
     assert "actions/upload-artifact@v4" in workflow
@@ -191,6 +196,60 @@ def test_ci_benchmark_contract_is_xs_only_and_baseline_bound() -> None:
     assert baseline["boundaries"]["production_sla"] == (
         "NOT_ESTABLISHED_OPEN_012"
     )
+
+
+def test_ci_p2_vertical_slice_gate_is_required_and_machine_checkable(
+    tmp_path: Path,
+) -> None:
+    workflow = (ROOT / ".github" / "workflows" / "ci.yml").read_text(
+        encoding="utf-8"
+    )
+    normalized = " ".join(workflow.split())
+    assert (
+        "name: P2 vertical slice Gate evidence run: >- uv run python -m "
+        "app.application.p2_gate_report --root . --repeat 2 --report "
+        "build/validation/ci-p2-vertical-slice-gate.json"
+    ) in normalized
+    assert "continue-on-error" not in workflow
+    report_path = tmp_path / "p2-vertical-slice-gate.json"
+    assert (
+        p2_gate_main(
+            [
+                "--root",
+                str(ROOT),
+                "--repeat",
+                "2",
+                "--report",
+                str(report_path),
+            ]
+        )
+        == 0
+    )
+    report = json.loads(report_path.read_text(encoding="utf-8"))
+    assert report["report_version"] == "p2-vertical-slice-report.v1"
+    assert report["status"] == "PASS"
+    assert report["task_id"] == "TASK-P2-13"
+    assert report["repeat_count"] == 2
+    assert report["check_count"] == 11
+    assert report["hash_consistency"]["unique_combined_fingerprints"] == 1
+    assert report["counts"] == {
+        "full_replays": 2,
+        "correctness_scenario_executions": 14,
+        "correctness_validator_passes": 14,
+        "correctness_mutation_executions": 22,
+        "unique_constraint_ids": 11,
+        "benchmark_profile_executions": 6,
+        "benchmark_global_measured_runs": 18,
+        "benchmark_reference_measured_runs": 90,
+        "benchmark_validator_passes": 108,
+        "explicit_output_contract_executions": 2,
+        "embedded_benchmark_export_executions": 6,
+        "rejection_cases": 4,
+    }
+    assert report["blocking_gaps"] == []
+    assert report["boundaries"]["exit_gate_decision"] == "NOT_PERFORMED"
+    assert report["boundaries"]["p2_14"] == "NOT_STARTED"
+    assert report["boundaries"]["p3"] == "NOT_STARTED"
 
 
 def test_ci_planning_problem_contract_report_is_machine_checkable(

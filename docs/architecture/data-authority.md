@@ -6,7 +6,7 @@ spec_version: 0.3.0
 phase: cross-phase
 normative: true
 source_sections: [15, 22, 59, 61, 90]
-last_reviewed: 2026-08-20
+last_reviewed: 2026-08-21
 ---
 
 # 数据权威边界
@@ -109,3 +109,9 @@ Common ingress不新建authority层：ReferenceFileAdapter仅读取同一synthet
 DemandOrder `due_at_utc`及source三元组从Snapshot canonical record逐字进入DeliveryDemand；priority不是Snapshot已有权威字段，因此v2 builder要求调用方为每个active demand提供非boolean正整数权重和独立source system/version/record ID，禁止默认`1`、缺省排序或把Scenario值冒充Production authority。OPEN-006/015未关闭时Production使用继续阻断；Simulation只允许显式versioned policy。
 
 Resource topology/status/calendar/capabilities、ExecutionFact和OperationLock仍只由Snapshot canonical facts提供，Problem builder不成为数据owner。`capacity=1`是C-003 primary unary contract语义，不推断人数/模具/工装或secondary capacity。真实lock owner、due/priority policy、resource/calendar/transport authority继续受OPEN-004/005/007/009/010约束。
+
+## TASK-P2-13 authority boundary
+
+Vertical Gate只重放已版本化的synthetic Profile/Scenario/Policy/Limits和已有canonical lineage，不新增、选择或覆盖任何业务权威。四类边界明确拒绝unsupported capability、invalid Problem、invalid SolveLimits，并把UNKNOWN保持为无candidate的`NO_SOLUTION_WITHIN_LIMIT`；这些machine结论既不是Production数据权威，也不能把缺失事实补成默认值。
+
+报告中的due/priority、resource/calendar/material/transport、fact/lock、runtime与memory仍分别受原Scenario/Problem/baseline provenance约束。全部PROD_OPEN继续OPEN，尤其OPEN-006/011/012/015没有Authority/Evidence closure record；Gate PASS只证明Simulation链路可重放，不批准Production binding、capacity、SLA或发布。

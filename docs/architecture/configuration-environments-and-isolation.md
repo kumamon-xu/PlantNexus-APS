@@ -170,3 +170,9 @@ Manifest固定`publishable=false`及所有P3状态未启动，synthetic package�
 Benchmark profile来自versioned YAML而非环境默认；CLI只接受`xs|s|m`并经synthetic-only Profile/Scenario与Simulation Raw Staging进入正式pipeline。报告采集OS/release/machine/processor、Python、logical CPU、OR-Tools、timer、local/GitHub provider及其SHA-256 environment signature，不采集hostname、username、secret、数据库或网络地址。
 
 CI只通过非秘密变量选择XS并写ignored artifact，不新增service/port/container/migration/credential或Production route。跨环境baseline明确跳过相对性能判定；L/XL和Production capacity/SLA禁止。独立Production/Simulation DB仍未由本Task实现。
+
+## TASK-P2-13 Gate environment review
+
+Gate CLI只有`--root`、`--repeat >= 2`和`--report`三个显式参数；所有profile/policy/limits继续从版本化仓库合同读取，没有环境默认。`PLANTNEXUS_CODE_COMMIT`只接受`uncommitted`或40位小写SHA并传递到全部子报告；CI由`${{ github.sha }}`提供。报告复用Benchmark的去hostname/username/secret环境签名，不读取credential、DB、Redis、API、Worker或网络配置。
+
+Required workflow在既有XS step后真实执行两次七类correctness、XS/S/M和output contract，并把单一Gate JSON纳入现有artifact glob。Local与provider运行都保持Simulation-only；相对baseline仍按各Benchmark报告环境规则判定，Gate不会把GitHub runner或本机值转成Production部署规格。

@@ -30,6 +30,7 @@ uv run python -m app.simulation.scenarios.p2_correctness --root . --report build
 uv run python -m app.simulation.baselines.reference_schedulers --root . --report build/validation/TASK-P2-10-reference-schedulers.json
 uv run python -m app.exporters.contract_check --root . --report build/validation/TASK-P2-11-output-contracts.json
 uv run python scripts/run_benchmark.py --profile xs --report build/benchmarks/TASK-P2-12-xs.json
+uv run python -m app.application.p2_gate_report --root . --repeat 2 --report build/validation/TASK-P2-13-p2-gate.json
 uv run python -m app.infrastructure.contract_check --root . --report build/validation/TASK-P0-08-engineering.json
 docker compose --env-file .env.example config --quiet
 uv run python scripts/check_docs.py
@@ -85,3 +86,5 @@ TASK-P2-11新增`kpi.v2`、`export-manifest.v1`和`p2-internal-export.v1`：所�
 TASK-P2-12已形成`benchmark-profile-set/report/baseline.v1`、`benchmark-runner.v1`和SIM-ASSUMPTION-013。XS/S/M分别固定8/24/48 operations，同一正式Raw→Problem链上运行Global与五个Reference，各完成1次warm-up和3次measured replay；三份报告均8/8 PASS、formal Validator与共享KPI一致，baseline comparison无warning。Implementation `01e7f4bdca88fc903e7caa771f875fc1a70ff357`的required run `32460861563` / artifact `9438899443`精确复现19/19 reports、XS 8/8及49 committed/0 working治理证据，故Task=`done`；P2-13/14与P3未启动。
 
 用户于2026-08-21明确授权TASK-P2-13。启动门复核确认`main=origin/main=59f3b013a4be7bd11d054e8464886b3cde791602`且working tree clean，P2-01～12 implementation与exact provider evidence均位于可追溯祖先链；closure run `32461665177` / required job `96709654227` / artifact `9439159396`精确success。当前只允许聚合公开边界形成可重放`p2-vertical-slice-report.v1`、四类负例、测试/CI evidence及治理文档；不修复既有实现、不作P2 Exit结论，也不启动P2-14或P3。
+
+TASK-P2-13本地Gate现以两次完整replay聚合七场景correctness、XS/S/M Global+五Reference Benchmark、formal Validator/KPI/SolverReport与九payload internal Export；聚焦`30 passed`、全仓`476 passed`，Gate为11/11 PASS、14次correctness场景、6次profile、108次Benchmark Validator、4类exit rejection且0 blocking gap。报告保留全部原始运行字段，同时用versioned semantic projection验证业务一致性；`Exit Gate Audit=NOT_PERFORMED`，exact implementation provider闭环前Task保持`in_progress`。

@@ -222,3 +222,9 @@ Synthetic provenance从Snapshot与P2 correctness manifest逐字段交叉，Scena
 `benchmark-report.v1`绑定`benchmark-profile-set.v1`、`benchmark-runner.v1`、generator/assembler `1.0.0`、Scenario/Profile/seed、pipeline versions、Import/Snapshot/Problem hashes、Global strategy/backend/solver/parameters、五个Reference algorithm IDs、raw measurement samples、assignment/KPI fingerprints、environment signature、baseline version/path和code commit。Local可写`uncommitted`；provider必须是exact 40字符SHA。
 
 三个`benchmark-baseline.v1`把Profile/Generator/Problem hash/complexity与一次真实环境观测固定为immutable v1；profile或观测语义变化发布新版本，不覆盖历史。Benchmark内部合同不进入global JSON Schema set，故schema set仍`2.5.0`；若未来成为外部/持久化consumer，必须另行发布Schema与compatibility plan。
+
+## TASK-P2-13 Gate provenance
+
+`p2-vertical-slice-report.v1`绑定exact code commit、`p2-gate-semantic-projection.v1`、correctness/benchmark/output报告版本、全部嵌套子报告、两次replay index/stage/time、四类rejection、11项aggregate check、counts、blocking gaps和phase boundary。Provider时Gate及每个子报告的`code_commit`必须等于同一`${{ github.sha }}`；local仅允许`uncommitted`。
+
+Correctness projection只排除`generated_at/code_commit`；Benchmark projection保留Profile/Scenario/Problem/environment、candidate fingerprints、model/quality/Validator/Reference/baseline而排除timing/memory与由SolverReport时间产生的KPI/package identities；Output projection保留frozen inputs、file roles/counts、stable lineage和state boundary而排除run-specific identities。原始timing、memory、KPI/SolverReport/package/file hashes仍逐replay完整保存，不伪称这些时间敏感hash必须相等；只有versioned business projection必须两次一致且本地unique count=`1`。

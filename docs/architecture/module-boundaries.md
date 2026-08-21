@@ -171,3 +171,9 @@ Exporter核心不依赖`jsonschema`或外部I/O服务；Schema validation只存�
 `app.simulation.benchmarks`位于Simulation evidence层，单向依赖versioned Profile/Scenario assembler、public Planning Strategy/Problem/Reporting、Reference Scheduler和internal Exporter。它不得被Domain/Planning/Backend/Validator反向导入，不接触API/ORM/Worker/DB/queue，也不直接导入OR-Tools；solver identity经`planning.backends.cp_sat`公共常量和SolverReport取得。
 
 Planning reporting新增的`calculate_schedule_kpi_metrics`只提取已有pure schedule公式，继续不依赖Simulation。Benchmark用它交叉Global KPI v2和Reference carrier，不复制KPI公式。该拓扑已由P2总规预留`simulation/benchmarks`模块，无新依赖或架构决策，ADR不新增。
+
+## TASK-P2-13 evidence orchestrator boundary
+
+`application/p2_gate_report.py`是唯一跨越到`app.exporters.contract_check`的application文件，且只为TASK-P2-13 machine evidence重跑既有公开output boundary；它不导入Exporter实现、API、Infrastructure、Backend/Strategy/Validator native modules、OR-Tools或SQLAlchemy，不承载产品用例、事务或持久化。P1 CommonIngress仍终止于Problem，其他`application/*.py`继续禁止Exporter及Solver/Validator/API/Infrastructure捷径。
+
+该例外由AST integration test按“精确文件→精确module”固定为`p2_gate_report.py → app.exporters.contract_check`，不能扩展为通配或dynamic import。Gate对Simulation correctness/benchmark/export的依赖方向仍是evidence consumer单向下游；Domain/Planning/Validator/Exporter均不反向依赖Gate，因此无需新ADR。

@@ -6,7 +6,7 @@ spec_version: 0.3.0
 phase: cross-phase
 normative: true
 source_sections: [0, 9, 10, 23, 24, 30, 32, 33, 35, 57, 67]
-last_reviewed: 2026-08-20
+last_reviewed: 2026-08-21
 ---
 
 # 端到端计划链路
@@ -69,3 +69,9 @@ TASK-P1-08现把该链路推进到immutable PlanningSnapshot v2：builder验证c
 P2的第一段现在固定为`verified PlanningSnapshot v2 + explicit versioned priority facts → build_planning_problem_v2 → immutable planning-problem.v2`。v2 output包含DeliveryDemand、complete primary Resource facts、active OperationInstances、HistoricalCompletionAnchors、precedence edges、active locks、calendar intervals与required platform capabilities；机器report同时重放v1默认路径。
 
 该handoff终止于verified Problem。Application common ingress尚未切换默认v2，PlanningPolicy/SolveLimits/Solution、Backend/Strategy、ScheduleValidator、KPI/Export/Benchmark均未调用；这些只能从P2-02起按依赖链逐Task接入。
+
+## TASK-P2-13 vertical-slice Gate orchestration
+
+`app.application.p2_gate_report`现只通过P2-09/P2-12/P2-11公开machine boundaries聚合`Snapshot → PlanningProblem v2 → PlanningPolicy/SolveLimits → GlobalCpSatStrategy → independent Validator → KPI/SolverReport → p2-internal-export.v1`。每个完整replay依次运行七类correctness、XS/S/M Global+五Reference与独立output contract；本地`repeat=2`形成14个correctness scenario executions、6个benchmark profile executions、108个benchmark Validator passes、8个显式/嵌入Export executions及四类fail-closed边界，11/11 checks PASS。
+
+该入口是无状态、in-process、Simulation-only验收编排，不创建PlanningRun/ScheduleVersion/ExportJob，不连接API/DB/Worker/queue，也不批准或发布。`p2-vertical-slice-report.v1`保留每次完整子报告、timing/memory/hash/export evidence，并只对排除generated/timing的versioned业务语义投影要求跨replay一致；P2-14才可独立审计Exit。

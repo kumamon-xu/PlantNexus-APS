@@ -105,3 +105,5 @@ TASK-P2-11 provider closure：required run/artifact精确复现non-publishable i
 TASK-P2-12 local review：versioned XS/S/M complexity/model/timing/memory与immutable baseline加强RISK-005，formal source pipeline/Validator/shared KPI加强RISK-002/003，warning/环境/OPEN-011/012边界加强RISK-009，exact solver public namespace与dependency零变化继续约束RISK-011。Profile仍synthetic、无历史生产数据/Production threshold、Nightly provider或P2 Gate，因此任何风险均不得标记`MITIGATED/CLOSED`；RISK-001～011继续`MONITORED`，registry format version保持`1.0.0`。
 
 TASK-P2-12 provider closure：required XS run/artifact精确复现strict contract、formal Validator/shared KPI、baseline/environment与warning边界，没有降低或关闭任何风险。S/M provider schedule、历史生产数据、Production threshold、L/XL与完整P2 Gate仍未形成；RISK-001～011继续`MONITORED`，registry format version保持`1.0.0`。
+
+TASK-P2-13 local review：两次完整纵向replay、raw evidence与稳定语义投影分层、fresh Validator/output contract及四类fail-closed拒绝加强RISK-001～009；dependency/lock零变化与namespace guard继续约束RISK-011。Exact provider、P2-14独立审计、历史生产数据、Production threshold/L/XL与deployment仍缺失，且本Gate不能消除共同实现缺陷或操作风险；任何风险均不得标记`MITIGATED/CLOSED`。RISK-001～011全部继续`MONITORED`，registry format version保持`1.0.0`。

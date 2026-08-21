@@ -110,3 +110,5 @@ TASK-P2-11链路为`Snapshot/Problem → validated PlanningSolution + Validation
 TASK-P2-12已形成严格Profile/Report/Baseline v1、确定性source-shaped generator、warm-up/repetition/median/p95、环境签名、Global/五Reference comparison、`BENCHMARK_WARNING`和immutable baseline规则。XS/S/M报告绑定三个固定Problem hash并均为8/8 PASS；implementation `01e7f4bdca88fc903e7caa771f875fc1a70ff357`的run `32460861563` / required job `96707353990` / artifact `9438899443`已复现19/19 PASS与49-path治理，Task=`done`。该证据只属development/simulation，OPEN-011/012保持OPEN，P2-13/14与P3未启动。
 
 用户于2026-08-21明确授权TASK-P2-13；clean/provider-verified Diff base为`59f3b013a4be7bd11d054e8464886b3cde791602`，其run `32461665177` / required job `96709654227` / artifact `9439159396`均success。当前只编排已发布的P2公开边界，重放correctness与XS/S/M并聚合Validator/KPI/SolverReport/Export、四类拒绝和CI artifact；不得混入remediation、Exit READY、P2-14或P3。
+
+TASK-P2-13本地已形成`p2-vertical-slice-report.v1`与`p2-gate-semantic-projection.v1`：两次完整replay均PASS，七场景、XS/S/M、Global+五Reference、formal Validator、KPI/SolverReport、internal Export和四类拒绝全部闭环。聚焦30项与全仓476项测试PASS，11项Gate checks全部PASS且无blocking gap；exact implementation provider形成前Task仍为`in_progress`，P2-14/P3保持未启动。

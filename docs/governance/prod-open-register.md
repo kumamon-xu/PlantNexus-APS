@@ -124,3 +124,5 @@ TASK-P2-11 provider closure：GitHub required run/artifact只复现synthetic、n
 TASK-P2-12 local review：XS/S/M profile、Windows baseline、development ceilings和2.5倍same-environment factor全部由本次新增的simulation assumption限定为synthetic engineering evidence，不是历史生产数据、部署预算、容量或SLA。尤其OPEN-011仍缺真实历史benchmark，OPEN-012仍缺经授权的Production runtime/memory/scale threshold；没有Authority/Evidence closure record。OPEN-001～015全部继续`OPEN`，registry format version保持`1.0.0`。
 
 TASK-P2-12 provider closure：GitHub required XS run/artifact只复现synthetic development benchmark、formal correctness和环境/性能carrier，不是历史生产数据、部署预算、容量或SLA Authority/Evidence closure record。OPEN-001～015全部继续`OPEN`，registry format version保持`1.0.0`。
+
+TASK-P2-13 local review：两次完整Gate聚合的correctness、XS/S/M Benchmark、internal Export与四类exit rejection全部是Simulation/development evidence；Gate明确`publishable=false`、Production authority absent、Exit Audit未执行。它不提供真实接口/字段/拓扑/日历/priority/default limit、历史性能、容量、SLA、审批或发布决定，尤其不关闭OPEN-006/010/011/012/015。没有Authority/Evidence closure record；OPEN-001～015全部继续`OPEN`，registry format version保持`1.0.0`。

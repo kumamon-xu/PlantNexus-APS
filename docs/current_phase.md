@@ -225,3 +225,9 @@ Implementation `01e7f4bdca88fc903e7caa771f875fc1a70ff357`的GitHub push run `324
 用户于2026-08-21明确授权执行TASK-P2-13。启动复核确认`main=origin/main=59f3b013a4be7bd11d054e8464886b3cde791602`且working tree clean，P2-01～12均`done`，十二个implementation均位于当前HEAD祖先链且各自exact required `validate` / artifact可取；closure HEAD的run `32461665177` / required `validate` job/check `96709654227`（app `15368`）/ artifact `9439159396`均success，artifact digest=`sha256:007e7a3107d06d7d629f519a87a7e8e0c54143863d422413664d857659e38cb1`且未过期。Diff base据此冻结。
 
 本Task只编排Snapshot→Problem→Policy/Limits→Global CP-SAT→independent Validator→KPI/SolverReport→internal Export公开边界，至少两次完整replay七类correctness与XS/S/M，形成versioned Gate report、四类unsupported/invalid/limit拒绝、CI exact artifact及blocking gap列表。既有Solver/Validator/合同/fixture/benchmark只读；任何失败诚实返回FAIL且不在本Task修复。P2-14 Exit Gate Audit、P3及Production readiness全部禁止，current phase保持P2。
+
+## TASK-P2-13 本地实现边界
+
+`p2-vertical-slice-report.v1`现执行两次完整`correctness → XS → S → M → output`顺序链；每次保存全部sub-report、timing/memory/hash/export证据，并由`p2-gate-semantic-projection.v1`仅排除运行时噪声及其派生identity后比较业务语义。聚焦测试`30 passed`、全仓`476 passed`；Gate为11/11 PASS、14次correctness场景、6次benchmark profile、108次benchmark Validator PASS、4类exact rejection与0 blocking gap。
+
+本地PASS不等于required provider或Exit结论。当前`Exit Gate Audit=NOT_PERFORMED`、P2-14/P3=`NOT_STARTED`、Production readiness=`NOT_CLAIMED`；implementation exact required `validate` / artifact闭环前TASK-P2-13保持`in_progress`，P2 Milestone保持`active`。

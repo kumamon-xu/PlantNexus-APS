@@ -149,14 +149,16 @@ def test_application_rejects_cross_plane_input_before_normalization() -> None:
 
 def test_application_boundary_has_no_solver_validator_persistence_or_api_shortcut() -> None:
     application_root = ROOT / "backend" / "app" / "application"
-    imported_modules: set[str] = set()
+    imported_modules_by_file: dict[str, set[str]] = {}
     for path in sorted(application_root.glob("*.py")):
+        imported_modules: set[str] = set()
         tree = ast.parse(path.read_text(encoding="utf-8"), filename=str(path))
         for node in ast.walk(tree):
             if isinstance(node, ast.Import):
                 imported_modules.update(alias.name for alias in node.names)
             elif isinstance(node, ast.ImportFrom) and node.module is not None:
                 imported_modules.add(node.module)
+        imported_modules_by_file[path.name] = imported_modules
     forbidden = (
         "app.api",
         "app.exporters",
@@ -167,10 +169,16 @@ def test_application_boundary_has_no_solver_validator_persistence_or_api_shortcu
         "ortools",
         "sqlalchemy",
     )
-    assert not {
-        module
-        for module in imported_modules
-        if any(
-            module == prefix or module.startswith(f"{prefix}.") for prefix in forbidden
-        )
+    evidence_only_exception = {
+        "p2_gate_report.py": {"app.exporters.contract_check"},
     }
+    for filename, imported_modules in imported_modules_by_file.items():
+        observed = {
+            module
+            for module in imported_modules
+            if any(
+                module == prefix or module.startswith(f"{prefix}.")
+                for prefix in forbidden
+            )
+        }
+        assert observed == evidence_only_exception.get(filename, set())

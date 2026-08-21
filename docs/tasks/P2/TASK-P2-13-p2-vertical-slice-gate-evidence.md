@@ -27,7 +27,7 @@ Inputs: P2-01～12 completion/provider evidence、all P2 contracts/assets/profil
 
 Diff base: 59f3b013a4be7bd11d054e8464886b3cde791602
 
-Files allowed to change: `backend/app/application/p2_gate_report.py`、`backend/tests/integration/test_p2_vertical_slice.py`、`backend/tests/contract/test_p2_exit_rejections.py`、`.github/workflows/ci.yml`、`backend/tests/integration/test_ci_contract.py`及`Documents to update`；report写入ignored `build/validation/TASK-P2-13-p2-gate.json`，其他路径先修订。
+Files allowed to change: `backend/app/application/p2_gate_report.py`、`backend/tests/integration/test_p2_vertical_slice.py`、`backend/tests/contract/test_p2_exit_rejections.py`、`backend/tests/integration/test_p1_common_ingress.py`、`.github/workflows/ci.yml`、`backend/tests/integration/test_ci_contract.py`及`Documents to update`；report写入ignored `build/validation/TASK-P2-13-p2-gate.json`，其他路径先修订。`test_p1_common_ingress.py`只允许把原application-wide exporter禁令收窄为唯一evidence-only Gate orchestrator例外；P1 CommonIngress本身及其no-Solver/Validator/API/Infrastructure边界不得弱化。
 
 Files forbidden to change: Solver/Validator/contract/fixture/benchmark remediation、P2-14 audit report、P3 Task/state/publish、Production config/data。
 
@@ -41,7 +41,7 @@ Documents to update: `README.md`、`docs/README.md`、`docs/current_phase.md`、
 
 Documentation impact rationale: Gate编排和CI artifact把全部P2实现连接为单一可核验链，必须同步架构、错误、质量、性能和追踪。
 
-Change-impact matrix rows reviewed: `IMPACT-PHASE`、`IMPACT-DOCS`
+Change-impact matrix rows reviewed: `IMPACT-PHASE`、`IMPACT-APPLICATION`、`IMPACT-INFRA`、`IMPACT-TESTS`、`IMPACT-GOVERNANCE-REGISTRY`、`IMPACT-DOCS`
 
 Traceability updates: 全部P2 roots→TASK-P2-01～13→P2 Test IDs/machine reports→`p2-vertical-slice-report.v1`/CI artifact；P2-14 audit和P3保持PLANNED。
 
@@ -55,13 +55,13 @@ ADR impact: none；编排不得改变既有技术决定；发现不一致作为g
 
 Error behavior: 任一required stage、Validator、scenario、benchmark、export或provider evidence非PASS则report overall FAIL/NOT_RUN并返回非零；不得用其他PASS抵消。
 
-Tests: TEST-GOLDEN-JSSP/FJSP、所有C-specific、TEST-VALIDATOR-MUTATION/PROPERTY/OUTPUT/SCENARIO-REPLAY/REFERENCE-SCHEDULER/BENCHMARK/SOLVER-UPGRADE及CI contract。
+Tests: TEST-GOLDEN-JSSP/FJSP、所有C-specific、TEST-VALIDATOR-MUTATION/PROPERTY/OUTPUT/SCENARIO-REPLAY/REFERENCE-SCHEDULER/BENCHMARK/SOLVER-UPGRADE、CI contract及P1 application boundary regression；唯一Gate→output machine-check例外必须逐文件/逐module exact匹配。
 
 Benchmark impact: 重放XS/S/M并引用既有baseline，不建立新Production threshold；任何回归按P2-12规则阻断。
 
 Simulation scenarios: Golden JSSP/FJSP、Cross Workshop、Calendar、Material Delay、Running、Hard Lock、XS/S/M完整集合。
 
-Acceptance commands: `uv run pytest -q backend/tests/integration/test_p2_vertical_slice.py backend/tests/contract/test_p2_exit_rejections.py backend/tests/integration/test_ci_contract.py`；`uv run python -m app.application.p2_gate_report --root . --repeat 2 --report build/validation/TASK-P2-13-p2-gate.json`；`uv run ruff check .`；`uv run pyright backend/app backend/tests`；`uv run python scripts/check_docs.py`；`uv run python scripts/check_docs.py --task docs/tasks/P2/TASK-P2-13-p2-vertical-slice-gate-evidence.md --check-diff --report build/traceability/TASK-P2-13-report.json`；`git diff --check`；`uv build`。
+Acceptance commands: `uv run pytest -q backend/tests/integration/test_p2_vertical_slice.py backend/tests/contract/test_p2_exit_rejections.py backend/tests/integration/test_p1_common_ingress.py backend/tests/integration/test_ci_contract.py`；`uv run python -m app.application.p2_gate_report --root . --repeat 2 --report build/validation/TASK-P2-13-p2-gate.json`；`uv run ruff check .`；`uv run pyright backend/app backend/tests`；`uv run python scripts/check_docs.py`；`uv run python scripts/check_docs.py --task docs/tasks/P2/TASK-P2-13-p2-vertical-slice-gate-evidence.md --check-diff --report build/traceability/TASK-P2-13-report.json`；`git diff --check`；`uv build`。
 
 Artifacts: P2 Gate report、all referenced reports/hashes、CI artifact、Task report和gap list。
 
@@ -80,3 +80,13 @@ Rollback: CI Gate可回退到previous workflow但失败evidence保留；若Gate�
 用户明确授权执行TASK-P2-13。启动时`main=origin/main=59f3b013a4be7bd11d054e8464886b3cde791602`且working tree clean；P2-01～12全部`done`，十二个implementation及各自exact provider evidence均位于该HEAD可追溯祖先链。基线closure push run `32461665177`、required `validate` job/check `96709654227`（GitHub Actions app `15368`）均`completed/success`；artifact `9439159396`未过期，digest=`sha256:007e7a3107d06d7d629f519a87a7e8e0c54143863d422413664d857659e38cb1`。故依赖、提交拓扑与退出前证据一致，Diff base冻结为上述HEAD。
 
 启动范围审查补入Task lifecycle所需current phase/Milestone/index与provenance文档，并声明`IMPACT-PHASE`。Activation-only差异只允许命中`IMPACT-PHASE/IMPACT-DOCS`；在首个实现路径修改前，本卡将把Impact Rule恢复为实际Gate实现所需的`IMPACT-APPLICATION/INFRA/TESTS/GOVERNANCE-REGISTRY/DOCS`集合。既有Solver/Validator/合同/fixture/benchmark、P2-14与P3保持冻结。
+
+Activation implementation `00ba68d59b883599bf1182d055faf53684ba8d64`的push run `32463228988`（attempt 1）/ required `validate` job/check `96714316051`（GitHub Actions app `15368`）全部success；branch protection精确要求`validate`/app `15368`。Artifact `9439713239`（`plantnexus-ci-evidence-32463228988`，45099 bytes）未过期，digest=`sha256:19179316733e2d94c6ca0c8deb7604beb6f7afe22322ea9383a9194280ab62dc`、expiry=`2026-11-19T08:26:59Z`；下载复核`ci-current-task-report.json`绑定该SHA与固定Diff base，为8 committed/0 working paths、2 rows、19 checks、0 issues。现在进入实现差异，完整Impact Rule恢复为六行声明。
+
+首轮全仓回归为`475 passed, 1 failed`：新增指定`application/p2_gate_report.py`公开导入`app.exporters.contract_check`，触发P1时期对全部`application/*.py`统一禁止Exporter的AST断言。由于本Task必须在该指定application入口聚合Export，禁止以dynamic import规避；故在修改该测试前先扩展allow-list，并只允许`p2_gate_report.py → app.exporters.contract_check`一个exact evidence-only例外。其他application文件及API/Infrastructure/Backend/Strategy/Validator/OR-Tools/SQLAlchemy禁令保持原样。
+
+本地实现形成strict internal `p2-vertical-slice-report.v1`与`p2-gate-semantic-projection.v1`。每次完整replay按`correctness → benchmark XS/S/M → output`执行，并嵌入全部sub-report、真实timing/memory/hash/export证据；稳定投影只排除运行时噪声及由其派生的identity，不修改原始证据。两次业务投影的combined fingerprint相同，四类`UNSUPPORTED_CAPABILITY`、`INVALID_PLANNING_PROBLEM`、`INVALID_SOLVE_LIMITS`、`NO_SOLUTION_WITHIN_LIMIT`均以exact category/code/stage fail-closed。
+
+指定聚焦命令为`30 passed in 37.68s`，完整仓库回归为`476 passed in 50.60s`；Gate CLI exit 0并得到11/11 PASS、14次correctness scenario executions、6次benchmark profile executions、108次benchmark Validator passes、4次exit rejection、2次explicit output contract与0 blocking gap。边界固定为P2/Simulation-only、Exit Audit=`NOT_PERFORMED`、P2-14/P3=`NOT_STARTED`、Production readiness=`NOT_CLAIMED`。其余lint/type/build/machine/governance检查和exact implementation provider evidence仍待下述验收完成，故Task保持`in_progress`。
+
+其余本地验收也已完成：Ruff=`All checks passed`，Pyright=`0 errors`；Rule/Generator/Golden/Mutation、P1 Gate、Problem/Machine/Backend/Formal Validator、Core/Temporal/Fact-Lock/Objective、Correctness/Reference/Output/Engineering全部machine reports为PASS；独立XS/S/M各8/8且0 warning；Compose config、`uv build`与`git diff --check`退出0。Full docs治理为142 docs/30 roots/36 Tests/15 OPEN/13 SIM/11 risks/37 Tasks；Task diff为37 paths（8 committed-range、37 working-tree union）、6 Impact rows、19 checks、0 issues并PASS。Schema/migration/dependency/lock/ADR以及冻结的Planning/Strategy/Backend/Validator/Reference/Scenario/Benchmark/Exporter实现均零差异。Exact implementation SHA的required `validate` / artifact仍待push后核验，故Task继续`in_progress`。

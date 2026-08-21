@@ -63,3 +63,5 @@ TASK-P2-11已形成`kpi.v2`、`export-manifest.v1`与`p2-internal-export.v1`，�
 TASK-P2-12现已对XS/S/M固定Problem完成Global+五Reference、fresh Validator、共享KPI、1+3 repetition、环境/规模/时间/质量/内存采集与immutable baseline比较；三份报告均8/8 PASS且无warning。Implementation `01e7f4bdca88fc903e7caa771f875fc1a70ff357`的run `32460861563` / required job `96707353990` / artifact `9438899443`精确复现19/19 reports与49-path治理，故Task=`done`。Milestone继续`active`；P2-13/14与P3不自动启动。
 
 用户于2026-08-21明确授权TASK-P2-13；Diff base `59f3b013a4be7bd11d054e8464886b3cde791602`的run `32461665177`、required job `96709654227`与artifact `9439159396`精确success。当前只启动公开边界Gate编排、至少两次correctness/XS/S/M replay、四类拒绝、CI machine evidence与治理同步；P2-14 Audit和P3不自动启动。
+
+TASK-P2-13本地Gate已完成两次完整replay并为11/11 PASS；30项聚焦、476项全仓测试通过，累计14次correctness场景、6次XS/S/M profile、108次Benchmark Validator与4类exit rejection，blocking gap为空。Exact implementation provider尚未闭环，Task保持`in_progress`；P2 Milestone仍为`active`，P2-14仍是唯一最后Exit Gate Audit且未启动。

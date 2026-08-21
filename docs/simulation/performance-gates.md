@@ -6,7 +6,7 @@ spec_version: 0.3.0
 phase: P2-P7
 normative: true
 source_sections: [57, 58, 76, 80, 84, 85, 89, 105, 106]
-last_reviewed: 2026-08-20
+last_reviewed: 2026-08-21
 ---
 
 # 性能与现实校准门
@@ -56,3 +56,9 @@ CI新增该correctness report只为防止objective/strategy/status回归；任�
 XS/S/M三个versioned profile现已各自在正式source→Problem链上运行Global和五Reference，并记录build/first feasible/solve/validation/total、objective/bound/gap、memory、model/Problem complexity与Validator结果。每个scheduler执行1次warm-up和3次measured repetition；本地三份`benchmark-report.v1`均8/8 PASS且无warning，CI PR slice真实执行XS。
 
 这只关闭Gate A的XS/S/M scale-measurement子项，不替代P2-09 Golden/Cross/Calendar/Material/Running/Hard Lock evidence整合，也不形成完整Gate report。TASK-P2-13仍须把所有子项、exact provider artifact与phase trace组合后判定；TASK-P2-14才可审计。Development ceiling和same-environment factor不是Production SLA，OPEN-011/012继续OPEN。
+
+## TASK-P2-13 Gate A aggregate evidence
+
+`p2-vertical-slice-report.v1`现把Golden JSSP/FJSP、Cross Workshop、Calendar、Material Delay、Running、Hard Lock与XS/S/M组合为两次完整replay；每个XS/S/M再次运行Global+五Reference的1 warm-up/3 measured、fresh Validator、共享KPI和internal Export，并保留build/first/solve/validation/total、objective/bound/gap、memory、model/Problem scale、environment及package hashes。两次versioned business projection一致且11/11 aggregate checks PASS。
+
+这构成TASK-P2-13本地Gate A aggregate evidence，不是TASK-P2-14 Exit audit或Production performance Gate。Run-specific SolverReport/KPI/package hash包含时间证据并逐次保留，不错误要求相等；Problem/candidate/业务投影必须一致。OPEN-011/012、L/XL、Nightly schedule、Production capacity/SLA仍未形成。

@@ -214,4 +214,6 @@ Implementation `546292831c3bd52185687a4c646c10ae10541ae2`的required run `324546
 
 形成链为`REQ-004/005/009/012/014/015 + NFR-COR/DET/TRC/ISO/OBS/PER + ENG-ARCH/SOL/VAL/ERR/VER → TASK-P2-12 → benchmark-profile-set/report/baseline.v1 + generator/assembler → formal Raw/Import/Snapshot/Problem → Global + five References → fresh Validator + common schedule KPI → TEST-BENCHMARK/REFERENCE-SCHEDULER/SCENARIO-REPLAY/CONTRACT → XS/S/M reports + CI XS/Task/provider artifact`。
 
-只有versioned development XS/S/M、真实环境测量、immutable baseline和同Problem comparison可提升为local formed。证据必须区分correctness hard failure与warning、raw sample与median/p95、local与provider commit、同环境相对判定与跨环境ceiling、development profile与Production capacity/SLA。P2-09/10/11资产和合同保持冻结；L/XL、OPEN-011/012、P2-13/14与P3继续PLANNED。Exact provider形成前Task保持`in_progress`。
+只有versioned development XS/S/M、真实环境测量、immutable baseline和同Problem comparison可提升为formed。证据必须区分correctness hard failure与warning、raw sample与median/p95、local与provider commit、同环境相对判定与跨环境ceiling、development profile与Production capacity/SLA。P2-09/10/11资产和合同保持冻结；L/XL、OPEN-011/012、P2-13/14与P3继续PLANNED。
+
+Implementation `01e7f4bdca88fc903e7caa771f875fc1a70ff357`的required run `32460861563`与artifact `9438899443`已精确绑定并复现XS 8/8、19 reports及49 committed/0 working paths、7 rows、19 checks、0 issues，因此TASK-P2-12=`done`。S/M各8/8保留为local policy evidence；Planning/Strategy/Backend/Validator/Reference/Scenario/Exporter/dependency/lock/P3禁止边界保持无差异，完成不自动授权P2-13。

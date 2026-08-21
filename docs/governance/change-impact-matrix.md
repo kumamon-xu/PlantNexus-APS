@@ -316,3 +316,5 @@ Implementation artifact `9436863185`已绑定`546292831c3bd52185687a4c646c10ae10
 完整Diff base范围命中`IMPACT-BENCHMARK`（profiles/baselines/runner/CLI）、`IMPACT-REPORTING`（只抽公共schedule KPI pure calculation）、`IMPACT-TESTS`、`IMPACT-INFRA`（CI XS及artifact）、`IMPACT-PHASE`、`IMPACT-GOVERNANCE-REGISTRY`和`IMPACT-DOCS`七行。所有required documents均已列入Task allow-list并同步review。
 
 Schema/global set、Planning Problem/Policy/Strategy/Backend/Validator、Reference算法、P2-09 assets、P2-11 Exporter、dependency/lock、migration/DB/API/Worker和P3+零差异，故不声明对应Rule ID。Machine rule table与`registry_version=1.0.0`不变；最终path/check/issue计数须由Task diff report和exact provider artifact回填，provider前Task保持`in_progress`。
+
+Implementation artifact `9438899443`已绑定`01e7f4bdca88fc903e7caa771f875fc1a70ff357`并复现49 committed/0 working paths、上述七行、19 checks与0 issues；TASK-P2-12据此关闭为`done`。Schema/dependency、Planning/Strategy/Backend/Validator/Reference/Scenario/Exporter/API/DB/Worker/P3+禁止边界保持零差异，P2-13不自动启动。

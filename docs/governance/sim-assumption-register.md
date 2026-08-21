@@ -107,3 +107,5 @@ TASK-P2-11 local review：内部包复用SIM-ASSUMPTION-011的P2 correctness Sce
 TASK-P2-11 provider closure：required run/artifact精确重放同一synthetic Scenario/Profile/seed、KPI与package lineage，没有新增、修改或retire任何assumption。SIM-ASSUMPTION-001～012继续`ACTIVE`；provider执行不把internal package或single-run telemetry提升为Production事实、XS/S/M baseline或SLA，registry format version保持`1.0.0`。
 
 TASK-P2-12 local review：新增SIM-ASSUMPTION-013并绑定strict profile set、generator `1.0.0`、三个Problem hash、warm-up/repetition和真实baseline environment；XS/S/M全部经formal pipeline/Validator/KPI，但只构成development synthetic evidence。SIM-ASSUMPTION-001～013均`ACTIVE`；任何profile变更必须新版本，数值不得用于Production topology/distribution/capacity/SLA、L/XL，也不得关闭相邻的历史数据或生产运行阈值问题，registry format version保持`1.0.0`。
+
+TASK-P2-12 provider closure：required XS artifact精确复现同一profile/version/seed/Problem hash、1+3 runs与环境carrier，没有修改或retire任何assumption。SIM-ASSUMPTION-001～013继续`ACTIVE`；S/M仍为本地policy，provider执行不把任一数值提升为Production事实，registry format version保持`1.0.0`。

@@ -69,7 +69,7 @@ last_reviewed: 2026-08-21
 
 ## 当前范围
 
-当前阶段为P2。P1 Milestone为`completed`，P2为`active`；TASK-P2-00～11均已闭环为`done`，TASK-P2-12已获授权并为`in_progress`。当前只执行BenchmarkRunner与XS/S/M；P2-13/14和P3均未启动，详见`current_phase.md`。
+当前阶段为P2。P1 Milestone为`completed`，P2为`active`；TASK-P2-00～12均已闭环为`done`。P2-13/14和P3均未启动，详见`current_phase.md`。
 
 ## 仓库入口与本地检查
 
@@ -107,4 +107,4 @@ TASK-P2-11链路为`Snapshot/Problem → validated PlanningSolution + Validation
 
 用户于2026-08-21明确授权TASK-P2-12；clean/provider-verified Diff base为`58db14e8f18fb50866fb757d4c89e76fef1141f1`，其run `32455399561` / required job `96691604529` / artifact `9437086153`均success。当前只启动versioned XS/S/M benchmark profile/baseline、同Problem/Validator/KPI的Global与五Reference比较、环境/规模/时间/质量/内存报告和CI XS artifact；L/XL、Production capacity/SLA、P2-13/14与P3保持冻结。
 
-TASK-P2-12本地已形成严格Profile/Report/Baseline v1、确定性source-shaped generator、warm-up/repetition/median/p95、环境签名、Global/五Reference comparison、`BENCHMARK_WARNING`和immutable baseline规则。XS/S/M报告绑定三个固定Problem hash并均为8/8 PASS；CI现在真实执行XS而不是deferred hook。该证据只属development/simulation，OPEN-011/012保持OPEN；provider closure前Task仍为`in_progress`。
+TASK-P2-12已形成严格Profile/Report/Baseline v1、确定性source-shaped generator、warm-up/repetition/median/p95、环境签名、Global/五Reference comparison、`BENCHMARK_WARNING`和immutable baseline规则。XS/S/M报告绑定三个固定Problem hash并均为8/8 PASS；implementation `01e7f4bdca88fc903e7caa771f875fc1a70ff357`的run `32460861563` / required job `96707353990` / artifact `9438899443`已复现19/19 PASS与49-path治理，Task=`done`。该证据只属development/simulation，OPEN-011/012保持OPEN，P2-13/14与P3未启动。

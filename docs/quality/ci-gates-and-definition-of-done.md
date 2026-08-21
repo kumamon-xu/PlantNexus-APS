@@ -201,4 +201,6 @@ Implementation provider Gate已通过：SHA `546292831c3bd52185687a4c646c10ae105
 
 Workflow中的deferred conditional hook已替换为不可跳过的`P2 XS BenchmarkRunner evidence`步骤：固定`PLANTNEXUS_BENCHMARK_PROFILE=xs`并写`build/benchmarks/ci-xs.json`。Artifact upload在`if: always()`下同时收集validation、traceability与benchmark JSON；integration contract禁止deferred文案、S/M进入PR步骤或遗漏baseline binding。
 
-本地Gate已通过27项指定测试、full repository `466 passed`、Ruff/Pyright 0、XS/S/M三份8/8 BenchmarkReport、P2-11 output 8/8及全部历史machine reports。Compose、build、142-doc治理与49 paths/7 rows/19 checks/0 issues的Task diff同样PASS；implementation exact provider run/artifact尚待push，所以Task DoD未关闭。CI XS是development regression，不是Production capacity/SLA或完整P2 Gate。
+本地Gate已通过27项指定测试、full repository `466 passed`、Ruff/Pyright 0、XS/S/M三份8/8 BenchmarkReport、P2-11 output 8/8及全部历史machine reports。Compose、build、142-doc治理与49 paths/7 rows/19 checks/0 issues的Task diff同样PASS。CI XS是development regression，不是Production capacity/SLA或完整P2 Gate。
+
+Implementation provider Gate已通过：SHA `01e7f4bdca88fc903e7caa771f875fc1a70ff357`、run `32460861563`、required `validate` job/check `96707353990`（app `15368`）均success；artifact `9438899443`未过期且digest=`sha256:caeb61fbbbd100c301725073398410e50e4b79f979f0b72df08d32a28fc2874e`。19/19 reports、XS benchmark 8/8/0 warning及Task 49 committed/0 working paths、7 rows、19 checks、0 issues均绑定同一SHA；TASK-P2-12 DoD完成，不自动授权P2-13。

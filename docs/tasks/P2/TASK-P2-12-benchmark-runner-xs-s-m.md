@@ -1,7 +1,7 @@
 ---
 doc_id: TASK-P2-12
 title: BenchmarkRunner and XS S M Profiles
-status: in_progress
+status: done
 spec_version: 0.3.0
 phase: P2
 normative: true
@@ -87,4 +87,12 @@ Rollback: baseline不覆盖；runner/profile错误发布新version并保留旧�
 
 已形成strict `benchmark-profile-set.v1`、`benchmark-report.v1`、`benchmark-baseline.v1`、deterministic source-shaped generator、正式Raw→Import→Quality→Expansion→Snapshot→Problem assembler、Global与五个Reference同Problem比较及公共pure schedule KPI。XS/S/M固定为1次warm-up加3次measured replay，三个不可覆盖v1 baseline记录environment/problem/complexity/quality/timing/memory；correctness/Validator/baseline drift硬失败，CP-SAT劣于reference只产生`BENCHMARK_WARNING`，跨环境只适用absolute development ceiling。
 
-本地focused=`27 passed`、full repository=`466 passed`，XS/S/M BenchmarkReport均为8/8 PASS；P2-11 KPI v2/export回归为8/8且历史输出不变，全部历史machine reports PASS，Ruff/Pyright为0问题，Compose与build成功。Full docs与Task diff治理为142 docs、49 paths、7 rows、19 checks、0 issues，`git diff --check`及冻结/禁止路径复核PASS。CI已用真实`run_benchmark.py --profile xs`替代deferred hook并将report纳入artifact，S/M按本地policy保留。Exact implementation provider evidence尚待本Task收口，因此status仍为`in_progress`；P2-13/14、P3、L/XL与Production阈值均未启动。
+本地focused=`27 passed`、full repository=`466 passed`，XS/S/M BenchmarkReport均为8/8 PASS；P2-11 KPI v2/export回归为8/8且历史输出不变，全部历史machine reports PASS，Ruff/Pyright为0问题，Compose与build成功。Full docs与Task diff治理为142 docs、49 paths、7 rows、19 checks、0 issues，`git diff --check`及冻结/禁止路径复核PASS。CI已用真实`run_benchmark.py --profile xs`替代deferred hook并将report纳入artifact，S/M按本地policy保留。
+
+## Provider evidence and completion — 2026-08-21
+
+Implementation `01e7f4bdca88fc903e7caa771f875fc1a70ff357`已直接push到`main`。GitHub push run [`32460861563`](https://github.com/kumamon-xu/PlantNexus-APS/actions/runs/32460861563)（attempt 1）为`completed/success`；required [`validate` job/check `96707353990`](https://github.com/kumamon-xu/PlantNexus-APS/actions/runs/32460861563/job/96707353990)由GitHub Actions app `15368`执行并success。Branch protection仍精确要求`validate`/app `15368`，新增`P2 XS BenchmarkRunner evidence`步骤实际执行且success。
+
+Artifact `9438899443`（`plantnexus-ci-evidence-32460861563`，45692 bytes）未过期，digest=`sha256:caeb61fbbbd100c301725073398410e50e4b79f979f0b72df08d32a28fc2874e`、expiry=`2026-11-19T07:56:26Z`。下载复核确认19/19 JSON reports全部PASS；`benchmarks/ci-xs.json`绑定同一implementation SHA、8/8 checks、0 warning及Problem hash `sha256:a70a0549f737b2872185189a010cd89169d1f473f893947869b42cbf99937b04`；`ci-current-task-report.json`绑定同一SHA和Diff base，记录49 committed/0 working paths、7 Impact Rules、19 checks、0 issues。S/M按已声明local policy各为8/8 PASS、0 warning并保留本地报告，不伪写required provider运行。
+
+因此Goal、strict Profile/Report/Baseline、formal ingress/Validator/KPI/Export回归、XS/S/M本地证据、CI XS、文档追踪、provider和回滚边界均满足，TASK-P2-12=`done`。P2保持`active`；P2-13 Gate evidence、P2-14 Exit Audit、P3、L/XL、Nightly scheduler与Production capacity/SLA仍明确排除，本次关闭不授权或启动任何后续Task。

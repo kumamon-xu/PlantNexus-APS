@@ -1,6 +1,6 @@
 # PlantNexus APS
 
-PlantNexus APS 是一个面向单工厂、多车间场景的高级计划与排程（APS）项目。P1 Data & Snapshot 已通过 Exit Gate并关闭，当前阶段为P2（CP-SAT Vertical Slice）。TASK-P2-01～09已由local/exact provider闭环；TASK-P2-10现已获授权并处于`in_progress`，只形成五个非生产Reference Schedulers及同Problem/Validator/KPI证据。Benchmark、Production能力、P2-11～14和P3仍未形成或未获启动授权。
+PlantNexus APS 是一个面向单工厂、多车间场景的高级计划与排程（APS）项目。P1 Data & Snapshot 已通过 Exit Gate并关闭，当前阶段为P2（CP-SAT Vertical Slice）。TASK-P2-01～10已由local/exact provider闭环；五个非生产Reference Schedulers及同Problem/Validator/KPI证据现已形成。Benchmark、Production能力、P2-11～14和P3仍未形成或未获启动授权。
 
 ## 开始之前
 
@@ -58,9 +58,9 @@ scripts/      仓库级校验与自动化脚本
 infra/        P0 开发容器构建配置
 ```
 
-P1 Data & Snapshot已通过Exit Gate并关闭，当前阶段为P2。TASK-P2-01～09均已由local与exact provider evidence闭环；TASK-P2-10以`0e4f6630412889254a7bef41f487c24dc274ca9c`为Diff base启动，只实现五个deterministic non-production baseline并复用相同Problem/formal Validator/KPI。Benchmark、DB/API/Worker、P2-11～14和P3仍未实现或未获授权。当前边界见[`docs/current_phase.md`](docs/current_phase.md)。
+P1 Data & Snapshot已通过Exit Gate并关闭，当前阶段为P2。TASK-P2-01～10均已由local与exact provider evidence闭环；TASK-P2-10以`0e4f6630412889254a7bef41f487c24dc274ca9c`为Diff base形成五个deterministic non-production baseline并复用相同Problem/formal Validator/KPI。Benchmark、DB/API/Worker、P2-11～14和P3仍未实现或未获授权。当前边界见[`docs/current_phase.md`](docs/current_phase.md)。
 
-TASK-P2-05本地验收与implementation `df706786e0ec1c54bf60cd43261a92ef6aa53cc7`的GitHub required `validate` / artifact均已闭环。TASK-P2-06 implementation `ba6dd2cdc2eeaae3b60714314bc3d2c155a2d81c`及TASK-P2-07 implementation `5ab65f36d532fd8786eb7ecad3cce406f4d9fb70`的required `validate`与artifact也已闭环，二者均=`done`；TASK-P2-08/09亦已闭环，P2-10及以后不会自动启动。
+TASK-P2-05本地验收与implementation `df706786e0ec1c54bf60cd43261a92ef6aa53cc7`的GitHub required `validate` / artifact均已闭环。TASK-P2-06 implementation `ba6dd2cdc2eeaae3b60714314bc3d2c155a2d81c`及TASK-P2-07 implementation `5ab65f36d532fd8786eb7ecad3cce406f4d9fb70`的required `validate`与artifact也已闭环，二者均=`done`；TASK-P2-08/09亦已闭环，TASK-P2-10是之后另获授权启动。
 
 TASK-P2-08形成`POLICY-P2-SIM-DELIVERY-OBJ001-001@1.0.0`、显式SolveLimits、priority-weighted tardiness seconds目标、single-call GlobalCpSatStrategy、诚实status/bound/gap与mandatory formal Validator gate；70 focused、395 full与7/7 local machine PASS，implementation `b1ec83ed96120357ecadd41d3f520181838f17c6`的required run `32438785162` / artifact `9431673977`精确复现证据，Task=`done`。该证据不构成XS/S/M baseline或Production policy；P2-09是之后另获授权启动。
 
@@ -72,4 +72,4 @@ TASK-P2-06 exact run `32432482739` / required job `96626844156` / artifact `9429
 
 用户于2026-08-21明确授权TASK-P2-10。启动门复核确认`main=origin/main=0e4f6630412889254a7bef41f487c24dc274ca9c`、P2-01/02/04=`done`，且该SHA的required `validate` run `32443067388` / job `96657446617` / artifact `9433118755`精确成功。当前只允许五个versioned baseline、测试、CI machine evidence与治理文档；P2-11～14、BenchmarkRunner/XS-S-M、Production fallback及P3不会自动启动。
 
-TASK-P2-10本地已形成`reference-scheduler-contracts/policy/result/report.v1`及五个exact algorithm identity；七个冻结Problem×五算法得到35个完整candidate、35次fresh Validator PASS和35次deterministic replay，blocked-calendar得到5个零partial `HEURISTIC_FAILURE`。Task-specific=`13 passed`、full=`441 passed`且Ruff/Pyright为0；exact implementation provider仍待push后闭环，Task保持`in_progress`，不启动P2-11。
+TASK-P2-10已形成`reference-scheduler-contracts/policy/result/report.v1`及五个exact algorithm identity；七个冻结Problem×五算法得到35个完整candidate、35次fresh Validator PASS和35次deterministic replay，blocked-calendar得到5个零partial `HEURISTIC_FAILURE`。Task-specific=`13 passed`、full=`441 passed`且Ruff/Pyright为0；implementation `8ca62bbb1105a1dfae2ee2600ae7e4e62a5bef6c`的required run `32449742281` / artifact `9435264655`精确复现17/17 reports和38 committed/0 working治理证据，Task=`done`，不自动启动P2-11。

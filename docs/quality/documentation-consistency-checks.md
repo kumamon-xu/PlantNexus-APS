@@ -307,4 +307,6 @@ Implementation artifact `9432982306`内`traceability-report.v1`精确绑定`20e4
 
 Diff base固定为`0e4f6630412889254a7bef41f487c24dc274ca9c`；范围检查必须联合activation/implementation commits与working tree，命中`IMPACT-REFERENCE-SCHEDULER/TESTS/INFRA/PHASE/GOVERNANCE-REGISTRY/DOCS`。Task卡已在首个baseline文件前冻结全部实现、测试、CI和文档路径；Schema、Planning/Validator/P2-09 assets、dependency/lock、Benchmark/Export/API/DB/Worker及P3禁止路径必须为零差异。
 
-本Task不新增`docs/**/*.md`，inventory仍为142；roots=30、Test IDs=36、OPEN=15、risks=11、Tasks=37不变，新增SIM-ASSUMPTION-012使active Simulation assumptions=12。本地`traceability-report.v1`为38 paths/6 matched rows/19 checks/0 issues并PASS；运行时source counts为8 committed-range与38 working-tree paths（union仍为38）。Provider报告必须把同一38-path union以committed/working精确绑定implementation SHA；未push前不得预填run/job/artifact。
+本Task不新增`docs/**/*.md`，inventory仍为142；roots=30、Test IDs=36、OPEN=15、risks=11、Tasks=37不变，新增SIM-ASSUMPTION-012使active Simulation assumptions=12。本地`traceability-report.v1`为38 paths/6 matched rows/19 checks/0 issues并PASS；提交前source counts为8 committed-range与38 working-tree paths（union仍为38）。
+
+Implementation artifact `9435264655`内`traceability-report.v1`精确绑定`8ca62bbb1105a1dfae2ee2600ae7e4e62a5bef6c`与Diff base `0e4f6630412889254a7bef41f487c24dc274ca9c`，复现38 committed/0 working paths、6 rows、19 checks、0 issues并PASS；TASK-P2-10治理Gate据此闭环为`done`。Closure提交仍须由自身exact provider复核。

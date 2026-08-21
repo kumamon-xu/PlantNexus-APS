@@ -98,3 +98,5 @@ TASK-P2-09 local review：新增SIM-ASSUMPTION-011并绑定七个`1.0.0` Scenari
 TASK-P2-09 provider closure：required run/artifact精确重放同一批versioned assets、seeds与hashes，没有修改或retire任何assumption。SIM-ASSUMPTION-001～011继续`ACTIVE`；provider执行不把tiny correctness值提升为XS/S/M distribution、Production default或SLA，registry format version保持`1.0.0`。
 
 TASK-P2-10 local review：新增SIM-ASSUMPTION-012并绑定`reference-scheduler-policy.v1`及五个`reference-*.v1` identity；tie-break、blocked-calendar failure和single-run timing只用于deterministic baseline correctness，不修改P2-09 assets或创建XS/S/M Profile。SIM-ASSUMPTION-001～012均保持`ACTIVE`，不用于Production fallback/default/weight/capacity/SLA或PROD_OPEN closure，registry format version保持`1.0.0`。
+
+TASK-P2-10 provider closure：required run/artifact精确重放同一policy、algorithm identities、Problem hashes与failure boundary，没有修改或retire任何assumption。SIM-ASSUMPTION-001～012继续`ACTIVE`；provider执行不把tiny timing提升为XS/S/M baseline、Production fallback/default或SLA，registry format version保持`1.0.0`。

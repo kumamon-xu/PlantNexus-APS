@@ -69,7 +69,7 @@ last_reviewed: 2026-08-21
 
 ## 当前范围
 
-当前阶段为P2。P1 Milestone为`completed`，P2为`active`；TASK-P2-00～09均已闭环为`done`，TASK-P2-10已获授权并为`in_progress`。本Task只形成五个deterministic non-production Reference Schedulers及相同Problem/formal Validator/KPI证据；Benchmark、P2-11～14和P3均未启动，详见`current_phase.md`。
+当前阶段为P2。P1 Milestone为`completed`，P2为`active`；TASK-P2-00～10均已闭环为`done`。五个deterministic non-production Reference Schedulers及相同Problem/formal Validator/KPI证据已经形成；Benchmark、P2-11～14和P3均未启动，详见`current_phase.md`。
 
 ## 仓库入口与本地检查
 
@@ -99,4 +99,4 @@ TASK-P2-09以`15c298f343a47db2a922544944ff5e02e4ca72d9`为Diff base启动。七�
 
 用户于2026-08-21明确授权TASK-P2-10；clean/provider-verified Diff base为`0e4f6630412889254a7bef41f487c24dc274ca9c`，其run `32443067388` / required job `96657446617` / artifact `9433118755`均success。当前只启动五算法identity/tie-break、完整candidate或明确heuristic failure、fresh formal Validator和CI report；既有Schema/Planning/Validator/correctness assets/dependency与Benchmark/Production/P2-11+保持冻结。
 
-TASK-P2-10本地实现现为5个versioned deterministic algorithms、35/35 complete candidate/fresh Validator/deterministic replay及5个zero-partial explicit failures；`reference-scheduler-report.v1`为7/7 PASS。13个Task-specific与441个full tests、Ruff/Pyright均PASS；Global comparison/XS-S-M/threshold、Export、Production fallback和P2-11+仍未启动，exact provider形成前Task保持`in_progress`。
+TASK-P2-10实现为5个versioned deterministic algorithms、35/35 complete candidate/fresh Validator/deterministic replay及5个zero-partial explicit failures；`reference-scheduler-report.v1`为7/7 PASS。13个Task-specific与441个full tests、Ruff/Pyright均PASS；implementation exact required run/artifact已精确复现17/17 reports并闭环为`done`。Global comparison/XS-S-M/threshold、Export、Production fallback和P2-11+仍未启动。

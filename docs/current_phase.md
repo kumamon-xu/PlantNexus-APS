@@ -42,7 +42,7 @@ PlanningSnapshot
 
 用户于2026-08-20明确授权执行`TASK-P2-03 — OR-Tools and SolverBackend Foundation`；该Task以clean、provider-verified `f73f8c90af94d3c9b05ecc10b6c999594a3b7d66`启动，并在依赖变更前接受ADR-0011。现已由implementation `9268b88ca7ce90a8f72023241f87e2d3676fd58a`的GitHub run `32346208046` / required job `96355386111` / artifact `9398128763`闭环为`done`。Problem/Policy/Solution/Report合同字节和语义保持只读。
 
-P2-02把global schema set additive提升到`2.4.0`，新增四个互相离线解析的v1 document contract，并以`CONTRACT_SAMPLE`/`SOLVER_RUN`显式区分shape样例与真实运行。该发布样例的`not-installed`是P2-02历史shape证据，不随P2-03安装依赖而改写。TASK-P2-00～09现均由exact implementation provider evidence闭环为`done`；TASK-P2-10已获授权并为`in_progress`，P2-11～14未获授权。
+P2-02把global schema set additive提升到`2.4.0`，新增四个互相离线解析的v1 document contract，并以`CONTRACT_SAMPLE`/`SOLVER_RUN`显式区分shape样例与真实运行。该发布样例的`not-installed`是P2-02历史shape证据，不随P2-03安装依赖而改写。TASK-P2-00～10现均由exact implementation provider evidence闭环为`done`；P2-11～14未获授权。
 
 ## 当前允许
 
@@ -54,7 +54,7 @@ P2-02把global schema set additive提升到`2.4.0`，新增四个互相离线解
 
 ## 当前禁止
 
-- TASK-P2-09已关闭且不再扩展其correctness asset/replay范围；TASK-P2-10只可在冻结allow-list内执行Reference Scheduler，未经另行授权不得启动P2-11～14，TASK-P2-08也不再扩展OBJ-001/Global Strategy范围；
+- TASK-P2-09/10均已关闭且不得扩展其correctness/reference范围；未经另行授权不得启动P2-11～14，TASK-P2-08也不再扩展OBJ-001/Global Strategy范围；
 - 修改Task允许范围外文件、预填PASS/provider evidence或跳过独立Validator；
 - 实现C-012～C-018、OBJ-002 Stability、动态Replan、ExecutionSimulator、P3 Workspace/审批/发布状态；
 - 把UNKNOWN写成INFEASIBLE、FEASIBLE写成OPTIMAL，或以hint代替Execution Fact/HARD lock；
@@ -176,4 +176,10 @@ Implementation `20e49c92306128b47313059fabe31534814dbe3d`的GitHub push run `324
 
 `reference-scheduler-contracts.v1`、`reference-scheduler-policy.v1`与五个`reference-*.v1` identity已形成；共享deterministic hard-feasibility helper覆盖C-001～C-011候选构造，成功必须complete且fresh Validator PASS，失败只返回`HEURISTIC_FAILURE`并丢弃partial state。七Problem×五算法形成35个candidate/Validator/replay，5个blocked-calendar failure不声明INFEASIBLE；report同口径记录weighted tardiness、makespan和runtime且显式non-production/no-optimality。
 
-Task-specific=`13 passed`、full repository=`441 passed`，Ruff/Pyright均0问题，reference machine report=`7/7 PASS`。Schema、Planning/Validator、P2-09 assets、dependency/lock、Benchmark/Export/API/DB/Worker禁止路径保持零差异；exact implementation required `validate`/artifact仍待push后形成，因此TASK-P2-10继续`in_progress`。Current phase仍为P2，P2-11～14与P3均未启动。
+Task-specific=`13 passed`、full repository=`441 passed`，Ruff/Pyright均0问题，reference machine report=`7/7 PASS`。Schema、Planning/Validator、P2-09 assets、dependency/lock、Benchmark/Export/API/DB/Worker禁止路径保持零差异。
+
+## TASK-P2-10 执行结果
+
+Implementation `8ca62bbb1105a1dfae2ee2600ae7e4e62a5bef6c`的GitHub push run `32449742281`（attempt 1）/ required `validate` job/check `96675839685`（GitHub Actions app `15368`）全部success；branch protection仍精确要求`validate`/app `15368`。Artifact `9435264655`（37194 bytes）未过期，digest=`sha256:db250a86929c7e2c50ef0c24a2cbf74940a7b244e5d9499e42e087f4cd94c784`、expiry=`2026-11-19T05:13:14Z`。
+
+下载复核17份JSON全部PASS；`ci-reference-schedulers.json`绑定implementation SHA并为7/7、5 algorithms、7 scenarios、35 complete candidates/Validator passes/deterministic replays及5 heuristic failures；`ci-current-task-report.json`绑定同一SHA/Diff base并为38 committed/0 working paths、6 rows、19 checks、0 issues。因此TASK-P2-10=`done`，current phase仍为P2；P2-11～14未获授权，P3仍禁止。

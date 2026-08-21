@@ -114,3 +114,5 @@ TASK-P2-09 local review：七个Scenario/Profile/blueprint及其已登记synthet
 TASK-P2-09 provider closure：GitHub required run/artifact只复现versioned Simulation correctness，不是业务Authority或closure record。OPEN-001～015全部继续`OPEN`，没有Production source/default/SLA/capacity/infrastructure或发布决定，registry format version保持`1.0.0`。
 
 TASK-P2-10 local review：五个Reference algorithms、tie-break、tiny runtime及priority consumption均由`reference-scheduler-policy.v1`及独立Simulation注册项限定为Simulation-only，不能决定真实priority、dispatch/fallback、历史baseline、capacity或runtime threshold。没有Authority/Evidence closure record；OPEN-006/011/012及OPEN-001～015全部继续`OPEN`，registry format version保持`1.0.0`。
+
+TASK-P2-10 provider closure：GitHub required run/artifact只复现versioned Simulation reference correctness，不是业务Authority或closure record。OPEN-001～015全部继续`OPEN`，没有Production priority/default/fallback/SLA/capacity或发布决定，registry format version保持`1.0.0`。

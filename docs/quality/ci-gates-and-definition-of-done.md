@@ -185,4 +185,6 @@ Implementation provider Gate已通过：SHA `20e49c92306128b47313059fabe31534814
 
 Workflow在P2 correctness evidence后执行`python -m app.simulation.baselines.reference_schedulers --root . --report build/validation/ci-reference-schedulers.json`。该step不得`continue-on-error`；Integration contract要求`reference-scheduler-report.v1`为7/7 PASS，包含5 identities、7 Problems、35 complete candidates/independent Validator passes/deterministic replays、5 heuristic failures及完整scope boundaries。
 
-Local code Gate当前为13个Task-specific tests、441个full repository tests、Ruff/Pyright零问题与reference report 7/7。最终还必须通过全部历史machine reports、Task差异治理、Compose、build、冻结hash和`git diff --check`。Push后required `validate`、artifact digest/expiry、reference report `code_commit`与Task report必须绑定exact implementation SHA；完成前TASK-P2-10保持`in_progress`，不得启动P2-11。
+Local code Gate为13个Task-specific tests、441个full repository tests、Ruff/Pyright零问题与reference report 7/7；全部历史machine reports、Task差异治理、Compose、build、冻结hash和`git diff --check`也均PASS。
+
+Implementation provider Gate已通过：SHA `8ca62bbb1105a1dfae2ee2600ae7e4e62a5bef6c`、run `32449742281`、required `validate` job/check `96675839685`（app `15368`）均success；artifact `9435264655`未过期且digest=`sha256:db250a86929c7e2c50ef0c24a2cbf74940a7b244e5d9499e42e087f4cd94c784`。17/17 reports、reference 7/7及Task 38 committed/0 working/6 rows/19 checks/0 issues均绑定同一SHA；TASK-P2-10 DoD完成，不自动授权P2-11。

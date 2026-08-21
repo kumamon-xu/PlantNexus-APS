@@ -95,3 +95,5 @@ TASK-P2-09 local review：versioned assets与SIM-ASSUMPTION-011、public Raw→P
 TASK-P2-09 provider closure：required run/artifact确认上述correctness控制在Linux provider重放成功，但仍无Reference、XS/S/M Benchmark、Production authority/deployment或P2 Gate。该证据不足以把任何风险标记`MITIGATED/CLOSED`；RISK-001～011全部保持`MONITORED`，registry format version保持`1.0.0`。
 
 TASK-P2-10 local review：五个deterministic baseline、fresh Validator、complete-or-discard和no-optimality/no-certificate边界加强RISK-002/003/004/006/009；baseline namespace无direct Solver dependency继续约束共同缺陷，single-run timing明确非threshold。仍无Global comparison、XS/S/M、historical baseline、Production authority/deployment或P2 Gate，因此RISK-001～011全部保持`MONITORED`，registry format version保持`1.0.0`。
+
+TASK-P2-10 provider closure：required run/artifact精确复现五算法、35个Validator-PASS candidate、5个explicit failures及冻结边界，没有降低或关闭任何风险。Global comparison、XS/S/M、historical baseline、Production与P2 Gate仍未形成；RISK-001～011继续`MONITORED`，registry format version保持`1.0.0`。

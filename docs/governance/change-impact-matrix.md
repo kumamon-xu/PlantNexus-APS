@@ -111,6 +111,8 @@ registry_version: 1.0.0
 
 Schema、Planning/Validator、P2-09 Scenario/fixture、dependency/lock、Benchmark implementation/profile、API/DB/Worker、Export与P3路径均为零差异，因此不声明对应Rule ID。Machine rule表无需新增glob或改变`registry_version`；最终path/count以Task governance report真实结果为准。
 
+Implementation artifact `9435264655`已绑定`8ca62bbb1105a1dfae2ee2600ae7e4e62a5bef6c`并复现38 committed/0 working paths、上述六行、19 checks与0 issues；TASK-P2-10据此关闭为`done`。Schema/Planning/Validator/Scenario/Dependency/Benchmark/Export规则继续未命中，P2-11不自动启动。
+
 ## TASK-P0-04 matrix review
 
 本 Task 实际路径预期命中 `IMPACT-SCHEMA`、`IMPACT-DOMAIN`、`IMPACT-VALIDATOR`、`IMPACT-STATE`、`IMPACT-DEPENDENCY`、`IMPACT-VERSION-METADATA`、`IMPACT-TESTS`、`IMPACT-PHASE`、`IMPACT-GOVERNANCE-REGISTRY`、`IMPACT-DOCS`。`schemas/rules/**` 由 IMPACT-SCHEMA 覆盖；rule completeness CLI 位于 `backend/app/planning/validation/**`，由 IMPACT-VALIDATOR 覆盖，不需要无边界新 glob。

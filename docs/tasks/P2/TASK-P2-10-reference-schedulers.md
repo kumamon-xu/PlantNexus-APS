@@ -1,7 +1,7 @@
 ---
 doc_id: TASK-P2-10
 title: Reference Schedulers
-status: in_progress
+status: done
 spec_version: 0.3.0
 phase: P2
 normative: true
@@ -89,4 +89,12 @@ Scope review确认原卡未包含machine report的CI step/integration contract�
 
 新增`simulation.baselines` contracts/implementation与unit/property tests，并把`reference-scheduler-report.v1`接入required workflow/integration contract。五算法在七个冻结P2-09 Problem上形成35个complete candidate、35次fresh formal Validator PASS及35次deterministic replay；blocked-calendar对五算法均返回`HEURISTIC_FAILURE`、零candidate、零scheduled count且不声明INFEASIBLE。成功结果逐例记录相同priority-weighted tardiness、makespan与runtime，全部`non_production=true`、`optimality_claim=NONE`。
 
-Task-specific unit/property=`13 passed`；包含全部unit/contract/simulation/golden/validation/integration/property的full repository=`441 passed`；Ruff/Pyright均0问题，machine report=`7/7 PASS`。文档治理为142 docs、30 roots、36 Tests、15 OPEN、12 SIM、11 risks、37 Tasks；Task range为38 paths/6 rows/19 checks/0 issues（此时8 committed-range、38 working-tree，union 38）并PASS。Schema、Planning/Validator、P2-09 assets、dependency/lock、Benchmark/Export/API/DB/Worker/P3禁止路径均未修改；Schema/Migration/Dependency/ADR均为none，SIM-ASSUMPTION-012已登记。完整历史machine reports、Compose/build及exact implementation provider仍须在提交/push前后复验，因此Task保持`in_progress`且不启动P2-11。
+Task-specific unit/property=`13 passed`；包含全部unit/contract/simulation/golden/validation/integration/property的full repository=`441 passed`；Ruff/Pyright均0问题，machine report=`7/7 PASS`。文档治理为142 docs、30 roots、36 Tests、15 OPEN、12 SIM、11 risks、37 Tasks；Task range为38 paths/6 rows/19 checks/0 issues（提交前8 committed-range、38 working-tree，union 38）并PASS。Schema、Planning/Validator、P2-09 assets、dependency/lock、Benchmark/Export/API/DB/Worker/P3禁止路径均未修改；Schema/Migration/Dependency/ADR均为none，SIM-ASSUMPTION-012已登记。全部历史machine reports、Compose/build、冻结hash及`git diff --check`均PASS。
+
+## Provider evidence and completion — 2026-08-21
+
+Implementation `8ca62bbb1105a1dfae2ee2600ae7e4e62a5bef6c`已直接push到`main`。GitHub push run [`32449742281`](https://github.com/kumamon-xu/PlantNexus-APS/actions/runs/32449742281)（attempt 1）为`completed/success`；required [`validate` job/check `96675839685`](https://github.com/kumamon-xu/PlantNexus-APS/actions/runs/32449742281/job/96675839685)由GitHub Actions app `15368`执行并success。Branch protection仍精确要求`validate`/app `15368`。
+
+Artifact `9435264655`（`plantnexus-ci-evidence-32449742281`，37194 bytes）未过期，digest=`sha256:db250a86929c7e2c50ef0c24a2cbf74940a7b244e5d9499e42e087f4cd94c784`、expiry=`2026-11-19T05:13:14Z`。下载复核确认17/17 JSON reports全部PASS；`ci-reference-schedulers.json`的`code_commit`精确绑定implementation SHA并为7/7 checks、5 algorithms、7 scenarios、35 complete candidates/independent Validator passes/deterministic replays、5 heuristic failures；`ci-current-task-report.json`绑定同一SHA和Diff base，记录38 committed/0 working paths、6 Impact Rules、19 checks、0 issues。
+
+因此Goal、测试、版本/指纹、文档/追踪、provider和回滚边界全部满足，TASK-P2-10=`done`。Global comparison、BenchmarkRunner/XS-S-M/threshold、Export、Production fallback、P2 Exit Audit与P3/P4仍明确排除；P2保持`active`，本次关闭不授权或启动TASK-P2-11。

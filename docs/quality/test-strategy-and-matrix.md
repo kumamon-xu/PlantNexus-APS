@@ -61,7 +61,7 @@ registry_version: 1.0.0
 | TEST-IDEMPOTENCY | Import/Planning/Export/Publish/Event 幂等 | P0-P3 | [`test_job_reliability.py`](../../backend/tests/integration/test_job_reliability.py) generic primitive + P1 [`test_raw_import_staging.py`](../../backend/tests/integration/test_raw_import_staging.py) durable Import staging replay/conflict/rollback formed；Worker/Planning/Export/Publish/Event side effects PLANNED |
 | TEST-SCENARIO-REPLAY | Scenario/Profile/Generator/seed 重放 | P0-P2 | empty/P0 + P1 ingress + [seven versioned Solver/Validator replays](../../backend/tests/property/test_p2_solver_properties.py) with fixed hashes and row-order invariance formed |
 | TEST-SIM-ISOLATION | Synthetic/Production 隔离 | P0-P1 | generator Production/no-Planning + Raw/Snapshot plane guards + [application expected-plane/no-shortcut](../../backend/tests/integration/test_p1_common_ingress.py) formed；separate DB/API/publish guards PLANNED |
-| TEST-REFERENCE-SCHEDULER | Reference Scheduler baseline | P2 | [five algorithms / 35 complete candidates / explicit failure](../../backend/tests/unit/test_reference_schedulers.py) and [shrinkable properties](../../backend/tests/property/test_reference_scheduler_properties.py) locally formed；exact provider pending |
+| TEST-REFERENCE-SCHEDULER | Reference Scheduler baseline | P2 | [five algorithms / 35 complete candidates / explicit failure](../../backend/tests/unit/test_reference_schedulers.py) and [shrinkable properties](../../backend/tests/property/test_reference_scheduler_properties.py) provider-verified |
 | TEST-BENCHMARK | BenchmarkReport/profile 回归 | P2 | PLANNED |
 | TEST-PROPERTY | 合法 Problem 的通用不变量 | P2 | Problem v2/formal/Solver properties + [Reference gate/duration/due and authoritative Problem properties](../../backend/tests/property/test_reference_scheduler_properties.py) formed；XS/S/M properties PLANNED |
 | TEST-SOLVER-UPGRADE | Solver 升级 replay/status contract | P2+ | PLANNED |
@@ -72,7 +72,7 @@ TASK-P2-09未新增或复用Test ID；它把TEST-GOLDEN-JSSP/FJSP、CALENDAR/MAT
 
 Implementation provider run `32442651322` / artifact `9432982306`精确复现上述427 tests与8/8 correctness report；TASK-P2-09=`done`。这不改变Test ID集合或表结构，XS/S/M、Reference、Export、P2 Gate与Production测试仍为`PLANNED`，registry format version保持`1.0.0`。
 
-TASK-P2-10不新增或复用Test ID；它把TEST-REFERENCE-SCHEDULER与TEST-PROPERTY链接到五个exact algorithm identity、unit/property/integration tests和`reference-scheduler-report.v1`。新增Task-specific tests=`13 passed`，full repository=`441 passed`，machine report为7/7、35 complete/fresh Validator/deterministic、5 explicit failures；Ruff/Pyright均0问题。Exact implementation provider尚待push后核验，故该slice仅为local formed；TEST-BENCHMARK、Export、P2 Gate与Production继续PLANNED，registry format version保持`1.0.0`。
+TASK-P2-10不新增或复用Test ID；它把TEST-REFERENCE-SCHEDULER与TEST-PROPERTY链接到五个exact algorithm identity、unit/property/integration tests和`reference-scheduler-report.v1`。新增Task-specific tests=`13 passed`，full repository=`441 passed`，machine report为7/7、35 complete/fresh Validator/deterministic、5 explicit failures；Ruff/Pyright均0问题。Implementation provider run `32449742281` / artifact `9435264655`精确复现上述441 tests、reference 7/7及38-path治理，故TASK-P2-10=`done`；TEST-BENCHMARK、Export、P2 Gate与Production继续PLANNED，registry format version保持`1.0.0`。
 
 ## 原则
 

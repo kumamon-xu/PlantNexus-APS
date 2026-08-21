@@ -69,7 +69,7 @@ last_reviewed: 2026-08-21
 
 ## 当前范围
 
-当前阶段为P2。P1 Milestone为`completed`，P2为`active`；TASK-P2-00～07均已闭环为`done`。正式Problem/Solution Validator独立重算C-001～C-011，P2-05～07 bounded Solver已形成全部C-001～C-011并有exact provider证据；OBJ-001搜索、Benchmark、P2-08～14和P3均未启动，详见`current_phase.md`。
+当前阶段为P2。P1 Milestone为`completed`，P2为`active`；TASK-P2-00～07均已闭环为`done`，TASK-P2-08已获授权并为`in_progress`。正式Problem/Solution Validator独立重算C-001～C-011，P2-05～07 bounded Solver已形成全部C-001～C-011并有exact provider证据；当前只接入OBJ-001/Global Strategy，Benchmark、P2-09～14和P3均未启动，详见`current_phase.md`。
 
 ## 仓库入口与本地检查
 
@@ -89,4 +89,4 @@ TASK-P2-04本地证据为6/6 formal machine checks、13个mutation、11个C-ID�
 
 TASK-P2-05已形成C-001/003/004/010/011 core CP-SAT、完整candidate映射、formal Validator consumer、fixed-seed property与独立tiny oracle。Local acceptance为64 focused、360 full、Ruff/Pyright 0、core/formal各6/6、治理49 paths/6 rows/0 issues、compose/build/immutable PASS；implementation `df706786e0ec1c54bf60cd43261a92ef6aa53cc7`的run `32354050257` / job `96379299455` / artifact `9400957897`精确复现证据，Task=`done`。
 
-TASK-P2-06已把precedence/calendar/release/material/transport提升为C-002/005/006/009模型；TASK-P2-07再形成COMPLETED/RUNNING facts、HARD exact lock、SOFT metadata-only的C-007/008模型。Implementation `5ab65f36d532fd8786eb7ecad3cce406f4d9fb70`的exact provider evidence已闭环，Task=`done`；objective与后续Task仍未启动。
+TASK-P2-06已把precedence/calendar/release/material/transport提升为C-002/005/006/009模型；TASK-P2-07再形成COMPLETED/RUNNING facts、HARD exact lock、SOFT metadata-only的C-007/008模型。Implementation `5ab65f36d532fd8786eb7ecad3cce406f4d9fb70`的exact provider evidence已闭环，Task=`done`；TASK-P2-08已在closure基线上启动，后续Task仍未授权。

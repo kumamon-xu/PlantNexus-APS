@@ -42,7 +42,7 @@ PlanningSnapshot
 
 用户于2026-08-20明确授权执行`TASK-P2-03 — OR-Tools and SolverBackend Foundation`；该Task以clean、provider-verified `f73f8c90af94d3c9b05ecc10b6c999594a3b7d66`启动，并在依赖变更前接受ADR-0011。现已由implementation `9268b88ca7ce90a8f72023241f87e2d3676fd58a`的GitHub run `32346208046` / required job `96355386111` / artifact `9398128763`闭环为`done`。Problem/Policy/Solution/Report合同字节和语义保持只读。
 
-P2-02把global schema set additive提升到`2.4.0`，新增四个互相离线解析的v1 document contract，并以`CONTRACT_SAMPLE`/`SOLVER_RUN`显式区分shape样例与真实运行。该发布样例的`not-installed`是P2-02历史shape证据，不随P2-03安装依赖而改写。TASK-P2-00～07现均由exact implementation provider evidence闭环为`done`；P2-08～14未获授权。
+P2-02把global schema set additive提升到`2.4.0`，新增四个互相离线解析的v1 document contract，并以`CONTRACT_SAMPLE`/`SOLVER_RUN`显式区分shape样例与真实运行。该发布样例的`not-installed`是P2-02历史shape证据，不随P2-03安装依赖而改写。TASK-P2-00～07现均由exact implementation provider evidence闭环为`done`；用户于2026-08-21明确授权TASK-P2-08，已在clean/provider-verified基线`9c55df993b12ae0bdd3d4d38c900d601324c05d2`上启动。P2-09～14未获授权。
 
 ## 当前允许
 
@@ -54,7 +54,7 @@ P2-02把global schema set additive提升到`2.4.0`，新增四个互相离线解
 
 ## 当前禁止
 
-- 未经用户另行明确授权启动任何P2-08～14实现；TASK-P2-07已关闭，不再扩展其execution facts/HARD lock范围；
+- 未经用户另行明确授权启动任何P2-09～14实现；TASK-P2-07已关闭，不再扩展其execution facts/HARD lock范围，TASK-P2-08只执行OBJ-001与Global Strategy；
 - 修改Task允许范围外文件、预填PASS/provider evidence或跳过独立Validator；
 - 实现C-012～C-018、OBJ-002 Stability、动态Replan、ExecutionSimulator、P3 Workspace/审批/发布状态；
 - 把UNKNOWN写成INFEASIBLE、FEASIBLE写成OPTIMAL，或以hint代替Execution Fact/HARD lock；
@@ -131,3 +131,9 @@ Fact/lock builder现已组合进bounded CP-SAT model并由formal Validator独立
 ## TASK-P2-07 执行结果
 
 Implementation `5ab65f36d532fd8786eb7ecad3cce406f4d9fb70`的GitHub run `32435395744` / required `validate` job/check `96635463577`（app `15368`）均success；artifact `9430579117`未过期，digest=`sha256:a6b6ff7413b8010a8012ddd351a2a194b89b1a13cdf71c6dada5d6afa53a44ab`、expiry=`2026-11-19T01:11:01Z`。Foundation/core/formal/temporal/fact-lock及Task reports全部绑定该SHA，分别为6/6、6/6、6/6、7/7、7/7及54 committed/0 working/6 rows/19 checks/0 issues。TASK-P2-07=`done`；current phase仍为P2，P2-08保持`planned`且未获启动授权。
+
+## TASK-P2-08 启动边界
+
+用户于2026-08-21明确授权执行TASK-P2-08。启动复核确认`main=origin/main=9c55df993b12ae0bdd3d4d38c900d601324c05d2`、working tree clean，且该SHA的GitHub run `32435755901` / required `validate` job/check `96636509174`（app `15368`）/ artifact `9430697910`精确成功；artifact digest=`sha256:6fd173b5cdb6cdae4d5f86bbdee773b8ca7679db34d90d52c4db05d5ca18d8c4`、expiry=`2026-11-19T01:17:08Z`。P2-07 implementation是该基线祖先；Problem/Policy/Solution/Report Schema、formal Validator、Problem builder/hash、C-ID formulas、OR-Tools pin与`uv.lock`全部冻结。
+
+本Task只在完整C-001～C-011硬可行域内实现单一OBJ-001 weighted tardiness、唯一`GlobalCpSatStrategy`、显式Simulation Policy/SolveLimits、honest OPTIMAL/FEASIBLE/UNKNOWN及完整SolverReport/machine evidence。OBJ-002/003、Production policy/default、Reference Scheduler、BenchmarkRunner、Export、DB/API/Worker、P3/P4均禁止；OPEN-006/011/012保持OPEN。P2-09～14继续`planned`且未获授权。

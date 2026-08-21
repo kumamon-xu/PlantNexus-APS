@@ -31,7 +31,7 @@ P1 Exit Gate=`READY`且blocking gaps为空；用户于2026-08-20明确批准P1�
 | 5 | TASK-P2-05 | C-001/003/004/010/011 core model | P2-03/04 | `done` |
 | 6 | TASK-P2-06 | C-002/005/006/009 temporal/calendar/material | P2-05 | `done` |
 | 7 | TASK-P2-07 | C-007/008 execution facts/HARD lock | P2-06 | `done` |
-| 8 | TASK-P2-08 | OBJ-001 Delivery与GlobalCpSatStrategy | P2-02/05/06/07 | `planned` |
+| 8 | TASK-P2-08 | OBJ-001 Delivery与GlobalCpSatStrategy | P2-02/05/06/07 | `in_progress` |
 | 9 | TASK-P2-09 | Golden/scenario/property/mutation integration | P2-04～08 | `planned` |
 | 10 | TASK-P2-10 | 五个Reference Schedulers | P2-01/02/04 | `planned` |
 | 11 | TASK-P2-11 | KPI/SolverReport/internal Export closure | P2-08/09 | `planned` |
@@ -68,7 +68,7 @@ P2-03与P2-04在合同固定后可并行准备，但P2-05必须同时等待Backe
 
 ## Current execution boundary
 
-TASK-P2-00～07均已闭环为`done`。P2-03以clean/provider-verified Diff base `f73f8c90af94d3c9b05ecc10b6c999594a3b7d66`启动，依赖变更前接受ADR-0011；implementation `9268b88ca7ce90a8f72023241f87e2d3676fd58a`的required run `32346208046` / job `96355386111` / artifact `9398128763`均success。P2-03形成exact Solver dependency与Backend engineering foundation，P2-04形成formal independent Validator，P2-05～07形成完整C-001～C-011 bounded feasibility model；OBJ-001与后续能力仍未实现，P2保持`active`且不进入P3。
+TASK-P2-00～07均已闭环为`done`，TASK-P2-08已由用户明确授权并以clean/provider-verified Diff base `9c55df993b12ae0bdd3d4d38c900d601324c05d2`进入`in_progress`。P2-03形成exact Solver dependency与Backend engineering foundation，P2-04形成formal independent Validator，P2-05～07形成完整C-001～C-011 bounded feasibility model；当前只实现OBJ-001与Global Strategy，P2保持`active`且不进入P3。
 
 P2-02已形成global schema set`2.4.0`、PlanningPolicy/SolveLimits/PlanningSolution/SolverReport v1、七种status与pure fingerprint/precheck/CI report。P2-03未修改这些合同字节；empty/model-invalid smoke不构成业务可行性或candidate。TASK-P2-04随后以clean/provider-verified `4c66dce3b919a53816005c4aebf4983db19a6108`启动并固定P0/P2合同与fixture hashes；TASK-P2-04～07现均已完成，P2-08～14仍为`planned`且未获启动授权。
 
@@ -86,4 +86,6 @@ Implementation `ba6dd2cdc2eeaae3b60714314bc3d2c155a2d81c`的run `32432482739` / 
 
 TASK-P2-07本地实现已形成COMPLETED exclusion/historical anchor、RUNNING remaining/resource fixed interval、HARD exact tuple与SOFT metadata-only边界。Focused=`93 passed`、full=`382 passed`、Ruff/Pyright 0，五份历史/当前machine reports均PASS，治理54 paths/6 rows/19 checks/0 issues且Compose/build/immutable均PASS。Task仍等待exact implementation SHA的required `validate`与artifact，故保持`in_progress`；Milestone保持`active`且不启动P2-08。
 
-Implementation `5ab65f36d532fd8786eb7ecad3cce406f4d9fb70`的run `32435395744` / required job `96635463577` / artifact `9430579117`均success，artifact digest=`sha256:a6b6ff7413b8010a8012ddd351a2a194b89b1a13cdf71c6dada5d6afa53a44ab`且精确复现fact-lock/temporal/core/formal/Task报告。因此TASK-P2-07=`done`。P2 Milestone保持`active`；P2-08～14和P3不自动启动。
+Implementation `5ab65f36d532fd8786eb7ecad3cce406f4d9fb70`的run `32435395744` / required job `96635463577` / artifact `9430579117`均success，artifact digest=`sha256:a6b6ff7413b8010a8012ddd351a2a194b89b1a13cdf71c6dada5d6afa53a44ab`且精确复现fact-lock/temporal/core/formal/Task报告。因此TASK-P2-07=`done`。
+
+用户于2026-08-21明确授权TASK-P2-08；启动基线`9c55df993b12ae0bdd3d4d38c900d601324c05d2`的run `32435755901` / required job `96636509174` / artifact `9430697910`均success且工作树clean。TASK-P2-08只接入versioned Simulation OBJ-001与Global Strategy/status/report evidence；P2 Milestone保持`active`，P2-09～14和P3不自动启动。

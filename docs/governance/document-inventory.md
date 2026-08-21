@@ -12,7 +12,7 @@ registry_version: 1.0.0
 
 # 文档清单
 
-本清单列出当前仓库已经实际存在的Markdown文档。P0/P1均已归档为completed；P2现为active，TASK-P2-00～07已done。P2-08～14仍为planned且未获启动授权。产品API与Production Runbook正文尚未形成并继续由相应索引登记。
+本清单列出当前仓库已经实际存在的Markdown文档。P0/P1均已归档为completed；P2现为active，TASK-P2-00～07已done，TASK-P2-08已授权并为in_progress。P2-09～14仍为planned且未获启动授权。产品API与Production Runbook正文尚未形成并继续由相应索引登记。
 
 | Path | Doc ID | Status | Title |
 |---|---|---|---|
@@ -149,7 +149,7 @@ registry_version: 1.0.0
 | [tasks/P2/TASK-P2-05-cp-sat-core-assignment-resource-model.md](../tasks/P2/TASK-P2-05-cp-sat-core-assignment-resource-model.md) | TASK-P2-05 | done | CP-SAT Core Assignment and Resource Model |
 | [tasks/P2/TASK-P2-06-cp-sat-temporal-calendar-material-model.md](../tasks/P2/TASK-P2-06-cp-sat-temporal-calendar-material-model.md) | TASK-P2-06 | done | CP-SAT Temporal Calendar and Material Model |
 | [tasks/P2/TASK-P2-07-execution-facts-and-hard-lock-model.md](../tasks/P2/TASK-P2-07-execution-facts-and-hard-lock-model.md) | TASK-P2-07 | done | Execution Facts and Hard Lock Model |
-| [tasks/P2/TASK-P2-08-delivery-objective-and-global-strategy.md](../tasks/P2/TASK-P2-08-delivery-objective-and-global-strategy.md) | TASK-P2-08 | planned | Delivery Objective and Global Strategy |
+| [tasks/P2/TASK-P2-08-delivery-objective-and-global-strategy.md](../tasks/P2/TASK-P2-08-delivery-objective-and-global-strategy.md) | TASK-P2-08 | in_progress | Delivery Objective and Global Strategy |
 | [tasks/P2/TASK-P2-09-golden-scenario-property-integration.md](../tasks/P2/TASK-P2-09-golden-scenario-property-integration.md) | TASK-P2-09 | planned | Golden Scenario and Property Integration |
 | [tasks/P2/TASK-P2-10-reference-schedulers.md](../tasks/P2/TASK-P2-10-reference-schedulers.md) | TASK-P2-10 | planned | Reference Schedulers |
 | [tasks/P2/TASK-P2-11-kpi-solver-report-and-export-closure.md](../tasks/P2/TASK-P2-11-kpi-solver-report-and-export-closure.md) | TASK-P2-11 | planned | KPI SolverReport and Export Closure |
@@ -210,3 +210,5 @@ TASK-P2-07启动不新增、删除或重命名Markdown路径，inventory继续�
 TASK-P2-07本地实现继续不新增、删除或重命名Markdown路径；full治理确认142份docs与142条inventory entries一致，完整Task range为54 paths/6 rows/19 checks/0 issues。新增Python/tests与ignored JSON不属于inventory；exact provider关闭前TASK-P2-07仍为`in_progress`且P2-08不启动。
 
 Implementation artifact `9430579117`已复现142 docs inventory与54-path/6-row/19-check/0-issue Task report，TASK-P2-07=`done`。没有新增、删除或重命名Markdown；P2-08～14保持`planned`，inventory与registry版本不变。
+
+TASK-P2-08启动不新增、删除或重命名Markdown路径，inventory继续完整覆盖142份`docs/**/*.md`；只将已获2026-08-21明确授权的该Task同步为`in_progress`。预计新增的Strategy/objective/machine CLI/tests与workflow修改均不是正式Markdown inventory条目，`build/validation`/`build/traceability`报告继续ignored；P2-09～14保持`planned`。

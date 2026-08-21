@@ -30,7 +30,7 @@ P0 当前状态：TASK-P0-01～10 全部完成；[superseding audit](P0-exit-gat
 
 P1当前状态：[`P1 — Data & Snapshot`](P1-data-and-snapshot.md)为`completed`，TASK-P1-01～12全部`done`。[P1 audit](P1-exit-gate-audit-report.md)的271项回归、14/14 pipeline、全部machine/build/docs/provider证据均PASS；TASK-P1-12 implementation `a5d7e4a68dc12d48e36cb692500f59446f8097b4` / run `32326616525` / artifact `9391591718`已闭环，Gate=`READY`且无blocking gap。用户于2026-08-20明确批准transition。
 
-P2当前状态：[`P2 — CP-SAT Vertical Slice`](P2-cp-sat-vertical-slice.md)为`active`。TASK-P2-00～05均已闭环为`done`；P2-03的ADR/dependency/backend、P2-04 formal Validator及P2-05 five-C-ID core Solver local/provider证据完整。用户于2026-08-21明确授权TASK-P2-06，该Task以`c55aa294977a6cafad85741f425d46cd36e9af1a`为Diff base并处于`in_progress`；P2-07～14仍为`planned`且未获启动授权。P2-14必须为最后的Exit Gate Audit，不得自动进入P3。
+P2当前状态：[`P2 — CP-SAT Vertical Slice`](P2-cp-sat-vertical-slice.md)为`active`。TASK-P2-00～06均已闭环为`done`；P2-03的ADR/dependency/backend、P2-04 formal Validator、P2-05 core Solver及P2-06 temporal Solver local/provider证据完整。P2-07～14仍为`planned`且未获启动授权；P2-14必须为最后的Exit Gate Audit，不得自动进入P3。
 
 TASK-P2-03 implementation `9268b88ca7ce90a8f72023241f87e2d3676fd58a`的run `32346208046`、required job `96355386111`和artifact `9398128763`均success；P2 phase保持active，后续Task不自动启动。
 
@@ -38,4 +38,4 @@ TASK-P2-04 implementation `9b532e2c054b02e1692f345a252922ec7fd469e4`的run `3235
 
 TASK-P2-05本地实现和治理验收均PASS：64 focused、360 full、core/formal各6/6、Task diff 49 paths/6 rows/0 issues及compose/build/immutable。Implementation `df706786e0ec1c54bf60cd43261a92ef6aa53cc7`的run `32354050257` / job `96379299455` / artifact `9400957897`也精确PASS，故Task=`done`。TASK-P2-06的启动来自用户新的明确授权；其启动基线run `32354521904` / job `96380738933` / artifact `9401134902`精确绑定Diff base并成功，不会自动启动P2-07。
 
-TASK-P2-06已在本地形成C-002/005/006/009 bounded temporal model与7/7 machine evidence，exact provider证据尚待implementation提交后核验，故仍为`in_progress`。P2保持`active`；该进展不自动授权P2-07，也不改变P2-14必须最后执行的Exit Gate边界。
+TASK-P2-06已形成C-002/005/006/009 bounded temporal model与7/7 machine evidence；implementation `ba6dd2cdc2eeaae3b60714314bc3d2c155a2d81c`的run `32432482739` / required job `96626844156` / artifact `9429579311`精确成功，故Task=`done`。P2保持`active`；该完成不自动授权P2-07，也不改变P2-14必须最后执行的Exit Gate边界。

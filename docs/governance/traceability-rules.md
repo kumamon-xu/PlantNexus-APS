@@ -169,3 +169,5 @@ Implementation `df706786e0ec1c54bf60cd43261a92ef6aa53cc7`的required run `323540
 形成链为`REQ-004/005/009/012 → TASK-P2-06 → C-002/005/006/009 → temporal builder + independent formal Validator → TEST-MAX-LAG/CALENDAR/MATERIAL/CROSS-WORKSHOP/PROPERTY/VALIDATOR-MUTATION → cp-sat-temporal-model-report.v1 + Task report + exact provider artifact`。只把这四个temporal C-ID的bounded Solver slice提升为formed；C-007/008、OBJ-001 execution、Strategy、Reference/Benchmark/Export/P3继续PLANNED。
 
 证据必须区分seconds权威值与tick projection、min/transport独立下界与错误相加、grid-equivalent calendar与输入改写、MODEL_INVALID与certified INFEASIBLE、local `uncommitted`与exact provider SHA。Formal Validator公式、Problem builder/hash和rule sheet保持独立且冻结；provider artifact未绑定implementation SHA前Task保持`in_progress`，完成也不自动授权P2-07。
+
+Implementation `ba6dd2cdc2eeaae3b60714314bc3d2c155a2d81c`的required run `32432482739`与artifact `9429579311`已精确绑定并复现temporal/core/formal/Task链，因此TASK-P2-06=`done`。C-007/008、OBJ-001 execution、Strategy、Benchmark/Export/P3仍为PLANNED；P2-07没有自动激活。

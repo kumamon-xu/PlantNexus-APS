@@ -1,7 +1,7 @@
 ---
 doc_id: TASK-P2-06
 title: CP-SAT Temporal Calendar and Material Model
-status: in_progress
+status: done
 spec_version: 0.3.0
 phase: P2
 normative: true
@@ -83,4 +83,6 @@ Scope review: P2-05的`core_constraints.py`仍会拒绝本Task必须消费的pre
 
 Implementation evidence: `temporal_constraints.py`实现signed exact ceil/floor、calendar grid projection/merge、precedence/historical anchor、release/material gates与option-conditional transport；`model.py`在resource NoOverlap前组合temporal bindings，Backend/mapper/contract surface同步P2-06真实边界。`temporal_model_check.py`冻结合同/Builder/Validator/rule/lock fingerprints并输出7项机器检查；workflow与integration contract上传/验证该报告。
 
-Local acceptance: focused `87 passed`、full repository `367 passed`、Ruff/Pyright均0；foundation/core/formal/temporal报告分别6/6、6/6、6/6、7/7。Temporal counts为4 implemented C-ID、5 positive candidate、3 certified infeasible、2 precheck、4 independent Validator mutation与8 tiny oracle cases；治理为142 docs、53 paths/6 rows/19 checks/0 issues，Compose、`uv build`、`git diff --check`及禁止路径diff均PASS。Exact provider结果仍待implementation SHA；在此之前Task保持`in_progress`。
+Local acceptance: focused `87 passed`、full repository `367 passed`、Ruff/Pyright均0；foundation/core/formal/temporal报告分别6/6、6/6、6/6、7/7。Temporal counts为4 implemented C-ID、5 positive candidate、3 certified infeasible、2 precheck、4 independent Validator mutation与8 tiny oracle cases；治理为142 docs、53 paths/6 rows/19 checks/0 issues，Compose、`uv build`、`git diff --check`及禁止路径diff均PASS。
+
+Provider closure: implementation `ba6dd2cdc2eeaae3b60714314bc3d2c155a2d81c`的GitHub push run `32432482739`、required `validate` job/check `96626844156`（app `15368`）均`completed/success`。Artifact `9429579311`未过期，expiry=`2026-11-19T00:23:37Z`，digest=`sha256:3d1dce2dad986669d5709d7f8cf3900287773863cdda430e791e007495d5259c`；temporal/core/formal/foundation报告均绑定同一SHA并分别7/7、6/6、6/6、6/6 PASS，Task report绑定同一SHA与Diff base并为53 committed/0 working paths、6 rows、19 checks、0 issues。Completion conditions全部满足，Task=`done`；P2-07仍需新的用户明确授权。

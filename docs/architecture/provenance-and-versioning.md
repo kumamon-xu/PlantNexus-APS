@@ -186,3 +186,5 @@ Implementation `df706786e0ec1c54bf60cd43261a92ef6aa53cc7`的run `32354050257` / 
 当前链扩展为`Problem hash + Policy/Limits fingerprints + exact solver identity + temporal constraint metrics → complete candidate → independent formal validation`。Temporal report冻结Problem/Solution/Policy/Limits Schema、rule sheet、formal Validator、Planning contracts、Problem builder/hash与`uv.lock`指纹，并记录C-002/005/006/009 candidate、infeasible/precheck、Validator mutation、tiny oracle和真实model delta。
 
 Local report的`code_commit=uncommitted`只用于工作树验收；Task关闭前必须由exact pushed implementation SHA的required `validate`与artifact替代。该链不改变Schema/Problem identity，也不产生OBJ-001 optimality、Benchmark baseline、ScheduleVersion或Production provenance。
+
+Implementation `ba6dd2cdc2eeaae3b60714314bc3d2c155a2d81c`的run `32432482739` / job `96626844156` / artifact `9429579311`完成exact绑定；artifact digest=`sha256:3d1dce2dad986669d5709d7f8cf3900287773863cdda430e791e007495d5259c`。Temporal/core/formal/Task report文件SHA-256分别为`014cbfe2…d1611`、`d338300d…d523`、`af575341…ebb5`、`06ebb6c7…9661`，全部记录同一implementation SHA；TASK-P2-06 provenance据此闭环。

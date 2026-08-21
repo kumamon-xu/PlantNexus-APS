@@ -68,3 +68,9 @@ OBJ-001 execution继续由P2-08形成，OBJ-002/003保持deferred；不得把nat
 RUNNING与HARD lock只收紧可行域；SOFT lock明确不进入本Task模型、hint或post-solve stability cost。Candidate仍只后测weighted tardiness、使用通用0 lower bound并标记`OBJECTIVE_NOT_OPTIMIZED`。
 
 OBJ-001 execution继续由P2-08形成，OBJ-002 Stability与OBJ-003保持deferred；不得把native OPTIMAL、fact/lock preservation或SOFT metadata reference表述为目标最优。OPEN-005/006与Policy版本不变。
+
+## TASK-P2-08 OBJ-001 execution
+
+OBJ-001现在以每个Demand全部active operation的最大`end_tick`作为completion，并计算`max(0, completion_tick*tick_seconds-due_offset_seconds)`；因此非tick-grid due也保留exact迟交秒数。每项乘显式正整数`priority_weight`后求和，单位固定为`priority_weighted_tardiness_seconds`，并在建模前检查CP-SAT int64上界。
+
+模型只调用一次`Minimize`且不混入makespan、SOFT lock movement或浮点权重。OPTIMAL必须有value=bound/gap=0，FEASIBLE不得称最优，UNKNOWN不得称无解；4个tiny exhaustive cases与generated properties复核数值。Policy仍为`objective-policy.v1`单stage，OBJ-002/003继续deferred；OPEN-006未关闭，只有approved versioned Simulation source可执行。

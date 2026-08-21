@@ -145,3 +145,9 @@ Machine contract自身的shape/version/reference/time/metric/provenance拒绝使
 Formal candidate的schedule违反继续使用既有`error.v2`映射：`VALIDATION_FAILED/SCHEDULE_VALIDATION_FAILED`，每个detail保存首个entity、`candidate.assignments`字段、C-ID/entity/value、expected rule与`planning_solution.assignments`来源。PASS不生成Error；多条violation按稳定report顺序产生等量details。
 
 权威PlanningProblem v2 shape/hash错误属于Validator输入合同缺陷，由`ProblemScheduleValidationInputError`在C-ID执行前fail closed，不改写成INFEASIBLE或candidate validation failure。Candidate reference/assignment结构问题可在现有C-001/C-003/C-007/C-008/C-010/C-011语义内稳定聚合；本Task不新增error code/registry/schema/HTTP mapping或Solver diagnostics。
+
+## TASK-P2-08 status/error review
+
+Strategy precheck对Production/未批准Simulation Policy或priority source显式抛出`DeliveryPolicyError`，objective demand映射/priority/int64不可表达显式抛出`DeliveryObjectiveError`，不得进入INFEASIBLE。Search无candidate且无证明保持UNKNOWN并映射`NO_SOLUTION_WITHIN_LIMIT`；只有complete hard model证明才为INFEASIBLE；有candidate未证明最优为FEASIBLE。
+
+Independent Validator拒绝optimized candidate时映射FAILED/SYSTEM_ERROR语义、丢弃assignments与objective candidate，并保留sanitized diagnostic；不新增error registry code、Schema、HTTP/API mapping或诊断子系统。Production authority未批准不是可重试Solver结论。

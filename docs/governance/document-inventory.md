@@ -212,3 +212,5 @@ TASK-P2-07本地实现继续不新增、删除或重命名Markdown路径；full�
 Implementation artifact `9430579117`已复现142 docs inventory与54-path/6-row/19-check/0-issue Task report，TASK-P2-07=`done`。没有新增、删除或重命名Markdown；P2-08～14保持`planned`，inventory与registry版本不变。
 
 TASK-P2-08启动不新增、删除或重命名Markdown路径，inventory继续完整覆盖142份`docs/**/*.md`；只将已获2026-08-21明确授权的该Task同步为`in_progress`。预计新增的Strategy/objective/machine CLI/tests与workflow修改均不是正式Markdown inventory条目，`build/validation`/`build/traceability`报告继续ignored；P2-09～14保持`planned`。
+
+TASK-P2-08本地实现继续不新增、删除或重命名Markdown路径；full治理确认inventory完整覆盖142份`docs/**/*.md`，Task range为52 paths/8 rows/19 checks/0 issues。新增Policy/Strategy/objective/check/tests与ignored JSON不属于inventory；现有文档只同步OBJ-001/Global Strategy local formed、exact provider pending及P2-09～14未授权边界。Provider关闭不会改变inventory/registry format version。

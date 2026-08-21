@@ -177,3 +177,9 @@ Implementation `ba6dd2cdc2eeaae3b60714314bc3d2c155a2d81c`的required run `324324
 形成链为`REQ-004/005/009/012 → TASK-P2-07 → C-007/008 → fact_lock_constraints + independent formal Validator → TEST-RUNNING/INF-LOCK/PROPERTY/VALIDATOR-MUTATION → cp-sat-fact-lock-model-report.v1 + Task report + exact provider artifact`。COMPLETED anchor、RUNNING tuple、HARD exact、SOFT metadata、precheck与certified INFEASIBLE必须分别可追踪，不能用单一“lock PASS”合并。
 
 证据必须区分Problem hash保存的RUNNING历史与Problem未暴露的execution fact ID、HARD constraint与SOFT metadata、self-conflict MODEL_INVALID与合法constraint INFEASIBLE、local `uncommitted`与exact provider SHA。Formal Validator、Problem builder/hash、rule sheet、ADR-0007与dependency保持独立且冻结；implementation `5ab65f36d532fd8786eb7ecad3cce406f4d9fb70`的artifact `9430579117`已绑定exact SHA并关闭Task，完成也不自动授权P2-08。
+
+## TASK-P2-08 traceability rule application
+
+形成链为`REQ-004/005/009 → TASK-P2-08 → OBJ-001 → versioned Simulation Delivery Policy + GlobalCpSatStrategy + objective builder + formal Validator → TEST-GOLDEN-JSSP/FJSP、TEST-PROPERTY、TEST-SOLVER-UPGRADE、TEST-ERROR-MAPPING-001 → objective-strategy-report.v1 + Task report + exact provider artifact`。只有完整C-001～C-011域上的priority-weighted tardiness seconds与Global Strategy可从PLANNED提升为local formed；OBJ-002/003、P2-09 Golden/scenario integration、Reference/Export/Benchmark/Gate/P3继续PLANNED。
+
+证据必须区分hard feasibility与objective optimality、native best bound与candidate objective、OPTIMAL/FEASIBLE/UNKNOWN/INFEASIBLE、solver candidate与formal Validator接受、explicit Simulation value与Production authority、tiny correctness timing与XS/S/M baseline、local `uncommitted` report与exact provider SHA。Validator FAIL必须丢弃candidate；UNKNOWN不得冒充INFEASIBLE，FEASIBLE不得冒充OPTIMAL。Provider artifact未绑定implementation SHA前TASK-P2-08保持`in_progress`，完成也不自动授权P2-09。

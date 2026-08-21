@@ -137,3 +137,10 @@ TASK-P0-05 已在 `simulation/profiles`、`simulation/scenarios`、`simulation/g
 - `core_constraints.py`在CP-SAT对象创建前区分unrepresentable/self-conflicting fact/lock的MODEL_INVALID，与calendar/resource/horizon等合法约束冲突的certified INFEASIBLE；`model.py`只组合core/temporal/fact-lock bindings。
 - `solution_mapper.py`使用RUNNING `remaining_seconds`映射duration，并稳定回写该operation全部lock IDs；Problem v2未暴露RUNNING execution fact ID，因此不得猜造`execution_fact_ids`，历史事实由Problem hash与actual/resource/remainder字段保持。
 - Formal Validator继续独立重算C-007/C-008且不导入Backend/OR-Tools。`fact_lock_model_check.py`拥有synthetic oracle、mutation、model delta与telemetry，不拥有Problem builder/hash、rule formula、OBJ-001、Strategy、dynamic Replan、Benchmark或Production入口。
+
+## TASK-P2-08 Strategy/objective boundary
+
+- `planning/policy/delivery.py`拥有唯一批准的versioned Simulation Delivery Policy、无默认值SolveLimits factory与priority source/data-plane gate；不创建native Solver对象。
+- `planning/strategies/global_cp_sat.py`拥有单PlanningRun编排、显式run/commit provenance和SolverReport组装；每次只调用一次`solve_delivery_with_evidence`，不分解、不rolling、不fallback、不批准或发布。
+- `planning/backends/cp_sat/objectives.py`是新增OR-Tools import的唯一目标模块，拥有每Demand completion max、exact tardiness seconds、priority integer sum、int64 precheck与`Minimize`；C-ID builder、Problem、Policy和Validator均不依赖它。
+- `backend.py`保留P2-07 feasibility-only diagnostic入口，并为Global Strategy新增objective-aware evidence入口；两条路径都强制formal independent Validator，candidate FAIL即丢弃。`objective_strategy_check.py`只拥有tiny correctness/provenance evidence，不是BenchmarkRunner。

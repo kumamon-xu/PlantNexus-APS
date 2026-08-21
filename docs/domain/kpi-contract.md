@@ -80,3 +80,9 @@ Weighted tardiness仍仅为post-solve合同值，CP-SAT模型不含objective。O
 Fact/lock report新增RUNNING/HARD/SOFT数量、fixed operation interval、resource/start/end equality、constraint delta及build/solve/first-feasible/memory telemetry，只证明C-007/C-008实际进入模型。它没有warm-up、profile、percentile、Reference comparison、stability cost或threshold，不是KPI/Benchmark baseline、capacity或SLA。
 
 Weighted tardiness仍只在candidate后测量，CP-SAT模型不含objective；SOFT lock movement不计入OBJ-002。OPEN-005/006/012及全部Production KPI口径保持不变。
+
+## TASK-P2-08 Solver metric evidence
+
+Global Strategy的真实SolverReport现记录OBJ-001 weighted tardiness seconds、certified best bound/relative gap、model build、first feasible、solve、independent validation、total、variables/constraints/optional intervals与Python traced peak MB，并绑定tick/Problem/Policy/Limits/Solver/commit。Objective由neutral assignments独立复算并必须等于native objective carrier。
+
+这些字段只证明tiny correctness/observability；没有KPI calculator、makespan/Resource/Stability计算、warm-up、percentile、hardware profile、Reference comparison或XS/S/M baseline。OPEN-006/012继续OPEN，不形成Production KPI、capacity或SLA。

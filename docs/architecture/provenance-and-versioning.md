@@ -198,3 +198,9 @@ Implementation `ba6dd2cdc2eeaae3b60714314bc3d2c155a2d81c`的run `32432482739` / 
 本地工作树报告已7/7 PASS并与93 focused、382 full及54-path/6-row/19-check/0-issue治理相互印证；它仍不是可发布provenance。实现提交后必须以`PLANTNEXUS_CODE_COMMIT=<exact SHA>`重生成并由GitHub artifact验证，随后才允许写入closure evidence。
 
 Provider provenance现已形成：implementation `5ab65f36d532fd8786eb7ecad3cce406f4d9fb70`的run `32435395744` / job `96635463577` / artifact `9430579117`全部success，artifact digest=`sha256:a6b6ff7413b8010a8012ddd351a2a194b89b1a13cdf71c6dada5d6afa53a44ab`。Fact-lock与历史machine reports及Task report全部绑定该SHA；这只证明bounded C-001～C-011 correctness，不产生OBJ-001 optimality、dynamic Replan、Benchmark、ScheduleVersion或Production provenance。
+
+## TASK-P2-08 objective/run provenance
+
+每次Global Strategy运行同时绑定Problem hash、approved Policy/Limits canonical fingerprints、PlanningSolution fingerprint、`planning_run_id`、exact backend/solver/version/parameters、OBJ-001 value/bound/gap、build/first-feasible/solve/validation/total、model size、memory与显式`code_commit`。SolverReport与Solution的problem/policy/limits/status/objective/diagnostics必须逐字一致并通过bundle replay；local `uncommitted`不能冒充provider SHA。
+
+`objective-strategy-report.v1`冻结Problem/Solution/Report/Policy/Limits Schema、Planning contracts、core model、Problem hashing、formal Validator、rule sheet、ADR-0004/0006与`uv.lock` fingerprints，并记录4个tiny optimum/Validator及完整报告。它是correctness provenance，不创建ScheduleVersion/Export/approval/publish或Production authority；implementation exact provider evidence仍须在push后核验。

@@ -140,3 +140,9 @@ Backend仍只消费显式Problem v2、PlanningPolicy v1与SolveLimits v1；prece
 Backend继续只消费显式Problem v2、PlanningPolicy v1与SolveLimits v1，不读取environment、Secret、DB、API、Worker或Production配置。RUNNING actual/resource/remainder和operation locks均来自Problem hash绑定的权威输入；HARD lock必须exact grid表示，SOFT lock只保留metadata reference，不读取freeze window或稳定性默认值。
 
 `fact_lock_model_check`只构造in-memory synthetic correctness vectors并写ignored JSON；workflow未新增service、port、container、migration或deployment route。Fact/lock model delta、timing与memory只证明repository correctness，不构成Production authority、容量、SLA或发布权限。
+
+## TASK-P2-08 explicit Simulation execution
+
+`GlobalCpSatStrategy`只接受代码内固定版本的`POLICY-P2-SIM-DELIVERY-OBJ001-001@1.0.0`、显式传入且同为`SIMULATION`的SolveLimits，以及Problem中`plantnexus-synthetic-policy@1.0.0`来源的priority weight；不读取environment、Secret、DB、API、Worker或隐式默认值。`planning_run_id`与`code_commit`也是显式调用参数，local允许`uncommitted`，CI由`PLANTNEXUS_CODE_COMMIT`只注入machine evidence。
+
+Workflow只新增in-memory `objective_strategy_check`与ignored JSON上传，不新增service、port、container、migration或deployment route。OPEN-006/011/012未关闭时Production Policy/weight/limit均在solve前拒绝；tiny timing/memory不是容量、SLA或Production readiness。

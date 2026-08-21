@@ -1,8 +1,9 @@
-"""Pinned CP-SAT adapter with the bounded P2-05 through P2-07 model."""
+"""Pinned CP-SAT adapter for hard-feasibility and P2 OBJ-001 execution."""
 
 from __future__ import annotations
 
 from dataclasses import dataclass
+import math
 from time import perf_counter
 import tracemalloc
 from typing import Literal, TypedDict
@@ -24,6 +25,11 @@ from app.planning.backends.cp_sat.fact_lock_constraints import (
 from app.planning.backends.cp_sat.model import (
     CoreModelMetricsDocument,
     build_core_model,
+)
+from app.planning.backends.cp_sat.objectives import (
+    DeliveryObjectiveMetricsDocument,
+    DeliveryObjectiveModel,
+    add_delivery_objective,
 )
 from app.planning.backends.cp_sat.solution_mapper import (
     map_core_candidate_solution,
@@ -66,7 +72,10 @@ class CoreSolveTelemetryDocument(TypedDict):
     python_memory_peak_mb: float
     model_metrics: CoreModelMetricsDocument
     fact_lock_metrics: FactLockConstraintMetricsDocument
+    objective_metrics: DeliveryObjectiveMetricsDocument | None
     validator_status: str | None
+    validation_seconds: float | None
+    total_seconds: float
     objective_optimized: bool
 
 
@@ -249,7 +258,7 @@ def probe_model_invalid(
 
 
 class CpSatBackend:
-    """SolverBackend for bounded core, temporal, and fact/lock feasibility."""
+    """Backend for complete hard feasibility and explicit OBJ-001 search."""
 
     def __init__(self) -> None:
         self._identity = backend_identity()
@@ -279,7 +288,39 @@ class CpSatBackend:
         policy: PlanningPolicyDocument,
         limits: SolveLimitsDocument,
     ) -> CoreSolveResult:
-        """Solve, map, and independently validate the bounded P2-07 model."""
+        """Retain the P2-07 feasibility-only diagnostic execution boundary."""
+
+        return self._solve_with_evidence(
+            problem,
+            policy,
+            limits,
+            optimize_delivery=False,
+        )
+
+    def solve_delivery_with_evidence(
+        self,
+        problem: PlanningProblemDocumentV2,
+        policy: PlanningPolicyDocument,
+        limits: SolveLimitsDocument,
+    ) -> CoreSolveResult:
+        """Optimize OBJ-001 inside the complete hard domain and validate output."""
+
+        return self._solve_with_evidence(
+            problem,
+            policy,
+            limits,
+            optimize_delivery=True,
+        )
+
+    def _solve_with_evidence(
+        self,
+        problem: PlanningProblemDocumentV2,
+        policy: PlanningPolicyDocument,
+        limits: SolveLimitsDocument,
+        *,
+        optimize_delivery: bool,
+    ) -> CoreSolveResult:
+        """Build, solve, map, and independently validate one complete model."""
 
         validate_planning_policy(policy)
         validate_solve_limits(limits)
@@ -289,8 +330,14 @@ class CpSatBackend:
         if owns_trace:
             tracemalloc.start()
         baseline_peak = tracemalloc.get_traced_memory()[1]
+        total_started = perf_counter()
         try:
+            build_started = perf_counter()
             core_model = build_core_model(problem)
+            objective_model: DeliveryObjectiveModel | None = None
+            if optimize_delivery:
+                objective_model = add_delivery_objective(problem, core_model)
+            model_build_seconds = max(0.0, perf_counter() - build_started)
             solver = _configured_solver(limits)
             observer = _FirstFeasibleObserver()
             solve_started = perf_counter()
@@ -299,10 +346,27 @@ class CpSatBackend:
             native_name = native_status_name(native_status)
             mapped_status = solver_status_from_cp_sat(native_status)
             first_feasible = observer.first_feasible_seconds
+            validation_seconds: float | None = None
             if mapped_status in {SolverStatus.OPTIMAL, SolverStatus.FEASIBLE}:
                 if first_feasible is None:
                     first_feasible = min(
                         max(0.0, float(solver.wall_time)), solve_seconds
+                    )
+                objective_value: int | None = None
+                if objective_model is None:
+                    product_status = SolverStatus.FEASIBLE
+                    best_bound = 0
+                else:
+                    product_status = mapped_status
+                    objective_value = int(
+                        solver.value(
+                            objective_model.total_weighted_tardiness_seconds
+                        )
+                    )
+                    best_bound = _certified_objective_bound(
+                        solver,
+                        status=product_status,
+                        objective_value=objective_value,
                     )
                 solution = map_core_candidate_solution(
                     problem,
@@ -312,8 +376,27 @@ class CpSatBackend:
                     solver,
                     native_status=native_name,
                     solve_seconds=float(solver.wall_time),
+                    solver_status=product_status,
+                    best_bound=best_bound,
+                    objective_optimized=optimize_delivery,
                 )
+                if objective_value is not None and (
+                    solution["objective_stage_results"][0]["objective_value"]
+                    != objective_value
+                ):
+                    raise SolverBackendError(
+                        BackendFailureReason.ADAPTER_FAILURE,
+                        solver_status=SolverStatus.FAILED,
+                        message=(
+                            "CP-SAT objective differs from independently measured "
+                            "weighted tardiness"
+                        ),
+                    )
+                validation_started = perf_counter()
                 validation_report = validate_problem_schedule(problem, solution)
+                validation_seconds = max(
+                    0.0, perf_counter() - validation_started
+                )
                 if validation_report["status"] != "PASS":
                     product_status = SolverStatus.FAILED
                     solution = map_core_non_candidate_solution(
@@ -329,12 +412,16 @@ class CpSatBackend:
                             ),
                         },
                         solve_seconds=float(solver.wall_time),
+                        objective_optimized=optimize_delivery,
                     )
-                else:
-                    product_status = SolverStatus.FEASIBLE
             else:
                 product_status = mapped_status
                 validation_report = None
+                unknown_bound = (
+                    _certified_unknown_bound(solver)
+                    if optimize_delivery and product_status is SolverStatus.UNKNOWN
+                    else None
+                )
                 solution = map_core_non_candidate_solution(
                     problem,
                     policy,
@@ -343,31 +430,49 @@ class CpSatBackend:
                     diagnostic={
                         "code": f"CP_SAT_BOUNDED_{product_status.value}",
                         "message": (
-                            "Pinned CP-SAT completed the bounded P2-07 model without "
-                            "an accepted candidate"
+                            "Pinned CP-SAT completed the full hard model and OBJ-001 "
+                            "search without an accepted candidate"
+                            if optimize_delivery
+                            else (
+                                "Pinned CP-SAT completed the bounded P2-07 model "
+                                "without an accepted candidate"
+                            )
                         ),
                     },
                     solve_seconds=float(solver.wall_time),
+                    best_bound=unknown_bound,
+                    objective_optimized=optimize_delivery,
                 )
             observed_peak = tracemalloc.get_traced_memory()[1]
+            real_model_metrics: CoreModelMetricsDocument = {
+                "variables": len(core_model.model.proto.variables),
+                "constraints": len(core_model.model.proto.constraints),
+                "optional_intervals": core_model.metrics["optional_intervals"],
+            }
+            total_seconds = max(0.0, perf_counter() - total_started)
             telemetry: CoreSolveTelemetryDocument = {
                 "native_status": native_name,
                 "solver_status": product_status.value,
-                "model_build_seconds": core_model.model_build_seconds,
+                "model_build_seconds": model_build_seconds,
                 "first_feasible_seconds": first_feasible,
                 "solve_seconds": solve_seconds,
                 "solver_wall_time_seconds": max(0.0, float(solver.wall_time)),
                 "python_memory_peak_mb": max(
                     0.0, (observed_peak - baseline_peak) / (1024 * 1024)
                 ),
-                "model_metrics": core_model.metrics,
+                "model_metrics": real_model_metrics,
                 "fact_lock_metrics": core_model.fact_lock_metrics,
+                "objective_metrics": (
+                    None if objective_model is None else objective_model.metrics
+                ),
                 "validator_status": (
                     None
                     if validation_report is None
                     else str(validation_report["status"])
                 ),
-                "objective_optimized": False,
+                "validation_seconds": validation_seconds,
+                "total_seconds": total_seconds,
+                "objective_optimized": optimize_delivery,
             }
             return CoreSolveResult(
                 solution=solution,
@@ -377,6 +482,31 @@ class CpSatBackend:
         finally:
             if owns_trace:
                 tracemalloc.stop()
+
+
+def _certified_objective_bound(
+    solver: cp_model.CpSolver,
+    *,
+    status: SolverStatus,
+    objective_value: int,
+) -> int:
+    """Convert CP-SAT's float carrier to a conservative integer lower bound."""
+
+    if status is SolverStatus.OPTIMAL:
+        return objective_value
+    observed = float(solver.best_objective_bound)
+    if not math.isfinite(observed):
+        return 0
+    return max(0, min(objective_value, math.floor(observed)))
+
+
+def _certified_unknown_bound(solver: cp_model.CpSolver) -> int | None:
+    """Return only a finite non-negative conservative bound without a candidate."""
+
+    observed = float(solver.best_objective_bound)
+    if not math.isfinite(observed):
+        return None
+    return max(0, math.floor(observed))
 
 
 __all__ = [

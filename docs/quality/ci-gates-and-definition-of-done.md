@@ -162,3 +162,11 @@ Step不得`continue-on-error`；artifact必须同时上传fact-lock/temporal/cor
 Local Gate已通过93 focused、382 full、Ruff/Pyright 0、foundation/core/formal 6/6与temporal/fact-lock 7/7、54-path/6-row/19-check/0-issue治理、Compose、build、`git diff --check`和immutable checks。下一门仅为implementation exact SHA的required `validate`与artifact；通过前状态不变。
 
 Implementation provider Gate现已通过：SHA `5ab65f36d532fd8786eb7ecad3cce406f4d9fb70`、run `32435395744`、required `validate` job/check `96635463577`（app `15368`）均success；artifact `9430579117`未过期且digest=`sha256:a6b6ff7413b8010a8012ddd351a2a194b89b1a13cdf71c6dada5d6afa53a44ab`，fact-lock/temporal/core/formal/Task报告绑定同一SHA并复现7/7、7/7、6/6、6/6及54 paths/6 rows/19 checks/0 issues。TASK-P2-07 DoD完成；closure提交本身仍须另行核验exact provider，不自动授权P2-08。
+
+## TASK-P2-08 required validate additions
+
+Required `validate`在foundation/core/temporal/fact-lock/formal evidence后运行`app.planning.backends.cp_sat.objective_strategy_check --root . --report build/validation/ci-objective-strategy.json`。PASS要求7/7 checks、固定合同/model/Validator/ADR/lock fingerprints、approved Simulation Policy/Limits、exact objective shape/unit、4个brute-force optimum、4个Validator PASS、1个certified INFEASIBLE、完整status/report/provenance及Production/OBJ-002/003/Reference/Benchmark/Export边界。
+
+Step不得`continue-on-error`；artifact必须同时上传objective-strategy及全部历史machine/Task reports且`code_commit`绑定exact pushed SHA。Local `70 focused`/`395 full`与7/7 machine PASS不替代required `validate`、artifact digest/expiry和内容复核；这些证据形成前TASK-P2-08保持`in_progress`，P2-09不自动启动。
+
+Local Gate现已通过70 focused、395 full、Ruff/Pyright 0、objective/strategy 7/7及全部历史machine reports、142-doc治理与52-path/8-row/19-check/0-issue Task report、Compose、build、`git diff --check`和冻结路径检查。下一门仅为implementation exact SHA的required `validate`与artifact；通过前状态不变。

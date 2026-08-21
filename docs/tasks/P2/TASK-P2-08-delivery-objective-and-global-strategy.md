@@ -41,7 +41,7 @@ Documents to update: `README.md`、`docs/README.md`、`docs/current_phase.md`、
 
 Documentation impact rationale: Objective、Strategy、limits和status决定P2计划选择/报告边界，且必须隔离未知Production权重。
 
-Change-impact matrix rows reviewed: `IMPACT-PHASE`、`IMPACT-DOCS`
+Change-impact matrix rows reviewed: `IMPACT-POLICY`、`IMPACT-STRATEGY`、`IMPACT-BACKEND`、`IMPACT-TESTS`、`IMPACT-INFRA`、`IMPACT-PHASE`、`IMPACT-GOVERNANCE-REGISTRY`、`IMPACT-DOCS`
 
 Traceability updates: REQ-004/005/009→TASK-P2-08→OBJ-001→TEST-GOLDEN-JSSP/FJSP、TEST-PROPERTY、TEST-SOLVER-UPGRADE→strategy/objective/status artifacts；OBJ-002/003保持PLANNED/非接受目标。
 
@@ -82,3 +82,9 @@ Rollback: 回退Strategy/objective后Backend仅可作内部constraint test，不
 用户明确授权执行TASK-P2-08。启动时`main=origin/main=9c55df993b12ae0bdd3d4d38c900d601324c05d2`且working tree clean；该SHA的push run `32435755901`、required `validate` job/check `96636509174`（GitHub Actions app `15368`）均`completed/success`。Artifact `9430697910`未过期，digest=`sha256:6fd173b5cdb6cdae4d5f86bbdee773b8ca7679db34d90d52c4db05d5ca18d8c4`、expiry=`2026-11-19T01:17:08Z`。因此P2-02/05/06/07依赖与完整C-001～C-011/formal Validator启动门一致，Diff base冻结为上述HEAD。
 
 启动前scope review确认原卡未包含objective-aware solution mapping、SolverReport assembly的machine CLI、CP-SAT namespace回归、CI workflow/integration contract以及Task lifecycle/Impact Rule必审文档；故先扩展上述允许路径与验收命令，再实施业务代码。当前activation-only差异只命中`IMPACT-PHASE`/`IMPACT-DOCS`；激活提交后、首个业务文件变更前，必须把本卡的impact行切换为实际实现所需`IMPACT-POLICY`、`IMPACT-STRATEGY`、`IMPACT-BACKEND`、`IMPACT-TESTS`、`IMPACT-INFRA`、`IMPACT-PHASE`、`IMPACT-GOVERNANCE-REGISTRY`、`IMPACT-DOCS`。Schema/Planning contracts、Problem builder/hash、formal Validator、core model/C-ID公式、OR-Tools exact pin与lock均冻结；本Task只允许显式versioned Simulation Delivery Policy执行OBJ-001，OPEN-006/011/012继续阻断Production。
+
+## Local implementation evidence — 2026-08-21
+
+已形成`POLICY-P2-SIM-DELIVERY-OBJ001-001@1.0.0`、no-default explicit SolveLimits、OBJ-001 integer objective builder、objective-aware Backend/mapper、single-call `GlobalCpSatStrategy`与`objective-strategy-report.v1`。Objective单位固定为priority-weighted tardiness seconds；demand completion取其active operations最大end tick，due offset保持权威seconds，int64 upper bound在建模前检查。Global Strategy只接受Simulation及approved policy/source，并对每个candidate强制formal independent Validator PASS；失败即返回FAILED且不泄漏assignment/objective。
+
+本地focused suite=`70 passed`、full repository=`395 passed`、Ruff/Pyright=0，machine report=`7/7 PASS`：4个tiny exhaustive optimum、4次Validator PASS、1个certified infeasible、7种status与1个Production rejection均形成；全部历史machine reports亦PASS。治理为142 docs、52 changed paths、8 matched rows、19 checks、0 issues，Compose、`uv build`、`git diff --check`和冻结/禁止路径0差异均PASS。OBJ-002/003、Production default、Reference/Export/Benchmark/P3/P4均未实现；Schema/contracts、Problem builder/hash、formal Validator、core model/C-ID、dependency/lock和migration保持冻结。Exact implementation provider仍须在push后闭环，故Task状态保持`in_progress`。

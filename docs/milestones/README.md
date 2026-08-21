@@ -30,7 +30,7 @@ P0 当前状态：TASK-P0-01～10 全部完成；[superseding audit](P0-exit-gat
 
 P1当前状态：[`P1 — Data & Snapshot`](P1-data-and-snapshot.md)为`completed`，TASK-P1-01～12全部`done`。[P1 audit](P1-exit-gate-audit-report.md)的271项回归、14/14 pipeline、全部machine/build/docs/provider证据均PASS；TASK-P1-12 implementation `a5d7e4a68dc12d48e36cb692500f59446f8097b4` / run `32326616525` / artifact `9391591718`已闭环，Gate=`READY`且无blocking gap。用户于2026-08-20明确批准transition。
 
-P2当前状态：[`P2 — CP-SAT Vertical Slice`](P2-cp-sat-vertical-slice.md)为`active`。TASK-P2-00～07均已闭环为`done`；P2-03的ADR/dependency/backend、P2-04 formal Validator及P2-05～07完整C-001～C-011 bounded Solver local/provider证据完整。TASK-P2-08已获授权并进入`in_progress`；P2-09～14仍为`planned`且未获启动授权，P2-14必须为最后的Exit Gate Audit，不得自动进入P3。
+P2当前状态：[`P2 — CP-SAT Vertical Slice`](P2-cp-sat-vertical-slice.md)为`active`。TASK-P2-00～07均已闭环为`done`；P2-03的ADR/dependency/backend、P2-04 formal Validator及P2-05～07完整C-001～C-011 bounded Solver local/provider证据完整。TASK-P2-08的OBJ-001/Global Strategy已在本地形成并等待exact provider，故仍为`in_progress`；P2-09～14仍为`planned`且未获启动授权，P2-14必须为最后的Exit Gate Audit，不得自动进入P3。
 
 TASK-P2-03 implementation `9268b88ca7ce90a8f72023241f87e2d3676fd58a`的run `32346208046`、required job `96355386111`和artifact `9398128763`均success；P2 phase保持active，后续Task不自动启动。
 
@@ -43,3 +43,5 @@ TASK-P2-06已形成C-002/005/006/009 bounded temporal model与7/7 machine eviden
 TASK-P2-07已形成C-007/008 fact/lock model与7/7 machine evidence；implementation `5ab65f36d532fd8786eb7ecad3cce406f4d9fb70`的run `32435395744` / required job `96635463577` / artifact `9430579117`精确成功，故Task=`done`。
 
 用户于2026-08-21明确授权TASK-P2-08；clean Diff base `9c55df993b12ae0bdd3d4d38c900d601324c05d2`的run `32435755901`、required job `96636509174`与artifact `9430697910`精确success。TASK-P2-08现只执行versioned Simulation OBJ-001、Global Strategy与honest status/report；P2-09～14未授权，P2-14仍必须最后执行。
+
+TASK-P2-08本地已形成explicit Simulation policy/limits、exact OBJ-001、single-call Global Strategy、honest seven-status/objective/bound/gap/report与mandatory Validator gate；70 focused、395 full和7/7 machine checks均PASS。Implementation SHA的required `validate`和artifact仍待push后核验，故Milestone保持`active`、Task保持`in_progress`且不启动P2-09。

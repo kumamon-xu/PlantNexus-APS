@@ -211,6 +211,7 @@ def test_ortools_imports_are_confined_to_cp_sat_backend_package() -> None:
         "backend/app/planning/backends/cp_sat/backend.py",
         "backend/app/planning/backends/cp_sat/fact_lock_constraints.py",
         "backend/app/planning/backends/cp_sat/model.py",
+        "backend/app/planning/backends/cp_sat/objectives.py",
         "backend/app/planning/backends/cp_sat/solution_mapper.py",
         "backend/app/planning/backends/cp_sat/status.py",
         "backend/app/planning/backends/cp_sat/temporal_constraints.py",

@@ -111,6 +111,12 @@ jobs:
           --root .
           --report build/validation/ci-cp-sat-fact-lock-model.json
 
+      - name: OBJ-001 and Global CP-SAT strategy evidence
+        run: >-
+          uv run python -m app.planning.backends.cp_sat.objective_strategy_check
+          --root .
+          --report build/validation/ci-objective-strategy.json
+
       - name: Engineering contract
         run: >-
           uv run python -m app.infrastructure.contract_check

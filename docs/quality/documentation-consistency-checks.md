@@ -286,3 +286,9 @@ Diff base固定为`33cc3282ead23a4cc1bb214190191e116b095119`；activation commit
 本地实际full治理PASS为142 docs/30 roots/36 Test IDs/15 OPEN/10 SIM assumptions/11 risks/37 Tasks；TASK-P2-07完整range为54 paths、6 matched rows、19 checks、0 issues。Immutable paths、Compose、build与`git diff --check`均PASS；exact provider artifact尚待实现提交后复现。
 
 Implementation artifact `9430579117`内`traceability-report.v1`精确绑定`5ab65f36d532fd8786eb7ecad3cce406f4d9fb70`与Diff base `33cc3282ead23a4cc1bb214190191e116b095119`，复现54 committed/0 working paths、6 rows、19 checks、0 issues并PASS；TASK-P2-07治理Gate据此闭环为`done`。Evidence-only closure仍须由自身exact provider run复核，不能在本提交中预写其ID。
+
+## TASK-P2-08 governance handoff
+
+Task以`9c55df993b12ae0bdd3d4d38c900d601324c05d2`为immutable Diff base；activation-only提交`f6c7871`先以8 paths/`IMPACT-PHASE`+`IMPACT-DOCS`通过检查，再在首个业务文件前把卡片声明切换为实现预期的Policy/Strategy/Backend/Tests/Infra/Phase/Governance/Docs八行。最终必须以`Diff base..HEAD`+working tree并集重新计算真实paths/rows，不能沿用activation报告。
+
+新增Python/CI/ignored JSON不增加Markdown inventory；本地最终为142 docs、30 roots、36 Test IDs、15 OPEN、10 SIM assumptions、11 risks、37 Tasks，完整range为52 paths、8 matched rows、19 checks、0 issues。Exact implementation SHA provider artifact必须包含`ci-objective-strategy.json`与`ci-current-task-report.json`；未push前不得预填run/job/artifact。

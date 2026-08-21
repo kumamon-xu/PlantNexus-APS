@@ -16,6 +16,9 @@ from app.planning.backends.cp_sat.core_model_check import main as core_model_mai
 from app.planning.backends.cp_sat.fact_lock_model_check import (
     main as fact_lock_model_main,
 )
+from app.planning.backends.cp_sat.objective_strategy_check import (
+    main as objective_strategy_main,
+)
 from app.planning.backends.cp_sat.temporal_model_check import (
     main as temporal_model_main,
 )
@@ -119,6 +122,8 @@ def test_ci_runs_repository_gates_and_discovers_the_current_task() -> None:
         "build/validation/ci-cp-sat-temporal-model.json",
         "app.planning.backends.cp_sat.fact_lock_model_check",
         "build/validation/ci-cp-sat-fact-lock-model.json",
+        "app.planning.backends.cp_sat.objective_strategy_check",
+        "build/validation/ci-objective-strategy.json",
         "app.infrastructure.contract_check",
         "docker compose --env-file .env.example config --quiet",
         "PLANTNEXUS_CI_CHANGE_BASE:",
@@ -224,10 +229,12 @@ def test_ci_solver_backend_foundation_report_is_machine_checkable(
     assert report["boundaries"]["business_constraints"] == (
         "CORE_P2_05_TEMPORAL_P2_06_FACT_LOCK_P2_07_PRESENT"
     )
-    assert report["boundaries"]["candidate_solution"] == "BOUNDED_P2_07_SLICE_ONLY"
+    assert report["boundaries"]["candidate_solution"] == (
+        "P2_07_COMPATIBILITY_AND_P2_08_GLOBAL_STRATEGY"
+    )
     assert report["boundaries"]["schedule_validator"] == "TASK_P2_04_PRESENT"
     assert report["boundaries"]["business_feasibility"] == (
-        "EVALUATED_BY_TASK_P2_05_P2_06_P2_07_NOT_FOUNDATION_SMOKES"
+        "EVALUATED_BY_TASK_P2_05_THROUGH_P2_08_NOT_FOUNDATION_SMOKES"
     )
     assert report["boundaries"]["benchmark"] == "NOT_APPLICABLE_FOUNDATION_ONLY"
 
@@ -374,6 +381,52 @@ def test_ci_cp_sat_fact_lock_model_report_is_machine_checkable(
     assert report["boundaries"]["benchmark"] == (
         "TINY_CORRECTNESS_ONLY_NO_XS_S_M_BASELINE"
     )
+
+
+def test_ci_objective_strategy_report_is_machine_checkable(tmp_path: Path) -> None:
+    report_path = tmp_path / "objective-strategy.json"
+    assert (
+        objective_strategy_main(
+            ["--root", str(ROOT), "--report", str(report_path)]
+        )
+        == 0
+    )
+    report = json.loads(report_path.read_text(encoding="utf-8"))
+
+    assert report["report_version"] == "objective-strategy-report.v1"
+    assert report["status"] == "PASS"
+    assert report["task_id"] == "TASK-P2-08"
+    assert report["check_count"] == 7
+    assert report["counts"] == {
+        "objective_ids": 1,
+        "tiny_optimality_cases": 4,
+        "independent_validator_passes": 4,
+        "certified_infeasible_cases": 1,
+        "status_values": 7,
+        "production_rejections": 1,
+    }
+    assert {check["name"] for check in report["checks"]} == {
+        "fixed-contract-model-validator-adr-and-lock-fingerprints",
+        "approved-versioned-simulation-policy-and-explicit-limits",
+        "exact-obj001-model-shape-unit-and-overflow-domain",
+        "tiny-brute-force-weighted-tardiness-optimality",
+        "complete-hard-domain-and-independent-validator-gate",
+        "honest-status-solution-report-limits-and-provenance",
+        "global-only-and-production-deferred-boundary",
+    }
+    assert report["boundaries"] == {
+        "hard_constraints": "C-001_THROUGH_C-011_COMPLETE_AND_UNCHANGED",
+        "objective": "OBJ-001_ONLY_PRIORITY_WEIGHTED_TARDINESS_SECONDS",
+        "strategy": "ONE_GLOBAL_CP_SAT_MODEL_NO_DECOMPOSITION_OR_FALLBACK",
+        "policy": "VERSIONED_SIMULATION_ONLY",
+        "production_authority": "BLOCKED_BY_OPEN_006_011_012",
+        "obj_002_obj_003": "DEFERRED",
+        "formal_validator_changes": "NONE",
+        "schema_contract_changes": "NONE",
+        "dependency_changes": "NONE",
+        "benchmark": "TINY_CORRECTNESS_ONLY_NO_XS_S_M_BASELINE",
+        "publishability": "INTERNAL_TEST_EVIDENCE_ONLY",
+    }
 
 
 def test_ci_formal_schedule_validator_report_is_machine_checkable(

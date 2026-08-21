@@ -95,3 +95,9 @@ Report本身不写业务数据库，temporary CSV随进程回收，`build/valida
 本地/CI运行`python -m app.planning.backends.cp_sat.fact_lock_model_check --root . --report <path>`生成`cp-sat-fact-lock-model-report.v1`。PASS要求7项检查全部成功，并显示2个fact/lock C-ID、4 candidate、3 certified INFEASIBLE、4 precheck、2 independent Validator mutation、6 tiny oracle、冻结合同/Builder/Validator/rule/ADR/lock fingerprints与real model delta/telemetry；CI固定路径为`build/validation/ci-cp-sat-fact-lock-model.json`。
 
 非零返回必须保留sanitized FAIL report并阻断closure。该命令仅使用in-memory synthetic data，不读取Production系统、不发布ScheduleVersion、不运行OBJ-001/002、Strategy、dynamic Replan或Benchmark；local `uncommitted`结果不替代exact GitHub provider evidence。
+
+## TASK-P2-08 objective/strategy evidence command
+
+本地/CI运行`python -m app.planning.backends.cp_sat.objective_strategy_check --root . --report <path>`生成`objective-strategy-report.v1`；CI固定路径为`build/validation/ci-objective-strategy.json`。PASS必须为7/7，并包含冻结fingerprints、approved Simulation Policy/Limits、exact OBJ-001 model、4个tiny exhaustive optimum/Validator PASS、hard INFEASIBLE、七状态/report/provenance与Production deferred边界。
+
+非零返回保留sanitized FAIL report并阻断closure。命令只使用in-memory synthetic vectors，不读取Production source、不设置默认limits、不运行Reference/XS/S/M Benchmark、不创建ScheduleVersion/Export/approval/publish。Provider核验时必须确认report `code_commit`等于exact pushed SHA，local `uncommitted`不算external evidence。

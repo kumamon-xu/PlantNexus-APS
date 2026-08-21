@@ -192,7 +192,7 @@ def _protocol_evidence(root: Path) -> dict[str, object]:
         "foundation_rejection": {
             "status": "SUPERSEDED_BY_TASK_P2_05_CORE_MODEL",
             "historical_task": TASK_ID,
-            "current_business_solve_owner": "TASK-P2-07",
+            "current_business_solve_owner": "TASK-P2-08_GLOBAL_STRATEGY",
         },
         "candidate_produced": False,
     }
@@ -287,12 +287,12 @@ def run_contract_checks(root: Path) -> dict[str, object]:
             "business_constraints": (
                 "CORE_P2_05_TEMPORAL_P2_06_FACT_LOCK_P2_07_PRESENT"
             ),
-            "objective_execution": "NOT_IMPLEMENTED",
-            "candidate_solution": "BOUNDED_P2_07_SLICE_ONLY",
+            "objective_execution": "TASK_P2_08_STRATEGY_PRESENT_NOT_FOUNDATION_SMOKES",
+            "candidate_solution": "P2_07_COMPATIBILITY_AND_P2_08_GLOBAL_STRATEGY",
             "schedule_validator": "TASK_P2_04_PRESENT",
             "benchmark": "NOT_APPLICABLE_FOUNDATION_ONLY",
             "business_feasibility": (
-                "EVALUATED_BY_TASK_P2_05_P2_06_P2_07_NOT_FOUNDATION_SMOKES"
+                "EVALUATED_BY_TASK_P2_05_THROUGH_P2_08_NOT_FOUNDATION_SMOKES"
             ),
             "database_api_worker": "NOT_IMPLEMENTED",
             "production_readiness": "NOT_CLAIMED",

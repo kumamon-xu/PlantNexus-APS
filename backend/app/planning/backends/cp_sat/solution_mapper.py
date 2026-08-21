@@ -122,7 +122,7 @@ def _measured_weighted_tardiness_seconds(
     problem: PlanningProblemDocumentV2,
     assignments: list[OperationAssignmentDocument],
 ) -> int:
-    """Measure the candidate only; this does not add or optimize OBJ-001."""
+    """Recompute exact OBJ-001 from neutral assignments for evidence integrity."""
 
     demand_by_operation = {
         operation["operation_id"]: operation["demand_order_id"]
@@ -156,15 +156,27 @@ def _candidate_stage(
     solve_seconds: float,
     objective_value: int,
     native_status: str,
+    solver_status: SolverStatus,
+    best_bound: int,
+    objective_optimized: bool,
 ) -> ObjectiveStageResultDocument:
-    best_bound = 0
     relative_gap = (objective_value - best_bound) / max(1, objective_value)
+    if objective_optimized:
+        stop_reason = (
+            "OBJ001_OPTIMALITY_PROVEN"
+            if solver_status is SolverStatus.OPTIMAL
+            else "OBJ001_FEASIBLE_CANDIDATE_OPTIMALITY_NOT_PROVEN"
+        )
+    else:
+        stop_reason = (
+            f"BOUNDED_FEASIBILITY_ONLY_NATIVE_{native_status}_OBJECTIVE_NOT_OPTIMIZED"
+        )
     return {
         "stage_index": 1,
         "objective_id": "OBJ-001",
         "metric": "WEIGHTED_TARDINESS",
         "sense": "MINIMIZE",
-        "status": "FEASIBLE",
+        "status": solver_status.value,
         "objective_value": objective_value,
         "best_bound": best_bound,
         "relative_gap": relative_gap,
@@ -172,9 +184,7 @@ def _candidate_stage(
         "solve_seconds": min(
             max(0.0, solve_seconds), float(limits["max_wall_time_seconds"])
         ),
-        "stop_reason": (
-            f"BOUNDED_FEASIBILITY_ONLY_NATIVE_{native_status}_OBJECTIVE_NOT_OPTIMIZED"
-        ),
+        "stop_reason": stop_reason,
     }
 
 
@@ -187,8 +197,14 @@ def map_core_candidate_solution(
     *,
     native_status: str,
     solve_seconds: float,
+    solver_status: SolverStatus = SolverStatus.FEASIBLE,
+    best_bound: int = 0,
+    objective_optimized: bool = False,
 ) -> PlanningSolutionDocument:
-    """Create an honest FEASIBLE solution from a complete native candidate."""
+    """Create an honest candidate solution from a complete native assignment."""
+
+    if solver_status not in {SolverStatus.OPTIMAL, SolverStatus.FEASIBLE}:
+        raise ValueError("candidate mapping requires OPTIMAL or FEASIBLE status")
 
     assignments = _assignments(problem, core_model, solver)
     objective_value = _measured_weighted_tardiness_seconds(problem, assignments)
@@ -197,6 +213,9 @@ def map_core_candidate_solution(
         solve_seconds=solve_seconds,
         objective_value=objective_value,
         native_status=native_status,
+        solver_status=solver_status,
+        best_bound=best_bound,
+        objective_optimized=objective_optimized,
     )
     identity_payload: Mapping[str, object] = {
         "problem_hash": problem["problem_hash"],
@@ -207,7 +226,7 @@ def map_core_candidate_solution(
             cast(Mapping[str, object], limits)
         ),
         "assignments": cast(object, assignments),
-        "solver_status": "FEASIBLE",
+        "solver_status": solver_status.value,
     }
     solution = cast(
         PlanningSolutionDocument,
@@ -220,21 +239,42 @@ def map_core_candidate_solution(
             "problem": _problem_reference(problem),
             "policy": _policy_reference(policy),
             "limits": _limits_reference(limits),
-            "solver_status": "FEASIBLE",
+            "solver_status": solver_status.value,
             "planning_run_outcome": outcome_document_for_status(
-                SolverStatus.FEASIBLE
+                solver_status
             ),
             "assignments": assignments,
             "objective_stage_results": [stage],
-            "diagnostics": [
-                {
-                    "code": "CP_SAT_BOUNDED_FEASIBILITY_ONLY",
-                    "message": (
-                        "Candidate satisfies the bounded P2-07 model; OBJ-001 was "
-                        "measured after solve but was not optimized"
-                    ),
-                }
-            ],
+            "diagnostics": (
+                [
+                    {
+                        "code": "CP_SAT_OBJ001_OPTIMALITY_PROVEN",
+                        "message": (
+                            "Candidate passed the complete hard model and independent "
+                            "Validator; CP-SAT proved the OBJ-001 optimum"
+                        ),
+                    }
+                ]
+                if solver_status is SolverStatus.OPTIMAL
+                else [
+                    {
+                        "code": (
+                            "CP_SAT_OBJ001_FEASIBLE_NOT_PROVEN_OPTIMAL"
+                            if objective_optimized
+                            else "CP_SAT_BOUNDED_FEASIBILITY_ONLY"
+                        ),
+                        "message": (
+                            "Candidate passed the complete hard model and independent "
+                            "Validator; OBJ-001 optimality was not proven"
+                            if objective_optimized
+                            else (
+                                "Candidate satisfies the bounded P2-07 model; OBJ-001 "
+                                "was measured after solve but was not optimized"
+                            )
+                        ),
+                    }
+                ]
+            ),
         },
     )
     validate_planning_solution(cast(Mapping[str, object], solution))
@@ -249,6 +289,8 @@ def map_core_non_candidate_solution(
     status: SolverStatus,
     diagnostic: DiagnosticDocument,
     solve_seconds: float,
+    best_bound: int | None = None,
+    objective_optimized: bool = False,
 ) -> PlanningSolutionDocument:
     """Map a certified non-candidate status without leaking partial assignments."""
 
@@ -263,13 +305,17 @@ def map_core_non_candidate_solution(
             "sense": "MINIMIZE",
             "status": status.value,
             "objective_value": None,
-            "best_bound": None,
+            "best_bound": best_bound if status is SolverStatus.UNKNOWN else None,
             "relative_gap": None,
             "allocated_wall_time_seconds": float(limits["max_wall_time_seconds"]),
             "solve_seconds": min(
                 max(0.0, solve_seconds), float(limits["max_wall_time_seconds"])
             ),
-            "stop_reason": f"BOUNDED_SOLVE_{status.value}",
+            "stop_reason": (
+                f"OBJ001_SOLVE_{status.value}"
+                if objective_optimized
+                else f"BOUNDED_SOLVE_{status.value}"
+            ),
         },
     )
     diagnostics = sorted([diagnostic], key=lambda item: (item["code"], item["message"]))

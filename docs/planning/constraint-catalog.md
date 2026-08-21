@@ -114,3 +114,7 @@ CP-SAT现新增C-002 precedence inclusive min/max lag、C-005 resource calendar 
 CP-SAT现实现C-007/C-008：COMPLETED不产生future assignment但historical anchor继续参与lag；RUNNING固定assigned resource、`start_tick=0`与`end_tick=ceil(remaining_seconds/tick_seconds)`；HARD lock exact固定resource/start/end。SOFT lock只保留metadata reference，不属于hard validation pass condition，也不形成hint/objective。
 
 Fact/lock self-conflict或grid不可表示性在model build前MODEL_INVALID；grid-aligned lock与calendar、capacity-1 resource或C-011 horizon冲突由solver认证INFEASIBLE。当前bounded model至此覆盖C-001～C-011并继续由formal Validator独立复验；OBJ-001搜索仍未实现，C-012～018继续unsupported。Rule sheet、C-ID公式、severity、Problem/Solution Schema与Validator源码均未修改。
+
+## TASK-P2-08 hard-domain review
+
+OBJ-001只在P2-05～07已形成的完整C-001～C-011可行域上增加目标，不修改任何C-ID公式、severity、rule sheet、core/temporal/fact-lock builder或formal Validator。每个优化candidate仍由Validator独立重算全部C-ID；Validator FAIL不能通过更优objective抵消。C-012～C-018继续explicit unsupported，OBJ-002/003不是硬约束或本Task目标。

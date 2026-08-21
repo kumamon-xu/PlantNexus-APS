@@ -72,3 +72,9 @@ PlanningSolution Schema、fingerprint和ScheduleVersion状态机不变。Native 
 RUNNING assignment的resource来自Problem `assigned_resource_id`，`start_tick=0`，`end_tick=ceil(remaining_seconds/tick_seconds)`，`duration_seconds=remaining_seconds`；不再使用selected option的原始duration。HARD lock candidate精确匹配resource/start/end，SOFT lock可以移动；assignment仍稳定回写该operation全部HARD/SOFT `lock_ids`以保持metadata provenance。
 
 Problem v2没有向active RUNNING operation暴露execution fact ID，因此`execution_fact_ids`保持空数组，禁止用operation ID或source record猜造；actual start/resource/remainder由candidate引用的Problem hash保存。PlanningSolution Schema/fingerprint与ScheduleVersion状态机不变，完整candidate仍须formal Validator PASS；INFEASIBLE/MODEL_INVALID/UNKNOWN/FAILED均不得泄漏partial assignments。Native OPTIMAL继续降级为业务FEASIBLE，OBJ-001仅post-solve measurement。
+
+## TASK-P2-08 objective-aware Solution/Report
+
+Global Strategy路径现在执行OBJ-001：native OPTIMAL只有在目标值等于certified bound且gap=0时保留OPTIMAL；有candidate但未证明最优时为FEASIBLE；无candidate且无证明时为UNKNOWN/NO_SOLUTION_WITHIN_LIMIT；hard domain证明无解才为INFEASIBLE。FEASIBLE使用保守整数lower bound计算gap，UNKNOWN可保存bound但不得保存objective/gap/assignments。Validator FAIL转FAILED并丢弃全部assignments/objective candidate。
+
+SolverReport v1现在由真实`SOLVER_RUN`填充exact solver/parameters、stage、build/first-feasible/solve/validation/total、model metrics、memory与code commit，并与Solution逐字bundle replay。PlanningSolution/SolverReport Schema及状态合同不变；本Task不创建ScheduleVersion、approval、publish或Export。

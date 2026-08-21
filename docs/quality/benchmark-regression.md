@@ -112,3 +112,9 @@ Temporal report记录precedence、min/max、calendar input/fixed blocks、gate�
 Fact/lock report记录RUNNING/HARD/SOFT counts、fixed operation intervals、resource/start/end equality counts与相对无事实模型的6条constraint delta，并保存tiny solve build/solve/first-feasible/native wall/Python memory。6-case oracle只核对grid/horizon/calendar half-open feasibility。
 
 这些值没有warm-up、重复统计、Reference comparison、stability objective或profile，不建立XS/S/M baseline、threshold、quality delta或conditional regression Gate。P2-12职责与OPEN-012保持不变。
+
+## TASK-P2-08 objective correctness, not baseline
+
+新machine report对4个tiny vectors同时运行Global Strategy与独立穷举oracle，要求objective=value=bound、gap=0并由formal Validator PASS；另有一个complete hard-domain certified INFEASIBLE。报告也保存单次build/first-feasible/solve/validation/model/memory值。
+
+这些case未使用Reference Scheduler或versioned XS/S/M profile，未做warm-up、重复、分位数、hardware normalization、threshold或升级比较，因此只构成OBJ-001 correctness regression，不构成Benchmark baseline。P2-12与TEST-BENCHMARK仍PLANNED，OPEN-012不变。

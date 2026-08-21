@@ -276,3 +276,11 @@ Problem/Policy/Solution Schema、rule sheet、formal Validator、Problem builder
 本地Task diff已精确命中上述六行：54 changed paths、19 checks、0 issues；禁止路径相对Diff base无变化。Exact provider artifact仍需在implementation SHA push后复现同一range与Impact Rule集合，Task才可关闭。
 
 Implementation artifact `9430579117`已绑定`5ab65f36d532fd8786eb7ecad3cce406f4d9fb70`并复现54 paths、`IMPACT-BACKEND/DOCS/GOVERNANCE-REGISTRY/INFRA/PHASE/TESTS`六行、19 checks、0 issues；Task据此关闭为`done`。Schema/Validator/Problem/Dependency/Migration Rule继续未命中，P2-08不自动启动。
+
+## TASK-P2-08 impact review
+
+实际范围必须命中`IMPACT-POLICY`（versioned Simulation Delivery Policy/explicit limits）、`IMPACT-STRATEGY`（single global orchestration）、`IMPACT-BACKEND`（OBJ-001 builder、objective-aware solve/mapper/report）、`IMPACT-TESTS`（unit/property/integration）、`IMPACT-INFRA`（required validate machine step）、`IMPACT-PHASE`（唯一active Task与边界）、`IMPACT-GOVERNANCE-REGISTRY`（REQ/NFR/trace/open/sim/risk review）和`IMPACT-DOCS`（架构/合同/领域/规划/质量/运维同步）八行。
+
+Planning Schema/contracts、Problem builder/hash、formal Validator、core model/C-ID formulas、dependency/lock、fixture/benchmark implementation、migration、DB/API/Worker和P3/P4无差异，因此不命中SCHEMA/PLANNING-CONTRACTS/PROBLEM/VALIDATOR/DEPENDENCY/MIGRATION等额外Rule ID。最终path/check/issue计数必须由TASK-P2-08 diff report与exact provider artifact回填；registry tables及`registry_version=1.0.0`保持不变。
+
+本地machine report已形成7/7 objective/strategy checks与70 focused/395 full tests；最终Task diff精确为52 changed paths、`IMPACT-BACKEND/DOCS/GOVERNANCE-REGISTRY/INFRA/PHASE/POLICY/STRATEGY/TESTS`八行、19 checks、0 issues。禁止路径相对Diff base无变化；exact provider artifact绑定implementation SHA前TASK-P2-08保持`in_progress`，P2-09不自动启动。

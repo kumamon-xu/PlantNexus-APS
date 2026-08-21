@@ -89,3 +89,5 @@ TASK-P2-07本地实现已形成COMPLETED exclusion/historical anchor、RUNNING r
 Implementation `5ab65f36d532fd8786eb7ecad3cce406f4d9fb70`的run `32435395744` / required job `96635463577` / artifact `9430579117`均success，artifact digest=`sha256:a6b6ff7413b8010a8012ddd351a2a194b89b1a13cdf71c6dada5d6afa53a44ab`且精确复现fact-lock/temporal/core/formal/Task报告。因此TASK-P2-07=`done`。
 
 用户于2026-08-21明确授权TASK-P2-08；启动基线`9c55df993b12ae0bdd3d4d38c900d601324c05d2`的run `32435755901` / required job `96636509174` / artifact `9430697910`均success且工作树clean。TASK-P2-08只接入versioned Simulation OBJ-001与Global Strategy/status/report evidence；P2 Milestone保持`active`，P2-09～14和P3不自动启动。
+
+TASK-P2-08本地已形成explicit Simulation-only Delivery Policy/SolveLimits、priority-weighted tardiness seconds、single-call GlobalCpSatStrategy、诚实七状态/objective/bound/gap/report与mandatory formal Validator gate。Focused=`70 passed`、full=`395 passed`、Ruff/Pyright=0、objective/strategy machine=`7/7 PASS`，全部历史machine、治理52 paths/8 rows/19 checks/0 issues、Compose/build/immutable均PASS；Schema/contracts、Problem/Validator/C-ID/dependency/lock无变化。Exact provider闭环前TASK-P2-08仍为`in_progress`，Milestone保持`active`且不启动P2-09。

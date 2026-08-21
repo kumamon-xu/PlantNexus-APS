@@ -51,3 +51,9 @@ P2-08继续独占Global strategy与OBJ-001搜索接线；P2-06不得被Productio
 C-007/C-008直接组合进同一bounded Backend model，没有创建`GlobalCpSatStrategy`、freeze/replan strategy、warm start或Reference Scheduler。HARD lock是可行域等式，SOFT lock不被用作hint或cost；因此本Task不产生稳定性策略或计划变更比较。
 
 P2-08继续独占Global strategy与OBJ-001搜索接线；P2-07不得被Production workflow调用，也不提供策略质量、动态Replan或publishability声明。
+
+## TASK-P2-08 GlobalCpSatStrategy
+
+`GlobalCpSatStrategy@global-cp-sat-strategy.v1`现为唯一可执行P2策略：先验证完整Problem与approved Simulation Policy/Limits/priority source，再对全部active operations调用一次complete C-001～C-011 Backend+OBJ-001模型，最后要求formal independent Validator PASS并组装SolverReport。不得按order/workshop/resource拆分，不存在rolling、fallback、warm start或Reference Scheduler。
+
+Hard constraints定义可接受域且不能由目标放宽；OBJ-001只在该域内选择候选。当前Strategy是internal Simulation correctness入口，不批准、不发布、不创建ScheduleVersion；OPEN-006/011/012关闭和后续Gate前不得用于Production。任何decomposition/rolling/hybrid仍需新ADR与同口径Benchmark/merge Validator证据。

@@ -110,3 +110,9 @@ P2-01扩展`test_planning_problem_properties.py`，保留v1 seeds `20260820/21/2
 [`test_cp_sat_fact_lock_properties.py`](../../backend/tests/property/test_cp_sat_fact_lock_properties.py)使用固定seed：36例生成任意tick/remainder/assigned resource并验证RUNNING exact tuple；36例生成grid-aligned start/duration/resource与non-integral authoritative seconds并验证HARD exact tuple；24例生成shifted RUNNING/HARD冲突并要求稳定MODEL_INVALID。Hypothesis generation/shrinking与Problem hash均可重放。
 
 属性范围只覆盖C-007/C-008的bounded整数事实，不采样OBJ-001/002质量、事件流、freeze policy、XS/S/M或Production distribution。失败时必须保留seed、tick/remainder/lock tuple、Problem hash和最小反例；in-memory cases不得注册为Golden或Benchmark baseline。
+
+## TASK-P2-08 delivery objective properties
+
+[`test_delivery_objective_properties.py`](../../backend/tests/property/test_delivery_objective_properties.py)使用deterministic Hypothesis生成2～5个单资源单工序Demand、1～3 tick duration、显式due tick与1～5正整数priority；每例枚举全部permutation并要求Global Strategy的OPTIMAL value/bound与独立oracle完全相等、gap=0且formal Validator PASS。另生成单Demand duration/slack/weight缩放，并固定非grid due的exact秒级例。
+
+这些值只属于test-local shrinkable correctness vectors，不新增Scenario/Profile/fixture或Production weight distribution。属性不覆盖OBJ-002/003、Reference、XS/S/M或动态Replan；失败必须保留Hypothesis反例、Problem hash、Policy/Limits版本及SolverReport。

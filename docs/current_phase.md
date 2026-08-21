@@ -137,3 +137,9 @@ Implementation `5ab65f36d532fd8786eb7ecad3cce406f4d9fb70`的GitHub run `32435395
 用户于2026-08-21明确授权执行TASK-P2-08。启动复核确认`main=origin/main=9c55df993b12ae0bdd3d4d38c900d601324c05d2`、working tree clean，且该SHA的GitHub run `32435755901` / required `validate` job/check `96636509174`（app `15368`）/ artifact `9430697910`精确成功；artifact digest=`sha256:6fd173b5cdb6cdae4d5f86bbdee773b8ca7679db34d90d52c4db05d5ca18d8c4`、expiry=`2026-11-19T01:17:08Z`。P2-07 implementation是该基线祖先；Problem/Policy/Solution/Report Schema、formal Validator、Problem builder/hash、C-ID formulas、OR-Tools pin与`uv.lock`全部冻结。
 
 本Task只在完整C-001～C-011硬可行域内实现单一OBJ-001 weighted tardiness、唯一`GlobalCpSatStrategy`、显式Simulation Policy/SolveLimits、honest OPTIMAL/FEASIBLE/UNKNOWN及完整SolverReport/machine evidence。OBJ-002/003、Production policy/default、Reference Scheduler、BenchmarkRunner、Export、DB/API/Worker、P3/P4均禁止；OPEN-006/011/012保持OPEN。P2-09～14继续`planned`且未获授权。
+
+## TASK-P2-08 本地实现边界
+
+`POLICY-P2-SIM-DELIVERY-OBJ001-001@1.0.0`现以source `plantnexus-synthetic-policy@1.0.0`和显式SolveLimits保护Simulation-only入口；GlobalCpSatStrategy对完整Problem只调用一次Backend，OBJ-001严格计算`sum(priority_weight × max(0, demand_completion_seconds - due_offset_seconds))`，支持非tick-grid due offset且先执行int64域检查。Candidate仅在native OPTIMAL/FEASIBLE且formal independent Validator PASS后保留；UNKNOWN不冒充INFEASIBLE、FEASIBLE不冒充OPTIMAL，validator失败映射FAILED并丢弃assignment/objective。
+
+本地focused=`70 passed`、full repository=`395 passed`，Ruff/Pyright均0问题；`objective-strategy-report.v1`为7/7 PASS，覆盖4个tiny brute-force optimum、4次independent Validator PASS、1个certified infeasible、7种status及Production rejection。全部历史machine reports、142-doc治理、52 paths/8 rows/19 checks/0 issues、Compose、build、`git diff --check`与冻结边界均PASS。Exact implementation provider仍需在push后闭环，因此TASK-P2-08保持`in_progress`；P2-09～14仍未授权，P2不进入P3。

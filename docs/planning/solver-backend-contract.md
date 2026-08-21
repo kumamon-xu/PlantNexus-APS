@@ -128,3 +128,9 @@ Certified native INFEASIBLE才映射业务INFEASIBLE；time/limit导致的UNKNOW
 Current `solve()`在core/temporal模型上组合C-007/C-008：RUNNING option interval统一改用权威remaining seconds并固定resource/start/end；HARD lock增加exact resource/start/end equality；SOFT lock只进入assignment metadata。完成历史继续只以anchor参与temporal constraints。
 
 Precheck区分HARD grid/权威duration/多lock/RUNNING tuple自冲突的MODEL_INVALID，与calendar、capacity-1 overlap或horizon冲突的certified INFEASIBLE。完整candidate稳定回写lock IDs并强制formal Validator PASS；Validator FAIL仍丢弃assignments。模型无objective，native OPTIMAL降级为FEASIBLE，UNKNOWN不升级。Global Strategy、OBJ-001搜索、dynamic Replan、Benchmark和Production入口未形成。
+
+## TASK-P2-08 OBJ-001 backend path
+
+Backend新增`solve_delivery_with_evidence`供Global Strategy：在既有完整C-001～C-011模型上加入每Demand active-operation最大completion、exact tardiness seconds与priority integer sum并Minimize；int64溢出在search前拒绝。历史`solve_with_evidence`继续保留feasibility-only诊断语义，不能作为可接受策略入口。
+
+Objective路径如实保留native OPTIMAL/FEASIBLE/INFEASIBLE/UNKNOWN；最佳bound从native carrier保守转换为整数，OPTIMAL强制value=bound/gap=0。所有candidate仍经formal independent Validator；失败转FAILED且清空assignments。Global Strategy报告exact parameters、timing/model/memory/provenance；Schema、Protocol signature、Backend/OR-Tools version、C-ID、Validator、dependency均未改变。

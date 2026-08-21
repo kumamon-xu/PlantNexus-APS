@@ -91,3 +91,7 @@ TASK-P0-05 在 `simulation/profiles|scenarios|generators` 中加入纯标准库�
 TASK-P1-01只修改 repository-governance边界：`scripts/check_docs.py`增加 phase policy与CI event-range Task discovery，`.github/workflows/ci.yml`使用中性 report/artifact并保留 P0全部 test/machine/build gates；`backend/tests/unit/test_check_docs.py`和`backend/tests/integration/test_ci_contract.py`覆盖负向路径。没有新增目录、业务模块、Schema、Fixture、Migration、dependency、Solver或 P2代码。
 
 TASK-P1-02在既有`schemas/json`/`schemas/samples`边界新增canonical-records.v1、Import v2、Snapshot v2与synthetic contract samples，并在`backend/app/domain/canonical_records.py`新增pure JSON-compatible types/prechecks。没有创建`importers`、staging、normalization、data-validation、expansion、Snapshot/Problem builder、migration、API或Solver实现；后续模块只能消费已发布v2合同，发现缺口必须先走Schema升版。
+
+## TASK-P2-08 layout delta
+
+新增`backend/app/planning/strategies/{__init__,global_cp_sat}.py`、`planning/policy/delivery.py`、`planning/backends/cp_sat/{objectives,objective_strategy_check}.py`及对应unit/property/integration tests；既有Backend/mapper/foundation check与CI workflow仅做有界接线。没有新增Schema、fixture、benchmark profile、migration、DB/API/Worker、exporter或P3/P4目录；OR-Tools仍只存在于`planning/backends/cp_sat/`。

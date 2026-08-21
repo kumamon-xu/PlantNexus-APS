@@ -59,3 +59,5 @@ P2-06覆盖exact precedence min/max、historical anchor、calendar fixed interva
 TASK-P2-07已完成本地实现验收：93 focused、382 full、Ruff/Pyright 0、fact-lock 7/7，治理54 paths/6 rows/19 checks/0 issues，Compose/build/immutable均PASS。Exact implementation provider evidence形成前索引继续为`in_progress`；P2-08～14不因本地PASS自动启动。
 
 TASK-P2-07 implementation `5ab65f36d532fd8786eb7ecad3cce406f4d9fb70`的run `32435395744` / required job `96635463577` / artifact `9430579117`精确复现fact-lock 7/7及54 committed/0 working/6 rows/19 checks/0 issues，故索引状态为`done`。TASK-P2-08的启动基线run `32435755901` / job `96636509174` / artifact `9430697910`精确成功；本Task仅执行OBJ-001/Global Strategy，P2-09～14不会自动启动。
+
+TASK-P2-08本地实现已通过70 focused、395 full、Ruff/Pyright 0、objective/strategy 7/7及全部历史machine checks，治理为142 docs、52 paths/8 rows/19 checks/0 issues，Compose/build/immutable均PASS；已形成explicit Simulation policy/limits、exact OBJ-001、single-call Global Strategy、honest status/report与Validator fail-discard。Exact implementation SHA的required `validate`和artifact尚未核验，因此索引继续为`in_progress`；P2-09～14保持`planned`且未授权。

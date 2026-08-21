@@ -182,3 +182,9 @@ Temporal model复用exact-pinned `ortools==9.15.6755`的linear constraints、fix
 Fact/lock模型复用exact-pinned `ortools==9.15.6755`的linear equality、optional interval、`AddExactlyOne`与`AddNoOverlap`；没有修改`pyproject.toml`、`uv.lock`或transitive pins。新增OR-Tools import只位于既有`planning/backends/cp_sat/fact_lock_constraints.py`，namespace scan同步覆盖该路径。
 
 没有新增Schema、migration、service、container、database、API、Worker或runtime dependency。CI只增加fact/lock machine evidence步骤并沿用既有artifact glob；不启用OBJ-001搜索、Strategy、dynamic Replan或Benchmark runner。
+
+## TASK-P2-08 objective technology
+
+OBJ-001复用exact-pinned `ortools==9.15.6755`，使用IntVar、`AddMaxEquality`、整数线性和与`Minimize`表达Demand completion和priority-weighted tardiness seconds；先检查每项及总和可落入CP-SAT int64。`pyproject.toml`、`uv.lock`、wheel hashes、Backend identity/version与所有Schema均不变，namespace scan新增且只允许`objectives.py`的OR-Tools import。
+
+CI新增`app.planning.backends.cp_sat.objective_strategy_check`并沿用`build/validation/*.json`/中性artifact；没有新Action、service、container、migration、database、API、Worker或BenchmarkRunner。Timing/memory/model metrics只作tiny correctness可观测性，不形成Production hardware/SLA结论。

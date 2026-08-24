@@ -6,7 +6,7 @@ spec_version: 0.3.0
 phase: P0-P2
 normative: true
 source_sections: [36, 38, 39, 70, 71, 103]
-last_reviewed: 2026-08-20
+last_reviewed: 2026-08-24
 ---
 
 # Schema 计划索引
@@ -48,3 +48,7 @@ last_reviewed: 2026-08-20
 TASK-P2-02新增四份Schema/sample并将global set提升到`2.4.0`；Problem v1/v2 Schema/sample、builders与fixed replay不改，Import/Snapshot/quality/unit document版本也不改。Planning machine类型、pure cross-document checks与status mapping已形成；Solver backend、C-ID、ScheduleValidator、Benchmark和Production authority继续`PLANNED`。
 
 TASK-P2-11新增两份strict Draft 2020-12 Schema和两份synthetic sample，将global set additive提升到`2.5.0`。KPI v1及全部既有Schema/sample bytes由fingerprint regression保护；没有migration或dependency变化。`export-manifest.v1`只描述P2 internal profile，不是ScheduleVersion、ExportJob或publish合同。
+
+## P3 planned schema release
+
+TASK-P3-02被分配为P3唯一首个additive Schema release owner，预期覆盖ScheduleVersion、workspace query/command、comparison、audit event、publication result和ExportJob。实际文件名、URN、document version、set version与compatibility必须先由TASK-P3-01接受并在P3-02激活时冻结；在此之前全部状态为`PLANNED`，global set保持`2.5.0`，P2 bytes/URN不可改写。

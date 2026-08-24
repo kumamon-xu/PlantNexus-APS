@@ -6,7 +6,7 @@ spec_version: 0.3.0
 phase: P0-P2
 normative: true
 source_sections: [30, 31, 50, 75, 86, 87]
-last_reviewed: 2026-08-21
+last_reviewed: 2026-08-24
 ---
 
 # 独立 ScheduleValidator 合同
@@ -122,3 +122,7 @@ Formal Validator源码、公式、Schema、rule sheet和13-case corpus保持字�
 ## TASK-P2-14 Exit audit
 
 审计确认七correctness场景两轮、XS/S/M两轮Global+五Reference以及所有output candidate均由fresh formal Validator接受，Gate累计108次Benchmark Validator PASS；11个exact C-ID mutation仍逐一FAIL且无共同公式导入。Validator源码、Schema/rule与Backend均零差异。P2 READY只表示Simulation/development candidate可进入本阶段评审，不构成approval、publish或Production acceptance。
+
+## P3 consumer allocation
+
+P3-04创建reviewable DRAFT前、P3-06 edit/lock产生新DRAFT后以及P3-14/15 Gate/Audit时都必须通过fresh formal Validator；FAIL必须丢弃candidate/new version，不得保留“待人工接受”的非法计划。Approval不能覆盖Validator FAIL，UI/API不得复制或降级规则。P3不修改C-001～C-011公式或Validator独立性，任何缺口需有界P3 remediation而非Audit内修复。

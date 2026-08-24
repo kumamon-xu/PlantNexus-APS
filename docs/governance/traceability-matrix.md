@@ -3,10 +3,10 @@ doc_id: DOC-GOV-005
 title: 追踪矩阵
 status: living
 spec_version: 0.3.0
-phase: P2
+phase: P3
 normative: true
 source_sections: [5, 6, 71, 86]
-last_reviewed: 2026-08-21
+last_reviewed: 2026-08-24
 registry_version: 1.0.0
 ---
 
@@ -19,33 +19,33 @@ registry_version: 1.0.0
 | REQ-001 | REQ | `docs/contracts/import-and-normalization.md` | P0-P1 / TASK-P0-03；TASK-P1-02～06、10/11 | v1 retained + canonical/Import v2 + Raw/Reference/Normalization/Data Validation + [Reference/Synthetic common ingress](../../backend/tests/integration/test_p1_common_ingress.py) formed；Production binding仍PLANNED |
 | REQ-002 | REQ | `docs/contracts/import-and-normalization.md`、`docs/contracts/planning-snapshot.md`、`docs/contracts/planning-problem.md` | P0-P2 / TASK-P0-03；TASK-P1-02、05/06、08/09、11；TASK-P2-01 | Canonical Import/Data Validation + Snapshot bytes/hash/ID + Problem v1/v2 deterministic builder/hash/replay formed |
 | REQ-003 | REQ | `docs/contracts/import-and-normalization.md`、`docs/domain/operation-instance-and-resource-options.md` | P0-P2 / TASK-P0-03；TASK-P1-02、05～07、09～11；TASK-P2-01 | canonical Order/Lot/Routing + expansion/Snapshot + active/historical Problem v2 fact projection formed |
-| REQ-004 | REQ | `docs/architecture/end-to-end-planning-flow.md`、`docs/planning/constraint-catalog.md` | P2 / P0 contract/fixture；TASK-P2-01～14 | complete Problem/CP-SAT C-001～C-011/OBJ-001 + independent Validator + two-replay seven-case/output + XS/S/M Global/Reference Gate及P2 Exit audit均provider-verified；Exit=`READY` |
-| REQ-005 | REQ | `docs/planning/schedule-validator.md` | P0-P2 / P0 contract/fixture/mutation；TASK-P2-02、04～14 | formal independent Validator + stable report/error + mandatory Global/Reference/output/benchmark + two-replay Gate及P2 Exit audit均provider-verified；Exit=`READY` |
-| REQ-006 | REQ | `docs/contracts/export-package.md` | P2-P3 / TASK-P2-11、13/14 | provider Gate两次复验`p2-internal-export.v1` 9-payload canonical/hash/count/lineage/atomic profile；P3 ExportJob/approval/publish仍PLANNED |
-| REQ-007 | REQ | `docs/domain/state-machines/schedule-version.md` | P0/P3 / TASK-P0-04 contract；no P1 Task | [`state-machines.v1`](../../schemas/rules/state-machines.v1.yaml) + [`TEST-STATE-TRANSITION-001`](../../backend/tests/contract/test_rule_contracts.py) formed；approval/publish persistence PLANNED |
+| REQ-004 | REQ | `docs/architecture/end-to-end-planning-flow.md`、`docs/planning/constraint-catalog.md` | P2-P3 / TASK-P2-01～14；TASK-P3-04～06、10～15 | P2 solve/Validator Exit=`READY`；P3只读消费validated solution并规划workspace/Gate，P3证据仍PLANNED |
+| REQ-005 | REQ | `docs/planning/schedule-validator.md` | P0-P3 / TASK-P2-02、04～14；TASK-P3-04/06、10、13～15 | P2 formal Validator provider-verified；P3 new-DRAFT/approval/publish链的fresh validation仍PLANNED |
+| REQ-006 | REQ | `docs/contracts/export-package.md` | P2-P3 / TASK-P2-11、13/14；TASK-P3-01～03、09/10、13～15 | P2 internal non-publishable package formed；P3 ExportJob/approved publish/standard package仍PLANNED |
+| REQ-007 | REQ | `docs/domain/state-machines/schedule-version.md` | P0/P3 / TASK-P0-04 contract；TASK-P3-01～15 | state-machine v1 contract formed；P3 contract/Schema/persistence/command/approval/publish/API/UI/Gate/Audit全部已规划但未实现 |
 | REQ-008 | REQ | `docs/planning/replanning.md` | P0/P4 / TASK-P0-04 capability boundary；no P1 Task | DYNAMIC_REPLANNING contract declaration formed；ExecutionEvent/Replan implementation PLANNED |
-| REQ-009 | REQ | `docs/architecture/provenance-and-versioning.md` | P0-P4 / P0-P1 evidence；TASK-P2-00～14 | P1→Solver/Validator/Scenario/Reference→KPI/Export→Benchmark→two-replay Gate→Exit audit完整lineage provider-verified，raw evidence与semantic projection并存；Exit=`READY` |
+| REQ-009 | REQ | `docs/architecture/provenance-and-versioning.md` | P0-P4 / P0-P2 evidence；TASK-P3-01～15 | P1→P2 Exit lineage provider-verified；P3 version/audit/publish/export/UI provider链已规划，证据仍PLANNED |
 | REQ-010 | REQ | `docs/core/capability-matrix.md` | P6 / no P1 Task | REGISTERED；capability DEFERRED |
 | REQ-011 | REQ | `docs/simulation/synthetic-generator-and-determinism.md` | P0-P1 / TASK-P0-05/06；TASK-P1-10/11 | FactoryProfile + seven-layer Generator + public Raw Staging + 49-record Import/Snapshot/Problem replay formed；real distribution仍PLANNED |
 | REQ-012 | REQ | `docs/simulation/scenario-spec-and-provenance.md` | P0-P2 / P0-P1 evidence；TASK-P2-01、06/07、09、12～14 | P1 E2E + seven-case correctness + generated XS/S/M profile/seed/hash由两次完整Gate与Exit audit provider复验；Exit=`READY` |
 | REQ-013 | REQ | `docs/simulation/execution-simulator-and-disruptions.md` | P4 / TASK-P0-05 provenance boundary；no P1 Task | ScenarioManifest version/seed boundary formed；Execution Simulator/event/fact preservation PLANNED |
 | REQ-014 | REQ | `docs/simulation/benchmark-harness.md` | P2 / P0 provenance；TASK-P2-12～14 | strict BenchmarkRunner/Profile/Report/Baseline + XS/S/M 1+3由两次完整Gate与Exit audit provider复验；Exit=`READY` |
 | REQ-015 | REQ | `docs/planning/reference-schedulers.md` | P2 / P0 provenance；TASK-P2-10、12～14 | five algorithms + same Problem/Validator/common-KPI Global comparison/warning由两次完整Gate与Exit audit provider复验；Exit=`READY` |
-| NFR-COR-001 | NFR | `docs/planning/constraint-catalog.md`、`docs/planning/schedule-validator.md` | P0-P2 / P0-P1 evidence；TASK-P2-01～14 | complete CP-SAT/OBJ-001/formal Validator + output/benchmark/四类退出拒绝在两次完整Gate与Exit audit中provider PASS；Exit=`READY` |
-| NFR-DET-001 | NFR | `docs/contracts/planning-snapshot.md`、`docs/contracts/planning-problem.md`、`docs/simulation/synthetic-generator-and-determinism.md` | P0-P2 / P0-P1 evidence；TASK-P2-01/02/04、08/09～14 | P1/Problem/Scenario/KPI/package/benchmark replay与两次provider Gate业务语义投影一致；raw运行证据完整保留 |
-| NFR-TRC-001 | NFR | `docs/architecture/provenance-and-versioning.md`、`docs/governance/traceability-rules.md` | P0-P4 / P0-P1 evidence；TASK-P2-00～14 | Raw→Problem→Solution/Validation/KPI/Export→Benchmark→Gate→Exit audit完整lineage provider-verified；Exit=`READY` |
+| NFR-COR-001 | NFR | `docs/planning/constraint-catalog.md`、`docs/planning/schedule-validator.md` | P0-P3 / P2 Exit formed；TASK-P3-04/06、13～15 | P2 complete Solver/Validator provider PASS；P3每个review/publish candidate的fresh validation与negative UI/API paths仍PLANNED |
+| NFR-DET-001 | NFR | `docs/contracts/planning-snapshot.md`、`docs/contracts/planning-problem.md`、`docs/simulation/synthetic-generator-and-determinism.md` | P0-P3 / P2 Exit formed；TASK-P3-02～05、09、14/15 | P2 replay formed；P3 immutable version/read-model/package/idempotent replay仍PLANNED |
+| NFR-TRC-001 | NFR | `docs/architecture/provenance-and-versioning.md`、`docs/governance/traceability-rules.md` | P0-P4 / P0-P2 evidence；TASK-P3-00～15 | P2 Exit lineage provider-verified；P3 audit/version/provider chain已完整分配但仍PLANNED |
 | NFR-ISO-001 | NFR | `docs/architecture/configuration-environments-and-isolation.md` | P0-P2 / P0-P1 evidence；TASK-P2-09、11～14 | P1 guards + synthetic-only correctness/export/benchmark/Gate CLI and no-secret environment capture formed；independent Production DB仍PLANNED |
-| NFR-REL-001 | NFR | `docs/domain/state-machines/export-job.md` | P0-P3 / P0-P1 evidence；TASK-P2-11、13/14 | exact internal directory replay/conflict + atomic manifest-last/partial cleanup在两次provider Gate中复验；business ExportJob Worker/publish仍PLANNED |
+| NFR-REL-001 | NFR | `docs/domain/state-machines/export-job.md` | P0-P3 / P2 internal slice；TASK-P3-03、08～10、13～15 | P2 directory replay formed；durable publish/ExportJob transaction、retry与idempotency仍PLANNED |
 | NFR-SEC-001 | NFR | `docs/architecture/configuration-environments-and-isolation.md` | P0-P3 / P0-P1 evidence；TASK-P2-03、11、13/14 | existing controls + exact solver lock/namespace/dependency review + Gate无新增依赖/secret/Production authority；RISK-011与Production review仍OPEN/PLANNED |
 | NFR-OBS-001 | NFR | `docs/domain/kpi-contract.md`、`docs/architecture/provenance-and-versioning.md` | P0-P2 / P0 evidence；TASK-P2-02/03/05～08、11～14 | Solver/KPI/manifest + XS/S/M model/build/first/solve/validation/quality/memory/environment原始证据由两次provider Gate保留 |
 | NFR-PER-001 | NFR | `docs/simulation/performance-gates.md`、`docs/quality/benchmark-regression.md` | P0-P7 / CI XS；TASK-P2-03/05～14 | exact solver + immutable XS/S/M baseline/ceilings + 两次完整Gate provider复验；OPEN-012保持OPEN，Production SLA未形成 |
-| NFR-HUM-001 | NFR | `docs/domain/state-machines/schedule-version.md` | P0/P3 / TASK-P0-04 contract；P1+ Task 未创建 | only-APPROVED publish transition contract formed；authorization/approval tests PLANNED |
-| ENG-ARCH-001 | ENG | `docs/architecture/repository-layout.md`、`docs/architecture/module-boundaries.md`、`docs/adr/ADR-0002-modular-monolith-and-solver-worker.md` | P0-P2 / P0-P1 formed；TASK-P2-00、03、08、10～14 | one-way pipeline + isolated CP-SAT/Validator/reporting/exporter + application Gate without API/ORM/Worker reverse dependency provider-verified |
+| NFR-HUM-001 | NFR | `docs/domain/state-machines/schedule-version.md` | P0/P3 / TASK-P0-04 contract；TASK-P3-01、04、06～10、13～15 | APPROVED-only transition contract formed；authority-neutral/default-deny approval/publish行为仍PLANNED，OPEN-010保持OPEN |
+| ENG-ARCH-001 | ENG | `docs/architecture/repository-layout.md`、`docs/architecture/module-boundaries.md`、`docs/adr/ADR-0002-modular-monolith-and-solver-worker.md` | P0-P3 / P2 formed；TASK-P3-01、03～15 | P2 one-way isolation formed；P3 domain→application→API/UI与jobs/export边界仍PLANNED |
 | ENG-SOL-001 | ENG | `docs/contracts/planning-problem.md`、`docs/planning/solver-backend-contract.md`、`docs/adr/ADR-0003-solver-neutral-planning-problem.md` | P0-P2 / P1 Problem formed；TASK-P2-01～03、05～14 | solver-neutral CP-SAT/OBJ-001/SolverReport + XS/S/M consumption without native types由两次provider Gate复验 |
-| ENG-VAL-001 | ENG | `docs/planning/schedule-validator.md`、`docs/adr/ADR-0005-independent-schedule-validator.md` | P0-P2 / P0 fixture evaluator；TASK-P2-04～14 | formal independent Validator + correctness/output/every benchmark candidate exact PASS binding由两次provider Gate复验 |
-| ENG-ERR-001 | ENG | `docs/domain/error-model.md`、`docs/planning/infeasibility-diagnostics.md` | P0-P2 / P0-P1 formed；TASK-P2-01～08、11～14 | planning/output/benchmark errors + 四类Gate exit rejection及hard failure/warning separation locally formed；P3 mappings PLANNED |
-| ENG-VER-001 | ENG | `docs/architecture/provenance-and-versioning.md`、`docs/contracts/schema-versioning.md`、`docs/architecture/technology-stack.md` | P0-P7 / P0-P1 formed；TASK-P2-00～14 | schema set`2.5.0`保持不变；output/benchmark v1由provider-verified Gate v1及semantic projection v1聚合 |
-| ENG-LOG-001 | ENG | `docs/architecture/technology-stack.md`、`docs/architecture/provenance-and-versioning.md` | P0 / TASK-P0-08 | [`logging.py`](../../backend/app/infrastructure/logging.py) + [`TEST-OBS-001`](../../backend/tests/integration/test_logging.py) JSON/context/trace/redaction formed；central retention/audit PLANNED |
+| ENG-VAL-001 | ENG | `docs/planning/schedule-validator.md`、`docs/adr/ADR-0005-independent-schedule-validator.md` | P0-P3 / P2 formed；TASK-P3-04/06、13～15 | formal independent Validator formed；P3 command/new-DRAFT/publish Gate integration仍PLANNED |
+| ENG-ERR-001 | ENG | `docs/domain/error-model.md`、`docs/planning/infeasibility-diagnostics.md` | P0-P3 / P2 formed；TASK-P3-01～15 | P2 error/status formed；P3 invalid-state/auth/idempotency/export/HTTP/UI mappings仍PLANNED |
+| ENG-VER-001 | ENG | `docs/architecture/provenance-and-versioning.md`、`docs/contracts/schema-versioning.md`、`docs/architecture/technology-stack.md` | P0-P7 / P2 set `2.5.0` formed；TASK-P3-01～15 | P2 bytes冻结；P3 additive Schema/version/audit/provider chain已规划但未发布 |
+| ENG-LOG-001 | ENG | `docs/architecture/technology-stack.md`、`docs/architecture/provenance-and-versioning.md` | P0-P3 / TASK-P0-08；TASK-P3-03、07～10、14/15 | JSON/context/redaction formed；P3 append-only audit/correlation/retention证据仍PLANNED |
 
 TASK-P0-02 的 validator 已证明本表 Roots 与两个根注册表完全相等，并已将 `TEST-TRACEABILITY-VALIDATOR`、脚本、unit test 和报告摘要链接回 NFR-TRC-001 / ENG-VER-001；[Completion evidence](../tasks/P0/TASK-P0-02-requirements-and-traceability.md#completion-evidence) 记录真实命令结果。每个后续 Task 完成时只增加真实路径和真实结果；计划项继续保留 `PLANNED`。
 
@@ -125,4 +125,10 @@ Implementation `dc2e5cd41080603606090ebfc4bc6162941c5f7f`的run `32465737712` / 
 
 TASK-P2-14在固定基线`e76776d83726d13600d8ea29fd490474c8e32604`上独立复核P2-01～13的13组提交拓扑、26个exact implementation/closure provider artifacts、C-001～C-011/OBJ-001、formal Validator、七类correctness、五个Reference、internal Export、XS/S/M Benchmark与两次完整Gate。476项full tests、Gate 11/11及14次correctness、108次benchmark Validator、14次独立场景计量、XS/S/M各8/8均PASS，所有报告绑定audit execution head且blocking gaps为空；[audit report](../milestones/P2-exit-gate-audit-report.md)与[machine manifest](../milestones/P2-exit-gate-evidence-manifest.json)据此给出local `READY`。在decision-writing时audit implementation exact provider尚待提交，故Task当时保持`in_progress`；P2/P3/Production边界不变。
 
-TASK-P2-14 provider closure：audit implementation `65c556789f176ad9de55523d6420737bb60f933f`的required run `32677741558` / job `97288829348` / artifact `9503227240`精确复现20/20 JSON、30 committed/0 working paths、上述3 rows、19 checks、0 issues及Gate 11/11，故TASK-P2-14=`done`、Exit=`READY`。所有root继续按既有formed/PLANNED边界保持`ALLOCATED`；P2 Milestone仍`active`，P3/Production authority/publish仍未启动。
+TASK-P2-14 provider closure：audit implementation `65c556789f176ad9de55523d6420737bb60f933f`的required run `32677741558` / job `97288829348` / artifact `9503227240`精确复现P2审计，故TASK-P2-14=`done`、Exit=`READY`。在用户transition决定前所有root按既有formed/PLANNED边界保持`ALLOCATED`，P2仍`active`且P3未启动；这一历史事实不改写。
+
+## P3 planning trace baseline
+
+2026-08-24 transition核验又确认closure `80c403384d1e171258cf874d26605d0d22aff1b2` / run `32678248961` / required job `97290201234` / artifact `9503372291`与P2 audit implementation拓扑、SHA、Task、Impact Rules、19 checks和0 issues一致。用户据此批准P3；P2转为`completed`，P3转为`active`。
+
+P3追踪链固定为`REQ/NFR/ENG → TASK-P3-01 contract/ADR → P3-02 Schema → P3-03 persistence → P3-04～09 application/state/export → P3-10 API → P3-11～13 UI/E2E → P3-14 Gate → P3-15 independent Audit → exact implementation/closure provider artifacts`。本次只登记48个Test ID与planned Task，不把任何P3行为标记formed；P4和Production仍在明确边界外。

@@ -6,7 +6,7 @@ spec_version: 0.3.0
 phase: P0-P3
 normative: true
 source_sections: [4, 34, 36, 40, 55, 67, 93]
-last_reviewed: 2026-08-21
+last_reviewed: 2026-08-24
 ---
 
 # 标准成果包合同
@@ -86,3 +86,7 @@ Provider artifact `9440650646`内两次显式output与六次embedded Export证�
 ## TASK-P2-14 Exit audit
 
 审计重新执行两次完整Gate与476项回归，确认2次显式output contract、6次benchmark embedded Export、fresh Validation/KPI/SolverReport、9 payload hash/count/lineage及atomic replay均PASS。Export Schema/bytes与实现零差异；`publishable=false`、ScheduleVersion/ExportJob=`NOT_CREATED`、approval/publish=`NOT_STARTED`保持，P2 READY不等于P3发布能力。
+
+## P3 planned export boundary
+
+TASK-P3-09被分配为首个business ExportJob/standard package owner，必须等待immutable ScheduleVersion、approval与idempotent internal publication语义形成。Export与Publish是分离副作用：相同key/target/version只能same-result replay，内容冲突fail closed，FAILED retry不得改变ScheduleVersion状态。外部MES/Production target受OPEN-002/010/015约束，本次仍保持P2 `publishable=false`历史事实。

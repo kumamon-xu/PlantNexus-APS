@@ -6,7 +6,7 @@ spec_version: 0.3.0
 phase: cross-phase
 normative: true
 source_sections: [0, 9, 10, 23, 24, 30, 32, 33, 35, 57, 67]
-last_reviewed: 2026-08-21
+last_reviewed: 2026-08-24
 ---
 
 # 端到端计划链路
@@ -77,3 +77,7 @@ P2的第一段现在固定为`verified PlanningSnapshot v2 + explicit versioned 
 该入口是无状态、in-process、Simulation-only验收编排，不创建PlanningRun/ScheduleVersion/ExportJob，不连接API/DB/Worker/queue，也不批准或发布。`p2-vertical-slice-report.v1`保留每次完整子报告、timing/memory/hash/export evidence，并只对排除generated/timing的versioned业务语义投影要求跨replay一致；P2-14才可独立审计Exit。
 
 Implementation `dc2e5cd41080603606090ebfc4bc6162941c5f7f`的required run `32465737712` / artifact `9440650646`已精确复现该完整链与两次replay，Gate 11/11且0 blocking gap。该provider证据仍明确Exit=`NOT_PERFORMED`，只满足P2-14启动依赖。
+
+## P3 planned continuation
+
+P2 Exit已provider-verified并关闭；P3在其后追加`validated solution → immutable DRAFT → read/compare → command validation → new DRAFT → approve/reject → idempotent publish → ExportJob/package → API/UI`。P3-01先固定合同/ADR，P3-02～13分层实现，P3-14/15分别负责vertical Gate与独立Audit。该链不回写P2 artifacts，也不包含P4 Execution/Replan或Production external side effect。

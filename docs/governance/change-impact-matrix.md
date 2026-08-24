@@ -6,7 +6,7 @@ spec_version: 0.3.0
 phase: cross-phase
 normative: true
 source_sections: [6, 97, 98, 99, 100, 101, 102, 103, 104, 111]
-last_reviewed: 2026-08-21
+last_reviewed: 2026-08-24
 registry_version: 1.0.0
 ---
 
@@ -334,3 +334,9 @@ Implementation artifact `9440650646`已绑定`dc2e5cd41080603606090ebfc4bc616294
 完整Diff base范围只允许命中`IMPACT-PHASE`（audit report/manifest、current phase、Milestone/Task索引）、`IMPACT-GOVERNANCE-REGISTRY`（REQ/NFR/trace/open/sim/risk/matrix review）和`IMPACT-DOCS`（合同/规划/质量/清单同步）三行。Ignored `build/validation/TASK-P2-14-*`和`build/traceability/TASK-P2-14-report.json`不进入Git diff或Markdown inventory。
 
 Backend/application、Schema/global set、fixture/benchmark baseline、test assertions、scripts/workflow、dependency/lock、migration/database、ADR、API/Worker、P3+均相对Diff base零差异，故不声明其他Rule ID。Machine rule table、required-document列和`registry_version=1.0.0`不变；最终本地Task diff report已覆盖30 paths、上述3 rows、19 checks、0 issues并PASS。Implementation artifact `9503227240`精确复现30 committed/0 working paths及相同结果，故TASK-P2-14=`done`；closure仍保持相同30-path union与三行影响。
+
+## TASK-P3-00 impact review
+
+本次phase-planning batch相对不可变Diff base `80c403384d1e171258cf874d26605d0d22aff1b2`只允许文档变化，命中`IMPACT-STATE`（三份state-machine文档的P3规划解释）、`IMPACT-PHASE`（current phase、P2/P3 Milestone、16张P3 Task）、`IMPACT-GOVERNANCE-REGISTRY`（REQ/NFR/trace/Test/OPEN/SIM/risk/impact/inventory同步）和`IMPACT-DOCS`。所有required documents均列入TASK-P3-00 allow-list与`Documents to update`。
+
+业务代码、Schema、migration、dependency/lock、test assertion、fixture/benchmark、frontend、infra、scripts和workflow必须相对Diff base零差异，因此不声明其他Rule ID。规划implementation与evidence-only closure必须各自由exact required `validate`/artifact复现实际path union、4 rows、完整checks与0 issues；provider形成前TASK-P3-00保持`in_progress`。Machine rule表和`registry_version=1.0.0`不变。

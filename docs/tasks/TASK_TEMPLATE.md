@@ -6,7 +6,7 @@ spec_version: 0.3.0
 phase: cross-phase
 normative: true
 source_sections: [98, 99, 100, 111]
-last_reviewed: 2026-08-21
+last_reviewed: 2026-08-24
 ---
 
 # TASK-Px-yy — Title
@@ -150,3 +150,5 @@ P2及以后Task还必须单列`Start gate`、`Dependency changes`、`ADR impact`
 涉及阶段纵向Gate聚合器时还必须记录：严格Gate report与semantic projection版本、至少两次完整replay、每次公开correctness/Benchmark/Validator/KPI/Export调用链及全部原始sub-report；稳定投影只允许排除运行时噪声和由其派生的identity，不得删除或改写原始timing/memory/hash。每项业务投影、拒绝、边界和治理检查必须二值化；任一失败必须生成`FAIL`、blocking gap并非零退出。四类exit rejection须保留exact stage/category/code，不能冒充成功、INFEASIBLE证书或fallback。纵向Gate不是独立Phase Exit Audit：必须明确`Exit Gate Audit=NOT_PERFORMED`、下一Task/Phase未启动、Production不可发布，并在exact implementation provider artifact形成前保持Task为`in_progress`。
 
 涉及独立Phase Exit Audit时还必须区分：前置Task implementation/closure provider链、审计执行head、审计文档implementation commit及evidence-only closure；报告可在已验证前置baseline与真实本地重放上作出READY/NOT_READY，但不得预填自身尚未发生的provider run。每个总规required case必须保存其要求的逐次字段，聚合摘要缺字段时可在Task允许的ignored audit report中额外重放补齐，不得修改业务实现或历史artifact。`blocking_gaps`决定Exit结论，自身provider pending只允许Task保持`in_progress`；provider失败则必须撤回READY并登记gap。READY仍不自动切换current phase或创建下一Phase Task。
+
+涉及P3 Planning Workspace时还必须记录：页面/API/permission合同先于实现；ScheduleVersion内容不可变且编辑/lock命令只产生新DRAFT；DRAFT/REJECTED不可publish、仅APPROVED可publish、PUBLISHED immutable；所有command经application/server guard与fresh formal Validator；authorization采用capability与default-deny直到OPEN-010关闭；publish/export分别幂等、审计可追踪且不等于Production side effect。必须明确P4 ExecutionEvent/Replan/OBJ-002/freeze/ChangeReport/Execution Simulator排除项，并为合同、Schema、migration、dependency/ADR、state/error、API/UI/E2E、provider与rollback逐项给出边界。

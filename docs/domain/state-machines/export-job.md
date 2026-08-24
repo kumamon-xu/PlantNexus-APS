@@ -6,7 +6,7 @@ spec_version: 0.3.0
 phase: P0-P3
 normative: true
 source_sections: [34, 65, 66, 67]
-last_reviewed: 2026-08-19
+last_reviewed: 2026-08-24
 ---
 
 # ExportJob 状态机
@@ -79,3 +79,7 @@ PlanningSolution/SolverReport v1没有ExportJob字段、storage side effect或pu
 `p2-internal-export.v1`只提供纯内存构建和本地同文件系统原子目录materialization。Manifest固定`export_job=NOT_CREATED`、`publication=NOT_STARTED`与`publishable=false`；实现没有ExportJob ID/idempotency key/attempt/lease/heartbeat、repository、storage target或外部副作用，也没有执行`CREATED → EXPORTING → EXPORTED`。
 
 同一目标的exact byte replay仅验证文件级确定性；目标内容不同则返回conflict，I/O失败清理临时目录且不留下成功manifest。这是NFR-REL-001的P2 internal consistency slice，不等于business ExportJob retry或double-publish控制。状态机和`state-machines.v1`保持不变，P3实现仍须提供持久化、audit、target、lease/retry与发布隔离。
+
+## P3 implementation allocation
+
+P3-02形成ExportJob carrier，P3-03形成repository/migration，P3-09实现既有pair、atomic package、same-key replay/conflict与显式FAILED retry。EXPORTED/CANCELLED终态不可复活，Job状态不得改变ScheduleVersion publication；P3-10/13只调用application service，P3-14/15复验。Production external target继续受OPEN-002/010/015阻止。

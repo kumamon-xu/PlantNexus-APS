@@ -6,7 +6,7 @@ spec_version: 0.3.0
 phase: P0-P7
 normative: false
 source_sections: [65, 66, 93, 94, 95, 101, 106]
-last_reviewed: 2026-08-21
+last_reviewed: 2026-08-24
 ---
 
 # Operations 索引与形成边界
@@ -133,3 +133,7 @@ Report本身不写业务数据库，temporary CSV随进程回收，`build/valida
 任一stage失败时CLI仍写包含stage/error/blocking gap的FAIL report并返回非零；不得在本Task内修改Solver/Validator/fixture/baseline来“让Gate变绿”。命令不连接业务服务、不创建状态或可发布artifact。CI使用同一命令与`--repeat 2`输出`build/validation/ci-p2-vertical-slice-gate.json`，exact provider SHA/required job/artifact必须在实现提交后另行核验。
 
 该provider验收已完成：implementation `dc2e5cd41080603606090ebfc4bc6162941c5f7f`、run `32465737712`、required job `96721819879`和artifact `9440650646`全部success；artifact 20/20 JSON PASS。命令仍是evidence-only，不是Production runbook或P2 Exit audit。
+
+## P3 operations planning
+
+P3-01先定义security/audit/idempotency责任，P3-03/07～10再形成repository、audit、publish/export/API的development行为，P3-14/15验证failure/retry/evidence。当前没有新增Runbook、service、queue、dashboard、Production secret/target或deployment；P3 internal Simulation workflow不得写成Production operation readiness。

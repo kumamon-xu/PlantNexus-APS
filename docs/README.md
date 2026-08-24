@@ -3,10 +3,10 @@ doc_id: DOC-INDEX-001
 title: PlantNexus APS 文档中心
 status: baseline
 spec_version: 0.3.0
-phase: P2
+phase: P3
 normative: false
 source_sections: [2, 6, 70]
-last_reviewed: 2026-08-21
+last_reviewed: 2026-08-24
 ---
 
 # PlantNexus APS 文档中心
@@ -69,7 +69,9 @@ last_reviewed: 2026-08-21
 
 ## 当前范围
 
-当前阶段为P2。P1 Milestone为`completed`，P2为`active`；TASK-P2-00～13均已闭环为`done`。P2-14 Exit Gate Audit和P3均未启动，详见`current_phase.md`。
+当前阶段为P3。P0～P2 Milestone均为`completed`，P3为`active`；TASK-P3-00只执行phase transition、完整Task plan与文档治理，P3-01～15均为`planned`且未获业务实现授权。P3-15必须最后独立执行Exit Gate Audit；P4与Production不在当前范围，详见`current_phase.md`。
+
+P3顺序固定为合同/ADR→Schema→persistence→validated DRAFT→read models→edit/lock→approval/reject→idempotent publish→ExportJob→API→Frontend/E2E→vertical Gate→independent Audit。首先建议另行授权TASK-P3-01，但当前规划Task不得自动执行它。
 
 ## 仓库入口与本地检查
 
@@ -82,6 +84,8 @@ last_reviewed: 2026-08-21
 本地检查从`current_phase.md`读取current `Pn`，保留历史terminal Task且拒绝future-phase详细卡。普通CI range只能归属一张current-phase Task；初始phase-planning batch仅允许唯一新建`TASK-Pn-00` owner加同range新建的`planned/ready`成员卡，之后仍按owner Diff base执行scope/impact。Provider结果必须来自真实授权运行，不能由本地PASS推断。
 
 CI 可用 `uv run python scripts/check_docs.py --discover-task-from <event-base-sha> --check-diff --report build/traceability/ci-current-task-report.json`从一次 PR/push event range发现唯一 current-phase Task；本地 Task验收仍使用显式 `--task`。两种入口最终都使用 Task Card内的 immutable `Diff base`，不能把 event base当作 Task scope base。
+
+## P2 历史执行证据
 
 TASK-P2-03本地39项聚焦、319项全量和6/6 foundation均PASS；exact GitHub required `validate`与artifact也已核验，Task=`done`。工程smoke仍不是业务Solver/Validator/Benchmark证据。
 

@@ -3,7 +3,7 @@ doc_id: DOC-TASK-INDEX
 title: Task Card 索引
 status: living
 spec_version: 0.3.0
-phase: P2
+phase: P3
 normative: true
 source_sections: [2, 6, 73, 74, 75, 76, 98, 99, 100]
 last_reviewed: 2026-08-24
@@ -11,12 +11,13 @@ last_reviewed: 2026-08-24
 
 # Task Card 索引
 
-当前Phase为P2。P0/P1 Task作为terminal历史保留；只有当前P2允许详细Task Card，P3～P7继续只保留Milestone。
+当前Phase为P3。P0～P2 Task作为terminal历史保留；只有当前P3允许详细Task Card，P4～P7继续只保留Milestone。
 
 ## Completed history
 
 - TASK-P0-01～10全部`done`，P0 Milestone=`completed`。
 - [TASK-P1-01～12](P1/)全部`done`；[P1 audit](../milestones/P1-exit-gate-audit-report.md)=`READY`且用户已批准transition，P1 Milestone=`completed`。
+- [TASK-P2-00～14](P2/)全部`done`；[P2 audit](../milestones/P2-exit-gate-audit-report.md)=`READY`、`blocking_gaps=[]`且用户已批准transition，P2 Milestone=`completed`。历史失败、修复与provider evidence不改写。
 
 ## P2 execution order
 
@@ -38,13 +39,36 @@ last_reviewed: 2026-08-24
 | [TASK-P2-13](P2/TASK-P2-13-p2-vertical-slice-gate-evidence.md) | Vertical Slice Gate evidence | P2-01～12 | `done` |
 | [TASK-P2-14](P2/TASK-P2-14-p2-exit-gate-audit.md) | P2 Exit Gate Audit | P2-01～13 | `done` |
 
+## P3 execution order
+
+| Task | 目标 | 依赖 | 状态 |
+|---|---|---|---|
+| [TASK-P3-00](P3/TASK-P3-00-phase-transition-and-task-planning-governance.md) | Phase transition、Task plan与治理同步 | P2-14 | `in_progress` |
+| [TASK-P3-01](P3/TASK-P3-01-planning-workspace-contract-and-adr-baseline.md) | Workspace合同与ADR基线 | P3-00 | `planned` |
+| [TASK-P3-02](P3/TASK-P3-02-schedule-version-workspace-and-export-schemas.md) | Workspace/version/export Schema | P3-01 | `planned` |
+| [TASK-P3-03](P3/TASK-P3-03-schedule-version-audit-and-export-persistence.md) | Version/audit/export persistence | P3-02 | `planned` |
+| [TASK-P3-04](P3/TASK-P3-04-validated-solution-to-reviewable-schedule-version.md) | Validated solution→reviewable DRAFT | P3-03 | `planned` |
+| [TASK-P3-05](P3/TASK-P3-05-planning-workspace-read-models-and-comparison.md) | Workspace read models/comparison | P3-04 | `planned` |
+| [TASK-P3-06](P3/TASK-P3-06-gantt-edit-and-lock-command-pipeline.md) | Gantt edit/lock command pipeline | P3-04/05 | `planned` |
+| [TASK-P3-07](P3/TASK-P3-07-approval-rejection-and-audit-service.md) | Approval/rejection/audit service | P3-03/04 | `planned` |
+| [TASK-P3-08](P3/TASK-P3-08-idempotent-publication-and-supersession.md) | Idempotent publish/supersession | P3-03/07 | `planned` |
+| [TASK-P3-09](P3/TASK-P3-09-export-job-and-standard-package.md) | ExportJob/standard package | P3-03/04/08 | `planned` |
+| [TASK-P3-10](P3/TASK-P3-10-planning-workspace-http-api.md) | Planning Workspace HTTP API | P3-05～09 | `planned` |
+| [TASK-P3-11](P3/TASK-P3-11-frontend-foundation-and-read-only-workspace.md) | Frontend/read-only workspace | P3-01/10 | `planned` |
+| [TASK-P3-12](P3/TASK-P3-12-gantt-resource-load-and-version-comparison-ui.md) | Gantt/Load/Comparison UI | P3-05/10/11 | `planned` |
+| [TASK-P3-13](P3/TASK-P3-13-human-control-actions-and-ui-e2e.md) | Human control actions/UI E2E | P3-06～12 | `planned` |
+| [TASK-P3-14](P3/TASK-P3-14-p3-vertical-slice-gate-evidence.md) | P3 vertical-slice Gate evidence | P3-01～13 | `planned` |
+| [TASK-P3-15](P3/TASK-P3-15-p3-exit-gate-audit.md) | Independent P3 Exit Gate Audit | P3-14 | `planned` |
+
+推荐首先单独授权并执行P3-01，但本次不自动执行。P3-01必须先固定页面/API/权限矩阵、状态机、错误、审计和idempotency合同；P3-15必须最后执行且只审计冻结事实。P3不得实现P4 ExecutionEvent/Replan/OBJ-002/freeze/ChangeReport/Execution Simulator，内部Simulation publish也不构成Production approval/readiness。
+
 ## Lifecycle and planning-batch rules
 
 状态使用`planned`、`ready`、`in_progress`、`blocked`、`done`、`cancelled`。进入`in_progress`前必须确认全部依赖`done`、用户授权、允许范围与文档影响，再把即时完整40字符HEAD写入Diff base；P2 Task还必须明确Start gate、Dependency changes、ADR impact和Provider evidence。
 
 普通CI event range仍只能变更一张current-phase Task Card。唯一例外是初始phase-planning batch：必须由新建`TASK-Pn-00`、`Task batch role: phase-planning-owner`、有效Diff base且`in_progress/done`的唯一owner归属；其他卡必须同range新建、role=`phase-plan-member`、保持`planned/ready`且不得预填implementation SHA。历史卡、既有成员、多个owner或active/done成员均硬失败。选择owner后仍按owner Diff base检查全部scope/Impact Rule。
 
-TASK-P2-00～14已`done`。P2-03的Diff base固定为`f73f8c90af94d3c9b05ecc10b6c999594a3b7d66`且ADR-0011先于dependency变更接受；P2-04～14的implementation及exact provider evidence均已闭环。P2 Exit Gate=`READY`，但current phase仍为P2。
+TASK-P2-00～14已`done`。P2-03的Diff base固定为`f73f8c90af94d3c9b05ecc10b6c999594a3b7d66`且ADR-0011先于dependency变更接受；P2-04～14的implementation及exact provider evidence均已闭环。P2 Exit Gate=`READY`；“current phase仍为P2”只描述用户transition决定前的历史边界，现已由上方P3索引取代且历史证据不改写。
 
 P2-04限定为正式Problem/Solution独立C-001～C-011判定、stable ValidationReport/Error、mutation/property/independence machine evidence及CI handoff；不得修改Backend、合同Schema、fixture历史bytes、dependency、objective、Benchmark或P3。P2-05及以后不会由本Task自动启动。
 

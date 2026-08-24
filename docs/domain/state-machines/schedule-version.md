@@ -6,7 +6,7 @@ spec_version: 0.3.0
 phase: P0-P3
 normative: true
 source_sections: [30, 33, 35, 66, 69, 78]
-last_reviewed: 2026-08-19
+last_reviewed: 2026-08-24
 ---
 
 # ScheduleVersion 状态机
@@ -70,3 +70,7 @@ PlanningSolution v1仍只是未验证candidate carrier；`CONTRACT_SAMPLE`的UNK
 Internal package中的`schedule.json`虽然必须绑定fresh exact PASS ValidationReport，却仍是`planning-solution.v1`，不是DRAFT ScheduleVersion。Manifest明确`schedule_version=NOT_CREATED`、approval/publication=`NOT_STARTED`和`publishable=false`；因此不执行`DRAFT → READY_FOR_REVIEW`，也不创建actor、decision、audit或current-version记录。
 
 该边界保留“Validator PASS是进入评审的必要但非充分条件”：只有P3创建immutable ScheduleVersion并满足provenance/权限/状态guard后才能进入评审。状态pair、terminal semantics与`state-machines.v1`均未修改。
+
+## P3 implementation allocation
+
+P3-01补齐guard/actor/reason/audit/idempotency合同但不改v1 pair；P3-03形成immutable persistence，P3-04实现DRAFT→READY_FOR_REVIEW，P3-07实现READY_FOR_REVIEW→APPROVED/REJECTED，P3-08实现APPROVED→PUBLISHED与PUBLISHED→SUPERSEDED。DRAFT/REJECTED不可publish、PUBLISHED/REJECTED内容不可变，edit/lock只产生新DRAFT。P3-10/13只能调用这些application guards，P3-14/15负责Gate/Audit。

@@ -6,7 +6,7 @@ spec_version: 0.3.0
 phase: P0-P7
 normative: true
 source_sections: [58, 62, 93, 95, 100]
-last_reviewed: 2026-08-19
+last_reviewed: 2026-08-24
 ---
 
 # P0 工程安全边界
@@ -53,3 +53,7 @@ P0-08 没有 authentication/authorization、Import size/type/macro controls、ne
 `ortools==9.15.6755`由accepted ADR-0011、exact direct pin、`uv.lock` transitive versions和CPython 3.12多平台wheel SHA-256共同约束；AST检查确认native import只存在于`planning/backends/cp_sat/`。Repository-level upstream advisory查询在2026-08-20为空，`pip-audit==2.10.1 --skip-editable`的point-in-time结果中，新增OR-Tools依赖子树无记录。
 
 同一次全环境审计仍检出Diff base已存在的`pytest==8.4.1`一个advisory和`starlette==0.47.3`六个唯一advisory（原始记录含alias/duplicate共8条）；两者不在OR-Tools依赖子树，本Task不越界升级FastAPI/Starlette或pytest。该债务登记为RISK-011并阻止Production安全认证，但不否定P2-03新增solver子树的有界审查。仓库尚无持续SCA、SBOM/signing、binary provenance attestation或Production threat assessment。
+
+## P3 security planning
+
+P3采用authority-neutral capability与Production default-deny；actor credential不得进入Schema、日志或artifact。P3-01固定permission/error/audit合同，P3-07/10/13验证未授权和跨plane拒绝，P3-11对frontend exact lock执行SCA/license review。OPEN-010与既有advisory债务保持开放，因此任何P3成功都不能声明Production security approval。

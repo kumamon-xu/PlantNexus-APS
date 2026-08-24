@@ -6,7 +6,7 @@ spec_version: 0.3.0
 phase: P0-P7
 normative: true
 source_sections: [58, 72, 74, 76, 78, 80, 89, 100, 101]
-last_reviewed: 2026-08-21
+last_reviewed: 2026-08-24
 ---
 
 # CI Gate 与 Definition of Done
@@ -218,3 +218,9 @@ Implementation provider Gate已通过：SHA `dc2e5cd41080603606090ebfc4bc6162941
 审计先验证P2-01～13共26个exact implementation/closure runs/jobs/artifacts，再在provider-verified activation head独立执行locked sync、Ruff、Pyright、476 tests、两次P2 Gate、XS/S/M、Compose、docs与build。Gate=11/11、七场景×两轮§76 measurement完整、XS/S/M各8/8、4 rejections、0 gaps，因此report/manifest给出`READY`。
 
 Decision writing commit `65c556789f176ad9de55523d6420737bb60f933f`的exact required run `32677741558` / job `97288829348` / artifact `9503227240`已全部success；下载复核20/20 JSON、Task 30 paths/3 rows/19 checks/0 issues及Gate 11/11均绑定同一SHA。因此TASK-P2-14在本evidence-only closure标记`done`且READY保持；P2仍保持current phase，等待用户明确P2→P3授权。
+
+## P3 planning and CI handoff
+
+用户已批准P2→P3；TASK-P3-00是当前唯一`in_progress` owner，P3-01～15均为planned batch member。本规划提交不得修改workflow；required `validate`仍通过current-phase discovery选择P3-00，并上传中性artifact。规划implementation和evidence-only closure各自都必须核对exact SHA、required job/steps、artifact digest/expiry、Task/Impact/checks/issues后，P3-00才能`done`。
+
+未来每张P3 Task必须按卡片运行locked install、lint/type、相关unit/contract/integration/E2E/migration/build、full docs/diff治理和machine report。P3-14聚合Gate不替代P3-15独立Audit；两者READY均不构成P4 transition或Production release。

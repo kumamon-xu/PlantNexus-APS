@@ -6,7 +6,7 @@ spec_version: 0.3.0
 phase: cross-phase
 normative: false
 source_sections: [0, 8, 10, 30, 42, 57, 59, 62, 89, 90, 105]
-last_reviewed: 2026-08-21
+last_reviewed: 2026-08-24
 registry_version: 1.0.0
 ---
 
@@ -25,6 +25,8 @@ registry_version: 1.0.0
 | RISK-009 | MONITORED | 过早性能或最优性承诺 | 没有历史数据却设置 SLA | OPEN-012、Benchmark 环境声明、P7 Gate |
 | RISK-010 | MONITORED | P5 高级能力大爆炸 | 多个高级约束同时进入一个迭代 | 每能力独立 ADR/Schema/Validator/Fixture/Benchmark |
 | RISK-011 | MONITORED | 依赖漏洞或Solver供应链漂移 | lock/advisory/wheel变化，SCA发现未处置记录 | exact pin/lock/wheel hash、namespace isolation、point-in-time audit；后续持续SCA/SBOM与有界升级 |
+| RISK-012 | MONITORED | 审批责任未定却被实现成Production授权 | 测试角色或前端按钮被解释为真实approve/publish authority | OPEN-010、authority-neutral capability、Production default-deny、append-only audit |
+| RISK-013 | MONITORED | UI/API绕过状态机或直接修改已发布计划 | client计算权威状态、router直写DB、PUBLISHED内容变化 | command-only application service、server/formal Validator、immutable version、API/E2E negative gates |
 
 风险状态、责任人和日期将在团队角色与仓库工作流确认后补充，当前不猜测人员归属。
 
@@ -113,3 +115,9 @@ TASK-P2-13 provider closure：required run/artifact确认上述两次Gate与边�
 TASK-P2-14 local audit review：独立topology/provider/content检查、476 tests、两次Gate、逐场景§76 metrics、XS/S/M与四类fail-closed拒绝进一步提高RISK-001～009/011的可见性，但不能消除共同实现缺陷、操作风险、真实数据/authority缺失、持续供应链扫描或Production部署风险。Decision-writing时Audit implementation provider尚未形成；历史生产数据、Production threshold/L/XL与deployment仍未形成，任何风险均不得标记`MITIGATED/CLOSED`，RISK-001～011继续`MONITORED`，registry format version保持`1.0.0`。
 
 TASK-P2-14 provider closure：required run `32677741558` / artifact `9503227240`已复验audit实现，但仍无历史生产数据、Production threshold/L/XL、持续供应链扫描或deployment。该证据不关闭任何风险；RISK-001～011继续`MONITORED`，registry format version保持`1.0.0`。
+
+## P3 planning review
+
+P3的人机控制面新增RISK-012/013：OPEN-010未关闭时测试actor/按钮不能升级为真实Production authority；所有UI/API必须通过application command、server/state guard与formal Validator，PUBLISHED保持immutable。TASK-P3-01先固定合同/ADR，P3-07/08/10/13形成负向权限与旁路证据，P3-14/15再聚合和独立审计。
+
+本次只是风险登记与Task控制设计，没有行为证据可以降低风险。RISK-001～013全部保持`MONITORED`；P4动态重排和Production部署风险仍不在P3实现范围，`registry_version=1.0.0`格式不变。

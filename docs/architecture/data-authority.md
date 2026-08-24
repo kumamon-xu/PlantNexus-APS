@@ -6,7 +6,7 @@ spec_version: 0.3.0
 phase: cross-phase
 normative: true
 source_sections: [15, 22, 59, 61, 90]
-last_reviewed: 2026-08-21
+last_reviewed: 2026-08-24
 ---
 
 # 数据权威边界
@@ -117,3 +117,7 @@ Vertical Gate只重放已版本化的synthetic Profile/Scenario/Policy/Limits和
 报告中的due/priority、resource/calendar/material/transport、fact/lock、runtime与memory仍分别受原Scenario/Problem/baseline provenance约束。全部PROD_OPEN继续OPEN，尤其OPEN-006/011/012/015没有Authority/Evidence closure record；Gate PASS只证明Simulation链路可重放，不批准Production binding、capacity、SLA或发布。
 
 Provider artifact `9440650646`精确复现相同Simulation-only authority boundary；20份报告均未引入Production source/default/closure record。TASK-P2-13=`done`不改变任何PROD_OPEN或Production publishability。
+
+## P3 authority planning
+
+ScheduleVersion内容权威来自validated PlanningSolution与显式human command；状态权威只属于server application/state machine，UI/API transport不得自封权威。OPEN-010关闭前capability matrix只能表达view/edit/lock/approve/reject/publish/export/audit并在Production default-deny，Simulation test actor也不能成为真实角色。外部publish target与字段authority继续受OPEN-002/015约束。

@@ -6,7 +6,7 @@ spec_version: 0.3.0
 phase: cross-phase
 normative: true
 source_sections: [6, 98, 99, 100, 101, 103, 104]
-last_reviewed: 2026-08-21
+last_reviewed: 2026-08-24
 ---
 
 # 文档一致性自动检查合同
@@ -342,3 +342,9 @@ Implementation artifact `9440650646`内`traceability-report.v1`精确绑定`dc2e
 Diff base固定为`e76776d83726d13600d8ea29fd490474c8e32604`；完整范围只允许audit report/JSON manifest、phase/milestone/task/contract/planning/quality/governance文档及ignored `TASK-P2-14-*` reports，必须命中`IMPACT-PHASE/GOVERNANCE-REGISTRY/DOCS`三行。业务代码、Schema、fixture、benchmark、scripts、workflow、dependency/lock、migration与P3必须零差异。
 
 Activation provider `32675914600` / artifact `9502674319`已对8 paths/2 rows/0 issues闭环。写回前full治理为143 docs、30 roots、36 tests、15 OPEN、13 SIM assumptions、11 risks与37 Tasks；activation-range diff为8 paths/2 rows/19 checks/0 issues。Audit decision写回后再次生成最终`TASK-P2-14-report.json`：full治理保持143/30/36/15/13/11/37，Task diff为30 paths、3 rows、19 checks、0 issues并PASS。Implementation provider run `32677741558` / artifact `9503227240`精确复现30 committed/0 working paths及相同治理结果，因此Task治理闭环为`done`；本evidence-only closure仍须在push后外部复核。
+
+## TASK-P3-00 governance application
+
+P3首次规划batch以`80c403384d1e171258cf874d26605d0d22aff1b2`为不可变Diff base。唯一owner必须是`TASK-P3-00`、role=`phase-planning-owner`且`in_progress`；P3-01～15必须同range新建、role=`phase-plan-member`、`planned`且无implementation SHA。P0～P2卡保持terminal，P4+不得创建详细卡。
+
+本batch新增16份Markdown，inventory预期从143增至159；Task总数从37增至53，Test IDs从36增至48，风险从11增至13，roots=30、OPEN=15、SIM assumptions=13不变。完整治理和current Task diff必须实际核对这些计数、4条Impact Rule、changed paths、19项或当时完整checks与issues；provider artifact形成前不得预填PASS或关闭owner。

@@ -6,7 +6,7 @@ spec_version: 0.3.0
 phase: P0-P7
 normative: true
 source_sections: [31, 57, 72, 74, 76, 78, 80, 86, 87, 88, 89, 100]
-last_reviewed: 2026-08-21
+last_reviewed: 2026-08-24
 registry_version: 1.0.0
 ---
 
@@ -65,6 +65,18 @@ registry_version: 1.0.0
 | TEST-BENCHMARK | BenchmarkReport/profile 回归 | P2 | [`test_benchmark_contract.py`](../../backend/tests/contract/test_benchmark_contract.py) + [`test_benchmark_runner.py`](../../backend/tests/integration/test_benchmark_runner.py) strict Profile/Report/Baseline、XS/S/M replay、Global/Reference/Validator/KPI、warning/threshold与required CI XS artifact provider-verified |
 | TEST-PROPERTY | 合法 Problem 的通用不变量 | P2 | Problem v2/formal/Solver properties + [Reference gate/duration/due and authoritative Problem properties](../../backend/tests/property/test_reference_scheduler_properties.py) + [generated XS/S/M formal pipeline replay](../../backend/tests/integration/test_benchmark_runner.py) formed |
 | TEST-SOLVER-UPGRADE | Solver 升级 replay/status contract | P2+ | Benchmark baseline固定Python/OR-Tools/environment signature并拒绝profile/problem/complexity drift的P2 development slice formed；实际upgrade重建新版本baseline/compatibility evidence仍PLANNED |
+| TEST-WORKSPACE-CONTRACT-001 | P3页面/API/permission/state/error/audit/idempotency合同一致性 | P3 | PLANNED / TASK-P3-01～02 |
+| TEST-SCHEDULE-VERSION-REPOSITORY-001 | ScheduleVersion/Audit/ExportJob migration、immutability、transaction与replay | P3 | PLANNED / TASK-P3-03 |
+| TEST-SCHEDULE-VERSION-LIFECYCLE-001 | Validated Solution→DRAFT→READY_FOR_REVIEW与非法状态拒绝 | P3 | PLANNED / TASK-P3-04、07～08 |
+| TEST-WORKSPACE-READ-MODEL-001 | Gantt、Resource Load、Order View与Version Comparison lineage/KPI一致性 | P3 | PLANNED / TASK-P3-05 |
+| TEST-GANTT-COMMAND-001 | Edit/Lock command→server validation→new DRAFT→formal Validator | P3 | PLANNED / TASK-P3-06 |
+| TEST-APPROVAL-AUTHORIZATION-001 | authority-neutral capability、default-deny、approve/reject guards | P3 | PLANNED / TASK-P3-07、10、13 |
+| TEST-PUBLISH-IDEMPOTENCY-001 | APPROVED-only publish、same-key replay、conflict与supersession | P3 | PLANNED / TASK-P3-08 |
+| TEST-EXPORT-JOB-001 | ExportJob transition、package integrity、atomic/idempotent export与失败恢复 | P3 | PLANNED / TASK-P3-03、09 |
+| TEST-AUDIT-TRAIL-001 | append-only actor/reason/correlation/before-after/version audit完整性 | P3 | PLANNED / TASK-P3-03、07～10 |
+| TEST-WORKSPACE-API-001 | HTTP payload/error/auth/idempotency/OpenAPI与application boundary | P3 | PLANNED / TASK-P3-10 |
+| TEST-WORKSPACE-FRONTEND-001 | read/action UI、状态可见性、accessibility与no-client-authority E2E | P3 | PLANNED / TASK-P3-11～13 |
+| TEST-P3-VERTICAL-SLICE-001 | P3完整workspace→review→approve→publish→export双重replay与拒绝门 | P3 | PLANNED / TASK-P3-14～15 |
 
 Test ID 一经分配不得复用。链接到真实测试路径才是已形成证据；`PLANNED` 只登记合同。表结构或状态语义变化必须提升 `registry_version`。
 
@@ -261,3 +273,9 @@ Integration覆盖完整链、七Scenario/C-ID、XS/S/M status/objective/model/ti
 本Task不新增、删除、修改或复用Test ID/test assertion；它独立重跑全部registered unit/contract/simulation/golden/validation/integration/property目录，结果为`476 passed in 52.66s`，Ruff/Pyright均0问题。P2 Gate重新执行两轮且11/11；独立XS/S/M各8/8、0 warning。为确保总规§76每个correctness case的model/build/first/objective/bound/gap/memory/Validator字段可直接审计，另通过公开P2 correctness执行边界生成14条两轮measurement observation，全部PASS。
 
 该evidence与P2-01～13的26个exact provider artifacts共同支持P2 Gate=`READY`，且audit implementation run `32677741558` / artifact `9503227240`再次精确通过476项测试与Gate 11/11，故TASK-P2-14=`done`。36个Test ID、registry format version或Production测试状态不变；P3 approval/publish、L/XL与Production capacity/SLA tests继续`PLANNED`。
+
+## P3 planning allocation baseline
+
+TASK-P3-00只登记12个P3 Test ID，registry从36项增加到48项；没有创建测试文件、修改断言或把任一P3 evidence标为formed。P3-01先形成合同/ADR，P3-02～13按repository/lifecycle/read-command/authorization/publish/export/API/frontend顺序形成证据，P3-14聚合vertical slice，P3-15独立重放Exit Audit。
+
+所有P3测试必须保留P2 formal Validator与immutable artifacts，明确DRAFT/REJECTED publish拒绝、APPROVED-only publish、PUBLISHED immutability、command产生new DRAFT、same-key幂等和default-deny authorization。P4 ExecutionEvent/Replan/OBJ-002/ChangeReport/Execution Simulator及Production identity/deployment/SLA测试不属于P3；48个ID的生命周期仍为注册或历史证据状态，`registry_version=1.0.0`格式不变。

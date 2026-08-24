@@ -6,7 +6,7 @@ spec_version: 0.3.0
 phase: cross-phase
 normative: true
 source_sections: [4, 6, 16, 23, 24, 29, 30, 42, 58, 62, 65, 66, 89, 93, 95]
-last_reviewed: 2026-08-21
+last_reviewed: 2026-08-24
 registry_version: 1.0.0
 ---
 
@@ -119,3 +119,9 @@ TASK-P2-13 provider closure：required run `32465737712` / artifact `9440650646`
 TASK-P2-14 local audit review：NFR-COR/DET/TRC/ISO/REL/SEC/OBS/PER与ENG-ARCH/SOL/VAL/ERR/VER由完整provider lineage、476 tests、两次Gate、七场景逐次§76 metrics、XS/S/M、fresh Validator、Reference/KPI/Export和四类fail-closed拒绝独立审计为PASS。业务/Schema/lock/ADR零差异，raw运行证据未被semantic projection覆盖；overall=`READY`且0 gaps。Decision-writing时Audit Task provider尚未形成；L/XL、Production authority/capacity/SLA/security deployment仍未形成，全部NFR/ENG根ID继续`ALLOCATED`，registry format version保持`1.0.0`。
 
 TASK-P2-14 provider closure：required run `32677741558` / artifact `9503227240`精确复现20/20 reports、Gate 11/11、两轮provider业务投影一致及30 paths/3 rows/0 issues，故Task=`done`、Exit=`READY`。该证据不形成L/XL、Production authority/capacity/SLA/security deployment；全部NFR/ENG根ID继续`ALLOCATED`，registry format version保持`1.0.0`。
+
+## P3 planning allocation
+
+P3-01～15把NFR-COR/DET/TRC/ISO/REL/SEC/OBS/PER/HUM与ENG-ARCH/VAL/ERR/VER/LOG分配到合同、immutable persistence、command/state guards、approval/publish/export、API/UI、Gate及独立Audit；ENG-SOL只作为P2 frozen boundary，不在P3扩展Solver。NFR-HUM的唯一允许目标是APPROVED-only、authorized-human capability与default-deny，OPEN-010关闭前不得写成真实角色授权。
+
+本次只有规划与治理证据，不形成状态行为、可靠性、权限、UI、Production安全/性能或deployment证据。全部NFR/ENG根ID保持`ALLOCATED`，P4动态重排和Production readiness继续显式排除，`registry_version=1.0.0`格式不变。

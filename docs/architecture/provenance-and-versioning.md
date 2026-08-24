@@ -6,7 +6,7 @@ spec_version: 0.3.0
 phase: cross-phase
 normative: true
 source_sections: [4, 23, 24, 40, 67, 93, 101, 102, 103, 104]
-last_reviewed: 2026-08-21
+last_reviewed: 2026-08-24
 ---
 
 # Provenance 与版本规则
@@ -230,3 +230,7 @@ Synthetic provenance从Snapshot与P2 correctness manifest逐字段交叉，Scena
 Correctness projection只排除`generated_at/code_commit`；Benchmark projection保留Profile/Scenario/Problem/environment、candidate fingerprints、model/quality/Validator/Reference/baseline而排除timing/memory与由SolverReport时间产生的KPI/package identities；Output projection保留frozen inputs、file roles/counts、stable lineage和state boundary而排除run-specific identities。原始timing、memory、KPI/SolverReport/package/file hashes仍逐replay完整保存，不伪称这些时间敏感hash必须相等；只有versioned business projection必须两次一致且本地unique count=`1`。
 
 Provider run `32465737712` / job `96721819879` / artifact `9440650646`把Gate、每个nested correctness/XS/S/M/export report及Task report全部绑定`dc2e5cd41080603606090ebfc4bc6162941c5f7f`；20/20 JSON PASS，artifact未过期。该exact lineage关闭TASK-P2-13，不生成Exit READY。
+
+## P3 provenance plan
+
+每个P3 ScheduleVersion必须保留Snapshot/Problem/Solution/Validation/Policy/Solver/KPI/code/schema lineage；comparison、command、decision、publish和export再追加source/target version、actor capability、reason、correlation/idempotency key与append-only audit identity。TASK-P3-14/15的报告和每张Task implementation/closure artifact必须精确绑定各自SHA，不能用后续closure覆盖原始provider事实。

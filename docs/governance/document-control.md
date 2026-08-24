@@ -6,7 +6,7 @@ spec_version: 0.3.0
 phase: P0
 normative: true
 source_sections: [1, 2, 6, 97, 101, 103, 104]
-last_reviewed: 2026-08-19
+last_reviewed: 2026-08-24
 ---
 
 # 文档控制规则
@@ -110,3 +110,7 @@ change-impact matrix 使用稳定 `IMPACT-*` Rule ID。实际 changed path 是 `
 P1及以后 Task Card还必须填写 `Completion conditions`，把实现、负向路径、文档/追踪、治理验收与排除项写成可核验完成门；历史 P0 Task不追补该字段。
 
 CI event attribution使用 `--discover-task-from <40-char-event-base>`：只允许选择唯一 current-phase Task Card，或在没有 changed Task Card时回退到唯一 `in_progress` current Task；event base只负责归属，scope仍由卡片 `Diff base`决定。历史/未来 Task、多个 current Task、无唯一归属、非完整/非祖先 SHA都必须非零失败。
+
+## P3 planning control
+
+P3首次batch只允许TASK-P3-00为唯一phase-planning owner，P3-01～15为同range新建planned members；P0～P2卡保持terminal，P4+禁止详细卡。每个P3 member以后必须由新用户授权、clean synchronized/provider-verified HEAD和新Diff base单独激活；不允许用本batch批量实现。P3-15必须最后独立审计，READY后仍需用户批准才能进入P4。

@@ -6,7 +6,7 @@ spec_version: 0.3.0
 phase: P0-P3
 normative: true
 source_sections: [29, 30, 32, 33, 67, 78]
-last_reviewed: 2026-08-21
+last_reviewed: 2026-08-24
 ---
 
 # PlanningSolution 与 ScheduleVersion 合同
@@ -78,3 +78,7 @@ Problem v2没有向active RUNNING operation暴露execution fact ID，因此`exec
 Global Strategy路径现在执行OBJ-001：native OPTIMAL只有在目标值等于certified bound且gap=0时保留OPTIMAL；有candidate但未证明最优时为FEASIBLE；无candidate且无证明时为UNKNOWN/NO_SOLUTION_WITHIN_LIMIT；hard domain证明无解才为INFEASIBLE。FEASIBLE使用保守整数lower bound计算gap，UNKNOWN可保存bound但不得保存objective/gap/assignments。Validator FAIL转FAILED并丢弃全部assignments/objective candidate。
 
 SolverReport v1现在由真实`SOLVER_RUN`填充exact solver/parameters、stage、build/first-feasible/solve/validation/total、model metrics、memory与code commit，并与Solution逐字bundle replay。PlanningSolution/SolverReport Schema及状态合同不变；本Task不创建ScheduleVersion、approval、publish或Export。
+
+## P3 planned consumer chain
+
+P3-04只能把fresh formal Validator接受的PlanningSolution复制为immutable ScheduleVersion DRAFT，再由既有guard进入READY_FOR_REVIEW。P3-06的edit/lock只产生新DRAFT，P3-07/08分别执行approval/rejection与APPROVED-only publish；任何PUBLISHED内容更新均为禁止路径。上述行为须等待P3-01合同/ADR、P3-02 Schema和P3-03 persistence完成，本次没有创建ScheduleVersion。

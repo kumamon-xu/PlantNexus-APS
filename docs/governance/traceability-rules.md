@@ -6,7 +6,7 @@ spec_version: 0.3.0
 phase: cross-phase
 normative: true
 source_sections: [5, 6, 86, 98, 99, 111]
-last_reviewed: 2026-08-21
+last_reviewed: 2026-08-24
 ---
 
 # 需求追踪规则
@@ -90,7 +90,7 @@ TASK-P0-10 的 provider closure 必须同时记录 GitHub repository/workflow/ev
 6. 使用 `--check-diff` 时，以 Task 的 `Diff base..HEAD` 已提交路径和当前 working tree 路径并集作为实际 Git diff；命中的 change-impact Rule ID 已在当前 Task 声明，且必审文档已列入 `Documents to update`；
 7. `OPEN` 关闭记录字段完整，PROD_OPEN 与 SIM_ASSUMPTION 命名空间没有混用。
 
-2026-08-20用户明确批准P1→P2后，校验器继续从`docs/current_phase.md` front matter读取current phase并支持任意`TASK-Pn-NN～NN`依赖范围。P0/P1 `done`历史卡继续参与依赖/引用审计；P1+必须包含`Completion conditions`，P2+还必须包含`Start gate`、`Dependency changes`、`ADR impact`与`Provider evidence`；P3+仍只能保留Milestone。
+2026-08-24用户明确批准P2→P3后，校验器继续从`docs/current_phase.md` front matter读取current phase并支持任意`TASK-Pn-NN～NN`依赖范围。P0～P2 `done`历史卡继续参与依赖/引用审计；P1+必须包含`Completion conditions`，P2+还必须包含`Start gate`、`Dependency changes`、`ADR impact`与`Provider evidence`。当前P3允许详细Task；P4+仍只能保留Milestone。
 
 TASK-P1-01建立的CI changed-task discovery仍要求`--discover-task-from <event-base-sha>`为完整、存在且为HEAD祖先的commit。普通range在`docs/tasks/**`中只能出现一个current-phase Task Card；历史/未来/phase错位/多个卡直接失败。若range没有Task Card，仅当仓库恰有一个current-phase `in_progress` Task时回退。选择完成后仍使用卡片`Diff base..HEAD`+working tree执行scope/impact，不把event base混成Task baseline。
 
@@ -237,3 +237,11 @@ P2 Exit evidence链必须区分：P2-01～13各自Diff base/implementation/evide
 Audit report可基于已验证prerequisite provider baseline及真实本地独立命令给出READY/NOT_READY，但不得预填自身尚未发生的provider。Task只有在audit implementation exact required run/job/artifact成功并由evidence-only closure回填后才`done`；provider失败必须撤回READY。READY只允许请求用户批准P2→P3，current phase/P2 Milestone在明确授权前仍为P2/`active`，不得创建P3 Task或声称Production readiness。
 
 TASK-P2-14 audit implementation `65c556789f176ad9de55523d6420737bb60f933f`的required run `32677741558` / job `97288829348` / artifact `9503227240`已精确成功；Task report为30 committed/0 working paths、3 rows、19 checks、0 issues，Gate为11/11且0 gaps。因此本evidence-only closure可把Task标为`done`；closure自身exact provider只能在push后外部核验。READY仍只允许请求用户批准P2→P3，current phase/P2 Milestone保持P2/`active`。
+
+## TASK-P3-00 planning trace rule application
+
+用户批准transition前已核验P2-14 audit implementation `65c556789f176ad9de55523d6420737bb60f933f`及closure `80c403384d1e171258cf874d26605d0d22aff1b2`的提交拓扑、exact required runs/jobs/artifacts、下载后的20+20份JSON与branch required context；因此P2可转`completed`、P3可转`active`。P2历史卡、audit report/manifest、失败记录和provider evidence不得改写。
+
+P3首次规划batch必须且只能由TASK-P3-00作为`phase-planning-owner`；P3-01～15均为同range新建的`phase-plan-member`、`planned`且无implementation SHA。链路固定为contract/ADR→Schema→persistence→validated DRAFT→read models→commands/authorization/publish/export→API→frontend/E2E→Gate→independent Audit。每张成员卡的后续启动必须有新用户授权、依赖`done`、clean synchronized/provider-verified HEAD与新40字符Diff base；batch创建不等于实现授权。
+
+P3证据必须区分planned注册与formed行为、internal Simulation publish与Production authority、P3 human-control与P4 Execution/Replan。P3-15只审计冻结事实；READY仍不自动进入P4或Production。TASK-P3-00 implementation与evidence-only closure各自也必须由exact required `validate`/artifact核验后才能`done`。

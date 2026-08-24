@@ -6,7 +6,7 @@ spec_version: 0.3.0
 phase: cross-phase
 normative: true
 source_sections: [23, 24, 40, 101, 103, 104]
-last_reviewed: 2026-08-20
+last_reviewed: 2026-08-24
 ---
 
 # Schema 版本与兼容规则
@@ -151,3 +151,7 @@ Problem v1/v2 Schema/sample及`uv.lock`启动fingerprint在Task卡中固定；�
 - Migration：没有KPI/ExportJob/ScheduleVersion persistence或已发布consumer，database/data migration为none。未发布internal package可丢弃重建，合同回滚只能移除新增additive类型并恢复set metadata，不能改写历史artifact；
 - Validation：Schema positive/sample round-trip、KPI v1 fingerprint preservation、same-input bytes、formal run lineage、hash/size/row count、mixed/tamper/missing/partial-write negatives及8-check machine report；
 - Dependency/ADR：runtime/dev pins与`uv.lock`不变；internal immutable package未改变架构或状态语义，因此不新增ADR。若进入persistence/publish/external storage必须停止并由P3 Task/ADR治理。
+
+## P3 planning boundary
+
+TASK-P3-02如获授权，只能执行additive set release：旧P2 document version、URN、sample bytes和consumer replay必须保留；新P3 documents须独立版本化、离线解析并提供compatibility/fingerprint negatives。P3-03 migration只消费已发布Schema，不得用数据库默认值反向定义合同；本次transition不改变`2.5.0`或任何依赖/lock。

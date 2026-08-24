@@ -6,7 +6,7 @@ spec_version: 0.3.0
 phase: P0
 normative: true
 source_sections: [12, 13, 41, 70, 71]
-last_reviewed: 2026-08-19
+last_reviewed: 2026-08-24
 ---
 
 # 目标仓库结构
@@ -99,3 +99,7 @@ TASK-P1-02在既有`schemas/json`/`schemas/samples`边界新增canonical-records
 ## TASK-P2-09 layout delta
 
 新增`simulation/scenarios/p2_correctness.py`、四个聚焦测试文件、两组deterministic Golden目录和一个五例synthetic correctness matrix目录；CI与既有integration contract只增加machine evidence接线。Fixture目录只保存versioned JSON与calculation note，不新增Schema、dependency、migration、Benchmark/Reference/Export、DB/API/Worker或P3目录。
+
+## P3 planned layout
+
+当前只新增`docs/tasks/P3/`中的16张Task卡；没有创建backend、schema、migration、frontend或workflow路径。未来P3-01只形成docs/ADR，P3-02负责Schema/contracts，P3-03负责persistence/migration，P3-04～10负责application/API/jobs/exporters，P3-11～13负责frontend，P3-14/15只形成Gate/Audit evidence。具体新路径必须在各Task激活时逐字冻结。

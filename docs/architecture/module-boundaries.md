@@ -6,7 +6,7 @@ spec_version: 0.3.0
 phase: cross-phase
 normative: true
 source_sections: [12, 13, 14, 30, 41, 47, 51, 65, 70]
-last_reviewed: 2026-08-21
+last_reviewed: 2026-08-24
 ---
 
 # 模块边界与依赖规则
@@ -179,3 +179,7 @@ Planning reporting新增的`calculate_schedule_kpi_metrics`只提取已有pure s
 该例外由AST integration test按“精确文件→精确module”固定为`p2_gate_report.py → app.exporters.contract_check`，不能扩展为通配或dynamic import。Gate对Simulation correctness/benchmark/export的依赖方向仍是evidence consumer单向下游；Domain/Planning/Validator/Exporter均不反向依赖Gate，因此无需新ADR。
 
 Required run `32465737712`的Lint/Type/full tests、Gate与artifact全部success，provider精确复验该单文件例外及其余application禁令；未出现API/ORM/Worker/native反向依赖。TASK-P2-13据此闭环，不改变P2-14/P3架构边界。
+
+## P3 planned module chain
+
+P3依赖方向固定为domain contracts/state→infrastructure repositories→application services/read models→API/jobs/exporters→frontend；router、worker和UI不得直接写repository状态、复制Validator/Solver规则或决定authority。P3-01用ADR固定边界，P3-03/04～10逐层落地，P3-11～13只通过HTTP/application合同消费。P4 execution/replan模块不得被P3引用为实现捷径。

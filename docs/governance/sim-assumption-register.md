@@ -6,7 +6,7 @@ spec_version: 0.3.0
 phase: cross-phase
 normative: true
 source_sections: [37, 38, 39, 43, 44, 49, 59, 62, 96]
-last_reviewed: 2026-08-21
+last_reviewed: 2026-08-24
 registry_version: 1.0.0
 ---
 
@@ -117,3 +117,9 @@ TASK-P2-13 provider closure：required artifact精确复现既有Scenario/Profil
 TASK-P2-14 local audit review：审计只重放SIM-ASSUMPTION-011～013的既有versioned correctness/reference/XS-S-M assets；额外`repeat=2`逐场景measurement是审计观测配置，不新增Factory/Profile/Scenario参数或分布。没有新增、修改或retire条目；SIM-ASSUMPTION-001～013全部继续`ACTIVE`，timing/memory/size不得成为Production default、capacity/SLA或PROD_OPEN closure，registry format version保持`1.0.0`。
 
 TASK-P2-14 provider closure：required run `32677741558` / artifact `9503227240`复验既有Scenario/Profile/seed/hash与两次Gate，没有新增、修改或retire assumption。SIM-ASSUMPTION-001～013全部继续`ACTIVE`，registry format version保持`1.0.0`。
+
+## P3 planning review
+
+P3规划只允许复用既有P2 validated synthetic schedule与Simulation plane测试actor验证状态、命令、API/UI、publish/export；没有新增拓扑、角色、权限、性能、分布或业务默认值，因此不登记新的SIM_ASSUMPTION。若后续Task需要新的定量Scenario，必须先版本化并注册，且不得关闭PROD_OPEN。
+
+SIM-ASSUMPTION-001～013全部继续`ACTIVE`。内部Simulation publish/export只证明P3工作流行为，不代表真实Production authority、capacity、SLA或external side effect，`registry_version=1.0.0`格式不变。

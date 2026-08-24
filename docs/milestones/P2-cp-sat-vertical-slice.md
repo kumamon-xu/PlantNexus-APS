@@ -1,7 +1,7 @@
 ---
 doc_id: MILESTONE-P2
 title: P2 — CP-SAT Vertical Slice
-status: active
+status: completed
 spec_version: 0.3.0
 phase: P2
 normative: true
@@ -13,7 +13,7 @@ last_reviewed: 2026-08-24
 
 ## Authorization
 
-P1 Exit Gate=`READY`且blocking gaps为空；用户于2026-08-20明确批准P1→P2并授权先进行P2 Task规划。P1现为`completed`，P2为当前`active` Milestone。该授权不自动启动任何P2业务Task，也不授权P3或Production release。
+P1 Exit Gate=`READY`且blocking gaps为空；用户于2026-08-20明确批准P1→P2并授权先进行P2 Task规划。P2全部Task及Exit Gate证据随后闭环。用户于2026-08-24在复核P2 exact provider evidence与提交拓扑后明确批准P2→P3；P2现为`completed`历史Milestone。该状态变化不改写任何历史失败、修复、Simulation/provider evidence，也不构成Production release。
 
 ## Outcome
 
@@ -68,7 +68,7 @@ P2-03与P2-04在合同固定后可并行准备，但P2-05必须同时等待Backe
 
 ## Current execution boundary
 
-TASK-P2-00～14均已由local/exact provider闭环为`done`。P2-03形成exact Solver dependency与Backend engineering foundation，P2-04形成formal independent Validator，P2-05～07形成完整C-001～C-011 hard model，P2-08形成唯一OBJ-001与Global Strategy，P2-09形成七类correctness integration，P2-10形成五个non-production Reference Schedulers，P2-11形成不可发布internal Export闭环，P2-12形成versioned XS/S/M BenchmarkRunner，P2-13形成完整Vertical Slice Gate evidence，P2-14给出Exit=`READY`且0 gaps。P2保持`active`并等待用户明确transition，且不进入P3。
+TASK-P2-00～14均已由local/exact provider闭环为`done`。P2-03形成exact Solver dependency与Backend engineering foundation，P2-04形成formal independent Validator，P2-05～07形成完整C-001～C-011 hard model，P2-08形成唯一OBJ-001与Global Strategy，P2-09形成七类correctness integration，P2-10形成五个non-production Reference Schedulers，P2-11形成不可发布internal Export闭环，P2-12形成versioned XS/S/M BenchmarkRunner，P2-13形成完整Vertical Slice Gate evidence，P2-14给出Exit=`READY`且0 gaps。P2现为`completed`；其实现和审计只作为P3只读输入，不因transition扩展为P3或Production能力。
 
 P2-02已形成global schema set`2.4.0`、PlanningPolicy/SolveLimits/PlanningSolution/SolverReport v1、七种status与pure fingerprint/precheck/CI report。P2-03未修改这些合同字节；empty/model-invalid smoke不构成业务可行性或candidate。TASK-P2-11以additive set`2.5.0`新增KPI/manifest合同且保留所有历史artifact。TASK-P2-04～14现均已完成，P2 Exit Gate=`READY`。
 
@@ -130,4 +130,8 @@ Implementation `dc2e5cd41080603606090ebfc4bc6162941c5f7f`的required run `324657
 
 TASK-P2-14已在audit execution head `c6e57566871faefb2582e1c33218e1ba22b44785`独立执行全部acceptance。476 tests、两次完整Gate 11/11、Golden JSSP/FJSP、Cross Workshop、Calendar、Material Delay、Running、Hard Lock及XS/S/M均PASS；七场景另有14/14逐次model/build/first/objective/bound/gap/memory/Validator记录，XS/S/M各8/8且0 warning，blocking gaps为空。因此[audit report](P2-exit-gate-audit-report.md)与[manifest](P2-exit-gate-evidence-manifest.json)给出P2 Exit Gate=`READY`。
 
-Audit implementation `65c556789f176ad9de55523d6420737bb60f933f`的exact required run `32677741558` / job `97288829348` / artifact `9503227240`已success并复现20/20 JSON、Task 30 paths/3 rows/0 issues及Gate 11/11，故TASK-P2-14=`done`。Milestone保持`active`且current phase仍为P2；READY不创建P3 Task，也不授权P3或Production，必须等待用户明确phase transition。
+Audit implementation `65c556789f176ad9de55523d6420737bb60f933f`的exact required run `32677741558` / job `97288829348` / artifact `9503227240`已success并复现20/20 JSON、Task 30 paths/3 rows/0 issues及Gate 11/11，故TASK-P2-14=`done`。这是transition前的历史边界：当时Milestone保持`active`且current phase仍为P2，READY没有自动创建P3 Task或授权P3/Production。
+
+## P2→P3 transition closure
+
+Evidence-only closure `80c403384d1e171258cf874d26605d0d22aff1b2`的GitHub run `32678248961` / required `validate` job `97290201234` / artifact `9503372291`成功，且下载检查的20份JSON精确绑定该SHA、TASK-P2-14、3条Impact Rule、19 checks与0 issues。用户于2026-08-24基于上述证据明确批准P2→P3；P2因此转为`completed`，但所有P2 audit、失败、修复、provider evidence、Simulation假设与不可发布internal Export边界保持原样。

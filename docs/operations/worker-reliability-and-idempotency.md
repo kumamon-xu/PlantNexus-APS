@@ -6,7 +6,7 @@ spec_version: 0.3.0
 phase: P0-P7
 normative: true
 source_sections: [34, 65, 66, 67]
-last_reviewed: 2026-08-19
+last_reviewed: 2026-08-24
 ---
 
 # P0 Worker Reliability 与 Idempotency
@@ -40,3 +40,7 @@ Raw Staging新增首个business-specific durable idempotency repository。唯一
 batch metadata与全部opaque rows在一个SQLAlchemy transaction插入；integration trigger在第二行故障时证明batch/rows均rollback且原driver detail不泄漏。repository无update/delete，duplicate row identity由immutable contract和DB key双层拒绝；plane-scoped query不暴露另一data plane记录。
 
 该slice没有创建ImportJob/Celery task、lease/heartbeat/scanner、distributed side-effect exactly-once或真实PostgreSQL concurrency/outage测试。P0通用`engineering_idempotency_records`保持独立，未被Raw Staging复用或改写；未来Worker编排必须调用本repository而不能把Job success等同于canonical Import成功。
+
+## P3 idempotency allocation
+
+P3-03负责version/audit/export repository的transaction与unique-key基础；P3-08负责publish same-key same-result/conflict和supersession，P3-09负责ExportJob retry/atomic package，P3-10负责HTTP idempotency envelope。Publish成功、ExportJob成功和外部传输必须分离，worker重试不得重复副作用或改写PUBLISHED内容。当前没有新增worker、lease、outbox或Production exactly-once证据。

@@ -6,7 +6,7 @@ spec_version: 0.3.0
 phase: cross-phase
 normative: false
 source_sections: [11, 12, 65, 95, 100, 102]
-last_reviewed: 2026-08-21
+last_reviewed: 2026-08-24
 ---
 
 # 推荐技术栈与锁定规则
@@ -218,3 +218,7 @@ Gate实现只使用Python 3.12标准库`argparse/datetime/hashlib/json/pathlib/p
 `p2-vertical-slice-report.v1`是严格internal Python-validated machine contract，未发布外部JSON Schema；若未来持久化、API或第三方consumer使用，必须另立Task发布Schema/compatibility/retention。当前workflow仅新增不可跳过的CLI step并复用`actions/upload-artifact@v4`既有路径。
 
 Implementation provider对exact lock、Lint、Type、full tests、Gate、build与artifact全部success；artifact digest=`sha256:35e67191d1026169d9acd2a64f50e93bd8d2704df9f8ba1a2297f2dd2a00ca4d`。本Task无dependency/Schema/migration/ADR变化的结论据此闭环。
+
+## P3 dependency allocation
+
+本次transition不修改Python依赖、`uv.lock`、Frontend依赖或CI。TASK-P3-01须先在ADR/技术栈中确认React/TypeScript/build/test方案；只有TASK-P3-11可在独立授权后引入exact frontend pins/lock并执行point-in-time SCA/license审查。P3-12/13不得无审查增加Gantt/E2E库，Production部署栈继续未形成。

@@ -6,7 +6,7 @@ spec_version: 0.3.0
 phase: P0-P4
 normative: true
 source_sections: [21, 26, 33, 35, 47, 48, 50, 69, 79]
-last_reviewed: 2026-08-19
+last_reviewed: 2026-08-24
 ---
 
 # 执行事实、锁定与重排边界
@@ -65,3 +65,7 @@ COMPLETED继续不进入future assignment；其historical anchor仍可约束acti
 HARD lock精确固定resource/start/end。若HARD interval不在tick grid、与权威duration不一致、多个HARD互相冲突或与RUNNING tuple冲突，输入在model build前以稳定MODEL_INVALID拒绝；与calendar、其他固定占用或horizon的合法冲突由CP-SAT认证INFEASIBLE。SOFT lock只回写metadata reference，不形成hard constraint、hint或稳定性成本。
 
 本Task不产生ExecutionEvent、ReplanRequest、freeze window、ChangeReport或ScheduleVersion变更；OBJ-002和P4仍未启动。Production fact/lock authority及freeze policy继续由OPEN-005/007约束。
+
+## P3 lock boundary
+
+P3-06只允许针对既有计划内容提交human edit/lock command，经server validation与formal Validator后产生新DRAFT；它不能消费新的ExecutionEvent、移动RUNNING/HARD事实、应用freeze window、计算OBJ-002或生成ChangeReport。上述动态事实保护继续属于P4，OPEN-005/007不因P3锁UI关闭。

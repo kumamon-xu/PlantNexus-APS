@@ -6,7 +6,7 @@ spec_version: 0.3.0
 phase: cross-phase
 normative: true
 source_sections: [7, 8, 27, 43, 81, 82, 107]
-last_reviewed: 2026-08-19
+last_reviewed: 2026-08-24
 ---
 
 # 能力矩阵
@@ -65,3 +65,7 @@ TEST-CAPABILITY-001 检查 YAML 与纯枚举一致以及 explicit rejection。�
 Canonical RoutingOperation的`required_capabilities`同时容纳versioned platform declaration与普通设备能力标签。Data Validation对registry中`UNSUPPORTED/DEFERRED`名称输出`UNSUPPORTED_CAPABILITY`；`V1_SUPPORTED`只允许声明且不要求资源伪造同名设备标签。未登记但格式合法的名称按ordinary machine capability处理，至少一个显式resource option必须指向声明全部这些标签的现有Resource，否则输出`MISSING_RESOURCE/DATA_ERROR`。
 
 重复/空/非文本声明分别保持`DUPLICATE_CAPABILITY`或`INVALID_CAPABILITY_DECLARATION`。该逻辑形成P1 input precheck，不把DAG_ROUTING/ALTERNATIVE_RESOURCE等合同状态提升为Solver实现，也不改变20项registry状态或C-012～C-018语义。
+
+## P3 planning allocation
+
+P3只消费P2已验证的C-001～C-011/OBJ-001结果并增加计划版本、人机控制、内部发布、导出和审计工作区；它不改变20项capability registry或支持C-012～C-018。ExecutionEvent、DYNAMIC_REPLANNING、OBJ-002、freeze和Execution Simulator仍属于P4；任何未支持能力继续显式拒绝，不能由UI/API静默忽略。

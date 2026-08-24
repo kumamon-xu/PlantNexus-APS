@@ -6,7 +6,7 @@ spec_version: 0.3.0
 phase: cross-phase
 normative: true
 source_sections: [16, 59, 60, 61, 105, 106]
-last_reviewed: 2026-08-21
+last_reviewed: 2026-08-24
 registry_version: 1.0.0
 ---
 
@@ -132,3 +132,9 @@ TASK-P2-13 provider closure：required run/artifact只精确复现Simulation/dev
 TASK-P2-14 local audit review：Exit READY来自versioned synthetic correctness/benchmark、formal Validator、internal non-publishable Export、测试/构建/治理与provider evidence，不是任何业务Authority或closure record。审计没有收到真实接口/字段/拓扑/日历/material/priority/role、历史生产数据、capacity/SLA或migration/publish决定；OPEN-001～015全部继续`OPEN`并阻止依赖这些事实的Production声明，registry format version保持`1.0.0`。
 
 TASK-P2-14 provider closure：required run `32677741558` / artifact `9503227240`只确认上述Synthetic Exit审计可在provider精确复现，不是业务Authority或PROD_OPEN closure record。OPEN-001～015全部继续`OPEN`，registry format version保持`1.0.0`。
+
+## P3 planning review
+
+P3将版本、approval/reject、internal publish、export与audit分配到TASK-P3-01～15，但没有收到任何Authority/Evidence closure record。尤其OPEN-010继续阻止猜测真实审批责任；OPEN-002/015继续阻止外部MES/ERP publish target与字段authority；OPEN-012继续阻止Production runtime/readiness承诺。P3只能先形成authority-neutral capability、Simulation test actor与Production default-deny。
+
+本次transition/规划未关闭、重命名或改变任何条目；OPEN-001～015全部保持`OPEN`，P3 internal publish不得写成Production approval/publish，`registry_version=1.0.0`格式不变。

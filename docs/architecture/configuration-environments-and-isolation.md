@@ -6,7 +6,7 @@ spec_version: 0.3.0
 phase: cross-phase
 normative: true
 source_sections: [16, 38, 49, 62, 64, 95, 96]
-last_reviewed: 2026-08-21
+last_reviewed: 2026-08-24
 ---
 
 # 配置、环境与数据隔离
@@ -178,3 +178,7 @@ Gate CLI只有`--root`、`--repeat >= 2`和`--report`三个显式参数；所有
 Required workflow在既有XS step后真实执行两次七类correctness、XS/S/M和output contract，并把单一Gate JSON纳入现有artifact glob。Local与provider运行都保持Simulation-only；相对baseline仍按各Benchmark报告环境规则判定，Gate不会把GitHub runner或本机值转成Production部署规格。
 
 Required run `32465737712`已在GitHub Linux runner精确执行该Gate并上传artifact `9440650646`；Gate及全部sub-report绑定同一SHA，未泄漏secret或建立Production配置。跨环境执行结果仍仅属development evidence。
+
+## P3 environment planning
+
+P3 development/Simulation只能使用显式data plane和test actor；Production channel保持default-deny并不得配置真实publish target或Simulation API。P3-03 persistence、P3-08 publish、P3-09 ExportJob、P3-10 API与P3-11 frontend分别必须证明环境/secret/target隔离；本次不修改配置、infra、数据库或deployment。

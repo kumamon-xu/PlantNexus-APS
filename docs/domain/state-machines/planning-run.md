@@ -6,7 +6,7 @@ spec_version: 0.3.0
 phase: P0-P2
 normative: true
 source_sections: [29, 32, 65]
-last_reviewed: 2026-08-19
+last_reviewed: 2026-08-24
 ---
 
 # PlanningRun 状态机
@@ -78,3 +78,7 @@ Pure mapping把OPTIMAL/FEASIBLE送往`SOLVED`，INFEASIBLE送往`INFEASIBLE`，U
 ## TASK-P2-11 reporting review
 
 KPI v2与internal manifest只引用既有`planning_run_id`，并要求该ID与真实SolverReport完全一致；它们不创建、claim、完成或重试PlanningRun。`generated_at_utc`取同一SolverReport的finished time，只是immutable provenance，不是状态转移时间写入。PlanningRun state registry、repository、worker lease/heartbeat和failure audit均未修改。
+
+## P3 planning allocation
+
+P3只消费已经完成且candidate通过formal Validator的PlanningRun/Solution；创建ScheduleVersion不得改变PlanningRun状态或重试Solver。P3-04负责消费边界，P3-14/15验证lineage和无反向状态副作用；本次不增加PlanningRun pair、repository或worker行为。

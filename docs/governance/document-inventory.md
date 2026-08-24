@@ -12,7 +12,7 @@ registry_version: 1.0.0
 
 # 文档清单
 
-本清单列出当前仓库已经实际存在的Markdown文档。P0/P1均已归档为completed；P2现为active，TASK-P2-00～14已done且Exit Gate=`READY`，等待用户明确transition。产品API与Production Runbook正文尚未形成并继续由相应索引登记。
+本清单列出当前仓库已经实际存在的Markdown文档。P0～P2均已归档为completed；P2 Exit Gate=`READY`且用户已批准transition。P3现为active，只有TASK-P3-00执行phase-planning治理，P3-01～15均为planned。产品API、Frontend详细规范与Production Runbook正文尚未形成并继续由相应Task/索引登记。
 
 | Path | Doc ID | Status | Title |
 |---|---|---|---|
@@ -83,9 +83,9 @@ registry_version: 1.0.0
 | [milestones/P0-exit-gate-audit-report.md](../milestones/P0-exit-gate-audit-report.md) | MILESTONE-P0-AUDIT-001 | baseline | P0 Exit Gate Audit Report |
 | [milestones/P1-data-and-snapshot.md](../milestones/P1-data-and-snapshot.md) | MILESTONE-P1 | completed | P1 — Data & Snapshot |
 | [milestones/P1-exit-gate-audit-report.md](../milestones/P1-exit-gate-audit-report.md) | MILESTONE-P1-AUDIT-001 | baseline | P1 Exit Gate Audit Report |
-| [milestones/P2-cp-sat-vertical-slice.md](../milestones/P2-cp-sat-vertical-slice.md) | MILESTONE-P2 | active | P2 — CP-SAT Vertical Slice |
+| [milestones/P2-cp-sat-vertical-slice.md](../milestones/P2-cp-sat-vertical-slice.md) | MILESTONE-P2 | completed | P2 — CP-SAT Vertical Slice |
 | [milestones/P2-exit-gate-audit-report.md](../milestones/P2-exit-gate-audit-report.md) | MILESTONE-P2-AUDIT-001 | baseline | P2 Exit Gate Audit Report |
-| [milestones/P3-planning-workspace.md](../milestones/P3-planning-workspace.md) | MILESTONE-P3 | planned | P3 — Planning Workspace |
+| [milestones/P3-planning-workspace.md](../milestones/P3-planning-workspace.md) | MILESTONE-P3 | active | P3 — Planning Workspace |
 | [milestones/P4-dynamic-replanning.md](../milestones/P4-dynamic-replanning.md) | MILESTONE-P4 | planned | P4 — Dynamic Replanning |
 | [milestones/P5-advanced-capabilities.md](../milestones/P5-advanced-capabilities.md) | MILESTONE-P5 | planned | P5 — Advanced Capabilities |
 | [milestones/P6-ai-duration-prediction.md](../milestones/P6-ai-duration-prediction.md) | MILESTONE-P6 | planned | P6 — AI Duration Prediction |
@@ -157,10 +157,26 @@ registry_version: 1.0.0
 | [tasks/P2/TASK-P2-12-benchmark-runner-xs-s-m.md](../tasks/P2/TASK-P2-12-benchmark-runner-xs-s-m.md) | TASK-P2-12 | done | BenchmarkRunner and XS S M Profiles |
 | [tasks/P2/TASK-P2-13-p2-vertical-slice-gate-evidence.md](../tasks/P2/TASK-P2-13-p2-vertical-slice-gate-evidence.md) | TASK-P2-13 | done | P2 Vertical Slice Gate Evidence |
 | [tasks/P2/TASK-P2-14-p2-exit-gate-audit.md](../tasks/P2/TASK-P2-14-p2-exit-gate-audit.md) | TASK-P2-14 | done | P2 Exit Gate Audit |
+| [tasks/P3/TASK-P3-00-phase-transition-and-task-planning-governance.md](../tasks/P3/TASK-P3-00-phase-transition-and-task-planning-governance.md) | TASK-P3-00 | in_progress | P3 Phase Transition and Task Planning Governance |
+| [tasks/P3/TASK-P3-01-planning-workspace-contract-and-adr-baseline.md](../tasks/P3/TASK-P3-01-planning-workspace-contract-and-adr-baseline.md) | TASK-P3-01 | planned | Planning Workspace Contract and ADR Baseline |
+| [tasks/P3/TASK-P3-02-schedule-version-workspace-and-export-schemas.md](../tasks/P3/TASK-P3-02-schedule-version-workspace-and-export-schemas.md) | TASK-P3-02 | planned | ScheduleVersion Workspace and Export Schemas |
+| [tasks/P3/TASK-P3-03-schedule-version-audit-and-export-persistence.md](../tasks/P3/TASK-P3-03-schedule-version-audit-and-export-persistence.md) | TASK-P3-03 | planned | ScheduleVersion Audit and Export Persistence |
+| [tasks/P3/TASK-P3-04-validated-solution-to-reviewable-schedule-version.md](../tasks/P3/TASK-P3-04-validated-solution-to-reviewable-schedule-version.md) | TASK-P3-04 | planned | Validated Solution to Reviewable ScheduleVersion |
+| [tasks/P3/TASK-P3-05-planning-workspace-read-models-and-comparison.md](../tasks/P3/TASK-P3-05-planning-workspace-read-models-and-comparison.md) | TASK-P3-05 | planned | Planning Workspace Read Models and Comparison |
+| [tasks/P3/TASK-P3-06-gantt-edit-and-lock-command-pipeline.md](../tasks/P3/TASK-P3-06-gantt-edit-and-lock-command-pipeline.md) | TASK-P3-06 | planned | Gantt Edit and Lock Command Pipeline |
+| [tasks/P3/TASK-P3-07-approval-rejection-and-audit-service.md](../tasks/P3/TASK-P3-07-approval-rejection-and-audit-service.md) | TASK-P3-07 | planned | Approval Rejection and Audit Service |
+| [tasks/P3/TASK-P3-08-idempotent-publication-and-supersession.md](../tasks/P3/TASK-P3-08-idempotent-publication-and-supersession.md) | TASK-P3-08 | planned | Idempotent Publication and Supersession |
+| [tasks/P3/TASK-P3-09-export-job-and-standard-package.md](../tasks/P3/TASK-P3-09-export-job-and-standard-package.md) | TASK-P3-09 | planned | ExportJob and Standard Export Package |
+| [tasks/P3/TASK-P3-10-planning-workspace-http-api.md](../tasks/P3/TASK-P3-10-planning-workspace-http-api.md) | TASK-P3-10 | planned | Planning Workspace HTTP API |
+| [tasks/P3/TASK-P3-11-frontend-foundation-and-read-only-workspace.md](../tasks/P3/TASK-P3-11-frontend-foundation-and-read-only-workspace.md) | TASK-P3-11 | planned | Frontend Foundation and Read-only Workspace |
+| [tasks/P3/TASK-P3-12-gantt-resource-load-and-version-comparison-ui.md](../tasks/P3/TASK-P3-12-gantt-resource-load-and-version-comparison-ui.md) | TASK-P3-12 | planned | Gantt Resource Load and Version Comparison UI |
+| [tasks/P3/TASK-P3-13-human-control-actions-and-ui-e2e.md](../tasks/P3/TASK-P3-13-human-control-actions-and-ui-e2e.md) | TASK-P3-13 | planned | Human Control Actions and UI E2E |
+| [tasks/P3/TASK-P3-14-p3-vertical-slice-gate-evidence.md](../tasks/P3/TASK-P3-14-p3-vertical-slice-gate-evidence.md) | TASK-P3-14 | planned | P3 Vertical Slice Gate Evidence |
+| [tasks/P3/TASK-P3-15-p3-exit-gate-audit.md](../tasks/P3/TASK-P3-15-p3-exit-gate-audit.md) | TASK-P3-15 | planned | P3 Exit Gate Audit |
 | [tasks/README.md](../tasks/README.md) | DOC-TASK-INDEX | living | Task Card 索引 |
 | [tasks/TASK_TEMPLATE.md](../tasks/TASK_TEMPLATE.md) | TEMPLATE-TASK | baseline | Task Card Template |
 
-更新文档时应同步维护本清单。`uv run python scripts/check_docs.py`会校验本表是否完整覆盖当前142份`docs/**/*.md`，并核对Doc ID、status和title，但不会自动改写清单。根`README.md`、根`AGENTS.md`、非Markdown evidence manifest、代码和脚本不属于正式文档清单。
+更新文档时应同步维护本清单。`uv run python scripts/check_docs.py`会校验本表是否完整覆盖当前159份`docs/**/*.md`，并核对Doc ID、status和title，但不会自动改写清单。根`README.md`、根`AGENTS.md`、非Markdown evidence manifest、代码和脚本不属于正式文档清单。
 
 本清单格式为 `registry_version: 1.0.0`；列结构或状态比较语义变化时提升版本。
 
@@ -253,3 +269,5 @@ Implementation artifact `9440650646`已复现142-doc inventory与37 committed/0 
 TASK-P2-14 activation新增`milestones/P2-exit-gate-audit-report.md`并同步本Task为`in_progress`，inventory因此覆盖143份Markdown。相邻machine manifest为JSON，不进入Markdown清单；report/manifest当前均明确`NOT_PERFORMED`且不构成Exit结论。Registry table format仍为`1.0.0`；P2 Milestone保持`active`、P3未启动。
 
 TASK-P2-14 local audit writeback不再新增、删除或重命名Markdown，inventory继续143份；audit report front matter现为`baseline`并与本清单一致，JSON manifest及ignored Gate/XS/S/M/scenario/trace reports仍不进入Markdown清单。Roots=30、Test IDs=36、OPEN=15、SIM assumptions=13、risks=11、Tasks=37与所有registry format version保持不变；最终治理为30 paths/3 rows/19 checks/0 issues。Implementation artifact `9503227240`精确复现上述inventory/治理范围，故TASK-P2-14=`done`、Exit=`READY`；P2保持`active`、P3未启动。
+
+TASK-P3-00 phase-planning batch新增16张P3 Task Markdown，inventory从143增至159；没有创建其他合同、ADR、Frontend或Runbook正文。P2状态转为`completed`、P3转为`active`；TASK-P3-00=`in_progress`，P3-01～15=`planned`。Roots=30、OPEN=15、SIM assumptions=13不变；Test IDs由36增至48，risks由11增至13，Tasks由37增至53，所有registry format version保持`1.0.0`。本次不把任何P3业务、Production authority/publish/readiness或P4能力登记为formed。

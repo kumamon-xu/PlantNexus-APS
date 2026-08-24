@@ -6,7 +6,7 @@ spec_version: 0.3.0
 phase: P2
 normative: false
 source_sections: [24, 36, 38, 39, 63, 64, 67, 103]
-last_reviewed: 2026-08-20
+last_reviewed: 2026-08-24
 ---
 
 # 合同文档索引
@@ -72,3 +72,7 @@ TASK-P1-12独立审计已重放全部合同、迁移、Generator和common-ingres
 ## TASK-P2-14 Exit contract audit
 
 P2独立Exit审计已重跑schema set`2.5.0`及全部registered contract tests，并核对Problem v2、Policy/Limits、Solution/Report、Validation、KPI/Export Manifest各自固定document版本与历史fingerprints。结果为PASS，Schema、data dictionary、migration、dependency/lock和ADR均零变化；C-012～018、OBJ-002/003、P3 API/state/publish合同没有被补猜。Audit implementation required run `32677741558` / artifact `9503227240`已精确复验并闭环，TASK-P2-14=`done`、Exit=`READY`；P3合同仍未授权。
+
+## P3 planning allocation
+
+P3现为active，但只有TASK-P3-00治理在执行。TASK-P3-01须先形成人类可审计的Workspace API、authorization/audit、页面和permission合同及ADR；TASK-P3-02再发布严格机器Schema；TASK-P3-10只能序列化这些合同，不能自建第二套HTTP事实。当前schema set仍为`2.5.0`，没有P3合同、Schema、migration或consumer evidence被标记formed。

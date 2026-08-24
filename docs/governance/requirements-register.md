@@ -6,7 +6,7 @@ spec_version: 0.3.0
 phase: cross-phase
 normative: true
 source_sections: [3, 4, 5, 6, 107]
-last_reviewed: 2026-08-21
+last_reviewed: 2026-08-24
 registry_version: 1.0.0
 ---
 
@@ -117,3 +117,9 @@ TASK-P2-13 provider closure：implementation `dc2e5cd41080603606090ebfc4bc616294
 TASK-P2-14 local audit review：REQ-004/005/006/009/012/014/015的P2完整链已由13组Task topology、26个exact prerequisite provider artifacts、476项全仓测试、两次Gate 11/11、七correctness场景×两轮完整§76 measurement、XS/S/M各8/8、formal Validator/Reference/Export与四类拒绝独立复核为PASS，blocking gaps为空，故Exit decision=`READY`。Decision-writing时audit implementation provider尚待闭环；本结论不改变根ID生命周期，REQ-001～015继续`ALLOCATED`，Production authority/publish与P3仍未形成，registry format version保持`1.0.0`。
 
 TASK-P2-14 provider closure：implementation `65c556789f176ad9de55523d6420737bb60f933f`的required run `32677741558` / artifact `9503227240`精确复现20/20 reports、476 tests、Gate 11/11及30-path治理链，故Task=`done`、Exit=`READY`。全部Requirement根ID继续`ALLOCATED`，Production authority/publish与P3仍未形成，registry format version保持`1.0.0`。
+
+## P3 planning allocation
+
+用户批准transition后，REQ-006分配到TASK-P3-01～03、09/10、13～15，REQ-007分配到TASK-P3-01～15，REQ-009贯穿TASK-P3-01～15；REQ-004/005作为validated-solution与formal-Validator只读前提进入P3-04～06、10～15。该分配建立合同→Schema→persistence→application→API/UI→Gate→Audit链，但P3-01～15均未形成业务实现证据。
+
+REQ-008/013继续只属于P4，ExecutionEvent、ReplanRequest、OBJ-002、freeze、ChangeReport和Execution Simulator不得进入P3。REQ-001～015的根生命周期全部保持`ALLOCATED`，P2 historical evidence不改写，OPEN-010等Production authority问题未关闭，`registry_version=1.0.0`格式不变。

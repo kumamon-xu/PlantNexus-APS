@@ -30,7 +30,11 @@ P0 当前状态：TASK-P0-01～10 全部完成；[superseding audit](P0-exit-gat
 
 P1当前状态：[`P1 — Data & Snapshot`](P1-data-and-snapshot.md)为`completed`，TASK-P1-01～12全部`done`。[P1 audit](P1-exit-gate-audit-report.md)的271项回归、14/14 pipeline、全部machine/build/docs/provider证据均PASS；TASK-P1-12 implementation `a5d7e4a68dc12d48e36cb692500f59446f8097b4` / run `32326616525` / artifact `9391591718`已闭环，Gate=`READY`且无blocking gap。用户于2026-08-20明确批准transition。
 
-P2当前状态：[`P2 — CP-SAT Vertical Slice`](P2-cp-sat-vertical-slice.md)为`active`。TASK-P2-00～14均已闭环为`done`；P2 Exit Gate=`READY`且0 gaps。必须等待用户明确批准P2→P3，不得自动进入P3。
+P2当前状态：[`P2 — CP-SAT Vertical Slice`](P2-cp-sat-vertical-slice.md)为`completed`。TASK-P2-00～14均已闭环为`done`；P2 Exit Gate=`READY`且0 gaps。用户于2026-08-24在复核exact provider evidence、提交拓扑与clean synchronized baseline后明确批准P2→P3。
+
+P3当前状态：[`P3 — Planning Workspace`](P3-planning-workspace.md)为`active`。只有TASK-P3-00 phase-planning governance处于`in_progress`；TASK-P3-01～15仅为`planned`且未获业务实现授权。P3-15必须最后独立执行Exit Gate Audit；READY不自动进入P4或Production。
+
+## P2 execution history
 
 TASK-P2-03 implementation `9268b88ca7ce90a8f72023241f87e2d3676fd58a`的run `32346208046`、required job `96355386111`和artifact `9398128763`均success；P2 phase保持active，后续Task不自动启动。
 
@@ -70,4 +74,6 @@ Implementation `dc2e5cd41080603606090ebfc4bc6162941c5f7f`的required run `324657
 
 用户于2026-08-24明确授权TASK-P2-14。启动时`main=origin/main=e76776d83726d13600d8ea29fd490474c8e32604`且clean；P2-01～13的13组提交拓扑、26个implementation/closure required runs与artifacts均独立复核PASS，当前closure run/job/artifact为`32466635638` / `96724500691` / `9440970310`。本Task只形成P2 Exit Gate report/manifest与治理证据，不进入P3；Milestone在用户另行批准transition前继续`active`。
 
-TASK-P2-14本地独立审计结论为`READY`：476 tests、两次11/11 Gate、七correctness场景×两轮完整§76 measurement、XS/S/M各8/8、108次Benchmark Validator、四类exact rejection及0 blocking gap均PASS；report/manifest一致。Audit implementation `65c556789f176ad9de55523d6420737bb60f933f`的run `32677741558` / required job `97288829348` / artifact `9503227240`精确复现20/20 JSON、30 paths/3 rows/19 checks/0 issues及Gate 11/11，故Task=`done`。P2 Milestone仍为`active`（Gate ready / awaiting user decision），P3未启动。
+TASK-P2-14本地独立审计结论为`READY`：476 tests、两次11/11 Gate、七correctness场景×两轮完整§76 measurement、XS/S/M各8/8、108次Benchmark Validator、四类exact rejection及0 blocking gap均PASS；report/manifest一致。Audit implementation `65c556789f176ad9de55523d6420737bb60f933f`的run `32677741558` / required job `97288829348` / artifact `9503227240`精确复现20/20 JSON、30 paths/3 rows/19 checks/0 issues及Gate 11/11，故Task=`done`。
+
+Evidence-only closure `80c403384d1e171258cf874d26605d0d22aff1b2`的run `32678248961` / required job `97290201234` / artifact `9503372291`精确success；下载的implementation/closure artifacts均为20份可解析JSON且SHA、Task、Impact Rules、19 checks、0 issues一致。该SHA是P3-00不可变规划Diff base；transition保留P2所有历史记录，不把P2 internal Export提升为P3/Production publish。

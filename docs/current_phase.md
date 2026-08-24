@@ -3,74 +3,73 @@ doc_id: DOC-PHASE-CURRENT
 title: 当前阶段
 status: living
 spec_version: 0.3.0
-phase: P2
+phase: P3
 normative: true
 source_sections: [73, 74, 75, 76, 110, 111]
 last_reviewed: 2026-08-24
 ---
 
-# 当前阶段：P2 — CP-SAT Vertical Slice
+# 当前阶段：P3 — Planning Workspace
 
 ## 阶段授权与证据
 
-用户于2026-08-20明确批准P1→P2 phase transition，并授权先进行P2 Task规划。切换前已重新核验：TASK-P1-01～12全部`done`；[P1 Exit Gate audit](milestones/P1-exit-gate-audit-report.md)与[machine manifest](milestones/P1-exit-gate-evidence-manifest.json)给出overall=`READY`、blocking gaps为空；audit implementation `a5d7e4a68dc12d48e36cb692500f59446f8097b4`是规划基线`098c44059856e3203d95d046fea44894b5cf414b`的祖先。
+用户于2026-08-24明确批准P2→P3 phase transition，并授权先执行P3 Milestone激活、Task规划与文档治理。切换前重新核验：TASK-P2-00～14全部`done`；[P2 Exit Gate audit](milestones/P2-exit-gate-audit-report.md)与[machine manifest](milestones/P2-exit-gate-evidence-manifest.json)均为overall=`READY`、`blocking_gaps=[]`；13组前序implementation/closure以及P2-14三段提交拓扑均保持祖先关系。
 
-GitHub上audit implementation的push run `32326616525` / required `validate` job `96299073525` / artifact `9391591718`均success；规划基线自身的run `32327121469` / job `96300506550` / artifact `9391753870`也精确绑定`098c44059856e3203d95d046fea44894b5cf414b`并success。规划启动时`main=origin/main`且working tree clean，因此前提一致，阶段切换成立。
+P2-14 audit implementation `65c556789f176ad9de55523d6420737bb60f933f`的GitHub push run `32677741558` / required `validate` job `97288829348` / artifact `9503227240`成功，artifact digest=`sha256:fbb76f0ab44d3bdcff2d31e70f9698af84e10e48ee57ae611eef8529a288240e`；evidence-only closure `80c403384d1e171258cf874d26605d0d22aff1b2`的run `32678248961` / job `97290201234` / artifact `9503372291`也成功，digest=`sha256:673412905b7420660d1e9f07755fcda6291f85f8f2bd926b4bf31a0a6bd1bd0c`。下载检查的两份artifact均含20份可解析JSON，Task/SHA/Impact Rules/checks/issues与对应提交一致且0 issue。规划启动时`main=origin/main=80c403384d1e171258cf874d26605d0d22aff1b2`、ahead/behind=`0/0`且working tree clean，因此transition前提一致。
 
-P1 Milestone现为`completed`，P2 Milestone为`active`。这只授权P2范围内的Task规划与后续逐Task实现，不表示Solver、Validator、Benchmark、Export或Production能力已经形成。
+P2 Milestone现为`completed`，P3 Milestone为`active`。该授权只启动`TASK-P3-00 — P3 Phase Transition and Task Planning Governance`；P3-01～15仅建立为`planned`，不因依赖、规划或本次验收自动进入实现。
 
 ## 当前目标
 
-建立唯一受支持的P2纵向链：
+在保持P2求解与Validator闭环只读的前提下，建立唯一受支持的P3计划工作区链：
 
 ```text
-PlanningSnapshot
-→ PlanningProblem v2
-→ PlanningPolicy + SolveLimits
-→ GlobalCpSatStrategy + CpSatBackend
-→ PlanningSolution
-→ independent ScheduleValidator
-→ KPI + SolverReport + internal Export package
-→ Reference Scheduler / BenchmarkRunner
+validated PlanningSolution
+→ immutable ScheduleVersion DRAFT
+→ workspace read models / comparison
+→ command-only Gantt edit and lock
+→ server validation + new DRAFT
+→ approval / rejection / audit
+→ idempotent publish / supersession
+→ ExportJob + standard export package
+→ HTTP API + Planning Workspace UI
 ```
 
-只实现C-001～C-011与OBJ-001；Gate覆盖Golden JSSP/FJSP、Cross Workshop、Calendar、Material Delay、Running、Hard Lock和XS/S/M，并记录model size、build、first feasible、objective、bound、gap、memory、Validator与Snapshot→Export证据。
+P3 Gate要求DRAFT/REJECTED不可发布、只有APPROVED可发布、PUBLISHED immutable、export idempotent；Gantt编辑必须走UI Command→Server Validation→New Draft→formal Validator，不得直接更新published schedule。权限先采用authority-neutral capability与default-deny边界，OPEN-010关闭前不声明真实审批责任或Production publish authority。
 
 ## 当前Task与启动边界
 
-`TASK-P2-00 — P2 Phase Transition and Task Planning Governance`、`TASK-P2-01 — PlanningProblem v2 Contract Gap Closure`与`TASK-P2-02 — Planning Machine Contracts and Status`均已闭环为`done`。P2-02 implementation `2661598ecb592942e50c9a13dd41ff5b2535ca0d`的GitHub push run `32342489997`、required `validate` job `96344226221`与artifact `9396828326`均精确绑定该SHA并为success；closure HEAD `f73f8c90af94d3c9b05ecc10b6c999594a3b7d66`的run `32342949743` / job `96345556588` / artifact `9396984310`也成功并作为P2-03 Diff base。
+`TASK-P3-00`以不可变Diff base `80c403384d1e171258cf874d26605d0d22aff1b2`执行本次phase transition、完整Task规划和治理注册表同步；状态为`in_progress`，是本规划batch唯一`phase-planning-owner`。P3-01～15均为`phase-plan-member`、状态`planned`且无implementation SHA；每张卡只能在新的用户明确授权、依赖全部`done`、clean/synchronized/provider-verified HEAD写入新Diff base后启动。
 
-用户于2026-08-20明确授权执行`TASK-P2-03 — OR-Tools and SolverBackend Foundation`；该Task以clean、provider-verified `f73f8c90af94d3c9b05ecc10b6c999594a3b7d66`启动，并在依赖变更前接受ADR-0011。现已由implementation `9268b88ca7ce90a8f72023241f87e2d3676fd58a`的GitHub run `32346208046` / required job `96355386111` / artifact `9398128763`闭环为`done`。Problem/Policy/Solution/Report合同字节和语义保持只读。
-
-P2-02把global schema set additive提升到`2.4.0`，新增四个互相离线解析的v1 document contract，并以`CONTRACT_SAMPLE`/`SOLVER_RUN`显式区分shape样例与真实运行。该发布样例的`not-installed`是P2-02历史shape证据，不随P2-03安装依赖而改写。TASK-P2-11再以additive `2.5.0`新增KPI v2与ExportManifest v1，而PlanningSolution/SolverReport仍保留document内的`2.4.0`。TASK-P2-00～14现均由exact implementation provider evidence闭环为`done`；P2 Exit Gate=`READY`，但阶段仍为P2并等待用户明确transition授权。
+推荐的第一个业务Task是`TASK-P3-01 — Planning Workspace Contract and ADR Baseline`，但本次不自动执行。它必须先固定页面/API/权限/状态机/错误/审计/idempotency合同与ADR，再允许P3-02及后续代码Task启动。
 
 ## 当前允许
 
-- 按已授权Task在P2范围内演进solver-neutral Problem/Policy/Limits/Solution/Report合同；
-- exact pin OR-Tools并保持其只存在于CP-SAT Backend；
-- 逐项实现C-001～C-011、OBJ-001、formal independent Validator、Reference Schedulers、internal Export与BenchmarkRunner；
-- 使用versioned Simulation Policy/Profile/Scenario运行correctness与XS/S/M；
-- 每个Task完成本地验收后，在用户本次授权边界内提交并直接push当前`main`，再核验exact required `validate`和artifact。
+- 本次仅修改`TASK-P3-00`允许的phase/milestone/task/architecture/contract/quality/governance文档；
+- 运行完整文档治理、current Task diff、`git diff --check`与禁止路径核验；
+- 提交并push当前`main`，核验规划implementation的exact required `validate`和artifact；必要时仅用evidence-only closure登记该provider事实；
+- 后续P3 Task只有在逐Task明确授权后，才可按各卡允许范围和不可变Diff base实施。
 
 ## 当前禁止
 
-- TASK-P2-09～13均已关闭且不得扩展其correctness/reference/output/benchmark/Gate实现范围；TASK-P2-14只可独立审计冻结事实并形成Exit report/manifest/provider evidence，TASK-P2-08也不再扩展OBJ-001/Global Strategy范围；
-- 修改Task允许范围外文件、预填PASS/provider evidence或跳过独立Validator；
-- 实现C-012～C-018、OBJ-002 Stability、动态Replan、ExecutionSimulator、P3 Workspace/审批/发布状态；
-- 把UNKNOWN写成INFEASIBLE、FEASIBLE写成OPTIMAL，或以hint代替Execution Fact/HARD lock；
-- 猜测Production权重、calendar/transport/default solve limits、性能阈值或真实system authority；
-- 将synthetic correctness/XS/S/M结果外推为Production SLA、容量或readiness。
+- 本次修改业务代码、Schema、migration、dependency/lock、测试断言、fixture/benchmark、CI workflow、frontend或infra；
+- 在`TASK-P3-01`合同/ADR基线前实现P3代码，或让任何P3-01～15自动进入`ready/in_progress`；
+- 直接更新PUBLISHED、绕过server/formal Validator、允许DRAFT/REJECTED发布或产生非幂等export/publish；
+- 实现P4的ExecutionEvent、ReplanRequest、OBJ-002 Stability、freeze window、ChangeReport或Execution Simulator；
+- 创建P4详细Task、进入P4，或声明Production readiness、approval authority、external publish/deployment已形成；
+- 改写P2历史audit、失败记录、provider evidence、Simulation假设或阶段边界。
 
 ## 阶段完成条件
 
-- Problem/Policy/Limits/Solution/Report版本化合同与solver/backend隔离成立；
-- C-001～C-011与OBJ-001由CP-SAT实现且formal independent Validator全部PASS；
-- Golden JSSP/FJSP、Cross Workshop、Calendar、Material Delay、Running、Hard Lock、Property/Mutation与Reference Scheduler证据形成；
-- Snapshot→Export internal package闭环，报告/hash/版本一致；
-- XS/S/M报告包含全部Gate字段且有provider artifact，不形成Production承诺；
-- TASK-P2-01～13全部`done`后，最后执行TASK-P2-14 Exit Gate Audit；只有audit=`READY`且用户再次明确批准，才允许请求进入P3。
+- ScheduleVersion、Comparison、Gantt/Resource Load/Order View、Lock、Approval/Reject/Publish、ExportJob、Audit、HTTP API与UI按P3卡片闭环；
+- DRAFT/REJECTED publish拒绝、APPROVED-only publish、PUBLISHED immutability、new-DRAFT edit和idempotent export均有contract/integration/E2E证据；
+- P3-14形成完整vertical-slice Gate evidence；最后独立执行P3-15 Exit Gate Audit；
+- P3-15 report/manifest必须给出真实overall和`blocking_gaps`，并由exact GitHub required `validate`和artifact复验；
+- 即使P3-15=`READY`，也必须等待用户再次明确批准才允许P3→P4 transition。
 
-Task全部完成或audit READY都不自动切换P3；失败时保持P2并建立有界remediation Task。
+失败时保持P3；实现缺口只能进入有界P3 remediation Task，P3-15本身不得修实现。P3 Task完成、Gate READY或内部Simulation publish都不构成Production readiness/approval/publish声明。
+
+## P2 阶段历史
 
 ## TASK-P2-03 执行结果
 

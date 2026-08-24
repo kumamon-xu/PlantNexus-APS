@@ -6,7 +6,7 @@ spec_version: 0.3.0
 phase: P0-P2
 normative: true
 source_sections: [17, 18, 19, 20, 21, 22]
-last_reviewed: 2026-08-20
+last_reviewed: 2026-08-24
 ---
 
 # APS 领域模型
@@ -124,3 +124,7 @@ PlanningPolicy与SolveLimits是显式version/source/data-plane的输入值；Pla
 KPI v2是从已验证的Snapshot/Problem/Solution/Validation/Solver/Quality bundle派生的immutable value；internal Export package是canonical bytes与manifest identity的值集合。二者都不是新的Factory/Order/Operation领域实体，也不拥有事实权威。Reporting只复算指标与校验血缘，不修改Solution、Problem或上游document。
 
 `schedule.json`继续是validated PlanningSolution，不是ScheduleVersion；目录写入也不是ExportJob aggregate或状态转移。Package manifest显式保存`NOT_CREATED/NOT_STARTED`边界和`publishable=false`，因此P2实现不会把计算结果提升为可评审、已审批或已发布计划。P3 persistence、actor/audit、external target与publish idempotency仍须由独立Task形成。
+
+## P3 aggregate allocation
+
+P3-02定义ScheduleVersion、AuditEvent与ExportJob机器合同，P3-03形成不可变repository/migration，P3-04才允许从fresh-validated solution创建首个DRAFT。Version content、lineage和decision/audit采用append-only语义；修改/lock生成新Version，ExportJob不拥有或改变ScheduleVersion状态。当前只分配aggregate责任，没有新增领域对象实现或Schema。

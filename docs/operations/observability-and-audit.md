@@ -6,7 +6,7 @@ spec_version: 0.3.0
 phase: P0-P7
 normative: true
 source_sections: [29, 42, 65, 93, 95]
-last_reviewed: 2026-08-19
+last_reviewed: 2026-08-24
 ---
 
 # P0 Observability 与 Audit 边界
@@ -26,3 +26,7 @@ PlantNexus application logger 输出单行 JSON，稳定包含 `event`、`level`
 TEST-OBS-001 的 P0 slice 位于 [`test_logging.py`](../../backend/tests/integration/test_logging.py)，health/config evidence 位于 [`test_config_and_health.py`](../../backend/tests/integration/test_config_and_health.py)。machine report 固定成功/失败 health 示例与 redacted log 示例。
 
 尚未形成 PlanningRun model size、build/first-feasible/solve/validation duration、objective/bound/gap/memory metrics，未形成 metric backend、trace exporter、dashboard、alert、SLO、audit event/table、retention/redaction review 或 clock-skew/collector failure behavior。外部 CI run、platform logs 和 production monitoring 也未运行；因此 NFR-OBS-001 只获得基础日志关联 slice，不能声称 PlanningRun observability 完成。
+
+## P3 audit allocation
+
+P3-02定义AuditEvent carrier，P3-03形成append-only persistence，P3-07～10为command/decision/publish/export/API记录actor capability、reason、correlation/idempotency key、source/target version与result；P3-14/15核对完整性和exact provider lineage。真实identity、retention/SIEM、dashboard/alert/SLO继续未决定，本次没有形成审计实现或Production observability。

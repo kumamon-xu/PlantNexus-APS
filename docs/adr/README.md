@@ -6,7 +6,7 @@ spec_version: 0.3.0
 phase: cross-phase
 normative: true
 source_sections: [97]
-last_reviewed: 2026-08-21
+last_reviewed: 2026-08-24
 ---
 
 # Architecture Decision Records
@@ -58,3 +58,7 @@ TASK-P2-09严格落实ADR-0003/0004/0005/0006/0008/0011：versioned Scenario只�
 TASK-P2-11继续落实ADR-0003/0005/0007/0008：reporting/export只消费solver-neutral immutable documents，SolverReport与formal Validator绑定，canonical UTC/seconds/ticks不改，validated PlanningSolution不冒充ScheduleVersion。Additive KPI/manifest合同和本地原子目录materialization未引入状态持久化、外部storage、approval或publish，也未改变module topology/dependency，因此不新增ADR。若未来创建ExportJob/ScheduleVersion、允许publish/external transfer、改变package identity/canonicalization或把ChangeReport提前到P2，必须停止并由P3/P4 Task及新/取代ADR治理。
 
 TASK-P2-12继续落实ADR-0002/0003/0004/0005/0006/0008/0011：Benchmark位于预留Simulation模块，只经solver-neutral Problem/Global Strategy/formal Validator/public KPI/Exporter；OR-Tools exact pin、单Global模型、OBJ-001、UTC/tick与Validator隔离均不变。三个internal v1 evidence合同、existing PyYAML dev工具和CI XS activation不改变架构、Schema、dependency或Production policy，因此不新增ADR。若未来引入decomposition/fallback、Production threshold/default、L/XL release gate、外部Benchmark service、持久化报告合同或共享Solver/Validator实现，必须停止并提交new/superseding ADR。
+
+## P3 ADR allocation
+
+本次governance transition不接受或预留新ADR编号。TASK-P3-01必须在激活时分配当时下一个未使用编号，并在任何P3 Schema/代码前创建、接受Workspace command/state/publication ADR；至少决定command-only edit/lock→new DRAFT、ScheduleVersion immutability、authority-neutral/default-deny authorization、APPROVED-only idempotent internal publish、Publish/Export分离、append-only audit与P4/Production边界。若实际需要新state/pair、identity provider、outbox、external storage/MES、SSR/microfrontend或P4语义，必须另建new/superseding ADR；不得修改ADR-0002/0005/0007/0009历史事实。

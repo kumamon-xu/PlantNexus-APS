@@ -6,7 +6,7 @@ spec_version: 0.3.0
 phase: P0-P4
 normative: true
 source_sections: [29, 32, 34, 60, 65, 91, 92]
-last_reviewed: 2026-08-21
+last_reviewed: 2026-08-24
 ---
 
 # 错误与求解状态模型
@@ -159,3 +159,7 @@ Gate新增的四项evidence只调用既有public contracts：`SECONDARY_CAPACITY
 任一correctness/benchmark/Validator/export/rejection/semantic-hash stage异常都会生成`p2-vertical-slice-report.v1` `FAIL`、blocking gap与非零exit；成功阶段不能抵消失败，也不在Gate中修复。该编排不增加error-code registry、Schema、HTTP/status/persistence mapping；P2 Exit decision始终`NOT_PERFORMED`。
 
 Required run `32465737712`精确复验四类rejection与FAIL/nonzero contract测试，artifact内Gate仍为0 blocking gaps且Exit=`NOT_PERFORMED`。没有新增error code或Production mapping。
+
+## P3 error allocation
+
+P3-01须先固定`INVALID_STATE_TRANSITION`、`AUTHORIZATION_DENIED`、`IDEMPOTENCY_CONFLICT`、`VALIDATION_FAILED`与`EXPORT_FAILED`的责任层和HTTP/UI映射；P3-02只能形成carrier，P3-04～10形成行为，P3-13验证用户可见负向路径。UNKNOWN仍不得写成INFEASIBLE，未授权Production必须fail closed；本次不新增error code或实现映射。

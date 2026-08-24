@@ -159,3 +159,5 @@ P3 Workspace Task还必须明确引用ADR-0012或后续superseding ADR，并记�
 ## TASK-P3-02 carrier-release governance note
 
 Additive machine-contract Task激活时必须逐字固定新Schema/sample/module/test/CI路径，并在任何实现前冻结此前全部published bytes/URN、current global metadata与lock摘要。若global metadata前移导致既有current-set assertion变化，须先扩卡并明确历史document const/bytes/行为断言仍不可改。Machine report必须同时保存positive、unknown/version/plane/non-interchangeability、canonical fingerprint drift、offline `$ref`、state/error namespace和forbidden-phase边界；provider成功前Task保持`in_progress`。
+
+涉及validated output→reviewable ScheduleVersion lifecycle时还必须记录：显式PlanningRun COMPLETED消费事实与零反向mutation/Solver调用；Snapshot/Problem/Solution/Validation/KPI/SolverReport/Quality/code完整lineage；fresh formal Validator与exact KPI在transaction前执行；DRAFT creation bytes、content fingerprint与READY immutable projection；单事务CAS+audit、same-key replay/conflict、audit rollback与并发结果；actor/auth-policy/reason/correlation/key-reference redaction及authority未形成边界。必须验证failed/mixed/stale/tamper/plane均无副作用，保留Schema/migration/dependency/Validator/fixture bytes；READY不得冒充approval/publish/Production readiness，回滚不得删除已形成Version/audit。

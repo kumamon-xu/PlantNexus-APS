@@ -40,3 +40,9 @@ TASK-P3-01已固定`audit-event.v1`的人类语义：event identity/version/UTC�
 `audit_events`现在按plane+event ID保存完整canonical carrier/SHA，按aggregate/time和correlation建索引，并以可选scope/key unique实现exact replay/conflict。Parent event必须在同plane存在；database trigger禁止任何update/delete，纠正只能由后续application追加新event。Caller-owned transaction入口允许P3-07～10把成功state/idempotency/audit放在同一transaction，但本Task不自行写业务audit。
 
 Machine evidence只证明synthetic append/replay/conflict/list/trigger/rollback。Audit retention、legal hold、SIEM、PII policy、dashboard/alert/SLO、backup/restore与Production identity仍未形成。
+
+## TASK-P3-04 business audit slice
+
+成功submit-for-review现在把DRAFT→READY与单一`SUBMIT_FOR_REVIEW` event原子提交；event绑定actor/auth-policy/capability、reason、correlation、key/request fingerprint、完整lineage、before/after/source/new version、result和code commit。Exact replay不会追加第二条event，same-key conflict使本次schedule transaction回滚；machine check另记录transaction观测微秒但明确`SLA=NOT_DEFINED`。
+
+CLI FAIL只输出稳定reason/error type/fixed message，不输出SQL、DSN、credential或stack。该证据不形成read-audit API、retention/legal hold/SIEM、metrics backend、dashboard/alert/SLO、Production identity或backup/restore。

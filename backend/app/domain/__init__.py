@@ -46,6 +46,15 @@ from .validation import (
     validate_planning_problem_contract,
     validate_snapshot_contract,
 )
+from .schedule_version import (
+    ReviewableScheduleDocuments,
+    SCHEDULE_VERSION_LIFECYCLE_VERSION,
+    ScheduleVersionCreationContext,
+    ScheduleVersionLifecycleError,
+    ScheduleVersionLifecycleFailure,
+    ValidatedPlanningOutput,
+    build_reviewable_schedule_documents,
+)
 
 __all__ = [
     "CAPABILITY_STATUS_BY_NAME",
@@ -67,11 +76,18 @@ __all__ = [
     "PlanningSnapshotDocumentV2",
     "ProductErrorCategory",
     "ProductErrorCode",
+    "ReviewableScheduleDocuments",
+    "SCHEDULE_VERSION_LIFECYCLE_VERSION",
+    "ScheduleVersionCreationContext",
+    "ScheduleVersionLifecycleError",
+    "ScheduleVersionLifecycleFailure",
     "TickSeconds",
+    "ValidatedPlanningOutput",
     "SourceReference",
     "SyntheticProvenance",
     "canonical_id",
     "category_for_error_code",
+    "build_reviewable_schedule_documents",
     "duration_to_ticks",
     "format_utc_instant",
     "parse_utc_instant",

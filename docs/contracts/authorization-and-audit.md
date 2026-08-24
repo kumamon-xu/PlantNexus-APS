@@ -122,3 +122,9 @@ TASK-P3-02的`audit-event.v1`、`workspace-command.v1`与共享`workspace-contro
 ## P4/Production边界
 
 ExecutionEvent、Replan、freeze、OBJ-002、ChangeReport和Execution Simulator不在本合同。真实RBAC/SSO、role责任、external publish/export target、retention/SIEM和Production approval保持OPEN-002/010/015或后续治理，P3 default-deny不得被test actor绕过。
+
+## TASK-P3-04 submit-for-review audit slice
+
+P3-04首次把成功的DRAFT→READY_FOR_REVIEW与一条append-only `SUBMIT_FOR_REVIEW` AuditEvent放入同一数据库事务。Event固定actor reference、upstream auth-policy context、resolved `edit` capability、sanitized reason、correlation、request fingerprint、key reference、完整P2 lineage、DRAFT/READY source/new reference与exact code commit；repository/audit任一冲突会回滚本次ScheduleVersion变化。Exact replay返回原event，event内`result.replayed=false`保持历史事实，调用结果另行标记replay，不能通过改写event伪造第二次执行。
+
+本Task不实现principal/role→capability解析，也不声称`auth_policy_version`是Production授权；调用者提供的resolved context只满足carrier/audit可追踪边界。未授权/default-deny、approve/reject/publish/export authority仍由P3-07+和OPEN-010治理；测试actor不得外推真实责任人。无raw key、credential、SQL、stack trace或secret进入carrier/error/machine report。

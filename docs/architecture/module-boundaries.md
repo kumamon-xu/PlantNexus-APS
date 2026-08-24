@@ -193,3 +193,9 @@ ADR-0012已接受该方向并补充：domain定义versioned command/query/state/
 `app.domain.state_machines.schedule_version|export_job`只包含pure CAS/attempt/lease不变量；`app.infrastructure.workspace_persistence`及四个SQLAlchemy repository只负责plane、canonical integrity、unique/FK/index、append-only、CAS和caller-owned transaction。依赖保持domain→infrastructure，且import package不建连接。Application/API/jobs/exporters/frontend均零差异，router/worker/UI仍不能直接写repository。
 
 未引入outbox、event bus、external adapter或新topology，因此无需新ADR；P3-04～09必须通过公开`*_in_transaction`原语由application组合capability/state/Validator/audit，不能把repository成功当成业务Gate成功。
+
+## TASK-P3-04 application composition
+
+`app.domain.schedule_version`只依赖domain state/types/workspace pure contracts；AST evidence禁止其反向导入Infrastructure、Planning或Simulation。`app.application.schedule_versions`声明repository ports与transaction factory注入，只调用P2 public reporting/Validator consumer，不静态导入SQLAlchemy/Infrastructure、CP-SAT Backend、Strategy或Simulation，且源文件无`.solve(`调用。Machine CLI是唯一executable composition root，以延迟runtime装配既有adapter并复用冻结P2 correctness test input；报告明确service Solver调用为0，既有P1 application-boundary AST Gate继续PASS。
+
+Application是本slice唯一transaction owner：repository仍不知道fresh Validator、COMPLETED gate、actor reason或audit业务动作；API/UI/Worker不得直接调用repository。没有新outbox/topology/dependency，若未来需跨事务side effect仍须新ADR。

@@ -146,3 +146,9 @@ P3-01先定义security/audit/idempotency责任，P3-03/07～10再形成repositor
 新增`python -m app.infrastructure.workspace_persistence_check --root . --report <ignored-json>`在临时SQLite执行`0001→0004`、四repository正负路径、database trigger、caller rollback、populated `0004→0003→0004`并输出8/8 machine checks。CI step无`continue-on-error`并复用既有artifact glob；FAIL报告只含error type与sanitized固定message。
 
 非生产回滚仅允许在确认备份/可丢弃synthetic rows后downgrade到`0003`，这会删除全部P3表和历史；不得对真实ScheduleVersion/audit历史原地回退。没有新增service、health、queue、worker、dashboard、runbook、Production Secret/target或deployment，PostgreSQL backup/restore演练仍未形成。
+
+## TASK-P3-04 lifecycle evidence command
+
+`uv run python -m app.application.schedule_version_lifecycle_check --root . --report <ignored-json>`复用一个冻结P2 correctness input，在三个临时SQLite数据库验证fresh lineage/KPI、DRAFT→READY、atomic audit、exact replay、五类无副作用拒绝、audit-conflict rollback、concurrent exact request、plane/PlanningRun/Solver边界并输出8/8 `p3-schedule-version-lifecycle-report.v1`。CI命令写`build/validation/ci-p3-schedule-version-lifecycle.json`且不可continue-on-error。
+
+这是development machine evidence，不是业务Runbook：没有常驻service、health、queue、external storage、Production credential/target或deployment。业务回滚不得删除已形成的ScheduleVersion/audit；代码回退只能停止新调用并保留append-only历史，测试临时数据库随测试清理。

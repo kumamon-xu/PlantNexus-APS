@@ -100,3 +100,11 @@ ScheduleVersion persistence现要求：完整`2.6.0` carrier通过pure/top-level
 Repository不会从PlanningSolution创建DRAFT、不会调用Validator，也不会判断approve/publish capability。P3-04必须复制fresh Validator PASS的validated solution并提供完整carrier；P3-06修改/lock仍必须新建Version，不能调用CAS原地改content。
 
 既有pair不变：DRAFT→READY_FOR_REVIEW，READY_FOR_REVIEW→APPROVED/REJECTED，APPROVED→PUBLISHED，PUBLISHED→SUPERSEDED。Approve/Reject只消费READY，Publish只消费APPROVED，PUBLISHED content不可变；REJECTED/历史Version的修订只能派生新DRAFT。所有这些仍是文档合同，`schedule-version.v1` Schema、DB、application/API/UI行为由P3-02+形成。
+
+## TASK-P3-04 validated output consumer
+
+`ValidatedSolutionToScheduleVersionService`现在只接受完整Snapshot/Problem/PlanningSolution/SolverReport/ValidationReport/ImportQualityReport/KPI bundle与显式`PlanningRun=COMPLETED`事实。进入事务前，它调用既有`build_kpi_v2`，由该公开P2边界重新执行formal Validator、SolverReport freeze、quality与KPI计算，并要求 supplied KPI逐字等于fresh结果；任何stale、mixed、tampered或非PASS输入均不创建版本。
+
+通过后，pure domain builder复制assignments并把Problem的`HARD_LOCK/SOFT_LOCK`稳定映射为Schedule content的`HARD/SOFT`，形成同一content identity的immutable DRAFT与READY_FOR_REVIEW candidate。Application在一个caller-owned transaction中insert DRAFT、执行既有DRAFT→READY CAS并追加`SUBMIT_FOR_REVIEW` AuditEvent；same key/same request返回原READY/audit，不执行self-transition或增行，同key/different request冲突。PlanningSolution、P2 output bytes、Schema、Validator公式与其他state pair均未修改。
+
+该slice只形成reviewable carrier：`decision/publication/superseded_by=null`，没有approve/reject/publish/export、manual edit、HTTP/UI或P4行为。READY_FOR_REVIEW仍不是approval、publishability或Production readiness。

@@ -141,3 +141,9 @@ TASK-P3-01 provider run `32684713630` / artifact `9505303054`没有生成或修�
 Repository/migration tests继续只使用既有P3 synthetic samples、固定UTC和临时SQLite；表数、row数、lease秒数、attempt和执行时间仅为contract vector，不是工厂拓扑、分布、SLA或worker默认。`lease_expires_at_utc`逐调用显式传入，不从sample推导Production配置。
 
 没有新增、修改或retire任何条目，SIM-ASSUMPTION-001～013继续`ACTIVE`；Simulation/internal evidence不得外推Production，`registry_version=1.0.0`不变。
+
+## TASK-P3-04 review
+
+Machine/contract/integration只复用既有`P2-GOLDEN-JSSP`及P2 lock correctness case的原Profile/Scenario/assembler/version/seed/hash，未修改fixture bytes或增加新的定量参数。Transaction观测微秒只作单次diagnostic且明确`SLA=NOT_DEFINED`，不登记为性能假设、baseline或Production容量。
+
+SIM-ASSUMPTION-001～013继续`ACTIVE`，没有新增/修改/retire；synthetic ScheduleVersion与test actor只属Simulation evidence，`registry_version=1.0.0`不变。

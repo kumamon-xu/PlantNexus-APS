@@ -77,3 +77,10 @@ last_reviewed: 2026-08-19
 - **Lease expiry metadata**：ExportJob repository显式接收的UTC storage coordination值；没有DB业务默认，不是`export-job.v1`字段，不能由API或worker自行补猜。
 
 上述术语只描述TASK-P3-03持久化原语；approval/publish/export execution、HTTP/UI与Production topology仍未形成。
+
+## TASK-P3-04 terms
+
+- **Validated Planning Output Bundle**：同一PlanningRun的Snapshot、Problem、PlanningSolution、SolverReport、fresh ValidationReport、ImportQualityReport与exact KPI；缺一、mixed或stale均不得形成ScheduleVersion。
+- **Reviewable ScheduleVersion**：已由application原子经历DRAFT→READY_FOR_REVIEW且绑定完整lineage/audit的immutable Version；不等于APPROVED、PUBLISHED、Production-ready或有审批人授权。
+- **Lifecycle exact replay**：same plane/scope/key reference与same request返回原READY carrier和原AuditEvent，不新增self-transition、版本或audit；same key/different request为conflict。
+- **Upstream auth-policy context**：写入audit的已解析引用信息，只用于追踪；P3-04不实现identity/RBAC mapping，OPEN-010仍OPEN。

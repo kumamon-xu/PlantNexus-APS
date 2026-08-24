@@ -197,3 +197,9 @@ CI新增的workspace contract CLI只读repository并写ignored JSON，不新增e
 每个repository实例固定一个uppercase carrier `WorkspaceDataPlane`，所有PK/unique/read/CAS均包含plane；ScheduleVersion/Audit支持显式Simulation或Production carrier，PublicationResult/ExportJob v1在constructor与DB check层都只允许Simulation/internal target。Cross-plane read返回空，cross-plane write稳定拒绝；任何credential、DSN或SQL都不会进入carrier/error/report。
 
 Migration包含PostgreSQL DDL和SQLite test兼容trigger，但本Task只在临时SQLite执行empty/populated round-trip；未修改env、Compose、Secret、service、network或deployment。独立Production/Simulation数据库、role/network isolation、backup/restore和Production migration Runbook仍未形成。
+
+## TASK-P3-04 lifecycle isolation
+
+Service实例固定一个`WorkspaceDataPlane`；context environment必须与plane兼容，synthetic P2 output只允许`SIMULATION` + Development/Test/Benchmark。Machine/integration tests验证同一engine上的Production repository看不到Simulation Version，synthetic→Production在持久化前拒绝；所有key只以SHA-256 reference扩散。
+
+Workflow只新增离线/临时SQLite lifecycle machine命令并复用既有`PLANTNEXUS_CODE_COMMIT`与artifact glob；没有新env、Secret、权限、port、service、network、storage或deployment。SQLite concurrency/replay不证明独立Production DB、PostgreSQL capacity、backup或role isolation。

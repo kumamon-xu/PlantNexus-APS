@@ -239,3 +239,9 @@ P3 Schema/precheck复用Python 3.12标准库、既有`jsonschema==4.25.1`与`ref
 实现只复用locked Python 3.12、SQLAlchemy `2.0.43`与Alembic `1.16.5`；`pyproject.toml`和`uv.lock`零变化。`0004_schedule_versions_audit_export_jobs`使用SQLAlchemy/Alembic portable table/index/FK/check定义，并为SQLite/PostgreSQL分别提供immutability trigger；repository使用SQLAlchemy Core、nested savepoint仅处理PostgreSQL concurrent unique race，SQLite保持caller rollback语义。
 
 临时SQLite证明合同、migration和negative path，不证明PostgreSQL并发吞吐、locking plan、capacity、backup或Production deployment。未引入outbox、queue、storage SDK、API/UI或P4依赖。
+
+## TASK-P3-04 technology review
+
+Lifecycle实现只复用locked Python 3.12、既有SQLAlchemy/Alembic repositories、P2 reporting/Validator与P3 2.6.0 pure contracts；`pyproject.toml`、`uv.lock`、Schema、migration和runtime/dev dependency均零变化。Concurrent exact-request evidence使用临时file SQLite与既有CAS/unique原语，不能外推PostgreSQL吞吐或Production transaction policy。
+
+CI新增一个required machine step，不改变`validate` job名称、permissions、Secret、service/deployment或artifact action。Frontend/Node、API、queue/outbox、export/storage SDK和P4技术均未引入。

@@ -180,3 +180,9 @@ Schema/纯precheck错误在consumer副作用前拒绝unknown field/version/state
 Repository新增module-local `PersistenceFailure`：`INVALID_DOCUMENT`、`DATA_PLANE_MISMATCH`、`IDENTITY_CONFLICT`、`IDEMPOTENCY_CONFLICT`、`STATE_CONFLICT`、`LEASE_CONFLICT`、`APPEND_ONLY`、`PERSISTENCE_FAILED`。它们统一由`WorkspacePersistenceError`返回field与sanitized message，不暴露SQL、DSN、credential或stack；SQLAlchemy/driver异常不会穿透边界。这些不是global Product Error code，也没有修改`error-code-registry.v2`；P3-10才负责稳定HTTP映射。
 
 Carrier top-level required/unknown、plane/environment/provenance和canonical fingerprint在write前fail closed；CAS/lease/identity冲突不写成功state或audit。事务调用者回滚由测试证明，但真实PostgreSQL故障分类和Production retry policy仍未形成。
+
+## TASK-P3-04 lifecycle error boundary
+
+Application新增module-local sanitized reasons：`INVALID_INPUT`、`PLANNING_RUN_NOT_COMPLETED`、`VALIDATION_FAILED`、`MIXED_LINEAGE`、`DATA_PLANE_MISMATCH`、`IDEMPOTENCY_CONFLICT`、`STATE_CONFLICT`、`PERSISTENCE_FAILED`。P2 reporting错误先按validation/mixed/invalid映射；P3 repository identity/idempotency/state/plane错误再映射为稳定lifecycle reason，SQL/credential/stack不进入message或machine artifact。
+
+这些reason没有加入`error-code-registry.v2`，也不是HTTP status合同。所有输入/Validator/KPI错误发生在事务前；transaction/audit错误回滚本次DRAFT/READY。未来P3-10若公开HTTP mapping，必须消费既有namespace并在合同Task中版本化，不得从本地异常文本推断status。

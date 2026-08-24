@@ -269,3 +269,11 @@ Task从provider-verified closure `9621fda535f66393beab88efc13c100fc805c993`激�
 Implementation artifact必须同时含`p3-persistence-report.v1`与current Task report，二者绑定exact SHA/Task，前者8/8、5 tables、4 repositories、0隐式business action，后者7 Impact rows、full checks、`issues=[]`。任一不一致保持`in_progress`并阻止P3-04；成功后只允许evidence-only closure写回provider事实，closure自身也须exact provider且不得启动P3-04。
 
 该规则已由implementation `e315dbf4f6c079df6d19b52f0403b00827126232`的required run/job/artifact=`32694644036`/`97334382152`/`9508445635`满足：下载的22/22 JSON顶层PASS，persistence与Task报告精确为8/8及52 committed/0 working paths、7 rows、19 checks、0 issues。因此本closure只写回TASK-P3-03=`done`和provider事实，P3-04仍为`planned`。
+
+## TASK-P3-04 reviewable lifecycle evidence rule
+
+Task从provider-verified closure `62604d05964413a0aa7f763afd720afa2d53a887`激活。Evidence必须同时证明：固定P2 Snapshot→Problem→Solution→Validation/Solver/KPI lineage；显式PlanningRun COMPLETED且零反向mutation/Solver调用；fresh Validator/KPI exact gate；DRAFT与READY immutable identity；one-transaction CAS+audit；exact replay/same-key conflict；failed/mixed/tampered/plane无副作用；audit conflict rollback；concurrent request最终单Version/单audit；Schema/state/P2 frozen bytes和P3-05+零越界。
+
+追踪链固定为`REQ-004/005/007/009 + NFR-COR/DET/TRC/HUM + ENG-ARCH/VAL/ERR/VER → TASK-P3-04 → domain builder + application service + contract/integration/CI tests → TEST-SCHEDULE-VERSION-LIFECYCLE-001/TEST-STATE-TRANSITION-001/TEST-VALIDATOR-MUTATION/TEST-SIM-ISOLATION → p3-schedule-version-lifecycle-report.v1 + Task report → exact implementation/closure provider artifacts`。
+
+Implementation artifact必须绑定exact SHA/Task，lifecycle report为8/8、issues=[]、service Solver=0，Task report为八Impact rows/full checks/0 issues。Provider成功前保持`in_progress`；成功后只允许evidence-only closure写回事实，closure自身也须exact provider且不得自动启动P3-05。

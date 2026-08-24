@@ -6,10 +6,16 @@ from .import_pipeline import (
     DataQualityGateRejected,
     PlanningBuildConfiguration,
 )
+from .schedule_versions import (
+    ScheduleVersionLifecycleResult,
+    ValidatedSolutionToScheduleVersionService,
+)
 
 __all__ = [
     "CommonIngressArtifacts",
     "CommonIngressPipeline",
     "DataQualityGateRejected",
     "PlanningBuildConfiguration",
+    "ScheduleVersionLifecycleResult",
+    "ValidatedSolutionToScheduleVersionService",
 ]

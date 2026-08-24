@@ -93,3 +93,9 @@ Workspace合同确认PlanningRun只承担计算生命周期：`COMPLETED`不能�
 ## TASK-P3-03 persistence separation
 
 `0004`没有新增PlanningRun table、state或pair。ScheduleVersion repository只保存已由上游提供的lineage引用，不查询、推进或补写PlanningRun；Publication/Export storage也不能把`COMPLETED`解释为approve/publish/export授权。P3-04+的application仍必须在自己的启动门消费fresh validated solution；本Task的8/8 machine report只证明持久化边界。
+
+## TASK-P3-04 completed-run consumption
+
+Lifecycle context现在必须逐次显式提供`planning_run_state=COMPLETED`；`VERIFYING`及其他值在任何持久化前以`PLANNING_RUN_NOT_COMPLETED`拒绝。P2 PlanningSolution/SolverReport中的`planning_run_outcome.state=SOLVED`继续是求解输出语义，不能被服务改写或冒充持久化PlanningRun COMPLETED事实。
+
+服务没有PlanningRun repository/import/write，也不调用Solver或重试计算；machine evidence记录`planning_run_mutations=0`与`lifecycle_service_solver_invocations=0`。COMPLETED只开放validated output消费门，不授予approve/reject/publish/export，PlanningRun state/pair/terminal bytes保持不变。

@@ -251,3 +251,19 @@ Required `validate`新增non-skippable `P3 workspace persistence evidence`：`uv
 本地PASS只允许Task保持`in_progress`。只有implementation push的required run/job成功、artifact同时复现persistence/Task report的SHA、7 Impact rows、全部checks和`issues=[]`后，才可进行evidence-only closure；closure自身也须exact provider。任一migration/replay/CAS/lease/rollback/artifact失败阻止P3-04，不得删历史row或改写migration恢复绿色。
 
 Implementation provider Gate已通过：SHA `e315dbf4f6c079df6d19b52f0403b00827126232`、run `32694644036`、required `validate` job/check `97334382152`（app `15368`）均success；artifact `9508445635`未过期，digest=`sha256:4a0d30ae020c998e2b2a399a3c8c93848b14b66daecaa3c75b95fa7f11feb588`。22/22 JSON顶层PASS，persistence 8/8与Task 52 committed/0 working paths、7 rows、19 checks、0 issues均绑定同一SHA；TASK-P3-03 DoD完成，不自动授权P3-04。
+
+## TASK-P3-04 required lifecycle evidence
+
+Required `validate`新增non-skippable `P3 reviewable ScheduleVersion lifecycle evidence`：
+
+```bash
+uv run python -m app.application.schedule_version_lifecycle_check \
+  --root . \
+  --report build/validation/ci-p3-schedule-version-lifecycle.json
+```
+
+报告必须为`p3-schedule-version-lifecycle-report.v1`、Task=`TASK-P3-04`、schema set=`2.6.0`、lifecycle=`schedule-version-lifecycle.v1`、8/8 checks、1 reviewable Version、1 atomic audit、1 exact replay、5无副作用拒绝、service Solver调用0、`issues=[]`，并与Task report绑定同一`PLANTNEXUS_CODE_COMMIT` exact SHA。Workflow不改变required job名称、permissions、Secret、service/deployment并复用既有artifact glob。
+
+本地PASS只允许Task保持`in_progress`。Implementation push后必须核验required run/job、下载artifact并逐项核对SHA/Task/8 checks/八Impact rows/full checks/issues；成功后才可做evidence-only closure，closure自身也须exact provider。READY_FOR_REVIEW evidence不构成approval/publish/Production readiness，任一Validator/transaction/audit/provider失败阻止P3-05自动启动。
+
+本地实现Gate现已实际通过：35 focused、515 full、Ruff、Pyright、8/8 lifecycle、全部既有machine contracts、P2 Gate、XS benchmark、Compose、build、full/diff docs治理及forbidden boundary均无失败；Task report为45 paths/8 rows/19 checks/0 issues。该结果不替代push后的exact provider Gate，Task仍为`in_progress`。

@@ -249,3 +249,9 @@ Additive set `2.6.0`新增七份exact v1/URN；旧P2 document仍保留各自`2.0
 ScheduleVersion同时保存canonical creation bytes、immutable fingerprint、content bytes/fingerprint及当前state carrier SHA；合法CAS只能改变合同允许的state metadata。AuditEvent/PublicationResult保存完整canonical bytes与SHA并由DB trigger禁止update/delete；ExportJob保存creation bytes、current job fingerprint、attempt/lease/state revision。Publication idempotency以plane+scope+key/request/result fingerprint绑定，current reference以revision CAS前移。
 
 Machine report `p3-persistence-report.v1`记录migration revision、五表/七index/八FK、四repository、CAS/replay/rollback/plane/trigger及8/8 checks，并由CI的`PLANTNEXUS_CODE_COMMIT`绑定exact SHA。它不改写P2/P3 Schema bytes，也不证明Production PostgreSQL capacity、backup/restore或external side effect。
+
+## TASK-P3-04 lifecycle provenance
+
+ScheduleVersion lineage现在逐项固定`planning-snapshot.v2` ID/hash、`planning-problem.v2` hash-derived ID、`planning-solution.v1` ID/full fingerprint、`validation-report.v2` derived ID/full fingerprint、`kpi.v2` ID/full fingerprint、`solver-report.v1` ID/full fingerprint、planning run ID与SolverReport code commit。Content fingerprint只覆盖sorted assignment/lock content；DRAFT/READY共享identity/content，storage revision不进入carrier fingerprint。
+
+ScheduleVersion/Audit ID由lifecycle version、plane和hashed idempotency key reference确定；request fingerprint再绑定COMPLETED、environment、actor、reason、lineage与content。Exact replay保留原created/validated/occurred timestamps和audit result，不改写历史。`p3-schedule-version-lifecycle-report.v1`由CI exact SHA绑定8/8 checks，但本地报告在provider形成前只属local evidence。

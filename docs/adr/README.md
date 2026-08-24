@@ -73,3 +73,9 @@ TASK-P3-01以当时下一个未使用编号接受ADR-0012，决定command-only/c
 `0004`与repositories直接实现ADR-0002/0007/0009/0012已经接受的modular repository、immutable version、provenance、append-only/idempotency/CAS边界；没有引入outbox、event bus、external storage、new state/pair或不同transaction topology，因此不需新ADR。Storage-only state/reference revision和显式lease expiry不改变carrier/state语义，也没有DB业务默认。
 
 若P3-04+需要公开lease expiry、新outbox/exactly-once、mutable PUBLISHED content、cross-plane current、external target或新pair，必须先停止并新建/supersede ADR与Schema；现有ADR历史事实不改写。
+
+## TASK-P3-04 ADR conformance
+
+本Task直接落实ADR-0005的independent Validator、ADR-0007的immutable version/provenance与ADR-0012的command-only/application transaction/append-only audit：validated output复制成DRAFT，既有pair推进READY，content/lineage不变，same-key replay/conflict稳定。没有新state/pair、mutable Version、outbox、external target、authorization provider或topology，因此不需新ADR。
+
+若后续需要跳过DRAFT、允许READY覆盖Validator FAIL、把COMPLETED视为approval、修改audit历史、跨plane identity、outbox/exactly-once或外部side effect，必须停止并新建/supersede ADR；不得改写现有accepted历史。

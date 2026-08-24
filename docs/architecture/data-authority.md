@@ -136,3 +136,9 @@ Production没有principal→capability/resource/target mapping时DENY，`SIMULAT
 机器Schema继续是carrier形状/字段权威，`state-machines.v1`继续是pair权威；migration没有用DB default补造任何业务字段。Repository只保存完整carrier并维护storage-only state/reference revision与显式lease expiry。ScheduleVersion content/lineage/validation以creation+immutable fingerprint为权威历史，AuditEvent/PublicationResult只能追加，current publication reference只是可CAS projection。
 
 Repository不是capability、approval、publish或export authority；`SIMULATION_INTERNAL`存储成功也不授权Production。OPEN-002/010/015保持OPEN，真实identity/target/field owner仍不能由test actor或DB row推断。
+
+## TASK-P3-04 authority review
+
+P2 Snapshot/Problem/Solution/Validation/KPI/SolverReport继续分别拥有其事实与计算证据；P3-04只复制validated assignment/lock projection并引用fingerprint，不成为上游事实修改者。Formal Validator和`build_kpi_v2`仍是correctness authority，repository只是durability/CAS authority，application只拥有本次消费/事务编排。
+
+Audit中的actor、auth-policy version与resolved `edit` capability是caller-supplied upstream context，不建立identity/RBAC authority；READY的`allowed_actions`是carrier state能力集合，不是对某用户的审批授权。OPEN-010未关闭，Production channel继续default-deny。

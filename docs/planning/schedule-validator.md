@@ -126,3 +126,9 @@ Formal Validator源码、公式、Schema、rule sheet和13-case corpus保持字�
 ## P3 consumer allocation
 
 P3-04创建reviewable DRAFT前、P3-06 edit/lock产生新DRAFT后以及P3-14/15 Gate/Audit时都必须通过fresh formal Validator；FAIL必须丢弃candidate/new version，不得保留“待人工接受”的非法计划。Approval不能覆盖Validator FAIL，UI/API不得复制或降级规则。P3不修改C-001～C-011公式或Validator独立性，任何缺口需有界P3 remediation而非Audit内修复。
+
+## TASK-P3-04 fresh validation consumer
+
+`create_reviewable`在任何DB调用前通过`build_kpi_v2`重新调用现有`validate_problem_schedule(problem, solution)`，要求fresh report逐字等于supplied ValidationReport，并再次冻结SolverReport/quality/KPI；随后pure builder只接受`PASS + hard_violation_count=0 + violations=[]`。失败、stale、tamper、mixed或KPI drift均不产生DRAFT/audit。
+
+本Task没有修改Validator、C-001～C-011、mutation assets、expected outcomes或Backend模型，也没有在domain/application复制约束公式。成功machine case复用P2 frozen correctness input；`lifecycle_service_solver_invocations=0`，测试fixture replay不能写成业务Solver rerun或新correctness baseline。

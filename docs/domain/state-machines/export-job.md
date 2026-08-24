@@ -100,3 +100,7 @@ TASK-P3-01未创建`export-job.v1`、repository、lease/heartbeat/attempt、stor
 `export_jobs`只接受`SIMULATION`/`SIMULATION_INTERNAL`且source必须匹配同plane的PUBLISHED ScheduleVersion。Creation以scope/key/request fingerprint和creation bytes exact-replay；state CAS只接受既有六个pair，claim/retry必须把attempt恰好加一，非claim transition保持attempt。Heartbeat是同一`EXPORTING` lease上的operational CAS，不登记为state self-transition；错误owner、expired lease、stale revision全部fail closed。
 
 DB中的`lease_expires_at_utc`是调用者显式提供、不可由默认值补猜的storage coordination metadata，不进入`export-job.v1` carrier或job fingerprint；若未来需要对API暴露它，必须先发布新Schema版本。当前没有Celery business task、package writer、artifact manifest、external storage或自动retry；P3-09仍负责真实export行为。
+
+## TASK-P3-04 zero-impact review
+
+Validated output lifecycle在READY_FOR_REVIEW停止，`decision/publication`保持null，AuditEvent的`export_job_id`保持null；代码不导入ExportJob repository、exporter或worker，也不创建package/target/lease/attempt。ExportJob state、pair、carrier、table和P3-03持久化语义均无变化，P3-09仍是唯一business export owner。

@@ -87,3 +87,9 @@ P2 Exit已provider-verified并关闭；P3在其后追加`validated solution → 
 P3先行合同现把链固定为`P2 validated immutable inputs → ScheduleVersion copy-on-write → versioned read/query → server command/precondition → fresh Validator → new DRAFT → capability/state decision → internal idempotent publication/current/supersession → independent ExportJob/package → API/UI consumer`。每个箭头都必须保留plane、fingerprint、correlation、idempotency和append-only audit lineage；UI/router/worker没有旁路。
 
 TASK-P3-01仅形成文档和ADR-0012；Schema/persistence/application/API/UI节点仍未落地。链在ExportJob/internal artifact处终止，不进入P4 Execution/Replan，也不连接Production external target。
+
+## TASK-P3-04 formed application segment
+
+当前已形成的新增段为：`completed PlanningRun fact + frozen P2 bundle → build_kpi_v2(fresh formal Validator) → pure ScheduleVersion documents → one DB transaction(insert DRAFT → CAS READY_FOR_REVIEW → append SUBMIT_FOR_REVIEW audit)`。任何input/lineage/KPI错误在transaction前停止；任一repository/audit错误使整个本次transaction回滚。
+
+该段不回写PlanningRun、不调用Solver、不经过API/Frontend/Worker，也不越过READY_FOR_REVIEW。Read model/comparison仍由P3-05，edit/lock新DRAFT由P3-06，approval/rejection由P3-07，publish/export由P3-08/09；P4 Execution/Replan与Production external target仍不在流中。

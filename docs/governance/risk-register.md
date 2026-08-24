@@ -141,3 +141,9 @@ Implementation run `32689832111` / artifact `9506913562`已通过上述检查，
 Plane/unique/CAS/append-only/immutable trigger与caller rollback提高RISK-007/008/013的可见性；sanitized error和无dependency drift继续约束RISK-011/012。ExportJob owner/expiry/attempt与publication replay/current CAS只降低storage-level duplicate/race暴露，不证明worker crash、network side effect、business transaction或Production authority。
 
 SQLite不能替代PostgreSQL concurrency/capacity/backup，且application/API/UI/worker尚未形成，因此RISK-001～013全部继续`MONITORED`，不降低severity/status。Implementation run `32694644036` / artifact `9508445635`已通过migration/CAS/trigger与冻结范围检查，故本closure把TASK-P3-03标为`done`；这不关闭或降级任何风险，P3-04仍须另行授权，`registry_version=1.0.0`不变。
+
+## TASK-P3-04 risk review
+
+Fresh Validator/KPI、atomic rollback、exact replay/concurrency和no-secret mapping为correctness/trace/reliability提供新增控制，但只在synthetic临时SQLite与固定input上验证；它不消除PostgreSQL concurrency/capacity、真实authorization责任、retention、API/UI或Production side-effect风险。OPEN-010及RISK-007/008/011～013尤其保持原边界。
+
+RISK-001～013全部继续`MONITORED`，severity/status不降低；provider pending且P3-05+未启动，`registry_version=1.0.0`不变。

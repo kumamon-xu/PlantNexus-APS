@@ -160,3 +160,9 @@ OPEN-002/010/015及OPEN-001～015全部继续`OPEN`，没有Authority/Evidence c
 Plane-scoped repository、Production publication/export constructor denial和DB mutation guard形成development storage evidence，但没有真实source/identity/role/approval owner、external target、independent Production database/network/credential、PostgreSQL capacity、backup/restore或deployment。Operational lease expiry也只是显式storage metadata，不是Production worker policy。
 
 因此OPEN-002/010/012/015及OPEN-001～015全部保持`OPEN`，没有closure record；SQLite 8/8、CI artifact或internal current reference均不得写成Production approval/publish/readiness。`registry_version=1.0.0`不变。
+
+## TASK-P3-04 review
+
+Lifecycle使用synthetic P2 fixture、test actor与upstream auth-policy reference，只在Simulation/Test临时SQLite形成READY_FOR_REVIEW；没有真实identity/role责任、approval authority、external target、Production DB/credential/network、SLA或deployment。特别是OPEN-010继续`OPEN`：READY及carrier `allowed_actions`不代表任何人已获approve/reject/publish授权。
+
+OPEN-001～015全部保持`OPEN`，没有closure record；本地或未来provider的8/8 lifecycle report不得写成Production approval、publishability或readiness，`registry_version=1.0.0`不变。

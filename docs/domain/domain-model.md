@@ -139,3 +139,9 @@ Query/command以不同document分离：query result只含stable projection refer
 首次形成五张P3 storage table：ScheduleVersion、AuditEvent、PublicationResult、current publication reference与ExportJob。ScheduleVersion/ExportJob保留immutable identity和单调state revision，AuditEvent/PublicationResult完全append-only，current reference是唯一允许CAS替换的projection。四个plane-scoped repository同时提供caller-owned transaction入口，使后续application可在一个transaction中组合state/idempotency/audit，而repository自身不拥有业务command。
 
 该实现只持久化既有carrier；没有新增Schema字段、领域state、approval/publish/export aggregate behavior、API/UI或P4对象。DB operational lease expiry不是领域carrier字段或默认值。
+
+## TASK-P3-04 domain lifecycle value
+
+`ValidatedPlanningOutput`把七份既有P2 immutable document作为一个消费bundle；`ScheduleVersionCreationContext`只承载COMPLETED事实、plane-compatible environment、stable actor/auth-policy reference、UTC、correlation、hashed key reference与reason。Pure `build_reviewable_schedule_documents`派生DRAFT、同identity READY candidate、request fingerprint和AuditEvent，不持有repository或Solver依赖，也不修改输入。
+
+ScheduleVersion现在首次成为可评审aggregate：identity由plane+idempotency key reference确定，content由validated assignments与Problem locks确定，lineage逐项引用Snapshot/Problem/Solution/Validation/KPI/SolverReport/code commit。状态变化由application组合repository；AuditEvent是append-only证据，不是第二个状态权威。未新增Schema/entity/state，approval/publication/export/P4仍不属于该aggregate slice。

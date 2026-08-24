@@ -91,3 +91,9 @@ same idempotency scope/key + same request只重放原logical result，不建立s
 `schedule_versions`按`data_plane + schedule_version_id`隔离保存creation bytes、当前carrier、content/immutable fingerprint与单调`state_revision`。数据库trigger禁止identity、revision、lineage、validation、content、parent、creator和creation bytes更新并禁止delete；repository只允许通过expected state + expected revision的CAS执行既有五个pair。PUBLISHED→SUPERSEDED只更新state metadata，PUBLISHED/SUPERSEDED的content仍逐字节不可变；self-transition和stale CAS均拒绝。
 
 该primitive不决定capability、decision、APPROVED-only publish、supersession事务或fresh Validator，也不会创建DRAFT；这些仍属于P3-04/06～08 application。Schema、`state-machines.v1`及pair bytes保持不变，SQLite只提供测试证据，不等于Production concurrency。
+
+## TASK-P3-04 formed transition
+
+P3-04 application现以fresh P2 validation/KPI为事务前置门，insert immutable DRAFT后仅调用P3-03 CAS执行既有`DRAFT→READY_FOR_REVIEW`，随后在同一transaction追加`SUBMIT_FOR_REVIEW` audit。DRAFT和READY保持相同ID/revision/content/lineage/validation/creator/timestamps，仅state与state-derived `allowed_actions`变化；storage `state_revision`从0增至1。
+
+Exact replay读取原creation bytes和当前READY carrier并返回原audit，不新增state self-pair；同key不同request、stale/mixed/failed validation、audit冲突和synthetic→Production plane均fail closed。READY仍只能等待P3-07的授权审批/驳回行为；本Task没有实现READY→APPROVED/REJECTED、APPROVED→PUBLISHED、PUBLISHED→SUPERSEDED或REJECTED revision。

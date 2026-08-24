@@ -6,7 +6,7 @@ spec_version: 0.3.0
 phase: P2
 normative: true
 source_sections: [73, 74, 75, 76, 110, 111]
-last_reviewed: 2026-08-21
+last_reviewed: 2026-08-24
 ---
 
 # 当前阶段：P2 — CP-SAT Vertical Slice
@@ -42,7 +42,7 @@ PlanningSnapshot
 
 用户于2026-08-20明确授权执行`TASK-P2-03 — OR-Tools and SolverBackend Foundation`；该Task以clean、provider-verified `f73f8c90af94d3c9b05ecc10b6c999594a3b7d66`启动，并在依赖变更前接受ADR-0011。现已由implementation `9268b88ca7ce90a8f72023241f87e2d3676fd58a`的GitHub run `32346208046` / required job `96355386111` / artifact `9398128763`闭环为`done`。Problem/Policy/Solution/Report合同字节和语义保持只读。
 
-P2-02把global schema set additive提升到`2.4.0`，新增四个互相离线解析的v1 document contract，并以`CONTRACT_SAMPLE`/`SOLVER_RUN`显式区分shape样例与真实运行。该发布样例的`not-installed`是P2-02历史shape证据，不随P2-03安装依赖而改写。TASK-P2-11再以additive `2.5.0`新增KPI v2与ExportManifest v1，而PlanningSolution/SolverReport仍保留document内的`2.4.0`。TASK-P2-00～12现均由exact implementation provider evidence闭环为`done`；TASK-P2-13已获授权并为`in_progress`，P2-14未授权。
+P2-02把global schema set additive提升到`2.4.0`，新增四个互相离线解析的v1 document contract，并以`CONTRACT_SAMPLE`/`SOLVER_RUN`显式区分shape样例与真实运行。该发布样例的`not-installed`是P2-02历史shape证据，不随P2-03安装依赖而改写。TASK-P2-11再以additive `2.5.0`新增KPI v2与ExportManifest v1，而PlanningSolution/SolverReport仍保留document内的`2.4.0`。TASK-P2-00～13现均由exact implementation provider evidence闭环为`done`；TASK-P2-14已获授权并为`in_progress`。
 
 ## 当前允许
 
@@ -54,7 +54,7 @@ P2-02把global schema set additive提升到`2.4.0`，新增四个互相离线解
 
 ## 当前禁止
 
-- TASK-P2-09～12均已关闭且不得扩展其correctness/reference/output/benchmark范围；TASK-P2-13只可编排冻结公开边界并形成Gate machine/provider evidence，未经另行授权不得启动P2-14，TASK-P2-08也不再扩展OBJ-001/Global Strategy范围；
+- TASK-P2-09～13均已关闭且不得扩展其correctness/reference/output/benchmark/Gate实现范围；TASK-P2-14只可独立审计冻结事实并形成Exit report/manifest/provider evidence，TASK-P2-08也不再扩展OBJ-001/Global Strategy范围；
 - 修改Task允许范围外文件、预填PASS/provider evidence或跳过独立Validator；
 - 实现C-012～C-018、OBJ-002 Stability、动态Replan、ExecutionSimulator、P3 Workspace/审批/发布状态；
 - 把UNKNOWN写成INFEASIBLE、FEASIBLE写成OPTIMAL，或以hint代替Execution Fact/HARD lock；
@@ -237,3 +237,9 @@ Implementation `01e7f4bdca88fc903e7caa771f875fc1a70ff357`的GitHub push run `324
 Implementation `dc2e5cd41080603606090ebfc4bc6162941c5f7f`的GitHub push run [`32465737712`](https://github.com/kumamon-xu/PlantNexus-APS/actions/runs/32465737712)（attempt 1）/ required `validate` job/check `96721819879`（GitHub Actions app `15368`）全部success；branch protection仍精确要求`validate`/app `15368`。Artifact `9440650646`（`plantnexus-ci-evidence-32465737712`，86029 bytes）未过期，digest=`sha256:35e67191d1026169d9acd2a64f50e93bd8d2704df9f8ba1a2297f2dd2a00ca4d`、expiry=`2026-11-19T08:59:32Z`。
 
 下载复核20/20 JSON全部PASS；Gate及每个correctness/XS/S/M/export sub-report均绑定implementation SHA，Gate为11/11、两次replay、14 scenarios、108 Benchmark Validator passes、4 rejections、0 gaps且Exit=`NOT_PERFORMED`。Task报告绑定同一SHA/Diff base并为37 committed/0 working paths、6 rows、19 checks、0 issues。因此TASK-P2-13=`done`，current phase/P2 Milestone仍为P2/`active`；P2-14保持`planned`且未授权，P3禁止。
+
+## TASK-P2-14 启动边界
+
+用户于2026-08-24明确授权执行TASK-P2-14。启动复核确认`main=origin/main=e76776d83726d13600d8ea29fd490474c8e32604`且working tree clean，P2-01～13全部`done`。13组Diff base→implementation→closure→当前HEAD祖先检查全部PASS；26个implementation/closure run与required `validate` job均success，26个artifact全部可取且未过期。下载后的364份JSON无解析/顶层失败，26份Task trace report均绑定exact SHA并为PASS/0 issues；closure HEAD的run/job/artifact=`32466635638`/`96724500691`/`9440970310`，digest=`sha256:4a41a54cde5fe0cb349f177769bfff6e17b5820ffbf68c4811c46169a3860890`。Diff base据此冻结。
+
+本Task只独立重跑并审计P2合同、C-001～C-011、OBJ-001、correctness、Reference、Export、XS/S/M、Gate、文档治理与provider证据，形成诚实`READY/NOT_READY`和blocking gaps。不得在audit内修业务代码、Schema、test、baseline或workflow；不得关闭Production开放项、创建P3 Task或自动切换current phase。P2 Milestone在用户另行批准P2→P3前继续为`active`。

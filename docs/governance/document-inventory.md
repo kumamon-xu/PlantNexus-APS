@@ -6,13 +6,13 @@ spec_version: 0.3.0
 phase: cross-phase
 normative: false
 source_sections: []
-last_reviewed: 2026-08-21
+last_reviewed: 2026-08-24
 registry_version: 1.0.0
 ---
 
 # 文档清单
 
-本清单列出当前仓库已经实际存在的Markdown文档。P0/P1均已归档为completed；P2现为active，TASK-P2-00～13已done。P2-14仍为planned且未获启动授权。产品API与Production Runbook正文尚未形成并继续由相应索引登记。
+本清单列出当前仓库已经实际存在的Markdown文档。P0/P1均已归档为completed；P2现为active，TASK-P2-00～13已done，TASK-P2-14已获授权并为in_progress。产品API与Production Runbook正文尚未形成并继续由相应索引登记。
 
 | Path | Doc ID | Status | Title |
 |---|---|---|---|
@@ -84,6 +84,7 @@ registry_version: 1.0.0
 | [milestones/P1-data-and-snapshot.md](../milestones/P1-data-and-snapshot.md) | MILESTONE-P1 | completed | P1 — Data & Snapshot |
 | [milestones/P1-exit-gate-audit-report.md](../milestones/P1-exit-gate-audit-report.md) | MILESTONE-P1-AUDIT-001 | baseline | P1 Exit Gate Audit Report |
 | [milestones/P2-cp-sat-vertical-slice.md](../milestones/P2-cp-sat-vertical-slice.md) | MILESTONE-P2 | active | P2 — CP-SAT Vertical Slice |
+| [milestones/P2-exit-gate-audit-report.md](../milestones/P2-exit-gate-audit-report.md) | MILESTONE-P2-AUDIT-001 | in_progress | P2 Exit Gate Audit Report |
 | [milestones/P3-planning-workspace.md](../milestones/P3-planning-workspace.md) | MILESTONE-P3 | planned | P3 — Planning Workspace |
 | [milestones/P4-dynamic-replanning.md](../milestones/P4-dynamic-replanning.md) | MILESTONE-P4 | planned | P4 — Dynamic Replanning |
 | [milestones/P5-advanced-capabilities.md](../milestones/P5-advanced-capabilities.md) | MILESTONE-P5 | planned | P5 — Advanced Capabilities |
@@ -155,7 +156,7 @@ registry_version: 1.0.0
 | [tasks/P2/TASK-P2-11-kpi-solver-report-and-export-closure.md](../tasks/P2/TASK-P2-11-kpi-solver-report-and-export-closure.md) | TASK-P2-11 | done | KPI SolverReport and Export Closure |
 | [tasks/P2/TASK-P2-12-benchmark-runner-xs-s-m.md](../tasks/P2/TASK-P2-12-benchmark-runner-xs-s-m.md) | TASK-P2-12 | done | BenchmarkRunner and XS S M Profiles |
 | [tasks/P2/TASK-P2-13-p2-vertical-slice-gate-evidence.md](../tasks/P2/TASK-P2-13-p2-vertical-slice-gate-evidence.md) | TASK-P2-13 | done | P2 Vertical Slice Gate Evidence |
-| [tasks/P2/TASK-P2-14-p2-exit-gate-audit.md](../tasks/P2/TASK-P2-14-p2-exit-gate-audit.md) | TASK-P2-14 | planned | P2 Exit Gate Audit |
+| [tasks/P2/TASK-P2-14-p2-exit-gate-audit.md](../tasks/P2/TASK-P2-14-p2-exit-gate-audit.md) | TASK-P2-14 | in_progress | P2 Exit Gate Audit |
 | [tasks/README.md](../tasks/README.md) | DOC-TASK-INDEX | living | Task Card 索引 |
 | [tasks/TASK_TEMPLATE.md](../tasks/TASK_TEMPLATE.md) | TEMPLATE-TASK | baseline | Task Card Template |
 
@@ -248,3 +249,5 @@ TASK-P2-13本地实现仍未新增、删除或重命名`docs/**/*.md`，inventor
 本地full/diff治理实际为37 paths、6 rows、19 checks、0 issues并PASS；Diff base范围中activation为8 committed paths、当前working-tree union为37 paths。Exact implementation provider尚待形成，inventory与生命周期不据此提前关闭。
 
 Implementation artifact `9440650646`已复现142-doc inventory与37 committed/0 working paths、6 rows、19 checks、0 issues，TASK-P2-13=`done`。没有新增、删除或重命名正式Markdown；P2-14保持`planned`，inventory与registry版本不变。
+
+TASK-P2-14 activation新增`milestones/P2-exit-gate-audit-report.md`并同步本Task为`in_progress`，inventory因此覆盖143份Markdown。相邻machine manifest为JSON，不进入Markdown清单；report/manifest当前均明确`NOT_PERFORMED`且不构成Exit结论。Registry table format仍为`1.0.0`；P2 Milestone保持`active`、P3未启动。

@@ -6,7 +6,7 @@ spec_version: 0.3.0
 phase: cross-phase
 normative: true
 source_sections: [71, 72, 73, 74, 75, 76, 77, 78, 79, 80, 81, 82, 83, 84]
-last_reviewed: 2026-08-21
+last_reviewed: 2026-08-24
 ---
 
 # Milestone 索引
@@ -30,7 +30,7 @@ P0 当前状态：TASK-P0-01～10 全部完成；[superseding audit](P0-exit-gat
 
 P1当前状态：[`P1 — Data & Snapshot`](P1-data-and-snapshot.md)为`completed`，TASK-P1-01～12全部`done`。[P1 audit](P1-exit-gate-audit-report.md)的271项回归、14/14 pipeline、全部machine/build/docs/provider证据均PASS；TASK-P1-12 implementation `a5d7e4a68dc12d48e36cb692500f59446f8097b4` / run `32326616525` / artifact `9391591718`已闭环，Gate=`READY`且无blocking gap。用户于2026-08-20明确批准transition。
 
-P2当前状态：[`P2 — CP-SAT Vertical Slice`](P2-cp-sat-vertical-slice.md)为`active`。TASK-P2-00～13均已闭环为`done`；P2-14仍为`planned`且未获启动授权。P2-14必须为最后的Exit Gate Audit，不得自动进入P3。
+P2当前状态：[`P2 — CP-SAT Vertical Slice`](P2-cp-sat-vertical-slice.md)为`active`。TASK-P2-00～13均已闭环为`done`；P2-14已获授权并为`in_progress`。P2-14仍是最后的Exit Gate Audit；即使结论为READY，也不得自动进入P3。
 
 TASK-P2-03 implementation `9268b88ca7ce90a8f72023241f87e2d3676fd58a`的run `32346208046`、required job `96355386111`和artifact `9398128763`均success；P2 phase保持active，后续Task不自动启动。
 
@@ -67,3 +67,5 @@ TASK-P2-12现已对XS/S/M固定Problem完成Global+五Reference、fresh Validato
 TASK-P2-13本地Gate已完成两次完整replay并为11/11 PASS；30项聚焦、476项全仓测试通过，累计14次correctness场景、6次XS/S/M profile、108次Benchmark Validator与4类exit rejection，blocking gap为空。Exact implementation provider尚未闭环，Task保持`in_progress`；P2 Milestone仍为`active`，P2-14仍是唯一最后Exit Gate Audit且未启动。
 
 Implementation `dc2e5cd41080603606090ebfc4bc6162941c5f7f`的required run `32465737712` / job `96721819879` / artifact `9440650646`精确复现20/20 JSON与37-path治理证据，故TASK-P2-13=`done`。P2 Milestone仍`active`，P2-14继续`planned`且未授权，P3不自动启动。
+
+用户于2026-08-24明确授权TASK-P2-14。启动时`main=origin/main=e76776d83726d13600d8ea29fd490474c8e32604`且clean；P2-01～13的13组提交拓扑、26个implementation/closure required runs与artifacts均独立复核PASS，当前closure run/job/artifact为`32466635638` / `96724500691` / `9440970310`。本Task只形成P2 Exit Gate report/manifest与治理证据，不进入P3；Milestone在用户另行批准transition前继续`active`。

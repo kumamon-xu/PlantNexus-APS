@@ -1,0 +1,29 @@
+{
+  "manifest_version": "p2-exit-gate-evidence-manifest.v1",
+  "audit_task": "TASK-P2-14",
+  "audit_date": "2026-08-24",
+  "timezone": "Asia/Hong_Kong",
+  "task_status": "in_progress",
+  "diff_base": "e76776d83726d13600d8ea29fd490474c8e32604",
+  "repository_head_at_execution": "e76776d83726d13600d8ea29fd490474c8e32604",
+  "schema_set_version": "2.5.0",
+  "overall_status": "NOT_PERFORMED",
+  "recommendation": "COMPLETE_P2_EXIT_GATE_AUDIT_BEFORE_REQUESTING_P3",
+  "audit_implementation_commit": null,
+  "gates": [],
+  "blocking_gaps": [
+    {
+      "id": "P2-AUDIT-EXECUTION-PENDING",
+      "status": "NOT_RUN",
+      "summary": "TASK-P2-14 was activated, but mandatory local replay and the audit implementation provider run have not yet been executed."
+    }
+  ],
+  "boundaries": {
+    "current_phase": "P2",
+    "p2_milestone": "active",
+    "p3_authorized": false,
+    "p3_started": false,
+    "production_ready": false
+  },
+  "note": "Activation manifest only. It contains no PASS or READY decision and must be replaced by observed audit evidence."
+}

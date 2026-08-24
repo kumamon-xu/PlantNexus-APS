@@ -247,3 +247,9 @@ P3首次规划batch必须且只能由TASK-P3-00作为`phase-planning-owner`；P3
 P3证据必须区分planned注册与formed行为、internal Simulation publish与Production authority、P3 human-control与P4 Execution/Replan。P3-15只审计冻结事实；READY仍不自动进入P4或Production。TASK-P3-00 implementation与evidence-only closure各自也必须由exact required `validate`/artifact核验后才能`done`。
 
 TASK-P3-00 implementation provider已由run `32681493976` / required job `97298850740` / artifact `9504310381`精确复验，Task report绑定SHA并为64 committed/0 working paths、4 rows、19 checks、0 issues。故evidence-only closure可把owner标为`done`；closure自身仍只能在push后外部核验，不得自引用或自动启动P3-01。
+
+## TASK-P3-01 contract trace application
+
+P3-01的追踪链固定为`REQ-006/007/009 + NFR-TRC/ISO/SEC/HUM + ENG-ARCH/ERR/VER → TASK-P3-01 → planning-workspace/gantt/approval + planning-workspace-api/authorization-audit + ADR-0012 → TEST-WORKSPACE-CONTRACT-001/TEST-STATE-TRANSITION-001/TEST-ERROR-MAPPING-001 (behavior PLANNED) → implementation/closure exact provider artifacts`。文档可标记contract baseline formed，但不得把既有state/error/doc tests写成P3行为PASS。
+
+七份planned Schema必须逐项记录filename/URN/compatibility/consumer，P3-02发布前均为PLANNED；module-local auth/idempotency/export reason不得冒充global registry。Implementation provider前Task保持`in_progress`，closure只允许状态/证据写回；P3-02仍需新的用户授权和新Diff base。

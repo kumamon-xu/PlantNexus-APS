@@ -183,3 +183,7 @@ Required run `32465737712`的Lint/Type/full tests、Gate与artifact全部success
 ## P3 planned module chain
 
 P3依赖方向固定为domain contracts/state→infrastructure repositories→application services/read models→API/jobs/exporters→frontend；router、worker和UI不得直接写repository状态、复制Validator/Solver规则或决定authority。P3-01用ADR固定边界，P3-03/04～10逐层落地，P3-11～13只通过HTTP/application合同消费。P4 execution/replan模块不得被P3引用为实现捷径。
+
+ADR-0012已接受该方向并补充：domain定义versioned command/query/state/error语义；repository只提供plane-scoped immutable/append-only/CAS/idempotency原语；application是capability/state/transaction/fresh Validator的唯一owner；API/jobs/exporters只适配；React只消费HTTP并显示server authority。P3-02发布carrier、P3-03持久化、P3-04～09应用服务、P3-10 API、P3-11～13 frontend，不允许任一层反向成为第二权威。
+
+本Task没有创建module或代码。任何需要API→repository直写、UI/client solver、shared Solver/Validator、outbox/external adapter或P4 module引用的实现必须停止并先行新ADR/Task授权。

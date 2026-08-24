@@ -83,3 +83,9 @@ PlanningSolution/SolverReport v1没有ExportJob字段、storage side effect或pu
 ## P3 implementation allocation
 
 P3-02形成ExportJob carrier，P3-03形成repository/migration，P3-09实现既有pair、atomic package、same-key replay/conflict与显式FAILED retry。EXPORTED/CANCELLED终态不可复活，Job状态不得改变ScheduleVersion publication；P3-10/13只调用application service，P3-14/15复验。Production external target继续受OPEN-002/010/015阻止。
+
+## TASK-P3-01 guard baseline
+
+Export合同确认P3只从PUBLISHED ScheduleVersion创建ExportJob，并把Publish与Export分成独立idempotency scope和副作用。`CREATED→EXPORTING→EXPORTED/EXPORT_FAILED/CANCELLED`及`EXPORT_FAILED→EXPORTING`仍是唯一允许pair；same key/same fingerprint返回同一Job/artifact result，不重复package或Publish，不同fingerprint冲突。显式retry增加attempt并保持audit，不能复活EXPORTED/CANCELLED。
+
+TASK-P3-01未创建`export-job.v1`、repository、lease/heartbeat/attempt、storage或worker；`state-machines.v1`不变。外部target、Production容量/SLA和side effect继续受OPEN-002/010/012/015阻止。

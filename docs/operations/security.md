@@ -57,3 +57,7 @@ P0-08 没有 authentication/authorization、Import size/type/macro controls、ne
 ## P3 security planning
 
 P3采用authority-neutral capability与Production default-deny；actor credential不得进入Schema、日志或artifact。P3-01固定permission/error/audit合同，P3-07/10/13验证未授权和跨plane拒绝，P3-11对frontend exact lock执行SCA/license review。OPEN-010与既有advisory债务保持开放，因此任何P3成功都不能声明Production security approval。
+
+TASK-P3-01合同现要求每个action同时校验authenticated principal reference、environment、data plane、capability、resource/state/fingerprint和target；客户端role/capability声明无效。Production缺少mapping/target时DENY，Simulation test policy必须`production_binding=false`且只作用于synthetic resource/`SIMULATION_INTERNAL`。高风险拒绝可写sanitized audit，但not-found不得泄漏跨scope资源。
+
+Audit/log/error/artifact不得包含token、cookie、authorization header、Secret、raw DSN/SQL/stack或未清洗PII；actor使用稳定reference。TASK-P3-01未形成authentication provider、RBAC/SSO、rate limit、CSRF/CSP、frontend dependency lock、SCA结果或Production threat model，OPEN-002/010/015和RISK-011/012/013均不因此关闭。

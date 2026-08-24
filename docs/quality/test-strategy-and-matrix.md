@@ -65,7 +65,7 @@ registry_version: 1.0.0
 | TEST-BENCHMARK | BenchmarkReport/profile 回归 | P2 | [`test_benchmark_contract.py`](../../backend/tests/contract/test_benchmark_contract.py) + [`test_benchmark_runner.py`](../../backend/tests/integration/test_benchmark_runner.py) strict Profile/Report/Baseline、XS/S/M replay、Global/Reference/Validator/KPI、warning/threshold与required CI XS artifact provider-verified |
 | TEST-PROPERTY | 合法 Problem 的通用不变量 | P2 | Problem v2/formal/Solver properties + [Reference gate/duration/due and authoritative Problem properties](../../backend/tests/property/test_reference_scheduler_properties.py) + [generated XS/S/M formal pipeline replay](../../backend/tests/integration/test_benchmark_runner.py) formed |
 | TEST-SOLVER-UPGRADE | Solver 升级 replay/status contract | P2+ | Benchmark baseline固定Python/OR-Tools/environment signature并拒绝profile/problem/complexity drift的P2 development slice formed；实际upgrade重建新版本baseline/compatibility evidence仍PLANNED |
-| TEST-WORKSPACE-CONTRACT-001 | P3页面/API/permission/state/error/audit/idempotency合同一致性 | P3 | PLANNED / TASK-P3-01～02 |
+| TEST-WORKSPACE-CONTRACT-001 | P3页面/API/permission/state/error/audit/idempotency合同一致性 | P3 | TASK-P3-01 human-readable contract baseline formed；machine Schema/behavior assertions PLANNED / TASK-P3-02+ |
 | TEST-SCHEDULE-VERSION-REPOSITORY-001 | ScheduleVersion/Audit/ExportJob migration、immutability、transaction与replay | P3 | PLANNED / TASK-P3-03 |
 | TEST-SCHEDULE-VERSION-LIFECYCLE-001 | Validated Solution→DRAFT→READY_FOR_REVIEW与非法状态拒绝 | P3 | PLANNED / TASK-P3-04、07～08 |
 | TEST-WORKSPACE-READ-MODEL-001 | Gantt、Resource Load、Order View与Version Comparison lineage/KPI一致性 | P3 | PLANNED / TASK-P3-05 |
@@ -281,3 +281,9 @@ TASK-P3-00只登记12个P3 Test ID，registry从36项增加到48项；没有创�
 所有P3测试必须保留P2 formal Validator与immutable artifacts，明确DRAFT/REJECTED publish拒绝、APPROVED-only publish、PUBLISHED immutability、command产生new DRAFT、same-key幂等和default-deny authorization。P4 ExecutionEvent/Replan/OBJ-002/ChangeReport/Execution Simulator及Production identity/deployment/SLA测试不属于P3；48个ID的生命周期仍为注册或历史证据状态，`registry_version=1.0.0`格式不变。
 
 TASK-P3-00本地治理回归为`35 passed`，implementation required run `32681493976`的完整repository suites与20份artifact JSON均PASS。该结果只验证规划/registry/历史回归；12个P3新Test ID全部继续`PLANNED`，没有测试断言或P3行为证据形成。
+
+## TASK-P3-01 contract-test boundary
+
+TASK-P3-01形成三份Frontend规范、两份语义合同和accepted ADR-0012，并用现有TEST-WORKSPACE-CONTRACT-001/TEST-STATE-TRANSITION-001/TEST-ERROR-MAPPING-001建立planned矩阵。现有`test_rule_contracts.py`只复验三套state enum/42 pairs及旧error registry不漂移；`test_check_docs.py`只复验front matter、链接、trace/Impact治理。它们不能证明P3 Schema、authorization、idempotency、state persistence、API或UI行为。
+
+因此P3新Test ID总数仍为48且behavior lifecycle保持`PLANNED`；本Task不得新增/修改测试断言。后续P3-02必须先形成strict Schema/round-trip evidence，P3-03～13按卡片形成repository/application/API/UI evidence，P3-14/15再聚合和独立审计。

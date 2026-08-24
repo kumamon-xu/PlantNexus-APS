@@ -224,3 +224,9 @@ Decision writing commit `65c556789f176ad9de55523d6420737bb60f933f`的exact requi
 用户已批准P2→P3；TASK-P3-00是本batch唯一owner，P3-01～15均为planned member。本规划未修改workflow；required `validate`通过current-phase discovery选择P3-00。Implementation `1d4b1a5c0ad6dc13df18588fbdcb9732e5ef15e7`的run `32681493976` / job `97298850740`为success且32/32 steps成功；artifact `9504310381`未过期，digest=`sha256:306ccfc7fedef1541c36bcc4afb0727239bd3fb9a17dd4b7ea022fd7c3d4fe64`，20/20 JSON与Task 64 paths/4 rows/19 checks/0 issues一致。因此本closure把P3-00标为`done`；closure自身仍须push后核验。
 
 未来每张P3 Task必须按卡片运行locked install、lint/type、相关unit/contract/integration/E2E/migration/build、full docs/diff治理和machine report。P3-14聚合Gate不替代P3-15独立Audit；两者READY均不构成P4 transition或Production release。
+
+## TASK-P3-01 provider boundary
+
+P3-01从TASK-P3-00 closure `7f65f88b620ea1e8d2f4693911be3b52f4052d5d`启动；该baseline required run/job/artifact=`32682015727`/`97300206924`/`9504453154`成功，artifact内Task/SHA、4 Impact rows、19 checks和0 issues一致。当前Task不修改workflow；current-phase discovery必须选择唯一changed card TASK-P3-01。
+
+Implementation提交只能在本地full docs、Task diff、指定35项治理/规则回归、`git diff --check`和禁止范围全部通过后push。其exact required `validate`和未过期artifact必须复现TASK-P3-01、implementation SHA、实际changed paths、`IMPACT-STATE/PHASE/GOVERNANCE-REGISTRY/DOCS`、全部checks和0 issues；在该证据形成前Task保持`in_progress`。随后只允许evidence-only closure更新状态/证据并再次通过exact required provider；不得借closure启动P3-02或写入P3行为。

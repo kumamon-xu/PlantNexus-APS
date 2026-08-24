@@ -350,3 +350,9 @@ P3首次规划batch以`80c403384d1e171258cf874d26605d0d22aff1b2`为不可变Diff
 本batch新增16份Markdown，inventory预期从143增至159；Task总数从37增至53，Test IDs从36增至48，风险从11增至13，roots=30、OPEN=15、SIM assumptions=13不变。完整治理和current Task diff必须实际核对这些计数、4条Impact Rule、changed paths、19项或当时完整checks与issues；provider artifact形成前不得预填PASS或关闭owner。
 
 实际full governance与implementation provider均确认159/30/48/15/13/13/53计数；artifact `9504310381`中的`traceability-report.v1`精确绑定implementation SHA，记录64 committed/0 working paths、4 rows、19/19 checks与0 issues。因此P3-00治理Gate闭环；本evidence-only closure自身仍须push后复核。
+
+## TASK-P3-01 governance application
+
+不可变Diff base为`7f65f88b620ea1e8d2f4693911be3b52f4052d5d`。本Task新增三份Frontend规范、两份contract和ADR-0012，因此`docs/**/*.md`预期由159增至165；Task数53、roots 30、Test IDs 48、OPEN 15、SIM assumptions 13、risks 13和所有registry format version保持。Inventory必须逐项登记6个新path/Doc ID/status/title，且Frontend index从planned转为baseline。
+
+完整range只允许Task卡逐字列出的docs路径，预期命中`IMPACT-STATE/PHASE/GOVERNANCE-REGISTRY/DOCS`。`backend/**`、`schemas/**`、`frontend/**`、migrations、`.github/workflows/**`、`pyproject.toml`和`uv.lock`必须相对Diff base零变化；P2 historical docs/artifacts不可改写。Full/diff治理、实际path/check/issue计数和provider IDs只有命令/外部执行后才可回填，禁止预写PASS。

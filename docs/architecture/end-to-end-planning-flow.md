@@ -81,3 +81,9 @@ Implementation `dc2e5cd41080603606090ebfc4bc6162941c5f7f`的required run `324657
 ## P3 planned continuation
 
 P2 Exit已provider-verified并关闭；P3在其后追加`validated solution → immutable DRAFT → read/compare → command validation → new DRAFT → approve/reject → idempotent publish → ExportJob/package → API/UI`。P3-01先固定合同/ADR，P3-02～13分层实现，P3-14/15分别负责vertical Gate与独立Audit。该链不回写P2 artifacts，也不包含P4 Execution/Replan或Production external side effect。
+
+## TASK-P3-01 flow contract
+
+P3先行合同现把链固定为`P2 validated immutable inputs → ScheduleVersion copy-on-write → versioned read/query → server command/precondition → fresh Validator → new DRAFT → capability/state decision → internal idempotent publication/current/supersession → independent ExportJob/package → API/UI consumer`。每个箭头都必须保留plane、fingerprint、correlation、idempotency和append-only audit lineage；UI/router/worker没有旁路。
+
+TASK-P3-01仅形成文档和ADR-0012；Schema/persistence/application/API/UI节点仍未落地。链在ExportJob/internal artifact处终止，不进入P4 Execution/Replan，也不连接Production external target。

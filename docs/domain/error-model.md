@@ -163,3 +163,9 @@ Required run `32465737712`精确复验四类rejection与FAIL/nonzero contract测
 ## P3 error allocation
 
 P3-01须先固定`INVALID_STATE_TRANSITION`、`AUTHORIZATION_DENIED`、`IDEMPOTENCY_CONFLICT`、`VALIDATION_FAILED`与`EXPORT_FAILED`的责任层和HTTP/UI映射；P3-02只能形成carrier，P3-04～10形成行为，P3-13验证用户可见负向路径。UNKNOWN仍不得写成INFEASIBLE，未授权Production必须fail closed；本次不新增error code或实现映射。
+
+## TASK-P3-01 error contract baseline
+
+P3先行合同现固定计划映射：request/reference/data-plane `DATA_ERROR`与client-supplied `MODEL_INVALID`为HTTP 422；fresh Validator `VALIDATION_FAILED/SCHEDULE_VALIDATION_FAILED`为422；既有`INVALID_STATE_TRANSITION`为409；module-local `AUTHORIZATION_DENIED`为403、`IDEMPOTENCY_CONFLICT`为409、`EXPORT_FAILED`以`SYSTEM_ERROR` carrier为500。已持久化权威artifact损坏或unknown exception统一sanitized 500；not-found可用`INVALID_REFERENCE`/404而不泄漏跨scope资源。
+
+后三个reason尚未加入`error-code-registry.v2`或Error Schema；TASK-P3-02必须在strict workspace carrier中以`workspace-control.v1`和product error显式分namespace，保持七类category兼容，不得把authorization/idempotency强塞进`DATA_ERROR`或改写P2 registry bytes。Export底层system cause可引用sanitized `SYSTEM_ERROR`，但control result仍为独立`EXPORT_FAILED`。所有失败在副作用前拒绝或保持可审计失败Job；UNKNOWN继续是`NO_SOLUTION_WITHIN_LIMIT`且无candidate，绝不映射INFEASIBLE/Validation PASS/可发布Version。HTTP/API/UI行为测试仍为`PLANNED`。

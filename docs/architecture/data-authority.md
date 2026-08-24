@@ -121,3 +121,7 @@ Provider artifact `9440650646`精确复现相同Simulation-only authority bounda
 ## P3 authority planning
 
 ScheduleVersion内容权威来自validated PlanningSolution与显式human command；状态权威只属于server application/state machine，UI/API transport不得自封权威。OPEN-010关闭前capability matrix只能表达view/edit/lock/approve/reject/publish/export/audit并在Production default-deny，Simulation test actor也不能成为真实角色。外部publish target与字段authority继续受OPEN-002/015约束。
+
+TASK-P3-01现形成该合同：ScheduleVersion content由P2 immutable lineage加server接受的copy-on-write command派生；state/current publication、`allowed_actions`和decision result只由application/state repository事务授权；ExportJob/artifact有独立authority且不能反写publish。actor只能保存已认证principal reference和resolved capability，客户端自报role、UI按钮与test fixture均无authority。
+
+Production没有principal→capability/resource/target mapping时DENY，`SIMULATION_INTERNAL`只用于隔离测试。OPEN-002/010/015没有closure record；真实角色、字段owner、external target和approval仍未知。

@@ -44,3 +44,7 @@ batch metadata与全部opaque rows在一个SQLAlchemy transaction插入；integr
 ## P3 idempotency allocation
 
 P3-03负责version/audit/export repository的transaction与unique-key基础；P3-08负责publish same-key same-result/conflict和supersession，P3-09负责ExportJob retry/atomic package，P3-10负责HTTP idempotency envelope。Publish成功、ExportJob成功和外部传输必须分离，worker重试不得重复副作用或改写PUBLISHED内容。当前没有新增worker、lease、outbox或Production exactly-once证据。
+
+ADR-0012现固定最低scope=`data_plane + action + resource/version + target + idempotency_key`，request fingerprint覆盖contract version、state/content precondition、payload、reason和target。same key/same fingerprint返回原logical result且不重复业务audit/state/artifact；same key/different fingerprint为conflict。Approve/Reject、Publish和Export各自独立scope，timeout后必须先查询原result，不能换key盲重试。
+
+Publish transaction只处理APPROVED→PUBLISHED/current/必要supersession/audit；ExportJob独立执行既有pair、attempt/retry/atomic manifest-last，永不调用Publish。TASK-P3-01没有实现DB unique/CAS、lease/heartbeat、worker、storage、outbox或network exactly-once；这些仍由P3-03/08/09及未来external adapter负责。

@@ -126,4 +126,10 @@ P3-01～15把NFR-COR/DET/TRC/ISO/REL/SEC/OBS/PER/HUM与ENG-ARCH/VAL/ERR/VER/LOG�
 
 本次只有规划与治理证据，不形成状态行为、可靠性、权限、UI、Production安全/性能或deployment证据。全部NFR/ENG根ID保持`ALLOCATED`，P4动态重排和Production readiness继续显式排除，`registry_version=1.0.0`格式不变。
 
-TASK-P3-00 provider closure：required run `32681493976` / artifact `9504310381`精确复验64 paths/4 rows/19 checks/0 issues；它只关闭规划治理Task，不形成任何NFR/ENG行为证据。全部根ID继续`ALLOCATED`，P3-01仍未启动。
+TASK-P3-00 provider closure：required run `32681493976` / artifact `9504310381`精确复验64 paths/4 rows/19 checks/0 issues；它只关闭规划治理Task，不形成任何NFR/ENG行为证据。全部根ID继续`ALLOCATED`。P3-01随后由新的明确授权启动。
+
+## TASK-P3-01 contract review
+
+NFR-TRC获得source/new Version、fingerprint、actor/reason/correlation/idempotency/audit链；NFR-ISO/SEC获得explicit plane/target、Simulation test policy和Production default-deny/no-secret合同；NFR-HUM获得READY-only approve/reject、APPROVED-only internal publish和UI非authority合同。ENG-ARCH获得ADR-0012分层方向，ENG-ERR获得P3 responsibility/HTTP mapping plan，ENG-VER获得七份planned Schema/URN/consumer和Frontend selected-not-installed版本边界。
+
+没有机器carrier、persistence、auth provider、state/application/API/UI、dependency lock或行为测试形成，因此所有NFR/ENG根ID继续`ALLOCATED`；OPEN-002/010/015与RISK-012/013不关闭，`registry_version=1.0.0`不变。

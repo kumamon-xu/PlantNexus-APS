@@ -12,7 +12,7 @@ registry_version: 1.0.0
 
 # 文档清单
 
-本清单列出当前仓库已经实际存在的Markdown文档。P0～P2均已归档为completed；P2 Exit Gate=`READY`且用户已批准transition。P3现为active，TASK-P3-00 phase-planning治理已done，P3-01～15均为planned。产品API、Frontend详细规范与Production Runbook正文尚未形成并继续由相应Task/索引登记。
+本清单列出当前仓库已经实际存在的Markdown文档。P0～P2均已归档为completed；P2 Exit Gate=`READY`且用户已批准transition。P3现为active，TASK-P3-00 phase-planning治理已done，TASK-P3-01合同/ADR治理为in_progress，P3-02～15均为planned。P3人类可审计API/Frontend规范已形成；机器Schema、API/Frontend实现与Production Runbook正文仍未形成。
 
 | Path | Doc ID | Status | Title |
 |---|---|---|---|
@@ -28,6 +28,7 @@ registry_version: 1.0.0
 | [adr/ADR-0009-production-simulation-data-isolation.md](../adr/ADR-0009-production-simulation-data-isolation.md) | ADR-0009 | accepted | Production 与 Simulation 数据隔离 |
 | [adr/ADR-0010-planning-problem-v2-contract-evolution.md](../adr/ADR-0010-planning-problem-v2-contract-evolution.md) | ADR-0010 | accepted | PlanningProblem v2 合同演进 |
 | [adr/ADR-0011-ortools-9-15-cp-sat-backend-version-policy.md](../adr/ADR-0011-ortools-9-15-cp-sat-backend-version-policy.md) | ADR-0011 | accepted | OR-Tools 9.15 CP-SAT Backend 与版本策略 |
+| [adr/ADR-0012-planning-workspace-command-state-publication.md](../adr/ADR-0012-planning-workspace-command-state-publication.md) | ADR-0012 | accepted | Planning Workspace Command State 与 Publication 边界 |
 | [adr/README.md](../adr/README.md) | DOC-ADR-INDEX | baseline | Architecture Decision Records |
 | [agents/AGENTS.md](../agents/AGENTS.md) | DOC-AGENT-001 | baseline | PlantNexus APS Coding Agent 规则 |
 | [agents/reading-order-and-context-policy.md](../agents/reading-order-and-context-policy.md) | DOC-AGENT-002 | baseline | Agent 读取顺序与上下文策略 |
@@ -43,6 +44,7 @@ registry_version: 1.0.0
 | [architecture/simulation-first-dual-channel.md](../architecture/simulation-first-dual-channel.md) | DOC-ARCH-004 | baseline | Simulation-First 双通道架构 |
 | [architecture/system-context.md](../architecture/system-context.md) | DOC-ARCH-001 | baseline | 系统上下文 |
 | [architecture/technology-stack.md](../architecture/technology-stack.md) | DOC-ARCH-006 | baseline | 推荐技术栈与锁定规则 |
+| [contracts/authorization-and-audit.md](../contracts/authorization-and-audit.md) | DOC-CONTRACT-011 | baseline | P3 Authorization Capability 与 Audit 合同 |
 | [contracts/execution-events-and-replan-request.md](../contracts/execution-events-and-replan-request.md) | DOC-CONTRACT-006 | baseline | ExecutionEvent 与 ReplanRequest 合同 |
 | [contracts/export-package.md](../contracts/export-package.md) | DOC-CONTRACT-007 | baseline | 标准成果包合同 |
 | [contracts/import-and-normalization.md](../contracts/import-and-normalization.md) | DOC-CONTRACT-001 | baseline | Import 与 Normalization 合同 |
@@ -50,6 +52,7 @@ registry_version: 1.0.0
 | [contracts/planning-problem.md](../contracts/planning-problem.md) | DOC-CONTRACT-003 | baseline | PlanningProblem 合同 |
 | [contracts/planning-snapshot.md](../contracts/planning-snapshot.md) | DOC-CONTRACT-002 | baseline | PlanningSnapshot 合同 |
 | [contracts/planning-solution-and-schedule-version.md](../contracts/planning-solution-and-schedule-version.md) | DOC-CONTRACT-005 | baseline | PlanningSolution 与 ScheduleVersion 合同 |
+| [contracts/planning-workspace-api.md](../contracts/planning-workspace-api.md) | DOC-CONTRACT-010 | baseline | P3 Planning Workspace API 语义合同 |
 | [contracts/README.md](../contracts/README.md) | DOC-CONTRACT-INDEX | living | 合同文档索引 |
 | [contracts/schema-index.md](../contracts/schema-index.md) | DOC-CONTRACT-008 | living | Schema 计划索引 |
 | [contracts/schema-versioning.md](../contracts/schema-versioning.md) | DOC-CONTRACT-009 | baseline | Schema 版本与兼容规则 |
@@ -68,7 +71,10 @@ registry_version: 1.0.0
 | [domain/state-machines/planning-run.md](../domain/state-machines/planning-run.md) | DOC-STATE-001 | baseline | PlanningRun 状态机 |
 | [domain/state-machines/schedule-version.md](../domain/state-machines/schedule-version.md) | DOC-STATE-002 | baseline | ScheduleVersion 状态机 |
 | [domain/time-calendar-and-material-boundaries.md](../domain/time-calendar-and-material-boundaries.md) | DOC-DOM-003 | baseline | 时间、日历与物料边界 |
-| [frontend/README.md](../frontend/README.md) | DOC-FRONTEND-INDEX | planned | Frontend 文档形成计划 |
+| [frontend/approval-publication-flow.md](../frontend/approval-publication-flow.md) | DOC-FRONTEND-003 | baseline | P3 Approval Publication 与 Export 人工控制流程 |
+| [frontend/gantt-command-contract.md](../frontend/gantt-command-contract.md) | DOC-FRONTEND-002 | baseline | P3 Gantt Command 与新版本合同 |
+| [frontend/planning-workspace.md](../frontend/planning-workspace.md) | DOC-FRONTEND-001 | baseline | P3 Planning Workspace 页面与只读视图合同 |
+| [frontend/README.md](../frontend/README.md) | DOC-FRONTEND-INDEX | baseline | Frontend 文档形成计划 |
 | [governance/change-impact-matrix.md](../governance/change-impact-matrix.md) | DOC-GOV-010 | baseline | 变更影响与必审文档矩阵 |
 | [governance/document-control.md](../governance/document-control.md) | DOC-GOV-001 | baseline | 文档控制规则 |
 | [governance/document-inventory.md](../governance/document-inventory.md) | DOC-GOV-009 | living | 文档清单 |
@@ -158,7 +164,7 @@ registry_version: 1.0.0
 | [tasks/P2/TASK-P2-13-p2-vertical-slice-gate-evidence.md](../tasks/P2/TASK-P2-13-p2-vertical-slice-gate-evidence.md) | TASK-P2-13 | done | P2 Vertical Slice Gate Evidence |
 | [tasks/P2/TASK-P2-14-p2-exit-gate-audit.md](../tasks/P2/TASK-P2-14-p2-exit-gate-audit.md) | TASK-P2-14 | done | P2 Exit Gate Audit |
 | [tasks/P3/TASK-P3-00-phase-transition-and-task-planning-governance.md](../tasks/P3/TASK-P3-00-phase-transition-and-task-planning-governance.md) | TASK-P3-00 | done | P3 Phase Transition and Task Planning Governance |
-| [tasks/P3/TASK-P3-01-planning-workspace-contract-and-adr-baseline.md](../tasks/P3/TASK-P3-01-planning-workspace-contract-and-adr-baseline.md) | TASK-P3-01 | planned | Planning Workspace Contract and ADR Baseline |
+| [tasks/P3/TASK-P3-01-planning-workspace-contract-and-adr-baseline.md](../tasks/P3/TASK-P3-01-planning-workspace-contract-and-adr-baseline.md) | TASK-P3-01 | in_progress | Planning Workspace Contract and ADR Baseline |
 | [tasks/P3/TASK-P3-02-schedule-version-workspace-and-export-schemas.md](../tasks/P3/TASK-P3-02-schedule-version-workspace-and-export-schemas.md) | TASK-P3-02 | planned | ScheduleVersion Workspace and Export Schemas |
 | [tasks/P3/TASK-P3-03-schedule-version-audit-and-export-persistence.md](../tasks/P3/TASK-P3-03-schedule-version-audit-and-export-persistence.md) | TASK-P3-03 | planned | ScheduleVersion Audit and Export Persistence |
 | [tasks/P3/TASK-P3-04-validated-solution-to-reviewable-schedule-version.md](../tasks/P3/TASK-P3-04-validated-solution-to-reviewable-schedule-version.md) | TASK-P3-04 | planned | Validated Solution to Reviewable ScheduleVersion |
@@ -176,7 +182,7 @@ registry_version: 1.0.0
 | [tasks/README.md](../tasks/README.md) | DOC-TASK-INDEX | living | Task Card 索引 |
 | [tasks/TASK_TEMPLATE.md](../tasks/TASK_TEMPLATE.md) | TEMPLATE-TASK | baseline | Task Card Template |
 
-更新文档时应同步维护本清单。`uv run python scripts/check_docs.py`会校验本表是否完整覆盖当前159份`docs/**/*.md`，并核对Doc ID、status和title，但不会自动改写清单。根`README.md`、根`AGENTS.md`、非Markdown evidence manifest、代码和脚本不属于正式文档清单。
+更新文档时应同步维护本清单。`uv run python scripts/check_docs.py`会校验本表是否完整覆盖当前165份`docs/**/*.md`，并核对Doc ID、status和title，但不会自动改写清单。根`README.md`、根`AGENTS.md`、非Markdown evidence manifest、代码和脚本不属于正式文档清单。
 
 本清单格式为 `registry_version: 1.0.0`；列结构或状态比较语义变化时提升版本。
 
@@ -271,3 +277,5 @@ TASK-P2-14 activation新增`milestones/P2-exit-gate-audit-report.md`并同步本
 TASK-P2-14 local audit writeback不再新增、删除或重命名Markdown，inventory继续143份；audit report front matter现为`baseline`并与本清单一致，JSON manifest及ignored Gate/XS/S/M/scenario/trace reports仍不进入Markdown清单。Roots=30、Test IDs=36、OPEN=15、SIM assumptions=13、risks=11、Tasks=37与所有registry format version保持不变；最终治理为30 paths/3 rows/19 checks/0 issues。Implementation artifact `9503227240`精确复现上述inventory/治理范围，故TASK-P2-14=`done`、Exit=`READY`；P2保持`active`、P3未启动。
 
 TASK-P3-00 phase-planning batch新增16张P3 Task Markdown，inventory从143增至159；没有创建其他合同、ADR、Frontend或Runbook正文。P2状态转为`completed`、P3转为`active`；implementation `1d4b1a5c0ad6dc13df18588fbdcb9732e5ef15e7` / artifact `9504310381`成功后TASK-P3-00=`done`，P3-01～15=`planned`。Roots=30、OPEN=15、SIM assumptions=13不变；Test IDs由36增至48，risks由11增至13，Tasks由37增至53，所有registry format version保持`1.0.0`。本次不把任何P3业务、Production authority/publish/readiness或P4能力登记为formed。
+
+TASK-P3-01新增6份正式Markdown：ADR-0012、三份Frontend规范和两份P3 contract，因此inventory从159增至165；Frontend index由`planned`转为`baseline`，TASK-P3-01在provider闭环前为`in_progress`。Schema/sample/code/test/workflow、`frontend/**`实现与ignored Task/provider reports均不进入清单。Roots=30、Test IDs=48、OPEN=15、SIM assumptions=13、risks=13、Tasks=53和所有registry format version保持`1.0.0`；机器Schema/API/UI/Production/P4能力仍未形成。

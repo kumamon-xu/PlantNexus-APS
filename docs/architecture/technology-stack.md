@@ -222,3 +222,9 @@ Implementation provider对exact lock、Lint、Type、full tests、Gate、build�
 ## P3 dependency allocation
 
 本次transition不修改Python依赖、`uv.lock`、Frontend依赖或CI。TASK-P3-01须先在ADR/技术栈中确认React/TypeScript/build/test方案；只有TASK-P3-11可在独立授权后引入exact frontend pins/lock并执行point-in-time SCA/license审查。P3-12/13不得无审查增加Gantt/E2E库，Production部署栈继续未形成。
+
+## TASK-P3-01 frontend stack decision
+
+ADR-0012已接受React + TypeScript + Ant Design + TanStack Query；build/dev选择Vite；package manager选择npm并要求`package-lock.json` + `npm ci`；unit/component选择Vitest + Testing Library；browser E2E选择Playwright。该组合遵循总规推荐栈并与P3-11现有acceptance command一致。
+
+TASK-P3-01没有创建`frontend/**`、`package.json`/lock、Node pin、dependency、bundle、test或workflow；因此这些组件仍是selected-not-installed。P3-11启动前必须逐字固定Node/npm和全部direct pins、lock策略、SCA/license命令并由exact provider执行；P3-12/13新增Gantt/E2E库必须另行dependency review。SSR、microfrontend、client-side Solver与Production hosting不在当前决定内。

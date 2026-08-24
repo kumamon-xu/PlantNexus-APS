@@ -1,0 +1,88 @@
+---
+doc_id: DOC-FRONTEND-003
+title: P3 Approval Publication 与 Export 人工控制流程
+status: baseline
+spec_version: 0.3.0
+phase: P3
+normative: true
+source_sections: [33, 34, 66, 67, 68, 77, 78, 94]
+last_reviewed: 2026-08-24
+---
+
+# P3 Approval Publication 与 Export 人工控制流程
+
+本文件固定人机控制流程和UI可见边界。TASK-P3-01没有批准任何真实人、组织、身份提供商、Production target或发布行为。
+
+## 控制原则
+
+- UI按钮不是authority；server依据已认证principal、capability、environment/data plane、Version state和target重新判定。
+- 每个状态改变命令必须包含非空`reason`、idempotency key、expected state/content fingerprint和correlation ID。
+- ScheduleVersion content不可变；decision只改变既有允许pair的state，修订只创建新DRAFT。
+- internal Publish与Export是两个不同副作用。Publish改变ScheduleVersion/current reference；Export创建ExportJob与成果包，不能调用或推断Publish。
+- Production authority/target未配置时default-deny；Simulation test policy不能映射成真实角色。
+
+## 决策与副作用矩阵
+
+| UI action | Source state | capability | 成功结果 | 明确拒绝 |
+|---|---|---|---|---|
+| Approve | `READY_FOR_REVIEW` | `approve` | `APPROVED` + one audit event | 其他state、缺reason、stale、unauthorized |
+| Reject | `READY_FOR_REVIEW` | `reject` | `REJECTED` + one audit event | 其他state、缺reason、stale、unauthorized |
+| Publish | `APPROVED` | `publish` | internal `PUBLISHED`、current reference、必要时旧current `SUPERSEDED`、audit | DRAFT/READY/REJECTED/PUBLISHED/SUPERSEDED、unknown/Production target |
+| Export | `PUBLISHED` | `export` | 新建或重放ExportJob；不改ScheduleVersion state | 非PUBLISHED、unknown target、unauthorized、mixed plane |
+| View audit/history | 任意 | `audit` | append-only projection | unauthorized/cross-plane |
+
+`PUBLISHED → SUPERSEDED`只能作为一次新Version成功成为current的原子publication transaction的一部分，不能由普通UI单独触发。历史rollback只允许“以历史Version为参考派生并重新走审批/发布”，不得把旧PUBLISHED原行改回current状态；P4 Replan不在本流程中。
+
+## UI序列
+
+### Approve / Reject
+
+1. 刷新Version、ValidationReport、state和server `allowed_actions`；
+2. 显示Version/lineage、决策影响与必填reason；
+3. 提交expected state/fingerprint、idempotency key和correlation；
+4. 仅在server返回已提交state与audit ID后显示成功；
+5. `409/403/422/500`保持明确失败，刷新后由用户决定是否重试。
+
+### Publish
+
+1. 只在server确认`APPROVED`、`publish` capability、明确`SIMULATION_INTERNAL` target时展示P3动作；
+2. 对话框展示将成为current的Version、当前Version、可能的supersession和“不是Production发布”；
+3. 提交一次幂等请求；
+4. same-key/same-request返回同一publication result且不重复audit/current switch；
+5. same-key/different-request、并发冲突或target不明均显示失败，不自动换key重试。
+
+### Export
+
+1. 只从PUBLISHED Version创建ExportJob；
+2. UI分别显示CREATED/EXPORTING/EXPORTED/EXPORT_FAILED/CANCELLED，不把Job排队或文件存在写成成功；
+3. `EXPORT_FAILED → EXPORTING`必须是显式retry，使用可追踪attempt且不得触发Publish；
+4. 下载只在EXPORTED且manifest/hash验证通过时可用；partial package不得暴露。
+
+## Idempotency scope
+
+| 动作 | 最低scope/fingerprint内容 | replay保证 |
+|---|---|---|
+| Approve/Reject | plane + action + Version + key；state/content/reason/actor capability | 相同decision/result/audit，不重复transition |
+| Publish | plane + target + Version + key；approved fingerprint/current precondition | 相同publication result，不double publish/supersede |
+| Export | plane + target + Version + package profile + key | 相同ExportJob/artifact identity，不重复成功包或Publish |
+
+不同fingerprint复用key统一返回`IDEMPOTENCY_CONFLICT`/HTTP `409`。客户端不得通过生成新key掩盖不确定结果；必须先查询原result。
+
+## 失败可见性
+
+- `AUTHORIZATION_DENIED`=`403`：不显示成功、不过度透露所需角色；Production未配置时同样拒绝。
+- `INVALID_STATE_TRANSITION`=`409`：显示实际state并要求刷新，不自动改变命令。
+- `IDEMPOTENCY_CONFLICT`=`409`：显示原请求引用，不自动重放不同内容。
+- `VALIDATION_FAILED`=`422`：Version不可进入批准/发布链。
+- `EXPORT_FAILED`=`500`：显示ExportJob/attempt/correlation和显式retry条件，不改变ScheduleVersion。
+- 网络超时结果未知时先按key查询，不显示成功toast，也不直接换key提交。
+
+上面三个P3 module-local reason code在TASK-P3-02前不是global error registry新增项；机器carrier必须保留现有七类category兼容与sanitized details，不能静默扩写已发布registry bytes。
+
+## Audit 与隐私
+
+每次成功state change、publication/export attempt及允许记录的拒绝必须关联Version、before/after、actor reference/capability、reason、target、request fingerprint、idempotency reference、correlation、result/error和UTC时间。认证token、Secret、raw credential、SQL/stack trace和未经分类的敏感payload不得进入浏览器trace、日志或audit。
+
+## 环境边界
+
+P3 E2E只可使用隔离的Simulation plane、明确test principal和`SIMULATION_INTERNAL` target。Production UI不得暴露Simulation入口；OPEN-002/010/015未关闭前不存在真实approve/publish/export target。P3完成不等于UAT、Production approval、publish authorization或deployment readiness。

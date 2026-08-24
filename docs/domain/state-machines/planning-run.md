@@ -82,3 +82,7 @@ KPI v2与internal manifest只引用既有`planning_run_id`，并要求该ID与�
 ## P3 planning allocation
 
 P3只消费已经完成且candidate通过formal Validator的PlanningRun/Solution；创建ScheduleVersion不得改变PlanningRun状态或重试Solver。P3-04负责消费边界，P3-14/15验证lineage和无反向状态副作用；本次不增加PlanningRun pair、repository或worker行为。
+
+## TASK-P3-01 contract review
+
+Workspace合同确认PlanningRun只承担计算生命周期：`COMPLETED`不能授权approve/publish/export，也不等于ScheduleVersion存在。P3 query可只读展示PlanningRun/Solution/Validation lineage；任何manual command只针对ScheduleVersion并产生新DRAFT，不反向改变PlanningRun或重跑Solver。本Task未修改`state-machines.v1`、pure state contract、repository或worker，P3行为仍为`PLANNED`。

@@ -17,7 +17,7 @@ last_reviewed: 2026-08-24
 
 P2-14 audit implementation `65c556789f176ad9de55523d6420737bb60f933f`的GitHub push run `32677741558` / required `validate` job `97288829348` / artifact `9503227240`成功，artifact digest=`sha256:fbb76f0ab44d3bdcff2d31e70f9698af84e10e48ee57ae611eef8529a288240e`；evidence-only closure `80c403384d1e171258cf874d26605d0d22aff1b2`的run `32678248961` / job `97290201234` / artifact `9503372291`也成功，digest=`sha256:673412905b7420660d1e9f07755fcda6291f85f8f2bd926b4bf31a0a6bd1bd0c`。下载检查的两份artifact均含20份可解析JSON，Task/SHA/Impact Rules/checks/issues与对应提交一致且0 issue。规划启动时`main=origin/main=80c403384d1e171258cf874d26605d0d22aff1b2`、ahead/behind=`0/0`且working tree clean，因此transition前提一致。
 
-P2 Milestone现为`completed`，P3 Milestone为`active`。`TASK-P3-00 — P3 Phase Transition and Task Planning Governance`已由exact implementation provider闭环并在evidence-only closure标为`done`；P3-01～15仅建立为`planned`，不因依赖、规划或本次验收自动进入实现。
+P2 Milestone现为`completed`，P3 Milestone为`active`。`TASK-P3-00 — P3 Phase Transition and Task Planning Governance`已由exact implementation provider闭环并在evidence-only closure标为`done`。用户随后于2026-08-24明确授权执行`TASK-P3-01`；P3-01现为唯一`in_progress` Task，P3-02～15保持`planned`且不会自动启动。
 
 ## 当前目标
 
@@ -39,25 +39,31 @@ P3 Gate要求DRAFT/REJECTED不可发布、只有APPROVED可发布、PUBLISHED im
 
 ## 当前Task与启动边界
 
-`TASK-P3-00`以不可变Diff base `80c403384d1e171258cf874d26605d0d22aff1b2`完成phase transition、完整Task规划和治理注册表同步；implementation `1d4b1a5c0ad6dc13df18588fbdcb9732e5ef15e7`的run `32681493976` / required job `97298850740` / artifact `9504310381`成功，下载的20份JSON全部PASS，Task report为64 committed/0 working paths、4 rows、19 checks、0 issues。P3-01～15均为`phase-plan-member`、状态`planned`且无implementation SHA；每张卡只能在新的用户明确授权、依赖全部`done`、clean/synchronized/provider-verified HEAD写入新Diff base后启动。
+`TASK-P3-00`以不可变Diff base `80c403384d1e171258cf874d26605d0d22aff1b2`完成phase transition、完整Task规划和治理注册表同步；implementation `1d4b1a5c0ad6dc13df18588fbdcb9732e5ef15e7`的run `32681493976` / required job `97298850740` / artifact `9504310381`成功，下载的20份JSON全部PASS，Task report为64 committed/0 working paths、4 rows、19 checks、0 issues。
 
-推荐的第一个业务Task是`TASK-P3-01 — Planning Workspace Contract and ADR Baseline`，但本次不自动执行。它必须先固定页面/API/权限/状态机/错误/审计/idempotency合同与ADR，再允许P3-02及后续代码Task启动。
+`TASK-P3-01 — Planning Workspace Contract and ADR Baseline`已从clean、synchronized、provider-verified HEAD `7f65f88b620ea1e8d2f4693911be3b52f4052d5d`启动并固定为不可变Diff base；该HEAD的required run/job/artifact=`32682015727`/`97300206924`/`9504453154`，artifact内TASK-P3-00 closure exact SHA、4 rows、19 checks和0 issues一致。当前只允许形成三份Frontend规范、两份合同、accepted ADR-0012及命中的治理文档；不创建Schema、migration、dependency、业务代码、测试断言、CI或Frontend实现。
 
 ## 当前允许
 
-- 读取、复核并维护已闭环的P3治理基线；
-- 等待用户对下一张有界Task的明确授权；
-- 后续P3 Task只有在逐Task明确授权后，才可按各卡允许范围和不可变Diff base实施；
-- 当前建议首先执行TASK-P3-01，但不得由P3-00完成或依赖满足自动启动。
+- 执行TASK-P3-01的页面/API/payload/capability/state/error/audit/idempotency合同与ADR-0012；
+- 运行本Task限定的完整文档治理、合同回归、Diff检查及exact provider验收；
+- TASK-P3-01关闭后只建议由用户另行授权TASK-P3-02，不自动执行；
+- 后续P3 Task只有在逐Task明确授权后，才可按各卡允许范围和新的不可变Diff base实施。
 
 ## 当前禁止
 
-- 本次修改业务代码、Schema、migration、dependency/lock、测试断言、fixture/benchmark、CI workflow、frontend或infra；
-- 在`TASK-P3-01`合同/ADR基线前实现P3代码，或让任何P3-01～15自动进入`ready/in_progress`；
+- 本Task修改业务代码、Schema、migration、dependency/lock、测试断言、fixture/benchmark、CI workflow、`frontend/**`实现或infra；
+- 执行P3-02～15，或让其中任何Task自动进入`ready/in_progress`；
 - 直接更新PUBLISHED、绕过server/formal Validator、允许DRAFT/REJECTED发布或产生非幂等export/publish；
 - 实现P4的ExecutionEvent、ReplanRequest、OBJ-002 Stability、freeze window、ChangeReport或Execution Simulator；
 - 创建P4详细Task、进入P4，或声明Production readiness、approval authority、external publish/deployment已形成；
 - 改写P2历史audit、失败记录、provider evidence、Simulation假设或阶段边界。
+
+## TASK-P3-01 当前合同边界
+
+页面/路由/read model见[`frontend/planning-workspace.md`](frontend/planning-workspace.md)，编辑/lock见[`frontend/gantt-command-contract.md`](frontend/gantt-command-contract.md)，人工批准/发布/导出见[`frontend/approval-publication-flow.md`](frontend/approval-publication-flow.md)；HTTP payload/error和capability/audit分别由[`contracts/planning-workspace-api.md`](contracts/planning-workspace-api.md)与[`contracts/authorization-and-audit.md`](contracts/authorization-and-audit.md)固定。ADR-0012接受copy-on-write new DRAFT、server authority、既有state pair、Production default-deny、approved-only internal publish、Publish/Export分离、append-only audit及React/TypeScript/npm/Vite/Vitest/Playwright组合。
+
+这些是contract-only事实：schema set继续`2.5.0`，`state-machines.v1`不变，所有P3机器carrier、persistence、application/API/UI/E2E行为仍为`PLANNED`；OPEN-002/010/015保持OPEN，P4/Production边界不变。
 
 ## 阶段完成条件
 

@@ -125,3 +125,5 @@ P3规划只允许复用既有P2 validated synthetic schedule与Simulation plane�
 SIM-ASSUMPTION-001～013全部继续`ACTIVE`。内部Simulation publish/export只证明P3工作流行为，不代表真实Production authority、capacity、SLA或external side effect，`registry_version=1.0.0`格式不变。
 
 TASK-P3-00 provider run `32681493976`没有生成或修改Scenario/Profile/seed/value；SIM-ASSUMPTION-001～013全部继续`ACTIVE`，P3 planned test actor仍不是Production authority。
+
+TASK-P3-01 review：页面/命令/approval合同只定义非定量Simulation test principal和`SIMULATION_INTERNAL` target边界；没有新增Scenario/Profile/seed/topology/size/latency threshold或业务默认值。规模测试只登记观测维度，P2 XS/S/M数值不外推UI/Production容量。SIM-ASSUMPTION-001～013全部继续`ACTIVE`，无新增/修改/retire条目，`registry_version=1.0.0`不变。

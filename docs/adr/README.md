@@ -15,7 +15,7 @@ ADR 记录 Architecture、Solver Backend、Constraint semantics、Objective hier
 
 ADR 状态：`proposed`、`accepted`、`rejected`、`superseded`。Accepted ADR 不重写历史；变更通过新 ADR `supersedes` 旧记录。
 
-ADR-0001～0009 是从 implementation spec 0.3.0 已明确决定中建立的基线记录。ADR-0010是TASK-P2-01对PlanningProblem v2合同演进的新增决定；[ADR-0011](ADR-0011-ortools-9-15-cp-sat-backend-version-policy.md)是TASK-P2-03在首次Solver dependency前接受的OR-Tools exact-version、namespace与upgrade/replay决定。Accepted状态不表示后继约束、Validator或业务可行性已经实现。
+ADR-0001～0009 是从 implementation spec 0.3.0 已明确决定中建立的基线记录。ADR-0010是TASK-P2-01对PlanningProblem v2合同演进的新增决定；[ADR-0011](ADR-0011-ortools-9-15-cp-sat-backend-version-policy.md)是TASK-P2-03在首次Solver dependency前接受的OR-Tools exact-version、namespace与upgrade/replay决定；[ADR-0012](ADR-0012-planning-workspace-command-state-publication.md)是TASK-P3-01在任何P3 Schema/代码前接受的Workspace command/state/publication决定。Accepted状态不表示后继Schema、持久化、行为或Production authority已经实现。
 
 TASK-P0-03 的 Schema/type skeleton 落实 ADR-0001（共同入口 envelope）、ADR-0003（Solver-neutral Problem）、ADR-0007（immutable Snapshot）、ADR-0008（UTC/seconds/ticks）和 ADR-0009（Production/Simulation 标识隔离）的既有决定，没有改变这些决定，因此不新增 ADR。Problem builder、hash、Solver 或字段权威若偏离这些决定，必须另建 ADR，不能借 skeleton 隐式修改。
 
@@ -59,6 +59,8 @@ TASK-P2-11继续落实ADR-0003/0005/0007/0008：reporting/export只消费solver-
 
 TASK-P2-12继续落实ADR-0002/0003/0004/0005/0006/0008/0011：Benchmark位于预留Simulation模块，只经solver-neutral Problem/Global Strategy/formal Validator/public KPI/Exporter；OR-Tools exact pin、单Global模型、OBJ-001、UTC/tick与Validator隔离均不变。三个internal v1 evidence合同、existing PyYAML dev工具和CI XS activation不改变架构、Schema、dependency或Production policy，因此不新增ADR。若未来引入decomposition/fallback、Production threshold/default、L/XL release gate、外部Benchmark service、持久化报告合同或共享Solver/Validator实现，必须停止并提交new/superseding ADR。
 
-## P3 ADR allocation
+## TASK-P3-01 ADR decision
 
-本次governance transition不接受或预留新ADR编号。TASK-P3-01必须在激活时分配当时下一个未使用编号，并在任何P3 Schema/代码前创建、接受Workspace command/state/publication ADR；至少决定command-only edit/lock→new DRAFT、ScheduleVersion immutability、authority-neutral/default-deny authorization、APPROVED-only idempotent internal publish、Publish/Export分离、append-only audit与P4/Production边界。若实际需要新state/pair、identity provider、outbox、external storage/MES、SSR/microfrontend或P4语义，必须另建new/superseding ADR；不得修改ADR-0002/0005/0007/0009历史事实。
+TASK-P3-01以当时下一个未使用编号接受ADR-0012，决定command-only/copy-on-write edit/lock→new DRAFT、ScheduleVersion content immutability、authority-neutral/default-deny authorization、APPROVED-only idempotent internal publish、Publish/Export分离、append-only audit、domain→repository→application→API/jobs→frontend依赖方向，以及React/TypeScript/Ant Design/TanStack Query + npm/Vite/Vitest/Testing Library/Playwright组合。该决定不修改既有state pair、Schema、migration、dependency/lock或业务实现，也不关闭OPEN-002/010/015。
+
+若实际需要新state/pair、identity provider、outbox、external storage/MES、SSR/microfrontend、mutable Version或P4语义，必须另建new/superseding ADR；不得修改ADR-0002/0005/0007/0009/0012历史事实。

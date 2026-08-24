@@ -182,3 +182,7 @@ Required run `32465737712`已在GitHub Linux runner精确执行该Gate并上传a
 ## P3 environment planning
 
 P3 development/Simulation只能使用显式data plane和test actor；Production channel保持default-deny并不得配置真实publish target或Simulation API。P3-03 persistence、P3-08 publish、P3-09 ExportJob、P3-10 API与P3-11 frontend分别必须证明环境/secret/target隔离；本次不修改配置、infra、数据库或deployment。
+
+TASK-P3-01合同固定授权上下文必须同时包含environment、data plane、resource scope和target。Simulation test policy只能在Development/Test/Benchmark环境、`SIMULATION` plane、synthetic resource及`SIMULATION_INTERNAL` target生效，并明确`production_binding=false`；Production缺少真实mapping/target时所有write/decision/publish/export默认拒绝，Production导航不得暴露Simulation labs。
+
+本Task没有新增env var、Secret、service、database、storage、network、frontend build或deployment配置。identity provider、external target、retention/SIEM和Production publish channel继续未形成。

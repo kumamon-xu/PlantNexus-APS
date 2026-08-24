@@ -30,3 +30,7 @@ TEST-OBS-001 的 P0 slice 位于 [`test_logging.py`](../../backend/tests/integra
 ## P3 audit allocation
 
 P3-02定义AuditEvent carrier，P3-03形成append-only persistence，P3-07～10为command/decision/publish/export/API记录actor capability、reason、correlation/idempotency key、source/target version与result；P3-14/15核对完整性和exact provider lineage。真实identity、retention/SIEM、dashboard/alert/SLO继续未决定，本次没有形成审计实现或Production observability。
+
+TASK-P3-01已固定`audit-event.v1`的人类语义：event identity/version/UTC、stable actor reference与resolved capability、environment/plane/action/aggregate/target、sanitized reason、request fingerprint/idempotency reference、完整P2/P3 lineage、before/after或source/new Version、result/error/replay和correlation/code/schema/policy versions。成功state/idempotency/audit必须同一一致性边界；audit append-only，纠正只能追加引用旧event。
+
+该carrier机器Schema与durable store仍未形成。Structured log/trace不替代audit，read access日志与business audit分开；retention、SIEM、legal hold、backup/restore、dashboard/alert/SLO和external collector继续未决定。

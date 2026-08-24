@@ -139,4 +139,10 @@ P3将版本、approval/reject、internal publish、export与audit分配到TASK-P
 
 本次transition/规划未关闭、重命名或改变任何条目；OPEN-001～015全部保持`OPEN`，P3 internal publish不得写成Production approval/publish，`registry_version=1.0.0`格式不变。
 
-TASK-P3-00 provider artifact `9504310381`只复验规划与治理，不是Authority/Evidence closure record。OPEN-001～015全部继续`OPEN`；P3-01未启动，Production approval/publish/readiness仍未形成。
+TASK-P3-00 provider artifact `9504310381`只复验规划与治理，不是Authority/Evidence closure record。OPEN-001～015全部继续`OPEN`；P3-01随后由新授权启动，但不会形成Production authority closure。
+
+## TASK-P3-01 authority review
+
+新合同只定义`view/edit/lock/approve/reject/publish/export/audit` capability、isolated Simulation test policy和Production default-deny；没有principal→role/capability、组织责任、identity provider、外部MES/ERP/storage target或字段authority evidence。`SIMULATION_INTERNAL`明确不是Production target，Frontend工具链选择也不是deployment/readiness证据。
+
+因此OPEN-002/010/015及OPEN-001～015全部继续`OPEN`，没有Authority/Evidence closure record；OPEN-012的Production容量/SLA也不因planned规模维度改变。`registry_version=1.0.0`不变。

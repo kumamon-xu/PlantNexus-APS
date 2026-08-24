@@ -74,3 +74,9 @@ Internal package中的`schedule.json`虽然必须绑定fresh exact PASS Validati
 ## P3 implementation allocation
 
 P3-01补齐guard/actor/reason/audit/idempotency合同但不改v1 pair；P3-03形成immutable persistence，P3-04实现DRAFT→READY_FOR_REVIEW，P3-07实现READY_FOR_REVIEW→APPROVED/REJECTED，P3-08实现APPROVED→PUBLISHED与PUBLISHED→SUPERSEDED。DRAFT/REJECTED不可publish、PUBLISHED/REJECTED内容不可变，edit/lock只产生新DRAFT。P3-10/13只能调用这些application guards，P3-14/15负责Gate/Audit。
+
+## TASK-P3-01 guard baseline
+
+[ADR-0012](../../adr/ADR-0012-planning-workspace-command-state-publication.md)已接受以下guard，但没有实现transition：所有Version content append-only；manual edit/lock永远copy-on-write生成新DRAFT且source state/content不变；READY_FOR_REVIEW的approve/reject分别要求`approve`/`reject` capability、non-empty reason、expected fingerprint和atomic audit；publish只允许APPROVED、明确internal Simulation target和`publish` capability；Export不是ScheduleVersion transition。
+
+same idempotency scope/key + same request只重放原logical result，不建立self-transition；不同request冲突。新current publication时，APPROVED→PUBLISHED与旧current PUBLISHED→SUPERSEDED必须在同一一致性边界完成。Production authority/target未知时default-deny。state enum、pair、terminal集合和`state-machines.v1` bytes均不变；persistence/application/API/UI证据继续`PLANNED`。

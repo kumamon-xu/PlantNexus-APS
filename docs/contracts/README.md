@@ -3,7 +3,7 @@ doc_id: DOC-CONTRACT-INDEX
 title: 合同文档索引
 status: living
 spec_version: 0.3.0
-phase: P2
+phase: P3
 normative: false
 source_sections: [24, 36, 38, 39, 63, 64, 67, 103]
 last_reviewed: 2026-08-24
@@ -20,6 +20,8 @@ last_reviewed: 2026-08-24
 - `planning-problem.md`
 - `planning-policy-and-solve-limits.md`
 - `planning-solution-and-schedule-version.md`
+- `planning-workspace-api.md`
+- `authorization-and-audit.md`
 - `execution-events-and-replan-request.md`
 - `export-package.md`
 - `schema-index.md`
@@ -75,4 +77,6 @@ P2独立Exit审计已重跑schema set`2.5.0`及全部registered contract tests�
 
 ## P3 planning allocation
 
-P3现为active，但只有TASK-P3-00治理在执行。TASK-P3-01须先形成人类可审计的Workspace API、authorization/audit、页面和permission合同及ADR；TASK-P3-02再发布严格机器Schema；TASK-P3-10只能序列化这些合同，不能自建第二套HTTP事实。当前schema set仍为`2.5.0`，没有P3合同、Schema、migration或consumer evidence被标记formed。
+P3现为active，TASK-P3-01已形成[`planning-workspace-api.md`](planning-workspace-api.md)、[`authorization-and-audit.md`](authorization-and-audit.md)、三份Frontend规范和accepted [ADR-0012](../adr/ADR-0012-planning-workspace-command-state-publication.md)。这些是人类可审计的contract baseline；TASK-P3-02才可发布严格机器Schema，TASK-P3-10只能序列化这些合同，不能自建第二套HTTP事实。
+
+当前schema set仍为`2.5.0`，上表七份P3 planned Schema/URN均未创建；没有migration、repository、API、Frontend或state behavior形成。现有P2 document/URN/bytes、error registry与`state-machines.v1`保持不变；OPEN-002/010/015继续OPEN。

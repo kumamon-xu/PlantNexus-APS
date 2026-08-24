@@ -1,0 +1,114 @@
+---
+doc_id: DOC-FRONTEND-002
+title: P3 Gantt Command 与新版本合同
+status: baseline
+spec_version: 0.3.0
+phase: P3
+normative: true
+source_sections: [33, 35, 47, 48, 50, 69, 77, 78, 94]
+last_reviewed: 2026-08-24
+---
+
+# P3 Gantt Command 与新版本合同
+
+本文件固定UI提交人工编辑/lock的command语义。TASK-P3-01不实现command、Schema、API或UI；机器carrier由TASK-P3-02发布，application pipeline由TASK-P3-06实现。
+
+## 唯一允许的链
+
+```text
+UI intent
+→ versioned command envelope
+→ authentication/capability/data-plane precheck
+→ idempotency + expected-state/content precondition
+→ server semantic validation
+→ copy-on-write candidate
+→ fresh independent ScheduleValidator
+→ atomic new DRAFT + lineage + audit + idempotency result
+```
+
+任何失败均不得修改source Version、创建成功状态或返回伪成功。UI不得直接写repository/DB，也不得在浏览器运行Solver、Validator或KPI公式。
+
+## Command types
+
+| `command_type` | Intent payload | 必需capability | 结果 |
+|---|---|---|---|
+| `MOVE_OPERATION` | operation ID、建议start/end或duration-preserving start、reason | `edit` | assignment变更后的新DRAFT |
+| `ASSIGN_RESOURCE` | operation ID、candidate resource ID、reason | `edit` | 资源/时长合同校验后的新DRAFT |
+| `SET_LOCK` | operation ID、lock type、resource/start/end、reason | `lock` | version-local lock投影后的新DRAFT |
+| `RELEASE_LOCK` | operation ID、lock identity、reason | `lock` | 显式移除version-local lock后的新DRAFT |
+
+`SET_LOCK/RELEASE_LOCK`不创建P4 freeze window，不移动RUNNING/COMPLETED事实，不弱化既有HARD lock，也不把SOFT lock升级为Production稳定性策略。
+
+## Command envelope
+
+TASK-P3-02必须将下列语义发布为strict、versioned、`additionalProperties=false`的机器合同；字段名可在Schema review中保持等价但不得减少语义。
+
+| 字段 | 要求 |
+|---|---|
+| `workspace_command_version` | 精确document version；未知版本fail closed |
+| `command_id` | 客户端生成的可追踪ID，不承担幂等唯一性 |
+| `command_type` | 上表固定enum |
+| `idempotency_key` | scope内非空；raw credential不得作为key |
+| `source_schedule_version_id` | 唯一source Version；旧内容只读 |
+| `expected_state` | 客户端读取时的state；server必须CAS/比较 |
+| `expected_content_fingerprint` | source content/precondition指纹 |
+| `data_plane` | `SIMULATION`或`PRODUCTION`；禁止跨plane |
+| `payload` | command-type discriminated strict object |
+| `reason` | 非空、用户可审计且按日志规则清洗 |
+| `correlation_id` | 贯穿HTTP/application/audit/provider的trace carrier |
+
+transport可以另带认证principal和`Idempotency-Key` header；credential/token绝不能进入payload、audit或artifact。application只消费已认证principal解析出的capability context，不能信任客户端自报授权。
+
+## Source 与不可变性
+
+- source Version内容在任何state下都不可原地更新；command结果必须有新的`schedule_version_id`、父版本引用和新的content fingerprint。
+- `DRAFT`或`READY_FOR_REVIEW`可作为工作source；`APPROVED`、`REJECTED`、`PUBLISHED`或`SUPERSEDED`若被选作历史参考，也只能copy-on-write派生新DRAFT，绝不能改变原state/content/current publication。
+- PUBLISHED Version没有“保存到当前版本”的路径。若实现无法证明copy-on-write，必须拒绝而不是退化为UPDATE。
+- source state不会因编辑自动转移；新DRAFT进入READY仍须TASK-P3-04的fresh ValidationReport PASS/hard=0 guard。
+
+## Server validation
+
+server在持久化成功结果前至少检查：
+
+1. principal/capability、environment、data plane和source identity；
+2. exact state/content precondition与idempotency fingerprint；
+3. operation/resource/lock reference存在且属于同一Problem/ScheduleVersion lineage；
+4. UTC、整数秒、duration、calendar、candidate resource和execution fact不可变边界；
+5. command不得移动COMPLETED/RUNNING事实或违反HARD lock；
+6. copy-on-write candidate具有完整assignment与provenance；
+7. fresh、solver-independent Validator对C-001～C-011返回PASS且hard violation count为0。
+
+Validator FAIL时返回`VALIDATION_FAILED/SCHEDULE_VALIDATION_FAILED`及sanitized details，不发布新成功DRAFT。实现Task必须明确失败candidate是完全不持久化，还是作为不可评审的失败attempt evidence单独保存；两者都不得伪装成功ScheduleVersion。
+
+## Idempotency 与并发
+
+幂等scope至少包括`data_plane + action + source_schedule_version_id + idempotency_key`，request fingerprint覆盖command version/type、source identity/preconditions、payload和reason。
+
+- same scope/key + same fingerprint：返回相同logical result/new Version ID，不重复audit或写入；
+- same scope/key + different fingerprint：`IDEMPOTENCY_CONFLICT`；
+- source state/content已变化：HTTP `409`并返回稳定precondition错误；
+- 并发两个不同key可各自产生独立DRAFT，但不得覆盖彼此或改变source。
+
+## Result contract
+
+成功结果至少包含command/version、source/new ScheduleVersion ID、new state=`DRAFT`、parent/content fingerprint、fresh ValidationReport reference、audit event ID、idempotent replay flag和correlation ID。客户端只能在收到成功结果后切换到新Version；optimistic preview不得作为权威状态。
+
+## Error/UI mapping
+
+| 情况 | 责任层 | 计划HTTP | UI行为 |
+|---|---|---|---|
+| payload/reference/time/data-plane错误 | contract/domain | `422` | 标出字段，不提交成功状态 |
+| stale state/content或key冲突 | application/idempotency | `409` | 刷新Version，保留用户intent供显式重试 |
+| unauthorized/default-deny | authorization | `403` | 隐藏/禁用动作并显示拒绝；不请求Production override |
+| independent Validator FAIL | validation | `422` | 展示C-ID/details；不得显示已保存成功 |
+| unexpected persistence/system failure | infrastructure | `500` | 显示可追踪correlation ID，不泄漏异常 |
+
+`UNKNOWN` Solver status不是command验证结果，绝不能转换成`INFEASIBLE`或“可编辑成功”。
+
+## 审计
+
+成功和允许记录的拒绝attempt须使用[`authorization-and-audit.md`](../contracts/authorization-and-audit.md)的append-only字段，至少关联actor reference/capability、reason、command/request fingerprint、source/new Version、before/after state、ValidationReport、correlation和result。raw token、payload中的敏感自由文本和stack trace不得进入审计。
+
+## P4 与Production边界
+
+本合同不定义ExecutionEvent、ReplanRequest、freeze window、OBJ-002、ChangeReport、Execution Simulator或真实调度员角色。Simulation test actor只验证contract；Production authority未知时所有command default-deny，OPEN-005/010继续开放。

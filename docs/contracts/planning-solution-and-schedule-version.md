@@ -82,3 +82,9 @@ SolverReport v1现在由真实`SOLVER_RUN`填充exact solver/parameters、stage�
 ## P3 planned consumer chain
 
 P3-04只能把fresh formal Validator接受的PlanningSolution复制为immutable ScheduleVersion DRAFT，再由既有guard进入READY_FOR_REVIEW。P3-06的edit/lock只产生新DRAFT，P3-07/08分别执行approval/rejection与APPROVED-only publish；任何PUBLISHED内容更新均为禁止路径。上述行为须等待P3-01合同/ADR、P3-02 Schema和P3-03 persistence完成，本次没有创建ScheduleVersion。
+
+## TASK-P3-01 ScheduleVersion contract baseline
+
+[ADR-0012](../adr/ADR-0012-planning-workspace-command-state-publication.md)现已接受ScheduleVersion content append-only/copy-on-write：validated P2 Solution未来可创建新DRAFT；任何manual edit/lock都读取source Version并产生具有新ID、parent、content fingerprint、fresh ValidationReport与audit的新DRAFT，source content/state/current publication不改变。PlanningSolution仍不是ScheduleVersion，Validator PASS仍只是READY_FOR_REVIEW的必要而非充分条件。
+
+既有pair不变：DRAFT→READY_FOR_REVIEW，READY_FOR_REVIEW→APPROVED/REJECTED，APPROVED→PUBLISHED，PUBLISHED→SUPERSEDED。Approve/Reject只消费READY，Publish只消费APPROVED，PUBLISHED content不可变；REJECTED/历史Version的修订只能派生新DRAFT。所有这些仍是文档合同，`schedule-version.v1` Schema、DB、application/API/UI行为由P3-02+形成。

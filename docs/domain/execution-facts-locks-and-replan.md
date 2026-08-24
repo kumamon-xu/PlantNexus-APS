@@ -69,3 +69,5 @@ HARD lock精确固定resource/start/end。若HARD interval不在tick grid、与�
 ## P3 lock boundary
 
 P3-06只允许针对既有计划内容提交human edit/lock command，经server validation与formal Validator后产生新DRAFT；它不能消费新的ExecutionEvent、移动RUNNING/HARD事实、应用freeze window、计算OBJ-002或生成ChangeReport。上述动态事实保护继续属于P4，OPEN-005/007不因P3锁UI关闭。
+
+TASK-P3-01已把`SET_LOCK/RELEASE_LOCK`固定为versioned、copy-on-write command：必须引用同一ScheduleVersion/Problem lineage，保留COMPLETED/RUNNING事实与HARD tuple，fresh Validator PASS后才可形成成功新DRAFT。该lock是P3 plan-version control，不是P4 freeze/stability/replan；不存在ExecutionEvent ingest、SOFT stability cost、OBJ-002或ChangeReport实现。

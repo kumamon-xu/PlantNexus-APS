@@ -1,0 +1,120 @@
+---
+doc_id: DOC-CONTRACT-011
+title: P3 Authorization Capability 与 Audit 合同
+status: baseline
+spec_version: 0.3.0
+phase: P3
+normative: true
+source_sections: [33, 34, 60, 66, 78, 94, 95]
+last_reviewed: 2026-08-24
+---
+
+# P3 Authorization Capability 与 Audit 合同
+
+本合同定义authority-neutral capability、default-deny判定和append-only audit语义。它不选择真实用户、岗位、组织、identity provider或Production责任人，也不关闭OPEN-010。
+
+## 判定模型
+
+一次授权决定必须同时消费：
+
+```text
+authenticated principal reference
++ environment
++ data plane
++ capability
++ resource / ScheduleVersion / ExportJob identity
++ current state and content fingerprint
++ target
+→ ALLOW or DENY
+```
+
+客户端自报role/capability、UI按钮、Simulation fixture或数据库owner均不是授权来源。Production缺少明确principal→capability mapping、resource scope或target时必须DENY；不得使用“admin”“planner”等猜测角色作为fallback。
+
+## Capability vocabulary
+
+| capability | 允许的语义 | 不允许的扩张 |
+|---|---|---|
+| `view` | 读取已授权workspace/version/job投影 | 不隐含audit或任何command |
+| `edit` | 提交copy-on-write人工内容command | 不原地UPDATE，不调用Solver/Replan |
+| `lock` | 提交version-local SET/RELEASE lock command | 不移动execution facts，不定义freeze |
+| `approve` | READY_FOR_REVIEW→APPROVED | 不隐含publish/export |
+| `reject` | READY_FOR_REVIEW→REJECTED | 不删除或改写Version |
+| `publish` | APPROVED→internal PUBLISHED/current switch | 不授权外部MES/Production target |
+| `export` | 从允许的PUBLISHED Version创建/重试/cancel ExportJob | 不改变ScheduleVersion publish state |
+| `audit` | 读取有scope限制的append-only audit projection | 不修改、删除或补写历史event |
+
+capability名称是应用合同，不是现有Solver `capability-registry.v1`中的工厂建模能力；TASK-P3-02必须避免两个namespace混淆。
+
+## Action guard matrix
+
+| Action | resource guard | state guard | target/data-plane guard | audit requirement |
+|---|---|---|---|---|
+| read workspace | `view` + resource scope | any visible state | same plane | access log；敏感读取是否升格audit留待retention policy |
+| edit/lock | `edit`/`lock` + source scope | copy-on-write；source不可原地修改 | same plane | attempt/result、reason、old/new Version |
+| approve/reject | exact capability + Version scope | only READY_FOR_REVIEW | same plane | decision、actor ref、reason、before/after |
+| publish | `publish` + Version/target scope | only APPROVED | P3仅`SIMULATION_INTERNAL`；Production deny | request/result/current/supersession |
+| export/retry/cancel | `export` + Version/Job/target scope | only允许的ScheduleVersion/ExportJob pair | P3 internal target；same plane | job/attempt/artifact/result |
+| read audit | `audit` + aggregate scope | not a transition | same plane | security access log，不能递归写业务event |
+
+状态、capability和target任一失败都必须在副作用前拒绝。是否记录拒绝audit由action policy固定：高风险approve/reject/publish/export和Production default-deny attempt必须记录sanitized拒绝event；普通not-found不得泄漏资源是否存在。
+
+## Simulation test policy
+
+P3 test可以在显式Development/Test/Benchmark环境、`SIMULATION` plane和隔离数据库中绑定stable test principal reference与capability set。该policy必须：
+
+- 名称包含test/simulation语义且`production_binding=false`；
+- 只作用于synthetic resource和`SIMULATION_INTERNAL` target；
+- 在Production配置中不存在或始终DENY；
+- 不被写入真实组织role mapping、OPEN closure或Production approval evidence。
+
+本合同不新增定量SIM_ASSUMPTION。
+
+## AuditEvent v1语义
+
+TASK-P3-02须发布strict `audit-event.v1` carrier，TASK-P3-03须append-only持久化。event至少包含：
+
+| Field group | Required meaning |
+|---|---|
+| identity | `audit_event_id`、event version、UTC `occurred_at` |
+| actor | stable pseudonymous `actor_ref`、resolved capability、auth policy version；不含token/credential |
+| context | environment、data plane、action、aggregate type/ID、target |
+| intent | sanitized reason、command/decision type、request fingerprint、idempotency reference |
+| lineage | PlanningRun/Snapshot/Problem/Solution/Validation/ScheduleVersion/ExportJob references as applicable |
+| state | before/after state；content改变时source/new Version和fingerprint |
+| result | ALLOWED/DENIED/SUCCEEDED/FAILED、stable category/code、retry/replay flag |
+| trace | correlation ID、parent event/attempt reference、code/schema/policy versions |
+
+raw idempotency key可以被视为operational identifier但不得包含credential；持久化/日志应保存稳定reference或hash，避免把用户输入key扩散到artifact。自由文本reason需长度/字符/敏感信息策略，审计必须保存其批准后的sanitized representation。
+
+## Append-only 与transaction
+
+- audit event禁止UPDATE/DELETE；纠正只能追加新event引用旧event。
+- state-changing result、idempotency result和成功audit必须处于同一事务/一致性边界；写audit失败即业务state不得成功。
+- 外部副作用尚未形成；未来outbox/adapter若需要新transaction topology必须新ADR，不能在P3-01假定exactly-once network delivery。
+- structured log/trace是观测carrier，不替代durable audit；audit retention、SIEM、legal hold和Production backup仍未决定。
+- replay同一请求返回原logical result，不重复业务audit；允许追加单独的read/operational replay observation时必须与业务event类型区分。
+
+## Redaction 与no-leak
+
+不得写入audit、日志、HTTP error或CI artifact：password、token、cookie、authorization header、Secret、raw database DSN、SQL/stack trace、未清洗文件内容或未经批准的PII。actor使用稳定reference而非显示名/邮箱；UI需要显示名时由未来identity adapter按权限解析，不写回历史event。
+
+## Error contract
+
+- 未授权/default-deny使用`workspace-control.v1` module-local `AUTHORIZATION_DENIED`，HTTP计划为`403`；它与product error category显式分namespace，尚未加入global registry。
+- state不允许使用既有`INVALID_STATE_TRANSITION`，HTTP `409`。
+- same key/different fingerprint使用module-local `IDEMPOTENCY_CONFLICT`，HTTP `409`。
+- audit/persistence失败归sanitized `SYSTEM_ERROR`，业务state不改变。
+
+缺失认证的`401`行为、challenge header和identity provider选择留给独立安全/API决定；不能用`403`合同反向声明真实认证已形成。
+
+## Version、Schema 与迁移边界
+
+本Task没有Schema/migration。TASK-P3-02新增carrier必须保留P2 bytes，TASK-P3-03负责plane-scoped表、unique/CAS/index和append-only enforcement。字段不足必须发布新document version，禁止在数据库私加无法序列化的authority默认值。
+
+## 追踪与测试
+
+`REQ-007/009 + NFR-TRC/ISO/SEC/HUM + ENG-ERR/VER → TASK-P3-01 → TEST-WORKSPACE-CONTRACT-001/TEST-STATE-TRANSITION-001/TEST-ERROR-MAPPING-001`当前只形成文档合同。authorization/audit behavior由P3-03/07～10/13验证，Gate/Audit由P3-14/15复验。
+
+## P4/Production边界
+
+ExecutionEvent、Replan、freeze、OBJ-002、ChangeReport和Execution Simulator不在本合同。真实RBAC/SSO、role责任、external publish/export target、retention/SIEM和Production approval保持OPEN-002/010/015或后续治理，P3 default-deny不得被test actor绕过。

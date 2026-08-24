@@ -1,7 +1,7 @@
 ---
 doc_id: TASK-P3-01
 title: Planning Workspace Contract and ADR Baseline
-status: planned
+status: in_progress
 spec_version: 0.3.0
 phase: P3
 normative: true
@@ -27,9 +27,11 @@ Non-goals: 不创建Schema/Python/DB/API/Frontend，不选择Production角色，
 
 Inputs: P3 Milestone、ScheduleVersion/ExportJob状态机、ADR-0002/0005/0007/0009、P2 validated output、总规§33～35/65～69/77～78/94、OPEN-002/010。
 
-Diff base: set only when this Task enters in_progress; must be the immediate full 40-character HEAD
+Diff base: 7f65f88b620ea1e8d2f4693911be3b52f4052d5d
 
-Files allowed to change: `docs/frontend/README.md`、`docs/frontend/planning-workspace.md`、`docs/frontend/gantt-command-contract.md`、`docs/frontend/approval-publication-flow.md`、`docs/contracts/planning-workspace-api.md`、`docs/contracts/authorization-and-audit.md`、`docs/contracts/README.md`、`docs/contracts/planning-solution-and-schedule-version.md`、`docs/contracts/export-package.md`、`docs/adr/README.md`、激活时以当时下一个未使用编号逐字固定的一份P3 Workspace ADR及`Documents to update`中的明确文档；任何新增路径须在激活提交中逐字固定。
+Activation evidence: TASK-P3-00 closure=`7f65f88b620ea1e8d2f4693911be3b52f4052d5d`，GitHub Actions run `32682015727` / required `validate` job `97300206924` / artifact `9504453154`均为success且artifact未过期；artifact内Task=`TASK-P3-00`、exact SHA一致、19 checks PASS、issues=`[]`。启动时`main=origin/main`且working tree clean，用户已于2026-08-24明确授权执行本Task。
+
+Files allowed to change: `docs/frontend/README.md`、`docs/frontend/planning-workspace.md`、`docs/frontend/gantt-command-contract.md`、`docs/frontend/approval-publication-flow.md`、`docs/contracts/planning-workspace-api.md`、`docs/contracts/authorization-and-audit.md`、`docs/contracts/README.md`、`docs/contracts/planning-solution-and-schedule-version.md`、`docs/contracts/export-package.md`、`docs/adr/README.md`、`docs/adr/ADR-0012-planning-workspace-command-state-publication.md`、`docs/current_phase.md`、`docs/milestones/P3-planning-workspace.md`、`docs/milestones/README.md`、`docs/tasks/README.md`、`docs/tasks/TASK_TEMPLATE.md`、`docs/tasks/P3/TASK-P3-01-planning-workspace-contract-and-adr-baseline.md`、`docs/domain/state-machines/planning-run.md`、`docs/domain/state-machines/schedule-version.md`、`docs/domain/state-machines/export-job.md`、`docs/domain/execution-facts-locks-and-replan.md`、`docs/domain/error-model.md`、`docs/architecture/end-to-end-planning-flow.md`、`docs/architecture/module-boundaries.md`、`docs/architecture/data-authority.md`、`docs/architecture/provenance-and-versioning.md`、`docs/architecture/configuration-environments-and-isolation.md`、`docs/architecture/technology-stack.md`、`docs/operations/security.md`、`docs/operations/observability-and-audit.md`、`docs/operations/worker-reliability-and-idempotency.md`、`docs/quality/test-strategy-and-matrix.md`、`docs/quality/ci-gates-and-definition-of-done.md`、`docs/quality/documentation-consistency-checks.md`、`docs/governance/requirements-register.md`、`docs/governance/nfr-and-engineering-register.md`、`docs/governance/traceability-rules.md`、`docs/governance/traceability-matrix.md`、`docs/governance/prod-open-register.md`、`docs/governance/sim-assumption-register.md`、`docs/governance/risk-register.md`、`docs/governance/change-impact-matrix.md`、`docs/governance/document-inventory.md`，并包含下方`Documents to update`中的所有逐字路径。除上述逐字路径外不得新增或修改其他路径；任何新增路径须先修订本卡并重新执行差异治理。
 
 Files forbidden to change: `backend/**`、`schemas/**`、`frontend/**`、migrations、`.github/workflows/**`、`pyproject.toml`、`uv.lock`、P2历史report/manifest/Task、P4 ExecutionEvent/Replan/ChangeReport/OBJ-002实现。
 
@@ -39,7 +41,7 @@ Outputs: 三份Frontend规范、两份P3合同、一份accepted P3 Workspace ADR
 
 Documentation impact: required
 
-Documents to update: `docs/current_phase.md`、`docs/milestones/P3-planning-workspace.md`、`docs/milestones/README.md`、`docs/tasks/README.md`、`docs/contracts/README.md`、`docs/contracts/planning-solution-and-schedule-version.md`、`docs/contracts/export-package.md`、`docs/domain/state-machines/planning-run.md`、`docs/domain/state-machines/schedule-version.md`、`docs/domain/state-machines/export-job.md`、`docs/domain/execution-facts-locks-and-replan.md`、`docs/domain/error-model.md`、`docs/architecture/end-to-end-planning-flow.md`、`docs/architecture/module-boundaries.md`、`docs/architecture/data-authority.md`、`docs/architecture/provenance-and-versioning.md`、`docs/architecture/configuration-environments-and-isolation.md`、`docs/operations/security.md`、`docs/operations/observability-and-audit.md`、`docs/operations/worker-reliability-and-idempotency.md`、`docs/quality/test-strategy-and-matrix.md`、`docs/quality/ci-gates-and-definition-of-done.md`、`docs/governance/requirements-register.md`、`docs/governance/nfr-and-engineering-register.md`、`docs/governance/traceability-rules.md`、`docs/governance/traceability-matrix.md`、`docs/governance/prod-open-register.md`、`docs/governance/risk-register.md`、`docs/governance/change-impact-matrix.md`、`docs/governance/document-inventory.md`、`docs/quality/documentation-consistency-checks.md`、`docs/tasks/TASK_TEMPLATE.md`、`docs/adr/README.md`、新增的五份规范/ADR及本Task卡。
+Documents to update: `docs/current_phase.md`、`docs/milestones/P3-planning-workspace.md`、`docs/milestones/README.md`、`docs/tasks/README.md`、`docs/contracts/README.md`、`docs/contracts/planning-solution-and-schedule-version.md`、`docs/contracts/export-package.md`、`docs/domain/state-machines/planning-run.md`、`docs/domain/state-machines/schedule-version.md`、`docs/domain/state-machines/export-job.md`、`docs/domain/execution-facts-locks-and-replan.md`、`docs/domain/error-model.md`、`docs/architecture/end-to-end-planning-flow.md`、`docs/architecture/module-boundaries.md`、`docs/architecture/data-authority.md`、`docs/architecture/provenance-and-versioning.md`、`docs/architecture/configuration-environments-and-isolation.md`、`docs/architecture/technology-stack.md`、`docs/operations/security.md`、`docs/operations/observability-and-audit.md`、`docs/operations/worker-reliability-and-idempotency.md`、`docs/quality/test-strategy-and-matrix.md`、`docs/quality/ci-gates-and-definition-of-done.md`、`docs/governance/requirements-register.md`、`docs/governance/nfr-and-engineering-register.md`、`docs/governance/traceability-rules.md`、`docs/governance/traceability-matrix.md`、`docs/governance/prod-open-register.md`、`docs/governance/sim-assumption-register.md`、`docs/governance/risk-register.md`、`docs/governance/change-impact-matrix.md`、`docs/governance/document-inventory.md`、`docs/quality/documentation-consistency-checks.md`、`docs/tasks/TASK_TEMPLATE.md`、`docs/adr/README.md`、三份新增Frontend规范、两份新增P3合同、`docs/adr/ADR-0012-planning-workspace-command-state-publication.md`及本Task卡。
 
 Documentation impact rationale: P3实现前置条件就是详细页面、API payload与permission matrix；状态、数据权威、审计、发布和模块方向需要ADR与跨文档一致性。
 
@@ -47,13 +49,13 @@ Change-impact matrix rows reviewed: `IMPACT-STATE`、`IMPACT-PHASE`、`IMPACT-GO
 
 Traceability updates: REQ-006/007/009→TASK-P3-01→TEST-WORKSPACE-CONTRACT-001/TEST-STATE-TRANSITION-001→versioned docs/ADR；只形成合同证据，不写实现链接。
 
-Schema changes: none；只列出TASK-P3-02必须发布的文档名、URN、兼容分类与consumer，不创建机器Schema。
+Schema changes: none；`planning-workspace-api.md`已逐项列出TASK-P3-02必须发布的`schedule-version/workspace-query/workspace-command/schedule-version-comparison/audit-event/publication-result/export-job.v1`文件、URN、新文档compatibility与consumer，不创建机器Schema；schema set保持`2.5.0`。
 
 Migration: none；只定义事务、不变量、索引/唯一性需求，实际DDL留给TASK-P3-03。
 
-Dependency changes: none；Frontend package manager/build/test组合必须在ADR/技术栈审查中明确，但任何lockfile只允许TASK-P3-11修改。
+Dependency changes: none；ADR-0012/技术栈已选择React+TypeScript+Ant Design+TanStack Query、npm+`package-lock.json`/`npm ci`、Vite、Vitest+Testing Library与Playwright，但本Task不安装或锁定任何版本；任何lockfile只允许TASK-P3-11在独立授权后修改。
 
-ADR impact: required；记录command-only编辑、新Version、authorized-human capability、approved-only idempotent publication、Export与Publish分离、Production default-deny及P4边界；不得以ADR关闭OPEN-010。
+ADR impact: required；已接受`docs/adr/ADR-0012-planning-workspace-command-state-publication.md`，固定command-only/copy-on-write新DRAFT、capability/default-deny、APPROVED-only idempotent internal publication、Export与Publish分离、append-only audit、Frontend组合及P4边界；未关闭OPEN-002/010/015。
 
 State-machine impact: pair集合保持既有v1；只补齐guard/actor/reason/audit/idempotency/persistence解释。若需新state/pair立即停止并单独提出superseding ADR与版本化迁移计划。
 
@@ -82,3 +84,39 @@ PROD_OPEN: OPEN-002/010/015保持OPEN；permission matrix只定义capability和�
 SIM_ASSUMPTIONS: 可定义非定量的Simulation test-actor边界；任何新增定量数据必须另行注册且不得关闭OPEN。
 
 Rollback: 文档/ADR在未被consumer使用前可由有界superseding变更修正；accepted ADR和已发布合同不得删除或重写，后续变化使用新ADR/版本。
+
+## Completion evidence
+
+### Activation and immutable range
+
+- 2026-08-24启动时`main=origin/main=7f65f88b620ea1e8d2f4693911be3b52f4052d5d`、ahead/behind=`0/0`且working tree clean；该完整SHA为不可变Diff base。
+- TASK-P3-00 closure exact provider为run `32682015727` / required `validate` job `97300206924` / artifact `9504453154`；下载复核20份JSON均PASS，Task/SHA、4 rows、19 checks、issues=`[]`一致。
+- 本地pre-commit验收时Git HEAD仍为Diff base；Task report记录`committed_range=0`、`working_tree=43`。Implementation SHA/provider尚未形成，故本Task保持`in_progress`。
+
+### Actual scope and outputs
+
+- 实际差异43 paths，全部属于卡片逐字allow-list且outside count=`0`：新增ADR-0012、三份Frontend规范、两份P3 contract；更新37份phase/state/contract/architecture/operations/quality/governance/index/Task文档。
+- 页面/路由/read model、Gantt command、approve/reject/publish/export、capability、state、error、audit、idempotency和P3/P4/Production矩阵已形成；ADR-0012 status=`accepted`。
+- `docs/**/*.md`由159增至165并全部登记；roots=30、trace rows=30、Test IDs=48、OPEN=15、SIM assumptions=13、risks=13、Tasks=53，registry format version均不变。
+- Schema/migration/dependency/Benchmark均为none；schema set保持`2.5.0`，`state-machines.v1`及P2 Schema/error/fixture/benchmark bytes不变。Frontend stack只是selected-not-installed；`frontend/**`、`pyproject.toml`、`uv.lock`无差异。
+
+### Traceability, error and boundary review
+
+- `REQ-006/007/009 + NFR-TRC/ISO/SEC/HUM + ENG-ARCH/ERR/VER → TASK-P3-01 → six new docs/ADR-0012 → TEST-WORKSPACE-CONTRACT-001/TEST-STATE-TRANSITION-001/TEST-ERROR-MAPPING-001`已登记；三个Test ID只承载planned contract matrix/既有preservation检查，不声明P3 behavior formed。
+- P3 control error采用planned `workspace-control.v1` namespace；`AUTHORIZATION_DENIED/IDEMPOTENCY_CONFLICT/EXPORT_FAILED`未加入或冒充`error-code-registry.v2`，UNKNOWN仍为NO_SOLUTION_WITHIN_LIMIT且不等于INFEASIBLE。
+- OPEN-002/010/015保持OPEN且无closure record；SIM-ASSUMPTION-001～013全部ACTIVE且无新增定量值；RISK-012/013及全部风险继续MONITORED。
+- P3-02～15未启动；ExecutionEvent/ReplanRequest/freeze/OBJ-002/ChangeReport/Execution Simulator、真实identity/RBAC/MES target、Production approval/publish/readiness均未形成。
+
+### Local acceptance
+
+- `uv run python scripts/check_docs.py`：exit 0，`PASS repository governance: docs=165 roots=30 trace_rows=30 tests=48 open=15 sim=13 risks=13 tasks=53 task=TASK-P3-01`。
+- `uv run python scripts/check_docs.py --task docs/tasks/P3/TASK-P3-01-planning-workspace-contract-and-adr-baseline.md --check-diff --report build/traceability/TASK-P3-01-report.json`：exit 0，43 paths、`IMPACT-DOCS/GOVERNANCE-REGISTRY/PHASE/STATE`、19 checks、0 issues。
+- `uv run pytest -q backend/tests/unit/test_check_docs.py backend/tests/contract/test_rule_contracts.py`：exit 0，`27 passed in 0.49s`；只证明治理和既有state/error contracts未漂移。
+- `git diff --check`：exit 0；仅Windows工作区LF→CRLF提示，无whitespace error。
+- 相对Diff base检查`backend schemas frontend .github pyproject.toml uv.lock`为0 paths；P2 Task/Milestone/audit report/manifest历史范围为0 paths。
+
+### Provider and rollback status
+
+Implementation required `validate`/artifact=`NOT_RUN`，evidence-only closure=`NOT_RUN`；不得据本地PASS关闭Task或启动P3-02。Provider必须复现exact implementation SHA、TASK-P3-01、43-path union或实际最终union、4 Impact rows、全部checks和0 issues。
+
+回滚只可移除尚未被consumer使用的新文档candidate并恢复索引；一旦accepted ADR/合同被P3-02+消费，必须用new/superseding ADR/document version修正，不能改写历史。没有业务数据、Schema、DB、dependency或外部side effect需要回滚。

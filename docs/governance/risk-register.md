@@ -122,4 +122,6 @@ P3的人机控制面新增RISK-012/013：OPEN-010未关闭时测试actor/按钮�
 
 本次只是风险登记与Task控制设计，没有行为证据可以降低风险。RISK-001～013全部保持`MONITORED`；P4动态重排和Production部署风险仍不在P3实现范围，`registry_version=1.0.0`格式不变。
 
-TASK-P3-00 provider artifact `9504310381`确认RISK-012/013及Task控制已登记，但没有权限、API/UI或状态行为证据可以降低风险。RISK-001～013全部继续`MONITORED`，P3-01仍为`planned`。
+TASK-P3-00 provider artifact `9504310381`确认RISK-012/013及Task控制已登记，但没有权限、API/UI或状态行为证据可以降低风险。RISK-001～013全部继续`MONITORED`；P3-01随后由新授权启动。
+
+TASK-P3-01 review：ADR-0012和合同已固定Production default-deny、UI/router非authority、copy-on-write new DRAFT、PUBLISHED immutability、fresh Validator、Publish/Export分离与negative test allocation。这些降低了设计歧义，但尚无Schema、repository、authorization/application/API/UI/E2E行为证据，故RISK-012/013及RISK-001～013全部继续`MONITORED`，不下调severity/status，`registry_version=1.0.0`不变。

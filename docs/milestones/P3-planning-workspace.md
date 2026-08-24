@@ -15,7 +15,7 @@ last_reviewed: 2026-08-24
 
 用户于2026-08-24在核验TASK-P2-00～14全部`done`、P2 Exit Gate overall=`READY`/`blocking_gaps=[]`、audit implementation/closure拓扑与exact GitHub required `validate`/artifact后，明确批准P2→P3 transition。P2为`completed`，P3为当前`active` Milestone。
 
-本次只授权`TASK-P3-00`进行Milestone激活、Task规划与文档治理。P3-01～15均保持`planned`；依赖满足不会自动授权业务实现。每个Task必须从当时clean、`main=origin/main`且provider-verified的完整40字符HEAD建立新的不可变Diff base。
+TASK-P3-00已完成Milestone激活、Task规划与文档治理。用户于2026-08-24另行明确授权执行TASK-P3-01；其Diff base固定为`7f65f88b620ea1e8d2f4693911be3b52f4052d5d`，只形成合同/ADR/治理文档。P3-02～15保持`planned`；依赖满足不会自动授权后续实现。每个Task必须从当时clean、`main=origin/main`且provider-verified的完整40字符HEAD建立新的不可变Diff base。
 
 ## Outcome
 
@@ -28,7 +28,7 @@ last_reviewed: 2026-08-24
 | Order | Task | Outcome | Depends on | State |
 |---:|---|---|---|---|
 | 0 | TASK-P3-00 | Phase transition、完整Task plan与治理同步 | TASK-P2-14 | `done` |
-| 1 | TASK-P3-01 | Workspace页面/API/权限/状态/错误/审计/idempotency合同与ADR基线 | P3-00 | `planned` |
+| 1 | TASK-P3-01 | Workspace页面/API/权限/状态/错误/审计/idempotency合同与ADR基线 | P3-00 | `in_progress` |
 | 2 | TASK-P3-02 | ScheduleVersion workspace/export Schema | P3-01 | `planned` |
 | 3 | TASK-P3-03 | ScheduleVersion、Audit与ExportJob persistence | P3-02 | `planned` |
 | 4 | TASK-P3-04 | validated solution→reviewable DRAFT | P3-03 | `planned` |
@@ -74,4 +74,4 @@ Gate还必须证明：版本/比较/read model lineage一致；所有command产�
 
 ## Current execution boundary
 
-TASK-P3-00 planning implementation `1d4b1a5c0ad6dc13df18588fbdcb9732e5ef15e7`的run/job/artifact=`32681493976`/`97298850740`/`9504310381`已精确PASS；artifact内20份JSON全部PASS，Task治理为64 committed/0 working paths、4 rows、19 checks、0 issues。因此P3-00在evidence-only closure中为`done`。P3 Milestone继续`active`，但P3-01～15全部保持`planned`且不自动启动；推荐下一步是用户另行授权P3-01。
+TASK-P3-00 planning implementation `1d4b1a5c0ad6dc13df18588fbdcb9732e5ef15e7`的run/job/artifact=`32681493976`/`97298850740`/`9504310381`已精确PASS；其closure `7f65f88b620ea1e8d2f4693911be3b52f4052d5d`的run/job/artifact=`32682015727`/`97300206924`/`9504453154`也精确PASS。TASK-P3-01据此成为唯一`in_progress` Task并形成contract-only baseline；P3-02～15未启动，implementation/provider闭环前P3-01不得标记`done`。

@@ -90,3 +90,9 @@ Provider artifact `9440650646`内两次显式output与六次embedded Export证�
 ## P3 planned export boundary
 
 TASK-P3-09被分配为首个business ExportJob/standard package owner，必须等待immutable ScheduleVersion、approval与idempotent internal publication语义形成。Export与Publish是分离副作用：相同key/target/version只能same-result replay，内容冲突fail closed，FAILED retry不得改变ScheduleVersion状态。外部MES/Production target受OPEN-002/010/015约束，本次仍保持P2 `publishable=false`历史事实。
+
+## TASK-P3-01 export/publication contract baseline
+
+P3合同现固定：internal Publish只允许APPROVED并改变ScheduleVersion/current reference；Export只从PUBLISHED创建独立ExportJob/standard package，任何ExportJob pair、retry或失败都不得调用Publish或改变ScheduleVersion state。Approve/Reject、Publish和Export使用独立idempotency scope；same key/same fingerprint返回同一logical result，same key/different fingerprint冲突。
+
+P3标准包未来必须增加ScheduleVersion、approval/publication、ExportJob/attempt、audit和target lineage，同时保留P2 payload hash/count/Validator/KPI/SolverReport事实。TASK-P3-01没有修改`export-manifest.v1`、P2 package bytes或创建新Schema/文件；外部MES/ERP/storage target与Production publish继续受OPEN-002/010/015阻止。

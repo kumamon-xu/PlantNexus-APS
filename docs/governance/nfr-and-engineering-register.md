@@ -133,3 +133,5 @@ TASK-P3-00 provider closure：required run `32681493976` / artifact `9504310381`
 NFR-TRC获得source/new Version、fingerprint、actor/reason/correlation/idempotency/audit链；NFR-ISO/SEC获得explicit plane/target、Simulation test policy和Production default-deny/no-secret合同；NFR-HUM获得READY-only approve/reject、APPROVED-only internal publish和UI非authority合同。ENG-ARCH获得ADR-0012分层方向，ENG-ERR获得P3 responsibility/HTTP mapping plan，ENG-VER获得七份planned Schema/URN/consumer和Frontend selected-not-installed版本边界。
 
 没有机器carrier、persistence、auth provider、state/application/API/UI、dependency lock或行为测试形成，因此所有NFR/ENG根ID继续`ALLOCATED`；OPEN-002/010/015与RISK-012/013不关闭，`registry_version=1.0.0`不变。
+
+TASK-P3-01 provider closure：implementation `3bf99cbafdad983795a83a88646240dbb0b24509`的required run `32684713630` / artifact `9505303054`精确复验43 paths、4 rows、19 checks、0 issues及contract-only禁止范围。该证据只关闭合同/ADR治理Task，不形成任何NFR/ENG行为证据；全部根ID继续`ALLOCATED`，P3-02仍为`planned`。

@@ -131,3 +131,5 @@ TASK-P3-00 provider closure：implementation `1d4b1a5c0ad6dc13df18588fbdcb9732e5
 REQ-006获得Publish与Export分离、PUBLISHED-only ExportJob、standard package lineage和独立idempotency scope的人类语义合同；REQ-007获得copy-on-write new DRAFT、既有state pair、capability/default-deny、approve/reject/publish guard与PUBLISHED immutability合同；REQ-009获得query/command/decision/publication/export/audit/provider的version/fingerprint/correlation链和accepted ADR-0012。
 
 这些仅是六份新Markdown与现有文档的contract baseline，没有Schema、repository、state transition、API/UI或artifact behavior。REQ-006/007/009及全部根ID继续`ALLOCATED`；P3-02+、P4和Production边界保持`PLANNED`，`registry_version=1.0.0`不变。
+
+TASK-P3-01 provider closure：implementation `3bf99cbafdad983795a83a88646240dbb0b24509`的required run `32684713630` / artifact `9505303054`精确复验上述contract baseline与43-path治理链，故Task=`done`。这不形成REQ-006/007/009业务行为；全部Requirement根ID继续`ALLOCATED`，P3-02+、P4与Production状态不变。

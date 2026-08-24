@@ -137,6 +137,6 @@ TASK-P3-00 implementation `1d4b1a5c0ad6dc13df18588fbdcb9732e5ef15e7`的run/job/a
 
 ## TASK-P3-01 contract trace
 
-TASK-P3-01把REQ-006/007/009与NFR-TRC/ISO/SEC/HUM、ENG-ARCH/ERR/VER链接到三份Frontend规范、两份contract和accepted ADR-0012；planned TEST-WORKSPACE-CONTRACT-001/STATE-TRANSITION/ERROR-MAPPING只指向文档一致性和既有state/error preservation。Schema set仍`2.5.0`，七份P3 carrier、persistence、application、API/UI/E2E及provider实现证据未形成。
+TASK-P3-01把REQ-006/007/009与NFR-TRC/ISO/SEC/HUM、ENG-ARCH/ERR/VER链接到三份Frontend规范、两份contract和accepted ADR-0012；planned TEST-WORKSPACE-CONTRACT-001/STATE-TRANSITION/ERROR-MAPPING只指向文档一致性和既有state/error preservation。Schema set仍`2.5.0`，七份P3 carrier、persistence、application与API/UI/E2E行为证据未形成。
 
-Diff base/启动provider=`7f65f88b620ea1e8d2f4693911be3b52f4052d5d` / run `32682015727` / artifact `9504453154`。Implementation/closure provider待实际push后回填；全部root继续`ALLOCATED`，P3-02不得自动启动。
+Diff base/启动provider=`7f65f88b620ea1e8d2f4693911be3b52f4052d5d` / run `32682015727` / artifact `9504453154`。Implementation `3bf99cbafdad983795a83a88646240dbb0b24509` / run `32684713630` / artifact `9505303054`精确复现TASK-P3-01、43 committed/0 working paths、4 rows、19 checks和0 issues，故contract/ADR节点为provider-verified/done；P3 behavior仍`PLANNED`，全部root继续`ALLOCATED`，P3-02不得自动启动。

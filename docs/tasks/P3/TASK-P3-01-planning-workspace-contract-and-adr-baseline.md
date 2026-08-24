@@ -1,7 +1,7 @@
 ---
 doc_id: TASK-P3-01
 title: Planning Workspace Contract and ADR Baseline
-status: in_progress
+status: done
 spec_version: 0.3.0
 phase: P3
 normative: true
@@ -91,7 +91,7 @@ Rollback: 文档/ADR在未被consumer使用前可由有界superseding变更修�
 
 - 2026-08-24启动时`main=origin/main=7f65f88b620ea1e8d2f4693911be3b52f4052d5d`、ahead/behind=`0/0`且working tree clean；该完整SHA为不可变Diff base。
 - TASK-P3-00 closure exact provider为run `32682015727` / required `validate` job `97300206924` / artifact `9504453154`；下载复核20份JSON均PASS，Task/SHA、4 rows、19 checks、issues=`[]`一致。
-- 本地pre-commit验收时Git HEAD仍为Diff base；Task report记录`committed_range=0`、`working_tree=43`。Implementation SHA/provider尚未形成，故本Task保持`in_progress`。
+- 本地pre-commit验收时Git HEAD仍为Diff base；Task report记录`committed_range=0`、`working_tree=43`。最终implementation提交为`3bf99cbafdad983795a83a88646240dbb0b24509`，其provider结果见下方闭环证据。
 
 ### Actual scope and outputs
 
@@ -117,6 +117,10 @@ Rollback: 文档/ADR在未被consumer使用前可由有界superseding变更修�
 
 ### Provider and rollback status
 
-Implementation required `validate`/artifact=`NOT_RUN`，evidence-only closure=`NOT_RUN`；不得据本地PASS关闭Task或启动P3-02。Provider必须复现exact implementation SHA、TASK-P3-01、43-path union或实际最终union、4 Impact rows、全部checks和0 issues。
+Implementation `3bf99cbafdad983795a83a88646240dbb0b24509`的GitHub push run `32684713630` / required `validate` job/check `97307562801`（GitHub Actions app `15368`）均为`success`，32/32 steps成功。Branch protection精确要求context=`validate`、app_id=`15368`。Artifact `9505303054` / `plantnexus-ci-evidence-32684713630`大小`86023` bytes、digest=`sha256:06cd50a3172e234a9d2227737ecbfa648a4eb3b35cfc2d34c0e1d3bdb597b593`、expiry=`2026-11-22T02:56:31Z`且未过期。
+
+下载复核artifact内20份JSON均可解析且PASS、所有显式issues总数为0、checks无失败；13份携带`code_commit`的历史能力报告均绑定implementation exact SHA，其原始P0/P2 `task_id`作为能力来源历史保留。`ci-current-task-report.json`精确绑定TASK-P3-01、implementation SHA与Diff base，记录43 committed/0 working paths、`IMPACT-DOCS/GOVERNANCE-REGISTRY/PHASE/STATE`、19/19 checks和issues=`[]`。
+
+因此本evidence-only closure将TASK-P3-01标为`done`；closure自身的exact provider只能在push后由交付验收核验，不能在提交内自引用。P3-02仍为`planned`且需要新的用户明确授权、clean synchronized/provider-verified HEAD及新的不可变Diff base；本closure不启动P3-02。
 
 回滚只可移除尚未被consumer使用的新文档candidate并恢复索引；一旦accepted ADR/合同被P3-02+消费，必须用new/superseding ADR/document version修正，不能改写历史。没有业务数据、Schema、DB、dependency或外部side effect需要回滚。

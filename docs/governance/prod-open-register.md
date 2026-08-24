@@ -146,3 +146,5 @@ TASK-P3-00 provider artifact `9504310381`只复验规划与治理，不是Author
 新合同只定义`view/edit/lock/approve/reject/publish/export/audit` capability、isolated Simulation test policy和Production default-deny；没有principal→role/capability、组织责任、identity provider、外部MES/ERP/storage target或字段authority evidence。`SIMULATION_INTERNAL`明确不是Production target，Frontend工具链选择也不是deployment/readiness证据。
 
 因此OPEN-002/010/015及OPEN-001～015全部继续`OPEN`，没有Authority/Evidence closure record；OPEN-012的Production容量/SLA也不因planned规模维度改变。`registry_version=1.0.0`不变。
+
+TASK-P3-01 provider artifact `9505303054`只精确复验合同/ADR和治理范围，不是业务Authority/Evidence closure record，也不提供Production principal、角色、target、capacity、SLA或publish approval。OPEN-001～015全部继续`OPEN`，`registry_version=1.0.0`不变。

@@ -347,4 +347,6 @@ Implementation artifact `9504310381`已绑定`1d4b1a5c0ad6dc13df18588fbdcb9732e5
 
 完整Diff base `7f65f88b620ea1e8d2f4693911be3b52f4052d5d`范围只允许Task卡逐字列出的Markdown：三份Frontend规范、两份contract、ADR-0012及state/phase/governance/docs同步。预期命中`IMPACT-STATE`（三份state-machine合同review）、`IMPACT-PHASE`（current phase/P3 Milestone/Task index）、`IMPACT-GOVERNANCE-REGISTRY`（REQ/NFR/trace/OPEN/SIM/risk/impact/inventory）和`IMPACT-DOCS`（新文档与清单/一致性合同）。
 
-`backend/**`、`schemas/**`、`frontend/**`、migration、dependency/lock、test assertion、fixture/benchmark、infra/scripts/workflow、P2历史与P4实现必须零差异；因此不声明SCHEMA/FRONTEND/API/APPLICATION/DEPENDENCY/TESTS等行为Rule。Machine rule表和`registry_version=1.0.0`不变；实际paths/checks/issues只能由最终Task report与exact implementation/closure provider回填，provider前TASK-P3-01保持`in_progress`。
+`backend/**`、`schemas/**`、`frontend/**`、migration、dependency/lock、test assertion、fixture/benchmark、infra/scripts/workflow、P2历史与P4实现必须零差异；因此不声明SCHEMA/FRONTEND/API/APPLICATION/DEPENDENCY/TESTS等行为Rule。Machine rule表和`registry_version=1.0.0`不变。
+
+Implementation artifact `9505303054`已绑定`3bf99cbafdad983795a83a88646240dbb0b24509`并复现43 committed/0 working paths、上述4 rows、19 checks、0 issues及禁止范围零差异；因此本evidence-only closure可把TASK-P3-01标为`done`。Closure仍只命中相同4 rows，不修改合同语义、不启动P3-02，也不形成Schema/API/UI/Production/P4行为Rule。

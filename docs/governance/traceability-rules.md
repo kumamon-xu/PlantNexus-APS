@@ -252,4 +252,4 @@ TASK-P3-00 implementation provider已由run `32681493976` / required job `972988
 
 P3-01的追踪链固定为`REQ-006/007/009 + NFR-TRC/ISO/SEC/HUM + ENG-ARCH/ERR/VER → TASK-P3-01 → planning-workspace/gantt/approval + planning-workspace-api/authorization-audit + ADR-0012 → TEST-WORKSPACE-CONTRACT-001/TEST-STATE-TRANSITION-001/TEST-ERROR-MAPPING-001 (behavior PLANNED) → implementation/closure exact provider artifacts`。文档可标记contract baseline formed，但不得把既有state/error/doc tests写成P3行为PASS。
 
-七份planned Schema必须逐项记录filename/URN/compatibility/consumer，P3-02发布前均为PLANNED；module-local auth/idempotency/export reason不得冒充global registry。Implementation provider前Task保持`in_progress`，closure只允许状态/证据写回；P3-02仍需新的用户授权和新Diff base。
+七份planned Schema必须逐项记录filename/URN/compatibility/consumer，P3-02发布前均为PLANNED；module-local auth/idempotency/export reason不得冒充global registry。Implementation provider run `32684713630` / artifact `9505303054`已精确复验TASK-P3-01的SHA、43 paths、4 rows、19 checks和0 issues，因此closure只允许把Task改为`done`并写回证据；closure自身仍须push后外部核验。P3-02仍需新的用户授权、clean synchronized/provider-verified HEAD和新Diff base。

@@ -127,3 +127,5 @@ SIM-ASSUMPTION-001～013全部继续`ACTIVE`。内部Simulation publish/export�
 TASK-P3-00 provider run `32681493976`没有生成或修改Scenario/Profile/seed/value；SIM-ASSUMPTION-001～013全部继续`ACTIVE`，P3 planned test actor仍不是Production authority。
 
 TASK-P3-01 review：页面/命令/approval合同只定义非定量Simulation test principal和`SIMULATION_INTERNAL` target边界；没有新增Scenario/Profile/seed/topology/size/latency threshold或业务默认值。规模测试只登记观测维度，P2 XS/S/M数值不外推UI/Production容量。SIM-ASSUMPTION-001～013全部继续`ACTIVE`，无新增/修改/retire条目，`registry_version=1.0.0`不变。
+
+TASK-P3-01 provider run `32684713630` / artifact `9505303054`没有生成或修改Scenario/Profile/seed/value，只复验非定量合同边界。SIM-ASSUMPTION-001～013全部继续`ACTIVE`，Simulation test principal与internal target仍不得外推为Production事实。

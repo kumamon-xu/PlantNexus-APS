@@ -287,3 +287,5 @@ TASK-P3-00本地治理回归为`35 passed`，implementation required run `326814
 TASK-P3-01形成三份Frontend规范、两份语义合同和accepted ADR-0012，并用现有TEST-WORKSPACE-CONTRACT-001/TEST-STATE-TRANSITION-001/TEST-ERROR-MAPPING-001建立planned矩阵。现有`test_rule_contracts.py`只复验三套state enum/42 pairs及旧error registry不漂移；`test_check_docs.py`只复验front matter、链接、trace/Impact治理。它们不能证明P3 Schema、authorization、idempotency、state persistence、API或UI行为。
 
 因此P3新Test ID总数仍为48且behavior lifecycle保持`PLANNED`；本Task不得新增/修改测试断言。后续P3-02必须先形成strict Schema/round-trip evidence，P3-03～13按卡片形成repository/application/API/UI evidence，P3-14/15再聚合和独立审计。
+
+TASK-P3-01本地治理/规则回归为`27 passed`，implementation required run `32684713630`的完整repository suites与20份artifact JSON均PASS。该结果只验证合同文档、registry与既有state/error preservation；48个Test ID及全部P3 behavior lifecycle不因此提升，P3-02仍需新的明确授权。

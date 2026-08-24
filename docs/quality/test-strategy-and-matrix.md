@@ -69,7 +69,7 @@ registry_version: 1.0.0
 | TEST-SCHEDULE-VERSION-REPOSITORY-001 | ScheduleVersion/Audit/ExportJob migration、immutability、transaction与replay | P3 | FORMED / TASK-P3-03 provider-verified storage slice |
 | TEST-SCHEDULE-VERSION-LIFECYCLE-001 | Validated Solution→DRAFT→READY_FOR_REVIEW与非法状态拒绝 | P3 | TASK-P3-04 fresh lineage/DRAFT→READY/atomic audit/replay/conflict/concurrency slice provider-verified；approval/publish slice PLANNED / TASK-P3-07～08 |
 | TEST-WORKSPACE-READ-MODEL-001 | Gantt、Resource Load、Order View与Version Comparison lineage/KPI一致性 | P3 | TASK-P3-05 provider-verified；HTTP/UI consumer PLANNED / P3-10～12 |
-| TEST-GANTT-COMMAND-001 | Edit/Lock command→server validation→new DRAFT→formal Validator | P3 | TASK-P3-06 unit/property/contract/validation/integration + `p3-schedule-command-report.v1` formed；HTTP/UI E2E PLANNED |
+| TEST-GANTT-COMMAND-001 | Edit/Lock command→server validation→new DRAFT→formal Validator | P3 | TASK-P3-06 provider-verified；HTTP/UI E2E PLANNED / P3-10～13 |
 | TEST-APPROVAL-AUTHORIZATION-001 | authority-neutral capability、default-deny、approve/reject guards | P3 | PLANNED / TASK-P3-07、10、13 |
 | TEST-PUBLISH-IDEMPOTENCY-001 | APPROVED-only publish、same-key replay、conflict与supersession | P3 | PLANNED / TASK-P3-08 |
 | TEST-EXPORT-JOB-001 | ExportJob transition、package integrity、atomic/idempotent export与失败恢复 | P3 | persistence state/lease/attempt slice FORMED / TASK-P3-03 provider-verified；package/export behavior PLANNED / TASK-P3-09 |
@@ -320,6 +320,6 @@ TASK-P3-01本地治理/规则回归为`27 passed`，implementation required run 
 
 `TEST-GANTT-COMMAND-001`现覆盖Move/Assign/Set/Remove Lock、SUBMIT_FOR_REVIEW、strict Schema carrier、semantic guard、copy-on-write DRAFT、second-fresh READY和atomic audit；`TEST-VALIDATOR-MUTATION`覆盖server accepted后C-003 mutation；`TEST-STATE-TRANSITION-001`证明content command只insert DRAFT、submit只复用既有DRAFT→READY pair且content不变；`TEST-IDEMPOTENCY`覆盖exact replay/conflict与insert/CAS audit rollback。Unit/property/contract/validation/integration及CI machine共同覆盖stale/missing/auth/plane/time/resource/lock/Validator/transaction负例、REJECTED/PUBLISHED immutable source及Production default-deny。
 
-Task仍为`in_progress`直至exact implementation provider与evidence-only closure完成。Test ID总数保持48、registry version保持`1.0.0`；HTTP/UI E2E、approval/publish/export、P4与Production测试继续PLANNED。
+Task由exact implementation provider与本evidence-only closure标为`done`。Test ID总数保持48、registry version保持`1.0.0`；HTTP/UI E2E、approval/rejection/publish/export、P4与Production测试继续PLANNED。
 
-本地定向组合为41 PASS、全仓为546 PASS，machine为8/8且`issues=[]`；locked sync、Ruff/Pyright、全部历史machine、P2 Gate/XS、Compose/build与治理均PASS。Provider成功前`TEST-GANTT-COMMAND-001`只标记本地formed slice，不写provider-verified。
+本地定向组合为41 PASS、全仓为546 PASS，machine为8/8且`issues=[]`；locked sync、Ruff/Pyright、全部历史machine、P2 Gate/XS、Compose/build与治理均PASS。Implementation run `32713635045` / artifact `9515126567`精确复现25/25 JSON、command 8/8及57 committed/0 working paths、8 rows、19 checks、0 issues，因此TEST-GANTT-COMMAND-001本Task slice与TEST-VALIDATOR-MUTATION/STATE-TRANSITION/IDEMPOTENCY consumer回归为provider-verified。

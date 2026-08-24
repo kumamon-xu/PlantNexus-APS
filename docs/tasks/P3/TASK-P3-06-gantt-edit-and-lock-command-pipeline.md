@@ -1,7 +1,7 @@
 ---
 doc_id: TASK-P3-06
 title: Gantt Edit and Lock Command Pipeline
-status: in_progress
+status: done
 spec_version: 0.3.0
 phase: P3
 normative: true
@@ -73,7 +73,7 @@ Provider evidence: exact implementation/closure required validate/artifact；核
 
 Completion conditions: 四类编辑/lock均command-only/new DRAFT/fresh Validator；显式submit second-fresh并同ID/content READY；old/PUBLISHED immutable；负向无副作用；docs/provider闭环；无Solver/Replan/UI/approval。
 
-Local acceptance results: focused=`41 passed`；full repository=`546 passed`；`uv sync --locked`、Ruff、Pyright均PASS；`p3-schedule-command-report.v1`为8/8、5 command types、5 fresh Validator passes、2 exact replay、1 conflict、2 historical source states、6 rejected requests without side effect、Solver调用0、`issues=[]`。全部既有machine contracts、P2 Gate 11/11、XS benchmark、Compose config、`uv build`、full/diff docs、`git diff --check`前置检查均PASS；Task report为57 working paths、8 Impact rows、19 checks、0 issues。Implementation provider尚未形成，Task保持`in_progress`。
+Local acceptance results: focused=`41 passed`；full repository=`546 passed`；`uv sync --locked`、Ruff、Pyright均PASS；`p3-schedule-command-report.v1`为8/8、5 command types、5 fresh Validator passes、2 exact replay、1 conflict、2 historical source states、6 rejected requests without side effect、Solver调用0、`issues=[]`。全部既有machine contracts、P2 Gate 11/11、XS benchmark、Compose config、`uv build`、full/diff docs、`git diff --check`前置检查均PASS；提交前Task report为57 working paths、8 Impact rows、19 checks、0 issues。上述为本地事实，最终状态由下述exact provider evidence闭环。
 
 Failure handling: Validator、lineage、identity或transaction不一致即丢弃candidate/回滚本事务并停止后继API/UI；本Task不持久化失败Version或拒绝audit，不得修改Validator或历史Version。
 
@@ -84,3 +84,9 @@ PROD_OPEN: OPEN-005/010保持OPEN；P3 lock command不定义Production freeze或
 SIM_ASSUMPTIONS: command vectors引用既有synthetic schedule；不新增定量policy。
 
 Rollback: 代码回退不删除已提交Version/audit；未提交失败candidate本就不存在，已提交错误DRAFT只能由后续新command修订；合同变化使用新版本，不改写成功或失败历史事实。
+
+## Implementation provider evidence
+
+Implementation `08317637c7fbb51d46880d32523545bb0b4fe1c0`的push run `32713635045` / required `validate` job/check `97390177509`（GitHub Actions app `15368`）均为success。Artifact `9515126567`（95797 bytes）未过期，digest=`sha256:33e501d81fad861a0dba4f1f2760fb98ce0b22cf02c6ad04265174a6cb409e4e`、expiry=`2026-11-22T09:50:02Z`；下载复核25/25 JSON顶层PASS。
+
+`ci-p3-schedule-commands.json`精确绑定implementation SHA且为8/8、5 command types（4 content + 1 submit）、5 fresh Validator passes、2 exact replay、1 conflict、2 historical source states、6 rejected requests without side effect、Solver调用0、`issues=[]`；边界为source content update=`FORBIDDEN_AND_ABSENT`、manual DRAFT READY=`EXPLICIT_CAS_SAME_CONTENT`、Production readiness=`NOT_CLAIMED`。`ci-current-task-report.json`绑定同一SHA/Diff base并记录57 committed/0 working paths、8 Impact rows、19/19 checks、0 issues。故TASK-P3-06=`done`；该结论不形成HTTP/UI、approval/rejection/publish/export、P4或Production authority/readiness，也不自动授权TASK-P3-07。

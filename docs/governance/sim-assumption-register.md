@@ -157,3 +157,5 @@ Implementation artifact `9512423712`精确复验相同两个versioned synthetic 
 ## TASK-P3-06 review
 
 Machine/property/contract/validation/integration只复用既有`P2-GOLDEN-JSSP`与`P2-GOLDEN-FJSP`版本、Profile/Scenario/assembler/seed，不修改fixture bytes或增加新定量policy。Generated idempotency key/lock suffix与command microseconds只属test-local evidence，不登记分布、threshold、baseline或Production容量。SIM-ASSUMPTION-001～013继续`ACTIVE`，无新增/修改/retire且`registry_version=1.0.0`不变。
+
+Implementation artifact `9515126567`精确复验相同versioned synthetic inputs与上述边界；没有新增、修改或retire任何SIM assumption。

@@ -295,3 +295,5 @@ Task从provider-verified closure `67d38d030f8b129de7f1b2f6e5b75bd706655396`激�
 追踪链固定为`REQ-005/007/009 + NFR-COR/DET/TRC/HUM + ENG-ARCH/VAL/ERR/VER → TASK-P3-06 → domain command + application transaction/Validator service + five test classes → TEST-GANTT-COMMAND-001/TEST-VALIDATOR-MUTATION/TEST-STATE-TRANSITION-001/TEST-IDEMPOTENCY → p3-schedule-command-report.v1 + Task report → exact implementation/closure provider artifacts`。Provider成功前保持`in_progress`；closure只写事实且不得启动P3-07。
 
 Implementation artifact必须绑定exact SHA/Task，command report为8/8、5 command types（4 content + 1 submit）、5 fresh Validator passes、2 exact replay/1 conflict、issues=[]、product service Solver=0，Task report为八Impact rows/full checks/0 issues。任何provider、artifact SHA、Task/base、checks或issues不一致都阻断closure。
+
+该规则已由implementation `08317637c7fbb51d46880d32523545bb0b4fe1c0`的required run/job/artifact=`32713635045`/`97390177509`/`9515126567`满足：下载的25/25 JSON顶层PASS，command与Task报告精确为8/8及57 committed/0 working paths、8 rows、19 checks、0 issues。因此本closure只写回TASK-P3-06=`done`和provider事实，P3-07仍为`planned`且未授权。

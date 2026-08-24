@@ -12,7 +12,7 @@ registry_version: 1.0.0
 
 # 文档清单
 
-本清单列出当前仓库已经实际存在的Markdown文档。P0～P2均已归档为completed；P2 Exit Gate=`READY`且用户已批准transition。P3现为active，TASK-P3-00～05均已done，TASK-P3-06为`in_progress`，P3-07～15为planned。P3人类可审计API/Frontend规范、七份机器Schema carrier、有界持久化/生命周期/read/command原语已形成；API/Frontend业务实现与Production Runbook正文仍未形成。
+本清单列出当前仓库已经实际存在的Markdown文档。P0～P2均已归档为completed；P2 Exit Gate=`READY`且用户已批准transition。P3现为active，TASK-P3-00～06均已done，P3-07～15为planned。P3人类可审计API/Frontend规范、七份机器Schema carrier、有界持久化/生命周期/read/command原语已形成；API/Frontend业务实现与Production Runbook正文仍未形成。
 
 | Path | Doc ID | Status | Title |
 |---|---|---|---|
@@ -169,7 +169,7 @@ registry_version: 1.0.0
 | [tasks/P3/TASK-P3-03-schedule-version-audit-and-export-persistence.md](../tasks/P3/TASK-P3-03-schedule-version-audit-and-export-persistence.md) | TASK-P3-03 | done | ScheduleVersion Audit and Export Persistence |
 | [tasks/P3/TASK-P3-04-validated-solution-to-reviewable-schedule-version.md](../tasks/P3/TASK-P3-04-validated-solution-to-reviewable-schedule-version.md) | TASK-P3-04 | done | Validated Solution to Reviewable ScheduleVersion |
 | [tasks/P3/TASK-P3-05-planning-workspace-read-models-and-comparison.md](../tasks/P3/TASK-P3-05-planning-workspace-read-models-and-comparison.md) | TASK-P3-05 | done | Planning Workspace Read Models and Comparison |
-| [tasks/P3/TASK-P3-06-gantt-edit-and-lock-command-pipeline.md](../tasks/P3/TASK-P3-06-gantt-edit-and-lock-command-pipeline.md) | TASK-P3-06 | in_progress | Gantt Edit and Lock Command Pipeline |
+| [tasks/P3/TASK-P3-06-gantt-edit-and-lock-command-pipeline.md](../tasks/P3/TASK-P3-06-gantt-edit-and-lock-command-pipeline.md) | TASK-P3-06 | done | Gantt Edit and Lock Command Pipeline |
 | [tasks/P3/TASK-P3-07-approval-rejection-and-audit-service.md](../tasks/P3/TASK-P3-07-approval-rejection-and-audit-service.md) | TASK-P3-07 | planned | Approval Rejection and Audit Service |
 | [tasks/P3/TASK-P3-08-idempotent-publication-and-supersession.md](../tasks/P3/TASK-P3-08-idempotent-publication-and-supersession.md) | TASK-P3-08 | planned | Idempotent Publication and Supersession |
 | [tasks/P3/TASK-P3-09-export-job-and-standard-package.md](../tasks/P3/TASK-P3-09-export-job-and-standard-package.md) | TASK-P3-09 | planned | ExportJob and Standard Export Package |
@@ -292,4 +292,4 @@ TASK-P3-04 implementation仍不新增、删除或重命名正式Markdown，inven
 
 TASK-P3-05 implementation不新增、删除或重命名正式Markdown，inventory继续165份；新增domain/application Python、四类tests、workflow命令及ignored read-model/Task JSON均不进入Markdown清单。Implementation artifact `9512423712`复现50 paths、7 rows、19 checks、0 issues后，本closure将TASK-P3-05标为`done`。Roots=30、Test IDs=48、OPEN=15、SIM assumptions=13、risks=13、Tasks=53及全部registry format version保持`1.0.0`；API/UI/write/approval/publish/export、P4与Production未形成。
 
-TASK-P3-06 activation/implementation不新增、删除或重命名正式Markdown，inventory继续165份；Task从P3-05 provider-verified closure `67d38d030f8b129de7f1b2f6e5b75bd706655396`冻结Diff base。新增domain/application Python、五类tests、workflow命令及ignored command/Task JSON均不进入Markdown清单；形成四类content command及独立SUBMIT same-content READY slice。Roots=30、Test IDs=48、OPEN=15、SIM assumptions=13、risks=13、Tasks=53及全部registry format version保持`1.0.0`；provider前Task保持`in_progress`，P3-07+、HTTP/UI、approval/publish/export、P4与Production未形成。
+TASK-P3-06 activation/implementation不新增、删除或重命名正式Markdown，inventory继续165份；Task从P3-05 provider-verified closure `67d38d030f8b129de7f1b2f6e5b75bd706655396`冻结Diff base。新增domain/application Python、五类tests、workflow命令及ignored command/Task JSON均不进入Markdown清单；形成四类content command及独立SUBMIT same-content READY slice。Implementation artifact `9515126567`复现57 paths、8 rows、19 checks、0 issues后，本closure将TASK-P3-06标为`done`。Roots=30、Test IDs=48、OPEN=15、SIM assumptions=13、risks=13、Tasks=53及全部registry format version保持`1.0.0`；P3-07+、HTTP/UI、approval/rejection/publish/export、P4与Production未形成。

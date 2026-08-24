@@ -156,4 +156,4 @@ Source/lineage fingerprint、stale cursor/precondition、load/KPI一致性及rea
 
 Source precondition、copy-on-write、fresh Validator、hashed idempotency、append-only audit与transaction rollback降低本slice的stale overwrite、invalid plan、duplicate command和partial commit暴露；authorization-before-replay与Production deny降低capability/result disclosure风险。但证据只覆盖synthetic临时SQLite，不证明distributed concurrency、PostgreSQL capacity、real RBAC、HTTP/UI可用性、retention或Production side effect。
 
-RISK-001～013全部继续`MONITORED`，severity/status不降低；特别是RISK-007/008/011～013及OPEN-005/010保持原边界，`registry_version=1.0.0`不变。Provider成功前TASK-P3-06仍`in_progress`。
+Implementation run `32713635045` / artifact `9515126567`已通过command/negative/atomic rollback/冻结范围检查，故本closure把TASK-P3-06标为`done`。RISK-001～013全部继续`MONITORED`，severity/status不降低；特别是RISK-007/008/011～013及OPEN-005/010保持原边界，`registry_version=1.0.0`不变。

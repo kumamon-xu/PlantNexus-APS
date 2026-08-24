@@ -49,7 +49,7 @@ last_reviewed: 2026-08-24
 | [TASK-P3-03](P3/TASK-P3-03-schedule-version-audit-and-export-persistence.md) | Version/audit/export persistence | P3-02 | `done` |
 | [TASK-P3-04](P3/TASK-P3-04-validated-solution-to-reviewable-schedule-version.md) | Validated solution→reviewable DRAFT | P3-03 | `done` |
 | [TASK-P3-05](P3/TASK-P3-05-planning-workspace-read-models-and-comparison.md) | Workspace read models/comparison | P3-04 | `done` |
-| [TASK-P3-06](P3/TASK-P3-06-gantt-edit-and-lock-command-pipeline.md) | Gantt edit/lock command pipeline | P3-04/05 | `in_progress` |
+| [TASK-P3-06](P3/TASK-P3-06-gantt-edit-and-lock-command-pipeline.md) | Gantt edit/lock command pipeline | P3-04/05 | `done` |
 | [TASK-P3-07](P3/TASK-P3-07-approval-rejection-and-audit-service.md) | Approval/rejection/audit service | P3-03/04 | `planned` |
 | [TASK-P3-08](P3/TASK-P3-08-idempotent-publication-and-supersession.md) | Idempotent publish/supersession | P3-03/07 | `planned` |
 | [TASK-P3-09](P3/TASK-P3-09-export-job-and-standard-package.md) | ExportJob/standard package | P3-03/04/08 | `planned` |
@@ -76,7 +76,7 @@ TASK-P3-05已形成14种read view、stable query/cursor、Resource Load/KPI与tw
 
 用户现已单独授权TASK-P3-06；其从P3-05 provider-verified closure `67d38d030f8b129de7f1b2f6e5b75bd706655396`冻结Diff base并进入`in_progress`。当前只允许Move/Assign/Set/Remove Lock的server content command、copy-on-write新DRAFT、每次非replay fresh Validator、显式SUBMIT second-fresh与同content READY CAS、atomic audit、限定tests/machine CI和命中文档；P3-07～15不自动启动，Solver、Schema/migration/dependency、HTTP/UI、approval/publish/export、P4与Production authority保持禁止。
 
-TASK-P3-06本地41 focused、546 full、Ruff/Pyright、command machine 8/8、全部历史machine、P2 Gate/XS、Compose/build和57 paths/8 rows/19 checks/0 issues治理均PASS；exact implementation provider与evidence-only closure尚待push后核验，故索引仍为`in_progress`，P3-07不启动。
+TASK-P3-06本地41 focused、546 full、Ruff/Pyright、command machine 8/8、全部历史machine、P2 Gate/XS、Compose/build和57 paths/8 rows/19 checks/0 issues治理均PASS。Implementation `08317637c7fbb51d46880d32523545bb0b4fe1c0`的run/job/artifact=`32713635045`/`97390177509`/`9515126567`精确复现25/25 JSON、8/8 command及同一57 committed/0 working paths治理链，故索引标为`done`；P3-07不自动启动。
 
 ## Lifecycle and planning-batch rules
 

@@ -286,4 +286,6 @@ Required `validate`新增唯一step：`uv run python -m app.application.schedule
 
 本地PASS只允许Task保持`in_progress`。Implementation push后必须核验exact SHA required run/job/app、下载artifact并核对command/Task report的Task/SHA、8 Impact rows、all checks/issues；成功后才可evidence-only closure，closure自身也须exact provider。该Gate不形成HTTP/UI、approval/publish/export、P4或Production readiness，也不自动启动TASK-P3-07。
 
-当前本地结果为41 focused、546 full、8/8 command machine、全部历史machine、P2 Gate 11/11、XS benchmark、Compose、build与57 paths/8 rows/19 checks/0 issues治理PASS；provider前不得把这些本地结果写成GitHub required成功。
+本地implementation Gate已通过：41 focused、546 full、8/8 command machine、全部历史machine、P2 Gate 11/11、XS benchmark、locked sync、Ruff、Pyright、Compose、build、full/diff docs、`git diff --check`与禁止路径均PASS；提交前Task report为57 working paths、8 rows、19 checks、0 issues。
+
+Implementation provider Gate已通过：SHA `08317637c7fbb51d46880d32523545bb0b4fe1c0`、run `32713635045`、required `validate` job/check `97390177509`（app `15368`）均success；artifact `9515126567`未过期，digest=`sha256:33e501d81fad861a0dba4f1f2760fb98ce0b22cf02c6ad04265174a6cb409e4e`。25/25 JSON顶层PASS，command 8/8与Task 57 committed/0 working paths、8 rows、19 checks、0 issues均绑定同一SHA；TASK-P3-06 DoD完成，不自动授权P3-07。

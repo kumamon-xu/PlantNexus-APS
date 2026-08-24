@@ -162,4 +162,4 @@ Implementation `f236fab47aa2565b87a060b2c8bde8f2e8d66229` / artifact `9512423712
 
 REQ-005获得Move/Assign candidate与Set/Remove Lock后的fresh independent Validator gate，以及manual DRAFT显式submit的第二次fresh gate；REQ-007获得command-only copy-on-write new DRAFT、source/current publication不变，并只复用既有DRAFT→READY pair；REQ-009获得server precondition、deterministic idempotency identity、source/new lineage与atomic insert/CAS + append-only audit。形成路径为`app.domain.schedule_commands`、`app.application.schedule_commands/schedule_command_check`、unit/property/contract/validation/integration tests和8-check machine report。
 
-该slice不形成Solver/Replan、approval/rejection/publication/export、HTTP/UI、Production identity/authority或P4。全部15个root Requirement继续`ALLOCATED`，OPEN/SIM/risk状态与`registry_version=1.0.0`不变；exact provider成功前TASK-P3-06保持`in_progress`。
+Implementation `08317637c7fbb51d46880d32523545bb0b4fe1c0` / artifact `9515126567`已精确复验8/8 command及57-path治理链，故只闭环TASK-P3-06 bounded command slice。该slice不形成Solver/Replan、approval/rejection/publication/export、HTTP/UI、Production identity/authority或P4；全部15个root Requirement继续`ALLOCATED`，OPEN/SIM/risk状态与`registry_version=1.0.0`不变。

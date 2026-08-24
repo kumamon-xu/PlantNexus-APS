@@ -267,3 +267,5 @@ Implementation provider artifact必须同时包含`p3-workspace-contract-report.
 Task从provider-verified closure `9621fda535f66393beab88efc13c100fc805c993`激活。Migration/repository evidence必须同时证明：`0004`五表/unique/FK/index/check/SQLite+PostgreSQL trigger定义；empty/populated upgrade/downgrade；ScheduleVersion creation replay/content immutability/stale CAS；Audit append-only；Publication result/current atomic replay；ExportJob claim/heartbeat/failure/retry/lease owner；caller rollback与plane isolation。Schema/state/rules/dependency/lock及P3-04+路径必须零差异。
 
 Implementation artifact必须同时含`p3-persistence-report.v1`与current Task report，二者绑定exact SHA/Task，前者8/8、5 tables、4 repositories、0隐式business action，后者7 Impact rows、full checks、`issues=[]`。任一不一致保持`in_progress`并阻止P3-04；成功后只允许evidence-only closure写回provider事实，closure自身也须exact provider且不得启动P3-04。
+
+该规则已由implementation `e315dbf4f6c079df6d19b52f0403b00827126232`的required run/job/artifact=`32694644036`/`97334382152`/`9508445635`满足：下载的22/22 JSON顶层PASS，persistence与Task报告精确为8/8及52 committed/0 working paths、7 rows、19 checks、0 issues。因此本closure只写回TASK-P3-03=`done`和provider事实，P3-04仍为`planned`。

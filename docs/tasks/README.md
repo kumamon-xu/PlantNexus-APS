@@ -46,7 +46,7 @@ last_reviewed: 2026-08-24
 | [TASK-P3-00](P3/TASK-P3-00-phase-transition-and-task-planning-governance.md) | Phase transition、Task plan与治理同步 | P2-14 | `done` |
 | [TASK-P3-01](P3/TASK-P3-01-planning-workspace-contract-and-adr-baseline.md) | Workspace合同与ADR基线 | P3-00 | `done` |
 | [TASK-P3-02](P3/TASK-P3-02-schedule-version-workspace-and-export-schemas.md) | Workspace/version/export Schema | P3-01 | `done` |
-| [TASK-P3-03](P3/TASK-P3-03-schedule-version-audit-and-export-persistence.md) | Version/audit/export persistence | P3-02 | `in_progress` |
+| [TASK-P3-03](P3/TASK-P3-03-schedule-version-audit-and-export-persistence.md) | Version/audit/export persistence | P3-02 | `done` |
 | [TASK-P3-04](P3/TASK-P3-04-validated-solution-to-reviewable-schedule-version.md) | Validated solution→reviewable DRAFT | P3-03 | `planned` |
 | [TASK-P3-05](P3/TASK-P3-05-planning-workspace-read-models-and-comparison.md) | Workspace read models/comparison | P3-04 | `planned` |
 | [TASK-P3-06](P3/TASK-P3-06-gantt-edit-and-lock-command-pipeline.md) | Gantt edit/lock command pipeline | P3-04/05 | `planned` |
@@ -64,9 +64,9 @@ last_reviewed: 2026-08-24
 
 TASK-P3-00 implementation `1d4b1a5c0ad6dc13df18588fbdcb9732e5ef15e7`的run `32681493976` / required job `97298850740` / artifact `9504310381`精确复现64 committed/0 working paths、4 rows、19 checks、0 issues及20/20 JSON PASS；closure `7f65f88b620ea1e8d2f4693911be3b52f4052d5d`的run/job/artifact=`32682015727`/`97300206924`/`9504453154`也成功。P3-01从该clean baseline启动，P3-02～15保持`planned`。
 
-TASK-P3-01 implementation `3bf99cbafdad983795a83a88646240dbb0b24509`的run `32684713630` / required job `97307562801` / artifact `9505303054`精确复现43 committed/0 working paths、4 rows、19 checks、0 issues及20/20 JSON PASS。TASK-P3-02 implementation `aff27d3d6b63fb9f216c9a2687408a6c676fa96a`的run `32689832111` / required job `97321420908` / artifact `9506913562`精确复现21/21 JSON PASS、65 committed/0 working paths、10 rows、19 checks和0 issues；closure `9621fda535f66393beab88efc13c100fc805c993`的run/job/artifact=`32690302424`/`97322642627`/`9507045338`也精确成功。TASK-P3-03现从该closure SHA进入`in_progress`；P3-04不自动启动。
+TASK-P3-01 implementation `3bf99cbafdad983795a83a88646240dbb0b24509`的run `32684713630` / required job `97307562801` / artifact `9505303054`精确复现43 committed/0 working paths、4 rows、19 checks、0 issues及20/20 JSON PASS。TASK-P3-02 implementation `aff27d3d6b63fb9f216c9a2687408a6c676fa96a`的run `32689832111` / required job `97321420908` / artifact `9506913562`精确复现21/21 JSON PASS、65 committed/0 working paths、10 rows、19 checks和0 issues；closure `9621fda535f66393beab88efc13c100fc805c993`的run/job/artifact=`32690302424`/`97322642627`/`9507045338`也精确成功。TASK-P3-03随后从该closure SHA进入`in_progress`并完成有界实现；P3-04未自动启动。
 
-TASK-P3-03本地已形成`0004`、四类plane-scoped repository、既有pair CAS/lease/transaction原语及8/8 machine evidence；36 focused、503 full与52 paths/7 rows/19 checks/0 issues治理均PASS。Exact implementation provider与closure尚待形成，故索引仍为`in_progress`，P3-04～15保持`planned`。
+TASK-P3-03已形成`0004`、四类plane-scoped repository、既有pair CAS/lease/transaction原语及8/8 machine evidence。Implementation `e315dbf4f6c079df6d19b52f0403b00827126232`的run/job/artifact=`32694644036`/`97334382152`/`9508445635`精确复现22/22 JSON PASS及52 committed/0 working paths、7 rows、19 checks、0 issues，故本closure将索引标为`done`；P3-04～15保持`planned`。
 
 ## Lifecycle and planning-batch rules
 

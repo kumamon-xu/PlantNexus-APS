@@ -144,4 +144,4 @@ REQ-006获得PublicationResult/ExportJob strict carrier，REQ-007获得ScheduleV
 
 REQ-006获得PublicationResult/current reference与ExportJob durable exact replay/conflict/CAS/lease-attempt storage primitive；REQ-007获得ScheduleVersion creation-byte replay、immutable content/lineage/validation、existing-pair state CAS与DB mutation guard；REQ-009获得canonical document SHA、append-only AuditEvent、idempotency/current/version lineage及machine report路径。`0004` empty/populated round-trip、caller rollback与plane isolation由真实tests/8-check report覆盖。
 
-这些不创建DRAFT、执行approval/publish/export、生成standard package或提供API/UI/worker/Production side effect；REQ-006/007/009及全部root仍为`ALLOCATED`。OPEN-002/010/012/015、P3-04+、P4与Production边界不变，`registry_version=1.0.0`不变；exact provider形成前只标记local storage slice。
+这些不创建DRAFT、执行approval/publish/export、生成standard package或提供API/UI/worker/Production side effect；REQ-006/007/009及全部root仍为`ALLOCATED`。Implementation `e315dbf4f6c079df6d19b52f0403b00827126232` / artifact `9508445635`已精确复验8/8 machine与52-path治理链，故只闭环TASK-P3-03 storage slice。OPEN-002/010/012/015、P3-04+、P4与Production边界不变，`registry_version=1.0.0`不变。

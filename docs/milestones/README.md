@@ -32,7 +32,7 @@ P1当前状态：[`P1 — Data & Snapshot`](P1-data-and-snapshot.md)为`complete
 
 P2当前状态：[`P2 — CP-SAT Vertical Slice`](P2-cp-sat-vertical-slice.md)为`completed`。TASK-P2-00～14均已闭环为`done`；P2 Exit Gate=`READY`且0 gaps。用户于2026-08-24在复核exact provider evidence、提交拓扑与clean synchronized baseline后明确批准P2→P3。
 
-P3当前状态：[`P3 — Planning Workspace`](P3-planning-workspace.md)为`active`。TASK-P3-00～02均已由exact implementation provider闭环并在evidence-only closure标为`done`；用户已另行授权TASK-P3-03从P3-02 closure `9621fda535f66393beab88efc13c100fc805c993`进入`in_progress`，仅实施持久化原语。P3-04～15保持`planned`，P3-15必须最后独立执行Exit Gate Audit；READY不自动进入P4或Production。
+P3当前状态：[`P3 — Planning Workspace`](P3-planning-workspace.md)为`active`。TASK-P3-00～03均已由exact implementation provider闭环并在evidence-only closure标为`done`；P3-04～15保持`planned`，P3-15必须最后独立执行Exit Gate Audit；READY不自动进入P4或Production。
 
 ## P2 execution history
 

@@ -369,3 +369,5 @@ Implementation artifact `9506913562`中的`traceability-report.v1`精确绑定`a
 不可变Diff base=`9621fda535f66393beab88efc13c100fc805c993`。完整union只能命中`IMPACT-DOMAIN/STATE/INFRA/TESTS/PHASE/GOVERNANCE-REGISTRY/DOCS`七行；Task卡逐字冻结migration、四repository、shared/machine modules、两个state modules、四个test/CI文件和全部required docs。Schema/sample/rules、Planning/Solver/Validator、application/API/jobs/exporters/frontend、dependency/lock、fixture/benchmark与P4路径必须零差异。
 
 Full docs、Task diff、`git diff --check`、forbidden-root与machine report必须在implementation和closure各运行一次。Provider artifact必须精确绑定Task/SHA/Diff base、7 rows、full check set和0 issues；在provider形成前P3-03保持`in_progress`且P3-04不得启动。
+
+Implementation artifact `9508445635`中的`traceability-report.v1`精确绑定`e315dbf4f6c079df6d19b52f0403b00827126232`与Diff base，复现165/30/48/15/13/13/53治理计数、52 committed/0 working paths、7 rows、19/19 checks和0 issues。因此TASK-P3-03治理Gate闭环；本evidence-only closure自身仍须push后复核，P3-04保持`planned`。

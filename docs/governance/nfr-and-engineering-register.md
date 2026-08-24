@@ -146,4 +146,4 @@ NFR-DET/TRC获得canonical projection、immutable lineage、exact artifact finge
 
 NFR-DET/TRC获得canonical creation/current bytes、immutable/append-only SHA及exact replay；NFR-ISO/SEC获得plane-scoped identity/read/CAS、internal-only Production denial、top-level/no-secret precheck、sanitized errors和DB triggers；NFR-REL获得unique/savepoint/CAS/caller transaction、ExportJob owner/expiry/attempt/heartbeat；NFR-HUM只获得既有pair的repository guard。ENG-ARCH/ERR/VER获得domain→repository分层、module-local persistence reasons和revisioned `0004`消费set`2.6.0`且dependency/lock零变化。
 
-SQLite evidence不外推PostgreSQL capacity/backup，repository不拥有auth/Validator/business state/API/UI/worker。全部NFR/ENG root保持`ALLOCATED`，OPEN-002/010/012/015及RISK-007/008/011～013不关闭，`registry_version=1.0.0`不变。
+SQLite evidence不外推PostgreSQL capacity/backup，repository不拥有auth/Validator/business state/API/UI/worker。Implementation `e315dbf4f6c079df6d19b52f0403b00827126232` / artifact `9508445635`已精确复验该有界NFR/ENG slice并支持TASK-P3-03闭环；全部NFR/ENG root保持`ALLOCATED`，OPEN-002/010/012/015及RISK-007/008/011～013不关闭，`registry_version=1.0.0`不变。

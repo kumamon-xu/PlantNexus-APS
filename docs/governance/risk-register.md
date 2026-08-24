@@ -140,4 +140,4 @@ Implementation run `32689832111` / artifact `9506913562`已通过上述检查，
 
 Plane/unique/CAS/append-only/immutable trigger与caller rollback提高RISK-007/008/013的可见性；sanitized error和无dependency drift继续约束RISK-011/012。ExportJob owner/expiry/attempt与publication replay/current CAS只降低storage-level duplicate/race暴露，不证明worker crash、network side effect、business transaction或Production authority。
 
-SQLite不能替代PostgreSQL concurrency/capacity/backup，且application/API/UI/worker尚未形成，因此RISK-001～013全部继续`MONITORED`，不降低severity/status。Provider失败或migration/CAS/trigger回归必须保持Task`in_progress`并阻止P3-04，不能删除历史数据或放宽guard修绿；`registry_version=1.0.0`不变。
+SQLite不能替代PostgreSQL concurrency/capacity/backup，且application/API/UI/worker尚未形成，因此RISK-001～013全部继续`MONITORED`，不降低severity/status。Implementation run `32694644036` / artifact `9508445635`已通过migration/CAS/trigger与冻结范围检查，故本closure把TASK-P3-03标为`done`；这不关闭或降级任何风险，P3-04仍须另行授权，`registry_version=1.0.0`不变。

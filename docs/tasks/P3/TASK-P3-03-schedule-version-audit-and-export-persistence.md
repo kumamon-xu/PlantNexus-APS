@@ -1,7 +1,7 @@
 ---
 doc_id: TASK-P3-03
 title: ScheduleVersion Audit and Export Persistence
-status: in_progress
+status: done
 spec_version: 0.3.0
 phase: P3
 normative: true
@@ -69,7 +69,7 @@ Acceptance commands: 定向unit/integration/migration pytest；`alembic upgrade 
 
 Artifacts: migration/repository/idempotency/audit report、Task report、provider artifact。
 
-Provider evidence: exact implementation/closure required `validate`/artifact；核对migration report、Task exact SHA/Impact/checks/issues及branch required context。
+Provider evidence: implementation `e315dbf4f6c079df6d19b52f0403b00827126232`的push run `32694644036` / required `validate` job/check `97334382152`（GitHub Actions app `15368`）均`completed/success`；artifact `9508445635` / `plantnexus-ci-evidence-32694644036`未过期，size=`90489` bytes、digest=`sha256:4a0d30ae020c998e2b2a399a3c8c93848b14b66daecaa3c75b95fa7f11feb588`、expiry=`2026-11-22T05:45:14Z`。下载复核22/22 JSON可解析且顶层全部PASS、0 issue、0 non-PASS check；15份带`code_commit`的报告全部绑定implementation SHA。Task report精确为52 committed/0 working paths、7 Impact rows、19 checks、0 issues，persistence report为8/8、5 tables、4 repositories、4 DB mutation和2 plane mismatch拒绝。Evidence-only closure自身仍须push后核验exact provider，不能在提交内自引用。
 
 Completion conditions: repositories durable/plane-scoped/immutable/append-only/idempotent；migration reversible且历史表保留；负向/rollback/provider闭环；无业务状态动作、API/UI/外部副作用。
 
@@ -95,4 +95,4 @@ Rollback: 代码回退配合`0004` downgrade仅用于有备份的非生产/测�
 
 本地focused persistence/migration/CI回归为36 passed，完整repository suite为503 passed；`uv sync --locked`、Ruff、Pyright、Compose config、build、全部既有machine contracts、P2 Gate与XS benchmark均PASS。`p3-persistence-report.v1`为8/8 checks、5 tables、4 repositories、4次DB mutation拒绝和2次plane mismatch拒绝；治理报告为52 working-tree paths、7条Impact rows、19 checks、0 issues，`git diff --check`及Schema/dependency/application/API/exporter/frontend/P4禁止范围核验均PASS。
 
-以上只证明本地storage primitive slice。Implementation exact SHA、required `validate`与artifact尚待push后provider核验，因此Task保持`in_progress`；不得启动TASK-P3-04，也不得声称业务审批、发布、导出、外部副作用或Production readiness已形成。
+Implementation exact provider已精确复现上述storage primitive slice和冻结范围，因此本evidence-only closure将Task标为`done`。这不启动TASK-P3-04，也不声称业务审批、发布、导出、外部副作用、PostgreSQL Production migration或Production readiness已形成；closure自身的provider结果只可在push后作为交付证据核验。

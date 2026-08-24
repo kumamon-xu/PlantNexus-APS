@@ -84,3 +84,6 @@ last_reviewed: 2026-08-19
 - **Reviewable ScheduleVersion**：已由application原子经历DRAFT→READY_FOR_REVIEW且绑定完整lineage/audit的immutable Version；不等于APPROVED、PUBLISHED、Production-ready或有审批人授权。
 - **Lifecycle exact replay**：same plane/scope/key reference与same request返回原READY carrier和原AuditEvent，不新增self-transition、版本或audit；same key/different request为conflict。
 - **Upstream auth-policy context**：写入audit的已解析引用信息，只用于追踪；P3-04不实现identity/RBAC mapping，OPEN-010仍OPEN。
+- **Workspace projection**：从一个exact immutable source set确定生成的只读payload；strict carrier只保存stable item identity/type与payload fingerprint，不能成为第二事实源。
+- **Query-scope cursor**：绑定view、filter、sort、page size、Version precondition、source与collection fingerprint的opaque游标；不保存业务权威且source变化时必须拒绝。
+- **P3 Version Comparison**：两个immutable ScheduleVersion的operation/KPI delta只读DTO；不是P4 ChangeReport、ReplanRequest或新Version。

@@ -142,3 +142,9 @@ Repository不是capability、approval、publish或export authority；`SIMULATION
 P2 Snapshot/Problem/Solution/Validation/KPI/SolverReport继续分别拥有其事实与计算证据；P3-04只复制validated assignment/lock projection并引用fingerprint，不成为上游事实修改者。Formal Validator和`build_kpi_v2`仍是correctness authority，repository只是durability/CAS authority，application只拥有本次消费/事务编排。
 
 Audit中的actor、auth-policy version与resolved `edit` capability是caller-supplied upstream context，不建立identity/RBAC authority；READY的`allowed_actions`是carrier state能力集合，不是对某用户的审批授权。OPEN-010未关闭，Production channel继续default-deny。
+
+## TASK-P3-05 projection authority
+
+Snapshot仍拥有orders/calendars/source，Problem拥有operations/resources/horizon/locks，PlanningSolution拥有assignments，KPI拥有delivery/planning/resource指标，Solver/Validation/Quality report拥有各自diagnostic/status，ScheduleVersion拥有immutable content/state/lineage，Audit repository拥有event历史。Read layer只关联并投影这些事实；Resource Load从assignment求和后必须与KPI resource事实一致，任何冲突均停止而不是选择或修补一方。
+
+Query carrier、cursor、collection fingerprint和comparison都只是derived read evidence，不获得write、state、authorization、Solver、Validator或P4 authority。

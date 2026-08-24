@@ -46,3 +46,7 @@ Machine evidence只证明synthetic append/replay/conflict/list/trigger/rollback�
 成功submit-for-review现在把DRAFT→READY与单一`SUBMIT_FOR_REVIEW` event原子提交；event绑定actor/auth-policy/capability、reason、correlation、key/request fingerprint、完整lineage、before/after/source/new version、result和code commit。Exact replay不会追加第二条event，same-key conflict使本次schedule transaction回滚；machine check另记录transaction观测微秒但明确`SLA=NOT_DEFINED`。
 
 CLI FAIL只输出稳定reason/error type/fixed message，不输出SQL、DSN、credential或stack。该证据不形成read-audit API、retention/legal hold/SIEM、metrics backend、dashboard/alert/SLO、Production identity或backup/restore。
+
+## TASK-P3-05 query evidence
+
+Read-model machine report记录Task/exact code commit、14 views/counts、payload/comparison fingerprints、query/comparison replay、source/projected bytes、observed microseconds、negative reasons、durable counts before/after及product-service Solver invocation=0。Audit read view只呈现既有event reference，不产生“读取日志”业务event或修改历史。FAIL artifact继续只暴露稳定reason/type/fixed message；没有新增metric backend、retention、alert或Production SLA。

@@ -85,3 +85,7 @@ P2独立Exit审计已重跑schema set`2.5.0`及全部registered contract tests�
 P3现为active，TASK-P3-01已形成[`planning-workspace-api.md`](planning-workspace-api.md)、[`authorization-and-audit.md`](authorization-and-audit.md)、三份Frontend规范和accepted [ADR-0012](../adr/ADR-0012-planning-workspace-command-state-publication.md)。TASK-P3-02据此发布七份strict Draft 2020-12 Schema、七份synthetic vector、pure fingerprint/precheck与required CI machine report；TASK-P3-03～13只能显式消费这些version/URN，不能自建私有字段或第二套状态/错误事实。
 
 当前schema set为additive `2.6.0`。冻结清单证明21份既有JSON Schema与13份sample共34个P2 artifact逐字节不变；`error-code-registry.v2`、`state-machines.v1`与Solver capability registry也不变。新Schema不执行migration、repository、transition、authorization、API、Frontend、worker、publish或export；OPEN-002/010/015继续OPEN。Implementation `aff27d3d6b63fb9f216c9a2687408a6c676fa96a` / artifact `9506913562`已精确闭环机器合同，P3-03仍未启动。
+
+## TASK-P3-05 strict carrier consumer
+
+`app.domain.workspace`与`app.application.workspace_queries/schedule_comparison`现严格消费既有`workspace-query.v1`及`schedule-version-comparison.v1`，不改Schema bytes、URN或set version。Query result只在carrier中保存`item_id/item_type/payload_fingerprint`，完整只读payload由application result持有并逐项绑定；14个view、empty/missing/stale/plane/cursor及comparison重放由`p3-workspace-read-model-report.v1`验证。当前没有HTTP/OpenAPI/UI、command、transition、publish/export或P4 carrier。

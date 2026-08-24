@@ -108,3 +108,9 @@ Repository不会从PlanningSolution创建DRAFT、不会调用Validator，也不�
 通过后，pure domain builder复制assignments并把Problem的`HARD_LOCK/SOFT_LOCK`稳定映射为Schedule content的`HARD/SOFT`，形成同一content identity的immutable DRAFT与READY_FOR_REVIEW candidate。Application在一个caller-owned transaction中insert DRAFT、执行既有DRAFT→READY CAS并追加`SUBMIT_FOR_REVIEW` AuditEvent；same key/same request返回原READY/audit，不执行self-transition或增行，同key/different request冲突。PlanningSolution、P2 output bytes、Schema、Validator公式与其他state pair均未修改。
 
 该slice只形成reviewable carrier：`decision/publication/superseded_by=null`，没有approve/reject/publish/export、manual edit、HTTP/UI或P4行为。READY_FOR_REVIEW仍不是approval、publishability或Production readiness。
+
+## TASK-P3-05 immutable read consumer
+
+Read service只从repository取得权威ScheduleVersion，并用request中的`state/content_fingerprint` precondition拒绝stale读取；随后把Version lineage逐项与Snapshot、Problem、PlanningSolution、ValidationReport、KPI、SolverReport及code commit重绑。Orders/Gantt/Resource Load等投影只消费已验证assignments，Locks只消费Version content，任何不一致均拒绝而不修补source或写回Version。
+
+Version Comparison产生`schedule-version-comparison.v1`只读DTO：operation delta、六项KPI delta、summary和canonical fingerprint均可重放；它不创建parent/new DRAFT、不执行transition、不写decision/publication，也不包含ChangeReport、Replan或OBJ-002。

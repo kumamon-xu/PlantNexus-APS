@@ -160,3 +160,9 @@ Implementation `e315dbf4f6c079df6d19b52f0403b00827126232` / run `32694644036` / 
 追踪链为`REQ-004/005/007/009 + NFR-COR/DET/TRC/HUM + ENG-ARCH/VAL/ERR/VER → TASK-P3-04 → app.domain.schedule_version + app.application.schedule_versions/schedule_version_lifecycle_check → generated 2.6.0 ScheduleVersion/AuditEvent + existing repositories → TEST-SCHEDULE-VERSION-LIFECYCLE-001/TEST-STATE-TRANSITION-001/TEST-VALIDATOR-MUTATION/TEST-SIM-ISOLATION → p3-schedule-version-lifecycle-report.v1 + Task report → exact implementation/closure provider artifacts`。
 
 Implementation `a9be974855bb825784d639b7f6675e5a33e4273d` / run `32700005280` / artifact `9510215582`精确复验8/8 machine、35 focused与515 full PASS、Schema/fresh Validator/KPI、DRAFT→READY、atomic audit、replay/conflict/concurrency/rollback/plane negative及45 paths/8 rows/19 checks/0 issues，故该slice为provider-verified且TASK-P3-04在本closure标为`done`。Approval/rejection/publish/export/read model/API/UI/P4/Production仍PLANNED；全部root继续`ALLOCATED`、48个Test ID与registry version`1.0.0`不变。
+
+## TASK-P3-05 read-model trace
+
+追踪链为`REQ-002/003/004/005/007/009 + NFR-COR/DET/TRC/OBS/PER + ENG-ARCH/ERR/VER → TASK-P3-05 → app.domain.workspace + app.application.workspace_queries/schedule_comparison/workspace_read_model_check → existing 2.6.0 query/comparison carriers + read repositories → TEST-WORKSPACE-READ-MODEL-001/TEST-PROPERTY/TEST-OBS-001/TEST-SIM-ISOLATION → p3-workspace-read-model-report.v1 + Task report → exact implementation/closure provider artifacts`。
+
+当前本地证据为32 focused PASS、8/8 machine、14 views、23普通view payload、1 comparison、query/comparison exact replay、4 negative及Solver/write/P4 boundary；provider尚待形成，因此root仍`ALLOCATED`、48个Test ID与registry version`1.0.0`不变，P3-06+、API/UI/P4/Production仍PLANNED。

@@ -59,3 +59,7 @@ TASK-P2-11新增两份strict Draft 2020-12 Schema和两份synthetic sample，将
 ## TASK-P3-02 additive schema release
 
 TASK-P3-02作为P3首个additive Schema release owner，已按TASK-P3-01冻结的七组文件名/URN/document version发布`2.6.0`。全部对象`additionalProperties=false`、无`default`、显式plane/environment/provenance并离线解析跨URN `$ref`；24个shape/version/plane/non-interchangeability负例与6个canonical fingerprint drift负例fail closed。P2 bytes/URN、state pair与global error registry没有改写；implementation artifact `9506913562`已精确复验并支持本closure把Task标为`done`。
+
+## TASK-P3-05 consumer review
+
+本Task只生成并验证既有`workspace-query.v1` REQUEST/RESULT和`schedule-version-comparison.v1`文档；`schema_set_version=2.6.0`、canonical projection和offline `$ref`均由contract tests复验。没有新增、修改或重新发布Schema/sample/URN；完整payload不被私自塞入strict carrier，P4 ChangeReport也未借comparison名义出现。

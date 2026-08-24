@@ -147,3 +147,7 @@ SQLite不能替代PostgreSQL concurrency/capacity/backup，且application/API/UI
 Fresh Validator/KPI、atomic rollback、exact replay/concurrency和no-secret mapping为correctness/trace/reliability提供新增控制，但只在synthetic临时SQLite与固定input上验证；它不消除PostgreSQL concurrency/capacity、真实authorization责任、retention、API/UI或Production side-effect风险。OPEN-010及RISK-007/008/011～013尤其保持原边界。
 
 RISK-001～013全部继续`MONITORED`，severity/status不降低；implementation run `32700005280` / artifact `9510215582`已通过lifecycle/rollback/concurrency/冻结范围检查，故本closure把TASK-P3-04标为`done`，但P3-05+仍未启动，`registry_version=1.0.0`不变。
+
+## TASK-P3-05 risk review
+
+Source/lineage fingerprint、stale cursor/precondition、load/KPI一致性及read-only row-count控制降低本slice的混读/漂移风险，但只覆盖固定synthetic XS与临时SQLite；没有证明PostgreSQL capacity、cache consistency、真实authorization、API/UI可用性或Production SLA。RISK-001～013全部继续`MONITORED`，severity/status不降低；provider pending且`registry_version=1.0.0`不变。

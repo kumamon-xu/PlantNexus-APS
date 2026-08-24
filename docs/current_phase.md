@@ -17,7 +17,7 @@ last_reviewed: 2026-08-24
 
 P2-14 audit implementation `65c556789f176ad9de55523d6420737bb60f933f`的GitHub push run `32677741558` / required `validate` job `97288829348` / artifact `9503227240`成功，artifact digest=`sha256:fbb76f0ab44d3bdcff2d31e70f9698af84e10e48ee57ae611eef8529a288240e`；evidence-only closure `80c403384d1e171258cf874d26605d0d22aff1b2`的run `32678248961` / job `97290201234` / artifact `9503372291`也成功，digest=`sha256:673412905b7420660d1e9f07755fcda6291f85f8f2bd926b4bf31a0a6bd1bd0c`。下载检查的两份artifact均含20份可解析JSON，Task/SHA/Impact Rules/checks/issues与对应提交一致且0 issue。规划启动时`main=origin/main=80c403384d1e171258cf874d26605d0d22aff1b2`、ahead/behind=`0/0`且working tree clean，因此transition前提一致。
 
-P2 Milestone现为`completed`，P3 Milestone为`active`。`TASK-P3-00`～`TASK-P3-04`均已由exact implementation provider闭环并在evidence-only closure标为`done`；P3-05～15保持`planned`且未获授权，不会自动启动。
+P2 Milestone现为`completed`，P3 Milestone为`active`。`TASK-P3-00`～`TASK-P3-04`均已由exact implementation provider闭环并在evidence-only closure标为`done`；用户现已单独授权TASK-P3-05并从provider-verified closure进入`in_progress`，P3-06～15保持`planned`且未获授权，不会自动启动。
 
 ## 当前目标
 
@@ -65,18 +65,26 @@ TASK-P3-04从clean、synchronized且P3-03 closure provider-verified的`62604d059
 
 当前实现已形成fresh Validation/KPI/lineage前置Gate、deterministic immutable DRAFT、同事务CAS `DRAFT→READY_FOR_REVIEW`与append-only audit，以及same-request replay、conflict/rollback/concurrency/plane isolation。核心application只依赖repository ports与transaction factory；SQLAlchemy adapter仅由composition root装配，生命周期service不调用Solver，也不写PlanningRun。
 
-本地35项定向与515项全仓测试、Ruff、Pyright、8/8 lifecycle report、全部既有machine contracts、P2 Gate、XS benchmark、Compose、build与治理均PASS；Task diff为45 paths、8 rows、19 checks、0 issues。Implementation `a9be974855bb825784d639b7f6675e5a33e4273d`的run/job/artifact=`32700005280`/`97349447107`/`9510215582`精确复现23/23 JSON PASS、lifecycle 8/8及45 committed/0 working paths、8 rows、19 checks、0 issues，故本closure把TASK-P3-04标为`done`。READY_FOR_REVIEW不等于approval/publish，P3-05～15、P4和Production均未启动。
+本地35项定向与515项全仓测试、Ruff、Pyright、8/8 lifecycle report、全部既有machine contracts、P2 Gate、XS benchmark、Compose、build与治理均PASS；Task diff为45 paths、8 rows、19 checks、0 issues。Implementation `a9be974855bb825784d639b7f6675e5a33e4273d`的run/job/artifact=`32700005280`/`97349447107`/`9510215582`精确复现23/23 JSON PASS、lifecycle 8/8及45 committed/0 working paths、8 rows、19 checks、0 issues，故本closure把TASK-P3-04标为`done`。READY_FOR_REVIEW不等于approval/publish；该closure发生时P3-05～15、P4和Production均未启动。
+
+## TASK-P3-05 启动边界
+
+用户于2026-08-24单独授权TASK-P3-05。该Task从clean、synchronized且P3-04 closure provider-verified的`fc5011f78a242160097521259a1914d864d9ad17`启动并冻结为不可变Diff base；closure run/job/artifact=`32700684160`/`97351382226`/`9510431988`，required `validate`来自GitHub Actions app `15368`且success，artifact未过期、23/23 JSON PASS、lifecycle 8/8、Task 45 committed/0 working paths、8 rows、19 checks、0 issues。启动时本地重新确认一个synthetic ScheduleVersion为`READY_FOR_REVIEW`且exact replay成立。
+
+本地实现现覆盖14种read view、strict carrier+complete payload fingerprint、stable filter/sort/cursor、found-empty/missing/stale/plane/tamper、Resource Load/KPI及two-Version comparison；8/8 machine、33项定向及527项全仓测试PASS，locked sync/Ruff/Pyright/Compose/build/full+diff治理/禁止范围均通过，read前后durable rows不变且product-service Solver调用0。Exact provider尚未形成，因此Task/P3 Milestone继续`in_progress`/`active`，P3-06保持`planned`。
+
+当前只允许solver-neutral Data Health/Import Runs/Planning Runs/Orders/Operations/Resources/Calendars/Gantt/Resource Load/KPI/Diagnostics/Locks/Audit read models、稳定filter/sort/cursor分页与P3 Version Comparison，以及限定tests/machine CI和命中文档。产品query/comparison service不得写repository、调用Solver/Validator、推进state或生成ChangeReport；P3-06～15、HTTP/UI、approval/reject/publish/export、P4和Production authority均未启动。
 
 ## 当前允许
 
-- 读取并复核P3-01～03合同、Schema、persistence/provider evidence和P2 frozen artifact；
-- 仅在TASK-P3-04逐字allow-list内实施validated solution lifecycle、限定tests/machine evidence与命中文档；
-- 后续P3-05～15只有在逐Task明确授权后，才可按各卡允许范围和新的不可变Diff base实施。
+- 读取并复核P3-01～04合同、Schema、persistence/lifecycle provider evidence和P2 frozen artifact；
+- 仅在TASK-P3-05逐字allow-list内实施只读projection/query/comparison、限定tests/machine evidence与命中文档；
+- 后续P3-06～15只有在逐Task明确授权后，才可按各卡允许范围和新的不可变Diff base实施。
 
 ## 当前禁止
 
-- 修改TASK-P3-04 allow-list外的业务代码、migration、Schema、dependency/lock、P2 fixture/benchmark bytes、`frontend/**`、API/Worker或deployment；
-- 执行P3-05～15，或让其中任何Task自动进入`ready/in_progress`；
+- 修改TASK-P3-05 allow-list外的业务代码、migration、Schema、dependency/lock、P2 fixture/benchmark bytes、`frontend/**`、API/Worker或deployment；
+- 执行P3-06～15，或让其中任何Task自动进入`ready/in_progress`；
 - 直接更新PUBLISHED、绕过server/formal Validator、允许DRAFT/REJECTED发布或产生非幂等export/publish；
 - 实现P4的ExecutionEvent、ReplanRequest、OBJ-002 Stability、freeze window、ChangeReport或Execution Simulator；
 - 创建P4详细Task、进入P4，或声明Production readiness、approval authority、external publish/deployment已形成；

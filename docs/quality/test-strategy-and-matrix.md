@@ -309,3 +309,9 @@ TASK-P3-01本地治理/规则回归为`27 passed`，implementation required run 
 新增contract/integration与CI contract覆盖：generated DRAFT/READY/AuditEvent对冻结2.6.0 Schema/offline refs；deterministic identity、input immutability与HARD lock projection；COMPLETED/mixed/failed/plane拒绝；fresh KPI/Validator；single-transaction state+audit；same-key exact replay/conflict；audit-conflict rollback；双线程exact request后1 Version+1 audit与retry replay；AST no Solver/Simulation/reverse dependency。既有`test_p3_persistence_state.py`同时复验state pair/immutable projection。
 
 定向组合`backend/tests/unit/test_p3_persistence_state.py`、新contract/integration和`test_ci_contract.py`为`35 passed`，full repository为`515 passed`，Ruff全通过、Pyright为0 errors/0 warnings；machine report为8/8且`issues=[]`，全部既有machine contracts、P2 Gate、XS benchmark、Compose与build也PASS。Implementation run `32700005280` / artifact `9510215582`又精确复现23/23 JSON PASS、lifecycle 8/8及45-path治理，因此TEST-SCHEDULE-VERSION-LIFECYCLE-001本Task slice与TEST-STATE-TRANSITION-001、TEST-VALIDATOR-MUTATION、TEST-SIM-ISOLATION consumer回归为provider-verified。Test ID仍48、registry version仍`1.0.0`，approval/publish/API/UI/Production测试继续PLANNED。
+
+## TASK-P3-05 read-model test slice
+
+`TEST-WORKSPACE-READ-MODEL-001`现由unit/contract/integration覆盖14 views、strict carrier/full payload fingerprint、Version/source lineage、Resource Load/KPI、comparison replay及P4 absence；`TEST-PROPERTY`覆盖不同page size/direction的完整唯一跨页重放和resource filter；`TEST-OBS-001`记录versioned synthetic bytes/count/time而不设阈值；`TEST-SIM-ISOLATION`覆盖plane mismatch与read前后row count。
+
+定向Task组合为33 PASS、全仓为527 PASS，locked sync、Ruff/Pyright、Compose、build与8/8 machine均通过；exact provider evidence尚待本Task implementation commit，因此上述状态为implementation-formed/provider-pending。Test ID总数仍48，Schema/migration/dependency/API/UI/P4与Production测试状态不提升。

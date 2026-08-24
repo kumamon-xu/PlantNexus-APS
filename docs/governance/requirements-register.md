@@ -151,3 +151,9 @@ REQ-006获得PublicationResult/current reference与ExportJob durable exact repla
 REQ-004/005获得validated P2 output消费与fresh formal Validator/KPI gate；REQ-007获得immutable DRAFT→READY_FOR_REVIEW既有pair的application执行；REQ-009获得full lineage、deterministic identity、atomic append-only audit与exact replay/conflict。形成路径为`app.domain.schedule_version`、`app.application.schedule_versions`、限定tests和8-check lifecycle report。
 
 该slice不形成read model/edit/approval/rejection/publish/export/API/UI/worker/P4或Production authority，故所有15个root Requirement继续`ALLOCATED`。Implementation `a9be974855bb825784d639b7f6675e5a33e4273d` / artifact `9510215582`已精确复验8/8 lifecycle与45-path治理链，故只闭环TASK-P3-04 reviewable slice；OPEN-010及其他OPEN、SIM assumption、风险状态不变，`registry_version=1.0.0`不变。
+
+## TASK-P3-05 requirement review
+
+REQ-002/003获得Snapshot/Problem/Version facts的stable filter/sort/cursor只读投影；REQ-004获得Gantt、Resource Load及两个Version comparison；REQ-005获得KPI/diagnostic/validation lineage而不复制Validator；REQ-007获得ScheduleVersion/Audit只读workspace；REQ-009获得source-set、payload、collection、query及comparison fingerprint链。形成路径为`app.domain.workspace`、`app.application.workspace_queries/schedule_comparison`、四类tests和8-check machine report。
+
+当前为implementation-formed/provider-pending，不提升任何root生命周期；没有edit/approval/publish/export/API/UI/P4或Production authority。全部15个root Requirement继续`ALLOCATED`，OPEN/SIM/risk状态及`registry_version=1.0.0`不变。

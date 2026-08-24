@@ -90,3 +90,7 @@ P3-05/11/12只记录versioned synthetic数据下的orders、operations、resourc
 - P3形成read/command/approval/internal publication/export工作流；真实身份、角色责任、MES/ERP/storage target和Production批准保持OPEN-002/010/015。
 - ExecutionEvent、ReplanRequest、freeze window、OBJ-002、ChangeReport和Execution Simulator属于P4。
 - Production deployment、UAT、publish authority、capacity和SLA证据均未形成。
+
+## TASK-P3-05 read-model handoff
+
+Backend现提供页面矩阵所需的14种只读投影，且每页完整payload均由carrier fingerprint引用。Frontend后续必须保留server排序与cursor、显示`found=false`和`found=true/items=[]`的不同状态、在Version precondition过期时重新获取权威Version；不得在浏览器重算Resource Load/KPI、推断UNKNOWN为INFEASIBLE或将comparison渲染成P4 ChangeReport。当前尚无组件、API call或用户可见页面。

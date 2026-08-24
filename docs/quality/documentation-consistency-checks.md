@@ -377,3 +377,9 @@ Implementation artifact `9508445635`中的`traceability-report.v1`精确绑定`e
 不可变Diff base=`62604d05964413a0aa7f763afd720afa2d53a887`。完整union只能命中`IMPACT-DOMAIN/APPLICATION/STATE/INFRA/TESTS/PHASE/GOVERNANCE-REGISTRY/DOCS`八行；Task卡逐字冻结两个domain/application模块与`__init__`、machine CLI、限定contract/integration/CI tests、单一workflow command和全部required docs。Schema/sample/rules、migration/repository primitive、Planning/Solver/Validator公式、P2 fixture/baseline/export bytes、dependency/lock、API/jobs/exporters/frontend与P4路径必须零差异。
 
 Full docs、Task diff、`git diff --check`、forbidden-root、machine report与全部local validation须在implementation和closure各运行。当前full治理实际为165 docs、30 roots/trace rows、48 Test IDs、15 OPEN、13 SIM assumptions、13 risks、53 Tasks；implementation artifact `9510215582`中的`traceability-report.v1`精确绑定`a9be974855bb825784d639b7f6675e5a33e4273d`与Diff base，复现45 committed/0 working paths、8 rows、19/19 checks和0 issues。因此TASK-P3-04治理Gate闭环；本evidence-only closure自身仍须push后复核，P3-05保持`planned`。
+
+## TASK-P3-05 diff governance
+
+不可变Diff base=`fc5011f78a242160097521259a1914d864d9ad17`。完整union只能命中`IMPACT-DOMAIN/APPLICATION/INFRA/TESTS/PHASE/GOVERNANCE-REGISTRY/DOCS`七行；allow-list逐字冻结pure domain、两个read service、machine CLI、四类测试、既有CI contract、单一workflow step及所有required docs。Schema/sample/rules、migration/dependency/lock、repository write语义、Planning/Solver/Validator/Exporter、API/Frontend、state pair和P4路径必须零差异。
+
+Implementation/closure均须通过full docs、Task diff、`git diff --check`、forbidden path、8/8 report、定向与full repository检查；provider artifact必须精确绑定Task/SHA/Diff base、7 rows、全部checks与0 issues。Provider形成前保持`in_progress`，且TASK-P3-06不得自动启动。

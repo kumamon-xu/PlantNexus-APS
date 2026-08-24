@@ -203,3 +203,7 @@ Migration包含PostgreSQL DDL和SQLite test兼容trigger，但本Task只在临�
 Service实例固定一个`WorkspaceDataPlane`；context environment必须与plane兼容，synthetic P2 output只允许`SIMULATION` + Development/Test/Benchmark。Machine/integration tests验证同一engine上的Production repository看不到Simulation Version，synthetic→Production在持久化前拒绝；所有key只以SHA-256 reference扩散。
 
 Workflow只新增离线/临时SQLite lifecycle machine命令并复用既有`PLANTNEXUS_CODE_COMMIT`与artifact glob；没有新env、Secret、权限、port、service、network、storage或deployment。SQLite concurrency/replay不证明独立Production DB、PostgreSQL capacity、backup或role isolation。
+
+## TASK-P3-05 query isolation
+
+每个query/comparison service实例固定单一data plane；request、base/compared Version及environment必须一致，repository本身仍plane-scoped。Machine负例验证Production carrier不能读取Simulation repository、mixed source fingerprint和stale cursor均拒绝；read前后两个Version/两个AuditEvent保持原row count。没有新configuration key、network、cache、database、credential或Production route。

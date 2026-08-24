@@ -128,3 +128,7 @@ P2-01扩展`test_planning_problem_properties.py`，保留v1 seeds `20260820/21/2
 [`test_reference_scheduler_properties.py`](../../backend/tests/property/test_reference_scheduler_properties.py)使用seed `20260821`生成60组可收缩的duration、release/material gate、non-grid due、priority和algorithm组合，逐例验证ceil tick placement、exact weighted tardiness/makespan、完整candidate、deterministic replay与fresh formal Validator PASS。另从七个冻结Scenario ID×五algorithm中生成35组sampled replay，要求active operation集合精确完整且零hard violation。
 
 Unit边界同时固定五种primary/resource tie-break、calendar/transport/RUNNING/HARD facts、invalid hash与blocked-horizon failure。Generated值只属于test-local correctness，不新增Profile/Scenario/fixture或Production distribution；它不采样XS/S/M规模、runtime分布或Global comparison。失败必须保留Hypothesis反例、Problem hash、algorithm/policy version及candidate/Validator report。
+
+## TASK-P3-05 pagination/filter properties
+
+[`test_workspace_read_model_properties.py`](../../backend/tests/property/test_workspace_read_model_properties.py)在冻结P2→ScheduleVersion input上生成page size 1～4与ASC/DESC组合，逐页重建strict request并要求collection fingerprint稳定、same-page exact replay、item不重不漏且最终observed count一致；另生成resource选择，要求Operations filter绝不泄露其他resource。失败保留Hypothesis反例、Version/source/query/collection fingerprint与cursor，不修改fixture或设置Production分布/阈值。

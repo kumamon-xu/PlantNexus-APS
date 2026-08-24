@@ -153,6 +153,12 @@ jobs:
           --root .
           --report build/validation/ci-p3-schedule-version-lifecycle.json
 
+      - name: P3 workspace read model and comparison evidence
+        run: >-
+          uv run python -m app.application.workspace_read_model_check
+          --root .
+          --report build/validation/ci-p3-workspace-read-models.json
+
       - name: Engineering contract
         run: >-
           uv run python -m app.infrastructure.contract_check

@@ -245,3 +245,7 @@ P3 Schema/precheck复用Python 3.12标准库、既有`jsonschema==4.25.1`与`ref
 Lifecycle实现只复用locked Python 3.12、既有SQLAlchemy/Alembic repositories、P2 reporting/Validator与P3 2.6.0 pure contracts；`pyproject.toml`、`uv.lock`、Schema、migration和runtime/dev dependency均零变化。Concurrent exact-request evidence使用临时file SQLite与既有CAS/unique原语，不能外推PostgreSQL吞吐或Production transaction policy。
 
 CI新增一个required machine step，不改变`validate` job名称、permissions、Secret、service/deployment或artifact action。Frontend/Node、API、queue/outbox、export/storage SDK和P4技术均未引入。
+
+## TASK-P3-05 technology review
+
+实现只使用Python 3.12标准库、既有domain contracts与read repository adapters；opaque cursor使用URL-safe base64包装canonical JSON，所有指纹仍为既有SHA-256规范。没有新增dependency、lock、Schema、migration、cache/search/OLAP组件或frontend package。CI只增加一个non-skippable离线machine command并复用临时SQLite和既有artifact上传范围；不改变required `validate` identity或provider权限。

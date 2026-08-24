@@ -153,3 +153,9 @@ SQLite evidence不外推PostgreSQL capacity/backup，repository不拥有auth/Val
 NFR-COR通过fresh Validator+exact KPI、失败无副作用；NFR-DET通过content/request/idempotency identity与exact replay；NFR-TRC通过P2 lineage/code commit/audit；NFR-HUM通过READY与approval严格分离。ENG-ARCH形成domain pure builder→ports/transaction-factory application→injected repository方向并通过既有P1 no-shortcut AST Gate，ENG-VAL只调用独立Validator public consumer，ENG-ERR形成sanitized module-local mapping，ENG-VER保持2.6.0/既有Schema/migration/dependency不漂移。
 
 NFR-ISO的synthetic→Production拒绝获得application slice，但独立Production DB/API/auth仍PLANNED；NFR-SEC/REL/OBS只获得no-secret、rollback/concurrency与audit/timing观察的局部证据，不建立SLA/retention/Production policy。Implementation `a9be974855bb825784d639b7f6675e5a33e4273d` / artifact `9510215582`已精确复验该有界NFR/ENG slice并支持TASK-P3-04闭环；全部NFR/ENG root继续`ALLOCATED`，OPEN-010/012及RISK-007/008/011～013不关闭，`registry_version=1.0.0`不变。
+
+## TASK-P3-05 NFR / engineering review
+
+NFR-COR通过source/assignment/KPI一致性与fail-closed negative；NFR-DET通过canonical payload/query/collection/comparison与exact replay；NFR-TRC通过Version lineage/source-set fingerprint；NFR-OBS/PER只记录XS synthetic count/bytes/time且不设阈值。ENG-ARCH形成pure domain→read ports application→composition-root方向，ENG-ERR形成sanitized local reason，ENG-VER严格消费2.6.0且Schema/migration/dependency零漂移。
+
+Plane mismatch与read前后row count为NFR-ISO提供局部回归，但独立Production DB/API/auth仍未形成。当前provider pending；全部NFR/ENG root继续`ALLOCATED`，不建立SLA、capacity、retention或Production policy，`registry_version=1.0.0`不变。

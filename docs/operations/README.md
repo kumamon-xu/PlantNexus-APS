@@ -152,3 +152,9 @@ P3-01先定义security/audit/idempotency责任，P3-03/07～10再形成repositor
 `uv run python -m app.application.schedule_version_lifecycle_check --root . --report <ignored-json>`复用一个冻结P2 correctness input，在三个临时SQLite数据库验证fresh lineage/KPI、DRAFT→READY、atomic audit、exact replay、五类无副作用拒绝、audit-conflict rollback、concurrent exact request、plane/PlanningRun/Solver边界并输出8/8 `p3-schedule-version-lifecycle-report.v1`。CI命令写`build/validation/ci-p3-schedule-version-lifecycle.json`且不可continue-on-error。
 
 这是development machine evidence，不是业务Runbook：没有常驻service、health、queue、external storage、Production credential/target或deployment。业务回滚不得删除已形成的ScheduleVersion/audit；代码回退只能停止新调用并保留append-only历史，测试临时数据库随测试清理。
+
+## TASK-P3-05 read-model evidence command
+
+`uv run python -m app.application.workspace_read_model_check --root . --report <ignored-json>`在临时SQLite创建两个versioned synthetic READY_FOR_REVIEW输入，读取13个普通view与1个comparison view，验证23个payload reference、load/KPI、lineage、stable page replay、empty/missing/stale/plane/tamper/cursor负例、exact comparison及read-only row count，输出8/8 `p3-workspace-read-model-report.v1`。CI固定写`build/validation/ci-p3-workspace-read-models.json`且不可continue-on-error。
+
+报告中的elapsed/source/projected bytes仅为XS synthetic observation，没有alert/SLO/Production threshold；代码回滚不删除或改变任何ScheduleVersion/Audit历史。

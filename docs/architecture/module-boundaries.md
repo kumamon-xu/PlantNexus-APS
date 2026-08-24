@@ -199,3 +199,9 @@ ADR-0012已接受该方向并补充：domain定义versioned command/query/state/
 `app.domain.schedule_version`只依赖domain state/types/workspace pure contracts；AST evidence禁止其反向导入Infrastructure、Planning或Simulation。`app.application.schedule_versions`声明repository ports与transaction factory注入，只调用P2 public reporting/Validator consumer，不静态导入SQLAlchemy/Infrastructure、CP-SAT Backend、Strategy或Simulation，且源文件无`.solve(`调用。Machine CLI是唯一executable composition root，以延迟runtime装配既有adapter并复用冻结P2 correctness test input；报告明确service Solver调用为0，既有P1 application-boundary AST Gate继续PASS。
 
 Application是本slice唯一transaction owner：repository仍不知道fresh Validator、COMPLETED gate、actor reason或audit业务动作；API/UI/Worker不得直接调用repository。没有新outbox/topology/dependency，若未来需跨事务side effect仍须新ADR。
+
+## TASK-P3-05 read composition
+
+`app.domain.workspace`只依赖domain types/contracts并拥有pure bind/projection/filter/sort/cursor/comparison；`app.application.workspace_queries`与`schedule_comparison`声明read-only repository ports并组合权威Version/audit，既不静态导入Infrastructure、Simulation或CP-SAT，也没有write/transition/Solver port。`workspace_read_model_check`是测试composition root，才可延迟装配既有SQLite adapters和冻结P2 fixture。
+
+完整payload与published carrier分层是既有Schema约束下的application return value，不是cache/materialized view或新transport Schema。若后续引入持久化read store、异步物化或跨进程cache，必须先建ADR并重新确认authority/freshness。

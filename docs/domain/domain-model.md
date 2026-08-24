@@ -145,3 +145,9 @@ Query/command以不同document分离：query result只含stable projection refer
 `ValidatedPlanningOutput`把七份既有P2 immutable document作为一个消费bundle；`ScheduleVersionCreationContext`只承载COMPLETED事实、plane-compatible environment、stable actor/auth-policy reference、UTC、correlation、hashed key reference与reason。Pure `build_reviewable_schedule_documents`派生DRAFT、同identity READY candidate、request fingerprint和AuditEvent，不持有repository或Solver依赖，也不修改输入。
 
 ScheduleVersion现在首次成为可评审aggregate：identity由plane+idempotency key reference确定，content由validated assignments与Problem locks确定，lineage逐项引用Snapshot/Problem/Solution/Validation/KPI/SolverReport/code commit。状态变化由application组合repository；AuditEvent是append-only证据，不是第二个状态权威。未新增Schema/entity/state，approval/publication/export/P4仍不属于该aggregate slice。
+
+## TASK-P3-05 workspace read values
+
+`WorkspaceSourceDocuments`表示七份不可变上游事实；`BoundWorkspaceSources`只在Version reference、artifact fingerprint、assignment/operation/resource、lock与KPI resource统计全部一致时形成。`WorkspaceProjection`保存stable identity/type、完整payload及其SHA-256，`WorkspaceProjectionPage`保存cursor/observed collection fingerprint；这些是pure read-side value，不是新aggregate或持久化实体。
+
+`schedule-version-comparison.v1`是两个immutable Version的deterministic read DTO。它没有state machine、repository ownership、parent关系或command语义；ChangeReport/Replan仍只属于P4。

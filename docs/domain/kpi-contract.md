@@ -106,3 +106,7 @@ Delivery逐Demand以其active operations的最大end tick为completion，按Prob
 `calculate_schedule_kpi_metrics(problem, assignments)`现把既有delivery/planning/resource公式抽为无I/O、无Solver trust、无输入修改的public pure calculation；`build_kpi_v2`直接消费该结果，因此KPI v2 document、ID、Schema和Export语义不变。Benchmark Global行同时要求完整KPI v2与该projection逐字段一致；五个Reference行用同一函数重算并与P2-10 metric carrier核对。
 
 共享口径只包含schedule-level weighted tardiness、makespan、counts、on-time与resource utilization；Solver build/bound/gap/timing/memory仍来自真实SolverReport，Reference runtime由其versioned carrier记录。该抽取不授权Reference写KPI v2、不改变OBJ-001或Production weight，P2-11 package回归8/8保持PASS。
+
+## TASK-P3-05 KPI and load projection
+
+KPI view完整引用冻结`kpi.v2`payload；Resource Load按权威ScheduleVersion assignments汇总`assignment_count/planned_busy_seconds`，并逐resource核对KPI的`available_seconds/utilization`，不复制或修改KPI公式。Version Comparison读取既有weighted tardiness、makespan、late/scheduled counts，并额外从两份assignment计算start shift与resource-changed count；这些是read delta，不是OBJ-002、replan score或Production KPI阈值。

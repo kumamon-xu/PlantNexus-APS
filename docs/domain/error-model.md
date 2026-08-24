@@ -186,3 +186,7 @@ Carrier top-level required/unknown、plane/environment/provenance和canonical fi
 Application新增module-local sanitized reasons：`INVALID_INPUT`、`PLANNING_RUN_NOT_COMPLETED`、`VALIDATION_FAILED`、`MIXED_LINEAGE`、`DATA_PLANE_MISMATCH`、`IDEMPOTENCY_CONFLICT`、`STATE_CONFLICT`、`PERSISTENCE_FAILED`。P2 reporting错误先按validation/mixed/invalid映射；P3 repository identity/idempotency/state/plane错误再映射为稳定lifecycle reason，SQL/credential/stack不进入message或machine artifact。
 
 这些reason没有加入`error-code-registry.v2`，也不是HTTP status合同。所有输入/Validator/KPI错误发生在事务前；transaction/audit错误回滚本次DRAFT/READY。未来P3-10若公开HTTP mapping，必须消费既有namespace并在合同Task中版本化，不得从本地异常文本推断status。
+
+## TASK-P3-05 read rejection boundary
+
+Read domain使用module-local `INVALID_QUERY`、`SOURCE_MISSING`、`MIXED_LINEAGE`、`DATA_PLANE_MISMATCH`、`STALE_VERSION`、`STALE_CURSOR`与`KPI_MISMATCH`。不存在的schedule query返回strict `found=false`而不是异常，存在但无投影返回`found=true/items=[]`；comparison缺少任一Version则显式`SOURCE_MISSING`。所有message固定且不泄露payload、SQL、credential或stack；P3-10公开HTTP前不得把这些local reason冒充global error registry变更。

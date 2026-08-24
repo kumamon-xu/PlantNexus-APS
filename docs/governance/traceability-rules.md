@@ -279,3 +279,9 @@ Task从provider-verified closure `62604d05964413a0aa7f763afd720afa2d53a887`激�
 Implementation artifact必须绑定exact SHA/Task，lifecycle report为8/8、issues=[]、service Solver=0，Task report为八Impact rows/full checks/0 issues。Provider成功前保持`in_progress`；成功后只允许evidence-only closure写回事实，closure自身也须exact provider且不得自动启动P3-05。
 
 该规则已由implementation `a9be974855bb825784d639b7f6675e5a33e4273d`的required run/job/artifact=`32700005280`/`97349447107`/`9510215582`满足：下载的23/23 JSON顶层PASS，lifecycle与Task报告精确为8/8及45 committed/0 working paths、8 rows、19 checks、0 issues。因此本closure只写回TASK-P3-04=`done`和provider事实，P3-05仍为`planned`。
+
+## TASK-P3-05 read-model evidence rule
+
+Task从provider-verified closure `fc5011f78a242160097521259a1914d864d9ad17`激活。Evidence必须同时证明14 views、strict carrier/full payload fingerprint、Version/source lineage、stable filter/sort/query-scope cursor、found-empty/missing/stale/plane/tamper语义、assignment/load/KPI一致、two-Version comparison exact replay及ChangeReport/Replan缺席、versioned synthetic规模观察、read前后durable rows不变和product-service Solver调用0。
+
+追踪链固定为`REQ-002/003/004/005/007/009 + NFR-COR/DET/TRC/OBS/PER + ENG-ARCH/ERR/VER → TASK-P3-05 → domain workspace + application query/comparison + tests → TEST-WORKSPACE-READ-MODEL-001/TEST-PROPERTY/TEST-OBS-001/TEST-SIM-ISOLATION → p3-workspace-read-model-report.v1 + Task report → exact implementation/closure provider artifacts`。Provider成功前保持`in_progress`；closure只写事实且不得启动P3-06。

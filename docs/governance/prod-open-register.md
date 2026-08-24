@@ -166,3 +166,7 @@ Plane-scoped repository、Production publication/export constructor denial和DB 
 Lifecycle使用synthetic P2 fixture、test actor与upstream auth-policy reference，只在Simulation/Test临时SQLite形成READY_FOR_REVIEW；没有真实identity/role责任、approval authority、external target、Production DB/credential/network、SLA或deployment。特别是OPEN-010继续`OPEN`：READY及carrier `allowed_actions`不代表任何人已获approve/reject/publish授权。
 
 OPEN-001～015全部保持`OPEN`，没有closure record；implementation provider artifact `9510215582`的8/8 lifecycle report不得写成Production approval、publishability或readiness，`registry_version=1.0.0`不变。
+
+## TASK-P3-05 review
+
+Read model只复用Simulation/Test Version与synthetic sources，单次count/bytes/time没有Production threshold或SLA。OPEN-001/002/003/004/015的time/unit/topology/authority/capacity事实未被投影层补猜，OPEN-010授权也未因`allowed_actions`或Audit view关闭；没有Production DB/API/UI/identity/target/deployment。OPEN-001～015全部保持`OPEN`且无closure record，`registry_version=1.0.0`不变。

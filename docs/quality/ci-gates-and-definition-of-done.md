@@ -269,3 +269,11 @@ uv run python -m app.application.schedule_version_lifecycle_check \
 本地实现Gate现已实际通过：35 focused、515 full、Ruff、Pyright、8/8 lifecycle、全部既有machine contracts、P2 Gate、XS benchmark、Compose、build、full/diff docs治理及forbidden boundary均无失败；Task report为45 paths/8 rows/19 checks/0 issues。该结果不替代push后的exact provider Gate，Task仍为`in_progress`。
 
 Implementation provider Gate已通过：SHA `a9be974855bb825784d639b7f6675e5a33e4273d`、run `32700005280`、required `validate` job/check `97349447107`（app `15368`）均success；artifact `9510215582`未过期，digest=`sha256:828311f8b2f512aa6ddcbf113d80aba2e475e99f192867cad1d14dda53842d54`。23/23 JSON顶层PASS，lifecycle 8/8与Task 45 committed/0 working paths、8 rows、19 checks、0 issues均绑定同一SHA；TASK-P3-04 DoD完成，不自动授权P3-05。
+
+## TASK-P3-05 required read-model evidence
+
+Required `validate`增加唯一step：`uv run python -m app.application.workspace_read_model_check --root . --report build/validation/ci-p3-workspace-read-models.json`。报告必须为`p3-workspace-read-model-report.v1`、Task=`TASK-P3-05`、schema set=`2.6.0`、read model=`workspace-read-model.v1`、8/8 checks、14 views、两个versioned synthetic inputs、query/comparison各1次exact replay、4类negative、product-service Solver调用0、durable read前后不变且`issues=[]`。
+
+本地PASS只允许Task保持`in_progress`。Implementation push后必须核验exact SHA required run/job/app、下载artifact并核对read-model/Task report的Task/SHA、7 Impact rows、all checks/issues；成功后才可evidence-only closure，closure自身也须exact provider。该Gate不形成HTTP/UI、approval/publish/export、P4或Production readiness，也不自动启动TASK-P3-06。
+
+本地implementation Gate已通过：33 focused、527 full、locked sync、Ruff、Pyright、Compose、build、8/8 read-model machine、full/diff docs、`git diff --check`和禁止路径均PASS；Task report为50 working paths、7 rows、19 checks、0 issues。该结果不替代push后的exact provider，TASK-P3-05仍为`in_progress`。

@@ -255,3 +255,9 @@ Machine report `p3-persistence-report.v1`记录migration revision、五表/七in
 ScheduleVersion lineage现在逐项固定`planning-snapshot.v2` ID/hash、`planning-problem.v2` hash-derived ID、`planning-solution.v1` ID/full fingerprint、`validation-report.v2` derived ID/full fingerprint、`kpi.v2` ID/full fingerprint、`solver-report.v1` ID/full fingerprint、planning run ID与SolverReport code commit。Content fingerprint只覆盖sorted assignment/lock content；DRAFT/READY共享identity/content，storage revision不进入carrier fingerprint。
 
 ScheduleVersion/Audit ID由lifecycle version、plane和hashed idempotency key reference确定；request fingerprint再绑定COMPLETED、environment、actor、auth-policy context、occurred timestamp、correlation、key reference、reason、lineage与content。Exact replay保留原created/validated/occurred timestamps和audit result，不改写历史。`p3-schedule-version-lifecycle-report.v1`已由implementation `a9be974855bb825784d639b7f6675e5a33e4273d`的CI artifact `9510215582`精确绑定并复现8/8 checks与0 issues。
+
+## TASK-P3-05 read provenance
+
+每个投影payload以canonical JSON SHA-256绑定到carrier item；source-set fingerprint按Snapshot→Problem→Solution→SolverReport→ValidationReport→QualityReport→KPI固定顺序绑定七份完整bytes。Collection fingerprint再绑定read-model version、query-scope、source与排序后的item references；cursor保存相同fingerprints及offset，source、filter、sort、page size或Version precondition任一变化都会拒绝旧cursor。
+
+Comparison query fingerprint额外绑定base/compared两个Version ID，comparison fingerprint排除派生ID/fingerprint/generated timestamp后覆盖完整语义。相同inputs与generated timestamp逐字重放；本Task不改写任一历史artifact、Schema version、code commit lineage或P2 evidence。

@@ -144,3 +144,9 @@ TASK-P3-01只形成文档合同；TASK-P3-02现以`test_p3_workspace_contracts.p
 ## P4/Production边界
 
 本合同不包含ExecutionEvent、ReplanRequest、freeze、OBJ-002、ChangeReport、Execution Simulator、真实RBAC/SSO、MES/ERP/storage adapter或Production deployment。OPEN-002/010/015继续开放，Production command/target default-deny。
+
+## TASK-P3-05 read application semantics
+
+P3-05已在HTTP边界之前形成solver-neutral read application：Data Health、Import/Planning Runs、Orders、Operations、Resources、Calendars、Gantt、Resource Load、KPI、Diagnostics、Locks、Audit与Version Comparison。Schedule-scoped请求必须带exact Version reference；不存在返回`found=false`，存在但结果为空返回`found=true/items=[]`，state/content变化为`STALE_VERSION`，plane/environment、lineage或cursor不匹配均fail closed。Cursor绑定过滤、排序、page size、Version precondition及不可变source collection；comparison显式绑定base/compared两个Version。
+
+这不是HTTP endpoint实现：没有FastAPI/Pydantic/OpenAPI、identity/capability解析或前端payload。P3-10必须适配这里的carrier+payload结果，不得绕过precondition、重新计算Solver/Validator事实或把comparison升级成P4 ChangeReport。

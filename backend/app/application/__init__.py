@@ -10,6 +10,14 @@ from .schedule_versions import (
     ScheduleVersionLifecycleResult,
     ValidatedSolutionToScheduleVersionService,
 )
+from .schedule_comparison import (
+    ScheduleComparisonResult,
+    ScheduleComparisonService,
+)
+from .workspace_queries import (
+    WorkspaceQueryResult,
+    WorkspaceQueryService,
+)
 
 __all__ = [
     "CommonIngressArtifacts",
@@ -17,5 +25,9 @@ __all__ = [
     "DataQualityGateRejected",
     "PlanningBuildConfiguration",
     "ScheduleVersionLifecycleResult",
+    "ScheduleComparisonResult",
+    "ScheduleComparisonService",
     "ValidatedSolutionToScheduleVersionService",
+    "WorkspaceQueryResult",
+    "WorkspaceQueryService",
 ]

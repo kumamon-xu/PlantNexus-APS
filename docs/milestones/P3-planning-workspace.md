@@ -15,7 +15,7 @@ last_reviewed: 2026-08-24
 
 用户于2026-08-24在核验TASK-P2-00～14全部`done`、P2 Exit Gate overall=`READY`/`blocking_gaps=[]`、audit implementation/closure拓扑与exact GitHub required `validate`/artifact后，明确批准P2→P3 transition。P2为`completed`，P3为当前`active` Milestone。
 
-TASK-P3-00已完成Milestone激活、Task规划与文档治理，TASK-P3-01～04也已由各自exact implementation provider与evidence-only closure闭环；P3-05～15保持`planned`且未获授权。依赖满足不会自动授权后续实现。每个Task必须从当时clean、`main=origin/main`且provider-verified的完整40字符HEAD建立新的不可变Diff base。
+TASK-P3-00已完成Milestone激活、Task规划与文档治理，TASK-P3-01～04也已由各自exact implementation provider与evidence-only closure闭环；用户已单独授权TASK-P3-05并从P3-04 provider-verified closure进入`in_progress`，P3-06～15保持`planned`且未获授权。依赖满足不会自动授权后续实现。每个Task必须从当时clean、`main=origin/main`且provider-verified的完整40字符HEAD建立新的不可变Diff base。
 
 ## Outcome
 
@@ -32,7 +32,7 @@ TASK-P3-00已完成Milestone激活、Task规划与文档治理，TASK-P3-01～04
 | 2 | TASK-P3-02 | ScheduleVersion workspace/export Schema | P3-01 | `done` |
 | 3 | TASK-P3-03 | ScheduleVersion、Audit与ExportJob persistence | P3-02 | `done` |
 | 4 | TASK-P3-04 | validated solution→reviewable DRAFT | P3-03 | `done` |
-| 5 | TASK-P3-05 | Gantt/Resource Load/Order/Comparison read models | P3-04 | `planned` |
+| 5 | TASK-P3-05 | Gantt/Resource Load/Order/Comparison read models | P3-04 | `in_progress` |
 | 6 | TASK-P3-06 | Gantt edit/lock command→validation→new DRAFT | P3-04/05 | `planned` |
 | 7 | TASK-P3-07 | approval/rejection/audit service | P3-03/04 | `planned` |
 | 8 | TASK-P3-08 | idempotent publication与supersession | P3-03/07 | `planned` |
@@ -73,6 +73,10 @@ Gate还必须证明：版本/比较/read model lineage一致；所有command产�
 - P3-15=`READY`也不自动进入P4；P3→P4需要新的用户明确批准。
 
 ## Current execution boundary
+
+TASK-P3-05现从P3-04 closure `fc5011f78a242160097521259a1914d864d9ad17`冻结Diff base并进入`in_progress`；该closure的run/job/artifact=`32700684160`/`97351382226`/`9510431988`精确成功，启动重放再次确认synthetic READY_FOR_REVIEW Version。当前只允许只读projection/query/comparison、限定tests/machine CI与命中文档；repository write/state transition、Solver/Validator、HTTP/UI、approval/publish/export、P4/Production均禁止。P3-06不自动启动。
+
+P3-05本地read slice现覆盖13个普通view与独立Version Comparison，machine为8/8、普通payload 23、exact query/comparison replay各1、4类negative、read前后row count一致、product-service Solver调用0；定向33项与全仓527项PASS，治理为50 working paths/7 rows/19 checks/0 issues。Provider闭环前该证据不把Task标为`done`，不形成API/UI/write/approval/publish/P4或Production能力，P3-06仍等待用户明确授权。
 
 TASK-P3-00 planning implementation `1d4b1a5c0ad6dc13df18588fbdcb9732e5ef15e7`的run/job/artifact=`32681493976`/`97298850740`/`9504310381`已精确PASS；其closure `7f65f88b620ea1e8d2f4693911be3b52f4052d5d`的run/job/artifact=`32682015727`/`97300206924`/`9504453154`也精确PASS。TASK-P3-01 implementation `3bf99cbafdad983795a83a88646240dbb0b24509`的run/job/artifact=`32684713630`/`97307562801`/`9505303054`复现43 paths、4 rows、19 checks和0 issues。TASK-P3-02 implementation `aff27d3d6b63fb9f216c9a2687408a6c676fa96a`的run/job/artifact=`32689832111`/`97321420908`/`9506913562`复现additive schema set`2.6.0`、7 Schema/7 sample、8/8 checks及65 paths/10 rows/19 checks/0 issues；closure `9621fda535f66393beab88efc13c100fc805c993`的run/job/artifact=`32690302424`/`97322642627`/`9507045338`也精确成功。TASK-P3-03已从该closure SHA激活，只允许持久化原语；P3-04～15未启动。
 

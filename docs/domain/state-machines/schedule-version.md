@@ -97,3 +97,9 @@ same idempotency scope/key + same request只重放原logical result，不建立s
 P3-04 application现以fresh P2 validation/KPI为事务前置门，insert immutable DRAFT后仅调用P3-03 CAS执行既有`DRAFT→READY_FOR_REVIEW`，随后在同一transaction追加`SUBMIT_FOR_REVIEW` audit。DRAFT和READY保持相同ID/revision/content/lineage/validation/creator/timestamps，仅state与state-derived `allowed_actions`变化；storage `state_revision`从0增至1。
 
 Exact replay读取原creation bytes和当前READY carrier并返回原audit，不新增state self-pair；同key不同request、stale/mixed/failed validation、audit冲突和synthetic→Production plane均fail closed。READY仍只能等待P3-07的授权审批/驳回行为；本Task没有实现READY→APPROVED/REJECTED、APPROVED→PUBLISHED、PUBLISHED→SUPERSEDED或REJECTED revision。
+
+## TASK-P3-06 copy-on-write creation
+
+Move/Assign/Set/Remove Lock不是state transition：source在DRAFT、READY_FOR_REVIEW、REJECTED、APPROVED、PUBLISHED或SUPERSEDED下都不发生self-pair或content update；成功只insert具有new ID、parent source reference、revision+1、fresh validation及DRAFT state的新carrier。`MANUAL_EDIT`用于Move/Assign，`LOCK_CHANGE`用于Set/Remove Lock。Same key/same request只重放原DRAFT logical reference，不新增Version/audit；不同request冲突。
+
+P3-03允许pair与`state-machines.v1` bytes没有变化，新DRAFT不自动执行DRAFT→READY_FOR_REVIEW。独立`SUBMIT_FOR_REVIEW`只接受本Task生成的manual/lock DRAFT，第二次fresh PASS且fingerprint一致后以CAS执行既有pair；只允许state与allowed actions改变，ID/content/content fingerprint/lineage/decision保持不变，audit失败则transition回滚。Failed candidate不保存为ScheduleVersion。TASK-P3-07/08仍分别拥有decision与publication state transition；PUBLISHED source仅可历史参考派生DRAFT，绝无原地更新。

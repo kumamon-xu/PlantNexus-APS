@@ -205,3 +205,9 @@ Application是本slice唯一transaction owner：repository仍不知道fresh Vali
 `app.domain.workspace`只依赖domain types/contracts并拥有pure bind/projection/filter/sort/cursor/comparison；`app.application.workspace_queries`与`schedule_comparison`声明read-only repository ports并组合权威Version/audit，既不静态导入Infrastructure、Simulation或CP-SAT，也没有write/transition/Solver port。`workspace_read_model_check`是测试composition root，才可延迟装配既有SQLite adapters和冻结P2 fixture。
 
 完整payload与published carrier分层是既有Schema约束下的application return value，不是cache/materialized view或新transport Schema。若后续引入持久化read store、异步物化或跨进程cache，必须先建ADR并重新确认authority/freshness。
+
+## TASK-P3-06 command composition
+
+`app.domain.schedule_commands`只依赖domain types/workspace pure contracts，负责strict carrier、semantic guard、copy-on-write DRAFT及显式review submission的READY/audit documents；它不导入Planning Validator、Infrastructure、Simulation、CP-SAT或HTTP。`app.application.schedule_commands`只声明Schedule get/insert/CAS、Audit、transaction和Validator ports，Validator factory必须由外部显式注入；它不静态导入Planning Validator、SQLAlchemy、Infrastructure、Backend/Strategy或Solver API。`schedule_command_check`是唯一executable composition root，才装配公开`ProblemScheduleValidator`、临时SQLite adapters与冻结synthetic inputs。
+
+Application拥有atomic insert+append与CAS+append transaction；repository不决定command capability/semantics，API/UI不得直接写repository或复制mutation/Validator逻辑。没有新outbox、cache、queue、dependency或topology；若未来跨事务记录失败attempt或异步command，必须先建ADR。

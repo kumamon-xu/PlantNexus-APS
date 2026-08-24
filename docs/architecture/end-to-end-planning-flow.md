@@ -99,3 +99,9 @@ TASK-P3-01仅形成文档和ADR-0012；Schema/persistence/application/API/UI节�
 当前新增只读段为：`workspace-query REQUEST + exact Version precondition + seven immutable source documents + plane-scoped schedule/audit repository → lineage binding → pure view projection → stable filter/sort/cursor page → workspace-query RESULT`；comparison再显式读取第二个Version/reference并输出fingerprinted P3 comparison DTO。查询前后ScheduleVersion/Audit row count不变，product service Solver调用为0。
 
 该段没有HTTP/UI、command、new DRAFT、state transition、Validator重算、approval/publish/export或P4。P3-10只能包装该application boundary，P3-06+ write flow不得复用read DTO作为写权威。
+
+## TASK-P3-06 formed command segment
+
+当前新增写段为：`workspace-command + server capability/plane/precondition/idempotency guard + immutable source Version/Problem → copy-on-write assignment/lock candidate → new independent ProblemScheduleValidator → PASS/0 → one transaction(insert new DRAFT + append command AuditEvent) → stable logical result`。MOVE/ASSIGN与SET/REMOVE Lock均走同一pipeline；manual DRAFT可再以显式`SUBMIT_FOR_REVIEW → second fresh Validator PASS → one transaction(CAS existing DRAFT→READY_FOR_REVIEW + append audit)`进入既有评审态，ID/content/fingerprint不变。Same key/same fingerprint从durable audit/new Version重放，conflict/Validator/audit失败不留下成功副作用。
+
+四类content command不回写source、PlanningRun、Problem或Snapshot；submit只改变其目标manual DRAFT的state/allowed actions，不改变content/lineage/identity。该段不调用Solver/KPI optimizer，不隐式submit或自动approval，也没有HTTP/UI、approval/rejection、publication/export或P4。Failed candidate在内存丢弃；历史REJECTED/PUBLISHED只可作为parent参考派生DRAFT。

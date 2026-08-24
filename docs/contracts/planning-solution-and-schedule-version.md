@@ -114,3 +114,9 @@ Repository不会从PlanningSolution创建DRAFT、不会调用Validator，也不�
 Read service只从repository取得权威ScheduleVersion，并用request中的`state/content_fingerprint` precondition拒绝stale读取；随后把Version lineage逐项与Snapshot、Problem、PlanningSolution、ValidationReport、KPI、SolverReport及code commit重绑。Orders/Gantt/Resource Load等投影只消费已验证assignments，Locks只消费Version content，任何不一致均拒绝而不修补source或写回Version。
 
 Version Comparison产生`schedule-version-comparison.v1`只读DTO：operation delta、六项KPI delta、summary和canonical fingerprint均可重放；它不创建parent/new DRAFT、不执行transition、不写decision/publication，也不包含ChangeReport、Replan或OBJ-002。
+
+## TASK-P3-06 manual command derivation
+
+人工命令不创建或冒充新的Solver run。新ScheduleVersion保留source的PlanningRun/Snapshot/Problem/PlanningSolution/KPI/SolverReport provenance，替换为对copy-on-write assignments执行fresh formal Validator所得的ValidationReport reference，并以`source_kind=MANUAL_EDIT|LOCK_CHANGE`和parent Version明确表达派生边界。Schedule content是新Version的权威计划内容；origin PlanningSolution仍是求解来源而不是人工修改后的等同document。
+
+应用不会CAS更新content command的source，也不改变current publication；每个成功Move/Assign/Set/Remove Lock insert一个revision递增、identity独立的DRAFT并append command audit。该DRAFT只有经独立`SUBMIT_FOR_REVIEW`、第二次fresh Validator且report fingerprint与lineage一致，才以CAS复用既有`DRAFT→READY_FOR_REVIEW` pair；ID/content/fingerprint保持不变并原子追加submit audit。失败candidate完全不持久化。P3-06没有approve/reject/publish/export。P3-05基于原始PlanningSolution/KPI的严格read bundle不会被静默伪造成已重算manual KPI；后续API/UI若需要manual Version的完整KPI projection，必须消费明确的Version content/derived read contract，不得把旧KPI当新KPI。

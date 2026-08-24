@@ -166,3 +166,9 @@ Implementation `a9be974855bb825784d639b7f6675e5a33e4273d` / run `32700005280` / 
 追踪链为`REQ-002/003/004/005/007/009 + NFR-COR/DET/TRC/OBS/PER + ENG-ARCH/ERR/VER → TASK-P3-05 → app.domain.workspace + app.application.workspace_queries/schedule_comparison/workspace_read_model_check → existing 2.6.0 query/comparison carriers + read repositories → TEST-WORKSPACE-READ-MODEL-001/TEST-PROPERTY/TEST-OBS-001/TEST-SIM-ISOLATION → p3-workspace-read-model-report.v1 + Task report → exact implementation/closure provider artifacts`。
 
 当前本地证据为33 focused与527 full PASS、8/8 machine、14 views、23普通view payload、1 comparison、query/comparison exact replay、4 negative及Solver/write/P4 boundary。Implementation `f236fab47aa2565b87a060b2c8bde8f2e8d66229` / run `32706258281` / artifact `9512423712`精确复验24/24 JSON及50 committed/0 working paths、7 rows、19 checks、0 issues，故该slice为provider-verified且TASK-P3-05在本closure标为`done`。Root仍`ALLOCATED`、48个Test ID与registry version`1.0.0`不变，P3-06+、API/UI/P4/Production仍PLANNED。
+
+## TASK-P3-06 command trace
+
+追踪链为`REQ-005/007/009 + NFR-COR/DET/TRC/HUM + ENG-ARCH/VAL/ERR/VER → TASK-P3-06 → app.domain.schedule_commands + app.application.schedule_commands/schedule_command_check → existing workspace-command/ScheduleVersion/AuditEvent 2.6.0 carriers + existing repositories/formal Validator → TEST-GANTT-COMMAND-001/TEST-VALIDATOR-MUTATION/TEST-STATE-TRANSITION-001/TEST-IDEMPOTENCY → p3-schedule-command-report.v1 + Task report → exact implementation/closure provider artifacts`。
+
+当前bounded evidence已覆盖5 command types（4 content + explicit submit）、new DRAFT/source immutability、同ID/content DRAFT→READY、fresh Validator、Schema validation、property replay、idempotency conflict、insert/CAS atomic rollback、historical source、negative与Solver/P4 boundary；8/8 machine为PASS且`issues=[]`。Exact implementation/closure provider仍待形成，因此TASK-P3-06保持`in_progress`；Root仍`ALLOCATED`、48个Test ID与registry version`1.0.0`不变，P3-07+、HTTP/UI、P4/Production仍PLANNED。

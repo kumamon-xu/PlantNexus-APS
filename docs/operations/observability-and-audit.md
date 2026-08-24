@@ -50,3 +50,9 @@ CLI FAIL只输出稳定reason/error type/fixed message，不输出SQL、DSN、cr
 ## TASK-P3-05 query evidence
 
 Read-model machine report记录Task/exact code commit、14 views/counts、payload/comparison fingerprints、query/comparison replay、source/projected bytes、observed microseconds、negative reasons、durable counts before/after及product-service Solver invocation=0。Audit read view只呈现既有event reference，不产生“读取日志”业务event或修改历史。FAIL artifact继续只暴露稳定reason/type/fixed message；没有新增metric backend、retention、alert或Production SLA。
+
+## TASK-P3-06 command evidence
+
+每条成功command audit绑定actor/policy/capability、sanitized reason、source/new Version、request/key reference、fresh validation lineage、correlation、parent event、result和code commit；content event与new DRAFT原子提交，submit event与同content READY CAS原子提交。Machine report记录5 command types（4 content + 1 submit）、5 fresh Validator passes、2 exact replay/1 conflict、historical states、无副作用拒绝、insert/CAS rollback、schedule size及observed microseconds；明确Solver调用0、SLA未定义、Production readiness未声明。
+
+失败CLI只输出stable reason/type/fixed message，既不泄露SQL/DSN/credential/stack，也不把未提交candidate写成成功audit。仍无metric backend、dashboard/alert、retention/SIEM、backup/restore或Production identity。

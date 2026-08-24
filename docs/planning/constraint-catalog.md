@@ -122,3 +122,7 @@ OBJ-001只在P2-05～07已形成的完整C-001～C-011可行域上增加目标�
 ## TASK-P2-14 Exit audit
 
 独立审计以两次七场景replay、11个positive C-ID、11个formula-free exact negative mutation和476项全仓回归确认C-001～C-011完整硬域为PASS。Rule sheet、Backend builders与formal Validator均零差异；`UNSUPPORTED_CAPABILITY`继续覆盖C-012～018。Audit READY不改变任何C-ID公式、severity、Production authority或后续能力状态。
+
+## TASK-P3-06 consumer review
+
+Move/Assign candidate在server reference/time/duration/lock guard后仍必须由新建`ProblemScheduleValidator`重算全部C-001～C-011；SET/REMOVE Lock保留assignment并同样执行fresh validation；SUBMIT_FOR_REVIEW再次重算并要求report fingerprint与DRAFT lineage一致。Mutation test在server接受的candidate上独立改变resource，要求formal report命中C-003并阻止DRAFT。C-ID公式、severity、rule sheet、Validator与Backend源码零变化；version-local lock shape/HARD tuple属于command guard，不新增C-ID或P4 freeze rule。

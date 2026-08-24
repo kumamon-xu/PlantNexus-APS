@@ -159,6 +159,12 @@ jobs:
           --root .
           --report build/validation/ci-p3-workspace-read-models.json
 
+      - name: P3 schedule edit and lock command evidence
+        run: >-
+          uv run python -m app.application.schedule_command_check
+          --root .
+          --report build/validation/ci-p3-schedule-commands.json
+
       - name: Engineering contract
         run: >-
           uv run python -m app.infrastructure.contract_check

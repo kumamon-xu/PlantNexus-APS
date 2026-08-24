@@ -10,6 +10,7 @@ from .schedule_versions import (
     ScheduleVersionLifecycleResult,
     ValidatedSolutionToScheduleVersionService,
 )
+from .schedule_commands import ScheduleCommandResult, ScheduleCommandService
 from .schedule_comparison import (
     ScheduleComparisonResult,
     ScheduleComparisonService,
@@ -25,6 +26,8 @@ __all__ = [
     "DataQualityGateRejected",
     "PlanningBuildConfiguration",
     "ScheduleVersionLifecycleResult",
+    "ScheduleCommandResult",
+    "ScheduleCommandService",
     "ScheduleComparisonResult",
     "ScheduleComparisonService",
     "ValidatedSolutionToScheduleVersionService",

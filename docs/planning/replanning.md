@@ -44,3 +44,7 @@ freeze window 的生产语义由 OPEN-005 决定；仿真值必须标记 SIM_ASS
 ## P3/P4 boundary
 
 P3 version comparison只比较两个immutable ScheduleVersion的既有assignment/KPI/lineage；Gantt edit/lock是人工新DRAFT命令，不是ExecutionEvent驱动的Replan。ExecutionEvent、ReplanRequest、freeze、OBJ-002 stability、ChangeReport和Execution Simulator全部继续属于P4，P3 Task/Schema/API/UI不得预埋可执行P4语义。
+
+## TASK-P3-06 enforced P3/P4 boundary
+
+形成的Move/Assign/Lock及manual review-submit service仅消费一个immutable Problem和source Version，不读ExecutionEvent、不构建Problem/Snapshot、不调用Solver，也不计算freeze window、OBJ-002或ChangeReport。SOFT lock仍是metadata，HARD lock只保护Version tuple；READY只表示通过fresh review gate，不是执行态或Replan结果。Machine report固定`solver_replan_obj002=NOT_IMPLEMENTED`和`p4_capabilities=NOT_IMPLEMENTED`；这些边界不得因“人工重排”名称而解释为动态Replan。

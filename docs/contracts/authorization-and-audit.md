@@ -132,3 +132,9 @@ P3-04首次把成功的DRAFT→READY_FOR_REVIEW与一条append-only `SUBMIT_FOR_
 ## TASK-P3-05 audit read boundary
 
 Audit view只通过plane-scoped append-only repository读取指定ScheduleVersion的event，按`occurred_at_utc/audit_event_id`稳定排序，并输出fingerprinted `AUDIT_REFERENCE` payload；query本身不追加、改写或重放业务event。Carrier中的`allowed_actions`来自权威Version状态集合，仅供后续authorization适配器裁剪，不能证明当前principal具有任何capability；P3-05没有identity/RBAC、approve/reject/publish/export授权行为。
+
+## TASK-P3-06 edit/lock audit slice
+
+Command context只接受server-resolved `edit`或`lock` capability、sanitized actor reference、auth-policy version、UTC、code commit及可选parent audit reference；客户端carrier中的`required_capability`必须等于command-derived值，但不获得授权权威。Production没有真实mapping时在任何source读取或idempotent replay前default-deny。
+
+成功new DRAFT与`EDIT_SCHEDULE`/`SET_LOCK`/`REMOVE_LOCK` AuditEvent在同一transaction提交。显式`SUBMIT_FOR_REVIEW`在第二次fresh PASS后把同一manual DRAFT CAS为READY，并在同一transaction追加独立event。Event记录actor/capability/reason、request fingerprint、hashed key reference、source/new Version、before/after state、fresh validation lineage、correlation、parent及成功result；raw key、credential、SQL、payload全文和stack均不进入event。Same request replay返回原event且不改写`result.replayed=false`历史事实。TASK-P3-06不持久化失败Version或拒绝audit；若后续需要attempt audit，必须单独定义失败event policy并保持成功历史不可改写。

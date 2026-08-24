@@ -132,3 +132,9 @@ P3-04创建reviewable DRAFT前、P3-06 edit/lock产生新DRAFT后以及P3-14/15 
 `create_reviewable`在任何DB调用前通过`build_kpi_v2`重新调用现有`validate_problem_schedule(problem, solution)`，要求fresh report逐字等于supplied ValidationReport，并再次冻结SolverReport/quality/KPI；随后pure builder只接受`PASS + hard_violation_count=0 + violations=[]`。失败、stale、tamper、mixed或KPI drift均不产生DRAFT/audit。
 
 本Task没有修改Validator、C-001～C-011、mutation assets、expected outcomes或Backend模型，也没有在domain/application复制约束公式。成功machine case复用P2 frozen correctness input；`lifecycle_service_solver_invocations=0`，测试fixture replay不能写成业务Solver rerun或新correctness baseline。
+
+## TASK-P3-06 fresh command consumer
+
+每个非replay content command先构造完整candidate assignments，再通过factory新建独立`ProblemScheduleValidator`执行正式Problem→candidate验证；只有精确`validation-report.v2`、matching problem hash、PASS、hard=0、violations=[]才构建/提交new DRAFT。`SUBMIT_FOR_REVIEW`对DRAFT content再次创建独立Validator，除PASS/0外还要求fresh report fingerprint逐字等于DRAFT validation lineage，才可CAS READY。Validator input不信任client status/objective，且domain command模块不导入Validator/Backend公式。Exact replay只核验已持久化fresh ValidationReport reference和immutable content，不重复制造历史event。
+
+Validation mutation suite先取得一个server-accepted Move candidate，再把resource改为非候选并要求C-003 FAIL，证明application不能以semantic precheck替代formal gate。Validator FAIL candidate直接丢弃且row count不变。C-001～C-011、rule metadata、Solver、fixtures和P2 baseline均未修改。

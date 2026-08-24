@@ -249,3 +249,9 @@ CI新增一个required machine step，不改变`validate` job名称、permission
 ## TASK-P3-05 technology review
 
 实现只使用Python 3.12标准库、既有domain contracts与read repository adapters；opaque cursor使用URL-safe base64包装canonical JSON，所有指纹仍为既有SHA-256规范。没有新增dependency、lock、Schema、migration、cache/search/OLAP组件或frontend package。CI只增加一个non-skippable离线machine command并复用临时SQLite和既有artifact上传范围；不改变required `validate` identity或provider权限。
+
+## TASK-P3-06 technology review
+
+Command pipeline只复用locked Python 3.12、既有formal Validator、SQLAlchemy/Alembic Schedule/Audit repositories、SHA-256/canonical JSON与Schema set 2.6.0；`pyproject.toml`、`uv.lock`、Schema、migration和runtime/dev dependencies零变化。CI只新增一个non-skippable offline machine step，仍属于同一required `validate` job和既有artifact glob；permissions、Secret、service、container/deployment不变。
+
+临时SQLite transaction/rollback与microsecond observation只属于development evidence，不定义Production database、capacity、SLA或retry policy。未引入Frontend/Node、HTTP identity SDK、queue/outbox、export/storage或P4技术。

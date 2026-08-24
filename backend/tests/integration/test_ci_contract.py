@@ -13,6 +13,7 @@ from app.application.p2_gate_report import main as p2_gate_main
 from app.application.schedule_version_lifecycle_check import (
     main as schedule_version_lifecycle_main,
 )
+from app.application.schedule_command_check import main as schedule_command_main
 from app.application.workspace_read_model_check import (
     main as workspace_read_model_main,
 )
@@ -155,6 +156,8 @@ def test_ci_runs_repository_gates_and_discovers_the_current_task() -> None:
         "build/validation/ci-p3-schedule-version-lifecycle.json",
         "app.application.workspace_read_model_check",
         "build/validation/ci-p3-workspace-read-models.json",
+        "app.application.schedule_command_check",
+        "build/validation/ci-p3-schedule-commands.json",
         "app.infrastructure.contract_check",
         "docker compose --env-file .env.example config --quiet",
         "PLANTNEXUS_CI_CHANGE_BASE:",
@@ -178,6 +181,7 @@ def test_ci_runs_repository_gates_and_discovers_the_current_task() -> None:
     assert "name: P3 workspace persistence evidence" in workflow
     assert "name: P3 reviewable ScheduleVersion lifecycle evidence" in workflow
     assert "name: P3 workspace read model and comparison evidence" in workflow
+    assert "name: P3 schedule edit and lock command evidence" in workflow
     assert "Benchmark hook (deferred until runner exists)" not in workflow
     assert "Benchmark runner remains deferred" not in workflow
     assert "actions/upload-artifact@v4" in workflow
@@ -314,6 +318,40 @@ def test_ci_p3_workspace_read_models_are_required_and_machine_checkable(
     assert report["counts"]["workspace_views"] == 14
     assert report["counts"]["product_service_solver_invocations"] == 0
     assert report["boundaries"]["change_report_replan"] == "NOT_IMPLEMENTED"
+
+
+def test_ci_p3_schedule_commands_are_required_and_machine_checkable(
+    tmp_path: Path,
+) -> None:
+    workflow = (ROOT / ".github" / "workflows" / "ci.yml").read_text(encoding="utf-8")
+    normalized = " ".join(workflow.split())
+    assert (
+        "name: P3 schedule edit and lock command evidence run: >- "
+        "uv run python -m app.application.schedule_command_check --root . "
+        "--report build/validation/ci-p3-schedule-commands.json"
+    ) in normalized
+    assert "continue-on-error" not in workflow
+
+    report_path = tmp_path / "p3-schedule-commands.json"
+    assert (
+        schedule_command_main(["--root", str(ROOT), "--report", str(report_path)]) == 0
+    )
+    report = json.loads(report_path.read_text(encoding="utf-8"))
+    assert report["report_version"] == "p3-schedule-command-report.v1"
+    assert report["status"] == "PASS"
+    assert report["task_id"] == "TASK-P3-06"
+    assert report["check_count"] == 8
+    assert report["counts"]["command_types"] == 5
+    assert report["counts"]["content_command_types"] == 4
+    assert report["counts"]["review_submission_command_types"] == 1
+    assert report["counts"]["fresh_validator_passes"] == 5
+    assert report["counts"]["exact_replays"] == 2
+    assert report["counts"]["product_service_solver_invocations"] == 0
+    assert report["boundaries"]["source_content_update"] == ("FORBIDDEN_AND_ABSENT")
+    assert report["boundaries"]["manual_draft_ready_transition"] == (
+        "EXPLICIT_CAS_SAME_CONTENT"
+    )
+    assert report["boundaries"]["production_readiness"] == "NOT_CLAIMED"
 
 
 def test_ci_benchmark_contract_is_xs_only_and_baseline_bound() -> None:

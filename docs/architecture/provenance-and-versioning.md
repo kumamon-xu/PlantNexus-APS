@@ -261,3 +261,9 @@ ScheduleVersion/Audit ID由lifecycle version、plane和hashed idempotency key re
 每个投影payload以canonical JSON SHA-256绑定到carrier item；source-set fingerprint按Snapshot→Problem→Solution→SolverReport→ValidationReport→QualityReport→KPI固定顺序绑定七份完整bytes。Collection fingerprint再绑定read-model version、query-scope、source与排序后的item references；cursor保存相同fingerprints及offset，source、filter、sort、page size或Version precondition任一变化都会拒绝旧cursor。
 
 Comparison query fingerprint额外绑定base/compared两个Version ID，comparison fingerprint排除派生ID/fingerprint/generated timestamp后覆盖完整语义。相同inputs与generated timestamp逐字重放；本Task不改写任一历史artifact、Schema version、code commit lineage或P2 evidence。
+
+## TASK-P3-06 command provenance
+
+Command request fingerprint覆盖冻结contract/type、source ID/state/content、plane/environment/synthetic provenance、target、reason和payload；raw key另与server-derived scope计算hashed key reference。四类content command用其reference确定new ScheduleVersion/Audit ID；`SUBMIT_FOR_REVIEW`保持source ScheduleVersion ID，只派生独立Audit ID。New DRAFT保存parent source reference、revision+1、`MANUAL_EDIT|LOCK_CHANGE`、fresh ValidationReport fingerprint和content fingerprint；显式submit要求第二次fresh report fingerprint与DRAFT lineage一致，并只把state/allowed actions推进READY。Audit另保存执行code commit、actor/policy/correlation与source/new references。
+
+Origin PlanningRun/Snapshot/Problem/PlanningSolution/KPI/SolverReport references不改写；content command的source及任何current publication均保留，submit只推进其目标manual DRAFT的既有state pair且不改content。Exact replay读取原AuditEvent的logical source/new reference并核验durable content，不生成新时间戳或改写event；different request conflict。Schema set、canonicalization和P2 provider evidence均未变。

@@ -190,3 +190,9 @@ Application新增module-local sanitized reasons：`INVALID_INPUT`、`PLANNING_RU
 ## TASK-P3-05 read rejection boundary
 
 Read domain使用module-local `INVALID_QUERY`、`SOURCE_MISSING`、`MIXED_LINEAGE`、`DATA_PLANE_MISMATCH`、`STALE_VERSION`、`STALE_CURSOR`与`KPI_MISMATCH`。不存在的schedule query返回strict `found=false`而不是异常，存在但无投影返回`found=true/items=[]`；comparison缺少任一Version则显式`SOURCE_MISSING`。所有message固定且不泄露payload、SQL、credential或stack；P3-10公开HTTP前不得把这些local reason冒充global error registry变更。
+
+## TASK-P3-06 command rejection boundary
+
+Command domain/application使用module-local sanitized reasons：`INVALID_COMMAND`、`UNAUTHORIZED`、`PRODUCTION_AUTHORITY_UNAVAILABLE`、`DATA_PLANE_MISMATCH`、`SOURCE_NOT_FOUND`、`STALE_SOURCE`、`MIXED_LINEAGE`、`INVALID_REFERENCE`、`INVALID_TIME`、`IMMUTABLE_EXECUTION_FACT`、`LOCK_CONFLICT`、`NO_OP`、`VALIDATION_FAILED`、`IDEMPOTENCY_CONFLICT`和`PERSISTENCE_FAILED`。所有失败都不写成功Version/audit；adapter错误只映射stable reason/field/message，不泄露SQL、credential或stack。
+
+这些reason不修改`error-code-registry.v2`且尚不是HTTP status合同。P3-10必须按既有command API文档映射403/409/422/500并保留correlation，不能把local exception文本直接外放；Validator FAIL仍关联正式C-ID details，绝不转换Solver UNKNOWN或INFEASIBLE。

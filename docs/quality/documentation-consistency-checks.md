@@ -385,3 +385,11 @@ Full docs、Task diff、`git diff --check`、forbidden-root、machine report与�
 Implementation/closure均须通过full docs、Task diff、`git diff --check`、forbidden path、8/8 report、定向与full repository检查；provider artifact必须精确绑定Task/SHA/Diff base、7 rows、全部checks与0 issues。Provider形成前保持`in_progress`，且TASK-P3-06不得自动启动。
 
 Implementation artifact `9512423712`中的`traceability-report.v1`精确绑定`f236fab47aa2565b87a060b2c8bde8f2e8d66229`与Diff base，复现165/30/48/15/13/13/53治理计数、50 committed/0 working paths、7 rows、19/19 checks和0 issues。因此TASK-P3-05治理Gate闭环；本evidence-only closure自身仍须push后复核，P3-06保持`planned`。
+
+## TASK-P3-06 diff governance
+
+不可变Diff base=`67d38d030f8b129de7f1b2f6e5b75bd706655396`。完整union只能命中`IMPACT-DOMAIN/APPLICATION/STATE/INFRA/TESTS/PHASE/GOVERNANCE-REGISTRY/DOCS`八行；allow-list逐字冻结pure command domain、application service/machine CLI、五类tests、既有CI contract、单一workflow step及所有required docs。Schema/sample/rules、migration/dependency/lock、PlanningProblem/Snapshot/Validator/Backend/Strategy/Reporting、API/Frontend、publication/export和P4路径必须零差异。
+
+Implementation/closure均须通过full docs、Task diff、`git diff --check`、forbidden path、8/8 report、focused/full repository、Ruff/Pyright/locked sync、Compose/build及全部历史machine checks；provider artifact必须精确绑定Task/SHA/Diff base、8 rows、全部checks与0 issues。Provider形成前Task保持`in_progress`，TASK-P3-07不得自动启动。
+
+当前本地full docs计数为165/30 roots/30 trace rows/48 tests/15 OPEN/13 SIM/13 risks/53 tasks；Task diff为57 working paths、8 rows、19 checks、0 issues。该记录只证明pre-provider治理PASS，implementation/closure artifact仍须分别核验exact SHA。

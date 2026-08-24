@@ -151,3 +151,9 @@ ScheduleVersion现在首次成为可评审aggregate：identity由plane+idempoten
 `WorkspaceSourceDocuments`表示七份不可变上游事实；`BoundWorkspaceSources`只在Version reference、artifact fingerprint、assignment/operation/resource、lock与KPI resource统计全部一致时形成。`WorkspaceProjection`保存stable identity/type、完整payload及其SHA-256，`WorkspaceProjectionPage`保存cursor/observed collection fingerprint；这些是pure read-side value，不是新aggregate或持久化实体。
 
 `schedule-version-comparison.v1`是两个immutable Version的deterministic read DTO。它没有state machine、repository ownership、parent关系或command语义；ChangeReport/Replan仍只属于P4。
+
+## TASK-P3-06 command values
+
+`ScheduleCommandIdentity`由server-verified scope与raw key的SHA-256 reference确定result Version/Audit identity；content command生成new Version ID，submit固定为source ID。`ScheduleCommandContext`保存server-resolved actor/capability/policy/time/code facts；`PreparedScheduleCommand`/`ScheduleCommandDocuments`保存copy-on-write candidate及fresh PASS后的DRAFT+AuditEvent；`PreparedReviewSubmission`/`ScheduleReviewSubmissionDocuments`保存同content DRAFT→READY candidate及submit audit。它们都是pure value，不持有repository、Solver或HTTP依赖。
+
+`ScheduleCommandService`是application use case：source/new/audit repository和transaction由ports注入，每次非replay执行实例化独立`ProblemScheduleValidator`，content command随后atomic insert+append，submit随后atomic CAS+append。Version content/parent/state/audit是durable facts；failed candidate不是aggregate，直接丢弃。没有新增Schema、state或领域entity，P4 Replan/ChangeReport仍不属于本模型。

@@ -132,3 +132,7 @@ Unit边界同时固定五种primary/resource tie-break、calendar/transport/RUNN
 ## TASK-P3-05 pagination/filter properties
 
 [`test_workspace_read_model_properties.py`](../../backend/tests/property/test_workspace_read_model_properties.py)在冻结P2→ScheduleVersion input上生成page size 1～4与ASC/DESC组合，逐页重建strict request并要求collection fingerprint稳定、same-page exact replay、item不重不漏且最终observed count一致；另生成resource选择，要求Operations filter绝不泄露其他resource。失败保留Hypothesis反例、Version/source/query/collection fingerprint与cursor，不修改fixture或设置Production分布/阈值。
+
+## TASK-P3-06 command properties
+
+[`test_schedule_command_properties.py`](../../backend/tests/property/test_schedule_command_properties.py)以24个可收缩safe key/lock suffix生成SOFT-lock commands，要求同source/command/context两次得到逐值相同Prepared candidate、fresh ValidationReport、DRAFT/Audit documents和identity，同时source canonical bytes不变、新ID/content fingerprint不同。Generated key只用于test-local Simulation，不建立Production idempotency分布、capacity或SLA。

@@ -157,3 +157,9 @@ REQ-004/005获得validated P2 output消费与fresh formal Validator/KPI gate；R
 REQ-002/003获得Snapshot/Problem/Version facts的stable filter/sort/cursor只读投影；REQ-004获得Gantt、Resource Load及两个Version comparison；REQ-005获得KPI/diagnostic/validation lineage而不复制Validator；REQ-007获得ScheduleVersion/Audit只读workspace；REQ-009获得source-set、payload、collection、query及comparison fingerprint链。形成路径为`app.domain.workspace`、`app.application.workspace_queries/schedule_comparison`、四类tests和8-check machine report。
 
 Implementation `f236fab47aa2565b87a060b2c8bde8f2e8d66229` / artifact `9512423712`已精确复验8/8 read-model及50-path治理链，故只闭环TASK-P3-05 bounded read slice；没有edit/approval/publish/export/API/UI/P4或Production authority。全部15个root Requirement继续`ALLOCATED`，OPEN/SIM/risk状态及`registry_version=1.0.0`不变。
+
+## TASK-P3-06 requirement review
+
+REQ-005获得Move/Assign candidate与Set/Remove Lock后的fresh independent Validator gate，以及manual DRAFT显式submit的第二次fresh gate；REQ-007获得command-only copy-on-write new DRAFT、source/current publication不变，并只复用既有DRAFT→READY pair；REQ-009获得server precondition、deterministic idempotency identity、source/new lineage与atomic insert/CAS + append-only audit。形成路径为`app.domain.schedule_commands`、`app.application.schedule_commands/schedule_command_check`、unit/property/contract/validation/integration tests和8-check machine report。
+
+该slice不形成Solver/Replan、approval/rejection/publication/export、HTTP/UI、Production identity/authority或P4。全部15个root Requirement继续`ALLOCATED`，OPEN/SIM/risk状态与`registry_version=1.0.0`不变；exact provider成功前TASK-P3-06保持`in_progress`。

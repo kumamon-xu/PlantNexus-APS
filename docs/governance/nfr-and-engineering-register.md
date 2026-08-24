@@ -159,3 +159,9 @@ NFR-ISO的synthetic→Production拒绝获得application slice，但独立Product
 NFR-COR通过source/assignment/KPI一致性与fail-closed negative；NFR-DET通过canonical payload/query/collection/comparison与exact replay；NFR-TRC通过Version lineage/source-set fingerprint；NFR-OBS/PER只记录XS synthetic count/bytes/time且不设阈值。ENG-ARCH形成pure domain→read ports application→composition-root方向，ENG-ERR形成sanitized local reason，ENG-VER严格消费2.6.0且Schema/migration/dependency零漂移。
 
 Plane mismatch与read前后row count为NFR-ISO提供局部回归，但独立Production DB/API/auth仍未形成。Implementation `f236fab47aa2565b87a060b2c8bde8f2e8d66229` / artifact `9512423712`已精确复验该有界NFR/ENG slice并支持TASK-P3-05闭环；全部NFR/ENG root继续`ALLOCATED`，不建立SLA、capacity、retention或Production policy，`registry_version=1.0.0`不变。
+
+## TASK-P3-06 NFR / engineering review
+
+NFR-COR通过server semantic guard+每次非replay fresh Validator+failed candidate discard；NFR-DET通过canonical command/request/content与same-key exact replay；NFR-TRC通过parent/source/new/validation/audit/code lineage；NFR-HUM通过command result显式new DRAFT，且READY只能由独立submit第二次fresh PASS形成并明确不等于approval。NFR-ISO/SEC/REL/OBS获得plane-bound repository、Production pre-replay deny、hashed raw key、sanitized error、atomic insert/CAS rollback与development timing局部证据。ENG-ARCH形成pure domain→Validator/repository ports application→composition-root方向，ENG-VAL只调用独立Validator public API，ENG-ERR使用module-local稳定reason，ENG-VER保持2.6.0/Schema/migration/dependency零漂移。
+
+SQLite/machine timing不建立PostgreSQL capacity/SLA/backup，test capability不建立Production RBAC。全部NFR/ENG root继续`ALLOCATED`，OPEN-005/010、RISK-007/008/011～013及`registry_version=1.0.0`不变；provider前Task保持`in_progress`。

@@ -92,3 +92,9 @@ Formal 13类mutation corpus、Validator公式、rule sheet和P0 fixture bytes均
 新suite先从七个正式replay取得Validator PASS的Solver candidate，再以不调用Solver/Backend约束公式的字段级变异分别命中C-001～C-011。每例执行两次formal Validator，必须稳定得到`FAIL`、`hard_violation_count=1`和唯一相同C-ID，并通过`validation-report.v2` Schema；任一额外/缺失C-ID均hard fail。
 
 P0 13-case与P2-04 formal corpus、rule sheet、Validator实现及历史fixture均未修改。该证据属于correctness，不是Benchmark、Production authority或新的constraint semantics。
+
+## TASK-P3-06 command mutation gate
+
+[`test_schedule_command_validator_mutation.py`](../../backend/tests/validation/test_schedule_command_validator_mutation.py)先构造server-accepted Move candidate并得到fresh PASS，再在不调用command semantic helper的情况下把resource改成非候选，要求formal Validator返回FAIL、hard≥1且含C-003；应用document builder必须以`VALIDATION_FAILED`拒绝。另以flexible FJSP source证明ASSIGN_RESOURCE保持start、重算duration/end并fresh PASS。
+
+该suite不修改Validator源码、rule sheet、P0/P2 mutation assets或expected baseline，不从Backend复用公式。它是TEST-VALIDATOR-MUTATION的P3 consumer slice，不形成Production validator approval。

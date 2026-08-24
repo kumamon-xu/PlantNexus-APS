@@ -69,7 +69,7 @@ registry_version: 1.0.0
 | TEST-SCHEDULE-VERSION-REPOSITORY-001 | ScheduleVersion/Audit/ExportJob migration、immutability、transaction与replay | P3 | FORMED / TASK-P3-03 provider-verified storage slice |
 | TEST-SCHEDULE-VERSION-LIFECYCLE-001 | Validated Solution→DRAFT→READY_FOR_REVIEW与非法状态拒绝 | P3 | TASK-P3-04 fresh lineage/DRAFT→READY/atomic audit/replay/conflict/concurrency slice provider-verified；approval/publish slice PLANNED / TASK-P3-07～08 |
 | TEST-WORKSPACE-READ-MODEL-001 | Gantt、Resource Load、Order View与Version Comparison lineage/KPI一致性 | P3 | TASK-P3-05 provider-verified；HTTP/UI consumer PLANNED / P3-10～12 |
-| TEST-GANTT-COMMAND-001 | Edit/Lock command→server validation→new DRAFT→formal Validator | P3 | PLANNED / TASK-P3-06 |
+| TEST-GANTT-COMMAND-001 | Edit/Lock command→server validation→new DRAFT→formal Validator | P3 | TASK-P3-06 unit/property/contract/validation/integration + `p3-schedule-command-report.v1` formed；HTTP/UI E2E PLANNED |
 | TEST-APPROVAL-AUTHORIZATION-001 | authority-neutral capability、default-deny、approve/reject guards | P3 | PLANNED / TASK-P3-07、10、13 |
 | TEST-PUBLISH-IDEMPOTENCY-001 | APPROVED-only publish、same-key replay、conflict与supersession | P3 | PLANNED / TASK-P3-08 |
 | TEST-EXPORT-JOB-001 | ExportJob transition、package integrity、atomic/idempotent export与失败恢复 | P3 | persistence state/lease/attempt slice FORMED / TASK-P3-03 provider-verified；package/export behavior PLANNED / TASK-P3-09 |
@@ -315,3 +315,11 @@ TASK-P3-01本地治理/规则回归为`27 passed`，implementation required run 
 `TEST-WORKSPACE-READ-MODEL-001`现由unit/contract/integration覆盖14 views、strict carrier/full payload fingerprint、Version/source lineage、Resource Load/KPI、comparison replay及P4 absence；`TEST-PROPERTY`覆盖不同page size/direction的完整唯一跨页重放和resource filter；`TEST-OBS-001`记录versioned synthetic bytes/count/time而不设阈值；`TEST-SIM-ISOLATION`覆盖plane mismatch与read前后row count。
 
 定向Task组合为33 PASS、全仓为527 PASS，locked sync、Ruff/Pyright、Compose、build与8/8 machine均通过。Implementation run `32706258281` / artifact `9512423712`精确复现24/24 JSON、read-model 8/8及50 committed/0 working paths、7 rows、19 checks、0 issues，因此TEST-WORKSPACE-READ-MODEL-001本Task slice与TEST-PROPERTY/OBS/SIM-ISOLATION consumer回归为provider-verified。Test ID总数仍48，Schema/migration/dependency/API/UI/P4与Production测试状态不提升。
+
+## TASK-P3-06 command test slice
+
+`TEST-GANTT-COMMAND-001`现覆盖Move/Assign/Set/Remove Lock、SUBMIT_FOR_REVIEW、strict Schema carrier、semantic guard、copy-on-write DRAFT、second-fresh READY和atomic audit；`TEST-VALIDATOR-MUTATION`覆盖server accepted后C-003 mutation；`TEST-STATE-TRANSITION-001`证明content command只insert DRAFT、submit只复用既有DRAFT→READY pair且content不变；`TEST-IDEMPOTENCY`覆盖exact replay/conflict与insert/CAS audit rollback。Unit/property/contract/validation/integration及CI machine共同覆盖stale/missing/auth/plane/time/resource/lock/Validator/transaction负例、REJECTED/PUBLISHED immutable source及Production default-deny。
+
+Task仍为`in_progress`直至exact implementation provider与evidence-only closure完成。Test ID总数保持48、registry version保持`1.0.0`；HTTP/UI E2E、approval/publish/export、P4与Production测试继续PLANNED。
+
+本地定向组合为41 PASS、全仓为546 PASS，machine为8/8且`issues=[]`；locked sync、Ruff/Pyright、全部历史machine、P2 Gate/XS、Compose/build与治理均PASS。Provider成功前`TEST-GANTT-COMMAND-001`只标记本地formed slice，不写provider-verified。

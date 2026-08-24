@@ -287,3 +287,11 @@ Task从provider-verified closure `fc5011f78a242160097521259a1914d864d9ad17`激�
 追踪链固定为`REQ-002/003/004/005/007/009 + NFR-COR/DET/TRC/OBS/PER + ENG-ARCH/ERR/VER → TASK-P3-05 → domain workspace + application query/comparison + tests → TEST-WORKSPACE-READ-MODEL-001/TEST-PROPERTY/TEST-OBS-001/TEST-SIM-ISOLATION → p3-workspace-read-model-report.v1 + Task report → exact implementation/closure provider artifacts`。Provider成功前保持`in_progress`；closure只写事实且不得启动P3-06。
 
 该规则已由implementation `f236fab47aa2565b87a060b2c8bde8f2e8d66229`的required run/job/artifact=`32706258281`/`97367902547`/`9512423712`满足：下载的24/24 JSON顶层PASS，read-model与Task报告精确为8/8及50 committed/0 working paths、7 rows、19 checks、0 issues。因此本closure只写回TASK-P3-05=`done`和provider事实，P3-06仍为`planned`且未授权。
+
+## TASK-P3-06 command evidence rule
+
+Task从provider-verified closure `67d38d030f8b129de7f1b2f6e5b75bd706655396`激活。Evidence必须同时证明Move/Assign/Set/Remove Lock strict carrier与server guard、source immutable/new DRAFT parent identity、显式SUBMIT的second fresh PASS/同ID同content READY、fresh Validator PASS/FAIL、version-local/authoritative HARD lock边界、same-key replay/conflict、insert与CAS两类atomic audit rollback、REJECTED/PUBLISHED历史参考、stale/auth/plane/Production default-deny、failed candidate discard、Solver/Problem/Snapshot/P4零mutation，并记录development size/latency但不设SLA。
+
+追踪链固定为`REQ-005/007/009 + NFR-COR/DET/TRC/HUM + ENG-ARCH/VAL/ERR/VER → TASK-P3-06 → domain command + application transaction/Validator service + five test classes → TEST-GANTT-COMMAND-001/TEST-VALIDATOR-MUTATION/TEST-STATE-TRANSITION-001/TEST-IDEMPOTENCY → p3-schedule-command-report.v1 + Task report → exact implementation/closure provider artifacts`。Provider成功前保持`in_progress`；closure只写事实且不得启动P3-07。
+
+Implementation artifact必须绑定exact SHA/Task，command report为8/8、5 command types（4 content + 1 submit）、5 fresh Validator passes、2 exact replay/1 conflict、issues=[]、product service Solver=0，Task report为八Impact rows/full checks/0 issues。任何provider、artifact SHA、Task/base、checks或issues不一致都阻断closure。

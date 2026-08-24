@@ -94,3 +94,7 @@ P3-05/11/12只记录versioned synthetic数据下的orders、operations、resourc
 ## TASK-P3-05 read-model handoff
 
 Backend现提供页面矩阵所需的14种只读投影，且每页完整payload均由carrier fingerprint引用。Frontend后续必须保留server排序与cursor、显示`found=false`和`found=true/items=[]`的不同状态、在Version precondition过期时重新获取权威Version；不得在浏览器重算Resource Load/KPI、推断UNKNOWN为INFEASIBLE或将comparison渲染成P4 ChangeReport。当前尚无组件、API call或用户可见页面。
+
+## TASK-P3-06 command handoff
+
+Backend application现可把Move/Assign/Set/Remove Lock intent转换为fresh-validated、audited新DRAFT，并以独立`SUBMIT_FOR_REVIEW`在第二次fresh PASS后把该DRAFT的同一identity/content推进READY。未来UI必须把content command响应中的new Version identity作为下一次读取/命令基准，并把submit与approve/reject明确分离；不能继续把optimistic preview、source Version或READY状态当作已批准结果。Stale、authorization、Validator与idempotency失败均不得显示成功。当前仍没有Frontend组件、drag interaction或browser evidence，P3-13才可接入human-control UI。

@@ -71,3 +71,9 @@ HARD lock精确固定resource/start/end。若HARD interval不在tick grid、与�
 P3-06只允许针对既有计划内容提交human edit/lock command，经server validation与formal Validator后产生新DRAFT；它不能消费新的ExecutionEvent、移动RUNNING/HARD事实、应用freeze window、计算OBJ-002或生成ChangeReport。上述动态事实保护继续属于P4，OPEN-005/007不因P3锁UI关闭。
 
 TASK-P3-01已把`SET_LOCK/RELEASE_LOCK`固定为versioned、copy-on-write command：必须引用同一ScheduleVersion/Problem lineage，保留COMPLETED/RUNNING事实与HARD tuple，fresh Validator PASS后才可形成成功新DRAFT。该lock是P3 plan-version control，不是P4 freeze/stability/replan；不存在ExecutionEvent ingest、SOFT stability cost、OBJ-002或ChangeReport实现。
+
+## TASK-P3-06 formed lock behavior
+
+机器合同与实现统一使用`SET_LOCK/REMOVE_LOCK`。SET HARD只接受与当前assignment完全相同的resource/start/end；MOVE/ASSIGN若破坏任一Version HARD lock即拒绝；Problem中原有`HARD_LOCK`不能被REMOVE。SOFT lock只作为version-local metadata，可带null resource/time且不进入formal hard constraint。SET/REMOVE都更新assignment的stable lock IDs并创建`LOCK_CHANGE` DRAFT，不改Problem、Snapshot、RUNNING/COMPLETED事实或source Version。
+
+Fresh Validator仍只按immutable Problem重算C-001～C-011，version-local lock的引用/shape/HARD tuple由server semantic guard补充；二者均通过才可提交DRAFT，显式review submit还必须再次fresh PASS且lineage fingerprint一致。该行为没有freeze window、ExecutionEvent ingest、stability objective、ReplanRequest或ChangeReport，OPEN-005/007保持OPEN。

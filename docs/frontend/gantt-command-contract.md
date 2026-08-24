@@ -112,3 +112,11 @@ Validator FAIL时返回`VALIDATION_FAILED/SCHEDULE_VALIDATION_FAILED`及sanitize
 ## P4 与Production边界
 
 本合同不定义ExecutionEvent、ReplanRequest、freeze window、OBJ-002、ChangeReport、Execution Simulator或真实调度员角色。Simulation test actor只验证contract；Production authority未知时所有command default-deny，OPEN-005/010继续开放。
+
+## TASK-P3-06 executable command boundary
+
+`ScheduleCommandService`现严格消费`MOVE_OPERATION`、`ASSIGN_RESOURCE`、`SET_LOCK`、Schema中的实际名称`REMOVE_LOCK`及`SUBMIT_FOR_REVIEW`；此前表格中的`RELEASE_LOCK`仅为早期人类措辞，机器与应用权威名称统一为`REMOVE_LOCK`。服务先校验server-resolved capability、plane/environment、source state/content precondition、scope/key/request fingerprint及operation/resource/time/lock引用，再构造copy-on-write candidate；`MOVE_OPERATION`要求tick-aligned interval与candidate resource duration一致，`ASSIGN_RESOURCE`保持start并按候选duration重算end，HARD lock必须与assignment精确一致。
+
+每次成功都创建不同ID、parent reference、`MANUAL_EDIT`或`LOCK_CHANGE`、fresh `validation-report.v2`引用和append-only AuditEvent的新DRAFT；source在DRAFT、READY_FOR_REVIEW、REJECTED或PUBLISHED等状态下均逐字不变。Same scope/key+same fingerprint重放原logical result，同key+不同fingerprint冲突。Validator FAIL、stale、unauthorized、mixed plane、invalid reference/time/lock及transaction failure都不保留失败ScheduleVersion；本slice选择“discard candidate、无成功audit”，未来若记录拒绝attempt必须独立版本化且不得伪装成功。
+
+该application boundary没有HTTP/UI或真实principal→capability解析。Simulation carrier只证明test policy；Production command始终`DEFAULT_DENY_OPEN_010`。新DRAFT不会隐式进入READY；当前已形成独立空payload `SUBMIT_FOR_REVIEW`，仅接受`MANUAL_EDIT|LOCK_CHANGE` DRAFT，第二次fresh PASS后以同ID/content CAS到READY并原子audit。它不等于approve/reject；approval/publish/export和P4均未形成。

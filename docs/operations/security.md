@@ -67,3 +67,9 @@ Audit/log/error/artifact不得包含token、cookie、authorization header、Secr
 Write前的carrier precheck拒绝unknown/missing top-level field、plane/environment/provenance drift和已登记secret-bearing key；repository错误只公开module-local reason/field/sanitized message，SQL/DSN/credential/stack不会向外透传。Plane进入全部identity/query/CAS；Publication/Export的Production constructor/DB约束双重default-deny。Append-only与immutable trigger提供绕过repository时的第二层保护。
 
 这些不是authentication/RBAC、encryption、retention、SCA、SIEM或Production threat-model证据；test actor和`SIMULATION_INTERNAL`仍无Production binding，OPEN-002/010/015与RISK-011～013保持开放/监控。
+
+## TASK-P3-06 command security review
+
+Authorization在source lookup和exact replay前执行；只有server-resolved `edit`/`lock` capability可继续，`SUBMIT_FOR_REVIEW`由server固定要求`edit`，client `required_capability`仅作一致性校验。Raw idempotency key不进入AuditEvent/machine report，event仅保存hashed key reference；reason/actor/correlation受bounded/control-character guard，adapter异常统一清洗。Production即使携带`edit` capability也固定`PRODUCTION_AUTHORITY_UNAVAILABLE`，OPEN-010未关闭。
+
+该slice没有authentication provider、RBAC/SSO、rate limit、CSRF/CSP、external publish target或Production threat model。Failed command不保存成功audit，未来拒绝attempt审计必须避免not-found/authorization侧信道。

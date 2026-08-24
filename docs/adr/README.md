@@ -79,3 +79,9 @@ TASK-P3-01以当时下一个未使用编号接受ADR-0012，决定command-only/c
 本Task直接落实ADR-0005的independent Validator、ADR-0007的immutable version/provenance与ADR-0012的command-only/application transaction/append-only audit：validated output复制成DRAFT，既有pair推进READY，content/lineage不变，same-key replay/conflict稳定。没有新state/pair、mutable Version、outbox、external target、authorization provider或topology，因此不需新ADR。
 
 若后续需要跳过DRAFT、允许READY覆盖Validator FAIL、把COMPLETED视为approval、修改audit历史、跨plane identity、outbox/exactly-once或外部side effect，必须停止并新建/supersede ADR；不得改写现有accepted历史。
+
+## TASK-P3-06 ADR conformance
+
+本Task直接落实ADR-0005的independent Validator、ADR-0007的immutable version/provenance与ADR-0012的server command/copy-on-write new DRAFT/idempotency/atomic audit：四类content command只insert派生DRAFT，显式`SUBMIT_FOR_REVIEW`在第二次fresh PASS后以既有pair把同一manual DRAFT推进`READY_FOR_REVIEW`，content/identity不变；PUBLISHED/current不变，failed candidate丢弃。没有新state/pair、Schema、mutable content、Solver/Replan、outbox、external target、authorization provider或topology，因此不需新ADR。
+
+若未来允许原地edit/PUBLISHED update、command触发Solver/P4、failed Version持久化、跨事务attempt/outbox或Production identity/target，必须停止并新建/supersede ADR；不得改写上述accepted历史。

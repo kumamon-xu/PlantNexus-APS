@@ -279,3 +279,11 @@ Required `validate`增加唯一step：`uv run python -m app.application.workspac
 本地implementation Gate已通过：33 focused、527 full、locked sync、Ruff、Pyright、Compose、build、8/8 read-model machine、full/diff docs、`git diff --check`和禁止路径均PASS；提交前Task report为50 working paths、7 rows、19 checks、0 issues。
 
 Implementation provider Gate已通过：SHA `f236fab47aa2565b87a060b2c8bde8f2e8d66229`、run `32706258281`、required `validate` job/check `97367902547`（app `15368`）均success；artifact `9512423712`未过期，digest=`sha256:46f783ea4871d845aab57cf84bc3952b4686d52e4fb8a327087e6d75e77b4219`。24/24 JSON顶层PASS，read-model 8/8与Task 50 committed/0 working paths、7 rows、19 checks、0 issues均绑定同一SHA；TASK-P3-05 DoD完成，不自动授权P3-06。
+
+## TASK-P3-06 required command evidence
+
+Required `validate`新增唯一step：`uv run python -m app.application.schedule_command_check --root . --report build/validation/ci-p3-schedule-commands.json`。报告必须为`p3-schedule-command-report.v1`、Task=`TASK-P3-06`、schema set=`2.6.0`、pipeline=`schedule-command-pipeline.v1`、8/8 checks、5 command types（4 content + 1 submit）、5 fresh Validator passes、2 exact replay/1 conflict、2 historical source states、Solver调用0、`issues=[]`，并明确failed candidate discarded、source content update absent、manual DRAFT READY=`EXPLICIT_CAS_SAME_CONTENT`以及P4/Production readiness absent。
+
+本地PASS只允许Task保持`in_progress`。Implementation push后必须核验exact SHA required run/job/app、下载artifact并核对command/Task report的Task/SHA、8 Impact rows、all checks/issues；成功后才可evidence-only closure，closure自身也须exact provider。该Gate不形成HTTP/UI、approval/publish/export、P4或Production readiness，也不自动启动TASK-P3-07。
+
+当前本地结果为41 focused、546 full、8/8 command machine、全部历史machine、P2 Gate 11/11、XS benchmark、Compose、build与57 paths/8 rows/19 checks/0 issues治理PASS；provider前不得把这些本地结果写成GitHub required成功。

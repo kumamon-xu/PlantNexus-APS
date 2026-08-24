@@ -207,3 +207,7 @@ Workflow只新增离线/临时SQLite lifecycle machine命令并复用既有`PLAN
 ## TASK-P3-05 query isolation
 
 每个query/comparison service实例固定单一data plane；request、base/compared Version及environment必须一致，repository本身仍plane-scoped。Machine负例验证Production carrier不能读取Simulation repository、mixed source fingerprint和stale cursor均拒绝；read前后两个Version/两个AuditEvent保持原row count。没有新configuration key、network、cache、database、credential或Production route。
+
+## TASK-P3-06 command isolation
+
+Command service实例固定`SIMULATION`或`PRODUCTION` repository plane；command/source/problem provenance、environment与synthetic标记必须一致。当前仅Simulation test policy可执行，Production在source lookup和idempotent replay前固定拒绝。Machine/tests只用临时SQLite验证transaction、replay/rollback与plane guard，不新增env key、Secret、port、service、database、network或deployment，也不能外推PostgreSQL concurrency/Production isolation。

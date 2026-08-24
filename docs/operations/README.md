@@ -158,3 +158,9 @@ P3-01先定义security/audit/idempotency责任，P3-03/07～10再形成repositor
 `uv run python -m app.application.workspace_read_model_check --root . --report <ignored-json>`在临时SQLite创建两个versioned synthetic READY_FOR_REVIEW输入，读取13个普通view与1个comparison view，验证23个payload reference、load/KPI、lineage、stable page replay、empty/missing/stale/plane/tamper/cursor负例、exact comparison及read-only row count，输出8/8 `p3-workspace-read-model-report.v1`。CI固定写`build/validation/ci-p3-workspace-read-models.json`且不可continue-on-error。
 
 报告中的elapsed/source/projected bytes仅为XS synthetic observation，没有alert/SLO/Production threshold；代码回滚不删除或改变任何ScheduleVersion/Audit历史。
+
+## TASK-P3-06 command evidence command
+
+`uv run python -m app.application.schedule_command_check --root . --report <ignored-json>`在三个临时SQLite数据库重放versioned P2 JSSP/FJSP inputs，验证Move、Assign、Set/Remove Lock、显式SUBMIT_FOR_REVIEW、每次非replay fresh Validator、新DRAFT/audit、同ID/content READY、exact replay/conflict、REJECTED/PUBLISHED source immutability、stale/auth/validation负例、insert/CAS transaction rollback及Solver/P4边界，输出8/8 `p3-schedule-command-report.v1`。CI固定写`build/validation/ci-p3-schedule-commands.json`且不可continue-on-error。
+
+报告中的command microseconds/schedule size只为development observation，`SLA=NOT_DEFINED`。没有常驻endpoint、queue、credential、external target或Production Runbook。代码回退不得删除已提交Version/audit；错误计划只能通过新command修订，不能UPDATE历史。

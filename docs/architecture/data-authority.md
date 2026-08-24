@@ -148,3 +148,9 @@ Audit中的actor、auth-policy version与resolved `edit` capability是caller-sup
 Snapshot仍拥有orders/calendars/source，Problem拥有operations/resources/horizon/locks，PlanningSolution拥有assignments，KPI拥有delivery/planning/resource指标，Solver/Validation/Quality report拥有各自diagnostic/status，ScheduleVersion拥有immutable content/state/lineage，Audit repository拥有event历史。Read layer只关联并投影这些事实；Resource Load从assignment求和后必须与KPI resource事实一致，任何冲突均停止而不是选择或修补一方。
 
 Query carrier、cursor、collection fingerprint和comparison都只是derived read evidence，不获得write、state、authorization、Solver、Validator或P4 authority。
+
+## TASK-P3-06 command authority
+
+Human content command intent经server接受后成为新ScheduleVersion content的派生权威；source Version、immutable Problem和execution facts仍拥有其历史/约束事实。Server semantic guard拥有command shape/reference/time/lock authority，fresh formal Validator拥有C-001～C-011 correctness authority，repository只拥有durability/CAS/idempotent replay authority。显式review submission在第二次fresh PASS后只授予manual DRAFT既有`READY_FOR_REVIEW`状态事实，不授予approval。Origin PlanningSolution/KPI/SolverReport保留为provenance，不得被宣称为人工content的逐字等同或重算KPI。
+
+客户端`required_capability`、UI按钮和Simulation actor都不是authorization authority；应用只接受server-resolved capability context，Production在OPEN-010关闭前default-deny。PUBLISHED/current publication不因command改变，P4 fact/freeze/replan authority也未形成。

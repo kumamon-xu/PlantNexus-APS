@@ -99,3 +99,7 @@ Workspace合同确认PlanningRun只承担计算生命周期：`COMPLETED`不能�
 Lifecycle context现在必须逐次显式提供`planning_run_state=COMPLETED`；`VERIFYING`及其他值在任何持久化前以`PLANNING_RUN_NOT_COMPLETED`拒绝。P2 PlanningSolution/SolverReport中的`planning_run_outcome.state=SOLVED`继续是求解输出语义，不能被服务改写或冒充持久化PlanningRun COMPLETED事实。
 
 服务没有PlanningRun repository/import/write，也不调用Solver或重试计算；machine evidence记录`planning_run_mutations=0`与`lifecycle_service_solver_invocations=0`。COMPLETED只开放validated output消费门，不授予approve/reject/publish/export，PlanningRun state/pair/terminal bytes保持不变。
+
+## TASK-P3-06 zero-transition review
+
+Command service只读取ScheduleVersion中已绑定的PlanningRun/Problem lineage并对content或review-submit candidate执行Validator；它没有PlanningRun repository或transition port，product-service Solver调用为0。Move/Assign/Lock/SUBMIT不会重开、重试或推进PlanningRun，既有16 states、31 pairs和terminal bytes均无变化。

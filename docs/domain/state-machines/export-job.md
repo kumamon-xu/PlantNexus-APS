@@ -104,3 +104,7 @@ DB中的`lease_expires_at_utc`是调用者显式提供、不可由默认值补�
 ## TASK-P3-04 zero-impact review
 
 Validated output lifecycle在READY_FOR_REVIEW停止，`decision/publication`保持null，AuditEvent的`export_job_id`保持null；代码不导入ExportJob repository、exporter或worker，也不创建package/target/lease/attempt。ExportJob state、pair、carrier、table和P3-03持久化语义均无变化，P3-09仍是唯一business export owner。
+
+## TASK-P3-06 zero-impact review
+
+Edit/lock content command只创建DRAFT与command AuditEvent；review submit只执行ScheduleVersion既有DRAFT→READY pair。两者`export_job_id=null`且不导入ExportJob repository、worker或exporter。ExportJob state/pair/lease/attempt、PUBLISHED-only source gate和package contract均无变化；P3-09仍是唯一export behavior owner。

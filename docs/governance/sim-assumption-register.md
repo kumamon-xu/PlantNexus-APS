@@ -153,3 +153,7 @@ SIM-ASSUMPTION-001～013继续`ACTIVE`，没有新增/修改/retire；implementa
 Machine/property/contract/integration复用既有`P2-GOLDEN-JSSP`与`P2-GOLDEN-FJSP`的原Scenario/Profile/assembler/version/seed，不改fixture或建立新分布。两个Version、23个普通view payload、source/projected bytes及elapsed microseconds只作synthetic XS observation；不新增threshold、baseline或Production容量假设。SIM-ASSUMPTION-001～013继续`ACTIVE`，`registry_version=1.0.0`不变。
 
 Implementation artifact `9512423712`精确复验相同两个versioned synthetic inputs及边界；没有新增、修改或retire任何SIM assumption。
+
+## TASK-P3-06 review
+
+Machine/property/contract/validation/integration只复用既有`P2-GOLDEN-JSSP`与`P2-GOLDEN-FJSP`版本、Profile/Scenario/assembler/seed，不修改fixture bytes或增加新定量policy。Generated idempotency key/lock suffix与command microseconds只属test-local evidence，不登记分布、threshold、baseline或Production容量。SIM-ASSUMPTION-001～013继续`ACTIVE`，无新增/修改/retire且`registry_version=1.0.0`不变。

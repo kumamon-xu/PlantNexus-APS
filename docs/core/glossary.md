@@ -87,3 +87,7 @@ last_reviewed: 2026-08-19
 - **Workspace projection**：从一个exact immutable source set确定生成的只读payload；strict carrier只保存stable item identity/type与payload fingerprint，不能成为第二事实源。
 - **Query-scope cursor**：绑定view、filter、sort、page size、Version precondition、source与collection fingerprint的opaque游标；不保存业务权威且source变化时必须拒绝。
 - **P3 Version Comparison**：两个immutable ScheduleVersion的operation/KPI delta只读DTO；不是P4 ChangeReport、ReplanRequest或新Version。
+- **Schedule command identity**：由plane、command type、source、target组成的server scope与raw idempotency key的SHA-256 reference；决定new Version/Audit ID，raw key不进入durable audit。
+- **Copy-on-write command DRAFT**：Move/Assign/Set/Remove Lock经server semantic guard和fresh formal Validator后创建的独立DRAFT；parent/source state/content保持不变。
+- **Manual review submission**：对`MANUAL_EDIT|LOCK_CHANGE` DRAFT执行的独立`SUBMIT_FOR_REVIEW`命令；第二次fresh Validator PASS且lineage fingerprint一致后，只以既有pair把同一ID/content推进`READY_FOR_REVIEW`并原子追加audit，不等于approve/reject。
+- **Failed command candidate**：尚未成为ScheduleVersion的内存candidate；TASK-P3-06在任何Validator/identity/persistence失败时丢弃，不得称为“已保存但不可评审”版本。

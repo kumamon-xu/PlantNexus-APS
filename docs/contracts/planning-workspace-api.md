@@ -150,3 +150,9 @@ TASK-P3-01只形成文档合同；TASK-P3-02现以`test_p3_workspace_contracts.p
 P3-05已在HTTP边界之前形成solver-neutral read application：Data Health、Import/Planning Runs、Orders、Operations、Resources、Calendars、Gantt、Resource Load、KPI、Diagnostics、Locks、Audit与Version Comparison。Schedule-scoped请求必须带exact Version reference；不存在返回`found=false`，存在但结果为空返回`found=true/items=[]`，state/content变化为`STALE_VERSION`，plane/environment、lineage或cursor不匹配均fail closed。Cursor绑定过滤、排序、page size、Version precondition及不可变source collection；comparison显式绑定base/compared两个Version。
 
 这不是HTTP endpoint实现：没有FastAPI/Pydantic/OpenAPI、identity/capability解析或前端payload。P3-10必须适配这里的carrier+payload结果，不得绕过precondition、重新计算Solver/Validator事实或把comparison升级成P4 ChangeReport。
+
+## TASK-P3-06 command application semantics
+
+HTTP之前的command application已形成：接受`workspace-command.v1`的Move/Assign/Set/Remove Lock四类content command及空payload `SUBMIT_FOR_REVIEW`，逐项复验strict字段、derived capability、exact source state/content、server-derived idempotency scope、plane/environment/synthetic provenance和`WORKSPACE_INTERNAL` target。Raw idempotency key只在调用内使用；AuditEvent仅保存hashed key reference与request fingerprint。Content成功结果固定source/new Version reference、new state DRAFT、fresh ValidationReport reference、audit ID、correlation及replay flag；submit只接受本Task生成的manual/lock DRAFT，经第二次fresh PASS与CAS返回同ID/content的READY reference。
+
+Same key/same request可在source后续state变化后通过既有audit/new immutable content重放原logical result；same key/different request、stale source、missing source、authorization、Validator或persistence failure均fail closed。该服务不是HTTP endpoint、OpenAPI或RBAC实现；P3-10只能做transport/error映射，不能在router复制command mutation或Validator逻辑。Production在OPEN-010关闭前无论carrier capability如何都default-deny。

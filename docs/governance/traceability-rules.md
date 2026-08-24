@@ -285,3 +285,5 @@ Implementation artifact必须绑定exact SHA/Task，lifecycle report为8/8、iss
 Task从provider-verified closure `fc5011f78a242160097521259a1914d864d9ad17`激活。Evidence必须同时证明14 views、strict carrier/full payload fingerprint、Version/source lineage、stable filter/sort/query-scope cursor、found-empty/missing/stale/plane/tamper语义、assignment/load/KPI一致、two-Version comparison exact replay及ChangeReport/Replan缺席、versioned synthetic规模观察、read前后durable rows不变和product-service Solver调用0。
 
 追踪链固定为`REQ-002/003/004/005/007/009 + NFR-COR/DET/TRC/OBS/PER + ENG-ARCH/ERR/VER → TASK-P3-05 → domain workspace + application query/comparison + tests → TEST-WORKSPACE-READ-MODEL-001/TEST-PROPERTY/TEST-OBS-001/TEST-SIM-ISOLATION → p3-workspace-read-model-report.v1 + Task report → exact implementation/closure provider artifacts`。Provider成功前保持`in_progress`；closure只写事实且不得启动P3-06。
+
+该规则已由implementation `f236fab47aa2565b87a060b2c8bde8f2e8d66229`的required run/job/artifact=`32706258281`/`97367902547`/`9512423712`满足：下载的24/24 JSON顶层PASS，read-model与Task报告精确为8/8及50 committed/0 working paths、7 rows、19 checks、0 issues。因此本closure只写回TASK-P3-05=`done`和provider事实，P3-06仍为`planned`且未授权。

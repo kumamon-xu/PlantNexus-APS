@@ -1,7 +1,7 @@
 ---
 doc_id: TASK-P3-05
 title: Planning Workspace Read Models and Comparison
-status: in_progress
+status: done
 spec_version: 0.3.0
 phase: P3
 normative: true
@@ -93,4 +93,10 @@ Rollback: read service可回退而不改持久化；已发布query Schema需新�
 
 Pure domain现形成14种`WorkspaceView`、七文档lineage binding、complete payload→strict carrier fingerprint、stable filter/sort/query-scope cursor、found-empty/missing/stale/plane/tamper语义及deterministic P3 comparison。Application形成read-only ScheduleVersion/Audit repository ports、workspace query和two-Version comparison service；产品service无Solver/write/transition port。Required workflow只新增`workspace_read_model_check`命令。
 
-本地machine报告为8/8 PASS：13个普通view共23个payload、1个comparison、query/comparison各1次exact replay、4类negative、两个Version/两个AuditEvent在所有read前后保持相同row count、product-service Solver调用0；comparison无ChangeReport/Replan。Unit/property/contract/integration/CI定向组合33 PASS，全仓527 PASS，locked sync、Ruff、Pyright、Compose、build、full/diff docs、`git diff --check`和禁止范围均通过；治理为50 working paths、7 Impact rows、19 checks、0 issues。以上仍是provider-pending实现事实，Task保持`in_progress`；implementation exact provider与closure尚须完成，P3-06不得自动启动。
+本地machine报告为8/8 PASS：13个普通view共23个payload、1个comparison、query/comparison各1次exact replay、4类negative、两个Version/两个AuditEvent在所有read前后保持相同row count、product-service Solver调用0；comparison无ChangeReport/Replan。Unit/property/contract/integration/CI定向组合33 PASS，全仓527 PASS，locked sync、Ruff、Pyright、Compose、build、full/diff docs、`git diff --check`和禁止范围均通过；治理为50 working paths、7 Impact rows、19 checks、0 issues。上述为提交前本地事实；Task最终状态由下述exact provider evidence闭环，P3-06不得自动启动。
+
+## Implementation provider evidence
+
+Implementation `f236fab47aa2565b87a060b2c8bde8f2e8d66229`的push run `32706258281` / required `validate` job/check `97367902547`（GitHub Actions app `15368`）均为success。Artifact `9512423712`（94085 bytes）未过期，digest=`sha256:46f783ea4871d845aab57cf84bc3952b4686d52e4fb8a327087e6d75e77b4219`、expiry=`2026-11-22T08:25:44Z`；下载复核24/24 JSON顶层PASS。
+
+`ci-p3-workspace-read-models.json`精确绑定implementation SHA且为8/8、14 views、2 versioned synthetic inputs、query/comparison各1次exact replay、4 negative、product-service Solver调用0、`issues=[]`；`ci-current-task-report.json`绑定同一SHA/Diff base并记录50 committed/0 working paths、7 Impact rows、19/19 checks、0 issues。故TASK-P3-05=`done`；该结论不形成HTTP/UI/write/approval/publish/export、P4或Production readiness，也不自动授权TASK-P3-06。

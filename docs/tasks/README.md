@@ -48,7 +48,7 @@ last_reviewed: 2026-08-24
 | [TASK-P3-02](P3/TASK-P3-02-schedule-version-workspace-and-export-schemas.md) | Workspace/version/export Schema | P3-01 | `done` |
 | [TASK-P3-03](P3/TASK-P3-03-schedule-version-audit-and-export-persistence.md) | Version/audit/export persistence | P3-02 | `done` |
 | [TASK-P3-04](P3/TASK-P3-04-validated-solution-to-reviewable-schedule-version.md) | Validated solution→reviewable DRAFT | P3-03 | `done` |
-| [TASK-P3-05](P3/TASK-P3-05-planning-workspace-read-models-and-comparison.md) | Workspace read models/comparison | P3-04 | `in_progress` |
+| [TASK-P3-05](P3/TASK-P3-05-planning-workspace-read-models-and-comparison.md) | Workspace read models/comparison | P3-04 | `done` |
 | [TASK-P3-06](P3/TASK-P3-06-gantt-edit-and-lock-command-pipeline.md) | Gantt edit/lock command pipeline | P3-04/05 | `planned` |
 | [TASK-P3-07](P3/TASK-P3-07-approval-rejection-and-audit-service.md) | Approval/rejection/audit service | P3-03/04 | `planned` |
 | [TASK-P3-08](P3/TASK-P3-08-idempotent-publication-and-supersession.md) | Idempotent publish/supersession | P3-03/07 | `planned` |
@@ -71,6 +71,8 @@ TASK-P3-03已形成`0004`、四类plane-scoped repository、既有pair CAS/lease
 TASK-P3-04已形成fresh validated lineage→immutable DRAFT→READY_FOR_REVIEW、原子audit、exact replay/conflict/rollback/concurrency/plane隔离，service Solver调用为0。Implementation `a9be974855bb825784d639b7f6675e5a33e4273d`的run/job/artifact=`32700005280`/`97349447107`/`9510215582`精确复现35 focused、515 full、8/8 machine及45 committed/0 working paths、8 rows、19 checks、0 issues，故索引标为`done`；P3-05～15不自动启动。
 
 用户随后单独授权TASK-P3-05；其从P3-04 provider-verified closure `fc5011f78a242160097521259a1914d864d9ad17`冻结Diff base并进入`in_progress`。当前只允许只读workspace projections、稳定query/cursor、Version Comparison、限定tests/machine CI和命中文档；P3-06～15不自动启动，HTTP/UI、write/state、approval/publish/export、P4和Production保持禁止。
+
+TASK-P3-05已形成14种read view、stable query/cursor、Resource Load/KPI与two-Version comparison。Implementation `f236fab47aa2565b87a060b2c8bde8f2e8d66229`的run/job/artifact=`32706258281`/`97367902547`/`9512423712`精确复现24/24 JSON PASS、machine 8/8及50 committed/0 working paths、7 rows、19 checks、0 issues，故索引标为`done`；P3-06～15不自动启动，HTTP/UI/write/approval/publish/P4/Production仍未形成。
 
 ## Lifecycle and planning-batch rules
 

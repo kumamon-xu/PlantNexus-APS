@@ -156,4 +156,4 @@ REQ-004/005获得validated P2 output消费与fresh formal Validator/KPI gate；R
 
 REQ-002/003获得Snapshot/Problem/Version facts的stable filter/sort/cursor只读投影；REQ-004获得Gantt、Resource Load及两个Version comparison；REQ-005获得KPI/diagnostic/validation lineage而不复制Validator；REQ-007获得ScheduleVersion/Audit只读workspace；REQ-009获得source-set、payload、collection、query及comparison fingerprint链。形成路径为`app.domain.workspace`、`app.application.workspace_queries/schedule_comparison`、四类tests和8-check machine report。
 
-当前为implementation-formed/provider-pending，不提升任何root生命周期；没有edit/approval/publish/export/API/UI/P4或Production authority。全部15个root Requirement继续`ALLOCATED`，OPEN/SIM/risk状态及`registry_version=1.0.0`不变。
+Implementation `f236fab47aa2565b87a060b2c8bde8f2e8d66229` / artifact `9512423712`已精确复验8/8 read-model及50-path治理链，故只闭环TASK-P3-05 bounded read slice；没有edit/approval/publish/export/API/UI/P4或Production authority。全部15个root Requirement继续`ALLOCATED`，OPEN/SIM/risk状态及`registry_version=1.0.0`不变。

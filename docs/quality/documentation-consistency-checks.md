@@ -383,3 +383,5 @@ Full docs、Task diff、`git diff --check`、forbidden-root、machine report与�
 不可变Diff base=`fc5011f78a242160097521259a1914d864d9ad17`。完整union只能命中`IMPACT-DOMAIN/APPLICATION/INFRA/TESTS/PHASE/GOVERNANCE-REGISTRY/DOCS`七行；allow-list逐字冻结pure domain、两个read service、machine CLI、四类测试、既有CI contract、单一workflow step及所有required docs。Schema/sample/rules、migration/dependency/lock、repository write语义、Planning/Solver/Validator/Exporter、API/Frontend、state pair和P4路径必须零差异。
 
 Implementation/closure均须通过full docs、Task diff、`git diff --check`、forbidden path、8/8 report、定向与full repository检查；provider artifact必须精确绑定Task/SHA/Diff base、7 rows、全部checks与0 issues。Provider形成前保持`in_progress`，且TASK-P3-06不得自动启动。
+
+Implementation artifact `9512423712`中的`traceability-report.v1`精确绑定`f236fab47aa2565b87a060b2c8bde8f2e8d66229`与Diff base，复现165/30/48/15/13/13/53治理计数、50 committed/0 working paths、7 rows、19/19 checks和0 issues。因此TASK-P3-05治理Gate闭环；本evidence-only closure自身仍须push后复核，P3-06保持`planned`。

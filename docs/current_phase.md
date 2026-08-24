@@ -17,7 +17,7 @@ last_reviewed: 2026-08-24
 
 P2-14 audit implementation `65c556789f176ad9de55523d6420737bb60f933f`的GitHub push run `32677741558` / required `validate` job `97288829348` / artifact `9503227240`成功，artifact digest=`sha256:fbb76f0ab44d3bdcff2d31e70f9698af84e10e48ee57ae611eef8529a288240e`；evidence-only closure `80c403384d1e171258cf874d26605d0d22aff1b2`的run `32678248961` / job `97290201234` / artifact `9503372291`也成功，digest=`sha256:673412905b7420660d1e9f07755fcda6291f85f8f2bd926b4bf31a0a6bd1bd0c`。下载检查的两份artifact均含20份可解析JSON，Task/SHA/Impact Rules/checks/issues与对应提交一致且0 issue。规划启动时`main=origin/main=80c403384d1e171258cf874d26605d0d22aff1b2`、ahead/behind=`0/0`且working tree clean，因此transition前提一致。
 
-P2 Milestone现为`completed`，P3 Milestone为`active`。`TASK-P3-00`～`TASK-P3-04`均已由exact implementation provider闭环并在evidence-only closure标为`done`；用户现已单独授权TASK-P3-05并从provider-verified closure进入`in_progress`，P3-06～15保持`planned`且未获授权，不会自动启动。
+P2 Milestone现为`completed`，P3 Milestone为`active`。`TASK-P3-00`～`TASK-P3-05`均已由exact implementation provider闭环并在evidence-only closure标为`done`；P3-06～15保持`planned`且未获授权，不会自动启动。
 
 ## 当前目标
 
@@ -71,7 +71,9 @@ TASK-P3-04从clean、synchronized且P3-03 closure provider-verified的`62604d059
 
 用户于2026-08-24单独授权TASK-P3-05。该Task从clean、synchronized且P3-04 closure provider-verified的`fc5011f78a242160097521259a1914d864d9ad17`启动并冻结为不可变Diff base；closure run/job/artifact=`32700684160`/`97351382226`/`9510431988`，required `validate`来自GitHub Actions app `15368`且success，artifact未过期、23/23 JSON PASS、lifecycle 8/8、Task 45 committed/0 working paths、8 rows、19 checks、0 issues。启动时本地重新确认一个synthetic ScheduleVersion为`READY_FOR_REVIEW`且exact replay成立。
 
-本地实现现覆盖14种read view、strict carrier+complete payload fingerprint、stable filter/sort/cursor、found-empty/missing/stale/plane/tamper、Resource Load/KPI及two-Version comparison；8/8 machine、33项定向及527项全仓测试PASS，locked sync/Ruff/Pyright/Compose/build/full+diff治理/禁止范围均通过，read前后durable rows不变且product-service Solver调用0。Exact provider尚未形成，因此Task/P3 Milestone继续`in_progress`/`active`，P3-06保持`planned`。
+本地实现覆盖14种read view、strict carrier+complete payload fingerprint、stable filter/sort/cursor、found-empty/missing/stale/plane/tamper、Resource Load/KPI及two-Version comparison；8/8 machine、33项定向及527项全仓测试PASS，locked sync/Ruff/Pyright/Compose/build/full+diff治理/禁止范围均通过，read前后durable rows不变且product-service Solver调用0。
+
+Implementation `f236fab47aa2565b87a060b2c8bde8f2e8d66229`的run/job/artifact=`32706258281`/`97367902547`/`9512423712`精确success；下载的24/24 JSON全部PASS，read-model报告为8/8且Task报告为50 committed/0 working paths、7 rows、19 checks、0 issues。因此本closure把TASK-P3-05标为`done`，P3 Milestone保持`active`；P3-06仍为`planned`且须用户另行明确授权。
 
 当前只允许solver-neutral Data Health/Import Runs/Planning Runs/Orders/Operations/Resources/Calendars/Gantt/Resource Load/KPI/Diagnostics/Locks/Audit read models、稳定filter/sort/cursor分页与P3 Version Comparison，以及限定tests/machine CI和命中文档。产品query/comparison service不得写repository、调用Solver/Validator、推进state或生成ChangeReport；P3-06～15、HTTP/UI、approval/reject/publish/export、P4和Production authority均未启动。
 

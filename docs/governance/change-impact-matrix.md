@@ -374,3 +374,5 @@ Schema/sample/rules、migration/infrastructure repositories、Planning/Strategy/
 完整Diff base=`fc5011f78a242160097521259a1914d864d9ad17`，预期只能命中七行：`IMPACT-DOMAIN`（pure read values/projections/comparison）、`IMPACT-APPLICATION`（read services/machine CLI）、`IMPACT-INFRA`（单一required workflow command）、`IMPACT-TESTS`、`IMPACT-PHASE`、`IMPACT-GOVERNANCE-REGISTRY`和`IMPACT-DOCS`。各行required docs均逐字进入Task allow-list。
 
 Schema/sample/rules、migration/dependency/lock、repository write/state语义、Planning/Solver/Validator/Exporter、API/Frontend、state pair和P4路径必须零差异；CI不改job名称/permissions/Secret/service/deployment。Provider artifact必须复现上述7 rows、full checks、exact SHA与issues=[]；成功前Task保持`in_progress`且不启动P3-06。
+
+Implementation artifact `9512423712`已绑定`f236fab47aa2565b87a060b2c8bde8f2e8d66229`并复现50 committed/0 working paths、上述7 rows、19 checks、0 issues及禁止范围零差异；因此本evidence-only closure可把TASK-P3-05标为`done`，P3-06不自动启动。

@@ -158,4 +158,4 @@ NFR-ISO的synthetic→Production拒绝获得application slice，但独立Product
 
 NFR-COR通过source/assignment/KPI一致性与fail-closed negative；NFR-DET通过canonical payload/query/collection/comparison与exact replay；NFR-TRC通过Version lineage/source-set fingerprint；NFR-OBS/PER只记录XS synthetic count/bytes/time且不设阈值。ENG-ARCH形成pure domain→read ports application→composition-root方向，ENG-ERR形成sanitized local reason，ENG-VER严格消费2.6.0且Schema/migration/dependency零漂移。
 
-Plane mismatch与read前后row count为NFR-ISO提供局部回归，但独立Production DB/API/auth仍未形成。当前provider pending；全部NFR/ENG root继续`ALLOCATED`，不建立SLA、capacity、retention或Production policy，`registry_version=1.0.0`不变。
+Plane mismatch与read前后row count为NFR-ISO提供局部回归，但独立Production DB/API/auth仍未形成。Implementation `f236fab47aa2565b87a060b2c8bde8f2e8d66229` / artifact `9512423712`已精确复验该有界NFR/ENG slice并支持TASK-P3-05闭环；全部NFR/ENG root继续`ALLOCATED`，不建立SLA、capacity、retention或Production policy，`registry_version=1.0.0`不变。

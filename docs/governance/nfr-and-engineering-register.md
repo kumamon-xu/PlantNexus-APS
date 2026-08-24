@@ -125,3 +125,5 @@ TASK-P2-14 provider closure：required run `32677741558` / artifact `9503227240`
 P3-01～15把NFR-COR/DET/TRC/ISO/REL/SEC/OBS/PER/HUM与ENG-ARCH/VAL/ERR/VER/LOG分配到合同、immutable persistence、command/state guards、approval/publish/export、API/UI、Gate及独立Audit；ENG-SOL只作为P2 frozen boundary，不在P3扩展Solver。NFR-HUM的唯一允许目标是APPROVED-only、authorized-human capability与default-deny，OPEN-010关闭前不得写成真实角色授权。
 
 本次只有规划与治理证据，不形成状态行为、可靠性、权限、UI、Production安全/性能或deployment证据。全部NFR/ENG根ID保持`ALLOCATED`，P4动态重排和Production readiness继续显式排除，`registry_version=1.0.0`格式不变。
+
+TASK-P3-00 provider closure：required run `32681493976` / artifact `9504310381`精确复验64 paths/4 rows/19 checks/0 issues；它只关闭规划治理Task，不形成任何NFR/ENG行为证据。全部根ID继续`ALLOCATED`，P3-01仍未启动。

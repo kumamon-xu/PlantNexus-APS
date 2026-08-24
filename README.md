@@ -1,6 +1,6 @@
 # PlantNexus APS
 
-PlantNexus APS 是一个面向单工厂、多车间场景的高级计划与排程（APS）项目。P2 CP-SAT Vertical Slice 已通过 Exit Gate并关闭，当前阶段为P3（Planning Workspace）。本次只激活TASK-P3-00 phase-planning治理；TASK-P3-01～15均为`planned`，Production能力与P4动态重排均未形成或未获授权。
+PlantNexus APS 是一个面向单工厂、多车间场景的高级计划与排程（APS）项目。P2 CP-SAT Vertical Slice 已通过 Exit Gate并关闭，当前阶段为P3（Planning Workspace）。TASK-P3-00 phase-planning治理已由exact provider闭环；TASK-P3-01～15均为`planned`，Production能力与P4动态重排均未形成或未获授权。
 
 ## 开始之前
 

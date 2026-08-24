@@ -245,3 +245,5 @@ TASK-P2-14 audit implementation `65c556789f176ad9de55523d6420737bb60f933f`的req
 P3首次规划batch必须且只能由TASK-P3-00作为`phase-planning-owner`；P3-01～15均为同range新建的`phase-plan-member`、`planned`且无implementation SHA。链路固定为contract/ADR→Schema→persistence→validated DRAFT→read models→commands/authorization/publish/export→API→frontend/E2E→Gate→independent Audit。每张成员卡的后续启动必须有新用户授权、依赖`done`、clean synchronized/provider-verified HEAD与新40字符Diff base；batch创建不等于实现授权。
 
 P3证据必须区分planned注册与formed行为、internal Simulation publish与Production authority、P3 human-control与P4 Execution/Replan。P3-15只审计冻结事实；READY仍不自动进入P4或Production。TASK-P3-00 implementation与evidence-only closure各自也必须由exact required `validate`/artifact核验后才能`done`。
+
+TASK-P3-00 implementation provider已由run `32681493976` / required job `97298850740` / artifact `9504310381`精确复验，Task report绑定SHA并为64 committed/0 working paths、4 rows、19 checks、0 issues。故evidence-only closure可把owner标为`done`；closure自身仍只能在push后外部核验，不得自引用或自动启动P3-01。

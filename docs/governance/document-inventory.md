@@ -12,7 +12,7 @@ registry_version: 1.0.0
 
 # 文档清单
 
-本清单列出当前仓库已经实际存在的Markdown文档。P0～P2均已归档为completed；P2 Exit Gate=`READY`且用户已批准transition。P3现为active，只有TASK-P3-00执行phase-planning治理，P3-01～15均为planned。产品API、Frontend详细规范与Production Runbook正文尚未形成并继续由相应Task/索引登记。
+本清单列出当前仓库已经实际存在的Markdown文档。P0～P2均已归档为completed；P2 Exit Gate=`READY`且用户已批准transition。P3现为active，TASK-P3-00 phase-planning治理已done，P3-01～15均为planned。产品API、Frontend详细规范与Production Runbook正文尚未形成并继续由相应Task/索引登记。
 
 | Path | Doc ID | Status | Title |
 |---|---|---|---|
@@ -157,7 +157,7 @@ registry_version: 1.0.0
 | [tasks/P2/TASK-P2-12-benchmark-runner-xs-s-m.md](../tasks/P2/TASK-P2-12-benchmark-runner-xs-s-m.md) | TASK-P2-12 | done | BenchmarkRunner and XS S M Profiles |
 | [tasks/P2/TASK-P2-13-p2-vertical-slice-gate-evidence.md](../tasks/P2/TASK-P2-13-p2-vertical-slice-gate-evidence.md) | TASK-P2-13 | done | P2 Vertical Slice Gate Evidence |
 | [tasks/P2/TASK-P2-14-p2-exit-gate-audit.md](../tasks/P2/TASK-P2-14-p2-exit-gate-audit.md) | TASK-P2-14 | done | P2 Exit Gate Audit |
-| [tasks/P3/TASK-P3-00-phase-transition-and-task-planning-governance.md](../tasks/P3/TASK-P3-00-phase-transition-and-task-planning-governance.md) | TASK-P3-00 | in_progress | P3 Phase Transition and Task Planning Governance |
+| [tasks/P3/TASK-P3-00-phase-transition-and-task-planning-governance.md](../tasks/P3/TASK-P3-00-phase-transition-and-task-planning-governance.md) | TASK-P3-00 | done | P3 Phase Transition and Task Planning Governance |
 | [tasks/P3/TASK-P3-01-planning-workspace-contract-and-adr-baseline.md](../tasks/P3/TASK-P3-01-planning-workspace-contract-and-adr-baseline.md) | TASK-P3-01 | planned | Planning Workspace Contract and ADR Baseline |
 | [tasks/P3/TASK-P3-02-schedule-version-workspace-and-export-schemas.md](../tasks/P3/TASK-P3-02-schedule-version-workspace-and-export-schemas.md) | TASK-P3-02 | planned | ScheduleVersion Workspace and Export Schemas |
 | [tasks/P3/TASK-P3-03-schedule-version-audit-and-export-persistence.md](../tasks/P3/TASK-P3-03-schedule-version-audit-and-export-persistence.md) | TASK-P3-03 | planned | ScheduleVersion Audit and Export Persistence |
@@ -270,4 +270,4 @@ TASK-P2-14 activation新增`milestones/P2-exit-gate-audit-report.md`并同步本
 
 TASK-P2-14 local audit writeback不再新增、删除或重命名Markdown，inventory继续143份；audit report front matter现为`baseline`并与本清单一致，JSON manifest及ignored Gate/XS/S/M/scenario/trace reports仍不进入Markdown清单。Roots=30、Test IDs=36、OPEN=15、SIM assumptions=13、risks=11、Tasks=37与所有registry format version保持不变；最终治理为30 paths/3 rows/19 checks/0 issues。Implementation artifact `9503227240`精确复现上述inventory/治理范围，故TASK-P2-14=`done`、Exit=`READY`；P2保持`active`、P3未启动。
 
-TASK-P3-00 phase-planning batch新增16张P3 Task Markdown，inventory从143增至159；没有创建其他合同、ADR、Frontend或Runbook正文。P2状态转为`completed`、P3转为`active`；TASK-P3-00=`in_progress`，P3-01～15=`planned`。Roots=30、OPEN=15、SIM assumptions=13不变；Test IDs由36增至48，risks由11增至13，Tasks由37增至53，所有registry format version保持`1.0.0`。本次不把任何P3业务、Production authority/publish/readiness或P4能力登记为formed。
+TASK-P3-00 phase-planning batch新增16张P3 Task Markdown，inventory从143增至159；没有创建其他合同、ADR、Frontend或Runbook正文。P2状态转为`completed`、P3转为`active`；implementation `1d4b1a5c0ad6dc13df18588fbdcb9732e5ef15e7` / artifact `9504310381`成功后TASK-P3-00=`done`，P3-01～15=`planned`。Roots=30、OPEN=15、SIM assumptions=13不变；Test IDs由36增至48，risks由11增至13，Tasks由37增至53，所有registry format version保持`1.0.0`。本次不把任何P3业务、Production authority/publish/readiness或P4能力登记为formed。

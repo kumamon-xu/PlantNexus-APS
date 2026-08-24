@@ -132,3 +132,5 @@ TASK-P2-14 provider closure：audit implementation `65c556789f176ad9de55523d6420
 2026-08-24 transition核验又确认closure `80c403384d1e171258cf874d26605d0d22aff1b2` / run `32678248961` / required job `97290201234` / artifact `9503372291`与P2 audit implementation拓扑、SHA、Task、Impact Rules、19 checks和0 issues一致。用户据此批准P3；P2转为`completed`，P3转为`active`。
 
 P3追踪链固定为`REQ/NFR/ENG → TASK-P3-01 contract/ADR → P3-02 Schema → P3-03 persistence → P3-04～09 application/state/export → P3-10 API → P3-11～13 UI/E2E → P3-14 Gate → P3-15 independent Audit → exact implementation/closure provider artifacts`。本次只登记48个Test ID与planned Task，不把任何P3行为标记formed；P4和Production仍在明确边界外。
+
+TASK-P3-00 implementation `1d4b1a5c0ad6dc13df18588fbdcb9732e5ef15e7`的run/job/artifact=`32681493976`/`97298850740`/`9504310381`精确复现20/20 JSON与64 committed/0 working paths、4 rows、19 checks、0 issues，故规划节点为provider-verified/done。P3-01～15的行为证据全部继续`PLANNED`。

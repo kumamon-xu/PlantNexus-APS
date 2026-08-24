@@ -1,7 +1,7 @@
 ---
 doc_id: TASK-P3-00
 title: P3 Phase Transition and Task Planning Governance
-status: in_progress
+status: done
 spec_version: 0.3.0
 phase: P3
 normative: true
@@ -85,4 +85,10 @@ Rollback: push前整体回退本Task文档变更并保持P2 active；push后如�
 
 ## Completion evidence
 
-本节在implementation provider成功后以evidence-only closure回填；在此之前TASK-P3-00保持`in_progress`，TASK-P3-01保持`planned`且不得自动执行。
+启动前确认TASK-P2-00～14全部`done`，P2 report/manifest均为`READY`且`blocking_gaps=[]`；13组前序implementation/closure及P2-14 `c6e5756 → 65c5567 → 80c4033`拓扑、required checks/artifacts均一致。`main=origin/main=80c403384d1e171258cf874d26605d0d22aff1b2`且working tree clean，因此phase transition前提成立。
+
+本地验收：locked sync成功；Ruff与Pyright为0问题；governance unit/CI contract=`35 passed`；full docs为159 docs、30 roots/trace rows、48 Test IDs、15 OPEN、13 SIM assumptions、13 risks、53 Tasks；current Task diff为64 paths、4 Impact rows、19 checks、0 issues；`git diff --check`与相对Diff base的业务代码/Schema/frontend/infra/scripts/workflow/dependency/fixture/benchmark禁止范围均PASS。
+
+Planning implementation `1d4b1a5c0ad6dc13df18588fbdcb9732e5ef15e7`的GitHub push run `32681493976` / required `validate` job `97298850740`（app `15368`）均success，32/32 steps成功。Artifact `9504310381` / `plantnexus-ci-evidence-32681493976`大小`86292` bytes、digest=`sha256:306ccfc7fedef1541c36bcc4afb0727239bd3fb9a17dd4b7ea022fd7c3d4fe64`、expiry=`2026-11-22T01:58:21Z`且未过期；下载的20份JSON全部可解析并PASS。Task report精确绑定implementation SHA/Diff base，记录64 committed/0 working paths、`IMPACT-DOCS/GOVERNANCE-REGISTRY/PHASE/STATE`、19/19 checks与0 issues。
+
+因此本evidence-only closure将TASK-P3-00标为`done`；closure自身的exact provider只能在push后由交付验收核验，不能在提交内自引用。TASK-P3-01仍为`planned`且未获执行授权，P4/Production仍未进入。

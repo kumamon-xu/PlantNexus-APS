@@ -221,6 +221,6 @@ Decision writing commit `65c556789f176ad9de55523d6420737bb60f933f`的exact requi
 
 ## P3 planning and CI handoff
 
-用户已批准P2→P3；TASK-P3-00是当前唯一`in_progress` owner，P3-01～15均为planned batch member。本规划提交不得修改workflow；required `validate`仍通过current-phase discovery选择P3-00，并上传中性artifact。规划implementation和evidence-only closure各自都必须核对exact SHA、required job/steps、artifact digest/expiry、Task/Impact/checks/issues后，P3-00才能`done`。
+用户已批准P2→P3；TASK-P3-00是本batch唯一owner，P3-01～15均为planned member。本规划未修改workflow；required `validate`通过current-phase discovery选择P3-00。Implementation `1d4b1a5c0ad6dc13df18588fbdcb9732e5ef15e7`的run `32681493976` / job `97298850740`为success且32/32 steps成功；artifact `9504310381`未过期，digest=`sha256:306ccfc7fedef1541c36bcc4afb0727239bd3fb9a17dd4b7ea022fd7c3d4fe64`，20/20 JSON与Task 64 paths/4 rows/19 checks/0 issues一致。因此本closure把P3-00标为`done`；closure自身仍须push后核验。
 
 未来每张P3 Task必须按卡片运行locked install、lint/type、相关unit/contract/integration/E2E/migration/build、full docs/diff治理和machine report。P3-14聚合Gate不替代P3-15独立Audit；两者READY均不构成P4 transition或Production release。

@@ -43,7 +43,7 @@ last_reviewed: 2026-08-24
 
 | Task | 目标 | 依赖 | 状态 |
 |---|---|---|---|
-| [TASK-P3-00](P3/TASK-P3-00-phase-transition-and-task-planning-governance.md) | Phase transition、Task plan与治理同步 | P2-14 | `in_progress` |
+| [TASK-P3-00](P3/TASK-P3-00-phase-transition-and-task-planning-governance.md) | Phase transition、Task plan与治理同步 | P2-14 | `done` |
 | [TASK-P3-01](P3/TASK-P3-01-planning-workspace-contract-and-adr-baseline.md) | Workspace合同与ADR基线 | P3-00 | `planned` |
 | [TASK-P3-02](P3/TASK-P3-02-schedule-version-workspace-and-export-schemas.md) | Workspace/version/export Schema | P3-01 | `planned` |
 | [TASK-P3-03](P3/TASK-P3-03-schedule-version-audit-and-export-persistence.md) | Version/audit/export persistence | P3-02 | `planned` |
@@ -61,6 +61,8 @@ last_reviewed: 2026-08-24
 | [TASK-P3-15](P3/TASK-P3-15-p3-exit-gate-audit.md) | Independent P3 Exit Gate Audit | P3-14 | `planned` |
 
 推荐首先单独授权并执行P3-01，但本次不自动执行。P3-01必须先固定页面/API/权限矩阵、状态机、错误、审计和idempotency合同；P3-15必须最后执行且只审计冻结事实。P3不得实现P4 ExecutionEvent/Replan/OBJ-002/freeze/ChangeReport/Execution Simulator，内部Simulation publish也不构成Production approval/readiness。
+
+TASK-P3-00 implementation `1d4b1a5c0ad6dc13df18588fbdcb9732e5ef15e7`的run `32681493976` / required job `97298850740` / artifact `9504310381`精确复现64 committed/0 working paths、4 rows、19 checks、0 issues及20/20 JSON PASS，故本evidence-only closure把P3-00标为`done`。P3-01保持`planned`；其启动必须来自新的用户明确授权和新的clean/provider-verified Diff base。
 
 ## Lifecycle and planning-batch rules
 

@@ -123,3 +123,5 @@ TASK-P2-14 provider closure：implementation `65c556789f176ad9de55523d6420737bb6
 用户批准transition后，REQ-006分配到TASK-P3-01～03、09/10、13～15，REQ-007分配到TASK-P3-01～15，REQ-009贯穿TASK-P3-01～15；REQ-004/005作为validated-solution与formal-Validator只读前提进入P3-04～06、10～15。该分配建立合同→Schema→persistence→application→API/UI→Gate→Audit链，但P3-01～15均未形成业务实现证据。
 
 REQ-008/013继续只属于P4，ExecutionEvent、ReplanRequest、OBJ-002、freeze、ChangeReport和Execution Simulator不得进入P3。REQ-001～015的根生命周期全部保持`ALLOCATED`，P2 historical evidence不改写，OPEN-010等Production authority问题未关闭，`registry_version=1.0.0`格式不变。
+
+TASK-P3-00 provider closure：implementation `1d4b1a5c0ad6dc13df18588fbdcb9732e5ef15e7` / run `32681493976` / artifact `9504310381`只验证phase allocation与治理一致性，不形成REQ-004/005/006/007/009业务行为；全部根ID继续`ALLOCATED`，P3-01保持`planned`。

@@ -69,7 +69,7 @@ last_reviewed: 2026-08-24
 
 ## 当前范围
 
-当前阶段为P3。P0～P2 Milestone均为`completed`，P3为`active`；TASK-P3-00只执行phase transition、完整Task plan与文档治理，P3-01～15均为`planned`且未获业务实现授权。P3-15必须最后独立执行Exit Gate Audit；P4与Production不在当前范围，详见`current_phase.md`。
+当前阶段为P3。P0～P2 Milestone均为`completed`，P3为`active`；TASK-P3-00 phase transition、完整Task plan与文档治理已由exact provider闭环为`done`，P3-01～15均为`planned`且未获业务实现授权。P3-15必须最后独立执行Exit Gate Audit；P4与Production不在当前范围，详见`current_phase.md`。
 
 P3顺序固定为合同/ADR→Schema→persistence→validated DRAFT→read models→edit/lock→approval/reject→idempotent publish→ExportJob→API→Frontend/E2E→vertical Gate→independent Audit。首先建议另行授权TASK-P3-01，但当前规划Task不得自动执行它。
 

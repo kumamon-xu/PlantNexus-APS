@@ -279,3 +279,5 @@ Integration覆盖完整链、七Scenario/C-ID、XS/S/M status/objective/model/ti
 TASK-P3-00只登记12个P3 Test ID，registry从36项增加到48项；没有创建测试文件、修改断言或把任一P3 evidence标为formed。P3-01先形成合同/ADR，P3-02～13按repository/lifecycle/read-command/authorization/publish/export/API/frontend顺序形成证据，P3-14聚合vertical slice，P3-15独立重放Exit Audit。
 
 所有P3测试必须保留P2 formal Validator与immutable artifacts，明确DRAFT/REJECTED publish拒绝、APPROVED-only publish、PUBLISHED immutability、command产生new DRAFT、same-key幂等和default-deny authorization。P4 ExecutionEvent/Replan/OBJ-002/ChangeReport/Execution Simulator及Production identity/deployment/SLA测试不属于P3；48个ID的生命周期仍为注册或历史证据状态，`registry_version=1.0.0`格式不变。
+
+TASK-P3-00本地治理回归为`35 passed`，implementation required run `32681493976`的完整repository suites与20份artifact JSON均PASS。该结果只验证规划/registry/历史回归；12个P3新Test ID全部继续`PLANNED`，没有测试断言或P3行为证据形成。

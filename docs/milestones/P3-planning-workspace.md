@@ -27,7 +27,7 @@ last_reviewed: 2026-08-24
 
 | Order | Task | Outcome | Depends on | State |
 |---:|---|---|---|---|
-| 0 | TASK-P3-00 | Phase transition、完整Task plan与治理同步 | TASK-P2-14 | `in_progress` |
+| 0 | TASK-P3-00 | Phase transition、完整Task plan与治理同步 | TASK-P2-14 | `done` |
 | 1 | TASK-P3-01 | Workspace页面/API/权限/状态/错误/审计/idempotency合同与ADR基线 | P3-00 | `planned` |
 | 2 | TASK-P3-02 | ScheduleVersion workspace/export Schema | P3-01 | `planned` |
 | 3 | TASK-P3-03 | ScheduleVersion、Audit与ExportJob persistence | P3-02 | `planned` |
@@ -71,3 +71,7 @@ Gate还必须证明：版本/比较/read model lineage一致；所有command产�
 - OPEN-010关闭前只允许authority-neutral capability与default-deny；不得声称已确定真实审批责任、组织角色或外部系统authority。
 - Production channel、真实MES/ERP侧效应、生产密钥/部署/SLA/readiness受PROD_OPEN和P7 gate约束；P3内部Simulation publish不能外推为Production publish/approval。
 - P3-15=`READY`也不自动进入P4；P3→P4需要新的用户明确批准。
+
+## Current execution boundary
+
+TASK-P3-00 planning implementation `1d4b1a5c0ad6dc13df18588fbdcb9732e5ef15e7`的run/job/artifact=`32681493976`/`97298850740`/`9504310381`已精确PASS；artifact内20份JSON全部PASS，Task治理为64 committed/0 working paths、4 rows、19 checks、0 issues。因此P3-00在evidence-only closure中为`done`。P3 Milestone继续`active`，但P3-01～15全部保持`planned`且不自动启动；推荐下一步是用户另行授权P3-01。

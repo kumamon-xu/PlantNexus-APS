@@ -348,3 +348,5 @@ Activation provider `32675914600` / artifact `9502674319`已对8 paths/2 rows/0 
 P3首次规划batch以`80c403384d1e171258cf874d26605d0d22aff1b2`为不可变Diff base。唯一owner必须是`TASK-P3-00`、role=`phase-planning-owner`且`in_progress`；P3-01～15必须同range新建、role=`phase-plan-member`、`planned`且无implementation SHA。P0～P2卡保持terminal，P4+不得创建详细卡。
 
 本batch新增16份Markdown，inventory预期从143增至159；Task总数从37增至53，Test IDs从36增至48，风险从11增至13，roots=30、OPEN=15、SIM assumptions=13不变。完整治理和current Task diff必须实际核对这些计数、4条Impact Rule、changed paths、19项或当时完整checks与issues；provider artifact形成前不得预填PASS或关闭owner。
+
+实际full governance与implementation provider均确认159/30/48/15/13/13/53计数；artifact `9504310381`中的`traceability-report.v1`精确绑定implementation SHA，记录64 committed/0 working paths、4 rows、19/19 checks与0 issues。因此P3-00治理Gate闭环；本evidence-only closure自身仍须push后复核。

@@ -340,3 +340,5 @@ Backend/application、Schema/global set、fixture/benchmark baseline、test asse
 本次phase-planning batch相对不可变Diff base `80c403384d1e171258cf874d26605d0d22aff1b2`只允许文档变化，命中`IMPACT-STATE`（三份state-machine文档的P3规划解释）、`IMPACT-PHASE`（current phase、P2/P3 Milestone、16张P3 Task）、`IMPACT-GOVERNANCE-REGISTRY`（REQ/NFR/trace/Test/OPEN/SIM/risk/impact/inventory同步）和`IMPACT-DOCS`。所有required documents均列入TASK-P3-00 allow-list与`Documents to update`。
 
 业务代码、Schema、migration、dependency/lock、test assertion、fixture/benchmark、frontend、infra、scripts和workflow必须相对Diff base零差异，因此不声明其他Rule ID。规划implementation与evidence-only closure必须各自由exact required `validate`/artifact复现实际path union、4 rows、完整checks与0 issues；provider形成前TASK-P3-00保持`in_progress`。Machine rule表和`registry_version=1.0.0`不变。
+
+Implementation artifact `9504310381`已绑定`1d4b1a5c0ad6dc13df18588fbdcb9732e5ef15e7`并复现64 committed/0 working paths、上述4 rows、19 checks、0 issues及禁止范围零差异；因此本closure可把TASK-P3-00标为`done`。Closure仍只命中相同4 rows且不启动任何P3业务实现。

@@ -17,7 +17,7 @@ last_reviewed: 2026-08-24
 
 P2-14 audit implementation `65c556789f176ad9de55523d6420737bb60f933f`的GitHub push run `32677741558` / required `validate` job `97288829348` / artifact `9503227240`成功，artifact digest=`sha256:fbb76f0ab44d3bdcff2d31e70f9698af84e10e48ee57ae611eef8529a288240e`；evidence-only closure `80c403384d1e171258cf874d26605d0d22aff1b2`的run `32678248961` / job `97290201234` / artifact `9503372291`也成功，digest=`sha256:673412905b7420660d1e9f07755fcda6291f85f8f2bd926b4bf31a0a6bd1bd0c`。下载检查的两份artifact均含20份可解析JSON，Task/SHA/Impact Rules/checks/issues与对应提交一致且0 issue。规划启动时`main=origin/main=80c403384d1e171258cf874d26605d0d22aff1b2`、ahead/behind=`0/0`且working tree clean，因此transition前提一致。
 
-P2 Milestone现为`completed`，P3 Milestone为`active`。该授权只启动`TASK-P3-00 — P3 Phase Transition and Task Planning Governance`；P3-01～15仅建立为`planned`，不因依赖、规划或本次验收自动进入实现。
+P2 Milestone现为`completed`，P3 Milestone为`active`。`TASK-P3-00 — P3 Phase Transition and Task Planning Governance`已由exact implementation provider闭环并在evidence-only closure标为`done`；P3-01～15仅建立为`planned`，不因依赖、规划或本次验收自动进入实现。
 
 ## 当前目标
 
@@ -39,16 +39,16 @@ P3 Gate要求DRAFT/REJECTED不可发布、只有APPROVED可发布、PUBLISHED im
 
 ## 当前Task与启动边界
 
-`TASK-P3-00`以不可变Diff base `80c403384d1e171258cf874d26605d0d22aff1b2`执行本次phase transition、完整Task规划和治理注册表同步；状态为`in_progress`，是本规划batch唯一`phase-planning-owner`。P3-01～15均为`phase-plan-member`、状态`planned`且无implementation SHA；每张卡只能在新的用户明确授权、依赖全部`done`、clean/synchronized/provider-verified HEAD写入新Diff base后启动。
+`TASK-P3-00`以不可变Diff base `80c403384d1e171258cf874d26605d0d22aff1b2`完成phase transition、完整Task规划和治理注册表同步；implementation `1d4b1a5c0ad6dc13df18588fbdcb9732e5ef15e7`的run `32681493976` / required job `97298850740` / artifact `9504310381`成功，下载的20份JSON全部PASS，Task report为64 committed/0 working paths、4 rows、19 checks、0 issues。P3-01～15均为`phase-plan-member`、状态`planned`且无implementation SHA；每张卡只能在新的用户明确授权、依赖全部`done`、clean/synchronized/provider-verified HEAD写入新Diff base后启动。
 
 推荐的第一个业务Task是`TASK-P3-01 — Planning Workspace Contract and ADR Baseline`，但本次不自动执行。它必须先固定页面/API/权限/状态机/错误/审计/idempotency合同与ADR，再允许P3-02及后续代码Task启动。
 
 ## 当前允许
 
-- 本次仅修改`TASK-P3-00`允许的phase/milestone/task/architecture/contract/quality/governance文档；
-- 运行完整文档治理、current Task diff、`git diff --check`与禁止路径核验；
-- 提交并push当前`main`，核验规划implementation的exact required `validate`和artifact；必要时仅用evidence-only closure登记该provider事实；
-- 后续P3 Task只有在逐Task明确授权后，才可按各卡允许范围和不可变Diff base实施。
+- 读取、复核并维护已闭环的P3治理基线；
+- 等待用户对下一张有界Task的明确授权；
+- 后续P3 Task只有在逐Task明确授权后，才可按各卡允许范围和不可变Diff base实施；
+- 当前建议首先执行TASK-P3-01，但不得由P3-00完成或依赖满足自动启动。
 
 ## 当前禁止
 

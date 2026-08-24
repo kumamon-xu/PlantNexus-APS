@@ -1,7 +1,7 @@
 ---
 doc_id: TASK-P3-02
 title: ScheduleVersion Workspace and Export Schemas
-status: in_progress
+status: done
 spec_version: 0.3.0
 phase: P3
 normative: true
@@ -71,7 +71,7 @@ Acceptance commands: `uv run pytest -q backend/tests/contract`；`uv run python 
 
 Artifacts: Schema/sample fingerprints、registry/round-trip report、Task report、provider artifact。
 
-Provider evidence: exact implementation/closure SHA各自required `validate`和artifact；检查Task、schema report、Impact rows/checks/issues及所有`code_commit`一致。
+Provider evidence: implementation `aff27d3d6b63fb9f216c9a2687408a6c676fa96a`的run `32689832111` / required `validate` job/check `97321420908`（GitHub Actions app `15368`）均`completed/success`；artifact `9506913562`未过期，digest=`sha256:fdc527be47df10febdd50395134b0a97799e15c2607fa0202c99d6679798ef0b`。下载复核21/21 JSON PASS，14份带`code_commit`的报告均绑定implementation SHA；workspace report与Task report的Task/SHA/count/Impact/checks/issues逐项一致。Evidence-only closure自身仍须push后核验exact required provider，不能在提交内自引用。
 
 Completion conditions: 所有P3机器合同严格、版本化、互引可离线解析；P2 bytes保留；非法组合fail closed；文档/追踪/provider闭环；无DB/API/UI/Worker行为。
 
@@ -89,4 +89,4 @@ Rollback: consumer采用前可回退additive release；一旦消费必须新版�
 
 2026-08-24本地验收在Diff base `a8fcec3383ea0f8d9dca4101056aff37d7eea08c`上通过：`uv sync --locked`、Ruff、Pyright、493个全量tests、`uv build`、`docker compose --env-file .env.example config --quiet`、repository docs、current Task diff与`git diff --check`均PASS。Task diff为65 paths、10条Impact rows、19 checks、0 issues；`p3-workspace-contract-report.v1`为8/8 checks、7 Schema/7 sample、34 frozen P2 artifacts、24个shape rejection、6个fingerprint rejection，且`uv.lock`与三份既有规则表摘要不变。
 
-这些结果是本地implementation evidence，不替代GitHub required `validate`。Exact implementation SHA、run/job/artifact及其下载复验尚未形成，因此Task继续为`in_progress`，TASK-P3-03保持`planned`。
+Exact implementation provider复现同一结果：workspace report为8/8 checks、7 Schema/7 sample、34 frozen P2 artifacts、24+6 negative；Task report为65 committed/0 working paths、10 Impact rows、19 checks、0 issues。全部Completion conditions在contract-only边界内满足，因此本evidence-only closure将TASK-P3-02标为`done`；TASK-P3-03保持`planned`且未获授权，persistence/API/UI/P4/Production均未形成。

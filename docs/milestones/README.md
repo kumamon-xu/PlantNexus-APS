@@ -32,7 +32,7 @@ P1当前状态：[`P1 — Data & Snapshot`](P1-data-and-snapshot.md)为`complete
 
 P2当前状态：[`P2 — CP-SAT Vertical Slice`](P2-cp-sat-vertical-slice.md)为`completed`。TASK-P2-00～14均已闭环为`done`；P2 Exit Gate=`READY`且0 gaps。用户于2026-08-24在复核exact provider evidence、提交拓扑与clean synchronized baseline后明确批准P2→P3。
 
-P3当前状态：[`P3 — Planning Workspace`](P3-planning-workspace.md)为`active`。TASK-P3-00 phase-planning governance已由implementation `1d4b1a5c0ad6dc13df18588fbdcb9732e5ef15e7` / run `32681493976` / artifact `9504310381`闭环为`done`；TASK-P3-01合同/ADR基线也由implementation `3bf99cbafdad983795a83a88646240dbb0b24509` / run `32684713630` / artifact `9505303054`闭环为`done`。TASK-P3-02已获授权并在Diff base `a8fcec3383ea0f8d9dca4101056aff37d7eea08c`上`in_progress`；P3-03～15保持`planned`，P3-15必须最后独立执行Exit Gate Audit；READY不自动进入P4或Production。
+P3当前状态：[`P3 — Planning Workspace`](P3-planning-workspace.md)为`active`。TASK-P3-00 phase-planning governance、TASK-P3-01合同/ADR基线及TASK-P3-02机器Schema carrier均已由exact implementation provider闭环并在evidence-only closure标为`done`；P3-02 implementation/run/artifact=`aff27d3d6b63fb9f216c9a2687408a6c676fa96a`/`32689832111`/`9506913562`。P3-03～15保持`planned`，P3-15必须最后独立执行Exit Gate Audit；READY不自动进入P4或Production。
 
 ## P2 execution history
 

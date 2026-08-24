@@ -29,7 +29,7 @@ TASK-P3-00已完成Milestone激活、Task规划与文档治理。用户于2026-0
 |---:|---|---|---|---|
 | 0 | TASK-P3-00 | Phase transition、完整Task plan与治理同步 | TASK-P2-14 | `done` |
 | 1 | TASK-P3-01 | Workspace页面/API/权限/状态/错误/审计/idempotency合同与ADR基线 | P3-00 | `done` |
-| 2 | TASK-P3-02 | ScheduleVersion workspace/export Schema | P3-01 | `in_progress` |
+| 2 | TASK-P3-02 | ScheduleVersion workspace/export Schema | P3-01 | `done` |
 | 3 | TASK-P3-03 | ScheduleVersion、Audit与ExportJob persistence | P3-02 | `planned` |
 | 4 | TASK-P3-04 | validated solution→reviewable DRAFT | P3-03 | `planned` |
 | 5 | TASK-P3-05 | Gantt/Resource Load/Order/Comparison read models | P3-04 | `planned` |
@@ -74,4 +74,4 @@ Gate还必须证明：版本/比较/read model lineage一致；所有command产�
 
 ## Current execution boundary
 
-TASK-P3-00 planning implementation `1d4b1a5c0ad6dc13df18588fbdcb9732e5ef15e7`的run/job/artifact=`32681493976`/`97298850740`/`9504310381`已精确PASS；其closure `7f65f88b620ea1e8d2f4693911be3b52f4052d5d`的run/job/artifact=`32682015727`/`97300206924`/`9504453154`也精确PASS。TASK-P3-01 implementation `3bf99cbafdad983795a83a88646240dbb0b24509`的run/job/artifact=`32684713630`/`97307562801`/`9505303054`复现43 paths、4 rows、19 checks和0 issues，故其closure=`done`。TASK-P3-02当前本地形成additive schema set`2.6.0`、7 Schema/7 sample、pure precheck及8-check CI report，exact implementation provider仍待push；P3-03～15未启动。
+TASK-P3-00 planning implementation `1d4b1a5c0ad6dc13df18588fbdcb9732e5ef15e7`的run/job/artifact=`32681493976`/`97298850740`/`9504310381`已精确PASS；其closure `7f65f88b620ea1e8d2f4693911be3b52f4052d5d`的run/job/artifact=`32682015727`/`97300206924`/`9504453154`也精确PASS。TASK-P3-01 implementation `3bf99cbafdad983795a83a88646240dbb0b24509`的run/job/artifact=`32684713630`/`97307562801`/`9505303054`复现43 paths、4 rows、19 checks和0 issues。TASK-P3-02 implementation `aff27d3d6b63fb9f216c9a2687408a6c676fa96a`的run/job/artifact=`32689832111`/`97321420908`/`9506913562`复现additive schema set`2.6.0`、7 Schema/7 sample、8/8 checks及65 paths/10 rows/19 checks/0 issues，故本closure将其标为`done`；P3-03～15未启动。

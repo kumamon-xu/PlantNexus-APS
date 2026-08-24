@@ -17,7 +17,7 @@ last_reviewed: 2026-08-24
 
 P2-14 audit implementation `65c556789f176ad9de55523d6420737bb60f933f`的GitHub push run `32677741558` / required `validate` job `97288829348` / artifact `9503227240`成功，artifact digest=`sha256:fbb76f0ab44d3bdcff2d31e70f9698af84e10e48ee57ae611eef8529a288240e`；evidence-only closure `80c403384d1e171258cf874d26605d0d22aff1b2`的run `32678248961` / job `97290201234` / artifact `9503372291`也成功，digest=`sha256:673412905b7420660d1e9f07755fcda6291f85f8f2bd926b4bf31a0a6bd1bd0c`。下载检查的两份artifact均含20份可解析JSON，Task/SHA/Impact Rules/checks/issues与对应提交一致且0 issue。规划启动时`main=origin/main=80c403384d1e171258cf874d26605d0d22aff1b2`、ahead/behind=`0/0`且working tree clean，因此transition前提一致。
 
-P2 Milestone现为`completed`，P3 Milestone为`active`。`TASK-P3-00 — P3 Phase Transition and Task Planning Governance`与`TASK-P3-01 — Planning Workspace Contract and ADR Baseline`均已由exact implementation provider闭环并在evidence-only closure标为`done`。用户已明确授权TASK-P3-02，当前状态为`in_progress`；P3-03～15保持`planned`且不会自动启动。
+P2 Milestone现为`completed`，P3 Milestone为`active`。`TASK-P3-00 — P3 Phase Transition and Task Planning Governance`、`TASK-P3-01 — Planning Workspace Contract and ADR Baseline`与`TASK-P3-02 — ScheduleVersion Workspace and Export Schemas`均已由exact implementation provider闭环并在evidence-only closure标为`done`；P3-03～15保持`planned`且不会自动启动。
 
 ## 当前目标
 
@@ -43,22 +43,21 @@ P3 Gate要求DRAFT/REJECTED不可发布、只有APPROVED可发布、PUBLISHED im
 
 `TASK-P3-01 — Planning Workspace Contract and ADR Baseline`从clean、synchronized、provider-verified HEAD `7f65f88b620ea1e8d2f4693911be3b52f4052d5d`启动并固定为不可变Diff base。Implementation `3bf99cbafdad983795a83a88646240dbb0b24509`的required run/job/artifact=`32684713630`/`97307562801`/`9505303054`成功；artifact未过期，20份JSON全部可解析并PASS，Task report精确复现43 committed/0 working paths、4 rows、19 checks和0 issues。因此本evidence-only closure把P3-01标为`done`，但不启动P3-02。
 
-## TASK-P3-02 当前执行边界
+## TASK-P3-02 已完成边界
 
 TASK-P3-02从clean、synchronized且P3-01 closure provider-verified的`a8fcec3383ea0f8d9dca4101056aff37d7eea08c`启动。启动冻结schema set`2.5.0`下21份既有Schema+13份sample的清单摘要`sha256:76bb8ae4…73723`及`uv.lock`摘要`sha256:8b13617f…87a82`；只允许additive `2.6.0`七份Workspace carrier、synthetic samples、pure precheck/machine report、CI step、tests与命中文档。
 
-本地已形成七份strict Schema/URN、七份sample、canonical fingerprints、24个Schema negative、6个fingerprint negative和8/8 machine checks；P2 bytes、state pair、global error registry、dependency/lock保持不变。Exact implementation provider尚未形成，因此Task保持`in_progress`、P3-03不启动。
+七份strict Schema/URN、七份sample、canonical fingerprints、24个Schema negative、6个fingerprint negative和8/8 machine checks已经形成；P2 bytes、state pair、global error registry、dependency/lock保持不变。Implementation `aff27d3d6b63fb9f216c9a2687408a6c676fa96a`的run/job/artifact=`32689832111`/`97321420908`/`9506913562`精确复现21/21 JSON PASS、65 committed/0 working paths、10 rows、19 checks和0 issues，故本closure把Task标为`done`；P3-03不启动。
 
 ## 当前允许
 
-- 在TASK-P3-02精确允许范围内完成Schema/sample、pure contract、CI machine evidence、测试与治理闭环；
-- 读取并复核P3-01合同/ADR和P2 frozen artifact；
-- provider成功后只执行TASK-P3-02 evidence-only closure；
+- 读取并复核P3-01/02合同、Schema、provider evidence和P2 frozen artifact；
+- 在用户另行明确授权前保持P3-03～15为`planned`；
 - 后续P3 Task只有在逐Task明确授权后，才可按各卡允许范围和新的不可变Diff base实施。
 
 ## 当前禁止
 
-- 超出TASK-P3-02卡片允许范围修改业务代码、migration、dependency/lock、fixture/benchmark、`frontend/**`实现或infra；
+- 在P3-03未获授权前修改业务代码、migration、dependency/lock、fixture/benchmark、`frontend/**`实现或infra；
 - 执行P3-03～15，或让其中任何Task自动进入`ready/in_progress`；
 - 直接更新PUBLISHED、绕过server/formal Validator、允许DRAFT/REJECTED发布或产生非幂等export/publish；
 - 实现P4的ExecutionEvent、ReplanRequest、OBJ-002 Stability、freeze window、ChangeReport或Execution Simulator；

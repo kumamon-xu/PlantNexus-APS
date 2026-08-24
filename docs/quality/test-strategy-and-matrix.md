@@ -290,7 +290,7 @@ TASK-P3-01形成三份Frontend规范、两份语义合同和accepted ADR-0012，
 
 `test_p3_workspace_contracts.py`与`p3-workspace-contract-report.v1`形成七份Draft 2020-12 Schema/URN的offline `$ref`、strict/no-default、7 synthetic positive、24个unknown/version/plane/non-interchangeable negative、6个canonical fingerprint drift、key-order replay、query/command authority separation、comparison/publication/export cross-value、no-secret audit以及Schedule/Export exact state pair证据。四份既有contract tests只把current set metadata/dictionary覆盖提升到`2.6.0`；P2 document const、bytes、URN与行为断言不变。
 
-本地首轮受影响contract=`73 passed`，CI integration focused=`4 passed`，machine checks=`8/8`。这些只形成TEST-CONTRACT-001与TEST-WORKSPACE-CONTRACT-001的carrier slice，并复验TEST-STATE-TRANSITION-001与TEST-ERROR-MAPPING-001 preservation；不形成auth decision、repository transaction、transition behavior、HTTP/UI/E2E、external side effect或Production readiness。最终全仓数量与exact provider在implementation push后回填。
+本地受影响contract=`73 passed`、CI integration focused=`4 passed`、全仓=`493 passed`、machine checks=`8/8`。Implementation run `32689832111` / artifact `9506913562`再次通过全仓suite并精确绑定workspace/Task报告。这些只形成TEST-CONTRACT-001与TEST-WORKSPACE-CONTRACT-001的carrier slice，并复验TEST-STATE-TRANSITION-001与TEST-ERROR-MAPPING-001 preservation；不形成auth decision、repository transaction、transition behavior、HTTP/UI/E2E、external side effect或Production readiness。
 
 因此P3新Test ID总数仍为48且behavior lifecycle保持`PLANNED`；本Task不得新增/修改测试断言。后续P3-02必须先形成strict Schema/round-trip evidence，P3-03～13按卡片形成repository/application/API/UI evidence，P3-14/15再聚合和独立审计。
 

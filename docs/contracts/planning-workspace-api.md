@@ -15,7 +15,7 @@ last_reviewed: 2026-08-24
 
 ## 合同版本与Schema分配
 
-当前全局schema set为additive `2.6.0`。下表文件和URN已由TASK-P3-02新增；机器文件、offline `$ref`、sample、canonical fingerprint和本地machine report已经形成，exact provider证据仍待implementation push后闭环。
+当前全局schema set为additive `2.6.0`。下表文件和URN已由TASK-P3-02新增；机器文件、offline `$ref`、sample、canonical fingerprint和machine report已经形成，并由implementation `aff27d3d6b63fb9f216c9a2687408a6c676fa96a`的exact provider artifact `9506913562`复验。Read/application/API行为仍留给P3-05～10。
 
 | Document | Stable `$id` | compatibility | 主要consumer |
 |---|---|---|---|

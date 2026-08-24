@@ -141,8 +141,10 @@ TASK-P3-01把REQ-006/007/009与NFR-TRC/ISO/SEC/HUM、ENG-ARCH/ERR/VER链接到�
 
 ## TASK-P3-02 machine carrier trace
 
-追踪链现为`REQ-006/007/009 + NFR-DET/TRC/ISO/REL/SEC/HUM + ENG-ARCH/ERR/VER → TASK-P3-02 → seven Schema/sample + data dictionary + app.domain.workspace_contracts/workspace_contract_check → TEST-CONTRACT-001/TEST-WORKSPACE-CONTRACT-001/TEST-STATE-TRANSITION-001/TEST-ERROR-MAPPING-001 → p3-workspace-contract-report.v1 → exact implementation/closure provider artifacts`。本地已形成7 Schema/7 sample、8/8 checks、24 shape与6 fingerprint拒绝、34 P2 artifact preservation；implementation provider尚待形成。
+追踪链现为`REQ-006/007/009 + NFR-DET/TRC/ISO/REL/SEC/HUM + ENG-ARCH/ERR/VER → TASK-P3-02 → seven Schema/sample + data dictionary + app.domain.workspace_contracts/workspace_contract_check → TEST-CONTRACT-001/TEST-WORKSPACE-CONTRACT-001/TEST-STATE-TRANSITION-001/TEST-ERROR-MAPPING-001 → p3-workspace-contract-report.v1 → exact implementation/closure provider artifacts`。Implementation `aff27d3d6b63fb9f216c9a2687408a6c676fa96a` / run `32689832111` / artifact `9506913562`已复验7 Schema/7 sample、8/8 checks、24 shape与6 fingerprint拒绝、34 P2 artifact preservation，以及Task 65 paths/10 rows/19 checks/0 issues。
 
 该证据只把machine carrier/fingerprint/state-error-preservation slice标为formed。Migration/repository/state transition/authorization/idempotent side effect/read model/API/UI/worker/standard package/Gate仍按P3-03～15为PLANNED；P4与Production排除不变，全部root继续`ALLOCATED`，48个Test ID与registry version`1.0.0`不变。
+
+因此TASK-P3-02在本evidence-only closure标为`done`；closure自身仍须push后由exact provider复验，且不会自动启动TASK-P3-03。
 
 Diff base/启动provider=`7f65f88b620ea1e8d2f4693911be3b52f4052d5d` / run `32682015727` / artifact `9504453154`。Implementation `3bf99cbafdad983795a83a88646240dbb0b24509` / run `32684713630` / artifact `9505303054`精确复现TASK-P3-01、43 committed/0 working paths、4 rows、19 checks和0 issues，故contract/ADR节点为provider-verified/done；P3 behavior仍`PLANNED`，全部root继续`ALLOCATED`，P3-02不得自动启动。

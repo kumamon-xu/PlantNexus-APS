@@ -140,4 +140,4 @@ TASK-P3-01 provider closure：implementation `3bf99cbafdad983795a83a88646240dbb0
 
 NFR-DET/TRC获得canonical projection、immutable lineage、exact artifact fingerprint和key-order replay；NFR-ISO/SEC获得plane/environment/provenance conditional、internal-only target、no role/body与no-secret carrier；NFR-REL获得ExportJob attempt/lease/error/idempotency shape；NFR-HUM获得server-derived allowed-actions与APPROVED-only carrier guard。ENG-ARCH/ERR/VER获得pure domain module、PRODUCT/WORKSPACE_CONTROL隔离和additive set`2.6.0`/stable URN/compatibility evidence。
 
-这些都是Schema与pure precheck证据，不是state、auth、transaction、API/UI/worker或Production行为。全部NFR/ENG根ID继续`ALLOCATED`，OPEN-002/010/015与RISK-012/013不关闭；dependency集合/`uv.lock`不变，`registry_version=1.0.0`不变。Exact implementation provider尚待形成。
+这些都是Schema与pure precheck证据，不是state、auth、transaction、API/UI/worker或Production行为。全部NFR/ENG根ID继续`ALLOCATED`，OPEN-002/010/015与RISK-012/013不关闭；dependency集合/`uv.lock`不变，`registry_version=1.0.0`不变。Exact implementation provider run `32689832111` / artifact `9506913562`已复验该有界证据并支持TASK-P3-02闭环。

@@ -241,3 +241,5 @@ uv run python -m app.domain.workspace_contract_check \
 ```
 
 报告必须为`p3-workspace-contract-report.v1`、Task=`TASK-P3-02`、schema set=`2.6.0`、8/8 checks、7 Schema/7 sample、34 frozen P2 artifacts、24 shape negative、6 fingerprint negative并绑定`PLANTNEXUS_CODE_COMMIT` exact SHA。现有`build/validation/*.json` artifact glob会上传它；缺失/FAIL不能continue。Gate PASS只证明机器carrier与历史冻结，不证明P3 persistence/state/API/UI、P4或Production。
+
+Implementation provider Gate已通过：SHA `aff27d3d6b63fb9f216c9a2687408a6c676fa96a`、run `32689832111`、required `validate` job/check `97321420908`（app `15368`）均success；artifact `9506913562`未过期，digest=`sha256:fdc527be47df10febdd50395134b0a97799e15c2607fa0202c99d6679798ef0b`。21/21 JSON PASS，workspace 8/8与Task 65 committed/0 working paths、10 rows、19 checks、0 issues均绑定同一SHA；TASK-P3-02 DoD完成，不自动授权P3-03。

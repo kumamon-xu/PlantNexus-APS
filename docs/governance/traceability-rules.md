@@ -259,3 +259,5 @@ P3-01的追踪链固定为`REQ-006/007/009 + NFR-TRC/ISO/SEC/HUM + ENG-ARCH/ERR/
 用户授权后，TASK-P3-02已从`a8fcec3383ea0f8d9dca4101056aff37d7eea08c`启动。Global set前移必须同时满足：七组exact file/version/URN；全object strict/no-default；offline refs；explicit plane/environment/synthetic conditional；canonical projection与negative drift；34份P2 Schema/sample和三份规则表固定bytes；dependency/lock零变化；state/error namespace不漂移；CI non-skippable report。
 
 Implementation provider artifact必须同时包含`p3-workspace-contract-report.v1`与current Task report，并验证同一exact SHA、Task、8 checks、7/7 artifacts、34 frozen、24+6 negative、10 Impact rows、full checks和issues=`[]`。任一不一致保持`in_progress`并阻止P3-03。Provider成功后只允许evidence-only closure写回事实；closure自身也须exact provider，且不得自动启动P3-03。
+
+该规则已由implementation `aff27d3d6b63fb9f216c9a2687408a6c676fa96a`的required run/job/artifact=`32689832111`/`97321420908`/`9506913562`满足：下载的21/21 JSON PASS，workspace report与Task report逐项一致。因此本closure只写回TASK-P3-02=`done`和provider事实，P3-03仍为`planned`。

@@ -361,3 +361,5 @@ P3首次规划batch以`80c403384d1e171258cf874d26605d0d22aff1b2`为不可变Diff
 本Task exact Diff base=`a8fcec3383ea0f8d9dca4101056aff37d7eea08c`。Diff治理必须识别10行Impact Rule：SCHEMA、DOMAIN、STATE、INFRA、DEPENDENCY、VERSION-METADATA、TESTS、PHASE、GOVERNANCE-REGISTRY、DOCS；逐字允许七Schema/七sample、data dictionary、两个domain模块、六个测试文件、metadata/workflow与本卡列出的文档。`uv.lock`、34份P2 Schema/sample、三份规则表、migration/application/API/jobs/exporters/frontend与later-phase roots必须零差异。
 
 Full docs、Task diff report、`git diff --check`与forbidden-root checks须在implementation和evidence-only closure各自运行；Task report必须绑定exact SHA/Impact rows/checks/issues。Provider artifact内workspace machine report和Task report任一Task/SHA/count/issue不一致即保持`in_progress`并阻止TASK-P3-03。
+
+Implementation artifact `9506913562`中的`traceability-report.v1`精确绑定`aff27d3d6b63fb9f216c9a2687408a6c676fa96a`与Diff base，复现165/30/48/15/13/13/53治理计数、65 committed/0 working paths、10 rows、19/19 checks和0 issues。因此TASK-P3-02治理Gate闭环；本evidence-only closure自身仍须push后复核，P3-03保持`planned`。

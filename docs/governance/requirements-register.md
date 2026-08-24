@@ -138,4 +138,4 @@ TASK-P3-01 provider closure：implementation `3bf99cbafdad983795a83a88646240dbb0
 
 REQ-006获得PublicationResult/ExportJob strict carrier，REQ-007获得ScheduleVersion/query/command/comparison与既有state集合对齐，REQ-009获得AuditEvent、完整lineage和canonical fingerprint/provider report路径。7 Schema/7 sample、pure prechecks、24 shape negative、6 fingerprint negative和P2 34 artifact preservation形成machine-contract slice。
 
-没有migration/repository/state/application/API/UI/worker、standard package或Production authority形成，因此REQ-006/007/009根ID及全部Requirement仍为`ALLOCATED`；P3-03+、P4与Production保持PLANNED/排除，`registry_version=1.0.0`不变。Exact implementation provider尚待形成，Task保持`in_progress`。
+没有migration/repository/state/application/API/UI/worker、standard package或Production authority形成，因此REQ-006/007/009根ID及全部Requirement仍为`ALLOCATED`；P3-03+、P4与Production保持PLANNED/排除，`registry_version=1.0.0`不变。Implementation `aff27d3d6b63fb9f216c9a2687408a6c676fa96a` / artifact `9506913562`只闭环machine carrier slice，故TASK-P3-02可标为`done`而根ID生命周期不提升。

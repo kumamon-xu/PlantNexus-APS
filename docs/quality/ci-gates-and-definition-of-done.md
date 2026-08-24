@@ -217,4 +217,4 @@ Implementation provider Gate已通过：SHA `dc2e5cd41080603606090ebfc4bc6162941
 
 审计先验证P2-01～13共26个exact implementation/closure runs/jobs/artifacts，再在provider-verified activation head独立执行locked sync、Ruff、Pyright、476 tests、两次P2 Gate、XS/S/M、Compose、docs与build。Gate=11/11、七场景×两轮§76 measurement完整、XS/S/M各8/8、4 rejections、0 gaps，因此report/manifest给出`READY`。
 
-该decision writing commit不能自我包含未来run，故TASK-P2-14仍须以其exact implementation SHA通过required `validate`并上传artifact，随后才能evidence-only标记`done`。若run/job/artifact或final Task report失败，必须撤回READY并登记blocking gap；local/activation provider不得替代。即使全部通过，P2仍保持current phase，等待用户明确P2→P3授权。
+Decision writing commit `65c556789f176ad9de55523d6420737bb60f933f`的exact required run `32677741558` / job `97288829348` / artifact `9503227240`已全部success；下载复核20/20 JSON、Task 30 paths/3 rows/19 checks/0 issues及Gate 11/11均绑定同一SHA。因此TASK-P2-14在本evidence-only closure标记`done`且READY保持；P2仍保持current phase，等待用户明确P2→P3授权。

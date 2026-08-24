@@ -71,4 +71,4 @@ TASK-P1-12独立审计已重放全部合同、迁移、Generator和common-ingres
 
 ## TASK-P2-14 Exit contract audit
 
-P2独立Exit审计已重跑schema set`2.5.0`及全部registered contract tests，并核对Problem v2、Policy/Limits、Solution/Report、Validation、KPI/Export Manifest各自固定document版本与历史fingerprints。结果为PASS，Schema、data dictionary、migration、dependency/lock和ADR均零变化；C-012～018、OBJ-002/003、P3 API/state/publish合同没有被补猜。Audit Task自身provider闭环前结论为READY但Task仍`in_progress`。
+P2独立Exit审计已重跑schema set`2.5.0`及全部registered contract tests，并核对Problem v2、Policy/Limits、Solution/Report、Validation、KPI/Export Manifest各自固定document版本与历史fingerprints。结果为PASS，Schema、data dictionary、migration、dependency/lock和ADR均零变化；C-012～018、OBJ-002/003、P3 API/state/publish合同没有被补猜。Audit implementation required run `32677741558` / artifact `9503227240`已精确复验并闭环，TASK-P2-14=`done`、Exit=`READY`；P3合同仍未授权。

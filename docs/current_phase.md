@@ -42,7 +42,7 @@ PlanningSnapshot
 
 用户于2026-08-20明确授权执行`TASK-P2-03 — OR-Tools and SolverBackend Foundation`；该Task以clean、provider-verified `f73f8c90af94d3c9b05ecc10b6c999594a3b7d66`启动，并在依赖变更前接受ADR-0011。现已由implementation `9268b88ca7ce90a8f72023241f87e2d3676fd58a`的GitHub run `32346208046` / required job `96355386111` / artifact `9398128763`闭环为`done`。Problem/Policy/Solution/Report合同字节和语义保持只读。
 
-P2-02把global schema set additive提升到`2.4.0`，新增四个互相离线解析的v1 document contract，并以`CONTRACT_SAMPLE`/`SOLVER_RUN`显式区分shape样例与真实运行。该发布样例的`not-installed`是P2-02历史shape证据，不随P2-03安装依赖而改写。TASK-P2-11再以additive `2.5.0`新增KPI v2与ExportManifest v1，而PlanningSolution/SolverReport仍保留document内的`2.4.0`。TASK-P2-00～13现均由exact implementation provider evidence闭环为`done`；TASK-P2-14已获授权并为`in_progress`。
+P2-02把global schema set additive提升到`2.4.0`，新增四个互相离线解析的v1 document contract，并以`CONTRACT_SAMPLE`/`SOLVER_RUN`显式区分shape样例与真实运行。该发布样例的`not-installed`是P2-02历史shape证据，不随P2-03安装依赖而改写。TASK-P2-11再以additive `2.5.0`新增KPI v2与ExportManifest v1，而PlanningSolution/SolverReport仍保留document内的`2.4.0`。TASK-P2-00～14现均由exact implementation provider evidence闭环为`done`；P2 Exit Gate=`READY`，但阶段仍为P2并等待用户明确transition授权。
 
 ## 当前允许
 
@@ -248,4 +248,4 @@ Implementation `dc2e5cd41080603606090ebfc4bc6162941c5f7f`的GitHub push run [`32
 
 独立验收已在audit execution head `c6e57566871faefb2582e1c33218e1ba22b44785`完成：locked sync、Ruff、Pyright、476项全仓测试、Compose、build与写回前full/diff治理均PASS；两次P2 Gate为11/11、14次correctness场景、6次XS/S/M profile、108次Benchmark Validator、4类exact rejection且0 blocking gap。为完整满足总规§76，另对七个correctness场景执行两轮逐场景measurement capture，14/14均保存model/build/first-feasible/objective/bound/gap/memory与Validator PASS。三份独立XS/S/M报告均8/8且0 warning。
 
-[P2 Exit audit report](milestones/P2-exit-gate-audit-report.md)与[machine manifest](milestones/P2-exit-gate-evidence-manifest.json)据此给出overall=`READY`、`blocking_gaps=[]`。该结论仍等待TASK-P2-14 audit implementation exact required provider后才能把Task标为`done`；在此之前生命周期保持`in_progress`。即使provider随后通过，current phase仍为P2、Milestone仍为`active`（Gate ready / awaiting user decision），P3保持`NOT_STARTED`，必须等待用户另行明确批准P2→P3。
+[P2 Exit audit report](milestones/P2-exit-gate-audit-report.md)与[machine manifest](milestones/P2-exit-gate-evidence-manifest.json)据此给出overall=`READY`、`blocking_gaps=[]`。Audit implementation `65c556789f176ad9de55523d6420737bb60f933f`的exact push run `32677741558`、required `validate` job `97288829348`和artifact `9503227240`均success；artifact内20/20 JSON、30 paths/3 rows/19 checks/0 issues及Gate 11/11全部绑定该SHA，因此TASK-P2-14=`done`。Current phase仍为P2、Milestone仍为`active`（Gate ready / awaiting user decision），P3保持`NOT_STARTED`，必须等待用户另行明确批准P2→P3。

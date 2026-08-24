@@ -1,7 +1,7 @@
 ---
 doc_id: TASK-P2-14
 title: P2 Exit Gate Audit
-status: in_progress
+status: done
 spec_version: 0.3.0
 phase: P2
 normative: true
@@ -93,4 +93,12 @@ Activation差异只更新Task/Phase/Milestone索引、本卡与document inventor
 
 独立XS/S/M报告各为8/8 PASS、0 warning；P2 Gate/XS/S/M/场景计量本地artifact的SHA-256分别为`17c987715246d5d9ca28bfb61763a9b243f2a4c92acc30283dc9f92f776a3100`、`2e195a25da2f012fe2a70c7fa0b92a431cdd70a12085eae5d1e1854f26d2faf9`、`8f63013f285d6eb1c94f5ade2a9eea4decc86699a637d1da45c0bff3a0a385fa`、`0c35477d5b52decc7fbe3e7db640b1a08738c8be05472c25da3156b9112596bb`与`df0f19a7dd0c3c1612a62421d1bc824b27917491a99e5ebac338a544830bc46c`。audit report/manifest据此给出overall `READY`且`blocking_gaps=[]`。
 
-相对Diff base的`backend/**`、`schemas/**`、`fixtures/**`、`benchmarks/**`、`scripts/**`、`.github/**`、`pyproject.toml`、`uv.lock`均为零差异；无migration、dependency或ADR变更，ADR-0001～0011均保持accepted。最终full治理为143 docs/30 roots/30 trace rows/36 tests/15 OPEN/13 SIM/11 risks/37 Tasks；Task diff为30 paths（8 committed-range / 30 working-tree union）、3 impact rows、19 checks、0 issues并PASS。当前仅完成本地审计与治理写回；audit implementation exact provider尚待提交核验，因此Task保持`in_progress`，P2保持`active`，P3保持`NOT_STARTED`。
+相对Diff base的`backend/**`、`schemas/**`、`fixtures/**`、`benchmarks/**`、`scripts/**`、`.github/**`、`pyproject.toml`、`uv.lock`均为零差异；无migration、dependency或ADR变更，ADR-0001～0011均保持accepted。最终full治理为143 docs/30 roots/30 trace rows/36 tests/15 OPEN/13 SIM/11 risks/37 Tasks；Task diff为30 paths（8 committed-range / 30 working-tree union）、3 impact rows、19 checks、0 issues并PASS。
+
+## Completion evidence
+
+Audit documentation implementation commit `65c556789f176ad9de55523d6420737bb60f933f`的GitHub push run [`32677741558`](https://github.com/kumamon-xu/PlantNexus-APS/actions/runs/32677741558)为attempt 1 / `completed success`；required `validate` job `97288829348`全部步骤success。Branch protection继续要求`validate`/GitHub Actions app ID `15368`。Artifact `9503227240`（`plantnexus-ci-evidence-32677741558`，85829 bytes）未过期，digest=`sha256:fbb76c4340e71a571f3051db1813e89931b17eb92f69bfd8a9cca0932987e720`，expiry=`2026-11-22T00:47:08Z`。
+
+下载artifact得到20份JSON、495904 uncompressed bytes，0 parse error、0顶层失败。`ci-current-task-report.json`精确绑定implementation SHA、Diff base与TASK-P2-14，记录30 committed/0 working paths、3 impact rows、19 checks、0 issues；provider Gate同样绑定该SHA并复现11/11、2 replays、14 scenarios、6 profiles、108 Benchmark Validator passes、4 rejections与0 gaps，两次provider业务投影一致。由此[audit report](../../milestones/P2-exit-gate-audit-report.md)与[manifest](../../milestones/P2-exit-gate-evidence-manifest.json)维持overall=`READY`、`blocking_gaps=[]`，全部Completion conditions满足，TASK-P2-14=`done`。
+
+本revision只回填已发生的provider事实与生命周期，是evidence-only closure；其自身exact provider必须在push后作为外部交付证据核验，不能自我预填。Current phase继续P2、Milestone继续`active`（Gate ready / awaiting user decision），P3保持`NOT_STARTED`且未创建任何P3 Task；Production readiness/publish仍未声明。

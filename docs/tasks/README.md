@@ -36,7 +36,7 @@ last_reviewed: 2026-08-24
 | [TASK-P2-11](P2/TASK-P2-11-kpi-solver-report-and-export-closure.md) | KPI/report/internal Export | P2-08/09 | `done` |
 | [TASK-P2-12](P2/TASK-P2-12-benchmark-runner-xs-s-m.md) | BenchmarkRunner与XS/S/M | P2-08～11 | `done` |
 | [TASK-P2-13](P2/TASK-P2-13-p2-vertical-slice-gate-evidence.md) | Vertical Slice Gate evidence | P2-01～12 | `done` |
-| [TASK-P2-14](P2/TASK-P2-14-p2-exit-gate-audit.md) | P2 Exit Gate Audit | P2-01～13 | `in_progress` |
+| [TASK-P2-14](P2/TASK-P2-14-p2-exit-gate-audit.md) | P2 Exit Gate Audit | P2-01～13 | `done` |
 
 ## Lifecycle and planning-batch rules
 
@@ -44,7 +44,7 @@ last_reviewed: 2026-08-24
 
 普通CI event range仍只能变更一张current-phase Task Card。唯一例外是初始phase-planning batch：必须由新建`TASK-Pn-00`、`Task batch role: phase-planning-owner`、有效Diff base且`in_progress/done`的唯一owner归属；其他卡必须同range新建、role=`phase-plan-member`、保持`planned/ready`且不得预填implementation SHA。历史卡、既有成员、多个owner或active/done成员均硬失败。选择owner后仍按owner Diff base检查全部scope/Impact Rule。
 
-TASK-P2-00～13已`done`。P2-03的Diff base固定为`f73f8c90af94d3c9b05ecc10b6c999594a3b7d66`且ADR-0011先于dependency变更接受；P2-04～13的implementation及exact provider evidence均已闭环。TASK-P2-14已获授权并为`in_progress`。
+TASK-P2-00～14已`done`。P2-03的Diff base固定为`f73f8c90af94d3c9b05ecc10b6c999594a3b7d66`且ADR-0011先于dependency变更接受；P2-04～14的implementation及exact provider evidence均已闭环。P2 Exit Gate=`READY`，但current phase仍为P2。
 
 P2-04限定为正式Problem/Solution独立C-001～C-011判定、stable ValidationReport/Error、mutation/property/independence machine evidence及CI handoff；不得修改Backend、合同Schema、fixture历史bytes、dependency、objective、Benchmark或P3。P2-05及以后不会由本Task自动启动。
 
@@ -86,4 +86,4 @@ Implementation `dc2e5cd41080603606090ebfc4bc6162941c5f7f`的required run `324657
 
 用户于2026-08-24授权TASK-P2-14。启动门确认P2-01～13全部`done`，13组Diff base/implementation/closure ancestry、26个exact required runs/jobs/artifacts及下载后的364份JSON均一致；clean Diff base=`e76776d83726d13600d8ea29fd490474c8e32604`，其run/job/artifact=`32466635638`/`96724500691`/`9440970310`。当前只允许独立Exit审计、report/manifest和治理证据；不得修P2实现、创建P3 Task或改变current phase。
 
-TASK-P2-14本地审计已形成overall=`READY`、blocking gaps为空：476 tests、两次Gate 11/11、七场景×两轮完整§76 measurements、XS/S/M各8/8、108次Benchmark Validator与四类fail-closed拒绝全部PASS。Audit implementation exact provider尚待push后核验，因此索引继续为`in_progress`；P3未进入。
+TASK-P2-14本地审计已形成overall=`READY`、blocking gaps为空：476 tests、两次Gate 11/11、七场景×两轮完整§76 measurements、XS/S/M各8/8、108次Benchmark Validator与四类fail-closed拒绝全部PASS。Audit implementation `65c556789f176ad9de55523d6420737bb60f933f`的run `32677741558` / required job `97288829348` / artifact `9503227240`精确复现20/20 JSON、30 committed/0 working paths、3 rows、19 checks、0 issues及Gate 11/11，故索引=`done`；P3未进入。

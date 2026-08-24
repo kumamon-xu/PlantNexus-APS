@@ -16,7 +16,7 @@ last_reviewed: 2026-08-24
 | Field | Audited value |
 |---|---|
 | Audit Task | TASK-P2-14 |
-| Task lifecycle | `in_progress`；本地审计结论已形成，等待审计实现提交的 exact provider run/artifact 后关闭 Task |
+| Task lifecycle | `done`；审计实现提交的exact required provider已成功，本revision为evidence-only closure |
 | Audit date | 2026-08-24 (Asia/Hong_Kong) |
 | Local execution window | 2026-08-24T08:16～08:24+08:00 |
 | Diff base | `e76776d83726d13600d8ea29fd490474c8e32604` |
@@ -26,13 +26,13 @@ last_reviewed: 2026-08-24
 | Provider baseline | GitHub Actions / `kumamon-xu/PlantNexus-APS` / `main` / `.github/workflows/ci.yml` |
 | P2-13 closure provider | run `32466635638` / required job `96724500691` / artifact `9440970310` / digest `sha256:4a41a54cde5fe0cb349f177769bfff6e17b5820ffbf68c4811c46169a3860890` / not expired |
 | Audit activation provider | run `32675914600` / required job `97283877370` / artifact `9502674319` / digest `sha256:242d3d76e5570aa15cbba009ffd9294545940ea45f24fa945695bd6b6d6d5fef` / not expired；20/20 JSON PASS |
-| Audit implementation provider | `NOT_RUN` at decision-writing time；不得自我预填，成功后由evidence-only closure回填 |
+| Audit implementation provider | SHA `65c556789f176ad9de55523d6420737bb60f933f` / run `32677741558` / required job `97288829348` / artifact `9503227240` / digest `sha256:fbb76c4340e71a571f3051db1813e89931b17eb92f69bfd8a9cca0932987e720` / not expired；20/20 JSON PASS |
 | Branch protection | `main.protected=true`；required check `validate` / GitHub Actions app ID `15368`；force-push/deletion disabled |
 | Auditor | Codex execution agent |
 | Attestation | 本地命令、Git拓扑、下载后的364份CI JSON与GitHub API事实分别核验；这是透明的非密码学审计声明，credential未写入仓库或artifact |
 | Overall P2 Exit Gate | `READY` |
 | Blocking gaps | none |
-| Recommendation | 审计Task provider闭环后，请求用户另行批准 P2→P3；本Task不改变current phase、不创建P3 Task |
+| Recommendation | 请求用户另行明确批准P2→P3；本Task不改变current phase、不创建P3 Task |
 
 机器可读结论见
 [`P2-exit-gate-evidence-manifest.json`](P2-exit-gate-evidence-manifest.json)。
@@ -158,20 +158,36 @@ P2-03的accepted ADR-0011先于dependency change，P2-05的activation/scope-refi
 
 这些报告位于ignored `build/validation`，均绑定audit execution head
 `c6e57566871faefb2582e1c33218e1ba22b44785`；不伪装为已提交产品artifact。
-P2-14 implementation provider会在clean exact SHA上重新运行required workflow与Gate，结果必须另行回填。
+
+## Audit implementation provider closure
+
+Audit documentation implementation commit `65c556789f176ad9de55523d6420737bb60f933f`的
+GitHub push run [`32677741558`](https://github.com/kumamon-xu/PlantNexus-APS/actions/runs/32677741558)
+为attempt 1 / `completed success`；required `validate` job `97288829348`的全部主步骤成功。
+Branch protection继续精确要求`validate` / GitHub Actions app ID `15368`。
+
+Artifact `9503227240`（`plantnexus-ci-evidence-32677741558`，85829 bytes，
+digest=`sha256:fbb76c4340e71a571f3051db1813e89931b17eb92f69bfd8a9cca0932987e720`，
+expiry=`2026-11-22T00:47:08Z`）未过期。下载后20份JSON共495904 bytes，0 parse error、
+0顶层失败；Task report精确绑定该SHA/Diff base并记录30 committed/0 working paths、
+3 impact rows、19 checks、0 issues。Provider Gate同样绑定该SHA并复现11/11、2 replays、
+14 correctness scenarios、6 profiles、108 Benchmark Validator passes、4 rejections、0 gaps；
+两次provider业务投影一致，combined fingerprint=
+`sha256:f42ddb852594941953a00c873641d4a164e175c37b9b163b4ada3ddc77e18f7f`。
+因此TASK-P2-14 completion conditions全部满足并在本evidence-only revision中关闭为`done`。
 
 ## Gaps, boundaries and recommendation
 
 `blocking_gaps=[]`。没有发现需要在本audit内修复的P2实现、Schema、test、migration、
-dependency、ADR、workflow或文档治理缺口。审计Task自身provider尚未发生，只阻止Task lifecycle
-从`in_progress`变为`done`，不被伪装成已发生证据；若该run失败，必须撤回READY并登记blocking gap。
+dependency、ADR、workflow或文档治理缺口。审计实现自身exact provider已经成功并由上述事实闭环；
+本evidence-only closure的exact provider将在提交后外部核验，不能由本revision自我预填。
 
 以下事项明确不被本结论关闭：OPEN-001～015、RISK-001～011、真实source/field/topology/calendar/
 material/priority authority、独立Production数据库/角色、历史生产benchmark、L/XL、Production
 capacity/SLA、安全持续扫描、ScheduleVersion/ExportJob、审批发布、P3 Workspace、dynamic Replan、
 Execution Simulator与Production deployment。
 
-因此下一动作不是自动进入P3，而是：先让P2-14 implementation与evidence-only closure各自通过
-exact required provider；随后向用户报告P2 Gate=`READY`并等待明确的P2→P3授权。
+因此下一动作不是自动进入P3，而是：提交本evidence-only closure、外部核验其exact required provider，
+随后向用户报告P2 Gate=`READY`并等待明确的P2→P3授权。
 未经该授权，`docs/current_phase.md`继续为P2，P2 Milestone继续`active`（Gate ready / awaiting decision），
 不得创建或执行P3 Task。

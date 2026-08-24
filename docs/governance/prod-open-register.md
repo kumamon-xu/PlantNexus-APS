@@ -130,3 +130,5 @@ TASK-P2-13 local review：两次完整Gate聚合的correctness、XS/S/M Benchmar
 TASK-P2-13 provider closure：required run/artifact只精确复现Simulation/development Gate与其fail-closed边界，不是业务Authority、历史生产数据、SLA、审批、发布或closure record。OPEN-001～015全部继续`OPEN`，没有Production default/capacity/publish决定，registry format version保持`1.0.0`。
 
 TASK-P2-14 local audit review：Exit READY来自versioned synthetic correctness/benchmark、formal Validator、internal non-publishable Export、测试/构建/治理与provider evidence，不是任何业务Authority或closure record。审计没有收到真实接口/字段/拓扑/日历/material/priority/role、历史生产数据、capacity/SLA或migration/publish决定；OPEN-001～015全部继续`OPEN`并阻止依赖这些事实的Production声明，registry format version保持`1.0.0`。
+
+TASK-P2-14 provider closure：required run `32677741558` / artifact `9503227240`只确认上述Synthetic Exit审计可在provider精确复现，不是业务Authority或PROD_OPEN closure record。OPEN-001～015全部继续`OPEN`，registry format version保持`1.0.0`。

@@ -154,3 +154,9 @@ TASK-P3-01 provider artifact `9505303054`只精确复验合同/ADR和治理范�
 七份机器carrier显式保存plane/environment/provenance，但没有提供Production source、principal→capability、审批责任、external target、storage/MES/ERP adapter、capacity/SLA或deployment evidence。PublicationResult/ExportJob v1强制`SIMULATION_INTERNAL`；Production ScheduleVersion只可表达未发布评审态，因此不可能由本Schema release形成Production publish。
 
 OPEN-002/010/015及OPEN-001～015全部继续`OPEN`，没有Authority/Evidence closure record；OPEN-012也不因Schema byte size/count关闭。Exact CI provider只会证明repository contract replay，不是Production approval/readiness。`registry_version=1.0.0`不变。
+
+## TASK-P3-03 Production-open review
+
+Plane-scoped repository、Production publication/export constructor denial和DB mutation guard形成development storage evidence，但没有真实source/identity/role/approval owner、external target、independent Production database/network/credential、PostgreSQL capacity、backup/restore或deployment。Operational lease expiry也只是显式storage metadata，不是Production worker policy。
+
+因此OPEN-002/010/012/015及OPEN-001～015全部保持`OPEN`，没有closure record；SQLite 8/8、CI artifact或internal current reference均不得写成Production approval/publish/readiness。`registry_version=1.0.0`不变。

@@ -187,3 +187,9 @@ P3依赖方向固定为domain contracts/state→infrastructure repositories→ap
 ADR-0012已接受该方向并补充：domain定义versioned command/query/state/error语义；repository只提供plane-scoped immutable/append-only/CAS/idempotency原语；application是capability/state/transaction/fresh Validator的唯一owner；API/jobs/exporters只适配；React只消费HTTP并显示server authority。P3-02发布carrier、P3-03持久化、P3-04～09应用服务、P3-10 API、P3-11～13 frontend，不允许任一层反向成为第二权威。
 
 本Task没有创建module或代码。任何需要API→repository直写、UI/client solver、shared Solver/Validator、outbox/external adapter或P4 module引用的实现必须停止并先行新ADR/Task授权。
+
+## TASK-P3-03 repository layer formed
+
+`app.domain.state_machines.schedule_version|export_job`只包含pure CAS/attempt/lease不变量；`app.infrastructure.workspace_persistence`及四个SQLAlchemy repository只负责plane、canonical integrity、unique/FK/index、append-only、CAS和caller-owned transaction。依赖保持domain→infrastructure，且import package不建连接。Application/API/jobs/exporters/frontend均零差异，router/worker/UI仍不能直接写repository。
+
+未引入outbox、event bus、external adapter或新topology，因此无需新ADR；P3-04～09必须通过公开`*_in_transaction`原语由application组合capability/state/Validator/audit，不能把repository成功当成业务Gate成功。

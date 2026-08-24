@@ -243,3 +243,9 @@ raw credential/Secret不得成为provenance；actor和idempotency只保存稳定
 Additive set `2.6.0`新增七份exact v1/URN；旧P2 document仍保留各自`2.0.0～2.5.0` const和bytes。ScheduleVersion lineage必须同时引用PlanningRun、Snapshot、Problem、PlanningSolution、ValidationReport、KPI、SolverReport与code commit；query/command/comparison/publication/export分别保存version/content/request/result/job fingerprint；AuditEvent保存actor/capability/reason/request/idempotency/before-after/trace references。
 
 启动冻结的34份P2 Schema/sample清单摘要为`sha256:76bb8ae4347ae8bbaa0b2781f74eccd7e4cb1ee97303533a5db3e49f27673723`。P3 machine report记录14份新artifact exact SHA/bytes、canonical projections和code commit；provider闭环前不把本地`uncommitted`报告当外部证据。
+
+## TASK-P3-03 durable provenance
+
+ScheduleVersion同时保存canonical creation bytes、immutable fingerprint、content bytes/fingerprint及当前state carrier SHA；合法CAS只能改变合同允许的state metadata。AuditEvent/PublicationResult保存完整canonical bytes与SHA并由DB trigger禁止update/delete；ExportJob保存creation bytes、current job fingerprint、attempt/lease/state revision。Publication idempotency以plane+scope+key/request/result fingerprint绑定，current reference以revision CAS前移。
+
+Machine report `p3-persistence-report.v1`记录migration revision、五表/七index/八FK、四repository、CAS/replay/rollback/plane/trigger及8/8 checks，并由CI的`PLANTNEXUS_CODE_COMMIT`绑定exact SHA。它不改写P2/P3 Schema bytes，也不证明Production PostgreSQL capacity、backup/restore或external side effect。

@@ -141,3 +141,9 @@ TASK-P3-01 provider closure：implementation `3bf99cbafdad983795a83a88646240dbb0
 NFR-DET/TRC获得canonical projection、immutable lineage、exact artifact fingerprint和key-order replay；NFR-ISO/SEC获得plane/environment/provenance conditional、internal-only target、no role/body与no-secret carrier；NFR-REL获得ExportJob attempt/lease/error/idempotency shape；NFR-HUM获得server-derived allowed-actions与APPROVED-only carrier guard。ENG-ARCH/ERR/VER获得pure domain module、PRODUCT/WORKSPACE_CONTROL隔离和additive set`2.6.0`/stable URN/compatibility evidence。
 
 这些都是Schema与pure precheck证据，不是state、auth、transaction、API/UI/worker或Production行为。全部NFR/ENG根ID继续`ALLOCATED`，OPEN-002/010/015与RISK-012/013不关闭；dependency集合/`uv.lock`不变，`registry_version=1.0.0`不变。Exact implementation provider run `32689832111` / artifact `9506913562`已复验该有界证据并支持TASK-P3-02闭环。
+
+## TASK-P3-03 NFR / engineering review
+
+NFR-DET/TRC获得canonical creation/current bytes、immutable/append-only SHA及exact replay；NFR-ISO/SEC获得plane-scoped identity/read/CAS、internal-only Production denial、top-level/no-secret precheck、sanitized errors和DB triggers；NFR-REL获得unique/savepoint/CAS/caller transaction、ExportJob owner/expiry/attempt/heartbeat；NFR-HUM只获得既有pair的repository guard。ENG-ARCH/ERR/VER获得domain→repository分层、module-local persistence reasons和revisioned `0004`消费set`2.6.0`且dependency/lock零变化。
+
+SQLite evidence不外推PostgreSQL capacity/backup，repository不拥有auth/Validator/business state/API/UI/worker。全部NFR/ENG root保持`ALLOCATED`，OPEN-002/010/012/015及RISK-007/008/011～013不关闭，`registry_version=1.0.0`不变。

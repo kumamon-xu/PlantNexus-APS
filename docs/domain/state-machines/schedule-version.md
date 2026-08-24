@@ -85,3 +85,9 @@ same idempotency scope/key + same request只重放原logical result，不建立s
 `schedule-version.v1`只允许`DRAFT/READY_FOR_REVIEW/APPROVED/PUBLISHED/SUPERSEDED/REJECTED`，并通过conditional约束decision/publication/superseded reference的合法形状。Machine report逐项比对既有五个allowed pair，未新增self-transition或state。Production carrier不能表达PUBLISHED/SUPERSEDED；P3 publication evidence只接受`SIMULATION_INTERNAL`。
 
 这些是serialization与precheck，不证明任何pair已由repository/application执行。Copy-on-write、CAS、transition、APPROVED-only publish和current supersession分别等待TASK-P3-03/04/06～08。
+
+## TASK-P3-03 persistence primitive
+
+`schedule_versions`按`data_plane + schedule_version_id`隔离保存creation bytes、当前carrier、content/immutable fingerprint与单调`state_revision`。数据库trigger禁止identity、revision、lineage、validation、content、parent、creator和creation bytes更新并禁止delete；repository只允许通过expected state + expected revision的CAS执行既有五个pair。PUBLISHED→SUPERSEDED只更新state metadata，PUBLISHED/SUPERSEDED的content仍逐字节不可变；self-transition和stale CAS均拒绝。
+
+该primitive不决定capability、decision、APPROVED-only publish、supersession事务或fresh Validator，也不会创建DRAFT；这些仍属于P3-04/06～08 application。Schema、`state-machines.v1`及pair bytes保持不变，SQLite只提供测试证据，不等于Production concurrency。

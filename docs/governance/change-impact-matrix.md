@@ -356,3 +356,9 @@ Implementation artifact `9505303054`已绑定`3bf99cbafdad983795a83a88646240dbb0
 完整Diff base=`a8fcec3383ea0f8d9dca4101056aff37d7eea08c`，实际预期命中10行：`IMPACT-SCHEMA`（7 Schema/7 sample/data dictionary）、`IMPACT-DOMAIN`（pure workspace contracts/check）、`IMPACT-STATE`（三份state文档对齐）、`IMPACT-INFRA`（required CI step）、`IMPACT-DEPENDENCY`（pyproject metadata only）、`IMPACT-VERSION-METADATA`（app/pyproject set`2.6.0`）、`IMPACT-TESTS`（contract/integration）、`IMPACT-PHASE`、`IMPACT-GOVERNANCE-REGISTRY`、`IMPACT-DOCS`。各行required documents均逐字列入Task卡。
 
 `uv.lock`、34份P2 Schema/sample、三份rules、migration、`backend/app/infrastructure|application|api|jobs|exporters`、Solver/Validator、fixtures/benchmarks、`frontend/**`及later-phase machine carriers必须零差异。CI workflow只新增workspace machine command，不增权限/Secret/service/deployment。Implementation artifact `9506913562`已复现65 committed/0 working paths、上述10 rows、19 checks、0 issues及禁止范围零差异；因此本evidence-only closure可把TASK-P3-02标为`done`。Machine impact rule表与`registry_version=1.0.0`不变，P3-03不自动启动。
+
+## TASK-P3-03 impact review
+
+完整Diff base=`9621fda535f66393beab88efc13c100fc805c993`，预期且实际只能命中七行：`IMPACT-DOMAIN`（两个pure persistence-state module）、`IMPACT-STATE`（既有pair文档同步）、`IMPACT-INFRA`（`0004`、shared/four repositories、machine check与单一required CI step）、`IMPACT-TESTS`（unit/integration/migration/CI）、`IMPACT-PHASE`、`IMPACT-GOVERNANCE-REGISTRY`和`IMPACT-DOCS`。各行required docs均逐字进入Task allow-list。
+
+Schema/sample/rules、Planning/Solver/Validator、application/API/jobs/exporters/frontend、dependency/lock、fixture/benchmark与P4路径必须零差异。CI不增权限/Secret/service/deployment；machine Rule表及`registry_version=1.0.0`不变。Final path/check/issue计数由Task diff report与exact provider artifact回填；provider前保持`in_progress`。

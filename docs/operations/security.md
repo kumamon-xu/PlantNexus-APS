@@ -61,3 +61,9 @@ P3采用authority-neutral capability与Production default-deny；actor credentia
 TASK-P3-01合同现要求每个action同时校验authenticated principal reference、environment、data plane、capability、resource/state/fingerprint和target；客户端role/capability声明无效。Production缺少mapping/target时DENY，Simulation test policy必须`production_binding=false`且只作用于synthetic resource/`SIMULATION_INTERNAL`。高风险拒绝可写sanitized audit，但not-found不得泄漏跨scope资源。
 
 Audit/log/error/artifact不得包含token、cookie、authorization header、Secret、raw DSN/SQL/stack或未清洗PII；actor使用稳定reference。TASK-P3-01未形成authentication provider、RBAC/SSO、rate limit、CSRF/CSP、frontend dependency lock、SCA结果或Production threat model，OPEN-002/010/015和RISK-011/012/013均不因此关闭。
+
+## TASK-P3-03 storage security review
+
+Write前的carrier precheck拒绝unknown/missing top-level field、plane/environment/provenance drift和已登记secret-bearing key；repository错误只公开module-local reason/field/sanitized message，SQL/DSN/credential/stack不会向外透传。Plane进入全部identity/query/CAS；Publication/Export的Production constructor/DB约束双重default-deny。Append-only与immutable trigger提供绕过repository时的第二层保护。
+
+这些不是authentication/RBAC、encryption、retention、SCA、SIEM或Production threat-model证据；test actor和`SIMULATION_INTERNAL`仍无Production binding，OPEN-002/010/015与RISK-011～013保持开放/监控。

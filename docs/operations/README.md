@@ -140,3 +140,9 @@ P3-01先定义security/audit/idempotency责任，P3-03/07～10再形成repositor
 ## TASK-P3-02 operational boundary
 
 新增`python -m app.domain.workspace_contract_check --root . --report <ignored-json>`只做离线Schema/sample/fingerprint/frozen-byte验证。CI step non-skippable且artifact保存report，但没有service、health endpoint、DB、queue、worker、storage、external publish、rollback procedure或Production runbook形成。失败时返回非零并保存sanitized FAIL report；不得通过放宽Schema或删除负例恢复绿色。
+
+## TASK-P3-03 operational boundary
+
+新增`python -m app.infrastructure.workspace_persistence_check --root . --report <ignored-json>`在临时SQLite执行`0001→0004`、四repository正负路径、database trigger、caller rollback、populated `0004→0003→0004`并输出8/8 machine checks。CI step无`continue-on-error`并复用既有artifact glob；FAIL报告只含error type与sanitized固定message。
+
+非生产回滚仅允许在确认备份/可丢弃synthetic rows后downgrade到`0003`，这会删除全部P3表和历史；不得对真实ScheduleVersion/audit历史原地回退。没有新增service、health、queue、worker、dashboard、runbook、Production Secret/target或deployment，PostgreSQL backup/restore演练仍未形成。

@@ -68,3 +68,12 @@ last_reviewed: 2026-08-19
 - **ExportJob**：从PUBLISHED ScheduleVersion创建的独立lifecycle carrier；不等于ExportManifest或外部传输。
 
 这些词在TASK-P3-02只形成Schema与pure precheck含义；repository/application/API/UI/worker行为仍未形成。
+
+## TASK-P3-03 persistence terms
+
+- **State revision**：repository内部单调整数，只用于expected-state CAS并发控制，不是ScheduleVersion业务`revision`，也不进入机器carrier。
+- **Creation bytes**：首次插入ScheduleVersion/ExportJob时保存的canonical carrier bytes；同identity exact replay必须与其一致，之后的合法state metadata由当前carrier另存。
+- **Current publication reference**：按plane/target保存的唯一current ScheduleVersion projection；只能由PublicationResult storage transaction以expected reference CAS替换，不等于业务Publish授权。
+- **Lease expiry metadata**：ExportJob repository显式接收的UTC storage coordination值；没有DB业务默认，不是`export-job.v1`字段，不能由API或worker自行补猜。
+
+上述术语只描述TASK-P3-03持久化原语；approval/publish/export execution、HTTP/UI与Production topology仍未形成。

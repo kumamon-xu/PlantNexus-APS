@@ -89,3 +89,7 @@ Workspace合同确认PlanningRun只承担计算生命周期：`COMPLETED`不能�
 ## TASK-P3-02 separation review
 
 新增P3 Schema没有修改PlanningRun的16个state、31个allowed pair或terminal集合。`schedule-version.v1.lineage.planning_run_id`只引用已完成的validated P2 run；Workspace command、approval、publication与ExportJob不得重新解释Solver status或推进PlanningRun。Solver `UNKNOWN`继续终止为`NO_SOLUTION_WITHIN_LIMIT`且不能创建Version。
+
+## TASK-P3-03 persistence separation
+
+`0004`没有新增PlanningRun table、state或pair。ScheduleVersion repository只保存已由上游提供的lineage引用，不查询、推进或补写PlanningRun；Publication/Export storage也不能把`COMPLETED`解释为approve/publish/export授权。P3-04+的application仍必须在自己的启动门消费fresh validated solution；本Task的8/8 machine report只证明持久化边界。

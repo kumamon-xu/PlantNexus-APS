@@ -174,3 +174,9 @@ P3先行合同现固定计划映射：request/reference/data-plane `DATA_ERROR`�
 `audit-event.v1`及共享defs显式区分`PRODUCT`与`WORKSPACE_CONTROL`。PRODUCT继续只接受既有七类category；module-local `workspace-control.v1`只接受`AUTHORIZATION_DENIED`、`IDEMPOTENCY_CONFLICT`、`EXPORT_FAILED`，三者未写入且不得冒充`error-code-registry.v2`。`UNKNOWN`的既有product含义继续是`NO_SOLUTION_WITHIN_LIMIT`，没有candidate，不得变成INFEASIBLE或ScheduleVersion。
 
 Schema/纯precheck错误在consumer副作用前拒绝unknown field/version/state、plane/provenance混用、fingerprint/reference drift和raw secret-bearing key。它们不决定HTTP、retry、audit persistence或真实授权；这些行为仍分配给P3-03/06～10。
+
+## TASK-P3-03 persistence error boundary
+
+Repository新增module-local `PersistenceFailure`：`INVALID_DOCUMENT`、`DATA_PLANE_MISMATCH`、`IDENTITY_CONFLICT`、`IDEMPOTENCY_CONFLICT`、`STATE_CONFLICT`、`LEASE_CONFLICT`、`APPEND_ONLY`、`PERSISTENCE_FAILED`。它们统一由`WorkspacePersistenceError`返回field与sanitized message，不暴露SQL、DSN、credential或stack；SQLAlchemy/driver异常不会穿透边界。这些不是global Product Error code，也没有修改`error-code-registry.v2`；P3-10才负责稳定HTTP映射。
+
+Carrier top-level required/unknown、plane/environment/provenance和canonical fingerprint在write前fail closed；CAS/lease/identity冲突不写成功state或audit。事务调用者回滚由测试证明，但真实PostgreSQL故障分类和Production retry policy仍未形成。

@@ -135,3 +135,9 @@ TASK-P3-01 provider run `32684713630` / artifact `9505303054`没有生成或修�
 七份sample复用既有`SIM-P2-GOLDEN-JSSP-001@1.0.0`、Profile、Generator与显式seed作为contract vector；没有新增Factory拓扑、分布、runtime、latency、size或业务默认值。Sample timestamp/ID/fingerprint仅用于确定性Schema replay，不是新的定量Simulation assumption。
 
 因此不新增、修改或retire条目，SIM-ASSUMPTION-001～013全部继续`ACTIVE`；internal target和CI replay不得外推为Production事实，`registry_version=1.0.0`不变。
+
+## TASK-P3-03 simulation assumption review
+
+Repository/migration tests继续只使用既有P3 synthetic samples、固定UTC和临时SQLite；表数、row数、lease秒数、attempt和执行时间仅为contract vector，不是工厂拓扑、分布、SLA或worker默认。`lease_expires_at_utc`逐调用显式传入，不从sample推导Production配置。
+
+没有新增、修改或retire任何条目，SIM-ASSUMPTION-001～013继续`ACTIVE`；Simulation/internal evidence不得外推Production，`registry_version=1.0.0`不变。

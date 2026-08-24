@@ -94,3 +94,9 @@ TASK-P3-01未创建`export-job.v1`、repository、lease/heartbeat/attempt、stor
 `export-job.v1`只允许`CREATED/EXPORTING/EXPORTED/EXPORT_FAILED/CANCELLED`并按state约束attempt、lease/heartbeat、artifact/error和timestamps。Machine report复验既有六个allowed pair；idempotent replay不表示self-transition。Source必须是PUBLISHED ScheduleVersion，target仅`SIMULATION_INTERNAL`。
 
 本Task不建表、不抢lease、不执行retry/cancel、不写artifact，也不改变ScheduleVersion state。Repository/CAS由TASK-P3-03形成，worker/package behavior由TASK-P3-09形成。
+
+## TASK-P3-03 persistence primitive
+
+`export_jobs`只接受`SIMULATION`/`SIMULATION_INTERNAL`且source必须匹配同plane的PUBLISHED ScheduleVersion。Creation以scope/key/request fingerprint和creation bytes exact-replay；state CAS只接受既有六个pair，claim/retry必须把attempt恰好加一，非claim transition保持attempt。Heartbeat是同一`EXPORTING` lease上的operational CAS，不登记为state self-transition；错误owner、expired lease、stale revision全部fail closed。
+
+DB中的`lease_expires_at_utc`是调用者显式提供、不可由默认值补猜的storage coordination metadata，不进入`export-job.v1` carrier或job fingerprint；若未来需要对API暴露它，必须先发布新Schema版本。当前没有Celery business task、package writer、artifact manifest、external storage或自动retry；P3-09仍负责真实export行为。

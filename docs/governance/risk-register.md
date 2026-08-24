@@ -135,3 +135,9 @@ Strict/no-default Schema、body无role authority、copy-on-write content fingerp
 若provider报告、历史fingerprint、state/error集合或forbidden boundary任一失败，TASK-P3-02保持`in_progress`并停止P3-03；不能通过放宽required/additionalProperties或修改P2 bytes消除失败。`registry_version=1.0.0`不变。
 
 Implementation run `32689832111` / artifact `9506913562`已通过上述检查，故本closure把TASK-P3-02标为`done`；这不关闭RISK-012/013，也不降低P3-03 persistence与后续authority风险，`registry_version=1.0.0`保持不变。
+
+## TASK-P3-03 risk review
+
+Plane/unique/CAS/append-only/immutable trigger与caller rollback提高RISK-007/008/013的可见性；sanitized error和无dependency drift继续约束RISK-011/012。ExportJob owner/expiry/attempt与publication replay/current CAS只降低storage-level duplicate/race暴露，不证明worker crash、network side effect、business transaction或Production authority。
+
+SQLite不能替代PostgreSQL concurrency/capacity/backup，且application/API/UI/worker尚未形成，因此RISK-001～013全部继续`MONITORED`，不降低severity/status。Provider失败或migration/CAS/trigger回归必须保持Task`in_progress`并阻止P3-04，不能删除历史数据或放宽guard修绿；`registry_version=1.0.0`不变。

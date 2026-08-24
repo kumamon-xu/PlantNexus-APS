@@ -48,3 +48,9 @@ P3-03负责version/audit/export repository的transaction与unique-key基础；P3
 ADR-0012现固定最低scope=`data_plane + action + resource/version + target + idempotency_key`，request fingerprint覆盖contract version、state/content precondition、payload、reason和target。same key/same fingerprint返回原logical result且不重复业务audit/state/artifact；same key/different fingerprint为conflict。Approve/Reject、Publish和Export各自独立scope，timeout后必须先查询原result，不能换key盲重试。
 
 Publish transaction只处理APPROVED→PUBLISHED/current/必要supersession/audit；ExportJob独立执行既有pair、attempt/retry/atomic manifest-last，永不调用Publish。TASK-P3-01没有实现DB unique/CAS、lease/heartbeat、worker、storage、outbox或network exactly-once；这些仍由P3-03/08/09及未来external adapter负责。
+
+## TASK-P3-03 durable primitives
+
+DB unique现覆盖Audit/Publication/Export的plane+scope+key，concurrent PostgreSQL insert race在savepoint内解析为exact replay或conflict；SQLite保留外层transaction rollback。ScheduleVersion/ExportJob使用expected state+monotonic revision CAS。ExportJob claim/retry显式接收future UTC lease expiry并递增attempt，heartbeat校验owner、未过期与revision；完成/失败/cancel从`EXPORTING`时也必须持有active lease。
+
+Publication repository可以在一个caller transaction内append immutable result并CAS current reference，exact replay不会再次移动current；它不执行APPROVED→PUBLISHED或旧current→SUPERSEDED。没有worker、automatic retry、outbox、package/storage/network side effect或distributed exactly-once，P3-08/09仍须组合业务事务与失败恢复。

@@ -67,3 +67,9 @@ TASK-P3-01以当时下一个未使用编号接受ADR-0012，决定command-only/c
 ## TASK-P3-02 ADR conformance
 
 本Task无需新ADR：七份v1 carrier逐项实现accepted ADR-0012的append-only/copy-on-write shape、query/command分离、既有state/pair、capability/default-deny边界、approve/publish/export分离、idempotency/audit同一致性要求和P3/P4/Production边界。它没有执行这些行为或改变transaction topology；发现语义缺口时仍必须先提交superseding ADR，不能私改Schema。ADR-0007/0009的immutability/provenance与ADR-0012均保持accepted。
+
+## TASK-P3-03 ADR conformance
+
+`0004`与repositories直接实现ADR-0002/0007/0009/0012已经接受的modular repository、immutable version、provenance、append-only/idempotency/CAS边界；没有引入outbox、event bus、external storage、new state/pair或不同transaction topology，因此不需新ADR。Storage-only state/reference revision和显式lease expiry不改变carrier/state语义，也没有DB业务默认。
+
+若P3-04+需要公开lease expiry、新outbox/exactly-once、mutable PUBLISHED content、cross-plane current、external target或新pair，必须先停止并新建/supersede ADR与Schema；现有ADR历史事实不改写。

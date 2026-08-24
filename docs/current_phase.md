@@ -17,7 +17,7 @@ last_reviewed: 2026-08-24
 
 P2-14 audit implementation `65c556789f176ad9de55523d6420737bb60f933f`的GitHub push run `32677741558` / required `validate` job `97288829348` / artifact `9503227240`成功，artifact digest=`sha256:fbb76f0ab44d3bdcff2d31e70f9698af84e10e48ee57ae611eef8529a288240e`；evidence-only closure `80c403384d1e171258cf874d26605d0d22aff1b2`的run `32678248961` / job `97290201234` / artifact `9503372291`也成功，digest=`sha256:673412905b7420660d1e9f07755fcda6291f85f8f2bd926b4bf31a0a6bd1bd0c`。下载检查的两份artifact均含20份可解析JSON，Task/SHA/Impact Rules/checks/issues与对应提交一致且0 issue。规划启动时`main=origin/main=80c403384d1e171258cf874d26605d0d22aff1b2`、ahead/behind=`0/0`且working tree clean，因此transition前提一致。
 
-P2 Milestone现为`completed`，P3 Milestone为`active`。`TASK-P3-00 — P3 Phase Transition and Task Planning Governance`、`TASK-P3-01 — Planning Workspace Contract and ADR Baseline`与`TASK-P3-02 — ScheduleVersion Workspace and Export Schemas`均已由exact implementation provider闭环并在evidence-only closure标为`done`；P3-03～15保持`planned`且不会自动启动。
+P2 Milestone现为`completed`，P3 Milestone为`active`。`TASK-P3-00 — P3 Phase Transition and Task Planning Governance`、`TASK-P3-01 — Planning Workspace Contract and ADR Baseline`与`TASK-P3-02 — ScheduleVersion Workspace and Export Schemas`均已由exact implementation provider闭环并在evidence-only closure标为`done`；用户现已另行明确授权TASK-P3-03并将其置为`in_progress`，P3-04～15保持`planned`且不会自动启动。
 
 ## 当前目标
 
@@ -49,16 +49,22 @@ TASK-P3-02从clean、synchronized且P3-01 closure provider-verified的`a8fcec338
 
 七份strict Schema/URN、七份sample、canonical fingerprints、24个Schema negative、6个fingerprint negative和8/8 machine checks已经形成；P2 bytes、state pair、global error registry、dependency/lock保持不变。Implementation `aff27d3d6b63fb9f216c9a2687408a6c676fa96a`的run/job/artifact=`32689832111`/`97321420908`/`9506913562`精确复现21/21 JSON PASS、65 committed/0 working paths、10 rows、19 checks和0 issues，故本closure把Task标为`done`；P3-03不启动。
 
+## TASK-P3-03 已激活边界
+
+TASK-P3-03从clean、synchronized且P3-02 closure provider-verified的`9621fda535f66393beab88efc13c100fc805c993`启动并冻结为不可变Diff base。P3-02 closure run/job/artifact=`32690302424`/`97322642627`/`9507045338`精确成功；启动门定向migration/Snapshot回归12 passed。当前只允许`0004`可逆migration、plane-scoped ScheduleVersion/Audit/Publication/ExportJob repositories、既有pair的CAS/lease/transaction原语、限定tests/machine evidence与命中文档；业务审批、发布、导出、API/UI/Celery task和P3-04+仍禁止。
+
+本地实现已形成5张表、四类repository与`p3-persistence-report.v1` 8/8 checks；36项focused与503项全仓测试、Ruff、Pyright、全部既有machine contracts、P2 Gate、XS benchmark、Compose、build及治理均PASS。当前Task diff为52 paths、7 rows、19 checks、0 issues。Exact implementation provider与evidence-only closure尚未形成，故TASK-P3-03继续为`in_progress`且P3-04不启动。
+
 ## 当前允许
 
 - 读取并复核P3-01/02合同、Schema、provider evidence和P2 frozen artifact；
-- 在用户另行明确授权前保持P3-03～15为`planned`；
+- 按TASK-P3-03冻结allow-list实现持久化基础并保留P2/P3 Schema bytes；
 - 后续P3 Task只有在逐Task明确授权后，才可按各卡允许范围和新的不可变Diff base实施。
 
 ## 当前禁止
 
-- 在P3-03未获授权前修改业务代码、migration、dependency/lock、fixture/benchmark、`frontend/**`实现或infra；
-- 执行P3-03～15，或让其中任何Task自动进入`ready/in_progress`；
+- 超出TASK-P3-03 allow-list修改Schema、dependency/lock、fixture/benchmark、`frontend/**`、application/API/exporter/Celery业务实现或infra；
+- 执行P3-04～15，或让其中任何Task自动进入`ready/in_progress`；
 - 直接更新PUBLISHED、绕过server/formal Validator、允许DRAFT/REJECTED发布或产生非幂等export/publish；
 - 实现P4的ExecutionEvent、ReplanRequest、OBJ-002 Stability、freeze window、ChangeReport或Execution Simulator；
 - 创建P4详细Task、进入P4，或声明Production readiness、approval authority、external publish/deployment已形成；

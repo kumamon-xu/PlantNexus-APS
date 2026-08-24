@@ -34,3 +34,9 @@ P3-02定义AuditEvent carrier，P3-03形成append-only persistence，P3-07～10�
 TASK-P3-01已固定`audit-event.v1`的人类语义：event identity/version/UTC、stable actor reference与resolved capability、environment/plane/action/aggregate/target、sanitized reason、request fingerprint/idempotency reference、完整P2/P3 lineage、before/after或source/new Version、result/error/replay和correlation/code/schema/policy versions。成功state/idempotency/audit必须同一一致性边界；audit append-only，纠正只能追加引用旧event。
 
 该carrier机器Schema与durable store仍未形成。Structured log/trace不替代audit，read access日志与business audit分开；retention、SIEM、legal hold、backup/restore、dashboard/alert/SLO和external collector继续未决定。
+
+## TASK-P3-03 append-only audit storage
+
+`audit_events`现在按plane+event ID保存完整canonical carrier/SHA，按aggregate/time和correlation建索引，并以可选scope/key unique实现exact replay/conflict。Parent event必须在同plane存在；database trigger禁止任何update/delete，纠正只能由后续application追加新event。Caller-owned transaction入口允许P3-07～10把成功state/idempotency/audit放在同一transaction，但本Task不自行写业务audit。
+
+Machine evidence只证明synthetic append/replay/conflict/list/trigger/rollback。Audit retention、legal hold、SIEM、PII policy、dashboard/alert/SLO、backup/restore与Production identity仍未形成。

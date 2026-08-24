@@ -130,3 +130,9 @@ Production没有principal→capability/resource/target mapping时DENY，`SIMULAT
 七份P3 Schema固定carrier中的authority边界：P2 artifact references/content fingerprint是ScheduleVersion事实；state pair仍由`state-machines.v1`授权；`allowed_actions`是未来server结果而非client grant；authenticated principal/role明确不进入command body；Publication/Export v1 target仅`SIMULATION_INTERNAL`。Synthetic sample和CI provider均不是Production authority。
 
 `app.domain.workspace_contracts`只验证canonical/cross-value invariant，不读取DB、environment identity provider或客户端role。真实repository/application/auth/API authority仍未形成，OPEN-002/010/015继续default-deny。
+
+## TASK-P3-03 persistence authority
+
+机器Schema继续是carrier形状/字段权威，`state-machines.v1`继续是pair权威；migration没有用DB default补造任何业务字段。Repository只保存完整carrier并维护storage-only state/reference revision与显式lease expiry。ScheduleVersion content/lineage/validation以creation+immutable fingerprint为权威历史，AuditEvent/PublicationResult只能追加，current publication reference只是可CAS projection。
+
+Repository不是capability、approval、publish或export authority；`SIMULATION_INTERNAL`存储成功也不授权Production。OPEN-002/010/015保持OPEN，真实identity/target/field owner仍不能由test actor或DB row推断。

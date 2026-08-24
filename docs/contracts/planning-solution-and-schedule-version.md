@@ -93,4 +93,10 @@ P3-04只能把fresh formal Validator接受的PlanningSolution复制为immutable 
 
 Schema只允许既有六个ScheduleVersion state，Production carrier只能表达未发布评审态；P3 v1 publication evidence只接受`SIMULATION_INTERNAL`。`app.domain.workspace_contracts`复验content fingerprint和Validation lineage相等，但不创建Version、不执行copy-on-write/transition/authorization/publish。P2 PlanningSolution/Validation/KPI/Export bytes完全保留；behavior owner仍为TASK-P3-03～08。
 
+## TASK-P3-03 repository contract
+
+ScheduleVersion persistence现要求：完整`2.6.0` carrier通过pure/top-level/plane/fingerprint precheck；identity按plane+ID唯一；creation bytes同值重放，不同值冲突；parent reference只能指向同plane已存Version；immutable projection覆盖版本、lineage、validation、content、parent、creator和created-at。合法state metadata变化必须同时满足existing pair、expected state与单调state revision，数据库trigger提供第二层content/delete保护。
+
+Repository不会从PlanningSolution创建DRAFT、不会调用Validator，也不会判断approve/publish capability。P3-04必须复制fresh Validator PASS的validated solution并提供完整carrier；P3-06修改/lock仍必须新建Version，不能调用CAS原地改content。
+
 既有pair不变：DRAFT→READY_FOR_REVIEW，READY_FOR_REVIEW→APPROVED/REJECTED，APPROVED→PUBLISHED，PUBLISHED→SUPERSEDED。Approve/Reject只消费READY，Publish只消费APPROVED，PUBLISHED content不可变；REJECTED/历史Version的修订只能派生新DRAFT。所有这些仍是文档合同，`schedule-version.v1` Schema、DB、application/API/UI行为由P3-02+形成。

@@ -102,3 +102,9 @@ P3标准包未来必须增加ScheduleVersion、approval/publication、ExportJob/
 [`publication-result.v1`](../../schemas/json/publication-result.schema.json)现固定APPROVED source→PUBLISHED logical result、可选previous-current→SUPERSEDED一一对应、idempotency reference/replay/audit与canonical result fingerprint；plane/target强制`SIMULATION`/`SIMULATION_INTERNAL`，所以它不能被解释为Production publish approval。
 
 [`export-job.v1`](../../schemas/json/export-job.schema.json)现固定PUBLISHED ScheduleVersion source、`p3-standard-export.v1` profile identity、既有五state、attempt/lease/heartbeat、manifest/storage reference、sanitized error、timestamps/audit与canonical job fingerprint。它与`export-manifest.v1`不互换，且不会修改P2 `p2-internal-export.v1` bytes。Schema/pure precheck不创建Job、不写package、不重试、不发布、不访问外部storage；这些行为分别等待TASK-P3-03/08/09，OPEN-002/010/015继续阻塞外部和Production target。
+
+## TASK-P3-03 ExportJob storage contract
+
+ExportJob repository现形成create/exact replay/conflict、state+revision CAS、explicit lease claim、heartbeat owner/expiry校验、failure→retry attempt递增和append-only identity/delete guards。Source必须匹配同plane已存PUBLISHED Version；Production repository construction和cross-plane read/write均拒绝。PublicationResult/current reference另由独立repository持久化，ExportJob永不改变current或ScheduleVersion state。
+
+该证据不创建`export-manifest.v1`、文件、package、storage reference或外部side effect；`EXPORTED`只能由P3-09在manifest-last/package integrity成功后提交。SQLite行数/延迟不构成OPEN-012或Production容量证据。

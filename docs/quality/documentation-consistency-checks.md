@@ -363,3 +363,9 @@ P3首次规划batch以`80c403384d1e171258cf874d26605d0d22aff1b2`为不可变Diff
 Full docs、Task diff report、`git diff --check`与forbidden-root checks须在implementation和evidence-only closure各自运行；Task report必须绑定exact SHA/Impact rows/checks/issues。Provider artifact内workspace machine report和Task report任一Task/SHA/count/issue不一致即保持`in_progress`并阻止TASK-P3-03。
 
 Implementation artifact `9506913562`中的`traceability-report.v1`精确绑定`aff27d3d6b63fb9f216c9a2687408a6c676fa96a`与Diff base，复现165/30/48/15/13/13/53治理计数、65 committed/0 working paths、10 rows、19/19 checks和0 issues。因此TASK-P3-02治理Gate闭环；本evidence-only closure自身仍须push后复核，P3-03保持`planned`。
+
+## TASK-P3-03 diff governance
+
+不可变Diff base=`9621fda535f66393beab88efc13c100fc805c993`。完整union只能命中`IMPACT-DOMAIN/STATE/INFRA/TESTS/PHASE/GOVERNANCE-REGISTRY/DOCS`七行；Task卡逐字冻结migration、四repository、shared/machine modules、两个state modules、四个test/CI文件和全部required docs。Schema/sample/rules、Planning/Solver/Validator、application/API/jobs/exporters/frontend、dependency/lock、fixture/benchmark与P4路径必须零差异。
+
+Full docs、Task diff、`git diff --check`、forbidden-root与machine report必须在implementation和closure各运行一次。Provider artifact必须精确绑定Task/SHA/Diff base、7 rows、full check set和0 issues；在provider形成前P3-03保持`in_progress`且P3-04不得启动。

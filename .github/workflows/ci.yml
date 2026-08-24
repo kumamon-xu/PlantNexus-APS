@@ -141,6 +141,12 @@ jobs:
           --root .
           --report build/validation/ci-p3-workspace-contracts.json
 
+      - name: P3 workspace persistence evidence
+        run: >-
+          uv run python -m app.infrastructure.workspace_persistence_check
+          --root .
+          --report build/validation/ci-p3-persistence.json
+
       - name: Engineering contract
         run: >-
           uv run python -m app.infrastructure.contract_check

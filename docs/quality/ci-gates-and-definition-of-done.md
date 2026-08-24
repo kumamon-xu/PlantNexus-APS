@@ -243,3 +243,9 @@ uv run python -m app.domain.workspace_contract_check \
 报告必须为`p3-workspace-contract-report.v1`、Task=`TASK-P3-02`、schema set=`2.6.0`、8/8 checks、7 Schema/7 sample、34 frozen P2 artifacts、24 shape negative、6 fingerprint negative并绑定`PLANTNEXUS_CODE_COMMIT` exact SHA。现有`build/validation/*.json` artifact glob会上传它；缺失/FAIL不能continue。Gate PASS只证明机器carrier与历史冻结，不证明P3 persistence/state/API/UI、P4或Production。
 
 Implementation provider Gate已通过：SHA `aff27d3d6b63fb9f216c9a2687408a6c676fa96a`、run `32689832111`、required `validate` job/check `97321420908`（app `15368`）均success；artifact `9506913562`未过期，digest=`sha256:fdc527be47df10febdd50395134b0a97799e15c2607fa0202c99d6679798ef0b`。21/21 JSON PASS，workspace 8/8与Task 65 committed/0 working paths、10 rows、19 checks、0 issues均绑定同一SHA；TASK-P3-02 DoD完成，不自动授权P3-03。
+
+## TASK-P3-03 required persistence evidence
+
+Required `validate`新增non-skippable `P3 workspace persistence evidence`：`uv run python -m app.infrastructure.workspace_persistence_check --root . --report build/validation/ci-p3-persistence.json`。报告必须为`p3-persistence-report.v1`、Task=`TASK-P3-03`、migration=`0004_schedule_versions_audit_export_jobs`、status PASS、8/8 checks、5 tables、4 repositories、4 DB mutation与2 plane mismatch拒绝，并与Task report绑定同一`PLANTNEXUS_CODE_COMMIT` exact SHA。
+
+本地PASS只允许Task保持`in_progress`。只有implementation push的required run/job成功、artifact同时复现persistence/Task report的SHA、7 Impact rows、全部checks和`issues=[]`后，才可进行evidence-only closure；closure自身也须exact provider。任一migration/replay/CAS/lease/rollback/artifact失败阻止P3-04，不得删历史row或改写migration恢复绿色。

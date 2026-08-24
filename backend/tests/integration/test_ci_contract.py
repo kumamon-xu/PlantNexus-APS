@@ -12,6 +12,9 @@ import yaml
 from app.application.p2_gate_report import main as p2_gate_main
 from app.domain.workspace_contract_check import main as workspace_contract_main
 from app.exporters.contract_check import main as output_contract_main
+from app.infrastructure.workspace_persistence_check import (
+    main as workspace_persistence_main,
+)
 from app.planning.backends.cp_sat.contract_check import (
     main as backend_contract_main,
 )
@@ -140,6 +143,8 @@ def test_ci_runs_repository_gates_and_discovers_the_current_task() -> None:
         "build/validation/ci-p2-output-contracts.json",
         "app.domain.workspace_contract_check",
         "build/validation/ci-p3-workspace-contracts.json",
+        "app.infrastructure.workspace_persistence_check",
+        "build/validation/ci-p3-persistence.json",
         "app.infrastructure.contract_check",
         "docker compose --env-file .env.example config --quiet",
         "PLANTNEXUS_CI_CHANGE_BASE:",
@@ -160,6 +165,7 @@ def test_ci_runs_repository_gates_and_discovers_the_current_task() -> None:
     assert "name: P2 XS BenchmarkRunner evidence" in workflow
     assert "name: P2 vertical slice Gate evidence" in workflow
     assert "name: P3 workspace schema contract evidence" in workflow
+    assert "name: P3 workspace persistence evidence" in workflow
     assert "Benchmark hook (deferred until runner exists)" not in workflow
     assert "Benchmark runner remains deferred" not in workflow
     assert "actions/upload-artifact@v4" in workflow
@@ -182,9 +188,7 @@ def test_ci_runs_repository_gates_and_discovers_the_current_task() -> None:
 def test_ci_p3_workspace_schema_contract_is_required_and_machine_checkable(
     tmp_path: Path,
 ) -> None:
-    workflow = (ROOT / ".github" / "workflows" / "ci.yml").read_text(
-        encoding="utf-8"
-    )
+    workflow = (ROOT / ".github" / "workflows" / "ci.yml").read_text(encoding="utf-8")
     normalized = " ".join(workflow.split())
     assert (
         "name: P3 workspace schema contract evidence run: >- uv run python -m "
@@ -195,9 +199,7 @@ def test_ci_p3_workspace_schema_contract_is_required_and_machine_checkable(
 
     report_path = tmp_path / "p3-workspace-contracts.json"
     assert (
-        workspace_contract_main(
-            ["--root", str(ROOT), "--report", str(report_path)]
-        )
+        workspace_contract_main(["--root", str(ROOT), "--report", str(report_path)])
         == 0
     )
     report = json.loads(report_path.read_text(encoding="utf-8"))
@@ -215,10 +217,38 @@ def test_ci_p3_workspace_schema_contract_is_required_and_machine_checkable(
     }
 
 
-def test_ci_benchmark_contract_is_xs_only_and_baseline_bound() -> None:
-    workflow = (ROOT / ".github" / "workflows" / "ci.yml").read_text(
-        encoding="utf-8"
+def test_ci_p3_persistence_is_required_and_machine_checkable(tmp_path: Path) -> None:
+    workflow = (ROOT / ".github" / "workflows" / "ci.yml").read_text(encoding="utf-8")
+    normalized = " ".join(workflow.split())
+    assert (
+        "name: P3 workspace persistence evidence run: >- uv run python -m "
+        "app.infrastructure.workspace_persistence_check --root . --report "
+        "build/validation/ci-p3-persistence.json"
+    ) in normalized
+    assert "continue-on-error" not in workflow
+
+    report_path = tmp_path / "p3-persistence.json"
+    assert (
+        workspace_persistence_main(["--root", str(ROOT), "--report", str(report_path)])
+        == 0
     )
+    report = json.loads(report_path.read_text(encoding="utf-8"))
+    assert report["report_version"] == "p3-persistence-report.v1"
+    assert report["status"] == "PASS"
+    assert report["task_id"] == "TASK-P3-03"
+    assert report["migration_revision"] == ("0004_schedule_versions_audit_export_jobs")
+    assert report["check_count"] == 8
+    assert report["counts"] == {
+        "tables": 5,
+        "repositories": 4,
+        "machine_checks": 8,
+        "database_mutation_rejections": 4,
+        "plane_mismatch_rejections": 2,
+    }
+
+
+def test_ci_benchmark_contract_is_xs_only_and_baseline_bound() -> None:
+    workflow = (ROOT / ".github" / "workflows" / "ci.yml").read_text(encoding="utf-8")
     assert workflow.count("scripts/run_benchmark.py") == 1
     assert '--profile "${PLANTNEXUS_BENCHMARK_PROFILE}"' in workflow
     assert "PLANTNEXUS_BENCHMARK_PROFILE: xs" in workflow
@@ -233,17 +263,13 @@ def test_ci_benchmark_contract_is_xs_only_and_baseline_bound() -> None:
         "profile_version": xs.profile_version,
         "size": xs.size,
     }
-    assert baseline["boundaries"]["production_sla"] == (
-        "NOT_ESTABLISHED_OPEN_012"
-    )
+    assert baseline["boundaries"]["production_sla"] == ("NOT_ESTABLISHED_OPEN_012")
 
 
 def test_ci_p2_vertical_slice_gate_is_required_and_machine_checkable(
     tmp_path: Path,
 ) -> None:
-    workflow = (ROOT / ".github" / "workflows" / "ci.yml").read_text(
-        encoding="utf-8"
-    )
+    workflow = (ROOT / ".github" / "workflows" / "ci.yml").read_text(encoding="utf-8")
     normalized = " ".join(workflow.split())
     assert (
         "name: P2 vertical slice Gate evidence run: >- uv run python -m "
@@ -427,10 +453,7 @@ def test_ci_cp_sat_temporal_model_report_is_machine_checkable(
     tmp_path: Path,
 ) -> None:
     report_path = tmp_path / "cp-sat-temporal-model.json"
-    assert (
-        temporal_model_main(["--root", str(ROOT), "--report", str(report_path)])
-        == 0
-    )
+    assert temporal_model_main(["--root", str(ROOT), "--report", str(report_path)]) == 0
     report = json.loads(report_path.read_text(encoding="utf-8"))
 
     assert report["report_version"] == "cp-sat-temporal-model-report.v1"
@@ -470,9 +493,7 @@ def test_ci_cp_sat_temporal_model_report_is_machine_checkable(
     assert report["boundaries"]["objective"] == (
         "POSTSOLVE_MEASUREMENT_ONLY_NOT_OPTIMIZED"
     )
-    assert report["boundaries"]["benchmark"] == (
-        "MODEL_DELTA_ONLY_NO_XS_S_M_BASELINE"
-    )
+    assert report["boundaries"]["benchmark"] == ("MODEL_DELTA_ONLY_NO_XS_S_M_BASELINE")
 
 
 def test_ci_cp_sat_fact_lock_model_report_is_machine_checkable(
@@ -480,8 +501,7 @@ def test_ci_cp_sat_fact_lock_model_report_is_machine_checkable(
 ) -> None:
     report_path = tmp_path / "cp-sat-fact-lock-model.json"
     assert (
-        fact_lock_model_main(["--root", str(ROOT), "--report", str(report_path)])
-        == 0
+        fact_lock_model_main(["--root", str(ROOT), "--report", str(report_path)]) == 0
     )
     report = json.loads(report_path.read_text(encoding="utf-8"))
 
@@ -525,9 +545,7 @@ def test_ci_cp_sat_fact_lock_model_report_is_machine_checkable(
 def test_ci_objective_strategy_report_is_machine_checkable(tmp_path: Path) -> None:
     report_path = tmp_path / "objective-strategy.json"
     assert (
-        objective_strategy_main(
-            ["--root", str(ROOT), "--report", str(report_path)]
-        )
+        objective_strategy_main(["--root", str(ROOT), "--report", str(report_path)])
         == 0
     )
     report = json.loads(report_path.read_text(encoding="utf-8"))
@@ -570,12 +588,7 @@ def test_ci_objective_strategy_report_is_machine_checkable(tmp_path: Path) -> No
 
 def test_ci_p2_correctness_report_is_machine_checkable(tmp_path: Path) -> None:
     report_path = tmp_path / "p2-correctness.json"
-    assert (
-        p2_correctness_main(
-            ["--root", str(ROOT), "--report", str(report_path)]
-        )
-        == 0
-    )
+    assert p2_correctness_main(["--root", str(ROOT), "--report", str(report_path)]) == 0
     report = json.loads(report_path.read_text(encoding="utf-8"))
 
     assert report["report_version"] == "p2-correctness-report.v1"
@@ -623,9 +636,7 @@ def test_ci_p2_correctness_report_is_machine_checkable(tmp_path: Path) -> None:
 def test_ci_reference_scheduler_report_is_machine_checkable(tmp_path: Path) -> None:
     report_path = tmp_path / "reference-schedulers.json"
     assert (
-        reference_scheduler_main(
-            ["--root", str(ROOT), "--report", str(report_path)]
-        )
+        reference_scheduler_main(["--root", str(ROOT), "--report", str(report_path)])
         == 0
     )
     report = json.loads(report_path.read_text(encoding="utf-8"))
@@ -663,8 +674,7 @@ def test_ci_reference_scheduler_report_is_machine_checkable(tmp_path: Path) -> N
     assert len(report["scenario_results"]) == 35
     assert all(value["status"] == "FEASIBLE" for value in report["scenario_results"])
     assert all(
-        value["validation_status"] == "PASS"
-        and value["hard_violation_count"] == 0
+        value["validation_status"] == "PASS" and value["hard_violation_count"] == 0
         for value in report["scenario_results"]
     )
     assert report["boundaries"] == {
@@ -684,8 +694,7 @@ def test_ci_reference_scheduler_report_is_machine_checkable(tmp_path: Path) -> N
 def test_ci_p2_output_contract_report_is_machine_checkable(tmp_path: Path) -> None:
     report_path = tmp_path / "p2-output-contracts.json"
     assert (
-        output_contract_main(["--root", str(ROOT), "--report", str(report_path)])
-        == 0
+        output_contract_main(["--root", str(ROOT), "--report", str(report_path)]) == 0
     )
     report = json.loads(report_path.read_text(encoding="utf-8"))
 

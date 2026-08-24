@@ -233,3 +233,9 @@ TASK-P3-01没有创建`frontend/**`、`package.json`/lock、Node pin、dependenc
 P3 Schema/precheck复用Python 3.12标准库、既有`jsonschema==4.25.1`与`referencing`链；没有新增runtime/dev dependency。`pyproject.toml`只把global schema metadata提升到`2.6.0`，`uv.lock`保持启动摘要`sha256:8b13617f31aa6a933347fc7b8ba010330cbb3f2d764f75c306dd9b6d77387a82`。CI增加单一required machine step并复用既有artifact upload glob。
 
 本Task不安装Frontend技术栈、不增加DB/queue/export库、不修改Solver/Validator，也不形成Production topology。
+
+## TASK-P3-03 persistence technology review
+
+实现只复用locked Python 3.12、SQLAlchemy `2.0.43`与Alembic `1.16.5`；`pyproject.toml`和`uv.lock`零变化。`0004_schedule_versions_audit_export_jobs`使用SQLAlchemy/Alembic portable table/index/FK/check定义，并为SQLite/PostgreSQL分别提供immutability trigger；repository使用SQLAlchemy Core、nested savepoint仅处理PostgreSQL concurrent unique race，SQLite保持caller rollback语义。
+
+临时SQLite证明合同、migration和negative path，不证明PostgreSQL并发吞吐、locking plan、capacity、backup或Production deployment。未引入outbox、queue、storage SDK、API/UI或P4依赖。

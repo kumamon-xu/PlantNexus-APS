@@ -133,3 +133,9 @@ P3-02定义ScheduleVersion、AuditEvent与ExportJob机器合同，P3-03形成不
 Global schema set `2.6.0`新增七个顶层document：ScheduleVersion、WorkspaceQuery、WorkspaceCommand、ScheduleVersionComparison、AuditEvent、PublicationResult和ExportJob。`ScheduleVersion.content`只含PlanningSolution assignment shape与operation lock；identity/state/lineage/validation/decision/publication是content外的版本元数据，content fingerprint只覆盖immutable content。Parent/source kind表达copy-on-write lineage，但本Task不执行派生。
 
 Query/command以不同document分离：query result只含stable projection references与server-derived allowed actions；command只含intent/CAS/idempotency，认证principal不在body。Comparison是read model；AuditEvent是append-only carrier；PublicationResult与ExportJob分离。Pure module只做canonical fingerprint、state enum和cross-value一致性precheck，不包含entity repository、aggregate mutation或transaction。
+
+## TASK-P3-03 durable aggregate boundary
+
+首次形成五张P3 storage table：ScheduleVersion、AuditEvent、PublicationResult、current publication reference与ExportJob。ScheduleVersion/ExportJob保留immutable identity和单调state revision，AuditEvent/PublicationResult完全append-only，current reference是唯一允许CAS替换的projection。四个plane-scoped repository同时提供caller-owned transaction入口，使后续application可在一个transaction中组合state/idempotency/audit，而repository自身不拥有业务command。
+
+该实现只持久化既有carrier；没有新增Schema字段、领域state、approval/publish/export aggregate behavior、API/UI或P4对象。DB operational lease expiry不是领域carrier字段或默认值。

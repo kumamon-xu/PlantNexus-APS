@@ -1,7 +1,7 @@
 ---
 doc_id: TASK-P3-03
 title: ScheduleVersion Audit and Export Persistence
-status: planned
+status: in_progress
 spec_version: 0.3.0
 phase: P3
 normative: true
@@ -27,9 +27,9 @@ Non-goals: 不创建HTTP/UI/Celery业务task，不改变state pair，不连接�
 
 Inputs: P3 Schemas、ADR-0002/0007/0009、TASK-P3-01 accepted Workspace ADR、state-machines.v1、现有SQLAlchemy/Alembic/job primitives。
 
-Diff base: set only when this Task enters in_progress; must be the immediate full 40-character HEAD
+Diff base: 9621fda535f66393beab88efc13c100fc805c993
 
-Files allowed to change: `backend/migrations/versions/0004_schedule_versions_audit_export_jobs.py`、`backend/app/infrastructure/schedule_version_repository.py`、`backend/app/infrastructure/audit_repository.py`、`backend/app/infrastructure/export_job_repository.py`、`backend/app/infrastructure/publication_repository.py`、`backend/app/domain/state_machines/schedule_version.py`、`backend/app/domain/state_machines/export_job.py`、对应`__init__.py`、限定unit/integration/migration tests及`Documents to update`；实际路径激活前逐字固定。
+Files allowed to change: `.github/workflows/ci.yml`、`backend/migrations/versions/0004_schedule_versions_audit_export_jobs.py`、`backend/app/infrastructure/__init__.py`、`backend/app/infrastructure/workspace_persistence.py`、`backend/app/infrastructure/schedule_version_repository.py`、`backend/app/infrastructure/audit_repository.py`、`backend/app/infrastructure/export_job_repository.py`、`backend/app/infrastructure/publication_repository.py`、`backend/app/infrastructure/workspace_persistence_check.py`、`backend/app/domain/state_machines/__init__.py`、`backend/app/domain/state_machines/schedule_version.py`、`backend/app/domain/state_machines/export_job.py`、`backend/tests/unit/test_p3_persistence_state.py`、`backend/tests/integration/test_p3_persistence.py`、`backend/tests/integration/test_migrations_and_infrastructure.py`、`backend/tests/integration/test_ci_contract.py`及`Documents to update`逐字列出的文档；这是激活时冻结的精确allow-list。
 
 Files forbidden to change: P3/P2 Schema bytes、Planning/Solver/Validator、`backend/app/application/**`、`backend/app/api/**`、`backend/app/exporters/**`、`backend/app/jobs/celery_app.py`、`frontend/**`、dependency/lock、workflow（除非仅接入本Taskmachine evidence且激活前扩卡）、P4 tables/events。
 
@@ -39,7 +39,7 @@ Outputs: `0004` migration、四类repository、持久化状态原语与machine r
 
 Documentation impact: required
 
-Documents to update: 三份state-machine文档、`docs/domain/domain-model.md`、`docs/domain/error-model.md`、`docs/contracts/planning-solution-and-schedule-version.md`、`docs/contracts/export-package.md`、`docs/architecture/module-boundaries.md`、`docs/architecture/data-authority.md`、`docs/architecture/provenance-and-versioning.md`、`docs/architecture/configuration-environments-and-isolation.md`、`docs/operations/README.md`、`docs/operations/security.md`、`docs/operations/observability-and-audit.md`、`docs/operations/worker-reliability-and-idempotency.md`、`docs/quality/test-strategy-and-matrix.md`、`docs/quality/ci-gates-and-definition-of-done.md`、全部governance/trace/impact/inventory必审文档、`docs/adr/README.md`、本Task卡。
+Documents to update: `docs/current_phase.md`、`docs/milestones/README.md`、`docs/milestones/P3-planning-workspace.md`、`docs/tasks/README.md`、`docs/tasks/TASK_TEMPLATE.md`、`docs/tasks/P3/TASK-P3-03-schedule-version-audit-and-export-persistence.md`、`docs/domain/state-machines/planning-run.md`、`docs/domain/state-machines/schedule-version.md`、`docs/domain/state-machines/export-job.md`、`docs/domain/domain-model.md`、`docs/domain/error-model.md`、`docs/core/glossary.md`、`docs/contracts/planning-solution-and-schedule-version.md`、`docs/contracts/export-package.md`、`docs/architecture/module-boundaries.md`、`docs/architecture/data-authority.md`、`docs/architecture/provenance-and-versioning.md`、`docs/architecture/configuration-environments-and-isolation.md`、`docs/architecture/technology-stack.md`、`docs/operations/README.md`、`docs/operations/security.md`、`docs/operations/observability-and-audit.md`、`docs/operations/worker-reliability-and-idempotency.md`、`docs/quality/test-strategy-and-matrix.md`、`docs/quality/ci-gates-and-definition-of-done.md`、`docs/quality/documentation-consistency-checks.md`、`docs/governance/requirements-register.md`、`docs/governance/nfr-and-engineering-register.md`、`docs/governance/traceability-rules.md`、`docs/governance/traceability-matrix.md`、`docs/governance/prod-open-register.md`、`docs/governance/sim-assumption-register.md`、`docs/governance/risk-register.md`、`docs/governance/change-impact-matrix.md`、`docs/governance/document-inventory.md`、`docs/adr/README.md`。
 
 Documentation impact rationale: 首次ScheduleVersion/ExportJob/audit durable state与migration影响不可变性、重试、隔离、安全、回滚及状态证据。
 
@@ -82,3 +82,17 @@ PROD_OPEN: OPEN-002/010/012/015保持OPEN；repository不提供真实角色、�
 SIM_ASSUMPTIONS: 只用显式synthetic rows；不新增工厂定量假设。
 
 Rollback: 代码回退配合`0004` downgrade仅用于有备份的非生产/测试；已产生的ScheduleVersion/audit历史不得原地改写，Production迁移需另行runbook授权。
+
+## Activation evidence
+
+2026-08-24用户明确授权执行TASK-P3-03。激活前确认`main=origin/main=9621fda535f66393beab88efc13c100fc805c993`且working tree clean；TASK-P3-02=`done`，其evidence-only closure exact run/job/artifact=`32690302424`/`97322642627`/`9507045338`为required `validate` success，下载artifact为21/21 JSON PASS并精确绑定closure SHA。启动门定向migration/Snapshot回归为12 passed，覆盖既有`0001～0003` empty/populated upgrade/downgrade和Snapshot insert-only；因此将该HEAD冻结为本Task不可变Diff base。
+
+本Task只接入一个无`continue-on-error`的P3 persistence machine-evidence CI step；不改变workflow权限、Secret、service或deployment。任何Schema字段缺口、state pair变化、outbox/topology决定或跨allow-list路径需求都必须先停止并修订治理边界，不能用数据库私有业务默认或提前实现P3-04+补齐。
+
+## Local implementation validation
+
+2026-08-24本地实现已在不可变Diff base `9621fda535f66393beab88efc13c100fc805c993`上完成：additive `0004` migration形成5张plane-scoped表、8个外键、7个索引与3个幂等唯一约束；四类repository形成exact replay/conflict、append-only/immutable DB guard、既有pair CAS、publication current CAS、显式ExportJob lease/attempt与caller-owned transaction rollback。SQLite测试证明trigger/rollback/plane isolation和populated downgrade边界；PostgreSQL DDL只形成定义并经静态合同检查，未实际执行，不能据此声明并发容量或Production可用性。
+
+本地focused persistence/migration/CI回归为36 passed，完整repository suite为503 passed；`uv sync --locked`、Ruff、Pyright、Compose config、build、全部既有machine contracts、P2 Gate与XS benchmark均PASS。`p3-persistence-report.v1`为8/8 checks、5 tables、4 repositories、4次DB mutation拒绝和2次plane mismatch拒绝；治理报告为52 working-tree paths、7条Impact rows、19 checks、0 issues，`git diff --check`及Schema/dependency/application/API/exporter/frontend/P4禁止范围核验均PASS。
+
+以上只证明本地storage primitive slice。Implementation exact SHA、required `validate`与artifact尚待push后provider核验，因此Task保持`in_progress`；不得启动TASK-P3-04，也不得声称业务审批、发布、导出、外部副作用或Production readiness已形成。

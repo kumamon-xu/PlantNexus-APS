@@ -58,22 +58,22 @@ registry_version: 1.0.0
 | TEST-VALIDATOR-MUTATION | 独立 Validator 拒绝人工错误计划 | P0-P2 | P0/formal suites + [11 formula-free mutations of Solver-produced candidates](../../backend/tests/validation/test_p2_solver_mutations.py) formed；performance integration PLANNED |
 | TEST-REPLAN | Replan 事实、锁与变化报告 | P4 | PLANNED |
 | TEST-OUTPUT | 标准成果包合同 | P2-P3 | [`test_p2_output_contracts.py`](../../backend/tests/contract/test_p2_output_contracts.py) + [`test_p2_export_package.py`](../../backend/tests/integration/test_p2_export_package.py) internal synthetic profile/schema/hash/count/lineage/tamper/atomic boundary formed；P3 publish PLANNED |
-| TEST-IDEMPOTENCY | Import/Planning/Export/Publish/Event 幂等 | P0-P3 | generic primitive + durable Import staging + [`test_p2_export_package.py`](../../backend/tests/integration/test_p2_export_package.py) exact internal directory replay/conflict/partial cleanup formed；business Worker/Planning/ExportJob/Publish/Event side effects PLANNED |
+| TEST-IDEMPOTENCY | Import/Planning/Export/Publish/Event 幂等 | P0-P3 | generic primitive + durable Import staging + P2 internal package + TASK-P3-03 Audit/Publication/ExportJob unique exact replay/conflict and current-reference CAS formed；business approval/publish/export/worker/external side effects PLANNED |
 | TEST-SCENARIO-REPLAY | Scenario/Profile/Generator/seed 重放 | P0-P2 | empty/P0 + P1 ingress + [seven versioned Solver/Validator replays](../../backend/tests/property/test_p2_solver_properties.py) with fixed hashes and row-order invariance formed |
-| TEST-SIM-ISOLATION | Synthetic/Production 隔离 | P0-P1 | generator Production/no-Planning + Raw/Snapshot plane guards + [application expected-plane/no-shortcut](../../backend/tests/integration/test_p1_common_ingress.py) formed；separate DB/API/publish guards PLANNED |
+| TEST-SIM-ISOLATION | Synthetic/Production 隔离 | P0-P3 | generator/common-ingress + Raw/Snapshot + TASK-P3-03 plane-scoped repository/cross-plane/internal-only publication-export guards formed；separate Production DB/API/auth/publish target PLANNED |
 | TEST-REFERENCE-SCHEDULER | Reference Scheduler baseline | P2 | [five algorithms / 35 complete candidates / explicit failure](../../backend/tests/unit/test_reference_schedulers.py) and [shrinkable properties](../../backend/tests/property/test_reference_scheduler_properties.py) provider-verified |
 | TEST-BENCHMARK | BenchmarkReport/profile 回归 | P2 | [`test_benchmark_contract.py`](../../backend/tests/contract/test_benchmark_contract.py) + [`test_benchmark_runner.py`](../../backend/tests/integration/test_benchmark_runner.py) strict Profile/Report/Baseline、XS/S/M replay、Global/Reference/Validator/KPI、warning/threshold与required CI XS artifact provider-verified |
 | TEST-PROPERTY | 合法 Problem 的通用不变量 | P2 | Problem v2/formal/Solver properties + [Reference gate/duration/due and authoritative Problem properties](../../backend/tests/property/test_reference_scheduler_properties.py) + [generated XS/S/M formal pipeline replay](../../backend/tests/integration/test_benchmark_runner.py) formed |
 | TEST-SOLVER-UPGRADE | Solver 升级 replay/status contract | P2+ | Benchmark baseline固定Python/OR-Tools/environment signature并拒绝profile/problem/complexity drift的P2 development slice formed；实际upgrade重建新版本baseline/compatibility evidence仍PLANNED |
 | TEST-WORKSPACE-CONTRACT-001 | P3页面/API/permission/state/error/audit/idempotency合同一致性 | P3 | TASK-P3-01 human baseline + TASK-P3-02 seven strict machine carriers/pure fingerprints/negative vectors formed；persistence/application/API/UI behavior PLANNED |
-| TEST-SCHEDULE-VERSION-REPOSITORY-001 | ScheduleVersion/Audit/ExportJob migration、immutability、transaction与replay | P3 | PLANNED / TASK-P3-03 |
+| TEST-SCHEDULE-VERSION-REPOSITORY-001 | ScheduleVersion/Audit/ExportJob migration、immutability、transaction与replay | P3 | FORMED / TASK-P3-03 local；exact provider closure PENDING |
 | TEST-SCHEDULE-VERSION-LIFECYCLE-001 | Validated Solution→DRAFT→READY_FOR_REVIEW与非法状态拒绝 | P3 | PLANNED / TASK-P3-04、07～08 |
 | TEST-WORKSPACE-READ-MODEL-001 | Gantt、Resource Load、Order View与Version Comparison lineage/KPI一致性 | P3 | PLANNED / TASK-P3-05 |
 | TEST-GANTT-COMMAND-001 | Edit/Lock command→server validation→new DRAFT→formal Validator | P3 | PLANNED / TASK-P3-06 |
 | TEST-APPROVAL-AUTHORIZATION-001 | authority-neutral capability、default-deny、approve/reject guards | P3 | PLANNED / TASK-P3-07、10、13 |
 | TEST-PUBLISH-IDEMPOTENCY-001 | APPROVED-only publish、same-key replay、conflict与supersession | P3 | PLANNED / TASK-P3-08 |
-| TEST-EXPORT-JOB-001 | ExportJob transition、package integrity、atomic/idempotent export与失败恢复 | P3 | PLANNED / TASK-P3-03、09 |
-| TEST-AUDIT-TRAIL-001 | append-only actor/reason/correlation/before-after/version audit完整性 | P3 | PLANNED / TASK-P3-03、07～10 |
+| TEST-EXPORT-JOB-001 | ExportJob transition、package integrity、atomic/idempotent export与失败恢复 | P3 | persistence state/lease/attempt slice FORMED / TASK-P3-03 local；package/export behavior PLANNED / TASK-P3-09 |
+| TEST-AUDIT-TRAIL-001 | append-only actor/reason/correlation/before-after/version audit完整性 | P3 | append/replay/trigger/index slice FORMED / TASK-P3-03 local；business action completeness PLANNED / TASK-P3-07～10 |
 | TEST-WORKSPACE-API-001 | HTTP payload/error/auth/idempotency/OpenAPI与application boundary | P3 | PLANNED / TASK-P3-10 |
 | TEST-WORKSPACE-FRONTEND-001 | read/action UI、状态可见性、accessibility与no-client-authority E2E | P3 | PLANNED / TASK-P3-11～13 |
 | TEST-P3-VERTICAL-SLICE-001 | P3完整workspace→review→approve→publish→export双重replay与拒绝门 | P3 | PLANNED / TASK-P3-14～15 |
@@ -293,5 +293,11 @@ TASK-P3-01形成三份Frontend规范、两份语义合同和accepted ADR-0012，
 本地受影响contract=`73 passed`、CI integration focused=`4 passed`、全仓=`493 passed`、machine checks=`8/8`。Implementation run `32689832111` / artifact `9506913562`再次通过全仓suite并精确绑定workspace/Task报告。这些只形成TEST-CONTRACT-001与TEST-WORKSPACE-CONTRACT-001的carrier slice，并复验TEST-STATE-TRANSITION-001与TEST-ERROR-MAPPING-001 preservation；不形成auth decision、repository transaction、transition behavior、HTTP/UI/E2E、external side effect或Production readiness。
 
 因此P3新Test ID总数仍为48且behavior lifecycle保持`PLANNED`；本Task不得新增/修改测试断言。后续P3-02必须先形成strict Schema/round-trip evidence，P3-03～13按卡片形成repository/application/API/UI evidence，P3-14/15再聚合和独立审计。
+
+## TASK-P3-03 persistence test slice
+
+`test_p3_persistence_state.py`与`test_p3_persistence.py`覆盖既有pair、content/identity mutation、stale CAS、top-level carrier rejection、audit exact replay/conflict/DB trigger、caller transaction rollback、publication result+current atomic replay、ExportJob claim/heartbeat/wrong owner/failure/retry及Production plane拒绝；既有migration suite新增五表检查和populated `0004` destructive downgrade/re-upgrade。CI contract要求`p3-persistence-report.v1`为Task P3-03、8/8、5 tables、4 repositories并绑定exact SHA。
+
+这些形成TEST-SCHEDULE-VERSION-REPOSITORY-001及TEST-IDEMPOTENCY/SIM-ISOLATION的storage slice，并只部分形成TEST-EXPORT-JOB-001/AUDIT-TRAIL-001；真实PostgreSQL concurrency/capacity、business audit completeness、package/side-effect与Production仍PLANNED。Test ID总数48、registry version`1.0.0`不变。
 
 TASK-P3-01本地治理/规则回归为`27 passed`，implementation required run `32684713630`的完整repository suites与20份artifact JSON均PASS。该结果只验证合同文档、registry与既有state/error preservation；48个Test ID及全部P3 behavior lifecycle不因此提升，P3-02仍需新的明确授权。

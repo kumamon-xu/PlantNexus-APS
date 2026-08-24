@@ -23,6 +23,10 @@ from app.infrastructure.import_staging_repository import (
     SqlAlchemyImportStagingRepository,
 )
 from app.infrastructure.snapshot_repository import SqlAlchemySnapshotRepository
+from app.infrastructure.schedule_version_repository import (
+    SqlAlchemyScheduleVersionRepository,
+)
+from app.infrastructure.workspace_persistence import WorkspaceDataPlane
 from app.infrastructure.redis_client import create_redis_client
 from app.importers import (
     RawImportRow,
@@ -67,6 +71,11 @@ def test_empty_database_migration_upgrades_and_downgrades(tmp_path: Path) -> Non
             "planning_snapshots",
             "raw_import_batches",
             "raw_import_rows",
+            "schedule_versions",
+            "audit_events",
+            "publication_results",
+            "publication_current_references",
+            "export_jobs",
         } <= tables
         unique_constraints = inspect(engine).get_unique_constraints(
             "engineering_idempotency_records"
@@ -77,9 +86,9 @@ def test_empty_database_migration_upgrades_and_downgrades(tmp_path: Path) -> Non
         raw_batch_unique_constraints = inspect(engine).get_unique_constraints(
             "raw_import_batches"
         )
-        assert {
-            constraint["name"] for constraint in raw_batch_unique_constraints
-        } == {"uq_raw_import_batches_plane_source_idempotency"}
+        assert {constraint["name"] for constraint in raw_batch_unique_constraints} == {
+            "uq_raw_import_batches_plane_source_idempotency"
+        }
         raw_row_unique_constraints = inspect(engine).get_unique_constraints(
             "raw_import_rows"
         )
@@ -89,9 +98,9 @@ def test_empty_database_migration_upgrades_and_downgrades(tmp_path: Path) -> Non
         snapshot_unique_constraints = inspect(engine).get_unique_constraints(
             "planning_snapshots"
         )
-        assert {
-            constraint["name"] for constraint in snapshot_unique_constraints
-        } == {"uq_planning_snapshots_snapshot_id"}
+        assert {constraint["name"] for constraint in snapshot_unique_constraints} == {
+            "uq_planning_snapshots_snapshot_id"
+        }
     finally:
         engine.dispose()
 
@@ -241,6 +250,65 @@ def test_populated_snapshot_migration_downgrade_is_destructive_and_reversible(
             data_plane=SnapshotDataPlane.SIMULATION,
         )
         assert repository.get_by_hash(snapshot.snapshot_hash) is None
+    finally:
+        engine.dispose()
+    command.downgrade(configuration, "base")
+
+
+def test_populated_p3_workspace_migration_downgrade_is_destructive_and_reversible(
+    tmp_path: Path,
+) -> None:
+    database_path = tmp_path / "populated-p3-workspace.db"
+    database_url = f"sqlite:///{database_path.as_posix()}"
+    configuration = _alembic_config(database_url)
+    command.upgrade(configuration, "0003_planning_snapshots")
+    engine = create_engine(database_url)
+    try:
+        assert "schedule_versions" not in set(inspect(engine).get_table_names())
+    finally:
+        engine.dispose()
+
+    command.upgrade(configuration, "head")
+    schedule_document = cast(
+        dict[str, object],
+        json.loads(
+            (ROOT / "schemas/samples/schedule-version.v1.synthetic.json").read_text(
+                encoding="utf-8"
+            )
+        ),
+    )
+    engine = create_engine(database_url)
+    try:
+        repository = SqlAlchemyScheduleVersionRepository(
+            engine,
+            data_plane=WorkspaceDataPlane.SIMULATION,
+        )
+        assert repository.put(schedule_document).replayed is False
+        assert repository.get("schedule-version-sim-001") == schedule_document
+    finally:
+        engine.dispose()
+
+    command.downgrade(configuration, "0003_planning_snapshots")
+    engine = create_engine(database_url)
+    try:
+        tables_after = set(inspect(engine).get_table_names())
+        assert "planning_snapshots" in tables_after
+        assert "schedule_versions" not in tables_after
+        assert "audit_events" not in tables_after
+        assert "publication_results" not in tables_after
+        assert "publication_current_references" not in tables_after
+        assert "export_jobs" not in tables_after
+    finally:
+        engine.dispose()
+
+    command.upgrade(configuration, "head")
+    engine = create_engine(database_url)
+    try:
+        repository = SqlAlchemyScheduleVersionRepository(
+            engine,
+            data_plane=WorkspaceDataPlane.SIMULATION,
+        )
+        assert repository.get("schedule-version-sim-001") is None
     finally:
         engine.dispose()
     command.downgrade(configuration, "base")

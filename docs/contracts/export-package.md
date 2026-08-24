@@ -82,3 +82,7 @@ Gate每次full replay既重放P2-11独立output contract，也验证XS/S/M各自
 SolverReport时间和timing-dependent KPI会使跨完整run的package identity合法变化；Gate只对不含这些run-specific identity的versioned business projection要求一致，并诚实保留所有原始hash。Exporter实现/Schema/bytes规则未修改，Gate不把自身报告装入package，不创建ScheduleVersion/ExportJob，也不改变`publishable=false`。
 
 Provider artifact `9440650646`内两次显式output与六次embedded Export证据均PASS并绑定implementation SHA；package仍不可发布，ScheduleVersion/ExportJob仍未创建。TASK-P2-13闭环不改变P3合同或状态边界。
+
+## TASK-P2-14 Exit audit
+
+审计重新执行两次完整Gate与476项回归，确认2次显式output contract、6次benchmark embedded Export、fresh Validation/KPI/SolverReport、9 payload hash/count/lineage及atomic replay均PASS。Export Schema/bytes与实现零差异；`publishable=false`、ScheduleVersion/ExportJob=`NOT_CREATED`、approval/publish=`NOT_STARTED`保持，P2 READY不等于P3发布能力。

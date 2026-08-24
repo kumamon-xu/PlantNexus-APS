@@ -328,3 +328,9 @@ Schema/global set、migration/database、runtime/dev dependency与`uv.lock`、AD
 本地完整Diff治理已实际覆盖37 paths（activation 8 committed、当前37 working-tree union）、上述六行、19 checks与0 issues并PASS。Implementation exact provider artifact形成前不得把该本地结果写成外部required evidence或关闭Task。
 
 Implementation artifact `9440650646`已绑定`dc2e5cd41080603606090ebfc4bc6162941c5f7f`并复现37 committed/0 working paths、上述六行、19 checks与0 issues；TASK-P2-13据此关闭为`done`。Schema/migration/dependency/lock/ADR及冻结业务实现边界保持零差异，P2-14/P3不自动启动。
+
+## TASK-P2-14 impact review
+
+完整Diff base范围只允许命中`IMPACT-PHASE`（audit report/manifest、current phase、Milestone/Task索引）、`IMPACT-GOVERNANCE-REGISTRY`（REQ/NFR/trace/open/sim/risk/matrix review）和`IMPACT-DOCS`（合同/规划/质量/清单同步）三行。Ignored `build/validation/TASK-P2-14-*`和`build/traceability/TASK-P2-14-report.json`不进入Git diff或Markdown inventory。
+
+Backend/application、Schema/global set、fixture/benchmark baseline、test assertions、scripts/workflow、dependency/lock、migration/database、ADR、API/Worker、P3+均相对Diff base零差异，故不声明其他Rule ID。Machine rule table、required-document列和`registry_version=1.0.0`不变；最终本地Task diff report已覆盖30 paths（8 committed-range / 30 working-tree union）、上述3 rows、19 checks、0 issues并PASS。Exact implementation provider仍须复现该范围，形成前不得关闭Task。

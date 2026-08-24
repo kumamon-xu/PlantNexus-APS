@@ -113,3 +113,5 @@ TASK-P2-12 provider closure：required XS artifact精确复现同一profile/vers
 TASK-P2-13 local review：Gate仅重放SIM-ASSUMPTION-011～013既有correctness/reference/benchmark资产及其version/seed/hash，不新增、修改或retire任何assumption。`repeat=2`是Gate验收配置，不是工厂、Scenario或Production定量假设；四类拒绝输入也是contract vectors而非新事实。SIM-ASSUMPTION-001～013全部继续`ACTIVE`，不得用于Production默认值、capacity/SLA或PROD_OPEN closure，registry format version保持`1.0.0`。
 
 TASK-P2-13 provider closure：required artifact精确复现既有Scenario/Profile/seed/hash与两次Gate，没有新增、修改或retire任何assumption。SIM-ASSUMPTION-001～013继续`ACTIVE`；provider执行不把repeat、timing、memory或拒绝向量提升为Production事实，registry format version保持`1.0.0`。
+
+TASK-P2-14 local audit review：审计只重放SIM-ASSUMPTION-011～013的既有versioned correctness/reference/XS-S-M assets；额外`repeat=2`逐场景measurement是审计观测配置，不新增Factory/Profile/Scenario参数或分布。没有新增、修改或retire条目；SIM-ASSUMPTION-001～013全部继续`ACTIVE`，timing/memory/size不得成为Production default、capacity/SLA或PROD_OPEN closure，registry format version保持`1.0.0`。

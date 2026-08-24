@@ -212,3 +212,9 @@ Workflow在既有P2 XS Benchmark step后新增不可跳过的`P2 vertical slice 
 Local Gate现为2 replays、11/11 checks、14 correctness scenarios、22 mutations、6 benchmark profiles、108 benchmark Validator passes、8 Export executions、4 rejections、stable semantic hash unique=`1`、0 blocking gaps。FAIL report必须非零，workflow不得`continue-on-error`。这只形成TASK-P2-13 implementation candidate；exact implementation SHA required `validate`/artifact尚须push后核验，且本Task绝不产生P2 Exit READY。
 
 Implementation provider Gate已通过：SHA `dc2e5cd41080603606090ebfc4bc6162941c5f7f`、run `32465737712`、required `validate` job/check `96721819879`（app `15368`）均success；artifact `9440650646`未过期且digest=`sha256:35e67191d1026169d9acd2a64f50e93bd8d2704df9f8ba1a2297f2dd2a00ca4d`。20/20 reports、Gate 11/11及Task 37 committed/0 working paths、6 rows、19 checks、0 issues均绑定同一SHA；TASK-P2-13 DoD完成，但P2 Exit READY仍未执行。
+
+## TASK-P2-14 Exit Gate audit
+
+审计先验证P2-01～13共26个exact implementation/closure runs/jobs/artifacts，再在provider-verified activation head独立执行locked sync、Ruff、Pyright、476 tests、两次P2 Gate、XS/S/M、Compose、docs与build。Gate=11/11、七场景×两轮§76 measurement完整、XS/S/M各8/8、4 rejections、0 gaps，因此report/manifest给出`READY`。
+
+该decision writing commit不能自我包含未来run，故TASK-P2-14仍须以其exact implementation SHA通过required `validate`并上传artifact，随后才能evidence-only标记`done`。若run/job/artifact或final Task report失败，必须撤回READY并登记blocking gap；local/activation provider不得替代。即使全部通过，P2仍保持current phase，等待用户明确P2→P3授权。

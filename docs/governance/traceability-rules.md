@@ -227,3 +227,11 @@ Gate必须至少执行两次完整replay；每次都保存七场景correctness�
 四类退出边界必须分别追踪`UNSUPPORTED_CAPABILITY`、`INVALID_PLANNING_PROBLEM`、`INVALID_SOLVE_LIMITS`和`NO_SOLUTION_WITHIN_LIMIT`，不得合并为成功、INFEASIBLE证书或Production fallback。Gate仅形成P2 Simulation/development readiness aggregation；`Exit Gate Audit=NOT_PERFORMED`、P2-14/P3=`NOT_STARTED`、Production publishability=false。Exact implementation provider artifact形成前只能记录local formed evidence，完成TASK-P2-13也只满足P2-14依赖，不自动授权P2-14或P3。
 
 Implementation `dc2e5cd41080603606090ebfc4bc6162941c5f7f`的required run `32465737712`与artifact `9440650646`已精确绑定并复现20/20 reports、Gate 11/11及37 committed/0 working paths、6 rows、19 checks、0 issues，因此TASK-P2-13=`done`。Artifact内每个sub-report均绑定同一SHA且Exit仍`NOT_PERFORMED`；完成只满足P2-14依赖，不自动授权P2-14或P3。
+
+## TASK-P2-14 traceability rule application
+
+P2 Exit evidence链必须区分：P2-01～13各自Diff base/implementation/evidence-only closure、26个exact provider artifacts、P2-13 non-Exit Gate冻结边界、P2-14 audit execution head、本地ignored reports、audit documentation implementation commit及其后续evidence-only closure。P2-13报告中的`Exit=NOT_PERFORMED/P2-14=NOT_STARTED`不得被改写；P2-14 report/manifest是新的权威Exit判定载体。
+
+§76的Golden JSSP/FJSP、Cross Workshop、Calendar、Material Delay、Running、Hard Lock、XS/S/M必须逐项拥有model/build/first feasible/objective/bound/gap/memory/Validator evidence。若既有聚合摘要未逐场景展开字段，可在不改业务实现的前提下通过Task允许的ignored audit observation重放补齐，并记录命令、head、size/hash；不得以功能测试或汇总PASS替代。任一required Gate失败、provider不一致、artifact缺失/过期无替代或scope违规均产生blocking gap与NOT_READY。
+
+Audit report可基于已验证prerequisite provider baseline及真实本地独立命令给出READY/NOT_READY，但不得预填自身尚未发生的provider。Task只有在audit implementation exact required run/job/artifact成功并由evidence-only closure回填后才`done`；provider失败必须撤回READY。READY只允许请求用户批准P2→P3，current phase/P2 Milestone在明确授权前仍为P2/`active`，不得创建P3 Task或声称Production readiness。

@@ -68,3 +68,7 @@ TASK-P1-12独立审计已重放全部合同、迁移、Generator和common-ingres
 - `external-adapters.md`：受 OPEN-002、OPEN-007、OPEN-013、OPEN-015 阻塞。
 
 这些路径不创建空文档，避免被误认为已经批准的接口合同。
+
+## TASK-P2-14 Exit contract audit
+
+P2独立Exit审计已重跑schema set`2.5.0`及全部registered contract tests，并核对Problem v2、Policy/Limits、Solution/Report、Validation、KPI/Export Manifest各自固定document版本与历史fingerprints。结果为PASS，Schema、data dictionary、migration、dependency/lock和ADR均零变化；C-012～018、OBJ-002/003、P3 API/state/publish合同没有被补猜。Audit Task自身provider闭环前结论为READY但Task仍`in_progress`。

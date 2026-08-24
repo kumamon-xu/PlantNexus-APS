@@ -255,3 +255,9 @@ Exact provider已复现：implementation `5ab65f36d532fd8786eb7ecad3cce406f4d9fb
 Integration覆盖完整链、七Scenario/C-ID、XS/S/M status/objective/model/timing/memory、五Reference、fresh Validator、KPI/Export、semantic projection和no-Exit/P3边界；contract覆盖unsupported/invalid/limit与repeat<2非零失败；CI contract固定required workflow命令、report counts和artifact路径。P1 application AST test只新增唯一`p2_gate_report.py → app.exporters.contract_check` exact evidence例外，其他捷径禁令不变。既有36个Test ID和registry format version保持不变；P2-14仍须独立重跑audit。
 
 本地30 focused/476 full与provider required run全部PASS；artifact Gate复现2 replays、11/11、14 scenarios、108 Benchmark Validator passes、4 rejections和0 gaps。TASK-P2-13测试DoD已闭环；P2-14仍须独立审计而不能复用本Task结论。
+
+## TASK-P2-14 independent audit replay
+
+本Task不新增、删除、修改或复用Test ID/test assertion；它独立重跑全部registered unit/contract/simulation/golden/validation/integration/property目录，结果为`476 passed in 52.66s`，Ruff/Pyright均0问题。P2 Gate重新执行两轮且11/11；独立XS/S/M各8/8、0 warning。为确保总规§76每个correctness case的model/build/first/objective/bound/gap/memory/Validator字段可直接审计，另通过公开P2 correctness执行边界生成14条两轮measurement observation，全部PASS。
+
+该evidence与P2-01～13的26个exact provider artifacts共同支持P2 Gate=`READY`，但不改变36个Test ID、registry format version或Production测试状态。Audit implementation provider成功前TASK-P2-14保持`in_progress`；P3 approval/publish、L/XL与Production capacity/SLA tests继续`PLANNED`。

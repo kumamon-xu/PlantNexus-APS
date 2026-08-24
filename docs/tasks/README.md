@@ -85,3 +85,5 @@ TASK-P2-13本地已形成两次完整Gate replay、11/11 checks、14次correctne
 Implementation `dc2e5cd41080603606090ebfc4bc6162941c5f7f`的required run `32465737712` / job `96721819879` / artifact `9440650646`精确复现20/20 reports、Gate 11/11及37 committed/0 working paths、6 rows、19 checks、0 issues，故索引=`done`。P2-14保持`planned`且未授权，P3未进入。
 
 用户于2026-08-24授权TASK-P2-14。启动门确认P2-01～13全部`done`，13组Diff base/implementation/closure ancestry、26个exact required runs/jobs/artifacts及下载后的364份JSON均一致；clean Diff base=`e76776d83726d13600d8ea29fd490474c8e32604`，其run/job/artifact=`32466635638`/`96724500691`/`9440970310`。当前只允许独立Exit审计、report/manifest和治理证据；不得修P2实现、创建P3 Task或改变current phase。
+
+TASK-P2-14本地审计已形成overall=`READY`、blocking gaps为空：476 tests、两次Gate 11/11、七场景×两轮完整§76 measurements、XS/S/M各8/8、108次Benchmark Validator与四类fail-closed拒绝全部PASS。Audit implementation exact provider尚待push后核验，因此索引继续为`in_progress`；P3未进入。

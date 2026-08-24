@@ -336,3 +336,9 @@ Diff base固定为`59f3b013a4be7bd11d054e8464886b3cde791602`；完整activation/
 本地full治理实际为142 docs、30 roots/trace rows、36 Test IDs、15 OPEN、13 SIM assumptions、11 risks、37 Tasks并PASS；Task diff实际为37 paths（8 committed-range、37 working-tree union）、六个Impact rows、19 checks、0 issues并PASS。`git diff --check`退出0，仅报告Windows工作区预期的LF→CRLF提示；exact implementation provider形成前TASK-P2-13继续`in_progress`。
 
 Implementation artifact `9440650646`内`traceability-report.v1`精确绑定`dc2e5cd41080603606090ebfc4bc6162941c5f7f`与Diff base `59f3b013a4be7bd11d054e8464886b3cde791602`，复现37 committed/0 working paths、6 rows、19 checks、0 issues并PASS；TASK-P2-13治理Gate据此闭环为`done`。本evidence-only closure仍须由自身exact provider复核，不在提交前预写其ID。
+
+## TASK-P2-14 audit governance application
+
+Diff base固定为`e76776d83726d13600d8ea29fd490474c8e32604`；完整范围只允许audit report/JSON manifest、phase/milestone/task/contract/planning/quality/governance文档及ignored `TASK-P2-14-*` reports，必须命中`IMPACT-PHASE/GOVERNANCE-REGISTRY/DOCS`三行。业务代码、Schema、fixture、benchmark、scripts、workflow、dependency/lock、migration与P3必须零差异。
+
+Activation provider `32675914600` / artifact `9502674319`已对8 paths/2 rows/0 issues闭环。写回前full治理为143 docs、30 roots、36 tests、15 OPEN、13 SIM assumptions、11 risks与37 Tasks；activation-range diff为8 paths/2 rows/19 checks/0 issues。Audit decision写回后已再次生成最终`TASK-P2-14-report.json`：full治理保持143/30/36/15/13/11/37，Task diff为30 paths（8 committed-range / 30 working-tree union）、3 rows、19 checks、0 issues并PASS。该本地报告仍须由exact implementation provider复现；当前不得预写其run/artifact或提前关闭Task。

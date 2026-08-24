@@ -146,3 +146,7 @@ KPI与Export consumer必须使用这份已冻结的真实report，不得用P2-02
 BenchmarkRunner只通过`GlobalCpSatStrategy`/solver-neutral documents消费Backend；每次run使用显式Simulation Policy、single worker、seed和profile wall limit，并从真实SolverReport读取exact solver identity/parameters、status、model build/first feasible/solve/validation/total、model counts、objective/bound/gap及Python peak memory。它不导入OR-Tools native types、不调用constraint builder或改写telemetry。
 
 Backend/Strategy/Validator/Problem、C-ID/OBJ-001与dependency/lock零变化。XS/S/M观测是development synthetic evidence，不能成为默认SolveLimits、Worker capacity或Production SLA。
+
+## TASK-P2-14 Exit audit
+
+locked sync与运行时检查确认OR-Tools exact version仍为`9.15.6755`，ADR-0011 accepted且`pyproject.toml`/`uv.lock`相对Diff base无变化。两次Gate与独立XS/S/M重放保存status、model/build/first/solve/validation/total、objective/bound/gap、memory及Validator；全部PASS。该证据只关闭P2 Synthetic Solver Gate，不建立Production worker capacity、SLA或升级批准。

@@ -118,3 +118,7 @@ Formal Validator源码、公式、Schema、rule sheet和13-case corpus保持字�
 五个Reference Scheduler不复制或修改Validator公式。共享heuristic只生成solver-neutral`problem + assignments`候选；成功路径每次实例化fresh `ProblemScheduleValidator`并要求C-001～C-011全PASS，Validator FAIL时立即丢弃candidate并返回`VALIDATION_FAILED`。机器报告又对35个成功candidate进行第二次fresh validation，得到35/35 PASS、零hard violation。
 
 `HEURISTIC_FAILURE`表示确定性构造过程没有找到完整hard-feasible placement，不是formal `INFEASIBLE`证书；失败路径不提交partial assignment给Validator，也不伪造PASS report。PlanningProblem本身非法继续在规则计算前拒绝。Validator源码、ValidationReport Schema、rule sheet、P2-09 assets与Solver backend均保持冻结；该交叉证据只形成TEST-REFERENCE-SCHEDULER，不形成Production publish gate或P2-12策略比较。
+
+## TASK-P2-14 Exit audit
+
+审计确认七correctness场景两轮、XS/S/M两轮Global+五Reference以及所有output candidate均由fresh formal Validator接受，Gate累计108次Benchmark Validator PASS；11个exact C-ID mutation仍逐一FAIL且无共同公式导入。Validator源码、Schema/rule与Backend均零差异。P2 READY只表示Simulation/development candidate可进入本阶段评审，不构成approval、publish或Production acceptance。

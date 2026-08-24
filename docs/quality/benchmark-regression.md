@@ -136,3 +136,7 @@ Manifest明确`benchmark_report.json=DEFERRED_P2_12`且文件不存在，禁止�
 首次正式baseline为`p2-xs/s/m.v1.json`，分别绑定Problem hash `a70a0549…7b04`、`42ee217e…5bb4`、`a49ee150…26aa`、完整complexity projection、环境签名、Global objective/bound与runtime/memory观测、五Reference quality和development ceilings。文件只允许首次创建；更新profile/generator/Problem/KPI或观测基线必须新建版本，禁止CLI原地覆盖。
 
 判定严格遵循correctness→status/feasibility→quality→runtime/memory→diagnostics。Problem/complexity漂移hard fail；所有Global/Reference candidate必须fresh Validator PASS且共享KPI一致；CP-SAT质量劣于Reference产生`BENCHMARK_WARNING`。跨环境不做相对性能回归，只应用非生产宽松ceiling；同一环境才比较2.5倍factor。当前XS/S/M本地报告均8/8 PASS、无warning，但这不关闭历史生产数据OPEN-011或生产阈值OPEN-012。
+
+## TASK-P2-14 Exit audit replay
+
+审计在Windows 11 AMD64/CPython 3.12.13/OR-Tools 9.15.6755环境独立生成XS/S/M三份`benchmark-report.v1`，Problem hashes与v1 baselines逐项一致，三份均8/8且0 warning；两次完整Gate又执行6个profile、18次Global measured、90次Reference measured和108次fresh Validator PASS。Baseline文件、Profile/Generator/KPI/runner与dependency均零差异；结果只支持P2 development READY，不更新baseline、不关闭OPEN-011/012，也不建立L/XL或Production threshold。

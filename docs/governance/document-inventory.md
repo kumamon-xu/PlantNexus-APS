@@ -84,7 +84,7 @@ registry_version: 1.0.0
 | [milestones/P1-data-and-snapshot.md](../milestones/P1-data-and-snapshot.md) | MILESTONE-P1 | completed | P1 — Data & Snapshot |
 | [milestones/P1-exit-gate-audit-report.md](../milestones/P1-exit-gate-audit-report.md) | MILESTONE-P1-AUDIT-001 | baseline | P1 Exit Gate Audit Report |
 | [milestones/P2-cp-sat-vertical-slice.md](../milestones/P2-cp-sat-vertical-slice.md) | MILESTONE-P2 | active | P2 — CP-SAT Vertical Slice |
-| [milestones/P2-exit-gate-audit-report.md](../milestones/P2-exit-gate-audit-report.md) | MILESTONE-P2-AUDIT-001 | in_progress | P2 Exit Gate Audit Report |
+| [milestones/P2-exit-gate-audit-report.md](../milestones/P2-exit-gate-audit-report.md) | MILESTONE-P2-AUDIT-001 | baseline | P2 Exit Gate Audit Report |
 | [milestones/P3-planning-workspace.md](../milestones/P3-planning-workspace.md) | MILESTONE-P3 | planned | P3 — Planning Workspace |
 | [milestones/P4-dynamic-replanning.md](../milestones/P4-dynamic-replanning.md) | MILESTONE-P4 | planned | P4 — Dynamic Replanning |
 | [milestones/P5-advanced-capabilities.md](../milestones/P5-advanced-capabilities.md) | MILESTONE-P5 | planned | P5 — Advanced Capabilities |
@@ -251,3 +251,5 @@ TASK-P2-13本地实现仍未新增、删除或重命名`docs/**/*.md`，inventor
 Implementation artifact `9440650646`已复现142-doc inventory与37 committed/0 working paths、6 rows、19 checks、0 issues，TASK-P2-13=`done`。没有新增、删除或重命名正式Markdown；P2-14保持`planned`，inventory与registry版本不变。
 
 TASK-P2-14 activation新增`milestones/P2-exit-gate-audit-report.md`并同步本Task为`in_progress`，inventory因此覆盖143份Markdown。相邻machine manifest为JSON，不进入Markdown清单；report/manifest当前均明确`NOT_PERFORMED`且不构成Exit结论。Registry table format仍为`1.0.0`；P2 Milestone保持`active`、P3未启动。
+
+TASK-P2-14 local audit writeback不再新增、删除或重命名Markdown，inventory继续143份；audit report front matter现为`baseline`并与本清单一致，JSON manifest及ignored Gate/XS/S/M/scenario/trace reports仍不进入Markdown清单。Roots=30、Test IDs=36、OPEN=15、SIM assumptions=13、risks=11、Tasks=37与所有registry format version保持不变；最终治理为30 paths/3 rows/19 checks/0 issues。Exit decision=`READY`但Task provider尚待闭环，TASK-P2-14仍`in_progress`；P2保持`active`、P3未启动。

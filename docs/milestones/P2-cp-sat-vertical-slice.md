@@ -125,3 +125,9 @@ TASK-P2-13本地已形成两次完整Vertical Slice Gate replay：七场景corre
 Implementation `dc2e5cd41080603606090ebfc4bc6162941c5f7f`的required run `32465737712` / job `96721819879` / artifact `9440650646`精确success并复现20/20 reports、Gate 11/11与37 committed/0 working paths、6 rows、19 checks、0 issues，故TASK-P2-13=`done`。Milestone继续`active`；只有P2-14独立审计可给出Exit结论，且其仍为`planned`、未授权，P3不自动启动。
 
 用户于2026-08-24明确授权TASK-P2-14；clean/provider-verified启动基线为`e76776d83726d13600d8ea29fd490474c8e32604`，run `32466635638` / required job `96724500691` / artifact `9440970310`精确success。P2-01～13的13组提交拓扑和26个implementation/closure provider artifacts全部独立复核通过；TASK-P2-14只执行Exit Gate Audit、report/manifest和治理闭环，不修实现、不关闭Production开放项、不创建P3 Task。Milestone保持`active`，等待audit结论及后续用户phase transition决定。
+
+## Exit Gate audit decision
+
+TASK-P2-14已在audit execution head `c6e57566871faefb2582e1c33218e1ba22b44785`独立执行全部acceptance。476 tests、两次完整Gate 11/11、Golden JSSP/FJSP、Cross Workshop、Calendar、Material Delay、Running、Hard Lock及XS/S/M均PASS；七场景另有14/14逐次model/build/first/objective/bound/gap/memory/Validator记录，XS/S/M各8/8且0 warning，blocking gaps为空。因此[audit report](P2-exit-gate-audit-report.md)与[manifest](P2-exit-gate-evidence-manifest.json)给出P2 Exit Gate=`READY`。
+
+Audit implementation provider在本结论写入时仍为`NOT_RUN`，所以TASK-P2-14继续`in_progress`，其exact required run/artifact必须在evidence-only closure回填。Milestone保持`active`且current phase仍为P2；READY不创建P3 Task，也不授权P3或Production，必须等待用户明确phase transition。

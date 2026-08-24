@@ -113,3 +113,7 @@ CP-SAT Backend现消费Problem v2既有RUNNING `actual_start_at_utc`、`assigned
 HARD lock start/end必须位于exact tick grid且interval ticks与该resource权威duration（RUNNING时为remainder）一致；同operation多个冲突HARD lock或RUNNING/HARD tuple冲突在model build前MODEL_INVALID。Grid-aligned但与calendar/resource/horizon冲突的完整事实进入模型并由native solver认证INFEASIBLE。SOFT lock不形成硬约束或hint，只作为稳定排序metadata reference保留。
 
 Problem v2 Schema/sample、builder、canonicalization与hash projection仍字节不变。RUNNING Problem记录不含execution fact ID，Backend不得从operation/source猜造；事实历史由Problem hash和actual/resource/remainder字段绑定。OBJ-001、OBJ-002、dynamic Replan与Production authority均不由本Task形成。
+
+## TASK-P2-14 Exit audit
+
+审计以full contract/property/golden/integration回归和两次Gate确认PlanningProblem v2仍是所有七correctness场景与XS/S/M的唯一solver-neutral输入；固定Problem hashes、历史v1/v2 fingerprints、C-001～C-011事实投影与row-order replay均PASS。Problem Schema/builder/hash、migration与ADR-0010无差异；READY不扩展capacity>1、C-012～018、OBJ-002/003、dynamic Replan或Production authority。

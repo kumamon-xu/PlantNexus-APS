@@ -48,3 +48,7 @@ Adapter精确映射`max_wall_time_seconds→max_time_in_seconds`、`max_workers�
 仓库现批准唯一`POLICY-P2-SIM-DELIVERY-OBJ001-001@1.0.0`：data plane=`SIMULATION`、C-001～C-011完整有序、单一OBJ-001 stage，source=`plantnexus-synthetic-policy@1.0.0`。Strategy要求Problem的每个priority weight使用同一versioned synthetic source；任意Production data plane、policy drift或priority source drift均在Backend调用前显式拒绝。OPEN-006/011/012继续阻断Production。
 
 `simulation_solve_limits`要求调用方逐项提供ID/revision/source record、wall time、workers和seed，不提供默认值。Backend继续精确映射native参数；SolverReport同时记录合同字段名与native映射名并按name排序。Policy/Limits Schema/version/fingerprint算法未改变，OBJ-002/003仍不允许进入stage。
+
+## TASK-P2-14 Exit audit
+
+独立Gate与四类exit rejection确认唯一Simulation OBJ-001 Policy、显式SolveLimits来源、native参数映射及UNKNOWN/no-candidate边界均PASS；`INVALID_SOLVE_LIMITS`与Production policy拒绝继续fail-closed。合同字节、默认值政策、dependency与ADR均无变化；OPEN-006/011/012继续阻止把本次READY外推为Production权重、limits或SLA。

@@ -118,3 +118,7 @@ Fact/lock self-conflict或grid不可表示性在model build前MODEL_INVALID；gr
 ## TASK-P2-08 hard-domain review
 
 OBJ-001只在P2-05～07已形成的完整C-001～C-011可行域上增加目标，不修改任何C-ID公式、severity、rule sheet、core/temporal/fact-lock builder或formal Validator。每个优化candidate仍由Validator独立重算全部C-ID；Validator FAIL不能通过更优objective抵消。C-012～C-018继续explicit unsupported，OBJ-002/003不是硬约束或本Task目标。
+
+## TASK-P2-14 Exit audit
+
+独立审计以两次七场景replay、11个positive C-ID、11个formula-free exact negative mutation和476项全仓回归确认C-001～C-011完整硬域为PASS。Rule sheet、Backend builders与formal Validator均零差异；`UNSUPPORTED_CAPABILITY`继续覆盖C-012～018。Audit READY不改变任何C-ID公式、severity、Production authority或后续能力状态。

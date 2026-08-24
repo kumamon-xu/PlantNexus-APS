@@ -46,3 +46,7 @@ TASK-P0-05 的 ScenarioManifest v1 提供未来 baseline 比较所需的 Scenari
 BenchmarkRunner未修改五个算法、tie-break、failure/status或候选构建。它在XS/S/M各对每算法执行1次warm-up和3次measured run，要求每次`FEASIBLE`、完整candidate、fresh Validator PASS与assignment fingerprint稳定；再用Planning reporting的公共schedule KPI函数独立核对P2-10 weighted tardiness/makespan carrier。所有comparison row绑定同一Problem hash。
 
 Global weighted tardiness高于最佳Reference时只记录`BENCHMARK_WARNING`，不得把Reference提升为Production fallback或最优性证明。三个本地profile均未触发该warning；Reference仍`non_production=true`、`optimality_claim=NONE`。
+
+## TASK-P2-14 Exit audit
+
+独立XS/S/M各8/8、0 warning，两次Gate共90次Reference measured run并全部经fresh Validator和公共KPI复核。五个algorithm identity/tie-break、complete-or-discard与explicit failure边界未变；Reference实现相对Diff base零差异。P2 READY不把任何Reference提升为Production dispatch/fallback、SLA或最优性证书。

@@ -41,7 +41,7 @@ Documents to update: `docs/current_phase.md`、`docs/milestones/README.md`、`do
 
 Documentation impact rationale: Exit audit聚合全部实现/运行/provider事实并决定P2 readiness，必须同步Phase/Milestone/合同/质量/追踪边界。
 
-Change-impact matrix rows reviewed: `IMPACT-PHASE`、`IMPACT-DOCS`
+Change-impact matrix rows reviewed: `IMPACT-PHASE`、`IMPACT-GOVERNANCE-REGISTRY`、`IMPACT-DOCS`
 
 Traceability updates: 全部P2 roots→TASK-P2-01～14→registered tests/machine reports/provider artifacts→P2 audit report/manifest；P3保持Milestone-only且PLANNED，gap必须新建P2 remediation Task。
 
@@ -83,4 +83,14 @@ Rollback: audit历史不覆盖；事实错误用更正/superseding audit；NOT_R
 
 GitHub独立查询确认P2-01～13共26个implementation/closure push run均为attempt 1、`completed/success`，对应26个required `validate` jobs全部success；branch protection继续精确要求`validate`/GitHub Actions app ID `15368`。26个artifact全部存在、未过期，下载后共解析364份JSON，未发现parse error或顶层FAIL；每个`ci-current-task-report.json`均绑定预期exact SHA、对应Task、`result=PASS`且issues为空。当前P2-13 closure基线的run/job/artifact为`32466635638` / `96724500691` / `9440970310`，artifact size=`86035` bytes、digest=`sha256:4a41a54cde5fe0cb349f177769bfff6e17b5820ffbf68c4811c46169a3860890`、expiry=`2026-11-19T09:10:43Z`。
 
-Activation差异只更新Task/Phase/Milestone索引、本卡与document inventory，并创建明确为`NOT_PERFORMED`/`AUDIT_EXECUTION_PENDING`的report/manifest草稿，实际命中`IMPACT-PHASE/IMPACT-DOCS`。草稿没有预填PASS/READY，必须由后续真实审计证据替换；开始回填治理registries前，本卡将恢复`IMPACT-GOVERNANCE-REGISTRY`。既有业务实现、Schema、fixture、benchmark、scripts、workflow、dependency/lock、migration、P3与Production state全部冻结。
+Activation差异只更新Task/Phase/Milestone索引、本卡与document inventory，并创建明确为`NOT_PERFORMED`/`AUDIT_EXECUTION_PENDING`的report/manifest草稿，实际命中`IMPACT-PHASE/IMPACT-DOCS`。草稿没有预填PASS/READY；本地审计命令全部成功后、开始回填治理registries前，本卡现已恢复`IMPACT-GOVERNANCE-REGISTRY`。既有业务实现、Schema、fixture、benchmark、scripts、workflow、dependency/lock、migration、P3与Production state全部冻结。
+
+## Local audit evidence
+
+审计执行head为activation commit `c6e57566871faefb2582e1c33218e1ba22b44785`；其exact push run/job/artifact为`32675914600` / `97283877370` / `9502674319`，artifact digest=`sha256:242d3d76e5570aa15cbba009ffd9294545940ea45f24fa945695bd6b6d6d5fef`，required `validate`、20份machine JSON与Task trace report均PASS。P2-01～13的26个implementation/closure artifact共下载解析364份JSON，全部可解析且顶层无FAIL，26份Task trace report均绑定预期exact SHA并为0 issues。
+
+本地`uv sync --locked`、Ruff、Pyright、476项full tests、Compose config、build及治理预检全部PASS。两次完整P2 Gate均为11/11 PASS，业务语义fingerprint同为`sha256:db224819b5163abb19e9e2543e87046930f3277238fdd138f0daa39ad4290faa`；累计14次correctness、108次benchmark Validator、6次profile execution、4类退出拒绝且0 gaps。为满足技术总规§76的逐场景计量要求，又通过公开correctness入口独立执行JSSP、FJSP、Cross Workshop、Calendar、Material Delay、Running、Hard Lock各两次，14次均有model size/build/first feasible/objective/bound/gap/memory/Validator且全部PASS。
+
+独立XS/S/M报告各为8/8 PASS、0 warning；P2 Gate/XS/S/M/场景计量本地artifact的SHA-256分别为`17c987715246d5d9ca28bfb61763a9b243f2a4c92acc30283dc9f92f776a3100`、`2e195a25da2f012fe2a70c7fa0b92a431cdd70a12085eae5d1e1854f26d2faf9`、`8f63013f285d6eb1c94f5ade2a9eea4decc86699a637d1da45c0bff3a0a385fa`、`0c35477d5b52decc7fbe3e7db640b1a08738c8be05472c25da3156b9112596bb`与`df0f19a7dd0c3c1612a62421d1bc824b27917491a99e5ebac338a544830bc46c`。audit report/manifest据此给出overall `READY`且`blocking_gaps=[]`。
+
+相对Diff base的`backend/**`、`schemas/**`、`fixtures/**`、`benchmarks/**`、`scripts/**`、`.github/**`、`pyproject.toml`、`uv.lock`均为零差异；无migration、dependency或ADR变更，ADR-0001～0011均保持accepted。最终full治理为143 docs/30 roots/30 trace rows/36 tests/15 OPEN/13 SIM/11 risks/37 Tasks；Task diff为30 paths（8 committed-range / 30 working-tree union）、3 impact rows、19 checks、0 issues并PASS。当前仅完成本地审计与治理写回；audit implementation exact provider尚待提交核验，因此Task保持`in_progress`，P2保持`active`，P3保持`NOT_STARTED`。

@@ -64,3 +64,7 @@ XS/S/M三个versioned profile现已各自在正式source→Problem链上运行Gl
 这构成TASK-P2-13本地Gate A aggregate evidence，不是TASK-P2-14 Exit audit或Production performance Gate。Run-specific SolverReport/KPI/package hash包含时间证据并逐次保留，不错误要求相等；Problem/candidate/业务投影必须一致。OPEN-011/012、L/XL、Nightly schedule、Production capacity/SLA仍未形成。
 
 Required run `32465737712` / artifact `9440650646`已在provider精确复现两次Gate A aggregate且无warning/gap，故TASK-P2-13=`done`。该结果仍不关闭OPEN-011/012，不形成L/XL、Nightly或Production SLA，也不替代P2-14 Audit。
+
+## TASK-P2-14 Exit audit
+
+独立audit已再次执行两次完整Gate及单独XS/S/M，并补充七correctness场景×两轮的逐次model/build/first/objective/bound/gap/memory/Validator观测。所有required case、三档8/8 reports、稳定业务投影与4类exit rejection均PASS，blocking gaps为空，因此P2 Synthetic Solver Gate=`READY`。Raw timing/memory仍保留且不作跨环境相等声明；OPEN-011/012、L/XL、Nightly provider schedule与Production capacity/SLA继续未形成。Audit Task exact provider仍须闭环。

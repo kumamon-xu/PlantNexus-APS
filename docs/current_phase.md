@@ -17,7 +17,7 @@ last_reviewed: 2026-08-24
 
 P2-14 audit implementation `65c556789f176ad9de55523d6420737bb60f933f`的GitHub push run `32677741558` / required `validate` job `97288829348` / artifact `9503227240`成功，artifact digest=`sha256:fbb76f0ab44d3bdcff2d31e70f9698af84e10e48ee57ae611eef8529a288240e`；evidence-only closure `80c403384d1e171258cf874d26605d0d22aff1b2`的run `32678248961` / job `97290201234` / artifact `9503372291`也成功，digest=`sha256:673412905b7420660d1e9f07755fcda6291f85f8f2bd926b4bf31a0a6bd1bd0c`。下载检查的两份artifact均含20份可解析JSON，Task/SHA/Impact Rules/checks/issues与对应提交一致且0 issue。规划启动时`main=origin/main=80c403384d1e171258cf874d26605d0d22aff1b2`、ahead/behind=`0/0`且working tree clean，因此transition前提一致。
 
-P2 Milestone现为`completed`，P3 Milestone为`active`。`TASK-P3-00`～`TASK-P3-03`均已由exact implementation provider闭环并在evidence-only closure标为`done`；用户已单独授权`TASK-P3-04`并将其置为`in_progress`，P3-05～15保持`planned`且不会自动启动。
+P2 Milestone现为`completed`，P3 Milestone为`active`。`TASK-P3-00`～`TASK-P3-04`均已由exact implementation provider闭环并在evidence-only closure标为`done`；P3-05～15保持`planned`且未获授权，不会自动启动。
 
 ## 当前目标
 
@@ -55,7 +55,7 @@ TASK-P3-03从clean、synchronized且P3-02 closure provider-verified的`9621fda53
 
 本地实现已形成5张表、四类repository与`p3-persistence-report.v1` 8/8 checks；36项focused与503项全仓测试、Ruff、Pyright、全部既有machine contracts、P2 Gate、XS benchmark、Compose、build及治理均PASS。Implementation `e315dbf4f6c079df6d19b52f0403b00827126232`的run/job/artifact=`32694644036`/`97334382152`/`9508445635`精确复现22/22 JSON PASS、52 committed/0 working paths、7 rows、19 checks和0 issues，故本closure把Task标为`done`；P3-04不启动。
 
-## TASK-P3-04 启动边界
+## TASK-P3-04 已完成边界
 
 TASK-P3-04从clean、synchronized且P3-03 closure provider-verified的`62604d05964413a0aa7f763afd720afa2d53a887`启动并冻结为不可变Diff base。P3-03 closure run/job/artifact=`32695127644`/`97335699708`/`9508601189`精确成功，下载artifact为22/22 JSON PASS、52 committed/0 working paths、7 rows、19 checks、0 issues；启动复核还确认固定P2 Snapshot→Problem→Solution→SolverReport→fresh ValidationReport→KPI lineage可重放。
 
@@ -65,7 +65,7 @@ TASK-P3-04从clean、synchronized且P3-03 closure provider-verified的`62604d059
 
 当前实现已形成fresh Validation/KPI/lineage前置Gate、deterministic immutable DRAFT、同事务CAS `DRAFT→READY_FOR_REVIEW`与append-only audit，以及same-request replay、conflict/rollback/concurrency/plane isolation。核心application只依赖repository ports与transaction factory；SQLAlchemy adapter仅由composition root装配，生命周期service不调用Solver，也不写PlanningRun。
 
-本地35项定向与515项全仓测试、Ruff、Pyright、8/8 lifecycle report、全部既有machine contracts、P2 Gate、XS benchmark、Compose、build与治理均PASS；Task diff为45 paths、8 rows、19 checks、0 issues。Implementation exact provider尚未形成，因此TASK-P3-04保持`in_progress`；READY_FOR_REVIEW不等于approval/publish，P3-05～15、P4和Production均未启动。
+本地35项定向与515项全仓测试、Ruff、Pyright、8/8 lifecycle report、全部既有machine contracts、P2 Gate、XS benchmark、Compose、build与治理均PASS；Task diff为45 paths、8 rows、19 checks、0 issues。Implementation `a9be974855bb825784d639b7f6675e5a33e4273d`的run/job/artifact=`32700005280`/`97349447107`/`9510215582`精确复现23/23 JSON PASS、lifecycle 8/8及45 committed/0 working paths、8 rows、19 checks、0 issues，故本closure把TASK-P3-04标为`done`。READY_FOR_REVIEW不等于approval/publish，P3-05～15、P4和Production均未启动。
 
 ## 当前允许
 

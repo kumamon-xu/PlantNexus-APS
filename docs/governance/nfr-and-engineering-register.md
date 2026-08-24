@@ -152,4 +152,4 @@ SQLite evidence不外推PostgreSQL capacity/backup，repository不拥有auth/Val
 
 NFR-COR通过fresh Validator+exact KPI、失败无副作用；NFR-DET通过content/request/idempotency identity与exact replay；NFR-TRC通过P2 lineage/code commit/audit；NFR-HUM通过READY与approval严格分离。ENG-ARCH形成domain pure builder→ports/transaction-factory application→injected repository方向并通过既有P1 no-shortcut AST Gate，ENG-VAL只调用独立Validator public consumer，ENG-ERR形成sanitized module-local mapping，ENG-VER保持2.6.0/既有Schema/migration/dependency不漂移。
 
-NFR-ISO的synthetic→Production拒绝获得application slice，但独立Production DB/API/auth仍PLANNED；NFR-SEC/REL/OBS只获得no-secret、rollback/concurrency与audit/timing观察的局部证据，不建立SLA/retention/Production policy。全部NFR/ENG root继续`ALLOCATED`，OPEN-010/012及RISK-007/008/011～013不关闭，`registry_version=1.0.0`不变。
+NFR-ISO的synthetic→Production拒绝获得application slice，但独立Production DB/API/auth仍PLANNED；NFR-SEC/REL/OBS只获得no-secret、rollback/concurrency与audit/timing观察的局部证据，不建立SLA/retention/Production policy。Implementation `a9be974855bb825784d639b7f6675e5a33e4273d` / artifact `9510215582`已精确复验该有界NFR/ENG slice并支持TASK-P3-04闭环；全部NFR/ENG root继续`ALLOCATED`，OPEN-010/012及RISK-007/008/011～013不关闭，`registry_version=1.0.0`不变。

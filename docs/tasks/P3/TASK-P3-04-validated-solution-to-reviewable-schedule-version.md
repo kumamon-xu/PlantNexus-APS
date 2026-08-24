@@ -1,7 +1,7 @@
 ---
 doc_id: TASK-P3-04
 title: Validated Solution to Reviewable ScheduleVersion
-status: in_progress
+status: done
 spec_version: 0.3.0
 phase: P3
 normative: true
@@ -93,4 +93,10 @@ Rollback: 回退application service不得删除已创建版本/audit；测试数
 
 本地已形成pure domain lifecycle与ports-only application service：完整且fresh的P2 ValidationReport/KPI/SolverReport lineage先通过无副作用guard，再在单一transaction中插入immutable DRAFT、以CAS推进到`READY_FOR_REVIEW`并追加`SUBMIT_FOR_REVIEW` audit。Same key/same request精确replay；same key/different request、mixed lineage、非`COMPLETED` PlanningRun、Validator失败、plane冲突、audit冲突及并发竞争均fail closed。核心application不静态依赖Infrastructure/SQLAlchemy，service Solver调用数为0。
 
-验收结果：定向suite=`35 passed`，full repository=`515 passed`，Ruff全通过，Pyright=`0 errors, 0 warnings`；`p3-schedule-version-lifecycle-report.v1`为8/8 PASS、1 reviewable Version、1 atomic audit、1 exact replay、5个无副作用拒绝、`issues=[]`。全部既有machine contracts、P2 vertical Gate、XS benchmark、Compose与`uv build`也PASS。Full文档治理为165 docs/30 roots/30 trace rows/48 Test IDs/15 OPEN/13 SIM assumptions/13 risks/53 Tasks；Task diff为45 paths、8 Impact rows、19 checks、0 issues。Exact implementation provider形成前Task继续`in_progress`，P3-05～15不启动。
+验收结果：定向suite=`35 passed`，full repository=`515 passed`，Ruff全通过，Pyright=`0 errors, 0 warnings`；`p3-schedule-version-lifecycle-report.v1`为8/8 PASS、1 reviewable Version、1 atomic audit、1 exact replay、5个无副作用拒绝、`issues=[]`。全部既有machine contracts、P2 vertical Gate、XS benchmark、Compose与`uv build`也PASS。Full文档治理为165 docs/30 roots/30 trace rows/48 Test IDs/15 OPEN/13 SIM assumptions/13 risks/53 Tasks；Task diff为45 paths、8 Impact rows、19 checks、0 issues。
+
+## Provider evidence and closure
+
+Implementation `a9be974855bb825784d639b7f6675e5a33e4273d`的GitHub push run `32700005280` / required `validate` job/check `97349447107`（GitHub Actions app `15368`）全部success。Artifact `9510215582`未过期，digest=`sha256:828311f8b2f512aa6ddcbf113d80aba2e475e99f192867cad1d14dda53842d54`、expiry=`2026-11-22T07:05:48Z`；下载的23/23 JSON全部顶层PASS，lifecycle report精确绑定implementation SHA并复现8/8、1 Version、1 audit、1 replay、5 rejected/no-side-effect、0 service Solver calls与0 issues，Task report复现45 committed/0 working paths、8 rows、19 checks、0 issues。
+
+因此本evidence-only closure将TASK-P3-04标为`done`。Closure自身仍须由其exact required `validate`与artifact复核；P3-05～15保持`planned`且未获授权，READY_FOR_REVIEW不构成approval、publish或Production readiness。

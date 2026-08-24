@@ -150,4 +150,4 @@ REQ-006获得PublicationResult/current reference与ExportJob durable exact repla
 
 REQ-004/005获得validated P2 output消费与fresh formal Validator/KPI gate；REQ-007获得immutable DRAFT→READY_FOR_REVIEW既有pair的application执行；REQ-009获得full lineage、deterministic identity、atomic append-only audit与exact replay/conflict。形成路径为`app.domain.schedule_version`、`app.application.schedule_versions`、限定tests和8-check lifecycle report。
 
-该slice不形成read model/edit/approval/rejection/publish/export/API/UI/worker/P4或Production authority，故所有15个root Requirement继续`ALLOCATED`。OPEN-010及其他OPEN、SIM assumption、风险状态不变；provider前只记local evidence，`registry_version=1.0.0`不变。
+该slice不形成read model/edit/approval/rejection/publish/export/API/UI/worker/P4或Production authority，故所有15个root Requirement继续`ALLOCATED`。Implementation `a9be974855bb825784d639b7f6675e5a33e4273d` / artifact `9510215582`已精确复验8/8 lifecycle与45-path治理链，故只闭环TASK-P3-04 reviewable slice；OPEN-010及其他OPEN、SIM assumption、风险状态不变，`registry_version=1.0.0`不变。

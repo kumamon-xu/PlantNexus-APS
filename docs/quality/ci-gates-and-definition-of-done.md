@@ -267,3 +267,5 @@ uv run python -m app.application.schedule_version_lifecycle_check \
 本地PASS只允许Task保持`in_progress`。Implementation push后必须核验required run/job、下载artifact并逐项核对SHA/Task/8 checks/八Impact rows/full checks/issues；成功后才可做evidence-only closure，closure自身也须exact provider。READY_FOR_REVIEW evidence不构成approval/publish/Production readiness，任一Validator/transaction/audit/provider失败阻止P3-05自动启动。
 
 本地实现Gate现已实际通过：35 focused、515 full、Ruff、Pyright、8/8 lifecycle、全部既有machine contracts、P2 Gate、XS benchmark、Compose、build、full/diff docs治理及forbidden boundary均无失败；Task report为45 paths/8 rows/19 checks/0 issues。该结果不替代push后的exact provider Gate，Task仍为`in_progress`。
+
+Implementation provider Gate已通过：SHA `a9be974855bb825784d639b7f6675e5a33e4273d`、run `32700005280`、required `validate` job/check `97349447107`（app `15368`）均success；artifact `9510215582`未过期，digest=`sha256:828311f8b2f512aa6ddcbf113d80aba2e475e99f192867cad1d14dda53842d54`。23/23 JSON顶层PASS，lifecycle 8/8与Task 45 committed/0 working paths、8 rows、19 checks、0 issues均绑定同一SHA；TASK-P3-04 DoD完成，不自动授权P3-05。

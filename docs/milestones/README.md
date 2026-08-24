@@ -32,9 +32,9 @@ P1当前状态：[`P1 — Data & Snapshot`](P1-data-and-snapshot.md)为`complete
 
 P2当前状态：[`P2 — CP-SAT Vertical Slice`](P2-cp-sat-vertical-slice.md)为`completed`。TASK-P2-00～14均已闭环为`done`；P2 Exit Gate=`READY`且0 gaps。用户于2026-08-24在复核exact provider evidence、提交拓扑与clean synchronized baseline后明确批准P2→P3。
 
-P3当前状态：[`P3 — Planning Workspace`](P3-planning-workspace.md)为`active`。TASK-P3-00～03均已由exact implementation provider闭环并在evidence-only closure标为`done`；用户已单独授权TASK-P3-04并将其置为`in_progress`，P3-05～15保持`planned`。P3-15必须最后独立执行Exit Gate Audit；READY_FOR_REVIEW不表示approval/publish，也不自动进入P4或Production。
+P3当前状态：[`P3 — Planning Workspace`](P3-planning-workspace.md)为`active`。TASK-P3-00～04均已由exact implementation provider闭环并在evidence-only closure标为`done`；P3-05～15保持`planned`且未获授权。P3-15必须最后独立执行Exit Gate Audit；READY_FOR_REVIEW不表示approval/publish，也不自动进入P4或Production。
 
-TASK-P3-04本地实现已通过35 focused、515 full、Ruff/Pyright、8/8 lifecycle machine、全部既有machine/P2 Gate、XS benchmark、Compose/build与45-path治理；exact implementation provider形成前继续为`in_progress`。该证据只形成reviewable ScheduleVersion，不形成approval、publish、P4或Production readiness。
+TASK-P3-04 implementation `a9be974855bb825784d639b7f6675e5a33e4273d`的run/job/artifact=`32700005280`/`97349447107`/`9510215582`精确复现35 focused、515 full、8/8 lifecycle、23/23 JSON PASS与45 committed/0 working paths、8 rows、19 checks、0 issues，故本closure标为`done`。该证据只形成reviewable ScheduleVersion，不形成approval、publish、P4或Production readiness。
 
 ## P2 execution history
 

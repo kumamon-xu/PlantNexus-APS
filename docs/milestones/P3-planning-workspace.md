@@ -15,7 +15,7 @@ last_reviewed: 2026-08-24
 
 用户于2026-08-24在核验TASK-P2-00～14全部`done`、P2 Exit Gate overall=`READY`/`blocking_gaps=[]`、audit implementation/closure拓扑与exact GitHub required `validate`/artifact后，明确批准P2→P3 transition。P2为`completed`，P3为当前`active` Milestone。
 
-TASK-P3-00已完成Milestone激活、Task规划与文档治理，TASK-P3-01～03也已由各自exact implementation provider与evidence-only closure闭环；用户已单独授权P3-04并将其置为`in_progress`，P3-05～15保持`planned`。依赖满足不会自动授权后续实现。每个Task必须从当时clean、`main=origin/main`且provider-verified的完整40字符HEAD建立新的不可变Diff base。
+TASK-P3-00已完成Milestone激活、Task规划与文档治理，TASK-P3-01～04也已由各自exact implementation provider与evidence-only closure闭环；P3-05～15保持`planned`且未获授权。依赖满足不会自动授权后续实现。每个Task必须从当时clean、`main=origin/main`且provider-verified的完整40字符HEAD建立新的不可变Diff base。
 
 ## Outcome
 
@@ -31,7 +31,7 @@ TASK-P3-00已完成Milestone激活、Task规划与文档治理，TASK-P3-01～03
 | 1 | TASK-P3-01 | Workspace页面/API/权限/状态/错误/审计/idempotency合同与ADR基线 | P3-00 | `done` |
 | 2 | TASK-P3-02 | ScheduleVersion workspace/export Schema | P3-01 | `done` |
 | 3 | TASK-P3-03 | ScheduleVersion、Audit与ExportJob persistence | P3-02 | `done` |
-| 4 | TASK-P3-04 | validated solution→reviewable DRAFT | P3-03 | `in_progress` |
+| 4 | TASK-P3-04 | validated solution→reviewable DRAFT | P3-03 | `done` |
 | 5 | TASK-P3-05 | Gantt/Resource Load/Order/Comparison read models | P3-04 | `planned` |
 | 6 | TASK-P3-06 | Gantt edit/lock command→validation→new DRAFT | P3-04/05 | `planned` |
 | 7 | TASK-P3-07 | approval/rejection/audit service | P3-03/04 | `planned` |
@@ -80,4 +80,4 @@ TASK-P3-03 implementation `e315dbf4f6c079df6d19b52f0403b00827126232`的run/job/a
 
 TASK-P3-04已从P3-03 provider-verified closure `62604d05964413a0aa7f763afd720afa2d53a887`启动；其closure run/job/artifact=`32695127644`/`97335699708`/`9508601189`精确成功并成为启动门证据。当前只允许validated P2 lineage→DRAFT→READY_FOR_REVIEW、原子audit、幂等/冲突/隔离、限定tests/machine CI和命中文档；P3-05～15、approval/reject/publish/export、HTTP/UI、P4与Production authority均未启动。
 
-TASK-P3-04本地已形成ports-only application lifecycle、fresh Validator/KPI gate、immutable DRAFT→READY_FOR_REVIEW、单事务audit、exact replay/conflict/rollback/concurrency/plane隔离；35 focused、515 full、Ruff/Pyright、8/8 machine report、全部历史machine、P2 Gate、XS benchmark、Compose/build及45 paths/8 rows/19 checks/0 issues治理均PASS。Exact implementation provider闭环前Task保持`in_progress`，不自动启动P3-05或任何approval/publish能力。
+TASK-P3-04已形成ports-only application lifecycle、fresh Validator/KPI gate、immutable DRAFT→READY_FOR_REVIEW、单事务audit、exact replay/conflict/rollback/concurrency/plane隔离；35 focused、515 full、Ruff/Pyright、8/8 machine report、全部历史machine、P2 Gate、XS benchmark、Compose/build及45 paths/8 rows/19 checks/0 issues治理均PASS。Implementation `a9be974855bb825784d639b7f6675e5a33e4273d`的run/job/artifact=`32700005280`/`97349447107`/`9510215582`精确复现23/23 JSON及上述证据，故本closure标为`done`；不自动启动P3-05或任何approval/publish能力。

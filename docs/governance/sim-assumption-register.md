@@ -146,4 +146,4 @@ Repository/migration tests继续只使用既有P3 synthetic samples、固定UTC�
 
 Machine/contract/integration只复用既有`P2-GOLDEN-JSSP`及P2 lock correctness case的原Profile/Scenario/assembler/version/seed/hash，未修改fixture bytes或增加新的定量参数。Transaction观测微秒只作单次diagnostic且明确`SLA=NOT_DEFINED`，不登记为性能假设、baseline或Production容量。
 
-SIM-ASSUMPTION-001～013继续`ACTIVE`，没有新增/修改/retire；synthetic ScheduleVersion与test actor只属Simulation evidence，`registry_version=1.0.0`不变。
+SIM-ASSUMPTION-001～013继续`ACTIVE`，没有新增/修改/retire；implementation provider artifact `9510215582`只复验同一synthetic lifecycle，不把fixture、test actor或单次timing外推为Production事实，`registry_version=1.0.0`不变。

@@ -3,7 +3,7 @@ doc_id: DOC-DOM-001
 title: APS 领域模型
 status: baseline
 spec_version: 0.3.0
-phase: P0-P2
+phase: P0-P3
 normative: true
 source_sections: [17, 18, 19, 20, 21, 22]
 last_reviewed: 2026-08-24
@@ -128,3 +128,8 @@ KPI v2是从已验证的Snapshot/Problem/Solution/Validation/Solver/Quality bund
 ## P3 aggregate allocation
 
 P3-02定义ScheduleVersion、AuditEvent与ExportJob机器合同，P3-03形成不可变repository/migration，P3-04才允许从fresh-validated solution创建首个DRAFT。Version content、lineage和decision/audit采用append-only语义；修改/lock生成新Version，ExportJob不拥有或改变ScheduleVersion状态。当前只分配aggregate责任，没有新增领域对象实现或Schema。
+## TASK-P3-02 workspace carrier model
+
+Global schema set `2.6.0`新增七个顶层document：ScheduleVersion、WorkspaceQuery、WorkspaceCommand、ScheduleVersionComparison、AuditEvent、PublicationResult和ExportJob。`ScheduleVersion.content`只含PlanningSolution assignment shape与operation lock；identity/state/lineage/validation/decision/publication是content外的版本元数据，content fingerprint只覆盖immutable content。Parent/source kind表达copy-on-write lineage，但本Task不执行派生。
+
+Query/command以不同document分离：query result只含stable projection references与server-derived allowed actions；command只含intent/CAS/idempotency，认证principal不在body。Comparison是read model；AuditEvent是append-only carrier；PublicationResult与ExportJob分离。Pure module只做canonical fingerprint、state enum和cross-value一致性precheck，不包含entity repository、aggregate mutation或transaction。

@@ -1,0 +1,198 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "urn:plantnexus:aps:schema:workspace-query:v1",
+  "title": "PlantNexus APS Workspace Query v1",
+  "description": "Strict request/result carrier for stable P3 workspace projections; it is not an arbitrary repository selector.",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "workspace_query_version",
+    "schema_set_version",
+    "canonicalization_version",
+    "direction",
+    "query_kind",
+    "data_plane",
+    "environment",
+    "synthetic",
+    "resource",
+    "view",
+    "schedule_version_precondition",
+    "sort",
+    "filters",
+    "page",
+    "query_fingerprint",
+    "correlation_id",
+    "result"
+  ],
+  "properties": {
+    "workspace_query_version": {"const": "workspace-query.v1"},
+    "schema_set_version": {"const": "2.6.0"},
+    "canonicalization_version": {"const": "canonical-json.v1"},
+    "direction": {"enum": ["REQUEST", "RESULT"]},
+    "query_kind": {"enum": ["WORKSPACE_VIEW", "SCHEDULE_VERSION_COMPARISON", "AUDIT_LOG"]},
+    "data_plane": {"$ref": "urn:plantnexus:aps:schema:schedule-version:v1#/$defs/dataPlane"},
+    "environment": {"$ref": "urn:plantnexus:aps:schema:schedule-version:v1#/$defs/environment"},
+    "synthetic": {"type": "boolean"},
+    "synthetic_provenance": {"$ref": "urn:plantnexus:aps:schema:schedule-version:v1#/$defs/syntheticProvenance"},
+    "resource": {"$ref": "#/$defs/resourceSelector"},
+    "view": {"$ref": "#/$defs/workspaceView"},
+    "schedule_version_precondition": {
+      "oneOf": [
+        {"type": "null"},
+        {"$ref": "urn:plantnexus:aps:schema:schedule-version:v1#/$defs/versionReference"}
+      ]
+    },
+    "sort": {
+      "type": "array",
+      "minItems": 1,
+      "maxItems": 4,
+      "items": {"$ref": "#/$defs/sortTerm"}
+    },
+    "filters": {"$ref": "#/$defs/queryFilters"},
+    "page": {"$ref": "#/$defs/pageRequest"},
+    "query_fingerprint": {"$ref": "urn:plantnexus:aps:schema:schedule-version:v1#/$defs/sha256Fingerprint"},
+    "correlation_id": {"$ref": "urn:plantnexus:aps:schema:schedule-version:v1#/$defs/canonicalId"},
+    "result": {
+      "oneOf": [
+        {"type": "null"},
+        {"$ref": "#/$defs/queryResult"}
+      ]
+    }
+  },
+  "allOf": [
+    {
+      "if": {"properties": {"synthetic": {"const": true}}, "required": ["synthetic"]},
+      "then": {"required": ["synthetic_provenance"]},
+      "else": {"not": {"required": ["synthetic_provenance"]}}
+    },
+    {
+      "if": {"properties": {"data_plane": {"const": "PRODUCTION"}}, "required": ["data_plane"]},
+      "then": {"properties": {"synthetic": {"const": false}, "environment": {"const": "PRODUCTION"}}}
+    },
+    {
+      "if": {"properties": {"data_plane": {"const": "SIMULATION"}}, "required": ["data_plane"]},
+      "then": {"properties": {"environment": {"enum": ["DEVELOPMENT", "TEST", "BENCHMARK"]}}}
+    },
+    {
+      "if": {"properties": {"direction": {"const": "REQUEST"}}, "required": ["direction"]},
+      "then": {"properties": {"result": {"type": "null"}}},
+      "else": {"properties": {"result": {"$ref": "#/$defs/queryResult"}}}
+    },
+    {
+      "if": {"properties": {"query_kind": {"const": "SCHEDULE_VERSION_COMPARISON"}}, "required": ["query_kind"]},
+      "then": {"properties": {"view": {"const": "VERSION_COMPARISON"}}}
+    },
+    {
+      "if": {"properties": {"query_kind": {"const": "AUDIT_LOG"}}, "required": ["query_kind"]},
+      "then": {"properties": {"view": {"const": "AUDIT"}}}
+    }
+  ],
+  "$defs": {
+    "workspaceView": {
+      "enum": ["DATA_HEALTH", "IMPORT_RUNS", "PLANNING_RUNS", "ORDERS", "OPERATIONS", "RESOURCES", "CALENDARS", "GANTT", "RESOURCE_LOAD", "KPI", "DIAGNOSTICS", "LOCKS", "AUDIT", "VERSION_COMPARISON"]
+    },
+    "resourceSelector": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["resource_type", "resource_id"],
+      "properties": {
+        "resource_type": {"enum": ["WORKSPACE", "SCHEDULE_VERSION"]},
+        "resource_id": {
+          "oneOf": [
+            {"type": "null"},
+            {"$ref": "urn:plantnexus:aps:schema:schedule-version:v1#/$defs/canonicalId"}
+          ]
+        }
+      },
+      "allOf": [
+        {
+          "if": {"properties": {"resource_type": {"const": "WORKSPACE"}}, "required": ["resource_type"]},
+          "then": {"properties": {"resource_id": {"type": "null"}}},
+          "else": {"properties": {"resource_id": {"$ref": "urn:plantnexus:aps:schema:schedule-version:v1#/$defs/canonicalId"}}}
+        }
+      ]
+    },
+    "sortTerm": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["field", "direction"],
+      "properties": {
+        "field": {"enum": ["ITEM_ID", "START_AT_UTC", "END_AT_UTC", "RESOURCE_ID", "ORDER_ID", "OCCURRED_AT_UTC"]},
+        "direction": {"enum": ["ASC", "DESC"]}
+      }
+    },
+    "queryFilters": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["order_ids", "operation_ids", "resource_ids", "states", "start_at_or_after_utc", "start_before_utc"],
+      "properties": {
+        "order_ids": {"type": "array", "uniqueItems": true, "items": {"$ref": "urn:plantnexus:aps:schema:schedule-version:v1#/$defs/canonicalId"}},
+        "operation_ids": {"type": "array", "uniqueItems": true, "items": {"$ref": "urn:plantnexus:aps:schema:schedule-version:v1#/$defs/canonicalId"}},
+        "resource_ids": {"type": "array", "uniqueItems": true, "items": {"$ref": "urn:plantnexus:aps:schema:schedule-version:v1#/$defs/canonicalId"}},
+        "states": {"type": "array", "uniqueItems": true, "items": {"$ref": "urn:plantnexus:aps:schema:schedule-version:v1#/$defs/scheduleState"}},
+        "start_at_or_after_utc": {"oneOf": [{"type": "null"}, {"$ref": "urn:plantnexus:aps:schema:schedule-version:v1#/$defs/utcInstant"}]},
+        "start_before_utc": {"oneOf": [{"type": "null"}, {"$ref": "urn:plantnexus:aps:schema:schedule-version:v1#/$defs/utcInstant"}]}
+      }
+    },
+    "pageRequest": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["size", "cursor"],
+      "properties": {
+        "size": {"type": "integer", "minimum": 1, "maximum": 500},
+        "cursor": {"type": ["string", "null"], "minLength": 16, "maxLength": 2048}
+      }
+    },
+    "projectionItem": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["item_id", "item_type", "payload_fingerprint"],
+      "properties": {
+        "item_id": {"$ref": "urn:plantnexus:aps:schema:schedule-version:v1#/$defs/canonicalId"},
+        "item_type": {"enum": ["DATA_HEALTH", "IMPORT_RUN", "PLANNING_RUN", "ORDER", "OPERATION", "RESOURCE", "CALENDAR", "GANTT_SEGMENT", "RESOURCE_LOAD", "KPI", "DIAGNOSTIC", "LOCK", "AUDIT_REFERENCE", "VERSION_COMPARISON"]},
+        "payload_fingerprint": {"$ref": "urn:plantnexus:aps:schema:schedule-version:v1#/$defs/sha256Fingerprint"}
+      }
+    },
+    "queryResult": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["result_version", "found", "authoritative_schedule_version", "lineage", "items", "next_cursor", "observed_count", "allowed_actions", "freshness", "generated_at_utc"],
+      "properties": {
+        "result_version": {"const": "workspace-query-result.v1"},
+        "found": {"type": "boolean"},
+        "authoritative_schedule_version": {
+          "oneOf": [
+            {"type": "null"},
+            {"$ref": "urn:plantnexus:aps:schema:schedule-version:v1#/$defs/versionReference"}
+          ]
+        },
+        "lineage": {
+          "oneOf": [
+            {"type": "null"},
+            {"$ref": "urn:plantnexus:aps:schema:schedule-version:v1#/$defs/lineage"}
+          ]
+        },
+        "items": {"type": "array", "items": {"$ref": "#/$defs/projectionItem"}},
+        "next_cursor": {"type": ["string", "null"], "minLength": 16, "maxLength": 2048},
+        "observed_count": {"type": "integer", "minimum": 0},
+        "allowed_actions": {"$ref": "urn:plantnexus:aps:schema:schedule-version:v1#/$defs/allowedActions"},
+        "freshness": {"enum": ["FRESH", "STALE"]},
+        "generated_at_utc": {"$ref": "urn:plantnexus:aps:schema:schedule-version:v1#/$defs/utcInstant"}
+      },
+      "allOf": [
+        {
+          "if": {"properties": {"found": {"const": false}}, "required": ["found"]},
+          "then": {
+            "properties": {
+              "authoritative_schedule_version": {"type": "null"},
+              "lineage": {"type": "null"},
+              "items": {"maxItems": 0},
+              "observed_count": {"const": 0},
+              "allowed_actions": {"maxItems": 0}
+            }
+          }
+        }
+      ]
+    }
+  }
+}

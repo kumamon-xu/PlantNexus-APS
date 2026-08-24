@@ -137,3 +137,6 @@ Report本身不写业务数据库，temporary CSV随进程回收，`build/valida
 ## P3 operations planning
 
 P3-01先定义security/audit/idempotency责任，P3-03/07～10再形成repository、audit、publish/export/API的development行为，P3-14/15验证failure/retry/evidence。当前没有新增Runbook、service、queue、dashboard、Production secret/target或deployment；P3 internal Simulation workflow不得写成Production operation readiness。
+## TASK-P3-02 operational boundary
+
+新增`python -m app.domain.workspace_contract_check --root . --report <ignored-json>`只做离线Schema/sample/fingerprint/frozen-byte验证。CI step non-skippable且artifact保存report，但没有service、health endpoint、DB、queue、worker、storage、external publish、rollback procedure或Production runbook形成。失败时返回非零并保存sanitized FAIL report；不得通过放宽Schema或删除负例恢复绿色。

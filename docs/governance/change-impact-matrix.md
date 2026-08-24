@@ -350,3 +350,9 @@ Implementation artifact `9504310381`已绑定`1d4b1a5c0ad6dc13df18588fbdcb9732e5
 `backend/**`、`schemas/**`、`frontend/**`、migration、dependency/lock、test assertion、fixture/benchmark、infra/scripts/workflow、P2历史与P4实现必须零差异；因此不声明SCHEMA/FRONTEND/API/APPLICATION/DEPENDENCY/TESTS等行为Rule。Machine rule表和`registry_version=1.0.0`不变。
 
 Implementation artifact `9505303054`已绑定`3bf99cbafdad983795a83a88646240dbb0b24509`并复现43 committed/0 working paths、上述4 rows、19 checks、0 issues及禁止范围零差异；因此本evidence-only closure可把TASK-P3-01标为`done`。Closure仍只命中相同4 rows，不修改合同语义、不启动P3-02，也不形成Schema/API/UI/Production/P4行为Rule。
+
+## TASK-P3-02 impact review
+
+完整Diff base=`a8fcec3383ea0f8d9dca4101056aff37d7eea08c`，实际预期命中10行：`IMPACT-SCHEMA`（7 Schema/7 sample/data dictionary）、`IMPACT-DOMAIN`（pure workspace contracts/check）、`IMPACT-STATE`（三份state文档对齐）、`IMPACT-INFRA`（required CI step）、`IMPACT-DEPENDENCY`（pyproject metadata only）、`IMPACT-VERSION-METADATA`（app/pyproject set`2.6.0`）、`IMPACT-TESTS`（contract/integration）、`IMPACT-PHASE`、`IMPACT-GOVERNANCE-REGISTRY`、`IMPACT-DOCS`。各行required documents均逐字列入Task卡。
+
+`uv.lock`、34份P2 Schema/sample、三份rules、migration、`backend/app/infrastructure|application|api|jobs|exporters`、Solver/Validator、fixtures/benchmarks、`frontend/**`及later-phase machine carriers必须零差异。CI workflow只新增workspace machine command，不增权限/Secret/service/deployment。最终path count、10 rows、完整checks/issues必须由local Task report和exact provider artifact复现；provider形成前Task保持`in_progress`。Machine impact rule表与`registry_version=1.0.0`不变。

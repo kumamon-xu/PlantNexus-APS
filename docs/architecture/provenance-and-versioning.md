@@ -238,3 +238,8 @@ Provider run `32465737712` / job `96721819879` / artifact `9440650646`把Gate、
 TASK-P3-01把P3 carrier链固定为：`schedule-version.v1`引用P2 fingerprints；query/comparison引用exact Version/content；command引用source/expected state/content和request fingerprint；new DRAFT引用parent/Validation/audit；decision/publication引用before/after、actor capability、reason、target和idempotency result；ExportJob/manifest引用PUBLISHED Version、attempt和artifact hashes。七份机器Schema/URN只有P3-02发布后才形成。
 
 raw credential/Secret不得成为provenance；actor和idempotency只保存稳定reference/hash。旧P2 bytes、ADR/state/error registry保持immutable；合同/ADR更改采用新document/new ADR，不能以当前living说明覆盖历史provider事实。
+## TASK-P3-02 provenance and fingerprint chain
+
+Additive set `2.6.0`新增七份exact v1/URN；旧P2 document仍保留各自`2.0.0～2.5.0` const和bytes。ScheduleVersion lineage必须同时引用PlanningRun、Snapshot、Problem、PlanningSolution、ValidationReport、KPI、SolverReport与code commit；query/command/comparison/publication/export分别保存version/content/request/result/job fingerprint；AuditEvent保存actor/capability/reason/request/idempotency/before-after/trace references。
+
+启动冻结的34份P2 Schema/sample清单摘要为`sha256:76bb8ae4347ae8bbaa0b2781f74eccd7e4cb1ee97303533a5db3e49f27673723`。P3 machine report记录14份新artifact exact SHA/bytes、canonical projections和code commit；provider闭环前不把本地`uncommitted`报告当外部证据。

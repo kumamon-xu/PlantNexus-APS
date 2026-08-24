@@ -150,3 +150,6 @@ Backend/Strategy/Validator/Problem、C-ID/OBJ-001与dependency/lock零变化。X
 ## TASK-P2-14 Exit audit
 
 locked sync与运行时检查确认OR-Tools exact version仍为`9.15.6755`，ADR-0011 accepted且`pyproject.toml`/`uv.lock`相对Diff base无变化。两次Gate与独立XS/S/M重放保存status、model/build/first/solve/validation/total、objective/bound/gap、memory及Validator；全部PASS。该证据只关闭P2 Synthetic Solver Gate，不建立Production worker capacity、SLA或升级批准。
+## TASK-P3-02 frozen Solver boundary
+
+Workspace carrier release不修改PlanningProblem/Policy/Limits/Solution/SolverReport Schema、CP-SAT backend、OBJ-001或formal Validator。ScheduleVersion只通过exact artifact reference与assignment `$ref`消费P2 validated output；纯precheck不导入或调用Backend/Validator。Solver UNKNOWN继续映射`NO_SOLUTION_WITHIN_LIMIT`且无candidate，不能创建Version。`uv.lock`与OR-Tools pin保持不变；OBJ-002及动态planning仍在后续阶段边界外。

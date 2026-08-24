@@ -1,0 +1,90 @@
+{
+  "schedule_version_version": "schedule-version.v1",
+  "schema_set_version": "2.6.0",
+  "canonicalization_version": "canonical-json.v1",
+  "schedule_version_id": "schedule-version-sim-001",
+  "revision": 1,
+  "state": "DRAFT",
+  "data_plane": "SIMULATION",
+  "environment": "TEST",
+  "synthetic": true,
+  "synthetic_provenance": {
+    "scenario_id": "SIM-P2-GOLDEN-JSSP-001",
+    "scenario_version": "1.0.0",
+    "seed": 20260824,
+    "factory_profile_id": "PROFILE-P2-XS-001",
+    "profile_version": "1.0.0",
+    "generator_id": "PLANTNEXUS-P2-CORRECTNESS-ASSEMBLER",
+    "generator_version": "1.0.0"
+  },
+  "parent_schedule_version": null,
+  "source_kind": "VALIDATED_SOLUTION",
+  "lineage": {
+    "planning_run_id": "planning-run-sim-001",
+    "snapshot": {
+      "document_version": "planning-snapshot.v2",
+      "artifact_id": "snapshot-sim-001",
+      "fingerprint": "sha256:1111111111111111111111111111111111111111111111111111111111111111"
+    },
+    "problem": {
+      "document_version": "planning-problem.v2",
+      "artifact_id": "problem-sim-001",
+      "fingerprint": "sha256:2222222222222222222222222222222222222222222222222222222222222222"
+    },
+    "planning_solution": {
+      "document_version": "planning-solution.v1",
+      "artifact_id": "solution-sim-001",
+      "fingerprint": "sha256:3333333333333333333333333333333333333333333333333333333333333333"
+    },
+    "validation_report": {
+      "document_version": "validation-report.v2",
+      "artifact_id": "validation-sim-001",
+      "fingerprint": "sha256:4444444444444444444444444444444444444444444444444444444444444444"
+    },
+    "kpi": {
+      "document_version": "kpi.v2",
+      "artifact_id": "kpi-sim-001",
+      "fingerprint": "sha256:5555555555555555555555555555555555555555555555555555555555555555"
+    },
+    "solver_report": {
+      "document_version": "solver-report.v1",
+      "artifact_id": "solver-report-sim-001",
+      "fingerprint": "sha256:6666666666666666666666666666666666666666666666666666666666666666"
+    },
+    "code_commit": "a8fcec3383ea0f8d9dca4101056aff37d7eea08c"
+  },
+  "content": {
+    "assignments": [
+      {
+        "operation_id": "operation-sim-001",
+        "resource_id": "resource-sim-001",
+        "start_tick": 0,
+        "end_tick": 2,
+        "duration_ticks": 2,
+        "start_at_utc": "2026-08-24T01:00:00Z",
+        "end_at_utc": "2026-08-24T01:02:00Z",
+        "duration_seconds": 120,
+        "lock_ids": [],
+        "execution_fact_ids": []
+      }
+    ],
+    "locks": []
+  },
+  "content_fingerprint": "sha256:a04434045794169cf0556ce7c43cf4969aaabfb5a77e4f19e4f8ccd9bbd6e4ac",
+  "validation": {
+    "validation_report": {
+      "document_version": "validation-report.v2",
+      "artifact_id": "validation-sim-001",
+      "fingerprint": "sha256:4444444444444444444444444444444444444444444444444444444444444444"
+    },
+    "status": "PASS",
+    "hard_violation_count": 0,
+    "validated_at_utc": "2026-08-24T01:03:00Z"
+  },
+  "decision": null,
+  "publication": null,
+  "superseded_by": null,
+  "allowed_actions": ["view", "edit", "lock"],
+  "created_at_utc": "2026-08-24T01:04:00Z",
+  "created_by_actor_ref": "actor:sim-planner-001"
+}

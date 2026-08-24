@@ -1,0 +1,116 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "urn:plantnexus:aps:schema:schedule-version-comparison:v1",
+  "title": "PlantNexus APS ScheduleVersion Comparison v1",
+  "description": "Deterministic read-only comparison of two immutable schedule versions.",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "schedule_version_comparison_version",
+    "schema_set_version",
+    "canonicalization_version",
+    "comparison_id",
+    "data_plane",
+    "environment",
+    "synthetic",
+    "base_version",
+    "compared_version",
+    "query_fingerprint",
+    "operation_deltas",
+    "kpi_deltas",
+    "summary",
+    "comparison_fingerprint",
+    "generated_at_utc"
+  ],
+  "properties": {
+    "schedule_version_comparison_version": {"const": "schedule-version-comparison.v1"},
+    "schema_set_version": {"const": "2.6.0"},
+    "canonicalization_version": {"const": "canonical-json.v1"},
+    "comparison_id": {"$ref": "urn:plantnexus:aps:schema:schedule-version:v1#/$defs/canonicalId"},
+    "data_plane": {"$ref": "urn:plantnexus:aps:schema:schedule-version:v1#/$defs/dataPlane"},
+    "environment": {"$ref": "urn:plantnexus:aps:schema:schedule-version:v1#/$defs/environment"},
+    "synthetic": {"type": "boolean"},
+    "synthetic_provenance": {"$ref": "urn:plantnexus:aps:schema:schedule-version:v1#/$defs/syntheticProvenance"},
+    "base_version": {"$ref": "urn:plantnexus:aps:schema:schedule-version:v1#/$defs/versionReference"},
+    "compared_version": {"$ref": "urn:plantnexus:aps:schema:schedule-version:v1#/$defs/versionReference"},
+    "query_fingerprint": {"$ref": "urn:plantnexus:aps:schema:schedule-version:v1#/$defs/sha256Fingerprint"},
+    "operation_deltas": {
+      "type": "array",
+      "items": {"$ref": "#/$defs/operationDelta"}
+    },
+    "kpi_deltas": {
+      "type": "array",
+      "items": {"$ref": "#/$defs/kpiDelta"}
+    },
+    "summary": {"$ref": "#/$defs/comparisonSummary"},
+    "comparison_fingerprint": {"$ref": "urn:plantnexus:aps:schema:schedule-version:v1#/$defs/sha256Fingerprint"},
+    "generated_at_utc": {"$ref": "urn:plantnexus:aps:schema:schedule-version:v1#/$defs/utcInstant"}
+  },
+  "allOf": [
+    {
+      "if": {"properties": {"synthetic": {"const": true}}, "required": ["synthetic"]},
+      "then": {"required": ["synthetic_provenance"]},
+      "else": {"not": {"required": ["synthetic_provenance"]}}
+    },
+    {
+      "if": {"properties": {"data_plane": {"const": "PRODUCTION"}}, "required": ["data_plane"]},
+      "then": {"properties": {"synthetic": {"const": false}, "environment": {"const": "PRODUCTION"}}}
+    },
+    {
+      "if": {"properties": {"data_plane": {"const": "SIMULATION"}}, "required": ["data_plane"]},
+      "then": {"properties": {"environment": {"enum": ["DEVELOPMENT", "TEST", "BENCHMARK"]}}}
+    }
+  ],
+  "$defs": {
+    "nullableId": {
+      "oneOf": [
+        {"type": "null"},
+        {"$ref": "urn:plantnexus:aps:schema:schedule-version:v1#/$defs/canonicalId"}
+      ]
+    },
+    "nullableUtc": {
+      "oneOf": [
+        {"type": "null"},
+        {"$ref": "urn:plantnexus:aps:schema:schedule-version:v1#/$defs/utcInstant"}
+      ]
+    },
+    "operationDelta": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["operation_id", "change_kind", "base_resource_id", "compared_resource_id", "base_start_at_utc", "compared_start_at_utc", "base_end_at_utc", "compared_end_at_utc"],
+      "properties": {
+        "operation_id": {"$ref": "urn:plantnexus:aps:schema:schedule-version:v1#/$defs/canonicalId"},
+        "change_kind": {"enum": ["ADDED", "REMOVED", "START_SHIFT", "RESOURCE_CHANGE", "DURATION_CHANGE", "UNCHANGED"]},
+        "base_resource_id": {"$ref": "#/$defs/nullableId"},
+        "compared_resource_id": {"$ref": "#/$defs/nullableId"},
+        "base_start_at_utc": {"$ref": "#/$defs/nullableUtc"},
+        "compared_start_at_utc": {"$ref": "#/$defs/nullableUtc"},
+        "base_end_at_utc": {"$ref": "#/$defs/nullableUtc"},
+        "compared_end_at_utc": {"$ref": "#/$defs/nullableUtc"}
+      }
+    },
+    "kpiDelta": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["metric", "base_value", "compared_value", "delta"],
+      "properties": {
+        "metric": {"enum": ["WEIGHTED_TARDINESS", "MAKESPAN_SECONDS", "LATE_ORDER_COUNT", "SCHEDULED_OPERATION_COUNT", "START_SHIFT_SECONDS", "RESOURCE_CHANGED_COUNT"]},
+        "base_value": {"type": "number"},
+        "compared_value": {"type": "number"},
+        "delta": {"type": "number"}
+      }
+    },
+    "comparisonSummary": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["operation_count", "changed_operation_count", "added_operation_count", "removed_operation_count", "resource_changed_count"],
+      "properties": {
+        "operation_count": {"type": "integer", "minimum": 0},
+        "changed_operation_count": {"type": "integer", "minimum": 0},
+        "added_operation_count": {"type": "integer", "minimum": 0},
+        "removed_operation_count": {"type": "integer", "minimum": 0},
+        "resource_changed_count": {"type": "integer", "minimum": 0}
+      }
+    }
+  }
+}

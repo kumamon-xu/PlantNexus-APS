@@ -169,3 +169,8 @@ P3-01须先固定`INVALID_STATE_TRANSITION`、`AUTHORIZATION_DENIED`、`IDEMPOTE
 P3先行合同现固定计划映射：request/reference/data-plane `DATA_ERROR`与client-supplied `MODEL_INVALID`为HTTP 422；fresh Validator `VALIDATION_FAILED/SCHEDULE_VALIDATION_FAILED`为422；既有`INVALID_STATE_TRANSITION`为409；module-local `AUTHORIZATION_DENIED`为403、`IDEMPOTENCY_CONFLICT`为409、`EXPORT_FAILED`以`SYSTEM_ERROR` carrier为500。已持久化权威artifact损坏或unknown exception统一sanitized 500；not-found可用`INVALID_REFERENCE`/404而不泄漏跨scope资源。
 
 后三个reason尚未加入`error-code-registry.v2`或Error Schema；TASK-P3-02必须在strict workspace carrier中以`workspace-control.v1`和product error显式分namespace，保持七类category兼容，不得把authorization/idempotency强塞进`DATA_ERROR`或改写P2 registry bytes。Export底层system cause可引用sanitized `SYSTEM_ERROR`，但control result仍为独立`EXPORT_FAILED`。所有失败在副作用前拒绝或保持可审计失败Job；UNKNOWN继续是`NO_SOLUTION_WITHIN_LIMIT`且无candidate，绝不映射INFEASIBLE/Validation PASS/可发布Version。HTTP/API/UI行为测试仍为`PLANNED`。
+## TASK-P3-02 workspace carrier error boundary
+
+`audit-event.v1`及共享defs显式区分`PRODUCT`与`WORKSPACE_CONTROL`。PRODUCT继续只接受既有七类category；module-local `workspace-control.v1`只接受`AUTHORIZATION_DENIED`、`IDEMPOTENCY_CONFLICT`、`EXPORT_FAILED`，三者未写入且不得冒充`error-code-registry.v2`。`UNKNOWN`的既有product含义继续是`NO_SOLUTION_WITHIN_LIMIT`，没有candidate，不得变成INFEASIBLE或ScheduleVersion。
+
+Schema/纯precheck错误在consumer副作用前拒绝unknown field/version/state、plane/provenance混用、fingerprint/reference drift和raw secret-bearing key。它们不决定HTTP、retry、audit persistence或真实授权；这些行为仍分配给P3-03/06～10。

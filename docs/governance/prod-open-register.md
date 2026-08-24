@@ -148,3 +148,9 @@ TASK-P3-00 provider artifact `9504310381`只复验规划与治理，不是Author
 因此OPEN-002/010/015及OPEN-001～015全部继续`OPEN`，没有Authority/Evidence closure record；OPEN-012的Production容量/SLA也不因planned规模维度改变。`registry_version=1.0.0`不变。
 
 TASK-P3-01 provider artifact `9505303054`只精确复验合同/ADR和治理范围，不是业务Authority/Evidence closure record，也不提供Production principal、角色、target、capacity、SLA或publish approval。OPEN-001～015全部继续`OPEN`，`registry_version=1.0.0`不变。
+
+## TASK-P3-02 Production-open review
+
+七份机器carrier显式保存plane/environment/provenance，但没有提供Production source、principal→capability、审批责任、external target、storage/MES/ERP adapter、capacity/SLA或deployment evidence。PublicationResult/ExportJob v1强制`SIMULATION_INTERNAL`；Production ScheduleVersion只可表达未发布评审态，因此不可能由本Schema release形成Production publish。
+
+OPEN-002/010/015及OPEN-001～015全部继续`OPEN`，没有Authority/Evidence closure record；OPEN-012也不因Schema byte size/count关闭。Exact CI provider只会证明repository contract replay，不是Production approval/readiness。`registry_version=1.0.0`不变。

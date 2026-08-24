@@ -1,0 +1,358 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "urn:plantnexus:aps:schema:schedule-version:v1",
+  "title": "PlantNexus APS ScheduleVersion v1",
+  "description": "Immutable P3 schedule content carrier. The schema represents state and provenance; it does not execute transitions or authorize actions.",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "schedule_version_version",
+    "schema_set_version",
+    "canonicalization_version",
+    "schedule_version_id",
+    "revision",
+    "state",
+    "data_plane",
+    "environment",
+    "synthetic",
+    "parent_schedule_version",
+    "source_kind",
+    "lineage",
+    "content",
+    "content_fingerprint",
+    "validation",
+    "decision",
+    "publication",
+    "superseded_by",
+    "allowed_actions",
+    "created_at_utc",
+    "created_by_actor_ref"
+  ],
+  "properties": {
+    "schedule_version_version": {"const": "schedule-version.v1"},
+    "schema_set_version": {"const": "2.6.0"},
+    "canonicalization_version": {"const": "canonical-json.v1"},
+    "schedule_version_id": {"$ref": "#/$defs/canonicalId"},
+    "revision": {"type": "integer", "minimum": 1},
+    "state": {"$ref": "#/$defs/scheduleState"},
+    "data_plane": {"$ref": "#/$defs/dataPlane"},
+    "environment": {"$ref": "#/$defs/environment"},
+    "synthetic": {"type": "boolean"},
+    "synthetic_provenance": {"$ref": "#/$defs/syntheticProvenance"},
+    "parent_schedule_version": {
+      "oneOf": [
+        {"type": "null"},
+        {"$ref": "#/$defs/versionReference"}
+      ]
+    },
+    "source_kind": {
+      "enum": ["VALIDATED_SOLUTION", "MANUAL_EDIT", "LOCK_CHANGE", "REJECTION_REVISION"]
+    },
+    "lineage": {"$ref": "#/$defs/lineage"},
+    "content": {"$ref": "#/$defs/scheduleContent"},
+    "content_fingerprint": {"$ref": "#/$defs/sha256Fingerprint"},
+    "validation": {"$ref": "#/$defs/validationEvidence"},
+    "decision": {
+      "oneOf": [
+        {"type": "null"},
+        {"$ref": "#/$defs/decisionEvidence"}
+      ]
+    },
+    "publication": {
+      "oneOf": [
+        {"type": "null"},
+        {"$ref": "#/$defs/publicationEvidence"}
+      ]
+    },
+    "superseded_by": {
+      "oneOf": [
+        {"type": "null"},
+        {"$ref": "#/$defs/versionReference"}
+      ]
+    },
+    "allowed_actions": {"$ref": "#/$defs/allowedActions"},
+    "created_at_utc": {"$ref": "#/$defs/utcInstant"},
+    "created_by_actor_ref": {"$ref": "#/$defs/actorReference"}
+  },
+  "allOf": [
+    {
+      "if": {"properties": {"synthetic": {"const": true}}, "required": ["synthetic"]},
+      "then": {"required": ["synthetic_provenance"]},
+      "else": {"not": {"required": ["synthetic_provenance"]}}
+    },
+    {
+      "if": {"properties": {"state": {"enum": ["DRAFT", "READY_FOR_REVIEW"]}}, "required": ["state"]},
+      "then": {
+        "properties": {
+          "decision": {"type": "null"},
+          "publication": {"type": "null"},
+          "superseded_by": {"type": "null"}
+        }
+      }
+    },
+    {
+      "if": {"properties": {"state": {"const": "REJECTED"}}, "required": ["state"]},
+      "then": {
+        "properties": {
+          "decision": {"$ref": "#/$defs/rejectedDecision"},
+          "publication": {"type": "null"},
+          "superseded_by": {"type": "null"}
+        }
+      }
+    },
+    {
+      "if": {"properties": {"state": {"enum": ["APPROVED", "PUBLISHED", "SUPERSEDED"]}}, "required": ["state"]},
+      "then": {"properties": {"decision": {"$ref": "#/$defs/approvedDecision"}}}
+    },
+    {
+      "if": {"properties": {"state": {"const": "APPROVED"}}, "required": ["state"]},
+      "then": {
+        "properties": {
+          "publication": {"type": "null"},
+          "superseded_by": {"type": "null"}
+        }
+      }
+    },
+    {
+      "if": {"properties": {"state": {"const": "PUBLISHED"}}, "required": ["state"]},
+      "then": {
+        "properties": {
+          "publication": {"$ref": "#/$defs/publicationEvidence"},
+          "superseded_by": {"type": "null"}
+        }
+      }
+    },
+    {
+      "if": {"properties": {"state": {"const": "SUPERSEDED"}}, "required": ["state"]},
+      "then": {
+        "properties": {
+          "publication": {"$ref": "#/$defs/publicationEvidence"},
+          "superseded_by": {"$ref": "#/$defs/versionReference"}
+        }
+      }
+    },
+    {
+      "if": {"properties": {"data_plane": {"const": "PRODUCTION"}}, "required": ["data_plane"]},
+      "then": {
+        "properties": {
+          "synthetic": {"const": false},
+          "environment": {"const": "PRODUCTION"},
+          "state": {"enum": ["DRAFT", "READY_FOR_REVIEW", "APPROVED", "REJECTED"]},
+          "publication": {"type": "null"},
+          "superseded_by": {"type": "null"}
+        }
+      }
+    },
+    {
+      "if": {"properties": {"data_plane": {"const": "SIMULATION"}}, "required": ["data_plane"]},
+      "then": {"properties": {"environment": {"enum": ["DEVELOPMENT", "TEST", "BENCHMARK"]}}}
+    }
+  ],
+  "$defs": {
+    "canonicalId": {
+      "type": "string",
+      "minLength": 1,
+      "maxLength": 256,
+      "pattern": "^[^\\s\\u0000-\\u001F\\u007F]+$"
+    },
+    "nonEmptyText": {"type": "string", "minLength": 1, "maxLength": 512},
+    "sanitizedReason": {
+      "type": "string",
+      "minLength": 1,
+      "maxLength": 512,
+      "pattern": "^[^\\u0000-\\u001F\\u007F]+$"
+    },
+    "actorReference": {
+      "type": "string",
+      "minLength": 1,
+      "maxLength": 256,
+      "pattern": "^actor:[A-Za-z0-9._:-]+$"
+    },
+    "sha256Fingerprint": {"type": "string", "pattern": "^sha256:[0-9a-f]{64}$"},
+    "gitCommit": {"type": "string", "pattern": "^(?:[0-9a-f]{40}|uncommitted)$"},
+    "utcInstant": {"type": "string", "format": "date-time", "pattern": "Z$"},
+    "semanticVersion": {
+      "type": "string",
+      "pattern": "^(0|[1-9][0-9]*)\\.(0|[1-9][0-9]*)\\.(0|[1-9][0-9]*)$"
+    },
+    "dataPlane": {"enum": ["SIMULATION", "PRODUCTION"]},
+    "environment": {"enum": ["DEVELOPMENT", "TEST", "BENCHMARK", "PRODUCTION"]},
+    "internalTarget": {"enum": ["WORKSPACE_INTERNAL", "SIMULATION_INTERNAL"]},
+    "capability": {"enum": ["view", "edit", "lock", "approve", "reject", "publish", "export", "audit"]},
+    "allowedActions": {
+      "type": "array",
+      "uniqueItems": true,
+      "items": {"$ref": "#/$defs/capability"}
+    },
+    "scheduleState": {"enum": ["DRAFT", "READY_FOR_REVIEW", "APPROVED", "PUBLISHED", "SUPERSEDED", "REJECTED"]},
+    "exportState": {"enum": ["CREATED", "EXPORTING", "EXPORTED", "EXPORT_FAILED", "CANCELLED"]},
+    "syntheticProvenance": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["scenario_id", "scenario_version", "seed", "factory_profile_id", "profile_version", "generator_id", "generator_version"],
+      "properties": {
+        "scenario_id": {"$ref": "#/$defs/canonicalId"},
+        "scenario_version": {"$ref": "#/$defs/semanticVersion"},
+        "seed": {"type": "integer", "minimum": 0, "maximum": 9223372036854775807},
+        "factory_profile_id": {"$ref": "#/$defs/canonicalId"},
+        "profile_version": {"$ref": "#/$defs/semanticVersion"},
+        "generator_id": {"$ref": "#/$defs/canonicalId"},
+        "generator_version": {"$ref": "#/$defs/semanticVersion"}
+      }
+    },
+    "artifactReference": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["document_version", "artifact_id", "fingerprint"],
+      "properties": {
+        "document_version": {"$ref": "#/$defs/nonEmptyText"},
+        "artifact_id": {"$ref": "#/$defs/canonicalId"},
+        "fingerprint": {"$ref": "#/$defs/sha256Fingerprint"}
+      }
+    },
+    "versionReference": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["schedule_version_id", "state", "content_fingerprint"],
+      "properties": {
+        "schedule_version_id": {"$ref": "#/$defs/canonicalId"},
+        "state": {"$ref": "#/$defs/scheduleState"},
+        "content_fingerprint": {"$ref": "#/$defs/sha256Fingerprint"}
+      }
+    },
+    "lineage": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["planning_run_id", "snapshot", "problem", "planning_solution", "validation_report", "kpi", "solver_report", "code_commit"],
+      "properties": {
+        "planning_run_id": {"$ref": "#/$defs/canonicalId"},
+        "snapshot": {"$ref": "#/$defs/artifactReference"},
+        "problem": {"$ref": "#/$defs/artifactReference"},
+        "planning_solution": {"$ref": "#/$defs/artifactReference"},
+        "validation_report": {"$ref": "#/$defs/artifactReference"},
+        "kpi": {"$ref": "#/$defs/artifactReference"},
+        "solver_report": {"$ref": "#/$defs/artifactReference"},
+        "code_commit": {"$ref": "#/$defs/gitCommit"}
+      }
+    },
+    "scheduleContent": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["assignments", "locks"],
+      "properties": {
+        "assignments": {
+          "type": "array",
+          "items": {"$ref": "urn:plantnexus:aps:schema:planning-solution:v1#/$defs/operationAssignment"}
+        },
+        "locks": {
+          "type": "array",
+          "uniqueItems": true,
+          "items": {"$ref": "#/$defs/operationLock"}
+        }
+      }
+    },
+    "operationLock": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["lock_id", "operation_id", "lock_type", "resource_id", "start_at_utc", "end_at_utc"],
+      "properties": {
+        "lock_id": {"$ref": "#/$defs/canonicalId"},
+        "operation_id": {"$ref": "#/$defs/canonicalId"},
+        "lock_type": {"enum": ["HARD", "SOFT"]},
+        "resource_id": {"oneOf": [{"type": "null"}, {"$ref": "#/$defs/canonicalId"}]},
+        "start_at_utc": {"oneOf": [{"type": "null"}, {"$ref": "#/$defs/utcInstant"}]},
+        "end_at_utc": {"oneOf": [{"type": "null"}, {"$ref": "#/$defs/utcInstant"}]}
+      },
+      "allOf": [
+        {
+          "if": {"properties": {"lock_type": {"const": "HARD"}}, "required": ["lock_type"]},
+          "then": {
+            "properties": {
+              "resource_id": {"$ref": "#/$defs/canonicalId"},
+              "start_at_utc": {"$ref": "#/$defs/utcInstant"},
+              "end_at_utc": {"$ref": "#/$defs/utcInstant"}
+            }
+          }
+        }
+      ]
+    },
+    "validationEvidence": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["validation_report", "status", "hard_violation_count", "validated_at_utc"],
+      "properties": {
+        "validation_report": {"$ref": "#/$defs/artifactReference"},
+        "status": {"const": "PASS"},
+        "hard_violation_count": {"const": 0},
+        "validated_at_utc": {"$ref": "#/$defs/utcInstant"}
+      }
+    },
+    "decisionEvidence": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["decision", "actor_ref", "capability", "reason", "decided_at_utc", "audit_event_id"],
+      "properties": {
+        "decision": {"enum": ["APPROVED", "REJECTED"]},
+        "actor_ref": {"$ref": "#/$defs/actorReference"},
+        "capability": {"enum": ["approve", "reject"]},
+        "reason": {"$ref": "#/$defs/sanitizedReason"},
+        "decided_at_utc": {"$ref": "#/$defs/utcInstant"},
+        "audit_event_id": {"$ref": "#/$defs/canonicalId"}
+      }
+    },
+    "approvedDecision": {
+      "allOf": [
+        {"$ref": "#/$defs/decisionEvidence"},
+        {"properties": {"decision": {"const": "APPROVED"}, "capability": {"const": "approve"}}}
+      ]
+    },
+    "rejectedDecision": {
+      "allOf": [
+        {"$ref": "#/$defs/decisionEvidence"},
+        {"properties": {"decision": {"const": "REJECTED"}, "capability": {"const": "reject"}}}
+      ]
+    },
+    "publicationEvidence": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["publication_id", "target", "published_at_utc", "audit_event_id"],
+      "properties": {
+        "publication_id": {"$ref": "#/$defs/canonicalId"},
+        "target": {"const": "SIMULATION_INTERNAL"},
+        "published_at_utc": {"$ref": "#/$defs/utcInstant"},
+        "audit_event_id": {"$ref": "#/$defs/canonicalId"}
+      }
+    },
+    "idempotencyReference": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["scope", "key_reference", "request_fingerprint"],
+      "properties": {
+        "scope": {"$ref": "#/$defs/nonEmptyText"},
+        "key_reference": {"$ref": "#/$defs/sha256Fingerprint"},
+        "request_fingerprint": {"$ref": "#/$defs/sha256Fingerprint"}
+      }
+    },
+    "productErrorReference": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["error_namespace", "category", "code", "message"],
+      "properties": {
+        "error_namespace": {"const": "PRODUCT"},
+        "category": {"enum": ["DATA_ERROR", "UNSUPPORTED_CAPABILITY", "MODEL_INVALID", "INFEASIBLE", "NO_SOLUTION_WITHIN_LIMIT", "VALIDATION_FAILED", "SYSTEM_ERROR"]},
+        "code": {"$ref": "#/$defs/canonicalId"},
+        "message": {"$ref": "#/$defs/nonEmptyText"}
+      }
+    },
+    "workspaceControlError": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["error_namespace", "reason", "message"],
+      "properties": {
+        "error_namespace": {"const": "WORKSPACE_CONTROL"},
+        "reason": {"enum": ["AUTHORIZATION_DENIED", "IDEMPOTENCY_CONFLICT", "EXPORT_FAILED"]},
+        "message": {"$ref": "#/$defs/nonEmptyText"}
+      }
+    }
+  }
+}

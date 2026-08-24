@@ -1,0 +1,40 @@
+{
+  "publication_result_version": "publication-result.v1",
+  "schema_set_version": "2.6.0",
+  "canonicalization_version": "canonical-json.v1",
+  "publication_id": "publication-sim-001",
+  "data_plane": "SIMULATION",
+  "environment": "TEST",
+  "synthetic": true,
+  "synthetic_provenance": {
+    "scenario_id": "SIM-P2-GOLDEN-JSSP-001",
+    "scenario_version": "1.0.0",
+    "seed": 20260824,
+    "factory_profile_id": "PROFILE-P2-XS-001",
+    "profile_version": "1.0.0",
+    "generator_id": "PLANTNEXUS-P2-CORRECTNESS-ASSEMBLER",
+    "generator_version": "1.0.0"
+  },
+  "target": "SIMULATION_INTERNAL",
+  "source_approved_version": {
+    "schedule_version_id": "schedule-version-sim-001",
+    "state": "APPROVED",
+    "content_fingerprint": "sha256:a04434045794169cf0556ce7c43cf4969aaabfb5a77e4f19e4f8ccd9bbd6e4ac"
+  },
+  "published_version": {
+    "schedule_version_id": "schedule-version-sim-001",
+    "state": "PUBLISHED",
+    "content_fingerprint": "sha256:a04434045794169cf0556ce7c43cf4969aaabfb5a77e4f19e4f8ccd9bbd6e4ac"
+  },
+  "previous_current_version": null,
+  "superseded_version": null,
+  "idempotency_reference": {
+    "scope": "SIMULATION/PUBLISH/schedule-version-sim-001/SIMULATION_INTERNAL",
+    "key_reference": "sha256:bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb",
+    "request_fingerprint": "sha256:cccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccc"
+  },
+  "replayed": false,
+  "published_at_utc": "2026-08-24T01:08:00Z",
+  "audit_event_id": "audit-event-publish-sim-001",
+  "result_fingerprint": "sha256:6ea93a5bb36c2016ff2c310f02602ad5b283e112356fe066f1a525ffd326c64f"
+}

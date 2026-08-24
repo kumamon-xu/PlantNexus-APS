@@ -10,6 +10,7 @@ from typing import Any, cast
 import yaml
 
 from app.application.p2_gate_report import main as p2_gate_main
+from app.domain.workspace_contract_check import main as workspace_contract_main
 from app.exporters.contract_check import main as output_contract_main
 from app.planning.backends.cp_sat.contract_check import (
     main as backend_contract_main,
@@ -137,6 +138,8 @@ def test_ci_runs_repository_gates_and_discovers_the_current_task() -> None:
         "build/validation/ci-reference-schedulers.json",
         "app.exporters.contract_check",
         "build/validation/ci-p2-output-contracts.json",
+        "app.domain.workspace_contract_check",
+        "build/validation/ci-p3-workspace-contracts.json",
         "app.infrastructure.contract_check",
         "docker compose --env-file .env.example config --quiet",
         "PLANTNEXUS_CI_CHANGE_BASE:",
@@ -156,6 +159,7 @@ def test_ci_runs_repository_gates_and_discovers_the_current_task() -> None:
     assert "scripts/run_benchmark.py" in workflow
     assert "name: P2 XS BenchmarkRunner evidence" in workflow
     assert "name: P2 vertical slice Gate evidence" in workflow
+    assert "name: P3 workspace schema contract evidence" in workflow
     assert "Benchmark hook (deferred until runner exists)" not in workflow
     assert "Benchmark runner remains deferred" not in workflow
     assert "actions/upload-artifact@v4" in workflow
@@ -173,6 +177,42 @@ def test_ci_runs_repository_gates_and_discovers_the_current_task() -> None:
     assert "TASK-P0-08" not in workflow
     assert "docs/tasks/P0/" not in workflow
     assert PHASE_GOVERNANCE_TEST_ID == "TEST-PHASE-GOVERNANCE-001"
+
+
+def test_ci_p3_workspace_schema_contract_is_required_and_machine_checkable(
+    tmp_path: Path,
+) -> None:
+    workflow = (ROOT / ".github" / "workflows" / "ci.yml").read_text(
+        encoding="utf-8"
+    )
+    normalized = " ".join(workflow.split())
+    assert (
+        "name: P3 workspace schema contract evidence run: >- uv run python -m "
+        "app.domain.workspace_contract_check --root . --report "
+        "build/validation/ci-p3-workspace-contracts.json"
+    ) in normalized
+    assert "continue-on-error" not in workflow
+
+    report_path = tmp_path / "p3-workspace-contracts.json"
+    assert (
+        workspace_contract_main(
+            ["--root", str(ROOT), "--report", str(report_path)]
+        )
+        == 0
+    )
+    report = json.loads(report_path.read_text(encoding="utf-8"))
+    assert report["report_version"] == "p3-workspace-contract-report.v1"
+    assert report["status"] == "PASS"
+    assert report["task_id"] == "TASK-P3-02"
+    assert report["schema_set_version"] == "2.6.0"
+    assert report["check_count"] == 8
+    assert report["counts"] == {
+        "new_schemas": 7,
+        "new_samples": 7,
+        "frozen_p2_artifacts": 34,
+        "negative_schema_rejections": 24,
+        "negative_fingerprint_rejections": 6,
+    }
 
 
 def test_ci_benchmark_contract_is_xs_only_and_baseline_bound() -> None:
@@ -264,7 +304,7 @@ def test_ci_planning_problem_contract_report_is_machine_checkable(
     assert report["report_version"] == "planning-problem-contract-report.v1"
     assert report["status"] == "PASS"
     assert report["task_id"] == "TASK-P2-01"
-    assert report["schema_set_version"] == "2.5.0"
+    assert report["schema_set_version"] == "2.6.0"
     assert report["check_count"] == 4
     assert {check["name"] for check in report["checks"]} == {
         "v1-byte-preservation",
@@ -289,7 +329,7 @@ def test_ci_planning_machine_contract_report_is_machine_checkable(
     assert report["report_version"] == "planning-machine-contract-report.v1"
     assert report["status"] == "PASS"
     assert report["task_id"] == "TASK-P2-02"
-    assert report["schema_set_version"] == "2.5.0"
+    assert report["schema_set_version"] == "2.6.0"
     assert report["check_count"] == 5
     assert {check["name"] for check in report["checks"]} == {
         "fixed-schema-and-sample-artifacts",

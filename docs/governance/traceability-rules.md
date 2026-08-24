@@ -252,4 +252,10 @@ TASK-P3-00 implementation provider已由run `32681493976` / required job `972988
 
 P3-01的追踪链固定为`REQ-006/007/009 + NFR-TRC/ISO/SEC/HUM + ENG-ARCH/ERR/VER → TASK-P3-01 → planning-workspace/gantt/approval + planning-workspace-api/authorization-audit + ADR-0012 → TEST-WORKSPACE-CONTRACT-001/TEST-STATE-TRANSITION-001/TEST-ERROR-MAPPING-001 (behavior PLANNED) → implementation/closure exact provider artifacts`。文档可标记contract baseline formed，但不得把既有state/error/doc tests写成P3行为PASS。
 
-七份planned Schema必须逐项记录filename/URN/compatibility/consumer，P3-02发布前均为PLANNED；module-local auth/idempotency/export reason不得冒充global registry。Implementation provider run `32684713630` / artifact `9505303054`已精确复验TASK-P3-01的SHA、43 paths、4 rows、19 checks和0 issues，因此closure只允许把Task改为`done`并写回证据；closure自身仍须push后外部核验。P3-02仍需新的用户授权、clean synchronized/provider-verified HEAD和新Diff base。
+七份Schema必须逐项记录filename/URN/compatibility/consumer；module-local auth/idempotency/export reason不得冒充global registry。Implementation provider run `32684713630` / artifact `9505303054`已精确复验TASK-P3-01的SHA、43 paths、4 rows、19 checks和0 issues，因此其closure只允许把Task改为`done`并写回证据。
+
+## TASK-P3-02 carrier evidence rule
+
+用户授权后，TASK-P3-02已从`a8fcec3383ea0f8d9dca4101056aff37d7eea08c`启动。Global set前移必须同时满足：七组exact file/version/URN；全object strict/no-default；offline refs；explicit plane/environment/synthetic conditional；canonical projection与negative drift；34份P2 Schema/sample和三份规则表固定bytes；dependency/lock零变化；state/error namespace不漂移；CI non-skippable report。
+
+Implementation provider artifact必须同时包含`p3-workspace-contract-report.v1`与current Task report，并验证同一exact SHA、Task、8 checks、7/7 artifacts、34 frozen、24+6 negative、10 Impact rows、full checks和issues=`[]`。任一不一致保持`in_progress`并阻止P3-03。Provider成功后只允许evidence-only closure写回事实；closure自身也须exact provider，且不得自动启动P3-03。

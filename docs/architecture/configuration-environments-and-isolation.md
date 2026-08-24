@@ -186,3 +186,8 @@ P3 development/Simulation只能使用显式data plane和test actor；Production 
 TASK-P3-01合同固定授权上下文必须同时包含environment、data plane、resource scope和target。Simulation test policy只能在Development/Test/Benchmark环境、`SIMULATION` plane、synthetic resource及`SIMULATION_INTERNAL` target生效，并明确`production_binding=false`；Production缺少真实mapping/target时所有write/decision/publish/export默认拒绝，Production导航不得暴露Simulation labs。
 
 本Task没有新增env var、Secret、service、database、storage、network、frontend build或deployment配置。identity provider、external target、retention/SIEM和Production publish channel继续未形成。
+## TASK-P3-02 contract isolation review
+
+新carrier必须逐文档显式`data_plane`与`environment`：SIMULATION只允许Development/Test/Benchmark，synthetic=true时必须携带完整Scenario/Profile/Generator/seed provenance；PRODUCTION必须Production environment且synthetic=false。PublicationResult/ExportJob v1只接受SIMULATION + `SIMULATION_INTERNAL`，不提供external/Production target或默认值。
+
+CI新增的workspace contract CLI只读repository并写ignored JSON，不新增env var、Secret、service、port、DB/Redis连接或deployment权限。它不能把test actor/sample/provider升级为Production authority。

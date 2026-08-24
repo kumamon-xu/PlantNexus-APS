@@ -135,6 +135,12 @@ jobs:
           --root .
           --report build/validation/ci-p2-output-contracts.json
 
+      - name: P3 workspace schema contract evidence
+        run: >-
+          uv run python -m app.domain.workspace_contract_check
+          --root .
+          --report build/validation/ci-p3-workspace-contracts.json
+
       - name: Engineering contract
         run: >-
           uv run python -m app.infrastructure.contract_check

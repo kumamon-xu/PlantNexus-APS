@@ -1,0 +1,198 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "urn:plantnexus:aps:schema:workspace-command:v1",
+  "title": "PlantNexus APS Workspace Command v1",
+  "description": "Strict command intent carrier with CAS and idempotency preconditions. Authenticated principal and roles are transport authority and are intentionally absent.",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "workspace_command_version",
+    "schema_set_version",
+    "canonicalization_version",
+    "command_id",
+    "command_type",
+    "required_capability",
+    "idempotency_key",
+    "idempotency_scope",
+    "request_fingerprint",
+    "source_id",
+    "expected_state",
+    "expected_content_fingerprint",
+    "data_plane",
+    "environment",
+    "synthetic",
+    "target",
+    "reason",
+    "correlation_id",
+    "payload"
+  ],
+  "properties": {
+    "workspace_command_version": {"const": "workspace-command.v1"},
+    "schema_set_version": {"const": "2.6.0"},
+    "canonicalization_version": {"const": "canonical-json.v1"},
+    "command_id": {"$ref": "urn:plantnexus:aps:schema:schedule-version:v1#/$defs/canonicalId"},
+    "command_type": {
+      "enum": ["MOVE_OPERATION", "ASSIGN_RESOURCE", "SET_LOCK", "REMOVE_LOCK", "SUBMIT_FOR_REVIEW", "APPROVE", "REJECT", "PUBLISH", "REQUEST_EXPORT", "RETRY_EXPORT", "CANCEL_EXPORT"]
+    },
+    "required_capability": {"$ref": "urn:plantnexus:aps:schema:schedule-version:v1#/$defs/capability"},
+    "idempotency_key": {
+      "type": "string",
+      "minLength": 16,
+      "maxLength": 128,
+      "pattern": "^[A-Za-z0-9._:-]+$"
+    },
+    "idempotency_scope": {
+      "type": "string",
+      "minLength": 8,
+      "maxLength": 512,
+      "pattern": "^[A-Za-z0-9._:/-]+$"
+    },
+    "request_fingerprint": {"$ref": "urn:plantnexus:aps:schema:schedule-version:v1#/$defs/sha256Fingerprint"},
+    "source_id": {"$ref": "urn:plantnexus:aps:schema:schedule-version:v1#/$defs/canonicalId"},
+    "expected_state": {
+      "enum": ["DRAFT", "READY_FOR_REVIEW", "APPROVED", "PUBLISHED", "SUPERSEDED", "REJECTED", "CREATED", "EXPORTING", "EXPORTED", "EXPORT_FAILED", "CANCELLED"]
+    },
+    "expected_content_fingerprint": {"$ref": "urn:plantnexus:aps:schema:schedule-version:v1#/$defs/sha256Fingerprint"},
+    "data_plane": {"$ref": "urn:plantnexus:aps:schema:schedule-version:v1#/$defs/dataPlane"},
+    "environment": {"$ref": "urn:plantnexus:aps:schema:schedule-version:v1#/$defs/environment"},
+    "synthetic": {"type": "boolean"},
+    "synthetic_provenance": {"$ref": "urn:plantnexus:aps:schema:schedule-version:v1#/$defs/syntheticProvenance"},
+    "target": {"$ref": "urn:plantnexus:aps:schema:schedule-version:v1#/$defs/internalTarget"},
+    "reason": {"$ref": "urn:plantnexus:aps:schema:schedule-version:v1#/$defs/sanitizedReason"},
+    "correlation_id": {"$ref": "urn:plantnexus:aps:schema:schedule-version:v1#/$defs/canonicalId"},
+    "payload": {
+      "oneOf": [
+        {"$ref": "#/$defs/emptyPayload"},
+        {"$ref": "#/$defs/moveOperationPayload"},
+        {"$ref": "#/$defs/assignResourcePayload"},
+        {"$ref": "#/$defs/setLockPayload"},
+        {"$ref": "#/$defs/removeLockPayload"},
+        {"$ref": "#/$defs/publishPayload"},
+        {"$ref": "#/$defs/requestExportPayload"},
+        {"$ref": "#/$defs/exportAttemptPayload"}
+      ]
+    }
+  },
+  "allOf": [
+    {
+      "if": {"properties": {"synthetic": {"const": true}}, "required": ["synthetic"]},
+      "then": {"required": ["synthetic_provenance"]},
+      "else": {"not": {"required": ["synthetic_provenance"]}}
+    },
+    {
+      "if": {"properties": {"data_plane": {"const": "PRODUCTION"}}, "required": ["data_plane"]},
+      "then": {"properties": {"synthetic": {"const": false}, "environment": {"const": "PRODUCTION"}}}
+    },
+    {
+      "if": {"properties": {"data_plane": {"const": "SIMULATION"}}, "required": ["data_plane"]},
+      "then": {"properties": {"environment": {"enum": ["DEVELOPMENT", "TEST", "BENCHMARK"]}}}
+    },
+    {
+      "if": {"properties": {"command_type": {"const": "MOVE_OPERATION"}}, "required": ["command_type"]},
+      "then": {"properties": {"required_capability": {"const": "edit"}, "payload": {"$ref": "#/$defs/moveOperationPayload"}, "target": {"const": "WORKSPACE_INTERNAL"}}}
+    },
+    {
+      "if": {"properties": {"command_type": {"const": "ASSIGN_RESOURCE"}}, "required": ["command_type"]},
+      "then": {"properties": {"required_capability": {"const": "edit"}, "payload": {"$ref": "#/$defs/assignResourcePayload"}, "target": {"const": "WORKSPACE_INTERNAL"}}}
+    },
+    {
+      "if": {"properties": {"command_type": {"const": "SET_LOCK"}}, "required": ["command_type"]},
+      "then": {"properties": {"required_capability": {"const": "lock"}, "payload": {"$ref": "#/$defs/setLockPayload"}, "target": {"const": "WORKSPACE_INTERNAL"}}}
+    },
+    {
+      "if": {"properties": {"command_type": {"const": "REMOVE_LOCK"}}, "required": ["command_type"]},
+      "then": {"properties": {"required_capability": {"const": "lock"}, "payload": {"$ref": "#/$defs/removeLockPayload"}, "target": {"const": "WORKSPACE_INTERNAL"}}}
+    },
+    {
+      "if": {"properties": {"command_type": {"const": "SUBMIT_FOR_REVIEW"}}, "required": ["command_type"]},
+      "then": {"properties": {"required_capability": {"const": "edit"}, "payload": {"$ref": "#/$defs/emptyPayload"}, "target": {"const": "WORKSPACE_INTERNAL"}}}
+    },
+    {
+      "if": {"properties": {"command_type": {"const": "APPROVE"}}, "required": ["command_type"]},
+      "then": {"properties": {"required_capability": {"const": "approve"}, "payload": {"$ref": "#/$defs/emptyPayload"}, "target": {"const": "WORKSPACE_INTERNAL"}}}
+    },
+    {
+      "if": {"properties": {"command_type": {"const": "REJECT"}}, "required": ["command_type"]},
+      "then": {"properties": {"required_capability": {"const": "reject"}, "payload": {"$ref": "#/$defs/emptyPayload"}, "target": {"const": "WORKSPACE_INTERNAL"}}}
+    },
+    {
+      "if": {"properties": {"command_type": {"const": "PUBLISH"}}, "required": ["command_type"]},
+      "then": {"properties": {"required_capability": {"const": "publish"}, "expected_state": {"const": "APPROVED"}, "payload": {"$ref": "#/$defs/publishPayload"}, "target": {"const": "SIMULATION_INTERNAL"}}}
+    },
+    {
+      "if": {"properties": {"command_type": {"const": "REQUEST_EXPORT"}}, "required": ["command_type"]},
+      "then": {"properties": {"required_capability": {"const": "export"}, "expected_state": {"const": "PUBLISHED"}, "payload": {"$ref": "#/$defs/requestExportPayload"}, "target": {"const": "SIMULATION_INTERNAL"}}}
+    },
+    {
+      "if": {"properties": {"command_type": {"const": "RETRY_EXPORT"}}, "required": ["command_type"]},
+      "then": {"properties": {"required_capability": {"const": "export"}, "expected_state": {"const": "EXPORT_FAILED"}, "payload": {"$ref": "#/$defs/exportAttemptPayload"}, "target": {"const": "SIMULATION_INTERNAL"}}}
+    },
+    {
+      "if": {"properties": {"command_type": {"const": "CANCEL_EXPORT"}}, "required": ["command_type"]},
+      "then": {"properties": {"required_capability": {"const": "export"}, "payload": {"$ref": "#/$defs/exportAttemptPayload"}, "target": {"const": "SIMULATION_INTERNAL"}}}
+    }
+  ],
+  "$defs": {
+    "emptyPayload": {"type": "object", "additionalProperties": false, "maxProperties": 0},
+    "moveOperationPayload": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["operation_id", "resource_id", "start_at_utc", "end_at_utc"],
+      "properties": {
+        "operation_id": {"$ref": "urn:plantnexus:aps:schema:schedule-version:v1#/$defs/canonicalId"},
+        "resource_id": {"$ref": "urn:plantnexus:aps:schema:schedule-version:v1#/$defs/canonicalId"},
+        "start_at_utc": {"$ref": "urn:plantnexus:aps:schema:schedule-version:v1#/$defs/utcInstant"},
+        "end_at_utc": {"$ref": "urn:plantnexus:aps:schema:schedule-version:v1#/$defs/utcInstant"}
+      }
+    },
+    "assignResourcePayload": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["operation_id", "resource_id"],
+      "properties": {
+        "operation_id": {"$ref": "urn:plantnexus:aps:schema:schedule-version:v1#/$defs/canonicalId"},
+        "resource_id": {"$ref": "urn:plantnexus:aps:schema:schedule-version:v1#/$defs/canonicalId"}
+      }
+    },
+    "setLockPayload": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["lock"],
+      "properties": {"lock": {"$ref": "urn:plantnexus:aps:schema:schedule-version:v1#/$defs/operationLock"}}
+    },
+    "removeLockPayload": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["lock_id", "operation_id"],
+      "properties": {
+        "lock_id": {"$ref": "urn:plantnexus:aps:schema:schedule-version:v1#/$defs/canonicalId"},
+        "operation_id": {"$ref": "urn:plantnexus:aps:schema:schedule-version:v1#/$defs/canonicalId"}
+      }
+    },
+    "publishPayload": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["previous_current_version"],
+      "properties": {
+        "previous_current_version": {
+          "oneOf": [
+            {"type": "null"},
+            {"$ref": "urn:plantnexus:aps:schema:schedule-version:v1#/$defs/versionReference"}
+          ]
+        }
+      }
+    },
+    "requestExportPayload": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["package_profile"],
+      "properties": {"package_profile": {"const": "p3-standard-export.v1"}}
+    },
+    "exportAttemptPayload": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["expected_attempt"],
+      "properties": {"expected_attempt": {"type": "integer", "minimum": 0}}
+    }
+  }
+}

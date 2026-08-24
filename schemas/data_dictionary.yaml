@@ -1,5 +1,5 @@
-schema_set_version: 2.5.0
-status: p2_validated_output_contracts
+schema_set_version: 2.6.0
+status: p3_workspace_machine_contracts
 spec_version: 0.3.0
 rules:
   unknown_root_fields: reject
@@ -12,7 +12,7 @@ rules:
   unit_conversion_registry: schemas/rules/unit-conversion-registry.v1.yaml
   data_quality_rule_version: data-quality-rules.v1
   error_registry: schemas/rules/error-code-registry.v2.yaml
-  schema_set_compatibility: additive_2_5_preserves_all_prior_schema_bytes_and_import_snapshot_quality_unit_problem_planning_machine_document_versions
+  schema_set_compatibility: additive_2_6_preserves_all_prior_schema_bytes_urns_and_document_versions_while_adding_p3_workspace_carriers
 schemas:
   canonical-records.v1:
     path: schemas/json/canonical-records.v1.schema.json
@@ -169,6 +169,68 @@ schemas:
     state_boundary: no ScheduleVersion, ExportJob, approval, publication, or external transfer
     identity: content-derived package_id plus per-file SHA-256, bytes, and CSV row counts
     production_open: [OPEN-002, OPEN-006, OPEN-010, OPEN-015]
+  schedule-version.v1:
+    path: schemas/json/schedule-version.schema.json
+    schema_set_version: 2.6.0
+    state_authority: state-machines.v1
+    content: immutable assignments and operation locks with canonical content fingerprint
+    lineage: [planning_run_id, snapshot, problem, planning_solution, validation_report, kpi, solver_report, code_commit]
+    publication_target: SIMULATION_INTERNAL only; Production publication is unrepresentable in v1
+    compatibility: new non-interchangeable document; PlanningSolution and all P2 bytes remain unchanged
+    p3_boundary: carrier and pure precheck only; no persistence, transition, authorization, API, UI, worker, or publication behavior
+    production_open: [OPEN-002, OPEN-010, OPEN-015]
+  workspace-query.v1:
+    path: schemas/json/workspace-query.schema.json
+    schema_set_version: 2.6.0
+    views: [DATA_HEALTH, IMPORT_RUNS, PLANNING_RUNS, ORDERS, OPERATIONS, RESOURCES, CALENDARS, GANTT, RESOURCE_LOAD, KPI, DIAGNOSTICS, LOCKS, AUDIT, VERSION_COMPARISON]
+    determinism: stable sort, explicit filters, opaque cursor, query fingerprint, authoritative version, freshness, and server-observed count
+    authority: allowed_actions is server-derived and does not grant capability
+    compatibility: new strict request/result envelope
+    production_open: [OPEN-002, OPEN-010, OPEN-015]
+  workspace-command.v1:
+    path: schemas/json/workspace-command.schema.json
+    schema_set_version: 2.6.0
+    preconditions: [source_id, expected_state, expected_content_fingerprint, data_plane, target]
+    idempotency: explicit key and scope plus canonical request fingerprint
+    authority: authenticated principal and role are intentionally absent from the client body
+    copy_on_write: edit and lock intents never authorize in-place ScheduleVersion mutation
+    compatibility: new strict discriminated command envelope
+    production_open: [OPEN-002, OPEN-010, OPEN-015]
+  schedule-version-comparison.v1:
+    path: schemas/json/schedule-version-comparison.schema.json
+    schema_set_version: 2.6.0
+    identity: two distinct immutable version references plus canonical comparison fingerprint
+    deltas: operation and KPI read-model deltas only
+    p3_boundary: not an execution or dynamic planning artifact
+    compatibility: new non-interchangeable read carrier
+    production_open: [OPEN-002, OPEN-010, OPEN-015]
+  audit-event.v1:
+    path: schemas/json/audit-event.schema.json
+    schema_set_version: 2.6.0
+    append_only: carrier requires stable identity, actor reference, resolved capability, sanitized intent, lineage, before/after, result, and trace
+    no_leak: raw credentials, secrets, SQL, and stack data are forbidden by contract and pure precheck
+    error_namespaces: PRODUCT and WORKSPACE_CONTROL remain explicit and non-interchangeable
+    p3_boundary: persistence and transactional append behavior remain TASK-P3-03 and later
+    production_open: [OPEN-002, OPEN-010, OPEN-015]
+  publication-result.v1:
+    path: schemas/json/publication-result.schema.json
+    schema_set_version: 2.6.0
+    data_plane: SIMULATION only
+    target: SIMULATION_INTERNAL only
+    idempotency: same logical result is represented with a persisted reference, replay flag, and canonical result fingerprint
+    compatibility: new successful-result carrier; rejected attempts use the separate error carrier
+    p3_boundary: no publication behavior is implemented by this release
+    production_open: [OPEN-002, OPEN-010, OPEN-015]
+  export-job.v1:
+    path: schemas/json/export-job.schema.json
+    schema_set_version: 2.6.0
+    state_authority: state-machines.v1
+    source_state: PUBLISHED ScheduleVersion only
+    target: SIMULATION_INTERNAL only
+    lifecycle_fields: [attempt, lease_reference, heartbeat_at_utc, artifact_manifest, error, timestamps]
+    error_namespace: EXPORT_FAILED remains workspace-control.v1 and is not a global product error code
+    p3_boundary: no repository, job runner, package write, or external transfer behavior
+    production_open: [OPEN-002, OPEN-010, OPEN-015]
   error.v1:
     path: schemas/json/error.schema.json
     p0_boundary: category and envelope only; concrete code registry belongs to TASK-P0-04

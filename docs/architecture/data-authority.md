@@ -125,3 +125,8 @@ ScheduleVersion内容权威来自validated PlanningSolution与显式human comman
 TASK-P3-01现形成该合同：ScheduleVersion content由P2 immutable lineage加server接受的copy-on-write command派生；state/current publication、`allowed_actions`和decision result只由application/state repository事务授权；ExportJob/artifact有独立authority且不能反写publish。actor只能保存已认证principal reference和resolved capability，客户端自报role、UI按钮与test fixture均无authority。
 
 Production没有principal→capability/resource/target mapping时DENY，`SIMULATION_INTERNAL`只用于隔离测试。OPEN-002/010/015没有closure record；真实角色、字段owner、external target和approval仍未知。
+## TASK-P3-02 carrier authority review
+
+七份P3 Schema固定carrier中的authority边界：P2 artifact references/content fingerprint是ScheduleVersion事实；state pair仍由`state-machines.v1`授权；`allowed_actions`是未来server结果而非client grant；authenticated principal/role明确不进入command body；Publication/Export v1 target仅`SIMULATION_INTERNAL`。Synthetic sample和CI provider均不是Production authority。
+
+`app.domain.workspace_contracts`只验证canonical/cross-value invariant，不读取DB、environment identity provider或客户端role。真实repository/application/auth/API authority仍未形成，OPEN-002/010/015继续default-deny。

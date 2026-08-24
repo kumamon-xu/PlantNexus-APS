@@ -12,7 +12,7 @@ registry_version: 1.0.0
 
 # 文档清单
 
-本清单列出当前仓库已经实际存在的Markdown文档。P0～P2均已归档为completed；P2 Exit Gate=`READY`且用户已批准transition。P3现为active，TASK-P3-00 phase-planning治理与TASK-P3-01合同/ADR治理均已done，P3-02～15均为planned。P3人类可审计API/Frontend规范已形成；机器Schema、API/Frontend实现与Production Runbook正文仍未形成。
+本清单列出当前仓库已经实际存在的Markdown文档。P0～P2均已归档为completed；P2 Exit Gate=`READY`且用户已批准transition。P3现为active，TASK-P3-00 phase-planning治理与TASK-P3-01合同/ADR治理均已done，TASK-P3-02为in_progress，P3-03～15为planned。P3人类可审计API/Frontend规范与七份机器Schema carrier已形成；persistence、API/Frontend实现与Production Runbook正文仍未形成。
 
 | Path | Doc ID | Status | Title |
 |---|---|---|---|
@@ -165,7 +165,7 @@ registry_version: 1.0.0
 | [tasks/P2/TASK-P2-14-p2-exit-gate-audit.md](../tasks/P2/TASK-P2-14-p2-exit-gate-audit.md) | TASK-P2-14 | done | P2 Exit Gate Audit |
 | [tasks/P3/TASK-P3-00-phase-transition-and-task-planning-governance.md](../tasks/P3/TASK-P3-00-phase-transition-and-task-planning-governance.md) | TASK-P3-00 | done | P3 Phase Transition and Task Planning Governance |
 | [tasks/P3/TASK-P3-01-planning-workspace-contract-and-adr-baseline.md](../tasks/P3/TASK-P3-01-planning-workspace-contract-and-adr-baseline.md) | TASK-P3-01 | done | Planning Workspace Contract and ADR Baseline |
-| [tasks/P3/TASK-P3-02-schedule-version-workspace-and-export-schemas.md](../tasks/P3/TASK-P3-02-schedule-version-workspace-and-export-schemas.md) | TASK-P3-02 | planned | ScheduleVersion Workspace and Export Schemas |
+| [tasks/P3/TASK-P3-02-schedule-version-workspace-and-export-schemas.md](../tasks/P3/TASK-P3-02-schedule-version-workspace-and-export-schemas.md) | TASK-P3-02 | in_progress | ScheduleVersion Workspace and Export Schemas |
 | [tasks/P3/TASK-P3-03-schedule-version-audit-and-export-persistence.md](../tasks/P3/TASK-P3-03-schedule-version-audit-and-export-persistence.md) | TASK-P3-03 | planned | ScheduleVersion Audit and Export Persistence |
 | [tasks/P3/TASK-P3-04-validated-solution-to-reviewable-schedule-version.md](../tasks/P3/TASK-P3-04-validated-solution-to-reviewable-schedule-version.md) | TASK-P3-04 | planned | Validated Solution to Reviewable ScheduleVersion |
 | [tasks/P3/TASK-P3-05-planning-workspace-read-models-and-comparison.md](../tasks/P3/TASK-P3-05-planning-workspace-read-models-and-comparison.md) | TASK-P3-05 | planned | Planning Workspace Read Models and Comparison |
@@ -279,3 +279,5 @@ TASK-P2-14 local audit writeback不再新增、删除或重命名Markdown，inve
 TASK-P3-00 phase-planning batch新增16张P3 Task Markdown，inventory从143增至159；没有创建其他合同、ADR、Frontend或Runbook正文。P2状态转为`completed`、P3转为`active`；implementation `1d4b1a5c0ad6dc13df18588fbdcb9732e5ef15e7` / artifact `9504310381`成功后TASK-P3-00=`done`，P3-01～15=`planned`。Roots=30、OPEN=15、SIM assumptions=13不变；Test IDs由36增至48，risks由11增至13，Tasks由37增至53，所有registry format version保持`1.0.0`。本次不把任何P3业务、Production authority/publish/readiness或P4能力登记为formed。
 
 TASK-P3-01新增6份正式Markdown：ADR-0012、三份Frontend规范和两份P3 contract，因此inventory从159增至165；Frontend index由`planned`转为`baseline`。Implementation `3bf99cbafdad983795a83a88646240dbb0b24509` / artifact `9505303054`复现43 paths、4 rows、19 checks和0 issues后，本closure把TASK-P3-01标为`done`；P3-02～15仍为`planned`。Schema/sample/code/test/workflow、`frontend/**`实现与ignored Task/provider reports均不进入清单。Roots=30、Test IDs=48、OPEN=15、SIM assumptions=13、risks=13、Tasks=53和所有registry format version保持`1.0.0`；机器Schema/API/UI/Production/P4能力仍未形成。
+
+TASK-P3-02不新增、删除或重命名正式Markdown，inventory继续165份；七Schema/七sample、data dictionary、Python/tests/workflow及ignored machine/Task JSON不进入Markdown清单。只把TASK-P3-02同步为`in_progress`并更新既有合同/架构/质量/治理文档；Roots=30、Test IDs=48、OPEN=15、SIM assumptions=13、risks=13、Tasks=53和所有registry format version保持`1.0.0`。Machine carrier slice已本地形成，但persistence/API/UI/Production/P4仍未形成，exact provider尚待闭环。

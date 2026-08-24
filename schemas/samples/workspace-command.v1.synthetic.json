@@ -1,0 +1,35 @@
+{
+  "workspace_command_version": "workspace-command.v1",
+  "schema_set_version": "2.6.0",
+  "canonicalization_version": "canonical-json.v1",
+  "command_id": "command-sim-001",
+  "command_type": "MOVE_OPERATION",
+  "required_capability": "edit",
+  "idempotency_key": "p3-sim-command-0001",
+  "idempotency_scope": "SIMULATION/MOVE_OPERATION/schedule-version-sim-001/WORKSPACE_INTERNAL",
+  "request_fingerprint": "sha256:34fb7bb7c384be4ab60f82616dc701ca89dcc98a127595d7d80d5a518794f89e",
+  "source_id": "schedule-version-sim-001",
+  "expected_state": "DRAFT",
+  "expected_content_fingerprint": "sha256:a04434045794169cf0556ce7c43cf4969aaabfb5a77e4f19e4f8ccd9bbd6e4ac",
+  "data_plane": "SIMULATION",
+  "environment": "TEST",
+  "synthetic": true,
+  "synthetic_provenance": {
+    "scenario_id": "SIM-P2-GOLDEN-JSSP-001",
+    "scenario_version": "1.0.0",
+    "seed": 20260824,
+    "factory_profile_id": "PROFILE-P2-XS-001",
+    "profile_version": "1.0.0",
+    "generator_id": "PLANTNEXUS-P2-CORRECTNESS-ASSEMBLER",
+    "generator_version": "1.0.0"
+  },
+  "target": "WORKSPACE_INTERNAL",
+  "reason": "Move the synthetic operation for contract replay.",
+  "correlation_id": "correlation-command-sim-001",
+  "payload": {
+    "operation_id": "operation-sim-001",
+    "resource_id": "resource-sim-001",
+    "start_at_utc": "2026-08-24T01:01:00Z",
+    "end_at_utc": "2026-08-24T01:03:00Z"
+  }
+}

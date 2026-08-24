@@ -57,4 +57,14 @@ last_reviewed: 2026-08-19
 
 术语新增或语义变化必须同步检查 Schema、Constraint、状态机、测试和追踪矩阵。
 
-当前Schema Set为`2.2.0`；`1.0.0`是TASK-P0-03数据合同发布，`1.1.0` additive增加rule/state/error/capability contracts，`1.2.0` additive增加FactoryProfile/ScenarioSpec/ScenarioManifest v1，`2.0.0` breaking set release新增canonical-records.v1、Import v2与Snapshot v2，`2.1.0` additive增加unit registry，`2.2.0` additive增加error registry v2/Error v3/ImportQualityReport v1。全部历史artifact保留，document/registry version仍需显式选择。
+当前Schema Set为`2.6.0`；`1.0.0`是TASK-P0-03数据合同发布，`1.1.0/1.2.0` additive增加rule/state/error/capability与Simulation contracts，`2.0.0` breaking set新增canonical-records.v1、Import v2与Snapshot v2，`2.1.0/2.2.0` additive增加unit/Data Quality，`2.3.0/2.4.0/2.5.0`依次增加Problem v2、planning-machine和KPI/ExportManifest，`2.6.0`增加P3 workspace carriers。全部历史artifact保留，document/registry version仍需显式选择。
+## TASK-P3-02 machine-carrier terms
+
+- **Workspace Query**：`workspace-query.v1`严格REQUEST/RESULT carrier；只选择受支持view并携带稳定sort/filter/page/fingerprint，不是repository/table selector。
+- **Workspace Command**：`workspace-command.v1`严格human intent carrier；携带CAS、reason、target与idempotency，但不携带principal/role authority。
+- **ScheduleVersion content fingerprint**：对`content={assignments,locks}`执行`canonical-json.v1`所得SHA-256；它不等于完整ScheduleVersion document fingerprint。
+- **Workspace control reason**：`workspace-control.v1` module-local的`AUTHORIZATION_DENIED/IDEMPOTENCY_CONFLICT/EXPORT_FAILED`；不是global product error code。
+- **PublicationResult**：APPROVED Version到`SIMULATION_INTERNAL`的成功logical result carrier；不等于approval、ExportJob或Production publish。
+- **ExportJob**：从PUBLISHED ScheduleVersion创建的独立lifecycle carrier；不等于ExportManifest或外部传输。
+
+这些词在TASK-P3-02只形成Schema与pure precheck含义；repository/application/API/UI/worker行为仍未形成。

@@ -230,3 +230,14 @@ Decision writing commit `65c556789f176ad9de55523d6420737bb60f933f`的exact requi
 P3-01从TASK-P3-00 closure `7f65f88b620ea1e8d2f4693911be3b52f4052d5d`启动；该baseline required run/job/artifact=`32682015727`/`97300206924`/`9504453154`成功，artifact内Task/SHA、4 Impact rows、19 checks和0 issues一致。当前Task不修改workflow；current-phase discovery必须选择唯一changed card TASK-P3-01。
 
 Implementation本地full docs、Task diff、27项指定治理/规则回归、`git diff --check`和禁止范围均通过。Exact SHA `3bf99cbafdad983795a83a88646240dbb0b24509`的run `32684713630` / required `validate` job `97307562801`（app `15368`）为success且32/32 steps成功；artifact `9505303054`未过期，digest=`sha256:06cd50a3172e234a9d2227737ecbfa648a4eb3b35cfc2d34c0e1d3bdb597b593`，20/20 JSON PASS，Task report为43 committed/0 working paths、4 rows、19 checks和0 issues。因此只允许本evidence-only closure更新状态/证据并再次通过exact required provider；不得借closure启动P3-02或写入P3行为。
+## TASK-P3-02 required workspace contract gate
+
+Required `validate`新增non-continue步骤：
+
+```text
+uv run python -m app.domain.workspace_contract_check \
+  --root . \
+  --report build/validation/ci-p3-workspace-contracts.json
+```
+
+报告必须为`p3-workspace-contract-report.v1`、Task=`TASK-P3-02`、schema set=`2.6.0`、8/8 checks、7 Schema/7 sample、34 frozen P2 artifacts、24 shape negative、6 fingerprint negative并绑定`PLANTNEXUS_CODE_COMMIT` exact SHA。现有`build/validation/*.json` artifact glob会上传它；缺失/FAIL不能continue。Gate PASS只证明机器carrier与历史冻结，不证明P3 persistence/state/API/UI、P4或Production。

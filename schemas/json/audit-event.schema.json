@@ -1,0 +1,151 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "urn:plantnexus:aps:schema:audit-event:v1",
+  "title": "PlantNexus APS AuditEvent v1",
+  "description": "Append-only P3 audit carrier containing stable references and sanitized intent, never raw credentials.",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "audit_event_version",
+    "schema_set_version",
+    "canonicalization_version",
+    "audit_event_id",
+    "occurred_at_utc",
+    "actor_ref",
+    "resolved_capability",
+    "auth_policy_version",
+    "environment",
+    "data_plane",
+    "synthetic",
+    "action",
+    "aggregate_type",
+    "aggregate_id",
+    "target",
+    "intent_type",
+    "reason",
+    "request_fingerprint",
+    "idempotency_reference",
+    "lineage",
+    "before_state",
+    "after_state",
+    "source_version",
+    "new_version",
+    "export_job_id",
+    "result",
+    "correlation_id",
+    "parent_audit_event_id",
+    "code_commit"
+  ],
+  "properties": {
+    "audit_event_version": {"const": "audit-event.v1"},
+    "schema_set_version": {"const": "2.6.0"},
+    "canonicalization_version": {"const": "canonical-json.v1"},
+    "audit_event_id": {"$ref": "urn:plantnexus:aps:schema:schedule-version:v1#/$defs/canonicalId"},
+    "occurred_at_utc": {"$ref": "urn:plantnexus:aps:schema:schedule-version:v1#/$defs/utcInstant"},
+    "actor_ref": {"$ref": "urn:plantnexus:aps:schema:schedule-version:v1#/$defs/actorReference"},
+    "resolved_capability": {"$ref": "urn:plantnexus:aps:schema:schedule-version:v1#/$defs/capability"},
+    "auth_policy_version": {"$ref": "urn:plantnexus:aps:schema:schedule-version:v1#/$defs/nonEmptyText"},
+    "environment": {"$ref": "urn:plantnexus:aps:schema:schedule-version:v1#/$defs/environment"},
+    "data_plane": {"$ref": "urn:plantnexus:aps:schema:schedule-version:v1#/$defs/dataPlane"},
+    "synthetic": {"type": "boolean"},
+    "synthetic_provenance": {"$ref": "urn:plantnexus:aps:schema:schedule-version:v1#/$defs/syntheticProvenance"},
+    "action": {"enum": ["READ_WORKSPACE", "EDIT_SCHEDULE", "SET_LOCK", "REMOVE_LOCK", "SUBMIT_FOR_REVIEW", "APPROVE", "REJECT", "PUBLISH", "CREATE_EXPORT", "RETRY_EXPORT", "CANCEL_EXPORT", "READ_AUDIT"]},
+    "aggregate_type": {"enum": ["WORKSPACE", "PLANNING_RUN", "SCHEDULE_VERSION", "EXPORT_JOB"]},
+    "aggregate_id": {"$ref": "urn:plantnexus:aps:schema:schedule-version:v1#/$defs/canonicalId"},
+    "target": {"$ref": "urn:plantnexus:aps:schema:schedule-version:v1#/$defs/internalTarget"},
+    "intent_type": {"enum": ["QUERY", "COMMAND", "DECISION", "PUBLICATION", "EXPORT"]},
+    "reason": {
+      "oneOf": [
+        {"type": "null"},
+        {"$ref": "urn:plantnexus:aps:schema:schedule-version:v1#/$defs/sanitizedReason"}
+      ]
+    },
+    "request_fingerprint": {
+      "oneOf": [
+        {"type": "null"},
+        {"$ref": "urn:plantnexus:aps:schema:schedule-version:v1#/$defs/sha256Fingerprint"}
+      ]
+    },
+    "idempotency_reference": {
+      "oneOf": [
+        {"type": "null"},
+        {"$ref": "urn:plantnexus:aps:schema:schedule-version:v1#/$defs/idempotencyReference"}
+      ]
+    },
+    "lineage": {
+      "oneOf": [
+        {"type": "null"},
+        {"$ref": "urn:plantnexus:aps:schema:schedule-version:v1#/$defs/lineage"}
+      ]
+    },
+    "before_state": {"$ref": "#/$defs/nullableState"},
+    "after_state": {"$ref": "#/$defs/nullableState"},
+    "source_version": {"$ref": "#/$defs/nullableVersion"},
+    "new_version": {"$ref": "#/$defs/nullableVersion"},
+    "export_job_id": {"$ref": "#/$defs/nullableId"},
+    "result": {"$ref": "#/$defs/auditResult"},
+    "correlation_id": {"$ref": "urn:plantnexus:aps:schema:schedule-version:v1#/$defs/canonicalId"},
+    "parent_audit_event_id": {"$ref": "#/$defs/nullableId"},
+    "code_commit": {"$ref": "urn:plantnexus:aps:schema:schedule-version:v1#/$defs/gitCommit"}
+  },
+  "allOf": [
+    {
+      "if": {"properties": {"synthetic": {"const": true}}, "required": ["synthetic"]},
+      "then": {"required": ["synthetic_provenance"]},
+      "else": {"not": {"required": ["synthetic_provenance"]}}
+    },
+    {
+      "if": {"properties": {"data_plane": {"const": "PRODUCTION"}}, "required": ["data_plane"]},
+      "then": {"properties": {"synthetic": {"const": false}, "environment": {"const": "PRODUCTION"}, "target": {"const": "WORKSPACE_INTERNAL"}}}
+    },
+    {
+      "if": {"properties": {"data_plane": {"const": "SIMULATION"}}, "required": ["data_plane"]},
+      "then": {"properties": {"environment": {"enum": ["DEVELOPMENT", "TEST", "BENCHMARK"]}}}
+    }
+  ],
+  "$defs": {
+    "nullableId": {
+      "oneOf": [
+        {"type": "null"},
+        {"$ref": "urn:plantnexus:aps:schema:schedule-version:v1#/$defs/canonicalId"}
+      ]
+    },
+    "nullableVersion": {
+      "oneOf": [
+        {"type": "null"},
+        {"$ref": "urn:plantnexus:aps:schema:schedule-version:v1#/$defs/versionReference"}
+      ]
+    },
+    "nullableState": {
+      "oneOf": [
+        {"type": "null"},
+        {"$ref": "urn:plantnexus:aps:schema:schedule-version:v1#/$defs/scheduleState"},
+        {"$ref": "urn:plantnexus:aps:schema:schedule-version:v1#/$defs/exportState"}
+      ]
+    },
+    "auditResult": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["outcome", "replayed", "retryable", "error"],
+      "properties": {
+        "outcome": {"enum": ["ALLOWED", "DENIED", "SUCCEEDED", "FAILED"]},
+        "replayed": {"type": "boolean"},
+        "retryable": {"type": "boolean"},
+        "error": {
+          "oneOf": [
+            {"type": "null"},
+            {"$ref": "urn:plantnexus:aps:schema:schedule-version:v1#/$defs/productErrorReference"},
+            {"$ref": "urn:plantnexus:aps:schema:schedule-version:v1#/$defs/workspaceControlError"}
+          ]
+        }
+      },
+      "allOf": [
+        {
+          "if": {"properties": {"outcome": {"enum": ["ALLOWED", "SUCCEEDED"]}}, "required": ["outcome"]},
+          "then": {"properties": {"error": {"type": "null"}}},
+          "else": {"not": {"properties": {"error": {"type": "null"}}}}
+        }
+      ]
+    }
+  }
+}

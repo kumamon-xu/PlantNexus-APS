@@ -87,4 +87,10 @@ P3-04只能把fresh formal Validator接受的PlanningSolution复制为immutable 
 
 [ADR-0012](../adr/ADR-0012-planning-workspace-command-state-publication.md)现已接受ScheduleVersion content append-only/copy-on-write：validated P2 Solution未来可创建新DRAFT；任何manual edit/lock都读取source Version并产生具有新ID、parent、content fingerprint、fresh ValidationReport与audit的新DRAFT，source content/state/current publication不改变。PlanningSolution仍不是ScheduleVersion，Validator PASS仍只是READY_FOR_REVIEW的必要而非充分条件。
 
+## TASK-P3-02 ScheduleVersion machine carrier
+
+[`schedule-version.v1`](../../schemas/json/schedule-version.schema.json)现以global set`2.6.0`固定ID/revision/state、plane/environment/synthetic provenance、parent/source kind、完整P2 PlanningRun/Snapshot/Problem/Solution/Validation/KPI/SolverReport/code lineage、assignment/lock content、canonical content fingerprint、fresh PASS evidence、decision/publication/supersession references与server-derived allowed actions。Assignment逐项复用`planning-solution.v1#/$defs/operationAssignment`的stable offline `$ref`，但两个顶层document不互换。
+
+Schema只允许既有六个ScheduleVersion state，Production carrier只能表达未发布评审态；P3 v1 publication evidence只接受`SIMULATION_INTERNAL`。`app.domain.workspace_contracts`复验content fingerprint和Validation lineage相等，但不创建Version、不执行copy-on-write/transition/authorization/publish。P2 PlanningSolution/Validation/KPI/Export bytes完全保留；behavior owner仍为TASK-P3-03～08。
+
 既有pair不变：DRAFT→READY_FOR_REVIEW，READY_FOR_REVIEW→APPROVED/REJECTED，APPROVED→PUBLISHED，PUBLISHED→SUPERSEDED。Approve/Reject只消费READY，Publish只消费APPROVED，PUBLISHED content不可变；REJECTED/历史Version的修订只能派生新DRAFT。所有这些仍是文档合同，`schedule-version.v1` Schema、DB、application/API/UI行为由P3-02+形成。

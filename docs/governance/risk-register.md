@@ -126,4 +126,10 @@ TASK-P3-00 provider artifact `9504310381`确认RISK-012/013及Task控制已登�
 
 TASK-P3-01 review：ADR-0012和合同已固定Production default-deny、UI/router非authority、copy-on-write new DRAFT、PUBLISHED immutability、fresh Validator、Publish/Export分离与negative test allocation。这些降低了设计歧义，但尚无Schema、repository、authorization/application/API/UI/E2E行为证据，故RISK-012/013及RISK-001～013全部继续`MONITORED`，不下调severity/status，`registry_version=1.0.0`不变。
 
-TASK-P3-01 provider artifact `9505303054`复验了上述合同与边界，但没有增加行为、Production authority或deployment证据，因此不降低或关闭任何风险。RISK-001～013全部继续`MONITORED`；P3-02仍需独立授权，`registry_version=1.0.0`不变。
+TASK-P3-01 provider artifact `9505303054`复验了上述合同与边界，但没有增加行为、Production authority或deployment证据，因此不降低或关闭任何风险。RISK-001～013全部继续`MONITORED`，`registry_version=1.0.0`不变。
+
+## TASK-P3-02 risk review
+
+Strict/no-default Schema、body无role authority、copy-on-write content fingerprint、PRODUCT/WORKSPACE_CONTROL分离、Production/synthetic conditional及P2 frozen-byte regression降低了contract drift的可见性，但没有实现repository CAS、authorization、transaction、append-only audit、API/UI或side-effect recovery。因此RISK-012/013与RISK-001～013全部继续`MONITORED`，不下调severity/status。
+
+若provider报告、历史fingerprint、state/error集合或forbidden boundary任一失败，TASK-P3-02保持`in_progress`并停止P3-03；不能通过放宽required/additionalProperties或修改P2 bytes消除失败。`registry_version=1.0.0`不变。

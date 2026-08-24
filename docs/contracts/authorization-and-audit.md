@@ -71,7 +71,7 @@ P3 test可以在显式Development/Test/Benchmark环境、`SIMULATION` plane和�
 
 ## AuditEvent v1语义
 
-TASK-P3-02须发布strict `audit-event.v1` carrier，TASK-P3-03须append-only持久化。event至少包含：
+TASK-P3-02已发布strict `audit-event.v1` carrier；TASK-P3-03才可append-only持久化。event至少包含：
 
 | Field group | Required meaning |
 |---|---|
@@ -108,6 +108,10 @@ raw idempotency key可以被视为operational identifier但不得包含credentia
 缺失认证的`401`行为、challenge header和identity provider选择留给独立安全/API决定；不能用`403`合同反向声明真实认证已形成。
 
 ## Version、Schema 与迁移边界
+
+TASK-P3-02的`audit-event.v1`、`workspace-command.v1`与共享`workspace-control.v1` reason carrier现已形成：actor只允许`actor:<stable-ref>`，resolved capability来自固定应用词汇，intent reason受长度/控制字符约束，idempotency只扩散key reference/hash而非credential。PRODUCT与WORKSPACE_CONTROL是互斥namespace；`AUTHORIZATION_DENIED/IDEMPOTENCY_CONFLICT/EXPORT_FAILED`仍未加入`error-code-registry.v2`。
+
+这只是strict serialization与pure no-secret/cross-reference precheck。真实principal→capability mapping、default-deny执行、append-only repository/transaction、拒绝事件策略、retention/SIEM及HTTP transport仍未实现；OPEN-002/010/015不变。
 
 本Task没有Schema/migration。TASK-P3-02新增carrier必须保留P2 bytes，TASK-P3-03负责plane-scoped表、unique/CAS/index和append-only enforcement。字段不足必须发布新document version，禁止在数据库私加无法序列化的authority默认值。
 

@@ -1,0 +1,53 @@
+{
+  "schedule_version_comparison_version": "schedule-version-comparison.v1",
+  "schema_set_version": "2.6.0",
+  "canonicalization_version": "canonical-json.v1",
+  "comparison_id": "comparison-sim-001",
+  "data_plane": "SIMULATION",
+  "environment": "TEST",
+  "synthetic": true,
+  "synthetic_provenance": {
+    "scenario_id": "SIM-P2-GOLDEN-JSSP-001",
+    "scenario_version": "1.0.0",
+    "seed": 20260824,
+    "factory_profile_id": "PROFILE-P2-XS-001",
+    "profile_version": "1.0.0",
+    "generator_id": "PLANTNEXUS-P2-CORRECTNESS-ASSEMBLER",
+    "generator_version": "1.0.0"
+  },
+  "base_version": {
+    "schedule_version_id": "schedule-version-sim-001",
+    "state": "DRAFT",
+    "content_fingerprint": "sha256:a04434045794169cf0556ce7c43cf4969aaabfb5a77e4f19e4f8ccd9bbd6e4ac"
+  },
+  "compared_version": {
+    "schedule_version_id": "schedule-version-sim-002",
+    "state": "DRAFT",
+    "content_fingerprint": "sha256:8888888888888888888888888888888888888888888888888888888888888888"
+  },
+  "query_fingerprint": "sha256:9999999999999999999999999999999999999999999999999999999999999999",
+  "operation_deltas": [
+    {
+      "operation_id": "operation-sim-001",
+      "change_kind": "START_SHIFT",
+      "base_resource_id": "resource-sim-001",
+      "compared_resource_id": "resource-sim-001",
+      "base_start_at_utc": "2026-08-24T01:00:00Z",
+      "compared_start_at_utc": "2026-08-24T01:01:00Z",
+      "base_end_at_utc": "2026-08-24T01:02:00Z",
+      "compared_end_at_utc": "2026-08-24T01:03:00Z"
+    }
+  ],
+  "kpi_deltas": [
+    {"metric": "START_SHIFT_SECONDS", "base_value": 0, "compared_value": 60, "delta": 60}
+  ],
+  "summary": {
+    "operation_count": 1,
+    "changed_operation_count": 1,
+    "added_operation_count": 0,
+    "removed_operation_count": 0,
+    "resource_changed_count": 0
+  },
+  "comparison_fingerprint": "sha256:9b34d22d6820d74a7bf073a1ad962a43739999f02f2a56e7940128a4da42e0da",
+  "generated_at_utc": "2026-08-24T01:06:00Z"
+}

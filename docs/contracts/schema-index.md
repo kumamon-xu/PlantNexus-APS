@@ -3,7 +3,7 @@ doc_id: DOC-CONTRACT-008
 title: Schema 计划索引
 status: living
 spec_version: 0.3.0
-phase: P0-P2
+phase: P0-P3
 normative: true
 source_sections: [36, 38, 39, 70, 71, 103]
 last_reviewed: 2026-08-24
@@ -11,7 +11,7 @@ last_reviewed: 2026-08-24
 
 # Schema 计划索引
 
-当前 schema set 为additive `2.5.0`。`CONTRACT_V1/V2/V3`表示机器可验证的合同已形成，不表示ScheduleVersion/ExportJob状态持久化、审批、发布或Production业务动作已完成。此前所有set artifact均保留，未被原地覆盖。
+当前 schema set 为additive `2.6.0`。`CONTRACT_V1/V2/V3`表示机器可验证的合同已形成，不表示ScheduleVersion/ExportJob状态持久化、审批、发布或Production业务动作已完成。此前所有set artifact均保留，未被原地覆盖。
 
 | Schema | 目标路径 | 首个 Task | 状态 |
 |---|---|---|---|
@@ -30,6 +30,13 @@ last_reviewed: 2026-08-24
 | KPI v1 | [`/schemas/json/kpi.schema.json`](../../schemas/json/kpi.schema.json) | TASK-P0-03 skeleton | SKELETON_V1 retained；不原地升级 |
 | KPI v2 | [`/schemas/json/kpi.v2.schema.json`](../../schemas/json/kpi.v2.schema.json) | TASK-P2-11 | CONTRACT_V2；validated synthetic run calculator/lineage formed，Production口径PLANNED |
 | Export manifest v1 | [`/schemas/json/export-manifest.schema.json`](../../schemas/json/export-manifest.schema.json) | TASK-P2-11 | CONTRACT_V1；9-payload internal non-publishable profile formed，P3 state/publish PLANNED |
+| ScheduleVersion v1 | [`/schemas/json/schedule-version.schema.json`](../../schemas/json/schedule-version.schema.json) | TASK-P3-02 | CONTRACT_V1；immutable content/lineage/fingerprint/state evidence carrier formed；persistence/transition PLANNED |
+| Workspace query v1 | [`/schemas/json/workspace-query.schema.json`](../../schemas/json/workspace-query.schema.json) | TASK-P3-02 | CONTRACT_V1；strict request/result、stable sort/page/freshness/allowed-actions carrier formed；read service PLANNED |
+| Workspace command v1 | [`/schemas/json/workspace-command.schema.json`](../../schemas/json/workspace-command.schema.json) | TASK-P3-02 | CONTRACT_V1；strict discriminator/CAS/reason/target/idempotency carrier formed；authorization/command behavior PLANNED |
+| ScheduleVersion comparison v1 | [`/schemas/json/schedule-version-comparison.schema.json`](../../schemas/json/schedule-version-comparison.schema.json) | TASK-P3-02 | CONTRACT_V1；immutable version read comparison formed；service/UI PLANNED |
+| AuditEvent v1 | [`/schemas/json/audit-event.schema.json`](../../schemas/json/audit-event.schema.json) | TASK-P3-02 | CONTRACT_V1；append-only/no-secret/error-namespace carrier formed；durable append PLANNED |
+| PublicationResult v1 | [`/schemas/json/publication-result.schema.json`](../../schemas/json/publication-result.schema.json) | TASK-P3-02 | CONTRACT_V1；Simulation-internal successful-result carrier formed；publication behavior PLANNED |
+| ExportJob v1 | [`/schemas/json/export-job.schema.json`](../../schemas/json/export-job.schema.json) | TASK-P3-02 | CONTRACT_V1；published-version/internal-target lifecycle carrier formed；persistence/worker/package behavior PLANNED |
 | ValidationReport v1 | [`/schemas/json/validation-report.schema.json`](../../schemas/json/validation-report.schema.json) | TASK-P0-03 | SKELETON_V1 retained |
 | ValidationReport v2 | [`/schemas/json/validation-report.v2.schema.json`](../../schemas/json/validation-report.v2.schema.json) | TASK-P0-04 rules；TASK-P0-07 mutations | SKELETON_V2 + C-ID shape formed；schedule evaluation PLANNED |
 | Error v1 | [`/schemas/json/error.schema.json`](../../schemas/json/error.schema.json) | TASK-P0-03 | SKELETON_V1 retained |
@@ -43,12 +50,12 @@ last_reviewed: 2026-08-24
 | ScenarioSpec | [`/schemas/scenario/scenario-spec.schema.json`](../../schemas/scenario/scenario-spec.schema.json) | TASK-P0-05 | SKELETON_V1；P0 fixture与`SIM-P1-INGRESS-001` formed；broader Scenario library PLANNED |
 | Scenario manifest | [`/schemas/scenario/scenario-manifest.schema.json`](../../schemas/scenario/scenario-manifest.schema.json) | TASK-P0-05 | SKELETON_V1 + empty Import replay formed；run/export audit PLANNED |
 
-[`/schemas/data_dictionary.yaml`](../../schemas/data_dictionary.yaml) 登记 schema set、canonical collections、版本/provenance、未知字段/默认值策略、兼容边界和 PROD_OPEN/SIM_ASSUMPTION 关联。Set-level `2.5.0`在planning-machine contracts之后新增KPI v2和ExportManifest v1；Import/Snapshot/quality/Problem/PlanningSolution/SolverReport均保持各自原set版本且历史artifact hash不变。P2-11 samples只证明合同shape/replay；真实calculator/package也只限validated synthetic internal evidence。
+[`/schemas/data_dictionary.yaml`](../../schemas/data_dictionary.yaml) 登记 schema set、canonical collections、版本/provenance、未知字段/默认值策略、兼容边界和 PROD_OPEN/SIM_ASSUMPTION 关联。Set-level `2.6.0`在P2 `2.5.0`之后新增七份P3 carrier；Import/Snapshot/quality/Problem/PlanningSolution/SolverReport/KPI/ExportManifest均保持各自原set版本且34份历史artifact hash不变。P3 samples只证明合同shape/replay；没有业务状态或Production证据。
 
 TASK-P2-02新增四份Schema/sample并将global set提升到`2.4.0`；Problem v1/v2 Schema/sample、builders与fixed replay不改，Import/Snapshot/quality/unit document版本也不改。Planning machine类型、pure cross-document checks与status mapping已形成；Solver backend、C-ID、ScheduleValidator、Benchmark和Production authority继续`PLANNED`。
 
 TASK-P2-11新增两份strict Draft 2020-12 Schema和两份synthetic sample，将global set additive提升到`2.5.0`。KPI v1及全部既有Schema/sample bytes由fingerprint regression保护；没有migration或dependency变化。`export-manifest.v1`只描述P2 internal profile，不是ScheduleVersion、ExportJob或publish合同。
 
-## P3 planned schema release
+## TASK-P3-02 additive schema release
 
-TASK-P3-02被分配为P3唯一首个additive Schema release owner，预期覆盖ScheduleVersion、workspace query/command、comparison、audit event、publication result和ExportJob。实际文件名、URN、document version、set version与compatibility必须先由TASK-P3-01接受并在P3-02激活时冻结；在此之前全部状态为`PLANNED`，global set保持`2.5.0`，P2 bytes/URN不可改写。
+TASK-P3-02作为P3首个additive Schema release owner，已按TASK-P3-01冻结的七组文件名/URN/document version发布`2.6.0`。全部对象`additionalProperties=false`、无`default`、显式plane/environment/provenance并离线解析跨URN `$ref`；24个shape/version/plane/non-interchangeability负例与6个canonical fingerprint drift负例fail closed。P2 bytes/URN、state pair与global error registry没有改写；provider证据形成前Task仍为`in_progress`。

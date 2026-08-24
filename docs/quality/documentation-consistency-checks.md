@@ -356,3 +356,8 @@ P3首次规划batch以`80c403384d1e171258cf874d26605d0d22aff1b2`为不可变Diff
 不可变Diff base为`7f65f88b620ea1e8d2f4693911be3b52f4052d5d`。本Task新增三份Frontend规范、两份contract和ADR-0012，因此`docs/**/*.md`预期由159增至165；Task数53、roots 30、Test IDs 48、OPEN 15、SIM assumptions 13、risks 13和所有registry format version保持。Inventory必须逐项登记6个新path/Doc ID/status/title，且Frontend index从planned转为baseline。
 
 完整range只允许Task卡逐字列出的docs路径，命中`IMPACT-STATE/PHASE/GOVERNANCE-REGISTRY/DOCS`。`backend/**`、`schemas/**`、`frontend/**`、migrations、`.github/workflows/**`、`pyproject.toml`和`uv.lock`相对Diff base零变化；P2 historical docs/artifacts未改写。Full治理实际为165/30/48/15/13/13/53；implementation artifact `9505303054`中的`traceability-report.v1`精确绑定`3bf99cbafdad983795a83a88646240dbb0b24509`与Diff base，记录43 committed/0 working paths、4 rows、19/19 checks与0 issues。因此TASK-P3-01治理Gate闭环；本evidence-only closure自身仍须push后复核。
+## TASK-P3-02 documentation and diff governance
+
+本Task exact Diff base=`a8fcec3383ea0f8d9dca4101056aff37d7eea08c`。Diff治理必须识别10行Impact Rule：SCHEMA、DOMAIN、STATE、INFRA、DEPENDENCY、VERSION-METADATA、TESTS、PHASE、GOVERNANCE-REGISTRY、DOCS；逐字允许七Schema/七sample、data dictionary、两个domain模块、六个测试文件、metadata/workflow与本卡列出的文档。`uv.lock`、34份P2 Schema/sample、三份规则表、migration/application/API/jobs/exporters/frontend与later-phase roots必须零差异。
+
+Full docs、Task diff report、`git diff --check`与forbidden-root checks须在implementation和evidence-only closure各自运行；Task report必须绑定exact SHA/Impact rows/checks/issues。Provider artifact内workspace machine report和Task report任一Task/SHA/count/issue不一致即保持`in_progress`并阻止TASK-P3-03。

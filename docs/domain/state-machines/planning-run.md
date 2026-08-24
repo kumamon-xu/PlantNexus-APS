@@ -86,3 +86,6 @@ P3只消费已经完成且candidate通过formal Validator的PlanningRun/Solution
 ## TASK-P3-01 contract review
 
 Workspace合同确认PlanningRun只承担计算生命周期：`COMPLETED`不能授权approve/publish/export，也不等于ScheduleVersion存在。P3 query可只读展示PlanningRun/Solution/Validation lineage；任何manual command只针对ScheduleVersion并产生新DRAFT，不反向改变PlanningRun或重跑Solver。本Task未修改`state-machines.v1`、pure state contract、repository或worker，P3行为仍为`PLANNED`。
+## TASK-P3-02 separation review
+
+新增P3 Schema没有修改PlanningRun的16个state、31个allowed pair或terminal集合。`schedule-version.v1.lineage.planning_run_id`只引用已完成的validated P2 run；Workspace command、approval、publication与ExportJob不得重新解释Solver status或推进PlanningRun。Solver `UNKNOWN`继续终止为`NO_SOLUTION_WITHIN_LIMIT`且不能创建Version。

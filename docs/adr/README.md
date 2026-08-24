@@ -64,3 +64,6 @@ TASK-P2-12继续落实ADR-0002/0003/0004/0005/0006/0008/0011：Benchmark位于�
 TASK-P3-01以当时下一个未使用编号接受ADR-0012，决定command-only/copy-on-write edit/lock→new DRAFT、ScheduleVersion content immutability、authority-neutral/default-deny authorization、APPROVED-only idempotent internal publish、Publish/Export分离、append-only audit、domain→repository→application→API/jobs→frontend依赖方向，以及React/TypeScript/Ant Design/TanStack Query + npm/Vite/Vitest/Testing Library/Playwright组合。该决定不修改既有state pair、Schema、migration、dependency/lock或业务实现，也不关闭OPEN-002/010/015。
 
 若实际需要新state/pair、identity provider、outbox、external storage/MES、SSR/microfrontend、mutable Version或P4语义，必须另建new/superseding ADR；不得修改ADR-0002/0005/0007/0009/0012历史事实。
+## TASK-P3-02 ADR conformance
+
+本Task无需新ADR：七份v1 carrier逐项实现accepted ADR-0012的append-only/copy-on-write shape、query/command分离、既有state/pair、capability/default-deny边界、approve/publish/export分离、idempotency/audit同一致性要求和P3/P4/Production边界。它没有执行这些行为或改变transaction topology；发现语义缺口时仍必须先提交superseding ADR，不能私改Schema。ADR-0007/0009的immutability/provenance与ADR-0012均保持accepted。

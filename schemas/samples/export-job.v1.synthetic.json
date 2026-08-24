@@ -1,0 +1,43 @@
+{
+  "export_job_version": "export-job.v1",
+  "schema_set_version": "2.6.0",
+  "canonicalization_version": "canonical-json.v1",
+  "export_job_id": "export-job-sim-001",
+  "state": "CREATED",
+  "schedule_version": {
+    "schedule_version_id": "schedule-version-sim-001",
+    "state": "PUBLISHED",
+    "content_fingerprint": "sha256:a04434045794169cf0556ce7c43cf4969aaabfb5a77e4f19e4f8ccd9bbd6e4ac"
+  },
+  "data_plane": "SIMULATION",
+  "environment": "TEST",
+  "synthetic": true,
+  "synthetic_provenance": {
+    "scenario_id": "SIM-P2-GOLDEN-JSSP-001",
+    "scenario_version": "1.0.0",
+    "seed": 20260824,
+    "factory_profile_id": "PROFILE-P2-XS-001",
+    "profile_version": "1.0.0",
+    "generator_id": "PLANTNEXUS-P2-CORRECTNESS-ASSEMBLER",
+    "generator_version": "1.0.0"
+  },
+  "target": "SIMULATION_INTERNAL",
+  "package_profile": "p3-standard-export.v1",
+  "idempotency_reference": {
+    "scope": "SIMULATION/EXPORT/schedule-version-sim-001/SIMULATION_INTERNAL",
+    "key_reference": "sha256:dddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddd",
+    "request_fingerprint": "sha256:eeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeee"
+  },
+  "attempt": 0,
+  "lease_reference": null,
+  "heartbeat_at_utc": null,
+  "artifact_manifest": null,
+  "error": null,
+  "created_at_utc": "2026-08-24T01:09:00Z",
+  "updated_at_utc": "2026-08-24T01:09:00Z",
+  "started_at_utc": null,
+  "finished_at_utc": null,
+  "cancelled_at_utc": null,
+  "latest_audit_event_id": "audit-event-export-sim-001",
+  "job_fingerprint": "sha256:8faade325c5fd2c47db2b801009370d74227292ef6c5c24594dc2da876f3aa09"
+}

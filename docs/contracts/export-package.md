@@ -96,3 +96,9 @@ TASK-P3-09被分配为首个business ExportJob/standard package owner，必须�
 P3合同现固定：internal Publish只允许APPROVED并改变ScheduleVersion/current reference；Export只从PUBLISHED创建独立ExportJob/standard package，任何ExportJob pair、retry或失败都不得调用Publish或改变ScheduleVersion state。Approve/Reject、Publish和Export使用独立idempotency scope；same key/same fingerprint返回同一logical result，same key/different fingerprint冲突。
 
 P3标准包未来必须增加ScheduleVersion、approval/publication、ExportJob/attempt、audit和target lineage，同时保留P2 payload hash/count/Validator/KPI/SolverReport事实。TASK-P3-01没有修改`export-manifest.v1`、P2 package bytes或创建新Schema/文件；外部MES/ERP/storage target与Production publish继续受OPEN-002/010/015阻止。
+
+## TASK-P3-02 publication and ExportJob carriers
+
+[`publication-result.v1`](../../schemas/json/publication-result.schema.json)现固定APPROVED source→PUBLISHED logical result、可选previous-current→SUPERSEDED一一对应、idempotency reference/replay/audit与canonical result fingerprint；plane/target强制`SIMULATION`/`SIMULATION_INTERNAL`，所以它不能被解释为Production publish approval。
+
+[`export-job.v1`](../../schemas/json/export-job.schema.json)现固定PUBLISHED ScheduleVersion source、`p3-standard-export.v1` profile identity、既有五state、attempt/lease/heartbeat、manifest/storage reference、sanitized error、timestamps/audit与canonical job fingerprint。它与`export-manifest.v1`不互换，且不会修改P2 `p2-internal-export.v1` bytes。Schema/pure precheck不创建Job、不写package、不重试、不发布、不访问外部storage；这些行为分别等待TASK-P3-03/08/09，OPEN-002/010/015继续阻塞外部和Production target。

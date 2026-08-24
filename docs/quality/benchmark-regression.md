@@ -140,3 +140,6 @@ Manifest明确`benchmark_report.json=DEFERRED_P2_12`且文件不存在，禁止�
 ## TASK-P2-14 Exit audit replay
 
 审计在Windows 11 AMD64/CPython 3.12.13/OR-Tools 9.15.6755环境独立生成XS/S/M三份`benchmark-report.v1`，Problem hashes与v1 baselines逐项一致，三份均8/8且0 warning；两次完整Gate又执行6个profile、18次Global measured、90次Reference measured和108次fresh Validator PASS。Baseline文件、Profile/Generator/KPI/runner与dependency均零差异；结果只支持P2 development READY，不更新baseline、不关闭OPEN-011/012，也不建立L/XL或Production threshold。
+## TASK-P3-02 benchmark impact
+
+本Task只在machine report记录七份Schema/七份sample的exact byte size与SHA、34份P2 frozen artifact count以及negative count；不新增timing、throughput、Gantt scale、DB/API/worker或Production threshold。P2 XS/S/M baseline与所有KPI/solver timings逐字保留，OPEN-011/012不受影响。

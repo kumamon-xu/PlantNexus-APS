@@ -1,0 +1,91 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "urn:plantnexus:aps:schema:publication-result:v1",
+  "title": "PlantNexus APS Publication Result v1",
+  "description": "Successful idempotent P3 internal Simulation publication result; rejected attempts use the separate error carrier.",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "publication_result_version",
+    "schema_set_version",
+    "canonicalization_version",
+    "publication_id",
+    "data_plane",
+    "environment",
+    "synthetic",
+    "synthetic_provenance",
+    "target",
+    "source_approved_version",
+    "published_version",
+    "previous_current_version",
+    "superseded_version",
+    "idempotency_reference",
+    "replayed",
+    "published_at_utc",
+    "audit_event_id",
+    "result_fingerprint"
+  ],
+  "properties": {
+    "publication_result_version": {"const": "publication-result.v1"},
+    "schema_set_version": {"const": "2.6.0"},
+    "canonicalization_version": {"const": "canonical-json.v1"},
+    "publication_id": {"$ref": "urn:plantnexus:aps:schema:schedule-version:v1#/$defs/canonicalId"},
+    "data_plane": {"const": "SIMULATION"},
+    "environment": {"enum": ["DEVELOPMENT", "TEST", "BENCHMARK"]},
+    "synthetic": {"const": true},
+    "synthetic_provenance": {"$ref": "urn:plantnexus:aps:schema:schedule-version:v1#/$defs/syntheticProvenance"},
+    "target": {"const": "SIMULATION_INTERNAL"},
+    "source_approved_version": {"$ref": "#/$defs/approvedVersion"},
+    "published_version": {"$ref": "#/$defs/publishedVersion"},
+    "previous_current_version": {
+      "oneOf": [
+        {"type": "null"},
+        {"$ref": "#/$defs/previousPublishedVersion"}
+      ]
+    },
+    "superseded_version": {
+      "oneOf": [
+        {"type": "null"},
+        {"$ref": "#/$defs/supersededVersion"}
+      ]
+    },
+    "idempotency_reference": {"$ref": "urn:plantnexus:aps:schema:schedule-version:v1#/$defs/idempotencyReference"},
+    "replayed": {"type": "boolean"},
+    "published_at_utc": {"$ref": "urn:plantnexus:aps:schema:schedule-version:v1#/$defs/utcInstant"},
+    "audit_event_id": {"$ref": "urn:plantnexus:aps:schema:schedule-version:v1#/$defs/canonicalId"},
+    "result_fingerprint": {"$ref": "urn:plantnexus:aps:schema:schedule-version:v1#/$defs/sha256Fingerprint"}
+  },
+  "allOf": [
+    {
+      "if": {"properties": {"previous_current_version": {"type": "null"}}, "required": ["previous_current_version"]},
+      "then": {"properties": {"superseded_version": {"type": "null"}}},
+      "else": {"properties": {"superseded_version": {"$ref": "#/$defs/supersededVersion"}}}
+    }
+  ],
+  "$defs": {
+    "approvedVersion": {
+      "allOf": [
+        {"$ref": "urn:plantnexus:aps:schema:schedule-version:v1#/$defs/versionReference"},
+        {"properties": {"state": {"const": "APPROVED"}}}
+      ]
+    },
+    "publishedVersion": {
+      "allOf": [
+        {"$ref": "urn:plantnexus:aps:schema:schedule-version:v1#/$defs/versionReference"},
+        {"properties": {"state": {"const": "PUBLISHED"}}}
+      ]
+    },
+    "previousPublishedVersion": {
+      "allOf": [
+        {"$ref": "urn:plantnexus:aps:schema:schedule-version:v1#/$defs/versionReference"},
+        {"properties": {"state": {"const": "PUBLISHED"}}}
+      ]
+    },
+    "supersededVersion": {
+      "allOf": [
+        {"$ref": "urn:plantnexus:aps:schema:schedule-version:v1#/$defs/versionReference"},
+        {"properties": {"state": {"const": "SUPERSEDED"}}}
+      ]
+    }
+  }
+}

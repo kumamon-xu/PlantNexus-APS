@@ -28,6 +28,18 @@ last_reviewed: 2026-08-24
 - Rename/unit/time semantic change：视为不兼容，不能用 alias 静默吸收。
 - Ordering-only serialization change：若影响 hash，必须作为版本变化治理。
 
+## TASK-P3-02 additive workspace carrier release
+
+- Set release：global metadata由`2.5.0`提升为additive `2.6.0`；新建`schedule-version/workspace-query/workspace-command/schedule-version-comparison/audit-event/publication-result/export-job.v1`七个非互换document，stable URN与文件名逐项登记；
+- Preservation：启动时冻结21份既有JSON Schema与13份sample，排序清单摘要=`sha256:76bb8ae4347ae8bbaa0b2781f74eccd7e4cb1ee97303533a5db3e49f27673723`；machine check还固定`state-machines.v1`、`error-code-registry.v2`和Solver capability registry，旧document内的`schema_set_version const`与所有bytes/URN均不改；
+- Compatibility：set-level additive，但七份新document彼此及与PlanningSolution/ExportManifest均不互换。Consumer必须按exact version/URN离线解析，不得使用`latest`、alias、unknown字段或隐式default；
+- Canonicalization：使用`canonical-json.v1`；Schedule content、query request、command request、comparison、publication result和ExportJob各有显式projection fingerprint，key ordering不改变结果，字段/value drift必须拒绝；
+- Plane/isolation：SIMULATION只允许Development/Test/Benchmark且synthetic provenance为显式条件；PRODUCTION carrier必须`synthetic=false`/Production environment。P3 publication/export v1只表示`SIMULATION_INTERNAL`，因此Production external side effect不可表示；
+- Migration/rollback：本release无DB migration和consumer behavior。TASK-P3-03消费前可整体回退metadata/new files；一旦consumer形成只能新增document version与显式migration，不得覆盖v1或P2历史；
+- Dependency：runtime/dev dependency集合及`uv.lock`摘要`sha256:8b13617f31aa6a933347fc7b8ba010330cbb3f2d764f75c306dd9b6d77387a82`不变。CI只增加非skippable machine contract step与artifact JSON。
+
+该release实现ADR-0012的carrier层，不执行state transition、authorization、repository/API/UI/worker、publication/export或Production行为；OPEN-002/010/015保持OPEN。
+
 Schema version、rule version、generator version 和 code commit 是不同维度，不能互相替代。
 
 ## 当前发布基线

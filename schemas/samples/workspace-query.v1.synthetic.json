@@ -1,0 +1,71 @@
+{
+  "workspace_query_version": "workspace-query.v1",
+  "schema_set_version": "2.6.0",
+  "canonicalization_version": "canonical-json.v1",
+  "direction": "RESULT",
+  "query_kind": "WORKSPACE_VIEW",
+  "data_plane": "SIMULATION",
+  "environment": "TEST",
+  "synthetic": true,
+  "synthetic_provenance": {
+    "scenario_id": "SIM-P2-GOLDEN-JSSP-001",
+    "scenario_version": "1.0.0",
+    "seed": 20260824,
+    "factory_profile_id": "PROFILE-P2-XS-001",
+    "profile_version": "1.0.0",
+    "generator_id": "PLANTNEXUS-P2-CORRECTNESS-ASSEMBLER",
+    "generator_version": "1.0.0"
+  },
+  "resource": {
+    "resource_type": "SCHEDULE_VERSION",
+    "resource_id": "schedule-version-sim-001"
+  },
+  "view": "GANTT",
+  "schedule_version_precondition": {
+    "schedule_version_id": "schedule-version-sim-001",
+    "state": "DRAFT",
+    "content_fingerprint": "sha256:a04434045794169cf0556ce7c43cf4969aaabfb5a77e4f19e4f8ccd9bbd6e4ac"
+  },
+  "sort": [
+    {"field": "START_AT_UTC", "direction": "ASC"},
+    {"field": "ITEM_ID", "direction": "ASC"}
+  ],
+  "filters": {
+    "order_ids": [],
+    "operation_ids": [],
+    "resource_ids": [],
+    "states": ["DRAFT"],
+    "start_at_or_after_utc": "2026-08-24T00:00:00Z",
+    "start_before_utc": "2026-08-25T00:00:00Z"
+  },
+  "page": {"size": 100, "cursor": null},
+  "query_fingerprint": "sha256:f787014a4922c2a3e1f11ace427a265b885d0154c18b616b150d4d13ebcd5a83",
+  "correlation_id": "correlation-query-sim-001",
+  "result": {
+    "result_version": "workspace-query-result.v1",
+    "found": true,
+    "authoritative_schedule_version": {
+      "schedule_version_id": "schedule-version-sim-001",
+      "state": "DRAFT",
+      "content_fingerprint": "sha256:a04434045794169cf0556ce7c43cf4969aaabfb5a77e4f19e4f8ccd9bbd6e4ac"
+    },
+    "lineage": {
+      "planning_run_id": "planning-run-sim-001",
+      "snapshot": {"document_version": "planning-snapshot.v2", "artifact_id": "snapshot-sim-001", "fingerprint": "sha256:1111111111111111111111111111111111111111111111111111111111111111"},
+      "problem": {"document_version": "planning-problem.v2", "artifact_id": "problem-sim-001", "fingerprint": "sha256:2222222222222222222222222222222222222222222222222222222222222222"},
+      "planning_solution": {"document_version": "planning-solution.v1", "artifact_id": "solution-sim-001", "fingerprint": "sha256:3333333333333333333333333333333333333333333333333333333333333333"},
+      "validation_report": {"document_version": "validation-report.v2", "artifact_id": "validation-sim-001", "fingerprint": "sha256:4444444444444444444444444444444444444444444444444444444444444444"},
+      "kpi": {"document_version": "kpi.v2", "artifact_id": "kpi-sim-001", "fingerprint": "sha256:5555555555555555555555555555555555555555555555555555555555555555"},
+      "solver_report": {"document_version": "solver-report.v1", "artifact_id": "solver-report-sim-001", "fingerprint": "sha256:6666666666666666666666666666666666666666666666666666666666666666"},
+      "code_commit": "a8fcec3383ea0f8d9dca4101056aff37d7eea08c"
+    },
+    "items": [
+      {"item_id": "operation-sim-001", "item_type": "GANTT_SEGMENT", "payload_fingerprint": "sha256:7777777777777777777777777777777777777777777777777777777777777777"}
+    ],
+    "next_cursor": null,
+    "observed_count": 1,
+    "allowed_actions": ["view", "edit", "lock"],
+    "freshness": "FRESH",
+    "generated_at_utc": "2026-08-24T01:05:00Z"
+  }
+}

@@ -11,7 +11,7 @@ last_reviewed: 2026-08-24
 
 # 合同文档索引
 
-本目录描述机器可执行 Schema 的人类语义。TASK-P0-03 发布 schema set `1.0.0` 的数据合同 skeleton；TASK-P0-04/05 以 set-level additive 方式发布 `1.1.0/1.2.0` 规则与Simulation合同；TASK-P1-02 以 breaking set release `2.0.0` 新增严格 canonical records、Import v2与Snapshot v2；TASK-P1-05/06再以additive `2.1.0/2.2.0`发布unit registry与Data Validation/error/report合同；TASK-P2-01以additive set `2.3.0`新增非互换的`planning-problem.v2`；TASK-P2-02以`2.4.0`新增Policy/Limits/Solution/SolverReport v1；TASK-P2-11再以additive `2.5.0`新增`kpi.v2`和`export-manifest.v1`。机器文件位于 `/schemas/json`、`/schemas/rules` 与 `/schemas/scenario`，data dictionary 位于 `/schemas/data_dictionary.yaml`。Schema 与对应合同必须同 Task、同版本语义更新。
+本目录描述机器可执行 Schema 的人类语义。TASK-P0-03 发布 schema set `1.0.0` 的数据合同 skeleton；TASK-P0-04/05 以 set-level additive 方式发布 `1.1.0/1.2.0` 规则与Simulation合同；TASK-P1-02 以 breaking set release `2.0.0` 新增严格 canonical records、Import v2与Snapshot v2；TASK-P1-05/06再以additive `2.1.0/2.2.0`发布unit registry与Data Validation/error/report合同；TASK-P2-01以additive set `2.3.0`新增非互换的`planning-problem.v2`；TASK-P2-02以`2.4.0`新增Policy/Limits/Solution/SolverReport v1；TASK-P2-11以`2.5.0`新增`kpi.v2`和`export-manifest.v1`；TASK-P3-02现以additive `2.6.0`新增七份Workspace/Version/Audit/Publication/ExportJob carrier。机器文件位于 `/schemas/json`、`/schemas/rules` 与 `/schemas/scenario`，data dictionary 位于 `/schemas/data_dictionary.yaml`。Schema 与对应合同必须同 Task、同版本语义更新。
 
 ## 当前基线
 
@@ -52,8 +52,13 @@ last_reviewed: 2026-08-24
 - `planning-solution.v1`、`solver-report.v1`：七种status、Problem/Policy/Limits/Solution指纹、tick/UTC、objective/bound/gap、timing/model/memory/version provenance，并区分合同样例与未来真实Solver run。
 - `kpi.v2`：绑定同一Snapshot/Problem/validated Solution/Validation/Solver/ImportQuality run，独立计算Delivery/Planning/Resource并显式声明无base ScheduleVersion时Stability不适用；
 - `export-manifest.v1`：固定`p2-internal-export.v1`的9个payload、逐文件hash/bytes/rows、entity counts、完整lineage、synthetic/non-publishable状态及P2-12/P4 deferred artifacts。
+- `schedule-version.v1`：固定immutable content、parent/source、P2 validated lineage、content fingerprint、validation/decision/publication evidence与server-derived allowed actions；
+- `workspace-query.v1` / `workspace-command.v1`：固定query/result稳定分页与严格command discriminator、CAS、reason、target、idempotency/request fingerprint；body不承载principal/role authority；
+- `schedule-version-comparison.v1`：只表达两份immutable Version的operation/KPI read-model delta；
+- `audit-event.v1`：append-only carrier，保存pseudonymous actor/capability、sanitized intent、before/after、result/error namespace与trace；
+- `publication-result.v1` / `export-job.v1`：只表达`SIMULATION_INTERNAL`成功发布结果和独立ExportJob lifecycle；不授权Production或外部target。
 
-`2.5.0`保留此前全部artifact；consumer必须显式选择document版本。Import/Snapshot v2固定`2.0.0`、unit registry固定`2.1.0`、quality固定`2.2.0`、Problem v2固定`2.3.0`，PlanningSolution/SolverReport固定`2.4.0`，均不因set-level新增合同而改写。strict objects拒绝未知字段且不声明业务默认值。P2-11两份sample只证明Schema shape/canonical round-trip；正式machine evidence来自validated synthetic replay，不是Production或发布证据。
+`2.6.0`保留此前全部artifact；consumer必须显式选择document版本。Import/Snapshot v2固定`2.0.0`、unit registry固定`2.1.0`、quality固定`2.2.0`、Problem v2固定`2.3.0`、PlanningSolution/SolverReport固定`2.4.0`、KPI v2/ExportManifest固定`2.5.0`，均不因set-level新增合同而改写。strict objects拒绝未知字段且不声明业务默认值。P3-02七份sample只证明Schema shape、offline `$ref`、canonical fingerprint与negative vector，不是状态行为、授权、持久化、Production或发布证据。
 
 TASK-P1-04已形成code-level `ReferenceFileAdapter@1.0.0` transport contract：fixed CSV/XLSX shape安全转换为TASK-P1-03 Raw Staging，manifest明确`production_binding=false`。`payload_json`在Adapter边界保持opaque，由TASK-P1-05的显式MappingProfile消费。因此下方真实`external-adapters.md`仍受OPEN-002/007/013/015阻塞，不能用Reference Adapter替代。
 
@@ -75,8 +80,8 @@ TASK-P1-12独立审计已重放全部合同、迁移、Generator和common-ingres
 
 P2独立Exit审计已重跑schema set`2.5.0`及全部registered contract tests，并核对Problem v2、Policy/Limits、Solution/Report、Validation、KPI/Export Manifest各自固定document版本与历史fingerprints。结果为PASS，Schema、data dictionary、migration、dependency/lock和ADR均零变化；C-012～018、OBJ-002/003、P3 API/state/publish合同没有被补猜。Audit implementation required run `32677741558` / artifact `9503227240`已精确复验并闭环，TASK-P2-14=`done`、Exit=`READY`；P3合同仍未授权。
 
-## P3 planning allocation
+## TASK-P3-02 workspace machine contract release
 
-P3现为active，TASK-P3-01已形成[`planning-workspace-api.md`](planning-workspace-api.md)、[`authorization-and-audit.md`](authorization-and-audit.md)、三份Frontend规范和accepted [ADR-0012](../adr/ADR-0012-planning-workspace-command-state-publication.md)。这些是人类可审计的contract baseline；TASK-P3-02才可发布严格机器Schema，TASK-P3-10只能序列化这些合同，不能自建第二套HTTP事实。
+P3现为active，TASK-P3-01已形成[`planning-workspace-api.md`](planning-workspace-api.md)、[`authorization-and-audit.md`](authorization-and-audit.md)、三份Frontend规范和accepted [ADR-0012](../adr/ADR-0012-planning-workspace-command-state-publication.md)。TASK-P3-02据此发布七份strict Draft 2020-12 Schema、七份synthetic vector、pure fingerprint/precheck与required CI machine report；TASK-P3-03～13只能显式消费这些version/URN，不能自建私有字段或第二套状态/错误事实。
 
-当前schema set仍为`2.5.0`，上表七份P3 planned Schema/URN均未创建；没有migration、repository、API、Frontend或state behavior形成。现有P2 document/URN/bytes、error registry与`state-machines.v1`保持不变；OPEN-002/010/015继续OPEN。
+当前schema set为additive `2.6.0`。冻结清单证明21份既有JSON Schema与13份sample共34个P2 artifact逐字节不变；`error-code-registry.v2`、`state-machines.v1`与Solver capability registry也不变。新Schema不执行migration、repository、transition、authorization、API、Frontend、worker、publish或export；OPEN-002/010/015继续OPEN，implementation exact provider尚待push后闭环。

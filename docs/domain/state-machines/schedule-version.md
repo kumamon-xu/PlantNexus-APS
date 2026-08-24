@@ -80,3 +80,8 @@ P3-01补齐guard/actor/reason/audit/idempotency合同但不改v1 pair；P3-03形
 [ADR-0012](../../adr/ADR-0012-planning-workspace-command-state-publication.md)已接受以下guard，但没有实现transition：所有Version content append-only；manual edit/lock永远copy-on-write生成新DRAFT且source state/content不变；READY_FOR_REVIEW的approve/reject分别要求`approve`/`reject` capability、non-empty reason、expected fingerprint和atomic audit；publish只允许APPROVED、明确internal Simulation target和`publish` capability；Export不是ScheduleVersion transition。
 
 same idempotency scope/key + same request只重放原logical result，不建立self-transition；不同request冲突。新current publication时，APPROVED→PUBLISHED与旧current PUBLISHED→SUPERSEDED必须在同一一致性边界完成。Production authority/target未知时default-deny。state enum、pair、terminal集合和`state-machines.v1` bytes均不变；persistence/application/API/UI证据继续`PLANNED`。
+## TASK-P3-02 carrier alignment
+
+`schedule-version.v1`只允许`DRAFT/READY_FOR_REVIEW/APPROVED/PUBLISHED/SUPERSEDED/REJECTED`，并通过conditional约束decision/publication/superseded reference的合法形状。Machine report逐项比对既有五个allowed pair，未新增self-transition或state。Production carrier不能表达PUBLISHED/SUPERSEDED；P3 publication evidence只接受`SIMULATION_INTERNAL`。
+
+这些是serialization与precheck，不证明任何pair已由repository/application执行。Copy-on-write、CAS、transition、APPROVED-only publish和current supersession分别等待TASK-P3-03/04/06～08。

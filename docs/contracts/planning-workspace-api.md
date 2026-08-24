@@ -15,9 +15,9 @@ last_reviewed: 2026-08-24
 
 ## 合同版本与Schema分配
 
-当前全局schema set仍为`2.5.0`。下表文件和URN必须由TASK-P3-02作为additive set release新增；在机器文件、offline `$ref`、sample、fingerprint和provider证据形成前，其状态均为`PLANNED`。
+当前全局schema set为additive `2.6.0`。下表文件和URN已由TASK-P3-02新增；机器文件、offline `$ref`、sample、canonical fingerprint和本地machine report已经形成，exact provider证据仍待implementation push后闭环。
 
-| Planned document | Planned `$id` | compatibility | 主要consumer |
+| Document | Stable `$id` | compatibility | 主要consumer |
 |---|---|---|---|
 | `schedule-version.schema.json` / `schedule-version.v1` | `urn:plantnexus:aps:schema:schedule-version:v1` | 新文档；不与PlanningSolution互换 | P3-03～10、11～13 |
 | `workspace-query.schema.json` / `workspace-query.v1` | `urn:plantnexus:aps:schema:workspace-query:v1` | 新文档；strict query/result envelope | P3-05、10～13 |
@@ -133,7 +133,13 @@ action scope至少包含data plane、action、resource/version、target和key；
 
 ## 测试分配
 
-TASK-P3-01只允许文档链接/矩阵一致性检查；`TEST-WORKSPACE-CONTRACT-001`、`TEST-STATE-TRANSITION-001`和`TEST-ERROR-MAPPING-001`的P3行为全部保持`PLANNED`。TASK-P3-02形成Schema shape evidence，P3-05～10形成read/command/API behavior，P3-13形成用户可见E2E，P3-14/15复验Gate/Audit。
+TASK-P3-01只形成文档合同；TASK-P3-02现以`test_p3_workspace_contracts.py`形成`TEST-CONTRACT-001`与`TEST-WORKSPACE-CONTRACT-001`的machine carrier slice，并复验`TEST-STATE-TRANSITION-001`/`TEST-ERROR-MAPPING-001`既有集合未漂移。P3-05～10才形成read/command/API behavior，P3-13形成用户可见E2E，P3-14/15复验Gate/Audit。
+
+## TASK-P3-02 machine carrier realization
+
+七份Schema都使用Draft 2020-12、strict object/no default、exact `2.6.0`与stable URN。`workspace-query.v1`把REQUEST/RESULT、14个允许view、sort/filter/page、query fingerprint、authoritative Version、lineage、items/cursor/count/allowed-actions/freshness固定为单一carrier；`workspace-command.v1`把11类P3 intent、derived capability、CAS、plane/environment/target、reason、idempotency scope/key与request fingerprint固定为discriminated carrier，且body明确不含principal/role。
+
+`app.domain.workspace_contracts`只计算canonical projection和跨值precheck；它不读取认证上下文、不推进state、不写repository，也不产生HTTP/result side effect。CI的`p3-workspace-contract-report.v1`固定7/7 positive、24个Schema negative、6个fingerprint negative、P2 34 artifact preservation和P3/P4/Production边界。
 
 ## P4/Production边界
 

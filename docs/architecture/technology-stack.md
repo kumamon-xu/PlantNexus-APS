@@ -228,3 +228,8 @@ Implementation provider对exact lock、Lint、Type、full tests、Gate、build�
 ADR-0012已接受React + TypeScript + Ant Design + TanStack Query；build/dev选择Vite；package manager选择npm并要求`package-lock.json` + `npm ci`；unit/component选择Vitest + Testing Library；browser E2E选择Playwright。该组合遵循总规推荐栈并与P3-11现有acceptance command一致。
 
 TASK-P3-01没有创建`frontend/**`、`package.json`/lock、Node pin、dependency、bundle、test或workflow；因此这些组件仍是selected-not-installed。P3-11启动前必须逐字固定Node/npm和全部direct pins、lock策略、SCA/license命令并由exact provider执行；P3-12/13新增Gantt/E2E库必须另行dependency review。SSR、microfrontend、client-side Solver与Production hosting不在当前决定内。
+## TASK-P3-02 technology and dependency review
+
+P3 Schema/precheck复用Python 3.12标准库、既有`jsonschema==4.25.1`与`referencing`链；没有新增runtime/dev dependency。`pyproject.toml`只把global schema metadata提升到`2.6.0`，`uv.lock`保持启动摘要`sha256:8b13617f31aa6a933347fc7b8ba010330cbb3f2d764f75c306dd9b6d77387a82`。CI增加单一required machine step并复用既有artifact upload glob。
+
+本Task不安装Frontend技术栈、不增加DB/queue/export库、不修改Solver/Validator，也不形成Production topology。

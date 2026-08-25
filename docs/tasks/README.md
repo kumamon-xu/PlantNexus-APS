@@ -51,7 +51,7 @@ last_reviewed: 2026-08-25
 | [TASK-P3-05](P3/TASK-P3-05-planning-workspace-read-models-and-comparison.md) | Workspace read models/comparison | P3-04 | `done` |
 | [TASK-P3-06](P3/TASK-P3-06-gantt-edit-and-lock-command-pipeline.md) | Gantt edit/lock command pipeline | P3-04/05 | `done` |
 | [TASK-P3-07](P3/TASK-P3-07-approval-rejection-and-audit-service.md) | Approval/rejection/audit service | P3-03/04 | `done` |
-| [TASK-P3-08](P3/TASK-P3-08-idempotent-publication-and-supersession.md) | Idempotent publish/supersession | P3-03/07 | `planned` |
+| [TASK-P3-08](P3/TASK-P3-08-idempotent-publication-and-supersession.md) | Idempotent publish/supersession | P3-03/07 | `in_progress` |
 | [TASK-P3-09](P3/TASK-P3-09-export-job-and-standard-package.md) | ExportJob/standard package | P3-03/04/08 | `planned` |
 | [TASK-P3-10](P3/TASK-P3-10-planning-workspace-http-api.md) | Planning Workspace HTTP API | P3-05～09 | `planned` |
 | [TASK-P3-11](P3/TASK-P3-11-frontend-foundation-and-read-only-workspace.md) | Frontend/read-only workspace | P3-01/10 | `planned` |
@@ -81,6 +81,8 @@ TASK-P3-06本地41 focused、546 full、Ruff/Pyright、command machine 8/8、全
 用户于2026-08-25单独授权TASK-P3-07；其从P3-06 provider-verified closure `514224b8ff2d507b613797ae697245bab14f79eb`冻结Diff base并进入`in_progress`。当前只允许authority-neutral approval/rejection、READY_FOR_REVIEW→APPROVED/REJECTED、atomic append-only audit、exact replay/conflict/CAS、Simulation测试策略、Production default-deny、限定tests/machine CI和命中文档；P3-08～15不自动启动，真实RBAC/SSO、publish/export、HTTP/UI、Schema/migration/dependency、P4与Production authority/readiness保持禁止。
 
 TASK-P3-07已通过39 focused、562 full、Ruff/Pyright、8/8 decision machine、全部历史machine、P2 Gate/XS、Compose/build和50 paths/8 rows/19 checks/0 issues治理；corrective implementation `9aed9d8c5dd86a9a9b972f8e9c5491fd6d2dbaa6`的run/job/artifact=`32794370664`/`97642478274`/`9544333991`精确复现26/26 JSON及success/DENIED audit、replay/conflict/rollback/concurrency、Production default-deny，故索引标为`done`。初始失败run `32793980039`保留；P3-08～15不自动启动。
+
+用户随后单独授权TASK-P3-08；其从provider-verified P3-07 closure `a53c0f7d4a0f0bcd4e02bfeaaa0f6fc4b93157b9`冻结Diff base并进入`in_progress`。当前只允许internal Simulation APPROVED-only publication、same-key replay/conflict、new PUBLISHED + old SUPERSEDED + current CAS + append-only audit同事务、限定tests/machine CI和命中文档；P3-09～15、ExportJob/成果包、external side effect、HTTP/UI、P4及Production authority/readiness不自动启动。
 
 ## Lifecycle and planning-batch rules
 

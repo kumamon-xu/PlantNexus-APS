@@ -126,3 +126,9 @@ Version Comparison产生`schedule-version-comparison.v1`只读DTO：operation de
 Approval/Reject不创建新PlanningSolution、ValidationReport、KPI或ScheduleVersion identity，也不重跑Solver/Validator。服务只在READY carrier及其existing validation/lineage通过冻结carrier precheck后，保持revision/content/content fingerprint/parent/source kind/validation/created facts逐字不变，新增Schema已允许的decision evidence并改变state/allowed actions：APPROVED为`view,publish`，REJECTED为`view,edit,lock`。REJECTED修订仍只能由后续copy-on-write command派生新DRAFT，不能回滚原行。
 
 Decision AuditEvent复制既有完整lineage并绑定READY source与同ID/content terminal reference；授权拒绝event没有resource lineage/reference，避免通过not-found泄漏。该slice不实现APPROVED→PUBLISHED、current/supersession、ExportJob、HTTP/UI、P4或Production side effect。
+
+## TASK-P3-08 immutable publication boundary
+
+Publication不创建新PlanningSolution、ValidationReport、KPI或ScheduleVersion identity，也不调用Solver/Validator。新current candidate只把同一APPROVED carrier改为PUBLISHED并增加冻结publication evidence/`view,export` actions；如已有current，则旧PUBLISHED只改为SUPERSEDED、写入指向新PUBLISHED reference的`superseded_by`并收窄为`view`。两者的revision、content/content fingerprint、decision、parent/source kind、validation、lineage和created facts逐字不变。
+
+新publish、旧supersede、PublicationResult、current reference CAS与success AuditEvent必须同事务，任一失败全部回滚。历史exact replay从append-only audit重建原logical result，即使新Version后来也被supersede也不修改历史。DRAFT/READY/REJECTED、double publish、stale current一律拒绝；ExportJob、文件包、HTTP/UI、external/Production side effect未形成。

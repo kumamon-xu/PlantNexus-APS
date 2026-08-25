@@ -60,3 +60,9 @@ Publication repository可以在一个caller transaction内append immutable resul
 Decision scope固定`plane/action/ScheduleVersion/WORKSPACE_INTERNAL`；raw key仅生成hash reference和Audit ID。授权在replay前重新执行；same request读取原SUCCEEDED或DENIED event，different fingerprint冲突。首次成功使用ScheduleVersion expected READY+state revision CAS与Audit append同事务；audit failure回滚，concurrent APPROVE/REJECT只允许一个winner，winner重试可exact replay。该语义不依赖process-local store，也不创建retry job。
 
 本Task没有worker、automatic retry、outbox、queue或network exactly-once。P3-08 publication与P3-09 ExportJob拥有独立scope/事务，不能复用decision key或把APPROVED自动排队为publish/export。
+
+## TASK-P3-08 synchronous publication idempotency
+
+Publication scope固定`plane/PUBLISH/ScheduleVersion/SIMULATION_INTERNAL`；raw key形成hash/Publication/Audit identity。授权在success replay与resource lookup前重新执行；same request从原audit重建result，不重复state/current/audit，different fingerprint冲突。首次成功将new publish、optional old supersede、result/current/audit置于一个caller transaction；audit/current failure回滚，两个并发candidate只有一个current CAS winner。
+
+该证据不使用worker、automatic retry、outbox、queue、network或distributed exactly-once。超时调用者必须以相同key重试，不能换key盲发；P3-09 ExportJob仍拥有独立scope/attempt/side effect。

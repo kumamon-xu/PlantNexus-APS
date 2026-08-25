@@ -32,7 +32,7 @@ P1当前状态：[`P1 — Data & Snapshot`](P1-data-and-snapshot.md)为`complete
 
 P2当前状态：[`P2 — CP-SAT Vertical Slice`](P2-cp-sat-vertical-slice.md)为`completed`。TASK-P2-00～14均已闭环为`done`；P2 Exit Gate=`READY`且0 gaps。用户于2026-08-24在复核exact provider evidence、提交拓扑与clean synchronized baseline后明确批准P2→P3。
 
-P3当前状态：[`P3 — Planning Workspace`](P3-planning-workspace.md)为`active`。TASK-P3-00～07均已有exact implementation provider并在evidence-only closure标为`done`；当前无已授权后续业务Task，P3-08～15保持`planned`且未获授权。P3-15必须最后独立执行Exit Gate Audit；approval/rejection PASS不表示publish，也不自动进入P4或Production。
+P3当前状态：[`P3 — Planning Workspace`](P3-planning-workspace.md)为`active`。TASK-P3-00～07均已有exact implementation provider并在evidence-only closure标为`done`；用户已单独授权TASK-P3-08且当前仅该Task为`in_progress`，P3-09～15保持`planned`。P3-15必须最后独立执行Exit Gate Audit；internal Simulation publication PASS不表示Export、P4或Production。
 
 TASK-P3-04 implementation `a9be974855bb825784d639b7f6675e5a33e4273d`的run/job/artifact=`32700005280`/`97349447107`/`9510215582`精确复现35 focused、515 full、8/8 lifecycle、23/23 JSON PASS与45 committed/0 working paths、8 rows、19 checks、0 issues，故本closure标为`done`。该证据只形成reviewable ScheduleVersion，不形成approval、publish、P4或Production readiness。
 
@@ -41,6 +41,8 @@ TASK-P3-06 implementation `08317637c7fbb51d46880d32523545bb0b4fe1c0`的run/job/a
 用户于2026-08-25单独授权TASK-P3-07；其从P3-06 provider-verified closure `514224b8ff2d507b613797ae697245bab14f79eb`冻结Diff base并进入`in_progress`。本Task只形成authority-neutral READY_FOR_REVIEW→APPROVED/REJECTED、atomic audit、idempotency/CAS、Simulation测试策略和Production default-deny；P3-08+、真实RBAC/SSO、publish/export、HTTP/UI、P4与Production authority/readiness保持未启动。
 
 TASK-P3-07 corrective implementation `9aed9d8c5dd86a9a9b972f8e9c5491fd6d2dbaa6`的run/job/artifact=`32794370664`/`97642478274`/`9544333991`精确复现562 tests、26/26 JSON、8/8 machine及50 committed/0 working paths、8 rows、19 checks、0 issues，故本closure标为`done`。初始跨平台计数失败run `32793980039`保留；P3-08不自动启动，OPEN-010保持`OPEN`。
+
+用户随后单独授权TASK-P3-08；P3-07 closure `a53c0f7d4a0f0bcd4e02bfeaaa0f6fc4b93157b9`的run/job/artifact=`32794963626`/`97644228513`/`9544539992`与26/26 JSON已作为启动门精确复核，该SHA冻结为Diff base。当前仅形成/验证`SIMULATION_INTERNAL` APPROVED-only publication、atomic current/supersession/audit和幂等边界；P3-09 ExportJob、外部side effect、P4与Production仍未启动。
 
 ## P2 execution history
 

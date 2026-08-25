@@ -307,3 +307,11 @@ Task从provider-verified closure `514224b8ff2d507b613797ae697245bab14f79eb`激�
 Implementation artifact必须绑定exact SHA/Task/Diff base，decision report为8/8、2 decision types、3 success、2 exact replay、1 conflict、3 denial audit、4无业务state拒绝、1 rollback、Solver=0、`issues=[]`，Task report为八Impact rows/full checks/0 issues。任何provider、artifact SHA、Task/base、checks、issues或禁止范围不一致都阻断closure。
 
 该规则已由corrective implementation `9aed9d8c5dd86a9a9b972f8e9c5491fd6d2dbaa6`的required run/job/artifact=`32794370664`/`97642478274`/`9544333991`满足：下载的26/26 JSON顶层PASS，decision与Task报告精确为8/8及50 committed/0 working paths、8 rows、19 checks、0 issues。因此本closure只写回TASK-P3-07=`done`和provider事实；初始失败run `32793980039`保留，P3-08仍为`planned`且未授权。
+
+## TASK-P3-08 publication evidence rule
+
+Task从provider-verified P3-07 closure `a53c0f7d4a0f0bcd4e02bfeaaa0f6fc4b93157b9`激活。Evidence必须同时证明strict PUBLISH、server publish capability/scope/test policy、authorization-before-success/source/current lookup、Production default-deny、APPROVED-only、DRAFT/READY/REJECTED/double publish拒绝、new PUBLISHED/old SUPERSEDED/content immutability、PublicationResult/current/audit同事务、same-key historical replay/conflict、rollback、concurrent current单winner、Publish/Export分离及external/API/UI/P4/Production absence。
+
+追踪链固定为`REQ-006/007/009 + NFR-TRC/ISO/REL/SEC/HUM + ENG-ARCH/ERR/VER/LOG → TASK-P3-08 → app.domain.publication + app.application.publication/publication_check + four test classes + CI contract → TEST-PUBLISH-IDEMPOTENCY-001/TEST-APPROVAL-AUTHORIZATION-001/TEST-AUDIT-TRAIL-001/TEST-STATE-TRANSITION-001/TEST-IDEMPOTENCY/TEST-SIM-ISOLATION → p3-publication-report.v1 + Task report → exact implementation/closure provider artifacts`。Provider成功前保持`in_progress`；closure只写事实且不得启动P3-09。
+
+Implementation artifact必须绑定exact SHA/Task/Diff base，publication report为8/8、3 success、2 supersession、1 replay、1 conflict、2 denial、4无业务state拒绝、1 rollback、1 concurrent winner、Solver=0、`issues=[]`，Task report为八Impact rows/full checks/0 issues。任何provider、artifact SHA、Task/base、checks、issues或禁止范围不一致都阻断closure。

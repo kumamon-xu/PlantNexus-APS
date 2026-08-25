@@ -165,3 +165,9 @@ Implementation artifact `9515126567`精确复验相同versioned synthetic inputs
 Machine/unit/contract/integration/security只复用既有P2-GOLDEN-JSSP与P3-04 reviewable lifecycle，生成的test actor、capability set、resource scope、idempotency key和decision microseconds均为非定量test-local evidence。未修改Scenario/Profile/assembler/version/seed/fixture bytes，未新增role分布、approval比例、latency threshold、baseline或Production容量假设。
 
 SIM-ASSUMPTION-001～013继续`ACTIVE`，无新增/修改/retire且`registry_version=1.0.0`不变；artifact `9544333991`只复验既有synthetic输入与test policy，Simulation APPROVED/REJECTED结果不得外推真实责任或Production authority。
+
+## TASK-P3-08 review
+
+Machine/unit/contract/integration/security继续复用既有P2-GOLDEN-JSSP与P3 lifecycle，test actor/capability/scope/idempotency/current race和publication microseconds均为非定量test-local evidence。没有修改Scenario/Profile/assembler/version/seed/fixture bytes，也没有新增publish率、并发分布、latency threshold、external target或Production容量假设。
+
+SIM-ASSUMPTION-001～013继续`ACTIVE`，无新增/修改/retire，`registry_version=1.0.0`不变；internal Simulation PUBLISHED/SUPERSEDED不得外推真实发布或Production authority。

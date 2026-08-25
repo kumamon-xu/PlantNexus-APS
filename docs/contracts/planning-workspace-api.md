@@ -162,3 +162,9 @@ Same key/same request可在source后续state变化后通过既有audit/new immut
 Approve/Reject application现消费冻结`workspace-command.v1`的空payload `APPROVE|REJECT`，要求`expected_state=READY_FOR_REVIEW`、exact content fingerprint、`WORKSPACE_INTERNAL`、server-derived scope/key reference及non-empty sanitized reason。返回logical result包含command/type/request fingerprint、READY source reference、APPROVED或REJECTED new reference、audit ID、correlation和replay flags；它不返回credential、role或raw key。
 
 该行为仍不是上述两个`POST` endpoint：未新增router、request model、OpenAPI、401/403 challenge或HTTP status adapter。P3-10只能调用`ApprovalDecisionService`并映射既有module-local failure，不能绕过authorization-before-lookup、在router重复CAS/audit逻辑，或把APPROVED解释为PUBLISHED。P3-08～13、真实RBAC/SSO与Production authority均未形成。
+
+## TASK-P3-08 publication application boundary
+
+`PublicationService`现消费冻结PUBLISH carrier：`expected_state=APPROVED`、exact content fingerprint、`SIMULATION_INTERNAL`、payload中的exact previous-current reference或null、server-derived scope/key和sanitized reason。成功返回`publication-result.v1`及current/superseded logical references；same-key replay把`replayed=true`并重算result fingerprint，但不重复transition、audit或current CAS。Stale previous/current、different fingerprint、double publish与并发loser均fail closed。
+
+该行为不是`POST .../publication` endpoint：没有router、request/response model、OpenAPI、HTTP status或Frontend。P3-10只能组合application service，不能在transport重写authorization、state/current CAS或把internal Simulation result外推为external/Production publish；P3-09 ExportJob仍是独立服务。

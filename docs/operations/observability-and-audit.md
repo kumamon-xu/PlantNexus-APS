@@ -62,3 +62,9 @@ Read-model machine report记录Task/exact code commit、14 views/counts、payloa
 成功APPROVE/REJECT event固定`intent_type=DECISION`、actor/policy/evaluated capability、sanitized reason、request/hash key reference、完整lineage、READY/terminal同ID/content reference、correlation/code commit与SUCCEEDED result，并与state CAS同事务。授权DENIED event保留同一identity/result但source/new/lineage/before/after均为空；exact replay不改写event内`replayed=false`历史事实。Machine report记录2 decision types、3 success、2 replay、1 conflict、3 denial audit、4无业务state拒绝、1 rollback与并发单winner。
 
 这些字段可供未来audit projection，但没有metrics backend、dashboard/alert、retention/SIEM、legal hold、backup/restore或Production identity。Observed microseconds只为development事实，不建立SLA。
+
+## TASK-P3-08 publication audit evidence
+
+成功PUBLISH event固定`PUBLICATION` intent、actor/policy/publish capability、sanitized reason、request/hash key、完整lineage、APPROVED/PUBLISHED reference、correlation/code与SUCCEEDED result，并与new/old CAS、PublicationResult/current同事务。DENIED无source/new/lineage/before/after；exact replay不改写event。Machine记录3 success、2 supersession、1 replay、1 conflict、2 denial、4无业务state拒绝、1 rollback及1 concurrent winner。
+
+这些仍是临时SQLite与machine artifact；没有metrics backend、dashboard/alert、retention/SIEM、external delivery telemetry或Production SLO。

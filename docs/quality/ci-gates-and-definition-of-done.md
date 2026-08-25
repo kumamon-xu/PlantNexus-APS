@@ -301,3 +301,11 @@ Required `validate`新增唯一step：`uv run python -m app.application.approval
 初始implementation `3f85959e91e74966f6482426b9db296a45d715ef`的run `32793980039` / required job `97641324105`为failure：Linux上SQLite LargeBinary不支持该report使用的`BLOB LIKE`统计，故1项CI contract看到success/denial均为0而失败（其余556项PASS），artifact未生成；required suite还未列出新增security目录。纠正要求canonical JSON计数、同一required suite显式执行security tests，并保留本失败记录；纠正SHA的required validate/artifact成功前不得closure。
 
 Corrective implementation provider Gate已通过：SHA `9aed9d8c5dd86a9a9b972f8e9c5491fd6d2dbaa6`、run `32794370664`、required `validate` job/check `97642478274`（app `15368`）均success；artifact `9544333991`未过期，97281 bytes，digest=`sha256:b96ca2fe44c7dff726f67bb3b23c11017d07de71bd196c6f6cd6b93dfdb2310f`、expiry=`2026-11-23T00:37:21Z`。下载复核26/26 JSON顶层PASS，decision 8/8与Task 50 committed/0 working paths、8 rows、19 checks、0 issues均绑定同一SHA；TASK-P3-07 bounded DoD完成，本closure不自动授权P3-08且自身仍须exact provider。
+
+## TASK-P3-08 required publication evidence
+
+Required `validate`新增唯一step：`uv run python -m app.application.publication_check --root . --report build/validation/ci-p3-publication.json`。报告必须为`p3-publication-report.v1`、Task=`TASK-P3-08`、service=`publication-service.v1`、8/8 checks、3 successful publications、2 supersessions、1 replay、1 conflict、2 denial、4无业务state拒绝、1 rollback、1 concurrent current winner、Solver调用0、`issues=[]`，并明确APPROVED-only、PUBLISHED immutable、Simulation target、Publish/Export分离、Production default-deny及external/API/UI/P4 absent。
+
+提交前本地Gate为focused 16、full 577、publication 8/8、全部历史machine、P2 Gate、XS benchmark、locked sync、Ruff/Pyright、Compose/build及full/diff治理全部PASS；Task report为51 working paths、8 rows、19 checks、0 issues。
+
+本地PASS只允许Task保持`in_progress`。Implementation push后必须核验exact SHA required run/job/app、下载artifact并核对publication/Task report的Task/SHA/Diff base、8 Impact rows、checks/issues；成功后才可evidence-only closure，closure自身也须exact provider。该Gate不形成ExportJob/package、external publish、HTTP/UI、P4或Production readiness，也不自动启动TASK-P3-09。

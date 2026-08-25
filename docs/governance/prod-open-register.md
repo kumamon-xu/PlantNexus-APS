@@ -184,3 +184,9 @@ Implementation artifact `9515126567`的8/8 command PASS只闭环bounded copy-on-
 Decision service只在Simulation/Test synthetic resources与显式test policy中形成APPROVE/REJECT behavior；Production即使context声明authenticated、capability和resource scope也在source/result lookup前固定拒绝并只写sanitized denial。没有真实principal→role/capability、组织责任、identity provider、Production resource scope/target、independent DB/network/credential、retention/SIEM、SLA或deployment evidence。APPROVED carrier不是Production approval或publish。
 
 因此OPEN-010及OPEN-001～015全部保持`OPEN`且无Authority/Evidence closure record，`registry_version=1.0.0`不变。Corrective artifact `9544333991`的8/8 exact provider只闭环bounded decision behavior，不得声明Production authority、publishability、approval、security review或readiness。
+
+## TASK-P3-08 review
+
+Publication service只允许Simulation/Test synthetic resource与`SIMULATION_INTERNAL`；Production command在success audit、source与current lookup前固定default-deny，并只形成`WORKSPACE_INTERNAL` sanitized denial。没有真实principal/role、Production publish channel/target、MES/ERP adapter、independent DB/network/credential、retention/SIEM、SLA、deployment或rollback authority。Internal PUBLISHED不是Production publish/approval。
+
+因此OPEN-002/010及OPEN-001～015全部保持`OPEN`，没有新增Authority/Evidence closure record，`registry_version=1.0.0`不变。Local 8/8 machine只证明bounded Simulation publication；exact provider尚未形成，也不得声明Production publishability、approval、security review或readiness。

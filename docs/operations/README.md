@@ -170,3 +170,9 @@ P3-01先定义security/audit/idempotency责任，P3-03/07～10再形成repositor
 `uv run python -m app.application.approval_decision_check --root . --report <ignored-json>`在临时SQLite上复用P3-04 reviewable sources，验证APPROVE/REJECT同content CAS+audit、exact replay/conflict、REJECTED terminal、capability/resource/authentication与Production default-deny audit、stale/empty/credential-like reason无副作用、audit rollback及并发单winner，输出8/8 `p3-approval-decision-report.v1`。CI固定写`build/validation/ci-p3-approval-decisions.json`且不可continue-on-error。
 
 报告只证明Simulation/Test application behavior，不配置真实principal/role、endpoint、publisher/exporter、external target或Production Runbook。回滚代码不得删除已提交decision/audit；错误decision只能通过受治理的新Version/纠正event处理，不能UPDATE历史。
+
+## TASK-P3-08 operator command
+
+`uv run python -m app.application.publication_check --root . --report <ignored-json>`在临时SQLite重放APPROVED-only first publish、historical replay/conflict/double publish、current/supersession、DRAFT/READY/REJECTED拒绝、Simulation/Production denial、audit rollback及并发current单winner，输出8/8 `p3-publication-report.v1`。CI固定写`build/validation/ci-p3-publication.json`且不可continue-on-error。
+
+报告只证明internal Simulation state/idempotency行为，不配置endpoint、worker、publisher/exporter、MES/ERP、storage或Production Runbook。已提交PUBLISHED/SUPERSEDED/Audit/PublicationResult/current历史不得由代码回滚删除；修订只能走新的受治理Version/publication。

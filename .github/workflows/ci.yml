@@ -172,6 +172,12 @@ jobs:
           --root .
           --report build/validation/ci-p3-approval-decisions.json
 
+      - name: P3 publication supersession and idempotency evidence
+        run: >-
+          uv run python -m app.application.publication_check
+          --root .
+          --report build/validation/ci-p3-publication.json
+
       - name: Engineering contract
         run: >-
           uv run python -m app.infrastructure.contract_check

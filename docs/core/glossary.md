@@ -95,3 +95,7 @@ last_reviewed: 2026-08-25
 - **Decision identity**：plane、APPROVE/REJECT、ScheduleVersion、workspace target与raw key reference形成的deterministic Audit identity；same request重放原logical result，raw key不进入durable event。
 - **Authorization denial audit**：高风险decision在capability/scope/authentication或Production default-deny时追加的sanitized DENIED event；不读取或保存source/lineage/before/after reference，也不改变ScheduleVersion。
 - **Approved ScheduleVersion**：READY经authorized `approve` capability与atomic decision audit进入的同ID/content状态；只成为P3-08 publish的前置候选，不等于PUBLISHED、Production-approved或外部已发布。
+- **Publication context**：server-resolved authenticated actor、publish capability、exact ScheduleVersion scope、Simulation test policy、plane binding、UTC与code facts；不是客户端role/target声明。
+- **Current publication reference**：按plane+internal target唯一保存当前PUBLISHED ScheduleVersion/content/publication identity与CAS revision的projection；不是可编辑Version内容。
+- **Publication exact replay**：same scope/key/request从append-only success audit重建原APPROVED→PUBLISHED及optional supersession logical result，设置response replay marker但不重复state/audit/current side effect。
+- **Superseded ScheduleVersion**：旧current在新Version原子成为current时由PUBLISHED进入的历史状态；content、decision与原publication evidence保持不可变，`superseded_by`指向当次新PUBLISHED reference。

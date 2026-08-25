@@ -261,3 +261,9 @@ Command pipeline只复用locked Python 3.12、既有formal Validator、SQLAlchem
 Decision service继续只复用locked Python 3.12、dataclass/Protocol、canonical JSON/SHA-256、冻结Schema set 2.6.0与既有SQLAlchemy/Alembic Schedule/Audit adapters；`pyproject.toml`、`uv.lock`、Schema、migration和runtime/dev dependencies零变化。CI只在同一required `validate` job增加`approval_decision_check`离线步骤与既有artifact glob，job名称、permissions、Secret、service、container/deployment不变。
 
 没有引入OIDC/RBAC/SSO SDK、HTTP framework新surface、Frontend/Node、queue/outbox、publisher/exporter或P4技术。临时SQLite timing/concurrency仍是development observation，不定义Production SLA或authorization topology。
+
+## TASK-P3-08 technology review
+
+Publication实现继续复用locked Python 3.12、dataclass/Protocol、canonical JSON/SHA-256、Schema set 2.6.0及既有SQLAlchemy/Alembic Schedule/Audit/Publication repositories；`pyproject.toml`、`uv.lock`、Schema、migration与dependency零变化。CI只在required `validate` job新增`publication_check`及既有artifact glob。
+
+没有引入publisher/MES/ERP SDK、HTTP/Frontend、Celery task、queue/outbox、storage或P4技术。SQLite timing/concurrency不定义Production topology、capacity、SLA或exactly-once。

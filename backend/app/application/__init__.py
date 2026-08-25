@@ -20,6 +20,7 @@ from .workspace_queries import (
     WorkspaceQueryService,
 )
 from .approval import ApprovalDecisionResult, ApprovalDecisionService
+from .publication import PublicationService, PublicationServiceResult
 
 __all__ = [
     "ApprovalDecisionResult",
@@ -28,6 +29,8 @@ __all__ = [
     "CommonIngressPipeline",
     "DataQualityGateRejected",
     "PlanningBuildConfiguration",
+    "PublicationService",
+    "PublicationServiceResult",
     "ScheduleVersionLifecycleResult",
     "ScheduleCommandResult",
     "ScheduleCommandService",

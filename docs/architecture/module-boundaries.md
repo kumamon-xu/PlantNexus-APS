@@ -217,3 +217,9 @@ Application拥有atomic insert+append与CAS+append transaction；repository不�
 `app.domain.authorization`只依赖domain types/workspace pure contracts，负责strict APPROVE/REJECT carrier、server context guard、deterministic identity、same-content decision candidate及success/denial AuditEvent；它不导入Infrastructure、Planning、Simulation、HTTP或identity SDK。`app.application.approval`只声明Schedule get/CAS、Audit get/append与transaction ports，并拥有authorization-before-lookup、replay/conflict和atomicity编排；它不导入SQLAlchemy、repository adapter、Solver、Validator、API或Frontend。
 
 `approval_decision_check`才作为executable composition root装配既有SQLAlchemy repositories、临时SQLite和P3-04 frozen lifecycle input。Repository只执行durability/CAS/append，不选择capability或Production role；未来HTTP、RBAC/SSO、publish/export adapter不得复制或绕过application guard。没有新dependency、outbox、queue、service或deployment topology。
+
+## TASK-P3-08 publication module boundary
+
+`app.domain.publication`只依赖domain types/workspace pure contracts，负责strict PUBLISH carrier、server context guard、deterministic identities、published/superseded/result/audit documents；不导入Infrastructure、Planning、Simulation、HTTP、Exporter或identity SDK。`app.application.publication`只声明Schedule/Audit/Publication repository与transaction ports，拥有authorization-before-lookup、historical replay、current CAS和atomicity编排；不导入SQLAlchemy adapter、Solver、Validator、API或Frontend。
+
+`publication_check`作为executable composition root装配既有repositories与临时SQLite。Repository仍只提供durability，不能授权或自动publish/export。没有新dependency、outbox、queue、worker、network、service或deployment topology。

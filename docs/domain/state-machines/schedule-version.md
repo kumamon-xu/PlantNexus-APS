@@ -109,3 +109,9 @@ P3-03允许pair与`state-machines.v1` bytes没有变化，新DRAFT不自动执�
 本Task只执行既有`READY_FOR_REVIEW→APPROVED`与`READY_FOR_REVIEW→REJECTED`两对。Guard同时要求server-resolved exact capability/resource scope、Simulation test policy、Production default-deny、non-empty sanitized reason、expected READY/content fingerprint、decision/publication/superseded为空及state revision CAS。Candidate仅改变`state/decision/allowed_actions`；immutable projection、ID、revision、content/fingerprint、lineage/validation和created facts不变。成功CAS与一条append-only DECISION audit同事务，audit失败回滚；并发Approve/Reject最多一个winner。
 
 Same key/same request从原audit返回READY→terminal logical reference，不新增self-pair或改写event；different request冲突。APPROVED的carrier actions为`view,publish`但P3-08尚未实现publish；REJECTED为terminal且只能由copy-on-write command派生新DRAFT。未新增state、pair或`state-machines.v1` bytes，PUBLISHED/SUPERSEDED仍未实现。
+
+## TASK-P3-08 executable publication transitions
+
+本Task只执行既有`APPROVED→PUBLISHED`与必要时旧current的`PUBLISHED→SUPERSEDED`。Guard要求server-resolved publish capability/resource scope、Simulation test policy、Production default-deny、exact state/content/current reference及state revision CAS。新candidate仅改变state/publication/allowed actions，旧candidate仅改变state/superseded_by/allowed actions；两者immutable content/decision/lineage/validation/creation facts保持不变。
+
+两个CAS、PublicationResult、current reference CAS与PUBLICATION audit在同一事务，任一步失败回滚。Same request重放原APPROVED→PUBLISHED及optional supersession logical references，不执行self-pair或移动current；different request、DRAFT/READY/REJECTED、double publish与并发loser拒绝。没有新增state/pair或修改`state-machines.v1` bytes；PUBLISHED/SUPERSEDED内容仍不可变。

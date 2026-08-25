@@ -163,3 +163,9 @@ ScheduleVersion现在首次成为可评审aggregate：identity由plane+idempoten
 `ApprovalDecisionIdentity`由plane/action/source/target scope与raw key的SHA-256 reference确定唯一Audit ID，并固定APPROVE→approve→APPROVED、REJECT→reject→REJECTED。`ApprovalDecisionContext`是server authority carrier；`PreparedApprovalDecision`绑定exact READY source，`ApprovalDecisionDocuments`包含同content state candidate与success audit。Pure domain只校验、克隆和构造documents，不依赖repository、SQLAlchemy、HTTP、identity provider、Solver或Validator。
 
 `ApprovalDecisionService`以Schedule get/CAS、Audit get/append和transaction ports组合authorization-before-lookup、exact replay/conflict及state+audit atomicity。成功decision成为既有ScheduleVersion aggregate的mutable state metadata和append-only AuditEvent事实，不创建新aggregate；DENIED event是安全attempt evidence，不成为ScheduleVersion状态事实。真实role/RBAC/SSO、publication/export和P4模型未新增。
+
+## TASK-P3-08 publication value objects and service
+
+`PublicationIdentity`由plane/PUBLISH/source/internal target scope和raw key的SHA-256 reference确定Publication/Audit identity；`PublicationContext`承载server authority；`CurrentPublicationState`是durable current reference的pure projection；`PreparedPublication`绑定APPROVED source与optional current PUBLISHED；`PublicationDocuments`包含new PUBLISHED、optional old SUPERSEDED、PublicationResult和success AuditEvent。Pure domain只做carrier/state/authority验证与document构造。
+
+`PublicationService`通过Schedule get/CAS、Audit get/append、Publication current/result与transaction ports组合authorization-before-lookup、历史replay、current CAS及全事务原子性。PublicationResult/Audit是append-only事实，current reference是唯一CAS projection；没有新增aggregate、Schema、state或pair。ExportJob、worker/outbox、HTTP/UI、external adapter、P4及Production模型未新增。

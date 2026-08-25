@@ -107,3 +107,7 @@ Command service只读取ScheduleVersion中已绑定的PlanningRun/Problem lineag
 ## TASK-P3-07 zero-transition review
 
 ApprovalDecisionService只读取ScheduleVersion已冻结的PlanningRun lineage并执行ScheduleVersion CAS；没有PlanningRun repository、Solver、Validator或job port。APPROVE/REJECT不会重开、推进或重新解释COMPLETED，也不会把PlanningRun terminal结果当成人工授权；PlanningRun 16 states、31 pairs、terminal集合与machine bytes均保持不变。
+
+## TASK-P3-08 zero-transition review
+
+PublicationService只复制ScheduleVersion已冻结的PlanningRun/Snapshot/Problem/Solution/Validation/KPI/SolverReport lineage进入publication audit；没有PlanningRun repository、Solver、Validator或worker port。APPROVED→PUBLISHED与PUBLISHED→SUPERSEDED均属于ScheduleVersion，不能重开、推进或重解释PlanningRun；其16 states、31 pairs、terminal集合与machine bytes保持不变。

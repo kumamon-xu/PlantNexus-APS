@@ -217,3 +217,9 @@ Command service实例固定`SIMULATION`或`PRODUCTION` repository plane；comman
 Decision service实例同样固定单一repository plane。Simulation只允许Development/Test/Benchmark、synthetic provenance、名称显式含test/simulation且`production_binding=false`的server policy；resource scope必须精确包含Version。Production command只能形成`WORKSPACE_INTERNAL` sanitized DENIED audit，且在任何source或success replay lookup前拒绝；Simulation/Production audit和Schedule tables按既有plane key隔离。
 
 本Task没有新增env var、Secret、credential、port、service、database、network或deployment。临时SQLite并发/CAS只证明bounded development behavior，不替代PostgreSQL、identity boundary、Production backup/restore或capacity验证。
+
+## TASK-P3-08 publication isolation
+
+Publication service实例固定单一plane；成功只允许Development/Test/Benchmark中的`SIMULATION`、synthetic provenance、explicit test/simulation policy、`production_binding=false`和`SIMULATION_INTERNAL`。Schedule/Audit/PublicationResult/current rows均由既有plane key隔离；mixed plane、unknown target或Production success carrier无法进入业务查询/事务。Production只形成`WORKSPACE_INTERNAL` sanitized denial audit。
+
+没有新增env var、Secret、database、storage、network、publisher、service或deployment。临时SQLite transaction/concurrency是development evidence，不证明PostgreSQL distributed CAS、Production backup/channel或external exactly-once。

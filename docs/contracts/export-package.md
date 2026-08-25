@@ -108,3 +108,9 @@ P3标准包未来必须增加ScheduleVersion、approval/publication、ExportJob/
 ExportJob repository现形成create/exact replay/conflict、state+revision CAS、explicit lease claim、heartbeat owner/expiry校验、failure→retry attempt递增和append-only identity/delete guards。Source必须匹配同plane已存PUBLISHED Version；Production repository construction和cross-plane read/write均拒绝。PublicationResult/current reference另由独立repository持久化，ExportJob永不改变current或ScheduleVersion state。
 
 该证据不创建`export-manifest.v1`、文件、package、storage reference或外部side effect；`EXPORTED`只能由P3-09在manifest-last/package integrity成功后提交。SQLite行数/延迟不构成OPEN-012或Production容量证据。
+
+## TASK-P3-08 publish/export separation evidence
+
+Internal publication service现只消费APPROVED并原子形成PUBLISHED/current/可选SUPERSEDED、PublicationResult和AuditEvent；它不导入Exporter、ExportJob repository、package profile、manifest、filesystem、storage或network。PUBLISHED carrier开放`export` action只是P3-09的state precondition，不自动创建、排队或重试ExportJob。
+
+Publication与Export继续使用独立idempotency scope和审计动作；publication replay不会生成包，Export retry未来也不得触发Publish或改变current。P2 `publishable=false`历史、P3 standard package PLANNED状态及OPEN-002/010/015不变。

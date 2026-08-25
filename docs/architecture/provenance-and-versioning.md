@@ -273,3 +273,9 @@ Origin PlanningRun/Snapshot/Problem/PlanningSolution/KPI/SolverReport references
 Decision request fingerprint沿用冻结command投影，包含action、READY source/content、plane/environment/synthetic provenance、workspace target与sanitized reason；raw key与server-derived action scope只计算hashed key reference和deterministic Audit ID。Success event保存actor reference、evaluated capability、auth-policy version、correlation/code commit、完整既有lineage以及同ID/content READY→APPROVED/REJECTED reference；ScheduleVersion decision保存同一audit ID。
 
 Exact replay即使当前Version将来继续到PUBLISHED，也返回原decision event的历史logical reference并核验durable content/decision binding，不改写时间或event。DENIED attempt保存request/key reference但不保存source/lineage/state reference。Schema/canonicalization、P2/P3-04～06历史provider evidence和Version immutable projection均不重写。
+
+## TASK-P3-08 publication provenance
+
+Publication request fingerprint绑定PUBLISH、APPROVED source/content、plane/environment/synthetic provenance、internal target、previous-current reference和sanitized reason；raw key只形成hashed key reference、Publication ID与Audit ID。Success event/PublicationResult共同保存APPROVED/PUBLISHED、optional previous PUBLISHED/SUPERSEDED、actor/policy/capability、lineage、correlation/code commit与published UTC；新/旧Schedule metadata反向绑定相同audit/publication reference。
+
+历史replay从原success audit重建logical PublicationResult，即使该new Version后来成为SUPERSEDED也不改写原时间、event或current。Old content/decision/publication evidence与全部P2 lineage保持不变；DENIED无resource reference。Schema/canonicalization、P2/P3历史provider与失败记录不重写。

@@ -146,3 +146,9 @@ Command context只接受server-resolved `edit`或`lock` capability、sanitized a
 APPROVE/REJECT必须分别精确匹配`approve`/`reject`与resource scope。授权通过后才读取durable audit/source；成功仅把同一ID/content的READY carrier以CAS推进APPROVED或REJECTED，并在同一transaction追加一条`DECISION` AuditEvent。Same scope/key/request从原audit重放，different fingerprint冲突；audit失败回滚state。高风险capability/scope/authentication/Production拒绝只追加无source/lineage/before/after引用的sanitized `DENIED` event且不读取resource；非法actor、空reason或credential-like reason因无法形成安全carrier而在audit前拒绝。DENIED event的`resolved_capability`表示本次被评估的server-derived capability，不代表grant。
 
 本slice不选择identity provider或真实role，不关闭OPEN-010，不形成HTTP/UI、publish/export、retention/SIEM或Production approval/readiness。`p3-approval-decision-report.v1`本地8/8仅是Simulation/Test与临时SQLite行为证据；exact provider仍是Task closure前置条件。
+
+## TASK-P3-08 publication authorization and audit slice
+
+PUBLISH使用独立scope=`plane/PUBLISH/ScheduleVersion/SIMULATION_INTERNAL`与hashed raw-key reference。Server context必须先验证authenticated、`publish` capability、exact ScheduleVersion scope、显式Simulation/Test policy、synthetic resource和`production_binding=false`，然后才允许读取success audit、source或current reference。Production在任何resource/replay lookup前以`PRODUCTION_AUTHORITY_UNAVAILABLE`拒绝，只能追加`WORKSPACE_INTERNAL`、无source/lineage/state reference的sanitized DENIED audit；OPEN-002/010保持OPEN。
+
+成功event固定`intent_type=PUBLICATION`、APPROVED source/PUBLISHED new reference、完整既有lineage、actor/policy/capability/reason/request/key/correlation/code与SUCCEEDED result，并与publish/supersede/current/result同事务。Same request只重放历史logical result且不改写event；different fingerprint冲突。该slice不选择真实RBAC/SSO、external target、HTTP/UI、ExportJob、retention/SIEM或Production authority/readiness。

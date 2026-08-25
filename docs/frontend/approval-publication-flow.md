@@ -92,3 +92,9 @@ P3 E2E只可使用隔离的Simulation plane、明确test principal和`SIMULATION
 Approve/Reject的server application guard现已形成：只接受READY、exact fingerprint、non-empty sanitized reason、对应capability与resource scope；成功state与audit原子，same-key exact replay不重复event，并发Approve/Reject只有一个CAS winner。APPROVED只开放未来`publish`动作，REJECTED保持终态且只能copy-on-write修订。
 
 本Task没有实现按钮、dialog、route、HTTP transport或E2E；Frontend不能据此显示真实用户角色，也不能把test actor、carrier `allowed_actions`或APPROVED状态解释为Production authority/publish。P3-11～13仍须单独实现并验证上述UI序列。
+
+## TASK-P3-08 server publication status
+
+Server application现形成APPROVED-only internal publish guard：exact capability/scope/test policy、source fingerprint与previous-current precondition通过后，单事务提交新PUBLISHED、旧SUPERSEDED、current CAS、PublicationResult与audit；same-key replay不double publish/supersede，并发只有一个current CAS winner。DRAFT/READY/REJECTED以及已PUBLISHED source均无业务副作用地拒绝。
+
+仍没有按钮、confirmation dialog、route、HTTP transport或E2E，Frontend不能自行拼装current、假设allowed action等于授权、自动Publish或把`SIMULATION_INTERNAL`显示成Production channel。Export按钮/Job/包仍等待P3-09/10/13。

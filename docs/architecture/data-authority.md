@@ -160,3 +160,9 @@ Human content command intent经server接受后成为新ScheduleVersion content�
 APPROVED/REJECTED状态事实由server application在验证authenticated actor reference、exact capability/resource scope、test policy、READY/content precondition后形成；repository只拥有CAS/append durability，carrier `required_capability`与UI按钮不拥有authority。Decision reason与actor reference成为append-only审计事实，显示名、邮箱、token和组织role不进入历史carrier。
 
 Simulation test policy只能对synthetic resource形成行为证据，不能成为Production principal mapping。OPEN-010未关闭时Production无论请求或context如何均DENY；APPROVED也不授权publish/external target。真实RBAC/SSO、责任人、retention和external authority仍由OPEN-002/010/015约束。
+
+## TASK-P3-08 publication authority
+
+Publish authority只来自server-resolved authenticated actor、`publish` capability、exact ScheduleVersion scope与explicit Simulation test policy；carrier capability、APPROVED state、UI action、repository或current reference本身均不授权。Source state/content和current reference来自同plane repositories，application拥有状态/CAS编排，database只拥有持久性权威。
+
+成功只形成`SIMULATION_INTERNAL`状态事实，不是external/Production authority。Production在resource/replay lookup前default-deny并记录不含resource existence的sanitized audit；OPEN-002/010/015继续约束真实identity、channel、责任和side effect。

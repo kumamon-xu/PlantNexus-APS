@@ -111,3 +111,9 @@ TASK-P3-01仅形成文档和ADR-0012；Schema/persistence/application/API/UI节�
 当前新增控制段为：`workspace-command APPROVE|REJECT + server authenticated/capability/resource/test-policy context → authorization before source/result lookup → exact READY/content precondition → one transaction(CAS same ScheduleVersion state+decision + append DECISION audit) → stable logical result`。Exact replay读取原event；different fingerprint冲突；并发两种decision只有一个CAS winner；audit失败回滚state。高风险DENY只写无resource reference的sanitized event。
 
 该段不修改content或上游PlanningRun/Snapshot/Problem/Solution/Validation/KPI/SolverReport，不调用Solver/Validator，不创建新Version、PublicationResult或ExportJob。APPROVED只到P3-08 publish前置，REJECTED只允许后续copy-on-write revision；HTTP/UI、真实RBAC/SSO、P4和Production side effect均未形成。
+
+## TASK-P3-08 internal publication segment
+
+当前新增控制段为：`PUBLISH command + server publish context → authorization before audit/source/current lookup → exact APPROVED/content/current preconditions → one transaction(new APPROVED→PUBLISHED CAS + optional old PUBLISHED→SUPERSEDED CAS + PUBLICATION audit + PublicationResult + current CAS) → stable logical result`。Same request从历史audit重建result；different request/double publish/stale current冲突；并发只有一个current winner；任一持久化失败回滚全部state。
+
+该段不改Schedule content或上游PlanningRun/Snapshot/Problem/Solution/Validation/KPI/SolverReport，不调用Solver/Validator，也不创建ExportJob/文件包/HTTP/UI/external side effect。Target严格是`SIMULATION_INTERNAL`，Production pre-lookup default-deny；P3-09、P4与Production未形成。

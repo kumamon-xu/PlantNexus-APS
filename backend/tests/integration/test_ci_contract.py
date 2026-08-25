@@ -11,6 +11,7 @@ import yaml
 
 from app.application.p2_gate_report import main as p2_gate_main
 from app.application.approval_decision_check import main as approval_decision_main
+from app.application.publication_check import main as publication_main
 from app.application.schedule_version_lifecycle_check import (
     main as schedule_version_lifecycle_main,
 )
@@ -161,6 +162,8 @@ def test_ci_runs_repository_gates_and_discovers_the_current_task() -> None:
         "build/validation/ci-p3-schedule-commands.json",
         "app.application.approval_decision_check",
         "build/validation/ci-p3-approval-decisions.json",
+        "app.application.publication_check",
+        "build/validation/ci-p3-publication.json",
         "app.infrastructure.contract_check",
         "docker compose --env-file .env.example config --quiet",
         "PLANTNEXUS_CI_CHANGE_BASE:",
@@ -186,6 +189,7 @@ def test_ci_runs_repository_gates_and_discovers_the_current_task() -> None:
     assert "name: P3 workspace read model and comparison evidence" in workflow
     assert "name: P3 schedule edit and lock command evidence" in workflow
     assert "name: P3 approval rejection and audit evidence" in workflow
+    assert "name: P3 publication supersession and idempotency evidence" in workflow
     assert "Benchmark hook (deferred until runner exists)" not in workflow
     assert "Benchmark runner remains deferred" not in workflow
     assert "actions/upload-artifact@v4" in workflow
@@ -396,6 +400,48 @@ def test_ci_p3_approval_decisions_are_required_and_machine_checkable(
     )
     assert report["boundaries"]["production_authority"] == ("DEFAULT_DENY_OPEN_010")
     assert report["boundaries"]["publish_export"] == "NOT_IMPLEMENTED"
+    assert report["boundaries"]["production_readiness"] == "NOT_CLAIMED"
+
+
+def test_ci_p3_publication_is_required_and_machine_checkable(
+    tmp_path: Path,
+) -> None:
+    workflow = (ROOT / ".github" / "workflows" / "ci.yml").read_text(encoding="utf-8")
+    normalized = " ".join(workflow.split())
+    assert (
+        "name: P3 publication supersession and idempotency evidence run: >- "
+        "uv run python -m app.application.publication_check --root . "
+        "--report build/validation/ci-p3-publication.json"
+    ) in normalized
+    assert "continue-on-error" not in workflow
+
+    report_path = tmp_path / "p3-publication.json"
+    assert publication_main(["--root", str(ROOT), "--report", str(report_path)]) == 0
+    report = json.loads(report_path.read_text(encoding="utf-8"))
+    assert report["report_version"] == "p3-publication-report.v1"
+    assert report["status"] == "PASS"
+    assert report["task_id"] == "TASK-P3-08"
+    assert report["check_count"] == 8
+    assert report["counts"] == {
+        "successful_publications": 3,
+        "supersessions": 2,
+        "exact_replays": 1,
+        "idempotency_conflicts": 1,
+        "authorization_denials": 2,
+        "rejected_requests_without_business_state": 4,
+        "atomic_rollbacks": 1,
+        "concurrent_current_winners": 1,
+        "product_service_solver_invocations": 0,
+    }
+    assert report["boundaries"]["publication_target"] == (
+        "SIMULATION_INTERNAL_ONLY"
+    )
+    assert report["boundaries"]["publish_export_separation"] == (
+        "EXPORT_NOT_INVOKED"
+    )
+    assert report["boundaries"]["production_authority"] == (
+        "DEFAULT_DENY_OPEN_002_010"
+    )
     assert report["boundaries"]["production_readiness"] == "NOT_CLAIMED"
 
 

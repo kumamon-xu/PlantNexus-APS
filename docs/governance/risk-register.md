@@ -163,3 +163,9 @@ Implementation run `32713635045` / artifact `9515126567`已通过command/negativ
 Authorization-before-lookup、exact capability/resource scope、Production default-deny、credential-safe reason、hashed key、generic denial audit、same-content CAS+audit transaction、exact replay/conflict和concurrent single winner降低本slice的authority bypass、resource disclosure、duplicate decision与partial commit暴露。但证据只覆盖synthetic临时SQLite和test policy，不证明real RBAC/SSO、PostgreSQL distributed concurrency、HTTP/UI bypass resistance、retention/SIEM、Production target或side-effect recovery。
 
 RISK-001～013全部继续`MONITORED`，severity/status不降低；尤其RISK-007/008/011～013与OPEN-010保持原边界，`registry_version=1.0.0`不变。Corrective artifact `9544333991`已精确复验bounded decision slice；该provider成功不关闭Production authority风险，初始Linux跨平台计数失败run `32793980039`保留为治理记录。
+
+## TASK-P3-08 risk review
+
+Authorization-before-lookup、APPROVED-only、immutable content、same-key replay/conflict、current CAS、single transaction/rollback、concurrent winner与generic Production denial降低authority bypass、double publish、lost-current、partial supersession和resource disclosure暴露。但证据只覆盖synthetic临时SQLite，不证明PostgreSQL distributed concurrency、network partition/exactly-once、real RBAC、external target recovery、HTTP/UI bypass、retention或Production rollback。
+
+RISK-001～013全部继续`MONITORED`，severity/status不降低；尤其RISK-007/008/011～013与OPEN-002/010保持原边界，`registry_version=1.0.0`不变。Exact provider pending；local success不关闭Production publish/side-effect风险。

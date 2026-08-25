@@ -79,3 +79,9 @@ Authorization在source lookup和exact replay前执行；只有server-resolved `e
 APPROVE/REJECT先验证strict carrier与server context，再按authenticated flag、exact derived capability、ScheduleVersion scope、Simulation test policy与Production binding授权；未授权时绝不读取ScheduleVersion或成功result。高风险DENY只追加aggregate ID、request/key reference和generic error，不保存source existence、lineage或before/after state；same denied request不重复event。普通authorized not-found仍不写denial audit，避免混淆resource existence。
 
 Actor必须是`actor:<stable-ref>`且不能含邮箱显示身份；reason拒绝control characters以及Authorization/Bearer/password/token/secret/cookie/DSN样式，raw idempotency key只计算SHA-256 reference。Adapter错误统一清洗。Production始终`PRODUCTION_AUTHORITY_UNAVAILABLE`并记录sanitized denial，OPEN-010保持OPEN；本Task没有authentication provider、RBAC/SSO、rate limit、CSRF/CSP或Production threat-model closure。
+
+## TASK-P3-08 publication security controls
+
+PUBLISH先验证strict carrier与server context，再按authenticated、publish capability、exact Version scope、Simulation test policy与Production binding授权；未授权不得读取success audit、ScheduleVersion或current reference。Production只能追加无source/lineage/state的generic `WORKSPACE_INTERNAL` denial，same denied request不重复event。Raw key只存hash reference，reason/actor/adapter error沿用credential与resource-existence清洗。
+
+Current/supersession precondition由server repository事实决定，客户端payload只能作为CAS expectation，不能授权或覆盖。没有authentication provider、RBAC/SSO、external publisher、rate limit、CSRF/CSP或Production threat-model closure；OPEN-002/010保持OPEN。

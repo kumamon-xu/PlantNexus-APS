@@ -202,3 +202,9 @@ Command domain/application使用module-local sanitized reasons：`INVALID_COMMAN
 Decision domain/application使用module-local sanitized reasons：`INVALID_REQUEST`、`AUTHORIZATION_DENIED`、`PRODUCTION_AUTHORITY_UNAVAILABLE`、`DATA_PLANE_MISMATCH`、`SOURCE_NOT_FOUND`、`STALE_SOURCE`、`INVALID_STATE_TRANSITION`、`IDEMPOTENCY_CONFLICT`和`PERSISTENCE_FAILED`。Authorization/capability/scope/Production拒绝统一写carrier允许的`WORKSPACE_CONTROL/AUTHORIZATION_DENIED` audit error而不暴露所需role或resource existence；非法carrier/actor/reason不能安全序列化时不写audit。Adapter的identity/state/other failure分别收敛到conflict/stale/sanitized persistence，SQL/stack/DSN不会外放。
 
 本Task不改`error-code-registry.v2`，也不形成HTTP 401 challenge或endpoint mapping。P3-10必须把module-local authorization与Production default-deny映射为既有计划的403、state/stale/idempotency映射为409、invalid request映射为422、persistence映射为500，并始终保留correlation而不回显credential。
+
+## TASK-P3-08 publication error boundary
+
+Publication domain/application新增module-local sanitized reasons：`INVALID_REQUEST`、`AUTHORIZATION_DENIED`、`PRODUCTION_AUTHORITY_UNAVAILABLE`、`DATA_PLANE_MISMATCH`、`SOURCE_NOT_FOUND`、`PREVIOUS_CURRENT_NOT_FOUND`、`STALE_SOURCE`、`INVALID_STATE_TRANSITION`、`CURRENT_REFERENCE_CONFLICT`、`IDEMPOTENCY_CONFLICT`和`PERSISTENCE_FAILED`。Authorization/Production拒绝仍只写carrier允许的`WORKSPACE_CONTROL/AUTHORIZATION_DENIED`；adapter state/current/identity失败分别收敛到stale/current/idempotency或generic persistence，绝不外放SQL/stack/DSN。
+
+Global `error-code-registry.v2`未修改，因为这些是未暴露的module-local控制原因。P3-10未来必须按冻结HTTP error model映射且不新造Product error category；P3-08没有HTTP surface、external failure或ExportJob error。

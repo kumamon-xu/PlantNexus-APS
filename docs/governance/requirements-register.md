@@ -169,3 +169,9 @@ Implementation `08317637c7fbb51d46880d32523545bb0b4fe1c0` / artifact `9515126567
 REQ-007获得authority-neutral APPROVE/REJECT、READY-only同content state CAS、terminal rejection、decision evidence、success/denial audit、exact replay/conflict/concurrency与rollback的application行为；REQ-009获得actor/policy/capability/resource scope、reason、request/key reference、source/new/lineage/correlation/code commit及machine report链。形成路径为`app.domain.authorization`、`app.application.approval/approval_decision_check`、unit/contract/integration/security/CI tests和8-check report。
 
 该slice不形成真实RBAC/SSO/责任人、HTTP/UI、publish/export、P4或Production authority/readiness；APPROVED只成为P3-08前置，OPEN-010继续OPEN。Corrective implementation `9aed9d8c5dd86a9a9b972f8e9c5491fd6d2dbaa6` / artifact `9544333991`已精确复验26/26 JSON、8/8 decision与50-path治理链，故只闭环TASK-P3-07 bounded slice。全部15个root Requirement保持`ALLOCATED`且`registry_version=1.0.0`不变。
+
+## TASK-P3-08 requirement review
+
+REQ-006获得Publish/Export分离的internal publication behavior、PublicationResult与current exact replay/conflict边界，但standard package/ExportJob behavior仍等待P3-09；REQ-007获得authorized APPROVED→PUBLISHED、old current PUBLISHED→SUPERSEDED、immutable content和DRAFT/READY/REJECTED/double publish拒绝；REQ-009获得request/key/Publication/Audit identity、source/new/previous/superseded/lineage/correlation/code及atomic provider report路径。形成路径为`app.domain.publication`、`app.application.publication/publication_check`、unit/contract/integration/security/CI tests和8-check report。
+
+该slice只面向`SIMULATION_INTERNAL`，不形成ExportJob/package、external MES/ERP、HTTP/UI、P4或Production authority/readiness；OPEN-002/010保持OPEN。Exact provider尚未形成，故这里只登记local bounded implementation；全部15个root Requirement继续`ALLOCATED`，`registry_version=1.0.0`不变。

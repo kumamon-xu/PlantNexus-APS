@@ -112,3 +112,7 @@ Edit/lock content command只创建DRAFT与command AuditEvent；review submit只�
 ## TASK-P3-07 zero-impact review
 
 APPROVE/REJECT AuditEvent继续固定`export_job_id=null`；decision service不导入ExportJob repository、worker、exporter或publication current reference。APPROVED不自动创建或排队ExportJob，REJECTED不可export。ExportJob五states/七pairs、lease/attempt/idempotency与PUBLISHED-only gate均无变化，P3-09仍是唯一export behavior owner。
+
+## TASK-P3-08 zero-impact review
+
+PUBLISH AuditEvent继续固定`export_job_id=null`；publication service不导入ExportJob repository、worker、exporter、manifest或storage。PUBLISHED只成为P3-09的source gate，不自动创建/排队ExportJob；SUPERSEDED历史版本不可作为新current export source。ExportJob五states/七pairs、lease/attempt/idempotency均无变化，P3-09仍是唯一export behavior owner。

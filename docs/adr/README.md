@@ -91,3 +91,9 @@ TASK-P3-01以当时下一个未使用编号接受ADR-0012，决定command-only/c
 本Task直接落实ADR-0007的immutable Version/provenance、ADR-0009的同事务state+audit边界与ADR-0012的authority-neutral capability、Production default-deny、READY-only approve/reject和append-only audit。实现只组合既有Schema、state pair和repository CAS/append ports；没有新增state/pair、Schema/migration/dependency、real role mapping、external side effect或topology，因此不需新ADR。
 
 若未来允许Production actor fallback、client/UI自报authority、decision绕过READY/fingerprint、跨事务成功audit、修改/删除历史decision，或把approve自动扩张为publish/export，必须停止并新建或supersede ADR；OPEN-010未关闭前不得用test policy替代该决定。
+
+## TASK-P3-08 ADR review
+
+本Task直接落实ADR-0007的immutable Version/provenance、ADR-0009的state/result/current/audit同事务边界及ADR-0012的APPROVED-only internal Publish、Publish/Export分离、idempotent replay、current/supersession与Production default-deny。实现只组合既有Schema、state pair与repository ports；没有新增state/pair、Schema/migration/dependency、outbox/external target或topology，因此不需新ADR。
+
+若未来允许mutable PUBLISHED/SUPERSEDED content、rollback/delete publication history、cross-plane current、automatic Export/external delivery、跨事务成功或Production target fallback，必须停止并新建/supersede ADR与authority；不得改写accepted历史。

@@ -1,12 +1,12 @@
 ---
 doc_id: TASK-P3-10
 title: Planning Workspace HTTP API
-status: planned
+status: in_progress
 spec_version: 0.3.0
 phase: P3
 normative: true
 source_sections: [58, 63, 65, 66, 68, 77, 78, 93]
-last_reviewed: 2026-08-24
+last_reviewed: 2026-08-25
 ---
 
 # TASK-P3-10 — Planning Workspace HTTP API
@@ -27,9 +27,9 @@ Non-goals: 不在router复制业务/Validator/Solver逻辑，不实现真实身�
 
 Inputs: P3 query/command/application services、Schema/authorization contracts、error model、现有health/config/log基础。
 
-Diff base: set only when this Task enters in_progress; must be the immediate full 40-character HEAD
+Diff base: f71c4a5a11a3fac0e203e2e92198c26124755927
 
-Files allowed to change: `backend/app/api/app.py`、`backend/app/api/contracts.py`、`backend/app/api/routers/planning_workspace.py`、`backend/app/api/dependencies/authorization.py`、对应`__init__.py`、限定contract/integration/security tests、OpenAPI/machine CLI及`Documents to update`；实际路径激活前固定。
+Files allowed to change: `.github/workflows/ci.yml`、`backend/app/api/__init__.py`、`backend/app/api/app.py`、`backend/app/api/contracts.py`、`backend/app/api/planning_workspace_check.py`、`backend/app/api/dependencies/__init__.py`、`backend/app/api/dependencies/authorization.py`、`backend/app/api/routers/__init__.py`、`backend/app/api/routers/planning_workspace.py`、`backend/tests/contract/test_planning_workspace_http_api.py`、`backend/tests/integration/test_planning_workspace_api_integration.py`、`backend/tests/security/test_planning_workspace_http_authorization.py`、`backend/tests/integration/test_ci_contract.py`、`backend/tests/integration/test_config_and_health.py`及`Documents to update`逐字列出的文档；这是在任何API实现修改前冻结的精确allow-list；首轮pytest collection在业务测试运行前发现contract/integration同名模块，故先以唯一basename替换integration路径，测试内容与范围不扩大。
 
 Files forbidden to change: domain/application business semantics、Solver/Validator、Schema/migration/dependency、repository、Frontend、external identity/MES/storage adapter、P4。
 
@@ -39,11 +39,11 @@ Outputs: P3 HTTP API、OpenAPI/contract report、security/error evidence。
 
 Documentation impact: required
 
-Documents to update: `docs/contracts/planning-workspace-api.md`、`docs/contracts/authorization-and-audit.md`、`docs/frontend/planning-workspace.md`、`docs/frontend/gantt-command-contract.md`、`docs/frontend/approval-publication-flow.md`、`docs/domain/error-model.md`、`docs/domain/state-machines/schedule-version.md`、`docs/domain/state-machines/export-job.md`、`docs/architecture/end-to-end-planning-flow.md`、`docs/architecture/module-boundaries.md`、`docs/architecture/data-authority.md`、`docs/architecture/configuration-environments-and-isolation.md`、`docs/operations/security.md`、`docs/operations/observability-and-audit.md`、`docs/quality/test-strategy-and-matrix.md`、`docs/quality/ci-gates-and-definition-of-done.md`、全部governance/trace/OPEN/risk/impact/inventory必审文档、本Task卡。
+Documents to update: `docs/current_phase.md`、`docs/milestones/README.md`、`docs/milestones/P3-planning-workspace.md`、`docs/tasks/README.md`、`docs/tasks/TASK_TEMPLATE.md`、`docs/tasks/P3/TASK-P3-10-planning-workspace-http-api.md`、`docs/contracts/README.md`、`docs/contracts/planning-workspace-api.md`、`docs/contracts/authorization-and-audit.md`、`docs/frontend/planning-workspace.md`、`docs/frontend/gantt-command-contract.md`、`docs/frontend/approval-publication-flow.md`、`docs/domain/error-model.md`、`docs/domain/state-machines/planning-run.md`、`docs/domain/state-machines/schedule-version.md`、`docs/domain/state-machines/export-job.md`、`docs/architecture/end-to-end-planning-flow.md`、`docs/architecture/module-boundaries.md`、`docs/architecture/data-authority.md`、`docs/architecture/configuration-environments-and-isolation.md`、`docs/architecture/technology-stack.md`、`docs/operations/README.md`、`docs/operations/security.md`、`docs/operations/observability-and-audit.md`、`docs/quality/test-strategy-and-matrix.md`、`docs/quality/ci-gates-and-definition-of-done.md`、`docs/quality/documentation-consistency-checks.md`、`docs/governance/requirements-register.md`、`docs/governance/nfr-and-engineering-register.md`、`docs/governance/traceability-rules.md`、`docs/governance/traceability-matrix.md`、`docs/governance/prod-open-register.md`、`docs/governance/sim-assumption-register.md`、`docs/governance/risk-register.md`、`docs/governance/change-impact-matrix.md`、`docs/governance/document-inventory.md`、`docs/adr/README.md`。
 
 Documentation impact rationale: 首次产品API/authorization/error/OpenAPI边界影响用户行为、安全、状态门和审计。
 
-Change-impact matrix rows reviewed: `IMPACT-API`、`IMPACT-TESTS`、`IMPACT-PHASE`、`IMPACT-GOVERNANCE-REGISTRY`、`IMPACT-DOCS`
+Change-impact matrix rows reviewed: `IMPACT-API`、`IMPACT-STATE`、`IMPACT-INFRA`、`IMPACT-TESTS`、`IMPACT-PHASE`、`IMPACT-GOVERNANCE-REGISTRY`、`IMPACT-DOCS`
 
 Traceability updates: REQ-001/004/005/006/007/009→TASK-P3-10→TEST-WORKSPACE-API-001/TEST-ERROR-MAPPING-001/TEST-APPROVAL-AUTHORIZATION-001/TEST-SIM-ISOLATION→OpenAPI/API report。
 
@@ -82,3 +82,15 @@ PROD_OPEN: OPEN-002/010/015保持OPEN；API capability机制不形成Production�
 SIM_ASSUMPTIONS: integration actor/data仅synthetic；不成为Production入口。
 
 Rollback: API路由可回退且不改业务历史；已发布payload/OpenAPI变化走versioned compatibility，不静默破坏consumer。
+
+## Local implementation evidence
+
+- 17个`/api/v1` operation、stable operation IDs、strict query/command/path/header binding、single application-port delegation、server-derived authorization、Production pre-provider default-deny、sanitized error/correlation/denial audit及thin-router边界已实现。
+- `uv run python -m app.api.planning_workspace_check --root . --report build/validation/local-p3-planning-workspace-api.json`为8/8 PASS，17 paths/17 delegations、8 mapped errors、Production provider/application调用0、router state/Solver/Validator调用0、`issues=[]`。
+- Contract/integration/security/health/CI focused suite为41 PASS；最终full repository为603 PASS，required当前29份JSON evidence、P2 Gate 11/11、XS benchmark 8/8、locked sync、Ruff/Pyright、Compose/build、full/diff docs均PASS。
+- Schema、migration、dependency/lock、domain/application/repository、Frontend、P4与Production零修改；OPEN-002/010/015保持OPEN。
+- Implementation provider evidence: pending exact implementation commit、required `validate`与artifact download review；本Task在provider闭环前保持`in_progress`。
+
+## Local failure and recovery record
+
+首轮full repository为601 PASS/1 FAIL；失败是本Task禁止修改的P3-09 `test_standard_package_is_byte_deterministic_and_preserves_p2_payloads`，同一进程的两次XLSX package hash瞬时不同。P3-10 diff未触及exporter/package/schema/dependency；该exact test随后独立连续5次PASS，完整suite重跑为602 PASS，API安全fail-closed加固后最终full为603 PASS。因未再现且不在冻结allow-list内，本Task未改写P3-09实现；若provider再次失败，必须停止closure并单独治理，不得在P3-10偷渡修正。

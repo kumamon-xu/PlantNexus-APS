@@ -178,3 +178,7 @@ P3-01先定义security/audit/idempotency责任，P3-03/07～10再形成repositor
 报告只证明internal Simulation state/idempotency行为，不配置endpoint、worker、publisher/exporter、MES/ERP、storage或Production Runbook。已提交PUBLISHED/SUPERSEDED/Audit/PublicationResult/current历史不得由代码回滚删除；修订只能走新的受治理Version/publication。
 
 P3-09新增可调用的internal worker composition与local atomic storage boundary，但不注册Celery task、不配置service/queue/external storage或Production Runbook。运维只可通过显式claim/heartbeat/fail/retry/cancel恢复；不得手改EXPORTED、删除terminal Job/audit/artifact或以目录存在替代manifest/DB成功。
+
+## TASK-P3-10 operational boundary
+
+API process现提供health与17个P3 route的composition seam，但默认application/principal provider为unavailable，因而不构成可运营Production service。本Task没有连接真实identity、MES/ERP/storage、queue、database或SIEM，也没有新增deployment/rollback/runbook。运维故障只能通过sanitized correlation和现有audit/log边界定位，不得用test provider开通Production。

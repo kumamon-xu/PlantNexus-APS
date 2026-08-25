@@ -113,3 +113,7 @@ ApprovalDecisionService只读取ScheduleVersion已冻结的PlanningRun lineage�
 PublicationService只复制ScheduleVersion已冻结的PlanningRun/Snapshot/Problem/Solution/Validation/KPI/SolverReport lineage进入publication audit；没有PlanningRun repository、Solver、Validator或worker port。APPROVED→PUBLISHED与PUBLISHED→SUPERSEDED均属于ScheduleVersion，不能重开、推进或重解释PlanningRun；其16 states、31 pairs、terminal集合与machine bytes保持不变。
 
 Export worker只消费冻结P2 package和PUBLISHED ScheduleVersion lineage，不读取或推进PlanningRun，不调用Solver/Validator，也不新增PlanningRun pair。Package内PlanningRun ID与P2 payload hash必须原样保留；Export retry只增加Job attempt。
+
+## TASK-P3-10 zero-transition HTTP review
+
+PlanningRun GET与Workspace read route只委托application port；validate/edit/decision/publication/export route也不持有PlanningRun repository、transition或Solver/Validator实现。Router business transition与Solver/Validator invocation在machine evidence中均为0，现16 states、31 pairs、terminal与machine bytes零变化。

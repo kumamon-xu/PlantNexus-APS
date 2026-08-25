@@ -225,3 +225,7 @@ Application拥有atomic insert+append与CAS+append transaction；repository不�
 `publication_check`作为executable composition root装配既有repositories与临时SQLite。Repository仍只提供durability，不能授权或自动publish/export。没有新dependency、outbox、queue、worker、network、service或deployment topology。
 
 P3-09依赖方向为`domain.export_job`→ports-only`application.export_jobs`→SQLAlchemy repositories；`exporters.standard_package`只消费冻结contracts/openpyxl，`jobs.export_job`是thin composition且不注册Celery business task。Domain/application/exporter/job均不依赖publication application service、API/frontend、network/external adapter或P4。
+
+## TASK-P3-10 API boundary
+
+`app.api.routers.planning_workspace` 只依赖API contracts、authorization dependency和由composition root注入的application port；禁止导入`app.application.*`具体service、`app.domain.*`业务state、repository、Solver或Validator。`app.api.app` 是唯一组装点，默认使用unavailable facade/provider以fail closed。Machine/static tests验证17个operation全部只委托一次、business transition和Solver/Validator invocation为0；无新service topology或ADR。

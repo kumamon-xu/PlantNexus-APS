@@ -32,7 +32,7 @@ P1当前状态：[`P1 — Data & Snapshot`](P1-data-and-snapshot.md)为`complete
 
 P2当前状态：[`P2 — CP-SAT Vertical Slice`](P2-cp-sat-vertical-slice.md)为`completed`。TASK-P2-00～14均已闭环为`done`；P2 Exit Gate=`READY`且0 gaps。用户于2026-08-24在复核exact provider evidence、提交拓扑与clean synchronized baseline后明确批准P2→P3。
 
-P3当前状态：[`P3 — Planning Workspace`](P3-planning-workspace.md)为`active`。TASK-P3-00～09均已有exact implementation provider并在evidence-only closure标为`done`；当前没有已授权的后续Task，P3-10～15保持`planned`。P3-15必须最后独立执行Exit Gate Audit；internal Simulation export PASS不表示external、P4或Production。
+P3当前状态：[`P3 — Planning Workspace`](P3-planning-workspace.md)为`active`。TASK-P3-00～09均已有exact implementation provider并在evidence-only closure标为`done`；用户已单独授权TASK-P3-10且其保持`in_progress`直到exact provider闭环，P3-11～15保持`planned`。P3-15必须最后独立执行Exit Gate Audit；HTTP/internal Simulation export PASS不表示Frontend、external、P4或Production。
 
 TASK-P3-04 implementation `a9be974855bb825784d639b7f6675e5a33e4273d`的run/job/artifact=`32700005280`/`97349447107`/`9510215582`精确复现35 focused、515 full、8/8 lifecycle、23/23 JSON PASS与45 committed/0 working paths、8 rows、19 checks、0 issues，故本closure标为`done`。该证据只形成reviewable ScheduleVersion，不形成approval、publish、P4或Production readiness。
 
@@ -93,3 +93,5 @@ TASK-P2-14本地独立审计结论为`READY`：476 tests、两次11/11 Gate、�
 Evidence-only closure `80c403384d1e171258cf874d26605d0d22aff1b2`的run `32678248961` / required job `97290201234` / artifact `9503372291`精确success；下载的implementation/closure artifacts均为20份可解析JSON且SHA、Task、Impact Rules、19 checks、0 issues一致。该SHA是P3-00不可变规划Diff base；transition保留P2所有历史记录，不把P2 internal Export提升为P3/Production publish。
 
 TASK-P3-09已形成additive `2.7.0` export v2 carriers与internal Simulation业务行为；implementation `42278239332e61e55a4e0305705534db768dc22f`的run/job/artifact=`32805450589`/`97674572006`/`9548027237`精确复现594 tests、28/28 JSON、8/8 machine及76 committed/0 working paths、13 rows、19 checks、0 issues，故本closure标为`done`。P3-10不会自动启动，标准包也不构成external/P4/Production能力。
+
+用户随后单独授权TASK-P3-10并从P3-09 provider-verified closure `f71c4a5a11a3fac0e203e2e92198c26124755927`启动。该Task只形成versioned planning-workspace HTTP/OpenAPI与fail-closed transport controls，P3 Milestone继续`active`；P3-11～15、Frontend、P4与Production均不会自动启动。

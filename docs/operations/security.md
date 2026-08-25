@@ -87,3 +87,7 @@ PUBLISH先验证strict carrier与server context，再按authenticated、publish 
 Current/supersession precondition由server repository事实决定，客户端payload只能作为CAS expectation，不能授权或覆盖。没有authentication provider、RBAC/SSO、external publisher、rate limit、CSRF/CSP或Production threat-model closure；OPEN-002/010保持OPEN。
 
 Export authorization在job/source/replay lookup前检查actor/authenticated/`export` capability/Schedule或Job scope/policy与Production binding；raw idempotency key只保留SHA-256 reference。Package防护包含canonical hashes、path allow-list、XLSX formula/macro/external-link拒绝、same-parent temp及escape check；carrier不含Secret、SQL、stack、absolute path。真实RBAC/SSO、download authorization、malware pipeline及Production threat model仍未形成。
+
+## TASK-P3-10 HTTP security boundary
+
+Bearer只交给server-side provider，router/body不接收role或capability authority。认证缺失/失败、scope/capability拒绝、Production default-deny和malformed provider result均在application前终止；provider或denial sink自身失败也只返回sanitized 503/500且不进入application。Denial sink只收集sanitized reference，测试证明Bearer/provider exception/audit DSN不泄漏；成功与错误响应均`no-store`。CORS/session/CSRF/rate-limit、真实OIDC/SSO/RBAC、secret rotation、gateway/WAF和Production threat model未形成，OPEN-010/015保持OPEN。

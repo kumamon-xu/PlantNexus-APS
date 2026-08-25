@@ -210,3 +210,9 @@ Publication domain/application新增module-local sanitized reasons：`INVALID_RE
 Global `error-code-registry.v2`未修改，因为这些是未暴露的module-local控制原因。P3-10未来必须按冻结HTTP error model映射且不新造Product error category；P3-08没有HTTP surface、external failure或ExportJob error。
 
 P3-09使用module-local `ExportJobFailure`与`StandardExportErrorCode`：invalid/auth/Production/source/stale/idempotency/state/lease/export/persistence及invalid/mixed/hash/XLSX/destination/I/O。Job失败carrier只使用冻结`WORKSPACE_CONTROL/EXPORT_FAILED`并保存sanitized message；授权拒绝用`AUTHORIZATION_DENIED` audit。Global product error registry、HTTP mapping和stack/SQL/path泄漏均未修改。
+
+## TASK-P3-10 HTTP error adapter
+
+Transport现把已有module-local reason收敛到strict `planning-workspace-error.v1`：缺失/非法Bearer=401，authorization/Production deny=403，source missing=404，stale/state/current/idempotency=409，invalid carrier/reference/time/validation=422，unexpected/persistence/export failure=500，composition unavailable=503。所有response保留correlation、stable namespace/reason、retryable与可选safe resource reference，但不返回raw exception、credential、SQL、stack或absolute path。
+
+该adapter未修改`error-code-registry.v2`、七类product category或module内部失败事实，也不将Solver `UNKNOWN`转换为`INFEASIBLE`。Contract/integration/security和machine report已在本地覆盖八类映射与泄漏防护，exact provider待提交后核验。

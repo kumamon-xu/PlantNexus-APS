@@ -17,7 +17,7 @@ last_reviewed: 2026-08-25
 
 P2-14 audit implementation `65c556789f176ad9de55523d6420737bb60f933f`的GitHub push run `32677741558` / required `validate` job `97288829348` / artifact `9503227240`成功，artifact digest=`sha256:fbb76f0ab44d3bdcff2d31e70f9698af84e10e48ee57ae611eef8529a288240e`；evidence-only closure `80c403384d1e171258cf874d26605d0d22aff1b2`的run `32678248961` / job `97290201234` / artifact `9503372291`也成功，digest=`sha256:673412905b7420660d1e9f07755fcda6291f85f8f2bd926b4bf31a0a6bd1bd0c`。下载检查的两份artifact均含20份可解析JSON，Task/SHA/Impact Rules/checks/issues与对应提交一致且0 issue。规划启动时`main=origin/main=80c403384d1e171258cf874d26605d0d22aff1b2`、ahead/behind=`0/0`且working tree clean，因此transition前提一致。
 
-P2 Milestone现为`completed`，P3 Milestone为`active`。`TASK-P3-00`～`TASK-P3-09`均已有exact implementation provider并由各自evidence-only closure标为`done`；当前没有已授权的后续业务Task，P3-10～15保持`planned`且不会自动启动。
+P2 Milestone现为`completed`，P3 Milestone为`active`。`TASK-P3-00`～`TASK-P3-09`均已有exact implementation provider并由各自evidence-only closure标为`done`；用户已单独授权`TASK-P3-10`，该Task从provider-verified clean HEAD进入`in_progress`。P3-11～15保持`planned`且不会自动启动。
 
 ## 当前目标
 
@@ -115,17 +115,25 @@ Schema预检发现既有`export-job.v1`要求P3 profile却只能引用冻结的P
 
 Implementation `42278239332e61e55a4e0305705534db768dc22f`的run/job/artifact=`32805450589`/`97674572006`/`9548027237`精确success；required `validate`来自GitHub Actions app `15368`且全部steps成功。Artifact未过期，100011 bytes，digest=`sha256:77cda829c35ad0b7018fa15ea5176c257b6ed0b60c89f9dba244da80bba7fe26`、expiry=`2026-11-23T03:30:45Z`。下载复核28/28 JSON顶层PASS，export报告为8/8且Task报告为76 committed/0 working paths、13 Impact rows、19 checks、0 issues。因此本evidence-only closure把TASK-P3-09标为`done`；closure自身仍须exact provider核验。P3-10、external/P4/Production均未启动。
 
+## TASK-P3-10 启动与本地实现边界
+
+用户于2026-08-25单独授权TASK-P3-10。启动复核确认P3-05～09全部`done`且五个closure SHA均为当前HEAD祖先；对应required run/job/artifact逐项精确success、artifact未过期且绑定各自exact SHA。启动时`main=origin/main=f71c4a5a11a3fac0e203e2e92198c26124755927`、ahead/behind=`0/0`且working tree clean，故该完整SHA冻结为不可变Diff base。
+
+本Task只允许17个`/api/v1` planning-workspace HTTP operation、稳定OpenAPI、strict `workspace-query.v1`/`workspace-command.v1` transport binding、server-derived capability/resource scope、Production pre-provider default-deny、sanitized versioned error、correlation/denial audit、限定tests/machine CI与命中文档。Router只向注入的application façade提交已授权operation；P3-05～09继续拥有query/Validator/state/CAS/publish/export语义。Schema、migration、dependency、repository、state pair、Solver/Validator、Frontend、external identity/MES/storage、P4和Production readiness均禁止。
+
+本地实现已形成17 paths/17 operation IDs、GET query carrier的URL-encoded canonical JSON序列化、POST command carrier与`Idempotency-Key` exact binding、401/403/404/409/422/500/503映射、`X-Correlation-Id`/`no-store`、provider/audit-sink exception sanitization、denial audit sink和默认未装配application/identity fail-closed。`p3-planning-workspace-api-report.v1`为8/8、17次成功delegation、8类error mapping、Production provider/application lookup均0、router业务transition与Solver/Validator调用均0，`issues=[]`；41 focused、603 full、29份当前JSON evidence、P2 Gate/XS、Ruff/Pyright、Compose/build和51 paths/7 rows/19 checks/0 issues治理均PASS。Exact implementation provider尚待push后核验，故Task保持`in_progress`且P3-11不启动。
+
 ## 当前允许
 
 - 读取并复核P3-01～09合同、Schema、persistence/lifecycle/read/command/decision/publication/export provider evidence和P2 frozen artifact；
-- 本次只提交TASK-P3-09 evidence-only closure并核验其exact provider，不再修改业务实现；
-- 保留P2/v1 Schema/package bytes、P3-08 publication与P3-09 ExportJob/package/audit事实及全部历史provider evidence；
-- 后续P3-10～15只有在逐Task明确授权后，才可按各卡允许范围和新的不可变Diff base实施。
+- 仅执行TASK-P3-10精确allow-list中的API transport、authorization/error/correlation适配、tests、required machine CI与治理文档；
+- 保留P2/v1 Schema/package bytes、P3-05～09 application/state/audit事实及全部历史provider evidence；
+- P3-11～15只有在逐Task明确授权后，才可按各卡允许范围和新的不可变Diff base实施。
 
 ## 当前禁止
 
-- 在没有新Task授权时修改业务代码、Schema、migration、dependency pin/lock、P2/v1 package/fixture/benchmark bytes、`frontend/**`、API、external adapter/network或deployment；
-- 执行P3-10～15，或让其中任何Task自动进入`ready/in_progress`；
+- 修改domain/application业务语义、Schema、migration、dependency pin/lock、repository、P2/v1 package/fixture/benchmark bytes、`frontend/**`、external adapter/network或deployment；
+- 执行P3-11～15，或让其中任何Task自动进入`ready/in_progress`；
 - 直接更新PUBLISHED、绕过server/formal Validator、允许DRAFT/REJECTED发布或产生非幂等export/publish；
 - 实现P4的ExecutionEvent、ReplanRequest、OBJ-002 Stability、freeze window、ChangeReport或Execution Simulator；
 - 创建P4详细Task、进入P4，或声明Production readiness、approval authority、external publish/deployment已形成；

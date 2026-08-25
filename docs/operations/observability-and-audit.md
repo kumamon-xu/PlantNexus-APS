@@ -70,3 +70,7 @@ Read-model machine report记录Task/exact code commit、14 views/counts、payloa
 这些仍是临时SQLite与machine artifact；没有metrics backend、dashboard/alert、retention/SIEM、external delivery telemetry或Production SLO。
 
 ExportJob append-only audit覆盖create、attempt/retry、failed/recovered、cancel与complete的before/after/outcome/request/key reference/actor/policy/correlation/code；heartbeat只更新同lease operational metadata。Manifest记录package/file/lineage事实，machine report记录counts/boundaries/issues。尚无metrics backend、lease-expiry alert、orphan artifact scanner、retention/SIEM或Production SLO；OPEN-012继续OPEN。
+
+## TASK-P3-10 transport observability
+
+每个API response回传`X-Correlation-Id`且`Cache-Control: no-store`；client correlation与carrier冲突在委托前以422拒绝。高风险authorization denial通过可注入sink记录operation、actor/resource/policy/reason/correlation/UTC，不写Bearer/raw key。`p3-planning-workspace-api-report.v1`记录17 route/delegation、error/auth/boundary计数与OpenAPI fingerprint；这不形成metrics backend、retention、SIEM、alert或Production SLO。

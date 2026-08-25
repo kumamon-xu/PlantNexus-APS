@@ -20,6 +20,7 @@ from app.application.schedule_command_check import main as schedule_command_main
 from app.application.workspace_read_model_check import (
     main as workspace_read_model_main,
 )
+from app.api.planning_workspace_check import main as planning_workspace_api_main
 from app.domain.workspace_contract_check import main as workspace_contract_main
 from app.exporters.contract_check import main as output_contract_main
 from app.infrastructure.workspace_persistence_check import (
@@ -434,15 +435,9 @@ def test_ci_p3_publication_is_required_and_machine_checkable(
         "concurrent_current_winners": 1,
         "product_service_solver_invocations": 0,
     }
-    assert report["boundaries"]["publication_target"] == (
-        "SIMULATION_INTERNAL_ONLY"
-    )
-    assert report["boundaries"]["publish_export_separation"] == (
-        "EXPORT_NOT_INVOKED"
-    )
-    assert report["boundaries"]["production_authority"] == (
-        "DEFAULT_DENY_OPEN_002_010"
-    )
+    assert report["boundaries"]["publication_target"] == ("SIMULATION_INTERNAL_ONLY")
+    assert report["boundaries"]["publish_export_separation"] == ("EXPORT_NOT_INVOKED")
+    assert report["boundaries"]["production_authority"] == ("DEFAULT_DENY_OPEN_002_010")
     assert report["boundaries"]["production_readiness"] == "NOT_CLAIMED"
 
 
@@ -481,6 +476,37 @@ def test_ci_p3_export_job_is_required_and_machine_checkable(tmp_path: Path) -> N
         "p4_dynamic_replan": "DEFERRED",
         "production": "DEFAULT_DENY_NOT_READY",
     }
+    assert report["issues"] == []
+
+
+def test_ci_p3_planning_workspace_api_is_required_and_machine_checkable(
+    tmp_path: Path,
+) -> None:
+    workflow = (ROOT / ".github/workflows/ci.yml").read_text(encoding="utf-8")
+    normalized = " ".join(workflow.split())
+    assert (
+        "name: P3 planning workspace HTTP API evidence run: >- "
+        "uv run python -m app.api.planning_workspace_check --root . "
+        "--report build/validation/ci-p3-planning-workspace-api.json"
+    ) in normalized
+    assert "continue-on-error" not in workflow
+
+    report_path = tmp_path / "p3-planning-workspace-api.json"
+    assert (
+        planning_workspace_api_main(["--root", str(ROOT), "--report", str(report_path)])
+        == 0
+    )
+    report = json.loads(report_path.read_text(encoding="utf-8"))
+    assert report["report_version"] == "p3-planning-workspace-api-report.v1"
+    assert report["status"] == "PASS"
+    assert report["task_id"] == "TASK-P3-10"
+    assert report["check_count"] == 8
+    assert report["counts"]["api_paths"] == 17
+    assert report["counts"]["successful_delegations"] == 17
+    assert report["counts"]["production_provider_lookups"] == 0
+    assert report["counts"]["router_business_state_transitions"] == 0
+    assert report["boundaries"]["p4_capabilities"] == "NOT_IMPLEMENTED"
+    assert report["boundaries"]["production_readiness"] == "NOT_CLAIMED"
     assert report["issues"] == []
 
 

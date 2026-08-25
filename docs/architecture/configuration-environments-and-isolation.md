@@ -225,3 +225,7 @@ Publication service实例固定单一plane；成功只允许Development/Test/Ben
 没有新增env var、Secret、database、storage、network、publisher、service或deployment。临时SQLite transaction/concurrency是development evidence，不证明PostgreSQL distributed CAS、Production backup/channel或external exactly-once。
 
 P3-09只使用显式`SIMULATION`与DEVELOPMENT/TEST/BENCHMARK、target=`SIMULATION_INTERNAL`；Production/auth binding在lookup前拒绝。Storage root由composition注入且必须为已存在目录，carrier/audit/manifest不保存absolute path。没有新增Secret/env var/network/storage service；临时filesystem/SQLite evidence不定义Production topology、retention或capacity。
+
+## TASK-P3-10 API isolation
+
+Planning Workspace route只在显式`PLANTNEXUS_SIMULATION_API_ENABLED=true`且data plane=`SIMULATION`时可使用test provider；Production无论Bearer或声明capability如何都在provider lookup/application调用前拒绝。本Task未新增env var、Secret、network、DB、container或deployment config，只消费已有typed setting。Simulation TestClient与test principal不得用于Production。

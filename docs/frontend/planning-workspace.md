@@ -98,3 +98,7 @@ Backend现提供页面矩阵所需的14种只读投影，且每页完整payload�
 ## TASK-P3-06 command handoff
 
 Backend application现可把Move/Assign/Set/Remove Lock intent转换为fresh-validated、audited新DRAFT，并以独立`SUBMIT_FOR_REVIEW`在第二次fresh PASS后把该DRAFT的同一identity/content推进READY。未来UI必须把content command响应中的new Version identity作为下一次读取/命令基准，并把submit与approve/reject明确分离；不能继续把optimistic preview、source Version或READY状态当作已批准结果。Stale、authorization、Validator与idempotency失败均不得显示成功。当前仍没有Frontend组件、drag interaction或browser evidence，P3-13才可接入human-control UI。
+
+## TASK-P3-10 HTTP handoff
+
+Backend现以17个`/api/v1` operation暴露已有read/validate/edit/decision/publication/export application边界，并提供stable OpenAPI、correlation、strict carrier与sanitized error envelope。这只是Backend transport handoff：本Task没有创建Frontend组件、browser client、session/identity integration或用户可见成功状态。P3-11～13的consumer必须保留URL-encoded strict query、exact Version precondition、Idempotency-Key/body一致和401/403/404/409/422/500/503区分，不得将test principal或Simulation flag外推为Production authority。

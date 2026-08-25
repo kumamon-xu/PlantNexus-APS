@@ -118,3 +118,7 @@ APPROVE/REJECT AuditEvent继续固定`export_job_id=null`；decision service不�
 PUBLISH AuditEvent继续固定`export_job_id=null`；publication service不导入ExportJob repository、worker、exporter、manifest或storage。PUBLISHED只成为P3-09的source gate，不自动创建/排队ExportJob；SUPERSEDED历史版本不可作为新current export source。ExportJob五states/七pairs、lease/attempt/idempotency均无变化，P3-09仍是唯一export behavior owner。
 
 P3-09现执行machine authority中的六个distinct allowed pair：CREATED→EXPORTING/CANCELLED、EXPORTING→EXPORTED/EXPORT_FAILED/CANCELLED、EXPORT_FAILED→EXPORTING；exact replay不是self-pair。Claim/retry递增attempt并创建future-expiry lease；heartbeat必须同owner/active lease且延长expiry；terminal释放lease。过期EXPORTING仅允许受审计恢复为FAILED或CANCELLED，再显式retry。EXPORTED/CANCELLED终态，artifact只在manifest完整写入后提交。
+
+## TASK-P3-10 transport-only review
+
+HTTP只暴露create/read/retry/cancel并传递exact Job/Schedule scope、v2 reference、idempotency与correlation；claim/heartbeat/fail/complete仍属worker/application边界，不由router执行。Retry/cancel的state failure仅映射为409，transport不增加state/self-pair/attempt/lease规则，也不把Export解释为Publish或external transfer。

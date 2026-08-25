@@ -184,6 +184,12 @@ jobs:
           --root .
           --report build/validation/ci-p3-export-jobs.json
 
+      - name: P3 planning workspace HTTP API evidence
+        run: >-
+          uv run python -m app.api.planning_workspace_check
+          --root .
+          --report build/validation/ci-p3-planning-workspace-api.json
+
       - name: Engineering contract
         run: >-
           uv run python -m app.infrastructure.contract_check

@@ -317,3 +317,9 @@ Required `validate`新增non-skippable `P3 ExportJob and standard package eviden
 提交前本地Gate已通过：16 focused、594 full、Ruff/Pyright、locked sync、27份machine reports、P2 Gate 11/11、XS benchmark 8/8、Compose、build、full/diff治理、`git diff --check`与冻结/禁止范围均PASS；Task report为76 working paths、13 rows、19 checks、0 issues。Provider字段在真实push前不得预填。
 
 Implementation provider Gate已通过：SHA `42278239332e61e55a4e0305705534db768dc22f`、run `32805450589`、required `validate` job/check `97674572006`（app `15368`）均success且全部steps通过；artifact `9548027237`未过期，100011 bytes，digest=`sha256:77cda829c35ad0b7018fa15ea5176c257b6ed0b60c89f9dba244da80bba7fe26`、expiry=`2026-11-23T03:30:45Z`。下载复核28/28 JSON顶层PASS，export 8/8与Task 76 committed/0 working paths、13 rows、19 checks、0 issues均绑定同一SHA；TASK-P3-09 bounded DoD完成，本closure不自动授权P3-10且自身仍须exact provider。该Gate不形成external transfer、HTTP/UI、P4或Production readiness。
+
+## TASK-P3-10 required HTTP API evidence
+
+Required `validate`新增non-skippable `P3 planning workspace HTTP API evidence`：`uv run python -m app.api.planning_workspace_check --root . --report build/validation/ci-p3-planning-workspace-api.json`。报告必须为`p3-planning-workspace-api-report.v1`、Task=`TASK-P3-10`、8/8 checks、17 paths/operation IDs/successful delegations、8 mapped error reasons、Production provider/application调用0、router business transition/Solver/Validator调用0，明确Schema/migration/dependency/state零变化、P4/Production未实现且`issues=[]`。同一artifact必须包含API与Task report并绑定exact SHA/Diff base/7 Impact rows。
+
+本地Gate已通过：41 focused、最终603 full、API machine 8/8、required当前29份JSON evidence、P2 Gate 11/11、XS benchmark 8/8、locked sync、Ruff/Pyright、Compose/build与full/diff docs均PASS。首轮full曾因未修改的P3-09 deterministic XLSX用例瞬时失败（601/1），定向5次与后续完整重跑均PASS；provider若再现则停止closure。Local PASS不可替代exact implementation required run/job/app与下载artifact复核；provider成功后才可evidence-only closure，closure自身也须exact provider。该Gate不形成Frontend、真实identity、external adapter、P4或Production readiness，不自动启动TASK-P3-11。

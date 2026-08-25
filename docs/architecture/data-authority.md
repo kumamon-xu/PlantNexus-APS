@@ -168,3 +168,7 @@ Publish authority只来自server-resolved authenticated actor、`publish` capabi
 成功只形成`SIMULATION_INTERNAL`状态事实，不是external/Production authority。Production在resource/replay lookup前default-deny并记录不含resource existence的sanitized audit；OPEN-002/010/015继续约束真实identity、channel、责任和side effect。
 
 Export source authority由stored PUBLISHED ScheduleVersion、其content fingerprint及已有PublicationResult共同决定；client只提供precondition与raw idempotency key，role/absolute path/artifact hash不可自报。Manifest exact bytes和Job artifact reference共同成为internal package authority；filesystem directory本身不授权EXPORTED。External target与Production binding不可表示。
+
+## TASK-P3-10 transport authority
+
+HTTP path/query/header/body是请求precondition，不是业务authority。Schedule/Job状态、lineage、current publication、validation、idempotent result与artifact reference仍由已有application/repository决定；principal/capability/scope仅由server provider决定。OpenAPI只记录transport shape，不取代Schema或state machine。Production authority缺失时pre-provider default-deny，OPEN-002/010/015均未关闭。

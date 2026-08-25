@@ -173,7 +173,7 @@ registry_version: 1.0.0
 | [tasks/P3/TASK-P3-07-approval-rejection-and-audit-service.md](../tasks/P3/TASK-P3-07-approval-rejection-and-audit-service.md) | TASK-P3-07 | done | Approval Rejection and Audit Service |
 | [tasks/P3/TASK-P3-08-idempotent-publication-and-supersession.md](../tasks/P3/TASK-P3-08-idempotent-publication-and-supersession.md) | TASK-P3-08 | done | Idempotent Publication and Supersession |
 | [tasks/P3/TASK-P3-09-export-job-and-standard-package.md](../tasks/P3/TASK-P3-09-export-job-and-standard-package.md) | TASK-P3-09 | done | ExportJob and Standard Export Package |
-| [tasks/P3/TASK-P3-10-planning-workspace-http-api.md](../tasks/P3/TASK-P3-10-planning-workspace-http-api.md) | TASK-P3-10 | planned | Planning Workspace HTTP API |
+| [tasks/P3/TASK-P3-10-planning-workspace-http-api.md](../tasks/P3/TASK-P3-10-planning-workspace-http-api.md) | TASK-P3-10 | in_progress | Planning Workspace HTTP API |
 | [tasks/P3/TASK-P3-11-frontend-foundation-and-read-only-workspace.md](../tasks/P3/TASK-P3-11-frontend-foundation-and-read-only-workspace.md) | TASK-P3-11 | planned | Frontend Foundation and Read-only Workspace |
 | [tasks/P3/TASK-P3-12-gantt-resource-load-and-version-comparison-ui.md](../tasks/P3/TASK-P3-12-gantt-resource-load-and-version-comparison-ui.md) | TASK-P3-12 | planned | Gantt Resource Load and Version Comparison UI |
 | [tasks/P3/TASK-P3-13-human-control-actions-and-ui-e2e.md](../tasks/P3/TASK-P3-13-human-control-actions-and-ui-e2e.md) | TASK-P3-13 | planned | Human Control Actions and UI E2E |
@@ -301,3 +301,5 @@ TASK-P3-07 implementation/closure仍不新增、删除或重命名正式Markdown
 TASK-P3-08 activation/implementation/closure不新增、删除或重命名正式Markdown，inventory继续165份；Task从P3-07 provider-verified closure `a53c0f7d4a0f0bcd4e02bfeaaa0f6fc4b93157b9`冻结Diff base。新增publication domain/application、unit/contract/integration/security tests、workflow命令及ignored publication/Task JSON均不进入Markdown清单；implementation artifact `9545782727`复现27/27 JSON、8/8 machine与51 committed/0 working paths、8 rows、19 checks、0 issues，故Task标为`done`。Roots=30、Test IDs=48、OPEN=15、SIM assumptions=13、risks=13、Tasks=53及registry format version保持`1.0.0`；P3-09+、Export/API/UI、P4与Production未形成。
 
 TASK-P3-09未新增/删除/重命名正式Markdown，inventory仍165份；只更新现有治理正文并新增非Markdown Schema/code/tests。Implementation artifact `9548027237`复现28/28 JSON、8/8 machine与76 committed/0 working paths、13 rows、19 checks、0 issues，故Task状态为`done`；roots=30、Test IDs=48、OPEN=15、SIM=13、risks=13、Tasks=53及registry format version均不变，P3-10/P4/Production未形成。
+
+TASK-P3-10未新增/删除/重命名正式Markdown，inventory仍165份；Task卡与现有索引/合同/架构/质量/治理文档更新为`in_progress`本地事实。新增的API code/tests/report非Markdown inventory项；roots=30、Test IDs=48、OPEN=15、SIM=13、risks=13、Tasks=53及registry format version均不变。Exact provider待提交后复核，P3-11/P4/Production未形成。

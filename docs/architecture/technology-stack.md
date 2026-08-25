@@ -269,3 +269,7 @@ Publication实现继续复用locked Python 3.12、dataclass/Protocol、canonical
 没有引入publisher/MES/ERP SDK、HTTP/Frontend、Celery task、queue/outbox、storage或P4技术。SQLite timing/concurrency不定义Production topology、capacity、SLA或exactly-once。
 
 P3-09复用Python 3.12、SQLAlchemy/Alembic 0004、标准库hash/json/csv/zip/filesystem与既有locked `openpyxl==3.1.5`。`pyproject.toml`只将schema metadata升至`2.7.0`；runtime/dev dependency集合及`uv.lock` SHA-256保持冻结。CI在同一required `validate` job新增一个non-continue machine step并复用现有artifact glob；无Celery registration、service、Secret、container或deployment变化。
+
+## TASK-P3-10 stack review
+
+API复用locked FastAPI/Pydantic/httpx/pytest，不新增身份SDK或dependency，`pyproject.toml`/`uv.lock`与Schema metadata均不变。CI仅在现有required `validate` job新增non-skippable `planning_workspace_check`命令并由既有artifact glob收集JSON；workflow topology、runner、Secret、container、service与deployment零变化。

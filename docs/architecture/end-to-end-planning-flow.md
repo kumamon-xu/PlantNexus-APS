@@ -119,3 +119,7 @@ TASK-P3-01仅形成文档和ADR-0012；Schema/persistence/application/API/UI节�
 该段不改Schedule content或上游PlanningRun/Snapshot/Problem/Solution/Validation/KPI/SolverReport，不调用Solver/Validator，也不创建ExportJob/文件包/HTTP/UI/external side effect。Target严格是`SIMULATION_INTERNAL`，Production pre-lookup default-deny；P3-09、P4与Production未形成。
 
 P3-09在publication之后增加独立支路：authorized request→durable CREATED+audit→worker claim/lease→冻结P2 payload与PUBLISHED/publication lineage校验→deterministic JSON/CSV/XLSX→manifest-last atomic materialization→EXPORTED+audit。任何package/I/O/transaction失败进入FAILED并显式retry；全程不反向调用Publish、不改PlanningRun/ScheduleVersion，也无external transfer。
+
+## TASK-P3-10 HTTP composition edge
+
+HTTP入口现固定为`request → strict carrier/path/header binding → server authorization → PlanningWorkspaceApplicationPort → sanitized response`。Router不跨过application直达domain/repository/Solver/Validator；Production在principal provider或application lookup前拒绝。该edge不改变Import→Planning→Version→Decision→Publication→Export的authority链，不引入Frontend、external adapter或P4 replan/execution支路。

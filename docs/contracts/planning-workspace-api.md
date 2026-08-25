@@ -15,7 +15,7 @@ last_reviewed: 2026-08-25
 
 ## 合同版本与Schema分配
 
-当前全局schema set为additive `2.6.0`。下表文件和URN已由TASK-P3-02新增；机器文件、offline `$ref`、sample、canonical fingerprint和machine report已经形成，并由implementation `aff27d3d6b63fb9f216c9a2687408a6c676fa96a`的exact provider artifact `9506913562`复验。Read/application/API行为仍留给P3-05～10。
+当前全局schema set为additive `2.7.0`。下表的P3-02文件和URN已由TASK-P3-02新增；机器文件、offline `$ref`、sample、canonical fingerprint和machine report已经形成，并由implementation `aff27d3d6b63fb9f216c9a2687408a6c676fa96a`的exact provider artifact `9506913562`复验。TASK-P3-09又以additive方式新增`export-manifest.v2`/`export-job.v2`且保留全部v1 bytes；TASK-P3-10只实现HTTP绑定，不修改任何Schema。
 
 | Document | Stable `$id` | compatibility | 主要consumer |
 |---|---|---|---|
@@ -25,7 +25,8 @@ last_reviewed: 2026-08-25
 | `schedule-version-comparison.schema.json` / `schedule-version-comparison.v1` | `urn:plantnexus:aps:schema:schedule-version-comparison:v1` | 新文档；不是ChangeReport | P3-05、10、12 |
 | `audit-event.schema.json` / `audit-event.v1` | `urn:plantnexus:aps:schema:audit-event:v1` | 新文档；append-only carrier | P3-03、06～10、13 |
 | `publication-result.schema.json` / `publication-result.v1` | `urn:plantnexus:aps:schema:publication-result:v1` | 新文档；internal publish result | P3-08、10、13 |
-| `export-job.schema.json` / `export-job.v1` | `urn:plantnexus:aps:schema:export-job:v1` | 新文档；不等于ExportManifest | P3-03、09、10、13 |
+| `export-job.schema.json` / `export-job.v1` | `urn:plantnexus:aps:schema:export-job:v1` | P3-02历史carrier；bytes保留 | P3-03与显式v1 consumer |
+| `export-job-v2.schema.json` / `export-job.v2` | `urn:plantnexus:aps:schema:export-job:v2` | P3-09 additive carrier；不等于ExportManifest | P3-09、10、13 |
 
 所有对象必须`additionalProperties=false`、显式version/plane/provenance、拒绝unknown state/code/version且不提供Production业务默认值。P2 Schema/URN/bytes和`state-machines.v1`保持不变。
 
@@ -170,3 +171,11 @@ Approve/Reject application现消费冻结`workspace-command.v1`的空payload `AP
 该行为不是`POST .../publication` endpoint：没有router、request/response model、OpenAPI、HTTP status或Frontend。P3-10只能组合application service，不能在transport重写authorization、state/current CAS或把internal Simulation result外推为external/Production publish；P3-09 ExportJob仍是独立服务。
 
 P3-09现形成transport-neutral `ExportJobService`与`export-job.v2`结果，仍没有HTTP route/OpenAPI/response model。P3-10如获授权只能组合create/read/retry/cancel，不得把raw role、absolute storage path、external target、Publish调用或Production fallback塞入API；下载/状态必须以v2 manifest/job fingerprints为authority。
+
+## TASK-P3-10 executable HTTP surface
+
+`create_app` 以显式注入的`PlanningWorkspaceApplicationPort`组装上述17个operation；默认facade为unavailable，不得在router中直接读repository或复制Solver、Validator、state-machine逻辑。GET route以URL-encoded canonical JSON `query`参数承载strict query carrier；POST command使用strict body，`Idempotency-Key`必须与body精确一致，传入的`X-Correlation-Id`也必须与carrier一致，缺失时由server生成并在response回传。Comparison显式绑定base/compared Version header与body。所有响应使用`Cache-Control: no-store`。
+
+Transport只有在server-derived principal/capability/resource scope通过后才委托application。缺失/非法Bearer为401，capability/scope拒绝为403，resource missing为404，state/stale/idempotency为409，strict carrier/validation为422，sanitized unexpected/persistence为500，unavailable composition为503；响应只暴露稳定namespace/reason、safe details和correlation。Production在provider lookup前固定拒绝，Simulation必须同时开启显式API flag和Simulation data plane。
+
+OpenAPI固定17个operation ID和`x-plantnexus-*`边界；本地machine evidence记录17 paths/17 successful delegations、8类error mapping、Production provider/application调用均0、router business transition与Solver/Validator调用均0。这不形成Frontend、external adapter、真实RBAC/SSO、P4 endpoint或Production readiness；exact provider仍待提交后闭环。

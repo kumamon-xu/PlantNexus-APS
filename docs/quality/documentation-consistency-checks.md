@@ -409,3 +409,9 @@ Implementation/closure均须通过full docs、Task diff、`git diff --check`、f
 提交前实际Task diff为51 working paths、上述8 rows、19/19 checks、0 issues；full docs为165 docs/30 roots/30 trace rows/48 Test IDs/15 OPEN/13 SIM assumptions/13 risks/53 Tasks，禁止路径零差异。
 
 TASK-P3-09治理验证13个Impact rows、Diff base `b9c0b1694448a4ec348b0b02107926f6213560c9`、新增2 Schema/2 sample及全部精确allow-list；四份v1 hash、`uv.lock`、migration、publication service、P2 package、API/frontend/P4/external路径保持冻结。Full docs/Task diff、16 focused/594 full、Ruff/Pyright/locked sync、27份machine reports、P2 Gate、XS benchmark、Compose/build与`git diff --check`均PASS；implementation artifact `9548027237`中的Task report绑定exact SHA/Diff base并复现165 docs/30 roots/30 trace rows/48 tests/15 OPEN/13 SIM/13 risks/53 tasks、76 committed/0 working paths、13 rows、19 checks、0 issues。本closure只写provider事实并不得启动TASK-P3-10；closure自身仍须exact provider。
+
+## TASK-P3-10 diff governance
+
+不可变Diff base=`f71c4a5a11a3fac0e203e2e92198c26124755927`。完整union只允许命中`IMPACT-API/STATE/INFRA/TESTS/PHASE/GOVERNANCE-REGISTRY/DOCS`七行；精确allow-list仅包含API composition/contracts/auth/router/machine check、三类API tests、既有health/CI contract、单一workflow step与Task卡逐字列出的文档。Schema/sample/rules、migration、dependency/lock、domain/application/repository/exporter/job、Frontend/P4/external路径保持冻结。
+
+本地API report为8/8、`issues=[]`，focused为41 PASS、最终full为603 PASS，required当前29份JSON evidence、Compose/build与full docs均PASS。Task diff报告复现51 working paths、7 rows、19 checks、0 issues；implementation commit后必须再以committed range复验exact SHA。Provider数据在push前保持pending；TASK-P3-11、P4与Production均不在本Diff内。

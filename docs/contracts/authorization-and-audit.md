@@ -154,3 +154,9 @@ PUBLISH使用独立scope=`plane/PUBLISH/ScheduleVersion/SIMULATION_INTERNAL`与h
 成功event固定`intent_type=PUBLICATION`、APPROVED source/PUBLISHED new reference、完整既有lineage、actor/policy/capability/reason/request/key/correlation/code与SUCCEEDED result，并与publish/supersede/current/result同事务。Same request只重放历史logical result且不改写event；different fingerprint冲突。该slice不选择真实RBAC/SSO、external target、HTTP/UI、ExportJob、retention/SIEM或Production authority/readiness。
 
 Export authorization由server context提供authenticated actor、`export` capability、Schedule/Job scope与policy；在Job/source/replay lookup前执行，Production提前default-deny。Denied Simulation request只append sanitized audit，不保存raw key或泄露resource existence。CREATE/attempt/retry/fail/cancel/complete的ExportJob CAS与对应append-only AuditEvent处于同一事务；heartbeat是同lease operational CAS。冻结audit action enum不新增pair，lifecycle phase由deterministic event ID、before/after/result表达。
+
+## TASK-P3-10 HTTP authorization adapter
+
+HTTP层只从Bearer解析器获得stable principal reference、policy version、capability与resource scopes，并为17个operation在application委托前计算唯一required capability。Client body/header不得提升role、capability、actor或Production binding。缺失/非法Bearer为401；未授权capability/scope为403；provider异常收敛为可重试sanitized 503，denial audit sink异常收敛为sanitized 500，两者都不进入application；Production在principal provider lookup和application调用前恒为403且对应调用计数为0。
+
+高风险拒绝使用sanitized `PlanningWorkspaceAuthorizationDenial`记录operation、actor reference、resource scope、policy、reason、correlation和UTC；Bearer/raw credential、SQL、stack、资源内容和绝对路径不得进入sink。默认provider/sink不形成真实identity或SIEM，OPEN-010保持OPEN；本地security/contract/integration和8/8 machine report通过，exact provider待提交后复验。

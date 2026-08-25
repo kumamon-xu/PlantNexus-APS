@@ -120,3 +120,7 @@ Validator FAIL时返回`VALIDATION_FAILED/SCHEDULE_VALIDATION_FAILED`及sanitize
 每次成功都创建不同ID、parent reference、`MANUAL_EDIT`或`LOCK_CHANGE`、fresh `validation-report.v2`引用和append-only AuditEvent的新DRAFT；source在DRAFT、READY_FOR_REVIEW、REJECTED或PUBLISHED等状态下均逐字不变。Same scope/key+same fingerprint重放原logical result，同key+不同fingerprint冲突。Validator FAIL、stale、unauthorized、mixed plane、invalid reference/time/lock及transaction failure都不保留失败ScheduleVersion；本slice选择“discard candidate、无成功audit”，未来若记录拒绝attempt必须独立版本化且不得伪装成功。
 
 该application boundary没有HTTP/UI或真实principal→capability解析。Simulation carrier只证明test policy；Production command始终`DEFAULT_DENY_OPEN_010`。新DRAFT不会隐式进入READY；当前已形成独立空payload `SUBMIT_FOR_REVIEW`，仅接受`MANUAL_EDIT|LOCK_CHANGE` DRAFT，第二次fresh PASS后以同ID/content CAS到READY并原子audit。它不等于approve/reject；approval/publish/export和P4均未形成。
+
+## TASK-P3-10 command transport
+
+`POST /api/v1/schedule-versions/{id}/commands`与validate/approve/reject/publish路由只处理strict body、path/header绑定、server authorization、correlation和error mapping，然后委托application port。Router不重算Gantt mutation、lock、Validator或state transition。HTTP已形成不等于UI已形成；drag/confirmation/accessibility/browser E2E仍由P3-11～13完成，P4 replan/freeze和Production command继续排除。

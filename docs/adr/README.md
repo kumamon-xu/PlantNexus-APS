@@ -99,3 +99,7 @@ TASK-P3-01以当时下一个未使用编号接受ADR-0012，决定command-only/c
 若未来允许mutable PUBLISHED/SUPERSEDED content、rollback/delete publication history、cross-plane current、automatic Export/external delivery、跨事务成功或Production target fallback，必须停止并新建/supersede ADR与authority；不得改写accepted历史。
 
 TASK-P3-09落实ADR-0002/0007/0009与accepted ADR-0012：internal-only、deterministic canonical artifacts、显式state/idempotency/audit和Version authority。Additive v2 carrier是已批准的兼容性修复，不改变storage topology、external adapter或state machine，故不新建ADR。若引入cloud/object storage、Celery topology/outbox、external MES/ERP、automatic retry policy、P4 ChangeReport或Production target，必须先停止并创建/取代ADR。
+
+## TASK-P3-10 ADR review
+
+本Task落实ADR-0002/0009与accepted ADR-0012的thin API、Version authority、server authorization/default-deny、strict command/idempotency/audit边界，不改Schema、state machine、identity model、storage/network topology或dependency，故不新建ADR。若引入API gateway、OIDC/SSO/RBAC provider、session model、async/outbox、external endpoint、P4 route或Production deployment，必须先停止并创建/取代ADR。

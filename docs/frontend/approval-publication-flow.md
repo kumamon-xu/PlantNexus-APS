@@ -98,3 +98,7 @@ Approve/Reject的server application guard现已形成：只接受READY、exact f
 Server application现形成APPROVED-only internal publish guard：exact capability/scope/test policy、source fingerprint与previous-current precondition通过后，单事务提交新PUBLISHED、旧SUPERSEDED、current CAS、PublicationResult与audit；same-key replay不double publish/supersede，并发只有一个current CAS winner。DRAFT/READY/REJECTED以及已PUBLISHED source均无业务副作用地拒绝。
 
 仍没有按钮、confirmation dialog、route、HTTP transport或E2E，Frontend不能自行拼装current、假设allowed action等于授权、自动Publish或把`SIMULATION_INTERNAL`显示成Production channel。Export按钮/Job/包仍等待P3-09/10/13。
+
+## TASK-P3-10 control-flow transport
+
+Approve、Reject、Publish、Export create/read/retry/cancel现有HTTP operation，但transport不改变已有application的authorization-before-lookup、state/CAS、idempotency、audit与Publish/Export分离。401表示缺失/非法认证，403表示capability/scope或Production default-deny，409表示stale/state/key conflict，422表示carrier/validation；UI不得将任一失败渲染为成功。本Task无Frontend/browser/E2E、真实identity或external publish，因此P3-13与Production门仍未形成。

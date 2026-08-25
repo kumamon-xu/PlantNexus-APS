@@ -321,3 +321,7 @@ Implementation `e90475f462b365d2e031445ad28a02ea0b89d2f5` / run `32798679852` / 
 TASK-P3-09链必须为`REQ-006/007/009 + NFR-DET/TRC/ISO/REL/SEC/OBS/HUM + ENG-ARCH/ERR/VER → TASK-P3-09 → export v2 Schema/domain/application/repository/exporter/worker → TEST-EXPORT-JOB-001/OUTPUT/IDEMPOTENCY/AUDIT-TRAIL-001/SIM-ISOLATION → p3-export-job-report.v1 + Task report → exact implementation/closure provider artifacts`。Machine与Task report必须同SHA；v1 hashes、Diff base、13 Impact rows、issues为空及P3-10/P4/Production absence均须下载复核。
 
 该规则已由implementation `42278239332e61e55a4e0305705534db768dc22f`的required run/job/artifact=`32805450589`/`97674572006`/`9548027237`满足：下载的28/28 JSON顶层PASS，export与Task报告精确为8/8及76 committed/0 working paths、13 rows、19 checks、0 issues。因此本closure只写回TASK-P3-09=`done`和provider事实，P3-10仍为`planned`且未授权。
+
+## TASK-P3-10 traceability rule
+
+追踪链固定为`REQ-001/004/005/006/007/009 + NFR-COR/TRC/ISO/REL/SEC/OBS/HUM + ENG-ARCH/ERR/VER/LOG → TASK-P3-10 → app.api contracts/authorization/router/composition → contract/integration/security tests → TEST-WORKSPACE-API-001/ERROR-MAPPING-001/APPROVAL-AUTHORIZATION-001/PUBLISH-IDEMPOTENCY-001/EXPORT-JOB-001/AUDIT-TRAIL-001/SIM-ISOLATION/OBS-001 → p3-planning-workspace-api-report.v1 + Task report → exact implementation/closure provider artifacts`。Machine与Task report必须绑定同一SHA、Diff base `f71c4a5a11a3fac0e203e2e92198c26124755927`、7 Impact rows、全部checks且`issues=[]`。Provider成功前Task保持`in_progress`；closure只写已验证事实且不自动启动P3-11。

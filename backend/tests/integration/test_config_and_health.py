@@ -1,4 +1,4 @@
-"""TASK-P0-08 configuration and health-only API integration evidence."""
+"""TASK-P0-08 health behavior plus TASK-P3-10 route compatibility evidence."""
 
 from __future__ import annotations
 
@@ -23,8 +23,7 @@ def test_settings_do_not_implicitly_load_dotenv(
     monkeypatch: pytest.MonkeyPatch,
 ) -> None:
     (tmp_path / ".env").write_text(
-        "PLANTNEXUS_RUNTIME_ENVIRONMENT=production\n"
-        "PLANTNEXUS_DATA_PLANE=production\n",
+        "PLANTNEXUS_RUNTIME_ENVIRONMENT=production\nPLANTNEXUS_DATA_PLANE=production\n",
         encoding="utf-8",
     )
     monkeypatch.chdir(tmp_path)
@@ -137,10 +136,9 @@ def test_health_endpoints_separate_liveness_from_readiness() -> None:
     assert "do-not-leak" not in ready.text
     assert "RuntimeError" not in ready.text
     assert unknown.status_code == 404
-    assert {getattr(route, "path", None) for route in application.routes} == {
-        "/health/live",
-        "/health/ready",
-    }
+    route_paths = {getattr(route, "path", None) for route in application.routes}
+    assert {"/health/live", "/health/ready", "/openapi.json"} <= route_paths
+    assert len({path for path in route_paths if str(path).startswith("/api/v1/")}) == 17
 
 
 def test_readiness_is_up_when_all_dependencies_pass() -> None:

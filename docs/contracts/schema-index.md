@@ -63,3 +63,5 @@ TASK-P3-02作为P3首个additive Schema release owner，已按TASK-P3-01冻结�
 ## TASK-P3-05 consumer review
 
 本Task只生成并验证既有`workspace-query.v1` REQUEST/RESULT和`schedule-version-comparison.v1`文档；`schema_set_version=2.6.0`、canonical projection和offline `$ref`均由contract tests复验。没有新增、修改或重新发布Schema/sample/URN；完整payload不被私自塞入strict carrier，P4 ChangeReport也未借comparison名义出现。
+
+TASK-P3-09新增`urn:plantnexus:aps:schema:export-manifest:v2`与`urn:plantnexus:aps:schema:export-job:v2`，current set为additive `2.7.0`。Manifest固定12个payload、hash/bytes/CSV rows/XLSX sheets、PUBLISHED/publication/job/audit/P2 lineage和external/P4/Production边界；Job v2只将成功artifact限定为manifest v2，五state/六pair不变。2 Schema/2 sample offline validate，四份v1 artifact继续hash冻结。

@@ -32,7 +32,7 @@ P1当前状态：[`P1 — Data & Snapshot`](P1-data-and-snapshot.md)为`complete
 
 P2当前状态：[`P2 — CP-SAT Vertical Slice`](P2-cp-sat-vertical-slice.md)为`completed`。TASK-P2-00～14均已闭环为`done`；P2 Exit Gate=`READY`且0 gaps。用户于2026-08-24在复核exact provider evidence、提交拓扑与clean synchronized baseline后明确批准P2→P3。
 
-P3当前状态：[`P3 — Planning Workspace`](P3-planning-workspace.md)为`active`。TASK-P3-00～08均已有exact implementation provider并在evidence-only closure标为`done`；当前没有已授权的后续业务Task，P3-09～15保持`planned`。P3-15必须最后独立执行Exit Gate Audit；internal Simulation publication PASS不表示Export、P4或Production。
+P3当前状态：[`P3 — Planning Workspace`](P3-planning-workspace.md)为`active`。TASK-P3-00～08均已有exact implementation provider并在evidence-only closure标为`done`；用户现已单独授权TASK-P3-09并从P3-08 closure冻结Diff base，P3-10～15保持`planned`。P3-15必须最后独立执行Exit Gate Audit；internal Simulation export PASS不表示external、P4或Production。
 
 TASK-P3-04 implementation `a9be974855bb825784d639b7f6675e5a33e4273d`的run/job/artifact=`32700005280`/`97349447107`/`9510215582`精确复现35 focused、515 full、8/8 lifecycle、23/23 JSON PASS与45 committed/0 working paths、8 rows、19 checks、0 issues，故本closure标为`done`。该证据只形成reviewable ScheduleVersion，不形成approval、publish、P4或Production readiness。
 
@@ -45,6 +45,8 @@ TASK-P3-07 corrective implementation `9aed9d8c5dd86a9a9b972f8e9c5491fd6d2dbaa6`�
 用户随后单独授权TASK-P3-08；P3-07 closure `a53c0f7d4a0f0bcd4e02bfeaaa0f6fc4b93157b9`的run/job/artifact=`32794963626`/`97644228513`/`9544539992`与26/26 JSON已作为启动门精确复核，该SHA冻结为Diff base。当前仅形成/验证`SIMULATION_INTERNAL` APPROVED-only publication、atomic current/supersession/audit和幂等边界；P3-09 ExportJob、外部side effect、P4与Production仍未启动。
 
 TASK-P3-08 implementation `e90475f462b365d2e031445ad28a02ea0b89d2f5`的run/job/artifact=`32798679852`/`97655144411`/`9545782727`精确复现577 tests、27/27 JSON、8/8 machine及51 committed/0 working paths、8 rows、19 checks、0 issues，故本closure标为`done`。P3-09不自动启动；OPEN-002/010保持`OPEN`，ExportJob/package、external/P4/Production仍未形成。
+
+用户随后单独授权TASK-P3-09；P3-08 closure `b9c0b1694448a4ec348b0b02107926f6213560c9`及run/job/artifact=`32799416669`/`97657208631`/`9546020704`通过启动复核。Schema缺口经零修改停止并获明确扩卡批准；当前只允许additive P3 export carrier、internal Simulation ExportJob/standard package与限定证据，既有v1 bytes、P3-08 publication、P3-10+、P4和Production保持冻结。
 
 ## P2 execution history
 
@@ -89,3 +91,5 @@ Implementation `dc2e5cd41080603606090ebfc4bc6162941c5f7f`的required run `324657
 TASK-P2-14本地独立审计结论为`READY`：476 tests、两次11/11 Gate、七correctness场景×两轮完整§76 measurement、XS/S/M各8/8、108次Benchmark Validator、四类exact rejection及0 blocking gap均PASS；report/manifest一致。Audit implementation `65c556789f176ad9de55523d6420737bb60f933f`的run `32677741558` / required job `97288829348` / artifact `9503227240`精确复现20/20 JSON、30 paths/3 rows/19 checks/0 issues及Gate 11/11，故Task=`done`。
 
 Evidence-only closure `80c403384d1e171258cf874d26605d0d22aff1b2`的run `32678248961` / required job `97290201234` / artifact `9503372291`精确success；下载的implementation/closure artifacts均为20份可解析JSON且SHA、Task、Impact Rules、19 checks、0 issues一致。该SHA是P3-00不可变规划Diff base；transition保留P2所有历史记录，不把P2 internal Export提升为P3/Production publish。
+
+TASK-P3-09本地implementation candidate现已形成additive `2.7.0` export v2 carriers与internal Simulation业务行为；provider Gate前继续`in_progress`。P3-10不会自动启动，标准包也不构成external/P4/Production能力。

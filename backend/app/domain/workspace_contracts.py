@@ -21,7 +21,8 @@ from app.domain.state_machines.contracts import (
 )
 
 
-SCHEMA_SET_VERSION = "2.6.0"
+SCHEMA_SET_VERSION = "2.7.0"
+WORKSPACE_V1_SCHEMA_SET_VERSION = "2.6.0"
 CANONICALIZATION_VERSION = "canonical-json.v1"
 
 
@@ -80,6 +81,11 @@ _VERSION_FIELDS: Mapping[str, str] = {
     "audit_event_version": "audit-event.v1",
     "publication_result_version": "publication-result.v1",
     "export_job_version": "export-job.v1",
+}
+
+_DOCUMENT_SCHEMA_SET_VERSIONS: Mapping[str, str] = {
+    **{version: WORKSPACE_V1_SCHEMA_SET_VERSION for version in _VERSION_FIELDS.values()},
+    "export-job.v2": SCHEMA_SET_VERSION,
 }
 
 _QUERY_FINGERPRINT_FIELDS = (
@@ -226,6 +232,8 @@ def workspace_document_version(document: Mapping[str, object]) -> str:
         for field, expected in _VERSION_FIELDS.items()
         if document.get(field) == expected
     ]
+    if document.get("export_job_version") == "export-job.v2":
+        found.append("export-job.v2")
     if len(found) != 1:
         raise WorkspaceContractError(
             "$", "exactly one supported workspace document version is required"
@@ -405,7 +413,9 @@ def require_workspace_document(document: Mapping[str, object]) -> str:
 
     version = workspace_document_version(document)
     _require_equal(
-        document.get("schema_set_version"), SCHEMA_SET_VERSION, "schema_set_version"
+        document.get("schema_set_version"),
+        _DOCUMENT_SCHEMA_SET_VERSIONS[version],
+        "schema_set_version",
     )
     _require_equal(
         document.get("canonicalization_version"),
@@ -424,7 +434,7 @@ def require_workspace_document(document: Mapping[str, object]) -> str:
         _precheck_audit(document)
     elif version == "publication-result.v1":
         _precheck_publication(document)
-    elif version == "export-job.v1":
+    elif version in {"export-job.v1", "export-job.v2"}:
         _precheck_export_job(document)
     _check_no_secret_keys(document)
     return version
@@ -450,6 +460,7 @@ def state_contract_evidence() -> dict[str, object]:
 __all__ = [
     "CANONICALIZATION_VERSION",
     "SCHEMA_SET_VERSION",
+    "WORKSPACE_V1_SCHEMA_SET_VERSION",
     "ScheduleVersionDocument",
     "VersionReference",
     "WorkspaceCommandDocument",

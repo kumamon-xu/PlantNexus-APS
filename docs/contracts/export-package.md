@@ -114,3 +114,7 @@ ExportJob repository现形成create/exact replay/conflict、state+revision CAS�
 Internal publication service现只消费APPROVED并原子形成PUBLISHED/current/可选SUPERSEDED、PublicationResult和AuditEvent；它不导入Exporter、ExportJob repository、package profile、manifest、filesystem、storage或network。PUBLISHED carrier开放`export` action只是P3-09的state precondition，不自动创建、排队或重试ExportJob。
 
 Publication与Export继续使用独立idempotency scope和审计动作；publication replay不会生成包，Export retry未来也不得触发Publish或改变current。P2 `publishable=false`历史、P3 standard package PLANNED状态及OPEN-002/010/015不变。
+
+## P3 standard export v2
+
+`export-manifest.v2`固定`p3-standard-export.v1`与12个payload：PUBLISHED `schedule_version.json`、原P2 `planning_solution.json`及三份CSV、KPI/Validation/Solver/ImportQuality/Scenario、`publication_result.json`和4-sheet `standard_package.xlsx`。P2 payload bytes原样复用；manifest记录逐文件SHA-256/bytes、CSV row、XLSX sheet及完整lineage，`package_id`和storage reference均内容派生。Writer同parent写临时目录、payload first、manifest last、atomic rename；exact bytes重放，差异冲突，失败清理。XLSX禁止formula/macro/external link/active content。`change_report.json`明确`DEFERRED_P4_DYNAMIC_REPLAN`，target仅`SIMULATION_INTERNAL`且`publishable=false`。

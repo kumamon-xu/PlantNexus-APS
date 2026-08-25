@@ -178,6 +178,12 @@ jobs:
           --root .
           --report build/validation/ci-p3-publication.json
 
+      - name: P3 ExportJob and standard package evidence
+        run: >-
+          uv run python -m app.application.export_job_check
+          --root .
+          --report build/validation/ci-p3-export-jobs.json
+
       - name: Engineering contract
         run: >-
           uv run python -m app.infrastructure.contract_check

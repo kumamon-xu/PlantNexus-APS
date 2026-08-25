@@ -99,3 +99,5 @@ last_reviewed: 2026-08-25
 - **Current publication reference**：按plane+internal target唯一保存当前PUBLISHED ScheduleVersion/content/publication identity与CAS revision的projection；不是可编辑Version内容。
 - **Publication exact replay**：same scope/key/request从append-only success audit重建原APPROVED→PUBLISHED及optional supersession logical result，设置response replay marker但不重复state/audit/current side effect。
 - **Superseded ScheduleVersion**：旧current在新Version原子成为current时由PUBLISHED进入的历史状态；content、decision与原publication evidence保持不可变，`superseded_by`指向当次新PUBLISHED reference。
+- **Standard Export Package v1**：由`export-manifest.v2`描述的P3 internal Simulation package profile；含12个JSON/CSV/XLSX payload并绑定PUBLISHED Version、PublicationResult、ExportJob attempt、audit与P2 lineage。其版本号与manifest document version彼此独立，不代表external/Production delivery。
+- **Manifest-last**：同一临时目录先写全部payload并校验，最后写`manifest.json`，随后原子rename；Job只有在该边界成功后才能进入EXPORTED。

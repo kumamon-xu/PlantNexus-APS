@@ -68,3 +68,5 @@ Read-model machine report记录Task/exact code commit、14 views/counts、payloa
 成功PUBLISH event固定`PUBLICATION` intent、actor/policy/publish capability、sanitized reason、request/hash key、完整lineage、APPROVED/PUBLISHED reference、correlation/code与SUCCEEDED result，并与new/old CAS、PublicationResult/current同事务。DENIED无source/new/lineage/before/after；exact replay不改写event。Machine记录3 success、2 supersession、1 replay、1 conflict、2 denial、4无业务state拒绝、1 rollback及1 concurrent winner。
 
 这些仍是临时SQLite与machine artifact；没有metrics backend、dashboard/alert、retention/SIEM、external delivery telemetry或Production SLO。
+
+ExportJob append-only audit覆盖create、attempt/retry、failed/recovered、cancel与complete的before/after/outcome/request/key reference/actor/policy/correlation/code；heartbeat只更新同lease operational metadata。Manifest记录package/file/lineage事实，machine report记录counts/boundaries/issues。尚无metrics backend、lease-expiry alert、orphan artifact scanner、retention/SIEM或Production SLO；OPEN-012继续OPEN。

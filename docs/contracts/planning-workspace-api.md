@@ -168,3 +168,5 @@ Approve/Reject application现消费冻结`workspace-command.v1`的空payload `AP
 `PublicationService`现消费冻结PUBLISH carrier：`expected_state=APPROVED`、exact content fingerprint、`SIMULATION_INTERNAL`、payload中的exact previous-current reference或null、server-derived scope/key和sanitized reason。成功返回`publication-result.v1`及current/superseded logical references；same-key replay把`replayed=true`并重算result fingerprint，但不重复transition、audit或current CAS。Stale previous/current、different fingerprint、double publish与并发loser均fail closed。
 
 该行为不是`POST .../publication` endpoint：没有router、request/response model、OpenAPI、HTTP status或Frontend。P3-10只能组合application service，不能在transport重写authorization、state/current CAS或把internal Simulation result外推为external/Production publish；P3-09 ExportJob仍是独立服务。
+
+P3-09现形成transport-neutral `ExportJobService`与`export-job.v2`结果，仍没有HTTP route/OpenAPI/response model。P3-10如获授权只能组合create/read/retry/cancel，不得把raw role、absolute storage path、external target、Publish调用或Production fallback塞入API；下载/状态必须以v2 manifest/job fingerprints为authority。

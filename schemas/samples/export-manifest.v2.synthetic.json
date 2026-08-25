@@ -1,0 +1,41 @@
+{
+  "package_id": "export-package-1111111111111111111111111111111111111111111111111111111111111111",
+  "export_manifest_version": "export-manifest.v2",
+  "schema_set_version": "2.7.0",
+  "package_profile": "p3-standard-export.v1",
+  "canonicalization_version": "canonical-json.v1",
+  "csv_dialect_version": "rfc4180-lf.v1",
+  "xlsx_profile_version": "xlsx-safe-deterministic.v1",
+  "generated_at_utc": "2026-08-25T00:00:00Z",
+  "publishable": false,
+  "target": "SIMULATION_INTERNAL",
+  "schedule_version": {"schedule_version_id": "schedule-version-sim-001", "state": "PUBLISHED", "content_fingerprint": "sha256:1111111111111111111111111111111111111111111111111111111111111111"},
+  "publication": {"publication_result_version": "publication-result.v1", "publication_id": "publication-sim-001", "result_fingerprint": "sha256:2222222222222222222222222222222222222222222222222222222222222222", "published_at_utc": "2026-08-25T00:00:00Z", "audit_event_id": "audit-publication-sim-001"},
+  "export_job": {"export_job_version": "export-job.v2", "export_job_id": "export-job-sim-v2-001", "attempt": 1, "state_at_materialization": "EXPORTING"},
+  "audit_lineage": {"create_audit_event_id": "audit-export-create-001", "attempt_audit_event_id": "audit-export-attempt-001", "completion_audit_event_id": "audit-export-complete-001", "correlation_id": "correlation-export-001"},
+  "p2_package": {"export_manifest_version": "export-manifest.v1", "package_profile": "p2-internal-export.v1", "package_id": "export-package-2222222222222222222222222222222222222222222222222222222222222222", "manifest_fingerprint": "sha256:3333333333333333333333333333333333333333333333333333333333333333"},
+  "p2_lineage": {"planning_run_id": "planning-run-sim-001"},
+  "entity_counts": {"snapshot_operation_count": 1, "problem_operation_count": 1, "assignment_count": 1, "demand_count": 1, "resource_count": 1},
+  "file_count": 12,
+  "files": [
+    {"path": "import_quality_report.json", "role": "IMPORT_QUALITY_REPORT", "media_type": "application/json", "sha256": "sha256:0000000000000000000000000000000000000000000000000000000000000001", "size_bytes": 101, "row_count": null, "sheet_count": null},
+    {"path": "kpi.json", "role": "KPI", "media_type": "application/json", "sha256": "sha256:0000000000000000000000000000000000000000000000000000000000000002", "size_bytes": 102, "row_count": null, "sheet_count": null},
+    {"path": "order_summary.csv", "role": "ORDER_SUMMARY", "media_type": "text/csv; charset=utf-8", "sha256": "sha256:0000000000000000000000000000000000000000000000000000000000000003", "size_bytes": 103, "row_count": 1, "sheet_count": null},
+    {"path": "planning_solution.json", "role": "VALIDATED_PLANNING_SOLUTION", "media_type": "application/json", "sha256": "sha256:0000000000000000000000000000000000000000000000000000000000000004", "size_bytes": 104, "row_count": null, "sheet_count": null},
+    {"path": "publication_result.json", "role": "PUBLICATION_RESULT", "media_type": "application/json", "sha256": "sha256:0000000000000000000000000000000000000000000000000000000000000005", "size_bytes": 105, "row_count": null, "sheet_count": null},
+    {"path": "resource_load.csv", "role": "RESOURCE_LOAD", "media_type": "text/csv; charset=utf-8", "sha256": "sha256:0000000000000000000000000000000000000000000000000000000000000006", "size_bytes": 106, "row_count": 1, "sheet_count": null},
+    {"path": "scenario_manifest.json", "role": "P2_CORRECTNESS_SCENARIO_MANIFEST", "media_type": "application/json", "sha256": "sha256:0000000000000000000000000000000000000000000000000000000000000007", "size_bytes": 107, "row_count": null, "sheet_count": null},
+    {"path": "schedule_operations.csv", "role": "SCHEDULE_OPERATIONS", "media_type": "text/csv; charset=utf-8", "sha256": "sha256:0000000000000000000000000000000000000000000000000000000000000008", "size_bytes": 108, "row_count": 1, "sheet_count": null},
+    {"path": "schedule_version.json", "role": "PUBLISHED_SCHEDULE_VERSION", "media_type": "application/json", "sha256": "sha256:0000000000000000000000000000000000000000000000000000000000000009", "size_bytes": 109, "row_count": null, "sheet_count": null},
+    {"path": "solver_report.json", "role": "SOLVER_REPORT", "media_type": "application/json", "sha256": "sha256:000000000000000000000000000000000000000000000000000000000000000a", "size_bytes": 110, "row_count": null, "sheet_count": null},
+    {"path": "standard_package.xlsx", "role": "STANDARD_WORKBOOK", "media_type": "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet", "sha256": "sha256:000000000000000000000000000000000000000000000000000000000000000b", "size_bytes": 111, "row_count": null, "sheet_count": 4},
+    {"path": "validation_report.json", "role": "VALIDATION_REPORT", "media_type": "application/json", "sha256": "sha256:000000000000000000000000000000000000000000000000000000000000000c", "size_bytes": 112, "row_count": null, "sheet_count": null}
+  ],
+  "deferred_artifacts": [
+    {"path": "benchmark_report.json", "status": "NOT_APPLICABLE_STANDARD_EXPORT"},
+    {"path": "change_report.json", "status": "DEFERRED_P4_DYNAMIC_REPLAN"}
+  ],
+  "state_boundary": {"schedule_version": "PUBLISHED", "publication": "COMPLETED", "export_job_at_materialization": "EXPORTING", "external_transfer": "NOT_STARTED", "production": "NOT_AUTHORIZED"},
+  "synthetic": true,
+  "synthetic_provenance": {"scenario_id": "SIM-P2-GOLDEN-JSSP-001", "scenario_version": "1.0.0", "seed": 20260824, "factory_profile_id": "PROFILE-P2-XS-001", "profile_version": "1.0.0", "generator_id": "PLANTNEXUS-P2-CORRECTNESS-ASSEMBLER", "generator_version": "1.0.0"}
+}

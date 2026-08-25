@@ -223,3 +223,5 @@ Decision service实例同样固定单一repository plane。Simulation只允许De
 Publication service实例固定单一plane；成功只允许Development/Test/Benchmark中的`SIMULATION`、synthetic provenance、explicit test/simulation policy、`production_binding=false`和`SIMULATION_INTERNAL`。Schedule/Audit/PublicationResult/current rows均由既有plane key隔离；mixed plane、unknown target或Production success carrier无法进入业务查询/事务。Production只形成`WORKSPACE_INTERNAL` sanitized denial audit。
 
 没有新增env var、Secret、database、storage、network、publisher、service或deployment。临时SQLite transaction/concurrency是development evidence，不证明PostgreSQL distributed CAS、Production backup/channel或external exactly-once。
+
+P3-09只使用显式`SIMULATION`与DEVELOPMENT/TEST/BENCHMARK、target=`SIMULATION_INTERNAL`；Production/auth binding在lookup前拒绝。Storage root由composition注入且必须为已存在目录，carrier/audit/manifest不保存absolute path。没有新增Secret/env var/network/storage service；临时filesystem/SQLite evidence不定义Production topology、retention或capacity。

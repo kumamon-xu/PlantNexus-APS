@@ -19,7 +19,7 @@ from typing import Never, cast
 from app.domain.types import parse_utc_instant
 from app.domain.workspace_contracts import (
     CANONICALIZATION_VERSION,
-    SCHEMA_SET_VERSION,
+    WORKSPACE_V1_SCHEMA_SET_VERSION as SCHEMA_SET_VERSION,
     canonical_workspace_bytes,
     comparison_fingerprint,
     require_workspace_document,

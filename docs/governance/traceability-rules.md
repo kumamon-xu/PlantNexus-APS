@@ -317,3 +317,5 @@ Task从provider-verified P3-07 closure `a53c0f7d4a0f0bcd4e02bfeaaa0f6fc4b93157b9
 Implementation artifact必须绑定exact SHA/Task/Diff base，publication report为8/8、3 success、2 supersession、1 replay、1 conflict、2 denial、4无业务state拒绝、1 rollback、1 concurrent winner、Solver=0、`issues=[]`，Task report为八Impact rows/full checks/0 issues。任何provider、artifact SHA、Task/base、checks、issues或禁止范围不一致都阻断closure。
 
 Implementation `e90475f462b365d2e031445ad28a02ea0b89d2f5` / run `32798679852` / artifact `9545782727`已满足上述规则并复验27/27 JSON与51 committed/0 working paths；closure自身继续接受相同exact-provider规则核验。
+
+TASK-P3-09链必须为`REQ-006/007/009 + NFR-DET/TRC/ISO/REL/SEC/OBS/HUM + ENG-ARCH/ERR/VER → TASK-P3-09 → export v2 Schema/domain/application/repository/exporter/worker → TEST-EXPORT-JOB-001/OUTPUT/IDEMPOTENCY/AUDIT-TRAIL-001/SIM-ISOLATION → p3-export-job-report.v1 + Task report → exact implementation/closure provider artifacts`。Machine与Task report必须同SHA；v1 hashes、Diff base、13 Impact rows、issues为空及P3-10/P4/Production absence均须下载复核。

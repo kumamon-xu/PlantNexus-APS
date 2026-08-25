@@ -17,7 +17,7 @@ last_reviewed: 2026-08-25
 
 P2-14 audit implementation `65c556789f176ad9de55523d6420737bb60f933f`的GitHub push run `32677741558` / required `validate` job `97288829348` / artifact `9503227240`成功，artifact digest=`sha256:fbb76f0ab44d3bdcff2d31e70f9698af84e10e48ee57ae611eef8529a288240e`；evidence-only closure `80c403384d1e171258cf874d26605d0d22aff1b2`的run `32678248961` / job `97290201234` / artifact `9503372291`也成功，digest=`sha256:673412905b7420660d1e9f07755fcda6291f85f8f2bd926b4bf31a0a6bd1bd0c`。下载检查的两份artifact均含20份可解析JSON，Task/SHA/Impact Rules/checks/issues与对应提交一致且0 issue。规划启动时`main=origin/main=80c403384d1e171258cf874d26605d0d22aff1b2`、ahead/behind=`0/0`且working tree clean，因此transition前提一致。
 
-P2 Milestone现为`completed`，P3 Milestone为`active`。`TASK-P3-00`～`TASK-P3-08`均已有exact implementation provider并在各自evidence-only closure标为`done`；当前没有已授权的后续业务Task，P3-09～15保持`planned`且不会自动启动。
+P2 Milestone现为`completed`，P3 Milestone为`active`。`TASK-P3-00`～`TASK-P3-08`均已有exact implementation provider并在各自evidence-only closure标为`done`；用户现已单独授权`TASK-P3-09`，该Task从provider-verified P3-08 closure冻结新Diff base并进入`in_progress`。P3-10～15保持`planned`且不会自动启动。
 
 ## 当前目标
 
@@ -107,16 +107,23 @@ Corrective implementation `9aed9d8c5dd86a9a9b972f8e9c5491fd6d2dbaa6`的run/job/a
 
 Implementation `e90475f462b365d2e031445ad28a02ea0b89d2f5`的run/job/artifact=`32798679852`/`97655144411`/`9545782727`精确success；下载的27/27 JSON全部PASS，publication报告为8/8且Task报告为51 committed/0 working paths、8 rows、19 checks、0 issues。因此本evidence-only closure把TASK-P3-08标为`done`；closure自身仍须exact provider核验。OPEN-002/010继续`OPEN`；ExportJob/package、external MES/ERP、HTTP/UI、P3-09+、P4与Production authority/readiness均未由该Task形成。
 
+## TASK-P3-09 启动边界
+
+用户于2026-08-25单独授权TASK-P3-09。启动复核确认TASK-P3-03/04/08均`done`；P3-08 evidence-only closure `b9c0b1694448a4ec348b0b02107926f6213560c9`的required run/job/artifact=`32799416669`/`97657208631`/`9546020704`精确success，artifact digest=`sha256:216a5b4aca40dc9ba322e9ca617aed0ae5e9e29506157fbc07db0fdf3ebf062d`且未过期。下载复核27/27 JSON全部可解析，publication与Task report分别为8/8及51 committed/0 working paths、8 Impact rows、19 checks、0 issues。启动时`main=origin/main=b9c0b1694448a4ec348b0b02107926f6213560c9`、ahead/behind=`0/0`且working tree clean，故该完整SHA冻结为不可变Diff base。
+
+Schema预检发现既有`export-job.v1`要求P3 profile却只能引用冻结的P2-only `export-manifest.v1`，后者无法表达XLSX及ScheduleVersion/publication/ExportJob/audit lineage。Agent按Task卡停止且零修改；用户随后明确批准处理该缺口。当前只允许additive `2.7.0`新增非互换`export-manifest.v2`/`export-job.v2`并逐字保留全部v1 bytes，随后实现PUBLISHED-only、`SIMULATION_INTERNAL` ExportJob、标准JSON/CSV/XLSX、manifest-last、lease/heartbeat/attempt/retry/cancel/crash recovery、append-only audit与Publish零调用。Migration、dependency pin/lock、P2 package bytes、publication service、external network、HTTP/UI、P4和Production authority/readiness均禁止。
+
 ## 当前允许
 
 - 读取并复核P3-01～08合同、Schema、persistence/lifecycle/read/command/decision/publication provider evidence和P2 frozen artifact；
-- 本次只提交TASK-P3-08 evidence-only closure并核验其exact provider，不再修改业务实现；
-- 后续P3-09～15只有在逐Task明确授权后，才可按各卡允许范围和新的不可变Diff base实施。
+- 按TASK-P3-09冻结allow-list发布additive P3 export carrier、实现business ExportJob/standard package、限定tests/machine CI和命中文档；
+- 保留P2/v1 Schema/package bytes、P3-08 publication state/current/audit及全部历史provider evidence；
+- 后续P3-10～15只有在逐Task明确授权后，才可按各卡允许范围和新的不可变Diff base实施。
 
 ## 当前禁止
 
-- 在没有新Task授权时修改业务代码、migration、Schema、dependency/lock、P2 fixture/benchmark bytes、`frontend/**`、API/Worker或deployment；
-- 执行P3-09～15，或让其中任何Task自动进入`ready/in_progress`；
+- 修改migration、dependency pin/lock、P2/v1 Schema/package/fixture/benchmark bytes、publication state service、`frontend/**`、API、external adapter/network或deployment；
+- 执行P3-10～15，或让其中任何Task自动进入`ready/in_progress`；
 - 直接更新PUBLISHED、绕过server/formal Validator、允许DRAFT/REJECTED发布或产生非幂等export/publish；
 - 实现P4的ExecutionEvent、ReplanRequest、OBJ-002 Stability、freeze window、ChangeReport或Execution Simulator；
 - 创建P4详细Task、进入P4，或声明Production readiness、approval authority、external publish/deployment已形成；
@@ -317,3 +324,7 @@ Implementation `dc2e5cd41080603606090ebfc4bc6162941c5f7f`的GitHub push run [`32
 独立验收已在audit execution head `c6e57566871faefb2582e1c33218e1ba22b44785`完成：locked sync、Ruff、Pyright、476项全仓测试、Compose、build与写回前full/diff治理均PASS；两次P2 Gate为11/11、14次correctness场景、6次XS/S/M profile、108次Benchmark Validator、4类exact rejection且0 blocking gap。为完整满足总规§76，另对七个correctness场景执行两轮逐场景measurement capture，14/14均保存model/build/first-feasible/objective/bound/gap/memory与Validator PASS。三份独立XS/S/M报告均8/8且0 warning。
 
 [P2 Exit audit report](milestones/P2-exit-gate-audit-report.md)与[machine manifest](milestones/P2-exit-gate-evidence-manifest.json)据此给出overall=`READY`、`blocking_gaps=[]`。Audit implementation `65c556789f176ad9de55523d6420737bb60f933f`的exact push run `32677741558`、required `validate` job `97288829348`和artifact `9503227240`均success；artifact内20/20 JSON、30 paths/3 rows/19 checks/0 issues及Gate 11/11全部绑定该SHA，因此TASK-P2-14=`done`。Current phase仍为P2、Milestone仍为`active`（Gate ready / awaiting user decision），P3保持`NOT_STARTED`，必须等待用户另行明确批准P2→P3。
+
+## TASK-P3-09 implementation candidate
+
+扩卡后的实现已形成additive set `2.7.0`、`export-manifest.v2`/`export-job.v2`、durable internal Simulation ExportJob、12-payload JSON/CSV/XLSX标准包、manifest-last原子writer、lease/heartbeat/retry/cancel/expired recovery、append-only audit与thin worker。全仓首轮581 PASS/12同源v1常量失败已纠正；最终16项focused、594项full、Ruff、全量Pyright、locked sync、27份machine reports、P2 Gate、XS benchmark、Compose、build、治理与冻结/禁止范围均PASS，`p3-export-job-report.v1`为8/8且`issues=[]`。Exact implementation provider仍待push后核验，故Task保持`in_progress`；P3-10、P4、external与Production未启动。

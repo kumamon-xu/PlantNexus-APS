@@ -318,6 +318,35 @@ _REQUIRED_TOP_LEVEL_FIELDS: Mapping[str, frozenset[str]] = {
             "job_fingerprint",
         }
     ),
+    "export-job.v2": frozenset(
+        {
+            "export_job_version",
+            "schema_set_version",
+            "canonicalization_version",
+            "export_job_id",
+            "state",
+            "schedule_version",
+            "data_plane",
+            "environment",
+            "synthetic",
+            "synthetic_provenance",
+            "target",
+            "package_profile",
+            "idempotency_reference",
+            "attempt",
+            "lease_reference",
+            "heartbeat_at_utc",
+            "artifact_manifest",
+            "error",
+            "created_at_utc",
+            "updated_at_utc",
+            "started_at_utc",
+            "finished_at_utc",
+            "cancelled_at_utc",
+            "latest_audit_event_id",
+            "job_fingerprint",
+        }
+    ),
 }
 
 
@@ -391,7 +420,11 @@ def _require_top_level_shape(
             field="environment",
             message="Simulation carrier environment is invalid",
         )
-    if expected_version in {"publication-result.v1", "export-job.v1"} and (
+    if expected_version in {
+        "publication-result.v1",
+        "export-job.v1",
+        "export-job.v2",
+    } and (
         document.get("target") != "SIMULATION_INTERNAL" or synthetic is not True
     ):
         reject(
@@ -486,7 +519,7 @@ def load_document(
     value: object,
     digest: object,
     *,
-    expected_version: str,
+    expected_version: str | tuple[str, ...],
     data_plane: WorkspaceDataPlane,
 ) -> dict[str, object]:
     if not isinstance(value, (bytes, bytearray, memoryview)):
@@ -517,9 +550,15 @@ def load_document(
             message="stored document failed integrity verification",
         )
     try:
+        allowed_versions = (
+            (expected_version,) if isinstance(expected_version, str) else expected_version
+        )
+        actual_version = require_workspace_document(cast(dict[str, object], parsed))
+        if actual_version not in allowed_versions:
+            raise WorkspaceContractError("$", "stored document version is not allowed")
         loaded, _ = canonical_document(
             cast(dict[str, object], parsed),
-            expected_version=expected_version,
+            expected_version=actual_version,
             data_plane=data_plane,
         )
     except WorkspacePersistenceError:

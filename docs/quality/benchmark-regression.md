@@ -143,3 +143,5 @@ Manifest明确`benchmark_report.json=DEFERRED_P2_12`且文件不存在，禁止�
 ## TASK-P3-02 benchmark impact
 
 本Task只在machine report记录七份Schema/七份sample的exact byte size与SHA、34份P2 frozen artifact count以及negative count；不新增timing、throughput、Gantt scale、DB/API/worker或Production threshold。P2 XS/S/M baseline与所有KPI/solver timings逐字保留，OPEN-011/012不受影响。
+
+P3-09 machine report记录2 Schema/2 sample、12 payload、4 XLSX sheet、五state/六pair与focused count；单个synthetic package bytes/rows/sheets只用于development correctness，不新增latency/memory/throughput threshold。P2 XS/S/M baseline不改，OPEN-012继续OPEN，禁止外推Production package scale或worker SLA。

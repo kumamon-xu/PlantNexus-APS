@@ -10,9 +10,12 @@ from .contracts import (
     new_job,
 )
 from .idempotency import InMemoryIdempotencyStore
+from .export_job import ExportWorkerResult, InternalExportJobWorker
 
 __all__ = [
     "InMemoryIdempotencyStore",
+    "ExportWorkerResult",
+    "InternalExportJobWorker",
     "JobRecord",
     "JobStatus",
     "claim_job",

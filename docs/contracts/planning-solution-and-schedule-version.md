@@ -132,3 +132,5 @@ Decision AuditEvent复制既有完整lineage并绑定READY source与同ID/conten
 Publication不创建新PlanningSolution、ValidationReport、KPI或ScheduleVersion identity，也不调用Solver/Validator。新current candidate只把同一APPROVED carrier改为PUBLISHED并增加冻结publication evidence/`view,export` actions；如已有current，则旧PUBLISHED只改为SUPERSEDED、写入指向新PUBLISHED reference的`superseded_by`并收窄为`view`。两者的revision、content/content fingerprint、decision、parent/source kind、validation、lineage和created facts逐字不变。
 
 新publish、旧supersede、PublicationResult、current reference CAS与success AuditEvent必须同事务，任一失败全部回滚。历史exact replay从append-only audit重建原logical result，即使新Version后来也被supersede也不修改历史。DRAFT/READY/REJECTED、double publish、stale current一律拒绝；ExportJob、文件包、HTTP/UI、external/Production side effect未形成。
+
+P3-09只接受当前state=`PUBLISHED`且content fingerprint同时匹配ExportRequest、PublicationResult与ExportJob的Version。Standard package再次校验P2 PlanningSolution assignments和lineage fingerprint；Job重试/失败/取消绝不修改ScheduleVersion content、publication或current reference。SUPERSEDED不是新export source。

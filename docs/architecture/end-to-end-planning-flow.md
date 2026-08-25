@@ -117,3 +117,5 @@ TASK-P3-01仅形成文档和ADR-0012；Schema/persistence/application/API/UI节�
 当前新增控制段为：`PUBLISH command + server publish context → authorization before audit/source/current lookup → exact APPROVED/content/current preconditions → one transaction(new APPROVED→PUBLISHED CAS + optional old PUBLISHED→SUPERSEDED CAS + PUBLICATION audit + PublicationResult + current CAS) → stable logical result`。Same request从历史audit重建result；different request/double publish/stale current冲突；并发只有一个current winner；任一持久化失败回滚全部state。
 
 该段不改Schedule content或上游PlanningRun/Snapshot/Problem/Solution/Validation/KPI/SolverReport，不调用Solver/Validator，也不创建ExportJob/文件包/HTTP/UI/external side effect。Target严格是`SIMULATION_INTERNAL`，Production pre-lookup default-deny；P3-09、P4与Production未形成。
+
+P3-09在publication之后增加独立支路：authorized request→durable CREATED+audit→worker claim/lease→冻结P2 payload与PUBLISHED/publication lineage校验→deterministic JSON/CSV/XLSX→manifest-last atomic materialization→EXPORTED+audit。任何package/I/O/transaction失败进入FAILED并显式retry；全程不反向调用Publish、不改PlanningRun/ScheduleVersion，也无external transfer。

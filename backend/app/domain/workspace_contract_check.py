@@ -17,7 +17,7 @@ from referencing import Registry, Resource
 import yaml
 
 from app.domain.workspace_contracts import (
-    SCHEMA_SET_VERSION,
+    WORKSPACE_V1_SCHEMA_SET_VERSION as SCHEMA_SET_VERSION,
     WorkspaceContractError,
     comparison_fingerprint,
     export_job_fingerprint,
@@ -418,8 +418,8 @@ def _dependency_and_boundary_check(root: Path) -> dict[str, object]:
         raise ValueError("runtime dependency set changed")
     if development != _EXPECTED_DEV_DEPENDENCIES:
         raise ValueError("development dependency set changed")
-    if project["tool"]["plantnexus-aps"]["versions"]["schema"] != SCHEMA_SET_VERSION:
-        raise ValueError("pyproject schema metadata did not advance to 2.6.0")
+    if project["tool"]["plantnexus-aps"]["versions"]["schema"] != "2.7.0":
+        raise ValueError("pyproject current schema metadata is not 2.7.0")
     lock_sha256 = _sha256(root / "uv.lock")
     if lock_sha256 != _UV_LOCK_SHA256:
         raise ValueError("uv.lock changed in a dependency-neutral schema release")

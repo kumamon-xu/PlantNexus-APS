@@ -111,3 +111,5 @@ ApprovalDecisionService只读取ScheduleVersion已冻结的PlanningRun lineage�
 ## TASK-P3-08 zero-transition review
 
 PublicationService只复制ScheduleVersion已冻结的PlanningRun/Snapshot/Problem/Solution/Validation/KPI/SolverReport lineage进入publication audit；没有PlanningRun repository、Solver、Validator或worker port。APPROVED→PUBLISHED与PUBLISHED→SUPERSEDED均属于ScheduleVersion，不能重开、推进或重解释PlanningRun；其16 states、31 pairs、terminal集合与machine bytes保持不变。
+
+Export worker只消费冻结P2 package和PUBLISHED ScheduleVersion lineage，不读取或推进PlanningRun，不调用Solver/Validator，也不新增PlanningRun pair。Package内PlanningRun ID与P2 payload hash必须原样保留；Export retry只增加Job attempt。

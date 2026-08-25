@@ -279,3 +279,5 @@ Exact replay即使当前Version将来继续到PUBLISHED，也返回原decision e
 Publication request fingerprint绑定PUBLISH、APPROVED source/content、plane/environment/synthetic provenance、internal target、previous-current reference和sanitized reason；raw key只形成hashed key reference、Publication ID与Audit ID。Success event/PublicationResult共同保存APPROVED/PUBLISHED、optional previous PUBLISHED/SUPERSEDED、actor/policy/capability、lineage、correlation/code commit与published UTC；新/旧Schedule metadata反向绑定相同audit/publication reference。
 
 历史replay从原success audit重建logical PublicationResult，即使该new Version后来成为SUPERSEDED也不改写原时间、event或current。Old content/decision/publication evidence与全部P2 lineage保持不变；DENIED无resource reference。Schema/canonicalization、P2/P3历史provider与失败记录不重写。
+
+Set `2.7.0`只新增manifest/job v2；workspace v1 carriers继续`2.6.0`，P2 manifest v1继续`2.5.0`。P3 package identity由排除`package_id`的canonical manifest派生，manifest fingerprint覆盖exact bytes，storage reference覆盖logical target/package而不泄露absolute path。Manifest重复保存P2 package ID/fingerprint/lineage/counts及ScheduleVersion/publication/attempt/audit lineage；retry产生独立attempt artifact且不改写旧attempt。

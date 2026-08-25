@@ -97,3 +97,5 @@ TASK-P3-01以当时下一个未使用编号接受ADR-0012，决定command-only/c
 本Task直接落实ADR-0007的immutable Version/provenance、ADR-0009的state/result/current/audit同事务边界及ADR-0012的APPROVED-only internal Publish、Publish/Export分离、idempotent replay、current/supersession与Production default-deny。实现只组合既有Schema、state pair与repository ports；没有新增state/pair、Schema/migration/dependency、outbox/external target或topology，因此不需新ADR。
 
 若未来允许mutable PUBLISHED/SUPERSEDED content、rollback/delete publication history、cross-plane current、automatic Export/external delivery、跨事务成功或Production target fallback，必须停止并新建/supersede ADR与authority；不得改写accepted历史。
+
+TASK-P3-09落实ADR-0002/0007/0009与accepted ADR-0012：internal-only、deterministic canonical artifacts、显式state/idempotency/audit和Version authority。Additive v2 carrier是已批准的兼容性修复，不改变storage topology、external adapter或state machine，故不新建ADR。若引入cloud/object storage、Celery topology/outbox、external MES/ERP、automatic retry policy、P4 ChangeReport或Production target，必须先停止并创建/取代ADR。

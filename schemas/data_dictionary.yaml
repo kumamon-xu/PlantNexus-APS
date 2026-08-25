@@ -1,5 +1,5 @@
-schema_set_version: 2.6.0
-status: p3_workspace_machine_contracts
+schema_set_version: 2.7.0
+status: p3_standard_export_contracts
 spec_version: 0.3.0
 rules:
   unknown_root_fields: reject
@@ -12,7 +12,7 @@ rules:
   unit_conversion_registry: schemas/rules/unit-conversion-registry.v1.yaml
   data_quality_rule_version: data-quality-rules.v1
   error_registry: schemas/rules/error-code-registry.v2.yaml
-  schema_set_compatibility: additive_2_6_preserves_all_prior_schema_bytes_urns_and_document_versions_while_adding_p3_workspace_carriers
+  schema_set_compatibility: additive_2_7_preserves_all_prior_schema_bytes_urns_and_document_versions_while_adding_p3_standard_export_manifest_and_job_v2
 schemas:
   canonical-records.v1:
     path: schemas/json/canonical-records.v1.schema.json
@@ -169,6 +169,18 @@ schemas:
     state_boundary: no ScheduleVersion, ExportJob, approval, publication, or external transfer
     identity: content-derived package_id plus per-file SHA-256, bytes, and CSV row counts
     production_open: [OPEN-002, OPEN-006, OPEN-010, OPEN-015]
+  export-manifest.v2:
+    path: schemas/json/export-manifest.v2.schema.json
+    schema_set_version: 2.7.0
+    package_profile: p3-standard-export.v1
+    source_state: PUBLISHED ScheduleVersion with completed internal Simulation publication
+    required_payloads: [schedule_version.json, planning_solution.json, schedule_operations.csv, order_summary.csv, resource_load.csv, kpi.json, validation_report.json, solver_report.json, import_quality_report.json, scenario_manifest.json, publication_result.json, standard_package.xlsx]
+    deferred_payloads: [benchmark_report.json, change_report.json]
+    identity: content-derived package_id plus per-file SHA-256, bytes, CSV rows, and XLSX sheet count
+    xlsx_safety: deterministic ZIP; no formula, macro, external link, or active content
+    compatibility: additive and non-interchangeable with export-manifest.v1; all P2 bytes remain frozen
+    p3_boundary: Simulation-internal package only; no external transfer, API, UI, P4 ChangeReport, or Production readiness
+    production_open: [OPEN-002, OPEN-010, OPEN-012, OPEN-015]
   schedule-version.v1:
     path: schemas/json/schedule-version.schema.json
     schema_set_version: 2.6.0
@@ -231,6 +243,16 @@ schemas:
     error_namespace: EXPORT_FAILED remains workspace-control.v1 and is not a global product error code
     p3_boundary: no repository, job runner, package write, or external transfer behavior
     production_open: [OPEN-002, OPEN-010, OPEN-015]
+  export-job.v2:
+    path: schemas/json/export-job.v2.schema.json
+    schema_set_version: 2.7.0
+    state_authority: state-machines.v1
+    source_state: PUBLISHED ScheduleVersion only
+    target: SIMULATION_INTERNAL only
+    artifact_manifest: export-manifest.v2 only
+    compatibility: additive and non-interchangeable with export-job.v1; no state pair changed
+    p3_boundary: internal package/job only; API/UI remain TASK-P3-10 and Production/external transfer remain forbidden
+    production_open: [OPEN-002, OPEN-010, OPEN-012, OPEN-015]
   error.v1:
     path: schemas/json/error.schema.json
     p0_boundary: category and envelope only; concrete code registry belongs to TASK-P0-04

@@ -1,0 +1,115 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "urn:plantnexus:aps:schema:export-manifest:v2",
+  "title": "PlantNexus APS P3 Standard Export Manifest v2",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "package_id", "export_manifest_version", "schema_set_version", "package_profile",
+    "canonicalization_version", "csv_dialect_version", "xlsx_profile_version",
+    "generated_at_utc", "publishable", "target", "schedule_version",
+    "publication", "export_job", "audit_lineage", "p2_package", "p2_lineage",
+    "entity_counts", "file_count", "files", "deferred_artifacts",
+    "state_boundary", "synthetic", "synthetic_provenance"
+  ],
+  "properties": {
+    "package_id": {"type": "string", "pattern": "^export-package-[0-9a-f]{64}$"},
+    "export_manifest_version": {"const": "export-manifest.v2"},
+    "schema_set_version": {"const": "2.7.0"},
+    "package_profile": {"const": "p3-standard-export.v1"},
+    "canonicalization_version": {"const": "canonical-json.v1"},
+    "csv_dialect_version": {"const": "rfc4180-lf.v1"},
+    "xlsx_profile_version": {"const": "xlsx-safe-deterministic.v1"},
+    "generated_at_utc": {"$ref": "#/$defs/utcInstant"},
+    "publishable": {"const": false},
+    "target": {"const": "SIMULATION_INTERNAL"},
+    "schedule_version": {"$ref": "#/$defs/publishedVersion"},
+    "publication": {"$ref": "#/$defs/publicationReference"},
+    "export_job": {"$ref": "#/$defs/exportJobReference"},
+    "audit_lineage": {"$ref": "#/$defs/auditLineage"},
+    "p2_package": {"$ref": "#/$defs/p2PackageReference"},
+    "p2_lineage": {"type": "object"},
+    "entity_counts": {"$ref": "#/$defs/entityCounts"},
+    "file_count": {"const": 12},
+    "files": {"type": "array", "minItems": 12, "maxItems": 12, "items": {"$ref": "#/$defs/fileRecord"}},
+    "deferred_artifacts": {
+      "type": "array", "minItems": 2, "maxItems": 2,
+      "prefixItems": [
+        {"type": "object", "additionalProperties": false, "required": ["path", "status"], "properties": {"path": {"const": "benchmark_report.json"}, "status": {"const": "NOT_APPLICABLE_STANDARD_EXPORT"}}},
+        {"type": "object", "additionalProperties": false, "required": ["path", "status"], "properties": {"path": {"const": "change_report.json"}, "status": {"const": "DEFERRED_P4_DYNAMIC_REPLAN"}}}
+      ],
+      "items": false
+    },
+    "state_boundary": {
+      "type": "object", "additionalProperties": false,
+      "required": ["schedule_version", "publication", "export_job_at_materialization", "external_transfer", "production"],
+      "properties": {
+        "schedule_version": {"const": "PUBLISHED"},
+        "publication": {"const": "COMPLETED"},
+        "export_job_at_materialization": {"const": "EXPORTING"},
+        "external_transfer": {"const": "NOT_STARTED"},
+        "production": {"const": "NOT_AUTHORIZED"}
+      }
+    },
+    "synthetic": {"const": true},
+    "synthetic_provenance": {"$ref": "urn:plantnexus:aps:schema:schedule-version:v1#/$defs/syntheticProvenance"}
+  },
+  "$defs": {
+    "canonicalId": {"type": "string", "minLength": 1, "maxLength": 256, "pattern": "^[^\\s\\u0000-\\u001F\\u007F]+$"},
+    "fingerprint": {"type": "string", "pattern": "^sha256:[0-9a-f]{64}$"},
+    "utcInstant": {"type": "string", "format": "date-time", "pattern": "Z$"},
+    "publishedVersion": {
+      "type": "object", "additionalProperties": false,
+      "required": ["schedule_version_id", "state", "content_fingerprint"],
+      "properties": {"schedule_version_id": {"$ref": "#/$defs/canonicalId"}, "state": {"const": "PUBLISHED"}, "content_fingerprint": {"$ref": "#/$defs/fingerprint"}}
+    },
+    "publicationReference": {
+      "type": "object", "additionalProperties": false,
+      "required": ["publication_result_version", "publication_id", "result_fingerprint", "published_at_utc", "audit_event_id"],
+      "properties": {
+        "publication_result_version": {"const": "publication-result.v1"}, "publication_id": {"$ref": "#/$defs/canonicalId"},
+        "result_fingerprint": {"$ref": "#/$defs/fingerprint"}, "published_at_utc": {"$ref": "#/$defs/utcInstant"}, "audit_event_id": {"$ref": "#/$defs/canonicalId"}
+      }
+    },
+    "exportJobReference": {
+      "type": "object", "additionalProperties": false,
+      "required": ["export_job_version", "export_job_id", "attempt", "state_at_materialization"],
+      "properties": {"export_job_version": {"const": "export-job.v2"}, "export_job_id": {"$ref": "#/$defs/canonicalId"}, "attempt": {"type": "integer", "minimum": 1}, "state_at_materialization": {"const": "EXPORTING"}}
+    },
+    "auditLineage": {
+      "type": "object", "additionalProperties": false,
+      "required": ["create_audit_event_id", "attempt_audit_event_id", "completion_audit_event_id", "correlation_id"],
+      "properties": {
+        "create_audit_event_id": {"$ref": "#/$defs/canonicalId"}, "attempt_audit_event_id": {"$ref": "#/$defs/canonicalId"},
+        "completion_audit_event_id": {"$ref": "#/$defs/canonicalId"}, "correlation_id": {"$ref": "#/$defs/canonicalId"}
+      }
+    },
+    "p2PackageReference": {
+      "type": "object", "additionalProperties": false,
+      "required": ["export_manifest_version", "package_profile", "package_id", "manifest_fingerprint"],
+      "properties": {
+        "export_manifest_version": {"const": "export-manifest.v1"}, "package_profile": {"const": "p2-internal-export.v1"},
+        "package_id": {"type": "string", "pattern": "^export-package-[0-9a-f]{64}$"}, "manifest_fingerprint": {"$ref": "#/$defs/fingerprint"}
+      }
+    },
+    "entityCounts": {
+      "type": "object", "additionalProperties": false,
+      "required": ["snapshot_operation_count", "problem_operation_count", "assignment_count", "demand_count", "resource_count"],
+      "properties": {
+        "snapshot_operation_count": {"type": "integer", "minimum": 0}, "problem_operation_count": {"type": "integer", "minimum": 0},
+        "assignment_count": {"type": "integer", "minimum": 0}, "demand_count": {"type": "integer", "minimum": 0}, "resource_count": {"type": "integer", "minimum": 0}
+      }
+    },
+    "fileRecord": {
+      "type": "object", "additionalProperties": false,
+      "required": ["path", "role", "media_type", "sha256", "size_bytes", "row_count", "sheet_count"],
+      "properties": {
+        "path": {"enum": ["import_quality_report.json", "kpi.json", "order_summary.csv", "planning_solution.json", "publication_result.json", "resource_load.csv", "scenario_manifest.json", "schedule_operations.csv", "schedule_version.json", "solver_report.json", "standard_package.xlsx", "validation_report.json"]},
+        "role": {"enum": ["IMPORT_QUALITY_REPORT", "KPI", "ORDER_SUMMARY", "VALIDATED_PLANNING_SOLUTION", "PUBLICATION_RESULT", "RESOURCE_LOAD", "P2_CORRECTNESS_SCENARIO_MANIFEST", "SCHEDULE_OPERATIONS", "PUBLISHED_SCHEDULE_VERSION", "SOLVER_REPORT", "STANDARD_WORKBOOK", "VALIDATION_REPORT"]},
+        "media_type": {"enum": ["application/json", "text/csv; charset=utf-8", "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet"]},
+        "sha256": {"$ref": "#/$defs/fingerprint"}, "size_bytes": {"type": "integer", "minimum": 0},
+        "row_count": {"type": ["integer", "null"], "minimum": 0}, "sheet_count": {"type": ["integer", "null"], "minimum": 0}
+      }
+    }
+  }
+}

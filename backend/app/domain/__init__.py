@@ -117,6 +117,12 @@ from .publication import (
     publication_identity,
     require_publication_authorization,
 )
+from .export_job import (
+    ExportJobContext,
+    ExportJobError,
+    ExportJobFailure,
+    ExportJobRequest,
+)
 
 __all__ = [
     "APPROVAL_DECISION_SERVICE_VERSION",
@@ -137,6 +143,10 @@ __all__ = [
     "CapabilityStatus",
     "DurationSeconds",
     "ERROR_CATEGORY_BY_CODE",
+    "ExportJobContext",
+    "ExportJobError",
+    "ExportJobFailure",
+    "ExportJobRequest",
     "ImportPackageDocumentV2",
     "OperationInstanceDocument",
     "OperationPrecedenceEdgeDocument",

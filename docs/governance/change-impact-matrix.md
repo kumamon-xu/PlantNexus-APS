@@ -400,3 +400,5 @@ Corrective implementation artifact `9544333991`已绑定`9aed9d8c5dd86a9a9b972f8
 Schema/sample/rules、migration/infrastructure repository semantics、dependency/lock、PlanningProblem/Snapshot/Solver/Validator/Backend/Strategy/Reporting、API/Frontend、Exporter/ExportJob与P4必须零差异；CI不改job名称/permissions/Secret/service/deployment。Implementation artifact `9545782727`已绑定`e90475f462b365d2e031445ad28a02ea0b89d2f5`与不可变Diff base，复现51 committed/0 working paths、上述8 rows、19 checks、0 issues及禁止范围零差异；因此本evidence-only closure可把TASK-P3-08标为`done`，P3-09不自动启动。
 
 提交前本地Task report为51 working paths、上述8 rows、19 checks、0 issues；implementation provider已精确重放为51 committed/0 working且冻结禁止路径零差异。
+
+TASK-P3-09实际命中13行：`IMPACT-SCHEMA/DOMAIN/APPLICATION/STATE/EXPORT/JOBS/INFRA/DEPENDENCY/VERSION-METADATA/TESTS/PHASE/GOVERNANCE-REGISTRY/DOCS`。Diff base=`b9c0b1694448a4ec348b0b02107926f6213560c9`；migration、dependency/lock、publication service、P2/v1 bytes、API/frontend/external/P4零差异。首轮full暴露的v1 builder影响已先扩卡并仅用显式2.6常量修正；本地最终Task report为76 working paths、13 rows、19 checks、0 issues，exact provider仍pending。

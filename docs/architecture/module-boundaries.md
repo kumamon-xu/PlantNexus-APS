@@ -223,3 +223,5 @@ Application拥有atomic insert+append与CAS+append transaction；repository不�
 `app.domain.publication`只依赖domain types/workspace pure contracts，负责strict PUBLISH carrier、server context guard、deterministic identities、published/superseded/result/audit documents；不导入Infrastructure、Planning、Simulation、HTTP、Exporter或identity SDK。`app.application.publication`只声明Schedule/Audit/Publication repository与transaction ports，拥有authorization-before-lookup、historical replay、current CAS和atomicity编排；不导入SQLAlchemy adapter、Solver、Validator、API或Frontend。
 
 `publication_check`作为executable composition root装配既有repositories与临时SQLite。Repository仍只提供durability，不能授权或自动publish/export。没有新dependency、outbox、queue、worker、network、service或deployment topology。
+
+P3-09依赖方向为`domain.export_job`→ports-only`application.export_jobs`→SQLAlchemy repositories；`exporters.standard_package`只消费冻结contracts/openpyxl，`jobs.export_job`是thin composition且不注册Celery business task。Domain/application/exporter/job均不依赖publication application service、API/frontend、network/external adapter或P4。

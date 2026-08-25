@@ -169,3 +169,5 @@ RISK-001～013全部继续`MONITORED`，severity/status不降低；尤其RISK-00
 Authorization-before-lookup、APPROVED-only、immutable content、same-key replay/conflict、current CAS、single transaction/rollback、concurrent winner与generic Production denial降低authority bypass、double publish、lost-current、partial supersession和resource disclosure暴露。但证据只覆盖synthetic临时SQLite，不证明PostgreSQL distributed concurrency、network partition/exactly-once、real RBAC、external target recovery、HTTP/UI bypass、retention或Production rollback。
 
 RISK-001～013全部继续`MONITORED`，severity/status不降低；尤其RISK-007/008/011～013与OPEN-002/010保持原边界，`registry_version=1.0.0`不变。Implementation artifact `9545782727`已复验bounded controls，但不关闭Production publish/side-effect风险。
+
+TASK-P3-09以hash/manifest-last/exact replay缓解RISK-007/008的internal artifact/idempotency slice，以prelookup deny/no-secret/path和safe XLSX缓解RISK-011/013，以lease/recovery/rollback缓解RISK-012；但local filesystem/SQLite不关闭distributed race、orphan retention、external transfer或Production security/capacity风险。全部13项仍MONITORED，registry version不变。

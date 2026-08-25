@@ -13,7 +13,7 @@ from referencing import Registry, Resource
 
 from app.domain.workspace_contract_check import run_contract_checks
 from app.domain.workspace_contracts import (
-    SCHEMA_SET_VERSION,
+    WORKSPACE_V1_SCHEMA_SET_VERSION as SCHEMA_SET_VERSION,
     WorkspaceContractError,
     comparison_fingerprint,
     export_job_fingerprint,

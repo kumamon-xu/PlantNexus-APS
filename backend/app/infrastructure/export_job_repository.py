@@ -17,7 +17,10 @@ from app.domain.state_machines.export_job import (
     require_export_job_heartbeat,
     require_export_job_transition,
 )
-from app.domain.workspace_contracts import workspace_fingerprint
+from app.domain.workspace_contracts import (
+    require_workspace_document,
+    workspace_fingerprint,
+)
 from app.infrastructure.workspace_persistence import (
     EXPORT_JOBS,
     SCHEDULE_VERSIONS,
@@ -72,7 +75,7 @@ class SqlAlchemyExportJobRepository:
             reject(
                 PersistenceFailure.DATA_PLANE_MISMATCH,
                 field="data_plane",
-                message="export-job.v1 supports internal Simulation only",
+                message="ExportJob carriers support internal Simulation only",
             )
         self._engine = engine
         self._data_plane = data_plane
@@ -122,7 +125,7 @@ class SqlAlchemyExportJobRepository:
         document = load_document(
             row["document_json"],
             row["document_sha256"],
-            expected_version="export-job.v1",
+            expected_version=("export-job.v1", "export-job.v2"),
             data_plane=self._data_plane,
         )
         schedule = require_mapping(document.get("schedule_version"), "schedule_version")
@@ -182,9 +185,16 @@ class SqlAlchemyExportJobRepository:
     def _candidate(
         self, document: Mapping[str, object]
     ) -> tuple[dict[str, object], bytes, Mapping[str, object]]:
+        version = require_workspace_document(document)
+        if version not in {"export-job.v1", "export-job.v2"}:
+            reject(
+                PersistenceFailure.INVALID_DOCUMENT,
+                field="export_job_version",
+                message="unsupported ExportJob document version",
+            )
         candidate, canonical = canonical_document(
             document,
-            expected_version="export-job.v1",
+            expected_version=version,
             data_plane=self._data_plane,
         )
         for field in (
@@ -386,6 +396,7 @@ class SqlAlchemyExportJobRepository:
         observed_at_utc: datetime,
         expected_lease_reference: str | None = None,
         lease_expires_at_utc: datetime | None = None,
+        allow_expired_lease_recovery: bool = False,
     ) -> StateWriteResult:
         require_text(export_job_id, "export_job_id")
         require_text(expected_state, "expected_state")
@@ -422,7 +433,15 @@ class SqlAlchemyExportJobRepository:
             )
         self._require_identity(current, candidate)
         if expected_state == "EXPORTING":
-            if (
+            lease_is_expired_recovery = (
+                allow_expired_lease_recovery
+                and candidate.get("state") in {"EXPORT_FAILED", "CANCELLED"}
+                and expected_lease_reference is not None
+                and current.get("lease_reference") == expected_lease_reference
+                and stored.lease_expires_at_utc is not None
+                and observed >= stored.lease_expires_at_utc
+            )
+            if not lease_is_expired_recovery and (
                 not expected_lease_reference
                 or current.get("lease_reference") != expected_lease_reference
                 or stored.lease_expires_at_utc is None
@@ -505,6 +524,7 @@ class SqlAlchemyExportJobRepository:
         observed_at_utc: datetime,
         expected_lease_reference: str | None = None,
         lease_expires_at_utc: datetime | None = None,
+        allow_expired_lease_recovery: bool = False,
     ) -> StateWriteResult:
         try:
             with self._engine.begin() as connection:
@@ -517,6 +537,7 @@ class SqlAlchemyExportJobRepository:
                     observed_at_utc=observed_at_utc,
                     expected_lease_reference=expected_lease_reference,
                     lease_expires_at_utc=lease_expires_at_utc,
+                    allow_expired_lease_recovery=allow_expired_lease_recovery,
                 )
         except WorkspacePersistenceError:
             raise

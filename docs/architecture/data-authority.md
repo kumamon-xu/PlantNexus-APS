@@ -166,3 +166,5 @@ Simulation test policy只能对synthetic resource形成行为证据，不能成�
 Publish authority只来自server-resolved authenticated actor、`publish` capability、exact ScheduleVersion scope与explicit Simulation test policy；carrier capability、APPROVED state、UI action、repository或current reference本身均不授权。Source state/content和current reference来自同plane repositories，application拥有状态/CAS编排，database只拥有持久性权威。
 
 成功只形成`SIMULATION_INTERNAL`状态事实，不是external/Production authority。Production在resource/replay lookup前default-deny并记录不含resource existence的sanitized audit；OPEN-002/010/015继续约束真实identity、channel、责任和side effect。
+
+Export source authority由stored PUBLISHED ScheduleVersion、其content fingerprint及已有PublicationResult共同决定；client只提供precondition与raw idempotency key，role/absolute path/artifact hash不可自报。Manifest exact bytes和Job artifact reference共同成为internal package authority；filesystem directory本身不授权EXPORTED。External target与Production binding不可表示。

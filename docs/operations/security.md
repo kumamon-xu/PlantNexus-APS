@@ -85,3 +85,5 @@ Actor必须是`actor:<stable-ref>`且不能含邮箱显示身份；reason拒绝c
 PUBLISH先验证strict carrier与server context，再按authenticated、publish capability、exact Version scope、Simulation test policy与Production binding授权；未授权不得读取success audit、ScheduleVersion或current reference。Production只能追加无source/lineage/state的generic `WORKSPACE_INTERNAL` denial，same denied request不重复event。Raw key只存hash reference，reason/actor/adapter error沿用credential与resource-existence清洗。
 
 Current/supersession precondition由server repository事实决定，客户端payload只能作为CAS expectation，不能授权或覆盖。没有authentication provider、RBAC/SSO、external publisher、rate limit、CSRF/CSP或Production threat-model closure；OPEN-002/010保持OPEN。
+
+Export authorization在job/source/replay lookup前检查actor/authenticated/`export` capability/Schedule或Job scope/policy与Production binding；raw idempotency key只保留SHA-256 reference。Package防护包含canonical hashes、path allow-list、XLSX formula/macro/external-link拒绝、same-parent temp及escape check；carrier不含Secret、SQL、stack、absolute path。真实RBAC/SSO、download authorization、malware pipeline及Production threat model仍未形成。

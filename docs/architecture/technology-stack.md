@@ -267,3 +267,5 @@ Decision service继续只复用locked Python 3.12、dataclass/Protocol、canonic
 Publication实现继续复用locked Python 3.12、dataclass/Protocol、canonical JSON/SHA-256、Schema set 2.6.0及既有SQLAlchemy/Alembic Schedule/Audit/Publication repositories；`pyproject.toml`、`uv.lock`、Schema、migration与dependency零变化。CI只在required `validate` job新增`publication_check`及既有artifact glob。
 
 没有引入publisher/MES/ERP SDK、HTTP/Frontend、Celery task、queue/outbox、storage或P4技术。SQLite timing/concurrency不定义Production topology、capacity、SLA或exactly-once。
+
+P3-09复用Python 3.12、SQLAlchemy/Alembic 0004、标准库hash/json/csv/zip/filesystem与既有locked `openpyxl==3.1.5`。`pyproject.toml`只将schema metadata升至`2.7.0`；runtime/dev dependency集合及`uv.lock` SHA-256保持冻结。CI在同一required `validate` job新增一个non-continue machine step并复用现有artifact glob；无Celery registration、service、Secret、container或deployment变化。

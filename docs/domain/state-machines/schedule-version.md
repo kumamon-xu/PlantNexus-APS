@@ -115,3 +115,5 @@ Same key/same request从原audit返回READY→terminal logical reference，不�
 本Task只执行既有`APPROVED→PUBLISHED`与必要时旧current的`PUBLISHED→SUPERSEDED`。Guard要求server-resolved publish capability/resource scope、Simulation test policy、Production default-deny、exact state/content/current reference及state revision CAS。新candidate仅改变state/publication/allowed actions，旧candidate仅改变state/superseded_by/allowed actions；两者immutable content/decision/lineage/validation/creation facts保持不变。
 
 两个CAS、PublicationResult、current reference CAS与PUBLICATION audit在同一事务，任一步失败回滚。Same request重放原APPROVED→PUBLISHED及optional supersession logical references，不执行self-pair或移动current；different request、DRAFT/READY/REJECTED、double publish与并发loser拒绝。没有新增state/pair或修改`state-machines.v1` bytes；PUBLISHED/SUPERSEDED内容仍不可变。
+
+ExportJob只引用PUBLISHED Version reference；create/attempt/retry/fail/cancel/complete均不进入ScheduleVersion repository transaction。Export成功不是Publish，Export失败不会回滚或重开PUBLISHED；P3-09没有新增ScheduleVersion state/pair。

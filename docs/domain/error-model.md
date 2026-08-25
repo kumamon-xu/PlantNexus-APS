@@ -208,3 +208,5 @@ Decision domain/application使用module-local sanitized reasons：`INVALID_REQUE
 Publication domain/application新增module-local sanitized reasons：`INVALID_REQUEST`、`AUTHORIZATION_DENIED`、`PRODUCTION_AUTHORITY_UNAVAILABLE`、`DATA_PLANE_MISMATCH`、`SOURCE_NOT_FOUND`、`PREVIOUS_CURRENT_NOT_FOUND`、`STALE_SOURCE`、`INVALID_STATE_TRANSITION`、`CURRENT_REFERENCE_CONFLICT`、`IDEMPOTENCY_CONFLICT`和`PERSISTENCE_FAILED`。Authorization/Production拒绝仍只写carrier允许的`WORKSPACE_CONTROL/AUTHORIZATION_DENIED`；adapter state/current/identity失败分别收敛到stale/current/idempotency或generic persistence，绝不外放SQL/stack/DSN。
 
 Global `error-code-registry.v2`未修改，因为这些是未暴露的module-local控制原因。P3-10未来必须按冻结HTTP error model映射且不新造Product error category；P3-08没有HTTP surface、external failure或ExportJob error。
+
+P3-09使用module-local `ExportJobFailure`与`StandardExportErrorCode`：invalid/auth/Production/source/stale/idempotency/state/lease/export/persistence及invalid/mixed/hash/XLSX/destination/I/O。Job失败carrier只使用冻结`WORKSPACE_CONTROL/EXPORT_FAILED`并保存sanitized message；授权拒绝用`AUTHORIZATION_DENIED` audit。Global product error registry、HTTP mapping和stack/SQL/path泄漏均未修改。

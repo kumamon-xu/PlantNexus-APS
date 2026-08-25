@@ -89,3 +89,5 @@ P3现为active，TASK-P3-01已形成[`planning-workspace-api.md`](planning-works
 ## TASK-P3-05 strict carrier consumer
 
 `app.domain.workspace`与`app.application.workspace_queries/schedule_comparison`现严格消费既有`workspace-query.v1`及`schedule-version-comparison.v1`，不改Schema bytes、URN或set version。Query result只在carrier中保存`item_id/item_type/payload_fingerprint`，完整只读payload由application result持有并逐项绑定；14个view、empty/missing/stale/plane/cursor及comparison重放由`p3-workspace-read-model-report.v1`验证。当前没有HTTP/OpenAPI/UI、command、transition、publish/export或P4 carrier。
+
+TASK-P3-09经用户扩卡发布additive set `2.7.0`：新增`export-manifest.v2`与`export-job.v2`，旧`export-manifest.v1`/`export-job.v1`及全部P2/P3-02 bytes/URN不变。v2只表达internal Simulation标准包和v2 artifact reference；consumer必须显式选版本，禁止`latest` alias。

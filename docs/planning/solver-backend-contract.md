@@ -153,3 +153,5 @@ locked sync与运行时检查确认OR-Tools exact version仍为`9.15.6755`，ADR
 ## TASK-P3-02 frozen Solver boundary
 
 Workspace carrier release不修改PlanningProblem/Policy/Limits/Solution/SolverReport Schema、CP-SAT backend、OBJ-001或formal Validator。ScheduleVersion只通过exact artifact reference与assignment `$ref`消费P2 validated output；纯precheck不导入或调用Backend/Validator。Solver UNKNOWN继续映射`NO_SOLUTION_WITHIN_LIMIT`且无candidate，不能创建Version。`uv.lock`与OR-Tools pin保持不变；OBJ-002及动态planning仍在后续阶段边界外。
+
+P3-09只复制已经由P2 Validator PASS冻结的PlanningSolution/Validation/KPI/SolverReport bytes，重新核对ScheduleVersion assignment与solution fingerprint，不执行solve或重新认证candidate。ExportJob retry绝不重新运行Solver；OBJ-002/003、ChangeReport和P4 replan仍未实现。

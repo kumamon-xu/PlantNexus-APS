@@ -66,3 +66,5 @@ Decision scope固定`plane/action/ScheduleVersion/WORKSPACE_INTERNAL`；raw key�
 Publication scope固定`plane/PUBLISH/ScheduleVersion/SIMULATION_INTERNAL`；raw key形成hash/Publication/Audit identity。授权在success replay与resource lookup前重新执行；same request从原audit重建result，不重复state/current/audit，different fingerprint冲突。首次成功将new publish、optional old supersede、result/current/audit置于一个caller transaction；audit/current failure回滚，两个并发candidate只有一个current CAS winner。
 
 该证据不使用worker、automatic retry、outbox、queue、network或distributed exactly-once。超时调用者必须以相同key重试，不能换key盲发；P3-09 ExportJob仍拥有独立scope/attempt/side effect。
+
+P3-09 business worker以repository CAS claim现有CREATED/FAILED，attempt单调增加且lease owner reference不可逆hash；active lease才可heartbeat/complete/fail，过期lease仅可审计恢复FAILED/CANCELLED。Package按attempt使用独立destination，payload/manifest确定性且existing exact bytes重放、差异冲突；DB completion失败时artifact不等于EXPORTED，后续显式retry生成新attempt。没有automatic retry、queue/outbox、distributed lock或external exactly-once承诺。

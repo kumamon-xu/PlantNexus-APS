@@ -176,3 +176,5 @@ P3-01先定义security/audit/idempotency责任，P3-03/07～10再形成repositor
 `uv run python -m app.application.publication_check --root . --report <ignored-json>`在临时SQLite重放APPROVED-only first publish、historical replay/conflict/double publish、current/supersession、DRAFT/READY/REJECTED拒绝、Simulation/Production denial、audit rollback及并发current单winner，输出8/8 `p3-publication-report.v1`。CI固定写`build/validation/ci-p3-publication.json`且不可continue-on-error。
 
 报告只证明internal Simulation state/idempotency行为，不配置endpoint、worker、publisher/exporter、MES/ERP、storage或Production Runbook。已提交PUBLISHED/SUPERSEDED/Audit/PublicationResult/current历史不得由代码回滚删除；修订只能走新的受治理Version/publication。
+
+P3-09新增可调用的internal worker composition与local atomic storage boundary，但不注册Celery task、不配置service/queue/external storage或Production Runbook。运维只可通过显式claim/heartbeat/fail/retry/cancel恢复；不得手改EXPORTED、删除terminal Job/audit/artifact或以目录存在替代manifest/DB成功。

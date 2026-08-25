@@ -12,6 +12,7 @@ import yaml
 from app.application.p2_gate_report import main as p2_gate_main
 from app.application.approval_decision_check import main as approval_decision_main
 from app.application.publication_check import main as publication_main
+from app.application.export_job_check import main as export_job_main
 from app.application.schedule_version_lifecycle_check import (
     main as schedule_version_lifecycle_main,
 )
@@ -445,6 +446,44 @@ def test_ci_p3_publication_is_required_and_machine_checkable(
     assert report["boundaries"]["production_readiness"] == "NOT_CLAIMED"
 
 
+def test_ci_p3_export_job_is_required_and_machine_checkable(tmp_path: Path) -> None:
+    workflow = (ROOT / ".github/workflows/ci.yml").read_text(encoding="utf-8")
+    normalized = " ".join(workflow.split())
+    assert (
+        "name: P3 ExportJob and standard package evidence run: >- "
+        "uv run python -m app.application.export_job_check --root . "
+        "--report build/validation/ci-p3-export-jobs.json"
+    ) in normalized
+    assert "continue-on-error" not in workflow
+
+    report_path = tmp_path / "p3-export-jobs.json"
+    assert export_job_main(["--root", str(ROOT), "--report", str(report_path)]) == 0
+    report = json.loads(report_path.read_text(encoding="utf-8"))
+    assert report["report_version"] == "p3-export-job-report.v1"
+    assert report["status"] == "PASS"
+    assert report["task_id"] == "TASK-P3-09"
+    assert report["schema_set_version"] == "2.7.0"
+    assert report["check_count"] == 8
+    assert report["counts"] == {
+        "new_schemas": 2,
+        "new_samples": 2,
+        "focused_tests": 16,
+        "package_payloads": 12,
+        "xlsx_sheets": 4,
+        "export_states": 5,
+        "export_allowed_pairs": 6,
+        "provider_side_effects": 0,
+    }
+    assert report["boundaries"] == {
+        "publish_service": "NOT_CALLED",
+        "external_target": "ABSENT",
+        "http_ui": "TASK_P3_10_NOT_STARTED",
+        "p4_dynamic_replan": "DEFERRED",
+        "production": "DEFAULT_DENY_NOT_READY",
+    }
+    assert report["issues"] == []
+
+
 def test_ci_benchmark_contract_is_xs_only_and_baseline_bound() -> None:
     workflow = (ROOT / ".github" / "workflows" / "ci.yml").read_text(encoding="utf-8")
     assert workflow.count("scripts/run_benchmark.py") == 1
@@ -528,7 +567,7 @@ def test_ci_planning_problem_contract_report_is_machine_checkable(
     assert report["report_version"] == "planning-problem-contract-report.v1"
     assert report["status"] == "PASS"
     assert report["task_id"] == "TASK-P2-01"
-    assert report["schema_set_version"] == "2.6.0"
+    assert report["schema_set_version"] == "2.7.0"
     assert report["check_count"] == 4
     assert {check["name"] for check in report["checks"]} == {
         "v1-byte-preservation",
@@ -553,7 +592,7 @@ def test_ci_planning_machine_contract_report_is_machine_checkable(
     assert report["report_version"] == "planning-machine-contract-report.v1"
     assert report["status"] == "PASS"
     assert report["task_id"] == "TASK-P2-02"
-    assert report["schema_set_version"] == "2.6.0"
+    assert report["schema_set_version"] == "2.7.0"
     assert report["check_count"] == 5
     assert {check["name"] for check in report["checks"]} == {
         "fixed-schema-and-sample-artifacts",

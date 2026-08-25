@@ -167,3 +167,5 @@ Problem v1/v2 Schema/sample及`uv.lock`启动fingerprint在Task卡中固定；�
 ## P3 planning boundary
 
 TASK-P3-02如获授权，只能执行additive set release：旧P2 document version、URN、sample bytes和consumer replay必须保留；新P3 documents须独立版本化、离线解析并提供compatibility/fingerprint negatives。P3-03 migration只消费已发布Schema，不得用数据库默认值反向定义合同；本次transition不改变`2.5.0`或任何依赖/lock。
+
+TASK-P3-09是additive set `2.7.0` owner。原因是冻结`export-job.v1`的P3 profile与P2-only manifest v1 reference不能共同表达标准XLSX及Version/publication/job/audit lineage；经用户批准，以新URN发布manifest/job v2，绝不原地重解释v1。旧workspace v1 carriers继续固定`2.6.0`，global current metadata才为`2.7.0`；`uv.lock`与dependency pins不变。

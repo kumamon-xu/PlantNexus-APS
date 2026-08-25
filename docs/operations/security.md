@@ -91,3 +91,9 @@ Export authorization在job/source/replay lookup前检查actor/authenticated/`exp
 ## TASK-P3-10 HTTP security boundary
 
 Bearer只交给server-side provider，router/body不接收role或capability authority。认证缺失/失败、scope/capability拒绝、Production default-deny和malformed provider result均在application前终止；provider或denial sink自身失败也只返回sanitized 503/500且不进入application。Denial sink只收集sanitized reference，测试证明Bearer/provider exception/audit DSN不泄漏；成功与错误响应均`no-store`。CORS/session/CSRF/rate-limit、真实OIDC/SSO/RBAC、secret rotation、gateway/WAF和Production threat model未形成，OPEN-010/015保持OPEN。
+
+## TASK-P3-11 Frontend security boundary
+
+Browser client仅GET、`credentials=omit`、`cache=no-store`，token只能由内存中的注入provider即时返回；源码与machine scan拒绝localStorage/sessionStorage/cookie和command carrier。默认provider返回null，authorization error保持显式denied，不以synthetic/empty缓存替代。Production runtime固定non-synthetic且navigation没有Simulation入口。
+
+Dependency Gate锁定24个direct pins和npm v3 integrity，SCA当前0 advisory，336个locked package license无unknown/deny-listed项；用户批准的typescript-eslint固定组与peer被lock/CI contract复验。这不是CSP/XSS penetration、real session/OIDC、CSRF/CORS、gateway/WAF、browser matrix或Production threat-model证据，OPEN-010/015和RISK-011～013不关闭。

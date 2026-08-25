@@ -273,3 +273,13 @@ P3-09复用Python 3.12、SQLAlchemy/Alembic 0004、标准库hash/json/csv/zip/fi
 ## TASK-P3-10 stack review
 
 API复用locked FastAPI/Pydantic/httpx/pytest，不新增身份SDK或dependency，`pyproject.toml`/`uv.lock`与Schema metadata均不变。CI仅在现有required `validate` job新增non-skippable `planning_workspace_check`命令并由既有artifact glob收集JSON；workflow topology、runner、Secret、container、service与deployment零变化。
+
+## TASK-P3-11 frontend toolchain activation
+
+TASK-P3-11以不可变Diff base `26dd519b1f1f84e08d415cfdfce43f286fa82988`首次安装ADR-0012选择的Frontend stack。运行时固定Node `24.19.0`、npm `11.17.0`与npm lockfile v3；五个runtime direct pins固定为React `19.2.8`、React DOM `19.2.8`、Ant Design `6.6.1`、TanStack Query `5.102.3`和React Router DOM `7.18.2`。十九个development direct pins及逐字版本以Task卡为唯一清单，所有direct spec禁止range，`package-lock.json`只允许npm `11.17.0`生成且禁止手改。
+
+用户于2026-08-25明确批准采用当时latest `typescript-eslint=8.68.0`。该批准冻结为兼容三元组`typescript-eslint=8.68.0`、`eslint=10.9.1`、`typescript=6.0.3`，TypeScript必须保持在typescript-eslint声明的`>=4.8.4 <6.1.0` peer范围内；required CI必须同时拒绝direct range、任一版本漂移、peer conflict与未经新Task dependency review的升级。该批准不授权P3-12/13依赖扩展。
+
+point-in-time dependency Gate固定为`npm ci`、High/Critical advisory阻断及unknown/deny-listed license阻断；Playwright `1.62.1`本Task只作为exact-pinned foundation，不下载browser、不形成E2E或control workflow。Python dependency/`uv.lock`、Backend API/business semantics、Schema/migration、SSR/microfrontend、P4与Production hosting保持零变化。
+
+本地lock与compatibility evidence现验证24个direct pins、npm lockfile v3、typescript-eslint peer边界及registry-integrity install；official npm advisory endpoint报告0 info/low/moderate/high/critical，license checker覆盖336个locked package且无unknown/deny-listed license。Production build观察为944682 JavaScript bytes与1365 CSS bytes；这是development ceiling内的point-in-time observation，不是Production SLA。Exact provider仍待implementation push。

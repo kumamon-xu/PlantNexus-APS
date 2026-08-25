@@ -173,3 +173,11 @@ RISK-001～013全部继续`MONITORED`，severity/status不降低；尤其RISK-00
 TASK-P3-09以hash/manifest-last/exact replay缓解RISK-007/008的internal artifact/idempotency slice，以prelookup deny/no-secret/path和safe XLSX缓解RISK-011/013，以lease/recovery/rollback缓解RISK-012；implementation artifact `9548027237`精确复验对应8/8 machine和0 issue。但local filesystem/SQLite不关闭distributed race、orphan retention、external transfer或Production security/capacity风险；全部13项仍MONITORED，registry version不变。
 
 TASK-P3-10以strict carrier/header binding和sanitized errors缓解RISK-007/008的API重放/混淆slice，以server-derived scope、Production pre-provider deny、denial redaction和thin-router边界缓解RISK-011/013，以stable 409/503和correlation缓解RISK-012的运维可见性；implementation artifact `9550224090`精确复验对应8/8 machine和0 issue。但真实identity/gateway/network/concurrency/retention/SIEM/Production capacity未形成，全部13项仍MONITORED，registry version不变。
+
+## TASK-P3-11 activation risk review
+
+Exact pins/lock、High/Critical advisory阻断、license allow/deny与fixed peer gate缓解Frontend supply-chain drift；server-authority adapter、seven-state UI、no-token persistence及Simulation navigation isolation缓解contract confusion、false success与credential泄漏。固定兼容组为`typescript-eslint=8.68.0`、`eslint=10.9.1`、`typescript=6.0.3`，任何range、drift、peer conflict或未审查升级均阻断。
+
+这些控制尚待implementation/provider复验，且不能关闭浏览器真实兼容性、identity/gateway、XSS/CSP、network、capacity/SLA或Production hosting风险。RISK-001～013全部继续`MONITORED`，severity/status和`registry_version=1.0.0`不变。
+
+本地npm ci、SCA 0 advisory、336 package license、peer/lock、25 tests和source boundary scan已复验bounded controls；provider及真实browser/security环境仍待后续证据。全部13项风险继续MONITORED，severity/status不降低。

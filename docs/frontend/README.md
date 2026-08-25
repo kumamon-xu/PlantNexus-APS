@@ -6,7 +6,7 @@ spec_version: 0.3.0
 phase: P3
 normative: false
 source_sections: [68, 69, 77, 78]
-last_reviewed: 2026-08-24
+last_reviewed: 2026-08-25
 ---
 
 # Frontend 文档形成计划
@@ -21,10 +21,18 @@ TASK-P3-01已在任何Frontend dependency或实现前形成：
 
 ## P3 formation plan
 
-TASK-P3-01已形成Planning Workspace、Gantt command与approval/publication三份详细规范以及页面/API/permission矩阵，并由[ADR-0012](../adr/ADR-0012-planning-workspace-command-state-publication.md)接受server authority、copy-on-write new DRAFT和Frontend组合。TASK-P3-11才可建立exact-pinned React/TypeScript/Ant Design/TanStack Query/npm/Vite/Vitest/Playwright foundation和read-only workspace；P3-12实现read-only visualization/comparison，P3-13最后接入edit/lock/approve/reject/publish/export并执行browser E2E。UI只发送server command、显示权威状态/错误，不计算排程、绕过Validator或提供PUBLISHED update；`frontend/**`当前仍未实现。
+TASK-P3-01已形成Planning Workspace、Gantt command与approval/publication三份详细规范以及页面/API/permission矩阵，并由[ADR-0012](../adr/ADR-0012-planning-workspace-command-state-publication.md)接受server authority、copy-on-write new DRAFT和Frontend组合。P3-01当时没有创建`frontend/**`；TASK-P3-11现建立exact-pinned React/TypeScript/Ant Design/TanStack Query/npm/Vite/Vitest/Playwright foundation和read-only workspace，P3-12才可实现read-only visualization/comparison，P3-13最后接入edit/lock/approve/reject/publish/export并执行browser E2E。UI只发送server command、显示权威状态/错误，不计算排程、绕过Validator或提供PUBLISHED update。
 
 页面规范形成不等于API payload Schema、OpenAPI、组件、bundle、dependency lock、accessibility/E2E或Production UI已经形成。所有行为证据继续由P3-02/05/10～15按序负责；OPEN-010未关闭前Production action default-deny。
 
 ## TASK-P3-05 backend read availability
 
-14个Planning Workspace read model的application结果已形成，包含stable carrier reference、完整payload page、lineage/freshness、found-empty/missing和opaque cursor语义；Version Comparison保持P3 DTO。`frontend/**`仍为零差异，当前没有React组件、route、virtualization、loading/error UI或browser evidence；P3-11/12只能经P3-10 HTTP适配消费这些server authority结果。
+14个Planning Workspace read model的application结果已形成，包含stable carrier reference、完整payload page、lineage/freshness、found-empty/missing和opaque cursor语义；Version Comparison保持P3 DTO。P3-05交接时`frontend/**`仍为零差异；P3-11现只能经P3-10 HTTP适配消费其中获授权的read-only subset，P3-12仍负责Gantt/load/comparison。
+
+## TASK-P3-11 activation boundary
+
+TASK-P3-11已于2026-08-25获明确授权并进入`in_progress`，不可变Diff base为`26dd519b1f1f84e08d415cfdfce43f286fa82988`。本Task只形成locked foundation与read-only workspace；Gantt、Resource Load、Version Comparison和全部edit/lock/approve/reject/publish/export control仍分别归P3-12/13。
+
+Node/npm/direct pins、lockfile v3、SCA/license命令以Task卡逐字清单为准。特别地，用户批准的typescript-eslint门禁是固定三元组`typescript-eslint=8.68.0`、`eslint=10.9.1`、`typescript=6.0.3`，而不是latest range；TypeScript必须满足`>=4.8.4 <6.1.0`，CI拒绝range、drift、peer conflict和未审查升级。
+
+本地implementation已形成13条read-only route、GET-only canonical query client、default no-token session、strict carrier/reference检查、exact Version precondition、raw UTC/lineage/fingerprint authority、seven-state UI、virtual table和25个Vitest/component/contract/accessibility tests；npm v3 lock来自npm `11.17.0`，SCA为0 advisory且336个package license通过allow/deny审查。Local PASS不能替代exact implementation provider，Task仍为`in_progress`。

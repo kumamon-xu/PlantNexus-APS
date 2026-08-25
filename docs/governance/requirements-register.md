@@ -179,3 +179,11 @@ REQ-006获得Publish/Export分离的internal publication behavior、PublicationR
 TASK-P3-09 provider closure：REQ-006获得PUBLISHED-only durable ExportJob、standard JSON/CSV/XLSX、manifest-last、retry/cancel/recovery和Publish分离；REQ-007获得server authorization、既有state pair/lease CAS及ScheduleVersion不变边界；REQ-009获得P2→Version→Publication→Job attempt→Audit→manifest/file exact lineage。Implementation `42278239332e61e55a4e0305705534db768dc22f` / artifact `9548027237`精确复验28/28 JSON、8/8 machine及76 committed/0 working paths、13 rows、19 checks、0 issues；API/UI、external/P4/Production仍未形成，全部root继续`ALLOCATED`且registry version不变。
 
 TASK-P3-10 provider closure：REQ-001获得Data Health/Import/Planning read的strict HTTP carrier；REQ-004/005获得ScheduleVersion/validate与fresh application delegation边界；REQ-006获得workspace/comparison/export的17个HTTP operation；REQ-007获得server-derived authorization、command/decision/publication/export的strict precondition和error mapping；REQ-009获得correlation/OpenAPI/machine lineage。Implementation `4958ce5759812331f13fab2608fbec37f1f1ff76` / artifact `9550224090`精确复验29/29 JSON、8/8 machine及51 committed/0 working paths、7 rows、19 checks、0 issues；Frontend、external/P4/Production未形成，所有root继续`ALLOCATED`、registry version不变。
+
+## TASK-P3-11 activation requirement review
+
+REQ-003/004/005/007/009现分配到locked read-only Frontend consumer：只读取P3-10 server carrier，显示ScheduleVersion、orders/operations/resources/calendars、validation/KPI/diagnostics/audit、lineage与明确错误状态。该分配禁止浏览器重算Solver/Validator/KPI/Resource Load、禁止control command，并保持Gantt/load/comparison归P3-12、control/E2E归P3-13。
+
+本次只是Task activation与依赖门禁冻结；尚无Frontend implementation/provider evidence，因此全部15个root Requirement继续`ALLOCATED`，`registry_version=1.0.0`不变。真实identity、external/P4与Production behavior/readiness均未形成。
+
+本地implementation现以13条read-only route、Version/query checked adapter、authority/lineage UI和25项tests形成上述consumer slice；没有Gantt/load/comparison/control或server行为变化。Exact provider尚未形成，因此root生命周期仍不提升、registry version不变，Task只保持`in_progress`。

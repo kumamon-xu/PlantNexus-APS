@@ -182,3 +182,9 @@ P3-09新增可调用的internal worker composition与local atomic storage bounda
 ## TASK-P3-10 operational boundary
 
 API process现提供health与17个P3 route的composition seam，但默认application/principal provider为unavailable，因而不构成可运营Production service。本Task没有连接真实identity、MES/ERP/storage、queue、database或SIEM，也没有新增deployment/rollback/runbook。运维故障只能通过sanitized correlation和现有audit/log边界定位，不得用test provider开通Production。
+
+## TASK-P3-11 operator commands and boundary
+
+本地与required CI依次使用`npm --prefix frontend ci`、`audit:sca`、`licenses:check`、`lint`、`typecheck`、`test -- --run`、`build`和`evidence`。SCA显式查询official npm advisory endpoint，High/Critical阻断；license未知/deny list阻断；machine report记录24 pins、13 routes、7 states、bundle bytes与P3/P4/Production absence。Playwright browser不安装。
+
+生成的`node_modules/dist/coverage/*.tsbuildinfo`与JSON report均不提交。Frontend bundle不是deployment，默认session无token且Backend application仍可fail closed；没有Production hosting、CDN、runtime secret、runbook、SLO或rollback authority形成。

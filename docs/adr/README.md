@@ -103,3 +103,9 @@ TASK-P3-09落实ADR-0002/0007/0009与accepted ADR-0012：internal-only、determi
 ## TASK-P3-10 ADR review
 
 本Task落实ADR-0002/0009与accepted ADR-0012的thin API、Version authority、server authorization/default-deny、strict command/idempotency/audit边界，不改Schema、state machine、identity model、storage/network topology或dependency，故不新建ADR。若引入API gateway、OIDC/SSO/RBAC provider、session model、async/outbox、external endpoint、P4 route或Production deployment，必须先停止并创建/取代ADR。
+
+## TASK-P3-11 ADR review
+
+实现直接落实accepted ADR-0012选择的React/TypeScript/Ant Design/TanStack Query/npm/Vite/Vitest/Playwright stack与server-authority/read-only边界；具体版本属于Task-local exact dependency Gate，不改变架构选择。Frontend不引入SSR/microfrontend、Schema interpreter、client Solver/Validator、identity topology、command/state transition、external target或Production hosting，因此不需新ADR。
+
+若P3-12/13拟改变stack、安装新的Gantt/E2E/runtime dependency、引入browser authority/session persistence、SSR/microfrontend或Production deployment topology，必须先执行独立dependency/ADR review；不得把本Task的Playwright pin解释为browser E2E已形成。

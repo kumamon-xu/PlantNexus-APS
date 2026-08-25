@@ -415,3 +415,11 @@ TASK-P3-09治理验证13个Impact rows、Diff base `b9c0b1694448a4ec348b0b021079
 不可变Diff base=`f71c4a5a11a3fac0e203e2e92198c26124755927`。完整union只允许命中`IMPACT-API/STATE/INFRA/TESTS/PHASE/GOVERNANCE-REGISTRY/DOCS`七行；精确allow-list仅包含API composition/contracts/auth/router/machine check、三类API tests、既有health/CI contract、单一workflow step与Task卡逐字列出的文档。Schema/sample/rules、migration、dependency/lock、domain/application/repository/exporter/job、Frontend/P4/external路径保持冻结。
 
 本地API report为8/8、`issues=[]`，focused为41 PASS、最终full为603 PASS，required当前29份JSON evidence、Compose/build与full docs均PASS。Implementation artifact `9550224090`中的Task report绑定exact SHA/Diff base并复现165 docs/30 roots/30 trace rows/48 tests/15 OPEN/13 SIM/13 risks/53 tasks、51 committed/0 working paths、7 rows、19 checks、0 issues；29/29 JSON与API 8/8均PASS。本closure只写provider事实并不得启动TASK-P3-11；closure自身仍须exact provider，P4与Production均不在本Diff内。
+
+## TASK-P3-11 diff governance
+
+不可变Diff base=`26dd519b1f1f84e08d415cfdfce43f286fa82988`。完整union只允许命中`IMPACT-FRONTEND/INFRA/TESTS/PHASE/GOVERNANCE-REGISTRY/DOCS`六行；精确allow-list只包含Task卡列出的Frontend foundation/read-only模块、单一required workflow、read-only CI contract及逐字治理文档。Schema/sample/rules、migration、Python dependency/lock、Backend business/API semantics、P3-12+、P4与Production路径必须冻结。
+
+Full docs与Task diff检查必须逐字验证Node/npm/24个direct pins/lockfile v3、SCA/license命令、13个route、七类状态和禁止模块。typescript-eslint的用户批准被编码为exact gate：`8.68.0`配`eslint 10.9.1`和`typescript 6.0.3`，TypeScript peer为`>=4.8.4 <6.1.0`；range、drift、peer conflict或未审查升级均为issue。Activation提交只证明计划边界，不能预填implementation/provider PASS。
+
+当前working Task diff已实际为74 paths、六行、19/19 checks、0 issue；full governance为165 docs/30 roots/30 trace rows/48 Test IDs/15 OPEN/13 SIM assumptions/13 risks/53 Tasks。Frontend machine报告为9/9、24 direct pins、13 routes、7 states、23 source files和0 boundary issue，SCA/license均顶层PASS；Frontend 25 tests、CI contract 28项、Python全仓604项、全部历史machine/P2 Gate/XS、Compose及build均已重跑通过。Provider字段在push前保持空白。

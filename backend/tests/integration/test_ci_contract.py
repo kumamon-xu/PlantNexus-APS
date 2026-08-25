@@ -67,6 +67,34 @@ EXPECTED_RUNTIME_DEPENDENCIES = {
     "structlog==25.4.0",
     "uvicorn==0.35.0",
 }
+EXPECTED_FRONTEND_RUNTIME_DEPENDENCIES = {
+    "@tanstack/react-query": "5.102.3",
+    "antd": "6.6.1",
+    "react": "19.2.8",
+    "react-dom": "19.2.8",
+    "react-router-dom": "7.18.2",
+}
+EXPECTED_FRONTEND_DEVELOPMENT_DEPENDENCIES = {
+    "@playwright/test": "1.62.1",
+    "@testing-library/dom": "10.4.1",
+    "@testing-library/jest-dom": "7.0.1",
+    "@testing-library/react": "16.3.2",
+    "@testing-library/user-event": "14.6.6",
+    "@types/node": "24.13.3",
+    "@types/react": "19.2.18",
+    "@types/react-dom": "19.2.5",
+    "@vitejs/plugin-react": "6.1.0",
+    "axe-core": "4.13.0",
+    "eslint": "10.9.1",
+    "eslint-plugin-react-hooks": "7.1.1",
+    "eslint-plugin-react-refresh": "0.5.4",
+    "globals": "17.11.0",
+    "jsdom": "30.0.1",
+    "typescript": "6.0.3",
+    "typescript-eslint": "8.68.0",
+    "vite": "8.2.2",
+    "vitest": "4.1.11",
+}
 PHASE_GOVERNANCE_TEST_ID = "TEST-PHASE-GOVERNANCE-001"
 
 
@@ -82,6 +110,60 @@ def test_runtime_dependencies_are_exact_and_solver_is_exact_pinned() -> None:
     assert 'version = "9.15.6755"' in lock_text
     assert "cp312-cp312-win_amd64" in lock_text
     assert "cp312-cp312-manylinux_2_27_x86_64" in lock_text
+
+
+def test_p3_frontend_dependencies_and_ci_are_exact_and_bounded() -> None:
+    package = cast(
+        dict[str, Any],
+        json.loads((ROOT / "frontend" / "package.json").read_text(encoding="utf-8")),
+    )
+    lock = cast(
+        dict[str, Any],
+        json.loads(
+            (ROOT / "frontend" / "package-lock.json").read_text(encoding="utf-8")
+        ),
+    )
+    assert package["engines"] == {"node": "24.19.0", "npm": "11.17.0"}
+    assert package["packageManager"] == "npm@11.17.0"
+    assert package["dependencies"] == EXPECTED_FRONTEND_RUNTIME_DEPENDENCIES
+    assert (
+        package["devDependencies"] == EXPECTED_FRONTEND_DEVELOPMENT_DEPENDENCIES
+    )
+    assert lock["lockfileVersion"] == 3
+    lock_root = cast(dict[str, Any], lock["packages"])[""]
+    assert lock_root["engines"] == package["engines"]
+    assert lock_root["dependencies"] == package["dependencies"]
+    assert lock_root["devDependencies"] == package["devDependencies"]
+    typescript_eslint = cast(dict[str, Any], lock["packages"])[
+        "node_modules/typescript-eslint"
+    ]
+    assert typescript_eslint["version"] == "8.68.0"
+    assert typescript_eslint["peerDependencies"]["eslint"] == (
+        "^8.57.0 || ^9.0.0 || ^10.0.0"
+    )
+    assert typescript_eslint["peerDependencies"]["typescript"] == (
+        ">=4.8.4 <6.1.0"
+    )
+    assert "registry.npmmirror.com" not in json.dumps(lock)
+
+    workflow = (ROOT / ".github/workflows/ci.yml").read_text(encoding="utf-8")
+    normalized = " ".join(workflow.split())
+    for fragment in (
+        'node-version: "24.19.0"',
+        'test "$(node --version)" = "v24.19.0"',
+        'test "$(npm --version)" = "11.17.0"',
+        "npm --prefix frontend ci",
+        "npm --prefix frontend run audit:sca -- --report ../build/validation/ci-p3-frontend-sca.json",
+        "npm --prefix frontend run licenses:check -- --report ../build/validation/ci-p3-frontend-licenses.json",
+        "npm --prefix frontend run lint",
+        "npm --prefix frontend run typecheck",
+        "npm --prefix frontend test -- --run",
+        "npm --prefix frontend run build",
+        "npm --prefix frontend run evidence -- --report ../build/validation/ci-p3-frontend.json",
+    ):
+        assert fragment in normalized
+    assert "playwright install" not in workflow.lower()
+    assert "continue-on-error" not in workflow
 
 
 def test_compose_has_health_checked_development_services_and_no_prod_defaults() -> None:

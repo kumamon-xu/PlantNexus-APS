@@ -1,0 +1,109 @@
+:root {
+  color: #17342d;
+  background: #f2f6f4;
+  font-synthesis: none;
+  text-rendering: optimizeLegibility;
+}
+
+* {
+  box-sizing: border-box;
+}
+
+body {
+  margin: 0;
+  min-width: 320px;
+  min-height: 100vh;
+}
+
+.app-shell {
+  min-height: 100vh;
+}
+
+.app-header {
+  height: auto;
+  min-height: 72px;
+  padding: 12px 24px;
+  background: #0b3b32;
+  color: #fff;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 16px;
+}
+
+.app-header h4,
+.app-header .ant-typography {
+  color: #fff;
+  margin: 0;
+}
+
+.app-sider,
+.app-sider .ant-layout-sider-children,
+.app-sider .ant-menu {
+  background: #fff;
+}
+
+.app-sider {
+  border-right: 1px solid #dfe8e4;
+}
+
+.app-content {
+  padding: 28px;
+  min-width: 0;
+}
+
+.workspace-page {
+  max-width: 1440px;
+  margin: 0 auto;
+  padding: 24px;
+  background: #fff;
+  border: 1px solid #dfe8e4;
+  border-radius: 10px;
+  box-shadow: 0 8px 26px rgb(18 73 61 / 7%);
+}
+
+.workspace-results {
+  width: 100%;
+  margin-top: 20px;
+}
+
+.payload-cell {
+  margin: 0;
+  max-height: 280px;
+  overflow: auto;
+  white-space: pre-wrap;
+  word-break: break-word;
+  font: 12px/1.55 ui-monospace, SFMono-Regular, Consolas, monospace;
+  color: #17342d;
+}
+
+.validation-document {
+  margin-top: 20px;
+  padding: 16px;
+  background: #f7faf8;
+  border: 1px solid #dfe8e4;
+}
+
+.fingerprint-wrap {
+  overflow-wrap: anywhere;
+}
+
+@media (max-width: 760px) {
+  .app-content {
+    padding: 12px;
+  }
+
+  .workspace-page {
+    padding: 16px;
+  }
+}
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    scroll-behavior: auto !important;
+    transition-duration: 0.01ms !important;
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+  }
+}

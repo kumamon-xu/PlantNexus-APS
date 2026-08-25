@@ -15,7 +15,7 @@ last_reviewed: 2026-08-25
 
 用户于2026-08-24在核验TASK-P2-00～14全部`done`、P2 Exit Gate overall=`READY`/`blocking_gaps=[]`、audit implementation/closure拓扑与exact GitHub required `validate`/artifact后，明确批准P2→P3 transition。P2为`completed`，P3为当前`active` Milestone。
 
-TASK-P3-00已完成Milestone激活、Task规划与文档治理，TASK-P3-01～10也已有各自exact implementation provider并由evidence-only closure标为`done`；当前没有已授权的后续Task，P3-11～15保持`planned`。依赖满足不会自动授权后续实现。每个Task必须从当时clean、`main=origin/main`且provider-verified的完整40字符HEAD建立新的不可变Diff base。
+TASK-P3-00已完成Milestone激活、Task规划与文档治理，TASK-P3-01～10也已有各自exact implementation provider并由evidence-only closure标为`done`；用户已单独授权TASK-P3-11并完成启动冻结，该Task现为`in_progress`。P3-12～15保持`planned`。依赖满足不会自动授权后续实现。每个Task必须从当时clean、`main=origin/main`且provider-verified的完整40字符HEAD建立新的不可变Diff base。
 
 ## Outcome
 
@@ -38,7 +38,7 @@ TASK-P3-00已完成Milestone激活、Task规划与文档治理，TASK-P3-01～10
 | 8 | TASK-P3-08 | idempotent publication与supersession | P3-03/07 | `done` |
 | 9 | TASK-P3-09 | ExportJob与标准成果包 | P3-03/04/08 | `done` |
 | 10 | TASK-P3-10 | Planning Workspace HTTP API | P3-05～09 | `done` |
-| 11 | TASK-P3-11 | Frontend foundation与read-only workspace | P3-01/10 | `planned` |
+| 11 | TASK-P3-11 | Frontend foundation与read-only workspace | P3-01/10 | `in_progress` |
 | 12 | TASK-P3-12 | Gantt/Resource Load/Comparison UI | P3-05/10/11 | `planned` |
 | 13 | TASK-P3-13 | Human control actions与UI E2E | P3-06～12 | `planned` |
 | 14 | TASK-P3-14 | 完整P3 vertical-slice Gate evidence | P3-01～13 | `planned` |
@@ -103,3 +103,7 @@ TASK-P3-04已形成ports-only application lifecycle、fresh Validator/KPI gate�
 TASK-P3-09已实现五state/六allowed pair、attempt/lease/heartbeat、explicit retry/cancel/expired recovery、audit-atomic CAS以及12-payload standard package。v2 manifest在P2 lineage之上绑定PUBLISHED Version、PublicationResult、Job attempt和audit；P4 ChangeReport仍`DEFERRED`。Implementation `42278239332e61e55a4e0305705534db768dc22f`的run/job/artifact=`32805450589`/`97674572006`/`9548027237`精确复现28/28 JSON、export 8/8及76 committed/0 working paths、13 rows、19 checks、0 issues，故本closure标为`done`。
 
 用户随后单独授权TASK-P3-10；P3-05～09的closure SHA/provider artifact全部重新核验，启动时`main=origin/main=f71c4a5a11a3fac0e203e2e92198c26124755927`且clean，该SHA成为不可变Diff base。当前bounded slice形成17个versioned HTTP operation、OpenAPI、strict carrier/header/path绑定、server-derived capability/scope、Production pre-provider deny、sanitized error/correlation/denial audit和application façade；不改变P3-05～09语义、Schema/migration/dependency/repository/state pair，也不形成Frontend、external/P4/Production。Implementation `4958ce5759812331f13fab2608fbec37f1f1ff76`的run/job/artifact=`32812163430`/`97693443111`/`9550224090`精确复现29/29 JSON、API 8/8及51 committed/0 working paths、7 rows、19 checks、0 issues，故本closure标为`done`；P3-11仍为`planned`且不会自动启动。
+
+用户随后单独授权TASK-P3-11；P3-01/10 closure provider与clean synchronized baseline复核通过，`26dd519b1f1f84e08d415cfdfce43f286fa82988`冻结为Diff base。激活前已逐字锁定Node `24.19.0`、npm `11.17.0`、24个direct pins、npm v3 lock策略、High/Critical SCA与license命令、模块级Frontend allow-list和六条Impact Rule。当前只允许read-only HTTP consumer、13条P3-11 UI route、七类页面状态、accessible virtual table、CI/machine evidence与治理；P3-12 Gantt/load/comparison、P3-13 actions/E2E、real identity、P4和Production仍未启动。
+
+P3-11本地实现已通过25项Frontend tests、type/lint/build、official npm SCA 0 advisory、336 package license review及9-check machine boundary；Python全仓604项、CI contract 28项和全部历史门禁也已重跑通过，required workflow已加入exact Node/npm install和全部non-skippable steps。该事实只表示implementation待provider，Milestone仍active、P3-11仍`in_progress`，P3-12+不自动启动。

@@ -75,7 +75,8 @@ TASK-P0-01 已建立可构建的顶层仓库边界，TASK-P0-02 建立治理 val
 | `backend/app/domain/`、`snapshots/contracts.py`、`planning/problem/contracts.py` | 纯标准库值语义、JSON-compatible type skeleton 和最小 contract precheck | Builder、hash、normalization、C-ID Validator 与 Solver 仍为后续 Task |
 | `backend/tests/` | 治理 unit test + `TEST-CONTRACT-001` Schema contract tests | Integration/Golden/Property/Simulation/Benchmark 证据仍为后续 Task |
 | `schemas/` | schema set `1.0.0` 的六份 JSON Schema、data dictionary 和明确 synthetic samples | Scenario/Profile Schema、正式 Fixture 和 builder output 尚未形成 |
-| `frontend/`、`benchmarks/` | 目录占位 | 不表示 Frontend 或 Benchmark 已形成 |
+| `frontend/` | P3-11 exact package/lock、Vite/TypeScript/ESLint、API/app/components/pages/styles与unit/component evidence scripts | 只形成read-only workspace；Gantt/load/comparison/actions/browser E2E/Production hosting未形成 |
+| `benchmarks/` | P2 versioned profile/baseline | 不表示Frontend容量或Production SLA |
 | `api/`、`infrastructure/`、`jobs/`、`backend/migrations/`、`infra/Dockerfile`、`docker-compose.yml` | P0-08 health/config/log/connectivity/job/migration/container skeleton | 产品 API、业务 repository/task、Solver 与 production deployment 仍为后续 Task |
 | `scripts/check_docs.py` | 文档结构、registry/reference、Task、traceability，以及 `Diff base..HEAD` + working tree 的 diff/impact 检查 | CI 强制集成与更高 Gate 属于 TASK-P0-08/09 |
 | `.github/workflows/ci.yml` | P0-08 PR/push gate 编排 | 本地只验证 workflow contract；provider run/branch protection 需外部证据 |
@@ -100,6 +101,10 @@ TASK-P1-02在既有`schemas/json`/`schemas/samples`边界新增canonical-records
 
 新增`simulation/scenarios/p2_correctness.py`、四个聚焦测试文件、两组deterministic Golden目录和一个五例synthetic correctness matrix目录；CI与既有integration contract只增加machine evidence接线。Fixture目录只保存versioned JSON与calculation note，不新增Schema、dependency、migration、Benchmark/Reference/Export、DB/API/Worker或P3目录。
 
-## P3 planned layout
+## P3 layout allocation history
 
-当前只新增`docs/tasks/P3/`中的16张Task卡；没有创建backend、schema、migration、frontend或workflow路径。未来P3-01只形成docs/ADR，P3-02负责Schema/contracts，P3-03负责persistence/migration，P3-04～10负责application/API/jobs/exporters，P3-11～13负责frontend，P3-14/15只形成Gate/Audit evidence。具体新路径必须在各Task激活时逐字冻结。
+P3 transition时只新增`docs/tasks/P3/`中的16张Task卡；当时没有创建backend、schema、migration、frontend或workflow路径。后续P3-01形成docs/ADR，P3-02负责Schema/contracts，P3-03负责persistence/migration，P3-04～10负责application/API/jobs/exporters；P3-11现按逐字allow-list形成Frontend read-only slice，P3-12/13仍未启动，P3-14/15只分配Gate/Audit evidence。
+
+## TASK-P3-11 Frontend layout
+
+`frontend/src/api`只拥有canonical query、checked read carrier、GET client、runtime/session boundary；`frontend/src/app`只组合router/query cache；`components/pages`只显示server projection和状态。`frontend/scripts`只生成SCA/license/build boundary evidence，`frontend/tests`使用in-memory versioned carrier且不安装browser。`dist/node_modules/coverage/*.tsbuildinfo`均ignored；仓库没有新增SSR/server、Gantt/load/comparison/control或P4目录。

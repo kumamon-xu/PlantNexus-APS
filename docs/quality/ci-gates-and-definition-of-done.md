@@ -325,3 +325,13 @@ Required `validate`新增non-skippable `P3 planning workspace HTTP API evidence`
 本地Gate已通过：41 focused、最终603 full、API machine 8/8、required当前29份JSON evidence、P2 Gate 11/11、XS benchmark 8/8、locked sync、Ruff/Pyright、Compose/build与full/diff docs均PASS。首轮full曾因未修改的P3-09 deterministic XLSX用例瞬时失败（601/1），定向5次与后续完整重跑均PASS；provider若再现则停止closure。Local PASS不可替代exact implementation required run/job/app与下载artifact复核；provider成功后才可evidence-only closure，closure自身也须exact provider。该Gate不形成Frontend、真实identity、external adapter、P4或Production readiness，不自动启动TASK-P3-11。
 
 Implementation provider Gate已通过：SHA `4958ce5759812331f13fab2608fbec37f1f1ff76`、run `32812163430`、required `validate` job/check `97693443111`（app `15368`）均success且全部steps通过；artifact `9550224090`未过期，101191 bytes，digest=`sha256:d8577d6429167d8782622722d4d64fb993e2db07cbca43a4f279bfd0ba3b9ecf`、expiry=`2026-11-23T05:16:01Z`。下载复核29/29 JSON顶层PASS，API 8/8与Task 51 committed/0 working paths、7 rows、19 checks、0 issues均绑定同一SHA；TASK-P3-10 bounded DoD完成，本closure不自动授权P3-11且自身仍须exact provider。该Gate不形成Frontend、真实identity、external adapter、P4或Production readiness。
+
+## TASK-P3-11 required Frontend evidence
+
+Required `validate`须使用Node `24.19.0`和npm `11.17.0`执行locked `npm ci`，随后顺序执行point-in-time SCA、license、lint、typecheck、Vitest component、build和`p3-frontend-report.v1` machine evidence；任何step均不得`continue-on-error`。同一artifact glob必须包含Frontend/SCA/license/Task JSON并绑定exact implementation SHA和Diff base `26dd519b1f1f84e08d415cfdfce43f286fa82988`。
+
+Dependency Gate逐字拒绝direct range、lock drift、High/Critical advisory、unknown/deny-listed license与peer conflict。用户批准的typescript-eslint边界只允许固定组`typescript-eslint=8.68.0`、`eslint=10.9.1`、`typescript=6.0.3`，且TypeScript须满足`>=4.8.4 <6.1.0`；不得用“latest”浮动解析。Playwright browser/E2E、P3-12/13、P4与Production不属于本Gate。
+
+Local PASS只允许Task保持`in_progress`。Implementation push后必须核验exact SHA required run/job/app并下载artifact复核Task/SHA/Diff base、六个Impact rows、route/state/dependency/boundary checks和`issues=[]`；成功后才可evidence-only closure，closure自身也须exact provider。
+
+当前本地Frontend Gate为npm ci、SCA、license、lint、typecheck、25/25 tests、build和9/9 machine PASS；SCA 0 advisory、license 336 package/0 issue、bundle 944682 JS/1365 CSS bytes。CI contract 28项、Python全仓604项、全部历史machine/P2 Gate/XS、Compose及build均PASS，并要求official registry lock、exact compatibility peers、无Playwright browser install及全部non-skippable commands。任何本地结果都不替代provider。

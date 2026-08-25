@@ -190,3 +190,11 @@ TASK-P3-09追踪链为`REQ-006/007/009 → TASK-P3-09 → export-manifest.v2/exp
 ## TASK-P3-10 provider-verified trace delta
 
 `REQ-001/004/005/006/007/009`、`NFR-COR/TRC/ISO/REL/SEC/OBS/HUM`与`ENG-ARCH/ERR/VER/LOG`现连接`app.api.contracts`、`dependencies.authorization`、`routers.planning_workspace`、`app.create_app`、三类HTTP tests与`p3-planning-workspace-api-report.v1`。Implementation `4958ce5759812331f13fab2608fbec37f1f1ff76` / artifact `9550224090`精确复验29/29 JSON、41 focused、603 full、8/8 report、17 paths/delegations、8 errors、Production provider/application调用0、router state/Solver/Validator调用0、`issues=[]`及51 committed/0 working paths、7 rows、19 checks、0 issues，因而TEST-WORKSPACE-API-001及相关error/auth/idempotency/export/audit/isolation/observability的HTTP slice为provider-verified。Test IDs仍48，root均`ALLOCATED`；Frontend/P3-11+、external、P4和Production继续PLANNED。
+
+## TASK-P3-11 activation trace delta
+
+`REQ-003/004/005/007/009`、`NFR-TRC/ISO/SEC/OBS/PER`与`ENG-ARCH/ERR/VER`已分配到TASK-P3-11的locked Frontend、read-only route、seven-state UI、authority/lineage display及TEST-WORKSPACE-FRONTEND-001/TEST-WORKSPACE-API-001 consumer回归。Diff base固定为`26dd519b1f1f84e08d415cfdfce43f286fa82988`；exact dependency/SCA/license/build/component/Task reports必须由后续implementation provider形成。
+
+当前仅为activation，所以TEST-WORKSPACE-FRONTEND-001仍`PLANNED`，48个Test ID、root lifecycle与`registry_version=1.0.0`均不变；P3-12/13、external、P4和Production继续PLANNED。
+
+本地implementation已覆盖route inventory、canonical query、HTTP error、contract/state、missing/empty/ready、authority/raw UTC、runtime isolation和axe结构，共25 PASS；因此TEST-WORKSPACE-FRONTEND-001的P3-11 slice为`LOCAL_PROVIDER_PENDING`，TEST-WORKSPACE-API-001只增加consumer回归而不改变其既有provider事实。48个Test ID与root/registry状态不变。

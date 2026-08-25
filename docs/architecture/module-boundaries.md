@@ -229,3 +229,9 @@ P3-09依赖方向为`domain.export_job`→ports-only`application.export_jobs`→
 ## TASK-P3-10 API boundary
 
 `app.api.routers.planning_workspace` 只依赖API contracts、authorization dependency和由composition root注入的application port；禁止导入`app.application.*`具体service、`app.domain.*`业务state、repository、Solver或Validator。`app.api.app` 是唯一组装点，默认使用unavailable facade/provider以fail closed。Machine/static tests验证17个operation全部只委托一次、business transition和Solver/Validator invocation为0；无新service topology或ADR。
+
+## TASK-P3-11 Frontend boundary
+
+依赖方向固定为`pages/components/app → api client/query/types`，再通过HTTP读取P3-10；Frontend不导入Backend source、Schema interpreter、Solver、Validator、repository或state transition。API client只发GET并从注入的ephemeral session provider取得token；默认provider返回null，任何server/contract/auth/stale failure都映射成明确非成功状态。
+
+Frontend只比较carrier reference和server完整payload item的一致性，保留server fingerprint authority；它不依据payload重算KPI/Resource Load或授权动作。TanStack Query只是transport cache，server state/precondition/error覆盖缓存。P3-12/13不得把Gantt/control逻辑塞回P3-11模块。

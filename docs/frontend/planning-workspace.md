@@ -6,7 +6,7 @@ spec_version: 0.3.0
 phase: P3
 normative: true
 source_sections: [4, 33, 35, 68, 77, 78, 94]
-last_reviewed: 2026-08-24
+last_reviewed: 2026-08-25
 ---
 
 # P3 Planning Workspace 页面与只读视图合同
@@ -93,7 +93,7 @@ P3-05/11/12只记录versioned synthetic数据下的orders、operations、resourc
 
 ## TASK-P3-05 read-model handoff
 
-Backend现提供页面矩阵所需的14种只读投影，且每页完整payload均由carrier fingerprint引用。Frontend后续必须保留server排序与cursor、显示`found=false`和`found=true/items=[]`的不同状态、在Version precondition过期时重新获取权威Version；不得在浏览器重算Resource Load/KPI、推断UNKNOWN为INFEASIBLE或将comparison渲染成P4 ChangeReport。当前尚无组件、API call或用户可见页面。
+Backend现提供页面矩阵所需的14种只读投影，且每页完整payload均由carrier fingerprint引用。Frontend必须保留server排序与cursor、显示`found=false`和`found=true/items=[]`的不同状态、在Version precondition过期时重新获取权威Version；不得在浏览器重算Resource Load/KPI、推断UNKNOWN为INFEASIBLE或将comparison渲染成P4 ChangeReport。P3-05交接时尚无组件/API call；P3-11现只消费获授权的read-only subset。
 
 ## TASK-P3-06 command handoff
 
@@ -102,3 +102,15 @@ Backend application现可把Move/Assign/Set/Remove Lock intent转换为fresh-val
 ## TASK-P3-10 HTTP handoff
 
 Backend现以17个`/api/v1` operation暴露已有read/validate/edit/decision/publication/export application边界，并提供stable OpenAPI、correlation、strict carrier与sanitized error envelope。这只是Backend transport handoff：本Task没有创建Frontend组件、browser client、session/identity integration或用户可见成功状态。P3-11～13的consumer必须保留URL-encoded strict query、exact Version precondition、Idempotency-Key/body一致和401/403/404/409/422/500/503区分，不得将test principal或Simulation flag外推为Production authority。
+
+## TASK-P3-11 read-only activation
+
+P3-11已在Diff base `26dd519b1f1f84e08d415cfdfce43f286fa82988`上激活，只允许实现Data Health、Import Runs、Planning Runs/Run Detail、Version、Orders、Operations、Resources、Calendars、Validation、KPI、Diagnostics和Audit的read-only route。每个consumer必须显式呈现`loading/empty/ready/stale/authorization_denied/contract_error/server_error`，区分`found=false`与`found=true/items=[]`，保留server cursor、raw UTC、Version/content/source fingerprints与lineage，并让server error/state authority覆盖客户端缓存。
+
+本Task不创建Gantt、Resource Load、Version Comparison或control route，也不在browser计算Solver/Validator/KPI/Resource Load。默认session provider没有token且fail closed；不得存储或记录token，Production navigation不得暴露Simulation-only入口。上述行为仍需implementation/provider evidence，activation本身不构成用户可见完成状态、Production identity或readiness。
+
+## TASK-P3-11 local implementation
+
+现有13条route与页面矩阵逐字一致。Workspace-level read构造URL-encoded canonical JSON `query`；schedule-scoped read先取得`schedule-version.v1`，再把exact identity/state/content fingerprint作为precondition。Consumer检查query fingerprint、carrier reference与完整payload item的identity/type/fingerprint一致；payload fingerprint本身保持server authority而不从解析后可能丢失number lexical form的JavaScript object重新定义canonical bytes。
+
+UI分别显示missing、found-empty、ready、stale、authorization、contract和server failure，保留raw UTC、Version/content/source/collection fingerprints、完整lineage和correlation；cursor只按server opaque value前后导航。当前本地25 tests、axe结构检查、type/lint/build与9/9 machine report均PASS；provider尚未形成，因此不得标记Task done。Playwright browser、Gantt/load/comparison、control、identity、P4和Production仍未形成。

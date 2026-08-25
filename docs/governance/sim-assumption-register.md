@@ -175,3 +175,11 @@ SIM-ASSUMPTION-001～013继续`ACTIVE`，无新增/修改/retire，`registry_ver
 TASK-P3-09复用既有synthetic scenario/profile/generator/seed与P2 correctness payload；未新增假设ID。Provider artifact `9548027237`精确复验synthetic target、12 payload、4 sheets与Simulation-only边界；Package size、row/sheet count、SQLite lease与local atomic rename仍只作为development evidence，不外推真实数据规模、distributed filesystem或Production retry。13项假设继续ACTIVE且registry version不变。
 
 TASK-P3-10只复用synthetic carrier/resource、stable test principal与test application facade，未新增假设ID。Provider artifact `9550224090`精确复验17 routes/delegations、Simulation flag/plane与Production pre-provider denial；TestClient、URL-encoded query字节、OpenAPI fingerprint、route数和本地latency仍不外推真实用户、网络、identity provider、Production流量或SLA，13项假设继续ACTIVE且registry version不变。
+
+## TASK-P3-11 activation review
+
+Frontend unit/component测试可复用显式versioned synthetic carrier，并记录bundle bytes、virtualized rows和test-local render/query observation；不得新增真实订单/资源/用户分布、浏览器容量阈值、网络latency、identity或Production SLA假设。Production navigation不得显示synthetic seed或Simulation-only入口。
+
+SIM-ASSUMPTION-001～013继续`ACTIVE`，本Task不新增、修改或retire假设，`registry_version=1.0.0`不变。Development fixture、jsdom和local bundle observation不得外推P3-12/13 browser E2E、P4或Production证据。
+
+本地25 tests只使用in-memory versioned payload；runtime明确拒绝Simulation/Development plane，没有新增seed/profile/distribution。全部13项假设继续ACTIVE且registry version不变。

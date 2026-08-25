@@ -404,3 +404,11 @@ Schema/sample/rules、migration/infrastructure repository semantics、dependency
 TASK-P3-09实际命中13行：`IMPACT-SCHEMA/DOMAIN/APPLICATION/STATE/EXPORT/JOBS/INFRA/DEPENDENCY/VERSION-METADATA/TESTS/PHASE/GOVERNANCE-REGISTRY/DOCS`。Diff base=`b9c0b1694448a4ec348b0b02107926f6213560c9`；migration、dependency/lock、publication service、P2/v1 bytes、API/frontend/external/P4零差异。首轮full暴露的v1 builder影响已先扩卡并仅用显式2.6常量修正；implementation artifact `9548027237`精确复现76 committed/0 working paths、13 rows、19 checks、0 issues及冻结范围，故本closure可把Task标为`done`且不启动P3-10。
 
 TASK-P3-10实际命中7行：`IMPACT-API/STATE/INFRA/TESTS/PHASE/GOVERNANCE-REGISTRY/DOCS`。Diff base=`f71c4a5a11a3fac0e203e2e92198c26124755927`；API与three test classes、health/CI contract、single required workflow step及逐字文档allow-list可变，Schema/sample/rules、migration、dependency/lock、domain/application/repository/exporter/job、Frontend/external/P4零差异。Implementation artifact `9550224090`精确复现51 committed/0 working paths、7 rows、19 checks、0 issues及冻结范围，故本closure可把Task标为`done`且不启动P3-11。
+
+## TASK-P3-11 impact review
+
+完整Diff base=`26dd519b1f1f84e08d415cfdfce43f286fa82988`，预期只命中六行：`IMPACT-FRONTEND`（locked shell/API adapter/read-only routes/components）、`IMPACT-INFRA`（required Node install/SCA/license/lint/type/test/build/evidence steps）、`IMPACT-TESTS`、`IMPACT-PHASE`、`IMPACT-GOVERNANCE-REGISTRY`和`IMPACT-DOCS`。Task卡逐字allow-list是完整可变范围。
+
+Schema/sample/rules、migration、Python dependency/`uv.lock`、Backend domain/application/repository/API semantics、state machine、Solver/Validator、P3-12+、P4与Production deployment必须零差异。`docs/domain/state-machines/schedule-version.md`、`docs/planning/replanning.md`、`docs/planning/schedule-validator.md`和Task Template由Impact Rule复核但无语义变化，允许保持零diff；不得为增加row而改写历史。兼容门禁固定为`typescript-eslint=8.68.0`/`eslint=10.9.1`/`typescript=6.0.3`及TypeScript peer `>=4.8.4 <6.1.0`。
+
+当前implementation diff实际命中上述六行，无额外Impact row；Task diff checker为0 issue。Frontend exact files、required workflow和只读CI contract为唯一代码/CI变化，全部冻结范围仍零差异。Exact provider前Task保持`in_progress`。

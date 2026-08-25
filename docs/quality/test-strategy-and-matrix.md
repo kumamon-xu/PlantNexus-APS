@@ -75,7 +75,7 @@ registry_version: 1.0.0
 | TEST-EXPORT-JOB-001 | ExportJob transition、package integrity、atomic/idempotent export与失败恢复 | P3 | TASK-P3-03/09 provider-verified persistence/business/package；TASK-P3-10 create/read/retry/cancel transport provider-verified |
 | TEST-AUDIT-TRAIL-001 | append-only actor/reason/correlation/before-after/version audit完整性 | P3 | TASK-P3-03～10 provider-verified business/denial audit、correlation与redaction；retention/SIEM PLANNED |
 | TEST-WORKSPACE-API-001 | HTTP payload/error/auth/idempotency/OpenAPI与application boundary | P3 | [`test_planning_workspace_http_api.py`](../../backend/tests/contract/test_planning_workspace_http_api.py) + [`test_planning_workspace_api_integration.py`](../../backend/tests/integration/test_planning_workspace_api_integration.py) + [`test_planning_workspace_http_authorization.py`](../../backend/tests/security/test_planning_workspace_http_authorization.py) + 8/8 machine provider-verified / TASK-P3-10 |
-| TEST-WORKSPACE-FRONTEND-001 | read/action UI、状态可见性、accessibility与no-client-authority E2E | P3 | PLANNED / TASK-P3-11～13 |
+| TEST-WORKSPACE-FRONTEND-001 | read/action UI、状态可见性、accessibility与no-client-authority E2E | P3 | P3-11 read-only slice LOCAL_PROVIDER_PENDING；P3-12/13 visualization/action/browser E2E PLANNED |
 | TEST-P3-VERTICAL-SLICE-001 | P3完整workspace→review→approve→publish→export双重replay与拒绝门 | P3 | PLANNED / TASK-P3-14～15 |
 
 Test ID 一经分配不得复用。链接到真实测试路径才是已形成证据；`PLANNED` 只登记合同。表结构或状态语义变化必须提升 `registry_version`。
@@ -343,3 +343,11 @@ TASK-P3-09新增contract/unit/integration/security覆盖：2份v2 Schema/sample 
 新增contract/integration/security覆盖17个route与stable operation ID/OpenAPI、strict GET query/POST command/header-path-body绑定、Idempotency-Key与correlation一致、全route单次application delegation、401/403/404/409/422/500/503映射与sanitization、capability/resource scope、Simulation flag/plane、Production pre-provider default-deny、provider/audit-sink exception fail-closed、denial audit redaction、health preservation与thin-router AST boundary。定向组合已为41 PASS，`p3-planning-workspace-api-report.v1`本地8/8 PASS、17 successful delegations、8 mapped reasons、Production provider/application调用0、business transition/Solver/Validator调用0、`issues=[]`。
 
 这只将现有P3 application绑定到HTTP，不新增Test ID，总数继续48。首轮full的既有P3-09 deterministic XLSX用例曾为601 PASS/1 FAIL，该用例定向连续5次PASS，API安全加固后最终full为603 PASS；P3-10未修改exporter/package。Implementation `4958ce5759812331f13fab2608fbec37f1f1ff76` / artifact `9550224090`精确复验29/29 JSON和上述结果，Task report为51 committed/0 working paths、7 rows、19 checks、0 issues；provider未复现该XLSX波动。Frontend/browser E2E、真实identity/external adapter、P4、Production data/API/auth/publish/deployment/readiness均不由这些测试形成。
+
+## TASK-P3-11 Frontend activation test slice
+
+TEST-WORKSPACE-FRONTEND-001计划覆盖13个read-only route、七种明确页面状态、missing与found-empty区分、raw UTC/lineage/fingerprint authority、opaque cursor、unknown state fail-visible、no client business calculation、no token persistence、Production navigation isolation及axe accessibility；TEST-WORKSPACE-API-001回归覆盖URL-encoded canonical query、GET-only read adapter和401/403/404/409/422/500/503分类。Playwright只锁pin，不下载browser或执行control E2E。
+
+Dependency tests必须验证24个exact direct pins、npm lockfile v3、Node/npm pin、SCA/license report，并逐字核对`typescript-eslint=8.68.0`、`eslint=10.9.1`、`typescript=6.0.3`和peer `>=4.8.4 <6.1.0`。Activation时没有PASS；当前只有下述local PASS而仍无provider声明。Test ID总数仍48、registry version仍`1.0.0`，P3-12/13、P4与Production测试继续PLANNED。
+
+本地已通过6个Vitest files/25 tests：canonical Python vector、13-route/exclusion、GET/token/error mapping、unknown state/fingerprint reference、seven visible states、missing/empty、server authority/raw UTC、Production runtime isolation和axe结构。Playwright browser未安装，color contrast/browser matrix仍不由jsdom形成；exact provider尚待push，所以P3-11 slice只标`LOCAL_PROVIDER_PENDING`。

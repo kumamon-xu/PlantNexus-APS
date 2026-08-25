@@ -34,6 +34,17 @@ jobs:
           version: "0.11.32"
           enable-cache: true
 
+      - uses: actions/setup-node@v4
+        with:
+          node-version: "24.19.0"
+          cache: npm
+          cache-dependency-path: frontend/package-lock.json
+
+      - name: Verify exact Frontend runtime
+        run: |
+          test "$(node --version)" = "v24.19.0"
+          test "$(npm --version)" = "11.17.0"
+
       - name: Sync exact lock
         run: uv sync --locked
 
@@ -189,6 +200,35 @@ jobs:
           uv run python -m app.api.planning_workspace_check
           --root .
           --report build/validation/ci-p3-planning-workspace-api.json
+
+      - name: P3 Frontend locked install
+        run: npm --prefix frontend ci
+
+      - name: P3 Frontend point-in-time SCA evidence
+        run: >-
+          npm --prefix frontend run audit:sca --
+          --report ../build/validation/ci-p3-frontend-sca.json
+
+      - name: P3 Frontend license evidence
+        run: >-
+          npm --prefix frontend run licenses:check --
+          --report ../build/validation/ci-p3-frontend-licenses.json
+
+      - name: P3 Frontend lint and type contract
+        run: |
+          npm --prefix frontend run lint
+          npm --prefix frontend run typecheck
+
+      - name: P3 Frontend component and accessibility tests
+        run: npm --prefix frontend test -- --run
+
+      - name: P3 Frontend production build
+        run: npm --prefix frontend run build
+
+      - name: P3 Frontend machine evidence
+        run: >-
+          npm --prefix frontend run evidence --
+          --report ../build/validation/ci-p3-frontend.json
 
       - name: Engineering contract
         run: >-

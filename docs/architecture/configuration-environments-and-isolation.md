@@ -229,3 +229,9 @@ P3-09只使用显式`SIMULATION`与DEVELOPMENT/TEST/BENCHMARK、target=`SIMULATI
 ## TASK-P3-10 API isolation
 
 Planning Workspace route只在显式`PLANTNEXUS_SIMULATION_API_ENABLED=true`且data plane=`SIMULATION`时可使用test provider；Production无论Bearer或声明capability如何都在provider lookup/application调用前拒绝。本Task未新增env var、Secret、network、DB、container或deployment config，只消费已有typed setting。Simulation TestClient与test principal不得用于Production。
+
+## TASK-P3-11 Frontend isolation
+
+Production bundle只接受same-origin默认`/api/v1`或显式base URL，并把plane/environment固定为`PRODUCTION/PRODUCTION`、`synthetic=false`；请求不能从页面、query string或local storage切换plane。任何Simulation/Development env尝试在runtime loader中fail closed，synthetic carrier只存在于unit/component test fixture且没有navigation/seed入口。
+
+Session provider默认无token，client使用`credentials=omit`、`cache=no-store`且不读写local/session storage或cookie。真实OIDC/session、CORS/CSRF、gateway base URL和Production deployment仍由OPEN-010/015及后续授权决定。

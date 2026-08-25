@@ -179,3 +179,11 @@ P3-09现形成transport-neutral `ExportJobService`与`export-job.v2`结果，仍
 Transport只有在server-derived principal/capability/resource scope通过后才委托application。缺失/非法Bearer为401，capability/scope拒绝为403，resource missing为404，state/stale/idempotency为409，strict carrier/validation为422，sanitized unexpected/persistence为500，unavailable composition为503；响应只暴露稳定namespace/reason、safe details和correlation。Production在provider lookup前固定拒绝，Simulation必须同时开启显式API flag和Simulation data plane。
 
 OpenAPI固定17个operation ID和`x-plantnexus-*`边界；本地machine evidence记录17 paths/17 successful delegations、8类error mapping、Production provider/application调用均0、router business transition与Solver/Validator调用均0。这不形成Frontend、external adapter、真实RBAC/SSO、P4 endpoint或Production readiness；exact provider仍待提交后闭环。
+
+## TASK-P3-11 read-only HTTP consumer
+
+Frontend现只调用`getPlanningRun`、`getScheduleVersion`及获授权的workspace GET route；query参数是canonical compact JSON经`URLSearchParams`编码的单一`query`值。Schedule-scoped页面必须先读取Version并把exact ID/state/content fingerprint放入query carrier；409只进入`stale`状态，不使用旧缓存继续显示ready。
+
+Response adapter逐字段检查version、view、result、unknown state、raw UTC、lineage、carrier item与完整payload item reference；query fingerprint由canonical projection复验。Payload fingerprint保留server authority并与carrier/reference逐字对齐，不从JSON.parse后的JavaScript number重新定义后端canonical lexical bytes。401/403、404/422、409、500/503/network分别进入authorization、contract、stale和server failure；任何失败均不伪造empty/ready。
+
+Session只来自注入provider且默认null；client不持久化/记录token、不发POST、不装配command/idempotency/action route。此consumer不改变17个operation、Schema/OpenAPI、Backend semantics或Production authority。

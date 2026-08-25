@@ -54,7 +54,7 @@ last_reviewed: 2026-08-25
 | [TASK-P3-08](P3/TASK-P3-08-idempotent-publication-and-supersession.md) | Idempotent publish/supersession | P3-03/07 | `done` |
 | [TASK-P3-09](P3/TASK-P3-09-export-job-and-standard-package.md) | ExportJob/standard package | P3-03/04/08 | `done` |
 | [TASK-P3-10](P3/TASK-P3-10-planning-workspace-http-api.md) | Planning Workspace HTTP API | P3-05～09 | `done` |
-| [TASK-P3-11](P3/TASK-P3-11-frontend-foundation-and-read-only-workspace.md) | Frontend/read-only workspace | P3-01/10 | `planned` |
+| [TASK-P3-11](P3/TASK-P3-11-frontend-foundation-and-read-only-workspace.md) | Frontend/read-only workspace | P3-01/10 | `in_progress` |
 | [TASK-P3-12](P3/TASK-P3-12-gantt-resource-load-and-version-comparison-ui.md) | Gantt/Load/Comparison UI | P3-05/10/11 | `planned` |
 | [TASK-P3-13](P3/TASK-P3-13-human-control-actions-and-ui-e2e.md) | Human control actions/UI E2E | P3-06～12 | `planned` |
 | [TASK-P3-14](P3/TASK-P3-14-p3-vertical-slice-gate-evidence.md) | P3 vertical-slice Gate evidence | P3-01～13 | `planned` |
@@ -141,3 +141,7 @@ TASK-P2-14本地审计已形成overall=`READY`、blocking gaps为空：476 tests
 TASK-P3-09已通过16 focused、594 full、Ruff/Pyright、8/8 export machine、全部历史machine、P2 Gate/XS、Compose/build和76 paths/13 rows/19 checks/0 issues治理；implementation `42278239332e61e55a4e0305705534db768dc22f`的run/job/artifact=`32805450589`/`97674572006`/`9548027237`精确复现28/28 JSON及v1 preservation、standard package、job lifecycle/recovery/audit与Production default-deny，故索引标为`done`。
 
 用户随后单独授权TASK-P3-10；P3-05～09 closure/provider、`main=origin/main`与clean tree复核通过，Diff base固定为`f71c4a5a11a3fac0e203e2e92198c26124755927`。该Task仅实现17个P3 HTTP operation、OpenAPI、strict carrier/idempotency/correlation、server-derived auth/scope、sanitized error与machine/test/docs；implementation `4958ce5759812331f13fab2608fbec37f1f1ff76`的run/job/artifact=`32812163430`/`97693443111`/`9550224090`精确复现603 tests、29/29 JSON、8/8 machine及51 committed/0 working paths、7 rows、19 checks、0 issues，故索引标为`done`。P3-11～15不自动启动。
+
+用户随后单独授权TASK-P3-11；启动门复核P3-01/10 closure provider、`main=origin/main=26dd519b1f1f84e08d415cfdfce43f286fa82988`与clean tree一致，并把该SHA冻结为Diff base。激活前已冻结Node/npm、24个exact direct pins、npm v3 lock、SCA/license命令、13条read-only route及模块级allow-list；Task现为`in_progress`。P3-12～15、Gantt/load/comparison、actions/E2E、P4和Production不自动启动。
+
+P3-11本地implementation已形成13 routes/seven states/read-only authority UI、25 tests、npm SCA/license/build与9/9 machine evidence；Python全仓604项、CI contract 28项及全部历史门禁也已通过。Required provider尚未形成，所以索引保持`in_progress`，不得预填implementation SHA/run/artifact或启动P3-12。

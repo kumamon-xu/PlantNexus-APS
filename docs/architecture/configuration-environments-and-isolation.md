@@ -242,4 +242,4 @@ Session provider默认无token，client使用`credentials=omit`、`cache=no-stor
 
 Gantt/load/comparison沿用P3-11 Production-only runtime与default no-token session，不新增env var、Secret、base URL switch、Simulation navigation、service、database、container或deployment。Playwright只在ephemeral Vite/Chromium进程中拦截same-origin request；`VERSIONED_SYNTHETIC_UI_120@1.0.0`使用Production-shaped mock carrier是为了验证Frontend runtime contract，不表示真实Production数据、authority或connected environment。
 
-Comparison POST仍使用`credentials=omit`/`cache=no-store`、Bearer只来自内存provider且没有Idempotency-Key；authorization denied保持显式页面状态。Browser install、screenshots/traces/video和bundle均为development CI artifact，不进入Production image或data plane；OPEN-010/015、真实identity/gateway/hosting与Production isolation证据未形成。
+Comparison POST仍使用`credentials=omit`/`cache=no-store`、Bearer只来自内存provider且没有Idempotency-Key；authorization denied保持显式页面状态。Artifact `9555196470`精确复验4/4 browser与no-command/no-Production flags。Browser install、screenshots/traces/video和bundle均为development CI artifact，不进入Production image或data plane；OPEN-010/015、真实identity/gateway/hosting与Production isolation证据未形成。

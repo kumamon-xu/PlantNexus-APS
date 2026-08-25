@@ -103,7 +103,7 @@ TASK-P1-02在既有`schemas/json`/`schemas/samples`边界新增canonical-records
 
 ## P3 layout allocation history
 
-P3 transition时只新增`docs/tasks/P3/`中的16张Task卡；当时没有创建backend、schema、migration、frontend或workflow路径。后续P3-01形成docs/ADR，P3-02负责Schema/contracts，P3-03负责persistence/migration，P3-04～10负责application/API/jobs/exporters；P3-11现按逐字allow-list形成Frontend read-only slice，P3-12/13仍未启动，P3-14/15只分配Gate/Audit evidence。
+P3 transition时只新增`docs/tasks/P3/`中的16张Task卡；当时没有创建backend、schema、migration、frontend或workflow路径。后续P3-01形成docs/ADR，P3-02负责Schema/contracts，P3-03负责persistence/migration，P3-04～10负责application/API/jobs/exporters；P3-11按逐字allow-list形成Frontend read-only foundation，P3-12形成read-only visualization/browser slice，P3-13仍未启动，P3-14/15只分配Gate/Audit evidence。
 
 ## TASK-P3-11 Frontend layout
 
@@ -115,4 +115,4 @@ Implementation artifact `9552386549`精确复验上述23个source files、13 rou
 
 新增`frontend/src/features/gantt/{GanttPage,GanttTimeline}.tsx`、`features/resource-load/ResourceLoadPage.tsx`、`features/version-comparison/VersionComparisonPage.tsx`、`app/useWorkspaceView.ts`、三个focused Vitest文件、`e2e/read-only-visualizations.spec.ts`与`playwright.config.ts`；既有API/app/routes/styles/tests/evidence script按Task allow-list扩展。`frontend/package.json`只增加E2E命令，`package-lock.json`与24个pins零差异；`node_modules/dist/test-results/coverage/*.tsbuildinfo`及machine/browser artifacts保持ignored。
 
-Backend仅既有CI contract test核对required workflow接线；没有新增或修改business/API module、Schema、migration、dependency、command/action、P4或Production hosting目录。Local machine报告识别28个Frontend source files、18 routes和7 states；exact provider形成前该layout slice仍为`in_progress`。
+Backend仅既有CI contract test核对required workflow接线；没有新增或修改business/API module、Schema、migration、dependency、command/action、P4或Production hosting目录。Implementation artifact `9555196470`精确复验28个Frontend source files、18 routes、7 states及上述absence flags，故该layout slice随TASK-P3-12标为`done`；P3-13、P4与Production目录仍未形成。

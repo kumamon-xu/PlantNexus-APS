@@ -55,7 +55,7 @@ last_reviewed: 2026-08-25
 | [TASK-P3-09](P3/TASK-P3-09-export-job-and-standard-package.md) | ExportJob/standard package | P3-03/04/08 | `done` |
 | [TASK-P3-10](P3/TASK-P3-10-planning-workspace-http-api.md) | Planning Workspace HTTP API | P3-05～09 | `done` |
 | [TASK-P3-11](P3/TASK-P3-11-frontend-foundation-and-read-only-workspace.md) | Frontend/read-only workspace | P3-01/10 | `done` |
-| [TASK-P3-12](P3/TASK-P3-12-gantt-resource-load-and-version-comparison-ui.md) | Gantt/Load/Comparison UI | P3-05/10/11 | `in_progress` |
+| [TASK-P3-12](P3/TASK-P3-12-gantt-resource-load-and-version-comparison-ui.md) | Gantt/Load/Comparison UI | P3-05/10/11 | `done` |
 | [TASK-P3-13](P3/TASK-P3-13-human-control-actions-and-ui-e2e.md) | Human control actions/UI E2E | P3-06～12 | `planned` |
 | [TASK-P3-14](P3/TASK-P3-14-p3-vertical-slice-gate-evidence.md) | P3 vertical-slice Gate evidence | P3-01～13 | `planned` |
 | [TASK-P3-15](P3/TASK-P3-15-p3-exit-gate-audit.md) | Independent P3 Exit Gate Audit | P3-14 | `planned` |
@@ -146,6 +146,6 @@ TASK-P3-09已通过16 focused、594 full、Ruff/Pyright、8/8 export machine、�
 
 P3-11 implementation `567e8693db881ea3dfffa011de9021fef9641361`的run/job/artifact=`32818657951`/`97712018632`/`9552386549`精确复现604 Python tests、25 Frontend tests、32/32 JSON、Frontend 9/9、SCA 0、336 package license及74 committed/0 working paths、6 rows、19 checks、0 issues，故本closure把索引标为`done`。P3-12～15保持`planned`且未获执行授权。
 
-用户随后单独授权TASK-P3-12；P3-05/10/11 closure provider、`main=origin/main=3bca1cc10ebedc4d47227bafb2f3f66854ccb526`与clean tree复核通过，该SHA冻结为Diff base。当前只允许只读Gantt/load/comparison、server KPI/diagnostics overlay、可访问virtualization、read-only Playwright及限定CI/docs；dependency/lock、actions、server business/state、P3-13+、P4和Production不自动启动。
+用户随后单独授权TASK-P3-12；P3-05/10/11 closure provider、`main=origin/main=3bca1cc10ebedc4d47227bafb2f3f66854ccb526`与clean tree复核通过，该SHA冻结为Diff base。本Task授权只允许只读Gantt/load/comparison、server KPI/diagnostics overlay、可访问virtualization、read-only Playwright及限定CI/docs；dependency/lock、actions、server business/state、P3-13+、P4和Production不自动启动。
 
-TASK-P3-12 local slice已通过type/lint、37 Vitest、4/4 Chromium、build与12/12 visualization machine；首轮2/4 locator失败记录与trace保留，SIM-ASSUMPTION-014绑定120-row fixture。Exact provider尚未形成，索引继续`in_progress`；P3-13～15仍`planned`。
+TASK-P3-12 local slice已通过type/lint、37 Vitest、4/4 Chromium、build与12/12 visualization machine；首轮2/4 locator失败记录与trace保留，SIM-ASSUMPTION-014绑定120-row fixture。Implementation `a719fe5bf2c2ea2d59e1582e8f4dfd3f2674ac69`的run/job/artifact=`32826371613`/`97735176425`/`9555196470`精确复现33/33 JSON、Frontend 12/12及55 committed/0 working paths、6 rows、19 checks、0 issues，故索引标为`done`；P3-13～15仍`planned`。

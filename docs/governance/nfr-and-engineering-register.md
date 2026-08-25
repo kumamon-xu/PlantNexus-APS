@@ -194,4 +194,4 @@ Implementation `567e8693db881ea3dfffa011de9021fef9641361` / artifact `9552386549
 
 NFR-COR/TRC通过strict完整payload fingerprint、Version/content/source lineage、server filter/cursor与comparison dual precondition保持事实一致；NFR-OBS/PER只记录`VERSIONED_SYNTHETIC_UI_120@1.0.0`的120 rows、最多24 mounted visual rows、4 browser specs及1030697 JS/4106 CSS bytes，不形成阈值或SLA。ENG-ARCH保持api contracts/client→view hook→feature page/timeline单向依赖，ENG-ERR把authorization/stale/contract/server/partial显式可见，ENG-VER保持Schema set/OpenAPI/read-model fingerprint及24个dependency pins/lock逐字冻结。
 
-Local type/lint、37 Vitest、4/4 Chromium与12/12 machine已通过，并包含outbound query/correlation/Version-pair绑定负例，但provider尚未形成；这不证明browser matrix、Production scale/security/capacity。全部NFR/ENG root继续`ALLOCATED`，OPEN-012和RISK-009/011/013继续开放或受监控，`registry_version=1.0.0`不变。
+Local type/lint、37 Vitest、4/4 Chromium与12/12 machine已通过，并包含outbound query/correlation/Version-pair绑定负例；implementation artifact `9555196470`已精确复验12/12、4/4与同一SHA/边界。该provider仍不证明browser matrix、Production scale/security/capacity。全部NFR/ENG root继续`ALLOCATED`，OPEN-012和RISK-009/011/013继续开放或受监控，`registry_version=1.0.0`不变。

@@ -195,4 +195,4 @@ Run `32818657951` / required job `97712018632`已逐步成功执行该链；arti
 
 在P3-11 locked chain后执行`npm --prefix frontend exec -- playwright install --with-deps chromium`、`npm --prefix frontend run test:e2e`、build与visualization evidence。Playwright配置单worker、read-only Vite、JSON report，并对失败保留trace/video/screenshot；required workflow的machine artifact step使用`if: always()`收集`build/playwright/**`，不能因前置失败跳过诊断证据。
 
-Local首轮2/4因strict locator歧义失败，失败介质保留后收紧role断言并4/4通过；不得删除row、skip spec或以截图替代behavior。该命令链不连接Production API/identity、不会执行command/action或写ScheduleVersion，也不形成deployment、support runbook、browser matrix、SLO或rollback authority；exact provider成功前TASK-P3-12保持`in_progress`。
+Local首轮2/4因strict locator歧义失败，失败介质保留后收紧role断言并4/4通过；不得删除row、skip spec或以截图替代behavior。Implementation run/job/artifact=`32826371613`/`97735176425`/`9555196470`已在required Linux runner精确复验4 expected/0 unexpected/0 flaky、Frontend 12/12与artifact always-upload，故TASK-P3-12=`done`。该命令链不连接Production API/identity、不会执行command/action或写ScheduleVersion，也不形成deployment、support runbook、browser matrix、SLO或rollback authority。

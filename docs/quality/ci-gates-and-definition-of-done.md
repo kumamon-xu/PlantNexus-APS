@@ -346,6 +346,8 @@ Dependency Gate保持P3-11边界，尤其`typescript-eslint=8.68.0`/`eslint=10.9
 
 Runner ownership Gate要求Vitest显式排除`e2e/**`、Playwright只运行该目录；这是防止同一spec被两个runner误收集的bounded script调整，不允许skip、`only`、降低assertion或改变dependency/lock。
 
-当前local typecheck、lint、9 files/37 Vitest、build、4/4 Chromium与12/12 machine PASS，包含response↔outbound query/correlation/Version-pair负向绑定；bundle观察为1030697 JS/4106 CSS bytes。首轮browser为2/4，原因是测试locator对同名heading/link不唯一；收紧role后4/4，首轮失败截图/video/trace已保留且没有隐藏产品row或降低行为边界。Local PASS不替代provider；push后必须核验exact SHA required run/job/app并下载artifact核对Task/SHA/base、六个Impact rows、SIM-ASSUMPTION-014、全部checks/issues，成功后才可evidence-only closure且不得自动启动P3-13。
+Local typecheck、lint、9 files/37 Vitest、build、4/4 Chromium与12/12 machine PASS，包含response↔outbound query/correlation/Version-pair负向绑定；bundle观察为1030697 JS/4106 CSS bytes。首轮browser为2/4，原因是测试locator对同名heading/link不唯一；收紧role后4/4，首轮失败截图/video/trace已保留且没有隐藏产品row或降低行为边界。Local PASS在provider形成前未被当作provider evidence。
 
-完整local Gate同时通过npm locked install、SCA 0 advisory、336 package license/0 issue、604 Python tests、Ruff/Pyright、全部32份required validation JSON、P2 XS 8/8与vertical Gate 11/11、Compose、Python build、full docs及55-path/6-row/19-check/0-issue Task diff。Provider字段在真实implementation push前不得预填。
+完整local Gate同时通过npm locked install、SCA 0 advisory、336 package license/0 issue、604 Python tests、Ruff/Pyright、全部32份required validation JSON、P2 XS 8/8与vertical Gate 11/11、Compose、Python build、full docs及55-path/6-row/19-check/0-issue Task diff；当时未预填provider字段。
+
+Implementation provider Gate现已通过：SHA `a719fe5bf2c2ea2d59e1582e8f4dfd3f2674ac69`、run `32826371613`、required `validate` job/check `97735176425`（app `15368`）均success且全部steps通过；artifact `9555196470`未过期，105525 bytes，digest=`sha256:6c6a1f05b6f66217256cec96ad8d3f6aea547dd57c0e7ce6bc5e73b679b7279f`、expiry=`2026-11-23T08:23:37Z`。下载复核33/33 JSON顶层PASS，25份SHA-bound报告一致，Frontend 12/12、Playwright 4/4、SCA 0、license 336/0与Task 55 committed/0 working paths、6 rows、19 checks、0 issues均匹配。TASK-P3-12 bounded DoD据此完成；该Gate不形成P3-13 control、真实identity、P4或Production readiness，也不自动授权后续Task。

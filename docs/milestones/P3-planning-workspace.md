@@ -15,7 +15,7 @@ last_reviewed: 2026-08-25
 
 用户于2026-08-24在核验TASK-P2-00～14全部`done`、P2 Exit Gate overall=`READY`/`blocking_gaps=[]`、audit implementation/closure拓扑与exact GitHub required `validate`/artifact后，明确批准P2→P3 transition。P2为`completed`，P3为当前`active` Milestone。
 
-TASK-P3-00已完成Milestone激活、Task规划与文档治理，TASK-P3-01～11也已有各自exact implementation provider并由evidence-only closure标为`done`；用户已单独授权TASK-P3-12并从provider-verified closure HEAD进入`in_progress`，P3-13～15保持`planned`且未获执行授权。依赖满足不会自动授权后续实现。每个Task必须从当时clean、`main=origin/main`且provider-verified的完整40字符HEAD建立新的不可变Diff base。
+TASK-P3-00已完成Milestone激活、Task规划与文档治理，TASK-P3-01～12也已有各自exact implementation provider并由evidence-only closure标为`done`；P3-13～15保持`planned`且未获执行授权。依赖满足不会自动授权后续实现。每个Task必须从当时clean、`main=origin/main`且provider-verified的完整40字符HEAD建立新的不可变Diff base。
 
 ## Outcome
 
@@ -39,7 +39,7 @@ TASK-P3-00已完成Milestone激活、Task规划与文档治理，TASK-P3-01～11
 | 9 | TASK-P3-09 | ExportJob与标准成果包 | P3-03/04/08 | `done` |
 | 10 | TASK-P3-10 | Planning Workspace HTTP API | P3-05～09 | `done` |
 | 11 | TASK-P3-11 | Frontend foundation与read-only workspace | P3-01/10 | `done` |
-| 12 | TASK-P3-12 | Gantt/Resource Load/Comparison UI | P3-05/10/11 | `in_progress` |
+| 12 | TASK-P3-12 | Gantt/Resource Load/Comparison UI | P3-05/10/11 | `done` |
 | 13 | TASK-P3-13 | Human control actions与UI E2E | P3-06～12 | `planned` |
 | 14 | TASK-P3-14 | 完整P3 vertical-slice Gate evidence | P3-01～13 | `planned` |
 | 15 | TASK-P3-15 | 独立P3 Exit Gate Audit | P3-14 | `planned` |
@@ -108,6 +108,6 @@ TASK-P3-09已实现五state/六allowed pair、attempt/lease/heartbeat、explicit
 
 P3-11 implementation `567e8693db881ea3dfffa011de9021fef9641361`的required run/job/artifact=`32818657951`/`97712018632`/`9552386549`精确success；下载复核32/32 JSON、Frontend 9/9、SCA 0、336 package license及74 committed/0 working paths、6 rows、19 checks、0 issues，故本closure标为`done`。Milestone仍active，P3-12+保持`planned`且不自动启动；browser E2E、P4与Production仍未形成。
 
-用户随后单独授权TASK-P3-12；P3-05/10/11 closure provider、`main=origin/main=3bca1cc10ebedc4d47227bafb2f3f66854ccb526`与clean tree复核通过，该SHA冻结为Diff base。当前仅形成Gantt/Resource Load/KPI/Diagnostics/two-Version comparison的只读UI、virtualization、可访问替代视图、read-only Playwright local evidence与provider接线；dependency/lock、server business/state、P3-13 actions、P4与Production均保持冻结。
+用户随后单独授权TASK-P3-12；P3-05/10/11 closure provider、`main=origin/main=3bca1cc10ebedc4d47227bafb2f3f66854ccb526`与clean tree复核通过，该SHA冻结为Diff base。本Task仅形成Gantt/Resource Load/KPI/Diagnostics/two-Version comparison的只读UI、virtualization、可访问替代视图与read-only Playwright evidence；dependency/lock、server business/state、P3-13 actions、P4与Production均保持冻结。
 
-TASK-P3-12 local implementation现为18条read-only route、三层Gantt、load/comparison、strict outbound binding、37项Vitest、4/4 Chromium和12/12 machine PASS；120/24 render与bundle仅为development observation，新增SIM-ASSUMPTION-014约束其不得外推Production。Exact implementation provider仍待push后核验，故Task保持`in_progress`且不自动启动P3-13。
+TASK-P3-12 local implementation为18条read-only route、三层Gantt、load/comparison、strict outbound binding、37项Vitest、4/4 Chromium和12/12 machine PASS；120/24 render与bundle仅为development observation，新增SIM-ASSUMPTION-014约束其不得外推Production。Implementation `a719fe5bf2c2ea2d59e1582e8f4dfd3f2674ac69`的required run/job/artifact=`32826371613`/`97735176425`/`9555196470`已精确复验33/33 JSON与55 committed/0 working paths、6 rows、19 checks、0 issues，故本closure把Task标为`done`且不自动启动P3-13。

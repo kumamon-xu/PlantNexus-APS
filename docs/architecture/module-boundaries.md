@@ -242,4 +242,4 @@ Frontend只比较carrier reference和server完整payload item的一致性，保�
 
 Comparison唯一POST仍属于read operation且明确无Idempotency-Key；feature不得导入command/action模块。Playwright只经mock network验证browser consumer并不连接repository/application service。Dependency方向、P3-10 backend API、state machine和24个pins/lock均不变；P3-13 control不得反向把mutation塞入这些read-only模块，P4与Production adapters仍不存在。
 
-Artifact `9552386549`以source boundary scan、GET/client tests和9/9 machine checks复验该依赖方向，Task=`done`；这不形成command/browser E2E、external或Production边界。
+P3-11 artifact `9552386549`先以source boundary scan、GET/client tests和9/9 machine checks复验foundation依赖方向；P3-12 artifact `9555196470`再以strict transport tests、4/4 Chromium及12/12 machine checks复验visualization依赖方向。两项Task均`done`；这仍不形成command/action、external、P4或Production边界。

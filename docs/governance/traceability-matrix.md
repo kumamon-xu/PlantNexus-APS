@@ -197,10 +197,10 @@ TASK-P3-09追踪链为`REQ-006/007/009 → TASK-P3-09 → export-manifest.v2/exp
 
 Implementation `567e8693db881ea3dfffa011de9021fef9641361` / artifact `9552386549`复验32/32 JSON、25 Frontend tests、9/9 machine、24 pins、13 routes、7 states、SCA/license及74 committed/0 working paths、6 rows、19 checks、0 issues。因此TEST-WORKSPACE-FRONTEND-001的P3-11 read-only slice为`PROVIDER_VERIFIED`，TEST-WORKSPACE-API-001只增加consumer回归而不改变其既有provider事实。
 
-48个Test ID、root lifecycle与`registry_version=1.0.0`均不变；P3-12/13 visualization/action/browser E2E、external、P4和Production继续`PLANNED`。
+48个Test ID、root lifecycle与`registry_version=1.0.0`均不变；P3-12 visualization/browser consumer现为provider-verified，P3-13 action E2E、external、P4和Production继续`PLANNED`。
 
-## TASK-P3-12 local trace delta
+## TASK-P3-12 trace delta 与 provider closure
 
 `REQ-003/004/005/007/009`、`NFR-COR/TRC/OBS/PER`与`ENG-ARCH/ERR/VER`现连接TASK-P3-12的strict visualization payload/client与outbound binding、Gantt/load/comparison feature、virtual timeline/table fallback、37项Vitest、4项read-only Chromium及`p3-frontend-visualization-report.v1`。Diff base固定为`3bca1cc10ebedc4d47227bafb2f3f66854ccb526`；P3-05 comparison fingerprint、P3-10 OpenAPI fingerprint和P3-11 dependency/lock均为冻结输入。
 
-Local report为12/12、18 routes、4 browser specs、120 total/最多24 mounted rows、28 source files、1030697 JS/4106 CSS bytes、`issues=[]`。因此TEST-WORKSPACE-READ-MODEL-001和TEST-WORKSPACE-FRONTEND-001增加P3-12 `LOCAL_PASS` consumer slice；exact implementation provider前不得标为PROVIDER_VERIFIED。48个Test ID、root lifecycle与`registry_version=1.0.0`不变；SIM registry新增有界SIM-ASSUMPTION-014，P3-13 actions、external、P4与Production继续`PLANNED`。
+Local report为12/12、18 routes、4 browser specs、120 total/最多24 mounted rows、28 source files、1030697 JS/4106 CSS bytes、`issues=[]`。Implementation `a719fe5bf2c2ea2d59e1582e8f4dfd3f2674ac69`的artifact `9555196470`又精确复现同一报告、4/4 Playwright与55 committed/0 working paths、六个Impact rows、19 checks、0 issues。因此TEST-WORKSPACE-READ-MODEL-001和TEST-WORKSPACE-FRONTEND-001的P3-12 consumer slice现标为`PROVIDER_VERIFIED`。48个Test ID、root lifecycle与`registry_version=1.0.0`不变；SIM registry的有界SIM-ASSUMPTION-014继续ACTIVE，P3-13 actions、external、P4与Production继续`PLANNED`。

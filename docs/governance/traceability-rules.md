@@ -342,4 +342,4 @@ Dependency trace必须逐字证明24个direct pins无range、lockfile v3由npm `
 
 Machine evidence必须证明18条exact read-only routes、24个dependency pins/lock零漂移、strict完整payload fingerprint、comparison只用POST read-query且无Idempotency-Key、4/4 Chromium、`VERSIONED_SYNTHETIC_UI_120@1.0.0`的120 rows/最多24 mounted rows、可访问完整table fallback、bundle observation、command/client authority/P4/Production absence及12/12 checks。失败workflow必须以`always()`上传Playwright screenshot/trace/video；local失败历史不得通过隐藏row或降低行为断言抹除。
 
-本地PASS只允许Task保持`in_progress`。Push后须核验exact required `validate` app `15368`、下载artifact并逐项核对Frontend/Playwright/Task的SHA/Task/base、SIM-ASSUMPTION-014、Impact/checks/issues；provider成功后才可evidence-only closure，closure自身也须exact provider。该规则不得启动P3-13、创建action/control、P4或Production readiness。
+本地PASS只允许Task保持`in_progress`。Implementation `a719fe5bf2c2ea2d59e1582e8f4dfd3f2674ac69`现已由required run/job/artifact=`32826371613`/`97735176425`/`9555196470`按本规则复核：33/33 JSON顶层PASS，Frontend/Playwright/Task的SHA/Task/base、SIM-ASSUMPTION-014、六个Impact rows、全部checks与0 issues一致，故本closure可把Task标为`done`；closure自身仍须exact provider。该规则不得启动P3-13、创建action/control、P4或Production readiness。

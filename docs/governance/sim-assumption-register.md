@@ -183,6 +183,6 @@ Frontend unit/component测试可复用显式versioned synthetic carrier，并记
 
 SIM-ASSUMPTION-001～013继续`ACTIVE`，本Task不新增、修改或retire假设，`registry_version=1.0.0`不变。Development fixture、jsdom和local bundle observation不得外推P3-12/13 browser E2E、P4或Production证据。
 
-TASK-P3-12 local review：新增SIM-ASSUMPTION-014，把120-row/30-order/6-resource/2-workshop/5-minute-offset/3600-second-duration数据绑定到`VERSIONED_SYNTHETIC_UI_120@1.0.0`，仅用于read-only Chromium virtualization、可访问table fallback和development render observation。其mock响应保持Production-shaped frontend carrier以验证runtime isolation，但不构成真实Production数据或authority；不得外推XS/S/M、browser matrix、topology/duration/capacity/SLA。SIM-ASSUMPTION-001～014均`ACTIVE`，表结构、ID/状态语义与`registry_version=1.0.0`不变。
+TASK-P3-12 review：新增SIM-ASSUMPTION-014，把120-row/30-order/6-resource/2-workshop/5-minute-offset/3600-second-duration数据绑定到`VERSIONED_SYNTHETIC_UI_120@1.0.0`，仅用于read-only Chromium virtualization、可访问table fallback和development render observation。Artifact `9555196470`复验120 total/最多24 mounted rows与4/4 browser，但其mock响应保持Production-shaped frontend carrier只为验证runtime isolation，不构成真实Production数据或authority；不得外推XS/S/M、browser matrix、topology/duration/capacity/SLA。SIM-ASSUMPTION-001～014均`ACTIVE`，表结构、ID/状态语义与`registry_version=1.0.0`不变。
 
 Implementation artifact `9552386549`复验25 tests只使用in-memory versioned payload，runtime明确拒绝Simulation/Development plane；没有新增seed/profile/distribution。全部13项假设继续ACTIVE且registry version不变。

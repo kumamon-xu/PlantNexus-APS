@@ -1,7 +1,7 @@
 ---
 doc_id: TASK-P3-12
 title: Gantt Resource Load and Version Comparison UI
-status: in_progress
+status: done
 spec_version: 0.3.0
 phase: P3
 normative: true
@@ -95,8 +95,16 @@ Browser-review scope clarification：真实浏览器快照发现P3-12页面复�
 
 截至2026-08-25，strict Gantt/Resource Load/Version Comparison payload与client、request/response query/correlation/Version-pair绑定、18条read-only route、三层Gantt、server filter/select/link、resource-load cross-link、server classification comparison、可访问完整table fallback、vertical windowing和read-only Chromium已形成。Local typecheck/lint、9个Vitest files/37 tests、build、4/4 Playwright及`p3-frontend-visualization-report.v1` 12/12 PASS；报告记录120 total/最多24 mounted rows、28 source files、1030697 JS/4106 CSS bytes、24 pins/lock零漂移与`issues=[]`。
 
-首轮Playwright为2/4，两个strict locator因同名heading/link产生多重匹配；失败截图/video/trace保留在ignored `build/playwright/local-failure-20260825-first-run/`，断言只收紧role后4/4 PASS，没有隐藏row、跳过spec或降低业务边界。CI使用`if: always()`收集`build/playwright/**`。这些均为local事实，exact implementation provider未形成，Task保持`in_progress`；P3-13 actions、P4与Production未启动。
+首轮Playwright为2/4，两个strict locator因同名heading/link产生多重匹配；失败截图/video/trace保留在ignored `build/playwright/local-failure-20260825-first-run/`，断言只收紧role后4/4 PASS，没有隐藏row、跳过spec或降低业务边界。CI使用`if: always()`收集`build/playwright/**`。这些local事实在implementation provider形成前不曾被写作provider-verified；P3-13 actions、P4与Production未启动。
 
 随后收紧response↔outbound binding时首轮Vitest为35 PASS/2 FAIL，原因是test fixture顶层correlation仍硬编码旧值；修正fixture使其回显request correlation后37/37 PASS，query/correlation/Version-pair负向断言全部保留。该本地失败不改产品阶段边界，也不得从历史中删去。
 
-完整local acceptance另通过`npm ci`、SCA 0 advisory、336 package license/0 issue、604 Python tests、Ruff/Pyright、32/32 required validation JSON、P2 XS 8/8与vertical Gate 11/11、Compose、Python package build、165-doc full governance及55 working paths/6 Impact rows/19 checks/0 issues Task diff。最终禁止差异核对确认Schema/sample/rules、migration/database、Python/Frontend locks、Backend business/API semantics、state machine、P2 bytes、command/action、P4与Production均零违规，`package-lock.json`与Diff base blob同为`6e053d1aa2db87fb789015f0a01807f326a0749f`；provider字段仍未预填。
+完整local acceptance另通过`npm ci`、SCA 0 advisory、336 package license/0 issue、604 Python tests、Ruff/Pyright、32/32 required validation JSON、P2 XS 8/8与vertical Gate 11/11、Compose、Python package build、165-doc full governance及55 working paths/6 Impact rows/19 checks/0 issues Task diff。最终禁止差异核对确认Schema/sample/rules、migration/database、Python/Frontend locks、Backend business/API semantics、state machine、P2 bytes、command/action、P4与Production均零违规，`package-lock.json`与Diff base blob同为`6e053d1aa2db87fb789015f0a01807f326a0749f`；当时未预填任何provider字段。
+
+## Provider closure evidence
+
+Implementation `a719fe5bf2c2ea2d59e1582e8f4dfd3f2674ac69`已直接push `main`。GitHub push run `32826371613`、required `validate` job/check `97735176425`（GitHub Actions app `15368`）均`completed/success`，全部53个列示job step（含post/complete）成功；branch protection仍只要求`validate`/app `15368`。
+
+Artifact `9555196470`=`plantnexus-ci-evidence-32826371613`，`expired=false`、105525 bytes、expiry=`2026-11-23T08:23:37Z`、digest=`sha256:6c6a1f05b6f66217256cec96ad8d3f6aea547dd57c0e7ce6bc5e73b679b7279f`。下载复核33/33 JSON可解析且顶层全PASS，25份`code_commit`报告绑定同一SHA；Frontend为12/12、18 routes、7 states、4 browser specs、120/24 rows、28 source files、1030697 JS/4106 CSS bytes与`issues=[]`，Playwright为4 expected/0 unexpected/0 flaky并绑定同一SHA/run。Task report精确绑定Diff base，复现55 committed/0 working paths、六个Impact rows、19 checks、0 issues；SCA为0 advisory、license为336 packages/0 issue，P2 vertical Gate仍11/11且`blocking_gaps=[]`。
+
+逐字范围复核确认state/replanning/Validator/Task Template/ADR由Impact Rule审阅但保持零diff；Schema/sample/rules、migration/database、Python/Frontend locks与24 pins、Backend business/API semantics、state machine、P2 fixture/baseline、command/action、P4和Production均零违规。故本evidence-only closure把TASK-P3-12标为`done`；P3 Milestone仍`active`，TASK-P3-13～15保持`planned`且未获启动授权。该证据不形成Production readiness、approval、publish、P4或外部系统能力；closure提交自身仍须按相同规则核验exact required provider。

@@ -32,7 +32,7 @@ P1当前状态：[`P1 — Data & Snapshot`](P1-data-and-snapshot.md)为`complete
 
 P2当前状态：[`P2 — CP-SAT Vertical Slice`](P2-cp-sat-vertical-slice.md)为`completed`。TASK-P2-00～14均已闭环为`done`；P2 Exit Gate=`READY`且0 gaps。用户于2026-08-24在复核exact provider evidence、提交拓扑与clean synchronized baseline后明确批准P2→P3。
 
-P3当前状态：[`P3 — Planning Workspace`](P3-planning-workspace.md)为`active`。TASK-P3-00～11均已有exact implementation provider并在evidence-only closure标为`done`；用户已单独授权TASK-P3-12并从clean synchronized closure HEAD进入`in_progress`，P3-13～15保持`planned`且未获执行授权。P3-15必须最后独立执行Exit Gate Audit；HTTP/internal Simulation export或Frontend provider evidence均不表示external、P4或Production。
+P3当前状态：[`P3 — Planning Workspace`](P3-planning-workspace.md)为`active`。TASK-P3-00～12均已有exact implementation provider并在evidence-only closure标为`done`；P3-13～15保持`planned`且未获执行授权。P3-15必须最后独立执行Exit Gate Audit；HTTP/internal Simulation export或Frontend provider evidence均不表示external、P4或Production。
 
 TASK-P3-04 implementation `a9be974855bb825784d639b7f6675e5a33e4273d`的run/job/artifact=`32700005280`/`97349447107`/`9510215582`精确复现35 focused、515 full、8/8 lifecycle、23/23 JSON PASS与45 committed/0 working paths、8 rows、19 checks、0 issues，故本closure标为`done`。该证据只形成reviewable ScheduleVersion，不形成approval、publish、P4或Production readiness。
 
@@ -98,4 +98,6 @@ TASK-P3-09已形成additive `2.7.0` export v2 carriers与internal Simulation业�
 
 用户随后单独授权TASK-P3-11；implementation `567e8693db881ea3dfffa011de9021fef9641361`的run/job/artifact=`32818657951`/`97712018632`/`9552386549`精确复现604 Python tests、25 Frontend tests、32/32 JSON、Frontend 9/9及74 committed/0 working paths、6 rows、19 checks、0 issues，故本closure标为`done`。P3 Milestone继续`active`；P3-12～15、browser control、P4与Production不自动启动。
 
-用户随后单独授权TASK-P3-12；P3-05/10/11 closure provider与clean synchronized `3bca1cc10ebedc4d47227bafb2f3f66854ccb526`启动门复核通过，该SHA冻结为不可变Diff base。当前只允许只读Gantt/Resource Load/Version Comparison、可访问virtualization、server authority显示和read-only Chromium evidence；dependency/lock、action/control、P3-13+、P4与Production均不自动启动。Local evidence不替代exact implementation provider，Task在provider成功前保持`in_progress`。
+用户随后单独授权TASK-P3-12；P3-05/10/11 closure provider与clean synchronized `3bca1cc10ebedc4d47227bafb2f3f66854ccb526`启动门复核通过，该SHA冻结为不可变Diff base。只读Gantt/Resource Load/Version Comparison、可访问virtualization、server authority显示和read-only Chromium evidence已按范围形成；dependency/lock、action/control、P3-13+、P4与Production均未被启动。
+
+TASK-P3-12 implementation `a719fe5bf2c2ea2d59e1582e8f4dfd3f2674ac69`的run/job/artifact=`32826371613`/`97735176425`/`9555196470`精确复现33/33 JSON、Frontend 12/12、4/4 Chromium及55 committed/0 working paths、6 rows、19 checks、0 issues，故本closure标为`done`。P3 Milestone继续`active`；P3-13～15、P4与Production不自动启动。

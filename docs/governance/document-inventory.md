@@ -12,7 +12,7 @@ registry_version: 1.0.0
 
 # 文档清单
 
-本清单列出当前仓库已经实际存在的Markdown文档。P0～P2均已归档为completed；P2 Exit Gate=`READY`且用户已批准transition。P3现为active，TASK-P3-00～11均已done，用户已单独授权TASK-P3-12并使其进入`in_progress`，P3-13～15为planned。P3人类可审计API/Frontend规范、workspace机器carrier、有界持久化/生命周期/read/command/decision/publication、ExportJob/standard package、HTTP API与P3-11 read-only Frontend provider已形成；P3-12 provider及Production Runbook正文仍未形成。
+本清单列出当前仓库已经实际存在的Markdown文档。P0～P2均已归档为completed；P2 Exit Gate=`READY`且用户已批准transition。P3现为active，TASK-P3-00～12均已done，P3-13～15为planned。P3人类可审计API/Frontend规范、workspace机器carrier、有界持久化/生命周期/read/command/decision/publication、ExportJob/standard package、HTTP API与P3-11/12 read-only Frontend provider已形成；Production Runbook正文仍未形成。
 
 | Path | Doc ID | Status | Title |
 |---|---|---|---|
@@ -175,7 +175,7 @@ registry_version: 1.0.0
 | [tasks/P3/TASK-P3-09-export-job-and-standard-package.md](../tasks/P3/TASK-P3-09-export-job-and-standard-package.md) | TASK-P3-09 | done | ExportJob and Standard Export Package |
 | [tasks/P3/TASK-P3-10-planning-workspace-http-api.md](../tasks/P3/TASK-P3-10-planning-workspace-http-api.md) | TASK-P3-10 | done | Planning Workspace HTTP API |
 | [tasks/P3/TASK-P3-11-frontend-foundation-and-read-only-workspace.md](../tasks/P3/TASK-P3-11-frontend-foundation-and-read-only-workspace.md) | TASK-P3-11 | done | Frontend Foundation and Read-only Workspace |
-| [tasks/P3/TASK-P3-12-gantt-resource-load-and-version-comparison-ui.md](../tasks/P3/TASK-P3-12-gantt-resource-load-and-version-comparison-ui.md) | TASK-P3-12 | in_progress | Gantt Resource Load and Version Comparison UI |
+| [tasks/P3/TASK-P3-12-gantt-resource-load-and-version-comparison-ui.md](../tasks/P3/TASK-P3-12-gantt-resource-load-and-version-comparison-ui.md) | TASK-P3-12 | done | Gantt Resource Load and Version Comparison UI |
 | [tasks/P3/TASK-P3-13-human-control-actions-and-ui-e2e.md](../tasks/P3/TASK-P3-13-human-control-actions-and-ui-e2e.md) | TASK-P3-13 | planned | Human Control Actions and UI E2E |
 | [tasks/P3/TASK-P3-14-p3-vertical-slice-gate-evidence.md](../tasks/P3/TASK-P3-14-p3-vertical-slice-gate-evidence.md) | TASK-P3-14 | planned | P3 Vertical Slice Gate Evidence |
 | [tasks/P3/TASK-P3-15-p3-exit-gate-audit.md](../tasks/P3/TASK-P3-15-p3-exit-gate-audit.md) | TASK-P3-15 | planned | P3 Exit Gate Audit |
@@ -306,4 +306,4 @@ TASK-P3-10未新增/删除/重命名正式Markdown，inventory仍165份；新增
 
 TASK-P3-11 implementation/closure未新增、删除或重命名正式Markdown，inventory仍165份；Frontend package/code/tests与required workflow均为非Markdown inventory项。Artifact `9552386549`复现32/32 JSON、Frontend 9/9与74 committed/0 working paths、6 rows、19 checks、0 issues，故Task=`done`；roots=30、Test IDs=48、OPEN=15、SIM=13、risks=13、Tasks=53及registry format version均不变，P3-12+、P4与Production未启动。
 
-TASK-P3-12 implementation当前未新增、删除或重命名正式Markdown，inventory仍165份；Frontend feature/tests/Playwright/config与required workflow变化均为非Markdown inventory项。Task=`in_progress`且exact provider待形成；roots=30、Test IDs=48、OPEN=15、SIM=14、risks=13、Tasks=53，新增的SIM-ASSUMPTION-014不改变registry format version。P3-13+、P4与Production未启动。
+TASK-P3-12 implementation/closure未新增、删除或重命名正式Markdown，inventory仍165份；Frontend feature/tests/Playwright/config与required workflow变化均为非Markdown inventory项。Artifact `9555196470`复现33/33 JSON、Frontend 12/12、Playwright 4/4与55 committed/0 working paths、6 rows、19 checks、0 issues，故Task=`done`；roots=30、Test IDs=48、OPEN=15、SIM=14、risks=13、Tasks=53，新增的SIM-ASSUMPTION-014不改变registry format version。P3-13+、P4与Production未启动。

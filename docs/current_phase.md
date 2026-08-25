@@ -17,7 +17,7 @@ last_reviewed: 2026-08-25
 
 P2-14 audit implementation `65c556789f176ad9de55523d6420737bb60f933f`的GitHub push run `32677741558` / required `validate` job `97288829348` / artifact `9503227240`成功，artifact digest=`sha256:fbb76f0ab44d3bdcff2d31e70f9698af84e10e48ee57ae611eef8529a288240e`；evidence-only closure `80c403384d1e171258cf874d26605d0d22aff1b2`的run `32678248961` / job `97290201234` / artifact `9503372291`也成功，digest=`sha256:673412905b7420660d1e9f07755fcda6291f85f8f2bd926b4bf31a0a6bd1bd0c`。下载检查的两份artifact均含20份可解析JSON，Task/SHA/Impact Rules/checks/issues与对应提交一致且0 issue。规划启动时`main=origin/main=80c403384d1e171258cf874d26605d0d22aff1b2`、ahead/behind=`0/0`且working tree clean，因此transition前提一致。
 
-P2 Milestone现为`completed`，P3 Milestone为`active`。`TASK-P3-00`～`TASK-P3-10`均已有exact implementation provider并由各自evidence-only closure标为`done`；用户已单独授权TASK-P3-11并完成启动门冻结，该Task现为`in_progress`。P3-12～15保持`planned`且不会自动启动。
+P2 Milestone现为`completed`，P3 Milestone为`active`。`TASK-P3-00`～`TASK-P3-11`均已有exact implementation provider并由各自evidence-only closure标为`done`；P3-12～15保持`planned`且不会自动启动，当前没有已授权的后续implementation Task。
 
 ## 当前目标
 
@@ -131,12 +131,14 @@ Implementation `4958ce5759812331f13fab2608fbec37f1f1ff76`的run/job/artifact=`32
 
 本Task只允许exact-pinned Node/npm/React/TypeScript/Ant Design/TanStack Query/Vite/Vitest/Testing Library/Playwright foundation、npm v3 lock、SCA/license evidence、HTTP-only query client、read-only Data Health/Import Runs/Planning Runs/Run Detail/Schedule Overview/Orders/Operations/Resources/Calendars/Validation/KPI/Diagnostics/Audit route、七类可见页面状态、virtualized accessible table、限定tests/required CI与命中文档。Playwright只锁定package foundation，不安装browser或形成E2E；Gantt/resource load/comparison/locks/action UI、real identity、Schema/migration/Python dependency、backend语义、P4和Production hosting/readiness均保持冻结。
 
-本地implementation现已形成exact npm v3 lock、13条read-only route、canonical GET query、Version precondition、default no-token session、seven-state UI、authority/lineage/raw UTC、virtual table、25项Vitest/component/contract/accessibility tests和三份Frontend/SCA/license machine report。Type/lint/test/build、0 advisory、336 package license与944682/1365 JS/CSS bytes observation均PASS；Python全仓604项、CI contract 28项、全部历史machine/P2 Gate/XS、Compose及build也已重跑通过，full docs为165 docs/30 roots/30 trace rows/48 tests/15 OPEN/13 SIM/13 risks/53 tasks，Task diff为74 working paths/6 rows/19 checks/0 issues。Required provider尚未核验，故Task仍为`in_progress`且不得启动P3-12。
+本地implementation现已形成exact npm v3 lock、13条read-only route、canonical GET query、Version precondition、default no-token session、seven-state UI、authority/lineage/raw UTC、virtual table、25项Vitest/component/contract/accessibility tests和三份Frontend/SCA/license machine report。Type/lint/test/build、0 advisory、336 package license与944682/1365 JS/CSS bytes observation均PASS；Python全仓604项、CI contract 28项、全部历史machine/P2 Gate/XS、Compose及build也已重跑通过，full docs为165 docs/30 roots/30 trace rows/48 tests/15 OPEN/13 SIM/13 risks/53 tasks，Task diff为74 working paths/6 rows/19 checks/0 issues。
+
+Implementation `567e8693db881ea3dfffa011de9021fef9641361`的required run/job/artifact=`32818657951`/`97712018632`/`9552386549`精确success，check app=`15368`且branch protection仍要求`validate`/app `15368`。Artifact未过期，103338 bytes，digest=`sha256:8d558b57453db04cb32ad55d8a42ff738b215100071f2564d46d185a78631aea`、expiry=`2026-11-23T06:49:23Z`；下载复核32/32 JSON顶层PASS，Frontend为9/9、SCA 0、license 336/0，Task为74 committed/0 working paths、6 rows、19 checks、0 issues。因此本evidence-only closure把TASK-P3-11标为`done`；P3-12+仍未授权，browser E2E、P4与Production均未形成。
 
 ## 当前允许
 
 - 读取并复核P3-01～10合同、Schema、persistence/lifecycle/read/command/decision/publication/export/API provider evidence和P2 frozen artifact；
-- 在TASK-P3-11逐字allow-list内实现Frontend foundation/read-only workspace、测试、required CI machine evidence和治理同步；
+- 只读复核TASK-P3-11已闭环的Frontend/provider证据，不继续扩展其实现边界；
 - 保留P2/v1 Schema/package bytes、P3-05～10 application/state/audit/API事实及全部历史provider evidence；
 - P3-12～15只有在逐Task明确授权后，才可按各卡允许范围和新的不可变Diff base实施。
 

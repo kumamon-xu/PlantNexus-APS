@@ -108,3 +108,5 @@ P3 transition时只新增`docs/tasks/P3/`中的16张Task卡；当时没有创建
 ## TASK-P3-11 Frontend layout
 
 `frontend/src/api`只拥有canonical query、checked read carrier、GET client、runtime/session boundary；`frontend/src/app`只组合router/query cache；`components/pages`只显示server projection和状态。`frontend/scripts`只生成SCA/license/build boundary evidence，`frontend/tests`使用in-memory versioned carrier且不安装browser。`dist/node_modules/coverage/*.tsbuildinfo`均ignored；仓库没有新增SSR/server、Gantt/load/comparison/control或P4目录。
+
+Implementation artifact `9552386549`精确复验上述23个source files、13 routes、7 states和read-only/P4/Production absence；Task=`done`。该layout事实不授权P3-12/13新增目录或Production hosting。

@@ -332,6 +332,6 @@ TASK-P3-09链必须为`REQ-006/007/009 + NFR-DET/TRC/ISO/REL/SEC/OBS/HUM + ENG-A
 
 追踪链固定为`REQ-003/004/005/007/009 + NFR-TRC/ISO/SEC/OBS/PER + ENG-ARCH/ERR/VER → TASK-P3-11 → exact package/lock + API/session/query adapter + app shell/read-only routes/components → TEST-WORKSPACE-FRONTEND-001/TEST-WORKSPACE-API-001 + accessibility/contract tests → p3-frontend/sca/license reports + Task report → exact implementation/closure provider artifacts`。所有报告必须绑定不可变Diff base `26dd519b1f1f84e08d415cfdfce43f286fa82988`、同一implementation SHA、六个Impact rows、全部checks及`issues=[]`。
 
-Dependency trace必须逐字证明24个direct pins无range、lockfile v3由npm `11.17.0`生成、Node `24.19.0`，并特别核对固定兼容组`typescript-eslint=8.68.0`/`eslint=10.9.1`/`typescript=6.0.3`与peer `>=4.8.4 <6.1.0`。Activation尚未形成implementation evidence；P3-12/13、P4与Production不得由本规则自动推进。
+Dependency trace必须逐字证明24个direct pins无range、lockfile v3由npm `11.17.0`生成、Node `24.19.0`，并特别核对固定兼容组`typescript-eslint=8.68.0`/`eslint=10.9.1`/`typescript=6.0.3`与peer `>=4.8.4 <6.1.0`。Activation本身未形成implementation evidence；P3-12/13、P4与Production不得由本规则自动推进。
 
-本地链现已连接`frontend/src/api|app|components|pages`、8个test/support文件、三份machine report和required workflow；Task diff已匹配六个Impact rows且0 issues。只有exact implementation required run/job/artifact下载复核成功后，才能把该链称为provider-verified并进行evidence-only closure。
+该规则已由implementation `567e8693db881ea3dfffa011de9021fef9641361`的required run/job/artifact=`32818657951`/`97712018632`/`9552386549`满足：下载32/32 JSON顶层PASS，Frontend/SCA/license绑定同一SHA且为9/9、0 vulnerability、336 packages/0 issue，Task报告为74 committed/0 working paths、6 rows、19 checks、0 issues。因此本closure只写回TASK-P3-11=`done`和provider事实，不自动启动P3-12。

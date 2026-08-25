@@ -182,10 +182,10 @@ TASK-P3-09 provider closure：NFR-DET/TRC通过canonical manifest/package/file f
 
 TASK-P3-10 provider closure：NFR-COR/TRC获得strict carrier/header/path绑定、correlation和OpenAPI fingerprint；NFR-ISO/SEC获得Simulation flag/plane、server-only principal/capability/scope、Production pre-provider deny和no-credential envelope/audit；NFR-REL获得idempotency/state/stale稳定409与unavailable 503；NFR-OBS/ENG-LOG获得correlation/denial record及machine counts；NFR-HUM获得清晰的401/403/404/409/422/500/503区分。ENG-ARCH/ERR/VER获得thin router→port、sanitized adapter、stable operation IDs且Schema/dependency不变。Artifact `9550224090`精确复现8/8与51-path治理链；无SLO/identity/Frontend/P4/Production，全部root继续`ALLOCATED`、registry version不变。
 
-## TASK-P3-11 activation NFR / engineering review
+## TASK-P3-11 provider closure NFR / engineering review
 
 NFR-TRC/OBS要求Frontend evidence、bundle/route/state counts与exact SHA；NFR-ISO/SEC要求default no-token provider、no token storage/logging、Production navigation不暴露Simulation-only入口；NFR-PER只记录bundle/virtualization development observation而不设SLA。ENG-ARCH/ERR/VER要求thin GET consumer、七类可见状态、server authority以及exact dependency/lock。
 
 Frontend兼容门禁固定为`typescript-eslint=8.68.0`、`eslint=10.9.1`、`typescript=6.0.3`，TypeScript peer须满足`>=4.8.4 <6.1.0`；range、drift、peer conflict或未经审查升级均阻断。Activation不提升任何NFR/ENG root，全部继续`ALLOCATED`且`registry_version=1.0.0`不变。
 
-本地type/lint/25 tests/build、SCA/license及9-check machine现验证上述bounded controls：default no-token/no storage、Production non-synthetic、seven states、13 routes、944682 JS/1365 CSS observation。Local evidence不构成provider、SLO或Production security，因此所有NFR/ENG root继续`ALLOCATED`且registry version不变。
+Implementation `567e8693db881ea3dfffa011de9021fef9641361` / artifact `9552386549`以type/lint/25 tests/build、SCA/license及9-check machine验证上述bounded controls：default no-token/no storage、Production non-synthetic、seven states、13 routes、944682 JS/1365 CSS observation。该provider evidence不构成SLO或Production security，因此所有NFR/ENG root继续`ALLOCATED`且registry version不变。

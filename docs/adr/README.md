@@ -108,4 +108,6 @@ TASK-P3-09落实ADR-0002/0007/0009与accepted ADR-0012：internal-only、determi
 
 实现直接落实accepted ADR-0012选择的React/TypeScript/Ant Design/TanStack Query/npm/Vite/Vitest/Playwright stack与server-authority/read-only边界；具体版本属于Task-local exact dependency Gate，不改变架构选择。Frontend不引入SSR/microfrontend、Schema interpreter、client Solver/Validator、identity topology、command/state transition、external target或Production hosting，因此不需新ADR。
 
+Implementation artifact `9552386549`已复验该实现边界；`typescript-eslint=8.68.0`兼容组仍是Task-local fixed gate，不构成新架构选择。ADR-0012保持`accepted`，P3-12/13或Production拓扑变化仍须按Impact Rule重新审查。
+
 若P3-12/13拟改变stack、安装新的Gantt/E2E/runtime dependency、引入browser authority/session persistence、SSR/microfrontend或Production deployment topology，必须先执行独立dependency/ADR review；不得把本Task的Playwright pin解释为browser E2E已形成。

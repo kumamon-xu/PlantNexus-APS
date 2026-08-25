@@ -96,4 +96,6 @@ Bearer只交给server-side provider，router/body不接收role或capability auth
 
 Browser client仅GET、`credentials=omit`、`cache=no-store`，token只能由内存中的注入provider即时返回；源码与machine scan拒绝localStorage/sessionStorage/cookie和command carrier。默认provider返回null，authorization error保持显式denied，不以synthetic/empty缓存替代。Production runtime固定non-synthetic且navigation没有Simulation入口。
 
+Artifact `9552386549`复验SCA 0 vulnerability、336 package license/0 issue、no-token persistence与Production non-synthetic boundary。真实OIDC/SSO/RBAC、CSP/WAF、browser matrix、Production threat model和security approval仍未形成，OPEN-010/015保持OPEN。
+
 Dependency Gate锁定24个direct pins和npm v3 integrity，SCA当前0 advisory，336个locked package license无unknown/deny-listed项；用户批准的typescript-eslint固定组与peer被lock/CI contract复验。这不是CSP/XSS penetration、real session/OIDC、CSRF/CORS、gateway/WAF、browser matrix或Production threat-model证据，OPEN-010/015和RISK-011～013不关闭。

@@ -180,10 +180,10 @@ TASK-P3-09 provider closure：REQ-006获得PUBLISHED-only durable ExportJob、st
 
 TASK-P3-10 provider closure：REQ-001获得Data Health/Import/Planning read的strict HTTP carrier；REQ-004/005获得ScheduleVersion/validate与fresh application delegation边界；REQ-006获得workspace/comparison/export的17个HTTP operation；REQ-007获得server-derived authorization、command/decision/publication/export的strict precondition和error mapping；REQ-009获得correlation/OpenAPI/machine lineage。Implementation `4958ce5759812331f13fab2608fbec37f1f1ff76` / artifact `9550224090`精确复验29/29 JSON、8/8 machine及51 committed/0 working paths、7 rows、19 checks、0 issues；Frontend、external/P4/Production未形成，所有root继续`ALLOCATED`、registry version不变。
 
-## TASK-P3-11 activation requirement review
+## TASK-P3-11 provider closure requirement review
 
 REQ-003/004/005/007/009现分配到locked read-only Frontend consumer：只读取P3-10 server carrier，显示ScheduleVersion、orders/operations/resources/calendars、validation/KPI/diagnostics/audit、lineage与明确错误状态。该分配禁止浏览器重算Solver/Validator/KPI/Resource Load、禁止control command，并保持Gantt/load/comparison归P3-12、control/E2E归P3-13。
 
-本次只是Task activation与依赖门禁冻结；尚无Frontend implementation/provider evidence，因此全部15个root Requirement继续`ALLOCATED`，`registry_version=1.0.0`不变。真实identity、external/P4与Production behavior/readiness均未形成。
+Activation时只完成依赖门禁冻结；当前implementation/provider已按下述证据闭环。全部15个root Requirement仍继续`ALLOCATED`，`registry_version=1.0.0`不变；真实identity、external/P4与Production behavior/readiness均未形成。
 
-本地implementation现以13条read-only route、Version/query checked adapter、authority/lineage UI和25项tests形成上述consumer slice；没有Gantt/load/comparison/control或server行为变化。Exact provider尚未形成，因此root生命周期仍不提升、registry version不变，Task只保持`in_progress`。
+Implementation `567e8693db881ea3dfffa011de9021fef9641361` / artifact `9552386549`以13条read-only route、Version/query checked adapter、authority/lineage UI、25项tests与9/9 machine形成上述consumer slice，并复现74-path治理链；没有Gantt/load/comparison/control或server行为变化。该bounded slice为provider-verified且Task=`done`，但root生命周期仍不提升、registry version不变。

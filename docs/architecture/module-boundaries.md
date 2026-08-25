@@ -235,3 +235,5 @@ P3-09依赖方向为`domain.export_job`→ports-only`application.export_jobs`→
 依赖方向固定为`pages/components/app → api client/query/types`，再通过HTTP读取P3-10；Frontend不导入Backend source、Schema interpreter、Solver、Validator、repository或state transition。API client只发GET并从注入的ephemeral session provider取得token；默认provider返回null，任何server/contract/auth/stale failure都映射成明确非成功状态。
 
 Frontend只比较carrier reference和server完整payload item的一致性，保留server fingerprint authority；它不依据payload重算KPI/Resource Load或授权动作。TanStack Query只是transport cache，server state/precondition/error覆盖缓存。P3-12/13不得把Gantt/control逻辑塞回P3-11模块。
+
+Artifact `9552386549`以source boundary scan、GET/client tests和9/9 machine checks复验该依赖方向，Task=`done`；这不形成command/browser E2E、external或Production边界。

@@ -187,4 +187,6 @@ API process现提供health与17个P3 route的composition seam，但默认applica
 
 本地与required CI依次使用`npm --prefix frontend ci`、`audit:sca`、`licenses:check`、`lint`、`typecheck`、`test -- --run`、`build`和`evidence`。SCA显式查询official npm advisory endpoint，High/Critical阻断；license未知/deny list阻断；machine report记录24 pins、13 routes、7 states、bundle bytes与P3/P4/Production absence。Playwright browser不安装。
 
+Run `32818657951` / required job `97712018632`已逐步成功执行该链；artifact `9552386549`复验Frontend/SCA/license/Task reports均PASS。该命令链只属于development CI，不是Production deploy、hosting、rollback或support runbook。
+
 生成的`node_modules/dist/coverage/*.tsbuildinfo`与JSON report均不提交。Frontend bundle不是deployment，默认session无token且Backend application仍可fail closed；没有Production hosting、CDN、runtime secret、runbook、SLO或rollback authority形成。

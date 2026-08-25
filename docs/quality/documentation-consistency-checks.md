@@ -422,4 +422,6 @@ TASK-P3-09治理验证13个Impact rows、Diff base `b9c0b1694448a4ec348b0b021079
 
 Full docs与Task diff检查必须逐字验证Node/npm/24个direct pins/lockfile v3、SCA/license命令、13个route、七类状态和禁止模块。typescript-eslint的用户批准被编码为exact gate：`8.68.0`配`eslint 10.9.1`和`typescript 6.0.3`，TypeScript peer为`>=4.8.4 <6.1.0`；range、drift、peer conflict或未审查升级均为issue。Activation提交只证明计划边界，不能预填implementation/provider PASS。
 
-当前working Task diff已实际为74 paths、六行、19/19 checks、0 issue；full governance为165 docs/30 roots/30 trace rows/48 Test IDs/15 OPEN/13 SIM assumptions/13 risks/53 Tasks。Frontend machine报告为9/9、24 direct pins、13 routes、7 states、23 source files和0 boundary issue，SCA/license均顶层PASS；Frontend 25 tests、CI contract 28项、Python全仓604项、全部历史machine/P2 Gate/XS、Compose及build均已重跑通过。Provider字段在push前保持空白。
+提交前working Task diff为74 paths、六行、19/19 checks、0 issue；full governance为165 docs/30 roots/30 trace rows/48 Test IDs/15 OPEN/13 SIM assumptions/13 risks/53 Tasks。Frontend machine报告为9/9、24 direct pins、13 routes、7 states、23 source files和0 boundary issue，SCA/license均顶层PASS；Frontend 25 tests、CI contract 28项、Python全仓604项、全部历史machine/P2 Gate/XS、Compose及build均已重跑通过。
+
+Implementation artifact `9552386549`中的Task report绑定`567e8693db881ea3dfffa011de9021fef9641361`与不可变Diff base，复现165 docs/30 roots/30 trace rows/48 tests/15 OPEN/13 SIM/13 risks/53 tasks、74 committed/0 working paths、6 rows、19 checks、0 issues；32/32 JSON和Frontend/SCA/license均PASS。本closure只写provider事实并不得启动TASK-P3-12；closure自身仍须exact provider，P4与Production均不在本Diff内。

@@ -107,10 +107,10 @@ Backend现以17个`/api/v1` operation暴露已有read/validate/edit/decision/pub
 
 P3-11已在Diff base `26dd519b1f1f84e08d415cfdfce43f286fa82988`上激活，只允许实现Data Health、Import Runs、Planning Runs/Run Detail、Version、Orders、Operations、Resources、Calendars、Validation、KPI、Diagnostics和Audit的read-only route。每个consumer必须显式呈现`loading/empty/ready/stale/authorization_denied/contract_error/server_error`，区分`found=false`与`found=true/items=[]`，保留server cursor、raw UTC、Version/content/source fingerprints与lineage，并让server error/state authority覆盖客户端缓存。
 
-本Task不创建Gantt、Resource Load、Version Comparison或control route，也不在browser计算Solver/Validator/KPI/Resource Load。默认session provider没有token且fail closed；不得存储或记录token，Production navigation不得暴露Simulation-only入口。上述行为仍需implementation/provider evidence，activation本身不构成用户可见完成状态、Production identity或readiness。
+本Task不创建Gantt、Resource Load、Version Comparison或control route，也不在browser计算Solver/Validator/KPI/Resource Load。默认session provider没有token且fail closed；不得存储或记录token，Production navigation不得暴露Simulation-only入口。该read-only行为已由下述provider复验，但不构成Production identity或readiness。
 
-## TASK-P3-11 local implementation
+## TASK-P3-11 implementation and provider closure
 
 现有13条route与页面矩阵逐字一致。Workspace-level read构造URL-encoded canonical JSON `query`；schedule-scoped read先取得`schedule-version.v1`，再把exact identity/state/content fingerprint作为precondition。Consumer检查query fingerprint、carrier reference与完整payload item的identity/type/fingerprint一致；payload fingerprint本身保持server authority而不从解析后可能丢失number lexical form的JavaScript object重新定义canonical bytes。
 
-UI分别显示missing、found-empty、ready、stale、authorization、contract和server failure，保留raw UTC、Version/content/source/collection fingerprints、完整lineage和correlation；cursor只按server opaque value前后导航。当前本地25 tests、axe结构检查、type/lint/build与9/9 machine report均PASS；provider尚未形成，因此不得标记Task done。Playwright browser、Gantt/load/comparison、control、identity、P4和Production仍未形成。
+UI分别显示missing、found-empty、ready、stale、authorization、contract和server failure，保留raw UTC、Version/content/source/collection fingerprints、完整lineage和correlation；cursor只按server opaque value前后导航。Implementation `567e8693db881ea3dfffa011de9021fef9641361` / artifact `9552386549`复验25 tests、axe结构检查、type/lint/build、Frontend 9/9及74-path治理，Task=`done`。Playwright browser、Gantt/load/comparison、control、identity、P4和Production仍未形成。

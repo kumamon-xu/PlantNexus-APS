@@ -234,4 +234,6 @@ Planning Workspace route只在显式`PLANTNEXUS_SIMULATION_API_ENABLED=true`且d
 
 Production bundle只接受same-origin默认`/api/v1`或显式base URL，并把plane/environment固定为`PRODUCTION/PRODUCTION`、`synthetic=false`；请求不能从页面、query string或local storage切换plane。任何Simulation/Development env尝试在runtime loader中fail closed，synthetic carrier只存在于unit/component test fixture且没有navigation/seed入口。
 
+Implementation `567e8693db881ea3dfffa011de9021fef9641361` / artifact `9552386549`已复验runtime isolation、default no-token/no storage与Production non-synthetic boundary；真实identity、gateway、hosting和Production deployment仍未形成。
+
 Session provider默认无token，client使用`credentials=omit`、`cache=no-store`且不读写local/session storage或cookie。真实OIDC/session、CORS/CSRF、gateway base URL和Production deployment仍由OPEN-010/015及后续授权决定。

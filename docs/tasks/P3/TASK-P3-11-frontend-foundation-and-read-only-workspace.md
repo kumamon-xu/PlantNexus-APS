@@ -1,7 +1,7 @@
 ---
 doc_id: TASK-P3-11
 title: Frontend Foundation and Read-only Workspace
-status: in_progress
+status: done
 spec_version: 0.3.0
 phase: P3
 normative: true
@@ -41,7 +41,11 @@ Files forbidden to change: backend business/API semantics、Schema/migration、P
 
 Implementation steps: exact dependency/lock/SCA review；app shell/routes/query client/generated-or-checked API types；loading/empty/error/auth-denied states；read-only pages/table virtualization/accessibility；unit/component tests；CI install/lint/type/test/build；no direct business calculation scan。
 
-Local implementation evidence: exact npm `11.17.0` lockfile v3现固定5 runtime + 19 development direct pins并只解析official registry integrity；`typescript-eslint=8.68.0` lock peer逐字为TypeScript `>=4.8.4 <6.1.0`且ESLint peer包含`^10.0.0`。13条route、GET-only client、canonical query fingerprint、Version precondition、carrier/payload-reference alignment、default no-token/no-storage、raw UTC/lineage/fingerprint、seven-state UI、opaque cursor与virtual table已形成；无Gantt/load/comparison/control module。25项Vitest/component/contract/accessibility tests、typecheck、zero-warning lint、build、official npm SCA 0 advisory、336 package license review与9-check `p3-frontend-report.v1`本地PASS；bundle observation为944682 JS/1365 CSS bytes。Python全仓604项、CI contract 28项、全部历史machine/P2 Gate/XS、Compose与build也已重跑通过；full docs为165 docs/30 roots/30 trace rows/48 tests/15 OPEN/13 SIM/13 risks/53 tasks，Task diff为74 working paths/6 rows/19 checks/0 issues。Local PASS不等于provider，Task保持`in_progress`。
+Local implementation evidence: exact npm `11.17.0` lockfile v3现固定5 runtime + 19 development direct pins并只解析official registry integrity；`typescript-eslint=8.68.0` lock peer逐字为TypeScript `>=4.8.4 <6.1.0`且ESLint peer包含`^10.0.0`。13条route、GET-only client、canonical query fingerprint、Version precondition、carrier/payload-reference alignment、default no-token/no-storage、raw UTC/lineage/fingerprint、seven-state UI、opaque cursor与virtual table已形成；无Gantt/load/comparison/control module。25项Vitest/component/contract/accessibility tests、typecheck、zero-warning lint、build、official npm SCA 0 advisory、336 package license review与9-check `p3-frontend-report.v1`本地PASS；bundle observation为944682 JS/1365 CSS bytes。Python全仓604项、CI contract 28项、全部历史machine/P2 Gate/XS、Compose与build也已重跑通过；full docs为165 docs/30 roots/30 trace rows/48 tests/15 OPEN/13 SIM/13 risks/53 tasks，Task diff为74 working paths/6 rows/19 checks/0 issues。该段保留提交前local事实，不替代下述provider证据。
+
+Implementation provider evidence: implementation `567e8693db881ea3dfffa011de9021fef9641361`的唯一父提交为不可变Diff base。Push run `32818657951`（attempt 1）与required `validate` job/check `97712018632`均为`completed/success`，check由GitHub Actions app `15368`提供且branch protection继续精确要求`validate`/app `15368`。Artifact `9552386549`（`plantnexus-ci-evidence-32818657951`）未过期，size=`103338` bytes、digest=`sha256:8d558b57453db04cb32ad55d8a42ff738b215100071f2564d46d185a78631aea`、expiry=`2026-11-23T06:49:23Z`。
+
+下载复核32/32 JSON顶层PASS且0 parse failure。Frontend报告绑定implementation SHA、TASK-P3-11与Diff base，复现9/9 checks、24 direct dependencies、13 routes、7 states、23 source files、944682/1365 JS/CSS bytes、read-only=true、browser E2E/P4/Production readiness=false及`issues=[]`；SCA为0 vulnerability，license为336 packages/0 issue。Task报告绑定同一SHA/Diff base并记录74 committed/0 working paths、6 Impact rows、19 checks、0 issues；provider log复现604 Python tests与6 files/25 Frontend tests。Completion conditions满足，故本evidence-only closure将Task标为`done`；P3-12～15仍为`planned`且未获执行授权。
 
 Outputs: reproducible frontend build、read-only workspace、frontend machine/CI evidence。
 

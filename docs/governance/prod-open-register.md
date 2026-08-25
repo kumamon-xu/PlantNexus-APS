@@ -191,4 +191,4 @@ Publication service只允许Simulation/Test synthetic resource与`SIMULATION_INT
 
 因此OPEN-002/010及OPEN-001～015全部保持`OPEN`，没有新增Authority/Evidence closure record，`registry_version=1.0.0`不变。Implementation artifact `9545782727`精确复验8/8 machine，但只证明bounded Simulation publication；不得据此声明Production publishability、approval、security review或readiness。
 
-TASK-P3-09只形成local/internal Simulation package：OPEN-002真实MES/ERP/storage接口与authority、OPEN-010 Production身份/权限/target、OPEN-012容量/SLA、OPEN-015 Production数据边界全部保持OPEN。`SIMULATION_INTERNAL` storage reference、synthetic XLSX与SQLite/filesystem tests不能作为Production evidence；registry version不变。
+TASK-P3-09只形成local/internal Simulation package：OPEN-002真实MES/ERP/storage接口与authority、OPEN-010 Production身份/权限/target、OPEN-012容量/SLA、OPEN-015 Production数据边界全部保持OPEN。Implementation artifact `9548027237`的0 provider side effect、Simulation target与Production default-deny精确PASS，但`SIMULATION_INTERNAL` storage reference、synthetic XLSX与SQLite/filesystem tests不能作为Production evidence；registry version不变。

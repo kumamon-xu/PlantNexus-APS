@@ -52,7 +52,7 @@ last_reviewed: 2026-08-25
 | [TASK-P3-06](P3/TASK-P3-06-gantt-edit-and-lock-command-pipeline.md) | Gantt edit/lock command pipeline | P3-04/05 | `done` |
 | [TASK-P3-07](P3/TASK-P3-07-approval-rejection-and-audit-service.md) | Approval/rejection/audit service | P3-03/04 | `done` |
 | [TASK-P3-08](P3/TASK-P3-08-idempotent-publication-and-supersession.md) | Idempotent publish/supersession | P3-03/07 | `done` |
-| [TASK-P3-09](P3/TASK-P3-09-export-job-and-standard-package.md) | ExportJob/standard package | P3-03/04/08 | `in_progress` |
+| [TASK-P3-09](P3/TASK-P3-09-export-job-and-standard-package.md) | ExportJob/standard package | P3-03/04/08 | `done` |
 | [TASK-P3-10](P3/TASK-P3-10-planning-workspace-http-api.md) | Planning Workspace HTTP API | P3-05～09 | `planned` |
 | [TASK-P3-11](P3/TASK-P3-11-frontend-foundation-and-read-only-workspace.md) | Frontend/read-only workspace | P3-01/10 | `planned` |
 | [TASK-P3-12](P3/TASK-P3-12-gantt-resource-load-and-version-comparison-ui.md) | Gantt/Load/Comparison UI | P3-05/10/11 | `planned` |
@@ -86,7 +86,7 @@ TASK-P3-07已通过39 focused、562 full、Ruff/Pyright、8/8 decision machine�
 
 TASK-P3-08已通过16 focused、577 full、Ruff/Pyright、8/8 publication machine、全部历史machine、P2 Gate/XS、Compose/build和51 paths/8 rows/19 checks/0 issues治理；implementation `e90475f462b365d2e031445ad28a02ea0b89d2f5`的run/job/artifact=`32798679852`/`97655144411`/`9545782727`精确复现27/27 JSON及APPROVED-only、current/supersession、replay/conflict/rollback/concurrency与Production default-deny，故索引标为`done`。P3-09～15不自动启动。
 
-用户现已单独授权TASK-P3-09；其从provider-verified P3-08 closure `b9c0b1694448a4ec348b0b02107926f6213560c9`冻结Diff base并进入`in_progress`。启动Schema审查发现P2-only `export-manifest.v1`无法合法表达P3标准XLSX与Version/publication/Job/audit lineage，Agent零修改停止后获得用户扩卡批准；本Task现先发布additive `2.7.0` manifest/Job新版本并保留全部v1 bytes，再实现internal Simulation ExportJob。P3-10～15、external/P4/Production不自动启动。
+用户随后单独授权TASK-P3-09；其从provider-verified P3-08 closure `b9c0b1694448a4ec348b0b02107926f6213560c9`冻结Diff base并进入`in_progress`。启动Schema审查发现P2-only `export-manifest.v1`无法合法表达P3标准XLSX与Version/publication/Job/audit lineage，Agent零修改停止后获得用户扩卡批准；该Task按批准先发布additive `2.7.0` manifest/Job新版本并保留全部v1 bytes，再实现internal Simulation ExportJob。P3-10～15、external/P4/Production不自动启动。
 
 ## Lifecycle and planning-batch rules
 
@@ -138,4 +138,4 @@ Implementation `dc2e5cd41080603606090ebfc4bc6162941c5f7f`的required run `324657
 
 TASK-P2-14本地审计已形成overall=`READY`、blocking gaps为空：476 tests、两次Gate 11/11、七场景×两轮完整§76 measurements、XS/S/M各8/8、108次Benchmark Validator与四类fail-closed拒绝全部PASS。Audit implementation `65c556789f176ad9de55523d6420737bb60f933f`的run `32677741558` / required job `97288829348` / artifact `9503227240`精确复现20/20 JSON、30 committed/0 working paths、3 rows、19 checks、0 issues及Gate 11/11，故索引=`done`；P3未进入。
 
-TASK-P3-09当前implementation candidate本地16 focused与8/8 machine PASS，global set additive升至`2.7.0`且四份v1 export Schema/sample hash保持冻结。Exact implementation provider与evidence-only closure尚未形成，故索引保持`in_progress`且不授权P3-10。
+TASK-P3-09已通过16 focused、594 full、Ruff/Pyright、8/8 export machine、全部历史machine、P2 Gate/XS、Compose/build和76 paths/13 rows/19 checks/0 issues治理；implementation `42278239332e61e55a4e0305705534db768dc22f`的run/job/artifact=`32805450589`/`97674572006`/`9548027237`精确复现28/28 JSON及v1 preservation、standard package、job lifecycle/recovery/audit与Production default-deny，故索引标为`done`。P3-10～15不自动启动。

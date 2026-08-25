@@ -170,4 +170,4 @@ Authorization-before-lookup、APPROVED-only、immutable content、same-key repla
 
 RISK-001～013全部继续`MONITORED`，severity/status不降低；尤其RISK-007/008/011～013与OPEN-002/010保持原边界，`registry_version=1.0.0`不变。Implementation artifact `9545782727`已复验bounded controls，但不关闭Production publish/side-effect风险。
 
-TASK-P3-09以hash/manifest-last/exact replay缓解RISK-007/008的internal artifact/idempotency slice，以prelookup deny/no-secret/path和safe XLSX缓解RISK-011/013，以lease/recovery/rollback缓解RISK-012；但local filesystem/SQLite不关闭distributed race、orphan retention、external transfer或Production security/capacity风险。全部13项仍MONITORED，registry version不变。
+TASK-P3-09以hash/manifest-last/exact replay缓解RISK-007/008的internal artifact/idempotency slice，以prelookup deny/no-secret/path和safe XLSX缓解RISK-011/013，以lease/recovery/rollback缓解RISK-012；implementation artifact `9548027237`精确复验对应8/8 machine和0 issue。但local filesystem/SQLite不关闭distributed race、orphan retention、external transfer或Production security/capacity风险；全部13项仍MONITORED，registry version不变。

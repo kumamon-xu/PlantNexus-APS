@@ -1,7 +1,7 @@
 ---
 doc_id: TASK-P3-09
 title: ExportJob and Standard Export Package
-status: in_progress
+status: done
 spec_version: 0.3.0
 phase: P3
 normative: true
@@ -85,4 +85,6 @@ Rollback: 终态job/artifact/audit不删除；代码回退保持可下载历史�
 
 ## Local implementation evidence
 
-Implementation candidate已形成2份新Schema/2份sample、12 payload（manifest另计）与4-sheet安全XLSX、durable lifecycle/audit/worker和required `export_job_check`。全仓首轮为581 PASS/12同源v1-builder常量失败，已通过显式`WORKSPACE_V1_SCHEMA_SET_VERSION=2.6.0`修正且12项定向复验PASS。最终focused 16、full 594、Ruff、全量Pyright、locked sync、27份machine reports、P2 Gate 11/11、XS benchmark 8/8、Compose、build、full/diff docs治理、`git diff --check`及冻结/禁止范围全部PASS；machine=`p3-export-job-report.v1`、8/8、`issues=[]`。Exact implementation provider未完成前Task保持`in_progress`。
+Implementation candidate已形成2份新Schema/2份sample、12 payload（manifest另计）与4-sheet安全XLSX、durable lifecycle/audit/worker和required `export_job_check`。全仓首轮为581 PASS/12同源v1-builder常量失败，已通过显式`WORKSPACE_V1_SCHEMA_SET_VERSION=2.6.0`修正且12项定向复验PASS。最终focused 16、full 594、Ruff、全量Pyright、locked sync、27份machine reports、P2 Gate 11/11、XS benchmark 8/8、Compose、build、full/diff docs治理、`git diff --check`及冻结/禁止范围全部PASS；machine=`p3-export-job-report.v1`、8/8、`issues=[]`。
+
+Implementation provider evidence: implementation `42278239332e61e55a4e0305705534db768dc22f`的GitHub push run `32805450589` / required `validate` job/check `97674572006`（GitHub Actions app `15368`）均为success，所有steps通过。Artifact `9548027237`（100011 bytes）未过期，digest=`sha256:77cda829c35ad0b7018fa15ea5176c257b6ed0b60c89f9dba244da80bba7fe26`、expiry=`2026-11-23T03:30:45Z`；下载复核28/28 JSON顶层PASS。Export report绑定exact SHA并为8/8、2 Schema、2 sample、16 focused、12 payload、4 XLSX sheets、5 states、6 pairs、0 provider side effects、`issues=[]`；Task report绑定同一SHA/Diff base并为76 committed/0 working paths、13 Impact rows、19 checks、0 issues。因此bounded implementation满足完成条件，本evidence-only closure只写回已验证事实且不启动P3-10；closure自身仍须exact provider核验。

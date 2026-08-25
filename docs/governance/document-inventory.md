@@ -12,7 +12,7 @@ registry_version: 1.0.0
 
 # 文档清单
 
-本清单列出当前仓库已经实际存在的Markdown文档。P0～P2均已归档为completed；P2 Exit Gate=`READY`且用户已批准transition。P3现为active，TASK-P3-00～08均已done，P3-09为`in_progress`，P3-10～15为planned。P3人类可审计API/Frontend规范、workspace机器carrier、有界持久化/生命周期/read/command/decision/publication及ExportJob/standard package implementation candidate已形成；API/Frontend业务实现与Production Runbook正文仍未形成。
+本清单列出当前仓库已经实际存在的Markdown文档。P0～P2均已归档为completed；P2 Exit Gate=`READY`且用户已批准transition。P3现为active，TASK-P3-00～09均已done，P3-10～15为planned。P3人类可审计API/Frontend规范、workspace机器carrier、有界持久化/生命周期/read/command/decision/publication及ExportJob/standard package实现已形成；API/Frontend业务实现与Production Runbook正文仍未形成。
 
 | Path | Doc ID | Status | Title |
 |---|---|---|---|
@@ -172,7 +172,7 @@ registry_version: 1.0.0
 | [tasks/P3/TASK-P3-06-gantt-edit-and-lock-command-pipeline.md](../tasks/P3/TASK-P3-06-gantt-edit-and-lock-command-pipeline.md) | TASK-P3-06 | done | Gantt Edit and Lock Command Pipeline |
 | [tasks/P3/TASK-P3-07-approval-rejection-and-audit-service.md](../tasks/P3/TASK-P3-07-approval-rejection-and-audit-service.md) | TASK-P3-07 | done | Approval Rejection and Audit Service |
 | [tasks/P3/TASK-P3-08-idempotent-publication-and-supersession.md](../tasks/P3/TASK-P3-08-idempotent-publication-and-supersession.md) | TASK-P3-08 | done | Idempotent Publication and Supersession |
-| [tasks/P3/TASK-P3-09-export-job-and-standard-package.md](../tasks/P3/TASK-P3-09-export-job-and-standard-package.md) | TASK-P3-09 | in_progress | ExportJob and Standard Export Package |
+| [tasks/P3/TASK-P3-09-export-job-and-standard-package.md](../tasks/P3/TASK-P3-09-export-job-and-standard-package.md) | TASK-P3-09 | done | ExportJob and Standard Export Package |
 | [tasks/P3/TASK-P3-10-planning-workspace-http-api.md](../tasks/P3/TASK-P3-10-planning-workspace-http-api.md) | TASK-P3-10 | planned | Planning Workspace HTTP API |
 | [tasks/P3/TASK-P3-11-frontend-foundation-and-read-only-workspace.md](../tasks/P3/TASK-P3-11-frontend-foundation-and-read-only-workspace.md) | TASK-P3-11 | planned | Frontend Foundation and Read-only Workspace |
 | [tasks/P3/TASK-P3-12-gantt-resource-load-and-version-comparison-ui.md](../tasks/P3/TASK-P3-12-gantt-resource-load-and-version-comparison-ui.md) | TASK-P3-12 | planned | Gantt Resource Load and Version Comparison UI |
@@ -300,4 +300,4 @@ TASK-P3-07 implementation/closure仍不新增、删除或重命名正式Markdown
 
 TASK-P3-08 activation/implementation/closure不新增、删除或重命名正式Markdown，inventory继续165份；Task从P3-07 provider-verified closure `a53c0f7d4a0f0bcd4e02bfeaaa0f6fc4b93157b9`冻结Diff base。新增publication domain/application、unit/contract/integration/security tests、workflow命令及ignored publication/Task JSON均不进入Markdown清单；implementation artifact `9545782727`复现27/27 JSON、8/8 machine与51 committed/0 working paths、8 rows、19 checks、0 issues，故Task标为`done`。Roots=30、Test IDs=48、OPEN=15、SIM assumptions=13、risks=13、Tasks=53及registry format version保持`1.0.0`；P3-09+、Export/API/UI、P4与Production未形成。
 
-TASK-P3-09未新增/删除/重命名正式Markdown，inventory仍165份；只更新现有治理正文并新增非Markdown Schema/code/tests。Task状态为`in_progress`，roots=30、Test IDs=48、OPEN=15、SIM=13、risks=13、Tasks=53及registry format version均不变；provider pending且P3-10/P4/Production未形成。
+TASK-P3-09未新增/删除/重命名正式Markdown，inventory仍165份；只更新现有治理正文并新增非Markdown Schema/code/tests。Implementation artifact `9548027237`复现28/28 JSON、8/8 machine与76 committed/0 working paths、13 rows、19 checks、0 issues，故Task状态为`done`；roots=30、Test IDs=48、OPEN=15、SIM=13、risks=13、Tasks=53及registry format version均不变，P3-10/P4/Production未形成。

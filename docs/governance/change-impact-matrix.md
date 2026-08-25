@@ -401,4 +401,4 @@ Schema/sample/rules、migration/infrastructure repository semantics、dependency
 
 提交前本地Task report为51 working paths、上述8 rows、19 checks、0 issues；implementation provider已精确重放为51 committed/0 working且冻结禁止路径零差异。
 
-TASK-P3-09实际命中13行：`IMPACT-SCHEMA/DOMAIN/APPLICATION/STATE/EXPORT/JOBS/INFRA/DEPENDENCY/VERSION-METADATA/TESTS/PHASE/GOVERNANCE-REGISTRY/DOCS`。Diff base=`b9c0b1694448a4ec348b0b02107926f6213560c9`；migration、dependency/lock、publication service、P2/v1 bytes、API/frontend/external/P4零差异。首轮full暴露的v1 builder影响已先扩卡并仅用显式2.6常量修正；本地最终Task report为76 working paths、13 rows、19 checks、0 issues，exact provider仍pending。
+TASK-P3-09实际命中13行：`IMPACT-SCHEMA/DOMAIN/APPLICATION/STATE/EXPORT/JOBS/INFRA/DEPENDENCY/VERSION-METADATA/TESTS/PHASE/GOVERNANCE-REGISTRY/DOCS`。Diff base=`b9c0b1694448a4ec348b0b02107926f6213560c9`；migration、dependency/lock、publication service、P2/v1 bytes、API/frontend/external/P4零差异。首轮full暴露的v1 builder影响已先扩卡并仅用显式2.6常量修正；implementation artifact `9548027237`精确复现76 committed/0 working paths、13 rows、19 checks、0 issues及冻结范围，故本closure可把Task标为`done`且不启动P3-10。

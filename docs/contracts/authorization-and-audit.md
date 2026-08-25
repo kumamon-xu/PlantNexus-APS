@@ -6,7 +6,7 @@ spec_version: 0.3.0
 phase: P3
 normative: true
 source_sections: [33, 34, 60, 66, 78, 94, 95]
-last_reviewed: 2026-08-24
+last_reviewed: 2026-08-25
 ---
 
 # P3 Authorization Capability 与 Audit 合同
@@ -138,3 +138,11 @@ Audit view只通过plane-scoped append-only repository读取指定ScheduleVersio
 Command context只接受server-resolved `edit`或`lock` capability、sanitized actor reference、auth-policy version、UTC、code commit及可选parent audit reference；客户端carrier中的`required_capability`必须等于command-derived值，但不获得授权权威。Production没有真实mapping时在任何source读取或idempotent replay前default-deny。
 
 成功new DRAFT与`EDIT_SCHEDULE`/`SET_LOCK`/`REMOVE_LOCK` AuditEvent在同一transaction提交。显式`SUBMIT_FOR_REVIEW`在第二次fresh PASS后把同一manual DRAFT CAS为READY，并在同一transaction追加独立event。Event记录actor/capability/reason、request fingerprint、hashed key reference、source/new Version、before/after state、fresh validation lineage、correlation、parent及成功result；raw key、credential、SQL、payload全文和stack均不进入event。Same request replay返回原event且不改写`result.replayed=false`历史事实。TASK-P3-06不持久化失败Version或拒绝audit；若后续需要attempt audit，必须单独定义失败event policy并保持成功历史不可改写。
+
+## TASK-P3-07 approval/rejection authorization slice
+
+`ApprovalDecisionContext`只接收server-resolved authenticated flag、stable actor reference、capability set、exact ScheduleVersion scope、test-policy version、Production binding flag、UTC/code commit和可选parent event；`workspace-command.v1`仍不允许client声明actor/role/capability authority。Simulation只接受名称显式包含test/simulation、`production_binding=false`且resource为synthetic的policy；Production即使carrier/context声称`approve`或`reject`也在任何source/result lookup前固定`PRODUCTION_AUTHORITY_UNAVAILABLE`，OPEN-010保持`OPEN`。
+
+APPROVE/REJECT必须分别精确匹配`approve`/`reject`与resource scope。授权通过后才读取durable audit/source；成功仅把同一ID/content的READY carrier以CAS推进APPROVED或REJECTED，并在同一transaction追加一条`DECISION` AuditEvent。Same scope/key/request从原audit重放，different fingerprint冲突；audit失败回滚state。高风险capability/scope/authentication/Production拒绝只追加无source/lineage/before/after引用的sanitized `DENIED` event且不读取resource；非法actor、空reason或credential-like reason因无法形成安全carrier而在audit前拒绝。DENIED event的`resolved_capability`表示本次被评估的server-derived capability，不代表grant。
+
+本slice不选择identity provider或真实role，不关闭OPEN-010，不形成HTTP/UI、publish/export、retention/SIEM或Production approval/readiness。`p3-approval-decision-report.v1`本地8/8仅是Simulation/Test与临时SQLite行为证据；exact provider仍是Task closure前置条件。

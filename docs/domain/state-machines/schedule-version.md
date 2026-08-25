@@ -6,7 +6,7 @@ spec_version: 0.3.0
 phase: P0-P3
 normative: true
 source_sections: [30, 33, 35, 66, 69, 78]
-last_reviewed: 2026-08-24
+last_reviewed: 2026-08-25
 ---
 
 # ScheduleVersion 状态机
@@ -103,3 +103,9 @@ Exact replay读取原creation bytes和当前READY carrier并返回原audit，不
 Move/Assign/Set/Remove Lock不是state transition：source在DRAFT、READY_FOR_REVIEW、REJECTED、APPROVED、PUBLISHED或SUPERSEDED下都不发生self-pair或content update；成功只insert具有new ID、parent source reference、revision+1、fresh validation及DRAFT state的新carrier。`MANUAL_EDIT`用于Move/Assign，`LOCK_CHANGE`用于Set/Remove Lock。Same key/same request只重放原DRAFT logical reference，不新增Version/audit；不同request冲突。
 
 P3-03允许pair与`state-machines.v1` bytes没有变化，新DRAFT不自动执行DRAFT→READY_FOR_REVIEW。独立`SUBMIT_FOR_REVIEW`只接受本Task生成的manual/lock DRAFT，第二次fresh PASS且fingerprint一致后以CAS执行既有pair；只允许state与allowed actions改变，ID/content/content fingerprint/lineage/decision保持不变，audit失败则transition回滚。Failed candidate不保存为ScheduleVersion。TASK-P3-07/08仍分别拥有decision与publication state transition；PUBLISHED source仅可历史参考派生DRAFT，绝无原地更新。
+
+## TASK-P3-07 executable decision transitions
+
+本Task只执行既有`READY_FOR_REVIEW→APPROVED`与`READY_FOR_REVIEW→REJECTED`两对。Guard同时要求server-resolved exact capability/resource scope、Simulation test policy、Production default-deny、non-empty sanitized reason、expected READY/content fingerprint、decision/publication/superseded为空及state revision CAS。Candidate仅改变`state/decision/allowed_actions`；immutable projection、ID、revision、content/fingerprint、lineage/validation和created facts不变。成功CAS与一条append-only DECISION audit同事务，audit失败回滚；并发Approve/Reject最多一个winner。
+
+Same key/same request从原audit返回READY→terminal logical reference，不新增self-pair或改写event；different request冲突。APPROVED的carrier actions为`view,publish`但P3-08尚未实现publish；REJECTED为terminal且只能由copy-on-write command派生新DRAFT。未新增state、pair或`state-machines.v1` bytes，PUBLISHED/SUPERSEDED仍未实现。

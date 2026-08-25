@@ -6,7 +6,7 @@ spec_version: 0.3.0
 phase: cross-phase
 normative: false
 source_sections: [0, 8, 10, 30, 42, 57, 59, 62, 89, 90, 105]
-last_reviewed: 2026-08-24
+last_reviewed: 2026-08-25
 registry_version: 1.0.0
 ---
 
@@ -157,3 +157,9 @@ Source/lineage fingerprint、stale cursor/precondition、load/KPI一致性及rea
 Source precondition、copy-on-write、fresh Validator、hashed idempotency、append-only audit与transaction rollback降低本slice的stale overwrite、invalid plan、duplicate command和partial commit暴露；authorization-before-replay与Production deny降低capability/result disclosure风险。但证据只覆盖synthetic临时SQLite，不证明distributed concurrency、PostgreSQL capacity、real RBAC、HTTP/UI可用性、retention或Production side effect。
 
 Implementation run `32713635045` / artifact `9515126567`已通过command/negative/atomic rollback/冻结范围检查，故本closure把TASK-P3-06标为`done`。RISK-001～013全部继续`MONITORED`，severity/status不降低；特别是RISK-007/008/011～013及OPEN-005/010保持原边界，`registry_version=1.0.0`不变。
+
+## TASK-P3-07 risk review
+
+Authorization-before-lookup、exact capability/resource scope、Production default-deny、credential-safe reason、hashed key、generic denial audit、same-content CAS+audit transaction、exact replay/conflict和concurrent single winner降低本slice的authority bypass、resource disclosure、duplicate decision与partial commit暴露。但证据只覆盖synthetic临时SQLite和test policy，不证明real RBAC/SSO、PostgreSQL distributed concurrency、HTTP/UI bypass resistance、retention/SIEM、Production target或side-effect recovery。
+
+RISK-001～013全部继续`MONITORED`，severity/status不降低；尤其RISK-007/008/011～013与OPEN-010保持原边界，`registry_version=1.0.0`不变。当前local PASS/provider pending；exact provider成功也只能闭环bounded decision slice，不关闭Production authority风险。

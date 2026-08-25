@@ -6,7 +6,7 @@ spec_version: 0.3.0
 phase: cross-phase
 normative: true
 source_sections: [16, 38, 49, 62, 64, 95, 96]
-last_reviewed: 2026-08-24
+last_reviewed: 2026-08-25
 ---
 
 # 配置、环境与数据隔离
@@ -211,3 +211,9 @@ Workflow只新增离线/临时SQLite lifecycle machine命令并复用既有`PLAN
 ## TASK-P3-06 command isolation
 
 Command service实例固定`SIMULATION`或`PRODUCTION` repository plane；command/source/problem provenance、environment与synthetic标记必须一致。当前仅Simulation test policy可执行，Production在source lookup和idempotent replay前固定拒绝。Machine/tests只用临时SQLite验证transaction、replay/rollback与plane guard，不新增env key、Secret、port、service、database、network或deployment，也不能外推PostgreSQL concurrency/Production isolation。
+
+## TASK-P3-07 decision isolation
+
+Decision service实例同样固定单一repository plane。Simulation只允许Development/Test/Benchmark、synthetic provenance、名称显式含test/simulation且`production_binding=false`的server policy；resource scope必须精确包含Version。Production command只能形成`WORKSPACE_INTERNAL` sanitized DENIED audit，且在任何source或success replay lookup前拒绝；Simulation/Production audit和Schedule tables按既有plane key隔离。
+
+本Task没有新增env var、Secret、credential、port、service、database、network或deployment。临时SQLite并发/CAS只证明bounded development behavior，不替代PostgreSQL、identity boundary、Production backup/restore或capacity验证。

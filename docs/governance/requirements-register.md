@@ -6,7 +6,7 @@ spec_version: 0.3.0
 phase: cross-phase
 normative: true
 source_sections: [3, 4, 5, 6, 107]
-last_reviewed: 2026-08-24
+last_reviewed: 2026-08-25
 registry_version: 1.0.0
 ---
 
@@ -163,3 +163,9 @@ Implementation `f236fab47aa2565b87a060b2c8bde8f2e8d66229` / artifact `9512423712
 REQ-005获得Move/Assign candidate与Set/Remove Lock后的fresh independent Validator gate，以及manual DRAFT显式submit的第二次fresh gate；REQ-007获得command-only copy-on-write new DRAFT、source/current publication不变，并只复用既有DRAFT→READY pair；REQ-009获得server precondition、deterministic idempotency identity、source/new lineage与atomic insert/CAS + append-only audit。形成路径为`app.domain.schedule_commands`、`app.application.schedule_commands/schedule_command_check`、unit/property/contract/validation/integration tests和8-check machine report。
 
 Implementation `08317637c7fbb51d46880d32523545bb0b4fe1c0` / artifact `9515126567`已精确复验8/8 command及57-path治理链，故只闭环TASK-P3-06 bounded command slice。该slice不形成Solver/Replan、approval/rejection/publication/export、HTTP/UI、Production identity/authority或P4；全部15个root Requirement继续`ALLOCATED`，OPEN/SIM/risk状态与`registry_version=1.0.0`不变。
+
+## TASK-P3-07 requirement review
+
+REQ-007获得authority-neutral APPROVE/REJECT、READY-only同content state CAS、terminal rejection、decision evidence、success/denial audit、exact replay/conflict/concurrency与rollback的application行为；REQ-009获得actor/policy/capability/resource scope、reason、request/key reference、source/new/lineage/correlation/code commit及machine report链。形成路径为`app.domain.authorization`、`app.application.approval/approval_decision_check`、unit/contract/integration/security/CI tests和8-check report。
+
+该slice不形成真实RBAC/SSO/责任人、HTTP/UI、publish/export、P4或Production authority/readiness；APPROVED只成为P3-08前置，OPEN-010继续OPEN。全部15个root Requirement保持`ALLOCATED`且`registry_version=1.0.0`不变；当前为local PASS/provider pending，只有exact implementation/closure evidence核验后才能闭环TASK-P3-07 bounded slice。

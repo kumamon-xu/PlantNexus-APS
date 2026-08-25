@@ -6,7 +6,7 @@ spec_version: 0.3.0
 phase: cross-phase
 normative: true
 source_sections: [4, 23, 24, 40, 67, 93, 101, 102, 103, 104]
-last_reviewed: 2026-08-24
+last_reviewed: 2026-08-25
 ---
 
 # Provenance 与版本规则
@@ -267,3 +267,9 @@ Comparison query fingerprint额外绑定base/compared两个Version ID，comparis
 Command request fingerprint覆盖冻结contract/type、source ID/state/content、plane/environment/synthetic provenance、target、reason和payload；raw key另与server-derived scope计算hashed key reference。四类content command用其reference确定new ScheduleVersion/Audit ID；`SUBMIT_FOR_REVIEW`保持source ScheduleVersion ID，只派生独立Audit ID。New DRAFT保存parent source reference、revision+1、`MANUAL_EDIT|LOCK_CHANGE`、fresh ValidationReport fingerprint和content fingerprint；显式submit要求第二次fresh report fingerprint与DRAFT lineage一致，并只把state/allowed actions推进READY。Audit另保存执行code commit、actor/policy/correlation与source/new references。
 
 Origin PlanningRun/Snapshot/Problem/PlanningSolution/KPI/SolverReport references不改写；content command的source及任何current publication均保留，submit只推进其目标manual DRAFT的既有state pair且不改content。Exact replay读取原AuditEvent的logical source/new reference并核验durable content，不生成新时间戳或改写event；different request conflict。Schema set、canonicalization和P2 provider evidence均未变。
+
+## TASK-P3-07 decision provenance
+
+Decision request fingerprint沿用冻结command投影，包含action、READY source/content、plane/environment/synthetic provenance、workspace target与sanitized reason；raw key与server-derived action scope只计算hashed key reference和deterministic Audit ID。Success event保存actor reference、evaluated capability、auth-policy version、correlation/code commit、完整既有lineage以及同ID/content READY→APPROVED/REJECTED reference；ScheduleVersion decision保存同一audit ID。
+
+Exact replay即使当前Version将来继续到PUBLISHED，也返回原decision event的历史logical reference并核验durable content/decision binding，不改写时间或event。DENIED attempt保存request/key reference但不保存source/lineage/state reference。Schema/canonicalization、P2/P3-04～06历史provider evidence和Version immutable projection均不重写。

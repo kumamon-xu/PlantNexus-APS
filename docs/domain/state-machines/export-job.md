@@ -6,7 +6,7 @@ spec_version: 0.3.0
 phase: P0-P3
 normative: true
 source_sections: [34, 65, 66, 67]
-last_reviewed: 2026-08-24
+last_reviewed: 2026-08-25
 ---
 
 # ExportJob 状态机
@@ -108,3 +108,7 @@ Validated output lifecycle在READY_FOR_REVIEW停止，`decision/publication`保�
 ## TASK-P3-06 zero-impact review
 
 Edit/lock content command只创建DRAFT与command AuditEvent；review submit只执行ScheduleVersion既有DRAFT→READY pair。两者`export_job_id=null`且不导入ExportJob repository、worker或exporter。ExportJob state/pair/lease/attempt、PUBLISHED-only source gate和package contract均无变化；P3-09仍是唯一export behavior owner。
+
+## TASK-P3-07 zero-impact review
+
+APPROVE/REJECT AuditEvent继续固定`export_job_id=null`；decision service不导入ExportJob repository、worker、exporter或publication current reference。APPROVED不自动创建或排队ExportJob，REJECTED不可export。ExportJob五states/七pairs、lease/attempt/idempotency与PUBLISHED-only gate均无变化，P3-09仍是唯一export behavior owner。

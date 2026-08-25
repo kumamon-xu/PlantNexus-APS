@@ -6,7 +6,7 @@ spec_version: 0.3.0
 phase: P3
 normative: true
 source_sections: [33, 34, 63, 65, 66, 68, 69, 77, 78, 91, 94]
-last_reviewed: 2026-08-24
+last_reviewed: 2026-08-25
 ---
 
 # P3 Planning Workspace API 语义合同
@@ -156,3 +156,9 @@ P3-05已在HTTP边界之前形成solver-neutral read application：Data Health�
 HTTP之前的command application已形成：接受`workspace-command.v1`的Move/Assign/Set/Remove Lock四类content command及空payload `SUBMIT_FOR_REVIEW`，逐项复验strict字段、derived capability、exact source state/content、server-derived idempotency scope、plane/environment/synthetic provenance和`WORKSPACE_INTERNAL` target。Raw idempotency key只在调用内使用；AuditEvent仅保存hashed key reference与request fingerprint。Content成功结果固定source/new Version reference、new state DRAFT、fresh ValidationReport reference、audit ID、correlation及replay flag；submit只接受本Task生成的manual/lock DRAFT，经第二次fresh PASS与CAS返回同ID/content的READY reference。
 
 Same key/same request可在source后续state变化后通过既有audit/new immutable content重放原logical result；same key/different request、stale source、missing source、authorization、Validator或persistence failure均fail closed。该服务不是HTTP endpoint、OpenAPI或RBAC实现；P3-10只能做transport/error映射，不能在router复制command mutation或Validator逻辑。Production在OPEN-010关闭前无论carrier capability如何都default-deny。
+
+## TASK-P3-07 decision application boundary
+
+Approve/Reject application现消费冻结`workspace-command.v1`的空payload `APPROVE|REJECT`，要求`expected_state=READY_FOR_REVIEW`、exact content fingerprint、`WORKSPACE_INTERNAL`、server-derived scope/key reference及non-empty sanitized reason。返回logical result包含command/type/request fingerprint、READY source reference、APPROVED或REJECTED new reference、audit ID、correlation和replay flags；它不返回credential、role或raw key。
+
+该行为仍不是上述两个`POST` endpoint：未新增router、request model、OpenAPI、401/403 challenge或HTTP status adapter。P3-10只能调用`ApprovalDecisionService`并映射既有module-local failure，不能绕过authorization-before-lookup、在router重复CAS/audit逻辑，或把APPROVED解释为PUBLISHED。P3-08～13、真实RBAC/SSO与Production authority均未形成。

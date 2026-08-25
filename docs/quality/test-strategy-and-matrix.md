@@ -6,7 +6,7 @@ spec_version: 0.3.0
 phase: P0-P7
 normative: true
 source_sections: [31, 57, 72, 74, 76, 78, 80, 86, 87, 88, 89, 100]
-last_reviewed: 2026-08-24
+last_reviewed: 2026-08-25
 registry_version: 1.0.0
 ---
 
@@ -42,7 +42,7 @@ registry_version: 1.0.0
 | TEST-PROBLEM-REPLAY-001 | Solver-neutral Problem builder/bytes/hash deterministic replay | P1 | TASK-P1-09 unit/property/Golden formed/provider `32315513504` PASS；[P1 pipeline full-byte replay](../../backend/tests/simulation/test_p1_pipeline_replay.py) added / TASK-P1-11 |
 | TEST-P1-COMMON-INGRESS | Reference/Synthetic共同 staging→Problem链路与 Gate report | P1 | [`test_p1_common_ingress.py`](../../backend/tests/integration/test_p1_common_ingress.py) + [`test_p1_pipeline_replay.py`](../../backend/tests/simulation/test_p1_pipeline_replay.py) + [`test_p1_exit_rejections.py`](../../backend/tests/contract/test_p1_exit_rejections.py) formed / TASK-P1-11 |
 | TEST-RULE-SHEET-001 | C-001～C-018 唯一/完整、input/formula/example/violation/Test ID 与 registry cross-check | P0 | [`test_rule_contracts.py`](../../backend/tests/contract/test_rule_contracts.py) + [`constraint-rule-sheet.v1`](../../schemas/rules/constraint-rule-sheet.v1.yaml) + [TASK-P0-04 Acceptance PASS](../tasks/P0/TASK-P0-04-constraints-states-errors-capabilities.md#completion-evidence) |
-| TEST-STATE-TRANSITION-001 | 三套 state enum、42 个 allowed pair、terminal/negative transitions | P0-P3 | [`test_rule_contracts.py`](../../backend/tests/contract/test_rule_contracts.py) + [`test_p3_workspace_contracts.py`](../../backend/tests/contract/test_p3_workspace_contracts.py) + [`state-machines.v1`](../../schemas/rules/state-machines.v1.yaml) formed；P3 carrier alignment formed，persistence/behavior PLANNED |
+| TEST-STATE-TRANSITION-001 | 三套 state enum、42 个 allowed pair、terminal/negative transitions | P0-P3 | frozen rules/carrier + P3 repository/lifecycle/command provider-verified；TASK-P3-07 READY→APPROVED/REJECTED/CAS/negative local PASS，provider pending |
 | TEST-ERROR-MAPPING-001 | 七类 error、global code/category与namespace isolation | P0-P3 | [`test_rule_contracts.py`](../../backend/tests/contract/test_rule_contracts.py) + [`test_p3_workspace_contracts.py`](../../backend/tests/contract/test_p3_workspace_contracts.py)；global registry preserved、workspace-control separation formed；HTTP behavior PLANNED |
 | TEST-CAPABILITY-001 | 20 capability registry 与 supported declaration/unsupported/unknown/duplicate precheck | P0 | [`test_rule_contracts.py`](../../backend/tests/contract/test_rule_contracts.py) registry contract + [`test_data_validation.py`](../../backend/tests/unit/test_data_validation.py) platform rejection/ordinary resource matching formed；Solver capability implementation PLANNED |
 | TEST-GOLDEN-JSSP | 人工可验证 JSSP | P2 | [`P2-GOLDEN-JSSP@1.0.0`](../../backend/tests/golden/test_p2_golden_solver.py) fixed Solver→Validator optimum/hash replay formed / TASK-P2-09 |
@@ -58,22 +58,22 @@ registry_version: 1.0.0
 | TEST-VALIDATOR-MUTATION | 独立 Validator 拒绝人工错误计划 | P0-P2 | P0/formal suites + [11 formula-free mutations of Solver-produced candidates](../../backend/tests/validation/test_p2_solver_mutations.py) formed；performance integration PLANNED |
 | TEST-REPLAN | Replan 事实、锁与变化报告 | P4 | PLANNED |
 | TEST-OUTPUT | 标准成果包合同 | P2-P3 | [`test_p2_output_contracts.py`](../../backend/tests/contract/test_p2_output_contracts.py) + [`test_p2_export_package.py`](../../backend/tests/integration/test_p2_export_package.py) internal synthetic profile/schema/hash/count/lineage/tamper/atomic boundary formed；P3 publish PLANNED |
-| TEST-IDEMPOTENCY | Import/Planning/Export/Publish/Event 幂等 | P0-P3 | generic primitive + durable Import staging + P2 internal package + TASK-P3-03 Audit/Publication/ExportJob unique exact replay/conflict and current-reference CAS formed；business approval/publish/export/worker/external side effects PLANNED |
+| TEST-IDEMPOTENCY | Import/Planning/Export/Publish/Event 幂等 | P0-P3 | generic/storage/command slices provider-verified；TASK-P3-07 decision exact replay/conflict/CAS rollback local PASS，provider pending；publish/export/worker/external side effects PLANNED |
 | TEST-SCENARIO-REPLAY | Scenario/Profile/Generator/seed 重放 | P0-P2 | empty/P0 + P1 ingress + [seven versioned Solver/Validator replays](../../backend/tests/property/test_p2_solver_properties.py) with fixed hashes and row-order invariance formed |
-| TEST-SIM-ISOLATION | Synthetic/Production 隔离 | P0-P3 | generator/common-ingress + Raw/Snapshot + TASK-P3-03 plane-scoped repository/cross-plane/internal-only publication-export guards + TASK-P3-04 synthetic lifecycle pre-write Production rejection provider-verified；separate Production DB/API/auth/publish target PLANNED |
+| TEST-SIM-ISOLATION | Synthetic/Production 隔离 | P0-P3 | existing plane/lifecycle slices provider-verified；TASK-P3-07 explicit Simulation test policy、resource scope、Production pre-lookup default-deny/local denial audit PASS，provider pending；separate Production DB/API/auth/publish target PLANNED |
 | TEST-REFERENCE-SCHEDULER | Reference Scheduler baseline | P2 | [five algorithms / 35 complete candidates / explicit failure](../../backend/tests/unit/test_reference_schedulers.py) and [shrinkable properties](../../backend/tests/property/test_reference_scheduler_properties.py) provider-verified |
 | TEST-BENCHMARK | BenchmarkReport/profile 回归 | P2 | [`test_benchmark_contract.py`](../../backend/tests/contract/test_benchmark_contract.py) + [`test_benchmark_runner.py`](../../backend/tests/integration/test_benchmark_runner.py) strict Profile/Report/Baseline、XS/S/M replay、Global/Reference/Validator/KPI、warning/threshold与required CI XS artifact provider-verified |
 | TEST-PROPERTY | 合法 Problem 的通用不变量 | P2 | Problem v2/formal/Solver properties + [Reference gate/duration/due and authoritative Problem properties](../../backend/tests/property/test_reference_scheduler_properties.py) + [generated XS/S/M formal pipeline replay](../../backend/tests/integration/test_benchmark_runner.py) formed |
 | TEST-SOLVER-UPGRADE | Solver 升级 replay/status contract | P2+ | Benchmark baseline固定Python/OR-Tools/environment signature并拒绝profile/problem/complexity drift的P2 development slice formed；实际upgrade重建新版本baseline/compatibility evidence仍PLANNED |
 | TEST-WORKSPACE-CONTRACT-001 | P3页面/API/permission/state/error/audit/idempotency合同一致性 | P3 | TASK-P3-01 human baseline + TASK-P3-02 seven strict machine carriers/pure fingerprints/negative vectors formed；persistence/application/API/UI behavior PLANNED |
 | TEST-SCHEDULE-VERSION-REPOSITORY-001 | ScheduleVersion/Audit/ExportJob migration、immutability、transaction与replay | P3 | FORMED / TASK-P3-03 provider-verified storage slice |
-| TEST-SCHEDULE-VERSION-LIFECYCLE-001 | Validated Solution→DRAFT→READY_FOR_REVIEW与非法状态拒绝 | P3 | TASK-P3-04 fresh lineage/DRAFT→READY/atomic audit/replay/conflict/concurrency slice provider-verified；approval/publish slice PLANNED / TASK-P3-07～08 |
+| TEST-SCHEDULE-VERSION-LIFECYCLE-001 | Validated Solution→DRAFT→READY_FOR_REVIEW与非法状态拒绝 | P3 | TASK-P3-04 DRAFT→READY provider-verified；TASK-P3-07 READY→APPROVED/REJECTED local PASS/provider pending；publish PLANNED / TASK-P3-08 |
 | TEST-WORKSPACE-READ-MODEL-001 | Gantt、Resource Load、Order View与Version Comparison lineage/KPI一致性 | P3 | TASK-P3-05 provider-verified；HTTP/UI consumer PLANNED / P3-10～12 |
 | TEST-GANTT-COMMAND-001 | Edit/Lock command→server validation→new DRAFT→formal Validator | P3 | TASK-P3-06 provider-verified；HTTP/UI E2E PLANNED / P3-10～13 |
-| TEST-APPROVAL-AUTHORIZATION-001 | authority-neutral capability、default-deny、approve/reject guards | P3 | PLANNED / TASK-P3-07、10、13 |
+| TEST-APPROVAL-AUTHORIZATION-001 | authority-neutral capability、default-deny、approve/reject guards | P3 | domain/application/contract/integration/security + 8/8 machine local PASS / TASK-P3-07，exact provider pending；HTTP/UI E2E PLANNED / P3-10、13 |
 | TEST-PUBLISH-IDEMPOTENCY-001 | APPROVED-only publish、same-key replay、conflict与supersession | P3 | PLANNED / TASK-P3-08 |
 | TEST-EXPORT-JOB-001 | ExportJob transition、package integrity、atomic/idempotent export与失败恢复 | P3 | persistence state/lease/attempt slice FORMED / TASK-P3-03 provider-verified；package/export behavior PLANNED / TASK-P3-09 |
-| TEST-AUDIT-TRAIL-001 | append-only actor/reason/correlation/before-after/version audit完整性 | P3 | append/replay/trigger/index slice FORMED / TASK-P3-03 provider-verified；business action completeness PLANNED / TASK-P3-07～10 |
+| TEST-AUDIT-TRAIL-001 | append-only actor/reason/correlation/before-after/version audit完整性 | P3 | storage/command slices provider-verified；TASK-P3-07 success+DENIED decision audit、redaction、rollback/replay local PASS，provider pending；publish/export/API completeness PLANNED / P3-08～10 |
 | TEST-WORKSPACE-API-001 | HTTP payload/error/auth/idempotency/OpenAPI与application boundary | P3 | PLANNED / TASK-P3-10 |
 | TEST-WORKSPACE-FRONTEND-001 | read/action UI、状态可见性、accessibility与no-client-authority E2E | P3 | PLANNED / TASK-P3-11～13 |
 | TEST-P3-VERTICAL-SLICE-001 | P3完整workspace→review→approve→publish→export双重replay与拒绝门 | P3 | PLANNED / TASK-P3-14～15 |
@@ -323,3 +323,9 @@ TASK-P3-01本地治理/规则回归为`27 passed`，implementation required run 
 Task由exact implementation provider与本evidence-only closure标为`done`。Test ID总数保持48、registry version保持`1.0.0`；HTTP/UI E2E、approval/rejection/publish/export、P4与Production测试继续PLANNED。
 
 本地定向组合为41 PASS、全仓为546 PASS，machine为8/8且`issues=[]`；locked sync、Ruff/Pyright、全部历史machine、P2 Gate/XS、Compose/build与治理均PASS。Implementation run `32713635045` / artifact `9515126567`精确复现25/25 JSON、command 8/8及57 committed/0 working paths、8 rows、19 checks、0 issues，因此TEST-GANTT-COMMAND-001本Task slice与TEST-VALIDATOR-MUTATION/STATE-TRANSITION/IDEMPOTENCY consumer回归为provider-verified。
+
+## TASK-P3-07 approval decision test slice
+
+`TEST-APPROVAL-AUTHORIZATION-001`现由unit/contract/integration/security覆盖strict APPROVE/REJECT carrier、server actor/capability/resource/test-policy context、authorization-before-source/result lookup、Production default-deny、credential-safe reason和DENIED audit；`TEST-STATE-TRANSITION-001`覆盖READY→APPROVED/REJECTED同content CAS、terminal rejection及无新pair；`TEST-AUDIT-TRAIL-001`覆盖success/denial event、hashed raw key、lineage/reference、single transaction与audit rollback；`TEST-IDEMPOTENCY`覆盖success/denial exact replay、different fingerprint conflict及concurrent decision单winner；`TEST-SIM-ISOLATION`覆盖Simulation test policy与plane guard。
+
+当前聚焦39、full repository 562、Ruff/Pyright、locked sync、全部历史machine、P2 Gate/XS、Compose/build与治理均PASS；`p3-approval-decision-report.v1`为8/8、2 decision types、3 successful decisions、2 exact replay、1 conflict、3 authorization denial/audit、4无业务state拒绝、1 rollback、Solver调用0、`issues=[]`。这些仍是本地事实，exact implementation provider尚待核验，因此相关行标为local PASS/provider pending。Test ID总数保持48、registry version保持`1.0.0`；HTTP/UI、publish/export、P4与Production测试仍PLANNED。

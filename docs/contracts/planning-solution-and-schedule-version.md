@@ -6,7 +6,7 @@ spec_version: 0.3.0
 phase: P0-P3
 normative: true
 source_sections: [29, 30, 32, 33, 67, 78]
-last_reviewed: 2026-08-24
+last_reviewed: 2026-08-25
 ---
 
 # PlanningSolution 与 ScheduleVersion 合同
@@ -120,3 +120,9 @@ Version Comparison产生`schedule-version-comparison.v1`只读DTO：operation de
 人工命令不创建或冒充新的Solver run。新ScheduleVersion保留source的PlanningRun/Snapshot/Problem/PlanningSolution/KPI/SolverReport provenance，替换为对copy-on-write assignments执行fresh formal Validator所得的ValidationReport reference，并以`source_kind=MANUAL_EDIT|LOCK_CHANGE`和parent Version明确表达派生边界。Schedule content是新Version的权威计划内容；origin PlanningSolution仍是求解来源而不是人工修改后的等同document。
 
 应用不会CAS更新content command的source，也不改变current publication；每个成功Move/Assign/Set/Remove Lock insert一个revision递增、identity独立的DRAFT并append command audit。该DRAFT只有经独立`SUBMIT_FOR_REVIEW`、第二次fresh Validator且report fingerprint与lineage一致，才以CAS复用既有`DRAFT→READY_FOR_REVIEW` pair；ID/content/fingerprint保持不变并原子追加submit audit。失败candidate完全不持久化。P3-06没有approve/reject/publish/export。P3-05基于原始PlanningSolution/KPI的严格read bundle不会被静默伪造成已重算manual KPI；后续API/UI若需要manual Version的完整KPI projection，必须消费明确的Version content/derived read contract，不得把旧KPI当新KPI。
+
+## TASK-P3-07 immutable decision boundary
+
+Approval/Reject不创建新PlanningSolution、ValidationReport、KPI或ScheduleVersion identity，也不重跑Solver/Validator。服务只在READY carrier及其existing validation/lineage通过冻结carrier precheck后，保持revision/content/content fingerprint/parent/source kind/validation/created facts逐字不变，新增Schema已允许的decision evidence并改变state/allowed actions：APPROVED为`view,publish`，REJECTED为`view,edit,lock`。REJECTED修订仍只能由后续copy-on-write command派生新DRAFT，不能回滚原行。
+
+Decision AuditEvent复制既有完整lineage并绑定READY source与同ID/content terminal reference；授权拒绝event没有resource lineage/reference，避免通过not-found泄漏。该slice不实现APPROVED→PUBLISHED、current/supersession、ExportJob、HTTP/UI、P4或Production side effect。

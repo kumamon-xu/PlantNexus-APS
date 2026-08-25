@@ -6,7 +6,7 @@ spec_version: 0.3.0
 phase: P0-P7
 normative: true
 source_sections: [34, 65, 66, 67]
-last_reviewed: 2026-08-24
+last_reviewed: 2026-08-25
 ---
 
 # P0 Worker Reliability 与 Idempotency
@@ -54,3 +54,9 @@ Publish transaction只处理APPROVED→PUBLISHED/current/必要supersession/audi
 DB unique现覆盖Audit/Publication/Export的plane+scope+key，concurrent PostgreSQL insert race在savepoint内解析为exact replay或conflict；SQLite保留外层transaction rollback。ScheduleVersion/ExportJob使用expected state+monotonic revision CAS。ExportJob claim/retry显式接收future UTC lease expiry并递增attempt，heartbeat校验owner、未过期与revision；完成/失败/cancel从`EXPORTING`时也必须持有active lease。
 
 Publication repository可以在一个caller transaction内append immutable result并CAS current reference，exact replay不会再次移动current；它不执行APPROVED→PUBLISHED或旧current→SUPERSEDED。没有worker、automatic retry、outbox、package/storage/network side effect或distributed exactly-once，P3-08/09仍须组合业务事务与失败恢复。
+
+## TASK-P3-07 synchronous decision idempotency
+
+Decision scope固定`plane/action/ScheduleVersion/WORKSPACE_INTERNAL`；raw key仅生成hash reference和Audit ID。授权在replay前重新执行；same request读取原SUCCEEDED或DENIED event，different fingerprint冲突。首次成功使用ScheduleVersion expected READY+state revision CAS与Audit append同事务；audit failure回滚，concurrent APPROVE/REJECT只允许一个winner，winner重试可exact replay。该语义不依赖process-local store，也不创建retry job。
+
+本Task没有worker、automatic retry、outbox、queue或network exactly-once。P3-08 publication与P3-09 ExportJob拥有独立scope/事务，不能复用decision key或把APPROVED自动排队为publish/export。

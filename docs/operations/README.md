@@ -6,7 +6,7 @@ spec_version: 0.3.0
 phase: P0-P7
 normative: false
 source_sections: [65, 66, 93, 94, 95, 101, 106]
-last_reviewed: 2026-08-24
+last_reviewed: 2026-08-25
 ---
 
 # Operations 索引与形成边界
@@ -164,3 +164,9 @@ P3-01先定义security/audit/idempotency责任，P3-03/07～10再形成repositor
 `uv run python -m app.application.schedule_command_check --root . --report <ignored-json>`在三个临时SQLite数据库重放versioned P2 JSSP/FJSP inputs，验证Move、Assign、Set/Remove Lock、显式SUBMIT_FOR_REVIEW、每次非replay fresh Validator、新DRAFT/audit、同ID/content READY、exact replay/conflict、REJECTED/PUBLISHED source immutability、stale/auth/validation负例、insert/CAS transaction rollback及Solver/P4边界，输出8/8 `p3-schedule-command-report.v1`。CI固定写`build/validation/ci-p3-schedule-commands.json`且不可continue-on-error。
 
 报告中的command microseconds/schedule size只为development observation，`SLA=NOT_DEFINED`。没有常驻endpoint、queue、credential、external target或Production Runbook。代码回退不得删除已提交Version/audit；错误计划只能通过新command修订，不能UPDATE历史。
+
+## TASK-P3-07 operator command
+
+`uv run python -m app.application.approval_decision_check --root . --report <ignored-json>`在临时SQLite上复用P3-04 reviewable sources，验证APPROVE/REJECT同content CAS+audit、exact replay/conflict、REJECTED terminal、capability/resource/authentication与Production default-deny audit、stale/empty/credential-like reason无副作用、audit rollback及并发单winner，输出8/8 `p3-approval-decision-report.v1`。CI固定写`build/validation/ci-p3-approval-decisions.json`且不可continue-on-error。
+
+报告只证明Simulation/Test application behavior，不配置真实principal/role、endpoint、publisher/exporter、external target或Production Runbook。回滚代码不得删除已提交decision/audit；错误decision只能通过受治理的新Version/纠正event处理，不能UPDATE历史。

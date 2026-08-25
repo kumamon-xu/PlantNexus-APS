@@ -6,13 +6,13 @@ spec_version: 0.3.0
 phase: cross-phase
 normative: false
 source_sections: []
-last_reviewed: 2026-08-24
+last_reviewed: 2026-08-25
 registry_version: 1.0.0
 ---
 
 # 文档清单
 
-本清单列出当前仓库已经实际存在的Markdown文档。P0～P2均已归档为completed；P2 Exit Gate=`READY`且用户已批准transition。P3现为active，TASK-P3-00～06均已done，P3-07～15为planned。P3人类可审计API/Frontend规范、七份机器Schema carrier、有界持久化/生命周期/read/command原语已形成；API/Frontend业务实现与Production Runbook正文仍未形成。
+本清单列出当前仓库已经实际存在的Markdown文档。P0～P2均已归档为completed；P2 Exit Gate=`READY`且用户已批准transition。P3现为active，TASK-P3-00～06均已done，P3-07为`in_progress`，P3-08～15为planned。P3人类可审计API/Frontend规范、七份机器Schema carrier、有界持久化/生命周期/read/command原语已形成；API/Frontend业务实现与Production Runbook正文仍未形成。
 
 | Path | Doc ID | Status | Title |
 |---|---|---|---|
@@ -170,7 +170,7 @@ registry_version: 1.0.0
 | [tasks/P3/TASK-P3-04-validated-solution-to-reviewable-schedule-version.md](../tasks/P3/TASK-P3-04-validated-solution-to-reviewable-schedule-version.md) | TASK-P3-04 | done | Validated Solution to Reviewable ScheduleVersion |
 | [tasks/P3/TASK-P3-05-planning-workspace-read-models-and-comparison.md](../tasks/P3/TASK-P3-05-planning-workspace-read-models-and-comparison.md) | TASK-P3-05 | done | Planning Workspace Read Models and Comparison |
 | [tasks/P3/TASK-P3-06-gantt-edit-and-lock-command-pipeline.md](../tasks/P3/TASK-P3-06-gantt-edit-and-lock-command-pipeline.md) | TASK-P3-06 | done | Gantt Edit and Lock Command Pipeline |
-| [tasks/P3/TASK-P3-07-approval-rejection-and-audit-service.md](../tasks/P3/TASK-P3-07-approval-rejection-and-audit-service.md) | TASK-P3-07 | planned | Approval Rejection and Audit Service |
+| [tasks/P3/TASK-P3-07-approval-rejection-and-audit-service.md](../tasks/P3/TASK-P3-07-approval-rejection-and-audit-service.md) | TASK-P3-07 | in_progress | Approval Rejection and Audit Service |
 | [tasks/P3/TASK-P3-08-idempotent-publication-and-supersession.md](../tasks/P3/TASK-P3-08-idempotent-publication-and-supersession.md) | TASK-P3-08 | planned | Idempotent Publication and Supersession |
 | [tasks/P3/TASK-P3-09-export-job-and-standard-package.md](../tasks/P3/TASK-P3-09-export-job-and-standard-package.md) | TASK-P3-09 | planned | ExportJob and Standard Export Package |
 | [tasks/P3/TASK-P3-10-planning-workspace-http-api.md](../tasks/P3/TASK-P3-10-planning-workspace-http-api.md) | TASK-P3-10 | planned | Planning Workspace HTTP API |
@@ -293,3 +293,7 @@ TASK-P3-04 implementation仍不新增、删除或重命名正式Markdown，inven
 TASK-P3-05 implementation不新增、删除或重命名正式Markdown，inventory继续165份；新增domain/application Python、四类tests、workflow命令及ignored read-model/Task JSON均不进入Markdown清单。Implementation artifact `9512423712`复现50 paths、7 rows、19 checks、0 issues后，本closure将TASK-P3-05标为`done`。Roots=30、Test IDs=48、OPEN=15、SIM assumptions=13、risks=13、Tasks=53及全部registry format version保持`1.0.0`；API/UI/write/approval/publish/export、P4与Production未形成。
 
 TASK-P3-06 activation/implementation不新增、删除或重命名正式Markdown，inventory继续165份；Task从P3-05 provider-verified closure `67d38d030f8b129de7f1b2f6e5b75bd706655396`冻结Diff base。新增domain/application Python、五类tests、workflow命令及ignored command/Task JSON均不进入Markdown清单；形成四类content command及独立SUBMIT same-content READY slice。Implementation artifact `9515126567`复现57 paths、8 rows、19 checks、0 issues后，本closure将TASK-P3-06标为`done`。Roots=30、Test IDs=48、OPEN=15、SIM assumptions=13、risks=13、Tasks=53及全部registry format version保持`1.0.0`；P3-07+、HTTP/UI、approval/rejection/publish/export、P4与Production未形成。
+
+TASK-P3-07 activation不新增、删除或重命名正式Markdown，inventory继续165份；Task从P3-06 provider-verified closure `514224b8ff2d507b613797ae697245bab14f79eb`冻结Diff base并进入`in_progress`。计划中的domain/application approval service、四类tests、workflow machine command及ignored report均不进入Markdown清单；Roots=30、Test IDs=48、OPEN=15、SIM assumptions=13、risks=13、Tasks=53及全部registry format version保持`1.0.0`。P3-08+、真实RBAC/SSO、publish/export、HTTP/UI、P4与Production authority/readiness未形成。
+
+TASK-P3-07本地implementation仍不新增、删除或重命名正式Markdown，inventory继续165份；新增domain/application Python、unit/contract/integration/security tests、workflow命令及ignored decision/Task JSON均不进入Markdown清单。39 focused、562 full、8/8 machine、全部历史machine/P2 Gate/XS、Compose/build与50 paths/8 rows/19 checks/0 issues治理均为local PASS；exact implementation provider尚待核验，故Task保持`in_progress`。Roots=30、Test IDs=48、OPEN=15、SIM assumptions=13、risks=13、Tasks=53及全部registry format version保持`1.0.0`；P3-08+、HTTP/UI、publish/export、P4与Production未形成。

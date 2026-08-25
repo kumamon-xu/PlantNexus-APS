@@ -6,7 +6,7 @@ spec_version: 0.3.0
 phase: P0-P2
 normative: true
 source_sections: [29, 32, 65]
-last_reviewed: 2026-08-24
+last_reviewed: 2026-08-25
 ---
 
 # PlanningRun 状态机
@@ -103,3 +103,7 @@ Lifecycle context现在必须逐次显式提供`planning_run_state=COMPLETED`；
 ## TASK-P3-06 zero-transition review
 
 Command service只读取ScheduleVersion中已绑定的PlanningRun/Problem lineage并对content或review-submit candidate执行Validator；它没有PlanningRun repository或transition port，product-service Solver调用为0。Move/Assign/Lock/SUBMIT不会重开、重试或推进PlanningRun，既有16 states、31 pairs和terminal bytes均无变化。
+
+## TASK-P3-07 zero-transition review
+
+ApprovalDecisionService只读取ScheduleVersion已冻结的PlanningRun lineage并执行ScheduleVersion CAS；没有PlanningRun repository、Solver、Validator或job port。APPROVE/REJECT不会重开、推进或重新解释COMPLETED，也不会把PlanningRun terminal结果当成人工授权；PlanningRun 16 states、31 pairs、terminal集合与machine bytes均保持不变。

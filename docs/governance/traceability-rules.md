@@ -6,7 +6,7 @@ spec_version: 0.3.0
 phase: cross-phase
 normative: true
 source_sections: [5, 6, 86, 98, 99, 111]
-last_reviewed: 2026-08-24
+last_reviewed: 2026-08-25
 ---
 
 # 需求追踪规则
@@ -297,3 +297,11 @@ Task从provider-verified closure `67d38d030f8b129de7f1b2f6e5b75bd706655396`激�
 Implementation artifact必须绑定exact SHA/Task，command report为8/8、5 command types（4 content + 1 submit）、5 fresh Validator passes、2 exact replay/1 conflict、issues=[]、product service Solver=0，Task report为八Impact rows/full checks/0 issues。任何provider、artifact SHA、Task/base、checks或issues不一致都阻断closure。
 
 该规则已由implementation `08317637c7fbb51d46880d32523545bb0b4fe1c0`的required run/job/artifact=`32713635045`/`97390177509`/`9515126567`满足：下载的25/25 JSON顶层PASS，command与Task报告精确为8/8及57 committed/0 working paths、8 rows、19 checks、0 issues。因此本closure只写回TASK-P3-06=`done`和provider事实，P3-07仍为`planned`且未授权。
+
+## TASK-P3-07 approval decision evidence rule
+
+Task从provider-verified closure `514224b8ff2d507b613797ae697245bab14f79eb`激活。Evidence必须同时证明APPROVE/REJECT strict frozen carrier、server-resolved authenticated actor/capability/resource/test-policy context、authorization-before-source/result lookup、Production default-deny、credential-safe reason、exact READY/content/state-revision CAS、同ID/content decision evidence、success state+audit transaction、允许的DENIED audit不泄漏resource existence、same-key success/denial replay/conflict、concurrent single winner、audit rollback、REJECTED copy-on-write-only revision及publish/export/API/UI/P4/Production absence。
+
+追踪链固定为`REQ-007/009 + NFR-TRC/ISO/SEC/HUM + ENG-ARCH/ERR/VER/LOG → TASK-P3-07 → app.domain.authorization + app.application.approval/approval_decision_check + four test classes + CI contract → TEST-APPROVAL-AUTHORIZATION-001/TEST-AUDIT-TRAIL-001/TEST-STATE-TRANSITION-001/TEST-IDEMPOTENCY/TEST-SIM-ISOLATION → p3-approval-decision-report.v1 + Task report → exact implementation/closure provider artifacts`。Provider成功前保持`in_progress`；closure只写事实且不得启动P3-08。
+
+Implementation artifact必须绑定exact SHA/Task/Diff base，decision report为8/8、2 decision types、3 success、2 exact replay、1 conflict、3 denial audit、4无业务state拒绝、1 rollback、Solver=0、`issues=[]`，Task report为八Impact rows/full checks/0 issues。任何provider、artifact SHA、Task/base、checks、issues或禁止范围不一致都阻断closure。

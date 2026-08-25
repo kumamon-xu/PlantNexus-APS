@@ -6,7 +6,7 @@ spec_version: 0.3.0
 phase: cross-phase
 normative: true
 source_sections: [4, 6, 16, 23, 24, 29, 30, 42, 58, 62, 65, 66, 89, 93, 95]
-last_reviewed: 2026-08-24
+last_reviewed: 2026-08-25
 registry_version: 1.0.0
 ---
 
@@ -165,3 +165,9 @@ Plane mismatch与read前后row count为NFR-ISO提供局部回归，但独立Prod
 NFR-COR通过server semantic guard+每次非replay fresh Validator+failed candidate discard；NFR-DET通过canonical command/request/content与same-key exact replay；NFR-TRC通过parent/source/new/validation/audit/code lineage；NFR-HUM通过command result显式new DRAFT，且READY只能由独立submit第二次fresh PASS形成并明确不等于approval。NFR-ISO/SEC/REL/OBS获得plane-bound repository、Production pre-replay deny、hashed raw key、sanitized error、atomic insert/CAS rollback与development timing局部证据。ENG-ARCH形成pure domain→Validator/repository ports application→composition-root方向，ENG-VAL只调用独立Validator public API，ENG-ERR使用module-local稳定reason，ENG-VER保持2.6.0/Schema/migration/dependency零漂移。
 
 SQLite/machine timing不建立PostgreSQL capacity/SLA/backup，test capability不建立Production RBAC。Implementation `08317637c7fbb51d46880d32523545bb0b4fe1c0` / artifact `9515126567`已精确复验该有界NFR/ENG slice并支持TASK-P3-06闭环；全部NFR/ENG root继续`ALLOCATED`，OPEN-005/010、RISK-007/008/011～013及`registry_version=1.0.0`不变。
+
+## TASK-P3-07 NFR / engineering review
+
+NFR-TRC通过success/denial AuditEvent的actor/policy/capability/scope/reason/request/key/source/new/lineage/correlation/code链；NFR-ISO通过plane-bound repositories、synthetic test policy与Production pre-lookup default-deny；NFR-SEC通过server-only authority context、credential-like reason拒绝、raw-key hash、generic denial与adapter error清洗；NFR-HUM通过READY-only explicit human decision、APPROVED≠PUBLISHED及REJECTED terminal。NFR-REL/OBS获得same-key replay/conflict、state+audit rollback、concurrent single winner与development timing局部证据。
+
+ENG-ARCH形成pure authorization domain→repository/transaction ports application→composition-root方向；ENG-ERR使用module-local stable failures与frozen workspace-control denial；ENG-VER保持Schema set 2.6.0、state rules、migration/dependency零漂移；ENG-LOG获得structured append-only decision event但不替代retention/SIEM。当前local 8/8及聚焦tests通过，exact provider待核验；全部NFR/ENG root继续`ALLOCATED`，OPEN-010、RISK-007/008/011～013和`registry_version=1.0.0`不变。

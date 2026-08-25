@@ -6,7 +6,7 @@ spec_version: 0.3.0
 phase: P0-P7
 normative: true
 source_sections: [29, 42, 65, 93, 95]
-last_reviewed: 2026-08-24
+last_reviewed: 2026-08-25
 ---
 
 # P0 Observability 与 Audit 边界
@@ -56,3 +56,9 @@ Read-model machine report记录Task/exact code commit、14 views/counts、payloa
 每条成功command audit绑定actor/policy/capability、sanitized reason、source/new Version、request/key reference、fresh validation lineage、correlation、parent event、result和code commit；content event与new DRAFT原子提交，submit event与同content READY CAS原子提交。Machine report记录5 command types（4 content + 1 submit）、5 fresh Validator passes、2 exact replay/1 conflict、historical states、无副作用拒绝、insert/CAS rollback、schedule size及observed microseconds；明确Solver调用0、SLA未定义、Production readiness未声明。
 
 失败CLI只输出stable reason/type/fixed message，既不泄露SQL/DSN/credential/stack，也不把未提交candidate写成成功audit。仍无metric backend、dashboard/alert、retention/SIEM、backup/restore或Production identity。
+
+## TASK-P3-07 decision audit evidence
+
+成功APPROVE/REJECT event固定`intent_type=DECISION`、actor/policy/evaluated capability、sanitized reason、request/hash key reference、完整lineage、READY/terminal同ID/content reference、correlation/code commit与SUCCEEDED result，并与state CAS同事务。授权DENIED event保留同一identity/result但source/new/lineage/before/after均为空；exact replay不改写event内`replayed=false`历史事实。Machine report记录2 decision types、3 success、2 replay、1 conflict、3 denial audit、4无业务state拒绝、1 rollback与并发单winner。
+
+这些字段可供未来audit projection，但没有metrics backend、dashboard/alert、retention/SIEM、legal hold、backup/restore或Production identity。Observed microseconds只为development事实，不建立SLA。

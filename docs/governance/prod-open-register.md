@@ -6,7 +6,7 @@ spec_version: 0.3.0
 phase: cross-phase
 normative: true
 source_sections: [16, 59, 60, 61, 105, 106]
-last_reviewed: 2026-08-24
+last_reviewed: 2026-08-25
 registry_version: 1.0.0
 ---
 
@@ -178,3 +178,9 @@ Implementation artifact `9512423712`的8/8 read-model PASS只闭环synthetic rea
 Command pipeline只在Simulation/Test synthetic inputs与test capability context执行；Production在任何source lookup或idempotent replay前固定default-deny。P3 version-local lock不定义Production freeze/责任，development timing不定义SLA，manual edit也不形成真实审批人或external target。OPEN-005/010尤其保持`OPEN`，OPEN-001～015全部无closure record，`registry_version=1.0.0`不变。
 
 Implementation artifact `9515126567`的8/8 command PASS只闭环bounded copy-on-write/Validator/audit slice，不改变上述OPEN判断；不得声明Production approval、publishability、authority或readiness。
+
+## TASK-P3-07 review
+
+Decision service只在Simulation/Test synthetic resources与显式test policy中形成APPROVE/REJECT behavior；Production即使context声明authenticated、capability和resource scope也在source/result lookup前固定拒绝并只写sanitized denial。没有真实principal→role/capability、组织责任、identity provider、Production resource scope/target、independent DB/network/credential、retention/SIEM、SLA或deployment evidence。APPROVED carrier不是Production approval或publish。
+
+因此OPEN-010及OPEN-001～015全部保持`OPEN`且无Authority/Evidence closure record，`registry_version=1.0.0`不变。本地8/8或未来exact provider只可闭环bounded decision behavior，不得声明Production authority、publishability、approval、security review或readiness。

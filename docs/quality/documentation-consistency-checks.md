@@ -6,7 +6,7 @@ spec_version: 0.3.0
 phase: cross-phase
 normative: true
 source_sections: [6, 98, 99, 100, 101, 103, 104]
-last_reviewed: 2026-08-24
+last_reviewed: 2026-08-25
 ---
 
 # 文档一致性自动检查合同
@@ -393,3 +393,9 @@ Implementation artifact `9512423712`中的`traceability-report.v1`精确绑定`f
 Implementation/closure均须通过full docs、Task diff、`git diff --check`、forbidden path、8/8 report、focused/full repository、Ruff/Pyright/locked sync、Compose/build及全部历史machine checks；provider artifact必须精确绑定Task/SHA/Diff base、8 rows、全部checks与0 issues。Provider形成前Task保持`in_progress`，TASK-P3-07不得自动启动。
 
 当前本地full docs计数为165/30 roots/30 trace rows/48 tests/15 OPEN/13 SIM/13 risks/53 tasks；提交前Task diff为57 working paths、8 rows、19 checks、0 issues。Implementation artifact `9515126567`中的`traceability-report.v1`精确绑定`08317637c7fbb51d46880d32523545bb0b4fe1c0`与Diff base，复现57 committed/0 working paths、8 rows、19/19 checks和0 issues。因此TASK-P3-06治理Gate闭环；本evidence-only closure自身仍须push后复核，P3-07保持`planned`。
+
+## TASK-P3-07 diff governance
+
+不可变Diff base=`514224b8ff2d507b613797ae697245bab14f79eb`。完整union只能命中`IMPACT-DOMAIN/APPLICATION/STATE/INFRA/TESTS/PHASE/GOVERNANCE-REGISTRY/DOCS`八行；allow-list逐字冻结pure authorization domain、approval application/machine CLI、unit/contract/integration/security与CI contract tests、单一workflow step及所有required docs。Schema/sample/rules、migration/dependency/lock、infrastructure repository semantics、PlanningProblem/Snapshot/Solver/Validator/Backend/Strategy/Reporting、API/Frontend、publication/export和P4路径必须零差异。
+
+Implementation/closure均须通过full docs、Task diff、`git diff --check`、forbidden path、8/8 report、focused/full repository、Ruff/Pyright/locked sync、Compose/build及全部历史machine checks；provider artifact必须精确绑定Task/SHA/Diff base、8 rows、全部checks与0 issues。Provider形成前Task保持`in_progress`，TASK-P3-08不得自动启动。本地治理已确认165 docs/30 roots/30 trace rows/48 tests/15 OPEN/13 SIM/13 risks/53 tasks，Task diff为50 working paths、8 rows、19 checks、0 issues；exact provider仍待push后核验。

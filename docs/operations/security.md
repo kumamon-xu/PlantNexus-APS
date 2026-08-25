@@ -6,7 +6,7 @@ spec_version: 0.3.0
 phase: P0-P7
 normative: true
 source_sections: [58, 62, 93, 95, 100]
-last_reviewed: 2026-08-24
+last_reviewed: 2026-08-25
 ---
 
 # P0 工程安全边界
@@ -73,3 +73,9 @@ Write前的carrier precheck拒绝unknown/missing top-level field、plane/environ
 Authorization在source lookup和exact replay前执行；只有server-resolved `edit`/`lock` capability可继续，`SUBMIT_FOR_REVIEW`由server固定要求`edit`，client `required_capability`仅作一致性校验。Raw idempotency key不进入AuditEvent/machine report，event仅保存hashed key reference；reason/actor/correlation受bounded/control-character guard，adapter异常统一清洗。Production即使携带`edit` capability也固定`PRODUCTION_AUTHORITY_UNAVAILABLE`，OPEN-010未关闭。
 
 该slice没有authentication provider、RBAC/SSO、rate limit、CSRF/CSP、external publish target或Production threat model。Failed command不保存成功audit，未来拒绝attempt审计必须避免not-found/authorization侧信道。
+
+## TASK-P3-07 decision security controls
+
+APPROVE/REJECT先验证strict carrier与server context，再按authenticated flag、exact derived capability、ScheduleVersion scope、Simulation test policy与Production binding授权；未授权时绝不读取ScheduleVersion或成功result。高风险DENY只追加aggregate ID、request/key reference和generic error，不保存source existence、lineage或before/after state；same denied request不重复event。普通authorized not-found仍不写denial audit，避免混淆resource existence。
+
+Actor必须是`actor:<stable-ref>`且不能含邮箱显示身份；reason拒绝control characters以及Authorization/Bearer/password/token/secret/cookie/DSN样式，raw idempotency key只计算SHA-256 reference。Adapter错误统一清洗。Production始终`PRODUCTION_AUTHORITY_UNAVAILABLE`并记录sanitized denial，OPEN-010保持OPEN；本Task没有authentication provider、RBAC/SSO、rate limit、CSRF/CSP或Production threat-model closure。

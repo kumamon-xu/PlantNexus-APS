@@ -6,7 +6,7 @@ spec_version: 0.3.0
 phase: P3
 normative: true
 source_sections: [33, 34, 66, 67, 68, 77, 78, 94]
-last_reviewed: 2026-08-24
+last_reviewed: 2026-08-25
 ---
 
 # P3 Approval Publication 与 Export 人工控制流程
@@ -86,3 +86,9 @@ last_reviewed: 2026-08-24
 ## 环境边界
 
 P3 E2E只可使用隔离的Simulation plane、明确test principal和`SIMULATION_INTERNAL` target。Production UI不得暴露Simulation入口；OPEN-002/010/015未关闭前不存在真实approve/publish/export target。P3完成不等于UAT、Production approval、publish authorization或deployment readiness。
+
+## TASK-P3-07 server decision status
+
+Approve/Reject的server application guard现已形成：只接受READY、exact fingerprint、non-empty sanitized reason、对应capability与resource scope；成功state与audit原子，same-key exact replay不重复event，并发Approve/Reject只有一个CAS winner。APPROVED只开放未来`publish`动作，REJECTED保持终态且只能copy-on-write修订。
+
+本Task没有实现按钮、dialog、route、HTTP transport或E2E；Frontend不能据此显示真实用户角色，也不能把test actor、carrier `allowed_actions`或APPROVED状态解释为Production authority/publish。P3-11～13仍须单独实现并验证上述UI序列。

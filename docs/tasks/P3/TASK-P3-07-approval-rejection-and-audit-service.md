@@ -1,12 +1,12 @@
 ---
 doc_id: TASK-P3-07
 title: Approval Rejection and Audit Service
-status: planned
+status: in_progress
 spec_version: 0.3.0
 phase: P3
 normative: true
 source_sections: [4, 33, 35, 66, 78, 94]
-last_reviewed: 2026-08-24
+last_reviewed: 2026-08-25
 ---
 
 # TASK-P3-07 — Approval Rejection and Audit Service
@@ -27,9 +27,9 @@ Non-goals: 不定义真实组织角色/身份提供商，不发布/导出，不�
 
 Inputs: permission/authorization contract、ScheduleVersion repository/state、append-only audit、ADR-0007/0009、TASK-P3-01 accepted Workspace ADR、OPEN-010。
 
-Diff base: set only when this Task enters in_progress; must be the immediate full 40-character HEAD
+Diff base: 514224b8ff2d507b613797ae697245bab14f79eb
 
-Files allowed to change: `backend/app/application/approval.py`、`backend/app/domain/authorization.py`、相关`__init__.py`、限定unit/contract/integration/security tests、machine CLI及`Documents to update`；实际路径激活前固定。
+Files allowed to change: `.github/workflows/ci.yml`、`backend/app/application/__init__.py`、`backend/app/application/approval.py`、`backend/app/application/approval_decision_check.py`、`backend/app/domain/__init__.py`、`backend/app/domain/authorization.py`、`backend/tests/unit/test_authorization.py`、`backend/tests/contract/test_approval_decision_contract.py`、`backend/tests/integration/test_approval_decisions.py`、`backend/tests/security/test_approval_authorization.py`、`backend/tests/integration/test_ci_contract.py`及`Documents to update`的逐字路径；ignored machine report只允许写入`build/validation/ci-p3-approval-decisions.json`或本地同类路径，Task report只允许写入`build/traceability/TASK-P3-07-report.json`或CI同类路径；除此以外均禁止。
 
 Files forbidden to change: Schema/migration/dependency、API/Frontend、publication/export、Solver/Validator、真实RBAC/SSO adapter、P4。
 
@@ -39,11 +39,11 @@ Outputs: authority-neutral approval/rejection service、audit trail与machine ev
 
 Documentation impact: required
 
-Documents to update: `docs/contracts/authorization-and-audit.md`、`docs/frontend/approval-publication-flow.md`、`docs/contracts/planning-solution-and-schedule-version.md`、`docs/domain/state-machines/schedule-version.md`、`docs/domain/error-model.md`、`docs/architecture/data-authority.md`、`docs/architecture/configuration-environments-and-isolation.md`、`docs/operations/security.md`、`docs/operations/observability-and-audit.md`、`docs/quality/test-strategy-and-matrix.md`、`docs/quality/ci-gates-and-definition-of-done.md`、全部governance/trace/OPEN/risk/impact/inventory必审文档、`docs/adr/README.md`、本Task卡。
+Documents to update: `docs/tasks/P3/TASK-P3-07-approval-rejection-and-audit-service.md`、`docs/current_phase.md`、`docs/milestones/P3-planning-workspace.md`、`docs/milestones/README.md`、`docs/tasks/README.md`、`docs/tasks/TASK_TEMPLATE.md`、`docs/contracts/authorization-and-audit.md`、`docs/contracts/planning-workspace-api.md`、`docs/contracts/planning-solution-and-schedule-version.md`、`docs/frontend/approval-publication-flow.md`、`docs/domain/domain-model.md`、`docs/domain/state-machines/planning-run.md`、`docs/domain/state-machines/schedule-version.md`、`docs/domain/state-machines/export-job.md`、`docs/domain/error-model.md`、`docs/core/glossary.md`、`docs/architecture/end-to-end-planning-flow.md`、`docs/architecture/module-boundaries.md`、`docs/architecture/data-authority.md`、`docs/architecture/provenance-and-versioning.md`、`docs/architecture/configuration-environments-and-isolation.md`、`docs/architecture/technology-stack.md`、`docs/operations/README.md`、`docs/operations/security.md`、`docs/operations/observability-and-audit.md`、`docs/operations/worker-reliability-and-idempotency.md`、`docs/quality/test-strategy-and-matrix.md`、`docs/quality/ci-gates-and-definition-of-done.md`、`docs/quality/documentation-consistency-checks.md`、`docs/governance/requirements-register.md`、`docs/governance/nfr-and-engineering-register.md`、`docs/governance/traceability-rules.md`、`docs/governance/traceability-matrix.md`、`docs/governance/prod-open-register.md`、`docs/governance/sim-assumption-register.md`、`docs/governance/risk-register.md`、`docs/governance/change-impact-matrix.md`、`docs/governance/document-inventory.md`、`docs/adr/README.md`。
 
 Documentation impact rationale: human control、authorization、audit与OPEN-010边界首次形成行为证据。
 
-Change-impact matrix rows reviewed: `IMPACT-DOMAIN`、`IMPACT-APPLICATION`、`IMPACT-STATE`、`IMPACT-TESTS`、`IMPACT-PHASE`、`IMPACT-GOVERNANCE-REGISTRY`、`IMPACT-DOCS`
+Change-impact matrix rows reviewed: `IMPACT-DOMAIN`、`IMPACT-APPLICATION`、`IMPACT-STATE`、`IMPACT-INFRA`、`IMPACT-TESTS`、`IMPACT-PHASE`、`IMPACT-GOVERNANCE-REGISTRY`、`IMPACT-DOCS`
 
 Traceability updates: REQ-007/009→TASK-P3-07→TEST-APPROVAL-AUTHORIZATION-001/TEST-AUDIT-TRAIL-001/TEST-STATE-TRANSITION-001→decision report。
 
@@ -72,6 +72,8 @@ Artifacts: authorization/decision/audit report、Task report、provider artifact
 Provider evidence: exact implementation/closure required validate/artifact；核对permission cases、state/audit counts、Task exact SHA/Impact/checks/issues。
 
 Completion conditions: only READY + authorized capability可approve/reject；actor/reason/audit/idempotency/race完整；Production未知角色默认拒绝；provider/docs闭环；无publish/API/UI。
+
+Local acceptance evidence: focused=`39 passed`、full repository=`562 passed`、Ruff/Pyright/locked sync均PASS；`p3-approval-decision-report.v1`为8/8且`issues=[]`，全部既有required machine reports、P2 Gate 11/11、XS benchmark、Compose与build均PASS。Full docs为165 docs/30 roots/30 trace rows/48 Test IDs/15 OPEN/13 SIM/13 risks/53 Tasks；Task diff为50 working paths、8 Impact rows、19 checks、0 issues，`git diff --check`与全部禁止范围均PASS。以上仅为local implementation evidence；exact implementation provider与evidence-only closure闭环前本Task保持`in_progress`。
 
 Failure handling: authorization/audit原子性失败即不改变状态并停止P3-08/10；不得临时放宽Production guard。
 

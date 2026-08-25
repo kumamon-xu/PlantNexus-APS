@@ -6,7 +6,7 @@ spec_version: 0.3.0
 phase: cross-phase
 normative: true
 source_sections: [12, 13, 14, 30, 41, 47, 51, 65, 70]
-last_reviewed: 2026-08-24
+last_reviewed: 2026-08-25
 ---
 
 # 模块边界与依赖规则
@@ -211,3 +211,9 @@ Application是本slice唯一transaction owner：repository仍不知道fresh Vali
 `app.domain.schedule_commands`只依赖domain types/workspace pure contracts，负责strict carrier、semantic guard、copy-on-write DRAFT及显式review submission的READY/audit documents；它不导入Planning Validator、Infrastructure、Simulation、CP-SAT或HTTP。`app.application.schedule_commands`只声明Schedule get/insert/CAS、Audit、transaction和Validator ports，Validator factory必须由外部显式注入；它不静态导入Planning Validator、SQLAlchemy、Infrastructure、Backend/Strategy或Solver API。`schedule_command_check`是唯一executable composition root，才装配公开`ProblemScheduleValidator`、临时SQLite adapters与冻结synthetic inputs。
 
 Application拥有atomic insert+append与CAS+append transaction；repository不决定command capability/semantics，API/UI不得直接写repository或复制mutation/Validator逻辑。没有新outbox、cache、queue、dependency或topology；若未来跨事务记录失败attempt或异步command，必须先建ADR。
+
+## TASK-P3-07 approval boundary
+
+`app.domain.authorization`只依赖domain types/workspace pure contracts，负责strict APPROVE/REJECT carrier、server context guard、deterministic identity、same-content decision candidate及success/denial AuditEvent；它不导入Infrastructure、Planning、Simulation、HTTP或identity SDK。`app.application.approval`只声明Schedule get/CAS、Audit get/append与transaction ports，并拥有authorization-before-lookup、replay/conflict和atomicity编排；它不导入SQLAlchemy、repository adapter、Solver、Validator、API或Frontend。
+
+`approval_decision_check`才作为executable composition root装配既有SQLAlchemy repositories、临时SQLite和P3-04 frozen lifecycle input。Repository只执行durability/CAS/append，不选择capability或Production role；未来HTTP、RBAC/SSO、publish/export adapter不得复制或绕过application guard。没有新dependency、outbox、queue、service或deployment topology。

@@ -6,7 +6,7 @@ spec_version: 0.3.0
 phase: P0-P4
 normative: true
 source_sections: [29, 32, 34, 60, 65, 91, 92]
-last_reviewed: 2026-08-24
+last_reviewed: 2026-08-25
 ---
 
 # 错误与求解状态模型
@@ -196,3 +196,9 @@ Read domain使用module-local `INVALID_QUERY`、`SOURCE_MISSING`、`MIXED_LINEAG
 Command domain/application使用module-local sanitized reasons：`INVALID_COMMAND`、`UNAUTHORIZED`、`PRODUCTION_AUTHORITY_UNAVAILABLE`、`DATA_PLANE_MISMATCH`、`SOURCE_NOT_FOUND`、`STALE_SOURCE`、`MIXED_LINEAGE`、`INVALID_REFERENCE`、`INVALID_TIME`、`IMMUTABLE_EXECUTION_FACT`、`LOCK_CONFLICT`、`NO_OP`、`VALIDATION_FAILED`、`IDEMPOTENCY_CONFLICT`和`PERSISTENCE_FAILED`。所有失败都不写成功Version/audit；adapter错误只映射stable reason/field/message，不泄露SQL、credential或stack。
 
 这些reason不修改`error-code-registry.v2`且尚不是HTTP status合同。P3-10必须按既有command API文档映射403/409/422/500并保留correlation，不能把local exception文本直接外放；Validator FAIL仍关联正式C-ID details，绝不转换Solver UNKNOWN或INFEASIBLE。
+
+## TASK-P3-07 decision failures
+
+Decision domain/application使用module-local sanitized reasons：`INVALID_REQUEST`、`AUTHORIZATION_DENIED`、`PRODUCTION_AUTHORITY_UNAVAILABLE`、`DATA_PLANE_MISMATCH`、`SOURCE_NOT_FOUND`、`STALE_SOURCE`、`INVALID_STATE_TRANSITION`、`IDEMPOTENCY_CONFLICT`和`PERSISTENCE_FAILED`。Authorization/capability/scope/Production拒绝统一写carrier允许的`WORKSPACE_CONTROL/AUTHORIZATION_DENIED` audit error而不暴露所需role或resource existence；非法carrier/actor/reason不能安全序列化时不写audit。Adapter的identity/state/other failure分别收敛到conflict/stale/sanitized persistence，SQL/stack/DSN不会外放。
+
+本Task不改`error-code-registry.v2`，也不形成HTTP 401 challenge或endpoint mapping。P3-10必须把module-local authorization与Production default-deny映射为既有计划的403、state/stale/idempotency映射为409、invalid request映射为422、persistence映射为500，并始终保留correlation而不回显credential。

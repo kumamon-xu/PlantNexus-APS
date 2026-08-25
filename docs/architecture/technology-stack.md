@@ -6,7 +6,7 @@ spec_version: 0.3.0
 phase: cross-phase
 normative: false
 source_sections: [11, 12, 65, 95, 100, 102]
-last_reviewed: 2026-08-24
+last_reviewed: 2026-08-25
 ---
 
 # 推荐技术栈与锁定规则
@@ -255,3 +255,9 @@ CI新增一个required machine step，不改变`validate` job名称、permission
 Command pipeline只复用locked Python 3.12、既有formal Validator、SQLAlchemy/Alembic Schedule/Audit repositories、SHA-256/canonical JSON与Schema set 2.6.0；`pyproject.toml`、`uv.lock`、Schema、migration和runtime/dev dependencies零变化。CI只新增一个non-skippable offline machine step，仍属于同一required `validate` job和既有artifact glob；permissions、Secret、service、container/deployment不变。
 
 临时SQLite transaction/rollback与microsecond observation只属于development evidence，不定义Production database、capacity、SLA或retry policy。未引入Frontend/Node、HTTP identity SDK、queue/outbox、export/storage或P4技术。
+
+## TASK-P3-07 technology review
+
+Decision service继续只复用locked Python 3.12、dataclass/Protocol、canonical JSON/SHA-256、冻结Schema set 2.6.0与既有SQLAlchemy/Alembic Schedule/Audit adapters；`pyproject.toml`、`uv.lock`、Schema、migration和runtime/dev dependencies零变化。CI只在同一required `validate` job增加`approval_decision_check`离线步骤与既有artifact glob，job名称、permissions、Secret、service、container/deployment不变。
+
+没有引入OIDC/RBAC/SSO SDK、HTTP framework新surface、Frontend/Node、queue/outbox、publisher/exporter或P4技术。临时SQLite timing/concurrency仍是development observation，不定义Production SLA或authorization topology。

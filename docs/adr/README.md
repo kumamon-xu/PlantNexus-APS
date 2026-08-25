@@ -6,7 +6,7 @@ spec_version: 0.3.0
 phase: cross-phase
 normative: true
 source_sections: [97]
-last_reviewed: 2026-08-24
+last_reviewed: 2026-08-25
 ---
 
 # Architecture Decision Records
@@ -85,3 +85,9 @@ TASK-P3-01以当时下一个未使用编号接受ADR-0012，决定command-only/c
 本Task直接落实ADR-0005的independent Validator、ADR-0007的immutable version/provenance与ADR-0012的server command/copy-on-write new DRAFT/idempotency/atomic audit：四类content command只insert派生DRAFT，显式`SUBMIT_FOR_REVIEW`在第二次fresh PASS后以既有pair把同一manual DRAFT推进`READY_FOR_REVIEW`，content/identity不变；PUBLISHED/current不变，failed candidate丢弃。没有新state/pair、Schema、mutable content、Solver/Replan、outbox、external target、authorization provider或topology，因此不需新ADR。
 
 若未来允许原地edit/PUBLISHED update、command触发Solver/P4、failed Version持久化、跨事务attempt/outbox或Production identity/target，必须停止并新建/supersede ADR；不得改写上述accepted历史。
+
+## TASK-P3-07 ADR review
+
+本Task直接落实ADR-0007的immutable Version/provenance、ADR-0009的同事务state+audit边界与ADR-0012的authority-neutral capability、Production default-deny、READY-only approve/reject和append-only audit。实现只组合既有Schema、state pair和repository CAS/append ports；没有新增state/pair、Schema/migration/dependency、real role mapping、external side effect或topology，因此不需新ADR。
+
+若未来允许Production actor fallback、client/UI自报authority、decision绕过READY/fingerprint、跨事务成功audit、修改/删除历史decision，或把approve自动扩张为publish/export，必须停止并新建或supersede ADR；OPEN-010未关闭前不得用test policy替代该决定。

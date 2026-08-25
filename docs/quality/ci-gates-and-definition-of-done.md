@@ -6,7 +6,7 @@ spec_version: 0.3.0
 phase: P0-P7
 normative: true
 source_sections: [58, 72, 74, 76, 78, 80, 89, 100, 101]
-last_reviewed: 2026-08-24
+last_reviewed: 2026-08-25
 ---
 
 # CI Gate 与 Definition of Done
@@ -289,3 +289,11 @@ Required `validate`新增唯一step：`uv run python -m app.application.schedule
 本地implementation Gate已通过：41 focused、546 full、8/8 command machine、全部历史machine、P2 Gate 11/11、XS benchmark、locked sync、Ruff、Pyright、Compose、build、full/diff docs、`git diff --check`与禁止路径均PASS；提交前Task report为57 working paths、8 rows、19 checks、0 issues。
 
 Implementation provider Gate已通过：SHA `08317637c7fbb51d46880d32523545bb0b4fe1c0`、run `32713635045`、required `validate` job/check `97390177509`（app `15368`）均success；artifact `9515126567`未过期，digest=`sha256:33e501d81fad861a0dba4f1f2760fb98ce0b22cf02c6ad04265174a6cb409e4e`。25/25 JSON顶层PASS，command 8/8与Task 57 committed/0 working paths、8 rows、19 checks、0 issues均绑定同一SHA；TASK-P3-06 DoD完成，不自动授权P3-07。
+
+## TASK-P3-07 required approval decision evidence
+
+Required `validate`新增唯一step：`uv run python -m app.application.approval_decision_check --root . --report build/validation/ci-p3-approval-decisions.json`。报告必须为`p3-approval-decision-report.v1`、Task=`TASK-P3-07`、service=`approval-decision-service.v1`、8/8 checks、2 decision types、3 successful decisions、2 exact replay、1 conflict、3 authorization denial/audit、4 rejected requests without business state、1 atomic rollback、Solver调用0、`issues=[]`，并明确existing READY→APPROVED/REJECTED only、source content update absent、Production default-deny/OPEN-010、real RBAC/SSO/publish/export/API/UI/P4/Production readiness absent。
+
+本地PASS只允许Task保持`in_progress`。Implementation push后必须核验exact SHA required run/job/app、下载artifact并核对decision/Task report的Task/SHA/Diff base、8 Impact rows、全部checks/issues；成功后才可evidence-only closure，closure自身也须exact provider。该Gate不形成HTTP/UI、publish/export、P4或Production approval/readiness，也不自动启动TASK-P3-08。
+
+本地implementation Gate已通过：39 focused、562 full、8/8 decision machine、全部历史machine、P2 Gate 11/11、XS benchmark、locked sync、Ruff、Pyright、Compose、build、full/diff docs、`git diff --check`与禁止范围均PASS；提交前Task report为50 working paths、8 rows、19 checks、0 issues。Provider字段在真实push前不得预填。

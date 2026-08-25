@@ -6,7 +6,7 @@ spec_version: 0.3.0
 phase: cross-phase
 normative: true
 source_sections: [15, 22, 59, 61, 90]
-last_reviewed: 2026-08-24
+last_reviewed: 2026-08-25
 ---
 
 # 数据权威边界
@@ -154,3 +154,9 @@ Query carrier、cursor、collection fingerprint和comparison都只是derived rea
 Human content command intent经server接受后成为新ScheduleVersion content的派生权威；source Version、immutable Problem和execution facts仍拥有其历史/约束事实。Server semantic guard拥有command shape/reference/time/lock authority，fresh formal Validator拥有C-001～C-011 correctness authority，repository只拥有durability/CAS/idempotent replay authority。显式review submission在第二次fresh PASS后只授予manual DRAFT既有`READY_FOR_REVIEW`状态事实，不授予approval。Origin PlanningSolution/KPI/SolverReport保留为provenance，不得被宣称为人工content的逐字等同或重算KPI。
 
 客户端`required_capability`、UI按钮和Simulation actor都不是authorization authority；应用只接受server-resolved capability context，Production在OPEN-010关闭前default-deny。PUBLISHED/current publication不因command改变，P4 fact/freeze/replan authority也未形成。
+
+## TASK-P3-07 decision authority
+
+APPROVED/REJECTED状态事实由server application在验证authenticated actor reference、exact capability/resource scope、test policy、READY/content precondition后形成；repository只拥有CAS/append durability，carrier `required_capability`与UI按钮不拥有authority。Decision reason与actor reference成为append-only审计事实，显示名、邮箱、token和组织role不进入历史carrier。
+
+Simulation test policy只能对synthetic resource形成行为证据，不能成为Production principal mapping。OPEN-010未关闭时Production无论请求或context如何均DENY；APPROVED也不授权publish/external target。真实RBAC/SSO、责任人、retention和external authority仍由OPEN-002/010/015约束。

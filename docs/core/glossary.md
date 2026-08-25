@@ -6,7 +6,7 @@ spec_version: 0.3.0
 phase: cross-phase
 normative: true
 source_sections: [1, 13, 14, 19, 23, 24, 29, 32, 33, 34, 37, 38, 39]
-last_reviewed: 2026-08-19
+last_reviewed: 2026-08-25
 ---
 
 # 术语表
@@ -91,3 +91,7 @@ last_reviewed: 2026-08-19
 - **Copy-on-write command DRAFT**：Move/Assign/Set/Remove Lock经server semantic guard和fresh formal Validator后创建的独立DRAFT；parent/source state/content保持不变。
 - **Manual review submission**：对`MANUAL_EDIT|LOCK_CHANGE` DRAFT执行的独立`SUBMIT_FOR_REVIEW`命令；第二次fresh Validator PASS且lineage fingerprint一致后，只以既有pair把同一ID/content推进`READY_FOR_REVIEW`并原子追加audit，不等于approve/reject。
 - **Failed command candidate**：尚未成为ScheduleVersion的内存candidate；TASK-P3-06在任何Validator/identity/persistence失败时丢弃，不得称为“已保存但不可评审”版本。
+- **Approval decision context**：server-resolved的authenticated principal reference、capability set、exact ScheduleVersion scope、test policy、plane binding、UTC与code facts；不是客户端role声明，也不是Production RBAC。
+- **Decision identity**：plane、APPROVE/REJECT、ScheduleVersion、workspace target与raw key reference形成的deterministic Audit identity；same request重放原logical result，raw key不进入durable event。
+- **Authorization denial audit**：高风险decision在capability/scope/authentication或Production default-deny时追加的sanitized DENIED event；不读取或保存source/lineage/before/after reference，也不改变ScheduleVersion。
+- **Approved ScheduleVersion**：READY经authorized `approve` capability与atomic decision audit进入的同ID/content状态；只成为P3-08 publish的前置候选，不等于PUBLISHED、Production-approved或外部已发布。

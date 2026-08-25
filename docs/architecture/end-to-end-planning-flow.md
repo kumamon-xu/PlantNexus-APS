@@ -6,7 +6,7 @@ spec_version: 0.3.0
 phase: cross-phase
 normative: true
 source_sections: [0, 9, 10, 23, 24, 30, 32, 33, 35, 57, 67]
-last_reviewed: 2026-08-24
+last_reviewed: 2026-08-25
 ---
 
 # 端到端计划链路
@@ -105,3 +105,9 @@ TASK-P3-01仅形成文档和ADR-0012；Schema/persistence/application/API/UI节�
 当前新增写段为：`workspace-command + server capability/plane/precondition/idempotency guard + immutable source Version/Problem → copy-on-write assignment/lock candidate → new independent ProblemScheduleValidator → PASS/0 → one transaction(insert new DRAFT + append command AuditEvent) → stable logical result`。MOVE/ASSIGN与SET/REMOVE Lock均走同一pipeline；manual DRAFT可再以显式`SUBMIT_FOR_REVIEW → second fresh Validator PASS → one transaction(CAS existing DRAFT→READY_FOR_REVIEW + append audit)`进入既有评审态，ID/content/fingerprint不变。Same key/same fingerprint从durable audit/new Version重放，conflict/Validator/audit失败不留下成功副作用。
 
 四类content command不回写source、PlanningRun、Problem或Snapshot；submit只改变其目标manual DRAFT的state/allowed actions，不改变content/lineage/identity。该段不调用Solver/KPI optimizer，不隐式submit或自动approval，也没有HTTP/UI、approval/rejection、publication/export或P4。Failed candidate在内存丢弃；历史REJECTED/PUBLISHED只可作为parent参考派生DRAFT。
+
+## TASK-P3-07 decision segment
+
+当前新增控制段为：`workspace-command APPROVE|REJECT + server authenticated/capability/resource/test-policy context → authorization before source/result lookup → exact READY/content precondition → one transaction(CAS same ScheduleVersion state+decision + append DECISION audit) → stable logical result`。Exact replay读取原event；different fingerprint冲突；并发两种decision只有一个CAS winner；audit失败回滚state。高风险DENY只写无resource reference的sanitized event。
+
+该段不修改content或上游PlanningRun/Snapshot/Problem/Solution/Validation/KPI/SolverReport，不调用Solver/Validator，不创建新Version、PublicationResult或ExportJob。APPROVED只到P3-08 publish前置，REJECTED只允许后续copy-on-write revision；HTTP/UI、真实RBAC/SSO、P4和Production side effect均未形成。

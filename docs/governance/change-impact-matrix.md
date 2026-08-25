@@ -6,7 +6,7 @@ spec_version: 0.3.0
 phase: cross-phase
 normative: true
 source_sections: [6, 97, 98, 99, 100, 101, 102, 103, 104, 111]
-last_reviewed: 2026-08-24
+last_reviewed: 2026-08-25
 registry_version: 1.0.0
 ---
 
@@ -384,3 +384,9 @@ Implementation artifact `9512423712`已绑定`f236fab47aa2565b87a060b2c8bde8f2e8
 Schema/sample/rules、migration/infrastructure repository semantics、dependency/lock、PlanningProblem/Snapshot、Validator/Backend/Strategy/Reporting、API/Frontend、publication/export和P4路径必须零差异；CI不改job名称/permissions/Secret/service/deployment。Provider artifact必须复现上述8 rows、full checks、exact SHA与issues=[]；成功前Task保持`in_progress`且不启动P3-07。
 
 Implementation artifact `9515126567`已绑定`08317637c7fbb51d46880d32523545bb0b4fe1c0`并复现57 committed/0 working paths、上述8 rows、19 checks、0 issues及禁止范围零差异；因此本evidence-only closure可把TASK-P3-06标为`done`，P3-07不自动启动。
+
+## TASK-P3-07 impact review
+
+完整Diff base=`514224b8ff2d507b613797ae697245bab14f79eb`，预期只能命中八行：`IMPACT-DOMAIN`（pure decision identity/authorization/documents）、`IMPACT-APPLICATION`（authorization-before-lookup、CAS+audit service与machine CLI）、`IMPACT-STATE`（只执行既有READY→APPROVED/REJECTED）、`IMPACT-INFRA`（单一required workflow command）、`IMPACT-TESTS`、`IMPACT-PHASE`、`IMPACT-GOVERNANCE-REGISTRY`和`IMPACT-DOCS`。各行required docs均逐字进入Task allow-list。
+
+Schema/sample/rules、migration/infrastructure repository semantics、dependency/lock、PlanningProblem/Snapshot/Solver/Validator/Backend/Strategy/Reporting、API/Frontend、publication/export和P4必须零差异；CI不改job名称/permissions/Secret/service/deployment。Provider artifact必须复现上述8 rows、full checks、exact SHA与`issues=[]`；成功前Task保持`in_progress`且不启动P3-08。

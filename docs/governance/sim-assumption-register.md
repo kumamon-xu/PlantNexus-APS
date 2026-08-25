@@ -6,7 +6,7 @@ spec_version: 0.3.0
 phase: cross-phase
 normative: true
 source_sections: [37, 38, 39, 43, 44, 49, 59, 62, 96]
-last_reviewed: 2026-08-24
+last_reviewed: 2026-08-25
 registry_version: 1.0.0
 ---
 
@@ -159,3 +159,9 @@ Implementation artifact `9512423712`精确复验相同两个versioned synthetic 
 Machine/property/contract/validation/integration只复用既有`P2-GOLDEN-JSSP`与`P2-GOLDEN-FJSP`版本、Profile/Scenario/assembler/seed，不修改fixture bytes或增加新定量policy。Generated idempotency key/lock suffix与command microseconds只属test-local evidence，不登记分布、threshold、baseline或Production容量。SIM-ASSUMPTION-001～013继续`ACTIVE`，无新增/修改/retire且`registry_version=1.0.0`不变。
 
 Implementation artifact `9515126567`精确复验相同versioned synthetic inputs与上述边界；没有新增、修改或retire任何SIM assumption。
+
+## TASK-P3-07 review
+
+Machine/unit/contract/integration/security只复用既有P2-GOLDEN-JSSP与P3-04 reviewable lifecycle，生成的test actor、capability set、resource scope、idempotency key和decision microseconds均为非定量test-local evidence。未修改Scenario/Profile/assembler/version/seed/fixture bytes，未新增role分布、approval比例、latency threshold、baseline或Production容量假设。
+
+SIM-ASSUMPTION-001～013继续`ACTIVE`，无新增/修改/retire且`registry_version=1.0.0`不变；Simulation test policy与APPROVED/REJECTED结果不得外推真实责任或Production authority。

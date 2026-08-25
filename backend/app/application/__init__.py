@@ -19,8 +19,11 @@ from .workspace_queries import (
     WorkspaceQueryResult,
     WorkspaceQueryService,
 )
+from .approval import ApprovalDecisionResult, ApprovalDecisionService
 
 __all__ = [
+    "ApprovalDecisionResult",
+    "ApprovalDecisionService",
     "CommonIngressArtifacts",
     "CommonIngressPipeline",
     "DataQualityGateRejected",

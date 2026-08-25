@@ -165,6 +165,12 @@ jobs:
           --root .
           --report build/validation/ci-p3-schedule-commands.json
 
+      - name: P3 approval rejection and audit evidence
+        run: >-
+          uv run python -m app.application.approval_decision_check
+          --root .
+          --report build/validation/ci-p3-approval-decisions.json
+
       - name: Engineering contract
         run: >-
           uv run python -m app.infrastructure.contract_check

@@ -6,7 +6,7 @@ spec_version: 0.3.0
 phase: cross-phase
 normative: true
 source_sections: [98, 99, 100, 111]
-last_reviewed: 2026-08-24
+last_reviewed: 2026-08-25
 ---
 
 # TASK-Px-yy — Title
@@ -165,3 +165,5 @@ Additive machine-contract Task激活时必须逐字固定新Schema/sample/module
 涉及只读workspace projection/comparison时还必须记录：权威ScheduleVersion precondition、七份上游source fingerprint及plane/environment绑定；完整payload与strict carrier reference的指纹关系；稳定filter/sort、query-scope cursor、found-empty/missing/stale/mixed-plane语义；Resource Load与assignment/KPI一致性；comparison exact replay且不得出现P4 ChangeReport/Replan。规模只作versioned synthetic观察，不设置Production阈值；query前后durable row count与product-service Solver调用必须均为零变化。
 
 涉及P3 edit/lock command时还必须记录：四类content command与`SUBMIT_FOR_REVIEW`的精确名称/payload；server-resolved capability在source lookup/replay前校验；source state/content/plane/problem lineage与server-derived idempotency scope；Move/Assign duration/time/resource和RUNNING/COMPLETED/HARD lock guard；copy-on-write parent/new ID/content；每次非replay fresh independent Validator；new DRAFT+AuditEvent insert事务；若Task含可选READY，必须证明独立submit second-fresh、既有pair、同ID/content CAS+AuditEvent事务；same-key replay/conflict与两类rollback；失败candidate是否丢弃或独立记录且绝不能伪装成功。必须证明source/PUBLISHED/current publication、Problem/Snapshot/Solver、state pair bytes、P4和Production authority均未被隐式修改。
+
+涉及P3 approval/rejection时还必须记录：冻结APPROVE/REJECT carrier与空payload、server-resolved authenticated actor/capability/resource scope/test-policy context、authorization-before-source/result lookup、Production default-deny、non-empty credential-safe reason、exact READY/content/revision CAS、同ID/content decision evidence和allowed-actions变化、state+success audit同事务、允许的DENIED audit是否避免resource existence泄漏、same-key success/denial replay/conflict、Approve/Reject并发单winner与audit rollback。必须明确真实RBAC/SSO/责任人、HTTP/UI、publish/export、P4和Production readiness均未由decision service形成。

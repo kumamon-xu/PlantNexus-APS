@@ -6,7 +6,7 @@ spec_version: 0.3.0
 phase: P0-P3
 normative: true
 source_sections: [17, 18, 19, 20, 21, 22]
-last_reviewed: 2026-08-24
+last_reviewed: 2026-08-25
 ---
 
 # APS 领域模型
@@ -157,3 +157,9 @@ ScheduleVersion现在首次成为可评审aggregate：identity由plane+idempoten
 `ScheduleCommandIdentity`由server-verified scope与raw key的SHA-256 reference确定result Version/Audit identity；content command生成new Version ID，submit固定为source ID。`ScheduleCommandContext`保存server-resolved actor/capability/policy/time/code facts；`PreparedScheduleCommand`/`ScheduleCommandDocuments`保存copy-on-write candidate及fresh PASS后的DRAFT+AuditEvent；`PreparedReviewSubmission`/`ScheduleReviewSubmissionDocuments`保存同content DRAFT→READY candidate及submit audit。它们都是pure value，不持有repository、Solver或HTTP依赖。
 
 `ScheduleCommandService`是application use case：source/new/audit repository和transaction由ports注入，每次非replay执行实例化独立`ProblemScheduleValidator`，content command随后atomic insert+append，submit随后atomic CAS+append。Version content/parent/state/audit是durable facts；failed candidate不是aggregate，直接丢弃。没有新增Schema、state或领域entity，P4 Replan/ChangeReport仍不属于本模型。
+
+## TASK-P3-07 decision value objects and service
+
+`ApprovalDecisionIdentity`由plane/action/source/target scope与raw key的SHA-256 reference确定唯一Audit ID，并固定APPROVE→approve→APPROVED、REJECT→reject→REJECTED。`ApprovalDecisionContext`是server authority carrier；`PreparedApprovalDecision`绑定exact READY source，`ApprovalDecisionDocuments`包含同content state candidate与success audit。Pure domain只校验、克隆和构造documents，不依赖repository、SQLAlchemy、HTTP、identity provider、Solver或Validator。
+
+`ApprovalDecisionService`以Schedule get/CAS、Audit get/append和transaction ports组合authorization-before-lookup、exact replay/conflict及state+audit atomicity。成功decision成为既有ScheduleVersion aggregate的mutable state metadata和append-only AuditEvent事实，不创建新aggregate；DENIED event是安全attempt evidence，不成为ScheduleVersion状态事实。真实role/RBAC/SSO、publication/export和P4模型未新增。

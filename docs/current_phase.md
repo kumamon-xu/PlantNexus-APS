@@ -17,7 +17,7 @@ last_reviewed: 2026-08-25
 
 P2-14 audit implementation `65c556789f176ad9de55523d6420737bb60f933f`的GitHub push run `32677741558` / required `validate` job `97288829348` / artifact `9503227240`成功，artifact digest=`sha256:fbb76f0ab44d3bdcff2d31e70f9698af84e10e48ee57ae611eef8529a288240e`；evidence-only closure `80c403384d1e171258cf874d26605d0d22aff1b2`的run `32678248961` / job `97290201234` / artifact `9503372291`也成功，digest=`sha256:673412905b7420660d1e9f07755fcda6291f85f8f2bd926b4bf31a0a6bd1bd0c`。下载检查的两份artifact均含20份可解析JSON，Task/SHA/Impact Rules/checks/issues与对应提交一致且0 issue。规划启动时`main=origin/main=80c403384d1e171258cf874d26605d0d22aff1b2`、ahead/behind=`0/0`且working tree clean，因此transition前提一致。
 
-P2 Milestone现为`completed`，P3 Milestone为`active`。`TASK-P3-00`～`TASK-P3-06`均已由exact implementation provider闭环并在evidence-only closure标为`done`；用户于2026-08-25单独授权`TASK-P3-07`，当前仅该Task为`in_progress`，P3-08～15保持`planned`且未获授权，不会自动启动。
+P2 Milestone现为`completed`，P3 Milestone为`active`。`TASK-P3-00`～`TASK-P3-07`均已有exact implementation provider并在各自evidence-only closure标为`done`；当前没有已授权的后续业务Task，P3-08～15保持`planned`且未获授权，不会自动启动。
 
 ## 当前目标
 
@@ -91,14 +91,14 @@ Implementation `08317637c7fbb51d46880d32523545bb0b4fe1c0`的run/job/artifact=`32
 
 当前实现形成strict APPROVE/REJECT carrier、server-derived authority context、sanitized actor/reason、authorization-before-source/replay lookup、Production pre-lookup default-deny、READY_FOR_REVIEW同content CAS、atomic append-only success/DENIED audit、exact replay/conflict及并发单winner。聚焦39项与全仓562项测试、Ruff/Pyright/locked sync、8/8 decision machine、全部既有machine、P2 Gate 11/11、XS benchmark、Compose、build及治理均PASS；Task报告为50 working paths、8 rows、19 checks、0 issues。
 
-这些仍是本地证据：exact implementation required `validate`/artifact及evidence-only closure未形成前TASK-P3-07保持`in_progress`。OPEN-010继续`OPEN`；真实RBAC/SSO、HTTP/UI、publish/export、P3-08+、P4与Production authority/readiness均未形成。
+Corrective implementation `9aed9d8c5dd86a9a9b972f8e9c5491fd6d2dbaa6`的run/job/artifact=`32794370664`/`97642478274`/`9544333991`精确success；下载的26/26 JSON全部PASS，decision报告为8/8且Task报告为50 committed/0 working paths、8 rows、19 checks、0 issues。因此本evidence-only closure把TASK-P3-07标为`done`；closure自身仍须exact provider核验。OPEN-010继续`OPEN`；真实RBAC/SSO、HTTP/UI、publish/export、P3-08+、P4与Production authority/readiness均未形成。
 
-初始implementation `3f85959e91e74966f6482426b9db296a45d715ef`的run/job=`32793980039`/`97641324105`在Linux tests因machine report使用SQLite `BLOB LIKE`产生跨平台0-count而失败（`1 failed, 556 passed`），且未生成artifact；该失败事实保留。修正仅把统计改为canonical JSON解析，并将新增security目录纳入required suite；本地exact suite重新为562 PASS、8/8 report的success/denial counts为3/3。修正provider成功前仍不允许closure或P3-08。
+初始implementation `3f85959e91e74966f6482426b9db296a45d715ef`的run/job=`32793980039`/`97641324105`在Linux tests因machine report使用SQLite `BLOB LIKE`产生跨平台0-count而失败（`1 failed, 556 passed`），且未生成artifact；该失败事实保留。修正仅把统计改为canonical JSON解析，并将新增security目录纳入required suite；corrective provider复现562 PASS与8/8 report的success/denial counts 3/3。
 
 ## 当前允许
 
-- 读取并复核P3-01～06合同、Schema、persistence/lifecycle/read/command provider evidence和P2 frozen artifact；
-- 只执行TASK-P3-07卡中固定allow-list内的approval/rejection/audit service、限定tests/machine CI与命中文档；
+- 读取并复核P3-01～07合同、Schema、persistence/lifecycle/read/command/decision provider evidence和P2 frozen artifact；
+- 本次只提交TASK-P3-07 evidence-only closure并核验其exact provider，不再修改业务实现；
 - 后续P3-08～15只有在逐Task明确授权后，才可按各卡允许范围和新的不可变Diff base实施。
 
 ## 当前禁止

@@ -305,3 +305,5 @@ Task从provider-verified closure `514224b8ff2d507b613797ae697245bab14f79eb`激�
 追踪链固定为`REQ-007/009 + NFR-TRC/ISO/SEC/HUM + ENG-ARCH/ERR/VER/LOG → TASK-P3-07 → app.domain.authorization + app.application.approval/approval_decision_check + four test classes + CI contract → TEST-APPROVAL-AUTHORIZATION-001/TEST-AUDIT-TRAIL-001/TEST-STATE-TRANSITION-001/TEST-IDEMPOTENCY/TEST-SIM-ISOLATION → p3-approval-decision-report.v1 + Task report → exact implementation/closure provider artifacts`。Provider成功前保持`in_progress`；closure只写事实且不得启动P3-08。
 
 Implementation artifact必须绑定exact SHA/Task/Diff base，decision report为8/8、2 decision types、3 success、2 exact replay、1 conflict、3 denial audit、4无业务state拒绝、1 rollback、Solver=0、`issues=[]`，Task report为八Impact rows/full checks/0 issues。任何provider、artifact SHA、Task/base、checks、issues或禁止范围不一致都阻断closure。
+
+该规则已由corrective implementation `9aed9d8c5dd86a9a9b972f8e9c5491fd6d2dbaa6`的required run/job/artifact=`32794370664`/`97642478274`/`9544333991`满足：下载的26/26 JSON顶层PASS，decision与Task报告精确为8/8及50 committed/0 working paths、8 rows、19 checks、0 issues。因此本closure只写回TASK-P3-07=`done`和provider事实；初始失败run `32793980039`保留，P3-08仍为`planned`且未授权。

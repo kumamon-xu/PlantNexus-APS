@@ -124,3 +124,9 @@ Validator FAIL时返回`VALIDATION_FAILED/SCHEDULE_VALIDATION_FAILED`及sanitize
 ## TASK-P3-10 command transport
 
 `POST /api/v1/schedule-versions/{id}/commands`与validate/approve/reject/publish路由只处理strict body、path/header绑定、server authorization、correlation和error mapping，然后委托application port。Router不重算Gantt mutation、lock、Validator或state transition。HTTP已形成不等于UI已形成；drag/confirmation/accessibility/browser E2E仍由P3-11～13完成，P4 replan/freeze和Production command继续排除。
+
+## TASK-P3-12 visualization-only boundary
+
+当前Gantt实现只有zoom、server filter、selection、cross-highlight和navigation link；timeline/bar/table均没有drag/drop、resize、lock toggle、optimistic mutation、command endpoint或Idempotency-Key。Resource Load和Version Comparison也只显示server事实；comparison POST是P3-10定义的双Version read-query，不是command，不生成新DRAFT或状态转换。
+
+Read-only Chromium覆盖120-row virtualization/table fallback、load→Gantt link、comparison no-idempotency/server classification及authorization denial。该证据不形成上表任何human command；P3-13必须另行授权并继续遵循copy-on-write、fresh Validator、explicit confirmation和server state authority，P4 replan/change report与Production authority仍排除。

@@ -27,9 +27,17 @@ export type WorkspaceView =
   | "OPERATIONS"
   | "RESOURCES"
   | "CALENDARS"
+  | "GANTT"
+  | "RESOURCE_LOAD"
   | "KPI"
   | "DIAGNOSTICS"
-  | "AUDIT";
+  | "AUDIT"
+  | "VERSION_COMPARISON";
+
+export type WorkspaceQueryKind =
+  | "WORKSPACE_VIEW"
+  | "SCHEDULE_VERSION_COMPARISON"
+  | "AUDIT_LOG";
 
 export interface ArtifactReference extends JsonObject {
   document_version: string;
@@ -91,7 +99,7 @@ export interface WorkspaceQueryDocument extends JsonObject {
   schema_set_version: "2.6.0";
   canonicalization_version: "canonical-json.v1";
   direction: "REQUEST" | "RESULT";
-  query_kind: "WORKSPACE_VIEW";
+  query_kind: WorkspaceQueryKind;
   data_plane: DataPlane;
   environment: RuntimeEnvironment;
   synthetic: boolean;
@@ -111,6 +119,94 @@ export interface WorkspacePayloadItem extends JsonObject {
   item_type: string;
   payload: JsonObject;
   payload_fingerprint: string;
+}
+
+export interface GanttSegment extends JsonObject {
+  item_id: string;
+  operation_id: string;
+  order_id: string;
+  resource_id: string;
+  resource_code: string;
+  factory_id: string | null;
+  workshop_id: string | null;
+  production_line_id: string | null;
+  resource_group_id: string | null;
+  start_at_utc: string;
+  end_at_utc: string;
+  duration_seconds: number;
+  start_tick: number;
+  end_tick: number;
+  lock_ids: string[];
+  execution_fact_ids: string[];
+}
+
+export interface ResourceLoad extends JsonObject {
+  item_id: string;
+  resource_id: string;
+  resource_code: string;
+  calendar_id: string;
+  start_at_utc: string;
+  end_at_utc: string;
+  bucket_kind: "PLANNING_HORIZON";
+  assignment_count: number;
+  planned_busy_seconds: number;
+  available_seconds: number;
+  utilization: number;
+}
+
+export const comparisonChangeKinds = [
+  "ADDED",
+  "REMOVED",
+  "RESOURCE_CHANGE",
+  "DURATION_CHANGE",
+  "START_SHIFT",
+  "UNCHANGED",
+] as const;
+
+export type ComparisonChangeKind = (typeof comparisonChangeKinds)[number];
+
+export interface OperationDelta extends JsonObject {
+  operation_id: string;
+  change_kind: ComparisonChangeKind;
+  base_resource_id: string | null;
+  compared_resource_id: string | null;
+  base_start_at_utc: string | null;
+  compared_start_at_utc: string | null;
+  base_end_at_utc: string | null;
+  compared_end_at_utc: string | null;
+}
+
+export interface KpiDelta extends JsonObject {
+  metric: string;
+  base_value: number;
+  compared_value: number;
+  delta: number;
+}
+
+export interface ComparisonSummary extends JsonObject {
+  operation_count: number;
+  changed_operation_count: number;
+  added_operation_count: number;
+  removed_operation_count: number;
+  resource_changed_count: number;
+}
+
+export interface ScheduleVersionComparison extends JsonObject {
+  schedule_version_comparison_version: "schedule-version-comparison.v1";
+  schema_set_version: "2.6.0";
+  canonicalization_version: "canonical-json.v1";
+  comparison_id: string;
+  data_plane: DataPlane;
+  environment: RuntimeEnvironment;
+  synthetic: boolean;
+  base_version: VersionReference;
+  compared_version: VersionReference;
+  query_fingerprint: string;
+  operation_deltas: OperationDelta[];
+  kpi_deltas: KpiDelta[];
+  summary: ComparisonSummary;
+  comparison_fingerprint: string;
+  generated_at_utc: string;
 }
 
 export interface WorkspaceHttpResponse extends JsonObject {

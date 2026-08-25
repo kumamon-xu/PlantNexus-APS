@@ -88,6 +88,191 @@ body {
   overflow-wrap: anywhere;
 }
 
+.visualization-page > .ant-alert,
+.visualization-page > .workspace-results,
+.visualization-page > section,
+.visualization-page > h3,
+.visualization-page > p,
+.visualization-page > .ant-descriptions,
+.visualization-page > .table-scroll,
+.visualization-page > .ant-flex {
+  margin-top: 20px;
+}
+
+.visualization-controls {
+  display: grid;
+  grid-template-columns: minmax(180px, 1fr) minmax(180px, 1fr) 140px auto auto;
+  gap: 12px;
+  align-items: end;
+}
+
+.visualization-controls label {
+  display: grid;
+  gap: 6px;
+  font-weight: 600;
+}
+
+.gantt-instructions {
+  margin: 0 0 10px;
+}
+
+.gantt-viewport {
+  height: 384px;
+  overflow: auto;
+  border: 1px solid #c8d8d2;
+  background: #f8fbfa;
+  scrollbar-gutter: stable;
+}
+
+.gantt-canvas {
+  position: relative;
+  min-height: 100%;
+  background-image: linear-gradient(to right, rgb(20 107 88 / 10%) 1px, transparent 1px);
+  background-size: 96px 100%;
+}
+
+.gantt-row {
+  position: absolute;
+  left: 0;
+  right: 0;
+  border-bottom: 1px solid #e0e9e5;
+}
+
+.gantt-row-label {
+  position: sticky;
+  left: 0;
+  z-index: 2;
+  display: flex;
+  align-items: center;
+  width: 240px;
+  height: 100%;
+  padding: 0 10px;
+  overflow: hidden;
+  background: #fff;
+  border-right: 1px solid #c8d8d2;
+  white-space: nowrap;
+  text-overflow: ellipsis;
+}
+
+.gantt-segment {
+  position: absolute;
+  top: 8px;
+  height: 30px;
+  padding: 5px 8px;
+  overflow: hidden;
+  border: 1px solid #0b5547;
+  border-radius: 5px;
+  background: #2d8b76;
+  color: #fff;
+  cursor: pointer;
+  white-space: nowrap;
+  text-overflow: ellipsis;
+}
+
+.gantt-row.is-highlighted .gantt-segment {
+  outline: 3px solid #cf7b13;
+  outline-offset: 1px;
+  background: #0b5547;
+  font-weight: 700;
+}
+
+.accessible-fallback {
+  margin-top: 16px;
+}
+
+.accessible-fallback summary {
+  cursor: pointer;
+  font-weight: 700;
+}
+
+.table-scroll {
+  width: 100%;
+  overflow: auto;
+}
+
+.table-scroll table,
+.resource-load-table {
+  width: 100%;
+  margin-top: 10px;
+  border-collapse: collapse;
+  background: #fff;
+}
+
+.table-scroll caption,
+.resource-load-table caption {
+  padding: 8px;
+  font-weight: 600;
+  text-align: left;
+}
+
+.table-scroll th,
+.table-scroll td,
+.resource-load-table th,
+.resource-load-table td {
+  min-width: 130px;
+  padding: 9px;
+  border: 1px solid #d7e3de;
+  text-align: left;
+  vertical-align: top;
+}
+
+.table-scroll tr.is-highlighted {
+  outline: 3px solid #cf7b13;
+  outline-offset: -3px;
+  background: #fff4df;
+}
+
+.resource-load-table progress {
+  display: block;
+  width: 150px;
+  margin-bottom: 5px;
+  accent-color: #146b58;
+}
+
+.overlay-grid {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 16px;
+}
+
+.comparison-form {
+  display: grid;
+  grid-template-columns: minmax(220px, 1fr) auto;
+  gap: 8px 12px;
+  align-items: end;
+  margin-top: 20px;
+}
+
+.comparison-form label {
+  grid-column: 1 / -1;
+  font-weight: 600;
+}
+
+.comparison-authority {
+  margin-top: 20px;
+}
+
+.comparison-summary {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(170px, 1fr));
+  gap: 10px;
+}
+
+.comparison-summary div {
+  padding: 12px;
+  border: 1px solid #d7e3de;
+  background: #f8fbfa;
+}
+
+.comparison-summary dt {
+  font-weight: 600;
+}
+
+.comparison-summary dd {
+  margin: 5px 0 0;
+  font-size: 1.25rem;
+}
+
 @media (max-width: 760px) {
   .app-content {
     padding: 12px;
@@ -95,6 +280,12 @@ body {
 
   .workspace-page {
     padding: 16px;
+  }
+
+  .visualization-controls,
+  .overlay-grid,
+  .comparison-form {
+    grid-template-columns: 1fr;
   }
 }
 @media (prefers-reduced-motion: reduce) {

@@ -222,6 +222,12 @@ jobs:
       - name: P3 Frontend component and accessibility tests
         run: npm --prefix frontend test -- --run
 
+      - name: P3 Frontend read-only browser runtime
+        run: npm --prefix frontend exec -- playwright install --with-deps chromium
+
+      - name: P3 Frontend read-only visualization browser evidence
+        run: npm --prefix frontend run test:e2e
+
       - name: P3 Frontend production build
         run: npm --prefix frontend run build
 
@@ -271,4 +277,5 @@ jobs:
             build/validation/*.json
             build/traceability/*.json
             build/benchmarks/*.json
+            build/playwright/**
           if-no-files-found: error

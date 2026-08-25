@@ -36,3 +36,9 @@ TASK-P3-11已于2026-08-25获明确授权并从不可变Diff base `26dd519b1f1f8
 Node/npm/direct pins、lockfile v3、SCA/license命令以Task卡逐字清单为准。特别地，用户批准的typescript-eslint门禁是固定三元组`typescript-eslint=8.68.0`、`eslint=10.9.1`、`typescript=6.0.3`，而不是latest range；TypeScript必须满足`>=4.8.4 <6.1.0`，CI拒绝range、drift、peer conflict和未审查升级。
 
 Implementation `567e8693db881ea3dfffa011de9021fef9641361`已形成13条read-only route、GET-only canonical query client、default no-token session、strict carrier/reference检查、exact Version precondition、raw UTC/lineage/fingerprint authority、seven-state UI、virtual table和25个Vitest/component/contract/accessibility tests；npm v3 lock来自npm `11.17.0`。Artifact `9552386549`精确复验Frontend 9/9、SCA 0 advisory、336 package license/0 issue及只读阶段边界，故Task=`done`。
+
+## TASK-P3-12 local visualization boundary
+
+TASK-P3-12已从不可变Diff base `3bca1cc10ebedc4d47227bafb2f3f66854ccb526`进入`in_progress`，在不增加dependency或改lock的前提下形成factory/workshop/machine Gantt、Resource Load和two-Version comparison。现有route inventory为18条；Gantt按server UTC/tick/duration定位并做vertical windowing，完整table fallback保留所有operation，load/utilization与comparison change/KPI/summary均逐字显示server事实。
+
+Local 37项Vitest、4项read-only Chromium及12/12 machine已通过；client还把response query fingerprint/correlation/authoritative Version与outbound request及compared Version逐字绑定。`VERSIONED_SYNTHETIC_UI_120@1.0.0`只观察120 total/最多24 mounted rows，不是Production规模或SLA。Client仍无command/action carrier、无token persistence、无Solver/Validator/KPI/Resource Load/delta authority；P3-13 actions、P4与Production均未启动，exact provider形成前Task保持`in_progress`。

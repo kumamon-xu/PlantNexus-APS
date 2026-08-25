@@ -73,7 +73,7 @@ export function WorkspaceStatePanel({
     <Alert
       showIcon
       type={copy.type}
-      message={copy.title}
+      title={copy.title}
       description={detail ?? copy.description}
       role="alert"
     />

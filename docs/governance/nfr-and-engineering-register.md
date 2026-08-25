@@ -189,3 +189,9 @@ NFR-TRC/OBS要求Frontend evidence、bundle/route/state counts与exact SHA；NFR
 Frontend兼容门禁固定为`typescript-eslint=8.68.0`、`eslint=10.9.1`、`typescript=6.0.3`，TypeScript peer须满足`>=4.8.4 <6.1.0`；range、drift、peer conflict或未经审查升级均阻断。Activation不提升任何NFR/ENG root，全部继续`ALLOCATED`且`registry_version=1.0.0`不变。
 
 Implementation `567e8693db881ea3dfffa011de9021fef9641361` / artifact `9552386549`以type/lint/25 tests/build、SCA/license及9-check machine验证上述bounded controls：default no-token/no storage、Production non-synthetic、seven states、13 routes、944682 JS/1365 CSS observation。该provider evidence不构成SLO或Production security，因此所有NFR/ENG root继续`ALLOCATED`且registry version不变。
+
+## TASK-P3-12 local NFR / engineering review
+
+NFR-COR/TRC通过strict完整payload fingerprint、Version/content/source lineage、server filter/cursor与comparison dual precondition保持事实一致；NFR-OBS/PER只记录`VERSIONED_SYNTHETIC_UI_120@1.0.0`的120 rows、最多24 mounted visual rows、4 browser specs及1030697 JS/4106 CSS bytes，不形成阈值或SLA。ENG-ARCH保持api contracts/client→view hook→feature page/timeline单向依赖，ENG-ERR把authorization/stale/contract/server/partial显式可见，ENG-VER保持Schema set/OpenAPI/read-model fingerprint及24个dependency pins/lock逐字冻结。
+
+Local type/lint、37 Vitest、4/4 Chromium与12/12 machine已通过，并包含outbound query/correlation/Version-pair绑定负例，但provider尚未形成；这不证明browser matrix、Production scale/security/capacity。全部NFR/ENG root继续`ALLOCATED`，OPEN-012和RISK-009/011/013继续开放或受监控，`registry_version=1.0.0`不变。

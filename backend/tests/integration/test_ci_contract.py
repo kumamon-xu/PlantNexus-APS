@@ -158,11 +158,13 @@ def test_p3_frontend_dependencies_and_ci_are_exact_and_bounded() -> None:
         "npm --prefix frontend run lint",
         "npm --prefix frontend run typecheck",
         "npm --prefix frontend test -- --run",
+        "npm --prefix frontend exec -- playwright install --with-deps chromium",
+        "npm --prefix frontend run test:e2e",
         "npm --prefix frontend run build",
         "npm --prefix frontend run evidence -- --report ../build/validation/ci-p3-frontend.json",
     ):
         assert fragment in normalized
-    assert "playwright install" not in workflow.lower()
+    assert "build/playwright/**" in workflow
     assert "continue-on-error" not in workflow
 
 

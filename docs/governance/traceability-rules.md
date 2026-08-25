@@ -335,3 +335,11 @@ TASK-P3-09链必须为`REQ-006/007/009 + NFR-DET/TRC/ISO/REL/SEC/OBS/HUM + ENG-A
 Dependency trace必须逐字证明24个direct pins无range、lockfile v3由npm `11.17.0`生成、Node `24.19.0`，并特别核对固定兼容组`typescript-eslint=8.68.0`/`eslint=10.9.1`/`typescript=6.0.3`与peer `>=4.8.4 <6.1.0`。Activation本身未形成implementation evidence；P3-12/13、P4与Production不得由本规则自动推进。
 
 该规则已由implementation `567e8693db881ea3dfffa011de9021fef9641361`的required run/job/artifact=`32818657951`/`97712018632`/`9552386549`满足：下载32/32 JSON顶层PASS，Frontend/SCA/license绑定同一SHA且为9/9、0 vulnerability、336 packages/0 issue，Task报告为74 committed/0 working paths、6 rows、19 checks、0 issues。因此本closure只写回TASK-P3-11=`done`和provider事实，不自动启动P3-12。
+
+## TASK-P3-12 visualization evidence rule
+
+追踪链固定为`REQ-003/004/005/007/009 + NFR-COR/TRC/OBS/PER + ENG-ARCH/ERR/VER → TASK-P3-12 → checked API payload/client + GanttTimeline/GanttPage/ResourceLoadPage/VersionComparisonPage + unit/component/accessibility/read-only Chromium → TEST-WORKSPACE-READ-MODEL-001/TEST-WORKSPACE-FRONTEND-001 → p3-frontend-visualization-report.v1 + Playwright report + Task report → exact implementation/closure provider artifacts`。所有报告必须绑定不可变Diff base `3bca1cc10ebedc4d47227bafb2f3f66854ccb526`、同一implementation SHA、六个Impact rows、全部checks且`issues=[]`。
+
+Machine evidence必须证明18条exact read-only routes、24个dependency pins/lock零漂移、strict完整payload fingerprint、comparison只用POST read-query且无Idempotency-Key、4/4 Chromium、`VERSIONED_SYNTHETIC_UI_120@1.0.0`的120 rows/最多24 mounted rows、可访问完整table fallback、bundle observation、command/client authority/P4/Production absence及12/12 checks。失败workflow必须以`always()`上传Playwright screenshot/trace/video；local失败历史不得通过隐藏row或降低行为断言抹除。
+
+本地PASS只允许Task保持`in_progress`。Push后须核验exact required `validate` app `15368`、下载artifact并逐项核对Frontend/Playwright/Task的SHA/Task/base、SIM-ASSUMPTION-014、Impact/checks/issues；provider成功后才可evidence-only closure，closure自身也须exact provider。该规则不得启动P3-13、创建action/control、P4或Production readiness。

@@ -17,7 +17,7 @@ last_reviewed: 2026-08-25
 
 P2-14 audit implementation `65c556789f176ad9de55523d6420737bb60f933f`的GitHub push run `32677741558` / required `validate` job `97288829348` / artifact `9503227240`成功，artifact digest=`sha256:fbb76f0ab44d3bdcff2d31e70f9698af84e10e48ee57ae611eef8529a288240e`；evidence-only closure `80c403384d1e171258cf874d26605d0d22aff1b2`的run `32678248961` / job `97290201234` / artifact `9503372291`也成功，digest=`sha256:673412905b7420660d1e9f07755fcda6291f85f8f2bd926b4bf31a0a6bd1bd0c`。下载检查的两份artifact均含20份可解析JSON，Task/SHA/Impact Rules/checks/issues与对应提交一致且0 issue。规划启动时`main=origin/main=80c403384d1e171258cf874d26605d0d22aff1b2`、ahead/behind=`0/0`且working tree clean，因此transition前提一致。
 
-P2 Milestone现为`completed`，P3 Milestone为`active`。`TASK-P3-00`～`TASK-P3-11`均已有exact implementation provider并由各自evidence-only closure标为`done`；P3-12～15保持`planned`且不会自动启动，当前没有已授权的后续implementation Task。
+P2 Milestone现为`completed`，P3 Milestone为`active`。`TASK-P3-00`～`TASK-P3-11`均已有exact implementation provider并由各自evidence-only closure标为`done`；用户已单独授权`TASK-P3-12`且其从clean synchronized closure HEAD进入`in_progress`，P3-13～15保持`planned`且不会自动启动。
 
 ## 当前目标
 
@@ -134,6 +134,20 @@ Implementation `4958ce5759812331f13fab2608fbec37f1f1ff76`的run/job/artifact=`32
 本地implementation现已形成exact npm v3 lock、13条read-only route、canonical GET query、Version precondition、default no-token session、seven-state UI、authority/lineage/raw UTC、virtual table、25项Vitest/component/contract/accessibility tests和三份Frontend/SCA/license machine report。Type/lint/test/build、0 advisory、336 package license与944682/1365 JS/CSS bytes observation均PASS；Python全仓604项、CI contract 28项、全部历史machine/P2 Gate/XS、Compose及build也已重跑通过，full docs为165 docs/30 roots/30 trace rows/48 tests/15 OPEN/13 SIM/13 risks/53 tasks，Task diff为74 working paths/6 rows/19 checks/0 issues。
 
 Implementation `567e8693db881ea3dfffa011de9021fef9641361`的required run/job/artifact=`32818657951`/`97712018632`/`9552386549`精确success，check app=`15368`且branch protection仍要求`validate`/app `15368`。Artifact未过期，103338 bytes，digest=`sha256:8d558b57453db04cb32ad55d8a42ff738b215100071f2564d46d185a78631aea`、expiry=`2026-11-23T06:49:23Z`；下载复核32/32 JSON顶层PASS，Frontend为9/9、SCA 0、license 336/0，Task为74 committed/0 working paths、6 rows、19 checks、0 issues。因此本evidence-only closure把TASK-P3-11标为`done`；P3-12+仍未授权，browser E2E、P4与Production均未形成。
+
+## TASK-P3-12 启动边界
+
+用户于2026-08-25单独授权TASK-P3-12。启动复核确认P3-05/10/11均`done`，三项closure required run/job/artifact=`32707242260`/`97370830393`/`9512779675`、`32812850599`/`97695423162`/`9550448943`、`32819640902`/`97714885416`/`9552720216`均exact success、未过期且下载内容绑定各自SHA、Task、Impact Rules、19 checks和0 issues。启动时`main=origin/main=3bca1cc10ebedc4d47227bafb2f3f66854ccb526`、ahead/behind=`0/0`且working tree clean，故该完整SHA冻结为不可变Diff base。
+
+当前只允许消费已冻结Gantt/Resource Load/KPI/Diagnostics/two-Version comparison HTTP read models，形成三层Gantt投影、server-filter/select/link、只读load与server delta comparison、可访问table fallback、virtualized development-scale observation和read-only Playwright provider evidence。不得新增dependency或改lock，不得调用任何command/action endpoint、在浏览器重算KPI/约束/可行性、改变ScheduleVersion、实现P4 ChangeReport/Replan或形成Production identity/authority/readiness；P3-13～15不自动启动。
+
+## TASK-P3-12 local implementation status
+
+当前已形成18条read-only route、factory/workshop/machine Gantt、Resource Load、Version Comparison、strict request/response/Version-pair绑定、120-row vertical windowing与完整可访问table fallback。Local type/lint、37项Vitest、4/4 Chromium、build和12/12 visualization machine为PASS；package-lock及24个pins保持冻结。SIM-ASSUMPTION-014只登记`VERSIONED_SYNTHETIC_UI_120@1.0.0` development fixture，不关闭OPEN-001/003/012或形成Production scale/SLA。
+
+首轮browser 2/4因测试locator同名歧义失败，失败trace/video/screenshot保留，收紧role断言后4/4；没有隐藏row或跳过behavior。Exact implementation required validate/artifact尚未形成，因此Task继续`in_progress`，上述local结果不得写成provider-verified；P3-13～15、actions、P4与Production仍未启动。
+
+完整local Gate现为604 Python tests、37 Frontend tests、4/4 Chromium、32/32 validation JSON、SCA/license、XS/P2 Gate、Compose/build及165-doc/55-path治理全部PASS；exact implementation provider仍是唯一未完成门。该事实不提升Production readiness或后续Task状态。
 
 ## 当前允许
 

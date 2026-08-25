@@ -1,12 +1,20 @@
-import { workspaceQueryFingerprint } from "./canonical";
+import { sha256Fingerprint, workspaceQueryFingerprint } from "./canonical";
 import {
+  comparisonChangeKinds,
   scheduleStates,
   type ArtifactReference,
+  type ComparisonChangeKind,
+  type ComparisonSummary,
+  type GanttSegment,
   type JsonObject,
   type JsonValue,
+  type KpiDelta,
+  type OperationDelta,
+  type ResourceLoad,
   type ScheduleLineage,
   type ScheduleState,
   type ScheduleVersion,
+  type ScheduleVersionComparison,
   type VersionReference,
   type WorkspaceHttpResponse,
   type WorkspacePayloadItem,
@@ -17,6 +25,7 @@ import {
 
 const fingerprintPattern = /^sha256:[0-9a-f]{64}$/;
 const scheduleStateSet = new Set<string>(scheduleStates);
+const comparisonChangeKindSet = new Set<string>(comparisonChangeKinds);
 
 export class ContractViolation extends Error {
   constructor(
@@ -75,6 +84,41 @@ function utc(value: unknown, field: string): string {
     throw new ContractViolation(field, "must be an explicit UTC instant");
   }
   return result;
+}
+
+function nullableString(value: unknown, field: string): string | null {
+  return value === null ? null : string(value, field);
+}
+
+function nullableUtc(value: unknown, field: string): string | null {
+  return value === null ? null : utc(value, field);
+}
+
+function finiteNumber(value: unknown, field: string): number {
+  if (typeof value !== "number" || !Number.isFinite(value)) {
+    throw new ContractViolation(field, "must be a finite number");
+  }
+  return value;
+}
+
+function nonNegativeNumber(value: unknown, field: string): number {
+  const result = finiteNumber(value, field);
+  if (result < 0) throw new ContractViolation(field, "must be non-negative");
+  return result;
+}
+
+function integer(value: unknown, field: string, minimum = 0): number {
+  if (!Number.isInteger(value) || (value as number) < minimum) {
+    throw new ContractViolation(field, `must be an integer >= ${minimum}`);
+  }
+  return value as number;
+}
+
+function stringArray(value: unknown, field: string): string[] {
+  if (!Array.isArray(value)) {
+    throw new ContractViolation(field, "must be an array");
+  }
+  return value.map((item, index) => string(item, `${field}[${index}]`));
 }
 
 function state(value: unknown, field: string): ScheduleState {
@@ -312,7 +356,11 @@ function workspaceDocument(
     direction: literal(document.direction, "RESULT", "document.direction"),
     query_kind: literal(
       document.query_kind,
-      "WORKSPACE_VIEW",
+      expectedView === "VERSION_COMPARISON"
+        ? "SCHEDULE_VERSION_COMPARISON"
+        : expectedView === "AUDIT"
+          ? "AUDIT_LOG"
+          : "WORKSPACE_VIEW",
       "document.query_kind",
     ),
     data_plane: literalPlane(document.data_plane, "document.data_plane"),
@@ -367,6 +415,304 @@ function payloadItem(value: unknown, index: number): WorkspacePayloadItem {
   } as WorkspacePayloadItem;
 }
 
+function requireItemType(
+  item: WorkspacePayloadItem,
+  expected: string,
+  index: number,
+): void {
+  if (item.item_type !== expected) {
+    throw new ContractViolation(
+      `items[${index}].item_type`,
+      `expected ${expected}, received ${item.item_type}`,
+    );
+  }
+}
+
+function ganttSegment(item: WorkspacePayloadItem, index: number): GanttSegment {
+  requireItemType(item, "GANTT_SEGMENT", index);
+  const payload = item.payload;
+  const startAt = utc(payload.start_at_utc, `items[${index}].payload.start_at_utc`);
+  const endAt = utc(payload.end_at_utc, `items[${index}].payload.end_at_utc`);
+  if (Date.parse(endAt) <= Date.parse(startAt)) {
+    throw new ContractViolation(
+      `items[${index}].payload.end_at_utc`,
+      "must be later than start_at_utc",
+    );
+  }
+  const startTick = integer(payload.start_tick, `items[${index}].payload.start_tick`);
+  const endTick = integer(payload.end_tick, `items[${index}].payload.end_tick`, 1);
+  if (endTick <= startTick) {
+    throw new ContractViolation(
+      `items[${index}].payload.end_tick`,
+      "must be greater than start_tick",
+    );
+  }
+  return {
+    ...payload,
+    item_id: item.item_id,
+    operation_id: string(payload.operation_id, `items[${index}].payload.operation_id`),
+    order_id: string(payload.order_id, `items[${index}].payload.order_id`),
+    resource_id: string(payload.resource_id, `items[${index}].payload.resource_id`),
+    resource_code: string(payload.resource_code, `items[${index}].payload.resource_code`),
+    factory_id: nullableString(payload.factory_id, `items[${index}].payload.factory_id`),
+    workshop_id: nullableString(payload.workshop_id, `items[${index}].payload.workshop_id`),
+    production_line_id: nullableString(
+      payload.production_line_id,
+      `items[${index}].payload.production_line_id`,
+    ),
+    resource_group_id: nullableString(
+      payload.resource_group_id,
+      `items[${index}].payload.resource_group_id`,
+    ),
+    start_at_utc: startAt,
+    end_at_utc: endAt,
+    duration_seconds: integer(
+      payload.duration_seconds,
+      `items[${index}].payload.duration_seconds`,
+      1,
+    ),
+    start_tick: startTick,
+    end_tick: endTick,
+    lock_ids: stringArray(payload.lock_ids, `items[${index}].payload.lock_ids`),
+    execution_fact_ids: stringArray(
+      payload.execution_fact_ids,
+      `items[${index}].payload.execution_fact_ids`,
+    ),
+  } as GanttSegment;
+}
+
+function resourceLoad(item: WorkspacePayloadItem, index: number): ResourceLoad {
+  requireItemType(item, "RESOURCE_LOAD", index);
+  const payload = item.payload;
+  const startAt = utc(payload.start_at_utc, `items[${index}].payload.start_at_utc`);
+  const endAt = utc(payload.end_at_utc, `items[${index}].payload.end_at_utc`);
+  if (Date.parse(endAt) <= Date.parse(startAt)) {
+    throw new ContractViolation(
+      `items[${index}].payload.end_at_utc`,
+      "must be later than start_at_utc",
+    );
+  }
+  return {
+    ...payload,
+    item_id: item.item_id,
+    resource_id: string(payload.resource_id, `items[${index}].payload.resource_id`),
+    resource_code: string(payload.resource_code, `items[${index}].payload.resource_code`),
+    calendar_id: string(payload.calendar_id, `items[${index}].payload.calendar_id`),
+    start_at_utc: startAt,
+    end_at_utc: endAt,
+    bucket_kind: literal(
+      payload.bucket_kind,
+      "PLANNING_HORIZON",
+      `items[${index}].payload.bucket_kind`,
+    ),
+    assignment_count: integer(
+      payload.assignment_count,
+      `items[${index}].payload.assignment_count`,
+    ),
+    planned_busy_seconds: nonNegativeNumber(
+      payload.planned_busy_seconds,
+      `items[${index}].payload.planned_busy_seconds`,
+    ),
+    available_seconds: nonNegativeNumber(
+      payload.available_seconds,
+      `items[${index}].payload.available_seconds`,
+    ),
+    utilization: nonNegativeNumber(
+      payload.utilization,
+      `items[${index}].payload.utilization`,
+    ),
+  } as ResourceLoad;
+}
+
+function operationDelta(value: unknown, index: number): OperationDelta {
+  const raw = object(value, `comparison.operation_deltas[${index}]`);
+  const changeKind = string(
+    raw.change_kind,
+    `comparison.operation_deltas[${index}].change_kind`,
+  );
+  if (!comparisonChangeKindSet.has(changeKind)) {
+    throw new ContractViolation(
+      `comparison.operation_deltas[${index}].change_kind`,
+      `unsupported server change kind: ${changeKind}`,
+    );
+  }
+  return {
+    ...raw,
+    operation_id: string(
+      raw.operation_id,
+      `comparison.operation_deltas[${index}].operation_id`,
+    ),
+    change_kind: changeKind as ComparisonChangeKind,
+    base_resource_id: nullableString(
+      raw.base_resource_id,
+      `comparison.operation_deltas[${index}].base_resource_id`,
+    ),
+    compared_resource_id: nullableString(
+      raw.compared_resource_id,
+      `comparison.operation_deltas[${index}].compared_resource_id`,
+    ),
+    base_start_at_utc: nullableUtc(
+      raw.base_start_at_utc,
+      `comparison.operation_deltas[${index}].base_start_at_utc`,
+    ),
+    compared_start_at_utc: nullableUtc(
+      raw.compared_start_at_utc,
+      `comparison.operation_deltas[${index}].compared_start_at_utc`,
+    ),
+    base_end_at_utc: nullableUtc(
+      raw.base_end_at_utc,
+      `comparison.operation_deltas[${index}].base_end_at_utc`,
+    ),
+    compared_end_at_utc: nullableUtc(
+      raw.compared_end_at_utc,
+      `comparison.operation_deltas[${index}].compared_end_at_utc`,
+    ),
+  } as OperationDelta;
+}
+
+function kpiDelta(value: unknown, index: number): KpiDelta {
+  const raw = object(value, `comparison.kpi_deltas[${index}]`);
+  return {
+    ...raw,
+    metric: string(raw.metric, `comparison.kpi_deltas[${index}].metric`),
+    base_value: finiteNumber(
+      raw.base_value,
+      `comparison.kpi_deltas[${index}].base_value`,
+    ),
+    compared_value: finiteNumber(
+      raw.compared_value,
+      `comparison.kpi_deltas[${index}].compared_value`,
+    ),
+    delta: finiteNumber(raw.delta, `comparison.kpi_deltas[${index}].delta`),
+  } as KpiDelta;
+}
+
+function comparisonSummary(value: unknown): ComparisonSummary {
+  const raw = object(value, "comparison.summary");
+  return {
+    ...raw,
+    operation_count: integer(raw.operation_count, "comparison.summary.operation_count"),
+    changed_operation_count: integer(
+      raw.changed_operation_count,
+      "comparison.summary.changed_operation_count",
+    ),
+    added_operation_count: integer(
+      raw.added_operation_count,
+      "comparison.summary.added_operation_count",
+    ),
+    removed_operation_count: integer(
+      raw.removed_operation_count,
+      "comparison.summary.removed_operation_count",
+    ),
+    resource_changed_count: integer(
+      raw.resource_changed_count,
+      "comparison.summary.resource_changed_count",
+    ),
+  } as ComparisonSummary;
+}
+
+function comparisonPayload(
+  item: WorkspacePayloadItem,
+  index: number,
+): ScheduleVersionComparison {
+  requireItemType(item, "VERSION_COMPARISON", index);
+  const raw = item.payload;
+  if (!Array.isArray(raw.operation_deltas) || !Array.isArray(raw.kpi_deltas)) {
+    throw new ContractViolation(
+      `items[${index}].payload`,
+      "operation_deltas and kpi_deltas must be arrays",
+    );
+  }
+  const base = versionReference(raw.base_version, "comparison.base_version");
+  const compared = versionReference(
+    raw.compared_version,
+    "comparison.compared_version",
+  );
+  if (base.schedule_version_id === compared.schedule_version_id) {
+    throw new ContractViolation(
+      "comparison.compared_version.schedule_version_id",
+      "must differ from the base Version",
+    );
+  }
+  return {
+    ...raw,
+    schedule_version_comparison_version: literal(
+      raw.schedule_version_comparison_version,
+      "schedule-version-comparison.v1",
+      "comparison.schedule_version_comparison_version",
+    ),
+    schema_set_version: literal(
+      raw.schema_set_version,
+      "2.6.0",
+      "comparison.schema_set_version",
+    ),
+    canonicalization_version: literal(
+      raw.canonicalization_version,
+      "canonical-json.v1",
+      "comparison.canonicalization_version",
+    ),
+    comparison_id: string(raw.comparison_id, "comparison.comparison_id"),
+    data_plane: literalPlane(raw.data_plane, "comparison.data_plane"),
+    environment: literalEnvironment(raw.environment, "comparison.environment"),
+    synthetic: requireBoolean(raw.synthetic, "comparison.synthetic"),
+    base_version: base,
+    compared_version: compared,
+    query_fingerprint: fingerprint(
+      raw.query_fingerprint,
+      "comparison.query_fingerprint",
+    ),
+    operation_deltas: raw.operation_deltas.map(operationDelta),
+    kpi_deltas: raw.kpi_deltas.map(kpiDelta),
+    summary: comparisonSummary(raw.summary),
+    comparison_fingerprint: fingerprint(
+      raw.comparison_fingerprint,
+      "comparison.comparison_fingerprint",
+    ),
+    generated_at_utc: utc(raw.generated_at_utc, "comparison.generated_at_utc"),
+  } as ScheduleVersionComparison;
+}
+
+export function parseGanttSegments(response: WorkspaceHttpResponse): GanttSegment[] {
+  if (response.document.view !== "GANTT") {
+    throw new ContractViolation("document.view", "expected GANTT response");
+  }
+  return response.items.map(ganttSegment);
+}
+
+export function parseResourceLoads(response: WorkspaceHttpResponse): ResourceLoad[] {
+  if (response.document.view !== "RESOURCE_LOAD") {
+    throw new ContractViolation("document.view", "expected RESOURCE_LOAD response");
+  }
+  return response.items.map(resourceLoad);
+}
+
+export function parseVersionComparison(
+  response: WorkspaceHttpResponse,
+): ScheduleVersionComparison {
+  if (response.document.view !== "VERSION_COMPARISON") {
+    throw new ContractViolation(
+      "document.view",
+      "expected VERSION_COMPARISON response",
+    );
+  }
+  if (response.items.length !== 1 || response.items[0] === undefined) {
+    throw new ContractViolation(
+      "response.items",
+      "Version comparison requires exactly one complete payload",
+    );
+  }
+  return comparisonPayload(response.items[0], 0);
+}
+
+function validateViewPayloads(
+  view: WorkspaceView,
+  response: WorkspaceHttpResponse,
+): void {
+  if (view === "GANTT") parseGanttSegments(response);
+  if (view === "RESOURCE_LOAD") parseResourceLoads(response);
+  if (view === "VERSION_COMPARISON") parseVersionComparison(response);
+}
+
 export async function parseWorkspaceResponse(
   value: unknown,
   expectedView: WorkspaceView,
@@ -401,6 +747,13 @@ export async function parseWorkspaceResponse(
         );
       }
     }
+    const calculatedPayload = await sha256Fingerprint(item.payload);
+    if (calculatedPayload !== item.payload_fingerprint) {
+      throw new ContractViolation(
+        `items[${index}].payload_fingerprint`,
+        "does not match the canonical complete payload",
+      );
+    }
   }
   const calculatedQuery = await workspaceQueryFingerprint(document);
   if (calculatedQuery !== document.query_fingerprint) {
@@ -415,7 +768,7 @@ export async function parseWorkspaceResponse(
       "missing resources cannot contain a payload collection",
     );
   }
-  return {
+  const parsed = {
     ...response,
     document,
     items,
@@ -429,6 +782,8 @@ export async function parseWorkspaceResponse(
     ),
     correlation_id: string(response.correlation_id, "response.correlation_id"),
   } as WorkspaceHttpResponse;
+  validateViewPayloads(expectedView, parsed);
+  return parsed;
 }
 
 export function parsePlanningRun(value: unknown): JsonObject {

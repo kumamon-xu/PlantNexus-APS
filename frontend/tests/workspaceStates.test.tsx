@@ -42,6 +42,9 @@ function clientWith(
       return testScheduleVersion;
     },
     queryWorkspace,
+    async compareScheduleVersions() {
+      throw new Error("not used by this test");
+    },
   };
 }
 

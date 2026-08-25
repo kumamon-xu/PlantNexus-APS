@@ -1,9 +1,10 @@
-import { canonicalJson } from "./canonical";
+import { canonicalJson, workspaceQueryFingerprint } from "./canonical";
 import {
   ContractViolation,
   isJsonObject,
   parsePlanningRun,
   parseScheduleVersion,
+  parseVersionComparison,
   parseWorkspaceResponse,
 } from "./contracts";
 import type { RuntimeConfig } from "./runtime";
@@ -12,6 +13,7 @@ import type {
   ClientFailureKind,
   JsonObject,
   ScheduleVersion,
+  VersionReference,
   WorkspaceHttpResponse,
   WorkspaceQueryDocument,
   WorkspaceView,
@@ -36,6 +38,10 @@ export interface PlanningWorkspaceClient {
     query: WorkspaceQueryDocument,
     expectedView: WorkspaceView,
   ): Promise<WorkspaceHttpResponse>;
+  compareScheduleVersions(
+    query: WorkspaceQueryDocument,
+    comparedVersion: VersionReference,
+  ): Promise<WorkspaceHttpResponse>;
 }
 
 function kindForStatus(status: number): ClientFailureKind {
@@ -57,7 +63,7 @@ function safeError(value: unknown, fallback: string): {
   };
 }
 
-function pathSegment(value: string): string {
+function identityValue(value: string): string {
   const trimmed = value.trim();
   if (trimmed.length === 0 || /[\s\u0000-\u001f\u007f]/u.test(trimmed)) {
     throw new WorkspaceClientError(
@@ -67,7 +73,82 @@ function pathSegment(value: string): string {
       null,
     );
   }
-  return encodeURIComponent(trimmed);
+  return trimmed;
+}
+
+function pathSegment(value: string): string {
+  return encodeURIComponent(identityValue(value));
+}
+
+function sameVersionReference(
+  left: VersionReference | null,
+  right: VersionReference | null,
+): boolean {
+  if (left === null || right === null) return left === right;
+  return (
+    left.schedule_version_id === right.schedule_version_id &&
+    left.state === right.state &&
+    left.content_fingerprint === right.content_fingerprint
+  );
+}
+
+async function parseBoundWorkspaceResponse(
+  value: unknown,
+  query: WorkspaceQueryDocument,
+  expectedView: WorkspaceView,
+): Promise<WorkspaceHttpResponse> {
+  if (query.direction !== "REQUEST" || query.view !== expectedView) {
+    throw new ContractViolation(
+      "request.view",
+      "outbound read carrier and expected view must match",
+    );
+  }
+  const response = await parseWorkspaceResponse(value, expectedView);
+  if (response.document.query_fingerprint !== query.query_fingerprint) {
+    throw new ContractViolation(
+      "document.query_fingerprint",
+      "response is not bound to the outbound read query",
+    );
+  }
+  if (
+    response.document.correlation_id !== query.correlation_id ||
+    response.correlation_id !== query.correlation_id
+  ) {
+    throw new ContractViolation(
+      "response.correlation_id",
+      "response is not bound to the outbound correlation",
+    );
+  }
+  if (
+    !sameVersionReference(
+      response.document.result?.authoritative_schedule_version ?? null,
+      query.schedule_version_precondition,
+    )
+  ) {
+    throw new ContractViolation(
+      "document.result.authoritative_schedule_version",
+      "response authority differs from the outbound Version precondition",
+    );
+  }
+  return response;
+}
+
+async function requireOutboundQuery(
+  query: WorkspaceQueryDocument,
+  expectedView: WorkspaceView,
+): Promise<void> {
+  if (query.direction !== "REQUEST" || query.view !== expectedView) {
+    throw new ContractViolation(
+      "request.view",
+      "outbound read carrier and expected view must match",
+    );
+  }
+  if ((await workspaceQueryFingerprint(query)) !== query.query_fingerprint) {
+    throw new ContractViolation(
+      "request.query_fingerprint",
+      "outbound read carrier fingerprint is invalid",
+    );
+  }
 }
 
 export function createPlanningWorkspaceClient(
@@ -75,7 +156,12 @@ export function createPlanningWorkspaceClient(
   session: SessionProvider,
   fetcher: typeof fetch = globalThis.fetch,
 ): PlanningWorkspaceClient {
-  async function get(path: string): Promise<unknown> {
+  async function request(
+    path: string,
+    method: "GET" | "POST",
+    body?: JsonObject,
+    additionalHeaders?: Readonly<Record<string, string>>,
+  ): Promise<unknown> {
     const token = await session.getAccessToken();
     const headers = new Headers({ Accept: "application/json" });
     if (token !== null) {
@@ -93,11 +179,16 @@ export function createPlanningWorkspaceClient(
       }
       headers.set("Authorization", `Bearer ${token}`);
     }
+    if (body !== undefined) headers.set("Content-Type", "application/json");
+    for (const [name, value] of Object.entries(additionalHeaders ?? {})) {
+      headers.set(name, identityValue(value));
+    }
     let response: Response;
     try {
       response = await fetcher(`${config.apiBaseUrl}${path}`, {
-        method: "GET",
+        method,
         headers,
+        body: body === undefined ? undefined : canonicalJson(body),
         cache: "no-store",
         credentials: "omit",
       });
@@ -132,6 +223,10 @@ export function createPlanningWorkspaceClient(
     return payload;
   }
 
+  function get(path: string): Promise<unknown> {
+    return request(path, "GET");
+  }
+
   async function checked<T>(operation: () => Promise<T>): Promise<T> {
     try {
       return await operation();
@@ -164,6 +259,7 @@ export function createPlanningWorkspaceClient(
     },
     async queryWorkspace(query, expectedView) {
       return checked(async () => {
+        await requireOutboundQuery(query, expectedView);
         const encoded = new URLSearchParams({ query: canonicalJson(query) });
         const path =
           query.resource.resource_type === "WORKSPACE"
@@ -172,7 +268,53 @@ export function createPlanningWorkspaceClient(
                 String(query.resource.resource_id),
                 expectedView,
               );
-        return parseWorkspaceResponse(await get(`${path}?${encoded}`), expectedView);
+        return parseBoundWorkspaceResponse(
+          await get(`${path}?${encoded}`),
+          query,
+          expectedView,
+        );
+      });
+    },
+    async compareScheduleVersions(query, comparedVersion) {
+      return checked(async () => {
+        await requireOutboundQuery(query, "VERSION_COMPARISON");
+        if (
+          query.view !== "VERSION_COMPARISON" ||
+          query.query_kind !== "SCHEDULE_VERSION_COMPARISON" ||
+          query.schedule_version_precondition === null
+        ) {
+          throw new TypeError(
+            "Version comparison requires its base Version read-query carrier",
+          );
+        }
+        const response = await parseBoundWorkspaceResponse(
+          await request(
+            "/schedule-version-comparisons",
+            "POST",
+            query,
+            {
+              "X-Compared-Schedule-Version-Id": comparedVersion.schedule_version_id,
+              "X-Compared-State": comparedVersion.state,
+              "X-Compared-Content-Fingerprint": comparedVersion.content_fingerprint,
+            },
+          ),
+          query,
+          "VERSION_COMPARISON",
+        );
+        const comparison = parseVersionComparison(response);
+        if (
+          !sameVersionReference(
+            comparison.base_version,
+            query.schedule_version_precondition,
+          ) ||
+          !sameVersionReference(comparison.compared_version, comparedVersion)
+        ) {
+          throw new ContractViolation(
+            "comparison.version_preconditions",
+            "comparison payload differs from the requested Version pair",
+          );
+        }
+        return response;
       });
     },
   };

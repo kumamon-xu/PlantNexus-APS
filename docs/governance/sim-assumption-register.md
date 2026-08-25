@@ -29,8 +29,9 @@ Simulation 用于模拟 APS Planning Reality，不代表真实物理工厂。每
 | SIM-ASSUMPTION-011 | `P2-GOLDEN-JSSP/FJSP`与`P2-CROSS-WORKSHOP/CALENDAR/MATERIAL-DELAY/RUNNING/HARD-LOCK@1.0.0`固定tiny topology、60秒tick、显式duration/due/calendar/material/fact/lock/transport值及seed `20260901`～`20260907` | ACTIVE | 只验证P2 C-001～C-011、OBJ-001、replay与Validator correctness；`XS`只表示可手算，不是Benchmark profile、Production分布、容量、策略默认值或SLA |
 | SIM-ASSUMPTION-012 | `reference-scheduler-policy.v1`固定FCFS/EDD/SPT/Priority+EDD/Greedy Earliest Available Machine的operation/resource deterministic total-order tie-break，并只消费Problem显式priority | ACTIVE | 只验证Simulation baseline correctness/replay；不得成为Production dispatch、fallback、weight、capacity、optimality或SLA策略，也不得关闭任何production-open问题 |
 | SIM-ASSUMPTION-013 | `benchmark-profile-set.v1`固定XS/S/M为4/8/12 orders、3/6/8 resources、2/3/4 operations per order、2 candidates、1/2/4 calendar fragments、180/480/900 ticks、seed `20261201`～`20261203`、1 warm-up + 3 measured runs及显式due/material/solve-limit；三个baseline绑定一次Windows AMD64/Python 3.12.13/OR-Tools 9.15.6755观测 | ACTIVE | 只用于P2 development synthetic scale/comparison；不得成为Production topology/distribution/capacity/SLA、L/XL、历史生产数据或部署预算 |
+| SIM-ASSUMPTION-014 | `VERSIONED_SYNTHETIC_UI_120@1.0.0`固定120个只读Gantt row、30个order、6个resource、2个workshop、5分钟start offset与3600秒duration，并观察最多24个mounted visual row和完整table fallback | ACTIVE | 只用于TASK-P3-12 browser virtualization/accessibility regression；mock carrier的Production形状不赋予数据真实性，不得成为XS/S/M、Production topology/duration/capacity/SLA、browser matrix或部署预算 |
 
-除SIM-ASSUMPTION-013明确绑定的P2 development XS/S/M profile外，具体workshop/resource数、候选设备密度、故障概率、到期压力等数值仍未批准为其他Profile或生产事实。后续数值必须由各自版本化FactoryProfile/ScenarioSpec/Generator明确，不能从任一fixture或本次baseline外推“通用默认工厂”。
+除SIM-ASSUMPTION-013明确绑定的P2 development XS/S/M profile和SIM-ASSUMPTION-014明确绑定的P3-12 UI render fixture外，具体workshop/resource数、候选设备密度、故障概率、到期压力等数值仍未批准为其他Profile或生产事实。后续数值必须由各自版本化FactoryProfile/ScenarioSpec/Generator明确，不能从任一fixture或本次baseline外推“通用默认工厂”。
 
 本注册表的稳定 ID 前缀为 `SIM-ASSUMPTION-NNN`。总规示例中的 `SIM_ASSUMPTION-003` 是同类标记的上游拼写，校验时规范化为 `SIM-ASSUMPTION-003`；新引用必须使用本表前缀。条目只能为 `ACTIVE` 或 `RETIRED`，不得出现 `OPEN`/`CLOSED` 生产问题状态，也不得用于关闭任何 `OPEN-NNN`。
 
@@ -181,5 +182,7 @@ TASK-P3-10只复用synthetic carrier/resource、stable test principal与test app
 Frontend unit/component测试可复用显式versioned synthetic carrier，并记录bundle bytes、virtualized rows和test-local render/query observation；不得新增真实订单/资源/用户分布、浏览器容量阈值、网络latency、identity或Production SLA假设。Production navigation不得显示synthetic seed或Simulation-only入口。
 
 SIM-ASSUMPTION-001～013继续`ACTIVE`，本Task不新增、修改或retire假设，`registry_version=1.0.0`不变。Development fixture、jsdom和local bundle observation不得外推P3-12/13 browser E2E、P4或Production证据。
+
+TASK-P3-12 local review：新增SIM-ASSUMPTION-014，把120-row/30-order/6-resource/2-workshop/5-minute-offset/3600-second-duration数据绑定到`VERSIONED_SYNTHETIC_UI_120@1.0.0`，仅用于read-only Chromium virtualization、可访问table fallback和development render observation。其mock响应保持Production-shaped frontend carrier以验证runtime isolation，但不构成真实Production数据或authority；不得外推XS/S/M、browser matrix、topology/duration/capacity/SLA。SIM-ASSUMPTION-001～014均`ACTIVE`，表结构、ID/状态语义与`registry_version=1.0.0`不变。
 
 Implementation artifact `9552386549`复验25 tests只使用in-memory versioned payload，runtime明确拒绝Simulation/Development plane；没有新增seed/profile/distribution。全部13项假设继续ACTIVE且registry version不变。

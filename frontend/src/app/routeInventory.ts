@@ -23,6 +23,24 @@ export const workspaceRoutes: readonly WorkspaceRouteDefinition[] = [
     view: "ORDERS",
     scheduleScoped: true,
   },
+  {
+    path: "/planning/versions/:schedule_version_id/gantt/factory",
+    label: "Factory Gantt",
+    view: "GANTT",
+    scheduleScoped: true,
+  },
+  {
+    path: "/planning/versions/:schedule_version_id/gantt/workshops",
+    label: "Workshop Gantt",
+    view: "GANTT",
+    scheduleScoped: true,
+  },
+  {
+    path: "/planning/versions/:schedule_version_id/gantt/machines",
+    label: "Machine Gantt",
+    view: "GANTT",
+    scheduleScoped: true,
+  },
   { path: "/operations", label: "Operations", view: "OPERATIONS", scheduleScoped: true },
   { path: "/resources", label: "Resources", view: "RESOURCES", scheduleScoped: true },
   { path: "/calendars", label: "Calendars", view: "CALENDARS", scheduleScoped: true },
@@ -30,12 +48,21 @@ export const workspaceRoutes: readonly WorkspaceRouteDefinition[] = [
   { path: "/kpi", label: "KPI", view: "KPI", scheduleScoped: true },
   { path: "/diagnostics", label: "Diagnostics", view: "DIAGNOSTICS", scheduleScoped: true },
   { path: "/audit", label: "Audit", view: "AUDIT", scheduleScoped: true },
+  {
+    path: "/resource-load",
+    label: "Resource Load",
+    view: "RESOURCE_LOAD",
+    scheduleScoped: true,
+  },
+  {
+    path: "/compare",
+    label: "Version comparison",
+    view: "VERSION_COMPARISON",
+    scheduleScoped: true,
+  },
 ] as const;
 
-export const excludedP311RouteFragments = [
-  "gantt",
-  "resource-load",
-  "comparison",
+export const excludedP312RouteFragments = [
   "commands",
   "approve",
   "reject",

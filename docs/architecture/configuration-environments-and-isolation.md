@@ -237,3 +237,9 @@ Production bundle只接受same-origin默认`/api/v1`或显式base URL，并把pl
 Implementation `567e8693db881ea3dfffa011de9021fef9641361` / artifact `9552386549`已复验runtime isolation、default no-token/no storage与Production non-synthetic boundary；真实identity、gateway、hosting和Production deployment仍未形成。
 
 Session provider默认无token，client使用`credentials=omit`、`cache=no-store`且不读写local/session storage或cookie。真实OIDC/session、CORS/CSRF、gateway base URL和Production deployment仍由OPEN-010/015及后续授权决定。
+
+## TASK-P3-12 browser isolation
+
+Gantt/load/comparison沿用P3-11 Production-only runtime与default no-token session，不新增env var、Secret、base URL switch、Simulation navigation、service、database、container或deployment。Playwright只在ephemeral Vite/Chromium进程中拦截same-origin request；`VERSIONED_SYNTHETIC_UI_120@1.0.0`使用Production-shaped mock carrier是为了验证Frontend runtime contract，不表示真实Production数据、authority或connected environment。
+
+Comparison POST仍使用`credentials=omit`/`cache=no-store`、Bearer只来自内存provider且没有Idempotency-Key；authorization denied保持显式页面状态。Browser install、screenshots/traces/video和bundle均为development CI artifact，不进入Production image或data plane；OPEN-010/015、真实identity/gateway/hosting与Production isolation证据未形成。

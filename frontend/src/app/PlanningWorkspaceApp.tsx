@@ -7,6 +7,9 @@ import { ScheduleVersionPage } from "../pages/ScheduleVersionPage";
 import { ValidationPage } from "../pages/ValidationPage";
 import { WorkspaceCollectionPage } from "../pages/WorkspaceCollectionPage";
 import { WorkspaceStatePanel } from "../components/WorkspaceStatePanel";
+import { GanttPage } from "../features/gantt/GanttPage";
+import { ResourceLoadPage } from "../features/resource-load/ResourceLoadPage";
+import { VersionComparisonPage } from "../features/version-comparison/VersionComparisonPage";
 
 const { Content, Header, Sider } = Layout;
 const { Text, Title } = Typography;
@@ -65,6 +68,18 @@ export function PlanningWorkspaceApp() {
               }
             />
             <Route
+              path="/planning/versions/:schedule_version_id/gantt/factory"
+              element={<GanttPage grouping="factory" />}
+            />
+            <Route
+              path="/planning/versions/:schedule_version_id/gantt/workshops"
+              element={<GanttPage grouping="workshop" />}
+            />
+            <Route
+              path="/planning/versions/:schedule_version_id/gantt/machines"
+              element={<GanttPage grouping="machine" />}
+            />
+            <Route
               path="/operations"
               element={
                 <WorkspaceCollectionPage
@@ -113,12 +128,14 @@ export function PlanningWorkspaceApp() {
               path="/audit"
               element={<WorkspaceCollectionPage title="Audit" view="AUDIT" scheduleScoped />}
             />
+            <Route path="/resource-load" element={<ResourceLoadPage />} />
+            <Route path="/compare" element={<VersionComparisonPage />} />
             <Route
               path="*"
               element={
                 <WorkspaceStatePanel
                   state="contract_error"
-                  detail="This route is outside the P3-11 read-only inventory."
+                  detail="This route is outside the P3-12 read-only inventory."
                 />
               }
             />

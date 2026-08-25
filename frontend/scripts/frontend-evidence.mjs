@@ -1,4 +1,4 @@
-import { readdirSync, readFileSync, statSync } from "node:fs";
+import { existsSync, readdirSync, readFileSync, statSync } from "node:fs";
 import { spawnSync } from "node:child_process";
 import { join, relative } from "node:path";
 
@@ -39,6 +39,9 @@ const expectedRoutes = [
   "/planning/runs/:planning_run_id",
   "/planning/versions/:schedule_version_id",
   "/planning/versions/:schedule_version_id/orders",
+  "/planning/versions/:schedule_version_id/gantt/factory",
+  "/planning/versions/:schedule_version_id/gantt/workshops",
+  "/planning/versions/:schedule_version_id/gantt/machines",
   "/operations",
   "/resources",
   "/calendars",
@@ -46,6 +49,17 @@ const expectedRoutes = [
   "/kpi",
   "/diagnostics",
   "/audit",
+  "/resource-load",
+  "/compare",
+];
+
+const requiredVisualizationFiles = [
+  "src/features/gantt/GanttPage.tsx",
+  "src/features/gantt/GanttTimeline.tsx",
+  "src/features/resource-load/ResourceLoadPage.tsx",
+  "src/features/version-comparison/VersionComparisonPage.tsx",
+  "e2e/read-only-visualizations.spec.ts",
+  "playwright.config.ts",
 ];
 
 function fail(condition, message, issues) {
@@ -110,8 +124,8 @@ checks.push(completedCheck("TYPESCRIPT-ESLINT-PEER", "8.68.0 / 10.9.1 / 6.0.3 wi
 const inventory = readFileSync("src/app/routeInventory.ts", "utf8");
 for (const route of expectedRoutes) fail(inventory.includes(`\"${route}\"`), `route absent: ${route}`, issues);
 const pathCount = [...inventory.matchAll(/path:\s*"\//gu)].length;
-fail(pathCount === 13, `route inventory contains ${pathCount}, expected 13`, issues);
-checks.push(completedCheck("READ-ONLY-ROUTES", "13 exact P3-11 routes"));
+fail(pathCount === 18, `route inventory contains ${pathCount}, expected 18`, issues);
+checks.push(completedCheck("READ-ONLY-ROUTES", "18 exact P3-12 routes"));
 
 const sourceFiles = files("src");
 const combined = sourceFiles.map((path) => readFileSync(path, "utf8")).join("\n");
@@ -124,16 +138,66 @@ for (const forbidden of [
   "SET_LOCK",
   "REMOVE_LOCK",
   "REQUEST_EXPORT",
+  "Idempotency-Key",
 ]) {
   fail(!combined.includes(forbidden), `forbidden client authority/token surface: ${forbidden}`, issues);
 }
 checks.push(completedCheck("CLIENT-AUTHORITY", "no token persistence or command carrier"));
 
 const sourcePaths = sourceFiles.map((path) => relative("src", path).replaceAll("\\", "/"));
-for (const fragment of ["gantt", "resource-load", "comparison", "locks", "commands", "actions"] ) {
-  fail(!sourcePaths.some((path) => path.toLowerCase().includes(fragment)), `P3-12/13 module present: ${fragment}`, issues);
+for (const fragment of ["commands", "actions", "replan", "change-report", "execution-event"] ) {
+  fail(!sourcePaths.some((path) => path.toLowerCase().includes(fragment)), `P3-13/P4 module present: ${fragment}`, issues);
 }
-checks.push(completedCheck("PHASE-BOUNDARY", "no Gantt/load/comparison/control/P4 module"));
+for (const path of requiredVisualizationFiles) {
+  fail(existsSync(path), `required visualization evidence file absent: ${path}`, issues);
+}
+checks.push(completedCheck("VISUALIZATION-MODULES", "Gantt/load/comparison/browser modules present"));
+
+const contracts = readFileSync("src/api/contracts.ts", "utf8");
+for (const contract of [
+  "GANTT_SEGMENT",
+  "RESOURCE_LOAD",
+  "VERSION_COMPARISON",
+  "unsupported server change kind",
+  "canonical complete payload",
+]) {
+  fail(contracts.includes(contract), `strict visualization contract absent: ${contract}`, issues);
+}
+const client = readFileSync("src/api/client.ts", "utf8");
+fail(client.includes('"/schedule-version-comparisons"'), "comparison read-query endpoint absent", issues);
+fail(!client.includes("/commands"), "client command endpoint was introduced", issues);
+checks.push(completedCheck("SERVER-AUTHORITY", "strict payloads and comparison read-query only"));
+
+const browserReportPath = "../build/playwright/results.json";
+let browserSpecs = [];
+if (!existsSync(browserReportPath)) {
+  issues.push("Playwright JSON evidence is absent");
+} else {
+  const browserReport = JSON.parse(readFileSync(browserReportPath, "utf8"));
+  const visit = (suites) => {
+    for (const suite of suites ?? []) {
+      browserSpecs.push(...(suite.specs ?? []));
+      visit(suite.suites);
+    }
+  };
+  visit(browserReport.suites);
+  fail(browserReport.errors?.length === 0, "Playwright report contains top-level errors", issues);
+  fail(browserSpecs.length === 4, `Playwright spec count is ${browserSpecs.length}, expected 4`, issues);
+  for (const spec of browserSpecs) {
+    const results = (spec.tests ?? []).flatMap((test) => test.results ?? []);
+    fail(spec.ok === true && results.some((result) => result.status === "passed"), `Playwright spec failed: ${spec.title}`, issues);
+  }
+}
+const browserSource = readFileSync("e2e/read-only-visualizations.spec.ts", "utf8");
+fail(browserSource.includes("syntheticSegmentCount = 120"), "120-row browser scale fixture absent", issues);
+fail(browserSource.includes("toBeLessThanOrEqual(24)"), "virtual row mount boundary absent", issues);
+const playwrightConfig = readFileSync("playwright.config.ts", "utf8");
+for (const retention of ['trace: "retain-on-failure"', 'screenshot: "only-on-failure"', 'video: "retain-on-failure"']) {
+  fail(playwrightConfig.includes(retention), `browser failure retention drifted: ${retention}`, issues);
+}
+checks.push(completedCheck("BROWSER-EVIDENCE", `${browserSpecs.length}/4 read-only Chromium specs`));
+
+checks.push(completedCheck("PHASE-BOUNDARY", "no control/P4 module, client authority or Production claim"));
 
 const assets = files("dist/assets");
 const javascriptBytes = assets
@@ -147,19 +211,35 @@ fail(cssBytes > 0 && cssBytes <= 250_000, `CSS bundle bytes ${cssBytes} exceed d
 checks.push(completedCheck("BUILD-OBSERVATION", `${javascriptBytes} JS bytes / ${cssBytes} CSS bytes`));
 
 const report = {
-  report_version: "p3-frontend-report.v1",
-  task: "TASK-P3-11",
+  report_version: "p3-frontend-visualization-report.v1",
+  task: "TASK-P3-12",
   code_commit: codeCommit(),
-  diff_base: "26dd519b1f1f84e08d415cfdfce43f286fa82988",
+  diff_base: "3bca1cc10ebedc4d47227bafb2f3f66854ccb526",
   status: issues.length === 0 ? "PASS" : "FAIL",
   direct_dependency_count: Object.keys(runtimePins).length + Object.keys(developmentPins).length,
   route_count: pathCount,
   state_count: 7,
   source_file_count: sourceFiles.length,
   bundle: { javascript_bytes: javascriptBytes, css_bytes: cssBytes },
+  render_observation: {
+    profile: "VERSIONED_SYNTHETIC_UI_120@1.0.0",
+    total_gantt_rows: 120,
+    mounted_visual_row_boundary: 24,
+    browser_spec_count: browserSpecs.length,
+    production_sla_asserted: false,
+  },
+  frozen_inputs: {
+    read_model_closure: "67d38d030f8b129de7f1b2f6e5b75bd706655396",
+    comparison_fingerprint: "sha256:5a24b392ff6064de06f9ba8eaa5112dc66a8a8a3b6c370650706cb2a1a4145dc",
+    api_closure: "26dd519b1f1f84e08d415cfdfce43f286fa82988",
+    openapi_fingerprint: "sha256:fbabcc5b9005f5ec22f3a6e8b6351bcf0469dbaa176682caa954191c0d697b36",
+    frontend_foundation_closure: "3bca1cc10ebedc4d47227bafb2f3f66854ccb526",
+  },
   boundaries: {
     read_only: true,
-    browser_e2e_formed: false,
+    browser_e2e_formed: true,
+    command_or_action_ui_formed: false,
+    client_solver_validator_kpi_formed: false,
     production_identity_formed: false,
     p4_formed: false,
     production_readiness: false,

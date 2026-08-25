@@ -412,3 +412,9 @@ TASK-P3-10实际命中7行：`IMPACT-API/STATE/INFRA/TESTS/PHASE/GOVERNANCE-REGI
 Schema/sample/rules、migration、Python dependency/`uv.lock`、Backend domain/application/repository/API semantics、state machine、Solver/Validator、P3-12+、P4与Production deployment必须零差异。`docs/domain/state-machines/schedule-version.md`、`docs/planning/replanning.md`、`docs/planning/schedule-validator.md`和Task Template由Impact Rule复核但无语义变化，允许保持零diff；不得为增加row而改写历史。兼容门禁固定为`typescript-eslint=8.68.0`/`eslint=10.9.1`/`typescript=6.0.3`及TypeScript peer `>=4.8.4 <6.1.0`。
 
 Implementation artifact `9552386549`精确复现74 committed/0 working paths、上述六行、19 checks、0 issues且无额外Impact row。Frontend exact files、required workflow和只读CI contract是唯一代码/CI变化，全部冻结范围仍零差异，故本closure可把Task标为`done`且不启动P3-12。
+
+## TASK-P3-12 impact review
+
+完整Diff base=`3bca1cc10ebedc4d47227bafb2f3f66854ccb526`，实际预期只命中六行：`IMPACT-FRONTEND`（strict visualization contracts/client、Gantt/load/comparison、routes/styles）、`IMPACT-INFRA`（既有required job增加Chromium install/read-only E2E且artifact always收集Playwright）、`IMPACT-TESTS`、`IMPACT-PHASE`、`IMPACT-GOVERNANCE-REGISTRY`（新增有界SIM-ASSUMPTION-014）和`IMPACT-DOCS`。Task卡逐字allow-list是完整可变范围。
+
+Schema/sample/rules、migration/database、Python dependency/`uv.lock`、`frontend/package-lock.json`及24个pins、Backend domain/application/repository/API semantics、state machine、Solver/Validator/KPI算法、P2 fixture/baseline、command/action、P4与Production deployment/identity/authority必须零差异。`docs/domain/state-machines/schedule-version.md`、`docs/planning/replanning.md`、`docs/planning/schedule-validator.md`、Task Template与ADR索引由Impact Rule复核但无语义变化，允许保持零diff。Local evidence为type/lint、37 Vitest、4/4 Chromium、12/12 machine及package-lock零diff；exact Task diff/provider结果形成前Task保持`in_progress`。

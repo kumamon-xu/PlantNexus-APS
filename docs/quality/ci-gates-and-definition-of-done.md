@@ -337,3 +337,15 @@ Dependency Gate逐字拒绝direct range、lock drift、High/Critical advisory、
 当前本地Frontend Gate为npm ci、SCA、license、lint、typecheck、25/25 tests、build和9/9 machine PASS；SCA 0 advisory、license 336 package/0 issue、bundle 944682 JS/1365 CSS bytes。CI contract 28项、Python全仓604项、全部历史machine/P2 Gate/XS、Compose及build均PASS，并要求official registry lock、exact compatibility peers、无Playwright browser install及全部non-skippable commands。任何本地结果都不替代provider。
 
 Implementation provider Gate已通过：SHA `567e8693db881ea3dfffa011de9021fef9641361`、run `32818657951`、required `validate` job/check `97712018632`（app `15368`）均success且全部steps通过；artifact `9552386549`未过期，103338 bytes，digest=`sha256:8d558b57453db04cb32ad55d8a42ff738b215100071f2564d46d185a78631aea`、expiry=`2026-11-23T06:49:23Z`。下载复核32/32 JSON顶层PASS，Frontend 9/9、SCA 0、license 336/0与Task 74 committed/0 working paths、6 rows、19 checks、0 issues均绑定同一SHA；TASK-P3-11 bounded DoD完成。该Gate不形成P3-12/13 browser/control、真实identity、P4或Production readiness，也不自动授权P3-12。
+
+## TASK-P3-12 required visualization and browser evidence
+
+Required `validate`继续使用Node `24.19.0`/npm `11.17.0`及冻结24个direct pins/lock，新增non-skippable Chromium `install --with-deps`和`test:e2e`步骤，再执行build与`p3-frontend-visualization-report.v1`。Frontend report必须为TASK-P3-12、Diff base `3bca1cc10ebedc4d47227bafb2f3f66854ccb526`、12/12 checks、18 routes、4 browser specs、120 total/最多24 mounted Gantt rows、28 source files、command/client-authority/P4/Production flags为false且`issues=[]`。Playwright JSON、失败screenshot/trace/video和Task report由同一`if: always()` artifact上传。
+
+Dependency Gate保持P3-11边界，尤其`typescript-eslint=8.68.0`/`eslint=10.9.1`/`typescript=6.0.3`、peer `>=4.8.4 <6.1.0`、package-lock逐字零差异；本Task不得引入Gantt/virtualization依赖。Read-only Gate拒绝command/action endpoint、Idempotency-Key comparison、client Solver/Validator/KPI/Resource Load/delta计算、P4与Production claim。
+
+Runner ownership Gate要求Vitest显式排除`e2e/**`、Playwright只运行该目录；这是防止同一spec被两个runner误收集的bounded script调整，不允许skip、`only`、降低assertion或改变dependency/lock。
+
+当前local typecheck、lint、9 files/37 Vitest、build、4/4 Chromium与12/12 machine PASS，包含response↔outbound query/correlation/Version-pair负向绑定；bundle观察为1030697 JS/4106 CSS bytes。首轮browser为2/4，原因是测试locator对同名heading/link不唯一；收紧role后4/4，首轮失败截图/video/trace已保留且没有隐藏产品row或降低行为边界。Local PASS不替代provider；push后必须核验exact SHA required run/job/app并下载artifact核对Task/SHA/base、六个Impact rows、SIM-ASSUMPTION-014、全部checks/issues，成功后才可evidence-only closure且不得自动启动P3-13。
+
+完整local Gate同时通过npm locked install、SCA 0 advisory、336 package license/0 issue、604 Python tests、Ruff/Pyright、全部32份required validation JSON、P2 XS 8/8与vertical Gate 11/11、Compose、Python build、full docs及55-path/6-row/19-check/0-issue Task diff。Provider字段在真实implementation push前不得预填。

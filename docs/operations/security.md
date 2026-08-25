@@ -99,3 +99,9 @@ Browser client仅GET、`credentials=omit`、`cache=no-store`，token只能由内
 Artifact `9552386549`复验SCA 0 vulnerability、336 package license/0 issue、no-token persistence与Production non-synthetic boundary。真实OIDC/SSO/RBAC、CSP/WAF、browser matrix、Production threat model和security approval仍未形成，OPEN-010/015保持OPEN。
 
 Dependency Gate锁定24个direct pins和npm v3 integrity，SCA当前0 advisory，336个locked package license无unknown/deny-listed项；用户批准的typescript-eslint固定组与peer被lock/CI contract复验。这不是CSP/XSS penetration、real session/OIDC、CSRF/CORS、gateway/WAF、browser matrix或Production threat-model证据，OPEN-010/015和RISK-011～013不关闭。
+
+## TASK-P3-12 visualization security boundary
+
+新增页面继续依赖React text rendering与strict runtime parser，不使用raw HTML、eval、local/session storage或cookie。Gantt/load只GET；comparison POST严格属于read-query，先校验两个Version exact reference、不带Idempotency-Key，也不装配commands/approve/reject/publish/export carrier。Authorization、stale、contract和server failure均显式可见，不用cached/synthetic empty伪装成功。
+
+Read-only Chromium覆盖authorization denial和no-command/no-idempotency transport；source/machine scan验证client Solver/Validator/KPI/Resource Load/delta authority及P4/control模块不存在。该bounded evidence不等于CSP/XSS penetration、真实session/OIDC/RBAC、CSRF/CORS、gateway/WAF、browser matrix或Production threat-model approval；OPEN-010/015与RISK-011～013继续保持原状态。

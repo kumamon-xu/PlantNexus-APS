@@ -110,3 +110,9 @@ P3 transition时只新增`docs/tasks/P3/`中的16张Task卡；当时没有创建
 `frontend/src/api`只拥有canonical query、checked read carrier、GET client、runtime/session boundary；`frontend/src/app`只组合router/query cache；`components/pages`只显示server projection和状态。`frontend/scripts`只生成SCA/license/build boundary evidence，`frontend/tests`使用in-memory versioned carrier且不安装browser。`dist/node_modules/coverage/*.tsbuildinfo`均ignored；仓库没有新增SSR/server、Gantt/load/comparison/control或P4目录。
 
 Implementation artifact `9552386549`精确复验上述23个source files、13 routes、7 states和read-only/P4/Production absence；Task=`done`。该layout事实不授权P3-12/13新增目录或Production hosting。
+
+## TASK-P3-12 visualization layout
+
+新增`frontend/src/features/gantt/{GanttPage,GanttTimeline}.tsx`、`features/resource-load/ResourceLoadPage.tsx`、`features/version-comparison/VersionComparisonPage.tsx`、`app/useWorkspaceView.ts`、三个focused Vitest文件、`e2e/read-only-visualizations.spec.ts`与`playwright.config.ts`；既有API/app/routes/styles/tests/evidence script按Task allow-list扩展。`frontend/package.json`只增加E2E命令，`package-lock.json`与24个pins零差异；`node_modules/dist/test-results/coverage/*.tsbuildinfo`及machine/browser artifacts保持ignored。
+
+Backend仅既有CI contract test核对required workflow接线；没有新增或修改business/API module、Schema、migration、dependency、command/action、P4或Production hosting目录。Local machine报告识别28个Frontend source files、18 routes和7 states；exact provider形成前该layout slice仍为`in_progress`。

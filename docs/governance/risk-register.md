@@ -181,3 +181,7 @@ Exact pins/lock、High/Critical advisory阻断、license allow/deny与fixed peer
 这些控制已由下述implementation/provider复验，但仍不能关闭浏览器真实兼容性、identity/gateway、XSS/CSP、network、capacity/SLA或Production hosting风险。RISK-001～013全部继续`MONITORED`，severity/status和`registry_version=1.0.0`不变。
 
 Implementation artifact `9552386549`以npm ci、SCA 0 advisory、336 package license、peer/lock、25 tests和source boundary scan复验bounded controls；真实browser/security环境仍待P3-13或后续证据。全部13项风险继续MONITORED，severity/status不降低。
+
+## TASK-P3-12 local risk review
+
+Strict server payload/reference检查、comparison read-query no-idempotency boundary、no-command source scan、read-only Chromium negative场景与Production-shaped mock fixture声明继续加强RISK-007/013；exact pins/lock零差异继续加强RISK-011；120/24 render与bundle值明确只作development observation继续约束RISK-009。尚无真实Production data/identity/browser matrix/capacity/SLA或action UI provider，不能把任何风险标记为MITIGATED/CLOSED。RISK-001～013全部保持`MONITORED`，`registry_version=1.0.0`不变。

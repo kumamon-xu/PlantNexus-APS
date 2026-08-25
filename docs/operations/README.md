@@ -190,3 +190,9 @@ API process现提供health与17个P3 route的composition seam，但默认applica
 Run `32818657951` / required job `97712018632`已逐步成功执行该链；artifact `9552386549`复验Frontend/SCA/license/Task reports均PASS。该命令链只属于development CI，不是Production deploy、hosting、rollback或support runbook。
 
 生成的`node_modules/dist/coverage/*.tsbuildinfo`与JSON report均不提交。Frontend bundle不是deployment，默认session无token且Backend application仍可fail closed；没有Production hosting、CDN、runtime secret、runbook、SLO或rollback authority形成。
+
+## TASK-P3-12 browser evidence operations
+
+在P3-11 locked chain后执行`npm --prefix frontend exec -- playwright install --with-deps chromium`、`npm --prefix frontend run test:e2e`、build与visualization evidence。Playwright配置单worker、read-only Vite、JSON report，并对失败保留trace/video/screenshot；required workflow的machine artifact step使用`if: always()`收集`build/playwright/**`，不能因前置失败跳过诊断证据。
+
+Local首轮2/4因strict locator歧义失败，失败介质保留后收紧role断言并4/4通过；不得删除row、skip spec或以截图替代behavior。该命令链不连接Production API/identity、不会执行command/action或写ScheduleVersion，也不形成deployment、support runbook、browser matrix、SLO或rollback authority；exact provider成功前TASK-P3-12保持`in_progress`。

@@ -236,4 +236,10 @@ P3-09依赖方向为`domain.export_job`→ports-only`application.export_jobs`→
 
 Frontend只比较carrier reference和server完整payload item的一致性，保留server fingerprint authority；它不依据payload重算KPI/Resource Load或授权动作。TanStack Query只是transport cache，server state/precondition/error覆盖缓存。P3-12/13不得把Gantt/control逻辑塞回P3-11模块。
 
+## TASK-P3-12 Frontend visualization boundary
+
+`frontend/src/api`只扩展strict visualization types/query/parser与comparison read-query transport；`app/useWorkspaceView`集中Version precondition、query state和七类页面状态；`features/gantt`、`features/resource-load`、`features/version-comparison`只做presentation、server filter与navigation。`GanttTimeline`拥有windowing/pixel layout和可访问table，但不拥有duration、feasibility、KPI、load或delta算法。
+
+Comparison唯一POST仍属于read operation且明确无Idempotency-Key；feature不得导入command/action模块。Playwright只经mock network验证browser consumer并不连接repository/application service。Dependency方向、P3-10 backend API、state machine和24个pins/lock均不变；P3-13 control不得反向把mutation塞入这些read-only模块，P4与Production adapters仍不存在。
+
 Artifact `9552386549`以source boundary scan、GET/client tests和9/9 machine checks复验该依赖方向，Task=`done`；这不形成command/browser E2E、external或Production边界。

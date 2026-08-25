@@ -37,7 +37,7 @@ export function ScheduleVersionPage() {
       <Alert
         type="info"
         showIcon
-        message="Read-only P3-11 boundary"
+        title="Read-only P3-12 boundary"
         description="Server allowed_actions are displayed as facts; no action control is mounted."
       />
       <ScheduleVersionPanel version={query.data} />
@@ -52,6 +52,23 @@ export function ScheduleVersionPage() {
         <Link to={`/kpi${search}`}>KPI</Link>
         <Link to={`/diagnostics${search}`}>Diagnostics</Link>
         <Link to={`/audit${search}`}>Audit</Link>
+        <Link
+          to={`/planning/versions/${encodeURIComponent(query.data.schedule_version_id)}/gantt/factory`}
+        >
+          Factory Gantt
+        </Link>
+        <Link
+          to={`/planning/versions/${encodeURIComponent(query.data.schedule_version_id)}/gantt/workshops`}
+        >
+          Workshop Gantt
+        </Link>
+        <Link
+          to={`/planning/versions/${encodeURIComponent(query.data.schedule_version_id)}/gantt/machines`}
+        >
+          Machine Gantt
+        </Link>
+        <Link to={`/resource-load${search}`}>Resource Load</Link>
+        <Link to={`/compare${search}`}>Version comparison</Link>
       </Space>
     </article>
   );

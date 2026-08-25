@@ -1,12 +1,12 @@
 ---
 doc_id: TASK-P3-12
 title: Gantt Resource Load and Version Comparison UI
-status: planned
+status: in_progress
 spec_version: 0.3.0
 phase: P3
 normative: true
 source_sections: [4, 68, 69, 77, 78]
-last_reviewed: 2026-08-24
+last_reviewed: 2026-08-25
 ---
 
 # TASK-P3-12 — Gantt Resource Load and Version Comparison UI
@@ -27,11 +27,15 @@ Non-goals: 不提交edit/lock/approve/publish/export命令，不在浏览器计�
 
 Inputs: workspace read models/API、P3 page/Gantt contracts、frontend foundation。
 
-Diff base: set only when this Task enters in_progress; must be the immediate full 40-character HEAD
+Diff base: 3bca1cc10ebedc4d47227bafb2f3f66854ccb526
 
-Files allowed to change: `frontend/src/features/gantt/**`、`frontend/src/features/resource-load/**`、`frontend/src/features/version-comparison/**`、相关routes/components/tests、Playwright read-only specs（若tooling已由P3-11形成）及`Documents to update`；激活前固定实际路径。
+Activation evidence: 用户于2026-08-25明确授权执行TASK-P3-12。启动复核确认`main=origin/main=HEAD=3bca1cc10ebedc4d47227bafb2f3f66854ccb526`、ahead/behind=`0/0`且working tree clean；TASK-P3-05/10/11均为`done`且其implementation与evidence-only closure提交均为当前HEAD祖先。三项closure required run/job/artifact分别为P3-05 `32707242260`/`97370830393`/`9512779675`、P3-10 `32812850599`/`97695423162`/`9550448943`、P3-11 `32819640902`/`97714885416`/`9552720216`，均为push、`completed/success`、未过期并由GitHub Actions app `15368`提供branch protection唯一required `validate`。下载复核分别为24/29/32份可解析JSON且顶层全PASS；Task报告依次为50/51/74 committed、0 working paths，7/7/6 Impact rows、19 checks、0 issues。该HEAD因此冻结为完整Task range不可变Diff base。
 
-Files forbidden to change: backend/Schema/migration/dependency lock（除非激活前批准必要Gantt库exact pin）、command/action UI、Solver/Validator/KPI算法、P4。
+Frozen consumer contracts: P3-05 read-model closure报告为8/8、14 views、Gantt 4、Resource Load 2、comparison fingerprint=`sha256:5a24b392ff6064de06f9ba8eaa5112dc66a8a8a3b6c370650706cb2a1a4145dc`且query/comparison Solver调用为0；P3-10 HTTP报告为8/8、17 paths/operations、OpenAPI fingerprint=`sha256:fbabcc5b9005f5ec22f3a6e8b6351bcf0469dbaa176682caa954191c0d697b36`，comparison只允许`POST /api/v1/schedule-version-comparisons` read-query与双Version exact precondition，不得携带Idempotency-Key或调用command端点；P3-11 closure冻结24个direct pins、Node `24.19.0`、npm `11.17.0`、`typescript-eslint=8.68.0`/`eslint=10.9.1`/`typescript=6.0.3`兼容组、13条foundation route和七种UI状态。本Task不升级任何依赖、不改lock，只在既有Playwright `1.62.1`上形成只读browser evidence。
+
+Files allowed to change: `frontend/package.json`、`frontend/playwright.config.ts`、`frontend/scripts/frontend-evidence.mjs`、`frontend/src/api/client.ts`、`frontend/src/api/contracts.ts`、`frontend/src/api/query.ts`、`frontend/src/api/types.ts`、`frontend/src/app/PlanningWorkspaceApp.tsx`、`frontend/src/app/routeInventory.ts`、`frontend/src/app/useWorkspaceView.ts`、`frontend/src/components/WorkspaceStatePanel.tsx`、`frontend/src/pages/ScheduleVersionPage.tsx`、`frontend/src/features/gantt/GanttPage.tsx`、`frontend/src/features/gantt/GanttTimeline.tsx`、`frontend/src/features/resource-load/ResourceLoadPage.tsx`、`frontend/src/features/version-comparison/VersionComparisonPage.tsx`、`frontend/src/styles/app.css`、`frontend/tests/accessibility.test.tsx`、`frontend/tests/apiClient.test.ts`、`frontend/tests/fixtures.ts`、`frontend/tests/ganttTimeline.test.tsx`、`frontend/tests/routeInventory.test.ts`、`frontend/tests/visualizationContracts.test.ts`、`frontend/tests/visualizationPages.test.tsx`、`frontend/tests/workspaceStates.test.tsx`、`frontend/e2e/read-only-visualizations.spec.ts`、`.github/workflows/ci.yml`、`backend/tests/integration/test_ci_contract.py`及下方`Documents to update`逐字路径。以上是完整可执行allow-list；build、browser、coverage、`node_modules`、`*.tsbuildinfo`与machine reports只允许生成在ignored路径，不得提交。
+
+Files forbidden to change: 上述单个CI contract test之外的`backend/**`、全部Schema/sample/rules、migration/database、`pyproject.toml`/`uv.lock`、`frontend/package-lock.json`及任何dependency pin、command/action UI、Solver/Validator/KPI算法、P2 fixture/benchmark/baseline、P4+与Production deployment/identity/authority。
 
 Implementation steps: 时间轴/row virtualization；zoom/filter/select/link；resource load/order cross-highlight；comparison changed/unchanged view；server-provided KPI/diagnostic display；keyboard/screen-reader/table fallback；large synthetic render tests；no-business-logic scan。
 
@@ -39,11 +43,11 @@ Outputs: Gantt/resource load/comparison UI与component/visual/E2E evidence。
 
 Documentation impact: required
 
-Documents to update: `docs/frontend/README.md`、`docs/frontend/planning-workspace.md`、`docs/frontend/gantt-command-contract.md`、`docs/contracts/planning-workspace-api.md`、`docs/architecture/module-boundaries.md`、`docs/domain/state-machines/schedule-version.md`、`docs/planning/schedule-validator.md`、`docs/quality/test-strategy-and-matrix.md`、`docs/quality/ci-gates-and-definition-of-done.md`、全部governance/trace/risk/impact/inventory必审文档、本Task卡。
+Documents to update: `docs/current_phase.md`、`docs/milestones/README.md`、`docs/milestones/P3-planning-workspace.md`、`docs/tasks/README.md`、`docs/tasks/TASK_TEMPLATE.md`、`docs/tasks/P3/TASK-P3-12-gantt-resource-load-and-version-comparison-ui.md`、`docs/frontend/README.md`、`docs/frontend/planning-workspace.md`、`docs/frontend/gantt-command-contract.md`、`docs/contracts/planning-workspace-api.md`、`docs/architecture/module-boundaries.md`、`docs/architecture/repository-layout.md`、`docs/architecture/configuration-environments-and-isolation.md`、`docs/architecture/technology-stack.md`、`docs/domain/state-machines/schedule-version.md`、`docs/planning/replanning.md`、`docs/planning/schedule-validator.md`、`docs/operations/README.md`、`docs/operations/security.md`、`docs/quality/test-strategy-and-matrix.md`、`docs/quality/ci-gates-and-definition-of-done.md`、`docs/quality/documentation-consistency-checks.md`、`docs/governance/requirements-register.md`、`docs/governance/nfr-and-engineering-register.md`、`docs/governance/traceability-rules.md`、`docs/governance/traceability-matrix.md`、`docs/governance/prod-open-register.md`、`docs/governance/sim-assumption-register.md`、`docs/governance/risk-register.md`、`docs/governance/change-impact-matrix.md`、`docs/governance/document-inventory.md`、`docs/adr/README.md`。由Impact Rule要求review但无语义变化的state/replanning/Validator/Task Template/ADR允许保持零diff，完成证据必须逐项说明。
 
 Documentation impact rationale: 核心P3可视化和版本比较改变用户信息架构、性能/可访问性与server-authority边界。
 
-Change-impact matrix rows reviewed: `IMPACT-FRONTEND`、`IMPACT-TESTS`、`IMPACT-PHASE`、`IMPACT-GOVERNANCE-REGISTRY`、`IMPACT-DOCS`
+Change-impact matrix rows reviewed: `IMPACT-FRONTEND`、`IMPACT-INFRA`、`IMPACT-TESTS`、`IMPACT-PHASE`、`IMPACT-GOVERNANCE-REGISTRY`、`IMPACT-DOCS`
 
 Traceability updates: REQ-003/004/005/007/009→TASK-P3-12→TEST-WORKSPACE-FRONTEND-001/TEST-WORKSPACE-READ-MODEL-001→Gantt/render/comparison report。
 
@@ -51,7 +55,7 @@ Schema changes: none；消费现有API payload。
 
 Migration: none。
 
-Dependency changes: none expected；若Gantt/virtualization新库不可避免，必须在activation前exact pin、lock/SCA并增加IMPACT/ADR审查。
+Dependency changes: none；使用P3-11冻结的React/Ant Design与`@playwright/test=1.62.1`，`package.json`只允许新增read-only E2E script，并让既有Vitest script显式排除`e2e/**`以避免两个runner重复收集同一Playwright spec；`package-lock.json`必须逐字不变。任何新Gantt/virtualization库或pin升级均超出本Task，必须停止并另行批准扩卡。
 
 ADR impact: none expected；任何client-side scheduling/derived authority或new rendering architecture先ADR。
 
@@ -63,9 +67,9 @@ Tests: TEST-WORKSPACE-FRONTEND-001、TEST-WORKSPACE-READ-MODEL-001；component/a
 
 Benchmark impact: versioned synthetic row/span/render/bundle observations；只设development regression boundary，不形成Production SLA。
 
-Simulation scenarios: 使用P2/P3 synthetic XS/S/M-like view数据但不改变Benchmark Profile或容量含义。
+Simulation scenarios: 使用`VERSIONED_SYNTHETIC_UI_120@1.0.0`（SIM-ASSUMPTION-014）的120-row只读render fixture；不改变P2 Benchmark Profile或容量含义。
 
-Acceptance commands: P3-11 npm locked/lint/type/test/build命令；read-only Playwright suite；Python/API contract回归；full/diff docs治理；`git diff --check`；backend/action/P4禁止diff。
+Acceptance commands: `npm --prefix frontend ci`；`npm --prefix frontend run audit:sca -- --report ../build/validation/ci-p3-frontend-sca.json`；`npm --prefix frontend run licenses:check -- --report ../build/validation/ci-p3-frontend-licenses.json`；`npm --prefix frontend run lint`；`npm --prefix frontend run typecheck`；`npm --prefix frontend test -- --run`；`npm --prefix frontend run build`；`npx --prefix frontend playwright install chromium`；`npm --prefix frontend run test:e2e`；`npm --prefix frontend run evidence -- --report ../build/validation/ci-p3-frontend.json`；`uv sync --locked`；`uv run ruff check .`；`uv run pyright backend/app backend/tests`；全仓八类pytest suites；全部既有machine reports/P2 Gate/XS Benchmark；`uv build`；`docker compose --env-file .env.example config --quiet`；`uv run python scripts/check_docs.py`；`uv run python scripts/check_docs.py --task docs/tasks/P3/TASK-P3-12-gantt-resource-load-and-version-comparison-ui.md --check-diff --report build/traceability/TASK-P3-12-report.json`；`git diff --check`；按Diff base核验backend业务、Schema/sample/rules、migration、dependency/lock、P2 bytes、action/P4/Production范围零差异。
 
 Artifacts: component/E2E/accessibility/render report、screenshots/traces（失败保留）、Task/provider report。
 
@@ -82,3 +86,17 @@ PROD_OPEN: OPEN-001/003/012保持OPEN；显示不猜timezone/topology/capacity�
 SIM_ASSUMPTIONS: 视图规模数据synthetic-only；若新增定量profile先登记。
 
 Rollback: UI可回退而不改server state；已发布payload/contract不随UI回退改写，dependency lock按versioned rollback处理。
+
+## Local implementation evidence
+
+Implementation-time scope clarification：Playwright规范固定在Task已允许的`frontend/e2e/read-only-visualizations.spec.ts`，Vitest默认glob会误收集该文件，因此同一已允许`frontend/package.json`除新增`test:e2e`外，把既有`test`命令收紧为`vitest --exclude e2e/**`。这只分离两个既有runner的测试所有权，不改变assertion、dependency pin/lock、CI required job或产品行为；allow-list路径未扩张。
+
+Browser-review scope clarification：真实浏览器快照发现P3-12页面复用的`WorkspaceStatePanel`仍使用Ant Design 6已弃用的`Alert.message`并产生console error。先把该单一既有组件加入allow-list，再只做语义等价的`message`→`title`兼容替换；七类状态、copy、tests、dependency与阶段边界不变，其他component路径不扩张。
+
+截至2026-08-25，strict Gantt/Resource Load/Version Comparison payload与client、request/response query/correlation/Version-pair绑定、18条read-only route、三层Gantt、server filter/select/link、resource-load cross-link、server classification comparison、可访问完整table fallback、vertical windowing和read-only Chromium已形成。Local typecheck/lint、9个Vitest files/37 tests、build、4/4 Playwright及`p3-frontend-visualization-report.v1` 12/12 PASS；报告记录120 total/最多24 mounted rows、28 source files、1030697 JS/4106 CSS bytes、24 pins/lock零漂移与`issues=[]`。
+
+首轮Playwright为2/4，两个strict locator因同名heading/link产生多重匹配；失败截图/video/trace保留在ignored `build/playwright/local-failure-20260825-first-run/`，断言只收紧role后4/4 PASS，没有隐藏row、跳过spec或降低业务边界。CI使用`if: always()`收集`build/playwright/**`。这些均为local事实，exact implementation provider未形成，Task保持`in_progress`；P3-13 actions、P4与Production未启动。
+
+随后收紧response↔outbound binding时首轮Vitest为35 PASS/2 FAIL，原因是test fixture顶层correlation仍硬编码旧值；修正fixture使其回显request correlation后37/37 PASS，query/correlation/Version-pair负向断言全部保留。该本地失败不改产品阶段边界，也不得从历史中删去。
+
+完整local acceptance另通过`npm ci`、SCA 0 advisory、336 package license/0 issue、604 Python tests、Ruff/Pyright、32/32 required validation JSON、P2 XS 8/8与vertical Gate 11/11、Compose、Python package build、165-doc full governance及55 working paths/6 Impact rows/19 checks/0 issues Task diff。最终禁止差异核对确认Schema/sample/rules、migration/database、Python/Frontend locks、Backend business/API semantics、state machine、P2 bytes、command/action、P4与Production均零违规，`package-lock.json`与Diff base blob同为`6e053d1aa2db87fb789015f0a01807f326a0749f`；provider字段仍未预填。

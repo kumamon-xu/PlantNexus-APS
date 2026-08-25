@@ -187,3 +187,9 @@ REQ-003/004/005/007/009现分配到locked read-only Frontend consumer：只读�
 Activation时只完成依赖门禁冻结；当前implementation/provider已按下述证据闭环。全部15个root Requirement仍继续`ALLOCATED`，`registry_version=1.0.0`不变；真实identity、external/P4与Production behavior/readiness均未形成。
 
 Implementation `567e8693db881ea3dfffa011de9021fef9641361` / artifact `9552386549`以13条read-only route、Version/query checked adapter、authority/lineage UI、25项tests与9/9 machine形成上述consumer slice，并复现74-path治理链；没有Gantt/load/comparison/control或server行为变化。该bounded slice为provider-verified且Task=`done`，但root生命周期仍不提升、registry version不变。
+
+## TASK-P3-12 local requirement review
+
+REQ-003/004/005/007/009现进一步分配到只读Gantt、Resource Load、KPI/Diagnostics overlay与two-Version comparison consumer：三层Gantt只显示server UTC/tick/duration/resource/order事实，load只显示server utilization/seconds/count，comparison只显示server change kind/KPI delta/summary。Frontend通过GET workspace carrier与无`Idempotency-Key`的comparison read-query POST消费P3-05/10合同，并提供keyboard、screen-reader与完整table fallback。
+
+该slice不发送edit/lock/approve/reject/publish/export命令，不在browser重算Solver/Validator/KPI/Resource Load或comparison delta，不改变ScheduleVersion，不形成P4 ChangeReport/Replan或Production identity/authority/readiness。当前type/lint、37项Vitest、4项read-only Chromium与12/12 machine仅为local evidence；exact provider成功前TASK-P3-12保持`in_progress`。全部15个root Requirement继续`ALLOCATED`，`registry_version=1.0.0`不变。

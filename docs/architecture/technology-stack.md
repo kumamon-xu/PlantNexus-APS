@@ -283,3 +283,9 @@ TASK-P3-11以不可变Diff base `26dd519b1f1f84e08d415cfdfce43f286fa82988`首次
 point-in-time dependency Gate固定为`npm ci`、High/Critical advisory阻断及unknown/deny-listed license阻断；Playwright `1.62.1`本Task只作为exact-pinned foundation，不下载browser、不形成E2E或control workflow。Python dependency/`uv.lock`、Backend API/business semantics、Schema/migration、SSR/microfrontend、P4与Production hosting保持零变化。
 
 Implementation `567e8693db881ea3dfffa011de9021fef9641361` / artifact `9552386549`验证24个direct pins、npm lockfile v3、typescript-eslint peer边界及registry-integrity install；official npm advisory endpoint报告0 info/low/moderate/high/critical，license checker覆盖336个locked package且无unknown/deny-listed license。Production build观察为944682 JavaScript bytes与1365 CSS bytes；这是development ceiling内的point-in-time observation，不是Production SLA。P3-12/13任何升级仍须新的dependency review。
+
+## TASK-P3-12 visualization technology review
+
+本Task不引入Gantt/virtualization/chart library，也不升级任何pin；用React/TypeScript/CSS的固定row window、native table/progress和既有Ant Design/TanStack Query实现。`package-lock.json`逐字冻结，兼容门仍为`typescript-eslint=8.68.0`、`eslint=10.9.1`、`typescript=6.0.3`及peer `>=4.8.4 <6.1.0`。既有`@playwright/test=1.62.1`首次下载Chromium并在required Linux runner执行4条read-only E2E；这不改变dependency review或形成browser support matrix。
+
+Local build观察为1030697 JavaScript bytes与4106 CSS bytes，120-row profile最多mount 24个visual row；两者只属于development evidence，不是Production ceiling、SLA或capacity。CI仍为单一required `validate` job且只增加browser install/E2E与artifact路径，无Secret/service/container/deployment；Python dependency、Schema/migration、Backend/P4与Production hosting零变化。

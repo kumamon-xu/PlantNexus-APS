@@ -425,3 +425,11 @@ Full docs与Task diff检查必须逐字验证Node/npm/24个direct pins/lockfile 
 提交前working Task diff为74 paths、六行、19/19 checks、0 issue；full governance为165 docs/30 roots/30 trace rows/48 Test IDs/15 OPEN/13 SIM assumptions/13 risks/53 Tasks。Frontend machine报告为9/9、24 direct pins、13 routes、7 states、23 source files和0 boundary issue，SCA/license均顶层PASS；Frontend 25 tests、CI contract 28项、Python全仓604项、全部历史machine/P2 Gate/XS、Compose及build均已重跑通过。
 
 Implementation artifact `9552386549`中的Task report绑定`567e8693db881ea3dfffa011de9021fef9641361`与不可变Diff base，复现165 docs/30 roots/30 trace rows/48 tests/15 OPEN/13 SIM/13 risks/53 tasks、74 committed/0 working paths、6 rows、19 checks、0 issues；32/32 JSON和Frontend/SCA/license均PASS。本closure只写provider事实并不得启动TASK-P3-12；closure自身仍须exact provider，P4与Production均不在本Diff内。
+
+## TASK-P3-12 diff governance
+
+不可变Diff base=`3bca1cc10ebedc4d47227bafb2f3f66854ccb526`。完整union只允许命中`IMPACT-FRONTEND/INFRA/TESTS/PHASE/GOVERNANCE-REGISTRY/DOCS`六行；精确allow-list仅包含Task卡列出的visualization API/client/routes/features/styles/tests、read-only Playwright/config、单一required workflow、单个CI contract test与逐字治理文档。Schema/sample/rules、migration/database、Python dependency/lock、Frontend lock/pins、Backend business/API semantics、state machine、P2 bytes、actions、P4与Production路径必须冻结。
+
+Full docs与Task diff必须复验165 docs/30 roots/30 trace rows/48 Test IDs/15 OPEN/14 SIM assumptions/13 risks/53 Tasks，SIM-ASSUMPTION-014仅绑定versioned 120-row UI fixture。Frontend machine必须为12/12、18 routes、4/4 browser、120/24 render、24 pins/lock无漂移和0 issues；Task report必须绑定exact SHA/base、六行、全部checks和0 issues。Impact review还逐项确认state/replanning/Validator/Task Template/ADR无语义变化并保持零diff。
+
+当前local full governance为165 docs/30 roots/30 trace rows/48 Test IDs/15 OPEN/14 SIM/13 risks/53 Tasks，Task diff为55 working paths、6 Impact rows、19 checks、0 issues；604 Python tests、37 Frontend tests、4/4 Chromium、32/32 validation JSON、XS/P2 Gate、Ruff/Pyright/locked sync、SCA/license、Compose与build均PASS。Exact provider仍待implementation push后复核，故TASK-P3-12保持`in_progress`。Implementation和后续evidence-only closure都必须各自通过exact required validate/artifact复核，且不得自动启动P3-13、P4或Production。

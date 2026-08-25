@@ -189,3 +189,9 @@ Implementation `567e8693db881ea3dfffa011de9021fef9641361` / artifact `9552386549
 Response adapter逐字段检查version、view、result、unknown state、raw UTC、lineage、carrier item与完整payload item reference；query fingerprint由canonical projection复验。Payload fingerprint保留server authority并与carrier/reference逐字对齐，不从JSON.parse后的JavaScript number重新定义后端canonical lexical bytes。401/403、404/422、409、500/503/network分别进入authorization、contract、stale和server failure；任何失败均不伪造empty/ready。
 
 Session只来自注入provider且默认null；client不持久化/记录token、不发POST、不装配command/idempotency/action route。此consumer不改变17个operation、Schema/OpenAPI、Backend semantics或Production authority。
+
+## TASK-P3-12 visualization consumer
+
+Frontend现消费既有`GANTT`、`RESOURCE_LOAD`、`KPI`、`DIAGNOSTICS`和`VERSION_COMPARISON`投影。每个完整payload在runtime重新canonicalize并核对server `payload_fingerprint`，Gantt严格校验UTC/tick/duration与operation/order/resource/topology引用，load严格校验seconds/count/utilization，comparison严格校验version/reference/change kind/KPI delta/summary/fingerprint。Unknown enum、invalid timestamp、reference或fingerprint mismatch均进入contract error，不丢row或推断fallback业务事实。
+
+Two-Version consumer先GET compared Version，再以base/compared exact ID/state/content fingerprint调用既有`POST /api/v1/schedule-version-comparisons`；它不发送`Idempotency-Key`且不调用任何command/action route。P3-10的17 operations、OpenAPI fingerprint `sha256:fbabcc5b9005f5ec22f3a6e8b6351bcf0469dbaa176682caa954191c0d697b36`、Schema、router/application authority均零变化；P3-12 local browser evidence不形成new endpoint、P4 ChangeReport或Production API readiness。

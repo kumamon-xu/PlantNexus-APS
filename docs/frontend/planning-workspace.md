@@ -114,3 +114,11 @@ P3-11已在Diff base `26dd519b1f1f84e08d415cfdfce43f286fa82988`上激活，只�
 现有13条route与页面矩阵逐字一致。Workspace-level read构造URL-encoded canonical JSON `query`；schedule-scoped read先取得`schedule-version.v1`，再把exact identity/state/content fingerprint作为precondition。Consumer检查query fingerprint、carrier reference与完整payload item的identity/type/fingerprint一致；payload fingerprint本身保持server authority而不从解析后可能丢失number lexical form的JavaScript object重新定义canonical bytes。
 
 UI分别显示missing、found-empty、ready、stale、authorization、contract和server failure，保留raw UTC、Version/content/source/collection fingerprints、完整lineage和correlation；cursor只按server opaque value前后导航。Implementation `567e8693db881ea3dfffa011de9021fef9641361` / artifact `9552386549`复验25 tests、axe结构检查、type/lint/build、Frontend 9/9及74-path治理，Task=`done`。Playwright browser、Gantt/load/comparison、control、identity、P4和Production仍未形成。
+
+## TASK-P3-12 read-only visualization implementation
+
+ScheduleVersion详情现在链接到`/planning/versions/:id/gantt/factory`、`gantt/workshops`、`gantt/machines`；全局schedule-scoped route增加`/resource-load`和`/compare`，route总数为18。Gantt只把server提供的`start_at_utc/end_at_utc/start_tick/end_tick/duration_seconds`映射到pixel，按factory/workshop/resource分组，并把order/resource筛选重新发送server；选择只做cross-highlight与orders/operations/resources链接。384 px viewport、48 px row和overscan 4在120-row fixture中最多mount 24个visual row，完整语义table仍保留全部120项。
+
+Resource Load逐字显示server assignment count、busy/available seconds和utilization；Version Comparison先读取base/compared exact Version reference，再调用无Idempotency-Key的`POST /schedule-version-comparisons` read-query，只按server `change_kind`提供changed/unchanged/all presentation filter。KPI delta、summary、fingerprint、raw UTC与lineage均不在browser重算；partial page显式提示，invalid UTC/unknown change kind/contract mismatch fail visible。
+
+Local type/lint、37 Vitest、4/4 read-only Chromium、build和12/12 machine为PASS；负向测试还拒绝与outbound query fingerprint/correlation或requested Version pair不一致的完整响应，但这些结果不替代provider。P3-13仍独立负责edit/lock/approve/reject/publish/export actions；ExecutionEvent/ReplanRequest/freeze/OBJ-002/ChangeReport属于P4，真实identity/authority/deployment/capacity/SLA仍属于Production开放边界。

@@ -1,7 +1,7 @@
 ---
 doc_id: TASK-P3-08
 title: Idempotent Publication and Supersession
-status: in_progress
+status: done
 spec_version: 0.3.0
 phase: P3
 normative: true
@@ -75,7 +75,9 @@ Provider evidence: exact implementation/closure required validate/artifact；核
 
 Completion conditions: DRAFT/READY/REJECTED不可publish、仅authorized APPROVED可publish、PUBLISHED immutable、重试零重复、current/supersede原子；Production仍blocked；provider/docs闭环。
 
-Local implementation evidence: `app.domain.publication`与`app.application.publication/publication_check`形成strict PUBLISH、server authorization-before-lookup、APPROVED-only、atomic new PUBLISHED/old SUPERSEDED/current/result/audit、historical replay/conflict、rollback与concurrent current CAS。Focused=`16 passed`、full repository=`577 passed`，locked sync、Ruff、Pyright、全部历史machine、P2 Gate、XS benchmark、Compose config、`uv build`、full/diff docs、`git diff --check`与禁止范围均PASS；`p3-publication-report.v1`为8/8、3 success、2 supersession、1 replay、1 conflict、2 denial、4无业务state拒绝、1 rollback、1 concurrent winner、Solver调用0且`issues=[]`。提交前Task report为51 working paths、8 Impact rows、19 checks、0 issues。Exact implementation provider尚未形成，故Task保持`in_progress`；P3-09不启动。
+Local implementation evidence: `app.domain.publication`与`app.application.publication/publication_check`形成strict PUBLISH、server authorization-before-lookup、APPROVED-only、atomic new PUBLISHED/old SUPERSEDED/current/result/audit、historical replay/conflict、rollback与concurrent current CAS。Focused=`16 passed`、full repository=`577 passed`，locked sync、Ruff、Pyright、全部历史machine、P2 Gate、XS benchmark、Compose config、`uv build`、full/diff docs、`git diff --check`与禁止范围均PASS；`p3-publication-report.v1`为8/8、3 success、2 supersession、1 replay、1 conflict、2 denial、4无业务state拒绝、1 rollback、1 concurrent winner、Solver调用0且`issues=[]`。提交前Task report为51 working paths、8 Impact rows、19 checks、0 issues。
+
+Implementation provider evidence: implementation `e90475f462b365d2e031445ad28a02ea0b89d2f5`的GitHub push run `32798679852` / required `validate` job/check `97655144411`（GitHub Actions app `15368`）均为success。Artifact `9545782727`（98713 bytes）未过期，digest=`sha256:f836569f5793334129a643147bdb5609f2992374e1a26c64955bbb42deb64044`、expiry=`2026-11-23T01:44:03Z`；下载复核27/27 JSON顶层PASS。Publication report绑定exact SHA并为8/8、3 success、2 supersession、1 replay、1 conflict、2 denial、4无业务state拒绝、1 rollback、1 concurrent winner、Solver 0、`issues=[]`；Task report绑定同一SHA/Diff base并为51 committed/0 working paths、8 Impact rows、19 checks、0 issues。因此bounded implementation满足完成条件，本evidence-only closure只写回已验证事实且不启动P3-09；closure自身仍须exact provider核验。
 
 Failure handling: transaction/side-effect不确定即返回失败并保持可重试，不推进状态；不得人工修改DB修绿。
 

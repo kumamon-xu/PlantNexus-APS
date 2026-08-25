@@ -404,6 +404,6 @@ Implementation/closure均须通过full docs、Task diff、`git diff --check`、f
 
 不可变Diff base=`a53c0f7d4a0f0bcd4e02bfeaaa0f6fc4b93157b9`。完整union只能命中`IMPACT-DOMAIN/APPLICATION/STATE/INFRA/TESTS/PHASE/GOVERNANCE-REGISTRY/DOCS`八行；allow-list逐字冻结publication domain/application/machine CLI、unit/contract/integration/security与CI contract tests、单一workflow step及required docs。Schema/sample/rules、migration/dependency/lock、infrastructure repository semantics、Planning/Solver/Validator、API/Frontend、Exporter/ExportJob和P4路径必须零差异。
 
-Implementation/closure均须通过full docs、Task diff、`git diff --check`、forbidden path、8/8 publication report、focused/full repository、Ruff/Pyright/locked sync、Compose/build及全部历史machine checks；provider artifact必须绑定Task/SHA/Diff base、8 rows、checks与0 issues。Provider形成前Task保持`in_progress`且P3-09不得自动启动。
+Implementation/closure均须通过full docs、Task diff、`git diff --check`、forbidden path、8/8 publication report、focused/full repository、Ruff/Pyright/locked sync、Compose/build及全部历史machine checks；provider artifact必须绑定Task/SHA/Diff base、8 rows、checks与0 issues。Implementation artifact `9545782727`中的Task report已绑定`e90475f462b365d2e031445ad28a02ea0b89d2f5`与不可变Diff base，复现165 docs/30 roots/30 trace rows/48 tests/15 OPEN/13 SIM/13 risks/53 tasks、51 committed/0 working paths、8 rows、19 checks、0 issues。本closure只写provider事实并不得启动TASK-P3-09；closure自身仍须exact provider。
 
 提交前实际Task diff为51 working paths、上述8 rows、19/19 checks、0 issues；full docs为165 docs/30 roots/30 trace rows/48 Test IDs/15 OPEN/13 SIM assumptions/13 risks/53 Tasks，禁止路径零差异。

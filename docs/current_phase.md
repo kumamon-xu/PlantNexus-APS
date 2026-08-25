@@ -17,7 +17,7 @@ last_reviewed: 2026-08-25
 
 P2-14 audit implementation `65c556789f176ad9de55523d6420737bb60f933f`的GitHub push run `32677741558` / required `validate` job `97288829348` / artifact `9503227240`成功，artifact digest=`sha256:fbb76f0ab44d3bdcff2d31e70f9698af84e10e48ee57ae611eef8529a288240e`；evidence-only closure `80c403384d1e171258cf874d26605d0d22aff1b2`的run `32678248961` / job `97290201234` / artifact `9503372291`也成功，digest=`sha256:673412905b7420660d1e9f07755fcda6291f85f8f2bd926b4bf31a0a6bd1bd0c`。下载检查的两份artifact均含20份可解析JSON，Task/SHA/Impact Rules/checks/issues与对应提交一致且0 issue。规划启动时`main=origin/main=80c403384d1e171258cf874d26605d0d22aff1b2`、ahead/behind=`0/0`且working tree clean，因此transition前提一致。
 
-P2 Milestone现为`completed`，P3 Milestone为`active`。`TASK-P3-00`～`TASK-P3-07`均已有exact implementation provider并在各自evidence-only closure标为`done`；用户于2026-08-25随后单独授权`TASK-P3-08`，当前仅该Task为`in_progress`，P3-09～15保持`planned`且不会自动启动。
+P2 Milestone现为`completed`，P3 Milestone为`active`。`TASK-P3-00`～`TASK-P3-08`均已有exact implementation provider并在各自evidence-only closure标为`done`；当前没有已授权的后续业务Task，P3-09～15保持`planned`且不会自动启动。
 
 ## 当前目标
 
@@ -103,17 +103,19 @@ Corrective implementation `9aed9d8c5dd86a9a9b972f8e9c5491fd6d2dbaa6`的run/job/a
 
 ## TASK-P3-08 本地实现边界
 
-当前bounded implementation形成pure publication domain、repository-port application service与`p3-publication-report.v1` machine CLI。首次publish、历史exact replay、different-request conflict、double publish拒绝、current/supersession原子切换、DRAFT/READY/REJECTED拒绝、authorization-before-lookup、Production default-deny、audit failure rollback及并发current CAS单winner已有unit/contract/integration/security/machine证据；8/8 machine为3次成功publication、2次supersession、1 replay、1 conflict、2 denial、4次无业务状态拒绝、1 rollback、1 concurrent winner、Solver调用0且`issues=[]`。Focused=`16 passed`、full repository=`577 passed`；locked sync、Ruff/Pyright、全部历史machine、P2 Gate、XS、Compose/build及full/diff治理均PASS，Task report为51 working paths、8 rows、19 checks、0 issues。以上仍是local implementation evidence，exact implementation provider与evidence-only closure闭环前Task保持`in_progress`，P3-09不会自动启动。
+当前bounded implementation形成pure publication domain、repository-port application service与`p3-publication-report.v1` machine CLI。首次publish、历史exact replay、different-request conflict、double publish拒绝、current/supersession原子切换、DRAFT/READY/REJECTED拒绝、authorization-before-lookup、Production default-deny、audit failure rollback及并发current CAS单winner已有unit/contract/integration/security/machine证据；8/8 machine为3次成功publication、2次supersession、1 replay、1 conflict、2 denial、4次无业务状态拒绝、1 rollback、1 concurrent winner、Solver调用0且`issues=[]`。Focused=`16 passed`、full repository=`577 passed`；locked sync、Ruff/Pyright、全部历史machine、P2 Gate、XS、Compose/build及full/diff治理均PASS。
+
+Implementation `e90475f462b365d2e031445ad28a02ea0b89d2f5`的run/job/artifact=`32798679852`/`97655144411`/`9545782727`精确success；下载的27/27 JSON全部PASS，publication报告为8/8且Task报告为51 committed/0 working paths、8 rows、19 checks、0 issues。因此本evidence-only closure把TASK-P3-08标为`done`；closure自身仍须exact provider核验。OPEN-002/010继续`OPEN`；ExportJob/package、external MES/ERP、HTTP/UI、P3-09+、P4与Production authority/readiness均未由该Task形成。
 
 ## 当前允许
 
 - 读取并复核P3-01～08合同、Schema、persistence/lifecycle/read/command/decision/publication provider evidence和P2 frozen artifact；
-- 本次仅在TASK-P3-08逐字allow-list内实现internal Simulation publication/supersession、限定tests/machine CI与命中文档，并完成exact implementation/closure provider闭环；
+- 本次只提交TASK-P3-08 evidence-only closure并核验其exact provider，不再修改业务实现；
 - 后续P3-09～15只有在逐Task明确授权后，才可按各卡允许范围和新的不可变Diff base实施。
 
 ## 当前禁止
 
-- 修改Task allow-list之外的业务代码、migration、Schema、dependency/lock、P2 fixture/benchmark bytes、`frontend/**`、API/Worker或deployment；
+- 在没有新Task授权时修改业务代码、migration、Schema、dependency/lock、P2 fixture/benchmark bytes、`frontend/**`、API/Worker或deployment；
 - 执行P3-09～15，或让其中任何Task自动进入`ready/in_progress`；
 - 直接更新PUBLISHED、绕过server/formal Validator、允许DRAFT/REJECTED发布或产生非幂等export/publish；
 - 实现P4的ExecutionEvent、ReplanRequest、OBJ-002 Stability、freeze window、ChangeReport或Execution Simulator；

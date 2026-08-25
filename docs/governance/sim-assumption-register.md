@@ -170,4 +170,4 @@ SIM-ASSUMPTION-001～013继续`ACTIVE`，无新增/修改/retire且`registry_ver
 
 Machine/unit/contract/integration/security继续复用既有P2-GOLDEN-JSSP与P3 lifecycle，test actor/capability/scope/idempotency/current race和publication microseconds均为非定量test-local evidence。没有修改Scenario/Profile/assembler/version/seed/fixture bytes，也没有新增publish率、并发分布、latency threshold、external target或Production容量假设。
 
-SIM-ASSUMPTION-001～013继续`ACTIVE`，无新增/修改/retire，`registry_version=1.0.0`不变；internal Simulation PUBLISHED/SUPERSEDED不得外推真实发布或Production authority。
+SIM-ASSUMPTION-001～013继续`ACTIVE`，无新增/修改/retire，`registry_version=1.0.0`不变；implementation artifact `9545782727`只复验同一test-local carrier与state evidence，internal Simulation PUBLISHED/SUPERSEDED不得外推真实发布或Production authority。

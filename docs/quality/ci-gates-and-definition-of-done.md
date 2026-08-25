@@ -308,4 +308,4 @@ Required `validate`新增唯一step：`uv run python -m app.application.publicat
 
 提交前本地Gate为focused 16、full 577、publication 8/8、全部历史machine、P2 Gate、XS benchmark、locked sync、Ruff/Pyright、Compose/build及full/diff治理全部PASS；Task report为51 working paths、8 rows、19 checks、0 issues。
 
-本地PASS只允许Task保持`in_progress`。Implementation push后必须核验exact SHA required run/job/app、下载artifact并核对publication/Task report的Task/SHA/Diff base、8 Impact rows、checks/issues；成功后才可evidence-only closure，closure自身也须exact provider。该Gate不形成ExportJob/package、external publish、HTTP/UI、P4或Production readiness，也不自动启动TASK-P3-09。
+Implementation provider Gate已通过：SHA `e90475f462b365d2e031445ad28a02ea0b89d2f5`、run `32798679852`、required `validate` job/check `97655144411`（app `15368`）均success；artifact `9545782727`未过期，98713 bytes，digest=`sha256:f836569f5793334129a643147bdb5609f2992374e1a26c64955bbb42deb64044`、expiry=`2026-11-23T01:44:03Z`。下载复核27/27 JSON顶层PASS，publication 8/8与Task 51 committed/0 working paths、8 rows、19 checks、0 issues均绑定同一SHA；TASK-P3-08 bounded DoD完成，本closure不自动授权P3-09且自身仍须exact provider。该Gate不形成ExportJob/package、external publish、HTTP/UI、P4或Production readiness。

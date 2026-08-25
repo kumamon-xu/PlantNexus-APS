@@ -15,7 +15,7 @@ last_reviewed: 2026-08-25
 
 用户于2026-08-24在核验TASK-P2-00～14全部`done`、P2 Exit Gate overall=`READY`/`blocking_gaps=[]`、audit implementation/closure拓扑与exact GitHub required `validate`/artifact后，明确批准P2→P3 transition。P2为`completed`，P3为当前`active` Milestone。
 
-TASK-P3-00已完成Milestone激活、Task规划与文档治理，TASK-P3-01～07也已有各自exact implementation provider并由evidence-only closure标为`done`；用户已单独授权TASK-P3-08且该Task现为`in_progress`，P3-09～15保持`planned`且未获授权。依赖满足不会自动授权后续实现。每个Task必须从当时clean、`main=origin/main`且provider-verified的完整40字符HEAD建立新的不可变Diff base。
+TASK-P3-00已完成Milestone激活、Task规划与文档治理，TASK-P3-01～08也已有各自exact implementation provider并由evidence-only closure标为`done`；P3-09～15保持`planned`且未获授权。依赖满足不会自动授权后续实现。每个Task必须从当时clean、`main=origin/main`且provider-verified的完整40字符HEAD建立新的不可变Diff base。
 
 ## Outcome
 
@@ -35,7 +35,7 @@ TASK-P3-00已完成Milestone激活、Task规划与文档治理，TASK-P3-01～07
 | 5 | TASK-P3-05 | Gantt/Resource Load/Order/Comparison read models | P3-04 | `done` |
 | 6 | TASK-P3-06 | Gantt edit/lock command→validation→new DRAFT | P3-04/05 | `done` |
 | 7 | TASK-P3-07 | approval/rejection/audit service | P3-03/04 | `done` |
-| 8 | TASK-P3-08 | idempotent publication与supersession | P3-03/07 | `in_progress` |
+| 8 | TASK-P3-08 | idempotent publication与supersession | P3-03/07 | `done` |
 | 9 | TASK-P3-09 | ExportJob与标准成果包 | P3-03/04/08 | `planned` |
 | 10 | TASK-P3-10 | Planning Workspace HTTP API | P3-05～09 | `planned` |
 | 11 | TASK-P3-11 | Frontend foundation与read-only workspace | P3-01/10 | `planned` |
@@ -88,7 +88,7 @@ TASK-P3-07已形成同content approve/reject、server authority与Production def
 
 用户随后于2026-08-25单独授权TASK-P3-08；启动复核确认P3-03/07均`done`，P3-07 closure `a53c0f7d4a0f0bcd4e02bfeaaa0f6fc4b93157b9`的required run/job/artifact=`32794963626`/`97644228513`/`9544539992`精确success，26/26 JSON、50 committed/0 working paths、8 rows、19 checks、0 issues。该SHA成为P3-08不可变Diff base。当前仅允许authorized APPROVED→PUBLISHED、旧current PUBLISHED→SUPERSEDED、current CAS、same-key replay/conflict与atomic audit的`SIMULATION_INTERNAL` slice；ExportJob/成果包、外部MES/ERP、HTTP/UI、Schema/migration/dependency、P3-09+、P4及Production authority/readiness均禁止。
 
-TASK-P3-08本地bounded implementation已形成pure domain/application ports service与8/8 publication machine：3 successful publications、2 supersessions、1 exact replay、1 conflict、2 authorization denials、4 no-state rejections、1 atomic rollback、1 concurrent current winner、Solver调用0、`issues=[]`。Focused 16、full repository 577、全部历史machine、P2 Gate、XS、Compose/build及51 paths/8 rows/19 checks/0 issues治理均PASS。Exact implementation provider与evidence-only closure尚未形成，故Task保持`in_progress`且P3-09不会自动启动。
+TASK-P3-08已形成pure domain/application ports service与8/8 publication machine：3 successful publications、2 supersessions、1 exact replay、1 conflict、2 authorization denials、4 no-state rejections、1 atomic rollback、1 concurrent current winner、Solver调用0、`issues=[]`。Focused 16、full repository 577、全部历史machine、P2 Gate、XS、Compose/build及51 paths/8 rows/19 checks/0 issues治理均PASS。Implementation `e90475f462b365d2e031445ad28a02ea0b89d2f5`的run/job/artifact=`32798679852`/`97655144411`/`9545782727`精确复现27/27 JSON，故本closure标为`done`；P3-09仍为`planned`且不会自动启动。
 
 TASK-P3-00 planning implementation `1d4b1a5c0ad6dc13df18588fbdcb9732e5ef15e7`的run/job/artifact=`32681493976`/`97298850740`/`9504310381`已精确PASS；其closure `7f65f88b620ea1e8d2f4693911be3b52f4052d5d`的run/job/artifact=`32682015727`/`97300206924`/`9504453154`也精确PASS。TASK-P3-01 implementation `3bf99cbafdad983795a83a88646240dbb0b24509`的run/job/artifact=`32684713630`/`97307562801`/`9505303054`复现43 paths、4 rows、19 checks和0 issues。TASK-P3-02 implementation `aff27d3d6b63fb9f216c9a2687408a6c676fa96a`的run/job/artifact=`32689832111`/`97321420908`/`9506913562`复现additive schema set`2.6.0`、7 Schema/7 sample、8/8 checks及65 paths/10 rows/19 checks/0 issues；closure `9621fda535f66393beab88efc13c100fc805c993`的run/job/artifact=`32690302424`/`97322642627`/`9507045338`也精确成功。TASK-P3-03已从该closure SHA激活，只允许持久化原语；P3-04～15未启动。
 

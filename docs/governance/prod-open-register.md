@@ -189,4 +189,4 @@ Decision service只在Simulation/Test synthetic resources与显式test policy中
 
 Publication service只允许Simulation/Test synthetic resource与`SIMULATION_INTERNAL`；Production command在success audit、source与current lookup前固定default-deny，并只形成`WORKSPACE_INTERNAL` sanitized denial。没有真实principal/role、Production publish channel/target、MES/ERP adapter、independent DB/network/credential、retention/SIEM、SLA、deployment或rollback authority。Internal PUBLISHED不是Production publish/approval。
 
-因此OPEN-002/010及OPEN-001～015全部保持`OPEN`，没有新增Authority/Evidence closure record，`registry_version=1.0.0`不变。Local 8/8 machine只证明bounded Simulation publication；exact provider尚未形成，也不得声明Production publishability、approval、security review或readiness。
+因此OPEN-002/010及OPEN-001～015全部保持`OPEN`，没有新增Authority/Evidence closure record，`registry_version=1.0.0`不变。Implementation artifact `9545782727`精确复验8/8 machine，但只证明bounded Simulation publication；不得据此声明Production publishability、approval、security review或readiness。

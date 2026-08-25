@@ -1,7 +1,7 @@
 ---
 doc_id: TASK-P3-10
 title: Planning Workspace HTTP API
-status: in_progress
+status: done
 spec_version: 0.3.0
 phase: P3
 normative: true
@@ -89,7 +89,7 @@ Rollback: API路由可回退且不改业务历史；已发布payload/OpenAPI变�
 - `uv run python -m app.api.planning_workspace_check --root . --report build/validation/local-p3-planning-workspace-api.json`为8/8 PASS，17 paths/17 delegations、8 mapped errors、Production provider/application调用0、router state/Solver/Validator调用0、`issues=[]`。
 - Contract/integration/security/health/CI focused suite为41 PASS；最终full repository为603 PASS，required当前29份JSON evidence、P2 Gate 11/11、XS benchmark 8/8、locked sync、Ruff/Pyright、Compose/build、full/diff docs均PASS。
 - Schema、migration、dependency/lock、domain/application/repository、Frontend、P4与Production零修改；OPEN-002/010/015保持OPEN。
-- Implementation provider evidence: pending exact implementation commit、required `validate`与artifact download review；本Task在provider闭环前保持`in_progress`。
+- Implementation provider evidence: implementation `4958ce5759812331f13fab2608fbec37f1f1ff76`的GitHub push run `32812163430` / required `validate` job/check `97693443111`（GitHub Actions app `15368`）均为success，所有steps通过。Artifact `9550224090`（101191 bytes）未过期，digest=`sha256:d8577d6429167d8782622722d4d64fb993e2db07cbca43a4f279bfd0ba3b9ecf`、expiry=`2026-11-23T05:16:01Z`；下载复核29/29 JSON顶层PASS。API report绑定exact SHA并为8/8、17 paths/operation IDs/delegations、8 mapped errors、Production provider/application调用0、router state/Solver/Validator调用0、`issues=[]`；Task report绑定同一SHA/Diff base并为51 committed/0 working paths、7 Impact rows、19 checks、0 issues。因此bounded implementation满足完成条件，本evidence-only closure只写回已验证事实且不启动P3-11；closure自身仍须exact provider核验。
 
 ## Local failure and recovery record
 

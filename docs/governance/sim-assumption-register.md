@@ -174,4 +174,4 @@ SIM-ASSUMPTION-001～013继续`ACTIVE`，无新增/修改/retire，`registry_ver
 
 TASK-P3-09复用既有synthetic scenario/profile/generator/seed与P2 correctness payload；未新增假设ID。Provider artifact `9548027237`精确复验synthetic target、12 payload、4 sheets与Simulation-only边界；Package size、row/sheet count、SQLite lease与local atomic rename仍只作为development evidence，不外推真实数据规模、distributed filesystem或Production retry。13项假设继续ACTIVE且registry version不变。
 
-TASK-P3-10只复用synthetic carrier/resource、stable test principal与test application facade，未新增假设ID。TestClient、URL-encoded query字节、OpenAPI fingerprint、17 route数和本地latency不外推真实用户、网络、identity provider、Production流量或SLA；13项假设继续ACTIVE，registry version不变。
+TASK-P3-10只复用synthetic carrier/resource、stable test principal与test application facade，未新增假设ID。Provider artifact `9550224090`精确复验17 routes/delegations、Simulation flag/plane与Production pre-provider denial；TestClient、URL-encoded query字节、OpenAPI fingerprint、route数和本地latency仍不外推真实用户、网络、identity provider、Production流量或SLA，13项假设继续ACTIVE且registry version不变。

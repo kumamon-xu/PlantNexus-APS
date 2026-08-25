@@ -414,4 +414,4 @@ TASK-P3-09治理验证13个Impact rows、Diff base `b9c0b1694448a4ec348b0b021079
 
 不可变Diff base=`f71c4a5a11a3fac0e203e2e92198c26124755927`。完整union只允许命中`IMPACT-API/STATE/INFRA/TESTS/PHASE/GOVERNANCE-REGISTRY/DOCS`七行；精确allow-list仅包含API composition/contracts/auth/router/machine check、三类API tests、既有health/CI contract、单一workflow step与Task卡逐字列出的文档。Schema/sample/rules、migration、dependency/lock、domain/application/repository/exporter/job、Frontend/P4/external路径保持冻结。
 
-本地API report为8/8、`issues=[]`，focused为41 PASS、最终full为603 PASS，required当前29份JSON evidence、Compose/build与full docs均PASS。Task diff报告复现51 working paths、7 rows、19 checks、0 issues；implementation commit后必须再以committed range复验exact SHA。Provider数据在push前保持pending；TASK-P3-11、P4与Production均不在本Diff内。
+本地API report为8/8、`issues=[]`，focused为41 PASS、最终full为603 PASS，required当前29份JSON evidence、Compose/build与full docs均PASS。Implementation artifact `9550224090`中的Task report绑定exact SHA/Diff base并复现165 docs/30 roots/30 trace rows/48 tests/15 OPEN/13 SIM/13 risks/53 tasks、51 committed/0 working paths、7 rows、19 checks、0 issues；29/29 JSON与API 8/8均PASS。本closure只写provider事实并不得启动TASK-P3-11；closure自身仍须exact provider，P4与Production均不在本Diff内。

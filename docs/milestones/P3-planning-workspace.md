@@ -15,7 +15,7 @@ last_reviewed: 2026-08-25
 
 用户于2026-08-24在核验TASK-P2-00～14全部`done`、P2 Exit Gate overall=`READY`/`blocking_gaps=[]`、audit implementation/closure拓扑与exact GitHub required `validate`/artifact后，明确批准P2→P3 transition。P2为`completed`，P3为当前`active` Milestone。
 
-TASK-P3-00已完成Milestone激活、Task规划与文档治理，TASK-P3-01～09也已有各自exact implementation provider并由evidence-only closure标为`done`；用户已单独授权P3-10并冻结provider-verified baseline，P3-11～15保持`planned`。依赖满足不会自动授权后续实现。每个Task必须从当时clean、`main=origin/main`且provider-verified的完整40字符HEAD建立新的不可变Diff base。
+TASK-P3-00已完成Milestone激活、Task规划与文档治理，TASK-P3-01～10也已有各自exact implementation provider并由evidence-only closure标为`done`；当前没有已授权的后续Task，P3-11～15保持`planned`。依赖满足不会自动授权后续实现。每个Task必须从当时clean、`main=origin/main`且provider-verified的完整40字符HEAD建立新的不可变Diff base。
 
 ## Outcome
 
@@ -37,7 +37,7 @@ TASK-P3-00已完成Milestone激活、Task规划与文档治理，TASK-P3-01～09
 | 7 | TASK-P3-07 | approval/rejection/audit service | P3-03/04 | `done` |
 | 8 | TASK-P3-08 | idempotent publication与supersession | P3-03/07 | `done` |
 | 9 | TASK-P3-09 | ExportJob与标准成果包 | P3-03/04/08 | `done` |
-| 10 | TASK-P3-10 | Planning Workspace HTTP API | P3-05～09 | `in_progress` |
+| 10 | TASK-P3-10 | Planning Workspace HTTP API | P3-05～09 | `done` |
 | 11 | TASK-P3-11 | Frontend foundation与read-only workspace | P3-01/10 | `planned` |
 | 12 | TASK-P3-12 | Gantt/Resource Load/Comparison UI | P3-05/10/11 | `planned` |
 | 13 | TASK-P3-13 | Human control actions与UI E2E | P3-06～12 | `planned` |
@@ -102,4 +102,4 @@ TASK-P3-04已形成ports-only application lifecycle、fresh Validator/KPI gate�
 
 TASK-P3-09已实现五state/六allowed pair、attempt/lease/heartbeat、explicit retry/cancel/expired recovery、audit-atomic CAS以及12-payload standard package。v2 manifest在P2 lineage之上绑定PUBLISHED Version、PublicationResult、Job attempt和audit；P4 ChangeReport仍`DEFERRED`。Implementation `42278239332e61e55a4e0305705534db768dc22f`的run/job/artifact=`32805450589`/`97674572006`/`9548027237`精确复现28/28 JSON、export 8/8及76 committed/0 working paths、13 rows、19 checks、0 issues，故本closure标为`done`。
 
-用户随后单独授权TASK-P3-10；P3-05～09的closure SHA/provider artifact全部重新核验，启动时`main=origin/main=f71c4a5a11a3fac0e203e2e92198c26124755927`且clean，该SHA成为不可变Diff base。当前bounded slice形成17个versioned HTTP operation、OpenAPI、strict carrier/header/path绑定、server-derived capability/scope、Production pre-provider deny、sanitized error/correlation/denial audit和application façade；不改变P3-05～09语义、Schema/migration/dependency/repository/state pair，也不形成Frontend、external/P4/Production。Local machine 8/8、41 focused、603 full与51 paths/7 rows/19 checks/0 issues均PASS，exact provider待提交；P3-11不自动启动。
+用户随后单独授权TASK-P3-10；P3-05～09的closure SHA/provider artifact全部重新核验，启动时`main=origin/main=f71c4a5a11a3fac0e203e2e92198c26124755927`且clean，该SHA成为不可变Diff base。当前bounded slice形成17个versioned HTTP operation、OpenAPI、strict carrier/header/path绑定、server-derived capability/scope、Production pre-provider deny、sanitized error/correlation/denial audit和application façade；不改变P3-05～09语义、Schema/migration/dependency/repository/state pair，也不形成Frontend、external/P4/Production。Implementation `4958ce5759812331f13fab2608fbec37f1f1ff76`的run/job/artifact=`32812163430`/`97693443111`/`9550224090`精确复现29/29 JSON、API 8/8及51 committed/0 working paths、7 rows、19 checks、0 issues，故本closure标为`done`；P3-11仍为`planned`且不会自动启动。

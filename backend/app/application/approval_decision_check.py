@@ -163,6 +163,13 @@ def _expect(
 
 def _counts(engine: Any) -> dict[str, int]:
     with engine.connect() as connection:
+        decision_outcomes = [
+            json.loads(bytes(row.document_json).decode("utf-8"))["result"]["outcome"]
+            for row in connection.exec_driver_sql(
+                "SELECT document_json FROM audit_events "
+                "WHERE action IN ('APPROVE','REJECT')"
+            )
+        ]
         return {
             "schedule_versions": int(
                 connection.exec_driver_sql(
@@ -175,18 +182,10 @@ def _counts(engine: Any) -> dict[str, int]:
                 ).scalar_one()
             ),
             "decision_success_audits": int(
-                connection.exec_driver_sql(
-                    "SELECT COUNT(*) FROM audit_events "
-                    "WHERE action IN ('APPROVE','REJECT') "
-                    'AND document_json LIKE \'%"outcome":"SUCCEEDED"%\''
-                ).scalar_one()
+                decision_outcomes.count("SUCCEEDED")
             ),
             "decision_denial_audits": int(
-                connection.exec_driver_sql(
-                    "SELECT COUNT(*) FROM audit_events "
-                    "WHERE action IN ('APPROVE','REJECT') "
-                    'AND document_json LIKE \'%"outcome":"DENIED"%\''
-                ).scalar_one()
+                decision_outcomes.count("DENIED")
             ),
         }
 

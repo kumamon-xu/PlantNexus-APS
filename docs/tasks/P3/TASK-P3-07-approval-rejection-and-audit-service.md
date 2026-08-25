@@ -75,6 +75,8 @@ Completion conditions: only READY + authorized capability可approve/reject；act
 
 Local acceptance evidence: focused=`39 passed`、full repository=`562 passed`、Ruff/Pyright/locked sync均PASS；`p3-approval-decision-report.v1`为8/8且`issues=[]`，全部既有required machine reports、P2 Gate 11/11、XS benchmark、Compose与build均PASS。Full docs为165 docs/30 roots/30 trace rows/48 Test IDs/15 OPEN/13 SIM/13 risks/53 Tasks；Task diff为50 working paths、8 Impact rows、19 checks、0 issues，`git diff --check`与全部禁止范围均PASS。以上仅为local implementation evidence；exact implementation provider与evidence-only closure闭环前本Task保持`in_progress`。
 
+Provider failure history: 初始implementation `3f85959e91e74966f6482426b9db296a45d715ef`的push run `32793980039` / required `validate` job `97641324105`在Linux repository tests失败，结果为`1 failed, 556 passed`且artifact因前置失败未生成。失败仅暴露machine evidence统计使用SQLite `BLOB LIKE`的跨平台差异：业务状态/audit测试均通过，但report把3个success与3个DENIED错误计为0；同时required suite未显式包含新`backend/tests/security`目录。修正保留该失败事实，改为解析canonical audit JSON计数并把security目录加入同一required suite；修正后的exact provider仍待核验。
+
 Failure handling: authorization/audit原子性失败即不改变状态并停止P3-08/10；不得临时放宽Production guard。
 
 Explicitly excluded: 真实RBAC/SSO、Production role approval、publish/export、HTTP/Frontend、P4。

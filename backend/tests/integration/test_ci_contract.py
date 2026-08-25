@@ -368,6 +368,7 @@ def test_ci_p3_approval_decisions_are_required_and_machine_checkable(
         "uv run python -m app.application.approval_decision_check --root . "
         "--report build/validation/ci-p3-approval-decisions.json"
     ) in normalized
+    assert "backend/tests/property backend/tests/security" in normalized
     assert "continue-on-error" not in workflow
 
     report_path = tmp_path / "p3-approval-decisions.json"

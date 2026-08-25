@@ -93,6 +93,8 @@ Implementation `08317637c7fbb51d46880d32523545bb0b4fe1c0`的run/job/artifact=`32
 
 这些仍是本地证据：exact implementation required `validate`/artifact及evidence-only closure未形成前TASK-P3-07保持`in_progress`。OPEN-010继续`OPEN`；真实RBAC/SSO、HTTP/UI、publish/export、P3-08+、P4与Production authority/readiness均未形成。
 
+初始implementation `3f85959e91e74966f6482426b9db296a45d715ef`的run/job=`32793980039`/`97641324105`在Linux tests因machine report使用SQLite `BLOB LIKE`产生跨平台0-count而失败（`1 failed, 556 passed`），且未生成artifact；该失败事实保留。修正仅把统计改为canonical JSON解析，并将新增security目录纳入required suite；本地exact suite重新为562 PASS、8/8 report的success/denial counts为3/3。修正provider成功前仍不允许closure或P3-08。
+
 ## 当前允许
 
 - 读取并复核P3-01～06合同、Schema、persistence/lifecycle/read/command provider evidence和P2 frozen artifact；

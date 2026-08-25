@@ -53,6 +53,7 @@ jobs:
           backend/tests/validation
           backend/tests/integration
           backend/tests/property
+          backend/tests/security
 
       - name: Existing executable contracts
         run: |

@@ -297,3 +297,5 @@ Required `validate`新增唯一step：`uv run python -m app.application.approval
 本地PASS只允许Task保持`in_progress`。Implementation push后必须核验exact SHA required run/job/app、下载artifact并核对decision/Task report的Task/SHA/Diff base、8 Impact rows、全部checks/issues；成功后才可evidence-only closure，closure自身也须exact provider。该Gate不形成HTTP/UI、publish/export、P4或Production approval/readiness，也不自动启动TASK-P3-08。
 
 本地implementation Gate已通过：39 focused、562 full、8/8 decision machine、全部历史machine、P2 Gate 11/11、XS benchmark、locked sync、Ruff、Pyright、Compose、build、full/diff docs、`git diff --check`与禁止范围均PASS；提交前Task report为50 working paths、8 rows、19 checks、0 issues。Provider字段在真实push前不得预填。
+
+初始implementation `3f85959e91e74966f6482426b9db296a45d715ef`的run `32793980039` / required job `97641324105`为failure：Linux上SQLite LargeBinary不支持该report使用的`BLOB LIKE`统计，故1项CI contract看到success/denial均为0而失败（其余556项PASS），artifact未生成；required suite还未列出新增security目录。纠正要求canonical JSON计数、同一required suite显式执行security tests，并保留本失败记录；纠正SHA的required validate/artifact成功前不得closure。

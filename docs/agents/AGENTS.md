@@ -25,6 +25,8 @@ last_reviewed: 2026-08-19
 
 完成上述规范读取后，可以读取根 `README.md` 获取已落地的构建与本地检查命令；`README.md` 不高于 Task Card 或规范正文。
 
+涉及P3 Frontend展示、locale、错误文案、时间/单位格式或human-control文本时，必须在代码前完整读取`../frontend/official-zh-cn-terminology-map.md`、相关Frontend规范、`../contracts/planning-workspace-api.md`、`../domain/error-model.md`与两份P3状态机文档。官方中文表只授权展示label；英文API key/state/command/error/C-ID/fingerprint仍是机器权威。
+
 Task 从 `planned`/`ready` 进入 `in_progress` 时，必须先把当时的完整 40 字符 HEAD commit SHA 记录为 Task Card 的 `Diff base`。后续 diff acceptance 以该不可变基线联合当前 working tree，不能依赖尚未提交的改动长期存在。
 
 规格版本变化，或修改架构边界、PlanningProblem、SolverBackend、Constraint Catalog、状态机、发布规则或阶段 Exit Gate 时，完整重读 `../core/APS_IMPLEMENTATION_SPEC.md`。

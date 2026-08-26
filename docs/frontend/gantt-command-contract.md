@@ -11,6 +11,10 @@ last_reviewed: 2026-08-26
 
 # P3 Gantt Command 与新版本合同
 
+## TASK-P3-16 planned localization boundary
+
+Move/Assign/Set Lock/Remove Lock等用户可见名称可依据[`official-zh-cn-terminology.v1`](official-zh-cn-terminology-map.md)显示中文或英文，但`MOVE_OPERATION`、`ASSIGN_RESOURCE`、`SET_LOCK`、`REMOVE_LOCK`、payload keys、state、Idempotency-Key与canonical fingerprint逐字保持英文。格式化时间仍保留raw UTC，未知command/state/reason显示raw值；UI不得从localized label解析或生成machine value。该规则等待TASK-P3-16实现和zero-wire-drift证据，最终由TASK-P3-17独立审计；当前command实现、Schema、测试和workflow零变化。
+
 ## TASK-P3-14 command Gate
 
 Gate两轮复验UI command→server validation→new DRAFT→formal Validator链、copy-on-write/immutable source与same-key replay，并在聚合层拒绝对PUBLISHED内容的任何mutation。该检查不增加command类型、状态转移、客户端权威或P4 replan；若raw report或semantic projection漂移则非零退出。

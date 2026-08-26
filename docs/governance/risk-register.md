@@ -14,7 +14,7 @@ registry_version: 1.0.0
 
 ## TASK-P3-15 risk review
 
-唯一amendment owner、base active/done保护、纯删除/重复路径拒绝和stable-ID rename降低阶段计划被错误归属或历史被改写的治理暴露；exact provider前禁止使用新模式又约束RISK-008/013的证据漂移。它不降低业务、供应链、authority、runtime或Production风险，RISK-001～013全部保持`MONITORED`，severity/status与`registry_version=1.0.0`不变。
+唯一amendment owner、base active/done保护、纯删除/重复路径拒绝和stable-ID rename降低阶段计划被错误归属或历史被改写的治理暴露；implementation artifact `9597967232`已精确复验该边界。新增RISK-014用于持续监测双语词典缺项、中文展示值反向污染英文machine contract以及unknown raw evidence被隐藏；当前只形成术语与未来Task控制，尚无Frontend implementation证据。RISK-001～014全部保持`MONITORED`，severity/status与`registry_version=1.0.0`不变。
 
 ## TASK-P3-14 risk review
 
@@ -41,6 +41,7 @@ Corrective implementation artifact `9589931373`已复验这些bounded controls�
 | RISK-011 | MONITORED | 依赖漏洞或Solver供应链漂移 | lock/advisory/wheel变化，SCA发现未处置记录 | exact pin/lock/wheel hash、namespace isolation、point-in-time audit；后续持续SCA/SBOM与有界升级 |
 | RISK-012 | MONITORED | 审批责任未定却被实现成Production授权 | 测试角色或前端按钮被解释为真实approve/publish authority | OPEN-010、authority-neutral capability、Production default-deny、append-only audit |
 | RISK-013 | MONITORED | UI/API绕过状态机或直接修改已发布计划 | client计算权威状态、router直写DB、PUBLISHED内容变化 | command-only application service、server/formal Validator、immutable version、API/E2E negative gates |
+| RISK-014 | MONITORED | 双语展示漂移、中文label污染英文机器合同或隐藏未知原值 | typed词典缺key、localized enum/code进入request、依赖英文message解析、raw code/UTC/ID被替换或丢失 | `official-zh-cn-terminology.v1`、typed exhaustive maps、unknown raw fallback、zero-wire-drift tests、TASK-P3-17独立Audit |
 
 风险状态、责任人和日期将在团队角色与仓库工作流确认后补充，当前不猜测人员归属。
 
@@ -132,7 +133,7 @@ TASK-P2-14 provider closure：required run `32677741558` / artifact `9503227240`
 
 ## P3 planning review
 
-P3的人机控制面新增RISK-012/013：OPEN-010未关闭时测试actor/按钮不能升级为真实Production authority；所有UI/API必须通过application command、server/state guard与formal Validator，PUBLISHED保持immutable。TASK-P3-01先固定合同/ADR，P3-07/08/10/13形成负向权限与旁路证据，P3-14/15再聚合和独立审计。
+P3的人机控制面新增RISK-012/013：OPEN-010未关闭时测试actor/按钮不能升级为真实Production authority；所有UI/API必须通过application command、server/state guard与formal Validator，PUBLISHED保持immutable。TASK-P3-01先固定合同/ADR，P3-07/08/10/13形成负向权限与旁路证据，P3-14聚合Gate；当前RISK-014由P3-16双语zero-drift控制并由P3-17最终独立审计。
 
 本次只是风险登记与Task控制设计，没有行为证据可以降低风险。RISK-001～013全部保持`MONITORED`；P4动态重排和Production部署风险仍不在P3实现范围，`registry_version=1.0.0`格式不变。
 

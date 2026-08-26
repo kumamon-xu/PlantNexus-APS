@@ -12,9 +12,11 @@ registry_version: 1.0.0
 
 # 文档清单
 
-## TASK-P3-15 activation review
+## TASK-P3-15 amendment closure review
 
-本Task不新增、删除或重命名正式Markdown，inventory继续覆盖165份`docs/**/*.md`；只把既有TASK-P3-15从原planned Exit分配调整为`in_progress` amendment-governance owner。治理Python/unit test与ignored Task report不进入清单。Roots=30、trace rows=30、Test IDs=48、OPEN=15、SIM=15、risks=13、Tasks=53及`registry_version=1.0.0`均不变；后续成员尚未创建。
+Activation阶段没有新增、删除或重命名正式Markdown，只把当时的TASK-P3-15从planned Exit分配调整为`in_progress` amendment-governance owner；implementation `c84e1aa1a81473f65d9f7906a6d2c67a94e7bb2f` / artifact `9597967232`已精确复验当时165 docs、30 roots/rows、48 Test IDs、15 OPEN/SIM、13 risks、53 Tasks与26/0/5/19/0 Task report。治理Python/unit test及ignored Task/provider reports不进入清单。
+
+本closure按稳定Doc ID重命名TASK-P3-15卡，并新增官方中文术语、TASK-P3-16与TASK-P3-17三份正式Markdown；inventory由165增至168，Task由53增至55，Test ID由48增至49，risk由13增至14。Roots=30、trace rows=30、OPEN=15、SIM=15与`registry_version=1.0.0`不变。TASK-P3-15=`done`，P3-16/P3-17=`planned`；没有Frontend源、业务、Schema、migration、dependency、workflow、P4或Production文档形成。
 
 ## TASK-P3-14 evidence closure review
 
@@ -28,7 +30,7 @@ TASK-P3-14不新增、删除或重命名正式Markdown，inventory继续覆盖16
 
 Root=30、trace rows=30、Test IDs=48、OPEN=15、risks=13、Tasks=53均不变；新增SIM-ASSUMPTION-015使SIM count=15但不改变registry format。Artifact `9589931373`复现33 JSON及Task 91/0/11/19/0，closure run `32921871460`失败且无artifact；独立corrective artifact `9590625358`再次复现33 JSON及91/0/11/19/0。本closure自身仍须exact provider。
 
-本清单列出当前仓库已经实际存在的Markdown文档。P0～P2均已归档为completed；P2 Exit Gate=`READY`且用户已批准transition。P3现为active，TASK-P3-00～13均已done，P3-14为in progress、P3-15为planned。P3 human-control UI/E2E和有界internal Simulation成果包下载已形成；Production Runbook正文仍未形成。
+本清单列出当前仓库已经实际存在的Markdown文档。P0～P2均已归档为completed；P2 Exit Gate=`READY`且用户已批准transition。P3现为active，TASK-P3-00～15均为`done`，P3-16双语本地化与P3-17最终独立Audit为`planned`。P3 human-control UI/E2E和有界internal Simulation成果包下载已形成；术语规范已形成但双语实现尚未执行，Production Runbook正文仍未形成。
 
 | Path | Doc ID | Status | Title |
 |---|---|---|---|
@@ -89,6 +91,7 @@ Root=30、trace rows=30、Test IDs=48、OPEN=15、risks=13、Tasks=53均不变�
 | [domain/time-calendar-and-material-boundaries.md](../domain/time-calendar-and-material-boundaries.md) | DOC-DOM-003 | baseline | 时间、日历与物料边界 |
 | [frontend/approval-publication-flow.md](../frontend/approval-publication-flow.md) | DOC-FRONTEND-003 | baseline | P3 Approval Publication 与 Export 人工控制流程 |
 | [frontend/gantt-command-contract.md](../frontend/gantt-command-contract.md) | DOC-FRONTEND-002 | baseline | P3 Gantt Command 与新版本合同 |
+| [frontend/official-zh-cn-terminology-map.md](../frontend/official-zh-cn-terminology-map.md) | DOC-FRONTEND-004 | baseline | Official zh-CN Terminology and Display Mapping |
 | [frontend/planning-workspace.md](../frontend/planning-workspace.md) | DOC-FRONTEND-001 | baseline | P3 Planning Workspace 页面与只读视图合同 |
 | [frontend/README.md](../frontend/README.md) | DOC-FRONTEND-INDEX | baseline | Frontend 文档形成计划 |
 | [governance/change-impact-matrix.md](../governance/change-impact-matrix.md) | DOC-GOV-010 | baseline | 变更影响与必审文档矩阵 |
@@ -194,11 +197,13 @@ Root=30、trace rows=30、Test IDs=48、OPEN=15、risks=13、Tasks=53均不变�
 | [tasks/P3/TASK-P3-12-gantt-resource-load-and-version-comparison-ui.md](../tasks/P3/TASK-P3-12-gantt-resource-load-and-version-comparison-ui.md) | TASK-P3-12 | done | Gantt Resource Load and Version Comparison UI |
 | [tasks/P3/TASK-P3-13-human-control-actions-and-ui-e2e.md](../tasks/P3/TASK-P3-13-human-control-actions-and-ui-e2e.md) | TASK-P3-13 | done | Human Control Actions and UI E2E |
 | [tasks/P3/TASK-P3-14-p3-vertical-slice-gate-evidence.md](../tasks/P3/TASK-P3-14-p3-vertical-slice-gate-evidence.md) | TASK-P3-14 | done | P3 Vertical Slice Gate Evidence |
-| [tasks/P3/TASK-P3-15-p3-exit-gate-audit.md](../tasks/P3/TASK-P3-15-p3-exit-gate-audit.md) | TASK-P3-15 | in_progress | P3 Phase Plan Amendment Governance Support |
+| [tasks/P3/TASK-P3-15-phase-plan-amendment-governance-support.md](../tasks/P3/TASK-P3-15-phase-plan-amendment-governance-support.md) | TASK-P3-15 | done | P3 Phase Plan Amendment Governance Support |
+| [tasks/P3/TASK-P3-16-frontend-bilingual-localization-and-official-terminology.md](../tasks/P3/TASK-P3-16-frontend-bilingual-localization-and-official-terminology.md) | TASK-P3-16 | planned | Frontend Bilingual Localization and Official Terminology |
+| [tasks/P3/TASK-P3-17-p3-exit-gate-audit.md](../tasks/P3/TASK-P3-17-p3-exit-gate-audit.md) | TASK-P3-17 | planned | P3 Exit Gate Audit |
 | [tasks/README.md](../tasks/README.md) | DOC-TASK-INDEX | living | Task Card 索引 |
 | [tasks/TASK_TEMPLATE.md](../tasks/TASK_TEMPLATE.md) | TEMPLATE-TASK | baseline | Task Card Template |
 
-更新文档时应同步维护本清单。`uv run python scripts/check_docs.py`会校验本表是否完整覆盖当前165份`docs/**/*.md`，并核对Doc ID、status和title，但不会自动改写清单。根`README.md`、根`AGENTS.md`、非Markdown evidence manifest、代码和脚本不属于正式文档清单。
+更新文档时应同步维护本清单。`uv run python scripts/check_docs.py`会校验本表是否完整覆盖当前168份`docs/**/*.md`，并核对Doc ID、status和title，但不会自动改写清单。根`README.md`、根`AGENTS.md`、非Markdown evidence manifest、代码和脚本不属于正式文档清单。
 
 本清单格式为 `registry_version: 1.0.0`；列结构或状态比较语义变化时提升版本。
 

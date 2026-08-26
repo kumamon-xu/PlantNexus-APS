@@ -11,9 +11,9 @@ last_reviewed: 2026-08-26
 
 # 目标仓库结构
 
-## TASK-P3-15 governance-only delta
+## TASK-P3-15 governance and planning delta
 
-本Task只修改`scripts/check_docs.py`、`backend/tests/unit/test_check_docs.py`与命中治理文档，增加phase-plan amendment discovery与回归。没有新增目录、业务模块、Schema、migration、dependency、workflow、Frontend、P4或Production路径；ignored `build/traceability/TASK-P3-15-report.json`不进入仓库结构或文档inventory。
+Implementation只修改`scripts/check_docs.py`、`backend/tests/unit/test_check_docs.py`与命中治理文档，增加phase-plan amendment discovery与回归。Provider通过后的closure重命名P3-15卡，新增P3-16/P3-17卡和`docs/frontend/official-zh-cn-terminology-map.md`；没有新增业务目录、Schema、migration、dependency、workflow、Frontend source、P4或Production路径。Ignored `build/traceability/TASK-P3-15-report.json`及provider下载不进入文档inventory。
 
 ## TASK-P3-14 layout delta
 
@@ -117,7 +117,7 @@ TASK-P1-02在既有`schemas/json`/`schemas/samples`边界新增canonical-records
 
 ## P3 layout allocation history
 
-P3 transition时只新增`docs/tasks/P3/`中的16张Task卡；当时没有创建backend、schema、migration、frontend或workflow路径。后续P3-01形成docs/ADR，P3-02负责Schema/contracts，P3-03负责persistence/migration，P3-04～10负责application/API/jobs/exporters；P3-11形成Frontend read-only foundation，P3-12形成read-only visualization/browser slice，P3-13形成human-control E2E，P3-14现形成有界Gate evidence；P3-15仅分配独立Audit。
+P3 transition时只新增`docs/tasks/P3/`中的16张Task卡；当时没有创建backend、schema、migration、frontend或workflow路径。后续P3-01形成docs/ADR，P3-02负责Schema/contracts，P3-03负责persistence/migration，P3-04～10负责application/API/jobs/exporters；P3-11形成Frontend read-only foundation，P3-12形成read-only visualization/browser slice，P3-13形成human-control E2E，P3-14形成有界Gate evidence。当前修订使P3卡总数为18张：P3-15治理owner、P3-16 planned bilingual localization、P3-17 planned/final Audit；新增一份Frontend术语规范但未新增Frontend implementation路径。
 
 ## TASK-P3-11 Frontend layout
 

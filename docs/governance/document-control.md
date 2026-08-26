@@ -6,7 +6,7 @@ spec_version: 0.3.0
 phase: P0
 normative: true
 source_sections: [1, 2, 6, 97, 101, 103, 104]
-last_reviewed: 2026-08-24
+last_reviewed: 2026-08-26
 ---
 
 # 文档控制规则
@@ -39,6 +39,7 @@ last_reviewed: YYYY-MM-DD
 - 修改架构、Solver Backend、Constraint 语义、目标层级、PlanningProblem、状态机、数据权威、分解策略、高级能力或生产性能阈值，必须提交 ADR。
 - Schema、Simulation 资产和依赖升级必须使用各自版本号，不能只依赖 Git 提交号。
 - 文档被取代时标记 `superseded` 并指向替代文档，不删除历史决策。
+- 用户可见术语/locale字典也必须版本化。`official-zh-cn-terminology.v1`只治理展示语义，不能改变英文wire值；新机器值必须先由权威Contract/Schema/状态机发布，术语表不得抢先创造或猜测语义。
 
 ## 一致性规则
 

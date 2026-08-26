@@ -11,6 +11,10 @@ last_reviewed: 2026-08-26
 
 # P3 Planning Workspace API 语义合同
 
+## TASK-P3-16 localization boundary
+
+计划中的双语只存在于Frontend display adapter。Route、JSON key、Schema/URN/version、OpenAPI `operationId`、query/command discriminator、state/error/C-ID、HTTP status、fingerprint/idempotency和response bytes逐字不变；请求仍发送`APPROVE`、`READY_FOR_REVIEW`等英文机器值。P3不增加`Accept-Language`协商或中文API字段/枚举。UI必须按error namespace/code/reason映射官方术语并保留raw/correlation，未知值fail visibly；规范来源为[`official-zh-cn-terminology.v1`](../frontend/official-zh-cn-terminology-map.md)。
+
 ## TASK-P3-14 transport Gate
 
 Gate消费P3-10已发布18-operation HTTP边界和P3-13 Frontend evidence，检查API/UI只经application/state guards并与Backend replay语义一致。报告不会发布新endpoint、payload、OpenAPI fingerprint或错误映射；发现transport/consumer漂移即形成blocking gap。当前仅为本地Gate证据，exact provider verification仍待implementation提交。
@@ -126,7 +130,7 @@ query至少携带`workspace_query_version`、`data_plane`、resource/view identi
 
 Solver `UNKNOWN`继续映射`NO_SOLUTION_WITHIN_LIMIT`并且没有candidate；API不得把它改成`INFEASIBLE`、Validation PASS或可发布ScheduleVersion。
 
-错误response至少包含version、error namespace/discriminator、product category/code或control reason、sanitized message/details、correlation ID、retryable和相关resource/version reference；不得返回raw credential、Secret、SQL、filesystem绝对目标或内部stack。
+错误response至少包含version、error namespace/discriminator、product category/code或control reason、sanitized message/details、correlation ID、retryable和相关resource/version reference；不得返回raw credential、Secret、SQL、filesystem绝对目标或内部stack。Frontend不得以英文`message`作为业务判断；本地化选择顺序是namespace→`product_error.code`或`workspace_control_error.reason`→`details.reason`，安全message只作诊断fallback。
 
 ## Idempotency 与事务
 
@@ -144,7 +148,7 @@ action scope至少包含data plane、action、resource/version、target和key；
 
 ## 测试分配
 
-TASK-P3-01只形成文档合同；TASK-P3-02现以`test_p3_workspace_contracts.py`形成`TEST-CONTRACT-001`与`TEST-WORKSPACE-CONTRACT-001`的machine carrier slice，并复验`TEST-STATE-TRANSITION-001`/`TEST-ERROR-MAPPING-001`既有集合未漂移。P3-05～10才形成read/command/API behavior，P3-13形成用户可见E2E，P3-14/15复验Gate/Audit。
+TASK-P3-01只形成文档合同；TASK-P3-02现以`test_p3_workspace_contracts.py`形成`TEST-CONTRACT-001`与`TEST-WORKSPACE-CONTRACT-001`的machine carrier slice，并复验`TEST-STATE-TRANSITION-001`/`TEST-ERROR-MAPPING-001`既有集合未漂移。P3-05～10形成read/command/API behavior，P3-13形成用户可见E2E，P3-14复验Gate；P3-16只计划本地化展示，P3-17最终独立Audit。P3-15为治理支持，不是API/Audit实现。
 
 ## TASK-P3-02 machine carrier realization
 

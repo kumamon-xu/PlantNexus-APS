@@ -11,6 +11,10 @@ last_reviewed: 2026-08-26
 
 # TASK-Px-yy — Title
 
+## P3 bilingual localization Task governance note
+
+涉及Frontend本地化时必须先固定locale集合、默认值、本地preference边界、`document.documentElement.lang`与组件库locale同步规则，并引用版本化官方术语源。实现应使用typed/exhaustive dictionary与原生Intl；未知machine value必须显示raw code/reason/state，不能猜译、隐藏或依赖英文message解析。中文只属于展示层，API path/key/operationId/header/body、enum/state/command/error/C-ID、ID/fingerprint/raw UTC与canonical bytes必须零漂移；自由文本、业务编码和credential不得机器翻译或持久化到locale preference。默认不得增加dependency；如确需新增必须先停止、扩卡并完成exact pin/lock/SCA/license/peer与ADR影响审查。Task须逐字列出Frontend source/test/Playwright/report/可选additive CI路径，建立双语coverage、accessibility、unknown fallback和wire-drift machine evidence，并分别核验implementation/closure exact provider。最终P3 Exit Audit必须由独立后继Task执行，本地化Task不得自审Exit或进入P4/Production。
+
 ## P3 vertical Gate Task governance note
 
 聚合Gate必须冻结全部前序closure SHA与不可变Diff base，保留每个subreport的raw evidence，并把runtime噪声与business semantic projection明确分离；合法并发交错只能在先严格验证允许结果集合后做versioned normalization。至少两次fresh isolated Backend/browser replay必须产生相同语义摘要。Gate只能编排已发布边界与增加focused Gate tests/CI evidence，禁止借Gate修改业务、Schema、migration、dependency、fixture或expected。Implementation与evidence-only closure分别要求exact-SHA required `validate`、未过期artifact及下载复核；Gate通过不自动执行Exit Audit、P4或Production。

@@ -13,13 +13,13 @@ last_reviewed: 2026-08-26
 
 ## TASK-P3-14 aggregated flow Gate
 
-P3-14现已获单独授权，并在一个fail-closed report中两次重放`validated P2 solution → immutable DRAFT → read/compare → command/new DRAFT → approve/reject → publish → ExportJob/package → API/UI`。18个Backend stage execution、两轮12-spec Chromium和P2 Gate regression的raw证据均保留，stable semantic projection必须唯一；P3-15 Exit Audit仍未执行。
+P3-14现已获单独授权，并在一个fail-closed report中两次重放`validated P2 solution → immutable DRAFT → read/compare → command/new DRAFT → approve/reject → publish → ExportJob/package → API/UI`。18个Backend stage execution、两轮12-spec Chromium和P2 Gate regression的raw证据均保留，stable semantic projection必须唯一；最终TASK-P3-17 Exit Audit仍未执行。
 
 ## TASK-P3-13 human-control edge
 
 当前bounded链为`authoritative read → state/capability-sensitive UI → canonical workspace-command.v1 → authorized HTTP/application → existing validation/state service → authoritative Version/Job refresh`。Browser不直连repository、不生成domain state、不调用Solver/Validator；PUBLISHED成果包下载为`authorize → EXPORTED Job → verified package directory → deterministic ZIP`只读支路。任何error/unknown outcome都回到authority refresh，不靠client rollback伪造事实。
 
-该edge完成P3 human-control consumer；其P3-14 vertical Gate已由exact provider复验并为`done`，P3-15 Exit Audit仍未执行。ExecutionEvent→Replan、OBJ-002/freeze/ChangeReport属于P4；真实identity、external publish/download、deployment与Production readiness均不在链内。
+该edge完成P3 human-control consumer；其P3-14 vertical Gate已由exact provider复验并为`done`，TASK-P3-16本地化与TASK-P3-17 Exit Audit仍未执行。本地化只可在API/UI边缘把英文machine value映射为`zh-CN/en-US` label并保留raw，不得进入domain/application链。ExecutionEvent→Replan、OBJ-002/freeze/ChangeReport属于P4；真实identity、external publish/download、deployment与Production readiness均不在链内。
 
 ```text
 Versioned Input Package
@@ -90,7 +90,7 @@ Implementation `dc2e5cd41080603606090ebfc4bc6162941c5f7f`的required run `324657
 
 ## P3 planned continuation
 
-P2 Exit已provider-verified并关闭；P3在其后追加`validated solution → immutable DRAFT → read/compare → command validation → new DRAFT → approve/reject → idempotent publish → ExportJob/package → API/UI`。P3-01先固定合同/ADR，P3-02～13分层实现，P3-14/15分别负责vertical Gate与独立Audit。该链不回写P2 artifacts，也不包含P4 Execution/Replan或Production external side effect。
+P2 Exit已provider-verified并关闭；P3在其后追加`validated solution → immutable DRAFT → read/compare → command validation → new DRAFT → approve/reject → idempotent publish → ExportJob/package → API/UI`。P3-01先固定合同/ADR，P3-02～13分层实现，P3-14负责vertical Gate，P3-15负责计划修订治理，P3-16计划增加display-only双语，P3-17最终独立Audit。该链不回写P2 artifacts，不允许localized label污染machine value，也不包含P4 Execution/Replan或Production external side effect。
 
 ## TASK-P3-01 flow contract
 

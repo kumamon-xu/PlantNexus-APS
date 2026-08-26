@@ -11,6 +11,10 @@ last_reviewed: 2026-08-26
 
 # Architecture Decision Records
 
+## TASK-P3-15 / TASK-P3-16 ADR impact review
+
+阶段计划修订治理、`official-zh-cn-terminology.v1`与planned Frontend双语展示继续遵循ADR-0002/0005/0007/0009/0012；typed display dictionaries、local non-sensitive locale preference和英文machine contract zero drift不改变模块、authority、state、persistence、Schema、dependency或Production决策，因此本closure的ADR impact为`none`，accepted ADR正文保持逐字只读。若TASK-P3-16实施发现需要server locale negotiation、新dependency、localized wire value、client authority或新state pair，必须停止并先走独立ADR/治理审查；不得在本次计划或本地化Task中隐式改变决定。
+
 ## TASK-P3-14 ADR review
 
 Gate编排继续严格遵循accepted ADR-0002/0005/0007/0009/0012：模块边界、独立Validator、immutable ScheduleVersion、Simulation隔离与server-authority command/state/publication均不变。三份状态文档只记录既有pair的Gate复验，未增加或修改state pair、authority、Schema、persistence、dependency或P4/Production决策，因此无需新ADR；任何Gate发现的业务偏差必须登记remediation而不能在Gate内改写ADR或实现。

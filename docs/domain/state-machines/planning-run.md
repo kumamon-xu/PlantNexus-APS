@@ -11,6 +11,10 @@ last_reviewed: 2026-08-26
 
 # PlanningRun 状态机
 
+## TASK-P3-16 display-boundary review
+
+PlanningRun页面名称和既有state未来可按`official-zh-cn-terminology.v1`显示`zh-CN`/`en-US` label，但PlanningRun enum、carrier、repository、worker、allowed pairs与Solver lifecycle继续使用英文machine value；未知state显示raw值并fail visibly。Locale切换不能触发run、retry、transition或重新计算。该mapping只为planned TASK-P3-16展示边界，TASK-P3-17最终审计；当前无PlanningRun实现、Schema、state pair或测试变化。
+
 ## TASK-P3-14 zero-transition Gate
 
 Gate从已完成且已验证的P2 output开始两次fresh replay，并核对P3 lifecycle未反向修改PlanningRun、重试Solver或增加pair。完整raw lifecycle evidence被保留；任何PlanningRun状态副作用都会成为blocking gap。状态机版本不变。
@@ -89,7 +93,7 @@ KPI v2与internal manifest只引用既有`planning_run_id`，并要求该ID与�
 
 ## P3 planning allocation
 
-P3只消费已经完成且candidate通过formal Validator的PlanningRun/Solution；创建ScheduleVersion不得改变PlanningRun状态或重试Solver。P3-04负责消费边界，P3-14/15验证lineage和无反向状态副作用；本次不增加PlanningRun pair、repository或worker行为。
+P3只消费已经完成且candidate通过formal Validator的PlanningRun/Solution；创建ScheduleVersion不得改变PlanningRun状态或重试Solver。P3-04负责消费边界，P3-14 Gate与P3-17 Audit验证lineage和无反向状态副作用；P3-15仅治理计划修订，P3-16仅处理display label。本次不增加PlanningRun pair、repository或worker行为。
 
 ## TASK-P3-01 contract review
 

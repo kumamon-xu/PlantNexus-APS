@@ -14,7 +14,9 @@ registry_version: 1.0.0
 
 ## TASK-P3-15 allocation review
 
-REQ-009新增有界治理分配：以唯一amendment owner、稳定Task ID、base成员状态和fail-closed删除/重复检查支持已批准的阶段计划修订。它不形成本地化、Exit、P4或Production行为；所有15个root Requirement继续`ALLOCATED`，表结构、状态语义与`registry_version=1.0.0`不变。
+REQ-009的有界治理分配已由implementation `c84e1aa1a81473f65d9f7906a6d2c67a94e7bb2f` / artifact `9597967232`精确复验：唯一amendment owner、稳定Task ID、base成员状态与fail-closed删除/重复检查共同约束已批准的阶段计划修订。该证据只完成TASK-P3-15治理能力，不形成本地化、Exit、P4或Production行为。
+
+本closure把REQ-005/006/007/009规划分配给`planned` TASK-P3-16，并由`planned` TASK-P3-17最终独立复验：P3-16只本地化既有Frontend展示、状态、错误与人机控制词汇，必须保持formal Validator、standard package、ScheduleVersion/ExportJob及全部英文machine contract逐字不漂移；`TEST-FRONTEND-I18N-001`当前只登记为`PLANNED`。所有15个root Requirement继续`ALLOCATED`，表结构、状态语义与`registry_version=1.0.0`不变。
 
 ## TASK-P3-14 allocation review
 
@@ -134,7 +136,7 @@ TASK-P2-14 provider closure：implementation `65c556789f176ad9de55523d6420737bb6
 
 ## P3 planning allocation
 
-用户批准transition后，REQ-006分配到TASK-P3-01～03、09/10、13～15，REQ-007分配到TASK-P3-01～15，REQ-009贯穿TASK-P3-01～15；REQ-004/005作为validated-solution与formal-Validator只读前提进入P3-04～06、10～15。该分配建立合同→Schema→persistence→application→API/UI→Gate→Audit链，但P3-01～15均未形成业务实现证据。
+用户批准transition后的首次规划把REQ-006分配到当时TASK-P3-01～03、09/10、13～15，REQ-007/009贯穿当时P3-01～15，REQ-004/005作为validated-solution与formal-Validator前提进入P3-04～06、10～15；“均未形成”是该规划提交当时的历史事实。当前amendment把REQ-005/006/007/009另行规划到P3-16双语zero-drift与P3-17最终Audit，不回写前置形成证据或root生命周期。
 
 REQ-008/013继续只属于P4，ExecutionEvent、ReplanRequest、OBJ-002、freeze、ChangeReport和Execution Simulator不得进入P3。REQ-001～015的根生命周期全部保持`ALLOCATED`，P2 historical evidence不改写，OPEN-010等Production authority问题未关闭，`registry_version=1.0.0`格式不变。
 

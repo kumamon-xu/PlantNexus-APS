@@ -13,7 +13,11 @@ last_reviewed: 2026-08-26
 
 ## TASK-P3-15 amendment-governance contract
 
-普通event唯一Task和首次all-added Pn-00 batch语义保持不变。新增修订模式要求唯一`phase-plan-amendment-owner`、完整Diff base、稳定逻辑Task ID、成员`planned/ready`且无implementation SHA；event base中active/done成员改写、deleted-only、重复存活路径、多owner与历史/future卡必须非零。Unit regression覆盖selector与repository event-base读取；本Task完整diff预期只命中`IMPACT-GOVERNANCE-VALIDATOR/TESTS/PHASE/GOVERNANCE-REGISTRY/DOCS`五行、19 checks与0 issues。Exact provider前状态为`in_progress`，后续计划修订不得提前使用。
+普通event唯一Task和首次all-added Pn-00 batch语义保持不变。新增修订模式要求唯一`phase-plan-amendment-owner`、完整Diff base、稳定逻辑Task ID、成员`planned/ready`且无implementation SHA；event base中active/done成员改写、deleted-only、重复存活路径、多owner与历史/future卡必须非零。22项unit regression覆盖selector与repository event-base读取；implementation artifact `9597967232`已精确复验26 committed/0 working paths、五行、19 checks与0 issues。
+
+本closure允许同一owner稳定ID rename，并原子新增两个planned/no-SHA成员、官方术语规范、一个planned Test ID及一个风险。Full governance预期为168 Markdown、30 roots、30 trace rows、49 Test IDs、15 OPEN、15 SIM、14 risks与55 Tasks；因两份state-machine规范显式记录display-only/no-pair-impact边界，完整Diff命中`IMPACT-GOVERNANCE-VALIDATOR/STATE/TESTS/PHASE/GOVERNANCE-REGISTRY/DOCS`六行，并须纳入ADR索引与PlanningRun必审项，仍为19 checks与0 issues。Closure必须从implementation event base动态选择TASK-P3-15，绑定原不可变Diff base，且不得出现Frontend/Backend业务、Schema、migration、dependency、workflow、P3-00～14、P4或Production变化；exact closure provider形成前只记录local closure evidence。
+
+提交前本地full治理实际为168 docs/167 formal docs/30 roots/30 rows/49 tests/15 OPEN/15 SIM/14 risks/55 tasks/167 unique Doc IDs；显式Task report为26 committed-range + 46 working-tree sources、48 unique paths、六行、19/19 checks、0 issues。Ruff/Pyright/22项治理unit/621项full repository与禁止范围均PASS；event-base自动发现必须在closure commit形成后执行，不能从尚未提交的working tree伪造event range。
 
 ## TASK-P3-14 governance contract
 

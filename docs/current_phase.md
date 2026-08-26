@@ -11,17 +11,19 @@ last_reviewed: 2026-08-26
 
 # 当前阶段：P3 — Planning Workspace
 
-## TASK-P3-15 启动边界
+## TASK-P3-15 完成与P3末段规划边界
 
 用户于2026-08-26批准P3末段编号方案，并授权先补齐阶段计划修订治理能力。启动前重新核验`main`、`origin/main`与remote main均为`06e7f794f486ac34c505237b847462c7c7c36d44`、ahead/behind=`0/0`且working tree clean；TASK-P3-00～14均为`done`，P3-14 corrective/closure provider及失败历史保持原样。该SHA现冻结为TASK-P3-15不可变Diff base。
 
-本Task只允许修改`scripts/check_docs.py`、治理unit test与逐字列明的治理文档，建立唯一`phase-plan-amendment-owner`、稳定Task ID rename归并、planned/ready成员、base状态保护和删除/重复路径拒绝。CI workflow、业务代码、Schema、migration、dependency、Frontend、P3-00～14、P4与Production全部冻结。Implementation exact required `validate`/artifact下载复验成功前，不创建后续本地化/Exit Audit卡，不执行本地化，也不作P3 Exit结论。
+本Task只允许修改`scripts/check_docs.py`、治理unit test与逐字列明的治理文档，建立唯一`phase-plan-amendment-owner`、稳定Task ID rename归并、planned/ready成员、base状态保护和删除/重复路径拒绝。Implementation `c84e1aa1a81473f65d9f7906a6d2c67a94e7bb2f`的push run/job=`32944633958`/`98102640242`与required `validate`成功；artifact `9597967232`、digest=`sha256:db5d7c67b33f81378fb2c2345aa4a3b6044cdacd899cc6320563607fed2b2e55`已下载复核Task/base、26/0 paths、5 Impact Rules、19 checks和0 issues。因此本evidence-only closure把TASK-P3-15标为`done`并原子登记后续planned成员；closure自身仍须exact provider复验。
+
+TASK-P3-16为Frontend bilingual localization与`official-zh-cn-terminology.v1`实施Task，依赖P3-14与P3-15；默认`zh-CN`、可切换`en-US`，但API路径/key/operationId/state/command/error/C-ID/fingerprint/标准包bytes继续为英文机器合同。它当前仅为`planned`，无Diff base或implementation SHA，必须等待新的明确授权。TASK-P3-17依赖P3-16并保持`planned`，是P3最后一项独立Exit Gate Audit；它必须独立审计双语coverage、unknown raw fallback和机器合同zero drift，不在Audit内修复问题。CI workflow、业务代码、Schema、migration、dependency、Frontend实现、P3-00～14历史、P4与Production在本closure全部冻结。
 
 ## TASK-P3-14 完成边界
 
 用户于2026-08-26明确授权执行TASK-P3-14。启动时`main=origin/main=6a3e02f00bf46f19915cb59c3c4af7daaac95be4`、ahead/behind=`0/0`且working tree clean；P3-01～13全部`done`，13组前序Diff base→implementation→closure→HEAD祖先关系、26个required `validate` run/job与26个未过期artifact均已逐项下载复核，Task/SHA/base/Impact Rules/checks/issues一致。因此该SHA冻结为本Task不可变Diff base，TASK-P3-14当时进入`in_progress`。
 
-本Task只能增加版本化P3 Gate聚合器、两次fresh isolated Backend与Chromium replay、四类exact fail-closed exit rejection、stable semantic projection/raw evidence、focused test及required CI artifact。P3-02～13业务/Schema/migration/dependency/frontend行为基线只读；P3-15 Exit Audit=`NOT_PERFORMED`，P4与Production未启动，也不形成Production readiness、approval或external publish。
+本Task只能增加版本化P3 Gate聚合器、两次fresh isolated Backend与Chromium replay、四类exact fail-closed exit rejection、stable semantic projection/raw evidence、focused test及required CI artifact。P3-02～13业务/Schema/migration/dependency/frontend行为基线只读；最终Exit Audit（现编号TASK-P3-17）=`NOT_PERFORMED`，P4与Production未启动，也不形成Production readiness、approval或external publish。
 
 当前完整本地验收已通过：616项Python、54项Vitest、基础Chromium与两轮Gate Chromium各12/12、全部历史/当前machine contracts、P2 XS/Gate、SCA/license、Compose/build和56 paths/8 Impact Rules/19 checks/0 issues。Backend Gate两轮共18个stage execution/144个subordinate checks，Frontend aggregate 5/5，四类rejection逐字一致，Python aggregate 14/14且`blocking_gaps=[]`。
 
@@ -43,7 +45,7 @@ Corrective implementation `54a25646053979a69734a3148030830d49c04c1e`的push run 
 
 P2-14 audit implementation `65c556789f176ad9de55523d6420737bb60f933f`的GitHub push run `32677741558` / required `validate` job `97288829348` / artifact `9503227240`成功，artifact digest=`sha256:fbb76f0ab44d3bdcff2d31e70f9698af84e10e48ee57ae611eef8529a288240e`；evidence-only closure `80c403384d1e171258cf874d26605d0d22aff1b2`的run `32678248961` / job `97290201234` / artifact `9503372291`也成功，digest=`sha256:673412905b7420660d1e9f07755fcda6291f85f8f2bd926b4bf31a0a6bd1bd0c`。下载检查的两份artifact均含20份可解析JSON，Task/SHA/Impact Rules/checks/issues与对应提交一致且0 issue。规划启动时`main=origin/main=80c403384d1e171258cf874d26605d0d22aff1b2`、ahead/behind=`0/0`且working tree clean，因此transition前提一致。
 
-P2 Milestone现为`completed`，P3 Milestone为`active`。`TASK-P3-00`～`TASK-P3-14`均为`done`；TASK-P3-15按新的明确授权为`in_progress`，只形成阶段计划修订治理支持，不自动创建或启动后续成员。
+P2 Milestone现为`completed`，P3 Milestone为`active`。`TASK-P3-00`～`TASK-P3-15`均为`done`；TASK-P3-16为planned bilingual localization，TASK-P3-17为planned/final independent Exit Audit，二者均未启动。
 
 ## 当前目标
 
@@ -180,12 +182,12 @@ Implementation `567e8693db881ea3dfffa011de9021fef9641361`的required run/job/art
 - 读取并复核P3-01～13合同、Schema、persistence/lifecycle/read/command/decision/publication/export/API/UI provider evidence和P2 frozen artifact；
 - 保留TASK-P3-13已形成的state/capability-sensitive human controls、UI E2E、第18个有界verified internal Simulation package download及XLSX corrective evidence，不追加实现；
 - 保留P2/v1 Schema/package bytes、P3-05～10 application/state/audit/API事实及全部历史provider evidence；
-- P3-14/15只有在逐Task明确授权后，才可按各卡允许范围和新的不可变Diff base实施。
+- P3-16/17只有在逐Task明确授权后，才可按各卡允许范围和新的不可变Diff base实施。
 
 ## 当前禁止
 
 - 继续或扩展TASK-P3-13的Frontend/download/export实现，或修改Schema、migration、Python/npm dependency、任一lockfile、repository persistence语义、P2/v1 package/fixture/benchmark bytes、external adapter/network或deployment；
-- 执行P3-14/15，或让其中任何Task自动进入`ready/in_progress`；
+- 执行TASK-P3-16/17，或让其中任何Task自动进入`ready/in_progress`；
 - 直接更新PUBLISHED、绕过server/formal Validator、允许DRAFT/REJECTED发布或产生非幂等export/publish；
 - 实现P4的ExecutionEvent、ReplanRequest、OBJ-002 Stability、freeze window、ChangeReport或Execution Simulator；
 - 创建P4详细Task、进入P4，或声明Production readiness、approval authority、external publish/deployment已形成；
@@ -201,11 +203,11 @@ Implementation `567e8693db881ea3dfffa011de9021fef9641361`的required run/job/art
 
 - ScheduleVersion、Comparison、Gantt/Resource Load/Order View、Lock、Approval/Reject/Publish、ExportJob、Audit、HTTP API与UI按P3卡片闭环；
 - DRAFT/REJECTED publish拒绝、APPROVED-only publish、PUBLISHED immutability、new-DRAFT edit和idempotent export均有contract/integration/E2E证据；
-- P3-14形成完整vertical-slice Gate evidence；最后独立执行P3-15 Exit Gate Audit；
-- P3-15 report/manifest必须给出真实overall和`blocking_gaps`，并由exact GitHub required `validate`和artifact复验；
-- 即使P3-15=`READY`，也必须等待用户再次明确批准才允许P3→P4 transition。
+- P3-14形成完整vertical-slice Gate evidence；P3-16形成双语展示与官方术语的zero-wire-drift证据；最后独立执行TASK-P3-17 Exit Gate Audit；
+- P3-17 report/manifest必须给出真实overall和`blocking_gaps`，并由exact GitHub required `validate`和artifact复验；
+- 即使P3-17=`READY`，也必须等待用户再次明确批准才允许P3→P4 transition。
 
-失败时保持P3；实现缺口只能进入有界P3 remediation Task，P3-15本身不得修实现。P3 Task完成、Gate READY或内部Simulation publish都不构成Production readiness/approval/publish声明。
+失败时保持P3；实现缺口只能进入有界P3 remediation Task，P3-17本身不得修实现。P3 Task完成、Gate READY或内部Simulation publish都不构成Production readiness/approval/publish声明。
 
 ## P2 阶段历史
 

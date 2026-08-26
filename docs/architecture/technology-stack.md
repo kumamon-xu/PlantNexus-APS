@@ -11,6 +11,10 @@ last_reviewed: 2026-08-26
 
 # 推荐技术栈与锁定规则
 
+## TASK-P3-16 localization stack boundary
+
+计划使用仓库内强类型versioned dictionaries、已锁定Ant Design自带`zhCN/enUS` locale和浏览器原生Intl；默认不增加i18n dependency。TASK-P3-16启动时`frontend/package.json`/lock应保持零差异；如确需新依赖，必须先停止并独立修订Task卡，完成exact pin、lock、SCA、license与React/Ant/TypeScript peer compatibility审查。展示层不得增加Accept-Language后端协商或改英文wire contract。
+
 ## TASK-P3-14 stack review
 
 Gate复用已锁定的Python/uv、Node `24.19.0`、npm `11.17.0`、Playwright/Chromium、Pytest与既有P3 application reports；没有新增或升级dependency/lock，也不改变此前批准的`typescript-eslint 8.68.x`门禁边界。CI新增的只是两轮browser与Python/Node Gate命令及artifact收集。
@@ -27,7 +31,7 @@ Python 3.12、uv、FastAPI、Pydantic v2、SQLAlchemy 2、Alembic、PostgreSQL�
 
 ## Frontend
 
-React、TypeScript、Ant Design、TanStack Query、支持虚拟滚动的 Gantt、Playwright。
+React、TypeScript、Ant Design、TanStack Query、原生Intl、仓库内typed locale dictionaries、支持虚拟滚动的 Gantt、Playwright。
 
 ## Quality
 

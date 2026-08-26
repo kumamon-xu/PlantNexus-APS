@@ -6,7 +6,7 @@ spec_version: 0.3.0
 phase: cross-phase
 normative: true
 source_sections: [2]
-last_reviewed: 2026-08-19
+last_reviewed: 2026-08-26
 ---
 
 # Agent 读取顺序与上下文策略
@@ -35,8 +35,11 @@ last_reviewed: 2026-08-19
 - 修改 PlanningProblem/SolverBackend/Validator/Constraint/Objective；
 - 修改 PlanningRun/ScheduleVersion/ExportJob；
 - 修改 publication、performance gate 或 production boundary。
+- 修改P3 locale、用户可见业务/错误文案、时间/单位格式或双语human-control surface。
 
 此时完整读取总规、相关 ADR 和追踪矩阵；必要时先创建 ADR/更新 Task，再开始编码。
+
+P3本地化还必须读取`../frontend/official-zh-cn-terminology-map.md`、Frontend规范、Planning Workspace API/error合同及ScheduleVersion/ExportJob状态机。术语文档是展示语义规范而非wire contract；未知机器值必须保留raw并fail visibly。
 
 ## 不应加载
 

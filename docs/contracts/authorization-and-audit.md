@@ -127,7 +127,7 @@ TASK-P3-02的`audit-event.v1`、`workspace-command.v1`与共享`workspace-contro
 
 ## 追踪与测试
 
-`REQ-007/009 + NFR-TRC/ISO/SEC/HUM + ENG-ERR/VER → TASK-P3-01 → TEST-WORKSPACE-CONTRACT-001/TEST-STATE-TRANSITION-001/TEST-ERROR-MAPPING-001`当前只形成文档合同。authorization/audit behavior由P3-03/07～10/13验证，Gate/Audit由P3-14/15复验。
+`REQ-007/009 + NFR-TRC/ISO/SEC/HUM + ENG-ERR/VER → TASK-P3-01 → TEST-WORKSPACE-CONTRACT-001/TEST-STATE-TRANSITION-001/TEST-ERROR-MAPPING-001`形成合同基线。authorization/audit behavior由P3-03/07～10/13验证，P3-14聚合Gate，P3-16未来只本地化用户可见label且必须保留actor/reason/code/correlation原值，P3-17最终独立Audit；P3-15只形成计划修订治理。
 
 ## P4/Production边界
 

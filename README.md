@@ -1,6 +1,6 @@
 # PlantNexus APS
 
-PlantNexus APS 是一个面向单工厂、多车间场景的高级计划与排程（APS）项目。P2 CP-SAT Vertical Slice 已通过 Exit Gate并关闭，当前阶段为P3（Planning Workspace）。TASK-P3-00～14均为`done`；TASK-P3-15正在实现阶段计划修订治理支持，后续本地化与独立Exit Audit尚未注册或执行，Production能力与P4动态重排均未启动。
+PlantNexus APS 是一个面向单工厂、多车间场景的高级计划与排程（APS）项目。P2 CP-SAT Vertical Slice 已通过 Exit Gate并关闭，当前阶段为P3（Planning Workspace）。TASK-P3-00～15均为`done`；TASK-P3-16 bilingual localization和TASK-P3-17 final Exit Audit均为`planned`且未启动，Production能力与P4动态重排均未启动。
 
 ## 开始之前
 
@@ -20,11 +20,13 @@ Coding Agent 必须从 [`AGENTS.md`](AGENTS.md) 进入项目规则。项目规�
 
 TASK-P3-14以`6a3e02f00bf46f19915cb59c3c4af7daaac95be4`为不可变Diff base，聚合P3-02～13已发布机器边界、两次fresh Backend replay、两次独立Chromium replay、P2 Gate regression和四类exact rejection。`p3-vertical-slice-report.v1`保留完整raw subreport；stable semantic projection只排除显式runtime/derived identity，并在先验证允许集合后归一化并发审批的合法线程交错。任一报告、语义、拒绝或provider交叉检查失败都会写入`blocking_gaps`并非零退出。
 
-当前完整本地验收为616项Python、54项Vitest、基础Chromium与两轮Gate Chromium各12/12、全部机器合同、P2 Gate/XS、Compose/build及56 paths/8 Impact Rules/19 checks/0 issues均PASS；P3 Gate为14/14且`blocking_gaps=[]`。Corrective implementation `54a25646053979a69734a3148030830d49c04c1e`的required run/job/artifact=`32931418903`/`98064264595`/`9593460266`精确全绿并复现全部Gate/Task/browser证据，故TASK-P3-14=`done`；本evidence-only closure自身仍须exact provider复核。P3-15 Exit Gate Audit仍为`NOT_PERFORMED`/`planned`；该Gate不形成P4或Production identity、approval、publish、capacity、SLA或readiness。
+当前完整本地验收为616项Python、54项Vitest、基础Chromium与两轮Gate Chromium各12/12、全部机器合同、P2 Gate/XS、Compose/build及56 paths/8 Impact Rules/19 checks/0 issues均PASS；P3 Gate为14/14且`blocking_gaps=[]`。Corrective implementation `54a25646053979a69734a3148030830d49c04c1e`的required run/job/artifact=`32931418903`/`98064264595`/`9593460266`精确全绿并复现全部Gate/Task/browser证据，故TASK-P3-14=`done`。最终TASK-P3-17 Exit Gate Audit仍为`NOT_PERFORMED`/`planned`；该Gate不形成P4或Production identity、approval、publish、capacity、SLA或readiness。
 
 ## TASK-P3-15 Phase Plan Amendment Governance
 
-用户已批准调整P3末段编号。TASK-P3-15以`06e7f794f486ac34c505237b847462c7c7c36d44`为不可变Diff base，只扩展治理validator与unit regression：普通event仍只能归属一个current-phase Task；首次all-added阶段计划仍只能由`TASK-Pn-00`的`phase-planning-owner`归属；后续修订必须由唯一已存在的`phase-plan-amendment-owner`归属，成员只能保持`planned/ready`且不能预填implementation SHA。逻辑Task按稳定ID归并rename，纯删除、重复存活路径和对active/done成员的改写均硬失败。Implementation exact provider成功前不得创建后续编号卡或执行本地化/Exit Audit。
+用户已批准调整P3末段编号。TASK-P3-15以`06e7f794f486ac34c505237b847462c7c7c36d44`为不可变Diff base，只扩展治理validator与unit regression：普通event仍只能归属一个current-phase Task；首次all-added阶段计划仍只能由`TASK-Pn-00`的`phase-planning-owner`归属；后续修订必须由唯一已存在的`phase-plan-amendment-owner`归属，成员只能保持`planned/ready`且不能预填implementation SHA。逻辑Task按稳定ID归并rename，纯删除、重复存活路径和对active/done成员的改写均硬失败。Implementation `c84e1aa1a81473f65d9f7906a6d2c67a94e7bb2f`的required run/job/artifact=`32944633958`/`98102640242`/`9597967232`已下载复核26/0 paths、5 rows、19 checks、0 issues；因此本closure把Task标为`done`并登记P3-16/P3-17，closure provider仍待核验。
+
+TASK-P3-16规划默认`zh-CN`、可切换`en-US`及[`official-zh-cn-terminology.v1`](docs/frontend/official-zh-cn-terminology-map.md)，只本地化展示层；API路径/key/operationId/state/command/error/C-ID/fingerprint和标准载体继续使用英文机器合同。TASK-P3-17依赖P3-16且为最后独立Audit。两者均未获执行授权，无Diff base或implementation SHA。
 
 ## 本地验收
 
@@ -51,7 +53,7 @@ uv run python -c "import app; assert app.CODE_VERSION == '0.0.0'; assert app.SPE
 `scripts/check_docs.py` 当前同时检查结构性 Markdown、版本化 registries、REQ/NFR/ENG/TEST 等引用、Task 依赖、逐根 traceability 和 PROD_OPEN/SIM_ASSUMPTION 隔离。Task 进入 `in_progress` 时须把当时完整 HEAD SHA 写入 `Diff base`；影响覆盖检查使用 `Diff base..HEAD` 的已提交变更与当前 working tree 的并集，因此提交前后可用同一命令复验：
 
 ```powershell
-uv run python scripts/check_docs.py --task docs/tasks/P3/TASK-P3-15-p3-exit-gate-audit.md --check-diff --report build/traceability/TASK-P3-15-report.json
+uv run python scripts/check_docs.py --task docs/tasks/P3/TASK-P3-15-phase-plan-amendment-governance-support.md --check-diff --report build/traceability/TASK-P3-15-report.json
 ```
 
 报告使用 `traceability-report.v1`，包含 `diff_base` 与 committed/working-tree source counts，生成到已忽略的 `build/`；Task Card Completion evidence 保存持久结果摘要。[`ci.yml`](.github/workflows/ci.yml) 已编排 exact lock、lint、type、全部 P0 tests、machine contracts、Compose config、文档 diff 和 package build。仓库内只证明 workflow/config 可执行；CI provider run URL/ID 必须来自真实外部运行，不能由本地结果替代。
@@ -71,7 +73,7 @@ scripts/      仓库级校验与自动化脚本
 infra/        P0 开发容器构建配置
 ```
 
-P2 CP-SAT Vertical Slice已通过Exit Gate并关闭，当前阶段为P3。P2-00～14和P3-00～14均已由exact implementation provider支撑并闭环为`done`；P3-15仅按本次明确授权进入治理实现，后续成员不会自动启动。Production capacity/SLA/identity/approval authority/external publish与P4仍未形成。当前边界见[`docs/current_phase.md`](docs/current_phase.md)。
+P2 CP-SAT Vertical Slice已通过Exit Gate并关闭，当前阶段为P3。P2-00～14和P3-00～15均已由exact implementation provider支撑并闭环为`done`；P3-16/P3-17为planned成员且不会自动启动。Production capacity/SLA/identity/approval authority/external publish与P4仍未形成。当前边界见[`docs/current_phase.md`](docs/current_phase.md)。
 
 TASK-P3-13保留失败implementation run `32920462781`、首次closure `87d47c7483185483ac8027100c1c664d18011a7c` / run `32921871460`的606/1失败与artifact count=0。独立XLSX deterministic corrective implementation `3538d46f8b73ae434057bcbca9037436aa91f2c7`的required run/job/artifact=`32923203227`/`98040743610`/`9590625358`已全绿并下载复验33份JSON、12/12 Chromium和Task 91/0/11/19/0；该P3-13 closure当时未自动启动P3-14，后者现依据新的用户授权独立执行。
 

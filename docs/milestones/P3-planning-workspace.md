@@ -11,17 +11,17 @@ last_reviewed: 2026-08-26
 
 # P3 — Planning Workspace
 
-## TASK-P3-15 amendment-governance activation
+## TASK-P3-15 amendment-governance completion and final plan
 
-用户已批准P3末段编号调整；TASK-P3-15不再承担最终Audit，而先以`06e7f794f486ac34c505237b847462c7c7c36d44`为不可变Diff base实现阶段计划修订owner。该implementation只改变治理selector、unit tests与命中文档；成功的exact provider evidence形成前，不登记后续本地化/Exit Audit成员。P3-00～14及其失败/成功provider历史保持只读，Milestone继续`active`，P4与Production未启动。
+用户已批准P3末段编号调整；TASK-P3-15不再承担最终Audit，而以`06e7f794f486ac34c505237b847462c7c7c36d44`为不可变Diff base实现阶段计划修订owner。Implementation `c84e1aa1a81473f65d9f7906a6d2c67a94e7bb2f`的required run/job/artifact=`32944633958`/`98102640242`/`9597967232`精确成功；下载复核26 committed/0 working paths、5 rows、19 checks、0 issues。因此本closure把TASK-P3-15标为`done`，并由同一owner原子登记planned TASK-P3-16 bilingual localization和planned/final TASK-P3-17 Exit Audit。P3-00～14及其失败/成功provider历史保持只读，Milestone继续`active`，P4与Production未启动。
 
 ## TASK-P3-14 provider-verified Gate boundary
 
 用户于2026-08-26单独授权TASK-P3-14；P3-01～13的done状态、提交祖先拓扑、26个exact required `validate`/未过期artifact和clean synchronized `6a3e02f00bf46f19915cb59c3c4af7daaac95be4`均已复核，该SHA冻结为Diff base。Task只允许Gate编排、双Backend/Chromium replay、四类exact rejection、semantic projection、focused tests、required CI evidence和治理同步。
 
-Gate不得混入业务修复或改写P3-02～13、P2及失败provider历史。成功也只证明P3 vertical slice evidence，P3-15 Exit Gate Audit继续`NOT_PERFORMED`/`planned`；P4、Production identity/authority/capacity/readiness与external publish均未形成。
+Gate不得混入业务修复或改写P3-02～13、P2及失败provider历史。成功也只证明P3 vertical slice evidence，最终TASK-P3-17 Exit Gate Audit继续`NOT_PERFORMED`/`planned`；P4、Production identity/authority/capacity/readiness与external publish均未形成。
 
-首个implementation `0617141e411eea146cd9fc1c512ade900710be7c`的run/job=`32930677030`/`98062166642`在repository suite失败：611 passed/5 setup errors均来自synthetic Frontend Gate夹具未绑定CI exact SHA；upload无reports且artifact count=0。失败事实保留且旧SHA不rerun。限定corrective `54a25646053979a69734a3148030830d49c04c1e`的run/job/artifact=`32931418903`/`98064264595`/`9593460266`随后完整通过，下载复验37 JSON、三组12/12 Playwright、P3 14/14/0 gaps和Task 56/0/8/19/0一致，故P3-14=`done`。P3 Milestone继续`active`，等待独立P3-15而非自动进入Exit/P4。
+首个implementation `0617141e411eea146cd9fc1c512ade900710be7c`的run/job=`32930677030`/`98062166642`在repository suite失败：611 passed/5 setup errors均来自synthetic Frontend Gate夹具未绑定CI exact SHA；upload无reports且artifact count=0。失败事实保留且旧SHA不rerun。限定corrective `54a25646053979a69734a3148030830d49c04c1e`的run/job/artifact=`32931418903`/`98064264595`/`9593460266`随后完整通过，下载复验37 JSON、三组12/12 Playwright、P3 14/14/0 gaps和Task 56/0/8/19/0一致，故P3-14=`done`。P3 Milestone继续`active`，等待P3-16后再独立执行P3-17，而非自动进入Exit/P4。
 
 当前完整local implementation Gate为PASS：616 Python、54 Vitest、基础Chromium及双Gate replay各12/12、全部machine/P2 XS/Gate/SCA/license/Compose/build与56 paths/8 rows/19 checks/0 issues均全绿；Backend双replay=18 stages/144 subordinate checks，Frontend 5/5、四类exact rejection及Python 14/14 checks通过，`blocking_gaps=[]`。这仍是provider pending状态；只有implementation exact-SHA required `validate`/artifact下载复核后，才可进入evidence-only closure。
 
@@ -29,7 +29,7 @@ Gate不得混入业务修复或改写P3-02～13、P2及失败provider历史。�
 
 本Task把P3-06～12已形成的server command/decision/publication/export/API/read-only UI连接为isolated Simulation human-control consumer，并经用户批准additive提供EXPORTED verified package download。当前范围固定为command-only edit/lock→new DRAFT、approve/reject、internal publish、ExportJob/retry/download、audit/history及12 Chromium E2E；第18个operation不改变Schema/state/persistence。
 
-首次closure provider暴露XLSX wall-clock non-determinism后，Task曾重新为`in_progress`；独立corrective implementation与本evidence-only closure现使其恢复`done`，closure自身仍须exact provider。P3-14必须独立聚合完整vertical slice，P3-15最后独立审计；本Task不得提前给出P3 Exit、P4或Production结论。
+首次closure provider暴露XLSX wall-clock non-determinism后，Task曾重新为`in_progress`；独立corrective implementation与本evidence-only closure现使其恢复`done`，closure自身仍须exact provider。P3-14必须独立聚合完整vertical slice，TASK-P3-17最后独立审计；本Task不得提前给出P3 Exit、P4或Production结论。
 
 Local implementation Gate和首个corrective implementation `13e16e36fc0a06a079d6832f419950c830f2b96e`的run/job/artifact=`32921059019`/`98034581212`/`9589931373`曾全绿；但closure `87d47c7483185483ac8027100c1c664d18011a7c`的run `32921871460`真实失败且无artifact。独立corrective `3538d46f8b73ae434057bcbca9037436aa91f2c7`的run/job/artifact=`32923203227`/`98040743610`/`9590625358`现全绿，并复验33 JSON、12/12 Chromium与Task 91/0/11/19/0，故TASK-P3-13满足bounded DoD。其closure当时没有自动启动后续Task；P3-14现按新的用户授权执行，所有失败run继续保留。
 
@@ -37,7 +37,7 @@ Local implementation Gate和首个corrective implementation `13e16e36fc0a06a079d
 
 用户于2026-08-24在核验TASK-P2-00～14全部`done`、P2 Exit Gate overall=`READY`/`blocking_gaps=[]`、audit implementation/closure拓扑与exact GitHub required `validate`/artifact后，明确批准P2→P3 transition。P2为`completed`，P3为当前`active` Milestone。
 
-TASK-P3-00已完成Milestone激活、Task规划与文档治理，TASK-P3-01～14均为`done`。TASK-P3-15按新授权为`in_progress`的修订治理支持；Gate通过与治理支持均不会自动授权本地化、Exit Audit或后续阶段。
+TASK-P3-00已完成Milestone激活、Task规划与文档治理，TASK-P3-01～15均为`done`。TASK-P3-16为`planned`本地化，TASK-P3-17为`planned`/final独立Audit；Gate与治理支持均不会自动授权二者或后续阶段。
 
 ## Outcome
 
@@ -64,7 +64,9 @@ TASK-P3-00已完成Milestone激活、Task规划与文档治理，TASK-P3-01～14
 | 12 | TASK-P3-12 | Gantt/Resource Load/Comparison UI | P3-05/10/11 | `done` |
 | 13 | TASK-P3-13 | Human control actions与UI E2E | P3-06～12 | `done` |
 | 14 | TASK-P3-14 | 完整P3 vertical-slice Gate evidence | P3-01～13 | `done` |
-| 15 | TASK-P3-15 | Phase plan amendment governance support | P3-14 | `in_progress` |
+| 15 | TASK-P3-15 | Phase plan amendment governance support | P3-14 | `done` |
+| 16 | TASK-P3-16 | Frontend bilingual localization与官方中文术语 | P3-14/P3-15 | `planned` |
+| 17 | TASK-P3-17 | P3独立Exit Gate Audit（最终Task） | P3-16 | `planned` |
 
 ## Dependency graph
 
@@ -73,10 +75,10 @@ P3-00 → P3-01 → P3-02 → P3-03 → P3-04 → P3-05 → P3-06
                               ├────→ P3-07 → P3-08 → P3-09
                               └──────────────────────────┘
 P3-05/06/07/08/09 → P3-10 → P3-11 → P3-12 → P3-13
-P3-01～13 → P3-14 → P3-15 → planned localization → independent Exit Audit
+P3-01～13 → P3-14 → P3-15 → P3-16 → P3-17
 ```
 
-P3-07可在P3-04之后与read-model支线并行准备；P3-08必须等待authorization/audit service，P3-09必须等待可发布版本语义。API必须组合全部application service后形成；UI action E2E必须等待read-only与command两条链。TASK-P3-15只负责修订治理；批准的本地化成员完成后，独立Exit Audit才可最后审计冻结证据且不得修实现。
+P3-07可在P3-04之后与read-model支线并行准备；P3-08必须等待authorization/audit service，P3-09必须等待可发布版本语义。API必须组合全部application service后形成；UI action E2E必须等待read-only与command两条链。TASK-P3-15只负责修订治理；TASK-P3-16必须等待新的明确授权并只做展示层双语/zero-wire-drift；TASK-P3-17最后审计冻结证据且不得修实现。
 
 ## Exit Gate
 
@@ -84,7 +86,7 @@ DRAFT/REJECTED 不可发布，仅 APPROVED 可发布；PUBLISHED immutable；exp
 
 详细页面、API payload、权限矩阵在实现前形成；审批责任受 OPEN-010 约束。
 
-Gate还必须证明：版本/比较/read model lineage一致；所有command产生新DRAFT且formal Validator复验；approval/rejection/publish/export写入append-only audit；publish/export重试same-key same-result且冲突fail closed；API与UI不能绕过application/state-machine；artifact精确绑定implementation SHA、Task、Impact Rules、checks和issues。
+Gate还必须证明：版本/比较/read model lineage一致；所有command产生新DRAFT且formal Validator复验；approval/rejection/publish/export写入append-only audit；publish/export重试same-key same-result且冲突fail closed；API与UI不能绕过application/state-machine；TASK-P3-16双语展示保留英文machine contract、unknown raw fallback、document lang/Ant locale和完整术语coverage；artifact精确绑定implementation SHA、Task、Impact Rules、checks和issues。
 
 ## P3/P4/Production boundaries
 

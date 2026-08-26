@@ -11,6 +11,10 @@ last_reviewed: 2026-08-26
 
 # 独立 ScheduleValidator 合同
 
+## TASK-P3-16 localization non-authority boundary
+
+Validator的C-001～C-011、PASS/FAIL、product code、report bytes与计算公式继续是英文机器合同；TASK-P3-16只可依据`official-zh-cn-terminology.v1`显示双语label/说明，并必须保留raw C-ID、code、details与correlation。UI不得根据中文文案重新判断可行性或把unknown映射为PASS/FAIL。该display consumer等待未来实现与zero-wire-drift tests，最终由TASK-P3-17独立复验；当前Validator、断言、fixture和expected零变化。
+
 ## TASK-P3-14 Validator Gate
 
 两次fresh replay分别要求validated P2 solution建立reviewable DRAFT、command-derived新DRAFT再次通过正式Validator，且Approval不能覆盖失败。Gate只读取既有Validator报告并进行语义交叉检查，不导入Solver内部逻辑、不改C-001～C-011、mutation set、fixture或expected；任何失败形成blocking gap而不是在Gate内修复。
@@ -135,7 +139,7 @@ Formal Validator源码、公式、Schema、rule sheet和13-case corpus保持字�
 
 ## P3 consumer allocation
 
-P3-04创建reviewable DRAFT前、P3-06 edit/lock产生新DRAFT后以及P3-14/15 Gate/Audit时都必须通过fresh formal Validator；FAIL必须丢弃candidate/new version，不得保留“待人工接受”的非法计划。Approval不能覆盖Validator FAIL，UI/API不得复制或降级规则。P3不修改C-001～C-011公式或Validator独立性，任何缺口需有界P3 remediation而非Audit内修复。
+P3-04创建reviewable DRAFT前、P3-06 edit/lock产生新DRAFT后以及P3-14 Gate/P3-17 Audit时都必须通过fresh formal Validator；TASK-P3-16只消费报告并本地化展示。FAIL必须丢弃candidate/new version，不得保留“待人工接受”的非法计划。Approval不能覆盖Validator FAIL，UI/API不得复制或降级规则。P3不修改C-001～C-011公式或Validator独立性，任何缺口需有界P3 remediation而非Audit内修复。
 
 ## TASK-P3-04 fresh validation consumer
 

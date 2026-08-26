@@ -243,7 +243,7 @@ Provider run `32465737712` / job `96721819879` / artifact `9440650646`把Gate、
 
 ## P3 provenance plan
 
-每个P3 ScheduleVersion必须保留Snapshot/Problem/Solution/Validation/Policy/Solver/KPI/code/schema lineage；comparison、command、decision、publish和export再追加source/target version、actor capability、reason、correlation/idempotency key与append-only audit identity。TASK-P3-14/15的报告和每张Task implementation/closure artifact必须精确绑定各自SHA，不能用后续closure覆盖原始provider事实。
+每个P3 ScheduleVersion必须保留Snapshot/Problem/Solution/Validation/Policy/Solver/KPI/code/schema lineage；comparison、command、decision、publish和export再追加source/target version、actor capability、reason、correlation/idempotency key与append-only audit identity。TASK-P3-14 Gate、TASK-P3-15治理、未来P3-16本地化与P3-17 Audit的每份报告和implementation/closure artifact都必须精确绑定各自SHA；locale preference/label不得改变ID、fingerprint、raw UTC、code或canonical bytes，后续closure也不能覆盖原始/失败provider事实。
 
 TASK-P3-01把P3 carrier链固定为：`schedule-version.v1`引用P2 fingerprints；query/comparison引用exact Version/content；command引用source/expected state/content和request fingerprint；new DRAFT引用parent/Validation/audit；decision/publication引用before/after、actor capability、reason、target和idempotency result；ExportJob/manifest引用PUBLISHED Version、attempt和artifact hashes。七份机器Schema/URN只有P3-02发布后才形成。
 

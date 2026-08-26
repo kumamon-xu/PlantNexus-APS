@@ -13,7 +13,15 @@ last_reviewed: 2026-08-26
 
 ## TASK-P3-15 required governance Gate
 
-Workflow不修改，继续把push event `before`传给`--discover-task-from`。本Task的required `validate`必须由单一changed TASK-P3-15归属并复验治理unit suite、full docs与owner Diff base范围；artifact中的Task report须绑定exact implementation SHA、`06e7f794f486ac34c505237b847462c7c7c36d44`、五个Impact Rules、19/19 checks和`issues=[]`。Local PASS不能代替provider；implementation provider成功前不得用新模式提交多卡修订，成功也不形成业务、P3 Exit、P4或Production证据。
+Workflow不修改，继续把push event `before`传给`--discover-task-from`。本Task的required `validate`必须由changed TASK-P3-15 owner归属并复验治理unit suite、full docs与owner Diff base范围；artifact中的Task report须绑定exact SHA、`06e7f794f486ac34c505237b847462c7c7c36d44`、五个Impact Rules、19/19 checks和`issues=[]`。
+
+Implementation Gate已通过：SHA `c84e1aa1a81473f65d9f7906a6d2c67a94e7bb2f`、run/job=`32944633958`/`98102640242`、required `validate`/app `15368`成功；artifact `9597967232`未过期，798863 bytes，digest=`sha256:db5d7c67b33f81378fb2c2345aa4a3b6044cdacd899cc6320563607fed2b2e55`，下载复核Task/base、26/0 paths、五行、19/19 checks与0 issues。该provider只允许本evidence-only closure使用amendment模式；closure仍须从implementation event base发现同一owner、验证planned/no-SHA成员与rename，并取得自身exact required check/artifact。两次provider都不形成Frontend本地化、P3 Exit、P4或Production证据。
+
+Closure提交前required-equivalent本地证据为Ruff/Pyright、22项治理unit、621项repository、168-doc full governance及48-path/六-row/19-check/0-issue Task governance全部PASS；workflow/dependency/business禁止范围零差异。Event-base discovery与exact provider只能在closure SHA形成并push后验证，故当前仍为provider pending。
+
+## TASK-P3-16 / TASK-P3-17 future required Gates
+
+TASK-P3-16获单独授权后，required `validate`才可additive运行`p3-frontend-i18n-report.v1`、两个locale关键Playwright、typed dictionary/unknown raw coverage、document/Ant locale、non-sensitive preference及API/OpenAPI/state/command/error/header/body/fingerprint zero-drift；artifact必须绑定exact SHA、Task、Diff base、`official-zh-cn-terminology.v1`、六个Impact Rules、checks/issues与全部原始browser evidence。不得改required context、权限、trigger、dependency lock或用本地PASS替代provider。TASK-P3-17必须在P3-16双提交provider闭环后另获授权并独立重放全部P3 Gate/双语/provider topology；Audit不能修实现，READY也不构成P4 transition或Production release。
 
 ## TASK-P3-14 required Gate
 
@@ -253,7 +261,7 @@ Decision writing commit `65c556789f176ad9de55523d6420737bb60f933f`的exact requi
 
 用户已批准P2→P3；TASK-P3-00是本batch唯一owner，P3-01～15均为planned member。本规划未修改workflow；required `validate`通过current-phase discovery选择P3-00。Implementation `1d4b1a5c0ad6dc13df18588fbdcb9732e5ef15e7`的run `32681493976` / job `97298850740`为success且32/32 steps成功；artifact `9504310381`未过期，digest=`sha256:306ccfc7fedef1541c36bcc4afb0727239bd3fb9a17dd4b7ea022fd7c3d4fe64`，20/20 JSON与Task 64 paths/4 rows/19 checks/0 issues一致。因此本closure把P3-00标为`done`；closure自身仍须push后核验。
 
-未来每张P3 Task必须按卡片运行locked install、lint/type、相关unit/contract/integration/E2E/migration/build、full docs/diff治理和machine report。P3-14聚合Gate不替代P3-15独立Audit；两者READY均不构成P4 transition或Production release。
+未来每张P3 Task必须按卡片运行locked install、lint/type、相关unit/contract/integration/E2E/migration/build、full docs/diff治理和machine report。P3-14聚合Gate与P3-15治理provider都不替代P3-17独立Audit；任何P3 READY结论均不构成P4 transition或Production release。
 
 ## TASK-P3-01 provider boundary
 

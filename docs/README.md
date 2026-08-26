@@ -6,7 +6,7 @@ spec_version: 0.3.0
 phase: P3
 normative: false
 source_sections: [2, 6, 70]
-last_reviewed: 2026-08-24
+last_reviewed: 2026-08-26
 ---
 
 # PlantNexus APS 文档中心
@@ -69,9 +69,9 @@ last_reviewed: 2026-08-24
 
 ## 当前范围
 
-当前阶段为P3。P0～P2 Milestone均为`completed`，P3为`active`；TASK-P3-00～14均已由exact provider闭环为`done`。用户已批准末段编号调整，TASK-P3-15当前只实现阶段计划修订治理支持；后续本地化与独立Exit Audit卡须等待该治理implementation exact provider成功后再由同一修订owner原子登记。P4与Production不在当前范围，详见`current_phase.md`。
+当前阶段为P3。P0～P2 Milestone均为`completed`，P3为`active`；TASK-P3-00～15均已由exact implementation provider支撑并闭环为`done`。TASK-P3-16 bilingual localization与TASK-P3-17 final independent Exit Audit已由amendment owner原子登记为`planned`，均无Diff base或implementation SHA且须新的逐Task授权。P4与Production不在当前范围，详见`current_phase.md`。
 
-P3已形成的顺序保持合同/ADR→Schema→persistence→validated DRAFT→read models→edit/lock→approval/reject→idempotent publish→ExportJob→API→Frontend/E2E→vertical Gate。批准的末段顺序为治理支持→本地化→独立Exit Audit；治理Task不得自动执行其成员。
+P3已形成的顺序保持合同/ADR→Schema→persistence→validated DRAFT→read models→edit/lock→approval/reject→idempotent publish→ExportJob→API→Frontend/E2E→vertical Gate。批准的末段顺序为TASK-P3-15治理支持→TASK-P3-16本地化→TASK-P3-17独立Exit Audit；治理Task不得自动执行其成员。展示术语规范见[`frontend/official-zh-cn-terminology-map.md`](frontend/official-zh-cn-terminology-map.md)，它不改变英文机器合同。
 
 ## 仓库入口与本地检查
 

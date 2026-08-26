@@ -14,7 +14,7 @@ registry_version: 1.0.0
 
 ## TASK-P3-15 review
 
-治理selector/unit tests不生成Scenario/Profile/seed、业务数值、browser fixture或性能观测；没有新增、修改或retire assumption。SIM-ASSUMPTION-001～015全部继续`ACTIVE`，数量15且`registry_version=1.0.0`不变，治理PASS不得外推Production。
+治理selector/unit tests及其provider不生成Scenario/Profile/seed、业务数值、browser fixture或性能观测；官方术语表与planned locale preference只定义display policy，也不构成新的Simulation事实。没有新增、修改或retire assumption。SIM-ASSUMPTION-001～015全部继续`ACTIVE`，数量15且`registry_version=1.0.0`不变，治理、本地化或未来Audit PASS均不得外推Production。
 
 ## TASK-P3-14 review
 

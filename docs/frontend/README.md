@@ -11,6 +11,10 @@ last_reviewed: 2026-08-26
 
 # Frontend 文档形成计划
 
+## TASK-P3-16 planned bilingual boundary
+
+[`official-zh-cn-terminology.v1`](official-zh-cn-terminology-map.md)现为P3展示层唯一官方中文术语基线。TASK-P3-16保持`planned`且尚无Diff base/implementation SHA：未来默认`zh-CN`并可切换`en-US`，只保存非敏感本地locale preference，同时同步document language与Ant Design locale；typed词典、Intl格式、unknown raw fallback及双语accessibility/browser证据必须完整。API path/key/operationId、state/command/error/C-ID、ID/fingerprint/raw UTC与canonical bytes继续为英文机器合同，严禁从中文label反向构造request。TASK-P3-17在其后最终独立审计；当前没有修改任何`frontend/**`实现、测试、dependency或workflow。
+
 ## TASK-P3-14 browser Gate
 
 Gate在Node `24.19.0`/npm `11.17.0`下对同一P3-13 12-spec Chromium suite执行两次独立replay，并由`p3-frontend-gate-report.v1`核对两轮12 expected/12 passed、8 human-control specs、JSON/JUnit/HTML文件与stable semantic fingerprint。既有failure-only screenshot/video/trace策略不变；本Task不新增用户能力或support browser matrix。

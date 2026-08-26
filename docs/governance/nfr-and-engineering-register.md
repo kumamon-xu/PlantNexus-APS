@@ -14,7 +14,9 @@ registry_version: 1.0.0
 
 ## TASK-P3-15 allocation review
 
-NFR-TRC-001/NFR-PER-001与ENG-ARCH-001/ENG-VER-001连接amendment-owner discovery、base-state fail-closed检查和existing unit/CI evidence。普通/initial规划兼容性与稳定ID rename受回归约束；这只是治理correctness/maintainability证据，不改变任何root的`ALLOCATED`状态或`registry_version=1.0.0`。
+NFR-TRC-001/NFR-PER-001与ENG-ARCH-001/ENG-VER-001连接amendment-owner discovery、base-state fail-closed检查和existing unit/CI evidence；implementation `c84e1aa1a81473f65d9f7906a6d2c67a94e7bb2f` / artifact `9597967232`已精确复验普通/initial规划兼容性与稳定ID rename。该证据只完成治理correctness/maintainability，不形成业务或Exit结论。
+
+本closure把NFR-COR/DET/TRC/ISO/SEC/OBS/HUM及ENG-ARCH/ERR/VER规划分配给TASK-P3-16：typed/versioned词典、unknown raw fallback、default `zh-CN`/optional `en-US`、document language/Ant Design locale同步与零wire漂移均等待未来implementation；TASK-P3-17在其后独立审计。NFR-REL/PER/ENG-VAL/LOG既有事实只作为冻结回归边界，不由本地化扩写。全部root继续`ALLOCATED`，`registry_version=1.0.0`不变。
 
 ## TASK-P3-14 allocation review
 
@@ -138,7 +140,7 @@ TASK-P2-14 provider closure：required run `32677741558` / artifact `9503227240`
 
 ## P3 planning allocation
 
-P3-01～15把NFR-COR/DET/TRC/ISO/REL/SEC/OBS/PER/HUM与ENG-ARCH/VAL/ERR/VER/LOG分配到合同、immutable persistence、command/state guards、approval/publish/export、API/UI、Gate及独立Audit；ENG-SOL只作为P2 frozen boundary，不在P3扩展Solver。NFR-HUM的唯一允许目标是APPROVED-only、authorized-human capability与default-deny，OPEN-010关闭前不得写成真实角色授权。
+首次P3规划的P3-01～15把NFR/ENG分配到合同、immutable persistence、command/state guards、approval/publish/export、API/UI、Gate及当时编号的Audit。当前amendment保持ENG-SOL为P2 frozen boundary，并把双语display/zero-drift分配到P3-16、最终Audit移到P3-17；NFR-HUM仍只允许APPROVED-only、authority-neutral capability与default-deny，OPEN-010关闭前不得写成真实角色授权。
 
 本次只有规划与治理证据，不形成状态行为、可靠性、权限、UI、Production安全/性能或deployment证据。全部NFR/ENG根ID保持`ALLOCATED`，P4动态重排和Production readiness继续显式排除，`registry_version=1.0.0`格式不变。
 

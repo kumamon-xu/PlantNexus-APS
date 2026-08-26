@@ -14,7 +14,11 @@ registry_version: 1.0.0
 
 ## TASK-P3-15 impact review
 
-完整Diff base=`06e7f794f486ac34c505237b847462c7c7c36d44`。实现只允许治理validator、其unit test、当前Task/phase/Milestone及逐字治理文档，预期精确命中`IMPACT-GOVERNANCE-VALIDATOR`、`IMPACT-TESTS`、`IMPACT-PHASE`、`IMPACT-GOVERNANCE-REGISTRY`和`IMPACT-DOCS`五行。Workflow、业务代码、Schema/migration/dependency/lock、Frontend、P3-00～14、P4与Production相对base必须零差异；machine Rule表和`registry_version=1.0.0`不变，最终paths/checks/issues由Task report与exact provider回填。
+完整Diff base=`06e7f794f486ac34c505237b847462c7c7c36d44`。Implementation只修改治理validator、其unit test、当前Task/phase/Milestone及逐字治理文档，精确命中`IMPACT-GOVERNANCE-VALIDATOR`、`IMPACT-TESTS`、`IMPACT-PHASE`、`IMPACT-GOVERNANCE-REGISTRY`和`IMPACT-DOCS`五行；artifact `9597967232`已复验26 committed/0 working paths、19 checks与0 issues。
+
+本closure完成稳定ID rename、两个planned Task卡、官方术语规范、Test ID/风险/索引/追踪登记；两份`docs/domain/state-machines/**`只增加display-label/no-machine-pair-impact说明，因此额外命中`IMPACT-STATE`并审查ADR索引、PlanningRun/ScheduleVersion/ExportJob与trace matrix，总计六行。当前没有任何`frontend/**`源文件或业务测试断言变化，因此不命中`IMPACT-FRONTEND`。未来TASK-P3-16若获单独授权，按其精确allow-list预期命中`IMPACT-FRONTEND/INFRA/TESTS/PHASE/GOVERNANCE-REGISTRY/DOCS`六行并需自身Diff base/provider；该future mapping不是本closure证据。Workflow、业务代码、Schema/migration/dependency/lock、P3-00～14、P4与Production相对base必须零差异；machine Rule表与`registry_version=1.0.0`不变，closure最终paths/checks/issues由本地及exact provider report回填。
+
+提交前本地Task report已得到48 unique paths（26 committed-range/46 working-tree sources）、上述六行、19/19 checks与0 issues；closure-only 46 paths均为根README或`docs/**`，完整范围仅另含既有治理脚本与其unit test。该本地结果不替代closure exact provider。
 
 ## TASK-P3-14 impact review
 

@@ -14,7 +14,7 @@ registry_version: 1.0.0
 
 ## TASK-P3-15 review
 
-Amendment-owner、Task ID rename与CI attribution不提供Factory、identity、approval responsibility、external interface、capacity/SLA或deployment Authority/Evidence。OPEN-001～015全部继续`OPEN`，无closure record、状态或`registry_version=1.0.0`变化；治理provider成功也不得声明Production readiness。
+Amendment-owner、Task ID rename与CI attribution的implementation provider已精确成功，但不提供Factory、identity、approval responsibility、external interface、capacity/SLA或deployment Authority/Evidence。新增官方中文术语与planned双语展示也不回答任何Production事实：尤其`zh-CN`默认展示、浏览器本地偏好及UTC原值展示不关闭OPEN-001 timezone，Simulation label不关闭OPEN-002/010/015。OPEN-001～015全部继续`OPEN`，无closure record、状态或`registry_version=1.0.0`变化；TASK-P3-16/17成功也不得继承Production readiness。
 
 ## TASK-P3-14 review
 
@@ -151,7 +151,7 @@ TASK-P2-14 provider closure：required run `32677741558` / artifact `9503227240`
 
 ## P3 planning review
 
-P3将版本、approval/reject、internal publish、export与audit分配到TASK-P3-01～15，但没有收到任何Authority/Evidence closure record。尤其OPEN-010继续阻止猜测真实审批责任；OPEN-002/015继续阻止外部MES/ERP publish target与字段authority；OPEN-012继续阻止Production runtime/readiness承诺。P3只能先形成authority-neutral capability、Simulation test actor与Production default-deny。
+P3首次规划曾把版本、approval/reject、internal publish、export与audit分配到当时TASK-P3-01～15；这些development slices后来形成也仍未提供任何PROD_OPEN Authority/Evidence closure record。当前P3-16双语与P3-17 Audit同样不能关闭OPEN：OPEN-010继续阻止猜测真实审批责任，OPEN-002/015阻止外部MES/ERP publish target与字段authority，OPEN-012阻止Production runtime/readiness承诺。P3只形成authority-neutral capability、Simulation test actor与Production default-deny。
 
 本次transition/规划未关闭、重命名或改变任何条目；OPEN-001～015全部保持`OPEN`，P3 internal publish不得写成Production approval/publish，`registry_version=1.0.0`格式不变。
 

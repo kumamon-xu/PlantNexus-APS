@@ -11,6 +11,10 @@ last_reviewed: 2026-08-26
 
 # ExportJob 状态机
 
+## TASK-P3-16 display-label review
+
+`official-zh-cn-terminology.v1`为CREATED/EXPORTING/EXPORTED/EXPORT_FAILED/CANCELLED提供双语展示label；Schema、API、repository、worker、manifest、transition与error中的machine value保持英文。未知Job state必须显示raw值并fail visibly，中文“已导出”不能从文件存在推断，也不能等同Publish或external transfer。该display-only mapping等待TASK-P3-16实现，TASK-P3-17最终独立复验；当前无state pair、package、migration或测试变化。
+
 ## TASK-P3-14 state Gate
 
 Gate两轮消费P3-09公开report，核对PENDING/RUNNING/EXPORTED/FAILED既有pair、terminal immutability、same-key replay与显式retry，并单独证明unpublished source返回`STALE_SOURCE`。不增加worker、queue、external target或状态pair。
@@ -90,7 +94,7 @@ PlanningSolution/SolverReport v1没有ExportJob字段、storage side effect或pu
 
 ## P3 implementation allocation
 
-P3-02形成ExportJob carrier，P3-03形成repository/migration，P3-09实现既有pair、atomic package、same-key replay/conflict与显式FAILED retry。EXPORTED/CANCELLED终态不可复活，Job状态不得改变ScheduleVersion publication；P3-10/13只调用application service，P3-14/15复验。Production external target继续受OPEN-002/010/015阻止。
+P3-02形成ExportJob carrier，P3-03形成repository/migration，P3-09实现既有pair、atomic package、same-key replay/conflict与显式FAILED retry。EXPORTED/CANCELLED终态不可复活，Job状态不得改变ScheduleVersion publication；P3-10/13只调用application service，P3-14 Gate与P3-17 Audit复验，P3-16仅处理label。Production external target继续受OPEN-002/010/015阻止。
 
 ## TASK-P3-01 guard baseline
 

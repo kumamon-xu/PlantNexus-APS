@@ -11,6 +11,10 @@ last_reviewed: 2026-08-26
 
 # ScheduleVersion 状态机
 
+## TASK-P3-16 display-label review
+
+`official-zh-cn-terminology.v1`为六个ScheduleVersion state提供`zh-CN`/`en-US`展示label，但状态registry、Schema、API、repository、transition pair与audit中的machine value仍逐字使用`DRAFT/READY_FOR_REVIEW/APPROVED/REJECTED/PUBLISHED/SUPERSEDED`。未知值必须显示raw state并fail visibly，不能猜测转移。该display-only mapping等待TASK-P3-16实现及zero-wire-drift tests，TASK-P3-17最终独立复验；当前无state-machine、migration或测试断言变化。
+
 ## TASK-P3-14 state Gate
 
 Gate覆盖DRAFT→READY_FOR_REVIEW→APPROVED/REJECTED、APPROVED→PUBLISHED及既有supersession行为，并以四类负向证据锁定DRAFT/REJECTED不可publish、PUBLISHED不可mutation。两轮语义必须一致；本Task不增加pair、guard、actor、Schema或migration。
@@ -81,7 +85,7 @@ Internal package中的`schedule.json`虽然必须绑定fresh exact PASS Validati
 
 ## P3 implementation allocation
 
-P3-01补齐guard/actor/reason/audit/idempotency合同但不改v1 pair；P3-03形成immutable persistence，P3-04实现DRAFT→READY_FOR_REVIEW，P3-07实现READY_FOR_REVIEW→APPROVED/REJECTED，P3-08实现APPROVED→PUBLISHED与PUBLISHED→SUPERSEDED。DRAFT/REJECTED不可publish、PUBLISHED/REJECTED内容不可变，edit/lock只产生新DRAFT。P3-10/13只能调用这些application guards，P3-14/15负责Gate/Audit。
+P3-01补齐guard/actor/reason/audit/idempotency合同但不改v1 pair；P3-03形成immutable persistence，P3-04实现DRAFT→READY_FOR_REVIEW，P3-07实现READY_FOR_REVIEW→APPROVED/REJECTED，P3-08实现APPROVED→PUBLISHED与PUBLISHED→SUPERSEDED。DRAFT/REJECTED不可publish、PUBLISHED/REJECTED内容不可变，edit/lock只产生新DRAFT。P3-10/13只能调用这些application guards，P3-14负责Gate，P3-16只本地化label，P3-17负责最终Audit。
 
 ## TASK-P3-01 guard baseline
 

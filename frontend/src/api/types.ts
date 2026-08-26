@@ -12,6 +12,15 @@ export const scheduleStates = [
 ] as const;
 
 export type ScheduleState = (typeof scheduleStates)[number];
+export const exportJobStates = [
+  "CREATED",
+  "EXPORTING",
+  "EXPORTED",
+  "EXPORT_FAILED",
+  "CANCELLED",
+] as const;
+export type ExportJobState = (typeof exportJobStates)[number];
+export type WorkspaceControlState = ScheduleState | ExportJobState;
 export type DataPlane = "SIMULATION" | "PRODUCTION";
 export type RuntimeEnvironment =
   | "DEVELOPMENT"
@@ -72,6 +81,7 @@ export interface ScheduleVersion extends JsonObject {
   data_plane: DataPlane;
   environment: RuntimeEnvironment;
   synthetic: boolean;
+  synthetic_provenance: JsonObject | null;
   parent_schedule_version: VersionReference | null;
   lineage: ScheduleLineage;
   content_fingerprint: string;
@@ -79,6 +89,91 @@ export interface ScheduleVersion extends JsonObject {
   allowed_actions: JsonValue[];
   created_at_utc: string;
   created_by_actor_ref: string;
+}
+
+export const workspaceCommandTypes = [
+  "MOVE_OPERATION",
+  "ASSIGN_RESOURCE",
+  "SET_LOCK",
+  "REMOVE_LOCK",
+  "SUBMIT_FOR_REVIEW",
+  "APPROVE",
+  "REJECT",
+  "PUBLISH",
+  "REQUEST_EXPORT",
+  "RETRY_EXPORT",
+  "CANCEL_EXPORT",
+] as const;
+
+export type WorkspaceCommandType = (typeof workspaceCommandTypes)[number];
+
+export interface WorkspaceCommandDocument extends JsonObject {
+  workspace_command_version: "workspace-command.v1";
+  schema_set_version: "2.6.0";
+  canonicalization_version: "canonical-json.v1";
+  command_id: string;
+  command_type: WorkspaceCommandType;
+  required_capability: string;
+  idempotency_key: string;
+  idempotency_scope: string;
+  request_fingerprint: string;
+  source_id: string;
+  expected_state: WorkspaceControlState;
+  expected_content_fingerprint: string;
+  data_plane: DataPlane;
+  environment: RuntimeEnvironment;
+  synthetic: boolean;
+  synthetic_provenance: JsonObject;
+  target: "WORKSPACE_INTERNAL" | "SIMULATION_INTERNAL";
+  reason: string;
+  correlation_id: string;
+  payload: JsonObject;
+}
+
+export interface ExportArtifactManifest extends JsonObject {
+  export_manifest_version: "export-manifest.v2";
+  package_id: string;
+  manifest_fingerprint: string;
+  storage_reference: string;
+}
+
+export interface ExportJob extends JsonObject {
+  export_job_version: "export-job.v2";
+  schema_set_version: "2.7.0";
+  canonicalization_version: "canonical-json.v1";
+  export_job_id: string;
+  state: ExportJobState;
+  schedule_version: VersionReference;
+  data_plane: DataPlane;
+  environment: RuntimeEnvironment;
+  synthetic: boolean;
+  synthetic_provenance: JsonObject | null;
+  target: "SIMULATION_INTERNAL";
+  package_profile: "p3-standard-export.v1";
+  attempt: number;
+  artifact_manifest: ExportArtifactManifest | null;
+  latest_audit_event_id: string;
+  job_fingerprint: string;
+}
+
+export interface WorkspaceActionResult {
+  commandType: WorkspaceCommandType;
+  correlationId: string;
+  auditEventId: string;
+  exactReplay: boolean;
+  sourceVersion: VersionReference | null;
+  authoritativeVersion: VersionReference | null;
+  exportJob: ExportJob | null;
+}
+
+export interface ExportPackageDownload {
+  blob: Blob;
+  filename: string;
+  packageId: string;
+  manifestFingerprint: string;
+  archiveFingerprint: string;
+  completionAuditEventId: string;
+  correlationId: string;
 }
 
 export interface WorkspaceQueryResultBody extends JsonObject {

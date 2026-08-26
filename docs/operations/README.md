@@ -6,10 +6,16 @@ spec_version: 0.3.0
 phase: P0-P7
 normative: false
 source_sections: [65, 66, 93, 94, 95, 101, 106]
-last_reviewed: 2026-08-25
+last_reviewed: 2026-08-26
 ---
 
 # Operations 索引与形成边界
+
+## TASK-P3-13 validation operations
+
+Required workflow在locked frontend install/SCA/license/lint/type/Vitest后安装Chromium，执行12条human-control+visualization E2E，随后build和12/12 frontend machine evidence；`if: always()`继续上传JSON/HTML/JUnit及failure trace/video/screenshot。Backend先执行第18个API operation machine check和full regression。Implementation/closure各自都必须push main、等待唯一required `validate`、下载exact run artifact并核对SHA/Task/base/Impact/checks/issues。
+
+这不是Production Runbook：没有部署、值班、SLO、真实identity、external storage、backup/restore或support browser matrix。P3-14 Gate与P3-15 Audit必须另行授权。
 
 P0-08 已形成工程骨架可验证的前三份 Operations baseline：
 

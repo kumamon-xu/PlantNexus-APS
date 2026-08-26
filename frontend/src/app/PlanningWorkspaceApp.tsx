@@ -10,6 +10,7 @@ import { WorkspaceStatePanel } from "../components/WorkspaceStatePanel";
 import { GanttPage } from "../features/gantt/GanttPage";
 import { ResourceLoadPage } from "../features/resource-load/ResourceLoadPage";
 import { VersionComparisonPage } from "../features/version-comparison/VersionComparisonPage";
+import { useAppServices } from "./context";
 
 const { Content, Header, Sider } = Layout;
 const { Text, Title } = Typography;
@@ -17,6 +18,7 @@ const { Text, Title } = Typography;
 export function PlanningWorkspaceApp() {
   const navigate = useNavigate();
   const location = useLocation();
+  const { runtime } = useAppServices();
   const selected = navigationRoutes.find((route) => route.path === location.pathname);
   return (
     <Layout className="app-shell">
@@ -25,11 +27,15 @@ export function PlanningWorkspaceApp() {
           <Title level={4}>PlantNexus APS</Title>
           <Text>Planning Workspace</Text>
         </div>
-        <Tag color="green">read-only · server authority</Tag>
+        <Tag color={runtime.dataPlane === "SIMULATION" ? "gold" : "green"}>
+          {runtime.dataPlane === "SIMULATION"
+            ? "synthetic Simulation controls · server authority"
+            : "Production read-only · controls default-deny"}
+        </Tag>
       </Header>
       <Layout>
         <Sider width={232} breakpoint="lg" collapsedWidth="0" className="app-sider">
-          <nav aria-label="Planning Workspace read-only navigation">
+          <nav aria-label="Planning Workspace navigation">
             <Menu
               mode="inline"
               selectedKeys={selected === undefined ? [] : [selected.path]}
@@ -135,7 +141,7 @@ export function PlanningWorkspaceApp() {
               element={
                 <WorkspaceStatePanel
                   state="contract_error"
-                  detail="This route is outside the P3-12 read-only inventory."
+                  detail="This route is outside the P3-13 bounded workspace inventory."
                 />
               }
             />

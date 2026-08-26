@@ -6,10 +6,16 @@ spec_version: 0.3.0
 phase: cross-phase
 normative: true
 source_sections: [12, 13, 14, 30, 41, 47, 51, 65, 70]
-last_reviewed: 2026-08-25
+last_reviewed: 2026-08-26
 ---
 
 # 模块边界与依赖规则
+
+## TASK-P3-13 bounded dependency additions
+
+Frontend依赖方向固定为`api canonical/contracts/client → useHumanControlAction → feature controls → pages`；feature只提交carrier并渲染server authority。Backend download依赖方向固定为`HTTP adapter → application download service ports → read-only Job repository/package store → standard package verifier/archive`，router与store都不持有business transition。Worker与download共用root-confined attempt destination identity，避免两套path语义。
+
+无Frontend→domain/backend import、无router→repository/Solver/Validator shortcut、无package store→external network。Schema、migration、dependency/lock、P3-06～09 domain/application语义与P4目录均不变；若以后加入object storage、streaming gateway或Production identity，必须另立Task/ADR。
 
 V1 使用 Modular Monolith：一个 FastAPI 应用、PostgreSQL、Redis、独立 Solver Worker 和 React Frontend。Solver 计算不得运行在 API Process 中。
 

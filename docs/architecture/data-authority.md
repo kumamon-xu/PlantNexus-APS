@@ -6,10 +6,16 @@ spec_version: 0.3.0
 phase: cross-phase
 normative: true
 source_sections: [15, 22, 59, 61, 90]
-last_reviewed: 2026-08-25
+last_reviewed: 2026-08-26
 ---
 
 # 数据权威边界
+
+## TASK-P3-13 control/download authority
+
+UI中的state、capability、new Version、ExportJob state和artifact reference全部来自server；form/drag只是请求意图，不能成为排程或审批事实。Unknown outcome不允许client推断结果，必须先重新读取authority。Download bytes只有在Job、manifest、directory payload、hash、provenance和completion audit全部一致后才可交给browser；header是验证证据而非新的业务authority。
+
+Test actor与synthetic fixture只属于SIM-ASSUMPTION-015。真实Production identity/role/approval authority、MES/external storage、retention和operating owner仍未批准，OPEN-002/010/012继续`OPEN`。
 
 | 数据 | 权威来源 | 当前注意事项 |
 |---|---|---|

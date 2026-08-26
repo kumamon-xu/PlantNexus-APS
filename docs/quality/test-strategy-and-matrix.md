@@ -6,11 +6,17 @@ spec_version: 0.3.0
 phase: P0-P7
 normative: true
 source_sections: [31, 57, 72, 74, 76, 78, 80, 86, 87, 88, 89, 100]
-last_reviewed: 2026-08-25
+last_reviewed: 2026-08-26
 registry_version: 1.0.0
 ---
 
 # 测试策略与 Test Matrix
+
+## TASK-P3-13 test allocation and local evidence
+
+本Task复用6个既有Test ID：TEST-WORKSPACE-FRONTEND-001覆盖state/capability controls、visible failures与accessible feedback；TEST-GANTT-COMMAND-001覆盖Move/Assign/Lock、new authoritative DRAFT与PUBLISHED immutable；TEST-APPROVAL-AUTHORIZATION-001覆盖approve/reject及401/403；TEST-PUBLISH-IDEMPOTENCY-001覆盖explicit internal confirmation、double-submit与unknown-outcome same-key recovery；TEST-EXPORT-JOB-001覆盖create/failure/retry/EXPORTED-only verified download；TEST-AUDIT-TRAIL-001覆盖audit link与completion lineage。Test ID总数保持48，registry format不变。
+
+当前本地证据为Backend focused `44 passed`、全仓`607 passed`、Ruff/Pyright 0问题、Frontend 12 files/54 Vitest、12/12 Chromium、Frontend machine 12/12和HTTP machine 18 paths/operations/delegations。Browser suite覆盖401/403/409/422/500、network unknown、double click、PUBLISHED negative、tamper/header binding与Job state flow。首轮E2E因fixture provenance/locator race失败且诊断介质按策略保留，修正测试fixture/等待条件后通过；不得以retry/skip/降低断言掩盖。全部required machine、XS/P2 Gate、Compose/build与治理也PASS，但exact provider仍待push后形成，因此这些slice标记为`LOCAL_IMPLEMENTED_PROVIDER_PENDING`，P3-14不得启动。
 
 ## 测试层
 

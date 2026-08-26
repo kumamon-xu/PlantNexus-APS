@@ -1,4 +1,4 @@
-"""TASK-P3-10 HTTP delegation, error, and correlation integration evidence."""
+"""P3 HTTP delegation, error, correlation, and bounded download evidence."""
 
 from __future__ import annotations
 
@@ -21,9 +21,9 @@ def test_planning_workspace_http_machine_contract_is_complete() -> None:
     assert report["status"] == "PASS"
     assert report["check_count"] == 8
     assert report["counts"] == {
-        "api_paths": 17,
-        "http_operations": 17,
-        "successful_delegations": 17,
+        "api_paths": 18,
+        "http_operations": 18,
+        "successful_delegations": 18,
         "mapped_error_reasons": 8,
         "production_provider_lookups": 0,
         "production_application_calls": 0,

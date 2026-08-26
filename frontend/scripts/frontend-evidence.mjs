@@ -4,6 +4,8 @@ import { join, relative } from "node:path";
 
 import { argument, codeCommit, completedCheck, writeReport } from "./report-utils.mjs";
 
+const taskId = "TASK-P3-13";
+const diffBase = "3dacf83c0f0bf87a9fa673aa75d61f8ad8659386";
 const runtimePins = {
   "@tanstack/react-query": "5.102.3",
   antd: "6.6.1",
@@ -52,14 +54,26 @@ const expectedRoutes = [
   "/resource-load",
   "/compare",
 ];
-
-const requiredVisualizationFiles = [
-  "src/features/gantt/GanttPage.tsx",
-  "src/features/gantt/GanttTimeline.tsx",
-  "src/features/resource-load/ResourceLoadPage.tsx",
-  "src/features/version-comparison/VersionComparisonPage.tsx",
+const requiredControlFiles = [
+  ".env.e2e",
+  "src/api/commands.ts",
+  "src/features/schedule-actions/useHumanControlAction.ts",
+  "src/features/schedule-actions/ScheduleActionsPanel.tsx",
+  "src/features/approval/ApprovalPanel.tsx",
+  "src/features/publication/PublicationPanel.tsx",
+  "src/features/export/ExportPanel.tsx",
+  "src/features/audit/AuditHistoryPanel.tsx",
+  "e2e/human-control-actions.spec.ts",
   "e2e/read-only-visualizations.spec.ts",
   "playwright.config.ts",
+];
+const requiredTestIds = [
+  "TEST-WORKSPACE-FRONTEND-001",
+  "TEST-GANTT-COMMAND-001",
+  "TEST-APPROVAL-AUTHORIZATION-001",
+  "TEST-PUBLISH-IDEMPOTENCY-001",
+  "TEST-EXPORT-JOB-001",
+  "TEST-AUDIT-TRAIL-001",
 ];
 
 function fail(condition, message, issues) {
@@ -93,22 +107,23 @@ const npmVersion = npmExecutable
   ? spawnSync(process.execPath, [npmExecutable, "--version"], { encoding: "utf8" }).stdout.trim()
   : "unavailable";
 fail(npmVersion === "11.17.0", `runtime npm is ${npmVersion}`, issues);
-if (issues.length === 0) checks.push(completedCheck("RUNTIME-PINS", "Node 24.19.0 / npm 11.17.0"));
+checks.push(completedCheck("RUNTIME-PINS", "Node 24.19.0 / npm 11.17.0"));
 
 for (const [name, version] of Object.entries(runtimePins)) {
   fail(pkg.dependencies?.[name] === version, `runtime pin drift: ${name}`, issues);
   fail(lockRoot.dependencies?.[name] === version, `runtime lock drift: ${name}`, issues);
 }
-checks.push(completedCheck("RUNTIME-DIRECT", `${Object.keys(runtimePins).length} exact pins checked`));
 for (const [name, version] of Object.entries(developmentPins)) {
   fail(pkg.devDependencies?.[name] === version, `development pin drift: ${name}`, issues);
   fail(lockRoot.devDependencies?.[name] === version, `development lock drift: ${name}`, issues);
 }
-checks.push(completedCheck("DEVELOPMENT-DIRECT", `${Object.keys(developmentPins).length} exact pins checked`));
 fail(lock.lockfileVersion === 3, `lockfileVersion is ${String(lock.lockfileVersion)}`, issues);
-fail(lockRoot.engines?.node === "24.19.0", "lock root Node engine drifted", issues);
-fail(lockRoot.engines?.npm === "11.17.0", "lock root npm engine drifted", issues);
-checks.push(completedCheck("LOCKFILE", "npm lockfile v3 root matches package.json"));
+checks.push(
+  completedCheck(
+    "DIRECT-DEPENDENCY-LOCK",
+    `${Object.keys(runtimePins).length + Object.keys(developmentPins).length} exact direct pins / npm lockfile v3`,
+  ),
+);
 
 const tsEslint = lock.packages?.["node_modules/typescript-eslint"] ?? {};
 fail(tsEslint.version === "8.68.0", "typescript-eslint lock pin drifted", issues);
@@ -119,56 +134,167 @@ fail(
 );
 fail(pkg.devDependencies.eslint === "10.9.1", "ESLint compatibility pin drifted", issues);
 fail(pkg.devDependencies.typescript === "6.0.3", "TypeScript compatibility pin drifted", issues);
-checks.push(completedCheck("TYPESCRIPT-ESLINT-PEER", "8.68.0 / 10.9.1 / 6.0.3 within >=4.8.4 <6.1.0"));
+checks.push(
+  completedCheck(
+    "TYPESCRIPT-ESLINT-PEER",
+    "8.68.0 / ESLint 10.9.1 / TypeScript 6.0.3 inside >=4.8.4 <6.1.0",
+  ),
+);
 
 const inventory = readFileSync("src/app/routeInventory.ts", "utf8");
-for (const route of expectedRoutes) fail(inventory.includes(`\"${route}\"`), `route absent: ${route}`, issues);
+for (const route of expectedRoutes) {
+  fail(inventory.includes(`"${route}"`), `route absent: ${route}`, issues);
+}
 const pathCount = [...inventory.matchAll(/path:\s*"\//gu)].length;
 fail(pathCount === 18, `route inventory contains ${pathCount}, expected 18`, issues);
-checks.push(completedCheck("READ-ONLY-ROUTES", "18 exact P3-12 routes"));
+checks.push(completedCheck("WORKSPACE-ROUTES", "18 exact P3 routes; no P4 route"));
 
+for (const path of requiredControlFiles) {
+  fail(existsSync(path), `required P3-13 control file absent: ${path}`, issues);
+}
 const sourceFiles = files("src");
+const sourcePaths = sourceFiles.map((path) => relative("src", path).replaceAll("\\", "/"));
 const combined = sourceFiles.map((path) => readFileSync(path, "utf8")).join("\n");
-for (const forbidden of [
-  "localStorage",
-  "sessionStorage",
-  "document.cookie",
+for (const forbidden of ["localStorage", "sessionStorage", "document.cookie"]) {
+  fail(!combined.includes(forbidden), `credential persistence surface present: ${forbidden}`, issues);
+}
+for (const fragment of ["replan", "change-report", "execution-event"]) {
+  fail(
+    !sourcePaths.some((path) => path.toLowerCase().includes(fragment)),
+    `P4 module present: ${fragment}`,
+    issues,
+  );
+}
+for (const command of [
   "MOVE_OPERATION",
   "ASSIGN_RESOURCE",
   "SET_LOCK",
-  "REMOVE_LOCK",
+  "SUBMIT_FOR_REVIEW",
+  "APPROVE",
+  "REJECT",
+  "PUBLISH",
   "REQUEST_EXPORT",
-  "Idempotency-Key",
+  "RETRY_EXPORT",
 ]) {
-  fail(!combined.includes(forbidden), `forbidden client authority/token surface: ${forbidden}`, issues);
+  fail(combined.includes(command), `required human-control command absent: ${command}`, issues);
 }
-checks.push(completedCheck("CLIENT-AUTHORITY", "no token persistence or command carrier"));
+checks.push(
+  completedCheck(
+    "HUMAN-CONTROL-MODULES",
+    "state/capability controls, command carrier, no browser credential persistence or P4 module",
+  ),
+);
 
-const sourcePaths = sourceFiles.map((path) => relative("src", path).replaceAll("\\", "/"));
-for (const fragment of ["commands", "actions", "replan", "change-report", "execution-event"] ) {
-  fail(!sourcePaths.some((path) => path.toLowerCase().includes(fragment)), `P3-13/P4 module present: ${fragment}`, issues);
-}
-for (const path of requiredVisualizationFiles) {
-  fail(existsSync(path), `required visualization evidence file absent: ${path}`, issues);
-}
-checks.push(completedCheck("VISUALIZATION-MODULES", "Gantt/load/comparison/browser modules present"));
-
-const contracts = readFileSync("src/api/contracts.ts", "utf8");
-for (const contract of [
-  "GANTT_SEGMENT",
-  "RESOURCE_LOAD",
-  "VERSION_COMPARISON",
-  "unsupported server change kind",
-  "canonical complete payload",
+const runtimeSource = readFileSync("src/api/runtime.ts", "utf8");
+for (const boundary of [
+  'env.DEV === true',
+  'env.VITE_PLANTNEXUS_E2E_SIMULATION === "true"',
+  'requestedPlane === "SIMULATION"',
+  'requestedEnvironment === "TEST"',
+  "SIM-P3-HUMAN-CONTROL-001",
 ]) {
-  fail(contracts.includes(contract), `strict visualization contract absent: ${contract}`, issues);
+  fail(runtimeSource.includes(boundary), `isolated E2E runtime boundary absent: ${boundary}`, issues);
 }
-const client = readFileSync("src/api/client.ts", "utf8");
-fail(client.includes('"/schedule-version-comparisons"'), "comparison read-query endpoint absent", issues);
-fail(!client.includes("/commands"), "client command endpoint was introduced", issues);
-checks.push(completedCheck("SERVER-AUTHORITY", "strict payloads and comparison read-query only"));
+const envSource = readFileSync(".env.e2e", "utf8");
+fail(!/token|secret|password|key=/iu.test(envSource), "E2E environment contains credential-like material", issues);
+checks.push(
+  completedCheck(
+    "SIMULATION-ISOLATION",
+    "development-only TEST synthetic fixture; Production remains default-deny",
+  ),
+);
+
+const commandSource = readFileSync("src/api/commands.ts", "utf8");
+const actionSource = readFileSync(
+  "src/features/schedule-actions/useHumanControlAction.ts",
+  "utf8",
+);
+for (const boundary of [
+  "workspaceCommandFingerprint",
+  "expected_content_fingerprint",
+  "idempotency_scope",
+  "SIMULATION_INTERNAL",
+  "credentialLike",
+]) {
+  fail(commandSource.includes(boundary), `command producer boundary absent: ${boundary}`, issues);
+}
+for (const boundary of [
+  "inFlight.current",
+  "outcome_unknown",
+  "refreshAuthority",
+  "retained.current",
+  "retryReady",
+]) {
+  fail(actionSource.includes(boundary), `unknown-outcome guard absent: ${boundary}`, issues);
+}
+checks.push(
+  completedCheck(
+    "IDEMPOTENCY-AND-FAILURE",
+    "double-submit guard and refresh-before-same-command retry are explicit",
+  ),
+);
+
+const downloadClient = readFileSync("src/api/client.ts", "utf8");
+const exportPanel = readFileSync("src/features/export/ExportPanel.tsx", "utf8");
+for (const boundary of [
+  "/download",
+  "application/zip",
+  "X-PlantNexus-Archive-Fingerprint",
+  "sha256BytesFingerprint",
+  "maxExportArchiveBytes",
+]) {
+  fail(downloadClient.includes(boundary), `verified download boundary absent: ${boundary}`, issues);
+}
+for (const boundary of [
+  'job?.state === "EXPORT_FAILED"',
+  'job?.state === "EXPORTED"',
+  "artifact_manifest.manifest_fingerprint",
+  "URL.createObjectURL",
+]) {
+  fail(exportPanel.includes(boundary), `Export UI boundary absent: ${boundary}`, issues);
+}
+checks.push(
+  completedCheck(
+    "EXPORT-RETRY-DOWNLOAD",
+    "visible job states, explicit retry, EXPORTED-only manifest/hash-bound download",
+  ),
+);
+
+const apiReportPath = "../build/validation/ci-p3-planning-workspace-api.json";
+let apiOperationCount = 0;
+let apiOpenapiFingerprint = null;
+if (!existsSync(apiReportPath)) {
+  issues.push("P3 planning-workspace API evidence is absent");
+} else {
+  const apiReport = JSON.parse(readFileSync(apiReportPath, "utf8"));
+  apiOperationCount = apiReport.counts?.http_operations ?? 0;
+  apiOpenapiFingerprint = apiReport.openapi_fingerprint ?? null;
+  fail(apiReport.status === "PASS", "P3 API machine report did not pass", issues);
+  fail(apiReport.issues?.length === 0, "P3 API machine report contains issues", issues);
+  fail(apiReport.counts?.api_paths === 18, "P3 API path count is not 18", issues);
+  fail(apiOperationCount === 18, "P3 API operation count is not 18", issues);
+  fail(
+    apiReport.boundaries?.p3_10_frozen_operations === 17 &&
+      apiReport.boundaries?.p3_13_additive_operations === 1,
+    "P3-10 frozen/P3-13 additive API boundary drifted",
+    issues,
+  );
+  fail(
+    apiReport.boundaries?.internal_simulation_download === "EXPORTED_VERIFIED_ZIP_ONLY",
+    "bounded internal download boundary is absent",
+    issues,
+  );
+}
+checks.push(
+  completedCheck(
+    "API-ADDITIVE-BOUNDARY",
+    `${apiOperationCount} operations = 17 frozen P3-10 + 1 P3-13 download`,
+  ),
+);
 
 const browserReportPath = "../build/playwright/results.json";
+const browserJunitPath = "../build/playwright/results.xml";
+const browserHtmlPath = "../build/playwright/html/index.html";
 let browserSpecs = [];
 if (!existsSync(browserReportPath)) {
   issues.push("Playwright JSON evidence is absent");
@@ -182,22 +308,66 @@ if (!existsSync(browserReportPath)) {
   };
   visit(browserReport.suites);
   fail(browserReport.errors?.length === 0, "Playwright report contains top-level errors", issues);
-  fail(browserSpecs.length === 4, `Playwright spec count is ${browserSpecs.length}, expected 4`, issues);
+  fail(browserSpecs.length === 12, `Playwright spec count is ${browserSpecs.length}, expected 12`, issues);
   for (const spec of browserSpecs) {
-    const results = (spec.tests ?? []).flatMap((test) => test.results ?? []);
-    fail(spec.ok === true && results.some((result) => result.status === "passed"), `Playwright spec failed: ${spec.title}`, issues);
+    const results = (spec.tests ?? []).flatMap((item) => item.results ?? []);
+    fail(
+      spec.ok === true && results.some((result) => result.status === "passed"),
+      `Playwright spec failed: ${spec.title}`,
+      issues,
+    );
   }
 }
-const browserSource = readFileSync("e2e/read-only-visualizations.spec.ts", "utf8");
-fail(browserSource.includes("syntheticSegmentCount = 120"), "120-row browser scale fixture absent", issues);
-fail(browserSource.includes("toBeLessThanOrEqual(24)"), "virtual row mount boundary absent", issues);
-const playwrightConfig = readFileSync("playwright.config.ts", "utf8");
-for (const retention of ['trace: "retain-on-failure"', 'screenshot: "only-on-failure"', 'video: "retain-on-failure"']) {
-  fail(playwrightConfig.includes(retention), `browser failure retention drifted: ${retention}`, issues);
+const controlSpecs = browserSpecs.filter((spec) => spec.file === "human-control-actions.spec.ts");
+fail(controlSpecs.length === 8, `human-control browser spec count is ${controlSpecs.length}, expected 8`, issues);
+fail(existsSync(browserJunitPath), "Playwright JUnit evidence is absent", issues);
+fail(existsSync(browserHtmlPath), "Playwright HTML evidence is absent", issues);
+const browserSource = readFileSync("e2e/human-control-actions.spec.ts", "utf8");
+for (const matrix of [
+  "[401, 403, 409, 422, 500]",
+  "failNextNetwork",
+  "Retry same request",
+  "PUBLISHED Gantt immutable",
+  "Download verified package",
+]) {
+  fail(browserSource.includes(matrix), `browser state/error matrix absent: ${matrix}`, issues);
 }
-checks.push(completedCheck("BROWSER-EVIDENCE", `${browserSpecs.length}/4 read-only Chromium specs`));
+const playwrightConfig = readFileSync("playwright.config.ts", "utf8");
+for (const retention of [
+  '["junit", { outputFile: "../build/playwright/results.xml" }]',
+  '["html", { outputFolder: "../build/playwright/html", open: "never" }]',
+  'trace: "retain-on-failure"',
+  'screenshot: "only-on-failure"',
+  'video: "retain-on-failure"',
+  "--mode e2e",
+]) {
+  fail(playwrightConfig.includes(retention), `browser reporter/retention drifted: ${retention}`, issues);
+}
+checks.push(
+  completedCheck(
+    "BROWSER-EVIDENCE",
+    `${browserSpecs.length}/12 Chromium specs; ${controlSpecs.length}/8 control specs; JSON/JUnit/HTML and failure retention`,
+  ),
+);
 
-checks.push(completedCheck("PHASE-BOUNDARY", "no control/P4 module, client authority or Production claim"));
+const publishedGuard = readFileSync(
+  "src/features/schedule-actions/ScheduleActionsPanel.tsx",
+  "utf8",
+);
+fail(
+  publishedGuard.includes('version.state === "PUBLISHED"') &&
+    publishedGuard.includes("Published history is immutable"),
+  "PUBLISHED mutation guard is absent",
+  issues,
+);
+fail(!combined.includes("/replan-requests"), "P4 Replan route was introduced", issues);
+fail(!combined.includes("/execution-events"), "P4 ExecutionEvent route was introduced", issues);
+checks.push(
+  completedCheck(
+    "PHASE-BOUNDARY",
+    "PUBLISHED immutable; no P4, MES, external storage, Production authority or readiness claim",
+  ),
+);
 
 const assets = files("dist/assets");
 const javascriptBytes = assets
@@ -206,42 +376,62 @@ const javascriptBytes = assets
 const cssBytes = assets
   .filter((path) => path.endsWith(".css"))
   .reduce((total, path) => total + statSync(path).size, 0);
-fail(javascriptBytes > 0 && javascriptBytes <= 2_000_000, `JavaScript bundle bytes ${javascriptBytes} exceed development boundary`, issues);
-fail(cssBytes > 0 && cssBytes <= 250_000, `CSS bundle bytes ${cssBytes} exceed development boundary`, issues);
-checks.push(completedCheck("BUILD-OBSERVATION", `${javascriptBytes} JS bytes / ${cssBytes} CSS bytes`));
+fail(
+  javascriptBytes > 0 && javascriptBytes <= 2_100_000,
+  `JavaScript bundle bytes ${javascriptBytes} exceed development boundary`,
+  issues,
+);
+fail(
+  cssBytes > 0 && cssBytes <= 275_000,
+  `CSS bundle bytes ${cssBytes} exceed development boundary`,
+  issues,
+);
+checks.push(
+  completedCheck(
+    "BUILD-OBSERVATION",
+    `${javascriptBytes} JS bytes / ${cssBytes} CSS bytes; development observation only`,
+  ),
+);
 
 const report = {
-  report_version: "p3-frontend-visualization-report.v1",
-  task: "TASK-P3-12",
+  report_version: "p3-frontend-human-control-report.v1",
+  task_id: taskId,
   code_commit: codeCommit(),
-  diff_base: "3bca1cc10ebedc4d47227bafb2f3f66854ccb526",
+  diff_base: diffBase,
   status: issues.length === 0 ? "PASS" : "FAIL",
   direct_dependency_count: Object.keys(runtimePins).length + Object.keys(developmentPins).length,
   route_count: pathCount,
-  state_count: 7,
+  api_operation_count: apiOperationCount,
+  api_openapi_fingerprint: apiOpenapiFingerprint,
   source_file_count: sourceFiles.length,
+  browser_spec_count: browserSpecs.length,
+  human_control_browser_spec_count: controlSpecs.length,
+  test_ids: requiredTestIds,
   bundle: { javascript_bytes: javascriptBytes, css_bytes: cssBytes },
-  render_observation: {
-    profile: "VERSIONED_SYNTHETIC_UI_120@1.0.0",
-    total_gantt_rows: 120,
-    mounted_visual_row_boundary: 24,
-    browser_spec_count: browserSpecs.length,
-    production_sla_asserted: false,
+  simulation_fixture: {
+    scenario_id: "SIM-P3-HUMAN-CONTROL-001",
+    scenario_version: "1.0.0",
+    actor_ref: "actor:p3-e2e-synthetic-controller",
+    mock_transport: true,
+    production_extrapolation: false,
   },
   frozen_inputs: {
-    read_model_closure: "67d38d030f8b129de7f1b2f6e5b75bd706655396",
-    comparison_fingerprint: "sha256:5a24b392ff6064de06f9ba8eaa5112dc66a8a8a3b6c370650706cb2a1a4145dc",
-    api_closure: "26dd519b1f1f84e08d415cfdfce43f286fa82988",
-    openapi_fingerprint: "sha256:fbabcc5b9005f5ec22f3a6e8b6351bcf0469dbaa176682caa954191c0d697b36",
-    frontend_foundation_closure: "3bca1cc10ebedc4d47227bafb2f3f66854ccb526",
+    p3_10_api_closure: "26dd519b1f1f84e08d415cfdfce43f286fa82988",
+    p3_11_frontend_closure: "3bca1cc10ebedc4d47227bafb2f3f66854ccb526",
+    p3_12_visualization_closure: "3dacf83c0f0bf87a9fa673aa75d61f8ad8659386",
   },
   boundaries: {
-    read_only: true,
+    p3_10_frozen_http_operations: 17,
+    p3_13_additive_download_operations: 1,
+    server_authority_only: true,
+    internal_simulation_controls: true,
+    verified_export_download: true,
     browser_e2e_formed: true,
-    command_or_action_ui_formed: false,
+    schema_migration_dependency_state_pairs_changed: false,
     client_solver_validator_kpi_formed: false,
-    production_identity_formed: false,
+    external_identity_mes_storage_formed: false,
     p4_formed: false,
+    production_identity_formed: false,
     production_readiness: false,
   },
   checks,

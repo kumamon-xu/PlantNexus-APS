@@ -17,6 +17,23 @@ const queryFingerprintFields = [
   "page",
 ] as const;
 
+const commandFingerprintFields = [
+  "workspace_command_version",
+  "schema_set_version",
+  "canonicalization_version",
+  "command_type",
+  "source_id",
+  "expected_state",
+  "expected_content_fingerprint",
+  "data_plane",
+  "environment",
+  "synthetic",
+  "synthetic_provenance",
+  "target",
+  "reason",
+  "payload",
+] as const;
+
 function compareCodePoints(left: string, right: string): number {
   const leftPoints = Array.from(left, (value) => value.codePointAt(0) ?? 0);
   const rightPoints = Array.from(right, (value) => value.codePointAt(0) ?? 0);
@@ -49,11 +66,34 @@ export function canonicalJson(value: JsonValue): string {
 
 export async function sha256Fingerprint(value: JsonObject): Promise<string> {
   const bytes = new TextEncoder().encode(canonicalJson(value));
-  const digest = await globalThis.crypto.subtle.digest("SHA-256", bytes);
+  return sha256BytesFingerprint(bytes);
+}
+
+export async function sha256BytesFingerprint(
+  value: ArrayBuffer | Uint8Array,
+): Promise<string> {
+  const bytes =
+    value instanceof Uint8Array ? Uint8Array.from(value) : new Uint8Array(value.slice(0));
+  const digest = await globalThis.crypto.subtle.digest("SHA-256", bytes.buffer);
   const hex = Array.from(new Uint8Array(digest), (byte) =>
     byte.toString(16).padStart(2, "0"),
   ).join("");
   return `sha256:${hex}`;
+}
+
+export async function workspaceCommandFingerprint(
+  document: JsonObject,
+): Promise<string> {
+  const projection: JsonObject = {};
+  for (const field of commandFingerprintFields) {
+    if (field === "synthetic_provenance" && !(field in document)) continue;
+    const value = document[field];
+    if (value === undefined) {
+      throw new TypeError(`command fingerprint field is absent: ${field}`);
+    }
+    projection[field] = value;
+  }
+  return sha256Fingerprint(projection);
 }
 
 export async function workspaceQueryFingerprint(

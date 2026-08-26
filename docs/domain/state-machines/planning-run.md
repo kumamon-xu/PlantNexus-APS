@@ -6,10 +6,14 @@ spec_version: 0.3.0
 phase: P0-P2
 normative: true
 source_sections: [29, 32, 65]
-last_reviewed: 2026-08-25
+last_reviewed: 2026-08-26
 ---
 
 # PlanningRun 状态机
+
+## TASK-P3-13 no-transition review
+
+Human-control browser只调用已有ScheduleVersion/ExportJob application commands；新增download是EXPORTED artifact的只读binary retrieval。PlanningRun enum、16 states、31 allowed pairs、terminal semantics及carrier bytes均未修改，router/browser不导入PlanningRun transition、Solver或Validator。
 
 PlanningRun 只描述计算生命周期，不承载批准、发布或版本替代语义。
 

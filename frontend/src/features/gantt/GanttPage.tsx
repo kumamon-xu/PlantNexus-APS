@@ -1,14 +1,21 @@
 import { Alert, Button, Card, Flex, Input, Select, Space, Typography } from "antd";
 import { useState } from "react";
-import { useSearchParams } from "react-router-dom";
+import { useNavigate, useSearchParams } from "react-router-dom";
 
 import { parseGanttSegments } from "../../api/contracts";
-import type { GanttSegment, WorkspaceHttpResponse, WorkspaceUiState } from "../../api/types";
+import type {
+  GanttSegment,
+  WorkspaceActionResult,
+  WorkspaceHttpResponse,
+  WorkspaceUiState,
+} from "../../api/types";
+import { useAppServices } from "../../app/context";
 import { stateForError } from "../../app/state";
 import { useScheduleVersion } from "../../app/useScheduleVersion";
 import { useScheduleWorkspaceView } from "../../app/useWorkspaceView";
 import { AuthorityPanel } from "../../components/AuthorityPanel";
 import { WorkspaceStatePanel } from "../../components/WorkspaceStatePanel";
+import { GanttEditControls } from "../schedule-actions/ScheduleActionsPanel";
 import { GanttTimeline, type GanttGrouping } from "./GanttTimeline";
 
 const { Paragraph, Text, Title } = Typography;
@@ -57,6 +64,8 @@ function oneFilter(value: string): string[] {
 }
 
 export function GanttPage({ grouping }: { grouping: GanttGrouping }) {
+  const navigate = useNavigate();
+  const { runtime } = useAppServices();
   const [search, setSearch] = useSearchParams();
   const initialOrder = search.get("order_id") ?? "";
   const initialResource = search.get("resource_id") ?? "";
@@ -68,6 +77,7 @@ export function GanttPage({ grouping }: { grouping: GanttGrouping }) {
   });
   const [zoom, setZoom] = useState(1);
   const [selected, setSelected] = useState<GanttSegment | null>(null);
+  const [proposedOffsetSeconds, setProposedOffsetSeconds] = useState(0);
   const { scheduleVersionId, query: versionQuery } = useScheduleVersion();
   const version = versionQuery.data;
   const ganttQuery = useScheduleWorkspaceView("GANTT", version, {
@@ -115,6 +125,36 @@ export function GanttPage({ grouping }: { grouping: GanttGrouping }) {
     orderId: selected?.order_id ?? filters.order_ids[0] ?? null,
     resourceId: selected?.resource_id ?? filters.resource_ids[0] ?? null,
   };
+  const editable =
+    runtime.dataPlane === "SIMULATION" &&
+    runtime.environment !== "PRODUCTION" &&
+    runtime.synthetic &&
+    version?.synthetic === true &&
+    version.state === "DRAFT" &&
+    version.allowed_actions.includes("edit");
+
+  async function refreshAuthority() {
+    const refreshedVersion = await versionQuery.refetch();
+    if (refreshedVersion.error !== null) throw refreshedVersion.error;
+    const refreshedGantt = await ganttQuery.refetch();
+    if (refreshedGantt.error !== null) throw refreshedGantt.error;
+  }
+
+  async function onActionResult(result: WorkspaceActionResult) {
+    const authority = result.authoritativeVersion;
+    if (authority === null) {
+      throw new TypeError("Gantt command returned no authoritative Version");
+    }
+    setSelected(null);
+    setProposedOffsetSeconds(0);
+    if (authority.schedule_version_id !== version?.schedule_version_id) {
+      void navigate(
+        `/planning/versions/${encodeURIComponent(authority.schedule_version_id)}/gantt/${grouping === "factory" ? "factory" : grouping === "workshop" ? "workshops" : "machines"}`,
+      );
+      return;
+    }
+    await refreshAuthority();
+  }
 
   function applyFilters() {
     const nextFilters = {
@@ -140,8 +180,9 @@ export function GanttPage({ grouping }: { grouping: GanttGrouping }) {
         <div>
           <Title level={2}>{grouping[0]?.toUpperCase()}{grouping.slice(1)} Gantt</Title>
           <Paragraph type="secondary">
-            Read-only server segments. Pixel positions are presentation transforms of
-            validated raw UTC instants; feasibility and KPI authority stay on the server.
+            Server segments remain authoritative. In an isolated synthetic DRAFT, drag
+            only proposes a bounded move; nothing changes until a command returns a new
+            Version and the browser refreshes it.
           </Paragraph>
         </div>
         <Button
@@ -225,8 +266,26 @@ export function GanttPage({ grouping }: { grouping: GanttGrouping }) {
                 scheduleVersionId={version.schedule_version_id}
                 zoom={zoom}
                 selection={selection}
-                onSelect={setSelected}
+                editable={editable}
+                onSelect={(segment) => {
+                  setSelected(segment);
+                  setProposedOffsetSeconds(0);
+                }}
+                onMoveIntent={(segment, offsetSeconds) => {
+                  setSelected(segment);
+                  setProposedOffsetSeconds(offsetSeconds);
+                }}
               />
+              {selected !== null && version !== undefined && (
+                <GanttEditControls
+                  key={`${selected.item_id}:${proposedOffsetSeconds}`}
+                  version={version}
+                  segment={selected}
+                  proposedOffsetSeconds={proposedOffsetSeconds}
+                  refreshAuthority={refreshAuthority}
+                  onActionResult={onActionResult}
+                />
+              )}
             </>
           )}
         </Space>

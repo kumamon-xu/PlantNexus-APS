@@ -1,14 +1,16 @@
-"""TASK-P3-10 pre-lookup authorization and redaction evidence."""
+"""P3 HTTP pre-lookup authorization, download, and redaction evidence."""
 
 from __future__ import annotations
 
-from collections.abc import Mapping
 from dataclasses import dataclass, field
 
 from fastapi.testclient import TestClient
 
 from app.api.app import create_app
-from app.api.contracts import PlanningWorkspaceApplicationRequest
+from app.api.contracts import (
+    PlanningWorkspaceApplicationRequest,
+    PlanningWorkspaceApplicationResult,
+)
 from app.api.dependencies.authorization import (
     AuthorizationAuditRecord,
     PrincipalContext,
@@ -23,7 +25,7 @@ class RecordingApplication:
 
     def execute(
         self, request: PlanningWorkspaceApplicationRequest
-    ) -> Mapping[str, object]:
+    ) -> PlanningWorkspaceApplicationResult:
         self.calls += 1
         if self.error is not None:
             raise self.error
@@ -54,13 +56,18 @@ class RecordingAuditSink:
         self.events.append(event)
 
 
-def _principal(*, scope: str) -> PrincipalContext:
+def _principal(
+    *,
+    scope: str,
+    capabilities: frozenset[str] = frozenset({"view"}),
+    export_job_scope: frozenset[str] = frozenset(),
+) -> PrincipalContext:
     return PrincipalContext(
         actor_ref="actor:p3-security-test",
-        resolved_capabilities=frozenset({"view"}),
+        resolved_capabilities=capabilities,
         planning_run_scope=frozenset(),
         schedule_version_scope=frozenset({scope}),
-        export_job_scope=frozenset(),
+        export_job_scope=export_job_scope,
         auth_policy_version="simulation-security-test.v1",
     )
 
@@ -129,6 +136,44 @@ def test_production_denies_before_provider_or_application_lookup() -> None:
     assert application.calls == 0
     assert len(sink.events) == 1
     assert sink.events[0].reason == "PRODUCTION_AUTHORITY_UNAVAILABLE"
+
+
+def test_download_requires_export_capability_and_exact_job_scope_before_application() -> (
+    None
+):
+    export_job_id = "export-job-" + "1" * 64
+    application = RecordingApplication()
+    provider = RecordingProvider(
+        _principal(
+            scope="schedule-version-sim-001",
+            capabilities=frozenset({"view"}),
+            export_job_scope=frozenset({export_job_id}),
+        )
+    )
+    sink = RecordingAuditSink()
+    api = create_app(
+        Settings(
+            runtime_environment=RuntimeEnvironment.TEST,
+            data_plane=DataPlane.SIMULATION,
+            simulation_api_enabled=True,
+        ),
+        probes={},
+        planning_workspace_application=application,
+        authorization_provider=provider,
+        authorization_audit_sink=sink,
+    )
+    with TestClient(api) as client:
+        response = client.get(
+            f"/api/v1/export-jobs/{export_job_id}/download",
+            headers={"Authorization": "Bearer known-token"},
+        )
+
+    assert response.status_code == 403
+    assert application.calls == 0
+    assert provider.calls == 1
+    assert sink.events[-1].required_capability == "export"
+    assert sink.events[-1].resource_id == export_job_id
+    assert sink.events[-1].reason == "CAPABILITY_DENIED"
 
 
 def test_unknown_application_error_is_sanitized() -> None:
@@ -200,9 +245,7 @@ def test_provider_and_denial_audit_failures_are_sanitized_and_fail_closed() -> N
         ),
     )
     with TestClient(audit_api) as client:
-        audit_failure = client.get(
-            "/api/v1/schedule-versions/schedule-version-sim-001"
-        )
+        audit_failure = client.get("/api/v1/schedule-versions/schedule-version-sim-001")
 
     assert provider_failure.status_code == 503
     assert provider_failure.headers["Cache-Control"] == "no-store"

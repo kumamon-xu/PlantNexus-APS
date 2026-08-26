@@ -1,4 +1,4 @@
-import { useMemo, useState, type UIEvent } from "react";
+import { useMemo, useRef, useState, type DragEvent, type UIEvent } from "react";
 import { Link } from "react-router-dom";
 
 import type { GanttSegment } from "../../api/types";
@@ -17,7 +17,9 @@ export interface GanttTimelineProps {
   scheduleVersionId: string;
   zoom: number;
   selection: GanttSelection;
+  editable?: boolean;
   onSelect(segment: GanttSegment): void;
+  onMoveIntent?(segment: GanttSegment, offsetSeconds: number): void;
 }
 
 const rowHeight = 48;
@@ -45,9 +47,12 @@ export function GanttTimeline({
   scheduleVersionId,
   zoom,
   selection,
+  editable = false,
   onSelect,
+  onMoveIntent,
 }: GanttTimelineProps) {
   const [scrollTop, setScrollTop] = useState(0);
+  const dragStartX = useRef<number | null>(null);
   const timeRange = useMemo(() => {
     const starts = segments.map((segment) => Date.parse(segment.start_at_utc));
     const ends = segments.map((segment) => Date.parse(segment.end_at_utc));
@@ -58,7 +63,9 @@ export function GanttTimeline({
   }, [segments]);
   const timelineWidth = Math.max(
     960,
-    Math.ceil(((timeRange.end - timeRange.start) / 3_600_000) * 96 * zoom),
+    Math.ceil(
+      (Math.max(1, timeRange.end - timeRange.start) / 3_600_000) * 96 * zoom,
+    ),
   );
   const firstRow = Math.max(0, Math.floor(scrollTop / rowHeight) - overscan);
   const visibleCount = Math.ceil(viewportHeight / rowHeight) + overscan * 2;
@@ -66,6 +73,34 @@ export function GanttTimeline({
 
   function onScroll(event: UIEvent<HTMLDivElement>) {
     setScrollTop(event.currentTarget.scrollTop);
+  }
+
+  function beginDrag(event: DragEvent<HTMLDivElement>, segment: GanttSegment) {
+    if (!editable || !Number.isFinite(event.clientX)) {
+      event.preventDefault();
+      return;
+    }
+    dragStartX.current = event.clientX;
+    event.dataTransfer.effectAllowed = "move";
+    event.dataTransfer.setData("text/plain", segment.operation_id);
+    onSelect(segment);
+  }
+
+  function finishDrag(event: DragEvent<HTMLDivElement>, segment: GanttSegment) {
+    const startX = dragStartX.current;
+    dragStartX.current = null;
+    if (
+      !editable ||
+      startX === null ||
+      !Number.isFinite(event.clientX) ||
+      onMoveIntent === undefined
+    )
+      return;
+    const spanSeconds = Math.max(1, timeRange.end - timeRange.start) / 1000;
+    const rawOffset = ((event.clientX - startX) / timelineWidth) * spanSeconds;
+    const quantized = Math.round(rawOffset / 300) * 300;
+    const bounded = Math.max(-86_400, Math.min(86_400, quantized));
+    if (bounded !== 0) onMoveIntent(segment, bounded);
   }
 
   return (
@@ -108,11 +143,15 @@ export function GanttTimeline({
               >
                 <span className="gantt-row-label">{groupLabel(segment, grouping)}</span>
                 <div
-                  className="gantt-segment"
+                  className={`gantt-segment${editable ? " is-editable" : ""}`}
                   data-operation-id={segment.operation_id}
+                  data-editable={editable ? "true" : "false"}
+                  draggable={editable}
+                  onDragStart={(event) => beginDrag(event, segment)}
+                  onDragEnd={(event) => finishDrag(event, segment)}
                   onClick={() => onSelect(segment)}
                   style={{ left, width }}
-                  title={`${segment.operation_id} · ${segment.start_at_utc} → ${segment.end_at_utc}`}
+                  title={`${segment.operation_id} · ${segment.start_at_utc} → ${segment.end_at_utc}${editable ? " · drag proposes a bounded move" : ""}`}
                 >
                   {isHighlighted ? "● " : ""}
                   {segment.operation_id}
@@ -128,8 +167,8 @@ export function GanttTimeline({
         <div className="table-scroll">
           <table>
             <caption>
-              Server-provided Gantt facts; select an operation or follow its related
-              read-only records.
+              Server-provided Gantt facts; select an operation for accessible manual
+              controls or follow its related records.
             </caption>
             <thead>
               <tr>

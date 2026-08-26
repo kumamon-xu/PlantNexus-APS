@@ -222,16 +222,16 @@ jobs:
       - name: P3 Frontend component and accessibility tests
         run: npm --prefix frontend test -- --run
 
-      - name: P3 Frontend read-only browser runtime
+      - name: P3 Frontend Chromium runtime
         run: npm --prefix frontend exec -- playwright install --with-deps chromium
 
-      - name: P3 Frontend read-only visualization browser evidence
+      - name: P3 Frontend human-control and visualization browser evidence
         run: npm --prefix frontend run test:e2e
 
       - name: P3 Frontend production build
         run: npm --prefix frontend run build
 
-      - name: P3 Frontend machine evidence
+      - name: P3-13 Frontend human-control machine evidence
         run: >-
           npm --prefix frontend run evidence --
           --report ../build/validation/ci-p3-frontend.json

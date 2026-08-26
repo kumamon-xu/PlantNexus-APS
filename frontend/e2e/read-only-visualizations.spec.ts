@@ -6,6 +6,15 @@ const baseVersionId = "schedule-version-e2e-001";
 const comparedVersionId = "schedule-version-e2e-002";
 const syntheticSegmentCount = 120;
 const fingerprint = (digit: string) => `sha256:${digit.repeat(64)}`;
+const syntheticProvenance = {
+  scenario_id: "SIM-P3-HUMAN-CONTROL-001",
+  scenario_version: "1.0.0",
+  seed: 20260826,
+  factory_profile_id: "PROFILE-P3-UI-E2E-001",
+  profile_version: "1.0.0",
+  generator_id: "PLANTNEXUS-P3-PLAYWRIGHT",
+  generator_version: "1.0.0",
+};
 
 function canonical(value: unknown): string {
   if (value === null || typeof value === "boolean" || typeof value === "string") {
@@ -30,9 +39,10 @@ function version(id: string) {
     schedule_version_id: id,
     revision: compared ? 2 : 1,
     state: compared ? "READY_FOR_REVIEW" : "DRAFT",
-    data_plane: "PRODUCTION",
-    environment: "PRODUCTION",
-    synthetic: false,
+    data_plane: "SIMULATION",
+    environment: "TEST",
+    synthetic: true,
+    synthetic_provenance: syntheticProvenance,
     parent_schedule_version: null,
     source_kind: "VALIDATED_SOLUTION",
     lineage: {
@@ -51,9 +61,11 @@ function version(id: string) {
     decision: null,
     publication: null,
     superseded_by: null,
-    allowed_actions: ["view"],
+    allowed_actions: compared
+      ? ["view", "approve", "reject", "audit"]
+      : ["view", "edit", "lock", "audit"],
     created_at_utc: compared ? "2026-08-25T00:02:00Z" : "2026-08-25T00:01:00Z",
-    created_by_actor_ref: "actor:e2e-reader",
+    created_by_actor_ref: "actor:e2e-synthetic-controller",
   };
 }
 
@@ -98,9 +110,10 @@ function comparisonPayload() {
     schema_set_version: "2.6.0",
     canonicalization_version: "canonical-json.v1",
     comparison_id: "comparison-e2e-001",
-    data_plane: "PRODUCTION",
-    environment: "PRODUCTION",
-    synthetic: false,
+    data_plane: "SIMULATION",
+    environment: "TEST",
+    synthetic: true,
+    synthetic_provenance: syntheticProvenance,
     base_version: { schedule_version_id: baseVersionId, state: "DRAFT", content_fingerprint: fingerprint("a") },
     compared_version: { schedule_version_id: comparedVersionId, state: "READY_FOR_REVIEW", content_fingerprint: fingerprint("b") },
     query_fingerprint: fingerprint("c"),

@@ -6,10 +6,16 @@ spec_version: 0.3.0
 phase: P0-P2
 normative: true
 source_sections: [30, 31, 50, 75, 86, 87]
-last_reviewed: 2026-08-24
+last_reviewed: 2026-08-26
 ---
 
 # 独立 ScheduleValidator 合同
+
+## TASK-P3-13 UI non-authority review
+
+Browser只构造Move/Assign/Lock/Submit carrier和显示server error/result；它不导入Validator、不执行C-001～C-011、不计算可行性、目标或KPI。DRAFT command的候选与fresh ValidationReport、SUBMIT second-fresh gate仍完全由P3-06 application service负责；UI成功后只跟随authoritative Version。
+
+Client-side时间量化和表单检查只是安全/可用性precheck，不能替代formal Validator。422 validation failure保持可见且不生成new Version；PUBLISHED无mutation入口。Validator代码、rule metadata、tests、Problem/Solver与P2 baselines在本Task零差异。
 
 ## 独立性
 

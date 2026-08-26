@@ -40,6 +40,7 @@ export const testScheduleVersion: ScheduleVersion = {
   data_plane: "PRODUCTION",
   environment: "PRODUCTION",
   synthetic: false,
+  synthetic_provenance: null,
   parent_schedule_version: null,
   source_kind: "VALIDATED_SOLUTION",
   lineage: testLineage,
@@ -56,6 +57,26 @@ export const testScheduleVersion: ScheduleVersion = {
   allowed_actions: ["view"],
   created_at_utc: "2026-08-25T01:03:04Z",
   created_by_actor_ref: "actor:test-reader",
+};
+
+export const syntheticProvenance: JsonObject = {
+  scenario_id: "SIM-P3-HUMAN-CONTROL-001",
+  scenario_version: "1.0.0",
+  seed: 20260826,
+  factory_profile_id: "PROFILE-P3-UI-E2E-001",
+  profile_version: "1.0.0",
+  generator_id: "PLANTNEXUS-P3-UI-FIXTURE",
+  generator_version: "1.0.0",
+};
+
+export const syntheticDraftVersion: ScheduleVersion = {
+  ...testScheduleVersion,
+  schedule_version_id: "schedule-version-sim-ui-001",
+  data_plane: "SIMULATION",
+  environment: "TEST",
+  synthetic: true,
+  synthetic_provenance: syntheticProvenance,
+  allowed_actions: ["view", "edit", "lock", "audit"],
 };
 
 export const comparedScheduleVersion: ScheduleVersion = {

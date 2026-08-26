@@ -6,10 +6,16 @@ spec_version: 0.3.0
 phase: P3
 normative: false
 source_sections: [68, 69, 77, 78]
-last_reviewed: 2026-08-25
+last_reviewed: 2026-08-26
 ---
 
 # Frontend 文档形成计划
+
+## TASK-P3-13 human-control slice
+
+P3-13在development-only `SIMULATION`/`TEST`/synthetic runtime内新增command producer、action state hook与schedule/approval/publication/export/audit controls。Browser只提交server contract，不复制Validator、state transition或authority；成功后跟随server返回的新Version或重新读取authority。401/403/409/422/500、unknown network outcome与ExportJob failure均显式可见且不显示成功状态；只有unknown outcome在完成mandatory refresh后可复用原command/idempotency key。
+
+Gantt drag只产生±24小时内、5分钟量化的Move proposal；最终时间仍作为command交由server validation，并导航到authoritative new DRAFT。PUBLISHED只显示immutable提示。Export下载只在authoritative Job=`EXPORTED`且artifact manifest存在时显示，并在browser核对package/manifest/archive header与bytes后保存。`.env.e2e`只打开versioned `SIM-P3-HUMAN-CONTROL-001@1.0.0`测试面，不含credential且不改变Production默认拒绝。
 
 TASK-P3-01已在任何Frontend dependency或实现前形成：
 

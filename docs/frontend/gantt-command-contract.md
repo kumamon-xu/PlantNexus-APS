@@ -6,10 +6,16 @@ spec_version: 0.3.0
 phase: P3
 normative: true
 source_sections: [33, 35, 47, 48, 50, 69, 77, 78, 94]
-last_reviewed: 2026-08-24
+last_reviewed: 2026-08-26
 ---
 
 # P3 Gantt Command 与新版本合同
+
+## TASK-P3-13 implemented command surface
+
+DRAFT Gantt现把selection映射为四种既有server command：Move发送operation/resource/start/end，Assign只发送operation/resource，Set Lock发送完整HARD/SOFT lock tuple，Remove Lock发送lock/operation identity。Drag只是5分钟量化且±24小时有界的Move intent；keyboard/table表单提供等价路径。Client canonicalize `workspace-command.v1`并绑定source Version ID/state/content fingerprint、capability、target、reason、correlation和同一header/body idempotency key。
+
+Server返回new authoritative DRAFT后，UI导航到该Version；validation/state/stale/idempotency错误不会乐观改变原Version。PUBLISHED timeline仍可选择和查看，但`draggable=false`且不渲染move/assign/lock button。以上不修改P3-06 copy-on-write/fresh Validator语义，也不是P4 dynamic replan。
 
 本文件固定UI提交人工编辑/lock的command语义。TASK-P3-01不实现command、Schema、API或UI；机器carrier由TASK-P3-02发布，application pipeline由TASK-P3-06实现。
 

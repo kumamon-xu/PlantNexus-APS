@@ -6,10 +6,16 @@ spec_version: 0.3.0
 phase: P3
 normative: true
 source_sections: [2, 6, 73, 74, 75, 76, 98, 99, 100]
-last_reviewed: 2026-08-25
+last_reviewed: 2026-08-26
 ---
 
 # Task Card 索引
+
+## TASK-P3-13 activation
+
+用户于2026-08-26单独授权TASK-P3-13；启动复核P3-06～12均`done`且closure provider/ancestry完整，clean synchronized `3dacf83c0f0bf87a9fa673aa75d61f8ad8659386`冻结为Diff base。经用户追加批准，Task卡允许一个`SIMULATION_INTERNAL`/`EXPORTED`/verified ZIP download operation。Task现为`in_progress`；P3-14/15、P4和Production不自动启动。
+
+本地实现已通过44 focused/607 full Python、54 Frontend、12/12 Chromium、Frontend 12/12、API 18-operation、全部machine/XS/P2 Gate、Compose/build及91 paths/11 rows/19 checks/0 issues；provider仍待implementation push后核验，因此索引继续标`in_progress`。
 
 当前Phase为P3。P0～P2 Task作为terminal历史保留；只有当前P3允许详细Task Card，P4～P7继续只保留Milestone。
 
@@ -56,7 +62,7 @@ last_reviewed: 2026-08-25
 | [TASK-P3-10](P3/TASK-P3-10-planning-workspace-http-api.md) | Planning Workspace HTTP API | P3-05～09 | `done` |
 | [TASK-P3-11](P3/TASK-P3-11-frontend-foundation-and-read-only-workspace.md) | Frontend/read-only workspace | P3-01/10 | `done` |
 | [TASK-P3-12](P3/TASK-P3-12-gantt-resource-load-and-version-comparison-ui.md) | Gantt/Load/Comparison UI | P3-05/10/11 | `done` |
-| [TASK-P3-13](P3/TASK-P3-13-human-control-actions-and-ui-e2e.md) | Human control actions/UI E2E | P3-06～12 | `planned` |
+| [TASK-P3-13](P3/TASK-P3-13-human-control-actions-and-ui-e2e.md) | Human control actions/UI E2E | P3-06～12 | `in_progress` |
 | [TASK-P3-14](P3/TASK-P3-14-p3-vertical-slice-gate-evidence.md) | P3 vertical-slice Gate evidence | P3-01～13 | `planned` |
 | [TASK-P3-15](P3/TASK-P3-15-p3-exit-gate-audit.md) | Independent P3 Exit Gate Audit | P3-14 | `planned` |
 

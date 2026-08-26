@@ -6,16 +6,24 @@ spec_version: 0.3.0
 phase: P3
 normative: true
 source_sections: [68, 69, 77, 78]
-last_reviewed: 2026-08-25
+last_reviewed: 2026-08-26
 ---
 
 # P3 — Planning Workspace
+
+## TASK-P3-13 active slice
+
+本Task把P3-06～12已形成的server command/decision/publication/export/API/read-only UI连接为isolated Simulation human-control consumer，并经用户批准additive提供EXPORTED verified package download。当前范围固定为command-only edit/lock→new DRAFT、approve/reject、internal publish、ExportJob/retry/download、audit/history及12 Chromium E2E；第18个operation不改变Schema/state/persistence。
+
+Implementation与evidence-only closure的exact provider均完成后方可标`done`。P3-14必须独立聚合完整vertical slice，P3-15最后独立审计；本Task不得提前给出P3 Exit、P4或Production结论。
+
+Local implementation Gate已通过607 Python、54 Frontend、12 Chromium、Frontend 12/12、API 18 operations、全部machine/XS/P2 Gate、Compose/build及91-path/11-row/19-check/0-issue治理。Milestone仍为`active`且Task仍为`in_progress`，因为exact implementation/closure provider尚未形成；P3-14不会自动启动。
 
 ## Authorization and start boundary
 
 用户于2026-08-24在核验TASK-P2-00～14全部`done`、P2 Exit Gate overall=`READY`/`blocking_gaps=[]`、audit implementation/closure拓扑与exact GitHub required `validate`/artifact后，明确批准P2→P3 transition。P2为`completed`，P3为当前`active` Milestone。
 
-TASK-P3-00已完成Milestone激活、Task规划与文档治理，TASK-P3-01～12也已有各自exact implementation provider并由evidence-only closure标为`done`；P3-13～15保持`planned`且未获执行授权。依赖满足不会自动授权后续实现。每个Task必须从当时clean、`main=origin/main`且provider-verified的完整40字符HEAD建立新的不可变Diff base。
+TASK-P3-00已完成Milestone激活、Task规划与文档治理，TASK-P3-01～12也已有各自exact implementation provider并由evidence-only closure标为`done`；TASK-P3-13已获明确授权并以provider-verified `3dacf83c0f0bf87a9fa673aa75d61f8ad8659386`为不可变Diff base进入`in_progress`。P3-14/15保持`planned`；依赖满足不会自动授权后续实现。
 
 ## Outcome
 
@@ -40,7 +48,7 @@ TASK-P3-00已完成Milestone激活、Task规划与文档治理，TASK-P3-01～12
 | 10 | TASK-P3-10 | Planning Workspace HTTP API | P3-05～09 | `done` |
 | 11 | TASK-P3-11 | Frontend foundation与read-only workspace | P3-01/10 | `done` |
 | 12 | TASK-P3-12 | Gantt/Resource Load/Comparison UI | P3-05/10/11 | `done` |
-| 13 | TASK-P3-13 | Human control actions与UI E2E | P3-06～12 | `planned` |
+| 13 | TASK-P3-13 | Human control actions与UI E2E | P3-06～12 | `in_progress` |
 | 14 | TASK-P3-14 | 完整P3 vertical-slice Gate evidence | P3-01～13 | `planned` |
 | 15 | TASK-P3-15 | 独立P3 Exit Gate Audit | P3-14 | `planned` |
 

@@ -1,13 +1,25 @@
-import type { DataPlane, RuntimeEnvironment } from "./types";
+import type { DataPlane, JsonObject, RuntimeEnvironment } from "./types";
+
+export const e2eSyntheticProvenance: JsonObject = {
+  scenario_id: "SIM-P3-HUMAN-CONTROL-001",
+  scenario_version: "1.0.0",
+  seed: 20260826,
+  factory_profile_id: "PROFILE-P3-UI-E2E-001",
+  profile_version: "1.0.0",
+  generator_id: "PLANTNEXUS-P3-PLAYWRIGHT",
+  generator_version: "1.0.0",
+};
 
 export interface RuntimeConfig {
   apiBaseUrl: string;
   dataPlane: DataPlane;
   environment: RuntimeEnvironment;
-  synthetic: false;
+  synthetic: boolean;
+  syntheticProvenance?: JsonObject;
 }
 
 export interface RuntimeEnvInput {
+  readonly DEV?: boolean;
   readonly VITE_PLANTNEXUS_API_BASE_URL?: string;
   readonly VITE_PLANTNEXUS_DATA_PLANE?: "SIMULATION" | "PRODUCTION";
   readonly VITE_PLANTNEXUS_ENVIRONMENT?:
@@ -15,6 +27,7 @@ export interface RuntimeEnvInput {
     | "TEST"
     | "BENCHMARK"
     | "PRODUCTION";
+  readonly VITE_PLANTNEXUS_E2E_SIMULATION?: "true" | "false";
 }
 
 function apiBaseUrl(value: string | undefined): string {
@@ -45,9 +58,23 @@ export function loadRuntimeConfig(env: RuntimeEnvInput = import.meta.env): Runti
   const requestedPlane = env.VITE_PLANTNEXUS_DATA_PLANE ?? "PRODUCTION";
   const requestedEnvironment =
     env.VITE_PLANTNEXUS_ENVIRONMENT ?? "PRODUCTION";
+  const isolatedE2e =
+    env.DEV === true &&
+    env.VITE_PLANTNEXUS_E2E_SIMULATION === "true" &&
+    requestedPlane === "SIMULATION" &&
+    requestedEnvironment === "TEST";
+  if (isolatedE2e) {
+    return {
+      apiBaseUrl: apiBaseUrl(env.VITE_PLANTNEXUS_API_BASE_URL),
+      dataPlane: "SIMULATION",
+      environment: "TEST",
+      synthetic: true,
+      syntheticProvenance: e2eSyntheticProvenance,
+    };
+  }
   if (requestedPlane !== "PRODUCTION" || requestedEnvironment !== "PRODUCTION") {
     throw new Error(
-      "P3-11 runtime is fail-closed: Simulation fixtures are test-only and have no navigation entry",
+      "P3 runtime is fail-closed: Simulation controls require the isolated development E2E gate",
     );
   }
   return {

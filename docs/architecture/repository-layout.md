@@ -6,10 +6,16 @@ spec_version: 0.3.0
 phase: P0
 normative: true
 source_sections: [12, 13, 41, 70, 71]
-last_reviewed: 2026-08-24
+last_reviewed: 2026-08-26
 ---
 
 # 目标仓库结构
+
+## TASK-P3-13 layout additions
+
+新增Backend `application/export_downloads.py`与`jobs/export_package_store.py`，并有界扩展standard package、worker、HTTP contracts/router/check和对应tests。Frontend新增`api/commands.ts`、schedule-actions/approval/publication/export/audit feature目录、human-control unit/E2E tests与`.env.e2e`；既有Gantt/page/client/runtime/styles/evidence按allow-list扩展。Workflow只更新human-control E2E/machine step名称及既有artifact收集路径。
+
+未新增Schema、migration、dependency、lock、domain state、repository persistence、P4/external/Production目录。`build/playwright/**`、validation/trace reports、dist/node_modules继续ignored；`.env.e2e`是无credential的版本化test configuration，须显式纳入Task提交。
 
 TASK-P0-01 已建立可构建的顶层仓库边界，TASK-P0-02 建立治理 validator；TASK-P0-03 在既有边界内加入 Schema、纯合同类型和 contract tests，仍未创建业务数据管道或 Solver。
 

@@ -6,10 +6,18 @@ spec_version: 0.3.0
 phase: P0-P7
 normative: true
 source_sections: [58, 72, 74, 76, 78, 80, 89, 100, 101]
-last_reviewed: 2026-08-25
+last_reviewed: 2026-08-26
 ---
 
 # CI Gate 与 Definition of Done
+
+## TASK-P3-13 required Gate
+
+不可变Diff base=`3dacf83c0f0bf87a9fa673aa75d61f8ad8659386`。Implementation提交前必须通过locked sync、Ruff、全量Pyright/full pytest、全部历史machine reports、P2 XS/Gate、Frontend SCA/license/lint/type/54 tests、12 Chromium、build、Frontend 12/12、API 18/18、Compose、full/diff docs、`git diff --check`及禁止路径。Workflow继续只有GitHub Actions app `15368`的required `validate`，browser失败也必须`always()`上传JSON/HTML/JUnit/trace/video/screenshot。
+
+DoD还要求implementation exact SHA push run/job/artifact全成功，下载后所有SHA-bound report、Task/base、11 Impact rows、checks/issues与Playwright evidence一致；随后只做provider事实写回的evidence-only closure，并再次核对closure exact SHA provider。任何失败都保持Task=`in_progress`且阻断P3-14；本地PASS不能预填provider、P3 Gate、Production approval/readiness或external publish。
+
+Local Gate结果：locked sync、Ruff、Pyright、607项Python、全部required machine、P2 XS 8/8、P2 Gate 11/11/0 gap、Frontend SCA/license/lint/type/54 tests、12/12 Chromium、build与12/12 machine、Compose、package build、165-doc full治理、91-path/11-row/19-check/0-issue Task治理和`git diff --check`全部PASS。该结果只允许提交implementation，不替代required provider或closure。
 
 ## 常规验收命令目标
 

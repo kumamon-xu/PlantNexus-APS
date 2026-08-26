@@ -33,6 +33,15 @@ const client: PlanningWorkspaceClient = {
       ? comparedScheduleVersion
       : testScheduleVersion;
   },
+  async getExportJob() {
+    throw new Error("not used by this test");
+  },
+  async executeCommand() {
+    throw new Error("not used by this test");
+  },
+  async downloadExportPackage() {
+    throw new Error("not used by this test");
+  },
   async queryWorkspace(_query, view) {
     if (view === "GANTT") {
       return workspaceResponse(view, {

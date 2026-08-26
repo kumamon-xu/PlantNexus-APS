@@ -1,11 +1,16 @@
 import { sha256Fingerprint, workspaceQueryFingerprint } from "./canonical";
 import {
   comparisonChangeKinds,
+  exportJobStates,
   scheduleStates,
+  workspaceCommandTypes,
   type ArtifactReference,
   type ComparisonChangeKind,
   type ComparisonSummary,
   type GanttSegment,
+  type ExportArtifactManifest,
+  type ExportJob,
+  type ExportJobState,
   type JsonObject,
   type JsonValue,
   type KpiDelta,
@@ -17,6 +22,9 @@ import {
   type ScheduleVersionComparison,
   type VersionReference,
   type WorkspaceHttpResponse,
+  type WorkspaceActionResult,
+  type WorkspaceCommandDocument,
+  type WorkspaceCommandType,
   type WorkspacePayloadItem,
   type WorkspaceQueryDocument,
   type WorkspaceQueryResultBody,
@@ -26,6 +34,8 @@ import {
 const fingerprintPattern = /^sha256:[0-9a-f]{64}$/;
 const scheduleStateSet = new Set<string>(scheduleStates);
 const comparisonChangeKindSet = new Set<string>(comparisonChangeKinds);
+const exportJobStateSet = new Set<string>(exportJobStates);
+const workspaceCommandTypeSet = new Set<string>(workspaceCommandTypes);
 
 export class ContractViolation extends Error {
   constructor(
@@ -129,6 +139,14 @@ function state(value: unknown, field: string): ScheduleState {
   return result as ScheduleState;
 }
 
+function exportState(value: unknown, field: string): ExportJobState {
+  const result = string(value, field);
+  if (!exportJobStateSet.has(result)) {
+    throw new ContractViolation(field, `unknown ExportJob state: ${result}`);
+  }
+  return result as ExportJobState;
+}
+
 function artifact(value: unknown, field: string): ArtifactReference {
   const result = object(value, field);
   return {
@@ -207,6 +225,12 @@ export function parseScheduleVersion(value: unknown): ScheduleVersion {
   if (typeof raw.synthetic !== "boolean") {
     throw new ContractViolation("schedule_version.synthetic", "must be a boolean");
   }
+  if (raw.synthetic && !isJsonObject(raw.synthetic_provenance)) {
+    throw new ContractViolation(
+      "schedule_version.synthetic_provenance",
+      "synthetic versions require provenance",
+    );
+  }
   return {
     ...raw,
     schedule_version_version: literal(
@@ -233,6 +257,9 @@ export function parseScheduleVersion(value: unknown): ScheduleVersion {
     data_plane: plane,
     environment,
     synthetic: raw.synthetic,
+    synthetic_provenance: raw.synthetic
+      ? (raw.synthetic_provenance as JsonObject)
+      : null,
     parent_schedule_version: parent,
     lineage: lineage(raw.lineage, "schedule_version.lineage"),
     content_fingerprint: fingerprint(
@@ -247,6 +274,168 @@ export function parseScheduleVersion(value: unknown): ScheduleVersion {
       "schedule_version.created_by_actor_ref",
     ),
   } as ScheduleVersion;
+}
+
+export function parseExportJob(value: unknown): ExportJob {
+  const envelope = object(value, "response");
+  const raw =
+    envelope.export_job_version === "export-job.v2"
+      ? envelope
+      : object(envelope.document ?? envelope.export_job, "response.export_job");
+  const rawArtifact = raw.artifact_manifest;
+  let artifactManifest: ExportArtifactManifest | null = null;
+  if (rawArtifact !== null) {
+    const artifact = object(rawArtifact, "export_job.artifact_manifest");
+    artifactManifest = {
+      ...artifact,
+      export_manifest_version: literal(
+        artifact.export_manifest_version,
+        "export-manifest.v2",
+        "export_job.artifact_manifest.export_manifest_version",
+      ),
+      package_id: string(
+        artifact.package_id,
+        "export_job.artifact_manifest.package_id",
+      ),
+      manifest_fingerprint: fingerprint(
+        artifact.manifest_fingerprint,
+        "export_job.artifact_manifest.manifest_fingerprint",
+      ),
+      storage_reference: fingerprint(
+        artifact.storage_reference,
+        "export_job.artifact_manifest.storage_reference",
+      ),
+    } as ExportArtifactManifest;
+  }
+  if (typeof raw.synthetic !== "boolean") {
+    throw new ContractViolation("export_job.synthetic", "must be a boolean");
+  }
+  const provenance = raw.synthetic_provenance;
+  if (raw.synthetic && !isJsonObject(provenance)) {
+    throw new ContractViolation(
+      "export_job.synthetic_provenance",
+      "synthetic jobs require provenance",
+    );
+  }
+  return {
+    ...raw,
+    export_job_version: literal(
+      raw.export_job_version,
+      "export-job.v2",
+      "export_job.export_job_version",
+    ),
+    schema_set_version: literal(
+      raw.schema_set_version,
+      "2.7.0",
+      "export_job.schema_set_version",
+    ),
+    canonicalization_version: literal(
+      raw.canonicalization_version,
+      "canonical-json.v1",
+      "export_job.canonicalization_version",
+    ),
+    export_job_id: string(raw.export_job_id, "export_job.export_job_id"),
+    state: exportState(raw.state, "export_job.state"),
+    schedule_version: versionReference(
+      raw.schedule_version,
+      "export_job.schedule_version",
+    ),
+    data_plane: literalPlane(raw.data_plane, "export_job.data_plane"),
+    environment: literalEnvironment(raw.environment, "export_job.environment"),
+    synthetic: raw.synthetic,
+    synthetic_provenance: raw.synthetic ? (provenance as JsonObject) : null,
+    target: literal(
+      raw.target,
+      "SIMULATION_INTERNAL",
+      "export_job.target",
+    ),
+    package_profile: literal(
+      raw.package_profile,
+      "p3-standard-export.v1",
+      "export_job.package_profile",
+    ),
+    attempt: integer(raw.attempt, "export_job.attempt"),
+    artifact_manifest: artifactManifest,
+    latest_audit_event_id: string(
+      raw.latest_audit_event_id,
+      "export_job.latest_audit_event_id",
+    ),
+    job_fingerprint: fingerprint(
+      raw.job_fingerprint,
+      "export_job.job_fingerprint",
+    ),
+  } as ExportJob;
+}
+
+export function parseWorkspaceActionResult(
+  value: unknown,
+  command: WorkspaceCommandDocument,
+): WorkspaceActionResult {
+  const raw = object(value, "action_response");
+  const correlationId = string(raw.correlation_id, "action_response.correlation_id");
+  if (correlationId !== command.correlation_id) {
+    throw new ContractViolation(
+      "action_response.correlation_id",
+      "does not match the outbound command",
+    );
+  }
+  const rawCommandType = raw.command_type;
+  if (
+    rawCommandType !== undefined &&
+    (!workspaceCommandTypeSet.has(String(rawCommandType)) ||
+      rawCommandType !== command.command_type)
+  ) {
+    throw new ContractViolation(
+      "action_response.command_type",
+      "does not match the outbound command",
+    );
+  }
+  const sourceVersion =
+    raw.source_version === undefined || raw.source_version === null
+      ? null
+      : versionReference(raw.source_version, "action_response.source_version");
+  const rawAuthority = raw.new_version ?? raw.published_version;
+  const authoritativeVersion =
+    rawAuthority === undefined || rawAuthority === null
+      ? null
+      : versionReference(rawAuthority, "action_response.authoritative_version");
+  let exportJob: ExportJob | null = null;
+  if (raw.document !== undefined || raw.export_job !== undefined) {
+    exportJob = parseExportJob(raw);
+  }
+  const rawReplay = raw.exact_replay ?? raw.replayed ?? false;
+  if (typeof rawReplay !== "boolean") {
+    throw new ContractViolation("action_response.exact_replay", "must be boolean");
+  }
+  if (
+    command.command_type === "REQUEST_EXPORT" ||
+    command.command_type === "RETRY_EXPORT" ||
+    command.command_type === "CANCEL_EXPORT"
+  ) {
+    if (exportJob === null) {
+      throw new ContractViolation(
+        "action_response.document",
+        "export commands require export-job.v2",
+      );
+    }
+  } else if (authoritativeVersion === null) {
+    throw new ContractViolation(
+      "action_response.authoritative_version",
+      "schedule commands require an authoritative Version reference",
+    );
+  }
+  return {
+    commandType: command.command_type as WorkspaceCommandType,
+    correlationId,
+    auditEventId: string(
+      raw.audit_event_id ?? exportJob?.latest_audit_event_id,
+      "action_response.audit_event_id",
+    ),
+    exactReplay: rawReplay,
+    sourceVersion,
+    authoritativeVersion,
+    exportJob,
+  };
 }
 
 function literalPlane(value: unknown, field: string): "SIMULATION" | "PRODUCTION" {

@@ -37,6 +37,10 @@ EXPORT_SCHEMA_SET_VERSION = "2.7.0"
 EXPORT_PACKAGE_PROFILE = "p3-standard-export.v1"
 XLSX_PROFILE_VERSION = "xlsx-safe-deterministic.v1"
 CSV_DIALECT_VERSION = "rfc4180-lf.v1"
+ZIP_PROFILE_VERSION = "zip-deterministic.v1"
+MAX_STANDARD_EXPORT_FILE_BYTES = 32 * 1024 * 1024
+MAX_STANDARD_EXPORT_PACKAGE_BYTES = 64 * 1024 * 1024
+MAX_STANDARD_EXPORT_MANIFEST_BYTES = 1024 * 1024
 
 _PAYLOAD_ROLES = {
     "schedule_version.json": "PUBLISHED_SCHEDULE_VERSION",
@@ -146,9 +150,10 @@ def _safe_cell(value: str) -> str:
 def _canonicalize_xlsx(value: bytes) -> bytes:
     source = io.BytesIO(value)
     target = io.BytesIO()
-    with ZipFile(source, "r") as archive, ZipFile(
-        target, "w", compression=ZIP_DEFLATED, compresslevel=9
-    ) as result:
+    with (
+        ZipFile(source, "r") as archive,
+        ZipFile(target, "w", compression=ZIP_DEFLATED, compresslevel=9) as result,
+    ):
         for name in sorted(archive.namelist()):
             content = archive.read(name)
             info = ZipInfo(name, date_time=(1980, 1, 1, 0, 0, 0))
@@ -159,7 +164,9 @@ def _canonicalize_xlsx(value: bytes) -> bytes:
     return target.getvalue()
 
 
-def _workbook_bytes(payloads: Mapping[str, bytes], metadata: Mapping[str, object]) -> bytes:
+def _workbook_bytes(
+    payloads: Mapping[str, bytes], metadata: Mapping[str, object]
+) -> bytes:
     workbook = Workbook()
     workbook.properties.creator = "PlantNexus APS"
     workbook.properties.lastModifiedBy = "PlantNexus APS"
@@ -179,7 +186,9 @@ def _workbook_bytes(payloads: Mapping[str, bytes], metadata: Mapping[str, object
     sheet = workbook.create_sheet("Metadata")
     sheet.append(["key", "value"])
     for key, value in sorted(metadata.items()):
-        rendered = json.dumps(value, ensure_ascii=False, sort_keys=True, separators=(",", ":"))
+        rendered = json.dumps(
+            value, ensure_ascii=False, sort_keys=True, separators=(",", ":")
+        )
         sheet.append([_safe_cell(str(key)), _safe_cell(rendered)])
     stream = io.BytesIO()
     workbook.save(stream)
@@ -201,8 +210,12 @@ def _verify_xlsx(value: bytes) -> int:
             if any(any(token in name for token in forbidden) for name in names):
                 _reject(StandardExportErrorCode.UNSAFE_XLSX, "standard_package.xlsx")
             for name in names:
-                if name.endswith(".xml") and re.search(br"<f(?:[ >])", archive.read(name)):
-                    _reject(StandardExportErrorCode.UNSAFE_XLSX, "standard_package.xlsx")
+                if name.endswith(".xml") and re.search(
+                    rb"<f(?:[ >])", archive.read(name)
+                ):
+                    _reject(
+                        StandardExportErrorCode.UNSAFE_XLSX, "standard_package.xlsx"
+                    )
         workbook = load_workbook(io.BytesIO(value), read_only=False, data_only=False)
         if tuple(workbook.sheetnames) != tuple(
             [title for title, _ in _WORKBOOK_SHEETS] + ["Metadata"]
@@ -212,7 +225,9 @@ def _verify_xlsx(value: bytes) -> int:
             for row in sheet.iter_rows():
                 for cell in row:
                     if cell.data_type == "f":
-                        _reject(StandardExportErrorCode.UNSAFE_XLSX, "standard_package.xlsx")
+                        _reject(
+                            StandardExportErrorCode.UNSAFE_XLSX, "standard_package.xlsx"
+                        )
         return len(workbook.sheetnames)
     except StandardExportError:
         raise
@@ -267,14 +282,26 @@ def build_standard_export_package(
         _reject(StandardExportErrorCode.INVALID_PACKAGE, "publication_result")
     if require_workspace_document(export_job) != EXPORT_JOB_VERSION:
         _reject(StandardExportErrorCode.INVALID_PACKAGE, "export_job")
-    if export_job.get("state") != "EXPORTING" or not isinstance(export_job.get("attempt"), int) or cast(int, export_job["attempt"]) < 1:
+    if (
+        export_job.get("state") != "EXPORTING"
+        or not isinstance(export_job.get("attempt"), int)
+        or cast(int, export_job["attempt"]) < 1
+    ):
         _reject(StandardExportErrorCode.MIXED_LINEAGE, "export_job.state/attempt")
 
-    schedule_reference = _mapping(export_job.get("schedule_version"), "export_job.schedule_version")
-    published_reference = _mapping(publication_result.get("published_version"), "publication_result.published_version")
+    schedule_reference = _mapping(
+        export_job.get("schedule_version"), "export_job.schedule_version"
+    )
+    published_reference = _mapping(
+        publication_result.get("published_version"),
+        "publication_result.published_version",
+    )
     for field in ("schedule_version_id", "content_fingerprint"):
         expected = schedule_version.get(field)
-        if schedule_reference.get(field) != expected or published_reference.get(field) != expected:
+        if (
+            schedule_reference.get(field) != expected
+            or published_reference.get(field) != expected
+        ):
             _reject(StandardExportErrorCode.MIXED_LINEAGE, field)
     if (
         publication_result.get("target") != "SIMULATION_INTERNAL"
@@ -292,15 +319,26 @@ def build_standard_export_package(
         planning_solution = cast(JsonObject, json.loads(p2_files["schedule.json"]))
         content = _mapping(schedule_version.get("content"), "schedule_version.content")
         lineage = _mapping(schedule_version.get("lineage"), "schedule_version.lineage")
-        schedule_solution = _mapping(lineage.get("planning_solution"), "schedule_version.lineage.planning_solution")
-        p2_solution = _mapping(_mapping(p2_manifest.get("lineage"), "p2.lineage").get("solution"), "p2.lineage.solution")
-        if content.get("assignments") != planning_solution.get("assignments") or schedule_solution.get("fingerprint") != p2_solution.get("solution_fingerprint"):
-            _reject(StandardExportErrorCode.MIXED_LINEAGE, "schedule_version.lineage/content")
+        schedule_solution = _mapping(
+            lineage.get("planning_solution"),
+            "schedule_version.lineage.planning_solution",
+        )
+        p2_solution = _mapping(
+            _mapping(p2_manifest.get("lineage"), "p2.lineage").get("solution"),
+            "p2.lineage.solution",
+        )
+        if content.get("assignments") != planning_solution.get(
+            "assignments"
+        ) or schedule_solution.get("fingerprint") != p2_solution.get(
+            "solution_fingerprint"
+        ):
+            _reject(
+                StandardExportErrorCode.MIXED_LINEAGE,
+                "schedule_version.lineage/content",
+            )
     except (UnicodeDecodeError, json.JSONDecodeError):
         _reject(StandardExportErrorCode.INVALID_PACKAGE, "planning_solution.json")
-    payloads = {
-        target: p2_files[source] for source, target in _P2_TO_P3_PATHS.items()
-    }
+    payloads = {target: p2_files[source] for source, target in _P2_TO_P3_PATHS.items()}
     payloads["schedule_version.json"] = _json_bytes(schedule_version)
     payloads["publication_result.json"] = _json_bytes(publication_result)
     payloads["standard_package.xlsx"] = _workbook_bytes(
@@ -332,7 +370,9 @@ def build_standard_export_package(
             "content_fingerprint": schedule_version["content_fingerprint"],
         },
         "publication": {
-            "publication_result_version": publication_result["publication_result_version"],
+            "publication_result_version": publication_result[
+                "publication_result_version"
+            ],
             "publication_id": publication_result["publication_id"],
             "result_fingerprint": publication_result["result_fingerprint"],
             "published_at_utc": publication_result["published_at_utc"],
@@ -400,7 +440,10 @@ def verify_standard_export_package(package: StandardExportPackage) -> None:
             _reject(StandardExportErrorCode.INVALID_PACKAGE, "manifest")
         basis = {key: value for key, value in manifest.items() if key != "package_id"}
         expected_id = f"export-package-{sha256(_json_bytes(basis)).hexdigest()}"
-        if package.package_id != expected_id or manifest.get("package_id") != expected_id:
+        if (
+            package.package_id != expected_id
+            or manifest.get("package_id") != expected_id
+        ):
             _reject(StandardExportErrorCode.HASH_MISMATCH, "package_id")
         if package.manifest_fingerprint != _fingerprint(files["manifest.json"]):
             _reject(StandardExportErrorCode.HASH_MISMATCH, "manifest_fingerprint")
@@ -412,11 +455,20 @@ def verify_standard_export_package(package: StandardExportPackage) -> None:
         for record in records:
             path = cast(str, record["path"])
             content = files[path]
-            if record.get("role") != _PAYLOAD_ROLES[path] or record.get("sha256") != _fingerprint(content) or record.get("size_bytes") != len(content):
+            if (
+                record.get("role") != _PAYLOAD_ROLES[path]
+                or record.get("sha256") != _fingerprint(content)
+                or record.get("size_bytes") != len(content)
+            ):
                 _reject(StandardExportErrorCode.HASH_MISMATCH, path)
-            if path.endswith(".csv") and record.get("row_count") != len(_csv_rows(content, path)) - 1:
+            if (
+                path.endswith(".csv")
+                and record.get("row_count") != len(_csv_rows(content, path)) - 1
+            ):
                 _reject(StandardExportErrorCode.HASH_MISMATCH, path)
-            if path.endswith(".xlsx") and record.get("sheet_count") != _verify_xlsx(content):
+            if path.endswith(".xlsx") and record.get("sheet_count") != _verify_xlsx(
+                content
+            ):
                 _reject(StandardExportErrorCode.UNSAFE_XLSX, path)
     except StandardExportError:
         raise
@@ -424,13 +476,133 @@ def verify_standard_export_package(package: StandardExportPackage) -> None:
         _reject(StandardExportErrorCode.INVALID_PACKAGE, "package")
 
 
+def _bounded_file_bytes(path: Path, *, maximum: int, field: str) -> bytes:
+    try:
+        if path.is_symlink() or not path.is_file():
+            _reject(StandardExportErrorCode.INVALID_PACKAGE, field)
+        size = path.stat().st_size
+        if size < 1 or size > maximum:
+            _reject(StandardExportErrorCode.INVALID_PACKAGE, field)
+        value = path.read_bytes()
+        if len(value) != size:
+            _reject(StandardExportErrorCode.IO_ERROR, field)
+        return value
+    except StandardExportError:
+        raise
+    except OSError as error:
+        raise StandardExportError(
+            StandardExportErrorCode.IO_ERROR, field=field
+        ) from error
+
+
+def load_standard_export_package(source: Path) -> StandardExportPackage:
+    """Read one exact, flat, manifest-complete package from internal storage."""
+
+    original = source
+    try:
+        if original.is_symlink():
+            _reject(StandardExportErrorCode.INVALID_PACKAGE, "source")
+        source = original.resolve(strict=True)
+        if not source.is_dir():
+            _reject(StandardExportErrorCode.INVALID_PACKAGE, "source")
+        children = list(source.iterdir())
+        expected_names = {"manifest.json", *_PAYLOAD_ROLES}
+        if {path.name for path in children} != expected_names or any(
+            path.is_symlink() or not path.is_file() for path in children
+        ):
+            _reject(StandardExportErrorCode.INVALID_PACKAGE, "source.files")
+        manifest_bytes = _bounded_file_bytes(
+            source / "manifest.json",
+            maximum=MAX_STANDARD_EXPORT_MANIFEST_BYTES,
+            field="manifest.json",
+        )
+        manifest = cast(JsonObject, json.loads(manifest_bytes))
+        package_id = manifest.get("package_id")
+        if not isinstance(package_id, str):
+            _reject(StandardExportErrorCode.INVALID_PACKAGE, "manifest.package_id")
+        files: dict[str, bytes] = {"manifest.json": manifest_bytes}
+        total_bytes = len(manifest_bytes)
+        for name in sorted(_PAYLOAD_ROLES):
+            value = _bounded_file_bytes(
+                source / name,
+                maximum=MAX_STANDARD_EXPORT_FILE_BYTES,
+                field=name,
+            )
+            total_bytes += len(value)
+            if total_bytes > MAX_STANDARD_EXPORT_PACKAGE_BYTES:
+                _reject(StandardExportErrorCode.INVALID_PACKAGE, "package.size_bytes")
+            files[name] = value
+        package = StandardExportPackage(
+            package_id=package_id,
+            manifest_fingerprint=_fingerprint(manifest_bytes),
+            storage_reference=storage_reference_for(package_id),
+            _files=tuple(sorted(files.items())),
+        )
+        verify_standard_export_package(package)
+        return package
+    except StandardExportError:
+        raise
+    except (OSError, json.JSONDecodeError, UnicodeError) as error:
+        raise StandardExportError(
+            StandardExportErrorCode.INVALID_PACKAGE,
+            field="source",
+        ) from error
+
+
+def archive_standard_export_package(package: StandardExportPackage) -> bytes:
+    """Render a deterministic ZIP only after full package verification."""
+
+    verify_standard_export_package(package)
+    if (
+        sum(len(value) for value in package.files.values())
+        > MAX_STANDARD_EXPORT_PACKAGE_BYTES
+    ):
+        _reject(StandardExportErrorCode.INVALID_PACKAGE, "package.size_bytes")
+    stream = io.BytesIO()
+    try:
+        with ZipFile(
+            stream,
+            "w",
+            compression=ZIP_DEFLATED,
+            compresslevel=9,
+        ) as archive:
+            ordered_names = [
+                *sorted(name for name in package.files if name != "manifest.json"),
+                "manifest.json",
+            ]
+            for name in ordered_names:
+                info = ZipInfo(name, date_time=(1980, 1, 1, 0, 0, 0))
+                info.compress_type = ZIP_DEFLATED
+                info.create_system = 0
+                info.external_attr = 0
+                archive.writestr(info, package.files[name])
+        rendered = stream.getvalue()
+        with ZipFile(io.BytesIO(rendered), "r") as replay:
+            if replay.namelist() != ordered_names:
+                _reject(StandardExportErrorCode.INVALID_PACKAGE, "archive.files")
+            if any(replay.read(name) != package.files[name] for name in ordered_names):
+                _reject(StandardExportErrorCode.HASH_MISMATCH, "archive")
+        return rendered
+    except StandardExportError:
+        raise
+    except Exception as error:
+        raise StandardExportError(
+            StandardExportErrorCode.IO_ERROR, field="archive"
+        ) from error
+
+
+def standard_export_bytes_fingerprint(value: bytes) -> str:
+    return _fingerprint(value)
+
+
 def _directory_matches(destination: Path, package: StandardExportPackage) -> bool:
     if not destination.is_dir():
         return False
     children = list(destination.iterdir())
-    return all(path.is_file() for path in children) and {
-        path.name: path.read_bytes() for path in children
-    } == package.files
+    return (
+        all(path.is_file() for path in children)
+        and {path.name: path.read_bytes() for path in children} == package.files
+    )
 
 
 def _write_file(path: Path, value: bytes) -> None:
@@ -456,7 +628,9 @@ def write_standard_export_package(
             if _directory_matches(destination, package):
                 return destination
             _reject(StandardExportErrorCode.DESTINATION_CONFLICT, "destination")
-        temporary = Path(tempfile.mkdtemp(prefix=f".{destination.name}.tmp-", dir=parent)).resolve()
+        temporary = Path(
+            tempfile.mkdtemp(prefix=f".{destination.name}.tmp-", dir=parent)
+        ).resolve()
         if temporary.parent != parent:
             _reject(StandardExportErrorCode.IO_ERROR, "temporary")
         for path, content in sorted(package.files.items()):
@@ -470,15 +644,31 @@ def write_standard_export_package(
     except Exception as error:
         if destination.exists() and _directory_matches(destination, package):
             return destination
-        raise StandardExportError(StandardExportErrorCode.IO_ERROR, field="write") from error
+        raise StandardExportError(
+            StandardExportErrorCode.IO_ERROR, field="write"
+        ) from error
     finally:
         if temporary is not None and temporary.exists() and temporary.parent == parent:
             shutil.rmtree(temporary, ignore_errors=True)
 
 
 __all__ = [
-    "EXPORT_JOB_VERSION", "EXPORT_MANIFEST_VERSION", "EXPORT_PACKAGE_PROFILE",
-    "EXPORT_SCHEMA_SET_VERSION", "StandardExportError", "StandardExportErrorCode",
-    "StandardExportPackage", "build_standard_export_package", "storage_reference_for",
-    "verify_standard_export_package", "write_standard_export_package",
+    "EXPORT_JOB_VERSION",
+    "EXPORT_MANIFEST_VERSION",
+    "EXPORT_PACKAGE_PROFILE",
+    "EXPORT_SCHEMA_SET_VERSION",
+    "StandardExportError",
+    "StandardExportErrorCode",
+    "MAX_STANDARD_EXPORT_FILE_BYTES",
+    "MAX_STANDARD_EXPORT_MANIFEST_BYTES",
+    "MAX_STANDARD_EXPORT_PACKAGE_BYTES",
+    "ZIP_PROFILE_VERSION",
+    "StandardExportPackage",
+    "archive_standard_export_package",
+    "build_standard_export_package",
+    "load_standard_export_package",
+    "standard_export_bytes_fingerprint",
+    "storage_reference_for",
+    "verify_standard_export_package",
+    "write_standard_export_package",
 ]

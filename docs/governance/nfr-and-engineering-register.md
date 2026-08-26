@@ -6,11 +6,17 @@ spec_version: 0.3.0
 phase: cross-phase
 normative: true
 source_sections: [4, 6, 16, 23, 24, 29, 30, 42, 58, 62, 65, 66, 89, 93, 95]
-last_reviewed: 2026-08-25
+last_reviewed: 2026-08-26
 registry_version: 1.0.0
 ---
 
 # NFR 与工程需求注册表
+
+## TASK-P3-13 allocation review
+
+NFR-COR/TRC由exact command/hash/precondition、authoritative refresh及Job/package/audit lineage加强；NFR-ISO/SEC由development-only Simulation fixture、Production default-deny、no credential persistence、pre-lookup auth和root-confined/tamper fail-closed下载加强；NFR-REL由in-flight suppression、known/unknown failure分离、refresh-before-same-key retry及explicit ExportJob retry加强；NFR-HUM由confirm/reason、accessible status/dialog、distinct failure与immutable PUBLISHED UI加强。
+
+ENG-ARCH保持thin client/router/application/store单向边界，ENG-VAL保持formal Validator只在server既有service，ENG-ERR保持sanitized visible failure，ENG-VER保持2.7.0 Schema set、17+1 API、command/ZIP profile和24 pins/lock逐字绑定。全部NFR/ENG root仍为`ALLOCATED`；没有Production security/SLO/browser matrix/identity evidence，`registry_version=1.0.0`不变。
 
 以下 ID 是对总规已有非功能要求的稳定化登记，不引入尚未确认的性能数值。
 

@@ -6,10 +6,16 @@ spec_version: 0.3.0
 phase: cross-phase
 normative: true
 source_sections: [5, 6, 86, 98, 99, 111]
-last_reviewed: 2026-08-25
+last_reviewed: 2026-08-26
 ---
 
 # 需求追踪规则
+
+## TASK-P3-13 evidence rule
+
+Trace chain固定为`REQ-005/006/007/009 + NFR-COR/TRC/ISO/REL/SEC/HUM + ENG-ARCH/VAL/ERR/VER → TASK-P3-13 → TEST-WORKSPACE-FRONTEND-001/TEST-GANTT-COMMAND-001/TEST-APPROVAL-AUTHORIZATION-001/TEST-PUBLISH-IDEMPOTENCY-001/TEST-EXPORT-JOB-001/TEST-AUDIT-TRAIL-001 → backend/frontend/Playwright/API/Task/provider reports`。每个report须含Task/exact SHA，Task report另须含immutable base、11 Impact rows、checks与issues。
+
+API证据必须同时声明P3-10历史17 operations和P3-13 additive download 1，不能把新OpenAPI fingerprint改写为历史artifact。Browser evidence必须为12 human-control+visualization specs并保留失败介质；SIM fixture必须引用SIM-ASSUMPTION-015。Implementation provider前只能写`LOCAL_IMPLEMENTED_PROVIDER_PENDING`，closure provider成功后才可标Task done；P3-14/15和Production声明均禁止继承。
 
 ## 标准链路
 

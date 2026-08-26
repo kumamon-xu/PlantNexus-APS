@@ -6,10 +6,16 @@ spec_version: 0.3.0
 phase: P0-P7
 normative: true
 source_sections: [58, 62, 93, 95, 100]
-last_reviewed: 2026-08-25
+last_reviewed: 2026-08-26
 ---
 
 # P0 工程安全边界
+
+## TASK-P3-13 browser/download security
+
+Command reason拒绝control character与credential-like token；Bearer仅来自in-memory provider，命令、unknown-outcome retention、trace和download evidence都不持久化credential/raw key。Controls同时要求isolated Simulation runtime、synthetic source、server capability与合法state；Production runtime隐藏入口并在server pre-provider default-deny。Accessible confirmation避免silent publish。
+
+Package retrieval先授权后lookup，使用root-confined Job/attempt identity，拒绝directory/file symlink、extra/missing/empty/oversize/tampered/mixed-lineage内容；响应为`no-store`/`nosniff`且filename/header受格式约束。Browser再次核对Job artifact与package/manifest/archive fingerprint。本证据不是Production threat-model、penetration、CSP/CSRF/CORS、OIDC/RBAC或external storage security approval。
 
 ## 已形成控制
 

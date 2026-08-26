@@ -6,11 +6,17 @@ spec_version: 0.3.0
 phase: cross-phase
 normative: true
 source_sections: [6, 97, 98, 99, 100, 101, 102, 103, 104, 111]
-last_reviewed: 2026-08-25
+last_reviewed: 2026-08-26
 registry_version: 1.0.0
 ---
 
 # 变更影响与必审文档矩阵
+
+## TASK-P3-13 impact review
+
+完整Diff base=`3dacf83c0f0bf87a9fa673aa75d61f8ad8659386`，预期精确命中11行：`IMPACT-APPLICATION`（verified download orchestration）、`IMPACT-API`（17+1 transport）、`IMPACT-STATE`（三份状态文档no-pair review）、`IMPACT-FRONTEND`（commands/controls/E2E）、`IMPACT-EXPORT`（loader/archive）、`IMPACT-JOBS`（root-confined store/worker identity）、`IMPACT-INFRA`（required workflow evidence）、`IMPACT-TESTS`、`IMPACT-PHASE`、`IMPACT-GOVERNANCE-REGISTRY`和`IMPACT-DOCS`。Task card逐字allow-list与Documents to update构成完整union。
+
+禁止范围为Schema/sample/rules、migration、Python/npm dependencies和locks、domain state implementation、repository persistence、P2 package bytes、Solver/Strategy/Validator/KPI、fixtures/benchmarks、external network/storage/MES、P4与Production。任何额外path或Impact row必须先停下扩卡；Task diff和provider artifact都必须为11 rows/全部checks/0 issues。
 
 本矩阵用于在 Task 开始前确定文档影响。表中的文档是“必须审查”，不代表每次都必须修改；如果审查后不修改，Task 完成证据必须逐项说明理由。
 

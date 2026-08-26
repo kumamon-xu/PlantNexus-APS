@@ -1,4 +1,7 @@
-import { loadRuntimeConfig } from "../src/api/runtime";
+import {
+  e2eSyntheticProvenance,
+  loadRuntimeConfig,
+} from "../src/api/runtime";
 
 describe("Production / Simulation runtime isolation", () => {
   it("defaults to a same-origin Production read surface", () => {
@@ -15,6 +18,31 @@ describe("Production / Simulation runtime isolation", () => {
       loadRuntimeConfig({
         VITE_PLANTNEXUS_DATA_PLANE: "SIMULATION",
         VITE_PLANTNEXUS_ENVIRONMENT: "DEVELOPMENT",
+      }),
+    ).toThrow(/fail-closed/u);
+  });
+
+  it("permits Simulation only through the explicit development E2E gate", () => {
+    expect(
+      loadRuntimeConfig({
+        DEV: true,
+        VITE_PLANTNEXUS_DATA_PLANE: "SIMULATION",
+        VITE_PLANTNEXUS_ENVIRONMENT: "TEST",
+        VITE_PLANTNEXUS_E2E_SIMULATION: "true",
+      }),
+    ).toEqual({
+      apiBaseUrl: "/api/v1",
+      dataPlane: "SIMULATION",
+      environment: "TEST",
+      synthetic: true,
+      syntheticProvenance: e2eSyntheticProvenance,
+    });
+    expect(() =>
+      loadRuntimeConfig({
+        DEV: false,
+        VITE_PLANTNEXUS_DATA_PLANE: "SIMULATION",
+        VITE_PLANTNEXUS_ENVIRONMENT: "TEST",
+        VITE_PLANTNEXUS_E2E_SIMULATION: "true",
       }),
     ).toThrow(/fail-closed/u);
   });

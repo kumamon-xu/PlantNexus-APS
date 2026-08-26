@@ -1,6 +1,6 @@
 # PlantNexus APS
 
-PlantNexus APS 是一个面向单工厂、多车间场景的高级计划与排程（APS）项目。P2 CP-SAT Vertical Slice 已通过 Exit Gate并关闭，当前阶段为P3（Planning Workspace）。TASK-P3-00 phase-planning治理已由exact provider闭环；TASK-P3-01～15均为`planned`，Production能力与P4动态重排均未形成或未获授权。
+PlantNexus APS 是一个面向单工厂、多车间场景的高级计划与排程（APS）项目。P2 CP-SAT Vertical Slice 已通过 Exit Gate并关闭，当前阶段为P3（Planning Workspace）。TASK-P3-00～12均由exact provider闭环为`done`；TASK-P3-13已获明确授权并从冻结SHA `3dacf83c0f0bf87a9fa673aa75d61f8ad8659386`进入`in_progress`，P3-14/15、Production能力与P4动态重排均未启动。
 
 ## 开始之前
 
@@ -12,7 +12,7 @@ Coding Agent 必须从 [`AGENTS.md`](AGENTS.md) 进入项目规则。项目规�
 |---|---|---|
 | Implementation spec | `0.3.0` | 当前权威实施规格版本 |
 | Code | `0.0.0` | P0 工程骨架占位，不代表发布版本 |
-| Business schema set | `2.5.0` | 加法包含`kpi.v2`与`export-manifest.v1`；既有document版本和历史字节保持不变 |
+| Business schema set | `2.7.0` | 加法包含Workspace v1与P3 export v2；本Task不改Schema、migration或历史document bytes |
 | Python | `3.12` | `.python-version` 与 `pyproject.toml` 固定的运行时系列 |
 | OR-Tools | `9.15.6755` | TASK-P2-03 exact runtime pin；只允许在 `planning/backends/cp_sat/` 使用 |
 
@@ -35,13 +35,13 @@ uv run python -m app.infrastructure.contract_check --root . --report build/valid
 docker compose --env-file .env.example config --quiet
 uv run python scripts/check_docs.py
 uv build
-uv run python -c "import app; assert app.CODE_VERSION == '0.0.0'; assert app.SPEC_VERSION == '0.3.0'; assert app.SCHEMA_VERSION == '2.5.0'"
+uv run python -c "import app; assert app.CODE_VERSION == '0.0.0'; assert app.SPEC_VERSION == '0.3.0'; assert app.SCHEMA_VERSION == '2.7.0'"
 ```
 
 `scripts/check_docs.py` 当前同时检查结构性 Markdown、版本化 registries、REQ/NFR/ENG/TEST 等引用、Task 依赖、逐根 traceability 和 PROD_OPEN/SIM_ASSUMPTION 隔离。Task 进入 `in_progress` 时须把当时完整 HEAD SHA 写入 `Diff base`；影响覆盖检查使用 `Diff base..HEAD` 的已提交变更与当前 working tree 的并集，因此提交前后可用同一命令复验：
 
 ```powershell
-uv run python scripts/check_docs.py --task docs/tasks/P3/TASK-P3-00-phase-transition-and-task-planning-governance.md --check-diff --report build/traceability/TASK-P3-00-report.json
+uv run python scripts/check_docs.py --task docs/tasks/P3/TASK-P3-13-human-control-actions-and-ui-e2e.md --check-diff --report build/traceability/TASK-P3-13-report.json
 ```
 
 报告使用 `traceability-report.v1`，包含 `diff_base` 与 committed/working-tree source counts，生成到已忽略的 `build/`；Task Card Completion evidence 保存持久结果摘要。[`ci.yml`](.github/workflows/ci.yml) 已编排 exact lock、lint、type、全部 P0 tests、machine contracts、Compose config、文档 diff 和 package build。仓库内只证明 workflow/config 可执行；CI provider run URL/ID 必须来自真实外部运行，不能由本地结果替代。
@@ -61,7 +61,7 @@ scripts/      仓库级校验与自动化脚本
 infra/        P0 开发容器构建配置
 ```
 
-P2 CP-SAT Vertical Slice已通过Exit Gate并关闭，当前阶段为P3。P2-00～14均由exact provider evidence闭环为`done`；P3-00只执行phase transition/Task planning/document governance，P3-01～15尚未实现或获逐Task授权。Production capacity/SLA/authority/publish与P4仍未形成。当前边界见[`docs/current_phase.md`](docs/current_phase.md)。
+P2 CP-SAT Vertical Slice已通过Exit Gate并关闭，当前阶段为P3。P2-00～14和P3-00～12均由exact provider evidence闭环为`done`；P3-13当前只实现isolated Simulation human-control UI/E2E与有界verified internal package download，P3-14/15不会自动启动。Production capacity/SLA/identity/approval authority/external publish与P4仍未形成。当前边界见[`docs/current_phase.md`](docs/current_phase.md)。
 
 ## P2 历史执行记录
 

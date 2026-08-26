@@ -6,10 +6,16 @@ spec_version: 0.3.0
 phase: cross-phase
 normative: true
 source_sections: [4, 23, 24, 40, 67, 93, 101, 102, 103, 104]
-last_reviewed: 2026-08-25
+last_reviewed: 2026-08-26
 ---
 
 # Provenance 与版本规则
+
+## TASK-P3-13 provenance bindings
+
+每个UI command保留source Version ID/state/content fingerprint、`workspace-command.v1`/schema set/canonicalization、command ID、idempotency scope/key、request fingerprint、target、reason与correlation。Server返回的新Version或Job必须重新通过runtime contract，并与请求source/result reference一致；same-key unknown-outcome recovery复用exact command bytes，不生成替代历史。
+
+Download没有发布新Schema/version；`zip-deterministic.v1`只是`export-manifest.v2`目录的transport profile。Job attempt、ScheduleVersion reference、synthetic provenance、package ID、manifest/storage/archive fingerprints及completion audit形成一次性证据链。P2 package bytes、P3-09历史artifact和17-operation P3-10 provider事实均保留，当前API机器证据另记17+1 additive边界。
 
 ## 计划结果最小来源链
 

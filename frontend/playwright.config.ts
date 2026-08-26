@@ -10,6 +10,8 @@ export default defineConfig({
   reporter: [
     ["line"],
     ["json", { outputFile: "../build/playwright/results.json" }],
+    ["junit", { outputFile: "../build/playwright/results.xml" }],
+    ["html", { outputFolder: "../build/playwright/html", open: "never" }],
   ],
   use: {
     baseURL: "http://127.0.0.1:4173",
@@ -19,12 +21,12 @@ export default defineConfig({
   },
   projects: [
     {
-      name: "chromium-read-only",
+      name: "chromium-p3-human-control",
       use: { ...devices["Desktop Chrome"] },
     },
   ],
   webServer: {
-    command: "npm run dev -- --host 127.0.0.1 --port 4173",
+    command: "npm run dev -- --mode e2e --host 127.0.0.1 --port 4173",
     url: "http://127.0.0.1:4173",
     reuseExistingServer: false,
     timeout: 30_000,

@@ -6,10 +6,18 @@ spec_version: 0.3.0
 phase: cross-phase
 normative: true
 source_sections: [6, 98, 99, 100, 101, 103, 104]
-last_reviewed: 2026-08-25
+last_reviewed: 2026-08-26
 ---
 
 # 文档一致性自动检查合同
+
+## TASK-P3-13 governance contract
+
+Diff checker必须以冻结base `3dacf83c0f0bf87a9fa673aa75d61f8ad8659386`计算committed+working union，只允许Task卡逐字路径并精确命中11行：`IMPACT-APPLICATION/API/STATE/FRONTEND/EXPORT/JOBS/INFRA/TESTS/PHASE/GOVERNANCE-REGISTRY/DOCS`。所有required documents必须实际进入Diff；Schema/migration/dependency/lock、domain state implementation、repository persistence、P2 bytes、Solver/Validator/KPI、fixtures/benchmarks、external/P4/Production路径必须为零。
+
+Full docs预期保持165 Markdown、30 roots、30 trace rows、48 Test IDs、15 OPEN、53 Tasks和13 risks；新增SIM-ASSUMPTION-015使SIM count由14增至15但不改变registry format。Task report必须绑定exact SHA/base、11 rows、全部checks和0 issues；implementation/closure provider分别复验，不能自动启动P3-14。
+
+提交前本地实测为165 docs/30 roots/30 trace rows/48 Test IDs/15 OPEN/15 SIM/13 risks/53 Tasks；Task union为91 working paths、11 Impact rows、19/19 checks、0 issues。Schema/migration/dependency/lock、domain state implementation、repository、P2 bytes、Solver/Validator/KPI、fixture/benchmark与P4/external/Production禁止范围均为零差异；provider形成前保持`in_progress`。
 
 本文件定义由 TASK-P0-02 建立的文档/追踪校验器合同。实现入口为
 [`scripts/check_docs.py`](../../scripts/check_docs.py)，负向和回归测试入口为

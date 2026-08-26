@@ -126,9 +126,7 @@ def test_p3_frontend_dependencies_and_ci_are_exact_and_bounded() -> None:
     assert package["engines"] == {"node": "24.19.0", "npm": "11.17.0"}
     assert package["packageManager"] == "npm@11.17.0"
     assert package["dependencies"] == EXPECTED_FRONTEND_RUNTIME_DEPENDENCIES
-    assert (
-        package["devDependencies"] == EXPECTED_FRONTEND_DEVELOPMENT_DEPENDENCIES
-    )
+    assert package["devDependencies"] == EXPECTED_FRONTEND_DEVELOPMENT_DEPENDENCIES
     assert lock["lockfileVersion"] == 3
     lock_root = cast(dict[str, Any], lock["packages"])[""]
     assert lock_root["engines"] == package["engines"]
@@ -141,9 +139,7 @@ def test_p3_frontend_dependencies_and_ci_are_exact_and_bounded() -> None:
     assert typescript_eslint["peerDependencies"]["eslint"] == (
         "^8.57.0 || ^9.0.0 || ^10.0.0"
     )
-    assert typescript_eslint["peerDependencies"]["typescript"] == (
-        ">=4.8.4 <6.1.0"
-    )
+    assert typescript_eslint["peerDependencies"]["typescript"] == (">=4.8.4 <6.1.0")
     assert "registry.npmmirror.com" not in json.dumps(lock)
 
     workflow = (ROOT / ".github/workflows/ci.yml").read_text(encoding="utf-8")
@@ -546,7 +542,7 @@ def test_ci_p3_export_job_is_required_and_machine_checkable(tmp_path: Path) -> N
     assert report["counts"] == {
         "new_schemas": 2,
         "new_samples": 2,
-        "focused_tests": 16,
+        "focused_tests": 18,
         "package_payloads": 12,
         "xlsx_sheets": 4,
         "export_states": 5,
@@ -585,11 +581,16 @@ def test_ci_p3_planning_workspace_api_is_required_and_machine_checkable(
     assert report["status"] == "PASS"
     assert report["task_id"] == "TASK-P3-10"
     assert report["check_count"] == 8
-    assert report["counts"]["api_paths"] == 17
-    assert report["counts"]["successful_delegations"] == 17
+    assert report["counts"]["api_paths"] == 18
+    assert report["counts"]["successful_delegations"] == 18
     assert report["counts"]["production_provider_lookups"] == 0
     assert report["counts"]["router_business_state_transitions"] == 0
     assert report["boundaries"]["p4_capabilities"] == "NOT_IMPLEMENTED"
+    assert report["boundaries"]["p3_10_frozen_operations"] == 17
+    assert report["boundaries"]["p3_13_additive_operations"] == 1
+    assert report["boundaries"]["internal_simulation_download"] == (
+        "EXPORTED_VERIFIED_ZIP_ONLY"
+    )
     assert report["boundaries"]["production_readiness"] == "NOT_CLAIMED"
     assert report["issues"] == []
 

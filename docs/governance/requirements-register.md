@@ -6,11 +6,17 @@ spec_version: 0.3.0
 phase: cross-phase
 normative: true
 source_sections: [3, 4, 5, 6, 107]
-last_reviewed: 2026-08-25
+last_reviewed: 2026-08-26
 registry_version: 1.0.0
 ---
 
 # 核心需求注册表
+
+## TASK-P3-13 allocation review
+
+REQ-005获得human command只经既有P3-06 fresh Validator/new DRAFT的UI consumer负例；REQ-006获得PUBLISHED ExportJob create/failure/retry及EXPORTED-only verified ZIP download；REQ-007获得state/capability-sensitive edit/lock/approve/reject/publish/export control、PUBLISHED immutable和authoritative refresh；REQ-009获得command/idempotency/correlation、Version/Job、package/manifest/archive/completion-audit及Playwright/provider链。
+
+这些仅形成isolated Simulation UI/transport slice，不形成P3-14 Gate、P3-15 Exit、P4 Replan、真实Production identity/approval authority、external publish/storage或deployment。全部15个root Requirement保持`ALLOCATED`，`registry_version=1.0.0`不变；exact provider形成前TASK-P3-13仍`in_progress`。
 
 | ID | ID status | Requirement | 首要验收证据 | 计划阶段 |
 |---|---|---|---|---|

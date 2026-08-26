@@ -6,10 +6,16 @@ spec_version: 0.3.0
 phase: P0-P7
 normative: true
 source_sections: [29, 42, 65, 93, 95]
-last_reviewed: 2026-08-25
+last_reviewed: 2026-08-26
 ---
 
 # P0 Observability 与 Audit 边界
+
+## TASK-P3-13 control evidence
+
+每个command/download都保留correlation；成功UI显示server-confirmed operation，unknown outcome显示correlation并要求authority refresh。Audit/history页面只读已有append-only events；download响应额外携带package、manifest、archive和completion-audit identifiers，使保存的bytes可回指EXPORTED Job，不暴露storage path。
+
+Playwright JSON/JUnit/HTML和failure trace/video/screenshot、Frontend 12-check report、API 18-operation report与Task trace report构成本Task CI artifact。它们没有形成metrics backend、log retention、SIEM、alert、Production audit owner或SLO。
 
 ## Structured log contract
 

@@ -1,4 +1,4 @@
-"""Emit machine-checkable TASK-P3-10 HTTP/OpenAPI/authorization evidence."""
+"""Recheck TASK-P3-10 HTTP baseline plus the bounded TASK-P3-13 download."""
 
 from __future__ import annotations
 
@@ -17,6 +17,7 @@ from app.api.app import create_app
 from app.api.contracts import (
     PlanningWorkspaceApplicationError,
     PlanningWorkspaceApplicationRequest,
+    PlanningWorkspaceDownload,
     PlanningWorkspaceOperation,
 )
 from app.api.dependencies.authorization import (
@@ -64,10 +65,22 @@ class _RecordingApplication:
 
     def execute(
         self, request: PlanningWorkspaceApplicationRequest
-    ) -> Mapping[str, object]:
+    ) -> Mapping[str, object] | PlanningWorkspaceDownload:
         self.requests.append(request)
         if self.failure is not None:
             raise self.failure
+        if request.operation is PlanningWorkspaceOperation.DOWNLOAD_EXPORT_PACKAGE:
+            archive = b"PK\x03\x04p3-http-machine-download"
+            return PlanningWorkspaceDownload(
+                content=archive,
+                filename="export-package-" + "1" * 64 + ".zip",
+                media_type="application/zip",
+                package_id="export-package-" + "1" * 64,
+                manifest_fingerprint="sha256:" + "2" * 64,
+                archive_fingerprint=f"sha256:{sha256(archive).hexdigest()}",
+                completion_audit_event_id="audit-export-machine-completed",
+                correlation_id=request.context.correlation_id,
+            )
         return {
             "http_check_result_version": "p3-http-check-result.v1",
             "operation": request.operation.value,
@@ -296,10 +309,11 @@ def run_http_api_checks(root: Path) -> dict[str, object]:
         "listScheduleVersionAuditEvents",
         "createScheduleVersionExport",
         "getExportJob",
+        "downloadExportPackage",
         "retryExportJob",
         "cancelExportJob",
     }
-    if len(api_paths) != 17 or operation_ids != expected_operation_ids:
+    if len(api_paths) != 18 or operation_ids != expected_operation_ids:
         raise ValueError("P3 HTTP route inventory or operation IDs drifted")
     checks.append(
         _pass(
@@ -322,6 +336,24 @@ def run_http_api_checks(root: Path) -> dict[str, object]:
             response = client.get(path, headers=_auth_headers())
             if response.status_code != status:
                 raise ValueError(f"HTTP read delegation failed: {path}")
+
+        download = client.get(
+            f"/api/v1/export-jobs/{_EXPORT_JOB_ID}/download",
+            headers={
+                **_auth_headers(),
+                "X-Correlation-Id": "correlation-http-download",
+            },
+        )
+        if (
+            download.status_code != 200
+            or download.headers.get("Content-Type") != "application/zip"
+            or download.headers.get("Cache-Control") != "no-store"
+            or download.headers.get("X-PlantNexus-Package-Id")
+            != "export-package-" + "1" * 64
+            or download.headers.get("X-PlantNexus-Archive-Fingerprint")
+            != f"sha256:{sha256(download.content).hexdigest()}"
+        ):
+            raise ValueError("verified export package download delegation failed")
 
         for path, view in (
             ("/api/v1/workspace/data-health", WorkspaceView.DATA_HEALTH),
@@ -424,7 +456,7 @@ def run_http_api_checks(root: Path) -> dict[str, object]:
                 raise ValueError(f"HTTP command delegation failed: {path}")
             if response.headers.get("X-Correlation-Id") != command["correlation_id"]:
                 raise ValueError("command correlation was not preserved")
-        if len(application.requests) != 17:
+        if len(application.requests) != 18:
             raise ValueError("not every frozen HTTP route delegated exactly once")
         if {request.operation for request in application.requests} != set(
             PlanningWorkspaceOperation
@@ -687,7 +719,7 @@ def run_http_api_checks(root: Path) -> dict[str, object]:
         "counts": {
             "api_paths": len(api_paths),
             "http_operations": len(operation_ids),
-            "successful_delegations": 17,
+            "successful_delegations": 18,
             "mapped_error_reasons": 8,
             "production_provider_lookups": 0,
             "production_application_calls": 0,
@@ -700,6 +732,9 @@ def run_http_api_checks(root: Path) -> dict[str, object]:
             "authorization": "SERVER_DERIVED_CAPABILITY_AND_SCOPE",
             "production_authority": "DEFAULT_DENY_OPEN_010",
             "external_identity_mes_storage": "NOT_IMPLEMENTED",
+            "internal_simulation_download": "EXPORTED_VERIFIED_ZIP_ONLY",
+            "p3_10_frozen_operations": 17,
+            "p3_13_additive_operations": 1,
             "schema_migration_dependency_state_pairs": "UNCHANGED",
             "p4_capabilities": "NOT_IMPLEMENTED",
             "production_readiness": "NOT_CLAIMED",

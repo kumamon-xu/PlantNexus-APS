@@ -101,6 +101,7 @@ class PlanningWorkspaceOperation(StrEnum):
     LIST_AUDIT_EVENTS = "LIST_AUDIT_EVENTS"
     CREATE_EXPORT_JOB = "CREATE_EXPORT_JOB"
     GET_EXPORT_JOB = "GET_EXPORT_JOB"
+    DOWNLOAD_EXPORT_PACKAGE = "DOWNLOAD_EXPORT_PACKAGE"
     RETRY_EXPORT_JOB = "RETRY_EXPORT_JOB"
     CANCEL_EXPORT_JOB = "CANCEL_EXPORT_JOB"
 
@@ -137,16 +138,35 @@ class PlanningWorkspaceApplicationRequest:
     compared_version_precondition: dict[str, object] | None = None
 
 
+@dataclass(frozen=True, slots=True)
+class PlanningWorkspaceDownload:
+    """Verified binary result returned only by the bounded download operation."""
+
+    content: bytes
+    filename: str
+    media_type: str
+    package_id: str
+    manifest_fingerprint: str
+    archive_fingerprint: str
+    completion_audit_event_id: str
+    correlation_id: str
+
+
+type PlanningWorkspaceApplicationResult = (
+    Mapping[str, object] | PlanningWorkspaceDownload
+)
+
+
 class PlanningWorkspaceApplicationPort(Protocol):
     """Application façade used by the router; implementations compose P3-05..09."""
 
     def execute(
         self, request: PlanningWorkspaceApplicationRequest
-    ) -> Mapping[str, object]: ...
+    ) -> PlanningWorkspaceApplicationResult: ...
 
 
 type PlanningWorkspaceHandler = Callable[
-    [PlanningWorkspaceApplicationRequest], Mapping[str, object]
+    [PlanningWorkspaceApplicationRequest], PlanningWorkspaceApplicationResult
 ]
 
 
@@ -161,7 +181,7 @@ class RoutedPlanningWorkspaceApplication:
 
     def execute(
         self, request: PlanningWorkspaceApplicationRequest
-    ) -> Mapping[str, object]:
+    ) -> PlanningWorkspaceApplicationResult:
         handler = self._handlers.get(request.operation)
         if handler is None:
             raise PlanningWorkspaceApplicationError(
@@ -170,7 +190,7 @@ class RoutedPlanningWorkspaceApplication:
                 message="application handler is not configured",
             )
         result = handler(request)
-        if not isinstance(result, Mapping):
+        if not isinstance(result, (Mapping, PlanningWorkspaceDownload)):
             raise PlanningWorkspaceApplicationError(
                 "PERSISTENCE_FAILED",
                 field="application_result",
@@ -184,7 +204,7 @@ class UnavailablePlanningWorkspaceApplication:
 
     def execute(
         self, request: PlanningWorkspaceApplicationRequest
-    ) -> Mapping[str, object]:
+    ) -> PlanningWorkspaceApplicationResult:
         del request
         raise PlanningWorkspaceApplicationError(
             "SERVICE_UNAVAILABLE",
@@ -622,6 +642,8 @@ __all__ = [
     "PlanningWorkspaceApplicationError",
     "PlanningWorkspaceApplicationPort",
     "PlanningWorkspaceApplicationRequest",
+    "PlanningWorkspaceApplicationResult",
+    "PlanningWorkspaceDownload",
     "PlanningWorkspaceErrorEnvelope",
     "PlanningWorkspaceHandler",
     "PlanningWorkspaceHttpError",

@@ -6,10 +6,18 @@ spec_version: 0.3.0
 phase: P3
 normative: true
 source_sections: [73, 74, 75, 76, 110, 111]
-last_reviewed: 2026-08-25
+last_reviewed: 2026-08-26
 ---
 
 # 当前阶段：P3 — Planning Workspace
+
+## TASK-P3-13 当前执行边界
+
+用户已明确授权TASK-P3-13，并批准为既有17-operation API additive增加一个有界internal Simulation成果包下载。启动时`main=origin/main=3dacf83c0f0bf87a9fa673aa75d61f8ad8659386`、ahead/behind=`0/0`、working tree clean；P3-06～12 closure均为该SHA祖先且各自exact required `validate`/artifact已下载复核，因此该SHA冻结为不可变Diff base。
+
+当前实现只覆盖state/capability-sensitive human controls、canonical command/idempotency/unknown-outcome恢复、PUBLISHED immutable、ExportJob显式retry/verified download、audit link和12条isolated Chromium E2E。Schema、migration、dependency/lock、state pair、repository、Solver/Validator/KPI、external/P4/Production均冻结。Implementation provider与evidence-only closure完成前Task保持`in_progress`，P3 Milestone保持`active`，P3-14/15不启动。
+
+本地验收现为44项Backend focused、607项全仓、54项Frontend unit/component、12/12 Chromium、Frontend 12/12、API 18-operation、全部required machine、XS/P2 Gate、Ruff/Pyright、SCA/license、Compose/build和91 paths/11 rows/19 checks/0 issues全部PASS。该结果不等于GitHub provider证据；implementation exact required `validate`/artifact和后续evidence-only closure闭环前仍不得标done。
 
 ## 阶段授权与证据
 
@@ -17,7 +25,7 @@ last_reviewed: 2026-08-25
 
 P2-14 audit implementation `65c556789f176ad9de55523d6420737bb60f933f`的GitHub push run `32677741558` / required `validate` job `97288829348` / artifact `9503227240`成功，artifact digest=`sha256:fbb76f0ab44d3bdcff2d31e70f9698af84e10e48ee57ae611eef8529a288240e`；evidence-only closure `80c403384d1e171258cf874d26605d0d22aff1b2`的run `32678248961` / job `97290201234` / artifact `9503372291`也成功，digest=`sha256:673412905b7420660d1e9f07755fcda6291f85f8f2bd926b4bf31a0a6bd1bd0c`。下载检查的两份artifact均含20份可解析JSON，Task/SHA/Impact Rules/checks/issues与对应提交一致且0 issue。规划启动时`main=origin/main=80c403384d1e171258cf874d26605d0d22aff1b2`、ahead/behind=`0/0`且working tree clean，因此transition前提一致。
 
-P2 Milestone现为`completed`，P3 Milestone为`active`。`TASK-P3-00`～`TASK-P3-12`均已有exact implementation provider并由各自evidence-only closure标为`done`；P3-13～15保持`planned`且不会自动启动。
+P2 Milestone现为`completed`，P3 Milestone为`active`。`TASK-P3-00`～`TASK-P3-12`均已有exact implementation provider并由各自evidence-only closure标为`done`；用户已明确授权`TASK-P3-13`并批准有界internal Simulation成果包下载transport，故该Task以冻结Diff base `3dacf83c0f0bf87a9fa673aa75d61f8ad8659386`进入`in_progress`。P3-14/15保持`planned`且不会自动启动。
 
 ## 当前目标
 
@@ -152,14 +160,14 @@ Implementation `567e8693db881ea3dfffa011de9021fef9641361`的required run/job/art
 ## 当前允许
 
 - 读取并复核P3-01～10合同、Schema、persistence/lifecycle/read/command/decision/publication/export/API provider evidence和P2 frozen artifact；
-- 只读复核TASK-P3-11/12已闭环的Frontend/provider证据，不继续扩展其实现边界；
+- 在TASK-P3-13卡的allow-list内实现state/capability-sensitive human controls、UI E2E和第18个有界verified internal Simulation package download operation；
 - 保留P2/v1 Schema/package bytes、P3-05～10 application/state/audit/API事实及全部历史provider evidence；
-- P3-13～15只有在逐Task明确授权后，才可按各卡允许范围和新的不可变Diff base实施。
+- P3-14/15只有在逐Task明确授权后，才可按各卡允许范围和新的不可变Diff base实施。
 
 ## 当前禁止
 
-- 扩展TASK-P3-11/12已冻结的read-only Frontend边界，或修改Schema、migration、Python dependency/`uv.lock`、repository、P2/v1 package/fixture/benchmark bytes、external adapter/network或deployment；
-- 执行P3-13～15，或让其中任何Task自动进入`ready/in_progress`；
+- 超出TASK-P3-13卡扩展Frontend或下载transport，或修改Schema、migration、Python/npm dependency、任一lockfile、repository persistence语义、P2/v1 package/fixture/benchmark bytes、external adapter/network或deployment；
+- 执行P3-14/15，或让其中任何Task自动进入`ready/in_progress`；
 - 直接更新PUBLISHED、绕过server/formal Validator、允许DRAFT/REJECTED发布或产生非幂等export/publish；
 - 实现P4的ExecutionEvent、ReplanRequest、OBJ-002 Stability、freeze window、ChangeReport或Execution Simulator；
 - 创建P4详细Task、进入P4，或声明Production readiness、approval authority、external publish/deployment已形成；

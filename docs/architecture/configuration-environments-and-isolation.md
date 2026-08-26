@@ -6,10 +6,16 @@ spec_version: 0.3.0
 phase: cross-phase
 normative: true
 source_sections: [16, 38, 49, 62, 64, 95, 96]
-last_reviewed: 2026-08-25
+last_reviewed: 2026-08-26
 ---
 
 # 配置、环境与数据隔离
+
+## TASK-P3-13 isolated E2E runtime
+
+`.env.e2e`只在Vite `--mode e2e`、`env.DEV=true`且显式`VITE_PLANTNEXUS_E2E_SIMULATION=true`时选择`SIMULATION`/`TEST`/synthetic runtime，并绑定`SIM-P3-HUMAN-CONTROL-001@1.0.0`。文件不含token/secret/password/key；普通build与Production-shaped默认仍为`PRODUCTION`、`synthetic=false`并隐藏controls。Mock transport只存在Playwright page interception，不创建service、database或connected environment。
+
+Local package store只接受server配置的existing root和内容派生Job/attempt identity，拒绝symlink/path escape；没有object storage、external URL或MES target。CI browser/install/artifact仍属required validation环境，不构成Production browser matrix、hosting、secrets或isolation approval。
 
 ## 配置层
 

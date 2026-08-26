@@ -6,10 +6,14 @@ spec_version: 0.3.0
 phase: P0-P3
 normative: true
 source_sections: [34, 65, 66, 67]
-last_reviewed: 2026-08-25
+last_reviewed: 2026-08-26
 ---
 
 # ExportJob 状态机
+
+## TASK-P3-13 EXPORTED retrieval review
+
+第18个HTTP operation只从已有EXPORTED terminal事实读取verified artifact；它不claim、heartbeat、complete、fail、retry或cancel，也不新增self-transition。Download要求v2 Job=`SIMULATION`/`SIMULATION_INTERNAL`/`EXPORTED`、positive attempt与exact artifact/audit lineage；其他state返回显式conflict/failure。5 states、6 pairs、lease/attempt/CAS和worker completion语义保持不变，Export仍不等于Publish或external transfer。
 
 ```text
 CREATED

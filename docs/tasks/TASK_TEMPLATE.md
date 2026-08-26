@@ -6,10 +6,14 @@ spec_version: 0.3.0
 phase: cross-phase
 normative: true
 source_sections: [98, 99, 100, 111]
-last_reviewed: 2026-08-25
+last_reviewed: 2026-08-26
 ---
 
 # TASK-Px-yy — Title
+
+## P3 human-control / browser Task governance note
+
+涉及human-control UI时还必须逐项冻结server state与`allowed_actions`门、command carrier/hash/idempotency、double-submit、unknown-outcome authority refresh+same-key retry、PUBLISHED immutable、confirm/reason、accessible status/error及Playwright failure artifact。若新增binary download transport，必须单列用户批准、pre-lookup authorization、root confinement、size/symlink/tamper/lineage验证、exact archive/header绑定，并明确它不发布Schema、不增加state pair、不形成external/Production能力。Implementation与evidence-only closure必须分别绑定exact SHA的required `validate`和下载artifact；下一Task不得自动启动。
 
 Task status: 写入本 Task Card front matter 的 `status`，不在正文建立第二状态源。
 

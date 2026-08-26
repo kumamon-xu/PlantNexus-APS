@@ -1,20 +1,30 @@
-import { canonicalJson, workspaceQueryFingerprint } from "./canonical";
+import {
+  canonicalJson,
+  sha256BytesFingerprint,
+  workspaceQueryFingerprint,
+} from "./canonical";
 import {
   ContractViolation,
   isJsonObject,
   parsePlanningRun,
+  parseExportJob,
   parseScheduleVersion,
   parseVersionComparison,
+  parseWorkspaceActionResult,
   parseWorkspaceResponse,
 } from "./contracts";
 import type { RuntimeConfig } from "./runtime";
 import type { SessionProvider } from "./session";
 import type {
   ClientFailureKind,
+  ExportJob,
+  ExportPackageDownload,
   JsonObject,
   ScheduleVersion,
   VersionReference,
   WorkspaceHttpResponse,
+  WorkspaceActionResult,
+  WorkspaceCommandDocument,
   WorkspaceQueryDocument,
   WorkspaceView,
 } from "./types";
@@ -31,9 +41,14 @@ export class WorkspaceClientError extends Error {
   }
 }
 
+const maxExportArchiveBytes = 70 * 1024 * 1024;
+
 export interface PlanningWorkspaceClient {
   getPlanningRun(planningRunId: string): Promise<JsonObject>;
   getScheduleVersion(scheduleVersionId: string): Promise<ScheduleVersion>;
+  getExportJob(exportJobId: string): Promise<ExportJob>;
+  executeCommand(command: WorkspaceCommandDocument): Promise<WorkspaceActionResult>;
+  downloadExportPackage(exportJobId: string): Promise<ExportPackageDownload>;
   queryWorkspace(
     query: WorkspaceQueryDocument,
     expectedView: WorkspaceView,
@@ -156,14 +171,9 @@ export function createPlanningWorkspaceClient(
   session: SessionProvider,
   fetcher: typeof fetch = globalThis.fetch,
 ): PlanningWorkspaceClient {
-  async function request(
-    path: string,
-    method: "GET" | "POST",
-    body?: JsonObject,
-    additionalHeaders?: Readonly<Record<string, string>>,
-  ): Promise<unknown> {
+  async function authorizedHeaders(accept: string): Promise<Headers> {
     const token = await session.getAccessToken();
-    const headers = new Headers({ Accept: "application/json" });
+    const headers = new Headers({ Accept: accept });
     if (token !== null) {
       if (
         token.length === 0 ||
@@ -179,6 +189,16 @@ export function createPlanningWorkspaceClient(
       }
       headers.set("Authorization", `Bearer ${token}`);
     }
+    return headers;
+  }
+
+  async function request(
+    path: string,
+    method: "GET" | "POST",
+    body?: JsonObject,
+    additionalHeaders?: Readonly<Record<string, string>>,
+  ): Promise<unknown> {
+    const headers = await authorizedHeaders("application/json");
     if (body !== undefined) headers.set("Content-Type", "application/json");
     for (const [name, value] of Object.entries(additionalHeaders ?? {})) {
       headers.set(name, identityValue(value));
@@ -237,7 +257,7 @@ export function createPlanningWorkspaceClient(
       }
       throw new WorkspaceClientError(
         "contract_error",
-        "Server response failed the read-only contract",
+        "Server response failed the Planning Workspace contract",
         200,
         null,
       );
@@ -256,6 +276,145 @@ export function createPlanningWorkspaceClient(
           await get(`/schedule-versions/${pathSegment(scheduleVersionId)}`),
         ),
       );
+    },
+    async getExportJob(exportJobId) {
+      return checked(async () => {
+        const expectedId = identityValue(exportJobId);
+        const job = parseExportJob(
+          await get(`/export-jobs/${pathSegment(expectedId)}`),
+        );
+        if (job.export_job_id !== expectedId) {
+          throw new ContractViolation(
+            "export_job.export_job_id",
+            "response is not bound to the requested ExportJob",
+          );
+        }
+        return job;
+      });
+    },
+    async executeCommand(command) {
+      return checked(async () => {
+        const path = commandPath(command);
+        const response = await request(path, "POST", command, {
+          "Idempotency-Key": command.idempotency_key,
+          "X-Correlation-Id": command.correlation_id,
+        });
+        return parseWorkspaceActionResult(response, command);
+      });
+    },
+    async downloadExportPackage(exportJobId) {
+      const correlationId = `correlation-download-${globalThis.crypto.randomUUID()}`;
+      const headers = await authorizedHeaders("application/zip");
+      headers.set("X-Correlation-Id", correlationId);
+      let response: Response;
+      try {
+        response = await fetcher(
+          `${config.apiBaseUrl}/export-jobs/${pathSegment(exportJobId)}/download`,
+          {
+            method: "GET",
+            headers,
+            cache: "no-store",
+            credentials: "omit",
+          },
+        );
+      } catch {
+        throw new WorkspaceClientError(
+          "server_error",
+          "Export package download outcome is unknown",
+          null,
+          correlationId,
+        );
+      }
+      if (!response.ok) {
+        let payload: unknown = null;
+        try {
+          payload = await response.json();
+        } catch {
+          // A failed binary route may still be sanitized without a JSON body.
+        }
+        const detail = safeError(
+          payload,
+          `Download failed with HTTP ${response.status}`,
+        );
+        throw new WorkspaceClientError(
+          kindForStatus(response.status),
+          detail.message,
+          response.status,
+          detail.correlationId ?? response.headers.get("X-Correlation-Id"),
+        );
+      }
+      const packageId = response.headers.get("X-PlantNexus-Package-Id");
+      const manifestFingerprint = response.headers.get(
+        "X-PlantNexus-Manifest-Fingerprint",
+      );
+      const archiveFingerprint = response.headers.get(
+        "X-PlantNexus-Archive-Fingerprint",
+      );
+      const completionAuditEventId = response.headers.get(
+        "X-PlantNexus-Completion-Audit-Event-Id",
+      );
+      const responseCorrelation = response.headers.get("X-Correlation-Id");
+      const disposition = response.headers.get("Content-Disposition");
+      const contentLength = response.headers.get("Content-Length");
+      const filename = disposition?.match(
+        /^attachment; filename="([A-Za-z0-9._-]{1,192}\.zip)"$/u,
+      )?.[1];
+      if (
+        response.headers.get("Content-Type")?.split(";", 1)[0] !==
+          "application/zip" ||
+        packageId === null ||
+        !/^export-package-[0-9a-f]{64}$/u.test(packageId) ||
+        filename !== `${packageId}.zip` ||
+        manifestFingerprint === null ||
+        !/^sha256:[0-9a-f]{64}$/u.test(manifestFingerprint) ||
+        archiveFingerprint === null ||
+        !/^sha256:[0-9a-f]{64}$/u.test(archiveFingerprint) ||
+        completionAuditEventId === null ||
+        completionAuditEventId.length === 0 ||
+        responseCorrelation !== correlationId ||
+        (contentLength !== null &&
+          (!/^[0-9]+$/u.test(contentLength) ||
+            Number(contentLength) > maxExportArchiveBytes))
+      ) {
+        throw new WorkspaceClientError(
+          "contract_error",
+          "Download response headers failed the verified package contract",
+          response.status,
+          responseCorrelation,
+        );
+      }
+      let bytes: ArrayBuffer;
+      try {
+        bytes = await response.arrayBuffer();
+      } catch {
+        throw new WorkspaceClientError(
+          "contract_error",
+          "Downloaded archive could not be read",
+          response.status,
+          responseCorrelation,
+        );
+      }
+      if (
+        bytes.byteLength === 0 ||
+        bytes.byteLength > maxExportArchiveBytes ||
+        (await sha256BytesFingerprint(bytes)) !== archiveFingerprint
+      ) {
+        throw new WorkspaceClientError(
+          "contract_error",
+          "Downloaded archive fingerprint does not match the server evidence",
+          response.status,
+          responseCorrelation,
+        );
+      }
+      return {
+        blob: new Blob([bytes], { type: "application/zip" }),
+        filename,
+        packageId,
+        manifestFingerprint,
+        archiveFingerprint,
+        completionAuditEventId,
+        correlationId,
+      };
     },
     async queryWorkspace(query, expectedView) {
       return checked(async () => {
@@ -318,6 +477,31 @@ export function createPlanningWorkspaceClient(
       });
     },
   };
+}
+
+function commandPath(command: WorkspaceCommandDocument): string {
+  const source = pathSegment(command.source_id);
+  switch (command.command_type) {
+    case "MOVE_OPERATION":
+    case "ASSIGN_RESOURCE":
+    case "SET_LOCK":
+    case "REMOVE_LOCK":
+      return `/schedule-versions/${source}/commands`;
+    case "SUBMIT_FOR_REVIEW":
+      return `/schedule-versions/${source}/validate`;
+    case "APPROVE":
+      return `/schedule-versions/${source}/approve`;
+    case "REJECT":
+      return `/schedule-versions/${source}/reject`;
+    case "PUBLISH":
+      return `/schedule-versions/${source}/publish`;
+    case "REQUEST_EXPORT":
+      return `/schedule-versions/${source}/exports`;
+    case "RETRY_EXPORT":
+      return `/export-jobs/${source}/retry`;
+    case "CANCEL_EXPORT":
+      return `/export-jobs/${source}/cancel`;
+  }
 }
 
 function workspacePath(view: WorkspaceView): string {

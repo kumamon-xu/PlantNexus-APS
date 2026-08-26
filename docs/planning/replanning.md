@@ -6,10 +6,16 @@ spec_version: 0.3.0
 phase: P0-P4
 normative: true
 source_sections: [21, 28, 35, 47, 48, 49, 50, 79, 80]
-last_reviewed: 2026-08-24
+last_reviewed: 2026-08-26
 ---
 
 # 动态重排设计合同
+
+## TASK-P3-13 P3/P4 boundary review
+
+Gantt drag/move/assign/lock是对单一immutable ScheduleVersion的人工command proposal，经既有P3-06 fresh Validator产生new DRAFT；它不读取ExecutionEvent、不生成ReplanRequest、不计算freeze window/OBJ-002/Stability/ChangeReport，也不调用Solver。UI的“refresh authority”仅重读Version/Job，不是replan trigger。
+
+P3-14/15完成前不能把本slice视为P3 Gate；P4 dynamic replanning仍完全未启动。PUBLISHED immutable且rollback只能以新Version/command表达，不能修改执行事实或历史发布。
 
 ## 输入
 

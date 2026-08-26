@@ -6,10 +6,16 @@ spec_version: 0.3.0
 phase: cross-phase
 normative: false
 source_sections: [11, 12, 65, 95, 100, 102]
-last_reviewed: 2026-08-25
+last_reviewed: 2026-08-26
 ---
 
 # 推荐技术栈与锁定规则
+
+## TASK-P3-13 stack review
+
+本Task复用Python标准库`zipfile`、现有FastAPI/React/Ant Design/TanStack Query和已锁定Playwright，不新增或升级任何dependency。Node `24.19.0`、npm `11.17.0`、24个direct pins、lockfile v3、`@playwright/test=1.62.1`以及已批准的`typescript-eslint=8.68.0`/ESLint `10.9.1`/TypeScript `6.0.3` peer gate逐字保持。`pyproject.toml`、`uv.lock`、`frontend/package.json`与`package-lock.json`禁止漂移。
+
+Deterministic ZIP、12 Chromium specs和bundle size都只属于development evidence；不建立Production file-size/SLA/browser compatibility/throughput承诺。若未来需要streaming、大包、external storage SDK或browser support matrix，必须在P4+/Production另行评审。
 
 ## Backend
 

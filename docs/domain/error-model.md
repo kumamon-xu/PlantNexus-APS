@@ -6,10 +6,16 @@ spec_version: 0.3.0
 phase: P0-P4
 normative: true
 source_sections: [29, 32, 34, 60, 65, 91, 92]
-last_reviewed: 2026-08-25
+last_reviewed: 2026-08-26
 ---
 
 # 错误与求解状态模型
+
+## TASK-P3-13 visible failure boundary
+
+Action UI保持401/403/409/422为已知失败并逐字显示sanitized message/correlation；network与500被标记为unknown outcome，禁止假定成功，必须先refresh authority后以original key retry。Download的missing、state conflict、tamper/partial/mixed lineage与unexpected I/O继续经既有error adapter映射，不返回path、credential、stack或raw exception。Frontend contract/header/hash mismatch本地收敛为contract error且不保存文件。
+
+本Task不新增全局error code/category，也不改变domain failure reason；P4 execution/replan error与Production incident taxonomy未形成。
 
 ## 产品错误分类
 

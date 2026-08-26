@@ -6,10 +6,16 @@ spec_version: 0.3.0
 phase: P3
 normative: true
 source_sections: [33, 34, 63, 65, 66, 68, 69, 77, 78, 91, 94]
-last_reviewed: 2026-08-25
+last_reviewed: 2026-08-26
 ---
 
 # P3 Planning Workspace API 语义合同
+
+## TASK-P3-13 additive download operation
+
+历史P3-10 17-operation集合保持不可变；经用户明确批准，当前合同additive增加第18项`GET /api/v1/export-jobs/{export_job_id}/download`（operation ID `downloadExportPackage`）。请求沿用Bearer/correlation和`export` capability，不带command body或Idempotency-Key；application只可返回verified binary result。200固定`application/zip`、attachment filename、`no-store`、`nosniff`及package/manifest/archive/completion-audit/correlation headers；其他失败继续使用sanitized `planning-workspace-error.v1`。
+
+该operation只接受internal Simulation `EXPORTED` Job，不发布JSON Schema或新state。Local machine report现为18 paths/18 operations/18 delegations、Production provider lookup=0、router transition=0，OpenAPI fingerprint=`sha256:a2de2adb15aae7cccbac13b1ad1ffb953c82f1ef735eb00eb95bb3a3be8035a4`。这不表示external download service或Production API readiness。
 
 本文件是P3 read/command HTTP的先行人类语义合同。TASK-P3-01不创建JSON Schema、Pydantic/FastAPI、OpenAPI、数据库或行为；TASK-P3-02发布机器carrier，TASK-P3-05～10实现read/application/API，TASK-P3-11～13消费。
 

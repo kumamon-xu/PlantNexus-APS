@@ -6,11 +6,17 @@ spec_version: 0.3.0
 phase: cross-phase
 normative: false
 source_sections: [0, 8, 10, 30, 42, 57, 59, 62, 89, 90, 105]
-last_reviewed: 2026-08-25
+last_reviewed: 2026-08-26
 registry_version: 1.0.0
 ---
 
 # 项目风险注册表
+
+## TASK-P3-13 risk review
+
+Server state/capability gates、PUBLISHED immutable、fresh-authority navigation和no-client-Validator继续约束RISK-007/013；in-flight suppression、unknown-outcome refresh+same-key replay、explicit Job retry和append-only audit加强RISK-008/012；root-confined full package verification、credential-safe reason/no persistence、exact dependency locks加强RISK-011/013；versioned Simulation fixture与browser/bundle非SLA声明继续约束RISK-009。
+
+这些证据仍只有mock browser/local filesystem/Simulation actor，没有真实identity、gateway、external storage、distributed failure、Production data/browser matrix/capacity/SLA。RISK-001～013全部保持`MONITORED`，severity/status与`registry_version=1.0.0`不变；provider成功也不得标记MITIGATED/CLOSED。
 
 | ID | Status | 风险 | 早期信号 | 当前控制 |
 |---|---|---|---|---|

@@ -15,6 +15,7 @@ from app.exporters.standard_package import (
     build_standard_export_package,
     write_standard_export_package,
 )
+from app.jobs.export_package_store import export_attempt_destination
 
 
 @dataclass(frozen=True, slots=True)
@@ -70,11 +71,11 @@ class InternalExportJobWorker:
                 correlation_id=correlation_id,
                 generated_at_utc=terminal_context.occurred_at_utc,
             )
-            destination = (
-                self._storage_root / f"{export_job_id}-attempt-{attempt}"
-            ).resolve()
-            if destination.parent != self._storage_root:
-                raise RuntimeError("ExportJob storage identity escaped configured root")
+            destination = export_attempt_destination(
+                self._storage_root,
+                export_job_id=export_job_id,
+                attempt=attempt,
+            )
             write_standard_export_package(package, destination)
             completed = self._service.complete(
                 export_job_id,

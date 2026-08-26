@@ -6,10 +6,16 @@ spec_version: 0.3.0
 phase: P3
 normative: true
 source_sections: [33, 34, 66, 67, 68, 77, 78, 94]
-last_reviewed: 2026-08-25
+last_reviewed: 2026-08-26
 ---
 
 # P3 Approval Publication 与 Export 人工控制流程
+
+## TASK-P3-13 browser control flow
+
+READY_FOR_REVIEW只在server允许时显示Approve/Reject并要求credential-safe reason；APPROVED publication必须打开accessible dialog、再次输入reason并勾选`SIMULATION_INTERNAL`确认。成功仅接受server authoritative Version，失败不产生success toast。PUBLISHED export与publication分离：create后显示Job事实，`EXPORT_FAILED`只提供显式same-contract retry，只有`EXPORTED`且artifact manifest完整时提供download。
+
+Double click由同步in-flight guard收敛为一次request。对network/5xx，UI显示“outcome unknown”、保留exact command/key/fingerprint并禁用retry；完成authority refresh后才允许原请求重放。401/403/409/422属于已知失败且不保留blind retry。Audit link只读取append-only event，不修改或补写decision/publication/export事实。
 
 本文件固定人机控制流程和UI可见边界。TASK-P3-01没有批准任何真实人、组织、身份提供商、Production target或发布行为。
 

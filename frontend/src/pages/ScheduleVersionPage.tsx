@@ -1,14 +1,23 @@
 import { Alert, Space, Typography } from "antd";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 
+import type { WorkspaceActionResult } from "../api/types";
+import { useAppServices } from "../app/context";
 import { stateForError } from "../app/state";
 import { useScheduleVersion } from "../app/useScheduleVersion";
 import { ScheduleVersionPanel } from "../components/ScheduleVersionPanel";
 import { WorkspaceStatePanel } from "../components/WorkspaceStatePanel";
+import { ApprovalPanel } from "../features/approval/ApprovalPanel";
+import { AuditHistoryPanel } from "../features/audit/AuditHistoryPanel";
+import { ExportPanel } from "../features/export/ExportPanel";
+import { PublicationPanel } from "../features/publication/PublicationPanel";
+import { ScheduleActionsPanel } from "../features/schedule-actions/ScheduleActionsPanel";
 
 const { Paragraph, Title } = Typography;
 
 export function ScheduleVersionPage() {
+  const navigate = useNavigate();
+  const { runtime } = useAppServices();
   const { scheduleVersionId, query } = useScheduleVersion();
   if (scheduleVersionId === null || scheduleVersionId.length === 0) {
     return (
@@ -26,19 +35,43 @@ export function ScheduleVersionPage() {
   if (query.data === undefined) {
     return <WorkspaceStatePanel state="contract_error" />;
   }
+  async function refreshAuthority() {
+    const refreshed = await query.refetch();
+    if (refreshed.error !== null) throw refreshed.error;
+  }
+
+  async function onActionResult(result: WorkspaceActionResult) {
+    const authority = result.authoritativeVersion;
+    if (
+      authority !== null &&
+      authority.schedule_version_id !== query.data?.schedule_version_id
+    ) {
+      void navigate(
+        `/planning/versions/${encodeURIComponent(authority.schedule_version_id)}`,
+      );
+      return;
+    }
+    await refreshAuthority();
+  }
+
   const search = `?schedule_version_id=${encodeURIComponent(query.data.schedule_version_id)}`;
+  const humanControlsEnabled =
+    runtime.dataPlane === "SIMULATION" &&
+    runtime.environment !== "PRODUCTION" &&
+    runtime.synthetic &&
+    query.data.synthetic;
   return (
     <article className="workspace-page">
       <Title level={2}>ScheduleVersion authority</Title>
       <Paragraph type="secondary">
-        This page exposes immutable identity, state and lineage without offering a
-        client-side transition.
+        Identity, state and lineage remain server authority. Human controls submit
+        versioned commands and accept only the returned authoritative result.
       </Paragraph>
       <Alert
         type="info"
         showIcon
-        title="Read-only P3-12 boundary"
-        description="Server allowed_actions are displayed as facts; no action control is mounted."
+        title="P3-13 bounded human-control surface"
+        description="Controls are isolated to synthetic Simulation tests. Production identity, MES publication and P4 replanning remain unavailable."
       />
       <ScheduleVersionPanel version={query.data} />
       <Space wrap>
@@ -70,6 +103,44 @@ export function ScheduleVersionPage() {
         <Link to={`/resource-load${search}`}>Resource Load</Link>
         <Link to={`/compare${search}`}>Version comparison</Link>
       </Space>
+      <Title level={3}>Human controls</Title>
+      {!humanControlsEnabled && (
+        <Alert
+          type="warning"
+          showIcon
+          title="Human controls are hidden in this runtime."
+          description="Production remains default-deny until its separate identity and authorization gates close."
+        />
+      )}
+      {humanControlsEnabled && (
+        <div className="control-stack">
+          {query.data.state === "DRAFT" && (
+            <ScheduleActionsPanel
+              version={query.data}
+              refreshAuthority={refreshAuthority}
+              onActionResult={onActionResult}
+            />
+          )}
+          {query.data.state === "READY_FOR_REVIEW" && (
+            <ApprovalPanel
+              version={query.data}
+              refreshAuthority={refreshAuthority}
+              onActionResult={onActionResult}
+            />
+          )}
+          {query.data.state === "APPROVED" && (
+            <PublicationPanel
+              version={query.data}
+              refreshAuthority={refreshAuthority}
+              onActionResult={onActionResult}
+            />
+          )}
+          {query.data.state === "PUBLISHED" && (
+            <ExportPanel version={query.data} refreshAuthority={refreshAuthority} />
+          )}
+          <AuditHistoryPanel version={query.data} />
+        </div>
+      )}
     </article>
   );
 }

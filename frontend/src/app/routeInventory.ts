@@ -62,13 +62,11 @@ export const workspaceRoutes: readonly WorkspaceRouteDefinition[] = [
   },
 ] as const;
 
-export const excludedP312RouteFragments = [
-  "commands",
-  "approve",
-  "reject",
-  "publish",
-  "export",
-  "locks",
+export const excludedP313RouteFragments = [
+  "replan",
+  "execution-events",
+  "change-report",
+  "production-publish",
 ] as const;
 
 export const navigationRoutes = workspaceRoutes.filter(

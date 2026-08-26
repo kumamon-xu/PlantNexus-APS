@@ -10,7 +10,7 @@ from uuid import uuid4
 
 from fastapi import APIRouter, Body, Header, Query, Request
 from fastapi.encoders import jsonable_encoder
-from fastapi.responses import JSONResponse
+from fastapi.responses import JSONResponse, Response
 
 from app.api.contracts import (
     API_CONTRACT_VERSION,
@@ -18,6 +18,7 @@ from app.api.contracts import (
     PlanningWorkspaceApplicationError,
     PlanningWorkspaceApplicationPort,
     PlanningWorkspaceApplicationRequest,
+    PlanningWorkspaceDownload,
     PlanningWorkspaceErrorEnvelope,
     PlanningWorkspaceHttpError,
     PlanningWorkspaceOperation,
@@ -38,6 +39,8 @@ from app.infrastructure.config import Settings
 
 _CORRELATION = re.compile(r"[^\s\x00-\x1f\x7f]{1,256}")
 _FINGERPRINT = re.compile(r"sha256:[0-9a-f]{64}")
+_DOWNLOAD_FILENAME = re.compile(r"[A-Za-z0-9._-]{1,192}\.zip")
+_PACKAGE_ID = re.compile(r"export-package-[0-9a-f]{64}")
 _VERSION_STATES = frozenset(
     {"DRAFT", "READY_FOR_REVIEW", "APPROVED", "PUBLISHED", "SUPERSEDED", "REJECTED"}
 )
@@ -89,6 +92,20 @@ _ERROR_RESPONSES: dict[int | str, dict[str, Any]] = {
         "description": "Application composition unavailable",
         "model": PlanningWorkspaceErrorEnvelope,
     },
+}
+
+_DOWNLOAD_RESPONSES: dict[int | str, dict[str, Any]] = {
+    200: {
+        "description": "Verified internal Simulation standard export ZIP",
+        "content": {"application/zip": {}},
+        "headers": {
+            "X-PlantNexus-Package-Id": {"schema": {"type": "string"}},
+            "X-PlantNexus-Manifest-Fingerprint": {"schema": {"type": "string"}},
+            "X-PlantNexus-Archive-Fingerprint": {"schema": {"type": "string"}},
+            "X-PlantNexus-Completion-Audit-Event-Id": {"schema": {"type": "string"}},
+        },
+    },
+    **_ERROR_RESPONSES,
 }
 
 
@@ -298,6 +315,12 @@ def _invoke(
             compared_version_precondition=compared_version_precondition,
         )
         result = application.execute(application_request)
+        if not isinstance(result, Mapping):
+            raise PlanningWorkspaceApplicationError(
+                "PERSISTENCE_FAILED",
+                field="application_result",
+                message="JSON operation returned a binary result",
+            )
         payload = dict(result)
         result_correlation = payload.get("correlation_id")
         if result_correlation is None:
@@ -327,6 +350,83 @@ def _invoke(
     )
 
 
+def _invoke_download(
+    request: Request,
+    *,
+    export_job_id: str,
+    correlation_id: str,
+) -> Response:
+    try:
+        principal = authorize_request(
+            request,
+            correlation_id=correlation_id,
+            required_capability="export",
+            resource_type="EXPORT_JOB",
+            resource_id=export_job_id,
+        )
+        application: PlanningWorkspaceApplicationPort = (
+            request.app.state.planning_workspace_application
+        )
+        result = application.execute(
+            PlanningWorkspaceApplicationRequest(
+                operation=PlanningWorkspaceOperation.DOWNLOAD_EXPORT_PACKAGE,
+                context=_context(
+                    request,
+                    correlation_id=correlation_id,
+                    principal=principal,
+                    idempotency_key=None,
+                ),
+                resource_id=export_job_id,
+            )
+        )
+        if not isinstance(result, PlanningWorkspaceDownload):
+            raise PlanningWorkspaceApplicationError(
+                "PERSISTENCE_FAILED",
+                field="application_result",
+                message="download operation returned a JSON result",
+            )
+        if (
+            result.correlation_id != correlation_id
+            or _DOWNLOAD_FILENAME.fullmatch(result.filename) is None
+            or _PACKAGE_ID.fullmatch(result.package_id) is None
+            or result.filename != f"{result.package_id}.zip"
+            or not result.content
+            or result.media_type != "application/zip"
+            or _FINGERPRINT.fullmatch(result.manifest_fingerprint) is None
+            or _FINGERPRINT.fullmatch(result.archive_fingerprint) is None
+            or _CORRELATION.fullmatch(result.completion_audit_event_id) is None
+        ):
+            raise PlanningWorkspaceApplicationError(
+                "PERSISTENCE_FAILED",
+                field="application_result",
+                message="download result failed its transport contract",
+            )
+    except PlanningWorkspaceHttpError:
+        raise
+    except Exception as error:
+        raise application_error_to_http(
+            error,
+            correlation_id=correlation_id,
+            resource=_resource("EXPORT_JOB", export_job_id),
+        ) from None
+    return Response(
+        content=result.content,
+        media_type=result.media_type,
+        headers={
+            "Content-Disposition": f'attachment; filename="{result.filename}"',
+            "X-Correlation-Id": correlation_id,
+            "Cache-Control": "no-store",
+            "X-Content-Type-Options": "nosniff",
+            "X-PlantNexus-Package-Id": result.package_id,
+            "X-PlantNexus-Manifest-Fingerprint": result.manifest_fingerprint,
+            "X-PlantNexus-Archive-Fingerprint": result.archive_fingerprint,
+            "X-PlantNexus-Completion-Audit-Event-Id": (
+                result.completion_audit_event_id
+            ),
+        },
+    )
+
+
 _READ_EXTRA = {
     "x-plantnexus-api-contract": API_CONTRACT_VERSION,
     "x-plantnexus-response-authority": "application-service",
@@ -340,6 +440,11 @@ _COMMAND_EXTRA = {
     **_READ_EXTRA,
     "x-plantnexus-request-contract": "workspace-command.v1",
     "x-plantnexus-idempotency-binding": "Idempotency-Key header equals body",
+}
+_DOWNLOAD_EXTRA = {
+    **_READ_EXTRA,
+    "x-plantnexus-response-contract": "export-manifest.v2 verified archive",
+    "x-plantnexus-download-boundary": "SIMULATION_INTERNAL EXPORTED only",
 }
 
 
@@ -791,6 +896,21 @@ def get_export_job(export_job_id: str, request: Request) -> JSONResponse:
         capability="view",
         resource_type="EXPORT_JOB",
         resource_id=export_job_id,
+    )
+
+
+@router.get(
+    "/export-jobs/{export_job_id}/download",
+    operation_id="downloadExportPackage",
+    response_class=Response,
+    responses=_DOWNLOAD_RESPONSES,
+    openapi_extra=_DOWNLOAD_EXTRA,
+)
+def download_export_package(export_job_id: str, request: Request) -> Response:
+    return _invoke_download(
+        request,
+        export_job_id=export_job_id,
+        correlation_id=_correlation(request),
     )
 
 

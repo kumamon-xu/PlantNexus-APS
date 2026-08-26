@@ -6,10 +6,16 @@ spec_version: 0.3.0
 phase: P0-P7
 normative: true
 source_sections: [34, 65, 66, 67]
-last_reviewed: 2026-08-25
+last_reviewed: 2026-08-26
 ---
 
 # P0 Worker Reliability 与 Idempotency
+
+## TASK-P3-13 UI retry and download boundary
+
+UI同步in-flight gate防止double click；已知4xx不自动retry，network/5xx只保留exact command并在authority refresh后same-key replay。ExportJob `EXPORT_FAILED`只通过用户显式`RETRY_EXPORT`且绑定expected attempt；browser不claim/heartbeat/complete/fail。Download只读EXPORTED terminal attempt，绝不把目录存在解释为Job success。
+
+Worker与download共用root-confined destination函数；manifest-last原子写入和full verifier保证partial/tampered目录不会下载。仍无automatic retry、queue/outbox/distributed lock/exactly-once或external transfer承诺，failure只能由新command/attempt纠正而不能改写旧audit/package。
 
 ## 通用 Job 原语
 

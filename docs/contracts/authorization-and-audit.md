@@ -6,10 +6,16 @@ spec_version: 0.3.0
 phase: P3
 normative: true
 source_sections: [33, 34, 60, 66, 78, 94, 95]
-last_reviewed: 2026-08-25
+last_reviewed: 2026-08-26
 ---
 
 # P3 Authorization Capability 与 Audit 合同
+
+## TASK-P3-13 action/download authorization
+
+Browser从不构造role/actor/Production binding；只依据server返回的`allowed_actions`决定是否呈现control，最终authorization仍由HTTP层和application层执行。Download在任何repository/package lookup前要求authenticated `export` capability、Job scope和non-Production binding；unauthorized resource不能通过404或timing暴露存在性。随后还须验证Job plane/target/state、attempt、ScheduleVersion、synthetic provenance、artifact/storage/package hash及completion audit lineage。
+
+UI reason、error、trace和download evidence不得包含Bearer、raw idempotency key、absolute storage path或stack。Unknown outcome只能保留内存中的exact command并在authority refresh后same-key retry；没有local/session storage。OPEN-010仍为`OPEN`，本Task没有真实RBAC/SSO、Production approver/publisher或SIEM evidence。
 
 本合同定义authority-neutral capability、default-deny判定和append-only audit语义。它不选择真实用户、岗位、组织、identity provider或Production责任人，也不关闭OPEN-010。
 

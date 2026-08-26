@@ -1,7 +1,7 @@
 ---
 doc_id: TASK-P3-13
 title: Human Control Actions and UI E2E
-status: in_progress
+status: done
 spec_version: 0.3.0
 phase: P3
 normative: true
@@ -11,7 +11,7 @@ last_reviewed: 2026-08-26
 
 # TASK-P3-13 — Human Control Actions and UI E2E
 
-## 当前已批准范围与本地实现候选
+## 完成结论与批准范围
 
 既有P3-10历史合同固定17个operation；用户于2026-08-26明确批准本Task additive增加`GET /api/v1/export-jobs/{export_job_id}/download`。该operation不是新业务carrier：只在server完成`export` capability与Job scope的pre-lookup授权后读取`SIMULATION`/`SIMULATION_INTERNAL`/`EXPORTED` v2 Job，逐字交叉验证Job attempt、ScheduleVersion reference、synthetic provenance、artifact manifest、package/storage/hash和completion audit lineage，再从root-confined flat directory生成deterministic ZIP。绝对路径、外部storage/network和Production target均禁止。
 
@@ -19,7 +19,9 @@ Frontend现按server `state`与`allowed_actions`显示DRAFT submit、Gantt Move/
 
 本地Gate现已完成：Backend focused `44 passed`、全仓`607 passed`、Ruff与全量Pyright 0问题；Frontend locked install/SCA/license/lint/type、12个Vitest文件`54 passed`、build、12个Chromium E2E和`p3-frontend-human-control-report.v1` 12/12均PASS；P3 HTTP machine report为18 paths/operations/delegations并保留历史17+additive 1口径。全部required Python machine commands、P2 XS 8/8、P2 Gate 11/11且`blocking_gaps=[]`、Compose、package build、full docs及91 paths/11 Impact rows/19 checks/0 issues、`git diff --check`均PASS。Playwright首轮因缺少版本化synthetic provenance和locator竞态失败，failure trace/video/screenshot按策略保留并在修正fixture/等待条件后12/12通过。
 
-首个implementation候选`672529c97780d7f9dd64b517df075db05d8a45d9`的push run `32920462781` / required `validate` job `98032902570`在Linux Frontend component step失败：历史`vitest --exclude e2e/**`被POSIX shell展开为两个文件，第二个Playwright spec被Vitest误收集；此前全部Backend/machine与Frontend SCA/license/lint/type步骤均success。失败artifact `9589702993`（digest=`sha256:a9c46b8f46da14f5667de3a5f8513d80c854f92a4189809061ac082015c2522d`）保留27份已通过JSON，不能作为成功provider。修正仅在已允许workflow的`frontend` working directory中用shell-neutral `npm exec -- vitest --exclude=e2e/** --run`并同步CI合同，不修改`package.json`、lock、pins或assertion。Corrective implementation exact provider与evidence-only closure仍须完成，因此本卡保持`in_progress`，P3-14/15不得启动。
+首个implementation候选`672529c97780d7f9dd64b517df075db05d8a45d9`的push run `32920462781` / required `validate` job `98032902570`在Linux Frontend component step失败：历史`vitest --exclude e2e/**`被POSIX shell展开为两个文件，第二个Playwright spec被Vitest误收集；此前全部Backend/machine与Frontend SCA/license/lint/type步骤均success。失败artifact `9589702993`（digest=`sha256:a9c46b8f46da14f5667de3a5f8513d80c854f92a4189809061ac082015c2522d`）保留27份已通过JSON，不能作为成功provider。修正仅在已允许workflow的`frontend` working directory中用shell-neutral `npm exec -- vitest --exclude=e2e/** --run`并同步CI合同，不修改`package.json`、lock、pins或assertion。
+
+Corrective implementation `13e16e36fc0a06a079d6832f419950c830f2b96e`的push run `32921059019`、required `validate` job/check `98034581212`（GitHub Actions app `15368`）全部53 steps success。Artifact `9589931373` / `plantnexus-ci-evidence-32921059019`未过期，313503 bytes，digest=`sha256:0910cbe73e49278978ed6af5bcef2ab43c5958f4eb7aef0bfa877bd07861e9eb`，expiry=`2026-11-24T01:59:58Z`；下载复验33份JSON、Task exact SHA/base与91 committed/0 working paths、11 Impact rows、19 checks、0 issues，Frontend 12/12、Playwright 12 expected/0 unexpected/0 flaky/0 skipped、API 18=17+1、P2 Gate `blocking_gaps=[]`全部一致。Success browser run按`retain-on-failure`/`only-on-failure`策略只有JSON/JUnit/HTML，未产生trace/video/screenshot是预期结果；失败配置仍由workflow与Playwright config保留。本evidence-only closure据此标Task=`done`，其自身仍须exact provider复核；P3-14/15不得自动启动。
 
 Task batch role: phase-plan-member
 

@@ -21,6 +21,8 @@ Local Gate结果：locked sync、Ruff、Pyright、607项Python、全部required 
 
 首个implementation候选`672529c97780d7f9dd64b517df075db05d8a45d9`的run/job=`32920462781`/`98032902570`在Linux component step失败，故required Gate明确未通过。根因是POSIX shell把未引号`e2e/**`展开成多个参数；corrective workflow在不改`package.json`/lock/pins/assertion的前提下于`frontend` working directory直接运行`npm exec -- vitest --exclude=e2e/** --run`。失败artifact `9589702993`只保留27份此前通过的JSON，必须保留且不得升级为provider success；corrective exact SHA仍须重跑全部non-skippable steps和artifact核验。
 
+Corrective implementation Gate已通过：SHA `13e16e36fc0a06a079d6832f419950c830f2b96e`、run `32921059019`、required `validate` job/check `98034581212`（app `15368`）和53/53 steps全部success。Artifact `9589931373`未过期，313503 bytes，digest=`sha256:0910cbe73e49278978ed6af5bcef2ab43c5958f4eb7aef0bfa877bd07861e9eb`、expiry=`2026-11-24T01:59:58Z`；下载复核33 JSON、Frontend 12/12、Playwright 12/0/0/0、API 18=17+1、Task 91 committed/0 working/11 rows/19 checks/0 issues及P2 `blocking_gaps=[]`一致。Success run未产生failure-only trace/video/screenshot符合config。本closure据此可标Task=`done`，但closure exact provider仍须复核。
+
 ## 常规验收命令目标
 
 Backend：Ruff、type check、unit/contract/integration tests。Frontend：test 和 production build。P2 后增加 golden/simulation；涉及 Solver 的任务增加 PR Benchmark。

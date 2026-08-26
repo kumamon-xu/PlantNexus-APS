@@ -32,7 +32,7 @@ Simulation 用于模拟 APS Planning Reality，不代表真实物理工厂。每
 | SIM-ASSUMPTION-014 | `VERSIONED_SYNTHETIC_UI_120@1.0.0`固定120个只读Gantt row、30个order、6个resource、2个workshop、5分钟start offset与3600秒duration，并观察最多24个mounted visual row和完整table fallback | ACTIVE | 只用于TASK-P3-12 browser virtualization/accessibility regression；mock carrier的Production形状不赋予数据真实性，不得成为XS/S/M、Production topology/duration/capacity/SLA、browser matrix或部署预算 |
 | SIM-ASSUMPTION-015 | `SIM-P3-HUMAN-CONTROL-001@1.0.0`固定isolated TEST actor、DRAFT/READY/APPROVED/PUBLISHED/ExportJob/audit mock carrier、1个operation与internal ZIP bytes，用于12条human-control/visualization Chromium flow | ACTIVE | 只用于TASK-P3-13 command/state/failure/download E2E；mock transport、5分钟drag量化、browser timing和package bytes不得成为Production role/policy/topology/SLA、external transfer或approval evidence |
 
-TASK-P3-13 review：新增SIM-ASSUMPTION-015并把fixture identity/provenance固定在development-only `.env.e2e`与runtime gate；普通runtime仍为Production-shaped default-deny。测试actor、状态carrier、network failure、internal ZIP和browser observations不关闭任何PROD_OPEN，也不表示真实身份、工厂事实或外部成果包。SIM-ASSUMPTION-001～015均`ACTIVE`，ID/状态语义和`registry_version=1.0.0`不变。
+TASK-P3-13 review：新增SIM-ASSUMPTION-015并把fixture identity/provenance固定在development-only `.env.e2e`与runtime gate；普通runtime仍为Production-shaped default-deny。Artifact `9589931373`复验12/12 browser与scenario identity，但测试actor、状态carrier、network failure、internal ZIP和browser observations不关闭任何PROD_OPEN，也不表示真实身份、工厂事实或外部成果包。SIM-ASSUMPTION-001～015均`ACTIVE`，ID/状态语义和`registry_version=1.0.0`不变。
 
 除SIM-ASSUMPTION-013明确绑定的P2 development XS/S/M profile和SIM-ASSUMPTION-014明确绑定的P3-12 UI render fixture外，具体workshop/resource数、候选设备密度、故障概率、到期压力等数值仍未批准为其他Profile或生产事实。后续数值必须由各自版本化FactoryProfile/ScenarioSpec/Generator明确，不能从任一fixture或本次baseline外推“通用默认工厂”。
 

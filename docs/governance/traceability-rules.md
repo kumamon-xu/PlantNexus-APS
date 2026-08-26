@@ -15,9 +15,11 @@ last_reviewed: 2026-08-26
 
 Trace chain固定为`REQ-005/006/007/009 + NFR-COR/TRC/ISO/REL/SEC/HUM + ENG-ARCH/VAL/ERR/VER → TASK-P3-13 → TEST-WORKSPACE-FRONTEND-001/TEST-GANTT-COMMAND-001/TEST-APPROVAL-AUTHORIZATION-001/TEST-PUBLISH-IDEMPOTENCY-001/TEST-EXPORT-JOB-001/TEST-AUDIT-TRAIL-001 → backend/frontend/Playwright/API/Task/provider reports`。每个report须含Task/exact SHA，Task report另须含immutable base、11 Impact rows、checks与issues。
 
-API证据必须同时声明P3-10历史17 operations和P3-13 additive download 1，不能把新OpenAPI fingerprint改写为历史artifact。Browser evidence必须为12 human-control+visualization specs并保留失败介质；SIM fixture必须引用SIM-ASSUMPTION-015。Implementation provider前只能写`LOCAL_IMPLEMENTED_PROVIDER_PENDING`，closure provider成功后才可标Task done；P3-14/15和Production声明均禁止继承。
+API证据必须同时声明P3-10历史17 operations和P3-13 additive download 1，不能把新OpenAPI fingerprint改写为历史artifact。Browser evidence必须为12 human-control+visualization specs并按失败策略保留介质；SIM fixture必须引用SIM-ASSUMPTION-015。Implementation provider前只能写`LOCAL_IMPLEMENTED_PROVIDER_PENDING`；corrective implementation provider成功后本closure可标Task done，且closure自身仍须exact provider。P3-14/15和Production声明均禁止继承。
 
 失败run `32920462781` / job `98032902570` / artifact `9589702993`属于不可删除的negative provider evidence：其component step因POSIX glob展开误收Playwright spec而失败，后续steps被skip，所以绝不能满足implementation Gate。Corrective提交必须保持原失败拓扑，以shell-neutral Vitest exclude重跑，并只接受corrective exact SHA的全步骤success artifact。
+
+Corrective implementation `13e16e36fc0a06a079d6832f419950c830f2b96e` / run `32921059019` / required job `98034581212` / artifact `9589931373`满足该规则：app `15368`、53/53 steps、33 JSON、SHA/base、11 rows、19 checks、0 issues、Frontend/Playwright/API/P2 Gate均一致。Success browser run没有failure-only介质是预期配置结果，不得伪造空trace/video/screenshot。
 
 ## 标准链路
 

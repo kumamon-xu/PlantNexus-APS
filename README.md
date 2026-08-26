@@ -1,6 +1,6 @@
 # PlantNexus APS
 
-PlantNexus APS 是一个面向单工厂、多车间场景的高级计划与排程（APS）项目。P2 CP-SAT Vertical Slice 已通过 Exit Gate并关闭，当前阶段为P3（Planning Workspace）。TASK-P3-00～12均由exact provider闭环为`done`；TASK-P3-13已获明确授权并从冻结SHA `3dacf83c0f0bf87a9fa673aa75d61f8ad8659386`进入`in_progress`，P3-14/15、Production能力与P4动态重排均未启动。
+PlantNexus APS 是一个面向单工厂、多车间场景的高级计划与排程（APS）项目。P2 CP-SAT Vertical Slice 已通过 Exit Gate并关闭，当前阶段为P3（Planning Workspace）。TASK-P3-00～13均由exact implementation provider闭环为`done`；P3 Milestone仍为`active`，P3-14/15、Production能力与P4动态重排均未启动。
 
 ## 开始之前
 
@@ -61,7 +61,7 @@ scripts/      仓库级校验与自动化脚本
 infra/        P0 开发容器构建配置
 ```
 
-P2 CP-SAT Vertical Slice已通过Exit Gate并关闭，当前阶段为P3。P2-00～14和P3-00～12均由exact provider evidence闭环为`done`；P3-13当前只实现isolated Simulation human-control UI/E2E与有界verified internal package download，P3-14/15不会自动启动。Production capacity/SLA/identity/approval authority/external publish与P4仍未形成。当前边界见[`docs/current_phase.md`](docs/current_phase.md)。
+P2 CP-SAT Vertical Slice已通过Exit Gate并关闭，当前阶段为P3。P2-00～14和P3-00～13均由exact implementation provider evidence闭环为`done`；P3-13只形成isolated Simulation human-control UI/E2E与有界verified internal package download，P3-14/15不会自动启动。Production capacity/SLA/identity/approval authority/external publish与P4仍未形成。当前边界见[`docs/current_phase.md`](docs/current_phase.md)。
 
 ## P2 历史执行记录
 

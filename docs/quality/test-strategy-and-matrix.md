@@ -12,11 +12,13 @@ registry_version: 1.0.0
 
 # 测试策略与 Test Matrix
 
-## TASK-P3-13 test allocation and local evidence
+## TASK-P3-13 test allocation and provider evidence
 
 本Task复用6个既有Test ID：TEST-WORKSPACE-FRONTEND-001覆盖state/capability controls、visible failures与accessible feedback；TEST-GANTT-COMMAND-001覆盖Move/Assign/Lock、new authoritative DRAFT与PUBLISHED immutable；TEST-APPROVAL-AUTHORIZATION-001覆盖approve/reject及401/403；TEST-PUBLISH-IDEMPOTENCY-001覆盖explicit internal confirmation、double-submit与unknown-outcome same-key recovery；TEST-EXPORT-JOB-001覆盖create/failure/retry/EXPORTED-only verified download；TEST-AUDIT-TRAIL-001覆盖audit link与completion lineage。Test ID总数保持48，registry format不变。
 
-当前本地证据为Backend focused `44 passed`、全仓`607 passed`、Ruff/Pyright 0问题、Frontend 12 files/54 Vitest、12/12 Chromium、Frontend machine 12/12和HTTP machine 18 paths/operations/delegations。Browser suite覆盖401/403/409/422/500、network unknown、double click、PUBLISHED negative、tamper/header binding与Job state flow。首轮E2E因fixture provenance/locator race失败且诊断介质按策略保留，修正测试fixture/等待条件后通过；不得以retry/skip/降低断言掩盖。全部required machine、XS/P2 Gate、Compose/build与治理也PASS，但exact provider仍待push后形成，因此这些slice标记为`LOCAL_IMPLEMENTED_PROVIDER_PENDING`，P3-14不得启动。
+本地证据为Backend focused `44 passed`、全仓`607 passed`、Ruff/Pyright 0问题、Frontend 12 files/54 Vitest、12/12 Chromium、Frontend machine 12/12和HTTP machine 18 paths/operations/delegations。Browser suite覆盖401/403/409/422/500、network unknown、double click、PUBLISHED negative、tamper/header binding与Job state flow。首轮E2E因fixture provenance/locator race失败且诊断介质按策略保留，修正测试fixture/等待条件后通过；不得以retry/skip/降低断言掩盖。
+
+Provider失败run `32920462781`保留POSIX glob误收Playwright的负证据；corrective implementation `13e16e36fc0a06a079d6832f419950c830f2b96e`的run/job/artifact=`32921059019`/`98034581212`/`9589931373`精确复验607 Python、54 Vitest、12 expected/0 unexpected/0 flaky/0 skipped Chromium、Frontend 12/12、API 18=17+1与Task 91/0/11/19/0。上述6个Test ID的P3-13 slice标为`PROVIDER_VERIFIED`，Test ID总数仍48；P3-14不得自动启动。
 
 ## 测试层
 
@@ -71,17 +73,17 @@ registry_version: 1.0.0
 | TEST-BENCHMARK | BenchmarkReport/profile 回归 | P2 | [`test_benchmark_contract.py`](../../backend/tests/contract/test_benchmark_contract.py) + [`test_benchmark_runner.py`](../../backend/tests/integration/test_benchmark_runner.py) strict Profile/Report/Baseline、XS/S/M replay、Global/Reference/Validator/KPI、warning/threshold与required CI XS artifact provider-verified |
 | TEST-PROPERTY | 合法 Problem 的通用不变量 | P2 | Problem v2/formal/Solver properties + [Reference gate/duration/due and authoritative Problem properties](../../backend/tests/property/test_reference_scheduler_properties.py) + [generated XS/S/M formal pipeline replay](../../backend/tests/integration/test_benchmark_runner.py) formed |
 | TEST-SOLVER-UPGRADE | Solver 升级 replay/status contract | P2+ | Benchmark baseline固定Python/OR-Tools/environment signature并拒绝profile/problem/complexity drift的P2 development slice formed；实际upgrade重建新版本baseline/compatibility evidence仍PLANNED |
-| TEST-WORKSPACE-CONTRACT-001 | P3页面/API/permission/state/error/audit/idempotency合同一致性 | P3 | TASK-P3-01/02 contract baseline + P3-03～10 provider-verified persistence/application/HTTP；UI behavior PLANNED |
+| TEST-WORKSPACE-CONTRACT-001 | P3页面/API/permission/state/error/audit/idempotency合同一致性 | P3 | TASK-P3-01/02 contract baseline + P3-03～10 provider-verified persistence/application/HTTP + P3-13 human-control UI behavior provider-verified |
 | TEST-SCHEDULE-VERSION-REPOSITORY-001 | ScheduleVersion/Audit/ExportJob migration、immutability、transaction与replay | P3 | FORMED / TASK-P3-03 provider-verified storage slice |
 | TEST-SCHEDULE-VERSION-LIFECYCLE-001 | Validated Solution→DRAFT→READY_FOR_REVIEW与非法状态拒绝 | P3 | TASK-P3-04 DRAFT→READY、TASK-P3-07 READY→APPROVED/REJECTED、TASK-P3-08 publish/supersede均provider-verified |
 | TEST-WORKSPACE-READ-MODEL-001 | Gantt、Resource Load、Order View与Version Comparison lineage/KPI一致性 | P3 | TASK-P3-05 provider-verified；TASK-P3-10 HTTP carrier/delegation provider-verified；P3-12 visualization consumer PROVIDER_VERIFIED |
-| TEST-GANTT-COMMAND-001 | Edit/Lock command→server validation→new DRAFT→formal Validator | P3 | TASK-P3-06 provider-verified；TASK-P3-10 command transport provider-verified；UI E2E PLANNED / P3-11～13 |
-| TEST-APPROVAL-AUTHORIZATION-001 | authority-neutral capability、default-deny、approve/reject guards | P3 | TASK-P3-07 provider-verified application；TASK-P3-10 HTTP principal/capability/scope/Production pre-provider denial provider-verified；UI E2E PLANNED / P3-13 |
-| TEST-PUBLISH-IDEMPOTENCY-001 | APPROVED-only publish、same-key replay、conflict与supersession | P3 | TASK-P3-08 provider-verified；TASK-P3-10 exact HTTP Idempotency-Key/body binding and delegation provider-verified |
-| TEST-EXPORT-JOB-001 | ExportJob transition、package integrity、atomic/idempotent export与失败恢复 | P3 | TASK-P3-03/09 provider-verified persistence/business/package；TASK-P3-10 create/read/retry/cancel transport provider-verified |
-| TEST-AUDIT-TRAIL-001 | append-only actor/reason/correlation/before-after/version audit完整性 | P3 | TASK-P3-03～10 provider-verified business/denial audit、correlation与redaction；retention/SIEM PLANNED |
+| TEST-GANTT-COMMAND-001 | Edit/Lock command→server validation→new DRAFT→formal Validator | P3 | TASK-P3-06 application + P3-10 transport + P3-13 UI E2E provider-verified |
+| TEST-APPROVAL-AUTHORIZATION-001 | authority-neutral capability、default-deny、approve/reject guards | P3 | TASK-P3-07 application + P3-10 HTTP + P3-13 UI E2E provider-verified；Production authority仍OPEN |
+| TEST-PUBLISH-IDEMPOTENCY-001 | APPROVED-only publish、same-key replay、conflict与supersession | P3 | TASK-P3-08 application + P3-10 HTTP + P3-13 confirmation/double-submit/unknown-outcome E2E provider-verified |
+| TEST-EXPORT-JOB-001 | ExportJob transition、package integrity、atomic/idempotent export与失败恢复 | P3 | TASK-P3-03/09 persistence/business/package + P3-10 transport + P3-13 retry/verified download provider-verified |
+| TEST-AUDIT-TRAIL-001 | append-only actor/reason/correlation/before-after/version audit完整性 | P3 | TASK-P3-03～10 business/denial audit + P3-13 UI/audit/download lineage provider-verified；retention/SIEM PLANNED |
 | TEST-WORKSPACE-API-001 | HTTP payload/error/auth/idempotency/OpenAPI与application boundary | P3 | [`test_planning_workspace_http_api.py`](../../backend/tests/contract/test_planning_workspace_http_api.py) + [`test_planning_workspace_api_integration.py`](../../backend/tests/integration/test_planning_workspace_api_integration.py) + [`test_planning_workspace_http_authorization.py`](../../backend/tests/security/test_planning_workspace_http_authorization.py) + 8/8 machine provider-verified / TASK-P3-10 |
-| TEST-WORKSPACE-FRONTEND-001 | read/action UI、状态可见性、accessibility与no-client-authority E2E | P3 | P3-11 read-only unit/component slice PROVIDER_VERIFIED；P3-12 visualization/browser slice PROVIDER_VERIFIED；P3-13 actions PLANNED |
+| TEST-WORKSPACE-FRONTEND-001 | read/action UI、状态可见性、accessibility与no-client-authority E2E | P3 | P3-11 read-only、P3-12 visualization/browser、P3-13 human-control/action slices均PROVIDER_VERIFIED |
 | TEST-P3-VERTICAL-SLICE-001 | P3完整workspace→review→approve→publish→export双重replay与拒绝门 | P3 | PLANNED / TASK-P3-14～15 |
 
 Test ID 一经分配不得复用。链接到真实测试路径才是已形成证据；`PLANNED` 只登记合同。表结构或状态语义变化必须提升 `registry_version`。

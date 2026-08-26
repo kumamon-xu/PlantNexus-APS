@@ -18,6 +18,8 @@ registry_version: 1.0.0
 
 禁止范围为Schema/sample/rules、migration、Python/npm dependencies和locks、domain state implementation、repository persistence、P2 package bytes、Solver/Strategy/Validator/KPI、fixtures/benchmarks、external network/storage/MES、P4与Production。任何额外path或Impact row必须先停下扩卡；Task diff和provider artifact都必须为11 rows/全部checks/0 issues。
 
+Corrective implementation artifact `9589931373`精确绑定`13e16e36fc0a06a079d6832f419950c830f2b96e`并复现91 committed/0 working paths、上述11 rows、19 checks、0 issues，冻结范围无漂移。首个失败artifact `9589702993`不满足完整Gate且按历史保留。本closure只写provider事实并标Task=`done`，P3-14/15、P4与Production不自动启动。
+
 本矩阵用于在 Task 开始前确定文档影响。表中的文档是“必须审查”，不代表每次都必须修改；如果审查后不修改，Task 完成证据必须逐项说明理由。
 
 ## 使用规则

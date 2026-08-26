@@ -16,7 +16,7 @@ registry_version: 1.0.0
 
 REQ-005获得human command只经既有P3-06 fresh Validator/new DRAFT的UI consumer负例；REQ-006获得PUBLISHED ExportJob create/failure/retry及EXPORTED-only verified ZIP download；REQ-007获得state/capability-sensitive edit/lock/approve/reject/publish/export control、PUBLISHED immutable和authoritative refresh；REQ-009获得command/idempotency/correlation、Version/Job、package/manifest/archive/completion-audit及Playwright/provider链。
 
-这些仅形成isolated Simulation UI/transport slice，不形成P3-14 Gate、P3-15 Exit、P4 Replan、真实Production identity/approval authority、external publish/storage或deployment。全部15个root Requirement保持`ALLOCATED`，`registry_version=1.0.0`不变；exact provider形成前TASK-P3-13仍`in_progress`。
+这些provider-verified证据仅形成isolated Simulation UI/transport slice，不形成P3-14 Gate、P3-15 Exit、P4 Replan、真实Production identity/approval authority、external publish/storage或deployment。Corrective implementation `13e16e36fc0a06a079d6832f419950c830f2b96e` / artifact `9589931373`已复验上述分配，TASK-P3-13在本closure标为`done`；全部15个root Requirement保持`ALLOCATED`，`registry_version=1.0.0`不变。
 
 | ID | ID status | Requirement | 首要验收证据 | 计划阶段 |
 |---|---|---|---|---|

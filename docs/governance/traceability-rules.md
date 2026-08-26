@@ -11,6 +11,10 @@ last_reviewed: 2026-08-26
 
 # 需求追踪规则
 
+## TASK-P3-14 Gate evidence rule
+
+Gate证据必须把13个前序closure SHA、P2 Gate、两轮Backend raw report、两轮Playwright JSON/JUnit/HTML、Frontend aggregate、四个exact rejection及stable semantic fingerprint同时绑定到TASK-P3-14和不可变Diff base。Implementation provider前只能标`LOCAL_PASS_PROVIDER_PENDING`；只有exact SHA required `validate`全绿、artifact未过期且下载后Task/base/8 Impact rows/checks/issues/0 gaps一致，才允许evidence-only closure。P3-15必须独立重放，不能引用Gate结论代替Audit。
+
 ## TASK-P3-13 evidence rule
 
 Trace chain固定为`REQ-005/006/007/009 + NFR-COR/TRC/ISO/REL/SEC/HUM + ENG-ARCH/VAL/ERR/VER → TASK-P3-13 → TEST-WORKSPACE-FRONTEND-001/TEST-GANTT-COMMAND-001/TEST-APPROVAL-AUTHORIZATION-001/TEST-PUBLISH-IDEMPOTENCY-001/TEST-EXPORT-JOB-001/TEST-AUDIT-TRAIL-001 → backend/frontend/Playwright/API/Task/provider reports`。每个report须含Task/exact SHA，Task report另须含immutable base、11 Impact rows、checks与issues。

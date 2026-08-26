@@ -11,6 +11,12 @@ last_reviewed: 2026-08-26
 
 # CI Gate 与 Definition of Done
 
+## TASK-P3-14 required Gate
+
+Required `validate`新增两次隔离P3 Chromium replay、Frontend Gate聚合与Python P3 Vertical Slice Gate；既有P2 Gate、XS、全部Python/Frontend/security/SCA/license/Compose/build/docs步骤保持required。DoD要求implementation exact SHA的job每一步success、未过期artifact内P3 Gate 14/14且0 gaps、Frontend两轮12/12、Task report exact base/8 Impact rows/0 issues；随后只做evidence-only closure并再次核验closure exact provider。P3-15不得由本Gate自动启动。
+
+提交前local required-equivalent现为616 Python、54 Vitest、三组Chromium各12/12、全部machine/P2 XS/Gate/SCA/license/Compose/build、P3 14/14+0 gaps及Task 56/8/19/0均PASS。该结果不能替代implementation exact provider。
+
 ## TASK-P3-13 required Gate
 
 不可变Diff base=`3dacf83c0f0bf87a9fa673aa75d61f8ad8659386`。Implementation提交前必须通过locked sync、Ruff、全量Pyright/full pytest、全部历史machine reports、P2 XS/Gate、Frontend SCA/license/lint/type/54 tests、12 Chromium、build、Frontend 12/12、API 18/18、Compose、full/diff docs、`git diff --check`及禁止路径。Workflow继续只有GitHub Actions app `15368`的required `validate`，browser失败也必须`always()`上传JSON/HTML/JUnit/trace/video/screenshot。

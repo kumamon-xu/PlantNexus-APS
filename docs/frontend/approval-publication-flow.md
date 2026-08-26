@@ -11,6 +11,10 @@ last_reviewed: 2026-08-26
 
 # P3 Approval Publication 与 Export 人工控制流程
 
+## TASK-P3-14 control-flow Gate
+
+两轮Chromium与Backend replay共同复验READY_FOR_REVIEW decision、APPROVED-only publication、REJECTED/DRAFT fail closed、PUBLISHED immutable、ExportJob retry/download及audit可见性。Gate不修改control surface或actor模型，也不把Simulation TEST actor升级为真实审批/发布权威。
+
 ## TASK-P3-13 browser control flow
 
 READY_FOR_REVIEW只在server允许时显示Approve/Reject并要求credential-safe reason；APPROVED publication必须打开accessible dialog、再次输入reason并勾选`SIMULATION_INTERNAL`确认。成功仅接受server authoritative Version，失败不产生success toast。PUBLISHED export与publication分离：create后显示Job事实，`EXPORT_FAILED`只提供显式same-contract retry，只有`EXPORTED`且artifact manifest完整时提供download。

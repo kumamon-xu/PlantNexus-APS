@@ -11,6 +11,10 @@ last_reviewed: 2026-08-26
 
 # P3 Planning Workspace 页面与只读视图合同
 
+## TASK-P3-14 workspace browser replay
+
+TASK-P3-14已单独授权并以两轮isolated Chromium重放P3-13的read、visualization、command、decision、publication、export与failure visibility。Gate只检查server-authority及两轮语义一致，未修改页面、route、carrier、action或accessibility断言；P3-15仍为`planned`，P4与Production未形成。
+
 ## TASK-P3-13 control composition
 
 Version页现在以server state和capability交集装配唯一可用control：DRAFT=`SUBMIT_FOR_REVIEW`，READY_FOR_REVIEW=`APPROVE/REJECT`，APPROVED=`PUBLISH`，PUBLISHED=`REQUEST_EXPORT`及Job后续操作；audit link始终只读。Gantt在DRAFT且server允许`edit/lock`时提供Move/Assign/Set/Remove Lock proposal，其他state不提供写入口。每个成功result必须解析authoritative Version/Job并刷新或导航；client不在本地预测新state。
@@ -19,7 +23,7 @@ Version页现在以server state和capability交集装配唯一可用control：DR
 
 该control surface只在显式development E2E Simulation fixture启用。普通Production-shaped runtime继续隐藏controls并default-deny；无真实session、identity provider、external publish、MES或deployment。P4的ExecutionEvent/ReplanRequest/freeze/OBJ-002/ChangeReport没有route、type或feature模块。
 
-本文件固定P3页面、路由、只读投影、状态可见性和server-authority边界。TASK-P3-01只形成规范；read model、HTTP、React页面和E2E分别由TASK-P3-05、10、11～13形成并已取得各自provider闭环。P3-14/15仍为`planned`。
+本文件固定P3页面、路由、只读投影、状态可见性和server-authority边界。TASK-P3-01只形成规范；read model、HTTP、React页面和E2E分别由TASK-P3-05、10、11～13形成并已取得各自provider闭环。P3-14现为`in_progress`并仅聚合Gate证据；P3-15仍为`planned`。
 
 ## 不变量
 

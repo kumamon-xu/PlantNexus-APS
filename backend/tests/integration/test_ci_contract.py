@@ -10,6 +10,11 @@ from typing import Any, cast
 import yaml
 
 from app.application.p2_gate_report import main as p2_gate_main
+from app.application.p3_gate_report import (
+    DIFF_BASE as P3_GATE_DIFF_BASE,
+    FRONTEND_REPORT_VERSION as P3_FRONTEND_GATE_REPORT_VERSION,
+    REPORT_VERSION as P3_GATE_REPORT_VERSION,
+)
 from app.application.approval_decision_check import main as approval_decision_main
 from app.application.publication_check import main as publication_main
 from app.application.export_job_check import main as export_job_main
@@ -665,6 +670,41 @@ def test_ci_p2_vertical_slice_gate_is_required_and_machine_checkable(
     assert report["boundaries"]["exit_gate_decision"] == "NOT_PERFORMED"
     assert report["boundaries"]["p2_14"] == "NOT_STARTED"
     assert report["boundaries"]["p3"] == "NOT_STARTED"
+
+
+def test_ci_p3_vertical_slice_gate_and_double_browser_replay_are_required() -> None:
+    workflow = (ROOT / ".github" / "workflows" / "ci.yml").read_text(encoding="utf-8")
+    normalized = " ".join(workflow.split())
+    for fragment in (
+        'name: P3 Gate Chromium replay 1 working-directory: frontend env: PLANTNEXUS_P3_GATE_REPLAY_INDEX: "1" run: npm exec -- playwright test --config playwright.p3-gate.config.ts',
+        'name: P3 Gate Chromium replay 2 working-directory: frontend env: PLANTNEXUS_P3_GATE_REPLAY_INDEX: "2" run: npm exec -- playwright test --config playwright.p3-gate.config.ts',
+        "node scripts/p3-gate-evidence.mjs --human-control-report ../build/validation/ci-p3-frontend.json --report ../build/validation/ci-p3-frontend-gate.json",
+        "uv run python -m app.application.p3_gate_report --root . --repeat 2 --frontend-report build/validation/ci-p3-frontend-gate.json --p2-report build/validation/ci-p2-vertical-slice-gate.json --report build/validation/ci-p3-vertical-slice-gate.json",
+    ):
+        assert fragment in normalized
+    assert workflow.index("P2 vertical slice Gate evidence") < workflow.index(
+        "P3 vertical slice Gate evidence"
+    )
+    assert "build/validation/*.json" in workflow
+    assert "build/playwright/**" in workflow
+    assert "continue-on-error" not in workflow
+
+    gate_source = (ROOT / "backend/app/application/p3_gate_report.py").read_text(
+        encoding="utf-8"
+    )
+    frontend_source = (ROOT / "frontend/scripts/p3-gate-evidence.mjs").read_text(
+        encoding="utf-8"
+    )
+    config_source = (ROOT / "frontend/playwright.p3-gate.config.ts").read_text(
+        encoding="utf-8"
+    )
+    assert f'REPORT_VERSION = "{P3_GATE_REPORT_VERSION}"' in gate_source
+    assert f'DIFF_BASE = "{P3_GATE_DIFF_BASE}"' in gate_source
+    assert P3_FRONTEND_GATE_REPORT_VERSION in frontend_source
+    assert "PLANTNEXUS_P3_GATE_REPLAY_INDEX" in config_source
+    assert 'trace: "retain-on-failure"' in (
+        ROOT / "frontend/playwright.config.ts"
+    ).read_text(encoding="utf-8")
 
 
 def test_ci_planning_problem_contract_report_is_machine_checkable(

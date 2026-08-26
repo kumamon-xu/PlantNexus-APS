@@ -11,6 +11,10 @@ last_reviewed: 2026-08-26
 
 # ExportJob 状态机
 
+## TASK-P3-14 state Gate
+
+Gate两轮消费P3-09公开report，核对PENDING/RUNNING/EXPORTED/FAILED既有pair、terminal immutability、same-key replay与显式retry，并单独证明unpublished source返回`STALE_SOURCE`。不增加worker、queue、external target或状态pair。
+
 ## TASK-P3-13 EXPORTED retrieval review
 
 第18个HTTP operation只从已有EXPORTED terminal事实读取verified artifact；它不claim、heartbeat、complete、fail、retry或cancel，也不新增self-transition。Download要求v2 Job=`SIMULATION`/`SIMULATION_INTERNAL`/`EXPORTED`、positive attempt与exact artifact/audit lineage；其他state返回显式conflict/failure。5 states、6 pairs、lease/attempt/CAS和worker completion语义保持不变，Export仍不等于Publish或external transfer。

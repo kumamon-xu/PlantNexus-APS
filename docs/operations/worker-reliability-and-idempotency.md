@@ -11,6 +11,10 @@ last_reviewed: 2026-08-26
 
 # P0 Worker Reliability 与 Idempotency
 
+## TASK-P3-14 replay/retry Gate
+
+两轮Gate复验command/decision/publication/export的same-key same-result、conflict fail closed、ExportJob显式retry与terminal immutability，同时确保每轮isolated state不串扰。Gate不增加worker、broker、lease策略或distributed exactly-once承诺；unknown-outcome与Production external retry仍受既有边界约束。
+
 ## TASK-P3-13 UI retry and download boundary
 
 UI同步in-flight gate防止double click；已知4xx不自动retry，network/5xx只保留exact command并在authority refresh后same-key replay。ExportJob `EXPORT_FAILED`只通过用户显式`RETRY_EXPORT`且绑定expected attempt；browser不claim/heartbeat/complete/fail。Download只读EXPORTED terminal attempt，绝不把目录存在解释为Job success。

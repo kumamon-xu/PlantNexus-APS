@@ -11,6 +11,10 @@ last_reviewed: 2026-08-26
 
 # 数据权威边界
 
+## TASK-P3-14 authority Gate
+
+Gate只读取既有versioned Simulation/P2/P3 evidence，业务权威仍来自server application guards、formal Validator、immutable version与append-only audit。Semantic projection仅排除显式runtime/derived identity噪声，并在验证`APPROVE|REJECT`单一CAS winner及允许的loser failure后归一化线程交错；完整raw winner/failure仍保留。它不能创建工厂事实、真实identity、approval/publish authority或Production default。
+
 ## TASK-P3-13 control/download authority
 
 UI中的state、capability、new Version、ExportJob state和artifact reference全部来自server；form/drag只是请求意图，不能成为排程或审批事实。Unknown outcome不允许client推断结果，必须先重新读取authority。Download bytes只有在Job、manifest、directory payload、hash、provenance和completion audit全部一致后才可交给browser；header是验证证据而非新的业务authority。

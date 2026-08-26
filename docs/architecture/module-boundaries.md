@@ -11,6 +11,10 @@ last_reviewed: 2026-08-26
 
 # 模块边界与依赖规则
 
+## TASK-P3-14 evidence-orchestrator boundary
+
+新增`app.application.p3_gate_report`只编排P3-02～10既有公开machine boundaries、P2 Gate和Frontend Gate文件，不得从Gate层实现repository、state、Solver/Validator、API或UI行为。既有application import guard为该文件逐字允许`app.api.planning_workspace_check`与`app.infrastructure.workspace_persistence_check`两个只读machine-check入口，除此之外仍全部禁止；该窄例外与P2 Gate同属evidence orchestration，不是业务依赖。Frontend Node脚本只解析Playwright与P3-13 evidence并生成稳定报告；没有反向业务依赖、Schema、migration或runtime service增加。
+
 ## TASK-P3-13 bounded dependency additions
 
 Frontend依赖方向固定为`api canonical/contracts/client → useHumanControlAction → feature controls → pages`；feature只提交carrier并渲染server authority。Backend download依赖方向固定为`HTTP adapter → application download service ports → read-only Job repository/package store → standard package verifier/archive`，router与store都不持有business transition。Worker与download共用root-confined attempt destination identity，避免两套path语义。

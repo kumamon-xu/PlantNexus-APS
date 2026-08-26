@@ -11,6 +11,10 @@ last_reviewed: 2026-08-26
 
 # P3 Gantt Command 与新版本合同
 
+## TASK-P3-14 command Gate
+
+Gate两轮复验UI command→server validation→new DRAFT→formal Validator链、copy-on-write/immutable source与same-key replay，并在聚合层拒绝对PUBLISHED内容的任何mutation。该检查不增加command类型、状态转移、客户端权威或P4 replan；若raw report或semantic projection漂移则非零退出。
+
 ## TASK-P3-13 implemented command surface
 
 DRAFT Gantt现把selection映射为四种既有server command：Move发送operation/resource/start/end，Assign只发送operation/resource，Set Lock发送完整HARD/SOFT lock tuple，Remove Lock发送lock/operation identity。Drag只是5分钟量化且±24小时有界的Move intent；keyboard/table表单提供等价路径。Client canonicalize `workspace-command.v1`并绑定source Version ID/state/content fingerprint、capability、target、reason、correlation和同一header/body idempotency key。

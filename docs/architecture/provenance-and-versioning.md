@@ -11,6 +11,10 @@ last_reviewed: 2026-08-26
 
 # Provenance 与版本规则
 
+## TASK-P3-14 Gate provenance
+
+`p3-vertical-slice-report.v1`绑定Task、不可变Diff base、当前code commit、13个前序closure SHA、P2/Frontend报告摘要和每轮raw subreport。两轮业务语义由canonical `p3-gate-semantic-projection.v1`摘要交叉验证；runtime timing与其派生ID只在projection中显式排除，并发审批合法线程交错只在逐值验证后归一化，raw事实不删改。Implementation/closure provider必须分别绑定各自exact SHA，不能互相替代。
+
 ## TASK-P3-13 provenance bindings
 
 每个UI command保留source Version ID/state/content fingerprint、`workspace-command.v1`/schema set/canonicalization、command ID、idempotency scope/key、request fingerprint、target、reason与correlation。Server返回的新Version或Job必须重新通过runtime contract，并与请求source/result reference一致；same-key unknown-outcome recovery复用exact command bytes，不生成替代历史。

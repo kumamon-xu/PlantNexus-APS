@@ -11,6 +11,12 @@ last_reviewed: 2026-08-26
 
 # Task Card 索引
 
+## TASK-P3-14 activation
+
+用户于2026-08-26单独授权TASK-P3-14。P3-01～13的done/provider/ancestry及clean synchronized `6a3e02f00bf46f19915cb59c3c4af7daaac95be4`均复核通过并冻结为Diff base；当前只执行P3 Gate编排与证据，Task=`in_progress`。P3-15 Exit Audit、P4与Production保持未启动。
+
+本地实现现已通过616 Python、54 Vitest、基础及双Gate Chromium各12/12、全部machine/P2 XS/Gate/SCA/license/Compose/build和56 paths/8 Impact Rules/19 checks/0 issues；Backend双replay为18 stages/144 subordinate checks、Frontend 5/5、四类exact rejection及Python 14/14，`blocking_gaps=[]`。状态仍为`LOCAL_PASS_PROVIDER_PENDING`；不得在implementation exact provider形成前标记`done`或启动P3-15。
+
 ## TASK-P3-13 evidence closure
 
 用户于2026-08-26单独授权TASK-P3-13；启动复核P3-06～12均`done`且closure provider/ancestry完整，clean synchronized `3dacf83c0f0bf87a9fa673aa75d61f8ad8659386`冻结为Diff base。经用户追加批准，Task卡允许一个`SIMULATION_INTERNAL`/`EXPORTED`/verified ZIP download operation。首次closure provider发现XLSX时钟非确定性后Task曾恢复`in_progress`；独立修复取得exact provider后，本closure将其标为`done`。P3-14/15、P4和Production不自动启动。
@@ -63,7 +69,7 @@ last_reviewed: 2026-08-26
 | [TASK-P3-11](P3/TASK-P3-11-frontend-foundation-and-read-only-workspace.md) | Frontend/read-only workspace | P3-01/10 | `done` |
 | [TASK-P3-12](P3/TASK-P3-12-gantt-resource-load-and-version-comparison-ui.md) | Gantt/Load/Comparison UI | P3-05/10/11 | `done` |
 | [TASK-P3-13](P3/TASK-P3-13-human-control-actions-and-ui-e2e.md) | Human control actions/UI E2E | P3-06～12 | `done` |
-| [TASK-P3-14](P3/TASK-P3-14-p3-vertical-slice-gate-evidence.md) | P3 vertical-slice Gate evidence | P3-01～13 | `planned` |
+| [TASK-P3-14](P3/TASK-P3-14-p3-vertical-slice-gate-evidence.md) | P3 vertical-slice Gate evidence | P3-01～13 | `in_progress` |
 | [TASK-P3-15](P3/TASK-P3-15-p3-exit-gate-audit.md) | Independent P3 Exit Gate Audit | P3-14 | `planned` |
 
 用户已于2026-08-24单独授权并完成P3-01/02，随后明确授权执行P3-03。P3-03只形成migration、plane-scoped repositories、既有pair的CAS/lease/transaction原语、CI/tests和治理，不执行审批、发布、导出或P3-04+；P3-15必须最后执行且只审计冻结事实。P3不得实现P4 ExecutionEvent/Replan/OBJ-002/freeze/ChangeReport/Execution Simulator，内部Simulation publish也不构成Production approval/readiness。

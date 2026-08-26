@@ -6,10 +6,14 @@ spec_version: 0.3.0
 phase: P2-P7
 normative: true
 source_sections: [53, 55, 56, 57, 58, 89, 102]
-last_reviewed: 2026-08-21
+last_reviewed: 2026-08-26
 ---
 
 # Benchmark Regression 规则
+
+## TASK-P3-14 regression boundary
+
+Vertical Gate保留P2 XS required regression与P2 Gate raw evidence，并把P3 read/render/action/export timing仅视为development observation。Semantic projection显式排除runtime timing及其派生identity，不调整P2 baseline/tolerance，也不建立L/XL、Production capacity、browser performance或SLA门槛。
 
 Solver 升级、Constraint 修改、PlanningProblem 修改和影响模型规模的 preprocessing 修改都必须回放固定 Scenario Set。
 

@@ -237,6 +237,25 @@ jobs:
           npm --prefix frontend run evidence --
           --report ../build/validation/ci-p3-frontend.json
 
+      - name: P3 Gate Chromium replay 1
+        working-directory: frontend
+        env:
+          PLANTNEXUS_P3_GATE_REPLAY_INDEX: "1"
+        run: npm exec -- playwright test --config playwright.p3-gate.config.ts
+
+      - name: P3 Gate Chromium replay 2
+        working-directory: frontend
+        env:
+          PLANTNEXUS_P3_GATE_REPLAY_INDEX: "2"
+        run: npm exec -- playwright test --config playwright.p3-gate.config.ts
+
+      - name: P3 Gate Frontend semantic evidence
+        working-directory: frontend
+        run: >-
+          node scripts/p3-gate-evidence.mjs
+          --human-control-report ../build/validation/ci-p3-frontend.json
+          --report ../build/validation/ci-p3-frontend-gate.json
+
       - name: Engineering contract
         run: >-
           uv run python -m app.infrastructure.contract_check
@@ -265,6 +284,15 @@ jobs:
           --root .
           --repeat 2
           --report build/validation/ci-p2-vertical-slice-gate.json
+
+      - name: P3 vertical slice Gate evidence
+        run: >-
+          uv run python -m app.application.p3_gate_report
+          --root .
+          --repeat 2
+          --frontend-report build/validation/ci-p3-frontend-gate.json
+          --p2-report build/validation/ci-p2-vertical-slice-gate.json
+          --report build/validation/ci-p3-vertical-slice-gate.json
 
       - name: Build package
         run: uv build

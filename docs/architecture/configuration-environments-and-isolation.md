@@ -11,6 +11,10 @@ last_reviewed: 2026-08-26
 
 # 配置、环境与数据隔离
 
+## TASK-P3-14 isolated replay environment
+
+Backend Gate每次在fresh isolated temporary database/context运行并固定version/seed/hash；Frontend Gate用`PLANTNEXUS_P3_GATE_REPLAY_INDEX=1/2`把JSON/JUnit/HTML与failure media分开到两个目录。Node/npm必须为`24.19.0`/`11.17.0`，普通runtime、Production path与secret配置不变；任何环境或语义串扰均fail closed。
+
 ## TASK-P3-13 isolated E2E runtime
 
 `.env.e2e`只在Vite `--mode e2e`、`env.DEV=true`且显式`VITE_PLANTNEXUS_E2E_SIMULATION=true`时选择`SIMULATION`/`TEST`/synthetic runtime，并绑定`SIM-P3-HUMAN-CONTROL-001@1.0.0`。文件不含token/secret/password/key；普通build与Production-shaped默认仍为`PRODUCTION`、`synthetic=false`并隐藏controls。Mock transport只存在Playwright page interception，不创建service、database或connected environment。

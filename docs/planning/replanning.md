@@ -11,6 +11,10 @@ last_reviewed: 2026-08-26
 
 # 动态重排设计合同
 
+## TASK-P3-14 boundary Gate
+
+P3 Gate只重放P3 copy-on-write manual command与publication链，并证明PUBLISHED不能原地mutation；它不消费ExecutionEvent、不生成ReplanRequest/ChangeReport、不实现freeze/OBJ-002或ExecutionSimulator。P3-15仍须独立审计，P4只有另行phase transition授权后才能启动。
+
 ## TASK-P3-13 P3/P4 boundary review
 
 Gantt drag/move/assign/lock是对单一immutable ScheduleVersion的人工command proposal，经既有P3-06 fresh Validator产生new DRAFT；它不读取ExecutionEvent、不生成ReplanRequest、不计算freeze window/OBJ-002/Stability/ChangeReport，也不调用Solver。UI的“refresh authority”仅重读Version/Job，不是replan trigger。

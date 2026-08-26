@@ -11,6 +11,10 @@ last_reviewed: 2026-08-26
 
 # P0 Observability 与 Audit 边界
 
+## TASK-P3-14 evidence observability
+
+Gate报告保留每个subreport的raw checks/issues/counts、四类rejection详情、两轮semantic fingerprint、P2/Frontend引用与前序closure map；CI artifact再绑定exact SHA/Task/Impact Rules。它不增加Production telemetry、dashboard、alert、retention或SIEM，也不把runtime microseconds解释为SLA。
+
 ## TASK-P3-13 control evidence
 
 每个command/download都保留correlation；成功UI显示server-confirmed operation，unknown outcome显示correlation并要求authority refresh。Audit/history页面只读已有append-only events；download响应额外携带package、manifest、archive和completion-audit identifiers，使保存的bytes可回指EXPORTED Job，不暴露storage path。

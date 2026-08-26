@@ -1,12 +1,12 @@
 ---
 doc_id: TASK-P3-14
 title: P3 Vertical Slice Gate Evidence
-status: planned
+status: in_progress
 spec_version: 0.3.0
 phase: P3
 normative: true
 source_sections: [33, 34, 66, 67, 68, 69, 77, 78, 86, 87, 94, 100]
-last_reviewed: 2026-08-24
+last_reviewed: 2026-08-26
 ---
 
 # TASK-P3-14 — P3 Vertical Slice Gate Evidence
@@ -27,9 +27,13 @@ Non-goals: 不在Gate修业务/Schema/test expected/baseline，不执行Exit Aud
 
 Inputs: P3-01～13公开边界与provider artifacts、P2 correctness/XS基线、P3 Test registry/Milestone Gate。
 
-Diff base: set only when this Task enters in_progress; must be the immediate full 40-character HEAD
+Diff base: 6a3e02f00bf46f19915cb59c3c4af7daaac95be4
 
-Files allowed to change: `backend/app/application/p3_gate_report.py`、相关`__init__.py`、`backend/tests/integration/test_p3_vertical_slice.py`、`backend/tests/contract/test_p3_exit_rejections.py`、frontend P3 Gate/Playwright orchestration文件、`.github/workflows/ci.yml`、`backend/tests/integration/test_ci_contract.py`及`Documents to update`；实际路径激活前固定。
+Activation evidence: 用户于2026-08-26明确授权执行TASK-P3-14；启动复核确认`main=origin/main=6a3e02f00bf46f19915cb59c3c4af7daaac95be4`、ahead/behind=`0/0`且working tree clean，P3-01～13全部`done`。13组Diff base→implementation→closure→当前HEAD祖先检查均PASS；26个implementation/closure push run与required `validate` job均success，26个artifact均未过期。下载解析全部artifact后无JSON解析/顶层/check/issues失败，Task trace均绑定各自exact SHA/base且implementation/closure的paths、Impact rows一致。该完整HEAD据此冻结为本Task不可变Diff base。
+
+Local implementation evidence: `p3-vertical-slice-report.v1`两次fresh Backend replay共18 stages/144 subordinate checks、4 exact rejections、14/14 checks且`blocking_gaps=[]`；Frontend两轮各12/12、8 human-control specs，5/5且semantic fingerprint唯一。首次full 615/1由import guard拦截后以逐模块只读例外修正；第二次full 611 pass/5 setup errors精确暴露approval合法并发交错，现已在验证允许集合、single CAS winner/1 audit/exact replay后只归一化projection并保留raw。最终完整本地验收为616 Python、54 Vitest、基础/双Gate Chromium各12/12、全部machine/P2 XS/Gate/SCA/license/Compose/build、Ruff/Pyright和Task 56 working paths/8 Impact Rules/19 checks/0 issues均PASS。Implementation exact provider仍须完成，Task保持`in_progress`且不得预填provider事实。
+
+Files allowed to change: `backend/app/application/p3_gate_report.py`、`backend/tests/integration/test_p3_vertical_slice.py`、`backend/tests/contract/test_p3_exit_rejections.py`、`backend/tests/integration/test_p1_common_ingress.py`（只允许登记`p3_gate_report.py`的逐模块evidence-orchestrator例外）、`frontend/playwright.p3-gate.config.ts`、`frontend/scripts/p3-gate-evidence.mjs`、`.github/workflows/ci.yml`、`backend/tests/integration/test_ci_contract.py`、`README.md`及`Documents to update`中的逐字路径。除这些路径外不得新增或修改任何文件；发现新增路径或Impact Rule时须先停止并修订本卡。
 
 Files forbidden to change: P3-02～13业务/Schema/migration/dependency/fixtures/baselines/expected artifacts、Solver/Validator公式、P2 historical artifacts、P4/Production implementation。
 
@@ -39,11 +43,11 @@ Outputs: P3 Gate CLI/report、focused tests、CI required evidence、blocking ga
 
 Documentation impact: required
 
-Documents to update: P3 Milestone/current phase/task index、P3 contracts/frontend/state/architecture/operations/quality Gate说明、全部governance/trace/OPEN/SIM/risk/impact/inventory必审文档、`docs/tasks/TASK_TEMPLATE.md`、本Task卡。
+Documents to update: `README.md`、`docs/current_phase.md`、`docs/milestones/P3-planning-workspace.md`、`docs/milestones/README.md`、`docs/tasks/README.md`、`docs/tasks/TASK_TEMPLATE.md`、`docs/tasks/P3/TASK-P3-14-p3-vertical-slice-gate-evidence.md`、`docs/contracts/README.md`、`docs/contracts/planning-solution-and-schedule-version.md`、`docs/contracts/planning-workspace-api.md`、`docs/contracts/authorization-and-audit.md`、`docs/contracts/export-package.md`、`docs/frontend/README.md`、`docs/frontend/planning-workspace.md`、`docs/frontend/gantt-command-contract.md`、`docs/frontend/approval-publication-flow.md`、`docs/domain/state-machines/planning-run.md`、`docs/domain/state-machines/schedule-version.md`、`docs/domain/state-machines/export-job.md`、`docs/domain/error-model.md`、`docs/architecture/end-to-end-planning-flow.md`、`docs/architecture/module-boundaries.md`、`docs/architecture/data-authority.md`、`docs/architecture/provenance-and-versioning.md`、`docs/architecture/configuration-environments-and-isolation.md`、`docs/architecture/technology-stack.md`、`docs/architecture/repository-layout.md`、`docs/adr/README.md`、`docs/operations/README.md`、`docs/operations/observability-and-audit.md`、`docs/operations/security.md`、`docs/operations/worker-reliability-and-idempotency.md`、`docs/planning/replanning.md`、`docs/planning/schedule-validator.md`、`docs/quality/test-strategy-and-matrix.md`、`docs/quality/ci-gates-and-definition-of-done.md`、`docs/quality/documentation-consistency-checks.md`、`docs/quality/benchmark-regression.md`、`docs/quality/fixtures-and-golden-tests.md`、`docs/governance/requirements-register.md`、`docs/governance/nfr-and-engineering-register.md`、`docs/governance/traceability-rules.md`、`docs/governance/traceability-matrix.md`、`docs/governance/prod-open-register.md`、`docs/governance/sim-assumption-register.md`、`docs/governance/risk-register.md`、`docs/governance/change-impact-matrix.md`、`docs/governance/document-inventory.md`。
 
 Documentation impact rationale: 全P3纵向聚合与Gate失败边界、CI artifact及Exit前提形成。
 
-Change-impact matrix rows reviewed: `IMPACT-APPLICATION`、`IMPACT-FRONTEND`、`IMPACT-INFRA`、`IMPACT-TESTS`、`IMPACT-PHASE`、`IMPACT-GOVERNANCE-REGISTRY`、`IMPACT-DOCS`
+Change-impact matrix rows reviewed: `IMPACT-APPLICATION`、`IMPACT-STATE`、`IMPACT-FRONTEND`、`IMPACT-INFRA`、`IMPACT-TESTS`、`IMPACT-PHASE`、`IMPACT-GOVERNANCE-REGISTRY`、`IMPACT-DOCS`
 
 Traceability updates: 所有P3 roots/Tasks/Test IDs→TASK-P3-14→`p3-vertical-slice-report.v1`/Playwright/Task/provider artifact；P3 Exit仍`NOT_PERFORMED`。
 
@@ -65,7 +69,7 @@ Benchmark impact: 保留P2 XS required regression及P3 read/render/action/export
 
 Simulation scenarios: 两次完全隔离、version/seed/hash固定的synthetic replay；Production path只验证fail closed。
 
-Acceptance commands: P3 Gate CLI `--repeat 2`（激活前固定report路径）；全部Python tests/Ruff/Pyright/locked sync/build；frontend npm locked/lint/type/test/build/Playwright；P2 XS/Gate regression；full/diff docs治理；`git diff --check`和冻结范围diff。
+Acceptance commands: `uv run python -m app.application.p3_gate_report --root . --repeat 2 --frontend-report build/validation/TASK-P3-14-frontend-gate.json --p2-report build/validation/TASK-P3-14-p2-gate.json --report build/validation/TASK-P3-14-p3-gate.json`；全部Python tests/Ruff/Pyright/locked sync/build；Frontend以Node `24.19.0`/npm `11.17.0`执行locked install、SCA/license/lint/type/Vitest/build及`PLANTNEXUS_P3_GATE_REPLAY_INDEX=1/2`两次Playwright；P2 XS/Gate regression；full/diff docs治理；`git diff --check`和冻结范围diff。
 
 Artifacts: P3 Gate raw/semantic report、Playwright evidence、P2 regression、Task traceability/provider artifact。
 

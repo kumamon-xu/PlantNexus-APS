@@ -11,6 +11,10 @@ last_reviewed: 2026-08-26
 
 # 目标仓库结构
 
+## TASK-P3-14 layout delta
+
+本Task仅新增`backend/app/application/p3_gate_report.py`、两份Backend Gate test、`frontend/playwright.p3-gate.config.ts`与`frontend/scripts/p3-gate-evidence.mjs`，并更新既有CI与命中文档。报告、Playwright输出和provider下载均位于ignored `build/`；没有新增Schema、migration、dependency、fixture、runtime service、P4或Production路径。
+
 ## TASK-P3-13 layout additions
 
 新增Backend `application/export_downloads.py`与`jobs/export_package_store.py`，并有界扩展standard package、worker、HTTP contracts/router/check和对应tests。Frontend新增`api/commands.ts`、schedule-actions/approval/publication/export/audit feature目录、human-control unit/E2E tests与`.env.e2e`；既有Gantt/page/client/runtime/styles/evidence按allow-list扩展。Workflow只更新human-control E2E/machine step名称及既有artifact收集路径。
@@ -109,7 +113,7 @@ TASK-P1-02在既有`schemas/json`/`schemas/samples`边界新增canonical-records
 
 ## P3 layout allocation history
 
-P3 transition时只新增`docs/tasks/P3/`中的16张Task卡；当时没有创建backend、schema、migration、frontend或workflow路径。后续P3-01形成docs/ADR，P3-02负责Schema/contracts，P3-03负责persistence/migration，P3-04～10负责application/API/jobs/exporters；P3-11按逐字allow-list形成Frontend read-only foundation，P3-12形成read-only visualization/browser slice，P3-13仍未启动，P3-14/15只分配Gate/Audit evidence。
+P3 transition时只新增`docs/tasks/P3/`中的16张Task卡；当时没有创建backend、schema、migration、frontend或workflow路径。后续P3-01形成docs/ADR，P3-02负责Schema/contracts，P3-03负责persistence/migration，P3-04～10负责application/API/jobs/exporters；P3-11形成Frontend read-only foundation，P3-12形成read-only visualization/browser slice，P3-13形成human-control E2E，P3-14现形成有界Gate evidence；P3-15仅分配独立Audit。
 
 ## TASK-P3-11 Frontend layout
 

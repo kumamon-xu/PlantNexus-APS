@@ -11,6 +11,10 @@ last_reviewed: 2026-08-26
 
 # Architecture Decision Records
 
+## TASK-P3-14 ADR review
+
+Gate编排继续严格遵循accepted ADR-0002/0005/0007/0009/0012：模块边界、独立Validator、immutable ScheduleVersion、Simulation隔离与server-authority command/state/publication均不变。三份状态文档只记录既有pair的Gate复验，未增加或修改state pair、authority、Schema、persistence、dependency或P4/Production决策，因此无需新ADR；任何Gate发现的业务偏差必须登记remediation而不能在Gate内改写ADR或实现。
+
 ## TASK-P3-13 ADR review
 
 实现继续遵循accepted ADR-0012：server authority、copy-on-write new Version、existing state pairs、Production default-deny、approved-only internal publish、Publish/Export分离、append-only audit和React/TypeScript Frontend。Additive binary download只暴露verified existing artifact，不改变架构决策、Schema或persistence，因此本Task无需新ADR。

@@ -11,6 +11,12 @@ last_reviewed: 2026-08-26
 
 # 文档一致性自动检查合同
 
+## TASK-P3-14 governance contract
+
+Full docs仍应为165 Markdown、30 roots、30 trace rows、48 Test IDs、15 OPEN、15 SIM、13 risks与53 Tasks。Task diff必须以`6a3e02f00bf46f19915cb59c3c4af7daaac95be4`为base，只出现逐字allow-list路径并精确命中`APPLICATION/STATE/FRONTEND/INFRA/TESTS/PHASE/GOVERNANCE-REGISTRY/DOCS`八行；报告须为0 issues。Implementation与closure分别复验，不得把ignored Gate/provider文件计入受管路径。
+
+当前本地报告精确为56 working/0 committed-range paths、上述8 rows、19/19 checks和0 issues；full治理为165/30 roots/30 rows/48 tests/15 OPEN/15 SIM/13 risks/53 tasks。Implementation provider须把同一union复现为56 committed/0 working paths。
+
 ## TASK-P3-13 governance contract
 
 Diff checker必须以冻结base `3dacf83c0f0bf87a9fa673aa75d61f8ad8659386`计算committed+working union，只允许Task卡逐字路径并精确命中11行：`IMPACT-APPLICATION/API/STATE/FRONTEND/EXPORT/JOBS/INFRA/TESTS/PHASE/GOVERNANCE-REGISTRY/DOCS`。所有required documents必须实际进入Diff；Schema/migration/dependency/lock、domain state implementation、repository persistence、P2 bytes、Solver/Validator/KPI、fixtures/benchmarks、external/P4/Production路径必须为零。

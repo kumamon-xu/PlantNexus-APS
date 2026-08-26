@@ -6,10 +6,14 @@ spec_version: 0.3.0
 phase: P0-P3
 normative: true
 source_sections: [29, 30, 32, 33, 67, 78]
-last_reviewed: 2026-08-25
+last_reviewed: 2026-08-26
 ---
 
 # PlanningSolution 与 ScheduleVersion 合同
+
+## TASK-P3-14 vertical replay
+
+Gate两次从既有validated P2 solution重放P3 lifecycle，核对immutable lineage、fresh Validator、read/command/decision/publication/export语义及raw report。它明确拒绝DRAFT/REJECTED publish与PUBLISHED mutation，并要求两轮stable semantic projection一致；不新增ScheduleVersion字段、状态pair、Schema或迁移，也不允许Gate修正任何业务差异。
 
 PlanningSolution 是 SolverBackend 的候选输出，应包含 Solver 状态、operation assignments、objective/bound/gap、diagnostics 和 provenance。它不代表已经验证、批准或发布。
 

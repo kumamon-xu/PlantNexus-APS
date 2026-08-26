@@ -11,11 +11,19 @@ last_reviewed: 2026-08-26
 
 # 当前阶段：P3 — Planning Workspace
 
+## TASK-P3-14 激活与冻结边界
+
+用户于2026-08-26明确授权执行TASK-P3-14。启动时`main=origin/main=6a3e02f00bf46f19915cb59c3c4af7daaac95be4`、ahead/behind=`0/0`且working tree clean；P3-01～13全部`done`，13组前序Diff base→implementation→closure→HEAD祖先关系、26个required `validate` run/job与26个未过期artifact均已逐项下载复核，Task/SHA/base/Impact Rules/checks/issues一致。因此该SHA冻结为本Task不可变Diff base，TASK-P3-14=`in_progress`。
+
+本Task只能增加版本化P3 Gate聚合器、两次fresh isolated Backend与Chromium replay、四类exact fail-closed exit rejection、stable semantic projection/raw evidence、focused test及required CI artifact。P3-02～13业务/Schema/migration/dependency/frontend行为基线只读；P3-15 Exit Audit=`NOT_PERFORMED`，P4与Production未启动，也不形成Production readiness、approval或external publish。
+
+当前完整本地验收已通过：616项Python、54项Vitest、基础Chromium与两轮Gate Chromium各12/12、全部历史/当前machine contracts、P2 XS/Gate、SCA/license、Compose/build和56 paths/8 Impact Rules/19 checks/0 issues。Backend Gate两轮共18个stage execution/144个subordinate checks，Frontend aggregate 5/5，四类rejection逐字一致，Python aggregate 14/14且`blocking_gaps=[]`。该结论仍为`LOCAL_PASS_PROVIDER_PENDING`；implementation exact-SHA required `validate`与artifact尚未形成，Task保持`in_progress`。
+
 ## TASK-P3-13 完成边界
 
 用户已明确授权TASK-P3-13，并批准为既有17-operation API additive增加一个有界internal Simulation成果包下载。启动时`main=origin/main=3dacf83c0f0bf87a9fa673aa75d61f8ad8659386`、ahead/behind=`0/0`、working tree clean；P3-06～12 closure均为该SHA祖先且各自exact required `validate`/artifact已下载复核，因此该SHA冻结为不可变Diff base。
 
-本Task只覆盖state/capability-sensitive human controls、canonical command/idempotency/unknown-outcome恢复、PUBLISHED immutable、ExportJob显式retry/verified download、audit link和12条isolated Chromium E2E。Schema、migration、dependency/lock、state pair、repository、Solver/Validator/KPI、external/P4/Production均冻结。首次closure provider暴露的standard XLSX core wall-clock缺口已由独立corrective implementation修复并取得exact provider；本evidence-only closure将Task标为`done`。P3 Milestone保持`active`，P3-14/15不启动。
+本Task只覆盖state/capability-sensitive human controls、canonical command/idempotency/unknown-outcome恢复、PUBLISHED immutable、ExportJob显式retry/verified download、audit link和12条isolated Chromium E2E。Schema、migration、dependency/lock、state pair、repository、Solver/Validator/KPI、external/P4/Production均冻结。首次closure provider暴露的standard XLSX core wall-clock缺口已由独立corrective implementation修复并取得exact provider；该evidence-only closure将Task标为`done`，且当时没有自动启动P3-14/15。P3-14现依据新的用户授权独立执行。
 
 本地验收为44项Backend focused、607项全仓、54项Frontend unit/component、12/12 Chromium、Frontend 12/12、API 18-operation、全部required machine、XS/P2 Gate、Ruff/Pyright、SCA/license、Compose/build和91 paths/11 rows/19 checks/0 issues全部PASS。首个implementation候选`672529c97780d7f9dd64b517df075db05d8a45d9`的run/job `32920462781`/`98032902570`因POSIX glob失败；首个corrective implementation `13e16e36fc0a06a079d6832f419950c830f2b96e`的run/job/artifact=`32921059019`/`98034581212`/`9589931373`全绿，但首次closure `87d47c7483185483ac8027100c1c664d18011a7c`的run/job=`32921871460`/`98036888624`在607项中的standard package byte determinism失败，upload也因前序无报告而失败且artifact count=0。跨秒复现确认OpenPyXL save覆盖`modified`；独立corrective implementation `3538d46f8b73ae434057bcbca9037436aa91f2c7`把core created/modified canonicalize为1980 UTC并加入跨秒回归，其push run `32923203227`、required job/check `98040743610`（app `15368`）53/53 steps success。Artifact `9590625358`未过期，313527 bytes，digest=`sha256:b1fc1ed43797ac44dddecf8e530f59da7ebfc92b40d9d73006a0104a3c53aa80`、expiry=`2026-11-24T02:34:05Z`；下载复验33 JSON、12/12 Chromium、API 18=17+1、P2 `blocking_gaps=[]`及Task 91/0/11/19/0一致。Closure自身仍须exact provider复核。
 
@@ -25,7 +33,7 @@ last_reviewed: 2026-08-26
 
 P2-14 audit implementation `65c556789f176ad9de55523d6420737bb60f933f`的GitHub push run `32677741558` / required `validate` job `97288829348` / artifact `9503227240`成功，artifact digest=`sha256:fbb76f0ab44d3bdcff2d31e70f9698af84e10e48ee57ae611eef8529a288240e`；evidence-only closure `80c403384d1e171258cf874d26605d0d22aff1b2`的run `32678248961` / job `97290201234` / artifact `9503372291`也成功，digest=`sha256:673412905b7420660d1e9f07755fcda6291f85f8f2bd926b4bf31a0a6bd1bd0c`。下载检查的两份artifact均含20份可解析JSON，Task/SHA/Impact Rules/checks/issues与对应提交一致且0 issue。规划启动时`main=origin/main=80c403384d1e171258cf874d26605d0d22aff1b2`、ahead/behind=`0/0`且working tree clean，因此transition前提一致。
 
-P2 Milestone现为`completed`，P3 Milestone为`active`。`TASK-P3-00`～`TASK-P3-13`均为`done`。P3-14/15保持`planned`且不会自动启动。
+P2 Milestone现为`completed`，P3 Milestone为`active`。`TASK-P3-00`～`TASK-P3-13`均为`done`，P3-14为`in_progress`；P3-15保持`planned`且不会自动启动。
 
 ## 当前目标
 

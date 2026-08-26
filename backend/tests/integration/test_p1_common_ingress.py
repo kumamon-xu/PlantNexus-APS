@@ -171,6 +171,10 @@ def test_application_boundary_has_no_solver_validator_persistence_or_api_shortcu
     )
     evidence_only_exception = {
         "p2_gate_report.py": {"app.exporters.contract_check"},
+        "p3_gate_report.py": {
+            "app.api.planning_workspace_check",
+            "app.infrastructure.workspace_persistence_check",
+        },
     }
     for filename, imported_modules in imported_modules_by_file.items():
         observed = {

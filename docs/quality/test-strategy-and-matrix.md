@@ -12,6 +12,14 @@ registry_version: 1.0.0
 
 # 测试策略与 Test Matrix
 
+## TASK-P3-14 local Gate evidence
+
+`TEST-P3-VERTICAL-SLICE-001`现由Backend两轮18 stage/144 subordinate checks、Frontend两轮12/12 Chromium、P2 Gate regression、4个exact exit rejection及14/14 aggregate checks覆盖；本地报告为PASS且`blocking_gaps=[]`。本状态仅为`LOCAL_PASS_PROVIDER_PENDING`，必须等待implementation exact-SHA required `validate`与artifact下载复验后才可升级为provider-verified；P3-15 independent Audit不能继承该结论。
+
+首次full repository为615 pass/1 fail；唯一失败是既有application import guard尚未登记P3 evidence orchestrator对API/persistence machine-check的只读调用。修复仅为`p3_gate_report.py`加入两个exact module例外，保持所有其他application文件及forbidden prefixes不变；该失败记录保留在本Task本地证据中，复验必须完整全绿。
+
+第二次full repository为611 pass/5 shared-fixture setup errors：Gate正确检测到approval concurrency raw winner/loser随线程交错变化。诊断复现只涉及`winner=APPROVE|REJECT`与`loser_failure=STALE_SOURCE|INVALID_STATE_TRANSITION`，single CAS winner、1 audit与winner exact replay均稳定；修正先严格验证这两个允许集合与不变量，再只在semantic projection归一化，raw evidence不删除。定向P3 Gate复验为5/5 PASS，最终完整仓库为616/616 PASS；Frontend为54/54 Vitest及基础/双Gate Chromium各12/12。
+
 ## TASK-P3-13 test allocation and provider evidence
 
 本Task复用6个既有Test ID：TEST-WORKSPACE-FRONTEND-001覆盖state/capability controls、visible failures与accessible feedback；TEST-GANTT-COMMAND-001覆盖Move/Assign/Lock、new authoritative DRAFT与PUBLISHED immutable；TEST-APPROVAL-AUTHORIZATION-001覆盖approve/reject及401/403；TEST-PUBLISH-IDEMPOTENCY-001覆盖explicit internal confirmation、double-submit与unknown-outcome same-key recovery；TEST-EXPORT-JOB-001覆盖create/failure/retry/EXPORTED-only verified download；TEST-AUDIT-TRAIL-001覆盖audit link与completion lineage。Test ID总数保持48，registry format不变。
@@ -84,7 +92,7 @@ Provider失败run `32920462781`保留POSIX glob误收Playwright的负证据；�
 | TEST-AUDIT-TRAIL-001 | append-only actor/reason/correlation/before-after/version audit完整性 | P3 | TASK-P3-03～10 business/denial audit + P3-13 UI/audit/download lineage provider-verified；retention/SIEM PLANNED |
 | TEST-WORKSPACE-API-001 | HTTP payload/error/auth/idempotency/OpenAPI与application boundary | P3 | [`test_planning_workspace_http_api.py`](../../backend/tests/contract/test_planning_workspace_http_api.py) + [`test_planning_workspace_api_integration.py`](../../backend/tests/integration/test_planning_workspace_api_integration.py) + [`test_planning_workspace_http_authorization.py`](../../backend/tests/security/test_planning_workspace_http_authorization.py) + 8/8 machine provider-verified / TASK-P3-10 |
 | TEST-WORKSPACE-FRONTEND-001 | read/action UI、状态可见性、accessibility与no-client-authority E2E | P3 | P3-11 read-only、P3-12 visualization/browser、P3-13 human-control/action slices均PROVIDER_VERIFIED |
-| TEST-P3-VERTICAL-SLICE-001 | P3完整workspace→review→approve→publish→export双重replay与拒绝门 | P3 | PLANNED / TASK-P3-14～15 |
+| TEST-P3-VERTICAL-SLICE-001 | P3完整workspace→review→approve→publish→export双重replay与拒绝门 | P3 | LOCAL_PASS_PROVIDER_PENDING / TASK-P3-14；P3-15独立复验待执行 |
 
 Test ID 一经分配不得复用。链接到真实测试路径才是已形成证据；`PLANNED` 只登记合同。表结构或状态语义变化必须提升 `registry_version`。
 

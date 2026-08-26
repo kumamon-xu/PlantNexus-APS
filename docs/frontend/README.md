@@ -11,6 +11,10 @@ last_reviewed: 2026-08-26
 
 # Frontend 文档形成计划
 
+## TASK-P3-14 browser Gate
+
+Gate在Node `24.19.0`/npm `11.17.0`下对同一P3-13 12-spec Chromium suite执行两次独立replay，并由`p3-frontend-gate-report.v1`核对两轮12 expected/12 passed、8 human-control specs、JSON/JUnit/HTML文件与stable semantic fingerprint。既有failure-only screenshot/video/trace策略不变；本Task不新增用户能力或support browser matrix。
+
 ## TASK-P3-13 human-control slice
 
 P3-13在development-only `SIMULATION`/`TEST`/synthetic runtime内新增command producer、action state hook与schedule/approval/publication/export/audit controls。Browser只提交server contract，不复制Validator、state transition或authority；成功后跟随server返回的新Version或重新读取authority。401/403/409/422/500、unknown network outcome与ExportJob failure均显式可见且不显示成功状态；只有unknown outcome在完成mandatory refresh后可复用原command/idempotency key。

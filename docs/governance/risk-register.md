@@ -12,6 +12,10 @@ registry_version: 1.0.0
 
 # 项目风险注册表
 
+## TASK-P3-14 risk review
+
+双Backend/Chromium replay、raw evidence retention、stable semantic projection、exact rejection和P2 regression继续约束RISK-002/003/006～009/012/013；locked SCA/license与无dependency delta继续约束RISK-011。当前仅为local Gate且provider待核验，也没有真实数据、identity、gateway、external storage、distributed failure或Production规模证据；RISK-001～013全部保持`MONITORED`，不新增/关闭/降级，`registry_version=1.0.0`不变。
+
 ## TASK-P3-13 risk review
 
 Server state/capability gates、PUBLISHED immutable、fresh-authority navigation和no-client-Validator继续约束RISK-007/013；in-flight suppression、unknown-outcome refresh+same-key replay、explicit Job retry和append-only audit加强RISK-008/012；root-confined full package verification、credential-safe reason/no persistence、exact dependency locks加强RISK-011/013；versioned Simulation fixture与browser/bundle非SLA声明继续约束RISK-009。

@@ -12,13 +12,19 @@ registry_version: 1.0.0
 
 # 文档清单
 
+## TASK-P3-14 activation review
+
+TASK-P3-14不新增、删除或重命名正式Markdown，inventory继续覆盖165份`docs/**/*.md`；新Gate source/test/Playwright/CI文件与ignored evidence不是Markdown inventory entry。P3-01～13=`done`，P3-14=`in_progress`，P3-15=`planned`；Root/trace/Test/OPEN/SIM/risk/Task数量与registry format均暂不改变。
+
+当前local Gate已形成并保持P3-14=`in_progress`/provider pending；165 docs、30 roots、30 rows、48 Test IDs、15 OPEN、15 SIM、13 risks、53 Tasks继续是强制治理计数，Task diff为56 paths/8 rows/19 checks/0 issues。所有Task卡、Milestone与P2/失败provider历史仍在原路径，未新增、删除、重命名或改写。
+
 ## TASK-P3-13 inventory review
 
 本Task不新增、删除或重命名正式Markdown，inventory继续覆盖165份`docs/**/*.md`；新增Backend/Frontend source、tests、`.env.e2e`、workflow与ignored validation/Playwright artifact均不是Markdown inventory entry。首次closure provider失败后，TASK-P3-13曾恢复`in_progress`；独立corrective provider通过后本closure将该行标为`done`，P3-14/15保持`planned`。
 
 Root=30、trace rows=30、Test IDs=48、OPEN=15、risks=13、Tasks=53均不变；新增SIM-ASSUMPTION-015使SIM count=15但不改变registry format。Artifact `9589931373`复现33 JSON及Task 91/0/11/19/0，closure run `32921871460`失败且无artifact；独立corrective artifact `9590625358`再次复现33 JSON及91/0/11/19/0。本closure自身仍须exact provider。
 
-本清单列出当前仓库已经实际存在的Markdown文档。P0～P2均已归档为completed；P2 Exit Gate=`READY`且用户已批准transition。P3现为active，TASK-P3-00～13均已done，P3-14/15为planned。P3 human-control UI/E2E和有界internal Simulation成果包下载已形成；Production Runbook正文仍未形成。
+本清单列出当前仓库已经实际存在的Markdown文档。P0～P2均已归档为completed；P2 Exit Gate=`READY`且用户已批准transition。P3现为active，TASK-P3-00～13均已done，P3-14为in progress、P3-15为planned。P3 human-control UI/E2E和有界internal Simulation成果包下载已形成；Production Runbook正文仍未形成。
 
 | Path | Doc ID | Status | Title |
 |---|---|---|---|
@@ -183,7 +189,7 @@ Root=30、trace rows=30、Test IDs=48、OPEN=15、risks=13、Tasks=53均不变�
 | [tasks/P3/TASK-P3-11-frontend-foundation-and-read-only-workspace.md](../tasks/P3/TASK-P3-11-frontend-foundation-and-read-only-workspace.md) | TASK-P3-11 | done | Frontend Foundation and Read-only Workspace |
 | [tasks/P3/TASK-P3-12-gantt-resource-load-and-version-comparison-ui.md](../tasks/P3/TASK-P3-12-gantt-resource-load-and-version-comparison-ui.md) | TASK-P3-12 | done | Gantt Resource Load and Version Comparison UI |
 | [tasks/P3/TASK-P3-13-human-control-actions-and-ui-e2e.md](../tasks/P3/TASK-P3-13-human-control-actions-and-ui-e2e.md) | TASK-P3-13 | done | Human Control Actions and UI E2E |
-| [tasks/P3/TASK-P3-14-p3-vertical-slice-gate-evidence.md](../tasks/P3/TASK-P3-14-p3-vertical-slice-gate-evidence.md) | TASK-P3-14 | planned | P3 Vertical Slice Gate Evidence |
+| [tasks/P3/TASK-P3-14-p3-vertical-slice-gate-evidence.md](../tasks/P3/TASK-P3-14-p3-vertical-slice-gate-evidence.md) | TASK-P3-14 | in_progress | P3 Vertical Slice Gate Evidence |
 | [tasks/P3/TASK-P3-15-p3-exit-gate-audit.md](../tasks/P3/TASK-P3-15-p3-exit-gate-audit.md) | TASK-P3-15 | planned | P3 Exit Gate Audit |
 | [tasks/README.md](../tasks/README.md) | DOC-TASK-INDEX | living | Task Card 索引 |
 | [tasks/TASK_TEMPLATE.md](../tasks/TASK_TEMPLATE.md) | TEMPLATE-TASK | baseline | Task Card Template |

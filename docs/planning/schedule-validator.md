@@ -11,6 +11,10 @@ last_reviewed: 2026-08-26
 
 # 独立 ScheduleValidator 合同
 
+## TASK-P3-14 Validator Gate
+
+两次fresh replay分别要求validated P2 solution建立reviewable DRAFT、command-derived新DRAFT再次通过正式Validator，且Approval不能覆盖失败。Gate只读取既有Validator报告并进行语义交叉检查，不导入Solver内部逻辑、不改C-001～C-011、mutation set、fixture或expected；任何失败形成blocking gap而不是在Gate内修复。
+
 ## TASK-P3-13 UI non-authority review
 
 Browser只构造Move/Assign/Lock/Submit carrier和显示server error/result；它不导入Validator、不执行C-001～C-011、不计算可行性、目标或KPI。DRAFT command的候选与fresh ValidationReport、SUBMIT second-fresh gate仍完全由P3-06 application service负责；UI成功后只跟随authoritative Version。

@@ -6,10 +6,14 @@ spec_version: 0.3.0
 phase: P0-P2
 normative: true
 source_sections: [31, 43, 46, 71, 72, 76, 88]
-last_reviewed: 2026-08-21
+last_reviewed: 2026-08-26
 ---
 
 # Fixture 与 Golden Test 规范
+
+## TASK-P3-14 fixture reuse
+
+Gate只重放已经登记的P2 correctness/XS fixtures与`SIM-P3-HUMAN-CONTROL-001@1.0.0`，使用固定version/seed/hash并在两轮间完全隔离。没有新增或修改fixture/golden/expected bytes，也没有引入定量假设；任何业务语义差异必须成为blocking gap而不是更新expected。
 
 ## SIM-MINIMAL-001
 

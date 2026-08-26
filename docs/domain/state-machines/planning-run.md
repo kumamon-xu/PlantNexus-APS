@@ -11,6 +11,10 @@ last_reviewed: 2026-08-26
 
 # PlanningRun 状态机
 
+## TASK-P3-14 zero-transition Gate
+
+Gate从已完成且已验证的P2 output开始两次fresh replay，并核对P3 lifecycle未反向修改PlanningRun、重试Solver或增加pair。完整raw lifecycle evidence被保留；任何PlanningRun状态副作用都会成为blocking gap。状态机版本不变。
+
 ## TASK-P3-13 no-transition review
 
 Human-control browser只调用已有ScheduleVersion/ExportJob application commands；新增download是EXPORTED artifact的只读binary retrieval。PlanningRun enum、16 states、31 allowed pairs、terminal semantics及carrier bytes均未修改，router/browser不导入PlanningRun transition、Solver或Validator。

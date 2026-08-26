@@ -6,10 +6,14 @@ spec_version: 0.3.0
 phase: P3
 normative: false
 source_sections: [24, 36, 38, 39, 63, 64, 67, 103]
-last_reviewed: 2026-08-24
+last_reviewed: 2026-08-26
 ---
 
 # 合同文档索引
+
+## TASK-P3-14 contract aggregation
+
+`p3-vertical-slice-report.v1`是internal Gate machine report，不增加Business schema set或外部API版本。它严格消费P3-02～13已发布carrier/报告以及P2 Gate，保留raw evidence并以`p3-gate-semantic-projection.v1`比较两次fresh replay；任何version/task/check/count、语义或拒绝映射漂移均fail closed。Schema set继续为`2.7.0`，没有migration、dependency或合同行为变更。
 
 本目录描述机器可执行 Schema 的人类语义。TASK-P0-03 发布 schema set `1.0.0` 的数据合同 skeleton；TASK-P0-04/05 以 set-level additive 方式发布 `1.1.0/1.2.0` 规则与Simulation合同；TASK-P1-02 以 breaking set release `2.0.0` 新增严格 canonical records、Import v2与Snapshot v2；TASK-P1-05/06再以additive `2.1.0/2.2.0`发布unit registry与Data Validation/error/report合同；TASK-P2-01以additive set `2.3.0`新增非互换的`planning-problem.v2`；TASK-P2-02以`2.4.0`新增Policy/Limits/Solution/SolverReport v1；TASK-P2-11以`2.5.0`新增`kpi.v2`和`export-manifest.v1`；TASK-P3-02现以additive `2.6.0`新增七份Workspace/Version/Audit/Publication/ExportJob carrier。机器文件位于 `/schemas/json`、`/schemas/rules` 与 `/schemas/scenario`，data dictionary 位于 `/schemas/data_dictionary.yaml`。Schema 与对应合同必须同 Task、同版本语义更新。
 

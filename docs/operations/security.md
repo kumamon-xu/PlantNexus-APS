@@ -11,6 +11,10 @@ last_reviewed: 2026-08-26
 
 # P0 工程安全边界
 
+## TASK-P3-14 security Gate
+
+Gate复验default-deny capability、DRAFT/REJECTED publish rejection、PUBLISHED mutation rejection、unpublished export rejection、root-confined verified package及browser failure visibility。它运行versioned synthetic actor和isolated data，不接secret、真实identity、gateway或external target；SCA/license与完整security suite仍是required validate的一部分。
+
 ## TASK-P3-13 browser/download security
 
 Command reason拒绝control character与credential-like token；Bearer仅来自in-memory provider，命令、unknown-outcome retention、trace和download evidence都不持久化credential/raw key。Controls同时要求isolated Simulation runtime、synthetic source、server capability与合法state；Production runtime隐藏入口并在server pre-provider default-deny。Accessible confirmation避免silent publish。

@@ -12,6 +12,10 @@ registry_version: 1.0.0
 
 # NFR 与工程需求注册表
 
+## TASK-P3-14 allocation review
+
+NFR-COR/DET/TRC/ISO/REL/SEC/OBS/PER/HUM与ENG-ARCH/VAL/ERR/VER/LOG由两轮raw+stable semantic replay、exact rejection、P2/Frontend交叉检查和required artifact链统一聚合。当前只形成local Gate，provider尚待核验；全部root仍为`ALLOCATED`，没有Production SLA、identity、external reliability或observability结论，`registry_version=1.0.0`不变。
+
 ## TASK-P3-13 allocation review
 
 NFR-COR/TRC由exact command/hash/precondition、authoritative refresh及Job/package/audit lineage加强；NFR-ISO/SEC由development-only Simulation fixture、Production default-deny、no credential persistence、pre-lookup auth和root-confined/tamper fail-closed下载加强；NFR-REL由in-flight suppression、known/unknown failure分离、refresh-before-same-key retry及explicit ExportJob retry加强；NFR-HUM由confirm/reason、accessible status/dialog、distinct failure与immutable PUBLISHED UI加强。

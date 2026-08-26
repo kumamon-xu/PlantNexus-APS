@@ -11,6 +11,10 @@ last_reviewed: 2026-08-26
 
 # P3 Planning Workspace API 语义合同
 
+## TASK-P3-14 transport Gate
+
+Gate消费P3-10已发布18-operation HTTP边界和P3-13 Frontend evidence，检查API/UI只经application/state guards并与Backend replay语义一致。报告不会发布新endpoint、payload、OpenAPI fingerprint或错误映射；发现transport/consumer漂移即形成blocking gap。当前仅为本地Gate证据，exact provider verification仍待implementation提交。
+
 ## TASK-P3-13 additive download operation
 
 历史P3-10 17-operation集合保持不可变；经用户明确批准，当前合同additive增加第18项`GET /api/v1/export-jobs/{export_job_id}/download`（operation ID `downloadExportPackage`）。请求沿用Bearer/correlation和`export` capability，不带command body或Idempotency-Key；application只可返回verified binary result。200固定`application/zip`、attachment filename、`no-store`、`nosniff`及package/manifest/archive/completion-audit/correlation headers；其他失败继续使用sanitized `planning-workspace-error.v1`。

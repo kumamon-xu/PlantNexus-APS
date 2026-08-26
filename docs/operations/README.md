@@ -11,6 +11,10 @@ last_reviewed: 2026-08-26
 
 # Operations 索引与形成边界
 
+## TASK-P3-14 Gate operations
+
+本地操作入口为两轮`playwright.p3-gate.config.ts`、Node `p3-gate-evidence.mjs`及Python `app.application.p3_gate_report --repeat 2`。成功要求Backend 18 stage executions/144 subordinate checks、Frontend 24 spec executions、4 exact rejections、14 aggregate checks和0 blocking gaps；失败报告与Playwright failure media必须保留并非零退出。该入口是CI evidence，不是Production Runbook、deployment、on-call或SLO。
+
 ## TASK-P3-13 validation operations
 
 Required workflow在locked frontend install/SCA/license/lint/type后于`frontend` working directory用shell-neutral `npm exec -- vitest --exclude=e2e/** --run`执行Vitest，再安装Chromium并执行12条human-control+visualization E2E，随后build和12/12 frontend machine evidence；`if: always()`继续上传JSON/HTML/JUnit及failure trace/video/screenshot。Backend先执行第18个API operation machine check和full regression。Implementation/closure各自都必须push main、等待唯一required `validate`、下载exact run artifact并核对SHA/Task/base/Impact/checks/issues。run `32920462781`因历史unquoted glob在Linux展开而失败，属于必须保留的negative evidence，不能用本地Windows PASS替代。

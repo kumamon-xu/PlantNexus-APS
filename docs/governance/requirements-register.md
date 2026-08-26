@@ -12,6 +12,10 @@ registry_version: 1.0.0
 
 # 核心需求注册表
 
+## TASK-P3-14 allocation review
+
+REQ-004/005/006/007/009现连接两轮完整P3 workspace Gate、四类exact rejection、P2 regression、Frontend双replay与`p3-vertical-slice-report.v1`。本地证据为PASS/0 gaps，implementation provider仍待提交后核验；所有15个root Requirement继续为`ALLOCATED`，不升级为Production fulfilled，`registry_version=1.0.0`不变。P3-15、P4及Production不继承该Gate状态。
+
 ## TASK-P3-13 allocation review
 
 REQ-005获得human command只经既有P3-06 fresh Validator/new DRAFT的UI consumer负例；REQ-006获得PUBLISHED ExportJob create/failure/retry及EXPORTED-only verified ZIP download；REQ-007获得state/capability-sensitive edit/lock/approve/reject/publish/export control、PUBLISHED immutable和authoritative refresh；REQ-009获得command/idempotency/correlation、Version/Job、package/manifest/archive/completion-audit及Playwright/provider链。

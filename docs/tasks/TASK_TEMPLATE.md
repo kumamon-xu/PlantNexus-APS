@@ -11,6 +11,10 @@ last_reviewed: 2026-08-26
 
 # TASK-Px-yy — Title
 
+## P3 vertical Gate Task governance note
+
+聚合Gate必须冻结全部前序closure SHA与不可变Diff base，保留每个subreport的raw evidence，并把runtime噪声与business semantic projection明确分离；合法并发交错只能在先严格验证允许结果集合后做versioned normalization。至少两次fresh isolated Backend/browser replay必须产生相同语义摘要。Gate只能编排已发布边界与增加focused Gate tests/CI evidence，禁止借Gate修改业务、Schema、migration、dependency、fixture或expected。Implementation与evidence-only closure分别要求exact-SHA required `validate`、未过期artifact及下载复核；Gate通过不自动执行Exit Audit、P4或Production。
+
 ## P3 human-control / browser Task governance note
 
 涉及human-control UI时还必须逐项冻结server state与`allowed_actions`门、command carrier/hash/idempotency、double-submit、unknown-outcome authority refresh+same-key retry、PUBLISHED immutable、confirm/reason、accessible status/error及Playwright failure artifact。若新增binary download transport，必须单列用户批准、pre-lookup authorization、root confinement、size/symlink/tamper/lineage验证、exact archive/header绑定，并明确它不发布Schema、不增加state pair、不形成external/Production能力。Implementation与evidence-only closure必须分别绑定exact SHA的required `validate`和下载artifact；下一Task不得自动启动。

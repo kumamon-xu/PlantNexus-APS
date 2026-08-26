@@ -11,6 +11,10 @@ last_reviewed: 2026-08-26
 
 # ScheduleVersion 状态机
 
+## TASK-P3-14 state Gate
+
+Gate覆盖DRAFT→READY_FOR_REVIEW→APPROVED/REJECTED、APPROVED→PUBLISHED及既有supersession行为，并以四类负向证据锁定DRAFT/REJECTED不可publish、PUBLISHED不可mutation。两轮语义必须一致；本Task不增加pair、guard、actor、Schema或migration。
+
 ## TASK-P3-13 UI authority review
 
 UI只按authoritative state/capability呈现既有commands，成功后读取server返回的新Version；DRAFT/READY_FOR_REVIEW/APPROVED/PUBLISHED控制面分别隔离，PUBLISHED永不提供edit/lock。新增download不接触ScheduleVersion repository或transition。现有6 states/9 pairs、copy-on-write、approval/publication/current语义、Schema与migration均零变化。

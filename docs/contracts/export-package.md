@@ -11,6 +11,10 @@ last_reviewed: 2026-08-26
 
 # 标准成果包合同
 
+## TASK-P3-14 export Gate
+
+Gate严格消费P3-09 ExportJob/standard package与P3-13 verified internal download evidence，复验仅PUBLISHED source可export、same-key replay与package lineage，并保留P2 output Gate regression。它不改变export schema/profile/bytes、external target或storage；unpublished Version export必须精确返回`STALE_SOURCE`并且无副作用。
+
 ## TASK-P3-13 verified download representation
 
 成果包目录仍是v2 manifest加12 payload的唯一业务事实；本Task只增加`zip-deterministic.v1` transport representation。Loader要求root-confined exact flat directory、无symlink/extra/missing/empty file，manifest≤1 MiB、单payload≤32 MiB、总未压缩包≤64 MiB，并重新执行canonical JSON、file hash/bytes/CSV rows/XLSX safety/package identity验证。ZIP固定名称排序、1980 timestamp、DEFLATE level 9且manifest last，生成后逐entry重读比对并提供archive SHA-256。XLSX canonicalization还必须把`docProps/core.xml`的created/modified逐字固定为`1980-01-01T00:00:00Z`，因为OpenPyXL save会覆盖modified；跨UTC秒同输入必须保持相同bytes/hash。

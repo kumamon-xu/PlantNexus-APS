@@ -11,6 +11,10 @@ last_reviewed: 2026-08-26
 
 # 错误与求解状态模型
 
+## TASK-P3-14 exact rejection Gate
+
+聚合报告固定四个exit rejection：DRAFT/REJECTED publish为`DATA_ERROR/INVALID_STATE_TRANSITION`，PUBLISHED mutation为`WORKSPACE_CONTROL/STATE_CONFLICT`，unpublished export为`WORKSPACE_CONTROL/STALE_SOURCE`。stage/category/code必须逐字匹配且无副作用；Gate不改全局错误注册表或既有业务返回。
+
 ## TASK-P3-13 visible failure boundary
 
 Action UI保持401/403/409/422为已知失败并逐字显示sanitized message/correlation；network与500被标记为unknown outcome，禁止假定成功，必须先refresh authority后以original key retry。Download的missing、state conflict、tamper/partial/mixed lineage与unexpected I/O继续经既有error adapter映射，不返回path、credential、stack或raw exception。Frontend contract/header/hash mismatch本地收敛为contract error且不保存文件。

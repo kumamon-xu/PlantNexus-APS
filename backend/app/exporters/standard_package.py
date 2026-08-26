@@ -71,6 +71,11 @@ _DEFERRED = [
     {"path": "benchmark_report.json", "status": "NOT_APPLICABLE_STANDARD_EXPORT"},
     {"path": "change_report.json", "status": "DEFERRED_P4_DYNAMIC_REPLAN"},
 ]
+_FIXED_CORE_INSTANT = b"1980-01-01T00:00:00Z"
+_CORE_TIME_PATTERNS = (
+    re.compile(rb"(<dcterms:created\b[^>]*>)([^<]*)(</dcterms:created>)"),
+    re.compile(rb"(<dcterms:modified\b[^>]*>)([^<]*)(</dcterms:modified>)"),
+)
 _WORKBOOK_SHEETS = (
     ("Schedule Operations", "schedule_operations.csv"),
     ("Order Summary", "order_summary.csv"),
@@ -156,6 +161,17 @@ def _canonicalize_xlsx(value: bytes) -> bytes:
     ):
         for name in sorted(archive.namelist()):
             content = archive.read(name)
+            if name == "docProps/core.xml":
+                for pattern in _CORE_TIME_PATTERNS:
+                    content, count = pattern.subn(
+                        rb"\g<1>" + _FIXED_CORE_INSTANT + rb"\g<3>",
+                        content,
+                    )
+                    if count != 1:
+                        _reject(
+                            StandardExportErrorCode.UNSAFE_XLSX,
+                            "standard_package.xlsx.docProps/core.xml",
+                        )
             info = ZipInfo(name, date_time=(1980, 1, 1, 0, 0, 0))
             info.compress_type = ZIP_DEFLATED
             info.create_system = 0
@@ -209,6 +225,14 @@ def _verify_xlsx(value: bytes) -> int:
             )
             if any(any(token in name for token in forbidden) for name in names):
                 _reject(StandardExportErrorCode.UNSAFE_XLSX, "standard_package.xlsx")
+            core_properties = archive.read("docProps/core.xml")
+            for pattern in _CORE_TIME_PATTERNS:
+                matches = tuple(pattern.finditer(core_properties))
+                if len(matches) != 1 or matches[0].group(2) != _FIXED_CORE_INSTANT:
+                    _reject(
+                        StandardExportErrorCode.UNSAFE_XLSX,
+                        "standard_package.xlsx.docProps/core.xml",
+                    )
             for name in names:
                 if name.endswith(".xml") and re.search(
                     rb"<f(?:[ >])", archive.read(name)

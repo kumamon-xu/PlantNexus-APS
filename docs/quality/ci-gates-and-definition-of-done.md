@@ -23,6 +23,8 @@ Local Gate结果：locked sync、Ruff、Pyright、607项Python、全部required 
 
 Corrective implementation Gate已通过：SHA `13e16e36fc0a06a079d6832f419950c830f2b96e`、run `32921059019`、required `validate` job/check `98034581212`（app `15368`）和53/53 steps全部success。Artifact `9589931373`未过期，313503 bytes，digest=`sha256:0910cbe73e49278978ed6af5bcef2ab43c5958f4eb7aef0bfa877bd07861e9eb`、expiry=`2026-11-24T01:59:58Z`；下载复核33 JSON、Frontend 12/12、Playwright 12/0/0/0、API 18=17+1、Task 91 committed/0 working/11 rows/19 checks/0 issues及P2 `blocking_gaps=[]`一致。Success run未产生failure-only trace/video/screenshot符合config。本closure据此可标Task=`done`，但closure exact provider仍须复核。
 
+首次closure `87d47c7483185483ac8027100c1c664d18011a7c`的run/job=`32921871460`/`98036888624`未通过：Repository suite为606 passed/1 failed，standard XLSX在跨秒的两次同输入构建中因OpenPyXL覆盖core `modified`而产生不同package/hash；后续步骤全skip，upload无files且artifact count=0。该失败否决done并要求新的corrective implementation：canonicalize/verify core created+modified fixed 1980 UTC，既有determinism test显式跨秒。不得只rerun旧SHA。
+
 ## 常规验收命令目标
 
 Backend：Ruff、type check、unit/contract/integration tests。Frontend：test 和 production build。P2 后增加 golden/simulation；涉及 Solver 的任务增加 PR Benchmark。

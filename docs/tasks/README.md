@@ -11,11 +11,11 @@ last_reviewed: 2026-08-26
 
 # Task Card 索引
 
-## TASK-P3-13 closure
+## TASK-P3-13 corrective implementation
 
-用户于2026-08-26单独授权TASK-P3-13；启动复核P3-06～12均`done`且closure provider/ancestry完整，clean synchronized `3dacf83c0f0bf87a9fa673aa75d61f8ad8659386`冻结为Diff base。经用户追加批准，Task卡允许一个`SIMULATION_INTERNAL`/`EXPORTED`/verified ZIP download operation。Corrective implementation provider成功后，本closure将Task标为`done`；P3-14/15、P4和Production不自动启动。
+用户于2026-08-26单独授权TASK-P3-13；启动复核P3-06～12均`done`且closure provider/ancestry完整，clean synchronized `3dacf83c0f0bf87a9fa673aa75d61f8ad8659386`冻结为Diff base。经用户追加批准，Task卡允许一个`SIMULATION_INTERNAL`/`EXPORTED`/verified ZIP download operation。首次closure provider发现XLSX时钟非确定性后Task重新为`in_progress`；P3-14/15、P4和Production不自动启动。
 
-失败候选`672529c97780d7f9dd64b517df075db05d8a45d9` / run `32920462781` / artifact `9589702993`按历史保留。Corrective implementation `13e16e36fc0a06a079d6832f419950c830f2b96e` / run `32921059019` / job `98034581212` / artifact `9589931373`全绿并精确复验33 JSON、Frontend 12/12、Playwright 12/0/0/0、API 18=17+1与Task 91/0/11/19/0，故索引标`done`。
+失败候选`672529c97780d7f9dd64b517df075db05d8a45d9` / run `32920462781` / artifact `9589702993`与成功corrective `13e16e36fc0a06a079d6832f419950c830f2b96e` / run `32921059019` / artifact `9589931373`均按历史保留。首次closure `87d47c7483185483ac8027100c1c664d18011a7c` / run `32921871460`因standard XLSX跨秒非确定性失败且无artifact；索引恢复`in_progress`直到修正实现/closure均exact provider通过。
 
 当前Phase为P3。P0～P2 Task作为terminal历史保留；只有当前P3允许详细Task Card，P4～P7继续只保留Milestone。
 
@@ -62,7 +62,7 @@ last_reviewed: 2026-08-26
 | [TASK-P3-10](P3/TASK-P3-10-planning-workspace-http-api.md) | Planning Workspace HTTP API | P3-05～09 | `done` |
 | [TASK-P3-11](P3/TASK-P3-11-frontend-foundation-and-read-only-workspace.md) | Frontend/read-only workspace | P3-01/10 | `done` |
 | [TASK-P3-12](P3/TASK-P3-12-gantt-resource-load-and-version-comparison-ui.md) | Gantt/Load/Comparison UI | P3-05/10/11 | `done` |
-| [TASK-P3-13](P3/TASK-P3-13-human-control-actions-and-ui-e2e.md) | Human control actions/UI E2E | P3-06～12 | `done` |
+| [TASK-P3-13](P3/TASK-P3-13-human-control-actions-and-ui-e2e.md) | Human control actions/UI E2E | P3-06～12 | `in_progress` |
 | [TASK-P3-14](P3/TASK-P3-14-p3-vertical-slice-gate-evidence.md) | P3 vertical-slice Gate evidence | P3-01～13 | `planned` |
 | [TASK-P3-15](P3/TASK-P3-15-p3-exit-gate-audit.md) | Independent P3 Exit Gate Audit | P3-14 | `planned` |
 

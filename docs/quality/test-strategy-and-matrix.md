@@ -18,7 +18,7 @@ registry_version: 1.0.0
 
 本地证据为Backend focused `44 passed`、全仓`607 passed`、Ruff/Pyright 0问题、Frontend 12 files/54 Vitest、12/12 Chromium、Frontend machine 12/12和HTTP machine 18 paths/operations/delegations。Browser suite覆盖401/403/409/422/500、network unknown、double click、PUBLISHED negative、tamper/header binding与Job state flow。首轮E2E因fixture provenance/locator race失败且诊断介质按策略保留，修正测试fixture/等待条件后通过；不得以retry/skip/降低断言掩盖。
 
-Provider失败run `32920462781`保留POSIX glob误收Playwright的负证据；corrective implementation `13e16e36fc0a06a079d6832f419950c830f2b96e`的run/job/artifact=`32921059019`/`98034581212`/`9589931373`精确复验607 Python、54 Vitest、12 expected/0 unexpected/0 flaky/0 skipped Chromium、Frontend 12/12、API 18=17+1与Task 91/0/11/19/0。上述6个Test ID的P3-13 slice标为`PROVIDER_VERIFIED`，Test ID总数仍48；P3-14不得自动启动。
+Provider失败run `32920462781`保留POSIX glob误收Playwright的负证据；corrective implementation `13e16e36fc0a06a079d6832f419950c830f2b96e`的run/job/artifact=`32921059019`/`98034581212`/`9589931373`曾精确复验607 Python、54 Vitest、12 expected/0 unexpected/0 flaky/0 skipped Chromium、Frontend 12/12、API 18=17+1与Task 91/0/11/19/0。但closure run `32921871460`在standard package两次构建跨秒时暴露OpenPyXL modified timestamp非确定性（606 passed/1 failed），故TEST-EXPORT-JOB-001及TASK-P3-13整体恢复`CORRECTIVE_IMPLEMENTATION_PENDING`；其他human-control/browser slice的provider事实保留。Test ID总数仍48，P3-14不得启动。
 
 ## 测试层
 
@@ -80,7 +80,7 @@ Provider失败run `32920462781`保留POSIX glob误收Playwright的负证据；co
 | TEST-GANTT-COMMAND-001 | Edit/Lock command→server validation→new DRAFT→formal Validator | P3 | TASK-P3-06 application + P3-10 transport + P3-13 UI E2E provider-verified |
 | TEST-APPROVAL-AUTHORIZATION-001 | authority-neutral capability、default-deny、approve/reject guards | P3 | TASK-P3-07 application + P3-10 HTTP + P3-13 UI E2E provider-verified；Production authority仍OPEN |
 | TEST-PUBLISH-IDEMPOTENCY-001 | APPROVED-only publish、same-key replay、conflict与supersession | P3 | TASK-P3-08 application + P3-10 HTTP + P3-13 confirmation/double-submit/unknown-outcome E2E provider-verified |
-| TEST-EXPORT-JOB-001 | ExportJob transition、package integrity、atomic/idempotent export与失败恢复 | P3 | TASK-P3-03/09 persistence/business/package + P3-10 transport + P3-13 retry/verified download provider-verified |
+| TEST-EXPORT-JOB-001 | ExportJob transition、package integrity、atomic/idempotent export与失败恢复 | P3 | TASK-P3-03/09 persistence/business/package + P3-10 transport provider-verified；P3-13 retry/download formed但XLSX cross-second determinism corrective provider PENDING |
 | TEST-AUDIT-TRAIL-001 | append-only actor/reason/correlation/before-after/version audit完整性 | P3 | TASK-P3-03～10 business/denial audit + P3-13 UI/audit/download lineage provider-verified；retention/SIEM PLANNED |
 | TEST-WORKSPACE-API-001 | HTTP payload/error/auth/idempotency/OpenAPI与application boundary | P3 | [`test_planning_workspace_http_api.py`](../../backend/tests/contract/test_planning_workspace_http_api.py) + [`test_planning_workspace_api_integration.py`](../../backend/tests/integration/test_planning_workspace_api_integration.py) + [`test_planning_workspace_http_authorization.py`](../../backend/tests/security/test_planning_workspace_http_authorization.py) + 8/8 machine provider-verified / TASK-P3-10 |
 | TEST-WORKSPACE-FRONTEND-001 | read/action UI、状态可见性、accessibility与no-client-authority E2E | P3 | P3-11 read-only、P3-12 visualization/browser、P3-13 human-control/action slices均PROVIDER_VERIFIED |

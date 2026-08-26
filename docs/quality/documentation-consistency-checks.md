@@ -17,7 +17,7 @@ Diff checker必须以冻结base `3dacf83c0f0bf87a9fa673aa75d61f8ad8659386`计算
 
 Full docs预期保持165 Markdown、30 roots、30 trace rows、48 Test IDs、15 OPEN、53 Tasks和13 risks；新增SIM-ASSUMPTION-015使SIM count由14增至15但不改变registry format。Task report必须绑定exact SHA/base、11 rows、全部checks和0 issues；implementation/closure provider分别复验，不能自动启动P3-14。
 
-提交前本地实测为165 docs/30 roots/30 trace rows/48 Test IDs/15 OPEN/15 SIM/13 risks/53 Tasks；Task union为91 working paths、11 Impact rows、19/19 checks、0 issues。Schema/migration/dependency/lock、domain state implementation、repository、P2 bytes、Solver/Validator/KPI、fixture/benchmark与P4/external/Production禁止范围均为零差异。Corrective implementation artifact `9589931373`中的Task report绑定exact SHA `13e16e36fc0a06a079d6832f419950c830f2b96e`与不可变base，复现91 committed/0 working paths、11 rows、19 checks、0 issues；本closure据此标Task=`done`且自身仍须exact provider。
+提交前本地实测为165 docs/30 roots/30 trace rows/48 Test IDs/15 OPEN/15 SIM/13 risks/53 Tasks；Task union为91 paths、11 Impact rows、19/19 checks、0 issues。Schema/migration/dependency/lock、domain state implementation、repository、P2 bytes、Solver/Validator/KPI、fixture/benchmark与P4/external/Production禁止范围均为零差异。Artifact `9589931373`中的Task report绑定exact implementation SHA/base并复现91/0/11/19/0；但closure `87d47c7483185483ac8027100c1c664d18011a7c` / run `32921871460`失败且无artifact，故Task恢复`in_progress`。XLSX timestamp fix仍在同一91-path allow-list内，新的implementation/closure provider必须重新复验。
 
 本文件定义由 TASK-P0-02 建立的文档/追踪校验器合同。实现入口为
 [`scripts/check_docs.py`](../../scripts/check_docs.py)，负向和回归测试入口为

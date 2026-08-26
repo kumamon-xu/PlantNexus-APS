@@ -1,7 +1,7 @@
 ---
 doc_id: TASK-P3-13
 title: Human Control Actions and UI E2E
-status: done
+status: in_progress
 spec_version: 0.3.0
 phase: P3
 normative: true
@@ -11,7 +11,7 @@ last_reviewed: 2026-08-26
 
 # TASK-P3-13 — Human Control Actions and UI E2E
 
-## 完成结论与批准范围
+## Corrective implementation 与批准范围
 
 既有P3-10历史合同固定17个operation；用户于2026-08-26明确批准本Task additive增加`GET /api/v1/export-jobs/{export_job_id}/download`。该operation不是新业务carrier：只在server完成`export` capability与Job scope的pre-lookup授权后读取`SIMULATION`/`SIMULATION_INTERNAL`/`EXPORTED` v2 Job，逐字交叉验证Job attempt、ScheduleVersion reference、synthetic provenance、artifact manifest、package/storage/hash和completion audit lineage，再从root-confined flat directory生成deterministic ZIP。绝对路径、外部storage/network和Production target均禁止。
 
@@ -22,6 +22,8 @@ Frontend现按server `state`与`allowed_actions`显示DRAFT submit、Gantt Move/
 首个implementation候选`672529c97780d7f9dd64b517df075db05d8a45d9`的push run `32920462781` / required `validate` job `98032902570`在Linux Frontend component step失败：历史`vitest --exclude e2e/**`被POSIX shell展开为两个文件，第二个Playwright spec被Vitest误收集；此前全部Backend/machine与Frontend SCA/license/lint/type步骤均success。失败artifact `9589702993`（digest=`sha256:a9c46b8f46da14f5667de3a5f8513d80c854f92a4189809061ac082015c2522d`）保留27份已通过JSON，不能作为成功provider。修正仅在已允许workflow的`frontend` working directory中用shell-neutral `npm exec -- vitest --exclude=e2e/** --run`并同步CI合同，不修改`package.json`、lock、pins或assertion。
 
 Corrective implementation `13e16e36fc0a06a079d6832f419950c830f2b96e`的push run `32921059019`、required `validate` job/check `98034581212`（GitHub Actions app `15368`）全部53 steps success。Artifact `9589931373` / `plantnexus-ci-evidence-32921059019`未过期，313503 bytes，digest=`sha256:0910cbe73e49278978ed6af5bcef2ab43c5958f4eb7aef0bfa877bd07861e9eb`，expiry=`2026-11-24T01:59:58Z`；下载复验33份JSON、Task exact SHA/base与91 committed/0 working paths、11 Impact rows、19 checks、0 issues，Frontend 12/12、Playwright 12 expected/0 unexpected/0 flaky/0 skipped、API 18=17+1、P2 Gate `blocking_gaps=[]`全部一致。Success browser run按`retain-on-failure`/`only-on-failure`策略只有JSON/JUnit/HTML，未产生trace/video/screenshot是预期结果；失败配置仍由workflow与Playwright config保留。本evidence-only closure据此标Task=`done`，其自身仍须exact provider复核；P3-14/15不得自动启动。
+
+首次evidence-only closure `87d47c7483185483ac8027100c1c664d18011a7c`的push run `32921871460` / required job `98036888624`失败：Repository suite为606 passed/1 failed，`test_standard_package_is_byte_deterministic_and_preserves_p2_payloads`的两次构建跨UTC秒后得到不同XLSX/package/hash；后续steps均skip，`always()` upload因没有任何report文件也失败，provider artifacts=`0`。该失败证明OpenPyXL save会把预设`modified`覆盖为runner wall clock；不得靠rerun掩盖。Task现重新为`in_progress`，corrective范围仅为在`standard_package.py` canonicalize并验证core created/modified=`1980-01-01T00:00:00Z`、在既有unit test加入跨秒回归及同步治理文档。Schema/profile/dependency/lock/state/API/Frontend/P4/Production均不变；新的corrective implementation与evidence-only closure都必须取得exact provider后才可done。
 
 Task batch role: phase-plan-member
 

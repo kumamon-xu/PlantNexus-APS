@@ -17,6 +17,8 @@ Required workflow在locked frontend install/SCA/license/lint/type后于`frontend
 
 Corrective implementation run/job/artifact=`32921059019`/`98034581212`/`9589931373`已全步骤success并下载复核。Success browser run只上传JSON/JUnit/HTML；trace/video/screenshot按配置仅在browser failure时产生，因此本次absence不是缺口。Closure仍须按同一流程核对exact SHA，P3-14不自动启动。
 
+首次closure run/job=`32921871460`/`98036888624`在Repository suite失败并且upload因无报告文件失败，artifact count=0。该run不可作为closure evidence；Task已重新打开以修复XLSX core wall-clock timestamp，必须以新SHA完整重跑，禁止仅rerun旧closure。
+
 这不是Production Runbook：没有部署、值班、SLO、真实identity、external storage、backup/restore或support browser matrix。P3-14 Gate与P3-15 Audit必须另行授权。
 
 P0-08 已形成工程骨架可验证的前三份 Operations baseline：

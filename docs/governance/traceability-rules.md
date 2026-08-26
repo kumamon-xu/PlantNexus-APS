@@ -21,6 +21,8 @@ API证据必须同时声明P3-10历史17 operations和P3-13 additive download 1�
 
 Corrective implementation `13e16e36fc0a06a079d6832f419950c830f2b96e` / run `32921059019` / required job `98034581212` / artifact `9589931373`满足该规则：app `15368`、53/53 steps、33 JSON、SHA/base、11 rows、19 checks、0 issues、Frontend/Playwright/API/P2 Gate均一致。Success browser run没有failure-only介质是预期配置结果，不得伪造空trace/video/screenshot。
 
+首次closure `87d47c7483185483ac8027100c1c664d18011a7c` / run `32921871460`在Repository suite发现XLSX跨秒非确定性，required job `98036888624`失败且artifact count=0；因此此前implementation success不能使Task保持done。Corrective chain必须新增不同SHA，显式证明core timestamp fixed与跨秒same bytes，并再执行evidence-only closure；禁止rerun旧SHA来消除失败记录。
+
 ## 标准链路
 
 ```text

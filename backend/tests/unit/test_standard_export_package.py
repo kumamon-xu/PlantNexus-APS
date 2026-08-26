@@ -8,6 +8,7 @@ from datetime import UTC, datetime
 import io
 import json
 from pathlib import Path
+from time import sleep
 from typing import Any, cast
 from zipfile import ZipFile
 
@@ -185,6 +186,7 @@ def test_standard_package_is_byte_deterministic_and_preserves_p2_payloads(
     package_inputs,
 ) -> None:  # type: ignore[no-untyped-def]
     first = _build(package_inputs)
+    sleep(1.1)
     second = _build(package_inputs)
     assert first == second
     verify_standard_export_package(first)
@@ -212,6 +214,8 @@ def test_xlsx_has_fixed_safe_sheets_and_no_active_content(package_inputs) -> Non
     package = _build(package_inputs)
     value = package.files["standard_package.xlsx"]
     workbook = load_workbook(io.BytesIO(value), data_only=False)
+    assert workbook.properties.created == datetime(1980, 1, 1)
+    assert workbook.properties.modified == datetime(1980, 1, 1)
     assert workbook.sheetnames == [
         "Schedule Operations",
         "Order Summary",

@@ -11,11 +11,11 @@ last_reviewed: 2026-08-26
 
 # Milestone 索引
 
-## TASK-P3-13 closure
+## TASK-P3-13 corrective implementation
 
-用户于2026-08-26单独授权TASK-P3-13并批准有界download transport；P3-06～12 dependency、closure ancestry/provider与clean synchronized `3dacf83c0f0bf87a9fa673aa75d61f8ad8659386`均复核通过，该SHA冻结为Diff base。Corrective implementation provider成功后本closure标Task=`done`，P3 Milestone继续`active`；P3-14 Gate、P3-15 Audit、P4与Production不会自动启动。
+用户于2026-08-26单独授权TASK-P3-13并批准有界download transport；P3-06～12 dependency、closure ancestry/provider与clean synchronized `3dacf83c0f0bf87a9fa673aa75d61f8ad8659386`均复核通过，该SHA冻结为Diff base。首次closure provider发现XLSX时钟非确定性后Task恢复`in_progress`，P3 Milestone继续`active`；P3-14 Gate、P3-15 Audit、P4与Production不会自动启动。
 
-TASK-P3-13失败候选`672529c97780d7f9dd64b517df075db05d8a45d9` / run `32920462781`按历史保留；corrective implementation `13e16e36fc0a06a079d6832f419950c830f2b96e` / run/job/artifact=`32921059019`/`98034581212`/`9589931373`全绿并复验33 JSON、Frontend/Playwright/API/Task evidence，因此Task状态提升为`done`但Milestone与后续阶段边界不提升。
+TASK-P3-13失败候选`672529c97780d7f9dd64b517df075db05d8a45d9` / run `32920462781`与成功corrective `13e16e36fc0a06a079d6832f419950c830f2b96e` / run `32921059019`按历史保留。首次closure `87d47c7483185483ac8027100c1c664d18011a7c` / run/job=`32921871460`/`98036888624`在standard package determinism失败且artifact count=0；新的corrective implementation/closure Gate完成前状态不提升。
 
 项目沿用总规 P0～P7，不建立 M0～M7 平行编号。
 
@@ -38,7 +38,7 @@ P1当前状态：[`P1 — Data & Snapshot`](P1-data-and-snapshot.md)为`complete
 
 P2当前状态：[`P2 — CP-SAT Vertical Slice`](P2-cp-sat-vertical-slice.md)为`completed`。TASK-P2-00～14均已闭环为`done`；P2 Exit Gate=`READY`且0 gaps。用户于2026-08-24在复核exact provider evidence、提交拓扑与clean synchronized baseline后明确批准P2→P3。
 
-P3当前状态：[`P3 — Planning Workspace`](P3-planning-workspace.md)为`active`。TASK-P3-00～13均已有exact implementation provider并在evidence-only closure标为`done`；P3-14/15保持`planned`。P3-15必须最后独立执行Exit Gate Audit；HTTP/internal Simulation export或Frontend provider evidence均不表示external、P4或Production。
+P3当前状态：[`P3 — Planning Workspace`](P3-planning-workspace.md)为`active`。TASK-P3-00～12为`done`，TASK-P3-13为`in_progress` corrective implementation；P3-14/15保持`planned`。P3-15必须最后独立执行Exit Gate Audit；HTTP/internal Simulation export或Frontend provider evidence均不表示external、P4或Production。
 
 TASK-P3-04 implementation `a9be974855bb825784d639b7f6675e5a33e4273d`的run/job/artifact=`32700005280`/`97349447107`/`9510215582`精确复现35 focused、515 full、8/8 lifecycle、23/23 JSON PASS与45 committed/0 working paths、8 rows、19 checks、0 issues，故本closure标为`done`。该证据只形成reviewable ScheduleVersion，不形成approval、publish、P4或Production readiness。
 

@@ -16,7 +16,7 @@ registry_version: 1.0.0
 
 Server state/capability gates、PUBLISHED immutable、fresh-authority navigation和no-client-Validator继续约束RISK-007/013；in-flight suppression、unknown-outcome refresh+same-key replay、explicit Job retry和append-only audit加强RISK-008/012；root-confined full package verification、credential-safe reason/no persistence、exact dependency locks加强RISK-011/013；versioned Simulation fixture与browser/bundle非SLA声明继续约束RISK-009。
 
-Corrective implementation artifact `9589931373`已复验这些bounded controls，并保留失败run `32920462781`的CI负证据；证据仍只有mock browser/local filesystem/Simulation actor，没有真实identity、gateway、external storage、distributed failure、Production data/browser matrix/capacity/SLA。RISK-001～013全部保持`MONITORED`，severity/status与`registry_version=1.0.0`不变；provider成功也不得标记MITIGATED/CLOSED。
+Corrective implementation artifact `9589931373`已复验这些bounded controls，并保留失败run `32920462781`的CI负证据；closure run `32921871460`又把XLSX wall-clock nondeterminism作为RISK-006/012的真实早期信号保留，当前修正仍待provider。证据仍只有mock browser/local filesystem/Simulation actor，没有真实identity、gateway、external storage、distributed failure、Production data/browser matrix/capacity/SLA。RISK-001～013全部保持`MONITORED`，severity/status与`registry_version=1.0.0`不变；provider成功也不得标记MITIGATED/CLOSED。
 
 | ID | Status | 风险 | 早期信号 | 当前控制 |
 |---|---|---|---|---|

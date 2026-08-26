@@ -18,7 +18,7 @@ NFR-COR/TRC由exact command/hash/precondition、authoritative refresh及Job/pack
 
 ENG-ARCH保持thin client/router/application/store单向边界，ENG-VAL保持formal Validator只在server既有service，ENG-ERR保持sanitized visible failure，ENG-VER保持2.7.0 Schema set、17+1 API、command/ZIP profile和24 pins/lock逐字绑定。全部NFR/ENG root仍为`ALLOCATED`；没有Production security/SLO/browser matrix/identity evidence，`registry_version=1.0.0`不变。
 
-Corrective implementation `13e16e36fc0a06a079d6832f419950c830f2b96e` / artifact `9589931373`曾provider复验Frontend、Playwright、API、Task与全部required machine evidence；失败run `32920462781`继续作为NFR-REL/ENG-ERR的negative CI记录。Closure run `32921871460`随后暴露XLSX wall-clock nondeterminism，故NFR-DET/ENG-VER的corrective evidence pending且TASK-P3-13未完成；任何root lifecycle与Production结论均不提升。
+Corrective implementation `13e16e36fc0a06a079d6832f419950c830f2b96e` / artifact `9589931373`曾provider复验Frontend、Playwright、API、Task与全部required machine evidence；失败run `32920462781`继续作为NFR-REL/ENG-ERR的negative CI记录。Closure run `32921871460`随后暴露XLSX wall-clock nondeterminism；独立corrective `3538d46f8b73ae434057bcbca9037436aa91f2c7` / artifact `9590625358`现以跨秒回归和33份PASS JSON补齐NFR-DET/ENG-VER证据，故TASK-P3-13=`done`。任何root lifecycle与Production结论均不提升。
 
 以下 ID 是对总规已有非功能要求的稳定化登记，不引入尚未确认的性能数值。
 

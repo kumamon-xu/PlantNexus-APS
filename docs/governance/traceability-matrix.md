@@ -16,7 +16,7 @@ registry_version: 1.0.0
 
 REQ-005/006/007/009、NFR-COR/TRC/ISO/REL/SEC/HUM与ENG-ARCH/VAL/ERR/VER现连接TASK-P3-13的command producer/action hook、state panels、Gantt controls、verified package loader/download transport、Backend/frontend tests、12 Chromium specs、`p3-planning-workspace-api-report.v1`与`p3-frontend-human-control-report.v1`。冻结输入为P3-06～12 closure及Diff base `3dacf83c0f0bf87a9fa673aa75d61f8ad8659386`。
 
-6个既有Test ID的human-control/API部分由implementation `13e16e36fc0a06a079d6832f419950c830f2b96e` / artifact `9589931373`复验，但closure `87d47c7483185483ac8027100c1c664d18011a7c` / run `32921871460`暴露TEST-EXPORT-JOB-001的XLSX跨秒determinism缺口；TASK-P3-13整体状态因此为`CORRECTIVE_IMPLEMENTATION_PENDING`。失败run `32920462781`和无artifact closure failure均保留。没有新增Test ID或root trace row，仍为48 IDs/30 roots/30 rows、`registry_version=1.0.0`。P3-14 vertical Gate、P3-15 Exit Audit、P4与Production保持`PLANNED`/未形成。
+6个既有Test ID的human-control/API部分由implementation `13e16e36fc0a06a079d6832f419950c830f2b96e` / artifact `9589931373`复验；closure `87d47c7483185483ac8027100c1c664d18011a7c` / run `32921871460`暴露TEST-EXPORT-JOB-001的XLSX跨秒determinism缺口，随后独立corrective `3538d46f8b73ae434057bcbca9037436aa91f2c7` / artifact `9590625358`以跨秒回归、33份PASS JSON和Task 91/0/11/19/0补齐证据，故TASK-P3-13=`PROVIDER_VERIFIED_DONE`。失败run `32920462781`和无artifact closure failure均保留。没有新增Test ID或root trace row，仍为48 IDs/30 roots/30 rows、`registry_version=1.0.0`。P3-14 vertical Gate、P3-15 Exit Audit、P4与Production保持`PLANNED`/未形成。
 
 本表每个已登记 REQ/NFR/ENG 根 ID 恰好一行。`REGISTERED` 只表示规范路径和治理追踪存在；`PLANNED`、`DEFERRED` 不得被解释成实现证据。
 

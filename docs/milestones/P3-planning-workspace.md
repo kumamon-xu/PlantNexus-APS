@@ -11,19 +11,19 @@ last_reviewed: 2026-08-26
 
 # P3 — Planning Workspace
 
-## TASK-P3-13 corrective slice
+## TASK-P3-13 completed slice
 
 本Task把P3-06～12已形成的server command/decision/publication/export/API/read-only UI连接为isolated Simulation human-control consumer，并经用户批准additive提供EXPORTED verified package download。当前范围固定为command-only edit/lock→new DRAFT、approve/reject、internal publish、ExportJob/retry/download、audit/history及12 Chromium E2E；第18个operation不改变Schema/state/persistence。
 
-首次closure provider暴露XLSX wall-clock non-determinism后，Task重新为`in_progress`；只有新的corrective implementation与evidence-only closure exact provider均成功后才可标`done`。P3-14必须独立聚合完整vertical slice，P3-15最后独立审计；本Task不得提前给出P3 Exit、P4或Production结论。
+首次closure provider暴露XLSX wall-clock non-determinism后，Task曾重新为`in_progress`；独立corrective implementation与本evidence-only closure现使其恢复`done`，closure自身仍须exact provider。P3-14必须独立聚合完整vertical slice，P3-15最后独立审计；本Task不得提前给出P3 Exit、P4或Production结论。
 
-Local implementation Gate和corrective implementation `13e16e36fc0a06a079d6832f419950c830f2b96e`的run/job/artifact=`32921059019`/`98034581212`/`9589931373`曾全绿；但closure `87d47c7483185483ac8027100c1c664d18011a7c`的run `32921871460`真实失败且无artifact，故Task不满足DoD。当前只修正XLSX core timestamp determinism并保持Milestone=`active`、P3-14不启动；所有失败run继续保留。
+Local implementation Gate和首个corrective implementation `13e16e36fc0a06a079d6832f419950c830f2b96e`的run/job/artifact=`32921059019`/`98034581212`/`9589931373`曾全绿；但closure `87d47c7483185483ac8027100c1c664d18011a7c`的run `32921871460`真实失败且无artifact。独立corrective `3538d46f8b73ae434057bcbca9037436aa91f2c7`的run/job/artifact=`32923203227`/`98040743610`/`9590625358`现全绿，并复验33 JSON、12/12 Chromium与Task 91/0/11/19/0，故Task满足bounded DoD。Milestone保持`active`、P3-14不启动；所有失败run继续保留。
 
 ## Authorization and start boundary
 
 用户于2026-08-24在核验TASK-P2-00～14全部`done`、P2 Exit Gate overall=`READY`/`blocking_gaps=[]`、audit implementation/closure拓扑与exact GitHub required `validate`/artifact后，明确批准P2→P3 transition。P2为`completed`，P3为当前`active` Milestone。
 
-TASK-P3-00已完成Milestone激活、Task规划与文档治理，TASK-P3-01～12为`done`；TASK-P3-13为`in_progress` corrective implementation。P3-14/15保持`planned`；依赖满足不会自动授权后续实现。
+TASK-P3-00已完成Milestone激活、Task规划与文档治理，TASK-P3-01～13均为`done`。P3-14/15保持`planned`；依赖满足不会自动授权后续实现。
 
 ## Outcome
 
@@ -48,7 +48,7 @@ TASK-P3-00已完成Milestone激活、Task规划与文档治理，TASK-P3-01～12
 | 10 | TASK-P3-10 | Planning Workspace HTTP API | P3-05～09 | `done` |
 | 11 | TASK-P3-11 | Frontend foundation与read-only workspace | P3-01/10 | `done` |
 | 12 | TASK-P3-12 | Gantt/Resource Load/Comparison UI | P3-05/10/11 | `done` |
-| 13 | TASK-P3-13 | Human control actions与UI E2E | P3-06～12 | `in_progress` |
+| 13 | TASK-P3-13 | Human control actions与UI E2E | P3-06～12 | `done` |
 | 14 | TASK-P3-14 | 完整P3 vertical-slice Gate evidence | P3-01～13 | `planned` |
 | 15 | TASK-P3-15 | 独立P3 Exit Gate Audit | P3-14 | `planned` |
 

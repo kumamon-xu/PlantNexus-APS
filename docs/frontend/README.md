@@ -17,7 +17,7 @@ P3-13在development-only `SIMULATION`/`TEST`/synthetic runtime内新增command p
 
 Gantt drag只产生±24小时内、5分钟量化的Move proposal；最终时间仍作为command交由server validation，并导航到authoritative new DRAFT。PUBLISHED只显示immutable提示。Export下载只在authoritative Job=`EXPORTED`且artifact manifest存在时显示，并在browser核对package/manifest/archive header与bytes后保存。`.env.e2e`只打开versioned `SIM-P3-HUMAN-CONTROL-001@1.0.0`测试面，不含credential且不改变Production默认拒绝。
 
-Corrective implementation `13e16e36fc0a06a079d6832f419950c830f2b96e`的required artifact `9589931373`已复验54 Vitest、12 expected/0 unexpected/0 flaky/0 skipped Chromium与Frontend machine 12/12；这些Frontend事实继续有效。TASK-P3-13因closure发现Backend XLSX determinism缺口而恢复`in_progress`，真实identity/authority、external adapter、P4和Production仍未形成。
+首个corrective implementation artifact `9589931373`已复验54 Vitest、12 expected/0 unexpected/0 flaky/0 skipped Chromium与Frontend machine 12/12；这些Frontend事实继续有效。首次closure发现的Backend XLSX determinism缺口由独立corrective `3538d46f8b73ae434057bcbca9037436aa91f2c7` / artifact `9590625358`修复并再次复验同一Frontend证据，故TASK-P3-13=`done`。真实identity/authority、external adapter、P4和Production仍未形成。
 
 TASK-P3-01已在任何Frontend dependency或实现前形成：
 

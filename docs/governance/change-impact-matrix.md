@@ -18,9 +18,9 @@ registry_version: 1.0.0
 
 禁止范围为Schema/sample/rules、migration、Python/npm dependencies和locks、domain state implementation、repository persistence、P2 package bytes、Solver/Strategy/Validator/KPI、fixtures/benchmarks、external network/storage/MES、P4与Production。任何额外path或Impact row必须先停下扩卡；Task diff和provider artifact都必须为11 rows/全部checks/0 issues。
 
-Corrective implementation artifact `9589931373`精确绑定`13e16e36fc0a06a079d6832f419950c830f2b96e`并复现91 committed/0 working paths、上述11 rows、19 checks、0 issues，冻结范围无漂移。首个失败artifact `9589702993`不满足完整Gate且按历史保留。本closure只写provider事实并标Task=`done`，P3-14/15、P4与Production不自动启动。
+首个corrective implementation artifact `9589931373`精确绑定`13e16e36fc0a06a079d6832f419950c830f2b96e`并复现91 committed/0 working paths、上述11 rows、19 checks、0 issues，冻结范围无漂移。首个失败artifact `9589702993`不满足完整Gate且按历史保留；其后的首次closure失败也不被改写。
 
-首次closure run `32921871460`又暴露同一allowed `backend/app/exporters/standard_package.py`的wall-clock nondeterminism，故Task恢复`in_progress`。修正只触及该exporter、既有unit test和required docs，仍命中原11 rows/91-path union；Schema/profile/dependency/lock/state/API/Frontend/P4/Production禁止范围不扩张。
+首次closure run `32921871460`又暴露同一allowed `backend/app/exporters/standard_package.py`的wall-clock nondeterminism，Task因此曾恢复`in_progress`。修正只触及该exporter、既有unit test和required docs，仍命中原11 rows/91-path union；Schema/profile/dependency/lock/state/API/Frontend/P4/Production禁止范围不扩张。独立corrective artifact `9590625358`精确绑定`3538d46f8b73ae434057bcbca9037436aa91f2c7`并再次复现91/0/11/19/0，故本closure标Task=`done`；P3-14/15、P4与Production不自动启动。
 
 本矩阵用于在 Task 开始前确定文档影响。表中的文档是“必须审查”，不代表每次都必须修改；如果审查后不修改，Task 完成证据必须逐项说明理由。
 

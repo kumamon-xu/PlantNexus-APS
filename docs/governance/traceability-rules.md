@@ -17,6 +17,8 @@ Trace chain固定为`REQ-005/006/007/009 + NFR-COR/TRC/ISO/REL/SEC/HUM + ENG-ARC
 
 API证据必须同时声明P3-10历史17 operations和P3-13 additive download 1，不能把新OpenAPI fingerprint改写为历史artifact。Browser evidence必须为12 human-control+visualization specs并保留失败介质；SIM fixture必须引用SIM-ASSUMPTION-015。Implementation provider前只能写`LOCAL_IMPLEMENTED_PROVIDER_PENDING`，closure provider成功后才可标Task done；P3-14/15和Production声明均禁止继承。
 
+失败run `32920462781` / job `98032902570` / artifact `9589702993`属于不可删除的negative provider evidence：其component step因POSIX glob展开误收Playwright spec而失败，后续steps被skip，所以绝不能满足implementation Gate。Corrective提交必须保持原失败拓扑，以shell-neutral Vitest exclude重跑，并只接受corrective exact SHA的全步骤success artifact。
+
 ## 标准链路
 
 ```text

@@ -19,6 +19,8 @@ DoD还要求implementation exact SHA push run/job/artifact全成功，下载后�
 
 Local Gate结果：locked sync、Ruff、Pyright、607项Python、全部required machine、P2 XS 8/8、P2 Gate 11/11/0 gap、Frontend SCA/license/lint/type/54 tests、12/12 Chromium、build与12/12 machine、Compose、package build、165-doc full治理、91-path/11-row/19-check/0-issue Task治理和`git diff --check`全部PASS。该结果只允许提交implementation，不替代required provider或closure。
 
+首个implementation候选`672529c97780d7f9dd64b517df075db05d8a45d9`的run/job=`32920462781`/`98032902570`在Linux component step失败，故required Gate明确未通过。根因是POSIX shell把未引号`e2e/**`展开成多个参数；corrective workflow在不改`package.json`/lock/pins/assertion的前提下于`frontend` working directory直接运行`npm exec -- vitest --exclude=e2e/** --run`。失败artifact `9589702993`只保留27份此前通过的JSON，必须保留且不得升级为provider success；corrective exact SHA仍须重跑全部non-skippable steps和artifact核验。
+
 ## 常规验收命令目标
 
 Backend：Ruff、type check、unit/contract/integration tests。Frontend：test 和 production build。P2 后增加 golden/simulation；涉及 Solver 的任务增加 PR Benchmark。

@@ -220,7 +220,8 @@ jobs:
           npm --prefix frontend run typecheck
 
       - name: P3 Frontend component and accessibility tests
-        run: npm --prefix frontend test -- --run
+        working-directory: frontend
+        run: npm exec -- vitest --exclude=e2e/** --run
 
       - name: P3 Frontend Chromium runtime
         run: npm --prefix frontend exec -- playwright install --with-deps chromium

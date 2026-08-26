@@ -17,7 +17,7 @@ last_reviewed: 2026-08-26
 
 当前实现只覆盖state/capability-sensitive human controls、canonical command/idempotency/unknown-outcome恢复、PUBLISHED immutable、ExportJob显式retry/verified download、audit link和12条isolated Chromium E2E。Schema、migration、dependency/lock、state pair、repository、Solver/Validator/KPI、external/P4/Production均冻结。Implementation provider与evidence-only closure完成前Task保持`in_progress`，P3 Milestone保持`active`，P3-14/15不启动。
 
-本地验收现为44项Backend focused、607项全仓、54项Frontend unit/component、12/12 Chromium、Frontend 12/12、API 18-operation、全部required machine、XS/P2 Gate、Ruff/Pyright、SCA/license、Compose/build和91 paths/11 rows/19 checks/0 issues全部PASS。该结果不等于GitHub provider证据；implementation exact required `validate`/artifact和后续evidence-only closure闭环前仍不得标done。
+本地验收现为44项Backend focused、607项全仓、54项Frontend unit/component、12/12 Chromium、Frontend 12/12、API 18-operation、全部required machine、XS/P2 Gate、Ruff/Pyright、SCA/license、Compose/build和91 paths/11 rows/19 checks/0 issues全部PASS。首个implementation候选`672529c97780d7f9dd64b517df075db05d8a45d9`的run `32920462781`在Linux component step因POSIX glob误收Playwright spec而失败；artifact `9589702993`只构成失败历史。该结果不等于GitHub provider证据；corrective implementation exact required `validate`/artifact和后续evidence-only closure闭环前仍不得标done。
 
 ## 阶段授权与证据
 

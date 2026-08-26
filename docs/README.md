@@ -69,9 +69,9 @@ last_reviewed: 2026-08-24
 
 ## 当前范围
 
-当前阶段为P3。P0～P2 Milestone均为`completed`，P3为`active`；TASK-P3-00 phase transition、完整Task plan与文档治理已由exact provider闭环为`done`，P3-01～15均为`planned`且未获业务实现授权。P3-15必须最后独立执行Exit Gate Audit；P4与Production不在当前范围，详见`current_phase.md`。
+当前阶段为P3。P0～P2 Milestone均为`completed`，P3为`active`；TASK-P3-00～14均已由exact provider闭环为`done`。用户已批准末段编号调整，TASK-P3-15当前只实现阶段计划修订治理支持；后续本地化与独立Exit Audit卡须等待该治理implementation exact provider成功后再由同一修订owner原子登记。P4与Production不在当前范围，详见`current_phase.md`。
 
-P3顺序固定为合同/ADR→Schema→persistence→validated DRAFT→read models→edit/lock→approval/reject→idempotent publish→ExportJob→API→Frontend/E2E→vertical Gate→independent Audit。首先建议另行授权TASK-P3-01，但当前规划Task不得自动执行它。
+P3已形成的顺序保持合同/ADR→Schema→persistence→validated DRAFT→read models→edit/lock→approval/reject→idempotent publish→ExportJob→API→Frontend/E2E→vertical Gate。批准的末段顺序为治理支持→本地化→独立Exit Audit；治理Task不得自动执行其成员。
 
 ## 仓库入口与本地检查
 
@@ -81,7 +81,7 @@ P3顺序固定为合同/ADR→Schema→persistence→validated DRAFT→read mode
 - 该检查验证 metadata、文档 ID、Markdown fence、本地链接、Task、版本化 registry、完整 ID 引用、逐根 traceability 和命名空间隔离；
 - Task 进入 `in_progress` 时记录完整 `Diff base`；`--task <task-card> --check-diff` 对 `Diff base..HEAD` 与 working tree 的并集匹配 change-impact Rule ID，并可用 `--report <path>` 输出 `traceability-report.v1`。
 
-本地检查从`current_phase.md`读取current `Pn`，保留历史terminal Task且拒绝future-phase详细卡。普通CI range只能归属一张current-phase Task；初始phase-planning batch仅允许唯一新建`TASK-Pn-00` owner加同range新建的`planned/ready`成员卡，之后仍按owner Diff base执行scope/impact。Provider结果必须来自真实授权运行，不能由本地PASS推断。
+本地检查从`current_phase.md`读取current `Pn`，保留历史terminal Task且拒绝future-phase详细卡。普通CI range只能归属一张current-phase Task；初始phase-planning batch仅允许唯一新建`TASK-Pn-00` owner加同range新建的`planned/ready`成员卡。后续阶段计划修订要求唯一已存在的`phase-plan-amendment-owner`、稳定逻辑Task ID、完整Diff base及仅`planned/ready`且无implementation SHA的成员；active/done成员改写、纯删除与重复路径均拒绝。选择owner后仍按其Diff base执行scope/impact。Provider结果必须来自真实授权运行，不能由本地PASS推断。
 
 CI 可用 `uv run python scripts/check_docs.py --discover-task-from <event-base-sha> --check-diff --report build/traceability/ci-current-task-report.json`从一次 PR/push event range发现唯一 current-phase Task；本地 Task验收仍使用显式 `--task`。两种入口最终都使用 Task Card内的 immutable `Diff base`，不能把 event base当作 Task scope base。
 

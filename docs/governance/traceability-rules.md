@@ -114,6 +114,8 @@ TASK-P1-01建立的CI changed-task discovery仍要求`--discover-task-from <even
 
 TASK-P2-00只为“首次创建完整阶段计划”增加严格batch例外：range中所有Task卡必须为本次新增；唯一owner必须是`TASK-Pn-00`、role=`phase-planning-owner`、status=`in_progress/done`并有完整Diff base；每个其余成员必须role=`phase-plan-member`、status=`planned/ready`且不得预填implementation SHA。既有成员、多个/错误owner、active/done成员、历史/future卡均硬失败。Batch选择owner后，全部range仍受owner精确allowed scope、Impact Rule和文档检查约束；该规则不允许批量实现或修改既有Task。
 
+阶段计划形成后的修订是独立例外：range须包含唯一`phase-plan-amendment-owner`，owner必须是已存在且本次确实修改的current-phase逻辑Task、status=`in_progress/done`、具有完整不可变Diff base。路径按`TASK-Pn-NN`稳定ID归并，因此同IDrename可保留身份；每个非owner最终文件须为`phase-plan-member`、`planned/ready`且无implementation SHA。校验器读取event base中的成员状态并拒绝active/done历史成员改写，同时拒绝deleted-only逻辑Task、同ID多存活路径、all-added非Pn-00 owner、多owner及历史/future Task。选择owner后仍以owner Diff base执行完整scope/Impact；该模式只治理计划修订，不授权成员实现。
+
 结构化报告 schema 为 `traceability-report.v1`，至少包含 Task、可选 `task_discovery_base`、Git HEAD、Diff base、committed-range/working-tree source counts、changed paths、matched impact rows、expected/observed documents、missing trace refs、registry counts 和失败明细。失败返回非零退出码，不允许自由文本 skip。
 
 TASK-P1-02将REQ-001/002/003/009、NFR-DET/TRC与ENG-SOL/ERR/VER链接到canonical-records.v1、Import v2、Snapshot v2、data dictionary、pure types/prechecks及TEST-CONTRACT-001。当前artifact state只标记contract formed；Adapter/staging/Normalization/DataValidation/Expansion/Snapshot/Problem builder/hash与P1 Gate继续`PLANNED`。

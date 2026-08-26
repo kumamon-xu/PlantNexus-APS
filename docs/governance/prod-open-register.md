@@ -12,6 +12,10 @@ registry_version: 1.0.0
 
 # PROD_OPEN 注册表
 
+## TASK-P3-15 review
+
+Amendment-owner、Task ID rename与CI attribution不提供Factory、identity、approval responsibility、external interface、capacity/SLA或deployment Authority/Evidence。OPEN-001～015全部继续`OPEN`，无closure record、状态或`registry_version=1.0.0`变化；治理provider成功也不得声明Production readiness。
+
 ## TASK-P3-14 review
 
 两轮Backend/Chromium、exact rejections、P2 regression和0-gap provider-verified Gate仍只证明versioned internal Simulation链。没有Authority、真实factory/identity、external endpoint/storage、capacity/SLA、deployment或approval/publish decision evidence；OPEN-001～015全部继续`OPEN`，无关闭记录，`registry_version=1.0.0`不变。Provider成功不改变这一结论。

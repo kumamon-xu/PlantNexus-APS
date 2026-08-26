@@ -12,6 +12,10 @@ registry_version: 1.0.0
 
 # NFR 与工程需求注册表
 
+## TASK-P3-15 allocation review
+
+NFR-TRC-001/NFR-PER-001与ENG-ARCH-001/ENG-VER-001连接amendment-owner discovery、base-state fail-closed检查和existing unit/CI evidence。普通/initial规划兼容性与稳定ID rename受回归约束；这只是治理correctness/maintainability证据，不改变任何root的`ALLOCATED`状态或`registry_version=1.0.0`。
+
 ## TASK-P3-14 allocation review
 
 NFR-COR/DET/TRC/ISO/REL/SEC/OBS/PER/HUM与ENG-ARCH/VAL/ERR/VER/LOG由两轮raw+stable semantic replay、exact rejection、P2/Frontend交叉检查和required artifact链统一聚合。Corrective artifact `9593460266`已复验P3 14/14、Frontend 5/5、双12/12 browser与0 gaps；全部root仍为`ALLOCATED`，没有Production SLA、identity、external reliability或observability结论，`registry_version=1.0.0`不变。

@@ -1,84 +1,92 @@
 ---
 doc_id: TASK-P3-15
-title: P3 Exit Gate Audit
-status: planned
+title: P3 Phase Plan Amendment Governance Support
+status: in_progress
 spec_version: 0.3.0
 phase: P3
 normative: true
-source_sections: [33, 34, 66, 67, 68, 69, 77, 78, 86, 87, 94, 100, 106, 110, 111]
-last_reviewed: 2026-08-24
+source_sections: [6, 58, 73, 74, 77, 78, 98, 99, 100, 101, 103, 104, 111]
+last_reviewed: 2026-08-26
 ---
 
-# TASK-P3-15 — P3 Exit Gate Audit
+# TASK-P3-15 — P3 Phase Plan Amendment Governance Support
 
-Task batch role: phase-plan-member
+Task batch role: phase-plan-amendment-owner
 
-Requirement IDs: REQ-004, REQ-005, REQ-006, REQ-007, REQ-009
+Requirement IDs: REQ-009
 
-NFR / ENG IDs: NFR-COR-001, NFR-DET-001, NFR-TRC-001, NFR-ISO-001, NFR-REL-001, NFR-SEC-001, NFR-OBS-001, NFR-PER-001, NFR-HUM-001, ENG-ARCH-001, ENG-VAL-001, ENG-ERR-001, ENG-VER-001, ENG-LOG-001
+NFR / ENG IDs: NFR-TRC-001, NFR-PER-001, ENG-ARCH-001, ENG-VER-001
 
 Depends on: TASK-P3-14
 
-Start gate: TASK-P3-00～14全部`done`；P3-14 Gate exact provider成功且0 blocking gaps；用户明确授权独立audit；clean synchronized main；记录immutable Diff base；审计人/实现不得复用Gate结论代替独立重放。
+Start gate: TASK-P3-00～14全部`done`；P3-14 corrective implementation及closure exact provider成功；用户已明确批准把当前编号改作阶段计划修订治理owner、把本地化与独立Exit Audit顺延；`main=origin/main=06e7f794f486ac34c505237b847462c7c7c36d44`、remote main一致且working tree clean；该SHA冻结为immutable Diff base。
 
-Goal: 独立审计P3全部提交拓扑、provider artifacts、contracts/Schema/migration/state/authorization/publication/export/API/Frontend/quality/governance证据，形成诚实READY/NOT_READY报告和machine manifest；这是P3最后一项。
+Goal: 为首次阶段计划之后的有界修订建立机器可检查的`phase-plan-amendment-owner`模式，使一个已存在、被当前event修改且拥有不可变Diff base的owner可以原子归属新增或修订的`planned/ready`成员卡，并在不削弱普通单Task和首次`phase-planning-owner`规则的前提下支持同一稳定Task ID的文件重命名。
 
-Non-goals: 不修复任何业务/Schema/test/workflow/dependency，不自动进入P4，不声明Production readiness/approval/publish/UAT。
+Non-goals: 不创建后续本地化或Exit Audit卡、不执行任何本地化/业务实现、不修改CI workflow、Schema、migration、dependency、业务测试断言、P4或Production材料。
 
-Inputs: TASK-P3-00～14 cards/implementation/closure provider链、P3 Gate raw artifacts、Milestone/总规Gate、所有OPEN/SIM/RISK边界。
+Inputs: 当前phase-aware Task discovery、首次phase-planning batch规则、TASK-P3-00与P3-14 provider-verified历史、用户批准的编号方案、现有治理validator与unit tests。
 
-Diff base: set only when this Task enters in_progress; must be the immediate full 40-character HEAD
+Diff base: 06e7f794f486ac34c505237b847462c7c7c36d44
 
-Files allowed to change: `docs/milestones/P3-exit-gate-audit-report.md`、`docs/milestones/P3-exit-gate-evidence-manifest.json`、`docs/current_phase.md`、`docs/milestones/P3-planning-workspace.md`、`docs/milestones/README.md`、`docs/tasks/P3/TASK-P3-15-p3-exit-gate-audit.md`、`docs/tasks/README.md`及`Documents to update`中的明确审计/治理文档与ignored `build/validation/TASK-P3-15-*`、`build/traceability/TASK-P3-15-report.json`。
+Files allowed to change: `scripts/check_docs.py`、`backend/tests/unit/test_check_docs.py`、ignored `build/traceability/TASK-P3-15-report.json`与`Documents to update`中的全部明确路径。
 
-Files forbidden to change: `backend/**`、`schemas/**`、`frontend/**`、migrations、fixtures/benchmarks、scripts/workflow、dependencies/locks、ADRs、P3-01～14历史卡/evidence、P4详细Task和所有Production部署/授权材料。
+Files forbidden to change: 除`backend/tests/unit/test_check_docs.py`外的`backend/**`、`schemas/**`、`frontend/**`、`backend/migrations/**`、fixtures/benchmarks、`.github/workflows/**`、`pyproject.toml`、`uv.lock`、ADRs、TASK-P3-00～14历史卡/evidence、P4详细Task及所有Production部署/授权材料。
 
-Implementation steps: 验证每Task Diff base→implementation→closure→audit head ancestry；查询/download exact required runs/artifacts并验证contents；独立运行full backend/frontend/E2E/P2 regression/P3 Gate/migrations/build/docs；审计Milestone每项正反门、state/immutability/idempotency/audit/plane；写report/manifest/gaps；提交push核验；evidence-only closure。
+Implementation steps: 增加稳定amendment-owner role；按路径中的稳定Task ID归并rename；保留首次all-added Pn-00 owner分支；对修订批次要求唯一owner、完整Diff base、成员planned/ready且无implementation SHA；读取event base中的成员原状态并拒绝active/done历史成员改写；拒绝纯删除与重复存活路径；增加正负unit test和真实event-range入口覆盖；同步治理合同并取得exact provider evidence。
 
-Outputs: P3 Exit audit report、machine manifest、provider download/topology清单、READY/NOT_READY与blocking gaps。
+Outputs: backward-compatible phase plan amendment discovery、21项以上治理unit regression、更新后的Task/phase/quality/governance合同与exact provider artifact。
 
 Documentation impact: required
 
-Documents to update: `docs/current_phase.md`、`docs/milestones/P3-planning-workspace.md`、`docs/milestones/README.md`、`docs/tasks/README.md`、`docs/contracts/README.md`、P3直接合同/Frontend/state/architecture/operations/quality结论、全部governance registries/trace/impact/inventory/docs consistency、`docs/tasks/TASK_TEMPLATE.md`、本Task卡与两份audit载体。
+Documents to update: `README.md`、`docs/README.md`、`docs/current_phase.md`、`docs/agents/AGENTS.md`、`docs/agents/reading-order-and-context-policy.md`、`docs/architecture/repository-layout.md`、`docs/governance/document-control.md`、`docs/governance/requirements-register.md`、`docs/governance/nfr-and-engineering-register.md`、`docs/governance/traceability-rules.md`、`docs/governance/traceability-matrix.md`、`docs/governance/prod-open-register.md`、`docs/governance/sim-assumption-register.md`、`docs/governance/risk-register.md`、`docs/governance/change-impact-matrix.md`、`docs/governance/document-inventory.md`、`docs/quality/documentation-consistency-checks.md`、`docs/quality/ci-gates-and-definition-of-done.md`、`docs/quality/test-strategy-and-matrix.md`、`docs/milestones/P3-planning-workspace.md`、`docs/milestones/README.md`、`docs/tasks/README.md`、`docs/tasks/TASK_TEMPLATE.md`、`docs/tasks/P3/TASK-P3-15-p3-exit-gate-audit.md`。
 
-Documentation impact rationale: Exit decision、provider拓扑、证据完整性与阶段边界必须跨索引/追踪/注册表一致，但不得改写前置事实。
+Documentation impact rationale: Task discovery语义属于仓库治理合同；新增修订owner必须同步Agent入口、阶段/Task索引、质量门、追踪规则和全部Impact Rule强制注册表，同时保持首次规划与历史provider事实不变。
 
-Change-impact matrix rows reviewed: `IMPACT-PHASE`、`IMPACT-GOVERNANCE-REGISTRY`、`IMPACT-DOCS`
+Change-impact matrix rows reviewed: `IMPACT-GOVERNANCE-VALIDATOR`、`IMPACT-TESTS`、`IMPACT-PHASE`、`IMPACT-GOVERNANCE-REGISTRY`、`IMPACT-DOCS`
 
-Traceability updates: P3 roots→TASK-P3-00～15→全部P3 Test IDs/artifacts→audit report/manifest；失败项逐一生成blocking gap/remediation，不伪造PASS。
+Traceability updates: REQ-009/NFR-TRC-001/NFR-PER-001/ENG-ARCH-001/ENG-VER-001→TASK-P3-15→TEST-TRACEABILITY-VALIDATOR/TEST-PHASE-GOVERNANCE-001→Task report/exact provider artifact；不新增root或Test ID，不把治理PASS写成业务/Exit证据。
 
-Schema changes: none；核验版本/bytes/compatibility，禁止修改。
+Schema changes: none；schema set与全部published bytes保持冻结。
 
-Migration: none；独立重放已发布migration/rollback测试，禁止新DDL。
+Migration: none；禁止新DDL或repository语义变化。
 
-Dependency changes: none；核验Python/frontend exact locks/SCA记录，禁止升级。
+Dependency changes: none；`pyproject.toml`与locks零差异。
 
-ADR impact: none；核验accepted decisions，偏差为gap而非审计内修订。
+ADR impact: none；只扩展既有治理机制，不改变业务架构或状态合同。
 
-State-machine impact: none；独立复验全部pairs/guards/authorization/audit/immutability/idempotency，禁止新增状态。
+State-machine impact: none；状态、command、error与wire contract全部冻结。
 
-Error behavior: 任一required命令/provider/artifact/contents/scope/OPEN边界失败即NOT_READY+blocking gap；NOT_RUN不得写PASS。
+Error behavior: 无owner/多owner、all-added非Pn-00 owner、owner无完整SHA、成员active/done或预填SHA、纯删除、重复存活path、历史/future phase或不唯一归属均抛`TaskDiscoveryError`并使治理非零；不得回退猜测Task。
 
-Tests: 独立重跑全部registered backend/frontend/Playwright/P3 Test IDs及P2 regression；不新增/删除/修改Test ID或断言。
+Tests: TEST-TRACEABILITY-VALIDATOR与TEST-PHASE-GOVERNANCE-001；覆盖首次规划不回归、amendment rename/new members成功、base中active/done成员降级改写拒绝、deleted-only拒绝及repository event-base读取。
 
-Benchmark impact: 复验P2 XS和P3 development observations；不形成L/XL、Production capacity/SLA。
+Benchmark impact: none；不执行或改变Benchmark，不形成容量/SLA。
 
-Simulation scenarios: 复验既有version/seed/hash，确保Production路径fail closed；不新增assumption。
+Simulation scenarios: none；不新增/修改/retire任何assumption。
 
-Acceptance commands: full Python lock/lint/type/tests/migrations/build/machine reports；frontend npm ci/lint/type/test/build/Playwright；P2 XS/Gate与P3 Gate repeat≥2；full/diff docs治理；`git diff --check`；相对Diff base的业务/Schema/frontend/test/workflow/dependency/migration禁止范围零差异。
+Acceptance commands: `uv run ruff check scripts/check_docs.py backend/tests/unit/test_check_docs.py`；`uv run pyright scripts/check_docs.py backend/tests/unit/test_check_docs.py`；`uv run pytest -q backend/tests/unit/test_check_docs.py`；`uv run python scripts/check_docs.py`；`uv run python scripts/check_docs.py --task docs/tasks/P3/TASK-P3-15-p3-exit-gate-audit.md --check-diff --report build/traceability/TASK-P3-15-report.json`；从event base动态发现同一Task并复验；`git diff --check`；禁止范围相对Diff base零差异。
 
-Artifacts: audit report/manifest、download inventory/digests、independent Gate/test/build/docs reports、Task/provider artifacts。
+Artifacts: `traceability-report.v1`、targeted test/type/lint结果与GitHub required `validate` exact artifact；无业务machine report。
 
-Provider evidence: audit implementation exact push run/job/artifact成功后才可evidence-only closure为`done`；closure自身也须外部核验exact SHA/Task/Impact/checks/issues/required context。Provider失败必须撤回READY。
+Provider evidence: implementation exact push run/job/artifact成功并下载确认SHA、Task、Diff base、五个Impact Rules、19 checks与issues=[]后，才允许同一owner发起后续计划修订closure；closure自身也须exact provider复验。失败run必须保留，Task保持`in_progress`。
 
-Completion conditions: 前置15项全部done且拓扑/provider/content完整；全部本地/CI/状态/权限/发布/导出/API/Frontend/边界Gate独立PASS；blocking gaps=[]才可READY；Task双提交provider闭环；P3保持current直到用户另行批准下一阶段。
+Completion conditions: 新旧selector正负路径与repository event-base test全部PASS；普通单Task与首次Pn-00 batch无回归；完整文档/diff治理、scope/Impact与禁止范围PASS；implementation exact provider artifact形成；后续修订批次可由本owner合法归属但不会自动实现成员Task或形成Exit/P4/Production结论。
 
-Failure handling: NOT_READY时保持P3 active，创建有界P3 remediation而非P4 Task；保留失败run/artifact/report，不修改前置实现或force-push。
+Failure handling: 任一本地或provider门失败即停止后续编号/规划修订，保持本Task`in_progress`，保留失败证据并只在本卡范围内修正；不得绕过validator、改workflow、force-push或批量启动成员。
 
-Explicitly excluded: 任何P3业务修复、P4创建/transition/implementation、Production readiness/UAT/approval/publish/deployment、PROD_OPEN closure。
+Explicitly excluded: 本地化实现与对应Task卡创建、P3 Exit Audit执行、P4创建/transition/implementation、Production readiness/UAT/approval/publish/deployment、CI workflow变更、PROD_OPEN closure。
 
-PROD_OPEN: OPEN-001～015按权威证据保持真实状态；任一未闭项继续阻止依赖它的Production声明。
+PROD_OPEN: OPEN-001～015全部保持`OPEN`；治理能力不是业务Authority或closure evidence。
 
-SIM_ASSUMPTIONS: 只审计既有ACTIVE条目；不得用Simulation结果关闭OPEN或校准Production。
+SIM_ASSUMPTIONS: SIM-ASSUMPTION-001～015全部保持`ACTIVE`；无新增定量值或生命周期变化。
 
-Rollback: audit文档可用superseding correction追加，失败/READY历史和provider evidence不删除；phase transition必须等待新的明确用户批准。
+Rollback: 回退到Diff base恢复旧selector与原planned卡；不得删除P3-14或失败provider历史。若implementation provider未通过，不得使用amendment-owner修订阶段计划。
+
+## Activation evidence
+
+2026-08-26启动前已复核`main`、`origin/main`和remote main均为`06e7f794f486ac34c505237b847462c7c7c36d44`且working tree clean；该SHA为不可变Diff base。P3-00～14均保持`done`，P3 Gate corrective/closure provider证据与失败历史不改写。本Task只建立后续文档计划修订所需治理能力，exact implementation provider形成前保持`in_progress`。
+
+## Local implementation evidence
+
+当前实现已覆盖唯一既存amendment owner、同ID rename、新planned/ready成员、base active/done成员保护、new-owner拒绝、deleted-only与重复路径边界，同时保留普通单Task和首次Pn-00 planning batch。Targeted Ruff=`PASS`、Pyright=`0 errors`、治理unit=`22 passed`；完整repository suites为既有603项加security 18项，共621项PASS。Full governance=`PASS docs=165 roots=30 trace_rows=30 tests=48 open=15 sim=15 risks=13 tasks=53`；显式与event-base动态diff均选择TASK-P3-15并为26 paths/5 Impact Rules/19 checks/0 issues。`git diff --check`与业务/Schema/Frontend/migration/workflow/dependency/P3-00～14禁止范围为PASS/零差异。Implementation exact provider尚未形成，因此Task继续`in_progress`且后续计划修订未执行。

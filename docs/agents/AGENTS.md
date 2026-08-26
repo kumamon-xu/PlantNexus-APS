@@ -90,6 +90,8 @@ uv run python scripts/check_docs.py --discover-task-from <event-base-sha> --chec
 
 event range必须恰好归属一个 current-phase Task Card；若没有 changed card，只允许回退到仓库中唯一 `in_progress` current Task。历史/未来 Task、多个 current Task、无可归属 Task或非完整 SHA均失败，禁止自由文本 skip。
 
+多卡只允许两种显式例外：首次阶段计划必须是all-added `TASK-Pn-00` / `phase-planning-owner`；后续阶段计划修订必须由唯一已存在、被event触及且有完整Diff base的`phase-plan-amendment-owner`归属。修订成员只能为`phase-plan-member`且保持`planned/ready`、不得预填implementation SHA；逻辑Task可按稳定ID重命名，但不得纯删除、留下重复路径或改写base中active/done成员。任一条件不满足必须停止，不能回退猜测owner。
+
 校验器检查 ID、Task 依赖、traceability，以及 `Diff base..HEAD` 已提交变更与 working tree 并集对应的 change-impact 声明，但不代替业务 Contract、Schema、Solver/Validator correctness、Scenario 或 Phase Gate 验收。
 
 校验器从 `docs/current_phase.md` front matter读取当前 `Pn`：保留 prior-phase terminal Task，允许 current-phase详细卡，拒绝 future-phase详细卡。不得在 Agent、Task或 CI中另建硬编码 current phase事实源；CI event base只用于发现 Task，不取代卡片中的 `Diff base`。

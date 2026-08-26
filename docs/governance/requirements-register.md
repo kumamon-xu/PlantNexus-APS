@@ -12,6 +12,10 @@ registry_version: 1.0.0
 
 # 核心需求注册表
 
+## TASK-P3-15 allocation review
+
+REQ-009新增有界治理分配：以唯一amendment owner、稳定Task ID、base成员状态和fail-closed删除/重复检查支持已批准的阶段计划修订。它不形成本地化、Exit、P4或Production行为；所有15个root Requirement继续`ALLOCATED`，表结构、状态语义与`registry_version=1.0.0`不变。
+
 ## TASK-P3-14 allocation review
 
 REQ-004/005/006/007/009现连接两轮完整P3 workspace Gate、四类exact rejection、P2 regression、Frontend双replay与`p3-vertical-slice-report.v1`。Corrective artifact `9593460266`已按exact SHA复验PASS/0 gaps与Task 56/0/8/19/0；所有15个root Requirement继续为`ALLOCATED`，不升级为Production fulfilled，`registry_version=1.0.0`不变。P3-15、P4及Production不继承该Gate状态。

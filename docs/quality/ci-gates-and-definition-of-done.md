@@ -11,6 +11,10 @@ last_reviewed: 2026-08-26
 
 # CI Gate 与 Definition of Done
 
+## TASK-P3-15 required governance Gate
+
+Workflow不修改，继续把push event `before`传给`--discover-task-from`。本Task的required `validate`必须由单一changed TASK-P3-15归属并复验治理unit suite、full docs与owner Diff base范围；artifact中的Task report须绑定exact implementation SHA、`06e7f794f486ac34c505237b847462c7c7c36d44`、五个Impact Rules、19/19 checks和`issues=[]`。Local PASS不能代替provider；implementation provider成功前不得用新模式提交多卡修订，成功也不形成业务、P3 Exit、P4或Production证据。
+
 ## TASK-P3-14 required Gate
 
 Required `validate`新增两次隔离P3 Chromium replay、Frontend Gate聚合与Python P3 Vertical Slice Gate；既有P2 Gate、XS、全部Python/Frontend/security/SCA/license/Compose/build/docs步骤保持required。DoD要求implementation exact SHA的job每一步success、未过期artifact内P3 Gate 14/14且0 gaps、Frontend两轮12/12、Task report exact base/8 Impact rows/0 issues；随后只做evidence-only closure并再次核验closure exact provider。P3-15不得由本Gate自动启动。

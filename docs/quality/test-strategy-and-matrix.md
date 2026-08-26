@@ -12,6 +12,10 @@ registry_version: 1.0.0
 
 # 测试策略与 Test Matrix
 
+## TASK-P3-15 governance test allocation
+
+TEST-TRACEABILITY-VALIDATOR与TEST-PHASE-GOVERNANCE-001增加phase-plan amendment覆盖：既存owner+rename+new planned members成功；base中done成员即使被降级为planned也拒绝；deleted-only逻辑Task拒绝；repository discovery必须读取event-base状态。首次phase-planning owner与普通单Task测试保持回归。没有新增Test ID、业务测试、Frontend断言或CI workflow；48个Test ID与`registry_version=1.0.0`不变，exact provider前只标local implementation evidence。
+
 ## TASK-P3-14 local Gate evidence
 
 `TEST-P3-VERTICAL-SLICE-001`现由Backend两轮18 stage/144 subordinate checks、Frontend两轮12/12 Chromium、P2 Gate regression、4个exact exit rejection及14/14 aggregate checks覆盖；本地与corrective provider报告均为PASS且`blocking_gaps=[]`。P3-15 independent Audit不能继承该结论。

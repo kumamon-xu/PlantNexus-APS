@@ -11,6 +11,10 @@ last_reviewed: 2026-08-26
 
 # 目标仓库结构
 
+## TASK-P3-15 governance-only delta
+
+本Task只修改`scripts/check_docs.py`、`backend/tests/unit/test_check_docs.py`与命中治理文档，增加phase-plan amendment discovery与回归。没有新增目录、业务模块、Schema、migration、dependency、workflow、Frontend、P4或Production路径；ignored `build/traceability/TASK-P3-15-report.json`不进入仓库结构或文档inventory。
+
 ## TASK-P3-14 layout delta
 
 本Task仅新增`backend/app/application/p3_gate_report.py`、两份Backend Gate test、`frontend/playwright.p3-gate.config.ts`与`frontend/scripts/p3-gate-evidence.mjs`，并更新既有CI与命中文档。报告、Playwright输出和provider下载均位于ignored `build/`；没有新增Schema、migration、dependency、fixture、runtime service、P4或Production路径。

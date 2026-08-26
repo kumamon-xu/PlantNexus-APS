@@ -45,3 +45,5 @@ last_reviewed: 2026-08-19
 `scripts/check_docs.py` 会从 `docs/current_phase.md` 读取当前 `Pn`，保留 prior-phase terminal Task、允许 current-phase详细卡并拒绝 future-phase详细卡；同时检查文档结构、注册 ID、Task 引用、逐根 traceability，以及 `--check-diff` 下 `Diff base..HEAD` 与 working tree并集的 change-impact Rule ID/必审文档覆盖。Agent 必须在 Task进入 `in_progress` 时先记录完整不可变 `Diff base`。P1及以后卡还必须有 `Completion conditions`。
 
 CI 的 `--discover-task-from <event-base-sha>`只从一次 event range选择唯一 current-phase Task Card，随后仍以卡片 `Diff base`审计真实 Task范围；零个/多个/非 current Task均不得猜测。校验器只能验证已经编码的治理规则；Agent仍须完整读取当前 Task引用的语义 Contract/Constraint/ADR，并对机器规则未表达的语义影响负责。
+
+阶段计划形成后如需改号、增卡或重命名，必须先有独立治理Task和用户明确授权。合法修订range只允许唯一`phase-plan-amendment-owner`；成员保持`planned/ready`且无implementation SHA，稳定Task ID用于识别rename，base中active/done成员与删除历史均不可改写。该owner只归属规划diff，不授权自动执行任何成员。

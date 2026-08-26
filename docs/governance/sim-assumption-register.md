@@ -12,6 +12,10 @@ registry_version: 1.0.0
 
 # SIM_ASSUMPTION 注册表
 
+## TASK-P3-15 review
+
+治理selector/unit tests不生成Scenario/Profile/seed、业务数值、browser fixture或性能观测；没有新增、修改或retire assumption。SIM-ASSUMPTION-001～015全部继续`ACTIVE`，数量15且`registry_version=1.0.0`不变，治理PASS不得外推Production。
+
 ## TASK-P3-14 review
 
 Gate复用已登记的P2 versioned synthetic inputs与`SIM-P3-HUMAN-CONTROL-001@1.0.0`，只增加两轮隔离重放和semantic comparison，不引入新的定量值、fixture identity或默认策略。Artifact `9593460266`复验双Backend/Chromium replay但不改变假设生命周期；SIM-ASSUMPTION-001～015全部继续`ACTIVE`，数量15且`registry_version=1.0.0`不变，browser/runtime observations不成为Production事实或SLA。

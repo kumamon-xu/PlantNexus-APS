@@ -5,10 +5,12 @@ from __future__ import annotations
 import re
 import unittest
 from pathlib import Path
+from tempfile import TemporaryDirectory
 from unittest.mock import Mock
 
 from scripts.check_docs import (
     ImpactRule,
+    PHASE_PLAN_AMENDMENT_OWNER_ROLE,
     PHASE_PLAN_MEMBER_ROLE,
     PHASE_PLANNING_OWNER_ROLE,
     RepositoryValidator,
@@ -301,6 +303,114 @@ class TraceabilityValidatorTests(unittest.TestCase):
                 task_texts={owner: owner_text, member: member_text},
             )
 
+    def test_phase_plan_amendment_selects_existing_owner_and_allows_rename(self) -> None:
+        first_id = "TASK-" + "P3-16"
+        second_id = "TASK-" + "P3-17"
+        old_owner = "docs/tasks/P3/TASK-P3-15-p3-exit-gate-audit.md"
+        owner = "docs/tasks/P3/TASK-P3-15-phase-plan-amendment-governance.md"
+        first = f"docs/tasks/P3/{first_id}-localization.md"
+        second = f"docs/tasks/P3/{second_id}-p3-exit-gate-audit.md"
+        texts = {
+            owner: (
+                "---\ndoc_id: TASK-P3-15\nstatus: done\n---\n"
+                f"Task batch role: {PHASE_PLAN_AMENDMENT_OWNER_ROLE}\n"
+                f"Diff base: {'a' * 40}\n"
+            ),
+            first: (
+                f"---\ndoc_id: {first_id}\nstatus: planned\n---\n"
+                f"Task batch role: {PHASE_PLAN_MEMBER_ROLE}\n"
+                "Diff base: set only when the Task enters in_progress\n"
+            ),
+            second: (
+                f"---\ndoc_id: {second_id}\nstatus: ready\n---\n"
+                f"Task batch role: {PHASE_PLAN_MEMBER_ROLE}\n"
+                "Diff base: set only when the Task enters in_progress\n"
+            ),
+        }
+
+        selected = select_changed_task_path(
+            (old_owner, owner, first, second),
+            "P3",
+            added_paths=(owner, first, second),
+            task_texts=texts,
+            base_task_texts={
+                old_owner: "---\ndoc_id: TASK-P3-15\nstatus: in_progress\n---\n"
+            },
+        )
+
+        self.assertEqual(selected, owner)
+
+    def test_phase_plan_amendment_rejects_completed_member_rewrite(self) -> None:
+        owner = "docs/tasks/P3/TASK-P3-15-phase-plan-amendment-governance.md"
+        member = "docs/tasks/P3/TASK-P3-14-vertical-slice-gate.md"
+        texts = {
+            owner: (
+                "---\ndoc_id: TASK-P3-15\nstatus: done\n---\n"
+                f"Task batch role: {PHASE_PLAN_AMENDMENT_OWNER_ROLE}\n"
+                f"Diff base: {'a' * 40}\n"
+            ),
+            member: (
+                "---\ndoc_id: TASK-P3-14\nstatus: planned\n---\n"
+                f"Task batch role: {PHASE_PLAN_MEMBER_ROLE}\n"
+                "Diff base: set only when the Task enters in_progress\n"
+            ),
+        }
+
+        with self.assertRaisesRegex(TaskDiscoveryError, "active or completed"):
+            select_changed_task_path(
+                (owner, member),
+                "P3",
+                added_paths=(),
+                task_texts=texts,
+                base_task_texts={
+                    owner: "---\ndoc_id: TASK-P3-15\nstatus: in_progress\n---\n",
+                    member: "---\ndoc_id: TASK-P3-14\nstatus: done\n---\n",
+                },
+            )
+
+    def test_phase_plan_amendment_rejects_deleted_logical_task(self) -> None:
+        owner = "docs/tasks/P3/TASK-P3-15-phase-plan-amendment-governance.md"
+        deleted = "docs/tasks/P3/" + "TASK-" + "P3-16-obsolete-plan.md"
+        owner_text = (
+            "---\ndoc_id: TASK-P3-15\nstatus: done\n---\n"
+            f"Task batch role: {PHASE_PLAN_AMENDMENT_OWNER_ROLE}\n"
+            f"Diff base: {'a' * 40}\n"
+        )
+
+        with self.assertRaisesRegex(TaskDiscoveryError, "may not delete"):
+            select_changed_task_path(
+                (owner, deleted),
+                "P3",
+                added_paths=(),
+                task_texts={owner: owner_text},
+            )
+
+    def test_phase_plan_amendment_rejects_new_owner(self) -> None:
+        member_id = "TASK-" + "P3-16"
+        owner = "docs/tasks/P3/TASK-P3-15-amendment-governance.md"
+        member = f"docs/tasks/P3/{member_id}-localization.md"
+        owner_text = (
+            "---\ndoc_id: TASK-P3-15\nstatus: in_progress\n---\n"
+            f"Task batch role: {PHASE_PLAN_AMENDMENT_OWNER_ROLE}\n"
+            f"Diff base: {'a' * 40}\n"
+        )
+        member_text = (
+            f"---\ndoc_id: {member_id}\nstatus: planned\n---\n"
+            f"Task batch role: {PHASE_PLAN_MEMBER_ROLE}\n"
+            "Diff base: set only when the Task enters in_progress\n"
+        )
+
+        with self.assertRaisesRegex(TaskDiscoveryError, "already exist"):
+            select_changed_task_path(
+                (owner, member),
+                "P3",
+                added_paths=(owner,),
+                task_texts={owner: owner_text, member: member_text},
+                base_task_texts={
+                    member: f"---\ndoc_id: {member_id}\nstatus: planned\n---\n"
+                },
+            )
+
     def test_repository_discovery_uses_an_immutable_event_range(self) -> None:
         change_base = "a" * 40
         task_path = "docs/tasks/P1/TASK-P1-01-phase-governance-and-ci-handoff.md"
@@ -333,6 +443,55 @@ class TraceabilityValidatorTests(unittest.TestCase):
 
         with self.assertRaisesRegex(TaskDiscoveryError, "40-character"):
             validator.discover_changed_task_path("HEAD", "P1")
+
+    def test_repository_discovery_loads_base_statuses_for_amendment(self) -> None:
+        change_base = "a" * 40
+        member_id = "TASK-" + "P3-16"
+        owner = "docs/tasks/P3/TASK-P3-15-amendment-governance.md"
+        member = f"docs/tasks/P3/{member_id}-localization.md"
+        owner_text = (
+            "---\ndoc_id: TASK-P3-15\nstatus: done\n---\n"
+            f"Task batch role: {PHASE_PLAN_AMENDMENT_OWNER_ROLE}\n"
+            f"Diff base: {'b' * 40}\n"
+        )
+        member_text = (
+            f"---\ndoc_id: {member_id}\nstatus: planned\n---\n"
+            f"Task batch role: {PHASE_PLAN_MEMBER_ROLE}\n"
+            "Diff base: set only when the Task enters in_progress\n"
+        )
+
+        with TemporaryDirectory() as temporary_directory:
+            root = Path(temporary_directory)
+            for path, text in ((owner, owner_text), (member, member_text)):
+                target = root / path
+                target.parent.mkdir(parents=True, exist_ok=True)
+                target.write_text(text, encoding="utf-8")
+
+            validator = object.__new__(RepositoryValidator)
+            validator.root = root
+            validator.git_output = Mock(
+                side_effect=(
+                    change_base,
+                    "",
+                    f"{owner}\n{member}\n",
+                    "",
+                    f"{owner}\n{member}\n",
+                    "---\ndoc_id: TASK-P3-15\nstatus: in_progress\n---\n",
+                    f"---\ndoc_id: {member_id}\nstatus: planned\n---\n",
+                )
+            )
+
+            selected = validator.discover_changed_task_path(change_base, "P3")
+
+        self.assertEqual(selected, owner)
+        validator.git_output.assert_any_call(
+            "ls-tree",
+            "-r",
+            "--name-only",
+            change_base,
+            "--",
+            "docs/tasks/P3",
+        )
 
 if __name__ == "__main__":
     unittest.main()

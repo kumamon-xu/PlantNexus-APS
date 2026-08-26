@@ -11,6 +11,12 @@ last_reviewed: 2026-08-26
 
 # 当前阶段：P3 — Planning Workspace
 
+## TASK-P3-15 启动边界
+
+用户于2026-08-26批准P3末段编号方案，并授权先补齐阶段计划修订治理能力。启动前重新核验`main`、`origin/main`与remote main均为`06e7f794f486ac34c505237b847462c7c7c36d44`、ahead/behind=`0/0`且working tree clean；TASK-P3-00～14均为`done`，P3-14 corrective/closure provider及失败历史保持原样。该SHA现冻结为TASK-P3-15不可变Diff base。
+
+本Task只允许修改`scripts/check_docs.py`、治理unit test与逐字列明的治理文档，建立唯一`phase-plan-amendment-owner`、稳定Task ID rename归并、planned/ready成员、base状态保护和删除/重复路径拒绝。CI workflow、业务代码、Schema、migration、dependency、Frontend、P3-00～14、P4与Production全部冻结。Implementation exact required `validate`/artifact下载复验成功前，不创建后续本地化/Exit Audit卡，不执行本地化，也不作P3 Exit结论。
+
 ## TASK-P3-14 完成边界
 
 用户于2026-08-26明确授权执行TASK-P3-14。启动时`main=origin/main=6a3e02f00bf46f19915cb59c3c4af7daaac95be4`、ahead/behind=`0/0`且working tree clean；P3-01～13全部`done`，13组前序Diff base→implementation→closure→HEAD祖先关系、26个required `validate` run/job与26个未过期artifact均已逐项下载复核，Task/SHA/base/Impact Rules/checks/issues一致。因此该SHA冻结为本Task不可变Diff base，TASK-P3-14当时进入`in_progress`。
@@ -37,7 +43,7 @@ Corrective implementation `54a25646053979a69734a3148030830d49c04c1e`的push run 
 
 P2-14 audit implementation `65c556789f176ad9de55523d6420737bb60f933f`的GitHub push run `32677741558` / required `validate` job `97288829348` / artifact `9503227240`成功，artifact digest=`sha256:fbb76f0ab44d3bdcff2d31e70f9698af84e10e48ee57ae611eef8529a288240e`；evidence-only closure `80c403384d1e171258cf874d26605d0d22aff1b2`的run `32678248961` / job `97290201234` / artifact `9503372291`也成功，digest=`sha256:673412905b7420660d1e9f07755fcda6291f85f8f2bd926b4bf31a0a6bd1bd0c`。下载检查的两份artifact均含20份可解析JSON，Task/SHA/Impact Rules/checks/issues与对应提交一致且0 issue。规划启动时`main=origin/main=80c403384d1e171258cf874d26605d0d22aff1b2`、ahead/behind=`0/0`且working tree clean，因此transition前提一致。
 
-P2 Milestone现为`completed`，P3 Milestone为`active`。`TASK-P3-00`～`TASK-P3-14`均为`done`；P3-15保持`planned`且不会自动启动。
+P2 Milestone现为`completed`，P3 Milestone为`active`。`TASK-P3-00`～`TASK-P3-14`均为`done`；TASK-P3-15按新的明确授权为`in_progress`，只形成阶段计划修订治理支持，不自动创建或启动后续成员。
 
 ## 当前目标
 

@@ -12,6 +12,10 @@ registry_version: 1.0.0
 
 # 追踪矩阵
 
+## TASK-P3-15 governance trace slice
+
+REQ-009、NFR-TRC-001/NFR-PER-001及ENG-ARCH-001/ENG-VER-001现连接TASK-P3-15的amendment-owner selector、repository event-base读取、TEST-TRACEABILITY-VALIDATOR/TEST-PHASE-GOVERNANCE-001与`traceability-report.v1`。Implementation exact provider形成前该slice为`LOCAL_PASS_PROVIDER_PENDING`；它不新增Test ID或root row，不把计划修订写成本地化/Exit/P4/Production证据。30 roots/30 rows、48 Test IDs与`registry_version=1.0.0`不变。
+
 ## TASK-P3-14 Gate trace slice
 
 REQ-004/005/006/007/009、NFR-COR/DET/TRC/ISO/REL/SEC/OBS/PER/HUM及ENG-ARCH/VAL/ERR/VER/LOG现连接TASK-P3-14的Python/Frontend Gate、两轮raw replay、semantic projection、four rejection contract、CI命令与Task report。首个provider run/job=`32930677030`/`98062166642`因fixture SHA mismatch失败且artifact count=0；corrective `54a25646053979a69734a3148030830d49c04c1e` / artifact `9593460266`已复验37 JSON、P3 14/14/0 gaps、三组12/12 Playwright及Task 56/0/8/19/0，故`TEST-P3-VERTICAL-SLICE-001`为`PROVIDER_VERIFIED`且TASK-P3-14=`done`。48 IDs、30 roots/rows和`registry_version=1.0.0`均不变。P3-15 Exit Audit仍`NOT_PERFORMED`，P4与Production未形成。

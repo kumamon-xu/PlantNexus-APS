@@ -11,6 +11,10 @@ last_reviewed: 2026-08-26
 
 # Task Card 索引
 
+## TASK-P3-15 activation
+
+用户已批准P3末段编号方案。TASK-P3-15从`06e7f794f486ac34c505237b847462c7c7c36d44`启动并转为`phase-plan-amendment-owner`，只实现后续计划修订所需的治理selector、负向测试与文档合同。Implementation exact provider成功前，不新增后续成员卡、不执行本地化或Exit Audit；P3-00～14及其provider/失败历史保持只读。
+
 ## TASK-P3-14 evidence closure
 
 用户于2026-08-26单独授权TASK-P3-14。P3-01～13的done/provider/ancestry及clean synchronized `6a3e02f00bf46f19915cb59c3c4af7daaac95be4`均复核通过并冻结为Diff base；Task只执行P3 Gate编排与证据。P3-15 Exit Audit、P4与Production保持未启动。
@@ -70,7 +74,7 @@ last_reviewed: 2026-08-26
 | [TASK-P3-12](P3/TASK-P3-12-gantt-resource-load-and-version-comparison-ui.md) | Gantt/Load/Comparison UI | P3-05/10/11 | `done` |
 | [TASK-P3-13](P3/TASK-P3-13-human-control-actions-and-ui-e2e.md) | Human control actions/UI E2E | P3-06～12 | `done` |
 | [TASK-P3-14](P3/TASK-P3-14-p3-vertical-slice-gate-evidence.md) | P3 vertical-slice Gate evidence | P3-01～13 | `done` |
-| [TASK-P3-15](P3/TASK-P3-15-p3-exit-gate-audit.md) | Independent P3 Exit Gate Audit | P3-14 | `planned` |
+| [TASK-P3-15](P3/TASK-P3-15-p3-exit-gate-audit.md) | P3 Phase Plan Amendment Governance Support | P3-14 | `in_progress` |
 
 用户已于2026-08-24单独授权并完成P3-01/02，随后明确授权执行P3-03。P3-03只形成migration、plane-scoped repositories、既有pair的CAS/lease/transaction原语、CI/tests和治理，不执行审批、发布、导出或P3-04+；P3-15必须最后执行且只审计冻结事实。P3不得实现P4 ExecutionEvent/Replan/OBJ-002/freeze/ChangeReport/Execution Simulator，内部Simulation publish也不构成Production approval/readiness。
 
@@ -104,7 +108,7 @@ TASK-P3-08已通过16 focused、577 full、Ruff/Pyright、8/8 publication machin
 
 状态使用`planned`、`ready`、`in_progress`、`blocked`、`done`、`cancelled`。进入`in_progress`前必须确认全部依赖`done`、用户授权、允许范围与文档影响，再把即时完整40字符HEAD写入Diff base；P2 Task还必须明确Start gate、Dependency changes、ADR impact和Provider evidence。
 
-普通CI event range仍只能变更一张current-phase Task Card。唯一例外是初始phase-planning batch：必须由新建`TASK-Pn-00`、`Task batch role: phase-planning-owner`、有效Diff base且`in_progress/done`的唯一owner归属；其他卡必须同range新建、role=`phase-plan-member`、保持`planned/ready`且不得预填implementation SHA。历史卡、既有成员、多个owner或active/done成员均硬失败。选择owner后仍按owner Diff base检查全部scope/Impact Rule。
+普通CI event range仍只能变更一张current-phase Task Card。首次phase-planning batch例外必须由新建`TASK-Pn-00`、role=`phase-planning-owner`、有效Diff base且`in_progress/done`的唯一owner归属；其他卡必须同range新建、role=`phase-plan-member`、保持`planned/ready`且不得预填implementation SHA。后续修订例外必须有唯一已存在且被event触及的`phase-plan-amendment-owner`；逻辑Task按稳定ID归并rename，成员只能保持`planned/ready`、不得预填SHA，base中active/done成员、纯删除、重复存活路径、历史/future卡或多owner均硬失败。选择任一owner后仍按其Diff base检查完整scope/Impact Rule。
 
 TASK-P2-00～14已`done`。P2-03的Diff base固定为`f73f8c90af94d3c9b05ecc10b6c999594a3b7d66`且ADR-0011先于dependency变更接受；P2-04～14的implementation及exact provider evidence均已闭环。P2 Exit Gate=`READY`；“current phase仍为P2”只描述用户transition决定前的历史边界，现已由上方P3索引取代且历史证据不改写。
 

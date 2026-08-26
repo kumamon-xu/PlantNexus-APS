@@ -12,6 +12,10 @@ registry_version: 1.0.0
 
 # 项目风险注册表
 
+## TASK-P3-15 risk review
+
+唯一amendment owner、base active/done保护、纯删除/重复路径拒绝和stable-ID rename降低阶段计划被错误归属或历史被改写的治理暴露；exact provider前禁止使用新模式又约束RISK-008/013的证据漂移。它不降低业务、供应链、authority、runtime或Production风险，RISK-001～013全部保持`MONITORED`，severity/status与`registry_version=1.0.0`不变。
+
 ## TASK-P3-14 risk review
 
 双Backend/Chromium replay、raw evidence retention、stable semantic projection、exact rejection和P2 regression继续约束RISK-002/003/006～009/012/013；locked SCA/license与无dependency delta继续约束RISK-011。首个provider run `32930677030`的fixture SHA mismatch（611/5、artifact count=0）作为RISK-006/008的真实早期信号保留；corrective artifact `9593460266`已复验限定test-evidence修复与完整Gate。当前仍没有真实数据、identity、gateway、external storage、distributed failure或Production规模证据；RISK-001～013全部保持`MONITORED`，不新增/关闭/降级，`registry_version=1.0.0`不变。

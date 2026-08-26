@@ -11,6 +11,10 @@ last_reviewed: 2026-08-26
 
 # 文档一致性自动检查合同
 
+## TASK-P3-15 amendment-governance contract
+
+普通event唯一Task和首次all-added Pn-00 batch语义保持不变。新增修订模式要求唯一`phase-plan-amendment-owner`、完整Diff base、稳定逻辑Task ID、成员`planned/ready`且无implementation SHA；event base中active/done成员改写、deleted-only、重复存活路径、多owner与历史/future卡必须非零。Unit regression覆盖selector与repository event-base读取；本Task完整diff预期只命中`IMPACT-GOVERNANCE-VALIDATOR/TESTS/PHASE/GOVERNANCE-REGISTRY/DOCS`五行、19 checks与0 issues。Exact provider前状态为`in_progress`，后续计划修订不得提前使用。
+
 ## TASK-P3-14 governance contract
 
 Full docs仍应为165 Markdown、30 roots、30 trace rows、48 Test IDs、15 OPEN、15 SIM、13 risks与53 Tasks。Task diff必须以`6a3e02f00bf46f19915cb59c3c4af7daaac95be4`为base，只出现逐字allow-list路径并精确命中`APPLICATION/STATE/FRONTEND/INFRA/TESTS/PHASE/GOVERNANCE-REGISTRY/DOCS`八行；报告须为0 issues。Implementation与closure分别复验，不得把ignored Gate/provider文件计入受管路径。
@@ -82,7 +86,7 @@ uv run python -m unittest discover -s backend/tests/unit -p "test_check_docs.py"
 10. `PROD_OPEN-*` 关闭时包含权威来源、证据、决定日期、影响面和迁移/回放结论；
 11. `PROD_OPEN-*` 与 `SIM_ASSUMPTION-*` 没有混用，模拟假设不能关闭生产开放项；
 12. 历史 Phase只保留 `done`/`cancelled` Task，当前 Phase允许详细 Task Card，未来 Phase只能保留 Milestone。
-13. CI event base为完整、存在且是HEAD祖先的SHA；range内历史/未来/phase错位/多个Task Card拒绝，不能硬编码旧Task或自由文本skip。
+13. CI event base为完整、存在且是HEAD祖先的SHA；普通range内历史/未来/phase错位/多个Task Card拒绝，不能硬编码旧Task或自由文本skip。多卡只允许all-added Pn-00 initial owner或唯一既存amendment owner；后者还必须执行稳定ID rename、base status、member SHA与删除/重复路径检查。
 
 ## CI 分层
 

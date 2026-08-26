@@ -113,4 +113,6 @@ CI event attribution使用 `--discover-task-from <40-char-event-base>`：只允�
 
 ## P3 planning control
 
-P3首次batch只允许TASK-P3-00为唯一phase-planning owner，P3-01～15为同range新建planned members；P0～P2卡保持terminal，P4+禁止详细卡。每个P3 member以后必须由新用户授权、clean synchronized/provider-verified HEAD和新Diff base单独激活；不允许用本batch批量实现。P3-15必须最后独立审计，READY后仍需用户批准才能进入P4。
+P3首次batch只允许TASK-P3-00为唯一phase-planning owner，原P3-01～15为同range新建planned members；P0～P2卡保持terminal，P4+禁止详细卡。每个P3 member以后必须由新用户授权、clean synchronized/provider-verified HEAD和新Diff base单独激活；不允许用本batch批量实现。
+
+用户批准后续计划修订时，event range必须由唯一已存在的`phase-plan-amendment-owner`归属；owner为`in_progress/done`并持有完整不可变Diff base。其他逻辑Task只能是`phase-plan-member`、`planned/ready`且无implementation SHA；允许稳定Task ID不变的文件重命名，禁止纯删除、重复存活路径和对base中active/done成员的改写。修订owner的provider成功不等于成员实现授权。独立Exit Audit仍须作为P3最后一项，READY后也需用户批准才能进入P4。

@@ -11,6 +11,10 @@ last_reviewed: 2026-08-26
 
 # Milestone 索引
 
+## TASK-P3-15 amendment-governance activation
+
+用户于2026-08-26批准P3末段编号方案。TASK-P3-15从clean synchronized `06e7f794f486ac34c505237b847462c7c7c36d44`启动，只实现阶段计划修订owner、rename/成员/base状态保护与治理回归；后续本地化和独立Exit Audit卡必须等待该implementation exact provider成功后再原子登记。P3保持`active`，P3-00～14与全部失败/成功provider历史不改写，P4和Production未启动。
+
 ## TASK-P3-14 evidence closure
 
 用户于2026-08-26单独授权TASK-P3-14；P3-01～13的done状态、ancestry、26组implementation/closure exact required provider及clean synchronized `6a3e02f00bf46f19915cb59c3c4af7daaac95be4`均复核通过，该SHA冻结为Diff base。P3 Milestone继续`active`；P3-15/P4/Production不自动启动。
@@ -44,7 +48,7 @@ P1当前状态：[`P1 — Data & Snapshot`](P1-data-and-snapshot.md)为`complete
 
 P2当前状态：[`P2 — CP-SAT Vertical Slice`](P2-cp-sat-vertical-slice.md)为`completed`。TASK-P2-00～14均已闭环为`done`；P2 Exit Gate=`READY`且0 gaps。用户于2026-08-24在复核exact provider evidence、提交拓扑与clean synchronized baseline后明确批准P2→P3。
 
-P3当前状态：[`P3 — Planning Workspace`](P3-planning-workspace.md)为`active`。TASK-P3-00～14均为`done`；P3-15保持`planned`。P3-15必须最后独立执行Exit Gate Audit；P3 Gate、HTTP/internal Simulation export或Frontend provider evidence均不表示external、P4或Production。
+P3当前状态：[`P3 — Planning Workspace`](P3-planning-workspace.md)为`active`。TASK-P3-00～14均为`done`；TASK-P3-15为`in_progress`的phase-plan amendment governance support。批准的本地化与独立Exit Audit尚未登记或执行；P3 Gate、HTTP/internal Simulation export、Frontend或治理provider evidence均不表示external、P4或Production。
 
 TASK-P3-04 implementation `a9be974855bb825784d639b7f6675e5a33e4273d`的run/job/artifact=`32700005280`/`97349447107`/`9510215582`精确复现35 focused、515 full、8/8 lifecycle、23/23 JSON PASS与45 committed/0 working paths、8 rows、19 checks、0 issues，故本closure标为`done`。该证据只形成reviewable ScheduleVersion，不形成approval、publish、P4或Production readiness。
 

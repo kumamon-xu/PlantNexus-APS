@@ -11,6 +11,10 @@ last_reviewed: 2026-08-26
 
 # P3 — Planning Workspace
 
+## TASK-P3-15 amendment-governance activation
+
+用户已批准P3末段编号调整；TASK-P3-15不再承担最终Audit，而先以`06e7f794f486ac34c505237b847462c7c7c36d44`为不可变Diff base实现阶段计划修订owner。该implementation只改变治理selector、unit tests与命中文档；成功的exact provider evidence形成前，不登记后续本地化/Exit Audit成员。P3-00～14及其失败/成功provider历史保持只读，Milestone继续`active`，P4与Production未启动。
+
 ## TASK-P3-14 provider-verified Gate boundary
 
 用户于2026-08-26单独授权TASK-P3-14；P3-01～13的done状态、提交祖先拓扑、26个exact required `validate`/未过期artifact和clean synchronized `6a3e02f00bf46f19915cb59c3c4af7daaac95be4`均已复核，该SHA冻结为Diff base。Task只允许Gate编排、双Backend/Chromium replay、四类exact rejection、semantic projection、focused tests、required CI evidence和治理同步。
@@ -33,7 +37,7 @@ Local implementation Gate和首个corrective implementation `13e16e36fc0a06a079d
 
 用户于2026-08-24在核验TASK-P2-00～14全部`done`、P2 Exit Gate overall=`READY`/`blocking_gaps=[]`、audit implementation/closure拓扑与exact GitHub required `validate`/artifact后，明确批准P2→P3 transition。P2为`completed`，P3为当前`active` Milestone。
 
-TASK-P3-00已完成Milestone激活、Task规划与文档治理，TASK-P3-01～14均为`done`。P3-15保持`planned`；Gate通过不会自动授权Exit Audit或后续阶段。
+TASK-P3-00已完成Milestone激活、Task规划与文档治理，TASK-P3-01～14均为`done`。TASK-P3-15按新授权为`in_progress`的修订治理支持；Gate通过与治理支持均不会自动授权本地化、Exit Audit或后续阶段。
 
 ## Outcome
 
@@ -60,7 +64,7 @@ TASK-P3-00已完成Milestone激活、Task规划与文档治理，TASK-P3-01～14
 | 12 | TASK-P3-12 | Gantt/Resource Load/Comparison UI | P3-05/10/11 | `done` |
 | 13 | TASK-P3-13 | Human control actions与UI E2E | P3-06～12 | `done` |
 | 14 | TASK-P3-14 | 完整P3 vertical-slice Gate evidence | P3-01～13 | `done` |
-| 15 | TASK-P3-15 | 独立P3 Exit Gate Audit | P3-14 | `planned` |
+| 15 | TASK-P3-15 | Phase plan amendment governance support | P3-14 | `in_progress` |
 
 ## Dependency graph
 
@@ -69,10 +73,10 @@ P3-00 → P3-01 → P3-02 → P3-03 → P3-04 → P3-05 → P3-06
                               ├────→ P3-07 → P3-08 → P3-09
                               └──────────────────────────┘
 P3-05/06/07/08/09 → P3-10 → P3-11 → P3-12 → P3-13
-P3-01～13 → P3-14 → P3-15
+P3-01～13 → P3-14 → P3-15 → planned localization → independent Exit Audit
 ```
 
-P3-07可在P3-04之后与read-model支线并行准备；P3-08必须等待authorization/audit service，P3-09必须等待可发布版本语义。API必须组合全部application service后形成；UI action E2E必须等待read-only与command两条链。P3-15只审计冻结证据，不修实现。
+P3-07可在P3-04之后与read-model支线并行准备；P3-08必须等待authorization/audit service，P3-09必须等待可发布版本语义。API必须组合全部application service后形成；UI action E2E必须等待read-only与command两条链。TASK-P3-15只负责修订治理；批准的本地化成员完成后，独立Exit Audit才可最后审计冻结证据且不得修实现。
 
 ## Exit Gate
 
@@ -88,7 +92,7 @@ Gate还必须证明：版本/比较/read model lineage一致；所有command产�
 - `PUBLISHED` immutable；任何编辑/锁变更都创建新DRAFT，不能原地修改或由UI复制Solver/Validator逻辑。
 - OPEN-010关闭前只允许authority-neutral capability与default-deny；不得声称已确定真实审批责任、组织角色或外部系统authority。
 - Production channel、真实MES/ERP侧效应、生产密钥/部署/SLA/readiness受PROD_OPEN和P7 gate约束；P3内部Simulation publish不能外推为Production publish/approval。
-- P3-15=`READY`也不自动进入P4；P3→P4需要新的用户明确批准。
+- 独立P3 Exit Audit=`READY`也不自动进入P4；P3→P4需要新的用户明确批准。
 
 ## Current execution boundary
 

@@ -12,6 +12,10 @@ registry_version: 1.0.0
 
 # 文档清单
 
+## TASK-P3-15 activation review
+
+本Task不新增、删除或重命名正式Markdown，inventory继续覆盖165份`docs/**/*.md`；只把既有TASK-P3-15从原planned Exit分配调整为`in_progress` amendment-governance owner。治理Python/unit test与ignored Task report不进入清单。Roots=30、trace rows=30、Test IDs=48、OPEN=15、SIM=15、risks=13、Tasks=53及`registry_version=1.0.0`均不变；后续成员尚未创建。
+
 ## TASK-P3-14 evidence closure review
 
 TASK-P3-14不新增、删除或重命名正式Markdown，inventory继续覆盖165份`docs/**/*.md`；新Gate source/test/Playwright/CI文件与ignored evidence不是Markdown inventory entry。P3-01～14=`done`，P3-15=`planned`；Root/trace/Test/OPEN/SIM/risk/Task数量与registry format均不改变。
@@ -190,7 +194,7 @@ Root=30、trace rows=30、Test IDs=48、OPEN=15、risks=13、Tasks=53均不变�
 | [tasks/P3/TASK-P3-12-gantt-resource-load-and-version-comparison-ui.md](../tasks/P3/TASK-P3-12-gantt-resource-load-and-version-comparison-ui.md) | TASK-P3-12 | done | Gantt Resource Load and Version Comparison UI |
 | [tasks/P3/TASK-P3-13-human-control-actions-and-ui-e2e.md](../tasks/P3/TASK-P3-13-human-control-actions-and-ui-e2e.md) | TASK-P3-13 | done | Human Control Actions and UI E2E |
 | [tasks/P3/TASK-P3-14-p3-vertical-slice-gate-evidence.md](../tasks/P3/TASK-P3-14-p3-vertical-slice-gate-evidence.md) | TASK-P3-14 | done | P3 Vertical Slice Gate Evidence |
-| [tasks/P3/TASK-P3-15-p3-exit-gate-audit.md](../tasks/P3/TASK-P3-15-p3-exit-gate-audit.md) | TASK-P3-15 | planned | P3 Exit Gate Audit |
+| [tasks/P3/TASK-P3-15-p3-exit-gate-audit.md](../tasks/P3/TASK-P3-15-p3-exit-gate-audit.md) | TASK-P3-15 | in_progress | P3 Phase Plan Amendment Governance Support |
 | [tasks/README.md](../tasks/README.md) | DOC-TASK-INDEX | living | Task Card 索引 |
 | [tasks/TASK_TEMPLATE.md](../tasks/TASK_TEMPLATE.md) | TEMPLATE-TASK | baseline | Task Card Template |
 

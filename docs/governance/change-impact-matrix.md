@@ -12,6 +12,10 @@ registry_version: 1.0.0
 
 # 变更影响与必审文档矩阵
 
+## TASK-P3-15 impact review
+
+完整Diff base=`06e7f794f486ac34c505237b847462c7c7c36d44`。实现只允许治理validator、其unit test、当前Task/phase/Milestone及逐字治理文档，预期精确命中`IMPACT-GOVERNANCE-VALIDATOR`、`IMPACT-TESTS`、`IMPACT-PHASE`、`IMPACT-GOVERNANCE-REGISTRY`和`IMPACT-DOCS`五行。Workflow、业务代码、Schema/migration/dependency/lock、Frontend、P3-00～14、P4与Production相对base必须零差异；machine Rule表和`registry_version=1.0.0`不变，最终paths/checks/issues由Task report与exact provider回填。
+
 ## TASK-P3-14 impact review
 
 不可变Diff base=`6a3e02f00bf46f19915cb59c3c4af7daaac95be4`。本Task逐字allow-list只覆盖Gate application、既有state合同复验、Frontend evidence/config、required CI、focused tests和治理文档，完整range为56 paths并精确命中八行：`IMPACT-APPLICATION`、`IMPACT-STATE`、`IMPACT-FRONTEND`、`IMPACT-INFRA`、`IMPACT-TESTS`、`IMPACT-PHASE`、`IMPACT-GOVERNANCE-REGISTRY`、`IMPACT-DOCS`，19/19 checks、0 issues。

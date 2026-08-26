@@ -121,6 +121,8 @@ P1及以后 Task必须单列 `Completion conditions`，把“实现目标、负�
 
 P2及以后Task还必须单列`Start gate`、`Dependency changes`、`ADR impact`和`Provider evidence`。初始phase planning若一次新增多卡，唯一`TASK-Pn-00`写`Task batch role: phase-planning-owner`且拥有有效Diff base；其余新卡写`Task batch role: phase-plan-member`、保持`planned/ready`且不得预填implementation SHA。该例外只用于同一range新建完整阶段计划，不允许批量修改既有Task或同时启动多个Task。
 
+已形成阶段计划的后续多卡修订必须先有独立治理Task并写`Task batch role: phase-plan-amendment-owner`；owner须为本次event修改的既有current-phase Task、`in_progress/done`且有完整Diff base。其他成员仍写`phase-plan-member`、保持`planned/ready`且无implementation SHA。稳定Task ID允许文件rename，但deleted-only、同ID多存活路径、base中active/done成员改写、多owner或all-added非Pn-00 owner都必须失败。修订owner只归属plan diff，不授权自动执行成员。
+
 若Task做set-level additive schema release但保留既有document版本，`Schema changes`和completion evidence必须分别记录global set version、各document内固定version、preserved artifact hash和consumer compatibility；不得用全局版本搜索替换改写immutable旧合同。Versioned mapping/rule还必须说明历史rows如何显式选择版本及禁止`latest`重解释。
 
 涉及canonical Data Validation/quality report时还必须记录：输入document/rule/error/report/canonicalization各自版本、旧Error/registry fingerprint、PASS零Error与FAIL count等式、四类P1 exact code/category、rich source/action evidence、multi-error stable ordering、report ID projection、malformed input不崩溃、capability/resource/DAG边界，以及与Normalization、Expansion、Snapshot/Problem、ScheduleValidator/Solver的依赖隔离。固定sample不得写成Production authority或common-ingress evidence。

@@ -17,6 +17,8 @@ Required `validate`新增两次隔离P3 Chromium replay、Frontend Gate聚合与
 
 提交前local required-equivalent现为616 Python、54 Vitest、三组Chromium各12/12、全部machine/P2 XS/Gate/SCA/license/Compose/build、P3 14/14+0 gaps及Task 56/8/19/0均PASS。该结果不能替代implementation exact provider。
 
+首个implementation SHA `0617141e411eea146cd9fc1c512ade900710be7c`的push run `32930677030` / required `validate` job `98062166642`未通过：repository suite为611 passed/5 errors，均因synthetic Frontend Gate夹具仍用`uncommitted`而不匹配CI注入exact SHA；后续artifact upload无匹配reports，artifact count=0。该负证据不允许rerun覆盖。Corrective仅使测试夹具复用生产Gate的SHA解析规则，须以新的commit执行全部non-skippable steps并下载artifact复验，Task此前保持`in_progress`。
+
 ## TASK-P3-13 required Gate
 
 不可变Diff base=`3dacf83c0f0bf87a9fa673aa75d61f8ad8659386`。Implementation提交前必须通过locked sync、Ruff、全量Pyright/full pytest、全部历史machine reports、P2 XS/Gate、Frontend SCA/license/lint/type/54 tests、12 Chromium、build、Frontend 12/12、API 18/18、Compose、full/diff docs、`git diff --check`及禁止路径。Workflow继续只有GitHub Actions app `15368`的required `validate`，browser失败也必须`always()`上传JSON/HTML/JUnit/trace/video/screenshot。

@@ -16,6 +16,8 @@ registry_version: 1.0.0
 
 不可变Diff base=`6a3e02f00bf46f19915cb59c3c4af7daaac95be4`。本Task逐字allow-list只覆盖Gate application、既有state合同复验、Frontend evidence/config、required CI、focused tests和治理文档，实际为56 working paths并精确命中八行：`IMPACT-APPLICATION`、`IMPACT-STATE`、`IMPACT-FRONTEND`、`IMPACT-INFRA`、`IMPACT-TESTS`、`IMPACT-PHASE`、`IMPACT-GOVERNANCE-REGISTRY`、`IMPACT-DOCS`，19/19 checks、0 issues；provider artifact须复现为56 committed/0 working paths。
 
+首个implementation provider只暴露同一allow-listed integration fixture的SHA绑定缺口；corrective未增加路径或Impact Rule，也未修改workflow/business/Schema/dependency/baseline。失败run/job=`32930677030`/`98062166642`与artifact count=0保留，新的corrective provider仍须复现上述56/8/19/0。
+
 Schema/sample/rules、migration、dependency/lock、P3-02～13业务/state/repository/API/UI实现、fixtures/baselines/expected、P2历史、P4与Production路径全部冻结。若最终diff出现额外path或Impact row，必须停止并先修订Task卡；Gate失败不得在本Task修改业务或expected。
 
 ## TASK-P3-13 impact review

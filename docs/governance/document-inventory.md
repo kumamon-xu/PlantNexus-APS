@@ -16,7 +16,7 @@ registry_version: 1.0.0
 
 TASK-P3-14不新增、删除或重命名正式Markdown，inventory继续覆盖165份`docs/**/*.md`；新Gate source/test/Playwright/CI文件与ignored evidence不是Markdown inventory entry。P3-01～13=`done`，P3-14=`in_progress`，P3-15=`planned`；Root/trace/Test/OPEN/SIM/risk/Task数量与registry format均暂不改变。
 
-当前local Gate已形成并保持P3-14=`in_progress`/provider pending；165 docs、30 roots、30 rows、48 Test IDs、15 OPEN、15 SIM、13 risks、53 Tasks继续是强制治理计数，Task diff为56 paths/8 rows/19 checks/0 issues。所有Task卡、Milestone与P2/失败provider历史仍在原路径，未新增、删除、重命名或改写。
+当前local Gate已形成并保持P3-14=`in_progress`/provider pending；首个implementation run `32930677030`因fixture SHA mismatch失败且artifact count=0，限定corrective不新增文档或正式登记项。165 docs、30 roots、30 rows、48 Test IDs、15 OPEN、15 SIM、13 risks、53 Tasks继续是强制治理计数，Task diff仍为56 paths/8 rows/19 checks/0 issues。所有Task卡、Milestone与P2/失败provider历史仍在原路径，未新增、删除、重命名或改写。
 
 ## TASK-P3-13 inventory review
 

@@ -13,6 +13,7 @@ import pytest
 from app.application.p2_gate_report import run_p2_vertical_slice_gate
 from app.application.p3_gate_report import (
     DIFF_BASE,
+    _code_commit,
     _stage_semantic_projection,
     run_p3_vertical_slice_gate,
     validate_p3_vertical_slice_report,
@@ -34,6 +35,7 @@ EXPECTED_STAGES = [
 
 
 def _frontend_report() -> dict[str, Any]:
+    code_commit = _code_commit()
     projection = {
         "projection_version": "p3-playwright-semantic-projection.v1",
         "project_name": "chromium-p3-human-control",
@@ -89,7 +91,7 @@ def _frontend_report() -> dict[str, Any]:
     return {
         "report_version": "p3-frontend-gate-report.v1",
         "task_id": "TASK-P3-14",
-        "code_commit": "uncommitted",
+        "code_commit": code_commit,
         "diff_base": DIFF_BASE,
         "status": "PASS",
         "repeat_count": 2,
@@ -99,7 +101,7 @@ def _frontend_report() -> dict[str, Any]:
             "sha256": f"sha256:{'4' * 64}",
             "report_version": "p3-frontend-human-control-report.v1",
             "task_id": "TASK-P3-13",
-            "code_commit": "uncommitted",
+            "code_commit": code_commit,
             "diff_base": "3dacf83c0f0bf87a9fa673aa75d61f8ad8659386",
             "status": "PASS",
             "browser_spec_count": 12,

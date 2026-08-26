@@ -20,6 +20,8 @@ registry_version: 1.0.0
 
 第二次full repository为611 pass/5 shared-fixture setup errors：Gate正确检测到approval concurrency raw winner/loser随线程交错变化。诊断复现只涉及`winner=APPROVE|REJECT`与`loser_failure=STALE_SOURCE|INVALID_STATE_TRANSITION`，single CAS winner、1 audit与winner exact replay均稳定；修正先严格验证这两个允许集合与不变量，再只在semantic projection归一化，raw evidence不删除。定向P3 Gate复验为5/5 PASS，最终完整仓库为616/616 PASS；Frontend为54/54 Vitest及基础/双Gate Chromium各12/12。
 
+首个provider run `32930677030` / job `98062166642`在CI exact-SHA环境再次得到611 passed/5 setup errors，但原因与上述并发交错不同：synthetic Frontend Gate两个`code_commit`写死`uncommitted`，被SHA contract拒绝；artifact count=0。测试夹具现复用Gate的SHA解析函数，使用该失败SHA模拟环境的定向suite为5/5 PASS；旧run不重跑，新的corrective provider未全绿前Test ID仍为`LOCAL_PASS_PROVIDER_PENDING`。
+
 ## TASK-P3-13 test allocation and provider evidence
 
 本Task复用6个既有Test ID：TEST-WORKSPACE-FRONTEND-001覆盖state/capability controls、visible failures与accessible feedback；TEST-GANTT-COMMAND-001覆盖Move/Assign/Lock、new authoritative DRAFT与PUBLISHED immutable；TEST-APPROVAL-AUTHORIZATION-001覆盖approve/reject及401/403；TEST-PUBLISH-IDEMPOTENCY-001覆盖explicit internal confirmation、double-submit与unknown-outcome same-key recovery；TEST-EXPORT-JOB-001覆盖create/failure/retry/EXPORTED-only verified download；TEST-AUDIT-TRAIL-001覆盖audit link与completion lineage。Test ID总数保持48，registry format不变。

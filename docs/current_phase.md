@@ -17,7 +17,9 @@ last_reviewed: 2026-08-26
 
 本Task只能增加版本化P3 Gate聚合器、两次fresh isolated Backend与Chromium replay、四类exact fail-closed exit rejection、stable semantic projection/raw evidence、focused test及required CI artifact。P3-02～13业务/Schema/migration/dependency/frontend行为基线只读；P3-15 Exit Audit=`NOT_PERFORMED`，P4与Production未启动，也不形成Production readiness、approval或external publish。
 
-当前完整本地验收已通过：616项Python、54项Vitest、基础Chromium与两轮Gate Chromium各12/12、全部历史/当前machine contracts、P2 XS/Gate、SCA/license、Compose/build和56 paths/8 Impact Rules/19 checks/0 issues。Backend Gate两轮共18个stage execution/144个subordinate checks，Frontend aggregate 5/5，四类rejection逐字一致，Python aggregate 14/14且`blocking_gaps=[]`。该结论仍为`LOCAL_PASS_PROVIDER_PENDING`；implementation exact-SHA required `validate`与artifact尚未形成，Task保持`in_progress`。
+当前完整本地验收已通过：616项Python、54项Vitest、基础Chromium与两轮Gate Chromium各12/12、全部历史/当前machine contracts、P2 XS/Gate、SCA/license、Compose/build和56 paths/8 Impact Rules/19 checks/0 issues。Backend Gate两轮共18个stage execution/144个subordinate checks，Frontend aggregate 5/5，四类rejection逐字一致，Python aggregate 14/14且`blocking_gaps=[]`。
+
+首个implementation `0617141e411eea146cd9fc1c512ade900710be7c`的push run/job=`32930677030`/`98062166642`在repository suite得到611 passed/5 setup errors：CI注入exact SHA，但integration synthetic Frontend Gate夹具的两个`code_commit`仍写死`uncommitted`，被`frontend_evidence` identity/SHA contract正确拒绝；后续upload无匹配reports，artifact count=0。该失败run不重跑、不改写。纠正只让既有测试夹具复用Gate的同一SHA解析规则，精确SHA环境定向复验5/5 PASS；Task仍为`LOCAL_PASS_PROVIDER_PENDING`/`in_progress`，必须由新的corrective commit完整重跑required `validate`与artifact。
 
 ## TASK-P3-13 完成边界
 

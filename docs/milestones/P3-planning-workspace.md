@@ -17,6 +17,8 @@ last_reviewed: 2026-08-26
 
 Gate不得混入业务修复或改写P3-02～13、P2及失败provider历史。成功也只证明P3 vertical slice evidence，P3-15 Exit Gate Audit继续`NOT_PERFORMED`/`planned`；P4、Production identity/authority/capacity/readiness与external publish均未形成。
 
+首个implementation `0617141e411eea146cd9fc1c512ade900710be7c`的run/job=`32930677030`/`98062166642`在repository suite失败：611 passed/5 setup errors均来自synthetic Frontend Gate夹具未绑定CI exact SHA；upload无reports且artifact count=0。失败事实保留且旧SHA不rerun；限定test-fixture corrective须以新提交完整通过required provider后，P3-14才可关闭。P3 Milestone因此继续`active`。
+
 当前完整local implementation Gate为PASS：616 Python、54 Vitest、基础Chromium及双Gate replay各12/12、全部machine/P2 XS/Gate/SCA/license/Compose/build与56 paths/8 rows/19 checks/0 issues均全绿；Backend双replay=18 stages/144 subordinate checks，Frontend 5/5、四类exact rejection及Python 14/14 checks通过，`blocking_gaps=[]`。这仍是provider pending状态；只有implementation exact-SHA required `validate`/artifact下载复核后，才可进入evidence-only closure。
 
 ## TASK-P3-13 completed slice

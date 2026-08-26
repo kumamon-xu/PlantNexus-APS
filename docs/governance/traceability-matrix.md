@@ -14,7 +14,7 @@ registry_version: 1.0.0
 
 ## TASK-P3-14 Gate trace slice
 
-REQ-004/005/006/007/009、NFR-COR/DET/TRC/ISO/REL/SEC/OBS/PER/HUM及ENG-ARCH/VAL/ERR/VER/LOG现连接TASK-P3-14的Python/Frontend Gate、两轮raw replay、semantic projection、four rejection contract、CI命令与Task report。`TEST-P3-VERTICAL-SLICE-001`为`LOCAL_PASS_PROVIDER_PENDING`；48 IDs、30 roots/rows和`registry_version=1.0.0`均不变。P3-15 Exit Audit仍`NOT_PERFORMED`，P4与Production未形成。
+REQ-004/005/006/007/009、NFR-COR/DET/TRC/ISO/REL/SEC/OBS/PER/HUM及ENG-ARCH/VAL/ERR/VER/LOG现连接TASK-P3-14的Python/Frontend Gate、两轮raw replay、semantic projection、four rejection contract、CI命令与Task report。`TEST-P3-VERTICAL-SLICE-001`为`LOCAL_PASS_PROVIDER_PENDING`；首个provider run/job=`32930677030`/`98062166642`因fixture SHA mismatch失败且artifact count=0，限定corrective exact-SHA定向5/5但仍待新provider。48 IDs、30 roots/rows和`registry_version=1.0.0`均不变。P3-15 Exit Audit仍`NOT_PERFORMED`，P4与Production未形成。
 
 ## TASK-P3-13 trace slice
 

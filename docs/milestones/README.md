@@ -15,7 +15,7 @@ last_reviewed: 2026-08-26
 
 用户于2026-08-26单独授权TASK-P3-14；P3-01～13的done状态、ancestry、26组implementation/closure exact required provider及clean synchronized `6a3e02f00bf46f19915cb59c3c4af7daaac95be4`均复核通过，该SHA冻结为Diff base。P3 Milestone继续`active`，P3-14=`in_progress`；P3-15/P4/Production不自动启动。
 
-当前完整local Gate为616 Python、54 Vitest、基础/双Gate Chromium各12/12、Backend 18 stages/144 subordinate checks、Frontend 5/5、四类exact rejection、Python 14/14、全部machine/P2 XS/Gate/Compose/build与Task 56/8/19/0，且0 blocking gaps；implementation provider evidence仍待exact-SHA提交后形成，因此Milestone保持`active`、P3-15保持`planned`。
+当前完整local Gate为616 Python、54 Vitest、基础/双Gate Chromium各12/12、Backend 18 stages/144 subordinate checks、Frontend 5/5、四类exact rejection、Python 14/14、全部machine/P2 XS/Gate/Compose/build与Task 56/8/19/0，且0 blocking gaps。首个implementation `0617141e411eea146cd9fc1c512ade900710be7c`的run/job=`32930677030`/`98062166642`因test fixture未绑定provider SHA而失败（611/5，artifact count=0）；负证据保留，限定corrective必须用新SHA重跑。因此Milestone保持`active`、P3-14保持`in_progress`、P3-15保持`planned`。
 
 ## TASK-P3-13 evidence closure
 

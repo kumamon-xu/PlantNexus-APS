@@ -15,7 +15,7 @@ last_reviewed: 2026-08-26
 
 用户于2026-08-26单独授权TASK-P3-14。P3-01～13的done/provider/ancestry及clean synchronized `6a3e02f00bf46f19915cb59c3c4af7daaac95be4`均复核通过并冻结为Diff base；当前只执行P3 Gate编排与证据，Task=`in_progress`。P3-15 Exit Audit、P4与Production保持未启动。
 
-本地实现现已通过616 Python、54 Vitest、基础及双Gate Chromium各12/12、全部machine/P2 XS/Gate/SCA/license/Compose/build和56 paths/8 Impact Rules/19 checks/0 issues；Backend双replay为18 stages/144 subordinate checks、Frontend 5/5、四类exact rejection及Python 14/14，`blocking_gaps=[]`。状态仍为`LOCAL_PASS_PROVIDER_PENDING`；不得在implementation exact provider形成前标记`done`或启动P3-15。
+本地实现现已通过616 Python、54 Vitest、基础及双Gate Chromium各12/12、全部machine/P2 XS/Gate/SCA/license/Compose/build和56 paths/8 Impact Rules/19 checks/0 issues；Backend双replay为18 stages/144 subordinate checks、Frontend 5/5、四类exact rejection及Python 14/14，`blocking_gaps=[]`。首个implementation `0617141e411eea146cd9fc1c512ade900710be7c`的run/job=`32930677030`/`98062166642`因synthetic Frontend Gate夹具写死`uncommitted`而在CI exact-SHA环境失败（611 passed/5 errors），upload无reports且artifact count=0；失败历史保留，旧SHA不重跑。测试夹具限定纠正已在exact-SHA环境5/5通过，状态仍为`LOCAL_PASS_PROVIDER_PENDING`；新的corrective implementation exact provider形成前不得标记`done`或启动P3-15。
 
 ## TASK-P3-13 evidence closure
 

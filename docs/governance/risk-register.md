@@ -14,7 +14,7 @@ registry_version: 1.0.0
 
 ## TASK-P3-14 risk review
 
-双Backend/Chromium replay、raw evidence retention、stable semantic projection、exact rejection和P2 regression继续约束RISK-002/003/006～009/012/013；locked SCA/license与无dependency delta继续约束RISK-011。首个provider run `32930677030`的fixture SHA mismatch（611/5、artifact count=0）作为RISK-006/008的真实早期信号保留，corrective只修测试证据绑定且仍待新provider。当前也没有真实数据、identity、gateway、external storage、distributed failure或Production规模证据；RISK-001～013全部保持`MONITORED`，不新增/关闭/降级，`registry_version=1.0.0`不变。
+双Backend/Chromium replay、raw evidence retention、stable semantic projection、exact rejection和P2 regression继续约束RISK-002/003/006～009/012/013；locked SCA/license与无dependency delta继续约束RISK-011。首个provider run `32930677030`的fixture SHA mismatch（611/5、artifact count=0）作为RISK-006/008的真实早期信号保留；corrective artifact `9593460266`已复验限定test-evidence修复与完整Gate。当前仍没有真实数据、identity、gateway、external storage、distributed failure或Production规模证据；RISK-001～013全部保持`MONITORED`，不新增/关闭/降级，`registry_version=1.0.0`不变。
 
 ## TASK-P3-13 risk review
 

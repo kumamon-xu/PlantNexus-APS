@@ -14,7 +14,7 @@ registry_version: 1.0.0
 
 ## TASK-P3-14 review
 
-两轮Backend/Chromium、exact rejections、P2 regression和0-gap local Gate仍只证明versioned internal Simulation链。没有Authority、真实factory/identity、external endpoint/storage、capacity/SLA、deployment或approval/publish decision evidence；OPEN-001～015全部继续`OPEN`，无关闭记录，`registry_version=1.0.0`不变。Provider成功也不得改变这一结论。
+两轮Backend/Chromium、exact rejections、P2 regression和0-gap provider-verified Gate仍只证明versioned internal Simulation链。没有Authority、真实factory/identity、external endpoint/storage、capacity/SLA、deployment或approval/publish decision evidence；OPEN-001～015全部继续`OPEN`，无关闭记录，`registry_version=1.0.0`不变。Provider成功不改变这一结论。
 
 ## TASK-P3-13 review
 

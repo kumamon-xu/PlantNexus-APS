@@ -1,7 +1,7 @@
 ---
 doc_id: TASK-P3-14
 title: P3 Vertical Slice Gate Evidence
-status: in_progress
+status: done
 spec_version: 0.3.0
 phase: P3
 normative: true
@@ -33,7 +33,11 @@ Activation evidence: 用户于2026-08-26明确授权执行TASK-P3-14；启动复
 
 Local implementation evidence: `p3-vertical-slice-report.v1`两次fresh Backend replay共18 stages/144 subordinate checks、4 exact rejections、14/14 checks且`blocking_gaps=[]`；Frontend两轮各12/12、8 human-control specs，5/5且semantic fingerprint唯一。首次full 615/1由import guard拦截后以逐模块只读例外修正；第二次full 611 pass/5 setup errors精确暴露approval合法并发交错，现已在验证允许集合、single CAS winner/1 audit/exact replay后只归一化projection并保留raw。最终完整本地验收为616 Python、54 Vitest、基础/双Gate Chromium各12/12、全部machine/P2 XS/Gate/SCA/license/Compose/build、Ruff/Pyright和Task 56 working paths/8 Impact Rules/19 checks/0 issues均PASS。
 
-Provider failure/corrective boundary: 首个implementation `0617141e411eea146cd9fc1c512ade900710be7c`的push run `32930677030` / required job `98062166642`在repository suite失败（611 passed/5 shared-fixture setup errors）。原因是CI的`PLANTNEXUS_CODE_COMMIT`已绑定exact SHA，而synthetic Frontend Gate及其嵌套human-control report仍写死`uncommitted`；Gate按合同拒绝，后续upload无reports且artifact count=0。该run作为负证据永久保留且不得rerun。独立corrective只让测试夹具调用Gate既有`_code_commit()`，不改业务、断言语义、workflow、Schema、dependency或冻结基线；exact-SHA定向5/5已PASS。新的corrective exact provider完成前Task保持`in_progress`/`LOCAL_PASS_PROVIDER_PENDING`。
+Provider failure/corrective boundary: 首个implementation `0617141e411eea146cd9fc1c512ade900710be7c`的push run `32930677030` / required job `98062166642`在repository suite失败（611 passed/5 shared-fixture setup errors）。原因是CI的`PLANTNEXUS_CODE_COMMIT`已绑定exact SHA，而synthetic Frontend Gate及其嵌套human-control report仍写死`uncommitted`；Gate按合同拒绝，后续upload无reports且artifact count=0。该run作为负证据永久保留且不得rerun。独立corrective只让测试夹具调用Gate既有`_code_commit()`，不改业务、断言语义、workflow、Schema、dependency或冻结基线；exact-SHA定向5/5已PASS。该失败后Task保持`in_progress`/`LOCAL_PASS_PROVIDER_PENDING`，直至新的corrective provider闭环。
+
+Provider evidence and completion: Corrective implementation `54a25646053979a69734a3148030830d49c04c1e`已直接push受保护`main`；push run [`32931418903`](https://github.com/kumamon-xu/PlantNexus-APS/actions/runs/32931418903)、required `validate` job/check [`98064264595`](https://github.com/kumamon-xu/PlantNexus-APS/actions/runs/32931418903/job/98064264595)（GitHub Actions app `15368`）为completed/success，57/57 steps成功。Artifact `9593460266` / `plantnexus-ci-evidence-32931418903`未过期，size=`799284` bytes，digest=`sha256:750bcd133f2d10637208da546f3cb75423b77e1dd8d5a8355c3ef88bd650a81f`，expires_at=`2026-11-24T04:45:36Z`。下载的43个文件含37份可解析JSON、三组Playwright JSON/JUnit/HTML；所有SHA-bound report均绑定corrective SHA，三组browser均12 expected/0 unexpected/0 flaky/0 skipped，7个raw evidence hash全部匹配。P3 Gate复现2 Backend replay、18 stage executions、144 subordinate checks、24 browser executions、16 human-control executions、4 exact rejections、13 predecessor closure、14/14 checks、unique semantic fingerprint=1、`blocking_gaps=[]`；Frontend Gate为5/5与双12/12，P2 Gate为11/11与0 gaps。Task report精确为56 committed/0 working paths、8 Impact rows、19/19 checks、0 issues；branch protection只要求`validate`/app `15368`且该check成功。
+
+Completion decision: 两次完整P3 replay、Frontend/raw evidence、exact rejection、P2 regression、治理、冻结/禁止范围与corrective exact provider均满足本卡Completion conditions，故TASK-P3-14=`done`。本revision只写回已发生provider事实，是evidence-only closure；其自身exact provider须在push后独立复核。P3-15仍为`planned`/`NOT_PERFORMED`且未获本次自动授权；P4、external与Production identity/authority/readiness/publish均未形成。
 
 Files allowed to change: `backend/app/application/p3_gate_report.py`、`backend/tests/integration/test_p3_vertical_slice.py`、`backend/tests/contract/test_p3_exit_rejections.py`、`backend/tests/integration/test_p1_common_ingress.py`（只允许登记`p3_gate_report.py`的逐模块evidence-orchestrator例外）、`frontend/playwright.p3-gate.config.ts`、`frontend/scripts/p3-gate-evidence.mjs`、`.github/workflows/ci.yml`、`backend/tests/integration/test_ci_contract.py`、`README.md`及`Documents to update`中的逐字路径。除这些路径外不得新增或修改任何文件；发现新增路径或Impact Rule时须先停止并修订本卡。
 

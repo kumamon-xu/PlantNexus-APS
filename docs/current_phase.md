@@ -11,15 +11,17 @@ last_reviewed: 2026-08-26
 
 # 当前阶段：P3 — Planning Workspace
 
-## TASK-P3-14 激活与冻结边界
+## TASK-P3-14 完成边界
 
-用户于2026-08-26明确授权执行TASK-P3-14。启动时`main=origin/main=6a3e02f00bf46f19915cb59c3c4af7daaac95be4`、ahead/behind=`0/0`且working tree clean；P3-01～13全部`done`，13组前序Diff base→implementation→closure→HEAD祖先关系、26个required `validate` run/job与26个未过期artifact均已逐项下载复核，Task/SHA/base/Impact Rules/checks/issues一致。因此该SHA冻结为本Task不可变Diff base，TASK-P3-14=`in_progress`。
+用户于2026-08-26明确授权执行TASK-P3-14。启动时`main=origin/main=6a3e02f00bf46f19915cb59c3c4af7daaac95be4`、ahead/behind=`0/0`且working tree clean；P3-01～13全部`done`，13组前序Diff base→implementation→closure→HEAD祖先关系、26个required `validate` run/job与26个未过期artifact均已逐项下载复核，Task/SHA/base/Impact Rules/checks/issues一致。因此该SHA冻结为本Task不可变Diff base，TASK-P3-14当时进入`in_progress`。
 
 本Task只能增加版本化P3 Gate聚合器、两次fresh isolated Backend与Chromium replay、四类exact fail-closed exit rejection、stable semantic projection/raw evidence、focused test及required CI artifact。P3-02～13业务/Schema/migration/dependency/frontend行为基线只读；P3-15 Exit Audit=`NOT_PERFORMED`，P4与Production未启动，也不形成Production readiness、approval或external publish。
 
 当前完整本地验收已通过：616项Python、54项Vitest、基础Chromium与两轮Gate Chromium各12/12、全部历史/当前machine contracts、P2 XS/Gate、SCA/license、Compose/build和56 paths/8 Impact Rules/19 checks/0 issues。Backend Gate两轮共18个stage execution/144个subordinate checks，Frontend aggregate 5/5，四类rejection逐字一致，Python aggregate 14/14且`blocking_gaps=[]`。
 
-首个implementation `0617141e411eea146cd9fc1c512ade900710be7c`的push run/job=`32930677030`/`98062166642`在repository suite得到611 passed/5 setup errors：CI注入exact SHA，但integration synthetic Frontend Gate夹具的两个`code_commit`仍写死`uncommitted`，被`frontend_evidence` identity/SHA contract正确拒绝；后续upload无匹配reports，artifact count=0。该失败run不重跑、不改写。纠正只让既有测试夹具复用Gate的同一SHA解析规则，精确SHA环境定向复验5/5 PASS；Task仍为`LOCAL_PASS_PROVIDER_PENDING`/`in_progress`，必须由新的corrective commit完整重跑required `validate`与artifact。
+首个implementation `0617141e411eea146cd9fc1c512ade900710be7c`的push run/job=`32930677030`/`98062166642`在repository suite得到611 passed/5 setup errors：CI注入exact SHA，但integration synthetic Frontend Gate夹具的两个`code_commit`仍写死`uncommitted`，被`frontend_evidence` identity/SHA contract正确拒绝；后续upload无匹配reports，artifact count=0。该失败run不重跑、不改写。纠正只让既有测试夹具复用Gate的同一SHA解析规则，精确SHA环境定向复验5/5 PASS；在该失败后Task保持`LOCAL_PASS_PROVIDER_PENDING`/`in_progress`，并以新corrective commit完整重跑。
+
+Corrective implementation `54a25646053979a69734a3148030830d49c04c1e`的push run `32931418903`与required `validate` job/check `98064264595`（GitHub Actions app `15368`）57/57 steps success。Artifact `9593460266` / `plantnexus-ci-evidence-32931418903`未过期，799284 bytes，digest=`sha256:750bcd133f2d10637208da546f3cb75423b77e1dd8d5a8355c3ef88bd650a81f`、expiry=`2026-11-24T04:45:36Z`；下载复核37/37 JSON、3组Playwright JSON/JUnit/HTML、7个raw hash、P3 Gate 14/14与0 gaps、Frontend 5/5、P2 Gate 11/11及Task 56 committed/0 working paths、8 rows、19 checks、0 issues全部一致。因此本evidence-only closure把TASK-P3-14标为`done`；closure自身仍须exact provider复核。
 
 ## TASK-P3-13 完成边界
 
@@ -35,7 +37,7 @@ last_reviewed: 2026-08-26
 
 P2-14 audit implementation `65c556789f176ad9de55523d6420737bb60f933f`的GitHub push run `32677741558` / required `validate` job `97288829348` / artifact `9503227240`成功，artifact digest=`sha256:fbb76f0ab44d3bdcff2d31e70f9698af84e10e48ee57ae611eef8529a288240e`；evidence-only closure `80c403384d1e171258cf874d26605d0d22aff1b2`的run `32678248961` / job `97290201234` / artifact `9503372291`也成功，digest=`sha256:673412905b7420660d1e9f07755fcda6291f85f8f2bd926b4bf31a0a6bd1bd0c`。下载检查的两份artifact均含20份可解析JSON，Task/SHA/Impact Rules/checks/issues与对应提交一致且0 issue。规划启动时`main=origin/main=80c403384d1e171258cf874d26605d0d22aff1b2`、ahead/behind=`0/0`且working tree clean，因此transition前提一致。
 
-P2 Milestone现为`completed`，P3 Milestone为`active`。`TASK-P3-00`～`TASK-P3-13`均为`done`，P3-14为`in_progress`；P3-15保持`planned`且不会自动启动。
+P2 Milestone现为`completed`，P3 Milestone为`active`。`TASK-P3-00`～`TASK-P3-14`均为`done`；P3-15保持`planned`且不会自动启动。
 
 ## 当前目标
 

@@ -11,11 +11,11 @@ last_reviewed: 2026-08-26
 
 # Task Card 索引
 
-## TASK-P3-14 activation
+## TASK-P3-14 evidence closure
 
-用户于2026-08-26单独授权TASK-P3-14。P3-01～13的done/provider/ancestry及clean synchronized `6a3e02f00bf46f19915cb59c3c4af7daaac95be4`均复核通过并冻结为Diff base；当前只执行P3 Gate编排与证据，Task=`in_progress`。P3-15 Exit Audit、P4与Production保持未启动。
+用户于2026-08-26单独授权TASK-P3-14。P3-01～13的done/provider/ancestry及clean synchronized `6a3e02f00bf46f19915cb59c3c4af7daaac95be4`均复核通过并冻结为Diff base；Task只执行P3 Gate编排与证据。P3-15 Exit Audit、P4与Production保持未启动。
 
-本地实现现已通过616 Python、54 Vitest、基础及双Gate Chromium各12/12、全部machine/P2 XS/Gate/SCA/license/Compose/build和56 paths/8 Impact Rules/19 checks/0 issues；Backend双replay为18 stages/144 subordinate checks、Frontend 5/5、四类exact rejection及Python 14/14，`blocking_gaps=[]`。首个implementation `0617141e411eea146cd9fc1c512ade900710be7c`的run/job=`32930677030`/`98062166642`因synthetic Frontend Gate夹具写死`uncommitted`而在CI exact-SHA环境失败（611 passed/5 errors），upload无reports且artifact count=0；失败历史保留，旧SHA不重跑。测试夹具限定纠正已在exact-SHA环境5/5通过，状态仍为`LOCAL_PASS_PROVIDER_PENDING`；新的corrective implementation exact provider形成前不得标记`done`或启动P3-15。
+本地实现通过616 Python、54 Vitest、基础及双Gate Chromium各12/12、全部machine/P2 XS/Gate/SCA/license/Compose/build和56 paths/8 Impact Rules/19 checks/0 issues；Backend双replay为18 stages/144 subordinate checks、Frontend 5/5、四类exact rejection及Python 14/14，`blocking_gaps=[]`。首个implementation `0617141e411eea146cd9fc1c512ade900710be7c`的run/job=`32930677030`/`98062166642`因synthetic Frontend Gate夹具写死`uncommitted`而失败（611 passed/5 errors，artifact count=0）；失败历史保留且旧SHA不重跑。Corrective `54a25646053979a69734a3148030830d49c04c1e`的run/job/artifact=`32931418903`/`98064264595`/`9593460266`全绿，37/37 JSON、双Gate、P2 regression、三组Playwright及Task 56/0/8/19/0一致，故本closure标Task=`done`；closure自身仍须exact provider。P3-15不自动启动。
 
 ## TASK-P3-13 evidence closure
 
@@ -69,7 +69,7 @@ last_reviewed: 2026-08-26
 | [TASK-P3-11](P3/TASK-P3-11-frontend-foundation-and-read-only-workspace.md) | Frontend/read-only workspace | P3-01/10 | `done` |
 | [TASK-P3-12](P3/TASK-P3-12-gantt-resource-load-and-version-comparison-ui.md) | Gantt/Load/Comparison UI | P3-05/10/11 | `done` |
 | [TASK-P3-13](P3/TASK-P3-13-human-control-actions-and-ui-e2e.md) | Human control actions/UI E2E | P3-06～12 | `done` |
-| [TASK-P3-14](P3/TASK-P3-14-p3-vertical-slice-gate-evidence.md) | P3 vertical-slice Gate evidence | P3-01～13 | `in_progress` |
+| [TASK-P3-14](P3/TASK-P3-14-p3-vertical-slice-gate-evidence.md) | P3 vertical-slice Gate evidence | P3-01～13 | `done` |
 | [TASK-P3-15](P3/TASK-P3-15-p3-exit-gate-audit.md) | Independent P3 Exit Gate Audit | P3-14 | `planned` |
 
 用户已于2026-08-24单独授权并完成P3-01/02，随后明确授权执行P3-03。P3-03只形成migration、plane-scoped repositories、既有pair的CAS/lease/transaction原语、CI/tests和治理，不执行审批、发布、导出或P3-04+；P3-15必须最后执行且只审计冻结事实。P3不得实现P4 ExecutionEvent/Replan/OBJ-002/freeze/ChangeReport/Execution Simulator，内部Simulation publish也不构成Production approval/readiness。

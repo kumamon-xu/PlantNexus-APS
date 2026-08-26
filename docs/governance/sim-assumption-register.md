@@ -14,7 +14,7 @@ registry_version: 1.0.0
 
 ## TASK-P3-14 review
 
-Gate复用已登记的P2 versioned synthetic inputs与`SIM-P3-HUMAN-CONTROL-001@1.0.0`，只增加两轮隔离重放和semantic comparison，不引入新的定量值、fixture identity或默认策略。SIM-ASSUMPTION-001～015全部继续`ACTIVE`，数量15且`registry_version=1.0.0`不变；browser/runtime observations不成为Production事实或SLA。
+Gate复用已登记的P2 versioned synthetic inputs与`SIM-P3-HUMAN-CONTROL-001@1.0.0`，只增加两轮隔离重放和semantic comparison，不引入新的定量值、fixture identity或默认策略。Artifact `9593460266`复验双Backend/Chromium replay但不改变假设生命周期；SIM-ASSUMPTION-001～015全部继续`ACTIVE`，数量15且`registry_version=1.0.0`不变，browser/runtime observations不成为Production事实或SLA。
 
 Simulation 用于模拟 APS Planning Reality，不代表真实物理工厂。每个定量假设必须在 FactoryProfile 或 ScenarioSpec 中版本化，并可追溯到本注册表。
 

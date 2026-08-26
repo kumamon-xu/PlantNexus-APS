@@ -14,7 +14,7 @@ registry_version: 1.0.0
 
 ## TASK-P3-14 allocation review
 
-REQ-004/005/006/007/009现连接两轮完整P3 workspace Gate、四类exact rejection、P2 regression、Frontend双replay与`p3-vertical-slice-report.v1`。本地证据为PASS/0 gaps，implementation provider仍待提交后核验；所有15个root Requirement继续为`ALLOCATED`，不升级为Production fulfilled，`registry_version=1.0.0`不变。P3-15、P4及Production不继承该Gate状态。
+REQ-004/005/006/007/009现连接两轮完整P3 workspace Gate、四类exact rejection、P2 regression、Frontend双replay与`p3-vertical-slice-report.v1`。Corrective artifact `9593460266`已按exact SHA复验PASS/0 gaps与Task 56/0/8/19/0；所有15个root Requirement继续为`ALLOCATED`，不升级为Production fulfilled，`registry_version=1.0.0`不变。P3-15、P4及Production不继承该Gate状态。
 
 ## TASK-P3-13 allocation review
 

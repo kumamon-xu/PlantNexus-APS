@@ -1,6 +1,6 @@
 # PlantNexus APS
 
-PlantNexus APS 是一个面向单工厂、多车间场景的高级计划与排程（APS）项目。P2 CP-SAT Vertical Slice 已通过 Exit Gate并关闭，当前阶段为P3（Planning Workspace）。TASK-P3-00～13均为`done`，TASK-P3-14已获单独授权并处于`in_progress`；P3-15、Production能力与P4动态重排均未启动。
+PlantNexus APS 是一个面向单工厂、多车间场景的高级计划与排程（APS）项目。P2 CP-SAT Vertical Slice 已通过 Exit Gate并关闭，当前阶段为P3（Planning Workspace）。TASK-P3-00～14均为`done`；P3-15、Production能力与P4动态重排均未启动。
 
 ## 开始之前
 
@@ -20,7 +20,7 @@ Coding Agent 必须从 [`AGENTS.md`](AGENTS.md) 进入项目规则。项目规�
 
 TASK-P3-14以`6a3e02f00bf46f19915cb59c3c4af7daaac95be4`为不可变Diff base，聚合P3-02～13已发布机器边界、两次fresh Backend replay、两次独立Chromium replay、P2 Gate regression和四类exact rejection。`p3-vertical-slice-report.v1`保留完整raw subreport；stable semantic projection只排除显式runtime/derived identity，并在先验证允许集合后归一化并发审批的合法线程交错。任一报告、语义、拒绝或provider交叉检查失败都会写入`blocking_gaps`并非零退出。
 
-当前完整本地验收为616项Python、54项Vitest、基础Chromium与两轮Gate Chromium各12/12、全部机器合同、P2 Gate/XS、Compose/build及56 paths/8 Impact Rules/19 checks/0 issues均PASS；P3 Gate为14/14且`blocking_gaps=[]`。Implementation exact-SHA GitHub required `validate`与artifact尚待提交后核验，因此TASK-P3-14仍为`in_progress`。P3-15 Exit Gate Audit仍为`NOT_PERFORMED`/`planned`；该Gate不形成P4或Production identity、approval、publish、capacity、SLA或readiness。
+当前完整本地验收为616项Python、54项Vitest、基础Chromium与两轮Gate Chromium各12/12、全部机器合同、P2 Gate/XS、Compose/build及56 paths/8 Impact Rules/19 checks/0 issues均PASS；P3 Gate为14/14且`blocking_gaps=[]`。Corrective implementation `54a25646053979a69734a3148030830d49c04c1e`的required run/job/artifact=`32931418903`/`98064264595`/`9593460266`精确全绿并复现全部Gate/Task/browser证据，故TASK-P3-14=`done`；本evidence-only closure自身仍须exact provider复核。P3-15 Exit Gate Audit仍为`NOT_PERFORMED`/`planned`；该Gate不形成P4或Production identity、approval、publish、capacity、SLA或readiness。
 
 ## 本地验收
 
@@ -67,7 +67,7 @@ scripts/      仓库级校验与自动化脚本
 infra/        P0 开发容器构建配置
 ```
 
-P2 CP-SAT Vertical Slice已通过Exit Gate并关闭，当前阶段为P3。P2-00～14和P3-00～13均由exact implementation provider与evidence-only closure闭环为`done`；P3-14已单独授权并处于`in_progress`，P3-15不会自动启动。Production capacity/SLA/identity/approval authority/external publish与P4仍未形成。当前边界见[`docs/current_phase.md`](docs/current_phase.md)。
+P2 CP-SAT Vertical Slice已通过Exit Gate并关闭，当前阶段为P3。P2-00～14和P3-00～14均已由exact implementation provider支撑并闭环为`done`；P3-15不会自动启动。Production capacity/SLA/identity/approval authority/external publish与P4仍未形成。当前边界见[`docs/current_phase.md`](docs/current_phase.md)。
 
 TASK-P3-13保留失败implementation run `32920462781`、首次closure `87d47c7483185483ac8027100c1c664d18011a7c` / run `32921871460`的606/1失败与artifact count=0。独立XLSX deterministic corrective implementation `3538d46f8b73ae434057bcbca9037436aa91f2c7`的required run/job/artifact=`32923203227`/`98040743610`/`9590625358`已全绿并下载复验33份JSON、12/12 Chromium和Task 91/0/11/19/0；该P3-13 closure当时未自动启动P3-14，后者现依据新的用户授权独立执行。
 

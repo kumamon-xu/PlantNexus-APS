@@ -13,7 +13,7 @@ last_reviewed: 2026-08-26
 
 ## TASK-P3-14 Gate evidence rule
 
-Gate证据必须把13个前序closure SHA、P2 Gate、两轮Backend raw report、两轮Playwright JSON/JUnit/HTML、Frontend aggregate、四个exact rejection及stable semantic fingerprint同时绑定到TASK-P3-14和不可变Diff base。Implementation provider前只能标`LOCAL_PASS_PROVIDER_PENDING`；只有exact SHA required `validate`全绿、artifact未过期且下载后Task/base/8 Impact rows/checks/issues/0 gaps一致，才允许evidence-only closure。P3-15必须独立重放，不能引用Gate结论代替Audit。
+Gate证据必须把13个前序closure SHA、P2 Gate、两轮Backend raw report、两轮Playwright JSON/JUnit/HTML、Frontend aggregate、四个exact rejection及stable semantic fingerprint同时绑定到TASK-P3-14和不可变Diff base。Implementation provider前只能标`LOCAL_PASS_PROVIDER_PENDING`；只有exact SHA required `validate`全绿、artifact未过期且下载后Task/base/8 Impact rows/checks/issues/0 gaps一致，才允许evidence-only closure。Corrective artifact `9593460266`已满足该门并允许TASK-P3-14关闭为`done`；closure自身仍须exact provider。P3-15必须独立重放，不能引用Gate结论代替Audit。
 
 ## TASK-P3-13 evidence rule
 

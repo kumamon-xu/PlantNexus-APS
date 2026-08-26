@@ -14,7 +14,7 @@ registry_version: 1.0.0
 
 ## TASK-P3-14 allocation review
 
-NFR-COR/DET/TRC/ISO/REL/SEC/OBS/PER/HUM与ENG-ARCH/VAL/ERR/VER/LOG由两轮raw+stable semantic replay、exact rejection、P2/Frontend交叉检查和required artifact链统一聚合。当前只形成local Gate，provider尚待核验；全部root仍为`ALLOCATED`，没有Production SLA、identity、external reliability或observability结论，`registry_version=1.0.0`不变。
+NFR-COR/DET/TRC/ISO/REL/SEC/OBS/PER/HUM与ENG-ARCH/VAL/ERR/VER/LOG由两轮raw+stable semantic replay、exact rejection、P2/Frontend交叉检查和required artifact链统一聚合。Corrective artifact `9593460266`已复验P3 14/14、Frontend 5/5、双12/12 browser与0 gaps；全部root仍为`ALLOCATED`，没有Production SLA、identity、external reliability或observability结论，`registry_version=1.0.0`不变。
 
 ## TASK-P3-13 allocation review
 

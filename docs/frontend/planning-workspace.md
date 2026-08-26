@@ -23,7 +23,7 @@ Version页现在以server state和capability交集装配唯一可用control：DR
 
 该control surface只在显式development E2E Simulation fixture启用。普通Production-shaped runtime继续隐藏controls并default-deny；无真实session、identity provider、external publish、MES或deployment。P4的ExecutionEvent/ReplanRequest/freeze/OBJ-002/ChangeReport没有route、type或feature模块。
 
-本文件固定P3页面、路由、只读投影、状态可见性和server-authority边界。TASK-P3-01只形成规范；read model、HTTP、React页面和E2E分别由TASK-P3-05、10、11～13形成并已取得各自provider闭环。P3-14现为`in_progress`并仅聚合Gate证据；P3-15仍为`planned`。
+本文件固定P3页面、路由、只读投影、状态可见性和server-authority边界。TASK-P3-01只形成规范；read model、HTTP、React页面和E2E分别由TASK-P3-05、10、11～13形成并已取得各自provider闭环。P3-14现以双12/12 Chromium与exact provider聚合Gate证据并为`done`；P3-15仍为`planned`。
 
 ## 不变量
 

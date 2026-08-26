@@ -19,7 +19,7 @@ P3-14现已获单独授权，并在一个fail-closed report中两次重放`valid
 
 当前bounded链为`authoritative read → state/capability-sensitive UI → canonical workspace-command.v1 → authorized HTTP/application → existing validation/state service → authoritative Version/Job refresh`。Browser不直连repository、不生成domain state、不调用Solver/Validator；PUBLISHED成果包下载为`authorize → EXPORTED Job → verified package directory → deterministic ZIP`只读支路。任何error/unknown outcome都回到authority refresh，不靠client rollback伪造事实。
 
-该edge完成P3 human-control consumer；其P3-14 vertical Gate现处于`in_progress`，P3-15 Exit Audit仍未执行。ExecutionEvent→Replan、OBJ-002/freeze/ChangeReport属于P4；真实identity、external publish/download、deployment与Production readiness均不在链内。
+该edge完成P3 human-control consumer；其P3-14 vertical Gate已由exact provider复验并为`done`，P3-15 Exit Audit仍未执行。ExecutionEvent→Replan、OBJ-002/freeze/ChangeReport属于P4；真实identity、external publish/download、deployment与Production readiness均不在链内。
 
 ```text
 Versioned Input Package

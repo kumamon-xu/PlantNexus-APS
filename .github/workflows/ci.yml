@@ -13,7 +13,75 @@ concurrency:
   cancel-in-progress: true
 
 jobs:
-  validate:
+  classify:
+    runs-on: ubuntu-latest
+    timeout-minutes: 3
+    outputs:
+      profile: ${{ steps.profile.outputs.profile }}
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+
+      - name: Classify validation profile
+        id: profile
+        env:
+          PLANTNEXUS_CI_CHANGE_BASE: ${{ github.event.pull_request.base.sha || github.event.before }}
+          PLANTNEXUS_CI_CHANGE_HEAD: ${{ github.sha }}
+        run: >-
+          python scripts/ci_validation_profile.py classify
+          --base "${PLANTNEXUS_CI_CHANGE_BASE}"
+          --head "${PLANTNEXUS_CI_CHANGE_HEAD}"
+          --report build/validation/ci-validation-profile.json
+          --github-output "${GITHUB_OUTPUT}"
+
+      - name: Upload validation profile evidence
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: plantnexus-ci-profile-${{ github.run_id }}
+          path: build/validation/ci-validation-profile.json
+          if-no-files-found: error
+
+  docs_validation:
+    needs: classify
+    if: ${{ needs.classify.outputs.profile == 'DOCS_ONLY' }}
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+
+      - name: Validate changed public documentation
+        env:
+          PLANTNEXUS_CI_CHANGE_BASE: ${{ github.event.pull_request.base.sha || github.event.before }}
+          PLANTNEXUS_CI_CHANGE_HEAD: ${{ github.sha }}
+        run: >-
+          python scripts/ci_validation_profile.py validate-docs
+          --base "${PLANTNEXUS_CI_CHANGE_BASE}"
+          --head "${PLANTNEXUS_CI_CHANGE_HEAD}"
+          --report build/validation/ci-public-docs-validation.json
+
+      - name: Upload public documentation evidence
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: plantnexus-ci-public-docs-${{ github.run_id }}
+          path: build/validation/ci-public-docs-validation.json
+          if-no-files-found: error
+
+  full_validation:
+    needs: classify
+    if: ${{ needs.classify.outputs.profile == 'FULL' }}
     runs-on: ubuntu-latest
     timeout-minutes: 20
     env:
@@ -337,3 +405,33 @@ jobs:
             build/benchmarks/*.json
             build/playwright/**
           if-no-files-found: error
+
+  validate:
+    needs: [classify, docs_validation, full_validation]
+    if: ${{ always() }}
+    runs-on: ubuntu-latest
+    timeout-minutes: 2
+    env:
+      PLANTNEXUS_CI_PROFILE: ${{ needs.classify.outputs.profile }}
+      PLANTNEXUS_CLASSIFY_RESULT: ${{ needs.classify.result }}
+      PLANTNEXUS_DOCS_RESULT: ${{ needs.docs_validation.result }}
+      PLANTNEXUS_FULL_RESULT: ${{ needs.full_validation.result }}
+    steps:
+      - name: Enforce fail-closed validation routing
+        shell: bash
+        run: |
+          test "${PLANTNEXUS_CLASSIFY_RESULT}" = "success"
+          case "${PLANTNEXUS_CI_PROFILE}" in
+            FULL)
+              test "${PLANTNEXUS_FULL_RESULT}" = "success"
+              test "${PLANTNEXUS_DOCS_RESULT}" = "skipped"
+              ;;
+            DOCS_ONLY)
+              test "${PLANTNEXUS_DOCS_RESULT}" = "success"
+              test "${PLANTNEXUS_FULL_RESULT}" = "skipped"
+              ;;
+            *)
+              echo "Unknown or missing CI validation profile" >&2
+              exit 1
+              ;;
+          esac

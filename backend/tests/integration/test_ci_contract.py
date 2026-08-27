@@ -317,6 +317,58 @@ def test_ci_runs_repository_gates_and_discovers_the_current_task() -> None:
     assert PHASE_GOVERNANCE_TEST_ID == "TEST-PHASE-GOVERNANCE-001"
 
 
+def test_ci_profile_routing_is_mutually_exclusive_and_fail_closed() -> None:
+    workflow_path = ROOT / ".github" / "workflows" / "ci.yml"
+    workflow_text = workflow_path.read_text(encoding="utf-8")
+    workflow = cast(dict[str, Any], yaml.safe_load(workflow_text))
+    jobs = cast(dict[str, Any], workflow["jobs"])
+
+    assert set(jobs) == {
+        "classify",
+        "docs_validation",
+        "full_validation",
+        "validate",
+    }
+    classify = cast(dict[str, Any], jobs["classify"])
+    docs = cast(dict[str, Any], jobs["docs_validation"])
+    full = cast(dict[str, Any], jobs["full_validation"])
+    final = cast(dict[str, Any], jobs["validate"])
+
+    assert classify["outputs"] == {
+        "profile": "${{ steps.profile.outputs.profile }}"
+    }
+    assert docs["needs"] == "classify"
+    assert docs["if"] == "${{ needs.classify.outputs.profile == 'DOCS_ONLY' }}"
+    assert full["needs"] == "classify"
+    assert full["if"] == "${{ needs.classify.outputs.profile == 'FULL' }}"
+    assert final["needs"] == ["classify", "docs_validation", "full_validation"]
+    assert final["if"] == "${{ always() }}"
+
+    classify_text = json.dumps(classify)
+    docs_text = json.dumps(docs)
+    full_text = json.dumps(full)
+    final_run = cast(dict[str, Any], final["steps"][0])["run"]
+    assert "scripts/ci_validation_profile.py classify" in classify_text
+    assert "--github-output" in classify_text
+    assert "scripts/ci_validation_profile.py validate-docs" in docs_text
+    assert "setup-uv" not in docs_text
+    assert "setup-node" not in docs_text
+    assert "uv run" not in docs_text
+    assert "npm " not in docs_text
+    assert "uv sync --locked" in full_text
+    assert "backend/tests/security" in full_text
+    assert "P3 vertical slice Gate evidence" in full_text
+    assert "Build package" in full_text
+    assert len(full["steps"]) == 56
+
+    assert 'test "${PLANTNEXUS_CLASSIFY_RESULT}" = "success"' in final_run
+    assert 'test "${PLANTNEXUS_FULL_RESULT}" = "success"' in final_run
+    assert 'test "${PLANTNEXUS_DOCS_RESULT}" = "success"' in final_run
+    assert final_run.count('= "skipped"') == 2
+    assert "Unknown or missing CI validation profile" in final_run
+    assert "continue-on-error" not in workflow_text
+
+
 def test_ci_p3_workspace_schema_contract_is_required_and_machine_checkable(
     tmp_path: Path,
 ) -> None:

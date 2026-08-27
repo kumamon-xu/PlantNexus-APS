@@ -16,7 +16,7 @@ registry_version: 1.0.0
 
 REQ-004/005/007/008/009/013现连接TASK-P4-01与accepted ADR-0013～0015。形成的仅是语义基线：ExecutionEvent权威入口与append-only事实投影、immutable ReplanRequest/result lineage、半开freeze与effective HARD、OBJ-002四元整数词典序、完整ChangeReport，以及Simulator标准事件共同路径。对应TEST-EXECUTION-EVENT-CONTRACT-001、TEST-REPLAN-REQUEST-CONTRACT-001、TEST-FREEZE-WINDOW-001、TEST-STABILITY-OBJECTIVE-001、TEST-CHANGE-REPORT-001仍为`PLANNED`。
 
-没有机器Schema、migration、persistence、Solver、Simulator或行为测试，因此全部Requirement root继续`ALLOCATED`。P4-02是第一个可发布机器carrier的后继，但必须等待本Task双提交provider闭环和新的明确授权；P5/Production边界与`registry_version=1.0.0`不变。
+没有机器Schema、migration、persistence、Solver、Simulator或行为测试，因此全部Requirement root继续`ALLOCATED`。Implementation `abd70942a41984a9a3956f43d39065b19e4405c3` / artifact `9634380233`已精确复验合同/治理范围，本closure据此把TASK-P4-01标为`done`；P4-02虽是第一个可发布机器carrier的后继，仍须等待closure exact provider与新的明确授权。P5/Production边界与`registry_version=1.0.0`不变。
 
 ## P4 planning allocation
 

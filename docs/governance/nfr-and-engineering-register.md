@@ -16,7 +16,7 @@ registry_version: 1.0.0
 
 NFR-COR/DET/TRC/ISO/SEC/HUM与ENG-ARCH/SOL/VAL/ERR/VER现通过TASK-P4-01连接ADR-0013～0015及同步合同：确定性source position/replay、append-only provenance、plane authority fail-closed、Solver-neutral机器合同后继、fresh independent Validator、结构化拒绝和版本兼容边界均已规范化。ReplanRequest不增加独立state pair，Simulator不获得Production route或直接写权威事实的捷径。
 
-该证据是人类合同而非运行行为；所有NFR/ENG root继续`ALLOCATED`，五个相关P4 Test ID继续`PLANNED`。未修改dependency、lock、workflow或测试断言，未形成Production reliability/security/performance/SLA；`registry_version=1.0.0`不变。
+该证据是人类合同而非运行行为；所有NFR/ENG root继续`ALLOCATED`，五个相关P4 Test ID继续`PLANNED`。Implementation `abd70942a41984a9a3956f43d39065b19e4405c3` / artifact `9634380233`已精确验证57-path合同/治理diff、既有全仓Gate与0 issues，使TASK-P4-01可由本closure标为`done`，但不升级业务NFR/ENG。未修改dependency、lock、workflow或测试断言，未形成Production reliability/security/performance/SLA；`registry_version=1.0.0`不变。
 
 ## P4 planning allocation
 

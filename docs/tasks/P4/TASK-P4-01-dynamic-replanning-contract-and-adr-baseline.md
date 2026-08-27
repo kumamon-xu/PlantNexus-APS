@@ -1,7 +1,7 @@
 ---
 doc_id: TASK-P4-01
 title: Dynamic Replanning Contract and ADR Baseline
-status: in_progress
+status: done
 spec_version: 0.3.0
 phase: P4
 normative: true
@@ -101,4 +101,4 @@ Rollback: consumer形成前可通过新的superseding ADR撤回规划；不得�
 
 最终本地治理结果为188 docs、30 roots/30 trace rows、61 Test IDs、15 OPEN、15 SIM assumptions、17 risks、71 Tasks；Task diff相对不可变base覆盖57 paths，精确命中`IMPACT-STATE`、`IMPACT-PHASE`、`IMPACT-GOVERNANCE-REGISTRY`、`IMPACT-DOCS`，19/19 checks、17/17 expected/observed documents、`issues=[]`。`git diff --check`通过（仅Windows LF→CRLF提示），forbidden scope相对Diff base零差异；业务代码、Schema、migration、依赖/lock、测试断言、fixture/benchmark、workflow、P0～P3历史与P5+均未修改。
 
-Implementation exact provider evidence尚待本次提交后形成，因此Task继续`in_progress`；只有其required `validate`与artifact逐项核验成功后，才允许进行evidence-only closure。TASK-P4-02保持`planned`且不会自动启动。
+Implementation `abd70942a41984a9a3956f43d39065b19e4405c3`的required `validate` run/job=`33042150006`/`98417935201`由GitHub Actions app `15368`成功提供；artifact `9634380233`未过期至2026-11-25T05:19:48Z，digest=`sha256:d5078a89a3bbc8a8ffe9654c76dab04a0dd50955859f9fac1cf332a377d0cc3a`。下载的44 files/33 validation JSON精确绑定SHA、TASK-P4-01与Diff base，复现57 committed/0 working paths、四个Impact Rules、17/17 required documents、19/19 checks、`issues=[]`、P2 Gate 11/11、P3 Gate 14/14、Frontend/i18n与三轮12/12 Chromium；branch protection仍精确要求`validate`/app `15368`且`strict=false`。因此本evidence-only closure把Task标为`done`；closure自身必须post-push取得并核验exact required check/artifact，TASK-P4-02保持`planned`且不会自动启动。

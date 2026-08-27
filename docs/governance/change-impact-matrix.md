@@ -16,7 +16,7 @@ registry_version: 1.0.0
 
 不可变Diff base=`b96232b2e3f5573baaf735c7fa7935f95e6c88f5`。本Task新增ADR-0013～0015并同步卡片逐字列明的root README、合同、架构、领域、Planning、Simulation、Operations、Quality、Phase与Governance文档；root README current-status矛盾在修改前已按卡片规则扩入，最终allow-list为57 paths。预期精确命中`IMPACT-STATE`、`IMPACT-PHASE`、`IMPACT-GOVERNANCE-REGISTRY`、`IMPACT-DOCS`四行。STATE变化只记录ReplanRequest无独立状态机和既有PlanningRun/ScheduleVersion/ExportJob pair零漂移，不增加machine pair。
 
-相对base，`backend/**`、`schemas/**`、`frontend/**`、fixtures/benchmarks、migration、dependency/lock、test assertion、`.github/workflows/**`、P0～P3历史与P5+必须零差异。三份ADR为accepted decision而非机器/行为实现；若diff出现第五个Impact Rule或allow-list外路径，必须停止并先扩卡重新审查。最终path/check/issues只能由本地Task report和exact provider回填。
+相对base，`backend/**`、`schemas/**`、`frontend/**`、fixtures/benchmarks、migration、dependency/lock、test assertion、`.github/workflows/**`、P0～P3历史与P5+均为零差异。三份ADR为accepted decision而非机器/行为实现。Implementation artifact `9634380233`已复现57 committed/0 working paths、精确四行、19/19 checks与0 issues，未出现第五个Rule或allow-list外路径；本closure只回填该provider事实与lifecycle，仍保持相同57-path union。
 
 ## TASK-P4-00 phase-transition planning impact
 

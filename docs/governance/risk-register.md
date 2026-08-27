@@ -14,7 +14,7 @@ registry_version: 1.0.0
 
 ## TASK-P4-01 risk controls
 
-ADR-0013已为RISK-015形成source-position ordering、canonical fingerprint、exact replay/conflict、gap fail-closed、append-only projection与transaction边界；ADR-0014为RISK-016形成freeze优先级、四元OBJ-002和可复算ChangeReport；ADR-0015为RISK-017形成Simulator standard-event common-path及Production default-deny。它们只降低语义歧义，尚无机器carrier或行为证据，所以RISK-001～017全部继续`MONITORED`，不升级为MITIGATED/CLOSED。
+ADR-0013已为RISK-015形成source-position ordering、canonical fingerprint、exact replay/conflict、gap fail-closed、append-only projection与transaction边界；ADR-0014为RISK-016形成freeze优先级、四元OBJ-002和可复算ChangeReport；ADR-0015为RISK-017形成Simulator standard-event common-path及Production default-deny。Implementation artifact `9634380233`只证明这些语义与治理边界一致，尚无机器carrier或P4行为证据，所以RISK-001～017全部继续`MONITORED`，不升级为MITIGATED/CLOSED。
 
 ## P4 planning risks
 

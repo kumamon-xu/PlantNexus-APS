@@ -4,7 +4,7 @@
 
 用户已明确批准P3→P4。TASK-P3-17独立Exit Audit的report/manifest均为`READY`、`blocking_gaps=[]`；audit implementation `201be9c6fd1b433a9d0a629a3ae7d4ffe1107476`和evidence-only closure `61eeacdd5efc20b2321750e1310e9e21561c9fc2`的直接拓扑、required `validate`、GitHub Actions app `15368`及未过期artifact均已exact复验。因此P3 Milestone现为`completed`，P4 Dynamic Replanning已激活。
 
-PlantNexus APS 是一个面向单工厂、多车间场景的高级计划与排程（APS）项目。TASK-P4-00阶段启动与完整规划治理已由implementation/closure exact provider闭环为`done`；用户随后单独授权TASK-P4-01，它以`b96232b2e3f5573baaf735c7fa7935f95e6c88f5`为不可变Diff base进入`in_progress`，并形成ADR-0013～0015的事件投影/Replan lineage、freeze/OBJ-002/ChangeReport及Simulator common-path人类合同。P4-02～15仍为`planned`且不会自动启动；机器Schema、migration、代码与行为证据均未形成。Production readiness/UAT/真实approval authority/external publish/deployment/capacity/SLA与P5+仍在边界外。
+PlantNexus APS 是一个面向单工厂、多车间场景的高级计划与排程（APS）项目。TASK-P4-00阶段启动与完整规划治理已由implementation/closure exact provider闭环为`done`；用户随后单独授权TASK-P4-01，它以`b96232b2e3f5573baaf735c7fa7935f95e6c88f5`为不可变Diff base形成ADR-0013～0015的事件投影/Replan lineage、freeze/OBJ-002/ChangeReport及Simulator common-path人类合同。Implementation `abd70942a41984a9a3956f43d39065b19e4405c3`的required `validate`与artifact已exact成功，本evidence-only closure将TASK-P4-01标为`done`；P4-02～15仍为`planned`且不会自动启动。机器Schema、migration、代码与P4行为证据均未形成；Production readiness/UAT/真实approval authority/external publish/deployment/capacity/SLA与P5+仍在边界外。
 
 ## 开始之前
 
@@ -77,7 +77,7 @@ scripts/      仓库级校验与自动化脚本
 infra/        P0 开发容器构建配置
 ```
 
-P2 CP-SAT Vertical Slice与P3 Planning Workspace均已通过Exit Gate并关闭，当前阶段为P4。P2-00～14、P3-00～17与TASK-P4-00均为`done`；P3 Exit与P4 planning双提交exact provider已完整复验。TASK-P4-01当前为`in_progress`且只形成accepted contract/ADR baseline，P4-02～15仍为`planned`。Production capacity/SLA/identity/approval authority/external publish仍未形成，P4运行行为也尚未开始。当前边界见[`docs/current_phase.md`](docs/current_phase.md)。
+P2 CP-SAT Vertical Slice与P3 Planning Workspace均已通过Exit Gate并关闭，当前阶段为P4。P2-00～14、P3-00～17、TASK-P4-00与TASK-P4-01均为`done`；P3 Exit、P4 planning与P4-01 implementation provider已完整复验。P4-01只形成accepted contract/ADR baseline，P4-02～15仍为`planned`。Production capacity/SLA/identity/approval authority/external publish仍未形成，P4运行行为也尚未开始。当前边界见[`docs/current_phase.md`](docs/current_phase.md)。
 
 TASK-P3-13保留失败implementation run `32920462781`、首次closure `87d47c7483185483ac8027100c1c664d18011a7c` / run `32921871460`的606/1失败与artifact count=0。独立XLSX deterministic corrective implementation `3538d46f8b73ae434057bcbca9037436aa91f2c7`的required run/job/artifact=`32923203227`/`98040743610`/`9590625358`已全绿并下载复验33份JSON、12/12 Chromium和Task 91/0/11/19/0；该P3-13 closure当时未自动启动P3-14，后者现依据新的用户授权独立执行。
 

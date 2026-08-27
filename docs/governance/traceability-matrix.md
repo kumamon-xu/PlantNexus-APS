@@ -14,9 +14,9 @@ registry_version: 1.0.0
 
 ## TASK-P4-01 contract trace slice
 
-REQ-004/005/007/008/009/013、NFR-COR/DET/TRC/ISO/SEC/HUM和ENG-ARCH/SOL/VAL/ERR/VER现连接TASK-P4-01→ADR-0013/0014/0015→事件/Replan/freeze/stability/ChangeReport/Simulator人类合同→五个`PLANNED` Test ID。ADR decision为accepted，但机器Schema、migration、code、test与provider behavior均未形成；root lifecycle继续`ALLOCATED`。
+REQ-004/005/007/008/009/013、NFR-COR/DET/TRC/ISO/SEC/HUM和ENG-ARCH/SOL/VAL/ERR/VER现连接TASK-P4-01→ADR-0013/0014/0015→事件/Replan/freeze/stability/ChangeReport/Simulator人类合同→五个`PLANNED` Test ID。ADR decision与治理provider edge已形成，但机器Schema、migration、code、test及P4运行行为均未形成；root lifecycle继续`ALLOCATED`。
 
-合同链明确：ExecutionEvent→append-only fact revision→new immutable Snapshot→immutable ReplanRequest→lexicographic Solver→fresh independent Validator→new DRAFT ScheduleVersion+ChangeReport；Simulator只能从同一ExecutionEvent入口进入。Implementation/closure provider edge尚待各自exact SHA产生，P4-02～15均不得继承本地合同状态。
+合同链明确：ExecutionEvent→append-only fact revision→new immutable Snapshot→immutable ReplanRequest→lexicographic Solver→fresh independent Validator→new DRAFT ScheduleVersion+ChangeReport；Simulator只能从同一ExecutionEvent入口进入。Implementation `abd70942a41984a9a3956f43d39065b19e4405c3` / artifact `9634380233`已精确复验57/0/4/19/0与33份validation JSON，本closure据此把合同trace edge升级为`PROVIDER_VERIFIED_DONE`；closure自身仍须post-push exact provider，P4-02～15不继承P4行为状态。
 
 ## P4 planning trace slice
 

@@ -13,7 +13,7 @@ last_reviewed: 2026-08-27
 
 ## TASK-P4-01 contract baseline
 
-TASK-P4-01已获独立授权并从clean synchronized `b96232b2e3f5573baaf735c7fa7935f95e6c88f5`冻结Diff base，当前为`in_progress`。ADR-0013～0015已按registry precheck分配并作为accepted人类合同冻结事件投影/Replan lineage、freeze/OBJ-002/ChangeReport及Simulator common-path；未发布Schema、migration、代码或行为证据。P4仍为`active`，P4-02～15保持`planned`，不自动进入下一Task、P5或Production。
+TASK-P4-01已获独立授权并从clean synchronized `b96232b2e3f5573baaf735c7fa7935f95e6c88f5`冻结Diff base。ADR-0013～0015已按registry precheck分配并作为accepted人类合同冻结事件投影/Replan lineage、freeze/OBJ-002/ChangeReport及Simulator common-path；implementation `abd70942a41984a9a3956f43d39065b19e4405c3`的required `validate` run/job与未过期artifact `33042150006`/`98417935201`/`9634380233`已exact复验，故本closure把TASK-P4-01标为`done`。未发布Schema、migration、代码或P4行为证据；P4仍为`active`，P4-02～15保持`planned`，不自动进入下一Task、P5或Production。
 
 ## P3→P4 transition
 
@@ -62,7 +62,7 @@ P2当前状态：[`P2 — CP-SAT Vertical Slice`](P2-cp-sat-vertical-slice.md)�
 
 P3当前状态：[`P3 — Planning Workspace`](P3-planning-workspace.md)为`completed`。TASK-P3-00～17均为`done`；TASK-P3-17 final independent Exit Audit为`READY`且0 gaps，implementation/closure exact provider均已复验。用户于2026-08-27明确批准transition，历史失败与corrective/provider链保持只读。
 
-P4当前状态：[`P4 — Dynamic Replanning`](P4-dynamic-replanning.md)为`active`。TASK-P4-00已由implementation/closure exact provider闭环为`done`；TASK-P4-01按单独授权为`in_progress`并只形成contract/ADR基线，P4-02～15仍为`planned`。P4-15是独立Exit Audit；P5与Production仍未进入。
+P4当前状态：[`P4 — Dynamic Replanning`](P4-dynamic-replanning.md)为`active`。TASK-P4-00与TASK-P4-01均为`done`；P4-01只形成contract/ADR基线，P4-02～15仍为`planned`且未获自动授权。P4-15是独立Exit Audit；P5与Production仍未进入。
 
 TASK-P3-04 implementation `a9be974855bb825784d639b7f6675e5a33e4273d`的run/job/artifact=`32700005280`/`97349447107`/`9510215582`精确复现35 focused、515 full、8/8 lifecycle、23/23 JSON PASS与45 committed/0 working paths、8 rows、19 checks、0 issues，故本closure标为`done`。该证据只形成reviewable ScheduleVersion，不形成approval、publish、P4或Production readiness。
 

@@ -15,7 +15,7 @@ last_reviewed: 2026-08-27
 
 本Task只发布三份accepted ADR与其人类合同同步，禁止修改`.github/workflows/**`、业务代码、Schema、migration、dependency/lock和测试断言。不可变Diff base为`b96232b2e3f5573baaf735c7fa7935f95e6c88f5`；implementation与evidence-only closure必须分别由现有required `validate`（GitHub Actions app `15368`）对exact SHA执行成功，并下载未过期artifact核对TASK-P4-01、Diff base、`IMPACT-STATE/PHASE/GOVERNANCE-REGISTRY/DOCS`、19/19 checks与`issues=[]`。
 
-本地文档治理、Task diff、phase/dependency policy、`git diff --check`和forbidden-scope全部通过只构成local acceptance。Implementation provider形成前Task保持`in_progress`；其artifact精确通过后才能提交evidence-only closure，closure自身仍需相同exact provider闭环。失败run必须保留，corrective只能在经Impact review扩展后的57-path allow-list内；TASK-P4-02不得自动启动。
+本地文档治理、Task diff、phase/dependency policy、`git diff --check`和forbidden-scope全部通过只构成local acceptance。Implementation `abd70942a41984a9a3956f43d39065b19e4405c3`的required run/job=`33042150006`/`98417935201`由app `15368`成功提供；artifact `9634380233`未过期，digest=`sha256:d5078a89a3bbc8a8ffe9654c76dab04a0dd50955859f9fac1cf332a377d0cc3a`，下载复核44 files/33 validation JSON、TASK/base、57/0 paths、四行、17/17 documents、19/19 checks、0 issues、P2 11/11、P3 14/14与三轮12/12 Chromium。故本evidence-only closure可把Task标为`done`；closure自身仍需相同exact provider闭环，TASK-P4-02不得自动启动。
 
 ## P4 planning CI boundary
 

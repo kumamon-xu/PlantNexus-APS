@@ -11,6 +11,12 @@ last_reviewed: 2026-08-27
 
 # 配置、环境与数据隔离
 
+## CI validation profile isolation
+
+CI Profile只由不可变event base..head的Git路径决定，不读取业务environment、Secret、数据库、data plane或用户输入。只有`README.md`、`docs/README.md`及公开技术文档目录中的Markdown-only diff可选择DOCS_ONLY；workflow、脚本、test、lock、配置、内部过程路径、混合/空/未知diff全部选择FULL。分类器和changed-doc validator仅使用Python标准库与Git，workflow权限继续为`contents: read`。
+
+最终required context仍为`validate`：classifier成功且恰当分支成功、另一分支skipped时才PASS。DOCS_ONLY不连接Production/Simulation runtime，也不证明业务正确性、部署隔离、容量或SLA；FULL继续执行既有完整repository Gate。
+
 ## TASK-P4-05 isolation boundary
 
 Freeze policy不是环境变量、UI fallback或wall-clock配置；本Task只接受`SIMULATION`且`synthetic=true`的新Snapshot与base Version，environment限定DEVELOPMENT/TEST/BENCHMARK。Production-shaped policy/base或cross-plane lineage均在投影前拒绝，900秒只能引用SIM-ASSUMPTION-017，不得进入Production配置、部署值或SLA。

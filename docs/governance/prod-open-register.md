@@ -12,6 +12,10 @@ registry_version: 1.0.0
 
 # PROD_OPEN 注册表
 
+## P4 planning boundary
+
+TASK-P4-00不关闭任何PROD_OPEN。OPEN-005继续阻止Production freeze window；OPEN-006阻止Production priority/KPI权重；OPEN-002/010/015阻止真实external接口、identity/approval authority与字段/数据权威；OPEN-011/012阻止Production依赖安全完备性与capacity/SLA结论。P4-05/09/10/13只能登记有界Simulation值和测试actor，P4-11/12不得把internal output/API写成external Production能力。OPEN-001～015全部保持`OPEN`，无closure record且registry version不变。
+
 ## TASK-P3-17 audit boundary
 
 P3 Exit本地审计为`READY`不关闭任何PROD_OPEN。OPEN-001～015继续全部`OPEN`；尤其真实审批authority、Production数据库/身份/密钥、外部publish、历史生产benchmark、capacity/SLA与部署证据仍缺失。TASK-P3-17只证明内部Simulation Planning Workspace范围可复验，不能形成Production readiness、approval、UAT或deployment声明。

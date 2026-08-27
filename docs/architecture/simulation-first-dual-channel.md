@@ -11,6 +11,10 @@ last_reviewed: 2026-08-20
 
 # Simulation-First 双通道架构
 
+## P4 planned common-path use
+
+TASK-P4-09/10将建立deterministic Execution Simulator、虚拟时钟和五类连续异常，但synthetic事件必须通过TASK-P4-04同一validated event/fact入口，重排必须通过TASK-P4-08同一application service；禁止simulation-only shortcut伪造Production能力。TASK-P4-01的planned Execution Simulator Common-Path ADR必须先决定common-path与隔离边界。当前只有规划，没有Simulator runtime、Production channel或外部集成。
+
 ## 核心设计
 
 Production 和 Simulation 只在数据来源及环境隔离上不同，从 Standard Import Contract 开始必须使用同一产品链路。

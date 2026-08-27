@@ -1,7 +1,7 @@
 ---
 doc_id: MILESTONE-P3
 title: P3 — Planning Workspace
-status: active
+status: completed
 spec_version: 0.3.0
 phase: P3
 normative: true
@@ -11,17 +11,21 @@ last_reviewed: 2026-08-27
 
 # P3 — Planning Workspace
 
+## P3 closure and transition
+
+用户于2026-08-27在TASK-P3-00～17全部`done`、Exit report/manifest=`READY`且`blocking_gaps=[]`、audit implementation `201be9c6fd1b433a9d0a629a3ae7d4ffe1107476`与closure `61eeacdd5efc20b2321750e1310e9e21561c9fc2`的exact required provider/artifact均完成复验后批准P3→P4。P3现为`completed`；本段只追加transition事实，保留全部Exit报告、manifest、历史失败run、corrective链、provider evidence、OPEN/SIM assumptions、风险与P3/P4边界，不改写任何P3历史结论。
+
 ## TASK-P3-17 Exit decision
 
 最终独立Audit已在冻结baseline `0933e10760096cdf8e812b2d41b34916e9db5750`上完成本地判定：[audit report](P3-exit-gate-audit-report.md)与[machine manifest](P3-exit-gate-evidence-manifest.json)均为overall=`READY`、`blocking_gaps=[]`。39个P3 push SHA/required checks、35个成功run、4个历史失败run、36个未过期artifact及1052文件/1010 JSON均已独立核验；621 Python、67 Vitest、三组12/12 Chromium、双语8/8、P2 11/11与P3 14/14双回放也全部通过。
 
-Audit implementation `201be9c6fd1b433a9d0a629a3ae7d4ffe1107476`的run/job/artifact=`33033591189`/`98391337626`/`9631260796`已exact成功，下载复核44 files/38 JSON、28 SHA-bound/0 mismatch、61 committed/0 working paths、4 Impact Rules、19 checks、0 issues及P2/P3/i18n/三组Chromium一致。本evidence-only closure据此把TASK-P3-17标为`done`；closure provider只能在push后形成并须精确复验。P3仍保持`active`/Exit ready awaiting explicit transition；P4与Production没有被授权或启动。
+Audit implementation `201be9c6fd1b433a9d0a629a3ae7d4ffe1107476`的run/job/artifact=`33033591189`/`98391337626`/`9631260796`已exact成功，下载复核44 files/38 JSON、28 SHA-bound/0 mismatch、61 committed/0 working paths、4 Impact Rules、19 checks、0 issues及P2/P3/i18n/三组Chromium一致。Evidence-only closure `61eeacdd5efc20b2321750e1310e9e21561c9fc2`的run/job/artifact=`33034464425`/`98394043379`/`9631608856`亦已exact复验成功并把TASK-P3-17标为`done`。P3在该closure时保持`active`/Exit ready awaiting explicit transition；现已由本页顶部transition记录关闭，Production仍未启动。
 
 ## TASK-P3-17 independent Exit Audit activation
 
 用户于2026-08-27明确授权执行TASK-P3-17。启动复核确认TASK-P3-00～16全部`done`，`main=origin/main=remote main=0933e10760096cdf8e812b2d41b34916e9db5750`且working tree clean；P3-16 implementation/closure拓扑与exact required provider均成功，closure artifact `9629623182`下载内容的Task/SHA/base、双语coverage、P3 Gate、Impact Rules、checks与issues一致。该HEAD冻结为不可变Diff base；Task已完成独立Audit并由上述implementation provider支持为`done`。
 
-本Audit独立重放全部P3 Gate并形成READY/NOT_READY；不得继承P3-14/P3-16结论代替重放，不得在Audit内修实现。P3继续`active`，P4、Production readiness/UAT/authority/deployment均未启动。
+本Audit独立重放全部P3 Gate并形成READY/NOT_READY；不得继承P3-14/P3-16结论代替重放，不得在Audit内修实现。在Audit执行与closure时P3继续`active`且P4未启动；现已由新的明确transition授权结束该等待状态。Production readiness/UAT/authority/deployment仍未启动。
 
 ## TASK-P3-15 amendment-governance completion and final plan
 

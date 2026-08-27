@@ -11,6 +11,10 @@ last_reviewed: 2026-08-27
 
 # ScheduleVersion 状态机
 
+## P4 planned state review
+
+Dynamic replan不得原地修改PUBLISHED或既有Version。TASK-P4-08只可在P4-03～07完成后，以受验证结果创建带完整base/event/fact/request/report lineage的新DRAFT；是否需要额外state/pair必须由TASK-P4-01 ADR和TASK-P4-02 carrier显式决定。当前DRAFT/READY_FOR_REVIEW/APPROVED/REJECTED/PUBLISHED/SUPERSEDED集合与所有pair不变。
+
 ## TASK-P3-17 audit conclusion
 
 六状态与五个allowed pair、APPROVED-only internal publication、REJECTED/DRAFT不可发布、PUBLISHED immutable、SUPERSEDED history、CAS/idempotency/audit均经双Gate和negative replay独立PASS。状态集合与transition pair未修改，真实Production approval authority未形成。

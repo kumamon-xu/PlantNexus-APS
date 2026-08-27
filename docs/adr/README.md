@@ -11,6 +11,10 @@ last_reviewed: 2026-08-27
 
 # Architecture Decision Records
 
+## P4 planned ADR allocation
+
+TASK-P4-01预期新增且仅能新增三份独立决定：ExecutionEvent Authority / Fact Projection / Replan Lineage ADR、Freeze / Stability / ChangeReport ADR、Deterministic Execution Simulator Common-Path ADR。三份ADR当前均为`PLANNED_NOT_CREATED`，stable ID与文件名必须在TASK-P4-01启动时通过registry precheck分配，不得在TASK-P4-00中创建、接受或预写结论；它们必须先于TASK-P4-02任何Schema以及全部P4业务实现，并且不得改写ADR-0001～0012历史。
+
 ## TASK-P3-15 / TASK-P3-16 ADR impact review
 
 阶段计划修订治理、`official-zh-cn-terminology.v1`与TASK-P3-16 Frontend双语展示继续遵循ADR-0002/0005/0007/0009/0012；typed display dictionaries、local non-sensitive locale preference和英文machine contract zero drift已按既有决定实现并由exact implementation provider复验，没有改变模块、authority、state、persistence、Schema、dependency或Production决策，因此ADR impact为`none`，accepted ADR正文保持逐字只读。若未来需要server locale negotiation、新dependency、localized wire value、client authority或新state pair，必须停止并先走独立ADR/治理审查。

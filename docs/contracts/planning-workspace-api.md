@@ -11,6 +11,10 @@ last_reviewed: 2026-08-27
 
 # P3 Planning Workspace API 语义合同
 
+## P4 planned API extension boundary
+
+TASK-P4-12在P4-02/03/04/08/11全部`done`后才可设计有界dynamic replanning transport，并必须复用既有server authority、idempotency/CAS、correlation、audit及Simulation隔离。当前17+1 P3 operation与OpenAPI fingerprint不变；没有P4 route/action、真实identity/approval authority、external publish或deployment接口形成。
+
 ## TASK-P3-17 audit conclusion
 
 18个operation（17个frozen P3-10 + 1个bounded verified download）的path/header/body/error/correlation/idempotency与server delegation完成zero-drift复验：18 delegations、0 router transition、0 Solver/Validator调用、0 Production provider lookup/application call。P3 Exit本地READY不形成external API authority。
@@ -152,7 +156,7 @@ action scope至少包含data plane、action、resource/version、target和key；
 
 ## 测试分配
 
-TASK-P3-01只形成文档合同；TASK-P3-02现以`test_p3_workspace_contracts.py`形成`TEST-CONTRACT-001`与`TEST-WORKSPACE-CONTRACT-001`的machine carrier slice，并复验`TEST-STATE-TRANSITION-001`/`TEST-ERROR-MAPPING-001`既有集合未漂移。P3-05～10形成read/command/API behavior，P3-13形成用户可见E2E，P3-14复验Gate；P3-16 display-only本地化与P3-17最终独立Audit均为`done`，P3-17 closure provider待push后复验。P3-15为治理支持，不是API/Audit实现。
+TASK-P3-01只形成文档合同；TASK-P3-02以`test_p3_workspace_contracts.py`形成`TEST-CONTRACT-001`与`TEST-WORKSPACE-CONTRACT-001`的machine carrier slice，并复验`TEST-STATE-TRANSITION-001`/`TEST-ERROR-MAPPING-001`既有集合未漂移。P3-05～10形成read/command/API behavior，P3-13形成用户可见E2E，P3-14复验Gate；P3-16 display-only本地化与P3-17最终独立Audit均为`done`且双提交provider完整闭环。P3-15为治理支持，不是API/Audit实现。
 
 ## TASK-P3-02 machine carrier realization
 

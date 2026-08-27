@@ -11,6 +11,10 @@ last_reviewed: 2026-08-27
 
 # ExportJob 状态机
 
+## P4 planned ChangeReport export review
+
+TASK-P4-11可以在P4-06/08后把versioned ChangeReport接入既有internal Simulation成果包，但不得改变ExportJob lifecycle、重试幂等、verified download或published-only guard，除非其自身先取得明确state/contract扩卡。当前state set/pair、worker与external-target default-deny均不变。
+
 ## TASK-P3-17 audit conclusion
 
 五状态、六个allowed pair、attempt/lease/heartbeat、retry/cancel/expired recovery、atomic audit与EXPORTED-only verified package已独立PASS。没有外部target、P4 ChangeReport或Production worker capacity声明。

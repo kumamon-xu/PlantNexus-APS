@@ -11,6 +11,10 @@ last_reviewed: 2026-08-26
 
 # P0 Observability 与 Audit 边界
 
+## P4 planned observability chain
+
+TASK-P4-03/04/08/09必须用stable correlation连接event、fact projection、ReplanRequest、solver/validator、new Version、ChangeReport与simulator replay；TASK-P4-14/15检查完整性、失败与纠正链。不得记录secret或以日志代替durable audit。当前metric/log/trace配置及Production monitoring/SLO不变。
+
 ## TASK-P3-17 audit conclusion
 
 ScheduleVersion decision/publication/export的success与denial audit、correlation、redaction、lineage、raw runtime observation及provider artifacts已独立重放；0 issue/0 gap。Production retention、alerting和SLA仍未形成。

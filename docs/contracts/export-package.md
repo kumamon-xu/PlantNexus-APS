@@ -11,6 +11,10 @@ last_reviewed: 2026-08-26
 
 # 标准成果包合同
 
+## P4 planned ChangeReport export impact
+
+TASK-P4-11在P4-06/08完成后才可把ChangeReport read model以版本化、deterministic、lineage-bound方式接入既有internal Simulation export；不得改写P2/P3 package bytes或把报告当作external publish。具体manifest/carrier变化若需要Schema，必须回到TASK-P4-02或经独立扩卡治理；当前成果包、ExportJob和下载行为不变。
+
 ## TASK-P3-17 audit conclusion
 
 P3 standard package的12 payload、manifest-last、canonical JSON/CSV/XLSX bytes、lineage/hash、exact replay/conflict/partial cleanup及EXPORTED-only verified download已独立复验PASS。P4 ChangeReport仍deferred，internal Simulation package不等于external或Production publish。

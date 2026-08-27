@@ -11,6 +11,10 @@ last_reviewed: 2026-08-21
 
 # PlanningStrategy 规则
 
+## P4 planned strategy boundary
+
+P4-07在既有Global Strategy上增加有界replan solve path，并可使用base schedule作为Hint，但Hint不构成事实、freeze或lock保护；独立Validator仍是acceptance authority。P4不引入P5 decomposition、rolling/hybrid、多工厂、alternative route、batch、secondary resource或sequence-dependent setup策略。本次没有策略实现或默认参数变化。
+
 V1 默认且唯一批准的生产策略为：
 
 ```text

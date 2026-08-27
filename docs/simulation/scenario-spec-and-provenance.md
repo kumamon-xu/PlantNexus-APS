@@ -11,6 +11,10 @@ last_reviewed: 2026-08-20
 
 # ScenarioSpec 与 Provenance
 
+## P4 planned provenance extension
+
+TASK-P4-02/09/10必须为Simulator run登记scenario/version/seed/virtual-time/event-stream/base-version及全部input/output fingerprints，使任一异常链可byte/semantic replay并明确`synthetic=true`。新增字段只能通过versioned additive contract形成；当前ScenarioSpec、existing samples和SIM-ASSUMPTION-001～015均不变。
+
 ScenarioSpec 描述一次可完全重放的计划实验：引用 FactoryProfile，给出 seed、能力要求、复杂度、事件和预期行为。
 
 ```yaml

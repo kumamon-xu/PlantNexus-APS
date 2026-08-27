@@ -11,6 +11,10 @@ last_reviewed: 2026-08-21
 
 # 性能与现实校准门
 
+## P4 planned gate boundary
+
+P4-14必须在功能完整性、determinism、fact/lock preservation、Validator PASS和ChangeReport completeness均通过后才比较replan timing/tardiness/stability；P4-15独立重放。OPEN-003/004/005/006及真实数据校准未关闭前，任何结果都不能声明Production capacity或SLA。本次不修改阈值、fixture或benchmark evidence。
+
 ## TASK-P3-17 audit boundary
 
 独立Audit复验P2 XS/S/M及P3 development observations，但不建立L/XL、真实历史回放、Production capacity或SLA。OPEN-011/012继续OPEN，所有时延/内存/bundle只作为原始开发证据保留。

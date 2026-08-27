@@ -11,6 +11,10 @@ last_reviewed: 2026-08-21
 
 # Property Test 规范
 
+## P4 planned property coverage
+
+后继Task必须覆盖event dedup/order invariance、fact projection idempotency、freeze/HARD_LOCK preservation、OBJ-002/ChangeReport arithmetic、new Version immutability及same scenario replay determinism；生成器不能产生未声明P5能力并静默近似。具体断言属于P4-03～10，不在TASK-P4-00修改。
+
 ## TASK-P3-17 audit conclusion
 
 registered property suites随621项全仓测试重新执行，覆盖determinism、copy-on-write、idempotency、CAS/并发、plane与Validator边界；全部PASS且断言未变。Audit没有新增assumption或以property样本替代Production证据。

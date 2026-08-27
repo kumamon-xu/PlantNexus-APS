@@ -11,6 +11,10 @@ last_reviewed: 2026-08-27
 
 # CI Gate 与 Definition of Done
 
+## P4 planning CI boundary
+
+TASK-P4-00只运行既有本地治理与required-equivalent检查，禁止修改`.github/workflows/**`。每个P4 implementation Task必须以自身exact Diff base生成Task report，并在push后由required `validate`（GitHub Actions app `15368`）提供未过期artifact，核对exact SHA/Task/base/Impact Rules/checks/issues后才能evidence-only closure；P4-14/15另有完整Gate/Audit。当前required check仍只有`validate`。
+
 ## TASK-P3-17 audit conclusion
 
 本地required-equivalent已通过locked install、Ruff、Pyright、621 pytest、67 Vitest、三组12/12 Chromium、33 machine reports、P2 11/11、P3 14/14、SCA/license、Compose与双build；前序provider chain也已下载核验。TASK-P3-17仍须自身implementation exact `validate`/artifact与evidence-only closure provider后才满足DoD；本地READY不能替代provider。

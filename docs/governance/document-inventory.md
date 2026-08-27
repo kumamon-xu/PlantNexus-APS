@@ -12,9 +12,13 @@ registry_version: 1.0.0
 
 # 文档清单
 
+## TASK-P4-00 phase-planning inventory delta
+
+本批新增TASK-P4-00～15共16份正式Markdown，inventory由169增至185；P3从`active`转为`completed`，P4从`planned`转为`active`，P4-00=`in_progress`、P4-01～15=`planned`。Roots=30、trace rows=30、OPEN=15、SIM assumptions=15与registry format version不变；Test IDs由49增至61、risks由14增至17、Tasks由55增至71。没有新增ADR正文、Schema、migration、依赖、fixture、test、workflow、runbook、P5或Production文档。
+
 ## TASK-P3-17 audit inventory delta
 
-本Audit新增唯一正式Markdown `docs/milestones/P3-exit-gate-audit-report.md`，inventory由168增至169；相邻machine manifest为JSON，下载的provider evidence和本地`build/**`报告均不进入清单。TASK-P3-17独立审计结论为`READY`且`blocking_gaps=[]`，audit implementation exact provider已验证并由本closure标为`done`，closure provider待push后复验。Roots=30、trace rows=30、Test IDs=49、OPEN=15、SIM=15、risks=14、Tasks=55与所有registry format version保持不变；P3继续active，P4与Production未启动。
+本Audit新增唯一正式Markdown `docs/milestones/P3-exit-gate-audit-report.md`，inventory由168增至169；相邻machine manifest为JSON，下载的provider evidence和本地`build/**`报告均不进入清单。TASK-P3-17独立审计结论为`READY`且`blocking_gaps=[]`，audit implementation与closure exact provider均已验证并把Task标为`done`。Roots=30、trace rows=30、Test IDs=49、OPEN=15、SIM=15、risks=14、Tasks=55与所有registry format version保持不变；P3 active/P4未启动是该closure时的历史状态，现由上方P4 planning delta取代。
 
 ## TASK-P3-16 implementation review
 
@@ -38,7 +42,7 @@ TASK-P3-14不新增、删除或重命名正式Markdown，inventory继续覆盖16
 
 Root=30、trace rows=30、Test IDs=48、OPEN=15、risks=13、Tasks=53均不变；新增SIM-ASSUMPTION-015使SIM count=15但不改变registry format。Artifact `9589931373`复现33 JSON及Task 91/0/11/19/0，closure run `32921871460`失败且无artifact；独立corrective artifact `9590625358`再次复现33 JSON及91/0/11/19/0。本closure自身仍须exact provider。
 
-本清单列出当前仓库已经实际存在的Markdown文档。P0～P2均已归档为completed；P2 Exit Gate=`READY`且用户已批准transition。P3现为active，TASK-P3-00～17均为`done`；P3-17最终独立Audit为`IMPLEMENTATION_PROVIDER_VERIFIED_CLOSURE_PENDING`，Exit=`READY`/0 gaps。P3 human-control UI/E2E、有界internal Simulation成果包下载及双语展示provider evidence已形成；Production Runbook正文仍未形成。
+本清单列出当前仓库已经实际存在的Markdown文档。P0～P3均已归档为completed；P3 Exit Gate=`READY`、0 gaps且implementation/closure provider完整闭环。P4现为active，TASK-P4-00负责phase planning，P4-01～15仍为planned且无implementation SHA。P3 human-control UI/E2E、有界internal Simulation成果包下载及双语展示provider evidence保持历史只读；Production Runbook正文仍未形成。
 
 | Path | Doc ID | Status | Title |
 |---|---|---|---|
@@ -119,8 +123,8 @@ Root=30、trace rows=30、Test IDs=48、OPEN=15、risks=13、Tasks=53均不变�
 | [milestones/P2-cp-sat-vertical-slice.md](../milestones/P2-cp-sat-vertical-slice.md) | MILESTONE-P2 | completed | P2 — CP-SAT Vertical Slice |
 | [milestones/P2-exit-gate-audit-report.md](../milestones/P2-exit-gate-audit-report.md) | MILESTONE-P2-AUDIT-001 | baseline | P2 Exit Gate Audit Report |
 | [milestones/P3-exit-gate-audit-report.md](../milestones/P3-exit-gate-audit-report.md) | MILESTONE-P3-AUDIT-001 | baseline | P3 Exit Gate Audit Report |
-| [milestones/P3-planning-workspace.md](../milestones/P3-planning-workspace.md) | MILESTONE-P3 | active | P3 — Planning Workspace |
-| [milestones/P4-dynamic-replanning.md](../milestones/P4-dynamic-replanning.md) | MILESTONE-P4 | planned | P4 — Dynamic Replanning |
+| [milestones/P3-planning-workspace.md](../milestones/P3-planning-workspace.md) | MILESTONE-P3 | completed | P3 — Planning Workspace |
+| [milestones/P4-dynamic-replanning.md](../milestones/P4-dynamic-replanning.md) | MILESTONE-P4 | active | P4 — Dynamic Replanning |
 | [milestones/P5-advanced-capabilities.md](../milestones/P5-advanced-capabilities.md) | MILESTONE-P5 | planned | P5 — Advanced Capabilities |
 | [milestones/P6-ai-duration-prediction.md](../milestones/P6-ai-duration-prediction.md) | MILESTONE-P6 | planned | P6 — AI Duration Prediction |
 | [milestones/P7-reality-calibration.md](../milestones/P7-reality-calibration.md) | MILESTONE-P7 | planned | P7 — Reality Calibration |
@@ -209,10 +213,26 @@ Root=30、trace rows=30、Test IDs=48、OPEN=15、risks=13、Tasks=53均不变�
 | [tasks/P3/TASK-P3-15-phase-plan-amendment-governance-support.md](../tasks/P3/TASK-P3-15-phase-plan-amendment-governance-support.md) | TASK-P3-15 | done | P3 Phase Plan Amendment Governance Support |
 | [tasks/P3/TASK-P3-16-frontend-bilingual-localization-and-official-terminology.md](../tasks/P3/TASK-P3-16-frontend-bilingual-localization-and-official-terminology.md) | TASK-P3-16 | done | Frontend Bilingual Localization and Official Terminology |
 | [tasks/P3/TASK-P3-17-p3-exit-gate-audit.md](../tasks/P3/TASK-P3-17-p3-exit-gate-audit.md) | TASK-P3-17 | done | P3 Exit Gate Audit |
+| [tasks/P4/TASK-P4-00-phase-transition-and-task-planning-governance.md](../tasks/P4/TASK-P4-00-phase-transition-and-task-planning-governance.md) | TASK-P4-00 | in_progress | P4 Phase Transition and Task Planning Governance |
+| [tasks/P4/TASK-P4-01-dynamic-replanning-contract-and-adr-baseline.md](../tasks/P4/TASK-P4-01-dynamic-replanning-contract-and-adr-baseline.md) | TASK-P4-01 | planned | Dynamic Replanning Contract and ADR Baseline |
+| [tasks/P4/TASK-P4-02-execution-event-replan-change-report-schemas.md](../tasks/P4/TASK-P4-02-execution-event-replan-change-report-schemas.md) | TASK-P4-02 | planned | ExecutionEvent Replan and ChangeReport Machine Contracts |
+| [tasks/P4/TASK-P4-03-replan-event-persistence-and-state-transactions.md](../tasks/P4/TASK-P4-03-replan-event-persistence-and-state-transactions.md) | TASK-P4-03 | planned | Replan Event Persistence and State Transactions |
+| [tasks/P4/TASK-P4-04-execution-event-ingestion-and-fact-projection.md](../tasks/P4/TASK-P4-04-execution-event-ingestion-and-fact-projection.md) | TASK-P4-04 | planned | ExecutionEvent Ingestion and Fact Projection |
+| [tasks/P4/TASK-P4-05-freeze-window-and-effective-lock-projection.md](../tasks/P4/TASK-P4-05-freeze-window-and-effective-lock-projection.md) | TASK-P4-05 | planned | Freeze Window and Effective Lock Projection |
+| [tasks/P4/TASK-P4-06-stability-objective-and-change-report.md](../tasks/P4/TASK-P4-06-stability-objective-and-change-report.md) | TASK-P4-06 | planned | OBJ-002 Stability and ChangeReport |
+| [tasks/P4/TASK-P4-07-lexicographic-replan-solver-and-validator.md](../tasks/P4/TASK-P4-07-lexicographic-replan-solver-and-validator.md) | TASK-P4-07 | planned | Lexicographic Replan Solver and Validator |
+| [tasks/P4/TASK-P4-08-replan-application-and-schedule-version-lineage.md](../tasks/P4/TASK-P4-08-replan-application-and-schedule-version-lineage.md) | TASK-P4-08 | planned | Replan Application and ScheduleVersion Lineage |
+| [tasks/P4/TASK-P4-09-deterministic-execution-simulator-core.md](../tasks/P4/TASK-P4-09-deterministic-execution-simulator-core.md) | TASK-P4-09 | planned | Deterministic Execution Simulator Core |
+| [tasks/P4/TASK-P4-10-disruption-scenario-library-and-replay.md](../tasks/P4/TASK-P4-10-disruption-scenario-library-and-replay.md) | TASK-P4-10 | planned | Disruption Scenario Library and Continuous Replay |
+| [tasks/P4/TASK-P4-11-change-report-read-model-and-export-integration.md](../tasks/P4/TASK-P4-11-change-report-read-model-and-export-integration.md) | TASK-P4-11 | planned | ChangeReport Read Model and Export Integration |
+| [tasks/P4/TASK-P4-12-dynamic-replanning-http-api.md](../tasks/P4/TASK-P4-12-dynamic-replanning-http-api.md) | TASK-P4-12 | planned | Dynamic Replanning HTTP API |
+| [tasks/P4/TASK-P4-13-replanning-workspace-ui-and-browser-e2e.md](../tasks/P4/TASK-P4-13-replanning-workspace-ui-and-browser-e2e.md) | TASK-P4-13 | planned | Replanning Workspace UI and Browser E2E |
+| [tasks/P4/TASK-P4-14-p4-vertical-slice-gate-evidence.md](../tasks/P4/TASK-P4-14-p4-vertical-slice-gate-evidence.md) | TASK-P4-14 | planned | P4 Vertical Slice Gate Evidence |
+| [tasks/P4/TASK-P4-15-p4-exit-gate-audit.md](../tasks/P4/TASK-P4-15-p4-exit-gate-audit.md) | TASK-P4-15 | planned | P4 Exit Gate Audit |
 | [tasks/README.md](../tasks/README.md) | DOC-TASK-INDEX | living | Task Card 索引 |
 | [tasks/TASK_TEMPLATE.md](../tasks/TASK_TEMPLATE.md) | TEMPLATE-TASK | baseline | Task Card Template |
 
-更新文档时应同步维护本清单。`uv run python scripts/check_docs.py`会校验本表是否完整覆盖当前169份`docs/**/*.md`，并核对Doc ID、status和title，但不会自动改写清单。根`README.md`、根`AGENTS.md`、非Markdown evidence manifest、代码和脚本不属于正式文档清单。
+更新文档时应同步维护本清单。`uv run python scripts/check_docs.py`会校验本表是否完整覆盖当前185份`docs/**/*.md`，并核对Doc ID、status和title，但不会自动改写清单。根`README.md`、根`AGENTS.md`、非Markdown evidence manifest、代码和脚本不属于正式文档清单。
 
 本清单格式为 `registry_version: 1.0.0`；列结构或状态比较语义变化时提升版本。
 

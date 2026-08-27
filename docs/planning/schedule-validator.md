@@ -11,6 +11,10 @@ last_reviewed: 2026-08-27
 
 # 独立 ScheduleValidator 合同
 
+## P4 planned validation extension
+
+TASK-P4-07必须扩展独立Validator以验证completed/running facts、freeze、HARD_LOCK、SOFT_LOCK/OBJ-002、base/new lineage及ChangeReport一致性，并保持与Solver分离；P4-08只能接受fresh PASS。TASK-P4-14/15须重放positive/negative/mutation证据。当前Validator代码、C-ID、error mapping与测试断言不变。
+
 ## TASK-P3-17 audit conclusion
 
 formal Validator独立性、C-001～C-011 positive/negative、每个P3 command新DRAFT与submit前fresh validation、solver status不受信任、PUBLISHED immutability及Validator-fail rejection均经P2/P3 Gate独立PASS。Audit没有修改公式、C-ID或测试断言。

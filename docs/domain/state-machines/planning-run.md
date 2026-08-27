@@ -11,6 +11,10 @@ last_reviewed: 2026-08-27
 
 # PlanningRun 状态机
 
+## P4 planned state review
+
+P4-01必须决定ReplanRequest与PlanningRun的协调方式，P4-03才允许实现持久化事务，P4-08才允许把validated replan结果应用为new DRAFT。当前PlanningRun state set、allowed pair、guard、audit与terminal semantics逐字不变；若后继设计需要任何新pair，必须先经ADR/合同/Schema及Task扩卡，不能由本规划隐式形成。
+
 ## TASK-P3-17 audit conclusion
 
 P3 application链只消费已完成且validated的P2 PlanningRun lineage，未新增或修改PlanningRun state/pair，也未在workspace service中调用Solver。P2 regression与P3 Gate均PASS；P4 execution/replan state未形成。

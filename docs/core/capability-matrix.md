@@ -11,6 +11,10 @@ last_reviewed: 2026-08-24
 
 # 能力矩阵
 
+## P4 activation capability status
+
+P4 Milestone已激活只表示DYNAMIC_REPLANNING进入已规划阶段，不表示能力已经实现。TASK-P4-01～13按合同、carrier、persistence、event/freeze/stability/replan、simulator、API/UI顺序形成证据，TASK-P4-14/15再分别Gate与独立审计；在此之前ExecutionEvent、ReplanRequest、ChangeReport和Execution Simulator均为`PLANNED_NOT_FORMED`。所有P5 candidate/UNSUPPORTED能力与Production capability继续保持原状态。
+
 ## TASK-P3-17 audit boundary
 
 独立Audit确认P3范围内的version/read/comparison/edit-lock/approval-rejection/internal publish/export/API/UI/bilingual/audit能力证据完整并为READY；它不提升P4+ capability，也不改变Production capability的default-deny/PROD_OPEN条件。TASK-P3-17 audit implementation provider已验证并由本closure标为`done`，closure自身待push后复验。

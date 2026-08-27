@@ -11,6 +11,10 @@ last_reviewed: 2026-08-26
 
 # 端到端计划链路
 
+## P4 planned end-to-end extension
+
+P4规划在既有`PUBLISHED ScheduleVersion → internal export`之后增加一条受控反馈链：versioned ExecutionEvent→durable fact projection/new Snapshot→auditable ReplanRequest→freeze/effective locks→lexicographic Solver→independent Validator→new DRAFT ScheduleVersion+ChangeReport。TASK-P4-03～08分别拥有该链的事务节点，TASK-P4-09/10以同一入口重放Simulation，TASK-P4-12/13只提供transport/UI。本次没有实现或启用任何节点。
+
 ## TASK-P3-17 audit conclusion
 
 完整P3链`validated PlanningSolution→immutable DRAFT→read/comparison→command/new DRAFT→approval/rejection→internal publish/supersession→ExportJob/package→HTTP/UI`已由两次Backend Gate及独立machine/tests复验PASS。链路终止于内部Simulation工作区；ExecutionEvent/Replan/P4与Production side effect未进入。
@@ -23,7 +27,7 @@ P3-14现已获单独授权，并在一个fail-closed report中两次重放`valid
 
 当前bounded链为`authoritative read → state/capability-sensitive UI → canonical workspace-command.v1 → authorized HTTP/application → existing validation/state service → authoritative Version/Job refresh`。Browser不直连repository、不生成domain state、不调用Solver/Validator；PUBLISHED成果包下载为`authorize → EXPORTED Job → verified package directory → deterministic ZIP`只读支路。任何error/unknown outcome都回到authority refresh，不靠client rollback伪造事实。
 
-该edge完成P3 human-control consumer；其P3-14 vertical Gate、TASK-P3-16本地化与TASK-P3-17 Exit Audit均为`done`，P3-17 audit implementation provider已exact验证且closure provider待push后复验。本地化只可在API/UI边缘把英文machine value映射为`zh-CN/en-US` label并保留raw，不得进入domain/application链。ExecutionEvent→Replan、OBJ-002/freeze/ChangeReport属于P4；真实identity、external publish/download、deployment与Production readiness均不在链内。
+该edge完成P3 human-control consumer；其P3-14 vertical Gate、TASK-P3-16本地化与TASK-P3-17 Exit Audit均为`done`，P3-17 audit implementation与closure provider均已exact验证。本地化只可在API/UI边缘把英文machine value映射为`zh-CN/en-US` label并保留raw，不得进入domain/application链。ExecutionEvent→Replan、OBJ-002/freeze/ChangeReport现属于已激活但尚未实现的P4计划；真实identity、external publish/download、deployment与Production readiness均不在链内。
 
 ```text
 Versioned Input Package

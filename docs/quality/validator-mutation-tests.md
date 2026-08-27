@@ -11,6 +11,10 @@ last_reviewed: 2026-08-21
 
 # Validator Mutation Test 规范
 
+## P4 planned mutation coverage
+
+TASK-P4-07必须为completed/running fact、freeze、HARD_LOCK、base/new lineage、OBJ-002和ChangeReport一致性增加negative/mutation证据；每个故障都应被独立Validator或Gate拒绝。P4-14/15必须重放这些拒绝，不能只证明happy path。当前mutation set、C-ID和测试断言不变。
+
 ## TASK-P3-17 audit conclusion
 
 C-001～C-011 positive/negative、13个validator mutation与P3 four exact rejection均重新执行并fail closed；没有修改mutation formula、C-ID、expected error或Validator实现。P3 Exit本地READY仍受provider闭环约束。

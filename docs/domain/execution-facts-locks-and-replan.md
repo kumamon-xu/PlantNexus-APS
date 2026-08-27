@@ -11,6 +11,10 @@ last_reviewed: 2026-08-24
 
 # 执行事实、锁定与重排边界
 
+## P4 activation planning boundary
+
+P4现已获phase activation，但能力仍未形成。TASK-P4-04拥有ExecutionEvent→authoritative fact/new Snapshot投影；P4-05拥有freeze window与effective HARD/SOFT locks；P4-06拥有OBJ-002/ChangeReport；P4-07/08拥有replan solve/validate与copy-on-write Version application。OPEN-005/007继续阻止Production freeze与真实事实authority，本次不修改任何事实、锁或状态实现。
+
 ## TASK-P3-17 phase boundary
 
 P3只审计既有execution fact/hard lock作为P2输入以及workspace lock command的copy-on-write行为；没有接入新ExecutionEvent、事实覆盖、freeze window、dynamic replan或ChangeReport。P4仍需新的明确phase transition与Task规划。

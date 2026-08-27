@@ -11,6 +11,10 @@ last_reviewed: 2026-08-21
 
 # KPI 合同
 
+## P4 planned Stability and comparison impact
+
+TASK-P4-06只新增OBJ-002 Stability与ChangeReport的deterministic计算合同，且TASK-P4-07必须按Delivery→Stability→Makespan字典序使用，不能用浮点加权吞并OBJ-001。TASK-P4-10/14比较异常前后tardiness与stability；Production KPI targets/SLA仍未形成。本次不修改KPI Schema、公式代码或baseline。
+
 ## Delivery
 
 `on_time_order_ratio`、`total_tardiness_seconds`、`priority_weighted_tardiness_seconds`、`late_order_count`及逐Demand completion/due/tardiness明细。

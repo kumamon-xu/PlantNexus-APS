@@ -11,6 +11,10 @@ last_reviewed: 2026-08-21
 
 # Benchmark Harness 合同
 
+## P4 planned harness impact
+
+TASK-P4-10/14将把五类连续重排场景接入可重放Gate，记录event count、replan count、solver/validator status、tardiness、stability和ChangeReport coverage；任何性能数据仅为Simulation evidence，不是Production SLA/capacity。现有XS/S/M benchmark baseline、threshold与runner不变。
+
 ```python
 BenchmarkRunner.run(
     scenario,

@@ -12,6 +12,12 @@ registry_version: 1.0.0
 
 # 测试策略与 Test Matrix
 
+## P4 planning allocation
+
+TASK-P4-00只登记12个P4 Test ID，使registry从49项增加到61项；没有创建测试文件、修改断言或把任何P4 evidence写成formed。分配链为P4-01合同/ADR→P4-02机器合同→P4-03持久化→P4-04事实投影→P4-05 freeze→P4-06 OBJ-002/ChangeReport→P4-07 Solver/Validator→P4-08应用→P4-09 Simulator→P4-10场景→P4-11输出→P4-12 API→P4-13 UI→P4-14 Gate→P4-15独立Audit。所有新ID保持`PLANNED`，`registry_version=1.0.0`格式不变。
+
+P4测试必须区分ExecutionEvent contract、durable idempotency、fact projection、freeze约束、stability计算、ChangeReport completeness、lexicographic Solver、Replan transaction、Simulator共同入口、五类连续场景、HTTP/UI与aggregate Gate；不得用单个TEST-REPLAN汇总PASS替代逐层证据。Production identity/external/capacity/SLA测试继续未形成。
+
 ## TASK-P3-17 independent replay conclusion
 
 49个registered Test ID保持不变；Exit Audit未改断言，而是fresh运行621 Python、67 Vitest、36 Chromium executions、全部P1/P2/P3 machine、migration、P2/P3双Gate、双语8/8、SCA/license/build与negative boundaries，结果`READY`/0 gaps。历史失败provider仍是负证据，Simulation PASS不外推Production。
@@ -85,6 +91,18 @@ Provider失败run `32920462781`保留POSIX glob误收Playwright的负证据；�
 | TEST-MAX-LAG | max_lag 不被忽略 | P0-P2 | Golden/formal inclusive min/max lag + P2 versioned JSSP/Scenario complete-edge Solver replay formed |
 | TEST-VALIDATOR-MUTATION | 独立 Validator 拒绝人工错误计划 | P0-P2 | P0/formal suites + [11 formula-free mutations of Solver-produced candidates](../../backend/tests/validation/test_p2_solver_mutations.py) formed；performance integration PLANNED |
 | TEST-REPLAN | Replan 事实、锁与变化报告 | P4 | PLANNED |
+| TEST-EXECUTION-EVENT-CONTRACT-001 | ExecutionEvent版本、来源、时间、entity refs、幂等与拒绝合同 | P4 | PLANNED / TASK-P4-01/02/04 |
+| TEST-REPLAN-REQUEST-CONTRACT-001 | immutable base/new Snapshot/freeze/reason/request/result carrier合同 | P4 | PLANNED / TASK-P4-01/02/08 |
+| TEST-P4-PERSISTENCE-001 | Event ledger、ReplanRequest/result、状态事务、CAS、audit与migration replay | P4 | PLANNED / TASK-P4-03 |
+| TEST-EXECUTION-FACT-PROJECTION-001 | ExecutionEvent→权威事实→新immutable Snapshot确定性投影 | P4 | PLANNED / TASK-P4-04 |
+| TEST-FREEZE-WINDOW-001 | Freeze边界、COMPLETED/RUNNING/HARD/effective lock保护与Production no-default | P4 | PLANNED / TASK-P4-05 |
+| TEST-STABILITY-OBJECTIVE-001 | OBJ-002 resource/start/count movement整数计算与lexicographic stage | P4 | PLANNED / TASK-P4-06/07 |
+| TEST-CHANGE-REPORT-001 | before/after KPI、变化、facts/locks、reason与lineage完整性 | P4 | PLANNED / TASK-P4-06/08/11 |
+| TEST-EXECUTION-SIMULATOR-001 | deterministic clock/seed/event stream与common-path/no-shortcut隔离 | P4 | PLANNED / TASK-P4-09 |
+| TEST-DISRUPTION-REPLAY-001 | Urgent Order、Machine Failure、Material/Processing Delay、Early Completion连续重放 | P4 | PLANNED / TASK-P4-10/14 |
+| TEST-REPLAN-API-001 | Event/Replan/ChangeReport HTTP contract、auth、idempotency与error mapping | P4 | PLANNED / TASK-P4-12 |
+| TEST-REPLAN-FRONTEND-001 | Event/Replan/freeze/stability/ChangeReport双语a11y与server-authority E2E | P4 | PLANNED / TASK-P4-13 |
+| TEST-P4-VERTICAL-SLICE-001 | 五类连续异常、facts/locks、Validator、ChangeReport和双replay聚合门 | P4 | PLANNED / TASK-P4-14；P4-15必须独立复验 |
 | TEST-OUTPUT | 标准成果包合同 | P2-P3 | P2 internal package provider-verified；TASK-P3-09 PUBLISHED-only v2 JSON/CSV/XLSX manifest-last package provider-verified；external/Production transfer PLANNED |
 | TEST-IDEMPOTENCY | Import/Planning/Export/Publish/Event 幂等 | P0-P3 | generic/storage/command/decision/publication/export worker provider-verified；TASK-P3-10 header/body exact binding provider-verified；external side effects PLANNED |
 | TEST-SCENARIO-REPLAY | Scenario/Profile/Generator/seed 重放 | P0-P2 | empty/P0 + P1 ingress + [seven versioned Solver/Validator replays](../../backend/tests/property/test_p2_solver_properties.py) with fixed hashes and row-order invariance formed |

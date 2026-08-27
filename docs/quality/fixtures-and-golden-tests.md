@@ -11,6 +11,10 @@ last_reviewed: 2026-08-26
 
 # Fixture 与 Golden Test 规范
 
+## P4 planned fixture impact
+
+TASK-P4-02才可增加contract samples，P4-04～10按versioned synthetic provenance增加event/fact/freeze/stability/replan/simulator fixtures，且任何golden更新都须由对应Task明确授权并解释语义。TASK-P4-00不修改fixture、baseline或expected；P2/P3 retained bytes继续冻结。
+
 ## TASK-P3-17 audit conclusion
 
 既有Golden/Simulation/E2E fixture均按version/seed/hash与Production fail-closed边界重放，P2 regression与P3 Gate通过；Audit未改fixture或expected。双语和browser fixture只验证内部TEST/Simulation，不外推真实业务语义。

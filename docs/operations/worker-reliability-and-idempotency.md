@@ -11,6 +11,10 @@ last_reviewed: 2026-08-26
 
 # P0 Worker Reliability 与 Idempotency
 
+## P4 planned reliability impact
+
+TASK-P4-03定义event/replan durable transaction与duplicate/retry recovery，P4-04保证同一event不重复投影事实，P4-08保证同一request不重复创建Version，P4-09保证same scenario/seed/stream可重放。具体lease/worker模型只有在各Task明确扩卡后才能形成；当前P3 ExportJob worker和Production HA/SLA边界不变。
+
 ## TASK-P3-17 audit conclusion
 
 ExportJob create/claim/lease/heartbeat/failure/retry/cancel/recovery、same-key replay/conflict、manifest-last atomicity与worker/publish separation均独立PASS。没有分布式Production capacity、external target或SLA结论。

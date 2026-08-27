@@ -11,6 +11,10 @@ last_reviewed: 2026-08-20
 
 # Scenario Library 与复杂度矩阵
 
+## P4 planned continuous scenarios
+
+TASK-P4-10必须在同一deterministic run中覆盖并可独立重放`URGENT_ORDER_CREATED`、`MACHINE_DOWN/RECOVERED`、`MATERIAL_DELAYED`、`OPERATION_DELAYED`与`OPERATION_COMPLETED` early completion；每类都要证明事实/锁保护、Validator PASS、ChangeReport completeness及tardiness/stability对比。P5 capabilities与Production profiles不得伪装成P4场景。本次不修改fixture或expected。
+
 ## 初始工厂画像
 
 | Profile | 主要特征 | 验证目标 |

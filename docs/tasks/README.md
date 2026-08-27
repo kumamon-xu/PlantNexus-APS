@@ -3,7 +3,7 @@ doc_id: DOC-TASK-INDEX
 title: Task Card 索引
 status: living
 spec_version: 0.3.0
-phase: P3
+phase: P4
 normative: true
 source_sections: [2, 6, 73, 74, 75, 76, 98, 99, 100]
 last_reviewed: 2026-08-27
@@ -11,9 +11,32 @@ last_reviewed: 2026-08-27
 
 # Task Card 索引
 
+## Current P4 plan
+
+当前Phase为P4。TASK-P4-00是本次唯一`in_progress` phase-planning owner；P4-01～15全部为新建`planned`成员、无implementation SHA且需要逐Task新授权。P3-00～17为terminal历史；P4-15是唯一最后独立Exit Audit，READY也不自动进入P5或Production。
+
+| Task | 目标 | 依赖 | 状态 |
+|---|---|---|---|
+| [TASK-P4-00](P4/TASK-P4-00-phase-transition-and-task-planning-governance.md) | Phase transition、完整Task plan与治理同步 | P3-17 | `in_progress` |
+| [TASK-P4-01](P4/TASK-P4-01-dynamic-replanning-contract-and-adr-baseline.md) | Dynamic Replanning合同与ADR基线 | P4-00 | `planned` |
+| [TASK-P4-02](P4/TASK-P4-02-execution-event-replan-change-report-schemas.md) | P4机器合同/Schema | P4-01 | `planned` |
+| [TASK-P4-03](P4/TASK-P4-03-replan-event-persistence-and-state-transactions.md) | Event/Replan persistence与state transaction | P4-02 | `planned` |
+| [TASK-P4-04](P4/TASK-P4-04-execution-event-ingestion-and-fact-projection.md) | Event ingestion与fact/Snapshot projection | P4-02/03 | `planned` |
+| [TASK-P4-05](P4/TASK-P4-05-freeze-window-and-effective-lock-projection.md) | Freeze Window与effective locks | P4-01/02/04 | `planned` |
+| [TASK-P4-06](P4/TASK-P4-06-stability-objective-and-change-report.md) | OBJ-002 Stability与ChangeReport | P4-01/02 | `planned` |
+| [TASK-P4-07](P4/TASK-P4-07-lexicographic-replan-solver-and-validator.md) | Lexicographic Replan Solver/Validator | P4-04/05/06 | `planned` |
+| [TASK-P4-08](P4/TASK-P4-08-replan-application-and-schedule-version-lineage.md) | Replan application与new DRAFT lineage | P4-03～07 | `planned` |
+| [TASK-P4-09](P4/TASK-P4-09-deterministic-execution-simulator-core.md) | Deterministic Execution Simulator core | P4-02/04 | `planned` |
+| [TASK-P4-10](P4/TASK-P4-10-disruption-scenario-library-and-replay.md) | Five disruption continuous replay | P4-05/08/09 | `planned` |
+| [TASK-P4-11](P4/TASK-P4-11-change-report-read-model-and-export-integration.md) | ChangeReport read/export integration | P4-06/08 | `planned` |
+| [TASK-P4-12](P4/TASK-P4-12-dynamic-replanning-http-api.md) | Dynamic Replanning HTTP API | P4-02/03/04/08/11 | `planned` |
+| [TASK-P4-13](P4/TASK-P4-13-replanning-workspace-ui-and-browser-e2e.md) | Replanning UI/browser E2E | P4-09～12 | `planned` |
+| [TASK-P4-14](P4/TASK-P4-14-p4-vertical-slice-gate-evidence.md) | P4 Vertical Slice Gate evidence | P4-01～13 | `planned` |
+| [TASK-P4-15](P4/TASK-P4-15-p4-exit-gate-audit.md) | P4 independent Exit Gate Audit | P4-14 | `planned` |
+
 ## TASK-P3-17 local independent audit
 
-TASK-P3-17已在Diff base `0933e10760096cdf8e812b2d41b34916e9db5750`上完成独立审计；P3 Exit report/manifest一致为`READY`、`blocking_gaps=[]`。39个前序P3 push SHA、36个下载artifact与1010份JSON，以及621 Python、67 Vitest、三组12/12 Chromium、P2/P3双Gate、双语与治理证据均已复验。Audit implementation `201be9c6fd1b433a9d0a629a3ae7d4ffe1107476`的exact provider成功并由本closure把Task标为`done`；closure provider待push后复验，不自动启动P4或Production。
+TASK-P3-17已在Diff base `0933e10760096cdf8e812b2d41b34916e9db5750`上完成独立审计；P3 Exit report/manifest一致为`READY`、`blocking_gaps=[]`。39个前序P3 push SHA、36个下载artifact与1010份JSON，以及621 Python、67 Vitest、三组12/12 Chromium、P2/P3双Gate、双语与治理证据均已复验。Audit implementation `201be9c6fd1b433a9d0a629a3ae7d4ffe1107476`与closure `61eeacdd5efc20b2321750e1310e9e21561c9fc2`的exact provider均成功并把Task标为`done`；当时未自动启动P4或Production，现P4只按新的明确授权进入规划基线。
 
 ## TASK-P3-17 activation
 
@@ -37,7 +60,7 @@ TASK-P3-16依赖P3-14/P3-15并以`1636fe9c909b728d49f9907ed9f53030b5921914`为�
 
 失败候选`672529c97780d7f9dd64b517df075db05d8a45d9` / run `32920462781` / artifact `9589702993`与成功corrective `13e16e36fc0a06a079d6832f419950c830f2b96e` / run `32921059019` / artifact `9589931373`均按历史保留。首次closure `87d47c7483185483ac8027100c1c664d18011a7c` / run `32921871460`因standard XLSX跨秒非确定性失败且无artifact；独立corrective `3538d46f8b73ae434057bcbca9037436aa91f2c7` / run/job/artifact=`32923203227`/`98040743610`/`9590625358`全绿并复现33 JSON及Task 91/0/11/19/0。Closure自身仍须exact provider复核。
 
-当前Phase为P3。P0～P2 Task作为terminal历史保留；只有当前P3允许详细Task Card，P4～P7继续只保留Milestone。
+当前Phase为P4。P0～P3 Task作为terminal历史保留；当前P4允许详细Task Card，P5～P7继续只保留Milestone，直至各自独立transition授权。
 
 ## Completed history
 

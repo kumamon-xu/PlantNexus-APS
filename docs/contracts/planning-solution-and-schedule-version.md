@@ -11,6 +11,10 @@ last_reviewed: 2026-08-26
 
 # PlanningSolution 与 ScheduleVersion 合同
 
+## P4 planned lineage impact
+
+TASK-P4-08预期把validated replan result以copy-on-write方式应用为新的DRAFT ScheduleVersion，并保留base version、event/fact Snapshot、ReplanRequest、ChangeReport与solver/validator provenance；PUBLISHED仍不可原地修改。具体carrier变化只能由TASK-P4-02版本化，state/persistence只能由TASK-P4-03/08实现。本次没有修改既有Solution/Version Schema、state pair或publication authority。
+
 ## TASK-P3-17 audit conclusion
 
 validated PlanningSolution→immutable ScheduleVersion DRAFT→READY_FOR_REVIEW→APPROVED/REJECTED→PUBLISHED/SUPERSEDED链及copy-on-write command、fresh Validator、lineage/fingerprint与状态不可变性均独立PASS。没有新增state pair、原地修改PUBLISHED或P4 replan语义。

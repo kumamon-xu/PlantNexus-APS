@@ -11,6 +11,10 @@ last_reviewed: 2026-08-26
 
 # 模块边界与依赖规则
 
+## P4 planned module allocation
+
+TASK-P4-01必须先固定边界；TASK-P4-02只发布carrier，P4-03只做repository/state transaction，P4-04只做event ingestion/fact projection，P4-05/06分别做freeze/locks与stability/report，P4-07只扩展Solver/Validator，P4-08做application/version lineage，P4-09/10属于Simulation，P4-11/12/13依次为read/export、API、UI。禁止Simulator绕过application service直接改fact/version，也禁止Frontend计算authority、OBJ-002或ChangeReport。本次仅登记边界。
+
 ## TASK-P3-17 audit conclusion
 
 Domain/application ports、SQLAlchemy adapters、thin HTTP router、Frontend consumer、export worker与formal Validator依赖方向经source/machine/full tests复验；router/UI无business transition或Solver调用，publication与export worker保持分离。Audit没有改变模块或依赖锁。

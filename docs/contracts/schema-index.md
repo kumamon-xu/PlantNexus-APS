@@ -6,16 +6,20 @@ spec_version: 0.3.0
 phase: P0-P3
 normative: true
 source_sections: [36, 38, 39, 70, 71, 103]
-last_reviewed: 2026-08-24
+last_reviewed: 2026-08-27
 ---
 
 # Schema 计划索引
+
+## P4 planned schema allocation
+
+TASK-P4-02预期在TASK-P4-01三份ADR全部accepted后，以独立additive set release定义ExecutionEvent、ReplanRequest、ChangeReport及Execution Simulator carrier，并逐项登记URN、compatibility、fingerprint、sample、negative interchange与rollback。当前TASK-P4-00不创建或修改任何`schemas/**`文件；具体version、字段与set release号仍为`NOT_ASSIGNED`，不得从本规划推断机器合同已经形成。
 
 ## TASK-P3-17 audit conclusion
 
 独立Audit确认schema set `2.7.0`、P2 retained bytes、P3 `2.6.0` workspace carriers、P3 export v2 carriers、samples、strict/offline refs与canonical fingerprints全部回归PASS；本Task没有Schema新增、删除、版本或字节变化。
 
-当前 schema set 为additive `2.6.0`。`CONTRACT_V1/V2/V3`表示机器可验证的合同已形成，不表示ScheduleVersion/ExportJob状态持久化、审批、发布或Production业务动作已完成。此前所有set artifact均保留，未被原地覆盖。
+当前 schema set 为additive `2.7.0`。`CONTRACT_V1/V2/V3`表示机器可验证的合同已形成，不表示ScheduleVersion/ExportJob状态持久化、审批、发布或Production业务动作已完成。此前所有set artifact均保留，未被原地覆盖。
 
 | Schema | 目标路径 | 首个 Task | 状态 |
 |---|---|---|---|

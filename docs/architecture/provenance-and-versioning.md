@@ -11,6 +11,10 @@ last_reviewed: 2026-08-26
 
 # Provenance 与版本规则
 
+## P4 planned provenance chain
+
+未来P4证据必须可逐跳追踪`ExecutionEvent ID/version/source → projected fact set/Snapshot → ReplanRequest → base ScheduleVersion → Problem/Policy/Limits → SolverReport + ValidatorReport → new DRAFT ScheduleVersion → ChangeReport → simulator scenario/replay`。TASK-P4-02定义carrier，P4-03/04/08保证append-only lineage，P4-14/15核验完整性。本次不生成这些runtime记录，也不改变既有hash/canonicalization。
+
 ## TASK-P3-17 audit conclusion
 
 39个P3提交、35个成功run、4个历史失败run、36个artifact及1010份JSON的SHA/Task/Diff base/provider/Impact/check/issue链已独立核验；失败事实和corrective新SHA均保留。Schema `2.7.0`、migration `0004`、terminology v1与raw fingerprints保持可追溯，P4/Production provenance未形成。

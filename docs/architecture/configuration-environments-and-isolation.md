@@ -11,6 +11,10 @@ last_reviewed: 2026-08-27
 
 # 配置、环境与数据隔离
 
+## P4 planned isolation boundary
+
+TASK-P4-09/10只能在Development/Test/Benchmark的Simulation plane创建synthetic事件与时钟，必须经过与未来Production相同的versioned入口，同时保持tenant/run/factory/source隔离和deterministic replay。任何Production event source、secret、external endpoint、deployment配置、freeze/capacity/SLA值继续禁止。本次不增加配置键、环境变量或运行服务。
+
 ## TASK-P3-17 audit conclusion
 
 Production pre-provider/application default-deny、TEST/Simulation E2E mock boundary、plane-scoped persistence、无browser credential storage及locale preference非敏感隔离均独立PASS。P3 READY不关闭OPEN、不建立Production identity、external side effect或部署环境。

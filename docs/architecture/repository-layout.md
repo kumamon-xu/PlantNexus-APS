@@ -11,6 +11,10 @@ last_reviewed: 2026-08-27
 
 # 目标仓库结构
 
+## P4 planned placement
+
+P4-03～08的event/replan/fact/freeze/stability/application实现仍须遵循既有domain/application/ports/adapters分层；P4-09/10保持在Simulation边界，P4-12/13仅在既有API/Frontend边界扩展。每张Task激活时必须把目录级意图收紧为exact file allow-list；本规划不创建源码目录或占位实现。
+
 ## TASK-P3-17 audit conclusion
 
 Exit Audit只新增P3 report/manifest并同步既有治理Markdown；业务、Schema、migration、dependency、tests、workflow与Frontend implementation相对Diff base零差异。下载和本地machine evidence继续位于ignored `build/**`，未写入正式源目录。

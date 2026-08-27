@@ -11,6 +11,10 @@ last_reviewed: 2026-08-20
 
 # Simulation 子系统
 
+## P4 planned Execution Simulator scope
+
+TASK-P4-09建立deterministic虚拟时钟、事件队列与同一event/application common path；TASK-P4-10只增加Urgent Order、Machine Failure、Material Delay、Processing Delay、Early Completion五类连续场景与replay；TASK-P4-14/15分别聚合与审计。所有数据仍为versioned synthetic provenance，不形成Production twin、真实MES、外部发布或capacity/SLA结论。
+
 Simulation 不是 Demo、Mock 或随机构造测试数据，而是无真实生产数据阶段的第一套可控计划环境。它模拟 APS Planning Reality：工厂结构、订单、工艺、资源、日历、工时、物料释放、WIP、锁定、执行事件和异常，不宣称模拟真实物理设备。
 
 ## 分类

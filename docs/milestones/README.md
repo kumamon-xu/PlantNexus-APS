@@ -11,9 +11,13 @@ last_reviewed: 2026-08-27
 
 # Milestone 索引
 
+## P3→P4 transition
+
+用户已在P3 Exit双提交exact provider闭环、`READY`且0 gaps后批准transition。P3现为`completed`，P4为`active`；TASK-P4-00仅建立完整规划治理，P4-01～15保持`planned`且P4-15为最后独立Audit。P4规划不授权P5或Production readiness/authority/external/deployment/capacity/SLA。
+
 ## TASK-P3-17 local Exit decision
 
-TASK-P3-17已独立重放全部P3 predecessor topology/provider contents、合同/Schema/migration/state/authorization/publication/export/API/Frontend/双语/质量/治理证据。[P3 Exit report](P3-exit-gate-audit-report.md)与[machine manifest](P3-exit-gate-evidence-manifest.json)一致给出`READY`、`blocking_gaps=[]`；P3-00～17均为`done`，4个历史失败run与corrective链保持原样。Audit implementation `201be9c6fd1b433a9d0a629a3ae7d4ffe1107476`的run/job/artifact=`33033591189`/`98391337626`/`9631260796`已exact验证，本closure provider待push后复验；P3仍`active`，P4与Production未启动。
+TASK-P3-17已独立重放全部P3 predecessor topology/provider contents、合同/Schema/migration/state/authorization/publication/export/API/Frontend/双语/质量/治理证据。[P3 Exit report](P3-exit-gate-audit-report.md)与[machine manifest](P3-exit-gate-evidence-manifest.json)一致给出`READY`、`blocking_gaps=[]`；P3-00～17均为`done`，4个历史失败run与corrective链保持原样。Audit implementation `201be9c6fd1b433a9d0a629a3ae7d4ffe1107476`的run/job/artifact=`33033591189`/`98391337626`/`9631260796`与closure `61eeacdd5efc20b2321750e1310e9e21561c9fc2`的run/job/artifact=`33034464425`/`98394043379`/`9631608856`均已exact验证。P3在closure时保持`active`并等待transition；现已按上方决定关闭，Production仍未启动。
 
 ## TASK-P3-15 amendment-governance closure
 
@@ -52,7 +56,9 @@ P1当前状态：[`P1 — Data & Snapshot`](P1-data-and-snapshot.md)为`complete
 
 P2当前状态：[`P2 — CP-SAT Vertical Slice`](P2-cp-sat-vertical-slice.md)为`completed`。TASK-P2-00～14均已闭环为`done`；P2 Exit Gate=`READY`且0 gaps。用户于2026-08-24在复核exact provider evidence、提交拓扑与clean synchronized baseline后明确批准P2→P3。
 
-P3当前状态：[`P3 — Planning Workspace`](P3-planning-workspace.md)为`active`。TASK-P3-00～17均为`done`；TASK-P3-17 final independent Exit Audit为`READY`且0 gaps，implementation provider已exact复验且closure provider待push后复验。该结论不自动切换P4，也不表示external、Production readiness、approval、publish、UAT或deployment。
+P3当前状态：[`P3 — Planning Workspace`](P3-planning-workspace.md)为`completed`。TASK-P3-00～17均为`done`；TASK-P3-17 final independent Exit Audit为`READY`且0 gaps，implementation/closure exact provider均已复验。用户于2026-08-27明确批准transition，历史失败与corrective/provider链保持只读。
+
+P4当前状态：[`P4 — Dynamic Replanning`](P4-dynamic-replanning.md)为`active`。TASK-P4-00负责phase transition和完整规划；P4-01～15均为`planned`，没有implementation SHA且不会自动启动。P4-15是独立Exit Audit；P5与Production仍未进入。
 
 TASK-P3-04 implementation `a9be974855bb825784d639b7f6675e5a33e4273d`的run/job/artifact=`32700005280`/`97349447107`/`9510215582`精确复现35 focused、515 full、8/8 lifecycle、23/23 JSON PASS与45 committed/0 working paths、8 rows、19 checks、0 issues，故本closure标为`done`。该证据只形成reviewable ScheduleVersion，不形成approval、publish、P4或Production readiness。
 

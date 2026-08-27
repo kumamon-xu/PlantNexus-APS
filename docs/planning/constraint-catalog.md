@@ -11,6 +11,10 @@ last_reviewed: 2026-08-21
 
 # V1 Constraint Catalog
 
+## P4 planned constraint application
+
+TASK-P4-05将把freeze window与effective HARD/SOFT lock投影为既有C-007/C-008可验证输入，TASK-P4-07必须同时保持completed/running事实、precedence、calendar/material与全部P2约束；不得以重排名义放宽任何C-ID。若确需新Constraint ID，必须先由TASK-P4-01合同和治理注册明确批准。本次Constraint Catalog与机器规则不变。
+
 本目录是 V1 硬约束的规范索引。Solver 实现与 Validator 实现必须分别追踪这些 ID，但不得共享 CP-SAT 约束实现。
 
 | ID | 规则 | Solver 表达 | Validator 核心检查 | P0 Test contract |

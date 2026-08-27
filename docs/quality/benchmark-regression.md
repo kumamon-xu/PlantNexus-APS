@@ -11,6 +11,10 @@ last_reviewed: 2026-08-26
 
 # Benchmark Regression 规则
 
+## P4 planned regression evidence
+
+TASK-P4-10/14在保留P2 XS/S/M基线的同时记录五类continuous disruption的deterministic functional与timing证据，并分别报告Delivery/Stability/Makespan；P4-15独立复验。没有真实数据与OPEN threshold closure时，这些数字只用于regression，不构成Production capacity/SLA。本次不改runner、threshold或expected。
+
 ## TASK-P3-17 audit conclusion
 
 P2 XS/S/M Gate regression与独立XS 8/8均PASS，P3 Gate两次语义指纹一致；Frontend bundle与各service timing只保留raw development observation。OPEN-011/012、L/XL与Production threshold/SLA仍未建立。

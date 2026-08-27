@@ -11,13 +11,17 @@ last_reviewed: 2026-08-27
 
 # 动态重排设计合同
 
+## P4 activation and ownership
+
+用户已批准P3→P4及完整规划，但未授权TASK-P4-01执行。P4-01/02先形成ADR与机器合同，P4-03～08依次拥有persistence、event facts、freeze/locks、OBJ-002/ChangeReport、Solver/Validator与new DRAFT application，P4-09/10形成deterministic Simulator与五类连续异常，P4-11～13形成read/export、API与UI，P4-14/15分别Gate/Audit。当前所有能力均为`PLANNED_NOT_FORMED`。
+
 ## TASK-P3-17 phase boundary
 
-P3 Exit本地READY只覆盖Planning Workspace；ExecutionEvent、ReplanRequest、freeze window、OBJ-002 Stability、ChangeReport和Execution Simulator仍属于P4且未授权、未创建详细Task、未实现。任何P3编辑仍是显式command→new DRAFT，不是dynamic replan。
+P3 Exit READY只覆盖Planning Workspace；ExecutionEvent、ReplanRequest、freeze window、OBJ-002 Stability、ChangeReport和Execution Simulator仍属于P4且未实现。详细Task现已由TASK-P4-00规划，但每张仍需新的明确授权。任何P3编辑仍是显式command→new DRAFT，不是dynamic replan。
 
 ## TASK-P3-16 localization / P4 boundary
 
-双语展示只本地化现有P3 workspace术语，没有新增ExecutionEvent、ReplanRequest、freeze window、OBJ-002、ChangeReport、Execution Simulator或任何P4 route/action。中文“移动/重新分配/锁定”仍只是P3 copy-on-write command label，不是dynamic replan。TASK-P3-16 implementation已取得exact provider；TASK-P3-17最终审计后P3也不会自动进入P4，当前P4仍完全未启动。
+双语展示只本地化现有P3 workspace术语，没有新增ExecutionEvent、ReplanRequest、freeze window、OBJ-002、ChangeReport、Execution Simulator或任何P4 route/action。中文“移动/重新分配/锁定”仍只是P3 copy-on-write command label，不是dynamic replan。TASK-P3-16 implementation已取得exact provider；TASK-P3-17最终审计没有自动进入P4，当前P4仅因后续明确授权进入规划状态。
 
 ## TASK-P3-14 boundary Gate
 
@@ -27,7 +31,7 @@ P3 Gate只重放P3 copy-on-write manual command与publication链，并证明PUBL
 
 Gantt drag/move/assign/lock是对单一immutable ScheduleVersion的人工command proposal，经既有P3-06 fresh Validator产生new DRAFT；它不读取ExecutionEvent、不生成ReplanRequest、不计算freeze window/OBJ-002/Stability/ChangeReport，也不调用Solver。UI的“refresh authority”仅重读Version/Job，不是replan trigger。
 
-P3-14已完成有界Gate，P3-15已完成修订治理，P3-16已完成双语实现双提交provider复验；P3-17独立Audit已由exact implementation provider支持为`done`，Exit=`READY`且closure provider待push后复验。P4 dynamic replanning完全未启动；PUBLISHED immutable且rollback只能以新Version/command表达，不能修改执行事实或历史发布。
+P3-14已完成有界Gate，P3-15已完成修订治理，P3-16已完成双语实现双提交provider复验；P3-17独立Audit implementation与closure均已exact provider验证，Exit=`READY`。P4 dynamic replanning现仅激活并完成Task规划，尚无业务实现；PUBLISHED immutable且rollback只能以新Version/command表达，不能修改执行事实或历史发布。
 
 ## 输入
 

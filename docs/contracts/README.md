@@ -11,6 +11,10 @@ last_reviewed: 2026-08-26
 
 # 合同文档索引
 
+## P4 activation planning boundary
+
+P4已激活，但当前TASK-P4-00只登记合同责任：TASK-P4-01先形成三份planned P4 ADR及ExecutionEvent、ReplanRequest、freeze/effective lock、OBJ-002 Stability、ChangeReport、Execution Simulator的人类语义；TASK-P4-02随后才允许发布版本化机器合同。ADR stable ID只可在P4-01启动时分配。P4-03～13只能消费这些已批准合同，P4-14/15分别聚合与独立审计。当前schema set仍为`2.7.0`，没有新增Schema、migration、dependency、state pair、API operation或Production/external authority。
+
 ## TASK-P3-17 contract audit conclusion
 
 P3 Exit独立重放确认P2 frozen contracts、P3 workspace `2.6.0`、export `2.7.0`、state/error/capability、HTTP与Frontend wire合同均PASS且相对Diff base零变化。审计为`READY`/0 gaps但provider pending；不形成P4 carrier、external contract或Production authority。
@@ -90,9 +94,9 @@ P2独立Exit审计已重跑schema set`2.5.0`及全部registered contract tests�
 
 ## TASK-P3-02 workspace machine contract release
 
-P3现为active，TASK-P3-01已形成[`planning-workspace-api.md`](planning-workspace-api.md)、[`authorization-and-audit.md`](authorization-and-audit.md)、三份Frontend规范和accepted [ADR-0012](../adr/ADR-0012-planning-workspace-command-state-publication.md)。TASK-P3-02据此发布七份strict Draft 2020-12 Schema、七份synthetic vector、pure fingerprint/precheck与required CI machine report；TASK-P3-03～13只能显式消费这些version/URN，不能自建私有字段或第二套状态/错误事实。
+P3已completed；TASK-P3-01形成[`planning-workspace-api.md`](planning-workspace-api.md)、[`authorization-and-audit.md`](authorization-and-audit.md)、三份Frontend规范和accepted [ADR-0012](../adr/ADR-0012-planning-workspace-command-state-publication.md)。TASK-P3-02据此发布七份strict Draft 2020-12 Schema、七份synthetic vector、pure fingerprint/precheck与required CI machine report；TASK-P3-03～13均显式消费这些version/URN，没有自建私有字段或第二套状态/错误事实。
 
-当前schema set为additive `2.6.0`。冻结清单证明21份既有JSON Schema与13份sample共34个P2 artifact逐字节不变；`error-code-registry.v2`、`state-machines.v1`与Solver capability registry也不变。新Schema不执行migration、repository、transition、authorization、API、Frontend、worker、publish或export；OPEN-002/010/015继续OPEN。Implementation `aff27d3d6b63fb9f216c9a2687408a6c676fa96a` / artifact `9506913562`已精确闭环机器合同，P3-03仍未启动。
+该P3-02 release时schema set为additive `2.6.0`，后续P3-09以`2.7.0`扩展export carriers；当前总set见本页顶部规划边界。冻结清单证明21份既有JSON Schema与13份sample共34个P2 artifact逐字节不变；`error-code-registry.v2`、`state-machines.v1`与Solver capability registry也不变。P3-02新Schema当时不执行migration、repository、transition、authorization、API、Frontend、worker、publish或export；OPEN-002/010/015继续OPEN。Implementation `aff27d3d6b63fb9f216c9a2687408a6c676fa96a` / artifact `9506913562`已精确闭环机器合同。
 
 ## TASK-P3-05 strict carrier consumer
 

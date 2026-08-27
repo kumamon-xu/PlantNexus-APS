@@ -12,9 +12,15 @@ registry_version: 1.0.0
 
 # 核心需求注册表
 
+## P4 planning allocation
+
+用户批准P3→P4后，TASK-P4-00把REQ-004/005/006/007/008/009/012/013/014分配到TASK-P4-01～15。REQ-008由合同/Schema/persistence/event/freeze/stability/Solver/application/output/API/UI/Gate/Audit全链承接；REQ-013由Simulator core、五类连续场景、UI/Gate/Audit承接；REQ-009贯穿所有Task的exact provenance。REQ-004/005/006/007分别覆盖lexicographic solve/fresh Validator、new immutable DRAFT、ChangeReport/export/API/UI与state/audit边界；REQ-012/014只提供versioned scenario和development regression，不产生Production分布或SLA。
+
+本次只有规划与治理，所有Requirement根ID继续`ALLOCATED`；ExecutionEvent、ReplanRequest、freeze、OBJ-002、ChangeReport和Execution Simulator行为均为`PLANNED`。P3 Exit历史已provider闭环但不被改写；`registry_version=1.0.0`不变。
+
 ## TASK-P3-17 audit status
 
-REQ-004/005/006/007/009的P3 Planning Workspace切片已由独立Exit Audit连接到39个前序P3 provider提交、36个下载artifact、621项Python、67项Frontend与P2/P3双Gate证据；判定为`READY`、0 gaps。TASK-P3-17 audit implementation provider已exact验证，当前标记`IMPLEMENTATION_PROVIDER_VERIFIED_CLOSURE_PENDING`；该审计不改变任何Requirement正文、root lifecycle或`registry_version=1.0.0`，P4和Production需求仍按原阶段边界未形成。
+REQ-004/005/006/007/009的P3 Planning Workspace切片已由独立Exit Audit连接到39个前序P3 provider提交、36个下载artifact、621项Python、67项Frontend与P2/P3双Gate证据；判定为`READY`、0 gaps。TASK-P3-17 audit implementation与closure provider均已exact验证，标记`PROVIDER_VERIFIED_DONE`；该审计不改变任何Requirement正文、root lifecycle或`registry_version=1.0.0`，P4需求现只进入规划、Production需求仍未形成。
 
 ## TASK-P3-15 allocation review
 

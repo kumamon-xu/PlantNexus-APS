@@ -11,6 +11,10 @@ last_reviewed: 2026-08-25
 
 # APS 领域模型
 
+## P4 planned domain additions
+
+TASK-P4-01/02将先决定并版本化ExecutionEvent、ReplanRequest、ChangeReport及Simulator clock/scenario carriers；TASK-P4-03/04/08再分别形成durable aggregate、fact projection与ScheduleVersion lineage。当前这些对象只是P4规划概念，不是已实现aggregate；既有PlanningRun、PlanningSnapshot、PlanningProblem、PlanningSolution、ScheduleVersion、AuditEvent与ExportJob语义不变。
+
 ## TASK-P3-17 audit conclusion
 
 P3的ScheduleVersion、PublicationResult、ExportJob、AuditEvent及workspace query/command模型和lineage/fingerprint已独立复验，state/Schema/字段未变。ExecutionEvent、ReplanRequest与P4模型仍未形成。

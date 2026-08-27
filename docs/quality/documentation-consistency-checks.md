@@ -11,6 +11,12 @@ last_reviewed: 2026-08-27
 
 # 文档一致性自动检查合同
 
+## P4 phase-plan validation
+
+本次phase-planning batch必须由唯一TASK-P4-00 owner覆盖P4-01～15全部新增卡，验证current phase=P4、P3 completed/P4 active、依赖无环且最终Task=P4-15、成员无伪造Diff base/implementation SHA、所有引用与registry/inventory计数一致。相对`61eeacdd5efc20b2321750e1310e9e21561c9fc2`的Task diff必须只命中允许文档并为0 issues；checker代码与CI workflow本次不改。
+
+本地结果为185 docs、30 roots/rows、61 Test IDs、15 OPEN/SIM、17 risks、71 Tasks；Task diff为83 unique paths、4 Impact Rules、19/19 checks、0 issues。首轮未注册future ADR ID引用被fail-closed检查拒绝，现改为由TASK-P4-01启动时分配stable ID并复验PASS；没有创建占位ADR或放宽检查。
+
 ## TASK-P3-17 audit conclusion
 
 审计前full governance为168 docs/30 roots/30 trace rows/49 Test IDs/15 OPEN/15 SIM/14 risks/55 Tasks，P3-17 activation diff为19 checks/0 issues。新增Exit report后inventory应为169；implementation提交前必须重新运行full/diff、`git diff --check`与禁止范围核验，provider artifact还须精确复现Task/Impact/check/issues。

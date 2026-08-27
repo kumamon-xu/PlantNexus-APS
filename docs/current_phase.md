@@ -3,25 +3,53 @@ doc_id: DOC-PHASE-CURRENT
 title: 当前阶段
 status: living
 spec_version: 0.3.0
-phase: P3
+phase: P4
 normative: true
 source_sections: [73, 74, 75, 76, 110, 111]
 last_reviewed: 2026-08-27
 ---
 
-# 当前阶段：P3 — Planning Workspace
+# 当前阶段：P4 — Dynamic Replanning
+
+## P3→P4 transition decision
+
+用户于2026-08-27明确批准phase transition。切换前逐项确认TASK-P3-00～17全部`done`；P3 Exit report与machine manifest均为`READY`且`blocking_gaps=[]`；audit implementation `201be9c6fd1b433a9d0a629a3ae7d4ffe1107476`与closure `61eeacdd5efc20b2321750e1310e9e21561c9fc2`为直接父子提交；两者required `validate`均由GitHub Actions app `15368`成功提供，artifact `9631260796`/`9631608856`未过期且exact SHA、TASK-P3-17、Diff base、四个Impact Rules、19 checks、0 issues、P2/P3 Gate、双语与机器合同证据一致。启动时main/origin/main/remote main均为closure SHA、ahead/behind=`0/0`、工作树clean。
+
+P3 Milestone因此关闭为`completed`，P4激活为`active`。TASK-P4-00只负责本次阶段启动、完整Task规划与治理同步；TASK-P4-01～15均保持`planned`，没有implementation SHA，且P4-01不会自动执行。
+
+## P4 planned execution chain
+
+```text
+P4-01 contract/ADR
+→ P4-02 machine contracts
+→ P4-03 persistence/state transactions
+→ P4-04 ExecutionEvent fact projection
+→ P4-05 freeze/effective locks
+→ P4-06 OBJ-002 + ChangeReport
+→ P4-07 lexicographic Replan Solver/Validator
+→ P4-08 Replan application + new DRAFT lineage
+→ P4-09 Execution Simulator core
+→ P4-10 five continuous disruption scenarios
+→ P4-11 ChangeReport read/export
+→ P4-12 API
+→ P4-13 UI/browser E2E
+→ P4-14 Vertical Gate
+→ P4-15 independent Exit Audit
+```
+
+每张后继Task都需要新的用户授权、全部依赖`done`、clean synchronized/provider-verified HEAD和启动时冻结的40字符Diff base。P4只形成隔离Simulation/development动态重排证据；P5 advanced capabilities、Production identity/approval authority、external MES/ERP/storage、Production freeze/priority、deployment/UAT以及capacity/SLA均不在当前授权内。
 
 ## P3 Exit 独立审计结论
 
 TASK-P3-17已在不可变Diff base `0933e10760096cdf8e812b2d41b34916e9db5750`上完成独立本地审计，结论为`READY`、`blocking_gaps=[]`。审计逐项复核39个P3 push SHA/required `validate`、35个成功run、4个保留的历史失败run和36个未过期artifact；下载的1052个文件/1010份JSON中，successful chain为0 parse error、0 SHA mismatch、0顶层失败、0 issue、0 gap。完整结论见[P3 Exit report](milestones/P3-exit-gate-audit-report.md)与[machine manifest](milestones/P3-exit-gate-evidence-manifest.json)。
 
-本地required-equivalent亦全绿：621 Python、67 Vitest、三组Chromium各12/12、i18n 8/8与2×243 keys/139 machine values、P2 Gate 11/11、P3 Gate 14/14及双Backend/双Chromium replay、migration/Compose/SCA/license/build和治理边界均通过。Audit implementation `201be9c6fd1b433a9d0a629a3ae7d4ffe1107476`的run/job/artifact=`33033591189`/`98391337626`/`9631260796`已exact成功并复验44 files/38 JSON、61/0 paths、4 Impact Rules、19 checks、0 issues；本evidence-only closure据此把TASK-P3-17标为`done`，closure自身仍须push后exact provider复验。P3继续`active`，不得把READY解释为P4授权、Production readiness/UAT/approval/external publish/deployment。
+本地required-equivalent亦全绿：621 Python、67 Vitest、三组Chromium各12/12、i18n 8/8与2×243 keys/139 machine values、P2 Gate 11/11、P3 Gate 14/14及双Backend/双Chromium replay、migration/Compose/SCA/license/build和治理边界均通过。Audit implementation `201be9c6fd1b433a9d0a629a3ae7d4ffe1107476`的run/job/artifact=`33033591189`/`98391337626`/`9631260796`已exact成功并复验44 files/38 JSON、61/0 paths、4 Impact Rules、19 checks、0 issues；evidence-only closure `61eeacdd5efc20b2321750e1310e9e21561c9fc2`的run/job/artifact=`33034464425`/`98394043379`/`9631608856`也已exact复验成功。该closure把TASK-P3-17标为`done`；当时P3继续`active`并等待transition。现用户已通过本页顶部决定授权P4，READY仍不得解释为Production readiness/UAT/approval/external publish/deployment。
 
 ## TASK-P3-17 启动边界
 
 用户于2026-08-27明确授权执行最终独立Exit Gate Audit。启动前确认`main=origin/main=remote main=0933e10760096cdf8e812b2d41b34916e9db5750`、ahead/behind=`0/0`且working tree clean；TASK-P3-00～16全部为`done`。TASK-P3-16 implementation→closure为直接父子提交`b3ba999e83f4e8b0f96c7ce5bc72eba01432d791`→`0933e10760096cdf8e812b2d41b34916e9db5750`；closure run/job/artifact=`33028998495`/`98376876640`/`9629623182`精确成功，下载复核44个文件/38份JSON、i18n 8/8、双locale 243/243 keys、139 machine values、三组12/12 Playwright、P3 Gate 14/14/0 gaps及Task 79/0/6/19/0一致。该HEAD已冻结为TASK-P3-17不可变Diff base。
 
-TASK-P3-17现为`done`，独立重放已覆盖P3拓扑/provider、本地合同/状态/权限/发布/导出/API/Frontend/双语/治理Gate并形成`READY`、`blocking_gaps=[]`。Audit未修业务、本地化、Schema、测试、workflow或依赖；P3 Milestone继续`active`并等待明确transition，P4与Production均未启动。
+TASK-P3-17现为`done`，独立重放已覆盖P3拓扑/provider、本地合同/状态/权限/发布/导出/API/Frontend/双语/治理Gate并形成`READY`、`blocking_gaps=[]`。Audit未修业务、本地化、Schema、测试、workflow或依赖；在Audit closure时P3 Milestone继续`active`并等待明确transition。该历史等待状态现已由本页顶部2026-08-27 transition决定结束，Production仍未启动。
 
 ## TASK-P3-16 完成边界
 

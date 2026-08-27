@@ -11,6 +11,10 @@ last_reviewed: 2026-08-27
 
 # 推荐技术栈与锁定规则
 
+## P4 planning dependency boundary
+
+完整P4链已按现有Python/OR-Tools/PostgreSQL/FastAPI/React能力规划；TASK-P4-00不修改依赖或lockfile。任何后继Task若发现确需新runtime/dev/npm依赖，必须先在自身Task卡逐字列出、说明license/SCA/lock/rollback并经单独授权；不得以P4激活作为隐式依赖批准。
+
 ## TASK-P3-17 audit conclusion
 
 CPython `3.12.13`、uv `0.11.32`、OR-Tools `9.15.6755`、Node `24.19.0`、npm `11.17.0`及Frontend exact direct pins（含`typescript-eslint 8.68.0`）已按lock/SCA/license/build/provider证据复验。Audit未升级dependency或lock；point-in-time PASS不等于Production供应链持续保证。

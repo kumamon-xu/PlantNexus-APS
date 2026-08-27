@@ -11,6 +11,10 @@ last_reviewed: 2026-08-27
 
 # TASK-Px-yy — Title
 
+## P4 Dynamic Replanning Task governance note
+
+P4 Task必须逐项说明ExecutionEvent、ReplanRequest、freeze window、OBJ-002 Stability、ChangeReport和Execution Simulator的直接owner或明确非owner边界；执行事实必须先进入权威事实层和新immutable Snapshot，不能成为Solver隐藏参数。Replan必须保留COMPLETED/RUNNING/HARD/freeze事实，SOFT只通过versioned OBJ-002计价，Delivery→Stability→Makespan保持词典序且每轮记录value/bound/budget/stop；candidate须经fresh independent Validator，结果只能创建new DRAFT及完整ChangeReport，不得自动approve/publish/export。Simulator必须输出同一ExecutionEvent合同并走共同入口，五类连续异常由P4 Gate重放。Production freeze/priority/identity/external/capacity/SLA受OPEN阻塞，Simulation值须登记；P5 advanced capabilities不得提前进入。每Task仍须独立授权、不可变Diff base、双提交exact provider，P4-15最后独立Audit且不自动进入P5/Production。
+
 ## Phase Exit Audit governance note
 
 Exit Audit必须是Milestone最后一项独立Task，冻结全部前序closure后的clean synchronized Diff base；逐项审计提交拓扑、required provider、下载artifact内容、合同/Schema/migration/state/依赖/ADR/测试/质量/治理与阶段边界。审计不得修实现、改断言、重写失败记录或用前序Gate结论替代fresh replay。`READY`要求所有required checks真实PASS且`blocking_gaps=[]`；Task仍须等待自身implementation exact provider，再由evidence-only closure标`done`。provider失败必须撤回READY并在当前Phase建立有界remediation。Exit READY和Task done均不自动切换下一Phase，也不形成Production readiness、approval、publish、UAT或deployment。

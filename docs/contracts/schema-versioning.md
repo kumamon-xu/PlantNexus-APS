@@ -6,10 +6,14 @@ spec_version: 0.3.0
 phase: cross-phase
 normative: true
 source_sections: [23, 24, 40, 101, 103, 104]
-last_reviewed: 2026-08-24
+last_reviewed: 2026-08-27
 ---
 
 # Schema 版本与兼容规则
+
+## P4 planning application
+
+TASK-P4-00只把未来Schema责任分配给TASK-P4-02；该Task必须以TASK-P4-01 accepted ADR为启动门，选择新的additive set version，并同时提交human contract、Schema、sample、compatibility/negative tests与machine evidence。P4-03及以后不得先于该release消费未版本化字段。当前`2.7.0`、migration `0004`及全部既有bytes保持不变。
 
 ## TASK-P3-17 audit conclusion
 

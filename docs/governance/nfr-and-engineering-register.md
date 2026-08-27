@@ -12,6 +12,12 @@ registry_version: 1.0.0
 
 # NFR 与工程需求注册表
 
+## P4 planning allocation
+
+TASK-P4-01～15把NFR-COR/DET/TRC/ISO/REL/SEC/OBS/PER/HUM与ENG-ARCH/SOL/VAL/ERR/VER/LOG分别落到版本化事件/请求/报告、append-only persistence、immutable fact projection、freeze/OBJ-002、lexicographic CP-SAT、fresh independent Validator、transaction/audit、deterministic Simulator、五类连续场景、API/UI和双Gate。每张卡都要求exact Diff base、required `validate`、未过期artifact与failure/corrective retention。
+
+该分配不形成任何P4 NFR/ENG行为证据，不改变root `ALLOCATED`生命周期或registry格式。Performance仅为development observation；Production isolation、identity、external side effect、capacity/SLA和operational readiness继续未形成。
+
 ## TASK-P3-17 audit status
 
 NFR-COR/DET/TRC/ISO/REL/SEC/OBS/PER/HUM与ENG-ARCH/VAL/ERR/VER/LOG的P3切片已由独立审计通过full tests、machine reports、双Gate、双语zero-wire-drift、SCA/license、build、provider topology/content与治理重放验证，结论`READY`、0 gaps。性能和bundle仅是development observation；OPEN-010～012等Production未知项未被关闭。Registry ID、正文、lifecycle与format version均未修改。

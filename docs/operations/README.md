@@ -11,6 +11,10 @@ last_reviewed: 2026-08-27
 
 # Operations 索引与形成边界
 
+## P4 planning operations boundary
+
+P4只规划Development/Test/Benchmark中的dynamic replanning与Execution Simulator证据。事件接入、worker、API/UI和成果包即使在后继Task形成，也不等于Production runbook、deployment、on-call、UAT、external integration或capacity/SLA；这些继续由PROD_OPEN与后续明确阶段治理。本次不创建runbook或运行配置。
+
 ## TASK-P3-17 audit conclusion
 
 P3的append-only audit、correlation/redaction、idempotency/CAS、ExportJob lease/recovery和internal package evidence均独立PASS；这些是开发/Simulation运行边界，不形成Production runbook、SLA、on-call、backup/restore或deployment readiness。
@@ -31,7 +35,7 @@ Required workflow在locked frontend install/SCA/license/lint/type后于`frontend
 
 首次closure run/job=`32921871460`/`98036888624`在Repository suite失败并且upload因无报告文件失败，artifact count=0。该run不可作为closure evidence；Task曾重新打开以修复XLSX core wall-clock timestamp，且没有仅rerun旧closure。独立corrective `3538d46f8b73ae434057bcbca9037436aa91f2c7` / run/job/artifact=`32923203227`/`98040743610`/`9590625358`已完整重跑并下载复验，故本closure标Task=`done`；closure仍须按同一流程核对exact SHA，P3-14不自动启动。
 
-这不是Production Runbook：没有部署、值班、SLO、真实identity、external storage、backup/restore或support browser matrix。P3-14 Gate和P3-16 implementation provider已经完成；P3-16 closure provider待核，P3-17最终Audit仍须另行授权。
+这不是Production Runbook：没有部署、值班、SLO、真实identity、external storage、backup/restore或support browser matrix。P3-14 Gate、P3-16与P3-17双提交provider均已完成；P4现在只激活规划，仍不形成上述Production能力。
 
 P0-08 已形成工程骨架可验证的前三份 Operations baseline：
 

@@ -11,6 +11,10 @@ last_reviewed: 2026-08-26
 
 # P0 工程安全边界
 
+## P4 planned security review
+
+P4-01/03/04/12必须覆盖event source spoofing、duplicate/replay、tenant/run/factory隔离、idempotency、audit redaction与default-deny；P4-13不得持久化token或计算authority。Simulation synthetic source不构成Production trust。真实identity、RBAC/SSO、MES credential与external endpoint仍未形成，本次无安全配置或依赖变化。
+
 ## TASK-P3-17 audit conclusion
 
 Production default-deny、pre-lookup authorization、credential-like material rejection、log/audit redaction、download confinement/size/symlink/tamper验证、browser no-credential-persistence、SCA 0 vulnerability与license policy均独立PASS。该point-in-time证据不关闭RISK-011/012/014或Production security readiness。

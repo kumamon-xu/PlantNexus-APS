@@ -11,6 +11,12 @@ last_reviewed: 2026-08-27
 
 # 需求追踪规则
 
+## TASK-P4-00 phase-plan trace rule
+
+本批唯一执行owner是TASK-P4-00，Diff base固定为P3 closure `61eeacdd5efc20b2321750e1310e9e21561c9fc2`；其原子新增TASK-P4-01～15 planned members并把current phase/P3/P4状态同步为P4/completed/active。P4执行链必须保持`P4-01 ADR/contract → P4-02 machine contracts → P4-03～08 persistence/event/freeze/stability/solve/apply → P4-09/10 Simulator/scenarios → P4-11～13 read-export/API/UI → P4-14 Gate → P4-15 independent Audit`，依赖未`done`、provider未闭环或没有新的明确授权时不得启动成员。
+
+P4规划把REQ-004/005/006/007/008/009/012/013/014与相关NFR/ENG root分配到15个成员，并登记12个`PLANNED` Test ID；只有后继Task的exact implementation SHA、required `validate`、未过期artifact与evidence-only closure才能把对应链提升为formed/verified。本批完成后counts应为30 roots、30 trace rows、61 Test IDs、15 OPEN、15 SIM assumptions、17 risks、71 Tasks和185份`docs/**/*.md`；这些计数不表示P4业务能力已实现。
+
 ## TASK-P3-17 Exit trace rule application
 
 最终Exit边按`P3 roots → TASK-P3-00～17 → registered Test IDs/machine reports → exact provider run/job/artifact → P3 Exit report/manifest`闭合。Audit必须独立下载并解析前序artifacts、验证SHA/Task/Diff base/Impact Rules/check/issues，并fresh重放全部required gates；前序Gate PASS不能替代Exit。当前30 roots/30 rows/49 Test IDs保持不变，TASK-P3-17为`IMPLEMENTATION_PROVIDER_VERIFIED_CLOSURE_PENDING`并在本closure中标为`done`；closure provider只能在push后复验。
@@ -118,7 +124,7 @@ TASK-P0-10 的 provider closure 必须同时记录 GitHub repository/workflow/ev
 6. 使用 `--check-diff` 时，以 Task 的 `Diff base..HEAD` 已提交路径和当前 working tree 路径并集作为实际 Git diff；命中的 change-impact Rule ID 已在当前 Task 声明，且必审文档已列入 `Documents to update`；
 7. `OPEN` 关闭记录字段完整，PROD_OPEN 与 SIM_ASSUMPTION 命名空间没有混用。
 
-2026-08-24用户明确批准P2→P3后，校验器继续从`docs/current_phase.md` front matter读取current phase并支持任意`TASK-Pn-NN～NN`依赖范围。P0～P2 `done`历史卡继续参与依赖/引用审计；P1+必须包含`Completion conditions`，P2+还必须包含`Start gate`、`Dependency changes`、`ADR impact`与`Provider evidence`。当前P3允许详细Task；P4+仍只能保留Milestone。
+校验器继续从`docs/current_phase.md` front matter读取current phase并支持任意`TASK-Pn-NN～NN`依赖范围。P0～P3 `done`历史卡继续参与依赖/引用审计；P1+必须包含`Completion conditions`，P2+还必须包含`Start gate`、`Dependency changes`、`ADR impact`与`Provider evidence`。2026-08-27明确transition后，当前P4允许详细Task；P5+仍只能保留Milestone。
 
 TASK-P1-01建立的CI changed-task discovery仍要求`--discover-task-from <event-base-sha>`为完整、存在且为HEAD祖先的commit。普通range在`docs/tasks/**`中只能出现一个current-phase Task Card；历史/未来/phase错位/多个卡直接失败。若range没有Task Card，仅当仓库恰有一个current-phase `in_progress` Task时回退。选择完成后仍使用卡片`Diff base..HEAD`+working tree执行scope/impact，不把event base混成Task baseline。
 

@@ -12,6 +12,10 @@ registry_version: 1.0.0
 
 # SIM_ASSUMPTION 注册表
 
+## P4 planning boundary
+
+TASK-P4-00不新增、修改或retire定量假设；SIM-ASSUMPTION-001～015继续全部`ACTIVE`。P4-05必须在实现前为freeze value登记新的versioned assumption，P4-09/10为clock/disruption config/seed登记，P4-13为browser fixture登记；只有实际数值确定时才使用下一个稳定ID，不在规划阶段预填。任何P4 Simulation值、事件概率、运行时间或bundle observation都不得关闭PROD_OPEN或外推Production capacity/SLA。
+
 ## TASK-P3-17 audit boundary
 
 独立Audit重新验证SIM-ASSUMPTION-001～015均保持`ACTIVE`且没有被provider或双语证据误当真实工厂校准。P3 `READY`只覆盖既有version/seed/hash与内部Simulation边界，不关闭PROD_OPEN、不建立external side effect，也不把开发时间、内存或bundle观测外推为Production SLA。

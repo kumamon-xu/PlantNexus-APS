@@ -11,6 +11,10 @@ last_reviewed: 2026-08-21
 
 # Objective Policy
 
+## P4 planned OBJ-002 allocation
+
+TASK-P4-06拥有OBJ-002 Stability与ChangeReport计算，TASK-P4-07必须实施`Delivery/OBJ-001 → Stability/OBJ-002 → Makespan`字典序并报告各层bound/value/provenance。SOFT_LOCK和非冻结旧计划的变化只能通过明确的deterministic成本表达；不得改写为单一浮点权重。当前OBJ-001与Solver机器合同保持不变。
+
 硬约束可行性优先于所有目标。目标采用词典序分轮，禁止用未经论证的浮点权重混合。
 
 ## OBJ-001 Delivery

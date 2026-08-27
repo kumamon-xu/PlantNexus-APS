@@ -11,6 +11,10 @@ last_reviewed: 2026-08-26
 
 # 数据权威边界
 
+## P4 planned authority boundary
+
+P4的Simulation ExecutionEvent只能以显式synthetic provenance进入与未来Production共用的验证/投影入口；它不成为真实MES authority。事件排序与幂等、actual fact覆盖、freeze/lock来源、base/new version及ChangeReport provenance由TASK-P4-01/03/04/08逐层固定。OPEN-005/007及Production source/role mapping继续OPEN，本次不建立真实authority。
+
 ## TASK-P3-17 audit conclusion
 
 独立Audit确认server仍是state、capability、validation、publication与export authority；Frontend只显示read model并发送canonical command，不能直接写ScheduleVersion或复制Solver/Validator。真实ERP/MES、组织审批与Production source authority均未形成。

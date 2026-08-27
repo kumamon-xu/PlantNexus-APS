@@ -3,7 +3,7 @@ doc_id: DOC-GOV-005
 title: 追踪矩阵
 status: living
 spec_version: 0.3.0
-phase: P3
+phase: P4
 normative: true
 source_sections: [5, 6, 71, 86]
 last_reviewed: 2026-08-27
@@ -12,9 +12,15 @@ registry_version: 1.0.0
 
 # 追踪矩阵
 
+## P4 planning trace slice
+
+P3 Exit `READY`/0 gaps与implementation→closure exact provider链已作为TASK-P4-00启动前提。P4规划链固定为`REQ/NFR/ENG → TASK-P4-01～15 → 12个新增PLANNED Test ID + TEST-REPLAN/历史回归 → future machine reports → exact implementation/closure provider artifacts → P4-15 report/manifest`。Roots/rows仍为30/30，Test IDs由49增至61，所有新证据状态为`PLANNED`；本次不把合同分配、Task文本或P3 evidence解释成P4行为PASS。
+
+能力owner：P4-04=ExecutionEvent事实投影，P4-08=ReplanRequest应用，P4-05=freeze/effective locks，P4-06/07=OBJ-002和词典序求解，P4-06/11=ChangeReport语义/输出，P4-09/10=Execution Simulator/连续场景，P4-14/15=Gate/Audit。Production与P5不在该链。
+
 ## TASK-P3-17 local independent Exit trace slice
 
-REQ-004/005/006/007/009、九项P3 NFR与ENG-ARCH/VAL/ERR/VER/LOG现连接TASK-P3-17→全部registered P3 Test IDs/machine reports→39个前序exact provider push/check-run→36个下载artifact→`P3-exit-gate-audit-report.md`/`p3-exit-gate-evidence-manifest.v1`。独立审计为`READY`、0 gaps：successful-chain 983 JSON为0 parse/SHA/top-level/check/issue/gap异常，621 Python、67 Vitest、三组12/12 Chromium、i18n 8/8、P2 11/11与P3 14/14双回放通过。Audit implementation exact provider又复现61/0 paths、四个Impact Rules、19 checks与0 issues，该边当前为`IMPLEMENTATION_PROVIDER_VERIFIED_CLOSURE_PENDING`且Task=`done`；closure provider只能在push后复验。Roots/rows仍30/30、Test IDs 49、registry version不变，P4/Production未形成。
+REQ-004/005/006/007/009、九项P3 NFR与ENG-ARCH/VAL/ERR/VER/LOG连接TASK-P3-17→全部registered P3 Test IDs/machine reports→39个前序exact provider push/check-run→36个下载artifact→`P3-exit-gate-audit-report.md`/`p3-exit-gate-evidence-manifest.v1`。独立审计为`READY`、0 gaps：successful-chain 983 JSON为0 parse/SHA/top-level/check/issue/gap异常，621 Python、67 Vitest、三组12/12 Chromium、i18n 8/8、P2 11/11与P3 14/14双回放通过。Audit implementation/closure exact provider均已复验，该边为`PROVIDER_VERIFIED_DONE`且Task=`done`。该历史slice为30 roots/rows、49 Test IDs；当前P4规划已把总Test IDs提升为61，Production仍未形成。
 
 ## TASK-P3-15 governance trace slice
 
@@ -41,17 +47,17 @@ REQ-005/006/007/009、NFR-COR/TRC/ISO/REL/SEC/HUM与ENG-ARCH/VAL/ERR/VER现连�
 | REQ-001 | REQ | `docs/contracts/import-and-normalization.md` | P0-P1 / TASK-P0-03；TASK-P1-02～06、10/11 | v1 retained + canonical/Import v2 + Raw/Reference/Normalization/Data Validation + [Reference/Synthetic common ingress](../../backend/tests/integration/test_p1_common_ingress.py) formed；Production binding仍PLANNED |
 | REQ-002 | REQ | `docs/contracts/import-and-normalization.md`、`docs/contracts/planning-snapshot.md`、`docs/contracts/planning-problem.md` | P0-P2 / TASK-P0-03；TASK-P1-02、05/06、08/09、11；TASK-P2-01 | Canonical Import/Data Validation + Snapshot bytes/hash/ID + Problem v1/v2 deterministic builder/hash/replay formed |
 | REQ-003 | REQ | `docs/contracts/import-and-normalization.md`、`docs/domain/operation-instance-and-resource-options.md` | P0-P2 / TASK-P0-03；TASK-P1-02、05～07、09～11；TASK-P2-01 | canonical Order/Lot/Routing + expansion/Snapshot + active/historical Problem v2 fact projection formed |
-| REQ-004 | REQ | `docs/architecture/end-to-end-planning-flow.md`、`docs/planning/constraint-catalog.md` | P2-P3 / TASK-P2-01～14；TASK-P3-04～15、17 | P2 Exit + P3-04～16 provider-verified；TASK-P3-17 Exit `IMPLEMENTATION_PROVIDER_VERIFIED_CLOSURE_PENDING` |
-| REQ-005 | REQ | `docs/planning/schedule-validator.md` | P0-P3 / TASK-P2-02、04～14；TASK-P3-04/06、10、13～17 | P2/P3 formal Validator链与P3-14/16 provider-verified；P3-17 Exit `IMPLEMENTATION_PROVIDER_VERIFIED_CLOSURE_PENDING` |
-| REQ-006 | REQ | `docs/contracts/export-package.md`、`docs/contracts/planning-workspace-api.md` | P2-P3 / TASK-P2-11、13/14；TASK-P3-01～03、08～10、13～17 | P2 package + P3 publication/export/API/UI/Gate formed；P3-16 zero-drift provider-verified，P3-17 Exit `IMPLEMENTATION_PROVIDER_VERIFIED_CLOSURE_PENDING` |
-| REQ-007 | REQ | `docs/domain/state-machines/schedule-version.md`、`docs/adr/ADR-0012-planning-workspace-command-state-publication.md` | P0/P3 / TASK-P0-04 contract；TASK-P3-01～17 | P3 state/application/API/UI/Gate and label zero-drift provider-verified；P3-17 Exit `IMPLEMENTATION_PROVIDER_VERIFIED_CLOSURE_PENDING` |
-| REQ-008 | REQ | `docs/planning/replanning.md` | P0/P4 / TASK-P0-04 capability boundary；no P1 Task | DYNAMIC_REPLANNING contract declaration formed；ExecutionEvent/Replan implementation PLANNED |
-| REQ-009 | REQ | `docs/architecture/provenance-and-versioning.md`、`docs/contracts/authorization-and-audit.md` | P0-P4 / P0-P2 evidence；TASK-P3-01～17 | P1→P2 Exit + P3-00～16 complete provider chain verified；P3-17 `IMPLEMENTATION_PROVIDER_VERIFIED_CLOSURE_PENDING`，P4 PLANNED |
+| REQ-004 | REQ | `docs/architecture/end-to-end-planning-flow.md`、`docs/planning/constraint-catalog.md` | P2-P4 / P2/P3 complete；TASK-P4-06～08、10、14/15 | P2/P3 provider-verified；P4 lexicographic Replan/Gate PLANNED |
+| REQ-005 | REQ | `docs/planning/schedule-validator.md` | P0-P4 / P2/P3 complete；TASK-P4-05～08、10、14/15 | P2/P3 formal Validator provider-verified；P4 fact/freeze/replan validation PLANNED |
+| REQ-006 | REQ | `docs/contracts/export-package.md`、`docs/contracts/planning-workspace-api.md` | P2-P4 / P2/P3 complete；TASK-P4-11～15 | P3 output/API/UI provider-verified；P4 ChangeReport output/API/UI PLANNED |
+| REQ-007 | REQ | `docs/domain/state-machines/schedule-version.md`、`docs/adr/ADR-0012-planning-workspace-command-state-publication.md` | P0/P3-P4 / P3 complete；TASK-P4-01～03、08、11～15 | P3 state/human-control provider-verified；P4 Replan state/new DRAFT/audit PLANNED |
+| REQ-008 | REQ | `docs/planning/replanning.md` | P0/P4 / TASK-P0-04 boundary；TASK-P4-01～15 | DYNAMIC_REPLANNING declaration formed；complete P4 implementation chain PLANNED |
+| REQ-009 | REQ | `docs/architecture/provenance-and-versioning.md`、`docs/contracts/authorization-and-audit.md` | P0-P4 / P0-P3 complete；TASK-P4-00～15 | P1→P3 exact provider chain verified；P4 event/replan/change/simulator provenance PLANNED |
 | REQ-010 | REQ | `docs/core/capability-matrix.md` | P6 / no P1 Task | REGISTERED；capability DEFERRED |
 | REQ-011 | REQ | `docs/simulation/synthetic-generator-and-determinism.md` | P0-P1 / TASK-P0-05/06；TASK-P1-10/11 | FactoryProfile + seven-layer Generator + public Raw Staging + 49-record Import/Snapshot/Problem replay formed；real distribution仍PLANNED |
-| REQ-012 | REQ | `docs/simulation/scenario-spec-and-provenance.md` | P0-P2 / P0-P1 evidence；TASK-P2-01、06/07、09、12～14 | P1 E2E + seven-case correctness + generated XS/S/M profile/seed/hash由两次完整Gate与Exit audit provider复验；Exit=`READY` |
-| REQ-013 | REQ | `docs/simulation/execution-simulator-and-disruptions.md` | P4 / TASK-P0-05 provenance boundary；no P1 Task | ScenarioManifest version/seed boundary formed；Execution Simulator/event/fact preservation PLANNED |
-| REQ-014 | REQ | `docs/simulation/benchmark-harness.md` | P2 / P0 provenance；TASK-P2-12～14 | strict BenchmarkRunner/Profile/Report/Baseline + XS/S/M 1+3由两次完整Gate与Exit audit provider复验；Exit=`READY` |
+| REQ-012 | REQ | `docs/simulation/scenario-spec-and-provenance.md` | P0-P4 / P0-P3 evidence；TASK-P4-09/10/14/15 | P1/P2 scenario provenance formed；P4 event-stream/five-disruption replay PLANNED |
+| REQ-013 | REQ | `docs/simulation/execution-simulator-and-disruptions.md` | P4 / TASK-P0-05 boundary；TASK-P4-01/02/04/09/10/12～15 | Scenario provenance formed；Execution Simulator/event/fact preservation chain PLANNED |
+| REQ-014 | REQ | `docs/simulation/benchmark-harness.md` | P2-P4 / P2 baseline；TASK-P4-14/15 regression | XS/S/M provider-verified；P4 Gate regression/development observations PLANNED，Production SLA未形成 |
 | REQ-015 | REQ | `docs/planning/reference-schedulers.md` | P2 / P0 provenance；TASK-P2-10、12～14 | five algorithms + same Problem/Validator/common-KPI Global comparison/warning由两次完整Gate与Exit audit provider复验；Exit=`READY` |
 | NFR-COR-001 | NFR | `docs/planning/constraint-catalog.md`、`docs/planning/schedule-validator.md` | P0-P3 / P2 Exit formed；TASK-P3-04/06、13～17 | P2/P3 correctness and no-client-calculation provider-verified；P3-17 Exit `IMPLEMENTATION_PROVIDER_VERIFIED_CLOSURE_PENDING` |
 | NFR-DET-001 | NFR | `docs/contracts/planning-snapshot.md`、`docs/contracts/planning-problem.md`、`docs/simulation/synthetic-generator-and-determinism.md` | P0-P3 / P2 Exit formed；TASK-P3-02～05、09、14～17 | deterministic carrier/package/Gate and locale-independent wire provider-verified；P3-17 Exit `IMPLEMENTATION_PROVIDER_VERIFIED_CLOSURE_PENDING` |

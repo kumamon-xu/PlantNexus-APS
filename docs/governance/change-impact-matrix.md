@@ -12,6 +12,12 @@ registry_version: 1.0.0
 
 # 变更影响与必审文档矩阵
 
+## TASK-P4-00 phase-transition planning impact
+
+不可变Diff base=`61eeacdd5efc20b2321750e1310e9e21561c9fc2`。本批只修改根README与`docs/**`，关闭P3/激活P4、新增16张P4 Task卡并同步合同/架构/领域/Planning/Simulation/Operations/Quality/Governance的“planned impact”说明。本地Task report得到0 committed-range/83 working-tree unique paths，精确命中`IMPACT-STATE`、`IMPACT-PHASE`、`IMPACT-GOVERNANCE-REGISTRY`、`IMPACT-DOCS`四行、19/19 checks、0 issues；state文档只登记未来责任，不增加或修改state pair。Exact provider仍必须复现同一完整提交范围，任何额外Impact Rule必须先停止并扩卡。
+
+相对Diff base，`backend/**`、`frontend/**`、`schemas/**`、migration、`pyproject.toml`/`uv.lock`/npm lock、fixtures/benchmarks、test assertion、`.github/workflows/**`、accepted ADR正文及P0～P3历史Task/Exit evidence必须零差异。TASK-P4-01的三份具名future ADR与TASK-P4-02 Schema只是预期影响，本批不得创建或分配ADR stable ID；P5+、Production identity/authority/external/deployment/capacity/SLA同样禁止。
+
 ## TASK-P3-17 audit impact decision
 
 本Task命中`IMPACT-PHASE`、`IMPACT-GOVERNANCE-REGISTRY`与`IMPACT-DOCS`，因此同步current phase、Milestone/Task索引、P3直接合同/Frontend/state/architecture/operations/quality结论、所有治理注册表、trace、inventory、模板及audit report/manifest。相对Diff base的business、Schema、migration、dependency/lock、ADR、test assertion、workflow与Frontend implementation零差异，因此没有触发这些载体的规范变更；审计结论为`READY`、0 gaps且provider pending，不授权P4或Production。

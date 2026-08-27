@@ -11,6 +11,10 @@ last_reviewed: 2026-08-27
 
 # 错误与求解状态模型
 
+## P4 planned error impact
+
+TASK-P4-01/02必须为duplicate/out-of-order event、invalid fact transition、stale base、freeze/lock conflict、stability/report mismatch、unsupported disruption与replan apply conflict定义版本化、机器稳定且可审计的错误边界；TASK-P4-12只能transport这些server错误。当前error-code registry不变，没有预分配code或放宽UNKNOWN/INFEASIBLE/INVALID语义。
+
 ## TASK-P3-17 audit conclusion
 
 Solver七状态、product error、workspace reason、HTTP 401/403/409/422/500与correlation/redaction映射均独立回归，四类P3 exact rejection逐字fail closed。双语只映射显示标签，raw code/reason保持可见；没有新错误码或P4语义。

@@ -11,6 +11,10 @@ last_reviewed: 2026-08-19
 
 # PlanningPolicy 与 SolveLimits 合同
 
+## P4 planned policy impact
+
+TASK-P4-01/06/07将分别固定freeze/稳定性语义、OBJ-002与ChangeReport计算、以及Delivery→Stability→Makespan字典序重排求解边界；TASK-P4-02必须在需要机器字段时以新版本additive表达。当前PlanningPolicy、SolveLimits、OBJ-001与Production limits/SLA完全不变，未形成Production freeze、priority或capacity默认值。
+
 ## PlanningPolicy
 
 PlanningPolicy 描述业务允许的计划策略，例如目标层级、交期权重来源、Replan 稳定性、freeze/lock 语义。V1 目标按词典序执行：Delivery → Stability（Replan）→ Makespan。

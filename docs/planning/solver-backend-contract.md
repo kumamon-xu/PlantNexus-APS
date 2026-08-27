@@ -11,6 +11,10 @@ last_reviewed: 2026-08-21
 
 # SolverBackend 合同
 
+## P4 planned replan backend impact
+
+TASK-P4-07在P4-04/05/06完成后才可添加replan solve orchestration，输入必须是版本化Problem/Policy/Limits及base schedule projection，输出必须honest status、分层objective与deterministic report；随后独立Validator决定可接受性。现有CP-SAT Backend、OR-Tools pin、limits、seed/workers及P2 benchmark contract不变。
+
 ```python
 class SolverBackend(Protocol):
     def solve(

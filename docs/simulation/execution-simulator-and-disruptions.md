@@ -11,6 +11,10 @@ last_reviewed: 2026-08-19
 
 # Execution Simulator 与异常模型
 
+## P4 planned implementation ownership
+
+TASK-P4-01的planned Execution Simulator Common-Path ADR先固定virtual clock、event ordering、seed、stop/replay和common-path边界；TASK-P4-02形成carrier，P4-09实现core，P4-10实现五类disruption。Simulator不得直接修改fact/ScheduleVersion、绕过P4-04 ingestion或P4-08 application，也不得隐藏不可支持能力。本次没有runtime实现或场景结果。
+
 ExecutionSimulator 输入 PUBLISHED ScheduleVersion，模拟生产时间推进并输出标准 `ExecutionEvent[]`。它不得直接修改计划数据库或调用特殊 Replan 入口。
 
 ## 事件

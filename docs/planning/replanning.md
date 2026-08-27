@@ -13,7 +13,7 @@ last_reviewed: 2026-08-27
 
 ## TASK-P3-16 localization / P4 boundary
 
-双语展示只本地化现有P3 workspace术语，没有新增ExecutionEvent、ReplanRequest、freeze window、OBJ-002、ChangeReport、Execution Simulator或任何P4 route/action。中文“移动/重新分配/锁定”仍只是P3 copy-on-write command label，不是dynamic replan。TASK-P3-16本地实现已形成但provider pending；TASK-P3-17最终审计后P3也不会自动进入P4，当前P4仍完全未启动。
+双语展示只本地化现有P3 workspace术语，没有新增ExecutionEvent、ReplanRequest、freeze window、OBJ-002、ChangeReport、Execution Simulator或任何P4 route/action。中文“移动/重新分配/锁定”仍只是P3 copy-on-write command label，不是dynamic replan。TASK-P3-16 implementation已取得exact provider；TASK-P3-17最终审计后P3也不会自动进入P4，当前P4仍完全未启动。
 
 ## TASK-P3-14 boundary Gate
 
@@ -23,7 +23,7 @@ P3 Gate只重放P3 copy-on-write manual command与publication链，并证明PUBL
 
 Gantt drag/move/assign/lock是对单一immutable ScheduleVersion的人工command proposal，经既有P3-06 fresh Validator产生new DRAFT；它不读取ExecutionEvent、不生成ReplanRequest、不计算freeze window/OBJ-002/Stability/ChangeReport，也不调用Solver。UI的“refresh authority”仅重读Version/Job，不是replan trigger。
 
-P3-14已完成有界Gate，P3-15已完成修订治理；在P3-16实现及P3-17独立Audit完成前仍不能形成P3 Exit。P4 dynamic replanning完全未启动；PUBLISHED immutable且rollback只能以新Version/command表达，不能修改执行事实或历史发布。
+P3-14已完成有界Gate，P3-15已完成修订治理，P3-16已完成双语实现provider复验；在P3-17独立Audit完成前仍不能形成P3 Exit。P4 dynamic replanning完全未启动；PUBLISHED immutable且rollback只能以新Version/command表达，不能修改执行事实或历史发布。
 
 ## 输入
 

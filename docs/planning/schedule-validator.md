@@ -13,7 +13,7 @@ last_reviewed: 2026-08-27
 
 ## TASK-P3-16 localization non-authority boundary
 
-Validator的C-001～C-011、PASS/FAIL、product code、report bytes与计算公式继续是英文机器合同；TASK-P3-16已依据`official-zh-cn-terminology.v1`实现双语label/说明并保留raw C-ID、code、details与correlation。UI不根据中文文案重新判断可行性或把unknown映射为PASS/FAIL。本地coverage/zero-wire-drift tests已通过，exact provider待形成；Validator、断言、fixture和expected零变化，最终由TASK-P3-17独立复验。
+Validator的C-001～C-011、PASS/FAIL、product code、report bytes与计算公式继续是英文机器合同；TASK-P3-16已依据`official-zh-cn-terminology.v1`实现双语label/说明并保留raw C-ID、code、details与correlation。UI不根据中文文案重新判断可行性或把unknown映射为PASS/FAIL。Coverage/zero-wire-drift tests已由exact implementation provider复验；Validator、断言、fixture和expected零变化，最终由TASK-P3-17独立复验。
 
 ## TASK-P3-14 Validator Gate
 

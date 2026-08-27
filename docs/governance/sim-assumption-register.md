@@ -14,7 +14,7 @@ registry_version: 1.0.0
 
 ## TASK-P3-16 review
 
-双语实现只消费既有versioned synthetic browser fixture并格式化已发布值，没有新增或修改Scenario/Profile/seed/hash/measurement，也不把中文label解释为真实工厂事实。SIM-ASSUMPTION-001～015全部继续`ACTIVE`，数量15且`registry_version=1.0.0`不变；本地或provider browser PASS均不得外推Production。
+双语实现只消费既有versioned synthetic browser fixture并格式化已发布值，没有新增或修改Scenario/Profile/seed/hash/measurement，也不把中文label解释为真实工厂事实。Exact implementation provider已复验三组各12/12 Chromium；SIM-ASSUMPTION-001～015全部继续`ACTIVE`，数量15且`registry_version=1.0.0`不变，browser PASS不得外推Production。
 
 ## TASK-P3-15 review
 

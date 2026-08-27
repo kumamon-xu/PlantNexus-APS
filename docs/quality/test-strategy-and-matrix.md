@@ -16,7 +16,7 @@ registry_version: 1.0.0
 
 TEST-TRACEABILITY-VALIDATOR与TEST-PHASE-GOVERNANCE-001增加phase-plan amendment覆盖：既存owner+rename+new planned members成功；base中done成员即使被降级为planned也拒绝；deleted-only逻辑Task拒绝；repository discovery必须读取event-base状态。首次phase-planning owner与普通单Task测试保持回归。Implementation `c84e1aa1a81473f65d9f7906a6d2c67a94e7bb2f` / artifact `9597967232`已精确复验该治理slice。
 
-`TEST-FRONTEND-I18N-001`现由TASK-P3-16实现：15 files/67 Vitest、基础/双Gate Chromium各12/12（8条human-control）、两个各243-key的typed词典、139个注册机器值及`p3-frontend-i18n-report.v1` 8/8 checks本地通过；621 Python与P2/P3 Gate也完整回归。覆盖`zh-CN`/`en-US`、官方术语、unknown raw fallback、document/Ant locale、local non-sensitive preference、bilingual browser flow及英文path/key/enum/code/C-ID/header/body零漂移；exact provider形成前状态为`LOCAL_PASS_PROVIDER_PENDING`。TASK-P3-17在其后独立审计，Test ID总数49且`registry_version=1.0.0`不变。
+`TEST-FRONTEND-I18N-001`现由TASK-P3-16实现：15 files/67 Vitest、基础/双Gate Chromium各12/12（8条human-control）、两个各243-key的typed词典、139个注册机器值及`p3-frontend-i18n-report.v1` 8/8 checks均由exact implementation provider复验；621 Python与P2/P3 Gate也完整回归。覆盖`zh-CN`/`en-US`、官方术语、unknown raw fallback、document/Ant locale、local non-sensitive preference、bilingual browser flow及英文path/key/enum/code/C-ID/header/body零漂移；状态为`PROVIDER_VERIFIED`。TASK-P3-17在其后独立审计，Test ID总数49且`registry_version=1.0.0`不变。
 
 ## TASK-P3-14 local Gate evidence
 
@@ -100,7 +100,7 @@ Provider失败run `32920462781`保留POSIX glob误收Playwright的负证据；�
 | TEST-AUDIT-TRAIL-001 | append-only actor/reason/correlation/before-after/version audit完整性 | P3 | TASK-P3-03～10 business/denial audit + P3-13 UI/audit/download lineage provider-verified；retention/SIEM PLANNED |
 | TEST-WORKSPACE-API-001 | HTTP payload/error/auth/idempotency/OpenAPI与application boundary | P3 | [`test_planning_workspace_http_api.py`](../../backend/tests/contract/test_planning_workspace_http_api.py) + [`test_planning_workspace_api_integration.py`](../../backend/tests/integration/test_planning_workspace_api_integration.py) + [`test_planning_workspace_http_authorization.py`](../../backend/tests/security/test_planning_workspace_http_authorization.py) + 8/8 machine provider-verified / TASK-P3-10 |
 | TEST-WORKSPACE-FRONTEND-001 | read/action UI、状态可见性、accessibility与no-client-authority E2E | P3 | P3-11 read-only、P3-12 visualization/browser、P3-13 human-control/action slices均PROVIDER_VERIFIED |
-| TEST-FRONTEND-I18N-001 | `zh-CN`/`en-US`术语coverage、unknown raw fallback、locale切换、accessibility与英文machine contract零漂移 | P3 | LOCAL_PASS_PROVIDER_PENDING / TASK-P3-16；67 Vitest、12/12 Chromium、`p3-frontend-i18n-report.v1` 8/8，本地事实不替代exact provider |
+| TEST-FRONTEND-I18N-001 | `zh-CN`/`en-US`术语coverage、unknown raw fallback、locale切换、accessibility与英文machine contract零漂移 | P3 | PROVIDER_VERIFIED / TASK-P3-16；67 Vitest、三组12/12 Chromium、`p3-frontend-i18n-report.v1` 8/8，artifact `9629193057` exact复验 |
 | TEST-P3-VERTICAL-SLICE-001 | P3完整workspace→review→approve→publish→export双重replay与拒绝门 | P3 | PROVIDER_VERIFIED / TASK-P3-14；TASK-P3-17独立复验待执行 |
 
 Test ID 一经分配不得复用。链接到真实测试路径才是已形成证据；`PLANNED` 只登记合同。表结构或状态语义变化必须提升 `registry_version`。
@@ -301,7 +301,7 @@ Integration覆盖完整链、七Scenario/C-ID、XS/S/M status/objective/model/ti
 
 ## P3 planning allocation baseline
 
-TASK-P3-00首次规划时只登记12个P3 Test ID，registry从36项增加到48项；没有创建测试文件、修改断言或把任一P3 evidence标为formed。当时编号链为P3-01合同/ADR→P3-02～13分层证据→P3-14 Gate→P3-15 Audit；获批amendment保留该历史并将末段改为P3-15治理→P3-16本地化/第49个Test ID→P3-17最终Audit。该第49项现为local pass/provider pending。
+TASK-P3-00首次规划时只登记12个P3 Test ID，registry从36项增加到48项；没有创建测试文件、修改断言或把任一P3 evidence标为formed。当时编号链为P3-01合同/ADR→P3-02～13分层证据→P3-14 Gate→P3-15 Audit；获批amendment保留该历史并将末段改为P3-15治理→P3-16本地化/第49个Test ID→P3-17最终Audit。该第49项现为implementation `PROVIDER_VERIFIED`。
 
 所有P3测试必须保留P2 formal Validator与immutable artifacts，明确DRAFT/REJECTED publish拒绝、APPROVED-only publish、PUBLISHED immutability、command产生new DRAFT、same-key幂等和default-deny authorization。P4 ExecutionEvent/Replan/OBJ-002/ChangeReport/Execution Simulator及Production identity/deployment/SLA测试不属于P3；48个ID的生命周期仍为注册或历史证据状态，`registry_version=1.0.0`格式不变。
 
@@ -317,7 +317,7 @@ TASK-P3-01形成三份Frontend规范、两份语义合同和accepted ADR-0012，
 
 本地受影响contract=`73 passed`、CI integration focused=`4 passed`、全仓=`493 passed`、machine checks=`8/8`。Implementation run `32689832111` / artifact `9506913562`再次通过全仓suite并精确绑定workspace/Task报告。这些只形成TEST-CONTRACT-001与TEST-WORKSPACE-CONTRACT-001的carrier slice，并复验TEST-STATE-TRANSITION-001与TEST-ERROR-MAPPING-001 preservation；不形成auth decision、repository transaction、transition behavior、HTTP/UI/E2E、external side effect或Production readiness。
 
-因此该历史P3-01合同Task结束时Test ID总数仍为48且behavior lifecycle保持`PLANNED`；它没有新增/修改测试断言。后续P3-02～14已按卡片形成证据，amendment新增的TEST-FRONTEND-I18N-001现由P3-16形成local evidence/provider pending，总数49；只有TASK-P3-17最终独立审计。
+因此该历史P3-01合同Task结束时Test ID总数仍为48且behavior lifecycle保持`PLANNED`；它没有新增/修改测试断言。后续P3-02～14已按卡片形成证据，amendment新增的TEST-FRONTEND-I18N-001现由P3-16形成provider-verified evidence，总数49；只有TASK-P3-17最终独立审计。
 
 ## TASK-P3-03 persistence test slice
 

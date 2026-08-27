@@ -13,11 +13,11 @@ last_reviewed: 2026-08-27
 
 ## TASK-P3-16 localization overlay
 
-TASK-P3-16已在既有route/page/component/action之上应用[`official-zh-cn-terminology.v1`](official-zh-cn-terminology-map.md)：默认中文、可切换/刷新恢复英文，状态、空/缺失/错误、Gantt、Resource Load、Comparison、Audit和human-control文本均通过typed key双语显示且可访问。未知state/code/reason保留raw值并显式失败；raw UTC、ID、lineage与fingerprint不被翻译或隐藏。该overlay未新增route、读取模型、action、客户端计算或server authority；本地unit/browser/machine evidence已通过，exact provider仍待形成。
+TASK-P3-16已在既有route/page/component/action之上应用[`official-zh-cn-terminology.v1`](official-zh-cn-terminology-map.md)：默认中文、可切换/刷新恢复英文，状态、空/缺失/错误、Gantt、Resource Load、Comparison、Audit和human-control文本均通过typed key双语显示且可访问。未知state/code/reason保留raw值并显式失败；raw UTC、ID、lineage与fingerprint不被翻译或隐藏。该overlay未新增route、读取模型、action、客户端计算或server authority；unit/browser/machine evidence已由exact implementation provider复验。
 
 ## TASK-P3-14 workspace browser replay
 
-TASK-P3-14已单独授权并以两轮isolated Chromium重放P3-13的read、visualization、command、decision、publication、export与failure visibility。Gate只检查server-authority及两轮语义一致，未修改页面、route、carrier、action或accessibility断言；在该Gate形成时P3-16/P3-17均为`planned`。当前P3-15治理已完成、P3-16本地化处于`in_progress`/provider pending，P3-17仍为`planned`，P4与Production未形成。
+TASK-P3-14已单独授权并以两轮isolated Chromium重放P3-13的read、visualization、command、decision、publication、export与failure visibility。Gate只检查server-authority及两轮语义一致，未修改页面、route、carrier、action或accessibility断言；在该Gate形成时P3-16/P3-17均为`planned`。当前P3-15治理与P3-16本地化均为`done`，P3-16 closure provider待核；P3-17仍为`planned`，P4与Production未形成。
 
 ## TASK-P3-13 control composition
 
@@ -27,7 +27,7 @@ Version页现在以server state和capability交集装配唯一可用control：DR
 
 该control surface只在显式development E2E Simulation fixture启用。普通Production-shaped runtime继续隐藏controls并default-deny；无真实session、identity provider、external publish、MES或deployment。P4的ExecutionEvent/ReplanRequest/freeze/OBJ-002/ChangeReport没有route、type或feature模块。
 
-本文件固定P3页面、路由、只读投影、状态可见性和server-authority边界。TASK-P3-01只形成规范；read model、HTTP、React页面和E2E分别由TASK-P3-05、10、11～13形成并已取得各自provider闭环。P3-14 Gate与P3-15修订治理均为`done`；P3-16展示层双语处于`in_progress`/provider pending，P3-17才是最终独立Audit。
+本文件固定P3页面、路由、只读投影、状态可见性和server-authority边界。TASK-P3-01只形成规范；read model、HTTP、React页面和E2E分别由TASK-P3-05、10、11～13形成并已取得各自provider闭环。P3-14 Gate、P3-15修订治理与P3-16展示层双语均为`done`；P3-16 closure provider待核，P3-17才是最终独立Audit。
 
 ## 不变量
 

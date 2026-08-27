@@ -13,7 +13,7 @@ last_reviewed: 2026-08-27
 
 ## TASK-P3-16 bilingual operations boundary
 
-TASK-P3-16仅以key `plantnexus.locale.v1`保存`zh-CN`/`en-US`非敏感展示选择，不保存token、actor、reason、payload或authority，也未增加server config、Accept-Language、monitoring、runbook或deployment。Required workflow只additive运行双语machine evidence并沿用同一`validate`/artifact边界；本地8/8检查通过，exact SHA provider待形成。TASK-P3-17最后独立审计；没有service、queue、dashboard、secret、external target或Production operations变化。
+TASK-P3-16仅以key `plantnexus.locale.v1`保存`zh-CN`/`en-US`非敏感展示选择，不保存token、actor、reason、payload或authority，也未增加server config、Accept-Language、monitoring、runbook或deployment。Required workflow只additive运行双语machine evidence并沿用同一`validate`/artifact边界；implementation exact SHA的8/8检查与完整required Gate已由artifact `9629193057`复验。TASK-P3-17最后独立审计；没有service、queue、dashboard、secret、external target或Production operations变化。
 
 ## TASK-P3-14 Gate operations
 
@@ -27,7 +27,7 @@ Required workflow在locked frontend install/SCA/license/lint/type后于`frontend
 
 首次closure run/job=`32921871460`/`98036888624`在Repository suite失败并且upload因无报告文件失败，artifact count=0。该run不可作为closure evidence；Task曾重新打开以修复XLSX core wall-clock timestamp，且没有仅rerun旧closure。独立corrective `3538d46f8b73ae434057bcbca9037436aa91f2c7` / run/job/artifact=`32923203227`/`98040743610`/`9590625358`已完整重跑并下载复验，故本closure标Task=`done`；closure仍须按同一流程核对exact SHA，P3-14不自动启动。
 
-这不是Production Runbook：没有部署、值班、SLO、真实identity、external storage、backup/restore或support browser matrix。P3-14 Gate已经完成；P3-16已获授权且处于provider pending，P3-17最终Audit仍须另行授权。
+这不是Production Runbook：没有部署、值班、SLO、真实identity、external storage、backup/restore或support browser matrix。P3-14 Gate和P3-16 implementation provider已经完成；P3-16 closure provider待核，P3-17最终Audit仍须另行授权。
 
 P0-08 已形成工程骨架可验证的前三份 Operations baseline：
 
@@ -154,7 +154,7 @@ Report本身不写业务数据库，temporary CSV随进程回收，`build/valida
 
 ## P3 operations planning
 
-P3-01先定义security/audit/idempotency责任，P3-03/07～10再形成repository、audit、publish/export/API的development行为，P3-14验证Gate，P3-17最终独立验证failure/retry/evidence；P3-15只形成计划修订治理，P3-16只实现展示层本地化且当前provider pending。没有新增Runbook、service、queue、dashboard、Production secret/target或deployment；P3 internal Simulation workflow不得写成Production operation readiness。
+P3-01先定义security/audit/idempotency责任，P3-03/07～10再形成repository、audit、publish/export/API的development行为，P3-14验证Gate，P3-17最终独立验证failure/retry/evidence；P3-15只形成计划修订治理，P3-16只实现展示层本地化且implementation provider已复验。没有新增Runbook、service、queue、dashboard、Production secret/target或deployment；P3 internal Simulation workflow不得写成Production operation readiness。
 ## TASK-P3-02 operational boundary
 
 新增`python -m app.domain.workspace_contract_check --root . --report <ignored-json>`只做离线Schema/sample/fingerprint/frozen-byte验证。CI step non-skippable且artifact保存report，但没有service、health endpoint、DB、queue、worker、storage、external publish、rollback procedure或Production runbook形成。失败时返回非零并保存sanitized FAIL report；不得通过放宽Schema或删除负例恢复绿色。

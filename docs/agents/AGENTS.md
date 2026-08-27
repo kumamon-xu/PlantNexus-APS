@@ -27,7 +27,7 @@ last_reviewed: 2026-08-27
 
 涉及P3 Frontend展示、locale、错误文案、时间/单位格式或human-control文本时，必须在代码前完整读取`../frontend/official-zh-cn-terminology-map.md`、相关Frontend规范、`../contracts/planning-workspace-api.md`、`../domain/error-model.md`与两份P3状态机文档。官方中文表只授权展示label；英文API key/state/command/error/C-ID/fingerprint仍是机器权威。
 
-TASK-P3-16已把该规则实现为versioned typed dictionary、unknown raw fallback和zero-wire-drift machine evidence；后续修改任何P3用户可见文本时必须同步两个locale及coverage registry，不能绕过`src/i18n`重新散落字符串。Local PASS不替代implementation/closure exact provider，TASK-P3-17仍须独立授权。
+TASK-P3-16已把该规则实现为versioned typed dictionary、unknown raw fallback和zero-wire-drift machine evidence，且implementation exact provider已复验；后续修改任何P3用户可见文本时必须同步两个locale及coverage registry，不能绕过`src/i18n`重新散落字符串。本closure自身仍须exact provider，TASK-P3-17仍须独立授权。
 
 Task 从 `planned`/`ready` 进入 `in_progress` 时，必须先把当时的完整 40 字符 HEAD commit SHA 记录为 Task Card 的 `Diff base`。后续 diff acceptance 以该不可变基线联合当前 working tree，不能依赖尚未提交的改动长期存在。
 

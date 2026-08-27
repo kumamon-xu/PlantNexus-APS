@@ -13,7 +13,7 @@ last_reviewed: 2026-08-27
 
 ## TASK-P3-16 localization stack boundary
 
-TASK-P3-16已使用仓库内强类型versioned dictionaries、已锁定Ant Design自带`zhCN/enUS` locale和浏览器原生Intl实现展示层双语；没有增加i18n dependency，`frontend/package.json`/lock保持零差异。243个dictionary keys、139个注册机器值与8项machine checks已在本地通过；exact provider仍待形成。如未来确需新依赖，必须先停止并独立修订Task卡，完成exact pin、lock、SCA、license与React/Ant/TypeScript peer compatibility审查。展示层不得增加Accept-Language后端协商或改英文wire contract。
+TASK-P3-16已使用仓库内强类型versioned dictionaries、已锁定Ant Design自带`zhCN/enUS` locale和浏览器原生Intl实现展示层双语；没有增加i18n dependency，`frontend/package.json`/lock保持零差异。243个dictionary keys、139个注册机器值与8项machine checks已由exact implementation provider复验。如未来确需新依赖，必须先停止并独立修订Task卡，完成exact pin、lock、SCA、license与React/Ant/TypeScript peer compatibility审查。展示层不得增加Accept-Language后端协商或改英文wire contract。
 
 ## TASK-P3-14 stack review
 

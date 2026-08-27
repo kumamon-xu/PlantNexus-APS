@@ -15,7 +15,7 @@ last_reviewed: 2026-08-27
 
 TASK-P3-15 implementation evidence精确绑定`c84e1aa1a81473f65d9f7906a6d2c67a94e7bb2f`、原Diff base、required `validate`和artifact `9597967232`；closure `1636fe9c909b728d49f9907ed9f53030b5921914`的run/job/artifact=`32948633841`/`98114798738`/`9599442770`也已下载复验37份JSON、48/0 paths、六行、19 checks与0 issues。该历史只授权P3-16成为可单独启动成员，不替代其自身Diff base/provider。
 
-TASK-P3-16链固定为`REQ-005/006/007/009 + NFR-COR/DET/TRC/ISO/SEC/OBS/HUM + ENG-ARCH/ERR/VER → TASK-P3-16 → TEST-FRONTEND-I18N-001 + existing wire/frontend regressions → p3-frontend-i18n-report.v1/Playwright/exact provider`。`official-zh-cn-terminology.v1`现由两个243-key dictionary、139-value registry、unknown raw/Intl adapters及本地67 Vitest、12/12 Chromium、8/8 report承载；exact provider形成前只能标local evidence。报告逐locale证明raw UTC/ID/code/correlation可见及英文path/key/state/command/error/header/body/fingerprint零漂移。TASK-P3-17最后独立重放，不能继承P3-14 Gate或P3-16结论；READY也不自动进入P4或Production。
+TASK-P3-16链固定为`REQ-005/006/007/009 + NFR-COR/DET/TRC/ISO/SEC/OBS/HUM + ENG-ARCH/ERR/VER → TASK-P3-16 → TEST-FRONTEND-I18N-001 + existing wire/frontend regressions → p3-frontend-i18n-report.v1/Playwright/exact provider`。`official-zh-cn-terminology.v1`现由两个243-key dictionary、139-value registry、unknown raw/Intl adapters、67 Vitest、三组各12/12 Chromium及8/8 report承载；implementation `b3ba999e83f4e8b0f96c7ce5bc72eba01432d791` / artifact `9629193057`已精确复验该链和Task 79/0/6/19/0。报告逐locale证明raw UTC/ID/code/correlation可见及英文path/key/state/command/error/header/body/fingerprint零漂移。本closure自身仍须exact provider；TASK-P3-17最后独立重放，不能继承P3-14 Gate或P3-16结论，READY也不自动进入P4或Production。
 
 ## TASK-P3-14 Gate evidence rule
 
@@ -270,7 +270,7 @@ TASK-P2-14 audit implementation `65c556789f176ad9de55523d6420737bb60f933f`的req
 
 P3首次规划batch当时必须且只能由TASK-P3-00作为`phase-planning-owner`；当时的P3-01～15均为同range新建的`phase-plan-member`、`planned`且无implementation SHA。该历史链按当时编号结束于P3-15 independent Audit；2026-08-26获批的amendment由稳定ID P3-15 owner将最终Audit重编号为P3-17并插入P3-16，不改写首次batch事实。每张成员卡的后续启动仍必须有新用户授权、依赖`done`、clean synchronized/provider-verified HEAD与新40字符Diff base；batch或amendment创建都不等于实现授权。
 
-P3证据必须区分planned注册与formed行为、internal Simulation publish与Production authority、P3 human-control与P4 Execution/Replan。当前P3-15只形成修订治理，P3-16只允许展示层本地化，P3-17才审计冻结事实；READY仍不自动进入P4或Production。TASK-P3-00及TASK-P3-15的implementation与evidence-only closure各自都必须由exact required `validate`/artifact核验后才能完整闭环。
+P3证据必须区分planned注册与formed行为、internal Simulation publish与Production authority、P3 human-control与P4 Execution/Replan。P3-15只形成修订治理，P3-16已完成且只形成provider-verified展示层本地化，P3-17才审计冻结事实；READY仍不自动进入P4或Production。每个Task的implementation与evidence-only closure都必须分别由exact required `validate`/artifact核验后才能形成完整证据链。
 
 TASK-P3-00 implementation provider已由run `32681493976` / required job `97298850740` / artifact `9504310381`精确复验，Task report绑定SHA并为64 committed/0 working paths、4 rows、19 checks、0 issues。故evidence-only closure可把owner标为`done`；closure自身仍只能在push后外部核验，不得自引用或自动启动P3-01。
 

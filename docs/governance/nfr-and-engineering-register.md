@@ -16,7 +16,7 @@ registry_version: 1.0.0
 
 NFR-TRC-001/NFR-PER-001与ENG-ARCH-001/ENG-VER-001连接amendment-owner discovery、base-state fail-closed检查和existing unit/CI evidence；implementation `c84e1aa1a81473f65d9f7906a6d2c67a94e7bb2f` / artifact `9597967232`已精确复验普通/initial规划兼容性与稳定ID rename。该证据只完成治理correctness/maintainability，不形成业务或Exit结论。
 
-NFR-COR/DET/TRC/ISO/SEC/OBS/HUM及ENG-ARCH/ERR/VER现分配给`in_progress` TASK-P3-16：typed/versioned词典、unknown raw fallback、默认`zh-CN`/可选`en-US`、document language/Ant Design locale同步与零wire漂移已形成local evidence，exact provider待形成；TASK-P3-17在其后独立审计。NFR-REL/PER/ENG-VAL/LOG既有事实只作为冻结回归边界，不由本地化扩写。全部root继续`ALLOCATED`，`registry_version=1.0.0`不变。
+NFR-COR/DET/TRC/ISO/SEC/OBS/HUM及ENG-ARCH/ERR/VER现由`done` TASK-P3-16承载：typed/versioned词典、unknown raw fallback、默认`zh-CN`/可选`en-US`、document language/Ant Design locale同步与零wire漂移已由exact implementation provider复验；TASK-P3-17在其后独立审计。NFR-REL/PER/ENG-VAL/LOG既有事实只作为冻结回归边界，不由本地化扩写。全部root继续`ALLOCATED`，`registry_version=1.0.0`不变。
 
 ## TASK-P3-14 allocation review
 

@@ -21,7 +21,9 @@ Closure提交前required-equivalent本地证据为Ruff/Pyright、22项治理unit
 
 ## TASK-P3-16 active required Gate / TASK-P3-17 future Gate
 
-TASK-P3-16已获单独授权，required `validate`现additive运行`TASK-P3-16 Frontend bilingual localization machine evidence`，生成`p3-frontend-i18n-report.v1`并复用完整Vitest/Playwright、SCA/license、build、P2/P3 Gate和治理步骤。不得改required context、permissions、trigger或dependency lock；artifact必须绑定exact SHA、Task、Diff base、`official-zh-cn-terminology.v1`、六个Impact Rules、checks/issues与原始browser evidence。本地required-equivalent为621 Python、67 Vitest、基础/双Gate Chromium各12/12、i18n 8/8、P2 11/11/0 gaps、P3 14/14/0 gaps、Task 79/6/19/0及全部其余步骤PASS，但不能替代provider。TASK-P3-17必须在P3-16双提交provider闭环后另获授权并独立重放全部P3 Gate/双语/provider topology；Audit不能修实现，READY也不构成P4 transition或Production release。
+TASK-P3-16已获单独授权，required `validate`现additive运行`TASK-P3-16 Frontend bilingual localization machine evidence`，生成`p3-frontend-i18n-report.v1`并复用完整Vitest/Playwright、SCA/license、build、P2/P3 Gate和治理步骤。不得改required context、permissions、trigger或dependency lock；artifact必须绑定exact SHA、Task、Diff base、`official-zh-cn-terminology.v1`、六个Impact Rules、checks/issues与原始browser evidence。本地required-equivalent为621 Python、67 Vitest、基础/双Gate Chromium各12/12、i18n 8/8、P2 11/11/0 gaps、P3 14/14/0 gaps、Task 79/6/19/0及全部其余步骤PASS。
+
+Implementation provider Gate已通过：SHA `b3ba999e83f4e8b0f96c7ce5bc72eba01432d791`、run `33027761343`、required `validate` job/check `98373002264`（app `15368`）均success；artifact `9629193057`未过期，815187 bytes，digest=`sha256:e3b0d57c55acd25e74ba3095291feaac98f735dd7cc515357aa2d4c1aff5ba87`、expiry=`2026-11-25T00:43:01Z`。下载复核38/38 JSON、i18n 8/8、三组12/12 Chromium、P2/P3 zero gaps与Task 79 committed/0 working paths、六行、19 checks、0 issues均绑定同一SHA；本closure只写provider事实且自身仍须exact provider。TASK-P3-17必须在P3-16双提交provider闭环后另获授权并独立重放全部P3 Gate/双语/provider topology；Audit不能修实现，READY也不构成P4 transition或Production release。
 
 ## TASK-P3-14 required Gate
 

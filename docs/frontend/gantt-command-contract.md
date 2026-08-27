@@ -13,7 +13,7 @@ last_reviewed: 2026-08-27
 
 ## TASK-P3-16 localization boundary
 
-Move/Assign/Set Lock/Remove Lock等用户可见名称已依据[`official-zh-cn-terminology.v1`](official-zh-cn-terminology-map.md)显示中文或英文，但`MOVE_OPERATION`、`ASSIGN_RESOURCE`、`SET_LOCK`、`REMOVE_LOCK`、payload keys、state、Idempotency-Key与canonical fingerprint逐字保持英文。格式化时间保留raw UTC，未知command/state/reason显示raw值；UI不从localized label解析或生成machine value。本地zero-wire-drift与双语Gantt browser evidence已通过，exact provider待形成；command行为、Schema和state pair零变化，最终由TASK-P3-17独立审计。
+Move/Assign/Set Lock/Remove Lock等用户可见名称已依据[`official-zh-cn-terminology.v1`](official-zh-cn-terminology-map.md)显示中文或英文，但`MOVE_OPERATION`、`ASSIGN_RESOURCE`、`SET_LOCK`、`REMOVE_LOCK`、payload keys、state、Idempotency-Key与canonical fingerprint逐字保持英文。格式化时间保留raw UTC，未知command/state/reason显示raw值；UI不从localized label解析或生成machine value。Zero-wire-drift与双语Gantt browser evidence已由exact implementation provider复验；command行为、Schema和state pair零变化，最终由TASK-P3-17独立审计。
 
 ## TASK-P3-14 command Gate
 

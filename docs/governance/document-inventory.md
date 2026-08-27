@@ -14,7 +14,7 @@ registry_version: 1.0.0
 
 ## TASK-P3-16 implementation review
 
-本Task不新增、删除或重命名正式Markdown，inventory继续覆盖168份`docs/**/*.md`；新增`frontend/src/i18n/**`、测试、Playwright、evidence脚本、workflow step与ignored报告均不是Markdown inventory entry。TASK-P3-16现为`in_progress`/local pass/provider pending，P3-17保持`planned`；Roots=30、trace rows=30、Test IDs=49、OPEN=15、SIM=15、risks=14与Tasks=55均不变，`registry_version=1.0.0`不变。
+本Task不新增、删除或重命名正式Markdown，inventory继续覆盖168份`docs/**/*.md`；新增`frontend/src/i18n/**`、测试、Playwright、evidence脚本、workflow step与ignored报告均不是Markdown inventory entry。TASK-P3-16 implementation provider已exact复验并由本closure标为`done`，P3-17保持`planned`；Roots=30、trace rows=30、Test IDs=49、OPEN=15、SIM=15、risks=14与Tasks=55均不变，`registry_version=1.0.0`不变。
 
 ## TASK-P3-15 amendment closure review
 
@@ -34,7 +34,7 @@ TASK-P3-14不新增、删除或重命名正式Markdown，inventory继续覆盖16
 
 Root=30、trace rows=30、Test IDs=48、OPEN=15、risks=13、Tasks=53均不变；新增SIM-ASSUMPTION-015使SIM count=15但不改变registry format。Artifact `9589931373`复现33 JSON及Task 91/0/11/19/0，closure run `32921871460`失败且无artifact；独立corrective artifact `9590625358`再次复现33 JSON及91/0/11/19/0。本closure自身仍须exact provider。
 
-本清单列出当前仓库已经实际存在的Markdown文档。P0～P2均已归档为completed；P2 Exit Gate=`READY`且用户已批准transition。P3现为active，TASK-P3-00～15均为`done`，P3-16双语本地化为`in_progress`/provider pending，P3-17最终独立Audit为`planned`。P3 human-control UI/E2E、有界internal Simulation成果包下载及双语展示local evidence已形成；Production Runbook正文仍未形成。
+本清单列出当前仓库已经实际存在的Markdown文档。P0～P2均已归档为completed；P2 Exit Gate=`READY`且用户已批准transition。P3现为active，TASK-P3-00～16均为`done`，P3-16双语本地化implementation provider已复验且closure provider待核，P3-17最终独立Audit为`planned`。P3 human-control UI/E2E、有界internal Simulation成果包下载及双语展示provider evidence已形成；Production Runbook正文仍未形成。
 
 | Path | Doc ID | Status | Title |
 |---|---|---|---|
@@ -202,7 +202,7 @@ Root=30、trace rows=30、Test IDs=48、OPEN=15、risks=13、Tasks=53均不变�
 | [tasks/P3/TASK-P3-13-human-control-actions-and-ui-e2e.md](../tasks/P3/TASK-P3-13-human-control-actions-and-ui-e2e.md) | TASK-P3-13 | done | Human Control Actions and UI E2E |
 | [tasks/P3/TASK-P3-14-p3-vertical-slice-gate-evidence.md](../tasks/P3/TASK-P3-14-p3-vertical-slice-gate-evidence.md) | TASK-P3-14 | done | P3 Vertical Slice Gate Evidence |
 | [tasks/P3/TASK-P3-15-phase-plan-amendment-governance-support.md](../tasks/P3/TASK-P3-15-phase-plan-amendment-governance-support.md) | TASK-P3-15 | done | P3 Phase Plan Amendment Governance Support |
-| [tasks/P3/TASK-P3-16-frontend-bilingual-localization-and-official-terminology.md](../tasks/P3/TASK-P3-16-frontend-bilingual-localization-and-official-terminology.md) | TASK-P3-16 | in_progress | Frontend Bilingual Localization and Official Terminology |
+| [tasks/P3/TASK-P3-16-frontend-bilingual-localization-and-official-terminology.md](../tasks/P3/TASK-P3-16-frontend-bilingual-localization-and-official-terminology.md) | TASK-P3-16 | done | Frontend Bilingual Localization and Official Terminology |
 | [tasks/P3/TASK-P3-17-p3-exit-gate-audit.md](../tasks/P3/TASK-P3-17-p3-exit-gate-audit.md) | TASK-P3-17 | planned | P3 Exit Gate Audit |
 | [tasks/README.md](../tasks/README.md) | DOC-TASK-INDEX | living | Task Card 索引 |
 | [tasks/TASK_TEMPLATE.md](../tasks/TASK_TEMPLATE.md) | TEMPLATE-TASK | baseline | Task Card Template |

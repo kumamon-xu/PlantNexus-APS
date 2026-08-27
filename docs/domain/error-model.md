@@ -15,7 +15,7 @@ last_reviewed: 2026-08-27
 
 双语展示不得改变七类product error、`error-code-registry.v2`的23个code、Workspace module-local reason或HTTP mapping。Frontend以namespace与code/reason查`official-zh-cn-terminology.v1`，中文模式仍同时显示原始code/reason和correlation ID；未知值显示raw并fail visibly。后端英文安全message仅作诊断fallback，禁止据其文本判断业务或猜测中文；自由文本、ID、actor reference、fingerprint与raw UTC不机器翻译。
 
-TASK-P3-16已实现typed product/workspace error adapters与未知raw fallback；本地词典/组件/browser及zero-wire-drift检查通过，未改变registry、HTTP mapping或后端message。Exact provider形成前该事实仍为local-only。
+TASK-P3-16已实现typed product/workspace error adapters与未知raw fallback；词典/组件/browser及zero-wire-drift检查已由exact implementation provider复验，未改变registry、HTTP mapping或后端message。
 
 ## TASK-P3-14 exact rejection Gate
 
@@ -231,4 +231,4 @@ P3-09使用module-local `ExportJobFailure`与`StandardExportErrorCode`：invalid
 
 Transport现把已有module-local reason收敛到strict `planning-workspace-error.v1`：缺失/非法Bearer=401，authorization/Production deny=403，source missing=404，stale/state/current/idempotency=409，invalid carrier/reference/time/validation=422，unexpected/persistence/export failure=500，composition unavailable=503。所有response保留correlation、stable namespace/reason、retryable与可选safe resource reference，但不返回raw exception、credential、SQL、stack或absolute path。
 
-该adapter未修改`error-code-registry.v2`、七类product category或module内部失败事实，也不将Solver `UNKNOWN`转换为`INFEASIBLE`。Contract/integration/security和machine report已在本地覆盖八类映射与泄漏防护，exact provider待提交后核验。
+该adapter未修改`error-code-registry.v2`、七类product category或module内部失败事实，也不将Solver `UNKNOWN`转换为`INFEASIBLE`。Contract/integration/security和machine report覆盖八类映射与泄漏防护，并已随implementation artifact `9629193057`核验。

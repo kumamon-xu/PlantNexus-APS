@@ -14,7 +14,7 @@ registry_version: 1.0.0
 
 ## TASK-P3-16 review
 
-默认`zh-CN`、可选`en-US`、Intl展示与浏览器非敏感locale preference已形成本地实现/测试，但不提供Factory business timezone、真实identity/approval responsibility、external interface、capacity/SLA、storage或deployment事实。Raw UTC继续可见，Simulation label不升级为Production。OPEN-001～015全部保持`OPEN`，无closure record、数量、状态或`registry_version=1.0.0`变化；exact provider或TASK-P3-17也不得据此声明Production readiness。
+默认`zh-CN`、可选`en-US`、Intl展示与浏览器非敏感locale preference已由exact implementation provider复验，但不提供Factory business timezone、真实identity/approval responsibility、external interface、capacity/SLA、storage或deployment事实。Raw UTC继续可见，Simulation label不升级为Production。OPEN-001～015全部保持`OPEN`，无closure record、数量、状态或`registry_version=1.0.0`变化；TASK-P3-16 provider或TASK-P3-17也不得据此声明Production readiness。
 
 ## TASK-P3-15 review
 

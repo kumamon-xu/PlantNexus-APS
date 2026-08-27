@@ -13,7 +13,7 @@ last_reviewed: 2026-08-27
 
 ## TASK-P3-16 localization layout delta
 
-本Task新增`frontend/src/i18n/`八个typed locale/registry/formatter/coverage模块、三份focused Vitest、一个双语Playwright spec及`frontend/scripts/i18n-evidence.mjs`，并有界修改既有P3页面、控件、两份E2E、style和required workflow的additive evidence step。`build/validation`与browser/provider输出保持ignored；未新增route、backend、Schema、migration、dependency/lock、P4或Production目录。当前本地证据通过但exact provider尚未形成。
+本Task新增`frontend/src/i18n/`八个typed locale/registry/formatter/coverage模块、三份focused Vitest、一个双语Playwright spec及`frontend/scripts/i18n-evidence.mjs`，并有界修改既有P3页面、控件、两份E2E、style和required workflow的additive evidence step。`build/validation`与browser/provider输出保持ignored；未新增route、backend、Schema、migration、dependency/lock、P4或Production目录。Implementation exact provider已复验该79-path边界，本closure不新增业务路径。
 
 ## TASK-P3-15 governance and planning delta
 
@@ -121,7 +121,7 @@ TASK-P1-02在既有`schemas/json`/`schemas/samples`边界新增canonical-records
 
 ## P3 layout allocation history
 
-P3 transition时只新增`docs/tasks/P3/`中的16张Task卡；当时没有创建backend、schema、migration、frontend或workflow路径。后续P3-01形成docs/ADR，P3-02负责Schema/contracts，P3-03负责persistence/migration，P3-04～10负责application/API/jobs/exporters；P3-11形成Frontend read-only foundation，P3-12形成read-only visualization/browser slice，P3-13形成human-control E2E，P3-14形成有界Gate evidence。当前P3卡总数为18张：P3-15治理owner已完成，P3-16双语展示实现处于`in_progress`且provider pending，P3-17为planned/final Audit；正式Markdown总数不因本实现变化。
+P3 transition时只新增`docs/tasks/P3/`中的16张Task卡；当时没有创建backend、schema、migration、frontend或workflow路径。后续P3-01形成docs/ADR，P3-02负责Schema/contracts，P3-03负责persistence/migration，P3-04～10负责application/API/jobs/exporters；P3-11形成Frontend read-only foundation，P3-12形成read-only visualization/browser slice，P3-13形成human-control E2E，P3-14形成有界Gate evidence。当前P3卡总数为18张：P3-15治理owner与P3-16双语展示均为`done`，P3-16 closure provider待核，P3-17为planned/final Audit；正式Markdown总数不因本实现变化。
 
 ## TASK-P3-11 Frontend layout
 

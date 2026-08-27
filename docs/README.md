@@ -69,9 +69,9 @@ last_reviewed: 2026-08-27
 
 ## 当前范围
 
-当前阶段为P3。P0～P2 Milestone均为`completed`，P3为`active`；TASK-P3-00～15均已由exact implementation provider支撑并闭环为`done`。TASK-P3-16 bilingual localization已获逐Task授权，冻结Diff base `1636fe9c909b728d49f9907ed9f53030b5921914`并处于`in_progress`；本地实现/测试已形成但exact provider仍待核验。TASK-P3-17 final independent Exit Audit继续`planned`且不得自动启动。P4与Production不在当前范围，详见`current_phase.md`。
+当前阶段为P3。P0～P2 Milestone均为`completed`，P3为`active`；TASK-P3-00～16均标为`done`。TASK-P3-16 bilingual localization的不可变Diff base为`1636fe9c909b728d49f9907ed9f53030b5921914`，implementation `b3ba999e83f4e8b0f96c7ce5bc72eba01432d791`已取得exact required `validate`/artifact provider evidence；本evidence-only closure自身仍须exact provider复验。TASK-P3-17 final independent Exit Audit继续`planned`且不得自动启动。P4与Production不在当前范围，详见`current_phase.md`。
 
-P3已形成的顺序保持合同/ADR→Schema→persistence→validated DRAFT→read models→edit/lock→approval/reject→idempotent publish→ExportJob→API→Frontend/E2E→vertical Gate。批准的末段顺序为TASK-P3-15治理支持→TASK-P3-16本地化→TASK-P3-17独立Exit Audit；当前只执行P3-16。展示术语规范见[`frontend/official-zh-cn-terminology-map.md`](frontend/official-zh-cn-terminology-map.md)，它不改变英文机器合同。
+P3已形成的顺序保持合同/ADR→Schema→persistence→validated DRAFT→read models→edit/lock→approval/reject→idempotent publish→ExportJob→API→Frontend/E2E→vertical Gate。批准的末段顺序为TASK-P3-15治理支持→TASK-P3-16本地化→TASK-P3-17独立Exit Audit；P3-16现已完成实现provider复验与文档closure，下一项仍须另行授权。展示术语规范见[`frontend/official-zh-cn-terminology-map.md`](frontend/official-zh-cn-terminology-map.md)，它不改变英文机器合同。
 
 ## 仓库入口与本地检查
 

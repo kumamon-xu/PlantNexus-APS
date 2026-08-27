@@ -37,7 +37,7 @@ last_reviewed: 2026-08-27
 - 修改 publication、performance gate 或 production boundary。
 - 修改P3 locale、用户可见业务/错误文案、时间/单位格式或双语human-control surface。
 
-TASK-P3-16已形成的`src/i18n`、双语Vitest/Playwright与`p3-frontend-i18n-report.v1`必须作为上述扩大上下文的一部分读取；其本地证据尚不等于exact provider闭环，也不授权TASK-P3-17。
+TASK-P3-16已形成并由exact implementation provider复验的`src/i18n`、双语Vitest/Playwright与`p3-frontend-i18n-report.v1`必须作为上述扩大上下文的一部分读取；本closure provider仍须核验，也不授权TASK-P3-17。
 
 此时完整读取总规、相关 ADR 和追踪矩阵；必要时先创建 ADR/更新 Task，再开始编码。
 

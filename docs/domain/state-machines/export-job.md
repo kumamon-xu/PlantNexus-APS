@@ -13,7 +13,7 @@ last_reviewed: 2026-08-27
 
 ## TASK-P3-16 display-label review
 
-`official-zh-cn-terminology.v1`为CREATED/EXPORTING/EXPORTED/EXPORT_FAILED/CANCELLED提供双语展示label；Schema、API、repository、worker、manifest、transition与error中的machine value保持英文。未知Job state显示raw值并fail visibly，中文“已导出”不从文件存在推断，也不等同Publish或external transfer。TASK-P3-16已形成该display-only mapping与本地zero-wire-drift evidence，exact provider待形成；state pair、package、migration与后端测试零变化，TASK-P3-17最终独立复验。
+`official-zh-cn-terminology.v1`为CREATED/EXPORTING/EXPORTED/EXPORT_FAILED/CANCELLED提供双语展示label；Schema、API、repository、worker、manifest、transition与error中的machine value保持英文。未知Job state显示raw值并fail visibly，中文“已导出”不从文件存在推断，也不等同Publish或external transfer。TASK-P3-16的display-only mapping与zero-wire-drift evidence已由exact implementation provider复验；state pair、package、migration与后端测试零变化，TASK-P3-17最终独立复验。
 
 ## TASK-P3-14 state Gate
 

@@ -14,7 +14,7 @@ registry_version: 1.0.0
 
 ## TASK-P3-16 implementation impact
 
-不可变Diff base=`1636fe9c909b728d49f9907ed9f53030b5921914`。Frontend `src/i18n`、既有display surfaces、Vitest/Playwright/evidence、additive CI step及状态文档的display review精确命中`IMPACT-FRONTEND`、`IMPACT-INFRA`、`IMPACT-STATE`、`IMPACT-PHASE`、`IMPACT-GOVERNANCE-REGISTRY`和`IMPACT-DOCS`六行。Frontend test路径由`IMPACT-FRONTEND`覆盖，`IMPACT-TESTS`只匹配`backend/tests/**`，故不虚报。Package/lock、backend、Schema/migration、state implementation、fixture/benchmark、P3-00～15、P4与Production均为禁止范围且必须零差异；machine Rule table与`registry_version=1.0.0`不变。当前本地Task/event report为79 working paths、六行、19/19 checks、0 issues；exact provider仍须在implementation提交后复验。
+不可变Diff base=`1636fe9c909b728d49f9907ed9f53030b5921914`。Frontend `src/i18n`、既有display surfaces、Vitest/Playwright/evidence、additive CI step及状态文档的display review精确命中`IMPACT-FRONTEND`、`IMPACT-INFRA`、`IMPACT-STATE`、`IMPACT-PHASE`、`IMPACT-GOVERNANCE-REGISTRY`和`IMPACT-DOCS`六行。Frontend test路径由`IMPACT-FRONTEND`覆盖，`IMPACT-TESTS`只匹配`backend/tests/**`，故不虚报。Package/lock、backend、Schema/migration、state implementation、fixture/benchmark、P3-00～15、P4与Production均为禁止范围且零差异；machine Rule table与`registry_version=1.0.0`不变。Implementation artifact `9629193057`中的Task report绑定exact SHA/base并复现79 committed/0 working paths、六行、19/19 checks、0 issues；本closure只写provider事实且自身仍须exact provider。
 
 ## TASK-P3-15 impact review
 

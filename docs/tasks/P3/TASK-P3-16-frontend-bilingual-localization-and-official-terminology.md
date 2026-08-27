@@ -1,7 +1,7 @@
 ---
 doc_id: TASK-P3-16
 title: Frontend Bilingual Localization and Official Terminology
-status: in_progress
+status: done
 spec_version: 0.3.0
 phase: P3
 normative: true
@@ -31,7 +31,7 @@ Diff base: 1636fe9c909b728d49f9907ed9f53030b5921914
 
 Activation evidence: 用户于2026-08-27明确授权执行TASK-P3-16。启动复核确认`main=origin/main=remote main=1636fe9c909b728d49f9907ed9f53030b5921914`、ahead/behind=`0/0`且working tree clean；P3-14 corrective implementation/closure与P3-15 implementation/closure均为`done`，四个exact required `validate`/artifact均success、下载可解析且issues/gaps为空。该完整HEAD据此冻结为不可变Diff base；TASK-P3-17保持`planned`且未获自动授权。
 
-Local implementation evidence: 两个locale各243个等键dictionary entries、139个官方machine-value mappings、default `zh-CN`、`en-US`切换/刷新恢复、`plantnexus.locale.v1`非敏感preference、document/Ant locale同步、Intl+raw value及unknown raw fallback已实现。Node `24.19.0`/npm `11.17.0` clean install、SCA/license、lint/typecheck、15 files/67 Vitest、基础/双Gate Chromium各12/12（8 human-control）、build、既有Frontend evidence与`p3-frontend-i18n-report.v1` 8/8均PASS。`uv sync --locked`、Ruff/Pyright、621 Python、全部machine contracts、XS、P2 Gate 11/11/0 gaps、P3 Gate 14/14/0 gaps、Compose与`uv build`均PASS。Full governance为168 docs/30 roots/30 trace rows/49 Test IDs/15 OPEN/15 SIM/14 risks/55 Tasks；Task/event diff为79 working paths、六个Impact rows、19/19 checks、0 issues，`git diff --check`通过。Package/lock、backend、Schema、migration、state implementation和标准成果包零差异。Exact provider仍须完成，故状态保持`in_progress`。
+Local implementation evidence: 两个locale各243个等键dictionary entries、139个官方machine-value mappings、default `zh-CN`、`en-US`切换/刷新恢复、`plantnexus.locale.v1`非敏感preference、document/Ant locale同步、Intl+raw value及unknown raw fallback已实现。Node `24.19.0`/npm `11.17.0` clean install、SCA/license、lint/typecheck、15 files/67 Vitest、基础/双Gate Chromium各12/12（8 human-control）、build、既有Frontend evidence与`p3-frontend-i18n-report.v1` 8/8均PASS。`uv sync --locked`、Ruff/Pyright、621 Python、全部machine contracts、XS、P2 Gate 11/11/0 gaps、P3 Gate 14/14/0 gaps、Compose与`uv build`均PASS。Full governance为168 docs/30 roots/30 trace rows/49 Test IDs/15 OPEN/15 SIM/14 risks/55 Tasks；Task/event diff为79 paths、六个Impact rows、19/19 checks、0 issues，`git diff --check`通过。Package/lock、backend、Schema、migration、state implementation和标准成果包零差异。Exact implementation provider已按下述记录复验，因此本evidence-only closure将状态标为`done`；closure自身仍须exact provider复验。
 
 Files allowed to change: `.github/workflows/ci.yml`仅可additive增加本Task命名machine-evidence step且不得改required check名/权限/触发器；`frontend/src/i18n/locale.ts`、`frontend/src/i18n/types.ts`、`frontend/src/i18n/dictionaries/en-US.ts`、`frontend/src/i18n/dictionaries/zh-CN.ts`、`frontend/src/i18n/business-labels.ts`、`frontend/src/i18n/error-labels.ts`、`frontend/src/i18n/formatters.ts`、`frontend/src/i18n/coverage.ts`、`frontend/src/main.tsx`、`frontend/src/app/PlanningWorkspaceApp.tsx`、`frontend/src/app/context.tsx`、`frontend/src/app/state.ts`、`frontend/src/app/routeInventory.ts`、`frontend/src/components/AuthorityPanel.tsx`、`frontend/src/components/ReadOnlyTable.tsx`、`frontend/src/components/ScheduleVersionPanel.tsx`、`frontend/src/components/WorkspaceStatePanel.tsx`、`frontend/src/pages/PlanningRunPage.tsx`、`frontend/src/pages/ScheduleVersionPage.tsx`、`frontend/src/pages/ValidationPage.tsx`、`frontend/src/pages/WorkspaceCollectionPage.tsx`、`frontend/src/features/gantt/GanttPage.tsx`、`frontend/src/features/gantt/GanttTimeline.tsx`、`frontend/src/features/resource-load/ResourceLoadPage.tsx`、`frontend/src/features/version-comparison/VersionComparisonPage.tsx`、`frontend/src/features/schedule-actions/ScheduleActionsPanel.tsx`、`frontend/src/features/schedule-actions/useHumanControlAction.ts`、`frontend/src/features/approval/ApprovalPanel.tsx`、`frontend/src/features/publication/PublicationPanel.tsx`、`frontend/src/features/export/ExportPanel.tsx`、`frontend/src/features/audit/AuditHistoryPanel.tsx`、`frontend/src/styles/app.css`、`frontend/tests/i18nDictionaries.test.ts`、`frontend/tests/i18nFormatting.test.ts`、`frontend/tests/i18nWorkspace.test.tsx`、`frontend/tests/accessibility.test.tsx`、`frontend/tests/apiClient.test.ts`、`frontend/tests/commandContracts.test.ts`、`frontend/tests/ganttTimeline.test.tsx`、`frontend/tests/humanControlActions.test.tsx`、`frontend/tests/routeInventory.test.ts`、`frontend/tests/runtimeIsolation.test.ts`、`frontend/tests/visualizationContracts.test.ts`、`frontend/tests/visualizationPages.test.tsx`、`frontend/tests/workspaceStates.test.tsx`、`frontend/e2e/bilingual-localization.spec.ts`、`frontend/e2e/read-only-visualizations.spec.ts`、`frontend/e2e/human-control-actions.spec.ts`、`frontend/scripts/i18n-evidence.mjs`、`frontend/scripts/frontend-evidence.mjs`仅可收窄为精确允许versioned locale preference且继续阻断credential/session/cookie storage、`frontend/scripts/report-utils.mjs`、`docs/tasks/P3/TASK-P3-16-frontend-bilingual-localization-and-official-terminology.md`、ignored `build/validation/TASK-P3-16-frontend-i18n.json`、ignored browser/trace/traceability outputs及`Documents to update`中的明确路径。
 
@@ -73,7 +73,7 @@ Acceptance commands: 验证exact Node/npm；`npm --prefix frontend ci --ignore-s
 
 Artifacts: `p3-frontend-i18n-report.v1`、Vitest/Playwright JSON/JUnit/HTML/trace、build/SCA/license与P2/P3 Gate regressions、`traceability-report.v1`及GitHub exact artifact；所有报告绑定exact SHA、locale dictionary version和Task。
 
-Provider evidence: repository=`kumamon-xu/PlantNexus-APS`、branch=`main`、workflow=`PlantNexus repository gates`、required check=`validate`/GitHub Actions app `15368`；implementation exact push run/job/artifact全部success且下载复核SHA/Task/base/Impact Rules/checks/issues、i18n report、双语Playwright与wire-drift checks后才可evidence-only closure；closure exact provider再次成功前不得标`done`。失败run/artifact必须保留。
+Provider evidence: repository=`kumamon-xu/PlantNexus-APS`、branch=`main`、workflow=`PlantNexus repository gates`、required check=`validate`/GitHub Actions app `15368`。Implementation `b3ba999e83f4e8b0f96c7ce5bc72eba01432d791`的push run/job=`33027761343`/`98373002264`全部success；branch protection与该exact SHA均只绑定`validate`/app `15368`。Artifact `9629193057` / `plantnexus-ci-evidence-33027761343`未过期，815187 bytes，digest=`sha256:e3b0d57c55acd25e74ba3095291feaac98f735dd7cc515357aa2d4c1aff5ba87`、expiry=`2026-11-25T00:43:01Z`。下载复核38/38 JSON可解析，i18n report为TASK-P3-16/exact SHA/base/8 checks/0 issues，Task report为79 committed/0 working paths、六个Impact Rules、19/19 checks/0 issues，三组Playwright均12 expected/0 unexpected，P2/P3 Gate `blocking_gaps=[]`。本evidence-only closure自身仍须exact provider再次复验；失败run/artifact必须保留。
 
 Completion conditions: `zh-CN`默认与`en-US`切换/恢复、document lang/Ant locale、所有列明surface双语、术语/enum/error完备性、未知值raw fallback、raw UTC/ID/code/fingerprint/JSON可审计性、API机器合同zero drift均由自动化证据通过；dependency/schema/migration/state/backend/standard package零差异；full/diff治理与exact provider双提交闭环；TASK-P3-17仍未自动执行。
 
@@ -86,3 +86,15 @@ PROD_OPEN: OPEN-001～015全部保持`OPEN`；本地化不得关闭真实identit
 SIM_ASSUMPTIONS: SIM-ASSUMPTION-001～015全部保持`ACTIVE`；locale不改变任何Scenario/Profile/seed/hash/measurement。
 
 Rollback: 回退本Task implementation恢复既有英文UI和原wire行为；保留官方术语规范、失败provider和历史P3 evidence。不得通过删除中文key、静默退回英文或改变API值掩盖失败。
+
+## Implementation provider verification
+
+2026-08-27已核验implementation commit `b3ba999e83f4e8b0f96c7ce5bc72eba01432d791`的parent恰为不可变Diff base；`main`、`origin/main`与remote main均指向该SHA且working tree clean。GitHub run `33027761343` / required job `98373002264`完成且conclusion=`success`，exact check-run的head SHA与app `15368`和branch protection要求一致。
+
+下载artifact `9629193057`后共核验44个文件，其中38份JSON全部可解析且所有适用顶层结果均为PASS；`issues=[]`、`blocking_gaps=[]`、Playwright `unexpected=0`。`p3-frontend-i18n-report.v1`精确复现243/243 keys、139 machine values、12 specs/8 human controls和8/8 checks；`traceability-report.v1`精确复现TASK-P3-16、Diff base、79/0 paths、六个Impact Rules、19/19 checks和0 issues。该provider evidence授权本次仅文档closure，不授权TASK-P3-17、P4或Production。
+
+## Evidence-only closure
+
+本closure只把已发生的implementation provider事实写回本Task及其命中治理文档，不修改Frontend/Backend业务、Schema、migration、dependency/lock、测试断言、workflow或历史P3 evidence。TASK-P3-17保持`planned`且未获执行授权；P3 Milestone保持`active`，P3 Exit=`NOT_PERFORMED`，P4/Production均未启动。
+
+提交前closure本地验收为full governance `PASS`（168 docs/30 roots/30 trace rows/49 tests/15 OPEN/15 SIM/14 risks/55 Tasks），显式Task报告为79 committed-range/38 working-tree sources、79 unique paths、六个Impact Rules、19/19 checks、0 issues；closure-only 38 paths全部为`README.md`/`docs/**`，禁止范围为0，`git diff --check`除既有CRLF提示外通过。Event-base动态发现必须在closure commit形成后复验，不能从尚未提交的Task卡变化伪造event range；随后还须下载核对closure exact required provider artifact。

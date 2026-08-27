@@ -15,7 +15,7 @@ last_reviewed: 2026-08-27
 
 用户已批准P3末段编号方案。TASK-P3-15从`06e7f794f486ac34c505237b847462c7c7c36d44`启动并转为`phase-plan-amendment-owner`，只实现后续计划修订所需的治理selector、负向测试与文档合同。Implementation `c84e1aa1a81473f65d9f7906a6d2c67a94e7bb2f`的required run/job/artifact=`32944633958`/`98102640242`/`9597967232`已精确复验26/0 paths、5 Impact Rules、19 checks、0 issues；closure `1636fe9c909b728d49f9907ed9f53030b5921914`的run/job/artifact=`32948633841`/`98114798738`/`9599442770`也已复核37份JSON、48/0/6/19/0。因此P3-15完整闭环为`done`；P3-00～14及其provider/失败历史保持只读。
 
-TASK-P3-16依赖P3-14/P3-15，现已获明确授权并冻结Diff base `1636fe9c909b728d49f9907ed9f53030b5921914`；默认`zh-CN`、可切换`en-US`、官方术语/错误映射和API英文machine contract zero-drift的本地实现已形成，exact provider闭环前保持`in_progress`。TASK-P3-17依赖P3-16，是`planned`/final独立Exit Audit；不得在Audit中修本地化，也不自动进入P4或Production。
+TASK-P3-16依赖P3-14/P3-15并以`1636fe9c909b728d49f9907ed9f53030b5921914`为不可变Diff base；默认`zh-CN`、可切换`en-US`、官方术语/错误映射和API英文machine contract zero-drift的implementation `b3ba999e83f4e8b0f96c7ce5bc72eba01432d791`已取得exact provider，现由evidence-only closure标为`done`。Closure自身仍须exact provider复验。TASK-P3-17依赖P3-16，是`planned`/final独立Exit Audit；不得在Audit中修本地化，也不自动进入P4或Production。
 
 ## TASK-P3-14 evidence closure
 
@@ -77,7 +77,7 @@ TASK-P3-16依赖P3-14/P3-15，现已获明确授权并冻结Diff base `1636fe9c9
 | [TASK-P3-13](P3/TASK-P3-13-human-control-actions-and-ui-e2e.md) | Human control actions/UI E2E | P3-06～12 | `done` |
 | [TASK-P3-14](P3/TASK-P3-14-p3-vertical-slice-gate-evidence.md) | P3 vertical-slice Gate evidence | P3-01～13 | `done` |
 | [TASK-P3-15](P3/TASK-P3-15-phase-plan-amendment-governance-support.md) | P3 Phase Plan Amendment Governance Support | P3-14 | `done` |
-| [TASK-P3-16](P3/TASK-P3-16-frontend-bilingual-localization-and-official-terminology.md) | Frontend bilingual localization与官方中文术语 | P3-14/P3-15 | `in_progress` |
+| [TASK-P3-16](P3/TASK-P3-16-frontend-bilingual-localization-and-official-terminology.md) | Frontend bilingual localization与官方中文术语 | P3-14/P3-15 | `done` |
 | [TASK-P3-17](P3/TASK-P3-17-p3-exit-gate-audit.md) | P3 Exit Gate Audit（最终Task） | P3-16 | `planned` |
 
 用户已于2026-08-24单独授权并完成P3-01/02，随后明确授权执行P3-03。P3-03只形成migration、plane-scoped repositories、既有pair的CAS/lease/transaction原语、CI/tests和治理，不执行审批、发布、导出或P3-04+；当时规划中的最终Audit现已顺延为TASK-P3-17，仍只审计冻结事实。P3不得实现P4 ExecutionEvent/Replan/OBJ-002/freeze/ChangeReport/Execution Simulator，内部Simulation publish也不构成Production approval/readiness。

@@ -14,7 +14,7 @@ registry_version: 1.0.0
 
 ## TASK-P3-17 audit inventory delta
 
-本Audit新增唯一正式Markdown `docs/milestones/P3-exit-gate-audit-report.md`，inventory由168增至169；相邻machine manifest为JSON，下载的provider evidence和本地`build/**`报告均不进入清单。TASK-P3-17在本地独立审计结论为`READY`且`blocking_gaps=[]`，但在audit implementation exact provider闭环前仍为`in_progress`。Roots=30、trace rows=30、Test IDs=49、OPEN=15、SIM=15、risks=14、Tasks=55与所有registry format version保持不变；P3继续active，P4与Production未启动。
+本Audit新增唯一正式Markdown `docs/milestones/P3-exit-gate-audit-report.md`，inventory由168增至169；相邻machine manifest为JSON，下载的provider evidence和本地`build/**`报告均不进入清单。TASK-P3-17独立审计结论为`READY`且`blocking_gaps=[]`，audit implementation exact provider已验证并由本closure标为`done`，closure provider待push后复验。Roots=30、trace rows=30、Test IDs=49、OPEN=15、SIM=15、risks=14、Tasks=55与所有registry format version保持不变；P3继续active，P4与Production未启动。
 
 ## TASK-P3-16 implementation review
 
@@ -38,7 +38,7 @@ TASK-P3-14不新增、删除或重命名正式Markdown，inventory继续覆盖16
 
 Root=30、trace rows=30、Test IDs=48、OPEN=15、risks=13、Tasks=53均不变；新增SIM-ASSUMPTION-015使SIM count=15但不改变registry format。Artifact `9589931373`复现33 JSON及Task 91/0/11/19/0，closure run `32921871460`失败且无artifact；独立corrective artifact `9590625358`再次复现33 JSON及91/0/11/19/0。本closure自身仍须exact provider。
 
-本清单列出当前仓库已经实际存在的Markdown文档。P0～P2均已归档为completed；P2 Exit Gate=`READY`且用户已批准transition。P3现为active，TASK-P3-00～16均为`done`，P3-16双语本地化双提交provider已复验，P3-17最终独立Audit为`LOCAL_READY_PROVIDER_PENDING`。P3 human-control UI/E2E、有界internal Simulation成果包下载及双语展示provider evidence已形成；Production Runbook正文仍未形成。
+本清单列出当前仓库已经实际存在的Markdown文档。P0～P2均已归档为completed；P2 Exit Gate=`READY`且用户已批准transition。P3现为active，TASK-P3-00～17均为`done`；P3-17最终独立Audit为`IMPLEMENTATION_PROVIDER_VERIFIED_CLOSURE_PENDING`，Exit=`READY`/0 gaps。P3 human-control UI/E2E、有界internal Simulation成果包下载及双语展示provider evidence已形成；Production Runbook正文仍未形成。
 
 | Path | Doc ID | Status | Title |
 |---|---|---|---|
@@ -208,7 +208,7 @@ Root=30、trace rows=30、Test IDs=48、OPEN=15、risks=13、Tasks=53均不变�
 | [tasks/P3/TASK-P3-14-p3-vertical-slice-gate-evidence.md](../tasks/P3/TASK-P3-14-p3-vertical-slice-gate-evidence.md) | TASK-P3-14 | done | P3 Vertical Slice Gate Evidence |
 | [tasks/P3/TASK-P3-15-phase-plan-amendment-governance-support.md](../tasks/P3/TASK-P3-15-phase-plan-amendment-governance-support.md) | TASK-P3-15 | done | P3 Phase Plan Amendment Governance Support |
 | [tasks/P3/TASK-P3-16-frontend-bilingual-localization-and-official-terminology.md](../tasks/P3/TASK-P3-16-frontend-bilingual-localization-and-official-terminology.md) | TASK-P3-16 | done | Frontend Bilingual Localization and Official Terminology |
-| [tasks/P3/TASK-P3-17-p3-exit-gate-audit.md](../tasks/P3/TASK-P3-17-p3-exit-gate-audit.md) | TASK-P3-17 | in_progress | P3 Exit Gate Audit |
+| [tasks/P3/TASK-P3-17-p3-exit-gate-audit.md](../tasks/P3/TASK-P3-17-p3-exit-gate-audit.md) | TASK-P3-17 | done | P3 Exit Gate Audit |
 | [tasks/README.md](../tasks/README.md) | DOC-TASK-INDEX | living | Task Card 索引 |
 | [tasks/TASK_TEMPLATE.md](../tasks/TASK_TEMPLATE.md) | TEMPLATE-TASK | baseline | Task Card Template |
 

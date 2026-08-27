@@ -11,15 +11,15 @@ last_reviewed: 2026-08-27
 
 # P3 — Planning Workspace
 
-## TASK-P3-17 local Exit decision
+## TASK-P3-17 Exit decision
 
 最终独立Audit已在冻结baseline `0933e10760096cdf8e812b2d41b34916e9db5750`上完成本地判定：[audit report](P3-exit-gate-audit-report.md)与[machine manifest](P3-exit-gate-evidence-manifest.json)均为overall=`READY`、`blocking_gaps=[]`。39个P3 push SHA/required checks、35个成功run、4个历史失败run、36个未过期artifact及1052文件/1010 JSON均已独立核验；621 Python、67 Vitest、三组12/12 Chromium、双语8/8、P2 11/11与P3 14/14双回放也全部通过。
 
-TASK-P3-17仍为`in_progress`，因为audit implementation和evidence-only closure的exact provider事实只能在提交后形成。若provider失败，必须撤回READY并在P3内建立有界remediation。即使Task最终`done`，P3仍保持`active`/Exit ready awaiting explicit transition；P4与Production没有被授权或启动。
+Audit implementation `201be9c6fd1b433a9d0a629a3ae7d4ffe1107476`的run/job/artifact=`33033591189`/`98391337626`/`9631260796`已exact成功，下载复核44 files/38 JSON、28 SHA-bound/0 mismatch、61 committed/0 working paths、4 Impact Rules、19 checks、0 issues及P2/P3/i18n/三组Chromium一致。本evidence-only closure据此把TASK-P3-17标为`done`；closure provider只能在push后形成并须精确复验。P3仍保持`active`/Exit ready awaiting explicit transition；P4与Production没有被授权或启动。
 
 ## TASK-P3-17 independent Exit Audit activation
 
-用户于2026-08-27明确授权执行TASK-P3-17。启动复核确认TASK-P3-00～16全部`done`，`main=origin/main=remote main=0933e10760096cdf8e812b2d41b34916e9db5750`且working tree clean；P3-16 implementation/closure拓扑与exact required provider均成功，closure artifact `9629623182`下载内容的Task/SHA/base、双语coverage、P3 Gate、Impact Rules、checks与issues一致。该HEAD冻结为不可变Diff base，TASK-P3-17现为`in_progress`。
+用户于2026-08-27明确授权执行TASK-P3-17。启动复核确认TASK-P3-00～16全部`done`，`main=origin/main=remote main=0933e10760096cdf8e812b2d41b34916e9db5750`且working tree clean；P3-16 implementation/closure拓扑与exact required provider均成功，closure artifact `9629623182`下载内容的Task/SHA/base、双语coverage、P3 Gate、Impact Rules、checks与issues一致。该HEAD冻结为不可变Diff base；Task已完成独立Audit并由上述implementation provider支持为`done`。
 
 本Audit独立重放全部P3 Gate并形成READY/NOT_READY；不得继承P3-14/P3-16结论代替重放，不得在Audit内修实现。P3继续`active`，P4、Production readiness/UAT/authority/deployment均未启动。
 
@@ -78,7 +78,7 @@ TASK-P3-00已完成Milestone激活、Task规划与文档治理，TASK-P3-01～16
 | 14 | TASK-P3-14 | 完整P3 vertical-slice Gate evidence | P3-01～13 | `done` |
 | 15 | TASK-P3-15 | Phase plan amendment governance support | P3-14 | `done` |
 | 16 | TASK-P3-16 | Frontend bilingual localization与官方中文术语 | P3-14/P3-15 | `done` |
-| 17 | TASK-P3-17 | P3独立Exit Gate Audit（最终Task） | P3-16 | `in_progress` |
+| 17 | TASK-P3-17 | P3独立Exit Gate Audit（最终Task） | P3-16 | `done` |
 
 ## Dependency graph
 

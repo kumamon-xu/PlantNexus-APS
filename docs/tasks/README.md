@@ -13,11 +13,11 @@ last_reviewed: 2026-08-27
 
 ## TASK-P3-17 local independent audit
 
-TASK-P3-17已在Diff base `0933e10760096cdf8e812b2d41b34916e9db5750`上完成本地独立审计；P3 Exit report/manifest一致为`READY`、`blocking_gaps=[]`。39个P3 push SHA、required check/provider topology、36个下载artifact与1010份JSON，以及621 Python、67 Vitest、三组12/12 Chromium、P2/P3双Gate、双语与治理证据均已复验。Task仍为`in_progress`，等待audit implementation exact provider与evidence-only closure；不自动启动P4或Production。
+TASK-P3-17已在Diff base `0933e10760096cdf8e812b2d41b34916e9db5750`上完成独立审计；P3 Exit report/manifest一致为`READY`、`blocking_gaps=[]`。39个前序P3 push SHA、36个下载artifact与1010份JSON，以及621 Python、67 Vitest、三组12/12 Chromium、P2/P3双Gate、双语与治理证据均已复验。Audit implementation `201be9c6fd1b433a9d0a629a3ae7d4ffe1107476`的exact provider成功并由本closure把Task标为`done`；closure provider待push后复验，不自动启动P4或Production。
 
 ## TASK-P3-17 activation
 
-用户于2026-08-27明确授权执行最终独立P3 Exit Gate Audit。启动复核确认TASK-P3-00～16全部`done`、P3-16 implementation/closure提交拓扑与exact required provider完整，`main=origin/main=remote main=0933e10760096cdf8e812b2d41b34916e9db5750`且working tree clean；该SHA冻结为TASK-P3-17不可变Diff base。TASK-P3-17现为`in_progress`，仅审计并形成READY/NOT_READY，不在Audit内修复实现，也不启动P4或Production。
+用户于2026-08-27明确授权执行最终独立P3 Exit Gate Audit。启动复核确认TASK-P3-00～16全部`done`、P3-16 implementation/closure提交拓扑与exact required provider完整，`main=origin/main=remote main=0933e10760096cdf8e812b2d41b34916e9db5750`且working tree clean；该SHA冻结为TASK-P3-17不可变Diff base。在启动时Task为`in_progress`，仅审计并形成READY/NOT_READY，不在Audit内修复实现，也不启动P4或Production；当前完成状态见上一段。
 
 ## TASK-P3-15 closure and final planned members
 
@@ -86,7 +86,7 @@ TASK-P3-16依赖P3-14/P3-15并以`1636fe9c909b728d49f9907ed9f53030b5921914`为�
 | [TASK-P3-14](P3/TASK-P3-14-p3-vertical-slice-gate-evidence.md) | P3 vertical-slice Gate evidence | P3-01～13 | `done` |
 | [TASK-P3-15](P3/TASK-P3-15-phase-plan-amendment-governance-support.md) | P3 Phase Plan Amendment Governance Support | P3-14 | `done` |
 | [TASK-P3-16](P3/TASK-P3-16-frontend-bilingual-localization-and-official-terminology.md) | Frontend bilingual localization与官方中文术语 | P3-14/P3-15 | `done` |
-| [TASK-P3-17](P3/TASK-P3-17-p3-exit-gate-audit.md) | P3 Exit Gate Audit（最终Task） | P3-16 | `in_progress` |
+| [TASK-P3-17](P3/TASK-P3-17-p3-exit-gate-audit.md) | P3 Exit Gate Audit（最终Task） | P3-16 | `done` |
 
 用户已于2026-08-24单独授权并完成P3-01/02，随后明确授权执行P3-03。P3-03只形成migration、plane-scoped repositories、既有pair的CAS/lease/transaction原语、CI/tests和治理，不执行审批、发布、导出或P3-04+；当时规划中的最终Audit现已顺延为TASK-P3-17，仍只审计冻结事实。P3不得实现P4 ExecutionEvent/Replan/OBJ-002/freeze/ChangeReport/Execution Simulator，内部Simulation publish也不构成Production approval/readiness。
 

@@ -16,21 +16,22 @@ last_reviewed: 2026-08-27
 | Field | Audited value |
 |---|---|
 | Audit Task | TASK-P3-17 |
-| Task lifecycle | `in_progress`；本地独立审计结论已形成，等待audit implementation的exact provider run/artifact后以evidence-only closure关闭Task |
+| Task lifecycle | `done`；audit implementation exact provider已验证，本evidence-only closure写回事实；closure提交自身仍须push后exact provider复验 |
 | Audit date | 2026-08-27 (Asia/Hong_Kong) |
 | Local execution window | 2026-08-27T09:45～10:10+08:00 |
 | Immutable Diff base | `0933e10760096cdf8e812b2d41b34916e9db5750` |
 | Audited business baseline | `0933e10760096cdf8e812b2d41b34916e9db5750`；TASK-P3-16 evidence-only closure |
 | Audit execution head | `0933e10760096cdf8e812b2d41b34916e9db5750`；工作树只含TASK-P3-17 activation/audit治理文档，业务代码、Schema、migration、dependency、test assertion与workflow均与Diff base相同 |
+| Audit implementation commit | `201be9c6fd1b433a9d0a629a3ae7d4ffe1107476`；parent=`0933e10760096cdf8e812b2d41b34916e9db5750` |
 | Runtime / contract baseline | CPython `3.12.13`、uv `0.11.32`、Node `24.19.0`、npm `11.17.0`、schema set `2.7.0`、OR-Tools `9.15.6755`、Frontend direct pins exact |
 | P3-16 closure provider | run `33028998495` / required job `98376876640` / artifact `9629623182` / digest `sha256:e1aaab824dd529459e986b2a8ea1bd0e643ac5cc8ba5fa8849727faf365861ba` / not expired |
 | Predecessor provider audit | P3的39个push SHA、39个`validate` check-run与36个可用artifact逐项查询；35 success与4个保留的historical failure一致 |
 | Download audit | 36个artifact、1052个文件、1010份JSON；0 parse error、0 SHA mismatch；983份successful-chain JSON均顶层PASS/0 issue/0 gap，27份失败候选partial JSON保留为负证据 |
 | Branch protection | `main.protected=true`；required status check `validate`绑定GitHub Actions app ID `15368`；`strict=false` |
-| Audit implementation provider | `NOT_RUN` at decision-writing time；不得自我预填，失败时必须撤回READY并登记blocking gap |
+| Audit implementation provider | run `33033591189` / required job `98391337626` / artifact `9631260796` / digest `sha256:49833cdb63c9703a3837a194fd05d648b721d23719f0096a96fbbe0642937852` / not expired；44 files/38 JSON全部一致 |
 | Overall P3 Exit Gate | `READY` |
 | Blocking gaps | `[]` |
-| Recommendation | 本Task implementation与closure provider闭环后，请求用户另行批准P3→P4；本Task不切换phase、不创建或执行P4 |
+| Recommendation | 本evidence-only closure provider复验后，请求用户另行批准P3→P4；本Task不切换phase、不创建或执行P4 |
 | Auditor | Codex execution agent |
 
 机器可读结论见
@@ -120,7 +121,7 @@ last_reviewed: 2026-08-27
 | `git diff --check` | 0 | no whitespace errors |
 | forbidden-scope audit relative to Diff base | 0 | 61 documentation/governance paths；0 backend/Schema/frontend implementation/test/workflow/dependency/migration path |
 
-最终写回后的full/diff governance、`git diff --check`与禁止范围已经执行并写入manifest；提交前还会做最终复核。审计Task自身provider结果只能由提交后的exact run产生，当前本地结果不冒充外部required evidence。
+最终写回后的full/diff governance、`git diff --check`与禁止范围已经执行并写入manifest；提交前还会做最终复核。审计Task自身provider结果来自implementation提交后的exact run，不以本地结果替代；evidence-only closure提交仍不能自我预填未来provider。
 
 ## Selected local machine artifacts
 
@@ -136,12 +137,18 @@ last_reviewed: 2026-08-27
 | `TASK-P3-17-p3-export-jobs.json` | 2684 | `sha256:b16bbedb2401636164e6f96325f57529450d2ad7ef04164143568f2869d7416d` |
 | `TASK-P3-17-xs.json` | 20815 | `sha256:c03ecfb33361afcaec32459d91eceb030f73be799e04ca0e158076c02d0b2e11` |
 
-这些文件位于ignored `build/**`，均是冻结baseline上的本地审计输出，不是已提交产品artifact。implementation provider将在clean exact implementation SHA上重新运行required workflow并上传新的provider artifact。
+这些文件位于ignored `build/**`，均是冻结baseline上的本地审计输出，不是已提交产品artifact。Implementation provider已在clean exact implementation SHA上重新运行required workflow并上传、下载复核artifact。
+
+## Audit implementation provider closure
+
+Implementation `201be9c6fd1b433a9d0a629a3ae7d4ffe1107476`的parent恰为immutable Diff base；run `33033591189` / required `validate` job `98391337626`全部58 steps success，check-run绑定exact head SHA与GitHub Actions app `15368`。Artifact `9631260796` / `plantnexus-ci-evidence-33033591189`为814448 bytes，digest=`sha256:49833cdb63c9703a3837a194fd05d648b721d23719f0096a96fbbe0642937852`，未过期且expiry=`2026-11-25T02:32:29Z`。
+
+下载后共有44 files、38份JSON与2701704 uncompressed bytes；全部JSON可解析，28份SHA-bound报告均绑定implementation SHA，0 mismatch、0顶层failure、0 issue、0 blocking gap。Task报告精确复现TASK-P3-17、Diff base、61 committed/0 working paths、四个Impact Rules、19 checks和0 issues；P3 Gate 14/14、双Backend/双Chromium、P2 Gate 11/11、i18n 8/8与三组Chromium各12 expected/0 unexpected均一致。该证据支持本evidence-only closure把Task标为`done`，不改变原审计baseline、失败历史或阶段边界。
 
 ## Gaps, boundaries and recommendation
 
-`blocking_gaps=[]`。没有发现需要在本Audit内修复的P3业务、本地化、Schema、migration、state machine、test assertion、dependency、ADR、workflow或治理缺口。Audit implementation provider尚未发生，只阻止TASK-P3-17从`in_progress`变为`done`；如果该exact run、required job、artifact或内容验证失败，必须撤回`READY`并在P3内登记有界remediation，不能进入P4。
+`blocking_gaps=[]`。没有发现需要在本Audit内修复的P3业务、本地化、Schema、migration、state machine、test assertion、dependency、ADR、workflow或治理缺口。Audit implementation provider已exact成功，TASK-P3-17由本evidence-only closure标为`done`；closure提交自身仍须push后精确复验，若失败必须撤回`READY`并在P3内登记有界remediation，不能进入P4。
 
 以下事项明确不被本结论关闭：OPEN-001～015、RISK-001～014、SIM-ASSUMPTION-001～015、真实source/field/topology/calendar/material/priority authority、独立Production数据库/角色、真实RBAC/SSO、external ERP/MES transfer、Production publish/approval、L/XL、Production capacity/SLA、UAT、deployment、ExecutionEvent、ReplanRequest、freeze window、OBJ-002 Stability、ChangeReport与Execution Simulator。
 
-因此下一动作是：先让TASK-P3-17 audit implementation与evidence-only closure分别通过exact required `validate`和artifact下载复核；随后向用户报告P3 Exit Gate=`READY`并等待新的明确P3→P4授权。未经该授权，`current_phase`继续为P3，P3 Milestone继续`active`（Exit ready / awaiting transition），不得创建或执行P4 Task。
+因此下一动作是：先让本evidence-only closure通过exact required `validate`和artifact下载复核；随后向用户报告P3 Exit Gate=`READY`并等待新的明确P3→P4授权。未经该授权，`current_phase`继续为P3，P3 Milestone继续`active`（Exit ready / awaiting transition），不得创建或执行P4 Task。

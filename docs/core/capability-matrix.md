@@ -13,7 +13,7 @@ last_reviewed: 2026-08-24
 
 ## TASK-P3-17 audit boundary
 
-独立Audit确认P3范围内的version/read/comparison/edit-lock/approval-rejection/internal publish/export/API/UI/bilingual/audit能力证据完整并为本地READY；它不提升P4+ capability，也不改变Production capability的default-deny/PROD_OPEN条件。TASK-P3-17自身provider闭环前仍为`in_progress`。
+独立Audit确认P3范围内的version/read/comparison/edit-lock/approval-rejection/internal publish/export/API/UI/bilingual/audit能力证据完整并为READY；它不提升P4+ capability，也不改变Production capability的default-deny/PROD_OPEN条件。TASK-P3-17 audit implementation provider已验证并由本closure标为`done`，closure自身待push后复验。
 
 ## 状态定义
 

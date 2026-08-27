@@ -13,7 +13,7 @@ last_reviewed: 2026-08-27
 
 ## TASK-P3-17 Exit trace rule application
 
-最终Exit边按`P3 roots → TASK-P3-00～17 → registered Test IDs/machine reports → exact provider run/job/artifact → P3 Exit report/manifest`闭合。Audit必须独立下载并解析前序artifacts、验证SHA/Task/Diff base/Impact Rules/check/issues，并fresh重放全部required gates；前序Gate PASS不能替代Exit。当前30 roots/30 rows/49 Test IDs保持不变，TASK-P3-17为`LOCAL_READY_PROVIDER_PENDING`；implementation与closure provider成功后才可提升为`PROVIDER_VERIFIED_DONE`。
+最终Exit边按`P3 roots → TASK-P3-00～17 → registered Test IDs/machine reports → exact provider run/job/artifact → P3 Exit report/manifest`闭合。Audit必须独立下载并解析前序artifacts、验证SHA/Task/Diff base/Impact Rules/check/issues，并fresh重放全部required gates；前序Gate PASS不能替代Exit。当前30 roots/30 rows/49 Test IDs保持不变，TASK-P3-17为`IMPLEMENTATION_PROVIDER_VERIFIED_CLOSURE_PENDING`并在本closure中标为`done`；closure provider只能在push后复验。
 
 ## TASK-P3-15 amendment and planned-member evidence rule
 

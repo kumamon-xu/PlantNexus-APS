@@ -27,7 +27,7 @@ P3 Gate只重放P3 copy-on-write manual command与publication链，并证明PUBL
 
 Gantt drag/move/assign/lock是对单一immutable ScheduleVersion的人工command proposal，经既有P3-06 fresh Validator产生new DRAFT；它不读取ExecutionEvent、不生成ReplanRequest、不计算freeze window/OBJ-002/Stability/ChangeReport，也不调用Solver。UI的“refresh authority”仅重读Version/Job，不是replan trigger。
 
-P3-14已完成有界Gate，P3-15已完成修订治理，P3-16已完成双语实现双提交provider复验；P3-17已完成本地独立Audit但在自身provider闭环前仍不能形成可关闭的P3 Exit。P4 dynamic replanning完全未启动；PUBLISHED immutable且rollback只能以新Version/command表达，不能修改执行事实或历史发布。
+P3-14已完成有界Gate，P3-15已完成修订治理，P3-16已完成双语实现双提交provider复验；P3-17独立Audit已由exact implementation provider支持为`done`，Exit=`READY`且closure provider待push后复验。P4 dynamic replanning完全未启动；PUBLISHED immutable且rollback只能以新Version/command表达，不能修改执行事实或历史发布。
 
 ## 输入
 

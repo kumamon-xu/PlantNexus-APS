@@ -11,17 +11,17 @@ last_reviewed: 2026-08-27
 
 # 当前阶段：P3 — Planning Workspace
 
-## P3 Exit 本地独立审计结论
+## P3 Exit 独立审计结论
 
 TASK-P3-17已在不可变Diff base `0933e10760096cdf8e812b2d41b34916e9db5750`上完成独立本地审计，结论为`READY`、`blocking_gaps=[]`。审计逐项复核39个P3 push SHA/required `validate`、35个成功run、4个保留的历史失败run和36个未过期artifact；下载的1052个文件/1010份JSON中，successful chain为0 parse error、0 SHA mismatch、0顶层失败、0 issue、0 gap。完整结论见[P3 Exit report](milestones/P3-exit-gate-audit-report.md)与[machine manifest](milestones/P3-exit-gate-evidence-manifest.json)。
 
-本地required-equivalent亦全绿：621 Python、67 Vitest、三组Chromium各12/12、i18n 8/8与2×243 keys/139 machine values、P2 Gate 11/11、P3 Gate 14/14及双Backend/双Chromium replay、migration/Compose/SCA/license/build和治理边界均通过。TASK-P3-17在audit implementation exact provider与evidence-only closure完成前仍为`in_progress`；P3继续`active`，不得把READY解释为P4授权、Production readiness/UAT/approval/external publish/deployment。
+本地required-equivalent亦全绿：621 Python、67 Vitest、三组Chromium各12/12、i18n 8/8与2×243 keys/139 machine values、P2 Gate 11/11、P3 Gate 14/14及双Backend/双Chromium replay、migration/Compose/SCA/license/build和治理边界均通过。Audit implementation `201be9c6fd1b433a9d0a629a3ae7d4ffe1107476`的run/job/artifact=`33033591189`/`98391337626`/`9631260796`已exact成功并复验44 files/38 JSON、61/0 paths、4 Impact Rules、19 checks、0 issues；本evidence-only closure据此把TASK-P3-17标为`done`，closure自身仍须push后exact provider复验。P3继续`active`，不得把READY解释为P4授权、Production readiness/UAT/approval/external publish/deployment。
 
 ## TASK-P3-17 启动边界
 
 用户于2026-08-27明确授权执行最终独立Exit Gate Audit。启动前确认`main=origin/main=remote main=0933e10760096cdf8e812b2d41b34916e9db5750`、ahead/behind=`0/0`且working tree clean；TASK-P3-00～16全部为`done`。TASK-P3-16 implementation→closure为直接父子提交`b3ba999e83f4e8b0f96c7ce5bc72eba01432d791`→`0933e10760096cdf8e812b2d41b34916e9db5750`；closure run/job/artifact=`33028998495`/`98376876640`/`9629623182`精确成功，下载复核44个文件/38份JSON、i18n 8/8、双locale 243/243 keys、139 machine values、三组12/12 Playwright、P3 Gate 14/14/0 gaps及Task 79/0/6/19/0一致。该HEAD已冻结为TASK-P3-17不可变Diff base。
 
-TASK-P3-17现为`in_progress`，只允许独立重放P3拓扑/provider、本地合同/状态/权限/发布/导出/API/Frontend/双语/治理Gate并形成READY/NOT_READY与`blocking_gaps`。Audit内不得修业务、本地化、Schema、测试、workflow或依赖；P3 Milestone继续`active`，P4与Production均未启动。
+TASK-P3-17现为`done`，独立重放已覆盖P3拓扑/provider、本地合同/状态/权限/发布/导出/API/Frontend/双语/治理Gate并形成`READY`、`blocking_gaps=[]`。Audit未修业务、本地化、Schema、测试、workflow或依赖；P3 Milestone继续`active`并等待明确transition，P4与Production均未启动。
 
 ## TASK-P3-16 完成边界
 
@@ -67,7 +67,7 @@ Corrective implementation `54a25646053979a69734a3148030830d49c04c1e`的push run 
 
 P2-14 audit implementation `65c556789f176ad9de55523d6420737bb60f933f`的GitHub push run `32677741558` / required `validate` job `97288829348` / artifact `9503227240`成功，artifact digest=`sha256:fbb76f0ab44d3bdcff2d31e70f9698af84e10e48ee57ae611eef8529a288240e`；evidence-only closure `80c403384d1e171258cf874d26605d0d22aff1b2`的run `32678248961` / job `97290201234` / artifact `9503372291`也成功，digest=`sha256:673412905b7420660d1e9f07755fcda6291f85f8f2bd926b4bf31a0a6bd1bd0c`。下载检查的两份artifact均含20份可解析JSON，Task/SHA/Impact Rules/checks/issues与对应提交一致且0 issue。规划启动时`main=origin/main=80c403384d1e171258cf874d26605d0d22aff1b2`、ahead/behind=`0/0`且working tree clean，因此transition前提一致。
 
-P2 Milestone现为`completed`，P3 Milestone为`active`。`TASK-P3-00`～`TASK-P3-16`均为`done`；TASK-P3-17为`in_progress`/final independent Exit Audit。本地P3 Exit结论已形成`READY`/0 gaps，但Task自身provider尚待闭环；P3→P4仍必须等待新的用户明确批准。
+P2 Milestone现为`completed`，P3 Milestone为`active`。`TASK-P3-00`～`TASK-P3-17`均为`done`；P3 Exit结论为`READY`/0 gaps，audit implementation provider已exact验证且closure provider待push后复验。P3→P4仍必须等待新的用户明确批准。
 
 ## 当前目标
 

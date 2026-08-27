@@ -125,7 +125,7 @@ TASK-P1-02在既有`schemas/json`/`schemas/samples`边界新增canonical-records
 
 ## P3 layout allocation history
 
-P3 transition时只新增`docs/tasks/P3/`中的16张Task卡；当时没有创建backend、schema、migration、frontend或workflow路径。后续P3-01形成docs/ADR，P3-02负责Schema/contracts，P3-03负责persistence/migration，P3-04～10负责application/API/jobs/exporters；P3-11形成Frontend read-only foundation，P3-12形成read-only visualization/browser slice，P3-13形成human-control E2E，P3-14形成有界Gate evidence。当前P3卡总数为18张：P3-15治理owner与P3-16双语展示均为`done`且provider完整，P3-17为`LOCAL_READY_PROVIDER_PENDING`的final Audit；新增正式Exit报告后Markdown总数为169。
+P3 transition时只新增`docs/tasks/P3/`中的16张Task卡；当时没有创建backend、schema、migration、frontend或workflow路径。后续P3-01形成docs/ADR，P3-02负责Schema/contracts，P3-03负责persistence/migration，P3-04～10负责application/API/jobs/exporters；P3-11形成Frontend read-only foundation，P3-12形成read-only visualization/browser slice，P3-13形成human-control E2E，P3-14形成有界Gate evidence。当前P3卡总数为18张且P3-00～17均为`done`；P3-17为`IMPLEMENTATION_PROVIDER_VERIFIED_CLOSURE_PENDING`的final Audit，新增正式Exit报告后Markdown总数为169。
 
 ## TASK-P3-11 Frontend layout
 

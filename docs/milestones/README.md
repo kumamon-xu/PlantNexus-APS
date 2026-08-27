@@ -13,7 +13,7 @@ last_reviewed: 2026-08-27
 
 ## TASK-P3-17 local Exit decision
 
-TASK-P3-17已独立重放全部P3 predecessor topology/provider contents、合同/Schema/migration/state/authorization/publication/export/API/Frontend/双语/质量/治理证据。[P3 Exit report](P3-exit-gate-audit-report.md)与[machine manifest](P3-exit-gate-evidence-manifest.json)当前一致给出`READY`、`blocking_gaps=[]`；P3-00～16保持`done`，4个历史失败run与corrective链保持原样。Audit implementation provider尚未发生，因此TASK-P3-17仍为`in_progress`，P3仍`active`；P4与Production未启动。
+TASK-P3-17已独立重放全部P3 predecessor topology/provider contents、合同/Schema/migration/state/authorization/publication/export/API/Frontend/双语/质量/治理证据。[P3 Exit report](P3-exit-gate-audit-report.md)与[machine manifest](P3-exit-gate-evidence-manifest.json)一致给出`READY`、`blocking_gaps=[]`；P3-00～17均为`done`，4个历史失败run与corrective链保持原样。Audit implementation `201be9c6fd1b433a9d0a629a3ae7d4ffe1107476`的run/job/artifact=`33033591189`/`98391337626`/`9631260796`已exact验证，本closure provider待push后复验；P3仍`active`，P4与Production未启动。
 
 ## TASK-P3-15 amendment-governance closure
 
@@ -52,7 +52,7 @@ P1当前状态：[`P1 — Data & Snapshot`](P1-data-and-snapshot.md)为`complete
 
 P2当前状态：[`P2 — CP-SAT Vertical Slice`](P2-cp-sat-vertical-slice.md)为`completed`。TASK-P2-00～14均已闭环为`done`；P2 Exit Gate=`READY`且0 gaps。用户于2026-08-24在复核exact provider evidence、提交拓扑与clean synchronized baseline后明确批准P2→P3。
 
-P3当前状态：[`P3 — Planning Workspace`](P3-planning-workspace.md)为`active`。TASK-P3-00～16均为`done`；TASK-P3-16 implementation/closure provider均已exact复验。TASK-P3-17为`in_progress`/final independent Exit Audit，本地判定为`READY`且0 gaps，等待自身implementation/closure provider闭环。该结论不自动切换P4，也不表示external、Production readiness、approval、publish、UAT或deployment。
+P3当前状态：[`P3 — Planning Workspace`](P3-planning-workspace.md)为`active`。TASK-P3-00～17均为`done`；TASK-P3-17 final independent Exit Audit为`READY`且0 gaps，implementation provider已exact复验且closure provider待push后复验。该结论不自动切换P4，也不表示external、Production readiness、approval、publish、UAT或deployment。
 
 TASK-P3-04 implementation `a9be974855bb825784d639b7f6675e5a33e4273d`的run/job/artifact=`32700005280`/`97349447107`/`9510215582`精确复现35 focused、515 full、8/8 lifecycle、23/23 JSON PASS与45 committed/0 working paths、8 rows、19 checks、0 issues，故本closure标为`done`。该证据只形成reviewable ScheduleVersion，不形成approval、publish、P4或Production readiness。
 

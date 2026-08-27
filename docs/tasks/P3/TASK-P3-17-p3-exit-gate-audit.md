@@ -1,7 +1,7 @@
 ---
 doc_id: TASK-P3-17
 title: P3 Exit Gate Audit
-status: in_progress
+status: done
 spec_version: 0.3.0
 phase: P3
 normative: true
@@ -31,7 +31,7 @@ Diff base: 0933e10760096cdf8e812b2d41b34916e9db5750
 
 Activation evidence: 用户于2026-08-27明确授权执行TASK-P3-17。启动复核确认`main=origin/main=remote main=0933e10760096cdf8e812b2d41b34916e9db5750`、ahead/behind=`0/0`且working tree clean；TASK-P3-00～16全部为`done`。TASK-P3-16 implementation `b3ba999e83f4e8b0f96c7ce5bc72eba01432d791`与evidence-only closure `0933e10760096cdf8e812b2d41b34916e9db5750`为直接父子提交；closure run/job/artifact=`33028998495`/`98376876640`/`9629623182`均exact success，artifact未过期，digest=`sha256:e1aaab824dd529459e986b2a8ea1bd0e643ac5cc8ba5fa8849727faf365861ba`。下载复核44个文件/38份JSON、i18n 8/8、两个locale各243 keys、139 machine values、三组Playwright各12 expected/0 unexpected、P3 Gate 14/14/0 gaps及Task 79/0/6/19/0均一致。该完整HEAD据此冻结为不可变Diff base；本Task只独立审计，P4与Production继续禁止。
 
-Local independent audit result: `READY`，`blocking_gaps=[]`。39个P3 push SHA/39个required `validate` check-run（35 success、4历史failure）、36个未过期artifact与下载的1052文件/1010 JSON均已逐项核验；successful chain为0 parse error、0 SHA mismatch、0顶层failure、0 issue、0 gap。621 Python、67 Vitest、三组Chromium各12/12、i18n 8/8、P2 Gate 11/11、P3 Gate 14/14与双Backend/双Chromium replay、migration/Compose/SCA/license/build/docs/scope检查全部通过。详见`docs/milestones/P3-exit-gate-audit-report.md`与machine manifest。Task保持`in_progress`直至audit implementation exact provider成功并以evidence-only closure回填；任何provider失败必须撤回READY。
+Local independent audit result: `READY`，`blocking_gaps=[]`。39个P3 push SHA/39个required `validate` check-run（35 success、4历史failure）、36个未过期artifact与下载的1052文件/1010 JSON均已逐项核验；successful chain为0 parse error、0 SHA mismatch、0顶层failure、0 issue、0 gap。621 Python、67 Vitest、三组Chromium各12/12、i18n 8/8、P2 Gate 11/11、P3 Gate 14/14与双Backend/双Chromium replay、migration/Compose/SCA/license/build/docs/scope检查全部通过。详见`docs/milestones/P3-exit-gate-audit-report.md`与machine manifest。Audit implementation exact provider现已成功并由本evidence-only closure回填，故Task标为`done`；closure提交自身仍须exact provider复验，任何失败必须撤回READY。
 
 Files allowed to change: `docs/milestones/P3-exit-gate-evidence-manifest.json`、`Documents to update`中的逐字路径、ignored `build/validation/TASK-P3-17-*`、`build/validation/ci-p3-planning-workspace-api.json`、`build/benchmarks/TASK-P3-17-xs.json`、`build/playwright/**`、`build/provider-evidence/TASK-P3-17-predecessors/**`、`build/traceability/TASK-P3-17-report.json`及build产物`dist/**`、`frontend/dist/**`。除这些路径外不得新增或修改任何文件；发现新Impact Rule时须先同步本卡再继续。
 
@@ -73,7 +73,7 @@ Acceptance commands: full Python lock/lint/type/tests/migrations/build/machine r
 
 Artifacts: audit report/manifest、download inventory/digests、independent Gate/test/build/docs/bilingual reports、Task/provider artifacts。
 
-Provider evidence: audit implementation exact push run/job/artifact成功后才可evidence-only closure为`done`；closure自身也须核验exact SHA/Task/Impact/checks/issues/required context与audit report/manifest。Provider失败必须撤回READY并保留负证据。
+Provider evidence: audit implementation `201be9c6fd1b433a9d0a629a3ae7d4ffe1107476`的push run/job=`33033591189`/`98391337626`全部success，required check=`validate`且GitHub Actions app=`15368`。Artifact `9631260796` / `plantnexus-ci-evidence-33033591189`未过期，814448 bytes，digest=`sha256:49833cdb63c9703a3837a194fd05d648b721d23719f0096a96fbbe0642937852`、expiry=`2026-11-25T02:32:29Z`。下载复核44 files/38 JSON、28 SHA-bound/0 mismatch、0 top-level failure/issue/gap；Task report精确为61 committed/0 working paths、`IMPACT-DOCS/GOVERNANCE-REGISTRY/PHASE/STATE`、19 checks、0 issues；三组Playwright各12 expected/0 unexpected，P2 Gate 11/11/0 gaps，P3 Gate 14/14/0 gaps，i18n 8/8。closure自身仍须核验exact SHA/Task/Impact/checks/issues/required context与audit report/manifest；失败必须撤回READY并保留负证据。
 
 Completion conditions: 前置17项全部done且拓扑/provider/content完整；全部本地/CI/状态/权限/发布/导出/API/Frontend/双语/机器合同/边界Gate独立PASS；`blocking_gaps=[]`才可READY；Task双提交provider闭环；P3保持current直到用户另行批准下一阶段。
 
@@ -86,3 +86,15 @@ PROD_OPEN: OPEN-001～015按权威证据保持真实状态；任一未闭项继�
 SIM_ASSUMPTIONS: 只审计既有ACTIVE条目；不得用Simulation或双语结果关闭OPEN或校准Production。
 
 Rollback: audit文档可用superseding correction追加，失败/READY历史和provider evidence不删除；phase transition必须等待新的明确用户批准。
+
+## Implementation provider verification
+
+Audit implementation commit `201be9c6fd1b433a9d0a629a3ae7d4ffe1107476`的parent恰为不可变Diff base `0933e10760096cdf8e812b2d41b34916e9db5750`；push后`main=origin/main`绑定该SHA。GitHub run `33033591189`、required `validate` job/check `98391337626`均completed/success，check app `15368`与branch protection一致。
+
+Artifact `9631260796`下载后为44 files/38份可解析JSON、2701704 uncompressed bytes；28份`code_commit`报告全部等于implementation SHA，0 parse error、0 SHA mismatch、0顶层failure、0 issue、0 blocking gap。`traceability-report.v1`复现TASK-P3-17、Diff base、61 committed/0 working paths、四个Impact Rules、19/19 checks和0 issues；P3 Gate 14/14、P2 Gate 11/11、i18n 8/8及三组Chromium各12 expected/0 unexpected均一致。
+
+## Evidence-only closure
+
+本closure只把上述已发生provider事实写回Task、Exit report/manifest与命中治理文档，不修改业务代码、Schema、migration、dependency/lock、测试断言、workflow、ADR或前置P3历史。TASK-P3-17据此为`done`，P3 Exit为`READY`且`blocking_gaps=[]`；P3仍为current/active并等待新的明确P3→P4 transition授权，P4与Production均未启动。closure提交自身须在push后核验exact required provider，不能在本提交预写未来run/artifact。
+
+提交前closure验收为full governance `PASS`（169 docs/30 roots/30 trace rows/49 tests/15 OPEN/15 SIM/14 risks/55 Tasks），显式Task diff为61 committed-range/20 working-tree sources、61 unique paths、四个Impact Rules、19/19 checks、0 issues；closure-only 20 paths与完整range 61 paths均只含`README.md`/`docs/**`，禁止范围为0，`git diff --check`通过。

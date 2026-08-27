@@ -4,7 +4,7 @@
 
 TASK-P3-17独立本地审计结论为`READY`、`blocking_gaps=[]`；详见[P3 Exit report](docs/milestones/P3-exit-gate-audit-report.md)与[machine manifest](docs/milestones/P3-exit-gate-evidence-manifest.json)。Audit implementation/closure provider尚待闭环，因此P3仍是当前active phase；该结论不授权P4，也不表示Production readiness、approval、publish、UAT或deployment。
 
-PlantNexus APS 是一个面向单工厂、多车间场景的高级计划与排程（APS）项目。P2 CP-SAT Vertical Slice 已通过 Exit Gate并关闭，当前阶段为P3（Planning Workspace）。TASK-P3-00～16均为`done`；TASK-P3-17 final Exit Audit已在冻结基线`0933e10760096cdf8e812b2d41b34916e9db5750`上完成本地独立复核，结论为`READY`且`blocking_gaps=[]`，现等待自身exact required `validate`/artifact与evidence-only closure。Production能力与P4动态重排均未启动。
+PlantNexus APS 是一个面向单工厂、多车间场景的高级计划与排程（APS）项目。P2 CP-SAT Vertical Slice 已通过 Exit Gate并关闭，当前阶段为P3（Planning Workspace）。TASK-P3-00～17均为`done`；TASK-P3-17 final Exit Audit在冻结基线`0933e10760096cdf8e812b2d41b34916e9db5750`上给出`READY`且`blocking_gaps=[]`，audit implementation `201be9c6fd1b433a9d0a629a3ae7d4ffe1107476`的exact required provider已验证，本evidence-only closure自身仍须push后复验。Production能力与P4动态重排均未启动。
 
 ## 开始之前
 
@@ -30,7 +30,7 @@ TASK-P3-14以`6a3e02f00bf46f19915cb59c3c4af7daaac95be4`为不可变Diff base，�
 
 用户已批准调整P3末段编号。TASK-P3-15以`06e7f794f486ac34c505237b847462c7c7c36d44`为不可变Diff base，只扩展治理validator与unit regression。Implementation `c84e1aa1a81473f65d9f7906a6d2c67a94e7bb2f`的required run/job/artifact=`32944633958`/`98102640242`/`9597967232`已下载复核26/0 paths、5 rows、19 checks、0 issues；evidence-only closure `1636fe9c909b728d49f9907ed9f53030b5921914`的run/job/artifact=`32948633841`/`98114798738`/`9599442770`也已下载复核37份JSON、48/0 paths、6 rows、19 checks和0 issues。因此TASK-P3-15=`done`，其失败/成功provider历史保持只读。
 
-TASK-P3-16现实现默认`zh-CN`、可切换/恢复`en-US`及[`official-zh-cn-terminology.v1`](docs/frontend/official-zh-cn-terminology-map.md)的typed display adapter；`document.lang`、Ant Design locale、Intl格式、unknown raw fallback、双语a11y/Playwright与`p3-frontend-i18n-report.v1`均已由exact implementation/closure provider复验。API路径/key/operationId/state/command/error/C-ID/fingerprint和标准载体继续使用英文机器合同，package/lock零差异。TASK-P3-17已依据后续明确授权独立执行；在自身provider闭环前保持`in_progress`，不会自动进入P4。
+TASK-P3-16现实现默认`zh-CN`、可切换/恢复`en-US`及[`official-zh-cn-terminology.v1`](docs/frontend/official-zh-cn-terminology-map.md)的typed display adapter；`document.lang`、Ant Design locale、Intl格式、unknown raw fallback、双语a11y/Playwright与`p3-frontend-i18n-report.v1`均已由exact implementation/closure provider复验。API路径/key/operationId/state/command/error/C-ID/fingerprint和标准载体继续使用英文机器合同，package/lock零差异。TASK-P3-17已依据后续明确授权独立执行并由exact implementation provider支持为`done`；不会自动进入P4。
 
 ## 本地验收
 
@@ -77,7 +77,7 @@ scripts/      仓库级校验与自动化脚本
 infra/        P0 开发容器构建配置
 ```
 
-P2 CP-SAT Vertical Slice已通过Exit Gate并关闭，当前阶段为P3。P2-00～14和P3-00～16均已有exact implementation/closure provider支撑并标为`done`；P3-17已获明确授权并完成本地独立Audit，正等待自身provider闭环。Production capacity/SLA/identity/approval authority/external publish与P4仍未形成。当前边界见[`docs/current_phase.md`](docs/current_phase.md)。
+P2 CP-SAT Vertical Slice已通过Exit Gate并关闭，当前阶段为P3。P2-00～14和P3-00～17均标为`done`；P3-17 audit implementation exact provider已复验，本evidence-only closure自身仍须push后复验。Production capacity/SLA/identity/approval authority/external publish与P4仍未形成。当前边界见[`docs/current_phase.md`](docs/current_phase.md)。
 
 TASK-P3-13保留失败implementation run `32920462781`、首次closure `87d47c7483185483ac8027100c1c664d18011a7c` / run `32921871460`的606/1失败与artifact count=0。独立XLSX deterministic corrective implementation `3538d46f8b73ae434057bcbca9037436aa91f2c7`的required run/job/artifact=`32923203227`/`98040743610`/`9590625358`已全绿并下载复验33份JSON、12/12 Chromium和Task 91/0/11/19/0；该P3-13 closure当时未自动启动P3-14，后者现依据新的用户授权独立执行。
 

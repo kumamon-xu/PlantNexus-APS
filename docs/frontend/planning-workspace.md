@@ -21,7 +21,7 @@ TASK-P3-16已在既有route/page/component/action之上应用[`official-zh-cn-te
 
 ## TASK-P3-14 workspace browser replay
 
-TASK-P3-14已单独授权并以两轮isolated Chromium重放P3-13的read、visualization、command、decision、publication、export与failure visibility。Gate只检查server-authority及两轮语义一致，未修改页面、route、carrier、action或accessibility断言；在该Gate形成时P3-16/P3-17均为`planned`。当前P3-15治理与P3-16本地化均为`done`且双提交provider完整；P3-17已完成本地独立Audit并等待自身provider闭环，P4与Production未形成。
+TASK-P3-14已单独授权并以两轮isolated Chromium重放P3-13的read、visualization、command、decision、publication、export与failure visibility。Gate只检查server-authority及两轮语义一致，未修改页面、route、carrier、action或accessibility断言；在该Gate形成时P3-16/P3-17均为`planned`。当前P3-15治理、P3-16本地化与P3-17独立Audit均为`done`；P3-17 implementation provider已exact验证，closure provider待push后复验，P4与Production未形成。
 
 ## TASK-P3-13 control composition
 

@@ -14,7 +14,7 @@ registry_version: 1.0.0
 
 ## TASK-P3-17 audit status
 
-REQ-004/005/006/007/009的P3 Planning Workspace切片已由独立Exit Audit连接到39个P3 provider提交、36个下载artifact、621项Python、67项Frontend与P2/P3双Gate证据；本地判定为`READY`、0 gaps。该审计不改变任何Requirement正文、root lifecycle或`registry_version=1.0.0`，在TASK-P3-17 implementation/closure provider闭环前只标记`LOCAL_READY_PROVIDER_PENDING`；P4和Production需求仍按原阶段边界未形成。
+REQ-004/005/006/007/009的P3 Planning Workspace切片已由独立Exit Audit连接到39个前序P3 provider提交、36个下载artifact、621项Python、67项Frontend与P2/P3双Gate证据；判定为`READY`、0 gaps。TASK-P3-17 audit implementation provider已exact验证，当前标记`IMPLEMENTATION_PROVIDER_VERIFIED_CLOSURE_PENDING`；该审计不改变任何Requirement正文、root lifecycle或`registry_version=1.0.0`，P4和Production需求仍按原阶段边界未形成。
 
 ## TASK-P3-15 allocation review
 

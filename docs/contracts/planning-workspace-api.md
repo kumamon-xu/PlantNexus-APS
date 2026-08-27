@@ -152,7 +152,7 @@ action scope至少包含data plane、action、resource/version、target和key；
 
 ## 测试分配
 
-TASK-P3-01只形成文档合同；TASK-P3-02现以`test_p3_workspace_contracts.py`形成`TEST-CONTRACT-001`与`TEST-WORKSPACE-CONTRACT-001`的machine carrier slice，并复验`TEST-STATE-TRANSITION-001`/`TEST-ERROR-MAPPING-001`既有集合未漂移。P3-05～10形成read/command/API behavior，P3-13形成用户可见E2E，P3-14复验Gate；P3-16 display-only本地化已取得exact双提交provider并标为`done`，P3-17最终独立Audit为`LOCAL_READY_PROVIDER_PENDING`。P3-15为治理支持，不是API/Audit实现。
+TASK-P3-01只形成文档合同；TASK-P3-02现以`test_p3_workspace_contracts.py`形成`TEST-CONTRACT-001`与`TEST-WORKSPACE-CONTRACT-001`的machine carrier slice，并复验`TEST-STATE-TRANSITION-001`/`TEST-ERROR-MAPPING-001`既有集合未漂移。P3-05～10形成read/command/API behavior，P3-13形成用户可见E2E，P3-14复验Gate；P3-16 display-only本地化与P3-17最终独立Audit均为`done`，P3-17 closure provider待push后复验。P3-15为治理支持，不是API/Audit实现。
 
 ## TASK-P3-02 machine carrier realization
 

@@ -1,0 +1,55 @@
+{
+  "execution_event_version": "execution-event.v1",
+  "schema_set_version": "2.8.0",
+  "canonicalization_version": "canonical-json.v1",
+  "event_id": "execution-event-a293ff05c1c320f598910dbb1bcccc45abab25cdc79e5ab5cb1bcc072184101c",
+  "event_type": "MACHINE_UNAVAILABLE",
+  "data_plane": "SIMULATION",
+  "environment": "TEST",
+  "factory_id": "factory-sim-001",
+  "planning_scope_id": "planning-scope-sim-001",
+  "authority": {
+    "authority_version": "execution-event-authority.v1",
+    "authority_id": "authority-sim-execution-001",
+    "authority_scope": "SIMULATION/factory-sim-001/planning-scope-sim-001",
+    "source": {
+      "source_system": "plantnexus-execution-simulator",
+      "source_version": "1.0.0",
+      "source_record_id": "SIM-P4-CONTRACT-STREAM-001"
+    },
+    "decision": "AUTHORIZED_SIMULATION_SOURCE",
+    "production_binding": false
+  },
+  "source_stream": {
+    "stream_id": "execution-stream-sim-001",
+    "stream_version": "1.0.0",
+    "authority_id": "authority-sim-execution-001"
+  },
+  "source_position": 1,
+  "occurred_at_utc": "2026-08-27T06:00:00Z",
+  "received_at_utc": "2026-08-27T06:00:05Z",
+  "entity_refs": [
+    {"entity_type": "RESOURCE", "entity_id": "resource-sim-001"}
+  ],
+  "payload": {
+    "kind": "MACHINE_UNAVAILABLE",
+    "resource_id": "resource-sim-001",
+    "unavailable_from_utc": "2026-08-27T06:00:00Z",
+    "unavailable_until_utc": null
+  },
+  "synthetic": true,
+  "synthetic_provenance": {
+    "scenario_id": "SIM-P4-CONTRACT-001",
+    "scenario_version": "1.0.0",
+    "factory_profile_id": "PROFILE-P4-CONTRACT-001",
+    "profile_version": "1.0.0",
+    "generator_id": "PLANTNEXUS-P4-CONTRACT-GENERATOR",
+    "generator_version": "1.0.0",
+    "simulator_id": "PLANTNEXUS-EXECUTION-SIMULATOR",
+    "simulator_version": "1.0.0",
+    "seed": 20260827
+  },
+  "production_binding": false,
+  "correlation_id": "correlation-p4-contract-001",
+  "event_fingerprint": "sha256:a293ff05c1c320f598910dbb1bcccc45abab25cdc79e5ab5cb1bcc072184101c"
+}

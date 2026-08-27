@@ -11,6 +11,10 @@ last_reviewed: 2026-08-26
 
 # 标准成果包合同
 
+## TASK-P4-02 P4 export carriers
+
+`export-manifest.v3`与`export-job.v3`只为未来P4-11提供versioned internal Simulation carrier：manifest精确绑定P3 package、published P4 ScheduleVersion、publication/job/audit与ChangeReport，Job沿用既有五state/六pair及幂等/lease/error语义。v3与v1/v2不可互换，sample target固定`SIMULATION_INTERNAL`且`publishable=false`；本Task不生成包、不执行Job、不传输外部系统，也不形成Production storage/target。
+
 ## TASK-P4-01 ChangeReport export contract
 
 ADR-0014固定ChangeReport是new DRAFT result的immutable完整证据，绑定base/new Version/Snapshot/Problem、events/facts、Request/Run、freeze/locks、Policy/Limits、Solver/fresh Validator、before/after KPI和operation全集分类。TASK-P4-11只有在P4-06/08完成后才可把其versioned read model接入既有internal Simulation export；report fingerprint/bytes与manifest lineage必须可重放。

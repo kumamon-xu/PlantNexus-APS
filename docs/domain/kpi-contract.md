@@ -11,6 +11,10 @@ last_reviewed: 2026-08-21
 
 # KPI 合同
 
+## TASK-P4-02 KPI and stability references
+
+ChangeReport v1以exact artifact reference绑定before/after KPI，并用整数OBJ-002四元分量和`numerator/denominator`或`NOT_APPLICABLE`表达稳定性，禁止浮点猜测或把sample值解释为业务目标。KPI v1/v2 bytes与Production KPI authority不变；实际重算属于P4-06，Solver objective execution属于P4-07。
+
 ## TASK-P4-01 Stability contract baseline
 
 ADR-0014现固定TASK-P4-06/07必须按`Delivery/OBJ-001 → Stability/OBJ-002 → Makespan`执行，且OBJ-002内部为`soft lock violation count → changed existing operation count → resource change count → absolute start-shift seconds`的非负整数词典序向量。不得用浮点或Big-M混合，也不得把base中不存在的urgent operation计为movement。

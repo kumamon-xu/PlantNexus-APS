@@ -11,6 +11,10 @@ last_reviewed: 2026-08-21
 
 # SolverBackend 合同
 
+## TASK-P4-02 SolverReport v2 boundary
+
+新Report carrier记录exact Policy/Limits、三阶段value/bound/budget/stop、native status与product outcome，但没有调用CP-SAT或改变backend protocol。UNKNOWN与INFEASIBLE严格区分，非candidate状态不能携带部分解；P4-07必须在fresh independent Validator前后生成真实evidence。本Task无dependency/lock或capacity claim。
+
 ## P4 planned replan backend impact
 
 TASK-P4-07在P4-04/05/06完成后才可添加replan solve orchestration，输入必须是版本化Problem/Policy/Limits及base schedule projection，输出必须honest status、分层objective与deterministic report；随后独立Validator决定可接受性。现有CP-SAT Backend、OR-Tools pin、limits、seed/workers及P2 benchmark contract不变。

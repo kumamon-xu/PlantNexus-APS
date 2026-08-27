@@ -11,6 +11,10 @@ last_reviewed: 2026-08-27
 
 # Operations 索引与形成边界
 
+## TASK-P4-02 operations boundary
+
+CI新增纯机器合同报告生成，不新增service、worker、queue、database、secret、deployment或external adapter。Report只用于development/provider evidence；没有Runbook、on-call、capacity/SLA、Production readiness或真实authority形成。Migration manifest与Compose/lock继续冻结。
+
 ## P4 planning operations boundary
 
 P4只规划Development/Test/Benchmark中的dynamic replanning与Execution Simulator证据。事件接入、worker、API/UI和成果包即使在后继Task形成，也不等于Production runbook、deployment、on-call、UAT、external integration或capacity/SLA；这些继续由PROD_OPEN与后续明确阶段治理。本次不创建runbook或运行配置。

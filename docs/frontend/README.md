@@ -11,6 +11,10 @@ last_reviewed: 2026-08-27
 
 # Frontend 文档形成计划
 
+## TASK-P4-02 historical evidence compatibility
+
+P4-02不修改任何Frontend source、route、wire producer、package或lock。历史P3 i18n evidence原先以P3-15 Diff base禁止未来所有`backend/**`/`schemas/**`变化，与additive P4阶段不兼容；本Task只把其zero-wire检查收窄为P3 Frontend API、P3 Backend API exact files、P3 workspace/export Schema、state/error registry与locks。67 Vitest、12 Chromium和双语raw-machine-value合同保持不变，不形成P4 UI。
+
 ## TASK-P3-17 audit conclusion
 
 P3 Frontend已由67项Vitest、三组Chromium各12/12、SCA/license、build与machine evidence独立复验；18 routes、human controls、read-only visualizations和双语display均PASS。TASK-P3-17只审计冻结实现，不增加P4 route、client Solver/Validator或Production authority。

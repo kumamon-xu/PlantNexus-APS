@@ -11,6 +11,10 @@ last_reviewed: 2026-08-20
 
 # Simulation-First 双通道架构
 
+## TASK-P4-02 Simulation carrier channel
+
+九份新sample及SIM-ASSUMPTION-016只属于Simulation channel；Production binding/target/authority没有已批准值并被Schema/precheck拒绝。ExecutionSimulationManifest描述未来common-path replay所需版本、seed、clock、stream和checkpoint，但不启动Simulator或生产旁路；P4-09/10仍须证明真正走同一event ingress。
+
 ## TASK-P4-01 common-path decision
 
 ADR-0015现要求TASK-P4-09/10的Execution Simulator只输出标准ExecutionEvent，使用versioned virtual clock/seed/source position，并通过P4-04同一ledger/fact入口及P4-08同一application service。禁止simulation-only projector、direct Solver/Version write或自动approval/publish。五类异常必须在同一run中连续消费前一步明确基线，而非五个clean-state happy path。

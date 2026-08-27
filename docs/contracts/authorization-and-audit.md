@@ -11,6 +11,10 @@ last_reviewed: 2026-08-26
 
 # P3 Authorization Capability 与 Audit 合同
 
+## TASK-P4-02 authority carrier boundary
+
+ExecutionEvent/ReplanRequest/Simulator manifest现要求显式authority ID/scope/source与Simulation plane；authority参与canonical identity且不得从test actor推断Production授权。ScheduleVersion v2与Export v3只引用既有P3 decision/publication/audit evidence，不增加角色、RBAC、真实approval responsibility或external authority。未知/Production authority均default-deny，OPEN-010/015保持OPEN。
+
 ## TASK-P4-01 event authorization and audit contract
 
 ADR-0013固定ExecutionEvent authority必须由server composition绑定data plane、factory/planning scope、source stream/version/position和允许event type；client body、received-at、AI、database owner或Simulation fixture均不能提升authority。Production映射缺失时在ledger write前DENY；Simulation只允许明确test source、synthetic、`production_binding=false`和隔离plane。

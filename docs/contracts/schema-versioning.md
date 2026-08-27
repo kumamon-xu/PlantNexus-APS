@@ -11,11 +11,19 @@ last_reviewed: 2026-08-27
 
 # Schema 版本与兼容规则
 
+## TASK-P4-02 additive set `2.8.0`
+
+Global current metadata现为`2.8.0`，只增加ExecutionEvent v1、PlanningPolicy v2、ReplanRequest v1、SolverReport v2、ChangeReport v1、ScheduleVersion v2、ExecutionSimulationManifest v1、ExportManifest v3和ExportJob v3。每个document有独立stable URN/version，consumer必须精确选择；v2/v3不是旧document的alias或原地重解释。
+
+启动时冻结58份P0～P3 Schema/sample，排序清单摘要为`sha256:523ab38a466aa76c97ee39cfa52b7b1d43c77ba4dd622c3d27c409ee9af7242e`；旧document内的set const、URN和bytes均保持原值。新Schema严格、无业务default、仅离线引用，匹配sample只表达有界Simulation。Migration保持`0004`，`uv.lock`保持`sha256:8b13617f31aa6a933347fc7b8ba010330cbb3f2d764f75c306dd9b6d77387a82`，依赖集合不变。
+
+Compatibility分类为set-level additive/document-level exact：未知版本、跨document替换、P3 carrier伪装P4、Production-shaped sample、字段或fingerprint drift均fail closed。无consumer时可整体撤回新files与metadata；一旦后继消费，只能发布后继document version与显式migration，禁止覆盖本release。
+
 ## TASK-P4-01 versioning handoff
 
 TASK-P4-01已接受ADR-0013～0015并只冻结人类语义。TASK-P4-02必须以它们为启动门选择新的additive set version，同时提交human contract、Schema、sample、stable URN、canonical fingerprint、backward/forward classification、negative interchange、retained-byte manifest和machine evidence；P4-03+不得消费未版本化私有字段。
 
-ExecutionEvent的authority/source position、ReplanRequest immutable lineage、freeze resolved interval、OBJ-002整数分量、ChangeReport completeness及Simulator run/checkpoint若需要机器carrier都必须显式版本化；不得原地修改P2/P3 document。当前`2.7.0`、migration `0004`、data dictionary、`pyproject.toml`、`uv.lock`及全部既有bytes保持不变。
+ExecutionEvent的authority/source position、ReplanRequest immutable lineage、freeze resolved interval、OBJ-002整数分量、ChangeReport completeness及Simulator run/checkpoint已由上方`2.8.0` release显式版本化；不得原地修改P2/P3 document。Migration `0004`、`uv.lock`及全部既有bytes保持不变。
 
 ## TASK-P3-17 audit conclusion
 

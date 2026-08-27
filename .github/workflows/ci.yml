@@ -153,6 +153,12 @@ jobs:
           --root .
           --report build/validation/ci-p3-workspace-contracts.json
 
+      - name: P4 dynamic replanning machine contract evidence
+        run: >-
+          uv run python -m app.domain.execution_contract_check
+          --root .
+          --report build/validation/ci-p4-machine-contracts.json
+
       - name: P3 workspace persistence evidence
         run: >-
           uv run python -m app.infrastructure.workspace_persistence_check

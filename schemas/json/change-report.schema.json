@@ -1,0 +1,138 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "urn:plantnexus:aps:schema:change-report:v1",
+  "title": "PlantNexus APS ChangeReport v1",
+  "description": "Immutable complete operation-universe delta and exact OBJ-002 stability evidence for one P4 replan result.",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "change_report_version", "schema_set_version", "canonicalization_version",
+    "report_id", "report_fingerprint", "data_plane", "environment", "synthetic",
+    "synthetic_provenance", "production_binding", "base_schedule_version",
+    "new_schedule_version", "lineage", "freeze_evidence", "before_kpi",
+    "after_kpi", "operation_universe_count", "operations", "stability",
+    "generated_at_utc", "correlation_id"
+  ],
+  "properties": {
+    "change_report_version": {"const": "change-report.v1"},
+    "schema_set_version": {"const": "2.8.0"},
+    "canonicalization_version": {"const": "canonical-json.v1"},
+    "report_id": {"type": "string", "pattern": "^change-report-[0-9a-f]{64}$"},
+    "report_fingerprint": {"$ref": "urn:plantnexus:aps:schema:execution-event:v1#/$defs/sha256Fingerprint"},
+    "data_plane": {"const": "SIMULATION"},
+    "environment": {"enum": ["DEVELOPMENT", "TEST", "BENCHMARK"]},
+    "synthetic": {"const": true},
+    "synthetic_provenance": {"$ref": "urn:plantnexus:aps:schema:execution-event:v1#/$defs/syntheticProvenance"},
+    "production_binding": {"const": false},
+    "base_schedule_version": {"$ref": "urn:plantnexus:aps:schema:replan-request:v1#/$defs/publishedScheduleReference"},
+    "new_schedule_version": {"$ref": "#/$defs/draftScheduleReference"},
+    "lineage": {"$ref": "#/$defs/changeLineage"},
+    "freeze_evidence": {"$ref": "urn:plantnexus:aps:schema:replan-request:v1#/$defs/freezeResolution"},
+    "before_kpi": {"$ref": "urn:plantnexus:aps:schema:execution-event:v1#/$defs/artifactReference"},
+    "after_kpi": {"$ref": "urn:plantnexus:aps:schema:execution-event:v1#/$defs/artifactReference"},
+    "operation_universe_count": {"type": "integer", "minimum": 0},
+    "operations": {"type": "array", "items": {"$ref": "#/$defs/operationChange"}},
+    "stability": {"$ref": "#/$defs/stabilitySummary"},
+    "generated_at_utc": {"$ref": "urn:plantnexus:aps:schema:execution-event:v1#/$defs/utcInstant"},
+    "correlation_id": {"$ref": "urn:plantnexus:aps:schema:execution-event:v1#/$defs/canonicalId"}
+  },
+  "$defs": {
+    "draftScheduleReference": {
+      "type": "object", "additionalProperties": false,
+      "required": ["schedule_version_version", "schedule_version_id", "state", "content_fingerprint"],
+      "properties": {
+        "schedule_version_version": {"const": "schedule-version.v2"},
+        "schedule_version_id": {"$ref": "urn:plantnexus:aps:schema:execution-event:v1#/$defs/canonicalId"},
+        "state": {"const": "DRAFT"},
+        "content_fingerprint": {"$ref": "urn:plantnexus:aps:schema:execution-event:v1#/$defs/sha256Fingerprint"}
+      }
+    },
+    "changeLineage": {
+      "type": "object", "additionalProperties": false,
+      "required": ["base_snapshot", "base_problem", "new_snapshot", "new_problem", "event_stream_fingerprint", "fact_checkpoint", "replan_request", "planning_run_id", "policy", "limits", "solver_report", "validation_report"],
+      "properties": {
+        "base_snapshot": {"$ref": "urn:plantnexus:aps:schema:execution-event:v1#/$defs/artifactReference"},
+        "base_problem": {"$ref": "urn:plantnexus:aps:schema:execution-event:v1#/$defs/artifactReference"},
+        "new_snapshot": {"$ref": "urn:plantnexus:aps:schema:execution-event:v1#/$defs/artifactReference"},
+        "new_problem": {"$ref": "urn:plantnexus:aps:schema:execution-event:v1#/$defs/artifactReference"},
+        "event_stream_fingerprint": {"$ref": "urn:plantnexus:aps:schema:execution-event:v1#/$defs/sha256Fingerprint"},
+        "fact_checkpoint": {"$ref": "urn:plantnexus:aps:schema:execution-event:v1#/$defs/artifactReference"},
+        "replan_request": {"$ref": "urn:plantnexus:aps:schema:replan-request:v1#/$defs/requestReference"},
+        "planning_run_id": {"$ref": "urn:plantnexus:aps:schema:execution-event:v1#/$defs/canonicalId"},
+        "policy": {"$ref": "urn:plantnexus:aps:schema:planning-policy:v2#/$defs/policyReference"},
+        "limits": {"$ref": "urn:plantnexus:aps:schema:solve-limits:v1#/$defs/limitsReference"},
+        "solver_report": {"$ref": "urn:plantnexus:aps:schema:execution-event:v1#/$defs/artifactReference"},
+        "validation_report": {"$ref": "urn:plantnexus:aps:schema:execution-event:v1#/$defs/artifactReference"}
+      }
+    },
+    "nullableAssignment": {"oneOf": [{"type": "null"}, {"$ref": "urn:plantnexus:aps:schema:planning-solution:v1#/$defs/operationAssignment"}]},
+    "operationDeltas": {
+      "type": "object", "additionalProperties": false,
+      "required": ["resource_changed", "start_shift_seconds", "absolute_start_shift_seconds", "end_shift_seconds", "duration_delta_seconds"],
+      "properties": {
+        "resource_changed": {"type": "boolean"},
+        "start_shift_seconds": {"type": "integer"},
+        "absolute_start_shift_seconds": {"type": "integer", "minimum": 0},
+        "end_shift_seconds": {"type": "integer"},
+        "duration_delta_seconds": {"type": "integer"}
+      }
+    },
+    "reasonEvidence": {
+      "type": "object", "additionalProperties": false,
+      "required": ["reason_code", "evidence_refs"],
+      "properties": {
+        "reason_code": {"enum": ["NO_CHANGE", "TRIGGER_EVENT", "EXECUTION_FACT", "URGENT_DEMAND", "FREEZE_OR_HARD_LOCK_PRESERVED", "SOFT_LOCK_STABILITY_TRADE_OFF", "DELIVERY_OBJECTIVE_TRADE_OFF", "REMOVED_BY_COMPLETION_FACT", "UNATTRIBUTED_SOLVER_CHANGE"]},
+        "evidence_refs": {"type": "array", "minItems": 1, "uniqueItems": true, "items": {"$ref": "urn:plantnexus:aps:schema:execution-event:v1#/$defs/artifactReference"}}
+      }
+    },
+    "operationChange": {
+      "type": "object", "additionalProperties": false,
+      "required": ["operation_id", "classification", "base_assignment", "new_assignment", "deltas", "reasons"],
+      "properties": {
+        "operation_id": {"$ref": "urn:plantnexus:aps:schema:execution-event:v1#/$defs/canonicalId"},
+        "classification": {"enum": ["UNCHANGED", "CHANGED", "ADDED", "REMOVED_BY_FACT"]},
+        "base_assignment": {"$ref": "#/$defs/nullableAssignment"},
+        "new_assignment": {"$ref": "#/$defs/nullableAssignment"},
+        "deltas": {"$ref": "#/$defs/operationDeltas"},
+        "reasons": {"type": "array", "minItems": 1, "items": {"$ref": "#/$defs/reasonEvidence"}}
+      },
+      "allOf": [
+        {"if": {"properties": {"classification": {"const": "ADDED"}}, "required": ["classification"]}, "then": {"properties": {"base_assignment": {"type": "null"}, "new_assignment": {"$ref": "urn:plantnexus:aps:schema:planning-solution:v1#/$defs/operationAssignment"}}}},
+        {"if": {"properties": {"classification": {"const": "REMOVED_BY_FACT"}}, "required": ["classification"]}, "then": {"properties": {"base_assignment": {"$ref": "urn:plantnexus:aps:schema:planning-solution:v1#/$defs/operationAssignment"}, "new_assignment": {"type": "null"}}}},
+        {"if": {"properties": {"classification": {"enum": ["UNCHANGED", "CHANGED"]}}, "required": ["classification"]}, "then": {"properties": {"base_assignment": {"$ref": "urn:plantnexus:aps:schema:planning-solution:v1#/$defs/operationAssignment"}, "new_assignment": {"$ref": "urn:plantnexus:aps:schema:planning-solution:v1#/$defs/operationAssignment"}}}}
+      ]
+    },
+    "applicableRatio": {
+      "type": "object", "additionalProperties": false,
+      "required": ["status", "numerator", "denominator"],
+      "properties": {"status": {"const": "APPLICABLE"}, "numerator": {"type": "integer", "minimum": 0}, "denominator": {"type": "integer", "minimum": 1}}
+    },
+    "notApplicableRatio": {
+      "type": "object", "additionalProperties": false,
+      "required": ["status", "numerator", "denominator"],
+      "properties": {"status": {"const": "NOT_APPLICABLE_NO_COMPARABLE_OPERATION"}, "numerator": {"const": 0}, "denominator": {"const": 0}}
+    },
+    "stabilitySummary": {
+      "type": "object", "additionalProperties": false,
+      "required": ["soft_lock_violations", "changed_existing_operations", "resource_changes", "absolute_start_shift_seconds", "unchanged_existing", "comparable_existing", "unchanged_ratio"],
+      "properties": {
+        "soft_lock_violations": {"type": "integer", "minimum": 0},
+        "changed_existing_operations": {"type": "integer", "minimum": 0},
+        "resource_changes": {"type": "integer", "minimum": 0},
+        "absolute_start_shift_seconds": {"type": "integer", "minimum": 0},
+        "unchanged_existing": {"type": "integer", "minimum": 0},
+        "comparable_existing": {"type": "integer", "minimum": 0},
+        "unchanged_ratio": {"oneOf": [{"$ref": "#/$defs/applicableRatio"}, {"$ref": "#/$defs/notApplicableRatio"}]}
+      }
+    },
+    "reportReference": {
+      "type": "object", "additionalProperties": false,
+      "required": ["change_report_version", "report_id", "report_fingerprint"],
+      "properties": {
+        "change_report_version": {"const": "change-report.v1"},
+        "report_id": {"type": "string", "pattern": "^change-report-[0-9a-f]{64}$"},
+        "report_fingerprint": {"$ref": "urn:plantnexus:aps:schema:execution-event:v1#/$defs/sha256Fingerprint"}
+      }
+    }
+  }
+}

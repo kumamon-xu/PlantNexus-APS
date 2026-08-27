@@ -69,6 +69,17 @@ SCHEMA_FILES = (
     "import-quality-report.schema.json",
     "validation-report.v2.schema.json",
     "state-transition.schema.json",
+    "schedule-version.schema.json",
+    "export-manifest.v2.schema.json",
+    "execution-event.schema.json",
+    "planning-policy.v2.schema.json",
+    "replan-request.schema.json",
+    "solver-report.v2.schema.json",
+    "change-report.schema.json",
+    "schedule-version.v2.schema.json",
+    "execution-simulation-manifest.schema.json",
+    "export-manifest.v3.schema.json",
+    "export-job.v3.schema.json",
 )
 
 V1_SCHEMA_SHA256 = {
@@ -171,7 +182,7 @@ def test_schemas_do_not_encode_implicit_defaults() -> None:
 
 def test_published_versions_are_consistent() -> None:
     pyproject = tomllib.loads((ROOT / "pyproject.toml").read_text(encoding="utf-8"))
-    assert SCHEMA_VERSION == "2.7.0"
+    assert SCHEMA_VERSION == "2.8.0"
     assert pyproject["tool"]["plantnexus-aps"]["versions"]["schema"] == SCHEMA_VERSION
 
 
@@ -196,6 +207,18 @@ def test_synthetic_samples_validate_and_round_trip() -> None:
         ("export-manifest.schema.json", "export-manifest.v1.synthetic.json"),
         ("import-quality-report.schema.json", "import-quality-report.v1.pass.json"),
         ("import-quality-report.schema.json", "import-quality-report.v1.fail.json"),
+        ("execution-event.schema.json", "execution-event.v1.synthetic.json"),
+        ("planning-policy.v2.schema.json", "planning-policy.v2.synthetic.json"),
+        ("replan-request.schema.json", "replan-request.v1.synthetic.json"),
+        ("solver-report.v2.schema.json", "solver-report.v2.synthetic.json"),
+        ("change-report.schema.json", "change-report.v1.synthetic.json"),
+        ("schedule-version.v2.schema.json", "schedule-version.v2.synthetic.json"),
+        (
+            "execution-simulation-manifest.schema.json",
+            "execution-simulation-manifest.v1.synthetic.json",
+        ),
+        ("export-manifest.v3.schema.json", "export-manifest.v3.synthetic.json"),
+        ("export-job.v3.schema.json", "export-job.v3.synthetic.json"),
     )
     for schema_name, sample_name in samples:
         sample = load_json(SAMPLE_ROOT / sample_name)
@@ -566,7 +589,7 @@ def test_data_dictionary_covers_every_published_schema() -> None:
     dictionary = yaml.safe_load(
         (ROOT / "schemas" / "data_dictionary.yaml").read_text("utf-8")
     )
-    assert dictionary["schema_set_version"] == "2.7.0"
+    assert dictionary["schema_set_version"] == "2.8.0"
     assert set(dictionary["schemas"]) == {
         "canonical-records.v1",
         "import-package.v1",
@@ -607,6 +630,15 @@ def test_data_dictionary_covers_every_published_schema() -> None:
         "factory-profile.v1",
         "scenario-spec.v1",
         "scenario-manifest.v1",
+        "execution-event.v1",
+        "planning-policy.v2",
+        "replan-request.v1",
+        "solver-report.v2",
+        "change-report.v1",
+        "schedule-version.v2",
+        "execution-simulation-manifest.v1",
+        "export-manifest.v3",
+        "export-job.v3",
     }
     canonical_schema = load_json(SCHEMA_ROOT / "canonical-records.v1.schema.json")
     assert set(COLLECTION_ID_FIELDS) == (

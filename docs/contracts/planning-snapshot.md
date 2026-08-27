@@ -11,6 +11,10 @@ last_reviewed: 2026-08-20
 
 # PlanningSnapshot 合同
 
+## TASK-P4-02 snapshot lineage boundary
+
+P4 carrier现分别记录base/new Snapshot exact ID/version/fingerprint与cutoff，并把ordered event/fact checkpoint纳入Replan lineage。TASK-P4-02不修改Snapshot v1/v2 Schema、hash或持久化；ExecutionEvent不能直接改Snapshot，new immutable Snapshot的projection仍属于P4-04且必须通过标准authority/fact路径。
+
 ## TASK-P4-01 event projection boundary
 
 ADR-0013确认ExecutionEvent不能原地修改Snapshot。Ingress先append ledger；只有连续source-position的已验证event/batch才能由versioned projector在原子事务中形成append-only fact revisions、new immutable Snapshot、ReplanRequest/checkpoint/audit。Projector identity覆盖previous checkpoint、ordered event identities/fingerprints、source/rule/projector versions；received-at和runtime timing不进入semantic hash。

@@ -11,6 +11,10 @@ last_reviewed: 2026-08-25
 
 # APS 领域模型
 
+## TASK-P4-02 additive domain values
+
+领域层新增无副作用的P4 document/version常量、canonical fingerprint与pure semantic precheck，只识别九份`2.8.0` carrier。ExecutionEvent、ReplanRequest、ChangeReport和ExecutionSimulationManifest当前是值/证据合同，不是repository entity或运行服务；没有aggregate state、数据库表、事件处理器或Solver依赖。
+
 ## P4 planned domain additions
 
 TASK-P4-01/02将先决定并版本化ExecutionEvent、ReplanRequest、ChangeReport及Simulator clock/scenario carriers；TASK-P4-03/04/08再分别形成durable aggregate、fact projection与ScheduleVersion lineage。当前这些对象只是P4规划概念，不是已实现aggregate；既有PlanningRun、PlanningSnapshot、PlanningProblem、PlanningSolution、ScheduleVersion、AuditEvent与ExportJob语义不变。

@@ -1,0 +1,39 @@
+{
+  "solver_report_version": "solver-report.v2",
+  "schema_set_version": "2.8.0",
+  "canonicalization_version": "canonical-json.v1",
+  "report_id": "solver-report-78c59a4e4b01fc769a137783faab1cb130499bf74209fa31fd94c6241b25037e",
+  "report_fingerprint": "sha256:78c59a4e4b01fc769a137783faab1cb130499bf74209fa31fd94c6241b25037e",
+  "evidence_kind": "CONTRACT_SAMPLE",
+  "replan_request": {"replan_request_version": "replan-request.v1", "request_id": "replan-request-8c3484577f6ee85a4c6face64e73ae88b25ecd277391d12933ce4e1ce336ecea", "request_fingerprint": "sha256:8c3484577f6ee85a4c6face64e73ae88b25ecd277391d12933ce4e1ce336ecea"},
+  "planning_run_id": "planning-run-p4-contract-001",
+  "started_at_utc": "2026-08-27T06:00:07Z",
+  "finished_at_utc": "2026-08-27T06:00:07Z",
+  "base_problem": {"document_version": "planning-problem.v2", "artifact_id": "problem-base-001", "fingerprint": "sha256:3333333333333333333333333333333333333333333333333333333333333333"},
+  "new_problem": {"document_version": "planning-problem.v2", "artifact_id": "problem-new-001", "fingerprint": "sha256:5555555555555555555555555555555555555555555555555555555555555555"},
+  "policy": {"planning_policy_version": "planning-policy.v2", "policy_id": "POLICY-P4-SIM-DYNAMIC-001", "policy_revision": "1.0.0", "policy_fingerprint": "sha256:d75a4cba2094628f6c20397e3ea40aaec4288ea67801dc741bad6e0b1b71419b"},
+  "limits": {"solve_limits_version": "solve-limits.v1", "limits_id": "LIMITS-SAMPLE-P2-02-001", "limits_revision": "1.0.0", "limits_fingerprint": "sha256:76091493ee0b96a761c9df6e9881d03d9b8cca1c4b09103602661dcbf5d4a27b", "max_wall_time_seconds": 30, "max_workers": 1, "random_seed": 20260820},
+  "candidate": null,
+  "solver_status": "UNKNOWN",
+  "planning_run_outcome": {"state": "NO_SOLUTION_WITHIN_LIMIT", "product_error": {"category": "NO_SOLUTION_WITHIN_LIMIT", "code": "NO_SOLUTION_WITHIN_LIMIT"}},
+  "solver": {
+    "backend_id": "contract-sample-backend", "backend_version": "0.0.0-contract-sample",
+    "solver_name": "contract-sample-no-solver", "solver_version": "not-installed",
+    "parameters": [
+      {"name": "max_wall_time_seconds", "value": 30, "source": "SOLVE_LIMITS"},
+      {"name": "max_workers", "value": 1, "source": "SOLVE_LIMITS"},
+      {"name": "random_seed", "value": 20260820, "source": "SOLVE_LIMITS"}
+    ]
+  },
+  "objective_stage_results": [
+    {"stage_index": 1, "objective_id": "OBJ-001", "metric": "WEIGHTED_TARDINESS_SECONDS", "sense": "MINIMIZE", "status": "UNKNOWN", "objective_value": null, "best_bound": null, "relative_gap": null, "allocated_wall_time_seconds": 10, "solve_seconds": 0, "stop_reason": "CONTRACT_SAMPLE_NO_SOLVER"},
+    {"stage_index": 2, "objective_id": "OBJ-002", "metric": "STABILITY_VECTOR", "sense": "LEXICOGRAPHIC_MINIMIZE", "status": "UNKNOWN", "objective_value": null, "best_bound": null, "relative_gap": null, "allocated_wall_time_seconds": 10, "solve_seconds": 0, "stop_reason": "CONTRACT_SAMPLE_NO_SOLVER"},
+    {"stage_index": 3, "objective_id": "OBJ-003", "metric": "MAKESPAN_SECONDS", "sense": "MINIMIZE", "status": "UNKNOWN", "objective_value": null, "best_bound": null, "relative_gap": null, "allocated_wall_time_seconds": 10, "solve_seconds": 0, "stop_reason": "CONTRACT_SAMPLE_NO_SOLVER"}
+  ],
+  "stability_evidence": null,
+  "timings": {"model_build_seconds": 0, "first_feasible_seconds": null, "solve_seconds": 0, "validation_seconds": null, "total_seconds": 0},
+  "model_metrics": {"variables": 0, "constraints": 0, "optional_intervals": 0},
+  "memory_peak_mb": 0,
+  "diagnostics": [{"code": "CONTRACT_SAMPLE_NO_SOLVER", "message": "Contract sample only; no solver was executed."}],
+  "provenance": {"code_commit": "uncommitted", "spec_version": "0.3.0", "schema_set_version": "2.8.0", "canonicalization_version": "canonical-json.v1", "constraint_contract_version": "constraint-rule-sheet.v1", "objective_policy_version": "objective-policy.v2", "state_machine_contract_version": "state-machines.v1", "error_registry_version": "error-code-registry.v2"}
+}

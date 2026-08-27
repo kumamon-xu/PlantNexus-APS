@@ -1,0 +1,72 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "urn:plantnexus:aps:schema:export-job:v3",
+  "title": "PlantNexus APS ExportJob v3",
+  "description": "P4 Simulation export lifecycle carrier for export-manifest.v3; state pairs remain state-machines.v1.",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "export_job_version", "schema_set_version", "canonicalization_version",
+    "export_job_id", "state", "schedule_version", "change_report", "data_plane",
+    "environment", "synthetic", "synthetic_provenance", "target",
+    "package_profile", "idempotency_reference", "attempt", "lease_reference",
+    "heartbeat_at_utc", "artifact_manifest", "error", "created_at_utc",
+    "updated_at_utc", "started_at_utc", "finished_at_utc", "cancelled_at_utc",
+    "latest_audit_event_id", "job_fingerprint"
+  ],
+  "properties": {
+    "export_job_version": {"const": "export-job.v3"},
+    "schema_set_version": {"const": "2.8.0"},
+    "canonicalization_version": {"const": "canonical-json.v1"},
+    "export_job_id": {"$ref": "urn:plantnexus:aps:schema:execution-event:v1#/$defs/canonicalId"},
+    "state": {"$ref": "urn:plantnexus:aps:schema:schedule-version:v1#/$defs/exportState"},
+    "schedule_version": {"$ref": "urn:plantnexus:aps:schema:export-manifest:v3#/$defs/publishedP4Version"},
+    "change_report": {"$ref": "urn:plantnexus:aps:schema:change-report:v1#/$defs/reportReference"},
+    "data_plane": {"const": "SIMULATION"},
+    "environment": {"enum": ["DEVELOPMENT", "TEST", "BENCHMARK"]},
+    "synthetic": {"const": true},
+    "synthetic_provenance": {"$ref": "urn:plantnexus:aps:schema:execution-event:v1#/$defs/syntheticProvenance"},
+    "target": {"const": "SIMULATION_INTERNAL"},
+    "package_profile": {"const": "p4-dynamic-replan-export.v1"},
+    "idempotency_reference": {"$ref": "urn:plantnexus:aps:schema:schedule-version:v1#/$defs/idempotencyReference"},
+    "attempt": {"type": "integer", "minimum": 0},
+    "lease_reference": {"$ref": "#/$defs/nullableFingerprint"},
+    "heartbeat_at_utc": {"$ref": "#/$defs/nullableUtc"},
+    "artifact_manifest": {"oneOf": [{"type": "null"}, {"$ref": "#/$defs/artifactManifestReference"}]},
+    "error": {"oneOf": [{"type": "null"}, {"$ref": "urn:plantnexus:aps:schema:schedule-version:v1#/$defs/workspaceControlError"}, {"$ref": "urn:plantnexus:aps:schema:schedule-version:v1#/$defs/productErrorReference"}]},
+    "created_at_utc": {"$ref": "urn:plantnexus:aps:schema:execution-event:v1#/$defs/utcInstant"},
+    "updated_at_utc": {"$ref": "urn:plantnexus:aps:schema:execution-event:v1#/$defs/utcInstant"},
+    "started_at_utc": {"$ref": "#/$defs/nullableUtc"},
+    "finished_at_utc": {"$ref": "#/$defs/nullableUtc"},
+    "cancelled_at_utc": {"$ref": "#/$defs/nullableUtc"},
+    "latest_audit_event_id": {"$ref": "urn:plantnexus:aps:schema:execution-event:v1#/$defs/canonicalId"},
+    "job_fingerprint": {"$ref": "urn:plantnexus:aps:schema:execution-event:v1#/$defs/sha256Fingerprint"}
+  },
+  "allOf": [
+    {"if": {"properties": {"state": {"const": "CREATED"}}, "required": ["state"]}, "then": {"properties": {"attempt": {"const": 0}, "lease_reference": {"type": "null"}, "heartbeat_at_utc": {"type": "null"}, "artifact_manifest": {"type": "null"}, "error": {"type": "null"}, "started_at_utc": {"type": "null"}, "finished_at_utc": {"type": "null"}, "cancelled_at_utc": {"type": "null"}}}},
+    {"if": {"properties": {"state": {"const": "EXPORTING"}}, "required": ["state"]}, "then": {"properties": {"attempt": {"minimum": 1}, "lease_reference": {"$ref": "urn:plantnexus:aps:schema:execution-event:v1#/$defs/sha256Fingerprint"}, "heartbeat_at_utc": {"$ref": "urn:plantnexus:aps:schema:execution-event:v1#/$defs/utcInstant"}, "artifact_manifest": {"type": "null"}, "error": {"type": "null"}, "started_at_utc": {"$ref": "urn:plantnexus:aps:schema:execution-event:v1#/$defs/utcInstant"}, "finished_at_utc": {"type": "null"}, "cancelled_at_utc": {"type": "null"}}}},
+    {"if": {"properties": {"state": {"const": "EXPORTED"}}, "required": ["state"]}, "then": {"properties": {"attempt": {"minimum": 1}, "lease_reference": {"type": "null"}, "heartbeat_at_utc": {"type": "null"}, "artifact_manifest": {"$ref": "#/$defs/artifactManifestReference"}, "error": {"type": "null"}, "started_at_utc": {"$ref": "urn:plantnexus:aps:schema:execution-event:v1#/$defs/utcInstant"}, "finished_at_utc": {"$ref": "urn:plantnexus:aps:schema:execution-event:v1#/$defs/utcInstant"}, "cancelled_at_utc": {"type": "null"}}}},
+    {"if": {"properties": {"state": {"const": "EXPORT_FAILED"}}, "required": ["state"]}, "then": {"properties": {"attempt": {"minimum": 1}, "lease_reference": {"type": "null"}, "heartbeat_at_utc": {"type": "null"}, "artifact_manifest": {"type": "null"}, "error": {"$ref": "#/$defs/exportFailedError"}, "started_at_utc": {"$ref": "urn:plantnexus:aps:schema:execution-event:v1#/$defs/utcInstant"}, "finished_at_utc": {"$ref": "urn:plantnexus:aps:schema:execution-event:v1#/$defs/utcInstant"}, "cancelled_at_utc": {"type": "null"}}}},
+    {"if": {"properties": {"state": {"const": "CANCELLED"}}, "required": ["state"]}, "then": {"properties": {"lease_reference": {"type": "null"}, "heartbeat_at_utc": {"type": "null"}, "artifact_manifest": {"type": "null"}, "error": {"type": "null"}, "cancelled_at_utc": {"$ref": "urn:plantnexus:aps:schema:execution-event:v1#/$defs/utcInstant"}}}}
+  ],
+  "$defs": {
+    "nullableUtc": {"oneOf": [{"type": "null"}, {"$ref": "urn:plantnexus:aps:schema:execution-event:v1#/$defs/utcInstant"}]},
+    "nullableFingerprint": {"oneOf": [{"type": "null"}, {"$ref": "urn:plantnexus:aps:schema:execution-event:v1#/$defs/sha256Fingerprint"}]},
+    "artifactManifestReference": {
+      "type": "object", "additionalProperties": false,
+      "required": ["export_manifest_version", "package_id", "manifest_fingerprint", "storage_reference"],
+      "properties": {
+        "export_manifest_version": {"const": "export-manifest.v3"},
+        "package_id": {"type": "string", "pattern": "^export-package-[0-9a-f]{64}$"},
+        "manifest_fingerprint": {"$ref": "urn:plantnexus:aps:schema:execution-event:v1#/$defs/sha256Fingerprint"},
+        "storage_reference": {"$ref": "urn:plantnexus:aps:schema:execution-event:v1#/$defs/sha256Fingerprint"}
+      }
+    },
+    "exportFailedError": {
+      "allOf": [
+        {"$ref": "urn:plantnexus:aps:schema:schedule-version:v1#/$defs/workspaceControlError"},
+        {"properties": {"reason": {"const": "EXPORT_FAILED"}}}
+      ]
+    }
+  }
+}

@@ -11,6 +11,10 @@ last_reviewed: 2026-08-26
 
 # PlanningSolution 与 ScheduleVersion 合同
 
+## TASK-P4-02 P4 result carriers
+
+`solver-report.v2`新增三阶段objective evidence与诚实native-status→product-outcome映射；UNKNOWN绝不写成INFEASIBLE，非candidate状态不得泄漏partial success。`schedule-version.v2`绑定ReplanRequest、base/new Snapshot/Problem、event/fact checkpoint、PlanningRun candidate、fresh Validation/KPI/SolverReport和complete ChangeReport lineage，但沿用P3 ScheduleVersion状态集合与allowed pairs。Synthetic sample保持DRAFT且不自动READY/APPROVED/PUBLISHED；实际求解和new DRAFT transaction仍属于P4-07/08。
+
 ## TASK-P4-01 lineage decision
 
 ADR-0013/0014固定P4-08只能把fresh-validated replan result以copy-on-write方式原子应用为新的DRAFT ScheduleVersion，并保留base PUBLISHED ID/content fingerprint、base/new Snapshot/Problem、ordered event/facts、ReplanRequest/PlanningRun、freeze/effective locks、Policy/Limits、Solver/Validator及ChangeReport fingerprint。Result application前必须重读current/base/checkpoint；stale或任何mismatch无Version副作用。

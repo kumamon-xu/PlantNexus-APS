@@ -3,13 +3,31 @@ doc_id: DOC-CONTRACT-008
 title: Schema 计划索引
 status: living
 spec_version: 0.3.0
-phase: P0-P3
+phase: P0-P4
 normative: true
 source_sections: [36, 38, 39, 70, 71, 103]
 last_reviewed: 2026-08-27
 ---
 
 # Schema 计划索引
+
+## TASK-P4-02 additive `2.8.0` release
+
+本Task从冻结的set `2.7.0`加法发布九个彼此及历史版本均不可互换的document，全部使用JSON Schema Draft 2020-12、stable URN、`additionalProperties=false`、无`default`、offline `$ref`、exact version与canonical fingerprint。九份匹配sample均明确`data_plane=SIMULATION`/`production_binding=false`；58份P0～P3 Schema/sample按清单摘要`sha256:523ab38a466aa76c97ee39cfa52b7b1d43c77ba4dd622c3d27c409ee9af7242e`逐字冻结。
+
+| Document | Schema / stable URN | Compatibility and owner boundary |
+|---|---|---|
+| ExecutionEvent v1 | [`execution-event.schema.json`](../../schemas/json/execution-event.schema.json) / `urn:plantnexus:aps:schema:execution-event:v1` | 新carrier；authority/source position/canonical identity；ingress由P4-04 |
+| PlanningPolicy v2 | [`planning-policy.v2.schema.json`](../../schemas/json/planning-policy.v2.schema.json) / `urn:plantnexus:aps:schema:planning-policy:v2` | v1不可互换；freeze与OBJ-001→002→003；行为由P4-05～07 |
+| ReplanRequest v1 | [`replan-request.schema.json`](../../schemas/json/replan-request.schema.json) / `urn:plantnexus:aps:schema:replan-request:v1` | 新immutable carrier、无状态机；持久化/应用由P4-03/08 |
+| SolverReport v2 | [`solver-report.v2.schema.json`](../../schemas/json/solver-report.v2.schema.json) / `urn:plantnexus:aps:schema:solver-report:v2` | v1不可互换；三阶段与诚实status；求解由P4-07 |
+| ChangeReport v1 | [`change-report.schema.json`](../../schemas/json/change-report.schema.json) / `urn:plantnexus:aps:schema:change-report:v1` | 新完整operation-universe carrier；生成由P4-06/08 |
+| ScheduleVersion v2 | [`schedule-version.v2.schema.json`](../../schemas/json/schedule-version.v2.schema.json) / `urn:plantnexus:aps:schema:schedule-version:v2` | v1不可互换；沿用既有state pairs；应用由P4-08 |
+| ExecutionSimulationManifest v1 | [`execution-simulation-manifest.schema.json`](../../schemas/json/execution-simulation-manifest.schema.json) / `urn:plantnexus:aps:schema:execution-simulation-manifest:v1` | 新无状态carrier；Simulator由P4-09 |
+| ExportManifest v3 | [`export-manifest.v3.schema.json`](../../schemas/json/export-manifest.v3.schema.json) / `urn:plantnexus:aps:schema:export-manifest:v3` | v2不可互换；internal Simulation P4 lineage；消费由P4-11 |
+| ExportJob v3 | [`export-job.v3.schema.json`](../../schemas/json/export-job.v3.schema.json) / `urn:plantnexus:aps:schema:export-job:v3` | v2不可互换；沿用既有五state/六pair；消费由P4-11 |
+
+`p4-machine-contract-report.v1`离线验证9/9 Schema与9/9 sample、35个Schema rejection和7个semantic rejection。该release无migration、dependency或runtime consumer；rollback在无consumer时可移除additive files并恢复metadata，一旦P4-03+消费则只能发布后继版本与显式迁移。
 
 ## TASK-P4-01 schema decision handoff
 
@@ -21,7 +39,7 @@ ADR-0013～0015现已accepted；TASK-P4-02的启动输入明确为ExecutionEvent
 
 独立Audit确认schema set `2.7.0`、P2 retained bytes、P3 `2.6.0` workspace carriers、P3 export v2 carriers、samples、strict/offline refs与canonical fingerprints全部回归PASS；本Task没有Schema新增、删除、版本或字节变化。
 
-当前 schema set 为additive `2.7.0`。`CONTRACT_V1/V2/V3`表示机器可验证的合同已形成，不表示ScheduleVersion/ExportJob状态持久化、审批、发布或Production业务动作已完成。此前所有set artifact均保留，未被原地覆盖。
+当前 schema set 为additive `2.8.0`。`CONTRACT_V1/V2/V3`表示机器可验证的合同已形成，不表示ScheduleVersion/ExportJob状态持久化、审批、发布或Production业务动作已完成。此前所有set artifact均保留，未被原地覆盖。
 
 | Schema | 目标路径 | 首个 Task | 状态 |
 |---|---|---|---|

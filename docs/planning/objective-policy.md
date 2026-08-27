@@ -11,6 +11,10 @@ last_reviewed: 2026-08-21
 
 # Objective Policy
 
+## TASK-P4-02 PlanningPolicy v2 contract
+
+Machine carrier现固定三阶段exact lexicographic顺序：OBJ-001 Delivery、OBJ-002四元Stability、OBJ-003 Makespan；每阶段保留sense/value/bound/budget/stop evidence。任何weighted blend、隐式优先级或Production默认均不可表示。此处只形成Policy/Report Schema和sample，P4-07才执行求解。
+
 ## TASK-P4-01 accepted OBJ-002 allocation
 
 ADR-0014已固定TASK-P4-06拥有Stability/ChangeReport pure calculation，TASK-P4-07实施`hard feasibility → Delivery/OBJ-001 → Stability/OBJ-002 → Makespan`。OBJ-002不是单一加权分数，而是`soft_lock_violation_count → changed_existing_operation_count → resource_changed_count → total_absolute_start_shift_seconds`的整数词典序向量；每层value/bound/stop reason/provenance必须独立报告。当前OBJ-001机器合同与实现不变，P4行为仍未形成。

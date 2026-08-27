@@ -11,6 +11,10 @@ last_reviewed: 2026-08-27
 
 # 配置、环境与数据隔离
 
+## TASK-P4-02 isolation boundary
+
+九份P4 sample只允许Simulation/development-test语义并显式`production_binding=false`；Production-shaped mutation在Schema或pure precheck层拒绝。没有新增environment variable、database、secret、container、queue或network endpoint；Production authority/external integration/deployment仍default-deny。
+
 ## TASK-P4-01 isolation contract
 
 ADR-0013/0015确认P4 Simulator/test authority只能在Development/Test/Benchmark的SIMULATION plane创建synthetic事件与virtual clock，必须经过与未来Production相同的versioned event/application入口，并把factory/planning scope、authority stream、run、source position和provenance纳入identity/guard。Checkpoint/restart不能跨run/plane读取或删除历史。

@@ -11,6 +11,10 @@ last_reviewed: 2026-08-27
 
 # PlanningRun 状态机
 
+## TASK-P4-02 carrier review
+
+SolverReport v2和ScheduleVersion v2只引用既有PlanningRun identity/outcome；ReplanRequest与ExecutionSimulationManifest不获得业务状态。`state-machines.v1`中PlanningRun states/pairs与terminal semantics逐字冻结，本Task没有run repository、transition或worker行为。
+
 ## TASK-P4-01 state decision
 
 ADR-0013已决定ReplanRequest是immutable intent/result envelope，不拥有独立状态机。每个solve attempt继续由本PlanningRun状态机承载，request、attempt、result和audit以append-only reference连接；exact replay不伪造成self-transition。P4-03才可实现持久化，P4-08才可把fresh-validated结果应用为new DRAFT。PlanningRun state set、allowed pair、guard、audit与terminal semantics逐字不变；任何新pair仍须new ADR/contract/Schema/Task扩卡。

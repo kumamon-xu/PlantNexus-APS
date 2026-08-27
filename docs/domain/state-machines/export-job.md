@@ -11,6 +11,10 @@ last_reviewed: 2026-08-27
 
 # ExportJob 状态机
 
+## TASK-P4-02 ExportJob v3 carrier review
+
+ExportJob v3仅把source/manifest引用提升到P4 exact versions并固定internal Simulation target；五状态、六allowed pairs、attempt/lease/heartbeat/error/terminal semantics继续由`state-machines.v1`权威定义。Sample停留CREATED/attempt 0，本Task不执行Job、retry、download或external transfer。
+
 ## TASK-P4-01 ChangeReport export state decision
 
 ADR-0014确认ChangeReport与new DRAFT在replan result transaction中形成，但Report本身不推进或扩展ExportJob状态。TASK-P4-11只能在P4-06/08后以新版本、完整lineage把ChangeReport接入既有internal Simulation成果包；published-only export、retry幂等、verified download、state set/pair和external-target default-deny全部不变。任何state变化仍须独立contract/ADR/Task扩卡。

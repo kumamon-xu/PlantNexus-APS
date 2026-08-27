@@ -11,6 +11,10 @@ last_reviewed: 2026-08-19
 
 # PlanningPolicy 与 SolveLimits 合同
 
+## TASK-P4-02 PlanningPolicy v2 carrier
+
+`planning-policy.v2`是与v1不可互换的Simulation carrier，显式引用policy source/revision/fingerprint和freeze policy，并把目标固定为exact lexicographic `OBJ-001 delivery → OBJ-002 stability → OBJ-003 makespan`。OBJ-002依次最小化SOFT lock violations、changed existing operations、resource changes与absolute start shift seconds；禁止加权和、隐式priority或Production默认。SolveLimits继续复用v1 exact reference，本Task不改变其字段、默认或执行行为。
+
 ## TASK-P4-01 policy decision
 
 ADR-0014固定freeze policy必须显式versioned，以new Snapshot cutoff解析half-open interval并保存source/fingerprint；缺少approved Production policy时拒绝，不采用0或仓库样例默认。OBJ-002在Delivery等价后以`soft lock violations → changed existing operations → resource changes → absolute start shift seconds`的非负整数向量逐层优化，Makespan仅在完整Stability相等后tie-break。

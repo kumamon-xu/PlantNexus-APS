@@ -11,11 +11,17 @@ last_reviewed: 2026-08-27
 
 # 当前阶段：P4 — Dynamic Replanning
 
+## TASK-P4-02 implementation boundary
+
+用户于2026-08-27单独授权TASK-P4-02。启动门精确确认TASK-P4-01 implementation/closure直接拓扑、GitHub Actions app `15368`的required `validate`、两份未过期artifact及`main=origin/main=remote main=4026597ab1015b5ea3a89d241f0d12b5b481dee3`、ahead/behind=`0/0`、工作树clean；该SHA冻结为Diff base。当前Task为`in_progress`，发布additive schema set `2.8.0`的九份strict Simulation carrier、九份synthetic sample与`p4-machine-contract-report.v1`，并逐字冻结58份P0～P3 Schema/sample、migration `0004`和依赖锁。
+
+本Task没有migration、repository、event ingress、fact projection、state transition、Solver/Validator运行、Simulator行为、API或UI。ReplanRequest与ExecutionSimulationManifest没有业务状态机，ScheduleVersion/PlanningRun/ExportJob沿用既有state pairs；P4-03～15、P5及Production authority/external integration/deployment/capacity/SLA均未启动。Task只有在implementation与evidence-only closure的exact provider均成功后才可改为`done`。
+
 ## TASK-P4-01 completion boundary
 
 用户于2026-08-27单独授权TASK-P4-01。启动门已确认TASK-P4-00=`done`且implementation/closure exact provider完整，`main=origin/main=remote main=b96232b2e3f5573baaf735c7fa7935f95e6c88f5`、ahead/behind=`0/0`、working tree clean；该SHA已冻结为不可变Diff base。ADR registry precheck分配未占用stable ID ADR-0013～0015。Implementation `abd70942a41984a9a3956f43d39065b19e4405c3`的run/job/artifact=`33042150006`/`98417935201`/`9634380233`已由GitHub Actions app `15368` exact成功并复验，因此本evidence-only closure把Task标为`done`；closure自身仍须post-push exact provider复验。
 
-三份accepted ADR只冻结ExecutionEvent authority/fact projection/Replan lineage、freeze/OBJ-002/ChangeReport和deterministic Simulator common-path语义。它们不发布机器Schema、migration、依赖、代码、测试断言或workflow，不形成任何P4运行行为或Production能力。TASK-P4-02～15继续`planned`；即使本Task闭环也不得自动启动TASK-P4-02。
+三份accepted ADR只冻结ExecutionEvent authority/fact projection/Replan lineage、freeze/OBJ-002/ChangeReport和deterministic Simulator common-path语义。TASK-P4-02现按上方独立授权发布对应机器合同，但不形成任何P4运行行为或Production能力；TASK-P4-03～15继续`planned`且不得自动启动。
 
 ## P3→P4 transition decision
 

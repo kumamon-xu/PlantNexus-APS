@@ -1,0 +1,71 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "urn:plantnexus:aps:schema:schedule-version:v2",
+  "title": "PlantNexus APS ScheduleVersion v2",
+  "description": "Immutable P4 dynamic-replan ScheduleVersion carrier. It preserves the P3 state machine and adds complete replan lineage.",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "schedule_version_version", "schema_set_version", "canonicalization_version",
+    "schedule_version_id", "revision", "state", "data_plane", "environment",
+    "synthetic", "synthetic_provenance", "parent_schedule_version", "source_kind",
+    "lineage", "content", "content_fingerprint", "validation", "decision",
+    "publication", "superseded_by", "allowed_actions", "created_at_utc",
+    "created_by_actor_ref"
+  ],
+  "properties": {
+    "schedule_version_version": {"const": "schedule-version.v2"},
+    "schema_set_version": {"const": "2.8.0"},
+    "canonicalization_version": {"const": "canonical-json.v1"},
+    "schedule_version_id": {"$ref": "urn:plantnexus:aps:schema:execution-event:v1#/$defs/canonicalId"},
+    "revision": {"type": "integer", "minimum": 1},
+    "state": {"$ref": "urn:plantnexus:aps:schema:schedule-version:v1#/$defs/scheduleState"},
+    "data_plane": {"const": "SIMULATION"},
+    "environment": {"enum": ["DEVELOPMENT", "TEST", "BENCHMARK"]},
+    "synthetic": {"const": true},
+    "synthetic_provenance": {"$ref": "urn:plantnexus:aps:schema:execution-event:v1#/$defs/syntheticProvenance"},
+    "parent_schedule_version": {"$ref": "urn:plantnexus:aps:schema:replan-request:v1#/$defs/publishedScheduleReference"},
+    "source_kind": {"const": "DYNAMIC_REPLAN"},
+    "lineage": {"$ref": "#/$defs/replanLineage"},
+    "content": {"$ref": "urn:plantnexus:aps:schema:schedule-version:v1#/$defs/scheduleContent"},
+    "content_fingerprint": {"$ref": "urn:plantnexus:aps:schema:execution-event:v1#/$defs/sha256Fingerprint"},
+    "validation": {"$ref": "urn:plantnexus:aps:schema:schedule-version:v1#/$defs/validationEvidence"},
+    "decision": {"oneOf": [{"type": "null"}, {"$ref": "urn:plantnexus:aps:schema:schedule-version:v1#/$defs/decisionEvidence"}]},
+    "publication": {"oneOf": [{"type": "null"}, {"$ref": "urn:plantnexus:aps:schema:schedule-version:v1#/$defs/publicationEvidence"}]},
+    "superseded_by": {"oneOf": [{"type": "null"}, {"$ref": "urn:plantnexus:aps:schema:schedule-version:v1#/$defs/versionReference"}]},
+    "allowed_actions": {"$ref": "urn:plantnexus:aps:schema:schedule-version:v1#/$defs/allowedActions"},
+    "created_at_utc": {"$ref": "urn:plantnexus:aps:schema:execution-event:v1#/$defs/utcInstant"},
+    "created_by_actor_ref": {"$ref": "urn:plantnexus:aps:schema:schedule-version:v1#/$defs/actorReference"}
+  },
+  "allOf": [
+    {"if": {"properties": {"state": {"enum": ["DRAFT", "READY_FOR_REVIEW"]}}, "required": ["state"]}, "then": {"properties": {"decision": {"type": "null"}, "publication": {"type": "null"}, "superseded_by": {"type": "null"}}}},
+    {"if": {"properties": {"state": {"const": "REJECTED"}}, "required": ["state"]}, "then": {"properties": {"decision": {"$ref": "urn:plantnexus:aps:schema:schedule-version:v1#/$defs/rejectedDecision"}, "publication": {"type": "null"}, "superseded_by": {"type": "null"}}}},
+    {"if": {"properties": {"state": {"enum": ["APPROVED", "PUBLISHED", "SUPERSEDED"]}}, "required": ["state"]}, "then": {"properties": {"decision": {"$ref": "urn:plantnexus:aps:schema:schedule-version:v1#/$defs/approvedDecision"}}}},
+    {"if": {"properties": {"state": {"const": "APPROVED"}}, "required": ["state"]}, "then": {"properties": {"publication": {"type": "null"}, "superseded_by": {"type": "null"}}}},
+    {"if": {"properties": {"state": {"const": "PUBLISHED"}}, "required": ["state"]}, "then": {"properties": {"publication": {"$ref": "urn:plantnexus:aps:schema:schedule-version:v1#/$defs/publicationEvidence"}, "superseded_by": {"type": "null"}}}},
+    {"if": {"properties": {"state": {"const": "SUPERSEDED"}}, "required": ["state"]}, "then": {"properties": {"publication": {"$ref": "urn:plantnexus:aps:schema:schedule-version:v1#/$defs/publicationEvidence"}, "superseded_by": {"$ref": "urn:plantnexus:aps:schema:schedule-version:v1#/$defs/versionReference"}}}}
+  ],
+  "$defs": {
+    "replanLineage": {
+      "type": "object", "additionalProperties": false,
+      "required": ["replan_request", "base_schedule_version", "base_snapshot", "base_problem", "new_snapshot", "new_problem", "event_stream_fingerprint", "fact_checkpoint", "planning_run_id", "candidate", "validation_report", "kpi", "solver_report", "change_report", "code_commit"],
+      "properties": {
+        "replan_request": {"$ref": "urn:plantnexus:aps:schema:replan-request:v1#/$defs/requestReference"},
+        "base_schedule_version": {"$ref": "urn:plantnexus:aps:schema:replan-request:v1#/$defs/publishedScheduleReference"},
+        "base_snapshot": {"$ref": "urn:plantnexus:aps:schema:execution-event:v1#/$defs/artifactReference"},
+        "base_problem": {"$ref": "urn:plantnexus:aps:schema:execution-event:v1#/$defs/artifactReference"},
+        "new_snapshot": {"$ref": "urn:plantnexus:aps:schema:execution-event:v1#/$defs/artifactReference"},
+        "new_problem": {"$ref": "urn:plantnexus:aps:schema:execution-event:v1#/$defs/artifactReference"},
+        "event_stream_fingerprint": {"$ref": "urn:plantnexus:aps:schema:execution-event:v1#/$defs/sha256Fingerprint"},
+        "fact_checkpoint": {"$ref": "urn:plantnexus:aps:schema:execution-event:v1#/$defs/artifactReference"},
+        "planning_run_id": {"$ref": "urn:plantnexus:aps:schema:execution-event:v1#/$defs/canonicalId"},
+        "candidate": {"$ref": "urn:plantnexus:aps:schema:execution-event:v1#/$defs/artifactReference"},
+        "validation_report": {"$ref": "urn:plantnexus:aps:schema:execution-event:v1#/$defs/artifactReference"},
+        "kpi": {"$ref": "urn:plantnexus:aps:schema:execution-event:v1#/$defs/artifactReference"},
+        "solver_report": {"$ref": "urn:plantnexus:aps:schema:execution-event:v1#/$defs/artifactReference"},
+        "change_report": {"$ref": "urn:plantnexus:aps:schema:change-report:v1#/$defs/reportReference"},
+        "code_commit": {"type": "string", "pattern": "^(uncommitted|[0-9a-f]{40})$"}
+      }
+    }
+  }
+}

@@ -11,11 +11,17 @@ last_reviewed: 2026-08-26
 
 # 合同文档索引
 
+## TASK-P4-02 machine-contract baseline
+
+Additive schema set现为`2.8.0`。TASK-P4-02发布九份strict/offline/no-default机器carrier与九份Simulation sample，并由纯合同precheck、四个Test ID及`p4-machine-contract-report.v1`固定exact fingerprints、authority/order、immutable lineage、half-open freeze、OBJ-001→002→003、ChangeReport completeness、既有state pairs及P4 export/simulator边界。58份历史Schema/sample、migration `0004`和dependency lock保持逐字不变。
+
+该baseline仅可被后继Task消费，不实现event ingress/persistence/projection、freeze calculation、Solver、new DRAFT、Simulator、export、API或UI。Production authority、external endpoints、deployment、capacity/SLA与P5字段不可表示或default-deny；TASK-P4-03不会自动启动。
+
 ## TASK-P4-01 contract baseline
 
 TASK-P4-01已通过registry precheck接受ADR-0013～0015，并形成ExecutionEvent authority/order/idempotency、fact→new Snapshot、ReplanRequest无独立状态机、freeze/effective locks、OBJ-002整数词典序、complete ChangeReport与deterministic Simulator common-path的人类语义。TASK-P4-02随后才允许以additive新版本发布机器合同；P4-03～13只能消费这些决定，P4-14/15分别聚合与独立审计。
 
-当前schema set仍为`2.7.0`，migration仍为`0004`；没有新增Schema/sample、migration、dependency、state pair、API operation或业务实现。Production event authority/freeze/identity/external target/capacity/SLA继续未形成，P4-02不会自动启动。
+P4-01完成时schema set仍为`2.7.0`且没有机器carrier；该历史边界现由上方经独立授权形成的`2.8.0` release取代。Migration仍为`0004`，没有dependency、state pair、API operation或业务实现变化；Production event authority/freeze/identity/external target/capacity/SLA继续未形成。
 
 ## TASK-P3-17 contract audit conclusion
 

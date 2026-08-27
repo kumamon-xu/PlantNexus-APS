@@ -11,6 +11,10 @@ last_reviewed: 2026-08-26
 
 # 模块边界与依赖规则
 
+## TASK-P4-02 module boundary
+
+新增实现仅位于domain pure contracts/check CLI；它可解析JSON/YAML与校验Schema，但不导入repository、application service、OR-Tools、Simulator、API或Frontend。两处existing application/domain machine checker只同步current global metadata，不改变P3业务路径。后继consumer不得把pure precheck当作transaction或authority provider。
+
 ## TASK-P4-01 accepted module allocation
 
 ADR-0013～0015固定依赖方向：contract/domain event+fact semantics → plane-scoped ledger/repositories → fact/Snapshot projector → replan application → existing Strategy/Backend + independent Validator → Version/ChangeReport persistence → read/export/API/UI。TASK-P4-02只发布carrier；P4-03不实现业务projection；P4-04不直接solve/apply；P4-05/06只提供pure freeze/stability/report边界；P4-07不写repository；P4-08不复制Solver/Validator；P4-09/10只生成标准Event；P4-11/12/13只消费application/read authority。

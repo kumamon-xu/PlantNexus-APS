@@ -11,6 +11,10 @@ last_reviewed: 2026-08-27
 
 # 动态重排设计合同
 
+## TASK-P4-02 machine-contract slice
+
+ExecutionEvent v1、ReplanRequest v1、Policy v2、SolverReport v2、ChangeReport v1与ScheduleVersion v2现可离线组成exact lineage bundle。Freeze resolution固定半开区间，Request无状态，ChangeReport覆盖完整operation universe，new Version仍只能是后继Task创建的DRAFT。本Task不持久化、投影、求解、验证或应用，因此动态重排行为仍未形成。
+
 ## TASK-P4-01 contract activation
 
 用户已单独授权TASK-P4-01；ADR-0013～0015及一致的人类合同现已形成。P4-02仍须先发布机器合同，P4-03～08再依次拥有persistence、event facts、freeze/locks、OBJ-002/ChangeReport、Solver/Validator与new DRAFT application，P4-09/10形成deterministic Simulator与五类连续异常，P4-11～13形成read/export、API与UI，P4-14/15分别Gate/Audit。除合同/ADR外所有P4行为仍为`PLANNED_NOT_FORMED`，P4-02不会自动启动。

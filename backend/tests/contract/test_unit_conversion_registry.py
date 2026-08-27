@@ -56,9 +56,9 @@ def test_additive_schema_set_metadata_and_immutable_v2_contracts() -> None:
     )
     import_schema = load_json(SCHEMA_ROOT / "import-package.v2.schema.json")
 
-    assert SCHEMA_VERSION == "2.7.0"
-    assert pyproject["tool"]["plantnexus-aps"]["versions"]["schema"] == "2.7.0"
-    assert dictionary["schema_set_version"] == "2.7.0"
+    assert SCHEMA_VERSION == "2.8.0"
+    assert pyproject["tool"]["plantnexus-aps"]["versions"]["schema"] == "2.8.0"
+    assert dictionary["schema_set_version"] == "2.8.0"
     assert "unit-conversion-registry.v1" in dictionary["schemas"]
     assert import_schema["properties"]["schema_set_version"]["const"] == "2.0.0"
     for filename, expected in PRESERVED_SCHEMA_SHA256.items():

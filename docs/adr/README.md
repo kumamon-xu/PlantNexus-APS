@@ -11,6 +11,10 @@ last_reviewed: 2026-08-27
 
 # Architecture Decision Records
 
+## TASK-P4-02 conformance review
+
+本Task不新增或修改ADR。Additive `2.8.0` carrier逐项实现ADR-0013的event authority/order/Replan lineage、ADR-0014的half-open freeze/四元OBJ-002/complete ChangeReport，以及ADR-0015的Simulation manifest/common-path boundary；35/7负例用于拒绝语义漂移。若后继需要改变这些决定，必须先提交superseding ADR，不能修改既有Schema含义。
+
 ## TASK-P4-01 ADR decisions
 
 TASK-P4-01启动时registry precheck确认`ADR-0013`～`ADR-0015`未占用，并已在任何P4 Schema、migration、dependency或业务代码前接受三份独立决定：

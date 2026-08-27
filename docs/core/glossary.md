@@ -11,6 +11,13 @@ last_reviewed: 2026-08-25
 
 # 术语表
 
+## TASK-P4-02 machine terms
+
+- **ExecutionEvent v1**：带显式Simulation plane、authority/source stream、单调position、occurred/received时间、typed payload与canonical identity的不可变事件carrier；不是已接入的外部事件。
+- **ReplanRequest v1**：绑定PUBLISHED base、new Snapshot/Problem、ordered events/facts、resolved freeze、Policy/Limits的immutable intent/result lineage；没有业务状态机。
+- **ChangeReport v1**：对base operation全集逐项分类并绑定before/after KPI、facts/locks/reasons与完整replan lineage的不可变报告carrier。
+- **ExecutionSimulationManifest v1**：记录Scenario/Profile/Generator/Simulator、seed、virtual clock、authority stream与checkpoint的Simulation-only manifest；不是Simulator执行证据。
+
 | 术语 | 项目语义 |
 |---|---|
 | APS | Advanced Planning and Scheduling；本项目的计划排程模块 |

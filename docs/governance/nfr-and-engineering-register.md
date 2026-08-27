@@ -12,6 +12,10 @@ registry_version: 1.0.0
 
 # NFR 与工程需求注册表
 
+## TASK-P4-02 machine-contract allocation
+
+NFR-COR/DET/TRC/ISO/SEC与ENG-ARCH/ERR/VER现由strict `2.8.0` carriers、offline refs、canonical fingerprints、historical byte freeze、Simulation-only/default-deny和诚实status映射承接机器合同切片。当前证据不包含runtime correctness、distributed reliability、Production isolation deployment或真实security authority；所有root lifecycle继续`ALLOCATED`，dependency/lock与registry format不变。
+
 ## TASK-P4-01 contract allocation
 
 NFR-COR/DET/TRC/ISO/SEC/HUM与ENG-ARCH/SOL/VAL/ERR/VER现通过TASK-P4-01连接ADR-0013～0015及同步合同：确定性source position/replay、append-only provenance、plane authority fail-closed、Solver-neutral机器合同后继、fresh independent Validator、结构化拒绝和版本兼容边界均已规范化。ReplanRequest不增加独立state pair，Simulator不获得Production route或直接写权威事实的捷径。

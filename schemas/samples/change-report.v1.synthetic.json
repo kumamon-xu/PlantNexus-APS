@@ -1,0 +1,65 @@
+{
+  "change_report_version": "change-report.v1",
+  "schema_set_version": "2.8.0",
+  "canonicalization_version": "canonical-json.v1",
+  "report_id": "change-report-7a9bf61ba331229b238dcd9d1f9b92a08d6ecdad1e0bb69d885003f205ea86ad",
+  "report_fingerprint": "sha256:7a9bf61ba331229b238dcd9d1f9b92a08d6ecdad1e0bb69d885003f205ea86ad",
+  "data_plane": "SIMULATION",
+  "environment": "TEST",
+  "synthetic": true,
+  "synthetic_provenance": {
+    "scenario_id": "SIM-P4-CONTRACT-001", "scenario_version": "1.0.0",
+    "factory_profile_id": "PROFILE-P4-CONTRACT-001", "profile_version": "1.0.0",
+    "generator_id": "PLANTNEXUS-P4-CONTRACT-GENERATOR", "generator_version": "1.0.0",
+    "simulator_id": "PLANTNEXUS-EXECUTION-SIMULATOR", "simulator_version": "1.0.0",
+    "seed": 20260827
+  },
+  "production_binding": false,
+  "base_schedule_version": {"schedule_version_version": "schedule-version.v1", "schedule_version_id": "schedule-version-base-published-001", "state": "PUBLISHED", "content_fingerprint": "sha256:1111111111111111111111111111111111111111111111111111111111111111"},
+  "new_schedule_version": {"schedule_version_version": "schedule-version.v2", "schedule_version_id": "schedule-version-p4-draft-001", "state": "DRAFT", "content_fingerprint": "sha256:0c92b6687cd7825bb34b7cac1ad78bb8624179118853aa4d993c80533914c561"},
+  "lineage": {
+    "base_snapshot": {"document_version": "planning-snapshot.v2", "artifact_id": "snapshot-base-001", "fingerprint": "sha256:2222222222222222222222222222222222222222222222222222222222222222"},
+    "base_problem": {"document_version": "planning-problem.v2", "artifact_id": "problem-base-001", "fingerprint": "sha256:3333333333333333333333333333333333333333333333333333333333333333"},
+    "new_snapshot": {"document_version": "planning-snapshot.v2", "artifact_id": "snapshot-new-001", "fingerprint": "sha256:4444444444444444444444444444444444444444444444444444444444444444"},
+    "new_problem": {"document_version": "planning-problem.v2", "artifact_id": "problem-new-001", "fingerprint": "sha256:5555555555555555555555555555555555555555555555555555555555555555"},
+    "event_stream_fingerprint": "sha256:46641d96f28efc0eb8e88b64159b2a9243acabfa96440a06bfe9249238872811",
+    "fact_checkpoint": {"document_version": "execution-fact-checkpoint.v1", "artifact_id": "fact-checkpoint-001", "fingerprint": "sha256:6666666666666666666666666666666666666666666666666666666666666666"},
+    "replan_request": {"replan_request_version": "replan-request.v1", "request_id": "replan-request-8c3484577f6ee85a4c6face64e73ae88b25ecd277391d12933ce4e1ce336ecea", "request_fingerprint": "sha256:8c3484577f6ee85a4c6face64e73ae88b25ecd277391d12933ce4e1ce336ecea"},
+    "planning_run_id": "planning-run-p4-contract-001",
+    "policy": {"planning_policy_version": "planning-policy.v2", "policy_id": "POLICY-P4-SIM-DYNAMIC-001", "policy_revision": "1.0.0", "policy_fingerprint": "sha256:d75a4cba2094628f6c20397e3ea40aaec4288ea67801dc741bad6e0b1b71419b"},
+    "limits": {"solve_limits_version": "solve-limits.v1", "limits_id": "LIMITS-SAMPLE-P2-02-001", "limits_revision": "1.0.0", "limits_fingerprint": "sha256:76091493ee0b96a761c9df6e9881d03d9b8cca1c4b09103602661dcbf5d4a27b", "max_wall_time_seconds": 30, "max_workers": 1, "random_seed": 20260820},
+    "solver_report": {"document_version": "solver-report.v2", "artifact_id": "solver-report-78c59a4e4b01fc769a137783faab1cb130499bf74209fa31fd94c6241b25037e", "fingerprint": "sha256:78c59a4e4b01fc769a137783faab1cb130499bf74209fa31fd94c6241b25037e"},
+    "validation_report": {"document_version": "validation-report.v2", "artifact_id": "validation-report-p4-001", "fingerprint": "sha256:7777777777777777777777777777777777777777777777777777777777777777"}
+  },
+  "freeze_evidence": {
+    "freeze_policy_version": "freeze-policy.v1", "freeze_policy_id": "FREEZE-POLICY-P4-SIM-001", "freeze_policy_revision": "1.0.0",
+    "freeze_policy_fingerprint": "sha256:690ca65d702302d141bb89c17ec9fc9993435e94dcb2255413b27fdcaaa17f1d",
+    "source": {"source_system": "plantnexus-synthetic-policy", "source_version": "1.0.0", "source_record_id": "SCHEMA-SAMPLE-P4-02-FREEZE"},
+    "window_seconds": 900, "effective_from_utc": "2026-08-27T06:00:00Z", "effective_until_utc": "2026-08-27T06:15:00Z",
+    "interval_semantics": "HALF_OPEN_START_INCLUSIVE_END_EXCLUSIVE", "effective_lock_ids": ["lock-sim-freeze-001"]
+  },
+  "before_kpi": {"document_version": "kpi.v2", "artifact_id": "kpi-before-001", "fingerprint": "sha256:8888888888888888888888888888888888888888888888888888888888888888"},
+  "after_kpi": {"document_version": "kpi.v2", "artifact_id": "kpi-after-001", "fingerprint": "sha256:9999999999999999999999999999999999999999999999999999999999999999"},
+  "operation_universe_count": 2,
+  "operations": [
+    {
+      "operation_id": "operation-sim-001",
+      "classification": "UNCHANGED",
+      "base_assignment": {"operation_id": "operation-sim-001", "resource_id": "resource-sim-001", "start_tick": 0, "end_tick": 2, "duration_ticks": 2, "start_at_utc": "2026-08-27T06:00:00Z", "end_at_utc": "2026-08-27T06:02:00Z", "duration_seconds": 120, "lock_ids": ["lock-sim-freeze-001"], "execution_fact_ids": []},
+      "new_assignment": {"operation_id": "operation-sim-001", "resource_id": "resource-sim-001", "start_tick": 0, "end_tick": 2, "duration_ticks": 2, "start_at_utc": "2026-08-27T06:00:00Z", "end_at_utc": "2026-08-27T06:02:00Z", "duration_seconds": 120, "lock_ids": ["lock-sim-freeze-001"], "execution_fact_ids": []},
+      "deltas": {"resource_changed": false, "start_shift_seconds": 0, "absolute_start_shift_seconds": 0, "end_shift_seconds": 0, "duration_delta_seconds": 0},
+      "reasons": [{"reason_code": "NO_CHANGE", "evidence_refs": [{"document_version": "operation-lock.v1", "artifact_id": "lock-sim-freeze-001", "fingerprint": "sha256:aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa"}]}]
+    },
+    {
+      "operation_id": "operation-sim-002",
+      "classification": "CHANGED",
+      "base_assignment": {"operation_id": "operation-sim-002", "resource_id": "resource-sim-002", "start_tick": 2, "end_tick": 4, "duration_ticks": 2, "start_at_utc": "2026-08-27T06:02:00Z", "end_at_utc": "2026-08-27T06:04:00Z", "duration_seconds": 120, "lock_ids": [], "execution_fact_ids": []},
+      "new_assignment": {"operation_id": "operation-sim-002", "resource_id": "resource-sim-003", "start_tick": 7, "end_tick": 9, "duration_ticks": 2, "start_at_utc": "2026-08-27T06:07:00Z", "end_at_utc": "2026-08-27T06:09:00Z", "duration_seconds": 120, "lock_ids": [], "execution_fact_ids": ["execution-fact-machine-unavailable-001"]},
+      "deltas": {"resource_changed": true, "start_shift_seconds": 300, "absolute_start_shift_seconds": 300, "end_shift_seconds": 300, "duration_delta_seconds": 0},
+      "reasons": [{"reason_code": "UNATTRIBUTED_SOLVER_CHANGE", "evidence_refs": [{"document_version": "solver-report.v2", "artifact_id": "solver-report-78c59a4e4b01fc769a137783faab1cb130499bf74209fa31fd94c6241b25037e", "fingerprint": "sha256:78c59a4e4b01fc769a137783faab1cb130499bf74209fa31fd94c6241b25037e"}]}]
+    }
+  ],
+  "stability": {"soft_lock_violations": 0, "changed_existing_operations": 1, "resource_changes": 1, "absolute_start_shift_seconds": 300, "unchanged_existing": 1, "comparable_existing": 2, "unchanged_ratio": {"status": "APPLICABLE", "numerator": 1, "denominator": 2}},
+  "generated_at_utc": "2026-08-27T06:00:08Z",
+  "correlation_id": "correlation-p4-contract-001"
+}

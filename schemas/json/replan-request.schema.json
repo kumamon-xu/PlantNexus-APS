@@ -1,0 +1,99 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "urn:plantnexus:aps:schema:replan-request:v1",
+  "title": "PlantNexus APS ReplanRequest v1",
+  "description": "Immutable P4 request lineage carrier. ReplanRequest has no independent business state machine.",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "replan_request_version", "schema_set_version", "canonicalization_version",
+    "request_id", "data_plane", "environment", "factory_id", "planning_scope_id",
+    "base_schedule_version", "base_snapshot", "base_problem", "new_snapshot",
+    "new_snapshot_cutoff_at_utc", "new_problem", "event_stream", "trigger_event_ids",
+    "trigger_reason", "freeze_resolution", "planning_policy", "solve_limits",
+    "synthetic", "synthetic_provenance", "production_binding", "requested_at_utc",
+    "correlation_id", "request_fingerprint"
+  ],
+  "properties": {
+    "replan_request_version": {"const": "replan-request.v1"},
+    "schema_set_version": {"const": "2.8.0"},
+    "canonicalization_version": {"const": "canonical-json.v1"},
+    "request_id": {"type": "string", "pattern": "^replan-request-[0-9a-f]{64}$"},
+    "data_plane": {"const": "SIMULATION"},
+    "environment": {"enum": ["DEVELOPMENT", "TEST", "BENCHMARK"]},
+    "factory_id": {"$ref": "urn:plantnexus:aps:schema:execution-event:v1#/$defs/canonicalId"},
+    "planning_scope_id": {"$ref": "urn:plantnexus:aps:schema:execution-event:v1#/$defs/canonicalId"},
+    "base_schedule_version": {"$ref": "#/$defs/publishedScheduleReference"},
+    "base_snapshot": {"$ref": "urn:plantnexus:aps:schema:execution-event:v1#/$defs/artifactReference"},
+    "base_problem": {"$ref": "urn:plantnexus:aps:schema:execution-event:v1#/$defs/artifactReference"},
+    "new_snapshot": {"$ref": "urn:plantnexus:aps:schema:execution-event:v1#/$defs/artifactReference"},
+    "new_snapshot_cutoff_at_utc": {"$ref": "urn:plantnexus:aps:schema:execution-event:v1#/$defs/utcInstant"},
+    "new_problem": {"$ref": "urn:plantnexus:aps:schema:execution-event:v1#/$defs/artifactReference"},
+    "event_stream": {"$ref": "#/$defs/eventStreamReference"},
+    "trigger_event_ids": {
+      "type": "array", "minItems": 1, "uniqueItems": true,
+      "items": {"type": "string", "pattern": "^execution-event-[0-9a-f]{64}$"}
+    },
+    "trigger_reason": {"enum": ["EXECUTION_FACT_CHANGED", "URGENT_DEMAND_RECEIVED", "LOCK_POLICY_CHANGED"]},
+    "freeze_resolution": {"$ref": "#/$defs/freezeResolution"},
+    "planning_policy": {"$ref": "urn:plantnexus:aps:schema:planning-policy:v2#/$defs/policyReference"},
+    "solve_limits": {"$ref": "urn:plantnexus:aps:schema:solve-limits:v1#/$defs/limitsReference"},
+    "synthetic": {"const": true},
+    "synthetic_provenance": {"$ref": "urn:plantnexus:aps:schema:execution-event:v1#/$defs/syntheticProvenance"},
+    "production_binding": {"const": false},
+    "requested_at_utc": {"$ref": "urn:plantnexus:aps:schema:execution-event:v1#/$defs/utcInstant"},
+    "correlation_id": {"$ref": "urn:plantnexus:aps:schema:execution-event:v1#/$defs/canonicalId"},
+    "request_fingerprint": {"$ref": "urn:plantnexus:aps:schema:execution-event:v1#/$defs/sha256Fingerprint"}
+  },
+  "$defs": {
+    "publishedScheduleReference": {
+      "type": "object", "additionalProperties": false,
+      "required": ["schedule_version_version", "schedule_version_id", "state", "content_fingerprint"],
+      "properties": {
+        "schedule_version_version": {"enum": ["schedule-version.v1", "schedule-version.v2"]},
+        "schedule_version_id": {"$ref": "urn:plantnexus:aps:schema:execution-event:v1#/$defs/canonicalId"},
+        "state": {"const": "PUBLISHED"},
+        "content_fingerprint": {"$ref": "urn:plantnexus:aps:schema:execution-event:v1#/$defs/sha256Fingerprint"}
+      }
+    },
+    "eventStreamReference": {
+      "type": "object", "additionalProperties": false,
+      "required": ["authority", "source_stream", "from_position", "through_position", "event_ids", "event_fingerprints", "stream_fingerprint", "fact_checkpoint"],
+      "properties": {
+        "authority": {"$ref": "urn:plantnexus:aps:schema:execution-event:v1#/$defs/authority"},
+        "source_stream": {"$ref": "urn:plantnexus:aps:schema:execution-event:v1#/$defs/sourceStream"},
+        "from_position": {"type": "integer", "minimum": 1},
+        "through_position": {"type": "integer", "minimum": 1},
+        "event_ids": {"type": "array", "minItems": 1, "uniqueItems": true, "items": {"type": "string", "pattern": "^execution-event-[0-9a-f]{64}$"}},
+        "event_fingerprints": {"type": "array", "minItems": 1, "uniqueItems": true, "items": {"$ref": "urn:plantnexus:aps:schema:execution-event:v1#/$defs/sha256Fingerprint"}},
+        "stream_fingerprint": {"$ref": "urn:plantnexus:aps:schema:execution-event:v1#/$defs/sha256Fingerprint"},
+        "fact_checkpoint": {"$ref": "urn:plantnexus:aps:schema:execution-event:v1#/$defs/artifactReference"}
+      }
+    },
+    "freezeResolution": {
+      "type": "object", "additionalProperties": false,
+      "required": ["freeze_policy_version", "freeze_policy_id", "freeze_policy_revision", "freeze_policy_fingerprint", "source", "window_seconds", "effective_from_utc", "effective_until_utc", "interval_semantics", "effective_lock_ids"],
+      "properties": {
+        "freeze_policy_version": {"const": "freeze-policy.v1"},
+        "freeze_policy_id": {"$ref": "urn:plantnexus:aps:schema:execution-event:v1#/$defs/canonicalId"},
+        "freeze_policy_revision": {"$ref": "urn:plantnexus:aps:schema:execution-event:v1#/$defs/nonEmptyText"},
+        "freeze_policy_fingerprint": {"$ref": "urn:plantnexus:aps:schema:execution-event:v1#/$defs/sha256Fingerprint"},
+        "source": {"$ref": "urn:plantnexus:aps:schema:execution-event:v1#/$defs/sourceReference"},
+        "window_seconds": {"type": "integer", "minimum": 1},
+        "effective_from_utc": {"$ref": "urn:plantnexus:aps:schema:execution-event:v1#/$defs/utcInstant"},
+        "effective_until_utc": {"$ref": "urn:plantnexus:aps:schema:execution-event:v1#/$defs/utcInstant"},
+        "interval_semantics": {"const": "HALF_OPEN_START_INCLUSIVE_END_EXCLUSIVE"},
+        "effective_lock_ids": {"type": "array", "uniqueItems": true, "items": {"$ref": "urn:plantnexus:aps:schema:execution-event:v1#/$defs/canonicalId"}}
+      }
+    },
+    "requestReference": {
+      "type": "object", "additionalProperties": false,
+      "required": ["replan_request_version", "request_id", "request_fingerprint"],
+      "properties": {
+        "replan_request_version": {"const": "replan-request.v1"},
+        "request_id": {"type": "string", "pattern": "^replan-request-[0-9a-f]{64}$"},
+        "request_fingerprint": {"$ref": "urn:plantnexus:aps:schema:execution-event:v1#/$defs/sha256Fingerprint"}
+      }
+    }
+  }
+}

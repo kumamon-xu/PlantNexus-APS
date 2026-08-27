@@ -1,0 +1,77 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "urn:plantnexus:aps:schema:planning-policy:v2",
+  "title": "PlantNexus APS PlanningPolicy v2",
+  "description": "P4 Simulation-only freeze and exact lexicographic Delivery/Stability/Makespan policy carrier; it contains no Production defaults.",
+  "type": "object",
+  "additionalProperties": false,
+  "required": ["planning_policy_version", "schema_set_version", "policy_id", "policy_revision", "data_plane", "policy_source", "canonicalization_version", "constraint_contract_version", "objective_policy_version", "hard_constraint_ids", "freeze_policy", "objective_stages"],
+  "properties": {
+    "planning_policy_version": {"const": "planning-policy.v2"},
+    "schema_set_version": {"const": "2.8.0"},
+    "policy_id": {"$ref": "urn:plantnexus:aps:schema:execution-event:v1#/$defs/canonicalId"},
+    "policy_revision": {"$ref": "urn:plantnexus:aps:schema:execution-event:v1#/$defs/nonEmptyText"},
+    "data_plane": {"const": "SIMULATION"},
+    "policy_source": {"$ref": "urn:plantnexus:aps:schema:execution-event:v1#/$defs/sourceReference"},
+    "canonicalization_version": {"const": "canonical-json.v1"},
+    "constraint_contract_version": {"const": "constraint-rule-sheet.v1"},
+    "objective_policy_version": {"const": "objective-policy.v2"},
+    "hard_constraint_ids": {
+      "type": "array", "minItems": 11, "maxItems": 11, "uniqueItems": true,
+      "prefixItems": [{"const": "C-001"}, {"const": "C-002"}, {"const": "C-003"}, {"const": "C-004"}, {"const": "C-005"}, {"const": "C-006"}, {"const": "C-007"}, {"const": "C-008"}, {"const": "C-009"}, {"const": "C-010"}, {"const": "C-011"}],
+      "items": false
+    },
+    "freeze_policy": {"$ref": "#/$defs/freezePolicy"},
+    "objective_stages": {
+      "type": "array", "minItems": 3, "maxItems": 3,
+      "prefixItems": [{"$ref": "#/$defs/deliveryStage"}, {"$ref": "#/$defs/stabilityStage"}, {"$ref": "#/$defs/makespanStage"}],
+      "items": false
+    }
+  },
+  "$defs": {
+    "freezePolicy": {
+      "type": "object", "additionalProperties": false,
+      "required": ["freeze_policy_version", "freeze_policy_id", "freeze_policy_revision", "source", "window_seconds", "interval_semantics"],
+      "properties": {
+        "freeze_policy_version": {"const": "freeze-policy.v1"},
+        "freeze_policy_id": {"$ref": "urn:plantnexus:aps:schema:execution-event:v1#/$defs/canonicalId"},
+        "freeze_policy_revision": {"$ref": "urn:plantnexus:aps:schema:execution-event:v1#/$defs/nonEmptyText"},
+        "source": {"$ref": "urn:plantnexus:aps:schema:execution-event:v1#/$defs/sourceReference"},
+        "window_seconds": {"type": "integer", "minimum": 1},
+        "interval_semantics": {"const": "HALF_OPEN_START_INCLUSIVE_END_EXCLUSIVE"}
+      }
+    },
+    "deliveryStage": {
+      "type": "object", "additionalProperties": false,
+      "required": ["stage_index", "objective_id", "metric", "sense"],
+      "properties": {"stage_index": {"const": 1}, "objective_id": {"const": "OBJ-001"}, "metric": {"const": "WEIGHTED_TARDINESS_SECONDS"}, "sense": {"const": "MINIMIZE"}}
+    },
+    "stabilityStage": {
+      "type": "object", "additionalProperties": false,
+      "required": ["stage_index", "objective_id", "metric", "sense", "components"],
+      "properties": {
+        "stage_index": {"const": 2}, "objective_id": {"const": "OBJ-002"}, "metric": {"const": "STABILITY_VECTOR"}, "sense": {"const": "LEXICOGRAPHIC_MINIMIZE"},
+        "components": {
+          "type": "array", "minItems": 4, "maxItems": 4,
+          "prefixItems": [{"const": "SOFT_LOCK_VIOLATIONS"}, {"const": "CHANGED_EXISTING_OPERATIONS"}, {"const": "RESOURCE_CHANGES"}, {"const": "ABSOLUTE_START_SHIFT_SECONDS"}],
+          "items": false
+        }
+      }
+    },
+    "makespanStage": {
+      "type": "object", "additionalProperties": false,
+      "required": ["stage_index", "objective_id", "metric", "sense"],
+      "properties": {"stage_index": {"const": 3}, "objective_id": {"const": "OBJ-003"}, "metric": {"const": "MAKESPAN_SECONDS"}, "sense": {"const": "MINIMIZE"}}
+    },
+    "policyReference": {
+      "type": "object", "additionalProperties": false,
+      "required": ["planning_policy_version", "policy_id", "policy_revision", "policy_fingerprint"],
+      "properties": {
+        "planning_policy_version": {"const": "planning-policy.v2"},
+        "policy_id": {"$ref": "urn:plantnexus:aps:schema:execution-event:v1#/$defs/canonicalId"},
+        "policy_revision": {"$ref": "urn:plantnexus:aps:schema:execution-event:v1#/$defs/nonEmptyText"},
+        "policy_fingerprint": {"$ref": "urn:plantnexus:aps:schema:execution-event:v1#/$defs/sha256Fingerprint"}
+      }
+    }
+  }
+}

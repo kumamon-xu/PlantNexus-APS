@@ -11,6 +11,10 @@ last_reviewed: 2026-08-27
 
 # 独立 ScheduleValidator 合同
 
+## TASK-P4-02 validation carrier
+
+ScheduleVersion v2、SolverReport v2与ChangeReport v1现携带fresh ValidationReport exact reference和complete lineage，但TASK-P4-02不运行或修改Validator、C-001～C-011、mutation suite或PASS含义。P3 i18n evidence兼容修正仍冻结P3 API/Schema/registry exact paths；它不允许Frontend或P4 carrier绕过future P4-07 fresh independent validation。
+
 ## TASK-P4-01 accepted validation extension
 
 ADR-0013/0014已固定TASK-P4-07的独立验证责任：直接从base/new Problem、facts、explicit HARD、freeze-derived effective HARD、candidate和ChangeReport重算约束与完整性；不信任Solver自报、Hint、report聚合值或application状态。必须验证operation universe恰好一次、OBJ-002整数分量/KPI、before/after lineage和new DRAFT eligibility；P4-08只能接受fresh PASS。

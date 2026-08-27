@@ -11,6 +11,12 @@ last_reviewed: 2026-08-27
 
 # 需求追踪规则
 
+## TASK-P4-02 machine-contract trace rule
+
+本Task链固定为`REQ-005/007/008/009/013 + declared NFR/ENG + SIM-ASSUMPTION-016 → TASK-P4-02 → nine exact-version carriers/samples + pure prechecks → TEST-CONTRACT-001/TEST-EXECUTION-EVENT-CONTRACT-001/TEST-REPLAN-REQUEST-CONTRACT-001/TEST-CHANGE-REPORT-001 → p4-machine-contract-report.v1 + Task report → exact implementation provider → evidence-only closure provider`。Diff base固定`4026597ab1015b5ea3a89d241f0d12b5b481dee3`；任何SHA、Task、base、Impact Rules、checks/issues或artifact digest不一致均保持`in_progress`。
+
+Machine-carrier formed不等于persistence/behavior formed。P4-03+必须等待本Task双提交闭环与新的明确授权；Production、P5、state transition、event projection、Solver/Simulator和external evidence不得沿该edge推断。
+
 ## TASK-P4-01 contract trace rule
 
 本Task唯一owner为TASK-P4-01，不可变Diff base=`b96232b2e3f5573baaf735c7fa7935f95e6c88f5`。追踪链固定为`REQ-004/005/007/008/009/013 + declared NFR/ENG → TASK-P4-01 → ADR-0013/0014/0015 + synchronized human contracts → five PLANNED Test IDs → future p4-contract-adr-report.v1/exact provider`。ADR被accepted只表示decision形成，不得把Test ID、机器carrier或业务能力提升为formed。

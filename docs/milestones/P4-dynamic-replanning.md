@@ -11,9 +11,13 @@ last_reviewed: 2026-08-27
 
 # P4 — Dynamic Replanning
 
+## TASK-P4-02 active machine-contract slice
+
+TASK-P4-02已从provider-verified P4-01 closure `4026597ab1015b5ea3a89d241f0d12b5b481dee3`独立启动，状态为`in_progress`。它只发布additive set `2.8.0`的九份P4 Simulation carrier、对应sample、纯语义precheck和non-skippable CI machine report；58份历史Schema/sample、migration `0004`、dependency lock和既有state pairs保持不变。P4-03～15仍为`planned`，本Task完成也不自动启动后继。
+
 ## Activation
 
-用户于2026-08-27在P3 Exit双提交provider与clean synchronized closure baseline精确通过后批准P3→P4。TASK-P4-00 phase-planning implementation/closure exact provider均已成功，P4-00=`done`。用户随后单独授权TASK-P4-01；它从closure SHA `b96232b2e3f5573baaf735c7fa7935f95e6c88f5`启动，implementation `abd70942a41984a9a3956f43d39065b19e4405c3` exact provider成功后由本closure标为`done`。P4-02～15继续`planned`且不会自动启动；P4-15是最后一项独立Exit Gate Audit。
+用户于2026-08-27在P3 Exit双提交provider与clean synchronized closure baseline精确通过后批准P3→P4。TASK-P4-00 phase-planning与TASK-P4-01 contract/ADR均已由双提交exact provider闭环为`done`。TASK-P4-02当前状态见上方独立切片；P4-03～15继续`planned`且不会自动启动，P4-15是最后一项独立Exit Gate Audit。
 
 TASK-P4-01已形成accepted ADR-0013～0015：事件authority/append-only投影/Replan lineage，半开freeze/四元OBJ-002/完整ChangeReport，以及Simulator只经标准ExecutionEvent共同路径。当前只形成合同基线，机器carrier、Schema、migration、persistence、业务实现和行为测试均未形成。
 
@@ -33,7 +37,7 @@ TASK-P4-01已形成accepted ADR-0013～0015：事件authority/append-only投影/
 |---|---|---|
 | TASK-P4-00 | Phase transition与完整规划治理 | P3-17 |
 | TASK-P4-01 | Dynamic Replanning合同与accepted ADR-0013～0015（done） | P4-00 |
-| TASK-P4-02 | ExecutionEvent/Replan/ChangeReport等机器合同 | P4-01 |
+| TASK-P4-02 | ExecutionEvent/Replan/ChangeReport等机器合同（in_progress） | P4-01 |
 | TASK-P4-03 | Event/Replan持久化与状态事务 | P4-02 |
 | TASK-P4-04 | ExecutionEvent→事实→新Snapshot | P4-02/03 |
 | TASK-P4-05 | Freeze Window与effective locks | P4-01/02/04 |

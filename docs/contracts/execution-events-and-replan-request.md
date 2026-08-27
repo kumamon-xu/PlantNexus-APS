@@ -11,6 +11,12 @@ last_reviewed: 2026-08-27
 
 # ExecutionEvent 与 ReplanRequest 合同
 
+## TASK-P4-02 machine carriers
+
+`execution-event.v1`现把Simulation plane/environment/factory/scope、authority/source stream、单调position、occurred/received UTC、entity refs、typed payload、correlation、synthetic provenance与canonical fingerprint编码为strict carrier。`received_at_utc`只记录接收观察，不参与event identity；authority、ordering和payload语义参与fingerprint。同identity不同fingerprint、position gap/倒退、authority/scope/plane漂移均fail closed。
+
+`replan-request.v1`现绑定immutable PUBLISHED base Version、base/new Snapshot与Problem、ordered event stream/fact checkpoint、reason set、半开resolved freeze区间、effective locks、Policy/Limits及request fingerprint。Request没有业务state；sample只证明合同与lineage，不投影事实、不创建Snapshot、不调用Solver，也不创建new ScheduleVersion。Durable transaction、projection与application仍分别属于P4-03、04、08。
+
 ## TASK-P4-01 accepted contract baseline
 
 [ADR-0013](../adr/ADR-0013-execution-event-authority-fact-projection-replan-lineage.md)、[ADR-0014](../adr/ADR-0014-freeze-window-stability-change-report.md)和[ADR-0015](../adr/ADR-0015-deterministic-execution-simulator-common-path.md)现已在任何P4 Schema/migration/code前固定事件authority/order/idempotency、事实投影、ReplanRequest、freeze/OBJ-002/ChangeReport及Simulator共同路径。TASK-P4-02才可发布机器字段/URN/version，TASK-P4-03/04/08分别拥有durable transaction、ingestion/projection与new DRAFT应用；本Task没有event endpoint、repository、业务实现或真实MES来源。

@@ -11,6 +11,10 @@ last_reviewed: 2026-08-27
 
 # 错误与求解状态模型
 
+## TASK-P4-02 fail-closed semantics
+
+纯合同校验以稳定P4 contract reason拒绝unknown version/type/state/authority、cross-plane、stale base、ordering gap、fingerprint/lineage/completeness漂移，且不产生业务副作用。既有error-code-registry.v2逐字不变；P4-02不新增API error或持久化错误。SolverReport v2保持UNKNOWN→NO_SOLUTION_WITHIN_LIMIT、INFEASIBLE→INFEASIBLE的诚实区分，禁止partial result冒充成功。
+
 ## TASK-P4-01 error responsibility baseline
 
 ADR-0013/0014固定责任层：unknown event/version/type/authority/reference/cross-plane在ingress前拒绝；same identity/different fingerprint、source gap/late、stale base/checkpoint为无副作用conflict；invalid fact transition与fact/HARD/freeze冲突在solve前拒绝；Solver INFEASIBLE与UNKNOWN保持分离；fresh Validator或ChangeReport completeness/metric/fingerprint失败不创建Version；persistence/audit失败整体回滚。Unsupported disruption必须显式拒绝，不静默近似P5能力。

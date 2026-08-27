@@ -11,6 +11,10 @@ last_reviewed: 2026-08-27
 
 # CI Gate 与 Definition of Done
 
+## TASK-P4-02 required evidence
+
+CI `validate`新增不可跳过的`P4 dynamic replanning machine contract evidence`步骤，输出`build/validation/ci-p4-machine-contracts.json`并由统一artifact上传。报告必须绑定TASK-P4-02、不可变Diff base、exact code commit、set `2.8.0`、8/8 checks、9/9 Schema/sample、58 historical freeze、35/7 rejection和`issues=[]`。本地PASS不替代GitHub Actions app `15368`的exact implementation/closure provider。
+
 ## TASK-P4-01 required Gate
 
 本Task只发布三份accepted ADR与其人类合同同步，禁止修改`.github/workflows/**`、业务代码、Schema、migration、dependency/lock和测试断言。不可变Diff base为`b96232b2e3f5573baaf735c7fa7935f95e6c88f5`；implementation与evidence-only closure必须分别由现有required `validate`（GitHub Actions app `15368`）对exact SHA执行成功，并下载未过期artifact核对TASK-P4-01、Diff base、`IMPACT-STATE/PHASE/GOVERNANCE-REGISTRY/DOCS`、19/19 checks与`issues=[]`。

@@ -11,6 +11,10 @@ last_reviewed: 2026-08-27
 
 # TASK-Px-yy — Title
 
+## P4 machine-contract Task governance note
+
+发布additive P4 carrier时必须先冻结全部历史Schema/sample fingerprint和全局metadata/lock/migration基线，再为每个document声明exact filename、stable URN、version、strict/no-default/offline-ref、canonical projection、positive/negative/non-interchangeability、consumer owner与rollback。Schema sample中的任何定量Simulation vector必须登记SIM_ASSUMPTION；sample不能冒充persistence、Solver、Simulator或state-transition evidence。Global set提升不得改写旧document const/bytes，existing machine report只允许比较current metadata而保留历史report version。CI必须生成non-skippable machine report，implementation与closure分别核验exact provider；下一Task不得自动启动。
+
 ## P4 Dynamic Replanning Task governance note
 
 P4 Task必须逐项说明ExecutionEvent、ReplanRequest、freeze window、OBJ-002 Stability、ChangeReport和Execution Simulator的直接owner或明确非owner边界；执行事实必须先进入权威事实层和新immutable Snapshot，不能成为Solver隐藏参数。Replan必须保留COMPLETED/RUNNING/HARD/freeze事实，SOFT只通过versioned OBJ-002计价，Delivery→Stability→Makespan保持词典序且每轮记录value/bound/budget/stop；candidate须经fresh independent Validator，结果只能创建new DRAFT及完整ChangeReport，不得自动approve/publish/export。Simulator必须输出同一ExecutionEvent合同并走共同入口，五类连续异常由P4 Gate重放。Production freeze/priority/identity/external/capacity/SLA受OPEN阻塞，Simulation值须登记；P5 advanced capabilities不得提前进入。每Task仍须独立授权、不可变Diff base、双提交exact provider，P4-15最后独立Audit且不自动进入P5/Production。

@@ -11,6 +11,10 @@ last_reviewed: 2026-08-26
 
 # Provenance 与版本规则
 
+## TASK-P4-02 provenance release
+
+Set `2.8.0`为每个P4 document固定stable URN/version、canonical projection/fingerprint和cross-document exact references。Event identity排除receive observation但包含authority/order；Request、SolverReport、ChangeReport、ScheduleVersion、Simulator manifest与Export各自具有不可互换fingerprint。58份历史bytes、migration `0004`、code/spec/solver/dependency版本维度保持独立。
+
 ## TASK-P4-01 provenance contract
 
 ADR-0013～0015固定完整链：`authority/source stream/version/position + ExecutionEvent identity/fingerprint → ledger disposition → projector/checkpoint + fact revisions/new Snapshot → immutable ReplanRequest + base PUBLISHED fingerprint → Problem/Policy/Limits/freeze/effective locks → PlanningRun/SolverReport + fresh ValidationReport → new DRAFT ScheduleVersion + ChangeReport → Scenario/Profile/Simulator/seed/virtual-clock/event-stream hash`。

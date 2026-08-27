@@ -12,6 +12,10 @@ registry_version: 1.0.0
 
 # 核心需求注册表
 
+## TASK-P4-02 machine-contract allocation
+
+REQ-005/007/008/009/013现获得additive `2.8.0`机器carrier、exact fingerprint/lineage、strict negative interchange与`p4-machine-contract-report.v1`本地证据。该边只形成schema/sample/pure precheck，未形成Validator运行、state transaction、event projection、Replan solve/apply或Simulator行为；所有Requirement root继续`ALLOCATED`，registry format不变。
+
 ## TASK-P4-01 contract allocation
 
 REQ-004/005/007/008/009/013现连接TASK-P4-01与accepted ADR-0013～0015。形成的仅是语义基线：ExecutionEvent权威入口与append-only事实投影、immutable ReplanRequest/result lineage、半开freeze与effective HARD、OBJ-002四元整数词典序、完整ChangeReport，以及Simulator标准事件共同路径。对应TEST-EXECUTION-EVENT-CONTRACT-001、TEST-REPLAN-REQUEST-CONTRACT-001、TEST-FREEZE-WINDOW-001、TEST-STABILITY-OBJECTIVE-001、TEST-CHANGE-REPORT-001仍为`PLANNED`。

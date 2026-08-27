@@ -1,0 +1,41 @@
+{
+  "execution_simulation_manifest_version": "execution-simulation-manifest.v1",
+  "schema_set_version": "2.8.0",
+  "canonicalization_version": "canonical-json.v1",
+  "manifest_id": "execution-simulation-d7b0ec60c90de6c3b80b1ae13fc18bb5e7d5cd1c445c5ee5540b3c063ecd324a",
+  "manifest_fingerprint": "sha256:d7b0ec60c90de6c3b80b1ae13fc18bb5e7d5cd1c445c5ee5540b3c063ecd324a",
+  "data_plane": "SIMULATION",
+  "environment": "TEST",
+  "factory_id": "factory-sim-001",
+  "planning_scope_id": "planning-scope-sim-001",
+  "production_binding": false,
+  "synthetic": true,
+  "synthetic_provenance": {
+    "scenario_id": "SIM-P4-CONTRACT-001", "scenario_version": "1.0.0",
+    "factory_profile_id": "PROFILE-P4-CONTRACT-001", "profile_version": "1.0.0",
+    "generator_id": "PLANTNEXUS-P4-CONTRACT-GENERATOR", "generator_version": "1.0.0",
+    "simulator_id": "PLANTNEXUS-EXECUTION-SIMULATOR", "simulator_version": "1.0.0",
+    "seed": 20260827
+  },
+  "base_schedule_version": {"schedule_version_version": "schedule-version.v1", "schedule_version_id": "schedule-version-base-published-001", "state": "PUBLISHED", "content_fingerprint": "sha256:1111111111111111111111111111111111111111111111111111111111111111"},
+  "base_snapshot": {"document_version": "planning-snapshot.v2", "artifact_id": "snapshot-base-001", "fingerprint": "sha256:2222222222222222222222222222222222222222222222222222222222222222"},
+  "base_problem": {"document_version": "planning-problem.v2", "artifact_id": "problem-base-001", "fingerprint": "sha256:3333333333333333333333333333333333333333333333333333333333333333"},
+  "scenario": {"asset_id": "SIM-P4-CONTRACT-001", "asset_version": "1.0.0", "fingerprint": "sha256:cccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccc"},
+  "factory_profile": {"asset_id": "PROFILE-P4-CONTRACT-001", "asset_version": "1.0.0", "fingerprint": "sha256:dddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddd"},
+  "generator": {"asset_id": "PLANTNEXUS-P4-CONTRACT-GENERATOR", "asset_version": "1.0.0", "fingerprint": "sha256:eeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeee"},
+  "simulator": {"asset_id": "PLANTNEXUS-EXECUTION-SIMULATOR", "asset_version": "1.0.0", "fingerprint": "sha256:ffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffff"},
+  "seed": 20260827,
+  "child_seed_derivation_version": "named-child-seed.v1",
+  "virtual_clock": {"clock_version": "virtual-clock.v1", "origin_at_utc": "2026-08-27T06:00:00Z", "resolution_seconds": 1, "schedule_fingerprint": "sha256:1212121212121212121212121212121212121212121212121212121212121212"},
+  "authority": {
+    "authority_version": "execution-event-authority.v1", "authority_id": "authority-sim-execution-001", "authority_scope": "SIMULATION/factory-sim-001/planning-scope-sim-001",
+    "source": {"source_system": "plantnexus-execution-simulator", "source_version": "1.0.0", "source_record_id": "SIM-P4-CONTRACT-STREAM-001"},
+    "decision": "AUTHORIZED_SIMULATION_SOURCE", "production_binding": false
+  },
+  "source_stream": {"stream_id": "execution-stream-sim-001", "stream_version": "1.0.0", "authority_id": "authority-sim-execution-001"},
+  "planning_policy": {"planning_policy_version": "planning-policy.v2", "policy_id": "POLICY-P4-SIM-DYNAMIC-001", "policy_revision": "1.0.0", "policy_fingerprint": "sha256:d75a4cba2094628f6c20397e3ea40aaec4288ea67801dc741bad6e0b1b71419b"},
+  "solve_limits": {"solve_limits_version": "solve-limits.v1", "limits_id": "LIMITS-SAMPLE-P2-02-001", "limits_revision": "1.0.0", "limits_fingerprint": "sha256:76091493ee0b96a761c9df6e9881d03d9b8cca1c4b09103602661dcbf5d4a27b", "max_wall_time_seconds": 30, "max_workers": 1, "random_seed": 20260820},
+  "event_stream": {"event_count": 1, "first_position": 1, "last_position": 1, "ordered_event_ids": ["execution-event-a293ff05c1c320f598910dbb1bcccc45abab25cdc79e5ab5cb1bcc072184101c"], "ordered_event_fingerprints": ["sha256:a293ff05c1c320f598910dbb1bcccc45abab25cdc79e5ab5cb1bcc072184101c"], "stream_fingerprint": "sha256:46641d96f28efc0eb8e88b64159b2a9243acabfa96440a06bfe9249238872811"},
+  "checkpoint": {"checkpoint_version": "execution-checkpoint.v1", "last_applied_position": 1, "prefix_fingerprint": "sha256:46641d96f28efc0eb8e88b64159b2a9243acabfa96440a06bfe9249238872811", "fact_checkpoint": {"document_version": "execution-fact-checkpoint.v1", "artifact_id": "fact-checkpoint-001", "fingerprint": "sha256:6666666666666666666666666666666666666666666666666666666666666666"}},
+  "code_commit": "uncommitted"
+}

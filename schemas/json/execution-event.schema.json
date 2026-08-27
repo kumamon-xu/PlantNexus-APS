@@ -1,0 +1,183 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "urn:plantnexus:aps:schema:execution-event:v1",
+  "title": "PlantNexus APS ExecutionEvent v1",
+  "description": "Append-only, authority-scoped P4 Simulation execution input carrier. It records facts; it does not project or apply them.",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "execution_event_version", "schema_set_version", "canonicalization_version",
+    "event_id", "event_type", "data_plane", "environment", "factory_id",
+    "planning_scope_id", "authority", "source_stream", "source_position",
+    "occurred_at_utc", "received_at_utc", "entity_refs", "payload",
+    "synthetic", "synthetic_provenance", "production_binding",
+    "correlation_id", "event_fingerprint"
+  ],
+  "properties": {
+    "execution_event_version": {"const": "execution-event.v1"},
+    "schema_set_version": {"const": "2.8.0"},
+    "canonicalization_version": {"const": "canonical-json.v1"},
+    "event_id": {"type": "string", "pattern": "^execution-event-[0-9a-f]{64}$"},
+    "event_type": {"$ref": "#/$defs/eventType"},
+    "data_plane": {"const": "SIMULATION"},
+    "environment": {"enum": ["DEVELOPMENT", "TEST", "BENCHMARK"]},
+    "factory_id": {"$ref": "#/$defs/canonicalId"},
+    "planning_scope_id": {"$ref": "#/$defs/canonicalId"},
+    "authority": {"$ref": "#/$defs/authority"},
+    "source_stream": {"$ref": "#/$defs/sourceStream"},
+    "source_position": {"type": "integer", "minimum": 1, "maximum": 9223372036854775807},
+    "occurred_at_utc": {"$ref": "#/$defs/utcInstant"},
+    "received_at_utc": {"$ref": "#/$defs/utcInstant"},
+    "entity_refs": {
+      "type": "array",
+      "minItems": 1,
+      "uniqueItems": true,
+      "items": {"$ref": "#/$defs/entityReference"}
+    },
+    "payload": {"$ref": "#/$defs/eventPayload"},
+    "synthetic": {"const": true},
+    "synthetic_provenance": {"$ref": "#/$defs/syntheticProvenance"},
+    "production_binding": {"const": false},
+    "correlation_id": {"$ref": "#/$defs/canonicalId"},
+    "event_fingerprint": {"$ref": "#/$defs/sha256Fingerprint"}
+  },
+  "allOf": [
+    {"if": {"properties": {"event_type": {"const": "OPERATION_STARTED"}}, "required": ["event_type"]}, "then": {"properties": {"payload": {"$ref": "#/$defs/operationStarted"}}}},
+    {"if": {"properties": {"event_type": {"const": "OPERATION_COMPLETED"}}, "required": ["event_type"]}, "then": {"properties": {"payload": {"$ref": "#/$defs/operationCompleted"}}}},
+    {"if": {"properties": {"event_type": {"const": "MACHINE_UNAVAILABLE"}}, "required": ["event_type"]}, "then": {"properties": {"payload": {"$ref": "#/$defs/machineUnavailable"}}}},
+    {"if": {"properties": {"event_type": {"const": "MACHINE_RECOVERED"}}, "required": ["event_type"]}, "then": {"properties": {"payload": {"$ref": "#/$defs/machineRecovered"}}}},
+    {"if": {"properties": {"event_type": {"const": "MATERIAL_READY"}}, "required": ["event_type"]}, "then": {"properties": {"payload": {"$ref": "#/$defs/materialReady"}}}},
+    {"if": {"properties": {"event_type": {"const": "MATERIAL_DELAYED"}}, "required": ["event_type"]}, "then": {"properties": {"payload": {"$ref": "#/$defs/materialDelayed"}}}},
+    {"if": {"properties": {"event_type": {"const": "PROCESSING_DURATION_CHANGED"}}, "required": ["event_type"]}, "then": {"properties": {"payload": {"$ref": "#/$defs/processingDurationChanged"}}}},
+    {"if": {"properties": {"event_type": {"const": "PROCESSING_REMAINING_CHANGED"}}, "required": ["event_type"]}, "then": {"properties": {"payload": {"$ref": "#/$defs/processingRemainingChanged"}}}},
+    {"if": {"properties": {"event_type": {"const": "URGENT_DEMAND_RECEIVED"}}, "required": ["event_type"]}, "then": {"properties": {"payload": {"$ref": "#/$defs/urgentDemandReceived"}}}},
+    {"if": {"properties": {"event_type": {"const": "LOCK_CREATED"}}, "required": ["event_type"]}, "then": {"properties": {"payload": {"$ref": "#/$defs/lockCreated"}}}},
+    {"if": {"properties": {"event_type": {"const": "LOCK_RELEASED"}}, "required": ["event_type"]}, "then": {"properties": {"payload": {"$ref": "#/$defs/lockReleased"}}}}
+  ],
+  "$defs": {
+    "canonicalId": {"type": "string", "minLength": 1, "maxLength": 256, "pattern": "^[^\\s\\u0000-\\u001F\\u007F]+$"},
+    "nonEmptyText": {"type": "string", "minLength": 1, "maxLength": 512, "pattern": ".*\\S.*"},
+    "sha256Fingerprint": {"type": "string", "pattern": "^sha256:[0-9a-f]{64}$"},
+    "utcInstant": {"type": "string", "format": "date-time", "pattern": "Z$"},
+    "semanticVersion": {"type": "string", "pattern": "^(0|[1-9][0-9]*)\\.(0|[1-9][0-9]*)\\.(0|[1-9][0-9]*)$"},
+    "sourceReference": {
+      "type": "object", "additionalProperties": false,
+      "required": ["source_system", "source_version", "source_record_id"],
+      "properties": {
+        "source_system": {"$ref": "#/$defs/canonicalId"},
+        "source_version": {"$ref": "#/$defs/nonEmptyText"},
+        "source_record_id": {"$ref": "#/$defs/canonicalId"}
+      }
+    },
+    "artifactReference": {
+      "type": "object", "additionalProperties": false,
+      "required": ["document_version", "artifact_id", "fingerprint"],
+      "properties": {
+        "document_version": {"$ref": "#/$defs/nonEmptyText"},
+        "artifact_id": {"$ref": "#/$defs/canonicalId"},
+        "fingerprint": {"$ref": "#/$defs/sha256Fingerprint"}
+      }
+    },
+    "authority": {
+      "type": "object", "additionalProperties": false,
+      "required": ["authority_version", "authority_id", "authority_scope", "source", "decision", "production_binding"],
+      "properties": {
+        "authority_version": {"const": "execution-event-authority.v1"},
+        "authority_id": {"$ref": "#/$defs/canonicalId"},
+        "authority_scope": {"$ref": "#/$defs/nonEmptyText"},
+        "source": {"$ref": "#/$defs/sourceReference"},
+        "decision": {"const": "AUTHORIZED_SIMULATION_SOURCE"},
+        "production_binding": {"const": false}
+      }
+    },
+    "sourceStream": {
+      "type": "object", "additionalProperties": false,
+      "required": ["stream_id", "stream_version", "authority_id"],
+      "properties": {
+        "stream_id": {"$ref": "#/$defs/canonicalId"},
+        "stream_version": {"$ref": "#/$defs/semanticVersion"},
+        "authority_id": {"$ref": "#/$defs/canonicalId"}
+      }
+    },
+    "entityReference": {
+      "type": "object", "additionalProperties": false,
+      "required": ["entity_type", "entity_id"],
+      "properties": {
+        "entity_type": {"enum": ["OPERATION", "RESOURCE", "MATERIAL", "DEMAND_ORDER", "OPERATION_LOCK"]},
+        "entity_id": {"$ref": "#/$defs/canonicalId"}
+      }
+    },
+    "syntheticProvenance": {
+      "type": "object", "additionalProperties": false,
+      "required": ["scenario_id", "scenario_version", "factory_profile_id", "profile_version", "generator_id", "generator_version", "simulator_id", "simulator_version", "seed"],
+      "properties": {
+        "scenario_id": {"$ref": "#/$defs/canonicalId"},
+        "scenario_version": {"$ref": "#/$defs/semanticVersion"},
+        "factory_profile_id": {"$ref": "#/$defs/canonicalId"},
+        "profile_version": {"$ref": "#/$defs/semanticVersion"},
+        "generator_id": {"$ref": "#/$defs/canonicalId"},
+        "generator_version": {"$ref": "#/$defs/semanticVersion"},
+        "simulator_id": {"$ref": "#/$defs/canonicalId"},
+        "simulator_version": {"$ref": "#/$defs/semanticVersion"},
+        "seed": {"type": "integer", "minimum": 0, "maximum": 9223372036854775807}
+      }
+    },
+    "eventType": {"enum": ["OPERATION_STARTED", "OPERATION_COMPLETED", "MACHINE_UNAVAILABLE", "MACHINE_RECOVERED", "MATERIAL_READY", "MATERIAL_DELAYED", "PROCESSING_DURATION_CHANGED", "PROCESSING_REMAINING_CHANGED", "URGENT_DEMAND_RECEIVED", "LOCK_CREATED", "LOCK_RELEASED"]},
+    "operationStarted": {
+      "type": "object", "additionalProperties": false,
+      "required": ["kind", "operation_id", "resource_id", "actual_start_at_utc"],
+      "properties": {"kind": {"const": "OPERATION_STARTED"}, "operation_id": {"$ref": "#/$defs/canonicalId"}, "resource_id": {"$ref": "#/$defs/canonicalId"}, "actual_start_at_utc": {"$ref": "#/$defs/utcInstant"}}
+    },
+    "operationCompleted": {
+      "type": "object", "additionalProperties": false,
+      "required": ["kind", "operation_id", "resource_id", "actual_start_at_utc", "actual_end_at_utc"],
+      "properties": {"kind": {"const": "OPERATION_COMPLETED"}, "operation_id": {"$ref": "#/$defs/canonicalId"}, "resource_id": {"$ref": "#/$defs/canonicalId"}, "actual_start_at_utc": {"$ref": "#/$defs/utcInstant"}, "actual_end_at_utc": {"$ref": "#/$defs/utcInstant"}}
+    },
+    "machineUnavailable": {
+      "type": "object", "additionalProperties": false,
+      "required": ["kind", "resource_id", "unavailable_from_utc", "unavailable_until_utc"],
+      "properties": {"kind": {"const": "MACHINE_UNAVAILABLE"}, "resource_id": {"$ref": "#/$defs/canonicalId"}, "unavailable_from_utc": {"$ref": "#/$defs/utcInstant"}, "unavailable_until_utc": {"oneOf": [{"type": "null"}, {"$ref": "#/$defs/utcInstant"}]}}
+    },
+    "machineRecovered": {
+      "type": "object", "additionalProperties": false,
+      "required": ["kind", "resource_id", "available_from_utc"],
+      "properties": {"kind": {"const": "MACHINE_RECOVERED"}, "resource_id": {"$ref": "#/$defs/canonicalId"}, "available_from_utc": {"$ref": "#/$defs/utcInstant"}}
+    },
+    "materialReady": {
+      "type": "object", "additionalProperties": false,
+      "required": ["kind", "material_id", "available_at_utc"],
+      "properties": {"kind": {"const": "MATERIAL_READY"}, "material_id": {"$ref": "#/$defs/canonicalId"}, "available_at_utc": {"$ref": "#/$defs/utcInstant"}}
+    },
+    "materialDelayed": {
+      "type": "object", "additionalProperties": false,
+      "required": ["kind", "material_id", "available_at_utc"],
+      "properties": {"kind": {"const": "MATERIAL_DELAYED"}, "material_id": {"$ref": "#/$defs/canonicalId"}, "available_at_utc": {"$ref": "#/$defs/utcInstant"}}
+    },
+    "processingDurationChanged": {
+      "type": "object", "additionalProperties": false,
+      "required": ["kind", "operation_id", "final_duration_seconds", "duration_source", "source_version"],
+      "properties": {"kind": {"const": "PROCESSING_DURATION_CHANGED"}, "operation_id": {"$ref": "#/$defs/canonicalId"}, "final_duration_seconds": {"type": "integer", "minimum": 1}, "duration_source": {"$ref": "#/$defs/canonicalId"}, "source_version": {"$ref": "#/$defs/nonEmptyText"}}
+    },
+    "processingRemainingChanged": {
+      "type": "object", "additionalProperties": false,
+      "required": ["kind", "operation_id", "remaining_seconds", "as_of_utc"],
+      "properties": {"kind": {"const": "PROCESSING_REMAINING_CHANGED"}, "operation_id": {"$ref": "#/$defs/canonicalId"}, "remaining_seconds": {"type": "integer", "minimum": 0}, "as_of_utc": {"$ref": "#/$defs/utcInstant"}}
+    },
+    "urgentDemandReceived": {
+      "type": "object", "additionalProperties": false,
+      "required": ["kind", "demand_order_id", "quantity", "due_at_utc", "priority_weight", "priority_source"],
+      "properties": {"kind": {"const": "URGENT_DEMAND_RECEIVED"}, "demand_order_id": {"$ref": "#/$defs/canonicalId"}, "quantity": {"type": "integer", "minimum": 1}, "due_at_utc": {"$ref": "#/$defs/utcInstant"}, "priority_weight": {"type": "integer", "minimum": 1}, "priority_source": {"$ref": "#/$defs/sourceReference"}}
+    },
+    "lockCreated": {
+      "type": "object", "additionalProperties": false,
+      "required": ["kind", "lock_id", "operation_id", "lock_type", "resource_id", "start_at_utc", "end_at_utc", "policy_reference"],
+      "properties": {"kind": {"const": "LOCK_CREATED"}, "lock_id": {"$ref": "#/$defs/canonicalId"}, "operation_id": {"$ref": "#/$defs/canonicalId"}, "lock_type": {"enum": ["HARD", "SOFT"]}, "resource_id": {"$ref": "#/$defs/canonicalId"}, "start_at_utc": {"$ref": "#/$defs/utcInstant"}, "end_at_utc": {"$ref": "#/$defs/utcInstant"}, "policy_reference": {"$ref": "#/$defs/artifactReference"}}
+    },
+    "lockReleased": {
+      "type": "object", "additionalProperties": false,
+      "required": ["kind", "lock_id", "release_reason", "policy_reference"],
+      "properties": {"kind": {"const": "LOCK_RELEASED"}, "lock_id": {"$ref": "#/$defs/canonicalId"}, "release_reason": {"enum": ["POLICY_REEVALUATION", "FACT_SUPERSEDED", "OPERATION_COMPLETED"]}, "policy_reference": {"$ref": "#/$defs/artifactReference"}}
+    },
+    "eventPayload": {"oneOf": [{"$ref": "#/$defs/operationStarted"}, {"$ref": "#/$defs/operationCompleted"}, {"$ref": "#/$defs/machineUnavailable"}, {"$ref": "#/$defs/machineRecovered"}, {"$ref": "#/$defs/materialReady"}, {"$ref": "#/$defs/materialDelayed"}, {"$ref": "#/$defs/processingDurationChanged"}, {"$ref": "#/$defs/processingRemainingChanged"}, {"$ref": "#/$defs/urgentDemandReceived"}, {"$ref": "#/$defs/lockCreated"}, {"$ref": "#/$defs/lockReleased"}]}
+  }
+}

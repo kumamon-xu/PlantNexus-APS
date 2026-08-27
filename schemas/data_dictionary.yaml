@@ -1,5 +1,5 @@
-schema_set_version: 2.7.0
-status: p3_standard_export_contracts
+schema_set_version: 2.8.0
+status: p4_dynamic_replanning_machine_contracts
 spec_version: 0.3.0
 rules:
   unknown_root_fields: reject
@@ -12,7 +12,7 @@ rules:
   unit_conversion_registry: schemas/rules/unit-conversion-registry.v1.yaml
   data_quality_rule_version: data-quality-rules.v1
   error_registry: schemas/rules/error-code-registry.v2.yaml
-  schema_set_compatibility: additive_2_7_preserves_all_prior_schema_bytes_urns_and_document_versions_while_adding_p3_standard_export_manifest_and_job_v2
+  schema_set_compatibility: additive_2_8_preserves_all_2_7_and_prior_schema_sample_bytes_urns_and_document_versions_while_adding_strict_p4_simulation_replan_carriers
 schemas:
   canonical-records.v1:
     path: schemas/json/canonical-records.v1.schema.json
@@ -252,6 +252,92 @@ schemas:
     artifact_manifest: export-manifest.v2 only
     compatibility: additive and non-interchangeable with export-job.v1; no state pair changed
     p3_boundary: internal package/job only; API/UI remain TASK-P3-10 and Production/external transfer remain forbidden
+    production_open: [OPEN-002, OPEN-010, OPEN-012, OPEN-015]
+  execution-event.v1:
+    path: schemas/json/execution-event.schema.json
+    schema_set_version: 2.8.0
+    authority: one explicit Simulation authority and versioned source stream per factory/planning scope
+    identity_projection: excludes event_id, event_fingerprint, and received_at_utc; includes authority, source position, occurred-at, entity refs, and payload
+    event_types: [OPERATION_STARTED, OPERATION_COMPLETED, MACHINE_UNAVAILABLE, MACHINE_RECOVERED, MATERIAL_READY, MATERIAL_DELAYED, PROCESSING_DURATION_CHANGED, PROCESSING_REMAINING_CHANGED, URGENT_DEMAND_RECEIVED, LOCK_CREATED, LOCK_RELEASED]
+    p4_boundary: append-only input carrier only; no ledger, fact projection, Snapshot, Replan, Solver, or Simulator behavior
+    simulation_assumptions: [SIM-ASSUMPTION-016]
+    production_open: [OPEN-001, OPEN-002, OPEN-005, OPEN-006, OPEN-010, OPEN-015]
+  replan-request.v1:
+    path: schemas/json/replan-request.schema.json
+    schema_set_version: 2.8.0
+    lineage: [base_schedule_version, base_snapshot, base_problem, new_snapshot, new_problem, ordered_event_stream, fact_checkpoint, freeze_resolution, planning_policy, solve_limits]
+    freeze_interval: new Snapshot cutoff plus explicit positive seconds using half-open start-inclusive/end-exclusive semantics
+    state_machine: none; immutable request/result lineage is owned by later P4 persistence/application Tasks
+    p4_boundary: carrier only; no persistence, solve, apply, or auto-approval
+    simulation_assumptions: [SIM-ASSUMPTION-016]
+    production_open: [OPEN-001, OPEN-002, OPEN-005, OPEN-006, OPEN-010, OPEN-012, OPEN-015]
+  planning-policy.v2:
+    path: schemas/json/planning-policy.v2.schema.json
+    schema_set_version: 2.8.0
+    data_plane: SIMULATION only; no Production freeze or objective defaults
+    freeze_policy: explicit version, revision, source, positive window seconds, and half-open interval semantics
+    objective_stages: [OBJ-001_DELIVERY, OBJ-002_STABILITY_VECTOR, OBJ-003_MAKESPAN]
+    stability_components: [SOFT_LOCK_VIOLATIONS, CHANGED_EXISTING_OPERATIONS, RESOURCE_CHANGES, ABSOLUTE_START_SHIFT_SECONDS]
+    compatibility: additive and non-interchangeable with planning-policy.v1; v1 bytes and OBJ-001 semantics remain frozen
+    simulation_assumptions: [SIM-ASSUMPTION-016]
+    production_open: [OPEN-005, OPEN-006, OPEN-009, OPEN-010, OPEN-012, OPEN-015]
+  solver-report.v2:
+    path: schemas/json/solver-report.v2.schema.json
+    schema_set_version: 2.8.0
+    lineage: [replan_request, base_problem, new_problem, planning_policy_v2, solve_limits_v1, replan_candidate]
+    objective_stages: exact ordered Delivery, Stability four-tuple, then Makespan with honest status/bound/gap/budget evidence
+    compatibility: additive and non-interchangeable with solver-report.v1; no solver execution is implied by the sample
+    p4_boundary: evidence carrier only; solver and fresh independent Validator remain TASK-P4-07
+    simulation_assumptions: [SIM-ASSUMPTION-016]
+    production_open: [OPEN-006, OPEN-009, OPEN-010, OPEN-011, OPEN-012, OPEN-015]
+  change-report.v1:
+    path: schemas/json/change-report.schema.json
+    schema_set_version: 2.8.0
+    operation_universe: every operation exactly once as UNCHANGED, CHANGED, ADDED, or REMOVED_BY_FACT
+    stability: exact non-negative OBJ-002 components plus unchanged numerator/denominator or explicit no-comparable status
+    reasons: evidence-backed enums with UNATTRIBUTED_SOLVER_CHANGE when direct causality is not provable
+    lineage: [base_and_new_version, snapshot, problem, events, facts, request, run, freeze, policy, limits, solver, validation, before_and_after_kpi]
+    p4_boundary: immutable carrier and pure completeness precheck only; calculation is TASK-P4-06
+    simulation_assumptions: [SIM-ASSUMPTION-016]
+    production_open: [OPEN-001, OPEN-005, OPEN-006, OPEN-010, OPEN-012, OPEN-015]
+  schedule-version.v2:
+    path: schemas/json/schedule-version.v2.schema.json
+    schema_set_version: 2.8.0
+    state_authority: state-machines.v1 unchanged
+    source_kind: DYNAMIC_REPLAN with immutable PUBLISHED parent and complete request/event/fact/solver/validator/ChangeReport lineage
+    content: existing assignment and lock shapes with canonical content fingerprint
+    compatibility: additive and non-interchangeable with schedule-version.v1; no state pair or P3 authority changes
+    p4_boundary: carrier only; application creates only a new DRAFT in TASK-P4-08
+    simulation_assumptions: [SIM-ASSUMPTION-016]
+    production_open: [OPEN-002, OPEN-005, OPEN-006, OPEN-010, OPEN-015]
+  execution-simulation-manifest.v1:
+    path: schemas/json/execution-simulation-manifest.schema.json
+    schema_set_version: 2.8.0
+    identity: base lineage, Scenario/Profile/Generator/Simulator versions, seed, named child-seed derivation, virtual clock, authority, stream, Policy/Limits, and code
+    checkpoint: ordered stream prefix fingerprint and last applied position
+    state_machine: none; production_binding is always false
+    p4_boundary: deterministic manifest only; no event generation or common-path execution until TASK-P4-09/10
+    simulation_assumptions: [SIM-ASSUMPTION-016]
+    production_open: [OPEN-001, OPEN-002, OPEN-010, OPEN-012, OPEN-015]
+  export-manifest.v3:
+    path: schemas/json/export-manifest.v3.schema.json
+    schema_set_version: 2.8.0
+    package_profile: p4-dynamic-replan-export.v1
+    source_state: PUBLISHED schedule-version.v2 with completed internal Simulation publication
+    required_payloads: [change_report.json, import_quality_report.json, kpi.json, order_summary.csv, planning_solution.json, publication_result.json, resource_load.csv, scenario_manifest.json, schedule_operations.csv, schedule_version.json, solver_report.json, standard_package.xlsx, validation_report.json]
+    compatibility: additive and non-interchangeable with export-manifest.v1/v2; binds the frozen P3 package plus complete ChangeReport
+    p4_boundary: carrier only; no package generation, external transfer, or Production publish
+    simulation_assumptions: [SIM-ASSUMPTION-016]
+    production_open: [OPEN-002, OPEN-010, OPEN-012, OPEN-015]
+  export-job.v3:
+    path: schemas/json/export-job.v3.schema.json
+    schema_set_version: 2.8.0
+    state_authority: state-machines.v1 unchanged
+    source_state: PUBLISHED schedule-version.v2 only
+    artifact_manifest: export-manifest.v3 only
+    compatibility: additive and non-interchangeable with export-job.v1/v2; state pairs remain unchanged
+    p4_boundary: carrier only; P3 ExportJob storage is consumed by TASK-P4-11 without external target
+    simulation_assumptions: [SIM-ASSUMPTION-016]
     production_open: [OPEN-002, OPEN-010, OPEN-012, OPEN-015]
   error.v1:
     path: schemas/json/error.schema.json

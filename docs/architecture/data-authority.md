@@ -11,6 +11,10 @@ last_reviewed: 2026-08-26
 
 # 数据权威边界
 
+## TASK-P4-02 event authority carrier
+
+ExecutionEvent v1把authority ID/scope/source、source stream/version/position和factory/planning scope显式纳入合同；receive timestamp不构成业务authority或排序。Carrier只声明输入必须提供什么，不建立真实MES/ERP authority或冲突仲裁；OPEN-002/015未关闭，P4-04才可消费已授权Simulation stream投影事实。
+
 ## TASK-P4-01 event/fact authority decision
 
 ADR-0013固定一个projection scope只接受一个已批准authority source stream/version及单调source position；received-at、UI、数据库owner、AI和Simulation fixture均不是Production authority。Same ID/different fingerprint、gap、late、cross-plane或unknown authority全部fail closed；事实只能由append-only event projection产生新revision/Snapshot，不能用last-write-wins覆盖。

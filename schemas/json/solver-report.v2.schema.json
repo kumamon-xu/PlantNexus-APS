@@ -1,0 +1,127 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "urn:plantnexus:aps:schema:solver-report:v2",
+  "title": "PlantNexus APS SolverReport v2",
+  "description": "P4 solver-neutral lexicographic replan evidence carrier; sample evidence never claims solver execution.",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "solver_report_version", "schema_set_version", "canonicalization_version",
+    "report_id", "report_fingerprint", "evidence_kind", "replan_request",
+    "planning_run_id", "started_at_utc", "finished_at_utc", "base_problem",
+    "new_problem", "policy", "limits", "candidate", "solver_status",
+    "planning_run_outcome", "solver", "objective_stage_results",
+    "stability_evidence", "timings", "model_metrics", "memory_peak_mb",
+    "diagnostics", "provenance"
+  ],
+  "properties": {
+    "solver_report_version": {"const": "solver-report.v2"},
+    "schema_set_version": {"const": "2.8.0"},
+    "canonicalization_version": {"const": "canonical-json.v1"},
+    "report_id": {"type": "string", "pattern": "^solver-report-[0-9a-f]{64}$"},
+    "report_fingerprint": {"$ref": "urn:plantnexus:aps:schema:execution-event:v1#/$defs/sha256Fingerprint"},
+    "evidence_kind": {"enum": ["CONTRACT_SAMPLE", "SOLVER_RUN"]},
+    "replan_request": {"$ref": "urn:plantnexus:aps:schema:replan-request:v1#/$defs/requestReference"},
+    "planning_run_id": {"$ref": "urn:plantnexus:aps:schema:execution-event:v1#/$defs/canonicalId"},
+    "started_at_utc": {"$ref": "urn:plantnexus:aps:schema:execution-event:v1#/$defs/utcInstant"},
+    "finished_at_utc": {"$ref": "urn:plantnexus:aps:schema:execution-event:v1#/$defs/utcInstant"},
+    "base_problem": {"$ref": "urn:plantnexus:aps:schema:execution-event:v1#/$defs/artifactReference"},
+    "new_problem": {"$ref": "urn:plantnexus:aps:schema:execution-event:v1#/$defs/artifactReference"},
+    "policy": {"$ref": "urn:plantnexus:aps:schema:planning-policy:v2#/$defs/policyReference"},
+    "limits": {"$ref": "urn:plantnexus:aps:schema:solve-limits:v1#/$defs/limitsReference"},
+    "candidate": {"oneOf": [{"type": "null"}, {"$ref": "#/$defs/replanCandidate"}]},
+    "solver_status": {"$ref": "urn:plantnexus:aps:schema:planning-solution:v1#/$defs/solverStatus"},
+    "planning_run_outcome": {"$ref": "urn:plantnexus:aps:schema:planning-solution:v1#/$defs/planningRunOutcome"},
+    "solver": {"$ref": "urn:plantnexus:aps:schema:solver-report:v1#/$defs/solverIdentity"},
+    "objective_stage_results": {
+      "type": "array", "minItems": 3, "maxItems": 3,
+      "prefixItems": [{"$ref": "#/$defs/deliveryStageResult"}, {"$ref": "#/$defs/stabilityStageResult"}, {"$ref": "#/$defs/makespanStageResult"}],
+      "items": false
+    },
+    "stability_evidence": {"oneOf": [{"type": "null"}, {"$ref": "#/$defs/stabilityVector"}]},
+    "timings": {"$ref": "urn:plantnexus:aps:schema:solver-report:v1#/$defs/timings"},
+    "model_metrics": {"$ref": "urn:plantnexus:aps:schema:solver-report:v1#/$defs/modelMetrics"},
+    "memory_peak_mb": {"type": "number", "minimum": 0},
+    "diagnostics": {"type": "array", "items": {"$ref": "urn:plantnexus:aps:schema:planning-solution:v1#/$defs/diagnostic"}},
+    "provenance": {"$ref": "#/$defs/provenance"}
+  },
+  "allOf": [
+    {
+      "if": {"properties": {"solver_status": {"enum": ["OPTIMAL", "FEASIBLE"]}}, "required": ["solver_status"]},
+      "then": {"properties": {"candidate": {"$ref": "#/$defs/replanCandidate"}, "stability_evidence": {"$ref": "#/$defs/stabilityVector"}}},
+      "else": {"properties": {"candidate": {"type": "null"}, "stability_evidence": {"type": "null"}}}
+    }
+  ],
+  "$defs": {
+    "replanCandidate": {
+      "type": "object", "additionalProperties": false,
+      "required": ["candidate_version", "assignment_count", "assignments", "candidate_fingerprint"],
+      "properties": {
+        "candidate_version": {"const": "replan-candidate.v1"},
+        "assignment_count": {"type": "integer", "minimum": 0},
+        "assignments": {"type": "array", "items": {"$ref": "urn:plantnexus:aps:schema:planning-solution:v1#/$defs/operationAssignment"}},
+        "candidate_fingerprint": {"$ref": "urn:plantnexus:aps:schema:execution-event:v1#/$defs/sha256Fingerprint"}
+      }
+    },
+    "stabilityVector": {
+      "type": "object", "additionalProperties": false,
+      "required": ["soft_lock_violations", "changed_existing_operations", "resource_changes", "absolute_start_shift_seconds"],
+      "properties": {
+        "soft_lock_violations": {"type": "integer", "minimum": 0},
+        "changed_existing_operations": {"type": "integer", "minimum": 0},
+        "resource_changes": {"type": "integer", "minimum": 0},
+        "absolute_start_shift_seconds": {"type": "integer", "minimum": 0}
+      }
+    },
+    "scalarStageValue": {"type": ["integer", "null"], "minimum": 0},
+    "stageBase": {
+      "type": "object", "additionalProperties": false,
+      "required": ["stage_index", "objective_id", "metric", "sense", "status", "objective_value", "best_bound", "relative_gap", "allocated_wall_time_seconds", "solve_seconds", "stop_reason"],
+      "properties": {
+        "stage_index": {"type": "integer", "minimum": 1, "maximum": 3},
+        "objective_id": {"enum": ["OBJ-001", "OBJ-002", "OBJ-003"]},
+        "metric": {"enum": ["WEIGHTED_TARDINESS_SECONDS", "STABILITY_VECTOR", "MAKESPAN_SECONDS"]},
+        "sense": {"enum": ["MINIMIZE", "LEXICOGRAPHIC_MINIMIZE"]},
+        "status": {"$ref": "urn:plantnexus:aps:schema:planning-solution:v1#/$defs/solverStatus"},
+        "objective_value": {},
+        "best_bound": {},
+        "relative_gap": {"type": ["number", "null"], "minimum": 0},
+        "allocated_wall_time_seconds": {"type": "number", "exclusiveMinimum": 0},
+        "solve_seconds": {"type": "number", "minimum": 0},
+        "stop_reason": {"$ref": "urn:plantnexus:aps:schema:execution-event:v1#/$defs/nonEmptyText"}
+      }
+    },
+    "deliveryStageResult": {
+      "allOf": [
+        {"$ref": "#/$defs/stageBase"},
+        {"properties": {"stage_index": {"const": 1}, "objective_id": {"const": "OBJ-001"}, "metric": {"const": "WEIGHTED_TARDINESS_SECONDS"}, "sense": {"const": "MINIMIZE"}, "objective_value": {"$ref": "#/$defs/scalarStageValue"}, "best_bound": {"$ref": "#/$defs/scalarStageValue"}}}
+      ]
+    },
+    "stabilityStageResult": {
+      "allOf": [
+        {"$ref": "#/$defs/stageBase"},
+        {"properties": {"stage_index": {"const": 2}, "objective_id": {"const": "OBJ-002"}, "metric": {"const": "STABILITY_VECTOR"}, "sense": {"const": "LEXICOGRAPHIC_MINIMIZE"}, "objective_value": {"oneOf": [{"type": "null"}, {"$ref": "#/$defs/stabilityVector"}]}, "best_bound": {"oneOf": [{"type": "null"}, {"$ref": "#/$defs/stabilityVector"}]}}}
+      ]
+    },
+    "makespanStageResult": {
+      "allOf": [
+        {"$ref": "#/$defs/stageBase"},
+        {"properties": {"stage_index": {"const": 3}, "objective_id": {"const": "OBJ-003"}, "metric": {"const": "MAKESPAN_SECONDS"}, "sense": {"const": "MINIMIZE"}, "objective_value": {"$ref": "#/$defs/scalarStageValue"}, "best_bound": {"$ref": "#/$defs/scalarStageValue"}}}
+      ]
+    },
+    "provenance": {
+      "type": "object", "additionalProperties": false,
+      "required": ["code_commit", "spec_version", "schema_set_version", "canonicalization_version", "constraint_contract_version", "objective_policy_version", "state_machine_contract_version", "error_registry_version"],
+      "properties": {
+        "code_commit": {"type": "string", "pattern": "^(uncommitted|[0-9a-f]{40})$"},
+        "spec_version": {"const": "0.3.0"},
+        "schema_set_version": {"const": "2.8.0"},
+        "canonicalization_version": {"const": "canonical-json.v1"},
+        "constraint_contract_version": {"const": "constraint-rule-sheet.v1"},
+        "objective_policy_version": {"const": "objective-policy.v2"},
+        "state_machine_contract_version": {"const": "state-machines.v1"},
+        "error_registry_version": {"const": "error-code-registry.v2"}
+      }
+    }
+  }
+}

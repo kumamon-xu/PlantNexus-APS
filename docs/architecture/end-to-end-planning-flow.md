@@ -11,6 +11,10 @@ last_reviewed: 2026-08-26
 
 # 端到端计划链路
 
+## TASK-P4-02 contract-only flow
+
+机器lineage现可表达`ExecutionEvent → fact checkpoint/new Snapshot/new Problem → ReplanRequest → SolverReport/fresh Validation → ScheduleVersion v2 + ChangeReport → internal export`，但本Task只验证document links与fingerprints，箭头均不执行。P4-03～11分别拥有transaction、projection、freeze/stability/solve/apply/export，任何步骤失败不得从sample推断partial business success。
+
 ## TASK-P4-01 accepted end-to-end extension
 
 ADR-0013～0015已固定受控反馈链：versioned authoritative ExecutionEvent→append-only ledger→deterministic fact revision/new Snapshot/ReplanRequest→freeze/effective locks→Delivery/Stability/Makespan Solver→fresh independent Validator→atomic new DRAFT ScheduleVersion+complete ChangeReport。接收、projection和result application是三个明确可重放事务边界；base PUBLISHED与历史artifact不改。

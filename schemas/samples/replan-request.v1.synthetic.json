@@ -1,0 +1,79 @@
+{
+  "replan_request_version": "replan-request.v1",
+  "schema_set_version": "2.8.0",
+  "canonicalization_version": "canonical-json.v1",
+  "request_id": "replan-request-8c3484577f6ee85a4c6face64e73ae88b25ecd277391d12933ce4e1ce336ecea",
+  "data_plane": "SIMULATION",
+  "environment": "TEST",
+  "factory_id": "factory-sim-001",
+  "planning_scope_id": "planning-scope-sim-001",
+  "base_schedule_version": {
+    "schedule_version_version": "schedule-version.v1",
+    "schedule_version_id": "schedule-version-base-published-001",
+    "state": "PUBLISHED",
+    "content_fingerprint": "sha256:1111111111111111111111111111111111111111111111111111111111111111"
+  },
+  "base_snapshot": {"document_version": "planning-snapshot.v2", "artifact_id": "snapshot-base-001", "fingerprint": "sha256:2222222222222222222222222222222222222222222222222222222222222222"},
+  "base_problem": {"document_version": "planning-problem.v2", "artifact_id": "problem-base-001", "fingerprint": "sha256:3333333333333333333333333333333333333333333333333333333333333333"},
+  "new_snapshot": {"document_version": "planning-snapshot.v2", "artifact_id": "snapshot-new-001", "fingerprint": "sha256:4444444444444444444444444444444444444444444444444444444444444444"},
+  "new_snapshot_cutoff_at_utc": "2026-08-27T06:00:00Z",
+  "new_problem": {"document_version": "planning-problem.v2", "artifact_id": "problem-new-001", "fingerprint": "sha256:5555555555555555555555555555555555555555555555555555555555555555"},
+  "event_stream": {
+    "authority": {
+      "authority_version": "execution-event-authority.v1",
+      "authority_id": "authority-sim-execution-001",
+      "authority_scope": "SIMULATION/factory-sim-001/planning-scope-sim-001",
+      "source": {"source_system": "plantnexus-execution-simulator", "source_version": "1.0.0", "source_record_id": "SIM-P4-CONTRACT-STREAM-001"},
+      "decision": "AUTHORIZED_SIMULATION_SOURCE",
+      "production_binding": false
+    },
+    "source_stream": {"stream_id": "execution-stream-sim-001", "stream_version": "1.0.0", "authority_id": "authority-sim-execution-001"},
+    "from_position": 1,
+    "through_position": 1,
+    "event_ids": ["execution-event-a293ff05c1c320f598910dbb1bcccc45abab25cdc79e5ab5cb1bcc072184101c"],
+    "event_fingerprints": ["sha256:a293ff05c1c320f598910dbb1bcccc45abab25cdc79e5ab5cb1bcc072184101c"],
+    "stream_fingerprint": "sha256:46641d96f28efc0eb8e88b64159b2a9243acabfa96440a06bfe9249238872811",
+    "fact_checkpoint": {"document_version": "execution-fact-checkpoint.v1", "artifact_id": "fact-checkpoint-001", "fingerprint": "sha256:6666666666666666666666666666666666666666666666666666666666666666"}
+  },
+  "trigger_event_ids": ["execution-event-a293ff05c1c320f598910dbb1bcccc45abab25cdc79e5ab5cb1bcc072184101c"],
+  "trigger_reason": "EXECUTION_FACT_CHANGED",
+  "freeze_resolution": {
+    "freeze_policy_version": "freeze-policy.v1",
+    "freeze_policy_id": "FREEZE-POLICY-P4-SIM-001",
+    "freeze_policy_revision": "1.0.0",
+    "freeze_policy_fingerprint": "sha256:690ca65d702302d141bb89c17ec9fc9993435e94dcb2255413b27fdcaaa17f1d",
+    "source": {"source_system": "plantnexus-synthetic-policy", "source_version": "1.0.0", "source_record_id": "SCHEMA-SAMPLE-P4-02-FREEZE"},
+    "window_seconds": 900,
+    "effective_from_utc": "2026-08-27T06:00:00Z",
+    "effective_until_utc": "2026-08-27T06:15:00Z",
+    "interval_semantics": "HALF_OPEN_START_INCLUSIVE_END_EXCLUSIVE",
+    "effective_lock_ids": ["lock-sim-freeze-001"]
+  },
+  "planning_policy": {
+    "planning_policy_version": "planning-policy.v2",
+    "policy_id": "POLICY-P4-SIM-DYNAMIC-001",
+    "policy_revision": "1.0.0",
+    "policy_fingerprint": "sha256:d75a4cba2094628f6c20397e3ea40aaec4288ea67801dc741bad6e0b1b71419b"
+  },
+  "solve_limits": {
+    "solve_limits_version": "solve-limits.v1",
+    "limits_id": "LIMITS-SAMPLE-P2-02-001",
+    "limits_revision": "1.0.0",
+    "limits_fingerprint": "sha256:76091493ee0b96a761c9df6e9881d03d9b8cca1c4b09103602661dcbf5d4a27b",
+    "max_wall_time_seconds": 30,
+    "max_workers": 1,
+    "random_seed": 20260820
+  },
+  "synthetic": true,
+  "synthetic_provenance": {
+    "scenario_id": "SIM-P4-CONTRACT-001", "scenario_version": "1.0.0",
+    "factory_profile_id": "PROFILE-P4-CONTRACT-001", "profile_version": "1.0.0",
+    "generator_id": "PLANTNEXUS-P4-CONTRACT-GENERATOR", "generator_version": "1.0.0",
+    "simulator_id": "PLANTNEXUS-EXECUTION-SIMULATOR", "simulator_version": "1.0.0",
+    "seed": 20260827
+  },
+  "production_binding": false,
+  "requested_at_utc": "2026-08-27T06:00:06Z",
+  "correlation_id": "correlation-p4-contract-001",
+  "request_fingerprint": "sha256:8c3484577f6ee85a4c6face64e73ae88b25ecd277391d12933ce4e1ce336ecea"
+}

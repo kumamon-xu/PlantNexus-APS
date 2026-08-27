@@ -1,10 +1,10 @@
 # PlantNexus APS
 
-## P4 phase activation and TASK-P4-01
+## P4 phase activation and TASK-P4-02
 
 用户已明确批准P3→P4。TASK-P3-17独立Exit Audit的report/manifest均为`READY`、`blocking_gaps=[]`；audit implementation `201be9c6fd1b433a9d0a629a3ae7d4ffe1107476`和evidence-only closure `61eeacdd5efc20b2321750e1310e9e21561c9fc2`的直接拓扑、required `validate`、GitHub Actions app `15368`及未过期artifact均已exact复验。因此P3 Milestone现为`completed`，P4 Dynamic Replanning已激活。
 
-PlantNexus APS 是一个面向单工厂、多车间场景的高级计划与排程（APS）项目。TASK-P4-00阶段启动与完整规划治理已由implementation/closure exact provider闭环为`done`；用户随后单独授权TASK-P4-01，它以`b96232b2e3f5573baaf735c7fa7935f95e6c88f5`为不可变Diff base形成ADR-0013～0015的事件投影/Replan lineage、freeze/OBJ-002/ChangeReport及Simulator common-path人类合同。Implementation `abd70942a41984a9a3956f43d39065b19e4405c3`的required `validate`与artifact已exact成功，本evidence-only closure将TASK-P4-01标为`done`；P4-02～15仍为`planned`且不会自动启动。机器Schema、migration、代码与P4行为证据均未形成；Production readiness/UAT/真实approval authority/external publish/deployment/capacity/SLA与P5+仍在边界外。
+PlantNexus APS 是一个面向单工厂、多车间场景的高级计划与排程（APS）项目。TASK-P4-00与TASK-P4-01均已由implementation/closure exact provider闭环为`done`。用户随后单独授权TASK-P4-02，它以`4026597ab1015b5ea3a89d241f0d12b5b481dee3`为不可变Diff base，发布additive schema set `2.8.0`的九份P4机器carrier、九份synthetic sample、纯校验与CI evidence；当前为`in_progress`且implementation provider待精确核验。P4-03及后继未自动启动；migration、event ingress、事实投影、Solver、Simulator、API/UI与Production readiness/UAT/真实authority/external publish/deployment/capacity/SLA仍未形成。
 
 ## 开始之前
 
@@ -16,7 +16,7 @@ Coding Agent 必须从 [`AGENTS.md`](AGENTS.md) 进入项目规则。项目规�
 |---|---|---|
 | Implementation spec | `0.3.0` | 当前权威实施规格版本 |
 | Code | `0.0.0` | P0 工程骨架占位，不代表发布版本 |
-| Business schema set | `2.7.0` | 加法包含Workspace v1与P3 export v2；本Task不改Schema、migration或历史document bytes |
+| Business schema set | `2.8.0` | 加法包含九份P4 Simulation机器carrier；全部P0～P3 document bytes与migration `0004`保持冻结 |
 | Python | `3.12` | `.python-version` 与 `pyproject.toml` 固定的运行时系列 |
 | OR-Tools | `9.15.6755` | TASK-P2-03 exact runtime pin；只允许在 `planning/backends/cp_sat/` 使用 |
 
@@ -45,19 +45,20 @@ uv run python -m app.planning.validation.problem_validator_check --root . --repo
 uv run python -m app.simulation.scenarios.p2_correctness --root . --report build/validation/TASK-P2-09-correctness.json
 uv run python -m app.simulation.baselines.reference_schedulers --root . --report build/validation/TASK-P2-10-reference-schedulers.json
 uv run python -m app.exporters.contract_check --root . --report build/validation/TASK-P2-11-output-contracts.json
+uv run python -m app.domain.execution_contract_check --root . --report build/validation/ci-p4-machine-contracts.json
 uv run python scripts/run_benchmark.py --profile xs --report build/benchmarks/TASK-P2-12-xs.json
 uv run python -m app.application.p2_gate_report --root . --repeat 2 --report build/validation/TASK-P2-13-p2-gate.json
 uv run python -m app.infrastructure.contract_check --root . --report build/validation/TASK-P0-08-engineering.json
 docker compose --env-file .env.example config --quiet
 uv run python scripts/check_docs.py
 uv build
-uv run python -c "import app; assert app.CODE_VERSION == '0.0.0'; assert app.SPEC_VERSION == '0.3.0'; assert app.SCHEMA_VERSION == '2.7.0'"
+uv run python -c "import app; assert app.CODE_VERSION == '0.0.0'; assert app.SPEC_VERSION == '0.3.0'; assert app.SCHEMA_VERSION == '2.8.0'"
 ```
 
 `scripts/check_docs.py` 当前同时检查结构性 Markdown、版本化 registries、REQ/NFR/ENG/TEST 等引用、Task 依赖、逐根 traceability 和 PROD_OPEN/SIM_ASSUMPTION 隔离。Task 进入 `in_progress` 时须把当时完整 HEAD SHA 写入 `Diff base`；影响覆盖检查使用 `Diff base..HEAD` 的已提交变更与当前 working tree 的并集，因此提交前后可用同一命令复验：
 
 ```powershell
-uv run python scripts/check_docs.py --task docs/tasks/P4/TASK-P4-01-dynamic-replanning-contract-and-adr-baseline.md --check-diff --report build/traceability/TASK-P4-01-report.json
+uv run python scripts/check_docs.py --task docs/tasks/P4/TASK-P4-02-execution-event-replan-change-report-schemas.md --check-diff --report build/traceability/TASK-P4-02-report.json
 ```
 
 报告使用 `traceability-report.v1`，包含 `diff_base` 与 committed/working-tree source counts，生成到已忽略的 `build/`；Task Card Completion evidence 保存持久结果摘要。[`ci.yml`](.github/workflows/ci.yml) 已编排 exact lock、lint、type、全部 P0 tests、machine contracts、Compose config、文档 diff 和 package build。仓库内只证明 workflow/config 可执行；CI provider run URL/ID 必须来自真实外部运行，不能由本地结果替代。
@@ -77,7 +78,7 @@ scripts/      仓库级校验与自动化脚本
 infra/        P0 开发容器构建配置
 ```
 
-P2 CP-SAT Vertical Slice与P3 Planning Workspace均已通过Exit Gate并关闭，当前阶段为P4。P2-00～14、P3-00～17、TASK-P4-00与TASK-P4-01均为`done`；P3 Exit、P4 planning与P4-01 implementation provider已完整复验。P4-01只形成accepted contract/ADR baseline，P4-02～15仍为`planned`。Production capacity/SLA/identity/approval authority/external publish仍未形成，P4运行行为也尚未开始。当前边界见[`docs/current_phase.md`](docs/current_phase.md)。
+P2 CP-SAT Vertical Slice与P3 Planning Workspace均已通过Exit Gate并关闭，当前阶段为P4。P2-00～14、P3-00～17、TASK-P4-00与TASK-P4-01均为`done`；TASK-P4-02现为`in_progress`并只形成机器合同候选，P4-03～15仍为`planned`。Production capacity/SLA/identity/approval authority/external publish仍未形成，P4运行行为也尚未开始。当前边界见[`docs/current_phase.md`](docs/current_phase.md)。
 
 TASK-P3-13保留失败implementation run `32920462781`、首次closure `87d47c7483185483ac8027100c1c664d18011a7c` / run `32921871460`的606/1失败与artifact count=0。独立XLSX deterministic corrective implementation `3538d46f8b73ae434057bcbca9037436aa91f2c7`的required run/job/artifact=`32923203227`/`98040743610`/`9590625358`已全绿并下载复验33份JSON、12/12 Chromium和Task 91/0/11/19/0；该P3-13 closure当时未自动启动P3-14，后者现依据新的用户授权独立执行。
 

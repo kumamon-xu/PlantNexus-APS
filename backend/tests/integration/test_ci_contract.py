@@ -27,6 +27,7 @@ from app.application.workspace_read_model_check import (
 )
 from app.api.planning_workspace_check import main as planning_workspace_api_main
 from app.domain.workspace_contract_check import main as workspace_contract_main
+from app.domain.execution_contract_check import main as execution_contract_main
 from app.exporters.contract_check import main as output_contract_main
 from app.infrastructure.workspace_persistence_check import (
     main as workspace_persistence_main,
@@ -240,6 +241,8 @@ def test_ci_runs_repository_gates_and_discovers_the_current_task() -> None:
         "build/validation/ci-p2-output-contracts.json",
         "app.domain.workspace_contract_check",
         "build/validation/ci-p3-workspace-contracts.json",
+        "app.domain.execution_contract_check",
+        "build/validation/ci-p4-machine-contracts.json",
         "app.infrastructure.workspace_persistence_check",
         "build/validation/ci-p3-persistence.json",
         "app.application.schedule_version_lifecycle_check",
@@ -272,6 +275,7 @@ def test_ci_runs_repository_gates_and_discovers_the_current_task() -> None:
     assert "name: P2 XS BenchmarkRunner evidence" in workflow
     assert "name: P2 vertical slice Gate evidence" in workflow
     assert "name: P3 workspace schema contract evidence" in workflow
+    assert "name: P4 dynamic replanning machine contract evidence" in workflow
     assert "name: P3 workspace persistence evidence" in workflow
     assert "name: P3 reviewable ScheduleVersion lifecycle evidence" in workflow
     assert "name: P3 workspace read model and comparison evidence" in workflow
@@ -327,6 +331,37 @@ def test_ci_p3_workspace_schema_contract_is_required_and_machine_checkable(
         "negative_schema_rejections": 24,
         "negative_fingerprint_rejections": 6,
     }
+
+
+def test_ci_p4_machine_contract_is_required_and_machine_checkable(
+    tmp_path: Path,
+) -> None:
+    workflow = (ROOT / ".github" / "workflows" / "ci.yml").read_text(
+        encoding="utf-8"
+    )
+    normalized = " ".join(workflow.split())
+    assert (
+        "name: P4 dynamic replanning machine contract evidence run: >- "
+        "uv run python -m app.domain.execution_contract_check --root . --report "
+        "build/validation/ci-p4-machine-contracts.json"
+    ) in normalized
+    assert "continue-on-error" not in workflow
+
+    report_path = tmp_path / "p4-machine-contracts.json"
+    assert (
+        execution_contract_main(
+            ["--root", str(ROOT), "--report", str(report_path)]
+        )
+        == 0
+    )
+    report = json.loads(report_path.read_text(encoding="utf-8"))
+    assert report["report_version"] == "p4-machine-contract-report.v1"
+    assert report["status"] == "PASS"
+    assert report["task_id"] == "TASK-P4-02"
+    assert report["diff_base"] == "4026597ab1015b5ea3a89d241f0d12b5b481dee3"
+    assert report["schema_set_version"] == "2.8.0"
+    assert report["check_count"] == 8
+    assert report["issues"] == []
 
 
 def test_ci_p3_persistence_is_required_and_machine_checkable(tmp_path: Path) -> None:
@@ -719,7 +754,7 @@ def test_ci_planning_problem_contract_report_is_machine_checkable(
     assert report["report_version"] == "planning-problem-contract-report.v1"
     assert report["status"] == "PASS"
     assert report["task_id"] == "TASK-P2-01"
-    assert report["schema_set_version"] == "2.7.0"
+    assert report["schema_set_version"] == "2.8.0"
     assert report["check_count"] == 4
     assert {check["name"] for check in report["checks"]} == {
         "v1-byte-preservation",
@@ -744,7 +779,7 @@ def test_ci_planning_machine_contract_report_is_machine_checkable(
     assert report["report_version"] == "planning-machine-contract-report.v1"
     assert report["status"] == "PASS"
     assert report["task_id"] == "TASK-P2-02"
-    assert report["schema_set_version"] == "2.7.0"
+    assert report["schema_set_version"] == "2.8.0"
     assert report["check_count"] == 5
     assert {check["name"] for check in report["checks"]} == {
         "fixed-schema-and-sample-artifacts",
@@ -1164,3 +1199,22 @@ def test_container_build_is_pinned_and_non_root() -> None:
     assert "uv sync --locked --no-dev --no-editable" in dockerfile
     assert "USER plantnexus" in dockerfile
     assert "app.api.app:app" in dockerfile
+
+
+def test_p3_i18n_wire_freeze_allows_additive_future_phase_contracts() -> None:
+    source = (ROOT / "frontend" / "scripts" / "i18n-evidence.mjs").read_text(
+        encoding="utf-8"
+    )
+    for exact_path in (
+        "backend/app/api/contracts.py",
+        "backend/app/api/routers/planning_workspace.py",
+        "schemas/json/schedule-version.schema.json",
+        "schemas/json/workspace-command.schema.json",
+        "schemas/json/workspace-query.schema.json",
+        "schemas/rules/error-code-registry.v2.yaml",
+        "schemas/rules/state-machines.v1.yaml",
+        "uv.lock",
+    ):
+        assert f'"{exact_path}"' in source
+    for stale_broad_path in ('"backend"', '"schemas"', '"pyproject.toml"'):
+        assert stale_broad_path not in source

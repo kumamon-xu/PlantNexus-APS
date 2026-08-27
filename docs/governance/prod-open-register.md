@@ -12,6 +12,10 @@ registry_version: 1.0.0
 
 # PROD_OPEN 注册表
 
+## TASK-P4-02 machine-contract review
+
+九份新carrier只允许有界Simulation sample，并显式拒绝Production plane/binding、external target与未知authority/default。它们不提供真实Factory timezone/interface/freeze/priority/identity/approval/field authority、历史数据、runtime threshold、deployment或capacity/SLA closure record；OPEN-001～015全部继续`OPEN`，`registry_version=1.0.0`不变。
+
 ## TASK-P4-01 contract review
 
 ADR-0013把Production ExecutionEvent authority设为“无已批准绑定即default-deny”，ADR-0014禁止为Production假设freeze window，ADR-0015禁止Production启用Simulator route/worker/authority。它们只是防止未知值被实现为默认，不能替代权威closure record。OPEN-001～015全部继续`OPEN`；尤其OPEN-002/005/006/010/011/012/015的external、freeze/priority、identity/approval、dependency safety、capacity/SLA与字段authority均未形成，数量与`registry_version=1.0.0`不变。

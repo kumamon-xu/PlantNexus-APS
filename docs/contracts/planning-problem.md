@@ -11,6 +11,10 @@ last_reviewed: 2026-08-21
 
 # PlanningProblem 合同
 
+## TASK-P4-02 replan lineage boundary
+
+ReplanRequest、SolverReport v2、ScheduleVersion v2和ChangeReport v1均以exact artifact reference绑定base/new PlanningProblem，但本Task不修改PlanningProblem v1/v2 Schema、builder、hash或字段语义。新Problem只能由P4-04在新immutable Snapshot之后确定性构建；event/freeze/policy字段不得私塞入已冻结Problem document。
+
 ## TASK-P4-01 future Replan input boundary
 
 ADR-0013/0014要求P4 Replan仍只从verified new PlanningSnapshot构建solver-neutral Problem；ExecutionEvent不得作为Backend隐藏参数。Problem必须显式绑定base PUBLISHED reference、new Snapshot/fact checkpoint、freeze policy/resolved effective locks及OBJ-002 base assignments所需版本化引用。TASK-P4-02决定是否发布新Problem document或独立referenced carrier；不得原地扩写`planning-problem.v2`或改变其hash。

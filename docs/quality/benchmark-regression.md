@@ -11,6 +11,10 @@ last_reviewed: 2026-08-26
 
 # Benchmark Regression 规则
 
+## TASK-P4-02 benchmark boundary
+
+本Task不新增或修改Benchmark profile/baseline，也不运行P4 Solver/Simulator performance measurement。P2 XS/S/M资产保持冻结；machine-contract sample中的clock/freeze/duration数值只属于SIM-ASSUMPTION-016的contract replay，不能建立Production capacity/SLA或新的regression threshold。
+
 ## TASK-P4-01 regression contract
 
 ADR-0014现固定Replan质量比较顺序为hard feasibility → OBJ-001 Delivery → OBJ-002 Stability四元整数向量 → OBJ-003 Makespan，ChangeReport必须保存可独立复算的before/after值；ADR-0015要求五类连续disruption保留逐步事件、请求、版本和报告identity。后继TASK-P4-10/14仍须复用P2 XS/S/M baseline并记录deterministic functional、quality、runtime与memory观察，P4-15再独立复验。

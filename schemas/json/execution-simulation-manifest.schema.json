@@ -1,0 +1,93 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "urn:plantnexus:aps:schema:execution-simulation-manifest:v1",
+  "title": "PlantNexus APS ExecutionSimulationManifest v1",
+  "description": "Deterministic Simulation run identity, virtual-clock, stream and checkpoint carrier. It is not a business state machine.",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "execution_simulation_manifest_version", "schema_set_version",
+    "canonicalization_version", "manifest_id", "manifest_fingerprint",
+    "data_plane", "environment", "factory_id", "planning_scope_id",
+    "production_binding", "synthetic", "synthetic_provenance",
+    "base_schedule_version", "base_snapshot", "base_problem", "scenario",
+    "factory_profile", "generator", "simulator", "seed",
+    "child_seed_derivation_version", "virtual_clock", "authority",
+    "source_stream", "planning_policy", "solve_limits", "event_stream",
+    "checkpoint", "code_commit"
+  ],
+  "properties": {
+    "execution_simulation_manifest_version": {"const": "execution-simulation-manifest.v1"},
+    "schema_set_version": {"const": "2.8.0"},
+    "canonicalization_version": {"const": "canonical-json.v1"},
+    "manifest_id": {"type": "string", "pattern": "^execution-simulation-[0-9a-f]{64}$"},
+    "manifest_fingerprint": {"$ref": "urn:plantnexus:aps:schema:execution-event:v1#/$defs/sha256Fingerprint"},
+    "data_plane": {"const": "SIMULATION"},
+    "environment": {"enum": ["DEVELOPMENT", "TEST", "BENCHMARK"]},
+    "factory_id": {"$ref": "urn:plantnexus:aps:schema:execution-event:v1#/$defs/canonicalId"},
+    "planning_scope_id": {"$ref": "urn:plantnexus:aps:schema:execution-event:v1#/$defs/canonicalId"},
+    "production_binding": {"const": false},
+    "synthetic": {"const": true},
+    "synthetic_provenance": {"$ref": "urn:plantnexus:aps:schema:execution-event:v1#/$defs/syntheticProvenance"},
+    "base_schedule_version": {"$ref": "urn:plantnexus:aps:schema:replan-request:v1#/$defs/publishedScheduleReference"},
+    "base_snapshot": {"$ref": "urn:plantnexus:aps:schema:execution-event:v1#/$defs/artifactReference"},
+    "base_problem": {"$ref": "urn:plantnexus:aps:schema:execution-event:v1#/$defs/artifactReference"},
+    "scenario": {"$ref": "#/$defs/versionedAsset"},
+    "factory_profile": {"$ref": "#/$defs/versionedAsset"},
+    "generator": {"$ref": "#/$defs/versionedAsset"},
+    "simulator": {"$ref": "#/$defs/versionedAsset"},
+    "seed": {"type": "integer", "minimum": 0, "maximum": 9223372036854775807},
+    "child_seed_derivation_version": {"const": "named-child-seed.v1"},
+    "virtual_clock": {"$ref": "#/$defs/virtualClock"},
+    "authority": {"$ref": "urn:plantnexus:aps:schema:execution-event:v1#/$defs/authority"},
+    "source_stream": {"$ref": "urn:plantnexus:aps:schema:execution-event:v1#/$defs/sourceStream"},
+    "planning_policy": {"$ref": "urn:plantnexus:aps:schema:planning-policy:v2#/$defs/policyReference"},
+    "solve_limits": {"$ref": "urn:plantnexus:aps:schema:solve-limits:v1#/$defs/limitsReference"},
+    "event_stream": {"$ref": "#/$defs/streamEvidence"},
+    "checkpoint": {"$ref": "#/$defs/checkpointEvidence"},
+    "code_commit": {"type": "string", "pattern": "^(uncommitted|[0-9a-f]{40})$"}
+  },
+  "$defs": {
+    "versionedAsset": {
+      "type": "object", "additionalProperties": false,
+      "required": ["asset_id", "asset_version", "fingerprint"],
+      "properties": {
+        "asset_id": {"$ref": "urn:plantnexus:aps:schema:execution-event:v1#/$defs/canonicalId"},
+        "asset_version": {"$ref": "urn:plantnexus:aps:schema:execution-event:v1#/$defs/semanticVersion"},
+        "fingerprint": {"$ref": "urn:plantnexus:aps:schema:execution-event:v1#/$defs/sha256Fingerprint"}
+      }
+    },
+    "virtualClock": {
+      "type": "object", "additionalProperties": false,
+      "required": ["clock_version", "origin_at_utc", "resolution_seconds", "schedule_fingerprint"],
+      "properties": {
+        "clock_version": {"const": "virtual-clock.v1"},
+        "origin_at_utc": {"$ref": "urn:plantnexus:aps:schema:execution-event:v1#/$defs/utcInstant"},
+        "resolution_seconds": {"type": "integer", "minimum": 1},
+        "schedule_fingerprint": {"$ref": "urn:plantnexus:aps:schema:execution-event:v1#/$defs/sha256Fingerprint"}
+      }
+    },
+    "streamEvidence": {
+      "type": "object", "additionalProperties": false,
+      "required": ["event_count", "first_position", "last_position", "ordered_event_ids", "ordered_event_fingerprints", "stream_fingerprint"],
+      "properties": {
+        "event_count": {"type": "integer", "minimum": 1},
+        "first_position": {"type": "integer", "minimum": 1},
+        "last_position": {"type": "integer", "minimum": 1},
+        "ordered_event_ids": {"type": "array", "minItems": 1, "uniqueItems": true, "items": {"type": "string", "pattern": "^execution-event-[0-9a-f]{64}$"}},
+        "ordered_event_fingerprints": {"type": "array", "minItems": 1, "items": {"$ref": "urn:plantnexus:aps:schema:execution-event:v1#/$defs/sha256Fingerprint"}},
+        "stream_fingerprint": {"$ref": "urn:plantnexus:aps:schema:execution-event:v1#/$defs/sha256Fingerprint"}
+      }
+    },
+    "checkpointEvidence": {
+      "type": "object", "additionalProperties": false,
+      "required": ["checkpoint_version", "last_applied_position", "prefix_fingerprint", "fact_checkpoint"],
+      "properties": {
+        "checkpoint_version": {"const": "execution-checkpoint.v1"},
+        "last_applied_position": {"type": "integer", "minimum": 0},
+        "prefix_fingerprint": {"$ref": "urn:plantnexus:aps:schema:execution-event:v1#/$defs/sha256Fingerprint"},
+        "fact_checkpoint": {"$ref": "urn:plantnexus:aps:schema:execution-event:v1#/$defs/artifactReference"}
+      }
+    }
+  }
+}

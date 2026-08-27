@@ -11,6 +11,10 @@ last_reviewed: 2026-08-27
 
 # ScheduleVersion 状态机
 
+## TASK-P4-02 ScheduleVersion v2 carrier review
+
+新carrier增加dynamic-replan lineage但直接复用v1的六状态、guard evidence与allowed pairs。Synthetic sample只能是DRAFT且decision/publication为空；本Task不创建或迁移Version，不自动READY/APPROVE/PUBLISH，也不改变PUBLISHED immutable/supersession语义。实际new DRAFT transaction仍属于P4-08。
+
 ## TASK-P4-01 state decision
 
 ADR-0013/0014确认dynamic replan不得原地修改PUBLISHED或既有Version，也不需要额外ScheduleVersion state/pair。TASK-P4-08只可在P4-03～07完成后，以fresh-validated且ChangeReport complete的结果原子创建带base/event/fact/request/run/report lineage的新DRAFT；它不自动READY、APPROVED或PUBLISHED。当前DRAFT/READY_FOR_REVIEW/APPROVED/REJECTED/PUBLISHED/SUPERSEDED集合与所有pair逐字不变。

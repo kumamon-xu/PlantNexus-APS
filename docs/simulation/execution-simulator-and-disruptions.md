@@ -11,6 +11,10 @@ last_reviewed: 2026-08-19
 
 # Execution Simulator 与异常模型
 
+## TASK-P4-02 ExecutionSimulationManifest carrier
+
+Manifest v1固定Scenario/Profile/Generator/Simulator版本、seed/named-child derivation、virtual clock、authority/source stream、Policy/Limits、ordered event fingerprints与fact checkpoint；它没有业务state且`production_binding=false`。SIM-ASSUMPTION-016只提供Schema replay vector，本Task不生成事件、不推进时钟、不写事实或触发Replan；P4-09/10仍须实现并证明共同入口与连续场景。
+
 ## TASK-P4-01 accepted common-path boundary
 
 ADR-0015已固定virtual clock、named seed derivation、source-position ordering、content-derived event identity、prefix checkpoint/restart和共同入口。Simulator唯一业务输出是ADR-0013的标准ExecutionEvent stream，必须走ledger→fact/new Snapshot→ReplanRequest→Solver→fresh Validator→new DRAFT/ChangeReport；不得直接修改fact/ScheduleVersion或调用私有replan捷径。TASK-P4-02形成carrier，P4-09实现core，P4-10实现连续五类disruption；本Task没有runtime或场景结果。

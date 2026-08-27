@@ -12,6 +12,10 @@ registry_version: 1.0.0
 
 # 项目风险注册表
 
+## TASK-P4-02 machine-contract controls
+
+RISK-015现获得event identity排除receive observation但包含authority/source order、exact replay/conflict和gap fail-closed carrier；RISK-016获得半开freeze、OBJ-002四元顺序、operation全集分类与exact ratio carrier；RISK-017获得Simulation manifest/common-path lineage与Production binding拒绝carrier。35个shape和7个semantic负例只证明合同控制，尚无持久化、projection、Solver或Simulator行为，因此RISK-001～017继续`MONITORED`。
+
 ## TASK-P4-01 risk controls
 
 ADR-0013已为RISK-015形成source-position ordering、canonical fingerprint、exact replay/conflict、gap fail-closed、append-only projection与transaction边界；ADR-0014为RISK-016形成freeze优先级、四元OBJ-002和可复算ChangeReport；ADR-0015为RISK-017形成Simulator standard-event common-path及Production default-deny。Implementation artifact `9634380233`只证明这些语义与治理边界一致，尚无机器carrier或P4行为证据，所以RISK-001～017全部继续`MONITORED`，不升级为MITIGATED/CLOSED。

@@ -11,6 +11,10 @@ last_reviewed: 2026-08-27
 
 # 推荐技术栈与锁定规则
 
+## TASK-P4-02 stack review
+
+本Task只把global schema metadata提升到`2.8.0`并复用现有`jsonschema`/`referencing`/YAML工具。Runtime/dev dependency pins与`uv.lock`摘要`sha256:8b13617f31aa6a933347fc7b8ba010330cbb3f2d764f75c306dd9b6d77387a82`零变化；migration仍为`0004`。`pyproject.toml`路径命中dependency impact不等于依赖变更。
+
 ## TASK-P4-01 dependency decision
 
 ADR-0013～0015的event ledger、deterministic projection、lexicographic CP-SAT、pure ChangeReport与virtual-clock Simulator均可在现有Python/OR-Tools/SQLAlchemy/FastAPI/React边界内表达；TASK-P4-01不修改Python/npm dependency、`uv.lock`或`package-lock.json`，也不选择event broker、stream processor、outbox、external SDK或distributed simulator。

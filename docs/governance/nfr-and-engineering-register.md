@@ -14,7 +14,7 @@ registry_version: 1.0.0
 
 ## TASK-P4-03 persistence allocation
 
-NFR-DET/TRC/ISO/REL/SEC/OBS与ENG-ARCH/ERR/VER/LOG现连接canonical bytes/fingerprint、append-only lineage、plane-scoped repositories、strict CAS/rollback、Production default-deny、versioned audit和机器报告。本地focused及machine evidence为`LOCAL_PASS_PROVIDER_PENDING`；SQLite正确性不能外推PostgreSQL concurrency、Production isolation deployment、HA/backup、真实security authority或capacity/SLA。全部root lifecycle继续`ALLOCATED`，dependency/lock与registry格式不变。
+NFR-DET/TRC/ISO/REL/SEC/OBS与ENG-ARCH/ERR/VER/LOG现连接canonical bytes/fingerprint、append-only lineage、plane-scoped repositories、strict CAS/rollback、Production default-deny、versioned audit和机器报告。Implementation `60f8e8900ecab60f0d64311912ae27f09a4d002f` / artifact `9639720666`已把focused/machine/governance edge升级为`PROVIDER_VERIFIED`并允许本closure把TASK-P4-03标为`done`；SQLite正确性不能外推PostgreSQL concurrency、Production isolation deployment、HA/backup、真实security authority或capacity/SLA。全部root lifecycle继续`ALLOCATED`，dependency/lock与registry格式不变。
 
 ## TASK-P4-02 machine-contract allocation
 

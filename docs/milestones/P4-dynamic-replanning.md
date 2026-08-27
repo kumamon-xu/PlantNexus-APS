@@ -11,9 +11,9 @@ last_reviewed: 2026-08-27
 
 # P4 — Dynamic Replanning
 
-## TASK-P4-03 active persistence slice
+## TASK-P4-03 completed persistence slice
 
-TASK-P4-03已在provider-verified closure `7b9bfc3069de5d3738e5cc5827d27d197ed3d226`上按独立用户授权启动，状态为`in_progress`。它只实现additive `0005_replan_event_persistence`、Simulation plane-scoped ExecutionEvent ledger、projection checkpoint operational CAS、immutable ReplanRequest、request→PlanningRun attempt→terminal result references和append-only transaction audit；不新增ReplanRequest状态、不投影事实、不生成ChangeReport或new DRAFT，也不启动P4-04。
+TASK-P4-03已在provider-verified closure `7b9bfc3069de5d3738e5cc5827d27d197ed3d226`上按独立用户授权启动。它只实现additive `0005_replan_event_persistence`、Simulation plane-scoped ExecutionEvent ledger、projection checkpoint operational CAS、immutable ReplanRequest、request→PlanningRun attempt→terminal result references和append-only transaction audit；不新增ReplanRequest状态、不投影事实、不生成ChangeReport或new DRAFT。Implementation `60f8e8900ecab60f0d64311912ae27f09a4d002f` / artifact `9639720666` exact成功后，本closure把Task标为`done`；P4-04保持`planned`且不会自动启动。
 
 ## TASK-P4-02 completed machine-contract slice
 
@@ -21,7 +21,7 @@ TASK-P4-02已从provider-verified P4-01 closure `4026597ab1015b5ea3a89d241f0d12b
 
 ## Activation
 
-用户于2026-08-27在P3 Exit双提交provider与clean synchronized closure baseline精确通过后批准P3→P4。TASK-P4-00 phase-planning、TASK-P4-01 contract/ADR与TASK-P4-02 machine contract均已由双提交exact provider闭环为`done`。TASK-P4-03当前状态见上方独立切片；P4-04～15继续`planned`且不会自动启动，P4-15是最后一项独立Exit Gate Audit。
+用户于2026-08-27在P3 Exit双提交provider与clean synchronized closure baseline精确通过后批准P3→P4。TASK-P4-00 phase-planning、TASK-P4-01 contract/ADR、TASK-P4-02 machine contract与TASK-P4-03 persistence均已按独立治理链登记为`done`。P4-04～15继续`planned`且不会自动启动，P4-15是最后一项独立Exit Gate Audit。
 
 TASK-P4-01已形成accepted ADR-0013～0015：事件authority/append-only投影/Replan lineage，半开freeze/四元OBJ-002/完整ChangeReport，以及Simulator只经标准ExecutionEvent共同路径。当前只形成合同基线，机器carrier、Schema、migration、persistence、业务实现和行为测试均未形成。
 
@@ -42,7 +42,7 @@ TASK-P4-01已形成accepted ADR-0013～0015：事件authority/append-only投影/
 | TASK-P4-00 | Phase transition与完整规划治理 | P3-17 |
 | TASK-P4-01 | Dynamic Replanning合同与accepted ADR-0013～0015（done） | P4-00 |
 | TASK-P4-02 | ExecutionEvent/Replan/ChangeReport等机器合同（done） | P4-01 |
-| TASK-P4-03 | Event/Replan持久化与状态事务（in progress） | P4-02 |
+| TASK-P4-03 | Event/Replan持久化与状态事务（done） | P4-02 |
 | TASK-P4-04 | ExecutionEvent→事实→新Snapshot | P4-02/03 |
 | TASK-P4-05 | Freeze Window与effective locks | P4-01/02/04 |
 | TASK-P4-06 | OBJ-002 Stability与ChangeReport | P4-01/02 |

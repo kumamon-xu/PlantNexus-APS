@@ -1,7 +1,7 @@
 ---
 doc_id: TASK-P4-03
 title: Replan Event Persistence and State Transactions
-status: in_progress
+status: done
 spec_version: 0.3.0
 phase: P4
 normative: true
@@ -103,4 +103,6 @@ Rollback: 停止入口后按可逆migration downgrade；已形成历史事件/�
 
 本地实现与required-equivalent验收已完成：新增7张P4表、5个plane-scoped repository surfaces和9/9 `p4-replan-persistence-report.v1`；4 unit + 6 integration新用例、51项focused组合、643项完整Backend、Ruff/Pyright均PASS。Frontend以exact `npm@11.17.0`完成67 Vitest、主E2E及两轮Gate Chromium各12/12、SCA/license/build与两份machine report；默认npm `12.0.2`的首轮证据因版本不符被正确拒绝，未作为PASS。全部历史machine、P2 11/11、P3 14/14、Compose、Python build均PASS。
 
-治理报告相对不可变base得到0 committed-range/52 working-tree paths、精确`IMPACT-STATE/INFRA/TESTS/PHASE/GOVERNANCE-REGISTRY/DOCS`六行、21/21 expected/observed documents、19/19 checks、0 issues；forbidden tracked/untracked均为0，P4 carrier/state registry/0004/uv.lock六个冻结Git object hash逐字一致。当前仍保持`in_progress`，等待implementation exact provider后才允许evidence-only closure；这不是Production/P5+声明，P4-04不得自动启动。
+治理报告相对不可变base得到0 committed-range/52 working-tree paths、精确`IMPACT-STATE/INFRA/TESTS/PHASE/GOVERNANCE-REGISTRY/DOCS`六行、21/21 expected/observed documents、19/19 checks、0 issues；forbidden tracked/untracked均为0，P4 carrier/state registry/0004/uv.lock六个冻结Git object hash逐字一致。下方写回implementation exact provider事实；这不是Production/P5+声明，P4-04不得自动启动。
+
+Implementation `60f8e8900ecab60f0d64311912ae27f09a4d002f`的required `validate` run/job=`33055784278`/`98462103078`由GitHub Actions app `15368`成功提供；branch protection仍精确要求`validate`/app `15368`且`strict=false`。Artifact `9639720666`未过期至2026-11-25T08:50:05Z，provider与下载ZIP digest均为`sha256:70cacbf0534403d3e114a245c96db28770884e1198b54e0b47689b5bd01c96b6`。下载的46 files/40 JSON精确绑定SHA、TASK-P4-03与Diff base，复现52 committed/0 working paths、六条Impact Rules、21/21 expected/observed documents、19/19 checks、`issues=[]`、P4 persistence 9/9、7 tables、5 repositories、8 DB guard rejects、1 Production reject、P3 row retention、P2/P3 Gate、Frontend/i18n及三轮12/12 Chromium；40份JSON共253个checks且0 parse/SHA/top-level/check/issue/gap异常。因此本evidence-only closure把Task标为`done`；closure自身必须post-push取得并核验exact required check/artifact，TASK-P4-04保持`planned`且不会自动启动。

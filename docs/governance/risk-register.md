@@ -14,7 +14,7 @@ registry_version: 1.0.0
 
 ## TASK-P4-03 persistence controls
 
-RISK-015现在获得ledger exact replay/identity-position conflict、strict checkpoint CAS、request/attempt/result lineage、append-only DB guards与transaction rollback的本地行为控制；RISK-017获得repository Production default-deny与P3/P4 table isolation控制。SQLite与单进程测试尚不能证明PostgreSQL并发、distributed consumer、external exactly-once、HA或capacity；provider也仍待完成，因此RISK-001～017继续`MONITORED`，不关闭、不降级且registry格式不变。
+RISK-015现在获得ledger exact replay/identity-position conflict、strict checkpoint CAS、request/attempt/result lineage、append-only DB guards与transaction rollback的provider-verified控制；RISK-017获得repository Production default-deny与P3/P4 table isolation控制。Implementation artifact `9639720666`已复验9/9 persistence checks、8个DB mutation rejects、1个Production reject与0 issues；SQLite与单进程测试仍不能证明PostgreSQL并发、distributed consumer、external exactly-once、HA或capacity，因此RISK-001～017继续`MONITORED`，不关闭、不降级且registry格式不变。
 
 ## TASK-P4-02 machine-contract controls
 

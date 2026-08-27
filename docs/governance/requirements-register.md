@@ -14,7 +14,7 @@ registry_version: 1.0.0
 
 ## TASK-P4-03 persistence allocation
 
-REQ-007/008/009/013现连接TASK-P4-03的ExecutionEvent ledger、immutable ReplanRequest/attempt/result references、projection checkpoint CAS、append-only audit、`0005` migration与`p4-replan-persistence-report.v1`。本地证据已覆盖exact replay/conflict、lineage、transaction rollback、plane default-deny和P3 row retention，当前仅为`LOCAL_PASS_PROVIDER_PENDING`。该edge不形成事实投影、新Snapshot、freeze/OBJ-002、ChangeReport计算、Replan solve/apply或Simulator；所有Requirement root继续`ALLOCATED`，registry格式不变。
+REQ-007/008/009/013现连接TASK-P4-03的ExecutionEvent ledger、immutable ReplanRequest/attempt/result references、projection checkpoint CAS、append-only audit、`0005` migration与`p4-replan-persistence-report.v1`。Implementation `60f8e8900ecab60f0d64311912ae27f09a4d002f` / artifact `9639720666`已验证exact replay/conflict、lineage、transaction rollback、plane default-deny、P3 row retention与治理edge，使该slice为`PROVIDER_VERIFIED`并允许本closure把Task标为`done`。该edge不形成事实投影、新Snapshot、freeze/OBJ-002、ChangeReport计算、Replan solve/apply或Simulator；所有Requirement root继续`ALLOCATED`，registry格式不变。
 
 ## TASK-P4-02 machine-contract allocation
 

@@ -16,7 +16,7 @@ registry_version: 1.0.0
 
 不可变Diff base=`7b9bfc3069de5d3738e5cc5827d27d197ed3d226`。本Task只增加`0005`、Infrastructure storage/repository/machine evidence、Backend unit/integration/CI contract tests、一个non-skippable workflow step及逐字治理文档，精确命中`IMPACT-STATE`、`IMPACT-INFRA`、`IMPACT-TESTS`、`IMPACT-PHASE`、`IMPACT-GOVERNANCE-REGISTRY`、`IMPACT-DOCS`。STATE仅复验ReplanRequest无状态机、既有PlanningRun/ScheduleVersion/ExportJob pair不变以及checkpoint为operational CAS；没有修改`backend/app/domain/**`，因此不命中Domain implementation rule。
 
-`schemas/**`、历史migration、dependency/lock、application/domain/planning/Solver/Validator、event fact projection/Snapshot、Simulator/scenario、API/UI、fixtures/benchmarks、P0～P3历史、P5+和Production能力均为禁止范围且须零差异。提交前Task report已给出0 committed-range/52 working-tree paths、上述六行、19/19 checks与0 issues；独立禁止范围核验为tracked/untracked=0，六个冻结Git object hash全部一致。Implementation及closure provider必须逐项复现。
+`schemas/**`、历史migration、dependency/lock、application/domain/planning/Solver/Validator、event fact projection/Snapshot、Simulator/scenario、API/UI、fixtures/benchmarks、P0～P3历史、P5+和Production能力均为禁止范围且须零差异。提交前Task report给出0 committed-range/52 working-tree paths、上述六行、19/19 checks与0 issues；独立禁止范围核验为tracked/untracked=0，六个冻结Git object hash全部一致。Implementation artifact `9639720666`已精确复现52 committed/0 working paths、相同六行、21/21 expected/observed documents、19/19 checks与0 issues；本closure只回填provider事实与lifecycle，并保持相同52-path union。
 
 ## TASK-P4-02 implementation impact
 

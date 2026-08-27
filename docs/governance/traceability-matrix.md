@@ -12,11 +12,11 @@ registry_version: 1.0.0
 
 # 追踪矩阵
 
-## TASK-P4-03 local persistence trace slice
+## TASK-P4-03 provider-verified persistence trace slice
 
-`REQ-007/008/009/013 + NFR-DET/TRC/ISO/REL/SEC/OBS + ENG-ARCH/ERR/VER/LOG + SIM-ASSUMPTION-016 → TASK-P4-03 → 0005 + five plane-scoped repository surfaces → TEST-P4-PERSISTENCE-001/TEST-IDEMPOTENCY/TEST-AUDIT-TRAIL-001/TEST-STATE-TRANSITION-001/TEST-SIM-ISOLATION → p4-replan-persistence-report.v1/Task report → future exact provider`。本地现有4 unit + 6 integration、focused组合51项、完整Backend 643项、Frontend 67项/三轮各12 Chromium及machine 9/9均通过；Task治理为52/6/19/0，状态为`LOCAL_PASS_PROVIDER_PENDING`。
+`REQ-007/008/009/013 + NFR-DET/TRC/ISO/REL/SEC/OBS + ENG-ARCH/ERR/VER/LOG + SIM-ASSUMPTION-016 → TASK-P4-03 → 0005 + five plane-scoped repository surfaces → TEST-P4-PERSISTENCE-001/TEST-IDEMPOTENCY/TEST-AUDIT-TRAIL-001/TEST-STATE-TRANSITION-001/TEST-SIM-ISOLATION → p4-replan-persistence-report.v1/Task report → exact provider`。本地4 unit + 6 integration、focused组合51项、完整Backend 643项、Frontend 67项/三轮各12 Chromium及machine 9/9均通过；Implementation `60f8e8900ecab60f0d64311912ae27f09a4d002f` / artifact `9639720666`已复验52/0 paths、六个Impact Rules、19/19 checks与`issues=[]`，本closure把persistence edge升级为`PROVIDER_VERIFIED_DONE`。
 
-该slice只形成storage primitive，不形成ExecutionEvent事实投影、Snapshot、freeze、OBJ-002/ChangeReport计算、Solver/Validator、new DRAFT application或Simulator。Roots/rows仍为30/30，Test IDs仍为61，root lifecycle继续`ALLOCATED`；只有双提交exact provider后本edge才可升级。
+该slice只形成storage primitive，不形成ExecutionEvent事实投影、Snapshot、freeze、OBJ-002/ChangeReport计算、Solver/Validator、new DRAFT application或Simulator。Roots/rows仍为30/30，Test IDs仍为61，root lifecycle继续`ALLOCATED`；closure自身仍须post-push exact provider复验。
 
 ## TASK-P4-02 machine-contract trace slice
 

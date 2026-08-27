@@ -13,14 +13,14 @@ last_reviewed: 2026-08-27
 
 ## Current P4 plan
 
-当前Phase为P4。TASK-P4-00～02均由implementation/closure exact provider闭环为`done`。用户已单独授权TASK-P4-03并将clean provider-verified HEAD `7b9bfc3069de5d3738e5cc5827d27d197ed3d226`冻结为Diff base；它当前仅执行P4 event/replan persistence与operational transaction primitive，状态为`in_progress`。P4-04～15仍为`planned`且需要新的明确授权。P3-00～17为terminal历史；P4-15是唯一最后独立Exit Audit，READY也不自动进入P5或Production。
+当前Phase为P4。TASK-P4-00～03均已按各自独立授权形成implementation/evidence-only closure治理链并标为`done`；TASK-P4-03从clean provider-verified HEAD `7b9bfc3069de5d3738e5cc5827d27d197ed3d226`冻结Diff base，只形成P4 event/replan persistence与operational transaction primitive。P4-04～15仍为`planned`且需要新的明确授权。P3-00～17为terminal历史；P4-15是唯一最后独立Exit Audit，READY也不自动进入P5或Production。
 
 | Task | 目标 | 依赖 | 状态 |
 |---|---|---|---|
 | [TASK-P4-00](P4/TASK-P4-00-phase-transition-and-task-planning-governance.md) | Phase transition、完整Task plan与治理同步 | P3-17 | `done` |
 | [TASK-P4-01](P4/TASK-P4-01-dynamic-replanning-contract-and-adr-baseline.md) | Dynamic Replanning合同与ADR基线 | P4-00 | `done` |
 | [TASK-P4-02](P4/TASK-P4-02-execution-event-replan-change-report-schemas.md) | P4机器合同/Schema | P4-01 | `done` |
-| [TASK-P4-03](P4/TASK-P4-03-replan-event-persistence-and-state-transactions.md) | Event/Replan persistence与state transaction | P4-02 | `in_progress` |
+| [TASK-P4-03](P4/TASK-P4-03-replan-event-persistence-and-state-transactions.md) | Event/Replan persistence与state transaction | P4-02 | `done` |
 | [TASK-P4-04](P4/TASK-P4-04-execution-event-ingestion-and-fact-projection.md) | Event ingestion与fact/Snapshot projection | P4-02/03 | `planned` |
 | [TASK-P4-05](P4/TASK-P4-05-freeze-window-and-effective-lock-projection.md) | Freeze Window与effective locks | P4-01/02/04 | `planned` |
 | [TASK-P4-06](P4/TASK-P4-06-stability-objective-and-change-report.md) | OBJ-002 Stability与ChangeReport | P4-01/02 | `planned` |

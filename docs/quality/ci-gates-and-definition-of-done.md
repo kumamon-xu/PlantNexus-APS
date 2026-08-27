@@ -15,9 +15,9 @@ last_reviewed: 2026-08-27
 
 现有required `validate`增加不可跳过的`P4 replan event persistence evidence`步骤，执行`app.infrastructure.replan_persistence_check`并上传`ci-p4-replan-persistence.json`。成功报告必须绑定TASK-P4-03、Diff base `7b9bfc3069de5d3738e5cc5827d27d197ed3d226`、exact code commit、revision `0005`、7 tables、9/9 checks、8 DB guard rejects、1 Production reject、P3 row retention和`issues=[]`。Workflow权限、required context与GitHub Actions app `15368`不变。
 
-本地locked install、Ruff、Pyright、full tests、Frontend/Playwright、SCA/license、全部历史machine/P2/P3 Gate、docs/diff/forbidden-scope通过后仍保持`in_progress`；必须先push implementation并下载exact未过期artifact核对SHA/Task/base/六个Impact Rules/checks/issues，才可创建evidence-only closure。Closure本身须再次经过同一required provider；P4-04不得自动启动。
+Implementation `60f8e8900ecab60f0d64311912ae27f09a4d002f`的required run/job=`33055784278`/`98462103078`由GitHub Actions app `15368`成功提供；artifact `9639720666`未过期至2026-11-25T08:50:05Z，provider/download digest=`sha256:70cacbf0534403d3e114a245c96db28770884e1198b54e0b47689b5bd01c96b6`。下载复核46 files/40 JSON、TASK/base、52/0 paths、六个Impact Rules、21/21 documents、19/19 checks、0 issues、P4 persistence 9/9、P2/P3 Gate与Frontend/i18n一致PASS，故本closure可把Task标为`done`；closure自身须再次经过同一required provider，P4-04不得自动启动。
 
-提交前required-equivalent本地证据为Ruff/Pyright零问题、643 Python、67 Vitest、主E2E与两轮Gate Chromium各12/12、P4 persistence 9/9、P2 11/11与P3 14/14 Gate、SCA/license、Compose、Frontend/Python双build及52/6/19/0治理全部PASS。本机默认npm `12.0.2`被既有machine report正确拒绝；随后以仓库锁定的`npm@11.17.0`完整重跑并全绿，失败结果未被当作PASS。Provider仍待push后验证。
+提交前required-equivalent本地证据为Ruff/Pyright零问题、643 Python、67 Vitest、主E2E与两轮Gate Chromium各12/12、P4 persistence 9/9、P2 11/11与P3 14/14 Gate、SCA/license、Compose、Frontend/Python双build及52/6/19/0治理全部PASS。本机默认npm `12.0.2`被既有machine report正确拒绝；随后以仓库锁定的`npm@11.17.0`完整重跑并全绿，失败结果未被当作PASS。Implementation provider已复现这些边界；closure provider仍待post-push验证。
 
 ## TASK-P4-02 required evidence
 

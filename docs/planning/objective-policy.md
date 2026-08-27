@@ -11,6 +11,10 @@ last_reviewed: 2026-08-21
 
 # Objective Policy
 
+## TASK-P4-05 objective boundary
+
+PlanningPolicy v2 carrier继续声明Delivery→Stability→Makespan顺序，但本Task只解析freeze section并输出SOFT与非冻结base分类；没有构造OBJ-002整数向量、调用多阶段Solver、应用hint或计算objective value/bound。显式/derived HARD永不通过objective放松，SOFT的偏离和movement成本仍由TASK-P4-06/07实现。
+
 ## TASK-P4-02 PlanningPolicy v2 contract
 
 Machine carrier现固定三阶段exact lexicographic顺序：OBJ-001 Delivery、OBJ-002四元Stability、OBJ-003 Makespan；每阶段保留sense/value/bound/budget/stop evidence。任何weighted blend、隐式优先级或Production默认均不可表示。此处只形成Policy/Report Schema和sample，P4-07才执行求解。

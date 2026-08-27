@@ -12,6 +12,10 @@ registry_version: 1.0.0
 
 # NFR 与工程需求注册表
 
+## TASK-P4-05 freeze allocation
+
+NFR-COR/DET/TRC/ISO/HUM与ENG-SOL/VAL/ERR/VER现连接integer-second half-open resolution、canonical fingerprints、exact fact/policy/source lineage、Simulation default-deny、结构化冲突和独立precheck。Same inputs byte-exact replay，Problem/formal Validator/CP-SAT/dependency保持冻结；当前证据为`LOCAL_PASS_PROVIDER_PENDING`，全部root仍`ALLOCATED`，不提供Production reliability/security/performance/capacity/SLA结论。
+
 ## TASK-P4-04 projection allocation
 
 NFR-COR/DET/TRC/ISO/REL/SEC与ENG-ARCH/ERR/VER现连接pure deterministic projector、canonical/hash lineage、strict plane/authority、two-transaction atomicity、exact replay、sanitized error和frozen version inputs。Focused/machine证据已由implementation `47f55b41e370aa9d24fd9c987cff4663672c3ee8` / artifact `9644190441`升级为`PROVIDER_VERIFIED`，root lifecycle保持`ALLOCATED`。没有性能baseline更新、Production concurrency/HA/security deployment或capacity/SLA结论。

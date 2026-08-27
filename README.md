@@ -1,5 +1,9 @@
 # PlantNexus APS
 
+## TASK-P4-05 Freeze Window local implementation
+
+TASK-P4-05已按用户独立授权在不可变Diff base `e7b96e28913e7eb5be63ae4265c09f8281456b1c`上实现versioned `SIM-P4-FREEZE-001@1.0.0`、solver-neutral `effective-lock-projection.v1`、独立fail-closed precheck和`p4-freeze-window-report.v1`。HIGH_RISK本地验收已全部PASS，覆盖900秒half-open boundary、COMPLETED/RUNNING、显式/derived HARD、SOFT、ADDED、stale/conflict/grid/plane与exact replay；Task仍为`in_progress`并等待exact implementation provider。Schema/migration/dependency/state pair、既有Problem builder/hash/formal Validator/CP-SAT保持冻结，OBJ-002、ChangeReport、Replan application、ScheduleVersion、Simulator、API/UI、Production、P5+与TASK-P4-06均未启动。
+
 ## TASK-P4-04 ExecutionEvent fact projection completion
 
 TASK-P4-04已按用户独立授权在不可变Diff base `3563bb236ce7b2c01794485110d4945a6e265105`上执行。当前实现只在Simulation plane形成两段原子边界：ingress事务append exact ExecutionEvent ledger+audit，projection事务把连续source-position prefix解释为canonical execution/material/resource/duration/lock facts并提交new immutable PlanningSnapshot+checkpoint+audit；Urgent Demand只能携带完整Raw Staging+MappingProfile并重走Normalization→Data Validation→Order Expansion→Snapshot。全部11种已批准event均有确定性/replay/negative证据，Schema/migration/dependency/state pair不变。
@@ -15,7 +19,7 @@ TASK-P4-03已获独立授权并在不可变Diff base `7b9bfc3069de5d3738e5cc5827
 
 用户已明确批准P3→P4。TASK-P3-17独立Exit Audit的report/manifest均为`READY`、`blocking_gaps=[]`；audit implementation `201be9c6fd1b433a9d0a629a3ae7d4ffe1107476`和evidence-only closure `61eeacdd5efc20b2321750e1310e9e21561c9fc2`的直接拓扑、required `validate`、GitHub Actions app `15368`及未过期artifact均已exact复验。因此P3 Milestone现为`completed`，P4 Dynamic Replanning已激活。
 
-PlantNexus APS 是一个面向单工厂、多车间场景的高级计划与排程（APS）项目。TASK-P4-00～04现均已按各自独立授权形成implementation与evidence-only closure治理链；TASK-P4-04只形成provider-verified的Simulation event ingress/事实投影slice。Freeze/OBJ-002、ChangeReport生成、Solver、Simulator、API/UI与Production readiness/UAT/真实authority/external publish/deployment/capacity/SLA仍未形成。
+PlantNexus APS 是一个面向单工厂、多车间场景的高级计划与排程（APS）项目。TASK-P4-00～04现均已按各自独立授权形成implementation与evidence-only closure治理链；TASK-P4-05只形成local、provider-pending的Simulation freeze/effective-lock preparation slice。OBJ-002、ChangeReport生成、Solver/application、Simulator、API/UI与Production readiness/UAT/真实authority/external publish/deployment/capacity/SLA仍未形成。
 
 ## 开始之前
 
@@ -90,7 +94,7 @@ scripts/      仓库级校验与自动化脚本
 infra/        P0 开发容器构建配置
 ```
 
-P2 CP-SAT Vertical Slice与P3 Planning Workspace均已通过Exit Gate并关闭，当前阶段为P4。P2-00～14、P3-00～17、TASK-P4-00～04均为`done`；P4-05～15仍为`planned`。Production capacity/SLA/identity/approval authority/external publish仍未形成。当前边界见[`docs/current_phase.md`](docs/current_phase.md)。
+P2 CP-SAT Vertical Slice与P3 Planning Workspace均已通过Exit Gate并关闭，当前阶段为P4。P2-00～14、P3-00～17、TASK-P4-00～04均为`done`；TASK-P4-05为`in_progress`且等待exact provider，P4-06～15仍为`planned`。Production capacity/SLA/identity/approval authority/external publish仍未形成。当前边界见[`docs/current_phase.md`](docs/current_phase.md)。
 
 TASK-P3-13保留失败implementation run `32920462781`、首次closure `87d47c7483185483ac8027100c1c664d18011a7c` / run `32921871460`的606/1失败与artifact count=0。独立XLSX deterministic corrective implementation `3538d46f8b73ae434057bcbca9037436aa91f2c7`的required run/job/artifact=`32923203227`/`98040743610`/`9590625358`已全绿并下载复验33份JSON、12/12 Chromium和Task 91/0/11/19/0；该P3-13 closure当时未自动启动P3-14，后者现依据新的用户授权独立执行。
 

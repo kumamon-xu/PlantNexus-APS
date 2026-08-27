@@ -11,6 +11,10 @@ last_reviewed: 2026-08-24
 
 # 执行事实、锁定与重排边界
 
+## TASK-P4-05 formed freeze/effective-lock projection
+
+Event-derived new Snapshot、其exact PlanningProblem v2、base PUBLISHED Version和versioned Simulation policy现可确定性投影为独立carrier。权威COMPLETED/RUNNING事实优先级为1，显式HARD为2，freeze-derived HARD为3，SOFT为4；NOT_STARTED且base start落在`[cutoff, freeze_end)`时才产生exact resource/start/end derived lock，start等于freeze end归入outside-freeze。缺失事实authority、stale base、跨plane、grid/horizon不可精确表达或前三层冲突全部fail closed，不调用Solver或推进任何状态。
+
 ## TASK-P4-04 formed execution-fact projection
 
 现已形成Simulation-only projector：OPERATION_STARTED/COMPLETED与PROCESSING_REMAINING_CHANGED生成单一effective execution fact并保护COMPLETED终态；MACHINE_UNAVAILABLE/RECOVERED更新resource与calendar interval；MATERIAL_DELAYED/READY更新order及expanded instance readiness；PROCESSING_DURATION_CHANGED更新未完成operation的resource options；LOCK_CREATED/RELEASED维护effective lock与instance lock refs；URGENT_DEMAND_RECEIVED只合并标准Import新增lineage并保留显式priority source。完整prefix顺序、引用、冲突和事实时间均fail closed。

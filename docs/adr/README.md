@@ -11,6 +11,10 @@ last_reviewed: 2026-08-27
 
 # Architecture Decision Records
 
+## TASK-P4-05 ADR conformance
+
+实现逐字落实accepted ADR-0014的Snapshot-cutoff anchor、900秒versioned Simulation assumption、half-open边界、facts→HARD→freeze→SOFT优先级与solve前fail-closed冲突；同时遵守ADR-0013的immutable lineage和ADR-0015的Simulation common-path边界。没有改变decision、引入新拓扑/依赖/state pair或触发superseding ADR，因此ADR registry与正文均保持不变。
+
 ## TASK-P4-03 conformance review
 
 本Task严格落实ADR-0013～0015：single-authority event ledger、position/idempotency约束、checkpoint CAS、immutable request与PlanningRun attempt/result lineage、append-only transaction audit、Simulation-only common path。ReplanRequest无state，fact projection/new DRAFT/ChangeReport generation分别留给P4-04/08/06；没有引入outbox、external exactly-once、新state pair、dependency或topology决定，因此不新增或修改ADR。

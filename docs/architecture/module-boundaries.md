@@ -11,6 +11,10 @@ last_reviewed: 2026-08-26
 
 # 模块边界与依赖规则
 
+## TASK-P4-05 implemented pure dependency edge
+
+`app.planning.policy.freeze_window`只依赖既有pure contracts/Snapshot verification；`app.planning.problem.freeze_projection`消费policy、Snapshot、Problem和workspace/P4 carriers；`app.planning.validation.freeze_window_precheck`独立重算而不导入projector、CP-SAT Backend或formal `ProblemScheduleValidator`。Machine checker/tests可以组装versioned Simulation向量，但runtime projector没有repository/application/Simulator/API/UI依赖，也不创建ScheduleVersion。
+
 ## TASK-P4-04 implemented dependency edge
 
 依赖方向现为`domain/execution_fact_projection`纯规则 ← `snapshots/projection` canonical finalizer ← `application/execution_fact_projection`事务编排 → P4-03 repositories；`importers/urgent_demand`只携带既有Normalization inputs。Domain不导入SQLAlchemy、repository、Solver或wall clock；application不复制event/fact规则；repositories不解释payload。后继freeze/solver/application/Simulator仍不可反向进入本边界。

@@ -11,44 +11,100 @@ last_reviewed: 2026-08-27
 
 # Agent 读取顺序与上下文策略
 
-## 默认最小上下文
+## 目标
 
-```text
-/AGENTS.md（薄入口）
-→ docs/agents/AGENTS.md（规则正文）
-→ Current Phase
-→ Current Task
-→ Referenced Contracts/Constraints/ADRs
-→ Code
-→ Tests
-```
+上下文必须足以保证正确性，但不得把仓库历史、机器证据和所有候选规范反复装入每个新 Session。
 
-目的不是减少理解，而是避免每个任务机械加载整份总规后遗漏当前任务边界。
+默认启动链：
 
-根 `README.md` 是已落地命令和仓库地图的操作入口，只能在 Task 边界与引用规范已经确认后作为辅助上下文读取，不能覆盖规范正文。
+~~~text
+AGENTS.md thin entry
+→ docs/agents/AGENTS.md
+→ concise current_phase.md
+→ current Task normative fields
+→ direct Contract / Constraint / ADR
+→ affected code and tests
+~~~
 
-## 必须扩大上下文的情况
+## Task Card 分段读取
 
-- spec version 变化；
-- 发现 Contract 互相冲突；
-- 任务需要改变模块依赖方向；
-- 修改 PlanningProblem/SolverBackend/Validator/Constraint/Objective；
-- 修改 PlanningRun/ScheduleVersion/ExportJob；
-- 修改 publication、performance gate 或 production boundary。
-- 修改P3 locale、用户可见业务/错误文案、时间/单位格式或双语human-control surface。
+默认读取：
 
-TASK-P3-16已形成并由exact implementation provider复验的`src/i18n`、双语Vitest/Playwright与`p3-frontend-i18n-report.v1`必须作为上述扩大上下文的一部分读取；本closure provider仍须核验，也不授权TASK-P3-17。
+- front matter、Goal、Inputs、Diff base；
+- allowed/forbidden scope；
+- Implementation steps、Error behavior、Tests；
+- Documents to update、Traceability、Completion conditions、Rollback。
 
-此时完整读取总规、相关 ADR 和追踪矩阵；必要时先创建 ADR/更新 Task，再开始编码。
+按需读取：
 
-P3本地化还必须读取`../frontend/official-zh-cn-terminology-map.md`、Frontend规范、Planning Workspace API/error合同及ScheduleVersion/ExportJob状态机。术语文档是展示语义规范而非wire contract；未知机器值必须保留raw并fail visibly。
+- Activation evidence：仅启动门、依赖异常或 provenance 核验；
+- Completion evidence：仅 closure、remediation、handoff 或 Audit；
+- 历史失败：仅当前缺陷与其直接相关时。
 
-## 不应加载
+不得因为 Task Card 中存在 run ID、artifact digest 或 frozen hashes，就在普通实现启动时逐项重新验证。
 
-与当前 Task 无关的未来 Phase 设计、Historical 数据、未批准方案或大规模日志，不作为默认上下文。P1+ Milestone 只是路线，不是实施授权。
+## 大文档读取规则
 
-`scripts/check_docs.py` 会从 `docs/current_phase.md` 读取当前 `Pn`，保留 prior-phase terminal Task、允许 current-phase详细卡并拒绝 future-phase详细卡；同时检查文档结构、注册 ID、Task 引用、逐根 traceability，以及 `--check-diff` 下 `Diff base..HEAD` 与 working tree并集的 change-impact Rule ID/必审文档覆盖。Agent 必须在 Task进入 `in_progress` 时先记录完整不可变 `Diff base`。P1及以后卡还必须有 `Completion conditions`。
+以下文档默认使用精确定位，不完整加载：
 
-CI 的 `--discover-task-from <event-base-sha>`只从一次 event range选择唯一 current-phase Task Card，随后仍以卡片 `Diff base`审计真实 Task范围；零个/多个/非 current Task均不得猜测。校验器只能验证已经编码的治理规则；Agent仍须完整读取当前 Task引用的语义 Contract/Constraint/ADR，并对机器规则未表达的语义影响负责。
+- governance registries；
+- change-impact matrix 的历史记录；
+- test strategy 的历史完成证据；
+- CI/DoD 的历史 run 记录；
+- document inventory；
+- prior-phase milestone 和 audit；
+- 已完成 Task Card。
 
-阶段计划形成后如需改号、增卡或重命名，必须先有独立治理Task和用户明确授权。合法修订range只允许唯一`phase-plan-amendment-owner`；成员保持`planned/ready`且无implementation SHA，稳定Task ID用于识别rename，base中active/done成员与删除历史均不可改写。该owner只归属规划diff，不授权自动执行任何成员。
+定位顺序：
+
+1. 使用稳定 ID、标题或路径搜索；
+2. 读取命中表格行或完整规范章节；
+3. 如果存在引用冲突，再扩展到相邻章节；
+4. 只有 AGENTS.md 定义的触发条件成立时才完整读取总规。
+
+文件较大不等于可以只读半条规范：一旦选中一个 ADR、Contract 或章节作为当前决策依据，必须完整读完该选中单元。
+
+## 上下文扩大矩阵
+
+| 变化 | 必需上下文 | 不默认加载 |
+|---|---|---|
+| 文档/证据更新 | 当前 Task、命中文档、机器报告摘要 | 代码、历史 Phase、全部测试历史 |
+| 局部实现 | 直接 Contract、代码、目标测试、相关错误模型 | 全部架构与所有 registries |
+| Schema/Contract 语义 | Schema、producer/consumer、versioning、compatibility、相关 ADR | 不相关 Phase 和 UI |
+| Solver/Constraint/Validator | 对应 C-ID/OBJ、Problem/Policy、Backend、独立 Validator、Benchmark | Frontend、历史 provider 明细 |
+| 状态/发布/security/migration | 状态或安全 Contract、ADR、事务/回滚测试、运维边界 | 不相关算法与历史 Task |
+| Phase Gate/Audit | Milestone、全部直接 Task manifest、总规、fresh Gate | 不以实现 Task 摘要代替审计 |
+
+## 证据复用
+
+普通 Task 的依赖核验只需要：
+
+- 直接依赖状态为 done；
+- implementation/closure SHA 是当前 HEAD 祖先；
+- compact manifest 绑定 Task、SHA、Diff base、required check 和零 blocking issue；
+- artifact 未过期，或内容摘要已经以不可变 digest 固化。
+
+只有以下情况下载原始 artifact：
+
+- manifest 缺失、格式错误或 SHA 不匹配；
+- required check/provider identity 异常；
+- 失败 remediation 需要原始诊断；
+- Phase Audit 明确要求独立复核；
+- 用户要求完整取证。
+
+## current_phase 维护预算
+
+current_phase.md 应控制在 120 行和约 12,000 字符以内，只保留：
+
+- 当前 Phase/Milestone 状态；
+- 唯一当前 Task 与 Diff base；
+- 直接依赖结论；
+- 当前允许与禁止；
+- 下一 Gate 和授权边界；
+- 指向 Task、Milestone、Audit/manifest 的链接。
+
+完成一个 Task 时替换当前快照，不追加完整历史。历史仍可从 Git、Task Card、Milestone 和机器 manifest 恢复。
+
+## 规划修订
+
+阶段计划的新建、增卡、改号或重命名仍使用 phase-planning owner / phase-plan-amendment owner 机制，并要求用户明确授权。普通实现 Task 只需要知道自己是唯一 current Task；多卡发现算法由治理校验器负责，不进入默认上下文。

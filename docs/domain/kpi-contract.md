@@ -11,6 +11,10 @@ last_reviewed: 2026-08-21
 
 # KPI 合同
 
+## TASK-P4-05 KPI boundary
+
+本Task仅把SOFT lock原样保留为后继OBJ-002输入，并分类existing/added/completed/outside-freeze operation；没有计算soft violation、movement、stability ratio、Delivery、Makespan或任何新KPI。既有KPI v1/v2 bytes和`NOT_APPLICABLE`语义保持冻结，TASK-P4-06/07仍分别拥有OBJ-002/ChangeReport算术与词典序求解。
+
 ## TASK-P4-02 KPI and stability references
 
 ChangeReport v1以exact artifact reference绑定before/after KPI，并用整数OBJ-002四元分量和`numerator/denominator`或`NOT_APPLICABLE`表达稳定性，禁止浮点猜测或把sample值解释为业务目标。KPI v1/v2 bytes与Production KPI authority不变；实际重算属于P4-06，Solver objective execution属于P4-07。

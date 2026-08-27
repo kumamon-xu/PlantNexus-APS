@@ -13,15 +13,23 @@ from app.planning.validation.problem_schedule_validator import (
     validate_problem_schedule,
     validation_error_from_problem_report,
 )
+from app.planning.validation.freeze_window_precheck import (
+    FreezePrecheckInputError,
+    PRECHECK_VERSION,
+    validate_freeze_window_projection,
+)
 
 
 __all__ = [
     "FORMAL_RULE_METADATA",
+    "FreezePrecheckInputError",
+    "PRECHECK_VERSION",
     "ProblemScheduleValidationInputError",
     "ProblemScheduleValidator",
     "ValidationInputError",
     "fixture_problem_hash",
     "validate_fixture_schedule",
+    "validate_freeze_window_projection",
     "validate_problem_schedule",
     "validation_error_from_report",
     "validation_error_from_problem_report",

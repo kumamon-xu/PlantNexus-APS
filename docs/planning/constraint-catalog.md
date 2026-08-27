@@ -11,6 +11,10 @@ last_reviewed: 2026-08-21
 
 # V1 Constraint Catalog
 
+## TASK-P4-05 C-007/C-008 pre-solve projection
+
+本Task没有扩展C-001～C-018或修改rule sheet/formal Validator。新增独立precheck在Solver前复算C-007的COMPLETED排除/RUNNING exact authority与C-008显式HARD/freeze-derived HARD tuple，另外检查half-open边界、stale base、grid/horizon和lineage；SOFT只保留为非hard输入。任何冲突均拒绝整个projection，不能通过降级、裁剪或rounding变为可行。
+
 ## P4 planned constraint application
 
 TASK-P4-05将把freeze window与effective HARD/SOFT lock投影为既有C-007/C-008可验证输入，TASK-P4-07必须同时保持completed/running事实、precedence、calendar/material与全部P2约束；不得以重排名义放宽任何C-ID。若确需新Constraint ID，必须先由TASK-P4-01合同和治理注册明确批准。本次Constraint Catalog与机器规则不变。

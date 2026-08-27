@@ -11,6 +11,10 @@ last_reviewed: 2026-08-27
 
 # P4 — Dynamic Replanning
 
+## TASK-P4-05 local freeze implementation slice
+
+TASK-P4-05已在provider-verified P4-04 closure `e7b96e28913e7eb5be63ae4265c09f8281456b1c`上按独立用户授权实现versioned Simulation freeze policy、base PUBLISHED与new Snapshot/Problem的solver-neutral effective-lock projection、COMPLETED/RUNNING/显式HARD/freeze-derived HARD/SOFT优先级及独立fail-closed precheck。本地focused 21项、machine 7/7均PASS，Task仍为`in_progress`并等待implementation exact provider；TASK-P4-06 OBJ-002/ChangeReport、P4-07 Solver/正式candidate Validator、P4-08 application和P4-09+均未启动。
+
 ## TASK-P4-04 completed projection slice
 
 TASK-P4-04已从P4-03 provider-verified closure `3563bb236ce7b2c01794485110d4945a6e265105`按独立用户授权启动。范围限于Simulation-only ExecutionEvent ingestion、连续ledger事实投影、新immutable Snapshot/checkpoint/audit和Urgent Demand标准Import/Validation共同入口；P4-05 freeze、P4-06 OBJ-002/ChangeReport、P4-07 Solver/Validator、P4-08 new DRAFT application及P4-09+ Simulator/API/UI均未启动。
@@ -27,7 +31,7 @@ TASK-P4-02已从provider-verified P4-01 closure `4026597ab1015b5ea3a89d241f0d12b
 
 ## Activation
 
-用户于2026-08-27在P3 Exit双提交provider与clean synchronized closure baseline精确通过后批准P3→P4。TASK-P4-00 phase-planning、TASK-P4-01 contract/ADR、TASK-P4-02 machine contract、TASK-P4-03 persistence与TASK-P4-04 fact projection均已按独立治理链登记为`done`。P4-05～15继续`planned`且不会自动启动，P4-15是最后一项独立Exit Gate Audit。
+用户于2026-08-27在P3 Exit双提交provider与clean synchronized closure baseline精确通过后批准P3→P4。TASK-P4-00 phase-planning、TASK-P4-01 contract/ADR、TASK-P4-02 machine contract、TASK-P4-03 persistence与TASK-P4-04 fact projection均已按独立治理链登记为`done`。TASK-P4-05现按单独授权为`in_progress`；P4-06～15继续`planned`且不会自动启动，P4-15是最后一项独立Exit Gate Audit。
 
 TASK-P4-01已形成accepted ADR-0013～0015：事件authority/append-only投影/Replan lineage，半开freeze/四元OBJ-002/完整ChangeReport，以及Simulator只经标准ExecutionEvent共同路径。当前只形成合同基线，机器carrier、Schema、migration、persistence、业务实现和行为测试均未形成。
 
@@ -50,7 +54,7 @@ TASK-P4-01已形成accepted ADR-0013～0015：事件authority/append-only投影/
 | TASK-P4-02 | ExecutionEvent/Replan/ChangeReport等机器合同（done） | P4-01 |
 | TASK-P4-03 | Event/Replan持久化与状态事务（done） | P4-02 |
 | TASK-P4-04 | ExecutionEvent→事实→新Snapshot（done） | P4-02/03 |
-| TASK-P4-05 | Freeze Window与effective locks | P4-01/02/04 |
+| TASK-P4-05 | Freeze Window与effective locks（in progress） | P4-01/02/04 |
 | TASK-P4-06 | OBJ-002 Stability与ChangeReport | P4-01/02 |
 | TASK-P4-07 | Delivery→Stability→Makespan Solver/Validator | P4-04/05/06 |
 | TASK-P4-08 | ReplanRequest应用与new DRAFT lineage | P4-03～07 |

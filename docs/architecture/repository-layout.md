@@ -11,6 +11,10 @@ last_reviewed: 2026-08-27
 
 # 目标仓库结构
 
+## TASK-P4-05 repository layout delta
+
+新增`planning/policy/freeze_window.py`、`planning/problem/freeze_projection.py`、`planning/problem/freeze_window_check.py`和`planning/validation/freeze_window_precheck.py`，并在三个package surface以lazy/explicit export公开；测试分别落在unit/property/validation与既有CI contract。没有新增Schema、migration、dependency、application、Simulator、API、Frontend、fixture或P5目录。
+
 ## TASK-P4-04 repository layout delta
 
 本Task在既有边界内增加`domain/execution_fact_projection.py`、`application/execution_fact_projection.py`及machine check、`importers/urgent_demand.py`、`snapshots/projection.py`和unit/property/integration tests，并只扩展三个P4-03 repository的caller-transaction read/write surface。没有新增package root、migration、Schema、API、worker、Simulator或Frontend目录；P4-05+仍按独立Task扩展。

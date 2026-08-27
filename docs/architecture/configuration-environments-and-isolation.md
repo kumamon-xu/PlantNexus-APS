@@ -11,6 +11,10 @@ last_reviewed: 2026-08-27
 
 # 配置、环境与数据隔离
 
+## TASK-P4-05 isolation boundary
+
+Freeze policy不是环境变量、UI fallback或wall-clock配置；本Task只接受`SIMULATION`且`synthetic=true`的新Snapshot与base Version，environment限定DEVELOPMENT/TEST/BENCHMARK。Production-shaped policy/base或cross-plane lineage均在投影前拒绝，900秒只能引用SIM-ASSUMPTION-017，不得进入Production配置、部署值或SLA。
+
 ## TASK-P4-04 isolation boundary
 
 Service与四个repository实例固定为Simulation data plane；event本身还须`data_plane=SIMULATION`、`synthetic=true`、`production_binding=false`并携带完整synthetic provenance。Urgent staging同样必须为Simulation。测试数据库和SQLite原子性证据只属于development；未配置Production database/event source/credential/tenant promotion，未形成PostgreSQL并发、HA、backup或capacity结论。

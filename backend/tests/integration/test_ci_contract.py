@@ -52,6 +52,7 @@ from app.planning.backends.cp_sat.temporal_model_check import (
     main as temporal_model_main,
 )
 from app.planning.problem.contract_check import main as problem_contract_main
+from app.planning.problem.freeze_window_check import main as freeze_window_main
 from app.planning.policy.contract_check import main as machine_contract_main
 from app.planning.validation.problem_validator_check import (
     main as formal_validator_main,
@@ -255,6 +256,8 @@ def test_ci_runs_repository_gates_and_discovers_the_current_task() -> None:
         "build/validation/ci-p4-replan-persistence.json",
         "app.application.execution_fact_projection_check",
         "build/validation/ci-p4-execution-fact-projection.json",
+        "app.planning.problem.freeze_window_check",
+        "build/validation/ci-p4-freeze-window.json",
         "app.application.schedule_version_lifecycle_check",
         "build/validation/ci-p3-schedule-version-lifecycle.json",
         "app.application.workspace_read_model_check",
@@ -289,6 +292,7 @@ def test_ci_runs_repository_gates_and_discovers_the_current_task() -> None:
     assert "name: P3 workspace persistence evidence" in workflow
     assert "name: P4 replan event persistence evidence" in workflow
     assert "name: P4 ExecutionEvent fact projection evidence" in workflow
+    assert "name: P4 freeze window and effective lock evidence" in workflow
     assert "name: P3 reviewable ScheduleVersion lifecycle evidence" in workflow
     assert "name: P3 workspace read model and comparison evidence" in workflow
     assert "name: P3 schedule edit and lock command evidence" in workflow
@@ -472,6 +476,55 @@ def test_ci_p4_execution_fact_projection_is_required_and_machine_checkable(
         "committed_projection_snapshots": 2,
         "atomic_rollback_cases": 1,
         "machine_checks": 8,
+    }
+
+
+def test_ci_p4_freeze_window_is_required_and_machine_checkable(
+    tmp_path: Path,
+) -> None:
+    workflow = (ROOT / ".github" / "workflows" / "ci.yml").read_text(
+        encoding="utf-8"
+    )
+    normalized = " ".join(workflow.split())
+    assert (
+        "name: P4 freeze window and effective lock evidence run: >- "
+        "uv run python -m app.planning.problem.freeze_window_check "
+        "--root . --report build/validation/ci-p4-freeze-window.json"
+    ) in normalized
+    assert "continue-on-error" not in workflow
+
+    report_path = tmp_path / "p4-freeze-window.json"
+    assert (
+        freeze_window_main(["--root", str(ROOT), "--report", str(report_path)])
+        == 0
+    )
+    report = json.loads(report_path.read_text(encoding="utf-8"))
+    assert report["report_version"] == "p4-freeze-window-report.v1"
+    assert report["status"] == "PASS"
+    assert report["task_id"] == "TASK-P4-05"
+    assert report["diff_base"] == "e7b96e28913e7eb5be63ae4265c09f8281456b1c"
+    assert report["check_count"] == 7
+    assert report["issues"] == []
+    assert report["counts"] == {
+        "simulation_policies": 1,
+        "event_derived_snapshots": 2,
+        "positive_projection_vectors": 4,
+        "negative_projection_vectors": 4,
+        "independent_mutation_vectors": 1,
+        "machine_checks": 7,
+    }
+    assert report["boundaries"] == {
+        "data_plane": "SIMULATION_ONLY",
+        "freeze_policy": "SIM-P4-FREEZE-001_VERSIONED_900_SECONDS",
+        "interval_semantics": "HALF_OPEN_START_INCLUSIVE_END_EXCLUSIVE",
+        "production_freeze_default": "OPEN_005_NOT_FORMED",
+        "problem_v2_bytes": "UNCHANGED_REFERENCED_CARRIER",
+        "solver_obj_002_change_report": "NOT_IMPLEMENTED_BY_TASK",
+        "schedule_version_or_state_transition": "NONE",
+        "formal_validator_c001_c011": "UNCHANGED_INDEPENDENT_PRECHECK",
+        "p4_06_plus": "NOT_STARTED",
+        "p5_plus": "NOT_STARTED",
+        "production_external_authority_capacity_sla": "NOT_ESTABLISHED",
     }
 
 

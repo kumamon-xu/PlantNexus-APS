@@ -6,37 +6,51 @@ spec_version: 0.3.0
 phase: cross-phase
 normative: true
 source_sections: [90, 97, 100, 111]
-last_reviewed: 2026-08-19
+last_reviewed: 2026-08-27
 ---
 
 # Agent 审查清单
 
-## 任意功能
+只运行与 Task 类型匹配的清单。未命中的专项清单不要求调查或逐项填写 N/A。
 
-- 对应哪个 REQ/NFR/ENG？
-- 输入权威从哪里来？
-- Production 与 Simulation 如何区分？
-- PlanningProblem 如何表达？
-- SolverBackend 如何实现？
-- Validator 如何独立验证？
-- 正/反 Fixture 和 Scenario 是什么？
-- 性能如何变化？
-- 是否新增 PROD_OPEN/SIM_ASSUMPTION？
-- 是否需要 ADR？
-- 哪些文档必须更新？路径是否明确？
-- 哪些追踪矩阵行、Requirement、Test 或 Artifact 关系会变化？
-- 如果声明无文档影响，理由能否由 change-impact matrix 支持？
+## 所有 Task
 
-任何无法回答的问题都不能进入生产代码。
+- 目标、Requirement/NFR/ENG 和直接输入是否明确？
+- authority、Production/Simulation 和 unsupported 边界是否明确？
+- allowed/forbidden scope、错误行为和 rollback 是否明确？
+- 直接 Contract/ADR 与实现是否一致？
+- targeted positive/negative evidence 是否充分？
+- 文档、traceability、OPEN/SIM 是否只更新真实变化？
+- Validation profile 是否与风险匹配？
 
-## Solver 变更
+## Schema / Contract
 
-检查 C-ID、Objective phase、status semantics、Validator、Golden/Mutation/Property、Benchmark、exact version 和 rollback。
+检查 version、compatibility、migration、producer/consumer、canonical bytes/hash、positive/negative/round-trip 和旧版本保留。
 
-## Schema 变更
+## Planning / Solver / Constraint
 
-检查 version、migration、compatibility、contract test、fixture、hash/replay、producer/consumer 和 export。
+检查 Problem/Policy、C-ID/OBJ、status semantics、int/tick边界、独立 Validator、Golden/Mutation/Property、Benchmark、exact dependency 和 rollback。
 
-## Release
+## Validator / Diagnostics
 
-检查 approved-only publish、immutability、idempotency、manifest/provenance、security、monitoring、backup/restore、UAT 和 PROD_OPEN closure。
+检查与 Backend 隔离、每个目标 C-ID、mutation construction 与判断公式分离、错误映射、deterministic replay 和 fail-closed。
+
+## State / Persistence / Publication
+
+检查允许与拒绝 transition、CAS/transaction、immutability、idempotency、audit、concurrency、migration、approved-only publish 和 partial failure。
+
+## Import / Snapshot / Simulation
+
+检查 authority、Standard Import common path、determinism、version/seed/hash、data plane isolation、unsupported capability 和 Production default-deny。
+
+## Frontend / API
+
+检查 wire contract、server authority、状态与 allowed actions、unknown/raw fallback、accessibility、idempotency/unknown outcome、无 Solver/Validator/KPI 复制。
+
+## Security / Dependency / Operations
+
+检查 exact lock、advisory/license、Secret/no-leak、least privilege、backup/restore、monitoring、rollback 和 Production 阻塞项。
+
+## Phase Gate / Audit
+
+检查 fresh replay、全部直接 Task manifest、失败历史保留、blocking gaps、Provider identity、总规合规和下一 Phase 授权。Audit 不得在内部修实现。

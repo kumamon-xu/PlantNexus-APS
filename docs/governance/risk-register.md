@@ -12,6 +12,10 @@ registry_version: 1.0.0
 
 # 项目风险注册表
 
+## TASK-P4-05 local freeze controls
+
+RISK-016现获得versioned/no-default policy、half-open boundary、facts→HARD→freeze→SOFT排序、stale/conflict/grid/horizon/cross-plane fail-closed及独立mutation重算控制；RISK-015同时获得event-derived Snapshot/Problem/base/fingerprint exact lineage与byte replay控制。当前仅为local correctness evidence，尚无provider、OBJ-002/ChangeReport/Solver/application、真实Production policy或容量证据，因此RISK-001～017继续`MONITORED`，不关闭、不降级。
+
 ## TASK-P4-04 provider-verified projection controls
 
 RISK-015现获得完整source-position prefix、event exact replay、terminal/reference/conflict rejection、predecessor immutability与lost-response replay控制；RISK-017获得Simulation authority/default-deny、standard urgent ingress和atomic rollback控制。Machine 8/8与focused 10项已由implementation `47f55b41e370aa9d24fd9c987cff4663672c3ee8` / artifact `9644190441` exact复验，但未覆盖distributed consumer/PostgreSQL concurrency/Production source trust/capacity，因此RISK-001～017继续`MONITORED`，不关闭、不降级。

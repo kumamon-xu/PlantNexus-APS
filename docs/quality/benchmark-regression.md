@@ -11,6 +11,10 @@ last_reviewed: 2026-08-26
 
 # Benchmark Regression 规则
 
+## TASK-P4-05 benchmark boundary
+
+Freeze实现只运行small deterministic correctness/property/mutation向量，没有新增BenchmarkProfile、baseline、threshold或runtime/memory承诺。P2 XS/S/M与OR-Tools环境签名保持冻结；本Task不调用Solver，所以任何本地/CI耗时都不能外推Production capacity/SLA，P4后继若需要性能门必须另行版本化。
+
 ## TASK-P4-02 benchmark boundary
 
 本Task不新增或修改Benchmark profile/baseline，也不运行P4 Solver/Simulator performance measurement。P2 XS/S/M资产保持冻结；machine-contract sample中的clock/freeze/duration数值只属于SIM-ASSUMPTION-016的contract replay，不能建立Production capacity/SLA或新的regression threshold。

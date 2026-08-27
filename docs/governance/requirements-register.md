@@ -12,6 +12,10 @@ registry_version: 1.0.0
 
 # 核心需求注册表
 
+## TASK-P4-05 freeze allocation
+
+REQ-005/008/009现连接versioned Simulation freeze policy、event-derived Snapshot/new Problem、base PUBLISHED Version、content-addressed effective-lock projection与独立precheck。COMPLETED/RUNNING/C-007、显式HARD/freeze-derived HARD/C-008、SOFT input、half-open边界及no-Production-default已取得本地unit/property/mutation/machine PASS，状态为`LOCAL_PASS_PROVIDER_PENDING`；Requirement roots继续`ALLOCATED`，不形成OBJ-002、ChangeReport、Solver/application、P5或Production closure。
+
 ## TASK-P4-04 projection allocation
 
 REQ-002/003/008/009/013现连接Simulation ExecutionEvent strict ingress、authority/source-position fact projection、new immutable Snapshot/checkpoint/audit、Urgent Standard Import与机器报告。11-event/4-negative/standard-chain/rollback证据已由implementation `47f55b41e370aa9d24fd9c987cff4663672c3ee8` / artifact `9644190441`升级为`PROVIDER_VERIFIED`，root requirement lifecycle继续`ALLOCATED`；未形成ReplanRequest/freeze/Solver/ChangeReport/ScheduleVersion、P5或Production requirement closure。

@@ -12,6 +12,10 @@ registry_version: 1.0.0
 
 # 追踪矩阵
 
+## TASK-P4-05 local freeze trace slice
+
+`REQ-005/008/009 + NFR-COR/DET/TRC/ISO/HUM + ENG-SOL/VAL/ERR/VER + SIM-ASSUMPTION-017 → TASK-P4-05 → freeze-policy.v1 / effective-lock-projection.v1 / independent precheck → TEST-FREEZE-WINDOW-001/TEST-RUNNING/TEST-INF-LOCK/TEST-VALIDATOR-MUTATION/TEST-PROPERTY/TEST-SIM-ISOLATION → p4-freeze-window-report.v1/Task report → exact provider`。本地Task-specific 21项与machine 7/7已通过，当前edge为`LOCAL_PASS_PROVIDER_PENDING`；roots/rows仍为30/30、Test IDs仍为61，OBJ-002/ChangeReport/Solver/application与Production/P5保持`PLANNED/NOT_FORMED`。
+
 ## TASK-P4-04 provider-verified projection trace slice
 
 `REQ-002/003/008/009/013 + NFR-COR/DET/TRC/ISO/REL/SEC + ENG-ARCH/ERR/VER → TASK-P4-04 → ExecutionEvent ledger ingress / canonical fact projector / standard urgent import / new immutable Snapshot+checkpoint+audit → TEST-EXECUTION-FACT-PROJECTION-001/TEST-SNAPSHOT-REPLAY-001/TEST-IDEMPOTENCY/TEST-PROPERTY/TEST-SIM-ISOLATION → p4-execution-fact-projection-report.v1/Task report → exact provider`。4 unit + 2 property + 4 integration及machine 8/8均通过；implementation `47f55b41e370aa9d24fd9c987cff4663672c3ee8` / artifact `9644190441`已复验54/0 paths、九个Impact Rules、19/19 checks与`issues=[]`，本closure把projection edge升级为`PROVIDER_VERIFIED_DONE`。Roots/rows仍为30/30、Test IDs仍为61且root lifecycle保持`ALLOCATED`；closure自身仍须post-push exact provider复验。

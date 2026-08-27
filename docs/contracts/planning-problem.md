@@ -11,6 +11,10 @@ last_reviewed: 2026-08-21
 
 # PlanningProblem 合同
 
+## TASK-P4-05 immutable Problem consumer
+
+Freeze projector先完整验证new Snapshot和PlanningProblem v2的canonical bytes/hash，并要求Problem active operation全集逐字等于Snapshot中非COMPLETED实例；RUNNING与COMPLETED必须回链exact execution fact，historical anchor不得漂移。Effective locks保存在独立`effective-lock-projection.v1`，不会把event、freeze、base schedule或policy字段私塞入Problem v2，也不改写builder/hash/Schema或历史Problem bytes。
+
 ## TASK-P4-02 replan lineage boundary
 
 ReplanRequest、SolverReport v2、ScheduleVersion v2和ChangeReport v1均以exact artifact reference绑定base/new PlanningProblem，但本Task不修改PlanningProblem v1/v2 Schema、builder、hash或字段语义。新Problem只能由P4-04在新immutable Snapshot之后确定性构建；event/freeze/policy字段不得私塞入已冻结Problem document。

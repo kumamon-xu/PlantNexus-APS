@@ -11,6 +11,10 @@ last_reviewed: 2026-08-27
 
 # 动态重排设计合同
 
+## TASK-P4-05 freeze preparation slice
+
+P4-04产生的event-derived new Snapshot现在可与exact Problem、base PUBLISHED Version和`SIM-P4-FREEZE-001@1.0.0`组合，生成完整可引用的effective-lock projection及独立PASS/FAIL precheck。该步骤只完成Replan solve前的事实/锁/freeze准备；不创建ReplanRequest result/PlanningRun、不调用Solver/fresh candidate Validator、不计算ChangeReport，也不提交new DRAFT。冲突、stale、cross-plane或缺失authority均保持明确blocked input而非UNKNOWN/INFEASIBLE伪装。
+
 ## TASK-P4-04 fact projection slice
 
 P4-04把已持久化ExecutionEvent连续prefix解释为effective canonical facts并生成new immutable Snapshot/checkpoint；它只完成Replan链的事实准备阶段。Same input可byte-exact replay，gap/late/conflict/stale/terminal regression/cross-plane均fail closed，错误事实只能由后续补偿event和新Snapshot纠正，禁止改写ledger或历史Snapshot。Freeze resolution、OBJ-002、ReplanRequest、lexicographic solve、fresh Validator、ChangeReport和new DRAFT仍未执行。

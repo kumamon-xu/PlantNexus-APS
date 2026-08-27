@@ -11,6 +11,10 @@ last_reviewed: 2026-08-27
 
 # 独立 ScheduleValidator 合同
 
+## TASK-P4-05 independent freeze precheck
+
+新增`freeze_window_precheck.py`从Snapshot、Problem、base Version和policy独立重算完整projection与fingerprint，不导入projector、CP-SAT Backend或formal ScheduleValidator，并以C-007/C-008及local freeze check IDs报告mutation。它不是candidate Schedule Validator，不能替代P4-07对Solver产物重算C-001～C-011；既有formal Validator源码/规则/hash保持冻结。
+
 ## TASK-P4-02 validation carrier
 
 ScheduleVersion v2、SolverReport v2与ChangeReport v1现携带fresh ValidationReport exact reference和complete lineage，但TASK-P4-02不运行或修改Validator、C-001～C-011、mutation suite或PASS含义。P3 i18n evidence兼容修正仍冻结P3 API/Schema/registry exact paths；它不允许Frontend或P4 carrier绕过future P4-07 fresh independent validation。

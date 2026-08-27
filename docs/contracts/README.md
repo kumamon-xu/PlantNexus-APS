@@ -11,6 +11,10 @@ last_reviewed: 2026-08-26
 
 # 合同文档索引
 
+## TASK-P4-05 freeze/effective-lock consumer boundary
+
+TASK-P4-05只消费既有`planning-policy.v2`、`planning-snapshot.v2`、`planning-problem.v2`与base `PUBLISHED` ScheduleVersion，形成独立content-addressed `effective-lock-projection.v1`和`freeze-window-precheck.v1`；九份P4 Schema/sample、schema set `2.8.0`、migration与state pair均未修改。`p4-freeze-window-report.v1`只证明Simulation policy/投影/拒绝语义，未形成ReplanRequest结果、OBJ-002、ChangeReport、Solver或新ScheduleVersion。
+
 ## TASK-P4-04 runtime consumer boundary
 
 P4-04现以consumer-only方式解释既有`execution-event.v1`并生成既有`planning-snapshot.v2`；没有修改九份P4 Schema/sample、schema set `2.8.0`、`0005` migration或dependency。接收与投影使用P4-03 caller-owned事务primitive，Urgent Demand复用P1 Import/Validation/Expansion链；不新增wire carrier、state machine或私有业务合同。Implementation `47f55b41e370aa9d24fd9c987cff4663672c3ee8` / artifact `9644190441`已把该consumer evidence升级为`PROVIDER_VERIFIED`。

@@ -11,6 +11,10 @@ last_reviewed: 2026-08-27
 
 # PlantNexus APS 文档中心
 
+## TASK-P4-05 local implementation boundary
+
+TASK-P4-05已从provider-verified P4-04 closure `e7b96e28913e7eb5be63ae4265c09f8281456b1c`按独立授权实现Simulation policy、solver-neutral projection与独立precheck。HIGH_RISK本地验收、machine和mutation/Property replay均PASS；SIM-ASSUMPTION-017显式登记900秒half-open值，OPEN-005保持OPEN。Task仍为`in_progress`且implementation provider pending；Schema、migration、dependency、既有Problem/formal Validator/CP-SAT、OBJ-002/ChangeReport与P4-06+均未启动或保持只读。
+
 ## TASK-P4-04 implementation completion
 
 TASK-P4-04从closure SHA `3563bb236ce7b2c01794485110d4945a6e265105`冻结范围，现形成Simulation-only ExecutionEvent接收、连续prefix事实投影、new immutable Snapshot/checkpoint/audit及Urgent Demand标准Import复用。本地机器报告覆盖11个event type、4类拒绝、exact replay和故障注入原子回滚并为8/8 PASS；focused `12 passed`、完整Backend `654 passed`、Frontend 67 Vitest与三轮各12/12 Chromium、全部历史machine/P2/P3 Gate、SCA/license、Compose及双build均PASS。Implementation `47f55b41e370aa9d24fd9c987cff4663672c3ee8`的required run/job/artifact=`33066612047`/`98498125593`/`9644190441`已exact成功并下载复验，本evidence-only closure据此把Task标为`done`；closure自身仍须post-push exact provider复验。Schema set仍为`2.8.0`，migration head仍为`0005`，dependency/state pair不变；P4-05+、P5与Production均未启动。
@@ -90,7 +94,7 @@ TASK-P4-02已获单独授权并以`4026597ab1015b5ea3a89d241f0d12b5b481dee3`为�
 
 ## 当前范围
 
-当前阶段为P4。P0～P3 Milestone均为`completed`；TASK-P3-00～17全部`done`且P3 Exit双提交provider已闭环。TASK-P4-00～04现为`done`，P4-05～15为`planned`成员；P4-15最终独立审计也不自动进入P5或Production。详见`current_phase.md`。
+当前阶段为P4。P0～P3 Milestone均为`completed`；TASK-P3-00～17全部`done`且P3 Exit双提交provider已闭环。TASK-P4-00～04现为`done`，TASK-P4-05为`in_progress`且等待exact provider，P4-06～15为`planned`成员；P4-15最终独立审计也不自动进入P5或Production。详见`current_phase.md`。
 
 P3已形成的顺序保持合同/ADR→Schema→persistence→validated DRAFT→read models→edit/lock→approval/reject→idempotent publish→ExportJob→API→Frontend/E2E→vertical Gate。批准的末段顺序为TASK-P3-15治理支持→TASK-P3-16本地化→TASK-P3-17独立Exit Audit；P3-16现已完成实现provider复验与文档closure，下一项仍须另行授权。展示术语规范见[`frontend/official-zh-cn-terminology-map.md`](frontend/official-zh-cn-terminology-map.md)，它不改变英文机器合同。
 

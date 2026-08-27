@@ -11,6 +11,10 @@ last_reviewed: 2026-08-27
 
 # 推荐技术栈与锁定规则
 
+## TASK-P4-05 stack review
+
+实现仅使用Python 3.12标准库、既有canonical contract/Snapshot/Problem组件及测试环境既有jsonschema/Hypothesis；`pyproject.toml`、`uv.lock`、OR-Tools pin、Node/npm locks与container stack零变化。Projector和precheck不导入OR-Tools/CP-SAT，machine report的runtime/memory只属correctness执行观察，不建立容量阈值。
+
 ## TASK-P4-04 stack review
 
 实现复用已锁定Python 3.12、SQLAlchemy 2.0.43、Alembic 1.16.5、PyYAML及既有Hypothesis/Pytest/Ruff/Pyright；`pyproject.toml`和`uv.lock`字节保持冻结。SQLite仅用于migration/transaction correctness和故障注入，不代表Production database selection、concurrency、capacity或SLA。没有新增runtime/dev/frontend依赖，也未触碰OR-Tools。

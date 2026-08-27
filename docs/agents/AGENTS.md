@@ -11,91 +11,106 @@ last_reviewed: 2026-08-27
 
 # PlantNexus APS Coding Agent 规则
 
-根目录 `AGENTS.md` 仅为自动发现入口；本文件是 Agent 规则正文。根入口不得复制或另行解释本文件的规范，避免出现两套规则。
+根目录 AGENTS.md 只负责自动发现；本文件保存稳定、跨阶段的 Agent 规则。Task、run、artifact、测试数量和历史 SHA 不得写入本文件。
 
-## 开始任务
+## 默认启动顺序
 
-按顺序读取：
+开始 Task 时按以下顺序读取：
 
-1. 本文件；
-2. `../current_phase.md`；
-3. 当前 Task Card；
-4. Task 引用的 Schema/Contract、Constraint 和 ADR；
-5. 相关代码和测试。
+1. 完整读取本文件；
+2. 完整读取 ../current_phase.md；该文件只允许保存当前阶段快照；
+3. 读取当前 Task Card 从 front matter 到 Rollback 的规范部分；
+4. 只读取 Task 明确引用且与目标直接相关的 Schema、Contract、Constraint、ADR；
+5. 读取受影响代码、邻接接口和对应测试。
 
-完成上述规范读取后，可以读取根 `README.md` 获取已落地的构建与本地检查命令；`README.md` 不高于 Task Card 或规范正文。
+Task Card 的 Activation evidence、Completion evidence 和历史失败记录默认不加载。只有启动证据核验、closure、remediation 或 Phase Audit 才读取对应段落。
 
-涉及P3 Frontend展示、locale、错误文案、时间/单位格式或human-control文本时，必须在代码前完整读取`../frontend/official-zh-cn-terminology-map.md`、相关Frontend规范、`../contracts/planning-workspace-api.md`、`../domain/error-model.md`与两份P3状态机文档。官方中文表只授权展示label；英文API key/state/command/error/C-ID/fingerprint仍是机器权威。
+根 README.md 只作为命令和仓库地图入口，不能覆盖 Task、Contract、ADR 或总规。
 
-TASK-P3-16已把该规则实现为versioned typed dictionary、unknown raw fallback和zero-wire-drift machine evidence，且implementation exact provider已复验；后续修改任何P3用户可见文本时必须同步两个locale及coverage registry，不能绕过`src/i18n`重新散落字符串。本closure自身仍须exact provider，TASK-P3-17仍须独立授权。
+## 上下文预算
 
-Task 从 `planned`/`ready` 进入 `in_progress` 时，必须先把当时的完整 40 字符 HEAD commit SHA 记录为 Task Card 的 `Diff base`。后续 diff acceptance 以该不可变基线联合当前 working tree，不能依赖尚未提交的改动长期存在。
+- 默认不读取历史 Phase、已完成 Task Card、完整 artifact 内容、完整注册表、完整 Test Matrix、Document Inventory 或 Change Impact 历史。
+- 大型注册表和矩阵使用标题、稳定 ID、表格行或精确搜索定位；读取命中的规范段，不从第一行机械加载到文件末尾。
+- ADR 和直接业务 Contract 应完整读取；仅被列为候选影响、但语义没有变化的文档只需核对相关章节。
+- 已由 exact SHA 机器清单证明的依赖，默认读取清单摘要；只有摘要缺失、签名或 SHA 不一致、证据过期、Task 明确要求独立审计时才下载原始 artifact。
+- 如果默认启动上下文超过约 30,000 字符，应先缩小到稳定 ID、章节和机器摘要，并在工作记录中说明扩大上下文的原因。
 
-规格版本变化，或修改架构边界、PlanningProblem、SolverBackend、Constraint Catalog、状态机、发布规则或阶段 Exit Gate 时，完整重读 `../core/APS_IMPLEMENTATION_SPEC.md`。
+详细策略见 reading-order-and-context-policy.md。
+
+## 完整总规触发条件
+
+下列情况必须完整读取 ../core/APS_IMPLEMENTATION_SPEC.md：
+
+- spec_version 变化；
+- Task 直接修改总规或提出 superseding 的顶层规范决定；
+- 架构、PlanningProblem、SolverBackend、Constraint、状态机、发布或 Exit Gate 的既有规范发生语义变化；
+- Contract、ADR 与总规出现无法通过局部章节消解的冲突；
+- Phase Exit Audit 明确要求对整份总规做独立合规重放。
+
+实现已经由当前版本 Contract 或 accepted ADR 固定的 consumer，不因路径名称包含 problem、backend、state 等字样自动触发整份总规；仍须完整读取直接 Contract、ADR 和总规对应章节。
 
 ## 执行边界
 
-- 只修改 Task Card 的 `Files allowed to change`。
-- 需要额外文件时停止，说明原因并先修订 Task Card。
-- Task Card 必须显式填写 `Documentation impact`、`Documents to update` 和 `Traceability updates`；缺少任一字段不得开始实施。
-- P1及以后 Task Card还必须填写可核验的 `Completion conditions`；历史 Phase Task必须已是 terminal状态。
-- `Documents to update` 中的文件必须同时出现在 `Files allowed to change`，否则先修订任务卡。
+- 只修改 Task Card 的 Files allowed to change。
+- 需要额外文件时先说明原因并更新 Task 边界；不得无边界扩张。
+- Task 必须填写 Documentation impact、Documents to update 和 Traceability updates。
+- Documents to update 只列预计实际修改的语义所有者和机器规则要求的最小文档，不列所有可能相关文档。
+- P1 以后必须填写可二值判断的 Completion conditions。
 - 不得提前实施当前 Phase 以后的能力。
 - 不得把 SIM_ASSUMPTION 写入 Production Business Policy。
 - 不得猜生产数据、班次、冻结窗口、运输时间、标准工时、库存、资源能力或目标权重。
-- 不得删除硬约束、修改断言、静默忽略能力或把 Hint 当约束。
+- 不得删除硬约束、修改断言掩盖缺陷、静默忽略能力或把 Hint 当约束。
 
-## 模块边界
+Task 进入 in_progress 时必须记录启动前完整 40 字符 HEAD 为 Diff base。Diff acceptance 使用 Diff base..HEAD 与 working tree 的并集。
 
-- CP-SAT 逻辑只进入 `planning/backends/cp_sat/`。
-- Domain、API Controller、React、ORM 不出现 CP-SAT 建模。
-- Validator 不导入或复用 CpSatBackend 约束实现。
+## 模块与语义底线
+
+- CP-SAT 建模只进入 planning/backends/cp_sat。
+- Domain、API Controller、React 和 ORM 不承载 CP-SAT 建模。
+- Validator 不导入或复用 CpSatBackend 的约束实现。
 - Simulation 必须走 Standard Import → Snapshot → Problem → same Solver/Validator。
+- FEASIBLE 不称最优；UNKNOWN 不称无解；Synthetic Benchmark 不称生产容量。
+- 未支持能力必须显式返回 UNSUPPORTED_CAPABILITY。
 
-## 状态与措辞
+## 风险分级验收
 
-- FEASIBLE 不称为最优；UNKNOWN 不称为无解。
-- Synthetic Benchmark 不称为生产容量。
-- Assumption conflict subset 不称为 minimal conflict set，除非有证明。
-- 未支持能力返回 `UNSUPPORTED_CAPABILITY`。
+验收按 task-execution-protocol.md 的 DOCS_ONLY、STANDARD、HIGH_RISK、PHASE_GATE 四级执行：
 
-## 完成任务
+- 所有 Task 都运行目标测试、错误/边界测试、文档全仓检查和当前 Task diff 检查；
+- STANDARD 至少在项目已配置的 Provider 上完成一次完整受影响技术栈回归；明确采用 local-only Git 时以 exact immutable local manifest 代替，不伪造远程证据；
+- Solver、Constraint、状态机、migration、security、publication、依赖升级等 HIGH_RISK Task 保留完整本地相关回归、Benchmark 或 migration replay，并在 Provider 上全量执行；
+- Phase Gate/Audit 保留独立 fresh replay，不复用实现 Task 的结论代替审计。
 
-运行 Task 的 Acceptance Commands，记录真实结果；更新 traceability、开放问题、假设、文档和 artifacts。不能运行的命令必须明确说明原因，不得写成 PASS。
+不得为了节省时间跳过直接受影响的测试、负向路径、Schema compatibility、独立 Validator 或 required Provider。
 
-每个完成报告必须列出：
+## 证据与完成
 
-- 实际更新的文档；
-- 实际更新的追踪关系；
-- 若 `Documentation impact: none`，给出依据和审查结果；
-- 与 `governance/change-impact-matrix.md` 的匹配结果。
+- Completion evidence 以机器报告和 manifest 为权威；Task Card 记录结论、exact SHA、报告路径和未关闭问题，不复制全部 changed paths、digest、测试清单和历史 run。
+- 普通后继 Task 只验证直接依赖的 compact manifest 与当前 HEAD 祖先关系，不递归重放整条历史链。
+- Implementation commit 必须取得 Task 风险级别要求的 exact configured Provider 证据；明确的 local-only 模式则绑定 exact commit 的本地 machine manifest。
+- 纯 evidence-only closure 若机器证明相对 implementation 只修改 Task、Phase、Milestone、registry 或 evidence 文档，可以使用轻量 closure gate；若出现代码、Schema、测试、workflow、依赖、migration 或业务合同变化，必须恢复完整 Gate。
+- 失败命令、失败 run 和缺失证据必须真实记录，不得写成 PASS。
 
-代码、Schema、Constraint、状态机、Solver、Validator、Simulation、API 或发布行为发生变化，而完成报告没有文档影响结论时，Task 不得标记 Done。
+Task 完成至少更新真实 traceability、开放问题、假设和必要文档。未修改候选文档不要求逐份写无变化说明；只需说明命中的 Impact Rule、实际文档和为何没有对外语义变化。
 
-未经阶段 Gate 和用户确认，不更新到下一 Phase。
+## 治理命令
 
-当前仓库治理检查入口：
+全仓文档检查：
 
-```text
+~~~text
 uv run python scripts/check_docs.py
-```
+~~~
 
-当前 Task 还必须运行：
+当前 Task 范围检查：
 
-```text
+~~~text
 uv run python scripts/check_docs.py --task <task-card> --check-diff --report <report-path>
-```
+~~~
 
-CI 不得把 current phase或 Task路径硬编码在 workflow中。PR/push应传入不可变 event base并运行：
+CI 使用不可变 event base 自动发现唯一 current-phase Task。Task discovery、多卡 planning/amendment 的算法细节由 documentation-consistency-checks.md 和校验器测试负责；普通实现 Task 无需加载这些内部算法。
 
-```text
-uv run python scripts/check_docs.py --discover-task-from <event-base-sha> --check-diff --report build/traceability/ci-current-task-report.json
-```
+## 阶段边界
 
-event range必须恰好归属一个 current-phase Task Card；若没有 changed card，只允许回退到仓库中唯一 `in_progress` current Task。历史/未来 Task、多个 current Task、无可归属 Task或非完整 SHA均失败，禁止自由文本 skip。
+Task Done 不等于 Milestone Done。未经 Phase Gate 与用户确认，不更新到下一 Phase。
 
-多卡只允许两种显式例外：首次阶段计划必须是all-added `TASK-Pn-00` / `phase-planning-owner`；后续阶段计划修订必须由唯一已存在、被event触及且有完整Diff base的`phase-plan-amendment-owner`归属。修订成员只能为`phase-plan-member`且保持`planned/ready`、不得预填implementation SHA；逻辑Task可按稳定ID重命名，但不得纯删除、留下重复路径或改写base中active/done成员。任一条件不满足必须停止，不能回退猜测owner。
-
-校验器检查 ID、Task 依赖、traceability，以及 `Diff base..HEAD` 已提交变更与 working tree 并集对应的 change-impact 声明，但不代替业务 Contract、Schema、Solver/Validator correctness、Scenario 或 Phase Gate 验收。
-
-校验器从 `docs/current_phase.md` front matter读取当前 `Pn`：保留 prior-phase terminal Task，允许 current-phase详细卡，拒绝 future-phase详细卡。不得在 Agent、Task或 CI中另建硬编码 current phase事实源；CI event base只用于发现 Task，不取代卡片中的 `Diff base`。
+current_phase.md 只保存当前快照、当前 Task、直接依赖、当前禁止项和下一 Gate。历史 run、artifact、失败诊断和已完成 Task 详情保存在各 Task、Milestone Audit、机器 manifest 与 Git 历史中。

@@ -11,6 +11,10 @@ last_reviewed: 2026-08-21
 
 # Property Test 规范
 
+## TASK-P4-05 generated freeze properties
+
+固定seed属性覆盖new Snapshot cutoff前、区间内、恰等于freeze end与区间后的grid-aligned start；断言stale输入拒绝、inside唯一derived HARD、end/outside不冻结、same inputs byte-exact replay且独立precheck PASS。另生成非grid秒偏移并要求`UNREPRESENTABLE_LOCK`，不得round、truncate或repair；这些只验证Simulation synthetic vector，不是业务分布或性能抽样。
+
 ## TASK-P4-04 generated projection properties
 
 `TEST-PROPERTY`现以固定seed生成duration变化与order/plane/authority/time mutations，验证pure projection replay得到相同canonical bytes/hash/prefix fingerprint、predecessor bytes不变，并对gap、Production plane、authority mismatch和received-before-occurrence fail closed。Focused property evidence为2个test/80 examples；它不替代后续P4-10连续Scenario replay或Production workload/capacity测试。

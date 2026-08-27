@@ -11,6 +11,10 @@ last_reviewed: 2026-08-19
 
 # PlanningPolicy 与 SolveLimits 合同
 
+## TASK-P4-05 versioned Simulation freeze policy
+
+唯一已实现policy为`POLICY-P4-SIM-DYNAMIC-FREEZE-001@1.0.0`，内含`FREEZE-POLICY-P4-SIM-001@1.0.0`与显式source `SIM-P4-FREEZE-001`；窗口为900正整数秒，anchor只取verified new Snapshot `cutoff_at_utc`，区间固定为half-open `[cutoff, cutoff+900s)`。任何不同policy bytes、Production plane、缺失source/version或非整秒anchor都在solve前拒绝；OPEN-005继续阻止Production默认。SolveLimits、OBJ-002执行和Solver策略未由本Task修改。
+
 ## TASK-P4-02 PlanningPolicy v2 carrier
 
 `planning-policy.v2`是与v1不可互换的Simulation carrier，显式引用policy source/revision/fingerprint和freeze policy，并把目标固定为exact lexicographic `OBJ-001 delivery → OBJ-002 stability → OBJ-003 makespan`。OBJ-002依次最小化SOFT lock violations、changed existing operations、resource changes与absolute start shift seconds；禁止加权和、隐式priority或Production默认。SolveLimits继续复用v1 exact reference，本Task不改变其字段、默认或执行行为。

@@ -34,6 +34,14 @@ if TYPE_CHECKING:
         verify_problem,
         verify_problem_v2,
     )
+    from .freeze_projection import (
+        EFFECTIVE_LOCK_PROJECTION_VERSION,
+        FREEZE_DERIVED_LOCK_VERSION,
+        EffectiveLockProjection,
+        FreezeProjectionError,
+        FreezeProjectionFailure,
+        project_effective_locks,
+    )
 
 _HASHING_EXPORTS = {
     "PLANNING_PROBLEM_VERSION",
@@ -56,6 +64,15 @@ _HASHING_EXPORTS = {
     "verify_problem_v2",
 }
 
+_FREEZE_EXPORTS = {
+    "EFFECTIVE_LOCK_PROJECTION_VERSION",
+    "FREEZE_DERIVED_LOCK_VERSION",
+    "EffectiveLockProjection",
+    "FreezeProjectionError",
+    "FreezeProjectionFailure",
+    "project_effective_locks",
+}
+
 
 def __getattr__(name: str) -> Any:
     """Load implementation exports lazily so domain prechecks can import types."""
@@ -68,6 +85,10 @@ def __getattr__(name: str) -> Any:
         from . import hashing
 
         return getattr(hashing, name)
+    if name in _FREEZE_EXPORTS:
+        from . import freeze_projection
+
+        return getattr(freeze_projection, name)
     raise AttributeError(name)
 
 __all__ = [
@@ -80,6 +101,11 @@ __all__ = [
     "PROBLEM_HASH_PROJECTION_VERSION_V2",
     "PROBLEM_SCHEMA_SET_VERSION_V2",
     "DemandPriorityInput",
+    "EFFECTIVE_LOCK_PROJECTION_VERSION",
+    "FREEZE_DERIVED_LOCK_VERSION",
+    "EffectiveLockProjection",
+    "FreezeProjectionError",
+    "FreezeProjectionFailure",
     "ImmutablePlanningProblem",
     "ImmutablePlanningProblemV2",
     "PlanningProblemDocument",
@@ -96,6 +122,7 @@ __all__ = [
     "problem_hash_projection",
     "problem_v2_hash_for",
     "problem_v2_hash_projection",
+    "project_effective_locks",
     "verify_problem",
     "verify_problem_v2",
 ]

@@ -11,6 +11,10 @@ last_reviewed: 2026-08-26
 
 # 端到端计划链路
 
+## TASK-P4-05 formed freeze projection edge
+
+当前形成的新增纯链路为`event-derived immutable Snapshot → exact PlanningProblem v2`与`base PUBLISHED ScheduleVersion + PlanningPolicy v2 → effective-lock-projection.v1 → independent freeze precheck`。该edge输出facts/HARD/freeze/SOFT的完整solver-neutral输入，不进入CP-SAT、不写Replan repository、不生成candidate/ChangeReport/new DRAFT；后续仍由P4-06/07/08分别承接稳定性、求解验证与应用事务。
+
 ## TASK-P4-04 formed flow edge
 
 当前已形成的唯一新执行边为`validated Simulation ExecutionEvent → ledger+audit → complete ordered prefix → pure canonical fact projection → new immutable PlanningSnapshot → checkpoint+audit`。Urgent分支在projection前插入既有`Raw Staging → Normalization → Data Validation → Expansion → Snapshot candidate`，随后回到同一projector；无旁路。流程到此停止，不生成ReplanRequest/Problem/Solution/ChangeReport/ScheduleVersion，也不调用Simulator、API、UI或external adapter。

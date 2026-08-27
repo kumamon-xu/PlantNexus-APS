@@ -11,6 +11,10 @@ last_reviewed: 2026-08-27
 
 # Operations 索引与形成边界
 
+## TASK-P4-05 operations boundary
+
+CI新增不可跳过的`P4 freeze window and effective lock evidence`并上传`ci-p4-freeze-window.json`；报告只含sanitized IDs/fingerprints/counts/边界，不记录secret、真实工厂事实或外部side effect。本Task无service/worker/database/API部署、告警/retention、runbook、Production authority、capacity或SLA结论，rollback仅停用后继consumer并保留immutable evidence。
+
 ## TASK-P4-04 operations boundary
 
 本Task新增可运行的Simulation-only event/projection machine evidence，但没有形成Production Runbook、服务部署、event consumer daemon、queue/lease/retry scanner、dead-letter、outbox、external adapter、backup/restore或on-call流程。可操作的回滚边界仅为停用入口、保留ledger，并以补偿event+new Snapshot纠正；不可删除或改写历史。

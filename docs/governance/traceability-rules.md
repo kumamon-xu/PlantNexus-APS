@@ -11,6 +11,10 @@ last_reviewed: 2026-08-27
 
 # 需求追踪规则
 
+## TASK-P4-05 freeze trace rule
+
+唯一owner链固定为`REQ-005/008/009 + declared NFR/ENG + SIM-ASSUMPTION-017 → TASK-P4-05 → versioned Simulation policy + immutable effective-lock projection + independent precheck → TEST-FREEZE-WINDOW-001/TEST-RUNNING/TEST-INF-LOCK/TEST-VALIDATOR-MUTATION/TEST-PROPERTY/TEST-SIM-ISOLATION → p4-freeze-window-report.v1 + Task report → exact implementation provider → evidence-only closure provider`。Diff base固定`e7b96e28913e7eb5be63ae4265c09f8281456b1c`，只允许八个declared Impact Rules；P4-06不得因本地PASS自动启动。
+
 ## TASK-P4-04 projection trace rule
 
 本Task链固定为`REQ-002/003/008/009/013 + declared NFR/ENG + existing SIM assumptions → TASK-P4-04 → strict event ingress + pure fact projector + standard urgent chain + immutable Snapshot/checkpoint/audit → TEST-EXECUTION-FACT-PROJECTION-001/TEST-SNAPSHOT-REPLAY-001/TEST-IDEMPOTENCY/TEST-PROPERTY/TEST-SIM-ISOLATION → p4-execution-fact-projection-report.v1 + Task report → exact implementation provider → evidence-only closure provider`。Diff base固定`3563bb236ce7b2c01794485110d4945a6e265105`；必须精确命中九个declared Impact Rules并保持Schema/migration/dependency/state/P5/Production禁止范围零差异。P4-05只能在双提交闭环和新授权后启动。

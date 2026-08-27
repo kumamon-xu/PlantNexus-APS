@@ -12,6 +12,10 @@ registry_version: 1.0.0
 
 # PROD_OPEN 注册表
 
+## TASK-P4-05 freeze review
+
+已登记的P4 Simulation-only 900秒half-open窗口不得进入Production policy；resolver显式拒绝Production policy/base且没有environment/UI/wall-clock fallback。该correctness证据不能关闭OPEN-005，也不提供OPEN-002/006/010～012/015所需external、priority、identity/approval、dependency safety、capacity/SLA或字段authority closure；OPEN-001～015继续全部`OPEN`，数量与registry格式不变。
+
 ## TASK-P4-04 projection review
 
 Simulation-only event authority、standard urgent chain和SQLite transaction evidence不提供真实MES/ERP source、Production field authority、identity/RBAC、freeze/priority、PostgreSQL topology、external publish/deployment或capacity/SLA closure。OPEN-001～015全部继续`OPEN`，数量与`registry_version=1.0.0`不变；本Task不得用projector默认关闭任何未知项。

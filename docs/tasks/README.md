@@ -13,7 +13,7 @@ last_reviewed: 2026-08-27
 
 ## Current P4 plan
 
-当前Phase为P4。TASK-P4-00～04均已按各自独立授权形成implementation/evidence-only closure治理链并标为`done`；TASK-P4-04从clean provider-verified HEAD `3563bb236ce7b2c01794485110d4945a6e265105`冻结Diff base，implementation `47f55b41e370aa9d24fd9c987cff4663672c3ee8`及artifact `9644190441`已exact复验。P4-05～15仍为`planned`且需要新的明确授权。P3-00～17为terminal历史；P4-15是唯一最后独立Exit Audit，READY也不自动进入P5或Production。
+当前Phase为P4。TASK-P4-00～04均已按各自独立授权形成implementation/evidence-only closure治理链并标为`done`；TASK-P4-05从clean provider-verified HEAD `e7b96e28913e7eb5be63ae4265c09f8281456b1c`冻结Diff base并已完成local implementation/focused/machine evidence，当前仍为`in_progress`且provider pending。P4-06～15仍为`planned`并需要新的明确授权。P3-00～17为terminal历史；P4-15是唯一最后独立Exit Audit，READY也不自动进入P5或Production。
 
 | Task | 目标 | 依赖 | 状态 |
 |---|---|---|---|
@@ -22,7 +22,7 @@ last_reviewed: 2026-08-27
 | [TASK-P4-02](P4/TASK-P4-02-execution-event-replan-change-report-schemas.md) | P4机器合同/Schema | P4-01 | `done` |
 | [TASK-P4-03](P4/TASK-P4-03-replan-event-persistence-and-state-transactions.md) | Event/Replan persistence与state transaction | P4-02 | `done` |
 | [TASK-P4-04](P4/TASK-P4-04-execution-event-ingestion-and-fact-projection.md) | Event ingestion与fact/Snapshot projection | P4-02/03 | `done` |
-| [TASK-P4-05](P4/TASK-P4-05-freeze-window-and-effective-lock-projection.md) | Freeze Window与effective locks | P4-01/02/04 | `planned` |
+| [TASK-P4-05](P4/TASK-P4-05-freeze-window-and-effective-lock-projection.md) | Freeze Window与effective locks | P4-01/02/04 | `in_progress` |
 | [TASK-P4-06](P4/TASK-P4-06-stability-objective-and-change-report.md) | OBJ-002 Stability与ChangeReport | P4-01/02 | `planned` |
 | [TASK-P4-07](P4/TASK-P4-07-lexicographic-replan-solver-and-validator.md) | Lexicographic Replan Solver/Validator | P4-04/05/06 | `planned` |
 | [TASK-P4-08](P4/TASK-P4-08-replan-application-and-schedule-version-lineage.md) | Replan application与new DRAFT lineage | P4-03～07 | `planned` |

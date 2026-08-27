@@ -11,6 +11,10 @@ last_reviewed: 2026-08-26
 
 # Provenance 与版本规则
 
+## TASK-P4-05 freeze lineage
+
+Projection逐字绑定base ScheduleVersion version/ID/content fingerprint、new Snapshot ID/hash、new Problem hash、PlanningPolicy fingerprint、freeze policy fingerprint/source/version及resolved endpoints。每个freeze-derived lock ID由上述lineage与operation/resource/start/end的canonical fingerprint派生；projection自身再以完整内容生成`projection_fingerprint`，same immutable inputs可byte-exact replay。纠正只能产生新policy/Snapshot/Problem/projection，不能改写历史artifact。
+
 ## TASK-P4-04 projection lineage
 
 New Snapshot identity继续由canonical bytes确定。Projection在`source_versions`增加projector version、predecessor Snapshot hash、event authority ID及`stream@version#position#prefix-fingerprint`；cutoff取predecessor cutoff与本次event occurrence最大值。Event identity排除receive-order影响但保留approved carrier fingerprint；exact predecessor replay须重新投影并得到checkpoint所指同一bytes/hash。既有canonicalization、Schema和record source contract均未改版。

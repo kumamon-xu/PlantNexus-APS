@@ -177,6 +177,12 @@ jobs:
           --root .
           --report build/validation/ci-p4-execution-fact-projection.json
 
+      - name: P4 freeze window and effective lock evidence
+        run: >-
+          uv run python -m app.planning.problem.freeze_window_check
+          --root .
+          --report build/validation/ci-p4-freeze-window.json
+
       - name: P3 reviewable ScheduleVersion lifecycle evidence
         run: >-
           uv run python -m app.application.schedule_version_lifecycle_check

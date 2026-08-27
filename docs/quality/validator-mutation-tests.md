@@ -11,6 +11,10 @@ last_reviewed: 2026-08-21
 
 # Validator Mutation Test 规范
 
+## TASK-P4-05 freeze precheck mutations
+
+新增mutation suite逐项篡改RUNNING resource、显式HARD end、derived HARD resource、SOFT completeness、freeze endpoint、projection fingerprint、root completeness与COMPLETED fact evidence；独立precheck必须稳定FAIL并命中C-007/C-008或对应freeze check。另对duplicate base、stale base和cross-plane authoritative inputs验证compare前拒绝，并以AST证明precheck不导入projector、CP-SAT或formal Validator。
+
 ## TASK-P4-01 mutation contract
 
 ADR-0013/0014现要求后继TASK-P4-07为completed/running fact、显式HARD与freeze-derived HARD、半开边界、stale base/new lineage、四元OBJ-002及ChangeReport分类/算术增加independent negative evidence。事件重复冲突、source gap、跨plane、未知版本/类型/authority、Validator失败和partial result也必须fail closed；P4-14/15必须重放这些拒绝，不能只证明happy path。

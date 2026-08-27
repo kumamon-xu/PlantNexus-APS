@@ -1,8 +1,10 @@
 # PlantNexus APS
 
-## TASK-P4-06 OBJ-002 Stability / ChangeReport implementation
+## TASK-P4-06 OBJ-002 Stability / ChangeReport completion
 
-TASK-P4-06已按独立授权在不可变Diff base `d9d9f2fa2dbefe4c9942aaa8a943a93fdc7efd43`上实现Simulation-only纯整数`obj-002-stability.v1`、immutable `change-report.v1` builder、独立`change-report-precheck.v1`与`p4-stability-change-report.v1`机器证据。完整operation universe恰好一次分类为UNCHANGED/CHANGED/ADDED/REMOVED_BY_FACT；movement只由resource/start/end tuple决定，SOFT lock、changed existing、resource change、absolute start shift组成四元整数向量，before/after KPI、facts、reasons、freeze与完整lineage均可独立复算。HIGH_RISK本地验收已完整通过：Task-specific 21项、focused `64 passed`、完整Backend `724 passed`、Frontend 67项及三轮各12/12 Chromium、全部历史machine、XS benchmark、P2/P3 Gate、SCA/license、Compose/build、文档治理和26-path exact allow-list均PASS。首个implementation run `33125423389`虽required成功，但artifact未显式携带六个Impact Rules，故保留该证据并以范围内corrective commit补齐；状态仍为`LOCAL_PASS_PROVIDER_PENDING`，须待corrective exact provider后才能evidence-only closure。
+TASK-P4-06已按独立授权在不可变Diff base `d9d9f2fa2dbefe4c9942aaa8a943a93fdc7efd43`上实现Simulation-only纯整数`obj-002-stability.v1`、immutable `change-report.v1` builder、独立`change-report-precheck.v1`与`p4-stability-change-report.v1`机器证据。完整operation universe恰好一次分类为UNCHANGED/CHANGED/ADDED/REMOVED_BY_FACT；movement只由resource/start/end tuple决定，SOFT lock、changed existing、resource change、absolute start shift组成四元整数向量，before/after KPI、facts、reasons、freeze与完整lineage均可独立复算。HIGH_RISK本地验收已完整通过：Task-specific 21项、focused `64 passed`、完整Backend `724 passed`、Frontend 67项及三轮各12/12 Chromium、全部历史machine、XS benchmark、P2/P3 Gate、SCA/license、Compose/build、文档治理和26-path exact allow-list均PASS。
+
+首个implementation `5c7d9a6a42b798f5219484f0fb19851f410c991e`的required run成功但artifact缺少显式Impact Rules envelope，故作为纠正链历史保留。Corrective implementation `10abdd105c697f61ba6c88078ae0ba28fed8a4e5`的run/FULL job/required job/artifact=`33126551137`/`98706008238`/`98707464048`/`9668755204`已由GitHub Actions app `15368` exact成功并下载复验；artifact digest为`sha256:64c20ceba56d5872d48d19088c4f9f889d08eb31766659c6b579d908dd4bc066`，精确包含Task、不可变Diff base、6个Impact Rules、8/8 checks与`issues=[]`。本evidence-only closure据此把TASK-P4-06标为`done`；closure自身仍须post-push exact provider复验。
 
 本Task没有修改Schema、migration、dependency/lock、CP-SAT objective/strategy、formal C-001～C-011 Validator、业务状态、application/API/UI/Simulator或P3历史。OBJ-002当前仅是reporting/completeness能力，不代表P4-07词典序Solver已形成；P4-07+、P5与Production readiness/UAT/真实authority/external publish/deployment/capacity/SLA均未启动或未形成。
 
@@ -25,7 +27,7 @@ TASK-P4-03已获独立授权并在不可变Diff base `7b9bfc3069de5d3738e5cc5827
 
 用户已明确批准P3→P4。TASK-P3-17独立Exit Audit的report/manifest均为`READY`、`blocking_gaps=[]`；audit implementation `201be9c6fd1b433a9d0a629a3ae7d4ffe1107476`和evidence-only closure `61eeacdd5efc20b2321750e1310e9e21561c9fc2`的直接拓扑、required `validate`、GitHub Actions app `15368`及未过期artifact均已exact复验。因此P3 Milestone现为`completed`，P4 Dynamic Replanning已激活。
 
-PlantNexus APS 是一个面向单工厂、多车间场景的高级计划与排程（APS）项目。TASK-P4-00～05现均已按各自独立授权形成implementation与evidence-only closure治理链；TASK-P4-06正在形成Simulation-only OBJ-002 reporting、immutable ChangeReport与独立completeness precheck，provider尚待闭环。词典序Solver/application、Simulator、API/UI与Production readiness/UAT/真实authority/external publish/deployment/capacity/SLA仍未形成。
+PlantNexus APS 是一个面向单工厂、多车间场景的高级计划与排程（APS）项目。TASK-P4-00～06现均已按各自独立授权形成implementation与evidence-only closure治理链；TASK-P4-07仍为`planned`且未启动。词典序Solver/application、Simulator、API/UI与Production readiness/UAT/真实authority/external publish/deployment/capacity/SLA仍未形成。
 
 ## 开始之前
 
@@ -100,7 +102,7 @@ scripts/      仓库级校验与自动化脚本
 infra/        P0 开发容器构建配置
 ```
 
-P2 CP-SAT Vertical Slice与P3 Planning Workspace均已通过Exit Gate并关闭，当前阶段为P4。P2-00～14、P3-00～17、TASK-P4-00～05与P4-16均为`done`；TASK-P4-06为`in_progress`，P4-07～15仍为`planned`。Production capacity/SLA/identity/approval authority/external publish仍未形成。当前边界见[`docs/current_phase.md`](docs/current_phase.md)。
+P2 CP-SAT Vertical Slice与P3 Planning Workspace均已通过Exit Gate并关闭，当前阶段为P4。P2-00～14、P3-00～17、TASK-P4-00～06与P4-16均为`done`；P4-07～15仍为`planned`且当前没有自动启动的下一Task。Production capacity/SLA/identity/approval authority/external publish仍未形成。当前边界见[`docs/current_phase.md`](docs/current_phase.md)。
 
 TASK-P3-13保留失败implementation run `32920462781`、首次closure `87d47c7483185483ac8027100c1c664d18011a7c` / run `32921871460`的606/1失败与artifact count=0。独立XLSX deterministic corrective implementation `3538d46f8b73ae434057bcbca9037436aa91f2c7`的required run/job/artifact=`32923203227`/`98040743610`/`9590625358`已全绿并下载复验33份JSON、12/12 Chromium和Task 91/0/11/19/0；该P3-13 closure当时未自动启动P3-14，后者现依据新的用户授权独立执行。
 

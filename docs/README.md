@@ -11,9 +11,11 @@ last_reviewed: 2026-08-28
 
 # PlantNexus APS 文档中心
 
-## TASK-P4-06 local implementation boundary
+## TASK-P4-06 completion boundary
 
-TASK-P4-06已从provider-verified P4-05/P4-16 closure `d9d9f2fa2dbefe4c9942aaa8a943a93fdc7efd43`按独立授权激活并实现纯整数OBJ-002 calculator、immutable complete ChangeReport builder、独立precheck和FULL CI机器证据。固定fixture覆盖UNCHANGED/CHANGED/ADDED/REMOVED_BY_FACT、metadata-only no-movement、1个SOFT violation、300秒resource/start movement、completion fact、solver fallback reason及before/after priority-weighted tardiness `600→300`；machine为8/8、`issues=[]`。完整HIGH_RISK本地验收同时通过Backend `724 passed`、Frontend 67项与三轮各12/12 Chromium、全部历史machine、XS benchmark、P2/P3 Gate、SCA/license、Compose/build、文档治理及26-path exact allow-list。首个implementation run `33125423389`的required成功，但artifact缺少显式Impact Rules envelope；该run保留，本Task以原allow-list内corrective补齐，当前仍是`LOCAL_PASS_PROVIDER_PENDING`，P4-07不会由本Task自动启动。
+TASK-P4-06已从provider-verified P4-05/P4-16 closure `d9d9f2fa2dbefe4c9942aaa8a943a93fdc7efd43`按独立授权实现纯整数OBJ-002 calculator、immutable complete ChangeReport builder、独立precheck和FULL CI机器证据。固定fixture覆盖UNCHANGED/CHANGED/ADDED/REMOVED_BY_FACT、metadata-only no-movement、1个SOFT violation、300秒resource/start movement、completion fact、solver fallback reason及before/after priority-weighted tardiness `600→300`；machine为8/8、`issues=[]`。完整HIGH_RISK本地验收同时通过Backend `724 passed`、Frontend 67项与三轮各12/12 Chromium、全部历史machine、XS benchmark、P2/P3 Gate、SCA/license、Compose/build、文档治理及26-path exact allow-list。
+
+首个implementation `5c7d9a6a42b798f5219484f0fb19851f410c991e`/run `33125423389`因artifact缺少显式Impact Rules envelope而只作为纠正链历史保留。Corrective implementation `10abdd105c697f61ba6c88078ae0ba28fed8a4e5`的run/FULL job/required job/artifact=`33126551137`/`98706008238`/`98707464048`/`9668755204`已exact成功并下载复验；digest `sha256:64c20ceba56d5872d48d19088c4f9f889d08eb31766659c6b579d908dd4bc066`精确绑定Task、Diff base、6个Impact Rules、8/8 checks与`issues=[]`。本evidence-only closure把Task标为`done`；closure自身仍须post-push exact provider，P4-07不会自动启动。
 
 Schema set继续为`2.8.0`且Schema/migration/dependency/state pair/CP-SAT/formal Validator均未修改；ChangeReport尚未被Replan application、ScheduleVersion或export消费。P4-07+、P5、Production authority/external integration/deployment/capacity/SLA均保持未形成。
 
@@ -100,7 +102,7 @@ TASK-P4-02已获单独授权并以`4026597ab1015b5ea3a89d241f0d12b5b481dee3`为�
 
 ## 当前范围
 
-当前阶段为P4。P0～P3 Milestone均为`completed`；TASK-P3-00～17全部`done`且P3 Exit双提交provider已闭环。TASK-P4-00～05与P4-16现为`done`，TASK-P4-06为`in_progress`，P4-07～15为`planned`成员；P4-15最终独立审计也不自动进入P5或Production。详见`current_phase.md`。
+当前阶段为P4。P0～P3 Milestone均为`completed`；TASK-P3-00～17全部`done`且P3 Exit双提交provider已闭环。TASK-P4-00～06与P4-16现为`done`，P4-07～15为`planned`成员且当前无自动启动的下一Task；P4-15最终独立审计也不自动进入P5或Production。详见`current_phase.md`。
 
 P3已形成的顺序保持合同/ADR→Schema→persistence→validated DRAFT→read models→edit/lock→approval/reject→idempotent publish→ExportJob→API→Frontend/E2E→vertical Gate。批准的末段顺序为TASK-P3-15治理支持→TASK-P3-16本地化→TASK-P3-17独立Exit Audit；P3-16现已完成实现provider复验与文档closure，下一项仍须另行授权。展示术语规范见[`frontend/official-zh-cn-terminology-map.md`](frontend/official-zh-cn-terminology-map.md)，它不改变英文机器合同。
 

@@ -305,6 +305,7 @@ def test_ci_runs_repository_gates_and_discovers_the_current_task() -> None:
         "actions/setup-python@v7",
         "actions/setup-node@v7",
         "actions/upload-artifact@v7",
+        "astral-sh/setup-uv@v10.0.1",
     ):
         assert action in workflow
     assert "name: P1 common ingress gate" in workflow

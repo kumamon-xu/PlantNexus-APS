@@ -17,6 +17,8 @@ CI Profile只由不可变event base..head的Git路径决定，不读取业务env
 
 最终required context仍为`validate`：classifier成功且恰当分支成功、另一分支skipped时才PASS。DOCS_ONLY不连接Production/Simulation runtime，也不证明业务正确性、部署隔离、容量或SLA；FULL继续执行既有完整repository Gate。
 
+Provider使用支持Node.js 24的官方Action运行分类、Python/Node setup与artifact上传；Action版本变化本身属于workflow diff并强制走FULL，不能由DOCS_ONLY自我验证。
+
 ## TASK-P4-05 isolation boundary
 
 Freeze policy不是环境变量、UI fallback或wall-clock配置；本Task只接受`SIMULATION`且`synthetic=true`的新Snapshot与base Version，environment限定DEVELOPMENT/TEST/BENCHMARK。Production-shaped policy/base或cross-plane lineage均在投影前拒绝，900秒只能引用SIM-ASSUMPTION-017，不得进入Production配置、部署值或SLA。

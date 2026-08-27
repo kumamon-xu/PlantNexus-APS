@@ -1,0 +1,16 @@
+# Internal development-process documentation
+#
+# These files remain available in a developer's local workspace, but they are
+# intentionally excluded from the public repository. Public project and
+# technical documentation is kept outside these paths.
+/agents/
+/current_phase.md
+/governance/
+/milestones/
+/quality/
+/runbooks/
+/tasks/
+
+# Internal specification and authoring templates
+/core/APS_IMPLEMENTATION_SPEC.md
+/adr/ADR_TEMPLATE.md

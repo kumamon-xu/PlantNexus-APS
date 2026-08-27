@@ -1966,6 +1966,13 @@ def main(argv: Sequence[str] | None = None) -> int:
     if args.discover_task_from is not None and not args.check_diff:
         parser.error("--discover-task-from requires --check-diff")
     repository_root = Path(__file__).resolve().parents[1]
+    internal_governance_entry = repository_root / "docs" / "agents" / "AGENTS.md"
+    if not internal_governance_entry.is_file():
+        print(
+            "SKIP repository governance: internal process documentation "
+            "is not included in this public checkout"
+        )
+        return 0
     task_path = None
     if args.task is not None:
         task_path = args.task if args.task.is_absolute() else repository_root / args.task

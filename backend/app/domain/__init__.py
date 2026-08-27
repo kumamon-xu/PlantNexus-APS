@@ -123,6 +123,11 @@ from .export_job import (
     ExportJobFailure,
     ExportJobRequest,
 )
+from .change_report import (
+    ChangeReportError,
+    ChangeReportFailure,
+    ImmutableChangeReport,
+)
 
 __all__ = [
     "APPROVAL_DECISION_SERVICE_VERSION",
@@ -141,6 +146,8 @@ __all__ = [
     "CapabilityContractError",
     "CapabilityName",
     "CapabilityStatus",
+    "ChangeReportError",
+    "ChangeReportFailure",
     "DurationSeconds",
     "ERROR_CATEGORY_BY_CODE",
     "ExportJobContext",
@@ -148,6 +155,7 @@ __all__ = [
     "ExportJobFailure",
     "ExportJobRequest",
     "ImportPackageDocumentV2",
+    "ImmutableChangeReport",
     "OperationInstanceDocument",
     "OperationPrecedenceEdgeDocument",
     "OperationResourceOptionDocument",

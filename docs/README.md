@@ -6,10 +6,16 @@ spec_version: 0.3.0
 phase: P4
 normative: false
 source_sections: [2, 6, 70]
-last_reviewed: 2026-08-27
+last_reviewed: 2026-08-28
 ---
 
 # PlantNexus APS 文档中心
+
+## TASK-P4-06 local implementation boundary
+
+TASK-P4-06已从provider-verified P4-05/P4-16 closure `d9d9f2fa2dbefe4c9942aaa8a943a93fdc7efd43`按独立授权激活并实现纯整数OBJ-002 calculator、immutable complete ChangeReport builder、独立precheck和FULL CI机器证据。固定fixture覆盖UNCHANGED/CHANGED/ADDED/REMOVED_BY_FACT、metadata-only no-movement、1个SOFT violation、300秒resource/start movement、completion fact、solver fallback reason及before/after priority-weighted tardiness `600→300`；machine为8/8、`issues=[]`。完整HIGH_RISK本地验收同时通过Backend `724 passed`、Frontend 67项与三轮各12/12 Chromium、全部历史machine、XS benchmark、P2/P3 Gate、SCA/license、Compose/build、文档治理及26-path exact allow-list；当前仍是`LOCAL_PASS_PROVIDER_PENDING`，P4-07不会由本Task自动启动。
+
+Schema set继续为`2.8.0`且Schema/migration/dependency/state pair/CP-SAT/formal Validator均未修改；ChangeReport尚未被Replan application、ScheduleVersion或export消费。P4-07+、P5、Production authority/external integration/deployment/capacity/SLA均保持未形成。
 
 ## TASK-P4-05 completion boundary
 
@@ -94,7 +100,7 @@ TASK-P4-02已获单独授权并以`4026597ab1015b5ea3a89d241f0d12b5b481dee3`为�
 
 ## 当前范围
 
-当前阶段为P4。P0～P3 Milestone均为`completed`；TASK-P3-00～17全部`done`且P3 Exit双提交provider已闭环。TASK-P4-00～05现为`done`，P4-06～15为`planned`成员；P4-15最终独立审计也不自动进入P5或Production。详见`current_phase.md`。
+当前阶段为P4。P0～P3 Milestone均为`completed`；TASK-P3-00～17全部`done`且P3 Exit双提交provider已闭环。TASK-P4-00～05与P4-16现为`done`，TASK-P4-06为`in_progress`，P4-07～15为`planned`成员；P4-15最终独立审计也不自动进入P5或Production。详见`current_phase.md`。
 
 P3已形成的顺序保持合同/ADR→Schema→persistence→validated DRAFT→read models→edit/lock→approval/reject→idempotent publish→ExportJob→API→Frontend/E2E→vertical Gate。批准的末段顺序为TASK-P3-15治理支持→TASK-P3-16本地化→TASK-P3-17独立Exit Audit；P3-16现已完成实现provider复验与文档closure，下一项仍须另行授权。展示术语规范见[`frontend/official-zh-cn-terminology-map.md`](frontend/official-zh-cn-terminology-map.md)，它不改变英文机器合同。
 

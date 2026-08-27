@@ -6,10 +6,16 @@ spec_version: 0.3.0
 phase: cross-phase
 normative: true
 source_sections: [16, 38, 49, 62, 64, 95, 96]
-last_reviewed: 2026-08-27
+last_reviewed: 2026-08-28
 ---
 
 # 配置、环境与数据隔离
+
+## TASK-P4-06 isolation boundary
+
+Calculator、builder、precheck和machine fixture均为无网络、无数据库、无wall-clock/random读取的pure Simulation/development路径。Builder强制`data_plane=SIMULATION`、`synthetic=true`、`production_binding=false`且environment仅DEVELOPMENT/TEST/BENCHMARK；Production-shaped context、缺失provenance或cross-plane lineage在任何Solver/Version/persistence副作用前拒绝。CI新增证据步骤仍在FULL profile内且只上传JSON artifact。
+
+本Task没有创建Production config、secret、route、worker、database binding或external adapter；fixture的300秒shift与KPI值只是确定性测试向量，不是Production default、容量阈值或SLA。
 
 ## CI validation profile isolation
 

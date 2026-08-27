@@ -6,10 +6,16 @@ spec_version: 0.3.0
 phase: P0-P4
 normative: true
 source_sections: [28, 35, 50, 52, 53]
-last_reviewed: 2026-08-21
+last_reviewed: 2026-08-28
 ---
 
 # Objective Policy
+
+## TASK-P4-06 pure OBJ-002 measurement
+
+本Task实现的calculator只从immutable base/new assignments、complete active universe与priority-4 SOFT lock projection复算`(soft violations, changed existing, resource changes, absolute start shift seconds)`。全部分量使用integer seconds并保持signed delta与absolute aggregate分离；same inputs产生相同bytes/vector，禁止float、Big-M或私有权重。Metadata-only变化不计movement，ADDED为零movement，REMOVED必须有completion fact。
+
+这只是PlanningPolicy v2的reporting/completeness consumer，不修改Policy carrier，也不进入CP-SAT objective builder/strategy。Delivery→Stability→Makespan的多阶段冻结、value/bound/stop evidence和fresh candidate validation仍由TASK-P4-07负责；本地向量PASS不能声明Solver stage已形成。
 
 ## TASK-P4-05 objective boundary
 

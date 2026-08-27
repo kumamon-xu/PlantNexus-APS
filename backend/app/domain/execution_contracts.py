@@ -537,99 +537,227 @@ def _assignment(value: object, field: str) -> Mapping[str, object] | None:
     return _mapping(value, field)
 
 
+def _change_assignment_deltas(
+    base: Mapping[str, object],
+    new: Mapping[str, object],
+    *,
+    field: str,
+) -> dict[str, object]:
+    base_start = _utc(base.get("start_at_utc"), f"{field}.base.start_at_utc")
+    new_start = _utc(new.get("start_at_utc"), f"{field}.new.start_at_utc")
+    base_end = _utc(base.get("end_at_utc"), f"{field}.base.end_at_utc")
+    new_end = _utc(new.get("end_at_utc"), f"{field}.new.end_at_utc")
+    start_shift = int((new_start - base_start).total_seconds())
+    return {
+        "resource_changed": base.get("resource_id") != new.get("resource_id"),
+        "start_shift_seconds": start_shift,
+        "absolute_start_shift_seconds": abs(start_shift),
+        "end_shift_seconds": int((new_end - base_end).total_seconds()),
+        "duration_delta_seconds": _integer(
+            new.get("duration_seconds"), f"{field}.new.duration_seconds", minimum=1
+        )
+        - _integer(
+            base.get("duration_seconds"), f"{field}.base.duration_seconds", minimum=1
+        ),
+    }
+
+
 def _require_change_report(document: Mapping[str, object]) -> None:
     operations = _sequence(document.get("operations"), "operations")
     _equal(
-        document.get("operation_universe_count"),
+        _integer(
+            document.get("operation_universe_count"),
+            "operation_universe_count",
+            minimum=0,
+        ),
         len(operations),
         "operation_universe_count",
         P4ContractReason.INCOMPLETE_CHANGE_REPORT,
     )
+    classification_reasons = {
+        "UNCHANGED": {"NO_CHANGE", "FREEZE_OR_HARD_LOCK_PRESERVED"},
+        "CHANGED": {
+            "TRIGGER_EVENT",
+            "EXECUTION_FACT",
+            "FREEZE_OR_HARD_LOCK_PRESERVED",
+            "SOFT_LOCK_STABILITY_TRADE_OFF",
+            "DELIVERY_OBJECTIVE_TRADE_OFF",
+            "UNATTRIBUTED_SOLVER_CHANGE",
+        },
+        "ADDED": {"TRIGGER_EVENT", "URGENT_DEMAND"},
+        "REMOVED_BY_FACT": {"REMOVED_BY_COMPLETION_FACT"},
+    }
+    zero_deltas: dict[str, object] = {
+        "resource_changed": False,
+        "start_shift_seconds": 0,
+        "absolute_start_shift_seconds": 0,
+        "end_shift_seconds": 0,
+        "duration_delta_seconds": 0,
+    }
     operation_ids: list[str] = []
     unchanged = changed = resource_changes = absolute_shift = 0
     for index, value in enumerate(operations):
-        operation = _mapping(value, f"operations[{index}]")
-        operation_id = _text(operation.get("operation_id"), f"operations[{index}].operation_id")
+        prefix = f"operations[{index}]"
+        operation = _mapping(value, prefix)
+        operation_id = _text(operation.get("operation_id"), f"{prefix}.operation_id")
         operation_ids.append(operation_id)
         classification = operation.get("classification")
-        base = _assignment(operation.get("base_assignment"), "base_assignment")
-        new = _assignment(operation.get("new_assignment"), "new_assignment")
-        deltas = _mapping(operation.get("deltas"), "deltas")
-        reasons = _sequence(operation.get("reasons"), "reasons")
+        if classification not in classification_reasons:
+            _reject(
+                P4ContractReason.VERSION_MISMATCH,
+                f"{prefix}.classification",
+                "is unknown",
+            )
+        base = _assignment(operation.get("base_assignment"), f"{prefix}.base_assignment")
+        new = _assignment(operation.get("new_assignment"), f"{prefix}.new_assignment")
+        deltas = _mapping(operation.get("deltas"), f"{prefix}.deltas")
+        reasons = _sequence(operation.get("reasons"), f"{prefix}.reasons")
         if not reasons:
             _reject(
                 P4ContractReason.INCOMPLETE_CHANGE_REPORT,
-                f"operations[{index}].reasons",
+                f"{prefix}.reasons",
                 "at least one evidence-backed reason is required",
+            )
+        reason_codes: set[str] = set()
+        for reason_index, raw_reason in enumerate(reasons):
+            reason_field = f"{prefix}.reasons[{reason_index}]"
+            reason = _mapping(raw_reason, reason_field)
+            if set(reason) != {"reason_code", "evidence_refs"}:
+                _reject(
+                    P4ContractReason.INCOMPLETE_CHANGE_REPORT,
+                    reason_field,
+                    "reason fields are incomplete",
+                )
+            code = _text(reason.get("reason_code"), f"{reason_field}.reason_code")
+            reason_codes.add(code)
+            evidence = _sequence(
+                reason.get("evidence_refs"), f"{reason_field}.evidence_refs"
+            )
+            if not evidence:
+                _reject(
+                    P4ContractReason.INCOMPLETE_CHANGE_REPORT,
+                    f"{reason_field}.evidence_refs",
+                    "at least one immutable evidence reference is required",
+                )
+            for evidence_index, raw_reference in enumerate(evidence):
+                reference = _mapping(
+                    raw_reference,
+                    f"{reason_field}.evidence_refs[{evidence_index}]",
+                )
+                if set(reference) != {
+                    "document_version",
+                    "artifact_id",
+                    "fingerprint",
+                }:
+                    _reject(
+                        P4ContractReason.REFERENCE_MISMATCH,
+                        f"{reason_field}.evidence_refs[{evidence_index}]",
+                        "artifact reference fields are incomplete",
+                    )
+        if not reason_codes.issubset(classification_reasons[cast(str, classification)]):
+            _reject(
+                P4ContractReason.INCOMPLETE_CHANGE_REPORT,
+                f"{prefix}.reasons",
+                "reason is incompatible with the operation classification",
             )
         for assignment in (base, new):
             if assignment is not None:
                 _equal(
                     assignment.get("operation_id"),
                     operation_id,
-                    f"operations[{index}].assignment.operation_id",
+                    f"{prefix}.assignment.operation_id",
                     P4ContractReason.REFERENCE_MISMATCH,
                 )
-        shift = _integer(deltas.get("start_shift_seconds"), "start_shift_seconds")
-        _equal(
-            deltas.get("absolute_start_shift_seconds"),
-            abs(shift),
-            f"operations[{index}].deltas.absolute_start_shift_seconds",
-            P4ContractReason.STABILITY_MISMATCH,
-        )
         if classification == "UNCHANGED":
-            if base is None or new is None or dict(base) != dict(new):
+            if base is None or new is None:
                 _reject(
                     P4ContractReason.INCOMPLETE_CHANGE_REPORT,
-                    f"operations[{index}]",
-                    "UNCHANGED requires byte-equivalent assignments",
+                    prefix,
+                    "UNCHANGED requires base and new assignments",
                 )
+            expected_deltas = _change_assignment_deltas(base, new, field=prefix)
             if any(
-                deltas.get(field) not in (0, False)
+                expected_deltas[field] not in (0, False)
                 for field in (
                     "resource_changed",
                     "start_shift_seconds",
-                    "absolute_start_shift_seconds",
                     "end_shift_seconds",
-                    "duration_delta_seconds",
                 )
             ):
                 _reject(
-                    P4ContractReason.STABILITY_MISMATCH,
-                    f"operations[{index}].deltas",
-                    "UNCHANGED deltas must be zero",
+                    P4ContractReason.INCOMPLETE_CHANGE_REPORT,
+                    prefix,
+                    "UNCHANGED requires the same resource/start/end tuple",
                 )
+            _equal(
+                dict(deltas),
+                expected_deltas,
+                f"{prefix}.deltas",
+                P4ContractReason.STABILITY_MISMATCH,
+            )
             unchanged += 1
         elif classification == "CHANGED":
-            if base is None or new is None or dict(base) == dict(new):
+            if base is None or new is None:
                 _reject(
                     P4ContractReason.INCOMPLETE_CHANGE_REPORT,
-                    f"operations[{index}]",
-                    "CHANGED requires two distinct assignments",
+                    prefix,
+                    "CHANGED requires base and new assignments",
                 )
+            expected_deltas = _change_assignment_deltas(base, new, field=prefix)
+            if not any(
+                expected_deltas[field] not in (0, False)
+                for field in (
+                    "resource_changed",
+                    "start_shift_seconds",
+                    "end_shift_seconds",
+                )
+            ):
+                _reject(
+                    P4ContractReason.INCOMPLETE_CHANGE_REPORT,
+                    prefix,
+                    "CHANGED requires resource, start, or end movement",
+                )
+            _equal(
+                dict(deltas),
+                expected_deltas,
+                f"{prefix}.deltas",
+                P4ContractReason.STABILITY_MISMATCH,
+            )
             changed += 1
-            if deltas.get("resource_changed") is True:
+            if expected_deltas["resource_changed"] is True:
                 resource_changes += 1
-            absolute_shift += abs(shift)
+            absolute_shift += cast(int, expected_deltas["absolute_start_shift_seconds"])
         elif classification == "ADDED":
             if base is not None or new is None:
                 _reject(
                     P4ContractReason.INCOMPLETE_CHANGE_REPORT,
-                    f"operations[{index}]",
+                    prefix,
                     "ADDED requires only a new assignment",
                 )
+            _equal(
+                dict(deltas),
+                zero_deltas,
+                f"{prefix}.deltas",
+                P4ContractReason.STABILITY_MISMATCH,
+            )
         elif classification == "REMOVED_BY_FACT":
             if base is None or new is not None:
                 _reject(
                     P4ContractReason.INCOMPLETE_CHANGE_REPORT,
-                    f"operations[{index}]",
+                    prefix,
                     "REMOVED_BY_FACT requires only a base assignment",
                 )
-        else:
-            _reject(
-                P4ContractReason.VERSION_MISMATCH,
-                f"operations[{index}].classification",
-                "is unknown",
+            if reason_codes != {"REMOVED_BY_COMPLETION_FACT"}:
+                _reject(
+                    P4ContractReason.INCOMPLETE_CHANGE_REPORT,
+                    f"{prefix}.reasons",
+                    "REMOVED_BY_FACT requires completion-fact evidence",
+                )
+            _equal(
+                dict(deltas),
+                zero_deltas,
+                f"{prefix}.deltas",
+                P4ContractReason.STABILITY_MISMATCH,
             )
     if operation_ids != sorted(set(operation_ids)):
         _reject(
@@ -638,6 +766,11 @@ def _require_change_report(document: Mapping[str, object]) -> None:
             "operation universe must be sorted and unique",
         )
     stability = _mapping(document.get("stability"), "stability")
+    _integer(
+        stability.get("soft_lock_violations"),
+        "stability.soft_lock_violations",
+        minimum=0,
+    )
     expected = {
         "changed_existing_operations": changed,
         "resource_changes": resource_changes,

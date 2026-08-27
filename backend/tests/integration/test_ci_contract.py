@@ -54,6 +54,9 @@ from app.planning.backends.cp_sat.temporal_model_check import (
 from app.planning.problem.contract_check import main as problem_contract_main
 from app.planning.problem.freeze_window_check import main as freeze_window_main
 from app.planning.policy.contract_check import main as machine_contract_main
+from app.planning.reporting.stability_change_report_check import (
+    main as stability_change_report_main,
+)
 from app.planning.validation.problem_validator_check import (
     main as formal_validator_main,
 )
@@ -258,6 +261,8 @@ def test_ci_runs_repository_gates_and_discovers_the_current_task() -> None:
         "build/validation/ci-p4-execution-fact-projection.json",
         "app.planning.problem.freeze_window_check",
         "build/validation/ci-p4-freeze-window.json",
+        "app.planning.reporting.stability_change_report_check",
+        "build/validation/ci-p4-stability-change-report.json",
         "app.application.schedule_version_lifecycle_check",
         "build/validation/ci-p3-schedule-version-lifecycle.json",
         "app.application.workspace_read_model_check",
@@ -293,6 +298,7 @@ def test_ci_runs_repository_gates_and_discovers_the_current_task() -> None:
     assert "name: P4 replan event persistence evidence" in workflow
     assert "name: P4 ExecutionEvent fact projection evidence" in workflow
     assert "name: P4 freeze window and effective lock evidence" in workflow
+    assert "name: P4 OBJ-002 stability and ChangeReport evidence" in workflow
     assert "name: P3 reviewable ScheduleVersion lifecycle evidence" in workflow
     assert "name: P3 workspace read model and comparison evidence" in workflow
     assert "name: P3 schedule edit and lock command evidence" in workflow
@@ -366,7 +372,7 @@ def test_ci_profile_routing_is_mutually_exclusive_and_fail_closed() -> None:
     assert "backend/tests/security" in full_text
     assert "P3 vertical slice Gate evidence" in full_text
     assert "Build package" in full_text
-    assert len(full["steps"]) == 56
+    assert len(full["steps"]) == 57
 
     assert 'test "${PLANTNEXUS_CLASSIFY_RESULT}" = "success"' in final_run
     assert 'test "${PLANTNEXUS_FULL_RESULT}" = "success"' in final_run
@@ -582,6 +588,54 @@ def test_ci_p4_freeze_window_is_required_and_machine_checkable(
         "schedule_version_or_state_transition": "NONE",
         "formal_validator_c001_c011": "UNCHANGED_INDEPENDENT_PRECHECK",
         "p4_06_plus": "NOT_STARTED",
+        "p5_plus": "NOT_STARTED",
+        "production_external_authority_capacity_sla": "NOT_ESTABLISHED",
+    }
+
+
+def test_ci_p4_stability_change_report_is_required_and_machine_checkable(
+    tmp_path: Path,
+) -> None:
+    workflow = (ROOT / ".github" / "workflows" / "ci.yml").read_text(
+        encoding="utf-8"
+    )
+    normalized = " ".join(workflow.split())
+    assert (
+        "name: P4 OBJ-002 stability and ChangeReport evidence run: >- "
+        "uv run python -m app.planning.reporting.stability_change_report_check "
+        "--root . --report build/validation/ci-p4-stability-change-report.json"
+    ) in normalized
+    assert "continue-on-error" not in workflow
+
+    report_path = tmp_path / "p4-stability-change-report.json"
+    assert (
+        stability_change_report_main(
+            ["--root", str(ROOT), "--report", str(report_path)]
+        )
+        == 0
+    )
+    report = json.loads(report_path.read_text(encoding="utf-8"))
+    assert report["report_version"] == "p4-stability-change-report.v1"
+    assert report["status"] == "PASS"
+    assert report["task_id"] == "TASK-P4-06"
+    assert report["diff_base"] == "d9d9f2fa2dbefe4c9942aaa8a943a93fdc7efd43"
+    assert report["check_count"] == 8
+    assert report["issues"] == []
+    assert report["counts"] == {
+        "operation_universe": 4,
+        "positive_vectors": 1,
+        "mutation_vectors": 5,
+        "invalid_input_vectors": 4,
+        "machine_checks": 8,
+    }
+    assert report["boundaries"] == {
+        "data_plane": "SIMULATION_ONLY",
+        "objective": "OBJ-002_REPORTING_ONLY_NOT_CP_SAT_OBJECTIVE",
+        "change_report": "IMMUTABLE_COMPLETE_EVIDENCE_NOT_APPROVAL",
+        "execution_event_replan_request_freeze": "FROZEN_INPUT_REFERENCES_ONLY",
+        "schedule_version_or_state_transition": "NONE",
+        "application_api_ui_simulator": "NOT_IMPLEMENTED_BY_TASK",
+        "p4_07_plus": "NOT_STARTED",
         "p5_plus": "NOT_STARTED",
         "production_external_authority_capacity_sla": "NOT_ESTABLISHED",
     }

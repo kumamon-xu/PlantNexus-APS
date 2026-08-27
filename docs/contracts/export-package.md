@@ -3,13 +3,19 @@ doc_id: DOC-CONTRACT-007
 title: 标准成果包合同
 status: baseline
 spec_version: 0.3.0
-phase: P0-P3
+phase: P0-P4
 normative: true
 source_sections: [4, 34, 36, 40, 55, 67, 93]
-last_reviewed: 2026-08-26
+last_reviewed: 2026-08-28
 ---
 
 # 标准成果包合同
+
+## TASK-P4-06 ChangeReport output boundary
+
+`change-report.v1`内容现在可在Simulation/development中确定构建并独立复算，但本Task不修改任何export manifest/profile/writer/job，也不把该report加入现有P2/P3 package。P3 `change_report.json=DEFERRED_P4_DYNAMIC_REPLAN`历史事实保持不变；P4-11只有在P4-07/08完成fresh solve/validation/application后，才可按`export-manifest.v3`把exact report bytes接入internal Simulation read/export。
+
+ChangeReport本身不授予publishability、download、external target或Production authority。任何包消费仍须保持manifest lineage/fingerprint与existing published-only guards，不得以本地builder evidence伪造已发布P4结果。
 
 ## TASK-P4-02 P4 export carriers
 

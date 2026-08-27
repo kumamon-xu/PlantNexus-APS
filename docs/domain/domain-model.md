@@ -3,13 +3,19 @@ doc_id: DOC-DOM-001
 title: APS 领域模型
 status: baseline
 spec_version: 0.3.0
-phase: P0-P3
+phase: P0-P4
 normative: true
 source_sections: [17, 18, 19, 20, 21, 22]
-last_reviewed: 2026-08-25
+last_reviewed: 2026-08-28
 ---
 
 # APS 领域模型
+
+## TASK-P4-06 immutable ChangeReport value boundary
+
+领域层现增加只由canonical bytes、`report_id`和`report_fingerprint`构成的`ImmutableChangeReport`及结构化fail-closed错误。Builder对base/new assignment全集作copy-on-write式纯比较：共同且在new active universe中的operation按resource/start/end tuple分类UNCHANGED或CHANGED；new-only为ADDED；base-only只有存在精确COMPLETED fact evidence时才可为REMOVED_BY_FACT。Lock/fact metadata变化不伪造movement，但仍原样进入assignment evidence。
+
+该值不是aggregate、repository、approval、publication或ScheduleVersion状态；没有新增状态对、数据库实体或authority。ExecutionEvent、ReplanRequest、freeze projection、KPI、Solver/Validation仅作为immutable exact references输入，P4-08才拥有result transaction。
 
 ## TASK-P4-04 fact projection aggregate boundary
 

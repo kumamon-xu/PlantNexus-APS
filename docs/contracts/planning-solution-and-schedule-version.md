@@ -3,13 +3,19 @@ doc_id: DOC-CONTRACT-005
 title: PlanningSolution 与 ScheduleVersion 合同
 status: baseline
 spec_version: 0.3.0
-phase: P0-P3
+phase: P0-P4
 normative: true
 source_sections: [29, 30, 32, 33, 67, 78]
-last_reviewed: 2026-08-26
+last_reviewed: 2026-08-28
 ---
 
 # PlanningSolution 与 ScheduleVersion 合同
+
+## TASK-P4-06 assignment comparison consumer
+
+ChangeReport builder消费既有`planning-solution.v1` operationAssignment形状和base PUBLISHED/new DRAFT ScheduleVersion exact references；它从UTC whole-second resource/start/end tuple计算delta，同时保存完整base/new assignment、lock/fact metadata、freeze、Request/Run、Policy/Limits、Solver/Validator及KPI lineage。Report ID/fingerprint由canonical content派生，`generated_at_utc`不参与内容identity，same inputs可byte-exact replay。
+
+本Task不创建或持久化new DRAFT，不改变PlanningSolution/ScheduleVersion Schema、content fingerprint、state pair、review/approval/publication规则，也不把report当成fresh Validator PASS。P4-08仍须在stale/current/checkpoint复核后原子提交Version、report、request result与audit。
 
 ## TASK-P4-02 P4 result carriers
 

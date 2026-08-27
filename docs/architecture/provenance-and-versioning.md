@@ -6,10 +6,16 @@ spec_version: 0.3.0
 phase: cross-phase
 normative: true
 source_sections: [4, 23, 24, 40, 67, 93, 101, 102, 103, 104]
-last_reviewed: 2026-08-26
+last_reviewed: 2026-08-28
 ---
 
 # Provenance 与版本规则
+
+## TASK-P4-06 ChangeReport identity and lineage
+
+`change-report.v1`逐字绑定base/new ScheduleVersion、base/new Snapshot/Problem、ordered event-stream fingerprint、fact checkpoint、ReplanRequest、PlanningRun、PlanningPolicy、SolveLimits、SolverReport、ValidationReport、freeze evidence、before/after KPI及每个operation的base/new assignment、delta和reason evidence。`report_fingerprint`排除自身字段与`generated_at_utc`后由canonical JSON计算，`report_id=change-report-<digest>`；同一immutable basis必须byte-exact replay。
+
+独立precheck另以自己的完整basis生成content-addressed identity，不信任builder聚合值。任何纠正只能形成新的report/precheck identity；不得改写旧report、旧Version或P0～P3 evidence，也不得以“latest”替代exact version/id/fingerprint。
 
 ## TASK-P4-05 freeze lineage
 

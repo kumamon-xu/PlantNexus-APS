@@ -6,10 +6,16 @@ spec_version: 0.3.0
 phase: P0-P4
 normative: true
 source_sections: [21, 28, 35, 47, 48, 49, 50, 79, 80]
-last_reviewed: 2026-08-27
+last_reviewed: 2026-08-28
 ---
 
 # 动态重排设计合同
+
+## TASK-P4-06 stability/reporting slice
+
+Freeze/effective-lock准备之后，纯calculator现可对给定base/candidate assignments构造完整immutable ChangeReport，并由不导入builder、reporting calculator、Solver或formal Validator的precheck独立复算operation全集、分类、delta、SOFT violations、exact ratio、reasons/facts、KPI refs和identity。相同输入byte-exact replay；missing/duplicate universe、缺失completion fact、跨plane、reason/KPI/lineage或fingerprint mismatch均fail closed且无副作用。
+
+本切片不创建PlanningRun、不调用CP-SAT或fresh C-001～C-011 Validator、不写ReplanRequest result/new DRAFT/audit，也不export或运行Simulator。P4-07仍拥有lexicographic solve/fresh Validator，P4-08拥有原子result application；因此当前ChangeReport是可验证的构建能力，不是已应用的动态重排结果。
 
 ## TASK-P4-05 freeze preparation slice
 

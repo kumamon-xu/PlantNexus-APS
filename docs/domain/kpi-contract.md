@@ -3,13 +3,19 @@ doc_id: DOC-DOM-005
 title: KPI 合同
 status: baseline
 spec_version: 0.3.0
-phase: P0-P3
+phase: P0-P4
 normative: true
 source_sections: [36, 45, 53, 55, 93]
-last_reviewed: 2026-08-21
+last_reviewed: 2026-08-28
 ---
 
 # KPI 合同
+
+## TASK-P4-06 exact Stability and KPI evidence
+
+`obj-002-stability.v1`现按固定顺序返回四个非负整数：SOFT lock violation count、changed existing count、resource change count、total absolute start-shift seconds。Comparable只含base/new均存在且new Snapshot仍active的operation；ADDED/REMOVED不进入movement分母。`unchanged_ratio`保存exact numerator/denominator，分母0时固定`NOT_APPLICABLE_NO_COMPARABLE_OPERATION`，不生成浮点近似。
+
+ChangeReport只保存before/after immutable `kpi.v2` reference；独立precheck从输入KPI复核priority-weighted tardiness与makespan前后值/差值。KPI v1/v2 Schema和公式未改，也未形成Production KPI target、priority authority、threshold或SLA；P4-07才把该向量用于Solver lexicographic stage。
 
 ## TASK-P4-05 KPI boundary
 

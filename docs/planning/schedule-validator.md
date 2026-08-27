@@ -3,13 +3,19 @@ doc_id: DOC-PLAN-005
 title: 独立 ScheduleValidator 合同
 status: baseline
 spec_version: 0.3.0
-phase: P0-P2
+phase: P0-P4
 normative: true
 source_sections: [30, 31, 50, 75, 86, 87]
-last_reviewed: 2026-08-27
+last_reviewed: 2026-08-28
 ---
 
 # 独立 ScheduleValidator 合同
+
+## TASK-P4-06 independent ChangeReport precheck
+
+新增`change_report_precheck.py`直接从base/new assignments、active universe、SOFT locks、completion facts、reason inputs及before/after KPI重算完整report projection，不导入ChangeReport builder、stability calculator、CP-SAT Backend、formal ScheduleValidator、persistence、API或Simulator。它稳定返回PASS/FAIL、hard violations、四元objective vector与KPI comparison，并拒绝分类、delta、fact evidence、KPI reference、universe或identity篡改。
+
+该precheck只证明ChangeReport completeness/consistency，不重算candidate对Problem的C-001～C-011可行性，不能替代TASK-P4-07 fresh formal Validator。既有formal Validator源码/hash/C-ID/error mapping和测试断言保持冻结。
 
 ## TASK-P4-05 independent freeze precheck
 

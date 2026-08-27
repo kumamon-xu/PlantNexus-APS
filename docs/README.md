@@ -15,7 +15,7 @@ last_reviewed: 2026-08-28
 
 TASK-P4-06已从provider-verified P4-05/P4-16 closure `d9d9f2fa2dbefe4c9942aaa8a943a93fdc7efd43`按独立授权实现纯整数OBJ-002 calculator、immutable complete ChangeReport builder、独立precheck和FULL CI机器证据。固定fixture覆盖UNCHANGED/CHANGED/ADDED/REMOVED_BY_FACT、metadata-only no-movement、1个SOFT violation、300秒resource/start movement、completion fact、solver fallback reason及before/after priority-weighted tardiness `600→300`；machine为8/8、`issues=[]`。完整HIGH_RISK本地验收同时通过Backend `724 passed`、Frontend 67项与三轮各12/12 Chromium、全部历史machine、XS benchmark、P2/P3 Gate、SCA/license、Compose/build、文档治理及26-path exact allow-list。
 
-首个implementation `5c7d9a6a42b798f5219484f0fb19851f410c991e`/run `33125423389`因artifact缺少显式Impact Rules envelope而只作为纠正链历史保留。Corrective implementation `10abdd105c697f61ba6c88078ae0ba28fed8a4e5`的run/FULL job/required job/artifact=`33126551137`/`98706008238`/`98707464048`/`9668755204`已exact成功并下载复验；digest `sha256:64c20ceba56d5872d48d19088c4f9f889d08eb31766659c6b579d908dd4bc066`精确绑定Task、Diff base、6个Impact Rules、8/8 checks与`issues=[]`。本evidence-only closure把Task标为`done`；closure自身仍须post-push exact provider，P4-07不会自动启动。
+首个implementation `5c7d9a6a42b798f5219484f0fb19851f410c991e`/run `33125423389`因artifact缺少显式Impact Rules envelope而只作为纠正链历史保留。Corrective implementation `10abdd105c697f61ba6c88078ae0ba28fed8a4e5`的run/FULL job/required job/artifact=`33126551137`/`98706008238`/`98707464048`/`9668755204`已exact成功并下载复验；digest `sha256:64c20ceba56d5872d48d19088c4f9f889d08eb31766659c6b579d908dd4bc066`精确绑定Task、Diff base、6个Impact Rules、8/8 checks与`issues=[]`。首个closure `9a87ca13bb7623159d68fb06efec2714c065dd79`/run `33127421798`因4个仅内部工作区可见的链接而被public-doc gate和required `validate`正确拒绝；该失败证据保留。本corrective evidence-only closure移除公开文档中的内部链接并把Task标为`done`；自身仍须post-push exact provider，P4-07不会自动启动。
 
 Schema set继续为`2.8.0`且Schema/migration/dependency/state pair/CP-SAT/formal Validator均未修改；ChangeReport尚未被Replan application、ScheduleVersion或export消费。P4-07+、P5、Production authority/external integration/deployment/capacity/SLA均保持未形成。
 
@@ -42,7 +42,7 @@ TASK-P4-02已获单独授权并以`4026597ab1015b5ea3a89d241f0d12b5b481dee3`为�
 
 ## P3 Exit audit status
 
-[P3 Exit report](milestones/P3-exit-gate-audit-report.md)与[machine manifest](milestones/P3-exit-gate-evidence-manifest.json)已形成一致的`READY`/0 gaps结论，并保留39个前序P3 provider提交、4个历史失败run与阶段边界。TASK-P3-17 audit implementation与evidence-only closure均已exact provider验证，TASK-P3-17=`done`；其“P3保持active、P4未启动”是closure时的历史边界，现已由上方明确transition决定取代。Production仍未启动。
+内部工作区的P3 Exit report `milestones/P3-exit-gate-audit-report.md`与machine manifest `milestones/P3-exit-gate-evidence-manifest.json`已形成一致的`READY`/0 gaps结论，并保留39个前序P3 provider提交、4个历史失败run与阶段边界。TASK-P3-17 audit implementation与evidence-only closure均已exact provider验证，TASK-P3-17=`done`；其“P3保持active、P4未启动”是closure时的历史边界，现已由上方明确transition决定取代。Production仍未启动。
 
 本目录是 PlantNexus APS 的唯一实质性开发文档中心。项目采用 Simulation-First、可追溯和阶段门禁驱动的开发方式；文档不是事后说明，而是代码、Schema、测试、Fixture、Benchmark 和发布活动的前置边界。
 
@@ -90,7 +90,7 @@ TASK-P4-02已获单独授权并以`4026597ab1015b5ea3a89d241f0d12b5b481dee3`为�
 | `adr/` | 架构和规则决策记录 | 只追加/取代，不改历史 |
 | `operations/`、`runbooks/` | 实现后形成的运维事实 | 后期形成 |
 
-当前已生成文档的完整可点击清单见 [`governance/document-inventory.md`](governance/document-inventory.md)。
+当前已生成文档的完整清单记录在内部工作区的`governance/document-inventory.md`。
 
 ## 文档状态
 

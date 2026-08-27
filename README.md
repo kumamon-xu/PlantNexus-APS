@@ -4,7 +4,7 @@
 
 TASK-P4-06已按独立授权在不可变Diff base `d9d9f2fa2dbefe4c9942aaa8a943a93fdc7efd43`上实现Simulation-only纯整数`obj-002-stability.v1`、immutable `change-report.v1` builder、独立`change-report-precheck.v1`与`p4-stability-change-report.v1`机器证据。完整operation universe恰好一次分类为UNCHANGED/CHANGED/ADDED/REMOVED_BY_FACT；movement只由resource/start/end tuple决定，SOFT lock、changed existing、resource change、absolute start shift组成四元整数向量，before/after KPI、facts、reasons、freeze与完整lineage均可独立复算。HIGH_RISK本地验收已完整通过：Task-specific 21项、focused `64 passed`、完整Backend `724 passed`、Frontend 67项及三轮各12/12 Chromium、全部历史machine、XS benchmark、P2/P3 Gate、SCA/license、Compose/build、文档治理和26-path exact allow-list均PASS。
 
-首个implementation `5c7d9a6a42b798f5219484f0fb19851f410c991e`的required run成功但artifact缺少显式Impact Rules envelope，故作为纠正链历史保留。Corrective implementation `10abdd105c697f61ba6c88078ae0ba28fed8a4e5`的run/FULL job/required job/artifact=`33126551137`/`98706008238`/`98707464048`/`9668755204`已由GitHub Actions app `15368` exact成功并下载复验；artifact digest为`sha256:64c20ceba56d5872d48d19088c4f9f889d08eb31766659c6b579d908dd4bc066`，精确包含Task、不可变Diff base、6个Impact Rules、8/8 checks与`issues=[]`。本evidence-only closure据此把TASK-P4-06标为`done`；closure自身仍须post-push exact provider复验。
+首个implementation `5c7d9a6a42b798f5219484f0fb19851f410c991e`的required run成功但artifact缺少显式Impact Rules envelope，故作为纠正链历史保留。Corrective implementation `10abdd105c697f61ba6c88078ae0ba28fed8a4e5`的run/FULL job/required job/artifact=`33126551137`/`98706008238`/`98707464048`/`9668755204`已由GitHub Actions app `15368` exact成功并下载复验；artifact digest为`sha256:64c20ceba56d5872d48d19088c4f9f889d08eb31766659c6b579d908dd4bc066`，精确包含Task、不可变Diff base、6个Impact Rules、8/8 checks与`issues=[]`。首个closure `9a87ca13bb7623159d68fb06efec2714c065dd79`/run `33127421798`因4个仅内部工作区可见的链接而被public-doc gate与required `validate`正确拒绝；该失败证据保留。本corrective evidence-only closure移除公开文档中的内部链接并据此把TASK-P4-06标为`done`；自身仍须post-push exact provider复验。
 
 本Task没有修改Schema、migration、dependency/lock、CP-SAT objective/strategy、formal C-001～C-011 Validator、业务状态、application/API/UI/Simulator或P3历史。OBJ-002当前仅是reporting/completeness能力，不代表P4-07词典序Solver已形成；P4-07+、P5与Production readiness/UAT/真实authority/external publish/deployment/capacity/SLA均未启动或未形成。
 
@@ -102,7 +102,7 @@ scripts/      仓库级校验与自动化脚本
 infra/        P0 开发容器构建配置
 ```
 
-P2 CP-SAT Vertical Slice与P3 Planning Workspace均已通过Exit Gate并关闭，当前阶段为P4。P2-00～14、P3-00～17、TASK-P4-00～06与P4-16均为`done`；P4-07～15仍为`planned`且当前没有自动启动的下一Task。Production capacity/SLA/identity/approval authority/external publish仍未形成。当前边界见[`docs/current_phase.md`](docs/current_phase.md)。
+P2 CP-SAT Vertical Slice与P3 Planning Workspace均已通过Exit Gate并关闭，当前阶段为P4。P2-00～14、P3-00～17、TASK-P4-00～06与P4-16均为`done`；P4-07～15仍为`planned`且当前没有自动启动的下一Task。Production capacity/SLA/identity/approval authority/external publish仍未形成。内部工作区的当前边界记录为`docs/current_phase.md`。
 
 TASK-P3-13保留失败implementation run `32920462781`、首次closure `87d47c7483185483ac8027100c1c664d18011a7c` / run `32921871460`的606/1失败与artifact count=0。独立XLSX deterministic corrective implementation `3538d46f8b73ae434057bcbca9037436aa91f2c7`的required run/job/artifact=`32923203227`/`98040743610`/`9590625358`已全绿并下载复验33份JSON、12/12 Chromium和Task 91/0/11/19/0；该P3-13 closure当时未自动启动P3-14，后者现依据新的用户授权独立执行。
 

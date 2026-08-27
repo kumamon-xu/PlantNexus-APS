@@ -14,7 +14,7 @@ registry_version: 1.0.0
 
 ## TASK-P4-02 machine-contract evidence
 
-`test_p4_machine_contracts.py`现覆盖9/9 strict/offline/non-interchangeable Schema/sample、canonical bundle lineage、ExecutionEvent identity/authority、ReplanRequest无状态与half-open freeze、objective/status、complete ChangeReport、Simulator/export/state boundary及历史/依赖/migration freeze。`p4-machine-contract-report.v1`另执行35个Schema rejection与7个semantic rejection；当前状态为`LOCAL_PASS_PROVIDER_PENDING`，不得解释为event ingress、Solver、Simulator或Production行为PASS。
+`test_p4_machine_contracts.py`现覆盖9/9 strict/offline/non-interchangeable Schema/sample、canonical bundle lineage、ExecutionEvent identity/authority、ReplanRequest无状态与half-open freeze、objective/status、complete ChangeReport、Simulator/export/state boundary及历史/依赖/migration freeze。`p4-machine-contract-report.v1`另执行35个Schema rejection与7个semantic rejection；implementation `539cdbbdcdd406daba25b8d6b8caaa5133691e76` / artifact `9636892191`已把该机器合同证据升级为`PROVIDER_VERIFIED`，但不得解释为event ingress、Solver、Simulator或Production行为PASS。
 
 ## TASK-P4-01 contract evidence boundary
 
@@ -76,7 +76,7 @@ Provider失败run `32920462781`保留POSIX glob误收Playwright的负证据；�
 | TEST-TRACEABILITY-VALIDATOR | Registry、reference、Task、diff/impact，以及 clean-tree committed range regression | P0 | [`backend/tests/unit/test_check_docs.py`](../../backend/tests/unit/test_check_docs.py) |
 | TEST-PHASE-GOVERNANCE-001 | Current/prior/future Phase Task policy与 CI changed-task handoff | P1 | [`test_check_docs.py`](../../backend/tests/unit/test_check_docs.py) phase/range/discovery negative paths + [`test_ci_contract.py`](../../backend/tests/integration/test_ci_contract.py) generic workflow/no-stale-P0 handoff formed |
 | TEST-OBS-001 | 日志、运行标识与 Observability 关联 | P0 | [`test_logging.py`](../../backend/tests/integration/test_logging.py) JSON/context/trace-ID/redaction P0 slice formed；TASK-P3-10 HTTP correlation/denial-audit redaction provider-verified；PlanningRun metrics/retention PLANNED |
-| TEST-CONTRACT-001 | Schema meta/positive/negative、版本、UTC/duration/reference、isolation 与 round-trip | P0-P4 | Existing suite + [`test_p4_machine_contracts.py`](../../backend/tests/contract/test_p4_machine_contracts.py)；historical bytes与additive `2.8.0` carrier slice LOCAL_PASS_PROVIDER_PENDING |
+| TEST-CONTRACT-001 | Schema meta/positive/negative、版本、UTC/duration/reference、isolation 与 round-trip | P0-P4 | Existing suite + [`test_p4_machine_contracts.py`](../../backend/tests/contract/test_p4_machine_contracts.py)；historical bytes与additive `2.8.0` carrier slice PROVIDER_VERIFIED |
 | TEST-IMPORT-STAGING-001 | Raw batch/row provenance、transaction、migration与 idempotent replay | P1 | [`test_import_staging.py`](../../backend/tests/unit/test_import_staging.py) + [`test_raw_import_staging.py`](../../backend/tests/integration/test_raw_import_staging.py) + [`test_migrations_and_infrastructure.py`](../../backend/tests/integration/test_migrations_and_infrastructure.py) formed / TASK-P1-03 |
 | TEST-IMPORT-ADAPTER-001 | CSV/XLSX/ReferenceFileAdapter semantic parity与文件安全拒绝 | P1 | [`test_input_adapters.py`](../../backend/tests/contract/test_input_adapters.py) + [`test_reference_file_adapter.py`](../../backend/tests/integration/test_reference_file_adapter.py) formed / TASK-P1-04 |
 | TEST-NORMALIZATION-001 | ID/time/unit mapping、canonical bytes、unit error与 missing duration | P1 | [`test_normalization.py`](../../backend/tests/unit/test_normalization.py) formed / TASK-P1-05；`cycle_seconds_per_unit` explicit-unit regression added / TASK-P1-10 |
@@ -101,13 +101,13 @@ Provider失败run `32920462781`保留POSIX glob误收Playwright的负证据；�
 | TEST-MAX-LAG | max_lag 不被忽略 | P0-P2 | Golden/formal inclusive min/max lag + P2 versioned JSSP/Scenario complete-edge Solver replay formed |
 | TEST-VALIDATOR-MUTATION | 独立 Validator 拒绝人工错误计划 | P0-P2 | P0/formal suites + [11 formula-free mutations of Solver-produced candidates](../../backend/tests/validation/test_p2_solver_mutations.py) formed；performance integration PLANNED |
 | TEST-REPLAN | Replan 事实、锁与变化报告 | P4 | PLANNED |
-| TEST-EXECUTION-EVENT-CONTRACT-001 | ExecutionEvent版本、来源、时间、entity refs、幂等与拒绝合同 | P4 | MACHINE_CONTRACT_LOCAL_PASS_PROVIDER_PENDING / TASK-P4-02；ingress/projection P4-04 PLANNED |
-| TEST-REPLAN-REQUEST-CONTRACT-001 | immutable base/new Snapshot/freeze/reason/request/result carrier合同 | P4 | MACHINE_CONTRACT_LOCAL_PASS_PROVIDER_PENDING / TASK-P4-02；persistence/application P4-03/08 PLANNED |
+| TEST-EXECUTION-EVENT-CONTRACT-001 | ExecutionEvent版本、来源、时间、entity refs、幂等与拒绝合同 | P4 | MACHINE_CONTRACT_PROVIDER_VERIFIED / TASK-P4-02；ingress/projection P4-04 PLANNED |
+| TEST-REPLAN-REQUEST-CONTRACT-001 | immutable base/new Snapshot/freeze/reason/request/result carrier合同 | P4 | MACHINE_CONTRACT_PROVIDER_VERIFIED / TASK-P4-02；persistence/application P4-03/08 PLANNED |
 | TEST-P4-PERSISTENCE-001 | Event ledger、ReplanRequest/result、状态事务、CAS、audit与migration replay | P4 | PLANNED / TASK-P4-03 |
 | TEST-EXECUTION-FACT-PROJECTION-001 | ExecutionEvent→权威事实→新immutable Snapshot确定性投影 | P4 | PLANNED / TASK-P4-04 |
 | TEST-FREEZE-WINDOW-001 | Freeze边界、COMPLETED/RUNNING/HARD/effective lock保护与Production no-default | P4 | PLANNED / TASK-P4-05 |
 | TEST-STABILITY-OBJECTIVE-001 | OBJ-002 resource/start/count movement整数计算与lexicographic stage | P4 | PLANNED / TASK-P4-06/07 |
-| TEST-CHANGE-REPORT-001 | before/after KPI、变化、facts/locks、reason与lineage完整性 | P4 | MACHINE_CONTRACT_LOCAL_PASS_PROVIDER_PENDING / TASK-P4-02；calculation/application/export P4-06/08/11 PLANNED |
+| TEST-CHANGE-REPORT-001 | before/after KPI、变化、facts/locks、reason与lineage完整性 | P4 | MACHINE_CONTRACT_PROVIDER_VERIFIED / TASK-P4-02；calculation/application/export P4-06/08/11 PLANNED |
 | TEST-EXECUTION-SIMULATOR-001 | deterministic clock/seed/event stream与common-path/no-shortcut隔离 | P4 | PLANNED / TASK-P4-09 |
 | TEST-DISRUPTION-REPLAY-001 | Urgent Order、Machine Failure、Material/Processing Delay、Early Completion连续重放 | P4 | PLANNED / TASK-P4-10/14 |
 | TEST-REPLAN-API-001 | Event/Replan/ChangeReport HTTP contract、auth、idempotency与error mapping | P4 | PLANNED / TASK-P4-12 |

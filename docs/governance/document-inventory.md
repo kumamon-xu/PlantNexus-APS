@@ -14,7 +14,7 @@ registry_version: 1.0.0
 
 ## TASK-P4-02 inventory delta
 
-TASK-P4-02不新增、删除或重命名正式Markdown，inventory继续为188 entries；新增九份JSON Schema、九份sample、纯合同代码、tests、workflow step与ignored reports均不属于Markdown inventory。当前TASK-P4-02=`in_progress`，Roots=30、trace rows=30、Test IDs=61、OPEN=15、SIM assumptions=16、risks=17、Tasks=71与registry format均不变；P4-03～15保持`planned`。
+TASK-P4-02不新增、删除或重命名正式Markdown，inventory继续为188 entries；新增九份JSON Schema、九份sample、纯合同代码、tests、workflow step与ignored reports均不属于Markdown inventory。Implementation artifact `9636892191`已复验188 entries与87/0/12/19/0治理结果，本closure把TASK-P4-02从`in_progress`转为`done`。Roots=30、trace rows=30、Test IDs=61、OPEN=15、SIM assumptions=16、risks=17、Tasks=71与registry format均不变；P4-03～15保持`planned`。
 
 ## TASK-P4-01 contract/ADR inventory delta
 
@@ -50,7 +50,7 @@ TASK-P3-14不新增、删除或重命名正式Markdown，inventory继续覆盖16
 
 Root=30、trace rows=30、Test IDs=48、OPEN=15、risks=13、Tasks=53均不变；新增SIM-ASSUMPTION-015使SIM count=15但不改变registry format。Artifact `9589931373`复现33 JSON及Task 91/0/11/19/0，closure run `32921871460`失败且无artifact；独立corrective artifact `9590625358`再次复现33 JSON及91/0/11/19/0。本closure自身仍须exact provider。
 
-本清单列出当前仓库已经实际存在的Markdown文档。P0～P3均已归档为completed；P3 Exit Gate=`READY`、0 gaps且implementation/closure provider完整闭环。P4现为active，TASK-P4-00 phase planning与TASK-P4-01 contract/ADR baseline均为`done`，TASK-P4-02为`in_progress`，P4-03～15仍为planned。P3 human-control UI/E2E、有界internal Simulation成果包下载及双语展示provider evidence保持历史只读；Production Runbook正文仍未形成。
+本清单列出当前仓库已经实际存在的Markdown文档。P0～P3均已归档为completed；P3 Exit Gate=`READY`、0 gaps且implementation/closure provider完整闭环。P4现为active，TASK-P4-00 phase planning、TASK-P4-01 contract/ADR baseline与TASK-P4-02 machine contracts均为`done`，P4-03～15仍为planned。P3 human-control UI/E2E、有界internal Simulation成果包下载及双语展示provider evidence保持历史只读；Production Runbook正文仍未形成。
 
 | Path | Doc ID | Status | Title |
 |---|---|---|---|
@@ -226,7 +226,7 @@ Root=30、trace rows=30、Test IDs=48、OPEN=15、risks=13、Tasks=53均不变�
 | [tasks/P3/TASK-P3-17-p3-exit-gate-audit.md](../tasks/P3/TASK-P3-17-p3-exit-gate-audit.md) | TASK-P3-17 | done | P3 Exit Gate Audit |
 | [tasks/P4/TASK-P4-00-phase-transition-and-task-planning-governance.md](../tasks/P4/TASK-P4-00-phase-transition-and-task-planning-governance.md) | TASK-P4-00 | done | P4 Phase Transition and Task Planning Governance |
 | [tasks/P4/TASK-P4-01-dynamic-replanning-contract-and-adr-baseline.md](../tasks/P4/TASK-P4-01-dynamic-replanning-contract-and-adr-baseline.md) | TASK-P4-01 | done | Dynamic Replanning Contract and ADR Baseline |
-| [tasks/P4/TASK-P4-02-execution-event-replan-change-report-schemas.md](../tasks/P4/TASK-P4-02-execution-event-replan-change-report-schemas.md) | TASK-P4-02 | in_progress | ExecutionEvent Replan and ChangeReport Machine Contracts |
+| [tasks/P4/TASK-P4-02-execution-event-replan-change-report-schemas.md](../tasks/P4/TASK-P4-02-execution-event-replan-change-report-schemas.md) | TASK-P4-02 | done | ExecutionEvent Replan and ChangeReport Machine Contracts |
 | [tasks/P4/TASK-P4-03-replan-event-persistence-and-state-transactions.md](../tasks/P4/TASK-P4-03-replan-event-persistence-and-state-transactions.md) | TASK-P4-03 | planned | Replan Event Persistence and State Transactions |
 | [tasks/P4/TASK-P4-04-execution-event-ingestion-and-fact-projection.md](../tasks/P4/TASK-P4-04-execution-event-ingestion-and-fact-projection.md) | TASK-P4-04 | planned | ExecutionEvent Ingestion and Fact Projection |
 | [tasks/P4/TASK-P4-05-freeze-window-and-effective-lock-projection.md](../tasks/P4/TASK-P4-05-freeze-window-and-effective-lock-projection.md) | TASK-P4-05 | planned | Freeze Window and Effective Lock Projection |

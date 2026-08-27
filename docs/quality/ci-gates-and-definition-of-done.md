@@ -13,7 +13,7 @@ last_reviewed: 2026-08-27
 
 ## TASK-P4-02 required evidence
 
-CI `validate`新增不可跳过的`P4 dynamic replanning machine contract evidence`步骤，输出`build/validation/ci-p4-machine-contracts.json`并由统一artifact上传。报告必须绑定TASK-P4-02、不可变Diff base、exact code commit、set `2.8.0`、8/8 checks、9/9 Schema/sample、58 historical freeze、35/7 rejection和`issues=[]`。本地PASS不替代GitHub Actions app `15368`的exact implementation/closure provider。
+CI `validate`新增不可跳过的`P4 dynamic replanning machine contract evidence`步骤，输出`build/validation/ci-p4-machine-contracts.json`并由统一artifact上传。报告必须绑定TASK-P4-02、不可变Diff base、exact code commit、set `2.8.0`、8/8 checks、9/9 Schema/sample、58 historical freeze、35/7 rejection和`issues=[]`。Implementation `539cdbbdcdd406daba25b8d6b8caaa5133691e76`的required run/job=`33048889370`/`98439288723`由GitHub Actions app `15368`成功提供；artifact `9636892191`未过期至2026-11-25T07:14:10Z，digest=`sha256:378fbb47f12d92773e77855eff486d51f67502f610a6578b14549cdade7f5d7b`。下载复核45 files/39 JSON、TASK/base、87/0 paths、12 Impact Rules、36/36 documents、19/19 checks、0 issues、P4 8/8、P2/P3 Gate与Frontend/i18n一致PASS，故本closure可把Task标为`done`；closure自身仍需相同exact provider闭环。
 
 ## TASK-P4-01 required Gate
 

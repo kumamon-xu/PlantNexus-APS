@@ -11,9 +11,9 @@ last_reviewed: 2026-08-27
 
 # Milestone 索引
 
-## TASK-P4-02 machine-contract activation
+## TASK-P4-02 machine-contract completion
 
-用户已单独授权TASK-P4-02，并在P4-01双提交provider、branch protection与clean synchronized closure `4026597ab1015b5ea3a89d241f0d12b5b481dee3`精确复验后启动。当前状态为`in_progress`，范围仅为additive schema set `2.8.0`、九份Simulation carrier/sample、纯合同检查、CI evidence与治理同步；P4仍为`active`，P4-03～15不自动启动。
+用户已单独授权TASK-P4-02，并在P4-01双提交provider、branch protection与clean synchronized closure `4026597ab1015b5ea3a89d241f0d12b5b481dee3`精确复验后启动。范围仅为additive schema set `2.8.0`、九份Simulation carrier/sample、纯合同检查、CI evidence与治理同步；implementation `539cdbbdcdd406daba25b8d6b8caaa5133691e76`的required run/job/artifact=`33048889370`/`98439288723`/`9636892191`已exact复验，故本closure把TASK-P4-02标为`done`。P4仍为`active`，P4-03～15不自动启动。
 
 ## TASK-P4-01 contract baseline
 
@@ -66,7 +66,7 @@ P2当前状态：[`P2 — CP-SAT Vertical Slice`](P2-cp-sat-vertical-slice.md)�
 
 P3当前状态：[`P3 — Planning Workspace`](P3-planning-workspace.md)为`completed`。TASK-P3-00～17均为`done`；TASK-P3-17 final independent Exit Audit为`READY`且0 gaps，implementation/closure exact provider均已复验。用户于2026-08-27明确批准transition，历史失败与corrective/provider链保持只读。
 
-P4当前状态：[`P4 — Dynamic Replanning`](P4-dynamic-replanning.md)为`active`。TASK-P4-00与TASK-P4-01均为`done`；TASK-P4-02为`in_progress`且只形成机器合同候选，P4-03～15仍为`planned`。P4-15是独立Exit Audit；P5与Production仍未进入。
+P4当前状态：[`P4 — Dynamic Replanning`](P4-dynamic-replanning.md)为`active`。TASK-P4-00～02均为`done`；P4-03～15仍为`planned`。P4-15是独立Exit Audit；P5与Production仍未进入。
 
 TASK-P3-04 implementation `a9be974855bb825784d639b7f6675e5a33e4273d`的run/job/artifact=`32700005280`/`97349447107`/`9510215582`精确复现35 focused、515 full、8/8 lifecycle、23/23 JSON PASS与45 committed/0 working paths、8 rows、19 checks、0 issues，故本closure标为`done`。该证据只形成reviewable ScheduleVersion，不形成approval、publish、P4或Production readiness。
 

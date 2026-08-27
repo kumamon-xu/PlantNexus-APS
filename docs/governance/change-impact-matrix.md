@@ -16,7 +16,7 @@ registry_version: 1.0.0
 
 不可变Diff base=`4026597ab1015b5ea3a89d241f0d12b5b481dee3`。实际范围为additive Schema/sample、domain pure contracts、两处P3 evidence的current-set metadata兼容、global version metadata、Backend tests、non-skippable workflow evidence、P3 i18n zero-wire checker的future-phase兼容修正及逐字治理文档，预期精确命中`IMPACT-SCHEMA/DOMAIN/APPLICATION/FRONTEND/STATE/INFRA/DEPENDENCY/VERSION-METADATA/TESTS/PHASE/GOVERNANCE-REGISTRY/DOCS`。`IMPACT-DEPENDENCY`只因`pyproject.toml` metadata路径命中，runtime/dev dependency集合和`uv.lock`零差异；FRONTEND只改evidence path scope、不改UI/API producer；STATE只记录carrier复用既有pairs且ReplanRequest/Simulator无状态机。
 
-本Task不修改historical Schema/sample、migration、repository、event ingress/projector、Planning/Solver/Simulator/API/UI或P5+。PlanningPolicy/SolverReport/ChangeReport语义由Schema与domain pure precheck承载，不修改`backend/app/planning/**`，因此不虚报`IMPACT-PLANNING-CONTRACTS/POLICY/REPORTING`。最终paths/rules/checks/issues须由Task report和exact provider artifact一致证明。
+本Task不修改historical Schema/sample、migration、repository、event ingress/projector、Planning/Solver/Simulator/API/UI或P5+。PlanningPolicy/SolverReport/ChangeReport语义由Schema与domain pure precheck承载，不修改`backend/app/planning/**`，因此不虚报`IMPACT-PLANNING-CONTRACTS/POLICY/REPORTING`。Implementation artifact `9636892191`已精确复现87 committed/0 working paths、上述12行、36/36 expected/observed documents、19/19 checks与0 issues；本closure只回填provider事实与lifecycle，并保持相同87-path union。
 
 ## TASK-P4-01 contract/ADR impact
 

@@ -13,7 +13,7 @@ last_reviewed: 2026-08-27
 
 ## TASK-P4-02 governance checks
 
-当前Task report必须从Diff base `4026597ab1015b5ea3a89d241f0d12b5b481dee3`发现唯一`in_progress` TASK-P4-02，验证逐字allow-list、依赖状态、phase policy、Document Inventory、30 roots/rows、61 Test IDs、15 OPEN、16 SIM assumptions、17 risks与实际Impact Rules。Implementation/closure artifact中的report必须与exact SHA、changed paths、checks和issues逐项一致。
+当前Task report必须从Diff base `4026597ab1015b5ea3a89d241f0d12b5b481dee3`发现TASK-P4-02 owner，验证逐字allow-list、依赖状态、phase policy、Document Inventory、30 roots/rows、61 Test IDs、15 OPEN、16 SIM assumptions、17 risks与实际Impact Rules。Implementation artifact `9636892191`已精确复现87 committed/0 working paths、12 Impact Rules、36/36 expected/observed documents、19/19 checks、0 issues与上述治理计数，因此本closure把Task标为`done`；closure artifact仍必须与其exact SHA、同一changed-path union、checks和issues逐项一致。
 
 ## TASK-P4-01 contract/ADR validation
 

@@ -14,7 +14,7 @@ registry_version: 1.0.0
 
 ## TASK-P4-02 machine-contract controls
 
-RISK-015现获得event identity排除receive observation但包含authority/source order、exact replay/conflict和gap fail-closed carrier；RISK-016获得半开freeze、OBJ-002四元顺序、operation全集分类与exact ratio carrier；RISK-017获得Simulation manifest/common-path lineage与Production binding拒绝carrier。35个shape和7个semantic负例只证明合同控制，尚无持久化、projection、Solver或Simulator行为，因此RISK-001～017继续`MONITORED`。
+RISK-015现获得event identity排除receive observation但包含authority/source order、exact replay/conflict和gap fail-closed carrier；RISK-016获得半开freeze、OBJ-002四元顺序、operation全集分类与exact ratio carrier；RISK-017获得Simulation manifest/common-path lineage与Production binding拒绝carrier。Implementation artifact `9636892191`已复验35个shape和7个semantic负例及0 issues；它只证明合同控制，尚无持久化、projection、Solver或Simulator行为，因此RISK-001～017继续`MONITORED`。
 
 ## TASK-P4-01 risk controls
 

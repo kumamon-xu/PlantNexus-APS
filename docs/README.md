@@ -13,11 +13,11 @@ last_reviewed: 2026-08-27
 
 ## TASK-P4-02 machine-contract release
 
-TASK-P4-02已获单独授权并以`4026597ab1015b5ea3a89d241f0d12b5b481dee3`为不可变Diff base进入`in_progress`。当前additive set `2.8.0`发布ExecutionEvent/ReplanRequest/ChangeReport/ExecutionSimulationManifest以及Policy/SolverReport/ScheduleVersion/Export carrier的新版本；九份Schema与九份sample均为strict、no-default、offline-reference、Simulation-only合同。当前只完成本地候选，exact implementation/closure provider尚待闭环；P4-03、P5与Production均未启动。
+TASK-P4-02已获单独授权并以`4026597ab1015b5ea3a89d241f0d12b5b481dee3`为不可变Diff base发布additive set `2.8.0`。ExecutionEvent/ReplanRequest/ChangeReport/ExecutionSimulationManifest以及Policy/SolverReport/ScheduleVersion/Export carrier的九份Schema与九份sample均为strict、no-default、offline-reference、Simulation-only合同；implementation `539cdbbdcdd406daba25b8d6b8caaa5133691e76`的exact required provider成功后，本evidence-only closure将TASK-P4-02标为`done`。P4-03、P5与Production均未启动。
 
 ## P4 activation and planning baseline
 
-用户于2026-08-27在P3 Exit report/manifest=`READY`、`blocking_gaps=[]`且两个精确提交provider均验证后批准P3→P4。P3现为`completed`，P4为`active`；TASK-P4-00与TASK-P4-01均已由双提交exact provider闭环为`done`。TASK-P4-02状态以上方当前段落为准，P4-03～15保持`planned`，P4-15是唯一最后独立Exit Audit。当前不形成任何P4业务行为、P5能力或Production readiness/authority/external/deployment/capacity/SLA。
+用户于2026-08-27在P3 Exit report/manifest=`READY`、`blocking_gaps=[]`且两个精确提交provider均验证后批准P3→P4。P3现为`completed`，P4为`active`；TASK-P4-00～02状态以上方当前段落为准，P4-03～15保持`planned`，P4-15是唯一最后独立Exit Audit。当前不形成任何P4业务行为、P5能力或Production readiness/authority/external/deployment/capacity/SLA。
 
 ## P3 Exit audit status
 

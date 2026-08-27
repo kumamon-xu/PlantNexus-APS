@@ -4,7 +4,7 @@
 
 用户已明确批准P3→P4。TASK-P3-17独立Exit Audit的report/manifest均为`READY`、`blocking_gaps=[]`；audit implementation `201be9c6fd1b433a9d0a629a3ae7d4ffe1107476`和evidence-only closure `61eeacdd5efc20b2321750e1310e9e21561c9fc2`的直接拓扑、required `validate`、GitHub Actions app `15368`及未过期artifact均已exact复验。因此P3 Milestone现为`completed`，P4 Dynamic Replanning已激活。
 
-PlantNexus APS 是一个面向单工厂、多车间场景的高级计划与排程（APS）项目。TASK-P4-00与TASK-P4-01均已由implementation/closure exact provider闭环为`done`。用户随后单独授权TASK-P4-02，它以`4026597ab1015b5ea3a89d241f0d12b5b481dee3`为不可变Diff base，发布additive schema set `2.8.0`的九份P4机器carrier、九份synthetic sample、纯校验与CI evidence；当前为`in_progress`且implementation provider待精确核验。P4-03及后继未自动启动；migration、event ingress、事实投影、Solver、Simulator、API/UI与Production readiness/UAT/真实authority/external publish/deployment/capacity/SLA仍未形成。
+PlantNexus APS 是一个面向单工厂、多车间场景的高级计划与排程（APS）项目。TASK-P4-00与TASK-P4-01均已由implementation/closure exact provider闭环为`done`。用户随后单独授权TASK-P4-02，它以`4026597ab1015b5ea3a89d241f0d12b5b481dee3`为不可变Diff base，发布additive schema set `2.8.0`的九份P4机器carrier、九份synthetic sample、纯校验与CI evidence；implementation `539cdbbdcdd406daba25b8d6b8caaa5133691e76`的exact provider成功后，本evidence-only closure将其标为`done`。P4-03及后继未自动启动；migration、event ingress、事实投影、Solver、Simulator、API/UI与Production readiness/UAT/真实authority/external publish/deployment/capacity/SLA仍未形成。
 
 ## 开始之前
 
@@ -78,7 +78,7 @@ scripts/      仓库级校验与自动化脚本
 infra/        P0 开发容器构建配置
 ```
 
-P2 CP-SAT Vertical Slice与P3 Planning Workspace均已通过Exit Gate并关闭，当前阶段为P4。P2-00～14、P3-00～17、TASK-P4-00与TASK-P4-01均为`done`；TASK-P4-02现为`in_progress`并只形成机器合同候选，P4-03～15仍为`planned`。Production capacity/SLA/identity/approval authority/external publish仍未形成，P4运行行为也尚未开始。当前边界见[`docs/current_phase.md`](docs/current_phase.md)。
+P2 CP-SAT Vertical Slice与P3 Planning Workspace均已通过Exit Gate并关闭，当前阶段为P4。P2-00～14、P3-00～17、TASK-P4-00～02均为`done`；P4-03～15仍为`planned`。Production capacity/SLA/identity/approval authority/external publish仍未形成，P4运行行为也尚未开始。当前边界见[`docs/current_phase.md`](docs/current_phase.md)。
 
 TASK-P3-13保留失败implementation run `32920462781`、首次closure `87d47c7483185483ac8027100c1c664d18011a7c` / run `32921871460`的606/1失败与artifact count=0。独立XLSX deterministic corrective implementation `3538d46f8b73ae434057bcbca9037436aa91f2c7`的required run/job/artifact=`32923203227`/`98040743610`/`9590625358`已全绿并下载复验33份JSON、12/12 Chromium和Task 91/0/11/19/0；该P3-13 closure当时未自动启动P3-14，后者现依据新的用户授权独立执行。
 

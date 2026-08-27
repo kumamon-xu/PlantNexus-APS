@@ -11,11 +11,11 @@ last_reviewed: 2026-08-27
 
 # 当前阶段：P4 — Dynamic Replanning
 
-## TASK-P4-02 implementation boundary
+## TASK-P4-02 completion boundary
 
-用户于2026-08-27单独授权TASK-P4-02。启动门精确确认TASK-P4-01 implementation/closure直接拓扑、GitHub Actions app `15368`的required `validate`、两份未过期artifact及`main=origin/main=remote main=4026597ab1015b5ea3a89d241f0d12b5b481dee3`、ahead/behind=`0/0`、工作树clean；该SHA冻结为Diff base。当前Task为`in_progress`，发布additive schema set `2.8.0`的九份strict Simulation carrier、九份synthetic sample与`p4-machine-contract-report.v1`，并逐字冻结58份P0～P3 Schema/sample、migration `0004`和依赖锁。
+用户于2026-08-27单独授权TASK-P4-02。启动门精确确认TASK-P4-01 implementation/closure直接拓扑、GitHub Actions app `15368`的required `validate`、两份未过期artifact及`main=origin/main=remote main=4026597ab1015b5ea3a89d241f0d12b5b481dee3`、ahead/behind=`0/0`、工作树clean；该SHA冻结为Diff base。Task发布additive schema set `2.8.0`的九份strict Simulation carrier、九份synthetic sample与`p4-machine-contract-report.v1`，并逐字冻结58份P0～P3 Schema/sample、migration `0004`和依赖锁。Implementation `539cdbbdcdd406daba25b8d6b8caaa5133691e76`的run/job/artifact=`33048889370`/`98439288723`/`9636892191`已由GitHub Actions app `15368` exact成功并下载复验，因此本evidence-only closure把Task标为`done`；closure自身仍须post-push exact provider复验。
 
-本Task没有migration、repository、event ingress、fact projection、state transition、Solver/Validator运行、Simulator行为、API或UI。ReplanRequest与ExecutionSimulationManifest没有业务状态机，ScheduleVersion/PlanningRun/ExportJob沿用既有state pairs；P4-03～15、P5及Production authority/external integration/deployment/capacity/SLA均未启动。Task只有在implementation与evidence-only closure的exact provider均成功后才可改为`done`。
+本Task没有migration、repository、event ingress、fact projection、state transition、Solver/Validator运行、Simulator行为、API或UI。ReplanRequest与ExecutionSimulationManifest没有业务状态机，ScheduleVersion/PlanningRun/ExportJob沿用既有state pairs；P4-03～15、P5及Production authority/external integration/deployment/capacity/SLA均未启动，也不会由本closure自动启动。
 
 ## TASK-P4-01 completion boundary
 
@@ -27,7 +27,7 @@ last_reviewed: 2026-08-27
 
 用户于2026-08-27明确批准phase transition。切换前逐项确认TASK-P3-00～17全部`done`；P3 Exit report与machine manifest均为`READY`且`blocking_gaps=[]`；audit implementation `201be9c6fd1b433a9d0a629a3ae7d4ffe1107476`与closure `61eeacdd5efc20b2321750e1310e9e21561c9fc2`为直接父子提交；两者required `validate`均由GitHub Actions app `15368`成功提供，artifact `9631260796`/`9631608856`未过期且exact SHA、TASK-P3-17、Diff base、四个Impact Rules、19 checks、0 issues、P2/P3 Gate、双语与机器合同证据一致。启动时main/origin/main/remote main均为closure SHA、ahead/behind=`0/0`、工作树clean。
 
-P3 Milestone因此关闭为`completed`，P4激活为`active`。TASK-P4-00只负责该次阶段启动、完整Task规划与治理同步；implementation `c94af400392418f9bb69509331fa8d1dff046184`的run/job/artifact=`33038260107`/`98405799469`/`9632983094`及closure `b96232b2e3f5573baaf735c7fa7935f95e6c88f5`的run/job/artifact=`33039049885`/`98408256330`/`9633262079`均已exact成功，故P4-00=`done`。当时P4-01～15均为`planned`；现P4-01已按新的明确授权完成合同/ADR闭环，P4-02～15仍为`planned`。
+P3 Milestone因此关闭为`completed`，P4激活为`active`。TASK-P4-00只负责该次阶段启动、完整Task规划与治理同步；implementation `c94af400392418f9bb69509331fa8d1dff046184`的run/job/artifact=`33038260107`/`98405799469`/`9632983094`及closure `b96232b2e3f5573baaf735c7fa7935f95e6c88f5`的run/job/artifact=`33039049885`/`98408256330`/`9633262079`均已exact成功，故P4-00=`done`。当时P4-01～15均为`planned`；现P4-01与P4-02已按各自独立授权完成，P4-03～15仍为`planned`。
 
 ## P4 planned execution chain
 

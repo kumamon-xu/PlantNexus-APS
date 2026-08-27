@@ -13,7 +13,7 @@ last_reviewed: 2026-08-27
 
 ## TASK-P4-02 machine-contract trace rule
 
-本Task链固定为`REQ-005/007/008/009/013 + declared NFR/ENG + SIM-ASSUMPTION-016 → TASK-P4-02 → nine exact-version carriers/samples + pure prechecks → TEST-CONTRACT-001/TEST-EXECUTION-EVENT-CONTRACT-001/TEST-REPLAN-REQUEST-CONTRACT-001/TEST-CHANGE-REPORT-001 → p4-machine-contract-report.v1 + Task report → exact implementation provider → evidence-only closure provider`。Diff base固定`4026597ab1015b5ea3a89d241f0d12b5b481dee3`；任何SHA、Task、base、Impact Rules、checks/issues或artifact digest不一致均保持`in_progress`。
+本Task链固定为`REQ-005/007/008/009/013 + declared NFR/ENG + SIM-ASSUMPTION-016 → TASK-P4-02 → nine exact-version carriers/samples + pure prechecks → TEST-CONTRACT-001/TEST-EXECUTION-EVENT-CONTRACT-001/TEST-REPLAN-REQUEST-CONTRACT-001/TEST-CHANGE-REPORT-001 → p4-machine-contract-report.v1 + Task report → exact implementation provider → evidence-only closure provider`。Diff base固定`4026597ab1015b5ea3a89d241f0d12b5b481dee3`。Implementation `539cdbbdcdd406daba25b8d6b8caaa5133691e76` / artifact `9636892191`已精确满足SHA、Task、base、12 Impact Rules、19/19 checks、0 issues与digest核验，本closure据此把TASK-P4-02标为`done`；closure自身仍须post-push exact provider。
 
 Machine-carrier formed不等于persistence/behavior formed。P4-03+必须等待本Task双提交闭环与新的明确授权；Production、P5、state transition、event projection、Solver/Simulator和external evidence不得沿该edge推断。
 

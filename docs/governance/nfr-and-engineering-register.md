@@ -14,7 +14,7 @@ registry_version: 1.0.0
 
 ## TASK-P4-02 machine-contract allocation
 
-NFR-COR/DET/TRC/ISO/SEC与ENG-ARCH/ERR/VER现由strict `2.8.0` carriers、offline refs、canonical fingerprints、historical byte freeze、Simulation-only/default-deny和诚实status映射承接机器合同切片。当前证据不包含runtime correctness、distributed reliability、Production isolation deployment或真实security authority；所有root lifecycle继续`ALLOCATED`，dependency/lock与registry format不变。
+NFR-COR/DET/TRC/ISO/SEC与ENG-ARCH/ERR/VER现由strict `2.8.0` carriers、offline refs、canonical fingerprints、historical byte freeze、Simulation-only/default-deny和诚实status映射承接机器合同切片。Implementation `539cdbbdcdd406daba25b8d6b8caaa5133691e76` / artifact `9636892191`已精确验证该机器合同与治理edge并允许本closure把TASK-P4-02标为`done`。证据仍不包含runtime correctness、distributed reliability、Production isolation deployment或真实security authority；所有root lifecycle继续`ALLOCATED`，dependency/lock与registry format不变。
 
 ## TASK-P4-01 contract allocation
 

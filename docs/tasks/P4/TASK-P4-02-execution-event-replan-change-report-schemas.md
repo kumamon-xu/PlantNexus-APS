@@ -1,7 +1,7 @@
 ---
 doc_id: TASK-P4-02
 title: ExecutionEvent Replan and ChangeReport Machine Contracts
-status: in_progress
+status: done
 spec_version: 0.3.0
 phase: P4
 normative: true
@@ -101,7 +101,9 @@ Rollback: 无consumer前可移除additive版本并保留历史记录；一旦消
 
 工程与跨栈验收为：`uv sync --locked`、ruff、pyright、build、Compose、SCA、license、Frontend lint/typecheck/Vite build、67项Vitest、Chromium baseline及两次Gate replay各12项、Frontend Gate `5/5`、i18n evidence `8/8`全部PASS；Frontend证据使用contract要求的npm `11.17.0`。完整registered pytest=`631 passed`。文档治理为`docs=188`、`roots=30`、`trace_rows=30`、`tests=61`、`open=15`、`sim=16`、`risks=17`、`tasks=71`；Task差异治理为`diff_paths=87`、12条matched Impact Rules、19 checks、`issues=[]`，`git diff --check`通过。
 
-相对不可变Diff base `4026597ab1015b5ea3a89d241f0d12b5b481dee3`的87条路径全部落在逐字allow-list；既有Schema/sample bytes、dependency/lock、migration、state pair、业务行为、P5+与Production/external authority/capacity/SLA禁止范围均保持不变。implementation exact SHA、required `validate`、run/job/artifact/digest及closure证据将在provider成功后由evidence-only提交写回；TASK-P4-03不会自动启动。
+相对不可变Diff base `4026597ab1015b5ea3a89d241f0d12b5b481dee3`的87条路径全部落在逐字allow-list；既有Schema/sample bytes、dependency/lock、migration、state pair、业务行为、P5+与Production/external authority/capacity/SLA禁止范围均保持不变。下方写回implementation exact provider事实；TASK-P4-03不会自动启动。
+
+Implementation `539cdbbdcdd406daba25b8d6b8caaa5133691e76`的required `validate` run/job=`33048889370`/`98439288723`由GitHub Actions app `15368`成功提供；branch protection仍精确要求`validate`/app `15368`且`strict=false`。Artifact `9636892191`未过期至2026-11-25T07:14:10Z，digest=`sha256:378fbb47f12d92773e77855eff486d51f67502f610a6578b14549cdade7f5d7b`。下载的45 files/39 JSON精确绑定SHA、TASK-P4-02与Diff base，复现87 committed/0 working paths、12条Impact Rules、36/36 expected/observed documents、19/19 checks、`issues=[]`、P4 machine 8/8、P2/P3 Gate、Frontend/i18n及三轮12/12 Chromium。因此本evidence-only closure把Task标为`done`；closure自身必须post-push取得并核验exact required check/artifact，TASK-P4-03保持`planned`且不会自动启动。
 
 ## Activation evidence
 

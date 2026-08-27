@@ -11,6 +11,10 @@ last_reviewed: 2026-08-24
 
 # Schema 计划索引
 
+## TASK-P3-17 audit conclusion
+
+独立Audit确认schema set `2.7.0`、P2 retained bytes、P3 `2.6.0` workspace carriers、P3 export v2 carriers、samples、strict/offline refs与canonical fingerprints全部回归PASS；本Task没有Schema新增、删除、版本或字节变化。
+
 当前 schema set 为additive `2.6.0`。`CONTRACT_V1/V2/V3`表示机器可验证的合同已形成，不表示ScheduleVersion/ExportJob状态持久化、审批、发布或Production业务动作已完成。此前所有set artifact均保留，未被原地覆盖。
 
 | Schema | 目标路径 | 首个 Task | 状态 |

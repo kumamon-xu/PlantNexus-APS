@@ -12,6 +12,10 @@ registry_version: 1.0.0
 
 # NFR 与工程需求注册表
 
+## TASK-P3-17 audit status
+
+NFR-COR/DET/TRC/ISO/REL/SEC/OBS/PER/HUM与ENG-ARCH/VAL/ERR/VER/LOG的P3切片已由独立审计通过full tests、machine reports、双Gate、双语zero-wire-drift、SCA/license、build、provider topology/content与治理重放验证，结论`READY`、0 gaps。性能和bundle仅是development observation；OPEN-010～012等Production未知项未被关闭。Registry ID、正文、lifecycle与format version均未修改。
+
 ## TASK-P3-15 allocation review
 
 NFR-TRC-001/NFR-PER-001与ENG-ARCH-001/ENG-VER-001连接amendment-owner discovery、base-state fail-closed检查和existing unit/CI evidence；implementation `c84e1aa1a81473f65d9f7906a6d2c67a94e7bb2f` / artifact `9597967232`已精确复验普通/initial规划兼容性与稳定ID rename。该证据只完成治理correctness/maintainability，不形成业务或Exit结论。

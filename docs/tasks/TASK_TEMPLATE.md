@@ -11,6 +11,10 @@ last_reviewed: 2026-08-27
 
 # TASK-Px-yy — Title
 
+## Phase Exit Audit governance note
+
+Exit Audit必须是Milestone最后一项独立Task，冻结全部前序closure后的clean synchronized Diff base；逐项审计提交拓扑、required provider、下载artifact内容、合同/Schema/migration/state/依赖/ADR/测试/质量/治理与阶段边界。审计不得修实现、改断言、重写失败记录或用前序Gate结论替代fresh replay。`READY`要求所有required checks真实PASS且`blocking_gaps=[]`；Task仍须等待自身implementation exact provider，再由evidence-only closure标`done`。provider失败必须撤回READY并在当前Phase建立有界remediation。Exit READY和Task done均不自动切换下一Phase，也不形成Production readiness、approval、publish、UAT或deployment。
+
 ## P3 bilingual localization Task governance note
 
 涉及Frontend本地化时必须先固定locale集合、默认值、本地preference边界、`document.documentElement.lang`与组件库locale同步规则，并引用版本化官方术语源。实现应使用typed/exhaustive dictionary与原生Intl；未知machine value必须显示raw code/reason/state，不能猜译、隐藏或依赖英文message解析。中文只属于展示层，API path/key/operationId/header/body、enum/state/command/error/C-ID、ID/fingerprint/raw UTC与canonical bytes必须零漂移；自由文本、业务编码和credential不得机器翻译或持久化到locale preference。默认不得增加dependency；如确需新增必须先停止、扩卡并完成exact pin/lock/SCA/license/peer与ADR影响审查。Task须逐字列出Frontend source/test/Playwright/report/可选additive CI路径，建立双语coverage、accessibility、unknown fallback和wire-drift machine evidence，并分别核验implementation/closure exact provider。最终P3 Exit Audit必须由独立后继Task执行，本地化Task不得自审Exit或进入P4/Production。

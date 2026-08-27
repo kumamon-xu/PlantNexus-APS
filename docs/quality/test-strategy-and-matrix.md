@@ -12,6 +12,10 @@ registry_version: 1.0.0
 
 # 测试策略与 Test Matrix
 
+## TASK-P3-17 independent replay conclusion
+
+49个registered Test ID保持不变；Exit Audit未改断言，而是fresh运行621 Python、67 Vitest、36 Chromium executions、全部P1/P2/P3 machine、migration、P2/P3双Gate、双语8/8、SCA/license/build与negative boundaries，结果`READY`/0 gaps。历史失败provider仍是负证据，Simulation PASS不外推Production。
+
 ## TASK-P3-15 governance test allocation
 
 TEST-TRACEABILITY-VALIDATOR与TEST-PHASE-GOVERNANCE-001增加phase-plan amendment覆盖：既存owner+rename+new planned members成功；base中done成员即使被降级为planned也拒绝；deleted-only逻辑Task拒绝；repository discovery必须读取event-base状态。首次phase-planning owner与普通单Task测试保持回归。Implementation `c84e1aa1a81473f65d9f7906a6d2c67a94e7bb2f` / artifact `9597967232`已精确复验该治理slice。

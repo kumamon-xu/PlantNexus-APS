@@ -11,19 +11,23 @@ last_reviewed: 2026-08-27
 
 # 动态重排设计合同
 
+## TASK-P3-17 phase boundary
+
+P3 Exit本地READY只覆盖Planning Workspace；ExecutionEvent、ReplanRequest、freeze window、OBJ-002 Stability、ChangeReport和Execution Simulator仍属于P4且未授权、未创建详细Task、未实现。任何P3编辑仍是显式command→new DRAFT，不是dynamic replan。
+
 ## TASK-P3-16 localization / P4 boundary
 
 双语展示只本地化现有P3 workspace术语，没有新增ExecutionEvent、ReplanRequest、freeze window、OBJ-002、ChangeReport、Execution Simulator或任何P4 route/action。中文“移动/重新分配/锁定”仍只是P3 copy-on-write command label，不是dynamic replan。TASK-P3-16 implementation已取得exact provider；TASK-P3-17最终审计后P3也不会自动进入P4，当前P4仍完全未启动。
 
 ## TASK-P3-14 boundary Gate
 
-P3 Gate只重放P3 copy-on-write manual command与publication链，并证明PUBLISHED不能原地mutation；它不消费ExecutionEvent、不生成ReplanRequest/ChangeReport、不实现freeze/OBJ-002或ExecutionSimulator。最终TASK-P3-17仍须独立审计，P4只有另行phase transition授权后才能启动。
+P3 Gate只重放P3 copy-on-write manual command与publication链，并证明PUBLISHED不能原地mutation；它不消费ExecutionEvent、不生成ReplanRequest/ChangeReport、不实现freeze/OBJ-002或ExecutionSimulator。最终TASK-P3-17已完成本地独立审计并等待provider闭环，P4只有另行phase transition授权后才能启动。
 
 ## TASK-P3-13 P3/P4 boundary review
 
 Gantt drag/move/assign/lock是对单一immutable ScheduleVersion的人工command proposal，经既有P3-06 fresh Validator产生new DRAFT；它不读取ExecutionEvent、不生成ReplanRequest、不计算freeze window/OBJ-002/Stability/ChangeReport，也不调用Solver。UI的“refresh authority”仅重读Version/Job，不是replan trigger。
 
-P3-14已完成有界Gate，P3-15已完成修订治理，P3-16已完成双语实现provider复验；在P3-17独立Audit完成前仍不能形成P3 Exit。P4 dynamic replanning完全未启动；PUBLISHED immutable且rollback只能以新Version/command表达，不能修改执行事实或历史发布。
+P3-14已完成有界Gate，P3-15已完成修订治理，P3-16已完成双语实现双提交provider复验；P3-17已完成本地独立Audit但在自身provider闭环前仍不能形成可关闭的P3 Exit。P4 dynamic replanning完全未启动；PUBLISHED immutable且rollback只能以新Version/command表达，不能修改执行事实或历史发布。
 
 ## 输入
 

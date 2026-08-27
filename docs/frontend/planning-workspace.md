@@ -11,13 +11,17 @@ last_reviewed: 2026-08-27
 
 # P3 Planning Workspace 页面与只读视图合同
 
+## TASK-P3-17 audit conclusion
+
+18条P3 route、seven-state rendering、Gantt/Resource Load/KPI/Diagnostics/Comparison、virtual table fallback、server filters与authority/lineage visibility已独立PASS。两种locale各243 keys且raw machine values保持英文；未知值显式fallback，不形成P4 page或Production能力。
+
 ## TASK-P3-16 localization overlay
 
 TASK-P3-16已在既有route/page/component/action之上应用[`official-zh-cn-terminology.v1`](official-zh-cn-terminology-map.md)：默认中文、可切换/刷新恢复英文，状态、空/缺失/错误、Gantt、Resource Load、Comparison、Audit和human-control文本均通过typed key双语显示且可访问。未知state/code/reason保留raw值并显式失败；raw UTC、ID、lineage与fingerprint不被翻译或隐藏。该overlay未新增route、读取模型、action、客户端计算或server authority；unit/browser/machine evidence已由exact implementation provider复验。
 
 ## TASK-P3-14 workspace browser replay
 
-TASK-P3-14已单独授权并以两轮isolated Chromium重放P3-13的read、visualization、command、decision、publication、export与failure visibility。Gate只检查server-authority及两轮语义一致，未修改页面、route、carrier、action或accessibility断言；在该Gate形成时P3-16/P3-17均为`planned`。当前P3-15治理与P3-16本地化均为`done`，P3-16 closure provider待核；P3-17仍为`planned`，P4与Production未形成。
+TASK-P3-14已单独授权并以两轮isolated Chromium重放P3-13的read、visualization、command、decision、publication、export与failure visibility。Gate只检查server-authority及两轮语义一致，未修改页面、route、carrier、action或accessibility断言；在该Gate形成时P3-16/P3-17均为`planned`。当前P3-15治理与P3-16本地化均为`done`且双提交provider完整；P3-17已完成本地独立Audit并等待自身provider闭环，P4与Production未形成。
 
 ## TASK-P3-13 control composition
 

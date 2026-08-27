@@ -11,6 +11,10 @@ last_reviewed: 2026-08-27
 
 # PlanningRun 状态机
 
+## TASK-P3-17 audit conclusion
+
+P3 application链只消费已完成且validated的P2 PlanningRun lineage，未新增或修改PlanningRun state/pair，也未在workspace service中调用Solver。P2 regression与P3 Gate均PASS；P4 execution/replan state未形成。
+
 ## TASK-P3-16 display-boundary review
 
 PlanningRun页面名称和既有state已按`official-zh-cn-terminology.v1`显示`zh-CN`/`en-US` label，但PlanningRun enum、carrier、repository、worker、allowed pairs与Solver lifecycle继续使用英文machine value；未知state显示raw值并fail visibly。Locale切换不触发run、retry、transition或重新计算。Typed coverage/zero-wire-drift evidence已由exact implementation provider复验；PlanningRun实现、Schema和state pair零变化，TASK-P3-17最终独立审计。

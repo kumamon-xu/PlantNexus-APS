@@ -11,9 +11,13 @@ last_reviewed: 2026-08-27
 
 # Frontend 文档形成计划
 
+## TASK-P3-17 audit conclusion
+
+P3 Frontend已由67项Vitest、三组Chromium各12/12、SCA/license、build与machine evidence独立复验；18 routes、human controls、read-only visualizations和双语display均PASS。TASK-P3-17只审计冻结实现，不增加P4 route、client Solver/Validator或Production authority。
+
 ## TASK-P3-16 bilingual implementation boundary
 
-[`official-zh-cn-terminology.v1`](official-zh-cn-terminology-map.md)是P3展示层唯一官方中文术语基线。TASK-P3-16以`1636fe9c909b728d49f9907ed9f53030b5921914`为Diff base实现默认`zh-CN`、可切换/恢复`en-US`、非敏感locale preference、document/Ant Design locale同步、typed词典、Intl格式、unknown raw fallback及双语accessibility/browser证据。API path/key/operationId、state/command/error/C-ID、ID/fingerprint/raw UTC与canonical bytes继续为英文机器合同，严禁从中文label反向构造request。67项Vitest、三组各12/12 Chromium与8/8 i18n machine checks已由implementation artifact `9629193057`复验；dependency/lock零差异。TASK-P3-17在其后最终独立审计且未启动。
+[`official-zh-cn-terminology.v1`](official-zh-cn-terminology-map.md)是P3展示层唯一官方中文术语基线。TASK-P3-16以`1636fe9c909b728d49f9907ed9f53030b5921914`为Diff base实现默认`zh-CN`、可切换/恢复`en-US`、非敏感locale preference、document/Ant Design locale同步、typed词典、Intl格式、unknown raw fallback及双语accessibility/browser证据。API path/key/operationId、state/command/error/C-ID、ID/fingerprint/raw UTC与canonical bytes继续为英文机器合同，严禁从中文label反向构造request。67项Vitest、三组各12/12 Chromium与8/8 i18n machine checks已由implementation/closure provider复验；dependency/lock零差异。TASK-P3-17已依据后续明确授权完成本地独立审计，正等待自身provider闭环。
 
 ## TASK-P3-14 browser Gate
 

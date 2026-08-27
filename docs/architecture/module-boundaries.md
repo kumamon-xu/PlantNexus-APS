@@ -11,6 +11,10 @@ last_reviewed: 2026-08-26
 
 # 模块边界与依赖规则
 
+## TASK-P3-17 audit conclusion
+
+Domain/application ports、SQLAlchemy adapters、thin HTTP router、Frontend consumer、export worker与formal Validator依赖方向经source/machine/full tests复验；router/UI无business transition或Solver调用，publication与export worker保持分离。Audit没有改变模块或依赖锁。
+
 ## TASK-P3-14 evidence-orchestrator boundary
 
 新增`app.application.p3_gate_report`只编排P3-02～10既有公开machine boundaries、P2 Gate和Frontend Gate文件，不得从Gate层实现repository、state、Solver/Validator、API或UI行为。既有application import guard为该文件逐字允许`app.api.planning_workspace_check`与`app.infrastructure.workspace_persistence_check`两个只读machine-check入口，除此之外仍全部禁止；该窄例外与P2 Gate同属evidence orchestration，不是业务依赖。Frontend Node脚本只解析Playwright与P3-13 evidence并生成稳定报告；没有反向业务依赖、Schema、migration或runtime service增加。

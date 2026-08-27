@@ -11,6 +11,10 @@ last_reviewed: 2026-08-21
 
 # Validator Mutation Test 规范
 
+## TASK-P3-17 audit conclusion
+
+C-001～C-011 positive/negative、13个validator mutation与P3 four exact rejection均重新执行并fail closed；没有修改mutation formula、C-ID、expected error或Validator实现。P3 Exit本地READY仍受provider闭环约束。
+
 Mutation Test 从一个已知合法计划出发，单次或受控组合地注入错误，证明 Validator 不依赖 Solver 的自我声明。
 
 | Mutation | 期望 Constraint |

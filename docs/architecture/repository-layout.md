@@ -11,6 +11,10 @@ last_reviewed: 2026-08-27
 
 # 目标仓库结构
 
+## TASK-P3-17 audit conclusion
+
+Exit Audit只新增P3 report/manifest并同步既有治理Markdown；业务、Schema、migration、dependency、tests、workflow与Frontend implementation相对Diff base零差异。下载和本地machine evidence继续位于ignored `build/**`，未写入正式源目录。
+
 ## TASK-P3-16 localization layout delta
 
 本Task新增`frontend/src/i18n/`八个typed locale/registry/formatter/coverage模块、三份focused Vitest、一个双语Playwright spec及`frontend/scripts/i18n-evidence.mjs`，并有界修改既有P3页面、控件、两份E2E、style和required workflow的additive evidence step。`build/validation`与browser/provider输出保持ignored；未新增route、backend、Schema、migration、dependency/lock、P4或Production目录。Implementation exact provider已复验该79-path边界，本closure不新增业务路径。
@@ -121,7 +125,7 @@ TASK-P1-02在既有`schemas/json`/`schemas/samples`边界新增canonical-records
 
 ## P3 layout allocation history
 
-P3 transition时只新增`docs/tasks/P3/`中的16张Task卡；当时没有创建backend、schema、migration、frontend或workflow路径。后续P3-01形成docs/ADR，P3-02负责Schema/contracts，P3-03负责persistence/migration，P3-04～10负责application/API/jobs/exporters；P3-11形成Frontend read-only foundation，P3-12形成read-only visualization/browser slice，P3-13形成human-control E2E，P3-14形成有界Gate evidence。当前P3卡总数为18张：P3-15治理owner与P3-16双语展示均为`done`，P3-16 closure provider待核，P3-17为planned/final Audit；正式Markdown总数不因本实现变化。
+P3 transition时只新增`docs/tasks/P3/`中的16张Task卡；当时没有创建backend、schema、migration、frontend或workflow路径。后续P3-01形成docs/ADR，P3-02负责Schema/contracts，P3-03负责persistence/migration，P3-04～10负责application/API/jobs/exporters；P3-11形成Frontend read-only foundation，P3-12形成read-only visualization/browser slice，P3-13形成human-control E2E，P3-14形成有界Gate evidence。当前P3卡总数为18张：P3-15治理owner与P3-16双语展示均为`done`且provider完整，P3-17为`LOCAL_READY_PROVIDER_PENDING`的final Audit；新增正式Exit报告后Markdown总数为169。
 
 ## TASK-P3-11 Frontend layout
 

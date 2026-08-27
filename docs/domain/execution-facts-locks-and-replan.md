@@ -11,6 +11,10 @@ last_reviewed: 2026-08-24
 
 # 执行事实、锁定与重排边界
 
+## TASK-P3-17 phase boundary
+
+P3只审计既有execution fact/hard lock作为P2输入以及workspace lock command的copy-on-write行为；没有接入新ExecutionEvent、事实覆盖、freeze window、dynamic replan或ChangeReport。P4仍需新的明确phase transition与Task规划。
+
 ## 执行状态
 
 COMPLETED Operation 不进入未来排程，其 actual facts 保留。RUNNING Operation 必须保留：

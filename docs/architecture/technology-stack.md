@@ -11,6 +11,10 @@ last_reviewed: 2026-08-27
 
 # 推荐技术栈与锁定规则
 
+## TASK-P3-17 audit conclusion
+
+CPython `3.12.13`、uv `0.11.32`、OR-Tools `9.15.6755`、Node `24.19.0`、npm `11.17.0`及Frontend exact direct pins（含`typescript-eslint 8.68.0`）已按lock/SCA/license/build/provider证据复验。Audit未升级dependency或lock；point-in-time PASS不等于Production供应链持续保证。
+
 ## TASK-P3-16 localization stack boundary
 
 TASK-P3-16已使用仓库内强类型versioned dictionaries、已锁定Ant Design自带`zhCN/enUS` locale和浏览器原生Intl实现展示层双语；没有增加i18n dependency，`frontend/package.json`/lock保持零差异。243个dictionary keys、139个注册机器值与8项machine checks已由exact implementation provider复验。如未来确需新依赖，必须先停止并独立修订Task卡，完成exact pin、lock、SCA、license与React/Ant/TypeScript peer compatibility审查。展示层不得增加Accept-Language后端协商或改英文wire contract。

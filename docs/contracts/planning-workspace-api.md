@@ -11,6 +11,10 @@ last_reviewed: 2026-08-27
 
 # P3 Planning Workspace API 语义合同
 
+## TASK-P3-17 audit conclusion
+
+18个operation（17个frozen P3-10 + 1个bounded verified download）的path/header/body/error/correlation/idempotency与server delegation完成zero-drift复验：18 delegations、0 router transition、0 Solver/Validator调用、0 Production provider lookup/application call。P3 Exit本地READY不形成external API authority。
+
 ## TASK-P3-16 localization boundary
 
 TASK-P3-16双语已只实现于Frontend display adapter。Route、JSON key、Schema/URN/version、OpenAPI `operationId`、query/command discriminator、state/error/C-ID、HTTP status、fingerprint/idempotency和response bytes逐字不变；请求仍发送`APPROVE`、`READY_FOR_REVIEW`等英文机器值。P3没有增加`Accept-Language`协商或中文API字段/枚举。UI按error namespace/code/reason映射官方术语并保留raw/correlation，未知值fail visibly；zero-wire-drift evidence已由exact implementation provider复验。规范来源为[`official-zh-cn-terminology.v1`](../frontend/official-zh-cn-terminology-map.md)。
@@ -148,7 +152,7 @@ action scope至少包含data plane、action、resource/version、target和key；
 
 ## 测试分配
 
-TASK-P3-01只形成文档合同；TASK-P3-02现以`test_p3_workspace_contracts.py`形成`TEST-CONTRACT-001`与`TEST-WORKSPACE-CONTRACT-001`的machine carrier slice，并复验`TEST-STATE-TRANSITION-001`/`TEST-ERROR-MAPPING-001`既有集合未漂移。P3-05～10形成read/command/API behavior，P3-13形成用户可见E2E，P3-14复验Gate；P3-16 display-only本地化已取得exact implementation provider并标为`done`，P3-17最终独立Audit仍`planned`。P3-15为治理支持，不是API/Audit实现。
+TASK-P3-01只形成文档合同；TASK-P3-02现以`test_p3_workspace_contracts.py`形成`TEST-CONTRACT-001`与`TEST-WORKSPACE-CONTRACT-001`的machine carrier slice，并复验`TEST-STATE-TRANSITION-001`/`TEST-ERROR-MAPPING-001`既有集合未漂移。P3-05～10形成read/command/API behavior，P3-13形成用户可见E2E，P3-14复验Gate；P3-16 display-only本地化已取得exact双提交provider并标为`done`，P3-17最终独立Audit为`LOCAL_READY_PROVIDER_PENDING`。P3-15为治理支持，不是API/Audit实现。
 
 ## TASK-P3-02 machine carrier realization
 

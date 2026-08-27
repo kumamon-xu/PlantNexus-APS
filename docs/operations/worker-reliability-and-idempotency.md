@@ -11,6 +11,10 @@ last_reviewed: 2026-08-26
 
 # P0 Worker Reliability 与 Idempotency
 
+## TASK-P3-17 audit conclusion
+
+ExportJob create/claim/lease/heartbeat/failure/retry/cancel/recovery、same-key replay/conflict、manifest-last atomicity与worker/publish separation均独立PASS。没有分布式Production capacity、external target或SLA结论。
+
 ## TASK-P3-14 replay/retry Gate
 
 两轮Gate复验command/decision/publication/export的same-key same-result、conflict fail closed、ExportJob显式retry与terminal immutability，同时确保每轮isolated state不串扰。Gate不增加worker、broker、lease策略或distributed exactly-once承诺；unknown-outcome与Production external retry仍受既有边界约束。

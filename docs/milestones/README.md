@@ -11,6 +11,10 @@ last_reviewed: 2026-08-27
 
 # Milestone 索引
 
+## TASK-P3-17 local Exit decision
+
+TASK-P3-17已独立重放全部P3 predecessor topology/provider contents、合同/Schema/migration/state/authorization/publication/export/API/Frontend/双语/质量/治理证据。[P3 Exit report](P3-exit-gate-audit-report.md)与[machine manifest](P3-exit-gate-evidence-manifest.json)当前一致给出`READY`、`blocking_gaps=[]`；P3-00～16保持`done`，4个历史失败run与corrective链保持原样。Audit implementation provider尚未发生，因此TASK-P3-17仍为`in_progress`，P3仍`active`；P4与Production未启动。
+
 ## TASK-P3-15 amendment-governance closure
 
 用户于2026-08-26批准P3末段编号方案。TASK-P3-15从clean synchronized `06e7f794f486ac34c505237b847462c7c7c36d44`启动，只实现阶段计划修订owner、rename/成员/base状态保护与治理回归。Implementation `c84e1aa1a81473f65d9f7906a6d2c67a94e7bb2f`的run/job/artifact=`32944633958`/`98102640242`/`9597967232`精确成功并下载复核26/0/5/19/0，因此本closure原子登记planned TASK-P3-16本地化和planned/final TASK-P3-17 Audit。P3保持`active`，P3-00～14与全部失败/成功provider历史不改写，P4和Production未启动。
@@ -19,7 +23,7 @@ last_reviewed: 2026-08-27
 
 用户于2026-08-26单独授权TASK-P3-14；P3-01～13的done状态、ancestry、26组implementation/closure exact required provider及clean synchronized `6a3e02f00bf46f19915cb59c3c4af7daaac95be4`均复核通过，该SHA冻结为Diff base。P3 Milestone继续`active`；后续Task/P4/Production不自动启动。
 
-完整local Gate为616 Python、54 Vitest、基础/双Gate Chromium各12/12、Backend 18 stages/144 subordinate checks、Frontend 5/5、四类exact rejection、Python 14/14、全部machine/P2 XS/Gate/Compose/build与Task 56/8/19/0，且0 blocking gaps。首个implementation `0617141e411eea146cd9fc1c512ade900710be7c`的run/job=`32930677030`/`98062166642`因test fixture未绑定provider SHA而失败（611/5，artifact count=0）；负证据保留。Corrective `54a25646053979a69734a3148030830d49c04c1e`的run/job/artifact=`32931418903`/`98064264595`/`9593460266`全绿并复现37 JSON与Task 56/0/8/19/0，故P3-14=`done`。Milestone保持`active`，最终TASK-P3-17仍`planned`。
+完整local Gate为616 Python、54 Vitest、基础/双Gate Chromium各12/12、Backend 18 stages/144 subordinate checks、Frontend 5/5、四类exact rejection、Python 14/14、全部machine/P2 XS/Gate/Compose/build与Task 56/8/19/0，且0 blocking gaps。首个implementation `0617141e411eea146cd9fc1c512ade900710be7c`的run/job=`32930677030`/`98062166642`因test fixture未绑定provider SHA而失败（611/5，artifact count=0）；负证据保留。Corrective `54a25646053979a69734a3148030830d49c04c1e`的run/job/artifact=`32931418903`/`98064264595`/`9593460266`全绿并复现37 JSON与Task 56/0/8/19/0，故P3-14=`done`。在该closure时Milestone保持`active`，最终TASK-P3-17仍`planned`；当前状态由本页顶部P3-17 Audit段落覆盖。
 
 ## TASK-P3-13 evidence closure
 
@@ -48,7 +52,7 @@ P1当前状态：[`P1 — Data & Snapshot`](P1-data-and-snapshot.md)为`complete
 
 P2当前状态：[`P2 — CP-SAT Vertical Slice`](P2-cp-sat-vertical-slice.md)为`completed`。TASK-P2-00～14均已闭环为`done`；P2 Exit Gate=`READY`且0 gaps。用户于2026-08-24在复核exact provider evidence、提交拓扑与clean synchronized baseline后明确批准P2→P3。
 
-P3当前状态：[`P3 — Planning Workspace`](P3-planning-workspace.md)为`active`。TASK-P3-00～16均为`done`；TASK-P3-16 Diff base=`1636fe9c909b728d49f9907ed9f53030b5921914`且implementation `b3ba999e83f4e8b0f96c7ce5bc72eba01432d791`的required provider已exact复验，本closure自身仍须provider复验；TASK-P3-17为`planned`/final independent Exit Audit。P3 Gate、HTTP/internal Simulation export、Frontend或治理provider evidence均不表示external、P4或Production。
+P3当前状态：[`P3 — Planning Workspace`](P3-planning-workspace.md)为`active`。TASK-P3-00～16均为`done`；TASK-P3-16 implementation/closure provider均已exact复验。TASK-P3-17为`in_progress`/final independent Exit Audit，本地判定为`READY`且0 gaps，等待自身implementation/closure provider闭环。该结论不自动切换P4，也不表示external、Production readiness、approval、publish、UAT或deployment。
 
 TASK-P3-04 implementation `a9be974855bb825784d639b7f6675e5a33e4273d`的run/job/artifact=`32700005280`/`97349447107`/`9510215582`精确复现35 focused、515 full、8/8 lifecycle、23/23 JSON PASS与45 committed/0 working paths、8 rows、19 checks、0 issues，故本closure标为`done`。该证据只形成reviewable ScheduleVersion，不形成approval、publish、P4或Production readiness。
 

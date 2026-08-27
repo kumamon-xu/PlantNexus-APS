@@ -11,6 +11,10 @@ last_reviewed: 2026-08-26
 
 # P3 Authorization Capability 与 Audit 合同
 
+## TASK-P3-17 audit conclusion
+
+独立Audit复验server-derived capability/scope、Production pre-provider default-deny、success/denial append-only audit、redaction、idempotency/CAS/rollback与concurrent single-winner均PASS。OPEN-010保持OPEN；本地`READY`不确定真实审批责任或Production identity。
+
 ## TASK-P3-14 authorization/audit Gate
 
 两轮Gate复验authority-neutral capability、default-deny、actor/reason/correlation/idempotency与append-only audit link，并检查四类exact rejection的stage/category/code。它不创建真实identity或Production approval/publish authority；OPEN-010及全部PROD_OPEN保持未关闭，任何旁路或raw evidence不一致均阻断Gate。

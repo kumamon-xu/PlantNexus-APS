@@ -11,6 +11,10 @@ last_reviewed: 2026-08-27
 
 # CI Gate 与 Definition of Done
 
+## TASK-P3-17 audit conclusion
+
+本地required-equivalent已通过locked install、Ruff、Pyright、621 pytest、67 Vitest、三组12/12 Chromium、33 machine reports、P2 11/11、P3 14/14、SCA/license、Compose与双build；前序provider chain也已下载核验。TASK-P3-17仍须自身implementation exact `validate`/artifact与evidence-only closure provider后才满足DoD；本地READY不能替代provider。
+
 ## TASK-P3-15 required governance Gate
 
 Workflow不修改，继续把push event `before`传给`--discover-task-from`。本Task的required `validate`必须由changed TASK-P3-15 owner归属并复验治理unit suite、full docs与owner Diff base范围；artifact中的Task report须绑定exact SHA、`06e7f794f486ac34c505237b847462c7c7c36d44`、五个Impact Rules、19/19 checks和`issues=[]`。

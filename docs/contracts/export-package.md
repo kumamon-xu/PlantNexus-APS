@@ -11,6 +11,10 @@ last_reviewed: 2026-08-26
 
 # 标准成果包合同
 
+## TASK-P3-17 audit conclusion
+
+P3 standard package的12 payload、manifest-last、canonical JSON/CSV/XLSX bytes、lineage/hash、exact replay/conflict/partial cleanup及EXPORTED-only verified download已独立复验PASS。P4 ChangeReport仍deferred，internal Simulation package不等于external或Production publish。
+
 ## TASK-P3-14 export Gate
 
 Gate严格消费P3-09 ExportJob/standard package与P3-13 verified internal download evidence，复验仅PUBLISHED source可export、same-key replay与package lineage，并保留P2 output Gate regression。它不改变export schema/profile/bytes、external target或storage；unpublished Version export必须精确返回`STALE_SOURCE`并且无副作用。

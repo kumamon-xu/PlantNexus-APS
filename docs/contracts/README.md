@@ -11,6 +11,10 @@ last_reviewed: 2026-08-26
 
 # 合同文档索引
 
+## TASK-P3-17 contract audit conclusion
+
+P3 Exit独立重放确认P2 frozen contracts、P3 workspace `2.6.0`、export `2.7.0`、state/error/capability、HTTP与Frontend wire合同均PASS且相对Diff base零变化。审计为`READY`/0 gaps但provider pending；不形成P4 carrier、external contract或Production authority。
+
 ## TASK-P3-14 contract aggregation
 
 `p3-vertical-slice-report.v1`是internal Gate machine report，不增加Business schema set或外部API版本。它严格消费P3-02～13已发布carrier/报告以及P2 Gate，保留raw evidence并以`p3-gate-semantic-projection.v1`比较两次fresh replay；任何version/task/check/count、语义或拒绝映射漂移均fail closed。Schema set继续为`2.7.0`，没有migration、dependency或合同行为变更。

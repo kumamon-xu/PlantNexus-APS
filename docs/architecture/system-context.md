@@ -11,6 +11,10 @@ last_reviewed: 2026-08-19
 
 # 系统上下文
 
+## TASK-P3-17 audit conclusion
+
+P3 Exit只验证内部Planning Workspace和Simulation publish/export边界；外部ERP/MES、Production identity/authority、真实工厂source与deployment均继续位于系统边界之外。TASK-P3-17本地READY不改变context ownership。
+
 ## 系统职责
 
 PlantNexus APS 接收来自业务权威系统的计划输入，形成不可变快照和 Solver-neutral PlanningProblem，生成并独立验证计划草案，经计划员批准后发布至 MES 或标准成果包。异常与执行事实进入新快照并产生新 ScheduleVersion，历史版本不被覆盖。

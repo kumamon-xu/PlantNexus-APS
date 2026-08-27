@@ -11,6 +11,10 @@ last_reviewed: 2026-08-27
 
 # 独立 ScheduleValidator 合同
 
+## TASK-P3-17 audit conclusion
+
+formal Validator独立性、C-001～C-011 positive/negative、每个P3 command新DRAFT与submit前fresh validation、solver status不受信任、PUBLISHED immutability及Validator-fail rejection均经P2/P3 Gate独立PASS。Audit没有修改公式、C-ID或测试断言。
+
 ## TASK-P3-16 localization non-authority boundary
 
 Validator的C-001～C-011、PASS/FAIL、product code、report bytes与计算公式继续是英文机器合同；TASK-P3-16已依据`official-zh-cn-terminology.v1`实现双语label/说明并保留raw C-ID、code、details与correlation。UI不根据中文文案重新判断可行性或把unknown映射为PASS/FAIL。Coverage/zero-wire-drift tests已由exact implementation provider复验；Validator、断言、fixture和expected零变化，最终由TASK-P3-17独立复验。

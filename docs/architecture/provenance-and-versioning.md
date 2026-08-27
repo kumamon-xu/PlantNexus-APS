@@ -11,6 +11,10 @@ last_reviewed: 2026-08-26
 
 # Provenance 与版本规则
 
+## TASK-P3-17 audit conclusion
+
+39个P3提交、35个成功run、4个历史失败run、36个artifact及1010份JSON的SHA/Task/Diff base/provider/Impact/check/issue链已独立核验；失败事实和corrective新SHA均保留。Schema `2.7.0`、migration `0004`、terminology v1与raw fingerprints保持可追溯，P4/Production provenance未形成。
+
 ## TASK-P3-14 Gate provenance
 
 `p3-vertical-slice-report.v1`绑定Task、不可变Diff base、当前code commit、13个前序closure SHA、P2/Frontend报告摘要和每轮raw subreport。两轮业务语义由canonical `p3-gate-semantic-projection.v1`摘要交叉验证；runtime timing与其派生ID只在projection中显式排除，并发审批合法线程交错只在逐值验证后归一化，raw事实不删改。Implementation/closure provider必须分别绑定各自exact SHA，不能互相替代。
@@ -243,7 +247,7 @@ Provider run `32465737712` / job `96721819879` / artifact `9440650646`把Gate、
 
 ## P3 provenance plan
 
-每个P3 ScheduleVersion必须保留Snapshot/Problem/Solution/Validation/Policy/Solver/KPI/code/schema lineage；comparison、command、decision、publish和export再追加source/target version、actor capability、reason、correlation/idempotency key与append-only audit identity。TASK-P3-14 Gate、TASK-P3-15治理、未来P3-16本地化与P3-17 Audit的每份报告和implementation/closure artifact都必须精确绑定各自SHA；locale preference/label不得改变ID、fingerprint、raw UTC、code或canonical bytes，后续closure也不能覆盖原始/失败provider事实。
+每个P3 ScheduleVersion必须保留Snapshot/Problem/Solution/Validation/Policy/Solver/KPI/code/schema lineage；comparison、command、decision、publish和export再追加source/target version、actor capability、reason、correlation/idempotency key与append-only audit identity。TASK-P3-14 Gate、TASK-P3-15治理、P3-16本地化与P3-17 Audit的每份报告和implementation/closure artifact都必须精确绑定各自SHA；locale preference/label不得改变ID、fingerprint、raw UTC、code或canonical bytes，后续closure也不能覆盖原始/失败provider事实。
 
 TASK-P3-01把P3 carrier链固定为：`schedule-version.v1`引用P2 fingerprints；query/comparison引用exact Version/content；command引用source/expected state/content和request fingerprint；new DRAFT引用parent/Validation/audit；decision/publication引用before/after、actor capability、reason、target和idempotency result；ExportJob/manifest引用PUBLISHED Version、attempt和artifact hashes。七份机器Schema/URN只有P3-02发布后才形成。
 

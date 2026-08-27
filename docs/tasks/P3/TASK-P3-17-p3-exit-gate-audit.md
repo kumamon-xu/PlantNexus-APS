@@ -1,12 +1,12 @@
 ---
 doc_id: TASK-P3-17
 title: P3 Exit Gate Audit
-status: planned
+status: in_progress
 spec_version: 0.3.0
 phase: P3
 normative: true
 source_sections: [33, 34, 66, 67, 68, 69, 77, 78, 86, 87, 94, 100, 106, 110, 111]
-last_reviewed: 2026-08-26
+last_reviewed: 2026-08-27
 ---
 
 # TASK-P3-17 — P3 Exit Gate Audit
@@ -27,9 +27,13 @@ Non-goals: 不修复任何本地化、业务、Schema、test、workflow或depend
 
 Inputs: TASK-P3-00～16 cards/implementation/closure provider链、P3 Gate raw artifacts、`official-zh-cn-terminology.v1`与TASK-P3-16 bilingual artifacts、Milestone/总规Gate、全部OPEN/SIM/RISK边界。
 
-Diff base: set only when this Task enters in_progress; must be the immediate full 40-character HEAD
+Diff base: 0933e10760096cdf8e812b2d41b34916e9db5750
 
-Files allowed to change: `docs/milestones/P3-exit-gate-audit-report.md`、`docs/milestones/P3-exit-gate-evidence-manifest.json`、`docs/current_phase.md`、`docs/milestones/P3-planning-workspace.md`、`docs/milestones/README.md`、`docs/tasks/P3/TASK-P3-17-p3-exit-gate-audit.md`、`docs/tasks/README.md`及`Documents to update`中的明确审计/治理文档与ignored `build/validation/TASK-P3-17-*`、`build/traceability/TASK-P3-17-report.json`。
+Activation evidence: 用户于2026-08-27明确授权执行TASK-P3-17。启动复核确认`main=origin/main=remote main=0933e10760096cdf8e812b2d41b34916e9db5750`、ahead/behind=`0/0`且working tree clean；TASK-P3-00～16全部为`done`。TASK-P3-16 implementation `b3ba999e83f4e8b0f96c7ce5bc72eba01432d791`与evidence-only closure `0933e10760096cdf8e812b2d41b34916e9db5750`为直接父子提交；closure run/job/artifact=`33028998495`/`98376876640`/`9629623182`均exact success，artifact未过期，digest=`sha256:e1aaab824dd529459e986b2a8ea1bd0e643ac5cc8ba5fa8849727faf365861ba`。下载复核44个文件/38份JSON、i18n 8/8、两个locale各243 keys、139 machine values、三组Playwright各12 expected/0 unexpected、P3 Gate 14/14/0 gaps及Task 79/0/6/19/0均一致。该完整HEAD据此冻结为不可变Diff base；本Task只独立审计，P4与Production继续禁止。
+
+Local independent audit result: `READY`，`blocking_gaps=[]`。39个P3 push SHA/39个required `validate` check-run（35 success、4历史failure）、36个未过期artifact与下载的1052文件/1010 JSON均已逐项核验；successful chain为0 parse error、0 SHA mismatch、0顶层failure、0 issue、0 gap。621 Python、67 Vitest、三组Chromium各12/12、i18n 8/8、P2 Gate 11/11、P3 Gate 14/14与双Backend/双Chromium replay、migration/Compose/SCA/license/build/docs/scope检查全部通过。详见`docs/milestones/P3-exit-gate-audit-report.md`与machine manifest。Task保持`in_progress`直至audit implementation exact provider成功并以evidence-only closure回填；任何provider失败必须撤回READY。
+
+Files allowed to change: `docs/milestones/P3-exit-gate-evidence-manifest.json`、`Documents to update`中的逐字路径、ignored `build/validation/TASK-P3-17-*`、`build/validation/ci-p3-planning-workspace-api.json`、`build/benchmarks/TASK-P3-17-xs.json`、`build/playwright/**`、`build/provider-evidence/TASK-P3-17-predecessors/**`、`build/traceability/TASK-P3-17-report.json`及build产物`dist/**`、`frontend/dist/**`。除这些路径外不得新增或修改任何文件；发现新Impact Rule时须先同步本卡再继续。
 
 Files forbidden to change: `backend/**`、`schemas/**`、`frontend/**`、migrations、fixtures/benchmarks、scripts/workflow、dependencies/locks、ADRs、P3-00～16前置历史卡/evidence、P4详细Task与所有Production部署/授权材料。
 
@@ -39,11 +43,11 @@ Outputs: P3 Exit audit report、machine manifest、provider download/topology清
 
 Documentation impact: required
 
-Documents to update: `docs/current_phase.md`、`docs/milestones/P3-planning-workspace.md`、`docs/milestones/README.md`、`docs/tasks/README.md`、`docs/contracts/README.md`、P3直接合同/Frontend/state/architecture/operations/quality结论、全部governance registries/trace/impact/inventory/docs consistency、`docs/tasks/TASK_TEMPLATE.md`、本Task卡与两份audit载体。
+Documents to update: `README.md`、`docs/README.md`、`docs/current_phase.md`、`docs/milestones/P3-planning-workspace.md`、`docs/milestones/P3-exit-gate-audit-report.md`、`docs/milestones/P3-exit-gate-evidence-manifest.json`、`docs/milestones/README.md`、`docs/tasks/README.md`、`docs/tasks/TASK_TEMPLATE.md`、`docs/tasks/P3/TASK-P3-17-p3-exit-gate-audit.md`、`docs/contracts/README.md`、`docs/contracts/authorization-and-audit.md`、`docs/contracts/export-package.md`、`docs/contracts/planning-solution-and-schedule-version.md`、`docs/contracts/planning-workspace-api.md`、`docs/contracts/schema-index.md`、`docs/contracts/schema-versioning.md`、`docs/frontend/README.md`、`docs/frontend/planning-workspace.md`、`docs/frontend/gantt-command-contract.md`、`docs/frontend/approval-publication-flow.md`、`docs/frontend/official-zh-cn-terminology-map.md`、`docs/domain/domain-model.md`、`docs/domain/error-model.md`、`docs/domain/execution-facts-locks-and-replan.md`、`docs/domain/state-machines/planning-run.md`、`docs/domain/state-machines/schedule-version.md`、`docs/domain/state-machines/export-job.md`、`docs/architecture/configuration-environments-and-isolation.md`、`docs/architecture/data-authority.md`、`docs/architecture/end-to-end-planning-flow.md`、`docs/architecture/module-boundaries.md`、`docs/architecture/provenance-and-versioning.md`、`docs/architecture/repository-layout.md`、`docs/architecture/system-context.md`、`docs/architecture/technology-stack.md`、`docs/core/capability-matrix.md`、`docs/adr/README.md`（reviewed unchanged）、`docs/operations/README.md`、`docs/operations/observability-and-audit.md`、`docs/operations/security.md`、`docs/operations/worker-reliability-and-idempotency.md`、`docs/planning/replanning.md`、`docs/planning/schedule-validator.md`、`docs/quality/benchmark-regression.md`、`docs/quality/ci-gates-and-definition-of-done.md`、`docs/quality/documentation-consistency-checks.md`、`docs/quality/fixtures-and-golden-tests.md`、`docs/quality/property-tests.md`、`docs/quality/test-strategy-and-matrix.md`、`docs/quality/validator-mutation-tests.md`、`docs/simulation/performance-gates.md`、`docs/governance/change-impact-matrix.md`、`docs/governance/document-control.md`、`docs/governance/document-inventory.md`、`docs/governance/nfr-and-engineering-register.md`、`docs/governance/prod-open-register.md`、`docs/governance/requirements-register.md`、`docs/governance/risk-register.md`、`docs/governance/sim-assumption-register.md`、`docs/governance/traceability-matrix.md`、`docs/governance/traceability-rules.md`。
 
 Documentation impact rationale: Exit decision、provider拓扑、双语/机器合同证据完整性与阶段边界必须跨索引/追踪/注册表一致，但不得改写前置事实。
 
-Change-impact matrix rows reviewed: `IMPACT-PHASE`、`IMPACT-GOVERNANCE-REGISTRY`、`IMPACT-DOCS`
+Change-impact matrix rows reviewed: `IMPACT-STATE`、`IMPACT-PHASE`、`IMPACT-GOVERNANCE-REGISTRY`、`IMPACT-DOCS`
 
 Traceability updates: P3 roots→TASK-P3-00～17→全部P3 Test IDs/artifacts→audit report/manifest；TEST-FRONTEND-I18N-001、官方术语coverage、两个locale关键workflow与API English machine contract zero drift必须独立复验；失败项逐一生成blocking gap/remediation，不伪造PASS。
 

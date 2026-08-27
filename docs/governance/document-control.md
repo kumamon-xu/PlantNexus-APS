@@ -11,6 +11,10 @@ last_reviewed: 2026-08-26
 
 # 文档控制规则
 
+## TASK-P3-17 superseding audit rule
+
+Phase Exit report与machine manifest必须保留审计时的提交拓扑、失败run、provider digest、local commands、gaps和阶段边界；后续provider失败或新证据只能通过superseding correction追加，不能删除或追写历史Gate bytes。TASK-P3-17本地`READY`仍须implementation/closure exact provider闭环；Exit READY不自动改变current phase。
+
 ## 目的
 
 保证拆分文档不会制造第二套互相冲突的事实来源，并使每个实现决策可追溯到规格、ADR、任务和验证证据。

@@ -11,6 +11,10 @@ last_reviewed: 2026-08-24
 
 # Schema 版本与兼容规则
 
+## TASK-P3-17 audit conclusion
+
+P3 Exit验证已发布Schema/URN/version/fingerprint及negative cross-document interchange边界保持兼容，migration revision仍`0004`。Audit不发布新Schema、migration或superseding contract；P4与Production合同未形成。
+
 ## 每次 Schema 修改必须
 
 1. 增加对应 `schema_version`；

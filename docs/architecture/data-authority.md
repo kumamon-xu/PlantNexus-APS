@@ -11,6 +11,10 @@ last_reviewed: 2026-08-26
 
 # 数据权威边界
 
+## TASK-P3-17 audit conclusion
+
+独立Audit确认server仍是state、capability、validation、publication与export authority；Frontend只显示read model并发送canonical command，不能直接写ScheduleVersion或复制Solver/Validator。真实ERP/MES、组织审批与Production source authority均未形成。
+
 ## TASK-P3-14 authority Gate
 
 Gate只读取既有versioned Simulation/P2/P3 evidence，业务权威仍来自server application guards、formal Validator、immutable version与append-only audit。Semantic projection仅排除显式runtime/derived identity噪声，并在验证`APPROVE|REJECT`单一CAS winner及允许的loser failure后归一化线程交错；完整raw winner/failure仍保留。它不能创建工厂事实、真实identity、approval/publish authority或Production default。

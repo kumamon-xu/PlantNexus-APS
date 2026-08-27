@@ -12,6 +12,10 @@ registry_version: 1.0.0
 
 # 核心需求注册表
 
+## TASK-P3-17 audit status
+
+REQ-004/005/006/007/009的P3 Planning Workspace切片已由独立Exit Audit连接到39个P3 provider提交、36个下载artifact、621项Python、67项Frontend与P2/P3双Gate证据；本地判定为`READY`、0 gaps。该审计不改变任何Requirement正文、root lifecycle或`registry_version=1.0.0`，在TASK-P3-17 implementation/closure provider闭环前只标记`LOCAL_READY_PROVIDER_PENDING`；P4和Production需求仍按原阶段边界未形成。
+
 ## TASK-P3-15 allocation review
 
 REQ-009的有界治理分配已由implementation `c84e1aa1a81473f65d9f7906a6d2c67a94e7bb2f` / artifact `9597967232`精确复验：唯一amendment owner、稳定Task ID、base成员状态与fail-closed删除/重复检查共同约束已批准的阶段计划修订。该证据只完成TASK-P3-15治理能力，不形成本地化、Exit、P4或Production行为。

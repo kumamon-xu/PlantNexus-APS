@@ -11,6 +11,10 @@ last_reviewed: 2026-08-27
 
 # PlantNexus APS 文档中心
 
+## P3 Exit audit status
+
+[P3 Exit report](milestones/P3-exit-gate-audit-report.md)与[machine manifest](milestones/P3-exit-gate-evidence-manifest.json)已形成一致的本地`READY`/0 gaps结论，并保留39个P3 provider提交、4个历史失败run与阶段边界。TASK-P3-17仍等待自身exact provider闭环；P3保持active，P4/Production未启动。
+
 本目录是 PlantNexus APS 的唯一实质性开发文档中心。项目采用 Simulation-First、可追溯和阶段门禁驱动的开发方式；文档不是事后说明，而是代码、Schema、测试、Fixture、Benchmark 和发布活动的前置边界。
 
 ## 权威顺序
@@ -69,7 +73,7 @@ last_reviewed: 2026-08-27
 
 ## 当前范围
 
-当前阶段为P3。P0～P2 Milestone均为`completed`，P3为`active`；TASK-P3-00～16均标为`done`。TASK-P3-16 bilingual localization的不可变Diff base为`1636fe9c909b728d49f9907ed9f53030b5921914`，implementation `b3ba999e83f4e8b0f96c7ce5bc72eba01432d791`已取得exact required `validate`/artifact provider evidence；本evidence-only closure自身仍须exact provider复验。TASK-P3-17 final independent Exit Audit继续`planned`且不得自动启动。P4与Production不在当前范围，详见`current_phase.md`。
+当前阶段为P3。P0～P2 Milestone均为`completed`，P3为`active`；TASK-P3-00～16均标为`done`。TASK-P3-16 bilingual localization的implementation/closure exact required provider链已完整复验。TASK-P3-17 final independent Exit Audit已获明确授权并完成本地复核，当前为`LOCAL_READY_PROVIDER_PENDING`；P4与Production不在当前范围，详见`current_phase.md`。
 
 P3已形成的顺序保持合同/ADR→Schema→persistence→validated DRAFT→read models→edit/lock→approval/reject→idempotent publish→ExportJob→API→Frontend/E2E→vertical Gate。批准的末段顺序为TASK-P3-15治理支持→TASK-P3-16本地化→TASK-P3-17独立Exit Audit；P3-16现已完成实现provider复验与文档closure，下一项仍须另行授权。展示术语规范见[`frontend/official-zh-cn-terminology-map.md`](frontend/official-zh-cn-terminology-map.md)，它不改变英文机器合同。
 

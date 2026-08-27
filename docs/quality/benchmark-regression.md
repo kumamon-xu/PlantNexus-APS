@@ -11,6 +11,10 @@ last_reviewed: 2026-08-26
 
 # Benchmark Regression 规则
 
+## TASK-P3-17 audit conclusion
+
+P2 XS/S/M Gate regression与独立XS 8/8均PASS，P3 Gate两次语义指纹一致；Frontend bundle与各service timing只保留raw development observation。OPEN-011/012、L/XL与Production threshold/SLA仍未建立。
+
 ## TASK-P3-14 regression boundary
 
 Vertical Gate保留P2 XS required regression与P2 Gate raw evidence，并把P3 read/render/action/export timing仅视为development observation。Semantic projection显式排除runtime timing及其派生identity，不调整P2 baseline/tolerance，也不建立L/XL、Production capacity、browser performance或SLA门槛。

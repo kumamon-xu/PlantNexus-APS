@@ -12,6 +12,10 @@ registry_version: 1.0.0
 
 # 变更影响与必审文档矩阵
 
+## TASK-P3-17 audit impact decision
+
+本Task命中`IMPACT-PHASE`、`IMPACT-GOVERNANCE-REGISTRY`与`IMPACT-DOCS`，因此同步current phase、Milestone/Task索引、P3直接合同/Frontend/state/architecture/operations/quality结论、所有治理注册表、trace、inventory、模板及audit report/manifest。相对Diff base的business、Schema、migration、dependency/lock、ADR、test assertion、workflow与Frontend implementation零差异，因此没有触发这些载体的规范变更；审计结论为`READY`、0 gaps且provider pending，不授权P4或Production。
+
 ## TASK-P3-16 implementation impact
 
 不可变Diff base=`1636fe9c909b728d49f9907ed9f53030b5921914`。Frontend `src/i18n`、既有display surfaces、Vitest/Playwright/evidence、additive CI step及状态文档的display review精确命中`IMPACT-FRONTEND`、`IMPACT-INFRA`、`IMPACT-STATE`、`IMPACT-PHASE`、`IMPACT-GOVERNANCE-REGISTRY`和`IMPACT-DOCS`六行。Frontend test路径由`IMPACT-FRONTEND`覆盖，`IMPACT-TESTS`只匹配`backend/tests/**`，故不虚报。Package/lock、backend、Schema/migration、state implementation、fixture/benchmark、P3-00～15、P4与Production均为禁止范围且零差异；machine Rule table与`registry_version=1.0.0`不变。Implementation artifact `9629193057`中的Task report绑定exact SHA/base并复现79 committed/0 working paths、六行、19/19 checks、0 issues；本closure只写provider事实且自身仍须exact provider。

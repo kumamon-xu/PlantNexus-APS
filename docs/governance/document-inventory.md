@@ -12,15 +12,19 @@ registry_version: 1.0.0
 
 # 文档清单
 
+## TASK-P3-17 audit inventory delta
+
+本Audit新增唯一正式Markdown `docs/milestones/P3-exit-gate-audit-report.md`，inventory由168增至169；相邻machine manifest为JSON，下载的provider evidence和本地`build/**`报告均不进入清单。TASK-P3-17在本地独立审计结论为`READY`且`blocking_gaps=[]`，但在audit implementation exact provider闭环前仍为`in_progress`。Roots=30、trace rows=30、Test IDs=49、OPEN=15、SIM=15、risks=14、Tasks=55与所有registry format version保持不变；P3继续active，P4与Production未启动。
+
 ## TASK-P3-16 implementation review
 
-本Task不新增、删除或重命名正式Markdown，inventory继续覆盖168份`docs/**/*.md`；新增`frontend/src/i18n/**`、测试、Playwright、evidence脚本、workflow step与ignored报告均不是Markdown inventory entry。TASK-P3-16 implementation provider已exact复验并由本closure标为`done`，P3-17保持`planned`；Roots=30、trace rows=30、Test IDs=49、OPEN=15、SIM=15、risks=14与Tasks=55均不变，`registry_version=1.0.0`不变。
+在TASK-P3-16 closure时，本Task不新增、删除或重命名正式Markdown，inventory继续覆盖168份`docs/**/*.md`；新增`frontend/src/i18n/**`、测试、Playwright、evidence脚本、workflow step与ignored报告均不是Markdown inventory entry。该closure把TASK-P3-16标为`done`并把P3-17保持为`planned`；这是冻结历史。Roots=30、trace rows=30、Test IDs=49、OPEN=15、SIM=15、risks=14与Tasks=55均不变，`registry_version=1.0.0`不变。
 
 ## TASK-P3-15 amendment closure review
 
 Activation阶段没有新增、删除或重命名正式Markdown，只把当时的TASK-P3-15从planned Exit分配调整为`in_progress` amendment-governance owner；implementation `c84e1aa1a81473f65d9f7906a6d2c67a94e7bb2f` / artifact `9597967232`已精确复验当时165 docs、30 roots/rows、48 Test IDs、15 OPEN/SIM、13 risks、53 Tasks与26/0/5/19/0 Task report。治理Python/unit test及ignored Task/provider reports不进入清单。
 
-本closure按稳定Doc ID重命名TASK-P3-15卡，并新增官方中文术语、TASK-P3-16与TASK-P3-17三份正式Markdown；inventory由165增至168，Task由53增至55，Test ID由48增至49，risk由13增至14。Roots=30、trace rows=30、OPEN=15、SIM=15与`registry_version=1.0.0`不变。TASK-P3-15=`done`，P3-16/P3-17=`planned`；没有Frontend源、业务、Schema、migration、dependency、workflow、P4或Production文档形成。
+在TASK-P3-15 closure时，本closure按稳定Doc ID重命名TASK-P3-15卡，并新增官方中文术语、TASK-P3-16与TASK-P3-17三份正式Markdown；inventory由165增至168，Task由53增至55，Test ID由48增至49，risk由13增至14。Roots=30、trace rows=30、OPEN=15、SIM=15与`registry_version=1.0.0`不变。该时点TASK-P3-15=`done`、P3-16/P3-17=`planned`；没有Frontend源、业务、Schema、migration、dependency、workflow、P4或Production文档形成。
 
 ## TASK-P3-14 evidence closure review
 
@@ -34,7 +38,7 @@ TASK-P3-14不新增、删除或重命名正式Markdown，inventory继续覆盖16
 
 Root=30、trace rows=30、Test IDs=48、OPEN=15、risks=13、Tasks=53均不变；新增SIM-ASSUMPTION-015使SIM count=15但不改变registry format。Artifact `9589931373`复现33 JSON及Task 91/0/11/19/0，closure run `32921871460`失败且无artifact；独立corrective artifact `9590625358`再次复现33 JSON及91/0/11/19/0。本closure自身仍须exact provider。
 
-本清单列出当前仓库已经实际存在的Markdown文档。P0～P2均已归档为completed；P2 Exit Gate=`READY`且用户已批准transition。P3现为active，TASK-P3-00～16均为`done`，P3-16双语本地化implementation provider已复验且closure provider待核，P3-17最终独立Audit为`planned`。P3 human-control UI/E2E、有界internal Simulation成果包下载及双语展示provider evidence已形成；Production Runbook正文仍未形成。
+本清单列出当前仓库已经实际存在的Markdown文档。P0～P2均已归档为completed；P2 Exit Gate=`READY`且用户已批准transition。P3现为active，TASK-P3-00～16均为`done`，P3-16双语本地化双提交provider已复验，P3-17最终独立Audit为`LOCAL_READY_PROVIDER_PENDING`。P3 human-control UI/E2E、有界internal Simulation成果包下载及双语展示provider evidence已形成；Production Runbook正文仍未形成。
 
 | Path | Doc ID | Status | Title |
 |---|---|---|---|
@@ -114,6 +118,7 @@ Root=30、trace rows=30、Test IDs=48、OPEN=15、risks=13、Tasks=53均不变�
 | [milestones/P1-exit-gate-audit-report.md](../milestones/P1-exit-gate-audit-report.md) | MILESTONE-P1-AUDIT-001 | baseline | P1 Exit Gate Audit Report |
 | [milestones/P2-cp-sat-vertical-slice.md](../milestones/P2-cp-sat-vertical-slice.md) | MILESTONE-P2 | completed | P2 — CP-SAT Vertical Slice |
 | [milestones/P2-exit-gate-audit-report.md](../milestones/P2-exit-gate-audit-report.md) | MILESTONE-P2-AUDIT-001 | baseline | P2 Exit Gate Audit Report |
+| [milestones/P3-exit-gate-audit-report.md](../milestones/P3-exit-gate-audit-report.md) | MILESTONE-P3-AUDIT-001 | baseline | P3 Exit Gate Audit Report |
 | [milestones/P3-planning-workspace.md](../milestones/P3-planning-workspace.md) | MILESTONE-P3 | active | P3 — Planning Workspace |
 | [milestones/P4-dynamic-replanning.md](../milestones/P4-dynamic-replanning.md) | MILESTONE-P4 | planned | P4 — Dynamic Replanning |
 | [milestones/P5-advanced-capabilities.md](../milestones/P5-advanced-capabilities.md) | MILESTONE-P5 | planned | P5 — Advanced Capabilities |
@@ -203,11 +208,11 @@ Root=30、trace rows=30、Test IDs=48、OPEN=15、risks=13、Tasks=53均不变�
 | [tasks/P3/TASK-P3-14-p3-vertical-slice-gate-evidence.md](../tasks/P3/TASK-P3-14-p3-vertical-slice-gate-evidence.md) | TASK-P3-14 | done | P3 Vertical Slice Gate Evidence |
 | [tasks/P3/TASK-P3-15-phase-plan-amendment-governance-support.md](../tasks/P3/TASK-P3-15-phase-plan-amendment-governance-support.md) | TASK-P3-15 | done | P3 Phase Plan Amendment Governance Support |
 | [tasks/P3/TASK-P3-16-frontend-bilingual-localization-and-official-terminology.md](../tasks/P3/TASK-P3-16-frontend-bilingual-localization-and-official-terminology.md) | TASK-P3-16 | done | Frontend Bilingual Localization and Official Terminology |
-| [tasks/P3/TASK-P3-17-p3-exit-gate-audit.md](../tasks/P3/TASK-P3-17-p3-exit-gate-audit.md) | TASK-P3-17 | planned | P3 Exit Gate Audit |
+| [tasks/P3/TASK-P3-17-p3-exit-gate-audit.md](../tasks/P3/TASK-P3-17-p3-exit-gate-audit.md) | TASK-P3-17 | in_progress | P3 Exit Gate Audit |
 | [tasks/README.md](../tasks/README.md) | DOC-TASK-INDEX | living | Task Card 索引 |
 | [tasks/TASK_TEMPLATE.md](../tasks/TASK_TEMPLATE.md) | TEMPLATE-TASK | baseline | Task Card Template |
 
-更新文档时应同步维护本清单。`uv run python scripts/check_docs.py`会校验本表是否完整覆盖当前168份`docs/**/*.md`，并核对Doc ID、status和title，但不会自动改写清单。根`README.md`、根`AGENTS.md`、非Markdown evidence manifest、代码和脚本不属于正式文档清单。
+更新文档时应同步维护本清单。`uv run python scripts/check_docs.py`会校验本表是否完整覆盖当前169份`docs/**/*.md`，并核对Doc ID、status和title，但不会自动改写清单。根`README.md`、根`AGENTS.md`、非Markdown evidence manifest、代码和脚本不属于正式文档清单。
 
 本清单格式为 `registry_version: 1.0.0`；列结构或状态比较语义变化时提升版本。
 

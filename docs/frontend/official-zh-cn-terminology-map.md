@@ -12,6 +12,10 @@ terminology_version: official-zh-cn-terminology.v1
 
 # Official zh-CN Terminology and Display Mapping
 
+## TASK-P3-17 audit conclusion
+
+`official-zh-cn-terminology.v1`由独立Audit复验8/8：`zh-CN`/`en-US`各243 keys、139个注册machine values、22个localized surface、unknown raw fallback、document lang/Ant locale与English API/wire zero drift全部PASS。它仍是display-only规范，不改变Schema/state/error/C-ID或server export bytes。
+
 ## Authority and version
 
 `official-zh-cn-terminology.v1`是PlantNexus APS P3展示层`en-US`/`zh-CN`的规范语义源。它定义label、说明和格式化，不改变任何英文wire contract。API路径、JSON key、Schema/URN/version、OpenAPI `operationId`、状态、命令、错误码、constraint ID、数据库字段、canonical fingerprint/idempotency input与标准JSON/CSV/XLSX bytes继续使用已发布英文机器值。

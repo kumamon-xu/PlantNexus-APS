@@ -12,6 +12,10 @@ registry_version: 1.0.0
 
 # 项目风险注册表
 
+## TASK-P3-17 audit boundary
+
+RISK-001～014继续`MONITORED`。P3审计保留P3-07、P3-13与P3-14的4个provider失败run及其新SHA corrective链，并核验SCA/license、权限default-deny、幂等/并发、XLSX determinism、双语raw fallback和阶段越界风险；未发现新的blocking gap，也未以READY关闭风险或Production未知项。
+
 ## TASK-P3-16 risk controls
 
 RISK-014现由两个等键typed dictionary、139个machine-value映射、unknown raw fallback、Intl+raw value、locale preference边界及zero-wire-drift unit/browser/machine checks形成provider-verified control；dependency、API/backend/state/Schema保持零差异。TASK-P3-17独立审计尚未形成，故RISK-014及RISK-001～013仍全部为`MONITORED`，severity/status和`registry_version=1.0.0`不变。

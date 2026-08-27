@@ -11,6 +11,10 @@ last_reviewed: 2026-08-27
 
 # ExportJob 状态机
 
+## TASK-P3-17 audit conclusion
+
+五状态、六个allowed pair、attempt/lease/heartbeat、retry/cancel/expired recovery、atomic audit与EXPORTED-only verified package已独立PASS。没有外部target、P4 ChangeReport或Production worker capacity声明。
+
 ## TASK-P3-16 display-label review
 
 `official-zh-cn-terminology.v1`为CREATED/EXPORTING/EXPORTED/EXPORT_FAILED/CANCELLED提供双语展示label；Schema、API、repository、worker、manifest、transition与error中的machine value保持英文。未知Job state显示raw值并fail visibly，中文“已导出”不从文件存在推断，也不等同Publish或external transfer。TASK-P3-16的display-only mapping与zero-wire-drift evidence已由exact implementation provider复验；state pair、package、migration与后端测试零变化，TASK-P3-17最终独立复验。

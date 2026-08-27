@@ -11,6 +11,10 @@ last_reviewed: 2026-08-26
 
 # PlanningSolution 与 ScheduleVersion 合同
 
+## TASK-P3-17 audit conclusion
+
+validated PlanningSolution→immutable ScheduleVersion DRAFT→READY_FOR_REVIEW→APPROVED/REJECTED→PUBLISHED/SUPERSEDED链及copy-on-write command、fresh Validator、lineage/fingerprint与状态不可变性均独立PASS。没有新增state pair、原地修改PUBLISHED或P4 replan语义。
+
 ## TASK-P3-14 vertical replay
 
 Gate两次从既有validated P2 solution重放P3 lifecycle，核对immutable lineage、fresh Validator、read/command/decision/publication/export语义及raw report。它明确拒绝DRAFT/REJECTED publish与PUBLISHED mutation，并要求两轮stable semantic projection一致；不新增ScheduleVersion字段、状态pair、Schema或迁移，也不允许Gate修正任何业务差异。

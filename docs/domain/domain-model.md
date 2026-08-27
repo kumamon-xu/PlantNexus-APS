@@ -11,6 +11,10 @@ last_reviewed: 2026-08-25
 
 # APS 领域模型
 
+## TASK-P3-17 audit conclusion
+
+P3的ScheduleVersion、PublicationResult、ExportJob、AuditEvent及workspace query/command模型和lineage/fingerprint已独立复验，state/Schema/字段未变。ExecutionEvent、ReplanRequest与P4模型仍未形成。
+
 ## 工厂结构
 
 ```text

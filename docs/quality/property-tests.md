@@ -11,6 +11,10 @@ last_reviewed: 2026-08-21
 
 # Property Test 规范
 
+## TASK-P3-17 audit conclusion
+
+registered property suites随621项全仓测试重新执行，覆盖determinism、copy-on-write、idempotency、CAS/并发、plane与Validator边界；全部PASS且断言未变。Audit没有新增assumption或以property样本替代Production证据。
+
 Property Test 随机生成合法 V1 PlanningProblem 或合法 canonical input，检验跨大量组合保持的不变量。
 
 ## 核心性质

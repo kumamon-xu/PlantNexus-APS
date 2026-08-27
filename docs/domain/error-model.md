@@ -11,6 +11,10 @@ last_reviewed: 2026-08-27
 
 # 错误与求解状态模型
 
+## TASK-P3-17 audit conclusion
+
+Solver七状态、product error、workspace reason、HTTP 401/403/409/422/500与correlation/redaction映射均独立回归，四类P3 exact rejection逐字fail closed。双语只映射显示标签，raw code/reason保持可见；没有新错误码或P4语义。
+
 ## TASK-P3-16 localization contract
 
 双语展示不得改变七类product error、`error-code-registry.v2`的23个code、Workspace module-local reason或HTTP mapping。Frontend以namespace与code/reason查`official-zh-cn-terminology.v1`，中文模式仍同时显示原始code/reason和correlation ID；未知值显示raw并fail visibly。后端英文安全message仅作诊断fallback，禁止据其文本判断业务或猜测中文；自由文本、ID、actor reference、fingerprint与raw UTC不机器翻译。

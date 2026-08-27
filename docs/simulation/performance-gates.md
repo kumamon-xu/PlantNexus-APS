@@ -11,6 +11,10 @@ last_reviewed: 2026-08-21
 
 # 性能与现实校准门
 
+## TASK-P3-17 audit boundary
+
+独立Audit复验P2 XS/S/M及P3 development observations，但不建立L/XL、真实历史回放、Production capacity或SLA。OPEN-011/012继续OPEN，所有时延/内存/bundle只作为原始开发证据保留。
+
 ## Gate A — P2 Synthetic Solver
 
 完整验证 Snapshot → Problem → Solver → Validator → Export，至少运行 Golden JSSP/FJSP、Cross Workshop、Calendar、Material Delay、Running、Hard Lock 和 XS/S/M，并记录 build、first feasible、runtime、gap、memory、model size 和 validator result。

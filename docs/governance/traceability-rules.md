@@ -11,6 +11,12 @@ last_reviewed: 2026-08-27
 
 # 需求追踪规则
 
+## TASK-P4-03 persistence trace rule
+
+本Task唯一owner为TASK-P4-03，Diff base固定`7b9bfc3069de5d3738e5cc5827d27d197ed3d226`。链固定为`REQ-007/008/009/013 + declared NFR/ENG + existing SIM-ASSUMPTION-016 → TASK-P4-03 → 0005 + event/checkpoint/request/lineage/audit repositories → TEST-P4-PERSISTENCE-001/TEST-IDEMPOTENCY/TEST-AUDIT-TRAIL-001/TEST-STATE-TRANSITION-001/TEST-SIM-ISOLATION → p4-replan-persistence-report.v1 + Task report → exact implementation provider → evidence-only closure provider`。当前本地证据不得越过两个provider edge升级为verified。
+
+Diff须精确命中`IMPACT-STATE/INFRA/TESTS/PHASE/GOVERNANCE-REGISTRY/DOCS`，并保持Schema bytes、state pair、dependency/lock、fact projection、Solver/Validator、Simulator、API/UI、P5+与Production能力零差异。P4-04必须等待本Task双提交闭环与新的明确授权。
+
 ## TASK-P4-02 machine-contract trace rule
 
 本Task链固定为`REQ-005/007/008/009/013 + declared NFR/ENG + SIM-ASSUMPTION-016 → TASK-P4-02 → nine exact-version carriers/samples + pure prechecks → TEST-CONTRACT-001/TEST-EXECUTION-EVENT-CONTRACT-001/TEST-REPLAN-REQUEST-CONTRACT-001/TEST-CHANGE-REPORT-001 → p4-machine-contract-report.v1 + Task report → exact implementation provider → evidence-only closure provider`。Diff base固定`4026597ab1015b5ea3a89d241f0d12b5b481dee3`。Implementation `539cdbbdcdd406daba25b8d6b8caaa5133691e76` / artifact `9636892191`已精确满足SHA、Task、base、12 Impact Rules、19/19 checks、0 issues与digest核验，本closure据此把TASK-P4-02标为`done`；closure自身仍须post-push exact provider。

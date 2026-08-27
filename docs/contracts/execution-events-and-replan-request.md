@@ -11,6 +11,12 @@ last_reviewed: 2026-08-27
 
 # ExecutionEvent 与 ReplanRequest 合同
 
+## TASK-P4-03 durable consumer
+
+P4-03现建立Simulation-only durable consumer：ExecutionEvent按`event_id`和authority/stream/position双重唯一约束append，exact bytes replay返回同记录，不同content冲突；projection checkpoint只可通过position+revision CAS前进；ReplanRequest必须在同plane找到完整有序ledger events与匹配fact checkpoint后才能append。Request不新增state，attempt/result只引用既有PlanningRun attempt与terminal state；ChangeReport、SolverReport、ValidationReport和new ScheduleVersion只保存version/id/fingerprint引用，内容生成与应用仍由P4-06/07/08负责。
+
+所有写primitive提供caller-owned transaction入口，允许ledger+audit或checkpoint+request+audit原子提交/回滚。P4-03没有event endpoint、事实投影、Solver/Simulator、publish/export、external delivery或Production authority。
+
 ## TASK-P4-02 machine carriers
 
 `execution-event.v1`现把Simulation plane/environment/factory/scope、authority/source stream、单调position、occurred/received UTC、entity refs、typed payload、correlation、synthetic provenance与canonical fingerprint编码为strict carrier。`received_at_utc`只记录接收观察，不参与event identity；authority、ordering和payload语义参与fingerprint。同identity不同fingerprint、position gap/倒退、authority/scope/plane漂移均fail closed。

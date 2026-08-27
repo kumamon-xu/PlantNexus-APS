@@ -11,6 +11,10 @@ last_reviewed: 2026-08-27
 
 # 推荐技术栈与锁定规则
 
+## TASK-P4-03 stack review
+
+实现只使用现有exact-locked Python 3.12、SQLAlchemy与Alembic；`pyproject.toml`、`uv.lock`及全部dependency pin逐字不变。`0005_replan_event_persistence`提供SQLite test DDL与PostgreSQL-compatible table/trigger DDL，但本Task只执行SQLite证据，未证明PostgreSQL deployment、concurrency、backup/restore、performance或capacity。
+
 ## TASK-P4-02 stack review
 
 本Task只把global schema metadata提升到`2.8.0`并复用现有`jsonschema`/`referencing`/YAML工具。Runtime/dev dependency pins与`uv.lock`摘要`sha256:8b13617f31aa6a933347fc7b8ba010330cbb3f2d764f75c306dd9b6d77387a82`零变化；migration仍为`0004`。`pyproject.toml`路径命中dependency impact不等于依赖变更。

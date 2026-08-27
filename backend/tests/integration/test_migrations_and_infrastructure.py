@@ -22,6 +22,9 @@ from app.infrastructure.database import create_database_client
 from app.infrastructure.import_staging_repository import (
     SqlAlchemyImportStagingRepository,
 )
+from app.infrastructure.execution_event_repository import (
+    SqlAlchemyExecutionEventRepository,
+)
 from app.infrastructure.snapshot_repository import SqlAlchemySnapshotRepository
 from app.infrastructure.schedule_version_repository import (
     SqlAlchemyScheduleVersionRepository,
@@ -76,6 +79,13 @@ def test_empty_database_migration_upgrades_and_downgrades(tmp_path: Path) -> Non
             "publication_results",
             "publication_current_references",
             "export_jobs",
+            "execution_event_ledger",
+            "replan_projection_checkpoints",
+            "replan_requests",
+            "replan_request_events",
+            "replan_attempts",
+            "replan_results",
+            "replan_audit_records",
         } <= tables
         unique_constraints = inspect(engine).get_unique_constraints(
             "engineering_idempotency_records"
@@ -309,6 +319,80 @@ def test_populated_p3_workspace_migration_downgrade_is_destructive_and_reversibl
             data_plane=WorkspaceDataPlane.SIMULATION,
         )
         assert repository.get("schedule-version-sim-001") is None
+    finally:
+        engine.dispose()
+    command.downgrade(configuration, "base")
+
+
+def test_populated_p4_replan_migration_downgrade_preserves_p3_and_is_reversible(
+    tmp_path: Path,
+) -> None:
+    database_path = tmp_path / "populated-p4-replan.db"
+    database_url = f"sqlite:///{database_path.as_posix()}"
+    configuration = _alembic_config(database_url)
+    command.upgrade(configuration, "0004_schedule_versions_audit_export_jobs")
+    engine = create_engine(database_url)
+    try:
+        tables = set(inspect(engine).get_table_names())
+        assert "schedule_versions" in tables
+        assert "execution_event_ledger" not in tables
+    finally:
+        engine.dispose()
+
+    command.upgrade(configuration, "head")
+    event = cast(
+        dict[str, object],
+        json.loads(
+            (ROOT / "schemas/samples/execution-event.v1.synthetic.json").read_text(
+                encoding="utf-8"
+            )
+        ),
+    )
+    schedule = cast(
+        dict[str, object],
+        json.loads(
+            (ROOT / "schemas/samples/schedule-version.v1.synthetic.json").read_text(
+                encoding="utf-8"
+            )
+        ),
+    )
+    engine = create_engine(database_url)
+    try:
+        event_repository = SqlAlchemyExecutionEventRepository(
+            engine, data_plane=WorkspaceDataPlane.SIMULATION
+        )
+        schedule_repository = SqlAlchemyScheduleVersionRepository(
+            engine, data_plane=WorkspaceDataPlane.SIMULATION
+        )
+        assert schedule_repository.put(schedule).replayed is False
+        assert event_repository.append(event).replayed is False
+    finally:
+        engine.dispose()
+
+    command.downgrade(configuration, "0004_schedule_versions_audit_export_jobs")
+    engine = create_engine(database_url)
+    try:
+        tables_after = set(inspect(engine).get_table_names())
+        assert "schedule_versions" in tables_after
+        assert "execution_event_ledger" not in tables_after
+        schedule_repository = SqlAlchemyScheduleVersionRepository(
+            engine, data_plane=WorkspaceDataPlane.SIMULATION
+        )
+        assert schedule_repository.get("schedule-version-sim-001") == schedule
+    finally:
+        engine.dispose()
+
+    command.upgrade(configuration, "head")
+    engine = create_engine(database_url)
+    try:
+        event_repository = SqlAlchemyExecutionEventRepository(
+            engine, data_plane=WorkspaceDataPlane.SIMULATION
+        )
+        assert event_repository.get(cast(str, event["event_id"])) is None
+        schedule_repository = SqlAlchemyScheduleVersionRepository(
+            engine, data_plane=WorkspaceDataPlane.SIMULATION
+        )
+        assert schedule_repository.get("schedule-version-sim-001") == schedule
     finally:
         engine.dispose()
     command.downgrade(configuration, "base")

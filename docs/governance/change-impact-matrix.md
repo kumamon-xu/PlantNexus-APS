@@ -12,6 +12,12 @@ registry_version: 1.0.0
 
 # 变更影响与必审文档矩阵
 
+## TASK-P4-03 implementation impact
+
+不可变Diff base=`7b9bfc3069de5d3738e5cc5827d27d197ed3d226`。本Task只增加`0005`、Infrastructure storage/repository/machine evidence、Backend unit/integration/CI contract tests、一个non-skippable workflow step及逐字治理文档，精确命中`IMPACT-STATE`、`IMPACT-INFRA`、`IMPACT-TESTS`、`IMPACT-PHASE`、`IMPACT-GOVERNANCE-REGISTRY`、`IMPACT-DOCS`。STATE仅复验ReplanRequest无状态机、既有PlanningRun/ScheduleVersion/ExportJob pair不变以及checkpoint为operational CAS；没有修改`backend/app/domain/**`，因此不命中Domain implementation rule。
+
+`schemas/**`、历史migration、dependency/lock、application/domain/planning/Solver/Validator、event fact projection/Snapshot、Simulator/scenario、API/UI、fixtures/benchmarks、P0～P3历史、P5+和Production能力均为禁止范围且须零差异。提交前Task report已给出0 committed-range/52 working-tree paths、上述六行、19/19 checks与0 issues；独立禁止范围核验为tracked/untracked=0，六个冻结Git object hash全部一致。Implementation及closure provider必须逐项复现。
+
 ## TASK-P4-02 implementation impact
 
 不可变Diff base=`4026597ab1015b5ea3a89d241f0d12b5b481dee3`。实际范围为additive Schema/sample、domain pure contracts、两处P3 evidence的current-set metadata兼容、global version metadata、Backend tests、non-skippable workflow evidence、P3 i18n zero-wire checker的future-phase兼容修正及逐字治理文档，预期精确命中`IMPACT-SCHEMA/DOMAIN/APPLICATION/FRONTEND/STATE/INFRA/DEPENDENCY/VERSION-METADATA/TESTS/PHASE/GOVERNANCE-REGISTRY/DOCS`。`IMPACT-DEPENDENCY`只因`pyproject.toml` metadata路径命中，runtime/dev dependency集合和`uv.lock`零差异；FRONTEND只改evidence path scope、不改UI/API producer；STATE只记录carrier复用既有pairs且ReplanRequest/Simulator无状态机。

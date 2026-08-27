@@ -11,6 +11,10 @@ last_reviewed: 2026-08-27
 
 # Architecture Decision Records
 
+## TASK-P4-03 conformance review
+
+本Task严格落实ADR-0013～0015：single-authority event ledger、position/idempotency约束、checkpoint CAS、immutable request与PlanningRun attempt/result lineage、append-only transaction audit、Simulation-only common path。ReplanRequest无state，fact projection/new DRAFT/ChangeReport generation分别留给P4-04/08/06；没有引入outbox、external exactly-once、新state pair、dependency或topology决定，因此不新增或修改ADR。
+
 ## TASK-P4-02 conformance review
 
 本Task不新增或修改ADR。Additive `2.8.0` carrier逐项实现ADR-0013的event authority/order/Replan lineage、ADR-0014的half-open freeze/四元OBJ-002/complete ChangeReport，以及ADR-0015的Simulation manifest/common-path boundary；35/7负例用于拒绝语义漂移。若后继需要改变这些决定，必须先提交superseding ADR，不能修改既有Schema含义。

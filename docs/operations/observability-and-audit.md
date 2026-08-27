@@ -6,10 +6,14 @@ spec_version: 0.3.0
 phase: P0-P7
 normative: true
 source_sections: [29, 42, 65, 93, 95]
-last_reviewed: 2026-08-26
+last_reviewed: 2026-08-27
 ---
 
 # P0 Observability 与 Audit 边界
+
+## TASK-P4-03 durable evidence slice
+
+ExecutionEvent ledger、request/attempt/result关联和internal audit record现在保存stable identity、canonical fingerprint、plane/factory、correlation与artifact reference；exact replay返回原logical record，不追加重复审计。Machine report记录table/index/FK/unique、DB rejection、Production rejection与rollback计数，但不把wall clock或SQLite runtime解释为业务identity或SLA。原始payload全文、credential、SQL和stack仍不得进入audit/log。
 
 ## TASK-P4-01 observability chain
 

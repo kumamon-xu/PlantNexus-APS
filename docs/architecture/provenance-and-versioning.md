@@ -11,6 +11,10 @@ last_reviewed: 2026-08-26
 
 # Provenance 与版本规则
 
+## TASK-P4-03 durable provenance
+
+Ledger保存P4-02 exact canonical bytes与SHA，event identity继续排除`received_at_utc`但存储层要求同ID replay bytes完全一致，避免不同raw observation静默覆盖。Request必须绑定ordered event IDs/fingerprints、stream fingerprint与durable fact checkpoint；attempt/result/audit internal records使用固定record version和canonical fingerprint。Version/id/fingerprint任何不一致均拒绝，不以数据库行号、wall clock或`latest`重解释历史。
+
 ## TASK-P4-02 provenance release
 
 Set `2.8.0`为每个P4 document固定stable URN/version、canonical projection/fingerprint和cross-document exact references。Event identity排除receive observation但包含authority/order；Request、SolverReport、ChangeReport、ScheduleVersion、Simulator manifest与Export各自具有不可互换fingerprint。58份历史bytes、migration `0004`、code/spec/solver/dependency版本维度保持独立。

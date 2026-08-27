@@ -6,10 +6,14 @@ spec_version: 0.3.0
 phase: P0-P7
 normative: true
 source_sections: [58, 62, 93, 95, 100]
-last_reviewed: 2026-08-26
+last_reviewed: 2026-08-27
 ---
 
 # P0 工程安全边界
+
+## TASK-P4-03 persistence enforcement
+
+所有P4 repository在读取或写入前验证Simulation plane、factory/authority scope、contract/internal-record版本与canonical fingerprint；Production plane默认拒绝，跨plane引用、unknown version/state、stale base和不同内容重放均不得产生部分记录。数据库trigger再拒绝append-only表的UPDATE/DELETE与checkpoint的scope改写/非前进更新。该控制不形成真实identity/RBAC、MES source binding、database credential、encryption/retention策略或Production threat model。
 
 ## TASK-P4-01 security contract
 

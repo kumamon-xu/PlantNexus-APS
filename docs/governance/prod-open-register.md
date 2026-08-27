@@ -12,6 +12,10 @@ registry_version: 1.0.0
 
 # PROD_OPEN 注册表
 
+## TASK-P4-03 persistence review
+
+`0005`与SQLite repository evidence只证明Simulation/development中的数据形状、事务、CAS、回滚和default-deny；不提供真实Factory/event source/identity、PostgreSQL topology/credential/backup、external delivery、Production freeze/priority、capacity或SLA closure record。OPEN-001～015全部继续`OPEN`，状态、数量与`registry_version=1.0.0`不变。
+
 ## TASK-P4-02 machine-contract review
 
 九份新carrier只允许有界Simulation sample，并显式拒绝Production plane/binding、external target与未知authority/default。它们不提供真实Factory timezone/interface/freeze/priority/identity/approval/field authority、历史数据、runtime threshold、deployment或capacity/SLA closure record；OPEN-001～015全部继续`OPEN`，`registry_version=1.0.0`不变。

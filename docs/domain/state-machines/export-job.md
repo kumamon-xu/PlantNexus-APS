@@ -11,6 +11,10 @@ last_reviewed: 2026-08-27
 
 # ExportJob 状态机
 
+## TASK-P4-03 persistence review
+
+`0005_replan_event_persistence`不创建ExportJob、不调用export worker且不改变CREATED/EXPORTING/EXPORTED/EXPORT_FAILED/CANCELLED集合、attempt/lease或六个allowed pairs。P4 result reference也不是成果包或external delivery；P4-11以前没有ChangeReport export行为。
+
 ## TASK-P4-02 ExportJob v3 carrier review
 
 ExportJob v3仅把source/manifest引用提升到P4 exact versions并固定internal Simulation target；五状态、六allowed pairs、attempt/lease/heartbeat/error/terminal semantics继续由`state-machines.v1`权威定义。Sample停留CREATED/attempt 0，本Task不执行Job、retry、download或external transfer。

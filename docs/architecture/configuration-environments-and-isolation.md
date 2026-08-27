@@ -11,6 +11,10 @@ last_reviewed: 2026-08-27
 
 # 配置、环境与数据隔离
 
+## TASK-P4-03 isolation boundary
+
+新表和repository当前只接受`data_plane=SIMULATION`且P4 carrier继续要求`production_binding=false`；所有主键、唯一约束、查询和FK均包含plane。PRODUCTION repository实例只能得到空的plane-scoped read，并对write/default/cross-plane reference fail closed；本地SQLite证明逻辑隔离与rollback，不代表独立Production database、HA或容量。
+
 ## TASK-P4-02 isolation boundary
 
 九份P4 sample只允许Simulation/development-test语义并显式`production_binding=false`；Production-shaped mutation在Schema或pure precheck层拒绝。没有新增environment variable、database、secret、container、queue或network endpoint；Production authority/external integration/deployment仍default-deny。

@@ -32,6 +32,9 @@ from app.exporters.contract_check import main as output_contract_main
 from app.infrastructure.workspace_persistence_check import (
     main as workspace_persistence_main,
 )
+from app.infrastructure.replan_persistence_check import (
+    main as replan_persistence_main,
+)
 from app.planning.backends.cp_sat.contract_check import (
     main as backend_contract_main,
 )
@@ -245,6 +248,8 @@ def test_ci_runs_repository_gates_and_discovers_the_current_task() -> None:
         "build/validation/ci-p4-machine-contracts.json",
         "app.infrastructure.workspace_persistence_check",
         "build/validation/ci-p3-persistence.json",
+        "app.infrastructure.replan_persistence_check",
+        "build/validation/ci-p4-replan-persistence.json",
         "app.application.schedule_version_lifecycle_check",
         "build/validation/ci-p3-schedule-version-lifecycle.json",
         "app.application.workspace_read_model_check",
@@ -277,6 +282,7 @@ def test_ci_runs_repository_gates_and_discovers_the_current_task() -> None:
     assert "name: P3 workspace schema contract evidence" in workflow
     assert "name: P4 dynamic replanning machine contract evidence" in workflow
     assert "name: P3 workspace persistence evidence" in workflow
+    assert "name: P4 replan event persistence evidence" in workflow
     assert "name: P3 reviewable ScheduleVersion lifecycle evidence" in workflow
     assert "name: P3 workspace read model and comparison evidence" in workflow
     assert "name: P3 schedule edit and lock command evidence" in workflow
@@ -391,6 +397,43 @@ def test_ci_p3_persistence_is_required_and_machine_checkable(tmp_path: Path) -> 
         "machine_checks": 8,
         "database_mutation_rejections": 4,
         "plane_mismatch_rejections": 2,
+    }
+
+
+def test_ci_p4_replan_persistence_is_required_and_machine_checkable(
+    tmp_path: Path,
+) -> None:
+    workflow = (ROOT / ".github" / "workflows" / "ci.yml").read_text(encoding="utf-8")
+    normalized = " ".join(workflow.split())
+    assert (
+        "name: P4 replan event persistence evidence run: >- uv run python -m "
+        "app.infrastructure.replan_persistence_check --root . --report "
+        "build/validation/ci-p4-replan-persistence.json"
+    ) in normalized
+    assert "continue-on-error" not in workflow
+
+    report_path = tmp_path / "p4-replan-persistence.json"
+    assert (
+        replan_persistence_main(
+            ["--root", str(ROOT), "--report", str(report_path)]
+        )
+        == 0
+    )
+    report = json.loads(report_path.read_text(encoding="utf-8"))
+    assert report["report_version"] == "p4-replan-persistence-report.v1"
+    assert report["status"] == "PASS"
+    assert report["task_id"] == "TASK-P4-03"
+    assert report["diff_base"] == "7b9bfc3069de5d3738e5cc5827d27d197ed3d226"
+    assert report["migration_revision"] == "0005_replan_event_persistence"
+    assert report["check_count"] == 9
+    assert report["issues"] == []
+    assert report["counts"] == {
+        "tables": 7,
+        "repositories": 5,
+        "machine_checks": 9,
+        "database_mutation_rejections": 8,
+        "production_write_rejections": 1,
+        "p3_rows_retained": 1,
     }
 
 

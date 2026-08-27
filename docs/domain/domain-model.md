@@ -11,6 +11,10 @@ last_reviewed: 2026-08-25
 
 # APS 领域模型
 
+## TASK-P4-03 durable aggregate boundary
+
+ExecutionEvent ledger与immutable ReplanRequest现具有durable repository identity；projection checkpoint是单authority stream的operational CAS状态，attempt/result是ReplanRequest到既有PlanningRun的append-only reference，transaction audit保存持久化动作。它们不构成新的ReplanRequest业务状态机，也不把event payload、fact checkpoint、ChangeReport或ScheduleVersion内容解释权移入Infrastructure。P4-04/06/08仍分别拥有fact/Snapshot、ChangeReport生成和new DRAFT应用。
+
 ## TASK-P4-02 additive domain values
 
 领域层新增无副作用的P4 document/version常量、canonical fingerprint与pure semantic precheck，只识别九份`2.8.0` carrier。ExecutionEvent、ReplanRequest、ChangeReport和ExecutionSimulationManifest当前是值/证据合同，不是repository entity或运行服务；没有aggregate state、数据库表、事件处理器或Solver依赖。

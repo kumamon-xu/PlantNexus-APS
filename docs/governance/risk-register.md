@@ -12,6 +12,10 @@ registry_version: 1.0.0
 
 # 项目风险注册表
 
+## TASK-P4-03 persistence controls
+
+RISK-015现在获得ledger exact replay/identity-position conflict、strict checkpoint CAS、request/attempt/result lineage、append-only DB guards与transaction rollback的本地行为控制；RISK-017获得repository Production default-deny与P3/P4 table isolation控制。SQLite与单进程测试尚不能证明PostgreSQL并发、distributed consumer、external exactly-once、HA或capacity；provider也仍待完成，因此RISK-001～017继续`MONITORED`，不关闭、不降级且registry格式不变。
+
 ## TASK-P4-02 machine-contract controls
 
 RISK-015现获得event identity排除receive observation但包含authority/source order、exact replay/conflict和gap fail-closed carrier；RISK-016获得半开freeze、OBJ-002四元顺序、operation全集分类与exact ratio carrier；RISK-017获得Simulation manifest/common-path lineage与Production binding拒绝carrier。Implementation artifact `9636892191`已复验35个shape和7个semantic负例及0 issues；它只证明合同控制，尚无持久化、projection、Solver或Simulator行为，因此RISK-001～017继续`MONITORED`。

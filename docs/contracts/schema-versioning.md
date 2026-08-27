@@ -11,6 +11,12 @@ last_reviewed: 2026-08-27
 
 # Schema 版本与兼容规则
 
+## TASK-P4-03 consumer and migration boundary
+
+本Task不改变`2.8.0`、URN、document version、canonical projection、Schema/sample bytes、`pyproject.toml`或`uv.lock`。它以additive database revision `0005_replan_event_persistence`持久化ExecutionEvent/ReplanRequest exact canonical bytes，并为approved references建立versioned internal storage records；DDL没有业务default，也不反向扩充machine contract。
+
+P4-03成为首个durable consumer后，P4-02新Schema不能再通过删除文件回滚。测试/非生产可在停止入口并确认数据处置后downgrade到`0004`，该操作会删除P4 persistence rows但保留P3 rows；Production destructive downgrade、历史carrier改写和alias均禁止，未来兼容变化必须新document version与新migration。
+
 ## TASK-P4-02 additive set `2.8.0`
 
 Global current metadata现为`2.8.0`，只增加ExecutionEvent v1、PlanningPolicy v2、ReplanRequest v1、SolverReport v2、ChangeReport v1、ScheduleVersion v2、ExecutionSimulationManifest v1、ExportManifest v3和ExportJob v3。每个document有独立stable URN/version，consumer必须精确选择；v2/v3不是旧document的alias或原地重解释。

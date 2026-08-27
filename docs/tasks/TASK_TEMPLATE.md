@@ -11,6 +11,10 @@ last_reviewed: 2026-08-27
 
 # TASK-Px-yy — Title
 
+## P4 persistence Task governance note
+
+持久化Task必须把机器carrier原文、repository内部record与数据库结构区分开：carrier按已发布版本逐字canonicalize，内部record必须自带版本并拒绝unknown/default，不能私建第二套业务Schema或状态机。Event ledger与request/attempt/result/audit只允许append或exact replay；checkpoint是operational CAS而非业务state，必须拒绝stale/backward/self advance。Caller-owned transaction须证明任一步失败整批rollback，migration须覆盖empty/populated upgrade/downgrade/re-upgrade并保留前Phase数据。SQLite证据不等于PostgreSQL concurrency、Production HA、backup/restore、capacity或SLA。
+
 ## P4 machine-contract Task governance note
 
 发布additive P4 carrier时必须先冻结全部历史Schema/sample fingerprint和全局metadata/lock/migration基线，再为每个document声明exact filename、stable URN、version、strict/no-default/offline-ref、canonical projection、positive/negative/non-interchangeability、consumer owner与rollback。Schema sample中的任何定量Simulation vector必须登记SIM_ASSUMPTION；sample不能冒充persistence、Solver、Simulator或state-transition evidence。Global set提升不得改写旧document const/bytes，existing machine report只允许比较current metadata而保留历史report version。CI必须生成non-skippable machine report，implementation与closure分别核验exact provider；下一Task不得自动启动。

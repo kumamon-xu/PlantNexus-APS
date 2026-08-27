@@ -11,6 +11,10 @@ last_reviewed: 2026-08-27
 
 # PlanningRun 状态机
 
+## TASK-P4-03 persistence review
+
+P4-03只追加`request_id/request_fingerprint → planning_run_id/attempt_number → terminal result references`，result必须引用本机既有terminal state；`COMPLETED`才允许完整Solver/Validation/new ScheduleVersion/ChangeReport success references，其他terminal state不得暴露new Version或ChangeReport成功引用。状态集合、allowed pairs、guard与evidence逐字不变，ReplanRequest仍无状态机，exact replay不产生self-transition。
+
 ## TASK-P4-02 carrier review
 
 SolverReport v2和ScheduleVersion v2只引用既有PlanningRun identity/outcome；ReplanRequest与ExecutionSimulationManifest不获得业务状态。`state-machines.v1`中PlanningRun states/pairs与terminal semantics逐字冻结，本Task没有run repository、transition或worker行为。

@@ -11,6 +11,14 @@ last_reviewed: 2026-08-27
 
 # CI Gate 与 Definition of Done
 
+## TASK-P4-03 required evidence
+
+现有required `validate`增加不可跳过的`P4 replan event persistence evidence`步骤，执行`app.infrastructure.replan_persistence_check`并上传`ci-p4-replan-persistence.json`。成功报告必须绑定TASK-P4-03、Diff base `7b9bfc3069de5d3738e5cc5827d27d197ed3d226`、exact code commit、revision `0005`、7 tables、9/9 checks、8 DB guard rejects、1 Production reject、P3 row retention和`issues=[]`。Workflow权限、required context与GitHub Actions app `15368`不变。
+
+本地locked install、Ruff、Pyright、full tests、Frontend/Playwright、SCA/license、全部历史machine/P2/P3 Gate、docs/diff/forbidden-scope通过后仍保持`in_progress`；必须先push implementation并下载exact未过期artifact核对SHA/Task/base/六个Impact Rules/checks/issues，才可创建evidence-only closure。Closure本身须再次经过同一required provider；P4-04不得自动启动。
+
+提交前required-equivalent本地证据为Ruff/Pyright零问题、643 Python、67 Vitest、主E2E与两轮Gate Chromium各12/12、P4 persistence 9/9、P2 11/11与P3 14/14 Gate、SCA/license、Compose、Frontend/Python双build及52/6/19/0治理全部PASS。本机默认npm `12.0.2`被既有machine report正确拒绝；随后以仓库锁定的`npm@11.17.0`完整重跑并全绿，失败结果未被当作PASS。Provider仍待push后验证。
+
 ## TASK-P4-02 required evidence
 
 CI `validate`新增不可跳过的`P4 dynamic replanning machine contract evidence`步骤，输出`build/validation/ci-p4-machine-contracts.json`并由统一artifact上传。报告必须绑定TASK-P4-02、不可变Diff base、exact code commit、set `2.8.0`、8/8 checks、9/9 Schema/sample、58 historical freeze、35/7 rejection和`issues=[]`。Implementation `539cdbbdcdd406daba25b8d6b8caaa5133691e76`的required run/job=`33048889370`/`98439288723`由GitHub Actions app `15368`成功提供；artifact `9636892191`未过期至2026-11-25T07:14:10Z，digest=`sha256:378fbb47f12d92773e77855eff486d51f67502f610a6578b14549cdade7f5d7b`。下载复核45 files/39 JSON、TASK/base、87/0 paths、12 Impact Rules、36/36 documents、19/19 checks、0 issues、P4 8/8、P2/P3 Gate与Frontend/i18n一致PASS，故本closure可把Task标为`done`；closure自身仍需相同exact provider闭环。

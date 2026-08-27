@@ -11,6 +11,12 @@ last_reviewed: 2026-08-27
 
 # 动态重排设计合同
 
+## TASK-P4-03 persistence slice
+
+P4-03只把P4-02 carrier落入plane-scoped durable primitives：ExecutionEvent按authority/source stream/version/event ID、position与canonical fingerprint append/exact replay；projection checkpoint只通过strict CAS前进；ReplanRequest必须先引用已持久化checkpoint及同一有序ledger事件；attempt/result继续引用PlanningRun既有状态，ReplanRequest自身无状态机；audit为versioned append-only record。Caller可在单一事务中组合这些原语并在失败时完整rollback。
+
+本切片不解释event payload、不写fact revision或Snapshot、不计算freeze/OBJ-002/ChangeReport、不调用Solver/Validator/Simulator，也不创建new DRAFT。P4-04才拥有事实投影；P4-08才拥有结果应用。SQLite migration/repository测试仅为Simulation/development证据，不形成Production数据库、external exactly-once或capacity/SLA。
+
 ## TASK-P4-02 machine-contract slice
 
 ExecutionEvent v1、ReplanRequest v1、Policy v2、SolverReport v2、ChangeReport v1与ScheduleVersion v2现可离线组成exact lineage bundle。Freeze resolution固定半开区间，Request无状态，ChangeReport覆盖完整operation universe，new Version仍只能是后继Task创建的DRAFT。本Task不持久化、投影、求解、验证或应用，因此动态重排行为仍未形成。

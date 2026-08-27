@@ -11,6 +11,10 @@ last_reviewed: 2026-08-27
 
 # Operations 索引与形成边界
 
+## TASK-P4-03 persistence operations boundary
+
+新增`0005`与repository/machine-check只在本地及required CI的临时SQLite执行，验证append/exact replay、CAS、transaction rollback、plane default-deny和populated downgrade/re-upgrade。没有新增常驻service、queue、worker、secret、deployment、external adapter、Runbook或on-call；PostgreSQL并发、backup/restore、capacity/SLA与Production readiness仍未形成。
+
 ## TASK-P4-02 operations boundary
 
 CI新增纯机器合同报告生成，不新增service、worker、queue、database、secret、deployment或external adapter。Report只用于development/provider evidence；没有Runbook、on-call、capacity/SLA、Production readiness或真实authority形成。Migration manifest与Compose/lock继续冻结。

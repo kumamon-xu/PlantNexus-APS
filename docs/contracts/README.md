@@ -11,6 +11,10 @@ last_reviewed: 2026-08-26
 
 # 合同文档索引
 
+## TASK-P4-03 consumer boundary
+
+`0005_replan_event_persistence`现以consumer-only方式持久化P4-02的ExecutionEvent/ReplanRequest exact carrier bytes，并以versioned internal storage projection保存checkpoint、PlanningRun attempt/result reference和transaction audit。Schema set继续`2.8.0`且所有Schema/sample逐字不变；internal records不是第二套业务wire contract，不得携带event payload解释、fact projection、ChangeReport内容或ScheduleVersion application语义。
+
 ## TASK-P4-02 machine-contract baseline
 
 Additive schema set现为`2.8.0`。TASK-P4-02发布九份strict/offline/no-default机器carrier与九份Simulation sample，并由纯合同precheck、四个Test ID及`p4-machine-contract-report.v1`固定exact fingerprints、authority/order、immutable lineage、half-open freeze、OBJ-001→002→003、ChangeReport completeness、既有state pairs及P4 export/simulator边界。58份历史Schema/sample、migration `0004`和dependency lock保持逐字不变。

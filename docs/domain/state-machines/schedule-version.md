@@ -11,6 +11,10 @@ last_reviewed: 2026-08-27
 
 # ScheduleVersion 状态机
 
+## TASK-P4-03 persistence review
+
+本Task只允许terminal replan result保存future `schedule-version.v2`的version/id/content fingerprint reference，不创建或更新ScheduleVersion row。既有DRAFT/READY_FOR_REVIEW/APPROVED/PUBLISHED/SUPERSEDED/REJECTED集合与全部pair零变化；PUBLISHED base保持immutable，new DRAFT application仍由P4-08独占。
+
 ## TASK-P4-02 ScheduleVersion v2 carrier review
 
 新carrier增加dynamic-replan lineage但直接复用v1的六状态、guard evidence与allowed pairs。Synthetic sample只能是DRAFT且decision/publication为空；本Task不创建或迁移Version，不自动READY/APPROVE/PUBLISH，也不改变PUBLISHED immutable/supersession语义。实际new DRAFT transaction仍属于P4-08。

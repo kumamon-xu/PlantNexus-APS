@@ -11,13 +11,17 @@ last_reviewed: 2026-08-27
 
 # PlantNexus APS 文档中心
 
+## TASK-P4-03 persistence implementation boundary
+
+TASK-P4-03已在`7b9bfc3069de5d3738e5cc5827d27d197ed3d226`上独立激活，当前为`in_progress`。Additive migration `0005_replan_event_persistence`与plane-scoped repositories形成Simulation-only ledger/checkpoint/request/attempt/result-reference/audit storage primitive；本地machine 9/9、643 Backend、67 Vitest、三轮各12/12 Chromium、双Gate和52/6/19/0治理均PASS。Schema set仍为`2.8.0`且九份P4 carrier bytes、全部state pairs和dependency lock不变。P4-04 projection、P4-06 ChangeReport生成、P4-08 new DRAFT、P4-09 Simulator、P5及Production均未启动。
+
 ## TASK-P4-02 machine-contract release
 
 TASK-P4-02已获单独授权并以`4026597ab1015b5ea3a89d241f0d12b5b481dee3`为不可变Diff base发布additive set `2.8.0`。ExecutionEvent/ReplanRequest/ChangeReport/ExecutionSimulationManifest以及Policy/SolverReport/ScheduleVersion/Export carrier的九份Schema与九份sample均为strict、no-default、offline-reference、Simulation-only合同；implementation `539cdbbdcdd406daba25b8d6b8caaa5133691e76`的exact required provider成功后，本evidence-only closure将TASK-P4-02标为`done`。P4-03、P5与Production均未启动。
 
 ## P4 activation and planning baseline
 
-用户于2026-08-27在P3 Exit report/manifest=`READY`、`blocking_gaps=[]`且两个精确提交provider均验证后批准P3→P4。P3现为`completed`，P4为`active`；TASK-P4-00～02状态以上方当前段落为准，P4-03～15保持`planned`，P4-15是唯一最后独立Exit Audit。当前不形成任何P4业务行为、P5能力或Production readiness/authority/external/deployment/capacity/SLA。
+用户于2026-08-27在P3 Exit report/manifest=`READY`、`blocking_gaps=[]`且两个精确提交provider均验证后批准P3→P4。P3现为`completed`，P4为`active`；TASK-P4-00～02为`done`，TASK-P4-03状态以上方当前段落为准，P4-04～15保持`planned`，P4-15是唯一最后独立Exit Audit。当前不形成P4-04+业务行为、P5能力或Production readiness/authority/external/deployment/capacity/SLA。
 
 ## P3 Exit audit status
 

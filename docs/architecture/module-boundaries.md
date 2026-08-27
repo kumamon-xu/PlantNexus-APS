@@ -11,6 +11,10 @@ last_reviewed: 2026-08-26
 
 # 模块边界与依赖规则
 
+## TASK-P4-03 implemented dependency edge
+
+`app.domain.execution_contracts → app.infrastructure.replan_persistence/execution_event_repository/replan_repository`已形成单向consumer edge；repositories只依赖纯carrier precheck和既有SQLAlchemy/Alembic primitives。它们暴露caller-owned transaction与CAS，不导入Application、Planning、Solver、Validator、Simulation、API、Frontend或Exporter。P4-04只能消费这些ports完成projection，不能绕过ledger；P4-08只能消费attempt/result references完成application。
+
 ## TASK-P4-02 module boundary
 
 新增实现仅位于domain pure contracts/check CLI；它可解析JSON/YAML与校验Schema，但不导入repository、application service、OR-Tools、Simulator、API或Frontend。两处existing application/domain machine checker只同步current global metadata，不改变P3业务路径。后继consumer不得把pure precheck当作transaction或authority provider。

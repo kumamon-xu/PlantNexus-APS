@@ -11,6 +11,10 @@ last_reviewed: 2026-08-27
 
 # Schema 计划索引
 
+## TASK-P4-03 first durable consumer
+
+Schema set继续为`2.8.0`且九份P4 Schema/sample及58份历史artifact字节不变。Migration `0005_replan_event_persistence`首次消费ExecutionEvent v1与ReplanRequest v1 exact carriers；ChangeReport v1只以version/id/fingerprint reference进入terminal result记录，完整document repository仍属后继。由于durable consumer已形成，P4-02 additive files不再允许整体删除式rollback；未来合同变化必须新版本加显式迁移。
+
 ## TASK-P4-02 additive `2.8.0` release
 
 本Task从冻结的set `2.7.0`加法发布九个彼此及历史版本均不可互换的document，全部使用JSON Schema Draft 2020-12、stable URN、`additionalProperties=false`、无`default`、offline `$ref`、exact version与canonical fingerprint。九份匹配sample均明确`data_plane=SIMULATION`/`production_binding=false`；58份P0～P3 Schema/sample按清单摘要`sha256:523ab38a466aa76c97ee39cfa52b7b1d43c77ba4dd622c3d27c409ee9af7242e`逐字冻结。
@@ -19,7 +23,7 @@ last_reviewed: 2026-08-27
 |---|---|---|
 | ExecutionEvent v1 | [`execution-event.schema.json`](../../schemas/json/execution-event.schema.json) / `urn:plantnexus:aps:schema:execution-event:v1` | 新carrier；authority/source position/canonical identity；ingress由P4-04 |
 | PlanningPolicy v2 | [`planning-policy.v2.schema.json`](../../schemas/json/planning-policy.v2.schema.json) / `urn:plantnexus:aps:schema:planning-policy:v2` | v1不可互换；freeze与OBJ-001→002→003；行为由P4-05～07 |
-| ReplanRequest v1 | [`replan-request.schema.json`](../../schemas/json/replan-request.schema.json) / `urn:plantnexus:aps:schema:replan-request:v1` | 新immutable carrier、无状态机；持久化/应用由P4-03/08 |
+| ReplanRequest v1 | [`replan-request.schema.json`](../../schemas/json/replan-request.schema.json) / `urn:plantnexus:aps:schema:replan-request:v1` | immutable carrier、无状态机；P4-03 durable persistence已形成，应用仍由P4-08 |
 | SolverReport v2 | [`solver-report.v2.schema.json`](../../schemas/json/solver-report.v2.schema.json) / `urn:plantnexus:aps:schema:solver-report:v2` | v1不可互换；三阶段与诚实status；求解由P4-07 |
 | ChangeReport v1 | [`change-report.schema.json`](../../schemas/json/change-report.schema.json) / `urn:plantnexus:aps:schema:change-report:v1` | 新完整operation-universe carrier；生成由P4-06/08 |
 | ScheduleVersion v2 | [`schedule-version.v2.schema.json`](../../schemas/json/schedule-version.v2.schema.json) / `urn:plantnexus:aps:schema:schedule-version:v2` | v1不可互换；沿用既有state pairs；应用由P4-08 |

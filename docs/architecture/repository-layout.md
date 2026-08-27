@@ -11,6 +11,10 @@ last_reviewed: 2026-08-27
 
 # 目标仓库结构
 
+## TASK-P4-03 repository layout delta
+
+P4 persistence位于既有`backend/app/infrastructure/`，由shared storage projection、ExecutionEvent ledger adapter、checkpoint/request/lineage/audit adapters和machine check组成；database revision位于`backend/migrations/versions/0005_replan_event_persistence.py`，focused tests位于既有unit/integration目录。没有创建Application、Simulation、API、Frontend或P5目录，也没有旁路table。
+
 ## P4 planned placement
 
 P4-03～08的event/replan/fact/freeze/stability/application实现仍须遵循既有domain/application/ports/adapters分层；P4-09/10保持在Simulation边界，P4-12/13仅在既有API/Frontend边界扩展。每张Task激活时必须把目录级意图收紧为exact file allow-list；本规划不创建源码目录或占位实现。

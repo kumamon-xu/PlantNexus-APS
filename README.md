@@ -1,5 +1,9 @@
 # PlantNexus APS
 
+## TASK-P4-03 Replan persistence
+
+TASK-P4-03已获独立授权并在不可变Diff base `7b9bfc3069de5d3738e5cc5827d27d197ed3d226`上执行。当前实现增加additive `0005_replan_event_persistence`、7张Simulation-only关系表、5个plane-scoped repository边界和`p4-replan-persistence-report.v1`；本地machine evidence为9/9 PASS，完整Backend为643项、Frontend为67 Vitest及三轮各12/12 Chromium，P2/P3双Gate与52-path/6-rule/19-check/0-issue治理均通过。该持久化层只保存ExecutionEvent ledger、projection checkpoint CAS、immutable ReplanRequest、request→PlanningRun attempt→terminal result references与append-only audit，不解释事件、不投影事实、不生成ChangeReport/new DRAFT，也不调用Solver/Simulator或形成Production能力。Task保持`in_progress`直到implementation与evidence-only closure均获exact provider验证；P4-04不会自动启动。
+
 ## P4 phase activation and TASK-P4-02
 
 用户已明确批准P3→P4。TASK-P3-17独立Exit Audit的report/manifest均为`READY`、`blocking_gaps=[]`；audit implementation `201be9c6fd1b433a9d0a629a3ae7d4ffe1107476`和evidence-only closure `61eeacdd5efc20b2321750e1310e9e21561c9fc2`的直接拓扑、required `validate`、GitHub Actions app `15368`及未过期artifact均已exact复验。因此P3 Milestone现为`completed`，P4 Dynamic Replanning已激活。
@@ -16,7 +20,7 @@ Coding Agent 必须从 [`AGENTS.md`](AGENTS.md) 进入项目规则。项目规�
 |---|---|---|
 | Implementation spec | `0.3.0` | 当前权威实施规格版本 |
 | Code | `0.0.0` | P0 工程骨架占位，不代表发布版本 |
-| Business schema set | `2.8.0` | 加法包含九份P4 Simulation机器carrier；全部P0～P3 document bytes与migration `0004`保持冻结 |
+| Business schema set | `2.8.0` | 九份P4 Simulation机器carrier逐字冻结；数据库migration head现增加consumer-only `0005_replan_event_persistence`，不改变Business Schema bytes |
 | Python | `3.12` | `.python-version` 与 `pyproject.toml` 固定的运行时系列 |
 | OR-Tools | `9.15.6755` | TASK-P2-03 exact runtime pin；只允许在 `planning/backends/cp_sat/` 使用 |
 
@@ -46,6 +50,7 @@ uv run python -m app.simulation.scenarios.p2_correctness --root . --report build
 uv run python -m app.simulation.baselines.reference_schedulers --root . --report build/validation/TASK-P2-10-reference-schedulers.json
 uv run python -m app.exporters.contract_check --root . --report build/validation/TASK-P2-11-output-contracts.json
 uv run python -m app.domain.execution_contract_check --root . --report build/validation/ci-p4-machine-contracts.json
+uv run python -m app.infrastructure.replan_persistence_check --root . --report build/validation/TASK-P4-03-replan-persistence.json
 uv run python scripts/run_benchmark.py --profile xs --report build/benchmarks/TASK-P2-12-xs.json
 uv run python -m app.application.p2_gate_report --root . --repeat 2 --report build/validation/TASK-P2-13-p2-gate.json
 uv run python -m app.infrastructure.contract_check --root . --report build/validation/TASK-P0-08-engineering.json
@@ -58,7 +63,7 @@ uv run python -c "import app; assert app.CODE_VERSION == '0.0.0'; assert app.SPE
 `scripts/check_docs.py` 当前同时检查结构性 Markdown、版本化 registries、REQ/NFR/ENG/TEST 等引用、Task 依赖、逐根 traceability 和 PROD_OPEN/SIM_ASSUMPTION 隔离。Task 进入 `in_progress` 时须把当时完整 HEAD SHA 写入 `Diff base`；影响覆盖检查使用 `Diff base..HEAD` 的已提交变更与当前 working tree 的并集，因此提交前后可用同一命令复验：
 
 ```powershell
-uv run python scripts/check_docs.py --task docs/tasks/P4/TASK-P4-02-execution-event-replan-change-report-schemas.md --check-diff --report build/traceability/TASK-P4-02-report.json
+uv run python scripts/check_docs.py --task docs/tasks/P4/TASK-P4-03-replan-event-persistence-and-state-transactions.md --check-diff --report build/traceability/TASK-P4-03-report.json
 ```
 
 报告使用 `traceability-report.v1`，包含 `diff_base` 与 committed/working-tree source counts，生成到已忽略的 `build/`；Task Card Completion evidence 保存持久结果摘要。[`ci.yml`](.github/workflows/ci.yml) 已编排 exact lock、lint、type、全部 P0 tests、machine contracts、Compose config、文档 diff 和 package build。仓库内只证明 workflow/config 可执行；CI provider run URL/ID 必须来自真实外部运行，不能由本地结果替代。
@@ -78,7 +83,7 @@ scripts/      仓库级校验与自动化脚本
 infra/        P0 开发容器构建配置
 ```
 
-P2 CP-SAT Vertical Slice与P3 Planning Workspace均已通过Exit Gate并关闭，当前阶段为P4。P2-00～14、P3-00～17、TASK-P4-00～02均为`done`；P4-03～15仍为`planned`。Production capacity/SLA/identity/approval authority/external publish仍未形成，P4运行行为也尚未开始。当前边界见[`docs/current_phase.md`](docs/current_phase.md)。
+P2 CP-SAT Vertical Slice与P3 Planning Workspace均已通过Exit Gate并关闭，当前阶段为P4。P2-00～14、P3-00～17、TASK-P4-00～02均为`done`；TASK-P4-03为`in_progress`，P4-04～15仍为`planned`。Production capacity/SLA/identity/approval authority/external publish仍未形成，event fact projection及其他P4业务行为也尚未开始。当前边界见[`docs/current_phase.md`](docs/current_phase.md)。
 
 TASK-P3-13保留失败implementation run `32920462781`、首次closure `87d47c7483185483ac8027100c1c664d18011a7c` / run `32921871460`的606/1失败与artifact count=0。独立XLSX deterministic corrective implementation `3538d46f8b73ae434057bcbca9037436aa91f2c7`的required run/job/artifact=`32923203227`/`98040743610`/`9590625358`已全绿并下载复验33份JSON、12/12 Chromium和Task 91/0/11/19/0；该P3-13 closure当时未自动启动P3-14，后者现依据新的用户授权独立执行。
 

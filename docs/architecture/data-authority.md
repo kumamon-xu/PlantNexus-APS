@@ -11,6 +11,10 @@ last_reviewed: 2026-08-26
 
 # 数据权威边界
 
+## TASK-P4-03 authority persistence
+
+每个factory/planning scope只按carrier声明的`authority_id + stream_id + stream_version + source_position`写入唯一ExecutionEvent ledger位置；同position不同bytes、同ID不同bytes、跨plane或Production-shaped write均fail closed。Repository只保存authority decision与exact carrier，不判断payload真伪或成为第二事实权威；projection checkpoint只记录已原子提交的prefix/fact artifact reference，业务事实权威仍由P4-04建立。
+
 ## TASK-P4-02 event authority carrier
 
 ExecutionEvent v1把authority ID/scope/source、source stream/version/position和factory/planning scope显式纳入合同；receive timestamp不构成业务authority或排序。Carrier只声明输入必须提供什么，不建立真实MES/ERP authority或冲突仲裁；OPEN-002/015未关闭，P4-04才可消费已授权Simulation stream投影事实。

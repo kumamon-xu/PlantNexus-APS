@@ -12,6 +12,10 @@ registry_version: 1.0.0
 
 # SIM_ASSUMPTION 注册表
 
+## TASK-P4-03 persistence review
+
+本Task的storage tests只复用`SIM-P4-CONTRACT-001@1.0.0`及`SIM-ASSUMPTION-016`中的既有event/request/sample值；新增ID、概率、freeze值、运行阈值或Scenario分布均为零。测试临时数据库、row count和runtime不是Simulation assumption，更不是Production事实。SIM-ASSUMPTION-001～016全部继续`ACTIVE`，数量和registry格式不变。
+
 ## TASK-P4-02 contract-sample assumption
 
 TASK-P4-02新增`SIM-ASSUMPTION-016`，只把九份相互引用的Schema sample固定为`SIM-P4-CONTRACT-001@1.0.0`：seed `20260827`、UTC origin `2026-08-27T06:00:00Z`、1秒virtual-clock resolution、900秒freeze window、两条120秒assignment，并复用P2已登记的30秒/1 worker/seed `20260820` SolveLimits reference。这些数值只用于shape、fingerprint、lineage、half-open interval和complete ChangeReport的contract replay，不是Scenario distribution、Solver/Simulator run、Production freeze/default、capacity或SLA。

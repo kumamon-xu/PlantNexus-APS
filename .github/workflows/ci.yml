@@ -165,6 +165,12 @@ jobs:
           --root .
           --report build/validation/ci-p3-persistence.json
 
+      - name: P4 replan event persistence evidence
+        run: >-
+          uv run python -m app.infrastructure.replan_persistence_check
+          --root .
+          --report build/validation/ci-p4-replan-persistence.json
+
       - name: P3 reviewable ScheduleVersion lifecycle evidence
         run: >-
           uv run python -m app.application.schedule_version_lifecycle_check

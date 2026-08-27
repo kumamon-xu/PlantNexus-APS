@@ -15,6 +15,8 @@ last_reviewed: 2026-08-26
 
 P4首次详细计划只能由新建TASK-P4-00 `phase-planning-owner`归属；P4-01～15必须同range新建、保持`planned/ready`且不预填implementation SHA。每张后继卡需要独立用户授权、clean provider-verified HEAD和启动时40字符Diff base。规划只登记预期ADR/Schema/migration/state/dependency影响，不得把它们写成formed；P4-15必须最后独立审计，READY也不自动创建P5或Production声明。
 
+TASK-P4-00 implementation artifact `9632983094`已复验上述batch规则、83/0 paths、四行、19 checks、0 issues，本closure据此把owner标为`done`。这不会授权或激活任何planned member；TASK-P4-01仍须新的明确授权与新的clean synchronized Diff base。
+
 ## TASK-P3-17 superseding audit rule
 
 Phase Exit report与machine manifest必须保留审计时的提交拓扑、失败run、provider digest、local commands、gaps和阶段边界；后续provider失败或新证据只能通过superseding correction追加，不能删除或追写历史Gate bytes。TASK-P3-17的implementation/closure exact provider现已闭环；Exit READY没有自动改变current phase，本次P4切换来自后续独立用户授权。

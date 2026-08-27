@@ -15,7 +15,7 @@ last_reviewed: 2026-08-27
 
 用户于2026-08-27明确批准phase transition。切换前逐项确认TASK-P3-00～17全部`done`；P3 Exit report与machine manifest均为`READY`且`blocking_gaps=[]`；audit implementation `201be9c6fd1b433a9d0a629a3ae7d4ffe1107476`与closure `61eeacdd5efc20b2321750e1310e9e21561c9fc2`为直接父子提交；两者required `validate`均由GitHub Actions app `15368`成功提供，artifact `9631260796`/`9631608856`未过期且exact SHA、TASK-P3-17、Diff base、四个Impact Rules、19 checks、0 issues、P2/P3 Gate、双语与机器合同证据一致。启动时main/origin/main/remote main均为closure SHA、ahead/behind=`0/0`、工作树clean。
 
-P3 Milestone因此关闭为`completed`，P4激活为`active`。TASK-P4-00只负责本次阶段启动、完整Task规划与治理同步；TASK-P4-01～15均保持`planned`，没有implementation SHA，且P4-01不会自动执行。
+P3 Milestone因此关闭为`completed`，P4激活为`active`。TASK-P4-00只负责本次阶段启动、完整Task规划与治理同步；implementation `c94af400392418f9bb69509331fa8d1dff046184`的run/job/artifact=`33038260107`/`98405799469`/`9632983094`已exact成功并下载复验83/0 paths、四个Impact Rules、19/19 checks、0 issues，故本evidence-only closure把P4-00标为`done`。TASK-P4-01～15均保持`planned`且没有implementation SHA，P4-01不会自动执行；closure自身provider仍须push后exact复验。
 
 ## P4 planned execution chain
 

@@ -18,6 +18,8 @@ registry_version: 1.0.0
 
 本次只有规划与治理，所有Requirement根ID继续`ALLOCATED`；ExecutionEvent、ReplanRequest、freeze、OBJ-002、ChangeReport和Execution Simulator行为均为`PLANNED`。P3 Exit历史已provider闭环但不被改写；`registry_version=1.0.0`不变。
 
+TASK-P4-00 implementation artifact `9632983094`已精确复验规划分配、治理计数与83/0/4/19/0 Task report，故本closure把规划owner标为`done`。该provider不升级任何Requirement lifecycle，也不把P4-01～15或其业务能力写成fulfilled。
+
 ## TASK-P3-17 audit status
 
 REQ-004/005/006/007/009的P3 Planning Workspace切片已由独立Exit Audit连接到39个前序P3 provider提交、36个下载artifact、621项Python、67项Frontend与P2/P3双Gate证据；判定为`READY`、0 gaps。TASK-P3-17 audit implementation与closure provider均已exact验证，标记`PROVIDER_VERIFIED_DONE`；该审计不改变任何Requirement正文、root lifecycle或`registry_version=1.0.0`，P4需求现只进入规划、Production需求仍未形成。

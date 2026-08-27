@@ -13,7 +13,7 @@ last_reviewed: 2026-08-27
 
 ## P4 activation and planning baseline
 
-用户于2026-08-27在P3 Exit report/manifest=`READY`、`blocking_gaps=[]`且两个精确提交provider均验证后批准P3→P4。P3现为`completed`，P4为`active`；TASK-P4-00仅执行phase transition、15张后继Task规划和文档治理，TASK-P4-01～15保持`planned`且无implementation SHA。P4-15是唯一最后独立Exit Audit。当前不形成任何P4业务行为、P5能力或Production readiness/authority/external/deployment/capacity/SLA。
+用户于2026-08-27在P3 Exit report/manifest=`READY`、`blocking_gaps=[]`且两个精确提交provider均验证后批准P3→P4。P3现为`completed`，P4为`active`；TASK-P4-00只执行phase transition、15张后继Task规划和文档治理，现已取得exact implementation provider并由evidence-only closure标为`done`。TASK-P4-01～15保持`planned`且无implementation SHA，P4-15是唯一最后独立Exit Audit。当前不形成任何P4业务行为、P5能力或Production readiness/authority/external/deployment/capacity/SLA。
 
 ## P3 Exit audit status
 
@@ -77,7 +77,7 @@ last_reviewed: 2026-08-27
 
 ## 当前范围
 
-当前阶段为P4。P0～P3 Milestone均为`completed`；TASK-P3-00～17全部`done`且P3 Exit双提交provider已闭环。TASK-P4-00为唯一`in_progress` phase-planning owner，P4-01～15为`planned`成员；P4-01需要新的明确授权，P4-15最终独立审计也不自动进入P5或Production。详见`current_phase.md`。
+当前阶段为P4。P0～P3 Milestone均为`completed`；TASK-P3-00～17全部`done`且P3 Exit双提交provider已闭环。TASK-P4-00现为`done`，P4-01～15为`planned`成员；P4-01需要新的明确授权，P4-15最终独立审计也不自动进入P5或Production。详见`current_phase.md`。
 
 P3已形成的顺序保持合同/ADR→Schema→persistence→validated DRAFT→read models→edit/lock→approval/reject→idempotent publish→ExportJob→API→Frontend/E2E→vertical Gate。批准的末段顺序为TASK-P3-15治理支持→TASK-P3-16本地化→TASK-P3-17独立Exit Audit；P3-16现已完成实现provider复验与文档closure，下一项仍须另行授权。展示术语规范见[`frontend/official-zh-cn-terminology-map.md`](frontend/official-zh-cn-terminology-map.md)，它不改变英文机器合同。
 

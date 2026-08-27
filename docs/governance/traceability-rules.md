@@ -17,9 +17,11 @@ last_reviewed: 2026-08-27
 
 P4规划把REQ-004/005/006/007/008/009/012/013/014与相关NFR/ENG root分配到15个成员，并登记12个`PLANNED` Test ID；只有后继Task的exact implementation SHA、required `validate`、未过期artifact与evidence-only closure才能把对应链提升为formed/verified。本批完成后counts应为30 roots、30 trace rows、61 Test IDs、15 OPEN、15 SIM assumptions、17 risks、71 Tasks和185份`docs/**/*.md`；这些计数不表示P4业务能力已实现。
 
+TASK-P4-00 implementation `c94af400392418f9bb69509331fa8d1dff046184`的required run/job/artifact=`33038260107`/`98405799469`/`9632983094`已exact成功；fresh artifact复现TASK/base、83/0 paths、四行、19/19 checks、0 issues及上述全部计数。因此本closure只把P4-00治理边标为`done`；P4-01～15仍为`PLANNED`且没有implementation edge。
+
 ## TASK-P3-17 Exit trace rule application
 
-最终Exit边按`P3 roots → TASK-P3-00～17 → registered Test IDs/machine reports → exact provider run/job/artifact → P3 Exit report/manifest`闭合。Audit必须独立下载并解析前序artifacts、验证SHA/Task/Diff base/Impact Rules/check/issues，并fresh重放全部required gates；前序Gate PASS不能替代Exit。当前30 roots/30 rows/49 Test IDs保持不变，TASK-P3-17为`IMPLEMENTATION_PROVIDER_VERIFIED_CLOSURE_PENDING`并在本closure中标为`done`；closure provider只能在push后复验。
+最终Exit边按`P3 roots → TASK-P3-00～17 → registered Test IDs/machine reports → exact provider run/job/artifact → P3 Exit report/manifest`闭合。Audit必须独立下载并解析前序artifacts、验证SHA/Task/Diff base/Impact Rules/check/issues，并fresh重放全部required gates；前序Gate PASS不能替代Exit。该历史slice为30 roots/rows、49 Test IDs，TASK-P3-17 implementation/closure provider均已exact闭环并标为`done`；P4 transition仍来自后续独立授权。
 
 ## TASK-P3-15 amendment and planned-member evidence rule
 

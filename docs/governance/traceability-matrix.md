@@ -18,6 +18,8 @@ P3 Exit `READY`/0 gaps与implementation→closure exact provider链已作为TASK
 
 能力owner：P4-04=ExecutionEvent事实投影，P4-08=ReplanRequest应用，P4-05=freeze/effective locks，P4-06/07=OBJ-002和词典序求解，P4-06/11=ChangeReport语义/输出，P4-09/10=Execution Simulator/连续场景，P4-14/15=Gate/Audit。Production与P5不在该链。
 
+TASK-P4-00 implementation `c94af400392418f9bb69509331fa8d1dff046184` / artifact `9632983094`已精确复验185/30/30/61/15/15/17/71计数、83 committed/0 working paths、四个Impact Rules、19 checks与0 issues；因此只有phase-planning trace edge升级为`PROVIDER_VERIFIED_DONE`。P4-01～15及12个新增Test ID继续`PLANNED`，不得继承该provider状态。
+
 ## TASK-P3-17 local independent Exit trace slice
 
 REQ-004/005/006/007/009、九项P3 NFR与ENG-ARCH/VAL/ERR/VER/LOG连接TASK-P3-17→全部registered P3 Test IDs/machine reports→39个前序exact provider push/check-run→36个下载artifact→`P3-exit-gate-audit-report.md`/`p3-exit-gate-evidence-manifest.v1`。独立审计为`READY`、0 gaps：successful-chain 983 JSON为0 parse/SHA/top-level/check/issue/gap异常，621 Python、67 Vitest、三组12/12 Chromium、i18n 8/8、P2 11/11与P3 14/14双回放通过。Audit implementation/closure exact provider均已复验，该边为`PROVIDER_VERIFIED_DONE`且Task=`done`。该历史slice为30 roots/rows、49 Test IDs；当前P4规划已把总Test IDs提升为61，Production仍未形成。

@@ -13,7 +13,7 @@ last_reviewed: 2026-08-27
 
 ## Activation
 
-用户于2026-08-27在P3 Exit双提交provider与clean synchronized closure baseline精确通过后批准P3→P4。TASK-P4-00为唯一phase-planning owner；P4-01～15均为`planned`成员且不会自动启动。P4-15是最后一项独立Exit Gate Audit。
+用户于2026-08-27在P3 Exit双提交provider与clean synchronized closure baseline精确通过后批准P3→P4。TASK-P4-00 phase-planning implementation `c94af400392418f9bb69509331fa8d1dff046184`的exact required provider/artifact已成功，本closure把P4-00标为`done`；P4-01～15均为`planned`成员且不会自动启动。P4-15是最后一项独立Exit Gate Audit。
 
 ## Outcome
 

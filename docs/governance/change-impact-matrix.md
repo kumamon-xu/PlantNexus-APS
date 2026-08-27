@@ -14,7 +14,7 @@ registry_version: 1.0.0
 
 ## TASK-P4-00 phase-transition planning impact
 
-不可变Diff base=`61eeacdd5efc20b2321750e1310e9e21561c9fc2`。本批只修改根README与`docs/**`，关闭P3/激活P4、新增16张P4 Task卡并同步合同/架构/领域/Planning/Simulation/Operations/Quality/Governance的“planned impact”说明。本地Task report得到0 committed-range/83 working-tree unique paths，精确命中`IMPACT-STATE`、`IMPACT-PHASE`、`IMPACT-GOVERNANCE-REGISTRY`、`IMPACT-DOCS`四行、19/19 checks、0 issues；state文档只登记未来责任，不增加或修改state pair。Exact provider仍必须复现同一完整提交范围，任何额外Impact Rule必须先停止并扩卡。
+不可变Diff base=`61eeacdd5efc20b2321750e1310e9e21561c9fc2`。本批只修改根README与`docs/**`，关闭P3/激活P4、新增16张P4 Task卡并同步合同/架构/领域/Planning/Simulation/Operations/Quality/Governance的“planned impact”说明。本地Task report得到0 committed-range/83 working-tree unique paths，精确命中`IMPACT-STATE`、`IMPACT-PHASE`、`IMPACT-GOVERNANCE-REGISTRY`、`IMPACT-DOCS`四行、19/19 checks、0 issues；state文档只登记未来责任，不增加或修改state pair。Implementation artifact `9632983094`已复现83 committed/0 working paths、相同四行、19/19 checks与0 issues，故本closure可把P4-00标为`done`；任何后续额外Impact Rule仍必须先停止并扩卡。
 
 相对Diff base，`backend/**`、`frontend/**`、`schemas/**`、migration、`pyproject.toml`/`uv.lock`/npm lock、fixtures/benchmarks、test assertion、`.github/workflows/**`、accepted ADR正文及P0～P3历史Task/Exit evidence必须零差异。TASK-P4-01的三份具名future ADR与TASK-P4-02 Schema只是预期影响，本批不得创建或分配ADR stable ID；P5+、Production identity/authority/external/deployment/capacity/SLA同样禁止。
 

@@ -1,7 +1,7 @@
 ---
 doc_id: TASK-P4-00
 title: P4 Phase Transition and Task Planning Governance
-status: in_progress
+status: done
 spec_version: 0.3.0
 phase: P4
 normative: true
@@ -106,4 +106,11 @@ Rollback: push前整体回退本Task文档变化并保持P3 active；push后事�
 - Full governance=`PASS`：185 docs、30 roots、30 trace rows、61 Test IDs、15 OPEN、15 SIM assumptions、17 risks、71 Tasks，current owner=TASK-P4-00。
 - Task diff governance=`PASS`：相对不可变Diff base共有0 committed-range/83 working-tree unique paths，精确命中`IMPACT-DOCS`、`IMPACT-GOVERNANCE-REGISTRY`、`IMPACT-PHASE`、`IMPACT-STATE`四行，19/19 checks、0 issues；未注册future ADR ID的首轮失败已通过改为TASK-P4-01启动时分配stable ID纠正，没有创建空ADR。
 - `uv sync --locked`解析/检查69 packages；Ruff全绿；Pyright为0 errors/0 warnings；治理unit+CI contract回归为51 passed；`git diff --check`、phase/dependency/inventory一致性与禁止范围命令均PASS。
-- Implementation SHA/provider及evidence-only closure事实只能在提交/push后的exact验证中回填；当前TASK-P4-00保持`in_progress`，P4-01保持`planned`且未获执行授权。
+- Implementation SHA/provider已完成exact验证；本evidence-only closure把TASK-P4-00标为`done`。P4-01保持`planned`且未获执行授权，closure提交自身的provider只能在push后复验。
+
+### Exact implementation provider evidence
+
+- Implementation=`c94af400392418f9bb69509331fa8d1dff046184`，其唯一父提交为不可变Diff base `61eeacdd5efc20b2321750e1310e9e21561c9fc2`；push run/job/check=`33038260107`/`98405799469`，required context=`validate`，GitHub Actions app=`15368`，58/58 steps success。
+- Artifact=`9632983094` / `plantnexus-ci-evidence-33038260107`，815195 bytes，digest=`sha256:e5201dbe446af37302bc94da76c5ddc2a63439f327a79e435ac9612baa67ff88`，expiry=`2026-11-25T04:04:05Z`，下载时`expired=false`。
+- Fresh下载复核44 files/38 JSON、0 parse error；34份JSON含exact SHA，28份顶层`code_commit`为28/28 exact、0 mismatch。Task report为TASK-P4-00、git head/base精确、83 committed/0 working paths、四个Impact Rules、17/17 expected/observed documents、19/19 checks、0 issues、185/30/30/61/15/15/17/71治理计数一致。
+- Artifact同时复现P2 Gate 11/11/0 gaps、P3 Gate 14/14/0 gaps、i18n 8/8/0 issues、Frontend 12/12与三组Chromium各12 expected/0 unexpected/0 flaky/0 skipped。该证据只关闭P4规划Task，不形成任何P4业务能力、P5或Production声明。

@@ -13,7 +13,7 @@ last_reviewed: 2026-08-27
 
 ## P3→P4 transition
 
-用户已在P3 Exit双提交exact provider闭环、`READY`且0 gaps后批准transition。P3现为`completed`，P4为`active`；TASK-P4-00仅建立完整规划治理，P4-01～15保持`planned`且P4-15为最后独立Audit。P4规划不授权P5或Production readiness/authority/external/deployment/capacity/SLA。
+用户已在P3 Exit双提交exact provider闭环、`READY`且0 gaps后批准transition。P3现为`completed`，P4为`active`；TASK-P4-00只建立完整规划治理，其implementation exact provider已成功并由本closure标为`done`。P4-01～15保持`planned`且P4-15为最后独立Audit；P4规划不授权P5或Production readiness/authority/external/deployment/capacity/SLA。
 
 ## TASK-P3-17 local Exit decision
 
@@ -58,7 +58,7 @@ P2当前状态：[`P2 — CP-SAT Vertical Slice`](P2-cp-sat-vertical-slice.md)�
 
 P3当前状态：[`P3 — Planning Workspace`](P3-planning-workspace.md)为`completed`。TASK-P3-00～17均为`done`；TASK-P3-17 final independent Exit Audit为`READY`且0 gaps，implementation/closure exact provider均已复验。用户于2026-08-27明确批准transition，历史失败与corrective/provider链保持只读。
 
-P4当前状态：[`P4 — Dynamic Replanning`](P4-dynamic-replanning.md)为`active`。TASK-P4-00负责phase transition和完整规划；P4-01～15均为`planned`，没有implementation SHA且不会自动启动。P4-15是独立Exit Audit；P5与Production仍未进入。
+P4当前状态：[`P4 — Dynamic Replanning`](P4-dynamic-replanning.md)为`active`。TASK-P4-00完成phase transition和完整规划并由exact implementation provider支持为`done`；P4-01～15均为`planned`，没有implementation SHA且不会自动启动。P4-15是独立Exit Audit；P5与Production仍未进入。
 
 TASK-P3-04 implementation `a9be974855bb825784d639b7f6675e5a33e4273d`的run/job/artifact=`32700005280`/`97349447107`/`9510215582`精确复现35 focused、515 full、8/8 lifecycle、23/23 JSON PASS与45 committed/0 working paths、8 rows、19 checks、0 issues，故本closure标为`done`。该证据只形成reviewable ScheduleVersion，不形成approval、publish、P4或Production readiness。
 

@@ -15,6 +15,8 @@ last_reviewed: 2026-08-27
 
 TASK-P4-00只运行既有本地治理与required-equivalent检查，禁止修改`.github/workflows/**`。每个P4 implementation Task必须以自身exact Diff base生成Task report，并在push后由required `validate`（GitHub Actions app `15368`）提供未过期artifact，核对exact SHA/Task/base/Impact Rules/checks/issues后才能evidence-only closure；P4-14/15另有完整Gate/Audit。当前required check仍只有`validate`。
 
+TASK-P4-00 implementation `c94af400392418f9bb69509331fa8d1dff046184`的run/job=`33038260107`/`98405799469`由app `15368`提供`validate`并58/58 steps success；artifact `9632983094`未过期，digest=`sha256:e5201dbe446af37302bc94da76c5ddc2a63439f327a79e435ac9612baa67ff88`，下载复核44 files/38 JSON、TASK/base/83/0/4/19/0、双Gate/双语/Chromium均一致。本closure据此关闭P4-00；workflow、required context与P4业务实现零变化，closure自身仍须exact provider。
+
 ## TASK-P3-17 audit conclusion
 
 本地required-equivalent已通过locked install、Ruff、Pyright、621 pytest、67 Vitest、三组12/12 Chromium、33 machine reports、P2 11/11、P3 14/14、SCA/license、Compose与双build；前序provider chain也已下载核验。TASK-P3-17仍须自身implementation exact `validate`/artifact与evidence-only closure provider后才满足DoD；本地READY不能替代provider。

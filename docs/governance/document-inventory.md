@@ -14,7 +14,7 @@ registry_version: 1.0.0
 
 ## TASK-P4-00 phase-planning inventory delta
 
-本批新增TASK-P4-00～15共16份正式Markdown，inventory由169增至185；P3从`active`转为`completed`，P4从`planned`转为`active`，P4-00=`in_progress`、P4-01～15=`planned`。Roots=30、trace rows=30、OPEN=15、SIM assumptions=15与registry format version不变；Test IDs由49增至61、risks由14增至17、Tasks由55增至71。没有新增ADR正文、Schema、migration、依赖、fixture、test、workflow、runbook、P5或Production文档。
+本批新增TASK-P4-00～15共16份正式Markdown，inventory由169增至185；P3从`active`转为`completed`，P4从`planned`转为`active`。P4-00 implementation artifact `9632983094`已复现185 docs和83/0/4/19/0治理结果，故本closure把P4-00标为`done`；P4-01～15仍为`planned`。Roots=30、trace rows=30、OPEN=15、SIM assumptions=15与registry format version不变；Test IDs由49增至61、risks由14增至17、Tasks由55增至71。没有新增ADR正文、Schema、migration、依赖、fixture、test、workflow、runbook、P5或Production文档。
 
 ## TASK-P3-17 audit inventory delta
 
@@ -42,7 +42,7 @@ TASK-P3-14不新增、删除或重命名正式Markdown，inventory继续覆盖16
 
 Root=30、trace rows=30、Test IDs=48、OPEN=15、risks=13、Tasks=53均不变；新增SIM-ASSUMPTION-015使SIM count=15但不改变registry format。Artifact `9589931373`复现33 JSON及Task 91/0/11/19/0，closure run `32921871460`失败且无artifact；独立corrective artifact `9590625358`再次复现33 JSON及91/0/11/19/0。本closure自身仍须exact provider。
 
-本清单列出当前仓库已经实际存在的Markdown文档。P0～P3均已归档为completed；P3 Exit Gate=`READY`、0 gaps且implementation/closure provider完整闭环。P4现为active，TASK-P4-00负责phase planning，P4-01～15仍为planned且无implementation SHA。P3 human-control UI/E2E、有界internal Simulation成果包下载及双语展示provider evidence保持历史只读；Production Runbook正文仍未形成。
+本清单列出当前仓库已经实际存在的Markdown文档。P0～P3均已归档为completed；P3 Exit Gate=`READY`、0 gaps且implementation/closure provider完整闭环。P4现为active，TASK-P4-00 phase planning=`done`，P4-01～15仍为planned且无implementation SHA。P3 human-control UI/E2E、有界internal Simulation成果包下载及双语展示provider evidence保持历史只读；Production Runbook正文仍未形成。
 
 | Path | Doc ID | Status | Title |
 |---|---|---|---|
@@ -213,7 +213,7 @@ Root=30、trace rows=30、Test IDs=48、OPEN=15、risks=13、Tasks=53均不变�
 | [tasks/P3/TASK-P3-15-phase-plan-amendment-governance-support.md](../tasks/P3/TASK-P3-15-phase-plan-amendment-governance-support.md) | TASK-P3-15 | done | P3 Phase Plan Amendment Governance Support |
 | [tasks/P3/TASK-P3-16-frontend-bilingual-localization-and-official-terminology.md](../tasks/P3/TASK-P3-16-frontend-bilingual-localization-and-official-terminology.md) | TASK-P3-16 | done | Frontend Bilingual Localization and Official Terminology |
 | [tasks/P3/TASK-P3-17-p3-exit-gate-audit.md](../tasks/P3/TASK-P3-17-p3-exit-gate-audit.md) | TASK-P3-17 | done | P3 Exit Gate Audit |
-| [tasks/P4/TASK-P4-00-phase-transition-and-task-planning-governance.md](../tasks/P4/TASK-P4-00-phase-transition-and-task-planning-governance.md) | TASK-P4-00 | in_progress | P4 Phase Transition and Task Planning Governance |
+| [tasks/P4/TASK-P4-00-phase-transition-and-task-planning-governance.md](../tasks/P4/TASK-P4-00-phase-transition-and-task-planning-governance.md) | TASK-P4-00 | done | P4 Phase Transition and Task Planning Governance |
 | [tasks/P4/TASK-P4-01-dynamic-replanning-contract-and-adr-baseline.md](../tasks/P4/TASK-P4-01-dynamic-replanning-contract-and-adr-baseline.md) | TASK-P4-01 | planned | Dynamic Replanning Contract and ADR Baseline |
 | [tasks/P4/TASK-P4-02-execution-event-replan-change-report-schemas.md](../tasks/P4/TASK-P4-02-execution-event-replan-change-report-schemas.md) | TASK-P4-02 | planned | ExecutionEvent Replan and ChangeReport Machine Contracts |
 | [tasks/P4/TASK-P4-03-replan-event-persistence-and-state-transactions.md](../tasks/P4/TASK-P4-03-replan-event-persistence-and-state-transactions.md) | TASK-P4-03 | planned | Replan Event Persistence and State Transactions |

@@ -4,30 +4,31 @@ import { stateForError } from "../app/state";
 import { useScheduleVersion } from "../app/useScheduleVersion";
 import { ScheduleVersionPanel } from "../components/ScheduleVersionPanel";
 import { WorkspaceStatePanel } from "../components/WorkspaceStatePanel";
+import { useLocale } from "../i18n/locale";
 
 const { Paragraph, Title } = Typography;
 
 export function ValidationPage() {
+  const { locale, t } = useLocale();
   const { scheduleVersionId, query } = useScheduleVersion();
   if (scheduleVersionId === null || scheduleVersionId.length === 0) {
     return (
       <WorkspaceStatePanel
         state="contract_error"
-        detail="Validation requires ?schedule_version_id=<immutable-id>."
+        detail={t("validation.identityRequired")}
       />
     );
   }
   if (query.isPending) return <WorkspaceStatePanel state="loading" />;
   if (query.error !== null) {
-    return <WorkspaceStatePanel {...stateForError(query.error)} />;
+    return <WorkspaceStatePanel {...stateForError(query.error, locale)} />;
   }
   if (query.data === undefined) return <WorkspaceStatePanel state="contract_error" />;
   return (
     <article className="workspace-page">
-      <Title level={2}>Validation</Title>
+      <Title level={2}>{t("validation.title")}</Title>
       <Paragraph type="secondary">
-        Formal Validator evidence is rendered verbatim from the authoritative
-        ScheduleVersion. The browser does not validate the schedule.
+        {t("validation.description")}
       </Paragraph>
       <ScheduleVersionPanel version={query.data} />
       <pre className="payload-cell validation-document">

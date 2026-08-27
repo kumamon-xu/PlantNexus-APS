@@ -6,14 +6,14 @@ spec_version: 0.3.0
 phase: P3
 normative: true
 source_sections: [33, 35, 47, 48, 50, 69, 77, 78, 94]
-last_reviewed: 2026-08-26
+last_reviewed: 2026-08-27
 ---
 
 # P3 Gantt Command 与新版本合同
 
-## TASK-P3-16 planned localization boundary
+## TASK-P3-16 localization boundary
 
-Move/Assign/Set Lock/Remove Lock等用户可见名称可依据[`official-zh-cn-terminology.v1`](official-zh-cn-terminology-map.md)显示中文或英文，但`MOVE_OPERATION`、`ASSIGN_RESOURCE`、`SET_LOCK`、`REMOVE_LOCK`、payload keys、state、Idempotency-Key与canonical fingerprint逐字保持英文。格式化时间仍保留raw UTC，未知command/state/reason显示raw值；UI不得从localized label解析或生成machine value。该规则等待TASK-P3-16实现和zero-wire-drift证据，最终由TASK-P3-17独立审计；当前command实现、Schema、测试和workflow零变化。
+Move/Assign/Set Lock/Remove Lock等用户可见名称已依据[`official-zh-cn-terminology.v1`](official-zh-cn-terminology-map.md)显示中文或英文，但`MOVE_OPERATION`、`ASSIGN_RESOURCE`、`SET_LOCK`、`REMOVE_LOCK`、payload keys、state、Idempotency-Key与canonical fingerprint逐字保持英文。格式化时间保留raw UTC，未知command/state/reason显示raw值；UI不从localized label解析或生成machine value。本地zero-wire-drift与双语Gantt browser evidence已通过，exact provider待形成；command行为、Schema和state pair零变化，最终由TASK-P3-17独立审计。
 
 ## TASK-P3-14 command Gate
 

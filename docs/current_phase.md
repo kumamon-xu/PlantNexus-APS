@@ -6,18 +6,26 @@ spec_version: 0.3.0
 phase: P3
 normative: true
 source_sections: [73, 74, 75, 76, 110, 111]
-last_reviewed: 2026-08-26
+last_reviewed: 2026-08-27
 ---
 
 # 当前阶段：P3 — Planning Workspace
+
+## TASK-P3-16 执行边界
+
+用户已明确授权执行TASK-P3-16。启动前重新核验`main=origin/main=1636fe9c909b728d49f9907ed9f53030b5921914`、ahead/behind=`0/0`且working tree clean；P3-14/P3-15均为`done`，两者implementation/closure required `validate`与artifact按exact SHA下载复验为success、checks完整且issues为空。该完整HEAD已冻结为TASK-P3-16不可变Diff base。
+
+本Task只实现Frontend展示层双语：默认`zh-CN`，可切换/恢复`en-US`，浏览器仅保存非敏感locale preference，并同步`document.documentElement.lang`与Ant Design locale。`official-zh-cn-terminology.v1`映射ScheduleVersion/ExportJob state、WorkspaceView、command/action、change kind、C-001～C-011、product error与Workspace reason；未知机器值显式显示raw。时间、数量、秒数和利用率使用原生Intl，同时保留raw UTC/value、ID、code、fingerprint及JSON。API/backend/Schema/migration/dependency/lock/state pair和标准成果包bytes保持零差异。
+
+本地required-equivalent已全绿：typed dictionary两种locale各243 keys、139个注册机器值、22个localized surface、67项Vitest、基础/双Gate Chromium各12/12（8 human-control）、i18n 8/8、621 Python、全部machine contracts、P2 11/11/0 gaps、P3 14/14/0 gaps、SCA/license/Compose/build与Task 79 paths/6 rows/19 checks/0 issues均PASS。这些本地事实不替代exact GitHub required `validate`/artifact；implementation provider与后续evidence-only closure完成前Task保持`in_progress`。TASK-P3-17继续`planned`且不得自动执行，P4与Production均未启动。
 
 ## TASK-P3-15 完成与P3末段规划边界
 
 用户于2026-08-26批准P3末段编号方案，并授权先补齐阶段计划修订治理能力。启动前重新核验`main`、`origin/main`与remote main均为`06e7f794f486ac34c505237b847462c7c7c36d44`、ahead/behind=`0/0`且working tree clean；TASK-P3-00～14均为`done`，P3-14 corrective/closure provider及失败历史保持原样。该SHA现冻结为TASK-P3-15不可变Diff base。
 
-本Task只允许修改`scripts/check_docs.py`、治理unit test与逐字列明的治理文档，建立唯一`phase-plan-amendment-owner`、稳定Task ID rename归并、planned/ready成员、base状态保护和删除/重复路径拒绝。Implementation `c84e1aa1a81473f65d9f7906a6d2c67a94e7bb2f`的push run/job=`32944633958`/`98102640242`与required `validate`成功；artifact `9597967232`、digest=`sha256:db5d7c67b33f81378fb2c2345aa4a3b6044cdacd899cc6320563607fed2b2e55`已下载复核Task/base、26/0 paths、5 Impact Rules、19 checks和0 issues。因此本evidence-only closure把TASK-P3-15标为`done`并原子登记后续planned成员；closure自身仍须exact provider复验。
+本Task只允许修改`scripts/check_docs.py`、治理unit test与逐字列明的治理文档，建立唯一`phase-plan-amendment-owner`、稳定Task ID rename归并、planned/ready成员、base状态保护和删除/重复路径拒绝。Implementation `c84e1aa1a81473f65d9f7906a6d2c67a94e7bb2f`的push run/job/artifact=`32944633958`/`98102640242`/`9597967232`已下载复核Task/base、26/0 paths、5 Impact Rules、19 checks和0 issues；evidence-only closure `1636fe9c909b728d49f9907ed9f53030b5921914`的run/job/artifact=`32948633841`/`98114798738`/`9599442770`也已复核37份JSON、48/0 paths、6 rows、19 checks和0 issues。因此TASK-P3-15=`done`并完整provider闭环。
 
-TASK-P3-16为Frontend bilingual localization与`official-zh-cn-terminology.v1`实施Task，依赖P3-14与P3-15；默认`zh-CN`、可切换`en-US`，但API路径/key/operationId/state/command/error/C-ID/fingerprint/标准包bytes继续为英文机器合同。它当前仅为`planned`，无Diff base或implementation SHA，必须等待新的明确授权。TASK-P3-17依赖P3-16并保持`planned`，是P3最后一项独立Exit Gate Audit；它必须独立审计双语coverage、unknown raw fallback和机器合同zero drift，不在Audit内修复问题。CI workflow、业务代码、Schema、migration、dependency、Frontend实现、P3-00～14历史、P4与Production在本closure全部冻结。
+TASK-P3-16现已按上述授权进入`in_progress`并冻结Diff base；TASK-P3-17依赖其完整双提交provider闭环并保持`planned`，是P3最后一项独立Exit Gate Audit。它必须独立审计双语coverage、unknown raw fallback和机器合同zero drift，不在Audit内修复问题。P3-00～15历史、P4与Production继续冻结。
 
 ## TASK-P3-14 完成边界
 
@@ -29,7 +37,7 @@ TASK-P3-16为Frontend bilingual localization与`official-zh-cn-terminology.v1`�
 
 首个implementation `0617141e411eea146cd9fc1c512ade900710be7c`的push run/job=`32930677030`/`98062166642`在repository suite得到611 passed/5 setup errors：CI注入exact SHA，但integration synthetic Frontend Gate夹具的两个`code_commit`仍写死`uncommitted`，被`frontend_evidence` identity/SHA contract正确拒绝；后续upload无匹配reports，artifact count=0。该失败run不重跑、不改写。纠正只让既有测试夹具复用Gate的同一SHA解析规则，精确SHA环境定向复验5/5 PASS；在该失败后Task保持`LOCAL_PASS_PROVIDER_PENDING`/`in_progress`，并以新corrective commit完整重跑。
 
-Corrective implementation `54a25646053979a69734a3148030830d49c04c1e`的push run `32931418903`与required `validate` job/check `98064264595`（GitHub Actions app `15368`）57/57 steps success。Artifact `9593460266` / `plantnexus-ci-evidence-32931418903`未过期，799284 bytes，digest=`sha256:750bcd133f2d10637208da546f3cb75423b77e1dd8d5a8355c3ef88bd650a81f`、expiry=`2026-11-24T04:45:36Z`；下载复核37/37 JSON、3组Playwright JSON/JUnit/HTML、7个raw hash、P3 Gate 14/14与0 gaps、Frontend 5/5、P2 Gate 11/11及Task 56 committed/0 working paths、8 rows、19 checks、0 issues全部一致。因此本evidence-only closure把TASK-P3-14标为`done`；closure自身仍须exact provider复核。
+Corrective implementation `54a25646053979a69734a3148030830d49c04c1e`的push run `32931418903`与required `validate` job/check `98064264595`（GitHub Actions app `15368`）57/57 steps success。Artifact `9593460266` / `plantnexus-ci-evidence-32931418903`未过期，799284 bytes，digest=`sha256:750bcd133f2d10637208da546f3cb75423b77e1dd8d5a8355c3ef88bd650a81f`、expiry=`2026-11-24T04:45:36Z`；下载复核37/37 JSON、3组Playwright JSON/JUnit/HTML、7个raw hash、P3 Gate 14/14与0 gaps、Frontend 5/5、P2 Gate 11/11及Task 56 committed/0 working paths、8 rows、19 checks、0 issues全部一致。Evidence-only closure `06e7f794f486ac34c505237b847462c7c7c36d44`的run/job/artifact=`32932504153`/`98067309501`/`9593831442`也已exact复核成功，因此TASK-P3-14完整闭环为`done`。
 
 ## TASK-P3-13 完成边界
 
@@ -45,7 +53,7 @@ Corrective implementation `54a25646053979a69734a3148030830d49c04c1e`的push run 
 
 P2-14 audit implementation `65c556789f176ad9de55523d6420737bb60f933f`的GitHub push run `32677741558` / required `validate` job `97288829348` / artifact `9503227240`成功，artifact digest=`sha256:fbb76f0ab44d3bdcff2d31e70f9698af84e10e48ee57ae611eef8529a288240e`；evidence-only closure `80c403384d1e171258cf874d26605d0d22aff1b2`的run `32678248961` / job `97290201234` / artifact `9503372291`也成功，digest=`sha256:673412905b7420660d1e9f07755fcda6291f85f8f2bd926b4bf31a0a6bd1bd0c`。下载检查的两份artifact均含20份可解析JSON，Task/SHA/Impact Rules/checks/issues与对应提交一致且0 issue。规划启动时`main=origin/main=80c403384d1e171258cf874d26605d0d22aff1b2`、ahead/behind=`0/0`且working tree clean，因此transition前提一致。
 
-P2 Milestone现为`completed`，P3 Milestone为`active`。`TASK-P3-00`～`TASK-P3-15`均为`done`；TASK-P3-16为planned bilingual localization，TASK-P3-17为planned/final independent Exit Audit，二者均未启动。
+P2 Milestone现为`completed`，P3 Milestone为`active`。`TASK-P3-00`～`TASK-P3-15`均为`done`；TASK-P3-16为`in_progress` bilingual localization，TASK-P3-17为`planned`/final independent Exit Audit且未启动。
 
 ## 当前目标
 
@@ -182,12 +190,12 @@ Implementation `567e8693db881ea3dfffa011de9021fef9641361`的required run/job/art
 - 读取并复核P3-01～13合同、Schema、persistence/lifecycle/read/command/decision/publication/export/API/UI provider evidence和P2 frozen artifact；
 - 保留TASK-P3-13已形成的state/capability-sensitive human controls、UI E2E、第18个有界verified internal Simulation package download及XLSX corrective evidence，不追加实现；
 - 保留P2/v1 Schema/package bytes、P3-05～10 application/state/audit/API事实及全部历史provider evidence；
-- P3-16/17只有在逐Task明确授权后，才可按各卡允许范围和新的不可变Diff base实施。
+- 只在TASK-P3-16精确allow-list与不可变Diff base内完成展示层双语、测试、治理及provider闭环；TASK-P3-17仍须新的明确授权。
 
 ## 当前禁止
 
 - 继续或扩展TASK-P3-13的Frontend/download/export实现，或修改Schema、migration、Python/npm dependency、任一lockfile、repository persistence语义、P2/v1 package/fixture/benchmark bytes、external adapter/network或deployment；
-- 执行TASK-P3-16/17，或让其中任何Task自动进入`ready/in_progress`；
+- 执行TASK-P3-17，或让任何后续Task自动进入`ready/in_progress`；
 - 直接更新PUBLISHED、绕过server/formal Validator、允许DRAFT/REJECTED发布或产生非幂等export/publish；
 - 实现P4的ExecutionEvent、ReplanRequest、OBJ-002 Stability、freeze window、ChangeReport或Execution Simulator；
 - 创建P4详细Task、进入P4，或声明Production readiness、approval authority、external publish/deployment已形成；

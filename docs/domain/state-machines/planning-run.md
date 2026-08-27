@@ -6,14 +6,14 @@ spec_version: 0.3.0
 phase: P0-P2
 normative: true
 source_sections: [29, 32, 65]
-last_reviewed: 2026-08-26
+last_reviewed: 2026-08-27
 ---
 
 # PlanningRun 状态机
 
 ## TASK-P3-16 display-boundary review
 
-PlanningRun页面名称和既有state未来可按`official-zh-cn-terminology.v1`显示`zh-CN`/`en-US` label，但PlanningRun enum、carrier、repository、worker、allowed pairs与Solver lifecycle继续使用英文machine value；未知state显示raw值并fail visibly。Locale切换不能触发run、retry、transition或重新计算。该mapping只为planned TASK-P3-16展示边界，TASK-P3-17最终审计；当前无PlanningRun实现、Schema、state pair或测试变化。
+PlanningRun页面名称和既有state已按`official-zh-cn-terminology.v1`显示`zh-CN`/`en-US` label，但PlanningRun enum、carrier、repository、worker、allowed pairs与Solver lifecycle继续使用英文machine value；未知state显示raw值并fail visibly。Locale切换不触发run、retry、transition或重新计算。本地typed coverage/zero-wire-drift evidence已通过，exact provider待形成；PlanningRun实现、Schema和state pair零变化，TASK-P3-17最终独立审计。
 
 ## TASK-P3-14 zero-transition Gate
 

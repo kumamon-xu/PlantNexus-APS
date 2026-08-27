@@ -6,11 +6,15 @@ spec_version: 0.3.0
 phase: cross-phase
 normative: false
 source_sections: [0, 8, 10, 30, 42, 57, 59, 62, 89, 90, 105]
-last_reviewed: 2026-08-26
+last_reviewed: 2026-08-27
 registry_version: 1.0.0
 ---
 
 # 项目风险注册表
+
+## TASK-P3-16 risk controls
+
+RISK-014现由两个等键typed dictionary、139个machine-value映射、unknown raw fallback、Intl+raw value、locale preference边界及zero-wire-drift unit/browser/machine checks形成local mitigation；dependency、API/backend/state/Schema保持零差异。Exact provider与TASK-P3-17独立审计尚未形成，故RISK-014及RISK-001～013仍全部为`MONITORED`，severity/status和`registry_version=1.0.0`不变。
 
 ## TASK-P3-15 risk review
 
@@ -41,7 +45,7 @@ Corrective implementation artifact `9589931373`已复验这些bounded controls�
 | RISK-011 | MONITORED | 依赖漏洞或Solver供应链漂移 | lock/advisory/wheel变化，SCA发现未处置记录 | exact pin/lock/wheel hash、namespace isolation、point-in-time audit；后续持续SCA/SBOM与有界升级 |
 | RISK-012 | MONITORED | 审批责任未定却被实现成Production授权 | 测试角色或前端按钮被解释为真实approve/publish authority | OPEN-010、authority-neutral capability、Production default-deny、append-only audit |
 | RISK-013 | MONITORED | UI/API绕过状态机或直接修改已发布计划 | client计算权威状态、router直写DB、PUBLISHED内容变化 | command-only application service、server/formal Validator、immutable version、API/E2E negative gates |
-| RISK-014 | MONITORED | 双语展示漂移、中文label污染英文机器合同或隐藏未知原值 | typed词典缺key、localized enum/code进入request、依赖英文message解析、raw code/UTC/ID被替换或丢失 | `official-zh-cn-terminology.v1`、typed exhaustive maps、unknown raw fallback、zero-wire-drift tests、TASK-P3-17独立Audit |
+| RISK-014 | MONITORED | 双语展示漂移、中文label污染英文机器合同或隐藏未知原值 | typed词典缺key、localized enum/code进入request、依赖英文message解析、raw code/UTC/ID被替换或丢失 | `official-zh-cn-terminology.v1`、typed exhaustive maps、unknown raw fallback、TASK-P3-16 local zero-wire-drift evidence/provider pending、TASK-P3-17独立Audit |
 
 风险状态、责任人和日期将在团队角色与仓库工作流确认后补充，当前不猜测人员归属。
 

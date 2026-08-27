@@ -6,7 +6,7 @@ spec_version: 0.3.0
 phase: P3
 normative: true
 source_sections: [5, 6, 71, 86]
-last_reviewed: 2026-08-26
+last_reviewed: 2026-08-27
 registry_version: 1.0.0
 ---
 
@@ -14,11 +14,11 @@ registry_version: 1.0.0
 
 ## TASK-P3-15 governance trace slice
 
-REQ-009、NFR-TRC-001/NFR-PER-001及ENG-ARCH-001/ENG-VER-001连接TASK-P3-15的amendment-owner selector、repository event-base读取、TEST-TRACEABILITY-VALIDATOR/TEST-PHASE-GOVERNANCE-001与`traceability-report.v1`。Implementation `c84e1aa1a81473f65d9f7906a6d2c67a94e7bb2f` / artifact `9597967232`已精确复验26 committed/0 working paths、5 Impact Rules、19 checks和0 issues，该治理slice为`PROVIDER_VERIFIED`；closure provider仍待精确复验。
+REQ-009、NFR-TRC-001/NFR-PER-001及ENG-ARCH-001/ENG-VER-001连接TASK-P3-15的amendment-owner selector、repository event-base读取、TEST-TRACEABILITY-VALIDATOR/TEST-PHASE-GOVERNANCE-001与`traceability-report.v1`。Implementation `c84e1aa1a81473f65d9f7906a6d2c67a94e7bb2f` / artifact `9597967232`与closure `1636fe9c909b728d49f9907ed9f53030b5921914` / artifact `9599442770`均已exact复验，该治理slice完整`PROVIDER_VERIFIED`。
 
-## TASK-P3-16 / TASK-P3-17 planned trace slice
+## TASK-P3-16 active / TASK-P3-17 planned trace slice
 
-REQ-005/006/007/009、NFR-COR/DET/TRC/ISO/SEC/OBS/HUM及ENG-ARCH/ERR/VER现规划连接TASK-P3-16→TEST-FRONTEND-I18N-001→future `p3-frontend-i18n-report.v1`/bilingual Playwright/exact provider artifact；所有边均为`PLANNED`，不得从术语规范推断实现。TASK-P3-17依赖P3-16，并将P3全部root/Test/provider topology、双语coverage、unknown raw fallback与英文machine contract zero drift纳入最终独立Audit。Roots/rows仍为30/30，新增一个planned Test ID后总数为49，`registry_version=1.0.0`不变；P3 Exit、P4与Production均未形成。
+REQ-005/006/007/009、NFR-COR/DET/TRC/ISO/SEC/OBS/HUM及ENG-ARCH/ERR/VER现连接TASK-P3-16→TEST-FRONTEND-I18N-001→`p3-frontend-i18n-report.v1`/bilingual Playwright/exact provider artifact；Task→local test/report边已形成，provider边仍为`PENDING`。TASK-P3-17依赖P3-16，并将P3全部root/Test/provider topology、双语coverage、unknown raw fallback与英文machine contract zero drift纳入最终独立Audit。Roots/rows仍为30/30，Test ID总数49，`registry_version=1.0.0`不变；P3 Exit、P4与Production均未形成。
 
 ## TASK-P3-14 Gate trace slice
 

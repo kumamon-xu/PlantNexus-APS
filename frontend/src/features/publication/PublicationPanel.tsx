@@ -9,6 +9,7 @@ import {
   serverAllows,
   useHumanControlAction,
 } from "../schedule-actions/useHumanControlAction";
+import { useLocale } from "../../i18n/locale";
 
 const { Paragraph } = Typography;
 
@@ -24,6 +25,7 @@ export function PublicationPanel({
   onActionResult,
 }: PublicationPanelProps) {
   const { runtime } = useAppServices();
+  const { t } = useLocale();
   const [reason, setReason] = useState("");
   const [confirmed, setConfirmed] = useState(false);
   const [dialogOpen, setDialogOpen] = useState(false);
@@ -52,15 +54,15 @@ export function PublicationPanel({
   }
 
   return (
-    <Card title="Internal Simulation publication" className="control-card">
+    <Card title={t("publication.title")} className="control-card">
       <Alert
         type="info"
         showIcon
-        title="This control cannot publish to MES, ERP, or Production."
+        title={t("publication.boundary")}
       />
       {version.state !== "APPROVED" && (
         <Paragraph type="secondary">
-          Publication is available only for an APPROVED Version.
+          {t("publication.approvedOnly")}
         </Paragraph>
       )}
       <Button
@@ -68,14 +70,14 @@ export function PublicationPanel({
         disabled={!publishable || action.pending}
         onClick={() => setDialogOpen(true)}
       >
-        Review internal publication
+        {t("publication.review")}
       </Button>
       <Modal
-        title="Confirm SIMULATION_INTERNAL publication"
+        title={t("publication.confirmTitle")}
         open={dialogOpen}
         onCancel={() => setDialogOpen(false)}
         onOk={() => void publish()}
-        okText="Publish internally"
+        okText={t("publication.publish")}
         confirmLoading={action.pending}
         okButtonProps={{
           disabled:
@@ -85,11 +87,11 @@ export function PublicationPanel({
         <Alert
           type="warning"
           showIcon
-          title={`Publish Version ${version.schedule_version_id}`}
-          description="This may supersede the prior current Simulation Version. It does not publish to Production or MES."
+          title={t("publication.version", { version: version.schedule_version_id })}
+          description={t("publication.description")}
         />
         <label className="control-field">
-          Publication reason
+          {t("publication.reason")}
           <Input.TextArea
             value={reason}
             onChange={(event) => setReason(event.target.value)}
@@ -103,7 +105,7 @@ export function PublicationPanel({
           onChange={(event) => setConfirmed(event.target.checked)}
           disabled={action.pending}
         >
-          I understand this creates only a SIMULATION_INTERNAL publication.
+          {t("publication.checkbox")}
         </Checkbox>
       </Modal>
       <ActionFeedback

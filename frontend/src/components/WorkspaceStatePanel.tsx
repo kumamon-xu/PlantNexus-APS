@@ -1,35 +1,17 @@
 import { Alert, Empty, Skeleton } from "antd";
 
 import type { WorkspaceUiState } from "../api/types";
+import type { TranslationKey } from "../i18n/dictionaries/en-US";
+import { useLocale } from "../i18n/locale";
 
 const stateCopy: Record<
   Exclude<WorkspaceUiState, "loading" | "empty" | "ready">,
-  { title: string; description: string; type: "error" | "warning" }
+  { title: TranslationKey; description: TranslationKey; type: "error" | "warning" }
 > = {
-  stale: {
-    title: "ScheduleVersion changed",
-    description:
-      "The server rejected the cached precondition. Refresh the authoritative Version before retrying.",
-    type: "warning",
-  },
-  authorization_denied: {
-    title: "Authorization denied",
-    description:
-      "The server did not grant this read. No cached or synthetic value is shown as a substitute.",
-    type: "error",
-  },
-  contract_error: {
-    title: "Contract error",
-    description:
-      "The request or response did not satisfy the versioned Planning Workspace contract.",
-    type: "error",
-  },
-  server_error: {
-    title: "Workspace unavailable",
-    description:
-      "The authoritative service could not provide this view. No zero value or success state was inferred.",
-    type: "error",
-  },
+  stale: { title: "state.staleTitle", description: "state.staleDescription", type: "warning" },
+  authorization_denied: { title: "state.authorizationTitle", description: "state.authorizationDescription", type: "error" },
+  contract_error: { title: "state.contractTitle", description: "state.contractDescription", type: "error" },
+  server_error: { title: "state.serverTitle", description: "state.serverDescription", type: "error" },
 };
 
 export interface WorkspaceStatePanelProps {
@@ -43,9 +25,10 @@ export function WorkspaceStatePanel({
   detail,
   emptyKind = "collection",
 }: WorkspaceStatePanelProps) {
+  const { t } = useLocale();
   if (state === "loading") {
     return (
-      <div role="status" aria-label="Loading authoritative workspace data">
+      <div role="status" aria-label={t("state.loadingAria")}>
         <Skeleton active />
       </div>
     );
@@ -57,11 +40,11 @@ export function WorkspaceStatePanel({
         image={Empty.PRESENTED_IMAGE_SIMPLE}
         description={
           <span>
-            <strong>{missing ? "Resource not found" : "No matching items"}</strong>
+            <strong>{missing ? t("state.resourceNotFound") : t("state.noMatchingItems")}</strong>
             <br />
             {missing
-              ? "The server returned found=false for this immutable identity."
-              : "The server returned found=true with an empty item collection."}
+              ? t("state.foundFalse")
+              : t("state.foundEmpty")}
           </span>
         }
       />
@@ -73,8 +56,8 @@ export function WorkspaceStatePanel({
     <Alert
       showIcon
       type={copy.type}
-      title={copy.title}
-      description={detail ?? copy.description}
+      title={t(copy.title)}
+      description={detail ?? t(copy.description)}
       role="alert"
     />
   );

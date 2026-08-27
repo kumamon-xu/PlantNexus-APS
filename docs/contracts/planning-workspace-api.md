@@ -6,14 +6,14 @@ spec_version: 0.3.0
 phase: P3
 normative: true
 source_sections: [33, 34, 63, 65, 66, 68, 69, 77, 78, 91, 94]
-last_reviewed: 2026-08-26
+last_reviewed: 2026-08-27
 ---
 
 # P3 Planning Workspace API 语义合同
 
 ## TASK-P3-16 localization boundary
 
-计划中的双语只存在于Frontend display adapter。Route、JSON key、Schema/URN/version、OpenAPI `operationId`、query/command discriminator、state/error/C-ID、HTTP status、fingerprint/idempotency和response bytes逐字不变；请求仍发送`APPROVE`、`READY_FOR_REVIEW`等英文机器值。P3不增加`Accept-Language`协商或中文API字段/枚举。UI必须按error namespace/code/reason映射官方术语并保留raw/correlation，未知值fail visibly；规范来源为[`official-zh-cn-terminology.v1`](../frontend/official-zh-cn-terminology-map.md)。
+TASK-P3-16双语已只实现于Frontend display adapter。Route、JSON key、Schema/URN/version、OpenAPI `operationId`、query/command discriminator、state/error/C-ID、HTTP status、fingerprint/idempotency和response bytes逐字不变；请求仍发送`APPROVE`、`READY_FOR_REVIEW`等英文机器值。P3没有增加`Accept-Language`协商或中文API字段/枚举。UI按error namespace/code/reason映射官方术语并保留raw/correlation，未知值fail visibly；本地zero-wire-drift evidence已通过，exact provider待形成。规范来源为[`official-zh-cn-terminology.v1`](../frontend/official-zh-cn-terminology-map.md)。
 
 ## TASK-P3-14 transport Gate
 
@@ -148,7 +148,7 @@ action scope至少包含data plane、action、resource/version、target和key；
 
 ## 测试分配
 
-TASK-P3-01只形成文档合同；TASK-P3-02现以`test_p3_workspace_contracts.py`形成`TEST-CONTRACT-001`与`TEST-WORKSPACE-CONTRACT-001`的machine carrier slice，并复验`TEST-STATE-TRANSITION-001`/`TEST-ERROR-MAPPING-001`既有集合未漂移。P3-05～10形成read/command/API behavior，P3-13形成用户可见E2E，P3-14复验Gate；P3-16只计划本地化展示，P3-17最终独立Audit。P3-15为治理支持，不是API/Audit实现。
+TASK-P3-01只形成文档合同；TASK-P3-02现以`test_p3_workspace_contracts.py`形成`TEST-CONTRACT-001`与`TEST-WORKSPACE-CONTRACT-001`的machine carrier slice，并复验`TEST-STATE-TRANSITION-001`/`TEST-ERROR-MAPPING-001`既有集合未漂移。P3-05～10形成read/command/API behavior，P3-13形成用户可见E2E，P3-14复验Gate；P3-16已形成display-only本地化且provider pending，P3-17最终独立Audit。P3-15为治理支持，不是API/Audit实现。
 
 ## TASK-P3-02 machine carrier realization
 

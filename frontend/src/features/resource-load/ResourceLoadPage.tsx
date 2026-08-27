@@ -8,10 +8,13 @@ import { useScheduleVersion } from "../../app/useScheduleVersion";
 import { useScheduleWorkspaceView } from "../../app/useWorkspaceView";
 import { AuthorityPanel } from "../../components/AuthorityPanel";
 import { WorkspaceStatePanel } from "../../components/WorkspaceStatePanel";
+import { formatInteger, formatSeconds, formatUtc, formatUtilization } from "../../i18n/formatters";
+import { useLocale } from "../../i18n/locale";
 
 const { Paragraph, Title } = Typography;
 
 export function ResourceLoadPage() {
+  const { locale, t } = useLocale();
   const [search] = useSearchParams();
   const resourceId = search.get("resource_id")?.trim() ?? "";
   const { scheduleVersionId, query: versionQuery } = useScheduleVersion();
@@ -26,19 +29,19 @@ export function ResourceLoadPage() {
   let loads: ResourceLoad[] = [];
   if (scheduleVersionId === null || scheduleVersionId.length === 0) {
     state = "contract_error";
-    detail = "Resource Load requires ?schedule_version_id=<immutable-id>.";
+    detail = t("load.identityRequired");
   } else if (versionQuery.error !== null) {
-    ({ state, detail } = stateForError(versionQuery.error));
+    ({ state, detail } = stateForError(versionQuery.error, locale));
   } else if (loadQuery.error !== null) {
-    ({ state, detail } = stateForError(loadQuery.error));
+    ({ state, detail } = stateForError(loadQuery.error, locale));
   } else if (loadQuery.data !== undefined) {
     const result = loadQuery.data.document.result;
     if (result === null) {
       state = "contract_error";
-      detail = "The Resource Load RESULT carrier has no result body.";
+      detail = t("load.resultMissing");
     } else if (result.freshness !== "FRESH") {
       state = "stale";
-      detail = `Server freshness is ${result.freshness}; refresh the Version precondition.`;
+      detail = t("collection.stale", { freshness: result.freshness });
     } else if (!result.found || loadQuery.data.items.length === 0) {
       state = "empty";
     } else {
@@ -47,7 +50,7 @@ export function ResourceLoadPage() {
         state = "ready";
       } catch (error) {
         state = "contract_error";
-        detail = error instanceof Error ? error.message : "Resource Load contract failed.";
+        detail = error instanceof Error ? error.message : t("load.contractFailed");
       }
     }
   }
@@ -57,21 +60,20 @@ export function ResourceLoadPage() {
     <article className="workspace-page visualization-page">
       <Flex justify="space-between" align="flex-start" gap="middle" wrap>
         <div>
-          <Title level={2}>Resource Load</Title>
+          <Title level={2}>{t("load.title")}</Title>
           <Paragraph type="secondary">
-            Planning-horizon load facts are server-provided. Busy time, availability and
-            utilization are displayed without client-side capacity calculations.
+            {t("load.description")}
           </Paragraph>
         </div>
         <Button
           onClick={() => void loadQuery.refetch()}
           disabled={version === undefined || loadQuery.isFetching}
         >
-          Refresh read
+          {t("common.refreshRead")}
         </Button>
       </Flex>
       {resourceId.length > 0 && (
-        <Alert type="info" showIcon title={`Server resource filter: ${resourceId}`} />
+        <Alert type="info" showIcon title={t("load.filter", { resource: resourceId })} />
       )}
       <WorkspaceStatePanel
         state={state}
@@ -85,51 +87,58 @@ export function ResourceLoadPage() {
             <Alert
               type="warning"
               showIcon
-              title={`Server reports ${result.observed_count} rows; this bounded page contains ${loadQuery.data.items.length}.`}
+              title={t("load.partialRows", { observed: result.observed_count, shown: loadQuery.data.items.length })}
             />
           )}
           {state === "ready" && version !== undefined && (
             <div className="table-scroll">
               <table className="resource-load-table">
-                <caption>Server Resource Load facts for the immutable ScheduleVersion</caption>
+                <caption>{t("load.caption")}</caption>
                 <thead>
                   <tr>
-                    <th scope="col">Resource</th>
-                    <th scope="col">Planning horizon UTC</th>
-                    <th scope="col">Assignments</th>
-                    <th scope="col">Busy seconds</th>
-                    <th scope="col">Available seconds</th>
-                    <th scope="col">Utilization</th>
-                    <th scope="col">Related Gantt</th>
+                    <th scope="col">{t("gantt.resource")}</th>
+                    <th scope="col">{t("load.horizonUtc")}</th>
+                    <th scope="col">{t("load.assignments")}</th>
+                    <th scope="col">{t("load.busySeconds")}</th>
+                    <th scope="col">{t("load.availableSeconds")}</th>
+                    <th scope="col">{t("load.utilization")}</th>
+                    <th scope="col">{t("load.relatedGantt")}</th>
                   </tr>
                 </thead>
                 <tbody>
-                  {loads.map((load) => (
-                    <tr key={load.item_id}>
+                  {loads.map((load) => {
+                    const start = formatUtc(load.start_at_utc, locale);
+                    const end = formatUtc(load.end_at_utc, locale);
+                    const assignments = formatInteger(load.assignment_count, locale);
+                    const busy = formatSeconds(load.planned_busy_seconds, locale);
+                    const available = formatSeconds(load.available_seconds, locale);
+                    const utilization = formatUtilization(load.utilization, locale);
+                    return <tr key={load.item_id}>
                       <td>{load.resource_code}<br /><code>{load.resource_id}</code></td>
                       <td>
-                        <time dateTime={load.start_at_utc}>{load.start_at_utc}</time>
-                        <br />to<br />
-                        <time dateTime={load.end_at_utc}>{load.end_at_utc}</time>
+                        <time dateTime={load.start_at_utc}>{start.display}<code className="localized-raw">{start.raw}</code></time>
+                        <br />{t("common.to")}<br />
+                        <time dateTime={load.end_at_utc}>{end.display}<code className="localized-raw">{end.raw}</code></time>
                       </td>
-                      <td>{load.assignment_count}</td>
-                      <td>{load.planned_busy_seconds}</td>
-                      <td>{load.available_seconds}</td>
+                      <td>{assignments.display}<code className="localized-raw">{assignments.raw}</code></td>
+                      <td>{busy.display}<code className="localized-raw">{busy.raw}</code></td>
+                      <td>{available.display}<code className="localized-raw">{available.raw}</code></td>
                       <td>
                         <progress max={1} value={Math.min(load.utilization, 1)}>
                           {load.utilization}
                         </progress>
-                        <output>{load.utilization}</output>
+                        <output>{utilization.display}</output>
+                        <code className="localized-raw">{utilization.raw}</code>
                       </td>
                       <td>
                         <Link
                           to={`/planning/versions/${encodeURIComponent(version.schedule_version_id)}/gantt/machines?resource_id=${encodeURIComponent(load.resource_id)}`}
                         >
-                          Machine Gantt
+                          {t("route.machineGantt")}
                         </Link>
                       </td>
-                    </tr>
-                  ))}
+                    </tr>;
+                  })}
                 </tbody>
               </table>
             </div>

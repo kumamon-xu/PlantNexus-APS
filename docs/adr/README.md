@@ -6,14 +6,14 @@ spec_version: 0.3.0
 phase: cross-phase
 normative: true
 source_sections: [97]
-last_reviewed: 2026-08-26
+last_reviewed: 2026-08-27
 ---
 
 # Architecture Decision Records
 
 ## TASK-P3-15 / TASK-P3-16 ADR impact review
 
-阶段计划修订治理、`official-zh-cn-terminology.v1`与planned Frontend双语展示继续遵循ADR-0002/0005/0007/0009/0012；typed display dictionaries、local non-sensitive locale preference和英文machine contract zero drift不改变模块、authority、state、persistence、Schema、dependency或Production决策，因此本closure的ADR impact为`none`，accepted ADR正文保持逐字只读。若TASK-P3-16实施发现需要server locale negotiation、新dependency、localized wire value、client authority或新state pair，必须停止并先走独立ADR/治理审查；不得在本次计划或本地化Task中隐式改变决定。
+阶段计划修订治理、`official-zh-cn-terminology.v1`与TASK-P3-16 Frontend双语展示继续遵循ADR-0002/0005/0007/0009/0012；typed display dictionaries、local non-sensitive locale preference和英文machine contract zero drift已按既有决定实现，没有改变模块、authority、state、persistence、Schema、dependency或Production决策，因此ADR impact为`none`，accepted ADR正文保持逐字只读。若未来需要server locale negotiation、新dependency、localized wire value、client authority或新state pair，必须停止并先走独立ADR/治理审查。
 
 ## TASK-P3-14 ADR review
 

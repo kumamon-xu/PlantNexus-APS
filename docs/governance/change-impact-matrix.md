@@ -6,11 +6,15 @@ spec_version: 0.3.0
 phase: cross-phase
 normative: true
 source_sections: [6, 97, 98, 99, 100, 101, 102, 103, 104, 111]
-last_reviewed: 2026-08-26
+last_reviewed: 2026-08-27
 registry_version: 1.0.0
 ---
 
 # 变更影响与必审文档矩阵
+
+## TASK-P3-16 implementation impact
+
+不可变Diff base=`1636fe9c909b728d49f9907ed9f53030b5921914`。Frontend `src/i18n`、既有display surfaces、Vitest/Playwright/evidence、additive CI step及状态文档的display review精确命中`IMPACT-FRONTEND`、`IMPACT-INFRA`、`IMPACT-STATE`、`IMPACT-PHASE`、`IMPACT-GOVERNANCE-REGISTRY`和`IMPACT-DOCS`六行。Frontend test路径由`IMPACT-FRONTEND`覆盖，`IMPACT-TESTS`只匹配`backend/tests/**`，故不虚报。Package/lock、backend、Schema/migration、state implementation、fixture/benchmark、P3-00～15、P4与Production均为禁止范围且必须零差异；machine Rule table与`registry_version=1.0.0`不变。当前本地Task/event report为79 working paths、六行、19/19 checks、0 issues；exact provider仍须在implementation提交后复验。
 
 ## TASK-P3-15 impact review
 

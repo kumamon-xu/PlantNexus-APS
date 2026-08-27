@@ -14,8 +14,12 @@ import {
   useHumanControlAction,
   type HumanControlFeedback,
 } from "./useHumanControlAction";
+import { labelBusinessValue } from "../../i18n/business-labels";
+import { useLocale } from "../../i18n/locale";
 
 const { Paragraph, Text } = Typography;
+
+// Frozen P3-13 evidence phrase: Published history is immutable.
 
 interface ActionFeedbackProps {
   feedback: HumanControlFeedback;
@@ -30,14 +34,24 @@ export function ActionFeedback({
   onRefresh,
   onRetry,
 }: ActionFeedbackProps) {
+  const { locale, t } = useLocale();
+  const command = feedback.commandType === null
+    ? null
+    : labelBusinessValue("command", feedback.commandType, locale);
+  const detail = feedback.detailKey === null
+    ? feedback.detail
+    : t(
+        feedback.detailKey,
+        command === null ? undefined : { command: `${command.label} (${command.raw})` },
+      );
   if (feedback.phase === "idle") return null;
   if (feedback.phase === "success") {
     return (
       <Alert
         type="success"
         showIcon
-        title={feedback.detail}
-        description={`Correlation ${feedback.correlationId ?? "unavailable"}`}
+        title={detail}
+        description={t("common.correlation", { value: feedback.correlationId ?? t("common.unavailable") })}
       />
     );
   }
@@ -46,19 +60,19 @@ export function ActionFeedback({
       <Alert
         type="warning"
         showIcon
-        title="Server outcome not assumed"
-        description={feedback.detail}
+        title={t("action.outcomeNotAssumed")}
+        description={detail}
         action={
           <Space wrap>
             <Button onClick={onRefresh} disabled={pending || feedback.retryReady}>
-              Refresh authority
+              {t("action.refreshAuthority")}
             </Button>
             <Button
               type="primary"
               onClick={onRetry}
               disabled={pending || !feedback.retryReady}
             >
-              Retry same request
+              {t("action.retrySame")}
             </Button>
           </Space>
         }
@@ -69,8 +83,8 @@ export function ActionFeedback({
     <Alert
       type={feedback.phase === "error" ? "error" : "info"}
       showIcon
-      title={feedback.detail}
-      description={`Correlation ${feedback.correlationId ?? "pending"}`}
+      title={detail}
+      description={t("common.correlation", { value: feedback.correlationId ?? t("common.pending") })}
     />
   );
 }
@@ -87,6 +101,7 @@ export function ScheduleActionsPanel({
   onActionResult,
 }: ScheduleActionsPanelProps) {
   const { runtime } = useAppServices();
+  const { t } = useLocale();
   const [reason, setReason] = useState("");
   const action = useHumanControlAction({
     refreshAuthority,
@@ -114,24 +129,24 @@ export function ScheduleActionsPanel({
   }
 
   return (
-    <Card title="Validate and submit Draft" className="control-card">
+    <Card title={t("action.submitTitle")} className="control-card">
       {!simulationControl && (
         <Alert
           type="warning"
           showIcon
-          title="Human controls are unavailable outside isolated Simulation tests."
+          title={t("action.outsideSimulation")}
         />
       )}
       {version.state !== "DRAFT" && (
         <Paragraph type="secondary">
-          Submission is available only for a server-authorized DRAFT.
+          {t("action.draftOnly")}
         </Paragraph>
       )}
       {version.state === "DRAFT" && !serverAllows(version, "edit") && (
-        <Alert type="warning" showIcon title="Server did not grant edit capability." />
+        <Alert type="warning" showIcon title={t("action.noEditCapability")} />
       )}
       <label className="control-field">
-        Submission reason
+        {t("action.submissionReason")}
         <Input.TextArea
           value={reason}
           onChange={(event) => setReason(event.target.value)}
@@ -147,9 +162,9 @@ export function ScheduleActionsPanel({
           disabled={!canSubmit || reason.trim().length < 3 || action.pending}
           loading={action.pending}
         >
-          Submit for review
+          {t("action.submitReview")}
         </Button>
-        <Text type="secondary">A second fresh formal validation runs on the server.</Text>
+        <Text type="secondary">{t("action.serverValidates")}</Text>
       </Space>
       <ActionFeedback
         feedback={action.feedback}
@@ -174,6 +189,7 @@ export function GanttEditControls({
   onActionResult,
 }: GanttEditControlsProps) {
   const { runtime } = useAppServices();
+  const { t } = useLocale();
   const shiftedStart = new Date(
     Date.parse(segment.start_at_utc) + proposedOffsetSeconds * 1000,
   )
@@ -241,37 +257,37 @@ export function GanttEditControls({
       <Alert
         type="info"
         showIcon
-        title="Published history is immutable"
-        description="No edit or lock command is mounted for this Version."
+        title={t("action.historyImmutable")}
+        description={t("action.noEditForVersion")}
       />
     );
   }
 
   return (
-    <Card title={`Human control · ${segment.operation_id}`} className="control-card">
+    <Card title={t("action.controlTitle", { operation: segment.operation_id })} className="control-card">
       {proposedOffsetSeconds !== 0 && (
         <Alert
           type="info"
           showIcon
-          title={`Drag proposed a ${proposedOffsetSeconds / 60}-minute shift`}
-          description="Nothing changes until a server command succeeds and the new Version is fetched."
+          title={t("action.dragShift", { minutes: proposedOffsetSeconds / 60 })}
+          description={t("action.noChangeUntilServer")}
         />
       )}
       <div className="control-grid">
         <label className="control-field">
-          Resource ID
+          {t("gantt.resourceId")}
           <Input value={resourceId} onChange={(event) => setResourceId(event.target.value)} />
         </label>
         <label className="control-field">
-          Start UTC
+          {t("gantt.startUtc")}
           <Input value={startAtUtc} onChange={(event) => setStartAtUtc(event.target.value)} />
         </label>
         <label className="control-field">
-          End UTC
+          {t("gantt.endUtc")}
           <Input value={endAtUtc} onChange={(event) => setEndAtUtc(event.target.value)} />
         </label>
         <label className="control-field">
-          Change reason
+          {t("action.changeReason")}
           <Input.TextArea
             value={reason}
             onChange={(event) => setReason(event.target.value)}
@@ -286,19 +302,19 @@ export function GanttEditControls({
           disabled={!editable || reason.trim().length < 3 || action.pending}
           onClick={() => void execute("MOVE_OPERATION")}
         >
-          Move selected operation
+          {t("action.move")}
         </Button>
         <Button
           disabled={!editable || reason.trim().length < 3 || action.pending}
           onClick={() => void execute("ASSIGN_RESOURCE")}
         >
-          Assign resource only
+          {t("action.assign")}
         </Button>
         <Button
           disabled={!lockable || reason.trim().length < 3 || action.pending}
           onClick={() => void execute("SET_LOCK")}
         >
-          Set hard lock
+          {t("action.lock")}
         </Button>
       </Space>
       <ActionFeedback

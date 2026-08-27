@@ -37,6 +37,25 @@ body {
   margin: 0;
 }
 
+.locale-control {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  color: #fff;
+  font-weight: 600;
+}
+
+.locale-control .ant-select {
+  min-width: 128px;
+}
+
+.localized-raw {
+  display: block;
+  margin-top: 2px;
+  color: #58716a;
+  font-size: 0.78rem;
+}
+
 .app-sider,
 .app-sider .ant-layout-sider-children,
 .app-sider .ant-menu {

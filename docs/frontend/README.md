@@ -6,14 +6,14 @@ spec_version: 0.3.0
 phase: P3
 normative: false
 source_sections: [68, 69, 77, 78]
-last_reviewed: 2026-08-26
+last_reviewed: 2026-08-27
 ---
 
 # Frontend 文档形成计划
 
-## TASK-P3-16 planned bilingual boundary
+## TASK-P3-16 bilingual implementation boundary
 
-[`official-zh-cn-terminology.v1`](official-zh-cn-terminology-map.md)现为P3展示层唯一官方中文术语基线。TASK-P3-16保持`planned`且尚无Diff base/implementation SHA：未来默认`zh-CN`并可切换`en-US`，只保存非敏感本地locale preference，同时同步document language与Ant Design locale；typed词典、Intl格式、unknown raw fallback及双语accessibility/browser证据必须完整。API path/key/operationId、state/command/error/C-ID、ID/fingerprint/raw UTC与canonical bytes继续为英文机器合同，严禁从中文label反向构造request。TASK-P3-17在其后最终独立审计；当前没有修改任何`frontend/**`实现、测试、dependency或workflow。
+[`official-zh-cn-terminology.v1`](official-zh-cn-terminology-map.md)是P3展示层唯一官方中文术语基线。TASK-P3-16以`1636fe9c909b728d49f9907ed9f53030b5921914`为Diff base实现默认`zh-CN`、可切换/恢复`en-US`、非敏感locale preference、document/Ant Design locale同步、typed词典、Intl格式、unknown raw fallback及双语accessibility/browser证据。API path/key/operationId、state/command/error/C-ID、ID/fingerprint/raw UTC与canonical bytes继续为英文机器合同，严禁从中文label反向构造request。67项Vitest、12/12 Chromium与8/8 i18n machine checks本地通过；dependency/lock零差异，exact provider仍待形成。TASK-P3-17在其后最终独立审计且未启动。
 
 ## TASK-P3-14 browser Gate
 

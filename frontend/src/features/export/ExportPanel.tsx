@@ -17,6 +17,9 @@ import {
   serverAllows,
   useHumanControlAction,
 } from "../schedule-actions/useHumanControlAction";
+import { labelBusinessValue } from "../../i18n/business-labels";
+import { translate, useLocale } from "../../i18n/locale";
+import type { AppLocale } from "../../i18n/types";
 
 const { Paragraph, Text } = Typography;
 
@@ -25,15 +28,16 @@ interface ExportPanelProps {
   refreshAuthority(): Promise<void>;
 }
 
-function visibleError(error: unknown): string {
+function visibleError(error: unknown, locale: AppLocale): string {
   if (error instanceof WorkspaceClientError) {
-    return `${error.message} (correlation ${error.correlationId ?? "unavailable"})`;
+    return `${error.message} (${translate(locale, "common.correlation", { value: error.correlationId ?? translate(locale, "common.unavailable") })})`;
   }
-  return "Export authority failed its published contract.";
+  return translate(locale, "export.authorityFailed");
 }
 
 export function ExportPanel({ version, refreshAuthority }: ExportPanelProps) {
   const { client, runtime } = useAppServices();
+  const { locale, t } = useLocale();
   const [reason, setReason] = useState("");
   const [job, setJob] = useState<ExportJob | null>(null);
   const [jobError, setJobError] = useState<string | null>(null);
@@ -43,7 +47,7 @@ export function ExportPanel({ version, refreshAuthority }: ExportPanelProps) {
 
   async function acceptActionResult(result: WorkspaceActionResult) {
     if (result.exportJob === null) {
-      throw new TypeError("Export command returned no authoritative ExportJob");
+      throw new TypeError(t("export.commandNoJob"));
     }
     setJob(result.exportJob);
     setJobError(null);
@@ -61,7 +65,7 @@ export function ExportPanel({ version, refreshAuthority }: ExportPanelProps) {
       refreshed.schedule_version.schedule_version_id !== version.schedule_version_id ||
       refreshed.data_plane !== version.data_plane
     ) {
-      throw new TypeError("Refreshed ExportJob authority is not bound to this Version");
+      throw new TypeError(t("export.refreshMismatch"));
     }
     setJob(refreshed);
   }
@@ -117,7 +121,7 @@ export function ExportPanel({ version, refreshAuthority }: ExportPanelProps) {
     try {
       await refreshCurrentAuthority();
     } catch (error) {
-      setJobError(visibleError(error));
+      setJobError(visibleError(error, locale));
     } finally {
       setJobPending(false);
     }
@@ -136,7 +140,7 @@ export function ExportPanel({ version, refreshAuthority }: ExportPanelProps) {
           job.artifact_manifest.manifest_fingerprint
       ) {
         throw new TypeError(
-          "Downloaded package evidence differs from the authoritative ExportJob",
+          t("export.downloadMismatch"),
         );
       }
       const objectUrl = URL.createObjectURL(downloaded.blob);
@@ -147,30 +151,30 @@ export function ExportPanel({ version, refreshAuthority }: ExportPanelProps) {
       anchor.click();
       globalThis.setTimeout(() => URL.revokeObjectURL(objectUrl), 0);
       setDownloadEvidence(
-        `Verified ${downloaded.packageId}; archive ${downloaded.archiveFingerprint}; correlation ${downloaded.correlationId}`,
+        t("export.verifiedDetail", { package: downloaded.packageId, archive: downloaded.archiveFingerprint, correlation: downloaded.correlationId }),
       );
     } catch (error) {
-      setJobError(visibleError(error));
+      setJobError(visibleError(error, locale));
     } finally {
       setDownloadPending(false);
     }
   }
 
   return (
-    <Card title="Internal Simulation export" className="control-card">
+    <Card title={t("export.title")} className="control-card">
       <Alert
         type="info"
         showIcon
-        title="Export is separate from publication."
-        description="Only a verified EXPORTED package can be downloaded; no MES or external storage target is available."
+        title={t("export.separate")}
+        description={t("export.boundary")}
       />
       {version.state !== "PUBLISHED" && (
         <Paragraph type="secondary">
-          Export creation is available only from a PUBLISHED Version.
+          {t("export.publishedOnly")}
         </Paragraph>
       )}
       <label className="control-field">
-        Export or retry reason
+        {t("export.reason")}
         <Input.TextArea
           value={reason}
           onChange={(event) => setReason(event.target.value)}
@@ -186,11 +190,11 @@ export function ExportPanel({ version, refreshAuthority }: ExportPanelProps) {
           loading={action.pending && job === null}
           onClick={() => void requestExport()}
         >
-          Request export
+          {t("export.request")}
         </Button>
         {job !== null && (
           <Button loading={jobPending} onClick={() => void refreshJob()}>
-            Refresh export job
+            {t("export.refresh")}
           </Button>
         )}
         {job?.state === "EXPORT_FAILED" && (
@@ -199,7 +203,7 @@ export function ExportPanel({ version, refreshAuthority }: ExportPanelProps) {
             disabled={!canRetry || reason.trim().length < 3}
             onClick={() => void retryExport()}
           >
-            Retry failed export
+            {t("export.retry")}
           </Button>
         )}
         {job?.state === "EXPORTED" && (
@@ -209,7 +213,7 @@ export function ExportPanel({ version, refreshAuthority }: ExportPanelProps) {
             loading={downloadPending}
             onClick={() => void download()}
           >
-            Download verified package
+            {t("export.download")}
           </Button>
         )}
       </Space>
@@ -221,20 +225,20 @@ export function ExportPanel({ version, refreshAuthority }: ExportPanelProps) {
       />
       {jobError !== null && <Alert type="error" showIcon title={jobError} />}
       {downloadEvidence !== null && (
-        <Alert type="success" showIcon title="Verified package downloaded" description={downloadEvidence} />
+        <Alert type="success" showIcon title={t("export.verified")} description={downloadEvidence} />
       )}
       {job !== null && (
-        <Descriptions bordered size="small" column={1} title="Authoritative ExportJob">
-          <Descriptions.Item label="Job ID">{job.export_job_id}</Descriptions.Item>
-          <Descriptions.Item label="State">
-            <Text strong>{job.state}</Text>
+        <Descriptions bordered size="small" column={1} title={t("export.jobTitle")}>
+          <Descriptions.Item label={t("export.jobId")}>{job.export_job_id}</Descriptions.Item>
+          <Descriptions.Item label={t("version.state")}>
+            <Text strong>{labelBusinessValue("exportJobState", job.state, locale).label}</Text>{" "}<Text code>{job.state}</Text>
           </Descriptions.Item>
-          <Descriptions.Item label="Attempt">{job.attempt}</Descriptions.Item>
-          <Descriptions.Item label="Latest audit event">
+          <Descriptions.Item label={t("export.attempt")}>{job.attempt}</Descriptions.Item>
+          <Descriptions.Item label={t("export.latestAudit")}>
             {job.latest_audit_event_id}
           </Descriptions.Item>
-          <Descriptions.Item label="Package">
-            {job.artifact_manifest?.package_id ?? "Not formed"}
+          <Descriptions.Item label={t("export.package")}>
+            {job.artifact_manifest?.package_id ?? t("export.notFormed")}
           </Descriptions.Item>
         </Descriptions>
       )}

@@ -2,6 +2,12 @@ import { createHash } from "node:crypto";
 
 import { expect, test, type Page, type Route } from "@playwright/test";
 
+test.beforeEach(async ({ page }) => {
+  await page.addInitScript(() => {
+    globalThis.localStorage.setItem("plantnexus.locale.v1", "en-US");
+  });
+});
+
 const baseVersionId = "schedule-version-e2e-001";
 const comparedVersionId = "schedule-version-e2e-002";
 const syntheticSegmentCount = 120;
@@ -221,14 +227,26 @@ test("virtualizes 120 Gantt rows, exposes the table fallback and sends server fi
   await page.getByLabel("Order ID").fill("order-e2e-2");
   await page.getByRole("button", { name: "Apply server filters" }).click();
   await expect.poll(() => observation.ganttFilters?.order_ids).toEqual(["order-e2e-2"]);
+  await page.getByRole("combobox", { name: "Language" }).click();
+  await page.getByText("简体中文", { exact: true }).click();
+  await expect(page.locator("html")).toHaveAttribute("lang", "zh-CN");
+  await expect(page.getByRole("heading", { name: "工厂甘特图" })).toBeVisible();
+  await page.getByText("无障碍表格视图（120 个工序）").click();
+  await expect(page.getByText("2026-08-25T00:00:00Z", { exact: true }).first()).toBeVisible();
+  expect(observation.ganttFilters).not.toBeNull();
 });
 
 test("links Resource Load facts back to a resource-filtered machine Gantt", async ({ page }) => {
-  await mockApi(page);
+  await mockApi(page, { denyGantt: true });
   await page.goto(`/resource-load?schedule_version_id=${baseVersionId}&resource_id=resource-e2e-1`);
   await expect(page.getByText("43200")).toBeVisible();
-  await expect(page.locator("output").getByText("0.75", { exact: true })).toBeVisible();
+  await expect(page.locator("output").getByText("75%", { exact: true })).toBeVisible();
+  await expect(page.locator("code").getByText("0.75", { exact: true })).toBeVisible();
   await expect(page.getByRole("link", { name: "Machine Gantt" })).toHaveAttribute("href", /resource_id=resource-e2e-1/u);
+  await page.goto(`/planning/versions/${baseVersionId}/gantt/machines`);
+  await expect(page.getByRole("alert")).toContainText("Authorization denied");
+  await expect(page.getByText("view capability denied")).toBeVisible();
+  await expect(page.getByTestId("gantt-viewport")).toHaveCount(0);
 });
 
 test("uses a comparison read-query without idempotency or client delta classification", async ({ page }) => {
@@ -240,12 +258,4 @@ test("uses a comparison read-query without idempotency or client delta classific
   await page.getByLabel("Operation delta visibility").getByText("Unchanged").click();
   await expect(deltaTable.getByText("UNCHANGED", { exact: true })).toBeVisible();
   expect(observation.comparison).toEqual({ method: "POST", idempotency: null, queryKind: "SCHEDULE_VERSION_COMPARISON" });
-});
-
-test("keeps authorization denial distinct from empty or ready data", async ({ page }) => {
-  await mockApi(page, { denyGantt: true });
-  await page.goto(`/planning/versions/${baseVersionId}/gantt/machines`);
-  await expect(page.getByRole("alert")).toContainText("Authorization denied");
-  await expect(page.getByText("view capability denied")).toBeVisible();
-  await expect(page.getByTestId("gantt-viewport")).toHaveCount(0);
 });

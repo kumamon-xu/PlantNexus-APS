@@ -1,62 +1,60 @@
 import type { WorkspaceView } from "../api/types";
+import type { TranslationKey } from "../i18n/dictionaries/en-US";
 
 export interface WorkspaceRouteDefinition {
   path: string;
-  label: string;
+  labelKey?: TranslationKey;
   view?: WorkspaceView;
   scheduleScoped?: boolean;
 }
 
 export const workspaceRoutes: readonly WorkspaceRouteDefinition[] = [
-  { path: "/planning/data-health", label: "Data health", view: "DATA_HEALTH" },
-  { path: "/planning/import-runs", label: "Import runs", view: "IMPORT_RUNS" },
-  { path: "/planning/runs", label: "Planning runs", view: "PLANNING_RUNS" },
-  { path: "/planning/runs/:planning_run_id", label: "Planning run detail" },
+  { path: "/planning/data-health", view: "DATA_HEALTH" },
+  { path: "/planning/import-runs", view: "IMPORT_RUNS" },
+  { path: "/planning/runs", view: "PLANNING_RUNS" },
+  { path: "/planning/runs/:planning_run_id", labelKey: "route.planningRunDetail" },
   {
     path: "/planning/versions/:schedule_version_id",
-    label: "ScheduleVersion",
+    labelKey: "route.scheduleVersion",
     scheduleScoped: true,
   },
   {
     path: "/planning/versions/:schedule_version_id/orders",
-    label: "Orders",
     view: "ORDERS",
     scheduleScoped: true,
   },
   {
     path: "/planning/versions/:schedule_version_id/gantt/factory",
-    label: "Factory Gantt",
+    labelKey: "route.factoryGantt",
     view: "GANTT",
     scheduleScoped: true,
   },
   {
     path: "/planning/versions/:schedule_version_id/gantt/workshops",
-    label: "Workshop Gantt",
+    labelKey: "route.workshopGantt",
     view: "GANTT",
     scheduleScoped: true,
   },
   {
     path: "/planning/versions/:schedule_version_id/gantt/machines",
-    label: "Machine Gantt",
+    labelKey: "route.machineGantt",
     view: "GANTT",
     scheduleScoped: true,
   },
-  { path: "/operations", label: "Operations", view: "OPERATIONS", scheduleScoped: true },
-  { path: "/resources", label: "Resources", view: "RESOURCES", scheduleScoped: true },
-  { path: "/calendars", label: "Calendars", view: "CALENDARS", scheduleScoped: true },
-  { path: "/validation", label: "Validation", scheduleScoped: true },
-  { path: "/kpi", label: "KPI", view: "KPI", scheduleScoped: true },
-  { path: "/diagnostics", label: "Diagnostics", view: "DIAGNOSTICS", scheduleScoped: true },
-  { path: "/audit", label: "Audit", view: "AUDIT", scheduleScoped: true },
+  { path: "/operations", view: "OPERATIONS", scheduleScoped: true },
+  { path: "/resources", view: "RESOURCES", scheduleScoped: true },
+  { path: "/calendars", view: "CALENDARS", scheduleScoped: true },
+  { path: "/validation", labelKey: "route.validation", scheduleScoped: true },
+  { path: "/kpi", view: "KPI", scheduleScoped: true },
+  { path: "/diagnostics", view: "DIAGNOSTICS", scheduleScoped: true },
+  { path: "/audit", view: "AUDIT", scheduleScoped: true },
   {
     path: "/resource-load",
-    label: "Resource Load",
     view: "RESOURCE_LOAD",
     scheduleScoped: true,
   },
   {
     path: "/compare",
-    label: "Version comparison",
     view: "VERSION_COMPARISON",
     scheduleScoped: true,
   },

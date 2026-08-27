@@ -6,7 +6,7 @@ spec_version: 0.3.0
 phase: P3
 normative: true
 source_sections: [3, 5, 6, 30, 33, 34, 47, 48, 50, 58, 66, 67, 68, 69, 73, 74, 77, 78, 94, 100, 111]
-last_reviewed: 2026-08-26
+last_reviewed: 2026-08-27
 terminology_version: official-zh-cn-terminology.v1
 ---
 
@@ -284,4 +284,5 @@ terminology_version: official-zh-cn-terminology.v1
 - TASK-P3-16实施时，英文和中文dictionary key集合必须逐字相等；所有注册state/view/command/action/change kind/C-ID/product category/code/workspace reason/detail reason必须由机器coverage检查。
 - TEST-FRONTEND-I18N-001必须覆盖两个locale、默认与preference、document lang/Ant locale、unknown raw fallback、raw UTC/ID/code/fingerprint/JSON、error namespace/correlation与API canonical fingerprint/state/command zero drift。
 - 任何新机器值先由其权威Contract/Schema/状态机版本发布；展示字典不得抢先创造机器语义。未登记值进入UI时必须fail visibly并保留raw。
-- 本文只形成规范基线，不表示TASK-P3-16实现、P3 Exit、P4 transition、UAT、Production approval/publish或Production readiness已经形成。
+- TASK-P3-16已把本版本实现为两个各243-key的typed dictionary、139个注册machine-value映射、Intl formatter及unknown raw fallback；本地67项Vitest、12/12 Chromium和8/8 machine checks通过，exact provider仍待形成。
+- 上述实现事实不表示P3 Exit、P4 transition、UAT、Production approval/publish或Production readiness已经形成。

@@ -6,7 +6,7 @@ spec_version: 0.3.0
 phase: cross-phase
 normative: true
 source_sections: [71, 72, 73, 74, 75, 76, 77, 78, 79, 80, 81, 82, 83, 84]
-last_reviewed: 2026-08-26
+last_reviewed: 2026-08-27
 ---
 
 # Milestone 索引
@@ -48,7 +48,7 @@ P1当前状态：[`P1 — Data & Snapshot`](P1-data-and-snapshot.md)为`complete
 
 P2当前状态：[`P2 — CP-SAT Vertical Slice`](P2-cp-sat-vertical-slice.md)为`completed`。TASK-P2-00～14均已闭环为`done`；P2 Exit Gate=`READY`且0 gaps。用户于2026-08-24在复核exact provider evidence、提交拓扑与clean synchronized baseline后明确批准P2→P3。
 
-P3当前状态：[`P3 — Planning Workspace`](P3-planning-workspace.md)为`active`。TASK-P3-00～15均为`done`；TASK-P3-16为planned bilingual localization，TASK-P3-17为planned/final independent Exit Audit，均无Diff base或implementation SHA。P3 Gate、HTTP/internal Simulation export、Frontend或治理provider evidence均不表示external、P4或Production。
+P3当前状态：[`P3 — Planning Workspace`](P3-planning-workspace.md)为`active`。TASK-P3-00～15均为`done`；TASK-P3-16为`in_progress` bilingual localization，Diff base=`1636fe9c909b728d49f9907ed9f53030b5921914`且implementation provider仍待形成；TASK-P3-17为`planned`/final independent Exit Audit。P3 Gate、HTTP/internal Simulation export、Frontend或治理provider evidence均不表示external、P4或Production。
 
 TASK-P3-04 implementation `a9be974855bb825784d639b7f6675e5a33e4273d`的run/job/artifact=`32700005280`/`97349447107`/`9510215582`精确复现35 focused、515 full、8/8 lifecycle、23/23 JSON PASS与45 committed/0 working paths、8 rows、19 checks、0 issues，故本closure标为`done`。该证据只形成reviewable ScheduleVersion，不形成approval、publish、P4或Production readiness。
 

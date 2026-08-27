@@ -6,11 +6,15 @@ spec_version: 0.3.0
 phase: cross-phase
 normative: true
 source_sections: [37, 38, 39, 43, 44, 49, 59, 62, 96]
-last_reviewed: 2026-08-26
+last_reviewed: 2026-08-27
 registry_version: 1.0.0
 ---
 
 # SIM_ASSUMPTION 注册表
+
+## TASK-P3-16 review
+
+双语实现只消费既有versioned synthetic browser fixture并格式化已发布值，没有新增或修改Scenario/Profile/seed/hash/measurement，也不把中文label解释为真实工厂事实。SIM-ASSUMPTION-001～015全部继续`ACTIVE`，数量15且`registry_version=1.0.0`不变；本地或provider browser PASS均不得外推Production。
 
 ## TASK-P3-15 review
 

@@ -6,7 +6,7 @@ spec_version: 0.3.0
 phase: P0-P4
 normative: true
 source_sections: [29, 32, 34, 60, 65, 91, 92]
-last_reviewed: 2026-08-26
+last_reviewed: 2026-08-27
 ---
 
 # 错误与求解状态模型
@@ -14,6 +14,8 @@ last_reviewed: 2026-08-26
 ## TASK-P3-16 localization contract
 
 双语展示不得改变七类product error、`error-code-registry.v2`的23个code、Workspace module-local reason或HTTP mapping。Frontend以namespace与code/reason查`official-zh-cn-terminology.v1`，中文模式仍同时显示原始code/reason和correlation ID；未知值显示raw并fail visibly。后端英文安全message仅作诊断fallback，禁止据其文本判断业务或猜测中文；自由文本、ID、actor reference、fingerprint与raw UTC不机器翻译。
+
+TASK-P3-16已实现typed product/workspace error adapters与未知raw fallback；本地词典/组件/browser及zero-wire-drift检查通过，未改变registry、HTTP mapping或后端message。Exact provider形成前该事实仍为local-only。
 
 ## TASK-P3-14 exact rejection Gate
 

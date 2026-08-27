@@ -6,7 +6,7 @@ spec_version: 0.3.0
 phase: cross-phase
 normative: true
 source_sections: [98, 99, 100, 111]
-last_reviewed: 2026-08-26
+last_reviewed: 2026-08-27
 ---
 
 # TASK-Px-yy — Title
@@ -14,6 +14,8 @@ last_reviewed: 2026-08-26
 ## P3 bilingual localization Task governance note
 
 涉及Frontend本地化时必须先固定locale集合、默认值、本地preference边界、`document.documentElement.lang`与组件库locale同步规则，并引用版本化官方术语源。实现应使用typed/exhaustive dictionary与原生Intl；未知machine value必须显示raw code/reason/state，不能猜译、隐藏或依赖英文message解析。中文只属于展示层，API path/key/operationId/header/body、enum/state/command/error/C-ID、ID/fingerprint/raw UTC与canonical bytes必须零漂移；自由文本、业务编码和credential不得机器翻译或持久化到locale preference。默认不得增加dependency；如确需新增必须先停止、扩卡并完成exact pin/lock/SCA/license/peer与ADR影响审查。Task须逐字列出Frontend source/test/Playwright/report/可选additive CI路径，建立双语coverage、accessibility、unknown fallback和wire-drift machine evidence，并分别核验implementation/closure exact provider。最终P3 Exit Audit必须由独立后继Task执行，本地化Task不得自审Exit或进入P4/Production。
+
+本地dictionary/browser/report全部PASS后仍须保持`in_progress`，直到implementation exact provider下载复核；只有后续evidence-only closure的exact provider再次通过后才可标`done`。
 
 ## P3 vertical Gate Task governance note
 

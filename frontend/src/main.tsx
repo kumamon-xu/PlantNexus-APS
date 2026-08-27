@@ -9,6 +9,7 @@ import { loadRuntimeConfig } from "./api/runtime";
 import { unavailableSessionProvider } from "./api/session";
 import { AppServicesProvider } from "./app/context";
 import { PlanningWorkspaceApp } from "./app/PlanningWorkspaceApp";
+import { LocaleProvider, useLocale } from "./i18n/locale";
 import "./styles/app.css";
 
 const runtime = loadRuntimeConfig();
@@ -24,9 +25,11 @@ if (root === null) {
   throw new Error("PlantNexus APS root element is absent");
 }
 
-ReactDOM.createRoot(root).render(
-  <React.StrictMode>
+export function LocalizedApplication() {
+  const { antDesignLocale } = useLocale();
+  return (
     <ConfigProvider
+      locale={antDesignLocale}
       theme={{
         token: {
           colorPrimary: "#146b58",
@@ -45,5 +48,13 @@ ReactDOM.createRoot(root).render(
         </AppServicesProvider>
       </QueryClientProvider>
     </ConfigProvider>
+  );
+}
+
+ReactDOM.createRoot(root).render(
+  <React.StrictMode>
+    <LocaleProvider>
+      <LocalizedApplication />
+    </LocaleProvider>
   </React.StrictMode>,
 );

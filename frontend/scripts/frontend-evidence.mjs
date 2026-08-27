@@ -155,9 +155,25 @@ for (const path of requiredControlFiles) {
 const sourceFiles = files("src");
 const sourcePaths = sourceFiles.map((path) => relative("src", path).replaceAll("\\", "/"));
 const combined = sourceFiles.map((path) => readFileSync(path, "utf8")).join("\n");
-for (const forbidden of ["localStorage", "sessionStorage", "document.cookie"]) {
+for (const forbidden of ["sessionStorage", "document.cookie"]) {
   fail(!combined.includes(forbidden), `credential persistence surface present: ${forbidden}`, issues);
 }
+const localStoragePaths = sourceFiles
+  .filter((path) => readFileSync(path, "utf8").includes("localStorage"))
+  .map((path) => relative("src", path).replaceAll("\\", "/"));
+fail(
+  JSON.stringify(localStoragePaths) === JSON.stringify(["i18n/locale.ts"]),
+  `localStorage is only allowed for the versioned locale preference: ${localStoragePaths.join(", ")}`,
+  issues,
+);
+const localeSource = readFileSync("src/i18n/locale.ts", "utf8");
+const localeTypesSource = readFileSync("src/i18n/types.ts", "utf8");
+fail(localeSource.includes("localePreferenceKey"), "locale storage does not use the typed preference key", issues);
+fail(
+  localeTypesSource.includes('localePreferenceKey = "plantnexus.locale.v1"'),
+  "versioned locale preference key is absent",
+  issues,
+);
 for (const fragment of ["replan", "change-report", "execution-event"]) {
   fail(
     !sourcePaths.some((path) => path.toLowerCase().includes(fragment)),

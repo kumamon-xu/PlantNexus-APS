@@ -10,11 +10,13 @@ import { useScheduleVersion } from "../app/useScheduleVersion";
 import { AuthorityPanel } from "../components/AuthorityPanel";
 import { ReadOnlyTable } from "../components/ReadOnlyTable";
 import { WorkspaceStatePanel } from "../components/WorkspaceStatePanel";
+import { labelBusinessValue } from "../i18n/business-labels";
+import { useLocale } from "../i18n/locale";
 
 const { Paragraph, Title } = Typography;
 
 export interface WorkspaceCollectionPageProps {
-  title: string;
+  title?: string;
   view: WorkspaceView;
   scheduleScoped?: boolean;
 }
@@ -25,6 +27,7 @@ export function WorkspaceCollectionPage({
   scheduleScoped = false,
 }: WorkspaceCollectionPageProps) {
   const { client, runtime } = useAppServices();
+  const { locale, t } = useLocale();
   const [cursorStack, setCursorStack] = useState<(string | null)[]>([null]);
   const cursor = cursorStack.at(-1) ?? null;
   const { scheduleVersionId, query: versionQuery } = useScheduleVersion();
@@ -58,19 +61,19 @@ export function WorkspaceCollectionPage({
   if (scheduleScoped && (scheduleVersionId === null || scheduleVersionId.length === 0)) {
     state = "contract_error";
     detail =
-      "This read requires ?schedule_version_id=<immutable-id> or a version-scoped route.";
+      t("collection.identityRequired");
   } else if (scheduleScoped && versionQuery.error !== null) {
-    ({ state, detail } = stateForError(versionQuery.error));
+    ({ state, detail } = stateForError(versionQuery.error, locale));
   } else if (workspaceQuery.error !== null) {
-    ({ state, detail } = stateForError(workspaceQuery.error));
+    ({ state, detail } = stateForError(workspaceQuery.error, locale));
   } else if (workspaceQuery.data !== undefined) {
     const result = workspaceQuery.data.document.result;
     if (result === null) {
       state = "contract_error";
-      detail = "The RESULT carrier has no result body.";
+      detail = t("collection.resultMissing");
     } else if (result.freshness !== "FRESH") {
       state = "stale";
-      detail = `Server freshness is ${result.freshness}; refresh the Version precondition.`;
+      detail = t("collection.stale", { freshness: result.freshness });
     } else if (!result.found || workspaceQuery.data.items.length === 0) {
       state = "empty";
     } else {
@@ -80,15 +83,15 @@ export function WorkspaceCollectionPage({
 
   const result = workspaceQuery.data?.document.result ?? null;
   const emptyKind = result?.found === false ? "missing" : "collection";
+  const viewLabel = labelBusinessValue("workspaceView", view, locale);
 
   return (
     <article className="workspace-page">
       <Flex justify="space-between" align="flex-start" gap="middle" wrap>
         <div>
-          <Title level={2}>{title}</Title>
+          <Title level={2}>{viewLabel.known ? viewLabel.label : title ?? viewLabel.label}</Title>
           <Paragraph type="secondary">
-            Read-only server projection. Sorting, counts, state, lineage and allowed
-            actions remain authoritative on the API.
+            {t("collection.description")}
           </Paragraph>
         </div>
         <Space>
@@ -96,13 +99,13 @@ export function WorkspaceCollectionPage({
             onClick={() => void workspaceQuery.refetch()}
             disabled={!queryEnabled || workspaceQuery.isFetching}
           >
-            Refresh read
+            {t("common.refreshRead")}
           </Button>
           <Button
             onClick={() => setCursorStack((values) => values.slice(0, -1))}
             disabled={cursorStack.length === 1 || workspaceQuery.isFetching}
           >
-            Previous page
+            {t("common.previousPage")}
           </Button>
           <Button
             onClick={() => {
@@ -112,14 +115,14 @@ export function WorkspaceCollectionPage({
             }}
             disabled={result?.next_cursor == null || workspaceQuery.isFetching}
           >
-            Next page
+            {t("common.nextPage")}
           </Button>
         </Space>
       </Flex>
 
       <WorkspaceStatePanel state={state} detail={detail} emptyKind={emptyKind} />
       {workspaceQuery.data !== undefined && state !== "contract_error" && (
-        <Space direction="vertical" size="large" className="workspace-results">
+        <Space orientation="vertical" size="large" className="workspace-results">
           <AuthorityPanel response={workspaceQuery.data} />
           {state === "ready" && <ReadOnlyTable items={workspaceQuery.data.items} />}
         </Space>

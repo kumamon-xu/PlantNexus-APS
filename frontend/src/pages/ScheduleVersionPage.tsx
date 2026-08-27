@@ -12,24 +12,27 @@ import { AuditHistoryPanel } from "../features/audit/AuditHistoryPanel";
 import { ExportPanel } from "../features/export/ExportPanel";
 import { PublicationPanel } from "../features/publication/PublicationPanel";
 import { ScheduleActionsPanel } from "../features/schedule-actions/ScheduleActionsPanel";
+import { labelBusinessValue } from "../i18n/business-labels";
+import { useLocale } from "../i18n/locale";
 
 const { Paragraph, Title } = Typography;
 
 export function ScheduleVersionPage() {
   const navigate = useNavigate();
   const { runtime } = useAppServices();
+  const { locale, t } = useLocale();
   const { scheduleVersionId, query } = useScheduleVersion();
   if (scheduleVersionId === null || scheduleVersionId.length === 0) {
     return (
       <WorkspaceStatePanel
         state="contract_error"
-        detail="ScheduleVersion identity is required."
+        detail={t("schedule.identityRequired")}
       />
     );
   }
   if (query.isPending) return <WorkspaceStatePanel state="loading" />;
   if (query.error !== null) {
-    const failure = stateForError(query.error);
+    const failure = stateForError(query.error, locale);
     return <WorkspaceStatePanel {...failure} />;
   }
   if (query.data === undefined) {
@@ -62,54 +65,53 @@ export function ScheduleVersionPage() {
     query.data.synthetic;
   return (
     <article className="workspace-page">
-      <Title level={2}>ScheduleVersion authority</Title>
+      <Title level={2}>{t("schedule.title")}</Title>
       <Paragraph type="secondary">
-        Identity, state and lineage remain server authority. Human controls submit
-        versioned commands and accept only the returned authoritative result.
+        {t("schedule.description")}
       </Paragraph>
       <Alert
         type="info"
         showIcon
-        title="P3-13 bounded human-control surface"
-        description="Controls are isolated to synthetic Simulation tests. Production identity, MES publication and P4 replanning remain unavailable."
+        title={t("schedule.boundaryTitle")}
+        description={t("schedule.boundaryDescription")}
       />
       <ScheduleVersionPanel version={query.data} />
       <Space wrap>
         <Link to={`/planning/versions/${encodeURIComponent(query.data.schedule_version_id)}/orders`}>
-          Orders
+          {labelBusinessValue("workspaceView", "ORDERS", locale).label}
         </Link>
-        <Link to={`/operations${search}`}>Operations</Link>
-        <Link to={`/resources${search}`}>Resources</Link>
-        <Link to={`/calendars${search}`}>Calendars</Link>
-        <Link to={`/validation${search}`}>Validation</Link>
-        <Link to={`/kpi${search}`}>KPI</Link>
-        <Link to={`/diagnostics${search}`}>Diagnostics</Link>
-        <Link to={`/audit${search}`}>Audit</Link>
+        <Link to={`/operations${search}`}>{labelBusinessValue("workspaceView", "OPERATIONS", locale).label}</Link>
+        <Link to={`/resources${search}`}>{labelBusinessValue("workspaceView", "RESOURCES", locale).label}</Link>
+        <Link to={`/calendars${search}`}>{labelBusinessValue("workspaceView", "CALENDARS", locale).label}</Link>
+        <Link to={`/validation${search}`}>{t("route.validation")}</Link>
+        <Link to={`/kpi${search}`}>{labelBusinessValue("workspaceView", "KPI", locale).label}</Link>
+        <Link to={`/diagnostics${search}`}>{labelBusinessValue("workspaceView", "DIAGNOSTICS", locale).label}</Link>
+        <Link to={`/audit${search}`}>{labelBusinessValue("workspaceView", "AUDIT", locale).label}</Link>
         <Link
           to={`/planning/versions/${encodeURIComponent(query.data.schedule_version_id)}/gantt/factory`}
         >
-          Factory Gantt
+          {t("route.factoryGantt")}
         </Link>
         <Link
           to={`/planning/versions/${encodeURIComponent(query.data.schedule_version_id)}/gantt/workshops`}
         >
-          Workshop Gantt
+          {t("route.workshopGantt")}
         </Link>
         <Link
           to={`/planning/versions/${encodeURIComponent(query.data.schedule_version_id)}/gantt/machines`}
         >
-          Machine Gantt
+          {t("route.machineGantt")}
         </Link>
-        <Link to={`/resource-load${search}`}>Resource Load</Link>
-        <Link to={`/compare${search}`}>Version comparison</Link>
+        <Link to={`/resource-load${search}`}>{labelBusinessValue("workspaceView", "RESOURCE_LOAD", locale).label}</Link>
+        <Link to={`/compare${search}`}>{labelBusinessValue("workspaceView", "VERSION_COMPARISON", locale).label}</Link>
       </Space>
-      <Title level={3}>Human controls</Title>
+      <Title level={3}>{t("schedule.humanControls")}</Title>
       {!humanControlsEnabled && (
         <Alert
           type="warning"
           showIcon
-          title="Human controls are hidden in this runtime."
-          description="Production remains default-deny until its separate identity and authorization gates close."
+          title={t("schedule.controlsHidden")}
+          description={t("schedule.controlsHiddenDescription")}
         />
       )}
       {humanControlsEnabled && (

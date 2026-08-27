@@ -6,10 +6,14 @@ spec_version: 0.3.0
 phase: cross-phase
 normative: true
 source_sections: [16, 38, 49, 62, 64, 95, 96]
-last_reviewed: 2026-08-26
+last_reviewed: 2026-08-27
 ---
 
 # 配置、环境与数据隔离
+
+## TASK-P3-16 locale preference isolation
+
+浏览器只以versioned key `plantnexus.locale.v1`保存`zh-CN`或`en-US`展示偏好；不保存token、credential、actor、reason、payload、authority或业务数据，也不把locale加入API/header/canonical fingerprint。无值或无效值均安全回退`zh-CN`，普通Production-shaped runtime与Simulation隔离规则不变。该local preference不是server config、business timezone、identity或Production deployment配置；本地隔离/refresh证据通过，exact provider待形成。
 
 ## TASK-P3-14 isolated replay environment
 

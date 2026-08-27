@@ -6,11 +6,15 @@ spec_version: 0.3.0
 phase: cross-phase
 normative: true
 source_sections: [16, 59, 60, 61, 105, 106]
-last_reviewed: 2026-08-26
+last_reviewed: 2026-08-27
 registry_version: 1.0.0
 ---
 
 # PROD_OPEN 注册表
+
+## TASK-P3-16 review
+
+默认`zh-CN`、可选`en-US`、Intl展示与浏览器非敏感locale preference已形成本地实现/测试，但不提供Factory business timezone、真实identity/approval responsibility、external interface、capacity/SLA、storage或deployment事实。Raw UTC继续可见，Simulation label不升级为Production。OPEN-001～015全部保持`OPEN`，无closure record、数量、状态或`registry_version=1.0.0`变化；exact provider或TASK-P3-17也不得据此声明Production readiness。
 
 ## TASK-P3-15 review
 

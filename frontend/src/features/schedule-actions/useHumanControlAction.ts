@@ -7,6 +7,7 @@ import type {
   WorkspaceCommandDocument,
 } from "../../api/types";
 import { useAppServices } from "../../app/context";
+import type { TranslationKey } from "../../i18n/dictionaries/en-US";
 
 export type HumanControlPhase =
   | "idle"
@@ -19,6 +20,8 @@ export type HumanControlPhase =
 export interface HumanControlFeedback {
   phase: HumanControlPhase;
   detail: string | null;
+  detailKey: TranslationKey | null;
+  commandType: WorkspaceCommandDocument["command_type"] | null;
   correlationId: string | null;
   result: WorkspaceActionResult | null;
   retryReady: boolean;
@@ -32,6 +35,8 @@ interface UseHumanControlActionOptions {
 const initialFeedback: HumanControlFeedback = {
   phase: "idle",
   detail: null,
+  detailKey: null,
+  commandType: null,
   correlationId: null,
   result: null,
   retryReady: false,
@@ -60,7 +65,9 @@ export function useHumanControlAction({
       setFeedback({
         ...initialFeedback,
         phase: "pending",
-        detail: `Submitting ${command.command_type} to server authority…`,
+        detail: null,
+        detailKey: "action.submitting",
+        commandType: command.command_type,
         correlationId: command.correlation_id,
       });
       try {
@@ -69,7 +76,9 @@ export function useHumanControlAction({
         retained.current = null;
         setFeedback({
           phase: "success",
-          detail: `Server confirmed ${command.command_type}; authoritative state was refreshed.`,
+          detail: null,
+          detailKey: "action.serverConfirmed",
+          commandType: command.command_type,
           correlationId: result.correlationId,
           result,
           retryReady: false,
@@ -88,9 +97,9 @@ export function useHumanControlAction({
         retained.current = outcomeUnknown ? command : null;
         setFeedback({
           phase: outcomeUnknown ? "outcome_unknown" : "error",
-          detail: outcomeUnknown
-            ? "Outcome is unknown. Refresh server authority before retrying with the same idempotency key."
-            : failure.message,
+          detail: outcomeUnknown ? null : failure.message,
+          detailKey: outcomeUnknown ? "action.outcomeUnknown" : null,
+          commandType: command.command_type,
           correlationId: failure.correlationId ?? command.correlation_id,
           result: null,
           retryReady: false,
@@ -108,21 +117,24 @@ export function useHumanControlAction({
     setFeedback((current) => ({
       ...current,
       phase: "refreshing",
-      detail: "Refreshing authoritative state before an idempotent retry…",
+      detail: null,
+      detailKey: "action.refreshing",
     }));
     try {
       await refreshAuthority();
       setFeedback((current) => ({
         ...current,
         phase: "outcome_unknown",
-        detail: "Authority refreshed. Retry will reuse the original idempotency key.",
+        detail: null,
+        detailKey: "action.refreshed",
         retryReady: true,
       }));
     } catch {
       setFeedback((current) => ({
         ...current,
         phase: "outcome_unknown",
-        detail: "Authority refresh failed; retry remains blocked.",
+        detail: null,
+        detailKey: "action.refreshFailed",
         retryReady: false,
       }));
     } finally {

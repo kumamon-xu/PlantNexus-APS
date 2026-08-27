@@ -6,14 +6,14 @@ spec_version: 0.3.0
 phase: P0-P4
 normative: true
 source_sections: [21, 28, 35, 47, 48, 49, 50, 79, 80]
-last_reviewed: 2026-08-26
+last_reviewed: 2026-08-27
 ---
 
 # 动态重排设计合同
 
 ## TASK-P3-16 localization / P4 boundary
 
-双语展示只能本地化现有P3 workspace术语，不能新增ExecutionEvent、ReplanRequest、freeze window、OBJ-002、ChangeReport、Execution Simulator或任何P4 route/action。中文“移动/重新分配/锁定”仍只是P3 copy-on-write command label，不是dynamic replan。TASK-P3-16保持planned，TASK-P3-17最终审计后P3也不会自动进入P4；当前P4仍完全未启动。
+双语展示只本地化现有P3 workspace术语，没有新增ExecutionEvent、ReplanRequest、freeze window、OBJ-002、ChangeReport、Execution Simulator或任何P4 route/action。中文“移动/重新分配/锁定”仍只是P3 copy-on-write command label，不是dynamic replan。TASK-P3-16本地实现已形成但provider pending；TASK-P3-17最终审计后P3也不会自动进入P4，当前P4仍完全未启动。
 
 ## TASK-P3-14 boundary Gate
 

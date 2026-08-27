@@ -1,4 +1,4 @@
-import { Layout, Menu, Tag, Typography } from "antd";
+import { Layout, Menu, Select, Space, Tag, Typography } from "antd";
 import { Navigate, Route, Routes, useLocation, useNavigate } from "react-router-dom";
 
 import { navigationRoutes } from "./routeInventory";
@@ -11,6 +11,9 @@ import { GanttPage } from "../features/gantt/GanttPage";
 import { ResourceLoadPage } from "../features/resource-load/ResourceLoadPage";
 import { VersionComparisonPage } from "../features/version-comparison/VersionComparisonPage";
 import { useAppServices } from "./context";
+import { labelBusinessValue } from "../i18n/business-labels";
+import { useLocale } from "../i18n/locale";
+import type { AppLocale } from "../i18n/types";
 
 const { Content, Header, Sider } = Layout;
 const { Text, Title } = Typography;
@@ -19,29 +22,48 @@ export function PlanningWorkspaceApp() {
   const navigate = useNavigate();
   const location = useLocation();
   const { runtime } = useAppServices();
+  const { locale, setLocale, t } = useLocale();
   const selected = navigationRoutes.find((route) => route.path === location.pathname);
+  const routeLabel = (route: (typeof navigationRoutes)[number]) =>
+    route.labelKey === undefined
+      ? labelBusinessValue("workspaceView", route.view ?? route.path, locale).label
+      : t(route.labelKey);
   return (
-    <Layout className="app-shell">
+    <Layout className="app-shell" data-locale={locale}>
       <Header className="app-header">
         <div>
           <Title level={4}>PlantNexus APS</Title>
-          <Text>Planning Workspace</Text>
+          <Text>{t("app.workspace")}</Text>
         </div>
-        <Tag color={runtime.dataPlane === "SIMULATION" ? "gold" : "green"}>
-          {runtime.dataPlane === "SIMULATION"
-            ? "synthetic Simulation controls · server authority"
-            : "Production read-only · controls default-deny"}
-        </Tag>
+        <Space wrap>
+          <label className="locale-control">
+            <span>{t("locale.label")}</span>
+            <Select<AppLocale>
+              aria-label={t("locale.label")}
+              value={locale}
+              onChange={setLocale}
+              options={[
+                { value: "zh-CN", label: t("locale.zhCN") },
+                { value: "en-US", label: t("locale.enUS") },
+              ]}
+            />
+          </label>
+          <Tag color={runtime.dataPlane === "SIMULATION" ? "gold" : "green"}>
+            {runtime.dataPlane === "SIMULATION"
+              ? t("app.simulationBadge")
+              : t("app.productionBadge")}
+          </Tag>
+        </Space>
       </Header>
       <Layout>
         <Sider width={232} breakpoint="lg" collapsedWidth="0" className="app-sider">
-          <nav aria-label="Planning Workspace navigation">
+          <nav aria-label={t("app.navigation")}>
             <Menu
               mode="inline"
               selectedKeys={selected === undefined ? [] : [selected.path]}
               items={navigationRoutes.map((route) => ({
                 key: route.path,
-                label: route.label,
+                label: routeLabel(route),
               }))}
               onClick={({ key }) => void navigate(key)}
             />
@@ -52,15 +74,15 @@ export function PlanningWorkspaceApp() {
             <Route path="/" element={<Navigate to="/planning/data-health" replace />} />
             <Route
               path="/planning/data-health"
-              element={<WorkspaceCollectionPage title="Data health" view="DATA_HEALTH" />}
+              element={<WorkspaceCollectionPage view="DATA_HEALTH" />}
             />
             <Route
               path="/planning/import-runs"
-              element={<WorkspaceCollectionPage title="Import runs" view="IMPORT_RUNS" />}
+              element={<WorkspaceCollectionPage view="IMPORT_RUNS" />}
             />
             <Route
               path="/planning/runs"
-              element={<WorkspaceCollectionPage title="Planning runs" view="PLANNING_RUNS" />}
+              element={<WorkspaceCollectionPage view="PLANNING_RUNS" />}
             />
             <Route path="/planning/runs/:planning_run_id" element={<PlanningRunPage />} />
             <Route
@@ -70,7 +92,7 @@ export function PlanningWorkspaceApp() {
             <Route
               path="/planning/versions/:schedule_version_id/orders"
               element={
-                <WorkspaceCollectionPage title="Orders" view="ORDERS" scheduleScoped />
+                <WorkspaceCollectionPage view="ORDERS" scheduleScoped />
               }
             />
             <Route
@@ -89,7 +111,6 @@ export function PlanningWorkspaceApp() {
               path="/operations"
               element={
                 <WorkspaceCollectionPage
-                  title="Operations"
                   view="OPERATIONS"
                   scheduleScoped
                 />
@@ -99,7 +120,6 @@ export function PlanningWorkspaceApp() {
               path="/resources"
               element={
                 <WorkspaceCollectionPage
-                  title="Resources"
                   view="RESOURCES"
                   scheduleScoped
                 />
@@ -109,7 +129,6 @@ export function PlanningWorkspaceApp() {
               path="/calendars"
               element={
                 <WorkspaceCollectionPage
-                  title="Calendars"
                   view="CALENDARS"
                   scheduleScoped
                 />
@@ -118,13 +137,12 @@ export function PlanningWorkspaceApp() {
             <Route path="/validation" element={<ValidationPage />} />
             <Route
               path="/kpi"
-              element={<WorkspaceCollectionPage title="KPI" view="KPI" scheduleScoped />}
+              element={<WorkspaceCollectionPage view="KPI" scheduleScoped />}
             />
             <Route
               path="/diagnostics"
               element={
                 <WorkspaceCollectionPage
-                  title="Diagnostics"
                   view="DIAGNOSTICS"
                   scheduleScoped
                 />
@@ -132,7 +150,7 @@ export function PlanningWorkspaceApp() {
             />
             <Route
               path="/audit"
-              element={<WorkspaceCollectionPage title="Audit" view="AUDIT" scheduleScoped />}
+              element={<WorkspaceCollectionPage view="AUDIT" scheduleScoped />}
             />
             <Route path="/resource-load" element={<ResourceLoadPage />} />
             <Route path="/compare" element={<VersionComparisonPage />} />
@@ -141,7 +159,7 @@ export function PlanningWorkspaceApp() {
               element={
                 <WorkspaceStatePanel
                   state="contract_error"
-                  detail="This route is outside the P3-13 bounded workspace inventory."
+                  detail={t("app.routeOutside")}
                 />
               }
             />

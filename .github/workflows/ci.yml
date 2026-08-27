@@ -237,6 +237,11 @@ jobs:
           npm --prefix frontend run evidence --
           --report ../build/validation/ci-p3-frontend.json
 
+      - name: TASK-P3-16 Frontend bilingual localization machine evidence
+        run: >-
+          node frontend/scripts/i18n-evidence.mjs
+          --report build/validation/ci-p3-frontend-i18n.json
+
       - name: P3 Gate Chromium replay 1
         working-directory: frontend
         env:

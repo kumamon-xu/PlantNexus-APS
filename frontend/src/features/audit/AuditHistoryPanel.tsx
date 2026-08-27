@@ -2,25 +2,26 @@ import { Alert, Card, Typography } from "antd";
 import { Link } from "react-router-dom";
 
 import type { ScheduleVersion } from "../../api/types";
+import { useLocale } from "../../i18n/locale";
 
 const { Paragraph } = Typography;
 
 export function AuditHistoryPanel({ version }: { version: ScheduleVersion }) {
+  const { t } = useLocale();
   const search = new URLSearchParams({
     schedule_version_id: version.schedule_version_id,
   });
   return (
-    <Card title="Audit and immutable history" className="control-card">
+    <Card title={t("audit.title")} className="control-card">
       <Alert
         type="info"
         showIcon
-        title="The browser cannot rewrite audit or published history."
+        title={t("audit.immutable")}
       />
       <Paragraph>
-        Review server-projected command, decision, publication and export events with
-        their correlation and actor references.
+        {t("audit.description")}
       </Paragraph>
-      <Link to={`/audit?${search}`}>Open audit history</Link>
+      <Link to={`/audit?${search}`}>{t("audit.open")}</Link>
     </Card>
   );
 }

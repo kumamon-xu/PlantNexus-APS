@@ -2,6 +2,8 @@ import { useMemo, useRef, useState, type DragEvent, type UIEvent } from "react";
 import { Link } from "react-router-dom";
 
 import type { GanttSegment } from "../../api/types";
+import { formatUtc } from "../../i18n/formatters";
+import { useLocale } from "../../i18n/locale";
 
 export type GanttGrouping = "factory" | "workshop" | "machine";
 
@@ -27,9 +29,14 @@ const viewportHeight = 384;
 const overscan = 4;
 const labelWidth = 240;
 
-function groupLabel(segment: GanttSegment, grouping: GanttGrouping): string {
-  if (grouping === "factory") return segment.factory_id ?? "Unspecified factory";
-  if (grouping === "workshop") return segment.workshop_id ?? "Unspecified workshop";
+function groupLabel(
+  segment: GanttSegment,
+  grouping: GanttGrouping,
+  unspecifiedFactory: string,
+  unspecifiedWorkshop: string,
+): string {
+  if (grouping === "factory") return segment.factory_id ?? unspecifiedFactory;
+  if (grouping === "workshop") return segment.workshop_id ?? unspecifiedWorkshop;
   return `${segment.resource_code} · ${segment.resource_id}`;
 }
 
@@ -51,6 +58,7 @@ export function GanttTimeline({
   onSelect,
   onMoveIntent,
 }: GanttTimelineProps) {
+  const { locale, t } = useLocale();
   const [scrollTop, setScrollTop] = useState(0);
   const dragStartX = useRef<number | null>(null);
   const timeRange = useMemo(() => {
@@ -104,10 +112,9 @@ export function GanttTimeline({
   }
 
   return (
-    <section aria-label={`${grouping} Gantt projection`}>
+    <section aria-label={t(grouping === "factory" ? "gantt.factoryTitle" : grouping === "workshop" ? "gantt.workshopTitle" : "gantt.machineTitle")}>
       <p className="gantt-instructions">
-        Visual rows are windowed. Open the accessible table for keyboard selection,
-        exact raw UTC instants and Order/Operation links.
+        {t("gantt.instructions")}
       </p>
       <div
         className="gantt-viewport"
@@ -141,7 +148,7 @@ export function GanttTimeline({
                 key={segment.item_id}
                 style={{ top: rowIndex * rowHeight, height: rowHeight }}
               >
-                <span className="gantt-row-label">{groupLabel(segment, grouping)}</span>
+                <span className="gantt-row-label">{groupLabel(segment, grouping, t("gantt.unspecifiedFactory"), t("gantt.unspecifiedWorkshop"))}</span>
                 <div
                   className={`gantt-segment${editable ? " is-editable" : ""}`}
                   data-operation-id={segment.operation_id}
@@ -151,7 +158,7 @@ export function GanttTimeline({
                   onDragEnd={(event) => finishDrag(event, segment)}
                   onClick={() => onSelect(segment)}
                   style={{ left, width }}
-                  title={`${segment.operation_id} · ${segment.start_at_utc} → ${segment.end_at_utc}${editable ? " · drag proposes a bounded move" : ""}`}
+                  title={`${segment.operation_id} · ${segment.start_at_utc} → ${segment.end_at_utc}${editable ? ` · ${t("gantt.dragTitle")}` : ""}`}
                 >
                   {isHighlighted ? "● " : ""}
                   {segment.operation_id}
@@ -163,22 +170,21 @@ export function GanttTimeline({
       </div>
 
       <details className="accessible-fallback">
-        <summary>Accessible table view ({segments.length} operations)</summary>
+        <summary>{t("gantt.tableSummary", { count: segments.length })}</summary>
         <div className="table-scroll">
           <table>
             <caption>
-              Server-provided Gantt facts; select an operation for accessible manual
-              controls or follow its related records.
+              {t("gantt.tableCaption")}
             </caption>
             <thead>
               <tr>
-                <th scope="col">Group</th>
-                <th scope="col">Operation</th>
-                <th scope="col">Order</th>
-                <th scope="col">Resource</th>
-                <th scope="col">Start UTC</th>
-                <th scope="col">End UTC</th>
-                <th scope="col">Status</th>
+                <th scope="col">{t("gantt.group")}</th>
+                <th scope="col">{t("gantt.operation")}</th>
+                <th scope="col">{t("gantt.order")}</th>
+                <th scope="col">{t("gantt.resource")}</th>
+                <th scope="col">{t("gantt.startUtc")}</th>
+                <th scope="col">{t("gantt.endUtc")}</th>
+                <th scope="col">{t("gantt.status")}</th>
               </tr>
             </thead>
             <tbody>
@@ -190,7 +196,7 @@ export function GanttTimeline({
                 });
                 return (
                   <tr key={segment.item_id} className={isHighlighted ? "is-highlighted" : ""}>
-                    <td>{groupLabel(segment, grouping)}</td>
+                    <td>{groupLabel(segment, grouping, t("gantt.unspecifiedFactory"), t("gantt.unspecifiedWorkshop"))}</td>
                     <td>
                       <button type="button" onClick={() => onSelect(segment)}>
                         {segment.operation_id}
@@ -211,14 +217,20 @@ export function GanttTimeline({
                       </Link>
                     </td>
                     <td>
-                      <time dateTime={segment.start_at_utc}>{segment.start_at_utc}</time>
+                      <time dateTime={segment.start_at_utc}>
+                        {formatUtc(segment.start_at_utc, locale).display}
+                        <code className="localized-raw">{segment.start_at_utc}</code>
+                      </time>
                     </td>
                     <td>
-                      <time dateTime={segment.end_at_utc}>{segment.end_at_utc}</time>
+                      <time dateTime={segment.end_at_utc}>
+                        {formatUtc(segment.end_at_utc, locale).display}
+                        <code className="localized-raw">{segment.end_at_utc}</code>
+                      </time>
                     </td>
                     <td>
-                      {isHighlighted ? "Selected or linked" : "Not selected"}{" "}
-                      <Link to={`/operations?${search}`}>Operation record</Link>
+                      {isHighlighted ? t("gantt.selectedLinked") : t("gantt.notSelected")}{" "}
+                      <Link to={`/operations?${search}`}>{t("gantt.operationRecord")}</Link>
                     </td>
                   </tr>
                 );

@@ -17,6 +17,7 @@ import { AuthorityPanel } from "../../components/AuthorityPanel";
 import { WorkspaceStatePanel } from "../../components/WorkspaceStatePanel";
 import { GanttEditControls } from "../schedule-actions/ScheduleActionsPanel";
 import { GanttTimeline, type GanttGrouping } from "./GanttTimeline";
+import { useLocale } from "../../i18n/locale";
 
 const { Paragraph, Text, Title } = Typography;
 
@@ -28,11 +29,12 @@ interface OverlayProps {
 }
 
 function ServerOverlay({ title, pending, error, data }: OverlayProps) {
+  const { locale, t } = useLocale();
   if (pending) return <Card title={title} loading />;
   if (error !== null) {
     return (
       <Card title={title}>
-        <Alert type="error" showIcon title={stateForError(error).detail} />
+        <Alert type="error" showIcon title={stateForError(error, locale).detail} />
       </Card>
     );
   }
@@ -42,7 +44,7 @@ function ServerOverlay({ title, pending, error, data }: OverlayProps) {
         <Alert
           type="warning"
           showIcon
-          title="Server returned no overlay facts; nothing was inferred."
+          title={t("gantt.noOverlay")}
         />
       </Card>
     );
@@ -66,6 +68,7 @@ function oneFilter(value: string): string[] {
 export function GanttPage({ grouping }: { grouping: GanttGrouping }) {
   const navigate = useNavigate();
   const { runtime } = useAppServices();
+  const { locale, t } = useLocale();
   const [search, setSearch] = useSearchParams();
   const initialOrder = search.get("order_id") ?? "";
   const initialResource = search.get("resource_id") ?? "";
@@ -94,19 +97,19 @@ export function GanttPage({ grouping }: { grouping: GanttGrouping }) {
   let segments: GanttSegment[] = [];
   if (scheduleVersionId === null || scheduleVersionId.length === 0) {
     state = "contract_error";
-    detail = "A version-scoped Gantt route requires an immutable ScheduleVersion ID.";
+    detail = t("gantt.identityRequired");
   } else if (versionQuery.error !== null) {
-    ({ state, detail } = stateForError(versionQuery.error));
+    ({ state, detail } = stateForError(versionQuery.error, locale));
   } else if (ganttQuery.error !== null) {
-    ({ state, detail } = stateForError(ganttQuery.error));
+    ({ state, detail } = stateForError(ganttQuery.error, locale));
   } else if (ganttQuery.data !== undefined) {
     const result = ganttQuery.data.document.result;
     if (result === null) {
       state = "contract_error";
-      detail = "The Gantt RESULT carrier has no result body.";
+      detail = t("gantt.resultMissing");
     } else if (result.freshness !== "FRESH") {
       state = "stale";
-      detail = `Server freshness is ${result.freshness}; refresh the Version precondition.`;
+      detail = t("collection.stale", { freshness: result.freshness });
     } else if (!result.found || ganttQuery.data.items.length === 0) {
       state = "empty";
     } else {
@@ -115,7 +118,7 @@ export function GanttPage({ grouping }: { grouping: GanttGrouping }) {
         state = "ready";
       } catch (error) {
         state = "contract_error";
-        detail = error instanceof Error ? error.message : "Gantt payload contract failed.";
+        detail = error instanceof Error ? error.message : t("gantt.contractFailed");
       }
     }
   }
@@ -143,7 +146,7 @@ export function GanttPage({ grouping }: { grouping: GanttGrouping }) {
   async function onActionResult(result: WorkspaceActionResult) {
     const authority = result.authoritativeVersion;
     if (authority === null) {
-      throw new TypeError("Gantt command returned no authoritative Version");
+      throw new TypeError(t("gantt.commandNoVersion"));
     }
     setSelected(null);
     setProposedOffsetSeconds(0);
@@ -178,37 +181,37 @@ export function GanttPage({ grouping }: { grouping: GanttGrouping }) {
     <article className="workspace-page visualization-page">
       <Flex justify="space-between" align="flex-start" gap="middle" wrap>
         <div>
-          <Title level={2}>{grouping[0]?.toUpperCase()}{grouping.slice(1)} Gantt</Title>
+          <Title level={2}>
+            {t(grouping === "factory" ? "gantt.factoryTitle" : grouping === "workshop" ? "gantt.workshopTitle" : "gantt.machineTitle")}
+          </Title>
           <Paragraph type="secondary">
-            Server segments remain authoritative. In an isolated synthetic DRAFT, drag
-            only proposes a bounded move; nothing changes until a command returns a new
-            Version and the browser refreshes it.
+            {t("gantt.description")}
           </Paragraph>
         </div>
         <Button
           onClick={() => void ganttQuery.refetch()}
           disabled={version === undefined || ganttQuery.isFetching}
         >
-          Refresh read
+          {t("common.refreshRead")}
         </Button>
       </Flex>
 
-      <section className="visualization-controls" aria-label="Gantt read filters and zoom">
+      <section className="visualization-controls" aria-label={t("gantt.filtersAria")}>
         <label>
-          Order ID
+          {t("gantt.orderId")}
           <Input value={orderDraft} onChange={(event) => setOrderDraft(event.target.value)} />
         </label>
         <label>
-          Resource ID
+          {t("gantt.resourceId")}
           <Input
             value={resourceDraft}
             onChange={(event) => setResourceDraft(event.target.value)}
           />
         </label>
         <label>
-          Visual zoom
+          {t("gantt.visualZoom")}
           <Select
-            aria-label="Visual zoom"
+            aria-label={t("gantt.visualZoom")}
             value={zoom}
             onChange={setZoom}
             options={[
@@ -218,7 +221,7 @@ export function GanttPage({ grouping }: { grouping: GanttGrouping }) {
             ]}
           />
         </label>
-        <Button type="primary" onClick={applyFilters}>Apply server filters</Button>
+        <Button type="primary" onClick={applyFilters}>{t("gantt.applyFilters")}</Button>
         <Button
           onClick={() => {
             setOrderDraft("");
@@ -231,7 +234,7 @@ export function GanttPage({ grouping }: { grouping: GanttGrouping }) {
             setSearch(nextSearch, { replace: true });
           }}
         >
-          Clear
+          {t("gantt.clear")}
         </Button>
       </section>
 
@@ -247,7 +250,7 @@ export function GanttPage({ grouping }: { grouping: GanttGrouping }) {
             <Alert
               type="warning"
               showIcon
-              title={`Server reports ${result.observed_count} matching rows; this bounded page shows ${ganttQuery.data.items.length}. Narrow the server filters to avoid a partial view.`}
+              title={t("gantt.partialRows", { observed: result.observed_count, shown: ganttQuery.data.items.length })}
             />
           )}
           {state === "ready" && version !== undefined && (
@@ -256,8 +259,8 @@ export function GanttPage({ grouping }: { grouping: GanttGrouping }) {
                 <Alert
                   type="info"
                   showIcon
-                  title={`Selected ${selected.operation_id}`}
-                  description={`Order ${selected.order_id} · Resource ${selected.resource_id}`}
+                  title={t("gantt.selected", { operation: selected.operation_id })}
+                  description={t("gantt.selectedDescription", { order: selected.order_id, resource: selected.resource_id })}
                 />
               )}
               <GanttTimeline
@@ -291,20 +294,19 @@ export function GanttPage({ grouping }: { grouping: GanttGrouping }) {
         </Space>
       )}
 
-      <Title level={3}>Server KPI and diagnostics overlay</Title>
+      <Title level={3}>{t("gantt.overlayTitle")}</Title>
       <Paragraph>
-        <Text strong>No browser recomputation:</Text> these payloads are rendered verbatim,
-        and a missing or failed overlay remains visible.
+        <Text strong>{t("gantt.noRecompute")}</Text> {t("gantt.overlayDescription")}
       </Paragraph>
       <div className="overlay-grid">
         <ServerOverlay
-          title="KPI facts"
+          title={t("gantt.kpiFacts")}
           pending={kpiQuery.isPending}
           error={kpiQuery.error}
           data={kpiQuery.data}
         />
         <ServerOverlay
-          title="Diagnostics facts"
+          title={t("gantt.diagnosticFacts")}
           pending={diagnosticsQuery.isPending}
           error={diagnosticsQuery.error}
           data={diagnosticsQuery.data}

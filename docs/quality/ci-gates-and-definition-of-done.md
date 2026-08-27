@@ -6,7 +6,7 @@ spec_version: 0.3.0
 phase: P0-P7
 normative: true
 source_sections: [58, 72, 74, 76, 78, 80, 89, 100, 101]
-last_reviewed: 2026-08-26
+last_reviewed: 2026-08-27
 ---
 
 # CI Gate 与 Definition of Done
@@ -19,9 +19,9 @@ Implementation Gate已通过：SHA `c84e1aa1a81473f65d9f7906a6d2c67a94e7bb2f`、
 
 Closure提交前required-equivalent本地证据为Ruff/Pyright、22项治理unit、621项repository、168-doc full governance及48-path/六-row/19-check/0-issue Task governance全部PASS；workflow/dependency/business禁止范围零差异。Event-base discovery与exact provider只能在closure SHA形成并push后验证，故当前仍为provider pending。
 
-## TASK-P3-16 / TASK-P3-17 future required Gates
+## TASK-P3-16 active required Gate / TASK-P3-17 future Gate
 
-TASK-P3-16获单独授权后，required `validate`才可additive运行`p3-frontend-i18n-report.v1`、两个locale关键Playwright、typed dictionary/unknown raw coverage、document/Ant locale、non-sensitive preference及API/OpenAPI/state/command/error/header/body/fingerprint zero-drift；artifact必须绑定exact SHA、Task、Diff base、`official-zh-cn-terminology.v1`、六个Impact Rules、checks/issues与全部原始browser evidence。不得改required context、权限、trigger、dependency lock或用本地PASS替代provider。TASK-P3-17必须在P3-16双提交provider闭环后另获授权并独立重放全部P3 Gate/双语/provider topology；Audit不能修实现，READY也不构成P4 transition或Production release。
+TASK-P3-16已获单独授权，required `validate`现additive运行`TASK-P3-16 Frontend bilingual localization machine evidence`，生成`p3-frontend-i18n-report.v1`并复用完整Vitest/Playwright、SCA/license、build、P2/P3 Gate和治理步骤。不得改required context、permissions、trigger或dependency lock；artifact必须绑定exact SHA、Task、Diff base、`official-zh-cn-terminology.v1`、六个Impact Rules、checks/issues与原始browser evidence。本地required-equivalent为621 Python、67 Vitest、基础/双Gate Chromium各12/12、i18n 8/8、P2 11/11/0 gaps、P3 14/14/0 gaps、Task 79/6/19/0及全部其余步骤PASS，但不能替代provider。TASK-P3-17必须在P3-16双提交provider闭环后另获授权并独立重放全部P3 Gate/双语/provider topology；Audit不能修实现，READY也不构成P4 transition或Production release。
 
 ## TASK-P3-14 required Gate
 

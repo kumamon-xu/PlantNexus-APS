@@ -2,6 +2,12 @@ import { createHash } from "node:crypto";
 
 import { expect, test, type Page, type Route } from "@playwright/test";
 
+test.beforeEach(async ({ page }) => {
+  await page.addInitScript(() => {
+    globalThis.localStorage.setItem("plantnexus.locale.v1", "en-US");
+  });
+});
+
 const draftId = "schedule-version-e2e-control-draft";
 const readyId = "schedule-version-e2e-control-ready";
 const approvedId = "schedule-version-e2e-control-approved";
@@ -486,6 +492,12 @@ test("submits one DRAFT validation command and follows the authoritative Version
   expect(api.commands).toHaveLength(1);
   expect(api.commands[0]?.body.command_type).toBe("SUBMIT_FOR_REVIEW");
   assertCommandBinding(api.commands[0]!);
+  await page.goto(`/planning/versions/${readyId}`);
+  await page.getByLabel("Decision reason").fill("Reject infeasible planner choice");
+  await page.getByRole("button", { name: "Reject Version" }).click();
+  await expect(page.getByText("REJECTED", { exact: true })).toBeVisible();
+  await expect(page.getByRole("button", { name: /Approve Version|Publish internally|Request export/u })).toHaveCount(0);
+  expect(api.commands.at(-1)?.body.command_type).toBe("REJECT");
 });
 
 test("moves a Gantt operation only through a new authoritative DRAFT", async ({ page }) => {
@@ -541,16 +553,6 @@ test("recovers an unknown network outcome only after refresh and with the same k
   expect(api.commands[1]?.body.request_fingerprint).toBe(
     api.commands[0]?.body.request_fingerprint,
   );
-});
-
-test("rejects READY authority without exposing later-state controls", async ({ page }) => {
-  const api = await mockControlApi(page);
-  await page.goto(`/planning/versions/${readyId}`);
-  await page.getByLabel("Decision reason").fill("Reject infeasible planner choice");
-  await page.getByRole("button", { name: "Reject Version" }).click();
-  await expect(page.getByText("REJECTED", { exact: true })).toBeVisible();
-  await expect(page.getByRole("button", { name: /Approve Version|Publish internally|Request export/u })).toHaveCount(0);
-  expect(api.commands.at(-1)?.body.command_type).toBe("REJECT");
 });
 
 test("requires an explicit non-Production publication confirmation", async ({ page }) => {
@@ -610,4 +612,31 @@ test("keeps PUBLISHED Gantt immutable and links append-only audit history", asyn
   await page.getByRole("link", { name: "Open audit history" }).click();
   await expect(page).toHaveURL(new RegExp(`/audit\\?schedule_version_id=${publishedId}$`, "u"));
   await expect(page.getByText(/audit-p3-control-e2e/u)).toBeVisible();
+});
+
+test("replays approve, internal publish and export request in zh-CN without wire drift", async ({ page }) => {
+  const api = await mockControlApi(page);
+  await page.goto(`/planning/versions/${readyId}`);
+  await page.getByRole("combobox", { name: "Language" }).click();
+  await page.getByText("简体中文", { exact: true }).click();
+  await page.getByLabel("决定原因").fill("批准合成仿真计划");
+  await page.getByRole("button", { name: "批准版本" }).click();
+  await expect(page.getByText("APPROVED", { exact: true })).toBeVisible();
+
+  await page.getByRole("button", { name: "审核内部发布" }).click();
+  const dialog = page.getByRole("dialog", { name: "确认 SIMULATION_INTERNAL 发布" });
+  await dialog.getByLabel("发布原因").fill("内部发布已批准仿真计划");
+  await dialog.getByRole("checkbox").check();
+  await dialog.getByRole("button", { name: "内部发布" }).click();
+  await expect(page.getByText("PUBLISHED", { exact: true })).toBeVisible();
+
+  await page.getByLabel("导出或重试原因").fill("创建已验证的合成成果包");
+  await page.getByRole("button", { name: "请求导出" }).click();
+  await expect(page.getByText("CREATED", { exact: true })).toBeVisible();
+  expect(api.commands.map((item) => item.body.command_type)).toEqual([
+    "APPROVE",
+    "PUBLISH",
+    "REQUEST_EXPORT",
+  ]);
+  for (const command of api.commands) assertCommandBinding(command);
 });

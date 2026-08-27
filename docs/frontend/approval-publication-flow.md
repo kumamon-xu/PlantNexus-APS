@@ -6,14 +6,14 @@ spec_version: 0.3.0
 phase: P3
 normative: true
 source_sections: [33, 34, 66, 67, 68, 77, 78, 94]
-last_reviewed: 2026-08-26
+last_reviewed: 2026-08-27
 ---
 
 # P3 Approval Publication 与 Export 人工控制流程
 
-## TASK-P3-16 planned localization boundary
+## TASK-P3-16 localization boundary
 
-Approve/Reject/Publish/Export、确认/失败/unknown-outcome与Audit文案未来按[`official-zh-cn-terminology.v1`](official-zh-cn-terminology-map.md)提供`zh-CN`/`en-US`展示；reason仍是用户原文且不得机器翻译。`APPROVE/REJECT/PUBLISH/REQUEST_EXPORT`、ScheduleVersion/ExportJob state、target、error code/reason、idempotency/correlation和package facts继续为英文机器值，并在未知时显示raw值。中文按钮不增加capability，也不把Simulation TEST actor、`SIMULATION_INTERNAL`或PUBLISHED翻译成Production authority/approval。该slice仍为planned TASK-P3-16，最终由TASK-P3-17独立审计。
+Approve/Reject/Publish/Export、确认/失败/unknown-outcome与Audit文案已按[`official-zh-cn-terminology.v1`](official-zh-cn-terminology-map.md)提供`zh-CN`/`en-US`展示；reason仍是用户原文且不机器翻译。`APPROVE/REJECT/PUBLISH/REQUEST_EXPORT`、ScheduleVersion/ExportJob state、target、error code/reason、idempotency/correlation和package facts继续为英文机器值，并在未知时显示raw值。中文按钮不增加capability，也不把Simulation TEST actor、`SIMULATION_INTERNAL`或PUBLISHED翻译成Production authority/approval。本地双语human-control E2E通过，exact provider待形成，最终由TASK-P3-17独立审计。
 
 ## TASK-P3-14 control-flow Gate
 

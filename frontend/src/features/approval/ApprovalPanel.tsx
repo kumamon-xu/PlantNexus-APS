@@ -9,6 +9,7 @@ import {
   serverAllows,
   useHumanControlAction,
 } from "../schedule-actions/useHumanControlAction";
+import { useLocale } from "../../i18n/locale";
 
 const { Paragraph } = Typography;
 
@@ -24,6 +25,7 @@ export function ApprovalPanel({
   onActionResult,
 }: ApprovalPanelProps) {
   const { runtime } = useAppServices();
+  const { t } = useLocale();
   const [reason, setReason] = useState("");
   const action = useHumanControlAction({
     refreshAuthority,
@@ -47,10 +49,10 @@ export function ApprovalPanel({
   }
 
   return (
-    <Card title="Human approval decision" className="control-card">
+    <Card title={t("approval.title")} className="control-card">
       {version.state !== "READY_FOR_REVIEW" && (
         <Paragraph type="secondary">
-          Approve and reject are mounted only for READY_FOR_REVIEW authority.
+          {t("approval.readyOnly")}
         </Paragraph>
       )}
       {reviewable &&
@@ -59,11 +61,11 @@ export function ApprovalPanel({
           <Alert
             type="warning"
             showIcon
-            title="Server did not grant an approval capability."
+            title={t("approval.noCapability")}
           />
         )}
       <label className="control-field">
-        Decision reason
+        {t("approval.reason")}
         <Input.TextArea
           value={reason}
           onChange={(event) => setReason(event.target.value)}
@@ -83,7 +85,7 @@ export function ApprovalPanel({
           }
           onClick={() => void decide("APPROVE")}
         >
-          Approve Version
+          {t("approval.approve")}
         </Button>
         <Button
           danger
@@ -95,7 +97,7 @@ export function ApprovalPanel({
           }
           onClick={() => void decide("REJECT")}
         >
-          Reject Version
+          {t("approval.reject")}
         </Button>
       </Space>
       <ActionFeedback

@@ -6,22 +6,22 @@ spec_version: 0.3.0
 phase: P3
 normative: true
 source_sections: [2, 6, 73, 74, 75, 76, 98, 99, 100]
-last_reviewed: 2026-08-26
+last_reviewed: 2026-08-27
 ---
 
 # Task Card 索引
 
 ## TASK-P3-15 closure and final planned members
 
-用户已批准P3末段编号方案。TASK-P3-15从`06e7f794f486ac34c505237b847462c7c7c36d44`启动并转为`phase-plan-amendment-owner`，只实现后续计划修订所需的治理selector、负向测试与文档合同。Implementation `c84e1aa1a81473f65d9f7906a6d2c67a94e7bb2f`的required run/job/artifact=`32944633958`/`98102640242`/`9597967232`已精确复验26/0 paths、5 Impact Rules、19 checks、0 issues，故本closure把P3-15标为`done`并原子登记P3-16/P3-17；closure provider仍待push后核验。P3-00～14及其provider/失败历史保持只读。
+用户已批准P3末段编号方案。TASK-P3-15从`06e7f794f486ac34c505237b847462c7c7c36d44`启动并转为`phase-plan-amendment-owner`，只实现后续计划修订所需的治理selector、负向测试与文档合同。Implementation `c84e1aa1a81473f65d9f7906a6d2c67a94e7bb2f`的required run/job/artifact=`32944633958`/`98102640242`/`9597967232`已精确复验26/0 paths、5 Impact Rules、19 checks、0 issues；closure `1636fe9c909b728d49f9907ed9f53030b5921914`的run/job/artifact=`32948633841`/`98114798738`/`9599442770`也已复核37份JSON、48/0/6/19/0。因此P3-15完整闭环为`done`；P3-00～14及其provider/失败历史保持只读。
 
-TASK-P3-16依赖P3-14/P3-15，是默认`zh-CN`、可切换`en-US`、官方术语/错误映射和API英文machine contract zero-drift的planned Frontend Task；无Diff base或implementation SHA。TASK-P3-17依赖P3-16，是planned/final独立Exit Audit；不得在Audit中修本地化，也不自动进入P4或Production。二者均须新的逐Task明确授权。
+TASK-P3-16依赖P3-14/P3-15，现已获明确授权并冻结Diff base `1636fe9c909b728d49f9907ed9f53030b5921914`；默认`zh-CN`、可切换`en-US`、官方术语/错误映射和API英文machine contract zero-drift的本地实现已形成，exact provider闭环前保持`in_progress`。TASK-P3-17依赖P3-16，是`planned`/final独立Exit Audit；不得在Audit中修本地化，也不自动进入P4或Production。
 
 ## TASK-P3-14 evidence closure
 
 用户于2026-08-26单独授权TASK-P3-14。P3-01～13的done/provider/ancestry及clean synchronized `6a3e02f00bf46f19915cb59c3c4af7daaac95be4`均复核通过并冻结为Diff base；Task只执行P3 Gate编排与证据。最终TASK-P3-17 Exit Audit、P4与Production保持未启动。
 
-本地实现通过616 Python、54 Vitest、基础及双Gate Chromium各12/12、全部machine/P2 XS/Gate/SCA/license/Compose/build和56 paths/8 Impact Rules/19 checks/0 issues；Backend双replay为18 stages/144 subordinate checks、Frontend 5/5、四类exact rejection及Python 14/14，`blocking_gaps=[]`。首个implementation `0617141e411eea146cd9fc1c512ade900710be7c`的run/job=`32930677030`/`98062166642`因synthetic Frontend Gate夹具写死`uncommitted`而失败（611 passed/5 errors，artifact count=0）；失败历史保留且旧SHA不重跑。Corrective `54a25646053979a69734a3148030830d49c04c1e`的run/job/artifact=`32931418903`/`98064264595`/`9593460266`全绿，37/37 JSON、双Gate、P2 regression、三组Playwright及Task 56/0/8/19/0一致，故本closure标Task=`done`；closure自身仍须exact provider。当时未自动启动后续Task。
+本地实现通过616 Python、54 Vitest、基础及双Gate Chromium各12/12、全部machine/P2 XS/Gate/SCA/license/Compose/build和56 paths/8 Impact Rules/19 checks/0 issues；Backend双replay为18 stages/144 subordinate checks、Frontend 5/5、四类exact rejection及Python 14/14，`blocking_gaps=[]`。首个implementation `0617141e411eea146cd9fc1c512ade900710be7c`的run/job=`32930677030`/`98062166642`因synthetic Frontend Gate夹具写死`uncommitted`而失败（611 passed/5 errors，artifact count=0）；失败历史保留且旧SHA不重跑。Corrective `54a25646053979a69734a3148030830d49c04c1e`的run/job/artifact=`32931418903`/`98064264595`/`9593460266`全绿，closure `06e7f794f486ac34c505237b847462c7c7c36d44`的run/job/artifact=`32932504153`/`98067309501`/`9593831442`也已exact成功，故TASK-P3-14完整闭环为`done`。当时未自动启动后续Task。
 
 ## TASK-P3-13 evidence closure
 
@@ -77,7 +77,7 @@ TASK-P3-16依赖P3-14/P3-15，是默认`zh-CN`、可切换`en-US`、官方术语
 | [TASK-P3-13](P3/TASK-P3-13-human-control-actions-and-ui-e2e.md) | Human control actions/UI E2E | P3-06～12 | `done` |
 | [TASK-P3-14](P3/TASK-P3-14-p3-vertical-slice-gate-evidence.md) | P3 vertical-slice Gate evidence | P3-01～13 | `done` |
 | [TASK-P3-15](P3/TASK-P3-15-phase-plan-amendment-governance-support.md) | P3 Phase Plan Amendment Governance Support | P3-14 | `done` |
-| [TASK-P3-16](P3/TASK-P3-16-frontend-bilingual-localization-and-official-terminology.md) | Frontend bilingual localization与官方中文术语 | P3-14/P3-15 | `planned` |
+| [TASK-P3-16](P3/TASK-P3-16-frontend-bilingual-localization-and-official-terminology.md) | Frontend bilingual localization与官方中文术语 | P3-14/P3-15 | `in_progress` |
 | [TASK-P3-17](P3/TASK-P3-17-p3-exit-gate-audit.md) | P3 Exit Gate Audit（最终Task） | P3-16 | `planned` |
 
 用户已于2026-08-24单独授权并完成P3-01/02，随后明确授权执行P3-03。P3-03只形成migration、plane-scoped repositories、既有pair的CAS/lease/transaction原语、CI/tests和治理，不执行审批、发布、导出或P3-04+；当时规划中的最终Audit现已顺延为TASK-P3-17，仍只审计冻结事实。P3不得实现P4 ExecutionEvent/Replan/OBJ-002/freeze/ChangeReport/Execution Simulator，内部Simulation publish也不构成Production approval/readiness。

@@ -6,7 +6,7 @@ spec_version: 0.3.0
 phase: cross-phase
 normative: true
 source_sections: [3, 4, 5, 6, 107]
-last_reviewed: 2026-08-26
+last_reviewed: 2026-08-27
 registry_version: 1.0.0
 ---
 
@@ -16,7 +16,7 @@ registry_version: 1.0.0
 
 REQ-009的有界治理分配已由implementation `c84e1aa1a81473f65d9f7906a6d2c67a94e7bb2f` / artifact `9597967232`精确复验：唯一amendment owner、稳定Task ID、base成员状态与fail-closed删除/重复检查共同约束已批准的阶段计划修订。该证据只完成TASK-P3-15治理能力，不形成本地化、Exit、P4或Production行为。
 
-本closure把REQ-005/006/007/009规划分配给`planned` TASK-P3-16，并由`planned` TASK-P3-17最终独立复验：P3-16只本地化既有Frontend展示、状态、错误与人机控制词汇，必须保持formal Validator、standard package、ScheduleVersion/ExportJob及全部英文machine contract逐字不漂移；`TEST-FRONTEND-I18N-001`当前只登记为`PLANNED`。所有15个root Requirement继续`ALLOCATED`，表结构、状态语义与`registry_version=1.0.0`不变。
+REQ-005/006/007/009现连接`in_progress` TASK-P3-16，并由`planned` TASK-P3-17最终独立复验：P3-16已在本地形成既有Frontend展示、状态、错误与人机控制词汇的双语层，同时保持formal Validator、standard package、ScheduleVersion/ExportJob及英文machine contract不漂移；`TEST-FRONTEND-I18N-001`为`LOCAL_PASS_PROVIDER_PENDING`。所有15个root Requirement继续`ALLOCATED`，表结构、状态语义与`registry_version=1.0.0`不变。
 
 ## TASK-P3-14 allocation review
 

@@ -15,6 +15,9 @@ import { stateForError } from "../../app/state";
 import { useScheduleVersion } from "../../app/useScheduleVersion";
 import { AuthorityPanel } from "../../components/AuthorityPanel";
 import { WorkspaceStatePanel } from "../../components/WorkspaceStatePanel";
+import { labelBusinessValue } from "../../i18n/business-labels";
+import { formatNumber, formatUtc } from "../../i18n/formatters";
+import { useLocale } from "../../i18n/locale";
 
 const { Paragraph, Text, Title } = Typography;
 type DeltaFilter = "ALL" | "CHANGED" | "UNCHANGED";
@@ -32,6 +35,7 @@ function visibleDeltas(
 
 export function VersionComparisonPage() {
   const { client, runtime } = useAppServices();
+  const { locale, t } = useLocale();
   const [search, setSearch] = useSearchParams();
   const initialCompared = search.get("compared_schedule_version_id") ?? "";
   const [comparedDraft, setComparedDraft] = useState(initialCompared);
@@ -59,7 +63,7 @@ export function VersionComparisonPage() {
     ],
     queryFn: async () => {
       if (baseVersion === undefined || comparedVersion === undefined) {
-        throw new Error("Both immutable Version preconditions are required");
+        throw new Error(t("comparison.preconditionsRequired"));
       }
       const query = await buildWorkspaceQuery({
         authority: runtime,
@@ -82,27 +86,27 @@ export function VersionComparisonPage() {
   let comparison: ScheduleVersionComparison | null = null;
   if (scheduleVersionId === null || scheduleVersionId.length === 0) {
     state = "contract_error";
-    detail = "Version comparison requires an immutable base ScheduleVersion route.";
+    detail = t("comparison.identityRequired");
   } else if (baseQuery.error !== null) {
-    ({ state, detail } = stateForError(baseQuery.error));
+    ({ state, detail } = stateForError(baseQuery.error, locale));
   } else if (requestedId.length === 0) {
     state = "empty";
-    detail = "Enter a distinct compared ScheduleVersion ID to start the read query.";
+    detail = t("comparison.enterCompared");
   } else if (baseVersion?.schedule_version_id === requestedId) {
     state = "contract_error";
-    detail = "The compared ScheduleVersion must differ from the base Version.";
+    detail = t("comparison.mustDiffer");
   } else if (comparedQuery.error !== null) {
-    ({ state, detail } = stateForError(comparedQuery.error));
+    ({ state, detail } = stateForError(comparedQuery.error, locale));
   } else if (comparisonQuery.error !== null) {
-    ({ state, detail } = stateForError(comparisonQuery.error));
+    ({ state, detail } = stateForError(comparisonQuery.error, locale));
   } else if (comparisonQuery.data !== undefined) {
     const result = comparisonQuery.data.document.result;
     if (result === null) {
       state = "contract_error";
-      detail = "The comparison RESULT carrier has no result body.";
+      detail = t("comparison.resultMissing");
     } else if (result.freshness !== "FRESH") {
       state = "stale";
-      detail = `Server freshness is ${result.freshness}; reload both Version preconditions.`;
+      detail = t("comparison.stale", { freshness: result.freshness });
     } else if (!result.found || comparisonQuery.data.items.length === 0) {
       state = "empty";
     } else {
@@ -111,7 +115,7 @@ export function VersionComparisonPage() {
         state = "ready";
       } catch (error) {
         state = "contract_error";
-        detail = error instanceof Error ? error.message : "Comparison contract failed.";
+        detail = error instanceof Error ? error.message : t("comparison.contractFailed");
       }
     }
   }
@@ -132,19 +136,18 @@ export function VersionComparisonPage() {
 
   return (
     <article className="workspace-page visualization-page">
-      <Title level={2}>ScheduleVersion comparison</Title>
+      <Title level={2}>{t("comparison.title")}</Title>
       <Paragraph type="secondary">
-        Two immutable server versions are compared by the existing read-query endpoint.
-        Change kinds, summaries and KPI deltas are rendered as server facts.
+        {t("comparison.description")}
       </Paragraph>
       <form className="comparison-form" onSubmit={submit}>
-        <label htmlFor="compared-version-id">Compared ScheduleVersion ID</label>
+        <label htmlFor="compared-version-id">{t("comparison.comparedId")}</label>
         <Input
           id="compared-version-id"
           value={comparedDraft}
           onChange={(event) => setComparedDraft(event.target.value)}
         />
-        <Button htmlType="submit" type="primary">Run read comparison</Button>
+        <Button htmlType="submit" type="primary">{t("comparison.run")}</Button>
       </form>
 
       {requestedId.length === 0 ? (
@@ -162,77 +165,83 @@ export function VersionComparisonPage() {
       {comparison !== null && state === "ready" && (
         <>
           <Descriptions bordered size="small" column={1} className="comparison-authority">
-            <Descriptions.Item label="Comparison ID">
+            <Descriptions.Item label={t("comparison.id")}>
               <Text copyable>{comparison.comparison_id}</Text>
             </Descriptions.Item>
-            <Descriptions.Item label="Base Version">
-              {comparison.base_version.schedule_version_id} · {comparison.base_version.state}
+            <Descriptions.Item label={t("comparison.baseVersion")}>
+              {comparison.base_version.schedule_version_id} · {labelBusinessValue("scheduleState", comparison.base_version.state, locale).label} <Text code>{comparison.base_version.state}</Text>
             </Descriptions.Item>
-            <Descriptions.Item label="Compared Version">
-              {comparison.compared_version.schedule_version_id} · {comparison.compared_version.state}
+            <Descriptions.Item label={t("comparison.comparedVersion")}>
+              {comparison.compared_version.schedule_version_id} · {labelBusinessValue("scheduleState", comparison.compared_version.state, locale).label} <Text code>{comparison.compared_version.state}</Text>
             </Descriptions.Item>
-            <Descriptions.Item label="Comparison fingerprint">
+            <Descriptions.Item label={t("comparison.fingerprint")}>
               <Text copyable>{comparison.comparison_fingerprint}</Text>
             </Descriptions.Item>
-            <Descriptions.Item label="Generated at raw UTC">
-              <time dateTime={comparison.generated_at_utc}>{comparison.generated_at_utc}</time>
+            <Descriptions.Item label={t("comparison.generatedRawUtc")}>
+              <time dateTime={comparison.generated_at_utc}>
+                {formatUtc(comparison.generated_at_utc, locale).display}
+                <code className="localized-raw">{comparison.generated_at_utc}</code>
+              </time>
             </Descriptions.Item>
           </Descriptions>
 
-          <Title level={3}>Server summary</Title>
+          <Title level={3}>{t("comparison.summary")}</Title>
           <dl className="comparison-summary">
-            {Object.entries(comparison.summary).map(([name, value]) => (
-              <div key={name}><dt>{name}</dt><dd>{String(value)}</dd></div>
-            ))}
+            {Object.entries(comparison.summary).map(([name, value]) => {
+              const display = typeof value === "number"
+                ? formatNumber(value, locale).display
+                : String(value);
+              return <div key={name}><dt>{labelBusinessValue("businessTerm", name, locale).label}<code className="localized-raw">{name}</code></dt><dd>{display}<code className="localized-raw">{String(value)}</code></dd></div>;
+            })}
           </dl>
 
-          <Title level={3}>Server KPI deltas</Title>
+          <Title level={3}>{t("comparison.kpiDeltas")}</Title>
           <div className="table-scroll">
             <table>
-              <caption>No KPI value is recalculated in the browser</caption>
-              <thead><tr><th scope="col">Metric</th><th scope="col">Base</th><th scope="col">Compared</th><th scope="col">Delta</th></tr></thead>
+              <caption>{t("comparison.kpiCaption")}</caption>
+              <thead><tr><th scope="col">{t("comparison.metric")}</th><th scope="col">{t("comparison.base")}</th><th scope="col">{t("comparison.compared")}</th><th scope="col">{t("comparison.delta")}</th></tr></thead>
               <tbody>
                 {comparison.kpi_deltas.map((delta) => (
-                  <tr key={delta.metric}><th scope="row">{delta.metric}</th><td>{delta.base_value}</td><td>{delta.compared_value}</td><td>{delta.delta}</td></tr>
+                  <tr key={delta.metric}><th scope="row">{labelBusinessValue("businessTerm", delta.metric, locale).label}<code className="localized-raw">{delta.metric}</code></th><td>{formatNumber(delta.base_value, locale).display}<code className="localized-raw">{String(delta.base_value)}</code></td><td>{formatNumber(delta.compared_value, locale).display}<code className="localized-raw">{String(delta.compared_value)}</code></td><td>{formatNumber(delta.delta, locale).display}<code className="localized-raw">{String(delta.delta)}</code></td></tr>
                 ))}
               </tbody>
             </table>
           </div>
 
           <Flex justify="space-between" align="center" gap="middle" wrap>
-            <Title level={3}>Operation deltas</Title>
+            <Title level={3}>{t("comparison.operationDeltas")}</Title>
             <Radio.Group
-              aria-label="Operation delta visibility"
+              aria-label={t("comparison.visibilityAria")}
               value={deltaFilter}
               onChange={(event) => setDeltaFilter(event.target.value as DeltaFilter)}
               options={[
-                { label: "Changed", value: "CHANGED" },
-                { label: "Unchanged", value: "UNCHANGED" },
-                { label: "All", value: "ALL" },
+                { label: t("comparison.changed"), value: "CHANGED" },
+                { label: t("comparison.unchanged"), value: "UNCHANGED" },
+                { label: t("comparison.all"), value: "ALL" },
               ]}
             />
           </Flex>
           <div className="table-scroll">
             <table>
-              <caption>Server-classified operation changes ({deltaFilter.toLowerCase()})</caption>
+              <caption>{t("comparison.operationCaption", { filter: deltaFilter })}</caption>
               <thead>
-                <tr><th scope="col">Operation</th><th scope="col">Change kind</th><th scope="col">Base resource/time</th><th scope="col">Compared resource/time</th></tr>
+                <tr><th scope="col">{t("gantt.operation")}</th><th scope="col">{t("comparison.changeKind")}</th><th scope="col">{t("comparison.baseResourceTime")}</th><th scope="col">{t("comparison.comparedResourceTime")}</th></tr>
               </thead>
               <tbody>
                 {deltas.map((delta) => (
                   <tr key={delta.operation_id}>
                     <th scope="row">{delta.operation_id}</th>
-                    <td><Tag>{delta.change_kind}</Tag></td>
-                    <td>{delta.base_resource_id ?? "absent"}<br />{delta.base_start_at_utc ?? "absent"}<br />{delta.base_end_at_utc ?? "absent"}</td>
-                    <td>{delta.compared_resource_id ?? "absent"}<br />{delta.compared_start_at_utc ?? "absent"}<br />{delta.compared_end_at_utc ?? "absent"}</td>
+                    <td><Tag>{labelBusinessValue("changeKind", delta.change_kind, locale).label}</Tag><code className="localized-raw">{delta.change_kind}</code></td>
+                    <td>{delta.base_resource_id ?? t("common.absent")}<br />{delta.base_start_at_utc === null ? t("common.absent") : formatUtc(delta.base_start_at_utc, locale).display}<br />{delta.base_end_at_utc === null ? t("common.absent") : formatUtc(delta.base_end_at_utc, locale).display}<code className="localized-raw">{delta.base_start_at_utc ?? "null"} · {delta.base_end_at_utc ?? "null"}</code></td>
+                    <td>{delta.compared_resource_id ?? t("common.absent")}<br />{delta.compared_start_at_utc === null ? t("common.absent") : formatUtc(delta.compared_start_at_utc, locale).display}<br />{delta.compared_end_at_utc === null ? t("common.absent") : formatUtc(delta.compared_end_at_utc, locale).display}<code className="localized-raw">{delta.compared_start_at_utc ?? "null"} · {delta.compared_end_at_utc ?? "null"}</code></td>
                   </tr>
                 ))}
               </tbody>
             </table>
           </div>
           <Flex gap="middle" wrap>
-            <Link to={`/planning/versions/${encodeURIComponent(comparison.base_version.schedule_version_id)}/gantt/factory`}>Base factory Gantt</Link>
-            <Link to={`/planning/versions/${encodeURIComponent(comparison.compared_version.schedule_version_id)}/gantt/factory`}>Compared factory Gantt</Link>
+            <Link to={`/planning/versions/${encodeURIComponent(comparison.base_version.schedule_version_id)}/gantt/factory`}>{t("comparison.baseGantt")}</Link>
+            <Link to={`/planning/versions/${encodeURIComponent(comparison.compared_version.schedule_version_id)}/gantt/factory`}>{t("comparison.comparedGantt")}</Link>
           </Flex>
         </>
       )}

@@ -5,11 +5,14 @@ import type {
   VersionReference,
   WorkspaceHttpResponse,
 } from "../api/types";
+import { labelBusinessValue } from "../i18n/business-labels";
+import { formatUtc } from "../i18n/formatters";
+import { useLocale } from "../i18n/locale";
 
 const { Text } = Typography;
 
-function lineageFingerprints(lineage: ScheduleLineage | null): string {
-  if (lineage === null) return "not schedule-scoped";
+function lineageFingerprints(lineage: ScheduleLineage | null, missing: string): string {
+  if (lineage === null) return missing;
   return [
     lineage.snapshot.fingerprint,
     lineage.problem.fingerprint,
@@ -21,37 +24,41 @@ function lineageFingerprints(lineage: ScheduleLineage | null): string {
 }
 
 export function AuthorityPanel({ response }: { response: WorkspaceHttpResponse }) {
+  const { locale, t } = useLocale();
   const result = response.document.result;
   if (result === null) return null;
   const authority: VersionReference | null = result.authoritative_schedule_version;
   return (
-    <section aria-label="Server authority and lineage">
+    <section aria-label={t("authority.section")}>
       <Descriptions bordered size="small" column={1}>
-        <Descriptions.Item label="Authority">
-          <Tag color="green">server application</Tag>
+        <Descriptions.Item label={t("authority.authority")}>
+          <Tag color="green">{t("authority.serverApplication")}</Tag>
           <Text code>{response.document.data_plane}</Text>
         </Descriptions.Item>
-        <Descriptions.Item label="ScheduleVersion">
+        <Descriptions.Item label={t("authority.scheduleVersion")}>
           {authority === null
-            ? "workspace scope"
-            : `${authority.schedule_version_id} · ${authority.state}`}
+            ? t("authority.workspaceScope")
+            : <>{authority.schedule_version_id} · {labelBusinessValue("scheduleState", authority.state, locale).label} <Text code>{authority.state}</Text></>}
         </Descriptions.Item>
-        <Descriptions.Item label="Content fingerprint">
-          <Text copyable>{authority?.content_fingerprint ?? "not schedule-scoped"}</Text>
+        <Descriptions.Item label={t("authority.contentFingerprint")}>
+          <Text copyable>{authority?.content_fingerprint ?? t("authority.notScheduleScoped")}</Text>
         </Descriptions.Item>
-        <Descriptions.Item label="Source / collection">
+        <Descriptions.Item label={t("authority.sourceCollection")}>
           <Text copyable>
-            {response.source_fingerprint ?? "missing"} ·{" "}
-            {response.collection_fingerprint ?? "missing"}
+            {response.source_fingerprint ?? t("common.missing")} ·{" "}
+            {response.collection_fingerprint ?? t("common.missing")}
           </Text>
         </Descriptions.Item>
-        <Descriptions.Item label="Lineage fingerprints">
-          <Text className="fingerprint-wrap">{lineageFingerprints(result.lineage)}</Text>
+        <Descriptions.Item label={t("authority.lineageFingerprints")}>
+          <Text className="fingerprint-wrap">{lineageFingerprints(result.lineage, t("authority.notScheduleScoped"))}</Text>
         </Descriptions.Item>
-        <Descriptions.Item label="Generated at (raw UTC)">
-          <time dateTime={result.generated_at_utc}>{result.generated_at_utc}</time>
+        <Descriptions.Item label={t("authority.generatedRawUtc")}>
+          <time dateTime={result.generated_at_utc}>
+            {formatUtc(result.generated_at_utc, locale).display}
+            <code className="localized-raw">{result.generated_at_utc}</code>
+          </time>
         </Descriptions.Item>
-        <Descriptions.Item label="Correlation ID">
+        <Descriptions.Item label={t("authority.correlationId")}>
           <Text copyable>{response.correlation_id}</Text>
         </Descriptions.Item>
       </Descriptions>

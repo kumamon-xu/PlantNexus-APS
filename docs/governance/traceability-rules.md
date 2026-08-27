@@ -6,16 +6,16 @@ spec_version: 0.3.0
 phase: cross-phase
 normative: true
 source_sections: [5, 6, 86, 98, 99, 111]
-last_reviewed: 2026-08-26
+last_reviewed: 2026-08-27
 ---
 
 # 需求追踪规则
 
 ## TASK-P3-15 amendment and planned-member evidence rule
 
-TASK-P3-15 implementation evidence必须精确绑定`c84e1aa1a81473f65d9f7906a6d2c67a94e7bb2f`、原Diff base、required `validate`和artifact `9597967232`；下载报告必须为26 committed/0 working paths、五个Impact Rules、19 checks与0 issues。Closure event只能由同一稳定Task ID的既存`phase-plan-amendment-owner`归属；P3-16/P3-17必须保持`planned/ready`、无Diff base/implementation SHA，rename后只能有一个存活owner path。Closure也必须取得自身exact provider，不能用implementation artifact替代。
+TASK-P3-15 implementation evidence精确绑定`c84e1aa1a81473f65d9f7906a6d2c67a94e7bb2f`、原Diff base、required `validate`和artifact `9597967232`；closure `1636fe9c909b728d49f9907ed9f53030b5921914`的run/job/artifact=`32948633841`/`98114798738`/`9599442770`也已下载复验37份JSON、48/0 paths、六行、19 checks与0 issues。该历史只授权P3-16成为可单独启动成员，不替代其自身Diff base/provider。
 
-TASK-P3-16计划链固定为`REQ-005/006/007/009 + NFR-COR/DET/TRC/ISO/SEC/OBS/HUM + ENG-ARCH/ERR/VER → TASK-P3-16 → TEST-FRONTEND-I18N-001 + existing wire/frontend regressions → p3-frontend-i18n-report.v1/Playwright/exact provider`。`official-zh-cn-terminology.v1`只形成规范，不形成测试或实现证据；未来报告必须逐locale证明typed coverage、unknown raw fallback、raw UTC/ID/code/correlation可见及英文path/key/state/command/error/header/body/OpenAPI/fingerprint零漂移。TASK-P3-17最后独立重放，不能继承P3-14 Gate或P3-16结论；READY也不自动进入P4或Production。
+TASK-P3-16链固定为`REQ-005/006/007/009 + NFR-COR/DET/TRC/ISO/SEC/OBS/HUM + ENG-ARCH/ERR/VER → TASK-P3-16 → TEST-FRONTEND-I18N-001 + existing wire/frontend regressions → p3-frontend-i18n-report.v1/Playwright/exact provider`。`official-zh-cn-terminology.v1`现由两个243-key dictionary、139-value registry、unknown raw/Intl adapters及本地67 Vitest、12/12 Chromium、8/8 report承载；exact provider形成前只能标local evidence。报告逐locale证明raw UTC/ID/code/correlation可见及英文path/key/state/command/error/header/body/fingerprint零漂移。TASK-P3-17最后独立重放，不能继承P3-14 Gate或P3-16结论；READY也不自动进入P4或Production。
 
 ## TASK-P3-14 Gate evidence rule
 

@@ -6,7 +6,7 @@ spec_version: 0.3.0
 phase: P3
 normative: true
 source_sections: [68, 69, 77, 78]
-last_reviewed: 2026-08-26
+last_reviewed: 2026-08-27
 ---
 
 # P3 — Planning Workspace
@@ -37,7 +37,7 @@ Local implementation Gate和首个corrective implementation `13e16e36fc0a06a079d
 
 用户于2026-08-24在核验TASK-P2-00～14全部`done`、P2 Exit Gate overall=`READY`/`blocking_gaps=[]`、audit implementation/closure拓扑与exact GitHub required `validate`/artifact后，明确批准P2→P3 transition。P2为`completed`，P3为当前`active` Milestone。
 
-TASK-P3-00已完成Milestone激活、Task规划与文档治理，TASK-P3-01～15均为`done`。TASK-P3-16为`planned`本地化，TASK-P3-17为`planned`/final独立Audit；Gate与治理支持均不会自动授权二者或后续阶段。
+TASK-P3-00已完成Milestone激活、Task规划与文档治理，TASK-P3-01～15均为`done`。TASK-P3-16已获明确授权、冻结Diff base `1636fe9c909b728d49f9907ed9f53030b5921914`并处于`in_progress`；本地双语实现/证据已通过，exact implementation/closure provider仍待形成。TASK-P3-17为`planned`/final独立Audit，P3-16不会自动授权它或后续阶段。
 
 ## Outcome
 
@@ -65,7 +65,7 @@ TASK-P3-00已完成Milestone激活、Task规划与文档治理，TASK-P3-01～15
 | 13 | TASK-P3-13 | Human control actions与UI E2E | P3-06～12 | `done` |
 | 14 | TASK-P3-14 | 完整P3 vertical-slice Gate evidence | P3-01～13 | `done` |
 | 15 | TASK-P3-15 | Phase plan amendment governance support | P3-14 | `done` |
-| 16 | TASK-P3-16 | Frontend bilingual localization与官方中文术语 | P3-14/P3-15 | `planned` |
+| 16 | TASK-P3-16 | Frontend bilingual localization与官方中文术语 | P3-14/P3-15 | `in_progress` |
 | 17 | TASK-P3-17 | P3独立Exit Gate Audit（最终Task） | P3-16 | `planned` |
 
 ## Dependency graph
@@ -78,7 +78,7 @@ P3-05/06/07/08/09 → P3-10 → P3-11 → P3-12 → P3-13
 P3-01～13 → P3-14 → P3-15 → P3-16 → P3-17
 ```
 
-P3-07可在P3-04之后与read-model支线并行准备；P3-08必须等待authorization/audit service，P3-09必须等待可发布版本语义。API必须组合全部application service后形成；UI action E2E必须等待read-only与command两条链。TASK-P3-15只负责修订治理；TASK-P3-16必须等待新的明确授权并只做展示层双语/zero-wire-drift；TASK-P3-17最后审计冻结证据且不得修实现。
+P3-07可在P3-04之后与read-model支线并行准备；P3-08必须等待authorization/audit service，P3-09必须等待可发布版本语义。API必须组合全部application service后形成；UI action E2E必须等待read-only与command两条链。TASK-P3-15只负责修订治理；TASK-P3-16现按独立授权只做展示层双语/zero-wire-drift；TASK-P3-17最后审计冻结证据且不得修实现。
 
 ## Exit Gate
 

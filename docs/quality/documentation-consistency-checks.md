@@ -6,10 +6,16 @@ spec_version: 0.3.0
 phase: cross-phase
 normative: true
 source_sections: [6, 98, 99, 100, 101, 103, 104]
-last_reviewed: 2026-08-26
+last_reviewed: 2026-08-27
 ---
 
 # 文档一致性自动检查合同
+
+## TASK-P3-16 governance contract
+
+Diff checker固定使用`1636fe9c909b728d49f9907ed9f53030b5921914`，只允许Task卡逐字列出的Frontend source/test/E2E/evidence、additive workflow和Documents-to-update路径。完整range应命中`IMPACT-FRONTEND/INFRA/STATE/PHASE/GOVERNANCE-REGISTRY/DOCS`六行；STATE只审查三份状态机与ADR index的display-only/zero-pair-drift，不修改machine pair。`frontend/package.json`/lock、backend、Schema、migration、state实现、fixtures/benchmarks、P3历史、P4与Production必须零差异。Full governance继续为168 Markdown、30 roots/trace rows、49 Test IDs、15 OPEN、15 SIM、14 risks与55 Tasks；新增TS/Playwright/report不进入Markdown inventory。Implementation与closure各自必须以event-base动态发现TASK-P3-16、产生19/19 checks与`issues=[]`并由exact provider复验。
+
+提交前当前本地报告已复验79 working/0 committed-range paths、上述六行、19/19 checks与0 issues；full治理计数为168/30/30/49/15/15/14/55，event-base discovery与`git diff --check`通过。该报告的`git_head`仍为Diff base且只表示working-tree validation，implementation提交后必须重生exact-SHA provider report。
 
 ## TASK-P3-15 amendment-governance contract
 

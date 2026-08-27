@@ -6,14 +6,14 @@ spec_version: 0.3.0
 phase: P0-P3
 normative: true
 source_sections: [30, 33, 35, 66, 69, 78]
-last_reviewed: 2026-08-26
+last_reviewed: 2026-08-27
 ---
 
 # ScheduleVersion 状态机
 
 ## TASK-P3-16 display-label review
 
-`official-zh-cn-terminology.v1`为六个ScheduleVersion state提供`zh-CN`/`en-US`展示label，但状态registry、Schema、API、repository、transition pair与audit中的machine value仍逐字使用`DRAFT/READY_FOR_REVIEW/APPROVED/REJECTED/PUBLISHED/SUPERSEDED`。未知值必须显示raw state并fail visibly，不能猜测转移。该display-only mapping等待TASK-P3-16实现及zero-wire-drift tests，TASK-P3-17最终独立复验；当前无state-machine、migration或测试断言变化。
+`official-zh-cn-terminology.v1`为六个ScheduleVersion state提供`zh-CN`/`en-US`展示label，但状态registry、Schema、API、repository、transition pair与audit中的machine value仍逐字使用`DRAFT/READY_FOR_REVIEW/APPROVED/REJECTED/PUBLISHED/SUPERSEDED`。TASK-P3-16已实现typed display mapping、未知raw state fallback及本地zero-wire-drift tests；没有state-machine、migration或后端测试断言变化。Exact provider仍待形成，TASK-P3-17最终独立复验。
 
 ## TASK-P3-14 state Gate
 

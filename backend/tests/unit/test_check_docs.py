@@ -414,13 +414,21 @@ class TraceabilityValidatorTests(unittest.TestCase):
     def test_repository_discovery_uses_an_immutable_event_range(self) -> None:
         change_base = "a" * 40
         task_path = "docs/tasks/P1/TASK-P1-01-phase-governance-and-ci-handoff.md"
-        validator = object.__new__(RepositoryValidator)
-        validator.root = Path(__file__).resolve().parents[3]
-        validator.git_output = Mock(
-            side_effect=(change_base, "", f"{task_path}\n", f"{task_path}\n")
-        )
+        with TemporaryDirectory() as temporary_directory:
+            root = Path(temporary_directory)
+            target = root / task_path
+            target.parent.mkdir(parents=True, exist_ok=True)
+            target.write_text(
+                "---\ndoc_id: TASK-P1-01\nstatus: in_progress\n---\n",
+                encoding="utf-8",
+            )
+            validator = object.__new__(RepositoryValidator)
+            validator.root = root
+            validator.git_output = Mock(
+                side_effect=(change_base, "", f"{task_path}\n", f"{task_path}\n")
+            )
 
-        selected = validator.discover_changed_task_path(change_base, "P1")
+            selected = validator.discover_changed_task_path(change_base, "P1")
 
         self.assertEqual(selected, task_path)
         self.assertEqual(validator.task_discovery_base, change_base)

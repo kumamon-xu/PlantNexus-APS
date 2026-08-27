@@ -156,10 +156,16 @@ def test_fixture_dimensions_profile_ranges_and_assumptions_are_traceable() -> No
         "SIM-ASSUMPTION-009",
     ]
     note = (FIXTURE_ROOT / "calculation-note.md").read_text(encoding="utf-8")
-    register = SIM_ASSUMPTION_PATH.read_text(encoding="utf-8")
     for assumption_id in assumption_ids:
         assert assumption_id in note
-        assert assumption_id in register
+
+    # The fixture note is the public provenance contract. Internal workspaces
+    # retain an additional governance register, so cross-check it when present
+    # without making a public checkout depend on non-published process records.
+    if SIM_ASSUMPTION_PATH.is_file():
+        register = SIM_ASSUMPTION_PATH.read_text(encoding="utf-8")
+        for assumption_id in assumption_ids:
+            assert assumption_id in register
 
 
 def test_golden_schedule_independently_satisfies_c001_through_c011() -> None:

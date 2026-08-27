@@ -13,7 +13,7 @@ last_reviewed: 2026-08-26
 
 ## TASK-P4-04 runtime consumer boundary
 
-P4-04现以consumer-only方式解释既有`execution-event.v1`并生成既有`planning-snapshot.v2`；没有修改九份P4 Schema/sample、schema set `2.8.0`、`0005` migration或dependency。接收与投影使用P4-03 caller-owned事务primitive，Urgent Demand复用P1 Import/Validation/Expansion链；不新增wire carrier、state machine或私有业务合同。当前证据为local PASS/provider pending。
+P4-04现以consumer-only方式解释既有`execution-event.v1`并生成既有`planning-snapshot.v2`；没有修改九份P4 Schema/sample、schema set `2.8.0`、`0005` migration或dependency。接收与投影使用P4-03 caller-owned事务primitive，Urgent Demand复用P1 Import/Validation/Expansion链；不新增wire carrier、state machine或私有业务合同。Implementation `47f55b41e370aa9d24fd9c987cff4663672c3ee8` / artifact `9644190441`已把该consumer evidence升级为`PROVIDER_VERIFIED`。
 
 
 ## TASK-P4-03 consumer boundary

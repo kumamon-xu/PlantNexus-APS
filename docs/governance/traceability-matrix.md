@@ -12,9 +12,9 @@ registry_version: 1.0.0
 
 # 追踪矩阵
 
-## TASK-P4-04 local projection trace slice（provider pending）
+## TASK-P4-04 provider-verified projection trace slice
 
-`REQ-002/003/008/009/013 + NFR-COR/DET/TRC/ISO/REL/SEC + ENG-ARCH/ERR/VER → TASK-P4-04 → ExecutionEvent ledger ingress / canonical fact projector / standard urgent import / new immutable Snapshot+checkpoint+audit → TEST-EXECUTION-FACT-PROJECTION-001/TEST-SNAPSHOT-REPLAY-001/TEST-IDEMPOTENCY/TEST-PROPERTY/TEST-SIM-ISOLATION → p4-execution-fact-projection-report.v1/Task report → exact provider`。当前4 unit + 2 property + 4 integration及machine 8/8为`LOCAL_PASS_PROVIDER_PENDING`；Roots/rows仍为30/30、Test IDs仍为61且root lifecycle保持`ALLOCATED`。
+`REQ-002/003/008/009/013 + NFR-COR/DET/TRC/ISO/REL/SEC + ENG-ARCH/ERR/VER → TASK-P4-04 → ExecutionEvent ledger ingress / canonical fact projector / standard urgent import / new immutable Snapshot+checkpoint+audit → TEST-EXECUTION-FACT-PROJECTION-001/TEST-SNAPSHOT-REPLAY-001/TEST-IDEMPOTENCY/TEST-PROPERTY/TEST-SIM-ISOLATION → p4-execution-fact-projection-report.v1/Task report → exact provider`。4 unit + 2 property + 4 integration及machine 8/8均通过；implementation `47f55b41e370aa9d24fd9c987cff4663672c3ee8` / artifact `9644190441`已复验54/0 paths、九个Impact Rules、19/19 checks与`issues=[]`，本closure把projection edge升级为`PROVIDER_VERIFIED_DONE`。Roots/rows仍为30/30、Test IDs仍为61且root lifecycle保持`ALLOCATED`；closure自身仍须post-push exact provider复验。
 
 
 ## TASK-P4-03 provider-verified persistence trace slice

@@ -14,7 +14,7 @@ registry_version: 1.0.0
 
 ## TASK-P4-04 projection allocation
 
-REQ-002/003/008/009/013现连接Simulation ExecutionEvent strict ingress、authority/source-position fact projection、new immutable Snapshot/checkpoint/audit、Urgent Standard Import与机器报告。本地11-event/4-negative/standard-chain/rollback证据为`LOCAL_PASS_PROVIDER_PENDING`，root requirement lifecycle继续`ALLOCATED`；未形成ReplanRequest/freeze/Solver/ChangeReport/ScheduleVersion、P5或Production requirement closure。
+REQ-002/003/008/009/013现连接Simulation ExecutionEvent strict ingress、authority/source-position fact projection、new immutable Snapshot/checkpoint/audit、Urgent Standard Import与机器报告。11-event/4-negative/standard-chain/rollback证据已由implementation `47f55b41e370aa9d24fd9c987cff4663672c3ee8` / artifact `9644190441`升级为`PROVIDER_VERIFIED`，root requirement lifecycle继续`ALLOCATED`；未形成ReplanRequest/freeze/Solver/ChangeReport/ScheduleVersion、P5或Production requirement closure。
 
 
 ## TASK-P4-03 persistence allocation

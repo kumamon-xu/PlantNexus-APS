@@ -1,21 +1,21 @@
 # PlantNexus APS
 
-## TASK-P4-04 ExecutionEvent fact projection（provider pending）
+## TASK-P4-04 ExecutionEvent fact projection completion
 
 TASK-P4-04已按用户独立授权在不可变Diff base `3563bb236ce7b2c01794485110d4945a6e265105`上执行。当前实现只在Simulation plane形成两段原子边界：ingress事务append exact ExecutionEvent ledger+audit，projection事务把连续source-position prefix解释为canonical execution/material/resource/duration/lock facts并提交new immutable PlanningSnapshot+checkpoint+audit；Urgent Demand只能携带完整Raw Staging+MappingProfile并重走Normalization→Data Validation→Order Expansion→Snapshot。全部11种已批准event均有确定性/replay/negative证据，Schema/migration/dependency/state pair不变。
 
-当前Task-specific 10项、application boundary与CI contract合计focused `12 passed`，完整Backend `654 passed`，Frontend 67 Vitest、主E2E及两轮Gate Chromium各12/12，全部历史machine、P2/P3双Gate、SCA/license、Compose和双build均PASS；`p4-execution-fact-projection-report.v1`为8/8且`issues=[]`。Exact implementation provider尚未取得，故Task仍为`in_progress`且这些结果不得标记为provider-verified。ReplanRequest、freeze window、OBJ-002、Solver/Validator、ChangeReport、ScheduleVersion、Simulator、API/UI、P5与Production/external authority/capacity/SLA均未形成；TASK-P4-05不会自动启动。
+当前Task-specific 10项、application boundary与CI contract合计focused `12 passed`，完整Backend `654 passed`，Frontend 67 Vitest、主E2E及两轮Gate Chromium各12/12，全部历史machine、P2/P3双Gate、SCA/license、Compose和双build均PASS；`p4-execution-fact-projection-report.v1`为8/8且`issues=[]`。Implementation `47f55b41e370aa9d24fd9c987cff4663672c3ee8`的required run/job/artifact=`33066612047`/`98498125593`/`9644190441`已由GitHub Actions app `15368` exact成功并下载复验，故本evidence-only closure把TASK-P4-04标为`done`；closure自身仍须post-push exact provider复验。ReplanRequest、freeze window、OBJ-002、Solver/Validator、ChangeReport、ScheduleVersion、Simulator、API/UI、P5与Production/external authority/capacity/SLA均未形成；TASK-P4-05保持`planned`且不会自动启动。
 
 
 ## TASK-P4-03 Replan persistence completion
 
-TASK-P4-03已获独立授权并在不可变Diff base `7b9bfc3069de5d3738e5cc5827d27d197ed3d226`上执行。实现增加additive `0005_replan_event_persistence`、7张Simulation-only关系表、5个plane-scoped repository边界和`p4-replan-persistence-report.v1`；本地machine evidence为9/9 PASS，完整Backend为643项、Frontend为67 Vitest及三轮各12/12 Chromium，P2/P3双Gate与52-path/6-rule/19-check/0-issue治理均通过。Implementation `60f8e8900ecab60f0d64311912ae27f09a4d002f`的required run/job/artifact=`33055784278`/`98462103078`/`9639720666`已由GitHub Actions app `15368` exact成功并下载复验，因此本evidence-only closure把Task标为`done`；closure自身仍须post-push exact provider复验。该持久化层只保存ExecutionEvent ledger、projection checkpoint CAS、immutable ReplanRequest、request→PlanningRun attempt→terminal result references与append-only audit，不解释事件、不投影事实、不生成ChangeReport/new DRAFT，也不调用Solver/Simulator或形成Production能力。P4-04在该closure时保持`planned`；当前已按新的独立授权进入本页顶部的`in_progress` slice。
+TASK-P4-03已获独立授权并在不可变Diff base `7b9bfc3069de5d3738e5cc5827d27d197ed3d226`上执行。实现增加additive `0005_replan_event_persistence`、7张Simulation-only关系表、5个plane-scoped repository边界和`p4-replan-persistence-report.v1`；本地machine evidence为9/9 PASS，完整Backend为643项、Frontend为67 Vitest及三轮各12/12 Chromium，P2/P3双Gate与52-path/6-rule/19-check/0-issue治理均通过。Implementation `60f8e8900ecab60f0d64311912ae27f09a4d002f`的required run/job/artifact=`33055784278`/`98462103078`/`9639720666`已由GitHub Actions app `15368` exact成功并下载复验，因此本evidence-only closure把Task标为`done`；closure自身仍须post-push exact provider复验。该持久化层只保存ExecutionEvent ledger、projection checkpoint CAS、immutable ReplanRequest、request→PlanningRun attempt→terminal result references与append-only audit，不解释事件、不投影事实、不生成ChangeReport/new DRAFT，也不调用Solver/Simulator或形成Production能力。P4-04在该closure时保持`planned`；当前已按新的独立授权完成，状态见本页顶部。
 
 ## P4 phase activation and TASK-P4-02
 
 用户已明确批准P3→P4。TASK-P3-17独立Exit Audit的report/manifest均为`READY`、`blocking_gaps=[]`；audit implementation `201be9c6fd1b433a9d0a629a3ae7d4ffe1107476`和evidence-only closure `61eeacdd5efc20b2321750e1310e9e21561c9fc2`的直接拓扑、required `validate`、GitHub Actions app `15368`及未过期artifact均已exact复验。因此P3 Milestone现为`completed`，P4 Dynamic Replanning已激活。
 
-PlantNexus APS 是一个面向单工厂、多车间场景的高级计划与排程（APS）项目。TASK-P4-00～03现均已按各自独立授权形成implementation与evidence-only closure治理链；TASK-P4-04已另行授权并只形成provider-pending的Simulation event ingress/事实投影slice。Freeze/OBJ-002、ChangeReport生成、Solver、Simulator、API/UI与Production readiness/UAT/真实authority/external publish/deployment/capacity/SLA仍未形成。
+PlantNexus APS 是一个面向单工厂、多车间场景的高级计划与排程（APS）项目。TASK-P4-00～04现均已按各自独立授权形成implementation与evidence-only closure治理链；TASK-P4-04只形成provider-verified的Simulation event ingress/事实投影slice。Freeze/OBJ-002、ChangeReport生成、Solver、Simulator、API/UI与Production readiness/UAT/真实authority/external publish/deployment/capacity/SLA仍未形成。
 
 ## 开始之前
 
@@ -90,7 +90,7 @@ scripts/      仓库级校验与自动化脚本
 infra/        P0 开发容器构建配置
 ```
 
-P2 CP-SAT Vertical Slice与P3 Planning Workspace均已通过Exit Gate并关闭，当前阶段为P4。P2-00～14、P3-00～17、TASK-P4-00～03均为`done`；TASK-P4-04为`in_progress`且provider pending，P4-05～15仍为`planned`。Production capacity/SLA/identity/approval authority/external publish仍未形成。当前边界见[`docs/current_phase.md`](docs/current_phase.md)。
+P2 CP-SAT Vertical Slice与P3 Planning Workspace均已通过Exit Gate并关闭，当前阶段为P4。P2-00～14、P3-00～17、TASK-P4-00～04均为`done`；P4-05～15仍为`planned`。Production capacity/SLA/identity/approval authority/external publish仍未形成。当前边界见[`docs/current_phase.md`](docs/current_phase.md)。
 
 TASK-P3-13保留失败implementation run `32920462781`、首次closure `87d47c7483185483ac8027100c1c664d18011a7c` / run `32921871460`的606/1失败与artifact count=0。独立XLSX deterministic corrective implementation `3538d46f8b73ae434057bcbca9037436aa91f2c7`的required run/job/artifact=`32923203227`/`98040743610`/`9590625358`已全绿并下载复验33份JSON、12/12 Chromium和Task 91/0/11/19/0；该P3-13 closure当时未自动启动P3-14，后者现依据新的用户授权独立执行。
 

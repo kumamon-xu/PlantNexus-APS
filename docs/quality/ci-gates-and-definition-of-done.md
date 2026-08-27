@@ -15,6 +15,8 @@ last_reviewed: 2026-08-27
 
 Required `validate`新增不可跳过的`P4 ExecutionEvent fact projection evidence`步骤，执行`app.application.execution_fact_projection_check`并上传`ci-p4-execution-fact-projection.json`。PASS报告必须绑定TASK-P4-04、Diff base `3563bb236ce7b2c01794485110d4945a6e265105`、exact `PLANTNEXUS_CODE_COMMIT`、11 positive event vectors、4 negative vectors、standard urgent chain、atomic rollback、8/8 checks与`issues=[]`。Required context仍仅为`validate`且预期GitHub Actions app为`15368`；local PASS不替代provider。
 
+Implementation `47f55b41e370aa9d24fd9c987cff4663672c3ee8`的required run/job=`33066612047`/`98498125593`由GitHub Actions app `15368`成功提供；artifact `9644190441`未过期至`2026-11-25T11:15:59Z`，provider/download digest=`sha256:5de60ea1cb38c6f5b9d759f5c7a0179215e765e9f5c2c7e38c656ed04a6cd3a5`。下载复核47 files/41 JSON、31份exact commit-bound JSON、255 checks、TASK/base、54/0 paths、九个Impact Rules、27/27 documents、19/19 checks、0 issues以及P4 projection 8/8一致PASS，故本closure可把Task标为`done`；closure自身须再次经过同一required provider，P4-05不得自动启动。
+
 
 ## TASK-P4-03 required evidence
 

@@ -12,9 +12,9 @@ registry_version: 1.0.0
 
 # 文档清单
 
-## TASK-P4-04 implementation inventory review（provider pending）
+## TASK-P4-04 implementation inventory completion
 
-TASK-P4-04已由用户独立授权并从provider-verified clean HEAD `3563bb236ce7b2c01794485110d4945a6e265105`启动；不新增、删除或重命名正式Markdown，inventory继续为188 entries。新增domain/application/importer/snapshot代码、tests、workflow step与ignored machine/Task reports均不属于Markdown inventory。当前Task report为54 paths、9 Impact Rules、27/27 expected/observed documents、19/19 checks和0 issues；provider pending，故本Task inventory状态继续`in_progress`。P4-05～15保持`planned`，Roots=30、trace rows=30、Test IDs=61、OPEN=15、SIM=16、risks=17、Tasks=71及registry format均不变。
+TASK-P4-04已由用户独立授权并从provider-verified clean HEAD `3563bb236ce7b2c01794485110d4945a6e265105`启动；不新增、删除或重命名正式Markdown，inventory继续为188 entries。新增domain/application/importer/snapshot代码、tests、workflow step与ignored machine/Task reports均不属于Markdown inventory。Implementation artifact `9644190441`已复验54 committed/0 working paths、9 Impact Rules、27/27 expected/observed documents、19/19 checks和0 issues，本closure把Task inventory状态更新为`done`。P4-05～15保持`planned`，Roots=30、trace rows=30、Test IDs=61、OPEN=15、SIM=16、risks=17、Tasks=71及registry format均不变；closure自身仍须post-push exact provider复验。
 
 ## TASK-P4-03 inventory review
 
@@ -58,7 +58,7 @@ TASK-P3-14不新增、删除或重命名正式Markdown，inventory继续覆盖16
 
 Root=30、trace rows=30、Test IDs=48、OPEN=15、risks=13、Tasks=53均不变；新增SIM-ASSUMPTION-015使SIM count=15但不改变registry format。Artifact `9589931373`复现33 JSON及Task 91/0/11/19/0，closure run `32921871460`失败且无artifact；独立corrective artifact `9590625358`再次复现33 JSON及91/0/11/19/0。本closure自身仍须exact provider。
 
-本清单列出当前仓库已经实际存在的Markdown文档。P0～P3均已归档为completed；P3 Exit Gate=`READY`、0 gaps且implementation/closure provider完整闭环。P4现为active，TASK-P4-00 phase planning、TASK-P4-01 contract/ADR baseline、TASK-P4-02 machine contracts与TASK-P4-03 persistence均为`done`，P4-04为`in_progress`且provider pending，P4-05～15仍为planned。P3 human-control UI/E2E、有界internal Simulation成果包下载及双语展示provider evidence保持历史只读；Production Runbook正文仍未形成。
+本清单列出当前仓库已经实际存在的Markdown文档。P0～P3均已归档为completed；P3 Exit Gate=`READY`、0 gaps且implementation/closure provider完整闭环。P4现为active，TASK-P4-00 phase planning、TASK-P4-01 contract/ADR baseline、TASK-P4-02 machine contracts、TASK-P4-03 persistence与TASK-P4-04 fact projection均为`done`，P4-05～15仍为planned。P3 human-control UI/E2E、有界internal Simulation成果包下载及双语展示provider evidence保持历史只读；Production Runbook正文仍未形成。
 
 | Path | Doc ID | Status | Title |
 |---|---|---|---|
@@ -236,7 +236,7 @@ Root=30、trace rows=30、Test IDs=48、OPEN=15、risks=13、Tasks=53均不变�
 | [tasks/P4/TASK-P4-01-dynamic-replanning-contract-and-adr-baseline.md](../tasks/P4/TASK-P4-01-dynamic-replanning-contract-and-adr-baseline.md) | TASK-P4-01 | done | Dynamic Replanning Contract and ADR Baseline |
 | [tasks/P4/TASK-P4-02-execution-event-replan-change-report-schemas.md](../tasks/P4/TASK-P4-02-execution-event-replan-change-report-schemas.md) | TASK-P4-02 | done | ExecutionEvent Replan and ChangeReport Machine Contracts |
 | [tasks/P4/TASK-P4-03-replan-event-persistence-and-state-transactions.md](../tasks/P4/TASK-P4-03-replan-event-persistence-and-state-transactions.md) | TASK-P4-03 | done | Replan Event Persistence and State Transactions |
-| [tasks/P4/TASK-P4-04-execution-event-ingestion-and-fact-projection.md](../tasks/P4/TASK-P4-04-execution-event-ingestion-and-fact-projection.md) | TASK-P4-04 | in_progress | ExecutionEvent Ingestion and Fact Projection |
+| [tasks/P4/TASK-P4-04-execution-event-ingestion-and-fact-projection.md](../tasks/P4/TASK-P4-04-execution-event-ingestion-and-fact-projection.md) | TASK-P4-04 | done | ExecutionEvent Ingestion and Fact Projection |
 | [tasks/P4/TASK-P4-05-freeze-window-and-effective-lock-projection.md](../tasks/P4/TASK-P4-05-freeze-window-and-effective-lock-projection.md) | TASK-P4-05 | planned | Freeze Window and Effective Lock Projection |
 | [tasks/P4/TASK-P4-06-stability-objective-and-change-report.md](../tasks/P4/TASK-P4-06-stability-objective-and-change-report.md) | TASK-P4-06 | planned | OBJ-002 Stability and ChangeReport |
 | [tasks/P4/TASK-P4-07-lexicographic-replan-solver-and-validator.md](../tasks/P4/TASK-P4-07-lexicographic-replan-solver-and-validator.md) | TASK-P4-07 | planned | Lexicographic Replan Solver and Validator |

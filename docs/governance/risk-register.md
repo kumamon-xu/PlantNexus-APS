@@ -12,9 +12,9 @@ registry_version: 1.0.0
 
 # 项目风险注册表
 
-## TASK-P4-04 projection controls（provider pending）
+## TASK-P4-04 provider-verified projection controls
 
-RISK-015现获得完整source-position prefix、event exact replay、terminal/reference/conflict rejection、predecessor immutability与lost-response replay的local控制；RISK-017获得Simulation authority/default-deny、standard urgent ingress和atomic rollback控制。Machine 8/8与focused 10项尚待exact provider，且未覆盖distributed consumer/PostgreSQL concurrency/Production source trust/capacity，因此RISK-001～017继续`MONITORED`，不关闭、不降级。
+RISK-015现获得完整source-position prefix、event exact replay、terminal/reference/conflict rejection、predecessor immutability与lost-response replay控制；RISK-017获得Simulation authority/default-deny、standard urgent ingress和atomic rollback控制。Machine 8/8与focused 10项已由implementation `47f55b41e370aa9d24fd9c987cff4663672c3ee8` / artifact `9644190441` exact复验，但未覆盖distributed consumer/PostgreSQL concurrency/Production source trust/capacity，因此RISK-001～017继续`MONITORED`，不关闭、不降级。
 
 
 ## TASK-P4-03 persistence controls

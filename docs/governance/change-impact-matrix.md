@@ -16,7 +16,7 @@ registry_version: 1.0.0
 
 不可变Diff base=`3563bb236ce7b2c01794485110d4945a6e265105`。实际范围为pure domain projector、application two-transaction orchestration与machine evidence、Urgent Import input carrier、projected Snapshot finalizer、三个既有repository caller-transaction surface、Backend unit/property/integration/CI contract、一个non-skippable workflow step及逐字治理文档，精确命中`IMPACT-DOMAIN`、`IMPACT-APPLICATION`、`IMPACT-IMPORT`、`IMPACT-SNAPSHOT`、`IMPACT-INFRA`、`IMPACT-TESTS`、`IMPACT-PHASE`、`IMPACT-GOVERNANCE-REGISTRY`、`IMPACT-DOCS`九行。
 
-ExecutionEvent/PlanningSnapshot/Import Schema、`0005`及全部历史migration、state registry/pairs、dependency/lock、Planning/Solver/Validator/Policy/ChangeReport/ScheduleVersion、Simulator/scenario/fixture/benchmark、API/UI、P0～P3历史、P5+与Production/external authority/capacity/SLA均为禁止范围且须零差异。Repository修改只增加caller-owned transaction方法并修复SQLite Snapshot写入的方言感知savepoint原子性，不改变DDL。最终path/document/check/issue计数由Task report与exact provider artifact回填；当前provider pending。
+ExecutionEvent/PlanningSnapshot/Import Schema、`0005`及全部历史migration、state registry/pairs、dependency/lock、Planning/Solver/Validator/Policy/ChangeReport/ScheduleVersion、Simulator/scenario/fixture/benchmark、API/UI、P0～P3历史、P5+与Production/external authority/capacity/SLA均为禁止范围且零差异。Repository修改只增加caller-owned transaction方法并修复SQLite Snapshot写入的方言感知savepoint原子性，不改变DDL。Implementation artifact `9644190441`已精确复现54 committed/0 working paths、上述九行、27/27 expected/observed documents、19/19 checks与0 issues；本closure只回填provider事实与lifecycle，并保持相同54-path union。
 
 
 ## TASK-P4-03 implementation impact

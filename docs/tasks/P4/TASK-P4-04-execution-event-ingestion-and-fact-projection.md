@@ -1,7 +1,7 @@
 ---
 doc_id: TASK-P4-04
 title: ExecutionEvent Ingestion and Fact Projection
-status: in_progress
+status: done
 spec_version: 0.3.0
 phase: P4
 normative: true
@@ -97,7 +97,9 @@ Rollback: 禁用event入口并保留ledger；错误事实用补偿event和新Sna
 
 本地implementation candidate已形成Simulation-only strict event validation、ledger+audit ingress、pure full-prefix fact projection、new immutable Snapshot/checkpoint/audit、standard Urgent Import及exact replay。Snapshot中受hash保护的authority/stream/position/prefix lineage同时约束初始批次与连续第二批的immediate-predecessor lost-response replay，较旧或不一致base拒绝为stale。全部11种event均进入machine positive vectors；gap/reference/terminal/cross-plane、missing/mismatched urgent、stale base和故障注入均fail closed。SQLite Snapshot caller-transaction写入已改用现有方言感知savepoint，末端projection audit失败时新增Snapshot/checkpoint为0而已成功ingress ledger保留。
 
-Task-specific 4 unit + 2 property + 4 migration-backed integration=`10 passed`，连同application boundary与CI contract的focused组合为`12 passed`；完整Backend为`654 passed`。Frontend为67 Vitest、主E2E与两轮Gate Chromium各12/12；locked sync、Ruff/Pyright、全部历史machine、P2 XS/P2 Gate/P3 Gate、SCA/license、Compose和Frontend/Package双build均PASS。Machine report `p4-execution-fact-projection-report.v1`为8/8、11 positive、4 negative、1 standard urgent、1 atomic rollback且`issues=[]`；Task governance report为54 changed paths、九个Impact Rules、27/27 expected/observed documents、19/19 checks与0 issues。完整required-equivalent本地回归已通过，implementation exact provider及artifact仍待执行，因此Task保持`in_progress`，这些local结果不构成provider evidence，也不启动TASK-P4-05。
+Task-specific 4 unit + 2 property + 4 migration-backed integration=`10 passed`，连同application boundary与CI contract的focused组合为`12 passed`；完整Backend为`654 passed`。Frontend为67 Vitest、主E2E与两轮Gate Chromium各12/12；locked sync、Ruff/Pyright、全部历史machine、P2 XS/P2 Gate/P3 Gate、SCA/license、Compose和Frontend/Package双build均PASS。Machine report `p4-execution-fact-projection-report.v1`为8/8、11 positive、4 negative、1 standard urgent、1 atomic rollback且`issues=[]`；Task governance report为54 changed paths、九个Impact Rules、27/27 expected/observed documents、19/19 checks与0 issues。
+
+Implementation `47f55b41e370aa9d24fd9c987cff4663672c3ee8`是Diff base `3563bb236ce7b2c01794485110d4945a6e265105`的直接子提交。GitHub required run `33066612047` / job `98498125593`（context `validate`，GitHub Actions app `15368`）exact success；artifact `9644190441` / `plantnexus-ci-evidence-33066612047`创建于`2026-08-27T11:23:55Z`、到期于`2026-11-25T11:15:59Z`且未过期，provider/download digest均为`sha256:5de60ea1cb38c6f5b9d759f5c7a0179215e765e9f5c2c7e38c656ed04a6cd3a5`。下载复核47 files/41 JSON，其中31份JSON exact绑定implementation SHA；255个checks合计0 parse/SHA/top-level/check/issue/gap异常。Artifact内machine报告复现8/8、11 positive、4 negative、1 standard urgent、1 atomic rollback与`issues=[]`；Task报告复现54 committed/0 working paths、九个Impact Rules、27/27 documents、19/19 checks与0 issues。因此本evidence-only closure把Task标为`done`；closure自身仍须post-push exact provider复验，TASK-P4-05保持`planned`且未启动。
 
 ## Activation evidence
 

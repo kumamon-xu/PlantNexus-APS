@@ -15,7 +15,7 @@ last_reviewed: 2026-08-27
 
 P4-04实现全部11个既有ExecutionEvent type的strict Simulation runtime消费：root/payload exact fields、canonical fingerprint/event ID、authority/scope/stream、source position、UTC/provenance与entity refs先验证，再按完整连续prefix投影。Ingress事务只写ledger+`EXECUTION_EVENT_APPENDED` audit；projection事务只写new immutable PlanningSnapshot、CAS checkpoint与`PROJECTION_CHECKPOINT_COMMITTED` audit。Exact replay返回既有identity；different content、gap/late、terminal regression、invalid ref、stale base、cross-plane或写入失败均fail closed。
 
-本Task不创建ReplanRequest，也不解析其freeze、Policy/Limits、Solver、Validator、ChangeReport或new ScheduleVersion字段。Urgent Demand event只携带identity/quantity/due/priority source，canonical demand/order/lot必须由完整Standard Import链产生；private canonical/Snapshot injection不构成合法输入。当前为local implementation evidence，provider仍pending。
+本Task不创建ReplanRequest，也不解析其freeze、Policy/Limits、Solver、Validator、ChangeReport或new ScheduleVersion字段。Urgent Demand event只携带identity/quantity/due/priority source，canonical demand/order/lot必须由完整Standard Import链产生；private canonical/Snapshot injection不构成合法输入。Implementation `47f55b41e370aa9d24fd9c987cff4663672c3ee8` / artifact `9644190441`已把该runtime consumer evidence升级为`PROVIDER_VERIFIED`。
 
 
 ## TASK-P4-03 durable consumer

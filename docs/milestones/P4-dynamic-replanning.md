@@ -11,11 +11,11 @@ last_reviewed: 2026-08-27
 
 # P4 — Dynamic Replanning
 
-## TASK-P4-04 active projection slice
+## TASK-P4-04 completed projection slice
 
 TASK-P4-04已从P4-03 provider-verified closure `3563bb236ce7b2c01794485110d4945a6e265105`按独立用户授权启动。范围限于Simulation-only ExecutionEvent ingestion、连续ledger事实投影、新immutable Snapshot/checkpoint/audit和Urgent Demand标准Import/Validation共同入口；P4-05 freeze、P4-06 OBJ-002/ChangeReport、P4-07 Solver/Validator、P4-08 new DRAFT application及P4-09+ Simulator/API/UI均未启动。
 
-当前4 unit + 2 property + 4 migration-backed integration为10项，连同application boundary和CI contract合计focused `12 passed`；完整Backend `654 passed`、Frontend 67 Vitest与三轮各12/12 Chromium、全部历史machine/P2/P3 Gate、SCA/license、Compose及双build均PASS。Machine 8/8为local PASS，全部11个event type、exact replay、ordering/terminal/reference/plane rejection、standard urgent与atomic rollback已有证据，但implementation provider仍pending，故Task保持`in_progress`。
+当前4 unit + 2 property + 4 migration-backed integration为10项，连同application boundary和CI contract合计focused `12 passed`；完整Backend `654 passed`、Frontend 67 Vitest与三轮各12/12 Chromium、全部历史machine/P2/P3 Gate、SCA/license、Compose及双build均PASS。Machine 8/8覆盖全部11个event type、exact replay、ordering/terminal/reference/plane rejection、standard urgent与atomic rollback；implementation `47f55b41e370aa9d24fd9c987cff4663672c3ee8` / artifact `9644190441`已exact复验，故本closure把Task标为`done`，closure自身仍须post-push exact provider。
 
 ## TASK-P4-03 completed persistence slice
 
@@ -27,7 +27,7 @@ TASK-P4-02已从provider-verified P4-01 closure `4026597ab1015b5ea3a89d241f0d12b
 
 ## Activation
 
-用户于2026-08-27在P3 Exit双提交provider与clean synchronized closure baseline精确通过后批准P3→P4。TASK-P4-00 phase-planning、TASK-P4-01 contract/ADR、TASK-P4-02 machine contract与TASK-P4-03 persistence均已按独立治理链登记为`done`。P4-04现按独立授权为`in_progress`，P4-05～15继续`planned`且不会自动启动，P4-15是最后一项独立Exit Gate Audit。
+用户于2026-08-27在P3 Exit双提交provider与clean synchronized closure baseline精确通过后批准P3→P4。TASK-P4-00 phase-planning、TASK-P4-01 contract/ADR、TASK-P4-02 machine contract、TASK-P4-03 persistence与TASK-P4-04 fact projection均已按独立治理链登记为`done`。P4-05～15继续`planned`且不会自动启动，P4-15是最后一项独立Exit Gate Audit。
 
 TASK-P4-01已形成accepted ADR-0013～0015：事件authority/append-only投影/Replan lineage，半开freeze/四元OBJ-002/完整ChangeReport，以及Simulator只经标准ExecutionEvent共同路径。当前只形成合同基线，机器carrier、Schema、migration、persistence、业务实现和行为测试均未形成。
 
@@ -49,7 +49,7 @@ TASK-P4-01已形成accepted ADR-0013～0015：事件authority/append-only投影/
 | TASK-P4-01 | Dynamic Replanning合同与accepted ADR-0013～0015（done） | P4-00 |
 | TASK-P4-02 | ExecutionEvent/Replan/ChangeReport等机器合同（done） | P4-01 |
 | TASK-P4-03 | Event/Replan持久化与状态事务（done） | P4-02 |
-| TASK-P4-04 | ExecutionEvent→事实→新Snapshot（in progress） | P4-02/03 |
+| TASK-P4-04 | ExecutionEvent→事实→新Snapshot（done） | P4-02/03 |
 | TASK-P4-05 | Freeze Window与effective locks | P4-01/02/04 |
 | TASK-P4-06 | OBJ-002 Stability与ChangeReport | P4-01/02 |
 | TASK-P4-07 | Delivery→Stability→Makespan Solver/Validator | P4-04/05/06 |

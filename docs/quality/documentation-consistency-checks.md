@@ -13,7 +13,7 @@ last_reviewed: 2026-08-27
 
 ## TASK-P4-04 governance checks
 
-当前Task report必须从Diff base `3563bb236ce7b2c01794485110d4945a6e265105`发现唯一TASK-P4-04 owner，核对exact allow-list、P4-02/03=`done`、P4 active/P4-04 in_progress、188 Markdown、30 roots/rows、61 Test IDs、15 OPEN、16 SIM assumptions、17 risks和71 Tasks。提交前报告已得到54 working-tree paths、九个Impact Rules、27/27 expected/observed documents、19/19 checks与0 issues；machine report绑定Task/base并为8/8、`issues=[]`，forbidden tracked/untracked为0且冻结Git object逐项一致。Implementation/closure provider前不得把local结果升级为done。
+当前Task report必须从Diff base `3563bb236ce7b2c01794485110d4945a6e265105`发现唯一TASK-P4-04 owner，核对exact allow-list、P4-02/03=`done`、P4 active/P4-04 lifecycle、188 Markdown、30 roots/rows、61 Test IDs、15 OPEN、16 SIM assumptions、17 risks和71 Tasks。Implementation artifact `9644190441`已复现54 committed/0 working paths、九个Impact Rules、27/27 expected/observed documents、19/19 checks与0 issues；machine report绑定exact Task/base/SHA并为8/8、`issues=[]`，forbidden tracked/untracked为0且冻结Git object逐项一致。因此本closure可把P4-04升级为done；closure自身仍须post-push exact provider复验。
 
 
 ## TASK-P4-03 governance checks

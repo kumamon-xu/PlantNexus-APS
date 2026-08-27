@@ -11,6 +11,11 @@ last_reviewed: 2026-08-27
 
 # 文档一致性自动检查合同
 
+## TASK-P4-04 governance checks
+
+当前Task report必须从Diff base `3563bb236ce7b2c01794485110d4945a6e265105`发现唯一TASK-P4-04 owner，核对exact allow-list、P4-02/03=`done`、P4 active/P4-04 in_progress、188 Markdown、30 roots/rows、61 Test IDs、15 OPEN、16 SIM assumptions、17 risks和71 Tasks。提交前报告已得到54 working-tree paths、九个Impact Rules、27/27 expected/observed documents、19/19 checks与0 issues；machine report绑定Task/base并为8/8、`issues=[]`，forbidden tracked/untracked为0且冻结Git object逐项一致。Implementation/closure provider前不得把local结果升级为done。
+
+
 ## TASK-P4-03 governance checks
 
 当前Task report必须从不可变Diff base `7b9bfc3069de5d3738e5cc5827d27d197ed3d226`发现TASK-P4-03唯一owner，校验逐字allow-list、TASK-P4-02=`done`、P4 active/下一Task planned、188 Markdown、30 roots/rows、61 Test IDs、15 OPEN、16 SIM assumptions、17 risks、71 Tasks以及实际六个Impact Rules。新machine report必须绑定TASK/base、revision `0005`、9/9 checks、`issues=[]`；CI contract逐字要求`P4 replan event persistence evidence`及其artifact路径。Implementation artifact `9639720666`已精确复现52 committed/0 working paths、六个Impact Rules、21/21 expected/observed documents、19/19 checks、0 issues与上述治理计数，因此本closure把Task标为`done`；closure artifact仍必须与其exact SHA、同一changed-path union、checks和issues逐项一致。

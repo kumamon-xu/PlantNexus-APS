@@ -11,6 +11,11 @@ last_reviewed: 2026-08-27
 
 # PlantNexus APS 文档中心
 
+## TASK-P4-04 implementation boundary（provider pending）
+
+TASK-P4-04从closure SHA `3563bb236ce7b2c01794485110d4945a6e265105`冻结范围，现形成Simulation-only ExecutionEvent接收、连续prefix事实投影、new immutable Snapshot/checkpoint/audit及Urgent Demand标准Import复用。本地机器报告覆盖11个event type、4类拒绝、exact replay和故障注入原子回滚并为8/8 PASS；focused `12 passed`、完整Backend `654 passed`、Frontend 67 Vitest与三轮各12/12 Chromium、全部历史machine/P2/P3 Gate、SCA/license、Compose及双build均PASS。Implementation exact provider未完成，因此Task保持`in_progress`。Schema set仍为`2.8.0`，migration head仍为`0005`，dependency/state pair不变；P4-05+、P5与Production均未启动。
+
+
 ## TASK-P4-03 persistence completion boundary
 
 TASK-P4-03已在`7b9bfc3069de5d3738e5cc5827d27d197ed3d226`上独立激活。Additive migration `0005_replan_event_persistence`与plane-scoped repositories形成Simulation-only ledger/checkpoint/request/attempt/result-reference/audit storage primitive；本地machine 9/9、643 Backend、67 Vitest、三轮各12/12 Chromium、双Gate和52/6/19/0治理均PASS。Implementation `60f8e8900ecab60f0d64311912ae27f09a4d002f`的exact required provider及artifact `9639720666`已下载复验，本evidence-only closure据此把Task标为`done`；closure自身仍须post-push exact provider复验。Schema set仍为`2.8.0`且九份P4 carrier bytes、全部state pairs和dependency lock不变。P4-04 projection、P4-06 ChangeReport生成、P4-08 new DRAFT、P4-09 Simulator、P5及Production均未启动。
@@ -21,7 +26,7 @@ TASK-P4-02已获单独授权并以`4026597ab1015b5ea3a89d241f0d12b5b481dee3`为�
 
 ## P4 activation and planning baseline
 
-用户于2026-08-27在P3 Exit report/manifest=`READY`、`blocking_gaps=[]`且两个精确提交provider均验证后批准P3→P4。P3现为`completed`，P4为`active`；TASK-P4-00～03为`done`，P4-04～15保持`planned`，P4-15是唯一最后独立Exit Audit。当前不形成P4-04+业务行为、P5能力或Production readiness/authority/external/deployment/capacity/SLA。
+用户于2026-08-27在P3 Exit report/manifest=`READY`、`blocking_gaps=[]`且两个精确提交provider均验证后批准P3→P4。P3现为`completed`，P4为`active`；TASK-P4-00～03为`done`，P4-04已按新的独立授权进入`in_progress`且provider pending，P4-05～15保持`planned`，P4-15是唯一最后独立Exit Audit。当前不形成P4-05+、P5或Production readiness/authority/external/deployment/capacity/SLA。
 
 ## P3 Exit audit status
 
@@ -85,7 +90,7 @@ TASK-P4-02已获单独授权并以`4026597ab1015b5ea3a89d241f0d12b5b481dee3`为�
 
 ## 当前范围
 
-当前阶段为P4。P0～P3 Milestone均为`completed`；TASK-P3-00～17全部`done`且P3 Exit双提交provider已闭环。TASK-P4-00～03现为`done`，P4-04～15为`planned`成员；P4-04需要新的明确授权，P4-15最终独立审计也不自动进入P5或Production。详见`current_phase.md`。
+当前阶段为P4。P0～P3 Milestone均为`completed`；TASK-P3-00～17全部`done`且P3 Exit双提交provider已闭环。TASK-P4-00～03现为`done`，P4-04已获授权且为`in_progress`，P4-05～15为`planned`成员；P4-15最终独立审计也不自动进入P5或Production。详见`current_phase.md`。
 
 P3已形成的顺序保持合同/ADR→Schema→persistence→validated DRAFT→read models→edit/lock→approval/reject→idempotent publish→ExportJob→API→Frontend/E2E→vertical Gate。批准的末段顺序为TASK-P3-15治理支持→TASK-P3-16本地化→TASK-P3-17独立Exit Audit；P3-16现已完成实现provider复验与文档closure，下一项仍须另行授权。展示术语规范见[`frontend/official-zh-cn-terminology-map.md`](frontend/official-zh-cn-terminology-map.md)，它不改变英文机器合同。
 

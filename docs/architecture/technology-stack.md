@@ -11,6 +11,11 @@ last_reviewed: 2026-08-27
 
 # 推荐技术栈与锁定规则
 
+## TASK-P4-04 stack review
+
+实现复用已锁定Python 3.12、SQLAlchemy 2.0.43、Alembic 1.16.5、PyYAML及既有Hypothesis/Pytest/Ruff/Pyright；`pyproject.toml`和`uv.lock`字节保持冻结。SQLite仅用于migration/transaction correctness和故障注入，不代表Production database selection、concurrency、capacity或SLA。没有新增runtime/dev/frontend依赖，也未触碰OR-Tools。
+
+
 ## TASK-P4-03 stack review
 
 实现只使用现有exact-locked Python 3.12、SQLAlchemy与Alembic；`pyproject.toml`、`uv.lock`及全部dependency pin逐字不变。`0005_replan_event_persistence`提供SQLite test DDL与PostgreSQL-compatible table/trigger DDL，但本Task只执行SQLite证据，未证明PostgreSQL deployment、concurrency、backup/restore、performance或capacity。

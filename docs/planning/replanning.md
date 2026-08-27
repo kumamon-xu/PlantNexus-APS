@@ -11,6 +11,11 @@ last_reviewed: 2026-08-27
 
 # 动态重排设计合同
 
+## TASK-P4-04 fact projection slice
+
+P4-04把已持久化ExecutionEvent连续prefix解释为effective canonical facts并生成new immutable Snapshot/checkpoint；它只完成Replan链的事实准备阶段。Same input可byte-exact replay，gap/late/conflict/stale/terminal regression/cross-plane均fail closed，错误事实只能由后续补偿event和新Snapshot纠正，禁止改写ledger或历史Snapshot。Freeze resolution、OBJ-002、ReplanRequest、lexicographic solve、fresh Validator、ChangeReport和new DRAFT仍未执行。
+
+
 ## TASK-P4-03 persistence slice
 
 P4-03只把P4-02 carrier落入plane-scoped durable primitives：ExecutionEvent按authority/source stream/version/event ID、position与canonical fingerprint append/exact replay；projection checkpoint只通过strict CAS前进；ReplanRequest必须先引用已持久化checkpoint及同一有序ledger事件；attempt/result继续引用PlanningRun既有状态，ReplanRequest自身无状态机；audit为versioned append-only record。Caller可在单一事务中组合这些原语并在失败时完整rollback。

@@ -11,6 +11,11 @@ last_reviewed: 2026-08-27
 
 # Operations 索引与形成边界
 
+## TASK-P4-04 operations boundary
+
+本Task新增可运行的Simulation-only event/projection machine evidence，但没有形成Production Runbook、服务部署、event consumer daemon、queue/lease/retry scanner、dead-letter、outbox、external adapter、backup/restore或on-call流程。可操作的回滚边界仅为停用入口、保留ledger，并以补偿event+new Snapshot纠正；不可删除或改写历史。
+
+
 ## TASK-P4-03 persistence operations boundary
 
 新增`0005`与repository/machine-check只在本地及required CI的临时SQLite执行，验证append/exact replay、CAS、transaction rollback、plane default-deny和populated downgrade/re-upgrade。没有新增常驻service、queue、worker、secret、deployment、external adapter、Runbook或on-call；PostgreSQL并发、backup/restore、capacity/SLA与Production readiness仍未形成。

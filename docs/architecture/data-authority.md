@@ -11,6 +11,11 @@ last_reviewed: 2026-08-26
 
 # 数据权威边界
 
+## TASK-P4-04 authority projection
+
+只有`AUTHORIZED_SIMULATION_SOURCE`且plane/factory/planning scope/authority/stream/version完全匹配的ExecutionEvent可进入本projector。Source position而非received time决定顺序，完整prefix fingerprint与authority ID进入Snapshot provenance；ledger继续保存原event bytes。Urgent canonical records的authority只能来自同一标准Import/Validation链。未配置真实MES/ERP source、Production binding、field authority或cross-plane promotion；Production继续default-deny。
+
+
 ## TASK-P4-03 authority persistence
 
 每个factory/planning scope只按carrier声明的`authority_id + stream_id + stream_version + source_position`写入唯一ExecutionEvent ledger位置；同position不同bytes、同ID不同bytes、跨plane或Production-shaped write均fail closed。Repository只保存authority decision与exact carrier，不判断payload真伪或成为第二事实权威；projection checkpoint只记录已原子提交的prefix/fact artifact reference，业务事实权威仍由P4-04建立。

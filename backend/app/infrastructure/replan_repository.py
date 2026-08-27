@@ -85,24 +85,39 @@ class SqlAlchemyProjectionCheckpointRepository:
     def data_plane(self) -> WorkspaceDataPlane:
         return self._data_plane
 
-    def _find(
-        self, connection: Connection, checkpoint: ProjectionCheckpoint
+    def _find_scope(
+        self,
+        connection: Connection,
+        *,
+        factory_id: str,
+        planning_scope_id: str,
+        authority_id: str,
+        stream_id: str,
+        stream_version: str,
     ) -> RowMapping | None:
         row = connection.execute(
             select(REPLAN_PROJECTION_CHECKPOINTS).where(
-                REPLAN_PROJECTION_CHECKPOINTS.c.data_plane
-                == self._data_plane.value,
-                REPLAN_PROJECTION_CHECKPOINTS.c.factory_id == checkpoint.factory_id,
-                REPLAN_PROJECTION_CHECKPOINTS.c.planning_scope_id
-                == checkpoint.planning_scope_id,
-                REPLAN_PROJECTION_CHECKPOINTS.c.authority_id
-                == checkpoint.authority_id,
-                REPLAN_PROJECTION_CHECKPOINTS.c.stream_id == checkpoint.stream_id,
-                REPLAN_PROJECTION_CHECKPOINTS.c.stream_version
-                == checkpoint.stream_version,
+                REPLAN_PROJECTION_CHECKPOINTS.c.data_plane == self._data_plane.value,
+                REPLAN_PROJECTION_CHECKPOINTS.c.factory_id == factory_id,
+                REPLAN_PROJECTION_CHECKPOINTS.c.planning_scope_id == planning_scope_id,
+                REPLAN_PROJECTION_CHECKPOINTS.c.authority_id == authority_id,
+                REPLAN_PROJECTION_CHECKPOINTS.c.stream_id == stream_id,
+                REPLAN_PROJECTION_CHECKPOINTS.c.stream_version == stream_version,
             )
         ).first()
         return row._mapping if row is not None else None
+
+    def _find(
+        self, connection: Connection, checkpoint: ProjectionCheckpoint
+    ) -> RowMapping | None:
+        return self._find_scope(
+            connection,
+            factory_id=checkpoint.factory_id,
+            planning_scope_id=checkpoint.planning_scope_id,
+            authority_id=checkpoint.authority_id,
+            stream_id=checkpoint.stream_id,
+            stream_version=checkpoint.stream_version,
+        )
 
     def _load(self, row: RowMapping) -> StoredProjectionCheckpoint:
         document = load_internal_record(
@@ -115,9 +130,7 @@ class SqlAlchemyProjectionCheckpointRepository:
             planning_scope_id=require_text(
                 document.get("planning_scope_id"), "planning_scope_id"
             ),
-            authority_id=require_text(
-                document.get("authority_id"), "authority_id"
-            ),
+            authority_id=require_text(document.get("authority_id"), "authority_id"),
             stream_id=require_text(document.get("stream_id"), "stream_id"),
             stream_version=require_text(
                 document.get("stream_version"), "stream_version"
@@ -175,7 +188,9 @@ class SqlAlchemyProjectionCheckpointRepository:
                 message="stored fact checkpoint reference failed integrity verification",
             )
         revision = require_integer(row["state_revision"], "state_revision", minimum=0)
-        return StoredProjectionCheckpoint(checkpoint=checkpoint, state_revision=revision)
+        return StoredProjectionCheckpoint(
+            checkpoint=checkpoint, state_revision=revision
+        )
 
     def put_initial_in_transaction(
         self,
@@ -252,9 +267,7 @@ class SqlAlchemyProjectionCheckpointRepository:
         checkpoint: ProjectionCheckpoint,
     ) -> CheckpointWriteResult:
         require_integer(expected_position, "expected_position", minimum=1)
-        require_integer(
-            expected_state_revision, "expected_state_revision", minimum=0
-        )
+        require_integer(expected_state_revision, "expected_state_revision", minimum=0)
         canonical = validate_projection_checkpoint(checkpoint)
         if self._data_plane is not WorkspaceDataPlane.SIMULATION:
             reject(
@@ -295,13 +308,11 @@ class SqlAlchemyProjectionCheckpointRepository:
         result = connection.execute(
             update(REPLAN_PROJECTION_CHECKPOINTS)
             .where(
-                REPLAN_PROJECTION_CHECKPOINTS.c.data_plane
-                == self._data_plane.value,
+                REPLAN_PROJECTION_CHECKPOINTS.c.data_plane == self._data_plane.value,
                 REPLAN_PROJECTION_CHECKPOINTS.c.factory_id == checkpoint.factory_id,
                 REPLAN_PROJECTION_CHECKPOINTS.c.planning_scope_id
                 == checkpoint.planning_scope_id,
-                REPLAN_PROJECTION_CHECKPOINTS.c.authority_id
-                == checkpoint.authority_id,
+                REPLAN_PROJECTION_CHECKPOINTS.c.authority_id == checkpoint.authority_id,
                 REPLAN_PROJECTION_CHECKPOINTS.c.stream_id == checkpoint.stream_id,
                 REPLAN_PROJECTION_CHECKPOINTS.c.stream_version
                 == checkpoint.stream_version,
@@ -371,7 +382,9 @@ class SqlAlchemyProjectionCheckpointRepository:
                 message="projection checkpoint transaction failed",
             )
 
-    def get(self, checkpoint: ProjectionCheckpoint) -> StoredProjectionCheckpoint | None:
+    def get(
+        self, checkpoint: ProjectionCheckpoint
+    ) -> StoredProjectionCheckpoint | None:
         try:
             with self._engine.connect() as connection:
                 row = self._find(connection, checkpoint)
@@ -384,6 +397,36 @@ class SqlAlchemyProjectionCheckpointRepository:
                 field="repository.get",
                 message="projection checkpoint query failed",
             )
+
+    def get_scope_in_transaction(
+        self,
+        connection: Connection,
+        *,
+        factory_id: str,
+        planning_scope_id: str,
+        authority_id: str,
+        stream_id: str,
+        stream_version: str,
+    ) -> StoredProjectionCheckpoint | None:
+        """Read a checkpoint under the caller's atomic projection boundary."""
+
+        for field, value in (
+            ("factory_id", factory_id),
+            ("planning_scope_id", planning_scope_id),
+            ("authority_id", authority_id),
+            ("stream_id", stream_id),
+            ("stream_version", stream_version),
+        ):
+            require_text(value, field)
+        row = self._find_scope(
+            connection,
+            factory_id=factory_id,
+            planning_scope_id=planning_scope_id,
+            authority_id=authority_id,
+            stream_id=stream_id,
+            stream_version=stream_version,
+        )
+        return self._load(row) if row is not None else None
 
     def delete(self, *_args: object, **_kwargs: object) -> NoReturn:
         reject(
@@ -452,9 +495,9 @@ class SqlAlchemyReplanRequestRepository:
             (fact.get("fingerprint"), row["fact_checkpoint_fingerprint"]),
             (base.get("schedule_version_id"), row["base_schedule_version_id"]),
         )
-        if any(document.get(field) != value for field, value in expected.items()) or any(
-            actual != value for actual, value in nested
-        ):
+        if any(
+            document.get(field) != value for field, value in expected.items()
+        ) or any(actual != value for actual, value in nested):
             reject(
                 PersistenceFailure.PERSISTENCE_FAILED,
                 field="stored.replan_request",
@@ -485,8 +528,7 @@ class SqlAlchemyReplanRequestRepository:
     ) -> None:
         row = connection.execute(
             select(REPLAN_PROJECTION_CHECKPOINTS).where(
-                REPLAN_PROJECTION_CHECKPOINTS.c.data_plane
-                == self._data_plane.value,
+                REPLAN_PROJECTION_CHECKPOINTS.c.data_plane == self._data_plane.value,
                 REPLAN_PROJECTION_CHECKPOINTS.c.factory_id
                 == candidate.get("factory_id"),
                 REPLAN_PROJECTION_CHECKPOINTS.c.planning_scope_id
@@ -763,8 +805,7 @@ class SqlAlchemyReplanRequestRepository:
                 rows = connection.execute(
                     select(REPLAN_REQUEST_EVENTS.c.event_id)
                     .where(
-                        REPLAN_REQUEST_EVENTS.c.data_plane
-                        == self._data_plane.value,
+                        REPLAN_REQUEST_EVENTS.c.data_plane == self._data_plane.value,
                         REPLAN_REQUEST_EVENTS.c.request_id == request_id,
                     )
                     .order_by(REPLAN_REQUEST_EVENTS.c.event_ordinal)
@@ -819,10 +860,7 @@ class SqlAlchemyReplanLineageRepository:
                 (
                     (
                         (REPLAN_ATTEMPTS.c.request_id == attempt.request_id)
-                        & (
-                            REPLAN_ATTEMPTS.c.attempt_number
-                            == attempt.attempt_number
-                        )
+                        & (REPLAN_ATTEMPTS.c.attempt_number == attempt.attempt_number)
                     )
                     | (REPLAN_ATTEMPTS.c.planning_run_id == attempt.planning_run_id)
                     | (
@@ -975,9 +1013,7 @@ class SqlAlchemyReplanLineageRepository:
             )
         return DocumentWriteResult(document=attempt.as_document(), replayed=False)
 
-    def append_attempt(
-        self, attempt: ReplanAttemptReference
-    ) -> DocumentWriteResult:
+    def append_attempt(self, attempt: ReplanAttemptReference) -> DocumentWriteResult:
         try:
             with self._engine.begin() as connection:
                 return self.append_attempt_in_transaction(connection, attempt)
@@ -1152,9 +1188,7 @@ class SqlAlchemyReplanLineageRepository:
                             validation.artifact_id if validation is not None else None
                         ),
                         validation_report_fingerprint=(
-                            validation.fingerprint
-                            if validation is not None
-                            else None
+                            validation.fingerprint if validation is not None else None
                         ),
                         new_schedule_version_id=(
                             schedule.artifact_id if schedule is not None else None
@@ -1346,9 +1380,7 @@ class SqlAlchemyReplanAuditRepository:
                         aggregate_id=record.aggregate_id,
                         correlation_id=record.correlation_id,
                         idempotency_scope=record.idempotency_scope,
-                        idempotency_key_reference=(
-                            record.idempotency_key_reference
-                        ),
+                        idempotency_key_reference=(record.idempotency_key_reference),
                         request_fingerprint=record.request_fingerprint,
                         occurred_at_utc=record.occurred_at_utc,
                         record_json=canonical,
@@ -1395,8 +1427,7 @@ class SqlAlchemyReplanAuditRepository:
                 rows = connection.execute(
                     select(REPLAN_AUDIT_RECORDS)
                     .where(
-                        REPLAN_AUDIT_RECORDS.c.data_plane
-                        == self._data_plane.value,
+                        REPLAN_AUDIT_RECORDS.c.data_plane == self._data_plane.value,
                         REPLAN_AUDIT_RECORDS.c.aggregate_type == aggregate_type,
                         REPLAN_AUDIT_RECORDS.c.aggregate_id == aggregate_id,
                     )

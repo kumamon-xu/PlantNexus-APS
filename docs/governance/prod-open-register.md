@@ -12,6 +12,11 @@ registry_version: 1.0.0
 
 # PROD_OPEN 注册表
 
+## TASK-P4-04 projection review
+
+Simulation-only event authority、standard urgent chain和SQLite transaction evidence不提供真实MES/ERP source、Production field authority、identity/RBAC、freeze/priority、PostgreSQL topology、external publish/deployment或capacity/SLA closure。OPEN-001～015全部继续`OPEN`，数量与`registry_version=1.0.0`不变；本Task不得用projector默认关闭任何未知项。
+
+
 ## TASK-P4-03 persistence review
 
 `0005`与SQLite repository evidence只证明Simulation/development中的数据形状、事务、CAS、回滚和default-deny；不提供真实Factory/event source/identity、PostgreSQL topology/credential/backup、external delivery、Production freeze/priority、capacity或SLA closure record。OPEN-001～015全部继续`OPEN`，状态、数量与`registry_version=1.0.0`不变。

@@ -30,6 +30,7 @@ from app.snapshots.contracts import (
     SnapshotErrorCode,
     SnapshotWriteResult,
 )
+from app.infrastructure.workspace_persistence import integrity_savepoint
 
 _SHA256 = re.compile(r"sha256:[0-9a-f]{64}")
 _METADATA = MetaData()
@@ -225,34 +226,11 @@ class SqlAlchemySnapshotRepository:
         )
 
     def put(self, snapshot: ImmutablePlanningSnapshot) -> SnapshotWriteResult:
-        self._assert_plane(snapshot)
-        document = snapshot.document
         try:
             with self._engine.begin() as connection:
-                existing = self._find_by_hash(connection, snapshot.snapshot_hash)
-                if existing is None:
-                    existing = self._find_by_id(connection, snapshot.snapshot_id)
-                if existing is not None:
-                    return self._resolve_existing(existing, snapshot)
-                connection.execute(
-                    insert(_SNAPSHOTS).values(
-                        snapshot_hash=snapshot.snapshot_hash,
-                        snapshot_id=snapshot.snapshot_id,
-                        data_plane=snapshot.data_plane.value,
-                        snapshot_version=document["snapshot_version"],
-                        canonicalization_version=document[
-                            "canonicalization_version"
-                        ],
-                        cutoff_at_utc=document["cutoff_at_utc"],
-                        canonical_sha256=sha256(snapshot.canonical_bytes).hexdigest(),
-                        canonical_json=snapshot.canonical_bytes,
-                    )
-                )
-                return SnapshotWriteResult(snapshot=snapshot, replayed=False)
+                return self.put_in_transaction(connection, snapshot)
         except SnapshotError:
             raise
-        except IntegrityError:
-            return self._resolve_integrity_collision(snapshot)
         except SQLAlchemyError:
             _reject(
                 SnapshotErrorCode.SNAPSHOT_PERSISTENCE_FAILED,
@@ -260,6 +238,74 @@ class SqlAlchemySnapshotRepository:
                 expected_contract="atomic insert or exact replay",
                 message="Snapshot transaction failed",
             )
+
+    def put_in_transaction(
+        self,
+        connection: Connection,
+        snapshot: ImmutablePlanningSnapshot,
+    ) -> SnapshotWriteResult:
+        """Insert/replay a Snapshot on the caller's projection transaction."""
+
+        self._assert_plane(snapshot)
+        document = snapshot.document
+        existing = self._find_by_hash(connection, snapshot.snapshot_hash)
+        if existing is None:
+            existing = self._find_by_id(connection, snapshot.snapshot_id)
+        if existing is not None:
+            return self._resolve_existing(existing, snapshot)
+        try:
+            with integrity_savepoint(connection):
+                connection.execute(
+                    insert(_SNAPSHOTS).values(
+                        snapshot_hash=snapshot.snapshot_hash,
+                        snapshot_id=snapshot.snapshot_id,
+                        data_plane=snapshot.data_plane.value,
+                        snapshot_version=document["snapshot_version"],
+                        canonicalization_version=document["canonicalization_version"],
+                        cutoff_at_utc=document["cutoff_at_utc"],
+                        canonical_sha256=sha256(snapshot.canonical_bytes).hexdigest(),
+                        canonical_json=snapshot.canonical_bytes,
+                    )
+                )
+        except IntegrityError:
+            existing = self._find_by_hash(connection, snapshot.snapshot_hash)
+            if existing is None:
+                existing = self._find_by_id(connection, snapshot.snapshot_id)
+            if existing is not None:
+                return self._resolve_existing(existing, snapshot)
+            _reject(
+                SnapshotErrorCode.SNAPSHOT_PERSISTENCE_FAILED,
+                field="repository.put",
+                expected_contract="atomic insert or exact replay",
+                message="Snapshot insert lost an unresolved identity race",
+            )
+        return SnapshotWriteResult(snapshot=snapshot, replayed=False)
+
+    def get_by_id_in_transaction(
+        self, connection: Connection, snapshot_id: str
+    ) -> ImmutablePlanningSnapshot | None:
+        if not isinstance(snapshot_id, str) or not snapshot_id:
+            _reject(
+                SnapshotErrorCode.INVALID_SNAPSHOT_INPUT,
+                field="snapshot_id",
+                expected_contract="non-empty Snapshot ID",
+                message="Snapshot ID is invalid",
+            )
+        row = self._find_by_id(connection, snapshot_id)
+        return self._load(row) if row is not None else None
+
+    def get_by_hash_in_transaction(
+        self, connection: Connection, snapshot_hash: str
+    ) -> ImmutablePlanningSnapshot | None:
+        if _SHA256.fullmatch(snapshot_hash) is None:
+            _reject(
+                SnapshotErrorCode.INVALID_SNAPSHOT_INPUT,
+                field="snapshot_hash",
+                expected_contract="sha256:<64 lowercase hex>",
+                message="Snapshot hash is invalid",
+            )
+        row = self._find_by_hash(connection, snapshot_hash)
+        return self._load(row) if row is not None else None
 
     def get_by_id(self, snapshot_id: str) -> ImmutablePlanningSnapshot | None:
         if not isinstance(snapshot_id, str) or not snapshot_id:

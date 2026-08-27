@@ -11,6 +11,11 @@ last_reviewed: 2026-08-27
 
 # P0 Worker Reliability 与 Idempotency
 
+## TASK-P4-04 projection reliability
+
+接收与投影被刻意拆成两个事务：ledger+audit先durable，随后完整prefix在单一事务提交Snapshot+checkpoint+audit。Event ID/position与canonical bytes提供append exact replay，checkpoint使用position+revision CAS；响应丢失后以同一predecessor重放时，service重新投影并只有在bytes等于checkpoint Snapshot时返回exact replay。SQLite故障注入覆盖末端audit失败的零partial write。Worker lease/retry/backoff/dead-letter/outbox与distributed exactly-once仍未形成。
+
+
 ## TASK-P4-03 transaction primitive
 
 P4-03形成ledger/request/attempt/result/audit的append-or-exact-replay与checkpoint compare-and-swap；same identity + same canonical bytes返回既有记录，different bytes、position collision、stale/self/backward checkpoint全部fail closed。Repository暴露caller-owned transaction入口并用失败注入证明整批rollback。尚未形成event consumer、projector worker、lease/scanner、retry/backoff/dead-letter、outbox或external exactly-once；这些不能从storage primitive推断。

@@ -11,6 +11,11 @@ last_reviewed: 2026-08-25
 
 # APS 领域模型
 
+## TASK-P4-04 fact projection aggregate boundary
+
+ExecutionEvent仍是append-only observation；它通过authority-scoped ordered stream投影到新的PlanningSnapshot，而不是修改旧Snapshot或ScheduleVersion。ProjectionCheckpoint引用最新Snapshot及完整prefix fingerprint，只承担operational CAS。Execution fact、resource/calendar availability、material readiness、duration和operation lock为Snapshot内effective canonical facts；urgent priority作为event-derived fact随结果返回并由event ledger保留source。ReplanRequest、PlanningProblem/Solution和ScheduleVersion不在本Task创建。
+
+
 ## TASK-P4-03 durable aggregate boundary
 
 ExecutionEvent ledger与immutable ReplanRequest现具有durable repository identity；projection checkpoint是单authority stream的operational CAS状态，attempt/result是ReplanRequest到既有PlanningRun的append-only reference，transaction audit保存持久化动作。它们不构成新的ReplanRequest业务状态机，也不把event payload、fact checkpoint、ChangeReport或ScheduleVersion内容解释权移入Infrastructure。P4-04/06/08仍分别拥有fact/Snapshot、ChangeReport生成和new DRAFT应用。

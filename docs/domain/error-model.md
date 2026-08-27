@@ -11,6 +11,11 @@ last_reviewed: 2026-08-27
 
 # 错误与求解状态模型
 
+## TASK-P4-04 projection errors
+
+事实入口提供稳定且脱敏的拒绝类：`INVALID_EVENT`、`AUTHORITY_MISMATCH`、`ORDERING_VIOLATION`、`INVALID_REFERENCE`、`FACT_CONFLICT`、`TERMINAL_REGRESSION`、`URGENT_IMPORT_REQUIRED`、`URGENT_IMPORT_MISMATCH`、`STALE_SNAPSHOT`与`PERSISTENCE_FAILED`。错误只暴露reason/field/contract-safe message，不含raw payload或数据库细节；任何错误回滚当前事务且不映射为INFEASIBLE。Solver status/error语义未改变。
+
+
 ## TASK-P4-02 fail-closed semantics
 
 纯合同校验以稳定P4 contract reason拒绝unknown version/type/state/authority、cross-plane、stale base、ordering gap、fingerprint/lineage/completeness漂移，且不产生业务副作用。既有error-code-registry.v2逐字不变；P4-02不新增API error或持久化错误。SolverReport v2保持UNKNOWN→NO_SOLUTION_WITHIN_LIMIT、INFEASIBLE→INFEASIBLE的诚实区分，禁止partial result冒充成功。

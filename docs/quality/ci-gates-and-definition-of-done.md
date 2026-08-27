@@ -11,6 +11,11 @@ last_reviewed: 2026-08-27
 
 # CI Gate 与 Definition of Done
 
+## TASK-P4-04 required evidence
+
+Required `validate`新增不可跳过的`P4 ExecutionEvent fact projection evidence`步骤，执行`app.application.execution_fact_projection_check`并上传`ci-p4-execution-fact-projection.json`。PASS报告必须绑定TASK-P4-04、Diff base `3563bb236ce7b2c01794485110d4945a6e265105`、exact `PLANTNEXUS_CODE_COMMIT`、11 positive event vectors、4 negative vectors、standard urgent chain、atomic rollback、8/8 checks与`issues=[]`。Required context仍仅为`validate`且预期GitHub Actions app为`15368`；local PASS不替代provider。
+
+
 ## TASK-P4-03 required evidence
 
 现有required `validate`增加不可跳过的`P4 replan event persistence evidence`步骤，执行`app.infrastructure.replan_persistence_check`并上传`ci-p4-replan-persistence.json`。成功报告必须绑定TASK-P4-03、Diff base `7b9bfc3069de5d3738e5cc5827d27d197ed3d226`、exact code commit、revision `0005`、7 tables、9/9 checks、8 DB guard rejects、1 Production reject、P3 row retention和`issues=[]`。Workflow权限、required context与GitHub Actions app `15368`不变。

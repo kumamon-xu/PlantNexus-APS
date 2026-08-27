@@ -11,6 +11,11 @@ last_reviewed: 2026-08-27
 
 # 配置、环境与数据隔离
 
+## TASK-P4-04 isolation boundary
+
+Service与四个repository实例固定为Simulation data plane；event本身还须`data_plane=SIMULATION`、`synthetic=true`、`production_binding=false`并携带完整synthetic provenance。Urgent staging同样必须为Simulation。测试数据库和SQLite原子性证据只属于development；未配置Production database/event source/credential/tenant promotion，未形成PostgreSQL并发、HA、backup或capacity结论。
+
+
 ## TASK-P4-03 isolation boundary
 
 新表和repository当前只接受`data_plane=SIMULATION`且P4 carrier继续要求`production_binding=false`；所有主键、唯一约束、查询和FK均包含plane。PRODUCTION repository实例只能得到空的plane-scoped read，并对write/default/cross-plane reference fail closed；本地SQLite证明逻辑隔离与rollback，不代表独立Production database、HA或容量。

@@ -11,6 +11,13 @@ last_reviewed: 2026-08-24
 
 # 执行事实、锁定与重排边界
 
+## TASK-P4-04 formed execution-fact projection
+
+现已形成Simulation-only projector：OPERATION_STARTED/COMPLETED与PROCESSING_REMAINING_CHANGED生成单一effective execution fact并保护COMPLETED终态；MACHINE_UNAVAILABLE/RECOVERED更新resource与calendar interval；MATERIAL_DELAYED/READY更新order及expanded instance readiness；PROCESSING_DURATION_CHANGED更新未完成operation的resource options；LOCK_CREATED/RELEASED维护effective lock与instance lock refs；URGENT_DEMAND_RECEIVED只合并标准Import新增lineage并保留显式priority source。完整prefix顺序、引用、冲突和事实时间均fail closed。
+
+这些事实只形成new Snapshot输入。Freeze/effective HARD projection、SOFT penalty、ReplanRequest、OBJ-002、Solver/Validator、ChangeReport与new DRAFT仍分别属于P4-05～08。
+
+
 ## TASK-P4-01 accepted fact/replan boundary
 
 ADR-0013～0015现已在任何P4 machine carrier或实现前固定：ExecutionEvent是唯一动态事实入口；source position而非received-at决定顺序；ledger接收与fact→new Snapshot→ReplanRequest投影分成两个可重放事务；每个有效事实变化只创建新Snapshot，不改旧事实或Version。ReplanRequest是immutable intent/result lineage且不拥有状态机，attempt继续由PlanningRun承载。

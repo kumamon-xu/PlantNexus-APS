@@ -11,6 +11,14 @@ last_reviewed: 2026-08-25
 
 # 术语表
 
+## TASK-P4-04 formed terms
+
+- **Event ingress transaction**：验证一个ExecutionEvent后，仅原子append ledger记录与对应audit；不解释事实。
+- **Fact projection transaction**：消费同一authority stream从position 1开始的完整连续prefix，在pure projector外原子提交new immutable Snapshot、checkpoint和audit。
+- **Urgent Demand standard ingress**：用Raw Staging+MappingProfile重走Normalization/Data Validation/Expansion/Snapshot的唯一合法urgent数据路径；不是private canonical shortcut。
+- **Projection checkpoint**：保存已消费position、prefix fingerprint与当前Snapshot reference的operational CAS，不是业务状态机。
+
+
 ## TASK-P4-02 machine terms
 
 - **ExecutionEvent v1**：带显式Simulation plane、authority/source stream、单调position、occurred/received时间、typed payload与canonical identity的不可变事件carrier；不是已接入的外部事件。

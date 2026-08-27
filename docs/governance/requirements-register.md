@@ -12,6 +12,11 @@ registry_version: 1.0.0
 
 # 核心需求注册表
 
+## TASK-P4-04 projection allocation
+
+REQ-002/003/008/009/013现连接Simulation ExecutionEvent strict ingress、authority/source-position fact projection、new immutable Snapshot/checkpoint/audit、Urgent Standard Import与机器报告。本地11-event/4-negative/standard-chain/rollback证据为`LOCAL_PASS_PROVIDER_PENDING`，root requirement lifecycle继续`ALLOCATED`；未形成ReplanRequest/freeze/Solver/ChangeReport/ScheduleVersion、P5或Production requirement closure。
+
+
 ## TASK-P4-03 persistence allocation
 
 REQ-007/008/009/013现连接TASK-P4-03的ExecutionEvent ledger、immutable ReplanRequest/attempt/result references、projection checkpoint CAS、append-only audit、`0005` migration与`p4-replan-persistence-report.v1`。Implementation `60f8e8900ecab60f0d64311912ae27f09a4d002f` / artifact `9639720666`已验证exact replay/conflict、lineage、transaction rollback、plane default-deny、P3 row retention与治理edge，使该slice为`PROVIDER_VERIFIED`并允许本closure把Task标为`done`。该edge不形成事实投影、新Snapshot、freeze/OBJ-002、ChangeReport计算、Replan solve/apply或Simulator；所有Requirement root继续`ALLOCATED`，registry格式不变。

@@ -12,6 +12,11 @@ registry_version: 1.0.0
 
 # NFR 与工程需求注册表
 
+## TASK-P4-04 projection allocation
+
+NFR-COR/DET/TRC/ISO/REL/SEC与ENG-ARCH/ERR/VER现连接pure deterministic projector、canonical/hash lineage、strict plane/authority、two-transaction atomicity、exact replay、sanitized error和frozen version inputs。Focused/machine证据为local PASS/provider pending，故root lifecycle保持`ALLOCATED`。没有性能baseline更新、Production concurrency/HA/security deployment或capacity/SLA结论。
+
+
 ## TASK-P4-03 persistence allocation
 
 NFR-DET/TRC/ISO/REL/SEC/OBS与ENG-ARCH/ERR/VER/LOG现连接canonical bytes/fingerprint、append-only lineage、plane-scoped repositories、strict CAS/rollback、Production default-deny、versioned audit和机器报告。Implementation `60f8e8900ecab60f0d64311912ae27f09a4d002f` / artifact `9639720666`已把focused/machine/governance edge升级为`PROVIDER_VERIFIED`并允许本closure把TASK-P4-03标为`done`；SQLite正确性不能外推PostgreSQL concurrency、Production isolation deployment、HA/backup、真实security authority或capacity/SLA。全部root lifecycle继续`ALLOCATED`，dependency/lock与registry格式不变。

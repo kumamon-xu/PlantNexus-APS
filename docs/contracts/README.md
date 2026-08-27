@@ -11,6 +11,11 @@ last_reviewed: 2026-08-26
 
 # 合同文档索引
 
+## TASK-P4-04 runtime consumer boundary
+
+P4-04现以consumer-only方式解释既有`execution-event.v1`并生成既有`planning-snapshot.v2`；没有修改九份P4 Schema/sample、schema set `2.8.0`、`0005` migration或dependency。接收与投影使用P4-03 caller-owned事务primitive，Urgent Demand复用P1 Import/Validation/Expansion链；不新增wire carrier、state machine或私有业务合同。当前证据为local PASS/provider pending。
+
+
 ## TASK-P4-03 consumer boundary
 
 `0005_replan_event_persistence`现以consumer-only方式持久化P4-02的ExecutionEvent/ReplanRequest exact carrier bytes，并以versioned internal storage projection保存checkpoint、PlanningRun attempt/result reference和transaction audit。Schema set继续`2.8.0`且所有Schema/sample逐字不变；internal records不是第二套业务wire contract，不得携带event payload解释、fact projection、ChangeReport内容或ScheduleVersion application语义。

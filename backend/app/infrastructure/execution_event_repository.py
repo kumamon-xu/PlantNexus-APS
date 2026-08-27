@@ -152,7 +152,9 @@ class SqlAlchemyExecutionEventRepository:
     ) -> DocumentWriteResult:
         candidate, canonical, authority, stream = self._candidate(document)
         event_id = require_text(candidate.get("event_id"), "event_id")
-        authority_id = require_text(authority.get("authority_id"), "authority.authority_id")
+        authority_id = require_text(
+            authority.get("authority_id"), "authority.authority_id"
+        )
         stream_id = require_text(stream.get("stream_id"), "source_stream.stream_id")
         stream_version = require_text(
             stream.get("stream_version"), "source_stream.stream_version"
@@ -268,25 +270,15 @@ class SqlAlchemyExecutionEventRepository:
         stream_version: str,
         after_position: int = 0,
     ) -> tuple[dict[str, object], ...]:
-        require_text(authority_id, "authority_id")
-        require_text(stream_id, "stream_id")
-        require_text(stream_version, "stream_version")
-        require_integer(after_position, "after_position", minimum=0)
         try:
             with self._engine.connect() as connection:
-                rows = connection.execute(
-                    select(EXECUTION_EVENT_LEDGER)
-                    .where(
-                        EXECUTION_EVENT_LEDGER.c.data_plane
-                        == self._data_plane.value,
-                        EXECUTION_EVENT_LEDGER.c.authority_id == authority_id,
-                        EXECUTION_EVENT_LEDGER.c.stream_id == stream_id,
-                        EXECUTION_EVENT_LEDGER.c.stream_version == stream_version,
-                        EXECUTION_EVENT_LEDGER.c.source_position > after_position,
-                    )
-                    .order_by(EXECUTION_EVENT_LEDGER.c.source_position)
-                ).all()
-                return tuple(self._load(row._mapping) for row in rows)
+                return self.list_stream_in_transaction(
+                    connection,
+                    authority_id=authority_id,
+                    stream_id=stream_id,
+                    stream_version=stream_version,
+                    after_position=after_position,
+                )
         except WorkspacePersistenceError:
             raise
         except SQLAlchemyError:
@@ -295,6 +287,34 @@ class SqlAlchemyExecutionEventRepository:
                 field="repository.list_stream",
                 message="ExecutionEvent stream query failed",
             )
+
+    def list_stream_in_transaction(
+        self,
+        connection: Connection,
+        *,
+        authority_id: str,
+        stream_id: str,
+        stream_version: str,
+        after_position: int = 0,
+    ) -> tuple[dict[str, object], ...]:
+        """Read an ordered stream on the caller's projection transaction."""
+
+        require_text(authority_id, "authority_id")
+        require_text(stream_id, "stream_id")
+        require_text(stream_version, "stream_version")
+        require_integer(after_position, "after_position", minimum=0)
+        rows = connection.execute(
+            select(EXECUTION_EVENT_LEDGER)
+            .where(
+                EXECUTION_EVENT_LEDGER.c.data_plane == self._data_plane.value,
+                EXECUTION_EVENT_LEDGER.c.authority_id == authority_id,
+                EXECUTION_EVENT_LEDGER.c.stream_id == stream_id,
+                EXECUTION_EVENT_LEDGER.c.stream_version == stream_version,
+                EXECUTION_EVENT_LEDGER.c.source_position > after_position,
+            )
+            .order_by(EXECUTION_EVENT_LEDGER.c.source_position)
+        ).all()
+        return tuple(self._load(row._mapping) for row in rows)
 
     def update(self, *_args: object, **_kwargs: object) -> NoReturn:
         reject(

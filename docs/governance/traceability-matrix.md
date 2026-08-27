@@ -12,6 +12,11 @@ registry_version: 1.0.0
 
 # 追踪矩阵
 
+## TASK-P4-04 local projection trace slice（provider pending）
+
+`REQ-002/003/008/009/013 + NFR-COR/DET/TRC/ISO/REL/SEC + ENG-ARCH/ERR/VER → TASK-P4-04 → ExecutionEvent ledger ingress / canonical fact projector / standard urgent import / new immutable Snapshot+checkpoint+audit → TEST-EXECUTION-FACT-PROJECTION-001/TEST-SNAPSHOT-REPLAY-001/TEST-IDEMPOTENCY/TEST-PROPERTY/TEST-SIM-ISOLATION → p4-execution-fact-projection-report.v1/Task report → exact provider`。当前4 unit + 2 property + 4 integration及machine 8/8为`LOCAL_PASS_PROVIDER_PENDING`；Roots/rows仍为30/30、Test IDs仍为61且root lifecycle保持`ALLOCATED`。
+
+
 ## TASK-P4-03 provider-verified persistence trace slice
 
 `REQ-007/008/009/013 + NFR-DET/TRC/ISO/REL/SEC/OBS + ENG-ARCH/ERR/VER/LOG + SIM-ASSUMPTION-016 → TASK-P4-03 → 0005 + five plane-scoped repository surfaces → TEST-P4-PERSISTENCE-001/TEST-IDEMPOTENCY/TEST-AUDIT-TRAIL-001/TEST-STATE-TRANSITION-001/TEST-SIM-ISOLATION → p4-replan-persistence-report.v1/Task report → exact provider`。本地4 unit + 6 integration、focused组合51项、完整Backend 643项、Frontend 67项/三轮各12 Chromium及machine 9/9均通过；Implementation `60f8e8900ecab60f0d64311912ae27f09a4d002f` / artifact `9639720666`已复验52/0 paths、六个Impact Rules、19/19 checks与`issues=[]`，本closure把persistence edge升级为`PROVIDER_VERIFIED_DONE`。

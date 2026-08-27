@@ -11,6 +11,11 @@ last_reviewed: 2026-08-27
 
 # P0 工程安全边界
 
+## TASK-P4-04 security enforcement
+
+Runtime拒绝unknown/extra fields、非canonical time、authority/scope/stream不匹配、Production plane/binding、缺失synthetic provenance及跨plane urgent input；错误消息不回显raw payload/数据库细节。该default-deny只证明内部Simulation边界，不形成真实认证、RBAC、MES source trust、secret distribution、network policy、Production database isolation或approval authority。
+
+
 ## TASK-P4-03 persistence enforcement
 
 所有P4 repository在读取或写入前验证Simulation plane、factory/authority scope、contract/internal-record版本与canonical fingerprint；Production plane默认拒绝，跨plane引用、unknown version/state、stale base和不同内容重放均不得产生部分记录。数据库trigger再拒绝append-only表的UPDATE/DELETE与checkpoint的scope改写/非前进更新。该控制不形成真实identity/RBAC、MES source binding、database credential、encryption/retention策略或Production threat model。

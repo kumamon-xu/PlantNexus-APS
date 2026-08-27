@@ -11,6 +11,11 @@ last_reviewed: 2026-08-26
 
 # Provenance 与版本规则
 
+## TASK-P4-04 projection lineage
+
+New Snapshot identity继续由canonical bytes确定。Projection在`source_versions`增加projector version、predecessor Snapshot hash、event authority ID及`stream@version#position#prefix-fingerprint`；cutoff取predecessor cutoff与本次event occurrence最大值。Event identity排除receive-order影响但保留approved carrier fingerprint；exact predecessor replay须重新投影并得到checkpoint所指同一bytes/hash。既有canonicalization、Schema和record source contract均未改版。
+
+
 ## TASK-P4-03 durable provenance
 
 Ledger保存P4-02 exact canonical bytes与SHA，event identity继续排除`received_at_utc`但存储层要求同ID replay bytes完全一致，避免不同raw observation静默覆盖。Request必须绑定ordered event IDs/fingerprints、stream fingerprint与durable fact checkpoint；attempt/result/audit internal records使用固定record version和canonical fingerprint。Version/id/fingerprint任何不一致均拒绝，不以数据库行号、wall clock或`latest`重解释历史。

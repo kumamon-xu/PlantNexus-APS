@@ -18,6 +18,9 @@ from app.application.p3_gate_report import (
 from app.application.approval_decision_check import main as approval_decision_main
 from app.application.publication_check import main as publication_main
 from app.application.export_job_check import main as export_job_main
+from app.application.execution_fact_projection_check import (
+    main as execution_fact_projection_main,
+)
 from app.application.schedule_version_lifecycle_check import (
     main as schedule_version_lifecycle_main,
 )
@@ -250,6 +253,8 @@ def test_ci_runs_repository_gates_and_discovers_the_current_task() -> None:
         "build/validation/ci-p3-persistence.json",
         "app.infrastructure.replan_persistence_check",
         "build/validation/ci-p4-replan-persistence.json",
+        "app.application.execution_fact_projection_check",
+        "build/validation/ci-p4-execution-fact-projection.json",
         "app.application.schedule_version_lifecycle_check",
         "build/validation/ci-p3-schedule-version-lifecycle.json",
         "app.application.workspace_read_model_check",
@@ -283,6 +288,7 @@ def test_ci_runs_repository_gates_and_discovers_the_current_task() -> None:
     assert "name: P4 dynamic replanning machine contract evidence" in workflow
     assert "name: P3 workspace persistence evidence" in workflow
     assert "name: P4 replan event persistence evidence" in workflow
+    assert "name: P4 ExecutionEvent fact projection evidence" in workflow
     assert "name: P3 reviewable ScheduleVersion lifecycle evidence" in workflow
     assert "name: P3 workspace read model and comparison evidence" in workflow
     assert "name: P3 schedule edit and lock command evidence" in workflow
@@ -342,9 +348,7 @@ def test_ci_p3_workspace_schema_contract_is_required_and_machine_checkable(
 def test_ci_p4_machine_contract_is_required_and_machine_checkable(
     tmp_path: Path,
 ) -> None:
-    workflow = (ROOT / ".github" / "workflows" / "ci.yml").read_text(
-        encoding="utf-8"
-    )
+    workflow = (ROOT / ".github" / "workflows" / "ci.yml").read_text(encoding="utf-8")
     normalized = " ".join(workflow.split())
     assert (
         "name: P4 dynamic replanning machine contract evidence run: >- "
@@ -355,9 +359,7 @@ def test_ci_p4_machine_contract_is_required_and_machine_checkable(
 
     report_path = tmp_path / "p4-machine-contracts.json"
     assert (
-        execution_contract_main(
-            ["--root", str(ROOT), "--report", str(report_path)]
-        )
+        execution_contract_main(["--root", str(ROOT), "--report", str(report_path)])
         == 0
     )
     report = json.loads(report_path.read_text(encoding="utf-8"))
@@ -414,9 +416,7 @@ def test_ci_p4_replan_persistence_is_required_and_machine_checkable(
 
     report_path = tmp_path / "p4-replan-persistence.json"
     assert (
-        replan_persistence_main(
-            ["--root", str(ROOT), "--report", str(report_path)]
-        )
+        replan_persistence_main(["--root", str(ROOT), "--report", str(report_path)])
         == 0
     )
     report = json.loads(report_path.read_text(encoding="utf-8"))
@@ -434,6 +434,44 @@ def test_ci_p4_replan_persistence_is_required_and_machine_checkable(
         "database_mutation_rejections": 8,
         "production_write_rejections": 1,
         "p3_rows_retained": 1,
+    }
+
+
+def test_ci_p4_execution_fact_projection_is_required_and_machine_checkable(
+    tmp_path: Path,
+) -> None:
+    workflow = (ROOT / ".github" / "workflows" / "ci.yml").read_text(encoding="utf-8")
+    normalized = " ".join(workflow.split())
+    assert (
+        "name: P4 ExecutionEvent fact projection evidence run: >- "
+        "uv run python -m app.application.execution_fact_projection_check "
+        "--root . --report build/validation/ci-p4-execution-fact-projection.json"
+    ) in normalized
+    assert "continue-on-error" not in workflow
+
+    report_path = tmp_path / "p4-execution-fact-projection.json"
+    assert (
+        execution_fact_projection_main(
+            ["--root", str(ROOT), "--report", str(report_path)]
+        )
+        == 0
+    )
+    report = json.loads(report_path.read_text(encoding="utf-8"))
+    assert report["report_version"] == "p4-execution-fact-projection-report.v1"
+    assert report["status"] == "PASS"
+    assert report["task_id"] == "TASK-P4-04"
+    assert report["diff_base"] == "3563bb236ce7b2c01794485110d4945a6e265105"
+    assert report["check_count"] == 8
+    assert report["issues"] == []
+    assert report["counts"] == {
+        "event_types": 11,
+        "positive_event_vectors": 11,
+        "negative_vectors": 4,
+        "standard_urgent_imports": 1,
+        "durable_event_rows": 3,
+        "committed_projection_snapshots": 2,
+        "atomic_rollback_cases": 1,
+        "machine_checks": 8,
     }
 
 

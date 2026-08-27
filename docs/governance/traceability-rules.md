@@ -11,6 +11,11 @@ last_reviewed: 2026-08-27
 
 # 需求追踪规则
 
+## TASK-P4-04 projection trace rule
+
+本Task链固定为`REQ-002/003/008/009/013 + declared NFR/ENG + existing SIM assumptions → TASK-P4-04 → strict event ingress + pure fact projector + standard urgent chain + immutable Snapshot/checkpoint/audit → TEST-EXECUTION-FACT-PROJECTION-001/TEST-SNAPSHOT-REPLAY-001/TEST-IDEMPOTENCY/TEST-PROPERTY/TEST-SIM-ISOLATION → p4-execution-fact-projection-report.v1 + Task report → exact implementation provider → evidence-only closure provider`。Diff base固定`3563bb236ce7b2c01794485110d4945a6e265105`；必须精确命中九个declared Impact Rules并保持Schema/migration/dependency/state/P5/Production禁止范围零差异。P4-05只能在双提交闭环和新授权后启动。
+
+
 ## TASK-P4-03 persistence trace rule
 
 本Task唯一owner为TASK-P4-03，Diff base固定`7b9bfc3069de5d3738e5cc5827d27d197ed3d226`。链固定为`REQ-007/008/009/013 + declared NFR/ENG + existing SIM-ASSUMPTION-016 → TASK-P4-03 → 0005 + event/checkpoint/request/lineage/audit repositories → TEST-P4-PERSISTENCE-001/TEST-IDEMPOTENCY/TEST-AUDIT-TRAIL-001/TEST-STATE-TRANSITION-001/TEST-SIM-ISOLATION → p4-replan-persistence-report.v1 + Task report → exact implementation provider → evidence-only closure provider`。Implementation `60f8e8900ecab60f0d64311912ae27f09a4d002f` / artifact `9639720666`已精确满足SHA、Task、base、六个Impact Rules、19/19 checks、0 issues与digest核验，本closure据此把TASK-P4-03标为`done`；closure自身仍须post-push exact provider。

@@ -1,7 +1,7 @@
 ---
 doc_id: TASK-P4-04
 title: ExecutionEvent Ingestion and Fact Projection
-status: planned
+status: in_progress
 spec_version: 0.3.0
 phase: P4
 normative: true
@@ -27,9 +27,9 @@ Non-goals: 不直接修改既有Snapshot/ScheduleVersion、不决定freeze、不
 
 Inputs: P4-02 event contract、P4-03 ledger、P1 common ingress/Snapshot和P2 fact/lock contracts。
 
-Diff base: not assigned; record the clean provider-verified 40-character HEAD only when this Task is separately authorized and activated
+Diff base: 3563bb236ce7b2c01794485110d4945a6e265105
 
-Files allowed to change: 有界domain fact projection、application ingestion、snapshot integration、限定tests/CI machine evidence及命中文档；以及`Documents to update`中的逐字路径。激活前必须把目录范围展开为exact paths。
+Files allowed to change: `.github/workflows/ci.yml`、`backend/app/domain/execution_fact_projection.py`、`backend/app/importers/urgent_demand.py`、`backend/app/application/execution_fact_projection.py`、`backend/app/application/execution_fact_projection_check.py`、`backend/app/snapshots/projection.py`、`backend/app/infrastructure/execution_event_repository.py`、`backend/app/infrastructure/replan_repository.py`、`backend/app/infrastructure/snapshot_repository.py`、`backend/tests/unit/test_execution_fact_projection.py`、`backend/tests/property/test_execution_fact_projection_properties.py`、`backend/tests/integration/test_p4_execution_fact_projection.py`、`backend/tests/integration/test_ci_contract.py`及`Documents to update`逐字列出的文档；这是激活时冻结的exact allow-list。
 
 Files forbidden to change: Schema/migration/dependency、CP-SAT objective/strategy、Replan orchestration、Simulator/scenario、API/UI、P3 publication/export语义、P5+
 
@@ -41,7 +41,7 @@ Capability ownership and boundaries: 本Task的直接owner见Goal/Outputs；Exec
 
 Documentation impact: required
 
-Documents to update: `docs/contracts/execution-events-and-replan-request.md`、`docs/contracts/planning-snapshot.md`、`docs/contracts/import-and-normalization.md`、`docs/domain/execution-facts-locks-and-replan.md`、`docs/architecture/data-authority.md`、`docs/architecture/end-to-end-planning-flow.md`、`docs/architecture/provenance-and-versioning.md`、`docs/planning/replanning.md`、`docs/quality/property-tests.md`、`docs/quality/test-strategy-and-matrix.md`、`docs/governance/traceability-matrix.md`、`docs/tasks/P4/TASK-P4-04-execution-event-ingestion-and-fact-projection.md`
+Documents to update: `README.md`、`docs/README.md`、`docs/current_phase.md`、`docs/milestones/P4-dynamic-replanning.md`、`docs/milestones/README.md`、`docs/tasks/README.md`、`docs/tasks/TASK_TEMPLATE.md`、`docs/tasks/P4/TASK-P4-04-execution-event-ingestion-and-fact-projection.md`、`docs/contracts/README.md`、`docs/contracts/execution-events-and-replan-request.md`、`docs/contracts/planning-snapshot.md`、`docs/contracts/import-and-normalization.md`、`docs/core/glossary.md`、`docs/domain/domain-model.md`、`docs/domain/execution-facts-locks-and-replan.md`、`docs/domain/error-model.md`、`docs/architecture/data-authority.md`、`docs/architecture/end-to-end-planning-flow.md`、`docs/architecture/module-boundaries.md`、`docs/architecture/provenance-and-versioning.md`、`docs/architecture/configuration-environments-and-isolation.md`、`docs/architecture/technology-stack.md`、`docs/architecture/repository-layout.md`、`docs/planning/replanning.md`、`docs/operations/README.md`、`docs/operations/observability-and-audit.md`、`docs/operations/worker-reliability-and-idempotency.md`、`docs/operations/security.md`、`docs/quality/property-tests.md`、`docs/quality/test-strategy-and-matrix.md`、`docs/quality/documentation-consistency-checks.md`、`docs/quality/ci-gates-and-definition-of-done.md`、`docs/governance/requirements-register.md`、`docs/governance/nfr-and-engineering-register.md`、`docs/governance/traceability-rules.md`、`docs/governance/traceability-matrix.md`、`docs/governance/prod-open-register.md`、`docs/governance/sim-assumption-register.md`、`docs/governance/risk-register.md`、`docs/governance/change-impact-matrix.md`、`docs/governance/document-inventory.md`
 
 Documentation impact rationale: 本Task会改变其owner能力的合同/实现证据和追踪状态；所有Impact Rule必审文档须在激活前逐字确认，未修改者在Completion evidence逐项说明。
 
@@ -77,7 +77,7 @@ Artifacts: `p4-execution-fact-projection-report.v1`、event/snapshot replay vect
 
 Provider evidence: GitHub `kumamon-xu/PlantNexus-APS` / `main` / `.github/workflows/ci.yml`；implementation与evidence-only closure必须分别绑定exact SHA的required `validate`（GitHub Actions app `15368`）、未过期artifact、Task/Diff base/Impact Rules/checks/issues一致性；失败run保留并以新corrective SHA重跑。
 
-Completion conditions: 九类event的合法/拒绝/idempotent投影可重放；事实、source、hash与失败原子性完整；Urgent Order无捷径；exact provider闭环。；文档/追踪/OPEN/SIM/risk/inventory一致；实现与evidence-only closure均经exact provider；不自动启动下一Task。
+Completion conditions: 全部11种已批准event（九类事实语义）的合法/拒绝/idempotent投影可重放；事实、source、hash与失败原子性完整；Urgent Order无捷径；exact provider闭环；文档/追踪/OPEN/SIM/risk/inventory一致；实现与evidence-only closure均经exact provider；不自动启动下一Task。
 
 Failure handling: 任一本地、scope、required check或artifact不一致即保持`in_progress`并停止；保留失败run，限定corrective commit只能在原allow-list内；需要扩范围先更新Task并重新做Impact review，禁止重写历史。
 
@@ -95,4 +95,12 @@ Rollback: 禁用event入口并保留ledger；错误事实用补偿event和新Sna
 
 ## Completion evidence
 
-保持空白直到本Task获得独立授权并执行。计划卡不是实现、测试PASS、provider evidence或Production声明。
+本地implementation candidate已形成Simulation-only strict event validation、ledger+audit ingress、pure full-prefix fact projection、new immutable Snapshot/checkpoint/audit、standard Urgent Import及exact replay。Snapshot中受hash保护的authority/stream/position/prefix lineage同时约束初始批次与连续第二批的immediate-predecessor lost-response replay，较旧或不一致base拒绝为stale。全部11种event均进入machine positive vectors；gap/reference/terminal/cross-plane、missing/mismatched urgent、stale base和故障注入均fail closed。SQLite Snapshot caller-transaction写入已改用现有方言感知savepoint，末端projection audit失败时新增Snapshot/checkpoint为0而已成功ingress ledger保留。
+
+Task-specific 4 unit + 2 property + 4 migration-backed integration=`10 passed`，连同application boundary与CI contract的focused组合为`12 passed`；完整Backend为`654 passed`。Frontend为67 Vitest、主E2E与两轮Gate Chromium各12/12；locked sync、Ruff/Pyright、全部历史machine、P2 XS/P2 Gate/P3 Gate、SCA/license、Compose和Frontend/Package双build均PASS。Machine report `p4-execution-fact-projection-report.v1`为8/8、11 positive、4 negative、1 standard urgent、1 atomic rollback且`issues=[]`；Task governance report为54 changed paths、九个Impact Rules、27/27 expected/observed documents、19/19 checks与0 issues。完整required-equivalent本地回归已通过，implementation exact provider及artifact仍待执行，因此Task保持`in_progress`，这些local结果不构成provider evidence，也不启动TASK-P4-05。
+
+## Activation evidence
+
+2026-08-27用户明确授权执行TASK-P4-04。激活前确认`main=origin/main=remote main=3563bb236ce7b2c01794485110d4945a6e265105`、ahead/behind=`0/0`且working tree clean；TASK-P4-02/03均为`done`，其implementation/closure分别构成直接父子链`539cdbbdcdd406daba25b8d6b8caaa5133691e76`→`7b9bfc3069de5d3738e5cc5827d27d197ed3d226`与`60f8e8900ecab60f0d64311912ae27f09a4d002f`→`3563bb236ce7b2c01794485110d4945a6e265105`。四个required `validate`均由GitHub Actions app `15368`成功提供；artifact `9636892191`、`9637303205`、`9639720666`、`9640285305`均未过期，下载证据精确绑定Task、SHA、Diff base、Impact Rules、19/19 checks及`issues=[]`。
+
+启动时冻结Git object：ExecutionEvent Schema=`ea7c6faad66ec09f3f463179b008203e82121adf`、PlanningSnapshot v2 Schema=`26c8f9f1d2fe870f95e4eccbb8896bfae7823623`、ImportPackage v2 Schema=`41fdcf020a89382ebf3c718aa1c66934abcbdc54`、`0005` migration=`cac0ab5b8607c08593f2f7fc3004a67437e9c8aa`、state registry=`cd9fedc3a9c4b521646b16ec5628b00d99d249f2`、`pyproject.toml`=`241ccc5d343c4527c4e7a419ae0c282fe29e6086`、`uv.lock`=`a04b1285e0e1da0d2a2341a879d5e8cc718522b7`。本Task只形成Simulation-only event ingress、确定性事实投影、新immutable Snapshot/checkpoint/audit、标准Urgent Import复用及机器证据；不形成ReplanRequest、freeze、OBJ-002、Solver/Validator、ChangeReport、ScheduleVersion、Simulator、API/UI、Production或P5+能力。

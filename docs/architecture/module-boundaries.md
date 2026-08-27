@@ -11,6 +11,11 @@ last_reviewed: 2026-08-26
 
 # 模块边界与依赖规则
 
+## TASK-P4-04 implemented dependency edge
+
+依赖方向现为`domain/execution_fact_projection`纯规则 ← `snapshots/projection` canonical finalizer ← `application/execution_fact_projection`事务编排 → P4-03 repositories；`importers/urgent_demand`只携带既有Normalization inputs。Domain不导入SQLAlchemy、repository、Solver或wall clock；application不复制event/fact规则；repositories不解释payload。后继freeze/solver/application/Simulator仍不可反向进入本边界。
+
+
 ## TASK-P4-03 implemented dependency edge
 
 `app.domain.execution_contracts → app.infrastructure.replan_persistence/execution_event_repository/replan_repository`已形成单向consumer edge；repositories只依赖纯carrier precheck和既有SQLAlchemy/Alembic primitives。它们暴露caller-owned transaction与CAS，不导入Application、Planning、Solver、Validator、Simulation、API、Frontend或Exporter。P4-04只能消费这些ports完成projection，不能绕过ledger；P4-08只能消费attempt/result references完成application。

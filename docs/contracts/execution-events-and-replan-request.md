@@ -11,6 +11,13 @@ last_reviewed: 2026-08-27
 
 # ExecutionEvent 与 ReplanRequest 合同
 
+## TASK-P4-04 ingestion and projection consumer
+
+P4-04实现全部11个既有ExecutionEvent type的strict Simulation runtime消费：root/payload exact fields、canonical fingerprint/event ID、authority/scope/stream、source position、UTC/provenance与entity refs先验证，再按完整连续prefix投影。Ingress事务只写ledger+`EXECUTION_EVENT_APPENDED` audit；projection事务只写new immutable PlanningSnapshot、CAS checkpoint与`PROJECTION_CHECKPOINT_COMMITTED` audit。Exact replay返回既有identity；different content、gap/late、terminal regression、invalid ref、stale base、cross-plane或写入失败均fail closed。
+
+本Task不创建ReplanRequest，也不解析其freeze、Policy/Limits、Solver、Validator、ChangeReport或new ScheduleVersion字段。Urgent Demand event只携带identity/quantity/due/priority source，canonical demand/order/lot必须由完整Standard Import链产生；private canonical/Snapshot injection不构成合法输入。当前为local implementation evidence，provider仍pending。
+
+
 ## TASK-P4-03 durable consumer
 
 P4-03现建立Simulation-only durable consumer：ExecutionEvent按`event_id`和authority/stream/position双重唯一约束append，exact bytes replay返回同记录，不同content冲突；projection checkpoint只可通过position+revision CAS前进；ReplanRequest必须在同plane找到完整有序ledger events与匹配fact checkpoint后才能append。Request不新增state，attempt/result只引用既有PlanningRun attempt与terminal state；ChangeReport、SolverReport、ValidationReport和new ScheduleVersion只保存version/id/fingerprint引用，内容生成与应用仍由P4-06/07/08负责。

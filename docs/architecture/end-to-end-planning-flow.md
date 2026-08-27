@@ -11,6 +11,11 @@ last_reviewed: 2026-08-26
 
 # 端到端计划链路
 
+## TASK-P4-04 formed flow edge
+
+当前已形成的唯一新执行边为`validated Simulation ExecutionEvent → ledger+audit → complete ordered prefix → pure canonical fact projection → new immutable PlanningSnapshot → checkpoint+audit`。Urgent分支在projection前插入既有`Raw Staging → Normalization → Data Validation → Expansion → Snapshot candidate`，随后回到同一projector；无旁路。流程到此停止，不生成ReplanRequest/Problem/Solution/ChangeReport/ScheduleVersion，也不调用Simulator、API、UI或external adapter。
+
+
 ## TASK-P4-03 formed storage edge
 
 链路中`ExecutionEvent durable ledger → projection checkpoint/ReplanRequest transaction → PlanningRun attempt/result references`的存储边已形成；这只证明append/replay/conflict/CAS/rollback/lineage。`event → business fact → new Snapshot/Problem`仍未执行，result references不生成SolverReport/Validation/ChangeReport/ScheduleVersion；因此后续箭头仍分别由P4-04～08实现并需独立授权。

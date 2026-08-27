@@ -11,6 +11,11 @@ last_reviewed: 2026-08-20
 
 # Import 与 Normalization 合同
 
+## TASK-P4-04 Urgent Demand standard ingress
+
+Urgent Demand没有私有canonical入口。应用只接受绑定exact event ID的不可变`NormalizationInput` tuple，且每个StagedImportBatch必须为Simulation plane；随后执行既有`normalize_import → validate_import_package → expand_orders → build_planning_snapshot`完整链。Candidate必须保留全部既有canonical记录和expanded instances，只增加event指定的一条demand及其order/lot/operation lineage，不得借机改变topology、execution facts或locks。Mapping/profile/unit registry缺失或任何标准链失败均拒绝，不补猜Production默认。
+
+
 ## 管道
 
 ```text

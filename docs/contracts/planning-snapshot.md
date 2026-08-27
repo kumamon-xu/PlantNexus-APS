@@ -11,6 +11,11 @@ last_reviewed: 2026-08-20
 
 # PlanningSnapshot 合同
 
+## TASK-P4-04 projected Snapshot consumer
+
+ExecutionEvent投影绝不原地修改predecessor。Projector复制已验证的`planning-snapshot.v2`，只更新受事件影响的canonical facts/instances/records，重新计算全部entity counts、cutoff、canonical bytes、content hash与content-derived ID，并在`source_versions`保留predecessor hash、event authority和through-position prefix fingerprint。Stored base与checkpoint reference必须byte/hash一致；失败或stale base不写partial Snapshot。Schema bytes和Snapshot version均未改变。
+
+
 ## TASK-P4-02 snapshot lineage boundary
 
 P4 carrier现分别记录base/new Snapshot exact ID/version/fingerprint与cutoff，并把ordered event/fact checkpoint纳入Replan lineage。TASK-P4-02不修改Snapshot v1/v2 Schema、hash或持久化；ExecutionEvent不能直接改Snapshot，new immutable Snapshot的projection仍属于P4-04且必须通过标准authority/fact路径。

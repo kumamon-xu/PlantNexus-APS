@@ -11,6 +11,11 @@ last_reviewed: 2026-08-21
 
 # Property Test 规范
 
+## TASK-P4-04 generated projection properties
+
+`TEST-PROPERTY`现以固定seed生成duration变化与order/plane/authority/time mutations，验证pure projection replay得到相同canonical bytes/hash/prefix fingerprint、predecessor bytes不变，并对gap、Production plane、authority mismatch和received-before-occurrence fail closed。Focused property evidence为2个test/80 examples；它不替代后续P4-10连续Scenario replay或Production workload/capacity测试。
+
+
 ## TASK-P4-01 property contract
 
 ADR-0013～0015现把后继property边界固定为：同identity同fingerprint exact replay、同identity不同fingerprint拒绝、source position gap/倒退fail closed、确定性事实投影与Snapshot identity、freeze/HARD preservation、OBJ-002四元向量与ChangeReport算术、新Version immutable，以及同scenario/seed/virtual clock得到同一event stream与逐步结果。Urgent新增Operation不计movement，因事实消失的Operation必须显式分类，不能偷改比较分母。

@@ -12,6 +12,11 @@ registry_version: 1.0.0
 
 # SIM_ASSUMPTION 注册表
 
+## TASK-P4-04 projection review
+
+Unit/property/integration/machine vectors只复用既有synthetic sample、`SIM-P1-INGRESS-001`和SIM-ASSUMPTION-016的versioned Simulation provenance；新增的event times/quantities/durations仅为测试向量，不作为Scenario分布、freeze值、性能阈值或Production事实，因此不分配新ID。SIM-ASSUMPTION-001～016继续`ACTIVE`，数量与registry格式不变。
+
+
 ## TASK-P4-03 persistence review
 
 本Task的storage tests只复用`SIM-P4-CONTRACT-001@1.0.0`及`SIM-ASSUMPTION-016`中的既有event/request/sample值；新增ID、概率、freeze值、运行阈值或Scenario分布均为零。测试临时数据库、row count和runtime不是Simulation assumption，更不是Production事实。SIM-ASSUMPTION-001～016全部继续`ACTIVE`，数量和registry格式不变。

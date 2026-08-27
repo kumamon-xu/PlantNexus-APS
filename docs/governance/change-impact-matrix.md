@@ -12,6 +12,13 @@ registry_version: 1.0.0
 
 # 变更影响与必审文档矩阵
 
+## TASK-P4-04 implementation impact
+
+不可变Diff base=`3563bb236ce7b2c01794485110d4945a6e265105`。实际范围为pure domain projector、application two-transaction orchestration与machine evidence、Urgent Import input carrier、projected Snapshot finalizer、三个既有repository caller-transaction surface、Backend unit/property/integration/CI contract、一个non-skippable workflow step及逐字治理文档，精确命中`IMPACT-DOMAIN`、`IMPACT-APPLICATION`、`IMPACT-IMPORT`、`IMPACT-SNAPSHOT`、`IMPACT-INFRA`、`IMPACT-TESTS`、`IMPACT-PHASE`、`IMPACT-GOVERNANCE-REGISTRY`、`IMPACT-DOCS`九行。
+
+ExecutionEvent/PlanningSnapshot/Import Schema、`0005`及全部历史migration、state registry/pairs、dependency/lock、Planning/Solver/Validator/Policy/ChangeReport/ScheduleVersion、Simulator/scenario/fixture/benchmark、API/UI、P0～P3历史、P5+与Production/external authority/capacity/SLA均为禁止范围且须零差异。Repository修改只增加caller-owned transaction方法并修复SQLite Snapshot写入的方言感知savepoint原子性，不改变DDL。最终path/document/check/issue计数由Task report与exact provider artifact回填；当前provider pending。
+
+
 ## TASK-P4-03 implementation impact
 
 不可变Diff base=`7b9bfc3069de5d3738e5cc5827d27d197ed3d226`。本Task只增加`0005`、Infrastructure storage/repository/machine evidence、Backend unit/integration/CI contract tests、一个non-skippable workflow step及逐字治理文档，精确命中`IMPACT-STATE`、`IMPACT-INFRA`、`IMPACT-TESTS`、`IMPACT-PHASE`、`IMPACT-GOVERNANCE-REGISTRY`、`IMPACT-DOCS`。STATE仅复验ReplanRequest无状态机、既有PlanningRun/ScheduleVersion/ExportJob pair不变以及checkpoint为operational CAS；没有修改`backend/app/domain/**`，因此不命中Domain implementation rule。

@@ -11,6 +11,11 @@ last_reviewed: 2026-08-27
 
 # TASK-Px-yy — Title
 
+## P4 event projection Task governance note
+
+事实投影Task必须把接收事务与投影事务分开：前者只append ledger+audit，后者只消费完整连续prefix并原子提交new immutable Snapshot+checkpoint+audit；任一失败不得留下partial Snapshot/checkpoint。Projector必须pure、deterministic、source-position ordered、Simulation default-deny并保持predecessor bytes；same input须byte-exact replay，gap/late/conflict/stale/cross-plane须稳定拒绝。Urgent Demand只能接受完整Standard Import inputs，禁止传入私有canonical document或Snapshot捷径。该Task不得顺带创建ReplanRequest、freeze/OBJ-002、Solver/Validator、ChangeReport、ScheduleVersion、Simulator、P5或Production能力。
+
+
 ## P4 persistence Task governance note
 
 持久化Task必须把机器carrier原文、repository内部record与数据库结构区分开：carrier按已发布版本逐字canonicalize，内部record必须自带版本并拒绝unknown/default，不能私建第二套业务Schema或状态机。Event ledger与request/attempt/result/audit只允许append或exact replay；checkpoint是operational CAS而非业务state，必须拒绝stale/backward/self advance。Caller-owned transaction须证明任一步失败整批rollback，migration须覆盖empty/populated upgrade/downgrade/re-upgrade并保留前Phase数据。SQLite证据不等于PostgreSQL concurrency、Production HA、backup/restore、capacity或SLA。

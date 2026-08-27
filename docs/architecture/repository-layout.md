@@ -11,6 +11,11 @@ last_reviewed: 2026-08-27
 
 # 目标仓库结构
 
+## TASK-P4-04 repository layout delta
+
+本Task在既有边界内增加`domain/execution_fact_projection.py`、`application/execution_fact_projection.py`及machine check、`importers/urgent_demand.py`、`snapshots/projection.py`和unit/property/integration tests，并只扩展三个P4-03 repository的caller-transaction read/write surface。没有新增package root、migration、Schema、API、worker、Simulator或Frontend目录；P4-05+仍按独立Task扩展。
+
+
 ## TASK-P4-03 repository layout delta
 
 P4 persistence位于既有`backend/app/infrastructure/`，由shared storage projection、ExecutionEvent ledger adapter、checkpoint/request/lineage/audit adapters和machine check组成；database revision位于`backend/migrations/versions/0005_replan_event_persistence.py`，focused tests位于既有unit/integration目录。没有创建Application、Simulation、API、Frontend或P5目录，也没有旁路table。

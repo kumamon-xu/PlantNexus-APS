@@ -11,9 +11,11 @@ last_reviewed: 2026-08-26
 
 # 标准成果包合同
 
-## P4 planned ChangeReport export impact
+## TASK-P4-01 ChangeReport export contract
 
-TASK-P4-11在P4-06/08完成后才可把ChangeReport read model以版本化、deterministic、lineage-bound方式接入既有internal Simulation export；不得改写P2/P3 package bytes或把报告当作external publish。具体manifest/carrier变化若需要Schema，必须回到TASK-P4-02或经独立扩卡治理；当前成果包、ExportJob和下载行为不变。
+ADR-0014固定ChangeReport是new DRAFT result的immutable完整证据，绑定base/new Version/Snapshot/Problem、events/facts、Request/Run、freeze/locks、Policy/Limits、Solver/fresh Validator、before/after KPI和operation全集分类。TASK-P4-11只有在P4-06/08完成后才可把其versioned read model接入既有internal Simulation export；report fingerprint/bytes与manifest lineage必须可重放。
+
+P2/P3 package bytes不改，ChangeReport不等于external publish，也不改变ExportJob state/published-only guard。若需要新manifest/carrier，必须由TASK-P4-02或经独立扩卡发布additive版本；当前成果包、download、external target与Production行为不变。
 
 ## TASK-P3-17 audit conclusion
 

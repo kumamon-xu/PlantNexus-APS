@@ -11,9 +11,15 @@ last_reviewed: 2026-08-27
 
 # Architecture Decision Records
 
-## P4 planned ADR allocation
+## TASK-P4-01 ADR decisions
 
-TASK-P4-01预期新增且仅能新增三份独立决定：ExecutionEvent Authority / Fact Projection / Replan Lineage ADR、Freeze / Stability / ChangeReport ADR、Deterministic Execution Simulator Common-Path ADR。三份ADR当前均为`PLANNED_NOT_CREATED`，stable ID与文件名必须在TASK-P4-01启动时通过registry precheck分配，不得在TASK-P4-00中创建、接受或预写结论；它们必须先于TASK-P4-02任何Schema以及全部P4业务实现，并且不得改写ADR-0001～0012历史。
+TASK-P4-01启动时registry precheck确认`ADR-0013`～`ADR-0015`未占用，并已在任何P4 Schema、migration、dependency或业务代码前接受三份独立决定：
+
+- [ADR-0013](ADR-0013-execution-event-authority-fact-projection-replan-lineage.md)：唯一versioned ExecutionEvent入口、Production authority default-deny、source-position ordering、append-only ledger、确定性fact→new Snapshot投影、ReplanRequest无独立状态机及new DRAFT lineage；
+- [ADR-0014](ADR-0014-freeze-window-stability-change-report.md)：Snapshot cutoff锚定的half-open freeze、fact/HARD/effective-lock优先级、Delivery→OBJ-002→Makespan、整数Stability向量与完整可复算ChangeReport；
+- [ADR-0015](ADR-0015-deterministic-execution-simulator-common-path.md)：Simulator只生成标准ExecutionEvent、virtual clock/seed/version确定性、同一入口、连续五类异常和Production隔离。
+
+三份ADR均为`accepted`，不改写ADR-0001～0012。它们只冻结人类语义，TASK-P4-02仍须独立发布机器Schema/compatibility，P4-03+仍须逐Task授权；当前没有P4行为、Production event authority、external integration、capacity或SLA形成。
 
 ## TASK-P3-15 / TASK-P3-16 ADR impact review
 
@@ -33,7 +39,7 @@ ADR 记录 Architecture、Solver Backend、Constraint semantics、Objective hier
 
 ADR 状态：`proposed`、`accepted`、`rejected`、`superseded`。Accepted ADR 不重写历史；变更通过新 ADR `supersedes` 旧记录。
 
-ADR-0001～0009 是从 implementation spec 0.3.0 已明确决定中建立的基线记录。ADR-0010是TASK-P2-01对PlanningProblem v2合同演进的新增决定；[ADR-0011](ADR-0011-ortools-9-15-cp-sat-backend-version-policy.md)是TASK-P2-03在首次Solver dependency前接受的OR-Tools exact-version、namespace与upgrade/replay决定；[ADR-0012](ADR-0012-planning-workspace-command-state-publication.md)是TASK-P3-01在任何P3 Schema/代码前接受的Workspace command/state/publication决定。Accepted状态不表示后继Schema、持久化、行为或Production authority已经实现。
+ADR-0001～0009 是从 implementation spec 0.3.0 已明确决定中建立的基线记录。ADR-0010是TASK-P2-01对PlanningProblem v2合同演进的新增决定；[ADR-0011](ADR-0011-ortools-9-15-cp-sat-backend-version-policy.md)是TASK-P2-03在首次Solver dependency前接受的OR-Tools exact-version、namespace与upgrade/replay决定；[ADR-0012](ADR-0012-planning-workspace-command-state-publication.md)是TASK-P3-01在任何P3 Schema/代码前接受的Workspace command/state/publication决定；ADR-0013～0015是TASK-P4-01在任何P4 Schema/代码前接受的dynamic replanning基线。Accepted状态不表示后继Schema、持久化、行为或Production authority已经实现。
 
 TASK-P0-03 的 Schema/type skeleton 落实 ADR-0001（共同入口 envelope）、ADR-0003（Solver-neutral Problem）、ADR-0007（immutable Snapshot）、ADR-0008（UTC/seconds/ticks）和 ADR-0009（Production/Simulation 标识隔离）的既有决定，没有改变这些决定，因此不新增 ADR。Problem builder、hash、Solver 或字段权威若偏离这些决定，必须另建 ADR，不能借 skeleton 隐式修改。
 

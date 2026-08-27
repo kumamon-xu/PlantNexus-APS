@@ -11,6 +11,12 @@ last_reviewed: 2026-08-27
 
 # 文档一致性自动检查合同
 
+## TASK-P4-01 contract/ADR validation
+
+不可变Diff base=`b96232b2e3f5573baaf735c7fa7935f95e6c88f5`。Task diff只能出现卡片逐字列明的57个文档路径，其中新增且仅新增ADR-0013～0015三份Markdown；root `README.md`在发现其current-status仍写P4-01未授权后先扩卡纳入。Diff必须精确命中`IMPACT-STATE`、`IMPACT-PHASE`、`IMPACT-GOVERNANCE-REGISTRY`、`IMPACT-DOCS`四行。`backend/**`、`schemas/**`、`frontend/**`、migration、dependency/lock、tests/fixtures/benchmarks、workflow、P0～P3历史与P5+必须零差异。
+
+Full governance预期由185增至188份Markdown，保持30 roots/30 trace rows、61 Test IDs、15 OPEN、15 SIM assumptions、17 risks与71 Tasks；ADR registry新增三个accepted ID，TASK-P4-01=`in_progress`而P4-02～15仍`planned`。Task报告必须为19/19 checks与0 issues；implementation/closure提交后再由exact provider artifact复现，不能预写provider结论。
+
 ## P4 phase-plan validation
 
 本次phase-planning batch必须由唯一TASK-P4-00 owner覆盖P4-01～15全部新增卡，验证current phase=P4、P3 completed/P4 active、依赖无环且最终Task=P4-15、成员无伪造Diff base/implementation SHA、所有引用与registry/inventory计数一致。相对`61eeacdd5efc20b2321750e1310e9e21561c9fc2`的Task diff必须只命中允许文档并为0 issues；checker代码与CI workflow本次不改。

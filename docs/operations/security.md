@@ -11,9 +11,11 @@ last_reviewed: 2026-08-26
 
 # P0 工程安全边界
 
-## P4 planned security review
+## TASK-P4-01 security contract
 
-P4-01/03/04/12必须覆盖event source spoofing、duplicate/replay、tenant/run/factory隔离、idempotency、audit redaction与default-deny；P4-13不得持久化token或计算authority。Simulation synthetic source不构成Production trust。真实identity、RBAC/SSO、MES credential与external endpoint仍未形成，本次无安全配置或依赖变化。
+ADR-0013要求event authority由server绑定plane/factory/scope/source stream/version/position/type，且在任何ledger/fact lookup前拒绝spoofed、unknown、cross-plane或Production-unbound source。Same identity不同fingerprint、gap/late和stale base不得产生事实或Version。Event/audit/log只扩散stable reference/fingerprint/correlation，不记录credential、raw payload全文、SQL或stack。
+
+ADR-0015限定Simulator为Development/Test/Benchmark + SIMULATION + synthetic + `production_binding=false`，Production不注册其route/worker/authority；P4-13不得持久化token或计算authority。真实identity、RBAC/SSO、MES credential、external endpoint、threat model与Production security readiness仍未形成；本Task无安全配置、依赖或代码变化。
 
 ## TASK-P3-17 audit conclusion
 

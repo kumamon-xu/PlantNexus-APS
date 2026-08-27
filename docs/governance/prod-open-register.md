@@ -12,6 +12,10 @@ registry_version: 1.0.0
 
 # PROD_OPEN 注册表
 
+## TASK-P4-01 contract review
+
+ADR-0013把Production ExecutionEvent authority设为“无已批准绑定即default-deny”，ADR-0014禁止为Production假设freeze window，ADR-0015禁止Production启用Simulator route/worker/authority。它们只是防止未知值被实现为默认，不能替代权威closure record。OPEN-001～015全部继续`OPEN`；尤其OPEN-002/005/006/010/011/012/015的external、freeze/priority、identity/approval、dependency safety、capacity/SLA与字段authority均未形成，数量与`registry_version=1.0.0`不变。
+
 ## P4 planning boundary
 
 TASK-P4-00不关闭任何PROD_OPEN。OPEN-005继续阻止Production freeze window；OPEN-006阻止Production priority/KPI权重；OPEN-002/010/015阻止真实external接口、identity/approval authority与字段/数据权威；OPEN-011/012阻止Production依赖安全完备性与capacity/SLA结论。P4-05/09/10/13只能登记有界Simulation值和测试actor，P4-11/12不得把internal output/API写成external Production能力。OPEN-001～015全部保持`OPEN`，无closure record且registry version不变。

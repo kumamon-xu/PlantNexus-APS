@@ -11,6 +11,12 @@ last_reviewed: 2026-08-21
 
 # PlanningProblem 合同
 
+## TASK-P4-01 future Replan input boundary
+
+ADR-0013/0014要求P4 Replan仍只从verified new PlanningSnapshot构建solver-neutral Problem；ExecutionEvent不得作为Backend隐藏参数。Problem必须显式绑定base PUBLISHED reference、new Snapshot/fact checkpoint、freeze policy/resolved effective locks及OBJ-002 base assignments所需版本化引用。TASK-P4-02决定是否发布新Problem document或独立referenced carrier；不得原地扩写`planning-problem.v2`或改变其hash。
+
+P4-05/06/07消费这些新版本前，v1/v2 builder、Schema/sample/hash、C-001～C-011、OBJ-001和P2 XS/S/M baseline全部保持只读。本Task没有Problem builder、Schema、Solver或Validator变化；Production freeze/fact authority仍未形成。
+
 PlanningProblem 必须可序列化、Solver-neutral、deterministic，不包含 OR-Tools 类型。
 
 ## 顶层结构

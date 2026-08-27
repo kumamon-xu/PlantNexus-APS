@@ -11,9 +11,11 @@ last_reviewed: 2026-08-26
 
 # 端到端计划链路
 
-## P4 planned end-to-end extension
+## TASK-P4-01 accepted end-to-end extension
 
-P4规划在既有`PUBLISHED ScheduleVersion → internal export`之后增加一条受控反馈链：versioned ExecutionEvent→durable fact projection/new Snapshot→auditable ReplanRequest→freeze/effective locks→lexicographic Solver→independent Validator→new DRAFT ScheduleVersion+ChangeReport。TASK-P4-03～08分别拥有该链的事务节点，TASK-P4-09/10以同一入口重放Simulation，TASK-P4-12/13只提供transport/UI。本次没有实现或启用任何节点。
+ADR-0013～0015已固定受控反馈链：versioned authoritative ExecutionEvent→append-only ledger→deterministic fact revision/new Snapshot/ReplanRequest→freeze/effective locks→Delivery/Stability/Makespan Solver→fresh independent Validator→atomic new DRAFT ScheduleVersion+complete ChangeReport。接收、projection和result application是三个明确可重放事务边界；base PUBLISHED与历史artifact不改。
+
+TASK-P4-03～08分别拥有持久化/投影/freeze/stability/solve/apply，P4-09/10只能通过同一event/application入口重放Simulation，P4-12/13只提供transport/UI。ReplanRequest无独立state，Simulator无业务state；当前没有实现或启用任何节点，P4-02仍是下一独立启动门。
 
 ## TASK-P3-17 audit conclusion
 

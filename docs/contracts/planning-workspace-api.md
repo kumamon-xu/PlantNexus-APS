@@ -11,9 +11,11 @@ last_reviewed: 2026-08-27
 
 # P3 Planning Workspace API 语义合同
 
-## P4 planned API extension boundary
+## TASK-P4-01 future API boundary
 
-TASK-P4-12在P4-02/03/04/08/11全部`done`后才可设计有界dynamic replanning transport，并必须复用既有server authority、idempotency/CAS、correlation、audit及Simulation隔离。当前17+1 P3 operation与OpenAPI fingerprint不变；没有P4 route/action、真实identity/approval authority、external publish或deployment接口形成。
+ADR-0013～0015固定未来P4 transport只能调用server event ingress、ReplanRequest/read与ChangeReport application ports；router不得排序事件、投影facts、计算freeze/OBJ-002、调用Solver/Validator或推进Version。Authority scope/source position、idempotency/fingerprint、stale/current、correlation/audit和Simulation isolation均由application返回并fail closed。
+
+TASK-P4-12仍须等待P4-02/03/04/08/11全部`done`后独立设计/实现。当前18个P3 operation与OpenAPI fingerprint不变；没有P4 route/action、真实identity/event/approval authority、external publish或deployment接口形成。
 
 ## TASK-P3-17 audit conclusion
 

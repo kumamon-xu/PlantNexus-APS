@@ -11,9 +11,9 @@ last_reviewed: 2026-08-27
 
 # ScheduleVersion 状态机
 
-## P4 planned state review
+## TASK-P4-01 state decision
 
-Dynamic replan不得原地修改PUBLISHED或既有Version。TASK-P4-08只可在P4-03～07完成后，以受验证结果创建带完整base/event/fact/request/report lineage的新DRAFT；是否需要额外state/pair必须由TASK-P4-01 ADR和TASK-P4-02 carrier显式决定。当前DRAFT/READY_FOR_REVIEW/APPROVED/REJECTED/PUBLISHED/SUPERSEDED集合与所有pair不变。
+ADR-0013/0014确认dynamic replan不得原地修改PUBLISHED或既有Version，也不需要额外ScheduleVersion state/pair。TASK-P4-08只可在P4-03～07完成后，以fresh-validated且ChangeReport complete的结果原子创建带base/event/fact/request/run/report lineage的新DRAFT；它不自动READY、APPROVED或PUBLISHED。当前DRAFT/READY_FOR_REVIEW/APPROVED/REJECTED/PUBLISHED/SUPERSEDED集合与所有pair逐字不变。
 
 ## TASK-P3-17 audit conclusion
 

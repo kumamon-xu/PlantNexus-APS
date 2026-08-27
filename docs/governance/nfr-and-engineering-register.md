@@ -12,6 +12,12 @@ registry_version: 1.0.0
 
 # NFR 与工程需求注册表
 
+## TASK-P4-01 contract allocation
+
+NFR-COR/DET/TRC/ISO/SEC/HUM与ENG-ARCH/SOL/VAL/ERR/VER现通过TASK-P4-01连接ADR-0013～0015及同步合同：确定性source position/replay、append-only provenance、plane authority fail-closed、Solver-neutral机器合同后继、fresh independent Validator、结构化拒绝和版本兼容边界均已规范化。ReplanRequest不增加独立state pair，Simulator不获得Production route或直接写权威事实的捷径。
+
+该证据是人类合同而非运行行为；所有NFR/ENG root继续`ALLOCATED`，五个相关P4 Test ID继续`PLANNED`。未修改dependency、lock、workflow或测试断言，未形成Production reliability/security/performance/SLA；`registry_version=1.0.0`不变。
+
 ## P4 planning allocation
 
 TASK-P4-01～15把NFR-COR/DET/TRC/ISO/REL/SEC/OBS/PER/HUM与ENG-ARCH/SOL/VAL/ERR/VER/LOG分别落到版本化事件/请求/报告、append-only persistence、immutable fact projection、freeze/OBJ-002、lexicographic CP-SAT、fresh independent Validator、transaction/audit、deterministic Simulator、五类连续场景、API/UI和双Gate。每张卡都要求exact Diff base、required `validate`、未过期artifact与failure/corrective retention。

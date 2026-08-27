@@ -11,9 +11,11 @@ last_reviewed: 2026-08-27
 
 # 推荐技术栈与锁定规则
 
-## P4 planning dependency boundary
+## TASK-P4-01 dependency decision
 
-完整P4链已按现有Python/OR-Tools/PostgreSQL/FastAPI/React能力规划；TASK-P4-00不修改依赖或lockfile。任何后继Task若发现确需新runtime/dev/npm依赖，必须先在自身Task卡逐字列出、说明license/SCA/lock/rollback并经单独授权；不得以P4激活作为隐式依赖批准。
+ADR-0013～0015的event ledger、deterministic projection、lexicographic CP-SAT、pure ChangeReport与virtual-clock Simulator均可在现有Python/OR-Tools/SQLAlchemy/FastAPI/React边界内表达；TASK-P4-01不修改Python/npm dependency、`uv.lock`或`package-lock.json`，也不选择event broker、stream processor、outbox、external SDK或distributed simulator。
+
+任何后继Task若发现确需新runtime/dev/npm依赖，必须先在自身Task卡逐字列出exact pin、license/SCA/lock/rollback并经单独授权；不得以accepted ADR或P4 active作为隐式批准。现有P2 XS/S/M和P3 frontend dependency baselines保持只读。
 
 ## TASK-P3-17 audit conclusion
 

@@ -11,9 +11,9 @@ last_reviewed: 2026-08-27
 
 # ExportJob 状态机
 
-## P4 planned ChangeReport export review
+## TASK-P4-01 ChangeReport export state decision
 
-TASK-P4-11可以在P4-06/08后把versioned ChangeReport接入既有internal Simulation成果包，但不得改变ExportJob lifecycle、重试幂等、verified download或published-only guard，除非其自身先取得明确state/contract扩卡。当前state set/pair、worker与external-target default-deny均不变。
+ADR-0014确认ChangeReport与new DRAFT在replan result transaction中形成，但Report本身不推进或扩展ExportJob状态。TASK-P4-11只能在P4-06/08后以新版本、完整lineage把ChangeReport接入既有internal Simulation成果包；published-only export、retry幂等、verified download、state set/pair和external-target default-deny全部不变。任何state变化仍须独立contract/ADR/Task扩卡。
 
 ## TASK-P3-17 audit conclusion
 

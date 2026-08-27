@@ -12,6 +12,12 @@ registry_version: 1.0.0
 
 # 测试策略与 Test Matrix
 
+## TASK-P4-01 contract evidence boundary
+
+TEST-EXECUTION-EVENT-CONTRACT-001、TEST-REPLAN-REQUEST-CONTRACT-001、TEST-FREEZE-WINDOW-001、TEST-STABILITY-OBJECTIVE-001与TEST-CHANGE-REPORT-001现获得ADR-0013～0015及同步人类合同作为规范落点，但全部继续`PLANNED`：本Task没有发布机器carrier、Schema、migration、实现或新断言。现有治理/状态回归只证明ADR引用、ReplanRequest无独立state pair、ScheduleVersion/PlanningRun/ExportJob既有pair不漂移及Production/Simulation边界，不能标记上述Test ID为PASS或formed。
+
+后继测试必须逐项验证事件identity/order/replay、投影原子性、freeze半开区间、四元OBJ-002、ChangeReport完整性及Simulator common-path；不得用单个TEST-REPLAN或文档一致性PASS替代业务证据。Test ID总数仍为61，`registry_version=1.0.0`不变。
+
 ## P4 planning allocation
 
 TASK-P4-00只登记12个P4 Test ID，使registry从49项增加到61项；没有创建测试文件、修改断言或把任何P4 evidence写成formed。分配链为P4-01合同/ADR→P4-02机器合同→P4-03持久化→P4-04事实投影→P4-05 freeze→P4-06 OBJ-002/ChangeReport→P4-07 Solver/Validator→P4-08应用→P4-09 Simulator→P4-10场景→P4-11输出→P4-12 API→P4-13 UI→P4-14 Gate→P4-15独立Audit。所有新ID保持`PLANNED`，`registry_version=1.0.0`格式不变。

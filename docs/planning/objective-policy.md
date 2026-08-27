@@ -11,9 +11,9 @@ last_reviewed: 2026-08-21
 
 # Objective Policy
 
-## P4 planned OBJ-002 allocation
+## TASK-P4-01 accepted OBJ-002 allocation
 
-TASK-P4-06拥有OBJ-002 Stability与ChangeReport计算，TASK-P4-07必须实施`Delivery/OBJ-001 → Stability/OBJ-002 → Makespan`字典序并报告各层bound/value/provenance。SOFT_LOCK和非冻结旧计划的变化只能通过明确的deterministic成本表达；不得改写为单一浮点权重。当前OBJ-001与Solver机器合同保持不变。
+ADR-0014已固定TASK-P4-06拥有Stability/ChangeReport pure calculation，TASK-P4-07实施`hard feasibility → Delivery/OBJ-001 → Stability/OBJ-002 → Makespan`。OBJ-002不是单一加权分数，而是`soft_lock_violation_count → changed_existing_operation_count → resource_changed_count → total_absolute_start_shift_seconds`的整数词典序向量；每层value/bound/stop reason/provenance必须独立报告。当前OBJ-001机器合同与实现不变，P4行为仍未形成。
 
 硬约束可行性优先于所有目标。目标采用词典序分轮，禁止用未经论证的浮点权重混合。
 
@@ -30,6 +30,8 @@ TASK-P4-06拥有OBJ-002 Stability与ChangeReport计算，TASK-P4-07必须实施`
 - changed operation count/movement。
 
 HARD_LOCK 是约束，不属于 OBJ-002；SOFT_LOCK 通过本目标体现。旧计划 Hint 不保证稳定性。
+
+比较只覆盖base与candidate共有且在new Snapshot仍active的operation。resource/start/end任一改变使`changed_existing_operation_count += 1`；resource不同另计，start UTC差值按整数秒绝对值求和。新urgent operation无base assignment，OBJ-002贡献为0但ChangeReport必须标记ADDED；由COMPLETED fact移出future Problem的operation只报告事实，不成为Solver可选收益。SOFT lock偏离作为向量第一分量，HARD/freeze-derived lock仍是约束。Hint不影响score或正确性。
 
 ## OBJ-003 Makespan
 

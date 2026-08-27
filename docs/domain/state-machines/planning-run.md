@@ -11,9 +11,9 @@ last_reviewed: 2026-08-27
 
 # PlanningRun 状态机
 
-## P4 planned state review
+## TASK-P4-01 state decision
 
-P4-01必须决定ReplanRequest与PlanningRun的协调方式，P4-03才允许实现持久化事务，P4-08才允许把validated replan结果应用为new DRAFT。当前PlanningRun state set、allowed pair、guard、audit与terminal semantics逐字不变；若后继设计需要任何新pair，必须先经ADR/合同/Schema及Task扩卡，不能由本规划隐式形成。
+ADR-0013已决定ReplanRequest是immutable intent/result envelope，不拥有独立状态机。每个solve attempt继续由本PlanningRun状态机承载，request、attempt、result和audit以append-only reference连接；exact replay不伪造成self-transition。P4-03才可实现持久化，P4-08才可把fresh-validated结果应用为new DRAFT。PlanningRun state set、allowed pair、guard、audit与terminal semantics逐字不变；任何新pair仍须new ADR/contract/Schema/Task扩卡。
 
 ## TASK-P3-17 audit conclusion
 

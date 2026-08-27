@@ -11,9 +11,11 @@ last_reviewed: 2026-08-26
 
 # P3 Authorization Capability 与 Audit 合同
 
-## P4 planned authorization and audit impact
+## TASK-P4-01 event authorization and audit contract
 
-TASK-P4-01/03/04/08/12必须固定ExecutionEvent→fact→ReplanRequest→new Version的append-only audit与idempotent transaction边界；TASK-P4-13只能消费server-calculated allowed actions。P4 Simulation仍沿用authority-neutral/default-deny，真实RBAC/SSO、approval authority、MES event authority和Production actor mapping继续由PROD_OPEN约束，本次没有新增授权能力或状态转换。
+ADR-0013固定ExecutionEvent authority必须由server composition绑定data plane、factory/planning scope、source stream/version/position和允许event type；client body、received-at、AI、database owner或Simulation fixture均不能提升authority。Production映射缺失时在ledger write前DENY；Simulation只允许明确test source、synthetic、`production_binding=false`和隔离plane。
+
+Ingress audit保存authority decision、event identity/fingerprint/position/correlation与sanitized disposition；projection audit连接event→fact revision→new Snapshot→ReplanRequest/checkpoint；result audit连接Request/PlanningRun/Solver/Validator→new DRAFT/ChangeReport。接收、projection、result application各自原子，失败无partial业务副作用，历史ledger/audit不改写。ReplanRequest无state，exact replay不重复业务audit。真实RBAC/SSO、approval authority、MES event authority、retention/SIEM与Production actor mapping继续由PROD_OPEN约束，本Task没有新增授权能力或state pair。
 
 ## TASK-P3-17 audit conclusion
 

@@ -11,9 +11,11 @@ last_reviewed: 2026-08-26
 
 # 数据权威边界
 
-## P4 planned authority boundary
+## TASK-P4-01 event/fact authority decision
 
-P4的Simulation ExecutionEvent只能以显式synthetic provenance进入与未来Production共用的验证/投影入口；它不成为真实MES authority。事件排序与幂等、actual fact覆盖、freeze/lock来源、base/new version及ChangeReport provenance由TASK-P4-01/03/04/08逐层固定。OPEN-005/007及Production source/role mapping继续OPEN，本次不建立真实authority。
+ADR-0013固定一个projection scope只接受一个已批准authority source stream/version及单调source position；received-at、UI、数据库owner、AI和Simulation fixture均不是Production authority。Same ID/different fingerprint、gap、late、cross-plane或unknown authority全部fail closed；事实只能由append-only event projection产生新revision/Snapshot，不能用last-write-wins覆盖。
+
+Development/Test/Benchmark的Simulation source必须synthetic、`production_binding=false`并使用隔离plane，但通过与未来Production相同的contract/application入口。Freeze policy、priority、lock、base/new Version和ChangeReport都保存source/version/fingerprint。OPEN-002/005/007/010/013/015继续OPEN，本Task没有真实MES mapping、identity、role或external authority。
 
 ## TASK-P3-17 audit conclusion
 

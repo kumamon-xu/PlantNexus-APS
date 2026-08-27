@@ -11,9 +11,11 @@ last_reviewed: 2026-08-21
 
 # KPI 合同
 
-## P4 planned Stability and comparison impact
+## TASK-P4-01 Stability contract baseline
 
-TASK-P4-06只新增OBJ-002 Stability与ChangeReport的deterministic计算合同，且TASK-P4-07必须按Delivery→Stability→Makespan字典序使用，不能用浮点加权吞并OBJ-001。TASK-P4-10/14比较异常前后tardiness与stability；Production KPI targets/SLA仍未形成。本次不修改KPI Schema、公式代码或baseline。
+ADR-0014现固定TASK-P4-06/07必须按`Delivery/OBJ-001 → Stability/OBJ-002 → Makespan`执行，且OBJ-002内部为`soft lock violation count → changed existing operation count → resource change count → absolute start-shift seconds`的非负整数词典序向量。不得用浮点或Big-M混合，也不得把base中不存在的urgent operation计为movement。
+
+ChangeReport/KPI的比较集合只包含base与candidate均存在且在new Snapshot仍active的operation；ADDED与有明确COMPLETED fact的REMOVED_BY_FACT另行完整分类。`schedule_stability_ratio=unchanged_existing/comparable_existing`，必须保存exact numerator/denominator，分母0时为`null/NOT_APPLICABLE_NO_COMPARABLE_OPERATION`。TASK-P4-06才可实现计算，P4-02才可发布carrier；本Task不改KPI v1/v2 Schema/公式代码/baseline，Production KPI target/SLA仍未形成。
 
 ## Delivery
 
@@ -38,6 +40,8 @@ utilization = planned_busy_seconds / available_calendar_time
 ## Stability
 
 `changed_operation_count`、`resource_changed_count`、`start_shift_seconds`、`schedule_stability_ratio`。
+
+P4还要求`comparable_existing_operation_count`、`unchanged_existing_operation_count`、`soft_lock_violation_count`及ratio的exact numerator/denominator。Changed表示共同active operation的resource/start/end任一变化；start shift按UTC整数秒绝对值求和。既有无base ScheduleVersion时的`NOT_APPLICABLE_NO_BASE_SCHEDULE`语义不改写。
 
 ## Solver
 

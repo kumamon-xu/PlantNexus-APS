@@ -11,9 +11,11 @@ last_reviewed: 2026-08-26
 
 # 合同文档索引
 
-## P4 activation planning boundary
+## TASK-P4-01 contract baseline
 
-P4已激活，但当前TASK-P4-00只登记合同责任：TASK-P4-01先形成三份planned P4 ADR及ExecutionEvent、ReplanRequest、freeze/effective lock、OBJ-002 Stability、ChangeReport、Execution Simulator的人类语义；TASK-P4-02随后才允许发布版本化机器合同。ADR stable ID只可在P4-01启动时分配。P4-03～13只能消费这些已批准合同，P4-14/15分别聚合与独立审计。当前schema set仍为`2.7.0`，没有新增Schema、migration、dependency、state pair、API operation或Production/external authority。
+TASK-P4-01已通过registry precheck接受ADR-0013～0015，并形成ExecutionEvent authority/order/idempotency、fact→new Snapshot、ReplanRequest无独立状态机、freeze/effective locks、OBJ-002整数词典序、complete ChangeReport与deterministic Simulator common-path的人类语义。TASK-P4-02随后才允许以additive新版本发布机器合同；P4-03～13只能消费这些决定，P4-14/15分别聚合与独立审计。
+
+当前schema set仍为`2.7.0`，migration仍为`0004`；没有新增Schema/sample、migration、dependency、state pair、API operation或业务实现。Production event authority/freeze/identity/external target/capacity/SLA继续未形成，P4-02不会自动启动。
 
 ## TASK-P3-17 contract audit conclusion
 

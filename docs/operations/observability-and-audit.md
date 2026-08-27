@@ -11,9 +11,11 @@ last_reviewed: 2026-08-26
 
 # P0 Observability 与 Audit 边界
 
-## P4 planned observability chain
+## TASK-P4-01 observability chain
 
-TASK-P4-03/04/08/09必须用stable correlation连接event、fact projection、ReplanRequest、solver/validator、new Version、ChangeReport与simulator replay；TASK-P4-14/15检查完整性、失败与纠正链。不得记录secret或以日志代替durable audit。当前metric/log/trace配置及Production monitoring/SLO不变。
+ADR-0013～0015固定stable correlation/identity链：authority/source position/event fingerprint→ledger disposition→projector/checkpoint/fact/new Snapshot→ReplanRequest/PlanningRun/Solver/fresh Validator→new DRAFT/ChangeReport→Simulator run/seed/virtual clock/stream hash。Ingress、projection和result application分别保留原子成功/失败audit；exact replay引用原logical result，不改写历史event。
+
+Received-at、host wall clock、runtime/memory与线程顺序保留为raw development observation但不进入semantic identity。TASK-P4-14/15必须同时检查raw、semantic、失败和corrective chain；不得记录secret或以log替代durable ledger/audit。当前metric/log/trace配置及Production monitoring/retention/SLO不变。
 
 ## TASK-P3-17 audit conclusion
 

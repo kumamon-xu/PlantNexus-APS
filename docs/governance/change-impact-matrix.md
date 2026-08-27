@@ -12,6 +12,12 @@ registry_version: 1.0.0
 
 # 变更影响与必审文档矩阵
 
+## TASK-P4-01 contract/ADR impact
+
+不可变Diff base=`b96232b2e3f5573baaf735c7fa7935f95e6c88f5`。本Task新增ADR-0013～0015并同步卡片逐字列明的root README、合同、架构、领域、Planning、Simulation、Operations、Quality、Phase与Governance文档；root README current-status矛盾在修改前已按卡片规则扩入，最终allow-list为57 paths。预期精确命中`IMPACT-STATE`、`IMPACT-PHASE`、`IMPACT-GOVERNANCE-REGISTRY`、`IMPACT-DOCS`四行。STATE变化只记录ReplanRequest无独立状态机和既有PlanningRun/ScheduleVersion/ExportJob pair零漂移，不增加machine pair。
+
+相对base，`backend/**`、`schemas/**`、`frontend/**`、fixtures/benchmarks、migration、dependency/lock、test assertion、`.github/workflows/**`、P0～P3历史与P5+必须零差异。三份ADR为accepted decision而非机器/行为实现；若diff出现第五个Impact Rule或allow-list外路径，必须停止并先扩卡重新审查。最终path/check/issues只能由本地Task report和exact provider回填。
+
 ## TASK-P4-00 phase-transition planning impact
 
 不可变Diff base=`61eeacdd5efc20b2321750e1310e9e21561c9fc2`。本批只修改根README与`docs/**`，关闭P3/激活P4、新增16张P4 Task卡并同步合同/架构/领域/Planning/Simulation/Operations/Quality/Governance的“planned impact”说明。本地Task report得到0 committed-range/83 working-tree unique paths，精确命中`IMPACT-STATE`、`IMPACT-PHASE`、`IMPACT-GOVERNANCE-REGISTRY`、`IMPACT-DOCS`四行、19/19 checks、0 issues；state文档只登记未来责任，不增加或修改state pair。Implementation artifact `9632983094`已复现83 committed/0 working paths、相同四行、19/19 checks与0 issues，故本closure可把P4-00标为`done`；任何后续额外Impact Rule仍必须先停止并扩卡。

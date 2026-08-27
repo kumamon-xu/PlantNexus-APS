@@ -11,9 +11,11 @@ last_reviewed: 2026-08-27
 
 # Schema 计划索引
 
-## P4 planned schema allocation
+## TASK-P4-01 schema decision handoff
 
-TASK-P4-02预期在TASK-P4-01三份ADR全部accepted后，以独立additive set release定义ExecutionEvent、ReplanRequest、ChangeReport及Execution Simulator carrier，并逐项登记URN、compatibility、fingerprint、sample、negative interchange与rollback。当前TASK-P4-00不创建或修改任何`schemas/**`文件；具体version、字段与set release号仍为`NOT_ASSIGNED`，不得从本规划推断机器合同已经形成。
+ADR-0013～0015现已accepted；TASK-P4-02的启动输入明确为ExecutionEvent、ReplanRequest、ChangeReport及必要Execution Simulator/freeze/objective references的独立additive set release。它必须逐项分配stable URN/document version/set version，使用strict/no-default/offline refs，固定canonical projection/fingerprint、positive/negative/non-interchangeable samples、P2/P3 byte preservation及rollback。
+
+当前schema set仍为`2.7.0`，具体新version/文件/URN仍由TASK-P4-02在独立授权后分配。本Task没有创建或修改任何`schemas/**`文件、sample、data dictionary或consumer，不能从accepted ADR推断机器合同已形成。
 
 ## TASK-P3-17 audit conclusion
 

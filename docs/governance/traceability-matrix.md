@@ -12,6 +12,12 @@ registry_version: 1.0.0
 
 # 追踪矩阵
 
+## TASK-P4-01 contract trace slice
+
+REQ-004/005/007/008/009/013、NFR-COR/DET/TRC/ISO/SEC/HUM和ENG-ARCH/SOL/VAL/ERR/VER现连接TASK-P4-01→ADR-0013/0014/0015→事件/Replan/freeze/stability/ChangeReport/Simulator人类合同→五个`PLANNED` Test ID。ADR decision为accepted，但机器Schema、migration、code、test与provider behavior均未形成；root lifecycle继续`ALLOCATED`。
+
+合同链明确：ExecutionEvent→append-only fact revision→new immutable Snapshot→immutable ReplanRequest→lexicographic Solver→fresh independent Validator→new DRAFT ScheduleVersion+ChangeReport；Simulator只能从同一ExecutionEvent入口进入。Implementation/closure provider edge尚待各自exact SHA产生，P4-02～15均不得继承本地合同状态。
+
 ## P4 planning trace slice
 
 P3 Exit `READY`/0 gaps与implementation→closure exact provider链已作为TASK-P4-00启动前提。P4规划链固定为`REQ/NFR/ENG → TASK-P4-01～15 → 12个新增PLANNED Test ID + TEST-REPLAN/历史回归 → future machine reports → exact implementation/closure provider artifacts → P4-15 report/manifest`。Roots/rows仍为30/30，Test IDs由49增至61，所有新证据状态为`PLANNED`；本次不把合同分配、Task文本或P3 evidence解释成P4行为PASS。
@@ -49,16 +55,16 @@ REQ-005/006/007/009、NFR-COR/TRC/ISO/REL/SEC/HUM与ENG-ARCH/VAL/ERR/VER现连�
 | REQ-001 | REQ | `docs/contracts/import-and-normalization.md` | P0-P1 / TASK-P0-03；TASK-P1-02～06、10/11 | v1 retained + canonical/Import v2 + Raw/Reference/Normalization/Data Validation + [Reference/Synthetic common ingress](../../backend/tests/integration/test_p1_common_ingress.py) formed；Production binding仍PLANNED |
 | REQ-002 | REQ | `docs/contracts/import-and-normalization.md`、`docs/contracts/planning-snapshot.md`、`docs/contracts/planning-problem.md` | P0-P2 / TASK-P0-03；TASK-P1-02、05/06、08/09、11；TASK-P2-01 | Canonical Import/Data Validation + Snapshot bytes/hash/ID + Problem v1/v2 deterministic builder/hash/replay formed |
 | REQ-003 | REQ | `docs/contracts/import-and-normalization.md`、`docs/domain/operation-instance-and-resource-options.md` | P0-P2 / TASK-P0-03；TASK-P1-02、05～07、09～11；TASK-P2-01 | canonical Order/Lot/Routing + expansion/Snapshot + active/historical Problem v2 fact projection formed |
-| REQ-004 | REQ | `docs/architecture/end-to-end-planning-flow.md`、`docs/planning/constraint-catalog.md` | P2-P4 / P2/P3 complete；TASK-P4-06～08、10、14/15 | P2/P3 provider-verified；P4 lexicographic Replan/Gate PLANNED |
-| REQ-005 | REQ | `docs/planning/schedule-validator.md` | P0-P4 / P2/P3 complete；TASK-P4-05～08、10、14/15 | P2/P3 formal Validator provider-verified；P4 fact/freeze/replan validation PLANNED |
+| REQ-004 | REQ | `docs/architecture/end-to-end-planning-flow.md`、`docs/planning/constraint-catalog.md`、`docs/adr/ADR-0014-freeze-window-stability-change-report.md` | P2-P4 / P2/P3 complete；TASK-P4-01、06～08、10、14/15 | P2/P3 provider-verified；P4 lexicographic contract accepted，behavior/Gate PLANNED |
+| REQ-005 | REQ | `docs/planning/schedule-validator.md`、`docs/adr/ADR-0014-freeze-window-stability-change-report.md` | P0-P4 / P2/P3 complete；TASK-P4-01、05～08、10、14/15 | P2/P3 formal Validator provider-verified；P4 fact/freeze/replan validation contract accepted，behavior PLANNED |
 | REQ-006 | REQ | `docs/contracts/export-package.md`、`docs/contracts/planning-workspace-api.md` | P2-P4 / P2/P3 complete；TASK-P4-11～15 | P3 output/API/UI provider-verified；P4 ChangeReport output/API/UI PLANNED |
-| REQ-007 | REQ | `docs/domain/state-machines/schedule-version.md`、`docs/adr/ADR-0012-planning-workspace-command-state-publication.md` | P0/P3-P4 / P3 complete；TASK-P4-01～03、08、11～15 | P3 state/human-control provider-verified；P4 Replan state/new DRAFT/audit PLANNED |
-| REQ-008 | REQ | `docs/planning/replanning.md` | P0/P4 / TASK-P0-04 boundary；TASK-P4-01～15 | DYNAMIC_REPLANNING declaration formed；complete P4 implementation chain PLANNED |
-| REQ-009 | REQ | `docs/architecture/provenance-and-versioning.md`、`docs/contracts/authorization-and-audit.md` | P0-P4 / P0-P3 complete；TASK-P4-00～15 | P1→P3 exact provider chain verified；P4 event/replan/change/simulator provenance PLANNED |
+| REQ-007 | REQ | `docs/domain/state-machines/schedule-version.md`、`docs/adr/ADR-0012-planning-workspace-command-state-publication.md`、`docs/adr/ADR-0013-execution-event-authority-fact-projection-replan-lineage.md` | P0/P3-P4 / P3 complete；TASK-P4-01～03、08、11～15 | P3 state/human-control provider-verified；P4 no-request-state/new DRAFT/audit contract accepted，behavior PLANNED |
+| REQ-008 | REQ | `docs/planning/replanning.md`、`docs/contracts/execution-events-and-replan-request.md`、`docs/adr/ADR-0013-execution-event-authority-fact-projection-replan-lineage.md`、`docs/adr/ADR-0014-freeze-window-stability-change-report.md` | P0/P4 / TASK-P0-04 boundary；TASK-P4-01～15 | DYNAMIC_REPLANNING + contract/ADR baseline formed；complete machine/behavior chain PLANNED |
+| REQ-009 | REQ | `docs/architecture/provenance-and-versioning.md`、`docs/contracts/authorization-and-audit.md`、`docs/adr/ADR-0013-execution-event-authority-fact-projection-replan-lineage.md` | P0-P4 / P0-P3 complete；TASK-P4-00～15 | P1→P3 exact provider verified；P4 event/replan/change/simulator provenance contract accepted，behavior PLANNED |
 | REQ-010 | REQ | `docs/core/capability-matrix.md` | P6 / no P1 Task | REGISTERED；capability DEFERRED |
 | REQ-011 | REQ | `docs/simulation/synthetic-generator-and-determinism.md` | P0-P1 / TASK-P0-05/06；TASK-P1-10/11 | FactoryProfile + seven-layer Generator + public Raw Staging + 49-record Import/Snapshot/Problem replay formed；real distribution仍PLANNED |
 | REQ-012 | REQ | `docs/simulation/scenario-spec-and-provenance.md` | P0-P4 / P0-P3 evidence；TASK-P4-09/10/14/15 | P1/P2 scenario provenance formed；P4 event-stream/five-disruption replay PLANNED |
-| REQ-013 | REQ | `docs/simulation/execution-simulator-and-disruptions.md` | P4 / TASK-P0-05 boundary；TASK-P4-01/02/04/09/10/12～15 | Scenario provenance formed；Execution Simulator/event/fact preservation chain PLANNED |
+| REQ-013 | REQ | `docs/simulation/execution-simulator-and-disruptions.md`、`docs/adr/ADR-0015-deterministic-execution-simulator-common-path.md` | P4 / TASK-P0-05 boundary；TASK-P4-01/02/04/09/10/12～15 | Simulator common-path/no-shortcut contract accepted；machine/event/fact preservation behavior PLANNED |
 | REQ-014 | REQ | `docs/simulation/benchmark-harness.md` | P2-P4 / P2 baseline；TASK-P4-14/15 regression | XS/S/M provider-verified；P4 Gate regression/development observations PLANNED，Production SLA未形成 |
 | REQ-015 | REQ | `docs/planning/reference-schedulers.md` | P2 / P0 provenance；TASK-P2-10、12～14 | five algorithms + same Problem/Validator/common-KPI Global comparison/warning由两次完整Gate与Exit audit provider复验；Exit=`READY` |
 | NFR-COR-001 | NFR | `docs/planning/constraint-catalog.md`、`docs/planning/schedule-validator.md` | P0-P3 / P2 Exit formed；TASK-P3-04/06、13～17 | P2/P3 correctness and no-client-calculation provider-verified；P3-17 Exit `IMPLEMENTATION_PROVIDER_VERIFIED_CLOSURE_PENDING` |

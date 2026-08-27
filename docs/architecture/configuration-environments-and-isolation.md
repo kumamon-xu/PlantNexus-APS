@@ -11,9 +11,11 @@ last_reviewed: 2026-08-27
 
 # 配置、环境与数据隔离
 
-## P4 planned isolation boundary
+## TASK-P4-01 isolation contract
 
-TASK-P4-09/10只能在Development/Test/Benchmark的Simulation plane创建synthetic事件与时钟，必须经过与未来Production相同的versioned入口，同时保持tenant/run/factory/source隔离和deterministic replay。任何Production event source、secret、external endpoint、deployment配置、freeze/capacity/SLA值继续禁止。本次不增加配置键、环境变量或运行服务。
+ADR-0013/0015确认P4 Simulator/test authority只能在Development/Test/Benchmark的SIMULATION plane创建synthetic事件与virtual clock，必须经过与未来Production相同的versioned event/application入口，并把factory/planning scope、authority stream、run、source position和provenance纳入identity/guard。Checkpoint/restart不能跨run/plane读取或删除历史。
+
+Production在真实source binding、principal/scope、freeze policy和独立部署证据形成前于event ingress之前default-deny；不得通过environment默认、test principal或Production-shaped fixture开启。任何Secret、external endpoint、deployment、freeze/capacity/SLA值仍禁止。本Task不增加配置键、环境变量、database、service或runtime。
 
 ## TASK-P3-17 audit conclusion
 

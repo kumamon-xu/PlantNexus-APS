@@ -11,9 +11,11 @@ last_reviewed: 2026-08-21
 
 # Property Test 规范
 
-## P4 planned property coverage
+## TASK-P4-01 property contract
 
-后继Task必须覆盖event dedup/order invariance、fact projection idempotency、freeze/HARD_LOCK preservation、OBJ-002/ChangeReport arithmetic、new Version immutability及same scenario replay determinism；生成器不能产生未声明P5能力并静默近似。具体断言属于P4-03～10，不在TASK-P4-00修改。
+ADR-0013～0015现把后继property边界固定为：同identity同fingerprint exact replay、同identity不同fingerprint拒绝、source position gap/倒退fail closed、确定性事实投影与Snapshot identity、freeze/HARD preservation、OBJ-002四元向量与ChangeReport算术、新Version immutable，以及同scenario/seed/virtual clock得到同一event stream与逐步结果。Urgent新增Operation不计movement，因事实消失的Operation必须显式分类，不能偷改比较分母。
+
+这些断言仍由TASK-P4-02～10实现；TASK-P4-01不修改测试代码、generator、fixture、expected或既有property结果，也不得生成P5能力并静默近似。
 
 ## TASK-P3-17 audit conclusion
 

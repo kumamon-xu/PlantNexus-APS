@@ -11,9 +11,11 @@ last_reviewed: 2026-08-19
 
 # PlanningPolicy 与 SolveLimits 合同
 
-## P4 planned policy impact
+## TASK-P4-01 policy decision
 
-TASK-P4-01/06/07将分别固定freeze/稳定性语义、OBJ-002与ChangeReport计算、以及Delivery→Stability→Makespan字典序重排求解边界；TASK-P4-02必须在需要机器字段时以新版本additive表达。当前PlanningPolicy、SolveLimits、OBJ-001与Production limits/SLA完全不变，未形成Production freeze、priority或capacity默认值。
+ADR-0014固定freeze policy必须显式versioned，以new Snapshot cutoff解析half-open interval并保存source/fingerprint；缺少approved Production policy时拒绝，不采用0或仓库样例默认。OBJ-002在Delivery等价后以`soft lock violations → changed existing operations → resource changes → absolute start shift seconds`的非负整数向量逐层优化，Makespan仅在完整Stability相等后tie-break。
+
+TASK-P4-02必须以additive新document/version表达freeze、objective stages与exact references；P4-06/07才可计算/求解。当前PlanningPolicy v1、SolveLimits v1、OBJ-001、OR-Tools pin与Production limits/SLA完全不变，未形成Production freeze、priority或capacity默认值。
 
 ## PlanningPolicy
 

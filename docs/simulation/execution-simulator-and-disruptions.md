@@ -11,9 +11,9 @@ last_reviewed: 2026-08-19
 
 # Execution Simulator 与异常模型
 
-## P4 planned implementation ownership
+## TASK-P4-01 accepted common-path boundary
 
-TASK-P4-01的planned Execution Simulator Common-Path ADR先固定virtual clock、event ordering、seed、stop/replay和common-path边界；TASK-P4-02形成carrier，P4-09实现core，P4-10实现五类disruption。Simulator不得直接修改fact/ScheduleVersion、绕过P4-04 ingestion或P4-08 application，也不得隐藏不可支持能力。本次没有runtime实现或场景结果。
+ADR-0015已固定virtual clock、named seed derivation、source-position ordering、content-derived event identity、prefix checkpoint/restart和共同入口。Simulator唯一业务输出是ADR-0013的标准ExecutionEvent stream，必须走ledger→fact/new Snapshot→ReplanRequest→Solver→fresh Validator→new DRAFT/ChangeReport；不得直接修改fact/ScheduleVersion或调用私有replan捷径。TASK-P4-02形成carrier，P4-09实现core，P4-10实现连续五类disruption；本Task没有runtime或场景结果。
 
 ExecutionSimulator 输入 PUBLISHED ScheduleVersion，模拟生产时间推进并输出标准 `ExecutionEvent[]`。它不得直接修改计划数据库或调用特殊 Replan 入口。
 
@@ -23,7 +23,9 @@ ExecutionSimulator 输入 PUBLISHED ScheduleVersion，模拟生产时间推进�
 
 ## Disruption 配置
 
-设备故障、processing delay、urgent order、material delay 等开关和概率均为版本化 `SIM_ASSUMPTION`。相同 base schedule、simulator version、Scenario 和 seed 必须产生相同事件序列。
+设备故障、processing delay、urgent order、material delay等时间/持续量/概率均必须是versioned `SIM_ASSUMPTION`；TASK-P4-01不新增数值。相同base PUBLISHED schedule、Snapshot/Problem、Simulator/Scenario/Profile/Generator versions、virtual clock、policy和seed必须产生byte-identical event stream与相同semantic chain。Host wall clock、线程顺序和runtime timing不进入identity。
+
+Checkpoint只保存run identity、last source position和event-prefix fingerprint，不新增业务state machine。Restart先重新计算prefix；不一致即拒绝。已经合法投影的事实不因Simulator停止/失败被删除。
 
 ## 验证
 
@@ -37,5 +39,7 @@ ExecutionSimulator 输入 PUBLISHED ScheduleVersion，模拟生产时间推进�
 - 新 ScheduleVersion Validator PASS。
 
 P4 Gate 需要连续模拟 Urgent Order、Machine Failure、Material Delay、Processing Delay 和 Early Completion，而非仅单事件单元测试。
+
+“连续”要求每一步消费前一步形成的明确Snapshot/Version基线并保留独立Request/Run/DRAFT/ChangeReport；test harness的基线推进必须标记non-Production，不能解释为自动approval/publish。Simulator仅允许Development/Test/Benchmark + SIMULATION + synthetic + `production_binding=false`，Production不注册其route/worker/authority。
 
 TASK-P0-05 的 ScenarioManifest v1 可作为未来 ExecutionSimulator 输入链的 Scenario/Profile/Generator/seed provenance，但当前没有 `simulation/execution/**` 代码、事件概率、event stream 或 fact-preservation test。`failure_frequency` 只是 Scenario contract 维度，不能替代版本化 disruption 配置或关闭 REQ-013；simulator version 与事件 hash 仍为 P4 `PLANNED`。

@@ -11,9 +11,11 @@ last_reviewed: 2026-08-24
 
 # 执行事实、锁定与重排边界
 
-## P4 activation planning boundary
+## TASK-P4-01 accepted fact/replan boundary
 
-P4现已获phase activation，但能力仍未形成。TASK-P4-04拥有ExecutionEvent→authoritative fact/new Snapshot投影；P4-05拥有freeze window与effective HARD/SOFT locks；P4-06拥有OBJ-002/ChangeReport；P4-07/08拥有replan solve/validate与copy-on-write Version application。OPEN-005/007继续阻止Production freeze与真实事实authority，本次不修改任何事实、锁或状态实现。
+ADR-0013～0015现已在任何P4 machine carrier或实现前固定：ExecutionEvent是唯一动态事实入口；source position而非received-at决定顺序；ledger接收与fact→new Snapshot→ReplanRequest投影分成两个可重放事务；每个有效事实变化只创建新Snapshot，不改旧事实或Version。ReplanRequest是immutable intent/result lineage且不拥有状态机，attempt继续由PlanningRun承载。
+
+Freeze以new Snapshot cutoff为half-open区间锚；COMPLETED/RUNNING、显式HARD与freeze-derived effective HARD按顺序保护，冲突直接失败。SOFT与旧计划movement只进入Delivery之后的OBJ-002整数向量。P4-04/05/06/07/08仍分别负责行为实现，本Task没有修改事实、锁、Schema、state pair或测试断言；OPEN-005/007及Production event authority继续阻断真实执行。
 
 ## TASK-P3-17 phase boundary
 
@@ -49,6 +51,8 @@ freeze_window
 ```
 
 Replan 必须保留 completed/running facts 和 HARD_LOCK，对 SOFT_LOCK 计价，并比较交期与稳定性。旧 ScheduleVersion 不修改、不覆盖。
+
+TASK-P4-01进一步固定resolved freeze interval、base content fingerprint、ordered event/fact references、Policy/Limits与request fingerprint必须进入ReplanRequest；new result必须同时绑定fresh Validator与完整ChangeReport。Same input exact replay不重复事实/Snapshot/Request/Version；different fingerprint、gap/late、stale base或cross-plane均fail closed。
 
 ## UI 编辑
 

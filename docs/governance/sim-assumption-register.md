@@ -12,6 +12,10 @@ registry_version: 1.0.0
 
 # SIM_ASSUMPTION 注册表
 
+## TASK-P4-01 contract review
+
+ADR-0015要求后继Simulator显式记录scenario/profile/generator/simulator version、seed和virtual clock，并以content-derived identity产生标准ExecutionEvent；ADR-0014要求任何freeze数值先登记versioned assumption。TASK-P4-01没有选择数值、概率、时钟刻度、freeze duration或browser fixture，因此不分配新ID；SIM-ASSUMPTION-001～015继续全部`ACTIVE`，数量和`registry_version=1.0.0`不变。上述合同不得外推Production事实或capacity/SLA。
+
 ## P4 planning boundary
 
 TASK-P4-00不新增、修改或retire定量假设；SIM-ASSUMPTION-001～015继续全部`ACTIVE`。P4-05必须在实现前为freeze value登记新的versioned assumption，P4-09/10为clock/disruption config/seed登记，P4-13为browser fixture登记；只有实际数值确定时才使用下一个稳定ID，不在规划阶段预填。任何P4 Simulation值、事件概率、运行时间或bundle observation都不得关闭PROD_OPEN或外推Production capacity/SLA。

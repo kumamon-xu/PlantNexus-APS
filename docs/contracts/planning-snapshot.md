@@ -11,6 +11,12 @@ last_reviewed: 2026-08-20
 
 # PlanningSnapshot 合同
 
+## TASK-P4-01 event projection boundary
+
+ADR-0013确认ExecutionEvent不能原地修改Snapshot。Ingress先append ledger；只有连续source-position的已验证event/batch才能由versioned projector在原子事务中形成append-only fact revisions、new immutable Snapshot、ReplanRequest/checkpoint/audit。Projector identity覆盖previous checkpoint、ordered event identities/fingerprints、source/rule/projector versions；received-at和runtime timing不进入semantic hash。
+
+Same projection input必须返回相同Snapshot ID/bytes，gap/late/conflict/cross-plane或partial failure不得产生Snapshot。旧Snapshot及其Problem/Run/Version references保持不可变。TASK-P4-02/04若现有v2字段不足必须发布新document/projection version，不能原地改写v2；本Task不修改Schema、repository或migration。
+
 PlanningSnapshot 是某个 cutoff 的不可变计划事实集合，必须 immutable、deterministic、replayable、hashable。
 
 ## 最小元数据

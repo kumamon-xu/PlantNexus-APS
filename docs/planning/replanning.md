@@ -11,9 +11,9 @@ last_reviewed: 2026-08-27
 
 # 动态重排设计合同
 
-## P4 activation and ownership
+## TASK-P4-01 contract activation
 
-用户已批准P3→P4及完整规划，但未授权TASK-P4-01执行。P4-01/02先形成ADR与机器合同，P4-03～08依次拥有persistence、event facts、freeze/locks、OBJ-002/ChangeReport、Solver/Validator与new DRAFT application，P4-09/10形成deterministic Simulator与五类连续异常，P4-11～13形成read/export、API与UI，P4-14/15分别Gate/Audit。当前所有能力均为`PLANNED_NOT_FORMED`。
+用户已单独授权TASK-P4-01；ADR-0013～0015及一致的人类合同现已形成。P4-02仍须先发布机器合同，P4-03～08再依次拥有persistence、event facts、freeze/locks、OBJ-002/ChangeReport、Solver/Validator与new DRAFT application，P4-09/10形成deterministic Simulator与五类连续异常，P4-11～13形成read/export、API与UI，P4-14/15分别Gate/Audit。除合同/ADR外所有P4行为仍为`PLANNED_NOT_FORMED`，P4-02不会自动启动。
 
 ## TASK-P3-17 phase boundary
 
@@ -37,6 +37,8 @@ P3-14已完成有界Gate，P3-15已完成修订治理，P3-16已完成双语实�
 
 ReplanRequest 引用 base ScheduleVersion、新 PlanningSnapshot、reason 和 freeze window。执行事实必须先进入权威事实层和新 Snapshot，不能作为 Solver 的临时隐藏参数。
 
+ADR-0013要求同时绑定base content fingerprint/base Snapshot、ordered event/fact references、freeze policy/resolved interval、Policy/Limits、plane/scope/correlation/request fingerprint。ReplanRequest无独立state；每次attempt使用PlanningRun。Ledger接收与fact/Snapshot/Request projection为两个可重放事务，result application再以独立事务原子写new DRAFT、ChangeReport、result和audit。
+
 ## 约束与目标
 
 1. COMPLETED 保持不变；
@@ -50,6 +52,8 @@ ReplanRequest 引用 base ScheduleVersion、新 PlanningSnapshot、reason 和 fr
 ## ChangeReport
 
 至少比较：changed operation count、resource changes、start shifts、lock/fact preservation、before/after tardiness 和不可避免变化原因。报告引用 base/new version 和两个 Snapshot/Problem hash。
+
+Operation universe必须恰好一次分类为UNCHANGED、CHANGED、ADDED或有明确COMPLETED证据的REMOVED_BY_FACT。指标、before/after、facts/HARD/freeze/SOFT、fresh Validator、events/request/policy/solver/code lineage必须可独立复算；missing/duplicate/mismatch阻断new DRAFT。无法证明具体因果时使用显式unattributed reason，不得用自由文本补猜。
 
 ## Dynamic Gate
 

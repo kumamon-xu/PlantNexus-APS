@@ -11,9 +11,13 @@ last_reviewed: 2026-08-27
 
 # Milestone 索引
 
+## TASK-P4-01 contract baseline
+
+TASK-P4-01已获独立授权并从clean synchronized `b96232b2e3f5573baaf735c7fa7935f95e6c88f5`冻结Diff base，当前为`in_progress`。ADR-0013～0015已按registry precheck分配并作为accepted人类合同冻结事件投影/Replan lineage、freeze/OBJ-002/ChangeReport及Simulator common-path；未发布Schema、migration、代码或行为证据。P4仍为`active`，P4-02～15保持`planned`，不自动进入下一Task、P5或Production。
+
 ## P3→P4 transition
 
-用户已在P3 Exit双提交exact provider闭环、`READY`且0 gaps后批准transition。P3现为`completed`，P4为`active`；TASK-P4-00只建立完整规划治理，其implementation exact provider已成功并由本closure标为`done`。P4-01～15保持`planned`且P4-15为最后独立Audit；P4规划不授权P5或Production readiness/authority/external/deployment/capacity/SLA。
+用户已在P3 Exit双提交exact provider闭环、`READY`且0 gaps后批准transition。P3现为`completed`，P4为`active`；TASK-P4-00只建立完整规划治理，其implementation/closure exact provider均已成功并标为`done`。该规划提交时P4-01～15均保持`planned`；当前P4-01状态见本页上方TASK-P4-01段落。P4-15仍为最后独立Audit，P4规划不授权P5或Production readiness/authority/external/deployment/capacity/SLA。
 
 ## TASK-P3-17 local Exit decision
 
@@ -58,7 +62,7 @@ P2当前状态：[`P2 — CP-SAT Vertical Slice`](P2-cp-sat-vertical-slice.md)�
 
 P3当前状态：[`P3 — Planning Workspace`](P3-planning-workspace.md)为`completed`。TASK-P3-00～17均为`done`；TASK-P3-17 final independent Exit Audit为`READY`且0 gaps，implementation/closure exact provider均已复验。用户于2026-08-27明确批准transition，历史失败与corrective/provider链保持只读。
 
-P4当前状态：[`P4 — Dynamic Replanning`](P4-dynamic-replanning.md)为`active`。TASK-P4-00完成phase transition和完整规划并由exact implementation provider支持为`done`；P4-01～15均为`planned`，没有implementation SHA且不会自动启动。P4-15是独立Exit Audit；P5与Production仍未进入。
+P4当前状态：[`P4 — Dynamic Replanning`](P4-dynamic-replanning.md)为`active`。TASK-P4-00已由implementation/closure exact provider闭环为`done`；TASK-P4-01按单独授权为`in_progress`并只形成contract/ADR基线，P4-02～15仍为`planned`。P4-15是独立Exit Audit；P5与Production仍未进入。
 
 TASK-P3-04 implementation `a9be974855bb825784d639b7f6675e5a33e4273d`的run/job/artifact=`32700005280`/`97349447107`/`9510215582`精确复现35 focused、515 full、8/8 lifecycle、23/23 JSON PASS与45 committed/0 working paths、8 rows、19 checks、0 issues，故本closure标为`done`。该证据只形成reviewable ScheduleVersion，不形成approval、publish、P4或Production readiness。
 

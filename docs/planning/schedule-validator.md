@@ -11,9 +11,11 @@ last_reviewed: 2026-08-27
 
 # 独立 ScheduleValidator 合同
 
-## P4 planned validation extension
+## TASK-P4-01 accepted validation extension
 
-TASK-P4-07必须扩展独立Validator以验证completed/running facts、freeze、HARD_LOCK、SOFT_LOCK/OBJ-002、base/new lineage及ChangeReport一致性，并保持与Solver分离；P4-08只能接受fresh PASS。TASK-P4-14/15须重放positive/negative/mutation证据。当前Validator代码、C-ID、error mapping与测试断言不变。
+ADR-0013/0014已固定TASK-P4-07的独立验证责任：直接从base/new Problem、facts、explicit HARD、freeze-derived effective HARD、candidate和ChangeReport重算约束与完整性；不信任Solver自报、Hint、report聚合值或application状态。必须验证operation universe恰好一次、OBJ-002整数分量/KPI、before/after lineage和new DRAFT eligibility；P4-08只能接受fresh PASS。
+
+事实/HARD/freeze冲突、missing/duplicate operation、metric mismatch、stale base、unknown reason/reference或report fingerprint漂移都无Version副作用。SOFT lock偏离是objective/report数值而非hard constraint；UNKNOWN仍不等于INFEASIBLE。TASK-P4-14/15重放positive/negative/mutation证据。当前Validator代码、C-ID、error mapping与测试断言不变。
 
 ## TASK-P3-17 audit conclusion
 

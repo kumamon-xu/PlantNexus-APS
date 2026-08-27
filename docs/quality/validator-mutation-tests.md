@@ -11,9 +11,11 @@ last_reviewed: 2026-08-21
 
 # Validator Mutation Test 规范
 
-## P4 planned mutation coverage
+## TASK-P4-01 mutation contract
 
-TASK-P4-07必须为completed/running fact、freeze、HARD_LOCK、base/new lineage、OBJ-002和ChangeReport一致性增加negative/mutation证据；每个故障都应被独立Validator或Gate拒绝。P4-14/15必须重放这些拒绝，不能只证明happy path。当前mutation set、C-ID和测试断言不变。
+ADR-0013/0014现要求后继TASK-P4-07为completed/running fact、显式HARD与freeze-derived HARD、半开边界、stale base/new lineage、四元OBJ-002及ChangeReport分类/算术增加independent negative evidence。事件重复冲突、source gap、跨plane、未知版本/类型/authority、Validator失败和partial result也必须fail closed；P4-14/15必须重放这些拒绝，不能只证明happy path。
+
+TASK-P4-01没有修改当前mutation set、C-ID、Validator或测试断言，故只形成未来测试规范，不形成PASS证据。
 
 ## TASK-P3-17 audit conclusion
 

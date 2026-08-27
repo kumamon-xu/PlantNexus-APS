@@ -12,6 +12,10 @@ registry_version: 1.0.0
 
 # 文档清单
 
+## TASK-P4-01 contract/ADR inventory delta
+
+本Task新增ADR-0013、ADR-0014、ADR-0015三份正式Markdown，inventory由185增至188；它们均为`accepted`。TASK-P4-01按单独授权从`planned`转为`in_progress`，P4-02～15保持`planned`。Roots=30、trace rows=30、Test IDs=61、OPEN=15、SIM assumptions=15、risks=17、Tasks=71与所有registry format version不变；没有新增Schema、migration、dependency、fixture、test、workflow、P5或Production文档。
+
 ## TASK-P4-00 phase-planning inventory delta
 
 本批新增TASK-P4-00～15共16份正式Markdown，inventory由169增至185；P3从`active`转为`completed`，P4从`planned`转为`active`。P4-00 implementation artifact `9632983094`已复现185 docs和83/0/4/19/0治理结果，故本closure把P4-00标为`done`；P4-01～15仍为`planned`。Roots=30、trace rows=30、OPEN=15、SIM assumptions=15与registry format version不变；Test IDs由49增至61、risks由14增至17、Tasks由55增至71。没有新增ADR正文、Schema、migration、依赖、fixture、test、workflow、runbook、P5或Production文档。
@@ -42,7 +46,7 @@ TASK-P3-14不新增、删除或重命名正式Markdown，inventory继续覆盖16
 
 Root=30、trace rows=30、Test IDs=48、OPEN=15、risks=13、Tasks=53均不变；新增SIM-ASSUMPTION-015使SIM count=15但不改变registry format。Artifact `9589931373`复现33 JSON及Task 91/0/11/19/0，closure run `32921871460`失败且无artifact；独立corrective artifact `9590625358`再次复现33 JSON及91/0/11/19/0。本closure自身仍须exact provider。
 
-本清单列出当前仓库已经实际存在的Markdown文档。P0～P3均已归档为completed；P3 Exit Gate=`READY`、0 gaps且implementation/closure provider完整闭环。P4现为active，TASK-P4-00 phase planning=`done`，P4-01～15仍为planned且无implementation SHA。P3 human-control UI/E2E、有界internal Simulation成果包下载及双语展示provider evidence保持历史只读；Production Runbook正文仍未形成。
+本清单列出当前仓库已经实际存在的Markdown文档。P0～P3均已归档为completed；P3 Exit Gate=`READY`、0 gaps且implementation/closure provider完整闭环。P4现为active，TASK-P4-00 phase planning=`done`，TASK-P4-01 contract/ADR baseline=`in_progress`，P4-02～15仍为planned。P3 human-control UI/E2E、有界internal Simulation成果包下载及双语展示provider evidence保持历史只读；Production Runbook正文仍未形成。
 
 | Path | Doc ID | Status | Title |
 |---|---|---|---|
@@ -59,6 +63,9 @@ Root=30、trace rows=30、Test IDs=48、OPEN=15、risks=13、Tasks=53均不变�
 | [adr/ADR-0010-planning-problem-v2-contract-evolution.md](../adr/ADR-0010-planning-problem-v2-contract-evolution.md) | ADR-0010 | accepted | PlanningProblem v2 合同演进 |
 | [adr/ADR-0011-ortools-9-15-cp-sat-backend-version-policy.md](../adr/ADR-0011-ortools-9-15-cp-sat-backend-version-policy.md) | ADR-0011 | accepted | OR-Tools 9.15 CP-SAT Backend 与版本策略 |
 | [adr/ADR-0012-planning-workspace-command-state-publication.md](../adr/ADR-0012-planning-workspace-command-state-publication.md) | ADR-0012 | accepted | Planning Workspace Command State 与 Publication 边界 |
+| [adr/ADR-0013-execution-event-authority-fact-projection-replan-lineage.md](../adr/ADR-0013-execution-event-authority-fact-projection-replan-lineage.md) | ADR-0013 | accepted | ExecutionEvent 权威、事实投影与 Replan Lineage |
+| [adr/ADR-0014-freeze-window-stability-change-report.md](../adr/ADR-0014-freeze-window-stability-change-report.md) | ADR-0014 | accepted | Freeze Window、OBJ-002 Stability 与 ChangeReport |
+| [adr/ADR-0015-deterministic-execution-simulator-common-path.md](../adr/ADR-0015-deterministic-execution-simulator-common-path.md) | ADR-0015 | accepted | Deterministic Execution Simulator Common-Path |
 | [adr/README.md](../adr/README.md) | DOC-ADR-INDEX | baseline | Architecture Decision Records |
 | [agents/AGENTS.md](../agents/AGENTS.md) | DOC-AGENT-001 | baseline | PlantNexus APS Coding Agent 规则 |
 | [agents/reading-order-and-context-policy.md](../agents/reading-order-and-context-policy.md) | DOC-AGENT-002 | baseline | Agent 读取顺序与上下文策略 |
@@ -214,7 +221,7 @@ Root=30、trace rows=30、Test IDs=48、OPEN=15、risks=13、Tasks=53均不变�
 | [tasks/P3/TASK-P3-16-frontend-bilingual-localization-and-official-terminology.md](../tasks/P3/TASK-P3-16-frontend-bilingual-localization-and-official-terminology.md) | TASK-P3-16 | done | Frontend Bilingual Localization and Official Terminology |
 | [tasks/P3/TASK-P3-17-p3-exit-gate-audit.md](../tasks/P3/TASK-P3-17-p3-exit-gate-audit.md) | TASK-P3-17 | done | P3 Exit Gate Audit |
 | [tasks/P4/TASK-P4-00-phase-transition-and-task-planning-governance.md](../tasks/P4/TASK-P4-00-phase-transition-and-task-planning-governance.md) | TASK-P4-00 | done | P4 Phase Transition and Task Planning Governance |
-| [tasks/P4/TASK-P4-01-dynamic-replanning-contract-and-adr-baseline.md](../tasks/P4/TASK-P4-01-dynamic-replanning-contract-and-adr-baseline.md) | TASK-P4-01 | planned | Dynamic Replanning Contract and ADR Baseline |
+| [tasks/P4/TASK-P4-01-dynamic-replanning-contract-and-adr-baseline.md](../tasks/P4/TASK-P4-01-dynamic-replanning-contract-and-adr-baseline.md) | TASK-P4-01 | in_progress | Dynamic Replanning Contract and ADR Baseline |
 | [tasks/P4/TASK-P4-02-execution-event-replan-change-report-schemas.md](../tasks/P4/TASK-P4-02-execution-event-replan-change-report-schemas.md) | TASK-P4-02 | planned | ExecutionEvent Replan and ChangeReport Machine Contracts |
 | [tasks/P4/TASK-P4-03-replan-event-persistence-and-state-transactions.md](../tasks/P4/TASK-P4-03-replan-event-persistence-and-state-transactions.md) | TASK-P4-03 | planned | Replan Event Persistence and State Transactions |
 | [tasks/P4/TASK-P4-04-execution-event-ingestion-and-fact-projection.md](../tasks/P4/TASK-P4-04-execution-event-ingestion-and-fact-projection.md) | TASK-P4-04 | planned | ExecutionEvent Ingestion and Fact Projection |
@@ -232,7 +239,7 @@ Root=30、trace rows=30、Test IDs=48、OPEN=15、risks=13、Tasks=53均不变�
 | [tasks/README.md](../tasks/README.md) | DOC-TASK-INDEX | living | Task Card 索引 |
 | [tasks/TASK_TEMPLATE.md](../tasks/TASK_TEMPLATE.md) | TEMPLATE-TASK | baseline | Task Card Template |
 
-更新文档时应同步维护本清单。`uv run python scripts/check_docs.py`会校验本表是否完整覆盖当前185份`docs/**/*.md`，并核对Doc ID、status和title，但不会自动改写清单。根`README.md`、根`AGENTS.md`、非Markdown evidence manifest、代码和脚本不属于正式文档清单。
+更新文档时应同步维护本清单。`uv run python scripts/check_docs.py`会校验本表是否完整覆盖当前188份`docs/**/*.md`，并核对Doc ID、status和title，但不会自动改写清单。根`README.md`、根`AGENTS.md`、非Markdown evidence manifest、代码和脚本不属于正式文档清单。
 
 本清单格式为 `registry_version: 1.0.0`；列结构或状态比较语义变化时提升版本。
 

@@ -12,6 +12,12 @@ registry_version: 1.0.0
 
 # 核心需求注册表
 
+## TASK-P4-01 contract allocation
+
+REQ-004/005/007/008/009/013现连接TASK-P4-01与accepted ADR-0013～0015。形成的仅是语义基线：ExecutionEvent权威入口与append-only事实投影、immutable ReplanRequest/result lineage、半开freeze与effective HARD、OBJ-002四元整数词典序、完整ChangeReport，以及Simulator标准事件共同路径。对应TEST-EXECUTION-EVENT-CONTRACT-001、TEST-REPLAN-REQUEST-CONTRACT-001、TEST-FREEZE-WINDOW-001、TEST-STABILITY-OBJECTIVE-001、TEST-CHANGE-REPORT-001仍为`PLANNED`。
+
+没有机器Schema、migration、persistence、Solver、Simulator或行为测试，因此全部Requirement root继续`ALLOCATED`。P4-02是第一个可发布机器carrier的后继，但必须等待本Task双提交provider闭环和新的明确授权；P5/Production边界与`registry_version=1.0.0`不变。
+
 ## P4 planning allocation
 
 用户批准P3→P4后，TASK-P4-00把REQ-004/005/006/007/008/009/012/013/014分配到TASK-P4-01～15。REQ-008由合同/Schema/persistence/event/freeze/stability/Solver/application/output/API/UI/Gate/Audit全链承接；REQ-013由Simulator core、五类连续场景、UI/Gate/Audit承接；REQ-009贯穿所有Task的exact provenance。REQ-004/005/006/007分别覆盖lexicographic solve/fresh Validator、new immutable DRAFT、ChangeReport/export/API/UI与state/audit边界；REQ-012/014只提供versioned scenario和development regression，不产生Production分布或SLA。

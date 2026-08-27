@@ -11,9 +11,11 @@ last_reviewed: 2026-08-27
 
 # 错误与求解状态模型
 
-## P4 planned error impact
+## TASK-P4-01 error responsibility baseline
 
-TASK-P4-01/02必须为duplicate/out-of-order event、invalid fact transition、stale base、freeze/lock conflict、stability/report mismatch、unsupported disruption与replan apply conflict定义版本化、机器稳定且可审计的错误边界；TASK-P4-12只能transport这些server错误。当前error-code registry不变，没有预分配code或放宽UNKNOWN/INFEASIBLE/INVALID语义。
+ADR-0013/0014固定责任层：unknown event/version/type/authority/reference/cross-plane在ingress前拒绝；same identity/different fingerprint、source gap/late、stale base/checkpoint为无副作用conflict；invalid fact transition与fact/HARD/freeze冲突在solve前拒绝；Solver INFEASIBLE与UNKNOWN保持分离；fresh Validator或ChangeReport completeness/metric/fingerprint失败不创建Version；persistence/audit失败整体回滚。Unsupported disruption必须显式拒绝，不静默近似P5能力。
+
+具体namespace/code/HTTP映射由TASK-P4-02/12版本化；当前`error-code-registry.v2`与workspace-control reason不变，没有预分配code或放宽UNKNOWN/INFEASIBLE/MODEL_INVALID/VALIDATION_FAILED语义。日志/error只含sanitized references和correlation，不返回raw event payload、credential、SQL或stack。
 
 ## TASK-P3-17 audit conclusion
 

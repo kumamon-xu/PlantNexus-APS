@@ -11,9 +11,11 @@ last_reviewed: 2026-08-26
 
 # P0 Worker Reliability 与 Idempotency
 
-## P4 planned reliability impact
+## TASK-P4-01 reliability decision
 
-TASK-P4-03定义event/replan durable transaction与duplicate/retry recovery，P4-04保证同一event不重复投影事实，P4-08保证同一request不重复创建Version，P4-09保证same scenario/seed/stream可重放。具体lease/worker模型只有在各Task明确扩卡后才能形成；当前P3 ExportJob worker和Production HA/SLA边界不变。
+ADR-0013把接收、projection和result application拆为三个可重放事务：ledger exact replay不重复projection；projection checkpoint + fact revisions + new Snapshot + Request原子；result application重核stale/current并原子写new DRAFT + ChangeReport + result + audit。Same identity/request与same fingerprint返回原logical result，different fingerprint冲突；gap/late不通过worker重试改写顺序。
+
+ADR-0015用run identity/source position/event-prefix fingerprint实现Simulator restart；它不回滚已投影事实或删除历史。ReplanRequest无状态，attempt继续由PlanningRun承载。具体queue/lease/worker/outbox模型只有在后继Task明确扩卡后才能形成；当前P3 ExportJob worker、external exactly-once与Production HA/capacity/SLA边界不变。
 
 ## TASK-P3-17 audit conclusion
 

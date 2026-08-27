@@ -11,6 +11,12 @@ last_reviewed: 2026-08-27
 
 # CI Gate 与 Definition of Done
 
+## TASK-P4-01 required Gate
+
+本Task只发布三份accepted ADR与其人类合同同步，禁止修改`.github/workflows/**`、业务代码、Schema、migration、dependency/lock和测试断言。不可变Diff base为`b96232b2e3f5573baaf735c7fa7935f95e6c88f5`；implementation与evidence-only closure必须分别由现有required `validate`（GitHub Actions app `15368`）对exact SHA执行成功，并下载未过期artifact核对TASK-P4-01、Diff base、`IMPACT-STATE/PHASE/GOVERNANCE-REGISTRY/DOCS`、19/19 checks与`issues=[]`。
+
+本地文档治理、Task diff、phase/dependency policy、`git diff --check`和forbidden-scope全部通过只构成local acceptance。Implementation provider形成前Task保持`in_progress`；其artifact精确通过后才能提交evidence-only closure，closure自身仍需相同exact provider闭环。失败run必须保留，corrective只能在经Impact review扩展后的57-path allow-list内；TASK-P4-02不得自动启动。
+
 ## P4 planning CI boundary
 
 TASK-P4-00只运行既有本地治理与required-equivalent检查，禁止修改`.github/workflows/**`。每个P4 implementation Task必须以自身exact Diff base生成Task report，并在push后由required `validate`（GitHub Actions app `15368`）提供未过期artifact，核对exact SHA/Task/base/Impact Rules/checks/issues后才能evidence-only closure；P4-14/15另有完整Gate/Audit。当前required check仍只有`validate`。

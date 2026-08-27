@@ -12,6 +12,10 @@ registry_version: 1.0.0
 
 # 项目风险注册表
 
+## TASK-P4-01 risk controls
+
+ADR-0013已为RISK-015形成source-position ordering、canonical fingerprint、exact replay/conflict、gap fail-closed、append-only projection与transaction边界；ADR-0014为RISK-016形成freeze优先级、四元OBJ-002和可复算ChangeReport；ADR-0015为RISK-017形成Simulator standard-event common-path及Production default-deny。它们只降低语义歧义，尚无机器carrier或行为证据，所以RISK-001～017全部继续`MONITORED`，不升级为MITIGATED/CLOSED。
+
 ## P4 planning risks
 
 TASK-P4-00新增三项持续监测风险：event重放/乱序导致事实重复或漂移；freeze/OBJ-002/ChangeReport定义不一致导致稳定性被误报；Simulator走特殊路径或越过Simulation/Production隔离。它们分别由P4-02～04、P4-05～08/11和P4-09/10/14/15的strict contracts、idempotency、independent recomputation、common ingress、双replay与provider artifacts控制。当前只有控制计划，没有行为证据，因此RISK-001～017全部保持`MONITORED`，registry format不变。
@@ -54,8 +58,8 @@ Corrective implementation artifact `9589931373`已复验这些bounded controls�
 | RISK-012 | MONITORED | 审批责任未定却被实现成Production授权 | 测试角色或前端按钮被解释为真实approve/publish authority | OPEN-010、authority-neutral capability、Production default-deny、append-only audit |
 | RISK-013 | MONITORED | UI/API绕过状态机或直接修改已发布计划 | client计算权威状态、router直写DB、PUBLISHED内容变化 | command-only application service、server/formal Validator、immutable version、API/E2E negative gates |
 | RISK-014 | MONITORED | 双语展示漂移、中文label污染英文机器合同或隐藏未知原值 | typed词典缺key、localized enum/code进入request、依赖英文message解析、raw code/UTC/ID被替换或丢失 | `official-zh-cn-terminology.v1`、typed exhaustive maps、unknown raw fallback、TASK-P3-16 provider-verified zero-wire-drift evidence、TASK-P3-17独立Audit |
-| RISK-015 | MONITORED | ExecutionEvent重复、乱序或冲突投影导致事实/Snapshot漂移或重复Replan | 同event ID不同fingerprint、source sequence倒退、同输入产生不同Snapshot hash、重复request/result | strict event contract、append-only ledger、exact replay/conflict、deterministic fact projection、TASK-P4-02～04/14/15 |
-| RISK-016 | MONITORED | Freeze、OBJ-002与ChangeReport口径不一致，导致硬事实被移动或稳定性被“优化”误报 | freeze内assignment变化、HARD/SOFT混淆、Solver值与独立report不一致、缺少unavoidable reason | planned Freeze/Stability/ChangeReport ADR、versioned Simulation policy、lexicographic stages、fresh Validator、independent ChangeReport completeness、TASK-P4-05～08/11/14 |
+| RISK-015 | MONITORED | ExecutionEvent重复、乱序或冲突投影导致事实/Snapshot漂移或重复Replan | 同event ID不同fingerprint、source sequence倒退、同输入产生不同Snapshot hash、重复request/result | ADR-0013、strict event contract、append-only ledger、exact replay/conflict、deterministic fact projection、TASK-P4-02～04/14/15 |
+| RISK-016 | MONITORED | Freeze、OBJ-002与ChangeReport口径不一致，导致硬事实被移动或稳定性被“优化”误报 | freeze内assignment变化、HARD/SOFT混淆、Solver值与独立report不一致、缺少unavoidable reason | ADR-0014、versioned Simulation policy、lexicographic stages、fresh Validator、independent ChangeReport completeness、TASK-P4-05～08/11/14 |
 | RISK-017 | MONITORED | Execution Simulator走特殊捷径或污染Production，Gate只验证模拟专用链 | Simulator直写DB/Problem、绕过event ingress、Production启用sim endpoint、场景无seed/hash或只做单事件 | ADR-0001/0009/0015、common Event→Snapshot→Replan path、plane default-deny、五类连续双replay、TASK-P4-09/10/14/15 |
 
 风险状态、责任人和日期将在团队角色与仓库工作流确认后补充，当前不猜测人员归属。

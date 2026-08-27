@@ -11,9 +11,11 @@ last_reviewed: 2026-08-26
 
 # Benchmark Regression 规则
 
-## P4 planned regression evidence
+## TASK-P4-01 regression contract
 
-TASK-P4-10/14在保留P2 XS/S/M基线的同时记录五类continuous disruption的deterministic functional与timing证据，并分别报告Delivery/Stability/Makespan；P4-15独立复验。没有真实数据与OPEN threshold closure时，这些数字只用于regression，不构成Production capacity/SLA。本次不改runner、threshold或expected。
+ADR-0014现固定Replan质量比较顺序为hard feasibility → OBJ-001 Delivery → OBJ-002 Stability四元整数向量 → OBJ-003 Makespan，ChangeReport必须保存可独立复算的before/after值；ADR-0015要求五类连续disruption保留逐步事件、请求、版本和报告identity。后继TASK-P4-10/14仍须复用P2 XS/S/M baseline并记录deterministic functional、quality、runtime与memory观察，P4-15再独立复验。
+
+TASK-P4-01不运行或修改Benchmark runner、baseline、threshold、fixture或expected；没有真实数据与OPEN-011/012 closure时，任何数值只属于development regression，不构成Production capacity/SLA。
 
 ## TASK-P3-17 audit conclusion
 

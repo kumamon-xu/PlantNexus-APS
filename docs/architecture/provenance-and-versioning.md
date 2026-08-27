@@ -11,9 +11,11 @@ last_reviewed: 2026-08-26
 
 # Provenance 与版本规则
 
-## P4 planned provenance chain
+## TASK-P4-01 provenance contract
 
-未来P4证据必须可逐跳追踪`ExecutionEvent ID/version/source → projected fact set/Snapshot → ReplanRequest → base ScheduleVersion → Problem/Policy/Limits → SolverReport + ValidatorReport → new DRAFT ScheduleVersion → ChangeReport → simulator scenario/replay`。TASK-P4-02定义carrier，P4-03/04/08保证append-only lineage，P4-14/15核验完整性。本次不生成这些runtime记录，也不改变既有hash/canonicalization。
+ADR-0013～0015固定完整链：`authority/source stream/version/position + ExecutionEvent identity/fingerprint → ledger disposition → projector/checkpoint + fact revisions/new Snapshot → immutable ReplanRequest + base PUBLISHED fingerprint → Problem/Policy/Limits/freeze/effective locks → PlanningRun/SolverReport + fresh ValidationReport → new DRAFT ScheduleVersion + ChangeReport → Scenario/Profile/Simulator/seed/virtual-clock/event-stream hash`。
+
+每个identity使用versioned canonical projection；received-at、host wall clock、runtime timing和线程顺序只能保留raw observation，不进入业务identity。Same input exact replay必须返回同logical identities；stale/mismatch不得产生partial成功。TASK-P4-02定义carrier，P4-03/04/08实现append-only lineage，P4-14/15核验；本Task不生成runtime记录，也不改变既有hash/canonicalization。
 
 ## TASK-P3-17 audit conclusion
 

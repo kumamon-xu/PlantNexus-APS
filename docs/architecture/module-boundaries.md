@@ -11,9 +11,11 @@ last_reviewed: 2026-08-26
 
 # 模块边界与依赖规则
 
-## P4 planned module allocation
+## TASK-P4-01 accepted module allocation
 
-TASK-P4-01必须先固定边界；TASK-P4-02只发布carrier，P4-03只做repository/state transaction，P4-04只做event ingestion/fact projection，P4-05/06分别做freeze/locks与stability/report，P4-07只扩展Solver/Validator，P4-08做application/version lineage，P4-09/10属于Simulation，P4-11/12/13依次为read/export、API、UI。禁止Simulator绕过application service直接改fact/version，也禁止Frontend计算authority、OBJ-002或ChangeReport。本次仅登记边界。
+ADR-0013～0015固定依赖方向：contract/domain event+fact semantics → plane-scoped ledger/repositories → fact/Snapshot projector → replan application → existing Strategy/Backend + independent Validator → Version/ChangeReport persistence → read/export/API/UI。TASK-P4-02只发布carrier；P4-03不实现业务projection；P4-04不直接solve/apply；P4-05/06只提供pure freeze/stability/report边界；P4-07不写repository；P4-08不复制Solver/Validator；P4-09/10只生成标准Event；P4-11/12/13只消费application/read authority。
+
+禁止Simulator直写fact/Snapshot/Version、API/router/worker复制transaction或objective、Frontend计算authority/OBJ-002/ChangeReport。Evidence orchestrator只能调用公开边界并保留raw report。本Task没有源码、目录或依赖变化；后继Task须在激活时把上述目录责任收紧为exact file allow-list。
 
 ## TASK-P3-17 audit conclusion
 

@@ -11,9 +11,11 @@ last_reviewed: 2026-08-26
 
 # PlanningSolution 与 ScheduleVersion 合同
 
-## P4 planned lineage impact
+## TASK-P4-01 lineage decision
 
-TASK-P4-08预期把validated replan result以copy-on-write方式应用为新的DRAFT ScheduleVersion，并保留base version、event/fact Snapshot、ReplanRequest、ChangeReport与solver/validator provenance；PUBLISHED仍不可原地修改。具体carrier变化只能由TASK-P4-02版本化，state/persistence只能由TASK-P4-03/08实现。本次没有修改既有Solution/Version Schema、state pair或publication authority。
+ADR-0013/0014固定P4-08只能把fresh-validated replan result以copy-on-write方式原子应用为新的DRAFT ScheduleVersion，并保留base PUBLISHED ID/content fingerprint、base/new Snapshot/Problem、ordered event/facts、ReplanRequest/PlanningRun、freeze/effective locks、Policy/Limits、Solver/Validator及ChangeReport fingerprint。Result application前必须重读current/base/checkpoint；stale或任何mismatch无Version副作用。
+
+New DRAFT与complete ChangeReport、request result和audit在同一transaction提交；PUBLISHED不改，也不自动READY/APPROVED/PUBLISHED/export。具体carrier变化只能由TASK-P4-02版本化，persistence只能由TASK-P4-03/08实现。本Task没有修改既有Solution/Version Schema、state pair或publication authority。
 
 ## TASK-P3-17 audit conclusion
 

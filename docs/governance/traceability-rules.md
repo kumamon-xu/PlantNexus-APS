@@ -11,6 +11,12 @@ last_reviewed: 2026-08-27
 
 # 需求追踪规则
 
+## TASK-P4-01 contract trace rule
+
+本Task唯一owner为TASK-P4-01，不可变Diff base=`b96232b2e3f5573baaf735c7fa7935f95e6c88f5`。追踪链固定为`REQ-004/005/007/008/009/013 + declared NFR/ENG → TASK-P4-01 → ADR-0013/0014/0015 + synchronized human contracts → five PLANNED Test IDs → future p4-contract-adr-report.v1/exact provider`。ADR被accepted只表示decision形成，不得把Test ID、机器carrier或业务能力提升为formed。
+
+Implementation diff须精确限制在卡片56-path allow-list并命中`IMPACT-STATE/PHASE/GOVERNANCE-REGISTRY/DOCS`；provider必须绑定exact SHA、同一Diff base、19/19 checks与0 issues。只有implementation artifact下载复验后才可写evidence-only closure，closure自身也须exact provider。P4-02必须等待该双提交闭环和新的用户授权，不能继承当前本地证据。
+
 ## TASK-P4-00 phase-plan trace rule
 
 本批唯一执行owner是TASK-P4-00，Diff base固定为P3 closure `61eeacdd5efc20b2321750e1310e9e21561c9fc2`；其原子新增TASK-P4-01～15 planned members并把current phase/P3/P4状态同步为P4/completed/active。P4执行链必须保持`P4-01 ADR/contract → P4-02 machine contracts → P4-03～08 persistence/event/freeze/stability/solve/apply → P4-09/10 Simulator/scenarios → P4-11～13 read-export/API/UI → P4-14 Gate → P4-15 independent Audit`，依赖未`done`、provider未闭环或没有新的明确授权时不得启动成员。

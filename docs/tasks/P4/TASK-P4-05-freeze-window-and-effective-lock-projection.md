@@ -1,7 +1,7 @@
 ---
 doc_id: TASK-P4-05
 title: Freeze Window and Effective Lock Projection
-status: in_progress
+status: done
 spec_version: 0.3.0
 phase: P4
 normative: true
@@ -103,7 +103,9 @@ Rollback: 停止新policy版本并回退projection consumer；既有Problem/Poli
 
 anchor补强后的一次额外全库replay为`670 passed / 5 setup errors`，五项均来自同一既有P3 publication并发Gate的跨replay语义偶发差异；本Task未修改禁止范围内的P3 application/test。随后该P3 Gate独立`5 passed`，最终全库再次`675 passed`，故保留该本地失败事实但不把它归因为P4-05产品失败。
 
-实现SHA、Provider manifest与closure SHA尚待提交后回填，因此Task保持`in_progress`。实际语义文档已同步freeze/effective-lock/precheck、traceability、SIM-ASSUMPTION-017和OPEN-005边界；Schema/migration/dependency/ADR/state pair均无变化。回滚边界为停止新Simulation policy revision并移除projection consumer，不改写既有Problem/Policy evidence。P4-06、P5与Production均未启动。
+Implementation `2d0ca8723b18dc08a57d12f4e26db3fae9f46a35`是Diff base的直接子提交。其GitHub push run `33077329890`（attempt 1）与required `validate` job/check `98534856259`由GitHub Actions app `15368`成功提供；branch protection仍精确要求`validate`/app `15368`。Artifact `9648715231` / `plantnexus-ci-evidence-33077329890`未过期，826908 bytes，digest=`sha256:dfa3df8b76270b19b23797c1509fa0f7cfb9335b6c62a4e06f0303e8b5391581`、expiry=`2026-11-25T13:32:11Z`。下载复核48 files/42 JSON且0 parse failure、0 issue；Task report绑定同一SHA与Diff base，为56 committed/0 working paths、八个Impact Rules、19/19 checks、`issues=[]`；freeze report绑定同一SHA/Task/base并为7/7 PASS、`issues=[]`。因此本evidence-only closure把Task标为`done`；closure自身仍须post-push exact provider复验。
+
+实际语义文档已同步freeze/effective-lock/precheck、traceability、SIM-ASSUMPTION-017和OPEN-005边界；Schema/migration/dependency/ADR/state pair均无变化。回滚边界为停止新Simulation policy revision并移除projection consumer，不改写既有Problem/Policy evidence。P4-06、P5与Production均未启动。
 
 ## Activation evidence
 

@@ -14,7 +14,7 @@ registry_version: 1.0.0
 
 ## TASK-P4-05 local freeze trace slice
 
-`REQ-005/008/009 + NFR-COR/DET/TRC/ISO/HUM + ENG-SOL/VAL/ERR/VER + SIM-ASSUMPTION-017 → TASK-P4-05 → freeze-policy.v1 / effective-lock-projection.v1 / independent precheck → TEST-FREEZE-WINDOW-001/TEST-RUNNING/TEST-INF-LOCK/TEST-VALIDATOR-MUTATION/TEST-PROPERTY/TEST-SIM-ISOLATION → p4-freeze-window-report.v1/Task report → exact provider`。本地Task-specific 21项与machine 7/7已通过，当前edge为`LOCAL_PASS_PROVIDER_PENDING`；roots/rows仍为30/30、Test IDs仍为61，OBJ-002/ChangeReport/Solver/application与Production/P5保持`PLANNED/NOT_FORMED`。
+`REQ-005/008/009 + NFR-COR/DET/TRC/ISO/HUM + ENG-SOL/VAL/ERR/VER + SIM-ASSUMPTION-017 → TASK-P4-05 → freeze-policy.v1 / effective-lock-projection.v1 / independent precheck → TEST-FREEZE-WINDOW-001/TEST-RUNNING/TEST-INF-LOCK/TEST-VALIDATOR-MUTATION/TEST-PROPERTY/TEST-SIM-ISOLATION → p4-freeze-window-report.v1/Task report → exact provider`。Task-specific 21项与machine 7/7已通过，implementation artifact `9648715231`把该edge标为`PROVIDER_VERIFIED`；roots/rows仍为30/30、Test IDs仍为61，OBJ-002/ChangeReport/Solver/application与Production/P5保持`PLANNED/NOT_FORMED`。
 
 ## TASK-P4-04 provider-verified projection trace slice
 

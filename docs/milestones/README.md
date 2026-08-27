@@ -11,9 +11,9 @@ last_reviewed: 2026-08-27
 
 # Milestone 索引
 
-## TASK-P4-05 local implementation
+## TASK-P4-05 freeze completion
 
-用户已单独授权TASK-P4-05并从P4-04 provider-verified closure `e7b96e28913e7eb5be63ae4265c09f8281456b1c`冻结Diff base。本地现形成`SIM-P4-FREEZE-001@1.0.0`、独立effective-lock projection/precheck、focused 21项及machine 7/7 PASS；Task保持`in_progress`直到implementation与evidence-only closure分别通过exact provider。P4-06、P5与Production均未自动启动。
+用户已单独授权TASK-P4-05并从P4-04 provider-verified closure `e7b96e28913e7eb5be63ae4265c09f8281456b1c`冻结Diff base。当前形成`SIM-P4-FREEZE-001@1.0.0`、独立effective-lock projection/precheck、focused 21项及machine 7/7 PASS；implementation `2d0ca8723b18dc08a57d12f4e26db3fae9f46a35`的required run/job/artifact=`33077329890`/`98534856259`/`9648715231`已由app `15368` exact成功并下载复验，本closure据此把Task标为`done`。P4-06、P5与Production均未自动启动。
 
 ## TASK-P4-04 execution completion
 
@@ -79,7 +79,7 @@ P2当前状态：[`P2 — CP-SAT Vertical Slice`](P2-cp-sat-vertical-slice.md)�
 
 P3当前状态：[`P3 — Planning Workspace`](P3-planning-workspace.md)为`completed`。TASK-P3-00～17均为`done`；TASK-P3-17 final independent Exit Audit为`READY`且0 gaps，implementation/closure exact provider均已复验。用户于2026-08-27明确批准transition，历史失败与corrective/provider链保持只读。
 
-P4当前状态：[`P4 — Dynamic Replanning`](P4-dynamic-replanning.md)为`active`。TASK-P4-00～04均为`done`；TASK-P4-05为`in_progress`且等待exact provider，P4-06～15仍为`planned`。P4-15是独立Exit Audit；P5与Production仍未进入。
+P4当前状态：[`P4 — Dynamic Replanning`](P4-dynamic-replanning.md)为`active`。TASK-P4-00～05均为`done`；P4-06～15仍为`planned`。P4-15是独立Exit Audit；P5与Production仍未进入。
 
 TASK-P3-04 implementation `a9be974855bb825784d639b7f6675e5a33e4273d`的run/job/artifact=`32700005280`/`97349447107`/`9510215582`精确复现35 focused、515 full、8/8 lifecycle、23/23 JSON PASS与45 committed/0 working paths、8 rows、19 checks、0 issues，故本closure标为`done`。该证据只形成reviewable ScheduleVersion，不形成approval、publish、P4或Production readiness。
 

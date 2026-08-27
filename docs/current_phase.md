@@ -11,17 +11,17 @@ last_reviewed: 2026-08-27
 
 # 当前阶段：P4 — Dynamic Replanning
 
-## 当前 Task
+## 最近完成 Task
 
 - Owner：[TASK-P4-05 — Freeze Window and Effective Lock Projection](tasks/P4/TASK-P4-05-freeze-window-and-effective-lock-projection.md)
-- Status：`in_progress`
+- Status：`done`
 - Validation profile：`HIGH_RISK`
 - Immutable Diff base：`e7b96e28913e7eb5be63ae4265c09f8281456b1c`
 - Authorization：用户已于 2026-08-27 单独授权 TASK-P4-05
 
 目标是形成 versioned Simulation freeze policy、solver-neutral effective-lock projection 与独立 fail-closed precheck。COMPLETED、RUNNING、显式 HARD、freeze-derived HARD 和 SOFT 的优先级与半开 freeze window 必须可确定重放。
 
-当前HIGH_RISK本地验收已全部通过，Task仍等待exact implementation Provider，因此尚未done。
+HIGH_RISK本地验收已全部通过。Implementation `2d0ca8723b18dc08a57d12f4e26db3fae9f46a35`的required `validate` run/job=`33077329890`/`98534856259`由GitHub Actions app `15368`成功提供；artifact `9648715231`未过期，下载复核确认exact SHA、Task、Diff base、八条Impact Rules、19/19 checks、`issues=[]`与freeze machine 7/7一致。本evidence-only closure据此把Task标为`done`；closure自身仍须post-push exact provider复验。
 
 ## 直接依赖
 
@@ -60,7 +60,7 @@ Production freeze 仍由 OPEN-005 阻塞；Simulation 值不得外推为 Product
 | P4-02 | P4 machine contracts | done |
 | P4-03 | Event/replan persistence | done |
 | P4-04 | Event fact projection | done |
-| P4-05 | Freeze window and effective locks | in_progress |
+| P4-05 | Freeze window and effective locks | done |
 | P4-06 | OBJ-002 and ChangeReport | planned |
 | P4-07 | Lexicographic replan solver/validator | planned |
 | P4-08 | Replan application and DRAFT lineage | planned |
@@ -76,11 +76,9 @@ Production freeze 仍由 OPEN-005 阻塞；Simulation 值不得外推为 Product
 
 ## 下一步
 
-1. 提交 TASK-P4-05 implementation；
-2. 由现有 required `validate` 对 exact implementation SHA 生成 Provider evidence；
-3. 写回紧凑 completion evidence，并完成必要 closure；
-4. TASK-P4-05 标为 done 后停止；
-5. 只有用户在新 session 明确授权时，才启动满足依赖的下一 Task。
+1. 对本evidence-only closure的exact SHA完成required `validate`与artifact复验；
+2. 确认main/origin/main/remote main一致且working tree clean后停止；
+3. TASK-P4-06保持`planned`，只有用户另行明确授权且启动门重新通过时才可执行。
 
 TASK-P4-14 的 PASS 不替代 TASK-P4-15 fresh independent audit；P4 Exit READY 也不自动进入 P5 或 Production。
 

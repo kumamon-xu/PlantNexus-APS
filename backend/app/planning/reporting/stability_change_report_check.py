@@ -32,6 +32,14 @@ from app.planning.validation.change_report_precheck import validate_change_repor
 REPORT_VERSION = "p4-stability-change-report.v1"
 TASK_ID = "TASK-P4-06"
 DIFF_BASE = "d9d9f2fa2dbefe4c9942aaa8a943a93fdc7efd43"
+IMPACT_RULES = (
+    "IMPACT-DOCS",
+    "IMPACT-DOMAIN",
+    "IMPACT-INFRA",
+    "IMPACT-REPORTING",
+    "IMPACT-TESTS",
+    "IMPACT-VALIDATOR",
+)
 _ORIGIN = datetime(2026, 8, 28, tzinfo=UTC)
 _FROZEN_SHA256 = {
     "schemas/json/change-report.schema.json": (
@@ -762,6 +770,8 @@ def run_stability_change_report_checks(root: Path) -> dict[str, object]:
         "task_id": TASK_ID,
         "code_commit": os.environ.get("PLANTNEXUS_CODE_COMMIT", "uncommitted"),
         "diff_base": DIFF_BASE,
+        "impact_rule_count": len(IMPACT_RULES),
+        "impact_rules": list(IMPACT_RULES),
         "check_count": len(checks),
         "checks": checks,
         "issues": [],
@@ -802,6 +812,8 @@ def main(argv: list[str] | None = None) -> int:
             "task_id": TASK_ID,
             "code_commit": os.environ.get("PLANTNEXUS_CODE_COMMIT", "uncommitted"),
             "diff_base": DIFF_BASE,
+            "impact_rule_count": len(IMPACT_RULES),
+            "impact_rules": list(IMPACT_RULES),
             "error_type": type(error).__name__,
             "error_message": "OBJ-002 and ChangeReport evidence check failed",
             "issues": ["machine-check-failed"],

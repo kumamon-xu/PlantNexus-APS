@@ -619,6 +619,15 @@ def test_ci_p4_stability_change_report_is_required_and_machine_checkable(
     assert report["status"] == "PASS"
     assert report["task_id"] == "TASK-P4-06"
     assert report["diff_base"] == "d9d9f2fa2dbefe4c9942aaa8a943a93fdc7efd43"
+    assert report["impact_rule_count"] == 6
+    assert report["impact_rules"] == [
+        "IMPACT-DOCS",
+        "IMPACT-DOMAIN",
+        "IMPACT-INFRA",
+        "IMPACT-REPORTING",
+        "IMPACT-TESTS",
+        "IMPACT-VALIDATOR",
+    ]
     assert report["check_count"] == 8
     assert report["issues"] == []
     assert report["counts"] == {

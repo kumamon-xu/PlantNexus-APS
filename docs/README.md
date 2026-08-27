@@ -13,7 +13,7 @@ last_reviewed: 2026-08-28
 
 ## TASK-P4-06 local implementation boundary
 
-TASK-P4-06已从provider-verified P4-05/P4-16 closure `d9d9f2fa2dbefe4c9942aaa8a943a93fdc7efd43`按独立授权激活并实现纯整数OBJ-002 calculator、immutable complete ChangeReport builder、独立precheck和FULL CI机器证据。固定fixture覆盖UNCHANGED/CHANGED/ADDED/REMOVED_BY_FACT、metadata-only no-movement、1个SOFT violation、300秒resource/start movement、completion fact、solver fallback reason及before/after priority-weighted tardiness `600→300`；machine为8/8、`issues=[]`。完整HIGH_RISK本地验收同时通过Backend `724 passed`、Frontend 67项与三轮各12/12 Chromium、全部历史machine、XS benchmark、P2/P3 Gate、SCA/license、Compose/build、文档治理及26-path exact allow-list；当前仍是`LOCAL_PASS_PROVIDER_PENDING`，P4-07不会由本Task自动启动。
+TASK-P4-06已从provider-verified P4-05/P4-16 closure `d9d9f2fa2dbefe4c9942aaa8a943a93fdc7efd43`按独立授权激活并实现纯整数OBJ-002 calculator、immutable complete ChangeReport builder、独立precheck和FULL CI机器证据。固定fixture覆盖UNCHANGED/CHANGED/ADDED/REMOVED_BY_FACT、metadata-only no-movement、1个SOFT violation、300秒resource/start movement、completion fact、solver fallback reason及before/after priority-weighted tardiness `600→300`；machine为8/8、`issues=[]`。完整HIGH_RISK本地验收同时通过Backend `724 passed`、Frontend 67项与三轮各12/12 Chromium、全部历史machine、XS benchmark、P2/P3 Gate、SCA/license、Compose/build、文档治理及26-path exact allow-list。首个implementation run `33125423389`的required成功，但artifact缺少显式Impact Rules envelope；该run保留，本Task以原allow-list内corrective补齐，当前仍是`LOCAL_PASS_PROVIDER_PENDING`，P4-07不会由本Task自动启动。
 
 Schema set继续为`2.8.0`且Schema/migration/dependency/state pair/CP-SAT/formal Validator均未修改；ChangeReport尚未被Replan application、ScheduleVersion或export消费。P4-07+、P5、Production authority/external integration/deployment/capacity/SLA均保持未形成。
 

@@ -300,7 +300,13 @@ def test_ci_runs_repository_gates_and_discovers_the_current_task() -> None:
     assert "name: P3 publication supersession and idempotency evidence" in workflow
     assert "Benchmark hook (deferred until runner exists)" not in workflow
     assert "Benchmark runner remains deferred" not in workflow
-    assert "actions/upload-artifact@v4" in workflow
+    for action in (
+        "actions/checkout@v7",
+        "actions/setup-python@v7",
+        "actions/setup-node@v7",
+        "actions/upload-artifact@v7",
+    ):
+        assert action in workflow
     assert "name: P1 common ingress gate" in workflow
     assert workflow.count("uv run python scripts/check_docs.py") == 2
     assert (

@@ -19,11 +19,11 @@ jobs:
     outputs:
       profile: ${{ steps.profile.outputs.profile }}
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@v7
         with:
           fetch-depth: 0
 
-      - uses: actions/setup-python@v5
+      - uses: actions/setup-python@v7
         with:
           python-version: "3.12"
 
@@ -41,7 +41,7 @@ jobs:
 
       - name: Upload validation profile evidence
         if: always()
-        uses: actions/upload-artifact@v4
+        uses: actions/upload-artifact@v7
         with:
           name: plantnexus-ci-profile-${{ github.run_id }}
           path: build/validation/ci-validation-profile.json
@@ -53,11 +53,11 @@ jobs:
     runs-on: ubuntu-latest
     timeout-minutes: 5
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@v7
         with:
           fetch-depth: 0
 
-      - uses: actions/setup-python@v5
+      - uses: actions/setup-python@v7
         with:
           python-version: "3.12"
 
@@ -73,7 +73,7 @@ jobs:
 
       - name: Upload public documentation evidence
         if: always()
-        uses: actions/upload-artifact@v4
+        uses: actions/upload-artifact@v7
         with:
           name: plantnexus-ci-public-docs-${{ github.run_id }}
           path: build/validation/ci-public-docs-validation.json
@@ -89,11 +89,11 @@ jobs:
       PLANTNEXUS_POSTGRES_PASSWORD: ci-contract-only-not-a-secret
       PLANTNEXUS_CI_CHANGE_BASE: ${{ github.event.pull_request.base.sha || github.event.before }}
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@v7
         with:
           fetch-depth: 0
 
-      - uses: actions/setup-python@v5
+      - uses: actions/setup-python@v7
         with:
           python-version: "3.12"
 
@@ -102,7 +102,7 @@ jobs:
           version: "0.11.32"
           enable-cache: true
 
-      - uses: actions/setup-node@v4
+      - uses: actions/setup-node@v7
         with:
           node-version: "24.19.0"
           cache: npm
@@ -396,7 +396,7 @@ jobs:
 
       - name: Upload machine evidence
         if: always()
-        uses: actions/upload-artifact@v4
+        uses: actions/upload-artifact@v7
         with:
           name: plantnexus-ci-evidence-${{ github.run_id }}
           path: |

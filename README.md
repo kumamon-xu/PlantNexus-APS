@@ -1,5 +1,11 @@
 # PlantNexus APS
 
+## TASK-P4-09 deterministic Execution Simulator core
+
+TASK-P4-09已从不可变Diff base `e4874735166be93473ccaebaf1090980db957552`实现Simulation-only Execution Simulator core：PUBLISHED ScheduleVersion reference、Scenario/Profile/Generator/Simulator版本与fingerprint、seed、versioned event schedule和virtual clock先形成完整run identity；同刻事件使用named-child-seed rank与event key稳定排序。全部事件在任何副作用前生成canonical `execution-event.v1` bytes并通过P4-04 strict prefix validation，随后唯一输出边界是`ExecutionFactProjectionService.ingest_event`兼容端口。Prefix checkpoint/restart会重算run/prefix fingerprint，manifest只能消费调用者显式提供的fact checkpoint reference。
+
+完整HIGH_RISK本地验收已通过：Task-specific `12 passed`、完整Backend `771 passed`、Frontend 67项与三轮各12/12 Chromium、全部历史machine、XS Benchmark、P2/P3 Gate、SCA/license、Compose/build，以及24-path/4-rule/19-check/0-issue治理；`p4-execution-simulator-report.v1`为8/8且`issues=[]`。FULL CI新增不可跳过的Simulator machine step；Schema、migration、dependency/lock、P4-04入口、Solver/Replan、ScheduleVersion state、API/UI及P0～P3历史bytes均未修改。三事件/两个同刻offset/固定seed与origin只是SIM-ASSUMPTION-018 correctness vector；五类连续disruption仍归TASK-P4-10且未启动，P5 advanced capability会被显式拒绝，Production source/authority/external integration/deployment/capacity/SLA仍未形成。Exact implementation provider尚待push后复验，Task保持`in_progress`。
+
 ## TASK-P4-08 replan application / new DRAFT
 
 TASK-P4-08现已在不可变Diff base `77981f0564d91dfb57fee6e3792f4989bdb51d32`上形成Simulation-only application闭环：先以独立事务持久化immutable ReplanRequest、attempt与审计，再从exact current PUBLISHED及其PlanningSnapshot重建Problem，复用P4-05 effective locks、P4-07 lexicographic Solver、fresh独立Validator和P4-06 ChangeReport precheck，最后在第二个原子事务中同时写入new DRAFT ScheduleVersion、完整result envelope与审计。Exact idempotency replay不重复调用Solver或产生新DRAFT；stale current、KPI不一致、竞争失败、审计失败和无candidate terminal结果均fail closed且不留下partial result。
@@ -43,7 +49,7 @@ TASK-P4-03已获独立授权并在不可变Diff base `7b9bfc3069de5d3738e5cc5827
 
 用户已明确批准P3→P4。TASK-P3-17独立Exit Audit的report/manifest均为`READY`、`blocking_gaps=[]`；audit implementation `201be9c6fd1b433a9d0a629a3ae7d4ffe1107476`和evidence-only closure `61eeacdd5efc20b2321750e1310e9e21561c9fc2`的直接拓扑、required `validate`、GitHub Actions app `15368`及未过期artifact均已exact复验。因此P3 Milestone现为`completed`，P4 Dynamic Replanning已激活。
 
-PlantNexus APS 是一个面向单工厂、多车间场景的高级计划与排程（APS）项目。TASK-P4-00～08与TASK-P4-16现均已按各自独立授权形成provider-verified implementation与evidence-only closure治理链；本closure自身仍待post-push exact provider。P4-09～15保持`planned`且未自动启动；Simulator、API/UI与Production readiness/UAT/真实authority/external publish/deployment/capacity/SLA仍未形成。
+PlantNexus APS 是一个面向单工厂、多车间场景的高级计划与排程（APS）项目。TASK-P4-00～08与TASK-P4-16现均已按各自独立授权形成provider-verified implementation与evidence-only closure治理链；TASK-P4-09按新的独立授权形成上方本地实现并等待完整HIGH_RISK与双exact provider闭环。TASK-P4-10～15保持`planned`且未自动启动；API/UI与Production readiness/UAT/真实authority/external publish/deployment/capacity/SLA仍未形成。
 
 ## 开始之前
 

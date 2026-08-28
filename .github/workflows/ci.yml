@@ -269,6 +269,12 @@ jobs:
           --root .
           --report build/validation/ci-p4-replan-application.json
 
+      - name: P4 deterministic Execution Simulator core evidence
+        run: >-
+          uv run python -m app.simulation.execution.simulator_check
+          --root .
+          --report build/validation/ci-p4-execution-simulator.json
+
       - name: P3 reviewable ScheduleVersion lifecycle evidence
         run: >-
           uv run python -m app.application.schedule_version_lifecycle_check

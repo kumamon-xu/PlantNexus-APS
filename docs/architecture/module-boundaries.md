@@ -11,6 +11,12 @@ last_reviewed: 2026-08-28
 
 # 模块边界与依赖规则
 
+## TASK-P4-09 module boundary
+
+`backend/app/simulation/execution/contracts.py`拥有immutable Simulation run/event-schedule/clock/checkpoint inputs；`simulator.py`只拥有compile、queue、canonical Event、prefix restart与manifest projection；`simulator_check.py`是machine composition root，可用真实P4-04 service证明端口，但不属于core import boundary。Core可以消费pure domain event/capability/provenance/hash helpers，禁止导入Infrastructure、Planning/Solver、API或Application service。
+
+唯一side-effect port为`ExecutionEventIngressPort.ingest_event(Mapping)`；P4-04 `ExecutionFactProjectionService`结构化满足该端口。Scenario/disruption generation留在P4-10 owner，fact/Snapshot/Replan/ScheduleVersion state仍由既有模块负责。
+
 ## TASK-P4-08 implemented dependency edge
 
 `app.application.replan_application`只编排既有domain、Snapshot/Problem builder、freeze projection、Strategy、fresh Validator、ChangeReport与plane-scoped repositories；domain builder负责Simulation-only授权、DRAFT identity/content/lineage，repositories负责caller-owned transaction和existing-table immutable result envelope。Application不导入API/UI/Simulator/export adapter，Solver/Validator/ChangeReport均不反向依赖Application。

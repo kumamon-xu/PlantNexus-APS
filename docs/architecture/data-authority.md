@@ -11,6 +11,12 @@ last_reviewed: 2026-08-28
 
 # 数据权威边界
 
+## TASK-P4-09 synthetic event authority
+
+每个Simulator run从完整versioned input内容派生唯一Simulation authority ID和source stream ID；authority decision固定为`AUTHORIZED_SIMULATION_SOURCE`、source system固定为`plantnexus-execution-simulator`，scope固定为`SIMULATION/{factory_id}/{planning_scope_id}`且`production_binding=false`。Caller不能提供或替换真实Production authority，P4-04会再次核对scope/stream/version。
+
+该authority只证明synthetic event source可在测试环境进入ledger，不代表MES/ERP/设备事实或真实批准权威。Fact projection checkpoint仍由P4-04 owner形成，Simulator manifest只能引用显式下游evidence。
+
 ## TASK-P4-08 result authority boundary
 
 Application只接受server-bound `SIMULATION + DEVELOPMENT/TEST/BENCHMARK + production_binding=false` context，并在任何idempotency/result lookup前default-deny Production。Request必须绑定exact current `SIMULATION_INTERNAL` PUBLISHED base、stored Snapshot/Problem、ordered Event stream/fact checkpoint、Policy/Limits/freeze；client、AI、received-at或fixture均不能授予Production/approval/publish authority。

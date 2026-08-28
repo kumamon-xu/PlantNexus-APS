@@ -11,6 +11,12 @@ last_reviewed: 2026-08-28
 
 # Provenance 与版本规则
 
+## TASK-P4-09 simulator run and stream identity
+
+`execution-simulator-run.v1`内部projection把完整config与`execution-event-schedule.v1` fingerprint绑定为run fingerprint。Event schedule自身按event key canonicalize并绑定PUBLISHED base content、Scenario/Profile/Generator fingerprints；队列排序由offset、Simulator version/seed派生的named child rank和event key确定。每个Event fingerprint包含authority/stream/position/occurred/payload/provenance/correlation，排除既有合同指定的self fields和receive observation；Event canonical bytes仍保存deterministic received time。
+
+Prefix checkpoint必须同时匹配run fingerprint、last position及重新计算的ordered prefix fingerprint。`execution-simulation-manifest.v1`继续用既有P4-02 identity规则，并逐字引用schedule/run派生stream、base artifacts、Policy/Limits与调用者显式提供的fact checkpoint；Simulator不以`latest`、wall clock、线程顺序或数据库行号重解释历史。
+
 ## TASK-P4-08 application identity and lineage
 
 New ScheduleVersion identity由ReplanRequest fingerprint、PlanningRun/attempt和idempotency-key reference确定；content fingerprint只覆盖排序后的tick-occupied assignments/effective locks。Lineage完整绑定base/new Snapshot/Problem、ordered event-prefix/fact checkpoint、Request、candidate、fresh formal Validation、after KPI、SolverReport、ChangeReport和code commit。Solver processing duration在ScheduleVersion/ChangeReport carrier中规范化为实际tick占用UTC区间，不改写Solver candidate fingerprint。

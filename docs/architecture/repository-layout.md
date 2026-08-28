@@ -11,6 +11,10 @@ last_reviewed: 2026-08-27
 
 # 目标仓库结构
 
+## TASK-P4-09 layout addition
+
+新增`backend/app/simulation/execution/{contracts.py,simulator.py,simulator_check.py}`与public `__init__.py`，并在unit/contract/property/simulation及CI integration suite加入有界证据。`build/validation/ci-p4-execution-simulator.json`继续是ignored machine output。没有新增Schema、migration、dependency、fixture、scenario library、API/UI、Production connector或P5目录。
+
 ## TASK-P4-05 repository layout delta
 
 新增`planning/policy/freeze_window.py`、`planning/problem/freeze_projection.py`、`planning/problem/freeze_window_check.py`和`planning/validation/freeze_window_precheck.py`，并在三个package surface以lazy/explicit export公开；测试分别落在unit/property/validation与既有CI contract。没有新增Schema、migration、dependency、application、Simulator、API、Frontend、fixture或P5目录。

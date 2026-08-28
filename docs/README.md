@@ -11,13 +11,19 @@ last_reviewed: 2026-08-28
 
 # PlantNexus APS 文档中心
 
+## TASK-P4-09 local Execution Simulator core boundary
+
+TASK-P4-09从clean/provider-verified P4-08 closure `e4874735166be93473ccaebaf1090980db957552`冻结不可变Diff base，并在Simulation/development边界内形成versioned virtual clock/event schedule、named-child-seed tie-break、canonical standard ExecutionEvent stream、prefix checkpoint/restart与既有ExecutionSimulationManifest consumer。完整stream在副作用前通过P4-04严格事件校验；runtime只持有`ingest_event`端口，不导入Infrastructure、Planning/Solver、API或Application捷径，machine harness以真实`ExecutionFactProjectionService`公共入口复验该端口。
+
+完整HIGH_RISK本地验收为Task-specific 12、Backend 771、Frontend 67、三轮Chromium各12/12、历史machine/XS/双Gate/SCA/license/build/Compose与24/4/19/0治理全部PASS；machine 8/8且`issues=[]`。FULL workflow新增`P4 deterministic Execution Simulator core evidence`；Schema/migration/dependency/state machine/P4-04入口/P4-08 application保持逐字冻结。SIM-ASSUMPTION-018只登记三事件、两个10秒同刻事件、20秒末事件、1秒resolution及固定seed/origin的correctness向量；P4-10五类连续场景、P4-14 Gate、P5和Production authority/external/capacity/SLA均未形成或启动。Exact implementation provider尚待push后复验，Task保持`in_progress`。
+
 ## TASK-P4-08 local implementation boundary
 
 TASK-P4-08已在冻结Diff base `77981f0564d91dfb57fee6e3792f4989bdb51d32`内形成Simulation-only两事务application闭环：intent事务保存immutable request/attempt/audit；求解阶段重建exact current PUBLISHED lineage下的Problem，并复用P4-05/06/07能力；result事务重新读取current/base/request/attempt/Snapshot后，原子保存new DRAFT ScheduleVersion、完整SolverReport/fresh validation/KPI/ChangeReport result envelope与审计。Exact replay、stale current、KPI mismatch、并发竞争、审计失败和no-candidate terminal链均有本地证据。完整HIGH_RISK为focused 22、Backend 759、Frontend 67、三轮Chromium各12/12、历史machine/XS/双Gate/SCA/license/build/Compose与32/6/19/0治理全部PASS；machine为8/8、`issues=[]`。
 
 Implementation `f664517e5f17dc2453444adf9a5503ff1393530e`的run/FULL/required=`33137388411`/`98740332159`/`98741555347`已由GitHub Actions app `15368` exact成功。Machine/profile artifacts `9672684493`,`9672545763`均未过期并已下载复验；digests分别为`sha256:4d1ef3e89e32dd060e1cb946da119202f688adb9dcb7f2bd7536f2ee1c77e2f9`、`sha256:a9c4e44cdab8fab6bbdac19c7de08b2826b4286602c7fc376e2e76a89d8e3429`，精确绑定Task/base/SHA、32个changed paths、六个Impact Rules、8 checks、0 issues和P2/P3 Gate。本evidence-only closure据此把TASK-P4-08标为`done`；closure自身仍须post-push exact provider。
 
-Schema/migration/dependency/state pair、P4-07 Solver公式、Simulator、API/UI、P3 publish/export与Production边界保持冻结；P4-09～15仍为`planned`且不会自动启动。
+Schema/migration/dependency/state pair、P4-07 Solver公式、API/UI、P3 publish/export与Production边界保持冻结；P4-09现仅按上方独立授权形成core，P4-10～15仍为`planned`且不会自动启动。
 
 ## TASK-P4-07 completion boundary
 

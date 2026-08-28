@@ -6,10 +6,16 @@ spec_version: 0.3.0
 phase: cross-phase
 normative: true
 source_sections: [0, 10, 37, 40, 41, 42, 62, 74]
-last_reviewed: 2026-08-20
+last_reviewed: 2026-08-28
 ---
 
 # Simulation-First 双通道架构
+
+## TASK-P4-09 common-path implementation
+
+Simulation channel现有一个有界Execution Simulator core：versioned synthetic inputs经pure compile产生标准`execution-event.v1`完整prefix，先复用P4-04 strict validator，再只调用与`ExecutionFactProjectionService.ingest_event`结构兼容的公共端口。Core import/call guard明确排除Infrastructure/DB、Planning/Solver/Replan、API、Application shortcut、host clock和global random；machine harness再以真实P4-04 service验证端口，而不是用私有projector替代。
+
+当前共同路径只到event ingress。后续fact/new Snapshot→ReplanRequest→P4-08 application必须由各自公开边界驱动；Simulator不自动调用或写入这些阶段。P4-10连续五类场景、Production channel/source/authority和external adapter均没有因本Task形成。
 
 ## TASK-P4-02 Simulation carrier channel
 
@@ -19,7 +25,7 @@ last_reviewed: 2026-08-20
 
 ADR-0015现要求TASK-P4-09/10的Execution Simulator只输出标准ExecutionEvent，使用versioned virtual clock/seed/source position，并通过P4-04同一ledger/fact入口及P4-08同一application service。禁止simulation-only projector、direct Solver/Version write或自动approval/publish。五类异常必须在同一run中连续消费前一步明确基线，而非五个clean-state happy path。
 
-Simulator仅允许Development/Test/Benchmark + SIMULATION + synthetic + `production_binding=false`；Production不注册其route/worker/authority。当前只有accepted合同，没有Simulator runtime、Production channel、外部集成或定量假设。
+Simulator仅允许Development/Test/Benchmark + SIMULATION + synthetic + `production_binding=false`；Production不注册其route/worker/authority。TASK-P4-09现形成core runtime与SIM-ASSUMPTION-018 correctness向量，但没有Production channel、外部集成、disruption distribution或capacity/SLA证据。
 
 ## 核心设计
 

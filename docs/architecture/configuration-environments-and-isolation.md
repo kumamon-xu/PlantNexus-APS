@@ -11,6 +11,12 @@ last_reviewed: 2026-08-28
 
 # 配置、环境与数据隔离
 
+## TASK-P4-09 Execution Simulator isolation
+
+Execution Simulator config只接受`SIMULATION`、`synthetic=true`、`production_binding=false`与`DEVELOPMENT/TEST/BENCHMARK`。Environment为`PRODUCTION`、stale input fingerprint、unsupported/deferred capability或未知version时，在compile/ingress前fail closed。Core不读取环境变量、host clock、credential、network、database或Worker配置；code commit只能是`uncommitted`或exact 40字符lowercase SHA。
+
+FULL CI以`PLANTNEXUS_CODE_COMMIT=${{ github.sha }}`生成machine report并上传，报告不注册Simulator route/worker/Production authority。P4-10 quantitative disruption config、真实event source与Production enablement仍需独立治理，不得通过环境变量隐式开启。
+
 ## TASK-P4-08 isolation boundary
 
 Application composition在首次repository/idempotency lookup前强制Simulation plane、synthetic request、非Production binding和Development/Test/Benchmark environment；Production-shaped context、cross-plane repository或`SIMULATION_INTERNAL`以外current target均default-deny。真实SQLite迁移头测试只证明隔离correctness/rollback，不形成Production PostgreSQL topology、HA或capacity evidence。

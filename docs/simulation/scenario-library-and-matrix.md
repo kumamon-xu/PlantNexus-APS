@@ -6,14 +6,18 @@ spec_version: 0.3.0
 phase: P0-P7
 normative: true
 source_sections: [43, 44, 45, 46, 56]
-last_reviewed: 2026-08-20
+last_reviewed: 2026-08-28
 ---
 
 # Scenario Library 与复杂度矩阵
 
+## TASK-P4-09 core vector boundary
+
+`SIM-P4-EXECUTION-CORE-001@1.0.0`只是在machine/unit/property evidence中使用的versioned correctness identity：固定3个标准ExecutionEvent、10/10/20秒offset、1秒virtual-clock resolution与seed `20260828`，验证同刻queue/replay/checkpoint/common ingress。它不进入正式disruption scenario catalog，不声明概率、故障持续量、事件分布、期望KPI、capacity或SLA；因此不替代下方TASK-P4-10连续场景。
+
 ## P4 planned continuous scenarios
 
-TASK-P4-10必须在同一deterministic run中覆盖并可独立重放`URGENT_ORDER_CREATED`、`MACHINE_DOWN/RECOVERED`、`MATERIAL_DELAYED`、`OPERATION_DELAYED`与`OPERATION_COMPLETED` early completion；每类都要证明事实/锁保护、Validator PASS、ChangeReport completeness及tardiness/stability对比。P5 capabilities与Production profiles不得伪装成P4场景。本次不修改fixture或expected。
+TASK-P4-10必须在同一deterministic run中覆盖并可独立重放`URGENT_DEMAND_RECEIVED`、`MACHINE_UNAVAILABLE/MACHINE_RECOVERED`、`MATERIAL_DELAYED/MATERIAL_READY`、`PROCESSING_DURATION_CHANGED/PROCESSING_REMAINING_CHANGED`与`OPERATION_COMPLETED` early completion；每类都要证明事实/锁保护、Validator PASS、ChangeReport completeness及tardiness/stability对比。P5 capabilities与Production profiles不得伪装成P4场景。TASK-P4-09不修改正式fixture或expected。
 
 ## 初始工厂画像
 

@@ -6,14 +6,14 @@ spec_version: 0.3.0
 phase: P0-P4
 normative: true
 source_sections: [39, 40, 44, 46, 49, 104]
-last_reviewed: 2026-08-20
+last_reviewed: 2026-08-28
 ---
 
 # ScenarioSpec 与 Provenance
 
-## P4 planned provenance extension
+## TASK-P4-09 provenance consumption
 
-TASK-P4-02/09/10必须为Simulator run登记scenario/version/seed/virtual-time/event-stream/base-version及全部input/output fingerprints，使任一异常链可byte/semantic replay并明确`synthetic=true`。新增字段只能通过versioned additive contract形成；当前ScenarioSpec、existing samples和SIM-ASSUMPTION-001～015均不变。
+TASK-P4-09现在把scenario/profile/generator/simulator的ID、semantic version和fingerprint、seed、PUBLISHED base、Snapshot/Problem、Policy/Limits、virtual-clock origin/resolution、event-schedule fingerprint、run fingerprint、ordered event fingerprints及code commit纳入manifest/stream证据，且强制`synthetic=true`、`production_binding=false`。Core只消费versioned asset reference和已登记capability；不修改ScenarioSpec Schema/sample，也不生成P4-10定量事件。SIM-ASSUMPTION-018只保存core correctness vector。
 
 ScenarioSpec 描述一次可完全重放的计划实验：引用 FactoryProfile，给出 seed、能力要求、复杂度、事件和预期行为。
 

@@ -6,10 +6,18 @@ spec_version: 0.3.0
 phase: P0-P4
 normative: true
 source_sections: [47, 48, 49, 50, 79, 80]
-last_reviewed: 2026-08-19
+last_reviewed: 2026-08-28
 ---
 
 # Execution Simulator 与异常模型
+
+## TASK-P4-09 deterministic core
+
+`app.simulation.execution`现实现`execution-event-schedule.v1`有界内部配置、`virtual-clock.v1`、完整run fingerprint、named-child-seed queue rank、standard ExecutionEvent compile、prefix checkpoint/restart及既有`execution-simulation-manifest.v1` builder。Schedule逐字绑定PUBLISHED base content fingerprint和Scenario/Profile/Generator fingerprints；任何stale binding、unknown version/capability、非对齐offset、checkpoint mismatch或Production target均在调用入口前fail closed。
+
+Simulator先编译完整stream并调用P4-04 `validate_event_prefix`，确保所有payload/entity/time/authority/source-position和identity都合法；之后core唯一副作用调用点是`ingress.ingest_event(document)`。Machine evidence以真实`ExecutionFactProjectionService`复验该公共端口，同时AST/import guard禁止Infrastructure、Planning/Solver、API/Application shortcut、host clock和global random。Manifest所需fact checkpoint只能由调用者在正式投影后显式提供，Simulator不读取或伪造fact storage。
+
+SIM-ASSUMPTION-018的三事件向量只验证1秒resolution、10/10/20秒offset、同刻tie-break、same-input/declaration-permutation exact bytes、两段restart及拒绝边界；它不是disruption distribution或连续场景。TASK-P4-10仍独占Urgent Demand、Machine Failure/Recovery、Material Delay/Ready、Processing Duration/Remaining变化与Early Completion的连续replay，不因core完成而启动。
 
 ## TASK-P4-02 ExecutionSimulationManifest carrier
 
@@ -23,7 +31,7 @@ ExecutionSimulator 输入 PUBLISHED ScheduleVersion，模拟生产时间推进�
 
 ## 事件
 
-`OPERATION_STARTED`、`OPERATION_COMPLETED`、`OPERATION_DELAYED`、`MACHINE_DOWN`、`MACHINE_RECOVERED`、`MATERIAL_DELAYED`、`URGENT_ORDER_CREATED`、`LOCK_CREATED`、`LOCK_RELEASED`。
+机器合同的11种标准type为`OPERATION_STARTED`、`OPERATION_COMPLETED`、`MACHINE_UNAVAILABLE`、`MACHINE_RECOVERED`、`MATERIAL_READY`、`MATERIAL_DELAYED`、`PROCESSING_DURATION_CHANGED`、`PROCESSING_REMAINING_CHANGED`、`URGENT_DEMAND_RECEIVED`、`LOCK_CREATED`、`LOCK_RELEASED`。Simulator不得发明`OPERATION_DELAYED`、`MACHINE_DOWN`或`URGENT_ORDER_CREATED`等私有别名。
 
 ## Disruption 配置
 
@@ -46,4 +54,4 @@ P4 Gate 需要连续模拟 Urgent Order、Machine Failure、Material Delay、Pro
 
 “连续”要求每一步消费前一步形成的明确Snapshot/Version基线并保留独立Request/Run/DRAFT/ChangeReport；test harness的基线推进必须标记non-Production，不能解释为自动approval/publish。Simulator仅允许Development/Test/Benchmark + SIMULATION + synthetic + `production_binding=false`，Production不注册其route/worker/authority。
 
-TASK-P0-05 的 ScenarioManifest v1 可作为未来 ExecutionSimulator 输入链的 Scenario/Profile/Generator/seed provenance，但当前没有 `simulation/execution/**` 代码、事件概率、event stream 或 fact-preservation test。`failure_frequency` 只是 Scenario contract 维度，不能替代版本化 disruption 配置或关闭 REQ-013；simulator version 与事件 hash 仍为 P4 `PLANNED`。
+TASK-P0-05 的 ScenarioManifest v1继续提供Scenario/Profile/Generator/seed provenance来源；TASK-P4-09现增加`simulation/execution/**` core和event-stream/replay/common-ingress evidence，但没有事件概率或五类连续fact-preservation Gate。`failure_frequency`仍只是Scenario contract维度，不能替代versioned disruption配置、TASK-P4-10或关闭REQ-013。

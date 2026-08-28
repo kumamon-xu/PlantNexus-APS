@@ -11,6 +11,12 @@ last_reviewed: 2026-08-27
 
 # ExecutionEvent 与 ReplanRequest 合同
 
+## TASK-P4-09 deterministic producer
+
+Execution Simulator core现在是`execution-event.v1`的producer、P4-04 `ingest_event`的consumer。它先把PUBLISHED base、versioned Scenario/Profile/Generator/Simulator、seed、virtual clock与event schedule绑定为run fingerprint，再按`(offset_seconds, named-child-seed rank, event_key)`生成连续source positions、deterministic occurred/received UTC、exact entity refs及content-derived event ID/fingerprint。完整prefix先经P4-04 strict validator；任一invalid payload/time/reference/source会在首个ingress call前拒绝。
+
+Simulator不创建ReplanRequest、不投影事实、不调用Solver/Replan、不写ScheduleVersion。Checkpoint只保存run fingerprint、last emitted position和prefix fingerprint；existing manifest的fact checkpoint必须由下游显式提供。五类连续场景仍归TASK-P4-10。
+
 ## TASK-P4-04 ingestion and projection consumer
 
 P4-04实现全部11个既有ExecutionEvent type的strict Simulation runtime消费：root/payload exact fields、canonical fingerprint/event ID、authority/scope/stream、source position、UTC/provenance与entity refs先验证，再按完整连续prefix投影。Ingress事务只写ledger+`EXECUTION_EVENT_APPENDED` audit；projection事务只写new immutable PlanningSnapshot、CAS checkpoint与`PROJECTION_CHECKPOINT_COMMITTED` audit。Exact replay返回既有identity；different content、gap/late、terminal regression、invalid ref、stale base、cross-plane或写入失败均fail closed。
@@ -36,7 +42,7 @@ P4-03现建立Simulation-only durable consumer：ExecutionEvent按`event_id`和a
 
 ## V1 ExecutionEvent 类型
 
-`OPERATION_STARTED`、`OPERATION_COMPLETED`、`OPERATION_DELAYED`、`MACHINE_DOWN`、`MACHINE_RECOVERED`、`MATERIAL_DELAYED`、`URGENT_ORDER_CREATED`、`LOCK_CREATED`、`LOCK_RELEASED`。
+`OPERATION_STARTED`、`OPERATION_COMPLETED`、`MACHINE_UNAVAILABLE`、`MACHINE_RECOVERED`、`MATERIAL_READY`、`MATERIAL_DELAYED`、`PROCESSING_DURATION_CHANGED`、`PROCESSING_REMAINING_CHANGED`、`URGENT_DEMAND_RECEIVED`、`LOCK_CREATED`、`LOCK_RELEASED`。
 
 每个事件至少需要stable event identity、event type、business `occurred_at`、transport `received_at`、data plane/environment/factory scope、authority source stream/version、单调source position、entity refs、payload version、canonical fingerprint、correlation和conditional synthetic provenance。`received_at`不参与业务顺序或identity。
 

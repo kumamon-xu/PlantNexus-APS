@@ -11,6 +11,12 @@ last_reviewed: 2026-08-28
 
 # 端到端计划链路
 
+## TASK-P4-09 event-source prefix
+
+动态链新增一个严格前缀而不改变既有Planning路径：`PUBLISHED ScheduleVersion + exact Snapshot/Problem refs + Scenario/Profile/Generator/Simulator versions + seed + EventSchedule + VirtualClock → canonical ExecutionEvent prefix → P4-04 ingest_event`。Simulator在入口前完成完整prefix校验；每个event仍由P4-04 ledger/fact事务处理。
+
+本Task在此停止。Fact/new Snapshot→ReplanRequest→P4-08 application、fresh Validator、new DRAFT与ChangeReport均不由Simulator直接调用；P4-10才编排连续五类场景，且仍不得自动approve/publish/export。
+
 ## TASK-P4-08 formed application edge
 
 端到端链现扩展为`exact current PUBLISHED base + immutable ReplanRequest/attempt → stored new Snapshot → deterministic Problem rebuild → P4-05 effective locks → P4-07 global lexicographic solve → fresh independent validation → P4-06 complete ChangeReport → atomic new DRAFT ScheduleVersion v2/result envelope/result audit`。Intent与result application保持两个事务；第二个事务在写入前重新读取current/base/request/attempt/Snapshot并重建Problem，任何stale或lineage漂移均无DRAFT/result副作用。

@@ -71,6 +71,9 @@ from app.simulation.baselines.reference_schedulers import (
 )
 from app.simulation.benchmarks import load_baseline, load_profile_set
 from app.simulation.scenarios.p2_correctness import main as p2_correctness_main
+from app.simulation.execution.simulator_check import (
+    main as execution_simulator_main,
+)
 
 ROOT = Path(__file__).resolve().parents[3]
 
@@ -382,7 +385,7 @@ def test_ci_profile_routing_is_mutually_exclusive_and_fail_closed() -> None:
     assert "backend/tests/security" in full_text
     assert "P3 vertical slice Gate evidence" in full_text
     assert "Build package" in full_text
-    assert len(full["steps"]) == 59
+    assert len(full["steps"]) == 60
 
     assert 'test "${PLANTNEXUS_CLASSIFY_RESULT}" = "success"' in final_run
     assert 'test "${PLANTNEXUS_FULL_RESULT}" = "success"' in final_run
@@ -769,6 +772,66 @@ def test_ci_p4_replan_application_is_required_and_machine_checkable(
         "http_ui_execution_simulator": "NOT_IMPLEMENTED_BY_TASK",
         "p4_09_plus": "NOT_STARTED",
         "p5_plus": "NOT_STARTED",
+        "production_external_authority_capacity_sla": "NOT_ESTABLISHED",
+    }
+
+
+def test_ci_p4_execution_simulator_is_required_and_machine_checkable(
+    tmp_path: Path,
+) -> None:
+    workflow = (ROOT / ".github" / "workflows" / "ci.yml").read_text(
+        encoding="utf-8"
+    )
+    normalized = " ".join(workflow.split())
+    assert (
+        "name: P4 deterministic Execution Simulator core evidence run: >- "
+        "uv run python -m app.simulation.execution.simulator_check --root . "
+        "--report build/validation/ci-p4-execution-simulator.json"
+    ) in normalized
+    assert "continue-on-error" not in workflow
+
+    report_path = tmp_path / "p4-execution-simulator.json"
+    assert (
+        execution_simulator_main(
+            ["--root", str(ROOT), "--report", str(report_path)]
+        )
+        == 0
+    )
+    report = json.loads(report_path.read_text(encoding="utf-8"))
+    assert report["report_version"] == "p4-execution-simulator-report.v1"
+    assert report["status"] == "PASS"
+    assert report["task_id"] == "TASK-P4-09"
+    assert report["diff_base"] == "e4874735166be93473ccaebaf1090980db957552"
+    assert report["impact_rules"] == [
+        "IMPACT-DOCS",
+        "IMPACT-INFRA",
+        "IMPACT-SIM-EXECUTION",
+        "IMPACT-TESTS",
+    ]
+    assert report["check_count"] == 8
+    assert report["issues"] == []
+    assert report["counts"] == {
+        "scheduled_events": 3,
+        "same_offset_events": 2,
+        "event_types": 3,
+        "same_input_full_runs": 2,
+        "checkpoint_batches": 2,
+        "public_ingress_calls": 6,
+        "frozen_boundary_files": 8,
+        "machine_checks": 8,
+    }
+    assert report["boundaries"] == {
+        "data_plane": "SIMULATION_ONLY",
+        "time_source": "VERSIONED_VIRTUAL_CLOCK_ONLY",
+        "event_output": "STANDARD_EXECUTION_EVENT_V1_ONLY",
+        "common_ingress": (
+            "P4_04_EXECUTION_FACT_PROJECTION_SERVICE_INGEST_EVENT"
+        ),
+        "database_solver_replan_schedule_write": "NONE_IN_SIMULATOR_CORE",
+        "fact_checkpoint": "EXPLICIT_CALLER_SUPPLIED_REFERENCE_ONLY",
+        "five_disruption_continuous_replay": "P4_10_NOT_IMPLEMENTED",
+        "business_state_transition": "NONE",
+        "p5_plus": "EXPLICITLY_REJECTED",
         "production_external_authority_capacity_sla": "NOT_ESTABLISHED",
     }
 

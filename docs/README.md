@@ -15,7 +15,9 @@ last_reviewed: 2026-08-28
 
 TASK-P4-09从clean/provider-verified P4-08 closure `e4874735166be93473ccaebaf1090980db957552`冻结不可变Diff base，并在Simulation/development边界内形成versioned virtual clock/event schedule、named-child-seed tie-break、canonical standard ExecutionEvent stream、prefix checkpoint/restart与既有ExecutionSimulationManifest consumer。完整stream在副作用前通过P4-04严格事件校验；runtime只持有`ingest_event`端口，不导入Infrastructure、Planning/Solver、API或Application捷径，machine harness以真实`ExecutionFactProjectionService`公共入口复验该端口。
 
-完整HIGH_RISK本地验收为Task-specific 12、Backend 771、Frontend 67、三轮Chromium各12/12、历史machine/XS/双Gate/SCA/license/build/Compose与24/4/19/0治理全部PASS；machine 8/8且`issues=[]`。FULL workflow新增`P4 deterministic Execution Simulator core evidence`；Schema/migration/dependency/state machine/P4-04入口/P4-08 application保持逐字冻结。SIM-ASSUMPTION-018只登记三事件、两个10秒同刻事件、20秒末事件、1秒resolution及固定seed/origin的correctness向量；P4-10五类连续场景、P4-14 Gate、P5和Production authority/external/capacity/SLA均未形成或启动。Exact implementation provider尚待push后复验，Task保持`in_progress`。
+完整HIGH_RISK本地验收为Task-specific 12、Backend 771、Frontend 67、三轮Chromium各12/12、历史machine/XS/双Gate/SCA/license/build/Compose与24/4/19/0治理全部PASS；machine 8/8且`issues=[]`。FULL workflow新增`P4 deterministic Execution Simulator core evidence`；Schema/migration/dependency/state machine/P4-04入口/P4-08 application保持逐字冻结。SIM-ASSUMPTION-018只登记三事件、两个10秒同刻事件、20秒末事件、1秒resolution及固定seed/origin的correctness向量；P4-10五类连续场景、P4-14 Gate、P5和Production authority/external/capacity/SLA均未形成或启动。
+
+Implementation `6b293720d795ae7dcb2f6453dc999471d3586b94`的run/FULL/required=`33141091252`/`98751935625`/`98753074526`已exact成功；machine/profile artifacts `9674090110`,`9673955596`均未过期并已下载复验，digests分别为`sha256:521fec38cca4a625cc5dcacb6624e472b34dab1cf5fc76a5518c725cf5287e4b`、`sha256:7851c45a7abf3610030846ca27dd290ee9ef2a2949fffb02856c27dcecc4a4b4`。Artifact精确绑定implementation SHA、Task、原始Diff base、四个Impact Rules、8 checks、0 issues、FULL 24-path profile及P2/P3 Gate；本evidence-only closure记录完成结论，但其自身仍须post-push exact provider复验，TASK-P4-10保持`planned`且未启动。
 
 ## TASK-P4-08 local implementation boundary
 

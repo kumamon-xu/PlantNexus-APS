@@ -11,11 +11,17 @@ from .contracts import (
 )
 from .idempotency import InMemoryIdempotencyStore
 from .export_job import ExportWorkerResult, InternalExportJobWorker
+from .change_report_export_job import (
+    ChangeReportExportWorkerResult,
+    InternalChangeReportExportJobWorker,
+)
 
 __all__ = [
     "InMemoryIdempotencyStore",
     "ExportWorkerResult",
     "InternalExportJobWorker",
+    "ChangeReportExportWorkerResult",
+    "InternalChangeReportExportJobWorker",
     "JobRecord",
     "JobStatus",
     "claim_job",

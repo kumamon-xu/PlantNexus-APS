@@ -11,6 +11,12 @@ last_reviewed: 2026-08-28
 
 # APS 领域模型
 
+## TASK-P4-11 ChangeReport read/export projection
+
+`ChangeReportQueryService`是versioned只读projection，不是新Aggregate，也不是ChangeReport重算器。输入必须同时给出attempt/result fingerprint、ScheduleVersion ID/content fingerprint及ChangeReport ID/fingerprint；服务从durable applied-result envelope取得immutable Solver/Validation/KPI/ChangeReport，再读取exact ScheduleVersion并复验完整cross-artifact lineage。Operation classification与ID filter按稳定集合执行，cursor以已排序operation ID推进；输出只给出`export_eligible`事实，不授予publish或export authority。
+
+`export-job.v3`仍是既有ExportJob aggregate的additive carrier consumer。新identity只增加P4 ScheduleVersion version与ChangeReport reference；state、attempt、lease、heartbeat、artifact/error与audit ownership不变。P4 package是derived immutable artifact，不成为ScheduleVersion或ChangeReport的新事实来源。
+
 ## TASK-P4-08 Replan application aggregate boundary
 
 Replan application现把既有immutable ReplanRequest、attempt/result/audit与ScheduleVersion组合成两个显式事务边界。Intent事务只保存请求、attempt和审计；成功求解后，result事务重新确认exact current PUBLISHED及其Snapshot lineage，并原子保存new DRAFT ScheduleVersion、完整applied result envelope与审计。Terminal no-candidate只形成完整SolverReport result，不创建DRAFT或ChangeReport；失败或竞争不得留下partial aggregate。

@@ -11,6 +11,12 @@ last_reviewed: 2026-08-28
 
 # 模块边界与依赖规则
 
+## TASK-P4-11 module ownership
+
+`app.application.change_report_queries`拥有authorization-before-lookup、query preconditions、stable filtering/paging与read projection；它只依赖domain contract和repository ports，不导入Solver。`app.domain.export_job`拥有v2/v3 carrier identity和既有transition语义；`app.exporters.change_report_package`拥有canonical package/verify/load/archive/write；`app.jobs.change_report_export_job`只编排claim/materialize/complete/fail；Infrastructure只持久化/加载version-aware完整carrier。
+
+P3 `standard_package`保持独立owner和冻结行为，P4 exporter只复用其verified package及安全序列化原语。Download application通过package-store port验证结果，不暴露absolute path。没有API/UI、external adapter、Replan orchestration或Simulator反向依赖。
+
 ## TASK-P4-10 module boundary
 
 `simulation/scenarios/disruption_replay.py`拥有strict asset parsing、五步coverage/order、P4-09 schedule/config projection、checkpoint partition与downstream evidence validation；`disruption_replay_check.py`是machine composition root，可调用P4-04/P4-08/P4-09 owner checks并生成raw evidence。Runtime orchestrator只依赖pure contract/Simulation execution surface，不导入Infrastructure、API、OR-Tools/CP-SAT、SQLAlchemy或wall clock。

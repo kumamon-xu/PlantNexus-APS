@@ -16,6 +16,7 @@ from app.domain.export_job import (
     require_job_authorization,
 )
 from app.domain.workspace_contracts import require_workspace_document
+from app.domain.execution_contracts import require_p4_document
 
 _FINGERPRINT = re.compile(r"sha256:[0-9a-f]{64}")
 
@@ -113,14 +114,21 @@ class ExportPackageDownloadService:
             reject_export_job(ExportJobFailure.SOURCE_NOT_FOUND, "export_job_id")
         document = stored.document
         try:
-            contract = require_workspace_document(document)
+            contract = (
+                require_p4_document(document)
+                if document.get("export_job_version") == "export-job.v3"
+                else require_workspace_document(document)
+            )
         except (TypeError, ValueError) as error:
             raise ExportJobError(
                 ExportJobFailure.EXPORT_FAILED,
                 field="export_job",
             ) from error
-        if contract != "export-job.v2":
+        if contract not in {"export-job.v2", "export-job.v3"}:
             reject_export_job(ExportJobFailure.EXPORT_FAILED, "export_job_version")
+        expected_manifest_version = (
+            "export-manifest.v3" if contract == "export-job.v3" else "export-manifest.v2"
+        )
         if (
             document.get("state") != "EXPORTED"
             or document.get("data_plane") != "SIMULATION"
@@ -137,7 +145,7 @@ class ExportPackageDownloadService:
         manifest_fingerprint = artifact.get("manifest_fingerprint")
         storage_reference = artifact.get("storage_reference")
         if (
-            artifact.get("export_manifest_version") != "export-manifest.v2"
+            artifact.get("export_manifest_version") != expected_manifest_version
             or not isinstance(artifact.get("package_id"), str)
             or not isinstance(manifest_fingerprint, str)
             or _FINGERPRINT.fullmatch(manifest_fingerprint) is None
@@ -175,6 +183,8 @@ class ExportPackageDownloadService:
                 or _FINGERPRINT.fullmatch(package.archive_fingerprint) is None
                 or package.archive_fingerprint != computed_archive_fingerprint
                 or manifest.get("target") != "SIMULATION_INTERNAL"
+                or manifest.get("export_manifest_version") != expected_manifest_version
+                or manifest_job.get("export_job_version") != contract
                 or manifest.get("synthetic") is not True
                 or manifest_job.get("export_job_id") != export_job_id
                 or manifest_job.get("attempt") != attempt
@@ -184,6 +194,10 @@ class ExportPackageDownloadService:
                 != document.get("synthetic_provenance")
                 or audit_lineage.get("completion_audit_event_id")
                 != document.get("latest_audit_event_id")
+                or (
+                    contract == "export-job.v3"
+                    and manifest.get("change_report") != document.get("change_report")
+                )
             ):
                 reject_export_job(ExportJobFailure.EXPORT_FAILED, "artifact_lineage")
         except ExportJobError:

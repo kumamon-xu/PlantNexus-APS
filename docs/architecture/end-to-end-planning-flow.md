@@ -11,6 +11,12 @@ last_reviewed: 2026-08-28
 
 # 端到端计划链路
 
+## TASK-P4-11 read/export continuation
+
+当前P4链路可在P4-08 durable apply之后执行两条只读/输出分支：`applied result + exact ScheduleVersion → authorized ChangeReport query → stable page`，以及`already-PUBLISHED P4 ScheduleVersion + exact ChangeReport + verified P3 compatibility package → ExportJob claim → deterministic v3 package → EXPORTED-only verified download`。两条分支都复验Solver/Validation/KPI/report lineage，均不重新求解或推进Replan/Schedule state。
+
+Export不调用Publish；P4-08 DRAFT到PUBLISHED的authority流程仍必须由既有独立控制提供。HTTP/API、UI和browser E2E分别归P4-12/13，P5 advanced planning及Production external integration不在本链路中。
+
 ## TASK-P4-10 continuous composition edge
 
 当前Simulation链可由一个versioned run连续执行五个step：`Scenario step → P4-09 canonical Event delta → P4-04 fact/new Snapshot owner → ReplanRequest → P4-08 application/P4-07 solve → fresh Validator → new DRAFT + complete ChangeReport → explicit non-Production next baseline`。每个箭头保存exact IDs/fingerprints，step 2～5必须消费前一步Schedule/Snapshot/Problem reference；任一缺口停止后续chain。

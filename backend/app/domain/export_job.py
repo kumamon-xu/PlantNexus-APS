@@ -12,9 +12,13 @@ from typing import Never, cast
 
 from app.domain.types import parse_utc_instant
 from app.domain.workspace_contracts import (
-    export_job_fingerprint,
+    export_job_fingerprint as workspace_export_job_fingerprint,
     require_workspace_document,
     workspace_fingerprint,
+)
+from app.domain.execution_contracts import (
+    export_job_fingerprint as p4_export_job_fingerprint,
+    require_p4_document,
 )
 
 
@@ -71,6 +75,7 @@ class ExportJobRequest:
     synthetic_provenance: Mapping[str, object]
     data_plane: str = "SIMULATION"
     target: str = "SIMULATION_INTERNAL"
+    change_report_reference: Mapping[str, object] | None = None
 
 
 @dataclass(frozen=True, slots=True)
@@ -93,7 +98,7 @@ def _safe_text(value: str, field: str) -> str:
 
 
 def _request_projection(request: ExportJobRequest, key_reference: str) -> dict[str, object]:
-    return {
+    projection: dict[str, object] = {
         "service_version": EXPORT_JOB_SERVICE_VERSION,
         "schedule_version_id": request.schedule_version_id,
         "expected_content_fingerprint": request.expected_content_fingerprint,
@@ -104,8 +109,53 @@ def _request_projection(request: ExportJobRequest, key_reference: str) -> dict[s
         "synthetic_provenance": dict(request.synthetic_provenance),
         "data_plane": request.data_plane,
         "target": request.target,
-        "package_profile": "p3-standard-export.v1",
+        "package_profile": (
+            "p4-dynamic-replan-export.v1"
+            if request.change_report_reference is not None
+            else "p3-standard-export.v1"
+        ),
     }
+    if request.change_report_reference is not None:
+        projection["change_report"] = dict(request.change_report_reference)
+    return projection
+
+
+def _change_report_reference(value: object) -> dict[str, object]:
+    if not isinstance(value, Mapping) or set(value) != {
+        "change_report_version",
+        "report_id",
+        "report_fingerprint",
+    }:
+        reject_export_job(ExportJobFailure.INVALID_REQUEST, "change_report_reference")
+    reference = dict(value)
+    if (
+        reference.get("change_report_version") != "change-report.v1"
+        or not isinstance(reference.get("report_id"), str)
+        or re.fullmatch(
+            r"change-report-[0-9a-f]{64}", cast(str, reference["report_id"])
+        )
+        is None
+        or not isinstance(reference.get("report_fingerprint"), str)
+        or _SHA256_REFERENCE.fullmatch(cast(str, reference["report_fingerprint"]))
+        is None
+    ):
+        reject_export_job(ExportJobFailure.INVALID_REQUEST, "change_report_reference")
+    return reference
+
+
+_SHA256_REFERENCE = re.compile(r"sha256:[0-9a-f]{64}")
+
+
+def _job_fingerprint(document: Mapping[str, object]) -> str:
+    if document.get("export_job_version") == "export-job.v3":
+        return p4_export_job_fingerprint(document)
+    return workspace_export_job_fingerprint(document)
+
+
+def _require_job_document(document: Mapping[str, object]) -> str:
+    if document.get("export_job_version") == "export-job.v3":
+        return require_p4_document(document)
+    return require_workspace_document(document)
 
 
 def export_job_identity(request: ExportJobRequest) -> ExportJobIdentity:
@@ -117,6 +167,8 @@ def export_job_identity(request: ExportJobRequest) -> ExportJobIdentity:
         reject_export_job(ExportJobFailure.INVALID_REQUEST, "expected_content_fingerprint")
     if request.environment not in {"DEVELOPMENT", "TEST", "BENCHMARK", "PRODUCTION"}:
         reject_export_job(ExportJobFailure.INVALID_REQUEST, "environment")
+    if request.change_report_reference is not None:
+        _change_report_reference(request.change_report_reference)
     key_reference = f"sha256:{sha256(request.raw_idempotency_key.encode()).hexdigest()}"
     projection = _request_projection(request, key_reference)
     request_fingerprint = workspace_fingerprint(projection)
@@ -193,7 +245,17 @@ def build_created_export_job(
     schedule_version: Mapping[str, object],
     publication_result: Mapping[str, object],
 ) -> dict[str, object]:
-    if require_workspace_document(schedule_version) != "schedule-version.v1" or schedule_version.get("state") != "PUBLISHED":
+    schedule_document_version = schedule_version.get("schedule_version_version")
+    if schedule_document_version == "schedule-version.v2":
+        try:
+            schedule_contract = require_p4_document(schedule_version)
+        except (TypeError, ValueError) as error:
+            raise ExportJobError(
+                ExportJobFailure.STALE_SOURCE, field="schedule_version"
+            ) from error
+    else:
+        schedule_contract = require_workspace_document(schedule_version)
+    if schedule_contract not in {"schedule-version.v1", "schedule-version.v2"} or schedule_version.get("state") != "PUBLISHED":
         reject_export_job(ExportJobFailure.STALE_SOURCE, "schedule_version.state")
     if require_workspace_document(publication_result) != "publication-result.v1":
         reject_export_job(ExportJobFailure.PUBLICATION_NOT_FOUND, "publication_result")
@@ -208,23 +270,40 @@ def build_created_export_job(
         )
     ) or schedule_version.get("content_fingerprint") != request.expected_content_fingerprint:
         reject_export_job(ExportJobFailure.STALE_SOURCE, "schedule_version")
+    is_p4 = schedule_contract == "schedule-version.v2"
+    change_reference: dict[str, object] | None = None
+    if is_p4:
+        change_reference = _change_report_reference(request.change_report_reference)
+        lineage = schedule_version.get("lineage")
+        if not isinstance(lineage, Mapping) or lineage.get("change_report") != change_reference:
+            reject_export_job(ExportJobFailure.STALE_SOURCE, "schedule_version.lineage.change_report")
+    elif request.change_report_reference is not None:
+        reject_export_job(ExportJobFailure.INVALID_REQUEST, "change_report_reference")
     document: dict[str, object] = {
-        "export_job_version": "export-job.v2",
-        "schema_set_version": "2.7.0",
+        "export_job_version": "export-job.v3" if is_p4 else "export-job.v2",
+        "schema_set_version": "2.8.0" if is_p4 else "2.7.0",
         "canonicalization_version": "canonical-json.v1",
         "export_job_id": identity.export_job_id,
         "state": "CREATED",
         "schedule_version": {
+            **(
+                {"schedule_version_version": "schedule-version.v2"}
+                if is_p4
+                else {}
+            ),
             "schedule_version_id": schedule_version["schedule_version_id"],
             "state": "PUBLISHED",
             "content_fingerprint": schedule_version["content_fingerprint"],
         },
+        **({"change_report": change_reference} if is_p4 else {}),
         "data_plane": "SIMULATION",
         "environment": request.environment,
         "synthetic": True,
         "synthetic_provenance": deepcopy(dict(request.synthetic_provenance)),
         "target": "SIMULATION_INTERNAL",
-        "package_profile": "p3-standard-export.v1",
+        "package_profile": (
+            "p4-dynamic-replan-export.v1" if is_p4 else "p3-standard-export.v1"
+        ),
         "idempotency_reference": {
             "scope": identity.idempotency_scope,
             "key_reference": identity.key_reference,
@@ -243,8 +322,8 @@ def build_created_export_job(
         "latest_audit_event_id": identity.create_audit_event_id,
         "job_fingerprint": "sha256:" + "0" * 64,
     }
-    document["job_fingerprint"] = export_job_fingerprint(document)
-    require_workspace_document(document)
+    document["job_fingerprint"] = _job_fingerprint(document)
+    _require_job_document(document)
     return document
 
 
@@ -288,8 +367,8 @@ def transition_export_job(
         document["cancelled_at_utc"] = occurred_at_utc
     if source == "EXPORT_FAILED" and target_state == "EXPORTING":
         document["cancelled_at_utc"] = None
-    document["job_fingerprint"] = export_job_fingerprint(document)
-    require_workspace_document(document)
+    document["job_fingerprint"] = _job_fingerprint(document)
+    _require_job_document(document)
     return document
 
 
@@ -297,8 +376,8 @@ def heartbeat_export_job(current: Mapping[str, object], *, occurred_at_utc: str)
     document = deepcopy(dict(current))
     document["heartbeat_at_utc"] = occurred_at_utc
     document["updated_at_utc"] = occurred_at_utc
-    document["job_fingerprint"] = export_job_fingerprint(document)
-    require_workspace_document(document)
+    document["job_fingerprint"] = _job_fingerprint(document)
+    _require_job_document(document)
     return document
 
 
@@ -316,7 +395,11 @@ def build_export_audit(
     parent_audit_event_id: str | None = None,
     correlation_id: str | None = None,
 ) -> dict[str, object]:
-    reference = dict(cast(Mapping[str, object], job["schedule_version"]))
+    raw_reference = cast(Mapping[str, object], job["schedule_version"])
+    reference = {
+        field: raw_reference[field]
+        for field in ("schedule_version_id", "state", "content_fingerprint")
+    }
     idempotency = dict(cast(Mapping[str, object], job["idempotency_reference"]))
     event: dict[str, object] = {
         "audit_event_version": "audit-event.v1", "schema_set_version": "2.6.0", "canonicalization_version": "canonical-json.v1",

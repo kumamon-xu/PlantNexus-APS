@@ -11,6 +11,14 @@ last_reviewed: 2026-08-28
 
 # PlantNexus APS 文档中心
 
+## TASK-P4-11 local ChangeReport read/export boundary
+
+TASK-P4-11从clean/provider-verified P4-10 closure `45b12d9a67ce5ef1680a47fecdc68705355af226`冻结不可变Diff base。新增的versioned read model只读取P4-08 durable applied-result envelope和exact `schedule-version.v2`，以report/result/schedule/Solver/Validation/KPI lineage及显式query preconditions阻止stale或mixed replay；stable filter/cursor不会触发Solver或任何state write。
+
+Internal output consumer使用`export-job.v3`既有状态语义与独立P4 worker，生成`export-manifest.v3`、13 payload、5-sheet safe workbook及deterministic archive，随后只允许EXPORTED job的verified retrieval。P3 package/profile/bytes、Schema set `2.8.0`、migration `0005`、dependencies、Replan/Simulator owners和全部state pairs均未修改；API/UI留给P4-12/13，external/Production/P5保持`NOT_FORMED`。
+
+完整HIGH_RISK本地证据现为18 focused、806 Backend、67 Frontend、三轮各12/12 Chromium、全部历史machine/XS/双Gate/SCA/license/build/Compose以及32-path/8-rule/19-check/0-issue治理；本Task machine为8/8、`issues=[]`，P2/P3 Gate为11/11、14/14且`blocking_gaps=[]`。首次全量Backend因旧P3 substring扫描器把`_FINGERPRINT`中的`ERP`误判为外部集成而得到800 passed/1 failed/5 errors；限定改名为`_SHA256_REFERENCE`后目标与806项全量均PASS。Implementation/closure exact provider仍待形成，Task保持`in_progress`。
+
 ## TASK-P4-10 local continuous replay boundary
 
 TASK-P4-10从clean/provider-verified P4-09 closure `8bbe0c643571e578ec637f135a2390c90de02512`冻结不可变Diff base，并在Simulation/development边界形成一个versioned五步/八事件场景资产、严格continuous replay orchestrator、raw step evidence与FULL machine step。编排只调用P4-09标准event入口和既有P4-04/P4-08 owner contracts；它不复制fact、freeze、Solver、Validator或ChangeReport公式，也不直接访问repository/API。

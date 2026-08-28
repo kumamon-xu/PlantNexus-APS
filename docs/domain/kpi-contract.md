@@ -11,6 +11,12 @@ last_reviewed: 2026-08-28
 
 # KPI 合同
 
+## TASK-P4-11 KPI lineage in read/export
+
+ChangeReport read/export只消费P4-08保存的exact `kpi.v2` bytes和ChangeReport `before_kpi`/`after_kpi` references；artifact ID与canonical fingerprint必须分别一致，任何差异都拒绝整个projection/package。Read model不会重新计算或覆盖KPI，export也不会用workbook/CSV反向定义KPI。
+
+P4 manifest复用verified P3 compatibility package的KPI payload时，要求该payload与ChangeReport after-KPI以及P4 ScheduleVersion lineage逐字一致。XS/S/M历史baseline继续冻结；本Task不执行或声明新的Production performance/capacity/SLA baseline。
+
 ## TASK-P4-08 KPI application evidence
 
 Application消费immutable synthetic before/after `kpi.v2`，要求base lineage精确引用before KPI，并独立核对after priority-weighted tardiness/makespan等于fresh candidate objectives；ChangeReport与new DRAFT lineage必须引用同一after KPI identity。任一ID/fingerprint/value漂移都在Version写入前失败。

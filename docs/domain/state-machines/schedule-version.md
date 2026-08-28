@@ -11,6 +11,12 @@ last_reviewed: 2026-08-28
 
 # ScheduleVersion 状态机
 
+## TASK-P4-11 read/export state boundary
+
+ChangeReport read model可读取exact P4 ScheduleVersion但不推进任何state；`export_eligible=true`仅在载体已经是`PUBLISHED`、包含publication且允许`export`时出现。Export creation再次执行published-only guard并绑定content fingerprint和ChangeReport lineage，不能把P4-08生成的DRAFT自动批准、发布或导出。
+
+本Task没有增加或修改ScheduleVersion state/pair、current publication CAS或approval authority。测试中的PUBLISHED P4载体只是bounded Simulation contract vector；真实human authority和Production publication仍未形成。
+
 ## TASK-P4-08 DRAFT-only state application
 
 P4 application现唯一创建`source_kind=DYNAMIC_REPLAN`的new immutable DRAFT v2；PUBLISHED base/current reference保持字节级不变，new Version的decision/publication/superseded_by为空且只开放view/edit/lock/audit。Result transaction不调用任何transition，失败或并发loser不留下partial Version。

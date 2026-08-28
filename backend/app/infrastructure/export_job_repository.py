@@ -5,6 +5,7 @@ from __future__ import annotations
 from collections.abc import Mapping
 from dataclasses import dataclass
 from datetime import datetime
+import json
 from typing import NoReturn
 
 from sqlalchemy import insert, select, update
@@ -40,6 +41,10 @@ from app.infrastructure.workspace_persistence import (
     require_utc,
     stored_utc,
 )
+from app.infrastructure.replan_persistence import (
+    canonical_p4_document,
+    load_p4_document,
+)
 
 
 _MUTABLE_EXPORT_FIELDS = frozenset(
@@ -58,6 +63,8 @@ _MUTABLE_EXPORT_FIELDS = frozenset(
         "job_fingerprint",
     }
 )
+_P3_STORAGE_PACKAGE_PROFILE = "p3-standard-export.v1"
+_P4_DOCUMENT_PACKAGE_PROFILE = "p4-dynamic-replan-export.v1"
 
 
 @dataclass(frozen=True)
@@ -121,13 +128,45 @@ class SqlAlchemyExportJobRepository:
         ).first()
         return row._mapping if row is not None else None
 
+    @staticmethod
+    def _storage_package_profile(document: Mapping[str, object]) -> str:
+        """Project v3 onto the frozen P3 storage discriminator without rewriting bytes."""
+        version = document.get("export_job_version")
+        profile = require_text(document.get("package_profile"), "package_profile")
+        if version == "export-job.v3":
+            if profile != _P4_DOCUMENT_PACKAGE_PROFILE:
+                reject(
+                    PersistenceFailure.INVALID_DOCUMENT,
+                    field="package_profile",
+                    message="P4 ExportJob package profile is invalid",
+                )
+            return _P3_STORAGE_PACKAGE_PROFILE
+        return profile
+
     def _load(self, row: RowMapping) -> StoredExportJob:
-        document = load_document(
-            row["document_json"],
-            row["document_sha256"],
-            expected_version=("export-job.v1", "export-job.v2"),
-            data_plane=self._data_plane,
-        )
+        raw = row["document_json"]
+        try:
+            parsed = json.loads(bytes(raw).decode("utf-8"))
+        except (TypeError, UnicodeDecodeError, ValueError):
+            reject(
+                PersistenceFailure.PERSISTENCE_FAILED,
+                field="stored.document_json",
+                message="stored ExportJob carrier is invalid",
+            )
+        if isinstance(parsed, dict) and parsed.get("export_job_version") == "export-job.v3":
+            document = load_p4_document(
+                raw,
+                row["document_sha256"],
+                expected_version="export-job.v3",
+                data_plane=self._data_plane,
+            )
+        else:
+            document = load_document(
+                raw,
+                row["document_sha256"],
+                expected_version=("export-job.v1", "export-job.v2"),
+                data_plane=self._data_plane,
+            )
         schedule = require_mapping(document.get("schedule_version"), "schedule_version")
         idempotency = require_mapping(
             document.get("idempotency_reference"), "idempotency_reference"
@@ -137,7 +176,6 @@ class SqlAlchemyExportJobRepository:
             "state": row["state"],
             "environment": row["environment"],
             "target": row["target"],
-            "package_profile": row["package_profile"],
             "attempt": row["attempt"],
             "lease_reference": row["lease_reference"],
             "heartbeat_at_utc": row["heartbeat_at_utc"],
@@ -149,6 +187,12 @@ class SqlAlchemyExportJobRepository:
                 PersistenceFailure.PERSISTENCE_FAILED,
                 field="stored.export_job",
                 message="stored ExportJob metadata failed integrity verification",
+            )
+        if row["package_profile"] != self._storage_package_profile(document):
+            reject(
+                PersistenceFailure.PERSISTENCE_FAILED,
+                field="stored.package_profile",
+                message="stored ExportJob package profile projection is invalid",
             )
         if (
             schedule.get("schedule_version_id") != row["schedule_version_id"]
@@ -185,18 +229,26 @@ class SqlAlchemyExportJobRepository:
     def _candidate(
         self, document: Mapping[str, object]
     ) -> tuple[dict[str, object], bytes, Mapping[str, object]]:
-        version = require_workspace_document(document)
-        if version not in {"export-job.v1", "export-job.v2"}:
-            reject(
-                PersistenceFailure.INVALID_DOCUMENT,
-                field="export_job_version",
-                message="unsupported ExportJob document version",
+        if document.get("export_job_version") == "export-job.v3":
+            version = "export-job.v3"
+            candidate, canonical = canonical_p4_document(
+                document,
+                expected_version=version,
+                data_plane=self._data_plane,
             )
-        candidate, canonical = canonical_document(
-            document,
-            expected_version=version,
-            data_plane=self._data_plane,
-        )
+        else:
+            version = require_workspace_document(document)
+            if version not in {"export-job.v1", "export-job.v2"}:
+                reject(
+                    PersistenceFailure.INVALID_DOCUMENT,
+                    field="export_job_version",
+                    message="unsupported ExportJob document version",
+                )
+            candidate, canonical = canonical_document(
+                document,
+                expected_version=version,
+                data_plane=self._data_plane,
+            )
         for field in (
             "export_job_id",
             "state",
@@ -305,9 +357,7 @@ class SqlAlchemyExportJobRepository:
                         schedule_version_id=schedule_version_id,
                         schedule_content_fingerprint=schedule_fingerprint,
                         target=require_text(candidate.get("target"), "target"),
-                        package_profile=require_text(
-                            candidate.get("package_profile"), "package_profile"
-                        ),
+                        package_profile=self._storage_package_profile(candidate),
                         idempotency_scope=scope,
                         idempotency_key_reference=key_reference,
                         request_fingerprint=require_text(

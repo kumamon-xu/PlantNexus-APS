@@ -11,6 +11,12 @@ last_reviewed: 2026-08-28
 
 # Provenance 与版本规则
 
+## TASK-P4-11 output provenance chain
+
+Read projection以caller显式提供的result/ScheduleVersion/ChangeReport exact preconditions，加上durable Solver/Validation/KPI/report lineage形成可重放source binding；同一query、source和generated timestamp产生相同canonical bytes与read fingerprint。任何artifact ID/fingerprint、planning run、correlation或base/new reference不一致均fail closed。
+
+P4 package identity由13个payload records、P3 package reference、P4 schedule/report/job/publication/audit和synthetic provenance共同派生；archive另有transport SHA。Repository中的v3 canonical bytes/SHA仍是carrier authority，冻结表列的兼容storage discriminator不替代document version/profile。P3 v1/v2 fingerprints、Schema `2.8.0`与migration `0005`均未改写。
+
 ## TASK-P4-10 continuous replay provenance
 
 P4 disruption asset hash覆盖library/scenario/profile/generator/simulator IDs+versions、seed、virtual clock、exact base Schedule/Snapshot/Problem、Policy/Limits、五步payload与boundary声明。Simulator run fingerprint再绑定event schedule；每步evidence fingerprint依次绑定previous baseline、event prefix delta、new Snapshot/Problem、Request/Run/Validation/DRAFT/ChangeReport，最终形成replay fingerprint。Same seed/version/input必须产生exact event stream与相同语义结果投影；Solver运行时间戳和timing等raw observation继续保留但不参与该语义等价。任何值变化都必须发布新asset version或产生新hash，禁止覆盖历史。

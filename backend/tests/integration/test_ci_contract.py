@@ -34,6 +34,9 @@ from app.application.workspace_read_model_check import (
 from app.api.planning_workspace_check import main as planning_workspace_api_main
 from app.domain.workspace_contract_check import main as workspace_contract_main
 from app.domain.execution_contract_check import main as execution_contract_main
+from app.exporters.change_report_output_check import (
+    main as change_report_output_main,
+)
 from app.exporters.contract_check import main as output_contract_main
 from app.infrastructure.workspace_persistence_check import (
     main as workspace_persistence_main,
@@ -386,7 +389,7 @@ def test_ci_profile_routing_is_mutually_exclusive_and_fail_closed() -> None:
     assert "backend/tests/security" in full_text
     assert "P3 vertical slice Gate evidence" in full_text
     assert "Build package" in full_text
-    assert len(full["steps"]) == 61
+    assert len(full["steps"]) == 62
 
     assert 'test "${PLANTNEXUS_CLASSIFY_RESULT}" = "success"' in final_run
     assert 'test "${PLANTNEXUS_FULL_RESULT}" = "success"' in final_run
@@ -848,6 +851,48 @@ def test_ci_p4_disruption_replay_is_required_and_machine_checkable(
     ]
     assert report["check_count"] == 8
     assert report["issues"] == []
+
+
+def test_ci_p4_change_report_output_is_required_and_machine_checkable(
+    tmp_path: Path,
+) -> None:
+    workflow = (ROOT / ".github" / "workflows" / "ci.yml").read_text(
+        encoding="utf-8"
+    )
+    normalized = " ".join(workflow.split())
+    assert (
+        "name: P4 ChangeReport read model and export evidence run: >- "
+        "uv run python -m app.exporters.change_report_output_check --root . "
+        "--report build/validation/ci-p4-change-report-output.json"
+    ) in normalized
+    assert "continue-on-error" not in workflow
+
+    report_path = tmp_path / "p4-change-report-output.json"
+    assert (
+        change_report_output_main(
+            ["--root", str(ROOT), "--report", str(report_path)]
+        )
+        == 0
+    )
+    report = json.loads(report_path.read_text(encoding="utf-8"))
+    assert report["report_version"] == "p4-change-report-output-report.v1"
+    assert report["status"] == "PASS"
+    assert report["task_id"] == "TASK-P4-11"
+    assert report["diff_base"] == "45b12d9a67ce5ef1680a47fecdc68705355af226"
+    assert report["impact_rules"] == [
+        "IMPACT-APPLICATION",
+        "IMPACT-DOCS",
+        "IMPACT-DOMAIN",
+        "IMPACT-EXPORT",
+        "IMPACT-INFRA",
+        "IMPACT-JOBS",
+        "IMPACT-STATE",
+        "IMPACT-TESTS",
+    ]
+    assert report["check_count"] == 8
+    assert report["issues"] == []
+    assert report["boundaries"]["publishable"] is False
+    assert report["boundaries"]["p5_plus"] == "NOT_STARTED"
 
 
 def test_ci_p3_schedule_version_lifecycle_is_required_and_machine_checkable(

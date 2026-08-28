@@ -11,6 +11,12 @@ last_reviewed: 2026-08-28
 
 # P0 Worker Reliability 与 Idempotency
 
+## TASK-P4-11 ChangeReport export worker
+
+独立P4 worker复用ExportJob的durable idempotency scope、exact create replay、CAS state revision、attempt、lease reference、heartbeat、audit parent chain及fail/retry边界；它不会自动创建Publish或绕过application service。Package destination按`export_job_id/attempt`内容寻址，exact directory replay成功，different bytes冲突，manifest只在所有payload成功后最后写入。
+
+Repository对v3完整carrier执行P4 contract/canonical SHA验证，并以显式兼容projection复用冻结P3 storage table；row/profile tamper仍会拒绝。SQLite和single-worker tests不能证明distributed exactly-once、PostgreSQL concurrency、queue HA或Production recovery SLA。
+
 ## TASK-P4-08 application reliability
 
 Result application实现ADR-0013的两事务边界：intent可在后续失败时保留并安全重试；result transaction重新核对current/base/request/attempt/Snapshot/Problem后，把DRAFT、full result envelope和audit一次提交。Same request/key在完成后不再solve并返回exact bytes；different key/content冲突，并发只有一个完整结果，loser重试后读取winner，无partial Version/result/audit。

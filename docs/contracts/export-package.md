@@ -11,6 +11,14 @@ last_reviewed: 2026-08-28
 
 # 标准成果包合同
 
+## TASK-P4-11 implemented P4 internal package
+
+`export-manifest.v3`现在有Simulation-only consumer。Builder先完整验证一个`export-manifest.v2`/`p3-standard-export.v1` compatibility package，再要求其PlanningSolution、三份CSV、ImportQuality和Scenario bytes与待导出的P4 ScheduleVersion content一致；不一致不得拼接。随后加入exact PUBLISHED `schedule_version.json`、publication、complete `change_report.json`、P4 Solver/fresh Validation/after KPI，形成固定13 payload；workbook固定Schedule Operations、Order Summary、Resource Load、Change Report、Metadata五个sheet。
+
+Manifest逐文件绑定role/media type/SHA/bytes/row/sheet count，同时绑定P3 package ID/fingerprint、P4 ScheduleVersion、ChangeReport、ExportJob attempt、publication和三段audit lineage。JSON使用canonical-json.v1，CSV使用RFC4180 LF，XLSX禁止formula/macro/external link/embedding，目录payload-first/manifest-last原子rename，ZIP固定顺序/timestamp/compression。Exact replay返回相同bytes；tamper、extra/missing/symlink/oversize、destination conflict或partial write全部fail closed并清理临时目录。
+
+Verified retrieval只接受durable `EXPORTED export-job.v3`，重新加载并验证完整目录和archive，再逐字比较job/attempt/ScheduleVersion/ChangeReport/synthetic provenance/completion audit/storage reference。Target继续只允许`SIMULATION_INTERNAL`且`publishable=false`；P3 v1/v2 builder、manifest和package bytes未改，external transfer/Production storage与自动publish均未形成。
+
 ## TASK-P4-06 ChangeReport output boundary
 
 `change-report.v1`内容现在可在Simulation/development中确定构建并独立复算，但本Task不修改任何export manifest/profile/writer/job，也不把该report加入现有P2/P3 package。P3 `change_report.json=DEFERRED_P4_DYNAMIC_REPLAN`历史事实保持不变；P4-11只有在P4-07/08完成fresh solve/validation/application后，才可按`export-manifest.v3`把exact report bytes接入internal Simulation read/export。

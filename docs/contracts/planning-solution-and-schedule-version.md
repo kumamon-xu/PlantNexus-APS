@@ -11,6 +11,12 @@ last_reviewed: 2026-08-28
 
 # PlanningSolution 与 ScheduleVersion 合同
 
+## TASK-P4-11 compatibility-package boundary
+
+P4 output不重新定义`planning-solution.v1`或`schedule-version.v2`。Manifest中的PlanningSolution和三份CSV必须来自一个已验证P3 compatibility package，并与P4 published ScheduleVersion的完整assignment content逐字相等；这使现有P3呈现格式可复用，同时阻止把base schedule或stale solution误装进replan成果包。
+
+P4 ScheduleVersion仍以content fingerprint及P4-08 lineage为权威，ChangeReport只能作为其exact immutable reference出现。Read/export不创建PlanningSolution、不修改ScheduleVersion content/state，也不从XLSX/CSV反向构造业务权威。
+
 ## TASK-P4-08 dynamic DRAFT application
 
 Application现消费P4-07 candidate/SolverReport与fresh `validation-report.v2`，把tick-rounded occupied assignments、effective HARD/SOFT evidence和完整dynamic lineage写入新的immutable `schedule-version.v2` DRAFT。其`parent_schedule_version`精确引用current PUBLISHED base，`decision/publication/superseded_by=null`且`allowed_actions=[view,edit,lock,audit]`；base content/current publication不修改。

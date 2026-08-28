@@ -11,6 +11,12 @@ last_reviewed: 2026-08-28
 
 # 配置、环境与数据隔离
 
+## TASK-P4-11 runtime/isolation boundary
+
+ChangeReport read、P4 ExportJob、worker、local package store和machine check只接受`SIMULATION`及development/test/benchmark环境；Production-shaped context/request在lookup、transaction或I/O之前拒绝。Package target固定`SIMULATION_INTERNAL`，download不提供external transfer route。
+
+本Task没有新增environment variable、Secret、service、port、container、dependency、lock或migration。CI只新增in-process `app.exporters.change_report_output_check`并写ignored JSON artifact；临时SQLite/local directories、correctness runtime和archive size不是Production deployment、isolation、capacity或SLA证据。
+
 ## TASK-P4-10 disruption replay isolation
 
 Library loader只接受DEVELOPMENT/TEST/BENCHMARK、`synthetic=true`、`production_binding=false`以及exact boundary `SIMULATION_NON_PRODUCTION/UNSUPPORTED/NOT_ESTABLISHED`。Production environment、缺失五类coverage、未知字段/版本、乱序offset或tampered invariant在继续编排前fail closed。Orchestrator无Infrastructure/API/OR-Tools/SQLAlchemy、wall clock、global random、network或secret依赖；FULL CI只上传JSON evidence。

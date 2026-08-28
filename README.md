@@ -1,5 +1,15 @@
 # PlantNexus APS
 
+## TASK-P4-11 ChangeReport read model and internal export
+
+TASK-P4-11现从不可变Diff base `45b12d9a67ce5ef1680a47fecdc68705355af226`形成Simulation/development-only ChangeReport read/export slice。Versioned只读服务在任何repository lookup前完成plane/capability/scope检查，再以exact Replan result、P4 ScheduleVersion、ChangeReport、SolverReport、fresh Validation与before/after KPI references绑定查询；filter、operation-id cursor和page顺序稳定，读取不调用Solver、不写状态且不改变immutable report bytes。
+
+P4 `export-job.v3`沿用P3五个state/六个pair、lease/idempotency/audit语义，只为already-PUBLISHED `schedule-version.v2`增加exact ChangeReport reference和`p4-dynamic-replan-export.v1` profile。独立worker生成manifest-bound `export-manifest.v3`：13个payload、canonical JSON/CSV、安全确定性5-sheet XLSX、manifest-last目录与deterministic ZIP；verified download逐字绑定job/attempt/ScheduleVersion/ChangeReport/audit/storage。P3 v1/v2 package bytes和profile保持冻结；任何混合lineage、tamper、partial write、非PUBLISHED source或Production/external请求均fail closed。
+
+本Task没有新增Schema、migration、dependency/lock、state pair、自动approval/publish/export、API/UI或external storage。冻结`0004`表的profile列只作为已批准的兼容存储判别值，完整v3 carrier仍按canonical document bytes和SHA保存并在load时复验；这不形成Production authority、deployment、UAT、capacity/SLA或P5能力。TASK-P4-12不会自动启动。
+
+完整HIGH_RISK本地验收已通过：Task-specific `18 passed`、完整Backend `806 passed`、Frontend 67项与三轮各12/12 Chromium、全部历史machine、XS Benchmark、P2/P3 Gate、SCA/license、Compose及前后端build；`p4-change-report-output-report.v1`为8/8、`issues=[]`，治理为32-path/8-rule/19-check/0-issue，P2/P3 Gate为11/11、14/14且`blocking_gaps=[]`。首次完整Backend运行得到`800 passed, 1 failed, 5 errors`，原因是旧P3原始substring边界扫描器把标识符`_FINGERPRINT`中的`ERP`误判为外部集成；限定纠正仅将内部常量改名为`_SHA256_REFERENCE`，P3目标回归与806项全量随后通过。全局npm为12.0.2，Frontend证据使用仓库冻结的npm 11.17.0执行，未修改依赖或lock。Implementation与evidence-only closure的exact provider尚未完成，因此TASK-P4-11仍为`in_progress`。
+
 ## TASK-P4-10 five-disruption continuous replay
 
 TASK-P4-10已从不可变Diff base `8bbe0c643571e578ec637f135a2390c90de02512`形成versioned `SIM-P4-DISRUPTION-REPLAY-001@1.0.0`：同一fixed-seed stream按Urgent Order、Machine Failure/Recovery、Material Delay/Ready、Processing Duration/Remaining变化与Early Completion五步输出8个标准`execution-event.v1`。每步消费前一步的明确Snapshot/Version test baseline，绑定独立ReplanRequest/PlanningRun/fresh Validator/new DRAFT/ChangeReport evidence；baseline推进固定标记`SIMULATION_NON_PRODUCTION`、`authority_claim=NONE`，不构成自动批准或发布。
@@ -61,7 +71,7 @@ TASK-P4-03已获独立授权并在不可变Diff base `7b9bfc3069de5d3738e5cc5827
 
 用户已明确批准P3→P4。TASK-P3-17独立Exit Audit的report/manifest均为`READY`、`blocking_gaps=[]`；audit implementation `201be9c6fd1b433a9d0a629a3ae7d4ffe1107476`和evidence-only closure `61eeacdd5efc20b2321750e1310e9e21561c9fc2`的直接拓扑、required `validate`、GitHub Actions app `15368`及未过期artifact均已exact复验。因此P3 Milestone现为`completed`，P4 Dynamic Replanning已激活。
 
-PlantNexus APS 是一个面向单工厂、多车间场景的高级计划与排程（APS）项目。TASK-P4-00～09与TASK-P4-16现均已按各自独立授权形成provider-verified implementation与evidence-only closure治理链；TASK-P4-10按新的独立授权形成上方本地实现并等待双exact provider闭环。TASK-P4-11～15保持`planned`且未自动启动；API/UI与Production readiness/UAT/真实authority/external publish/deployment/capacity/SLA仍未形成。
+PlantNexus APS 是一个面向单工厂、多车间场景的高级计划与排程（APS）项目。TASK-P4-00～10与TASK-P4-16现均已按各自独立授权形成provider-verified implementation与evidence-only closure治理链；TASK-P4-11已按新的独立授权完成上方本地实现与HIGH_RISK验收，正在等待implementation/closure双exact provider闭环。TASK-P4-12～15保持`planned`且未自动启动；API/UI与Production readiness/UAT/真实authority/external publish/deployment/capacity/SLA仍未形成。
 
 ## 开始之前
 

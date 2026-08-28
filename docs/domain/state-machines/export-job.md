@@ -11,6 +11,12 @@ last_reviewed: 2026-08-27
 
 # ExportJob 状态机
 
+## TASK-P4-11 v3 consumer, unchanged pairs
+
+`export-job.v3`只扩展immutable identity：source必须是exact PUBLISHED `schedule-version.v2`，并绑定其lineage中的complete `change-report.v1`和`p4-dynamic-replan-export.v1`。它逐字复用`CREATED → EXPORTING → EXPORTED/EXPORT_FAILED`、`EXPORT_FAILED → EXPORTING`及既有cancel pair；没有新增state、pair、implicit retry或publish side effect。
+
+P4 worker仍通过既有claim/lease/audit/complete/fail application service运行，materialization发生于`EXPORTING`，只有完成manifest-last原子写入后才进入`EXPORTED`。冻结`0004` storage check仍只接受P3 storage discriminator，因此repository对v3采用显式version-aware compatibility projection；canonical v3 document/profile保存在完整JSON bytes中并以SHA、P4 contract和row metadata复验。该投影不是Schema/migration或profile alias，未知version/profile一律拒绝。
+
 ## TASK-P4-03 persistence review
 
 `0005_replan_event_persistence`不创建ExportJob、不调用export worker且不改变CREATED/EXPORTING/EXPORTED/EXPORT_FAILED/CANCELLED集合、attempt/lease或六个allowed pairs。P4 result reference也不是成果包或external delivery；P4-11以前没有ChangeReport export行为。

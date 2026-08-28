@@ -21,6 +21,12 @@ from app.exporters.standard_package import (
     verify_standard_export_package,
     write_standard_export_package,
 )
+from app.exporters.change_report_package import (
+    ChangeReportExportPackage,
+    build_change_report_export_package,
+    verify_change_report_export_package,
+    write_change_report_export_package,
+)
 
 __all__ = [
     "CSV_DIALECT_VERSION",
@@ -40,4 +46,8 @@ __all__ = [
     "build_standard_export_package",
     "verify_standard_export_package",
     "write_standard_export_package",
+    "ChangeReportExportPackage",
+    "build_change_report_export_package",
+    "verify_change_report_export_package",
+    "write_change_report_export_package",
 ]

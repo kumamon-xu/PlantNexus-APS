@@ -22,6 +22,12 @@ from .workspace_queries import (
 from .approval import ApprovalDecisionResult, ApprovalDecisionService
 from .publication import PublicationService, PublicationServiceResult
 from .export_jobs import ExportJobService, ExportJobServiceResult
+from .change_report_queries import (
+    ChangeReportQuery,
+    ChangeReportQueryService,
+    ChangeReportReadContext,
+    ChangeReportReadResult,
+)
 
 __all__ = [
     "ApprovalDecisionResult",
@@ -34,6 +40,10 @@ __all__ = [
     "PublicationServiceResult",
     "ExportJobService",
     "ExportJobServiceResult",
+    "ChangeReportQuery",
+    "ChangeReportQueryService",
+    "ChangeReportReadContext",
+    "ChangeReportReadResult",
     "ScheduleVersionLifecycleResult",
     "ScheduleCommandResult",
     "ScheduleCommandService",

@@ -3,16 +3,23 @@
 from __future__ import annotations
 
 from dataclasses import dataclass
+import json
 from pathlib import Path
 import re
 from typing import cast
 
 from app.application.export_downloads import VerifiedExportPackagePort
 from app.exporters.standard_package import (
+    MAX_STANDARD_EXPORT_MANIFEST_BYTES,
     StandardExportError,
     archive_standard_export_package,
     load_standard_export_package,
     standard_export_bytes_fingerprint,
+)
+from app.exporters.change_report_package import (
+    archive_change_report_export_package,
+    change_report_export_bytes_fingerprint,
+    load_change_report_export_package,
 )
 
 
@@ -68,16 +75,36 @@ class LocalExportPackageStore:
         if destination.is_symlink():
             raise ValueError("export package directory cannot be a symlink")
         try:
-            package = load_standard_export_package(destination)
-            archive = archive_standard_export_package(package)
+            manifest_path = destination / "manifest.json"
+            if (
+                manifest_path.is_symlink()
+                or not manifest_path.is_file()
+                or manifest_path.stat().st_size < 1
+                or manifest_path.stat().st_size > MAX_STANDARD_EXPORT_MANIFEST_BYTES
+            ):
+                raise ValueError("export manifest is missing or unsafe")
+            manifest = json.loads(manifest_path.read_bytes())
+            version = manifest.get("export_manifest_version") if isinstance(manifest, dict) else None
+            if version == "export-manifest.v3":
+                package = load_change_report_export_package(destination)
+                archive = archive_change_report_export_package(package)
+                archive_fingerprint = change_report_export_bytes_fingerprint(archive)
+            elif version == "export-manifest.v2":
+                package = load_standard_export_package(destination)
+                archive = archive_standard_export_package(package)
+                archive_fingerprint = standard_export_bytes_fingerprint(archive)
+            else:
+                raise ValueError("unsupported export manifest version")
         except StandardExportError as error:
+            raise ValueError("export package failed verification") from error
+        except (OSError, UnicodeError, json.JSONDecodeError) as error:
             raise ValueError("export package failed verification") from error
         return StoredVerifiedExportPackage(
             content=archive,
             package_id=package.package_id,
             manifest_fingerprint=package.manifest_fingerprint,
             storage_reference=package.storage_reference,
-            archive_fingerprint=standard_export_bytes_fingerprint(archive),
+            archive_fingerprint=archive_fingerprint,
             manifest=cast(dict[str, object], package.manifest),
         )
 

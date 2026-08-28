@@ -11,6 +11,12 @@ last_reviewed: 2026-08-27
 
 # Operations 索引与形成边界
 
+## TASK-P4-11 internal output operations
+
+P4新增的是bounded internal worker/reference operation：对既有v3 ExportJob claim lease，在临时目录构建并验证13-payload package，manifest last原子提交，成功后才complete；失败调用既有fail transition并清除partial directory。Verified download重新验证目录、manifest和archive，不暴露filesystem path，也不发送外部系统。
+
+这不是Production runbook。没有queue deployment、object storage、backup/restore、credential、external delivery、on-call threshold、capacity或SLA；这些边界继续由PROD_OPEN阻止。
+
 ## TASK-P4-05 operations boundary
 
 CI新增不可跳过的`P4 freeze window and effective lock evidence`并上传`ci-p4-freeze-window.json`；报告只含sanitized IDs/fingerprints/counts/边界，不记录secret、真实工厂事实或外部side effect。本Task无service/worker/database/API部署、告警/retention、runbook、Production authority、capacity或SLA结论，rollback仅停用后继consumer并保留immutable evidence。

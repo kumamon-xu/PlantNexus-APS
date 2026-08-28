@@ -17,7 +17,9 @@ TASK-P4-11从clean/provider-verified P4-10 closure `45b12d9a67ce5ef1680a47fecdc6
 
 Internal output consumer使用`export-job.v3`既有状态语义与独立P4 worker，生成`export-manifest.v3`、13 payload、5-sheet safe workbook及deterministic archive，随后只允许EXPORTED job的verified retrieval。P3 package/profile/bytes、Schema set `2.8.0`、migration `0005`、dependencies、Replan/Simulator owners和全部state pairs均未修改；API/UI留给P4-12/13，external/Production/P5保持`NOT_FORMED`。
 
-完整HIGH_RISK本地证据现为18 focused、806 Backend、67 Frontend、三轮各12/12 Chromium、全部历史machine/XS/双Gate/SCA/license/build/Compose以及32-path/8-rule/19-check/0-issue治理；本Task machine为8/8、`issues=[]`，P2/P3 Gate为11/11、14/14且`blocking_gaps=[]`。首次全量Backend因旧P3 substring扫描器把`_FINGERPRINT`中的`ERP`误判为外部集成而得到800 passed/1 failed/5 errors；限定改名为`_SHA256_REFERENCE`后目标与806项全量均PASS。Implementation/closure exact provider仍待形成，Task保持`in_progress`。
+完整HIGH_RISK本地证据现为18 focused、806 Backend、67 Frontend、三轮各12/12 Chromium、全部历史machine/XS/双Gate/SCA/license/build/Compose以及32-path/8-rule/19-check/0-issue治理；本Task machine为8/8、`issues=[]`，P2/P3 Gate为11/11、14/14且`blocking_gaps=[]`。首次全量Backend因旧P3 substring扫描器把`_FINGERPRINT`中的`ERP`误判为外部集成而得到800 passed/1 failed/5 errors；限定改名为`_SHA256_REFERENCE`后目标与806项全量均PASS。
+
+Implementation `7d685d91e5011cdb4b3289ef10a9a2355c53570b`的run/FULL/required=`33156391439`/`98800085239`/`98801664096`已exact成功；machine/profile artifacts `9679951468`,`9679763686`均未过期并已下载复验，digests分别为`sha256:59088ba24779ffb2cef9d8d225c2897d50a8d4ef598cf4ecb66037354bf97d80`、`sha256:7a89878a6fecc58657633577eb8d6caebc06b97eadd9ea90fb9efed79e94d8ba`。Artifact精确绑定Task、implementation SHA、原始Diff base、八个Impact Rules、8 checks、0 issues、FULL 32-path profile及P2/P3 Gate；本evidence-only closure记录完成结论，但其自身仍须post-push exact provider复验，TASK-P4-12保持`planned`且未启动。
 
 ## TASK-P4-10 local continuous replay boundary
 

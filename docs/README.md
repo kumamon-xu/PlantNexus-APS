@@ -11,6 +11,12 @@ last_reviewed: 2026-08-28
 
 # PlantNexus APS 文档中心
 
+## TASK-P4-07 implementation boundary
+
+TASK-P4-07已在冻结Diff base `e212ab7957d6bc5887048ee54809c8194d6e1eaf`内实现Simulation-only全局六轮词典序重排、逐轮等价锁定、base Hint、fresh独立candidate/ChangeReport算术复核和FULL CI机器证据。`solver-report.v2`保存三阶段value/bound/budget/stop/status与exact provenance；机器报告固定Task、Diff base、七个Impact Rules、8项检查和`issues=[]`。完整HIGH_RISK本地验收为focused 48、Backend 736、Frontend 67、三轮各12/12 Chromium、历史machine、XS Benchmark、双Gate、build/Compose及33/7/19/0治理全部PASS；当前结论为`LOCAL_PASS_PROVIDER_PENDING`，不得写成Task done。
+
+new DRAFT与最终ChangeReport/Request result原子事务仍归TASK-P4-08；P4-08+、P5和Production边界没有变化。
+
 ## TASK-P4-06 completion boundary
 
 TASK-P4-06已从provider-verified P4-05/P4-16 closure `d9d9f2fa2dbefe4c9942aaa8a943a93fdc7efd43`按独立授权实现纯整数OBJ-002 calculator、immutable complete ChangeReport builder、独立precheck和FULL CI机器证据。固定fixture覆盖UNCHANGED/CHANGED/ADDED/REMOVED_BY_FACT、metadata-only no-movement、1个SOFT violation、300秒resource/start movement、completion fact、solver fallback reason及before/after priority-weighted tardiness `600→300`；machine为8/8、`issues=[]`。完整HIGH_RISK本地验收同时通过Backend `724 passed`、Frontend 67项与三轮各12/12 Chromium、全部历史machine、XS benchmark、P2/P3 Gate、SCA/license、Compose/build、文档治理及26-path exact allow-list。

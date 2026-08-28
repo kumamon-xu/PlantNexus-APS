@@ -1,5 +1,13 @@
 # PlantNexus APS
 
+## TASK-P4-07 lexicographic replan solver
+
+TASK-P4-07现已在不可变Diff base `e212ab7957d6bc5887048ee54809c8194d6e1eaf`上形成Simulation-only全局重排路径：同一完整C-001～C-011 CP-SAT模型按`Delivery/OBJ-001 → Stability/OBJ-002`四个整数分量→`Makespan/OBJ-003`执行六轮有界求解，每轮接受值以等式锁定后才进入下一轮。base schedule只作为Hint；Execution facts、显式HARD与freeze-derived HARD仍是约束。每轮candidate均由不导入CP-SAT/backend/reporting calculator的fresh独立Validator重算formal feasibility、事实/锁、objective与ChangeReport operation universe；结果以Schema-valid `solver-report.v2`及`p4-replan-solver-report.v1`机器证据输出。
+
+完整HIGH_RISK本地验收已通过：P4-07 focused 48项、完整Backend `736 passed`、Frontend 67项与三轮各12/12 Chromium、全部历史machine、XS Benchmark、P2/P3 Gate、SCA/license、build/Compose，以及33-path/7-Impact-Rule/19-check/0-issue治理。首次全量回归暴露旧OR-Tools合法文件集合断言并以显式scope expansion纠正；首次Frontend evidence暴露本机npm 12.0.2偏差，随后用冻结npm 11.17.0完整重跑PASS。当前仍待exact implementation Provider闭环，TASK-P4-07保持`in_progress`。
+
+本实现不创建或持久化new DRAFT/ChangeReport/Request result，不改Schema、migration、dependency/lock、状态集合、Simulator、API/UI或export；P4-08+、P5 decomposition/rolling/hybrid及Production readiness/authority/external integration/capacity/SLA均未启动或未形成。
+
 ## TASK-P4-06 OBJ-002 Stability / ChangeReport completion
 
 TASK-P4-06已按独立授权在不可变Diff base `d9d9f2fa2dbefe4c9942aaa8a943a93fdc7efd43`上实现Simulation-only纯整数`obj-002-stability.v1`、immutable `change-report.v1` builder、独立`change-report-precheck.v1`与`p4-stability-change-report.v1`机器证据。完整operation universe恰好一次分类为UNCHANGED/CHANGED/ADDED/REMOVED_BY_FACT；movement只由resource/start/end tuple决定，SOFT lock、changed existing、resource change、absolute start shift组成四元整数向量，before/after KPI、facts、reasons、freeze与完整lineage均可独立复算。HIGH_RISK本地验收已完整通过：Task-specific 21项、focused `64 passed`、完整Backend `724 passed`、Frontend 67项及三轮各12/12 Chromium、全部历史machine、XS benchmark、P2/P3 Gate、SCA/license、Compose/build、文档治理和26-path exact allow-list均PASS。

@@ -11,6 +11,10 @@ last_reviewed: 2026-08-21
 
 # SolverBackend 合同
 
+## TASK-P4-07 bounded replan backend
+
+`cp-sat-replan-backend.v1`在一个完整Global model上执行六次有界solve，每个accepted round先生成candidate、通过fresh independent Validator，再将objective integer value以等式写回模型。raw round逐项保存native status、product status、value、best bound、budget、elapsed、stop reason及candidate/validation fingerprint；固定worker/seed和base Hint均写入SolverReport provenance。较低优先级UNKNOWN只能保留此前validated candidate并降为FEASIBLE；其他不一致或validator FAIL丢弃candidate并fail closed。
+
 ## TASK-P4-02 SolverReport v2 boundary
 
 新Report carrier记录exact Policy/Limits、三阶段value/bound/budget/stop、native status与product outcome，但没有调用CP-SAT或改变backend protocol。UNKNOWN与INFEASIBLE严格区分，非candidate状态不能携带部分解；P4-07必须在fresh independent Validator前后生成真实evidence。本Task无dependency/lock或capacity claim。

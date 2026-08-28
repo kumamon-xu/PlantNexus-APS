@@ -11,6 +11,10 @@ last_reviewed: 2026-08-26
 
 # 端到端计划链路
 
+## TASK-P4-07 formed solve edge
+
+端到端纯计算链现到达`ReplanRequest/projection/base assignments/new Problem → one global C-001～C-011 model → OBJ-001 → OBJ-002.1～.4 → OBJ-003 → fresh validation → solver-report.v2`。每一箭头保留exact fingerprint/provenance，candidate只在当前轮fresh PASS后才能锁值并继续。链路在持久化前停止；new DRAFT、final ChangeReport和Request result transaction仍由TASK-P4-08形成。
+
 ## TASK-P4-05 formed freeze projection edge
 
 当前形成的新增纯链路为`event-derived immutable Snapshot → exact PlanningProblem v2`与`base PUBLISHED ScheduleVersion + PlanningPolicy v2 → effective-lock-projection.v1 → independent freeze precheck`。该edge输出facts/HARD/freeze/SOFT的完整solver-neutral输入，不进入CP-SAT、不写Replan repository、不生成candidate/ChangeReport/new DRAFT；后续仍由P4-06/07/08分别承接稳定性、求解验证与应用事务。

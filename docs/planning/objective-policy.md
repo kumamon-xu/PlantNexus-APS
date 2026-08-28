@@ -11,6 +11,10 @@ last_reviewed: 2026-08-28
 
 # Objective Policy
 
+## TASK-P4-07 executable lexicographic order
+
+P4重排现严格执行六轮：`OBJ-001 weighted tardiness`，随后依次最小化`soft_lock_violations`、`changed_existing_operations`、`resource_changes`、`absolute_start_shift_seconds`，最后最小化`OBJ-003 makespan_seconds`。每个accepted value以exact equality冻结；不得用float、Big-M或混合权重替代。若较低优先级轮次预算耗尽，只有此前fresh-validated candidate可诚实保留为FEASIBLE，绝不声称optimal；最高可用轮无candidate时按native status返回且不进入后续目标。
+
 ## TASK-P4-06 pure OBJ-002 measurement
 
 本Task实现的calculator只从immutable base/new assignments、complete active universe与priority-4 SOFT lock projection复算`(soft violations, changed existing, resource changes, absolute start shift seconds)`。全部分量使用integer seconds并保持signed delta与absolute aggregate分离；same inputs产生相同bytes/vector，禁止float、Big-M或私有权重。Metadata-only变化不计movement，ADDED为零movement，REMOVED必须有completion fact。

@@ -11,6 +11,10 @@ last_reviewed: 2026-08-27
 
 # Architecture Decision Records
 
+## TASK-P4-07 ADR conformance
+
+实现落实ADR-0004/0005/0006的Global Backend、独立Validator与status语义，ADR-0011的固定dependency/upgrade gate，以及ADR-0014的Delivery→四分量Stability→Makespan、facts/HARD/freeze优先级和ChangeReport边界。没有改变objective顺序、拓扑、Schema、dependency或state pair，故不新增/修改ADR；decomposition、rolling/hybrid或Production policy仍须独立superseding decision。
+
 ## TASK-P4-05 ADR conformance
 
 实现逐字落实accepted ADR-0014的Snapshot-cutoff anchor、900秒versioned Simulation assumption、half-open边界、facts→HARD→freeze→SOFT优先级与solve前fail-closed冲突；同时遵守ADR-0013的immutable lineage和ADR-0015的Simulation common-path边界。没有改变decision、引入新拓扑/依赖/state pair或触发superseding ADR，因此ADR registry与正文均保持不变。

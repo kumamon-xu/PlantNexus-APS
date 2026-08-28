@@ -11,6 +11,10 @@ last_reviewed: 2026-08-28
 
 # Provenance 与版本规则
 
+## TASK-P4-07 solver and validation identity
+
+`solver-report.v2`绑定ReplanRequest、base/new Problem、Policy、Limits、candidate、三阶段evidence、native solver identity/parameters、timing/model/memory和exact code/contract versions；`report_id=solver-report-<content digest>`。每个raw round另绑定candidate与fresh validation fingerprint，candidate和validation report均从canonical basis派生identity。固定seed replay要求candidate/objectives/round status/value/bound/validation identities一致；wall-clock timing与SolverReport run identity可因真实执行时间不同而变化。
+
 ## TASK-P4-06 ChangeReport identity and lineage
 
 `change-report.v1`逐字绑定base/new ScheduleVersion、base/new Snapshot/Problem、ordered event-stream fingerprint、fact checkpoint、ReplanRequest、PlanningRun、PlanningPolicy、SolveLimits、SolverReport、ValidationReport、freeze evidence、before/after KPI及每个operation的base/new assignment、delta和reason evidence。`report_fingerprint`排除自身字段与`generated_at_utc`后由canonical JSON计算，`report_id=change-report-<digest>`；同一immutable basis必须byte-exact replay。

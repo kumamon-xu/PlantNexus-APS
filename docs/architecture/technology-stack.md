@@ -11,6 +11,10 @@ last_reviewed: 2026-08-27
 
 # 推荐技术栈与锁定规则
 
+## TASK-P4-07 stack review
+
+实现复用冻结的Python 3.12与`ortools==9.15.6755` CP-SAT API、既有jsonschema/Hypothesis测试能力；`pyproject.toml`、`uv.lock`、Schema、migration、Node/npm和container stack均不变。native solver identity与固定worker/seed/limits写入报告，任何未来依赖升级仍需独立ADR、TEST-SOLVER-UPGRADE和完整Gate。
+
 ## TASK-P4-05 stack review
 
 实现仅使用Python 3.12标准库、既有canonical contract/Snapshot/Problem组件及测试环境既有jsonschema/Hypothesis；`pyproject.toml`、`uv.lock`、OR-Tools pin、Node/npm locks与container stack零变化。Projector和precheck不导入OR-Tools/CP-SAT，machine report的runtime/memory只属correctness执行观察，不建立容量阈值。

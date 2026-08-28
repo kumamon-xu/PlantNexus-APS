@@ -11,6 +11,10 @@ last_reviewed: 2026-08-26
 
 # 模块边界与依赖规则
 
+## TASK-P4-07 implemented dependency edge
+
+CP-SAT变量、effective HARD constraints、Hint和六轮objective orchestration只位于`app.planning.backends.cp_sat`；`app.planning.strategies.lexicographic_replan`只验证lineage并组装SolverReport。`app.planning.validation.replan_candidate_validator`不导入OR-Tools/backend/reporting calculator，独立调用formal public validator并重算P4算术。三者均不依赖repository/application/API/UI/Simulator，不写状态；machine checker只负责组合fixture与证据。
+
 ## TASK-P4-05 implemented pure dependency edge
 
 `app.planning.policy.freeze_window`只依赖既有pure contracts/Snapshot verification；`app.planning.problem.freeze_projection`消费policy、Snapshot、Problem和workspace/P4 carriers；`app.planning.validation.freeze_window_precheck`独立重算而不导入projector、CP-SAT Backend或formal `ProblemScheduleValidator`。Machine checker/tests可以组装versioned Simulation向量，但runtime projector没有repository/application/Simulator/API/UI依赖，也不创建ScheduleVersion。

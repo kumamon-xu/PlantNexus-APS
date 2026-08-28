@@ -11,6 +11,12 @@ last_reviewed: 2026-08-28
 
 # PlanningSolution 与 ScheduleVersion 合同
 
+## TASK-P4-07 SolverReport v2 execution evidence
+
+全局重排现在输出Schema-valid `solver-report.v2`：candidate沿用`planning-solution.v1` assignment形状并携带content fingerprint，三个stage保存诚实status/value/bound/gap/budget/stop，Stability保存四元整数向量，provenance绑定exact code、Policy/Limits及冻结合同版本。OPTIMAL/FEASIBLE才可携带candidate；UNKNOWN、INFEASIBLE、MODEL_INVALID或FAILED不泄漏partial success。
+
+该输出仍是无持久化Solver evidence，不创建ScheduleVersion、不推进PlanningRun状态，也不等于new DRAFT或最终ChangeReport；这些原子应用责任继续属于TASK-P4-08。
+
 ## TASK-P4-06 assignment comparison consumer
 
 ChangeReport builder消费既有`planning-solution.v1` operationAssignment形状和base PUBLISHED/new DRAFT ScheduleVersion exact references；它从UTC whole-second resource/start/end tuple计算delta，同时保存完整base/new assignment、lock/fact metadata、freeze、Request/Run、Policy/Limits、Solver/Validator及KPI lineage。Report ID/fingerprint由canonical content派生，`generated_at_utc`不参与内容identity，same inputs可byte-exact replay。

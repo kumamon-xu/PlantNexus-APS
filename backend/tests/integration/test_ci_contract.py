@@ -48,6 +48,9 @@ from app.planning.backends.cp_sat.fact_lock_model_check import (
 from app.planning.backends.cp_sat.objective_strategy_check import (
     main as objective_strategy_main,
 )
+from app.planning.backends.cp_sat.replan_solver_check import (
+    main as replan_solver_main,
+)
 from app.planning.backends.cp_sat.temporal_model_check import (
     main as temporal_model_main,
 )
@@ -263,6 +266,8 @@ def test_ci_runs_repository_gates_and_discovers_the_current_task() -> None:
         "build/validation/ci-p4-freeze-window.json",
         "app.planning.reporting.stability_change_report_check",
         "build/validation/ci-p4-stability-change-report.json",
+        "app.planning.backends.cp_sat.replan_solver_check",
+        "build/validation/ci-p4-replan-solver.json",
         "app.application.schedule_version_lifecycle_check",
         "build/validation/ci-p3-schedule-version-lifecycle.json",
         "app.application.workspace_read_model_check",
@@ -372,7 +377,7 @@ def test_ci_profile_routing_is_mutually_exclusive_and_fail_closed() -> None:
     assert "backend/tests/security" in full_text
     assert "P3 vertical slice Gate evidence" in full_text
     assert "Build package" in full_text
-    assert len(full["steps"]) == 57
+    assert len(full["steps"]) == 58
 
     assert 'test "${PLANTNEXUS_CLASSIFY_RESULT}" = "success"' in final_run
     assert 'test "${PLANTNEXUS_FULL_RESULT}" = "success"' in final_run
@@ -645,6 +650,59 @@ def test_ci_p4_stability_change_report_is_required_and_machine_checkable(
         "schedule_version_or_state_transition": "NONE",
         "application_api_ui_simulator": "NOT_IMPLEMENTED_BY_TASK",
         "p4_07_plus": "NOT_STARTED",
+        "p5_plus": "NOT_STARTED",
+        "production_external_authority_capacity_sla": "NOT_ESTABLISHED",
+    }
+
+
+def test_ci_p4_replan_solver_is_required_and_machine_checkable(
+    tmp_path: Path,
+) -> None:
+    workflow = (ROOT / ".github" / "workflows" / "ci.yml").read_text(
+        encoding="utf-8"
+    )
+    normalized = " ".join(workflow.split())
+    assert (
+        "name: P4 lexicographic replan solver and validator evidence run: >- "
+        "uv run python -m app.planning.backends.cp_sat.replan_solver_check "
+        "--root . --report build/validation/ci-p4-replan-solver.json"
+    ) in normalized
+    assert "continue-on-error" not in workflow
+
+    report_path = tmp_path / "p4-replan-solver.json"
+    assert replan_solver_main(["--root", str(ROOT), "--report", str(report_path)]) == 0
+    report = json.loads(report_path.read_text(encoding="utf-8"))
+    assert report["report_version"] == "p4-replan-solver-report.v1"
+    assert report["status"] == "PASS"
+    assert report["task_id"] == "TASK-P4-07"
+    assert report["diff_base"] == "e212ab7957d6bc5887048ee54809c8194d6e1eaf"
+    assert report["impact_rule_count"] == 7
+    assert report["impact_rules"] == [
+        "IMPACT-BACKEND",
+        "IMPACT-DOCS",
+        "IMPACT-INFRA",
+        "IMPACT-STATE",
+        "IMPACT-STRATEGY",
+        "IMPACT-TESTS",
+        "IMPACT-VALIDATOR",
+    ]
+    assert report["check_count"] == 8
+    assert report["issues"] == []
+    assert report["counts"] == {
+        "objective_stages": 3,
+        "solver_rounds": 6,
+        "fresh_validations": 6,
+        "deterministic_replays": 2,
+        "machine_checks": 8,
+    }
+    assert report["boundaries"] == {
+        "data_plane": "SIMULATION_ONLY",
+        "solver_scope": "GLOBAL_C001_C011_NO_DECOMPOSITION",
+        "base_schedule": "HINT_ONLY_EXCEPT_EFFECTIVE_HARD_PROTECTIONS",
+        "change_report": "ARITHMETIC_AND_UNIVERSE_PRECHECK_ONLY",
+        "schedule_version_or_state_transition": "NONE",
+        "application_api_ui_simulator": "NOT_IMPLEMENTED_BY_TASK",
+        "p4_08_plus": "NOT_STARTED",
         "p5_plus": "NOT_STARTED",
         "production_external_authority_capacity_sla": "NOT_ESTABLISHED",
     }

@@ -257,6 +257,12 @@ jobs:
           --root .
           --report build/validation/ci-p4-stability-change-report.json
 
+      - name: P4 lexicographic replan solver and validator evidence
+        run: >-
+          uv run python -m app.planning.backends.cp_sat.replan_solver_check
+          --root .
+          --report build/validation/ci-p4-replan-solver.json
+
       - name: P3 reviewable ScheduleVersion lifecycle evidence
         run: >-
           uv run python -m app.application.schedule_version_lifecycle_check

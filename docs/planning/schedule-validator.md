@@ -11,6 +11,12 @@ last_reviewed: 2026-08-28
 
 # 独立 ScheduleValidator 合同
 
+## TASK-P4-07 fresh candidate validator
+
+`replan-candidate-validation.v1`每轮从candidate、Problem、base assignments和effective-lock projection重新执行formal C-001～C-011 Validator，并独立重算active universe、running/explicit/freeze HARD tuple与metadata、completion facts、Delivery、四元Stability、Makespan及UNCHANGED/CHANGED/ADDED/REMOVED_BY_FACT分类。它不导入CP-SAT、backend或reporting calculator，不信任native solver status；任何fingerprint、universe、lock/fact、formal feasibility或objective mismatch均返回FAIL或结构化input rejection，candidate不得进入下一轮。
+
+本Validator只提供candidate acceptance和ChangeReport算术/全集precheck；它不构造最终ChangeReport、不写new DRAFT或审批状态。
+
 ## TASK-P4-06 independent ChangeReport precheck
 
 新增`change_report_precheck.py`直接从base/new assignments、active universe、SOFT locks、completion facts、reason inputs及before/after KPI重算完整report projection，不导入ChangeReport builder、stability calculator、CP-SAT Backend、formal ScheduleValidator、persistence、API或Simulator。它稳定返回PASS/FAIL、hard violations、四元objective vector与KPI comparison，并拒绝分类、delta、fact evidence、KPI reference、universe或identity篡改。

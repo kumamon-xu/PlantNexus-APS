@@ -23,6 +23,13 @@ from app.planning.validation.change_report_precheck import (
     PRECHECK_VERSION as CHANGE_REPORT_PRECHECK_VERSION,
     validate_change_report,
 )
+from app.planning.validation.replan_candidate_validator import (
+    REPLAN_CANDIDATE_VALIDATION_VERSION,
+    ReplanCandidateValidationInputError,
+    ReplanCandidateValidationReason,
+    ReplanCandidateValidationReport,
+    validate_replan_candidate,
+)
 
 
 __all__ = [
@@ -31,14 +38,19 @@ __all__ = [
     "ChangeReportPrecheckInputError",
     "FreezePrecheckInputError",
     "PRECHECK_VERSION",
+    "REPLAN_CANDIDATE_VALIDATION_VERSION",
     "ProblemScheduleValidationInputError",
     "ProblemScheduleValidator",
+    "ReplanCandidateValidationInputError",
+    "ReplanCandidateValidationReason",
+    "ReplanCandidateValidationReport",
     "ValidationInputError",
     "fixture_problem_hash",
     "validate_fixture_schedule",
     "validate_freeze_window_projection",
     "validate_change_report",
     "validate_problem_schedule",
+    "validate_replan_candidate",
     "validation_error_from_report",
     "validation_error_from_problem_report",
 ]

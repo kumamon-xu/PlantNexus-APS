@@ -11,6 +11,10 @@ last_reviewed: 2026-08-19
 
 # PlanningPolicy 与 SolveLimits 合同
 
+## TASK-P4-07 execution consumer
+
+Replan strategy只接受byte-exact已批准的P4 Simulation Policy、同plane/versioned SolveLimits及其ReplanRequest/projection references。总wall time按三个Policy stage等分；Stability份额再等分给四个整数分量，六轮分别记录allocated budget、native/product status、value、bound和stop reason。该分配是有界Development执行规则，不是Production默认、容量或SLA；任何跨plane、stale reference或未批准priority/limits source在建模前fail closed。
+
 ## TASK-P4-05 versioned Simulation freeze policy
 
 唯一已实现policy为`POLICY-P4-SIM-DYNAMIC-FREEZE-001@1.0.0`，内含`FREEZE-POLICY-P4-SIM-001@1.0.0`与显式source `SIM-P4-FREEZE-001`；窗口为900正整数秒，anchor只取verified new Snapshot `cutoff_at_utc`，区间固定为half-open `[cutoff, cutoff+900s)`。任何不同policy bytes、Production plane、缺失source/version或非整秒anchor都在solve前拒绝；OPEN-005继续阻止Production默认。SolveLimits、OBJ-002执行和Solver策略未由本Task修改。

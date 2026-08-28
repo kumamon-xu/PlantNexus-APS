@@ -11,6 +11,10 @@ last_reviewed: 2026-08-27
 
 # 错误与求解状态模型
 
+## TASK-P4-07 honest bounded-solve outcomes
+
+各轮原生CP-SAT状态保持原义：OPTIMAL才声明该轮最优；FEASIBLE表示candidate可行但未证最优；UNKNOWN表示预算内未取得可接受candidate，绝不改写为INFEASIBLE。最高优先级无candidate时不泄漏partial result；较低优先级UNKNOWN只可保留此前fresh-validated candidate并把最终结果标为FEASIBLE。MODEL_INVALID、lower-round inconsistency、lineage/input错误或independent validation FAIL均fail closed并丢弃candidate；这些错误不是业务不可行的别名。
+
 ## TASK-P4-04 projection errors
 
 事实入口提供稳定且脱敏的拒绝类：`INVALID_EVENT`、`AUTHORITY_MISMATCH`、`ORDERING_VIOLATION`、`INVALID_REFERENCE`、`FACT_CONFLICT`、`TERMINAL_REGRESSION`、`URGENT_IMPORT_REQUIRED`、`URGENT_IMPORT_MISMATCH`、`STALE_SNAPSHOT`与`PERSISTENCE_FAILED`。错误只暴露reason/field/contract-safe message，不含raw payload或数据库细节；任何错误回滚当前事务且不映射为INFEASIBLE。Solver status/error语义未改变。

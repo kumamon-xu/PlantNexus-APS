@@ -11,6 +11,10 @@ last_reviewed: 2026-08-28
 
 # KPI 合同
 
+## TASK-P4-07 objective execution evidence
+
+Solver现按整数语义直接最小化OBJ-001 priority-weighted tardiness、OBJ-002四分量和OBJ-003 makespan，并由独立Validator从candidate重新计算后才接受。stage value/bound只是本次有界Development solve证据，不改变KPI v1/v2 bytes，不建立Production target、threshold或SLA；base中不存在的ADDED operation不计movement，completed operation不进入active candidate universe。
+
 ## TASK-P4-06 exact Stability and KPI evidence
 
 `obj-002-stability.v1`现按固定顺序返回四个非负整数：SOFT lock violation count、changed existing count、resource change count、total absolute start-shift seconds。Comparable只含base/new均存在且new Snapshot仍active的operation；ADDED/REMOVED不进入movement分母。`unchanged_ratio`保存exact numerator/denominator，分母0时固定`NOT_APPLICABLE_NO_COMPARABLE_OPERATION`，不生成浮点近似。

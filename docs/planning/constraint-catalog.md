@@ -11,6 +11,10 @@ last_reviewed: 2026-08-21
 
 # V1 Constraint Catalog
 
+## TASK-P4-07 global model reuse
+
+Replan CP-SAT复用既有完整C-001～C-011 Global model，并把running fact、显式HARD与freeze-derived HARD的resource/start/end exact tuple加入同一模型；任何保护引用unknown operation/resource或非grid instant都在solve前拒绝。六个objective round只替换active objective并锁定已接受整数值，不删除、弱化或逐轮重建硬约束；SOFT lock只进入OBJ-002第一分量。
+
 ## TASK-P4-05 C-007/C-008 pre-solve projection
 
 本Task没有扩展C-001～C-018或修改rule sheet/formal Validator。新增独立precheck在Solver前复算C-007的COMPLETED排除/RUNNING exact authority与C-008显式HARD/freeze-derived HARD tuple，另外检查half-open边界、stale base、grid/horizon和lineage；SOFT只保留为非hard输入。任何冲突均拒绝整个projection，不能通过降级、裁剪或rounding变为可行。

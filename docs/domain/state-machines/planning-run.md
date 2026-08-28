@@ -11,6 +11,10 @@ last_reviewed: 2026-08-27
 
 # PlanningRun 状态机
 
+## TASK-P4-07 state mapping review
+
+Replan strategy只生成`solver-report.v2.planning_run_outcome`证据并使用既有status mapping：OPTIMAL/FEASIBLE→SOLVED，INFEASIBLE→INFEASIBLE，UNKNOWN→NO_SOLUTION_WITHIN_LIMIT，MODEL_INVALID/FAILED分别保持原义。它不持久化PlanningRun、不产生transition/self-transition，也不创建ScheduleVersion；P4-08仍须在事务内验证terminal result references。状态集合、allowed pairs和guards未修改。
+
 ## TASK-P4-03 persistence review
 
 P4-03只追加`request_id/request_fingerprint → planning_run_id/attempt_number → terminal result references`，result必须引用本机既有terminal state；`COMPLETED`才允许完整Solver/Validation/new ScheduleVersion/ChangeReport success references，其他terminal state不得暴露new Version或ChangeReport成功引用。状态集合、allowed pairs、guard与evidence逐字不变，ReplanRequest仍无状态机，exact replay不产生self-transition。

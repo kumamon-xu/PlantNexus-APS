@@ -30,6 +30,18 @@ from app.planning.backends.cp_sat.status import (
     native_status_name,
     solver_status_from_cp_sat,
 )
+from app.planning.backends.cp_sat.replan_backend import (
+    REPLAN_BACKEND_ID,
+    REPLAN_BACKEND_VERSION,
+    LexicographicReplanBackend,
+    ReplanBackendResult,
+)
+from app.planning.backends.cp_sat.replan_model import (
+    REPLAN_MODEL_VERSION,
+    ReplanCpSatModel,
+    StabilityObjectiveModel,
+    build_replan_model,
+)
 from app.planning.backends.cp_sat.temporal_constraints import (
     TEMPORAL_CONSTRAINT_IDS,
     calendar_tick_blocks,
@@ -49,10 +61,18 @@ __all__ = [
     "CoreSolveTelemetryDocument",
     "CpSatBackend",
     "ORTOOLS_VERSION",
+    "REPLAN_BACKEND_ID",
+    "REPLAN_BACKEND_VERSION",
+    "REPLAN_MODEL_VERSION",
     "SOLVER_NAME",
+    "LexicographicReplanBackend",
+    "ReplanBackendResult",
+    "ReplanCpSatModel",
+    "StabilityObjectiveModel",
     "TEMPORAL_CONSTRAINT_IDS",
     "backend_identity",
     "build_core_model",
+    "build_replan_model",
     "calendar_tick_blocks",
     "ceil_seconds_to_ticks",
     "floor_seconds_to_ticks",

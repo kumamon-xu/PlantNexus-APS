@@ -11,6 +11,12 @@ last_reviewed: 2026-08-21
 
 # PlanningStrategy 规则
 
+## TASK-P4-07 implemented strategy
+
+`global-lexicographic-replan-cp-sat.v1`是P4当前唯一已实现的Simulation replan strategy。它先验证PUBLISHED synthetic base、Policy/Limits、ReplanRequest、new Problem和effective-lock projection的exact lineage，再调用一个全局CP-SAT模型完成六轮词典序求解；base assignment只作为搜索Hint。strategy只组装SolverReport和raw evidence，无repository、state、API或Simulator副作用。
+
+P2 single-stage strategy保持可回滚且未修改；P5 decomposition、rolling/hybrid、多工厂、alternative route、secondary resource、batch及sequence setup仍不支持。
+
 ## P4 planned strategy boundary
 
 P4-07在既有Global Strategy上增加有界replan solve path，并可使用base schedule作为Hint，但Hint不构成事实、freeze或lock保护；独立Validator仍是acceptance authority。P4不引入P5 decomposition、rolling/hybrid、多工厂、alternative route、batch、secondary resource或sequence-dependent setup策略。本次没有策略实现或默认参数变化。

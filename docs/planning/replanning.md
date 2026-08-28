@@ -11,6 +11,12 @@ last_reviewed: 2026-08-28
 
 # 动态重排设计合同
 
+## TASK-P4-07 solve and validation slice
+
+当前纯链路扩展为`verified ReplanRequest + new Problem + effective locks + base PUBLISHED assignments → global six-round CP-SAT → fresh candidate validation per round → solver-report.v2/raw evidence`。facts/HARD/freeze在每轮保持同一约束域，base只作Hint，prior objective value逐项等式冻结；candidate必须同时通过formal schedule、facts/locks、objectives与complete change-universe复算。
+
+链路仍在application transaction之前终止：不提交new ScheduleVersion、ChangeReport、Request result或audit，不消费连续disruption simulator。TASK-P4-08负责atomic application，P4-09/10负责Simulator/replay。
+
 ## TASK-P4-06 stability/reporting slice
 
 Freeze/effective-lock准备之后，纯calculator现可对给定base/candidate assignments构造完整immutable ChangeReport，并由不导入builder、reporting calculator、Solver或formal Validator的precheck独立复算operation全集、分类、delta、SOFT violations、exact ratio、reasons/facts、KPI refs和identity。相同输入byte-exact replay；missing/duplicate universe、缺失completion fact、跨plane、reason/KPI/lineage或fingerprint mismatch均fail closed且无副作用。

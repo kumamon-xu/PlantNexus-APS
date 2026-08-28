@@ -11,6 +11,10 @@ last_reviewed: 2026-08-28
 
 # 配置、环境与数据隔离
 
+## TASK-P4-07 isolation boundary
+
+Strategy只接受Simulation plane、synthetic PUBLISHED base、approved versioned Policy/Limits及同一ReplanRequest/projection/Problem lineage；任何Production-shaped、cross-plane或stale输入在建模前拒绝。求解器无网络、数据库、secret、external adapter或state副作用，CI只上传JSON evidence。fixture limits、seed、worker和运行时间都是bounded Development配置，不是Production default或SLA。
+
 ## TASK-P4-06 isolation boundary
 
 Calculator、builder、precheck和machine fixture均为无网络、无数据库、无wall-clock/random读取的pure Simulation/development路径。Builder强制`data_plane=SIMULATION`、`synthetic=true`、`production_binding=false`且environment仅DEVELOPMENT/TEST/BENCHMARK；Production-shaped context、缺失provenance或cross-plane lineage在任何Solver/Version/persistence副作用前拒绝。CI新增证据步骤仍在FULL profile内且只上传JSON artifact。

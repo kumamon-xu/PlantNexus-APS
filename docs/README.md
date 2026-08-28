@@ -15,7 +15,9 @@ last_reviewed: 2026-08-28
 
 TASK-P4-08已在冻结Diff base `77981f0564d91dfb57fee6e3792f4989bdb51d32`内形成Simulation-only两事务application闭环：intent事务保存immutable request/attempt/audit；求解阶段重建exact current PUBLISHED lineage下的Problem，并复用P4-05/06/07能力；result事务重新读取current/base/request/attempt/Snapshot后，原子保存new DRAFT ScheduleVersion、完整SolverReport/fresh validation/KPI/ChangeReport result envelope与审计。Exact replay、stale current、KPI mismatch、并发竞争、审计失败和no-candidate terminal链均有本地证据。完整HIGH_RISK为focused 22、Backend 759、Frontend 67、三轮Chromium各12/12、历史machine/XS/双Gate/SCA/license/build/Compose与32/6/19/0治理全部PASS；machine为8/8、`issues=[]`。
 
-GitHub required `validate`与artifact evidence尚未在本Task的implementation提交后形成，因此TASK-P4-08仍为`in_progress`，本地结果不构成provider完成证据。Schema/migration/dependency/state pair、P4-07 Solver公式、Simulator、API/UI、P3 publish/export与Production边界保持冻结；P4-09～15仍为`planned`且不会自动启动。
+Implementation `f664517e5f17dc2453444adf9a5503ff1393530e`的run/FULL/required=`33137388411`/`98740332159`/`98741555347`已由GitHub Actions app `15368` exact成功。Machine/profile artifacts `9672684493`,`9672545763`均未过期并已下载复验；digests分别为`sha256:4d1ef3e89e32dd060e1cb946da119202f688adb9dcb7f2bd7536f2ee1c77e2f9`、`sha256:a9c4e44cdab8fab6bbdac19c7de08b2826b4286602c7fc376e2e76a89d8e3429`，精确绑定Task/base/SHA、32个changed paths、六个Impact Rules、8 checks、0 issues和P2/P3 Gate。本evidence-only closure据此把TASK-P4-08标为`done`；closure自身仍须post-push exact provider。
+
+Schema/migration/dependency/state pair、P4-07 Solver公式、Simulator、API/UI、P3 publish/export与Production边界保持冻结；P4-09～15仍为`planned`且不会自动启动。
 
 ## TASK-P4-07 completion boundary
 
@@ -114,7 +116,7 @@ TASK-P4-02已获单独授权并以`4026597ab1015b5ea3a89d241f0d12b5b481dee3`为�
 
 ## 当前范围
 
-当前阶段为P4。P0～P3 Milestone均为`completed`；TASK-P3-00～17全部`done`且P3 Exit双提交provider已闭环。TASK-P4-00～07与P4-16现为`done`，TASK-P4-08为`in_progress`且provider待核验，P4-09～15为`planned`成员；P4-15最终独立审计也不自动进入P5或Production。详见`current_phase.md`。
+当前阶段为P4。P0～P3 Milestone均为`completed`；TASK-P3-00～17全部`done`且P3 Exit双提交provider已闭环。TASK-P4-00～08与P4-16现为`done`，P4-09～15为`planned`成员且未自动启动；P4-15最终独立审计也不自动进入P5或Production。详见`current_phase.md`。
 
 P3已形成的顺序保持合同/ADR→Schema→persistence→validated DRAFT→read models→edit/lock→approval/reject→idempotent publish→ExportJob→API→Frontend/E2E→vertical Gate。批准的末段顺序为TASK-P3-15治理支持→TASK-P3-16本地化→TASK-P3-17独立Exit Audit；P3-16现已完成实现provider复验与文档closure，下一项仍须另行授权。展示术语规范见[`frontend/official-zh-cn-terminology-map.md`](frontend/official-zh-cn-terminology-map.md)，它不改变英文机器合同。
 

@@ -6,10 +6,16 @@ spec_version: 0.3.0
 phase: P0-P2
 normative: true
 source_sections: [29, 32, 65]
-last_reviewed: 2026-08-27
+last_reviewed: 2026-08-28
 ---
 
 # PlanningRun 状态机
+
+## TASK-P4-08 terminal result application review
+
+Application只接受既有PlanningRun terminal semantics：`COMPLETED`可原子绑定Solver/Validation/new DRAFT/ChangeReport，其他terminal只绑定SolverReport且不得泄漏partial success。Request/attempt/result是append-only lineage，不新增ReplanRequest状态机或PlanningRun transition/self-transition；same command replay返回原terminal envelope。
+
+状态集合、allowed pairs、guards和`UNKNOWN → NO_SOLUTION_WITHIN_LIMIT`语义逐字不变。New DRAFT是ScheduleVersion创建，不是PlanningRun状态扩展。
 
 ## TASK-P4-07 state mapping review
 

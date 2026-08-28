@@ -4,12 +4,19 @@ from __future__ import annotations
 
 from collections.abc import Mapping, Sequence
 from dataclasses import dataclass
+import json
 from typing import NoReturn, cast
 
 from sqlalchemy import insert, select, update
 from sqlalchemy.engine import Connection, Engine, RowMapping
 from sqlalchemy.exc import IntegrityError, SQLAlchemyError
 
+from app.domain.execution_contracts import (
+    P4ContractError,
+    canonical_contract_bytes,
+    contract_fingerprint,
+    require_p4_document,
+)
 from app.infrastructure.replan_persistence import (
     EXECUTION_EVENT_LEDGER,
     REPLAN_ATTEMPTS,
@@ -24,6 +31,7 @@ from app.infrastructure.replan_persistence import (
     ReplanAuditRecord,
     ReplanResultReference,
     canonical_p4_document,
+    internal_record_bytes,
     internal_record_sha256,
     load_internal_record,
     load_p4_document,
@@ -57,6 +65,53 @@ class CheckpointWriteResult:
     checkpoint: ProjectionCheckpoint
     replayed: bool
     state_revision: int
+
+
+@dataclass(frozen=True)
+class StoredAppliedReplanResult:
+    """A terminal result plus the durable immutable ChangeReport envelope."""
+
+    result: dict[str, object]
+    solver_report: dict[str, object]
+    validation_report: dict[str, object]
+    kpi: dict[str, object]
+    change_report: dict[str, object]
+
+
+@dataclass(frozen=True)
+class StoredTerminalReplanResult:
+    """A non-success terminal result plus its durable SolverReport bytes."""
+
+    result: dict[str, object]
+    solver_report: dict[str, object]
+
+
+_APPLIED_RESULT_ENVELOPE_VERSION = "replan-applied-result-envelope.v1"
+_TERMINAL_RESULT_ENVELOPE_VERSION = "replan-terminal-result-envelope.v1"
+
+
+def _canonical_solver_report(
+    document: Mapping[str, object],
+) -> dict[str, object]:
+    """Canonicalize solver-report.v2, which intentionally has no data-plane field."""
+
+    candidate = dict(document)
+    try:
+        observed_version = require_p4_document(candidate)
+        canonical = canonical_contract_bytes(candidate)
+    except P4ContractError:
+        reject(
+            PersistenceFailure.INVALID_DOCUMENT,
+            field="solver_report",
+            message="SolverReport failed semantic integrity precheck",
+        )
+    if observed_version != "solver-report.v2":
+        reject(
+            PersistenceFailure.INVALID_DOCUMENT,
+            field="solver_report.solver_report_version",
+            message="only solver-report.v2 is accepted",
+        )
+    return cast(dict[str, object], json.loads(canonical))
 
 
 def _artifact_from_mapping(value: object, field: str) -> ArtifactReference:
@@ -787,8 +842,7 @@ class SqlAlchemyReplanRequestRepository:
         require_text(request_id, "request_id")
         try:
             with self._engine.connect() as connection:
-                row = self._find(connection, request_id)
-                return self._load(row) if row is not None else None
+                return self.get_in_transaction(connection, request_id)
         except WorkspacePersistenceError:
             raise
         except SQLAlchemyError:
@@ -797,6 +851,15 @@ class SqlAlchemyReplanRequestRepository:
                 field="repository.get",
                 message="ReplanRequest query failed",
             )
+
+    def get_in_transaction(
+        self, connection: Connection, request_id: str
+    ) -> dict[str, object] | None:
+        """Re-read an immutable request inside a caller-owned transaction."""
+
+        require_text(request_id, "request_id")
+        row = self._find(connection, request_id)
+        return self._load(row) if row is not None else None
 
     def list_event_ids(self, request_id: str) -> tuple[str, ...]:
         require_text(request_id, "request_id")
@@ -1048,12 +1111,7 @@ class SqlAlchemyReplanLineageRepository:
         ).first()
         return row._mapping if row is not None else None
 
-    def _load_result(self, row: RowMapping) -> dict[str, object]:
-        document = load_internal_record(
-            row["record_json"],
-            row["record_sha256"],
-            expected_version=ReplanResultReference.record_version,
-        )
+    def _result_value(self, document: Mapping[str, object]) -> ReplanResultReference:
         result = ReplanResultReference(
             result_id=require_text(document.get("result_id"), "result_id"),
             result_fingerprint=require_text(
@@ -1090,8 +1148,156 @@ class SqlAlchemyReplanLineageRepository:
                 document.get("finished_at_utc"), "finished_at_utc"
             ),
         )
+        validate_replan_result(result)
+        return result
+
+    def _load_result_record(
+        self, row: RowMapping
+    ) -> tuple[
+        dict[str, object],
+        dict[str, dict[str, object] | None] | None,
+    ]:
+        raw = row["record_json"]
+        try:
+            parsed = json.loads(bytes(raw).decode("utf-8"))
+        except (TypeError, UnicodeDecodeError, json.JSONDecodeError):
+            reject(
+                PersistenceFailure.PERSISTENCE_FAILED,
+                field="stored.replan_result",
+                message="stored result record is invalid",
+            )
+        version = parsed.get("record_version") if isinstance(parsed, dict) else None
+        if version == _APPLIED_RESULT_ENVELOPE_VERSION:
+            envelope = load_internal_record(
+                raw,
+                row["record_sha256"],
+                expected_version=_APPLIED_RESULT_ENVELOPE_VERSION,
+            )
+            result_document = require_mapping(envelope.get("result"), "result")
+            solver_document = require_mapping(
+                envelope.get("solver_report"), "solver_report"
+            )
+            validation_document = require_mapping(
+                envelope.get("validation_report"), "validation_report"
+            )
+            kpi_document = require_mapping(envelope.get("kpi"), "kpi")
+            change_document = require_mapping(
+                envelope.get("change_report"), "change_report"
+            )
+            result = self._result_value(result_document)
+            solver = _canonical_solver_report(solver_document)
+            validation = cast(
+                dict[str, object],
+                json.loads(canonical_contract_bytes(validation_document)),
+            )
+            validation_basis = {
+                key: value
+                for key, value in validation.items()
+                if key not in {"report_id", "report_fingerprint"}
+            }
+            if validation.get("report_fingerprint") != contract_fingerprint(
+                validation_basis
+            ):
+                reject(
+                    PersistenceFailure.PERSISTENCE_FAILED,
+                    field="stored.replan_result.validation_report",
+                    message="candidate validation identity is invalid",
+                )
+            kpi = cast(
+                dict[str, object], json.loads(canonical_contract_bytes(kpi_document))
+            )
+            change, _ = canonical_p4_document(
+                change_document,
+                expected_version="change-report.v1",
+                data_plane=self._data_plane,
+            )
+            reference = result.change_report
+            solver_reference = result.solver_report
+            validation_reference = result.validation_report
+            schedule_reference = result.new_schedule_version
+            formal_validation = require_mapping(
+                validation.get("formal_validation"),
+                "validation_report.formal_validation",
+            )
+            after_kpi = require_mapping(change.get("after_kpi"), "change_report.after_kpi")
+            report_schedule = require_mapping(
+                change.get("new_schedule_version"),
+                "change_report.new_schedule_version",
+            )
+            if (
+                reference is None
+                or reference.artifact_id != change.get("report_id")
+                or reference.fingerprint != change.get("report_fingerprint")
+                or solver_reference is None
+                or solver_reference.artifact_id != solver.get("report_id")
+                or solver_reference.fingerprint != solver.get("report_fingerprint")
+                or validation_reference is None
+                or validation_reference.fingerprint
+                != contract_fingerprint(formal_validation)
+                or after_kpi.get("artifact_id") != kpi.get("kpi_id")
+                or after_kpi.get("fingerprint") != contract_fingerprint(kpi)
+                or schedule_reference is None
+                or report_schedule.get("schedule_version_id")
+                != schedule_reference.artifact_id
+                or report_schedule.get("content_fingerprint")
+                != schedule_reference.fingerprint
+            ):
+                reject(
+                    PersistenceFailure.PERSISTENCE_FAILED,
+                    field="stored.replan_result.change_report",
+                    message="applied result envelope references differ",
+                )
+            document = result.as_document()
+            artifacts: dict[str, dict[str, object] | None] | None = {
+                "solver_report": solver,
+                "validation_report": validation,
+                "kpi": kpi,
+                "change_report": change,
+            }
+        elif version == _TERMINAL_RESULT_ENVELOPE_VERSION:
+            envelope = load_internal_record(
+                raw,
+                row["record_sha256"],
+                expected_version=_TERMINAL_RESULT_ENVELOPE_VERSION,
+            )
+            result_document = require_mapping(envelope.get("result"), "result")
+            solver_document = require_mapping(
+                envelope.get("solver_report"), "solver_report"
+            )
+            result = self._result_value(result_document)
+            solver = _canonical_solver_report(solver_document)
+            solver_reference = result.solver_report
+            if (
+                result.planning_run_terminal_state == "COMPLETED"
+                or solver_reference is None
+                or solver_reference.artifact_id != solver.get("report_id")
+                or solver_reference.fingerprint != solver.get("report_fingerprint")
+                or result.validation_report is not None
+                or result.new_schedule_version is not None
+                or result.change_report is not None
+            ):
+                reject(
+                    PersistenceFailure.PERSISTENCE_FAILED,
+                    field="stored.replan_result.solver_report",
+                    message="terminal result envelope references differ",
+                )
+            document = result.as_document()
+            artifacts = {
+                "solver_report": solver,
+                "validation_report": None,
+                "kpi": None,
+                "change_report": None,
+            }
+        else:
+            document = load_internal_record(
+                raw,
+                row["record_sha256"],
+                expected_version=ReplanResultReference.record_version,
+            )
+            result = self._result_value(document)
+            artifacts = None
         canonical = validate_replan_result(result)
-        if canonical != bytes(row["record_json"]):
+        if artifacts is None and canonical != bytes(raw):
             reject(
                 PersistenceFailure.PERSISTENCE_FAILED,
                 field="stored.replan_result",
@@ -1114,7 +1320,55 @@ class SqlAlchemyReplanLineageRepository:
                 field="stored.replan_result",
                 message="stored result metadata failed integrity verification",
             )
-        return document
+        return document, artifacts
+
+    def _load_result(self, row: RowMapping) -> dict[str, object]:
+        return self._load_result_record(row)[0]
+
+    def _load_applied_result(self, row: RowMapping) -> StoredAppliedReplanResult:
+        result, artifacts = self._load_result_record(row)
+        if artifacts is None:
+            reject(
+                PersistenceFailure.STATE_CONFLICT,
+                field="stored.replan_result",
+                message="stored result has no applied ChangeReport envelope",
+            )
+        solver = artifacts["solver_report"]
+        validation = artifacts["validation_report"]
+        kpi = artifacts["kpi"]
+        change = artifacts["change_report"]
+        if solver is None or validation is None or kpi is None or change is None:
+            reject(
+                PersistenceFailure.PERSISTENCE_FAILED,
+                field="stored.replan_result",
+                message="COMPLETED result artifact envelope is incomplete",
+            )
+        return StoredAppliedReplanResult(
+            result=result,
+            solver_report=solver,
+            validation_report=validation,
+            kpi=kpi,
+            change_report=change,
+        )
+
+    def _load_terminal_result(self, row: RowMapping) -> StoredTerminalReplanResult:
+        result, artifacts = self._load_result_record(row)
+        if artifacts is None or artifacts["solver_report"] is None:
+            reject(
+                PersistenceFailure.STATE_CONFLICT,
+                field="stored.replan_result",
+                message="stored terminal result has no SolverReport envelope",
+            )
+        if result.get("planning_run_terminal_state") == "COMPLETED":
+            reject(
+                PersistenceFailure.STATE_CONFLICT,
+                field="stored.replan_result",
+                message="stored result is not a non-success terminal",
+            )
+        return StoredTerminalReplanResult(
+            result=result,
+            solver_report=artifacts["solver_report"],
+        )
 
     def append_result_in_transaction(
         self,
@@ -1122,6 +1376,19 @@ class SqlAlchemyReplanLineageRepository:
         result: ReplanResultReference,
     ) -> DocumentWriteResult:
         canonical = validate_replan_result(result)
+        return self._append_result_record_in_transaction(
+            connection,
+            result=result,
+            record_bytes=canonical,
+        )
+
+    def _append_result_record_in_transaction(
+        self,
+        connection: Connection,
+        *,
+        result: ReplanResultReference,
+        record_bytes: bytes,
+    ) -> DocumentWriteResult:
         if self._data_plane is not WorkspaceDataPlane.SIMULATION:
             reject(
                 PersistenceFailure.DATA_PLANE_MISMATCH,
@@ -1151,7 +1418,7 @@ class SqlAlchemyReplanLineageRepository:
         if existing is None:
             existing = self._result_by_attempt(connection, result.attempt_id)
         if existing is not None:
-            if bytes(existing["record_json"]) != canonical:
+            if bytes(existing["record_json"]) != record_bytes:
                 reject(
                     PersistenceFailure.IDEMPOTENCY_CONFLICT,
                     field="result_id/attempt_id",
@@ -1204,15 +1471,15 @@ class SqlAlchemyReplanLineageRepository:
                         ),
                         correlation_id=result.correlation_id,
                         finished_at_utc=result.finished_at_utc,
-                        record_json=canonical,
-                        record_sha256=internal_record_sha256(canonical),
+                        record_json=record_bytes,
+                        record_sha256=internal_record_sha256(record_bytes),
                     )
                 )
         except IntegrityError:
             raced = self._result_by_id(connection, result.result_id)
             if raced is None:
                 raced = self._result_by_attempt(connection, result.attempt_id)
-            if raced is not None and bytes(raced["record_json"]) == canonical:
+            if raced is not None and bytes(raced["record_json"]) == record_bytes:
                 return DocumentWriteResult(
                     document=self._load_result(raced), replayed=True
                 )
@@ -1222,6 +1489,129 @@ class SqlAlchemyReplanLineageRepository:
                 message="result insert conflicted with stored lineage",
             )
         return DocumentWriteResult(document=result.as_document(), replayed=False)
+
+    def append_applied_result_in_transaction(
+        self,
+        connection: Connection,
+        *,
+        result: ReplanResultReference,
+        solver_report: Mapping[str, object],
+        validation_report: Mapping[str, object],
+        kpi: Mapping[str, object],
+        change_report: Mapping[str, object],
+    ) -> DocumentWriteResult:
+        """Atomically store a COMPLETED result and its immutable report bytes."""
+
+        validate_replan_result(result)
+        solver = _canonical_solver_report(solver_report)
+        validation = cast(
+            dict[str, object], json.loads(canonical_contract_bytes(validation_report))
+        )
+        validation_basis = {
+            key: value
+            for key, value in validation.items()
+            if key not in {"report_id", "report_fingerprint"}
+        }
+        canonical_validation_fingerprint = contract_fingerprint(validation_basis)
+        canonical_kpi = cast(
+            dict[str, object], json.loads(canonical_contract_bytes(kpi))
+        )
+        report, _ = canonical_p4_document(
+            change_report,
+            expected_version="change-report.v1",
+            data_plane=self._data_plane,
+        )
+        reference = result.change_report
+        solver_reference = result.solver_report
+        validation_reference = result.validation_report
+        schedule = result.new_schedule_version
+        formal_validation = require_mapping(
+            validation.get("formal_validation"),
+            "validation_report.formal_validation",
+        )
+        after_kpi = require_mapping(report.get("after_kpi"), "change_report.after_kpi")
+        report_schedule = require_mapping(
+            report.get("new_schedule_version"),
+            "change_report.new_schedule_version",
+        )
+        if (
+            result.planning_run_terminal_state != "COMPLETED"
+            or reference is None
+            or reference.artifact_id != report.get("report_id")
+            or reference.fingerprint != report.get("report_fingerprint")
+            or solver_reference is None
+            or solver_reference.artifact_id != solver.get("report_id")
+            or solver_reference.fingerprint != solver.get("report_fingerprint")
+            or validation.get("report_fingerprint")
+            != canonical_validation_fingerprint
+            or validation_reference is None
+            or validation_reference.fingerprint
+            != contract_fingerprint(formal_validation)
+            or after_kpi.get("artifact_id") != canonical_kpi.get("kpi_id")
+            or after_kpi.get("fingerprint") != contract_fingerprint(canonical_kpi)
+            or schedule is None
+            or report_schedule.get("schedule_version_id") != schedule.artifact_id
+            or report_schedule.get("content_fingerprint") != schedule.fingerprint
+        ):
+            reject(
+                PersistenceFailure.IDENTITY_CONFLICT,
+                field="result/change_report",
+                message="applied result and ChangeReport references differ",
+            )
+        envelope = internal_record_bytes(
+            {
+                "record_version": _APPLIED_RESULT_ENVELOPE_VERSION,
+                "result": result.as_document(),
+                "solver_report": solver,
+                "validation_report": validation,
+                "kpi": canonical_kpi,
+                "change_report": report,
+            }
+        )
+        return self._append_result_record_in_transaction(
+            connection,
+            result=result,
+            record_bytes=envelope,
+        )
+
+    def append_terminal_result_in_transaction(
+        self,
+        connection: Connection,
+        *,
+        result: ReplanResultReference,
+        solver_report: Mapping[str, object],
+    ) -> DocumentWriteResult:
+        """Atomically store a non-success terminal and exact SolverReport bytes."""
+
+        validate_replan_result(result)
+        solver = _canonical_solver_report(solver_report)
+        solver_reference = result.solver_report
+        if (
+            result.planning_run_terminal_state == "COMPLETED"
+            or solver_reference is None
+            or solver_reference.artifact_id != solver.get("report_id")
+            or solver_reference.fingerprint != solver.get("report_fingerprint")
+            or result.validation_report is not None
+            or result.new_schedule_version is not None
+            or result.change_report is not None
+        ):
+            reject(
+                PersistenceFailure.IDENTITY_CONFLICT,
+                field="result/solver_report",
+                message="terminal result and SolverReport references differ",
+            )
+        envelope = internal_record_bytes(
+            {
+                "record_version": _TERMINAL_RESULT_ENVELOPE_VERSION,
+                "result": result.as_document(),
+                "solver_report": solver,
+            }
+        )
+        return self._append_result_record_in_transaction(
+            connection,
+            result=result,
+            record_bytes=envelope,
+        )
 
     def append_result(self, result: ReplanResultReference) -> DocumentWriteResult:
         try:
@@ -1240,8 +1630,7 @@ class SqlAlchemyReplanLineageRepository:
         require_text(attempt_id, "attempt_id")
         try:
             with self._engine.connect() as connection:
-                row = self._attempt_by_id(connection, attempt_id)
-                return self._load_attempt(row) if row is not None else None
+                return self.get_attempt_in_transaction(connection, attempt_id)
         except WorkspacePersistenceError:
             raise
         except SQLAlchemyError:
@@ -1251,12 +1640,20 @@ class SqlAlchemyReplanLineageRepository:
                 message="replan attempt query failed",
             )
 
+    def get_attempt_in_transaction(
+        self, connection: Connection, attempt_id: str
+    ) -> dict[str, object] | None:
+        require_text(attempt_id, "attempt_id")
+        row = self._attempt_by_id(connection, attempt_id)
+        return self._load_attempt(row) if row is not None else None
+
     def get_result_for_attempt(self, attempt_id: str) -> dict[str, object] | None:
         require_text(attempt_id, "attempt_id")
         try:
             with self._engine.connect() as connection:
-                row = self._result_by_attempt(connection, attempt_id)
-                return self._load_result(row) if row is not None else None
+                return self.get_result_for_attempt_in_transaction(
+                    connection, attempt_id
+                )
         except WorkspacePersistenceError:
             raise
         except SQLAlchemyError:
@@ -1265,6 +1662,63 @@ class SqlAlchemyReplanLineageRepository:
                 field="repository.get_result_for_attempt",
                 message="replan result query failed",
             )
+
+    def get_result_for_attempt_in_transaction(
+        self, connection: Connection, attempt_id: str
+    ) -> dict[str, object] | None:
+        require_text(attempt_id, "attempt_id")
+        row = self._result_by_attempt(connection, attempt_id)
+        return self._load_result(row) if row is not None else None
+
+    def get_applied_result_for_attempt(
+        self, attempt_id: str
+    ) -> StoredAppliedReplanResult | None:
+        require_text(attempt_id, "attempt_id")
+        try:
+            with self._engine.connect() as connection:
+                return self.get_applied_result_for_attempt_in_transaction(
+                    connection, attempt_id
+                )
+        except WorkspacePersistenceError:
+            raise
+        except SQLAlchemyError:
+            reject(
+                PersistenceFailure.PERSISTENCE_FAILED,
+                field="repository.get_applied_result_for_attempt",
+                message="applied replan result query failed",
+            )
+
+    def get_applied_result_for_attempt_in_transaction(
+        self, connection: Connection, attempt_id: str
+    ) -> StoredAppliedReplanResult | None:
+        require_text(attempt_id, "attempt_id")
+        row = self._result_by_attempt(connection, attempt_id)
+        return self._load_applied_result(row) if row is not None else None
+
+    def get_terminal_result_for_attempt(
+        self, attempt_id: str
+    ) -> StoredTerminalReplanResult | None:
+        require_text(attempt_id, "attempt_id")
+        try:
+            with self._engine.connect() as connection:
+                return self.get_terminal_result_for_attempt_in_transaction(
+                    connection, attempt_id
+                )
+        except WorkspacePersistenceError:
+            raise
+        except SQLAlchemyError:
+            reject(
+                PersistenceFailure.PERSISTENCE_FAILED,
+                field="repository.get_terminal_result_for_attempt",
+                message="terminal result query failed",
+            )
+
+    def get_terminal_result_for_attempt_in_transaction(
+        self, connection: Connection, attempt_id: str
+    ) -> StoredTerminalReplanResult | None:
+        require_text(attempt_id, "attempt_id")
+        row = self._result_by_attempt(connection, attempt_id)
+        return self._load_terminal_result(row) if row is not None else None
 
     def update(self, *_args: object, **_kwargs: object) -> NoReturn:
         reject(
@@ -1467,5 +1921,7 @@ __all__ = [
     "SqlAlchemyReplanAuditRepository",
     "SqlAlchemyReplanLineageRepository",
     "SqlAlchemyReplanRequestRepository",
+    "StoredAppliedReplanResult",
     "StoredProjectionCheckpoint",
+    "StoredTerminalReplanResult",
 ]

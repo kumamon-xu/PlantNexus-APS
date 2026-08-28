@@ -6,10 +6,16 @@ spec_version: 0.3.0
 phase: cross-phase
 normative: true
 source_sections: [15, 22, 59, 61, 90]
-last_reviewed: 2026-08-26
+last_reviewed: 2026-08-28
 ---
 
 # 数据权威边界
+
+## TASK-P4-08 result authority boundary
+
+Application只接受server-bound `SIMULATION + DEVELOPMENT/TEST/BENCHMARK + production_binding=false` context，并在任何idempotency/result lookup前default-deny Production。Request必须绑定exact current `SIMULATION_INTERNAL` PUBLISHED base、stored Snapshot/Problem、ordered Event stream/fact checkpoint、Policy/Limits/freeze；client、AI、received-at或fixture均不能授予Production/approval/publish authority。
+
+Result transaction重新核对current/base/request/attempt/Snapshot和deterministic Problem bytes；只提交new immutable DRAFT与exact result/audit envelope。base PUBLISHED/current reference不变，真实MES/ERP authority、field conflict arbitration与Production binding继续由OPEN-002/010/015阻断。
 
 ## TASK-P4-04 authority projection
 

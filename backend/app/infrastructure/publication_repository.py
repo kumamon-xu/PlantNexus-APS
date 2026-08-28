@@ -477,8 +477,7 @@ class SqlAlchemyPublicationRepository:
         require_text(target, "target")
         try:
             with self._engine.connect() as connection:
-                row = self._current_row(connection, target)
-                return self._reference(row) if row is not None else None
+                return self.get_current_in_transaction(connection, target=target)
         except WorkspacePersistenceError:
             raise
         except SQLAlchemyError:
@@ -487,6 +486,18 @@ class SqlAlchemyPublicationRepository:
                 field="repository.get_current",
                 message="current publication query failed",
             )
+
+    def get_current_in_transaction(
+        self,
+        connection: Connection,
+        *,
+        target: str = "SIMULATION_INTERNAL",
+    ) -> CurrentPublicationReference | None:
+        """Re-read the current reference inside a caller-owned transaction."""
+
+        require_text(target, "target")
+        row = self._current_row(connection, target)
+        return self._reference(row) if row is not None else None
 
     def update(self, *_args: object, **_kwargs: object) -> NoReturn:
         reject(

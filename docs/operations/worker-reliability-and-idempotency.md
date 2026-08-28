@@ -6,10 +6,16 @@ spec_version: 0.3.0
 phase: P0-P7
 normative: true
 source_sections: [34, 65, 66, 67]
-last_reviewed: 2026-08-27
+last_reviewed: 2026-08-28
 ---
 
 # P0 Worker Reliability 与 Idempotency
+
+## TASK-P4-08 application reliability
+
+Result application实现ADR-0013的两事务边界：intent可在后续失败时保留并安全重试；result transaction重新核对current/base/request/attempt/Snapshot/Problem后，把DRAFT、full result envelope和audit一次提交。Same request/key在完成后不再solve并返回exact bytes；different key/content冲突，并发只有一个完整结果，loser重试后读取winner，无partial Version/result/audit。
+
+Audit故障注入证明result transaction全回滚；base与current保持不变。该correctness不形成queue lease、distributed lock/outbox、external exactly-once、Production HA/capacity/SLA，worker拓扑仍由后继范围决定。
 
 ## TASK-P4-04 projection reliability
 

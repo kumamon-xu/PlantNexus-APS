@@ -6,10 +6,16 @@ spec_version: 0.3.0
 phase: P3
 normative: true
 source_sections: [33, 34, 60, 66, 78, 94, 95]
-last_reviewed: 2026-08-26
+last_reviewed: 2026-08-28
 ---
 
 # P3 Authorization Capability 与 Audit 合同
+
+## TASK-P4-08 application authorization and audit
+
+Replan application authority来自server-bound Simulation context，不来自Request body；Production/environment/binding/actor不满足时在任何request/result lookup前DENY。Intent transaction原子追加Request、attempt及两份audit；result transaction原子追加new DRAFT、完整result envelope和result audit。Exact replay复用原audit/result，不伪造状态transition或重复副作用；different key/content、stale current、lineage或artifact mismatch均fail closed。
+
+本Task没有创建真实RBAC/SSO/approval/publish authority，result audit不等于人工批准。P3 decision/publication/export audit合同保持不变，OPEN-010/015继续OPEN。
 
 ## TASK-P4-02 authority carrier boundary
 

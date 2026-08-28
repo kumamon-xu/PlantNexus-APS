@@ -6,10 +6,16 @@ spec_version: 0.3.0
 phase: P0-P4
 normative: true
 source_sections: [29, 32, 34, 60, 65, 91, 92]
-last_reviewed: 2026-08-27
+last_reviewed: 2026-08-28
 ---
 
 # 错误与求解状态模型
+
+## TASK-P4-08 application failures and terminal replay
+
+Application使用稳定脱敏reason：`AUTHORIZATION_DENIED`、`INVALID_INPUT`、`DATA_PLANE_MISMATCH`、`STATE_CONFLICT`、`LINEAGE_MISMATCH`、`IDEMPOTENCY_CONFLICT`、`VALIDATION_FAILED`、`CHANGE_REPORT_FAILED`与`PERSISTENCE_FAILED`；SQL/credential/raw payload不进入message。Production denial发生在lookup前，stale/current/request/attempt/Snapshot/Problem或KPI/report reference漂移均无result-transaction副作用。
+
+Solver `NO_SOLUTION_WITHIN_LIMIT/INFEASIBLE/MODEL_INVALID/CANCELLED/FAILED`继续保存原terminal state与exact SolverReport，且不携带DRAFT/Validation/KPI/ChangeReport成功引用；exact replay不会把UNKNOWN改写为INFEASIBLE。Audit/persistence失败整体回滚，已提交intent保留为可重试事实。
 
 ## TASK-P4-07 honest bounded-solve outcomes
 

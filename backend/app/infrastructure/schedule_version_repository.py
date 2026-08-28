@@ -4,6 +4,7 @@ from __future__ import annotations
 
 from collections.abc import Mapping
 from dataclasses import dataclass
+import json
 from typing import NoReturn
 
 from sqlalchemy import insert, select, update
@@ -31,6 +32,10 @@ from app.infrastructure.workspace_persistence import (
     require_integer,
     require_mapping,
     require_text,
+)
+from app.infrastructure.replan_persistence import (
+    canonical_p4_document,
+    load_p4_document,
 )
 
 
@@ -63,12 +68,30 @@ class SqlAlchemyScheduleVersionRepository:
         return row._mapping if row is not None else None
 
     def _load(self, row: RowMapping) -> dict[str, object]:
-        document = load_document(
-            row["document_json"],
-            row["document_sha256"],
-            expected_version="schedule-version.v1",
-            data_plane=self._data_plane,
-        )
+        raw = row["document_json"]
+        try:
+            parsed = json.loads(bytes(raw).decode("utf-8"))
+        except (TypeError, UnicodeDecodeError, json.JSONDecodeError):
+            reject(
+                PersistenceFailure.PERSISTENCE_FAILED,
+                field="stored.document_json",
+                message="stored ScheduleVersion carrier is invalid",
+            )
+        version = parsed.get("schedule_version_version") if isinstance(parsed, dict) else None
+        if version == "schedule-version.v2":
+            document = load_p4_document(
+                raw,
+                row["document_sha256"],
+                expected_version="schedule-version.v2",
+                data_plane=self._data_plane,
+            )
+        else:
+            document = load_document(
+                raw,
+                row["document_sha256"],
+                expected_version="schedule-version.v1",
+                data_plane=self._data_plane,
+            )
         expected = {
             "schedule_version_id": row["schedule_version_id"],
             "revision": row["revision"],
@@ -93,11 +116,19 @@ class SqlAlchemyScheduleVersionRepository:
     def _candidate(
         self, document: Mapping[str, object]
     ) -> tuple[dict[str, object], bytes]:
-        candidate, canonical = canonical_document(
-            document,
-            expected_version="schedule-version.v1",
-            data_plane=self._data_plane,
-        )
+        version = document.get("schedule_version_version")
+        if version == "schedule-version.v2":
+            candidate, canonical = canonical_p4_document(
+                document,
+                expected_version="schedule-version.v2",
+                data_plane=self._data_plane,
+            )
+        else:
+            candidate, canonical = canonical_document(
+                document,
+                expected_version="schedule-version.v1",
+                data_plane=self._data_plane,
+            )
         require_text(candidate.get("schedule_version_id"), "schedule_version_id")
         require_integer(candidate.get("revision"), "revision", minimum=1)
         require_text(candidate.get("state"), "state")
@@ -237,24 +268,7 @@ class SqlAlchemyScheduleVersionRepository:
         require_text(schedule_version_id, "schedule_version_id")
         try:
             with self._engine.connect() as connection:
-                row = self._find(connection, schedule_version_id)
-                if row is None:
-                    return None
-                revision = row["state_revision"]
-                if (
-                    isinstance(revision, bool)
-                    or not isinstance(revision, int)
-                    or revision < 0
-                ):
-                    reject(
-                        PersistenceFailure.PERSISTENCE_FAILED,
-                        field="stored.state_revision",
-                        message="stored ScheduleVersion state revision is invalid",
-                    )
-                return StoredScheduleVersion(
-                    document=self._load(row),
-                    state_revision=revision,
-                )
+                return self.get_record_in_transaction(connection, schedule_version_id)
         except WorkspacePersistenceError:
             raise
         except SQLAlchemyError:
@@ -263,6 +277,27 @@ class SqlAlchemyScheduleVersionRepository:
                 field="repository.get",
                 message="ScheduleVersion query failed",
             )
+
+    def get_record_in_transaction(
+        self, connection: Connection, schedule_version_id: str
+    ) -> StoredScheduleVersion | None:
+        """Re-read a ScheduleVersion inside a caller-owned result transaction."""
+
+        require_text(schedule_version_id, "schedule_version_id")
+        row = self._find(connection, schedule_version_id)
+        if row is None:
+            return None
+        revision = row["state_revision"]
+        if isinstance(revision, bool) or not isinstance(revision, int) or revision < 0:
+            reject(
+                PersistenceFailure.PERSISTENCE_FAILED,
+                field="stored.state_revision",
+                message="stored ScheduleVersion state revision is invalid",
+            )
+        return StoredScheduleVersion(
+            document=self._load(row),
+            state_revision=revision,
+        )
 
     def transition_in_transaction(
         self,

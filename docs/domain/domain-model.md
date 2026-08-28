@@ -11,6 +11,12 @@ last_reviewed: 2026-08-28
 
 # APS 领域模型
 
+## TASK-P4-08 Replan application aggregate boundary
+
+Replan application现把既有immutable ReplanRequest、attempt/result/audit与ScheduleVersion组合成两个显式事务边界。Intent事务只保存请求、attempt和审计；成功求解后，result事务重新确认exact current PUBLISHED及其Snapshot lineage，并原子保存new DRAFT ScheduleVersion、完整applied result envelope与审计。Terminal no-candidate只形成完整SolverReport result，不创建DRAFT或ChangeReport；失败或竞争不得留下partial aggregate。
+
+New DRAFT复用既有ScheduleVersion aggregate与P3 lifecycle，不新增state、transition、Schema或migration；其parent必须是exact base PUBLISHED，decision/publication保持空值，后续approve/publish/export仍只属于P3 authority边界。Existing PUBLISHED与历史版本byte-exact immutable，ReplanRequest exact replay返回原结果且不得重跑Solver。
+
 ## TASK-P4-06 immutable ChangeReport value boundary
 
 领域层现增加只由canonical bytes、`report_id`和`report_fingerprint`构成的`ImmutableChangeReport`及结构化fail-closed错误。Builder对base/new assignment全集作copy-on-write式纯比较：共同且在new active universe中的operation按resource/start/end tuple分类UNCHANGED或CHANGED；new-only为ADDED；base-only只有存在精确COMPLETED fact evidence时才可为REMOVED_BY_FACT。Lock/fact metadata变化不伪造movement，但仍原样进入assignment evidence。

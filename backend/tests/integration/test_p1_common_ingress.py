@@ -175,6 +175,27 @@ def test_application_boundary_has_no_solver_validator_persistence_or_api_shortcu
             "app.api.planning_workspace_check",
             "app.infrastructure.workspace_persistence_check",
         },
+        "replan_application.py": {
+            "app.infrastructure.replan_persistence",
+            "app.infrastructure.workspace_persistence",
+            "app.planning.strategies.lexicographic_replan",
+            "app.planning.validation.change_report_precheck",
+            "app.planning.validation.replan_candidate_validator",
+            "sqlalchemy.engine",
+            "sqlalchemy.exc",
+        },
+        "replan_application_check.py": {
+            "app.infrastructure.execution_event_repository",
+            "app.infrastructure.publication_repository",
+            "app.infrastructure.replan_persistence",
+            "app.infrastructure.replan_repository",
+            "app.infrastructure.schedule_version_repository",
+            "app.infrastructure.snapshot_repository",
+            "app.infrastructure.workspace_persistence",
+            "app.planning.backends.cp_sat.replan_solver_check",
+            "sqlalchemy",
+            "sqlalchemy.engine",
+        },
     }
     for filename, imported_modules in imported_modules_by_file.items():
         observed = {

@@ -6,10 +6,16 @@ spec_version: 0.3.0
 phase: cross-phase
 normative: true
 source_sections: [0, 9, 10, 23, 24, 30, 32, 33, 35, 57, 67]
-last_reviewed: 2026-08-26
+last_reviewed: 2026-08-28
 ---
 
 # 端到端计划链路
+
+## TASK-P4-08 formed application edge
+
+端到端链现扩展为`exact current PUBLISHED base + immutable ReplanRequest/attempt → stored new Snapshot → deterministic Problem rebuild → P4-05 effective locks → P4-07 global lexicographic solve → fresh independent validation → P4-06 complete ChangeReport → atomic new DRAFT ScheduleVersion v2/result envelope/result audit`。Intent与result application保持两个事务；第二个事务在写入前重新读取current/base/request/attempt/Snapshot并重建Problem，任何stale或lineage漂移均无DRAFT/result副作用。
+
+Same request/key完成后直接从durable Solver/Validation/KPI/ChangeReport envelope返回exact logical result，不再次求解；不同key/content冲突。该链严格停在DRAFT，不触发READY/approval/publish/export/API/UI/Simulator，P4-09+、P5与Production均未进入。
 
 ## TASK-P4-07 formed solve edge
 

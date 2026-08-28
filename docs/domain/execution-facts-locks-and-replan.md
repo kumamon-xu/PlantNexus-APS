@@ -6,10 +6,16 @@ spec_version: 0.3.0
 phase: P0-P4
 normative: true
 source_sections: [21, 26, 33, 35, 47, 48, 50, 69, 79]
-last_reviewed: 2026-08-24
+last_reviewed: 2026-08-28
 ---
 
 # 执行事实、锁定与重排边界
+
+## TASK-P4-08 formed replan application
+
+一个ReplanRequest现可在exact current PUBLISHED base、event-derived new Snapshot/Problem、P4-05 effective protections、P4-06 reporting和P4-07 solve均一致时形成新的DRAFT。Application不重新解释event payload，而是读取stored Snapshot并以冻结builder参数重建Problem；facts、explicit/freeze-derived HARD和SOFT evidence全部进入ScheduleVersion/ChangeReport lineage。
+
+COMPLETED/RUNNING保护、freeze半开区间、OBJ-002四元向量与candidate universe仍分别由P4-04～07 owner计算；P4-08只编排并再次验证。Unsupported disruption、stale base、missing provenance、Production authority或任何fresh validation/report失败都不创建Version。P4-09 continuous Simulator仍未启动。
 
 ## TASK-P4-05 formed freeze/effective-lock projection
 

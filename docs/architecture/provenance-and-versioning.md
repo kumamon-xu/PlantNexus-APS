@@ -11,6 +11,12 @@ last_reviewed: 2026-08-28
 
 # Provenance 与版本规则
 
+## TASK-P4-08 application identity and lineage
+
+New ScheduleVersion identity由ReplanRequest fingerprint、PlanningRun/attempt和idempotency-key reference确定；content fingerprint只覆盖排序后的tick-occupied assignments/effective locks。Lineage完整绑定base/new Snapshot/Problem、ordered event-prefix/fact checkpoint、Request、candidate、fresh formal Validation、after KPI、SolverReport、ChangeReport和code commit。Solver processing duration在ScheduleVersion/ChangeReport carrier中规范化为实际tick占用UTC区间，不改写Solver candidate fingerprint。
+
+`replan-applied-result-envelope.v1`与`replan-terminal-result-envelope.v1`仅是existing `replan_results.record_json`的内部持久化记录版本，用于exact replay完整artifact bytes；它们不是公开Schema、状态或迁移。Same identity/different bytes fail closed，历史P0～P3 Version/provenance保持不变。
+
 ## TASK-P4-07 solver and validation identity
 
 `solver-report.v2`绑定ReplanRequest、base/new Problem、Policy、Limits、candidate、三阶段evidence、native solver identity/parameters、timing/model/memory和exact code/contract versions；`report_id=solver-report-<content digest>`。每个raw round另绑定candidate与fresh validation fingerprint，candidate和validation report均从canonical basis派生identity。固定seed replay要求candidate/objectives/round status/value/bound/validation identities一致；wall-clock timing与SolverReport run identity可因真实执行时间不同而变化。

@@ -6,10 +6,18 @@ spec_version: 0.3.0
 phase: cross-phase
 normative: true
 source_sections: [12, 13, 14, 30, 41, 47, 51, 65, 70]
-last_reviewed: 2026-08-26
+last_reviewed: 2026-08-28
 ---
 
 # 模块边界与依赖规则
+
+## TASK-P4-08 implemented dependency edge
+
+`app.application.replan_application`只编排既有domain、Snapshot/Problem builder、freeze projection、Strategy、fresh Validator、ChangeReport与plane-scoped repositories；domain builder负责Simulation-only授权、DRAFT identity/content/lineage，repositories负责caller-owned transaction和existing-table immutable result envelope。Application不导入API/UI/Simulator/export adapter，Solver/Validator/ChangeReport均不反向依赖Application。
+
+`SqlAlchemyScheduleVersionRepository`在不新增table/migration的前提下同时识别冻结v1与公开v2 carrier；`replan_results.record_json`保存内部envelope但不成为新业务Schema或状态机。P4-08没有复制P4-07公式、改变P3 lifecycle或建立P5/Production edge。
+
+既有application AST guard现以逐字文件→逐字module集合登记该获批边：runtime文件只可静态引用P4-03 persistence values/errors、P4-07 Strategy/fresh Validator、ChangeReport precheck及SQLAlchemy transaction types/errors；machine checker只可装配逐字列出的repositories、SQLite engine与P4-07 fixture入口。该例外禁止通配，其他application文件仍保持原禁令，且不授权API、Exporter、Simulator、OR-Tools对象或具体CP-SAT backend进入runtime service。
 
 ## TASK-P4-07 implemented dependency edge
 

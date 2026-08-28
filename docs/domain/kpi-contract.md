@@ -11,6 +11,12 @@ last_reviewed: 2026-08-28
 
 # KPI 合同
 
+## TASK-P4-08 KPI application evidence
+
+Application消费immutable synthetic before/after `kpi.v2`，要求base lineage精确引用before KPI，并独立核对after priority-weighted tardiness/makespan等于fresh candidate objectives；ChangeReport与new DRAFT lineage必须引用同一after KPI identity。任一ID/fingerprint/value漂移都在Version写入前失败。
+
+本Task不修改KPI Schema或公式；P2-shaped KPI v2仍作为冻结evidence carrier，不把SolverReport v2重新解释成旧字段。Fixture的0 tardiness/720秒makespan不是Production target、capacity或SLA，OPEN项保持不变。
+
 ## TASK-P4-07 objective execution evidence
 
 Solver现按整数语义直接最小化OBJ-001 priority-weighted tardiness、OBJ-002四分量和OBJ-003 makespan，并由独立Validator从candidate重新计算后才接受。stage value/bound只是本次有界Development solve证据，不改变KPI v1/v2 bytes，不建立Production target、threshold或SLA；base中不存在的ADDED operation不计movement，completed operation不进入active candidate universe。

@@ -11,6 +11,12 @@ last_reviewed: 2026-08-28
 
 # 动态重排设计合同
 
+## TASK-P4-08 atomic result application
+
+动态重排计算链现可在Simulation中应用：先原子记录Request/attempt/audit，再读取exact current PUBLISHED base和stored new Snapshot、按冻结参数重建Problem、投影effective locks、执行P4-07 solve与fresh validator、核对after KPI、构建并独立precheck complete ChangeReport；最后在另一事务重读全部关键lineage并原子提交new DRAFT/result envelope/result audit。
+
+Same request/key已完成时直接返回durable full-artifact replay，不重复solve；different key/content、stale current、concurrent loser或任何validation/report/persistence问题fail closed。Base不原地修改，result不自动进入review/approval/publication/export。P4-09/10 Simulator/scenario、P4-11 output、P5和Production仍未形成。
+
 ## TASK-P4-07 solve and validation slice
 
 当前纯链路扩展为`verified ReplanRequest + new Problem + effective locks + base PUBLISHED assignments → global six-round CP-SAT → fresh candidate validation per round → solver-report.v2/raw evidence`。facts/HARD/freeze在每轮保持同一约束域，base只作Hint，prior objective value逐项等式冻结；candidate必须同时通过formal schedule、facts/locks、objectives与complete change-universe复算。

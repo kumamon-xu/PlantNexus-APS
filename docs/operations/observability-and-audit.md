@@ -6,10 +6,16 @@ spec_version: 0.3.0
 phase: P0-P7
 normative: true
 source_sections: [29, 42, 65, 93, 95]
-last_reviewed: 2026-08-27
+last_reviewed: 2026-08-28
 ---
 
 # P0 Observability 与 Audit 边界
+
+## TASK-P4-08 result-application audit edge
+
+Durable correlation现连接`Request → attempt/PlanningRun → SolverReport → fresh Validation/KPI/ChangeReport → new DRAFT → result`。Intent transaction保存Request与attempt两类audit，result transaction保存result audit；same command replay复用既有三条业务audit，不重复写入。Terminal no-candidate也保存exact SolverReport envelope，便于区分UNKNOWN/INFEASIBLE/FAILED。
+
+`p4-replan-application-report.v1`输出Task、exact code commit、Diff base、8个Impact Rules、checks/issues和transaction manifest；runtime/memory/SQLite observation只属Development。未配置Production log/trace backend、SIEM、retention、alert或SLO。
 
 ## TASK-P4-04 audit evidence
 

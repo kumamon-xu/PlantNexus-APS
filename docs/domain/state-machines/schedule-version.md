@@ -6,10 +6,16 @@ spec_version: 0.3.0
 phase: P0-P3
 normative: true
 source_sections: [30, 33, 35, 66, 69, 78]
-last_reviewed: 2026-08-27
+last_reviewed: 2026-08-28
 ---
 
 # ScheduleVersion 状态机
+
+## TASK-P4-08 DRAFT-only state application
+
+P4 application现唯一创建`source_kind=DYNAMIC_REPLAN`的new immutable DRAFT v2；PUBLISHED base/current reference保持字节级不变，new Version的decision/publication/superseded_by为空且只开放view/edit/lock/audit。Result transaction不调用任何transition，失败或并发loser不留下partial Version。
+
+DRAFT后续仍必须走P3既有`DRAFT→READY_FOR_REVIEW→APPROVED/REJECTED→PUBLISHED→SUPERSEDED`人工控制链。本Task没有新state/pair、自动READY/approve/publish/export或Production authority。
 
 ## TASK-P4-03 persistence review
 

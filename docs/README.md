@@ -11,11 +11,17 @@ last_reviewed: 2026-08-28
 
 # PlantNexus APS 文档中心
 
+## TASK-P4-08 local implementation boundary
+
+TASK-P4-08已在冻结Diff base `77981f0564d91dfb57fee6e3792f4989bdb51d32`内形成Simulation-only两事务application闭环：intent事务保存immutable request/attempt/audit；求解阶段重建exact current PUBLISHED lineage下的Problem，并复用P4-05/06/07能力；result事务重新读取current/base/request/attempt/Snapshot后，原子保存new DRAFT ScheduleVersion、完整SolverReport/fresh validation/KPI/ChangeReport result envelope与审计。Exact replay、stale current、KPI mismatch、并发竞争、审计失败和no-candidate terminal链均有本地证据。完整HIGH_RISK为focused 22、Backend 759、Frontend 67、三轮Chromium各12/12、历史machine/XS/双Gate/SCA/license/build/Compose与32/6/19/0治理全部PASS；machine为8/8、`issues=[]`。
+
+GitHub required `validate`与artifact evidence尚未在本Task的implementation提交后形成，因此TASK-P4-08仍为`in_progress`，本地结果不构成provider完成证据。Schema/migration/dependency/state pair、P4-07 Solver公式、Simulator、API/UI、P3 publish/export与Production边界保持冻结；P4-09～15仍为`planned`且不会自动启动。
+
 ## TASK-P4-07 completion boundary
 
 TASK-P4-07已在冻结Diff base `e212ab7957d6bc5887048ee54809c8194d6e1eaf`内实现Simulation-only全局六轮词典序重排、逐轮等价锁定、base Hint、fresh独立candidate/ChangeReport算术复核和FULL CI机器证据。`solver-report.v2`保存三阶段value/bound/budget/stop/status与exact provenance；机器报告固定Task、Diff base、七个Impact Rules、8项检查和`issues=[]`。完整HIGH_RISK本地验收为focused 48、Backend 736、Frontend 67、三轮各12/12 Chromium、历史machine、XS Benchmark、双Gate、build/Compose及33/7/19/0治理全部PASS。Implementation `cd77708299edbc6c7ab9abb6aed7ff6950a7f2ec`的run/FULL job/required job=`33131611010`/`98722212668`/`98723499160`已由GitHub Actions app `15368` exact成功；machine artifact `9670605640`（digest `sha256:0623c54e61be4e0ce2e70ebf21926a78bdf956e73b1016de34d0da5fb8a22dde`）及FULL profile artifact `9670459898`（digest `sha256:90cfa27d5f9261a9bbb71de949b71bffb3183241c0b20412d7786730c4e4940c`）均未过期并已下载复验。本evidence-only closure据此把Task标为`done`；closure自身仍须post-push exact provider复验。
 
-new DRAFT与最终ChangeReport/Request result原子事务仍归TASK-P4-08；P4-08+、P5和Production边界没有变化。
+该P4-07 closure时new DRAFT与最终ChangeReport/Request result原子事务仍归TASK-P4-08；P4-08随后仅按新的独立授权形成上方本地application闭环，P4-09+、P5和Production边界没有变化。
 
 ## TASK-P4-06 completion boundary
 
@@ -108,7 +114,7 @@ TASK-P4-02已获单独授权并以`4026597ab1015b5ea3a89d241f0d12b5b481dee3`为�
 
 ## 当前范围
 
-当前阶段为P4。P0～P3 Milestone均为`completed`；TASK-P3-00～17全部`done`且P3 Exit双提交provider已闭环。TASK-P4-00～07与P4-16现为`done`，P4-08～15为`planned`成员且当前无自动启动的下一Task；P4-15最终独立审计也不自动进入P5或Production。详见`current_phase.md`。
+当前阶段为P4。P0～P3 Milestone均为`completed`；TASK-P3-00～17全部`done`且P3 Exit双提交provider已闭环。TASK-P4-00～07与P4-16现为`done`，TASK-P4-08为`in_progress`且provider待核验，P4-09～15为`planned`成员；P4-15最终独立审计也不自动进入P5或Production。详见`current_phase.md`。
 
 P3已形成的顺序保持合同/ADR→Schema→persistence→validated DRAFT→read models→edit/lock→approval/reject→idempotent publish→ExportJob→API→Frontend/E2E→vertical Gate。批准的末段顺序为TASK-P3-15治理支持→TASK-P3-16本地化→TASK-P3-17独立Exit Audit；P3-16现已完成实现provider复验与文档closure，下一项仍须另行授权。展示术语规范见[`frontend/official-zh-cn-terminology-map.md`](frontend/official-zh-cn-terminology-map.md)，它不改变英文机器合同。
 

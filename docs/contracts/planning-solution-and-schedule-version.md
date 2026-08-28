@@ -11,6 +11,12 @@ last_reviewed: 2026-08-28
 
 # PlanningSolution 与 ScheduleVersion 合同
 
+## TASK-P4-08 dynamic DRAFT application
+
+Application现消费P4-07 candidate/SolverReport与fresh `validation-report.v2`，把tick-rounded occupied assignments、effective HARD/SOFT evidence和完整dynamic lineage写入新的immutable `schedule-version.v2` DRAFT。其`parent_schedule_version`精确引用current PUBLISHED base，`decision/publication/superseded_by=null`且`allowed_actions=[view,edit,lock,audit]`；base content/current publication不修改。
+
+COMPLETED result必须同时引用exact Solver/Validation/new ScheduleVersion/ChangeReport；非成功terminal只保存SolverReport且不得携带DRAFT/ChangeReport。所有artifact在同一result transaction提交或整体回滚；未增加Schema、migration或ScheduleVersion state/pair，也不自动READY/APPROVED/PUBLISHED/EXPORTED。
+
 ## TASK-P4-07 SolverReport v2 execution evidence
 
 全局重排现在输出Schema-valid `solver-report.v2`：candidate沿用`planning-solution.v1` assignment形状并携带content fingerprint，三个stage保存诚实status/value/bound/gap/budget/stop，Stability保存四元整数向量，provenance绑定exact code、Policy/Limits及冻结合同版本。OPTIMAL/FEASIBLE才可携带candidate；UNKNOWN、INFEASIBLE、MODEL_INVALID或FAILED不泄漏partial success。

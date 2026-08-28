@@ -11,6 +11,12 @@ last_reviewed: 2026-08-28
 
 # 配置、环境与数据隔离
 
+## TASK-P4-08 isolation boundary
+
+Application composition在首次repository/idempotency lookup前强制Simulation plane、synthetic request、非Production binding和Development/Test/Benchmark environment；Production-shaped context、cross-plane repository或`SIMULATION_INTERNAL`以外current target均default-deny。真实SQLite迁移头测试只证明隔离correctness/rollback，不形成Production PostgreSQL topology、HA或capacity evidence。
+
+Service无HTTP/UI/secret/network/external publish路径；solver limits、seed、900秒freeze和fixture KPI仍引用既有versioned Simulation assumptions，不成为Production default。P4-09 Execution Simulator、P5与Production deployment/SLA保持未形成。
+
 ## TASK-P4-07 isolation boundary
 
 Strategy只接受Simulation plane、synthetic PUBLISHED base、approved versioned Policy/Limits及同一ReplanRequest/projection/Problem lineage；任何Production-shaped、cross-plane或stale输入在建模前拒绝。求解器无网络、数据库、secret、external adapter或state副作用，CI只上传JSON evidence。fixture limits、seed、worker和运行时间都是bounded Development配置，不是Production default或SLA。

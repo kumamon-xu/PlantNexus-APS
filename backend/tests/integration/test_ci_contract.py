@@ -17,6 +17,9 @@ from app.application.p3_gate_report import (
 )
 from app.application.approval_decision_check import main as approval_decision_main
 from app.application.publication_check import main as publication_main
+from app.application.replan_application_check import (
+    main as replan_application_main,
+)
 from app.application.export_job_check import main as export_job_main
 from app.application.execution_fact_projection_check import (
     main as execution_fact_projection_main,
@@ -268,6 +271,8 @@ def test_ci_runs_repository_gates_and_discovers_the_current_task() -> None:
         "build/validation/ci-p4-stability-change-report.json",
         "app.planning.backends.cp_sat.replan_solver_check",
         "build/validation/ci-p4-replan-solver.json",
+        "app.application.replan_application_check",
+        "build/validation/ci-p4-replan-application.json",
         "app.application.schedule_version_lifecycle_check",
         "build/validation/ci-p3-schedule-version-lifecycle.json",
         "app.application.workspace_read_model_check",
@@ -377,7 +382,7 @@ def test_ci_profile_routing_is_mutually_exclusive_and_fail_closed() -> None:
     assert "backend/tests/security" in full_text
     assert "P3 vertical slice Gate evidence" in full_text
     assert "Build package" in full_text
-    assert len(full["steps"]) == 58
+    assert len(full["steps"]) == 59
 
     assert 'test "${PLANTNEXUS_CLASSIFY_RESULT}" = "success"' in final_run
     assert 'test "${PLANTNEXUS_FULL_RESULT}" = "success"' in final_run
@@ -703,6 +708,66 @@ def test_ci_p4_replan_solver_is_required_and_machine_checkable(
         "schedule_version_or_state_transition": "NONE",
         "application_api_ui_simulator": "NOT_IMPLEMENTED_BY_TASK",
         "p4_08_plus": "NOT_STARTED",
+        "p5_plus": "NOT_STARTED",
+        "production_external_authority_capacity_sla": "NOT_ESTABLISHED",
+    }
+
+
+def test_ci_p4_replan_application_is_required_and_machine_checkable(
+    tmp_path: Path,
+) -> None:
+    workflow = (ROOT / ".github" / "workflows" / "ci.yml").read_text(
+        encoding="utf-8"
+    )
+    normalized = " ".join(workflow.split())
+    assert (
+        "name: P4 replan application and ScheduleVersion lineage evidence run: >- "
+        "uv run python -m app.application.replan_application_check --root . "
+        "--report build/validation/ci-p4-replan-application.json"
+    ) in normalized
+    assert "continue-on-error" not in workflow
+
+    report_path = tmp_path / "p4-replan-application.json"
+    assert (
+        replan_application_main(
+            ["--root", str(ROOT), "--report", str(report_path)]
+        )
+        == 0
+    )
+    report = json.loads(report_path.read_text(encoding="utf-8"))
+    assert report["report_version"] == "p4-replan-application-report.v1"
+    assert report["status"] == "PASS"
+    assert report["task_id"] == "TASK-P4-08"
+    assert report["diff_base"] == "77981f0564d91dfb57fee6e3792f4989bdb51d32"
+    assert report["impact_rule_count"] == 6
+    assert report["impact_rules"] == [
+        "IMPACT-APPLICATION",
+        "IMPACT-DOCS",
+        "IMPACT-DOMAIN",
+        "IMPACT-INFRA",
+        "IMPACT-STATE",
+        "IMPACT-TESTS",
+    ]
+    assert report["check_count"] == 8
+    assert report["issues"] == []
+    assert report["counts"] == {
+        "execution_events": 4,
+        "replan_requests": 1,
+        "replan_attempts": 1,
+        "replan_results": 1,
+        "audit_records": 3,
+        "schedule_versions_total": 2,
+        "new_draft_schedule_versions": 1,
+        "exact_replays": 1,
+        "machine_checks": 8,
+    }
+    assert report["boundaries"] == {
+        "data_plane": "SIMULATION_ONLY",
+        "result_schedule_state": "DRAFT_ONLY",
+        "base_published_schedule": "BYTE_EXACT_IMMUTABLE",
+        "approval_publish_export": "NOT_INVOKED",
+        "http_ui_execution_simulator": "NOT_IMPLEMENTED_BY_TASK",
+        "p4_09_plus": "NOT_STARTED",
         "p5_plus": "NOT_STARTED",
         "production_external_authority_capacity_sla": "NOT_ESTABLISHED",
     }

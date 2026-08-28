@@ -15,7 +15,9 @@ last_reviewed: 2026-08-28
 
 TASK-P4-10从clean/provider-verified P4-09 closure `8bbe0c643571e578ec637f135a2390c90de02512`冻结不可变Diff base，并在Simulation/development边界形成一个versioned五步/八事件场景资产、严格continuous replay orchestrator、raw step evidence与FULL machine step。编排只调用P4-09标准event入口和既有P4-04/P4-08 owner contracts；它不复制fact、freeze、Solver、Validator或ChangeReport公式，也不直接访问repository/API。
 
-每步要求exact trigger event、previous Snapshot/Version baseline、new Snapshot/Problem、ReplanRequest/Run、fresh Validator PASS、new immutable DRAFT、complete ChangeReport和六项fact/lock invariants。下一步baseline使用不同ID的PUBLISHED-shaped测试载体逐字承接同一DRAFT内容，并保存`source_draft_id`、`SIMULATION_NON_PRODUCTION`与`authority_claim=NONE`；它不执行READY/APPROVE/PUBLISH/EXPORT。完整HIGH_RISK本地验收已通过14 focused、786 Backend、67 Frontend、三轮各12/12 Chromium、全部历史machine/XS/双Gate/SCA/license/build/Compose及27/5/19/0治理；当前只等待implementation/closure双exact provider。P4-11不会自动启动，P5/Production边界保持未形成。
+每步要求exact trigger event、previous Snapshot/Version baseline、new Snapshot/Problem、ReplanRequest/Run、fresh Validator PASS、new immutable DRAFT、complete ChangeReport和六项fact/lock invariants。下一步baseline使用不同ID的PUBLISHED-shaped测试载体逐字承接同一DRAFT内容，并保存`source_draft_id`、`SIMULATION_NON_PRODUCTION`与`authority_claim=NONE`；它不执行READY/APPROVE/PUBLISH/EXPORT。完整HIGH_RISK本地验收已通过14 focused、786 Backend、67 Frontend、三轮各12/12 Chromium、全部历史machine/XS/双Gate/SCA/license/build/Compose及27/5/19/0治理。P4-11不会自动启动，P5/Production边界保持未形成。
+
+首个candidate `7e558666f89ec7ab2314ddd35320bc210d04a8f1`的run `33148120102`因既有P3 locale浏览器用例在2 workers下11/12而被required正确拦截，失败证据保留。限定corrective `f475a13baf22a0759c19967f6264d8d0b71e47d5`只串行化三轮Playwright且不改实现、断言、retry、依赖或lock；run/FULL/required=`33148902189`/`98776094074`/`98777724803`已exact成功。Machine/profile artifacts `9677080681`,`9676878307`均未过期并已下载复验，digests分别为`sha256:781240ef2b20791b4edc61509b1b95ddcffac57abfa3224ae9bd0518a1a4a46a`、`sha256:ed6bc45f16ebd928143196e4d082eb0e2d0da6950fc976b9aa6f10bd82c0d24c`；artifact精确绑定SHA、Task、原始Diff base、五个Impact Rules、8 checks、0 issues及P2/P3 Gate。本evidence-only closure记录完成结论，但其自身仍须post-push exact provider复验，TASK-P4-11保持`planned`且未启动。
 
 ## TASK-P4-09 local Execution Simulator core boundary
 

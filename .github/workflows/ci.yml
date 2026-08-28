@@ -349,7 +349,7 @@ jobs:
         run: npm --prefix frontend exec -- playwright install --with-deps chromium
 
       - name: P3 Frontend human-control and visualization browser evidence
-        run: npm --prefix frontend run test:e2e
+        run: npm --prefix frontend run test:e2e -- --workers=1
 
       - name: P3 Frontend production build
         run: npm --prefix frontend run build
@@ -368,13 +368,13 @@ jobs:
         working-directory: frontend
         env:
           PLANTNEXUS_P3_GATE_REPLAY_INDEX: "1"
-        run: npm exec -- playwright test --config playwright.p3-gate.config.ts
+        run: npm exec -- playwright test --config playwright.p3-gate.config.ts --workers=1
 
       - name: P3 Gate Chromium replay 2
         working-directory: frontend
         env:
           PLANTNEXUS_P3_GATE_REPLAY_INDEX: "2"
-        run: npm exec -- playwright test --config playwright.p3-gate.config.ts
+        run: npm exec -- playwright test --config playwright.p3-gate.config.ts --workers=1
 
       - name: P3 Gate Frontend semantic evidence
         working-directory: frontend

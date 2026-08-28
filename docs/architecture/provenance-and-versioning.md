@@ -11,6 +11,12 @@ last_reviewed: 2026-08-28
 
 # Provenance 与版本规则
 
+## TASK-P4-10 continuous replay provenance
+
+P4 disruption asset hash覆盖library/scenario/profile/generator/simulator IDs+versions、seed、virtual clock、exact base Schedule/Snapshot/Problem、Policy/Limits、五步payload与boundary声明。Simulator run fingerprint再绑定event schedule；每步evidence fingerprint依次绑定previous baseline、event prefix delta、new Snapshot/Problem、Request/Run/Validation/DRAFT/ChangeReport，最终形成replay fingerprint。Same seed/version/input必须产生exact event stream与相同语义结果投影；Solver运行时间戳和timing等raw observation继续保留但不参与该语义等价。任何值变化都必须发布新asset version或产生新hash，禁止覆盖历史。
+
+Scenario-local baseline advance保存source DRAFT ID但明确是non-Production test binding，不是ScheduleVersion publication provenance。Production source/authority/version仍需正式closure record。
+
 ## TASK-P4-09 simulator run and stream identity
 
 `execution-simulator-run.v1`内部projection把完整config与`execution-event-schedule.v1` fingerprint绑定为run fingerprint。Event schedule自身按event key canonicalize并绑定PUBLISHED base content、Scenario/Profile/Generator fingerprints；队列排序由offset、Simulator version/seed派生的named child rank和event key确定。每个Event fingerprint包含authority/stream/position/occurred/payload/provenance/correlation，排除既有合同指定的self fields和receive observation；Event canonical bytes仍保存deterministic received time。

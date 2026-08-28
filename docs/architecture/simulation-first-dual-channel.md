@@ -11,6 +11,10 @@ last_reviewed: 2026-08-28
 
 # Simulation-First 双通道架构
 
+## TASK-P4-10 continuous replay isolation
+
+五类disruption asset与orchestrator只存在于Simulation channel，并通过P4-09 standard event port组合P4-04/P4-08 owner contracts。Raw step envelope携带`production_binding=false`，baseline advance固定为`SIMULATION_NON_PRODUCTION`且无authority claim；任何Production environment/binding、P5 capability或跨plane evidence在首个有效step前拒绝。Production channel未注册scenario route、worker、connector或default。
+
 ## TASK-P4-09 common-path implementation
 
 Simulation channel现有一个有界Execution Simulator core：versioned synthetic inputs经pure compile产生标准`execution-event.v1`完整prefix，先复用P4-04 strict validator，再只调用与`ExecutionFactProjectionService.ingest_event`结构兼容的公共端口。Core import/call guard明确排除Infrastructure/DB、Planning/Solver/Replan、API、Application shortcut、host clock和global random；machine harness再以真实P4-04 service验证端口，而不是用私有projector替代。

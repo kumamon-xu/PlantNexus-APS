@@ -1,5 +1,13 @@
 # PlantNexus APS
 
+## TASK-P4-10 five-disruption continuous replay
+
+TASK-P4-10已从不可变Diff base `8bbe0c643571e578ec637f135a2390c90de02512`形成versioned `SIM-P4-DISRUPTION-REPLAY-001@1.0.0`：同一fixed-seed stream按Urgent Order、Machine Failure/Recovery、Material Delay/Ready、Processing Duration/Remaining变化与Early Completion五步输出8个标准`execution-event.v1`。每步消费前一步的明确Snapshot/Version test baseline，绑定独立ReplanRequest/PlanningRun/fresh Validator/new DRAFT/ChangeReport evidence；baseline推进固定标记`SIMULATION_NON_PRODUCTION`、`authority_claim=NONE`，不构成自动批准或发布。
+
+`p4-disruption-replay-report.v1`组合并复验P4-09 Simulator、P4-04 Event→fact/Snapshot与P4-08 Replan→Validator→DRAFT/ChangeReport既有owner machine contracts；same-seed语义投影一致（raw runtime evidence完整保留）、checkpoint partition、Schema、tamper/coverage/Production拒绝与每步六项fact/lock/report invariant均为fail closed。资产中的seed `20260828`、900秒freeze、event offsets、urgent priority/quantity、duration与tardiness/stability值都是bounded synthetic correctness值，不是Production分布、policy、capacity或SLA。
+
+完整HIGH_RISK本地验收已通过：Task-specific `14 passed`、完整Backend `786 passed`、Frontend 67项与三轮各12/12 Chromium、全部历史machine、XS Benchmark、P2/P3 Gate、SCA/license、Compose/build，以及27-path/5-rule/19-check/0-issue治理；`p4-disruption-replay-report.v1`为8/8且`issues=[]`。首次Vitest从仓库根目录误调用，因未加载Frontend配置而失败；随后按CI冻结的`frontend`工作目录重跑67/67 PASS，未修改断言或配置。当前只等待implementation/closure双exact provider，Task仍为`in_progress`。Schema、migration、dependency/lock、core Solver/Validator、API/UI、P4-11+、P5与Production readiness/authority/external integration/capacity/SLA均未修改或形成。
+
 ## TASK-P4-09 deterministic Execution Simulator core
 
 TASK-P4-09已从不可变Diff base `e4874735166be93473ccaebaf1090980db957552`实现Simulation-only Execution Simulator core：PUBLISHED ScheduleVersion reference、Scenario/Profile/Generator/Simulator版本与fingerprint、seed、versioned event schedule和virtual clock先形成完整run identity；同刻事件使用named-child-seed rank与event key稳定排序。全部事件在任何副作用前生成canonical `execution-event.v1` bytes并通过P4-04 strict prefix validation，随后唯一输出边界是`ExecutionFactProjectionService.ingest_event`兼容端口。Prefix checkpoint/restart会重算run/prefix fingerprint，manifest只能消费调用者显式提供的fact checkpoint reference。
@@ -51,7 +59,7 @@ TASK-P4-03已获独立授权并在不可变Diff base `7b9bfc3069de5d3738e5cc5827
 
 用户已明确批准P3→P4。TASK-P3-17独立Exit Audit的report/manifest均为`READY`、`blocking_gaps=[]`；audit implementation `201be9c6fd1b433a9d0a629a3ae7d4ffe1107476`和evidence-only closure `61eeacdd5efc20b2321750e1310e9e21561c9fc2`的直接拓扑、required `validate`、GitHub Actions app `15368`及未过期artifact均已exact复验。因此P3 Milestone现为`completed`，P4 Dynamic Replanning已激活。
 
-PlantNexus APS 是一个面向单工厂、多车间场景的高级计划与排程（APS）项目。TASK-P4-00～08与TASK-P4-16现均已按各自独立授权形成provider-verified implementation与evidence-only closure治理链；TASK-P4-09按新的独立授权形成上方本地实现并等待完整HIGH_RISK与双exact provider闭环。TASK-P4-10～15保持`planned`且未自动启动；API/UI与Production readiness/UAT/真实authority/external publish/deployment/capacity/SLA仍未形成。
+PlantNexus APS 是一个面向单工厂、多车间场景的高级计划与排程（APS）项目。TASK-P4-00～09与TASK-P4-16现均已按各自独立授权形成provider-verified implementation与evidence-only closure治理链；TASK-P4-10按新的独立授权形成上方本地实现并等待双exact provider闭环。TASK-P4-11～15保持`planned`且未自动启动；API/UI与Production readiness/UAT/真实authority/external publish/deployment/capacity/SLA仍未形成。
 
 ## 开始之前
 

@@ -71,6 +71,9 @@ from app.simulation.baselines.reference_schedulers import (
 )
 from app.simulation.benchmarks import load_baseline, load_profile_set
 from app.simulation.scenarios.p2_correctness import main as p2_correctness_main
+from app.simulation.scenarios.disruption_replay_check import (
+    main as disruption_replay_main,
+)
 from app.simulation.execution.simulator_check import (
     main as execution_simulator_main,
 )
@@ -360,9 +363,7 @@ def test_ci_profile_routing_is_mutually_exclusive_and_fail_closed() -> None:
     full = cast(dict[str, Any], jobs["full_validation"])
     final = cast(dict[str, Any], jobs["validate"])
 
-    assert classify["outputs"] == {
-        "profile": "${{ steps.profile.outputs.profile }}"
-    }
+    assert classify["outputs"] == {"profile": "${{ steps.profile.outputs.profile }}"}
     assert docs["needs"] == "classify"
     assert docs["if"] == "${{ needs.classify.outputs.profile == 'DOCS_ONLY' }}"
     assert full["needs"] == "classify"
@@ -385,7 +386,7 @@ def test_ci_profile_routing_is_mutually_exclusive_and_fail_closed() -> None:
     assert "backend/tests/security" in full_text
     assert "P3 vertical slice Gate evidence" in full_text
     assert "Build package" in full_text
-    assert len(full["steps"]) == 60
+    assert len(full["steps"]) == 61
 
     assert 'test "${PLANTNEXUS_CLASSIFY_RESULT}" = "success"' in final_run
     assert 'test "${PLANTNEXUS_FULL_RESULT}" = "success"' in final_run
@@ -560,9 +561,7 @@ def test_ci_p4_execution_fact_projection_is_required_and_machine_checkable(
 def test_ci_p4_freeze_window_is_required_and_machine_checkable(
     tmp_path: Path,
 ) -> None:
-    workflow = (ROOT / ".github" / "workflows" / "ci.yml").read_text(
-        encoding="utf-8"
-    )
+    workflow = (ROOT / ".github" / "workflows" / "ci.yml").read_text(encoding="utf-8")
     normalized = " ".join(workflow.split())
     assert (
         "name: P4 freeze window and effective lock evidence run: >- "
@@ -572,10 +571,7 @@ def test_ci_p4_freeze_window_is_required_and_machine_checkable(
     assert "continue-on-error" not in workflow
 
     report_path = tmp_path / "p4-freeze-window.json"
-    assert (
-        freeze_window_main(["--root", str(ROOT), "--report", str(report_path)])
-        == 0
-    )
+    assert freeze_window_main(["--root", str(ROOT), "--report", str(report_path)]) == 0
     report = json.loads(report_path.read_text(encoding="utf-8"))
     assert report["report_version"] == "p4-freeze-window-report.v1"
     assert report["status"] == "PASS"
@@ -609,9 +605,7 @@ def test_ci_p4_freeze_window_is_required_and_machine_checkable(
 def test_ci_p4_stability_change_report_is_required_and_machine_checkable(
     tmp_path: Path,
 ) -> None:
-    workflow = (ROOT / ".github" / "workflows" / "ci.yml").read_text(
-        encoding="utf-8"
-    )
+    workflow = (ROOT / ".github" / "workflows" / "ci.yml").read_text(encoding="utf-8")
     normalized = " ".join(workflow.split())
     assert (
         "name: P4 OBJ-002 stability and ChangeReport evidence run: >- "
@@ -666,9 +660,7 @@ def test_ci_p4_stability_change_report_is_required_and_machine_checkable(
 def test_ci_p4_replan_solver_is_required_and_machine_checkable(
     tmp_path: Path,
 ) -> None:
-    workflow = (ROOT / ".github" / "workflows" / "ci.yml").read_text(
-        encoding="utf-8"
-    )
+    workflow = (ROOT / ".github" / "workflows" / "ci.yml").read_text(encoding="utf-8")
     normalized = " ".join(workflow.split())
     assert (
         "name: P4 lexicographic replan solver and validator evidence run: >- "
@@ -719,9 +711,7 @@ def test_ci_p4_replan_solver_is_required_and_machine_checkable(
 def test_ci_p4_replan_application_is_required_and_machine_checkable(
     tmp_path: Path,
 ) -> None:
-    workflow = (ROOT / ".github" / "workflows" / "ci.yml").read_text(
-        encoding="utf-8"
-    )
+    workflow = (ROOT / ".github" / "workflows" / "ci.yml").read_text(encoding="utf-8")
     normalized = " ".join(workflow.split())
     assert (
         "name: P4 replan application and ScheduleVersion lineage evidence run: >- "
@@ -732,9 +722,7 @@ def test_ci_p4_replan_application_is_required_and_machine_checkable(
 
     report_path = tmp_path / "p4-replan-application.json"
     assert (
-        replan_application_main(
-            ["--root", str(ROOT), "--report", str(report_path)]
-        )
+        replan_application_main(["--root", str(ROOT), "--report", str(report_path)])
         == 0
     )
     report = json.loads(report_path.read_text(encoding="utf-8"))
@@ -779,9 +767,7 @@ def test_ci_p4_replan_application_is_required_and_machine_checkable(
 def test_ci_p4_execution_simulator_is_required_and_machine_checkable(
     tmp_path: Path,
 ) -> None:
-    workflow = (ROOT / ".github" / "workflows" / "ci.yml").read_text(
-        encoding="utf-8"
-    )
+    workflow = (ROOT / ".github" / "workflows" / "ci.yml").read_text(encoding="utf-8")
     normalized = " ".join(workflow.split())
     assert (
         "name: P4 deterministic Execution Simulator core evidence run: >- "
@@ -792,9 +778,7 @@ def test_ci_p4_execution_simulator_is_required_and_machine_checkable(
 
     report_path = tmp_path / "p4-execution-simulator.json"
     assert (
-        execution_simulator_main(
-            ["--root", str(ROOT), "--report", str(report_path)]
-        )
+        execution_simulator_main(["--root", str(ROOT), "--report", str(report_path)])
         == 0
     )
     report = json.loads(report_path.read_text(encoding="utf-8"))
@@ -824,9 +808,7 @@ def test_ci_p4_execution_simulator_is_required_and_machine_checkable(
         "data_plane": "SIMULATION_ONLY",
         "time_source": "VERSIONED_VIRTUAL_CLOCK_ONLY",
         "event_output": "STANDARD_EXECUTION_EVENT_V1_ONLY",
-        "common_ingress": (
-            "P4_04_EXECUTION_FACT_PROJECTION_SERVICE_INGEST_EVENT"
-        ),
+        "common_ingress": ("P4_04_EXECUTION_FACT_PROJECTION_SERVICE_INGEST_EVENT"),
         "database_solver_replan_schedule_write": "NONE_IN_SIMULATOR_CORE",
         "fact_checkpoint": "EXPLICIT_CALLER_SUPPLIED_REFERENCE_ONLY",
         "five_disruption_continuous_replay": "P4_10_NOT_IMPLEMENTED",
@@ -834,6 +816,38 @@ def test_ci_p4_execution_simulator_is_required_and_machine_checkable(
         "p5_plus": "EXPLICITLY_REJECTED",
         "production_external_authority_capacity_sla": "NOT_ESTABLISHED",
     }
+
+
+def test_ci_p4_disruption_replay_is_required_and_machine_checkable(
+    tmp_path: Path,
+) -> None:
+    workflow = (ROOT / ".github" / "workflows" / "ci.yml").read_text(encoding="utf-8")
+    normalized = " ".join(workflow.split())
+    assert (
+        "name: P4 five-disruption continuous replay evidence run: >- "
+        "uv run python -m app.simulation.scenarios.disruption_replay_check "
+        "--root . --report build/validation/ci-p4-disruption-replay.json"
+    ) in normalized
+    assert "continue-on-error" not in workflow
+
+    report_path = tmp_path / "p4-disruption-replay.json"
+    assert (
+        disruption_replay_main(["--root", str(ROOT), "--report", str(report_path)]) == 0
+    )
+    report = json.loads(report_path.read_text(encoding="utf-8"))
+    assert report["report_version"] == "p4-disruption-replay-report.v1"
+    assert report["status"] == "PASS"
+    assert report["task_id"] == "TASK-P4-10"
+    assert report["diff_base"] == "8bbe0c643571e578ec637f135a2390c90de02512"
+    assert report["impact_rules"] == [
+        "IMPACT-DOCS",
+        "IMPACT-FIXTURE",
+        "IMPACT-INFRA",
+        "IMPACT-SIM-SCENARIO",
+        "IMPACT-TESTS",
+    ]
+    assert report["check_count"] == 8
+    assert report["issues"] == []
 
 
 def test_ci_p3_schedule_version_lifecycle_is_required_and_machine_checkable(

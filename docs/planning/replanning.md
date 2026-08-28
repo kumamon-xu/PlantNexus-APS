@@ -11,6 +11,12 @@ last_reviewed: 2026-08-28
 
 # 动态重排设计合同
 
+## TASK-P4-10 continuous scenario consumer
+
+五类disruption现由versioned Simulation scenario orchestrator连续组合：每个step绑定标准ExecutionEvent delta、前一步明确Schedule/Snapshot baseline、new Snapshot/Problem、独立ReplanRequest/PlanningRun、fresh Validator、new DRAFT和complete ChangeReport。该Task只验证既有P4-04～09公共链的连续消费，不修改Delivery→Stability→Makespan公式、freeze/effective-lock规则、Replan persistence或ScheduleVersion状态机。
+
+Test harness把刚形成DRAFT内容显式重绑定为下一步`SIMULATION_NON_PRODUCTION` baseline并声明无authority；这不是自动approval/publication，也不能用于Production。HTTP/read/export/UI仍分别归P4-11～13。
+
 ## TASK-P4-08 atomic result application
 
 动态重排计算链现可在Simulation中应用：先原子记录Request/attempt/audit，再读取exact current PUBLISHED base和stored new Snapshot、按冻结参数重建Problem、投影effective locks、执行P4-07 solve与fresh validator、核对after KPI、构建并独立precheck complete ChangeReport；最后在另一事务重读全部关键lineage并原子提交new DRAFT/result envelope/result audit。

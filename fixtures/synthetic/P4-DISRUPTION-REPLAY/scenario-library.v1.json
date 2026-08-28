@@ -1,0 +1,205 @@
+{
+  "library_version": "p4-disruption-scenario-library.v1",
+  "asset_id": "SIM-P4-DISRUPTION-REPLAY-001",
+  "asset_version": "1.0.0",
+  "seed": 20260828,
+  "target_environment": "TEST",
+  "synthetic": true,
+  "production_binding": false,
+  "factory_id": "factory-76f855e0e222558b0542f73a0dfc80b9a3a11098e02dfe9121ddacce64d5c974",
+  "planning_scope_id": "scope-p4-disruption-replay-001",
+  "base_schedule": {
+    "schedule_version_version": "schedule-version.v1",
+    "schedule_version_id": "schedule-version-p4-freeze-base-001",
+    "state": "PUBLISHED",
+    "content_fingerprint": "sha256:030db3ba92769702c532f466cc058c02e78bd4c5874288ed61894320af49f80d"
+  },
+  "base_snapshot": {
+    "document_version": "planning-snapshot.v2",
+    "artifact_id": "planning-snapshot-v2-73d84cc088633ea7757fc976d287354ebbe29cbcd5e3e282705c11c2f1dc5e8f",
+    "fingerprint": "sha256:73d84cc088633ea7757fc976d287354ebbe29cbcd5e3e282705c11c2f1dc5e8f"
+  },
+  "base_problem": {
+    "document_version": "planning-problem.v2",
+    "artifact_id": "planning-problem-v2-8369c91faac427d5b9f2c6f4c64560a4affd8dc3ecb83af5febbee5e5de77484",
+    "fingerprint": "sha256:8369c91faac427d5b9f2c6f4c64560a4affd8dc3ecb83af5febbee5e5de77484"
+  },
+  "factory_profile": {
+    "asset_id": "PROFILE-P4-DISRUPTION-REPLAY-001",
+    "asset_version": "1.0.0"
+  },
+  "generator": {
+    "asset_id": "PLANTNEXUS-P4-DISRUPTION-LIBRARY",
+    "asset_version": "1.0.0"
+  },
+  "simulator": {
+    "asset_id": "PLANTNEXUS-EXECUTION-SIMULATOR",
+    "asset_version": "1.0.0"
+  },
+  "virtual_clock": {
+    "clock_version": "virtual-clock.v1",
+    "origin_at_utc": "2026-11-06T10:52:00Z",
+    "resolution_seconds": 1
+  },
+  "planning_policy": {
+    "planning_policy_version": "planning-policy.v2",
+    "policy_id": "POLICY-P4-SIM-DYNAMIC-FREEZE-001",
+    "policy_revision": "1.0.0",
+    "policy_fingerprint": "sha256:8b436bebc60b36202bff8ceff543f68b19f8d03053c9894ff83a3b037393e277",
+    "freeze_window_seconds": 900
+  },
+  "solve_limits": {
+    "solve_limits_version": "solve-limits.v1",
+    "limits_id": "LIMITS-TASK-P4-07-MACHINE",
+    "limits_revision": "1.0.0",
+    "limits_fingerprint": "sha256:d86fca34dcdede9cc8d5bc7493ee517ee43f71c9856c194e2f5be1a6c647b550",
+    "max_wall_time_seconds": 6,
+    "max_workers": 1,
+    "random_seed": 20260828
+  },
+  "steps": [
+    {
+      "step_index": 1,
+      "step_id": "urgent-order",
+      "disruption_kind": "URGENT_ORDER",
+      "events": [
+        {
+          "event_key": "urgent-demand-received-001",
+          "offset_seconds": 60,
+          "event_type": "URGENT_DEMAND_RECEIVED",
+          "payload": {
+            "kind": "URGENT_DEMAND_RECEIVED",
+            "demand_order_id": "demand-order-c20d50f3abc7dfbd69056c64495a50728a889095acb034fb479b76986765ea79",
+            "quantity": 4,
+            "due_at_utc": "2026-11-07T12:00:00Z",
+            "priority_weight": 10,
+            "priority_source": {
+              "source_system": "plantnexus-synthetic-policy",
+              "source_version": "1.0.0",
+              "source_record_id": "SIM-P4-URGENT-PRIORITY-001"
+            }
+          }
+        }
+      ]
+    },
+    {
+      "step_index": 2,
+      "step_id": "machine-failure-recovery",
+      "disruption_kind": "MACHINE_FAILURE_RECOVERY",
+      "events": [
+        {
+          "event_key": "machine-unavailable-001",
+          "offset_seconds": 120,
+          "event_type": "MACHINE_UNAVAILABLE",
+          "payload": {
+            "kind": "MACHINE_UNAVAILABLE",
+            "resource_id": "resource-d7f2a665bf4b8fccf2f0d536d66b9f3d5dfa84e8fa325ce589f2d8a6acc321a4",
+            "unavailable_from_utc": "2026-11-06T10:54:00Z",
+            "unavailable_until_utc": null
+          }
+        },
+        {
+          "event_key": "machine-recovered-001",
+          "offset_seconds": 180,
+          "event_type": "MACHINE_RECOVERED",
+          "payload": {
+            "kind": "MACHINE_RECOVERED",
+            "resource_id": "resource-d7f2a665bf4b8fccf2f0d536d66b9f3d5dfa84e8fa325ce589f2d8a6acc321a4",
+            "available_from_utc": "2026-11-06T10:55:00Z"
+          }
+        }
+      ]
+    },
+    {
+      "step_index": 3,
+      "step_id": "material-delay-ready",
+      "disruption_kind": "MATERIAL_DELAY",
+      "events": [
+        {
+          "event_key": "material-delayed-001",
+          "offset_seconds": 240,
+          "event_type": "MATERIAL_DELAYED",
+          "payload": {
+            "kind": "MATERIAL_DELAYED",
+            "material_id": "production-order-1f26d0687468564811c821c5eee0bfbb6510664e378c22bb660a95b681c22d0e",
+            "available_at_utc": "2026-11-06T13:00:00Z"
+          }
+        },
+        {
+          "event_key": "material-ready-001",
+          "offset_seconds": 300,
+          "event_type": "MATERIAL_READY",
+          "payload": {
+            "kind": "MATERIAL_READY",
+            "material_id": "production-order-1f26d0687468564811c821c5eee0bfbb6510664e378c22bb660a95b681c22d0e",
+            "available_at_utc": "2026-11-06T10:57:00Z"
+          }
+        }
+      ]
+    },
+    {
+      "step_index": 4,
+      "step_id": "processing-delay",
+      "disruption_kind": "PROCESSING_DELAY",
+      "events": [
+        {
+          "event_key": "processing-duration-changed-001",
+          "offset_seconds": 360,
+          "event_type": "PROCESSING_DURATION_CHANGED",
+          "payload": {
+            "kind": "PROCESSING_DURATION_CHANGED",
+            "operation_id": "operation-instance-6f5639829a3c4c0ff7c203985bc357c45992f7ce7662deac6ae1d0001c69fb0f",
+            "final_duration_seconds": 1200,
+            "duration_source": "p4-disruption-observation",
+            "source_version": "1.0.0"
+          }
+        },
+        {
+          "event_key": "processing-remaining-changed-001",
+          "offset_seconds": 420,
+          "event_type": "PROCESSING_REMAINING_CHANGED",
+          "payload": {
+            "kind": "PROCESSING_REMAINING_CHANGED",
+            "operation_id": "operation-instance-6f5639829a3c4c0ff7c203985bc357c45992f7ce7662deac6ae1d0001c69fb0f",
+            "remaining_seconds": 1200,
+            "as_of_utc": "2026-11-06T10:59:00Z"
+          }
+        }
+      ]
+    },
+    {
+      "step_index": 5,
+      "step_id": "early-completion",
+      "disruption_kind": "EARLY_COMPLETION",
+      "events": [
+        {
+          "event_key": "operation-completed-early-001",
+          "offset_seconds": 480,
+          "event_type": "OPERATION_COMPLETED",
+          "payload": {
+            "kind": "OPERATION_COMPLETED",
+            "operation_id": "operation-instance-6f5639829a3c4c0ff7c203985bc357c45992f7ce7662deac6ae1d0001c69fb0f",
+            "resource_id": "resource-d7f2a665bf4b8fccf2f0d536d66b9f3d5dfa84e8fa325ce589f2d8a6acc321a4",
+            "actual_start_at_utc": "2026-11-06T10:00:00Z",
+            "actual_end_at_utc": "2026-11-06T11:00:00Z"
+          }
+        }
+      ]
+    }
+  ],
+  "expected_invariants": [
+    "COMPLETED_OPERATION_PRESERVED",
+    "RUNNING_RESOURCE_PRESERVED",
+    "EXPLICIT_HARD_LOCKS_PRESERVED",
+    "FREEZE_LOCKS_PRESERVED",
+    "FRESH_VALIDATOR_PASS",
+    "CHANGE_REPORT_COMPLETE"
+  ],
+  "boundaries": {
+    "baseline_advance_mode": "SIMULATION_NON_PRODUCTION",
+    "p5_capabilities": "UNSUPPORTED",
+    "production_authority": "NOT_ESTABLISHED",
+    "external_integration": "NOT_ESTABLISHED",
+    "capacity_sla": "NOT_ESTABLISHED"
+  }
+}

@@ -11,6 +11,12 @@ last_reviewed: 2026-08-27
 
 # ExecutionEvent 与 ReplanRequest 合同
 
+## TASK-P4-10 consumer-only continuous replay
+
+`SIM-P4-DISRUPTION-REPLAY-001@1.0.0`只消费现有`execution-event.v1`、`replan-request.v1`、PlanningRun、Validation、ScheduleVersion v2和`change-report.v1`合同；不发布新Schema/URN/version。五步共8个event的完整prefix仍由P4-09编译并通过P4-04 common ingress，step envelope必须绑定exact event IDs/stream fingerprint和previous baseline，未知或额外字段fail closed。
+
+每步只接受fresh Validator PASS/0 hard violation、new DRAFT和complete ChangeReport。`SIMULATION_NON_PRODUCTION` baseline advance不新增state/transition pair，不授予approval/publication authority；Production event authority、external source与capacity/SLA仍未形成。
+
 ## TASK-P4-09 deterministic producer
 
 Execution Simulator core现在是`execution-event.v1`的producer、P4-04 `ingest_event`的consumer。它先把PUBLISHED base、versioned Scenario/Profile/Generator/Simulator、seed、virtual clock与event schedule绑定为run fingerprint，再按`(offset_seconds, named-child-seed rank, event_key)`生成连续source positions、deterministic occurred/received UTC、exact entity refs及content-derived event ID/fingerprint。完整prefix先经P4-04 strict validator；任一invalid payload/time/reference/source会在首个ingress call前拒绝。

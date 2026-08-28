@@ -11,6 +11,12 @@ last_reviewed: 2026-08-28
 
 # 模块边界与依赖规则
 
+## TASK-P4-10 module boundary
+
+`simulation/scenarios/disruption_replay.py`拥有strict asset parsing、五步coverage/order、P4-09 schedule/config projection、checkpoint partition与downstream evidence validation；`disruption_replay_check.py`是machine composition root，可调用P4-04/P4-08/P4-09 owner checks并生成raw evidence。Runtime orchestrator只依赖pure contract/Simulation execution surface，不导入Infrastructure、API、OR-Tools/CP-SAT、SQLAlchemy或wall clock。
+
+`ContinuousReplanPort`是唯一downstream composition boundary；fact/Snapshot、freeze、Solver/Validator、repository、DRAFT与ChangeReport语义继续由原owner负责。Scenario层不写repository、不推进业务state、不提供P5/Production adapter。
+
 ## TASK-P4-09 module boundary
 
 `backend/app/simulation/execution/contracts.py`拥有immutable Simulation run/event-schedule/clock/checkpoint inputs；`simulator.py`只拥有compile、queue、canonical Event、prefix restart与manifest projection；`simulator_check.py`是machine composition root，可用真实P4-04 service证明端口，但不属于core import boundary。Core可以消费pure domain event/capability/provenance/hash helpers，禁止导入Infrastructure、Planning/Solver、API或Application service。

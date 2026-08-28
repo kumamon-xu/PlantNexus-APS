@@ -11,6 +11,12 @@ last_reviewed: 2026-08-28
 
 # PlantNexus APS 文档中心
 
+## TASK-P4-10 local continuous replay boundary
+
+TASK-P4-10从clean/provider-verified P4-09 closure `8bbe0c643571e578ec637f135a2390c90de02512`冻结不可变Diff base，并在Simulation/development边界形成一个versioned五步/八事件场景资产、严格continuous replay orchestrator、raw step evidence与FULL machine step。编排只调用P4-09标准event入口和既有P4-04/P4-08 owner contracts；它不复制fact、freeze、Solver、Validator或ChangeReport公式，也不直接访问repository/API。
+
+每步要求exact trigger event、previous Snapshot/Version baseline、new Snapshot/Problem、ReplanRequest/Run、fresh Validator PASS、new immutable DRAFT、complete ChangeReport和六项fact/lock invariants。下一步baseline使用不同ID的PUBLISHED-shaped测试载体逐字承接同一DRAFT内容，并保存`source_draft_id`、`SIMULATION_NON_PRODUCTION`与`authority_claim=NONE`；它不执行READY/APPROVE/PUBLISH/EXPORT。完整HIGH_RISK本地验收已通过14 focused、786 Backend、67 Frontend、三轮各12/12 Chromium、全部历史machine/XS/双Gate/SCA/license/build/Compose及27/5/19/0治理；当前只等待implementation/closure双exact provider。P4-11不会自动启动，P5/Production边界保持未形成。
+
 ## TASK-P4-09 local Execution Simulator core boundary
 
 TASK-P4-09从clean/provider-verified P4-08 closure `e4874735166be93473ccaebaf1090980db957552`冻结不可变Diff base，并在Simulation/development边界内形成versioned virtual clock/event schedule、named-child-seed tie-break、canonical standard ExecutionEvent stream、prefix checkpoint/restart与既有ExecutionSimulationManifest consumer。完整stream在副作用前通过P4-04严格事件校验；runtime只持有`ingest_event`端口，不导入Infrastructure、Planning/Solver、API或Application捷径，machine harness以真实`ExecutionFactProjectionService`公共入口复验该端口。

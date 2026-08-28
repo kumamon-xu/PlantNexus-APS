@@ -11,6 +11,12 @@ last_reviewed: 2026-08-28
 
 # 配置、环境与数据隔离
 
+## TASK-P4-10 disruption replay isolation
+
+Library loader只接受DEVELOPMENT/TEST/BENCHMARK、`synthetic=true`、`production_binding=false`以及exact boundary `SIMULATION_NON_PRODUCTION/UNSUPPORTED/NOT_ESTABLISHED`。Production environment、缺失五类coverage、未知字段/版本、乱序offset或tampered invariant在继续编排前fail closed。Orchestrator无Infrastructure/API/OR-Tools/SQLAlchemy、wall clock、global random、network或secret依赖；FULL CI只上传JSON evidence。
+
+Seed、900秒freeze、offset、priority、duration、tardiness与stability均来自versioned asset/SIM registry，不读取环境默认且不形成Production policy/capacity/SLA。
+
 ## TASK-P4-09 Execution Simulator isolation
 
 Execution Simulator config只接受`SIMULATION`、`synthetic=true`、`production_binding=false`与`DEVELOPMENT/TEST/BENCHMARK`。Environment为`PRODUCTION`、stale input fingerprint、unsupported/deferred capability或未知version时，在compile/ingress前fail closed。Core不读取环境变量、host clock、credential、network、database或Worker配置；code commit只能是`uncommitted`或exact 40字符lowercase SHA。

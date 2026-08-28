@@ -11,6 +11,12 @@ last_reviewed: 2026-08-28
 
 # 端到端计划链路
 
+## TASK-P4-10 continuous composition edge
+
+当前Simulation链可由一个versioned run连续执行五个step：`Scenario step → P4-09 canonical Event delta → P4-04 fact/new Snapshot owner → ReplanRequest → P4-08 application/P4-07 solve → fresh Validator → new DRAFT + complete ChangeReport → explicit non-Production next baseline`。每个箭头保存exact IDs/fingerprints，step 2～5必须消费前一步Schedule/Snapshot/Problem reference；任一缺口停止后续chain。
+
+最后一箭头只是test harness baseline advance，明确无authority且不执行READY/APPROVE/PUBLISH/EXPORT。P4-11 read/export、P4-12 API、P4-13 UI、P4-14/15 Gate/Audit仍是独立后继。
+
 ## TASK-P4-09 event-source prefix
 
 动态链新增一个严格前缀而不改变既有Planning路径：`PUBLISHED ScheduleVersion + exact Snapshot/Problem refs + Scenario/Profile/Generator/Simulator versions + seed + EventSchedule + VirtualClock → canonical ExecutionEvent prefix → P4-04 ingest_event`。Simulator在入口前完成完整prefix校验；每个event仍由P4-04 ledger/fact事务处理。

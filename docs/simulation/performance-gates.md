@@ -11,6 +11,10 @@ last_reviewed: 2026-08-21
 
 # 性能与现实校准门
 
+## TASK-P4-10 correctness observation boundary
+
+五步continuous replay记录before/after synthetic tardiness、完整四分量Stability及机器运行证据，只用于determinism/correctness回归。它不增加或修改Benchmark threshold，不替代P2 XS/S/M baseline，也不形成P4 Gate B aggregate或Exit Audit。真实历史分布、L/XL、capacity和SLA继续由OPEN-003/004/006/011/012阻塞。
+
 ## P4 planned gate boundary
 
 P4-14必须在功能完整性、determinism、fact/lock preservation、Validator PASS和ChangeReport completeness均通过后才比较replan timing/tardiness/stability；P4-15独立重放。OPEN-003/004/005/006及真实数据校准未关闭前，任何结果都不能声明Production capacity或SLA。本次不修改阈值、fixture或benchmark evidence。

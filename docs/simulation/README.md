@@ -11,6 +11,12 @@ last_reviewed: 2026-08-28
 
 # Simulation 子系统
 
+## TASK-P4-10 continuous disruption library
+
+`simulation/scenarios/disruption_replay.py`现拥有strict versioned asset loader与五步连续编排；fixture固定Urgent、Machine fail/recover、Material delay/ready、Processing duration/remaining与Early Completion共8个标准event。每步必须返回完整Event→Snapshot→Replan→fresh Validator→DRAFT/ChangeReport envelope并承接前一步baseline；missing/extra字段、coverage/order/seed/plane或任何invariant漂移均拒绝。
+
+该层不拥有P4-04/05/06/07/08/09语义实现，只组合其公开合同和machine evidence。所有baseline advance均为`SIMULATION_NON_PRODUCTION`且无authority claim；不存在自动approval/publication/export、P5 capability或Production connector/capacity/SLA。
+
 ## TASK-P4-09 Execution Simulator core
 
 TASK-P4-09现建立deterministic虚拟时钟、versioned event schedule、named-child-seed队列、canonical standard ExecutionEvent stream、prefix checkpoint/restart与P4-04同一`ingest_event`公共入口；完整stream在任何入口调用前strict precheck。TASK-P4-10才增加Urgent Demand、Machine Failure/Recovery、Material Delay/Ready、Processing Duration/Remaining变化与Early Completion五类连续场景及replay；TASK-P4-14/15分别聚合与审计。所有数据仍为versioned synthetic provenance，不形成Production twin、真实MES、外部发布或capacity/SLA结论。

@@ -11,13 +11,21 @@ last_reviewed: 2026-08-28
 
 # Scenario Library 与复杂度矩阵
 
+## TASK-P4-10 formed continuous disruption row
+
+| Scenario | Profile | Seed / stream | Evidence | Boundary |
+| --- | --- | --- | --- | --- |
+| `SIM-P4-DISRUPTION-REPLAY-001@1.0.0` | `PROFILE-P4-DISRUPTION-REPLAY-001@1.0.0` | `20260828` / 5 steps / 8 standard events | [`scenario-library.v1.json`](../../fixtures/synthetic/P4-DISRUPTION-REPLAY/scenario-library.v1.json)、[`calculation-note.md`](../../fixtures/synthetic/P4-DISRUPTION-REPLAY/calculation-note.md)、TEST-DISRUPTION-REPLAY-001 | continuous correctness only；`SIMULATION_NON_PRODUCTION` baseline advance；not probability/capacity/SLA |
+
+五步顺序固定为Urgent Order→Machine Failure/Recovery→Material Delay/Ready→Processing Delay→Early Completion。每步保留raw event/replan/change evidence、fresh Validator PASS与completed/running/HARD/freeze invariants；same-seed须保持exact event stream与相同语义结果投影，raw runtime observation不丢弃。该row不创建PROFILE-A～E Production参数、不改变XS/S/M benchmark，也不提前形成P4-14 Gate。
+
 ## TASK-P4-09 core vector boundary
 
 `SIM-P4-EXECUTION-CORE-001@1.0.0`只是在machine/unit/property evidence中使用的versioned correctness identity：固定3个标准ExecutionEvent、10/10/20秒offset、1秒virtual-clock resolution与seed `20260828`，验证同刻queue/replay/checkpoint/common ingress。它不进入正式disruption scenario catalog，不声明概率、故障持续量、事件分布、期望KPI、capacity或SLA；因此不替代下方TASK-P4-10连续场景。
 
-## P4 planned continuous scenarios
+## P4 continuous scenario requirement
 
-TASK-P4-10必须在同一deterministic run中覆盖并可独立重放`URGENT_DEMAND_RECEIVED`、`MACHINE_UNAVAILABLE/MACHINE_RECOVERED`、`MATERIAL_DELAYED/MATERIAL_READY`、`PROCESSING_DURATION_CHANGED/PROCESSING_REMAINING_CHANGED`与`OPERATION_COMPLETED` early completion；每类都要证明事实/锁保护、Validator PASS、ChangeReport completeness及tardiness/stability对比。P5 capabilities与Production profiles不得伪装成P4场景。TASK-P4-09不修改正式fixture或expected。
+TASK-P4-10现以同一deterministic run覆盖并可独立重放`URGENT_DEMAND_RECEIVED`、`MACHINE_UNAVAILABLE/MACHINE_RECOVERED`、`MATERIAL_DELAYED/MATERIAL_READY`、`PROCESSING_DURATION_CHANGED/PROCESSING_REMAINING_CHANGED`与`OPERATION_COMPLETED` early completion；每类都要求事实/锁保护、Validator PASS、ChangeReport completeness及tardiness/stability对比。P5 capabilities与Production profiles不得伪装成P4场景；完整Provider与P4-14/15 Gate仍是后继证据。
 
 ## 初始工厂画像
 

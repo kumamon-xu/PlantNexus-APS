@@ -6,10 +6,14 @@ spec_version: 0.3.0
 phase: P0
 normative: true
 source_sections: [12, 13, 41, 70, 71]
-last_reviewed: 2026-08-27
+last_reviewed: 2026-08-28
 ---
 
 # 目标仓库结构
+
+## TASK-P4-10 layout addition
+
+新增`simulation/scenarios/disruption_replay.py`与machine composition check、`fixtures/synthetic/P4-DISRUPTION-REPLAY/{scenario-library.v1.json,calculation-note.md}`、unit/contract/property/simulation tests及FULL CI step；既有scenarios package只增加lazy exports。没有新增或修改Schema、migration、dependency/lock、execution/application/planning core、API/UI、state pair、Production connector或P5目录。
 
 ## TASK-P4-09 layout addition
 

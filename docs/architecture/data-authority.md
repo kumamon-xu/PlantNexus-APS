@@ -11,6 +11,12 @@ last_reviewed: 2026-08-28
 
 # 数据权威边界
 
+## TASK-P4-10 baseline authority boundary
+
+每个continuous step仍只消费P4-09派生的`AUTHORIZED_SIMULATION_SOURCE` event authority和P4-04/P4-08公开owner evidence。为连续测试而把刚形成DRAFT内容绑定为下一步PUBLISHED-shaped baseline时，envelope必须同时声明`SIMULATION_NON_PRODUCTION`、`production_binding=false`与`authority_claim=NONE`；它不是业务state transition、approval、publication或MES事实。
+
+任何Production binding/source/authority输入都会在library或step validation前拒绝。真实factory event authority、identity/RBAC、external adapter与Production baseline advance仍由OPEN项阻断。
+
 ## TASK-P4-09 synthetic event authority
 
 每个Simulator run从完整versioned input内容派生唯一Simulation authority ID和source stream ID；authority decision固定为`AUTHORIZED_SIMULATION_SOURCE`、source system固定为`plantnexus-execution-simulator`，scope固定为`SIMULATION/{factory_id}/{planning_scope_id}`且`production_binding=false`。Caller不能提供或替换真实Production authority，P4-04会再次核对scope/stream/version。

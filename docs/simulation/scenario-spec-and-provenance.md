@@ -11,6 +11,12 @@ last_reviewed: 2026-08-28
 
 # ScenarioSpec 与 Provenance
 
+## TASK-P4-10 versioned disruption asset
+
+`fixtures/synthetic/P4-DISRUPTION-REPLAY/scenario-library.v1.json`发布repository-local `SIM-P4-DISRUPTION-REPLAY-001@1.0.0` evidence contract。Canonical asset hash绑定library/scenario/profile/generator/simulator versions、seed `20260828`、P4-10场景专用且独立验证的base Schedule/Snapshot/Problem fingerprints、virtual clock、PlanningPolicy/SolveLimits、五步8-event payload及P4/P5/Production boundaries；任一字段、版本、顺序或provenance漂移产生不同fingerprint并fail closed。
+
+该asset不修改`scenario-spec.v1`或`scenario-manifest.v1`发布Schema；它是TASK-P4-10专用内部continuous-replay配置。900秒freeze、urgent quantity/priority、event offsets和duration values登记为bounded Simulation assumption，不外推真实故障率、订单分布、authority、capacity或SLA。Rollback通过撤下错误version并发布后继version，禁止覆盖历史hash。
+
 ## TASK-P4-09 provenance consumption
 
 TASK-P4-09现在把scenario/profile/generator/simulator的ID、semantic version和fingerprint、seed、PUBLISHED base、Snapshot/Problem、Policy/Limits、virtual-clock origin/resolution、event-schedule fingerprint、run fingerprint、ordered event fingerprints及code commit纳入manifest/stream证据，且强制`synthetic=true`、`production_binding=false`。Core只消费versioned asset reference和已登记capability；不修改ScenarioSpec Schema/sample，也不生成P4-10定量事件。SIM-ASSUMPTION-018只保存core correctness vector。

@@ -11,6 +11,12 @@ last_reviewed: 2026-08-28
 
 # Execution Simulator 与异常模型
 
+## TASK-P4-10 continuous orchestration
+
+P4-10在不修改Simulator core的前提下新增五步scenario library与continuous orchestrator。它按step event count驱动P4-09 checkpoint，每步只接受标准event prefix delta，并要求downstream返回previous baseline→new Snapshot/Problem→ReplanRequest/PlanningRun→fresh Validator PASS→new DRAFT/complete ChangeReport的严格exact-key envelope。任一event/order/version/base/fingerprint/invariant/tamper失败都会停止后续step且不写partial success。
+
+连续基线推进是显式`SIMULATION_NON_PRODUCTION` test-harness语义：next baseline使用与source DRAFT不同的ID和PUBLISHED-shaped载体，逐字绑定DRAFT content及new Snapshot/Problem并保存`source_draft_id`，同时声明`authority_claim=NONE`；不得解释为真实READY/APPROVED/PUBLISHED转换。Machine report同时重放P4-04/P4-08/P4-09 owner checks，保留五步raw evidence，并对排除runtime timestamp/timing派生噪声的same-seed语义投影做exact比较；P4-11+、P5与Production仍未启动。
+
 ## TASK-P4-09 deterministic core
 
 `app.simulation.execution`现实现`execution-event-schedule.v1`有界内部配置、`virtual-clock.v1`、完整run fingerprint、named-child-seed queue rank、standard ExecutionEvent compile、prefix checkpoint/restart及既有`execution-simulation-manifest.v1` builder。Schedule逐字绑定PUBLISHED base content fingerprint和Scenario/Profile/Generator fingerprints；任何stale binding、unknown version/capability、非对齐offset、checkpoint mismatch或Production target均在调用入口前fail closed。

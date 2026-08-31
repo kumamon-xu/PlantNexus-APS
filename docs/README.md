@@ -15,7 +15,7 @@ last_reviewed: 2026-08-31
 
 P5-21从P5-02 closure `d7779c014351d41909322b967c5c8eca68713e8b`冻结PHASE_GATE。公开P5-02 manifest仍精确是空selected、9项DEFERRED、18张cancelled owner和唯一直接依赖TASK-P5-02；本Gate不执行任何已取消owner。
 
-`p5-portfolio-gate-report.v1`本地为12/12 PASS、`issues=[]`、`blocking_gaps=[]`，完整保留empty selected-owner manifest、C-012～C-018七项exact rejection、Global-only、formal Validator/mutation、XS/S/M和独立P4两轮重放。两轮P4合计22 stages、10 browser specs、10次fresh Validator和10份complete ChangeReport，Backend corrective全量860/860 PASS。首次显式`uncommitted` environment误配置失败已保留，首次全量发现的application跨owner import也已改由owner machine contracts纠正；没有修改既有断言或P4业务语义。Exact Provider尚待implementation提交，P5-22继续`planned/NOT_STARTED`，该Gate不是Exit或Production evidence。
+`p5-portfolio-gate-report.v1`本地为12/12 PASS、`issues=[]`、`blocking_gaps=[]`，完整保留empty selected-owner manifest、C-012～C-018七项exact rejection、Global-only、formal Validator/mutation、XS/S/M和独立P4两轮重放。两轮P4合计22 stages、10 browser specs、10次fresh Validator和10份complete ChangeReport，Backend corrective全量860/860 PASS。首次显式`uncommitted` environment误配置失败已保留，首次全量发现的application跨owner import也已改由owner machine contracts纠正；没有修改既有断言或P4业务语义。Implementation candidate `e0dee8544a27adcae7ca98fabe2665452bf38d4d`的run `33402484533`进一步暴露新test fixture写死`uncommitted`与CI exact SHA不一致，corrective只绑定受控commit identity。Exact Provider仍待corrective提交，P5-22继续`planned/NOT_STARTED`，该Gate不是Exit或Production evidence。
 
 ## TASK-P5-02 portfolio amendment boundary
 

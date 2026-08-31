@@ -6,7 +6,7 @@ TASK-P5-21已获独立授权，不可变Diff base为`d7779c014351d41909322b967c5
 
 新增`p5-portfolio-gate-report.v1`以PHASE_GATE独立重放Global-only strategy、formal Validator、13个mutation、XS/S/M development Benchmark和两轮P4 vertical slice，并对C-012～C-018逐项要求`UNSUPPORTED_CAPABILITY`。本地报告为12/12 checks、7个exact rejection、22个P4 Backend stage、10个browser spec execution、10次fresh Validator、10份complete ChangeReport，`issues=[]`、`blocking_gaps=[]`；Backend corrective全量为860/860 PASS。首次本地调用因显式把`PLANTNEXUS_CODE_COMMIT`设为`uncommitted`而被Production default-deny配置前置拒绝；移除该错误覆盖后同一Gate完整PASS。首次全量测试还发现Gate直接import owner违反application边界，现已改由owner machine contracts执行并通过corrective全量；没有修改既有断言、P4 owner或放宽比较。
 
-CI在既有68-step FULL路由中的P4 Gate step后追加执行P5报告器，保持P4冻结evidence和步骤计数不变；machine artifact会包含exact commit下的P5报告。Implementation exact Provider尚待提交后验证，TASK仍`in_progress`。即使本Gate最终PASS，也不是P5 Exit Audit，不自动启动TASK-P5-22，不形成P6+、Production/UAT、真实approval authority、external publish/integration、deployment或capacity/SLA。
+CI在既有68-step FULL路由中的P4 Gate step后追加执行P5报告器，保持P4冻结evidence和步骤计数不变；machine artifact会包含exact commit下的P5报告。首次implementation candidate `e0dee8544a27adcae7ca98fabe2665452bf38d4d`的run `33402484533`在Repository test suites按设计fail closed：新integration fixture写死`uncommitted`，与CI注入的exact SHA不一致；corrective只让fixture消费当前受控commit identity，不放宽Gate。TASK仍`in_progress/provider pending`。即使本Gate最终PASS，也不是P5 Exit Audit，不自动启动TASK-P5-22，不形成P6+、Production/UAT、真实approval authority、external publish/integration、deployment或capacity/SLA。
 
 ## TASK-P5-02 — portfolio resolution and phase-plan amendment
 

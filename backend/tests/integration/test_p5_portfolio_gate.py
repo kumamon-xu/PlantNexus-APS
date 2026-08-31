@@ -24,12 +24,12 @@ from app.application.p5_portfolio_gate_report import (
 ROOT = Path(__file__).resolve().parents[3]
 
 
-def _strategy() -> dict[str, Any]:
+def _strategy(code_commit: str) -> dict[str, Any]:
     return {
         "report_version": "objective-strategy-report.v1",
         "task_id": "TASK-P2-08",
         "status": "PASS",
-        "code_commit": "uncommitted",
+        "code_commit": code_commit,
         "check_count": 7,
         "boundaries": {
             "strategy": "ONE_GLOBAL_CP_SAT_MODEL_NO_DECOMPOSITION_OR_FALLBACK",
@@ -38,12 +38,12 @@ def _strategy() -> dict[str, Any]:
     }
 
 
-def _formal() -> dict[str, Any]:
+def _formal(code_commit: str) -> dict[str, Any]:
     return {
         "report_version": "formal-schedule-validator-report.v1",
         "task_id": "TASK-P2-04",
         "status": "PASS",
-        "code_commit": "uncommitted",
+        "code_commit": code_commit,
         "check_count": 6,
     }
 
@@ -58,19 +58,19 @@ def _mutation() -> dict[str, Any]:
     }
 
 
-def _benchmark(profile: str) -> dict[str, Any]:
+def _benchmark(profile: str, code_commit: str) -> dict[str, Any]:
     return {
         "status": "PASS",
-        "code_commit": "uncommitted",
+        "code_commit": code_commit,
         "profile": {"size": profile.upper()},
         "global_solver": {"validation": {"status": "PASS"}},
     }
 
 
-def _p4() -> dict[str, Any]:
+def _p4(code_commit: str) -> dict[str, Any]:
     return {
         "report_version": "p4-vertical-slice-report.v1",
-        "code_commit": "uncommitted",
+        "code_commit": code_commit,
         "repeat_count": 2,
         "counts": {
             "continuous_scenario_step_executions": 10,
@@ -86,11 +86,12 @@ def report(monkeypatch: pytest.MonkeyPatch) -> dict[str, Any]:
     manifest, document_sha256 = load_portfolio_manifest(
         ROOT / "docs/core/p5-portfolio-amendment-manifest.md"
     )
+    code_commit = gate._code_commit()
 
     def owner_machine_contract(*, stage: str, **_: object) -> dict[str, Any]:
         return {
-            "global_strategy": _strategy(),
-            "formal_validator": _formal(),
+            "global_strategy": _strategy(code_commit),
+            "formal_validator": _formal(code_commit),
             "validator_mutation": _mutation(),
         }[stage]
 
@@ -98,10 +99,12 @@ def report(monkeypatch: pytest.MonkeyPatch) -> dict[str, Any]:
     monkeypatch.setattr(
         gate,
         "run_benchmark",
-        lambda *, profile_name, **_: _benchmark(profile_name),
+        lambda *, profile_name, **_: _benchmark(profile_name, code_commit),
     )
     monkeypatch.setattr(gate, "validate_benchmark_report", lambda _: None)
-    monkeypatch.setattr(gate, "run_p4_vertical_slice_gate", lambda **_: _p4())
+    monkeypatch.setattr(
+        gate, "run_p4_vertical_slice_gate", lambda **_: _p4(code_commit)
+    )
     monkeypatch.setattr(gate, "validate_p4_vertical_slice_report", lambda _: None)
     value = run_p5_portfolio_gate(
         root=ROOT,

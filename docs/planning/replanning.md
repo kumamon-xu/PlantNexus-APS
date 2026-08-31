@@ -6,10 +6,16 @@ spec_version: 0.3.0
 phase: P0-P5
 normative: true
 source_sections: [21, 28, 35, 47, 48, 49, 50, 79, 80]
-last_reviewed: 2026-08-31
+last_reviewed: 2026-09-01
 ---
 
 # 动态重排设计合同
+
+## TASK-P5-22 fresh frozen P4 audit
+
+P5 Exit没有修改动态重排owner，而是fresh重放冻结的P4 Gate及其P2/P3前置证据。两轮P4仍覆盖22个owner stage、10个连续disruption step、16个标准ExecutionEvent、10次fresh Validator和10份complete ChangeReport；ReplanRequest、freeze/HARD、OBJ-002 Stability、new DRAFT与Simulator common-path边界均保持一致。
+
+P5 selected owner为0，审计没有写入新约束、状态或authority。当前本地Exit READY仍仅为Simulation/development evidence，不推进approval/publish，不切换P6或Production。
 
 ## TASK-P5-21 frozen P4 regression
 

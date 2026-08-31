@@ -390,8 +390,11 @@ jobs:
           git worktree add --detach "${replay_root}" "${GITHUB_SHA}"
           rm -- \
             "${replay_root}/backend/app/application/p5_portfolio_gate_report.py" \
+            "${replay_root}/backend/app/application/p5_exit_gate_audit.py" \
             "${replay_root}/backend/tests/contract/test_p5_portfolio_gate_rejections.py" \
-            "${replay_root}/backend/tests/integration/test_p5_portfolio_gate.py"
+            "${replay_root}/backend/tests/contract/test_p5_exit_gate_rejections.py" \
+            "${replay_root}/backend/tests/integration/test_p5_portfolio_gate.py" \
+            "${replay_root}/backend/tests/integration/test_p5_exit_gate.py"
           mkdir -p \
             "${replay_root}/build/playwright" \
             "${replay_root}/build/validation"
@@ -486,6 +489,24 @@ jobs:
         run: |
           uv run python -m app.application.p4_gate_report --root . --repeat 2 --frontend-report build/validation/ci-p4-frontend-gate.json --p2-report build/validation/ci-p2-vertical-slice-gate.json --p3-report build/validation/ci-p3-vertical-slice-gate.json --report build/validation/ci-p4-vertical-slice-gate.json
           uv run python -m app.application.p5_portfolio_gate_report --root . --repeat 2 --portfolio-manifest docs/core/p5-portfolio-amendment-manifest.md --frontend-report build/validation/ci-p4-frontend-gate.json --p2-report build/validation/ci-p2-vertical-slice-gate.json --p3-report build/validation/ci-p3-vertical-slice-gate.json --report build/validation/ci-p5-portfolio-gate.json
+
+      - name: P5 capability qualification fresh evidence
+        run: >-
+          uv run python scripts/p5_capability_qualification.py
+          --root .
+          --manifest fixtures/simulation/p5/qualification/evidence-manifest.v1.json
+          --report build/validation/ci-p5-capability-qualification.json
+
+      - name: P5 Exit Gate independent audit evidence
+        run: >-
+          uv run python -m app.application.p5_exit_gate_audit
+          --root .
+          --provider-observation docs/p5-exit-gate-audit-observations.v1.json
+          --qualification-report build/validation/ci-p5-capability-qualification.json
+          --p5-gate-report build/validation/ci-p5-portfolio-gate.json
+          --p4-gate-report build/validation/ci-p4-vertical-slice-gate.json
+          --p4-exit-observation docs/p4-exit-gate-audit-observations.v1.json
+          --report build/validation/ci-p5-exit-gate-audit.json
 
       - name: Build package
         run: uv build

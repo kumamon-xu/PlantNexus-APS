@@ -6,10 +6,16 @@ spec_version: 0.3.0
 phase: cross-phase
 normative: true
 source_sections: [0, 9, 10, 23, 24, 30, 32, 33, 35, 57, 67]
-last_reviewed: 2026-08-31
+last_reviewed: 2026-09-01
 ---
 
 # 端到端计划链路
+
+## TASK-P5-22 independent Exit audit edge
+
+P5 Exit新增的只读审计链为`immutable P5 provider topology + frozen contract objects + fresh qualification → fresh P5 Gate → fresh P4/P3/P2 regressions → exact registers/boundaries → READY or NOT_READY manifest`。它不调用任何cancelled P5-03～20 owner，也不新增Solver、Validator、Schema、state或业务写入；任一SHA/digest/topology/report/boundary漂移都在进入READY前fail closed。
+
+当前本地15/15 READY仍待双exact provider。该edge不推进ScheduleVersion或phase，不进入P6，也不建立Production authority、external integration、deployment、capacity或SLA。
 
 ## TASK-P5-21 portfolio Gate edge
 

@@ -1,0 +1,328 @@
+{
+  "report_version": "p5-exit-gate-audit-observations.v1",
+  "audit_task": "TASK-P5-22",
+  "audit_date": "2026-09-01",
+  "timezone": "Asia/Hong_Kong",
+  "immutable_diff_base": "d0a83c58cb4a2d4afa76e8c8cff08441574e2e30",
+  "audited_business_baseline": "d0a83c58cb4a2d4afa76e8c8cff08441574e2e30",
+  "validation_profile": "PHASE_GATE",
+  "branch_protection": {
+    "required_context": "validate",
+    "expected_app_id": 15368,
+    "strict": false,
+    "status": "PASS"
+  },
+  "task_topology": {
+    "done": {
+      "TASK-P5-00": {
+        "implementation": "a316d7a5ebf2e8c7e33da46cf1d7c08f2dfbdfa3",
+        "closure": "4ccb2ed99ffe73abeb0462efff4a5342cd7c5522"
+      },
+      "TASK-P5-01": {
+        "implementation": "88fb9f53ab5425d72ee6659188b689a26d0e387a",
+        "closure": "01b8918db62cc9f5c4421d0b90d93151ddc552f1"
+      },
+      "TASK-P5-02": {
+        "implementation": "ed9ee75122341c1a71b641edc445e2a58cac70de",
+        "closure": "d7779c014351d41909322b967c5c8eca68713e8b"
+      },
+      "TASK-P5-21": {
+        "implementation": "c8ffd042738ffe79c350262aa7195daa9a7bf083",
+        "closure": "d0a83c58cb4a2d4afa76e8c8cff08441574e2e30"
+      }
+    },
+    "cancelled": [
+      "TASK-P5-03",
+      "TASK-P5-04",
+      "TASK-P5-05",
+      "TASK-P5-06",
+      "TASK-P5-07",
+      "TASK-P5-08",
+      "TASK-P5-09",
+      "TASK-P5-10",
+      "TASK-P5-11",
+      "TASK-P5-12",
+      "TASK-P5-13",
+      "TASK-P5-14",
+      "TASK-P5-15",
+      "TASK-P5-16",
+      "TASK-P5-17",
+      "TASK-P5-18",
+      "TASK-P5-19",
+      "TASK-P5-20"
+    ],
+    "active": "TASK-P5-22",
+    "active_diff_base": "d0a83c58cb4a2d4afa76e8c8cff08441574e2e30",
+    "direct_dependency": "TASK-P5-21",
+    "selected_owners": [],
+    "selected_count": 0,
+    "deferred_count": 9
+  },
+  "predecessor_provider_audit": {
+    "predecessor_base": "892c46d660a6bf3cde8ed473199f38746d041e47",
+    "commit_count": 11,
+    "workflow_run_count": 11,
+    "successful_run_count": 8,
+    "failed_run_count": 3,
+    "artifact_count": 22,
+    "expired_artifact_count": 0,
+    "digest_mismatch_count": 0,
+    "required_check_mismatch_count": 0,
+    "json_count": 216,
+    "successful_json_count": 126,
+    "failed_json_count": 90,
+    "machine_json_count": 187,
+    "browser_json_count": 12,
+    "json_parse_error_count": 0,
+    "semantic_issue_count": 0,
+    "run_inventory_fingerprint": "sha256:a702ad11aeba9d8ee90a2b0cee1df8e859f4eb000df2761a2e21cfb31a47827d",
+    "runs": [
+      {
+        "sha": "a316d7a5ebf2e8c7e33da46cf1d7c08f2dfbdfa3",
+        "parent": "892c46d660a6bf3cde8ed473199f38746d041e47",
+        "run_id": 33373013523,
+        "conclusion": "success",
+        "classify_job": 99428152667,
+        "docs_job": 99428185042,
+        "full_job": 99428186331,
+        "required_job": 99428242533,
+        "required_app_id": 15368,
+        "artifacts": [
+          {"artifact_id": 9750786965, "digest": "sha256:bd146736ea4431ae48fd9d93ccdce43273005f9fbbc6cf61d39752b49beac3ff", "expired": false},
+          {"artifact_id": 9750780227, "digest": "sha256:2a93283ffb9cfb59fd61e68dd4ededcfbcd27b273c2bef99657c88feaa3a6848", "expired": false}
+        ]
+      },
+      {
+        "sha": "4ccb2ed99ffe73abeb0462efff4a5342cd7c5522",
+        "parent": "a316d7a5ebf2e8c7e33da46cf1d7c08f2dfbdfa3",
+        "run_id": 33373929909,
+        "conclusion": "success",
+        "classify_job": 99431007708,
+        "docs_job": 99431044308,
+        "full_job": 99431046395,
+        "required_job": 99431098162,
+        "required_app_id": 15368,
+        "artifacts": [
+          {"artifact_id": 9751123503, "digest": "sha256:1bf22a90928f788e5f505bebc8f82af5315643133de10838b26df242f3f37491", "expired": false},
+          {"artifact_id": 9751117877, "digest": "sha256:a727df02dd63098fdccbc45ef13086d517ef16687e5456e5e37a6cdb32d6b604", "expired": false}
+        ]
+      },
+      {
+        "sha": "c3761d0505690567ab6b60be1d04041dab0c0652",
+        "parent": "4ccb2ed99ffe73abeb0462efff4a5342cd7c5522",
+        "run_id": 33380357486,
+        "conclusion": "failure",
+        "classify_job": 99451114042,
+        "docs_job": 99451151726,
+        "full_job": 99451150348,
+        "required_job": 99453090832,
+        "required_app_id": 15368,
+        "artifacts": [
+          {"artifact_id": 9753723986, "digest": "sha256:2e304cd52a8b781e59575d20da7d02ba0cdc285d6a9f8f555d4eedb2f30aba86", "expired": false},
+          {"artifact_id": 9753497576, "digest": "sha256:84490e98e5cdf023438480e4bec01e6d6269fda69283250cd13cddb4a3669784", "expired": false}
+        ]
+      },
+      {
+        "sha": "88fb9f53ab5425d72ee6659188b689a26d0e387a",
+        "parent": "c3761d0505690567ab6b60be1d04041dab0c0652",
+        "run_id": 33383710010,
+        "conclusion": "success",
+        "classify_job": 99461500612,
+        "docs_job": 99461538501,
+        "full_job": 99461537473,
+        "required_job": 99463769376,
+        "required_app_id": 15368,
+        "artifacts": [
+          {"artifact_id": 9754995093, "digest": "sha256:766163e4b516b1645bc985575e4ab3b113d32dd20d8ef77671cc56335f17a133", "expired": false},
+          {"artifact_id": 9754731890, "digest": "sha256:06caf0b3a9c448e6e9e1af7c01828edbf569e9bbfc810571c40111e2396515da", "expired": false}
+        ]
+      },
+      {
+        "sha": "01b8918db62cc9f5c4421d0b90d93151ddc552f1",
+        "parent": "88fb9f53ab5425d72ee6659188b689a26d0e387a",
+        "run_id": 33385086554,
+        "conclusion": "success",
+        "classify_job": 99465813296,
+        "docs_job": 99465841848,
+        "full_job": 99465843363,
+        "required_job": 99465888172,
+        "required_app_id": 15368,
+        "artifacts": [
+          {"artifact_id": 9755251916, "digest": "sha256:19034a807aebb43ab941d444a639a5b27a5c5a76079377709fd42fe45d54ad1c", "expired": false},
+          {"artifact_id": 9755246684, "digest": "sha256:fe2889fff7792831384490383f5b88635b662129da77c2c381958e12f7b64806", "expired": false}
+        ]
+      },
+      {
+        "sha": "ed9ee75122341c1a71b641edc445e2a58cac70de",
+        "parent": "01b8918db62cc9f5c4421d0b90d93151ddc552f1",
+        "run_id": 33389105900,
+        "conclusion": "success",
+        "classify_job": 99478355746,
+        "docs_job": 99478399695,
+        "full_job": 99478400881,
+        "required_job": 99478441483,
+        "required_app_id": 15368,
+        "artifacts": [
+          {"artifact_id": 9756735835, "digest": "sha256:bbda3d87f66e92ca2be68a7bb47cae53a59f007ff6712a2878fed39883a15fcd", "expired": false},
+          {"artifact_id": 9756730213, "digest": "sha256:1a32c6a134181501271ced74d8e513a1d06322b02392e532d1d14d180062b303", "expired": false}
+        ]
+      },
+      {
+        "sha": "d7779c014351d41909322b967c5c8eca68713e8b",
+        "parent": "ed9ee75122341c1a71b641edc445e2a58cac70de",
+        "run_id": 33389544474,
+        "conclusion": "success",
+        "classify_job": 99479760825,
+        "docs_job": 99479788456,
+        "full_job": 99479789677,
+        "required_job": 99479834853,
+        "required_app_id": 15368,
+        "artifacts": [
+          {"artifact_id": 9756904126, "digest": "sha256:92f14930150c63e588c292169cd0cb14a15309ab2cf68ffae09ba381713b491b", "expired": false},
+          {"artifact_id": 9756899489, "digest": "sha256:dba9eab9342ff27071ff56e5b523e0bcd999751b6e4d11b58a5b5fa8f31f04b5", "expired": false}
+        ]
+      },
+      {
+        "sha": "e0dee8544a27adcae7ca98fabe2665452bf38d4d",
+        "parent": "d7779c014351d41909322b967c5c8eca68713e8b",
+        "run_id": 33402484533,
+        "conclusion": "failure",
+        "classify_job": 99521928912,
+        "docs_job": 99521987551,
+        "full_job": 99521985664,
+        "required_job": 99523484366,
+        "required_app_id": 15368,
+        "artifacts": [
+          {"artifact_id": 9761952375, "digest": "sha256:839a6104965011f7e1a0b2a73e0e2caf37630ee6b31b18d7c7af01745f92dc87", "expired": false},
+          {"artifact_id": 9761778726, "digest": "sha256:37a3cf9765048247c7ef14ad253285bb7898bfdb7009a738df9d6f21ecee1bb9", "expired": false}
+        ]
+      },
+      {
+        "sha": "d00386f42fbd366afa94dae4cc93096c0242ce0e",
+        "parent": "e0dee8544a27adcae7ca98fabe2665452bf38d4d",
+        "run_id": 33403931397,
+        "conclusion": "failure",
+        "classify_job": 99526702683,
+        "docs_job": 99526745768,
+        "full_job": 99526743953,
+        "required_job": 99529118437,
+        "required_app_id": 15368,
+        "artifacts": [
+          {"artifact_id": 9762623682, "digest": "sha256:68da5e08191b0ad6e423fc8a0a820f418a0dbbe0b1dd30434189d4a0ecd1887e", "expired": false},
+          {"artifact_id": 9762340535, "digest": "sha256:a56424d2465c7b502750350b946b8271217f1d8e89f7a717b3d6e4b30c8978f4", "expired": false}
+        ]
+      },
+      {
+        "sha": "c8ffd042738ffe79c350262aa7195daa9a7bf083",
+        "parent": "d00386f42fbd366afa94dae4cc93096c0242ce0e",
+        "run_id": 33406166742,
+        "conclusion": "success",
+        "classify_job": 99534176989,
+        "docs_job": 99534220096,
+        "full_job": 99534217662,
+        "required_job": 99538066470,
+        "required_app_id": 15368,
+        "artifacts": [
+          {"artifact_id": 9763658843, "digest": "sha256:ed29d5aa2891d6a442a91360391219e6c265f2a0fe6d0b5e4210bd4c5ae316ed", "expired": false},
+          {"artifact_id": 9763213551, "digest": "sha256:1375f3fbeb739b53dee819da977e21f875c8bdc0ca910da86f43b84cd3cd098c", "expired": false}
+        ]
+      },
+      {
+        "sha": "d0a83c58cb4a2d4afa76e8c8cff08441574e2e30",
+        "parent": "c8ffd042738ffe79c350262aa7195daa9a7bf083",
+        "run_id": 33408463082,
+        "conclusion": "success",
+        "classify_job": 99541820524,
+        "docs_job": 99541879194,
+        "full_job": 99541880486,
+        "required_job": 99541954411,
+        "required_app_id": 15368,
+        "artifacts": [
+          {"artifact_id": 9764123644, "digest": "sha256:a774b24bf61840c012fcd3cdb931d6cb87085708afcb70a8e30f7cd2161bad59", "expired": false},
+          {"artifact_id": 9764114783, "digest": "sha256:7abae6ea0936f382b77395cfa01e1e3b03c26d9cd50061cd8be703264d809b85", "expired": false}
+        ]
+      }
+    ]
+  },
+  "historical_failure_corrective_chain": [
+    {
+      "failed_sha": "c3761d0505690567ab6b60be1d04041dab0c0652",
+      "run_id": 33380357486,
+      "corrective_sha": "88fb9f53ab5425d72ee6659188b689a26d0e387a",
+      "reason": "P4_FROZEN_FRONTEND_SCOPE_REJECTED_NEW_BACKEND_TEST_PATHS",
+      "status": "CORRECTED"
+    },
+    {
+      "failed_sha": "e0dee8544a27adcae7ca98fabe2665452bf38d4d",
+      "run_id": 33402484533,
+      "corrective_sha": "d00386f42fbd366afa94dae4cc93096c0242ce0e",
+      "reason": "P5_GATE_FIXTURE_COMMIT_IDENTITY_MISMATCH",
+      "status": "CORRECTED"
+    },
+    {
+      "failed_sha": "d00386f42fbd366afa94dae4cc93096c0242ce0e",
+      "run_id": 33403931397,
+      "corrective_sha": "c8ffd042738ffe79c350262aa7195daa9a7bf083",
+      "reason": "FROZEN_P4_REPLAY_SCOPE_FALSE_ATTRIBUTION",
+      "status": "CORRECTED"
+    }
+  ],
+  "frozen_git_objects": {
+    "schemas": "3a6a73c6df46048e2c053355959a3c684525cbe9",
+    "backend/migrations": "bc11121cc424bb6014c8cc82f89af8890582207a",
+    "backend/app/planning": "ab99c3c170e9d5fe4c06e1d266f234dd24e95510",
+    "docs/adr": "ed1d8a2032a7f6715c18476bafcd16eeab5fe8cf",
+    "schemas/rules/state-machines.v1.yaml": "cd9fedc3a9c4b521646b16ec5628b00d99d249f2",
+    "schemas/rules/capability-registry.v1.yaml": "0077cfcbfff9c67d747ae3e97dddcd1f3ece0d6f",
+    "schemas/rules/constraint-rule-sheet.v1.yaml": "3d6940fcb5f8135232fa818d3f60962b6b85f648",
+    "pyproject.toml": "241ccc5d343c4527c4e7a419ae0c282fe29e6086",
+    "uv.lock": "a04b1285e0e1da0d2a2341a879d5e8cc718522b7",
+    "frontend/package.json": "ff9879bcec4095edb44e53bc45783e5de9d3d5e6",
+    "frontend/package-lock.json": "6e053d1aa2db87fb789015f0a01807f326a0749f"
+  },
+  "contracts": {
+    "schema_set_version": "2.8.0",
+    "latest_migration": "0005_replan_event_persistence",
+    "state_machine_contract": "state-machines.v1",
+    "accepted_adrs": ["ADR-0013", "ADR-0014", "ADR-0015"],
+    "formed_strategy": "GLOBAL_ONLY",
+    "unsupported_constraints": ["C-012", "C-013", "C-014", "C-015", "C-016", "C-017", "C-018"],
+    "advanced_contract_schema_solver_validator_feature_flag_changes": []
+  },
+  "registers": {
+    "requirement_roots": 30,
+    "trace_rows": 30,
+    "test_ids": 73,
+    "prod_open_count": 15,
+    "prod_open_status": "ALL_OPEN",
+    "sim_assumption_count": 20,
+    "sim_assumption_status": "ALL_ACTIVE",
+    "risk_count": 17,
+    "risk_status": "ALL_MONITORED",
+    "owner_test_ids": "RETAINED_INACTIVE_FOR_FUTURE_REQUALIFICATION",
+    "new_prod_open": [],
+    "new_sim_assumptions": [],
+    "new_risks": []
+  },
+  "p4_exit_reference": {
+    "decision": "READY",
+    "blocking_gaps": [],
+    "implementation": "3637f514947397f7ba04a6ff3061a48f1809b44e",
+    "closure": "892c46d660a6bf3cde8ed473199f38746d041e47",
+    "reuse_policy": "HISTORICAL_REFERENCE_ONLY_FRESH_P4_REGRESSION_REQUIRED"
+  },
+  "boundaries": {
+    "current_phase": "P5",
+    "p5_milestone": "ACTIVE_AWAITING_EXIT_PROVIDER_CLOSURE",
+    "p6_plus": "NOT_ENTERED",
+    "production_readiness": "NOT_CLAIMED",
+    "production_identity_and_approval_authority": "NOT_FORMED",
+    "external_publish_integration_or_transfer": "NONE",
+    "uat": "NOT_PERFORMED",
+    "deployment": "NOT_PERFORMED",
+    "capacity_and_sla": "NOT_ESTABLISHED",
+    "data_plane": "SIMULATION_DEVELOPMENT_ONLY"
+  },
+  "implementation_provider": "PENDING_EXACT_SHA",
+  "evidence_only_closure_provider": "PENDING_AFTER_IMPLEMENTATION_PROVIDER"
+}

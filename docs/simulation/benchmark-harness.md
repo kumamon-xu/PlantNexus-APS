@@ -6,10 +6,16 @@ spec_version: 0.3.0
 phase: P0-P5
 normative: true
 source_sections: [45, 51, 52, 53, 54, 55, 56, 58, 89]
-last_reviewed: 2026-08-31
+last_reviewed: 2026-09-01
 ---
 
 # Benchmark Harness 合同
+
+## TASK-P5-22 fresh qualification and Exit evidence
+
+Exit审计fresh执行capability qualification并由P5 Gate重新运行XS/S/M完整BenchmarkReport；runtime、memory、model-size、quality、formal Validator、Reference comparison与baseline checks均保留且PASS。审计不修改Profile、Generator、Baseline、threshold、expected或BenchmarkRunner，也不从empty selected portfolio推导高级能力。
+
+这些结果继续只是synthetic development observations；L/XL、真实历史分布、Production capacity与SLA未建立。
 
 ## TASK-P5-21 fresh XS/S/M aggregate observations
 

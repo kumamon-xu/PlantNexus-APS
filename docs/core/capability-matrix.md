@@ -6,10 +6,16 @@ spec_version: 0.3.0
 phase: cross-phase
 normative: true
 source_sections: [7, 8, 27, 43, 81, 82, 107]
-last_reviewed: 2026-08-31
+last_reviewed: 2026-09-01
 ---
 
 # 能力矩阵
+
+## TASK-P5-22 independent Exit audit
+
+Fresh Exit审计没有改变能力状态。P5 qualification仍为九项`DEFERRED`、selected=`[]`，P5-03～20均为证据化`cancelled`；C-012～C-018的七个公开precheck继续逐项返回`UNSUPPORTED_CAPABILITY`，Decomposition与Rolling Horizon没有owner invocation，Global仍是唯一已形成策略。
+
+本地15/15 READY只证明P5空portfolio与既有Simulation/development边界可独立复验；implementation/closure provider仍待闭环。它不形成advanced capability、P6+或Production能力，也不改变default-deny。
 
 ## TASK-P5-21 aggregate rejection evidence
 

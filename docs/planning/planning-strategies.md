@@ -6,10 +6,16 @@ spec_version: 0.3.0
 phase: P0-P5
 normative: true
 source_sections: [14, 75, 81, 82]
-last_reviewed: 2026-08-31
+last_reviewed: 2026-09-01
 ---
 
 # PlanningStrategy 规则
+
+## TASK-P5-22 Exit audit strategy boundary
+
+Exit审计fresh重放P5 qualification与portfolio Gate，确认selected strategy owner集合仍为空，Global/`global-lexicographic-replan-cp-sat.v1`仍是唯一已形成策略。Decomposition、Rolling Horizon和Hybrid均未进入执行图；空组合不会生成fallback、参数、registry或Feature Flag变更。
+
+本地READY不授权P6 strategy、Production选策、deployment或capacity/SLA；implementation与closure provider完成前TASK仍为`in_progress`。
 
 ## TASK-P5-21 Global-only aggregate replay
 

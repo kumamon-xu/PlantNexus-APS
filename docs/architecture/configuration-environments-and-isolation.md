@@ -6,10 +6,16 @@ spec_version: 0.3.0
 phase: cross-phase
 normative: true
 source_sections: [16, 38, 49, 62, 64, 95, 96]
-last_reviewed: 2026-08-31
+last_reviewed: 2026-09-01
 ---
 
 # 配置、环境与数据隔离
+
+## TASK-P5-22 Exit audit isolation boundary
+
+Audit只读取仓库、公开GitHub provider metadata/artifact下载副本及Development/Test/Benchmark下的fresh evidence；运行输出限定在ignored `build/**`。它不新增environment variable、Secret、service、port、database、network、container、dependency或lock，也不读取或记录Production credential。
+
+报告固定`data_plane=SIMULATION_DEVELOPMENT_ONLY`、P6未进入、Production identity/approval authority未形成、external/deployment/capacity/SLA未建立。Local或provider READY都不改变隔离级别。
 
 ## TASK-P5-21 Gate isolation boundary
 

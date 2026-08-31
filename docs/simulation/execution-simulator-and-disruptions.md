@@ -6,10 +6,16 @@ spec_version: 0.3.0
 phase: P0-P5
 normative: true
 source_sections: [47, 48, 49, 50, 79, 80]
-last_reviewed: 2026-08-31
+last_reviewed: 2026-09-01
 ---
 
 # Execution Simulator 与异常模型
+
+## TASK-P5-22 fresh Exit regression
+
+独立Exit审计再次fresh重放P4两轮连续场景，仍得到10个step、16个标准event、10次fresh Validator和10份complete ChangeReport。没有新增Scenario、event type、seed、分布、baseline advance或P5 owner语义；同一冻结P4边界在P5 Gate和Exit消费中一致。
+
+Simulator仍只允许Simulation/development。READY不产生真实event source、approval/publication authority、Production deployment、capacity或SLA。
 
 ## TASK-P5-21 aggregate regression
 

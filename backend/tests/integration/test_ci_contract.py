@@ -24,6 +24,10 @@ from app.application.p5_portfolio_gate_report import (
     DIFF_BASE as P5_GATE_DIFF_BASE,
     REPORT_VERSION as P5_GATE_REPORT_VERSION,
 )
+from app.application.p5_exit_gate_audit import (
+    DIFF_BASE as P5_EXIT_DIFF_BASE,
+    REPORT_VERSION as P5_EXIT_REPORT_VERSION,
+)
 from app.application.approval_decision_check import main as approval_decision_main
 from app.application.publication_check import main as publication_main
 from app.application.replan_application_check import (
@@ -401,15 +405,19 @@ def test_ci_profile_routing_is_mutually_exclusive_and_fail_closed() -> None:
     assert "p4-replanning-replay.XXXXXX" in full_text
     assert "git worktree add --detach" in full_text
     assert "p5_portfolio_gate_report.py" in full_text
+    assert "p5_exit_gate_audit.py" in full_text
     assert "test_p5_portfolio_gate_rejections.py" in full_text
+    assert "test_p5_exit_gate_rejections.py" in full_text
     assert "test_p5_portfolio_gate.py" in full_text
+    assert "test_p5_exit_gate.py" in full_text
     assert "ci-p4-replanning-api.json" in full_text
     assert "build/playwright/results.json" in full_text
     assert "P3 vertical slice Gate evidence" in full_text
     assert "P4 vertical slice Gate evidence" in full_text
     assert "app.application.p5_portfolio_gate_report" in full_text
+    assert "app.application.p5_exit_gate_audit" in full_text
     assert "Build package" in full_text
-    assert len(full["steps"]) == 68
+    assert len(full["steps"]) == 70
 
     assert 'test "${PLANTNEXUS_CLASSIFY_RESULT}" = "success"' in final_run
     assert 'test "${PLANTNEXUS_FULL_RESULT}" = "success"' in final_run
@@ -1366,6 +1374,46 @@ def test_ci_p5_empty_selected_portfolio_gate_is_required_and_machine_checkable()
     assert f'REPORT_VERSION = "{P5_GATE_REPORT_VERSION}"' in gate_source
     assert f'DIFF_BASE = "{P5_GATE_DIFF_BASE}"' in gate_source
     assert "P5-03～20" not in workflow
+
+
+def test_ci_p5_exit_gate_is_independent_required_and_machine_checkable() -> None:
+    workflow = (ROOT / ".github" / "workflows" / "ci.yml").read_text(
+        encoding="utf-8"
+    )
+    normalized = " ".join(workflow.split())
+    qualification = (
+        "name: P5 capability qualification fresh evidence run: >- uv run python "
+        "scripts/p5_capability_qualification.py --root . --manifest "
+        "fixtures/simulation/p5/qualification/evidence-manifest.v1.json --report "
+        "build/validation/ci-p5-capability-qualification.json"
+    )
+    expected = (
+        "name: P5 Exit Gate independent audit evidence run: >- uv run python -m "
+        "app.application.p5_exit_gate_audit --root . --provider-observation "
+        "docs/p5-exit-gate-audit-observations.v1.json --qualification-report "
+        "build/validation/ci-p5-capability-qualification.json --p5-gate-report "
+        "build/validation/ci-p5-portfolio-gate.json --p4-gate-report "
+        "build/validation/ci-p4-vertical-slice-gate.json --p4-exit-observation "
+        "docs/p4-exit-gate-audit-observations.v1.json --report "
+        "build/validation/ci-p5-exit-gate-audit.json"
+    )
+    assert qualification in normalized
+    assert expected in normalized
+    assert workflow.index("app.application.p5_portfolio_gate_report") < workflow.index(
+        "scripts/p5_capability_qualification.py"
+    )
+    assert workflow.index("scripts/p5_capability_qualification.py") < workflow.index(
+        "app.application.p5_exit_gate_audit"
+    )
+    assert workflow.index("app.application.p5_exit_gate_audit") < workflow.index(
+        "Build package"
+    )
+    assert "continue-on-error" not in workflow
+    source = (ROOT / "backend/app/application/p5_exit_gate_audit.py").read_text(
+        encoding="utf-8"
+    )
+    assert f'REPORT_VERSION = "{P5_EXIT_REPORT_VERSION}"' in source
+    assert f'DIFF_BASE = "{P5_EXIT_DIFF_BASE}"' in source
 
 
 def test_ci_planning_problem_contract_report_is_machine_checkable(

@@ -6,10 +6,18 @@ spec_version: 0.3.0
 phase: P5
 normative: false
 source_sections: [2, 6, 70]
-last_reviewed: 2026-08-31
+last_reviewed: 2026-09-01
 ---
 
 # PlantNexus APS 文档中心
+
+## TASK-P5-22 local independent Exit decision
+
+TASK-P5-22从P5-21 provider-verified closure `d0a83c58cb4a2d4afa76e8c8cff08441574e2e30`冻结PHASE_GATE。独立审计已核对P5 first-parent的11个提交/run、8 success/3 retained failure和22个未过期artifact；required `validate`均来自GitHub Actions app `15368`，下载ZIP/provider digest、exact SHA与machine语义一致。
+
+Fresh qualification、P5/P4/P3/P2 Gate、XS/S/M、Frontend、两轮P4 browser/Simulator与治理检查均通过。Exit manifest当前为15/15、`issues=[]`、`blocking_gaps=[]`，九项DEFERRED、selected=`[]`、18张owner卡`cancelled`、C-012～C-018 unsupported及Global-only边界均未漂移。序列化排序造成的首次本地P4 object-key拒绝已由Audit入口的严格key-set校验与仅对象顺序正规化纠正；值、array与raw hash未变。
+
+本地Exit=`READY`，implementation/closure exact provider仍待提交后完成，所以Task保持`in_progress`、P5保持`active`。该决定不切换P6，也不是Production/UAT、真实authority、external publish/integration、deployment或capacity/SLA证据。
 
 ## TASK-P5-21 provider-verified portfolio Gate
 

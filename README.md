@@ -1,5 +1,13 @@
 # PlantNexus APS
 
+## TASK-P5-22 — independent P5 Exit Gate Audit
+
+TASK-P5-22已获独立授权，并从provider-verified P5-21 closure `d0a83c58cb4a2d4afa76e8c8cff08441574e2e30`冻结PHASE_GATE Diff base。审计没有复用P5-21 PASS代替Exit判断：它独立核对P5 first-parent topology的11个提交/run、8个成功与3个保留失败、22个未过期artifact及GitHub Actions app `15368`；下载ZIP digest、exact SHA、Task/Diff base、checks/issues语义均无漂移。
+
+Fresh本地审计重放P5 capability qualification、empty-selected P5 Gate、P4 Gate与其前置P2/P3证据、XS/S/M Benchmark、Frontend和两轮P4 browser/Simulator场景。当前`p5-exit-gate-evidence-manifest.v1`为15/15 checks、`issues=[]`、`blocking_gaps=[]`，selected仍为`[]`，九项仍为`DEFERRED`，P5-03～20仍为`cancelled`，C-012～C-018继续`UNSUPPORTED_CAPABILITY`，Global仍为唯一已形成策略。首次本地Exit聚合因冻结P4报告的JSON object key在序列化后排序而被既有order-sensitive validator拒绝；Audit入口现只校验并恢复该对象的既定key顺序，不改变值、array或raw hash，随后fresh重放通过。
+
+本地结论为`READY`，但implementation与evidence-only closure的exact required `validate`及artifact provider证据仍待提交后闭环，因此TASK当前保持`in_progress`。P5 Milestone继续`active`；READY不自动执行P5→P6，也不形成Production/UAT、真实approval authority、external publish/integration、deployment或capacity/SLA。
+
 ## TASK-P5-21 — empty-selected portfolio integration Gate
 
 TASK-P5-21已获独立授权，不可变Diff base为`d7779c014351d41909322b967c5c8eca68713e8b`。P5-02的provider-verified topology仍为selected=`[]`、9项`DEFERRED`和18张`cancelled` owner卡；本Gate因此不调用P5-03～20，而是以空组合identity证明未选能力没有进入执行图。

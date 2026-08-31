@@ -17,7 +17,9 @@ TASK-P5-22从P5-21 provider-verified closure `d0a83c58cb4a2d4afa76e8c8cff0844157
 
 Fresh qualification、P5/P4/P3/P2 Gate、XS/S/M、Frontend、两轮P4 browser/Simulator与治理检查均通过。Exit manifest当前为15/15、`issues=[]`、`blocking_gaps=[]`，九项DEFERRED、selected=`[]`、18张owner卡`cancelled`、C-012～C-018 unsupported及Global-only边界均未漂移。序列化排序造成的首次本地P4 object-key拒绝已由Audit入口的严格key-set校验与仅对象顺序正规化纠正；值、array与raw hash未变。
 
-本地Exit=`READY`。首个implementation candidate `5d60dc90ddf22e75ec1783c0a7b92c016d452136` / run `33450894193`在冻结P4-13 replay因当前70-step CI contract未被隔离而fail closed；失败artifact已保留。Direct corrective只在临时worktree恢复P5-21 closure的68-step CI contract后运行未修改P4-13 evidence，不改变主工作树断言、P4 owner或Exit决定。Implementation/closure exact provider仍待完成，所以Task保持`in_progress`、P5保持`active`；不切换P6，也不是Production/UAT、真实authority、external publish/integration、deployment或capacity/SLA证据。
+本地Exit=`READY`。首个implementation candidate `5d60dc90ddf22e75ec1783c0a7b92c016d452136` / run `33450894193`在冻结P4-13 replay因当前70-step CI contract未被隔离而fail closed；失败artifacts `9779882690`,`9779713051`已下载保留。Direct corrective只在临时worktree恢复P5-21 closure的68-step CI contract后运行未修改P4-13 evidence，不改变主工作树断言、P4 owner或Exit决定。
+
+Corrective implementation `83c51d765045da030b8cff871191be37bb9e899a` / run `33451784906`的FULL `99683143439`与required `99685627036`已exact成功，required app=`15368`。Artifacts `9780286365`,`9780011491`的Provider/download digests一致；60 JSON、216个commit字段、15 paths、4 Rules、15/15 checks与0 issues/gaps/scope均精确。当前提交仅为两路径evidence-only closure，closure provider完成前Task仍`in_progress`、P5仍`active`；不切换P6，也不是Production/UAT、真实authority、external publish/integration、deployment或capacity/SLA证据。
 
 ## TASK-P5-21 provider-verified portfolio Gate
 

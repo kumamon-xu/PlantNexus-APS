@@ -1,5 +1,13 @@
 # PlantNexus APS
 
+## TASK-P5-02 — portfolio resolution and phase-plan amendment
+
+用户已另行授权TASK-P5-02。该Task只消费TASK-P5-01 exact report，不重新选择portfolio：九项决定仍全部为`DEFERRED`、selected=`[]`。P5-03～20的九条合同/implementation链因此原子终结为`cancelled`；没有selected能力Task被保留或启动。P5-21的动态依赖已解析为唯一直接依赖`TASK-P5-02`，P5-21与P5-22均继续`planned/NOT_STARTED`并仍需各自授权。
+
+机器可读的[`p5-portfolio-amendment-manifest.v1`](docs/core/p5-portfolio-amendment-manifest.md)绑定不可变Diff base `01b8918db62cc9f5c4421d0b90d93151ddc552f1`、P5-01 implementation/closure、九个decision fingerprint、十八张terminal Task和resolved DAG。Manifest为10/10 checks、`issues=[]`、`blocking_issues=[]`；本次tracked差异仅为公开治理文档与manifest，exact DOCS_ONLY Provider将在implementation提交后核验。
+
+本计划写回不改变C-012～C-018的`UNSUPPORTED_CAPABILITY`、Global唯一已形成策略或P4 ExecutionEvent/ReplanRequest/freeze/OBJ-002/ChangeReport/Execution Simulator边界。OPEN-001～015、SIM-ASSUMPTION-001～020和RISK-001～017保持原状态；P6+、Production/UAT、真实approval authority、external publish/integration、deployment及capacity/SLA均未形成。
+
 ## TASK-P5-01 — capability evidence qualification
 
 P5-01以不可变Diff base `4ccb2ed99ffe73abeb0462efff4a5342cd7c5522`建立versioned qualification profile、raw evidence manifest和九份独立decision record。真实需求材料本次未提供；selection采用五项事实`ALL_TRUE`并交叉校验证据源的qualified/replayable状态，缺失或不满足即fail closed为`DEFERRED`，unknown version、hash tamper、source混用或声明/计算不一致则Task级失败。当前Secondary Resource、Sequence-dependent Setup、Material Competition、Batch、Split/Merge、Buffer、Preemption、Decomposition、Rolling Horizon均为`DEFERRED`，selected portfolio为空，TASK-P5-02未获授权且不会自动启动。

@@ -11,6 +11,14 @@ last_reviewed: 2026-08-31
 
 # PlantNexus APS 文档中心
 
+## TASK-P5-02 portfolio amendment boundary
+
+TASK-P5-02已获用户独立授权，并以P5-01 closure `01b8918db62cc9f5c4421d0b90d93151ddc552f1`为不可变Diff base。它不重做qualification：九项仍全部`DEFERRED`、selected=`[]`，因此TASK-P5-03～20的十八张owner卡全部进入证据化`cancelled` terminal状态，没有能力实现被启动。
+
+[`p5-portfolio-amendment-manifest.v1`](core/p5-portfolio-amendment-manifest.md)逐项绑定P5-01 decision fingerprints、owner映射和terminal状态，并把P5-21 direct dependencies消除占位后精确解析为仅`TASK-P5-02`。Manifest当前10/10 checks、0 issues/blocking issues；P5-21/P5-22继续`planned/NOT_STARTED`且不得自动启动。Tracked implementation只修改公开治理文档与该manifest，提交后按DOCS_ONLY exact Provider闭环。
+
+该amendment不把DEFERRED改写为SUPPORTED，不改变Global/P4冻结边界，也不关闭OPEN-001～015、SIM-ASSUMPTION-001～020或RISK-001～017。P6+、Production/UAT、真实authority、external publish/integration、deployment、capacity/SLA继续排除。
+
 ## TASK-P5-01 qualification decision boundary
 
 TASK-P5-01从`4ccb2ed99ffe73abeb0462efff4a5342cd7c5522`冻结证据范围。由于没有获得经授权的真实需求材料，九个P5候选分别以versioned Simulation/P2 XS/S/M作边界重放，但这些资产不能自行证明业务必要性；五事实`ALL_TRUE`规则因此把九项全部判为`DEFERRED`，selected=`[]`、P5-02 authorization=`false`。报告本地11/11、12项focused tests通过、`issues=[]`/`blocking_issues=[]`，未新增数值SIM假设。

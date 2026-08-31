@@ -15,7 +15,9 @@ last_reviewed: 2026-08-31
 
 TASK-P4-12以`f4a54d3bb065b5cc8b51c450ffdc435bcc77d384`为不可变Diff base，在既有FastAPI composition内additive新增8 paths/9 operations的`dynamic-replanning-http.v1`。Transport只验证已发布P4 carrier、fingerprinted query/action、header/body correlation/idempotency绑定、server-derived capability/planning-scope及稳定HTTP/error envelope，然后委托注入的P4 application facade。
 
-`p4-replanning-api-report.v1`当前为8/8、五个Impact Rules、`issues=[]`；新增FULL CI step与unit/contract/integration/security证据。P3的18 operations改为精确子集回归，operation ID与路由语义不变。ReplanRequest不新增state，cancel/retry只委托PlanningRun attempt CAS；Production在provider/application lookup前default-deny。本地14 focused、821 Backend、67 Frontend、三轮12/12 Chromium、全部machine/XS/P2/P3 Gate/SCA/license/build/Compose及35/5/19/0治理已PASS，双exact provider待本Task后续闭环；TASK-P4-13未启动。
+`p4-replanning-api-report.v1`为8/8、五个Impact Rules、`issues=[]`；新增FULL CI step与unit/contract/integration/security证据。P3的18 operations改为精确子集回归，operation ID与路由语义不变。ReplanRequest不新增state，cancel/retry只委托PlanningRun attempt CAS；Production在provider/application lookup前default-deny。本地14 focused、821 Backend、67 Frontend、三轮12/12 Chromium、全部machine/XS/P2/P3 Gate/SCA/license/build/Compose及35/5/19/0治理均PASS。
+
+Implementation `7cce9744783acc7cf80e0cecafb6f9e144fe085f`的run/FULL/required=`33347790649`/`99355189991`/`99356475314`已exact成功；machine/profile artifacts `9742718240`,`9742570373`未过期并已下载，ZIP SHA-256与provider digest逐字一致为`sha256:2ca6df933fee54a348b370b3fa2179dbaef0d3e48d477910f444455da27c0449`、`sha256:baad74c370a231d6933fa4d49cbd19945994d82ab39b3adb824093f9758dc229`。Artifact精确绑定Task、SHA、Diff base、35-path FULL profile、五个Rules、8 checks、0 issues与P2/P3 Gate；本evidence-only closure据此记录完成结论，但其自身仍须post-push exact provider复验，TASK-P4-13未启动。
 
 ## TASK-P4-11 local ChangeReport read/export boundary
 

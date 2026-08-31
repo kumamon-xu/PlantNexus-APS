@@ -401,6 +401,25 @@ jobs:
           --human-control-report ../build/validation/ci-p3-frontend.json
           --report ../build/validation/ci-p3-frontend-gate.json
 
+      - name: P4 Gate Chromium replay 1
+        working-directory: frontend
+        env:
+          PLANTNEXUS_P4_GATE_REPLAY_INDEX: "1"
+        run: npm exec -- playwright test --config playwright.p4-gate.config.ts --workers=1
+
+      - name: P4 Gate Chromium replay 2
+        working-directory: frontend
+        env:
+          PLANTNEXUS_P4_GATE_REPLAY_INDEX: "2"
+        run: npm exec -- playwright test --config playwright.p4-gate.config.ts --workers=1
+
+      - name: P4 Gate Frontend semantic evidence
+        working-directory: frontend
+        run: >-
+          node scripts/p4-gate-evidence.mjs
+          --replanning-report ../build/validation/ci-p4-replanning-frontend.json
+          --report ../build/validation/ci-p4-frontend-gate.json
+
       - name: Engineering contract
         run: >-
           uv run python -m app.infrastructure.contract_check
@@ -438,6 +457,16 @@ jobs:
           --frontend-report build/validation/ci-p3-frontend-gate.json
           --p2-report build/validation/ci-p2-vertical-slice-gate.json
           --report build/validation/ci-p3-vertical-slice-gate.json
+
+      - name: P4 vertical slice Gate evidence
+        run: >-
+          uv run python -m app.application.p4_gate_report
+          --root .
+          --repeat 2
+          --frontend-report build/validation/ci-p4-frontend-gate.json
+          --p2-report build/validation/ci-p2-vertical-slice-gate.json
+          --p3-report build/validation/ci-p3-vertical-slice-gate.json
+          --report build/validation/ci-p4-vertical-slice-gate.json
 
       - name: Build package
         run: uv build

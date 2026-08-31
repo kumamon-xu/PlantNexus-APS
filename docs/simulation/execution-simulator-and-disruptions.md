@@ -6,10 +6,16 @@ spec_version: 0.3.0
 phase: P0-P4
 normative: true
 source_sections: [47, 48, 49, 50, 79, 80]
-last_reviewed: 2026-08-28
+last_reviewed: 2026-08-31
 ---
 
 # Execution Simulator 与异常模型
+
+## TASK-P4-14 two-run aggregate evidence
+
+P4 Gate不修改P4-09 Simulator或P4-10 scenario owner，而是fresh调用其共同入口两次。每轮完整连续五类disruption并保留5个step、8个标准event、5次fresh Validator PASS、5份complete ChangeReport及所有raw checkpoints/subreports；两轮合计10/16/10/10。Same-seed业务投影逐stage和combined均只有一个fingerprint，runtime timing/memory及派生artifact identity仍在raw evidence中而不参与相等判定。
+
+Gate同时复验三类P4-10 tamper/coverage/plane negatives、P5 explicit unsupported和P4-12 Production default deny。测试基线推进仍是`SIMULATION_NON_PRODUCTION`且authority为NONE；报告不能解释为自动approval/publication、真实event source、Production distribution、capacity或SLA。
 
 ## TASK-P4-10 continuous orchestration
 

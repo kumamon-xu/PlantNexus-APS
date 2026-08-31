@@ -1,5 +1,11 @@
 # PlantNexus APS
 
+## TASK-P4-14 P4 Vertical Slice Gate
+
+TASK-P4-14以不可变Diff base `ea05c3d9e94af91ae4525e5fbf1087a4a4198a15`形成`p4-vertical-slice-report.v1`。PHASE_GATE对P4-02～12的11个公开Backend owner边界执行两次fresh replay，完整保留22份stage运行、176个subordinate checks及raw reports；五类连续disruption合计10步、16个标准event、10次fresh Validator PASS和10份complete ChangeReport。另有两轮隔离Chromium各5/5，`p4-playwright-semantic-projection.v1`指纹一致，并严格消费冻结的TASK-P4-13 frontend report。
+
+本地聚合结果为14/14、`blocking_gaps=[]`、P2/P3 Gate regression PASS、四类exact fail-closed rejection PASS。Runtime timing/memory与派生artifact identity只从版本化业务语义投影中排除，所有原始证据继续保留；已序列化P3 Gate的JSON object key顺序仅为复验入口正规化，不改变任何值、array顺序或raw report hash。本Gate不修改P4-01～13业务、Schema/migration/dependency/lock、fixture expected、ADR或状态机；它不是P4 Exit Audit，TASK-P4-15仍`NOT_STARTED`，P5、Production readiness/UAT/真实authority/external integration/deployment/capacity/SLA均未形成。Implementation exact provider及后续evidence-only closure仍须完成后才能把TASK-P4-14标为`done`。
+
 ## TASK-P4-13 Replanning Workspace UI
 
 TASK-P4-13从不可变Diff base `be2389594f3e224de3f5a73f4b8b62ffcffb5b7b`形成一个additive、Simulation/development-only的`/planning/replanning`工作台。浏览器以strict typed consumer读取P4-12的event timeline、ReplanRequest/attempt/result和ChangeReport投影，展示freeze half-open边界、before/after priority-weighted tardiness、OBJ-002 Stability及逐operation classification；query/response/resource/correlation/fingerprint任一不一致均fail closed。既有18条P3 route和12个P3 Chromium场景作为冻结子集继续复验。

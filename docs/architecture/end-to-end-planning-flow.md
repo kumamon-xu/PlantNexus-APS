@@ -11,6 +11,12 @@ last_reviewed: 2026-08-31
 
 # 端到端计划链路
 
+## TASK-P4-14 aggregate Gate edge
+
+P4 Gate现在通过一个只读编排边界复验完整公开链：`machine contracts/persistence → ExecutionEvent facts/Snapshot → freeze/effective locks → Stability/ChangeReport → six-round Solver/fresh Validator → atomic DRAFT application → deterministic Simulator/five-disruption replay → read/export → HTTP → browser`。每轮直接调用既有P4-02～12 owner machine入口，不复制业务逻辑；两轮的完整raw subreports全部保留，版本化semantic projection只剔除runtime timing/memory和派生artifact identity噪声。
+
+Gate还消费冻结P2/P3 reports及两轮P4专用Chromium evidence，并对tamper/plane、Production authority、P5 capability和partial-result state advance执行exact fail-closed检查。它只证明Simulation/development纵向切片连续一致，不推进DRAFT、P4 phase或Production状态；P4-15 Exit Audit仍为独立后继。
+
 ## TASK-P4-13 browser continuation
 
 当前可见链路为`explicit UI authority → canonical P4 read queries → server projections → strict fingerprint/lineage parser → bilingual raw-evidence panels`。动作分支为`server allowed_actions → confirmation/reason → expected-attempt-state action → authoritative acknowledgement`；不确定结果分支为`retain exact request in memory → refresh result/request authority → unchanged-only same-key retry`。

@@ -175,6 +175,12 @@ def test_application_boundary_has_no_solver_validator_persistence_or_api_shortcu
             "app.api.planning_workspace_check",
             "app.infrastructure.workspace_persistence_check",
         },
+        "p4_gate_report.py": {
+            "app.api.replanning_check",
+            "app.exporters.change_report_output_check",
+            "app.infrastructure.replan_persistence_check",
+            "app.planning.backends.cp_sat.replan_solver_check",
+        },
         "replan_application.py": {
             "app.infrastructure.replan_persistence",
             "app.infrastructure.workspace_persistence",

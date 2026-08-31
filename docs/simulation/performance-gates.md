@@ -6,10 +6,16 @@ spec_version: 0.3.0
 phase: P2-P7
 normative: true
 source_sections: [57, 58, 76, 80, 84, 85, 89, 105, 106]
-last_reviewed: 2026-08-21
+last_reviewed: 2026-08-31
 ---
 
 # 性能与现实校准门
+
+## TASK-P4-14 Gate B aggregate evidence boundary
+
+P4-14本地Gate B aggregate现以两轮完整P4 owner replay证明fact/lock preservation、fresh Validator PASS、complete ChangeReport和tardiness/Stability业务语义一致；所有per-stage runtime/memory原值均保存在raw reports。该结果复用且冻结P2 XS/S/M baseline，不新增profile、threshold、fixture expected、L/XL或Nightly，并不把本机/CI runner观测外推为Production capacity/SLA。
+
+这仍是P4 Vertical Slice Gate而非P4-15 Exit Audit。只有implementation/closure provider闭环后TASK-P4-14才能完成；即使完成也不能关闭OPEN-003/004/005/006/011/012或形成Production readiness。
 
 ## TASK-P4-10 correctness observation boundary
 

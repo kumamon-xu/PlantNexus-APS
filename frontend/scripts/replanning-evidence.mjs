@@ -240,6 +240,12 @@ checks.push(
 );
 
 const approvedCiContractTest = "backend/tests/integration/test_ci_contract.py";
+const approvedP4GateEvidence = new Set([
+  "backend/app/application/p4_gate_report.py",
+  "backend/tests/contract/test_p4_gate_rejections.py",
+  "backend/tests/integration/test_p1_common_ingress.py",
+  "backend/tests/integration/test_p4_vertical_slice.py",
+]);
 const frozenChanges = changedNames([
   "backend",
   "schemas",
@@ -247,12 +253,13 @@ const frozenChanges = changedNames([
   "uv.lock",
   "frontend/package.json",
   "frontend/package-lock.json",
-]).filter((path) => path !== approvedCiContractTest);
+]).filter((path) => path !== approvedCiContractTest && !approvedP4GateEvidence.has(path));
 fail(frozenChanges.length === 0, `forbidden backend/schema/dependency paths changed: ${frozenChanges.join(", ")}`, issues);
 const ciContractTest = readFileSync(resolve("..", approvedCiContractTest), "utf8");
 fail(
   ciContractTest.includes("TASK-P4-13 Dynamic replanning frontend machine evidence") &&
-    ciContractTest.includes('len(full["steps"]) == 64'),
+    ciContractTest.includes("P4 vertical slice Gate evidence") &&
+    ciContractTest.includes('len(full["steps"]) == 68'),
   "bounded FULL-step CI governance regression is absent",
   issues,
 );
@@ -264,7 +271,7 @@ fail(lock.lockfileVersion === 3, "npm lockfile version drifted", issues);
 checks.push(
   completedCheck(
     "ZERO-BACKEND-SCHEMA-DEPENDENCY-DRIFT",
-    "backend business/schema/migration/dependency and Frontend package/lock frozen; one exact 64-step CI test updated",
+    "backend business/schema/migration/dependency and Frontend package/lock frozen; four additive P4 Gate evidence/test files plus one exact 68-step CI test approved",
   ),
 );
 

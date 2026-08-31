@@ -11,6 +11,12 @@ last_reviewed: 2026-08-31
 
 # Frontend 文档形成计划
 
+## TASK-P4-14 isolated browser Gate
+
+`playwright.p4-gate.config.ts`只选择`dynamic-replanning.spec.ts`和独立项目`chromium-p4-vertical-slice`，两轮各执行5个positive/error/tamper/network-recovery场景，workers固定1、retry仍为0。每轮分别保留JSON/JUnit/HTML及failure-only trace/video/screenshot；`p4-gate-evidence.mjs`严格复验TASK-P4-13 frozen report、两轮5/5 expected PASS和stable `p4-playwright-semantic-projection.v1` fingerprint。
+
+本Gate不增加route、component、client、translation、dependency或lock，也不修改既有P3 12-spec Gate。Browser仍是mock transport consumer，不计算fact/freeze/KPI/Stability/Validator/ChangeReport，不控制Simulator或形成P4 Exit/P5/Production authority。
+
 ## TASK-P4-13 bounded P4 Frontend surface
 
 Planning Workspace现additive提供`/planning/replanning`，P3的18条route仍由独立`p3WorkspaceRoutes`冻结。六文件P4 feature实现strict query/action builder、response parser/client、authority/recovery hook及双语accessible page；`package.json`、lock与既有P3 API client均未修改。

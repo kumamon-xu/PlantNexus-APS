@@ -11,6 +11,12 @@ last_reviewed: 2026-08-31
 
 # 动态重排设计合同
 
+## TASK-P4-14 aggregate validation boundary
+
+P4 Vertical Slice Gate现以两轮fresh replay聚合P4-02～12全部公开owner报告，并连续复验Urgent Order、Machine Failure/Recovery、Material Delay、Processing Delay和Early Completion。每一步都保留前序baseline、标准ExecutionEvent、new Snapshot/Problem、ReplanRequest/attempt、fresh Validator、new DRAFT与complete ChangeReport；facts/HARD/freeze locks、before/after tardiness及四分量Stability必须跨两轮形成相同业务语义投影。
+
+四类负向边界固定为tamper/coverage/plane fail closed、Production authority default deny、P5 unsupported及partial result不能推进state。Gate只聚合冻结owner，不修合同、公式、state pair或expected；PASS也不等于Exit READY，TASK-P4-15必须独立审计且不会自动启动。
+
 ## TASK-P4-13 reviewable workspace consumer
 
 动态重排链现在可通过一个Simulation/development-only页面复核，但所有事实仍由server owner提供。UI严格消费event timeline、Request/attempt/result与ChangeReport read projection，显示freeze、tardiness和Stability而不重新计算；只有完整`COMPLETED → new DRAFT + ChangeReport`证据才呈现result。任何mixed lineage、fingerprint drift、unknown enum或缺失字段都整体fail closed。

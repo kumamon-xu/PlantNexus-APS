@@ -11,6 +11,12 @@ last_reviewed: 2026-08-31
 
 # PlantNexus APS 文档中心
 
+## TASK-P4-14 local P4 Vertical Slice Gate
+
+TASK-P4-14从`ea05c3d9e94af91ae4525e5fbf1087a4a4198a15`冻结全部P4-01～13 provider inputs，并新增只聚合、不修业务的`p4-vertical-slice-report.v1`。两轮Backend replay逐次调用P4-02～12的11个owner machine入口，保留22份raw subreport与176个subordinate checks；连续五类disruption合计10个step、16个标准event、10次fresh Validator及10份complete ChangeReport。两轮专用Chromium各5/5并保留JSON/JUnit/HTML与failure media策略，P2/P3 Gate也作为exact SHA回归输入。
+
+当前本地Gate为14/14、`blocking_gaps=[]`、单一Backend与browser semantic fingerprint、四项fail-closed rejection PASS。聚合器只对已序列化P3 JSON的object key顺序正规化，raw bytes hash及所有业务值完整保存。本Task不变更Schema/migration/dependency/lock、fixture expected、ADR/state pair或前序owner实现，也不形成Exit READY；TASK-P4-15/P5/Production/external authority/capacity/SLA继续明确排除。Implementation provider和evidence-only closure完成前TASK保持`in_progress`。
+
 ## TASK-P4-13 local Replanning Workspace boundary
 
 TASK-P4-13以`be2389594f3e224de3f5a73f4b8b62ffcffb5b7b`为不可变Diff base，只新增一个隔离的P4 route及六文件typed consumer。页面消费P4-12四类versioned projection，显示server-owned event顺序、Request/attempt/result、freeze/effective locks、tardiness/Stability和ChangeReport；英文machine values、raw UTC、ID、fingerprint和JSON证据始终可见，`zh-CN`/`en-US`只是展示层。

@@ -11,6 +11,12 @@ last_reviewed: 2026-08-31
 
 # 配置、环境与数据隔离
 
+## TASK-P4-14 Gate isolation boundary
+
+Gate在现有Development/Test/Benchmark + `SIMULATION`边界内fresh调用owner checks与Chromium mock transport，不新增environment variable、Secret、service、port、database、network、container、dependency或lock。两轮Backend与browser evidence写入`build/**`和required artifact；raw token、credential或Production connection均不读取、不记录。
+
+报告明确保持`external_publish_or_transfer=NONE`、Production identity/authority `NOT_FORMED`、capacity/SLA `NOT_ESTABLISHED`及P5 `UNSUPPORTED`。P2/P3序列化报告只做JSON object key-order正规化以满足既有in-memory validator，所有值、list顺序和raw SHA-256保持不变；这不是跨plane转换或新的authority。
+
 ## TASK-P4-13 browser isolation boundary
 
 P4工作台沿用既有runtime配置，只在`SIMULATION`与DEVELOPMENT/TEST/BENCHMARK中构造query/action；Production在发出read或mutation前default-deny。Bearer只由当前内存注入，请求使用`credentials: omit`，raw token与Idempotency-Key不写入local/session storage、cookie、URL、报告或UI；unknown outcome的exact action也只保留在当前hook内存，刷新页面即丢弃。

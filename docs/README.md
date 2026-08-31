@@ -11,11 +11,11 @@ last_reviewed: 2026-08-31
 
 # PlantNexus APS 文档中心
 
-## TASK-P5-21 local portfolio Gate
+## TASK-P5-21 provider-verified portfolio Gate
 
 P5-21从P5-02 closure `d7779c014351d41909322b967c5c8eca68713e8b`冻结PHASE_GATE。公开P5-02 manifest仍精确是空selected、9项DEFERRED、18张cancelled owner和唯一直接依赖TASK-P5-02；本Gate不执行任何已取消owner。
 
-`p5-portfolio-gate-report.v1`本地为12/12 PASS、`issues=[]`、`blocking_gaps=[]`，完整保留empty selected-owner manifest、C-012～C-018七项exact rejection、Global-only、formal Validator/mutation、XS/S/M和独立P4两轮重放。两轮P4合计22 stages、10 browser specs、10次fresh Validator和10份complete ChangeReport，Backend corrective全量860/860 PASS。首次显式`uncommitted` environment误配置失败已保留，首次全量发现的application跨owner import也已改由owner machine contracts纠正；没有修改既有断言或P4业务语义。Implementation candidate `e0dee8544a27adcae7ca98fabe2665452bf38d4d`的run `33402484533`进一步暴露新test fixture写死`uncommitted`与CI exact SHA不一致；第二个candidate `d00386f42fbd366afa94dae4cc93096c0242ce0e`的run `33403931397`通过Backend后，被P4-13历史累计scope对三个合法P5 Gate路径的误归属继续fail closed。Corrective只在临时detached worktree中移除这三个精确P5路径后运行未修改的P4-13 script，并复制本次fresh browser/API/build evidence，不改变P4检查或业务语义。Exact Provider仍待corrective提交，P5-22继续`planned/NOT_STARTED`，该Gate不是Exit或Production evidence。
+`p5-portfolio-gate-report.v1`本地与corrective Provider均为12/12 PASS、`issues=[]`、`blocking_gaps=[]`，完整保留empty selected-owner manifest、C-012～C-018七项exact rejection、Global-only、formal Validator/mutation、XS/S/M和独立P4两轮重放。两轮P4合计22 stages、10 browser specs、10次fresh Validator和10份complete ChangeReport，Backend全量860/860 PASS。失败candidate `e0dee8544...`与`d00386f4...`的run/artifact均保留；corrective不改变P4检查或业务语义。Implementation `c8ffd042738ffe79c350262aa7195daa9a7bf083`的run `33406166742`、FULL `99534217662`、required `99538066470`和artifacts `9763658843`/`9763213551`均exact成功；ZIP/Provider digests为`sha256:ed29d5aa2891d6a442a91360391219e6c265f2a0fe6d0b5e4210bd4c5ae316ed`、`sha256:1375f3fbeb739b53dee819da977e21f875c8bdc0ca910da86f43b84cd3cd098c`，52份validation JSON全部PASS、无commit drift。Evidence-only closure exact provider前TASK仍`in_progress`；P5-22继续`planned/NOT_STARTED`，该Gate不是Exit或Production evidence。
 
 ## TASK-P5-02 portfolio amendment boundary
 

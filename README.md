@@ -1,5 +1,15 @@
 # PlantNexus APS
 
+## TASK-P5-00 — P4→P5 transition and complete P5 plan
+
+用户已明确批准P4→P5。最小承接检查只确认P4 evidence-only closure `892c46d660a6bf3cde8ed473199f38746d041e47`仍同时是当前`main`、`origin/main`与remote `main`，ahead/behind=`0/0`、working tree clean、P4无active Task、Exit=`READY`且`blocking_gaps=[]`、无未关闭blocking项，required status check仍为GitHub Actions app `15368`提供的`validate`。没有重新运行P4 Exit Audit、下载/解析P4 artifact、重建evidence或修改P4 Task。
+
+P4 Milestone现关闭为`completed`，P5 Milestone激活为`active`。TASK-P5-00只建立23张Task卡与治理：P5-01逐项评价Secondary Resources、Sequence-dependent Setup、Material Competition、Batch、Split/Merge、Buffer、Preemption、Decomposition和Rolling Horizon；P5-02把selected链保留、deferred链以证据化`cancelled`终结；每个selected能力再独立完成合同包和Solver/Strategy+独立Validator vertical slice；P5-21为selected portfolio Gate，P5-22为最后的独立Exit Audit。TASK-P5-01～22均未启动。
+
+现有C-012～C-018及Decomposition/Rolling仍未形成支持能力。每条selected链必须另获授权、冻结新的40字符Diff base，并独立提交ADR、additive Schema、Capability Contract、正反Fixture、Benchmark、default-off Feature Flag和双exact provider evidence。ExecutionEvent、ReplanRequest、freeze window、OBJ-002 Stability、ChangeReport与Execution Simulator保持P4冻结边界。Multi-Factory、alternative routing扩展、tools/fixtures专用语义、Hybrid、P6+及Production/UAT/真实authority/external publish/deployment/capacity/SLA明确排除。
+
+本次tracked差异只包含公开Markdown，按既有fail-closed规则自然分类为DOCS_ONLY；implementation exact provider及后续tracked evidence-only closure完成前TASK-P5-00保持`in_progress`，且不会自动启动TASK-P5-01。
+
 ## TASK-P4-15 independent P4 Exit Gate Audit
 
 TASK-P4-15以P4-14 evidence-only closure `60ac4c17c6de514c036be7bac63e66da589bfb4c`为不可变Diff base，独立复核P4 first-parent拓扑、required `validate`、GitHub Actions app `15368`及全部provider artifact。审计覆盖41个提交、42个push run（37 success、4 failure、1 cancelled）和67个未过期artifact；下载后的ZIP SHA-256全部与provider digest一致，1,134份成功链JSON、981份machine report和80份browser report均无SHA/语义/issue/gap漂移。四个历史失败与一个取消run完整保留，并分别由后续direct corrective commit闭环。

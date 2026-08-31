@@ -11,6 +11,12 @@ last_reviewed: 2026-08-31
 
 # 能力矩阵
 
+## P5 activation status
+
+P5 Milestone现已激活，但激活与规划不改变任何能力状态。SECONDARY_CAPACITY、SEQUENCE_DEPENDENT_SETUP、MATERIAL_COMPETITION、BATCH_PROCESSING、SPLIT_MERGE、BUFFER_CAPACITY和PREEMPTIVE_OPERATION继续为`UNSUPPORTED`，DecomposedStrategy与RollingHorizonStrategy也尚未形成。调用方必须继续得到既有fail-closed rejection，不能因存在P5 Task卡而启用或近似能力。
+
+TASK-P5-01只逐项给出必要性证据；TASK-P5-02只修订selected/deferred计划。只有对应合同包与vertical slice均取得双exact provider、feature flag保持default-off且能力registry/合同由该Task明确同步后，单项支持状态才可能改变。所有selected实现还必须保持P4 ExecutionEvent/Replan/freeze/Stability/ChangeReport/Simulator边界。Multi-Factory、alternative routing扩展、tools/fixtures专用语义、Hybrid和P6+不在本P5计划内。
+
 ## TASK-P4-12 local API capability status
 
 ExecutionEvent append/query、ReplanRequest create/query/attempt-control/result与ChangeReport read现有`LOCAL_IMPLEMENTED_PROVIDER_PENDING`的HTTP/OpenAPI边界；这表示transport已能strict验证并委托既有P4 owner，不表示新的domain或Production capability。ReplanRequest仍无state，Simulator control、external publish、P5 candidates及Production identity/authority继续`NOT_FORMED/UNSUPPORTED`。

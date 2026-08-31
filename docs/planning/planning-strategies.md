@@ -6,10 +6,16 @@ spec_version: 0.3.0
 phase: P0-P5
 normative: true
 source_sections: [14, 75, 81, 82]
-last_reviewed: 2026-08-21
+last_reviewed: 2026-08-31
 ---
 
 # PlanningStrategy 规则
+
+## P5 evidence-gated strategy allocation
+
+P5现为active，但Global/`global-lexicographic-replan-cp-sat.v1`仍是唯一已形成策略。TASK-P5-01只评价Decomposition与Rolling Horizon必要性，TASK-P5-02只保留selected链；不存在因phase激活自动选择新strategy的路径。
+
+Decomposition仅可由TASK-P5-17/18在§82 scaling/memory/model-explosion trigger成立后形成，且必须提供Global comparison Benchmark、deterministic partition/subproblem provenance、complete-or-discard merge、公式独立merge Validator、quality impact report和default-off flag。Rolling Horizon仅可由TASK-P5-19/20形成，必须冻结window/step/overlap/handoff、完整schedule输出、whole-horizon Validator、Global fallback和P4 freeze/Stability/ChangeReport回归。Hybrid不在已批准P5 Milestone中，不得由两者组合推导。
 
 ## TASK-P4-07 implemented strategy
 
@@ -29,7 +35,7 @@ GlobalCpSatStrategy
 
 一个 PlanningRun 对 PlanningSnapshot 中全部 V1 OperationInstance 统一建模，覆盖跨车间 precedence、候选资源、日历、release/material gates、execution facts 和 locks。
 
-未来可选 `DecomposedStrategy`、`RollingHorizonStrategy`、`HybridStrategy`，但当前不得实现。
+未来可能提案`DecomposedStrategy`、`RollingHorizonStrategy`；P5只允许上述证据门控Task。`HybridStrategy`不在已批准P5范围，当前不得规划或实现。
 
 ## Decomposition 进入门
 

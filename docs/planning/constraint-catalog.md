@@ -3,13 +3,19 @@ doc_id: DOC-PLAN-003
 title: V1 Constraint Catalog
 status: baseline
 spec_version: 0.3.0
-phase: P0-P2
+phase: P0-P5
 normative: true
 source_sections: [21, 22, 25, 26, 27, 30, 31]
-last_reviewed: 2026-08-21
+last_reviewed: 2026-08-31
 ---
 
 # V1 Constraint Catalog
+
+## P5 evidence-gated allocation
+
+P5激活没有修改C-001～C-018规则、YAML或Validator。C-012～C-018继续返回`UNSUPPORTED_CAPABILITY`；只有P5-01证据选择、P5-02计划保留、独立用户授权以及对应合同/实现双卡全部闭环后，能力owner Task才可修改机器规则和状态。
+
+计划映射为C-012→TASK-P5-03/04、C-013→05/06、C-014→07/08、C-015→09/10、C-016→11/12、C-017→13/14、C-018→15/16。每条链必须包含additive Schema/Capability Contract、公式独立Validator、正反Fixture、Benchmark、default-off flag及适用P4 regression；未selected链由TASK-P5-02证据化取消，不得近似实现。P5 Decomposition/Rolling属于strategy Task，不分配新C-ID；Hybrid及Milestone外能力排除。
 
 ## TASK-P4-07 global model reuse
 

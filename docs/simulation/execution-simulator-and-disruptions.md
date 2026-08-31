@@ -11,6 +11,12 @@ last_reviewed: 2026-08-31
 
 # Execution Simulator 与异常模型
 
+## TASK-P4-15 independent replay audit
+
+Exit Audit fresh重放P4-09 core、P4-10连续scenario及P4 Gate两轮：Urgent Order、Machine Failure/Recovery、Material Delay/Ready、Processing Delay和Early Completion共10个step、16个标准event，每步都消费前一步明确baseline并产生独立Request/Run、fresh Validator PASS、new DRAFT和complete ChangeReport。Provider artifacts、same-seed projection、checkpoint/restart、tamper/coverage/plane negative及P5/Production rejection全部一致，未发现blocking gap。
+
+所有事件时间、seed、freeze和扰动量仍是versioned SIM_ASSUMPTION；baseline advance仍为`SIMULATION_NON_PRODUCTION`且authority NONE。READY不表示真实分布、MES source、自动approval/publish、Production deployment、capacity或SLA。
+
 ## TASK-P4-14 two-run aggregate evidence
 
 P4 Gate不修改P4-09 Simulator或P4-10 scenario owner，而是fresh调用其共同入口两次。每轮完整连续五类disruption并保留5个step、8个标准event、5次fresh Validator PASS、5份complete ChangeReport及所有raw checkpoints/subreports；两轮合计10/16/10/10。Same-seed业务投影逐stage和combined均只有一个fingerprint，runtime timing/memory及派生artifact identity仍在raw evidence中而不参与相等判定。

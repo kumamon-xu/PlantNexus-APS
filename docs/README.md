@@ -11,6 +11,12 @@ last_reviewed: 2026-08-31
 
 # PlantNexus APS 文档中心
 
+## TASK-P4-15 local independent Exit decision
+
+P4-15从`60ac4c17c6de514c036be7bac63e66da589bfb4c`执行独立Exit审计，而非复用P4-14 Gate结论。41个P4提交、42个run、67个artifact均被重新查询和下载；0 expired、0 digest mismatch、0 JSON parse error，成功链1,134份JSON的exact SHA/Task/Diff base/Impact Rules/checks/issues及browser语义一致。0093/9a87/7e558/18c0失败候选和direct corrective chain保持可见。
+
+fresh replay通过834 Backend、78 Frontend、17/17主Chromium、P3 12/12×2、P4 5/5×2及全部历史machine；P2/P3/P4 Gate分别11/11、14/14、14/14且均无blocking gap。审计本地结论为`READY`，公开机器观察位于[`p4-exit-gate-audit-observations.v1.json`](p4-exit-gate-audit-observations.v1.json)。P4仍是当前阶段并等待单独phase-transition授权；P5/Production、真实authority/external integration/UAT/deployment/capacity/SLA未启动或形成。
+
 ## TASK-P4-14 local P4 Vertical Slice Gate
 
 TASK-P4-14从`ea05c3d9e94af91ae4525e5fbf1087a4a4198a15`冻结全部P4-01～13 provider inputs，并新增只聚合、不修业务的`p4-vertical-slice-report.v1`。两轮Backend replay逐次调用P4-02～12的11个owner machine入口，保留22份raw subreport与176个subordinate checks；连续五类disruption合计10个step、16个标准event、10次fresh Validator及10份complete ChangeReport。两轮专用Chromium各5/5并保留JSON/JUnit/HTML与failure media策略，P2/P3 Gate也作为exact SHA回归输入。

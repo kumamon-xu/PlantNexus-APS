@@ -11,6 +11,12 @@ last_reviewed: 2026-08-31
 
 # 动态重排设计合同
 
+## TASK-P4-15 independent Exit audit
+
+P4 Exit Audit从P4-14 closure重新执行全部owner contracts、P2/P3/P4 Gates和五类连续异常，而不复用聚合PASS。41个提交/42个provider run/67个artifact的exact拓扑、required app、expiry、digest和机器内容一致；fresh P4 Gate仍为两轮14/14、10步、16 event、10次fresh Validator、10份complete ChangeReport及唯一业务语义fingerprint，`blocking_gaps=[]`。因此P4范围的本地Exit判定为READY。
+
+READY只说明已批准的Simulation/development动态重排切片可复验；它不授权P4→P5，不把OBJ-002或synthetic disruption外推为Production policy，也不形成真实event/approval authority、external publish、UAT、deployment、capacity或SLA。
+
 ## TASK-P4-14 aggregate validation boundary
 
 P4 Vertical Slice Gate现以两轮fresh replay聚合P4-02～12全部公开owner报告，并连续复验Urgent Order、Machine Failure/Recovery、Material Delay、Processing Delay和Early Completion。每一步都保留前序baseline、标准ExecutionEvent、new Snapshot/Problem、ReplanRequest/attempt、fresh Validator、new DRAFT与complete ChangeReport；facts/HARD/freeze locks、before/after tardiness及四分量Stability必须跨两轮形成相同业务语义投影。

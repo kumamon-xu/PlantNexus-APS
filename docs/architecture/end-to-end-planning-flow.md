@@ -11,6 +11,12 @@ last_reviewed: 2026-08-31
 
 # 端到端计划链路
 
+## TASK-P4-15 independently audited edge
+
+Exit Audit不新增链路节点，而是从冻结P4-14 closure重新执行并交叉核对完整公开链：`versioned event → durable ledger/facts/new Snapshot → freeze/effective locks → immutable ReplanRequest/attempt → Delivery/Stability/Makespan solve → fresh Validator → complete ChangeReport → atomic new DRAFT → read/export/API/UI`，以及`Execution Simulator → 同一标准event入口`。两轮P4 Gate与独立owner machine reports均证明facts/HARD/freeze preserved、完整operation universe、exact lineage及fail-closed边界，无第二套shortcut或隐藏state transition。
+
+审计READY不推进任何业务state或phase：P4 current phase保持不变，new DRAFT不自动review/approve/publish/export；P5 advanced planning及Production source/identity/authority/external/deployment/capacity/SLA继续在链外。
+
 ## TASK-P4-14 aggregate Gate edge
 
 P4 Gate现在通过一个只读编排边界复验完整公开链：`machine contracts/persistence → ExecutionEvent facts/Snapshot → freeze/effective locks → Stability/ChangeReport → six-round Solver/fresh Validator → atomic DRAFT application → deterministic Simulator/five-disruption replay → read/export → HTTP → browser`。每轮直接调用既有P4-02～12 owner machine入口，不复制业务逻辑；两轮的完整raw subreports全部保留，版本化semantic projection只剔除runtime timing/memory和派生artifact identity噪声。

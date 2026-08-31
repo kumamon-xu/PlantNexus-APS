@@ -3,13 +3,19 @@ doc_id: DOC-CONTRACT-INDEX
 title: 合同文档索引
 status: living
 spec_version: 0.3.0
-phase: P3
+phase: P4
 normative: false
 source_sections: [24, 36, 38, 39, 63, 64, 67, 103]
-last_reviewed: 2026-08-26
+last_reviewed: 2026-08-31
 ---
 
 # 合同文档索引
+
+## TASK-P4-15 Exit contract audit
+
+独立审计重新验证schema set `2.8.0`的九个P4 carrier/sample、`0005_replan_event_persistence`、`state-machines.v1`及ADR-0013～0015，与P0～P3冻结字节、ExecutionEvent→facts/Snapshot→ReplanRequest→Solver/Validator→new DRAFT/ChangeReport和Simulator共同入口一致。fresh machine/Gate与provider下载均未发现合同、Schema、migration、dependency、state pair或版本漂移，故合同分项为PASS；本Audit未修改任何carrier、migration、ADR或state machine。
+
+该PASS只覆盖Simulation/development P4合同。ReplanRequest仍无独立state，new ScheduleVersion仍止于DRAFT；Production event/approval authority、external endpoints/publish、UAT、deployment、capacity/SLA和P5字段均未形成。
 
 ## TASK-P4-05 freeze/effective-lock consumer boundary
 

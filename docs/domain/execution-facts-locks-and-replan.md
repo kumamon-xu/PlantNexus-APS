@@ -6,10 +6,16 @@ spec_version: 0.3.0
 phase: P0-P4
 normative: true
 source_sections: [21, 26, 33, 35, 47, 48, 50, 69, 79]
-last_reviewed: 2026-08-28
+last_reviewed: 2026-08-31
 ---
 
 # 执行事实、锁定与重排边界
+
+## TASK-P4-15 independently audited invariants
+
+Exit Audit fresh复核了11种标准ExecutionEvent、source-position ledger、事实prefix/checkpoint、新Snapshot、half-open freeze、COMPLETED/RUNNING/显式HARD/freeze-derived HARD/SOFT优先级、immutable ReplanRequest及PlanningRun attempt归属。两轮连续五场景共10步均保持facts/locks、fresh Validator PASS和complete ChangeReport；tamper、gap、stale、cross-plane、Production与partial-result向量均在写new DRAFT前fail closed。
+
+本结论没有把Simulation event source提升为真实authority，也没有关闭OPEN-005/007或改写事实、锁、Schema、migration、state pair。Replan仍只产生新DRAFT；P5和Production审批/发布/外部执行边界未形成。
 
 ## TASK-P4-08 formed replan application
 

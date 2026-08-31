@@ -1,5 +1,11 @@
 # PlantNexus APS
 
+## TASK-P4-15 independent P4 Exit Gate Audit
+
+TASK-P4-15以P4-14 evidence-only closure `60ac4c17c6de514c036be7bac63e66da589bfb4c`为不可变Diff base，独立复核P4 first-parent拓扑、required `validate`、GitHub Actions app `15368`及全部provider artifact。审计覆盖41个提交、42个push run（37 success、4 failure、1 cancelled）和67个未过期artifact；下载后的ZIP SHA-256全部与provider digest一致，1,134份成功链JSON、981份machine report和80份browser report均无SHA/语义/issue/gap漂移。四个历史失败与一个取消run完整保留，并分别由后续direct corrective commit闭环。
+
+fresh本地重放通过834项Backend、18 files/78项Frontend、主Chromium 17/17、P3 Gate 12/12×2、P4 Gate 5/5×2、37个machine命令、XS benchmark及P2/P3/P4 Gates。P4 Gate为14/14、两轮22 stages/176 subordinate checks、10个连续场景step、16个标准event、10次fresh Validator和10份complete ChangeReport，`blocking_gaps=[]`。基于这些独立证据，本地P4 Exit结论为`READY`；机器摘要见`docs/p4-exit-gate-audit-observations.v1.json`。该结论不切换P5，也不形成Production readiness、UAT、真实event/approval authority、external publish/deployment或capacity/SLA；implementation与后续evidence-only closure仍各自必须通过exact provider。
+
 ## TASK-P4-14 P4 Vertical Slice Gate
 
 TASK-P4-14以不可变Diff base `ea05c3d9e94af91ae4525e5fbf1087a4a4198a15`形成`p4-vertical-slice-report.v1`。PHASE_GATE对P4-02～12的11个公开Backend owner边界执行两次fresh replay，完整保留22份stage运行、176个subordinate checks及raw reports；五类连续disruption合计10步、16个标准event、10次fresh Validator PASS和10份complete ChangeReport。另有两轮隔离Chromium各5/5，`p4-playwright-semantic-projection.v1`指纹一致，并严格消费冻结的TASK-P4-13 frontend report。

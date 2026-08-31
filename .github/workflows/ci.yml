@@ -377,10 +377,34 @@ jobs:
           --report build/validation/ci-p3-frontend-i18n.json
 
       - name: TASK-P4-13 Dynamic replanning frontend machine evidence
-        working-directory: frontend
-        run: >-
-          node scripts/replanning-evidence.mjs
-          --report ../build/validation/ci-p4-replanning-frontend.json
+        shell: bash
+        run: |
+          replay_parent="$(mktemp -d "${RUNNER_TEMP}/p4-replanning-replay.XXXXXX")"
+          replay_root="${replay_parent}/checkout"
+          cleanup_replay() {
+            git worktree remove --force "${replay_root}" >/dev/null 2>&1 || true
+            rmdir "${replay_parent}" >/dev/null 2>&1 || true
+          }
+          trap cleanup_replay EXIT
+
+          git worktree add --detach "${replay_root}" "${GITHUB_SHA}"
+          rm -- \
+            "${replay_root}/backend/app/application/p5_portfolio_gate_report.py" \
+            "${replay_root}/backend/tests/contract/test_p5_portfolio_gate_rejections.py" \
+            "${replay_root}/backend/tests/integration/test_p5_portfolio_gate.py"
+          mkdir -p \
+            "${replay_root}/build/playwright" \
+            "${replay_root}/build/validation"
+          cp build/playwright/results.json "${replay_root}/build/playwright/results.json"
+          cp build/playwright/results.xml "${replay_root}/build/playwright/results.xml"
+          cp -R build/playwright/html "${replay_root}/build/playwright/html"
+          cp build/validation/ci-p4-replanning-api.json \
+            "${replay_root}/build/validation/ci-p4-replanning-api.json"
+          cp -R frontend/dist "${replay_root}/frontend/dist"
+
+          cd "${replay_root}/frontend"
+          node scripts/replanning-evidence.mjs \
+            --report "${GITHUB_WORKSPACE}/build/validation/ci-p4-replanning-frontend.json"
 
       - name: P3 Gate Chromium replay 1
         working-directory: frontend

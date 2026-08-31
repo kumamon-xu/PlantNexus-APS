@@ -398,6 +398,13 @@ def test_ci_profile_routing_is_mutually_exclusive_and_fail_closed() -> None:
     assert "uv sync --locked" in full_text
     assert "backend/tests/security" in full_text
     assert "TASK-P4-13 Dynamic replanning frontend machine evidence" in full_text
+    assert "p4-replanning-replay.XXXXXX" in full_text
+    assert "git worktree add --detach" in full_text
+    assert "p5_portfolio_gate_report.py" in full_text
+    assert "test_p5_portfolio_gate_rejections.py" in full_text
+    assert "test_p5_portfolio_gate.py" in full_text
+    assert "ci-p4-replanning-api.json" in full_text
+    assert "build/playwright/results.json" in full_text
     assert "P3 vertical slice Gate evidence" in full_text
     assert "P4 vertical slice Gate evidence" in full_text
     assert "app.application.p5_portfolio_gate_report" in full_text

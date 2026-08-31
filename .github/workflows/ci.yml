@@ -395,6 +395,9 @@ jobs:
             "${replay_root}/backend/tests/contract/test_p5_exit_gate_rejections.py" \
             "${replay_root}/backend/tests/integration/test_p5_portfolio_gate.py" \
             "${replay_root}/backend/tests/integration/test_p5_exit_gate.py"
+          git -C "${replay_root}" restore \
+            --source d0a83c58cb4a2d4afa76e8c8cff08441574e2e30 \
+            -- backend/tests/integration/test_ci_contract.py
           mkdir -p \
             "${replay_root}/build/playwright" \
             "${replay_root}/build/validation"

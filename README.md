@@ -6,7 +6,7 @@ TASK-P5-22已获独立授权，并从provider-verified P5-21 closure `d0a83c58cb
 
 Fresh本地审计重放P5 capability qualification、empty-selected P5 Gate、P4 Gate与其前置P2/P3证据、XS/S/M Benchmark、Frontend和两轮P4 browser/Simulator场景。当前`p5-exit-gate-evidence-manifest.v1`为15/15 checks、`issues=[]`、`blocking_gaps=[]`，selected仍为`[]`，九项仍为`DEFERRED`，P5-03～20仍为`cancelled`，C-012～C-018继续`UNSUPPORTED_CAPABILITY`，Global仍为唯一已形成策略。首次本地Exit聚合因冻结P4报告的JSON object key在序列化后排序而被既有order-sensitive validator拒绝；Audit入口现只校验并恢复该对象的既定key顺序，不改变值、array或raw hash，随后fresh重放通过。
 
-本地结论为`READY`，但implementation与evidence-only closure的exact required `validate`及artifact provider证据仍待提交后闭环，因此TASK当前保持`in_progress`。P5 Milestone继续`active`；READY不自动执行P5→P6，也不形成Production/UAT、真实approval authority、external publish/integration、deployment或capacity/SLA。
+本地结论为`READY`，但首个implementation candidate `5d60dc90ddf22e75ec1783c0a7b92c016d452136` / run `33450894193`在冻结P4-13 replay中正确fail closed：其隔离worktree虽已移除P5 Gate/Audit文件，却仍使用当前70-step CI contract，冻结P4证据要求的68-step治理断言因此缺失。失败run与artifacts保留；direct corrective只在该临时worktree恢复P5-21 closure `d0a83c58cb4a2d4afa76e8c8cff08441574e2e30`的CI contract，再运行未修改P4-13 evidence，不改变主工作树测试断言、P4 owner或Audit结论。双exact provider仍待闭环，TASK保持`in_progress`。P5 Milestone继续`active`；READY不自动执行P5→P6，也不形成Production/UAT、真实approval authority、external publish/integration、deployment或capacity/SLA。
 
 ## TASK-P5-21 — empty-selected portfolio integration Gate
 

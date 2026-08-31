@@ -410,6 +410,8 @@ def test_ci_profile_routing_is_mutually_exclusive_and_fail_closed() -> None:
     assert "test_p5_exit_gate_rejections.py" in full_text
     assert "test_p5_portfolio_gate.py" in full_text
     assert "test_p5_exit_gate.py" in full_text
+    assert f"--source {P5_EXIT_DIFF_BASE}" in full_text
+    assert "-- backend/tests/integration/test_ci_contract.py" in full_text
     assert "ci-p4-replanning-api.json" in full_text
     assert "build/playwright/results.json" in full_text
     assert "P3 vertical slice Gate evidence" in full_text

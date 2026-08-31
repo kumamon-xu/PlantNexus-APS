@@ -31,6 +31,39 @@ This document contains the public, machine-readable projection of TASK-P5-02. Th
     "required_check": "validate",
     "required_check_app_id": 15368
   },
+  "implementation_evidence": {
+    "commit": "ed9ee75122341c1a71b641edc445e2a58cac70de",
+    "run_id": 33389105900,
+    "jobs": {
+      "classify": {"job_id": 99478355746, "conclusion": "success"},
+      "docs_validation": {"job_id": 99478399695, "conclusion": "success"},
+      "full_validation": {"job_id": 99478400881, "conclusion": "skipped"},
+      "validate": {"job_id": 99478441483, "conclusion": "success", "app_id": 15368}
+    },
+    "artifacts": [
+      {
+        "artifact_id": 9756735835,
+        "name": "plantnexus-ci-public-docs-33389105900",
+        "digest": "sha256:bbda3d87f66e92ca2be68a7bb47cae53a59f007ff6712a2878fed39883a15fcd",
+        "expired": false
+      },
+      {
+        "artifact_id": 9756730213,
+        "name": "plantnexus-ci-profile-33389105900",
+        "digest": "sha256:1a32c6a134181501271ced74d8e513a1d06322b02392e532d1d14d180062b303",
+        "expired": false
+      }
+    ],
+    "provider_checks": {
+      "profile": "DOCS_ONLY",
+      "profile_checks": 4,
+      "public_doc_checks": 1,
+      "changed_paths": 3,
+      "documents_base": 77,
+      "documents_head": 78,
+      "issues": []
+    }
+  },
   "portfolio": {
     "selected": [],
     "selected_count": 0,

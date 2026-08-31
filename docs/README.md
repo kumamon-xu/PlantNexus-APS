@@ -15,7 +15,9 @@ last_reviewed: 2026-08-31
 
 TASK-P5-02已获用户独立授权，并以P5-01 closure `01b8918db62cc9f5c4421d0b90d93151ddc552f1`为不可变Diff base。它不重做qualification：九项仍全部`DEFERRED`、selected=`[]`，因此TASK-P5-03～20的十八张owner卡全部进入证据化`cancelled` terminal状态，没有能力实现被启动。
 
-[`p5-portfolio-amendment-manifest.v1`](core/p5-portfolio-amendment-manifest.md)逐项绑定P5-01 decision fingerprints、owner映射和terminal状态，并把P5-21 direct dependencies消除占位后精确解析为仅`TASK-P5-02`。Manifest当前10/10 checks、0 issues/blocking issues；P5-21/P5-22继续`planned/NOT_STARTED`且不得自动启动。Tracked implementation只修改公开治理文档与该manifest，提交后按DOCS_ONLY exact Provider闭环。
+[`p5-portfolio-amendment-manifest.v1`](core/p5-portfolio-amendment-manifest.md)逐项绑定P5-01 decision fingerprints、owner映射和terminal状态，并把P5-21 direct dependencies消除占位后精确解析为仅`TASK-P5-02`。Manifest为10/10 checks、0 issues/blocking issues；P5-21/P5-22继续`planned/NOT_STARTED`且不得自动启动。
+
+Implementation `ed9ee75122341c1a71b641edc445e2a58cac70de` / run `33389105900`的classify/docs/required jobs `99478355746`,`99478399695`,`99478441483`全部exact成功，FULL按DOCS_ONLY skipped且required app=`15368`。Artifacts `9756735835`,`9756730213`的Provider/download digest一致；profile 4/4、public-doc 1/1、3 paths、77→78 documents、`issues=[]`。本tracked提交只回写implementation evidence，closure exact Provider待post-push复验。
 
 该amendment不把DEFERRED改写为SUPPORTED，不改变Global/P4冻结边界，也不关闭OPEN-001～015、SIM-ASSUMPTION-001～020或RISK-001～017。P6+、Production/UAT、真实authority、external publish/integration、deployment、capacity/SLA继续排除。
 

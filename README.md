@@ -4,7 +4,9 @@
 
 用户已另行授权TASK-P5-02。该Task只消费TASK-P5-01 exact report，不重新选择portfolio：九项决定仍全部为`DEFERRED`、selected=`[]`。P5-03～20的九条合同/implementation链因此原子终结为`cancelled`；没有selected能力Task被保留或启动。P5-21的动态依赖已解析为唯一直接依赖`TASK-P5-02`，P5-21与P5-22均继续`planned/NOT_STARTED`并仍需各自授权。
 
-机器可读的[`p5-portfolio-amendment-manifest.v1`](docs/core/p5-portfolio-amendment-manifest.md)绑定不可变Diff base `01b8918db62cc9f5c4421d0b90d93151ddc552f1`、P5-01 implementation/closure、九个decision fingerprint、十八张terminal Task和resolved DAG。Manifest为10/10 checks、`issues=[]`、`blocking_issues=[]`；本次tracked差异仅为公开治理文档与manifest，exact DOCS_ONLY Provider将在implementation提交后核验。
+机器可读的[`p5-portfolio-amendment-manifest.v1`](docs/core/p5-portfolio-amendment-manifest.md)绑定不可变Diff base `01b8918db62cc9f5c4421d0b90d93151ddc552f1`、P5-01 implementation/closure、九个decision fingerprint、十八张terminal Task和resolved DAG。Manifest为10/10 checks、`issues=[]`、`blocking_issues=[]`；tracked implementation仅包含三份公开治理Markdown。
+
+Implementation `ed9ee75122341c1a71b641edc445e2a58cac70de`的run/classify/docs/required=`33389105900`/`99478355746`/`99478399695`/`99478441483`全部成功，FULL `99478400881`按DOCS_ONLY正确跳过，required app=`15368`。Public-doc/profile artifacts `9756735835`,`9756730213`的下载ZIP digest与Provider分别一致为`sha256:bbda3d87f66e92ca2be68a7bb47cae53a59f007ff6712a2878fed39883a15fcd`、`sha256:1a32c6a134181501271ced74d8e513a1d06322b02392e532d1d14d180062b303`；证据精确复现3 paths、4/4 profile、1/1 public-doc、77→78 documents和0 issues。本提交只作evidence-only closure，closure自身仍须post-push exact Provider。
 
 本计划写回不改变C-012～C-018的`UNSUPPORTED_CAPABILITY`、Global唯一已形成策略或P4 ExecutionEvent/ReplanRequest/freeze/OBJ-002/ChangeReport/Execution Simulator边界。OPEN-001～015、SIM-ASSUMPTION-001～020和RISK-001～017保持原状态；P6+、Production/UAT、真实approval authority、external publish/integration、deployment及capacity/SLA均未形成。
 

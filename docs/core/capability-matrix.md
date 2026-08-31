@@ -6,10 +6,14 @@ spec_version: 0.3.0
 phase: cross-phase
 normative: true
 source_sections: [7, 8, 27, 43, 81, 82, 107]
-last_reviewed: 2026-08-24
+last_reviewed: 2026-08-31
 ---
 
 # 能力矩阵
+
+## TASK-P4-12 local API capability status
+
+ExecutionEvent append/query、ReplanRequest create/query/attempt-control/result与ChangeReport read现有`LOCAL_IMPLEMENTED_PROVIDER_PENDING`的HTTP/OpenAPI边界；这表示transport已能strict验证并委托既有P4 owner，不表示新的domain或Production capability。ReplanRequest仍无state，Simulator control、external publish、P5 candidates及Production identity/authority继续`NOT_FORMED/UNSUPPORTED`。
 
 ## P4 activation capability status
 

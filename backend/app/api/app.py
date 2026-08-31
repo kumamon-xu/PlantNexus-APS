@@ -1,4 +1,4 @@
-"""FastAPI composition root for health and the P3 planning workspace."""
+"""FastAPI composition root for health and versioned planning APIs."""
 
 from __future__ import annotations
 
@@ -23,6 +23,11 @@ from app.api.dependencies.authorization import (
     UnavailableAuthorizationProvider,
 )
 from app.api.routers.planning_workspace import router as planning_workspace_router
+from app.api.replanning_contracts import (
+    DynamicReplanningApplicationPort,
+    UnavailableDynamicReplanningApplication,
+)
+from app.api.routers.dynamic_replanning import router as dynamic_replanning_router
 from app.infrastructure.config import Settings, load_settings
 from app.infrastructure.database import create_database_client
 from app.infrastructure.health import Probe, liveness_report, readiness_report
@@ -38,6 +43,8 @@ def create_app(
     authorization_provider: AuthorizationProvider | None = None,
     authorization_audit_sink: AuthorizationAuditSink | None = None,
     planning_workspace_clock: Callable[[], str] | None = None,
+    dynamic_replanning_application: DynamicReplanningApplicationPort | None = None,
+    dynamic_replanning_clock: Callable[[], str] | None = None,
 ) -> FastAPI:
     resolved_settings = settings or load_settings()
     configure_logging(
@@ -81,6 +88,9 @@ def create_app(
     application.state.planning_workspace_application = (
         planning_workspace_application or UnavailablePlanningWorkspaceApplication()
     )
+    application.state.dynamic_replanning_application = (
+        dynamic_replanning_application or UnavailableDynamicReplanningApplication()
+    )
     application.state.authorization_provider = (
         authorization_provider or UnavailableAuthorizationProvider()
     )
@@ -89,6 +99,8 @@ def create_app(
     )
     if planning_workspace_clock is not None:
         application.state.planning_workspace_clock = planning_workspace_clock
+    if dynamic_replanning_clock is not None:
+        application.state.dynamic_replanning_clock = dynamic_replanning_clock
 
     @application.exception_handler(PlanningWorkspaceHttpError)
     async def planning_workspace_error_handler(
@@ -148,6 +160,7 @@ def create_app(
         )
 
     application.include_router(planning_workspace_router)
+    application.include_router(dynamic_replanning_router)
 
     return application
 

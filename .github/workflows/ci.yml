@@ -329,6 +329,12 @@ jobs:
           --root .
           --report build/validation/ci-p3-planning-workspace-api.json
 
+      - name: P4 dynamic replanning HTTP API evidence
+        run: >-
+          uv run python -m app.api.replanning_check
+          --root .
+          --report build/validation/ci-p4-replanning-api.json
+
       - name: P3 Frontend locked install
         run: npm --prefix frontend ci
 

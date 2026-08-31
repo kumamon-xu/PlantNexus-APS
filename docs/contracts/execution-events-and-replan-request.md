@@ -6,10 +6,16 @@ spec_version: 0.3.0
 phase: P0-P4
 normative: true
 source_sections: [35, 47, 48, 49, 50, 64, 66, 79, 80]
-last_reviewed: 2026-08-27
+last_reviewed: 2026-08-31
 ---
 
 # ExecutionEvent 与 ReplanRequest 合同
+
+## TASK-P4-12 HTTP consumer
+
+HTTP append只接受完整`execution-event.v1`并绑定body correlation、Simulation plane/environment、planning scope、event identity/fingerprint与hashed Idempotency-Key；HTTP层不重新排序stream、不投影fact或checkpoint。Event get/list以fingerprinted query锁定planning scope，list另要求authority/stream/version与有界position window；真实ledger/query仍属于application/repository authority。
+
+Replan create只消费完整`replan-request.v1`并委托P4-08 owner；get/result/read要求exact request/attempt/report fingerprint前置。Cancel/retry不改写Request也不定义self-transition，仅以`replan-attempt-action-http.v1`表达对当前PlanningRun attempt的expected-state CAS intent；最终状态、幂等结果与audit仍由application/persistence判定。
 
 ## TASK-P4-10 consumer-only continuous replay
 

@@ -290,6 +290,11 @@ _CONFLICT_REASONS = frozenset(
         "LEASE_CONFLICT",
         "LOCK_CONFLICT",
         "IMMUTABLE_EXECUTION_FACT",
+        "IDENTITY_CONFLICT",
+        "LINEAGE_MISMATCH",
+        "POSITION_CONFLICT",
+        "STREAM_GAP",
+        "LATE_EVENT",
         "NO_OP",
     }
 )
@@ -305,6 +310,8 @@ _INVALID_REASONS = frozenset(
         "MIXED_LINEAGE",
         "KPI_MISMATCH",
         "PLANNING_RUN_NOT_COMPLETED",
+        "AUTHORITY_MISMATCH",
+        "CHANGE_REPORT_INCOMPLETE",
     }
 )
 _SYSTEM_REASONS = frozenset(
@@ -355,6 +362,11 @@ def public_http_error(
         control_reason = "IDEMPOTENCY_CONFLICT"
         product = None
         message = "The idempotency key conflicts with an earlier request."
+    elif reason == "UNKNOWN_OUTCOME":
+        status = status_code or 503
+        control_reason = "UNKNOWN_OUTCOME"
+        product = None
+        message = "The operation outcome is unknown; query the exact result before retrying."
     elif reason == "EXPORT_FAILED":
         status = status_code or 500
         control_reason = "EXPORT_FAILED"
@@ -404,7 +416,7 @@ def public_http_error(
             "reason": reason,
         },
         correlation_id=correlation_id,
-        retryable=status == 503,
+        retryable=status == 503 and reason != "UNKNOWN_OUTCOME",
         resource=_resource(resource),
     )
     headers = {

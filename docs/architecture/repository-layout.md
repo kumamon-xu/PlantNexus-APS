@@ -6,10 +6,14 @@ spec_version: 0.3.0
 phase: P0
 normative: true
 source_sections: [12, 13, 41, 70, 71]
-last_reviewed: 2026-08-28
+last_reviewed: 2026-08-31
 ---
 
 # 目标仓库结构
+
+## TASK-P4-12 API layout addition
+
+新增`backend/app/api/replanning_contracts.py`、`replanning_check.py`与`routers/dynamic_replanning.py`，并在既有unit/contract/integration/security suite和FULL CI加入限定证据。没有新增package root、Schema/migration/dependency、application/domain/repository、Frontend、Simulator、external connector或P5目录。
 
 ## TASK-P4-10 layout addition
 

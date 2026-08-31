@@ -6,10 +6,16 @@ spec_version: 0.3.0
 phase: P4
 normative: false
 source_sections: [2, 6, 70]
-last_reviewed: 2026-08-28
+last_reviewed: 2026-08-31
 ---
 
 # PlantNexus APS 文档中心
+
+## TASK-P4-12 local HTTP/OpenAPI boundary
+
+TASK-P4-12以`f4a54d3bb065b5cc8b51c450ffdc435bcc77d384`为不可变Diff base，在既有FastAPI composition内additive新增8 paths/9 operations的`dynamic-replanning-http.v1`。Transport只验证已发布P4 carrier、fingerprinted query/action、header/body correlation/idempotency绑定、server-derived capability/planning-scope及稳定HTTP/error envelope，然后委托注入的P4 application facade。
+
+`p4-replanning-api-report.v1`当前为8/8、五个Impact Rules、`issues=[]`；新增FULL CI step与unit/contract/integration/security证据。P3的18 operations改为精确子集回归，operation ID与路由语义不变。ReplanRequest不新增state，cancel/retry只委托PlanningRun attempt CAS；Production在provider/application lookup前default-deny。本地14 focused、821 Backend、67 Frontend、三轮12/12 Chromium、全部machine/XS/P2/P3 Gate/SCA/license/build/Compose及35/5/19/0治理已PASS，双exact provider待本Task后续闭环；TASK-P4-13未启动。
 
 ## TASK-P4-11 local ChangeReport read/export boundary
 
@@ -19,7 +25,7 @@ Internal output consumer使用`export-job.v3`既有状态语义与独立P4 worke
 
 完整HIGH_RISK本地证据现为18 focused、806 Backend、67 Frontend、三轮各12/12 Chromium、全部历史machine/XS/双Gate/SCA/license/build/Compose以及32-path/8-rule/19-check/0-issue治理；本Task machine为8/8、`issues=[]`，P2/P3 Gate为11/11、14/14且`blocking_gaps=[]`。首次全量Backend因旧P3 substring扫描器把`_FINGERPRINT`中的`ERP`误判为外部集成而得到800 passed/1 failed/5 errors；限定改名为`_SHA256_REFERENCE`后目标与806项全量均PASS。
 
-Implementation `7d685d91e5011cdb4b3289ef10a9a2355c53570b`的run/FULL/required=`33156391439`/`98800085239`/`98801664096`已exact成功；machine/profile artifacts `9679951468`,`9679763686`均未过期并已下载复验，digests分别为`sha256:59088ba24779ffb2cef9d8d225c2897d50a8d4ef598cf4ecb66037354bf97d80`、`sha256:7a89878a6fecc58657633577eb8d6caebc06b97eadd9ea90fb9efed79e94d8ba`。Artifact精确绑定Task、implementation SHA、原始Diff base、八个Impact Rules、8 checks、0 issues、FULL 32-path profile及P2/P3 Gate；本evidence-only closure记录完成结论，但其自身仍须post-push exact provider复验，TASK-P4-12保持`planned`且未启动。
+Implementation `7d685d91e5011cdb4b3289ef10a9a2355c53570b`的run/FULL/required=`33156391439`/`98800085239`/`98801664096`已exact成功；machine/profile artifacts `9679951468`,`9679763686`均未过期并已下载复验，digests分别为`sha256:59088ba24779ffb2cef9d8d225c2897d50a8d4ef598cf4ecb66037354bf97d80`、`sha256:7a89878a6fecc58657633577eb8d6caebc06b97eadd9ea90fb9efed79e94d8ba`。Artifact精确绑定Task、implementation SHA、原始Diff base、八个Impact Rules、8 checks、0 issues、FULL 32-path profile及P2/P3 Gate；在该P4-11 closure历史时点TASK-P4-12保持`planned`且未启动，当前状态见本页顶部。
 
 ## TASK-P4-10 local continuous replay boundary
 

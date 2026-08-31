@@ -6,10 +6,16 @@ spec_version: 0.3.0
 phase: P3
 normative: true
 source_sections: [33, 34, 60, 66, 78, 94, 95]
-last_reviewed: 2026-08-28
+last_reviewed: 2026-08-31
 ---
 
 # P3 Authorization Capability 与 Audit 合同
+
+## TASK-P4-12 HTTP authorization adapter
+
+P4 HTTP新增五个server-resolved capability：`event_ingest`、`event_view`、`replan`、`replan_control`与只读`replan_view`；每次委托均必须命中principal的exact `planning_scope_scope`。Carrier/action/header不能自行授予actor、capability、scope或Production binding。缺失/invalid token为401，capability/scope为403，均在application lookup前停止并记录sanitized denial audit。
+
+Raw bearer与raw Idempotency-Key不进入application context；后者在transport边界转为lowercase SHA-256 reference。Production对有效Simulation carrier仍在provider/application lookup前以`PRODUCTION_AUTHORITY_UNAVAILABLE`拒绝并审计，不因body或test principal改变。本Task不选择真实identity provider/RBAC、MES event authority、approval responsibility、retention/SIEM或external audit sink，OPEN-010/015保持OPEN。
 
 ## TASK-P4-08 application authorization and audit
 

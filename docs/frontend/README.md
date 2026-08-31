@@ -11,6 +11,10 @@ last_reviewed: 2026-08-27
 
 # Frontend 文档形成计划
 
+## TASK-P4-12 additive API / P3 evidence boundary
+
+TASK-P4-12没有形成P4 Frontend route、UI、API client、状态、交互或依赖；`frontend/src/**`、组件/浏览器断言、词典、`package.json`与lock均保持不变。由于P4 HTTP router必须进入共享Backend组合层，本Task只把P3-16双语machine evidence的zero-wire冻结粒度从六个共享API组合文件收窄到P3 Frontend API client、P3 planning-workspace router、Schema/migration/dependency和英文machine value；P3既有18-operation HTTP子集仍由独立`p3-planning-workspace-api-report.v1`逐字证明。该证据调整不得被解释为P4 UI或本地化wire形成，P4 UI仍不在本Task范围。
+
 ## TASK-P4-02 historical evidence compatibility
 
 P4-02不修改任何Frontend source、route、wire producer、package或lock。历史P3 i18n evidence原先以P3-15 Diff base禁止未来所有`backend/**`/`schemas/**`变化，与additive P4阶段不兼容；本Task只把其zero-wire检查收窄为P3 Frontend API、P3 Backend API exact files、P3 workspace/export Schema、state/error registry与locks。67 Vitest、12 Chromium和双语raw-machine-value合同保持不变，不形成P4 UI。

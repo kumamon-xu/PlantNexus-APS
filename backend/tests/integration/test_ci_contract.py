@@ -32,6 +32,7 @@ from app.application.workspace_read_model_check import (
     main as workspace_read_model_main,
 )
 from app.api.planning_workspace_check import main as planning_workspace_api_main
+from app.api.replanning_check import main as replanning_api_main
 from app.domain.workspace_contract_check import main as workspace_contract_main
 from app.domain.execution_contract_check import main as execution_contract_main
 from app.exporters.change_report_output_check import (
@@ -389,7 +390,7 @@ def test_ci_profile_routing_is_mutually_exclusive_and_fail_closed() -> None:
     assert "backend/tests/security" in full_text
     assert "P3 vertical slice Gate evidence" in full_text
     assert "Build package" in full_text
-    assert len(full["steps"]) == 62
+    assert len(full["steps"]) == 63
 
     assert 'test "${PLANTNEXUS_CLASSIFY_RESULT}" = "success"' in final_run
     assert 'test "${PLANTNEXUS_FULL_RESULT}" = "success"' in final_run
@@ -1128,12 +1129,53 @@ def test_ci_p3_planning_workspace_api_is_required_and_machine_checkable(
     assert report["counts"]["production_provider_lookups"] == 0
     assert report["counts"]["router_business_state_transitions"] == 0
     assert report["boundaries"]["p4_capabilities"] == "NOT_IMPLEMENTED"
+    assert report["boundaries"]["p4_additive_surface"] == (
+        "OUTSIDE_FROZEN_P3_SUBSET"
+    )
     assert report["boundaries"]["p3_10_frozen_operations"] == 17
     assert report["boundaries"]["p3_13_additive_operations"] == 1
     assert report["boundaries"]["internal_simulation_download"] == (
         "EXPORTED_VERIFIED_ZIP_ONLY"
     )
     assert report["boundaries"]["production_readiness"] == "NOT_CLAIMED"
+    assert report["issues"] == []
+
+
+def test_ci_p4_replanning_api_is_required_and_machine_checkable(
+    tmp_path: Path,
+) -> None:
+    workflow = (ROOT / ".github/workflows/ci.yml").read_text(encoding="utf-8")
+    normalized = " ".join(workflow.split())
+    assert (
+        "name: P4 dynamic replanning HTTP API evidence run: >- "
+        "uv run python -m app.api.replanning_check --root . "
+        "--report build/validation/ci-p4-replanning-api.json"
+    ) in normalized
+    assert "continue-on-error" not in workflow
+
+    report_path = tmp_path / "p4-replanning-api.json"
+    assert replanning_api_main(
+        ["--root", str(ROOT), "--report", str(report_path)]
+    ) == 0
+    report = json.loads(report_path.read_text(encoding="utf-8"))
+    assert report["report_version"] == "p4-replanning-api-report.v1"
+    assert report["status"] == "PASS"
+    assert report["task_id"] == "TASK-P4-12"
+    assert report["diff_base"] == "f4a54d3bb065b5cc8b51c450ffdc435bcc77d384"
+    assert report["impact_rules"] == [
+        "IMPACT-API",
+        "IMPACT-DOCS",
+        "IMPACT-FRONTEND",
+        "IMPACT-INFRA",
+        "IMPACT-TESTS",
+    ]
+    assert report["check_count"] == 8
+    assert report["counts"]["api_paths"] == 8
+    assert report["counts"]["http_operations"] == 9
+    assert report["counts"]["successful_delegations"] == 9
+    assert report["counts"]["p3_frozen_operations"] == 18
+    assert report["counts"]["production_provider_lookups"] == 0
+    assert report["counts"]["router_business_state_transitions"] == 0
     assert report["issues"] == []
 
 
@@ -1707,7 +1749,10 @@ def test_p3_i18n_wire_freeze_allows_additive_future_phase_contracts() -> None:
         encoding="utf-8"
     )
     for exact_path in (
-        "backend/app/api/contracts.py",
+        "frontend/src/api",
+        "frontend/package.json",
+        "frontend/package-lock.json",
+        "backend/app/api/dependencies/__init__.py",
         "backend/app/api/routers/planning_workspace.py",
         "schemas/json/schedule-version.schema.json",
         "schemas/json/workspace-command.schema.json",
@@ -1717,5 +1762,14 @@ def test_p3_i18n_wire_freeze_allows_additive_future_phase_contracts() -> None:
         "uv.lock",
     ):
         assert f'"{exact_path}"' in source
+    for additive_phase_composition_path in (
+        "backend/app/api/__init__.py",
+        "backend/app/api/app.py",
+        "backend/app/api/contracts.py",
+        "backend/app/api/dependencies/authorization.py",
+        "backend/app/api/planning_workspace_check.py",
+        "backend/app/api/routers/__init__.py",
+    ):
+        assert f'"{additive_phase_composition_path}"' not in source
     for stale_broad_path in ('"backend"', '"schemas"', '"pyproject.toml"'):
         assert stale_broad_path not in source

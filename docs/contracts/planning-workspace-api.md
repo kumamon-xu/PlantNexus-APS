@@ -6,16 +6,24 @@ spec_version: 0.3.0
 phase: P3
 normative: true
 source_sections: [33, 34, 63, 65, 66, 68, 69, 77, 78, 91, 94]
-last_reviewed: 2026-08-27
+last_reviewed: 2026-08-31
 ---
 
 # P3 Planning Workspace API 语义合同
+
+## TASK-P4-12 additive dynamic-replanning HTTP surface
+
+`dynamic-replanning-http.v1`以additive方式新增8 path/9 operation：`appendExecutionEvent`、`getExecutionEvent`、`listExecutionEvents`、`createReplanRequest`、`getReplanRequest`、`cancelReplanRequest`、`retryReplanRequest`、`getReplanResult`与`getChangeReport`。ExecutionEvent/ReplanRequest POST直接消费P4-02 machine carrier；GET使用canonical/fingerprinted `dynamic-replanning-query.v1`；cancel/retry使用strict `replan-attempt-action-http.v1`绑定request fingerprint、attempt ID/number、expected PlanningRun state、reason、plane/correlation与hashed Idempotency-Key。
+
+所有operation只在server-derived capability和exact planning scope通过后调用`DynamicReplanningApplicationPort`；结果必须以`dynamic-replanning-response.v1`反向绑定operation/resource/correlation。POST成功为202，GET为200；401/403/404/409/422/500/503继续使用sanitized `planning-workspace-error.v1`。`UNKNOWN_OUTCOME`=503且`retryable=false`，client必须先查询exact result而不是盲目换key重试。
+
+P3 18-operation清单现以精确path/operation子集复验，允许后续Phase只做additive route；P3 route、carrier、operation ID、status、authority与router语义不变。P4 router不计算fact/freeze/OBJ-002，不调用Solver/Validator/Simulator，不推进ScheduleVersion或ReplanRequest state，不暴露P5/external/Production capability。
 
 ## TASK-P4-01 future API boundary
 
 ADR-0013～0015固定未来P4 transport只能调用server event ingress、ReplanRequest/read与ChangeReport application ports；router不得排序事件、投影facts、计算freeze/OBJ-002、调用Solver/Validator或推进Version。Authority scope/source position、idempotency/fingerprint、stale/current、correlation/audit和Simulation isolation均由application返回并fail closed。
 
-TASK-P4-12仍须等待P4-02/03/04/08/11全部`done`后独立设计/实现。当前18个P3 operation与OpenAPI fingerprint不变；没有P4 route/action、真实identity/event/approval authority、external publish或deployment接口形成。
+该P4-01基线要求TASK-P4-12等待P4-02/03/04/08/11全部`done`后再独立设计/实现；上述启动门现已满足，当前实现见本页顶部。P3 18个operation仍作为冻结子集保持不变；真实identity/event/approval authority、external publish或deployment接口仍未形成。
 
 ## TASK-P3-17 audit conclusion
 

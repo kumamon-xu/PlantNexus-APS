@@ -185,13 +185,7 @@ const frozenDiffs = gitDiffNames([
   "frontend/src/api",
   "frontend/package.json",
   "frontend/package-lock.json",
-  "backend/app/api/__init__.py",
-  "backend/app/api/app.py",
-  "backend/app/api/contracts.py",
   "backend/app/api/dependencies/__init__.py",
-  "backend/app/api/dependencies/authorization.py",
-  "backend/app/api/planning_workspace_check.py",
-  "backend/app/api/routers/__init__.py",
   "backend/app/api/routers/planning_workspace.py",
   "schemas/json/audit-event.schema.json",
   "schemas/json/export-job.v2.schema.json",
@@ -205,12 +199,12 @@ const frozenDiffs = gitDiffNames([
   "schemas/rules/state-machines.v1.yaml",
   "uv.lock",
 ]);
-fail(frozenDiffs.length === 0, `wire/dependency/backend/schema paths changed: ${frozenDiffs.join(", ")}`, issues);
+fail(frozenDiffs.length === 0, `P3 localized wire/dependency/schema paths changed: ${frozenDiffs.join(", ")}`, issues);
 const localizedRuntimeText = `${combinedSurfaces}\n${JSON.stringify(enMessages)}\n${JSON.stringify(zhMessages)}`;
 for (const machineValue of ["APPROVE", "PUBLISH", "REQUEST_EXPORT", "READY_FOR_REVIEW", "SIMULATION_INTERNAL"]) {
   fail(localizedRuntimeText.includes(machineValue), `raw machine value absent from localized surfaces: ${machineValue}`, issues);
 }
-checks.push(completedCheck("ZERO-WIRE-AND-DEPENDENCY-DRIFT", "API/backend/schema/migration/dependency inputs unchanged; English command/state/target values retained"));
+checks.push(completedCheck("ZERO-WIRE-AND-DEPENDENCY-DRIFT", "P3 client/router/schema/migration/dependency inputs unchanged; additive later-phase API composition excluded; English command/state/target values retained"));
 
 const playwrightPath = resolve(repositoryRoot, "build/playwright/results.json");
 let playwrightSpecs = [];
@@ -266,7 +260,8 @@ const report = {
   boundaries: {
     display_only_localization: true,
     raw_machine_values_retained: true,
-    api_schema_migration_dependency_changed: false,
+    p3_localized_wire_schema_migration_dependency_changed: false,
+    additive_later_phase_api_composition_allowed: true,
     backend_locale_negotiation_formed: false,
     server_chinese_export_formed: false,
     p4_formed: false,

@@ -1,5 +1,13 @@
 # PlantNexus APS
 
+## TASK-P4-12 Dynamic Replanning HTTP API
+
+TASK-P4-12已从不可变Diff base `f4a54d3bb065b5cc8b51c450ffdc435bcc77d384`形成Simulation/development-only `dynamic-replanning-http.v1`：8个P4 path、9个operation覆盖ExecutionEvent append/get/stream query、ReplanRequest create/get/cancel/retry/result与ChangeReport read。POST严格消费已发布`execution-event.v1`/`replan-request.v1`；GET使用fingerprinted `dynamic-replanning-query.v1`；cancel/retry使用`replan-attempt-action-http.v1`绑定hashed Idempotency-Key、request fingerprint、attempt ID/number及预期PlanningRun state。ReplanRequest仍无独立state machine。
+
+路由在application lookup前执行server-derived capability与exact planning-scope授权，Production在provider/application lookup前审计并default-deny；raw bearer/idempotency key不进入application context。结果必须通过`dynamic-replanning-response.v1`的operation/resource/correlation反向绑定，unknown outcome固定503且要求query-before-retry。P3原18-operation作为精确冻结子集继续复验；router不导入application/domain/repository，不投影fact、计算freeze/OBJ-002、调用Solver/Validator或推进状态。
+
+完整HIGH_RISK本地验收已通过：Task-specific `14 passed`、完整Backend `821 passed`、Frontend 67项与主E2E/P3 Gate两轮各12/12 Chromium、Ruff/Pyright、全部历史machine、XS Benchmark、P2/P3 Gate、SCA/license、Compose及前后端build；`p4-replanning-api-report.v1`为8/8、五个Impact Rules、`issues=[]`，治理为35-path/5-rule/19-check/0-issue且forbidden scope=0。Implementation exact provider与evidence-only closure仍待本Task后续闭环。Schema/migration/dependency/lock、domain/application/Solver/Simulator语义、state pair、Frontend runtime/UI/client、external publish、P5和Production identity/authority/deployment/capacity/SLA未修改或形成；TASK-P4-13不会自动启动。
+
 ## TASK-P4-11 ChangeReport read model and internal export
 
 TASK-P4-11现从不可变Diff base `45b12d9a67ce5ef1680a47fecdc68705355af226`形成Simulation/development-only ChangeReport read/export slice。Versioned只读服务在任何repository lookup前完成plane/capability/scope检查，再以exact Replan result、P4 ScheduleVersion、ChangeReport、SolverReport、fresh Validation与before/after KPI references绑定查询；filter、operation-id cursor和page顺序稳定，读取不调用Solver、不写状态且不改变immutable report bytes。
@@ -73,7 +81,7 @@ TASK-P4-03已获独立授权并在不可变Diff base `7b9bfc3069de5d3738e5cc5827
 
 用户已明确批准P3→P4。TASK-P3-17独立Exit Audit的report/manifest均为`READY`、`blocking_gaps=[]`；audit implementation `201be9c6fd1b433a9d0a629a3ae7d4ffe1107476`和evidence-only closure `61eeacdd5efc20b2321750e1310e9e21561c9fc2`的直接拓扑、required `validate`、GitHub Actions app `15368`及未过期artifact均已exact复验。因此P3 Milestone现为`completed`，P4 Dynamic Replanning已激活。
 
-PlantNexus APS 是一个面向单工厂、多车间场景的高级计划与排程（APS）项目。TASK-P4-00～10与TASK-P4-16现均已按各自独立授权形成provider-verified implementation与evidence-only closure治理链；TASK-P4-11 implementation provider已exact通过，本evidence-only closure记录其完成结论并等待自身post-push复验。TASK-P4-12～15保持`planned`且未自动启动；API/UI与Production readiness/UAT/真实authority/external publish/deployment/capacity/SLA仍未形成。
+PlantNexus APS 是一个面向单工厂、多车间场景的高级计划与排程（APS）项目。TASK-P4-00～11与TASK-P4-16均已形成provider-verified implementation/evidence-only closure；TASK-P4-12现按独立授权处于`in_progress`并只实现Simulation/development HTTP/OpenAPI transport，TASK-P4-13～15保持`planned`且未启动。Frontend replanning UI与Production readiness/UAT/真实authority/external publish/deployment/capacity/SLA仍未形成。
 
 ## 开始之前
 

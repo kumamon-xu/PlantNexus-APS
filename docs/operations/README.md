@@ -6,10 +6,14 @@ spec_version: 0.3.0
 phase: P0-P7
 normative: false
 source_sections: [65, 66, 93, 94, 95, 101, 106]
-last_reviewed: 2026-08-27
+last_reviewed: 2026-08-31
 ---
 
 # Operations 索引与形成边界
+
+## TASK-P4-12 local API operations boundary
+
+P4 HTTP只是Development/Test/Benchmark中的Simulation API contract与machine evidence；`no-store`、correlation、sanitized error、denial audit和Production default-deny已在本地证据中形成。这不创建Production runbook、gateway、identity provider、external event ingress、deployment/on-call、UAT或capacity/SLA。
 
 ## TASK-P4-11 internal output operations
 

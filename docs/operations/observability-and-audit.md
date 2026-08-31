@@ -6,10 +6,14 @@ spec_version: 0.3.0
 phase: P0-P7
 normative: true
 source_sections: [29, 42, 65, 93, 95]
-last_reviewed: 2026-08-28
+last_reviewed: 2026-08-31
 ---
 
 # P0 Observability 与 Audit 边界
+
+## TASK-P4-12 transport observability
+
+所有P4 response固定回传`X-Correlation-Id`和`Cache-Control: no-store`，并要求application envelope的correlation与route逐字一致。Authentication/capability/scope/Production denial使用既有sanitized `AuthorizationAuditRecord`，记录capability、`PLANNING_SCOPE`、outcome/reason/plane/environment，不记raw token/key。成功ExecutionEvent/Replan/ChangeReport audit内容仍由对应application/persistence owner原子产生，router不伪造业务audit。
 
 ## TASK-P4-08 result-application audit edge
 

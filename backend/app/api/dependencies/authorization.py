@@ -27,6 +27,7 @@ class PrincipalContext:
     export_job_scope: frozenset[str]
     auth_policy_version: str
     production_binding: bool = False
+    planning_scope_scope: frozenset[str] = frozenset()
 
 
 class AuthorizationProvider(Protocol):
@@ -279,6 +280,8 @@ def authorize_request(
         if resource_type == "SCHEDULE_VERSION"
         else principal.export_job_scope
         if resource_type == "EXPORT_JOB"
+        else principal.planning_scope_scope
+        if resource_type == "PLANNING_SCOPE"
         else frozenset({"*"})
     )
     if not _scope_allows(scope, resource_id):

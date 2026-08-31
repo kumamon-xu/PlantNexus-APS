@@ -6,10 +6,14 @@ spec_version: 0.3.0
 phase: P0-P4
 normative: true
 source_sections: [21, 28, 35, 47, 48, 49, 50, 79, 80]
-last_reviewed: 2026-08-28
+last_reviewed: 2026-08-31
 ---
 
 # 动态重排设计合同
+
+## TASK-P4-12 transport entry and read boundary
+
+Dynamic Replanning现有一个Simulation-only HTTP入口：标准ExecutionEvent通过append port，完整ReplanRequest通过P4-08 facade，ChangeReport通过P4-11 read authority。Transport只绑定carrier/query/action、correlation、idempotency reference、capability/scope和expected attempt state，不重建Problem、freeze、OBJ-002、Solver/Validator或new DRAFT。Cancel/retry始终指向PlanningRun attempt，不创建ReplanRequest self-transition。
 
 ## TASK-P4-10 continuous scenario consumer
 

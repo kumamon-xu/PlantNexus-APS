@@ -6,10 +6,14 @@ spec_version: 0.3.0
 phase: cross-phase
 normative: true
 source_sections: [0, 9, 10, 23, 24, 30, 32, 33, 35, 57, 67]
-last_reviewed: 2026-08-28
+last_reviewed: 2026-08-31
 ---
 
 # 端到端计划链路
+
+## TASK-P4-12 HTTP continuation
+
+P4 HTTP链路为`strict carrier/query/action → correlation/plane → server capability + planning scope → injected application facade → response authority rebinding`。Append委托P4-04 ingress，create/result-control委托P4-08 composition，ChangeReport read委托P4-11；路由内没有event sorting/fact projection、Problem rebuild、freeze/OBJ-002、Solver/Validator、ScheduleVersion transition或Simulator control。任一授权、前置、lineage或结果envelope不一致都在成功response前fail closed。
 
 ## TASK-P4-11 read/export continuation
 

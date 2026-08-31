@@ -6,10 +6,14 @@ spec_version: 0.3.0
 phase: cross-phase
 normative: true
 source_sections: [15, 22, 59, 61, 90]
-last_reviewed: 2026-08-28
+last_reviewed: 2026-08-31
 ---
 
 # 数据权威边界
+
+## TASK-P4-12 transport authority edge
+
+P4 router只把已验证carrier/query/action与server-derived context交给`DynamicReplanningApplicationPort`。ExecutionEvent ledger/fact projection的authority仍在P4-03/04，Replan intent/result/new DRAFT在P4-08，ChangeReport read在P4-11；HTTP不直接读repository、不计算业务值、不以client body替代authority。Query中的planning scope/fingerprint是前置与授权绑定，不是客户端自证权威。
 
 ## TASK-P4-10 baseline authority boundary
 

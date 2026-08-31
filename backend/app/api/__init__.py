@@ -8,6 +8,13 @@ from app.api.contracts import (
     PlanningWorkspaceRequestContext,
     RoutedPlanningWorkspaceApplication,
 )
+from app.api.replanning_contracts import (
+    DynamicReplanningApplicationPort,
+    DynamicReplanningApplicationRequest,
+    DynamicReplanningOperation,
+    DynamicReplanningRequestContext,
+    RoutedDynamicReplanningApplication,
+)
 
 __all__ = [
     "PlanningWorkspaceApplicationPort",
@@ -15,5 +22,10 @@ __all__ = [
     "PlanningWorkspaceOperation",
     "PlanningWorkspaceRequestContext",
     "RoutedPlanningWorkspaceApplication",
+    "DynamicReplanningApplicationPort",
+    "DynamicReplanningApplicationRequest",
+    "DynamicReplanningOperation",
+    "DynamicReplanningRequestContext",
+    "RoutedDynamicReplanningApplication",
     "create_app",
 ]

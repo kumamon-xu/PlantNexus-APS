@@ -6,10 +6,14 @@ spec_version: 0.3.0
 phase: cross-phase
 normative: true
 source_sections: [12, 13, 14, 30, 41, 47, 51, 65, 70]
-last_reviewed: 2026-08-28
+last_reviewed: 2026-08-31
 ---
 
 # 模块边界与依赖规则
+
+## TASK-P4-12 API module ownership
+
+`app.api.replanning_contracts`拥有HTTP-only query/action/response合同与P4-02 carrier consumer precheck；`app.api.routers.dynamic_replanning`只拥有FastAPI binding、correlation、plane、authorization与delegation；`app.api.replanning_check`是machine composition root。Router只依赖API contract/authorization/config，禁止导入Application、Domain、Repository、Planning/Solver/Validator、Simulation或Exporter owner。
 
 ## TASK-P4-11 module ownership
 

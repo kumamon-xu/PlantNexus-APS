@@ -6,10 +6,16 @@ spec_version: 0.3.0
 phase: P0-P4
 normative: true
 source_sections: [29, 32, 34, 60, 65, 91, 92]
-last_reviewed: 2026-08-28
+last_reviewed: 2026-08-31
 ---
 
 # 错误与求解状态模型
+
+## TASK-P4-12 HTTP error mapping
+
+P4 HTTP保持`planning-workspace-error.v1`公开envelope：认证/authority为401/403，not found为404，lineage/state/position/idempotency conflict为409，strict carrier/query/action/validation为422，integrity/persistence/unexpected为500，unavailable composition或unknown outcome为503。`LINEAGE_MISMATCH`、stream gap/late/identity conflict不得写成Validation PASS；Solver no candidate仍由application terminal result表达，HTTP不得把UNKNOWN改成INFEASIBLE。
+
+`UNKNOWN_OUTCOME`为稳定control reason，response固定`retryable=false`并要求客户端以原request/attempt fingerprint查询result后再决定是否retry。所有未知exception只返回sanitized category/code/field/correlation，不反射SQL、DSN、token、stack或内部message。
 
 ## TASK-P4-08 application failures and terminal replay
 

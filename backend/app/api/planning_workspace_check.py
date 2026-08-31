@@ -40,6 +40,28 @@ TEST_IDS = (
     "TEST-SIM-ISOLATION",
     "TEST-OBS-001",
 )
+P3_PATHS = frozenset(
+    {
+        "/api/v1/planning-runs/{planning_run_id}",
+        "/api/v1/schedule-versions/{schedule_version_id}",
+        "/api/v1/schedule-versions/{schedule_version_id}/validate",
+        "/api/v1/schedule-versions/{schedule_version_id}/approve",
+        "/api/v1/schedule-versions/{schedule_version_id}/reject",
+        "/api/v1/schedule-versions/{schedule_version_id}/publish",
+        "/api/v1/workspace/data-health",
+        "/api/v1/workspace/import-runs",
+        "/api/v1/workspace/planning-runs",
+        "/api/v1/schedule-versions/{schedule_version_id}/workspace/{view}",
+        "/api/v1/schedule-version-comparisons",
+        "/api/v1/schedule-versions/{schedule_version_id}/commands",
+        "/api/v1/schedule-versions/{schedule_version_id}/audit-events",
+        "/api/v1/schedule-versions/{schedule_version_id}/exports",
+        "/api/v1/export-jobs/{export_job_id}",
+        "/api/v1/export-jobs/{export_job_id}/download",
+        "/api/v1/export-jobs/{export_job_id}/retry",
+        "/api/v1/export-jobs/{export_job_id}/cancel",
+    }
+)
 
 _SCHEDULE_ID = "schedule-version-sim-001"
 _COMPARED_ID = "schedule-version-sim-002"
@@ -252,6 +274,16 @@ def _openapi_fingerprint(document: Mapping[str, object]) -> str:
     return f"sha256:{sha256(payload).hexdigest()}"
 
 
+def _p3_openapi_projection(document: Mapping[str, object]) -> dict[str, object]:
+    """Keep the frozen P3 surface independent of additive later-phase routes."""
+
+    paths = cast(Mapping[str, object], document["paths"])
+    return {
+        "openapi": document["openapi"],
+        "paths": {path: paths[path] for path in sorted(P3_PATHS)},
+    }
+
+
 def run_http_api_checks(root: Path) -> dict[str, object]:
     application = _RecordingApplication()
     provider = _TokenProvider(
@@ -283,13 +315,13 @@ def run_http_api_checks(root: Path) -> dict[str, object]:
     api_paths = {
         path: sorted(method for method in value if method in {"get", "post"})
         for path, value in cast(dict[str, dict[str, object]], openapi["paths"]).items()
-        if path.startswith("/api/v1/")
+        if path in P3_PATHS
     }
     operation_ids = {
         cast(str, operation["operationId"])
         for route, path in cast(dict[str, dict[str, object]], openapi["paths"]).items()
         for method, operation in path.items()
-        if route.startswith("/api/v1/")
+        if route in P3_PATHS
         and method in {"get", "post"}
         and isinstance(operation, Mapping)
     }
@@ -321,7 +353,9 @@ def run_http_api_checks(root: Path) -> dict[str, object]:
             {
                 "api_paths": len(api_paths),
                 "operation_ids": len(operation_ids),
-                "openapi_fingerprint": _openapi_fingerprint(openapi),
+                "openapi_fingerprint": _openapi_fingerprint(
+                    _p3_openapi_projection(openapi)
+                ),
             },
         )
     )
@@ -688,7 +722,6 @@ def run_http_api_checks(root: Path) -> dict[str, object]:
             or ready.status_code != 200
             or len(application.requests) != before_health
             or any(token in router_source for token in forbidden_router_tokens)
-            or any("replan" in path or "execution-event" in path for path in api_paths)
         ):
             raise ValueError("health compatibility or thin-router boundary drifted")
         checks.append(
@@ -712,7 +745,7 @@ def run_http_api_checks(root: Path) -> dict[str, object]:
         "status": "PASS",
         "code_commit": os.environ.get("PLANTNEXUS_CODE_COMMIT", "uncommitted"),
         "http_contract_version": "planning-workspace-http.v1",
-        "openapi_fingerprint": _openapi_fingerprint(openapi),
+        "openapi_fingerprint": _openapi_fingerprint(_p3_openapi_projection(openapi)),
         "check_count": len(checks),
         "checks": checks,
         "test_ids": list(TEST_IDS),
@@ -737,6 +770,7 @@ def run_http_api_checks(root: Path) -> dict[str, object]:
             "p3_13_additive_operations": 1,
             "schema_migration_dependency_state_pairs": "UNCHANGED",
             "p4_capabilities": "NOT_IMPLEMENTED",
+            "p4_additive_surface": "OUTSIDE_FROZEN_P3_SUBSET",
             "production_readiness": "NOT_CLAIMED",
         },
         "issues": [],

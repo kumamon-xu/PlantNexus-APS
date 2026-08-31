@@ -6,10 +6,14 @@ spec_version: 0.3.0
 phase: cross-phase
 normative: true
 source_sections: [16, 38, 49, 62, 64, 95, 96]
-last_reviewed: 2026-08-28
+last_reviewed: 2026-08-31
 ---
 
 # 配置、环境与数据隔离
+
+## TASK-P4-12 HTTP isolation boundary
+
+P4 route只在`data_plane=SIMULATION`、`simulation_api_enabled=true`且environment为DEVELOPMENT/TEST/BENCHMARK时允许委托，carrier/query/action必须与runtime逐字一致且`production_binding=false`。Production composition对有效Simulation carrier在authorization provider和application lookup前直接拒绝并审计；本Task不新增env var、secret、gateway、network、storage或deployment配置。
 
 ## TASK-P4-11 runtime/isolation boundary
 

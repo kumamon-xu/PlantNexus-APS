@@ -6,10 +6,14 @@ spec_version: 0.3.0
 phase: P0-P7
 normative: true
 source_sections: [58, 62, 93, 95, 100]
-last_reviewed: 2026-08-27
+last_reviewed: 2026-08-31
 ---
 
 # P0 工程安全边界
+
+## TASK-P4-12 HTTP security controls
+
+P4 API要求Bearer只由server provider解析，在任何application/resource lookup前检查action-derived capability与exact planning scope。Raw token和raw Idempotency-Key不进入application/result/audit；未知exception与provider/audit错误不回显credential、DSN、SQL、stack或private path。Production不读provider即default-deny，不因Simulation flag、body authority或test principal放行。
 
 ## TASK-P4-04 security enforcement
 

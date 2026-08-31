@@ -64,6 +64,30 @@
       "status": "CORRECTED"
     }
   ],
+  "implementation_provider_candidates": [
+    {
+      "sha": "aedc682a5a82e135c63ce20f1c85009282ae7f42",
+      "direct_parent": "60ac4c17c6de514c036be7bac63e66da589bfb4c",
+      "run": 33366070434,
+      "classify_job": 99406875075,
+      "full_job": 99406912001,
+      "required_job": 99408660237,
+      "profile": "FULL",
+      "conclusion": "failure",
+      "failed_step": "P3 Gate Chromium replay 1",
+      "observed": "11 passed, 1 failed; language selection remained en-US after the zh-CN option click timeout",
+      "local_exact_replay_after_failure": "12 passed",
+      "artifacts": [9748513704, 9748318552],
+      "provider_digests": [
+        "sha256:513f2945ae416e0ea8f54526e96e95a5eff8fbfa4bdfe454639ab14c2b8be604",
+        "sha256:89972e0df417fadbaed31ec2e94d6a1bea4623820ad6bef53b8435065342a57d"
+      ],
+      "expired": false,
+      "download_digest_mismatch_count": 0,
+      "preserved": true,
+      "status": "FAILED_CANDIDATE_AWAITING_DIRECT_CORRECTIVE_SHA"
+    }
+  ],
   "successful_task_topology": {
     "TASK-P4-00": ["c94af400392418f9bb69509331fa8d1dff046184", "b96232b2e3f5573baaf735c7fa7935f95e6c88f5"],
     "TASK-P4-01": ["abd70942a41984a9a3956f43d39065b19e4405c3", "4026597ab1015b5ea3a89d241f0d12b5b481dee3"],
@@ -145,6 +169,6 @@
     "deployment": "NOT_PERFORMED",
     "capacity_and_sla": "NOT_ESTABLISHED"
   },
-  "implementation_provider": "PENDING_AT_AUDIT_IMPLEMENTATION_COMMIT",
+  "implementation_provider": "PENDING_NEW_DIRECT_CORRECTIVE_SHA_AFTER_PRESERVED_FAILURE",
   "evidence_only_closure_provider": "PENDING_AFTER_IMPLEMENTATION_PROVIDER"
 }

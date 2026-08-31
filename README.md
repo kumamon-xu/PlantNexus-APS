@@ -6,6 +6,10 @@ P5-01以不可变Diff base `4ccb2ed99ffe73abeb0462efff4a5342cd7c5522`建立versi
 
 机器报告本地为11/11 checks、`issues=[]`、`blocking_issues=[]`；12项聚焦unit/integration测试通过，并重放冻结的P2 XS/S/M，逐项保留runtime、memory、model size和quality原始开发观察。C-012～C-018仍显式`UNSUPPORTED_CAPABILITY`，Global仍是唯一已形成策略；未修改PlanningProblem、Solver、Validator、Schema/migration、dependency/lock、state/workflow、CI或任何候选实现，也未新增数值SIM假设。P4 ExecutionEvent/ReplanRequest/freeze/OBJ-002/ChangeReport/Simulator保持冻结回归边界；P6+、Production/UAT、真实authority、external publish/integration、deployment和capacity/SLA均未形成。
 
+首个candidate `c3761d0505690567ab6b60be1d04041dab0c0652`的FULL run `33380357486`保留为失败证据：唯一失败是P4 frozen evidence拒绝两份新增`backend/**`测试。Direct corrective `88fb9f53ab5425d72ee6659188b689a26d0e387a`只把同一12项测试迁到仓库级P5 test collection，不改P4脚本/Task或CI workflow；其run/classify/FULL/required=`33383710010`/`99461500612`/`99461537473`/`99463769376`全部成功，required `validate`由GitHub Actions app `15368`提供。
+
+Machine/profile artifacts `9754995093`,`9754731890`均未过期，下载ZIP SHA-256与provider digest逐字一致为`sha256:766163e4b516b1645bc985575e4ab3b113d32dd20d8ef77671cc56335f17a133`、`sha256:06caf0b3a9c448e6e9e1af7c01828edbf569e9bbfc810571c40111e2396515da`。Machine artifact的54个JSON全部可解析、43个commit字段全部exact且无非空issue/gap/error；P5 report精确绑定Task、不可变Diff base、HIGH_RISK、四个Impact Rules、11/11 checks、九项DEFERRED与`selected=[]`。本提交仅作tracked evidence-only closure；其自身仍须post-push exact provider，TASK-P5-02不会自动启动。
+
 ## TASK-P5-00 — P4→P5 transition and complete P5 plan
 
 用户已明确批准P4→P5。最小承接检查只确认P4 evidence-only closure `892c46d660a6bf3cde8ed473199f38746d041e47`仍同时是当前`main`、`origin/main`与remote `main`，ahead/behind=`0/0`、working tree clean、P4无active Task、Exit=`READY`且`blocking_gaps=[]`、无未关闭blocking项，required status check仍为GitHub Actions app `15368`提供的`validate`。没有重新运行P4 Exit Audit、下载/解析P4 artifact、重建evidence或修改P4 Task。

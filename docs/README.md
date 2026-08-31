@@ -17,6 +17,10 @@ TASK-P5-01从`4ccb2ed99ffe73abeb0462efff4a5342cd7c5522`冻结证据范围。由�
 
 该决定只形成可复现的优先级证据，不改变C-012～C-018的`UNSUPPORTED`或Global唯一策略状态，不实现候选，不修改Schema/migration/dependency/state/workflow/CI。P4动态重排能力只作为冻结回归上下文；P6+/Production/UAT/真实authority/external/deployment/capacity/SLA继续排除。
 
+首次candidate `c3761d0505690567ab6b60be1d04041dab0c0652` / run `33380357486`因P4 frozen evidence拒绝新增backend测试而保留为失败；direct corrective `88fb9f53ab5425d72ee6659188b689a26d0e387a`不改P4或workflow，只迁移同一12项测试。Corrective run/FULL/required=`33383710010`/`99461537473`/`99463769376`全部exact成功，required app=`15368`。
+
+Machine/profile artifacts `9754995093`,`9754731890`下载ZIP digest与provider一致为`sha256:766163e4b516b1645bc985575e4ab3b113d32dd20d8ef77671cc56335f17a133`、`sha256:06caf0b3a9c448e6e9e1af7c01828edbf569e9bbfc810571c40111e2396515da`；54 JSON全部解析、43个commit字段exact、0 issue/gap/error，P5 report为11/11、9 DEFERRED、selected empty。本tracked closure只回写上述provider evidence，closure自身等待DOCS_ONLY exact provider，P5-02仍`NOT_STARTED`。
+
 ## P5 activation and planning boundary
 
 P4已按用户授权关闭为`completed`，P5已激活为`active`。承接检查仅确认closure `892c46d660a6bf3cde8ed473199f38746d041e47`三端一致、0/0、clean、P4 Exit=`READY`/0 gaps、无active/blocking项且required `validate`/app `15368`未漂移，不构成P4重审。

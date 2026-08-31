@@ -17,6 +17,8 @@ P4-15从`60ac4c17c6de514c036be7bac63e66da589bfb4c`执行独立Exit审计，而�
 
 fresh replay通过834 Backend、78 Frontend、17/17主Chromium、P3 12/12×2、P4 5/5×2及全部历史machine；P2/P3/P4 Gate分别11/11、14/14、14/14且均无blocking gap。审计本地结论为`READY`，公开机器观察位于[`p4-exit-gate-audit-observations.v1.json`](p4-exit-gate-audit-observations.v1.json)。P4仍是当前阶段并等待单独phase-transition授权；P5/Production、真实authority/external integration/UAT/deployment/capacity/SLA未启动或形成。
 
+Candidate `aedc682a5a82e135c63ce20f1c85009282ae7f42`的FULL run `33366070434`因P3 locale click时序单次11/12失败而保留，required failure、两份artifact、digest与failure media均未改写；同一exact SHA本地复验12/12。Direct corrective `3637f514947397f7ba04a6ff3061a48f1809b44e`的run/classify/FULL/required=`33367097943`/`99409899613`/`99409926891`/`99412480503`成功，required app=`15368`。未过期artifacts `9748939618`,`9748651059`的provider/download digests为`sha256:be149288c052c84f314129bc2dbf63c9fef4608eae5de009dd51e959a93a595a`、`sha256:e853cd63c9e66d318dd44432ce2eff17d3d53ccb26481e0198fa52abf34f5946`，53 JSON及累计8-path/1-rule/19-check/0-issue治理证据一致；本次closure仍须通过独立DOCS_ONLY provider后Task才`done`。
+
 ## TASK-P4-14 local P4 Vertical Slice Gate
 
 TASK-P4-14从`ea05c3d9e94af91ae4525e5fbf1087a4a4198a15`冻结全部P4-01～13 provider inputs，并新增只聚合、不修业务的`p4-vertical-slice-report.v1`。两轮Backend replay逐次调用P4-02～12的11个owner machine入口，保留22份raw subreport与176个subordinate checks；连续五类disruption合计10个step、16个标准event、10次fresh Validator及10份complete ChangeReport。两轮专用Chromium各5/5并保留JSON/JUnit/HTML与failure media策略，P2/P3 Gate也作为exact SHA回归输入。

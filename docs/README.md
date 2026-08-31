@@ -17,6 +17,8 @@ P4已按用户授权关闭为`completed`，P5已激活为`active`。承接检查
 
 TASK-P5-00建立TASK-P5-00～22的条件计划：先证据选择和plan amendment，再为每个selected候选独立执行合同包与vertical slice，最后执行selected portfolio Gate和独立Exit Audit。所有P5业务、Schema、migration、dependency、test assertion和workflow本次均未修改；TASK-P5-01未启动。
 
+Implementation `a316d7a5ebf2e8c7e33da46cf1d7c08f2dfbdfa3`的run/required=`33373013523`/`99428242533`已exact成功；profile/public-doc artifacts `9750780227`,`9750786965`的下载ZIP digest与provider一致，并精确复现5个公开Markdown路径、`DOCS_ONLY`、4/4+1/1 checks和`issues=[]`。本tracked evidence-only closure仅修改本文档与根`README.md`，closure exact provider待post-push复验。
+
 P5激活不改变C-012～C-018的`UNSUPPORTED`状态，也不实现Decomposition/Rolling。P4的ExecutionEvent/ReplanRequest/freeze/OBJ-002/ChangeReport/Execution Simulator仍是冻结回归边界。P5不含multi-Factory、alternative routing扩展、tools/fixtures专用语义或Hybrid；P6+/Production/UAT/真实authority/external/deployment/capacity/SLA均未形成。
 
 ## TASK-P4-15 local independent Exit decision

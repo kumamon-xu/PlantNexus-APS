@@ -8,7 +8,9 @@ P4 Milestone现关闭为`completed`，P5 Milestone激活为`active`。TASK-P5-00
 
 现有C-012～C-018及Decomposition/Rolling仍未形成支持能力。每条selected链必须另获授权、冻结新的40字符Diff base，并独立提交ADR、additive Schema、Capability Contract、正反Fixture、Benchmark、default-off Feature Flag和双exact provider evidence。ExecutionEvent、ReplanRequest、freeze window、OBJ-002 Stability、ChangeReport与Execution Simulator保持P4冻结边界。Multi-Factory、alternative routing扩展、tools/fixtures专用语义、Hybrid、P6+及Production/UAT/真实authority/external publish/deployment/capacity/SLA明确排除。
 
-本次tracked差异只包含公开Markdown，按既有fail-closed规则自然分类为DOCS_ONLY；implementation exact provider及后续tracked evidence-only closure完成前TASK-P5-00保持`in_progress`，且不会自动启动TASK-P5-01。
+Implementation `a316d7a5ebf2e8c7e33da46cf1d7c08f2dfbdfa3`的run/classify/docs/required=`33373013523`/`99428152667`/`99428185042`/`99428242533`全部成功，required由GitHub Actions app `15368`提供。Profile/public-doc artifacts `9750780227`,`9750786965`均未过期，下载ZIP SHA-256与provider digest逐字一致为`sha256:2a93283ffb9cfb59fd61e68dd4ededcfbcd27b273c2bef99657c88feaa3a6848`、`sha256:bd146736ea4431ae48fd9d93ccdce43273005f9fbbc6cf61d39752b49beac3ff`。Artifact精确绑定不可变Diff base `892c46d660a6bf3cde8ed473199f38746d041e47`、implementation SHA、5个公开Markdown路径、`DOCS_ONLY`、4/4 profile checks、1/1 public-doc check与`issues=[]`。
+
+本提交是TASK-P5-00的tracked evidence-only closure，仅回写`README.md`与`docs/README.md`中的上述implementation证据，不扩大实现范围。Closure自身仍须通过post-push exact provider复验；TASK-P5-01保持`planned`且不会自动启动。
 
 ## TASK-P4-15 independent P4 Exit Gate Audit
 

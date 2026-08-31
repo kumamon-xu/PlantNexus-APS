@@ -4,7 +4,9 @@
 
 TASK-P4-14以不可变Diff base `ea05c3d9e94af91ae4525e5fbf1087a4a4198a15`形成`p4-vertical-slice-report.v1`。PHASE_GATE对P4-02～12的11个公开Backend owner边界执行两次fresh replay，完整保留22份stage运行、176个subordinate checks及raw reports；五类连续disruption合计10步、16个标准event、10次fresh Validator PASS和10份complete ChangeReport。另有两轮隔离Chromium各5/5，`p4-playwright-semantic-projection.v1`指纹一致，并严格消费冻结的TASK-P4-13 frontend report。
 
-本地聚合结果为14/14、`blocking_gaps=[]`、P2/P3 Gate regression PASS、四类exact fail-closed rejection PASS。Runtime timing/memory与派生artifact identity只从版本化业务语义投影中排除，所有原始证据继续保留；已序列化P3 Gate的JSON object key顺序仅为复验入口正规化，不改变任何值、array顺序或raw report hash。本Gate不修改P4-01～13业务、Schema/migration/dependency/lock、fixture expected、ADR或状态机；它不是P4 Exit Audit，TASK-P4-15仍`NOT_STARTED`，P5、Production readiness/UAT/真实authority/external integration/deployment/capacity/SLA均未形成。Implementation exact provider及后续evidence-only closure仍须完成后才能把TASK-P4-14标为`done`。
+本地聚合结果为14/14、`blocking_gaps=[]`、P2/P3 Gate regression PASS、四类exact fail-closed rejection PASS。Runtime timing/memory与派生artifact identity只从版本化业务语义投影中排除，所有原始证据继续保留；已序列化P3 Gate的JSON object key顺序仅为复验入口正规化，不改变任何值、array顺序或raw report hash。本Gate不修改P4-01～13业务、Schema/migration/dependency/lock、fixture expected、ADR或状态机；它不是P4 Exit Audit，TASK-P4-15仍`NOT_STARTED`，P5、Production readiness/UAT/真实authority/external integration/deployment/capacity/SLA均未形成。
+
+Implementation `296c9b495c44ac4245649f143ba9d366c25b0b13`的run/FULL/required=`33360100486`/`99389677929`/`99391482358`已由GitHub Actions app `15368` exact成功。未过期machine/profile artifacts `9746591757`,`9746389508`已下载复验，provider与ZIP digests分别一致为`sha256:7a4645e064b00430b67eb7bf19cd7e668b3c0dc1f7d4542ee23abc7669e06ba3`、`sha256:a4028270dd0138fef240db1b1f936062e26eea971eeb7424e80718bbf4237f0a`；47份machine JSON全部PASS、0 issues/gaps/commit drift，profile为17路径FULL且`issues=[]`。TASK仍须通过本次evidence-only closure的独立exact provider后才标为`done`。
 
 ## TASK-P4-13 Replanning Workspace UI
 

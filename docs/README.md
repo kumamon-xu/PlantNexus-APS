@@ -15,7 +15,9 @@ last_reviewed: 2026-08-31
 
 TASK-P4-14从`ea05c3d9e94af91ae4525e5fbf1087a4a4198a15`冻结全部P4-01～13 provider inputs，并新增只聚合、不修业务的`p4-vertical-slice-report.v1`。两轮Backend replay逐次调用P4-02～12的11个owner machine入口，保留22份raw subreport与176个subordinate checks；连续五类disruption合计10个step、16个标准event、10次fresh Validator及10份complete ChangeReport。两轮专用Chromium各5/5并保留JSON/JUnit/HTML与failure media策略，P2/P3 Gate也作为exact SHA回归输入。
 
-当前本地Gate为14/14、`blocking_gaps=[]`、单一Backend与browser semantic fingerprint、四项fail-closed rejection PASS。聚合器只对已序列化P3 JSON的object key顺序正规化，raw bytes hash及所有业务值完整保存。本Task不变更Schema/migration/dependency/lock、fixture expected、ADR/state pair或前序owner实现，也不形成Exit READY；TASK-P4-15/P5/Production/external authority/capacity/SLA继续明确排除。Implementation provider和evidence-only closure完成前TASK保持`in_progress`。
+当前本地Gate为14/14、`blocking_gaps=[]`、单一Backend与browser semantic fingerprint、四项fail-closed rejection PASS。聚合器只对已序列化P3 JSON的object key顺序正规化，raw bytes hash及所有业务值完整保存。本Task不变更Schema/migration/dependency/lock、fixture expected、ADR/state pair或前序owner实现，也不形成Exit READY；TASK-P4-15/P5/Production/external authority/capacity/SLA继续明确排除。
+
+Implementation `296c9b495c44ac4245649f143ba9d366c25b0b13`的FULL run/job/required=`33360100486`/`99389677929`/`99391482358`及machine/profile artifacts `9746591757`,`9746389508`均为exact、成功、未过期。下载ZIP与provider digest逐字一致为`sha256:7a4645e064b00430b67eb7bf19cd7e668b3c0dc1f7d4542ee23abc7669e06ba3`、`sha256:a4028270dd0138fef240db1b1f936062e26eea971eeb7424e80718bbf4237f0a`；47份JSON全部PASS、0 issues/gaps/commit drift，17-path FULL profile的base/head与`issues=[]`一致。Evidence-only closure exact provider完成前TASK仍为`in_progress`。
 
 ## TASK-P4-13 local Replanning Workspace boundary
 

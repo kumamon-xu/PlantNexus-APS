@@ -11,6 +11,12 @@ last_reviewed: 2026-08-31
 
 # 配置、环境与数据隔离
 
+## TASK-P4-13 browser isolation boundary
+
+P4工作台沿用既有runtime配置，只在`SIMULATION`与DEVELOPMENT/TEST/BENCHMARK中构造query/action；Production在发出read或mutation前default-deny。Bearer只由当前内存注入，请求使用`credentials: omit`，raw token与Idempotency-Key不写入local/session storage、cookie、URL、报告或UI；unknown outcome的exact action也只保留在当前hook内存，刷新页面即丢弃。
+
+本Task没有增加env var、secret、service、port、container、network、storage、dependency或lock。E2E的mock transport和`SIM-P4-REPLANNING-UI-001@1.0.0`仅证明browser contract/isolation，不是部署拓扑、真实Production data plane、capacity或SLA。
+
 ## TASK-P4-12 HTTP isolation boundary
 
 P4 route只在`data_plane=SIMULATION`、`simulation_api_enabled=true`且environment为DEVELOPMENT/TEST/BENCHMARK时允许委托，carrier/query/action必须与runtime逐字一致且`production_binding=false`。Production composition对有效Simulation carrier在authorization provider和application lookup前直接拒绝并审计；本Task不新增env var、secret、gateway、network、storage或deployment配置。

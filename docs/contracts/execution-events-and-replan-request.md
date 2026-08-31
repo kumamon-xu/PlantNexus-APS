@@ -11,6 +11,12 @@ last_reviewed: 2026-08-31
 
 # ExecutionEvent 与 ReplanRequest 合同
 
+## TASK-P4-13 display/action consumer
+
+工作台按服务端`source_position`原序显示ExecutionEvent并同时保留`event_type`、raw UTC、entity/payload和fingerprint；client只验证位置连续及projection绑定，不排序、推导fact或修改event。五类browser scenario由六个明确Simulation event覆盖Machine Failure/Recovery的两个事实边界，不能外推为Production事件分布。
+
+ReplanRequest仍无独立状态机。页面只显示immutable request与当前PlanningRun attempt state/`allowed_actions`，result仅在服务端给出`COMPLETED`且DRAFT/ChangeReport references完整时展示；cancel/retry是expected-attempt-state intent，不是client state transition。任何authority变化都会终止unknown-outcome重试。
+
 ## TASK-P4-12 HTTP consumer
 
 HTTP append只接受完整`execution-event.v1`并绑定body correlation、Simulation plane/environment、planning scope、event identity/fingerprint与hashed Idempotency-Key；HTTP层不重新排序stream、不投影fact或checkpoint。Event get/list以fingerprinted query锁定planning scope，list另要求authority/stream/version与有界position window；真实ledger/query仍属于application/repository authority。

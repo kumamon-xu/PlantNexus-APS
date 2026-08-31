@@ -11,6 +11,12 @@ last_reviewed: 2026-08-31
 
 # P0 工程安全边界
 
+## TASK-P4-13 browser security controls
+
+Browser runtime在任何P4 fetch前拒绝Production/非Simulation配置；token只作为内存Bearer发送，`credentials: omit`，raw token/key不进入browser storage、URL、DOM、console或machine evidence。Query/action均使用canonical fingerprint、exact planning-scope header和correlation；response还必须反向绑定operation/resource/query/projection。
+
+动作按钮以server `allowed_actions`为唯一capability来源，reason拒绝credential-like文本并要求确认；double submit被锁止。Unknown outcome不盲重试，exact body/key仅短暂保存在内存并先查询authority。上述测试控制不形成真实identity、RBAC、external ingress、secret distribution、Production threat model或approval authority。
+
 ## TASK-P4-12 HTTP security controls
 
 P4 API要求Bearer只由server provider解析，在任何application/resource lookup前检查action-derived capability与exact planning scope。Raw token和raw Idempotency-Key不进入application/result/audit；未知exception与provider/audit错误不回显credential、DSN、SQL、stack或private path。Production不读provider即default-deny，不因Simulation flag、body authority或test principal放行。

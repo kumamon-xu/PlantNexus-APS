@@ -376,6 +376,11 @@ jobs:
           node frontend/scripts/i18n-evidence.mjs
           --report build/validation/ci-p3-frontend-i18n.json
 
+      - name: TASK-P4-13 Dynamic replanning frontend machine evidence
+        run: >-
+          node frontend/scripts/replanning-evidence.mjs
+          --report build/validation/ci-p4-replanning-frontend.json
+
       - name: P3 Gate Chromium replay 1
         working-directory: frontend
         env:

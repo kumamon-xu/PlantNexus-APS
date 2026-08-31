@@ -11,6 +11,12 @@ last_reviewed: 2026-08-31
 
 # 端到端计划链路
 
+## TASK-P4-13 browser continuation
+
+当前可见链路为`explicit UI authority → canonical P4 read queries → server projections → strict fingerprint/lineage parser → bilingual raw-evidence panels`。动作分支为`server allowed_actions → confirmation/reason → expected-attempt-state action → authoritative acknowledgement`；不确定结果分支为`retain exact request in memory → refresh result/request authority → unchanged-only same-key retry`。
+
+Browser只消费P4-04/05/06/08/11/12 owner结果，不执行event projection、freeze、Problem/Solver、fresh Validator、KPI/Stability或ChangeReport计算，也不自动推进DRAFT进入review/approval/publication/export。P4-14聚合Gate、P5与Production external链仍是独立后继。
+
 ## TASK-P4-12 HTTP continuation
 
 P4 HTTP链路为`strict carrier/query/action → correlation/plane → server capability + planning scope → injected application facade → response authority rebinding`。Append委托P4-04 ingress，create/result-control委托P4-08 composition，ChangeReport read委托P4-11；路由内没有event sorting/fact projection、Problem rebuild、freeze/OBJ-002、Solver/Validator、ScheduleVersion transition或Simulator control。任一授权、前置、lineage或结果envelope不一致都在成功response前fail closed。

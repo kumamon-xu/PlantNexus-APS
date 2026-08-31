@@ -145,9 +145,17 @@ const inventory = readFileSync("src/app/routeInventory.ts", "utf8");
 for (const route of expectedRoutes) {
   fail(inventory.includes(`"${route}"`), `route absent: ${route}`, issues);
 }
-const pathCount = [...inventory.matchAll(/path:\s*"\//gu)].length;
-fail(pathCount === 18, `route inventory contains ${pathCount}, expected 18`, issues);
-checks.push(completedCheck("WORKSPACE-ROUTES", "18 exact P3 routes; no P4 route"));
+const totalPathCount = [...inventory.matchAll(/path:\s*"\//gu)].length;
+const p3PathCount = expectedRoutes.length;
+fail(totalPathCount === 19, `route inventory contains ${totalPathCount}, expected 19`, issues);
+fail(
+  inventory.includes('path: "/planning/replanning"') &&
+    inventory.includes("p3WorkspaceRoutes") &&
+    inventory.includes("p4WorkspaceRoutes"),
+  "bounded additive P4 route is not separated from the frozen P3 subset",
+  issues,
+);
+checks.push(completedCheck("WORKSPACE-ROUTES", "18 exact P3 routes preserved plus one bounded additive P4 route"));
 
 for (const path of requiredControlFiles) {
   fail(existsSync(path), `required P3-13 control file absent: ${path}`, issues);
@@ -174,13 +182,8 @@ fail(
   "versioned locale preference key is absent",
   issues,
 );
-for (const fragment of ["replan", "change-report", "execution-event"]) {
-  fail(
-    !sourcePaths.some((path) => path.toLowerCase().includes(fragment)),
-    `P4 module present: ${fragment}`,
-    issues,
-  );
-}
+const p4SourcePaths = sourcePaths.filter((path) => path.startsWith("features/replanning/"));
+fail(p4SourcePaths.length === 6, `bounded P4 module count is ${p4SourcePaths.length}, expected 6`, issues);
 for (const command of [
   "MOVE_OPERATION",
   "ASSIGN_RESOURCE",
@@ -197,7 +200,7 @@ for (const command of [
 checks.push(
   completedCheck(
     "HUMAN-CONTROL-MODULES",
-    "state/capability controls, command carrier, no browser credential persistence or P4 module",
+    "frozen P3 state/capability controls and command carrier; no browser credential persistence; additive P4 module isolated",
   ),
 );
 
@@ -324,17 +327,20 @@ if (!existsSync(browserReportPath)) {
   };
   visit(browserReport.suites);
   fail(browserReport.errors?.length === 0, "Playwright report contains top-level errors", issues);
-  fail(browserSpecs.length === 12, `Playwright spec count is ${browserSpecs.length}, expected 12`, issues);
-  for (const spec of browserSpecs) {
-    const results = (spec.tests ?? []).flatMap((item) => item.results ?? []);
-    fail(
-      spec.ok === true && results.some((result) => result.status === "passed"),
-      `Playwright spec failed: ${spec.title}`,
-      issues,
-    );
-  }
 }
-const controlSpecs = browserSpecs.filter((spec) => spec.file === "human-control-actions.spec.ts");
+const p3BrowserSpecs = browserSpecs.filter(
+  (spec) => spec.file !== "dynamic-replanning.spec.ts",
+);
+fail(p3BrowserSpecs.length === 12, `frozen P3 Playwright spec count is ${p3BrowserSpecs.length}, expected 12`, issues);
+for (const spec of p3BrowserSpecs) {
+  const results = (spec.tests ?? []).flatMap((item) => item.results ?? []);
+  fail(
+    spec.ok === true && results.some((result) => result.status === "passed"),
+    `frozen P3 Playwright spec failed: ${spec.title}`,
+    issues,
+  );
+}
+const controlSpecs = p3BrowserSpecs.filter((spec) => spec.file === "human-control-actions.spec.ts");
 fail(controlSpecs.length === 8, `human-control browser spec count is ${controlSpecs.length}, expected 8`, issues);
 fail(existsSync(browserJunitPath), "Playwright JUnit evidence is absent", issues);
 fail(existsSync(browserHtmlPath), "Playwright HTML evidence is absent", issues);
@@ -362,7 +368,7 @@ for (const retention of [
 checks.push(
   completedCheck(
     "BROWSER-EVIDENCE",
-    `${browserSpecs.length}/12 Chromium specs; ${controlSpecs.length}/8 control specs; JSON/JUnit/HTML and failure retention`,
+    `${p3BrowserSpecs.length}/12 frozen P3 Chromium specs inside ${browserSpecs.length} total; ${controlSpecs.length}/8 controls; JSON/JUnit/HTML and failure retention`,
   ),
 );
 
@@ -376,12 +382,13 @@ fail(
   "PUBLISHED mutation guard is absent",
   issues,
 );
-fail(!combined.includes("/replan-requests"), "P4 Replan route was introduced", issues);
-fail(!combined.includes("/execution-events"), "P4 ExecutionEvent route was introduced", issues);
+const frozenP3Client = readFileSync("src/api/client.ts", "utf8");
+fail(!frozenP3Client.includes("/replan-requests"), "P4 Replan route leaked into the frozen P3 client", issues);
+fail(!frozenP3Client.includes("/execution-events"), "P4 ExecutionEvent route leaked into the frozen P3 client", issues);
 checks.push(
   completedCheck(
     "PHASE-BOUNDARY",
-    "PUBLISHED immutable; no P4, MES, external storage, Production authority or readiness claim",
+    "PUBLISHED immutable; P4 consumer remains additive and isolated; no MES, external storage, Production authority or readiness claim",
   ),
 );
 
@@ -416,11 +423,13 @@ const report = {
   diff_base: diffBase,
   status: issues.length === 0 ? "PASS" : "FAIL",
   direct_dependency_count: Object.keys(runtimePins).length + Object.keys(developmentPins).length,
-  route_count: pathCount,
+  route_count: p3PathCount,
+  all_route_count: totalPathCount,
   api_operation_count: apiOperationCount,
   api_openapi_fingerprint: apiOpenapiFingerprint,
   source_file_count: sourceFiles.length,
-  browser_spec_count: browserSpecs.length,
+  browser_spec_count: p3BrowserSpecs.length,
+  all_browser_spec_count: browserSpecs.length,
   human_control_browser_spec_count: controlSpecs.length,
   test_ids: requiredTestIds,
   bundle: { javascript_bytes: javascriptBytes, css_bytes: cssBytes },
@@ -446,7 +455,7 @@ const report = {
     schema_migration_dependency_state_pairs_changed: false,
     client_solver_validator_kpi_formed: false,
     external_identity_mes_storage_formed: false,
-    p4_formed: false,
+    p4_additive_route_excluded_from_frozen_p3_counts: true,
     production_identity_formed: false,
     production_readiness: false,
   },

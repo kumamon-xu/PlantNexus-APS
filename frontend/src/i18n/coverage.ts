@@ -9,7 +9,14 @@ import {
   constraintIds,
   officialAllowedActions,
   officialWorkspaceViews,
+  replanTriggerReasons,
 } from "./business-labels";
+import {
+  changeClassifications,
+  executionEventTypes,
+  planningRunStates,
+  replanAttemptActions,
+} from "../features/replanning/types";
 import { enUSMessages } from "./dictionaries/en-US";
 import { zhCNMessages } from "./dictionaries/zh-CN";
 import {
@@ -51,6 +58,11 @@ export function inspectI18nCoverage(): I18nCoverageResult {
     ...missingKeys("command", workspaceCommandTypes, businessLabelRegistries.command),
     ...missingKeys("allowedAction", officialAllowedActions, businessLabelRegistries.allowedAction),
     ...missingKeys("changeKind", comparisonChangeKinds, businessLabelRegistries.changeKind),
+    ...missingKeys("executionEvent", executionEventTypes, businessLabelRegistries.executionEvent),
+    ...missingKeys("planningRunState", planningRunStates, businessLabelRegistries.planningRunState),
+    ...missingKeys("replanAction", replanAttemptActions, businessLabelRegistries.replanAction),
+    ...missingKeys("replanTrigger", replanTriggerReasons, businessLabelRegistries.replanTrigger),
+    ...missingKeys("changeClassification", changeClassifications, businessLabelRegistries.changeClassification),
     ...missingKeys("constraint", constraintIds, businessLabelRegistries.constraint),
     ...missingKeys("productCategory", productErrorCategories, errorLabelRegistries.productCategory),
     ...missingKeys("productCode", productErrorCodes, errorLabelRegistries.productCode),
@@ -64,6 +76,11 @@ export function inspectI18nCoverage(): I18nCoverageResult {
     workspaceCommandTypes.length +
     officialAllowedActions.length +
     comparisonChangeKinds.length +
+    executionEventTypes.length +
+    planningRunStates.length +
+    replanAttemptActions.length +
+    replanTriggerReasons.length +
+    changeClassifications.length +
     constraintIds.length +
     productErrorCategories.length +
     productErrorCodes.length +

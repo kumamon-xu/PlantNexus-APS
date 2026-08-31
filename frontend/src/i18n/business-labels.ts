@@ -8,6 +8,12 @@ import type {
   WorkspaceUiState,
 } from "../api/types";
 import type { AppLocale, LocalizedMachineValue } from "./types";
+import {
+  changeClassifications,
+  executionEventTypes,
+  planningRunStates,
+  replanAttemptActions,
+} from "../features/replanning/types";
 
 type BilingualLabel = Readonly<Record<AppLocale, string>>;
 
@@ -56,6 +62,12 @@ export const constraintIds = [
   "C-009",
   "C-010",
   "C-011",
+] as const;
+
+export const replanTriggerReasons = [
+  "EXECUTION_FACT_CHANGED",
+  "URGENT_DEMAND_RECEIVED",
+  "LOCK_POLICY_CHANGED",
 ] as const;
 
 export const businessLabelRegistries = {
@@ -144,6 +156,52 @@ export const businessLabelRegistries = {
     START_SHIFT: label("Start time shifted", "开始时间偏移"),
     UNCHANGED: label("Unchanged", "未变更"),
   } satisfies Record<ComparisonChangeKind, BilingualLabel>,
+  executionEvent: {
+    OPERATION_STARTED: label("Operation started", "工序已开始"),
+    OPERATION_COMPLETED: label("Operation completed", "工序已完成"),
+    MACHINE_UNAVAILABLE: label("Machine unavailable", "设备不可用"),
+    MACHINE_RECOVERED: label("Machine recovered", "设备已恢复"),
+    MATERIAL_READY: label("Material ready", "物料已就绪"),
+    MATERIAL_DELAYED: label("Material delayed", "物料延迟"),
+    PROCESSING_DURATION_CHANGED: label("Processing duration changed", "加工时长已变更"),
+    PROCESSING_REMAINING_CHANGED: label("Remaining processing changed", "剩余加工时长已变更"),
+    URGENT_DEMAND_RECEIVED: label("Urgent demand received", "已收到紧急需求"),
+    LOCK_CREATED: label("Lock created", "已创建锁定"),
+    LOCK_RELEASED: label("Lock released", "已释放锁定"),
+  } satisfies Record<(typeof executionEventTypes)[number], BilingualLabel>,
+  planningRunState: {
+    CREATED: label("Created", "已创建"),
+    INGESTING: label("Ingesting", "正在摄取"),
+    VALIDATING: label("Validating", "正在校验"),
+    SNAPSHOTTED: label("Snapshotted", "已生成快照"),
+    BUILDING: label("Building", "正在构建"),
+    SOLVING: label("Solving", "正在求解"),
+    SOLVED: label("Solved", "已求解"),
+    VERIFYING: label("Verifying", "正在复核"),
+    COMPLETED: label("Completed", "已完成"),
+    DATA_REJECTED: label("Data rejected", "数据被拒绝"),
+    MODEL_INVALID: label("Model invalid", "模型无效"),
+    INFEASIBLE: label("Infeasible", "不可行"),
+    NO_SOLUTION_WITHIN_LIMIT: label("No solution within limit", "限制内无解"),
+    VALIDATION_FAILED: label("Validation failed", "校验失败"),
+    CANCELLED: label("Cancelled", "已取消"),
+    FAILED: label("Failed", "失败"),
+  } satisfies Record<(typeof planningRunStates)[number], BilingualLabel>,
+  replanAction: {
+    CANCEL: label("Cancel attempt", "取消尝试"),
+    RETRY: label("Retry attempt", "重试尝试"),
+  } satisfies Record<(typeof replanAttemptActions)[number], BilingualLabel>,
+  replanTrigger: {
+    EXECUTION_FACT_CHANGED: label("Execution fact changed", "执行事实已变更"),
+    URGENT_DEMAND_RECEIVED: label("Urgent demand received", "已收到紧急需求"),
+    LOCK_POLICY_CHANGED: label("Lock policy changed", "锁定策略已变更"),
+  } satisfies Record<(typeof replanTriggerReasons)[number], BilingualLabel>,
+  changeClassification: {
+    UNCHANGED: label("Unchanged", "未变更"),
+    CHANGED: label("Changed", "已变更"),
+    ADDED: label("Added", "新增"),
+    REMOVED_BY_FACT: label("Removed by execution fact", "因执行事实移除"),
+  } satisfies Record<(typeof changeClassifications)[number], BilingualLabel>,
   constraint: {
     "C-001": label("Assignment completeness", "必排完整性"),
     "C-002": label("Precedence timing", "工艺时间关系"),

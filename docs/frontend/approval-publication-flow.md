@@ -6,10 +6,16 @@ spec_version: 0.3.0
 phase: P3
 normative: true
 source_sections: [33, 34, 66, 67, 68, 77, 78, 94]
-last_reviewed: 2026-08-27
+last_reviewed: 2026-08-31
 ---
 
 # P3 Approval Publication 与 Export 人工控制流程
+
+## TASK-P4-13 replanning action boundary
+
+P4的`CANCEL/RETRY`只作用于当前Simulation PlanningRun attempt，与P3 ScheduleVersion approve/reject/publish/export控制完全分离。按钮必须由服务端`allowed_actions`挂载，并要求非敏感reason和显式确认；success只接受绑定action/request/attempt/state/fingerprint/correlation的服务端acknowledgement。
+
+网络或503时不得显示成功或生成新key；页面先重新查询authoritative Request/result，仅在attempt ID/number/state/allowed action与原请求一致时提供“重试同一请求”。该流程不创建approval authority、不发布/导出DRAFT，也不把test actor升级为Production identity。
 
 ## TASK-P3-17 audit conclusion
 

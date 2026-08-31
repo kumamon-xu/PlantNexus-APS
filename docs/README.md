@@ -11,6 +11,12 @@ last_reviewed: 2026-08-31
 
 # PlantNexus APS 文档中心
 
+## TASK-P4-13 local Replanning Workspace boundary
+
+TASK-P4-13以`be2389594f3e224de3f5a73f4b8b62ffcffb5b7b`为不可变Diff base，只新增一个隔离的P4 route及六文件typed consumer。页面消费P4-12四类versioned projection，显示server-owned event顺序、Request/attempt/result、freeze/effective locks、tardiness/Stability和ChangeReport；英文machine values、raw UTC、ID、fingerprint和JSON证据始终可见，`zh-CN`/`en-US`只是展示层。
+
+动作严格依赖server `allowed_actions`与expected-state CAS。Unknown outcome固定为query-before-retry且只允许复用内存中的exact body/key；Production runtime、tampered projection、unknown state/type和mixed lineage均fail closed。完整HIGH_RISK已本地通过19 focused、821 Backend、78 Frontend、17/17主Chromium、两轮P3 Gate各12/12、全部machine/XS/P2/P3 Gate/SCA/license/build/Compose及43-path/5-rule/19-check/0-issue治理，forbidden scope=0；双exact provider仍待完成。新增`SIM-P4-REPLANNING-UI-001@1.0.0`只承载五类/六event的mock transport浏览器证据，不形成Production facts、authority、capacity或SLA。
+
 ## TASK-P4-12 local HTTP/OpenAPI boundary
 
 TASK-P4-12以`f4a54d3bb065b5cc8b51c450ffdc435bcc77d384`为不可变Diff base，在既有FastAPI composition内additive新增8 paths/9 operations的`dynamic-replanning-http.v1`。Transport只验证已发布P4 carrier、fingerprinted query/action、header/body correlation/idempotency绑定、server-derived capability/planning-scope及稳定HTTP/error envelope，然后委托注入的P4 application facade。

@@ -8,7 +8,7 @@ export interface WorkspaceRouteDefinition {
   scheduleScoped?: boolean;
 }
 
-export const workspaceRoutes: readonly WorkspaceRouteDefinition[] = [
+export const p3WorkspaceRoutes: readonly WorkspaceRouteDefinition[] = [
   { path: "/planning/data-health", view: "DATA_HEALTH" },
   { path: "/planning/import-runs", view: "IMPORT_RUNS" },
   { path: "/planning/runs", view: "PLANNING_RUNS" },
@@ -58,6 +58,18 @@ export const workspaceRoutes: readonly WorkspaceRouteDefinition[] = [
     view: "VERSION_COMPARISON",
     scheduleScoped: true,
   },
+] as const;
+
+export const p4WorkspaceRoutes: readonly WorkspaceRouteDefinition[] = [
+  {
+    path: "/planning/replanning",
+    labelKey: "route.replanningWorkspace",
+  },
+] as const;
+
+export const workspaceRoutes: readonly WorkspaceRouteDefinition[] = [
+  ...p3WorkspaceRoutes,
+  ...p4WorkspaceRoutes,
 ] as const;
 
 export const excludedP313RouteFragments = [

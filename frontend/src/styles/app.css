@@ -328,6 +328,74 @@ body {
   font-size: 1.25rem;
 }
 
+.replanning-section,
+.replanning-results > section,
+.replanning-footer-boundary {
+  margin-top: 20px;
+}
+
+.replanning-identity-grid {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 12px;
+  align-items: end;
+}
+
+.replanning-identity-grid label {
+  display: grid;
+  gap: 6px;
+  min-width: 0;
+  font-weight: 600;
+}
+
+.event-timeline {
+  position: relative;
+  display: grid;
+  gap: 14px;
+  margin: 0;
+  padding: 0 0 0 24px;
+  list-style: none;
+}
+
+.event-timeline::before {
+  position: absolute;
+  inset: 0 auto 0 7px;
+  width: 2px;
+  background: #a9c7bd;
+  content: "";
+}
+
+.event-timeline > li {
+  position: relative;
+}
+
+.event-timeline > li::before {
+  position: absolute;
+  z-index: 1;
+  top: 20px;
+  left: -22px;
+  width: 12px;
+  height: 12px;
+  border: 2px solid #fff;
+  border-radius: 50%;
+  background: #146b58;
+  box-shadow: 0 0 0 1px #146b58;
+  content: "";
+}
+
+.replanning-results .ant-descriptions,
+.replanning-results .ant-alert,
+.replanning-results .control-field,
+.replanning-results .ant-checkbox-wrapper,
+.replanning-results .ant-space,
+.action-feedback {
+  margin-top: 12px;
+}
+
+.replanning-results .ant-tag .localized-raw {
+  color: inherit;
+}
+
 @media (max-width: 760px) {
   .app-content {
     padding: 12px;
@@ -340,7 +408,8 @@ body {
   .visualization-controls,
   .overlay-grid,
   .comparison-form,
-  .control-grid {
+  .control-grid,
+  .replanning-identity-grid {
     grid-template-columns: 1fr;
   }
 }

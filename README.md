@@ -1,5 +1,13 @@
 # PlantNexus APS
 
+## TASK-P4-13 Replanning Workspace UI
+
+TASK-P4-13从不可变Diff base `be2389594f3e224de3f5a73f4b8b62ffcffb5b7b`形成一个additive、Simulation/development-only的`/planning/replanning`工作台。浏览器以strict typed consumer读取P4-12的event timeline、ReplanRequest/attempt/result和ChangeReport投影，展示freeze half-open边界、before/after priority-weighted tardiness、OBJ-002 Stability及逐operation classification；query/response/resource/correlation/fingerprint任一不一致均fail closed。既有18条P3 route和12个P3 Chromium场景作为冻结子集继续复验。
+
+`CANCEL/RETRY`只在服务端`allowed_actions`允许时挂载，并逐字绑定request fingerprint、attempt ID/number、expected PlanningRun state、hashed Idempotency-Key reference及显式确认/reason。网络或503造成unknown outcome时，浏览器仅在内存保留exact body/key，先refresh authoritative result；authority未变才允许same-body/same-key retry，变化则停止重试。Production runtime在任何read/action前default-deny；浏览器不计算event order、fact、freeze/effective lock、KPI、Stability、Validator或ChangeReport。
+
+完整HIGH_RISK本地验收已通过：focused 19/19、Backend 821/821、Frontend 78/78、主Chromium 17/17（12个冻结P3 + 5个P4 positive/error/tamper/network recovery场景）、两轮P3 Gate各12/12、P2/P3 Gate 11/11与14/14、Ruff/Pyright、SCA/license、全部历史machine、XS Benchmark、Compose、前后端build及sdist/wheel。`p4-replanning-frontend-report.v1`为8/8、五个Impact Rules、`issues=[]`；Task治理为43 paths/5 rules/19 checks/0 issues且forbidden scope=0。首次错误工作目录Vitest、两次raw-label locator、裸`node` evidence、旧i18n loader、首轮Backend CI-step count及最初Task-diff临时文件失败均保留并在冻结allow-list内限定纠正。Implementation exact provider与evidence-only closure仍待本Task后续闭环。Schema/migration/dependency/lock、backend business/state pair、Solver/Validator/Simulator、external publish、P4 Gate、P5及Production identity/authority/deployment/capacity/SLA未修改或形成；TASK-P4-14不会自动启动。
+
 ## TASK-P4-12 Dynamic Replanning HTTP API
 
 TASK-P4-12已从不可变Diff base `f4a54d3bb065b5cc8b51c450ffdc435bcc77d384`形成Simulation/development-only `dynamic-replanning-http.v1`：8个P4 path、9个operation覆盖ExecutionEvent append/get/stream query、ReplanRequest create/get/cancel/retry/result与ChangeReport read。POST严格消费已发布`execution-event.v1`/`replan-request.v1`；GET使用fingerprinted `dynamic-replanning-query.v1`；cancel/retry使用`replan-attempt-action-http.v1`绑定hashed Idempotency-Key、request fingerprint、attempt ID/number及预期PlanningRun state。ReplanRequest仍无独立state machine。

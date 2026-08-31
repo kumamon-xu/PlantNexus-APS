@@ -11,6 +11,12 @@ last_reviewed: 2026-08-31
 
 # P0 Observability 与 Audit 边界
 
+## TASK-P4-13 browser evidence edge
+
+UI把correlation ID、query/projection/resource fingerprints、event positions、Request/attempt IDs、DRAFT/ChangeReport references及raw UTC保留为可复核证据；不在browser生成业务AuditEvent或覆盖server authority。Action acknowledgement与unknown-outcome恢复绑定同一action fingerprint/body/key，便于把浏览器证据连接到P4-12 transport和application audit。
+
+Vitest、Playwright JSON/JUnit/HTML及失败时trace/video/screenshot进入CI artifact，`p4-replanning-frontend-report.v1`记录Task、exact commit、Diff base、Impact Rules、checks/issues与bounded fixture。它们只属于development correctness；尚无Production telemetry backend、SIEM、retention、alert、SLO、capacity或SLA。
+
 ## TASK-P4-12 transport observability
 
 所有P4 response固定回传`X-Correlation-Id`和`Cache-Control: no-store`，并要求application envelope的correlation与route逐字一致。Authentication/capability/scope/Production denial使用既有sanitized `AuthorizationAuditRecord`，记录capability、`PLANNING_SCOPE`、outcome/reason/plane/environment，不记raw token/key。成功ExecutionEvent/Replan/ChangeReport audit内容仍由对应application/persistence owner原子产生，router不伪造业务audit。

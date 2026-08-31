@@ -6,10 +6,16 @@ spec_version: 0.3.0
 phase: P0-P3
 normative: true
 source_sections: [30, 33, 35, 66, 69, 78]
-last_reviewed: 2026-08-28
+last_reviewed: 2026-08-31
 ---
 
 # ScheduleVersion 状态机
+
+## TASK-P4-13 UI state boundary
+
+Replanning Workspace只显示P4-08形成的new `DRAFT` reference和服务端PlanningRun attempt state；它不写ScheduleVersion、不新增state/pair，也不从`COMPLETED`推导ScheduleVersion已approved或published。只有完整、fingerprint-bound的DRAFT/ChangeReport result可见，失败、tamper或non-terminal attempt不得展示partial result。
+
+`CANCEL/RETRY`针对PlanningRun attempt而非ScheduleVersion。DRAFT后续仍必须经过既有P3人工控制链；本Task没有自动READY/APPROVE/PUBLISH/EXPORT或Production authority。
 
 ## TASK-P4-11 read/export state boundary
 

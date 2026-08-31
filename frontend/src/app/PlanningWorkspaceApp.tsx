@@ -9,6 +9,7 @@ import { WorkspaceCollectionPage } from "../pages/WorkspaceCollectionPage";
 import { WorkspaceStatePanel } from "../components/WorkspaceStatePanel";
 import { GanttPage } from "../features/gantt/GanttPage";
 import { ResourceLoadPage } from "../features/resource-load/ResourceLoadPage";
+import { ReplanningWorkspacePage } from "../features/replanning/ReplanningWorkspacePage";
 import { VersionComparisonPage } from "../features/version-comparison/VersionComparisonPage";
 import { useAppServices } from "./context";
 import { labelBusinessValue } from "../i18n/business-labels";
@@ -154,6 +155,7 @@ export function PlanningWorkspaceApp() {
             />
             <Route path="/resource-load" element={<ResourceLoadPage />} />
             <Route path="/compare" element={<VersionComparisonPage />} />
+            <Route path="/planning/replanning" element={<ReplanningWorkspacePage />} />
             <Route
               path="*"
               element={

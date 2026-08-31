@@ -11,6 +11,12 @@ last_reviewed: 2026-08-31
 
 # P3 Planning Workspace API 语义合同
 
+## TASK-P4-13 strict browser consumer
+
+Frontend只通过P4-12已发布的8 path/9 operation消费`dynamic-replanning-http.v1`，以canonical `query`参数读取`execution-event-timeline.v1`、`replan-request-workspace.v1`、`replan-result-workspace.v1`和`change-report-workspace.v1`。每个envelope必须与outbound query fingerprint、operation、resource、planning scope、correlation和projection fingerprint逐字绑定；未知字段、版本、state/type或tamper均显示contract error而不是partial success、缓存值或零值。
+
+Cancel/retry body继续使用`replan-attempt-action-http.v1`，浏览器不添加新wire字段、path、state或error。401/403/409/422/500/503保持可区分；unknown POST outcome必须refresh exact authority，只有权威未变化才可发送同一body与同一Idempotency-Key。P3 18-operation与既有carrier仍为冻结子集。
+
 ## TASK-P4-12 additive dynamic-replanning HTTP surface
 
 `dynamic-replanning-http.v1`以additive方式新增8 path/9 operation：`appendExecutionEvent`、`getExecutionEvent`、`listExecutionEvents`、`createReplanRequest`、`getReplanRequest`、`cancelReplanRequest`、`retryReplanRequest`、`getReplanResult`与`getChangeReport`。ExecutionEvent/ReplanRequest POST直接消费P4-02 machine carrier；GET使用canonical/fingerprinted `dynamic-replanning-query.v1`；cancel/retry使用strict `replan-attempt-action-http.v1`绑定request fingerprint、attempt ID/number、expected PlanningRun state、reason、plane/correlation与hashed Idempotency-Key。

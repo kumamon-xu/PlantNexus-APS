@@ -388,9 +388,10 @@ def test_ci_profile_routing_is_mutually_exclusive_and_fail_closed() -> None:
     assert "npm " not in docs_text
     assert "uv sync --locked" in full_text
     assert "backend/tests/security" in full_text
+    assert "TASK-P4-13 Dynamic replanning frontend machine evidence" in full_text
     assert "P3 vertical slice Gate evidence" in full_text
     assert "Build package" in full_text
-    assert len(full["steps"]) == 63
+    assert len(full["steps"]) == 64
 
     assert 'test "${PLANTNEXUS_CLASSIFY_RESULT}" = "success"' in final_run
     assert 'test "${PLANTNEXUS_FULL_RESULT}" = "success"' in final_run

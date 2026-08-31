@@ -6,11 +6,17 @@ spec_version: 0.3.0
 phase: P3
 normative: true
 source_sections: [3, 5, 6, 30, 33, 34, 47, 48, 50, 58, 66, 67, 68, 69, 73, 74, 77, 78, 94, 100, 111]
-last_reviewed: 2026-08-27
+last_reviewed: 2026-08-31
 terminology_version: official-zh-cn-terminology.v1
 ---
 
 # Official zh-CN Terminology and Display Mapping
+
+## TASK-P4-13 additive dynamic-replanning terminology
+
+P4展示层沿用`official-zh-cn-terminology.v1`并additive注册ExecutionEvent types、PlanningRun states、`CANCEL/RETRY`、Replan trigger及ChangeReport `UNCHANGED/CHANGED/ADDED/REMOVED_BY_FACT`。中文label不得改变英文wire value；事件类型、state、action、classification、ID、fingerprint、UTC、JSON和`publishable=false`均保留raw evidence，未知值显示`Unknown / 未知（<raw>）`并fail visibly。
+
+`ExecutionEvent`=执行事件，`ReplanRequest`=重排请求，`PlanningRun`=计划运行，`Freeze window`=冻结窗口，`Effective lock`=生效锁定，`Stability`=稳定性，`ChangeReport`=变更报告，`priority_weighted_tardiness_seconds`=优先级加权延期秒数。该映射仅用于`zh-CN`/`en-US`页面与accessibility文本，不形成后端locale negotiation或中文machine contract。
 
 ## TASK-P3-17 audit conclusion
 

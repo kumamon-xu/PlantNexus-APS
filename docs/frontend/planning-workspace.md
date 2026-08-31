@@ -6,10 +6,16 @@ spec_version: 0.3.0
 phase: P3
 normative: true
 source_sections: [4, 33, 35, 68, 77, 78, 94]
-last_reviewed: 2026-08-27
+last_reviewed: 2026-08-31
 ---
 
 # P3 Planning Workspace 页面与只读视图合同
+
+## TASK-P4-13 additive replanning workspace
+
+P4页面要求用户显式输入planning scope、authority、stream/version/position range、request/fingerprint与attempt ID，没有Production或业务默认值。Ready视图显示六类证据：server-ordered event timeline、immutable Request、PlanningRun attempt/allowed actions、half-open freeze/effective lock、result DRAFT，以及before/after tardiness、四分量OBJ-002 Stability和ChangeReport operations。每个label旁保留raw machine value、ID、fingerprint或UTC。
+
+Loading、authorization denied、stale/conflict、contract error和server unavailable不得伪装为空或成功。ChangeReport tamper不显示partial KPI；unknown action outcome显示独立恢复状态，refresh后authority变化会关闭same-key retry。页面可见声明Simulation DRAFT、P4 Gate未启动、P5/Production authority/external/capacity/SLA未形成。
 
 ## TASK-P3-17 audit conclusion
 

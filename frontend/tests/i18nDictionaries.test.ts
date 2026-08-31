@@ -72,5 +72,14 @@ describe("TEST-FRONTEND-I18N-001 dictionary and terminology coverage", () => {
     expect(businessLabelRegistries.command.PUBLISH["zh-CN"]).toBe("内部发布");
     expect(businessLabelRegistries.workspaceView.LOCKS["zh-CN"]).toBe("锁定");
     expect(businessLabelRegistries.constraint["C-011"]["zh-CN"]).toBe("计划时域");
+    expect(businessLabelRegistries.executionEvent.MACHINE_UNAVAILABLE["zh-CN"]).toBe(
+      "设备不可用",
+    );
+    expect(businessLabelRegistries.planningRunState.SOLVING["en-US"]).toBe(
+      "Solving",
+    );
+    expect(businessLabelRegistries.changeClassification.REMOVED_BY_FACT["zh-CN"]).toBe(
+      "因执行事实移除",
+    );
   });
 });

@@ -2,10 +2,12 @@ import { createContext, useContext, type PropsWithChildren } from "react";
 
 import type { PlanningWorkspaceClient } from "../api/client";
 import type { RuntimeConfig } from "../api/runtime";
+import type { DynamicReplanningClient } from "../features/replanning/client";
 
 interface AppServices {
   client: PlanningWorkspaceClient;
   runtime: RuntimeConfig;
+  dynamicReplanningClient?: DynamicReplanningClient;
 }
 
 const AppServicesContext = createContext<AppServices | null>(null);

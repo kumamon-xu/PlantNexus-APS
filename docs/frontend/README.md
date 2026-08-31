@@ -6,10 +6,16 @@ spec_version: 0.3.0
 phase: P3
 normative: false
 source_sections: [68, 69, 77, 78]
-last_reviewed: 2026-08-27
+last_reviewed: 2026-08-31
 ---
 
 # Frontend 文档形成计划
+
+## TASK-P4-13 bounded P4 Frontend surface
+
+Planning Workspace现additive提供`/planning/replanning`，P3的18条route仍由独立`p3WorkspaceRoutes`冻结。六文件P4 feature实现strict query/action builder、response parser/client、authority/recovery hook及双语accessible page；`package.json`、lock与既有P3 API client均未修改。
+
+自动证据包括contracts/client/component/axe Vitest、五个Chromium场景及`p4-replanning-frontend-report.v1`。主Playwright报告包含12个冻结P3 + 5个P4 spec；P3 Gate配置显式排除P4 spec并继续两轮各12项。P3 frontend/i18n证据只扩展为识别additive P4 route/surface，不改历史P3计数或wire口径。
 
 ## TASK-P4-12 additive API / P3 evidence boundary
 

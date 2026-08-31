@@ -9,11 +9,16 @@ import { loadRuntimeConfig } from "./api/runtime";
 import { unavailableSessionProvider } from "./api/session";
 import { AppServicesProvider } from "./app/context";
 import { PlanningWorkspaceApp } from "./app/PlanningWorkspaceApp";
+import { createDynamicReplanningClient } from "./features/replanning/client";
 import { LocaleProvider, useLocale } from "./i18n/locale";
 import "./styles/app.css";
 
 const runtime = loadRuntimeConfig();
 const client = createPlanningWorkspaceClient(runtime, unavailableSessionProvider);
+const dynamicReplanningClient = createDynamicReplanningClient(
+  runtime,
+  unavailableSessionProvider,
+);
 const queryClient = new QueryClient({
   defaultOptions: {
     queries: { retry: false, refetchOnWindowFocus: false, staleTime: 0 },
@@ -41,7 +46,7 @@ export function LocalizedApplication() {
       }}
     >
       <QueryClientProvider client={queryClient}>
-        <AppServicesProvider services={{ client, runtime }}>
+        <AppServicesProvider services={{ client, dynamicReplanningClient, runtime }}>
           <BrowserRouter>
             <PlanningWorkspaceApp />
           </BrowserRouter>

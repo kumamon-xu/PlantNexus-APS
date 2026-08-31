@@ -53,6 +53,7 @@ const surfaceFiles = [
   "src/features/publication/PublicationPanel.tsx",
   "src/features/export/ExportPanel.tsx",
   "src/features/audit/AuditHistoryPanel.tsx",
+  "src/features/replanning/ReplanningWorkspacePage.tsx",
 ];
 
 function source(path) {
@@ -60,15 +61,48 @@ function source(path) {
 }
 
 async function loadTypeScriptModule(path) {
-  const output = ts.transpileModule(source(path), {
-    compilerOptions: {
-      module: ts.ModuleKind.ESNext,
-      target: ts.ScriptTarget.ES2022,
-      verbatimModuleSyntax: true,
-    },
-    fileName: path,
-  }).outputText;
-  return import(`data:text/javascript;base64,${Buffer.from(output, "utf8").toString("base64")}`);
+  return import(await typeScriptDataUrl(path));
+}
+
+const moduleDataUrls = new Map();
+
+function resolveTypeScriptImport(path, specifier) {
+  const base = resolve(frontendRoot, dirname(path), specifier);
+  for (const candidate of [`${base}.ts`, `${base}.tsx`, resolve(base, "index.ts")]) {
+    if (existsSync(candidate)) {
+      return relative(frontendRoot, candidate).replaceAll("\\", "/");
+    }
+  }
+  throw new Error(`unable to resolve ${specifier} imported by ${path}`);
+}
+
+async function typeScriptDataUrl(path) {
+  const cached = moduleDataUrls.get(path);
+  if (cached !== undefined) return cached;
+
+  const pending = (async () => {
+    const output = ts.transpileModule(source(path), {
+      compilerOptions: {
+        module: ts.ModuleKind.ESNext,
+        target: ts.ScriptTarget.ES2022,
+        verbatimModuleSyntax: true,
+      },
+      fileName: path,
+    }).outputText;
+    let linkedOutput = output;
+    const specifiers = new Set(
+      [...output.matchAll(/(?:from\s+|import\s*\(\s*)["'](\.[^"']+)["']/gu)].map((match) => match[1]),
+    );
+    for (const specifier of specifiers) {
+      const linkedUrl = await typeScriptDataUrl(resolveTypeScriptImport(path, specifier));
+      linkedOutput = linkedOutput
+        .replaceAll(`"${specifier}"`, `"${linkedUrl}"`)
+        .replaceAll(`'${specifier}'`, `'${linkedUrl}'`);
+    }
+    return `data:text/javascript;base64,${Buffer.from(linkedOutput, "utf8").toString("base64")}`;
+  })();
+  moduleDataUrls.set(path, pending);
+  return pending;
 }
 
 function fail(condition, message, issues) {
@@ -208,16 +242,18 @@ checks.push(completedCheck("ZERO-WIRE-AND-DEPENDENCY-DRIFT", "P3 client/router/s
 
 const playwrightPath = resolve(repositoryRoot, "build/playwright/results.json");
 let playwrightSpecs = [];
+let p3PlaywrightSpecs = [];
 if (!existsSync(playwrightPath)) {
   issues.push("Playwright JSON evidence is absent");
 } else {
   const playwright = JSON.parse(readFileSync(playwrightPath, "utf8"));
   playwrightSpecs = collectPlaywrightSpecs(playwright);
+  p3PlaywrightSpecs = playwrightSpecs.filter((spec) => spec.file !== "dynamic-replanning.spec.ts");
   fail(playwright.errors?.length === 0, "Playwright report contains top-level errors", issues);
-  fail(playwrightSpecs.length === 12, `Playwright spec count is ${playwrightSpecs.length}, expected 12`, issues);
-  fail(playwrightSpecs.every((spec) => spec.ok === true), "one or more Playwright specs failed", issues);
-  fail(playwrightSpecs.some((spec) => spec.file === "bilingual-localization.spec.ts"), "bilingual Playwright spec is absent", issues);
-  fail(playwrightSpecs.filter((spec) => spec.file === "human-control-actions.spec.ts").length === 8, "frozen human-control spec count drifted", issues);
+  fail(p3PlaywrightSpecs.length === 12, `frozen P3 Playwright spec count is ${p3PlaywrightSpecs.length}, expected 12`, issues);
+  fail(p3PlaywrightSpecs.every((spec) => spec.ok === true), "one or more frozen P3 Playwright specs failed", issues);
+  fail(p3PlaywrightSpecs.some((spec) => spec.file === "bilingual-localization.spec.ts"), "bilingual Playwright spec is absent", issues);
+  fail(p3PlaywrightSpecs.filter((spec) => spec.file === "human-control-actions.spec.ts").length === 8, "frozen human-control spec count drifted", issues);
 }
 for (const path of [
   "tests/i18nDictionaries.test.ts",
@@ -227,7 +263,7 @@ for (const path of [
 ]) {
   fail(existsSync(resolve(frontendRoot, path)), `i18n test evidence source absent: ${path}`, issues);
 }
-checks.push(completedCheck("BILINGUAL-AUTOMATED-EVIDENCE", `${playwrightSpecs.length}/12 Playwright specs plus dictionary/format/workspace Vitest sources`));
+checks.push(completedCheck("BILINGUAL-AUTOMATED-EVIDENCE", `${p3PlaywrightSpecs.length}/12 frozen P3 specs inside ${playwrightSpecs.length} total plus dictionary/format/workspace Vitest sources`));
 
 const report = {
   report_version: "p3-frontend-i18n-report.v1",
@@ -244,8 +280,9 @@ const report = {
     registered_machine_values: registryValueCount,
     localized_surface_files: surfaceFiles.length,
     statically_referenced_message_keys: referencedKeys.size,
-    playwright_specs: playwrightSpecs.length,
-    human_control_playwright_specs: playwrightSpecs.filter((spec) => spec.file === "human-control-actions.spec.ts").length,
+    playwright_specs: p3PlaywrightSpecs.length,
+    all_playwright_specs: playwrightSpecs.length,
+    human_control_playwright_specs: p3PlaywrightSpecs.filter((spec) => spec.file === "human-control-actions.spec.ts").length,
   },
   preference: {
     scope: "browser-local",
@@ -264,7 +301,7 @@ const report = {
     additive_later_phase_api_composition_allowed: true,
     backend_locale_negotiation_formed: false,
     server_chinese_export_formed: false,
-    p4_formed: false,
+    p4_additive_localization_excluded_from_frozen_p3_counts: true,
     production_identity_formed: false,
     production_readiness: false,
   },

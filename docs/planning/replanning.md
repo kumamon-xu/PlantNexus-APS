@@ -11,6 +11,12 @@ last_reviewed: 2026-08-31
 
 # 动态重排设计合同
 
+## TASK-P4-13 reviewable workspace consumer
+
+动态重排链现在可通过一个Simulation/development-only页面复核，但所有事实仍由server owner提供。UI严格消费event timeline、Request/attempt/result与ChangeReport read projection，显示freeze、tardiness和Stability而不重新计算；只有完整`COMPLETED → new DRAFT + ChangeReport`证据才呈现result。任何mixed lineage、fingerprint drift、unknown enum或缺失字段都整体fail closed。
+
+Cancel/retry只表达PlanningRun attempt intent，采用server `allowed_actions`、expected state及same-key query-before-retry。页面不控制Execution Simulator、不创建ReplanRequest state、不自动approve/publish/export，也不形成P4-14 Gate、P5优化或Production event/approval/external authority。
+
 ## TASK-P4-12 transport entry and read boundary
 
 Dynamic Replanning现有一个Simulation-only HTTP入口：标准ExecutionEvent通过append port，完整ReplanRequest通过P4-08 facade，ChangeReport通过P4-11 read authority。Transport只绑定carrier/query/action、correlation、idempotency reference、capability/scope和expected attempt state，不重建Problem、freeze、OBJ-002、Solver/Validator或new DRAFT。Cancel/retry始终指向PlanningRun attempt，不创建ReplanRequest self-transition。

@@ -11,6 +11,12 @@ last_reviewed: 2026-08-31
 
 # 性能与现实校准门
 
+## TASK-P5-01 qualification observation boundary
+
+P5-01在不改变profile、baseline或threshold的前提下fresh重放P2 XS/S/M；三项均PASS且无warning，qualification report保存runtime、memory peak、model metrics、solver/reference quality、validation、environment和baseline identity。该重放只能说明冻结开发样本未给出候选必要性证据，不能证明L/XL、历史业务分布、Production capacity或SLA，也不能关闭OPEN-003/004/006/011/012。
+
+七个约束候选因没有可执行candidate case而不伪造比较数值；Decomposition/Rolling仅引用原始Global replay。没有新增数值SIM假设或performance budget。
+
 ## TASK-P4-14 Gate B aggregate evidence boundary
 
 P4-14本地Gate B aggregate现以两轮完整P4 owner replay证明fact/lock preservation、fresh Validator PASS、complete ChangeReport和tardiness/Stability业务语义一致；所有per-stage runtime/memory原值均保存在raw reports。该结果复用且冻结P2 XS/S/M baseline，不新增profile、threshold、fixture expected、L/XL或Nightly，并不把本机/CI runner观测外推为Production capacity/SLA。

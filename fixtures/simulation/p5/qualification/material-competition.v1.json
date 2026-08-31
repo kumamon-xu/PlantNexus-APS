@@ -1,0 +1,23 @@
+{
+  "record_version": "p5-capability-evidence-record.v1",
+  "candidate_id": "P5-CANDIDATE-MATERIAL-COMPETITION",
+  "title": "Material Competition",
+  "kind": "CONSTRAINT",
+  "capability_key": "MATERIAL_COMPETITION",
+  "constraint_id": "C-014",
+  "owner_tasks": ["TASK-P5-07", "TASK-P5-08"],
+  "necessity_question": "Does a versioned shared-inventory case require competition among operations beyond material_ready_at gates?",
+  "evidence": {
+    "real_requirement": {"source_type": "REAL_REQUIREMENT", "status": "NOT_PROVIDED", "qualified": false, "replayable": false, "source_ids": []},
+    "simulation": {"source_type": "VERSIONED_SIMULATION", "status": "READY_AT_ONLY_NO_SHARED_INVENTORY", "qualified": false, "replayable": true, "source_ids": ["SIM-ASSUMPTION-009", "SIM-ASSUMPTION-011", "SIM-ASSUMPTION-013"]},
+    "benchmark": {"source_type": "VERSIONED_BENCHMARK", "status": "MATERIAL_DELAY_ONLY_NO_COMPETITION", "qualified": false, "replayable": true, "source_ids": ["P2-BENCHMARK-XS@1.0.0", "P2-BENCHMARK-S@1.0.0", "P2-BENCHMARK-M@1.0.0"]}
+  },
+  "selection_facts": {"source_is_qualified": false, "source_replay_verified": true, "current_approximation_unacceptable": false, "candidate_specific_gate_passed": false, "policy_inputs_defined": false},
+  "candidate_specific_gate": "QUALIFIED_SEMANTIC_COUNTEREXAMPLE",
+  "current_boundary": "MATERIAL_COMPETITION is explicitly rejected; material_ready_at remains the only material gate.",
+  "metrics": {"runtime": "NOT_MEASURED_NO_EXECUTABLE_CANDIDATE", "memory": "NOT_MEASURED_NO_EXECUTABLE_CANDIDATE", "model_size": "NOT_MEASURED_NO_EXECUTABLE_CANDIDATE", "quality": "NOT_COMPARABLE_NO_SHARED_INVENTORY_CASE"},
+  "open_dependencies": ["OPEN-007", "OPEN-015"],
+  "evidence_gaps": ["No material authority or shared inventory ledger is supplied.", "Existing material-delay cases do not allocate scarce inventory."],
+  "expected_decision": "DEFERRED",
+  "production_boundary": "No Production material authority, inventory availability, capacity, or SLA conclusion."
+}

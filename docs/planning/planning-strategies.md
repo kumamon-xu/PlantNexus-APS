@@ -11,6 +11,10 @@ last_reviewed: 2026-08-31
 
 # PlanningStrategy 规则
 
+## TASK-P5-01 strategy decision
+
+Decomposition与Rolling Horizon均为`DEFERRED`。冻结的XS/S/M replay全部PASS且没有触发§82 scaling/memory/model-explosion必要性；同时没有真实portfolio分布、可接受quality-loss预算、partition/merge政策或rolling window/step/overlap/handoff政策。Global/`global-lexicographic-replan-cp-sat.v1`继续是唯一已形成策略，不能因DEFERRED而推导Decomposed、Rolling或Hybrid实现。
+
 ## P5 evidence-gated strategy allocation
 
 P5现为active，但Global/`global-lexicographic-replan-cp-sat.v1`仍是唯一已形成策略。TASK-P5-01只评价Decomposition与Rolling Horizon必要性，TASK-P5-02只保留selected链；不存在因phase激活自动选择新strategy的路径。

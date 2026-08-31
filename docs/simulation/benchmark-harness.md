@@ -6,10 +6,16 @@ spec_version: 0.3.0
 phase: P0-P2
 normative: true
 source_sections: [45, 51, 52, 53, 54, 55, 56, 58, 89]
-last_reviewed: 2026-08-21
+last_reviewed: 2026-08-31
 ---
 
 # Benchmark Harness 合同
+
+## TASK-P5-01 qualification profile
+
+`capability-qualification-profile.v1`把九项候选、五项`ALL_TRUE`选择事实、XS/S/M replay集合、四个必报维度和P5/P6/Production排除边界固定为机器合同；`evidence-manifest.v1`逐字绑定profile、九份candidate record及既有registry/rule-sheet/Simulation/Benchmark源文件SHA-256。hash、version、source type、candidate identity或声明决定漂移均fail closed。
+
+本Task复用既有BenchmarkRunner和baseline，不修改runner、profile set、threshold或expected。report中的runtime/memory/model-size/quality为raw development observation，不是新基线或Production承诺。
 
 ## P4 planned harness impact
 

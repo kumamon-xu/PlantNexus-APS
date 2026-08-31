@@ -1,0 +1,23 @@
+{
+  "record_version": "p5-capability-evidence-record.v1",
+  "candidate_id": "P5-CANDIDATE-BUFFER",
+  "title": "Buffer Capacity",
+  "kind": "CONSTRAINT",
+  "capability_key": "BUFFER_CAPACITY",
+  "constraint_id": "C-017",
+  "owner_tasks": ["TASK-P5-13", "TASK-P5-14"],
+  "necessity_question": "Does a versioned inter-operation storage case require finite buffer occupancy over time?",
+  "evidence": {
+    "real_requirement": {"source_type": "REAL_REQUIREMENT", "status": "NOT_PROVIDED", "qualified": false, "replayable": false, "source_ids": []},
+    "simulation": {"source_type": "VERSIONED_SIMULATION", "status": "NO_BUFFER_OCCUPANCY_CASE", "qualified": false, "replayable": true, "source_ids": ["SIM-ASSUMPTION-004", "SIM-ASSUMPTION-013"]},
+    "benchmark": {"source_type": "VERSIONED_BENCHMARK", "status": "NO_BUFFER_MODEL_COMPARISON", "qualified": false, "replayable": true, "source_ids": ["P2-BENCHMARK-XS@1.0.0", "P2-BENCHMARK-S@1.0.0", "P2-BENCHMARK-M@1.0.0"]}
+  },
+  "selection_facts": {"source_is_qualified": false, "source_replay_verified": true, "current_approximation_unacceptable": false, "candidate_specific_gate_passed": false, "policy_inputs_defined": false},
+  "candidate_specific_gate": "QUALIFIED_SEMANTIC_COUNTEREXAMPLE",
+  "current_boundary": "BUFFER_CAPACITY is explicitly rejected; precedence lag is not finite storage occupancy.",
+  "metrics": {"runtime": "NOT_MEASURED_NO_EXECUTABLE_CANDIDATE", "memory": "NOT_MEASURED_NO_EXECUTABLE_CANDIDATE", "model_size": "NOT_MEASURED_NO_EXECUTABLE_CANDIDATE", "quality": "NOT_COMPARABLE_NO_BUFFER_CASE"},
+  "open_dependencies": ["OPEN-003", "OPEN-004", "OPEN-015"],
+  "evidence_gaps": ["No buffer identity, capacity, occupancy interval, or calendar authority is supplied.", "No versioned blocking/starvation case exists."],
+  "expected_decision": "DEFERRED",
+  "production_boundary": "No Production storage topology, capacity, or SLA conclusion."
+}

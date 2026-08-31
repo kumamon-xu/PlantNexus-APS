@@ -1,0 +1,23 @@
+{
+  "record_version": "p5-capability-evidence-record.v1",
+  "candidate_id": "P5-CANDIDATE-SPLIT-MERGE",
+  "title": "Split and Merge",
+  "kind": "CONSTRAINT",
+  "capability_key": "SPLIT_MERGE",
+  "constraint_id": "C-016",
+  "owner_tasks": ["TASK-P5-11", "TASK-P5-12"],
+  "necessity_question": "Does an approved lot policy require planner-owned lot splitting and merge synchronization?",
+  "evidence": {
+    "real_requirement": {"source_type": "REAL_REQUIREMENT", "status": "NOT_PROVIDED", "qualified": false, "replayable": false, "source_ids": []},
+    "simulation": {"source_type": "VERSIONED_SIMULATION", "status": "SOURCE_LOTS_ONLY_NO_DYNAMIC_SPLIT", "qualified": false, "replayable": true, "source_ids": ["SIM-ASSUMPTION-010", "SIM-ASSUMPTION-013"]},
+    "benchmark": {"source_type": "VERSIONED_BENCHMARK", "status": "NO_SPLIT_MERGE_COMPARISON", "qualified": false, "replayable": true, "source_ids": ["P2-BENCHMARK-XS@1.0.0", "P2-BENCHMARK-S@1.0.0", "P2-BENCHMARK-M@1.0.0"]}
+  },
+  "selection_facts": {"source_is_qualified": false, "source_replay_verified": true, "current_approximation_unacceptable": false, "candidate_specific_gate_passed": false, "policy_inputs_defined": false},
+  "candidate_specific_gate": "QUALIFIED_SEMANTIC_COUNTEREXAMPLE",
+  "current_boundary": "SPLIT_MERGE is explicitly rejected; source-explicit lots are not planner-owned splitting.",
+  "metrics": {"runtime": "NOT_MEASURED_NO_EXECUTABLE_CANDIDATE", "memory": "NOT_MEASURED_NO_EXECUTABLE_CANDIDATE", "model_size": "NOT_MEASURED_NO_EXECUTABLE_CANDIDATE", "quality": "NOT_COMPARABLE_OPEN_008"},
+  "open_dependencies": ["OPEN-008", "OPEN-015"],
+  "evidence_gaps": ["OPEN-008 lot-splitting policy remains unresolved.", "No versioned merge synchronization or lot genealogy case exists."],
+  "expected_decision": "DEFERRED",
+  "production_boundary": "No Production lot genealogy, yield, quantity policy, capacity, or SLA conclusion."
+}

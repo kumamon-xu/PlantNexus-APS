@@ -11,6 +11,12 @@ last_reviewed: 2026-08-31
 
 # 能力矩阵
 
+## TASK-P5-01 qualification result
+
+九项候选当前组合决定均为`DEFERRED`：SECONDARY_CAPACITY、SEQUENCE_DEPENDENT_SETUP、MATERIAL_COMPETITION、BATCH_PROCESSING、SPLIT_MERGE、BUFFER_CAPACITY、PREEMPTIVE_OPERATION，以及Decomposition、Rolling Horizon。原因不是已证明不需要，而是本次没有合格真实需求，现有versioned Simulation/XS-S-M Benchmark也没有证明当前显式拒绝或Global策略不可接受。selected portfolio为空；DEFERRED允许未来以新版本证据重新提案，但不授权TASK-P5-02或任何能力实现。
+
+C-012～C-018的registry/precheck继续为`UNSUPPORTED`/`UNSUPPORTED_CAPABILITY`，Global仍是唯一已形成策略。此证据决定不形成partial support、近似支持或Production能力。
+
 ## P5 activation status
 
 P5 Milestone现已激活，但激活与规划不改变任何能力状态。SECONDARY_CAPACITY、SEQUENCE_DEPENDENT_SETUP、MATERIAL_COMPETITION、BATCH_PROCESSING、SPLIT_MERGE、BUFFER_CAPACITY和PREEMPTIVE_OPERATION继续为`UNSUPPORTED`，DecomposedStrategy与RollingHorizonStrategy也尚未形成。调用方必须继续得到既有fail-closed rejection，不能因存在P5 Task卡而启用或近似能力。

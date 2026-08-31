@@ -1,0 +1,86 @@
+{
+  "profile_version": "p5-capability-qualification-profile.v1",
+  "task_id": "TASK-P5-01",
+  "diff_base": "4ccb2ed99ffe73abeb0462efff4a5342cd7c5522",
+  "data_plane": "SIMULATION_DEVELOPMENT_ONLY",
+  "decision_values": [
+    "SELECTED",
+    "DEFERRED"
+  ],
+  "source_types": [
+    "REAL_REQUIREMENT",
+    "VERSIONED_SIMULATION",
+    "VERSIONED_BENCHMARK"
+  ],
+  "selection_rule": {
+    "operator": "ALL_TRUE",
+    "required_facts": [
+      "source_is_qualified",
+      "source_replay_verified",
+      "current_approximation_unacceptable",
+      "candidate_specific_gate_passed",
+      "policy_inputs_defined"
+    ],
+    "on_missing_or_false": "DEFERRED",
+    "on_unknown_profile_or_tamper": "TASK_FAIL",
+    "self_authored_need_is_qualified": false
+  },
+  "metrics_required": [
+    "runtime",
+    "memory",
+    "model_size",
+    "quality"
+  ],
+  "benchmark_profiles": [
+    "xs",
+    "s",
+    "m"
+  ],
+  "candidates": [
+    {
+      "candidate_id": "P5-CANDIDATE-SECONDARY-RESOURCE",
+      "record_path": "fixtures/simulation/p5/qualification/secondary-resource-capacity.v1.json"
+    },
+    {
+      "candidate_id": "P5-CANDIDATE-SEQUENCE-SETUP",
+      "record_path": "fixtures/simulation/p5/qualification/sequence-dependent-setup.v1.json"
+    },
+    {
+      "candidate_id": "P5-CANDIDATE-MATERIAL-COMPETITION",
+      "record_path": "fixtures/simulation/p5/qualification/material-competition.v1.json"
+    },
+    {
+      "candidate_id": "P5-CANDIDATE-BATCH",
+      "record_path": "fixtures/simulation/p5/qualification/batch-processing.v1.json"
+    },
+    {
+      "candidate_id": "P5-CANDIDATE-SPLIT-MERGE",
+      "record_path": "fixtures/simulation/p5/qualification/split-merge.v1.json"
+    },
+    {
+      "candidate_id": "P5-CANDIDATE-BUFFER",
+      "record_path": "fixtures/simulation/p5/qualification/buffer-capacity.v1.json"
+    },
+    {
+      "candidate_id": "P5-CANDIDATE-PREEMPTION",
+      "record_path": "fixtures/simulation/p5/qualification/preemptive-operation.v1.json"
+    },
+    {
+      "candidate_id": "P5-CANDIDATE-DECOMPOSITION",
+      "record_path": "fixtures/simulation/p5/qualification/decomposed-strategy.v1.json"
+    },
+    {
+      "candidate_id": "P5-CANDIDATE-ROLLING-HORIZON",
+      "record_path": "fixtures/simulation/p5/qualification/rolling-horizon.v1.json"
+    }
+  ],
+  "excluded": [
+    "MULTI_FACTORY",
+    "ALTERNATIVE_ROUTING_EXPANSION",
+    "TOOLS_FIXTURES_SPECIALIZED_SEMANTICS",
+    "HYBRID_STRATEGY",
+    "AI_DURATION_PREDICTION",
+    "P6_PLUS",
+    "PRODUCTION_AUTHORITY_EXTERNAL_DEPLOYMENT_CAPACITY_SLA"
+  ]
+}

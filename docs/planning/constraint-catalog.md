@@ -11,6 +11,12 @@ last_reviewed: 2026-08-31
 
 # V1 Constraint Catalog
 
+## TASK-P5-01 C-012～C-018 decision
+
+P5-01逐条验证C-012 SECONDARY_CAPACITY、C-013 SEQUENCE_DEPENDENT_SETUP、C-014 MATERIAL_COMPETITION、C-015 BATCH_PROCESSING、C-016 SPLIT_MERGE、C-017 BUFFER_CAPACITY和C-018 PREEMPTIVE_OPERATION。没有候选获得合格真实需求、不可接受近似、candidate-specific gate及完整policy inputs的联合证据，七项均`DEFERRED`；rule sheet与capability registry继续逐条显式拒绝，未修改YAML、PlanningProblem、Solver或Validator。
+
+每项record保留OPEN依赖、缺口及runtime/memory/model-size/quality的`NOT_MEASURED/NOT_COMPARABLE`理由；这不是以缺失证据推断无需能力，也不能把capacity-1 primary或其他现有规则描述成候选近似实现。
+
 ## P5 evidence-gated allocation
 
 P5激活没有修改C-001～C-018规则、YAML或Validator。C-012～C-018继续返回`UNSUPPORTED_CAPABILITY`；只有P5-01证据选择、P5-02计划保留、独立用户授权以及对应合同/实现双卡全部闭环后，能力owner Task才可修改机器规则和状态。

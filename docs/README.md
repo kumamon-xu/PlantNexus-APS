@@ -11,6 +11,12 @@ last_reviewed: 2026-08-31
 
 # PlantNexus APS 文档中心
 
+## TASK-P5-01 qualification decision boundary
+
+TASK-P5-01从`4ccb2ed99ffe73abeb0462efff4a5342cd7c5522`冻结证据范围。由于没有获得经授权的真实需求材料，九个P5候选分别以versioned Simulation/P2 XS/S/M作边界重放，但这些资产不能自行证明业务必要性；五事实`ALL_TRUE`规则因此把九项全部判为`DEFERRED`，selected=`[]`、P5-02 authorization=`false`。报告本地11/11、12项focused tests通过、`issues=[]`/`blocking_issues=[]`，未新增数值SIM假设。
+
+该决定只形成可复现的优先级证据，不改变C-012～C-018的`UNSUPPORTED`或Global唯一策略状态，不实现候选，不修改Schema/migration/dependency/state/workflow/CI。P4动态重排能力只作为冻结回归上下文；P6+/Production/UAT/真实authority/external/deployment/capacity/SLA继续排除。
+
 ## P5 activation and planning boundary
 
 P4已按用户授权关闭为`completed`，P5已激活为`active`。承接检查仅确认closure `892c46d660a6bf3cde8ed473199f38746d041e47`三端一致、0/0、clean、P4 Exit=`READY`/0 gaps、无active/blocking项且required `validate`/app `15368`未漂移，不构成P4重审。

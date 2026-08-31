@@ -1,0 +1,23 @@
+{
+  "record_version": "p5-capability-evidence-record.v1",
+  "candidate_id": "P5-CANDIDATE-PREEMPTION",
+  "title": "Preemptive Operation",
+  "kind": "CONSTRAINT",
+  "capability_key": "PREEMPTIVE_OPERATION",
+  "constraint_id": "C-018",
+  "owner_tasks": ["TASK-P5-15", "TASK-P5-16"],
+  "necessity_question": "Does a versioned operation permit interruption and resumption with authoritative segment semantics?",
+  "evidence": {
+    "real_requirement": {"source_type": "REAL_REQUIREMENT", "status": "NOT_PROVIDED", "qualified": false, "replayable": false, "source_ids": []},
+    "simulation": {"source_type": "VERSIONED_SIMULATION", "status": "NON_PREEMPTIVE_BOUNDARY_ONLY", "qualified": false, "replayable": true, "source_ids": ["SIM-ASSUMPTION-011", "SIM-ASSUMPTION-019"]},
+    "benchmark": {"source_type": "VERSIONED_BENCHMARK", "status": "NO_SEGMENT_MODEL_COMPARISON", "qualified": false, "replayable": true, "source_ids": ["P2-BENCHMARK-XS@1.0.0", "P2-BENCHMARK-S@1.0.0", "P2-BENCHMARK-M@1.0.0"]}
+  },
+  "selection_facts": {"source_is_qualified": false, "source_replay_verified": true, "current_approximation_unacceptable": false, "candidate_specific_gate_passed": false, "policy_inputs_defined": false},
+  "candidate_specific_gate": "QUALIFIED_SEMANTIC_COUNTEREXAMPLE",
+  "current_boundary": "PREEMPTIVE_OPERATION is explicitly rejected and V1 intervals remain non-preemptive.",
+  "metrics": {"runtime": "NOT_MEASURED_NO_EXECUTABLE_CANDIDATE", "memory": "NOT_MEASURED_NO_EXECUTABLE_CANDIDATE", "model_size": "NOT_MEASURED_NO_EXECUTABLE_CANDIDATE", "quality": "NOT_COMPARABLE_NO_SEGMENT_CASE"},
+  "open_dependencies": ["OPEN-004", "OPEN-005", "OPEN-015"],
+  "evidence_gaps": ["No interruption eligibility, segment duration, resume setup, or fact authority is supplied.", "P4 remaining-duration events do not authorize planned preemption."],
+  "expected_decision": "DEFERRED",
+  "production_boundary": "No Production interruption policy, execution authority, capacity, or SLA conclusion."
+}

@@ -1,0 +1,23 @@
+{
+  "record_version": "p5-capability-evidence-record.v1",
+  "candidate_id": "P5-CANDIDATE-DECOMPOSITION",
+  "title": "Decomposed Strategy",
+  "kind": "STRATEGY",
+  "capability_key": null,
+  "constraint_id": null,
+  "owner_tasks": ["TASK-P5-17", "TASK-P5-18"],
+  "necessity_question": "Does evidence satisfy at least one APS specification section 82 scaling, memory, or model-explosion trigger?",
+  "evidence": {
+    "real_requirement": {"source_type": "REAL_REQUIREMENT", "status": "NOT_PROVIDED", "qualified": false, "replayable": false, "source_ids": []},
+    "simulation": {"source_type": "VERSIONED_SIMULATION", "status": "XS_S_M_ONLY_NO_LARGE_TRIGGER", "qualified": false, "replayable": true, "source_ids": ["SIM-ASSUMPTION-005", "SIM-ASSUMPTION-013"]},
+    "benchmark": {"source_type": "VERSIONED_BENCHMARK", "status": "APPROVED_PROFILES_PASS_NO_SECTION_82_TRIGGER", "qualified": false, "replayable": true, "source_ids": ["P2-BENCHMARK-XS@1.0.0", "P2-BENCHMARK-S@1.0.0", "P2-BENCHMARK-M@1.0.0"]}
+  },
+  "selection_facts": {"source_is_qualified": false, "source_replay_verified": true, "current_approximation_unacceptable": false, "candidate_specific_gate_passed": false, "policy_inputs_defined": false},
+  "candidate_specific_gate": "APS_SPEC_SECTION_82_TRIGGER",
+  "current_boundary": "Global CP-SAT remains the only formed strategy; code-structure convenience is not a decomposition trigger.",
+  "metrics": {"runtime": "REPLAY_P2_XS_S_M_RAW_OBSERVATIONS", "memory": "REPLAY_P2_XS_S_M_RAW_OBSERVATIONS", "model_size": "REPLAY_P2_XS_S_M_RAW_OBSERVATIONS", "quality": "REPLAY_P2_XS_S_M_VALIDATOR_AND_REFERENCE_COMPARISON"},
+  "open_dependencies": ["OPEN-011", "OPEN-012"],
+  "evidence_gaps": ["No Synthetic large or historical benchmark is approved.", "No deployment memory budget exists.", "No advanced-constraint model explosion is observed."],
+  "expected_decision": "DEFERRED",
+  "production_boundary": "XS/S/M development observations do not establish deployment budget, capacity, or SLA."
+}

@@ -1,0 +1,106 @@
+{
+  "manifest_version": "p5-capability-evidence-manifest.v1",
+  "task_id": "TASK-P5-01",
+  "diff_base": "4ccb2ed99ffe73abeb0462efff4a5342cd7c5522",
+  "profile": {
+    "path": "benchmarks/p5/qualification/capability-qualification-profile.v1.json",
+    "sha256": "sha256:e3a85761f8a6dbb39c3d878ef2488f424438fe7d84469d5f126ee35e986e3732"
+  },
+  "candidate_records": [
+    {
+      "candidate_id": "P5-CANDIDATE-SECONDARY-RESOURCE",
+      "path": "fixtures/simulation/p5/qualification/secondary-resource-capacity.v1.json",
+      "sha256": "sha256:fb2fa124bb31eb07985adf3021667fbccc8f23c89d95974fd105d8b1a8fb73db"
+    },
+    {
+      "candidate_id": "P5-CANDIDATE-SEQUENCE-SETUP",
+      "path": "fixtures/simulation/p5/qualification/sequence-dependent-setup.v1.json",
+      "sha256": "sha256:c389e56d87a5d5063370d53a750ad1f64f931c35b0e592f547fc72d4cabf1b4d"
+    },
+    {
+      "candidate_id": "P5-CANDIDATE-MATERIAL-COMPETITION",
+      "path": "fixtures/simulation/p5/qualification/material-competition.v1.json",
+      "sha256": "sha256:460a367fb226c2046f74ea144fddb3418bfb1ca772929fa4accae3ec8a335390"
+    },
+    {
+      "candidate_id": "P5-CANDIDATE-BATCH",
+      "path": "fixtures/simulation/p5/qualification/batch-processing.v1.json",
+      "sha256": "sha256:bbad22370b2142cf8d457dc4a738e2e66016e65974ebd0334aea530900fe9555"
+    },
+    {
+      "candidate_id": "P5-CANDIDATE-SPLIT-MERGE",
+      "path": "fixtures/simulation/p5/qualification/split-merge.v1.json",
+      "sha256": "sha256:120611626a740b49bb7df8abe90114e4fd53aa7717e3093358d90bbc9fa69d4d"
+    },
+    {
+      "candidate_id": "P5-CANDIDATE-BUFFER",
+      "path": "fixtures/simulation/p5/qualification/buffer-capacity.v1.json",
+      "sha256": "sha256:99f8dad0c1a782868d6f72f61cfee74f7f76547f91dd35ade09148034af93fa4"
+    },
+    {
+      "candidate_id": "P5-CANDIDATE-PREEMPTION",
+      "path": "fixtures/simulation/p5/qualification/preemptive-operation.v1.json",
+      "sha256": "sha256:db4b93f5a5e675230f91c7af408f5923f7c4e7664badcd7a71494c6c3307e5b2"
+    },
+    {
+      "candidate_id": "P5-CANDIDATE-DECOMPOSITION",
+      "path": "fixtures/simulation/p5/qualification/decomposed-strategy.v1.json",
+      "sha256": "sha256:5e8ec56a5d27171a820ee8d682685d56c038ed8a638c526b17934c99e22ce615"
+    },
+    {
+      "candidate_id": "P5-CANDIDATE-ROLLING-HORIZON",
+      "path": "fixtures/simulation/p5/qualification/rolling-horizon.v1.json",
+      "sha256": "sha256:1072e9fe5efc89e54623c3b0484e0f84b7b7e4eb9c60047662c528d5d7662834"
+    }
+  ],
+  "source_assets": [
+    {
+      "path": "schemas/rules/capability-registry.v1.yaml",
+      "sha256": "sha256:a2b1ac03f769856940d716bbab9a13200dfdcf7d3072eec0638e3479704a1f37",
+      "role": "P5 candidate support-state and fail-closed boundary"
+    },
+    {
+      "path": "schemas/rules/constraint-rule-sheet.v1.yaml",
+      "sha256": "sha256:83fc3663dfd0ab3ca7361029ad288d4700ca6abdfd172df261da6873ef21f1e2",
+      "role": "C-012 through C-018 explicit rejection boundary"
+    },
+    {
+      "path": "benchmarks/profiles.yaml",
+      "sha256": "sha256:fd91a3a31804a90483b44d65d191ffe898a7444ad381eb694a43ad50f1502690",
+      "role": "Approved development XS/S/M profile definitions"
+    },
+    {
+      "path": "benchmarks/baselines/p2-xs.v1.json",
+      "sha256": "sha256:d9e2d9d6834518cc04d3c52aa9ba84817ea0d61300ed4577f40ba4623efbd077",
+      "role": "Immutable XS baseline"
+    },
+    {
+      "path": "benchmarks/baselines/p2-s.v1.json",
+      "sha256": "sha256:d92c841410bf72c0dcb7abf556afc0c5e099556c3dceab3e7263dc558737adfe",
+      "role": "Immutable S baseline"
+    },
+    {
+      "path": "benchmarks/baselines/p2-m.v1.json",
+      "sha256": "sha256:5812b2b3dd40705d478faa9acce54038dad166d72cf17877a89271024b08754f",
+      "role": "Immutable M baseline"
+    },
+    {
+      "path": "fixtures/synthetic/P2-CORRECTNESS-MATRIX/scenario-catalog.json",
+      "sha256": "sha256:4c9293b5d15b57caf35a99f45c3ae625112fc297742e915642970d9b382834f6",
+      "role": "Existing C-001 through C-011 correctness scenario boundary"
+    },
+    {
+      "path": "fixtures/synthetic/P4-DISRUPTION-REPLAY/scenario-library.v1.json",
+      "sha256": "sha256:99a23319d294a7e636dc186540f626de2632a97e87574dfc2fc820cb9881367a",
+      "role": "Existing five-disruption replay without rolling-window semantics"
+    }
+  ],
+  "boundaries": {
+    "real_requirement_material": "NOT_PROVIDED",
+    "new_numeric_simulation_assumption": "NONE",
+    "candidate_implementation": "PROHIBITED",
+    "support_state_change": "PROHIBITED",
+    "p5_02_auto_start": "PROHIBITED",
+    "production_capacity_sla": "NOT_ESTABLISHED"
+  }
+}

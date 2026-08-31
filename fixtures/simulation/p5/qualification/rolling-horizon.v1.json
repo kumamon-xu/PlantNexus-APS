@@ -1,0 +1,23 @@
+{
+  "record_version": "p5-capability-evidence-record.v1",
+  "candidate_id": "P5-CANDIDATE-ROLLING-HORIZON",
+  "title": "Rolling Horizon",
+  "kind": "STRATEGY",
+  "capability_key": null,
+  "constraint_id": null,
+  "owner_tasks": ["TASK-P5-19", "TASK-P5-20"],
+  "necessity_question": "Does a versioned whole-horizon comparison prove a bounded rolling window is required without losing feasibility or quality?",
+  "evidence": {
+    "real_requirement": {"source_type": "REAL_REQUIREMENT", "status": "NOT_PROVIDED", "qualified": false, "replayable": false, "source_ids": []},
+    "simulation": {"source_type": "VERSIONED_SIMULATION", "status": "DISRUPTION_REPLAY_HAS_NO_WINDOW_COMPARISON", "qualified": false, "replayable": true, "source_ids": ["SIM-ASSUMPTION-019", "SIM-ASSUMPTION-020"]},
+    "benchmark": {"source_type": "VERSIONED_BENCHMARK", "status": "GLOBAL_ONLY_NO_ROLLING_COMPARISON", "qualified": false, "replayable": true, "source_ids": ["P2-BENCHMARK-XS@1.0.0", "P2-BENCHMARK-S@1.0.0", "P2-BENCHMARK-M@1.0.0"]}
+  },
+  "selection_facts": {"source_is_qualified": false, "source_replay_verified": true, "current_approximation_unacceptable": false, "candidate_specific_gate_passed": false, "policy_inputs_defined": false},
+  "candidate_specific_gate": "WHOLE_HORIZON_COMPARISON_TRIGGER",
+  "current_boundary": "Global planning and P4 full-problem replanning remain formed; a repeated event stream is not a rolling-window requirement.",
+  "metrics": {"runtime": "REPLAY_P2_XS_S_M_RAW_OBSERVATIONS", "memory": "REPLAY_P2_XS_S_M_RAW_OBSERVATIONS", "model_size": "REPLAY_P2_XS_S_M_RAW_OBSERVATIONS", "quality": "NO_ROLLING_VS_GLOBAL_COMPARISON"},
+  "open_dependencies": ["OPEN-005", "OPEN-011", "OPEN-012"],
+  "evidence_gaps": ["No versioned window, step, overlap, or handoff policy exists.", "No rolling-versus-Global whole-horizon quality comparison exists."],
+  "expected_decision": "DEFERRED",
+  "production_boundary": "No Production planning cadence, freeze policy, capacity, or SLA conclusion."
+}

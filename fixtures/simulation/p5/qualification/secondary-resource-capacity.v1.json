@@ -1,0 +1,23 @@
+{
+  "record_version": "p5-capability-evidence-record.v1",
+  "candidate_id": "P5-CANDIDATE-SECONDARY-RESOURCE",
+  "title": "Secondary Resource Capacity",
+  "kind": "CONSTRAINT",
+  "capability_key": "SECONDARY_CAPACITY",
+  "constraint_id": "C-012",
+  "owner_tasks": ["TASK-P5-03", "TASK-P5-04"],
+  "necessity_question": "Is a versioned demand source unable to remain feasible without simultaneous secondary-resource capacity?",
+  "evidence": {
+    "real_requirement": {"source_type": "REAL_REQUIREMENT", "status": "NOT_PROVIDED", "qualified": false, "replayable": false, "source_ids": []},
+    "simulation": {"source_type": "VERSIONED_SIMULATION", "status": "NO_SECONDARY_CAPACITY_CASE", "qualified": false, "replayable": true, "source_ids": ["SIM-ASSUMPTION-004", "SIM-ASSUMPTION-013"]},
+    "benchmark": {"source_type": "VERSIONED_BENCHMARK", "status": "NO_CANDIDATE_COMPARISON", "qualified": false, "replayable": true, "source_ids": ["P2-BENCHMARK-XS@1.0.0", "P2-BENCHMARK-S@1.0.0", "P2-BENCHMARK-M@1.0.0"]}
+  },
+  "selection_facts": {"source_is_qualified": false, "source_replay_verified": true, "current_approximation_unacceptable": false, "candidate_specific_gate_passed": false, "policy_inputs_defined": false},
+  "candidate_specific_gate": "QUALIFIED_SEMANTIC_COUNTEREXAMPLE",
+  "current_boundary": "SECONDARY_CAPACITY is explicitly rejected; capacity-1 primary resources are not an approximation.",
+  "metrics": {"runtime": "NOT_MEASURED_NO_EXECUTABLE_CANDIDATE", "memory": "NOT_MEASURED_NO_EXECUTABLE_CANDIDATE", "model_size": "NOT_MEASURED_NO_EXECUTABLE_CANDIDATE", "quality": "NOT_COMPARABLE_NO_QUALIFIED_CASE"},
+  "open_dependencies": ["OPEN-003", "OPEN-015"],
+  "evidence_gaps": ["No real secondary-resource topology or authority is supplied.", "No versioned Simulation case proves current explicit rejection blocks an approved need."],
+  "expected_decision": "DEFERRED",
+  "production_boundary": "No Production topology, capacity, or SLA conclusion."
+}

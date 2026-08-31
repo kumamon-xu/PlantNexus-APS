@@ -1,5 +1,13 @@
 # PlantNexus APS
 
+## TASK-P5-21 — empty-selected portfolio integration Gate
+
+TASK-P5-21已获独立授权，不可变Diff base为`d7779c014351d41909322b967c5c8eca68713e8b`。P5-02的provider-verified topology仍为selected=`[]`、9项`DEFERRED`和18张`cancelled` owner卡；本Gate因此不调用P5-03～20，而是以空组合identity证明未选能力没有进入执行图。
+
+新增`p5-portfolio-gate-report.v1`以PHASE_GATE独立重放Global-only strategy、formal Validator、13个mutation、XS/S/M development Benchmark和两轮P4 vertical slice，并对C-012～C-018逐项要求`UNSUPPORTED_CAPABILITY`。本地报告为12/12 checks、7个exact rejection、22个P4 Backend stage、10个browser spec execution、10次fresh Validator、10份complete ChangeReport，`issues=[]`、`blocking_gaps=[]`；Backend corrective全量为860/860 PASS。首次本地调用因显式把`PLANTNEXUS_CODE_COMMIT`设为`uncommitted`而被Production default-deny配置前置拒绝；移除该错误覆盖后同一Gate完整PASS。首次全量测试还发现Gate直接import owner违反application边界，现已改由owner machine contracts执行并通过corrective全量；没有修改既有断言、P4 owner或放宽比较。
+
+CI在既有68-step FULL路由中的P4 Gate step后追加执行P5报告器，保持P4冻结evidence和步骤计数不变；machine artifact会包含exact commit下的P5报告。Implementation exact Provider尚待提交后验证，TASK仍`in_progress`。即使本Gate最终PASS，也不是P5 Exit Audit，不自动启动TASK-P5-22，不形成P6+、Production/UAT、真实approval authority、external publish/integration、deployment或capacity/SLA。
+
 ## TASK-P5-02 — portfolio resolution and phase-plan amendment
 
 用户已另行授权TASK-P5-02。该Task只消费TASK-P5-01 exact report，不重新选择portfolio：九项决定仍全部为`DEFERRED`、selected=`[]`。P5-03～20的九条合同/implementation链因此原子终结为`cancelled`；没有selected能力Task被保留或启动。P5-21的动态依赖已解析为唯一直接依赖`TASK-P5-02`，P5-21与P5-22均继续`planned/NOT_STARTED`并仍需各自授权。

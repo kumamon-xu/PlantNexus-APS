@@ -11,6 +11,12 @@ last_reviewed: 2026-08-31
 
 # 端到端计划链路
 
+## TASK-P5-21 portfolio Gate edge
+
+P5 Gate新增的只读application编排边界为`P5-02 exact portfolio/provider topology → empty selected-owner manifest → Global/default-off + formal Validator/mutation + XS/S/M Benchmark → two fresh P4 aggregate replays → versioned Gate report`。由于selected为空，TASK-P5-03～20 owner调用数必须为0；C-012～C-018请求在既有capability contract边界精确拒绝，没有第二套Solver、Validator、Simulator或业务state写入。
+
+该edge只聚合Simulation/development evidence，不推进ScheduleVersion、approval/publish或phase状态。TASK-P5-22仍为独立、未启动的Exit Audit；P6+、Production/UAT、真实authority、external publish/integration、deployment与capacity/SLA继续在链外。
+
 ## TASK-P4-15 independently audited edge
 
 Exit Audit不新增链路节点，而是从冻结P4-14 closure重新执行并交叉核对完整公开链：`versioned event → durable ledger/facts/new Snapshot → freeze/effective locks → immutable ReplanRequest/attempt → Delivery/Stability/Makespan solve → fresh Validator → complete ChangeReport → atomic new DRAFT → read/export/API/UI`，以及`Execution Simulator → 同一标准event入口`。两轮P4 Gate与独立owner machine reports均证明facts/HARD/freeze preserved、完整operation universe、exact lineage及fail-closed边界，无第二套shortcut或隐藏state transition。

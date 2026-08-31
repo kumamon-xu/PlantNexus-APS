@@ -11,6 +11,12 @@ last_reviewed: 2026-08-31
 
 # 配置、环境与数据隔离
 
+## TASK-P5-21 Gate isolation boundary
+
+P5 portfolio Gate只在Development/Test/Benchmark与`SIMULATION`边界内编排冻结的Global/default-off、formal Validator、XS/S/M Benchmark及P4 regression入口。新增CI命令沿用既有环境与artifact目录，不新增environment variable、Secret、service、port、database、network、container、dependency或lock；C-012～C-018在进入任何owner执行前保持`UNSUPPORTED_CAPABILITY`。
+
+Machine report明确保留P5-22 `NOT_STARTED`、P6+ `NOT_ENTERED`、Production identity/approval authority `NOT_FORMED`、external publish/integration `NONE`、deployment `NOT_PERFORMED`和capacity/SLA `NOT_ESTABLISHED`。本地或provider PASS都不改变data plane或隔离级别。
+
 ## TASK-P4-14 Gate isolation boundary
 
 Gate在现有Development/Test/Benchmark + `SIMULATION`边界内fresh调用owner checks与Chromium mock transport，不新增environment variable、Secret、service、port、database、network、container、dependency或lock。两轮Backend与browser evidence写入`build/**`和required artifact；raw token、credential或Production connection均不读取、不记录。

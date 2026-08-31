@@ -11,6 +11,12 @@ last_reviewed: 2026-08-31
 
 # 能力矩阵
 
+## TASK-P5-21 aggregate rejection evidence
+
+Empty-selected P5 Gate没有改变能力矩阵。它在fresh run中对SECONDARY_CAPACITY、SEQUENCE_DEPENDENT_SETUP、MATERIAL_COMPETITION、BATCH_PROCESSING、SPLIT_MERGE、BUFFER_CAPACITY和PREEMPTIVE_OPERATION分别调用公开capability precheck，C-012～C-018全部精确返回`UNSUPPORTED_CAPABILITY`。Decomposition和Rolling Horizon仍为DEFERRED且没有owner invocation；selected-owner evidence manifest的report count为0。
+
+该结果只证明未选能力持续默认关闭，不把DEFERRED解释为已支持或已取消真实需求。TASK-P5-22尚未启动，P6+和Production能力未形成。
+
 ## TASK-P5-01 qualification result
 
 九项候选当前组合决定均为`DEFERRED`：SECONDARY_CAPACITY、SEQUENCE_DEPENDENT_SETUP、MATERIAL_COMPETITION、BATCH_PROCESSING、SPLIT_MERGE、BUFFER_CAPACITY、PREEMPTIVE_OPERATION，以及Decomposition、Rolling Horizon。原因不是已证明不需要，而是本次没有合格真实需求，现有versioned Simulation/XS-S-M Benchmark也没有证明当前显式拒绝或Global策略不可接受。selected portfolio为空；DEFERRED允许未来以新版本证据重新提案，但不授权TASK-P5-02或任何能力实现。

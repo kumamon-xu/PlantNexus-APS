@@ -3,13 +3,19 @@ doc_id: DOC-SIM-006
 title: Benchmark Harness 合同
 status: baseline
 spec_version: 0.3.0
-phase: P0-P2
+phase: P0-P5
 normative: true
 source_sections: [45, 51, 52, 53, 54, 55, 56, 58, 89]
 last_reviewed: 2026-08-31
 ---
 
 # Benchmark Harness 合同
+
+## TASK-P5-21 fresh XS/S/M aggregate observations
+
+P5 Gate再次通过公开`run_benchmark`对XS、S、M各执行一份完整report，并保留raw runtime、memory、model-size、quality、formal Validator、Reference comparison和baseline证据。三份报告全部PASS；Gate没有修改Profile、Generator、Baseline、threshold、expected或BenchmarkRunner。
+
+这些仍是development observations。L/XL、真实历史分布、部署预算、Production capacity与SLA未建立；空selected portfolio也不会把Benchmark PASS解释为高级能力必要或已支持。
 
 ## TASK-P5-01 qualification profile
 

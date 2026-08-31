@@ -20,6 +20,10 @@ from app.application.p4_gate_report import (
     FRONTEND_REPORT_VERSION as P4_FRONTEND_GATE_REPORT_VERSION,
     REPORT_VERSION as P4_GATE_REPORT_VERSION,
 )
+from app.application.p5_portfolio_gate_report import (
+    DIFF_BASE as P5_GATE_DIFF_BASE,
+    REPORT_VERSION as P5_GATE_REPORT_VERSION,
+)
 from app.application.approval_decision_check import main as approval_decision_main
 from app.application.publication_check import main as publication_main
 from app.application.replan_application_check import (
@@ -396,6 +400,7 @@ def test_ci_profile_routing_is_mutually_exclusive_and_fail_closed() -> None:
     assert "TASK-P4-13 Dynamic replanning frontend machine evidence" in full_text
     assert "P3 vertical slice Gate evidence" in full_text
     assert "P4 vertical slice Gate evidence" in full_text
+    assert "app.application.p5_portfolio_gate_report" in full_text
     assert "Build package" in full_text
     assert len(full["steps"]) == 68
 
@@ -1328,6 +1333,32 @@ def test_ci_p4_vertical_slice_gate_and_double_browser_replay_are_required() -> N
     assert 'trace: "retain-on-failure"' in (
         ROOT / "frontend/playwright.config.ts"
     ).read_text(encoding="utf-8")
+
+
+def test_ci_p5_empty_selected_portfolio_gate_is_required_and_machine_checkable() -> None:
+    workflow = (ROOT / ".github" / "workflows" / "ci.yml").read_text(encoding="utf-8")
+    normalized = " ".join(workflow.split())
+    assert (
+        "uv run python -m app.application.p5_portfolio_gate_report --root . "
+        "--repeat 2 --portfolio-manifest docs/core/p5-portfolio-amendment-manifest.md "
+        "--frontend-report build/validation/ci-p4-frontend-gate.json "
+        "--p2-report build/validation/ci-p2-vertical-slice-gate.json "
+        "--p3-report build/validation/ci-p3-vertical-slice-gate.json "
+        "--report build/validation/ci-p5-portfolio-gate.json"
+    ) in normalized
+    p4_command = "uv run python -m app.application.p4_gate_report"
+    p5_command = "uv run python -m app.application.p5_portfolio_gate_report"
+    assert workflow.index(p4_command) < workflow.index(p5_command)
+    assert workflow.index(p5_command) < workflow.index("Build package")
+    assert "build/validation/*.json" in workflow
+    assert "continue-on-error" not in workflow
+
+    gate_source = (
+        ROOT / "backend/app/application/p5_portfolio_gate_report.py"
+    ).read_text(encoding="utf-8")
+    assert f'REPORT_VERSION = "{P5_GATE_REPORT_VERSION}"' in gate_source
+    assert f'DIFF_BASE = "{P5_GATE_DIFF_BASE}"' in gate_source
+    assert "P5-03～20" not in workflow
 
 
 def test_ci_planning_problem_contract_report_is_machine_checkable(

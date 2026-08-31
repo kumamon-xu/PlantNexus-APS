@@ -11,6 +11,12 @@ last_reviewed: 2026-08-31
 
 # PlantNexus APS 文档中心
 
+## TASK-P5-21 local portfolio Gate
+
+P5-21从P5-02 closure `d7779c014351d41909322b967c5c8eca68713e8b`冻结PHASE_GATE。公开P5-02 manifest仍精确是空selected、9项DEFERRED、18张cancelled owner和唯一直接依赖TASK-P5-02；本Gate不执行任何已取消owner。
+
+`p5-portfolio-gate-report.v1`本地为12/12 PASS、`issues=[]`、`blocking_gaps=[]`，完整保留empty selected-owner manifest、C-012～C-018七项exact rejection、Global-only、formal Validator/mutation、XS/S/M和独立P4两轮重放。两轮P4合计22 stages、10 browser specs、10次fresh Validator和10份complete ChangeReport，Backend corrective全量860/860 PASS。首次显式`uncommitted` environment误配置失败已保留，首次全量发现的application跨owner import也已改由owner machine contracts纠正；没有修改既有断言或P4业务语义。Exact Provider尚待implementation提交，P5-22继续`planned/NOT_STARTED`，该Gate不是Exit或Production evidence。
+
 ## TASK-P5-02 portfolio amendment boundary
 
 TASK-P5-02已获用户独立授权，并以P5-01 closure `01b8918db62cc9f5c4421d0b90d93151ddc552f1`为不可变Diff base。它不重做qualification：九项仍全部`DEFERRED`、selected=`[]`，因此TASK-P5-03～20的十八张owner卡全部进入证据化`cancelled` terminal状态，没有能力实现被启动。

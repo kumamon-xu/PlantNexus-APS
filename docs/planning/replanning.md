@@ -3,13 +3,19 @@ doc_id: DOC-PLAN-008
 title: 动态重排设计合同
 status: baseline
 spec_version: 0.3.0
-phase: P0-P4
+phase: P0-P5
 normative: true
 source_sections: [21, 28, 35, 47, 48, 49, 50, 79, 80]
 last_reviewed: 2026-08-31
 ---
 
 # 动态重排设计合同
+
+## TASK-P5-21 frozen P4 regression
+
+P5 Gate不修改动态重排，而是在自己的PHASE_GATE中独立重放P4-02～12全部公开owner两轮。报告继续要求ExecutionEvent→fact/Snapshot、ReplanRequest/attempt、freeze/HARD、OBJ-002 Stability、fresh Validator、new DRAFT、complete ChangeReport和Simulator five-disruption语义稳定；合计22 stages、10 steps、16 events、10次Validator和10份ChangeReport。
+
+Selected P5 owner数为0，所以没有P5约束与P4重排的组合写入。Gate不推进approval/publish/export状态，不是P5 Exit，不自动启动P5-22或Production。
 
 ## TASK-P4-15 independent Exit audit
 

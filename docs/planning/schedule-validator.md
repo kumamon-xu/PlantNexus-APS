@@ -3,13 +3,19 @@ doc_id: DOC-PLAN-005
 title: 独立 ScheduleValidator 合同
 status: baseline
 spec_version: 0.3.0
-phase: P0-P4
+phase: P0-P5
 normative: true
 source_sections: [30, 31, 50, 75, 86, 87]
 last_reviewed: 2026-08-28
 ---
 
 # 独立 ScheduleValidator 合同
+
+## TASK-P5-21 fresh Validator aggregation
+
+Empty-selected P5 Gate独立执行`formal-schedule-validator-report.v1`的6项machine checks、`validator-mutation-report.v1`的13个case/C-001～C-011 coverage，并要求XS/S/M每份Global candidate以fresh formal Validator PASS。随后的P4两轮重放另外产生10次fresh Validator PASS和10份complete ChangeReport。
+
+本Task只调用已冻结的Validator public boundary，没有复制公式、修改C-ID/rule sheet/expected/assertion或把Solver status当佛acceptance authority。P5-22 Exit和Production acceptance仍未形成。
 
 ## TASK-P4-07 fresh candidate validator
 

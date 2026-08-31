@@ -3,13 +3,19 @@ doc_id: DOC-SIM-005
 title: Execution Simulator 与异常模型
 status: baseline
 spec_version: 0.3.0
-phase: P0-P4
+phase: P0-P5
 normative: true
 source_sections: [47, 48, 49, 50, 79, 80]
 last_reviewed: 2026-08-31
 ---
 
 # Execution Simulator 与异常模型
+
+## TASK-P5-21 aggregate regression
+
+P5 Gate将P4 Simulator/disruption common path作为冻结regression，独立调用P4 Gate两轮并完整保留raw subreports。结果仍为10个连续step、16个标准event、10次fresh Validator和10份complete ChangeReport；没有P5 selected owner、新Scenario、event type、seed、分布或baseline advance语义。
+
+本Gate不控制真实event source，不将test-harness baseline推进解释为approval/publication，也不建立Production deployment、capacity或SLA。P5-22仍未启动。
 
 ## TASK-P4-15 independent replay audit
 

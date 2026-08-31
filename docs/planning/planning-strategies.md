@@ -11,6 +11,12 @@ last_reviewed: 2026-08-31
 
 # PlanningStrategy 规则
 
+## TASK-P5-21 Global-only aggregate replay
+
+P5 portfolio的selected strategy集合为空。Gate fresh调用既有objective/strategy public machine boundary，继续得到`ONE_GLOBAL_CP_SAT_MODEL_NO_DECOMPOSITION_OR_FALLBACK`；Decomposition和Rolling Horizon没有被调用，空组合的advanced-strategy fallback为`NOT_APPLICABLE_EMPTY_SELECTED`。这里的“Global default”不是新增fallback逻辑，也没有参数、公式、Strategy registry或Feature Flag变更。
+
+Gate PASS只是Simulation/development重放，不建立Hybrid、P6+、Production选策或capacity/SLA。
+
 ## TASK-P5-01 strategy decision
 
 Decomposition与Rolling Horizon均为`DEFERRED`。冻结的XS/S/M replay全部PASS且没有触发§82 scaling/memory/model-explosion必要性；同时没有真实portfolio分布、可接受quality-loss预算、partition/merge政策或rolling window/step/overlap/handoff政策。Global/`global-lexicographic-replan-cp-sat.v1`继续是唯一已形成策略，不能因DEFERRED而推导Decomposed、Rolling或Hybrid实现。

@@ -11,6 +11,12 @@ last_reviewed: 2026-09-01
 
 # 能力矩阵
 
+## TASK-P6-05 Simulation offline Gate status
+
+`AI_DURATION_PREDICTION`继续`DEFERRED`，分项更新为`CONTRACT_V1 + SIMULATION_DATASET_V1 + BASELINE_MODEL_V1 + OFFLINE_GATE_READY / NO_RUNTIME`。Frozen development profile以4条held-out、train-label zero-read、model/standard MAE `11/20`秒、P90 `4/4`、最低confidence `55/57`及全部slice no-regression形成`READY_FOR_SIMULATION_RUNTIME`；这只说明P6-06可在新授权后实现local runtime。
+
+当前没有prediction provider、API、Planning adapter、promotion、drift monitoring或Production authority。任何低置信度/invalid候选仍必须回退exact standard duration；OPEN-010/011/014/015继续OPEN，routing、resource compatibility、hard constraints、state和weights完全不变，P6-06不会自动启动。
+
 ## TASK-P6-04 Simulation baseline model status
 
 `AI_DURATION_PREDICTION`继续`DEFERRED`；当前分项为`CONTRACT_V1 + SIMULATION_DATASET_V1 + BASELINE_MODEL_V1 / NO_EVALUATION_GATE / NO_RUNTIME`。P6-04形成versioned deterministic train-only baseline、safe artifact/ModelManifest与sanitized replay，并由fail-closed machine report验证；其estimate没有confidence、approved threshold、formal EvaluationReport、promotion decision、provider runtime或Planning adapter，不能作为AI candidate被消费。

@@ -15,9 +15,15 @@ Contract status: accepted human governance baseline
 
 Decision authority: [ADR-0016](../adr/ADR-0016-ai-duration-data-model-governance.md)
 
-Machine contract status: additive `2.9.0` / `FORMED_SIMULATION_CONTRACT_V1`；见[Duration Prediction Machine Contract v1](duration-prediction-machine-contract.md)。TASK-P6-03/04现形成有界Simulation dataset与baseline model/replay，但不形成evaluation Gate、runtime或Production authority
+Machine contract status: additive `2.9.0` / `FORMED_SIMULATION_CONTRACT_V1`；见[Duration Prediction Machine Contract v1](duration-prediction-machine-contract.md)。TASK-P6-03/04形成有界Simulation dataset与baseline model/replay，TASK-P6-05形成独立development offline evaluation/fallback Gate；仍无runtime或Production authority
 
-Capability status: `AI_DURATION_PREDICTION = DEFERRED / CONTRACT_V1 + SIMULATION_DATASET_V1 + BASELINE_MODEL_V1 / NO_EVALUATION_GATE / NO_RUNTIME`
+Capability status: `AI_DURATION_PREDICTION = DEFERRED / CONTRACT_V1 + SIMULATION_DATASET_V1 + BASELINE_MODEL_V1 + OFFLINE_GATE_READY / NO_RUNTIME`
+
+## TASK-P6-05 executable evaluation-governance projection
+
+`SIM-P6-OFFLINE-EVALUATION-001@1.0.0` / `SIM-ASSUMPTION-024`在任何held-out label读取前冻结validation/test-only selection、train-label zero-read、exact metrics、partition/family slices、model-versus-standard no-regression、coverage、`9/10` confidence和fallback precedence。Frozen结果为model/standard MAE `11/20`秒、P90 coverage `4/4`与最低confidence `55/57`，所有slice满足门槛，因此只形成`READY_FOR_SIMULATION_RUNTIME`。
+
+任何missing/invalid/low-confidence、quantile、lineage/version/digest、model、timeout、authority或privacy错误都选择同resource option的exact standard duration并产生stable reason；invalid standard duration fail closed。Gate不调参、不读取train label、不换split、不修改P6-02 carrier，也没有promotion、runtime、Planning或Production authority。OPEN-010/011/014/015仍阻塞真实policy/owner/data，P6-06必须独立授权。
 
 ## TASK-P6-04 executable model-governance projection
 

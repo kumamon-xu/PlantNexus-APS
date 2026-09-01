@@ -11,6 +11,14 @@ last_reviewed: 2026-09-01
 
 # PlantNexus APS 文档中心
 
+## TASK-P6-05 offline evaluation and fallback Gate
+
+P6-05以[Machine contract](contracts/duration-prediction-machine-contract.md)和[governance](contracts/duration-prediction-governance.md)为authority，在held-out标签读取前冻结`SIM-ASSUMPTION-024`、exact metrics/slices、`9/10` confidence、coverage与standard-duration fallback。Evaluator只语义读取validation/test各2条，train label读取为0；strict profile和input file digests绑定P6-03 dataset与P6-04 safe model，任何版本、lineage、privacy、authority或report mutation均fail closed。
+
+当前aggregate为模型/standard MAE=`11/20`秒、median absolute error=`10`秒、P90 coverage=`4/4`、最低confidence=`55/57`，validation/test与milling/turning均无劣化，因此独立Gate输出`READY_FOR_SIMULATION_RUNTIME`且无blocking gap。P6-02 EvaluationReport只承载兼容measurement，实际Gate保存在aggregate-only内部envelope；profile/baseline见`benchmarks/p6/`，replay命令见仓库README。
+
+该READY只表示P6-06可在新的明确授权下实现development runtime；当前仍无provider runtime、Planning ingress、promotion或Production authority。Standard duration继续是fallback authority，OPEN-010/011/014/015保持OPEN，raw rows/labels不进入machine/Provider report，P6-06不自动启动。
+
 ## TASK-P6-04 deterministic versioned baseline model
 
 TASK-P6-04从P6-03 closure `1d184d082544454436a5558bc39a6a0a38f0fb1b`冻结Diff base，以无新dependency的Python 3.12标准库实现`grouped-median-residual-baseline.v1`。Trainer只读取已授权dataset的4条train row，以exact `Fraction`形成milling `-40/1`、turning `-45/2`秒median residual和20秒nearest-rank p90 margin；validation/test row绝不训练。`planned_quantity`与`setup_seconds`保持required/validated但zero-weight，训练无seed、RNG或host-time输入。

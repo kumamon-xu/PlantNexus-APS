@@ -11,6 +11,12 @@ last_reviewed: 2026-09-01
 
 # Provenance 与版本规则
 
+## TASK-P6-05 evaluation and Gate lineage
+
+`duration-evaluation-profile.v1`在held-out标签读取前冻结profile ID、SIM assumptions、exact dataset/model file digests、manifest/artifact/config identities、partitions/families、metric arithmetic、confidence/coverage threshold、fallback precedence、timestamp和authority boundary。Evaluator source normalized-LF SHA-256进入Gate lineage；任何profile、dataset、model、artifact、code或aggregate变化产生不同identity并必须发布新baseline，不得覆盖既有golden。
+
+P6-02 `duration-evaluation-report.v1`继续按原Schema绑定model、dataset、split、standard baseline、code/config、privacy和aggregate metrics，其`gate_assessment`常量不变。P6-05另以content-derived `p6-duration-offline-gate-report.v1`绑定measurement、exact rational overall/partition/family aggregates、18项checks、11项fallback evidence和READY/NOT_READY gaps；same-input与row-order permutation必须得到相同canonical bytes。Tracked baseline及Provider payload不保存row ID、FeatureRecord、source record或label。
+
 ## TASK-P6-04 model, manifest and replay lineage
 
 `duration-baseline-artifact.v1`绑定exact P6-03 dataset bundle/manifest、required/active/zero-weight feature contract、train-only row identities、algorithm/config、dependency lock、training cutoff、factory/resource/operation scope、`SIM-ASSUMPTION-021/022/023`及normalized-LF model source SHA-256。Training code的完整digest进入artifact，前40位进入既有ModelManifest `code_revision`；任何dataset、code、lock、config、scope、version或artifact byte漂移在load/replay前fail closed。Retraining只能形成新content identity，不得覆盖旧artifact或manifest。

@@ -6,10 +6,16 @@ spec_version: 0.3.0
 phase: P2-P7
 normative: true
 source_sections: [57, 58, 76, 80, 84, 85, 89, 105, 106]
-last_reviewed: 2026-08-31
+last_reviewed: 2026-09-01
 ---
 
 # 性能与现实校准门
+
+## TASK-P6-05 offline quality Gate boundary
+
+P6-05新增的是duration quality/confidence/fallback Gate，不是Solver performance Gate。Frozen synthetic profile要求model总MAE严格优于standard baseline、partition/family MAE不劣化、P90 coverage总体≥`3/4`/slice≥`1/2`、confidence≥`9/10`；当前aggregate全部满足并输出`READY_FOR_SIMULATION_RUNTIME`。
+
+该READY不表示P7 Reality Calibration、真实历史有效性、runtime latency/memory、Production capacity或SLA，也不改变Gate A/B/C。OPEN-010/011/012/014/015关闭前不得把4条held-out观测外推；threshold变化必须新profile/SIM assumption和独立Gate，禁止原地调低baseline。
 
 ## TASK-P5-01 qualification observation boundary
 

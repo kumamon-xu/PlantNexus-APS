@@ -3,13 +3,19 @@ doc_id: DOC-SIM-006
 title: Benchmark Harness 合同
 status: baseline
 spec_version: 0.3.0
-phase: P0-P5
+phase: P0-P6
 normative: true
 source_sections: [45, 51, 52, 53, 54, 55, 56, 58, 89]
 last_reviewed: 2026-09-01
 ---
 
 # Benchmark Harness 合同
+
+## TASK-P6-05 offline duration evaluation profile
+
+`benchmarks/p6/duration-evaluation-profile.v1.json`和`duration-evaluation-baseline.v1.json`是独立于P2 XS/S/M Solver Benchmark的development quality Gate。Profile在held-out读取前冻结P6-03 validation/test 4条、P6-04 model、exact metrics/slices、coverage/confidence和fallback；baseline只保存aggregate golden、input/report identity和safe boundary，不含row或label。
+
+Reporter fresh验证input file digests、safe model、source-order replay、P6-02 measurement compatibility、18项Gate与11项fallback matrix，并exact比较aggregate baseline。当前model/standard MAE=`11/20`秒、coverage=`4/4`且decision=`READY_FOR_SIMULATION_RUNTIME`。这是synthetic correctness/quality evidence，不修改XS/S/M baseline、不建立真实分布、Production threshold、capacity或SLA。
 
 ## TASK-P5-22 fresh qualification and Exit evidence
 

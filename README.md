@@ -1,5 +1,13 @@
 # PlantNexus APS
 
+## TASK-P6-05 — offline evaluation, confidence, and fallback Gate
+
+P6-05在首次读取held-out标签前冻结`SIM-P6-OFFLINE-EVALUATION-001@1.0.0` / `SIM-ASSUMPTION-024`：只评估P6-03 validation/test各2条，train label语义读取固定为0；使用exact rational MAE、nearest-rank median absolute error、P90 coverage和`max(0,1-(p90-p50)/p50)`置信度，门槛为`9/10`。模型总MAE必须严格优于权威standard-duration baseline，且每个partition与operation family不得劣化；coverage总体至少`3/4`、每个slice至少`1/2`。Profile、dataset/model文件、manifest、artifact、code和aggregate golden全部精确绑定，任何漂移或tamper fail closed。
+
+冻结结果为模型MAE `11`秒、standard baseline MAE `20`秒、median absolute error `10`秒、P90 coverage `4/4`，最低confidence为`55/57`；validation/test MAE分别为`15/7`秒，对应standard为`25/15`秒，milling/turning同样无劣化。18项Gate检查与11项fallback矩阵一致，当前decision=`READY_FOR_SIMULATION_RUNTIME`、`blocking_gaps=[]`。P6-02 `DurationEvaluationReport v1`仍保持原Schema和`NOT_EVALUATED_BY_P6_02`常量；实际threshold/fallback决策进入独立`p6-duration-offline-gate-report.v1` aggregate-only envelope。
+
+Missing/invalid/低置信度、quantile、lineage/version/digest、model、timeout、authority或privacy失败均选择exact standard duration并给出stable reason；标准工时自身无效则fail closed。报告、baseline和Provider payload不含raw rows或labels。可用`uv run python scripts/p6_duration_evaluation_check.py --root . --report build/validation/p6-duration-evaluation-report.json`重放；READY不是model promotion、runtime、Planning或Production授权，OPEN-010/011/014/015继续OPEN，P6-06不会自动启动。
+
 ## TASK-P6-04 — deterministic versioned baseline model and replay evidence
 
 用户已独立授权TASK-P6-04，并从P6-03 provider-verified closure `1d184d082544454436a5558bc39a6a0a38f0fb1b`冻结HIGH_RISK Diff base。新增`grouped-median-residual-baseline.v1`只消费已批准的`SIM-P6-FEATURE-DATASET-001@1.0.0`，只用4条train row，以Python `Fraction`精确计算operation-family median residual并按half-away-from-zero取整；milling/turning offset分别为`-40/1`、`-45/2`秒，training absolute residual的0.90 nearest-rank margin为20秒。`standard_duration_seconds`与`operation_family`是active feature；`planned_quantity`、`setup_seconds`仍是必填且严格验证的zero-weight feature。训练无RNG、seed、host clock、validation/test row或新dependency。

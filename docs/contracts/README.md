@@ -11,6 +11,12 @@ last_reviewed: 2026-09-01
 
 # 合同文档索引
 
+## TASK-P6-05 offline evaluation and fallback contract
+
+[Duration Prediction Machine Contract v1](duration-prediction-machine-contract.md)现追加P6-05 executable evaluation章节：冻结profile只消费P6-03 validation/test和P6-04 safe model，以exact rational aggregate比较model与standard duration，强制partition/family no-regression、P90 coverage、`9/10` confidence与完整fallback precedence；train label读取为0，input/report tamper fail closed。
+
+P6-02 EvaluationReport bytes和Schema不变，只承载compatible measurement；实际`READY_FOR_SIMULATION_RUNTIME|NOT_READY`与threshold/gaps位于strict aggregate-only Gate envelope。当前synthetic profile达到READY，但没有runtime、Planning、promotion或Production authority；P6-06必须另行授权，OPEN-010/011/014/015继续OPEN。
+
 ## TASK-P6-04 baseline model implementation contract
 
 [Duration Prediction Machine Contract v1](duration-prediction-machine-contract.md)现追加P6-04 deterministic baseline章节：trainer只消费P6-03 exact dataset/manifest的4条train row，以grouped median residual、exact rational arithmetic、fixed rounding与nearest-rank margin生成versioned safe model；existing ModelManifest绑定dataset/feature/code/lock/config/algorithm/artifact/scope/decision/rollback/replay。Loader对unsafe serialization、unknown/duplicate/non-finite、oversize、symlink及所有lineage/version/tamper fail closed，writer保证atomic replace和no partial。

@@ -11,6 +11,12 @@ last_reviewed: 2026-09-01
 
 # ScenarioSpec 与 Provenance
 
+## TASK-P6-05 versioned evaluation profile and aggregate baseline
+
+`benchmarks/p6/duration-evaluation-profile.v1.json`发布`SIM-P6-OFFLINE-EVALUATION-001@1.0.0` / `SIM-ASSUMPTION-024`，无seed、RNG或host clock；它在held-out读取前冻结P6-03/P6-04 exact identities、validation/test-only selection、metrics/slices、confidence/coverage和fallback。`duration-evaluation-baseline.v1.json`保存同一输入的aggregate golden及content identities，不保存raw rows、row IDs、FeatureRecords或labels。
+
+Profile/baseline不是ScenarioSpec Schema扩展，也不是Production policy。任何dataset/model/artifact/code/profile/threshold或aggregate变化必须产生新identity/version并重新执行独立Gate；禁止覆盖已引用baseline。当前READY只用于development后继授权，不表示runtime、Planning、P7现实校准、Production精度、capacity或SLA。
+
 ## TASK-P6-04 versioned baseline model fixture
 
 `fixtures/synthetic/P6-DURATION-MODEL/baseline-model.v1.pnmodel`与`expected-model-bundle.v1.json`发布`SIM-P6-BASELINE-MODEL-001@1.0.0` / `SIM-ASSUMPTION-023`的canonical golden projection。它只消费`SIM-P6-DURATION-HISTORY@1.0.0`中已由P6-03形成的4条train row，无RNG/seed/host time，以两类operation-family residual参数及20秒training-residual margin形成确定性artifact、manifest和replay。

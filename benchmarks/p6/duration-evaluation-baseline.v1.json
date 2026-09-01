@@ -1,0 +1,296 @@
+{
+  "baseline_fingerprint": "sha256:1206d4dd9c2eba2acce77156580331e7f8bc63340732768437e86033131bd474",
+  "baseline_id": "duration-evaluation-baseline-1206d4dd9c2eba2acce77156580331e7f8bc63340732768437e86033131bd474",
+  "duration_evaluation_baseline_version": "duration-evaluation-baseline.v1",
+  "expected_check_ids": [
+    "heldout-row-count",
+    "train-label-read-zero",
+    "heldout-model-mae-strictly-better",
+    "overall-p90-coverage",
+    "heldout-confidence-threshold",
+    "partition-validation-sample-count",
+    "partition-validation-mae-no-regression",
+    "partition-validation-p90-coverage",
+    "partition-test-sample-count",
+    "partition-test-mae-no-regression",
+    "partition-test-p90-coverage",
+    "family-milling-sample-count",
+    "family-milling-mae-no-regression",
+    "family-milling-p90-coverage",
+    "family-turning-sample-count",
+    "family-turning-mae-no-regression",
+    "family-turning-p90-coverage",
+    "fallback-matrix"
+  ],
+  "expected_fallback_reason_codes": [
+    "FALLBACK_CONFIDENCE_MISSING",
+    "FALLBACK_CONFIDENCE_INVALID",
+    "FALLBACK_CONFIDENCE_BELOW_THRESHOLD",
+    "FALLBACK_QUANTILES_INVALID",
+    "FALLBACK_LINEAGE_INCOMPATIBLE",
+    "FALLBACK_MODEL_INVALID",
+    "FALLBACK_TIMEOUT",
+    "FALLBACK_AUTHORITY_UNAVAILABLE",
+    "FALLBACK_PRIVACY_BOUNDARY"
+  ],
+  "expected_fallback_scenario_count": 11,
+  "expected_gate_decision": {
+    "blocking_gaps": [],
+    "decision": "READY_FOR_SIMULATION_RUNTIME",
+    "gate_contract": "p6-duration-offline-confidence-fallback-gate.v1"
+  },
+  "expected_metrics": {
+    "operation_families": [
+      {
+        "aggregate": {
+          "confidence": {
+            "at_or_above_threshold_count": 2,
+            "minimum": {
+              "denominator": 57,
+              "numerator": 55
+            },
+            "policy_version": "interval-tightness-confidence.v1",
+            "threshold": {
+              "denominator": 10,
+              "numerator": 9
+            }
+          },
+          "model_mae_seconds": {
+            "denominator": 1,
+            "numerator": 15
+          },
+          "model_median_absolute_error_seconds": {
+            "denominator": 1,
+            "numerator": 10
+          },
+          "p90_coverage": {
+            "covered_count": 2,
+            "ratio": {
+              "denominator": 1,
+              "numerator": 1
+            },
+            "total_count": 2
+          },
+          "sample_count": 2,
+          "selection": {
+            "model_p50_count": 2,
+            "standard_duration_fallback_count": 0
+          },
+          "standard_duration_mae_seconds": {
+            "denominator": 1,
+            "numerator": 25
+          }
+        },
+        "operation_family": "milling"
+      },
+      {
+        "aggregate": {
+          "confidence": {
+            "at_or_above_threshold_count": 2,
+            "minimum": {
+              "denominator": 289,
+              "numerator": 279
+            },
+            "policy_version": "interval-tightness-confidence.v1",
+            "threshold": {
+              "denominator": 10,
+              "numerator": 9
+            }
+          },
+          "model_mae_seconds": {
+            "denominator": 1,
+            "numerator": 7
+          },
+          "model_median_absolute_error_seconds": {
+            "denominator": 1,
+            "numerator": 2
+          },
+          "p90_coverage": {
+            "covered_count": 2,
+            "ratio": {
+              "denominator": 1,
+              "numerator": 1
+            },
+            "total_count": 2
+          },
+          "sample_count": 2,
+          "selection": {
+            "model_p50_count": 2,
+            "standard_duration_fallback_count": 0
+          },
+          "standard_duration_mae_seconds": {
+            "denominator": 1,
+            "numerator": 15
+          }
+        },
+        "operation_family": "turning"
+      }
+    ],
+    "overall": {
+      "confidence": {
+        "at_or_above_threshold_count": 4,
+        "minimum": {
+          "denominator": 57,
+          "numerator": 55
+        },
+        "policy_version": "interval-tightness-confidence.v1",
+        "threshold": {
+          "denominator": 10,
+          "numerator": 9
+        }
+      },
+      "model_mae_seconds": {
+        "denominator": 1,
+        "numerator": 11
+      },
+      "model_median_absolute_error_seconds": {
+        "denominator": 1,
+        "numerator": 10
+      },
+      "p90_coverage": {
+        "covered_count": 4,
+        "ratio": {
+          "denominator": 1,
+          "numerator": 1
+        },
+        "total_count": 4
+      },
+      "sample_count": 4,
+      "selection": {
+        "model_p50_count": 4,
+        "standard_duration_fallback_count": 0
+      },
+      "standard_duration_mae_seconds": {
+        "denominator": 1,
+        "numerator": 20
+      }
+    },
+    "partitions": [
+      {
+        "aggregate": {
+          "confidence": {
+            "at_or_above_threshold_count": 2,
+            "minimum": {
+              "denominator": 57,
+              "numerator": 55
+            },
+            "policy_version": "interval-tightness-confidence.v1",
+            "threshold": {
+              "denominator": 10,
+              "numerator": 9
+            }
+          },
+          "model_mae_seconds": {
+            "denominator": 1,
+            "numerator": 15
+          },
+          "model_median_absolute_error_seconds": {
+            "denominator": 1,
+            "numerator": 10
+          },
+          "p90_coverage": {
+            "covered_count": 2,
+            "ratio": {
+              "denominator": 1,
+              "numerator": 1
+            },
+            "total_count": 2
+          },
+          "sample_count": 2,
+          "selection": {
+            "model_p50_count": 2,
+            "standard_duration_fallback_count": 0
+          },
+          "standard_duration_mae_seconds": {
+            "denominator": 1,
+            "numerator": 25
+          }
+        },
+        "partition": "validation"
+      },
+      {
+        "aggregate": {
+          "confidence": {
+            "at_or_above_threshold_count": 2,
+            "minimum": {
+              "denominator": 289,
+              "numerator": 279
+            },
+            "policy_version": "interval-tightness-confidence.v1",
+            "threshold": {
+              "denominator": 10,
+              "numerator": 9
+            }
+          },
+          "model_mae_seconds": {
+            "denominator": 1,
+            "numerator": 7
+          },
+          "model_median_absolute_error_seconds": {
+            "denominator": 1,
+            "numerator": 2
+          },
+          "p90_coverage": {
+            "covered_count": 2,
+            "ratio": {
+              "denominator": 1,
+              "numerator": 1
+            },
+            "total_count": 2
+          },
+          "sample_count": 2,
+          "selection": {
+            "model_p50_count": 2,
+            "standard_duration_fallback_count": 0
+          },
+          "standard_duration_mae_seconds": {
+            "denominator": 1,
+            "numerator": 15
+          }
+        },
+        "partition": "test"
+      }
+    ]
+  },
+  "expected_selection": {
+    "heldout_row_count": 4,
+    "included_partitions": [
+      "validation",
+      "test"
+    ],
+    "operation_family_counts": {
+      "milling": 2,
+      "turning": 2
+    },
+    "partition_counts": {
+      "test": 2,
+      "validation": 2
+    },
+    "train_label_read_limit": 0,
+    "train_label_reads": 0
+  },
+  "gate_report_fingerprint": "sha256:c7aa6b5841882e93748c1bb570a768a2bd2b3f37c16f4a109bd46f11f891255b",
+  "input_lineage": {
+    "dataset_bundle_fingerprint": "sha256:137ed52753f8decfcc2b0903c37e697f18c0e5a20369458aabddba6e7df81d98",
+    "dataset_manifest_fingerprint": "sha256:d02f7818d4744e8a86205cfafe25efe1b39e2f1db6edc485a38e10aea8470bda",
+    "dataset_manifest_id": "duration-dataset-manifest-d02f7818d4744e8a86205cfafe25efe1b39e2f1db6edc485a38e10aea8470bda",
+    "evaluation_code_digest": "sha256:e6c0b5e239d52772b41744508709a589bd6723d4282b52655b74a64feb15b77c",
+    "model_artifact_digest": "sha256:472cc92ada06b488fceb8477ac5a3dfe06d6391dd5ada8b441d55b96e9640ddd",
+    "model_bundle_fingerprint": "sha256:4536d9700acdbe923a69c20692a19d6f4d8a6a53463e828ea582925676820c8e",
+    "model_manifest_fingerprint": "sha256:35f84b792028a1bf135fcc44d415423d47593f2843058d119fe288efd7195bf0",
+    "model_manifest_id": "duration-model-manifest-35f84b792028a1bf135fcc44d415423d47593f2843058d119fe288efd7195bf0",
+    "model_version": "1.0.0"
+  },
+  "measurement_report_fingerprint": "sha256:4c86069865003263c15e3a7e6d18a83b943a10a087d81ed34cdd3f353dfd799f",
+  "profile_reference": {
+    "profile_fingerprint": "sha256:ef5a0adc8f5a239a0e2083b791d7409818336408cb56b3dfe63b4d2f477d4f09",
+    "profile_id": "SIM-P6-OFFLINE-EVALUATION-001@1.0.0"
+  },
+  "provider_payload": {
+    "aggregate_only": true,
+    "labels_included": false,
+    "production_authorized": false,
+    "raw_rows_included": false
+  },
+  "task_id": "TASK-P6-05"
+}

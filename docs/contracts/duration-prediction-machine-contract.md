@@ -15,7 +15,15 @@ Contract status: `FORMED_SIMULATION_CONTRACT_V1` in additive schema set `2.9.0`
 
 Human authority: [ADR-0016](../adr/ADR-0016-ai-duration-data-model-governance.md) and [Duration Prediction Governance Contract](duration-prediction-governance.md)
 
-Capability status: `AI_DURATION_PREDICTION = DEFERRED / CONTRACT_V1 + SIMULATION_DATASET_V1 + BASELINE_MODEL_V1 / NO_EVALUATION_GATE / NO_RUNTIME`
+Capability status: `AI_DURATION_PREDICTION = DEFERRED / CONTRACT_V1 + SIMULATION_DATASET_V1 + BASELINE_MODEL_V1 + OFFLINE_GATE_READY / NO_RUNTIME`
+
+## TASK-P6-05 offline evaluation, confidence, and fallback Gate
+
+`duration-evaluation-profile.v1` / `SIM-P6-OFFLINE-EVALUATION-001@1.0.0` binds the exact P6-03 dataset file/bundle/manifest and P6-04 model file/bundle/manifest/artifact/config, plus `SIM-ASSUMPTION-021` through `024`. It includes only validation and test labels, two rows per partition and operation family, with a hard train-label read limit of zero. Raw file digests are checked before semantic evaluation; held-out row identities, feature privacy/plane, model scope, authorization and all cross-lineage references then fail closed independently.
+
+Metrics use exact rational arithmetic: MAE, nearest-rank median absolute error, and actual-at-or-below-p90 coverage. Overall model MAE must be strictly below the authoritative standard-duration MAE; each partition and operation-family MAE must be no worse. Coverage must be at least `3/4` overall and `1/2` per slice. Confidence is exactly `max(0,1-(p90-p50)/p50)` and every evaluated candidate must meet `9/10`. The frozen result is model/standard MAE `11/20` seconds, median error `10`, coverage `4/4`, minimum confidence `55/57`, and no slice regression, yielding `READY_FOR_SIMULATION_RUNTIME` with no gap.
+
+Missing, invalid or low confidence; invalid quantiles; incompatible lineage; invalid model; timeout; unavailable model authority; or privacy failure selects the exact positive standard duration and one stable fallback reason. Invalid standard duration fails closed. The unchanged P6-02 `duration-evaluation-report.v1` remains the measurement carrier with `NOT_EVALUATED_BY_P6_02` and no embedded thresholds. P6-05 decisions live in strict `p6-duration-offline-gate-report.v1`, which contains aggregate metrics, checks and fallback evidence but no rows, labels or FeatureRecords. READY grants no model promotion, runtime, Planning or Production authority.
 
 ## TASK-P6-04 deterministic baseline model and replay
 

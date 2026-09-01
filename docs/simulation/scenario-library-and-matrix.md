@@ -11,6 +11,14 @@ last_reviewed: 2026-09-01
 
 # Scenario Library 与复杂度矩阵
 
+## TASK-P6-05 duration offline-evaluation row
+
+| Scenario | Profile | Seed / stream | Evidence | Boundary |
+| --- | --- | --- | --- | --- |
+| `SIM-P6-DURATION-HISTORY@1.0.0` | `SIM-P6-OFFLINE-EVALUATION-001@1.0.0` | no RNG / validation 2 + test 2 | `duration-evaluation-profile.v1.json` + aggregate baseline、TEST-P6-OFFLINE-EVALUATION-001/TEST-P6-FALLBACK-001 | MAE `11<20`、P90 `4/4`、min confidence `55/57`、READY；development only；no runtime/Production |
+
+该row只消费P6-03 frozen held-out与P6-04 safe model，train label读取为0；partition/family no-regression、fallback matrix、same-input/order replay与tamper rejection均是Gate条件。它不是XS/S/M Solver Benchmark或P7 reality-calibration scenario，4条synthetic observation不能外推真实分布、capacity或SLA。
+
 ## TASK-P6-04 duration baseline model correctness row
 
 | Scenario | Profile | Seed / stream | Evidence | Boundary |

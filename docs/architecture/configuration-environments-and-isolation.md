@@ -11,6 +11,12 @@ last_reviewed: 2026-09-01
 
 # 配置、环境与数据隔离
 
+## TASK-P6-05 evaluation and evidence isolation
+
+Offline evaluator只接受冻结的`SIMULATION/TEST` profile、exact P6-03 dataset file、P6-04 model bundle和safe artifact；没有environment default、credential、database、network、queue、service、runtime provider或Planning side effect。Raw file SHA-256先验证，随后只对validation/test进行label语义访问；train label读取计数必须为0。Profile、threshold、timestamp与fallback precedence均来自versioned文件，不读取host clock或环境变量。
+
+Tracked baseline和machine/Provider evidence只包含aggregate metric、slice count、exact fraction、identity、stable fallback reason和Gate decision；raw source、dataset rows、FeatureRecord或labels全部禁止。FULL main validation新增一项不可跳过的P6-05 aggregate reporter，并在临时P4 frozen replay中移除evaluation模块及三份post-frozen测试，避免新路径污染冻结owner；required `validate`、job依赖、permission、Secret、dependency/lock和部署不变。`READY_FOR_SIMULATION_RUNTIME`不改变Production隔离或启用任何runtime。
+
 ## TASK-P6-04 model artifact and CI isolation
 
 Trainer/loader只接受`SIMULATION/TEST`、synthetic、`production_binding=false`且scope位于P6-03 manifest allow-list的输入；没有environment default、credential、database、queue、network、endpoint、service、registry或外部storage。Model/config/manifest/replay逐字声明Production与promotion未授权、planning authority=`NONE`，任何Production-shaped或cross-scope mutation在publish/estimate前拒绝。

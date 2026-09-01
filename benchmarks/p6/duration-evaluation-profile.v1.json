@@ -1,0 +1,123 @@
+{
+  "assumption_refs": [
+    "SIM-ASSUMPTION-021",
+    "SIM-ASSUMPTION-022",
+    "SIM-ASSUMPTION-023",
+    "SIM-ASSUMPTION-024"
+  ],
+  "confidence_policy": {
+    "formula": "max(0,1-(p90_seconds-p50_seconds)/p50_seconds)",
+    "policy_version": "interval-tightness-confidence.v1",
+    "threshold": {
+      "denominator": 10,
+      "numerator": 9
+    }
+  },
+  "created_at_utc": "2026-09-01T10:00:00Z",
+  "data_plane": "SIMULATION",
+  "duration_evaluation_profile_version": "duration-evaluation-profile.v1",
+  "environment": "TEST",
+  "evaluation_selection": {
+    "excluded_label_partitions": [
+      "train"
+    ],
+    "included_partitions": [
+      "validation",
+      "test"
+    ],
+    "minimum_heldout_rows": 4,
+    "minimum_operation_family_rows": 2,
+    "minimum_partition_rows": {
+      "test": 2,
+      "validation": 2
+    },
+    "required_operation_families": [
+      "milling",
+      "turning"
+    ],
+    "train_label_read_limit": 0
+  },
+  "fallback_policy": {
+    "authority": "STANDARD_DURATION_RESOURCE_OPTION",
+    "invalid_standard_duration_decision": "FAIL_CLOSED",
+    "policy_version": "standard-duration-offline-fallback-gate.v1",
+    "reason_codes": [
+      "FALLBACK_CONFIDENCE_MISSING",
+      "FALLBACK_CONFIDENCE_INVALID",
+      "FALLBACK_CONFIDENCE_BELOW_THRESHOLD",
+      "FALLBACK_QUANTILES_INVALID",
+      "FALLBACK_LINEAGE_INCOMPATIBLE",
+      "FALLBACK_MODEL_INVALID",
+      "FALLBACK_TIMEOUT",
+      "FALLBACK_AUTHORITY_UNAVAILABLE",
+      "FALLBACK_PRIVACY_BOUNDARY"
+    ],
+    "selected_duration_source": "feature.standard_duration_seconds"
+  },
+  "gate_policy": {
+    "gate_contract": "p6-duration-offline-confidence-fallback-gate.v1",
+    "heldout_model_mae_vs_standard": "STRICTLY_LESS_THAN",
+    "minimum_p90_coverage": {
+      "operation_family": {
+        "denominator": 2,
+        "numerator": 1
+      },
+      "overall": {
+        "denominator": 4,
+        "numerator": 3
+      },
+      "partition": {
+        "denominator": 2,
+        "numerator": 1
+      }
+    },
+    "slice_model_mae_vs_standard": "LESS_THAN_OR_EQUAL",
+    "success_decision": "READY_FOR_SIMULATION_RUNTIME",
+    "failure_decision": "NOT_READY"
+  },
+  "governance_boundary": {
+    "open_authority_gaps": [
+      "OPEN-010",
+      "OPEN-011",
+      "OPEN-014",
+      "OPEN-015"
+    ],
+    "planning_authority": "NONE",
+    "production_authorized": false,
+    "promotion_authorized": false,
+    "runtime_authorized": false
+  },
+  "input_contract": {
+    "canonicalization_version": "canonical-json.v1",
+    "dataset": {
+      "bundle_fingerprint": "sha256:137ed52753f8decfcc2b0903c37e697f18c0e5a20369458aabddba6e7df81d98",
+      "bundle_file_sha256": "sha256:9cc8d0a3e13258fac0a93cbf849edd50fe1ed270f331608274c8c6277639d144",
+      "bundle_version": "duration-dataset-bundle.v1",
+      "manifest_fingerprint": "sha256:d02f7818d4744e8a86205cfafe25efe1b39e2f1db6edc485a38e10aea8470bda",
+      "manifest_id": "duration-dataset-manifest-d02f7818d4744e8a86205cfafe25efe1b39e2f1db6edc485a38e10aea8470bda"
+    },
+    "feature_schema_version": "duration-features.v1",
+    "model": {
+      "artifact_digest": "sha256:472cc92ada06b488fceb8477ac5a3dfe06d6391dd5ada8b441d55b96e9640ddd",
+      "artifact_file_sha256": "sha256:70006f2df41a350cc83baea216d3ccc3fbb16034b949b65cd61c808960d67728",
+      "bundle_file_sha256": "sha256:f7d07ff8b3373d1beb2efe983ada88d6ca8a026a94099198fec4e528a4b60c47",
+      "bundle_fingerprint": "sha256:4536d9700acdbe923a69c20692a19d6f4d8a6a53463e828ea582925676820c8e",
+      "configuration_fingerprint": "sha256:8e7a6ec503298eec720b45520ebdce45fd114e55e8e96fdce4668895f4d2da45",
+      "configuration_id": "duration-training-config-8e7a6ec503298eec720b45520ebdce45fd114e55e8e96fdce4668895f4d2da45",
+      "manifest_fingerprint": "sha256:35f84b792028a1bf135fcc44d415423d47593f2843058d119fe288efd7195bf0",
+      "manifest_id": "duration-model-manifest-35f84b792028a1bf135fcc44d415423d47593f2843058d119fe288efd7195bf0",
+      "model_version": "1.0.0"
+    },
+    "schema_set_version": "2.9.0"
+  },
+  "metric_policy": {
+    "absolute_error_unit": "SECONDS",
+    "arithmetic": "EXACT_RATIONAL",
+    "mae": "sum-absolute-error/count.v1",
+    "median_absolute_error": "nearest-rank.v1@1/2",
+    "p90_coverage": "actual-processing-seconds-less-than-or-equal-p90.v1"
+  },
+  "profile_id": "SIM-P6-OFFLINE-EVALUATION-001@1.0.0",
+  "synthetic": true,
+  "task_id": "TASK-P6-05"
+}

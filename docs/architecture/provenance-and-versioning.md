@@ -6,10 +6,16 @@ spec_version: 0.3.0
 phase: cross-phase
 normative: true
 source_sections: [4, 23, 24, 40, 67, 93, 101, 102, 103, 104]
-last_reviewed: 2026-08-28
+last_reviewed: 2026-09-01
 ---
 
 # Provenance 与版本规则
+
+## TASK-P6-01 dataset/model/prediction lineage
+
+ADR-0016要求未来dataset manifest不可变绑定source/version/as-of cutoff、eligibility/exclusion与label policy、feature schema、time/group split、plane/factory scope、code revision和content fingerprint；model artifact另绑定dataset、dependency/lock、algorithm/config、determinism inputs、environment与artifact digest；evaluation绑定独立split、standard-duration baseline、slice/metric policy和完整machine evidence。Retraining只能产生新版本，禁止覆盖历史。
+
+每次prediction/consumption必须可关联operation/resource option、decision time/cutoff、标准工时source/version、feature/dataset/model/contract/code/config、p50/p90/confidence、provider outcome、consume/fallback decision/reason、audit/correlation及下游Snapshot/Problem/PlanningRun引用。日志不是唯一provenance；raw Production rows不得进入provider artifact。TASK-P6-01只冻结人类合同，尚无机器carrier、identity算法、dataset或model形成。
 
 ## TASK-P4-11 output provenance chain
 

@@ -11,6 +11,12 @@ last_reviewed: 2026-09-01
 
 # 配置、环境与数据隔离
 
+## TASK-P6-01 data/model isolation boundary
+
+Duration dataset、model registry、evaluation和prediction evidence必须在Development/Test/Benchmark/Production之间使用隔离的database、credential、namespace和artifact location；synthetic数据固定`production_binding=false`，不能join、复制或promotion为Production evidence。Raw受控行留在获授权数据平面，CI/provider只允许sanitized reference、version、fingerprint、count、aggregate metric与disposition。
+
+任一purpose、source authority、consent/获批准使用依据、retention policy、deletion procedure或具名owner closure缺失时，Production extraction/training/storage/promotion都default-deny。没有approved model/confidence/drift policy也等同禁用provider并使用标准工时；不得以environment default打开。TASK-P6-01没有增加环境变量、Secret、service、storage、route、dependency或deployment。
+
 ## TASK-P5-22 Exit audit isolation boundary
 
 Audit只读取仓库、公开GitHub provider metadata/artifact下载副本及Development/Test/Benchmark下的fresh evidence；运行输出限定在ignored `build/**`。它不新增environment variable、Secret、service、port、database、network、container、dependency或lock，也不读取或记录Production credential。

@@ -3,13 +3,19 @@ doc_id: DOC-CONTRACT-INDEX
 title: 合同文档索引
 status: living
 spec_version: 0.3.0
-phase: P4
+phase: P6
 normative: false
 source_sections: [24, 36, 38, 39, 63, 64, 67, 103]
-last_reviewed: 2026-08-31
+last_reviewed: 2026-09-01
 ---
 
 # 合同文档索引
+
+## TASK-P6-01 human governance contract
+
+[`duration-prediction-governance.md`](duration-prediction-governance.md)现作为ADR-0016的accepted人类治理合同，固定标准工时与预测candidate的authority分离、completed-label eligibility/censoring、feature as-of/leakage、privacy/retention/deletion、immutable dataset/model/evaluation provenance、human promotion/rollback、fallback decision table以及OPEN-010/011/014/015 closure conditions。
+
+该文档不是机器Schema：schema set、migration、dependency和既有carrier均未改变，`fallback_reason`枚举、Prediction/feature/model/evaluation carrier及compatibility必须由TASK-P6-02另行授权发布。当前没有dataset、model、runtime、planning integration或Production authority，能力继续`DEFERRED/NOT_FORMED`。
 
 ## TASK-P4-15 Exit contract audit
 

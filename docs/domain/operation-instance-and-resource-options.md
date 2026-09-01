@@ -3,13 +3,19 @@ doc_id: DOC-DOM-002
 title: OperationInstance 与候选资源语义
 status: baseline
 spec_version: 0.3.0
-phase: P0-P2
+phase: P0-P6
 normative: true
 source_sections: [19, 20, 21, 25, 26]
-last_reviewed: 2026-08-20
+last_reviewed: 2026-09-01
 ---
 
 # OperationInstance 与候选资源语义
+
+## P6 duration candidate and fallback boundary
+
+ADR-0016确认本文件既有`final_duration_seconds`、`duration_source`与`source_version`仍是每个resource option的标准工时authority。未来DurationPrediction只能以独立、versioned、可审计carrier提供候选；不得原地改写option、合并不同resource的duration或把候选写回历史Snapshot/Problem。Consumer遇到缺失、invalid、低置信度、版本不兼容、未批准、drift或provenance不全时必须选择同一option的标准工时。
+
+COMPLETED的actual resource/time和RUNNING的权威remaining/freeze事实优先于prediction。标准工时本身缺失、无效或冲突时，该option继续由Data Validation fail closed，模型不能成为fallback的fallback。TASK-P6-01尚未发布Prediction Schema或改变任何existing carrier。
 
 ## OperationInstance
 

@@ -1,5 +1,11 @@
 # PlantNexus APS
 
+## TASK-P6-01 — AI duration data/model governance baseline
+
+用户已独立授权TASK-P6-01；TASK-P6-00双exact provider、三端同步/0/0/clean与required `validate`/GitHub Actions app `15368`启动门通过，`e854c5bbea784f513863ae55d6b872a7a7d1b928`冻结为Diff base。Registry precheck分配并接受[`ADR-0016`](docs/adr/ADR-0016-ai-duration-data-model-governance.md)，配套[`Duration Prediction Governance Contract`](docs/contracts/duration-prediction-governance.md)固定label/feature authority、as-of leakage、privacy/retention、immutable model lineage、human promotion/rollback及标准工时fallback。
+
+每个resource option的标准工时继续是authority；模型只可提供独立candidate，任何缺失、invalid、低置信度、版本失配、未批准、drift或provenance缺口均回退标准工时，标准工时自身无效则fail closed。真实历史、Production data/model authority与retention仍由OPEN-010/011/014/015阻塞。当前没有Schema、代码、训练、dependency、runtime或planning integration，`AI_DURATION_PREDICTION`仍为`DEFERRED/NOT_FORMED`；TASK-P6-02未启动。
+
 ## TASK-P6-00 — P5→P6 transition and complete P6 plan
 
 用户已明确批准P5→P6。最小承接检查只确认P5 closure `a565ca9965202527a3fae44c935415131a5be9d2`在local `main`、`origin/main`与remote `main`一致，ahead/behind=`0/0`、working tree clean、P5无active Task、TASK-P5-22=`done`、Exit 15/15 `READY`且`blocking_gaps=[]`，required `validate`仍由GitHub Actions app `15368`提供；没有重跑、下载或重审P5。

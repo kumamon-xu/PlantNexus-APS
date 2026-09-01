@@ -6,10 +6,16 @@ spec_version: 0.3.0
 phase: cross-phase
 normative: false
 source_sections: [11, 12, 65, 95, 100, 102]
-last_reviewed: 2026-08-27
+last_reviewed: 2026-09-01
 ---
 
 # 推荐技术栈与锁定规则
+
+## TASK-P6-01 ML stack boundary
+
+本Task只接受ADR-0016与人类治理合同，不选择、安装或暗示任何ML framework、model family、registry、feature store或tracking service。`pyproject.toml`、`uv.lock`、Frontend/Node lock、container stack和CI workflow逐字冻结；文档中的model/dataset manifest要求不构成dependency决定。
+
+TASK-P6-04若选择训练stack，必须在其独立授权范围内固定exact dependency/lock、algorithm/config、determinism inputs、runtime environment、SCA/license与upgrade/replay策略，并消费TASK-P6-02/03合同。未形成该决定时不得由本地可用package、host环境或provider镜像推断技术栈。
 
 ## TASK-P4-07 stack review
 

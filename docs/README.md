@@ -11,6 +11,12 @@ last_reviewed: 2026-09-01
 
 # PlantNexus APS 文档中心
 
+## TASK-P6-01 governance baseline
+
+用户已独立授权TASK-P6-01，启动门确认TASK-P6-00 implementation/closure双exact provider、三端同步/0/0/clean及required `validate`/app `15368`未漂移，并冻结Diff base `e854c5bbea784f513863ae55d6b872a7a7d1b928`。Registry precheck分配并接受[ADR-0016](adr/ADR-0016-ai-duration-data-model-governance.md)，[Duration Prediction Governance Contract](contracts/duration-prediction-governance.md)成为后继machine contract的唯一人类语义基线。
+
+基线固定resource-option标准工时authority、completed-execution label eligibility/censoring、feature as-of leakage/time-group split、privacy/retention/deletion、immutable dataset/model/evaluation provenance、human promotion/rollback和fail-closed fallback。OPEN-010/011/014/015全部继续`OPEN`；没有Schema、migration、dependency、dataset、model、runtime、integration或Production authority，`AI_DURATION_PREDICTION`保持`DEFERRED/NOT_FORMED`，TASK-P6-02仍`planned/NOT_STARTED`。
+
 ## P6 activation and planning boundary
 
 用户已明确批准P5→P6；最小承接检查只确认P5 closure `a565ca9965202527a3fae44c935415131a5be9d2`三端一致、0/0、clean、P5无active Task、TASK-P5-22=`done`、Exit 15/15 `READY`/`blocking_gaps=[]`以及required `validate`/GitHub Actions app `15368`未漂移，不构成P5重审或artifact重取。P5现为`completed`，P6现为`active`。

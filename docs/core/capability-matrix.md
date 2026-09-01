@@ -11,6 +11,12 @@ last_reviewed: 2026-09-01
 
 # 能力矩阵
 
+## TASK-P6-01 governance baseline
+
+ADR-0016与`duration-prediction-governance`已形成accepted人类治理基线，覆盖标准工时authority、completed-label/censoring、feature as-of/leakage、privacy/retention、immutable provenance、human promotion/rollback和fallback。该基线只约束后继实现，不是capability evidence。
+
+`AI_DURATION_PREDICTION`继续为`DEFERRED/NOT_FORMED`：没有machine Schema、dataset、model、dependency、training、evaluation、runtime或planning adapter。调用方必须继续default-deny；OPEN-010/011/014/015全部`OPEN`，P6-02仍`planned/NOT_STARTED`。Accepted ADR或docs/provider PASS不得被解释为AI输出可用或Production ready。
+
 ## P6 activation status
 
 P6 Milestone已按用户明确授权激活，但激活和完整规划不会改变能力状态。`AI_DURATION_PREDICTION`继续为`DEFERRED/NOT_FORMED`，本次没有创建或修改预测Schema、model、dataset、runtime、planning adapter、migration、dependency或workflow；调用方不得因存在TASK-P6-00～10而启用、模拟支持或绕过既有`UNSUPPORTED_CAPABILITY`/default-deny边界。

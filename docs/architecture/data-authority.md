@@ -6,10 +6,16 @@ spec_version: 0.3.0
 phase: cross-phase
 normative: true
 source_sections: [15, 22, 59, 61, 90]
-last_reviewed: 2026-08-31
+last_reviewed: 2026-09-01
 ---
 
 # 数据权威边界
+
+## TASK-P6-01 duration data authority
+
+ADR-0016和`duration-prediction-governance`固定：每个`OperationResourceOption.final_duration_seconds`及其`duration_source/source_version`继续是resource-specific标准工时authority和唯一fallback；模型只生成derived candidate，不能覆盖Import/Snapshot/Problem/ExecutionFact/option或改变routing、resource compatibility、hard constraint、state和weight。标准工时缺失或冲突时由既有数据质量边界拒绝，不允许AI或通用常量补值。
+
+Label只能来自可唯一关联actual resource/source/version/cutoff的completed execution，并使用source明确的actual processing duration或经批准的versioned label policy。RUNNING、取消、删失、冲突、resource不明、仅标准工时或旧模型输出不得成为普通completed label；没有暂停/停机/返工政策时也不得默认用`actual_end - actual_start`。OPEN-011/015没有closure record，因此真实Production history仍不可进入P6 dataset；本决定不建立MES mapping或Production authority。
 
 ## TASK-P4-12 transport authority edge
 
@@ -79,7 +85,7 @@ Test actor与synthetic fixture只属于SIM-ASSUMPTION-015。真实Production ide
 
 ## AI 边界
 
-AI 可以输出 `duration`、`risk`、`confidence` 及版本信息。AI 不能成为 routing、resource compatibility、hard constraint、schedule state 或业务权重的权威来源。
+AI 可以输出 `duration`、`risk`、`confidence` 及版本信息，但只能作为有完整lineage的候选。AI 不能成为 routing、resource compatibility、hard constraint、schedule state 或业务权重的权威来源；任何缺失、invalid、低置信度、version mismatch、未批准、drift或governance failure都必须回退同resource option标准工时。
 
 ## Material Readiness
 

@@ -6,10 +6,16 @@ spec_version: 0.3.0
 phase: cross-phase
 normative: true
 source_sections: [97]
-last_reviewed: 2026-08-27
+last_reviewed: 2026-09-01
 ---
 
 # Architecture Decision Records
+
+## TASK-P6-01 ADR decision
+
+TASK-P6-01启动时完成registry precheck：ADR-0001～0015已占用，故在任何P6 Schema、dataset、ML dependency、训练或runtime之前分配并接受[ADR-0016](ADR-0016-ai-duration-data-model-governance.md)。该决定固定resource-option标准工时authority、completed-execution label eligibility、as-of leakage/time-group split、privacy/retention default-deny、immutable dataset/model/evaluation lineage、human-controlled promotion/rollback和standard-duration fallback。
+
+ADR-0016不授权真实历史、不创建机器carrier或model lifecycle state，也不形成AI能力。OPEN-010/011/014/015继续`OPEN`；`AI_DURATION_PREDICTION`继续`DEFERRED/NOT_FORMED`，TASK-P6-02仍须独立授权。
 
 ## TASK-P4-07 ADR conformance
 
@@ -55,7 +61,7 @@ ADR 记录 Architecture、Solver Backend、Constraint semantics、Objective hier
 
 ADR 状态：`proposed`、`accepted`、`rejected`、`superseded`。Accepted ADR 不重写历史；变更通过新 ADR `supersedes` 旧记录。
 
-ADR-0001～0009 是从 implementation spec 0.3.0 已明确决定中建立的基线记录。ADR-0010是TASK-P2-01对PlanningProblem v2合同演进的新增决定；[ADR-0011](ADR-0011-ortools-9-15-cp-sat-backend-version-policy.md)是TASK-P2-03在首次Solver dependency前接受的OR-Tools exact-version、namespace与upgrade/replay决定；[ADR-0012](ADR-0012-planning-workspace-command-state-publication.md)是TASK-P3-01在任何P3 Schema/代码前接受的Workspace command/state/publication决定；ADR-0013～0015是TASK-P4-01在任何P4 Schema/代码前接受的dynamic replanning基线。Accepted状态不表示后继Schema、持久化、行为或Production authority已经实现。
+ADR-0001～0009 是从 implementation spec 0.3.0 已明确决定中建立的基线记录。ADR-0010是TASK-P2-01对PlanningProblem v2合同演进的新增决定；[ADR-0011](ADR-0011-ortools-9-15-cp-sat-backend-version-policy.md)是TASK-P2-03在首次Solver dependency前接受的OR-Tools exact-version、namespace与upgrade/replay决定；[ADR-0012](ADR-0012-planning-workspace-command-state-publication.md)是TASK-P3-01在任何P3 Schema/代码前接受的Workspace command/state/publication决定；ADR-0013～0015是TASK-P4-01在任何P4 Schema/代码前接受的dynamic replanning基线；ADR-0016是TASK-P6-01在任何P6 machine contract或实现前接受的数据与模型治理决定。Accepted状态不表示后继Schema、持久化、行为或Production authority已经实现。
 
 TASK-P0-03 的 Schema/type skeleton 落实 ADR-0001（共同入口 envelope）、ADR-0003（Solver-neutral Problem）、ADR-0007（immutable Snapshot）、ADR-0008（UTC/seconds/ticks）和 ADR-0009（Production/Simulation 标识隔离）的既有决定，没有改变这些决定，因此不新增 ADR。Problem builder、hash、Solver 或字段权威若偏离这些决定，必须另建 ADR，不能借 skeleton 隐式修改。
 

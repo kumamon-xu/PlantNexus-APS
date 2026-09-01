@@ -29,7 +29,7 @@ Capability status: `AI_DURATION_PREDICTION = DEFERRED / CONTRACT_V1 + SIMULATION
 
 `SIM-P6-BASELINE-MODEL-001@1.0.0`把本合同的model provenance部分投影为可执行fail-closed规则：只消费P6-03 exact dataset/manifest和4条train row；固定required/active/zero-weight feature、exact rational grouped-median算法、rounding、margin、dependency lock、normalized-LF code identity、scope与deterministic timestamp。Validation/test label不进入训练，RNG、host clock、environment default和未声明dependency均不可成为隐式输入。
 
-Safe model、ModelManifest、configuration、decision、standard-duration rollback和replay全部使用content-derived identity。Loader拒绝unsafe executable serialization及version/digest/config/dataset/dependency/code/scope漂移，atomic writer在complete validation/build后才replace。Provider只保存safe model、manifest和无raw-row/no-label replay/report；baseline estimate没有confidence/evaluation/promotion/runtime authority。OPEN-010/011/014/015继续阻断Production model/promotion，P6-05仍须独立授权。
+Safe model、ModelManifest、configuration、decision、standard-duration rollback和replay全部使用content-derived identity。Loader拒绝unsafe executable serialization及version/digest/config/dataset/dependency/code/scope漂移，atomic writer在complete validation/build后才replace。Provider只保存safe model、manifest和无raw-row/no-label replay/report；P6-04 baseline estimate自身没有confidence/evaluation/promotion/runtime authority。P6-05后来经独立授权形成offline evaluation/fallback Gate，但OPEN-010/011/014/015继续阻断Production model/promotion。
 
 ## TASK-P6-03 executable policy projection
 
@@ -39,7 +39,7 @@ Purpose/access、no-PII/no-target、retention/deletion、source/record fingerpri
 
 ## 1. Purpose and scope
 
-本合同是P6数据、label、feature、privacy、dataset/model/evaluation provenance、promotion/rollback及标准工时fallback的唯一人类语义入口。TASK-P6-02已用四份严格Simulation v1 carrier逐项承载可机器表达的部分；TASK-P6-03/04已分别形成dataset与baseline model边界，TASK-P6-05～09仍必须引用并实现各自边界。若后继机器设计无法表达，必须停止并提交新ADR或扩卡，不能在代码中增加默认语义。
+本合同是P6数据、label、feature、privacy、dataset/model/evaluation provenance、promotion/rollback及标准工时fallback的唯一人类语义入口。TASK-P6-02已用四份严格Simulation v1 carrier逐项承载可机器表达的部分；TASK-P6-03/04/05已分别形成dataset、baseline model与offline evaluation/fallback边界，TASK-P6-06～09仍必须引用并实现各自边界。若后继机器设计无法表达，必须停止并提交新ADR或扩卡，不能在代码中增加默认语义。
 
 本合同本身不授权读取真实历史或形成Production data/model authority。P6-03/04的独立授权只允许仓库内synthetic dataset与dependency-neutral baseline训练/replay；不运行formal evaluation/Benchmark、不接入Planning，也不改变P0～P5合同、Schema、状态机、Solver、Validator或Execution/Replan链。
 
@@ -142,7 +142,7 @@ Monitoring可以生成review或retraining request，但不得自动切换模型�
 | Drift/evaluation Gate要求disable | 禁用该model scope并回退，等待人类决定 | gate/evaluation reference |
 | 权威标准工时也缺失/无效/冲突 | 停止该option/input并返回既有可区分数据错误 | data-quality evidence；禁止默认值 |
 
-`fallback_reason`稳定枚举、unknown-field policy与exact Schema/version compatibility已由TASK-P6-02的`duration-prediction.v1`形成；confidence与drift阈值仍属于TASK-P6-05/08。未形成approved policy等同于必须fallback，不得用代码常量或环境变量补猜。
+`fallback_reason`稳定枚举、unknown-field policy与exact Schema/version compatibility已由TASK-P6-02的`duration-prediction.v1`形成；TASK-P6-05只冻结development offline confidence/fallback threshold，Production-approved confidence/drift policy仍属于TASK-P6-08与OPEN-014。未形成对应environment的approved policy等同于必须fallback，不得用代码常量或环境变量补猜。
 
 ## 9. Boundary invariants
 
@@ -170,7 +170,7 @@ Closure必须含Authority、Evidence、scope、effective version和rollback；�
 
 `TEST-P6-DATA-GOVERNANCE-001`静态证明本文与ADR-0016覆盖：标准工时authority、completed-label eligibility、censoring/exclusion、as-of leakage、time/group split、privacy/retention/deletion、immutable dataset/model/evaluation lineage、human promotion/rollback、fallback decision table、OPEN closure conditions及P6/P7/Production负边界。`TEST-P6-PREDICTION-CONTRACT-001`另行机器验证四份v1 carrier的strict schema、round-trip、canonical identity、quantile/confidence、fallback、leakage、tamper、mixed-version与cross-lineage拒绝。
 
-TASK-P6-01历史上只允许文档/治理检查，TASK-P6-02只形成Schema/sample与contract checker。P6-03/04现经各自独立授权增加synthetic dataset、baseline model/training、safe artifacts、test和CI证据；仍没有migration、dependency lock变化、formal Benchmark/evaluation、runtime、planning integration或state变化。P6-05+证据必须继续逐Task独立授权并取得双exact provider后才能升级状态。
+TASK-P6-01历史上只允许文档/治理检查，TASK-P6-02只形成Schema/sample与contract checker。P6-03/04/05经各自独立授权增加synthetic dataset、baseline model/training、offline evaluation/fallback Gate、safe artifacts、test和CI证据；仍没有migration、dependency lock变化、runtime、planning integration或state变化。P6-06+必须继续逐Task独立授权；Provider与ignored closure按TASK-P6-11的single exact implementation manifest规则执行。
 
 ## 12. Compatibility and rollback
 

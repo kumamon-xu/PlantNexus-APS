@@ -96,7 +96,9 @@ from app.simulation.execution.simulator_check import (
 )
 from scripts.p6_duration_contract_check import main as p6_duration_contract_main
 from scripts.p6_duration_dataset_check import main as p6_duration_dataset_main
+from scripts.p6_duration_evaluation_check import main as p6_duration_evaluation_main
 from scripts.p6_duration_model_check import main as p6_duration_model_main
+from scripts.p6_duration_runtime_check import main as p6_duration_runtime_main
 
 ROOT = Path(__file__).resolve().parents[3]
 
@@ -687,6 +689,82 @@ def test_ci_p6_duration_model_is_required_and_machine_checkable(
     assert replay["document_version"] == "duration-training-replay.v1"
     assert replay["boundaries"]["labels_in_replay_artifact"] is False
     assert all("label" not in entry for entry in replay["estimates"])
+
+
+def test_ci_p6_duration_runtime_is_required_and_machine_checkable(
+    tmp_path: Path,
+) -> None:
+    workflow = (ROOT / ".github" / "workflows" / "ci.yml").read_text(
+        encoding="utf-8"
+    )
+    normalized = " ".join(workflow.split())
+    assert (
+        "uv run python scripts/p6_duration_evaluation_check.py --root . --report "
+        "build/validation/ci-p6-duration-evaluation.json && uv run python "
+        "scripts/p6_duration_runtime_check.py --root . --offline-gate-report "
+        "build/validation/ci-p6-duration-evaluation.json --report "
+        "build/validation/ci-p6-duration-runtime.json"
+    ) in normalized
+    assert workflow.count("scripts/p6_duration_runtime_check.py") == 1
+    assert "continue-on-error" not in workflow
+    for relative_path in (
+        "backend/app/duration_prediction/runtime.py",
+        "backend/tests/p6_duration_runtime_support.py",
+        "backend/tests/contract/test_p6_duration_runtime.py",
+        "backend/tests/property/test_p6_duration_runtime_properties.py",
+        "backend/tests/contract/test_p6_duration_runtime_security.py",
+        "backend/tests/performance/test_p6_duration_runtime_performance.py",
+        "backend/tests/validation/test_p6_duration_runtime_mutations.py",
+    ):
+        assert f'"${{replay_root}}/{relative_path}"' in workflow
+
+    offline_report = tmp_path / "p6-duration-evaluation.json"
+    runtime_report = tmp_path / "p6-duration-runtime.json"
+    assert (
+        p6_duration_evaluation_main(
+            ["--root", str(ROOT), "--report", str(offline_report)]
+        )
+        == 0
+    )
+    assert (
+        p6_duration_runtime_main(
+            [
+                "--root",
+                str(ROOT),
+                "--offline-gate-report",
+                str(offline_report),
+                "--report",
+                str(runtime_report),
+            ]
+        )
+        == 0
+    )
+    report = json.loads(runtime_report.read_text(encoding="utf-8"))
+    assert report["schema_version"] == "p6-duration-runtime-check-report.v1"
+    assert report["task_id"] == "TASK-P6-06"
+    assert report["diff_base"] == "9921e57034defc26c0a08b7b0c27da3398a0fc7e"
+    assert report["result"] == "PASS"
+    assert report["counts"] == {
+        "candidate_carriers": 8,
+        "feature_records": 8,
+        "label_semantic_reads": 0,
+        "registered_fallback_reasons": 19,
+        "same_input_replays": 8,
+        "schema_rejections": 0,
+        "standard_authority_mutations": 0,
+    }
+    assert report["boundaries"] == {
+        "business_state_write": "NONE",
+        "cache": "NONE",
+        "data_plane": "SIMULATION",
+        "environment": "TEST",
+        "network_external_service": "NONE",
+        "planning_authority": "ADVISORY_DURATION_ONLY_NO_CONSUMER",
+        "production_authorized": False,
+        "production_sla_claimed": False,
+        "provider": "IN_PROCESS_EXPLICIT_INVOCATION_ONLY",
+    }
+    assert report["issues"] == []
 
 
 def test_ci_p3_persistence_is_required_and_machine_checkable(tmp_path: Path) -> None:

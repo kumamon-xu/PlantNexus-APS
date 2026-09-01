@@ -11,11 +11,17 @@ last_reviewed: 2026-09-01
 
 # 端到端计划链路
 
+## TASK-P6-06 local runtime edge
+
+当前新增且止步于P6边界的链为`explicit Simulation/Test request + authoritative resource-option standard duration + exact FeatureRecord → exact runtime policy + P6-04 safe model + P6-05 READY Gate → pure p50/p90/confidence → P6-02 DurationPrediction candidate or exact standard fallback`。任一missing/timeout/invalid/low-confidence/version/digest/lineage/scope/authority/privacy问题在provider内收敛为稳定fallback；standard authority无效时整条边fail closed。
+
+该edge不读取或写入PlanningSnapshot/Problem/Solution/Run/ScheduleVersion/ExportJob，不调用Solver/Validator/replan/API/UI，也不修改routing、resource compatibility、hard constraint、state或weight。因此prediction carrier当前没有计划消费者；P6-07仍是独立授权的唯一Planning ingress owner，P6-08仍拥有drift monitoring，Production链继续不存在。
+
 ## TASK-P6-02 duration-prediction machine-contract boundary
 
 P6-02只建立离线、可重放的机器合同证据链：`as-of bounded feature record → immutable model manifest → evaluation evidence → candidate/fallback prediction`。该链由4份`2.9.0` JSON Schema、正反样例和pure checker验证identity、lineage、quantile order、Simulation scope及fallback exactness；它不接入PlanningProblem、Solver、ScheduleVersion、HTTP/UI或任何业务写入路径。
 
-当前计划链继续以authoritative standard duration作为唯一运行时输入。只有`fallback_reason=NONE`的离线候选证据可声明选择model p50；其他原因必须精确选择standard duration，但两者都不会在本Task进入计划执行。P6-06/P6-07分别保留未来的显式ingress与integration ownership；Production authority、阈值、在线推理、模型状态和自动决策均未建立。
+P6-02本身没有改变计划链：authoritative standard duration继续是唯一计划运行时输入。P6-06后来形成的显式local provider可在P6边界生成model-p50 candidate或exact standard fallback，但两者仍不进入计划执行；P6-07继续是独立授权的唯一Planning ingress owner。Production authority、在线推理、模型状态和自动决策均未建立。
 
 ## TASK-P5-22 independent Exit audit edge
 

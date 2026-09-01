@@ -11,6 +11,12 @@ last_reviewed: 2026-09-01
 
 # OperationInstance 与候选资源语义
 
+## P6-06 local runtime authority boundary
+
+Runtime request必须把factory/operation/resource option/resource identity与独立的`seconds/duration_source/source_version/source_record_id/source_record_fingerprint`标准工时authority一起传入。Provider验证FeatureRecord中同一option的`standard_duration_seconds`及source引用逐字匹配，但从不把FeatureRecord自身当作标准工时的唯一authority，也不回写`OperationResourceOption.final_duration_seconds`。
+
+只有exact model/Gate/policy/feature全部通过且confidence≥`9/10`时，独立Prediction carrier可选择model p50；否则carrier选择请求中的exact standard duration。标准工时缺失、非正、来源无效或无法绑定同option时不允许“fallback的fallback”，而是fail closed。当前carrier未进入PlanningProblem，RUNNING remaining、COMPLETED actual及全部candidate/resource语义保持不变。
+
 ## P6-03 dataset consumption boundary
 
 Dataset builder只读取source record中已版本化的operation/resource-option/resource ID以及decision cutoff前可用的`standard_duration_seconds`；它不改写`OperationResourceOption`或为缺失option补值。输出FeatureRecord保持同一operation/resource option/resource精确关联，label provenance另指向明确completed Simulation execution record。

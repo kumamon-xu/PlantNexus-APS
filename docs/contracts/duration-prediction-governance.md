@@ -15,15 +15,21 @@ Contract status: accepted human governance baseline
 
 Decision authority: [ADR-0016](../adr/ADR-0016-ai-duration-data-model-governance.md)
 
-Machine contract status: additive `2.9.0` / `FORMED_SIMULATION_CONTRACT_V1`；见[Duration Prediction Machine Contract v1](duration-prediction-machine-contract.md)。TASK-P6-03/04形成有界Simulation dataset与baseline model/replay，TASK-P6-05形成独立development offline evaluation/fallback Gate；仍无runtime或Production authority
+Machine contract status: additive `2.9.0` / `FORMED_SIMULATION_CONTRACT_V1`；见[Duration Prediction Machine Contract v1](duration-prediction-machine-contract.md)。TASK-P6-03/04形成有界Simulation dataset与baseline model/replay，TASK-P6-05形成独立development offline evaluation/fallback Gate，TASK-P6-06形成显式local Simulation/Test runtime；仍无Planning ingress或Production authority
 
-Capability status: `AI_DURATION_PREDICTION = DEFERRED / CONTRACT_V1 + SIMULATION_DATASET_V1 + BASELINE_MODEL_V1 + OFFLINE_GATE_READY / NO_RUNTIME`
+Capability status: `AI_DURATION_PREDICTION = DEFERRED / CONTRACT_V1 + SIMULATION_DATASET_V1 + BASELINE_MODEL_V1 + OFFLINE_GATE_READY + LOCAL_RUNTIME_V1 / NO_PLANNING_INGRESS`
+
+## TASK-P6-06 executable runtime-governance projection
+
+`SIM-P6-DURATION-RUNTIME-001@1.0.0` / `SIM-ASSUMPTION-025`只批准P6-04 exact model在`SIMULATION/TEST`、P6-05 exact READY Gate与caller-explicit invocation下运行；policy本身content-addressed并由runtime hard-bind exact identity。P6-04原`SIMULATION_EVALUATION_ONLY` manifest不被改写，P6-06 policy作为后续独立且更窄的local runtime授权；Production、promotion、Planning consumer与自动切换仍不可表示。
+
+Caller必须提供独立resource-option标准工时authority，provider再核对FeatureRecord中的same-option值/source。全部19项不确定性形成P6-02 stable fallback carrier并选择exact standard duration；invalid/unknown standard authority则在carrier前fail closed。Provider没有network、cache、database、registry或state，所有输出具备Feature/Model/Evaluation/Policy lineage与canonical identity。Development resource/latency profile只作拒绝和观测边界，不是SLA；P6-07/P6-08仍需独立授权。
 
 ## TASK-P6-05 executable evaluation-governance projection
 
 `SIM-P6-OFFLINE-EVALUATION-001@1.0.0` / `SIM-ASSUMPTION-024`在任何held-out label读取前冻结validation/test-only selection、train-label zero-read、exact metrics、partition/family slices、model-versus-standard no-regression、coverage、`9/10` confidence和fallback precedence。Frozen结果为model/standard MAE `11/20`秒、P90 coverage `4/4`与最低confidence `55/57`，所有slice满足门槛，因此只形成`READY_FOR_SIMULATION_RUNTIME`。
 
-任何missing/invalid/low-confidence、quantile、lineage/version/digest、model、timeout、authority或privacy错误都选择同resource option的exact standard duration并产生stable reason；invalid standard duration fail closed。Gate不调参、不读取train label、不换split、不修改P6-02 carrier，也没有promotion、runtime、Planning或Production authority。OPEN-010/011/014/015仍阻塞真实policy/owner/data，P6-06必须独立授权。
+任何missing/invalid/low-confidence、quantile、lineage/version/digest、model、timeout、authority或privacy错误都选择同resource option的exact standard duration并产生stable reason；invalid standard duration fail closed。P6-05 Gate本身不调参、不读取train label、不换split、不修改P6-02 carrier，也不授予promotion、runtime、Planning或Production authority；P6-06后来经独立授权形成上节所述local runtime。OPEN-010/011/014/015仍阻塞真实policy/owner/data。
 
 ## TASK-P6-04 executable model-governance projection
 
@@ -39,7 +45,7 @@ Purpose/access、no-PII/no-target、retention/deletion、source/record fingerpri
 
 ## 1. Purpose and scope
 
-本合同是P6数据、label、feature、privacy、dataset/model/evaluation provenance、promotion/rollback及标准工时fallback的唯一人类语义入口。TASK-P6-02已用四份严格Simulation v1 carrier逐项承载可机器表达的部分；TASK-P6-03/04/05已分别形成dataset、baseline model与offline evaluation/fallback边界，TASK-P6-06～09仍必须引用并实现各自边界。若后继机器设计无法表达，必须停止并提交新ADR或扩卡，不能在代码中增加默认语义。
+本合同是P6数据、label、feature、privacy、dataset/model/evaluation provenance、promotion/rollback及标准工时fallback的唯一人类语义入口。TASK-P6-02已用四份严格Simulation v1 carrier逐项承载可机器表达的部分；TASK-P6-03/04/05/06已分别形成dataset、baseline model、offline evaluation/fallback与local runtime边界，TASK-P6-07～09仍必须引用并实现各自边界。若后继机器设计无法表达，必须停止并提交新ADR或扩卡，不能在代码中增加默认语义。
 
 本合同本身不授权读取真实历史或形成Production data/model authority。P6-03/04的独立授权只允许仓库内synthetic dataset与dependency-neutral baseline训练/replay；不运行formal evaluation/Benchmark、不接入Planning，也不改变P0～P5合同、Schema、状态机、Solver、Validator或Execution/Replan链。
 
@@ -170,7 +176,7 @@ Closure必须含Authority、Evidence、scope、effective version和rollback；�
 
 `TEST-P6-DATA-GOVERNANCE-001`静态证明本文与ADR-0016覆盖：标准工时authority、completed-label eligibility、censoring/exclusion、as-of leakage、time/group split、privacy/retention/deletion、immutable dataset/model/evaluation lineage、human promotion/rollback、fallback decision table、OPEN closure conditions及P6/P7/Production负边界。`TEST-P6-PREDICTION-CONTRACT-001`另行机器验证四份v1 carrier的strict schema、round-trip、canonical identity、quantile/confidence、fallback、leakage、tamper、mixed-version与cross-lineage拒绝。
 
-TASK-P6-01历史上只允许文档/治理检查，TASK-P6-02只形成Schema/sample与contract checker。P6-03/04/05经各自独立授权增加synthetic dataset、baseline model/training、offline evaluation/fallback Gate、safe artifacts、test和CI证据；仍没有migration、dependency lock变化、runtime、planning integration或state变化。P6-06+必须继续逐Task独立授权；Provider与ignored closure按TASK-P6-11的single exact implementation manifest规则执行。
+TASK-P6-01历史上只允许文档/治理检查，TASK-P6-02只形成Schema/sample与contract checker。P6-03/04/05经各自独立授权增加synthetic dataset、baseline model/training、offline evaluation/fallback Gate与safe artifacts；P6-06增加显式local runtime、policy、tests与CI report，但仍没有migration、dependency lock、planning integration或state变化。P6-07+必须继续逐Task独立授权；Provider与ignored closure按TASK-P6-11的single exact implementation manifest规则执行。
 
 ## 12. Compatibility and rollback
 

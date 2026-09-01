@@ -11,11 +11,17 @@ last_reviewed: 2026-09-01
 
 # 合同文档索引
 
+## TASK-P6-06 local runtime contract
+
+[Duration Prediction Machine Contract v1](duration-prediction-machine-contract.md)现追加P6-06 executable runtime章节：content-addressed policy只授权exact P6-04 model与P6-05 READY Gate在Simulation/Test、显式UTC调用中形成P6-02 carrier。Strict provider验证Feature/Model/Evaluation/Policy与独立standard-duration authority，正常选择model p50，其余19项reason精确选择标准工时；invalid standard authority无carrier并fail closed。
+
+Runtime无network/cache/persistence/Planning/API/state/promotion权限；resource/latency数值只是development evidence。P6-02 Schema bytes、P6-04 artifact、P6-05 Gate与标准工时owner均不改，P6-07/P6-08继续是独立后继。
+
 ## TASK-P6-05 offline evaluation and fallback contract
 
 [Duration Prediction Machine Contract v1](duration-prediction-machine-contract.md)现追加P6-05 executable evaluation章节：冻结profile只消费P6-03 validation/test和P6-04 safe model，以exact rational aggregate比较model与standard duration，强制partition/family no-regression、P90 coverage、`9/10` confidence与完整fallback precedence；train label读取为0，input/report tamper fail closed。
 
-P6-02 EvaluationReport bytes和Schema不变，只承载compatible measurement；实际`READY_FOR_SIMULATION_RUNTIME|NOT_READY`与threshold/gaps位于strict aggregate-only Gate envelope。当前synthetic profile达到READY，但没有runtime、Planning、promotion或Production authority；P6-06必须另行授权，OPEN-010/011/014/015继续OPEN。
+P6-02 EvaluationReport bytes和Schema不变，只承载compatible measurement；实际`READY_FOR_SIMULATION_RUNTIME|NOT_READY`与threshold/gaps位于strict aggregate-only Gate envelope。该Gate本身没有runtime、Planning、promotion或Production authority；P6-06后来另获授权并形成上节所述local runtime，OPEN-010/011/014/015继续OPEN。
 
 ## TASK-P6-04 baseline model implementation contract
 

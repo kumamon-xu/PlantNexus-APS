@@ -11,6 +11,12 @@ last_reviewed: 2026-09-01
 
 # Benchmark Harness 合同
 
+## TASK-P6-06 development runtime profile
+
+`SIM-P6-DURATION-RUNTIME-001@1.0.0`把runtime correctness与development resource observation放在同一content-addressed policy中：16 KiB FeatureRecord、4 features、1 source、32 KiB prediction、50 ms pure-call deadline，以及16 warmup/256 measured、P95 20 ms、16 MiB peak上界。Reporter轮转8条tracked synthetic FeatureRecord并保留p50/p95/max latency、peak allocation和max carrier bytes；超界使Task machine Gate失败，不能调高baseline掩盖。
+
+该profile不修改P2 XS/S/M Solver Benchmark，也不代表Production workload、concurrency、capacity或SLA。Prediction runtime没有network、queue、database或Planning consumer；P7现实校准与Production performance仍未形成。
+
 ## TASK-P6-05 offline duration evaluation profile
 
 `benchmarks/p6/duration-evaluation-profile.v1.json`和`duration-evaluation-baseline.v1.json`是独立于P2 XS/S/M Solver Benchmark的development quality Gate。Profile在held-out读取前冻结P6-03 validation/test 4条、P6-04 model、exact metrics/slices、coverage/confidence和fallback；baseline只保存aggregate golden、input/report identity和safe boundary，不含row或label。

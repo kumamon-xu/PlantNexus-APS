@@ -11,6 +11,12 @@ last_reviewed: 2026-09-01
 
 # Provenance 与版本规则
 
+## TASK-P6-06 runtime policy and prediction lineage
+
+`duration-runtime-policy.v1`以排除自身ID/fingerprint的canonical projection形成content identity，并精确绑定P6-04 model manifest/artifact、P6-05 Gate/profile/measurement、P6-02 contract、Simulation/Test、confidence、fallback、explicit-time与resource边界。Policy或任一引用变化必须发布新identity；即使攻击者重算自identity，runtime仍按approved exact policy fingerprint拒绝。P6-04/P6-05既有bytes不改写。
+
+每份`duration-prediction.v1`从caller operation/resource-option、explicit predicted/as-of UTC、独立standard authority、Feature/Model/Evaluation/Policy references、candidate/fallback result与governance boundary形成canonical ID/fingerprint。同输入、同显式时间与同provider状态必须byte-exact；host monotonic latency只决定是否timeout，不进入identity。Machine report另绑定normalized-LF runtime code digest与上述immutable references，只保存prediction fingerprints/counts/aggregate performance和stable reasons，不保存FeatureRecord、row、label或source-record ID。
+
 ## TASK-P6-05 evaluation and Gate lineage
 
 `duration-evaluation-profile.v1`在held-out标签读取前冻结profile ID、SIM assumptions、exact dataset/model file digests、manifest/artifact/config identities、partitions/families、metric arithmetic、confidence/coverage threshold、fallback precedence、timestamp和authority boundary。Evaluator source normalized-LF SHA-256进入Gate lineage；任何profile、dataset、model、artifact、code或aggregate变化产生不同identity并必须发布新baseline，不得覆盖既有golden。

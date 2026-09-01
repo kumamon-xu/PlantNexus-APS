@@ -1,12 +1,20 @@
 # PlantNexus APS
 
+## TASK-P6-06 — local prediction runtime and exact standard-duration fallback
+
+P6-06以content-addressed `SIM-P6-DURATION-RUNTIME-001@1.0.0` / `SIM-ASSUMPTION-025`显式批准exact P6-04 model `1.0.0`与P6-05 READY Gate只在`SIMULATION/TEST`内运行。`app.duration_prediction.runtime`是无网络、无cache、无数据库、无业务写入的in-process provider；caller必须同时提供明确UTC决策时间、FeatureRecord、resource-option身份与独立的权威standard-duration carrier。Provider严格核验policy/model/artifact/Gate/feature/authority后才计算p50/p90和exact `9/10` confidence Gate。
+
+正常候选形成P6-02 `duration-prediction.v1`；missing/unavailable/timeout、invalid quantile/confidence/feature、low confidence、version/digest/lineage/model/Gate/authority/privacy任一失败都形成对应稳定reason并选择同resource option的exact standard duration。标准工时无效或authority无法建立时不伪造carrier，直接fail closed。每次输出都绑定Feature/Model/Evaluation/Policy identity，caller输入和standard duration保持不可变；超限、异常或返回值篡改不能污染后续调用。
+
+可先运行P6-05 reporter，再以`uv run python scripts/p6_duration_runtime_check.py --root . --offline-gate-report build/validation/p6-duration-evaluation-report.json --report build/validation/p6-duration-runtime-report.json`重放12项runtime Gate。该profile的50 ms调用deadline、256-call P95 20 ms与16 MiB peak只用于development fail-closed证据，不是Production SLA。当前仍无Planning ingress/API/UI、promotion、drift monitoring或Production authority；P6-07/P6-08不会自动启动。
+
 ## TASK-P6-05 — offline evaluation, confidence, and fallback Gate
 
 P6-05在首次读取held-out标签前冻结`SIM-P6-OFFLINE-EVALUATION-001@1.0.0` / `SIM-ASSUMPTION-024`：只评估P6-03 validation/test各2条，train label语义读取固定为0；使用exact rational MAE、nearest-rank median absolute error、P90 coverage和`max(0,1-(p90-p50)/p50)`置信度，门槛为`9/10`。模型总MAE必须严格优于权威standard-duration baseline，且每个partition与operation family不得劣化；coverage总体至少`3/4`、每个slice至少`1/2`。Profile、dataset/model文件、manifest、artifact、code和aggregate golden全部精确绑定，任何漂移或tamper fail closed。
 
 冻结结果为模型MAE `11`秒、standard baseline MAE `20`秒、median absolute error `10`秒、P90 coverage `4/4`，最低confidence为`55/57`；validation/test MAE分别为`15/7`秒，对应standard为`25/15`秒，milling/turning同样无劣化。18项Gate检查与11项fallback矩阵一致，当前decision=`READY_FOR_SIMULATION_RUNTIME`、`blocking_gaps=[]`。P6-02 `DurationEvaluationReport v1`仍保持原Schema和`NOT_EVALUATED_BY_P6_02`常量；实际threshold/fallback决策进入独立`p6-duration-offline-gate-report.v1` aggregate-only envelope。
 
-Missing/invalid/低置信度、quantile、lineage/version/digest、model、timeout、authority或privacy失败均选择exact standard duration并给出stable reason；标准工时自身无效则fail closed。报告、baseline和Provider payload不含raw rows或labels。可用`uv run python scripts/p6_duration_evaluation_check.py --root . --report build/validation/p6-duration-evaluation-report.json`重放；READY不是model promotion、runtime、Planning或Production授权，OPEN-010/011/014/015继续OPEN，P6-06不会自动启动。
+Missing/invalid/低置信度、quantile、lineage/version/digest、model、timeout、authority或privacy失败均选择exact standard duration并给出stable reason；标准工时自身无效则fail closed。报告、baseline和Provider payload不含raw rows或labels。可用`uv run python scripts/p6_duration_evaluation_check.py --root . --report build/validation/p6-duration-evaluation-report.json`重放；READY本身不是model promotion、runtime、Planning或Production授权。P6-06后来获得独立授权并形成上节所述local runtime，但OPEN-010/011/014/015仍继续OPEN。
 
 ## TASK-P6-04 — deterministic versioned baseline model and replay evidence
 

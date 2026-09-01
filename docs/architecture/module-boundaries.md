@@ -6,10 +6,16 @@ spec_version: 0.3.0
 phase: cross-phase
 normative: true
 source_sections: [12, 13, 14, 30, 41, 47, 51, 65, 70]
-last_reviewed: 2026-08-31
+last_reviewed: 2026-09-01
 ---
 
 # 模块边界与依赖规则
+
+## TASK-P6-06 duration runtime module boundary
+
+`app.duration_prediction.runtime`单向消费既有P6-04 safe model loader/pure predictor与P6-05 Gate validator，拥有exact runtime-policy、request/standard-authority precheck、candidate/confidence/fallback决策及P6-02 prediction identity。它不导入Application、PlanningProblem/Solver/Validator、Infrastructure、Simulation orchestrator、API、SQLAlchemy、network client或host configuration；provider实例不可变，无cache、thread、queue、database或业务state write。
+
+Caller仍拥有operation/resource-option与标准工时authority；runtime只返回独立advisory carrier，不改FeatureRecord、model、standard duration或P0～P5对象。`p6_duration_runtime_check.py`是唯一machine composition root，可读取tracked synthetic feature/model与P6-05 aggregate report并生成safe evidence，但不得成为Planning/API入口。P6-07才可拥有后继ingress/invariant adapter。
 
 ## TASK-P4-12 API module ownership
 

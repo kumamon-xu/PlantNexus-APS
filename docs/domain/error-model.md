@@ -6,10 +6,16 @@ spec_version: 0.3.0
 phase: P0-P4
 normative: true
 source_sections: [29, 32, 34, 60, 65, 91, 92]
-last_reviewed: 2026-08-31
+last_reviewed: 2026-09-01
 ---
 
 # 错误与求解状态模型
+
+## TASK-P6-06 runtime fallback and fail-closed errors
+
+Duration runtime把可形成合法P6-02 carrier的不确定性保留为20项Schema enum：正常为`NONE`，其余19项区分missing/unavailable/timeout、quantile/confidence、model/scope/version、feature/dataset/contract、digest/provenance、evaluation/drift、authority与privacy。所有非`NONE`原因只可选择`STANDARD_DURATION`并清空candidate fields；unexpected provider exception统一脱敏为`PROVIDER_UNAVAILABLE`，不得回显exception、token、payload或path。
+
+若caller identity/UTC或标准工时authority本身无效，runtime以module-local `P6RuntimeError`在carrier形成前fail closed；它不猜默认工时，也不新增或重解释`error-code-registry.v2`、HTTP status、Solver status或业务state。Model/Gate/policy tamper只禁用candidate并保留标准工时路径，不映射为INFEASIBLE、VALIDATION_FAILED或SYSTEM_ERROR。
 
 ## TASK-P4-12 HTTP error mapping
 

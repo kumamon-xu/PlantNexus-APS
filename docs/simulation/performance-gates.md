@@ -11,6 +11,12 @@ last_reviewed: 2026-09-01
 
 # 性能与现实校准门
 
+## TASK-P6-06 local runtime resource boundary
+
+P6-06以固定Simulation/Test pure-model调用验证50 ms timeout post-check、32 KiB输出、256-call P95≤20 ms与peak allocation≤16 MiB；machine report保存actual observations且任何超界均FAIL/fallback。输入大小与feature/source count在调用model前拒绝，避免unbounded payload；provider没有remote timeout、worker pool或concurrency claim。
+
+这些数值只用于development regression与fail-closed，不是Production latency、throughput、capacity、availability或SLA，也不关闭OPEN-006/011/012/014/015。P6-08 drift monitoring、P7 Reality Calibration和真实load profile仍是独立门。
+
 ## TASK-P6-05 offline quality Gate boundary
 
 P6-05新增的是duration quality/confidence/fallback Gate，不是Solver performance Gate。Frozen synthetic profile要求model总MAE严格优于standard baseline、partition/family MAE不劣化、P90 coverage总体≥`3/4`/slice≥`1/2`、confidence≥`9/10`；当前aggregate全部满足并输出`READY_FOR_SIMULATION_RUNTIME`。

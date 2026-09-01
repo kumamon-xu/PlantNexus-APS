@@ -11,6 +11,12 @@ last_reviewed: 2026-09-01
 
 # 配置、环境与数据隔离
 
+## TASK-P6-06 runtime and evidence isolation
+
+Runtime只接受content-addressed `SIM-P6-DURATION-RUNTIME-001@1.0.0`、`data_plane=SIMULATION`、`environment=TEST`、exact P6-04 artifact/manifest与P6-05 READY Gate。调用必须显式提供UTC prediction time和resource-option authority；不读取环境变量、host wall clock、credential、endpoint、database、queue、registry或Production namespace。Provider无network/external adapter、cache、全局启用或持久化side effect，unknown policy/authority default-deny。
+
+Policy将FeatureRecord限制为16 KiB、4 features、1 source，prediction限制为32 KiB，pure fixed-model call以50 ms deadline post-check；256 measured/16 warmup、P95 20 ms与16 MiB peak只用于development machine evidence。FULL validation在既有P6 model/evaluation folded step后追加runtime reporter，并从临时P4 frozen replay移除7个post-frozen runtime/test路径；required context、job topology、permission、dependency/lock、Secret与DOCS_ONLY routing不变。Provider artifact只含sanitized runtime report，不含FeatureRecord、row、label或source-record ID。
+
 ## TASK-P6-05 evaluation and evidence isolation
 
 Offline evaluator只接受冻结的`SIMULATION/TEST` profile、exact P6-03 dataset file、P6-04 model bundle和safe artifact；没有environment default、credential、database、network、queue、service、runtime provider或Planning side effect。Raw file SHA-256先验证，随后只对validation/test进行label语义访问；train label读取计数必须为0。Profile、threshold、timestamp与fallback precedence均来自versioned文件，不读取host clock或环境变量。

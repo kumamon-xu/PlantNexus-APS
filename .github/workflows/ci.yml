@@ -321,6 +321,11 @@ jobs:
           uv run python scripts/p6_duration_evaluation_check.py
           --root .
           --report build/validation/ci-p6-duration-evaluation.json
+          &&
+          uv run python scripts/p6_duration_runtime_check.py
+          --root .
+          --offline-gate-report build/validation/ci-p6-duration-evaluation.json
+          --report build/validation/ci-p6-duration-runtime.json
 
       - name: P3 workspace persistence evidence
         run: >-
@@ -498,6 +503,13 @@ jobs:
             "${replay_root}/backend/tests/contract/test_p6_duration_evaluation.py" \
             "${replay_root}/backend/tests/property/test_p6_duration_evaluation_properties.py" \
             "${replay_root}/backend/tests/validation/test_p6_duration_evaluation_mutations.py" \
+            "${replay_root}/backend/app/duration_prediction/runtime.py" \
+            "${replay_root}/backend/tests/p6_duration_runtime_support.py" \
+            "${replay_root}/backend/tests/contract/test_p6_duration_runtime.py" \
+            "${replay_root}/backend/tests/property/test_p6_duration_runtime_properties.py" \
+            "${replay_root}/backend/tests/contract/test_p6_duration_runtime_security.py" \
+            "${replay_root}/backend/tests/performance/test_p6_duration_runtime_performance.py" \
+            "${replay_root}/backend/tests/validation/test_p6_duration_runtime_mutations.py" \
             "${replay_root}/backend/tests/unit/test_task_execution_automation.py" \
             "${replay_root}/backend/tests/integration/test_p5_portfolio_gate.py" \
             "${replay_root}/backend/tests/integration/test_p5_exit_gate.py" \

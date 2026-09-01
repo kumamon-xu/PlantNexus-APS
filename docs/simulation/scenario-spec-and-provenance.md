@@ -11,6 +11,12 @@ last_reviewed: 2026-09-01
 
 # ScenarioSpec 与 Provenance
 
+## TASK-P6-06 versioned runtime policy fixture
+
+`fixtures/synthetic/P6-DURATION-RUNTIME/runtime-policy.v1.json`发布`SIM-P6-DURATION-RUNTIME-001@1.0.0` / `SIM-ASSUMPTION-025`。其canonical identity绑定P6-04 exact model/artifact/manifest、P6-05 Gate/profile/measurement、Simulation/Test、caller-explicit UTC、confidence/fallback、input/output和development performance边界；runtime只接受已批准的exact fingerprint，不能用重算后的未授权policy替换。
+
+该fixture不是新ScenarioSpec Schema、Production config、model lifecycle record、SLA或drift policy；`NOT_APPLICABLE_TO_FIXED_SIMULATION_TEST_REPLAY`只描述当前固定replay，不能替代P6-08 monitoring。任何policy/model/Gate或数值变化必须形成新SIM assumption与identity，P6-04/P6-05既有bytes不得覆盖。
+
 ## TASK-P6-05 versioned evaluation profile and aggregate baseline
 
 `benchmarks/p6/duration-evaluation-profile.v1.json`发布`SIM-P6-OFFLINE-EVALUATION-001@1.0.0` / `SIM-ASSUMPTION-024`，无seed、RNG或host clock；它在held-out读取前冻结P6-03/P6-04 exact identities、validation/test-only selection、metrics/slices、confidence/coverage和fallback。`duration-evaluation-baseline.v1.json`保存同一输入的aggregate golden及content identities，不保存raw rows、row IDs、FeatureRecords或labels。

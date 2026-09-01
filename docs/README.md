@@ -11,13 +11,19 @@ last_reviewed: 2026-09-01
 
 # PlantNexus APS 文档中心
 
+## TASK-P6-06 local prediction runtime and fallback
+
+P6-06形成显式调用、in-process、`SIMULATION/TEST`-only的DurationPrediction provider。Content-addressed `runtime-policy.v1.json`精确绑定P6-04 safe model、P6-05 READY Gate、P6-02 carrier、caller-explicit UTC、`9/10` confidence以及development-only input/output/latency/memory边界；没有环境默认、网络、cache、持久化、model registry或外部服务。
+
+Provider只在所有Feature/Model/Evaluation/Policy lineage与同resource-option standard-duration authority完整时选择model p50；19项registered fallback condition全部返回P6-02 strict carrier并精确选择标准工时。Invalid standard authority本身fail closed且无partial carrier。详见[Machine contract](contracts/duration-prediction-machine-contract.md)、[governance](contracts/duration-prediction-governance.md)、[module boundary](architecture/module-boundaries.md)、[isolation](architecture/configuration-environments-and-isolation.md)与[provenance](architecture/provenance-and-versioning.md)。该runtime尚无Planning consumer、API/UI、promotion、drift monitoring或Production authority。
+
 ## TASK-P6-05 offline evaluation and fallback Gate
 
 P6-05以[Machine contract](contracts/duration-prediction-machine-contract.md)和[governance](contracts/duration-prediction-governance.md)为authority，在held-out标签读取前冻结`SIM-ASSUMPTION-024`、exact metrics/slices、`9/10` confidence、coverage与standard-duration fallback。Evaluator只语义读取validation/test各2条，train label读取为0；strict profile和input file digests绑定P6-03 dataset与P6-04 safe model，任何版本、lineage、privacy、authority或report mutation均fail closed。
 
 当前aggregate为模型/standard MAE=`11/20`秒、median absolute error=`10`秒、P90 coverage=`4/4`、最低confidence=`55/57`，validation/test与milling/turning均无劣化，因此独立Gate输出`READY_FOR_SIMULATION_RUNTIME`且无blocking gap。P6-02 EvaluationReport只承载兼容measurement，实际Gate保存在aggregate-only内部envelope；profile/baseline见`benchmarks/p6/`，replay命令见仓库README。
 
-该READY只表示P6-06可在新的明确授权下实现development runtime；当前仍无provider runtime、Planning ingress、promotion或Production authority。Standard duration继续是fallback authority，OPEN-010/011/014/015保持OPEN，raw rows/labels不进入machine/Provider report，P6-06不自动启动。
+该READY本身只表示P6-06可在新的明确授权下实现development runtime，不直接授予provider、Planning、promotion或Production authority。P6-06后来获得独立授权并形成上节所述local runtime；standard duration继续是fallback authority，OPEN-010/011/014/015保持OPEN，raw rows/labels不进入machine/Provider report。
 
 ## TASK-P6-04 deterministic versioned baseline model
 

@@ -1,0 +1,139 @@
+{
+  "canonicalization_version": "canonical-json.v1",
+  "confidence_policy": {
+    "formula": "max(0,1-(p90_seconds-p50_seconds)/p50_seconds)",
+    "policy_version": "interval-tightness-confidence.v1",
+    "threshold": {
+      "denominator": 10,
+      "numerator": 9
+    }
+  },
+  "contract": {
+    "duration_prediction_version": "duration-prediction.v1",
+    "fallback_contract_version": "standard-duration-fallback.v1",
+    "feature_record_version": "duration-feature-record.v1",
+    "feature_schema_version": "duration-features.v1",
+    "schema_set_version": "2.9.0"
+  },
+  "determinism": {
+    "cache_enabled": false,
+    "external_or_network_service": false,
+    "host_clock_in_prediction_identity": false,
+    "prediction_time_source": "CALLER_EXPLICIT_UTC",
+    "side_effects": "NONE"
+  },
+  "duration_runtime_policy_version": "duration-runtime-policy.v1",
+  "drift_policy": {
+    "decision": "NOT_APPLICABLE_TO_FIXED_SIMULATION_TEST_REPLAY",
+    "monitoring_formed": false,
+    "production_use": false
+  },
+  "evaluation_gate": {
+    "decision": "READY_FOR_SIMULATION_RUNTIME",
+    "gate_contract": "p6-duration-offline-confidence-fallback-gate.v1",
+    "gate_report_fingerprint": "sha256:c7aa6b5841882e93748c1bb570a768a2bd2b3f37c16f4a109bd46f11f891255b",
+    "gate_report_id": "p6-duration-offline-gate-report-c7aa6b5841882e93748c1bb570a768a2bd2b3f37c16f4a109bd46f11f891255b",
+    "measurement_reference": {
+      "duration_evaluation_report_version": "duration-evaluation-report.v1",
+      "evaluation_report_fingerprint": "sha256:4c86069865003263c15e3a7e6d18a83b943a10a087d81ed34cdd3f353dfd799f",
+      "evaluation_report_id": "duration-evaluation-report-4c86069865003263c15e3a7e6d18a83b943a10a087d81ed34cdd3f353dfd799f",
+      "gate_decision": "NOT_EVALUATED_BY_P6_02"
+    },
+    "profile_fingerprint": "sha256:ef5a0adc8f5a239a0e2083b791d7409818336408cb56b3dfe63b4d2f477d4f09",
+    "profile_id": "SIM-P6-OFFLINE-EVALUATION-001@1.0.0"
+  },
+  "evidence_profile": {
+    "benchmark_measured_calls": 256,
+    "benchmark_warmup_calls": 16,
+    "evidence_prediction_time_utc": "2026-09-01T10:30:00Z",
+    "max_peak_allocated_bytes": 16777216,
+    "max_p95_latency_ns": 20000000,
+    "profile_kind": "DEVELOPMENT_ONLY_NOT_PRODUCTION_SLA"
+  },
+  "fallback_policy": {
+    "invalid_standard_duration_decision": "FAIL_CLOSED",
+    "registered_reasons": [
+      "PREDICTION_MISSING",
+      "PROVIDER_UNAVAILABLE",
+      "PROVIDER_TIMEOUT",
+      "INVALID_QUANTILES",
+      "CONFIDENCE_MISSING",
+      "CONFIDENCE_INVALID",
+      "LOW_CONFIDENCE",
+      "MODEL_NOT_APPROVED",
+      "MODEL_OUT_OF_SCOPE",
+      "MODEL_VERSION_INCOMPATIBLE",
+      "FEATURE_VERSION_INCOMPATIBLE",
+      "DATASET_VERSION_INCOMPATIBLE",
+      "CONTRACT_VERSION_INCOMPATIBLE",
+      "ARTIFACT_DIGEST_MISMATCH",
+      "PROVENANCE_INCOMPLETE",
+      "EVALUATION_GATE_NOT_PASSED",
+      "DRIFT_GATE_DISABLED",
+      "AUTHORITY_NOT_ESTABLISHED",
+      "PRIVACY_GOVERNANCE_FAILED"
+    ],
+    "selected_duration_source": "STANDARD_DURATION_RESOURCE_OPTION"
+  },
+  "governance_boundary": {
+    "open_authority_gaps": [
+      "OPEN-010",
+      "OPEN-011",
+      "OPEN-014",
+      "OPEN-015"
+    ],
+    "planning_authority": "ADVISORY_DURATION_ONLY",
+    "production_authorized": false,
+    "promotion_authorized": false
+  },
+  "model_authorization": {
+    "decision": "SIMULATION_TEST_RUNTIME_ONLY",
+    "duration_model_manifest_version": "duration-model-manifest.v1",
+    "model_artifact_digest": "sha256:472cc92ada06b488fceb8477ac5a3dfe06d6391dd5ada8b441d55b96e9640ddd",
+    "model_manifest_fingerprint": "sha256:35f84b792028a1bf135fcc44d415423d47593f2843058d119fe288efd7195bf0",
+    "model_manifest_id": "duration-model-manifest-35f84b792028a1bf135fcc44d415423d47593f2843058d119fe288efd7195bf0",
+    "model_version": "1.0.0",
+    "promotion_authorized": false
+  },
+  "policy_fingerprint": "sha256:6acf154fe7ed2ed5b4b28060fd033896ad3ad1b66436c9edadeefe6245faebc7",
+  "policy_id": "duration-runtime-policy-6acf154fe7ed2ed5b4b28060fd033896ad3ad1b66436c9edadeefe6245faebc7",
+  "policy_version": "SIM-P6-DURATION-RUNTIME-001@1.0.0",
+  "resource_policy": {
+    "max_feature_record_bytes": 16384,
+    "max_features": 4,
+    "max_prediction_bytes": 32768,
+    "max_source_records": 1,
+    "prediction_timeout_ns": 50000000
+  },
+  "runtime_environment": {
+    "data_plane": "SIMULATION",
+    "environment": "TEST",
+    "explicit_invocation_only": true,
+    "in_process_only": true,
+    "runtime_enabled": true
+  },
+  "standard_duration_policy": {
+    "authority": "OPERATION_RESOURCE_OPTION",
+    "required_fields": [
+      "seconds",
+      "duration_source",
+      "source_version",
+      "source_record_id",
+      "source_record_fingerprint"
+    ],
+    "same_resource_option_required": true,
+    "value_rule": "POSITIVE_INTEGER_SECONDS"
+  },
+  "synthetic": true,
+  "synthetic_provenance": {
+    "assumption_profile": "SIM-P6-DURATION-CONTRACT-001@1.0.0",
+    "assumption_refs": [
+      "SIM-ASSUMPTION-021",
+      "SIM-ASSUMPTION-022",
+      "SIM-ASSUMPTION-023",
+      "SIM-ASSUMPTION-024",
+      "SIM-ASSUMPTION-025"
+    ]
+  },
+  "task_id": "TASK-P6-06"
+}

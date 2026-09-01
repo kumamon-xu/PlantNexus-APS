@@ -19,6 +19,8 @@ Safe canonical JSON model、existing ModelManifest、training config/decision/ro
 
 Provider payload只包含safe model、manifest、sanitized replay/report，不包含raw source、dataset bundle/rows或labels。8个baseline estimate没有confidence和formal evaluation authority，不是`DurationPrediction` carrier，不进入runtime、Planning或Production。P6-02 Schema/sample、P6-03 source/dataset、dependency lock、migration/state及routing/resource/hard-constraint/weights均不变；能力继续DEFERRED，OPEN-010/011/014/015继续OPEN，P6-05保持`planned/NOT_STARTED`。
 
+Implementation `bf75f601b0a8138ab80304bee68e9bbe34b124fd`的exact FULL run `33474633364`已PASS。Classify/FULL/required jobs为`99751230649`/`99751254113`/`99753251628`，DOCS_ONLY正确skipped，required `validate`来自app `15368`；73个workflow steps、950 tests、P6-04 10/10、14 mutation rejection、2 atomic rejection、upstream与P4 frozen replay均成功。Profile/evidence artifacts `9787709131`/`9787940077`未过期，下载ZIP与Provider digests一致为`sha256:f4d2ff5ec857a0f178d8900ad1b086cb60ff644eed6a9ea14f6fb4352d4479f2`、`sha256:3547433403a048bd13e9ce14bf0630649eb57ec7d3db7a09171238dafe123615`；FULL profile精确为18 paths/`issues=[]`，66 JSON可解析且无non-empty issue/gap，safe payload无raw source/dataset rows/labels。本提交仅是两README evidence-only closure，其DOCS_ONLY exact provider成功前Task仍`in_progress`。
+
 ## TASK-P6-03 deterministic feature/label dataset
 
 TASK-P6-03从P6-02 closure `4360746f2712012a0aa4f52a40c189837a2097b3`冻结Diff base，形成`SIM-P6-FEATURE-DATASET-001@1.0.0`的Simulation/Test离线dataset。Versioned source共10条；8条`COMPLETED/NORMAL`显式actual-processing label进入4/2/2 group-safe time split，RUNNING与INTERRUPTED各1条稳定排除。四项feature都在decision cutoff前可用并绑定source/transform/version；标准工时只作feature，不作label。

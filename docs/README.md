@@ -17,7 +17,11 @@ TASK-P6-02从P6-01 provider-verified closure `e74099ca24ed59140f6490c84025b7299b
 
 Local checker为10/10 PASS、20 schema/7 semantic-lineage/5 tamper rejection、`issues=[]`；70份pre-P6 Schema/sample manifest、dependency projection、`uv.lock`、5份migration及state pairs均未变。CI只新增同一FULL job中的non-skippable离线step并复用既有artifact glob。
 
-Contract formed不等于capability formed：dataset/training/model/evaluation Gate/runtime/Planning/API/Production authority均未实现，OPEN-010/011/014/015继续OPEN，`AI_DURATION_PREDICTION=DEFERRED / CONTRACT_ONLY / NO_RUNTIME`。当前Task仍在implementation provider闭环中；P6-03不会自动启动。
+Local full regression为`907 passed`，Ruff/Pyright/build、全量文档治理和52-path Task diff均PASS。首个candidate `969891710add4133f2cf1e52362a360ef6a7fc29` / run `33462987751`在57 steps及P6 10/10通过后，被未隔离P6路径的冻结P4-13 replay正确拒绝；失败run、artifacts `9783828170`,`9783997445`与下载digests保留为不可改写审计链。
+
+Corrective implementation `093e6e1057458850eae11334b3015778f35bf273` / exact FULL run `33464029827`现已PASS。Classify/FULL/required jobs `99720044223`,`99720077916`,`99722215840`成功，DOCS_ONLY job `99720079061`正确skipped，required `validate`来自GitHub Actions app `15368`；72个正式FULL steps、provider 907 tests、P6 10/10和P4-13 corrective均成功。未过期profile/evidence artifacts `9784195878`,`9784437414`的Provider/下载ZIP digests一致为`sha256:20d7b5504dd71842741ac857cfc7712422602b65c62966709b924c1d0161743f`、`sha256:7ba06bcfdf3851cbcdd241aca5e82fb3cd3fd3e57f143a3499fee3fabb451089`，精确绑定2-path corrective和最终P6 machine `issues=[]`。
+
+Contract formed不等于capability formed：dataset/training/model/evaluation Gate/runtime/Planning/API/Production authority均未实现，OPEN-010/011/014/015继续OPEN，`AI_DURATION_PREDICTION=DEFERRED / CONTRACT_ONLY / NO_RUNTIME`。本提交只作两份README的evidence-only closure；closure exact provider成功前TASK仍`in_progress`，P6-03不会自动启动。
 
 ## TASK-P6-01 governance baseline
 

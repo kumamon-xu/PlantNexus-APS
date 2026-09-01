@@ -6,7 +6,11 @@
 
 `duration-prediction.v1`显式承载p50/p90/confidence、model/feature/evaluation lineage、20项stable fallback与权威standard duration source/version/record/fingerprint；unknown/mixed/additional、future leakage、reversed quantile、tamper和lineage mismatch全部fail closed。Local machine report为10/10、20个Schema rejection、7个semantic/lineage rejection、5个tamper rejection、`issues=[]`，并冻结70份历史Schema/sample、`uv.lock`、5份migration及既有state pairs。
 
-本Task没有dataset、训练model、evaluation Gate、runtime、Planning ingress、API、migration、dependency lock或Production authority；`AI_DURATION_PREDICTION`仍为`DEFERRED / CONTRACT_ONLY / NO_RUNTIME`，OPEN-010/011/014/015继续OPEN。当前实现正在完成HIGH_RISK/双exact provider闭环，TASK-P6-03不会自动启动。
+本地完整回归为`907 passed`，Ruff、Pyright、build、全量文档治理与52-path Task diff均PASS。首个implementation candidate `969891710add4133f2cf1e52362a360ef6a7fc29` / run `33462987751`保留为失败审计链：它在57个步骤及P6 10/10通过后，被未隔离P6路径的冻结P4-13 replay正确拒绝；失败profile/evidence artifacts `9783828170`,`9783997445`及下载digest已保留，没有改写或复用为成功结论。
+
+Corrective implementation `093e6e1057458850eae11334b3015778f35bf273` / exact FULL run `33464029827`已成功：classify/FULL/required jobs `99720044223`,`99720077916`,`99722215840`全部PASS，DOCS_ONLY job `99720079061`正确skipped，required `validate`由GitHub Actions app `15368`提供。FULL正式72 steps、provider 907 tests、P6 10/10与纠偏目标P4-13均PASS。未过期profile/evidence artifacts `9784195878`,`9784437414`的Provider/下载ZIP digests逐字一致为`sha256:20d7b5504dd71842741ac857cfc7712422602b65c62966709b924c1d0161743f`、`sha256:7ba06bcfdf3851cbcdd241aca5e82fb3cd3fd3e57f143a3499fee3fabb451089`；profile精确绑定`9698917…→093e6e1…`的2-path corrective，machine artifact在最终SHA环境中复现P6 10/10及`issues=[]`。
+
+本Task没有dataset、训练model、evaluation Gate、runtime、Planning ingress、API、migration、dependency lock或Production authority；`AI_DURATION_PREDICTION`仍为`DEFERRED / CONTRACT_ONLY / NO_RUNTIME`，OPEN-010/011/014/015继续OPEN。本提交只写回两份README的provider evidence；evidence-only closure exact provider成功前TASK-P6-02仍为`in_progress`，TASK-P6-03不会自动启动。
 
 ## TASK-P6-01 — AI duration data/model governance baseline
 

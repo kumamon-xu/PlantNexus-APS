@@ -231,6 +231,7 @@ TASK-P4-02已获单独授权并以`4026597ab1015b5ea3a89d241f0d12b5b481dee3`为�
 → docs/agents/AGENTS.md
 → docs/current_phase.md
 → 当前 TASK
+→ task-context-manifest.v1 选择索引
 → TASK 引用的 Schema / Contract / Constraint / ADR
 → 相关代码
 → 相关测试
@@ -279,6 +280,9 @@ P3已形成的顺序保持合同/ADR→Schema→persistence→validated DRAFT→
 - 仓库治理检查运行 `uv run python scripts/check_docs.py`；
 - 该检查验证 metadata、文档 ID、Markdown fence、本地链接、Task、版本化 registry、完整 ID 引用、逐根 traceability 和命名空间隔离；
 - Task 进入 `in_progress` 时记录完整 `Diff base`；`--task <task-card> --check-diff` 对 `Diff base..HEAD` 与 working tree 的并集匹配 change-impact Rule ID，并可用 `--report <path>` 输出 `traceability-report.v1`。
+- 当前Task确定后，用`scripts/task_context_manifest.py`生成不含正文的有界读取索引；约30,000字符为软预算，超出时精确扩读而不是截断。
+- workflow变更先用`scripts/ci_preflight.py`执行dependency-free结构预检；完整lint/type/test/machine/browser/Gate仍由FULL分支执行。
+- exact FULL成功后，`scripts/provider_evidence.py`集中校验required check和artifact并生成可复用manifest；公共README不再追加run、artifact或digest明细。
 
 本地检查从`current_phase.md`读取current `Pn`，保留历史terminal Task且拒绝future-phase详细卡。普通CI range只能归属一张current-phase Task；初始phase-planning batch仅允许唯一新建`TASK-Pn-00` owner加同range新建的`planned/ready`成员卡。后续阶段计划修订要求唯一已存在的`phase-plan-amendment-owner`、稳定逻辑Task ID、完整Diff base及仅`planned/ready`且无implementation SHA的成员；active/done成员改写、纯删除与重复路径均拒绝。选择owner后仍按其Diff base执行scope/impact。Provider结果必须来自真实授权运行，不能由本地PASS推断。
 

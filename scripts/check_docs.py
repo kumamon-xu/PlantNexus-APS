@@ -106,6 +106,7 @@ CHECK_DESCRIPTIONS = {
     "PROD-SIM-SEPARATION": "PROD_OPEN and SIM_ASSUMPTION separation",
     "PROD-CLOSURE": "complete PROD_OPEN closure evidence",
     "DIFF-IMPACT": "Git diff/change-impact coverage",
+    "CONTEXT-HYGIENE": "bounded current snapshot and history-free stable rules",
 }
 
 FRONT_MATTER_RE = re.compile(r"\A---\s*\n(?P<body>.*?)\n---\s*\n", re.DOTALL)
@@ -133,6 +134,15 @@ SIM_ID_RE = re.compile(
 RISK_ID_RE = re.compile(r"(?<![A-Z0-9_-])RISK-\d{3}(?![A-Z0-9_-])")
 IMPACT_ID_RE = re.compile(r"(?<![A-Z0-9_-])IMPACT-[A-Z0-9]+(?:-[A-Z0-9]+)*(?![A-Z0-9_-])")
 COMMIT_SHA_RE = re.compile(r"[0-9a-fA-F]{40}")
+CURRENT_PHASE_MAX_LINES = 120
+CURRENT_PHASE_MAX_CHARACTERS = 12_000
+STABLE_RULE_DOCUMENTS = (
+    "docs/agents/AGENTS.md",
+    "docs/agents/reading-order-and-context-policy.md",
+    "docs/agents/task-execution-protocol.md",
+    "docs/quality/ci-gates-and-definition-of-done.md",
+    "docs/quality/documentation-consistency-checks.md",
+)
 
 
 @dataclass(frozen=True)
@@ -719,6 +729,56 @@ def local_link_target(source: Path, raw_target: str) -> Path | None:
     return (source.parent / target).resolve()
 
 
+def context_hygiene_issues(doc_texts: Mapping[str, str]) -> list[Issue]:
+    """Keep the normal startup snapshot bounded and stable rules history-free."""
+
+    issues: list[Issue] = []
+    phase_path = "docs/current_phase.md"
+    phase_text = doc_texts.get(phase_path, "")
+    line_count = len(phase_text.splitlines())
+    character_count = len(phase_text)
+    if line_count > CURRENT_PHASE_MAX_LINES:
+        issues.append(
+            Issue(
+                "CONTEXT-HYGIENE",
+                "error",
+                phase_path,
+                f"current phase has {line_count} lines; maximum is {CURRENT_PHASE_MAX_LINES}",
+                "retain only the current snapshot and move durable evidence to the owning Task Card",
+            )
+        )
+    if character_count > CURRENT_PHASE_MAX_CHARACTERS:
+        issues.append(
+            Issue(
+                "CONTEXT-HYGIENE",
+                "error",
+                phase_path,
+                (
+                    f"current phase has {character_count} characters; maximum is "
+                    f"{CURRENT_PHASE_MAX_CHARACTERS}"
+                ),
+                "replace historical narrative with compact identities and direct links",
+            )
+        )
+    task_heading = re.compile(r"^##\s+TASK-P\d+-\d{2}\b", re.MULTILINE)
+    for path in STABLE_RULE_DOCUMENTS:
+        text = doc_texts.get(path, "")
+        match = task_heading.search(text)
+        if match is None:
+            continue
+        heading = match.group(0)
+        issues.append(
+            Issue(
+                "CONTEXT-HYGIENE",
+                "error",
+                path,
+                f"stable rule document contains Task-specific history heading {heading!r}",
+                "keep the stable rule only; retain Task evidence in the Task Card and machine manifest",
+            )
+        )
+    return issues
+
+
 class RepositoryValidator:
     """Run structural and traceability validation against one repository root."""
 
@@ -896,6 +956,8 @@ class RepositoryValidator:
 
         self.absorb(duplicate_id_issues(doc_ids, check_id="DOC-ID-UNIQUE"))
         self.validate_inventory(docs, source_metadata)
+        self.mark("CONTEXT-HYGIENE")
+        self.absorb(context_hygiene_issues(self.doc_texts))
 
         self.counts.update(
             {

@@ -3,6 +3,7 @@
 from __future__ import annotations
 
 import argparse
+import difflib
 import json
 import re
 import subprocess
@@ -21,6 +22,13 @@ SHA_RE = re.compile(r"[0-9a-fA-F]{40}")
 LINK_RE = re.compile(r"!?\[[^\]]*\]\(([^)]+)\)")
 REFERENCE_LINK_RE = re.compile(r"^\s*\[[^\]]+\]:\s*(\S+)")
 FENCE_RE = re.compile(r"^\s{0,3}(`{3,}|~{3,})")
+PUBLIC_EVIDENCE_PATTERNS = (
+    re.compile(
+        r"(?i)\b(?:run|job|artifact)(?:[_ -]?(?:id|number))?\b.{0,48}\b\d{8,}\b"
+    ),
+    re.compile(r"(?i)\bsha256\s*[:=]\s*[0-9a-f]{64}\b"),
+    re.compile(r"(?i)\b(?:implementation|closure)\b.{0,48}\b[0-9a-f]{40}\b"),
+)
 
 PUBLIC_MARKDOWN_EXACT = frozenset({"README.md", "docs/README.md"})
 INTERNAL_DOC_EXACT = frozenset(
@@ -437,6 +445,61 @@ def revision_docs_issues(
     return issues, len(paths)
 
 
+def _added_lines(base_text: str, head_text: str) -> tuple[tuple[int, str], ...]:
+    """Return only lines introduced or replaced in head, with 1-based numbers."""
+
+    base_lines = base_text.splitlines()
+    head_lines = head_text.splitlines()
+    matcher = difflib.SequenceMatcher(a=base_lines, b=head_lines, autojunk=False)
+    added: list[tuple[int, str]] = []
+    for operation, _base_start, _base_end, head_start, head_end in matcher.get_opcodes():
+        if operation not in {"insert", "replace"}:
+            continue
+        added.extend(
+            (line_number + 1, head_lines[line_number])
+            for line_number in range(head_start, head_end)
+        )
+    return tuple(added)
+
+
+def public_evidence_issues(
+    repository: GitRepository, classification: Classification
+) -> set[DocsIssue]:
+    """Reject newly copied provider/run evidence in the two public README files."""
+
+    issues: set[DocsIssue] = set()
+    changed_paths = {
+        path
+        for entry in classification.entries
+        for path in entry.paths
+        if path in PUBLIC_MARKDOWN_EXACT
+    }
+    for path in sorted(changed_paths):
+        base_text = (
+            repository.read_text(classification.base_sha, path)
+            if repository.object_exists(classification.base_sha, path)
+            else ""
+        )
+        if not repository.object_exists(classification.head_sha, path):
+            continue
+        head_text = repository.read_text(classification.head_sha, path)
+        for line_number, line in _added_lines(base_text, head_text):
+            if not any(pattern.search(line) for pattern in PUBLIC_EVIDENCE_PATTERNS):
+                continue
+            issues.add(
+                DocsIssue(
+                    check_id="PUBLIC-DOC-EVIDENCE",
+                    path=path,
+                    target=line.strip()[:160],
+                    message=(
+                        f"line {line_number}: public README must not duplicate run, "
+                        "artifact, digest, implementation, or closure evidence"
+                    ),
+                )
+            )
+    return issues
+
+
 def validate_public_docs(
     repository: GitRepository, classification: Classification
 ) -> dict[str, Any]:
@@ -463,7 +526,9 @@ def validate_public_docs(
     head_issues, head_count = revision_docs_issues(
         repository, classification.head_sha
     )
-    new_issues = sorted(head_issues - base_issues)
+    evidence_issues = public_evidence_issues(repository, classification)
+    new_document_issues = head_issues - base_issues
+    new_issues = sorted(new_document_issues | evidence_issues)
     result = "PASS" if not new_issues else "FAIL"
     return {
         "schema_version": DOCS_REPORT_VERSION,
@@ -476,11 +541,16 @@ def validate_public_docs(
         "checks": [
             {
                 "check": "no-new-public-document-issues",
-                "passed": not new_issues,
+                "passed": not new_document_issues,
                 "base_issue_count": len(base_issues),
                 "head_issue_count": len(head_issues),
-                "new_issue_count": len(new_issues),
-            }
+                "new_issue_count": len(new_document_issues),
+            },
+            {
+                "check": "no-new-public-provider-evidence",
+                "passed": not evidence_issues,
+                "new_issue_count": len(evidence_issues),
+            },
         ],
         "issues": [asdict(issue) for issue in new_issues],
     }

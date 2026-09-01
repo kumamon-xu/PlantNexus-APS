@@ -16,6 +16,7 @@ from scripts.check_docs import (
     RepositoryValidator,
     ROOT_ID_RE,
     TaskDiscoveryError,
+    context_hygiene_issues,
     duplicate_id_issues,
     evaluate_impact_coverage,
     expand_numeric_ranges,
@@ -35,6 +36,35 @@ PHASE_GOVERNANCE_TEST_ID = "TEST-PHASE-GOVERNANCE-001"
 
 
 class TraceabilityValidatorTests(unittest.TestCase):
+    def test_context_hygiene_accepts_compact_snapshot_and_stable_rules(self) -> None:
+        texts = {
+            "docs/current_phase.md": "# Current\n\ncompact\n",
+            "docs/agents/AGENTS.md": "# Stable rules\n",
+            "docs/agents/reading-order-and-context-policy.md": "# Context\n",
+            "docs/agents/task-execution-protocol.md": "# Protocol\n",
+            "docs/quality/ci-gates-and-definition-of-done.md": "# CI\n",
+            "docs/quality/documentation-consistency-checks.md": "# Docs\n",
+        }
+
+        self.assertEqual(context_hygiene_issues(texts), [])
+
+    def test_context_hygiene_rejects_oversized_phase_and_task_history_heading(
+        self,
+    ) -> None:
+        texts = {
+            "docs/current_phase.md": ("line\n" * 121),
+            "docs/quality/ci-gates-and-definition-of-done.md": (
+                "# CI\n\n## TASK-P6-11 historical evidence\n"
+            ),
+        }
+
+        issues = context_hygiene_issues(texts)
+
+        self.assertEqual({issue.check_id for issue in issues}, {"CONTEXT-HYGIENE"})
+        self.assertEqual(len(issues), 2)
+        self.assertTrue(any("maximum is 120" in issue.message for issue in issues))
+        self.assertTrue(any("Task-specific history" in issue.message for issue in issues))
+
     def test_repository_path_normalization_preserves_hidden_directories(self) -> None:
         self.assertEqual(
             normalize_repo_path(".github/workflows/ci.yml"),

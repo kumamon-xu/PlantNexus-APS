@@ -272,6 +272,51 @@ def test_docs_validator_rejects_new_unclosed_fence(repository_root: Path) -> Non
     assert report["issues"][0]["check_id"] == "PUBLIC-DOC-FENCE"
 
 
+@pytest.mark.parametrize(
+    "evidence_line",
+    (
+        "Provider run 12345678 completed successfully.",
+        "artifact id 87654321 was retained.",
+        f"sha256: {'a' * 64}",
+        f"implementation {'b' * 40}",
+        f"closure {'c' * 40}",
+    ),
+)
+def test_docs_validator_rejects_new_public_readme_evidence(
+    repository_root: Path, evidence_line: str
+) -> None:
+    write(repository_root, "README.md", "# Public\n")
+    base_sha = commit(repository_root, "base")
+    write(repository_root, "README.md", f"# Public\n\n{evidence_line}\n")
+    head_sha = commit(repository_root, "duplicate evidence")
+    repository = GitRepository(repository_root)
+
+    report = validate_public_docs(
+        repository, classify_repository(repository, base_sha, head_sha)
+    )
+
+    assert report["result"] == "FAIL"
+    assert report["issues"][0]["check_id"] == "PUBLIC-DOC-EVIDENCE"
+
+
+def test_docs_validator_allows_unchanged_public_readme_evidence_debt(
+    repository_root: Path,
+) -> None:
+    write(repository_root, "README.md", "# Public\n\nProvider run 12345678 passed.\n")
+    write(repository_root, "docs/README.md", "# Docs\n")
+    base_sha = commit(repository_root, "base")
+    write(repository_root, "docs/README.md", "# Docs\n\nClarified navigation.\n")
+    head_sha = commit(repository_root, "ordinary docs")
+    repository = GitRepository(repository_root)
+
+    report = validate_public_docs(
+        repository, classify_repository(repository, base_sha, head_sha)
+    )
+
+    assert report["result"] == "PASS"
+    assert report["issues"] == []
+
+
 def test_invalid_base_and_empty_range_fail_closed_to_full(
     repository_root: Path,
 ) -> None:

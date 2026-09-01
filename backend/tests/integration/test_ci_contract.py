@@ -375,24 +375,41 @@ def test_ci_profile_routing_is_mutually_exclusive_and_fail_closed() -> None:
     assert set(jobs) == {
         "classify",
         "docs_validation",
+        "full_preflight",
+        "full_backend",
         "full_validation",
         "validate",
     }
     classify = cast(dict[str, Any], jobs["classify"])
     docs = cast(dict[str, Any], jobs["docs_validation"])
+    preflight = cast(dict[str, Any], jobs["full_preflight"])
+    backend = cast(dict[str, Any], jobs["full_backend"])
     full = cast(dict[str, Any], jobs["full_validation"])
     final = cast(dict[str, Any], jobs["validate"])
 
     assert classify["outputs"] == {"profile": "${{ steps.profile.outputs.profile }}"}
     assert docs["needs"] == "classify"
     assert docs["if"] == "${{ needs.classify.outputs.profile == 'DOCS_ONLY' }}"
-    assert full["needs"] == "classify"
+    assert preflight["needs"] == "classify"
+    assert preflight["if"] == "${{ needs.classify.outputs.profile == 'FULL' }}"
+    assert backend["needs"] == ["classify", "full_preflight"]
+    assert backend["if"] == "${{ needs.classify.outputs.profile == 'FULL' }}"
+    assert full["needs"] == ["classify", "full_preflight"]
     assert full["if"] == "${{ needs.classify.outputs.profile == 'FULL' }}"
-    assert final["needs"] == ["classify", "docs_validation", "full_validation"]
+    assert backend["env"] == full["env"]
+    assert final["needs"] == [
+        "classify",
+        "docs_validation",
+        "full_preflight",
+        "full_backend",
+        "full_validation",
+    ]
     assert final["if"] == "${{ always() }}"
 
     classify_text = json.dumps(classify)
     docs_text = json.dumps(docs)
+    preflight_text = json.dumps(preflight)
+    backend_text = json.dumps(backend)
     full_text = json.dumps(full)
     final_run = cast(dict[str, Any], final["steps"][0])["run"]
     assert "scripts/ci_validation_profile.py classify" in classify_text
@@ -402,8 +419,19 @@ def test_ci_profile_routing_is_mutually_exclusive_and_fail_closed() -> None:
     assert "setup-node" not in docs_text
     assert "uv run" not in docs_text
     assert "npm " not in docs_text
+    assert "scripts/ci_preflight.py" in preflight_text
+    assert "setup-uv" not in preflight_text
+    assert "setup-node" not in preflight_text
+    assert "plantnexus-ci-preflight-${{ github.run_id }}" in preflight_text
+    assert "uv sync --locked" in backend_text
+    assert "uv run ruff check ." in backend_text
+    assert "uv run pyright backend/app backend/tests" in backend_text
+    assert "backend/tests/security" in backend_text
+    assert "ci-backend-tests.xml" in backend_text
+    assert "mkdir -p build/validation" in backend_text
+    assert "plantnexus-ci-backend-${{ github.run_id }}" in backend_text
     assert "uv sync --locked" in full_text
-    assert "backend/tests/security" in full_text
+    assert "backend/tests/security" not in full_text
     assert "TASK-P4-13 Dynamic replanning frontend machine evidence" in full_text
     assert "p4-replanning-replay.XXXXXX" in full_text
     assert "git worktree add --detach" in full_text
@@ -427,12 +455,16 @@ def test_ci_profile_routing_is_mutually_exclusive_and_fail_closed() -> None:
     assert "app.application.p5_portfolio_gate_report" in full_text
     assert "app.application.p5_exit_gate_audit" in full_text
     assert "Build package" in full_text
-    assert len(full["steps"]) == 73
+    assert len(preflight["steps"]) == 4
+    assert len(backend["steps"]) == 8
+    assert len(full["steps"]) == 70
 
     assert 'test "${PLANTNEXUS_CLASSIFY_RESULT}" = "success"' in final_run
+    assert 'test "${PLANTNEXUS_PREFLIGHT_RESULT}" = "success"' in final_run
+    assert 'test "${PLANTNEXUS_BACKEND_RESULT}" = "success"' in final_run
     assert 'test "${PLANTNEXUS_FULL_RESULT}" = "success"' in final_run
     assert 'test "${PLANTNEXUS_DOCS_RESULT}" = "success"' in final_run
-    assert final_run.count('= "skipped"') == 2
+    assert final_run.count('= "skipped"') == 4
     assert "Unknown or missing CI validation profile" in final_run
     assert "continue-on-error" not in workflow_text
 
@@ -1195,7 +1227,8 @@ def test_ci_p3_approval_decisions_are_required_and_machine_checkable(
         "uv run python -m app.application.approval_decision_check --root . "
         "--report build/validation/ci-p3-approval-decisions.json"
     ) in normalized
-    assert "backend/tests/property backend/tests/security" in normalized
+    assert "backend/tests/property" in normalized
+    assert "backend/tests/security" in normalized
     assert "continue-on-error" not in workflow
 
     report_path = tmp_path / "p3-approval-decisions.json"

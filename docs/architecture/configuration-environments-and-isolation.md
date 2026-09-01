@@ -99,11 +99,11 @@ Calculator、builder、precheck和machine fixture均为无网络、无数据库�
 
 ## CI validation profile isolation
 
-CI Profile只由不可变event base..head的Git路径决定，不读取业务environment、Secret、数据库、data plane或用户输入。只有`README.md`、`docs/README.md`及公开技术文档目录中的Markdown-only diff可选择DOCS_ONLY；workflow、脚本、test、lock、配置、内部过程路径、混合/空/未知diff全部选择FULL。分类器和changed-doc validator仅使用Python标准库与Git，workflow权限继续为`contents: read`。
+CI Profile只由不可变event base..head的Git路径决定，不读取业务environment、Secret、数据库、data plane或用户输入。只有`README.md`、`docs/README.md`及公开技术文档目录中的Markdown-only diff可选择DOCS_ONLY；workflow、脚本、test、lock、配置、内部过程路径、混合/空/未知diff全部选择FULL。分类器和changed-doc validator仅使用Python标准库与Git，workflow权限继续为`contents: read`；公共README新增run/job/artifact长ID、digest或implementation/closure SHA会被拒绝，避免把内部Provider证据复制到公开入口。
 
-最终required context仍为`validate`：classifier成功且恰当分支成功、另一分支skipped时才PASS。DOCS_ONLY不连接Production/Simulation runtime，也不证明业务正确性、部署隔离、容量或SLA；FULL继续执行既有完整repository Gate。
+最终required context仍为`validate`。FULL先由不安装依赖的`full_preflight`核验exact runtime、UTF-8/locale、working directory、单worker Playwright、fail-closed routing和P4 frozen replay隔离；成功后`full_backend`与machine/frontend/browser/build/Gate主链在独立runner并行，两个分支都必须成功。DOCS_ONLY要求全部FULL jobs skipped且只验证公开文档。任一未知、失败或意外skip都使`validate`失败。
 
-Provider使用支持Node.js 24的官方Action运行分类、Python/Node setup与artifact上传；Action版本变化本身属于workflow diff并强制走FULL，不能由DOCS_ONLY自我验证。
+Provider使用支持Node.js 24的官方Action运行分类、Python/Node setup与artifact上传；uv/npm缓存仅缓存immutable lock对应依赖，不共享working tree或业务状态。`provider_evidence.py`只通过已有`gh`认证读取exact SHA run/check/artifact，输出和ZIP限定在ignored `build/**`，不把credential写入参数、报告或仓库。Action版本变化本身属于workflow diff并强制走FULL，不能由DOCS_ONLY自我验证。
 
 ## TASK-P4-05 isolation boundary
 

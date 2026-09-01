@@ -11,6 +11,14 @@ last_reviewed: 2026-09-01
 
 # PlantNexus APS 文档中心
 
+## TASK-P6-03 deterministic feature/label dataset
+
+TASK-P6-03从P6-02 closure `4360746f2712012a0aa4f52a40c189837a2097b3`冻结Diff base，形成`SIM-P6-FEATURE-DATASET-001@1.0.0`的Simulation/Test离线dataset。Versioned source共10条；8条`COMPLETED/NORMAL`显式actual-processing label进入4/2/2 group-safe time split，RUNNING与INTERRUPTED各1条稳定排除。四项feature都在decision cutoff前可用并绑定source/transform/version；标准工时只作feature，不作label。
+
+Builder输出existing `duration-feature-record.v1`和content-derived dataset rows/manifest/bundle，具备canonical replay、row-order invariance、tamper/leakage/PII/target/mixed-policy rejection及atomic cleanup。[Machine contract](contracts/duration-prediction-machine-contract.md)、[data authority](architecture/data-authority.md)、[provenance](architecture/provenance-and-versioning.md)和[scenario provenance](simulation/scenario-spec-and-provenance.md)给出直接边界。Provider artifact只允许safe report/manifest，不含raw source或rows；P6-02 Schema、dependency/lock、migration/state、Planning/runtime保持不变。
+
+这是contract-correctness synthetic dataset，不是真实历史或模型质量证据。没有训练、evaluation Gate、runtime、Planning ingress、P7校准或Production authority；OPEN-010/011/014/015继续OPEN，TASK-P6-04不会自动启动。
+
 ## TASK-P6-02 duration machine contract
 
 TASK-P6-02从P6-01 provider-verified closure `e74099ca24ed59140f6490c84025b7299b5f201d`冻结不可变Diff base，global additive schema set提升到`2.9.0`。[Duration Prediction Machine Contract v1](contracts/duration-prediction-machine-contract.md)与四份strict Simulation Schema形成FeatureRecord/ModelManifest/EvaluationReport/Prediction exact carrier；5份正例、5份negative descriptor和`p6-duration-contract-report.v1`固定canonical identity、as-of leakage、quantile/confidence、stable fallback、标准工时authority与cross-lineage。

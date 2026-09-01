@@ -11,6 +11,12 @@ last_reviewed: 2026-09-01
 
 # Provenance 与版本规则
 
+## TASK-P6-03 dataset lineage and identity
+
+`duration-dataset-source.v1`对record内容先逐条计算canonical SHA-256，再把按`source_record_id`排序后的记录纳入source fingerprint，因此输入排列不是语义而任何内容篡改可检测。Builder以normalized-LF源码digest标识`duration-dataset-builder.v1`；每个FeatureRecord、dataset row、manifest与bundle分别从排除自身ID/fingerprint的canonical projection派生identity。相同source/version/code得到相同bytes，任何policy、cutoff、feature、label或lineage变化得到新identity，禁止覆盖既有manifest。
+
+`duration-dataset-manifest.v1`绑定source document/version/ID/fingerprint、schema set `2.9.0`、feature definitions、显式label policy、privacy/retention/deletion、half-open time/group split、Simulation factory/plane/environment、code revision、cutoff、row/group/exclusion counts与`SIM-ASSUMPTION-022`。每个label引用完整completed source record；FeatureRecord只引用由其ID确定性派生的`-feature-context` pre-cutoff投影及独立fingerprint，二者在dataset row中关联，避免让future label参与feature-source identity。FeatureRecord继续满足P6-02 Schema并同时引用021/022。Provider report只携带manifest、count与fingerprint，source/row bytes不进入artifact。
+
 ## TASK-P6-02 canonical carrier lineage
 
 Schema set `2.9.0`现以`canonical-json.v1`分别形成FeatureRecord、ModelManifest、EvaluationReport与Prediction v1 identity。每份projection排除自己的ID/fingerprint，以sorted finite JSON计算SHA-256并由同一digest派生ID；allowed-field tamper、混合version或任何跨文档ref不一致均fail closed。Prediction exact绑定Feature、Model、Evaluation、Policy与权威standard-duration source record；Evaluation exact绑定Model artifact、dataset、split、baseline、code/config与privacy review。

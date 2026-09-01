@@ -11,6 +11,14 @@ last_reviewed: 2026-08-28
 
 # Scenario Library 与复杂度矩阵
 
+## TASK-P6-03 duration dataset correctness row
+
+| Scenario | Profile | Seed / stream | Evidence | Boundary |
+| --- | --- | --- | --- | --- |
+| `SIM-P6-DURATION-HISTORY@1.0.0` | `SIM-P6-FEATURE-DATASET-001@1.0.0` | no RNG / 10 records | `source-records.v1.json` → `expected-dataset-bundle.v1.json`、TEST-P6-FEATURE-DATASET-001 | 8 eligible / 2 excluded / 4-2-2 split；contract correctness only；not history/distribution/model quality/Production |
+
+该row验证label eligibility/censoring、as-of leakage、lineage-group isolation、canonical provenance与atomic cleanup；它不进入XS/S/M Benchmark、不定义training/evaluation threshold，也不创建P6-04 model或P7 reality-calibration scenario。
+
 ## TASK-P4-10 formed continuous disruption row
 
 | Scenario | Profile | Seed / stream | Evidence | Boundary |

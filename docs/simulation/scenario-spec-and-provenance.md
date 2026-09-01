@@ -3,13 +3,19 @@ doc_id: DOC-SIM-002
 title: ScenarioSpec 与 Provenance
 status: baseline
 spec_version: 0.3.0
-phase: P0-P4
+phase: P0-P6
 normative: true
 source_sections: [39, 40, 44, 46, 49, 104]
 last_reviewed: 2026-08-28
 ---
 
 # ScenarioSpec 与 Provenance
+
+## TASK-P6-03 versioned dataset source
+
+`fixtures/synthetic/P6-DURATION-DATASET/source-records.v1.json`发布`SIM-P6-DURATION-HISTORY@1.0.0`，由`SIM-P6-FEATURE-DATASET-001@1.0.0` / `SIM-ASSUMPTION-022`约束。它不使用seed或RNG，固定10条Simulation/Test记录、四项as-of features、显式actual-processing label、两类排除和UTC time/group split；source/record identity覆盖全部policy与内容，record输入顺序不影响semantic fingerprint。
+
+`expected-dataset-bundle.v1.json`是同一source/code的canonical golden projection，验证8条eligible、2条excluded和4/2/2 split。两份fixture只用于contract correctness；它们不是ScenarioSpec Schema扩展、真实历史、工厂分布、模型质量、threshold、capacity或SLA，也不得promotion为Production evidence。变更任何数值或policy必须发布新version/identity并先更新SIM assumption，禁止改写已引用bytes。
 
 ## TASK-P4-10 versioned disruption asset
 

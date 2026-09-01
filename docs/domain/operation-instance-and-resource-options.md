@@ -11,6 +11,12 @@ last_reviewed: 2026-09-01
 
 # OperationInstance 与候选资源语义
 
+## P6-03 dataset consumption boundary
+
+Dataset builder只读取source record中已版本化的operation/resource-option/resource ID以及decision cutoff前可用的`standard_duration_seconds`；它不改写`OperationResourceOption`或为缺失option补值。输出FeatureRecord保持同一operation/resource option/resource精确关联，label provenance另指向明确completed Simulation execution record。
+
+标准工时值即使与显式actual label相等也仍是feature/authority evidence而非label来源。RUNNING/INTERRUPTED事实不被转换为普通completed label，dataset不计算remaining/freeze、不改变actual fact优先级，也不进入PlanningProblem。P6-04+若消费manifest必须使用其不可变ID/fingerprint，而不能回写本文件定义的owner对象。
+
 ## P6 duration candidate and fallback boundary
 
 ADR-0016确认本文件既有`final_duration_seconds`、`duration_source`与`source_version`仍是每个resource option的标准工时authority。未来DurationPrediction只能以独立、versioned、可审计carrier提供候选；不得原地改写option、合并不同resource的duration或把候选写回历史Snapshot/Problem。Consumer遇到缺失、invalid、低置信度、版本不兼容、未批准、drift或provenance不全时必须选择同一option的标准工时。

@@ -11,6 +11,12 @@ last_reviewed: 2026-09-01
 
 # 能力矩阵
 
+## TASK-P6-03 Simulation dataset status
+
+`AI_DURATION_PREDICTION`继续`DEFERRED`；其数据分项现为`SIMULATION_DATASET_V1 / NO_MODEL / NO_RUNTIME`。P6-03形成一个versioned、deterministic、group-safe且防泄漏的contract-correctness dataset builder/manifest，严格消费P6-02 FeatureRecord Schema，并由safe machine report验证。它没有model artifact、quality/evaluation Gate、prediction provider、Planning adapter或Production authority，因此不能提供AI candidate或改变任何排程行为。
+
+OPEN-010/011/014/015继续OPEN，调用方仍须default-deny并使用权威standard duration。Dataset中的标准工时只是feature，explicit actual processing才是eligible label；synthetic fixture不可解释为真实历史、capacity或SLA。TASK-P6-04必须另获授权并冻结新base，不会因本Task PASS自动训练。
+
 ## TASK-P6-02 contract-only status
 
 `AI_DURATION_PREDICTION`继续为`DEFERRED`，但合同分项从`NOT_FORMED`提升为`CONTRACT_V1 / NO_RUNTIME`：additive set `2.9.0`已发布FeatureRecord、ModelManifest、EvaluationReport与Prediction四份strict Simulation carrier、正反sample、canonical/lineage checker和non-skippable CI evidence。它只证明机器语义可验证，不证明dataset、model、accuracy、Gate、runtime、Planning ingress或Production authority。

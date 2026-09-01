@@ -11,6 +11,12 @@ last_reviewed: 2026-09-01
 
 # 配置、环境与数据隔离
 
+## TASK-P6-03 dataset and CI isolation
+
+Dataset source/profile被逐字限制为`SIMULATION/TEST`、synthetic、local-test-only且Production binding/authorization为false；没有环境变量、credential、database、network、queue、service或外部storage。Raw source与完整row bundle只作为repository synthetic fixture，CI/provider artifact仅上传`p6-duration-dataset-report.v1`中的sanitized manifest、counts、fingerprints和rejection summary。PII flag、target-as-feature、敏感key或Production-shaped mutation在写文件前拒绝。
+
+FULL workflow只追加一个不可跳过的dataset checker，并由既有`build/validation/*.json` glob收集report；触发器、权限、Secret、required `validate` context和部署均不变。冻结P4-13临时worktree只显式删除本Task新增的三个backend/test路径，再运行未修改P4 evidence；这不改变主树或P4 owner语义。
+
 ## TASK-P6-02 machine isolation boundary
 
 四份`2.9.0` carrier把`data_plane=SIMULATION`、Development/Test/Benchmark environment、`synthetic=true`、`production_binding=false`、`production_authorized=false`与OPEN-010/011/014/015固定为Schema常量/完整集合；任何Production、unknown environment/version/field或跨plane引用均拒绝。Published samples和CI report只含sanitized synthetic references、fingerprints和aggregate shape values，受`SIM-ASSUMPTION-021`约束，没有raw row、PII、credential、endpoint或secret。

@@ -15,9 +15,15 @@ Contract status: accepted human governance baseline
 
 Decision authority: [ADR-0016](../adr/ADR-0016-ai-duration-data-model-governance.md)
 
-Machine contract status: additive `2.9.0` / `FORMED_SIMULATION_CONTRACT_V1`；见[Duration Prediction Machine Contract v1](duration-prediction-machine-contract.md)。TASK-P6-02仍在双exact provider闭环中，不形成runtime或Production authority
+Machine contract status: additive `2.9.0` / `FORMED_SIMULATION_CONTRACT_V1`；见[Duration Prediction Machine Contract v1](duration-prediction-machine-contract.md)。TASK-P6-03现形成有界Simulation dataset实现，但不形成model、runtime或Production authority
 
-Capability status: `AI_DURATION_PREDICTION = DEFERRED / CONTRACT_ONLY / NO_RUNTIME`
+Capability status: `AI_DURATION_PREDICTION = DEFERRED / CONTRACT_V1 + SIMULATION_DATASET_V1 / NO_MODEL / NO_RUNTIME`
+
+## TASK-P6-03 executable policy projection
+
+`SIM-P6-FEATURE-DATASET-001@1.0.0`把本合同的数据部分投影为可执行fail-closed规则：只允许已登记Simulation/Test source；只以`COMPLETED/NORMAL`显式actual-processing seconds为label；RUNNING/INTERRUPTED稳定排除；feature逐项满足available-at不晚于decision cutoff；split按label availability的UTC half-open window且同一lineage group不可跨partition。标准工时只是as-of feature，不是label或预测授权。
+
+Purpose/access、no-PII/no-target、retention/deletion、source/record fingerprint、builder code revision和完整manifest均为强制输入/输出。Atomic writer在全量验证及canonical build完成后才同目录replace，任何错误保持既有target且不留partial artifact。Source和完整rows不进入Provider artifact；OPEN-010/011/014/015继续阻断Production extraction/training/promotion。
 
 ## 1. Purpose and scope
 

@@ -1,0 +1,1047 @@
+{
+  "bundle_fingerprint": "sha256:137ed52753f8decfcc2b0903c37e697f18c0e5a20369458aabddba6e7df81d98",
+  "canonicalization_version": "canonical-json.v1",
+  "dataset_manifest": {
+    "artifact_id": "duration-dataset-manifest-d02f7818d4744e8a86205cfafe25efe1b39e2f1db6edc485a38e10aea8470bda",
+    "authority": {
+      "access_scope": "LOCAL_TEST_ONLY",
+      "deletion_policy_version": "delete-with-versioned-fixture-retirement.v1",
+      "label_authority": "SIMULATION_EXECUTION_FACT",
+      "purpose": "CONTRACT_CORRECTNESS_ONLY",
+      "retention_policy_version": "sim-p6-contract-fixture-retention.v1",
+      "source_authority": "SIMULATION_SCENARIO_OWNER"
+    },
+    "builder": {
+      "code_revision": "sha256:b9ae3e83f4477e019ce2e63fde2f95a67d6e93488c7527097bd65507eb8689c9",
+      "contract_version": "duration-dataset-builder.v1"
+    },
+    "canonicalization_version": "canonical-json.v1",
+    "counts": {
+      "eligible_rows": 8,
+      "excluded_records": 2,
+      "source_records": 10
+    },
+    "data_plane": "SIMULATION",
+    "dataset_version": "SIM-P6-FEATURE-DATASET-001@1.0.0",
+    "document_version": "duration-dataset-manifest.v1",
+    "environment": "TEST",
+    "exclusion_reason_counts": {
+      "INTERRUPTED_NOT_LABEL_ELIGIBLE": 1,
+      "RUNNING_NOT_LABEL_ELIGIBLE": 1
+    },
+    "factory_ids": [
+      "factory-sim-p6-001"
+    ],
+    "feature_definitions": [
+      {
+        "feature_name": "planned_quantity",
+        "source_field": "planned_quantity",
+        "transform_version": "identity-count.v1",
+        "unit": "COUNT",
+        "value_type": "INTEGER"
+      },
+      {
+        "feature_name": "setup_seconds",
+        "source_field": "setup_seconds",
+        "transform_version": "identity-seconds.v1",
+        "unit": "SECONDS",
+        "value_type": "INTEGER"
+      },
+      {
+        "feature_name": "standard_duration_seconds",
+        "source_field": "standard_duration_seconds",
+        "transform_version": "identity-seconds.v1",
+        "unit": "SECONDS",
+        "value_type": "INTEGER"
+      },
+      {
+        "feature_name": "operation_family",
+        "source_field": "operation_family",
+        "transform_version": "identity-category.v1",
+        "unit": "CATEGORY",
+        "value_type": "CATEGORY"
+      }
+    ],
+    "feature_schema_version": "duration-features.v1",
+    "fingerprint": "sha256:d02f7818d4744e8a86205cfafe25efe1b39e2f1db6edc485a38e10aea8470bda",
+    "governance_boundary": {
+      "open_authority_gaps": [
+        "OPEN-010",
+        "OPEN-011",
+        "OPEN-014",
+        "OPEN-015"
+      ],
+      "production_authorized": false
+    },
+    "label_policy": {
+      "derive_from_start_end": false,
+      "eligible_disposition": "NORMAL",
+      "eligible_status": "COMPLETED",
+      "label_name": "actual_processing_seconds",
+      "model_output_is_label": false,
+      "policy_version": "explicit-normal-completion-label.v1",
+      "source_field": "actual_processing_seconds",
+      "standard_duration_is_label": false,
+      "unit": "SECONDS"
+    },
+    "partitions": [
+      {
+        "end_at_utc": "2026-08-01T00:00:00Z",
+        "lineage_group_count": 2,
+        "name": "train",
+        "row_count": 4,
+        "start_at_utc": "2026-07-01T00:00:00Z"
+      },
+      {
+        "end_at_utc": "2026-08-16T00:00:00Z",
+        "lineage_group_count": 1,
+        "name": "validation",
+        "row_count": 2,
+        "start_at_utc": "2026-08-01T00:00:00Z"
+      },
+      {
+        "end_at_utc": "2026-09-01T00:00:00Z",
+        "lineage_group_count": 1,
+        "name": "test",
+        "row_count": 2,
+        "start_at_utc": "2026-08-16T00:00:00Z"
+      }
+    ],
+    "privacy_policy": {
+      "pii_allowed": false,
+      "policy_version": "duration-dataset-no-pii-no-target-feature.v1",
+      "raw_source_in_provider_artifact": false,
+      "target_as_feature_allowed": false
+    },
+    "production_binding": false,
+    "schema_set_version": "2.9.0",
+    "source": {
+      "artifact_id": "duration-dataset-source-1ac16445678f0d1ee72794caea2220e669c9982f559d10a74652b433d97e1b65",
+      "document_version": "duration-dataset-source.v1",
+      "fingerprint": "sha256:1ac16445678f0d1ee72794caea2220e669c9982f559d10a74652b433d97e1b65",
+      "source_version": "SIM-P6-DURATION-HISTORY@1.0.0"
+    },
+    "split_policy": {
+      "event_time_field": "label_available_at_utc",
+      "group_field": "lineage_group_id",
+      "interval_semantics": "HALF_OPEN",
+      "partitions": [
+        {
+          "end_at_utc": "2026-08-01T00:00:00Z",
+          "name": "train",
+          "start_at_utc": "2026-07-01T00:00:00Z"
+        },
+        {
+          "end_at_utc": "2026-08-16T00:00:00Z",
+          "name": "validation",
+          "start_at_utc": "2026-08-01T00:00:00Z"
+        },
+        {
+          "end_at_utc": "2026-09-01T00:00:00Z",
+          "name": "test",
+          "start_at_utc": "2026-08-16T00:00:00Z"
+        }
+      ],
+      "policy_version": "group-safe-time-split.v1"
+    },
+    "synthetic": true,
+    "synthetic_provenance": {
+      "assumption_profile": "SIM-P6-FEATURE-DATASET-001@1.0.0",
+      "assumption_refs": [
+        "SIM-ASSUMPTION-022"
+      ],
+      "randomness": "NONE"
+    },
+    "training_data_cutoff_utc": "2026-08-27T09:05:00Z"
+  },
+  "duration_dataset_bundle_version": "duration-dataset-bundle.v1",
+  "exclusions": [
+    {
+      "lineage_group_id": "lineage-running",
+      "reason": "RUNNING_NOT_LABEL_ELIGIBLE",
+      "source_record_fingerprint": "sha256:4655a4770dd8030aee6a13a9ed44a24ba78107ec8342d08016741c1f82f4d4e7",
+      "source_record_id": "sim-p6-history-009"
+    },
+    {
+      "lineage_group_id": "lineage-interrupted",
+      "reason": "INTERRUPTED_NOT_LABEL_ELIGIBLE",
+      "source_record_fingerprint": "sha256:ee8b3e9445688dbedf63034a621eccee56db79999c505911cffcb09872b6ca35",
+      "source_record_id": "sim-p6-history-010"
+    }
+  ],
+  "rows": [
+    {
+      "dataset_row_fingerprint": "sha256:fc60f2cf864ce953f96fb208c3a5460b5d7c19574cd171c3ee6f583752d5621a",
+      "dataset_row_id": "duration-dataset-row-fc60f2cf864ce953f96fb208c3a5460b5d7c19574cd171c3ee6f583752d5621a",
+      "dataset_row_version": "duration-dataset-row.v1",
+      "feature_record": {
+        "as_of_cutoff_utc": "2026-07-04T08:00:00Z",
+        "canonicalization_version": "canonical-json.v1",
+        "data_plane": "SIMULATION",
+        "duration_feature_record_version": "duration-feature-record.v1",
+        "environment": "TEST",
+        "factory_id": "factory-sim-p6-001",
+        "feature_record_fingerprint": "sha256:055cc32e7be21ff694e22777ed25144ae96f34406aad4be9ccd29ff2f4107fee",
+        "feature_record_id": "duration-feature-record-055cc32e7be21ff694e22777ed25144ae96f34406aad4be9ccd29ff2f4107fee",
+        "feature_schema_version": "duration-features.v1",
+        "features": [
+          {
+            "available_at_utc": "2026-07-04T07:05:00Z",
+            "feature_name": "planned_quantity",
+            "source_record_ids": [
+              "sim-p6-history-001-feature-context"
+            ],
+            "transform_version": "identity-count.v1",
+            "unit": "COUNT",
+            "value": 10,
+            "value_type": "INTEGER"
+          },
+          {
+            "available_at_utc": "2026-07-04T07:05:00Z",
+            "feature_name": "setup_seconds",
+            "source_record_ids": [
+              "sim-p6-history-001-feature-context"
+            ],
+            "transform_version": "identity-seconds.v1",
+            "unit": "SECONDS",
+            "value": 45,
+            "value_type": "INTEGER"
+          },
+          {
+            "available_at_utc": "2026-07-04T07:05:00Z",
+            "feature_name": "standard_duration_seconds",
+            "source_record_ids": [
+              "sim-p6-history-001-feature-context"
+            ],
+            "transform_version": "identity-seconds.v1",
+            "unit": "SECONDS",
+            "value": 600,
+            "value_type": "INTEGER"
+          },
+          {
+            "available_at_utc": "2026-07-04T07:05:00Z",
+            "feature_name": "operation_family",
+            "source_record_ids": [
+              "sim-p6-history-001-feature-context"
+            ],
+            "transform_version": "identity-category.v1",
+            "unit": "CATEGORY",
+            "value": "milling",
+            "value_type": "CATEGORY"
+          }
+        ],
+        "governance_boundary": {
+          "open_authority_gaps": [
+            "OPEN-010",
+            "OPEN-011",
+            "OPEN-014",
+            "OPEN-015"
+          ],
+          "production_authorized": false
+        },
+        "operation_id": "operation-sim-p6-001",
+        "pii_fields_present": false,
+        "production_binding": false,
+        "resource_id": "resource-sim-p6-2",
+        "resource_option_id": "resource-option-sim-p6-2",
+        "schema_set_version": "2.9.0",
+        "source_records": [
+          {
+            "available_at_utc": "2026-07-04T07:05:00Z",
+            "observed_at_utc": "2026-07-04T07:00:00Z",
+            "record_fingerprint": "sha256:8cd17367ee2e1d1a1b58eb361b3fd7e0fa0dffd84ffb0bc12f71fef2c5ff3b4c",
+            "source_record_id": "sim-p6-history-001-feature-context",
+            "source_system": "simulated-operation-context",
+            "source_version": "SIM-P6-DURATION-HISTORY@1.0.0"
+          }
+        ],
+        "synthetic": true,
+        "synthetic_provenance": {
+          "assumption_profile": "SIM-P6-DURATION-CONTRACT-001@1.0.0",
+          "assumption_refs": [
+            "SIM-ASSUMPTION-021",
+            "SIM-ASSUMPTION-022"
+          ]
+        },
+        "target_fields_present": false
+      },
+      "label": {
+        "available_at_utc": "2026-07-04T09:05:00Z",
+        "label_name": "actual_processing_seconds",
+        "observed_at_utc": "2026-07-04T09:00:00Z",
+        "policy_version": "explicit-normal-completion-label.v1",
+        "source_record_fingerprint": "sha256:a70b6dd79f2f135f03dc832e8e64d116dd4bdcc94feb077ccd469196dd16c881",
+        "source_record_id": "sim-p6-history-001",
+        "unit": "SECONDS",
+        "value": 540
+      },
+      "lineage_group_id": "lineage-train-a",
+      "operation_type_id": "operation-type-milling",
+      "partition": "train"
+    },
+    {
+      "dataset_row_fingerprint": "sha256:d337c4f66f5d0e109035ef947467ada1297914e314dcd8ce04475a6c6e247a52",
+      "dataset_row_id": "duration-dataset-row-d337c4f66f5d0e109035ef947467ada1297914e314dcd8ce04475a6c6e247a52",
+      "dataset_row_version": "duration-dataset-row.v1",
+      "feature_record": {
+        "as_of_cutoff_utc": "2026-07-10T08:00:00Z",
+        "canonicalization_version": "canonical-json.v1",
+        "data_plane": "SIMULATION",
+        "duration_feature_record_version": "duration-feature-record.v1",
+        "environment": "TEST",
+        "factory_id": "factory-sim-p6-001",
+        "feature_record_fingerprint": "sha256:ea215bb1d7c0324c6ba4344aa6c36ed8272f6f47f9ca84a58fba3f5deb9394cf",
+        "feature_record_id": "duration-feature-record-ea215bb1d7c0324c6ba4344aa6c36ed8272f6f47f9ca84a58fba3f5deb9394cf",
+        "feature_schema_version": "duration-features.v1",
+        "features": [
+          {
+            "available_at_utc": "2026-07-10T07:05:00Z",
+            "feature_name": "planned_quantity",
+            "source_record_ids": [
+              "sim-p6-history-002-feature-context"
+            ],
+            "transform_version": "identity-count.v1",
+            "unit": "COUNT",
+            "value": 12,
+            "value_type": "INTEGER"
+          },
+          {
+            "available_at_utc": "2026-07-10T07:05:00Z",
+            "feature_name": "setup_seconds",
+            "source_record_ids": [
+              "sim-p6-history-002-feature-context"
+            ],
+            "transform_version": "identity-seconds.v1",
+            "unit": "SECONDS",
+            "value": 50,
+            "value_type": "INTEGER"
+          },
+          {
+            "available_at_utc": "2026-07-10T07:05:00Z",
+            "feature_name": "standard_duration_seconds",
+            "source_record_ids": [
+              "sim-p6-history-002-feature-context"
+            ],
+            "transform_version": "identity-seconds.v1",
+            "unit": "SECONDS",
+            "value": 620,
+            "value_type": "INTEGER"
+          },
+          {
+            "available_at_utc": "2026-07-10T07:05:00Z",
+            "feature_name": "operation_family",
+            "source_record_ids": [
+              "sim-p6-history-002-feature-context"
+            ],
+            "transform_version": "identity-category.v1",
+            "unit": "CATEGORY",
+            "value": "milling",
+            "value_type": "CATEGORY"
+          }
+        ],
+        "governance_boundary": {
+          "open_authority_gaps": [
+            "OPEN-010",
+            "OPEN-011",
+            "OPEN-014",
+            "OPEN-015"
+          ],
+          "production_authorized": false
+        },
+        "operation_id": "operation-sim-p6-002",
+        "pii_fields_present": false,
+        "production_binding": false,
+        "resource_id": "resource-sim-p6-3",
+        "resource_option_id": "resource-option-sim-p6-3",
+        "schema_set_version": "2.9.0",
+        "source_records": [
+          {
+            "available_at_utc": "2026-07-10T07:05:00Z",
+            "observed_at_utc": "2026-07-10T07:00:00Z",
+            "record_fingerprint": "sha256:06a1e19e1b37720c16930657011b0e428b1c5414c1ac255d2817ac2210107dc3",
+            "source_record_id": "sim-p6-history-002-feature-context",
+            "source_system": "simulated-operation-context",
+            "source_version": "SIM-P6-DURATION-HISTORY@1.0.0"
+          }
+        ],
+        "synthetic": true,
+        "synthetic_provenance": {
+          "assumption_profile": "SIM-P6-DURATION-CONTRACT-001@1.0.0",
+          "assumption_refs": [
+            "SIM-ASSUMPTION-021",
+            "SIM-ASSUMPTION-022"
+          ]
+        },
+        "target_fields_present": false
+      },
+      "label": {
+        "available_at_utc": "2026-07-10T09:05:00Z",
+        "label_name": "actual_processing_seconds",
+        "observed_at_utc": "2026-07-10T09:00:00Z",
+        "policy_version": "explicit-normal-completion-label.v1",
+        "source_record_fingerprint": "sha256:4eca121fe094920a1bc52f5b3ceb3c16caf898b0b029d169f407222c0f10a6ed",
+        "source_record_id": "sim-p6-history-002",
+        "unit": "SECONDS",
+        "value": 600
+      },
+      "lineage_group_id": "lineage-train-a",
+      "operation_type_id": "operation-type-milling",
+      "partition": "train"
+    },
+    {
+      "dataset_row_fingerprint": "sha256:0257e777088c8a90a4aedf3450dc185c5e34a01bc67bacbc0e698b96b19f6215",
+      "dataset_row_id": "duration-dataset-row-0257e777088c8a90a4aedf3450dc185c5e34a01bc67bacbc0e698b96b19f6215",
+      "dataset_row_version": "duration-dataset-row.v1",
+      "feature_record": {
+        "as_of_cutoff_utc": "2026-07-18T08:00:00Z",
+        "canonicalization_version": "canonical-json.v1",
+        "data_plane": "SIMULATION",
+        "duration_feature_record_version": "duration-feature-record.v1",
+        "environment": "TEST",
+        "factory_id": "factory-sim-p6-001",
+        "feature_record_fingerprint": "sha256:f2d0ce3d6c78d181c9b38c5dc64b71fe76d93e5818018ff604dc71d15ae2639b",
+        "feature_record_id": "duration-feature-record-f2d0ce3d6c78d181c9b38c5dc64b71fe76d93e5818018ff604dc71d15ae2639b",
+        "feature_schema_version": "duration-features.v1",
+        "features": [
+          {
+            "available_at_utc": "2026-07-18T07:05:00Z",
+            "feature_name": "planned_quantity",
+            "source_record_ids": [
+              "sim-p6-history-003-feature-context"
+            ],
+            "transform_version": "identity-count.v1",
+            "unit": "COUNT",
+            "value": 8,
+            "value_type": "INTEGER"
+          },
+          {
+            "available_at_utc": "2026-07-18T07:05:00Z",
+            "feature_name": "setup_seconds",
+            "source_record_ids": [
+              "sim-p6-history-003-feature-context"
+            ],
+            "transform_version": "identity-seconds.v1",
+            "unit": "SECONDS",
+            "value": 35,
+            "value_type": "INTEGER"
+          },
+          {
+            "available_at_utc": "2026-07-18T07:05:00Z",
+            "feature_name": "standard_duration_seconds",
+            "source_record_ids": [
+              "sim-p6-history-003-feature-context"
+            ],
+            "transform_version": "identity-seconds.v1",
+            "unit": "SECONDS",
+            "value": 640,
+            "value_type": "INTEGER"
+          },
+          {
+            "available_at_utc": "2026-07-18T07:05:00Z",
+            "feature_name": "operation_family",
+            "source_record_ids": [
+              "sim-p6-history-003-feature-context"
+            ],
+            "transform_version": "identity-category.v1",
+            "unit": "CATEGORY",
+            "value": "turning",
+            "value_type": "CATEGORY"
+          }
+        ],
+        "governance_boundary": {
+          "open_authority_gaps": [
+            "OPEN-010",
+            "OPEN-011",
+            "OPEN-014",
+            "OPEN-015"
+          ],
+          "production_authorized": false
+        },
+        "operation_id": "operation-sim-p6-003",
+        "pii_fields_present": false,
+        "production_binding": false,
+        "resource_id": "resource-sim-p6-1",
+        "resource_option_id": "resource-option-sim-p6-1",
+        "schema_set_version": "2.9.0",
+        "source_records": [
+          {
+            "available_at_utc": "2026-07-18T07:05:00Z",
+            "observed_at_utc": "2026-07-18T07:00:00Z",
+            "record_fingerprint": "sha256:91fd2eb6d64b49fffba82eb9951e92cb9d46e070a6f63d548b6576d0d139fc9b",
+            "source_record_id": "sim-p6-history-003-feature-context",
+            "source_system": "simulated-operation-context",
+            "source_version": "SIM-P6-DURATION-HISTORY@1.0.0"
+          }
+        ],
+        "synthetic": true,
+        "synthetic_provenance": {
+          "assumption_profile": "SIM-P6-DURATION-CONTRACT-001@1.0.0",
+          "assumption_refs": [
+            "SIM-ASSUMPTION-021",
+            "SIM-ASSUMPTION-022"
+          ]
+        },
+        "target_fields_present": false
+      },
+      "label": {
+        "available_at_utc": "2026-07-18T09:05:00Z",
+        "label_name": "actual_processing_seconds",
+        "observed_at_utc": "2026-07-18T09:00:00Z",
+        "policy_version": "explicit-normal-completion-label.v1",
+        "source_record_fingerprint": "sha256:4b1b1cdf5af66862063e3a49a6d77ce41b45cf4e6bb19fa4bbcc7e1b68af8603",
+        "source_record_id": "sim-p6-history-003",
+        "unit": "SECONDS",
+        "value": 620
+      },
+      "lineage_group_id": "lineage-train-b",
+      "operation_type_id": "operation-type-turning",
+      "partition": "train"
+    },
+    {
+      "dataset_row_fingerprint": "sha256:13d0bcb00ef5279f05f741d1fe827613cac020540fe45abbba9025b586d814f0",
+      "dataset_row_id": "duration-dataset-row-13d0bcb00ef5279f05f741d1fe827613cac020540fe45abbba9025b586d814f0",
+      "dataset_row_version": "duration-dataset-row.v1",
+      "feature_record": {
+        "as_of_cutoff_utc": "2026-07-26T08:00:00Z",
+        "canonicalization_version": "canonical-json.v1",
+        "data_plane": "SIMULATION",
+        "duration_feature_record_version": "duration-feature-record.v1",
+        "environment": "TEST",
+        "factory_id": "factory-sim-p6-001",
+        "feature_record_fingerprint": "sha256:79a5b0c4920b0a62cb22bdb825aa49ddb5d66b73e76a9d1d13093c19431af111",
+        "feature_record_id": "duration-feature-record-79a5b0c4920b0a62cb22bdb825aa49ddb5d66b73e76a9d1d13093c19431af111",
+        "feature_schema_version": "duration-features.v1",
+        "features": [
+          {
+            "available_at_utc": "2026-07-26T07:05:00Z",
+            "feature_name": "planned_quantity",
+            "source_record_ids": [
+              "sim-p6-history-004-feature-context"
+            ],
+            "transform_version": "identity-count.v1",
+            "unit": "COUNT",
+            "value": 11,
+            "value_type": "INTEGER"
+          },
+          {
+            "available_at_utc": "2026-07-26T07:05:00Z",
+            "feature_name": "setup_seconds",
+            "source_record_ids": [
+              "sim-p6-history-004-feature-context"
+            ],
+            "transform_version": "identity-seconds.v1",
+            "unit": "SECONDS",
+            "value": 40,
+            "value_type": "INTEGER"
+          },
+          {
+            "available_at_utc": "2026-07-26T07:05:00Z",
+            "feature_name": "standard_duration_seconds",
+            "source_record_ids": [
+              "sim-p6-history-004-feature-context"
+            ],
+            "transform_version": "identity-seconds.v1",
+            "unit": "SECONDS",
+            "value": 600,
+            "value_type": "INTEGER"
+          },
+          {
+            "available_at_utc": "2026-07-26T07:05:00Z",
+            "feature_name": "operation_family",
+            "source_record_ids": [
+              "sim-p6-history-004-feature-context"
+            ],
+            "transform_version": "identity-category.v1",
+            "unit": "CATEGORY",
+            "value": "turning",
+            "value_type": "CATEGORY"
+          }
+        ],
+        "governance_boundary": {
+          "open_authority_gaps": [
+            "OPEN-010",
+            "OPEN-011",
+            "OPEN-014",
+            "OPEN-015"
+          ],
+          "production_authorized": false
+        },
+        "operation_id": "operation-sim-p6-004",
+        "pii_fields_present": false,
+        "production_binding": false,
+        "resource_id": "resource-sim-p6-2",
+        "resource_option_id": "resource-option-sim-p6-2",
+        "schema_set_version": "2.9.0",
+        "source_records": [
+          {
+            "available_at_utc": "2026-07-26T07:05:00Z",
+            "observed_at_utc": "2026-07-26T07:00:00Z",
+            "record_fingerprint": "sha256:c5b6f72ee89ba877bff067232dee86a0db36c079488b5af31fb95c687d2bdedd",
+            "source_record_id": "sim-p6-history-004-feature-context",
+            "source_system": "simulated-operation-context",
+            "source_version": "SIM-P6-DURATION-HISTORY@1.0.0"
+          }
+        ],
+        "synthetic": true,
+        "synthetic_provenance": {
+          "assumption_profile": "SIM-P6-DURATION-CONTRACT-001@1.0.0",
+          "assumption_refs": [
+            "SIM-ASSUMPTION-021",
+            "SIM-ASSUMPTION-022"
+          ]
+        },
+        "target_fields_present": false
+      },
+      "label": {
+        "available_at_utc": "2026-07-26T09:05:00Z",
+        "label_name": "actual_processing_seconds",
+        "observed_at_utc": "2026-07-26T09:00:00Z",
+        "policy_version": "explicit-normal-completion-label.v1",
+        "source_record_fingerprint": "sha256:6be8ae6f43750b67e570dfde53e102fa1a13b6aecfa74600f36c3b4858dffafc",
+        "source_record_id": "sim-p6-history-004",
+        "unit": "SECONDS",
+        "value": 575
+      },
+      "lineage_group_id": "lineage-train-b",
+      "operation_type_id": "operation-type-turning",
+      "partition": "train"
+    },
+    {
+      "dataset_row_fingerprint": "sha256:d9328b0ca1cf59445d9bdddc3fdf8de138d11b04d5d2b4a567bda311b3965263",
+      "dataset_row_id": "duration-dataset-row-d9328b0ca1cf59445d9bdddc3fdf8de138d11b04d5d2b4a567bda311b3965263",
+      "dataset_row_version": "duration-dataset-row.v1",
+      "feature_record": {
+        "as_of_cutoff_utc": "2026-08-04T08:00:00Z",
+        "canonicalization_version": "canonical-json.v1",
+        "data_plane": "SIMULATION",
+        "duration_feature_record_version": "duration-feature-record.v1",
+        "environment": "TEST",
+        "factory_id": "factory-sim-p6-001",
+        "feature_record_fingerprint": "sha256:eee3f9407eb11428b0cf5d91bd71cf6d28105c269de4d5d6aa0f9b4b313cc553",
+        "feature_record_id": "duration-feature-record-eee3f9407eb11428b0cf5d91bd71cf6d28105c269de4d5d6aa0f9b4b313cc553",
+        "feature_schema_version": "duration-features.v1",
+        "features": [
+          {
+            "available_at_utc": "2026-08-04T07:05:00Z",
+            "feature_name": "planned_quantity",
+            "source_record_ids": [
+              "sim-p6-history-005-feature-context"
+            ],
+            "transform_version": "identity-count.v1",
+            "unit": "COUNT",
+            "value": 9,
+            "value_type": "INTEGER"
+          },
+          {
+            "available_at_utc": "2026-08-04T07:05:00Z",
+            "feature_name": "setup_seconds",
+            "source_record_ids": [
+              "sim-p6-history-005-feature-context"
+            ],
+            "transform_version": "identity-seconds.v1",
+            "unit": "SECONDS",
+            "value": 30,
+            "value_type": "INTEGER"
+          },
+          {
+            "available_at_utc": "2026-08-04T07:05:00Z",
+            "feature_name": "standard_duration_seconds",
+            "source_record_ids": [
+              "sim-p6-history-005-feature-context"
+            ],
+            "transform_version": "identity-seconds.v1",
+            "unit": "SECONDS",
+            "value": 610,
+            "value_type": "INTEGER"
+          },
+          {
+            "available_at_utc": "2026-08-04T07:05:00Z",
+            "feature_name": "operation_family",
+            "source_record_ids": [
+              "sim-p6-history-005-feature-context"
+            ],
+            "transform_version": "identity-category.v1",
+            "unit": "CATEGORY",
+            "value": "milling",
+            "value_type": "CATEGORY"
+          }
+        ],
+        "governance_boundary": {
+          "open_authority_gaps": [
+            "OPEN-010",
+            "OPEN-011",
+            "OPEN-014",
+            "OPEN-015"
+          ],
+          "production_authorized": false
+        },
+        "operation_id": "operation-sim-p6-005",
+        "pii_fields_present": false,
+        "production_binding": false,
+        "resource_id": "resource-sim-p6-3",
+        "resource_option_id": "resource-option-sim-p6-3",
+        "schema_set_version": "2.9.0",
+        "source_records": [
+          {
+            "available_at_utc": "2026-08-04T07:05:00Z",
+            "observed_at_utc": "2026-08-04T07:00:00Z",
+            "record_fingerprint": "sha256:7ecea51096a1ac9ba3d9949b7ea462b9c876cc061003a1fbcc0dfe42f9de8b93",
+            "source_record_id": "sim-p6-history-005-feature-context",
+            "source_system": "simulated-operation-context",
+            "source_version": "SIM-P6-DURATION-HISTORY@1.0.0"
+          }
+        ],
+        "synthetic": true,
+        "synthetic_provenance": {
+          "assumption_profile": "SIM-P6-DURATION-CONTRACT-001@1.0.0",
+          "assumption_refs": [
+            "SIM-ASSUMPTION-021",
+            "SIM-ASSUMPTION-022"
+          ]
+        },
+        "target_fields_present": false
+      },
+      "label": {
+        "available_at_utc": "2026-08-04T09:05:00Z",
+        "label_name": "actual_processing_seconds",
+        "observed_at_utc": "2026-08-04T09:00:00Z",
+        "policy_version": "explicit-normal-completion-label.v1",
+        "source_record_fingerprint": "sha256:8cb0d31d09fba38e69fee81f729e657c97bf97c9a9faea07506f402622d0dce1",
+        "source_record_id": "sim-p6-history-005",
+        "unit": "SECONDS",
+        "value": 580
+      },
+      "lineage_group_id": "lineage-validation-a",
+      "operation_type_id": "operation-type-milling",
+      "partition": "validation"
+    },
+    {
+      "dataset_row_fingerprint": "sha256:0340c9784327b1404ac5dd0f7561e173ea1078a4058487675c4829fb25f9afc8",
+      "dataset_row_id": "duration-dataset-row-0340c9784327b1404ac5dd0f7561e173ea1078a4058487675c4829fb25f9afc8",
+      "dataset_row_version": "duration-dataset-row.v1",
+      "feature_record": {
+        "as_of_cutoff_utc": "2026-08-12T08:00:00Z",
+        "canonicalization_version": "canonical-json.v1",
+        "data_plane": "SIMULATION",
+        "duration_feature_record_version": "duration-feature-record.v1",
+        "environment": "TEST",
+        "factory_id": "factory-sim-p6-001",
+        "feature_record_fingerprint": "sha256:853961fa5221ed5a2429593ab8f20f35369cb659160ff4bf8c5376e0e36fccf0",
+        "feature_record_id": "duration-feature-record-853961fa5221ed5a2429593ab8f20f35369cb659160ff4bf8c5376e0e36fccf0",
+        "feature_schema_version": "duration-features.v1",
+        "features": [
+          {
+            "available_at_utc": "2026-08-12T07:05:00Z",
+            "feature_name": "planned_quantity",
+            "source_record_ids": [
+              "sim-p6-history-006-feature-context"
+            ],
+            "transform_version": "identity-count.v1",
+            "unit": "COUNT",
+            "value": 13,
+            "value_type": "INTEGER"
+          },
+          {
+            "available_at_utc": "2026-08-12T07:05:00Z",
+            "feature_name": "setup_seconds",
+            "source_record_ids": [
+              "sim-p6-history-006-feature-context"
+            ],
+            "transform_version": "identity-seconds.v1",
+            "unit": "SECONDS",
+            "value": 55,
+            "value_type": "INTEGER"
+          },
+          {
+            "available_at_utc": "2026-08-12T07:05:00Z",
+            "feature_name": "standard_duration_seconds",
+            "source_record_ids": [
+              "sim-p6-history-006-feature-context"
+            ],
+            "transform_version": "identity-seconds.v1",
+            "unit": "SECONDS",
+            "value": 630,
+            "value_type": "INTEGER"
+          },
+          {
+            "available_at_utc": "2026-08-12T07:05:00Z",
+            "feature_name": "operation_family",
+            "source_record_ids": [
+              "sim-p6-history-006-feature-context"
+            ],
+            "transform_version": "identity-category.v1",
+            "unit": "CATEGORY",
+            "value": "milling",
+            "value_type": "CATEGORY"
+          }
+        ],
+        "governance_boundary": {
+          "open_authority_gaps": [
+            "OPEN-010",
+            "OPEN-011",
+            "OPEN-014",
+            "OPEN-015"
+          ],
+          "production_authorized": false
+        },
+        "operation_id": "operation-sim-p6-006",
+        "pii_fields_present": false,
+        "production_binding": false,
+        "resource_id": "resource-sim-p6-1",
+        "resource_option_id": "resource-option-sim-p6-1",
+        "schema_set_version": "2.9.0",
+        "source_records": [
+          {
+            "available_at_utc": "2026-08-12T07:05:00Z",
+            "observed_at_utc": "2026-08-12T07:00:00Z",
+            "record_fingerprint": "sha256:e21a05827ee7b7d63707edcb3d3785435a3804507994c96aa9e8ca4009c54a41",
+            "source_record_id": "sim-p6-history-006-feature-context",
+            "source_system": "simulated-operation-context",
+            "source_version": "SIM-P6-DURATION-HISTORY@1.0.0"
+          }
+        ],
+        "synthetic": true,
+        "synthetic_provenance": {
+          "assumption_profile": "SIM-P6-DURATION-CONTRACT-001@1.0.0",
+          "assumption_refs": [
+            "SIM-ASSUMPTION-021",
+            "SIM-ASSUMPTION-022"
+          ]
+        },
+        "target_fields_present": false
+      },
+      "label": {
+        "available_at_utc": "2026-08-12T09:05:00Z",
+        "label_name": "actual_processing_seconds",
+        "observed_at_utc": "2026-08-12T09:00:00Z",
+        "policy_version": "explicit-normal-completion-label.v1",
+        "source_record_fingerprint": "sha256:8fb4cd3558ff90c0296328a5bf832098a3841b659d0a09ecdba4691fda8627aa",
+        "source_record_id": "sim-p6-history-006",
+        "unit": "SECONDS",
+        "value": 610
+      },
+      "lineage_group_id": "lineage-validation-a",
+      "operation_type_id": "operation-type-milling",
+      "partition": "validation"
+    },
+    {
+      "dataset_row_fingerprint": "sha256:3a70325543507e9f4a35085402f437db9cf486a42ceed6424c76cd6dcb3cc159",
+      "dataset_row_id": "duration-dataset-row-3a70325543507e9f4a35085402f437db9cf486a42ceed6424c76cd6dcb3cc159",
+      "dataset_row_version": "duration-dataset-row.v1",
+      "feature_record": {
+        "as_of_cutoff_utc": "2026-08-19T08:00:00Z",
+        "canonicalization_version": "canonical-json.v1",
+        "data_plane": "SIMULATION",
+        "duration_feature_record_version": "duration-feature-record.v1",
+        "environment": "TEST",
+        "factory_id": "factory-sim-p6-001",
+        "feature_record_fingerprint": "sha256:34061e0afe04b0b6370a722356bb1ed5c159be9602114139b23f6382b0a413f2",
+        "feature_record_id": "duration-feature-record-34061e0afe04b0b6370a722356bb1ed5c159be9602114139b23f6382b0a413f2",
+        "feature_schema_version": "duration-features.v1",
+        "features": [
+          {
+            "available_at_utc": "2026-08-19T07:05:00Z",
+            "feature_name": "planned_quantity",
+            "source_record_ids": [
+              "sim-p6-history-007-feature-context"
+            ],
+            "transform_version": "identity-count.v1",
+            "unit": "COUNT",
+            "value": 7,
+            "value_type": "INTEGER"
+          },
+          {
+            "available_at_utc": "2026-08-19T07:05:00Z",
+            "feature_name": "setup_seconds",
+            "source_record_ids": [
+              "sim-p6-history-007-feature-context"
+            ],
+            "transform_version": "identity-seconds.v1",
+            "unit": "SECONDS",
+            "value": 25,
+            "value_type": "INTEGER"
+          },
+          {
+            "available_at_utc": "2026-08-19T07:05:00Z",
+            "feature_name": "standard_duration_seconds",
+            "source_record_ids": [
+              "sim-p6-history-007-feature-context"
+            ],
+            "transform_version": "identity-seconds.v1",
+            "unit": "SECONDS",
+            "value": 600,
+            "value_type": "INTEGER"
+          },
+          {
+            "available_at_utc": "2026-08-19T07:05:00Z",
+            "feature_name": "operation_family",
+            "source_record_ids": [
+              "sim-p6-history-007-feature-context"
+            ],
+            "transform_version": "identity-category.v1",
+            "unit": "CATEGORY",
+            "value": "turning",
+            "value_type": "CATEGORY"
+          }
+        ],
+        "governance_boundary": {
+          "open_authority_gaps": [
+            "OPEN-010",
+            "OPEN-011",
+            "OPEN-014",
+            "OPEN-015"
+          ],
+          "production_authorized": false
+        },
+        "operation_id": "operation-sim-p6-007",
+        "pii_fields_present": false,
+        "production_binding": false,
+        "resource_id": "resource-sim-p6-2",
+        "resource_option_id": "resource-option-sim-p6-2",
+        "schema_set_version": "2.9.0",
+        "source_records": [
+          {
+            "available_at_utc": "2026-08-19T07:05:00Z",
+            "observed_at_utc": "2026-08-19T07:00:00Z",
+            "record_fingerprint": "sha256:f6c83fc26ae56fe4a7d45179fb03523472df17ec960147090c9d253999b92f35",
+            "source_record_id": "sim-p6-history-007-feature-context",
+            "source_system": "simulated-operation-context",
+            "source_version": "SIM-P6-DURATION-HISTORY@1.0.0"
+          }
+        ],
+        "synthetic": true,
+        "synthetic_provenance": {
+          "assumption_profile": "SIM-P6-DURATION-CONTRACT-001@1.0.0",
+          "assumption_refs": [
+            "SIM-ASSUMPTION-021",
+            "SIM-ASSUMPTION-022"
+          ]
+        },
+        "target_fields_present": false
+      },
+      "label": {
+        "available_at_utc": "2026-08-19T09:05:00Z",
+        "label_name": "actual_processing_seconds",
+        "observed_at_utc": "2026-08-19T09:00:00Z",
+        "policy_version": "explicit-normal-completion-label.v1",
+        "source_record_fingerprint": "sha256:4404cc1a6b97aa3f7ed10acf4aa77fe8f4951ef6062e3bbe934da944a3ca9686",
+        "source_record_id": "sim-p6-history-007",
+        "unit": "SECONDS",
+        "value": 590
+      },
+      "lineage_group_id": "lineage-test-a",
+      "operation_type_id": "operation-type-turning",
+      "partition": "test"
+    },
+    {
+      "dataset_row_fingerprint": "sha256:b9271610d7e69393e60099b814e292c15d917fff57200d7aaf4031901ea022db",
+      "dataset_row_id": "duration-dataset-row-b9271610d7e69393e60099b814e292c15d917fff57200d7aaf4031901ea022db",
+      "dataset_row_version": "duration-dataset-row.v1",
+      "feature_record": {
+        "as_of_cutoff_utc": "2026-08-27T08:00:00Z",
+        "canonicalization_version": "canonical-json.v1",
+        "data_plane": "SIMULATION",
+        "duration_feature_record_version": "duration-feature-record.v1",
+        "environment": "TEST",
+        "factory_id": "factory-sim-p6-001",
+        "feature_record_fingerprint": "sha256:5617855246235b535bde35b73b2702d80c4c1986ecc554dcd4942bde442fa324",
+        "feature_record_id": "duration-feature-record-5617855246235b535bde35b73b2702d80c4c1986ecc554dcd4942bde442fa324",
+        "feature_schema_version": "duration-features.v1",
+        "features": [
+          {
+            "available_at_utc": "2026-08-27T07:05:00Z",
+            "feature_name": "planned_quantity",
+            "source_record_ids": [
+              "sim-p6-history-008-feature-context"
+            ],
+            "transform_version": "identity-count.v1",
+            "unit": "COUNT",
+            "value": 14,
+            "value_type": "INTEGER"
+          },
+          {
+            "available_at_utc": "2026-08-27T07:05:00Z",
+            "feature_name": "setup_seconds",
+            "source_record_ids": [
+              "sim-p6-history-008-feature-context"
+            ],
+            "transform_version": "identity-seconds.v1",
+            "unit": "SECONDS",
+            "value": 60,
+            "value_type": "INTEGER"
+          },
+          {
+            "available_at_utc": "2026-08-27T07:05:00Z",
+            "feature_name": "standard_duration_seconds",
+            "source_record_ids": [
+              "sim-p6-history-008-feature-context"
+            ],
+            "transform_version": "identity-seconds.v1",
+            "unit": "SECONDS",
+            "value": 650,
+            "value_type": "INTEGER"
+          },
+          {
+            "available_at_utc": "2026-08-27T07:05:00Z",
+            "feature_name": "operation_family",
+            "source_record_ids": [
+              "sim-p6-history-008-feature-context"
+            ],
+            "transform_version": "identity-category.v1",
+            "unit": "CATEGORY",
+            "value": "turning",
+            "value_type": "CATEGORY"
+          }
+        ],
+        "governance_boundary": {
+          "open_authority_gaps": [
+            "OPEN-010",
+            "OPEN-011",
+            "OPEN-014",
+            "OPEN-015"
+          ],
+          "production_authorized": false
+        },
+        "operation_id": "operation-sim-p6-008",
+        "pii_fields_present": false,
+        "production_binding": false,
+        "resource_id": "resource-sim-p6-3",
+        "resource_option_id": "resource-option-sim-p6-3",
+        "schema_set_version": "2.9.0",
+        "source_records": [
+          {
+            "available_at_utc": "2026-08-27T07:05:00Z",
+            "observed_at_utc": "2026-08-27T07:00:00Z",
+            "record_fingerprint": "sha256:71583f4ca60dc62a0339fbb50031955c9ad2ce9a16dfe426564ebc8ae95e1fcc",
+            "source_record_id": "sim-p6-history-008-feature-context",
+            "source_system": "simulated-operation-context",
+            "source_version": "SIM-P6-DURATION-HISTORY@1.0.0"
+          }
+        ],
+        "synthetic": true,
+        "synthetic_provenance": {
+          "assumption_profile": "SIM-P6-DURATION-CONTRACT-001@1.0.0",
+          "assumption_refs": [
+            "SIM-ASSUMPTION-021",
+            "SIM-ASSUMPTION-022"
+          ]
+        },
+        "target_fields_present": false
+      },
+      "label": {
+        "available_at_utc": "2026-08-27T09:05:00Z",
+        "label_name": "actual_processing_seconds",
+        "observed_at_utc": "2026-08-27T09:00:00Z",
+        "policy_version": "explicit-normal-completion-label.v1",
+        "source_record_fingerprint": "sha256:ebfcc89430eb0abd1ae7c1f9623fd52863c2af0578cb38157fc2e92ab5b7423b",
+        "source_record_id": "sim-p6-history-008",
+        "unit": "SECONDS",
+        "value": 630
+      },
+      "lineage_group_id": "lineage-test-a",
+      "operation_type_id": "operation-type-turning",
+      "partition": "test"
+    }
+  ],
+  "schema_set_version": "2.9.0"
+}

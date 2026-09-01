@@ -11,6 +11,12 @@ last_reviewed: 2026-09-01
 
 # 合同文档索引
 
+## TASK-P6-03 dataset implementation contract
+
+[Duration Prediction Machine Contract v1](duration-prediction-machine-contract.md)现追加P6-03 executable dataset章节：唯一versioned Simulation source、completed-normal label eligibility、RUNNING/INTERRUPTED censoring、四项as-of feature、4/2/2 group-safe UTC split、source/row/manifest/bundle identity、privacy/retention与atomic write。实现严格消费`duration-feature-record.v1`，没有修改四份P6-02 Schema或10份sample。
+
+Machine evidence为`p6-duration-dataset-report.v1`：10项检查、safe manifest/count/fingerprint、mutation rejection和no-partial boundary；source与expected bundle不进入Provider artifact。该合同不形成trained model、evaluation Gate、runtime、Planning integration或Production data/model authority。
+
 ## TASK-P6-02 duration machine contract
 
 [Duration Prediction Machine Contract v1](duration-prediction-machine-contract.md)现把P6-01人类治理基线发布为additive schema set `2.9.0`的四份strict Simulation carrier：FeatureRecord、ModelManifest、EvaluationReport与Prediction。五份正例、五份定点negative descriptor及`p6-duration-contract-report.v1`固定canonical identity、as-of leakage、exact cross-lineage、quantile/confidence、20项stable fallback、authoritative standard-duration selection、unknown/mixed/tamper拒绝和OPEN-010/011/014/015边界。

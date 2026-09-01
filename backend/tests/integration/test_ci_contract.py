@@ -95,6 +95,7 @@ from app.simulation.execution.simulator_check import (
     main as execution_simulator_main,
 )
 from scripts.p6_duration_contract_check import main as p6_duration_contract_main
+from scripts.p6_duration_dataset_check import main as p6_duration_dataset_main
 
 ROOT = Path(__file__).resolve().parents[3]
 
@@ -425,7 +426,7 @@ def test_ci_profile_routing_is_mutually_exclusive_and_fail_closed() -> None:
     assert "app.application.p5_portfolio_gate_report" in full_text
     assert "app.application.p5_exit_gate_audit" in full_text
     assert "Build package" in full_text
-    assert len(full["steps"]) == 71
+    assert len(full["steps"]) == 72
 
     assert 'test "${PLANTNEXUS_CLASSIFY_RESULT}" = "success"' in final_run
     assert 'test "${PLANTNEXUS_FULL_RESULT}" = "success"' in final_run
@@ -529,6 +530,52 @@ def test_ci_p6_duration_contract_is_required_and_machine_checkable(
         "semantic_rejections": 7,
         "tamper_rejections": 5,
     }
+    assert report["issues"] == []
+
+
+def test_ci_p6_duration_dataset_is_required_and_machine_checkable(
+    tmp_path: Path,
+) -> None:
+    workflow = (ROOT / ".github" / "workflows" / "ci.yml").read_text(encoding="utf-8")
+    normalized = " ".join(workflow.split())
+    assert (
+        "name: P6 feature label dataset evidence run: >- "
+        "uv run python scripts/p6_duration_dataset_check.py --root . --report "
+        "build/validation/ci-p6-duration-dataset.json"
+    ) in normalized
+    assert "continue-on-error" not in workflow
+    assert '"${replay_root}/backend/app/duration_prediction/__init__.py"' in workflow
+    assert '"${replay_root}/backend/app/duration_prediction/dataset.py"' in workflow
+    assert '"${replay_root}/backend/tests/contract/test_p6_duration_dataset.py"' in workflow
+
+    report_path = tmp_path / "p6-duration-dataset.json"
+    assert (
+        p6_duration_dataset_main(
+            ["--root", str(ROOT), "--report", str(report_path)]
+        )
+        == 0
+    )
+    report = json.loads(report_path.read_text(encoding="utf-8"))
+    assert report["report_version"] == "p6-duration-dataset-report.v1"
+    assert report["status"] == "PASS"
+    assert report["task_id"] == "TASK-P6-03"
+    assert report["diff_base"] == "4360746f2712012a0aa4f52a40c189837a2097b3"
+    assert report["schema_set_version"] == "2.9.0"
+    assert report["check_count"] == 10
+    assert report["counts"] == {
+        "source_records": 10,
+        "eligible_rows": 8,
+        "excluded_records": 2,
+        "train_rows": 4,
+        "validation_rows": 2,
+        "test_rows": 2,
+        "feature_records": 8,
+        "features": 32,
+        "mutation_rejections": 12,
+    }
+    assert report["artifacts"]["source"]["included_in_provider_artifact"] is False
+    assert report["artifacts"]["expected_bundle"]["included_in_provider_artifact"] is False
+    assert report["boundaries"]["production_binding"] is False
     assert report["issues"] == []
 
 

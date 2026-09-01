@@ -1,5 +1,13 @@
 # PlantNexus APS
 
+## TASK-P6-03 — deterministic feature/label dataset and provenance
+
+用户已独立授权TASK-P6-03，并从P6-02 provider-verified closure `4360746f2712012a0aa4f52a40c189837a2097b3`冻结HIGH_RISK Diff base。新增的纯离线builder只接受`SIM-P6-DURATION-HISTORY@1.0.0`、`SIMULATION/TEST`、synthetic且无Production binding的versioned source；它从10条contract-correctness记录中仅接纳8条`COMPLETED/NORMAL`显式`actual_processing_seconds` label，稳定排除1条RUNNING和1条INTERRUPTED记录，并按label availability与lineage group形成4/2/2 train/validation/test。标准工时只是as-of feature，绝不作为label。
+
+每行输出严格复用既有`duration-feature-record.v1` / schema set `2.9.0`，逐项保留source fingerprint、available time与transform version。Dataset manifest不可变绑定source/version/fingerprint、builder code digest、feature/label/privacy/retention policy、UTC half-open split、factory/plane、counts、exclusion reason与OPEN-010/011/014/015；canonical JSON、content-derived identity、input-order invariance和same-input bytes均确定。未授权source、tamper、mixed version、future leakage、invalid label、group crossing、PII/target或policy drift全部fail closed，atomic writer失败不替换既有artifact且清理partial file。
+
+[`Duration Prediction Machine Contract v1`](docs/contracts/duration-prediction-machine-contract.md)记录完整dataset语义；source与expected bundle只作为Git中的安全synthetic fixture，不上传为Provider artifact。`p6-duration-dataset-report.v1`只携带sanitized manifest、counts、fingerprints、rejection与边界，FULL CI新增一个non-skippable step并继续冻结P4 replay。该结果不训练或选择model，不实现evaluation Gate、prediction runtime、Planning ingress或Production authority；`AI_DURATION_PREDICTION`仍为DEFERRED，TASK-P6-04不会自动启动。
+
 ## TASK-P6-02 — Duration prediction machine contract and Schema
 
 用户已独立授权TASK-P6-02；fresh启动门确认P6-01双exact provider、required `validate`/app `15368`、四份artifact digest、三端同步/0/0/clean均未漂移，并冻结Diff base `e74099ca24ed59140f6490c84025b7299b5f201d`。Global additive schema set现为`2.9.0`，[Duration Prediction Machine Contract v1](docs/contracts/duration-prediction-machine-contract.md)发布FeatureRecord、ModelManifest、EvaluationReport与Prediction四份strict Simulation carrier，以及5份正例、5份定点negative descriptor和纯合同checker。

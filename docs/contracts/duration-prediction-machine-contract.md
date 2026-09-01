@@ -15,7 +15,21 @@ Contract status: `FORMED_SIMULATION_CONTRACT_V1` in additive schema set `2.9.0`
 
 Human authority: [ADR-0016](../adr/ADR-0016-ai-duration-data-model-governance.md) and [Duration Prediction Governance Contract](duration-prediction-governance.md)
 
-Capability status: `AI_DURATION_PREDICTION = DEFERRED / CONTRACT_ONLY / NO_RUNTIME`
+Capability status: `AI_DURATION_PREDICTION = DEFERRED / CONTRACT_V1 + SIMULATION_DATASET_V1 / NO_MODEL / NO_RUNTIME`
+
+## TASK-P6-03 dataset builder and manifest
+
+The executable builder accepts exactly `duration-dataset-source.v1` / `SIM-P6-DURATION-HISTORY@1.0.0` in `SIMULATION/TEST`, with synthetic true and Production binding/authorization false. Source authority, label authority, purpose/access, retention/deletion, split, feature, privacy and assumption profiles are exact allow-list values. Every source record and the order-normalized source document carry content-derived fingerprints. Unknown fields, duplicate JSON keys, non-finite values, mixed versions, sensitive/target fields and identity tampering fail closed.
+
+Label eligibility is `status=COMPLETED`, `disposition=NORMAL`, and an explicit positive `actual_processing_seconds` with `decision_cutoff < observed <= available`. The builder has no start/end derivation path. RUNNING/IN_PROGRESS has no label and is excluded as `RUNNING_NOT_LABEL_ELIGIBLE`; COMPLETED/INTERRUPTED is excluded as `INTERRUPTED_NOT_LABEL_ELIGIBLE`. Standard duration and model output are forbidden as label sources.
+
+The four frozen features are `planned_quantity/COUNT`, `setup_seconds/SECONDS`, `standard_duration_seconds/SECONDS`, and `operation_family/CATEGORY`. Each feature uses an identity transform and an availability time no later than the record decision cutoff. The FeatureRecord source is a deterministic `<label-source-id>-feature-context` pre-cutoff envelope with its own fingerprint; the full completed record fingerprint remains only on the dataset label, so future label content cannot enter feature-source identity. Output FeatureRecords remain byte-compatible with `duration-feature-record.v1`; the Schema-required profile/ref 021 is retained and ref 022 is additive. FeatureRecords contain neither PII nor target fields.
+
+`group-safe-time-split.v1` uses label availability and `lineage_group_id`, with half-open train `[2026-07-01,2026-08-01)`, validation `[2026-08-01,2026-08-16)`, and test `[2026-08-16,2026-09-01)` UTC windows. The frozen correctness profile yields 4/2/2 rows and forbids a lineage group from crossing partitions. These dates and counts are `SIM-ASSUMPTION-022`, not a Production window, distribution or threshold.
+
+Each dataset row, `duration-dataset-manifest.v1`, and `duration-dataset-bundle.v1` has canonical content identity. The manifest is compatible with the P6-02 ModelManifest reference shape and binds source/version/fingerprint, builder contract/code digest, schema/feature/label/privacy/split policy, plane/environment/factory, cutoff, partition/group/count and exclusion evidence. The atomic writer validates/builds first, writes canonical UTF-8 JSON in the target directory, fsyncs and replaces; failure preserves the old target and removes temporary bytes.
+
+`p6-duration-dataset-report.v1` independently replays the P6-02 contract package, published source/bundle, FeatureRecord Schema, eligibility/split/as-of/provenance, canonical reordering, mutation matrix and atomic cleanup. Provider artifacts contain the safe report/manifest only—not source records or dataset rows. No model is trained or selected, and no evaluation, prediction runtime, Planning authority, P7 calibration or Production authority is formed.
 
 ## 1. Published package
 

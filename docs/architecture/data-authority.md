@@ -11,6 +11,12 @@ last_reviewed: 2026-09-01
 
 # 数据权威边界
 
+## TASK-P6-03 executable dataset authority
+
+P6-03 builder的唯一allow-listed输入是`SIM-P6-DURATION-HISTORY@1.0.0`，并同时要求`data_plane=SIMULATION`、`environment=TEST`、`synthetic=true`、`production_binding=false`、Simulation scenario owner、Simulation execution fact label owner与`LOCAL_TEST_ONLY` purpose/access。Source整体及每条record都以canonical content fingerprint绑定；声明版本、authority、purpose、retention/deletion或内容identity任一漂移即拒绝。OPEN-011/015仍OPEN，因而不存在Production history入口。
+
+Label只读取`COMPLETED/NORMAL`记录中显式正整数`actual_processing_seconds`。RUNNING、INTERRUPTED及其他未知completion语义不进入普通label；builder没有start/end字段或推导逻辑，也不读取标准工时或model output作为label。`standard_duration_seconds`只是decision cutoff前可用的一个feature；它继续保留resource-option authority，dataset不会回写option、Snapshot、Problem或ExecutionFact。
+
 ## TASK-P6-01 duration data authority
 
 ADR-0016和`duration-prediction-governance`固定：每个`OperationResourceOption.final_duration_seconds`及其`duration_source/source_version`继续是resource-specific标准工时authority和唯一fallback；模型只生成derived candidate，不能覆盖Import/Snapshot/Problem/ExecutionFact/option或改变routing、resource compatibility、hard constraint、state和weight。标准工时缺失或冲突时由既有数据质量边界拒绝，不允许AI或通用常量补值。

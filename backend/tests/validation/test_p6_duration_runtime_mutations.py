@@ -11,11 +11,15 @@ from app.duration_prediction.runtime import (
     DurationPredictionProvider,
     DurationProviderSignal,
     P6RuntimeError,
+    monitor_duration_runtime,
     validate_duration_prediction,
 )
 from backend.tests.p6_duration_runtime_support import (
     build_test_provider,
     canonical_json_bytes,
+    load_monitoring_policy,
+    monitoring_window,
+    recompute_monitoring_window_identity,
     runtime_requests,
 )
 
@@ -130,3 +134,62 @@ def test_failed_validation_does_not_mutate_original_prediction(
         validate_duration_prediction(mutated, provider.policy)
 
     assert provider.predict(runtime_requests()[0]) == original
+
+
+def test_monitoring_window_identity_tamper_defaults_disabled() -> None:
+    window = monitoring_window()
+    window["outcomes"]["candidate_count"] = 6
+
+    report = monitor_duration_runtime(load_monitoring_policy(), window)
+
+    assert report["monitoring_decision"]["reason_codes"] == ["TELEMETRY_TAMPERED"]
+    assert report["window_reference"] is None
+
+
+def test_invalid_half_open_window_defaults_disabled_with_fresh_identity() -> None:
+    window = monitoring_window()
+    window["window"]["ended_at_utc"] = window["window"]["started_at_utc"]
+    recompute_monitoring_window_identity(window)
+
+    report = monitor_duration_runtime(load_monitoring_policy(), window)
+
+    assert report["monitoring_decision"]["reason_codes"] == ["TELEMETRY_WINDOW_INVALID"]
+
+
+def test_incomplete_quality_aggregate_requires_default_disable() -> None:
+    window = monitoring_window(quality_evaluated_count=7, quality_pass_count=7)
+
+    report = monitor_duration_runtime(load_monitoring_policy(), window)
+
+    assert report["monitoring_decision"]["reason_codes"] == [
+        "QUALITY_EVIDENCE_INCOMPLETE"
+    ]
+    assert report["monitoring_decision"]["runtime_fallback_reason"] == (
+        "DRIFT_GATE_DISABLED"
+    )
+
+
+def test_multiple_breaches_have_stable_reason_order_and_no_auto_action() -> None:
+    window = monitoring_window(
+        candidate_count=4,
+        fallback_count=4,
+        fallback_reason_counts={"PROVIDER_TIMEOUT": 4},
+        late_observation_count=1,
+        model_version_counts={"2.0.0": 8},
+        feature_schema_version_counts={"duration-features.v2": 8},
+        feature_bucket_counts={"HIGH": 8, "LOW": 0, "MID_HIGH": 0, "MID_LOW": 0},
+        quality_pass_count=4,
+    )
+
+    report = monitor_duration_runtime(load_monitoring_policy(), window)
+
+    assert report["monitoring_decision"]["reason_codes"] == [
+        "LATE_TELEMETRY",
+        "MODEL_VERSION_DRIFT",
+        "FEATURE_VERSION_DRIFT",
+        "FALLBACK_RATE_BREACH",
+        "FEATURE_DISTRIBUTION_DRIFT",
+        "QUALITY_DRIFT",
+    ]
+    assert report["monitoring_decision"]["automatic_actions"] == []
+    assert report["monitoring_decision"]["external_side_effects"] == []

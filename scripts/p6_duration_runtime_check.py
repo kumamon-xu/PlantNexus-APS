@@ -21,8 +21,9 @@ from jsonschema import Draft202012Validator, FormatChecker
 
 ROOT = Path(__file__).resolve().parents[1]
 BACKEND = ROOT / "backend"
-if str(BACKEND) not in sys.path:
-    sys.path.insert(0, str(BACKEND))
+for candidate in (ROOT, BACKEND):
+    if str(candidate) not in sys.path:
+        sys.path.insert(0, str(candidate))
 
 from app.duration_prediction.evaluation import (  # noqa: E402
     load_evaluation_profile,
@@ -36,6 +37,9 @@ from app.duration_prediction.runtime import (  # noqa: E402
     build_duration_prediction_provider,
     load_duration_runtime_policy,
     validate_duration_prediction,
+)
+from scripts.p6_duration_monitoring_check import (  # noqa: E402
+    main as monitoring_check_main,
 )
 
 
@@ -637,6 +641,11 @@ def main(argv: Sequence[str] | None = None) -> int:
         type=Path,
         default=Path("build/validation/p6-duration-runtime-report.json"),
     )
+    parser.add_argument(
+        "--monitoring-report",
+        type=Path,
+        default=None,
+    )
     args = parser.parse_args(argv)
     root = args.root.resolve()
     offline_report_path = args.offline_gate_report
@@ -645,6 +654,14 @@ def main(argv: Sequence[str] | None = None) -> int:
     report_path = args.report
     if not report_path.is_absolute():
         report_path = root / report_path
+    monitoring_report_path = args.monitoring_report
+    if monitoring_report_path is None:
+        monitoring_name = report_path.name.replace("runtime", "monitoring", 1)
+        if monitoring_name == report_path.name:
+            monitoring_name = f"{report_path.stem}-monitoring{report_path.suffix}"
+        monitoring_report_path = report_path.with_name(monitoring_name)
+    elif not monitoring_report_path.is_absolute():
+        monitoring_report_path = root / monitoring_report_path
     try:
         report = run_runtime_checks(root, offline_report_path)
     except (P6RuntimeError, P6RuntimeReportError) as error:
@@ -662,6 +679,12 @@ def main(argv: Sequence[str] | None = None) -> int:
         return 1
     _write_json(report_path, report)
     checks = cast(list[Any], report["checks"])
+    monitoring_exit = monitoring_check_main(
+        ["--root", str(root), "--report", str(monitoring_report_path)]
+    )
+    if monitoring_exit != 0:
+        print("FAIL P6 duration runtime: P6-08 monitoring evidence failed")
+        return 1
     print(f"PASS P6 duration runtime: checks={len(checks)} issues=0")
     return 0 if report["result"] == "PASS" else 1
 

@@ -1,9 +1,11 @@
-"""Fail-closed, in-process P6 duration prediction runtime.
+"""Fail-closed P6 duration runtime and aggregate monitoring.
 
 The provider consumes one exact Simulation/Test model and the independently
 accepted P6-05 offline Gate.  It returns the immutable P6-02 prediction
 carrier, never mutates standard duration, and has no Planning, persistence,
-network, cache, promotion, or Production authority.
+network, cache, promotion, or Production authority.  The P6-08 monitor accepts
+only one explicit aggregate window and can recommend default-disable without
+executing an action or retaining telemetry.
 """
 
 from __future__ import annotations
@@ -60,7 +62,38 @@ MODEL_VERSION = "1.0.0"
 DATA_PLANE = "SIMULATION"
 ENVIRONMENT = "TEST"
 MAX_POLICY_BYTES = 65_536
+MAX_MONITORING_POLICY_BYTES = 65_536
 OPEN_AUTHORITY_GAPS = ("OPEN-010", "OPEN-011", "OPEN-014", "OPEN-015")
+MONITORING_POLICY_VERSION = "duration-monitoring-policy.v1"
+MONITORING_POLICY_IDENTITY = "SIM-P6-DURATION-MONITORING-001@1.0.0"
+EXPECTED_MONITORING_POLICY_FINGERPRINT = (
+    "sha256:83df8f3f9ea8574f919734f2593b287cd80524e7bc3197795da07d1f90bfdf7b"
+)
+EXPECTED_MONITORING_POLICY_ID = (
+    "duration-monitoring-policy-"
+    "83df8f3f9ea8574f919734f2593b287cd80524e7bc3197795da07d1f90bfdf7b"
+)
+MONITORING_WINDOW_VERSION = "duration-monitoring-window.v1"
+MONITORING_REPORT_VERSION = "p6-duration-monitoring-report.v1"
+MONITORING_THRESHOLD_VERSION = "duration-drift-thresholds.v1"
+MONITORING_FEATURE_PROFILE_VERSION = "duration-feature-aggregate-profile.v1"
+MONITORING_QUALITY_POLICY_VERSION = "duration-quality-aggregate.v1"
+MONITORING_FEATURE_BUCKETS = ("HIGH", "LOW", "MID_HIGH", "MID_LOW")
+MONITORING_REASON_CODES = (
+    "TELEMETRY_PRIVACY_VIOLATION",
+    "TELEMETRY_TAMPERED",
+    "TELEMETRY_LINEAGE_INVALID",
+    "TELEMETRY_WINDOW_INVALID",
+    "INSUFFICIENT_TELEMETRY",
+    "WINDOW_COUNT_MISMATCH",
+    "LATE_TELEMETRY",
+    "MODEL_VERSION_DRIFT",
+    "FEATURE_VERSION_DRIFT",
+    "FALLBACK_RATE_BREACH",
+    "FEATURE_DISTRIBUTION_DRIFT",
+    "QUALITY_EVIDENCE_INCOMPLETE",
+    "QUALITY_DRIFT",
+)
 EXPECTED_FEATURE_NAMES = (
     "operation_family",
     "planned_quantity",
@@ -180,6 +213,27 @@ _SENSITIVE_KEYS = {
     "raw_payload",
     "secret",
     "token",
+}
+_MONITORING_DIRECT_IDENTIFIER_KEYS = {
+    "actor_id",
+    "correlation_id",
+    "customer_id",
+    "employee_id",
+    "factory_id",
+    "feature_record_id",
+    "label_id",
+    "operation_id",
+    "person_id",
+    "prediction_id",
+    "record_id",
+    "request_id",
+    "resource_id",
+    "resource_option_id",
+    "row_id",
+    "run_id",
+    "source_record_id",
+    "source_record_ids",
+    "user_id",
 }
 
 
@@ -692,6 +746,8 @@ def _validate_standard_duration(value: Mapping[str, Any]) -> JsonObject:
 def _contains_sensitive_key(value: object) -> bool:
     if isinstance(value, dict):
         for key, child in value.items():
+            if not isinstance(key, str):
+                continue
             lowered = key.lower()
             if (
                 lowered in _SENSITIVE_KEYS
@@ -705,6 +761,21 @@ def _contains_sensitive_key(value: object) -> bool:
                 return True
     elif isinstance(value, list):
         return any(_contains_sensitive_key(item) for item in value)
+    return False
+
+
+def _contains_monitoring_direct_identifier(value: object) -> bool:
+    if isinstance(value, dict):
+        for key, child in value.items():
+            if (
+                isinstance(key, str)
+                and key.lower() in _MONITORING_DIRECT_IDENTIFIER_KEYS
+            ):
+                return True
+            if _contains_monitoring_direct_identifier(child):
+                return True
+    elif isinstance(value, list):
+        return any(_contains_monitoring_direct_identifier(item) for item in value)
     return False
 
 
@@ -1082,3 +1153,723 @@ def validate_duration_prediction(
         "planning_authority": "ADVISORY_DURATION_ONLY",
     }:
         _fail("PREDICTION_AUTHORITY_MISMATCH", "prediction.governance")
+
+
+@dataclass(frozen=True)
+class LoadedMonitoringPolicy:
+    """Exact aggregate-only Simulation/Test monitoring authorization."""
+
+    document: JsonObject
+    fingerprint: str
+    fallback_rate_max: Fraction
+    feature_total_variation_max: Fraction
+    quality_pass_ratio_min: Fraction
+    expected_observation_count: int
+    minimum_observation_count: int
+    late_observation_max_count: int
+    reference_bucket_counts: Mapping[str, int]
+
+
+@dataclass(frozen=True)
+class ValidatedMonitoringWindow:
+    """Strict aggregate projection; it contains no record-level telemetry."""
+
+    document: JsonObject
+    fingerprint: str
+    observation_count: int
+    candidate_count: int
+    fallback_count: int
+    fallback_reason_counts: Mapping[str, int]
+    late_observation_count: int
+    model_version_matches: bool
+    feature_version_matches: bool
+    feature_bucket_counts: Mapping[str, int]
+    quality_evaluated_count: int
+    quality_pass_count: int
+
+
+def _expect_ratio(
+    value: object,
+    path: str,
+    *,
+    minimum: Fraction = Fraction(0),
+    maximum: Fraction = Fraction(1),
+) -> Fraction:
+    ratio = _expect_object(value, path)
+    _expect_keys(ratio, {"denominator", "numerator"}, path)
+    numerator = _expect_int(ratio["numerator"], f"{path}.numerator")
+    denominator = _expect_int(ratio["denominator"], f"{path}.denominator", minimum=1)
+    result = Fraction(numerator, denominator)
+    if result < minimum or result > maximum:
+        _fail("INVALID_RATIO", path)
+    return result
+
+
+def _validate_monitoring_policy(
+    document: Mapping[str, Any],
+) -> LoadedMonitoringPolicy:
+    candidate = deepcopy(dict(document))
+    _expect_keys(
+        candidate,
+        {
+            "canonicalization_version",
+            "decision_policy",
+            "duration_monitoring_policy_version",
+            "governance_boundary",
+            "policy_fingerprint",
+            "policy_id",
+            "policy_version",
+            "privacy_retention",
+            "reference_distribution",
+            "runtime_environment",
+            "runtime_reference",
+            "synthetic_provenance",
+            "task_id",
+            "thresholds",
+            "window_policy",
+        },
+        "monitoring-policy",
+    )
+    projection = deepcopy(candidate)
+    identifier = projection.pop("policy_id")
+    fingerprint = projection.pop("policy_fingerprint")
+    expected_fingerprint = _fingerprint(projection)
+    if (
+        fingerprint != expected_fingerprint
+        or fingerprint != EXPECTED_MONITORING_POLICY_FINGERPRINT
+        or identifier != EXPECTED_MONITORING_POLICY_ID
+    ):
+        _fail("MONITORING_POLICY_IDENTITY_MISMATCH", "monitoring-policy")
+    if (
+        candidate["duration_monitoring_policy_version"] != MONITORING_POLICY_VERSION
+        or candidate["policy_version"] != MONITORING_POLICY_IDENTITY
+        or candidate["canonicalization_version"] != CANONICALIZATION_VERSION
+        or candidate["task_id"] != "TASK-P6-08"
+    ):
+        _fail("MONITORING_POLICY_VERSION_MISMATCH", "monitoring-policy")
+
+    runtime_reference = _expect_object(
+        candidate["runtime_reference"], "monitoring-policy.runtime-reference"
+    )
+    if runtime_reference != {
+        "duration_runtime_policy_version": RUNTIME_POLICY_VERSION,
+        "feature_schema_version": FEATURE_SCHEMA_VERSION,
+        "model_version": MODEL_VERSION,
+        "policy_fingerprint": EXPECTED_POLICY_FINGERPRINT,
+        "policy_id": EXPECTED_POLICY_ID,
+    }:
+        _fail("MONITORING_POLICY_LINEAGE_MISMATCH", "runtime-reference")
+    environment = _expect_object(
+        candidate["runtime_environment"], "monitoring-policy.environment"
+    )
+    if environment != {
+        "data_plane": DATA_PLANE,
+        "environment": ENVIRONMENT,
+        "explicit_aggregate_input_only": True,
+        "production_binding": False,
+        "synthetic": True,
+    }:
+        _fail("MONITORING_POLICY_ENVIRONMENT_MISMATCH", "environment")
+
+    window = _expect_object(candidate["window_policy"], "monitoring-policy.window")
+    if set(window) != {
+        "expected_observation_count",
+        "late_observation_max_count",
+        "minimum_observation_count",
+        "window_mode",
+        "window_version",
+    }:
+        _fail("MONITORING_POLICY_WINDOW_MISMATCH", "window")
+    expected_observation_count = _expect_int(
+        window["expected_observation_count"], "window.expected-count", minimum=1
+    )
+    minimum_observation_count = _expect_int(
+        window["minimum_observation_count"], "window.minimum-count", minimum=1
+    )
+    late_observation_max_count = _expect_int(
+        window["late_observation_max_count"], "window.late-count"
+    )
+    if (
+        window["window_mode"] != "FIXED_COUNT_EXPLICIT_HALF_OPEN_UTC"
+        or window["window_version"] != MONITORING_WINDOW_VERSION
+        or expected_observation_count != 8
+        or minimum_observation_count != 8
+        or late_observation_max_count != 0
+    ):
+        _fail("MONITORING_POLICY_WINDOW_MISMATCH", "window")
+
+    thresholds = _expect_object(candidate["thresholds"], "monitoring-policy.thresholds")
+    _expect_keys(
+        thresholds,
+        {
+            "fallback_rate_max",
+            "feature_total_variation_max",
+            "quality_pass_ratio_min",
+            "threshold_policy_version",
+        },
+        "monitoring-policy.thresholds",
+    )
+    fallback_rate_max = _expect_ratio(
+        thresholds["fallback_rate_max"], "thresholds.fallback-rate"
+    )
+    feature_total_variation_max = _expect_ratio(
+        thresholds["feature_total_variation_max"], "thresholds.feature-drift"
+    )
+    quality_pass_ratio_min = _expect_ratio(
+        thresholds["quality_pass_ratio_min"], "thresholds.quality"
+    )
+    if (
+        thresholds["threshold_policy_version"] != MONITORING_THRESHOLD_VERSION
+        or fallback_rate_max != Fraction(1, 4)
+        or feature_total_variation_max != Fraction(1, 4)
+        or quality_pass_ratio_min != Fraction(3, 4)
+    ):
+        _fail("MONITORING_POLICY_THRESHOLD_MISMATCH", "thresholds")
+
+    reference = _expect_object(
+        candidate["reference_distribution"], "monitoring-policy.reference"
+    )
+    _expect_keys(
+        reference,
+        {"bucket_counts", "profile_version", "total_count"},
+        "monitoring-policy.reference",
+    )
+    reference_counts_raw = _expect_object(
+        reference["bucket_counts"], "monitoring-policy.reference.bucket-counts"
+    )
+    if set(reference_counts_raw) != set(MONITORING_FEATURE_BUCKETS):
+        _fail("MONITORING_POLICY_REFERENCE_MISMATCH", "reference.bucket-counts")
+    reference_counts = {
+        bucket: _expect_int(
+            reference_counts_raw[bucket], f"reference.bucket-counts.{bucket}"
+        )
+        for bucket in MONITORING_FEATURE_BUCKETS
+    }
+    reference_total = _expect_int(
+        reference["total_count"], "reference.total-count", minimum=1
+    )
+    if (
+        reference["profile_version"] != MONITORING_FEATURE_PROFILE_VERSION
+        or reference_total != 8
+        or sum(reference_counts.values()) != reference_total
+        or any(count != 2 for count in reference_counts.values())
+    ):
+        _fail("MONITORING_POLICY_REFERENCE_MISMATCH", "reference")
+
+    privacy = _expect_object(
+        candidate["privacy_retention"], "monitoring-policy.privacy"
+    )
+    if privacy != {
+        "direct_identifiers_allowed": False,
+        "persistence": "NONE",
+        "provider_artifact": "AGGREGATE_REPORT_ONLY",
+        "raw_feature_fields_allowed": False,
+        "raw_label_fields_allowed": False,
+        "retained_window_count": 1,
+        "retention_policy_version": "run-scoped-aggregate-retention.v1",
+        "source_record_references_allowed": False,
+        "telemetry_granularity": "AGGREGATE_WINDOW_ONLY",
+    }:
+        _fail("MONITORING_POLICY_PRIVACY_MISMATCH", "privacy")
+    decision = _expect_object(
+        candidate["decision_policy"], "monitoring-policy.decision"
+    )
+    if decision != {
+        "automatic_actions": [],
+        "external_side_effects": False,
+        "on_breach": "DEFAULT_DISABLE_AND_STANDARD_DURATION_FALLBACK",
+        "on_invalid_input": "DEFAULT_DISABLE_AND_STANDARD_DURATION_FALLBACK",
+    }:
+        _fail("MONITORING_POLICY_DECISION_MISMATCH", "decision")
+    governance = _expect_object(
+        candidate["governance_boundary"], "monitoring-policy.governance"
+    )
+    if governance != {
+        "automatic_promotion_authorized": False,
+        "automatic_retraining_authorized": False,
+        "automatic_rollback_authorized": False,
+        "open_authority_gaps": list(OPEN_AUTHORITY_GAPS),
+        "planning_authority": "ADVISORY_DURATION_ONLY",
+        "production_authorized": False,
+    }:
+        _fail("MONITORING_POLICY_AUTHORITY_MISMATCH", "governance")
+    provenance = _expect_object(
+        candidate["synthetic_provenance"], "monitoring-policy.provenance"
+    )
+    if provenance != {
+        "assumption_profile": MONITORING_POLICY_IDENTITY,
+        "assumption_refs": [
+            "SIM-ASSUMPTION-021",
+            "SIM-ASSUMPTION-022",
+            "SIM-ASSUMPTION-023",
+            "SIM-ASSUMPTION-024",
+            "SIM-ASSUMPTION-025",
+            "SIM-ASSUMPTION-026",
+        ],
+    }:
+        _fail("MONITORING_POLICY_PROVENANCE_MISMATCH", "provenance")
+    return LoadedMonitoringPolicy(
+        document=candidate,
+        fingerprint=cast(str, fingerprint),
+        fallback_rate_max=fallback_rate_max,
+        feature_total_variation_max=feature_total_variation_max,
+        quality_pass_ratio_min=quality_pass_ratio_min,
+        expected_observation_count=expected_observation_count,
+        minimum_observation_count=minimum_observation_count,
+        late_observation_max_count=late_observation_max_count,
+        reference_bucket_counts=reference_counts,
+    )
+
+
+def load_duration_monitoring_policy(path: Path) -> LoadedMonitoringPolicy:
+    """Load the exact monitoring policy without accepting ambient defaults."""
+
+    if path.is_symlink():
+        _fail("UNSAFE_MONITORING_POLICY_PATH", "symlink")
+    try:
+        if not path.is_file():
+            _fail("MONITORING_POLICY_READ_FAILED", "not-regular-file")
+        raw = path.read_bytes()
+    except P6RuntimeError:
+        raise
+    except OSError:
+        _fail("MONITORING_POLICY_READ_FAILED", "read")
+    if len(raw) > MAX_MONITORING_POLICY_BYTES:
+        _fail("MONITORING_POLICY_TOO_LARGE", "monitoring-policy")
+    try:
+        loaded = json.loads(
+            raw.decode("utf-8"),
+            object_pairs_hook=_pairs_to_object,
+            parse_constant=_reject_constant,
+        )
+    except P6RuntimeError:
+        raise
+    except (UnicodeError, json.JSONDecodeError):
+        _fail("MONITORING_POLICY_PARSE_FAILED", "monitoring-policy")
+    return _validate_monitoring_policy(_expect_object(loaded, "monitoring-policy"))
+
+
+def _expect_count_mapping(
+    value: object,
+    path: str,
+    *,
+    allowed_keys: set[str] | None = None,
+    maximum_keys: int = 32,
+    positive_only: bool = False,
+) -> dict[str, int]:
+    mapping = _expect_object(value, path)
+    if len(mapping) > maximum_keys:
+        _fail("TELEMETRY_WINDOW_INVALID", path)
+    counts: dict[str, int] = {}
+    for raw_key, raw_count in mapping.items():
+        key = _expect_identifier(raw_key, f"{path}.key")
+        if allowed_keys is not None and key not in allowed_keys:
+            _fail("TELEMETRY_WINDOW_INVALID", path)
+        counts[key] = _expect_int(
+            raw_count, f"{path}.{key}", minimum=1 if positive_only else 0
+        )
+    return counts
+
+
+def _validate_monitoring_window(
+    policy: LoadedMonitoringPolicy,
+    window: object,
+) -> ValidatedMonitoringWindow:
+    if not isinstance(window, Mapping) or any(
+        not isinstance(key, str) for key in window
+    ):
+        _fail("TELEMETRY_WINDOW_INVALID", "aggregate-window")
+    candidate = deepcopy(dict(window))
+    if _contains_sensitive_key(candidate) or _contains_monitoring_direct_identifier(
+        candidate
+    ):
+        _fail("TELEMETRY_PRIVACY_VIOLATION", "aggregate-window")
+    try:
+        _expect_keys(
+            candidate,
+            {
+                "canonicalization_version",
+                "data_plane",
+                "duration_monitoring_window_version",
+                "environment",
+                "feature_distribution",
+                "outcomes",
+                "policy_reference",
+                "privacy",
+                "production_binding",
+                "quality",
+                "runtime_reference",
+                "synthetic",
+                "versions",
+                "window",
+                "window_fingerprint",
+                "window_id",
+            },
+            "aggregate-window",
+        )
+        if (
+            candidate["duration_monitoring_window_version"] != MONITORING_WINDOW_VERSION
+            or candidate["canonicalization_version"] != CANONICALIZATION_VERSION
+            or candidate["data_plane"] != DATA_PLANE
+            or candidate["environment"] != ENVIRONMENT
+            or candidate["synthetic"] is not True
+            or candidate["production_binding"] is not False
+        ):
+            _fail("TELEMETRY_LINEAGE_INVALID", "aggregate-window.header")
+        expected_policy_reference = {
+            "artifact_id": policy.document["policy_id"],
+            "document_version": MONITORING_POLICY_VERSION,
+            "fingerprint": policy.fingerprint,
+            "threshold_policy_version": MONITORING_THRESHOLD_VERSION,
+        }
+        if candidate["policy_reference"] != expected_policy_reference:
+            _fail("TELEMETRY_LINEAGE_INVALID", "aggregate-window.policy")
+        if candidate["runtime_reference"] != policy.document["runtime_reference"]:
+            _fail("TELEMETRY_LINEAGE_INVALID", "aggregate-window.runtime")
+        if candidate["privacy"] != {
+            "aggregation": "WINDOW_ONLY",
+            "direct_identifiers_present": False,
+            "raw_feature_fields_present": False,
+            "raw_label_fields_present": False,
+            "source_record_references_present": False,
+        }:
+            _fail("TELEMETRY_PRIVACY_VIOLATION", "aggregate-window.privacy")
+
+        projection = deepcopy(candidate)
+        identifier = projection.pop("window_id")
+        fingerprint = projection.pop("window_fingerprint")
+        expected_fingerprint = _fingerprint(projection)
+        if (
+            fingerprint != expected_fingerprint
+            or identifier
+            != "duration-monitoring-window-"
+            + expected_fingerprint.removeprefix("sha256:")
+        ):
+            _fail("TELEMETRY_TAMPERED", "aggregate-window")
+
+        window_data = _expect_object(candidate["window"], "aggregate-window.window")
+        _expect_keys(
+            window_data,
+            {
+                "ended_at_utc",
+                "late_observation_count",
+                "observation_count",
+                "sequence",
+                "started_at_utc",
+            },
+            "aggregate-window.window",
+        )
+        _expect_int(window_data["sequence"], "window.sequence")
+        _, started_at = _utc_instant(window_data["started_at_utc"], "window.started-at")
+        _, ended_at = _utc_instant(window_data["ended_at_utc"], "window.ended-at")
+        if ended_at <= started_at:
+            _fail("TELEMETRY_WINDOW_INVALID", "window.half-open-range")
+        observation_count = _expect_int(
+            window_data["observation_count"], "window.observation-count"
+        )
+        late_observation_count = _expect_int(
+            window_data["late_observation_count"], "window.late-count"
+        )
+        if late_observation_count > observation_count:
+            _fail("TELEMETRY_WINDOW_INVALID", "window.late-count")
+
+        outcomes = _expect_object(candidate["outcomes"], "aggregate-window.outcomes")
+        _expect_keys(
+            outcomes,
+            {"candidate_count", "fallback_count", "fallback_reason_counts"},
+            "aggregate-window.outcomes",
+        )
+        candidate_count = _expect_int(
+            outcomes["candidate_count"], "outcomes.candidate-count"
+        )
+        fallback_count = _expect_int(
+            outcomes["fallback_count"], "outcomes.fallback-count"
+        )
+        fallback_reason_counts = _expect_count_mapping(
+            outcomes["fallback_reason_counts"],
+            "outcomes.fallback-reasons",
+            allowed_keys=set(REGISTERED_FALLBACK_REASONS),
+            maximum_keys=len(REGISTERED_FALLBACK_REASONS),
+            positive_only=True,
+        )
+        if (
+            candidate_count + fallback_count != observation_count
+            or sum(fallback_reason_counts.values()) != fallback_count
+        ):
+            _fail("TELEMETRY_WINDOW_INVALID", "outcomes.counts")
+
+        versions = _expect_object(candidate["versions"], "aggregate-window.versions")
+        _expect_keys(
+            versions,
+            {"feature_schema_version_counts", "model_version_counts"},
+            "aggregate-window.versions",
+        )
+        model_counts = _expect_count_mapping(
+            versions["model_version_counts"],
+            "versions.models",
+            maximum_keys=4,
+            positive_only=True,
+        )
+        feature_version_counts = _expect_count_mapping(
+            versions["feature_schema_version_counts"],
+            "versions.features",
+            maximum_keys=4,
+            positive_only=True,
+        )
+        if (
+            sum(model_counts.values()) != observation_count
+            or sum(feature_version_counts.values()) != observation_count
+        ):
+            _fail("TELEMETRY_WINDOW_INVALID", "versions.counts")
+
+        distribution = _expect_object(
+            candidate["feature_distribution"], "aggregate-window.distribution"
+        )
+        _expect_keys(
+            distribution,
+            {"bucket_counts", "profile_version"},
+            "aggregate-window.distribution",
+        )
+        if distribution["profile_version"] != MONITORING_FEATURE_PROFILE_VERSION:
+            _fail("TELEMETRY_LINEAGE_INVALID", "distribution.profile")
+        bucket_counts = _expect_count_mapping(
+            distribution["bucket_counts"],
+            "distribution.bucket-counts",
+            allowed_keys=set(MONITORING_FEATURE_BUCKETS),
+            maximum_keys=len(MONITORING_FEATURE_BUCKETS),
+        )
+        if (
+            set(bucket_counts) != set(MONITORING_FEATURE_BUCKETS)
+            or sum(bucket_counts.values()) != observation_count
+        ):
+            _fail("TELEMETRY_WINDOW_INVALID", "distribution.counts")
+
+        quality = _expect_object(candidate["quality"], "aggregate-window.quality")
+        _expect_keys(
+            quality,
+            {"evaluated_count", "pass_count", "policy_version"},
+            "aggregate-window.quality",
+        )
+        if quality["policy_version"] != MONITORING_QUALITY_POLICY_VERSION:
+            _fail("TELEMETRY_LINEAGE_INVALID", "quality.policy")
+        evaluated_count = _expect_int(
+            quality["evaluated_count"], "quality.evaluated-count"
+        )
+        pass_count = _expect_int(quality["pass_count"], "quality.pass-count")
+        if pass_count > evaluated_count or evaluated_count > observation_count:
+            _fail("TELEMETRY_WINDOW_INVALID", "quality.counts")
+    except P6RuntimeError as error:
+        if error.code in {
+            "TELEMETRY_LINEAGE_INVALID",
+            "TELEMETRY_PRIVACY_VIOLATION",
+            "TELEMETRY_TAMPERED",
+            "TELEMETRY_WINDOW_INVALID",
+        }:
+            raise
+        _fail("TELEMETRY_WINDOW_INVALID", "aggregate-window")
+    return ValidatedMonitoringWindow(
+        document=candidate,
+        fingerprint=cast(str, fingerprint),
+        observation_count=observation_count,
+        candidate_count=candidate_count,
+        fallback_count=fallback_count,
+        fallback_reason_counts=fallback_reason_counts,
+        late_observation_count=late_observation_count,
+        model_version_matches=model_counts == {MODEL_VERSION: observation_count},
+        feature_version_matches=feature_version_counts
+        == {FEATURE_SCHEMA_VERSION: observation_count},
+        feature_bucket_counts=bucket_counts,
+        quality_evaluated_count=evaluated_count,
+        quality_pass_count=pass_count,
+    )
+
+
+def _fraction_document(value: Fraction) -> JsonObject:
+    return {"denominator": value.denominator, "numerator": value.numerator}
+
+
+def _feature_total_variation(
+    observed: Mapping[str, int], reference: Mapping[str, int]
+) -> Fraction:
+    observed_total = sum(observed.values())
+    reference_total = sum(reference.values())
+    if observed_total <= 0 or reference_total <= 0:
+        return Fraction(0)
+    difference = sum(
+        abs(observed[bucket] * reference_total - reference[bucket] * observed_total)
+        for bucket in MONITORING_FEATURE_BUCKETS
+    )
+    return Fraction(difference, 2 * observed_total * reference_total)
+
+
+def _build_monitoring_report(
+    policy: LoadedMonitoringPolicy,
+    window: ValidatedMonitoringWindow | None,
+    reason_codes: list[str],
+) -> JsonObject:
+    ordered_reasons = [
+        reason for reason in MONITORING_REASON_CODES if reason in set(reason_codes)
+    ]
+    if window is None:
+        counts = {
+            "candidate_count": 0,
+            "fallback_count": 0,
+            "late_observation_count": 0,
+            "observation_count": 0,
+            "quality_evaluated_count": 0,
+            "quality_pass_count": 0,
+        }
+        fallback_reason_counts: JsonObject = {}
+        window_reference: JsonObject | None = None
+        metrics: JsonObject = {
+            "fallback_rate": None,
+            "feature_total_variation": None,
+            "quality_pass_ratio": None,
+        }
+        version_checks = {
+            "feature_schema_version_matches": False,
+            "model_version_matches": False,
+        }
+    else:
+        counts = {
+            "candidate_count": window.candidate_count,
+            "fallback_count": window.fallback_count,
+            "late_observation_count": window.late_observation_count,
+            "observation_count": window.observation_count,
+            "quality_evaluated_count": window.quality_evaluated_count,
+            "quality_pass_count": window.quality_pass_count,
+        }
+        fallback_reason_counts = deepcopy(dict(window.fallback_reason_counts))
+        window_reference = {
+            "fingerprint": window.fingerprint,
+            "window_id": window.document["window_id"],
+            "window_version": MONITORING_WINDOW_VERSION,
+        }
+        fallback_rate = (
+            Fraction(window.fallback_count, window.observation_count)
+            if window.observation_count
+            else Fraction(0)
+        )
+        feature_drift = _feature_total_variation(
+            window.feature_bucket_counts, policy.reference_bucket_counts
+        )
+        quality_ratio = (
+            Fraction(window.quality_pass_count, window.quality_evaluated_count)
+            if window.quality_evaluated_count
+            else Fraction(0)
+        )
+        metrics = {
+            "fallback_rate": _fraction_document(fallback_rate),
+            "feature_total_variation": _fraction_document(feature_drift),
+            "quality_pass_ratio": _fraction_document(quality_ratio),
+        }
+        version_checks = {
+            "feature_schema_version_matches": window.feature_version_matches,
+            "model_version_matches": window.model_version_matches,
+        }
+    disable = bool(ordered_reasons)
+    projection: JsonObject = {
+        "schema_version": MONITORING_REPORT_VERSION,
+        "task_id": "TASK-P6-08",
+        "result": "PASS",
+        "policy_reference": {
+            "artifact_id": policy.document["policy_id"],
+            "document_version": MONITORING_POLICY_VERSION,
+            "fingerprint": policy.fingerprint,
+            "threshold_policy_version": MONITORING_THRESHOLD_VERSION,
+        },
+        "window_reference": window_reference,
+        "counts": counts,
+        "fallback_reason_counts": fallback_reason_counts,
+        "metrics": metrics,
+        "thresholds": {
+            "fallback_rate_max": _fraction_document(policy.fallback_rate_max),
+            "feature_total_variation_max": _fraction_document(
+                policy.feature_total_variation_max
+            ),
+            "quality_pass_ratio_min": _fraction_document(policy.quality_pass_ratio_min),
+        },
+        "version_checks": version_checks,
+        "monitoring_decision": {
+            "automatic_actions": [],
+            "external_side_effects": [],
+            "human_review_required": disable,
+            "reason_codes": ordered_reasons,
+            "recommendation": "DEFAULT_DISABLE"
+            if disable
+            else "NO_DISABLE_RECOMMENDATION",
+            "runtime_fallback_reason": "DRIFT_GATE_DISABLED" if disable else None,
+            "standard_duration_fallback_required": disable,
+        },
+        "privacy_retention": deepcopy(policy.document["privacy_retention"]),
+        "boundaries": {
+            "data_plane": DATA_PLANE,
+            "environment": ENVIRONMENT,
+            "input_granularity": "AGGREGATE_WINDOW_ONLY",
+            "monitor_persistence": "NONE",
+            "planning_state_write": "NONE",
+            "production_authorized": False,
+            "production_slo_claimed": False,
+            "raw_feature_or_label_included": False,
+            "retraining_promotion_rollback": "NONE",
+        },
+        "issues": [],
+    }
+    projection["report_fingerprint"] = _fingerprint(projection)
+    return projection
+
+
+def monitor_duration_runtime(
+    policy: LoadedMonitoringPolicy,
+    aggregate_window: object,
+) -> JsonObject:
+    """Evaluate one immutable aggregate window and recommend default-disable."""
+
+    trusted_policy = _validate_monitoring_policy(policy.document)
+
+    try:
+        window = _validate_monitoring_window(trusted_policy, aggregate_window)
+    except P6RuntimeError as error:
+        reason = (
+            error.code
+            if error.code
+            in {
+                "TELEMETRY_LINEAGE_INVALID",
+                "TELEMETRY_PRIVACY_VIOLATION",
+                "TELEMETRY_TAMPERED",
+                "TELEMETRY_WINDOW_INVALID",
+            }
+            else "TELEMETRY_WINDOW_INVALID"
+        )
+        return _build_monitoring_report(trusted_policy, None, [reason])
+
+    reasons: list[str] = []
+    if window.observation_count < trusted_policy.minimum_observation_count:
+        reasons.append("INSUFFICIENT_TELEMETRY")
+    if window.observation_count != trusted_policy.expected_observation_count:
+        reasons.append("WINDOW_COUNT_MISMATCH")
+    if window.late_observation_count > trusted_policy.late_observation_max_count:
+        reasons.append("LATE_TELEMETRY")
+    if not window.model_version_matches:
+        reasons.append("MODEL_VERSION_DRIFT")
+    if not window.feature_version_matches:
+        reasons.append("FEATURE_VERSION_DRIFT")
+
+    if window.observation_count:
+        fallback_rate = Fraction(window.fallback_count, window.observation_count)
+        if fallback_rate > trusted_policy.fallback_rate_max:
+            reasons.append("FALLBACK_RATE_BREACH")
+        feature_drift = _feature_total_variation(
+            window.feature_bucket_counts, trusted_policy.reference_bucket_counts
+        )
+        if feature_drift > trusted_policy.feature_total_variation_max:
+            reasons.append("FEATURE_DISTRIBUTION_DRIFT")
+    if window.quality_evaluated_count != window.observation_count:
+        reasons.append("QUALITY_EVIDENCE_INCOMPLETE")
+    if window.quality_evaluated_count:
+        quality_ratio = Fraction(
+            window.quality_pass_count, window.quality_evaluated_count
+        )
+        if quality_ratio < trusted_policy.quality_pass_ratio_min:
+            reasons.append("QUALITY_DRIFT")
+    return _build_monitoring_report(trusted_policy, window, reasons)

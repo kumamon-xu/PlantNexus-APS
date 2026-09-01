@@ -3,10 +3,15 @@ from __future__ import annotations
 import time
 import tracemalloc
 
-from app.duration_prediction.runtime import DurationPredictionProvider
+from app.duration_prediction.runtime import (
+    DurationPredictionProvider,
+    monitor_duration_runtime,
+)
 from backend.tests.p6_duration_runtime_support import (
     build_test_provider,
     canonical_json_bytes,
+    load_monitoring_policy,
+    monitoring_window,
     runtime_requests,
 )
 
@@ -51,3 +56,27 @@ def test_prediction_bytes_stay_below_explicit_resource_limit() -> None:
 
     assert max(sizes) < provider.policy.max_prediction_bytes
     assert min(sizes) > 0
+
+
+def test_monitor_overhead_is_observed_without_production_slo_claim() -> None:
+    policy = load_monitoring_policy()
+    window = monitoring_window()
+    fingerprints: list[str] = []
+    report = monitor_duration_runtime(policy, window)
+
+    tracemalloc.start()
+    started = time.perf_counter_ns()
+    try:
+        for _ in range(256):
+            report = monitor_duration_runtime(policy, window)
+            fingerprints.append(report["report_fingerprint"])
+        elapsed_ns = time.perf_counter_ns() - started
+        _, peak_bytes = tracemalloc.get_traced_memory()
+    finally:
+        tracemalloc.stop()
+
+    assert elapsed_ns > 0
+    assert peak_bytes > 0
+    assert len(fingerprints) == 256
+    assert len(set(fingerprints)) == 1
+    assert report["boundaries"]["production_slo_claimed"] is False

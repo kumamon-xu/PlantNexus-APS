@@ -11,6 +11,12 @@ last_reviewed: 2026-09-01
 
 # 错误与求解状态模型
 
+## TASK-P6-08 monitoring reasons and sanitized default-disable
+
+Monitor使用closed reason set：`TELEMETRY_PRIVACY_VIOLATION`、`TELEMETRY_TAMPERED`、`TELEMETRY_LINEAGE_INVALID`、`TELEMETRY_WINDOW_INVALID`、`INSUFFICIENT_TELEMETRY`、`WINDOW_COUNT_MISMATCH`、`LATE_TELEMETRY`、`MODEL_VERSION_DRIFT`、`FEATURE_VERSION_DRIFT`、`FALLBACK_RATE_BREACH`、`FEATURE_DISTRIBUTION_DRIFT`、`QUALITY_EVIDENCE_INCOMPLETE`和`QUALITY_DRIFT`。Unknown reason不得输出；任一非空reason集合确定映射到`DEFAULT_DISABLE`建议、既有runtime `DRIFT_GATE_DISABLED` fallback reason及权威标准工时。
+
+Invalid input是evidence而不是exception leak：输出使用固定safe fields、zero aggregate counts和null window reference，不回显unknown key、raw feature/label value、identifier、path、credential或stack。Monitoring不改变state也不执行建议，caller继续使用既有fail-closed fallback。若标准工时authority无效，仍沿用既有hard failure，禁止猜测duration。
+
 ## TASK-P6-06 runtime fallback and fail-closed errors
 
 Duration runtime把可形成合法P6-02 carrier的不确定性保留为20项Schema enum：正常为`NONE`，其余19项区分missing/unavailable/timeout、quantile/confidence、model/scope/version、feature/dataset/contract、digest/provenance、evaluation/drift、authority与privacy。所有非`NONE`原因只可选择`STANDARD_DURATION`并清空candidate fields；unexpected provider exception统一脱敏为`PROVIDER_UNAVAILABLE`，不得回显exception、token、payload或path。

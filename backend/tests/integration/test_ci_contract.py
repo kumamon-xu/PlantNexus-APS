@@ -720,6 +720,7 @@ def test_ci_p6_duration_runtime_is_required_and_machine_checkable(
 
     offline_report = tmp_path / "p6-duration-evaluation.json"
     runtime_report = tmp_path / "p6-duration-runtime.json"
+    monitoring_report = tmp_path / "p6-duration-monitoring.json"
     assert (
         p6_duration_evaluation_main(
             ["--root", str(ROOT), "--report", str(offline_report)]
@@ -735,11 +736,14 @@ def test_ci_p6_duration_runtime_is_required_and_machine_checkable(
                 str(offline_report),
                 "--report",
                 str(runtime_report),
+                "--monitoring-report",
+                str(monitoring_report),
             ]
         )
         == 0
     )
     report = json.loads(runtime_report.read_text(encoding="utf-8"))
+    monitor = json.loads(monitoring_report.read_text(encoding="utf-8"))
     assert report["schema_version"] == "p6-duration-runtime-check-report.v1"
     assert report["task_id"] == "TASK-P6-06"
     assert report["diff_base"] == "9921e57034defc26c0a08b7b0c27da3398a0fc7e"
@@ -764,6 +768,25 @@ def test_ci_p6_duration_runtime_is_required_and_machine_checkable(
         "production_sla_claimed": False,
         "provider": "IN_PROCESS_EXPLICIT_INVOCATION_ONLY",
     }
+    assert monitor["schema_version"] == "p6-duration-monitoring-check-report.v1"
+    assert monitor["task_id"] == "TASK-P6-08"
+    assert monitor["diff_base"] == "e5d63fcf54c841ed93ef7c62084bcdeeda63abd4"
+    assert monitor["result"] == "PASS"
+    assert len(monitor["checks"]) == 12
+    assert monitor["blocking_gaps"] == []
+    assert monitor["issues"] == []
+    assert monitor["safe_artifact_boundary"] == {
+        "feature_records_included": False,
+        "labels_included": False,
+        "operation_or_resource_ids_included": False,
+        "raw_predictions_included": False,
+        "source_record_ids_included": False,
+    }
+    runtime_source = (ROOT / "scripts" / "p6_duration_runtime_check.py").read_text(
+        encoding="utf-8"
+    )
+    assert runtime_source.count("monitoring_check_main") == 2
+    assert "scripts/p6_duration_monitoring_check.py" not in workflow
     assert report["issues"] == []
 
 

@@ -11,6 +11,14 @@ last_reviewed: 2026-08-31
 
 # P0 Observability 与 Audit 边界
 
+## TASK-P6-08 aggregate drift/fallback monitoring
+
+`SIM-P6-DURATION-MONITORING-001@1.0.0`只接收一个固定8-observation、run-scoped的去标识aggregate window。输入仅保留window/version/policy lineage、observation/fallback/quality/late counts及四个`HIGH/LOW/MID_HIGH/MID_LOW` bucket counts；禁止FeatureRecord、raw feature、label、operation/resource/source/row/user identifier、credential和自由文本。Validator在任何unknown field、计数不闭合、mixed model/feature version、late observation、raw/private key或content identity篡改时生成sanitized default-disable报告，不把拒绝的原值复制到证据。
+
+`p6-duration-monitoring-check-report.v1`固定比较fallback rate不高于`1/4`、feature total variation不高于`1/4`、quality pass ratio不低于`3/4`、late count等于0且window count等于1。边界值inclusive；任一breach或无可靠telemetry产生`DEFAULT_DISABLE`建议、`DRIFT_GATE_DISABLED` runtime fallback及稳定reason，健康window只产生`NO_DISABLE_RECOMMENDATION`。Report是deterministic aggregate evidence，不执行disable、告警、retrain、promotion或rollback，也不写业务audit/state。
+
+Retention固定为单次report构造期间最多1个aggregate window、`persistence=NONE`；实现无log/metric/trace exporter、external alert、dashboard、SIEM或Production storage。该development monitor不建立Production telemetry backend、on-call owner、retention policy、SLO、capacity或自动响应权；OPEN-010/011/014/015继续OPEN。
+
 ## TASK-P4-13 browser evidence edge
 
 UI把correlation ID、query/projection/resource fingerprints、event positions、Request/attempt IDs、DRAFT/ChangeReport references及raw UTC保留为可复核证据；不在browser生成业务AuditEvent或覆盖server authority。Action acknowledgement与unknown-outcome恢复绑定同一action fingerprint/body/key，便于把浏览器证据连接到P4-12 transport和application audit。

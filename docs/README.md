@@ -11,17 +11,23 @@ last_reviewed: 2026-09-01
 
 # PlantNexus APS 文档中心
 
+## TASK-P6-08 aggregate monitoring and default-disable
+
+P6-08以`SIM-P6-DURATION-MONITORING-001@1.0.0`建立Simulation/Test-only aggregate monitor：content identity绑定P6-06 runtime policy/model/feature版本、`SIM-ASSUMPTION-026`的固定窗口/阈值/reference distribution及run-scoped/no-persistence privacy policy。输入不允许raw prediction、feature、label、operation/resource/source identity或敏感字段；report只保留count、exact fraction、safe fingerprint、stable reason与边界。
+
+Monitor以exact rational arithmetic检测model/feature version drift、fallback spike、feature total variation、quality pass ratio、late/incomplete/tampered window；越界或不可信输入只建议`DEFAULT_DISABLE`并投影既有`DRIFT_GATE_DISABLED`标准工时fallback。它没有自动retraining/promotion/rollback、external alert/infra、Planning/state写入或Production权威。12项machine evidence由既有runtime reporter不可跳过串接并进入同一`build/validation/*.json` artifact；workflow无变化。详见[observability](operations/observability-and-audit.md)、[governance](contracts/duration-prediction-governance.md)、[machine contract](contracts/duration-prediction-machine-contract.md)、[isolation](architecture/configuration-environments-and-isolation.md)与[provenance](architecture/provenance-and-versioning.md)。
+
 ## TASK-P6-07 default-off Planning ingress
 
 P6-07在Simulation/development标准Planning入口增加default-off adapter：先形成冻结标准PlanningProblem v2，只有P6-06 exact carrier、完整Feature/Model/Evaluation/Policy lineage及同resource-option标准工时authority全部通过时，才为NOT_STARTED option选择model p50。Accepted Problem只改变既有duration/source/version三字段并重新计算canonical hash；disabled、低置信度、provider unavailable与invalid quantile等fallback逐字复用标准Problem。
 
-Machine evidence覆盖5条入口路径、7项authority invariant、5项authority mutation、3次Solver→fresh Validator PASS、C-003/C-010 mutation、16个冻结P2/P4 owner及module isolation。Core Problem builder、Solver、Validator、P4/state、Schema/migration/dependency/API/UI均未改变；workflow只把6个新增路径加入既有P4 frozen replay临时隔离清单。能力仍为default-off Simulation-only，OPEN-010/011/014/015与Production/P6-08+继续未授权。详见[Planning flow](architecture/end-to-end-planning-flow.md)、[machine contract](contracts/duration-prediction-machine-contract.md)、[PlanningProblem](contracts/planning-problem.md)与[Validator](planning/schedule-validator.md)。
+Machine evidence覆盖5条入口路径、7项authority invariant、5项authority mutation、3次Solver→fresh Validator PASS、C-003/C-010 mutation、16个冻结P2/P4 owner及module isolation。Core Problem builder、Solver、Validator、P4/state、Schema/migration/dependency/API/UI均未改变；workflow只把6个新增路径加入既有P4 frozen replay临时隔离清单。能力仍为default-off Simulation-only，OPEN-010/011/014/015与Production继续未授权；P6-08后来形成上节aggregate monitor但不改变Planning ingress authority。详见[Planning flow](architecture/end-to-end-planning-flow.md)、[machine contract](contracts/duration-prediction-machine-contract.md)、[PlanningProblem](contracts/planning-problem.md)与[Validator](planning/schedule-validator.md)。
 
 ## TASK-P6-06 local prediction runtime and fallback
 
 P6-06形成显式调用、in-process、`SIMULATION/TEST`-only的DurationPrediction provider。Content-addressed `runtime-policy.v1.json`精确绑定P6-04 safe model、P6-05 READY Gate、P6-02 carrier、caller-explicit UTC、`9/10` confidence以及development-only input/output/latency/memory边界；没有环境默认、网络、cache、持久化、model registry或外部服务。
 
-Provider只在所有Feature/Model/Evaluation/Policy lineage与同resource-option standard-duration authority完整时选择model p50；19项registered fallback condition全部返回P6-02 strict carrier并精确选择标准工时。Invalid standard authority本身fail closed且无partial carrier。详见[Machine contract](contracts/duration-prediction-machine-contract.md)、[governance](contracts/duration-prediction-governance.md)、[module boundary](architecture/module-boundaries.md)、[isolation](architecture/configuration-environments-and-isolation.md)与[provenance](architecture/provenance-and-versioning.md)。P6-06 runtime自身无Planning/API/UI consumer；P6-07后来只形成上节default-off adapter，promotion、drift monitoring与Production authority仍不存在。
+Provider只在所有Feature/Model/Evaluation/Policy lineage与同resource-option standard-duration authority完整时选择model p50；19项registered fallback condition全部返回P6-02 strict carrier并精确选择标准工时。Invalid standard authority本身fail closed且无partial carrier。详见[Machine contract](contracts/duration-prediction-machine-contract.md)、[governance](contracts/duration-prediction-governance.md)、[module boundary](architecture/module-boundaries.md)、[isolation](architecture/configuration-environments-and-isolation.md)与[provenance](architecture/provenance-and-versioning.md)。P6-06 runtime自身无Planning/API/UI consumer；P6-07后来形成default-off adapter，P6-08形成只读aggregate monitor；promotion与Production authority仍不存在。
 
 ## TASK-P6-05 offline evaluation and fallback Gate
 

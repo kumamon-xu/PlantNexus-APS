@@ -11,11 +11,17 @@ last_reviewed: 2026-09-01
 
 # ScenarioSpec 与 Provenance
 
+## TASK-P6-08 versioned aggregate-monitoring policy
+
+[`monitor-policy.v1.json`](../../fixtures/synthetic/P6-DURATION-MONITORING/monitor-policy.v1.json)发布`SIM-P6-DURATION-MONITORING-001@1.0.0`，content fingerprint为`sha256:83df8f3f9ea8574f919734f2593b287cd80524e7bc3197795da07d1f90bfdf7b`。`SIM-ASSUMPTION-026`冻结exact 8 observations、四个reference bucket各2项、fallback maximum `1/4`、feature total-variation maximum `1/4`、quality pass minimum `3/4`、late maximum 0、单一run-scoped retained window及`persistence=NONE`。
+
+该fixture不是新ScenarioSpec Schema、真实分布、Production threshold、telemetry source、retention policy或SLO。Test windows只在内存生成且仅含aggregate counts与exact lineage；不发布raw feature/label或identifier fixture。Bucket、threshold、version、retention或authority变化必须形成新assumption和policy identity；P7 Reality Calibration与Production monitoring仍为独立Gate。
+
 ## TASK-P6-06 versioned runtime policy fixture
 
 `fixtures/synthetic/P6-DURATION-RUNTIME/runtime-policy.v1.json`发布`SIM-P6-DURATION-RUNTIME-001@1.0.0` / `SIM-ASSUMPTION-025`。其canonical identity绑定P6-04 exact model/artifact/manifest、P6-05 Gate/profile/measurement、Simulation/Test、caller-explicit UTC、confidence/fallback、input/output和development performance边界；runtime只接受已批准的exact fingerprint，不能用重算后的未授权policy替换。
 
-该fixture不是新ScenarioSpec Schema、Production config、model lifecycle record、SLA或drift policy；`NOT_APPLICABLE_TO_FIXED_SIMULATION_TEST_REPLAY`只描述当前固定replay，不能替代P6-08 monitoring。任何policy/model/Gate或数值变化必须形成新SIM assumption与identity，P6-04/P6-05既有bytes不得覆盖。
+该fixture不是新ScenarioSpec Schema、Production config、model lifecycle record、SLA或drift policy；`NOT_APPLICABLE_TO_FIXED_SIMULATION_TEST_REPLAY`只描述P6-06固定replay。P6-08后来以独立fixture形成上节aggregate monitor，未改写本policy/model/Gate bytes。任何policy/model/Gate或数值变化必须形成新SIM assumption与identity。
 
 ## TASK-P6-05 versioned evaluation profile and aggregate baseline
 

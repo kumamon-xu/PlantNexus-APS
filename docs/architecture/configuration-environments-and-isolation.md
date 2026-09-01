@@ -11,6 +11,14 @@ last_reviewed: 2026-09-01
 
 # 配置、环境与数据隔离
 
+## TASK-P6-08 monitoring and evidence isolation
+
+Monitor只加载tracked、content-addressed `SIM-P6-DURATION-MONITORING-001@1.0.0`并接收caller构造的单一Simulation/Test aggregate window；无environment default、credential、network、database、queue、cache、registry、filesystem telemetry store或Production namespace。Retention为当前report构造期间最多1个window且`persistence=NONE`，process结束后没有monitor-owned数据。
+
+Privacy validator在metric计算前拒绝raw/private字段和operation/resource/source/row/user identifiers，Provider artifact只含policy/window fingerprints、counts、exact ratios、stable reasons和recommendation。任何invalid/mixed/late/tampered input均只产生sanitized `DEFAULT_DISABLE` evidence；实现不向runtime、Planning、state、model registry或外部系统发送动作。
+
+FULL验证沿用既有P6-06 runtime reporter串接独立P6-08 aggregate report；没有workflow、job topology、permission、Secret、dependency/lock、artifact glob或P4 frozen-replay清单变化。Monitor代码有界加入既已从P4 replay移除的runtime路径，tests仅扩展既有已隔离路径，因此冻结owner与required `validate` context保持不变。
+
 ## TASK-P6-07 Planning-ingress and frozen-replay isolation
 
 Planning adapter默认disabled，只接受caller显式提供的verified Snapshot、P6-06 in-process provider、UTC prediction time与exact FeatureRecord mapping；它不读取environment default、credential、network、database、queue、registry、cache或Production namespace，也不写任何业务state。Machine report只保留sanitized carrier/Problem fingerprints、aggregate counts与development observation，不包含raw dataset row、label或secret。

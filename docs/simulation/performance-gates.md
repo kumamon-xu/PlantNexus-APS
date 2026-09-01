@@ -11,11 +11,17 @@ last_reviewed: 2026-09-01
 
 # 性能与现实校准门
 
+## TASK-P6-08 development monitoring overhead
+
+Monitor性能证据只测256次同一8-observation aggregate window的pure in-process validation/report构造并记录observed elapsed time；输入上限由固定8项window与strict field/count bounds限定，不接收raw rows或unbounded stream。Machine Gate只要求调用完成、报告可canonicalize且不会触发network/storage/automatic action，本机时间不进入semantic identity。
+
+该观察用于发现明显development regression，不形成Production latency、throughput、ingestion capacity、availability、retention或SLO，也不允许为了通过而降低drift/privacy threshold。真实telemetry volume、clock skew、concurrency、backpressure和alert delivery仍未测试。
+
 ## TASK-P6-06 local runtime resource boundary
 
 P6-06以固定Simulation/Test pure-model调用验证50 ms timeout post-check、32 KiB输出、256-call P95≤20 ms与peak allocation≤16 MiB；machine report保存actual observations且任何超界均FAIL/fallback。输入大小与feature/source count在调用model前拒绝，避免unbounded payload；provider没有remote timeout、worker pool或concurrency claim。
 
-这些数值只用于development regression与fail-closed，不是Production latency、throughput、capacity、availability或SLA，也不关闭OPEN-006/011/012/014/015。P6-08 drift monitoring、P7 Reality Calibration和真实load profile仍是独立门。
+这些数值只用于development regression与fail-closed，不是Production latency、throughput、capacity、availability或SLA，也不关闭OPEN-006/011/012/014/015。P6-08后来只形成上节aggregate development observation；P7 Reality Calibration和真实load profile仍是独立门。
 
 ## TASK-P6-05 offline quality Gate boundary
 

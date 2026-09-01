@@ -11,6 +11,14 @@ last_reviewed: 2026-09-01
 
 # Provenance 与版本规则
 
+## TASK-P6-08 monitoring policy, window and report lineage
+
+`duration-monitoring-policy.v1`从排除自身ID/fingerprint的canonical projection派生content identity；approved exact identity为`duration-monitoring-policy-83df8f3f9ea8574f919734f2593b287cd80524e7bc3197795da07d1f90bfdf7b` / `sha256:83df8f3f9ea8574f919734f2593b287cd80524e7bc3197795da07d1f90bfdf7b`。Policy精确绑定P6-06 runtime/model/feature lineage、`SIM-ASSUMPTION-026`、8项window、四类bucket reference、fallback/feature/quality/late thresholds及run-scoped no-persistence retention；任一数值、版本、scope或privacy字段变化必须形成新identity，不能覆盖既有policy。
+
+Aggregate window由caller显式UTC边界、exact policy/model/feature versions和去标识counts派生canonical fingerprint；同一内容与key order replay exact。Monitor report再绑定policy/window fingerprint、exact Fraction metrics、inclusive boundary evaluation、stable reasons与recommendation。Rejected/tampered/private input只形成sanitized report，不保留攻击者原始lineage、key或value。Raw feature/label、FeatureRecord、operation/resource/source/row/user identifier不属于monitoring identity或artifact。
+
+Report只能建议`NO_DISABLE_RECOMMENDATION|DEFAULT_DISABLE`；它不改写P6-02 carrier、P6-04 model、P6-05 Gate、P6-06 runtime policy或P6-07 ingress，也不建立model lifecycle state。Rollback删除/禁用monitor但保留已发布content-addressed report及标准工时fallback evidence。
+
 ## TASK-P6-06 runtime policy and prediction lineage
 
 `duration-runtime-policy.v1`以排除自身ID/fingerprint的canonical projection形成content identity，并精确绑定P6-04 model manifest/artifact、P6-05 Gate/profile/measurement、P6-02 contract、Simulation/Test、confidence、fallback、explicit-time与resource边界。Policy或任一引用变化必须发布新identity；即使攻击者重算自identity，runtime仍按approved exact policy fingerprint拒绝。P6-04/P6-05既有bytes不改写。

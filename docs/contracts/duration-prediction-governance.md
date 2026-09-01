@@ -15,9 +15,17 @@ Contract status: accepted human governance baseline
 
 Decision authority: [ADR-0016](../adr/ADR-0016-ai-duration-data-model-governance.md)
 
-Machine contract status: additive `2.9.0` / `FORMED_SIMULATION_CONTRACT_V1`；见[Duration Prediction Machine Contract v1](duration-prediction-machine-contract.md)。TASK-P6-03/04形成有界Simulation dataset与baseline model/replay，TASK-P6-05形成独立development offline evaluation/fallback Gate，TASK-P6-06形成显式local Simulation/Test runtime，TASK-P6-07形成default-off Simulation/development Planning ingress；仍无Production authority
+Machine contract status: additive `2.9.0` / `FORMED_SIMULATION_CONTRACT_V1`；见[Duration Prediction Machine Contract v1](duration-prediction-machine-contract.md)。TASK-P6-03/04形成有界Simulation dataset与baseline model/replay，TASK-P6-05形成独立development offline evaluation/fallback Gate，TASK-P6-06形成显式local Simulation/Test runtime，TASK-P6-07形成default-off Planning ingress，TASK-P6-08形成aggregate-only development monitor；仍无Production authority
 
-Capability status: `AI_DURATION_PREDICTION = DEFERRED / CONTRACT_V1 + SIMULATION_DATASET_V1 + BASELINE_MODEL_V1 + OFFLINE_GATE_READY + LOCAL_RUNTIME_V1 + PLANNING_INGRESS_V1 / DEFAULT_OFF_SIMULATION_ONLY`
+Capability status: `AI_DURATION_PREDICTION = DEFERRED / CONTRACT_V1 + SIMULATION_DATASET_V1 + BASELINE_MODEL_V1 + OFFLINE_GATE_READY + LOCAL_RUNTIME_V1 + PLANNING_INGRESS_V1 + AGGREGATE_MONITOR_V1 / DEFAULT_OFF_SIMULATION_ONLY`
+
+## TASK-P6-08 aggregate monitoring governance projection
+
+`SIM-P6-DURATION-MONITORING-001@1.0.0` / `SIM-ASSUMPTION-026`只批准固定8项的Simulation/Test aggregate window：fallback rate最多`1/4`、feature reference distribution total variation最多`1/4`、quality pass ratio至少`3/4`、late count必须为0，且单次run最多保留1个window、无持久化。Policy content identity精确绑定P6-06 model/feature lineage、bucket reference和inclusive thresholds；任何semantic变化必须新version/fingerprint。
+
+Monitor禁止raw feature/label、FeatureRecord、operation/resource/source/row/user identifier和unknown/private key。计数、version、window、privacy或identity无效时，报告必须先sanitization再default-disable。Version drift、fallback spike、feature distribution drift、quality drift、late telemetry和insufficient/mismatched telemetry分别产生稳定reason；任一reason映射到`DEFAULT_DISABLE`建议、既有`DRIFT_GATE_DISABLED` fallback reason和exact标准工时要求。
+
+Monitoring window/report是internal Python-validated aggregate envelope，不是P6-02的第五份JSON Schema、product API、business state或audit store。Monitor没有执行权：不得自动disable、retrain、promotion、rollback、告警或改变Planning output；健康报告也不授予enable/promotion authority。OPEN-010/011/014/015继续OPEN，Production telemetry/retention/SLO/owner仍未形成。
 
 ## TASK-P6-07 executable Planning-ingress projection
 
@@ -29,7 +37,7 @@ P6-07只批准一个caller-explicit、default-off的Simulation/development adapt
 
 `SIM-P6-DURATION-RUNTIME-001@1.0.0` / `SIM-ASSUMPTION-025`只批准P6-04 exact model在`SIMULATION/TEST`、P6-05 exact READY Gate与caller-explicit invocation下运行；policy本身content-addressed并由runtime hard-bind exact identity。P6-04原`SIMULATION_EVALUATION_ONLY` manifest不被改写，P6-06 policy作为后续独立且更窄的local runtime授权；Production、promotion、Planning consumer与自动切换仍不可表示。
 
-Caller必须提供独立resource-option标准工时authority，provider再核对FeatureRecord中的same-option值/source。全部19项不确定性形成P6-02 stable fallback carrier并选择exact standard duration；invalid/unknown standard authority则在carrier前fail closed。Provider没有network、cache、database、registry或state，所有输出具备Feature/Model/Evaluation/Policy lineage与canonical identity。Development resource/latency profile只作拒绝和观测边界，不是SLA；P6-07后来获得独立授权形成上节adapter，P6-08仍需独立授权。
+Caller必须提供独立resource-option标准工时authority，provider再核对FeatureRecord中的same-option值/source。全部19项不确定性形成P6-02 stable fallback carrier并选择exact standard duration；invalid/unknown standard authority则在carrier前fail closed。Provider没有network、cache、database、registry或state，所有输出具备Feature/Model/Evaluation/Policy lineage与canonical identity。Development resource/latency profile只作拒绝和观测边界，不是SLA；P6-07后来获得独立授权形成adapter，P6-08后来形成上节无执行权monitor。
 
 ## TASK-P6-05 executable evaluation-governance projection
 
@@ -51,7 +59,7 @@ Purpose/access、no-PII/no-target、retention/deletion、source/record fingerpri
 
 ## 1. Purpose and scope
 
-本合同是P6数据、label、feature、privacy、dataset/model/evaluation provenance、promotion/rollback及标准工时fallback的唯一人类语义入口。TASK-P6-02已用四份严格Simulation v1 carrier逐项承载可机器表达的部分；TASK-P6-03/04/05/06已分别形成dataset、baseline model、offline evaluation/fallback与local runtime边界，TASK-P6-07现形成default-off Planning ingress；TASK-P6-08～09仍必须引用并实现各自边界。若后继机器设计无法表达，必须停止并提交新ADR或扩卡，不能在代码中增加默认语义。
+本合同是P6数据、label、feature、privacy、dataset/model/evaluation provenance、promotion/rollback及标准工时fallback的唯一人类语义入口。TASK-P6-02已用四份严格Simulation v1 carrier逐项承载可机器表达的部分；TASK-P6-03/04/05/06已分别形成dataset、baseline model、offline evaluation/fallback与local runtime边界，TASK-P6-07形成default-off Planning ingress，TASK-P6-08形成aggregate-only monitor；TASK-P6-09仍必须独立引用并实现其边界。若后继机器设计无法表达，必须停止并提交新ADR或扩卡，不能在代码中增加默认语义。
 
 本合同本身不授权读取真实历史或形成Production data/model authority。P6-03/04的独立授权只允许仓库内synthetic dataset与dependency-neutral baseline训练/replay；不运行formal evaluation/Benchmark、不接入Planning，也不改变P0～P5合同、Schema、状态机、Solver、Validator或Execution/Replan链。
 
@@ -154,7 +162,7 @@ Monitoring可以生成review或retraining request，但不得自动切换模型�
 | Drift/evaluation Gate要求disable | 禁用该model scope并回退，等待人类决定 | gate/evaluation reference |
 | 权威标准工时也缺失/无效/冲突 | 停止该option/input并返回既有可区分数据错误 | data-quality evidence；禁止默认值 |
 
-`fallback_reason`稳定枚举、unknown-field policy与exact Schema/version compatibility已由TASK-P6-02的`duration-prediction.v1`形成；TASK-P6-05只冻结development offline confidence/fallback threshold，Production-approved confidence/drift policy仍属于TASK-P6-08与OPEN-014。未形成对应environment的approved policy等同于必须fallback，不得用代码常量或环境变量补猜。
+`fallback_reason`稳定枚举、unknown-field policy与exact Schema/version compatibility已由TASK-P6-02的`duration-prediction.v1`形成；TASK-P6-05冻结development offline confidence/fallback threshold，TASK-P6-08只冻结Simulation/Test aggregate drift policy。Production-approved confidence/drift policy仍受OPEN-014阻断；未形成对应environment的approved policy等同于必须fallback，不得用代码常量或环境变量补猜。
 
 ## 9. Boundary invariants
 
@@ -182,7 +190,7 @@ Closure必须含Authority、Evidence、scope、effective version和rollback；�
 
 `TEST-P6-DATA-GOVERNANCE-001`静态证明本文与ADR-0016覆盖：标准工时authority、completed-label eligibility、censoring/exclusion、as-of leakage、time/group split、privacy/retention/deletion、immutable dataset/model/evaluation lineage、human promotion/rollback、fallback decision table、OPEN closure conditions及P6/P7/Production负边界。`TEST-P6-PREDICTION-CONTRACT-001`另行机器验证四份v1 carrier的strict schema、round-trip、canonical identity、quantile/confidence、fallback、leakage、tamper、mixed-version与cross-lineage拒绝。
 
-TASK-P6-01历史上只允许文档/治理检查，TASK-P6-02只形成Schema/sample与contract checker。P6-03/04/05经各自独立授权增加synthetic dataset、baseline model/training、offline evaluation/fallback Gate与safe artifacts；P6-06增加显式local runtime、policy、tests与CI report；P6-07增加default-off Planning adapter与integration/invariant evidence，但仍没有migration、dependency lock、state、API/UI或Production变化。P6-08+必须继续逐Task独立授权；Provider与ignored closure按TASK-P6-11的single exact implementation manifest规则执行。
+TASK-P6-01历史上只允许文档/治理检查，TASK-P6-02只形成Schema/sample与contract checker。P6-03/04/05经各自独立授权增加synthetic dataset、baseline model/training、offline evaluation/fallback Gate与safe artifacts；P6-06增加显式local runtime、policy、tests与CI report；P6-07增加default-off Planning adapter与integration/invariant evidence；P6-08增加aggregate monitor、policy、tests与独立report，但仍没有migration、dependency lock、state、API/UI、workflow或Production变化。P6-09+必须继续逐Task独立授权；Provider与ignored closure按TASK-P6-11的single exact implementation manifest规则执行。
 
 ## 12. Compatibility and rollback
 

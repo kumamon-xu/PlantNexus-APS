@@ -17,8 +17,10 @@ from app.duration_prediction.runtime import (
     CandidatePredictor,
     DurationPredictionProvider,
     DurationPredictionRequest,
+    LoadedMonitoringPolicy,
     MonotonicClock,
     build_duration_prediction_provider,
+    load_duration_monitoring_policy,
     load_duration_runtime_policy,
 )
 
@@ -46,6 +48,13 @@ EVALUATION_PROFILE_PATH = (
 )
 RUNTIME_POLICY_PATH = (
     ROOT / "fixtures" / "synthetic" / "P6-DURATION-RUNTIME" / "runtime-policy.v1.json"
+)
+MONITORING_POLICY_PATH = (
+    ROOT
+    / "fixtures"
+    / "synthetic"
+    / "P6-DURATION-MONITORING"
+    / "monitor-policy.v1.json"
 )
 PREDICTION_SCHEMA_PATH = ROOT / "schemas" / "json" / "duration-prediction.schema.json"
 
@@ -76,6 +85,18 @@ def recompute_feature_identity(feature_record: dict[str, Any]) -> dict[str, Any]
     feature_record["feature_record_id"] = f"duration-feature-record-{digest}"
     feature_record["feature_record_fingerprint"] = f"sha256:{digest}"
     return feature_record
+
+
+def recompute_monitoring_window_identity(window: dict[str, Any]) -> dict[str, Any]:
+    projection = {
+        key: value
+        for key, value in window.items()
+        if key not in {"window_id", "window_fingerprint"}
+    }
+    digest = sha256(canonical_json_bytes(projection)).hexdigest()
+    window["window_id"] = f"duration-monitoring-window-{digest}"
+    window["window_fingerprint"] = f"sha256:{digest}"
+    return window
 
 
 def standard_duration_for_feature(feature_record: dict[str, Any]) -> dict[str, Any]:
@@ -162,6 +183,82 @@ def runtime_requests() -> list[DurationPredictionRequest]:
             )
         )
     return requests
+
+
+def load_monitoring_policy() -> LoadedMonitoringPolicy:
+    return load_duration_monitoring_policy(MONITORING_POLICY_PATH)
+
+
+def monitoring_window(
+    *,
+    observation_count: int = 8,
+    candidate_count: int = 7,
+    fallback_count: int = 1,
+    fallback_reason_counts: dict[str, int] | None = None,
+    late_observation_count: int = 0,
+    model_version_counts: dict[str, int] | None = None,
+    feature_schema_version_counts: dict[str, int] | None = None,
+    feature_bucket_counts: dict[str, int] | None = None,
+    quality_evaluated_count: int = 8,
+    quality_pass_count: int = 7,
+) -> dict[str, Any]:
+    policy = load_monitoring_policy()
+    document: dict[str, Any] = {
+        "canonicalization_version": "canonical-json.v1",
+        "data_plane": "SIMULATION",
+        "duration_monitoring_window_version": "duration-monitoring-window.v1",
+        "environment": "TEST",
+        "feature_distribution": {
+            "bucket_counts": feature_bucket_counts
+            if feature_bucket_counts is not None
+            else {"HIGH": 2, "LOW": 2, "MID_HIGH": 2, "MID_LOW": 2},
+            "profile_version": "duration-feature-aggregate-profile.v1",
+        },
+        "outcomes": {
+            "candidate_count": candidate_count,
+            "fallback_count": fallback_count,
+            "fallback_reason_counts": fallback_reason_counts
+            if fallback_reason_counts is not None
+            else ({"LOW_CONFIDENCE": fallback_count} if fallback_count else {}),
+        },
+        "policy_reference": {
+            "artifact_id": policy.document["policy_id"],
+            "document_version": "duration-monitoring-policy.v1",
+            "fingerprint": policy.fingerprint,
+            "threshold_policy_version": "duration-drift-thresholds.v1",
+        },
+        "privacy": {
+            "aggregation": "WINDOW_ONLY",
+            "direct_identifiers_present": False,
+            "raw_feature_fields_present": False,
+            "raw_label_fields_present": False,
+            "source_record_references_present": False,
+        },
+        "production_binding": False,
+        "quality": {
+            "evaluated_count": quality_evaluated_count,
+            "pass_count": quality_pass_count,
+            "policy_version": "duration-quality-aggregate.v1",
+        },
+        "runtime_reference": deepcopy(policy.document["runtime_reference"]),
+        "synthetic": True,
+        "versions": {
+            "feature_schema_version_counts": feature_schema_version_counts
+            if feature_schema_version_counts is not None
+            else {"duration-features.v1": observation_count},
+            "model_version_counts": model_version_counts
+            if model_version_counts is not None
+            else {"1.0.0": observation_count},
+        },
+        "window": {
+            "ended_at_utc": "2026-09-01T12:00:00Z",
+            "late_observation_count": late_observation_count,
+            "observation_count": observation_count,
+            "sequence": 1,
+            "started_at_utc": "2026-09-01T11:00:00Z",
+        },
+    }
+    return recompute_monitoring_window_identity(document)
 
 
 def sequence_clock(values: list[int]) -> MonotonicClock:

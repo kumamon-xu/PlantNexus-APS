@@ -14,14 +14,20 @@ import pytest
 from app.duration_prediction.runtime import (
     DurationPredictionProvider,
     P6RuntimeError,
+    load_duration_monitoring_policy,
     load_duration_runtime_policy,
+    monitor_duration_runtime,
 )
 from backend.tests.p6_duration_runtime_support import (
     MODEL_ARTIFACT_PATH,
+    MONITORING_POLICY_PATH,
     ROOT,
     RUNTIME_POLICY_PATH,
     build_test_provider,
+    load_monitoring_policy,
+    monitoring_window,
     recompute_feature_identity,
+    recompute_monitoring_window_identity,
     runtime_requests,
 )
 
@@ -224,3 +230,125 @@ def test_runtime_module_has_no_network_planning_persistence_or_cache_imports() -
         for imported in imports
         for prefix in forbidden_prefixes
     )
+
+
+def test_recomputed_monitoring_policy_tamper_is_rejected(
+    tmp_path: Path,
+) -> None:
+    policy = json.loads(MONITORING_POLICY_PATH.read_text(encoding="utf-8"))
+    policy["thresholds"]["fallback_rate_max"] = {
+        "denominator": 2,
+        "numerator": 1,
+    }
+    projection = {
+        key: value
+        for key, value in policy.items()
+        if key not in {"policy_id", "policy_fingerprint"}
+    }
+    digest = sha256(
+        json.dumps(
+            projection,
+            allow_nan=False,
+            ensure_ascii=False,
+            separators=(",", ":"),
+            sort_keys=True,
+        ).encode("utf-8")
+    ).hexdigest()
+    policy["policy_id"] = f"duration-monitoring-policy-{digest}"
+    policy["policy_fingerprint"] = f"sha256:{digest}"
+    target = tmp_path / "tampered-monitor-policy.json"
+    _write_json(target, policy)
+
+    with pytest.raises(P6RuntimeError) as captured:
+        load_duration_monitoring_policy(target)
+
+    assert captured.value.code == "MONITORING_POLICY_IDENTITY_MISMATCH"
+
+
+def test_raw_or_identifying_telemetry_defaults_disabled_without_reflection() -> None:
+    window = monitoring_window()
+    window["raw_payload"] = {
+        "operation_id": "secret-operation",
+        "actual_processing_seconds": 123,
+    }
+    recompute_monitoring_window_identity(window)
+
+    report = monitor_duration_runtime(load_monitoring_policy(), window)
+    serialized = json.dumps(report, sort_keys=True)
+
+    assert report["monitoring_decision"]["reason_codes"] == [
+        "TELEMETRY_PRIVACY_VIOLATION"
+    ]
+    assert report["monitoring_decision"]["recommendation"] == "DEFAULT_DISABLE"
+    assert "secret-operation" not in serialized
+    assert "actual_processing_seconds" not in serialized
+    assert report["window_reference"] is None
+
+
+@pytest.mark.parametrize(
+    "identifier_key",
+    [
+        "feature_record_id",
+        "operation_id",
+        "resource_id",
+        "resource_option_id",
+        "row_id",
+        "source_record_id",
+        "user_id",
+    ],
+)
+def test_direct_identifier_keys_are_classified_as_privacy_violations(
+    identifier_key: str,
+) -> None:
+    window = monitoring_window()
+    window[identifier_key] = "must-not-reflect"
+    recompute_monitoring_window_identity(window)
+
+    report = monitor_duration_runtime(load_monitoring_policy(), window)
+
+    assert report["monitoring_decision"]["reason_codes"] == [
+        "TELEMETRY_PRIVACY_VIOLATION"
+    ]
+    assert "must-not-reflect" not in json.dumps(report, sort_keys=True)
+
+
+def test_loaded_monitoring_policy_mutation_cannot_lower_thresholds() -> None:
+    policy = load_monitoring_policy()
+    policy.document["thresholds"]["fallback_rate_max"] = {
+        "denominator": 2,
+        "numerator": 1,
+    }
+
+    with pytest.raises(P6RuntimeError) as captured:
+        monitor_duration_runtime(policy, monitoring_window())
+
+    assert captured.value.code == "MONITORING_POLICY_IDENTITY_MISMATCH"
+
+
+def test_privacy_flag_tamper_defaults_disabled_even_with_fresh_identity() -> None:
+    window = monitoring_window()
+    window["privacy"]["raw_label_fields_present"] = True
+    recompute_monitoring_window_identity(window)
+
+    report = monitor_duration_runtime(load_monitoring_policy(), window)
+
+    assert report["monitoring_decision"]["reason_codes"] == [
+        "TELEMETRY_PRIVACY_VIOLATION"
+    ]
+    assert report["counts"]["observation_count"] == 0
+
+
+def test_unapproved_threshold_reference_defaults_disabled() -> None:
+    window = monitoring_window()
+    window["policy_reference"]["threshold_policy_version"] = (
+        "duration-drift-thresholds.v2"
+    )
+    recompute_monitoring_window_identity(window)
+
+    report = monitor_duration_runtime(load_monitoring_policy(), window)
+
+    assert report["monitoring_decision"]["reason_codes"] == [
+        "TELEMETRY_LINEAGE_INVALID"
+    ]
+    assert report["monitoring_decision"]["automatic_actions"] == []
+    assert report["boundaries"]["production_authorized"] is False

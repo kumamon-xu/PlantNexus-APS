@@ -15,15 +15,20 @@ from app.duration_prediction.runtime import (
     DurationPredictionProvider,
     DurationProviderSignal,
     P6RuntimeError,
+    load_duration_monitoring_policy,
     load_duration_runtime_policy,
+    monitor_duration_runtime,
     validate_duration_prediction,
 )
 from backend.tests.p6_duration_runtime_support import (
     MODEL_ARTIFACT_PATH,
+    MONITORING_POLICY_PATH,
     PREDICTION_SCHEMA_PATH,
     RUNTIME_POLICY_PATH,
     build_test_provider,
     load_json,
+    load_monitoring_policy,
+    monitoring_window,
     runtime_inputs,
     runtime_requests,
     sequence_clock,
@@ -387,3 +392,162 @@ def test_run_runtime_checks_is_replayable_from_same_offline_report(
     assert first["identities"] == second["identities"]
     assert first["fallback_summary"] == second["fallback_summary"]
     assert first["boundaries"] == second["boundaries"]
+
+
+def test_monitoring_policy_is_exact_aggregate_only_authority() -> None:
+    policy = load_duration_monitoring_policy(MONITORING_POLICY_PATH)
+
+    assert policy.document["policy_version"] == ("SIM-P6-DURATION-MONITORING-001@1.0.0")
+    assert policy.fallback_rate_max == Fraction(1, 4)
+    assert policy.feature_total_variation_max == Fraction(1, 4)
+    assert policy.quality_pass_ratio_min == Fraction(3, 4)
+    assert policy.expected_observation_count == 8
+    assert policy.late_observation_max_count == 0
+    assert policy.document["privacy_retention"] == {
+        "direct_identifiers_allowed": False,
+        "persistence": "NONE",
+        "provider_artifact": "AGGREGATE_REPORT_ONLY",
+        "raw_feature_fields_allowed": False,
+        "raw_label_fields_allowed": False,
+        "retained_window_count": 1,
+        "retention_policy_version": "run-scoped-aggregate-retention.v1",
+        "source_record_references_allowed": False,
+        "telemetry_granularity": "AGGREGATE_WINDOW_ONLY",
+    }
+
+
+def test_healthy_aggregate_window_has_no_disable_recommendation() -> None:
+    report = monitor_duration_runtime(load_monitoring_policy(), monitoring_window())
+
+    assert report["schema_version"] == "p6-duration-monitoring-report.v1"
+    assert report["result"] == "PASS"
+    assert report["monitoring_decision"] == {
+        "automatic_actions": [],
+        "external_side_effects": [],
+        "human_review_required": False,
+        "reason_codes": [],
+        "recommendation": "NO_DISABLE_RECOMMENDATION",
+        "runtime_fallback_reason": None,
+        "standard_duration_fallback_required": False,
+    }
+    assert report["metrics"] == {
+        "fallback_rate": {"denominator": 8, "numerator": 1},
+        "feature_total_variation": {"denominator": 1, "numerator": 0},
+        "quality_pass_ratio": {"denominator": 8, "numerator": 7},
+    }
+
+
+def test_exact_monitoring_threshold_boundaries_are_inclusive() -> None:
+    boundary = monitoring_window(
+        candidate_count=6,
+        fallback_count=2,
+        fallback_reason_counts={"LOW_CONFIDENCE": 2},
+        feature_bucket_counts={"HIGH": 4, "LOW": 2, "MID_HIGH": 1, "MID_LOW": 1},
+        quality_pass_count=6,
+    )
+
+    report = monitor_duration_runtime(load_monitoring_policy(), boundary)
+
+    assert report["metrics"] == {
+        "fallback_rate": {"denominator": 4, "numerator": 1},
+        "feature_total_variation": {"denominator": 4, "numerator": 1},
+        "quality_pass_ratio": {"denominator": 4, "numerator": 3},
+    }
+    assert report["monitoring_decision"]["reason_codes"] == []
+
+
+@pytest.mark.parametrize(
+    ("window_kwargs", "reason"),
+    [
+        (
+            {
+                "candidate_count": 5,
+                "fallback_count": 3,
+                "fallback_reason_counts": {"PROVIDER_TIMEOUT": 3},
+            },
+            "FALLBACK_RATE_BREACH",
+        ),
+        (
+            {
+                "feature_bucket_counts": {
+                    "HIGH": 4,
+                    "LOW": 4,
+                    "MID_HIGH": 0,
+                    "MID_LOW": 0,
+                }
+            },
+            "FEATURE_DISTRIBUTION_DRIFT",
+        ),
+        ({"quality_pass_count": 5}, "QUALITY_DRIFT"),
+        (
+            {"model_version_counts": {"1.0.0": 7, "2.0.0": 1}},
+            "MODEL_VERSION_DRIFT",
+        ),
+        (
+            {
+                "feature_schema_version_counts": {
+                    "duration-features.v1": 7,
+                    "duration-features.v2": 1,
+                }
+            },
+            "FEATURE_VERSION_DRIFT",
+        ),
+        ({"late_observation_count": 1}, "LATE_TELEMETRY"),
+    ],
+)
+def test_each_drift_signal_recommends_default_disable(
+    window_kwargs: dict[str, Any], reason: str
+) -> None:
+    report = monitor_duration_runtime(
+        load_monitoring_policy(), monitoring_window(**window_kwargs)
+    )
+
+    assert reason in report["monitoring_decision"]["reason_codes"]
+    assert report["monitoring_decision"]["recommendation"] == "DEFAULT_DISABLE"
+    assert report["monitoring_decision"]["runtime_fallback_reason"] == (
+        "DRIFT_GATE_DISABLED"
+    )
+    assert report["monitoring_decision"]["automatic_actions"] == []
+
+
+def test_short_monitoring_window_has_stable_insufficient_and_count_reasons() -> None:
+    report = monitor_duration_runtime(
+        load_monitoring_policy(),
+        monitoring_window(
+            observation_count=7,
+            candidate_count=6,
+            fallback_count=1,
+            fallback_reason_counts={"LOW_CONFIDENCE": 1},
+            model_version_counts={"1.0.0": 7},
+            feature_schema_version_counts={"duration-features.v1": 7},
+            feature_bucket_counts={"HIGH": 2, "LOW": 2, "MID_HIGH": 2, "MID_LOW": 1},
+            quality_evaluated_count=7,
+            quality_pass_count=7,
+        ),
+    )
+
+    assert report["monitoring_decision"]["reason_codes"] == [
+        "INSUFFICIENT_TELEMETRY",
+        "WINDOW_COUNT_MISMATCH",
+    ]
+    assert report["monitoring_decision"]["recommendation"] == "DEFAULT_DISABLE"
+
+
+def test_monitoring_report_is_byte_replayable_and_aggregate_only() -> None:
+    policy = load_monitoring_policy()
+    window = monitoring_window()
+
+    first = monitor_duration_runtime(policy, window)
+    second = monitor_duration_runtime(policy, window)
+
+    assert first == second
+    assert first["report_fingerprint"] == second["report_fingerprint"]
+    serialized = str(first)
+    for forbidden in (
+        "actual_processing_seconds",
+        "feature_record_id",
+        "operation_id",
+        "resource_option_id",
+        "source_record_id",
+    ):
+        assert forbidden not in serialized

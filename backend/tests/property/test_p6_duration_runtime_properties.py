@@ -10,10 +10,13 @@ from app.duration_prediction.runtime import (
     DurationCandidate,
     DurationPredictionProvider,
     DurationProviderSignal,
+    monitor_duration_runtime,
 )
 from backend.tests.p6_duration_runtime_support import (
     build_test_provider,
     canonical_json_bytes,
+    load_monitoring_policy,
+    monitoring_window,
     recompute_feature_identity,
     runtime_requests,
 )
@@ -109,5 +112,52 @@ def test_return_value_mutation_cannot_poison_later_predictions(
     poisoned["model_reference"]["model_version"] = "999.0.0"
 
     replay = provider.predict(request)
+
+    assert replay == expected
+
+
+@settings(max_examples=24, deadline=None)
+@given(fallback_count=st.integers(min_value=0, max_value=8))
+def test_fallback_rate_boundary_uses_exact_aggregate_arithmetic(
+    fallback_count: int,
+) -> None:
+    report = monitor_duration_runtime(
+        load_monitoring_policy(),
+        monitoring_window(
+            candidate_count=8 - fallback_count,
+            fallback_count=fallback_count,
+            fallback_reason_counts={"LOW_CONFIDENCE": fallback_count}
+            if fallback_count
+            else {},
+        ),
+    )
+
+    reasons = report["monitoring_decision"]["reason_codes"]
+    assert ("FALLBACK_RATE_BREACH" in reasons) is (fallback_count > 2)
+
+
+@settings(max_examples=24, deadline=None)
+@given(pass_count=st.integers(min_value=0, max_value=8))
+def test_quality_drift_boundary_uses_exact_aggregate_arithmetic(
+    pass_count: int,
+) -> None:
+    report = monitor_duration_runtime(
+        load_monitoring_policy(),
+        monitoring_window(quality_pass_count=pass_count),
+    )
+
+    reasons = report["monitoring_decision"]["reason_codes"]
+    assert ("QUALITY_DRIFT" in reasons) is (pass_count < 6)
+
+
+def test_monitoring_report_mutation_cannot_poison_replay() -> None:
+    policy = load_monitoring_policy()
+    window = monitoring_window()
+    expected = monitor_duration_runtime(policy, window)
+    poisoned = monitor_duration_runtime(policy, window)
+    poisoned["monitoring_decision"]["reason_codes"].append("QUALITY_DRIFT")
+    poisoned["counts"]["observation_count"] = 1
+
+    replay = monitor_duration_runtime(policy, window)
 
     assert replay == expected

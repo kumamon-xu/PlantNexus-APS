@@ -1,0 +1,95 @@
+{
+  "canonicalization_version": "canonical-json.v1",
+  "decision_policy": {
+    "automatic_actions": [],
+    "external_side_effects": false,
+    "on_breach": "DEFAULT_DISABLE_AND_STANDARD_DURATION_FALLBACK",
+    "on_invalid_input": "DEFAULT_DISABLE_AND_STANDARD_DURATION_FALLBACK"
+  },
+  "duration_monitoring_policy_version": "duration-monitoring-policy.v1",
+  "governance_boundary": {
+    "automatic_promotion_authorized": false,
+    "automatic_retraining_authorized": false,
+    "automatic_rollback_authorized": false,
+    "open_authority_gaps": [
+      "OPEN-010",
+      "OPEN-011",
+      "OPEN-014",
+      "OPEN-015"
+    ],
+    "planning_authority": "ADVISORY_DURATION_ONLY",
+    "production_authorized": false
+  },
+  "policy_fingerprint": "sha256:83df8f3f9ea8574f919734f2593b287cd80524e7bc3197795da07d1f90bfdf7b",
+  "policy_id": "duration-monitoring-policy-83df8f3f9ea8574f919734f2593b287cd80524e7bc3197795da07d1f90bfdf7b",
+  "policy_version": "SIM-P6-DURATION-MONITORING-001@1.0.0",
+  "privacy_retention": {
+    "direct_identifiers_allowed": false,
+    "persistence": "NONE",
+    "provider_artifact": "AGGREGATE_REPORT_ONLY",
+    "raw_feature_fields_allowed": false,
+    "raw_label_fields_allowed": false,
+    "retained_window_count": 1,
+    "retention_policy_version": "run-scoped-aggregate-retention.v1",
+    "source_record_references_allowed": false,
+    "telemetry_granularity": "AGGREGATE_WINDOW_ONLY"
+  },
+  "reference_distribution": {
+    "bucket_counts": {
+      "HIGH": 2,
+      "LOW": 2,
+      "MID_HIGH": 2,
+      "MID_LOW": 2
+    },
+    "profile_version": "duration-feature-aggregate-profile.v1",
+    "total_count": 8
+  },
+  "runtime_environment": {
+    "data_plane": "SIMULATION",
+    "environment": "TEST",
+    "explicit_aggregate_input_only": true,
+    "production_binding": false,
+    "synthetic": true
+  },
+  "runtime_reference": {
+    "duration_runtime_policy_version": "duration-runtime-policy.v1",
+    "feature_schema_version": "duration-features.v1",
+    "model_version": "1.0.0",
+    "policy_fingerprint": "sha256:6acf154fe7ed2ed5b4b28060fd033896ad3ad1b66436c9edadeefe6245faebc7",
+    "policy_id": "duration-runtime-policy-6acf154fe7ed2ed5b4b28060fd033896ad3ad1b66436c9edadeefe6245faebc7"
+  },
+  "synthetic_provenance": {
+    "assumption_profile": "SIM-P6-DURATION-MONITORING-001@1.0.0",
+    "assumption_refs": [
+      "SIM-ASSUMPTION-021",
+      "SIM-ASSUMPTION-022",
+      "SIM-ASSUMPTION-023",
+      "SIM-ASSUMPTION-024",
+      "SIM-ASSUMPTION-025",
+      "SIM-ASSUMPTION-026"
+    ]
+  },
+  "task_id": "TASK-P6-08",
+  "thresholds": {
+    "fallback_rate_max": {
+      "denominator": 4,
+      "numerator": 1
+    },
+    "feature_total_variation_max": {
+      "denominator": 4,
+      "numerator": 1
+    },
+    "quality_pass_ratio_min": {
+      "denominator": 4,
+      "numerator": 3
+    },
+    "threshold_policy_version": "duration-drift-thresholds.v1"
+  },
+  "window_policy": {
+    "expected_observation_count": 8,
+    "late_observation_max_count": 0,
+    "minimum_observation_count": 8,
+    "window_mode": "FIXED_COUNT_EXPLICIT_HALF_OPEN_UTC",
+    "window_version": "duration-monitoring-window.v1"
+  }
+}

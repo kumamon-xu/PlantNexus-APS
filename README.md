@@ -8,6 +8,8 @@ P5现为`completed`，P6 AI Duration Prediction现为`active`。本次TASK-P6-00
 
 P6计划覆盖数据/标签authority、versioned machine contract/Schema、确定性dataset、baseline model、offline evaluation/confidence/fallback、local runtime、planning ingress invariants、drift/fallback monitoring、vertical Gate和独立Exit。当前没有P6代码、Schema、migration、dependency、fixture/test assertion或workflow变化，`AI_DURATION_PREDICTION`仍为`DEFERRED/NOT_FORMED`。低置信度必须回退标准duration；AI不得改变routing、resource compatibility、hard constraints、schedule state或业务权重。P7、Production/UAT、真实data/model/approval authority、external integration/deployment、capacity与SLA均未进入。
 
+Planning implementation `5a58356d8df45c9156223d2b4ca935cc3e5f2f7a`的run/classify/docs/required=`33456013298`/`99696008255`/`99696033155`/`99696075050`全部成功，required由GitHub Actions app `15368`提供，FULL `99696035089`按`DOCS_ONLY`正确跳过。未过期profile/public-doc artifacts `9781446596`,`9781450874`的Provider/下载ZIP digests一致为`sha256:eb49b95cf654d9296ec956966b96b09fd075b346392c39122320ad31391794f1`、`sha256:c46d694aeb5a2835d219427a3a99f28301e71438ed36c9c7c882b8e800ad9022`；报告精确绑定原P5 closure、3份公开Markdown、4/4+1/1 checks和`issues=[]`。本提交只作两份README的evidence-only closure；closure exact provider完成前TASK-P6-00仍`in_progress`，P6-01不自动启动。
+
 ## TASK-P5-22 — independent P5 Exit Gate Audit
 
 TASK-P5-22已获独立授权，并从provider-verified P5-21 closure `d0a83c58cb4a2d4afa76e8c8cff08441574e2e30`冻结PHASE_GATE Diff base。审计没有复用P5-21 PASS代替Exit判断：它独立核对P5 first-parent topology的11个提交/run、8个成功与3个保留失败、22个未过期artifact及GitHub Actions app `15368`；下载ZIP digest、exact SHA、Task/Diff base、checks/issues语义均无漂移。

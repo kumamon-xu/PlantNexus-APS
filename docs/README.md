@@ -17,6 +17,8 @@ last_reviewed: 2026-09-01
 
 基线固定resource-option标准工时authority、completed-execution label eligibility/censoring、feature as-of leakage/time-group split、privacy/retention/deletion、immutable dataset/model/evaluation provenance、human promotion/rollback和fail-closed fallback。OPEN-010/011/014/015全部继续`OPEN`；没有Schema、migration、dependency、dataset、model、runtime、integration或Production authority，`AI_DURATION_PREDICTION`保持`DEFERRED/NOT_FORMED`，TASK-P6-02仍`planned/NOT_STARTED`。
 
+Implementation `856aac53cefa9477eb2b5906958f0a14775a950c` / run `33457799580`已取得exact DOCS_ONLY provider；classify/docs/required jobs `99701388867`,`99701411750`,`99701440089`成功，FULL `99701413055`正确skipped，required app=`15368`。Artifacts `9782059443`,`9782062454`未过期，Provider/下载ZIP digests一致为`sha256:ee500f13f1e01f304e859153486b022460b3a8af2a9d7ce1ac4e94d994fef7c8`、`sha256:3e59a355c1645a5017f3fda8bef9f8f70b38e06fc41f8994348800afe8e89b9a`；内容精确复现base/head、12 paths、4/4+1/1 checks、78→80 documents与`issues=[]`。当前tracked提交仅写回implementation evidence；其closure provider成功前TASK保持`in_progress`，P6-02不启动。
+
 ## P6 activation and planning boundary
 
 用户已明确批准P5→P6；最小承接检查只确认P5 closure `a565ca9965202527a3fae44c935415131a5be9d2`三端一致、0/0、clean、P5无active Task、TASK-P5-22=`done`、Exit 15/15 `READY`/`blocking_gaps=[]`以及required `validate`/GitHub Actions app `15368`未漂移，不构成P5重审或artifact重取。P5现为`completed`，P6现为`active`。

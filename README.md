@@ -1,5 +1,13 @@
 # PlantNexus APS
 
+## TASK-P6-09 — AI duration vertical-slice integration Gate
+
+P6-09新增只聚合证据的`p6-ai-duration-vertical-slice-report.v1`：每次Gate必须独立执行两轮`governance → contract → dataset → model → evaluation → runtime/fallback → Planning ingress → monitoring`完整P6链，并在每轮额外重放P2标准Problem/Global CP-SAT/fresh C-001～C-011 Validator与P4五步dynamic disruption。两轮只比较排除timestamp、commit/report identity与development timing后的versioned semantic projection；raw-safe owner subreport及performance observation仍完整保留并由manifest绑定。
+
+Gate精确检查P6-07/08 Provider identity、跨stage dataset/model/evaluation/runtime/Planning/monitor lineage、default-off标准Problem、19项exact标准工时fallback、C-003/C-010、tamper/mixed version/privacy/drift与no-auto-action。新增repository-evidence reporter和两个Gate测试由既有Backend FULL suite不可跳过执行，Task/base/checks/issues/gaps与report/manifest fingerprint进入JUnit属性；workflow与P6-01～08 owner实现均不修改。运行`uv run python -m tests.p6.p6_duration_gate_report --root . --repeat 2 --report build/validation/p6-ai-duration-vertical-slice.json --manifest build/validation/p6-ai-duration-vertical-slice-manifest.json --subreport-dir build/validation/p6-09-subreports`可生成本地PHASE_GATE证据。
+
+PASS只说明Simulation/development vertical slice可重复、default-off且fail-closed；它不是P6 Exit、P7 Reality Calibration、Production/UAT、真实data/model/approval authority、deployment、capacity或SLA，也不会自动启动TASK-P6-10。
+
 ## TASK-P6-08 — aggregate drift/fallback monitoring and default-disable
 
 P6-08新增content-addressed `SIM-P6-DURATION-MONITORING-001@1.0.0` / `SIM-ASSUMPTION-026`，只在`SIMULATION/TEST`消费固定计数的aggregate window。输入仅含candidate/fallback计数、19项stable fallback reason计数、model/feature version计数、四个coarse feature bucket计数及quality pass/evaluated计数；raw prediction、feature、label、operation/resource/source identity、credential和自由文本均不接受、不进入report。Policy固定8项窗口、fallback rate≤`1/4`、feature total variation≤`1/4`、quality pass ratio≥`3/4`、late count=`0`与run-scoped/no-persistence retention。

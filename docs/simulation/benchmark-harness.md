@@ -6,10 +6,16 @@ spec_version: 0.3.0
 phase: P0-P6
 normative: true
 source_sections: [45, 51, 52, 53, 54, 55, 56, 58, 89]
-last_reviewed: 2026-09-01
+last_reviewed: 2026-09-02
 ---
 
 # Benchmark Harness 合同
+
+## TASK-P6-09 fresh vertical-Gate observations
+
+P6-09每个完整replay都重新执行P6-05 frozen held-out quality、P6-06 runtime resource profile、P6-07 standard-vs-enabled Planning observation、P6-08 aggregate-monitor overhead，以及P4 dynamic disruption的5步/8 events/5 fresh Validator/5 complete ChangeReport。两轮保留原始development observation，但semantic consistency明确排除timestamp、report identity与host timing；不得用性能噪声制造determinism失败，也不得删除原始观测冒充相同。
+
+Quality仍要求model/standard MAE `11/20`秒、coverage `4/4`和Gate `READY_FOR_SIMULATION_RUNTIME`；runtime仍使用既有16 warmup/256 measured与P95/peak边界，monitor仍为observation-only，Planning comparison不设threshold。P6-09不修改任何profile、seed、threshold、baseline或P2 XS/S/M Benchmark，也不将synthetic Gate解释为现实分布、Production capacity或SLA。
 
 ## TASK-P6-06 development runtime profile
 

@@ -6,10 +6,18 @@ spec_version: 0.3.0
 phase: P6
 normative: false
 source_sections: [2, 6, 70]
-last_reviewed: 2026-09-01
+last_reviewed: 2026-09-02
 ---
 
 # PlantNexus APS 文档中心
+
+## TASK-P6-09 AI duration vertical-slice integration Gate
+
+P6-09以[端到端计划链路](architecture/end-to-end-planning-flow.md)为边界，新建只聚合证据的`p6-ai-duration-vertical-slice-report.v1`及compact manifest。Gate逐轮fresh执行P6-01治理冻结、P6-02合同、P6-03 dataset、P6-04 model、P6-05 evaluation、P6-06 runtime/fallback、P6-07 Planning ingress与P6-08 monitor，再重放P2 Problem/Solver/formal Validator和P4五步dynamic disruption；两轮稳定投影必须逐stage及combined一致。
+
+Aggregate checks固定Provider依赖identity、12条cross-stage lineage等式、model/standard MAE、default-off与19项fallback、tamper/mixed-version/privacy/drift/no-auto-action、C-003/C-010、P4 facts/freeze/ChangeReport/Simulator、exact Task scope及raw-safe边界。既有Backend FULL suite直接运行Gate并把Task/base/checks/issues/gaps与manifest fingerprint写入JUnit；完整FULL validation仍重放既有owner reports，workflow不增加step。详见[能力矩阵](core/capability-matrix.md)与[Benchmark Harness](simulation/benchmark-harness.md)。
+
+Gate PASS不是Exit READY或Production证据；P6-01～08 owner、Schema/migration/dependency/lock/workflow、routing/resource/hard constraints/state/weights全部保持冻结，P6-10仍需独立授权。
 
 ## TASK-P6-08 aggregate monitoring and default-disable
 

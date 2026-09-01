@@ -6,10 +6,31 @@ spec_version: 0.3.0
 phase: cross-phase
 normative: true
 source_sections: [0, 9, 10, 23, 24, 30, 32, 33, 35, 57, 67]
-last_reviewed: 2026-09-01
+last_reviewed: 2026-09-02
 ---
 
 # 端到端计划链路
+
+## TASK-P6-09 fresh aggregate Gate edge
+
+P6-09不增加业务edge，而是独立重放并验证现有链：
+
+```text
+P6-01 governance freeze
+→ P6-02 strict carriers
+→ P6-03 synthetic dataset
+→ P6-04 safe deterministic model
+→ P6-05 held-out Gate
+→ P6-06 candidate or exact standard fallback
+→ P6-07 default-off standard/selected Problem
+→ existing Global CP-SAT
+→ fresh formal Validator
+→ P6-08 aggregate monitor/default-disable advice
+```
+
+每轮又从同一仓库fresh执行P4五步dynamic disruption，要求facts、effective HARD/freeze、OBJ-002 Stability、complete ChangeReport、Simulator与5次fresh Validator全部通过；Gate本身不把预测接入P4 replan，也不写PlanningRun/ScheduleVersion/ExportJob。两轮stage projection与cross-lineage必须一致，default-off/fallback继续返回标准Problem，模型candidate仍只允许改变NOT_STARTED option既有duration/source/version三字段。
+
+Gate reporter没有runtime authority、database、network、external alert或自动动作。移除该reporter/测试不会改变标准计划链；Gate失败只产生blocking gap，不能在聚合层修复owner或放宽expected。P6-10 Exit Audit、P7与Production链继续不存在。
 
 ## TASK-P6-07 default-off Planning ingress
 
@@ -17,13 +38,13 @@ Simulation/development计划链现在可显式选择`verified Snapshot → froze
 
 只有P6-06 exact carrier、Feature/Model/Evaluation/Policy lineage及同resource-option标准工时authority全部通过时，adapter才为NOT_STARTED option把既有`final_duration_seconds/duration_source/source_version`投影为model p50、`MODEL_CANDIDATE`与model version，并生成新的canonical Problem/hash及独立lineage sidecar。RUNNING remainder、routing、candidate resources、hard facts/locks、operation state、delivery weights与所有其他Problem字段逐字继承标准Problem；三条路径都交给未修改Solver并由fresh C-001～C-011 Validator独立裁决。
 
-该edge没有API/UI、PlanningRun/ScheduleVersion/ExportJob写入、P4 replan改变、Production toggle或外部服务。Default-off rollback直接恢复完整标准链；P6-08 drift monitoring及P6-09+仍是独立、未启动后继。
+该edge没有API/UI、PlanningRun/ScheduleVersion/ExportJob写入、P4 replan改变、Production toggle或外部服务。Default-off rollback直接恢复完整标准链；P6-08后来形成aggregate monitor，P6-09后来只形成上节fresh聚合Gate，均不改变该edge authority。
 
 ## TASK-P6-06 local runtime edge
 
 当前新增且止步于P6边界的链为`explicit Simulation/Test request + authoritative resource-option standard duration + exact FeatureRecord → exact runtime policy + P6-04 safe model + P6-05 READY Gate → pure p50/p90/confidence → P6-02 DurationPrediction candidate or exact standard fallback`。任一missing/timeout/invalid/low-confidence/version/digest/lineage/scope/authority/privacy问题在provider内收敛为稳定fallback；standard authority无效时整条边fail closed。
 
-P6-06 edge本身不读取或写入PlanningSnapshot/Problem/Solution/Run/ScheduleVersion/ExportJob，不调用Solver/Validator/replan/API/UI，也不修改routing、resource compatibility、hard constraint、state或weight。P6-07后来只通过上节default-off adapter消费carrier；P6-08仍拥有尚未启动的drift monitoring，Production链继续不存在。
+P6-06 edge本身不读取或写入PlanningSnapshot/Problem/Solution/Run/ScheduleVersion/ExportJob，不调用Solver/Validator/replan/API/UI，也不修改routing、resource compatibility、hard constraint、state或weight。P6-07后来只通过上节default-off adapter消费carrier；P6-08形成aggregate monitor，P6-09只聚合fresh证据，Production链继续不存在。
 
 ## TASK-P6-02 duration-prediction machine-contract boundary
 

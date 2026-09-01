@@ -1,4 +1,4 @@
-"""Collect repository-level P5 evidence tests with the existing Backend suite."""
+"""Collect repository-level evidence tests with the existing Backend suite."""
 
 from __future__ import annotations
 
@@ -12,6 +12,11 @@ P5_TESTS = (
     ROOT / "tests/p5/test_p5_capability_qualification_unit.py",
     ROOT / "tests/p5/test_p5_capability_qualification_integration.py",
 )
+P6_GATE_TESTS = (
+    ROOT / "tests/p6/test_p6_duration_gate.py",
+    ROOT / "tests/p6/test_p6_duration_gate_rejections.py",
+)
+REPOSITORY_EVIDENCE_TESTS = P5_TESTS + P6_GATE_TESTS
 FULL_BACKEND_SUITES = tuple(
     ROOT / f"backend/tests/{name}"
     for name in (
@@ -32,7 +37,7 @@ def _contains(target: Path, candidate: Path) -> bool:
 
 
 def pytest_configure(config: pytest.Config) -> None:
-    """Append bounded P5 tests only to the repository's complete Backend suite."""
+    """Append bounded repository tests only to the complete Backend suite."""
 
     targets = [
         (ROOT / value).resolve() if not Path(value).is_absolute() else Path(value).resolve()
@@ -40,7 +45,7 @@ def pytest_configure(config: pytest.Config) -> None:
     ]
     if not all(suite in targets for suite in FULL_BACKEND_SUITES):
         return
-    for test_path in P5_TESTS:
+    for test_path in REPOSITORY_EVIDENCE_TESTS:
         if not any(_contains(target, test_path) for target in targets):
             config.args.append(str(test_path))
             targets.append(test_path)

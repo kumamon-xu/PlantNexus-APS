@@ -6,10 +6,16 @@ spec_version: 0.3.0
 phase: cross-phase
 normative: true
 source_sections: [7, 8, 27, 43, 81, 82, 107]
-last_reviewed: 2026-09-01
+last_reviewed: 2026-09-02
 ---
 
 # 能力矩阵
+
+## TASK-P6-09 Simulation vertical Gate status
+
+`AI_DURATION_PREDICTION`继续`DEFERRED`，当前分项为`CONTRACT_V1 + SIMULATION_DATASET_V1 + BASELINE_MODEL_V1 + OFFLINE_GATE_READY + LOCAL_RUNTIME_V1 + PLANNING_INGRESS_V1 + AGGREGATE_MONITOR_V1 + VERTICAL_GATE_V1 / DEFAULT_OFF_SIMULATION_ONLY`。`VERTICAL_GATE_V1`只表示两轮P6 owner chain、P2 Problem/Solver/正式Validator与适用P4 dynamic scenarios可fresh聚合并得到相同语义；它不新增prediction、planning或monitor authority。
+
+Gate固定验证Provider dependency identities、完整lineage、default-off、标准工时fallback、negative matrix、P2/P4冻结边界与raw-safe evidence。Schema、migration、dependency/lock、workflow、owner expected与业务state均无变化；OPEN-010/011/014/015继续OPEN。该状态不是P6 Exit READY，不形成P7 Reality Calibration、Production/UAT、真实data/model/approval authority、deployment、capacity或SLA。
 
 ## TASK-P6-06 Simulation local runtime status
 

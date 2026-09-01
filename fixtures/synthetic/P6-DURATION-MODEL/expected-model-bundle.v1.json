@@ -1,0 +1,478 @@
+{
+  "bundle_fingerprint": "sha256:4536d9700acdbe923a69c20692a19d6f4d8a6a53463e828ea582925676820c8e",
+  "canonicalization_version": "canonical-json.v1",
+  "duration_model_bundle_version": "duration-model-bundle.v1",
+  "model_manifest": {
+    "canonicalization_version": "canonical-json.v1",
+    "created_at_utc": "2026-09-01T09:00:00Z",
+    "data_plane": "SIMULATION",
+    "dataset_manifest": {
+      "artifact_id": "duration-dataset-manifest-d02f7818d4744e8a86205cfafe25efe1b39e2f1db6edc485a38e10aea8470bda",
+      "document_version": "duration-dataset-manifest.v1",
+      "fingerprint": "sha256:d02f7818d4744e8a86205cfafe25efe1b39e2f1db6edc485a38e10aea8470bda"
+    },
+    "duration_model_manifest_version": "duration-model-manifest.v1",
+    "environment": "TEST",
+    "fallback_contract_version": "standard-duration-fallback.v1",
+    "feature_schema_version": "duration-features.v1",
+    "governance_boundary": {
+      "open_authority_gaps": [
+        "OPEN-010",
+        "OPEN-011",
+        "OPEN-014",
+        "OPEN-015"
+      ],
+      "production_authorized": false
+    },
+    "model_artifact": {
+      "artifact_digest": "sha256:472cc92ada06b488fceb8477ac5a3dfe06d6391dd5ada8b441d55b96e9640ddd",
+      "media_type": "application/octet-stream",
+      "serialization_format": "plantnexus-safe-canonical-json",
+      "serialization_version": "1.0.0"
+    },
+    "model_manifest_fingerprint": "sha256:35f84b792028a1bf135fcc44d415423d47593f2843058d119fe288efd7195bf0",
+    "model_manifest_id": "duration-model-manifest-35f84b792028a1bf135fcc44d415423d47593f2843058d119fe288efd7195bf0",
+    "model_version": "1.0.0",
+    "production_binding": false,
+    "schema_set_version": "2.9.0",
+    "scope": {
+      "factory_ids": [
+        "factory-sim-p6-001"
+      ],
+      "operation_type_ids": [
+        "operation-type-milling",
+        "operation-type-turning"
+      ],
+      "resource_ids": [
+        "resource-sim-p6-1",
+        "resource-sim-p6-2",
+        "resource-sim-p6-3"
+      ]
+    },
+    "synthetic": true,
+    "synthetic_provenance": {
+      "assumption_profile": "SIM-P6-DURATION-CONTRACT-001@1.0.0",
+      "assumption_refs": [
+        "SIM-ASSUMPTION-021",
+        "SIM-ASSUMPTION-022",
+        "SIM-ASSUMPTION-023"
+      ]
+    },
+    "training_data_cutoff_utc": "2026-07-26T09:05:00Z",
+    "training_provenance": {
+      "algorithm_id": "grouped-median-residual-baseline",
+      "algorithm_version": "1.0.0",
+      "code_revision": "73d146ccc7efa1b682f49d6da7ab2d2e5cc57b65",
+      "configuration": {
+        "artifact_id": "duration-training-config-8e7a6ec503298eec720b45520ebdce45fd114e55e8e96fdce4668895f4d2da45",
+        "document_version": "duration-training-config.v1",
+        "fingerprint": "sha256:8e7a6ec503298eec720b45520ebdce45fd114e55e8e96fdce4668895f4d2da45"
+      },
+      "dependency_lock_digest": "sha256:8b13617f31aa6a933347fc7b8ba010330cbb3f2d764f75c306dd9b6d77387a82",
+      "deterministic_replay_reference": {
+        "artifact_id": "duration-training-replay-821e7bbb418292b5baa1f72a1a7123db89733ff2ebfe451f3e2ed68a807ee60b",
+        "document_version": "duration-training-replay.v1",
+        "fingerprint": "sha256:821e7bbb418292b5baa1f72a1a7123db89733ff2ebfe451f3e2ed68a807ee60b"
+      }
+    },
+    "use_authorization": {
+      "decision": "SIMULATION_EVALUATION_ONLY",
+      "decision_reference": {
+        "artifact_id": "duration-model-decision-3cc01f8d7a9be4d27176ec150651ad373430f9b61c2e9f2c0b2f16ec2f8f936e",
+        "document_version": "duration-model-decision.v1",
+        "fingerprint": "sha256:3cc01f8d7a9be4d27176ec150651ad373430f9b61c2e9f2c0b2f16ec2f8f936e"
+      },
+      "production_authorized": false,
+      "rollback_reference": {
+        "artifact_id": "standard-duration-authority-72ea81df5f9a50b400012489bc0406427679bdd4693d5c3c3f8db6d8da605480",
+        "document_version": "standard-duration-authority.v1",
+        "fingerprint": "sha256:72ea81df5f9a50b400012489bc0406427679bdd4693d5c3c3f8db6d8da605480"
+      }
+    }
+  },
+  "replay": {
+    "artifact_id": "duration-training-replay-821e7bbb418292b5baa1f72a1a7123db89733ff2ebfe451f3e2ed68a807ee60b",
+    "boundaries": {
+      "confidence_threshold": "NOT_FORMED",
+      "evaluation_gate": "NOT_RUN",
+      "labels_in_replay_artifact": false,
+      "production_authorized": false,
+      "promotion": "NOT_AUTHORIZED",
+      "quality_metrics": "NOT_COMPUTED",
+      "runtime_or_planning_authority": "NONE"
+    },
+    "configuration": {
+      "artifact_id": "duration-training-config-8e7a6ec503298eec720b45520ebdce45fd114e55e8e96fdce4668895f4d2da45",
+      "document_version": "duration-training-config.v1",
+      "fingerprint": "sha256:8e7a6ec503298eec720b45520ebdce45fd114e55e8e96fdce4668895f4d2da45"
+    },
+    "dataset_bundle_fingerprint": "sha256:137ed52753f8decfcc2b0903c37e697f18c0e5a20369458aabddba6e7df81d98",
+    "dataset_manifest": {
+      "artifact_id": "duration-dataset-manifest-d02f7818d4744e8a86205cfafe25efe1b39e2f1db6edc485a38e10aea8470bda",
+      "document_version": "duration-dataset-manifest.v1",
+      "fingerprint": "sha256:d02f7818d4744e8a86205cfafe25efe1b39e2f1db6edc485a38e10aea8470bda"
+    },
+    "determinism": {
+      "artifact_bytes_identical": true,
+      "estimate_bytes_identical": true,
+      "randomness": "NONE",
+      "same_input_replays": 2,
+      "source_order_replays": 1
+    },
+    "document_version": "duration-training-replay.v1",
+    "estimates": [
+      {
+        "dataset_row_id": "duration-dataset-row-0257e777088c8a90a4aedf3450dc185c5e34a01bc67bacbc0e698b96b19f6215",
+        "estimate": {
+          "confidence_status": "NOT_ESTABLISHED_BY_P6_04",
+          "data_plane": "SIMULATION",
+          "duration_baseline_estimate_version": "duration-baseline-estimate.v1",
+          "environment": "TEST",
+          "estimate_fingerprint": "sha256:7b9c3e57bc3f7cbbeef8a5eb63b908f236c5e0d5b2d03da78e4dff790a95d3e4",
+          "estimate_id": "duration-baseline-estimate-7b9c3e57bc3f7cbbeef8a5eb63b908f236c5e0d5b2d03da78e4dff790a95d3e4",
+          "evaluation_gate": "NOT_EVALUATED_BY_P6_04",
+          "feature_record_reference": {
+            "duration_feature_record_version": "duration-feature-record.v1",
+            "feature_record_fingerprint": "sha256:f2d0ce3d6c78d181c9b38c5dc64b71fe76d93e5818018ff604dc71d15ae2639b",
+            "feature_record_id": "duration-feature-record-f2d0ce3d6c78d181c9b38c5dc64b71fe76d93e5818018ff604dc71d15ae2639b",
+            "feature_schema_version": "duration-features.v1"
+          },
+          "model_reference": {
+            "model_artifact_digest": "sha256:472cc92ada06b488fceb8477ac5a3dfe06d6391dd5ada8b441d55b96e9640ddd",
+            "model_version": "1.0.0"
+          },
+          "p50_seconds": 618,
+          "p90_seconds": 638,
+          "planning_authority": "NONE",
+          "production_binding": false,
+          "synthetic": true,
+          "unit": "SECONDS"
+        },
+        "partition": "train"
+      },
+      {
+        "dataset_row_id": "duration-dataset-row-0340c9784327b1404ac5dd0f7561e173ea1078a4058487675c4829fb25f9afc8",
+        "estimate": {
+          "confidence_status": "NOT_ESTABLISHED_BY_P6_04",
+          "data_plane": "SIMULATION",
+          "duration_baseline_estimate_version": "duration-baseline-estimate.v1",
+          "environment": "TEST",
+          "estimate_fingerprint": "sha256:9584d9f660aaaa58c83b0203529792b567a5f28a4d8dfdeff2ff112f94ab4899",
+          "estimate_id": "duration-baseline-estimate-9584d9f660aaaa58c83b0203529792b567a5f28a4d8dfdeff2ff112f94ab4899",
+          "evaluation_gate": "NOT_EVALUATED_BY_P6_04",
+          "feature_record_reference": {
+            "duration_feature_record_version": "duration-feature-record.v1",
+            "feature_record_fingerprint": "sha256:853961fa5221ed5a2429593ab8f20f35369cb659160ff4bf8c5376e0e36fccf0",
+            "feature_record_id": "duration-feature-record-853961fa5221ed5a2429593ab8f20f35369cb659160ff4bf8c5376e0e36fccf0",
+            "feature_schema_version": "duration-features.v1"
+          },
+          "model_reference": {
+            "model_artifact_digest": "sha256:472cc92ada06b488fceb8477ac5a3dfe06d6391dd5ada8b441d55b96e9640ddd",
+            "model_version": "1.0.0"
+          },
+          "p50_seconds": 590,
+          "p90_seconds": 610,
+          "planning_authority": "NONE",
+          "production_binding": false,
+          "synthetic": true,
+          "unit": "SECONDS"
+        },
+        "partition": "validation"
+      },
+      {
+        "dataset_row_id": "duration-dataset-row-13d0bcb00ef5279f05f741d1fe827613cac020540fe45abbba9025b586d814f0",
+        "estimate": {
+          "confidence_status": "NOT_ESTABLISHED_BY_P6_04",
+          "data_plane": "SIMULATION",
+          "duration_baseline_estimate_version": "duration-baseline-estimate.v1",
+          "environment": "TEST",
+          "estimate_fingerprint": "sha256:dc53697c8454ec1dcd204706138b44cf78239fcd54af7e53570c86424a780a8e",
+          "estimate_id": "duration-baseline-estimate-dc53697c8454ec1dcd204706138b44cf78239fcd54af7e53570c86424a780a8e",
+          "evaluation_gate": "NOT_EVALUATED_BY_P6_04",
+          "feature_record_reference": {
+            "duration_feature_record_version": "duration-feature-record.v1",
+            "feature_record_fingerprint": "sha256:79a5b0c4920b0a62cb22bdb825aa49ddb5d66b73e76a9d1d13093c19431af111",
+            "feature_record_id": "duration-feature-record-79a5b0c4920b0a62cb22bdb825aa49ddb5d66b73e76a9d1d13093c19431af111",
+            "feature_schema_version": "duration-features.v1"
+          },
+          "model_reference": {
+            "model_artifact_digest": "sha256:472cc92ada06b488fceb8477ac5a3dfe06d6391dd5ada8b441d55b96e9640ddd",
+            "model_version": "1.0.0"
+          },
+          "p50_seconds": 578,
+          "p90_seconds": 598,
+          "planning_authority": "NONE",
+          "production_binding": false,
+          "synthetic": true,
+          "unit": "SECONDS"
+        },
+        "partition": "train"
+      },
+      {
+        "dataset_row_id": "duration-dataset-row-3a70325543507e9f4a35085402f437db9cf486a42ceed6424c76cd6dcb3cc159",
+        "estimate": {
+          "confidence_status": "NOT_ESTABLISHED_BY_P6_04",
+          "data_plane": "SIMULATION",
+          "duration_baseline_estimate_version": "duration-baseline-estimate.v1",
+          "environment": "TEST",
+          "estimate_fingerprint": "sha256:2046bbd0131010cdc50420541e3f75a2c3fd21927144fd2afdf6eccb5183d8f0",
+          "estimate_id": "duration-baseline-estimate-2046bbd0131010cdc50420541e3f75a2c3fd21927144fd2afdf6eccb5183d8f0",
+          "evaluation_gate": "NOT_EVALUATED_BY_P6_04",
+          "feature_record_reference": {
+            "duration_feature_record_version": "duration-feature-record.v1",
+            "feature_record_fingerprint": "sha256:34061e0afe04b0b6370a722356bb1ed5c159be9602114139b23f6382b0a413f2",
+            "feature_record_id": "duration-feature-record-34061e0afe04b0b6370a722356bb1ed5c159be9602114139b23f6382b0a413f2",
+            "feature_schema_version": "duration-features.v1"
+          },
+          "model_reference": {
+            "model_artifact_digest": "sha256:472cc92ada06b488fceb8477ac5a3dfe06d6391dd5ada8b441d55b96e9640ddd",
+            "model_version": "1.0.0"
+          },
+          "p50_seconds": 578,
+          "p90_seconds": 598,
+          "planning_authority": "NONE",
+          "production_binding": false,
+          "synthetic": true,
+          "unit": "SECONDS"
+        },
+        "partition": "test"
+      },
+      {
+        "dataset_row_id": "duration-dataset-row-b9271610d7e69393e60099b814e292c15d917fff57200d7aaf4031901ea022db",
+        "estimate": {
+          "confidence_status": "NOT_ESTABLISHED_BY_P6_04",
+          "data_plane": "SIMULATION",
+          "duration_baseline_estimate_version": "duration-baseline-estimate.v1",
+          "environment": "TEST",
+          "estimate_fingerprint": "sha256:c972f0968ab0d28c774f656d7c6bb0c60f125dd8f30f609d075009cea3aae287",
+          "estimate_id": "duration-baseline-estimate-c972f0968ab0d28c774f656d7c6bb0c60f125dd8f30f609d075009cea3aae287",
+          "evaluation_gate": "NOT_EVALUATED_BY_P6_04",
+          "feature_record_reference": {
+            "duration_feature_record_version": "duration-feature-record.v1",
+            "feature_record_fingerprint": "sha256:5617855246235b535bde35b73b2702d80c4c1986ecc554dcd4942bde442fa324",
+            "feature_record_id": "duration-feature-record-5617855246235b535bde35b73b2702d80c4c1986ecc554dcd4942bde442fa324",
+            "feature_schema_version": "duration-features.v1"
+          },
+          "model_reference": {
+            "model_artifact_digest": "sha256:472cc92ada06b488fceb8477ac5a3dfe06d6391dd5ada8b441d55b96e9640ddd",
+            "model_version": "1.0.0"
+          },
+          "p50_seconds": 628,
+          "p90_seconds": 648,
+          "planning_authority": "NONE",
+          "production_binding": false,
+          "synthetic": true,
+          "unit": "SECONDS"
+        },
+        "partition": "test"
+      },
+      {
+        "dataset_row_id": "duration-dataset-row-d337c4f66f5d0e109035ef947467ada1297914e314dcd8ce04475a6c6e247a52",
+        "estimate": {
+          "confidence_status": "NOT_ESTABLISHED_BY_P6_04",
+          "data_plane": "SIMULATION",
+          "duration_baseline_estimate_version": "duration-baseline-estimate.v1",
+          "environment": "TEST",
+          "estimate_fingerprint": "sha256:2f7375d19618345d1c2973acaca8876e8194dedc1c236009fbd80dd5bb36b103",
+          "estimate_id": "duration-baseline-estimate-2f7375d19618345d1c2973acaca8876e8194dedc1c236009fbd80dd5bb36b103",
+          "evaluation_gate": "NOT_EVALUATED_BY_P6_04",
+          "feature_record_reference": {
+            "duration_feature_record_version": "duration-feature-record.v1",
+            "feature_record_fingerprint": "sha256:ea215bb1d7c0324c6ba4344aa6c36ed8272f6f47f9ca84a58fba3f5deb9394cf",
+            "feature_record_id": "duration-feature-record-ea215bb1d7c0324c6ba4344aa6c36ed8272f6f47f9ca84a58fba3f5deb9394cf",
+            "feature_schema_version": "duration-features.v1"
+          },
+          "model_reference": {
+            "model_artifact_digest": "sha256:472cc92ada06b488fceb8477ac5a3dfe06d6391dd5ada8b441d55b96e9640ddd",
+            "model_version": "1.0.0"
+          },
+          "p50_seconds": 580,
+          "p90_seconds": 600,
+          "planning_authority": "NONE",
+          "production_binding": false,
+          "synthetic": true,
+          "unit": "SECONDS"
+        },
+        "partition": "train"
+      },
+      {
+        "dataset_row_id": "duration-dataset-row-d9328b0ca1cf59445d9bdddc3fdf8de138d11b04d5d2b4a567bda311b3965263",
+        "estimate": {
+          "confidence_status": "NOT_ESTABLISHED_BY_P6_04",
+          "data_plane": "SIMULATION",
+          "duration_baseline_estimate_version": "duration-baseline-estimate.v1",
+          "environment": "TEST",
+          "estimate_fingerprint": "sha256:2cf9890eb57a00a41c4e77e681a6e6a6a92c05a98941a43aa58ab0f569576b89",
+          "estimate_id": "duration-baseline-estimate-2cf9890eb57a00a41c4e77e681a6e6a6a92c05a98941a43aa58ab0f569576b89",
+          "evaluation_gate": "NOT_EVALUATED_BY_P6_04",
+          "feature_record_reference": {
+            "duration_feature_record_version": "duration-feature-record.v1",
+            "feature_record_fingerprint": "sha256:eee3f9407eb11428b0cf5d91bd71cf6d28105c269de4d5d6aa0f9b4b313cc553",
+            "feature_record_id": "duration-feature-record-eee3f9407eb11428b0cf5d91bd71cf6d28105c269de4d5d6aa0f9b4b313cc553",
+            "feature_schema_version": "duration-features.v1"
+          },
+          "model_reference": {
+            "model_artifact_digest": "sha256:472cc92ada06b488fceb8477ac5a3dfe06d6391dd5ada8b441d55b96e9640ddd",
+            "model_version": "1.0.0"
+          },
+          "p50_seconds": 570,
+          "p90_seconds": 590,
+          "planning_authority": "NONE",
+          "production_binding": false,
+          "synthetic": true,
+          "unit": "SECONDS"
+        },
+        "partition": "validation"
+      },
+      {
+        "dataset_row_id": "duration-dataset-row-fc60f2cf864ce953f96fb208c3a5460b5d7c19574cd171c3ee6f583752d5621a",
+        "estimate": {
+          "confidence_status": "NOT_ESTABLISHED_BY_P6_04",
+          "data_plane": "SIMULATION",
+          "duration_baseline_estimate_version": "duration-baseline-estimate.v1",
+          "environment": "TEST",
+          "estimate_fingerprint": "sha256:0b96bd7ab7bdf20d4fa2ff096ff3e3d644f549c285e1feebc2206a264a1064dd",
+          "estimate_id": "duration-baseline-estimate-0b96bd7ab7bdf20d4fa2ff096ff3e3d644f549c285e1feebc2206a264a1064dd",
+          "evaluation_gate": "NOT_EVALUATED_BY_P6_04",
+          "feature_record_reference": {
+            "duration_feature_record_version": "duration-feature-record.v1",
+            "feature_record_fingerprint": "sha256:055cc32e7be21ff694e22777ed25144ae96f34406aad4be9ccd29ff2f4107fee",
+            "feature_record_id": "duration-feature-record-055cc32e7be21ff694e22777ed25144ae96f34406aad4be9ccd29ff2f4107fee",
+            "feature_schema_version": "duration-features.v1"
+          },
+          "model_reference": {
+            "model_artifact_digest": "sha256:472cc92ada06b488fceb8477ac5a3dfe06d6391dd5ada8b441d55b96e9640ddd",
+            "model_version": "1.0.0"
+          },
+          "p50_seconds": 560,
+          "p90_seconds": 580,
+          "planning_authority": "NONE",
+          "production_binding": false,
+          "synthetic": true,
+          "unit": "SECONDS"
+        },
+        "partition": "train"
+      }
+    ],
+    "fingerprint": "sha256:821e7bbb418292b5baa1f72a1a7123db89733ff2ebfe451f3e2ed68a807ee60b",
+    "model_artifact_digest": "sha256:472cc92ada06b488fceb8477ac5a3dfe06d6391dd5ada8b441d55b96e9640ddd",
+    "training_partition": "train",
+    "training_row_ids": [
+      "duration-dataset-row-0257e777088c8a90a4aedf3450dc185c5e34a01bc67bacbc0e698b96b19f6215",
+      "duration-dataset-row-13d0bcb00ef5279f05f741d1fe827613cac020540fe45abbba9025b586d814f0",
+      "duration-dataset-row-d337c4f66f5d0e109035ef947467ada1297914e314dcd8ce04475a6c6e247a52",
+      "duration-dataset-row-fc60f2cf864ce953f96fb208c3a5460b5d7c19574cd171c3ee6f583752d5621a"
+    ]
+  },
+  "rollback_authority": {
+    "artifact_id": "standard-duration-authority-72ea81df5f9a50b400012489bc0406427679bdd4693d5c3c3f8db6d8da605480",
+    "authority": "OperationResourceOption.final_duration_seconds",
+    "document_version": "standard-duration-authority.v1",
+    "fingerprint": "sha256:72ea81df5f9a50b400012489bc0406427679bdd4693d5c3c3f8db6d8da605480",
+    "model_may_override": false,
+    "open_authority_gaps": [
+      "OPEN-010",
+      "OPEN-011",
+      "OPEN-014",
+      "OPEN-015"
+    ],
+    "production_authorized": false,
+    "selection": "STANDARD_DURATION"
+  },
+  "schema_set_version": "2.9.0",
+  "training_configuration": {
+    "active_feature_names": [
+      "standard_duration_seconds",
+      "operation_family"
+    ],
+    "algorithm": {
+      "id": "grouped-median-residual-baseline",
+      "version": "1.0.0"
+    },
+    "configuration_fingerprint": "sha256:8e7a6ec503298eec720b45520ebdce45fd114e55e8e96fdce4668895f4d2da45",
+    "configuration_id": "duration-training-config-8e7a6ec503298eec720b45520ebdce45fd114e55e8e96fdce4668895f4d2da45",
+    "configuration_version": "SIM-P6-BASELINE-MODEL-001@1.0.0",
+    "data_plane": "SIMULATION",
+    "dataset_bundle_fingerprint": "sha256:137ed52753f8decfcc2b0903c37e697f18c0e5a20369458aabddba6e7df81d98",
+    "determinism": {
+      "host_clock_in_identity": false,
+      "randomness": "NONE",
+      "seed_accepted": false,
+      "training_timestamp_utc": "2026-09-01T09:00:00Z"
+    },
+    "document_version": "duration-training-config.v1",
+    "environment": "TEST",
+    "governance_boundary": {
+      "open_authority_gaps": [
+        "OPEN-010",
+        "OPEN-011",
+        "OPEN-014",
+        "OPEN-015"
+      ],
+      "planning_authority": "NONE",
+      "production_authorized": false,
+      "promotion_authorized": false
+    },
+    "model_version": "1.0.0",
+    "prediction_policy": {
+      "quality_or_confidence_threshold": false,
+      "quantile_denominator": 10,
+      "quantile_numerator": 9,
+      "rounding": "fraction-half-away-from-zero.v1",
+      "upper_margin": "nearest-rank-absolute-training-residual.v1"
+    },
+    "production_binding": false,
+    "required_feature_names": [
+      "planned_quantity",
+      "setup_seconds",
+      "standard_duration_seconds",
+      "operation_family"
+    ],
+    "residual_policy": {
+      "even_sample_policy": "EXACT_MIDDLE_MEAN",
+      "name": "operation-family-median-residual.v1"
+    },
+    "serialization": {
+      "digest_projection": "canonical-json-payload-without-transport-newline.v1",
+      "format": "plantnexus-safe-canonical-json",
+      "max_bytes": 65536,
+      "unsafe_executable_formats_allowed": false,
+      "version": "1.0.0"
+    },
+    "synthetic": true,
+    "synthetic_provenance": {
+      "assumption_profile": "SIM-P6-DURATION-CONTRACT-001@1.0.0",
+      "assumption_refs": [
+        "SIM-ASSUMPTION-021",
+        "SIM-ASSUMPTION-022",
+        "SIM-ASSUMPTION-023"
+      ]
+    },
+    "training_partition": "train",
+    "zero_weight_feature_names": [
+      "planned_quantity",
+      "setup_seconds"
+    ]
+  },
+  "use_authorization_decision": {
+    "artifact_id": "duration-model-decision-3cc01f8d7a9be4d27176ec150651ad373430f9b61c2e9f2c0b2f16ec2f8f936e",
+    "assumption_refs": [
+      "SIM-ASSUMPTION-021",
+      "SIM-ASSUMPTION-022",
+      "SIM-ASSUMPTION-023"
+    ],
+    "decision": "SIMULATION_EVALUATION_ONLY",
+    "document_version": "duration-model-decision.v1",
+    "evaluation_gate": "NOT_RUN",
+    "fingerprint": "sha256:3cc01f8d7a9be4d27176ec150651ad373430f9b61c2e9f2c0b2f16ec2f8f936e",
+    "model_artifact_digest": "sha256:472cc92ada06b488fceb8477ac5a3dfe06d6391dd5ada8b441d55b96e9640ddd",
+    "open_authority_gaps": [
+      "OPEN-010",
+      "OPEN-011",
+      "OPEN-014",
+      "OPEN-015"
+    ],
+    "production_authorized": false,
+    "promotion_authorized": false
+  }
+}

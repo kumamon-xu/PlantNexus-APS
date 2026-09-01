@@ -11,6 +11,12 @@ last_reviewed: 2026-09-01
 
 # 推荐技术栈与锁定规则
 
+## TASK-P6-04 dependency-neutral baseline model
+
+Baseline trainer与safe loader只使用Python 3.12标准库的`fractions.Fraction`、`hashlib`、`json`、`math`、`os`与filesystem primitives；没有ML framework、joblib/pickle、registry、feature store、tracking service、network或native runtime。Runtime/dev dependency projection与`uv.lock`继续逐字不变，lock digest为`sha256:8b13617f31aa6a933347fc7b8ba010330cbb3f2d764f75c306dd9b6d77387a82`。算法/config/rounding/margin/serialization均作为artifact lineage的exact versioned输入，而不是host package推断。
+
+Safe artifact使用64 KiB上限的canonical finite JSON data-only envelope；load前后分别验证regular file、size、canonical framing、strict field set及artifact/config/dataset/dependency/code/scope identity。CI在既有FULL job追加一个offline non-skippable model checker并继续复用`build/validation/*.json`上传；trigger、permission、Secret、service、container、deployment、Node lock和required context不变。
+
 ## TASK-P6-02 dependency-neutral contract release
 
 Global schema metadata随additive carrier提升到`2.9.0`，但runtime/dev dependency projection保持`sha256:2b9c344936b57d46b279067300c22c6cf74fc87281a624944a3ce492a6251d2e`，`uv.lock`继续`sha256:8b13617f31aa6a933347fc7b8ba010330cbb3f2d764f75c306dd9b6d77387a82`。四份Schema只使用既有Draft 2020-12/jsonschema工具链；checker只用Python标准库、既有PyYAML/jsonschema，没有ML framework、model runtime、registry、feature store、service、container或network dependency。

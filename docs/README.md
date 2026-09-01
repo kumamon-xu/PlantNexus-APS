@@ -11,6 +11,14 @@ last_reviewed: 2026-09-01
 
 # PlantNexus APS 文档中心
 
+## TASK-P6-04 deterministic versioned baseline model
+
+TASK-P6-04从P6-03 closure `1d184d082544454436a5558bc39a6a0a38f0fb1b`冻结Diff base，以无新dependency的Python 3.12标准库实现`grouped-median-residual-baseline.v1`。Trainer只读取已授权dataset的4条train row，以exact `Fraction`形成milling `-40/1`、turning `-45/2`秒median residual和20秒nearest-rank p90 margin；validation/test row绝不训练。`planned_quantity`与`setup_seconds`保持required/validated但zero-weight，训练无seed、RNG或host-time输入。
+
+Safe canonical JSON model、existing ModelManifest、training config/decision/rollback/replay形成完整content-derived lineage，并由64 KiB、data-only、regular-file、exact version/digest/config/dataset/dependency/code/scope检查fail closed。Unknown/duplicate/non-finite、unsafe serialization、symlink、tamper和partial replace均被拒绝；same-input/source-order replay保持byte-exact。详见[Machine contract](contracts/duration-prediction-machine-contract.md)、[governance](contracts/duration-prediction-governance.md)、[provenance](architecture/provenance-and-versioning.md)和[scenario provenance](simulation/scenario-spec-and-provenance.md)。
+
+Provider payload只包含safe model、manifest、sanitized replay/report，不包含raw source、dataset bundle/rows或labels。8个baseline estimate没有confidence和formal evaluation authority，不是`DurationPrediction` carrier，不进入runtime、Planning或Production。P6-02 Schema/sample、P6-03 source/dataset、dependency lock、migration/state及routing/resource/hard-constraint/weights均不变；能力继续DEFERRED，OPEN-010/011/014/015继续OPEN，P6-05保持`planned/NOT_STARTED`。
+
 ## TASK-P6-03 deterministic feature/label dataset
 
 TASK-P6-03从P6-02 closure `4360746f2712012a0aa4f52a40c189837a2097b3`冻结Diff base，形成`SIM-P6-FEATURE-DATASET-001@1.0.0`的Simulation/Test离线dataset。Versioned source共10条；8条`COMPLETED/NORMAL`显式actual-processing label进入4/2/2 group-safe time split，RUNNING与INTERRUPTED各1条稳定排除。四项feature都在decision cutoff前可用并绑定source/transform/version；标准工时只作feature，不作label。

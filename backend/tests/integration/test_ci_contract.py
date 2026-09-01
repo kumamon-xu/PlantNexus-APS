@@ -96,6 +96,7 @@ from app.simulation.execution.simulator_check import (
 )
 from scripts.p6_duration_contract_check import main as p6_duration_contract_main
 from scripts.p6_duration_dataset_check import main as p6_duration_dataset_main
+from scripts.p6_duration_model_check import main as p6_duration_model_main
 
 ROOT = Path(__file__).resolve().parents[3]
 
@@ -426,7 +427,7 @@ def test_ci_profile_routing_is_mutually_exclusive_and_fail_closed() -> None:
     assert "app.application.p5_portfolio_gate_report" in full_text
     assert "app.application.p5_exit_gate_audit" in full_text
     assert "Build package" in full_text
-    assert len(full["steps"]) == 72
+    assert len(full["steps"]) == 73
 
     assert 'test "${PLANTNEXUS_CLASSIFY_RESULT}" = "success"' in final_run
     assert 'test "${PLANTNEXUS_FULL_RESULT}" = "success"' in final_run
@@ -577,6 +578,83 @@ def test_ci_p6_duration_dataset_is_required_and_machine_checkable(
     assert report["artifacts"]["expected_bundle"]["included_in_provider_artifact"] is False
     assert report["boundaries"]["production_binding"] is False
     assert report["issues"] == []
+
+
+def test_ci_p6_duration_model_is_required_and_machine_checkable(
+    tmp_path: Path,
+) -> None:
+    workflow = (ROOT / ".github" / "workflows" / "ci.yml").read_text(encoding="utf-8")
+    normalized = " ".join(workflow.split())
+    assert (
+        "name: P6 versioned baseline model and replay evidence run: >- "
+        "uv run python scripts/p6_duration_model_check.py --root . --report "
+        "build/validation/ci-p6-duration-model.json --model-artifact "
+        "build/validation/ci-p6-duration-baseline-model.json --manifest-artifact "
+        "build/validation/ci-p6-duration-model-manifest.json --replay-artifact "
+        "build/validation/ci-p6-duration-model-replay.json"
+    ) in normalized
+    assert "continue-on-error" not in workflow
+    assert '"${replay_root}/backend/app/duration_prediction/model.py"' in workflow
+    assert '"${replay_root}/backend/tests/contract/test_p6_duration_model.py"' in workflow
+
+    report_path = tmp_path / "p6-duration-model.json"
+    model_path = tmp_path / "p6-duration-baseline-model.json"
+    manifest_path = tmp_path / "p6-duration-model-manifest.json"
+    replay_path = tmp_path / "p6-duration-model-replay.json"
+    assert (
+        p6_duration_model_main(
+            [
+                "--root",
+                str(ROOT),
+                "--report",
+                str(report_path),
+                "--model-artifact",
+                str(model_path),
+                "--manifest-artifact",
+                str(manifest_path),
+                "--replay-artifact",
+                str(replay_path),
+            ]
+        )
+        == 0
+    )
+
+    report = json.loads(report_path.read_text(encoding="utf-8"))
+    assert report["report_version"] == "p6-duration-model-report.v1"
+    assert report["status"] == "PASS"
+    assert report["task_id"] == "TASK-P6-04"
+    assert report["diff_base"] == "1d184d082544454436a5558bc39a6a0a38f0fb1b"
+    assert report["schema_set_version"] == "2.9.0"
+    assert report["check_count"] == 10
+    assert report["counts"] == {
+        "atomic_rejections": 2,
+        "dataset_rows": 8,
+        "model_parameters": 3,
+        "mutation_rejections": 14,
+        "operation_families": 2,
+        "replayed_estimates": 8,
+        "test_rows_used_for_training": 0,
+        "training_rows": 4,
+        "validation_rows_used_for_training": 0,
+    }
+    assert report["artifacts"]["dataset_source"]["included_in_provider_artifact"] is False
+    assert report["artifacts"]["model_bundle"]["included_in_provider_artifact"] is False
+    assert report["artifacts"]["model_artifact"]["safe_for_provider"] is True
+    assert report["boundaries"]["production_authorized"] is False
+    assert report["boundaries"]["runtime_or_planning_authority"] == "NONE"
+    assert report["issues"] == []
+
+    model = json.loads(model_path.read_text(encoding="utf-8"))
+    manifest = json.loads(manifest_path.read_text(encoding="utf-8"))
+    replay = json.loads(replay_path.read_text(encoding="utf-8"))
+    assert model["duration_baseline_artifact_version"] == "duration-baseline-artifact.v1"
+    assert model["model_version"] == "1.0.0"
+    assert model["governance_boundary"]["production_authorized"] is False
+    assert manifest["duration_model_manifest_version"] == "duration-model-manifest.v1"
+    assert manifest["model_artifact"]["artifact_digest"] == replay["model_artifact_digest"]
+    assert replay["document_version"] == "duration-training-replay.v1"
+    assert replay["boundaries"]["labels_in_replay_artifact"] is False
+    assert all("label" not in entry for entry in replay["estimates"])
 
 
 def test_ci_p3_persistence_is_required_and_machine_checkable(tmp_path: Path) -> None:

@@ -15,9 +15,15 @@ Contract status: accepted human governance baseline
 
 Decision authority: [ADR-0016](../adr/ADR-0016-ai-duration-data-model-governance.md)
 
-Machine contract status: additive `2.9.0` / `FORMED_SIMULATION_CONTRACT_V1`；见[Duration Prediction Machine Contract v1](duration-prediction-machine-contract.md)。TASK-P6-03现形成有界Simulation dataset实现，但不形成model、runtime或Production authority
+Machine contract status: additive `2.9.0` / `FORMED_SIMULATION_CONTRACT_V1`；见[Duration Prediction Machine Contract v1](duration-prediction-machine-contract.md)。TASK-P6-03/04现形成有界Simulation dataset与baseline model/replay，但不形成evaluation Gate、runtime或Production authority
 
-Capability status: `AI_DURATION_PREDICTION = DEFERRED / CONTRACT_V1 + SIMULATION_DATASET_V1 / NO_MODEL / NO_RUNTIME`
+Capability status: `AI_DURATION_PREDICTION = DEFERRED / CONTRACT_V1 + SIMULATION_DATASET_V1 + BASELINE_MODEL_V1 / NO_EVALUATION_GATE / NO_RUNTIME`
+
+## TASK-P6-04 executable model-governance projection
+
+`SIM-P6-BASELINE-MODEL-001@1.0.0`把本合同的model provenance部分投影为可执行fail-closed规则：只消费P6-03 exact dataset/manifest和4条train row；固定required/active/zero-weight feature、exact rational grouped-median算法、rounding、margin、dependency lock、normalized-LF code identity、scope与deterministic timestamp。Validation/test label不进入训练，RNG、host clock、environment default和未声明dependency均不可成为隐式输入。
+
+Safe model、ModelManifest、configuration、decision、standard-duration rollback和replay全部使用content-derived identity。Loader拒绝unsafe executable serialization及version/digest/config/dataset/dependency/code/scope漂移，atomic writer在complete validation/build后才replace。Provider只保存safe model、manifest和无raw-row/no-label replay/report；baseline estimate没有confidence/evaluation/promotion/runtime authority。OPEN-010/011/014/015继续阻断Production model/promotion，P6-05仍须独立授权。
 
 ## TASK-P6-03 executable policy projection
 
@@ -27,9 +33,9 @@ Purpose/access、no-PII/no-target、retention/deletion、source/record fingerpri
 
 ## 1. Purpose and scope
 
-本合同是P6数据、label、feature、privacy、dataset/model/evaluation provenance、promotion/rollback及标准工时fallback的唯一人类语义入口。TASK-P6-02已用四份严格Simulation v1 carrier逐项承载可机器表达的部分；TASK-P6-03～09仍必须引用并实现各自边界。若后继机器设计无法表达，必须停止并提交新ADR或扩卡，不能在代码中增加默认语义。
+本合同是P6数据、label、feature、privacy、dataset/model/evaluation provenance、promotion/rollback及标准工时fallback的唯一人类语义入口。TASK-P6-02已用四份严格Simulation v1 carrier逐项承载可机器表达的部分；TASK-P6-03/04已分别形成dataset与baseline model边界，TASK-P6-05～09仍必须引用并实现各自边界。若后继机器设计无法表达，必须停止并提交新ADR或扩卡，不能在代码中增加默认语义。
 
-本合同不授权读取真实历史，不形成Production data/model authority，不选择ML dependency，不创建dataset/model，不运行训练或Benchmark，不接入Planning，也不改变P0～P5合同、Schema、状态机、Solver、Validator或Execution/Replan链。
+本合同本身不授权读取真实历史或形成Production data/model authority。P6-03/04的独立授权只允许仓库内synthetic dataset与dependency-neutral baseline训练/replay；不运行formal evaluation/Benchmark、不接入Planning，也不改变P0～P5合同、Schema、状态机、Solver、Validator或Execution/Replan链。
 
 ## 2. Authority table
 
@@ -75,7 +81,7 @@ OPEN-011/015 closure前，真实Production history、字段映射和冲突优先
 
 禁止项包括：actual completion/end或duration target、事后downtime/rework原因、未来订单/日历/排程/修订、未来聚合、test slice统计、target encoding跨越cutoff、evaluation outcome、后继model output，以及由未来ScheduleVersion或ChangeReport回填的值。
 
-Train/validation/test必须按时间因果顺序切分。相同execution occurrence、重复/修订链、同一source record的派生副本和其他可互相泄漏的lineage group必须位于同一partition。Split cutoff、group key、eligibility snapshot和dataset fingerprint不可变且可复算。日期、比例、window和sample threshold未在本Task设定；没有后继approved versioned policy时不得训练或宣称评价通过。
+Train/validation/test必须按时间因果顺序切分。相同execution occurrence、重复/修订链、同一source record的派生副本和其他可互相泄漏的lineage group必须位于同一partition。Split cutoff、group key、eligibility snapshot和dataset fingerprint不可变且可复算。P6-03/04现只允许各自versioned synthetic policy与train-only baseline；任何其他日期、比例、window或sample policy未获批准时不得训练，且当前训练PASS绝不等于评价通过。
 
 ## 5. Privacy, retention, consent/authority and deletion
 
@@ -97,11 +103,11 @@ Raw controlled rows保留在获授权数据平面。Provider/CI只保存schema�
 
 ### 6.1 Dataset manifest
 
-未来dataset manifest至少绑定source/version/cutoff、plane/factory scope、eligibility/exclusion与label policy、feature schema、split/group policy、code revision、row/content counts及content fingerprint。相同冻结输入必须得到相同semantic fingerprint；wall clock、host path和secret不得参与identity。
+P6-03 dataset manifest已绑定source/version/cutoff、plane/factory scope、eligibility/exclusion与label policy、feature schema、split/group policy、code revision、row/content counts及content fingerprint。相同冻结输入必须得到相同semantic fingerprint；wall clock、host path和secret不得参与identity。后继dataset只能发布新version/identity，不能改写该manifest。
 
 ### 6.2 Model manifest
 
-未来model manifest至少绑定dataset manifest、feature schema、training code revision、dependency/lock、algorithm/config、determinism inputs、training environment、model version和artifact digest。Retraining只能生成新版本，不能覆盖旧artifact。
+P6-04 ModelManifest已绑定dataset manifest、feature schema、training code revision、dependency lock、algorithm/config、determinism inputs、training environment、model version和artifact digest，并引用decision、rollback与replay。Retraining只能生成新版本，不能覆盖旧artifact；当前`SIMULATION_EVALUATION_ONLY`不是lifecycle state或Production approval。
 
 ### 6.3 Evaluation and prediction lineage
 
@@ -158,10 +164,10 @@ Closure必须含Authority、Evidence、scope、effective version和rollback；�
 
 `TEST-P6-DATA-GOVERNANCE-001`静态证明本文与ADR-0016覆盖：标准工时authority、completed-label eligibility、censoring/exclusion、as-of leakage、time/group split、privacy/retention/deletion、immutable dataset/model/evaluation lineage、human promotion/rollback、fallback decision table、OPEN closure conditions及P6/P7/Production负边界。`TEST-P6-PREDICTION-CONTRACT-001`另行机器验证四份v1 carrier的strict schema、round-trip、canonical identity、quantile/confidence、fallback、leakage、tamper、mixed-version与cross-lineage拒绝。
 
-TASK-P6-01历史上只允许文档/治理检查。TASK-P6-02现只增加Schema/sample/纯checker/test/CI证据与必要compatibility metadata，没有migration、dependency lock、training、Benchmark、runtime、planning integration或state变化。Dataset、model训练和runtime evidence仍必须由各后继Task独立授权并取得双exact provider后才能升级状态。
+TASK-P6-01历史上只允许文档/治理检查，TASK-P6-02只形成Schema/sample与contract checker。P6-03/04现经各自独立授权增加synthetic dataset、baseline model/training、safe artifacts、test和CI证据；仍没有migration、dependency lock变化、formal Benchmark/evaluation、runtime、planning integration或state变化。P6-05+证据必须继续逐Task独立授权并取得双exact provider后才能升级状态。
 
 ## 12. Compatibility and rollback
 
-本合同已由additive schema set `2.9.0`的新v1 carrier表达；70份既有Schema/sample bytes和所有历史document set字段逐字不变，不能重新解释P0～P4字段。当前无durable P6 consumer；一旦形成，v1只能由后继版本supersede。
+本合同已由additive schema set `2.9.0`的新v1 carrier表达；70份既有Schema/sample bytes和所有历史document set字段逐字不变，不能重新解释P0～P4字段。P6-03/04已消费FeatureRecord/ModelManifest边界，因此v1 bytes与已引用dataset/model identities不可改写，只能由后继版本supersede。
 
-若机器consumer尚未形成，可回退本Task文档并保持P6-02 blocked。Consumer形成后，运行回滚路径是禁用prediction provider并使用权威标准工时，同时保留全部不可变dataset/model/evaluation/prediction/decision evidence；语义修改只能由superseding ADR和新合同版本完成。
+当前没有prediction runtime可启用；P6-04回滚只能retire受影响synthetic model artifact或保持provider disabled，并继续使用权威标准工时，同时保留全部不可变dataset/model/replay/decision evidence。语义修改只能由superseding ADR、合同或artifact版本完成。

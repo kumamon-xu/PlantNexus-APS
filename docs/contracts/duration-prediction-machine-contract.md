@@ -15,7 +15,17 @@ Contract status: `FORMED_SIMULATION_CONTRACT_V1` in additive schema set `2.9.0`
 
 Human authority: [ADR-0016](../adr/ADR-0016-ai-duration-data-model-governance.md) and [Duration Prediction Governance Contract](duration-prediction-governance.md)
 
-Capability status: `AI_DURATION_PREDICTION = DEFERRED / CONTRACT_V1 + SIMULATION_DATASET_V1 / NO_MODEL / NO_RUNTIME`
+Capability status: `AI_DURATION_PREDICTION = DEFERRED / CONTRACT_V1 + SIMULATION_DATASET_V1 + BASELINE_MODEL_V1 / NO_EVALUATION_GATE / NO_RUNTIME`
+
+## TASK-P6-04 deterministic baseline model and replay
+
+The trainer accepts exactly the P6-03 dataset bundle fingerprint `sha256:137ed52753f8decfcc2b0903c37e697f18c0e5a20369458aabddba6e7df81d98` and manifest fingerprint `sha256:d02f7818d4744e8a86205cfafe25efe1b39e2f1db6edc485a38e10aea8470bda`. It validates all eight rows and the exact feature contract but trains only the four `train` rows. Validation and test labels are never read by the fitting path. `standard_duration_seconds` and `operation_family` are active; `planned_quantity` and `setup_seconds` remain required, typed and range-checked zero-weight features.
+
+`grouped-median-residual-baseline.v1` uses exact rational arithmetic, the per-operation-family median of `actual_processing_seconds - standard_duration_seconds`, half-away-from-zero rounding, and a 0.90 nearest-rank absolute training-residual margin. The fixed result has milling offset `-40/1`, turning offset `-45/2`, and p90 margin 20 seconds. There is no RNG, seed, host clock or new dependency; training time is the deterministic contract value `2026-09-01T09:00:00Z`.
+
+`duration-baseline-artifact.v1` is a maximum-64-KiB `plantnexus-safe-canonical-json@1.0.0` data-only envelope. The loader rejects executable/pickle/joblib formats, symlinks, non-regular or oversized files, duplicate keys, non-finite values, non-canonical framing, unknown fields and every version/digest/config/dataset/dependency/code/scope mismatch. The existing ModelManifest binds the resulting artifact digest, exact dataset and feature contract, normalized-LF training-code identity, lock, configuration, algorithm, cutoff, scope, decision, rollback and replay reference. The writer validates and builds complete canonical bytes before same-directory fsync and atomic replace; a validation or replace failure preserves the previous target and leaves no partial file.
+
+The replay proves two same-input trainings, one source-order permutation and eight sanitized `duration-baseline-estimate.v1` results. Those estimates deliberately carry `confidence_status=NOT_ESTABLISHED_BY_P6_04`, `evaluation_gate=NOT_EVALUATED_BY_P6_04` and `planning_authority=NONE`; they are not `duration-prediction.v1` carriers and have no promotion or runtime meaning. Provider artifacts may contain only the safe model, ModelManifest, sanitized replay and report—never raw source, dataset rows or labels. `p6-duration-model-report.v1` requires 10/10 checks, 14 mutation rejections, two atomic-failure rejections and `issues=[]`.
 
 ## TASK-P6-03 dataset builder and manifest
 
@@ -60,11 +70,13 @@ References are evidence carriers, not proof that a future dataset, trained model
 
 Every source record carries system/version/record identity, content fingerprint, observation time and availability time. Every feature carries a stable name, explicit value type/unit, source-record IDs, availability time and transform version. `observed_at <= available_at <= as_of_cutoff` is mandatory; every feature source must exist in the same record, feature names must be unique, and value/type must agree.
 
-`pii_fields_present=false` and `target_fields_present=false` are constants. Actual/target duration, completion, label/future data and direct personal identifiers are rejected by the semantic checker. This is an envelope contract only: TASK-P6-03 must publish the real dataset/feature policy and cannot treat these sample values as a feature distribution or training authority.
+`pii_fields_present=false` and `target_fields_present=false` are constants. Actual/target duration, completion, label/future data and direct personal identifiers are rejected by the semantic checker. P6-03 has separately published the exact synthetic dataset/feature policy; P6-04 consumes only that allow-listed contract and four train rows. Neither package permits treating sample values as a real feature distribution or Production training authority.
 
 ## 4. Model and evaluation boundary
 
 ModelManifest binds an opaque artifact digest, dataset manifest, feature schema, code revision, exact dependency lock, configuration, algorithm version, deterministic replay reference, cutoff, scope, human decision reference and standard-duration rollback reference. It contains no `state`, promotion/deployment status or runtime endpoint. `SIMULATION_EVALUATION_ONLY` is use evidence, not a model lifecycle state or Production approval.
+
+P6-04 now supplies one synthetic ModelManifest and safe artifact that satisfy this lineage envelope. It does not supply an EvaluationReport, confidence policy, approved threshold, prediction carrier, runtime endpoint or promotion decision. Its p50/p90 baseline estimates are replay evidence only; the formal P6-05 evaluation/fallback Gate remains unformed.
 
 EvaluationReport carries exact model/dataset/split/baseline/code/config/privacy lineage and typed aggregate metrics/slices. Metric units/directions are fixed and ratios stay within `[0,1]`. `gate_assessment.decision=NOT_EVALUATED_BY_P6_02` and `thresholds_embedded=false`; the planned P6-05 Gate and all confidence/evaluation thresholds remain unformed. P6-02 does not train, evaluate or promote a model—the sample only verifies the carrier shape and lineage.
 
@@ -86,10 +98,12 @@ The report requires 10/10 checks, 4 schemas, 5 positive samples, 5 negative vect
 
 CI runs the checker as a non-skippable FULL step and uploads the report through the existing `build/validation/*.json` artifact path. `TEST-P6-PREDICTION-CONTRACT-001` covers strict schema, round-trip, property, fallback, leakage, tamper and lineage behavior; `TEST-CONTRACT-001` registers the additive documents globally.
 
+P6-03 and P6-04 add separate non-skippable FULL checks for the exact dataset and model/replay packages. `TEST-P6-MODEL-REPLAY-001` covers train-only selection, deterministic/property replay, safe serialization/load, artifact/config/dataset/dependency/code/scope mutation rejection, invalid output, atomic replacement and provider data minimization without changing any P6-02 Schema/sample bytes.
+
 ## 7. Compatibility, authority and rollback
 
 Schema set `2.9.0` is additive. All 70 earlier Schema/sample bytes and every earlier document-level `schema_set_version` remain unchanged; P3/P4 checkers now distinguish their historical carrier version from the current global metadata. A consumer selects these four exact v1 documents explicitly—there is no alias, coercion from `2.8.0`, permissive fallback enum or in-place rewrite.
 
-This package does not implement a dataset, model, training, evaluation Gate, provider runtime, Planning ingress, API, migration, business state or Production authority. It cannot alter routing, resource compatibility, hard constraints, PlanningRun/ScheduleVersion/ExportJob state or weights. `AI_DURATION_PREDICTION` therefore remains DEFERRED.
+The separately authorized P6-03/P6-04 packages now implement one synthetic contract-correctness dataset and one deterministic baseline model/training replay. They do not implement an evaluation Gate, confidence policy, formal prediction, provider runtime, Planning ingress, API, migration, business state or Production authority. They cannot alter routing, resource compatibility, hard constraints, PlanningRun/ScheduleVersion/ExportJob state or weights. `AI_DURATION_PREDICTION` therefore remains DEFERRED.
 
-Before any durable consumer exists, rollback may remove only these additive files and restore current metadata/indexes while preserving audit evidence. Once consumed, v1 bytes are immutable and semantic change requires a new document/set version; operational rollback disables prediction and selects authoritative standard duration, never overwrites model/evaluation/prediction evidence. TASK-P6-03 and later require separate authorization and a new Diff base.
+The v1 contract bytes consumed by P6-03/P6-04 are immutable; semantic change requires a new document/set or artifact version. Model rollback retires the affected synthetic artifact or disables the future provider and selects authoritative standard duration, while preserving dataset/model/replay/decision evidence. TASK-P6-05 and later require separate authorization and a new Diff base.

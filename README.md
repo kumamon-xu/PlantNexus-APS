@@ -1,5 +1,13 @@
 # PlantNexus APS
 
+## TASK-P6-04 — deterministic versioned baseline model and replay evidence
+
+用户已独立授权TASK-P6-04，并从P6-03 provider-verified closure `1d184d082544454436a5558bc39a6a0a38f0fb1b`冻结HIGH_RISK Diff base。新增`grouped-median-residual-baseline.v1`只消费已批准的`SIM-P6-FEATURE-DATASET-001@1.0.0`，只用4条train row，以Python `Fraction`精确计算operation-family median residual并按half-away-from-zero取整；milling/turning offset分别为`-40/1`、`-45/2`秒，training absolute residual的0.90 nearest-rank margin为20秒。`standard_duration_seconds`与`operation_family`是active feature；`planned_quantity`、`setup_seconds`仍是必填且严格验证的zero-weight feature。训练无RNG、seed、host clock、validation/test row或新dependency。
+
+`duration-baseline-artifact.v1`采用64 KiB上限的`plantnexus-safe-canonical-json@1.0.0` data-only格式，显式拒绝pickle/joblib/executable serialization、duplicate key、non-finite、unknown field、symlink、oversize及artifact/config/dataset/dependency/code/version/scope漂移。ModelManifest不可变绑定P6-03 dataset、feature contract、exact lock、normalized-LF training-code digest、config、algorithm、artifact digest、scope、decision/rollback和deterministic replay；same-input与source-order replay得到相同artifact/bundle bytes，同目录atomic replace失败保持旧文件并清理partial。
+
+CI/provider只允许safe model、ModelManifest、sanitized replay和`p6-duration-model-report.v1`，不上传raw source、dataset rows或labels。Replay中的8个`duration-baseline-estimate.v1`只是pre-evaluation Simulation/Test证据，明确为`NOT_ESTABLISHED_BY_P6_04` / `NOT_EVALUATED_BY_P6_04`且planning authority=`NONE`；它们不是P6-02 `DurationPrediction`、没有confidence或quality Gate，不能promotion、接入runtime/Planning或改变标准工时authority。`AI_DURATION_PREDICTION`继续`DEFERRED / CONTRACT_V1 + SIMULATION_DATASET_V1 + BASELINE_MODEL_V1 / NO_EVALUATION_GATE / NO_RUNTIME`，OPEN-010/011/014/015继续OPEN，TASK-P6-05不会自动启动。
+
 ## TASK-P6-03 — deterministic feature/label dataset and provenance
 
 用户已独立授权TASK-P6-03，并从P6-02 provider-verified closure `4360746f2712012a0aa4f52a40c189837a2097b3`冻结HIGH_RISK Diff base。新增的纯离线builder只接受`SIM-P6-DURATION-HISTORY@1.0.0`、`SIMULATION/TEST`、synthetic且无Production binding的versioned source；它从10条contract-correctness记录中仅接纳8条`COMPLETED/NORMAL`显式`actual_processing_seconds` label，稳定排除1条RUNNING和1条INTERRUPTED记录，并按label availability与lineage group形成4/2/2 train/validation/test。标准工时只是as-of feature，绝不作为label。

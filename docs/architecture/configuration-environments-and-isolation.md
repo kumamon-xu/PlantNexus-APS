@@ -11,6 +11,12 @@ last_reviewed: 2026-09-01
 
 # 配置、环境与数据隔离
 
+## TASK-P6-04 model artifact and CI isolation
+
+Trainer/loader只接受`SIMULATION/TEST`、synthetic、`production_binding=false`且scope位于P6-03 manifest allow-list的输入；没有environment default、credential、database、queue、network、endpoint、service、registry或外部storage。Model/config/manifest/replay逐字声明Production与promotion未授权、planning authority=`NONE`，任何Production-shaped或cross-scope mutation在publish/estimate前拒绝。
+
+Provider artifact只上传safe canonical model、manifest、sanitized replay/report，不上传P6-03 raw source、dataset bundle/rows或labels。FULL workflow追加一个non-skippable model checker，既有artifact glob与required `validate`不变；冻结P4-13 worktree仅显式移除本Task新增的model module与contract test后重放旧证据，不改变主树、P4 owner或隔离语义。
+
 ## TASK-P6-03 dataset and CI isolation
 
 Dataset source/profile被逐字限制为`SIMULATION/TEST`、synthetic、local-test-only且Production binding/authorization为false；没有环境变量、credential、database、network、queue、service或外部storage。Raw source与完整row bundle只作为repository synthetic fixture，CI/provider artifact仅上传`p6-duration-dataset-report.v1`中的sanitized manifest、counts、fingerprints和rejection summary。PII flag、target-as-feature、敏感key或Production-shaped mutation在写文件前拒绝。

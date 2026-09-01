@@ -11,6 +11,12 @@ last_reviewed: 2026-09-01
 
 # Provenance 与版本规则
 
+## TASK-P6-04 model, manifest and replay lineage
+
+`duration-baseline-artifact.v1`绑定exact P6-03 dataset bundle/manifest、required/active/zero-weight feature contract、train-only row identities、algorithm/config、dependency lock、training cutoff、factory/resource/operation scope、`SIM-ASSUMPTION-021/022/023`及normalized-LF model source SHA-256。Training code的完整digest进入artifact，前40位进入既有ModelManifest `code_revision`；任何dataset、code、lock、config、scope、version或artifact byte漂移在load/replay前fail closed。Retraining只能形成新content identity，不得覆盖旧artifact或manifest。
+
+Model bytes先完成strict canonical build再派生artifact digest；ModelManifest继续使用P6-02 `duration-model-manifest.v1`并精确引用artifact、configuration、deterministic replay、decision与standard-duration rollback。Replay以model digest、dataset/manifest、train row IDs、determinism声明和8个sanitized baseline estimate形成独立fingerprint；它不携带raw source、dataset rows或labels，也不把validation/test label纳入训练。Same input与source-order permutation必须得到同一model/bundle bytes，atomic publish只在同目录完整写入并fsync后replace。
+
 ## TASK-P6-03 dataset lineage and identity
 
 `duration-dataset-source.v1`对record内容先逐条计算canonical SHA-256，再把按`source_record_id`排序后的记录纳入source fingerprint，因此输入排列不是语义而任何内容篡改可检测。Builder以normalized-LF源码digest标识`duration-dataset-builder.v1`；每个FeatureRecord、dataset row、manifest与bundle分别从排除自身ID/fingerprint的canonical projection派生identity。相同source/version/code得到相同bytes，任何policy、cutoff、feature、label或lineage变化得到新identity，禁止覆盖既有manifest。

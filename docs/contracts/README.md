@@ -11,6 +11,12 @@ last_reviewed: 2026-09-01
 
 # 合同文档索引
 
+## TASK-P6-04 baseline model implementation contract
+
+[Duration Prediction Machine Contract v1](duration-prediction-machine-contract.md)现追加P6-04 deterministic baseline章节：trainer只消费P6-03 exact dataset/manifest的4条train row，以grouped median residual、exact rational arithmetic、fixed rounding与nearest-rank margin生成versioned safe model；existing ModelManifest绑定dataset/feature/code/lock/config/algorithm/artifact/scope/decision/rollback/replay。Loader对unsafe serialization、unknown/duplicate/non-finite、oversize、symlink及所有lineage/version/tamper fail closed，writer保证atomic replace和no partial。
+
+Machine evidence为`p6-duration-model-report.v1`及safe model/manifest/replay：10项检查、14项mutation rejection、2项atomic failure rejection、same-input/source-order replay和no-raw/no-label provider boundary。8个baseline estimate不是formal `DurationPrediction`，没有confidence/evaluation Gate、runtime、Planning或Production authority；P6-05必须独立授权。
+
 ## TASK-P6-03 dataset implementation contract
 
 [Duration Prediction Machine Contract v1](duration-prediction-machine-contract.md)现追加P6-03 executable dataset章节：唯一versioned Simulation source、completed-normal label eligibility、RUNNING/INTERRUPTED censoring、四项as-of feature、4/2/2 group-safe UTC split、source/row/manifest/bundle identity、privacy/retention与atomic write。实现严格消费`duration-feature-record.v1`，没有修改四份P6-02 Schema或10份sample。

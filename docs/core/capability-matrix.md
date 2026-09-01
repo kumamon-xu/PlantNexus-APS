@@ -11,6 +11,12 @@ last_reviewed: 2026-09-01
 
 # 能力矩阵
 
+## TASK-P6-04 Simulation baseline model status
+
+`AI_DURATION_PREDICTION`继续`DEFERRED`；当前分项为`CONTRACT_V1 + SIMULATION_DATASET_V1 + BASELINE_MODEL_V1 / NO_EVALUATION_GATE / NO_RUNTIME`。P6-04形成versioned deterministic train-only baseline、safe artifact/ModelManifest与sanitized replay，并由fail-closed machine report验证；其estimate没有confidence、approved threshold、formal EvaluationReport、promotion decision、provider runtime或Planning adapter，不能作为AI candidate被消费。
+
+OPEN-010/011/014/015继续OPEN，权威standard duration、routing、resource compatibility、hard constraints、state与weights均不变。Synthetic model/replay不能解释为真实精度、Production data/model authority、capacity或SLA；P6-05必须另获授权并冻结新base，当前PASS不会自动形成evaluation/fallback Gate。
+
 ## TASK-P6-03 Simulation dataset status
 
 `AI_DURATION_PREDICTION`继续`DEFERRED`；其数据分项现为`SIMULATION_DATASET_V1 / NO_MODEL / NO_RUNTIME`。P6-03形成一个versioned、deterministic、group-safe且防泄漏的contract-correctness dataset builder/manifest，严格消费P6-02 FeatureRecord Schema，并由safe machine report验证。它没有model artifact、quality/evaluation Gate、prediction provider、Planning adapter或Production authority，因此不能提供AI candidate或改变任何排程行为。

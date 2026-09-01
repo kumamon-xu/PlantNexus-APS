@@ -6,10 +6,16 @@ spec_version: 0.3.0
 phase: P0-P6
 normative: true
 source_sections: [39, 40, 44, 46, 49, 104]
-last_reviewed: 2026-08-28
+last_reviewed: 2026-09-01
 ---
 
 # ScenarioSpec 与 Provenance
+
+## TASK-P6-04 versioned baseline model fixture
+
+`fixtures/synthetic/P6-DURATION-MODEL/baseline-model.v1.pnmodel`与`expected-model-bundle.v1.json`发布`SIM-P6-BASELINE-MODEL-001@1.0.0` / `SIM-ASSUMPTION-023`的canonical golden projection。它只消费`SIM-P6-DURATION-HISTORY@1.0.0`中已由P6-03形成的4条train row，无RNG/seed/host time，以两类operation-family residual参数及20秒training-residual margin形成确定性artifact、manifest和replay。
+
+该fixture只验证training/serialization/lineage/replay correctness；不是ScenarioSpec Schema扩展、formal evaluation、confidence calibration、真实历史拟合、Production model、capacity或SLA。Expected bundle含完整synthetic dataset/test projection以便仓库内golden验证，因此不进入Provider artifact；safe provider只携带model、manifest、无label replay和report。任何dataset/code/config/dependency/model字节变化必须形成新identity/version并先更新SIM assumption。
 
 ## TASK-P6-03 versioned dataset source
 

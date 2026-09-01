@@ -6,10 +6,18 @@ spec_version: 0.3.0
 phase: P0-P7
 normative: true
 source_sections: [43, 44, 45, 46, 56]
-last_reviewed: 2026-08-28
+last_reviewed: 2026-09-01
 ---
 
 # Scenario Library 与复杂度矩阵
+
+## TASK-P6-04 duration baseline model correctness row
+
+| Scenario | Profile | Seed / stream | Evidence | Boundary |
+| --- | --- | --- | --- | --- |
+| `SIM-P6-DURATION-HISTORY@1.0.0` | `SIM-P6-BASELINE-MODEL-001@1.0.0` | no RNG / 4 train rows | `baseline-model.v1.pnmodel` + `expected-model-bundle.v1.json`、TEST-P6-MODEL-REPLAY-001 | 2 family offsets / 20-second margin / 8 sanitized replay estimates；training correctness only；not evaluation/confidence/runtime/Production |
+
+该row验证train-only selection、exact arithmetic、same-input/order-invariant bytes、safe load、tamper rejection和atomic publish；validation/test只用于无label estimate replay，不进入训练或形成quality结论。它不进入XS/S/M Benchmark，不定义P6-05 threshold/fallback Gate，也不创建P7 reality-calibration scenario。
 
 ## TASK-P6-03 duration dataset correctness row
 

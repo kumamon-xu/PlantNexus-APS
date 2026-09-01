@@ -239,6 +239,15 @@ jobs:
           --root .
           --report build/validation/ci-p6-duration-dataset.json
 
+      - name: P6 versioned baseline model and replay evidence
+        run: >-
+          uv run python scripts/p6_duration_model_check.py
+          --root .
+          --report build/validation/ci-p6-duration-model.json
+          --model-artifact build/validation/ci-p6-duration-baseline-model.json
+          --manifest-artifact build/validation/ci-p6-duration-model-manifest.json
+          --replay-artifact build/validation/ci-p6-duration-model-replay.json
+
       - name: P3 workspace persistence evidence
         run: >-
           uv run python -m app.infrastructure.workspace_persistence_check
@@ -409,6 +418,8 @@ jobs:
             "${replay_root}/backend/app/duration_prediction/__init__.py" \
             "${replay_root}/backend/app/duration_prediction/dataset.py" \
             "${replay_root}/backend/tests/contract/test_p6_duration_dataset.py" \
+            "${replay_root}/backend/app/duration_prediction/model.py" \
+            "${replay_root}/backend/tests/contract/test_p6_duration_model.py" \
             "${replay_root}/backend/tests/integration/test_p5_portfolio_gate.py" \
             "${replay_root}/backend/tests/integration/test_p5_exit_gate.py" \
             "${replay_root}/schemas/json/duration-evaluation-report.schema.json" \

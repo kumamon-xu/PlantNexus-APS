@@ -11,11 +11,17 @@ last_reviewed: 2026-09-01
 
 # 能力矩阵
 
+## TASK-P6-02 contract-only status
+
+`AI_DURATION_PREDICTION`继续为`DEFERRED`，但合同分项从`NOT_FORMED`提升为`CONTRACT_V1 / NO_RUNTIME`：additive set `2.9.0`已发布FeatureRecord、ModelManifest、EvaluationReport与Prediction四份strict Simulation carrier、正反sample、canonical/lineage checker和non-skippable CI evidence。它只证明机器语义可验证，不证明dataset、model、accuracy、Gate、runtime、Planning ingress或Production authority。
+
+调用方仍必须default-deny。只有`fallback_reason=NONE`可表达advisory model candidate；其余19项stable reason选择exact standard duration，权威标准工时自身无效则使用既有data error。OPEN-010/011/014/015继续`OPEN`；TASK-P6-03+未启动，accepted contract或provider PASS不能启用能力。
+
 ## TASK-P6-01 governance baseline
 
 ADR-0016与`duration-prediction-governance`已形成accepted人类治理基线，覆盖标准工时authority、completed-label/censoring、feature as-of/leakage、privacy/retention、immutable provenance、human promotion/rollback和fallback。该基线只约束后继实现，不是capability evidence。
 
-`AI_DURATION_PREDICTION`继续为`DEFERRED/NOT_FORMED`：没有machine Schema、dataset、model、dependency、training、evaluation、runtime或planning adapter。调用方必须继续default-deny；OPEN-010/011/014/015全部`OPEN`，P6-02仍`planned/NOT_STARTED`。Accepted ADR或docs/provider PASS不得被解释为AI输出可用或Production ready。
+`AI_DURATION_PREDICTION`在TASK-P6-01完成时为`DEFERRED/NOT_FORMED`；TASK-P6-02现只形成上方machine contract，dataset、model、dependency、training、evaluation Gate、runtime或planning adapter仍不存在。调用方必须继续default-deny；OPEN-010/011/014/015全部`OPEN`。Accepted ADR/contract/provider PASS不得被解释为AI输出可用或Production ready。
 
 ## P6 activation status
 

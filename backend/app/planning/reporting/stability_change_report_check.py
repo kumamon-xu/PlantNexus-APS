@@ -71,6 +71,9 @@ _FROZEN_SHA256 = {
     ),
     "uv.lock": "8b13617f31aa6a933347fc7b8ba010330cbb3f2d764f75c306dd9b6d77387a82",
 }
+_P6_SCHEMA_METADATA_PYPROJECT_SHA256 = (
+    "c39c0ade6061de9a986eb0e5a3e2d8b568ccb37c7f7bf64242698af782b6c937"
+)
 
 
 @dataclass(frozen=True, slots=True)
@@ -426,7 +429,16 @@ def _frozen_input_check(root: Path) -> dict[str, object]:
         relative: sha256((root / relative).read_bytes()).hexdigest()
         for relative in _FROZEN_SHA256
     }
-    _ensure(observed == _FROZEN_SHA256, "frozen contract, Solver, or dependency bytes changed")
+    frozen_observed = dict(observed)
+    pyproject_digest = frozen_observed.pop("pyproject.toml")
+    frozen_expected = dict(_FROZEN_SHA256)
+    p4_pyproject_digest = frozen_expected.pop("pyproject.toml")
+    _ensure(
+        frozen_observed == frozen_expected
+        and pyproject_digest
+        in {p4_pyproject_digest, _P6_SCHEMA_METADATA_PYPROJECT_SHA256},
+        "frozen contract, Solver, or dependency bytes changed",
+    )
     builder_source = (root / "backend/app/planning/reporting/change_report.py").read_text(
         encoding="utf-8"
     )

@@ -1,0 +1,151 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "urn:plantnexus:aps:schema:duration-prediction:v1",
+  "title": "PlantNexus APS Duration Prediction v1",
+  "description": "Advisory Simulation duration candidate plus authoritative standard-duration fallback decision. It cannot change routing, resource compatibility, hard constraints, state or weights.",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "duration_prediction_version", "schema_set_version", "canonicalization_version",
+    "prediction_id", "data_plane", "environment", "factory_id", "operation_id",
+    "resource_option_id", "resource_id", "predicted_at_utc", "as_of_cutoff_utc",
+    "unit", "p50_seconds", "p90_seconds", "confidence", "model_version",
+    "feature_schema_version", "fallback_reason", "selected_duration_source",
+    "selected_duration_seconds", "standard_duration", "feature_record_reference",
+    "model_reference", "evaluation_reference", "prediction_policy_reference",
+    "synthetic", "synthetic_provenance", "production_binding", "governance_boundary",
+    "prediction_fingerprint"
+  ],
+  "properties": {
+    "duration_prediction_version": {"const": "duration-prediction.v1"},
+    "schema_set_version": {"const": "2.9.0"},
+    "canonicalization_version": {"const": "canonical-json.v1"},
+    "prediction_id": {"type": "string", "pattern": "^duration-prediction-[0-9a-f]{64}$"},
+    "data_plane": {"const": "SIMULATION"},
+    "environment": {"enum": ["DEVELOPMENT", "TEST", "BENCHMARK"]},
+    "factory_id": {"$ref": "#/$defs/canonicalId"},
+    "operation_id": {"$ref": "#/$defs/canonicalId"},
+    "resource_option_id": {"$ref": "#/$defs/canonicalId"},
+    "resource_id": {"$ref": "#/$defs/canonicalId"},
+    "predicted_at_utc": {"$ref": "#/$defs/utcInstant"},
+    "as_of_cutoff_utc": {"$ref": "#/$defs/utcInstant"},
+    "unit": {"const": "SECONDS"},
+    "p50_seconds": {"type": ["integer", "null"], "minimum": 1},
+    "p90_seconds": {"type": ["integer", "null"], "minimum": 1},
+    "confidence": {"type": ["number", "null"], "minimum": 0, "maximum": 1},
+    "model_version": {"$ref": "#/$defs/semanticVersion"},
+    "feature_schema_version": {"const": "duration-features.v1"},
+    "fallback_reason": {"$ref": "#/$defs/fallbackReason"},
+    "selected_duration_source": {"enum": ["MODEL_CANDIDATE", "STANDARD_DURATION"]},
+    "selected_duration_seconds": {"type": "integer", "minimum": 1},
+    "standard_duration": {"$ref": "#/$defs/standardDuration"},
+    "feature_record_reference": {"$ref": "#/$defs/featureReference"},
+    "model_reference": {"$ref": "#/$defs/modelReference"},
+    "evaluation_reference": {"$ref": "#/$defs/evaluationReference"},
+    "prediction_policy_reference": {"$ref": "#/$defs/artifactReference"},
+    "synthetic": {"const": true},
+    "synthetic_provenance": {"$ref": "#/$defs/syntheticProvenance"},
+    "production_binding": {"const": false},
+    "governance_boundary": {"$ref": "#/$defs/governanceBoundary"},
+    "prediction_fingerprint": {"$ref": "#/$defs/sha256Fingerprint"}
+  },
+  "allOf": [
+    {
+      "if": {"properties": {"fallback_reason": {"const": "NONE"}}, "required": ["fallback_reason"]},
+      "then": {
+        "properties": {
+          "p50_seconds": {"type": "integer", "minimum": 1},
+          "p90_seconds": {"type": "integer", "minimum": 1},
+          "confidence": {"type": "number", "minimum": 0, "maximum": 1},
+          "selected_duration_source": {"const": "MODEL_CANDIDATE"}
+        }
+      },
+      "else": {"properties": {"selected_duration_source": {"const": "STANDARD_DURATION"}}}
+    }
+  ],
+  "$defs": {
+    "canonicalId": {"type": "string", "minLength": 1, "maxLength": 256, "pattern": "^[^\\s\\u0000-\\u001F\\u007F]+$"},
+    "sha256Fingerprint": {"type": "string", "pattern": "^sha256:[0-9a-f]{64}$"},
+    "utcInstant": {"type": "string", "format": "date-time", "pattern": "Z$"},
+    "semanticVersion": {"type": "string", "pattern": "^(0|[1-9][0-9]*)\\.(0|[1-9][0-9]*)\\.(0|[1-9][0-9]*)$"},
+    "artifactReference": {
+      "type": "object", "additionalProperties": false,
+      "required": ["document_version", "artifact_id", "fingerprint"],
+      "properties": {
+        "document_version": {"$ref": "#/$defs/canonicalId"},
+        "artifact_id": {"$ref": "#/$defs/canonicalId"},
+        "fingerprint": {"$ref": "#/$defs/sha256Fingerprint"}
+      }
+    },
+    "standardDuration": {
+      "type": "object", "additionalProperties": false,
+      "required": ["seconds", "duration_source", "source_version", "source_record_id", "source_record_fingerprint"],
+      "properties": {
+        "seconds": {"type": "integer", "minimum": 1},
+        "duration_source": {"$ref": "#/$defs/canonicalId"},
+        "source_version": {"$ref": "#/$defs/canonicalId"},
+        "source_record_id": {"$ref": "#/$defs/canonicalId"},
+        "source_record_fingerprint": {"$ref": "#/$defs/sha256Fingerprint"}
+      }
+    },
+    "featureReference": {
+      "type": "object", "additionalProperties": false,
+      "required": ["duration_feature_record_version", "feature_record_id", "feature_record_fingerprint", "feature_schema_version"],
+      "properties": {
+        "duration_feature_record_version": {"const": "duration-feature-record.v1"},
+        "feature_record_id": {"$ref": "#/$defs/canonicalId"},
+        "feature_record_fingerprint": {"$ref": "#/$defs/sha256Fingerprint"},
+        "feature_schema_version": {"const": "duration-features.v1"}
+      }
+    },
+    "modelReference": {
+      "type": "object", "additionalProperties": false,
+      "required": ["duration_model_manifest_version", "model_manifest_id", "model_manifest_fingerprint", "model_version", "model_artifact_digest"],
+      "properties": {
+        "duration_model_manifest_version": {"const": "duration-model-manifest.v1"},
+        "model_manifest_id": {"$ref": "#/$defs/canonicalId"},
+        "model_manifest_fingerprint": {"$ref": "#/$defs/sha256Fingerprint"},
+        "model_version": {"$ref": "#/$defs/semanticVersion"},
+        "model_artifact_digest": {"$ref": "#/$defs/sha256Fingerprint"}
+      }
+    },
+    "evaluationReference": {
+      "type": "object", "additionalProperties": false,
+      "required": ["duration_evaluation_report_version", "evaluation_report_id", "evaluation_report_fingerprint", "gate_decision"],
+      "properties": {
+        "duration_evaluation_report_version": {"const": "duration-evaluation-report.v1"},
+        "evaluation_report_id": {"$ref": "#/$defs/canonicalId"},
+        "evaluation_report_fingerprint": {"$ref": "#/$defs/sha256Fingerprint"},
+        "gate_decision": {"const": "NOT_EVALUATED_BY_P6_02"}
+      }
+    },
+    "fallbackReason": {
+      "enum": [
+        "NONE", "PREDICTION_MISSING", "PROVIDER_UNAVAILABLE", "PROVIDER_TIMEOUT",
+        "INVALID_QUANTILES", "CONFIDENCE_MISSING", "CONFIDENCE_INVALID", "LOW_CONFIDENCE",
+        "MODEL_NOT_APPROVED", "MODEL_OUT_OF_SCOPE", "MODEL_VERSION_INCOMPATIBLE",
+        "FEATURE_VERSION_INCOMPATIBLE", "DATASET_VERSION_INCOMPATIBLE",
+        "CONTRACT_VERSION_INCOMPATIBLE", "ARTIFACT_DIGEST_MISMATCH",
+        "PROVENANCE_INCOMPLETE", "EVALUATION_GATE_NOT_PASSED", "DRIFT_GATE_DISABLED",
+        "AUTHORITY_NOT_ESTABLISHED", "PRIVACY_GOVERNANCE_FAILED"
+      ]
+    },
+    "syntheticProvenance": {
+      "type": "object", "additionalProperties": false,
+      "required": ["assumption_profile", "assumption_refs"],
+      "properties": {
+        "assumption_profile": {"const": "SIM-P6-DURATION-CONTRACT-001@1.0.0"},
+        "assumption_refs": {"type": "array", "minItems": 1, "uniqueItems": true, "items": {"type": "string", "pattern": "^SIM-ASSUMPTION-[0-9]{3}$"}, "contains": {"const": "SIM-ASSUMPTION-021"}}
+      }
+    },
+    "governanceBoundary": {
+      "type": "object", "additionalProperties": false,
+      "required": ["production_authorized", "open_authority_gaps", "planning_authority"],
+      "properties": {
+        "production_authorized": {"const": false},
+        "open_authority_gaps": {"type": "array", "minItems": 4, "maxItems": 4, "uniqueItems": true, "items": {"enum": ["OPEN-010", "OPEN-011", "OPEN-014", "OPEN-015"]}},
+        "planning_authority": {"const": "ADVISORY_DURATION_ONLY"}
+      }
+    }
+  }
+}

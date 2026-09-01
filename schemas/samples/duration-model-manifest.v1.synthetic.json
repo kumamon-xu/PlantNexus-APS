@@ -1,0 +1,70 @@
+{
+  "duration_model_manifest_version": "duration-model-manifest.v1",
+  "schema_set_version": "2.9.0",
+  "canonicalization_version": "canonical-json.v1",
+  "model_manifest_id": "duration-model-manifest-3e844eeefbbac8c48c9fc2e662adc47793fe82c44c3aec55997a78ecea6d689f",
+  "model_version": "1.0.0",
+  "model_artifact": {
+    "artifact_digest": "sha256:1111111111111111111111111111111111111111111111111111111111111111",
+    "media_type": "application/octet-stream",
+    "serialization_format": "synthetic-contract-model",
+    "serialization_version": "1.0.0"
+  },
+  "feature_schema_version": "duration-features.v1",
+  "dataset_manifest": {
+    "document_version": "duration-dataset-manifest.v1",
+    "artifact_id": "duration-dataset-manifest-synthetic-001",
+    "fingerprint": "sha256:2222222222222222222222222222222222222222222222222222222222222222"
+  },
+  "training_provenance": {
+    "code_revision": "e74099ca24ed59140f6490c84025b7299b5f201d",
+    "dependency_lock_digest": "sha256:8b13617f31aa6a933347fc7b8ba010330cbb3f2d764f75c306dd9b6d77387a82",
+    "configuration": {
+      "document_version": "duration-training-config.v1",
+      "artifact_id": "duration-training-config-synthetic-001",
+      "fingerprint": "sha256:3333333333333333333333333333333333333333333333333333333333333333"
+    },
+    "algorithm_id": "synthetic-contract-model",
+    "algorithm_version": "1.0.0",
+    "deterministic_replay_reference": {
+      "document_version": "duration-training-replay.v1",
+      "artifact_id": "duration-training-replay-synthetic-001",
+      "fingerprint": "sha256:4444444444444444444444444444444444444444444444444444444444444444"
+    }
+  },
+  "training_data_cutoff_utc": "2026-09-01T07:30:00Z",
+  "scope": {
+    "factory_ids": ["factory-sim-p6-001"],
+    "operation_type_ids": ["operation-type-sim-p6-001"],
+    "resource_ids": ["resource-sim-p6-001"]
+  },
+  "use_authorization": {
+    "decision": "SIMULATION_EVALUATION_ONLY",
+    "decision_reference": {
+      "document_version": "duration-model-decision.v1",
+      "artifact_id": "duration-model-decision-synthetic-001",
+      "fingerprint": "sha256:5555555555555555555555555555555555555555555555555555555555555555"
+    },
+    "rollback_reference": {
+      "document_version": "standard-duration-authority.v1",
+      "artifact_id": "source-standard-duration-001",
+      "fingerprint": "sha256:aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa"
+    },
+    "production_authorized": false
+  },
+  "fallback_contract_version": "standard-duration-fallback.v1",
+  "created_at_utc": "2026-09-01T08:05:00Z",
+  "data_plane": "SIMULATION",
+  "environment": "TEST",
+  "synthetic": true,
+  "synthetic_provenance": {
+    "assumption_profile": "SIM-P6-DURATION-CONTRACT-001@1.0.0",
+    "assumption_refs": ["SIM-ASSUMPTION-021"]
+  },
+  "production_binding": false,
+  "governance_boundary": {
+    "production_authorized": false,
+    "open_authority_gaps": ["OPEN-010", "OPEN-011", "OPEN-014", "OPEN-015"]
+  },
+  "model_manifest_fingerprint": "sha256:3e844eeefbbac8c48c9fc2e662adc47793fe82c44c3aec55997a78ecea6d689f"
+}

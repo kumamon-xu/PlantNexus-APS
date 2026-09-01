@@ -94,6 +94,7 @@ from app.simulation.scenarios.disruption_replay_check import (
 from app.simulation.execution.simulator_check import (
     main as execution_simulator_main,
 )
+from scripts.p6_duration_contract_check import main as p6_duration_contract_main
 
 ROOT = Path(__file__).resolve().parents[3]
 
@@ -419,7 +420,7 @@ def test_ci_profile_routing_is_mutually_exclusive_and_fail_closed() -> None:
     assert "app.application.p5_portfolio_gate_report" in full_text
     assert "app.application.p5_exit_gate_audit" in full_text
     assert "Build package" in full_text
-    assert len(full["steps"]) == 70
+    assert len(full["steps"]) == 71
 
     assert 'test "${PLANTNEXUS_CLASSIFY_RESULT}" = "success"' in final_run
     assert 'test "${PLANTNEXUS_FULL_RESULT}" = "success"' in final_run
@@ -485,6 +486,44 @@ def test_ci_p4_machine_contract_is_required_and_machine_checkable(
     assert report["diff_base"] == "4026597ab1015b5ea3a89d241f0d12b5b481dee3"
     assert report["schema_set_version"] == "2.8.0"
     assert report["check_count"] == 8
+    assert report["issues"] == []
+
+
+def test_ci_p6_duration_contract_is_required_and_machine_checkable(
+    tmp_path: Path,
+) -> None:
+    workflow = (ROOT / ".github" / "workflows" / "ci.yml").read_text(encoding="utf-8")
+    normalized = " ".join(workflow.split())
+    assert (
+        "name: P6 duration prediction machine contract evidence run: >- "
+        "uv run python scripts/p6_duration_contract_check.py --root . --report "
+        "build/validation/ci-p6-duration-contracts.json"
+    ) in normalized
+    assert "continue-on-error" not in workflow
+
+    report_path = tmp_path / "p6-duration-contracts.json"
+    assert (
+        p6_duration_contract_main(
+            ["--root", str(ROOT), "--report", str(report_path)]
+        )
+        == 0
+    )
+    report = json.loads(report_path.read_text(encoding="utf-8"))
+    assert report["report_version"] == "p6-duration-contract-report.v1"
+    assert report["status"] == "PASS"
+    assert report["task_id"] == "TASK-P6-02"
+    assert report["diff_base"] == "e74099ca24ed59140f6490c84025b7299b5f201d"
+    assert report["schema_set_version"] == "2.9.0"
+    assert report["check_count"] == 10
+    assert report["counts"] == {
+        "new_schemas": 4,
+        "positive_samples": 5,
+        "negative_samples": 5,
+        "frozen_historical_artifacts": 70,
+        "schema_rejections": 20,
+        "semantic_rejections": 7,
+        "tamper_rejections": 5,
+    }
     assert report["issues"] == []
 
 
@@ -1430,7 +1469,7 @@ def test_ci_planning_problem_contract_report_is_machine_checkable(
     assert report["report_version"] == "planning-problem-contract-report.v1"
     assert report["status"] == "PASS"
     assert report["task_id"] == "TASK-P2-01"
-    assert report["schema_set_version"] == "2.8.0"
+    assert report["schema_set_version"] == "2.9.0"
     assert report["check_count"] == 4
     assert {check["name"] for check in report["checks"]} == {
         "v1-byte-preservation",
@@ -1455,7 +1494,7 @@ def test_ci_planning_machine_contract_report_is_machine_checkable(
     assert report["report_version"] == "planning-machine-contract-report.v1"
     assert report["status"] == "PASS"
     assert report["task_id"] == "TASK-P2-02"
-    assert report["schema_set_version"] == "2.8.0"
+    assert report["schema_set_version"] == "2.9.0"
     assert report["check_count"] == 5
     assert {check["name"] for check in report["checks"]} == {
         "fixed-schema-and-sample-artifacts",

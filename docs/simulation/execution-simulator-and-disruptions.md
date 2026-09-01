@@ -3,13 +3,17 @@ doc_id: DOC-SIM-005
 title: Execution Simulator 与异常模型
 status: baseline
 spec_version: 0.3.0
-phase: P0-P5
+phase: P0-P6
 normative: true
 source_sections: [47, 48, 49, 50, 79, 80]
 last_reviewed: 2026-09-01
 ---
 
 # Execution Simulator 与异常模型
+
+## TASK-P6-02 checker compatibility only
+
+P6-02没有修改Simulator core、event queue、virtual clock、seed、disruption scenario或common ingress。`simulator_check`继续逐字冻结P4 event/manifest/Scenario/state与`uv.lock`，仅允许`pyproject.toml`采用P4原hash或P6 schema-metadata-only精确hash；所有dependency和runtime bytes不变。新增duration samples只验证离线carrier，不成为Simulator分布、阈值、duration source或baseline advance。
 
 ## TASK-P5-22 fresh Exit regression
 

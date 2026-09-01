@@ -11,6 +11,12 @@ last_reviewed: 2026-09-01
 
 # 配置、环境与数据隔离
 
+## TASK-P6-02 machine isolation boundary
+
+四份`2.9.0` carrier把`data_plane=SIMULATION`、Development/Test/Benchmark environment、`synthetic=true`、`production_binding=false`、`production_authorized=false`与OPEN-010/011/014/015固定为Schema常量/完整集合；任何Production、unknown environment/version/field或跨plane引用均拒绝。Published samples和CI report只含sanitized synthetic references、fingerprints和aggregate shape values，受`SIM-ASSUMPTION-021`约束，没有raw row、PII、credential、endpoint或secret。
+
+本Task没有新增环境变量、storage、database、queue、service、identity principal或deployment。Future Production carrier/authority不能通过配置开启，必须由新version和OPEN closure另行授权；当前唯一操作性边界仍是禁用provider并使用同resource option权威标准工时。
+
 ## TASK-P6-01 data/model isolation boundary
 
 Duration dataset、model registry、evaluation和prediction evidence必须在Development/Test/Benchmark/Production之间使用隔离的database、credential、namespace和artifact location；synthetic数据固定`production_binding=false`，不能join、复制或promotion为Production evidence。Raw受控行留在获授权数据平面，CI/provider只允许sanitized reference、version、fingerprint、count、aggregate metric与disposition。

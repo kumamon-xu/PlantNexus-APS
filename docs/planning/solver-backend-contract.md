@@ -3,13 +3,17 @@ doc_id: DOC-PLAN-001
 title: SolverBackend 合同
 status: baseline
 spec_version: 0.3.0
-phase: P0-P2
+phase: P0-P6
 normative: true
 source_sections: [13, 14, 24, 29, 57, 93, 102]
-last_reviewed: 2026-08-21
+last_reviewed: 2026-09-01
 ---
 
 # SolverBackend 合同
+
+## TASK-P6-02 checker compatibility only
+
+P6-02没有修改CP-SAT model、SolverBackend protocol、six-round lexicographic solve、limits、seed/workers、Hint或Validator。`replan_solver_check`仍冻结全部P4 Schema/ADR/objective/validator/state与`uv.lock`，只为`pyproject.toml`接受P4原hash和P6 schema-metadata-only精确hash。DurationPrediction carrier不被Backend读取，P6-06/P6-07前standard duration仍是唯一计划输入。
 
 ## TASK-P4-07 bounded replan backend
 

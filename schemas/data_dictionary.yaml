@@ -1,4 +1,4 @@
-schema_set_version: 2.8.0
+schema_set_version: 2.9.0
 status: p4_dynamic_replanning_machine_contracts
 spec_version: 0.3.0
 rules:
@@ -339,6 +339,45 @@ schemas:
     p4_boundary: carrier only; P3 ExportJob storage is consumed by TASK-P4-11 without external target
     simulation_assumptions: [SIM-ASSUMPTION-016]
     production_open: [OPEN-002, OPEN-010, OPEN-012, OPEN-015]
+  duration-feature-record.v1:
+    path: schemas/json/duration-feature-record.schema.json
+    schema_set_version: 2.9.0
+    feature_schema_version: duration-features.v1
+    authority: immutable as-of evidence envelope only; no target or PII fields
+    lineage: [factory, operation, resource_option, resource, cutoff, source_records, transform_versions]
+    compatibility: additive and non-interchangeable; all 70 historical Schema/sample bytes remain unchanged
+    p6_boundary: Simulation-only carrier; no dataset pipeline, training, runtime, planning mutation, or Production binding
+    simulation_assumptions: [SIM-ASSUMPTION-021]
+    production_open: [OPEN-010, OPEN-011, OPEN-014, OPEN-015]
+  duration-model-manifest.v1:
+    path: schemas/json/duration-model-manifest.schema.json
+    schema_set_version: 2.9.0
+    identity: model artifact digest plus dataset, feature, code, dependency, configuration, algorithm, replay, scope, decision, and rollback lineage
+    state_machine: none; use authorization evidence is not model lifecycle state
+    fallback_contract: standard-duration-fallback.v1
+    p6_boundary: Simulation evaluation evidence only; no trained model, promotion, deployment, runtime, or Production authority
+    simulation_assumptions: [SIM-ASSUMPTION-021]
+    production_open: [OPEN-010, OPEN-011, OPEN-014, OPEN-015]
+  duration-evaluation-report.v1:
+    path: schemas/json/duration-evaluation-report.schema.json
+    schema_set_version: 2.9.0
+    lineage: [model, model_artifact, dataset, split, feature_schema, standard_duration_baseline, code, dependency, configuration, privacy_review]
+    measurements: [MAE_SECONDS, P50_ABSOLUTE_ERROR_SECONDS, P90_COVERAGE_RATIO, STANDARD_DURATION_MAE_SECONDS]
+    gate_decision: NOT_EVALUATED_BY_P6_02; thresholds are never embedded
+    p6_boundary: offline Simulation measurements only; promotion/confidence/fallback Gate remains TASK-P6-05
+    simulation_assumptions: [SIM-ASSUMPTION-021]
+    production_open: [OPEN-010, OPEN-011, OPEN-014, OPEN-015]
+  duration-prediction.v1:
+    path: schemas/json/duration-prediction.schema.json
+    schema_set_version: 2.9.0
+    unit: SECONDS
+    candidate_fields: [p50_seconds, p90_seconds, confidence, model_version, feature_schema_version]
+    authority: model candidate is advisory; standard duration source/version/record/fingerprint remains authoritative fallback
+    fallback: stable enum with NONE as the only model-candidate selection; every other reason selects exact standard duration
+    lineage: [feature_record, model_manifest, model_artifact, evaluation_report, prediction_policy, authoritative_standard_duration]
+    p6_boundary: Simulation-only evidence; no routing, resource compatibility, hard constraint, state, weight, runtime, or Production mutation
+    simulation_assumptions: [SIM-ASSUMPTION-021]
+    production_open: [OPEN-010, OPEN-011, OPEN-014, OPEN-015]
   error.v1:
     path: schemas/json/error.schema.json
     p0_boundary: category and envelope only; concrete code registry belongs to TASK-P0-04

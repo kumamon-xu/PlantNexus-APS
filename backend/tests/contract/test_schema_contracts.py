@@ -80,6 +80,10 @@ SCHEMA_FILES = (
     "execution-simulation-manifest.schema.json",
     "export-manifest.v3.schema.json",
     "export-job.v3.schema.json",
+    "duration-feature-record.schema.json",
+    "duration-model-manifest.schema.json",
+    "duration-evaluation-report.schema.json",
+    "duration-prediction.schema.json",
 )
 
 V1_SCHEMA_SHA256 = {
@@ -182,7 +186,7 @@ def test_schemas_do_not_encode_implicit_defaults() -> None:
 
 def test_published_versions_are_consistent() -> None:
     pyproject = tomllib.loads((ROOT / "pyproject.toml").read_text(encoding="utf-8"))
-    assert SCHEMA_VERSION == "2.8.0"
+    assert SCHEMA_VERSION == "2.9.0"
     assert pyproject["tool"]["plantnexus-aps"]["versions"]["schema"] == SCHEMA_VERSION
 
 
@@ -219,6 +223,26 @@ def test_synthetic_samples_validate_and_round_trip() -> None:
         ),
         ("export-manifest.v3.schema.json", "export-manifest.v3.synthetic.json"),
         ("export-job.v3.schema.json", "export-job.v3.synthetic.json"),
+        (
+            "duration-feature-record.schema.json",
+            "duration-feature-record.v1.synthetic.json",
+        ),
+        (
+            "duration-model-manifest.schema.json",
+            "duration-model-manifest.v1.synthetic.json",
+        ),
+        (
+            "duration-evaluation-report.schema.json",
+            "duration-evaluation-report.v1.synthetic.json",
+        ),
+        (
+            "duration-prediction.schema.json",
+            "duration-prediction.v1.candidate.synthetic.json",
+        ),
+        (
+            "duration-prediction.schema.json",
+            "duration-prediction.v1.fallback.synthetic.json",
+        ),
     )
     for schema_name, sample_name in samples:
         sample = load_json(SAMPLE_ROOT / sample_name)
@@ -589,7 +613,7 @@ def test_data_dictionary_covers_every_published_schema() -> None:
     dictionary = yaml.safe_load(
         (ROOT / "schemas" / "data_dictionary.yaml").read_text("utf-8")
     )
-    assert dictionary["schema_set_version"] == "2.8.0"
+    assert dictionary["schema_set_version"] == "2.9.0"
     assert set(dictionary["schemas"]) == {
         "canonical-records.v1",
         "import-package.v1",
@@ -639,6 +663,10 @@ def test_data_dictionary_covers_every_published_schema() -> None:
         "execution-simulation-manifest.v1",
         "export-manifest.v3",
         "export-job.v3",
+        "duration-feature-record.v1",
+        "duration-model-manifest.v1",
+        "duration-evaluation-report.v1",
+        "duration-prediction.v1",
     }
     canonical_schema = load_json(SCHEMA_ROOT / "canonical-records.v1.schema.json")
     assert set(COLLECTION_ID_FIELDS) == (

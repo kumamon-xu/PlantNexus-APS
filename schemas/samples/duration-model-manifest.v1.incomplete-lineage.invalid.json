@@ -1,0 +1,11 @@
+{
+  "negative_sample_version": "duration-contract-negative.v1",
+  "base_sample": "duration-model-manifest.v1.synthetic.json",
+  "mutations": [
+    {"op": "remove", "path": "/dataset_manifest"}
+  ],
+  "recompute_identity": false,
+  "expected_rejection": "MISSING_DATASET_LINEAGE",
+  "synthetic": true,
+  "assumption_profile": "SIM-P6-DURATION-CONTRACT-001@1.0.0"
+}

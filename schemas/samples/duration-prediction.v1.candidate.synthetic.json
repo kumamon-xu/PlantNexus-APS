@@ -1,0 +1,66 @@
+{
+  "duration_prediction_version": "duration-prediction.v1",
+  "schema_set_version": "2.9.0",
+  "canonicalization_version": "canonical-json.v1",
+  "prediction_id": "duration-prediction-6cb0a6f243204ad3a42b648919d6c2d8d5a32f0a38b9490b5ca03cee637c821e",
+  "data_plane": "SIMULATION",
+  "environment": "TEST",
+  "factory_id": "factory-sim-p6-001",
+  "operation_id": "operation-sim-p6-001",
+  "resource_option_id": "resource-option-sim-p6-001",
+  "resource_id": "resource-sim-p6-001",
+  "predicted_at_utc": "2026-09-01T08:15:00Z",
+  "as_of_cutoff_utc": "2026-09-01T08:00:00Z",
+  "unit": "SECONDS",
+  "p50_seconds": 540,
+  "p90_seconds": 720,
+  "confidence": 0.8,
+  "model_version": "1.0.0",
+  "feature_schema_version": "duration-features.v1",
+  "fallback_reason": "NONE",
+  "selected_duration_source": "MODEL_CANDIDATE",
+  "selected_duration_seconds": 540,
+  "standard_duration": {
+    "seconds": 600,
+    "duration_source": "canonical-operation-resource-option",
+    "source_version": "operation-resource-option.v1",
+    "source_record_id": "source-standard-duration-001",
+    "source_record_fingerprint": "sha256:aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa"
+  },
+  "feature_record_reference": {
+    "duration_feature_record_version": "duration-feature-record.v1",
+    "feature_record_id": "duration-feature-record-f905bbd689cd225f44c3ccaefff8c049a03129fd1eee89c4694c2075f8e9f749",
+    "feature_record_fingerprint": "sha256:f905bbd689cd225f44c3ccaefff8c049a03129fd1eee89c4694c2075f8e9f749",
+    "feature_schema_version": "duration-features.v1"
+  },
+  "model_reference": {
+    "duration_model_manifest_version": "duration-model-manifest.v1",
+    "model_manifest_id": "duration-model-manifest-3e844eeefbbac8c48c9fc2e662adc47793fe82c44c3aec55997a78ecea6d689f",
+    "model_manifest_fingerprint": "sha256:3e844eeefbbac8c48c9fc2e662adc47793fe82c44c3aec55997a78ecea6d689f",
+    "model_version": "1.0.0",
+    "model_artifact_digest": "sha256:1111111111111111111111111111111111111111111111111111111111111111"
+  },
+  "evaluation_reference": {
+    "duration_evaluation_report_version": "duration-evaluation-report.v1",
+    "evaluation_report_id": "duration-evaluation-report-31aa940ef1a8390691c07fff4d6ac10af40bdfafb27134bd6681ca9b02203c95",
+    "evaluation_report_fingerprint": "sha256:31aa940ef1a8390691c07fff4d6ac10af40bdfafb27134bd6681ca9b02203c95",
+    "gate_decision": "NOT_EVALUATED_BY_P6_02"
+  },
+  "prediction_policy_reference": {
+    "document_version": "duration-prediction-policy.v1",
+    "artifact_id": "duration-prediction-policy-synthetic-001",
+    "fingerprint": "sha256:9999999999999999999999999999999999999999999999999999999999999999"
+  },
+  "synthetic": true,
+  "synthetic_provenance": {
+    "assumption_profile": "SIM-P6-DURATION-CONTRACT-001@1.0.0",
+    "assumption_refs": ["SIM-ASSUMPTION-021"]
+  },
+  "production_binding": false,
+  "governance_boundary": {
+    "production_authorized": false,
+    "open_authority_gaps": ["OPEN-010", "OPEN-011", "OPEN-014", "OPEN-015"],
+    "planning_authority": "ADVISORY_DURATION_ONLY"
+  },
+  "prediction_fingerprint": "sha256:6cb0a6f243204ad3a42b648919d6c2d8d5a32f0a38b9490b5ca03cee637c821e"
+}

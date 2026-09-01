@@ -227,6 +227,12 @@ jobs:
           --root .
           --report build/validation/ci-p4-machine-contracts.json
 
+      - name: P6 duration prediction machine contract evidence
+        run: >-
+          uv run python scripts/p6_duration_contract_check.py
+          --root .
+          --report build/validation/ci-p6-duration-contracts.json
+
       - name: P3 workspace persistence evidence
         run: >-
           uv run python -m app.infrastructure.workspace_persistence_check

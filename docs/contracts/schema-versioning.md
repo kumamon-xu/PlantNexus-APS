@@ -6,10 +6,18 @@ spec_version: 0.3.0
 phase: cross-phase
 normative: true
 source_sections: [23, 24, 40, 101, 103, 104]
-last_reviewed: 2026-08-27
+last_reviewed: 2026-09-01
 ---
 
 # Schema 版本与兼容规则
+
+## TASK-P6-02 additive set `2.9.0`
+
+Global current metadata同步提升到`2.9.0`：`pyproject.toml`、`app.SCHEMA_VERSION`与data dictionary一致。该set只增加`duration-feature-record.v1`、`duration-model-manifest.v1`、`duration-evaluation-report.v1`和`duration-prediction.v1`；每个document有独立stable URN/version、strict/no-default/offline refs、canonical fingerprint与exact non-interchangeable semantics。P3/P4 documents继续携带各自历史`2.6/2.7/2.8` set字段，旧checker只把`2.9.0`视为当前registry metadata，绝不改写历史carrier。
+
+70份pre-P6 Schema/sample bytes由manifest `sha256:ada3e2a0498bb5b42ef81aba01693a949cd41deac229ebad8ea6f9334e901c64`冻结。Runtime/dev dependency集合、`uv.lock`、migration `0001`～`0005`、state registry与canonicalization version均无变化；`pyproject.toml`路径命中Dependency impact只反映schema metadata更新。新sample数值只属于`SIM-ASSUMPTION-021` contract shape，不是兼容default或阈值。
+
+v1 consumer必须精确选择document/set版本；unknown/additional/mixed `2.8.0` payload fail closed，不允许coercion。无durable consumer时可删除本additive package并恢复metadata/index；一旦被P6-03+消费，bytes只能保留并由新document/set version supersede，运行回滚只能禁用prediction并选择权威标准工时。
 
 ## TASK-P4-03 consumer and migration boundary
 

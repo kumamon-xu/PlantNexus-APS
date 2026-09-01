@@ -1,0 +1,91 @@
+{
+  "duration_feature_record_version": "duration-feature-record.v1",
+  "schema_set_version": "2.9.0",
+  "canonicalization_version": "canonical-json.v1",
+  "feature_record_id": "duration-feature-record-f905bbd689cd225f44c3ccaefff8c049a03129fd1eee89c4694c2075f8e9f749",
+  "feature_schema_version": "duration-features.v1",
+  "data_plane": "SIMULATION",
+  "environment": "TEST",
+  "factory_id": "factory-sim-p6-001",
+  "operation_id": "operation-sim-p6-001",
+  "resource_option_id": "resource-option-sim-p6-001",
+  "resource_id": "resource-sim-p6-001",
+  "as_of_cutoff_utc": "2026-09-01T08:00:00Z",
+  "source_records": [
+    {
+      "source_system": "canonical-operation-resource-option",
+      "source_version": "operation-resource-option.v1",
+      "source_record_id": "source-standard-duration-001",
+      "record_fingerprint": "sha256:aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+      "observed_at_utc": "2026-09-01T07:40:00Z",
+      "available_at_utc": "2026-09-01T07:45:00Z"
+    },
+    {
+      "source_system": "completed-operation-facts",
+      "source_version": "completed-operation-facts.v1",
+      "source_record_id": "source-completed-history-001",
+      "record_fingerprint": "sha256:bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb",
+      "observed_at_utc": "2026-09-01T07:30:00Z",
+      "available_at_utc": "2026-09-01T07:35:00Z"
+    },
+    {
+      "source_system": "planning-snapshot",
+      "source_version": "planning-snapshot.v2",
+      "source_record_id": "source-queue-snapshot-001",
+      "record_fingerprint": "sha256:cccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccc",
+      "observed_at_utc": "2026-09-01T07:55:00Z",
+      "available_at_utc": "2026-09-01T07:56:00Z"
+    }
+  ],
+  "features": [
+    {
+      "feature_name": "operation_standard_duration_seconds",
+      "value_type": "INTEGER",
+      "value": 600,
+      "unit": "SECONDS",
+      "source_record_ids": ["source-standard-duration-001"],
+      "available_at_utc": "2026-09-01T07:45:00Z",
+      "transform_version": "identity.v1"
+    },
+    {
+      "feature_name": "resource_recent_completed_count",
+      "value_type": "INTEGER",
+      "value": 8,
+      "unit": "COUNT",
+      "source_record_ids": ["source-completed-history-001"],
+      "available_at_utc": "2026-09-01T07:35:00Z",
+      "transform_version": "completed-count.v1"
+    },
+    {
+      "feature_name": "resource_recent_duration_median_seconds",
+      "value_type": "INTEGER",
+      "value": 570,
+      "unit": "SECONDS",
+      "source_record_ids": ["source-completed-history-001"],
+      "available_at_utc": "2026-09-01T07:35:00Z",
+      "transform_version": "completed-median.v1"
+    },
+    {
+      "feature_name": "resource_queue_depth",
+      "value_type": "INTEGER",
+      "value": 3,
+      "unit": "COUNT",
+      "source_record_ids": ["source-queue-snapshot-001"],
+      "available_at_utc": "2026-09-01T07:56:00Z",
+      "transform_version": "queue-depth.v1"
+    }
+  ],
+  "pii_fields_present": false,
+  "target_fields_present": false,
+  "synthetic": true,
+  "synthetic_provenance": {
+    "assumption_profile": "SIM-P6-DURATION-CONTRACT-001@1.0.0",
+    "assumption_refs": ["SIM-ASSUMPTION-021"]
+  },
+  "production_binding": false,
+  "governance_boundary": {
+    "production_authorized": false,
+    "open_authority_gaps": ["OPEN-010", "OPEN-011", "OPEN-014", "OPEN-015"]
+  },
+  "feature_record_fingerprint": "sha256:f905bbd689cd225f44c3ccaefff8c049a03129fd1eee89c4694c2075f8e9f749"
+}

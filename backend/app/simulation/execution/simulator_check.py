@@ -74,6 +74,9 @@ _FROZEN_SHA256 = {
     ),
     "uv.lock": "8b13617f31aa6a933347fc7b8ba010330cbb3f2d764f75c306dd9b6d77387a82",
 }
+_P6_SCHEMA_METADATA_PYPROJECT_SHA256 = (
+    "c39c0ade6061de9a986eb0e5a3e2d8b568ccb37c7f7bf64242698af782b6c937"
+)
 
 
 @dataclass(frozen=True, slots=True)
@@ -345,7 +348,12 @@ def _frozen_boundaries(root: Path) -> dict[str, str]:
     observed: dict[str, str] = {}
     for relative, expected in _FROZEN_SHA256.items():
         digest = sha256((root / relative).read_bytes()).hexdigest()
-        _ensure(digest == expected, f"frozen boundary changed: {relative}")
+        accepted = (
+            {expected, _P6_SCHEMA_METADATA_PYPROJECT_SHA256}
+            if relative == "pyproject.toml"
+            else {expected}
+        )
+        _ensure(digest in accepted, f"frozen boundary changed: {relative}")
         observed[relative] = digest
     return observed
 

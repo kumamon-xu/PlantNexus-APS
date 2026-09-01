@@ -1,0 +1,106 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "urn:plantnexus:aps:schema:duration-feature-record:v1",
+  "title": "PlantNexus APS Duration Feature Record v1",
+  "description": "Immutable as-of Simulation feature envelope for duration prediction. It carries evidence only and cannot authorize Production or alter planning facts.",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "duration_feature_record_version", "schema_set_version", "canonicalization_version",
+    "feature_record_id", "feature_schema_version", "data_plane", "environment",
+    "factory_id", "operation_id", "resource_option_id", "resource_id",
+    "as_of_cutoff_utc", "source_records", "features", "pii_fields_present",
+    "target_fields_present", "synthetic", "synthetic_provenance",
+    "production_binding", "governance_boundary", "feature_record_fingerprint"
+  ],
+  "properties": {
+    "duration_feature_record_version": {"const": "duration-feature-record.v1"},
+    "schema_set_version": {"const": "2.9.0"},
+    "canonicalization_version": {"const": "canonical-json.v1"},
+    "feature_record_id": {"type": "string", "pattern": "^duration-feature-record-[0-9a-f]{64}$"},
+    "feature_schema_version": {"const": "duration-features.v1"},
+    "data_plane": {"const": "SIMULATION"},
+    "environment": {"enum": ["DEVELOPMENT", "TEST", "BENCHMARK"]},
+    "factory_id": {"$ref": "#/$defs/canonicalId"},
+    "operation_id": {"$ref": "#/$defs/canonicalId"},
+    "resource_option_id": {"$ref": "#/$defs/canonicalId"},
+    "resource_id": {"$ref": "#/$defs/canonicalId"},
+    "as_of_cutoff_utc": {"$ref": "#/$defs/utcInstant"},
+    "source_records": {
+      "type": "array",
+      "minItems": 1,
+      "uniqueItems": true,
+      "items": {"$ref": "#/$defs/sourceRecord"}
+    },
+    "features": {
+      "type": "array",
+      "minItems": 1,
+      "uniqueItems": true,
+      "items": {"$ref": "#/$defs/featureValue"}
+    },
+    "pii_fields_present": {"const": false},
+    "target_fields_present": {"const": false},
+    "synthetic": {"const": true},
+    "synthetic_provenance": {"$ref": "#/$defs/syntheticProvenance"},
+    "production_binding": {"const": false},
+    "governance_boundary": {"$ref": "#/$defs/governanceBoundary"},
+    "feature_record_fingerprint": {"$ref": "#/$defs/sha256Fingerprint"}
+  },
+  "$defs": {
+    "canonicalId": {"type": "string", "minLength": 1, "maxLength": 256, "pattern": "^[^\\s\\u0000-\\u001F\\u007F]+$"},
+    "sha256Fingerprint": {"type": "string", "pattern": "^sha256:[0-9a-f]{64}$"},
+    "utcInstant": {"type": "string", "format": "date-time", "pattern": "Z$"},
+    "sourceRecord": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["source_system", "source_version", "source_record_id", "record_fingerprint", "observed_at_utc", "available_at_utc"],
+      "properties": {
+        "source_system": {"$ref": "#/$defs/canonicalId"},
+        "source_version": {"$ref": "#/$defs/canonicalId"},
+        "source_record_id": {"$ref": "#/$defs/canonicalId"},
+        "record_fingerprint": {"$ref": "#/$defs/sha256Fingerprint"},
+        "observed_at_utc": {"$ref": "#/$defs/utcInstant"},
+        "available_at_utc": {"$ref": "#/$defs/utcInstant"}
+      }
+    },
+    "featureValue": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["feature_name", "value_type", "value", "unit", "source_record_ids", "available_at_utc", "transform_version"],
+      "properties": {
+        "feature_name": {"type": "string", "pattern": "^[a-z][a-z0-9_]{0,127}$"},
+        "value_type": {"enum": ["INTEGER", "NUMBER", "BOOLEAN", "CATEGORY"]},
+        "value": {"type": ["number", "string", "boolean"]},
+        "unit": {"enum": ["COUNT", "SECONDS", "RATIO", "BOOLEAN", "CATEGORY"]},
+        "source_record_ids": {"type": "array", "minItems": 1, "uniqueItems": true, "items": {"$ref": "#/$defs/canonicalId"}},
+        "available_at_utc": {"$ref": "#/$defs/utcInstant"},
+        "transform_version": {"$ref": "#/$defs/canonicalId"}
+      }
+    },
+    "syntheticProvenance": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["assumption_profile", "assumption_refs"],
+      "properties": {
+        "assumption_profile": {"const": "SIM-P6-DURATION-CONTRACT-001@1.0.0"},
+        "assumption_refs": {
+          "type": "array", "minItems": 1, "uniqueItems": true,
+          "items": {"type": "string", "pattern": "^SIM-ASSUMPTION-[0-9]{3}$"},
+          "contains": {"const": "SIM-ASSUMPTION-021"}
+        }
+      }
+    },
+    "governanceBoundary": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["production_authorized", "open_authority_gaps"],
+      "properties": {
+        "production_authorized": {"const": false},
+        "open_authority_gaps": {
+          "type": "array", "minItems": 4, "maxItems": 4, "uniqueItems": true,
+          "items": {"enum": ["OPEN-010", "OPEN-011", "OPEN-014", "OPEN-015"]}
+        }
+      }
+    }
+  }
+}

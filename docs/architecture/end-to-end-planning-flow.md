@@ -11,6 +11,12 @@ last_reviewed: 2026-09-01
 
 # 端到端计划链路
 
+## TASK-P6-02 duration-prediction machine-contract boundary
+
+P6-02只建立离线、可重放的机器合同证据链：`as-of bounded feature record → immutable model manifest → evaluation evidence → candidate/fallback prediction`。该链由4份`2.9.0` JSON Schema、正反样例和pure checker验证identity、lineage、quantile order、Simulation scope及fallback exactness；它不接入PlanningProblem、Solver、ScheduleVersion、HTTP/UI或任何业务写入路径。
+
+当前计划链继续以authoritative standard duration作为唯一运行时输入。只有`fallback_reason=NONE`的离线候选证据可声明选择model p50；其他原因必须精确选择standard duration，但两者都不会在本Task进入计划执行。P6-06/P6-07分别保留未来的显式ingress与integration ownership；Production authority、阈值、在线推理、模型状态和自动决策均未建立。
+
 ## TASK-P5-22 independent Exit audit edge
 
 P5 Exit新增的只读审计链为`immutable P5 provider topology + frozen contract objects + fresh qualification → fresh P5 Gate → fresh P4/P3/P2 regressions → exact registers/boundaries → READY or NOT_READY manifest`。它不调用任何cancelled P5-03～20 owner，也不新增Solver、Validator、Schema、state或业务写入；任一SHA/digest/topology/report/boundary漂移都在进入READY前fail closed。

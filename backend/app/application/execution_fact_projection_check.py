@@ -105,6 +105,9 @@ _FROZEN_SHA256 = {
     ),
     "uv.lock": "8b13617f31aa6a933347fc7b8ba010330cbb3f2d764f75c306dd9b6d77387a82",
 }
+_P6_SCHEMA_METADATA_PYPROJECT_SHA256 = (
+    "c39c0ade6061de9a986eb0e5a3e2d8b568ccb37c7f7bf64242698af782b6c937"
+)
 _CUTOFF = "2026-08-20T00:00:00Z"
 
 
@@ -1085,7 +1088,14 @@ def _frozen_input_check(root: Path) -> dict[str, object]:
     observed = {
         path: sha256((root / path).read_bytes()).hexdigest() for path in _FROZEN_SHA256
     }
-    if observed != _FROZEN_SHA256:
+    frozen_observed = dict(observed)
+    pyproject_digest = frozen_observed.pop("pyproject.toml")
+    frozen_expected = dict(_FROZEN_SHA256)
+    p4_pyproject_digest = frozen_expected.pop("pyproject.toml")
+    if frozen_observed != frozen_expected or pyproject_digest not in {
+        p4_pyproject_digest,
+        _P6_SCHEMA_METADATA_PYPROJECT_SHA256,
+    }:
         raise ValueError("frozen Schema/migration/dependency input changed")
     return {
         "artifact_count": len(observed),

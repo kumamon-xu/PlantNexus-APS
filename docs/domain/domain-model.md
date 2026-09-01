@@ -3,13 +3,19 @@ doc_id: DOC-DOM-001
 title: APS 领域模型
 status: baseline
 spec_version: 0.3.0
-phase: P0-P4
+phase: P0-P6
 normative: true
 source_sections: [17, 18, 19, 20, 21, 22]
-last_reviewed: 2026-08-28
+last_reviewed: 2026-09-01
 ---
 
 # APS 领域模型
+
+## TASK-P6-02 duration evidence value boundary
+
+P6-02新增的是外部化、immutable的duration evidence document，不是新的Aggregate、entity、repository或业务state。Feature record冻结as-of/source/transform provenance；model manifest冻结artifact、training dataset、feature set、code、dependency、configuration和replay identity；evaluation report只记录可重放指标与slice证据；prediction document只表达candidate/fallback选择及其完整lineage。
+
+`duration-prediction.v1`在`fallback_reason=NONE`时只能选择同文档model p50，任何其他稳定原因都只能选择authoritative standard duration。该规则目前仅在Simulation/development机器合同中成立，不替换Operation、PlanningProblem或ScheduleVersion中的duration语义，也不新增threshold、distribution、Production authority、model registry/runtime state或自动决策。P6-06/P6-07仍拥有未来runtime ingress与集成边界。
 
 ## TASK-P4-11 ChangeReport read/export projection
 

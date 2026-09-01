@@ -1,0 +1,12 @@
+{
+  "negative_sample_version": "duration-contract-negative.v1",
+  "base_sample": "duration-feature-record.v1.synthetic.json",
+  "mutations": [
+    {"op": "replace", "path": "/source_records/2/available_at_utc", "value": "2026-09-01T08:01:00Z"},
+    {"op": "replace", "path": "/features/3/available_at_utc", "value": "2026-09-01T08:01:00Z"}
+  ],
+  "recompute_identity": true,
+  "expected_rejection": "AS_OF_LEAKAGE",
+  "synthetic": true,
+  "assumption_profile": "SIM-P6-DURATION-CONTRACT-001@1.0.0"
+}

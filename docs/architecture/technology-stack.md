@@ -11,6 +11,12 @@ last_reviewed: 2026-09-01
 
 # 推荐技术栈与锁定规则
 
+## TASK-P6-02 dependency-neutral contract release
+
+Global schema metadata随additive carrier提升到`2.9.0`，但runtime/dev dependency projection保持`sha256:2b9c344936b57d46b279067300c22c6cf74fc87281a624944a3ce492a6251d2e`，`uv.lock`继续`sha256:8b13617f31aa6a933347fc7b8ba010330cbb3f2d764f75c306dd9b6d77387a82`。四份Schema只使用既有Draft 2020-12/jsonschema工具链；checker只用Python标准库、既有PyYAML/jsonschema，没有ML framework、model runtime、registry、feature store、service、container或network dependency。
+
+CI workflow只在同一FULL job增加一个offline non-skippable checker并复用既有`build/validation/*.json` artifact upload；required context、permissions、Secrets、service与deployment不变。`pyproject.toml`命中Dependency Rule仅因schema metadata位于同一路径，不表示dependency change。
+
 ## TASK-P6-01 ML stack boundary
 
 本Task只接受ADR-0016与人类治理合同，不选择、安装或暗示任何ML framework、model family、registry、feature store或tracking service。`pyproject.toml`、`uv.lock`、Frontend/Node lock、container stack和CI workflow逐字冻结；文档中的model/dataset manifest要求不构成dependency决定。

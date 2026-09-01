@@ -11,11 +11,17 @@ last_reviewed: 2026-09-01
 
 # 合同文档索引
 
+## TASK-P6-02 duration machine contract
+
+[Duration Prediction Machine Contract v1](duration-prediction-machine-contract.md)现把P6-01人类治理基线发布为additive schema set `2.9.0`的四份strict Simulation carrier：FeatureRecord、ModelManifest、EvaluationReport与Prediction。五份正例、五份定点negative descriptor及`p6-duration-contract-report.v1`固定canonical identity、as-of leakage、exact cross-lineage、quantile/confidence、20项stable fallback、authoritative standard-duration selection、unknown/mixed/tamper拒绝和OPEN-010/011/014/015边界。
+
+70份历史Schema/sample、runtime/dev dependency pins、`uv.lock`、migration head `0005`和所有state pairs逐字不变。CI只新增同一FULL job内的non-skippable离线checker；没有dataset、训练model、evaluation Gate、runtime、Planning ingress、API或Production authority，`AI_DURATION_PREDICTION`继续`DEFERRED / CONTRACT_ONLY / NO_RUNTIME`。TASK-P6-03不会自动启动。
+
 ## TASK-P6-01 human governance contract
 
 [`duration-prediction-governance.md`](duration-prediction-governance.md)现作为ADR-0016的accepted人类治理合同，固定标准工时与预测candidate的authority分离、completed-label eligibility/censoring、feature as-of/leakage、privacy/retention/deletion、immutable dataset/model/evaluation provenance、human promotion/rollback、fallback decision table以及OPEN-010/011/014/015 closure conditions。
 
-该文档不是机器Schema：schema set、migration、dependency和既有carrier均未改变，`fallback_reason`枚举、Prediction/feature/model/evaluation carrier及compatibility必须由TASK-P6-02另行授权发布。当前没有dataset、model、runtime、planning integration或Production authority，能力继续`DEFERRED/NOT_FORMED`。
+该文档在TASK-P6-01完成时不是机器Schema；TASK-P6-02现已另行授权并以本页上方additive `2.9.0` package承载其可机器表达部分。当前仍没有dataset、trained model、runtime、planning integration或Production authority，能力继续DEFERRED。
 
 ## TASK-P4-15 Exit contract audit
 

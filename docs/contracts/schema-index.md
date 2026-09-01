@@ -3,13 +3,26 @@ doc_id: DOC-CONTRACT-008
 title: Schema 计划索引
 status: living
 spec_version: 0.3.0
-phase: P0-P4
+phase: P0-P6
 normative: true
 source_sections: [36, 38, 39, 70, 71, 103]
-last_reviewed: 2026-08-27
+last_reviewed: 2026-09-01
 ---
 
 # Schema 计划索引
+
+## TASK-P6-02 additive `2.9.0` release
+
+Global current schema metadata现为`2.9.0`。TASK-P6-02只增加DurationFeatureRecord v1、DurationModelManifest v1、DurationEvaluationReport v1与DurationPrediction v1，以及5份正例和5份定点negative descriptor；每份carrier均为strict/no-default/self-offline-ref、`SIMULATION`/`production_binding=false`和content-derived identity。对应人类语义见[Duration Prediction Machine Contract v1](duration-prediction-machine-contract.md)。
+
+| Document | Schema / stable URN | Compatibility and owner boundary |
+|---|---|---|
+| DurationFeatureRecord v1 | [`duration-feature-record.schema.json`](../../schemas/json/duration-feature-record.schema.json) / `urn:plantnexus:aps:schema:duration-feature-record:v1` | 新as-of evidence envelope；实际dataset/feature pipeline属P6-03 |
+| DurationModelManifest v1 | [`duration-model-manifest.schema.json`](../../schemas/json/duration-model-manifest.schema.json) / `urn:plantnexus:aps:schema:duration-model-manifest:v1` | 新immutable lineage carrier、无状态机；训练/模型属P6-04 |
+| DurationEvaluationReport v1 | [`duration-evaluation-report.schema.json`](../../schemas/json/duration-evaluation-report.schema.json) / `urn:plantnexus:aps:schema:duration-evaluation-report:v1` | measurements only、Gate=`NOT_EVALUATED_BY_P6_02`；评价/threshold属P6-05 |
+| DurationPrediction v1 | [`duration-prediction.schema.json`](../../schemas/json/duration-prediction.schema.json) / `urn:plantnexus:aps:schema:duration-prediction:v1` | advisory quantiles/confidence + authoritative standard fallback；runtime/Planning ingress属P6-06/07 |
+
+70份P0～P5 Schema/sample以POSIX path+LF manifest `sha256:ada3e2a0498bb5b42ef81aba01693a949cd41deac229ebad8ea6f9334e901c64`逐字冻结；`uv.lock`、5份migration、state pair和runtime owner不变。`p6-duration-contract-report.v1`要求10/10、20个schema rejection、7个semantic/lineage rejection、5个tamper rejection和`issues=[]`。Contract形成不表示dataset/model/evaluation Gate/runtime/Planning或Production authority形成。
 
 ## TASK-P4-03 first durable consumer
 
@@ -43,10 +56,14 @@ ADR-0013～0015现已accepted；TASK-P4-02的启动输入明确为ExecutionEvent
 
 独立Audit确认schema set `2.7.0`、P2 retained bytes、P3 `2.6.0` workspace carriers、P3 export v2 carriers、samples、strict/offline refs与canonical fingerprints全部回归PASS；本Task没有Schema新增、删除、版本或字节变化。
 
-当前 schema set 为additive `2.8.0`。`CONTRACT_V1/V2/V3`表示机器可验证的合同已形成，不表示ScheduleVersion/ExportJob状态持久化、审批、发布或Production业务动作已完成。此前所有set artifact均保留，未被原地覆盖。
+当前 schema set 为additive `2.9.0`。`CONTRACT_V1/V2/V3`表示机器可验证的合同已形成，不表示ScheduleVersion/ExportJob状态持久化、审批、发布或Production业务动作已完成。此前所有set artifact均保留，未被原地覆盖。
 
 | Schema | 目标路径 | 首个 Task | 状态 |
 |---|---|---|---|
+| Duration feature record v1 | [`/schemas/json/duration-feature-record.schema.json`](../../schemas/json/duration-feature-record.schema.json) | TASK-P6-02 | CONTRACT_V1；Simulation evidence only；dataset pipeline NOT_FORMED |
+| Duration model manifest v1 | [`/schemas/json/duration-model-manifest.schema.json`](../../schemas/json/duration-model-manifest.schema.json) | TASK-P6-02 | CONTRACT_V1；immutable lineage/no state；model NOT_FORMED |
+| Duration evaluation report v1 | [`/schemas/json/duration-evaluation-report.schema.json`](../../schemas/json/duration-evaluation-report.schema.json) | TASK-P6-02 | CONTRACT_V1；measurements only；Gate NOT_EVALUATED |
+| Duration prediction v1 | [`/schemas/json/duration-prediction.schema.json`](../../schemas/json/duration-prediction.schema.json) | TASK-P6-02 | CONTRACT_V1；advisory candidate + exact standard fallback；runtime NOT_FORMED |
 | Canonical records | [`/schemas/json/canonical-records.v1.schema.json`](../../schemas/json/canonical-records.v1.schema.json) | TASK-P1-02 | CONTRACT_V1；Normalization/Data Validation/Expansion formed |
 | Canonical import v1 | [`/schemas/json/import-package.schema.json`](../../schemas/json/import-package.schema.json) | TASK-P0-03 skeleton | SKELETON_V1 retained |
 | Canonical import v2 | [`/schemas/json/import-package.v2.schema.json`](../../schemas/json/import-package.v2.schema.json) | TASK-P1-02 | CONTRACT_V2；Reference/Synthetic common-ingress pipeline formed；Production binding PLANNED |

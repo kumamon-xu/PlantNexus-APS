@@ -126,6 +126,22 @@ _NEW_ARTIFACT_PATHS = {
     *(f"schemas/json/{schema}" for schema, _, _, _ in _SCHEMA_SAMPLE_PAIRS),
     *(f"schemas/samples/{sample}" for _, sample, _, _ in _SCHEMA_SAMPLE_PAIRS),
 }
+_POST_P4_ADDITIVE_ARTIFACT_PATHS = {
+    "schemas/json/duration-feature-record.schema.json",
+    "schemas/json/duration-model-manifest.schema.json",
+    "schemas/json/duration-evaluation-report.schema.json",
+    "schemas/json/duration-prediction.schema.json",
+    "schemas/samples/duration-feature-record.v1.synthetic.json",
+    "schemas/samples/duration-model-manifest.v1.synthetic.json",
+    "schemas/samples/duration-evaluation-report.v1.synthetic.json",
+    "schemas/samples/duration-prediction.v1.candidate.synthetic.json",
+    "schemas/samples/duration-prediction.v1.fallback.synthetic.json",
+    "schemas/samples/duration-feature-record.v1.future-leakage.invalid.json",
+    "schemas/samples/duration-model-manifest.v1.incomplete-lineage.invalid.json",
+    "schemas/samples/duration-prediction.v1.invalid-quantiles.invalid.json",
+    "schemas/samples/duration-prediction.v1.mixed-version.invalid.json",
+    "schemas/samples/duration-prediction.v1.unknown-fallback.invalid.json",
+}
 
 _HISTORICAL_COUNT = 58
 _HISTORICAL_MANIFEST_SHA256 = (
@@ -215,7 +231,7 @@ def _historical_freeze(root: Path) -> dict[str, object]:
     observed: dict[str, str] = {}
     for path in sorted(candidates):
         relative = path.relative_to(root).as_posix()
-        if relative not in _NEW_ARTIFACT_PATHS:
+        if relative not in _NEW_ARTIFACT_PATHS | _POST_P4_ADDITIVE_ARTIFACT_PATHS:
             observed[relative] = _sha256(path)
     if len(observed) != _HISTORICAL_COUNT:
         raise ValueError("historical Schema/sample inventory changed")
@@ -507,16 +523,16 @@ def _dependency_and_boundary_check(root: Path) -> dict[str, object]:
         raise ValueError("runtime dependency set changed")
     if development != _EXPECTED_DEV_DEPENDENCIES:
         raise ValueError("development dependency set changed")
-    if project["tool"]["plantnexus-aps"]["versions"]["schema"] != SCHEMA_SET_VERSION:
-        raise ValueError("pyproject current schema metadata is not 2.8.0")
-    if SCHEMA_VERSION != SCHEMA_SET_VERSION:
-        raise ValueError("package current schema metadata is not 2.8.0")
+    if project["tool"]["plantnexus-aps"]["versions"]["schema"] != "2.9.0":
+        raise ValueError("pyproject current schema metadata is not 2.9.0")
+    if SCHEMA_VERSION != "2.9.0":
+        raise ValueError("package current schema metadata is not 2.9.0")
     dictionary = cast(
         dict[str, Any],
         yaml.safe_load((root / "schemas" / "data_dictionary.yaml").read_text("utf-8")),
     )
-    if dictionary.get("schema_set_version") != SCHEMA_SET_VERSION:
-        raise ValueError("data dictionary current schema metadata is not 2.8.0")
+    if dictionary.get("schema_set_version") != "2.9.0":
+        raise ValueError("data dictionary current schema metadata is not 2.9.0")
     expected_documents = {version for _, _, _, version in _SCHEMA_SAMPLE_PAIRS}
     if not expected_documents.issubset(set(cast(dict[str, Any], dictionary["schemas"]))):
         raise ValueError("data dictionary omits a P4 document version")

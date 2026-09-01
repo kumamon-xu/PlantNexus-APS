@@ -3,13 +3,17 @@ doc_id: DOC-CONTRACT-003
 title: PlanningProblem 合同
 status: baseline
 spec_version: 0.3.0
-phase: P0-P2
+phase: P0-P6
 normative: true
 source_sections: [13, 14, 24, 25, 26, 45, 89]
-last_reviewed: 2026-08-21
+last_reviewed: 2026-09-01
 ---
 
 # PlanningProblem 合同
+
+## TASK-P6-02 checker compatibility only
+
+P6-02没有修改PlanningProblem v1/v2 Schema、builder、hash、active-operation universe或Solver ingress。`freeze_window_check`仍逐字冻结P2/P4 Problem、Validator、state和`uv.lock`；它对`pyproject.toml`只新增一个精确兼容值，用于接受global schema metadata从`2.8.0`到`2.9.0`的单点提升。依赖projection、Problem bytes及所有计划语义保持不变，DurationPrediction在P6-06/P6-07前不得进入Problem。
 
 ## TASK-P4-05 immutable Problem consumer
 

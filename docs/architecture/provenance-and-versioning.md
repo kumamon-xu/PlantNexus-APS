@@ -11,11 +11,17 @@ last_reviewed: 2026-09-01
 
 # Provenance 与版本规则
 
+## TASK-P6-02 canonical carrier lineage
+
+Schema set `2.9.0`现以`canonical-json.v1`分别形成FeatureRecord、ModelManifest、EvaluationReport与Prediction v1 identity。每份projection排除自己的ID/fingerprint，以sorted finite JSON计算SHA-256并由同一digest派生ID；allowed-field tamper、混合version或任何跨文档ref不一致均fail closed。Prediction exact绑定Feature、Model、Evaluation、Policy与权威standard-duration source record；Evaluation exact绑定Model artifact、dataset、split、baseline、code/config与privacy review。
+
+这些reference只证明carrier shape/identity，不证明其引用的future dataset、trained model、approval principal或Production source已存在。ModelManifest无lifecycle state，Evaluation明确`NOT_EVALUATED_BY_P6_02`，Prediction只允许Simulation advisory candidate或standard-duration fallback。70份pre-P6字节、dependency lock、migration与历史version轴不变；P6-03+消费后v1 bytes不可改写。
+
 ## TASK-P6-01 dataset/model/prediction lineage
 
 ADR-0016要求未来dataset manifest不可变绑定source/version/as-of cutoff、eligibility/exclusion与label policy、feature schema、time/group split、plane/factory scope、code revision和content fingerprint；model artifact另绑定dataset、dependency/lock、algorithm/config、determinism inputs、environment与artifact digest；evaluation绑定独立split、standard-duration baseline、slice/metric policy和完整machine evidence。Retraining只能产生新版本，禁止覆盖历史。
 
-每次prediction/consumption必须可关联operation/resource option、decision time/cutoff、标准工时source/version、feature/dataset/model/contract/code/config、p50/p90/confidence、provider outcome、consume/fallback decision/reason、audit/correlation及下游Snapshot/Problem/PlanningRun引用。日志不是唯一provenance；raw Production rows不得进入provider artifact。TASK-P6-01只冻结人类合同，尚无机器carrier、identity算法、dataset或model形成。
+每次prediction/consumption必须可关联operation/resource option、decision time/cutoff、标准工时source/version、feature/dataset/model/contract/code/config、p50/p90/confidence、provider outcome、consume/fallback decision/reason、audit/correlation及下游Snapshot/Problem/PlanningRun引用。日志不是唯一provenance；raw Production rows不得进入provider artifact。TASK-P6-01历史上只冻结人类合同；TASK-P6-02现形成上述Simulation carrier/identity，但dataset、model和runtime仍未形成。
 
 ## TASK-P4-11 output provenance chain
 

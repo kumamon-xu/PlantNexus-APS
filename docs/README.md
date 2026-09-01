@@ -11,6 +11,14 @@ last_reviewed: 2026-09-01
 
 # PlantNexus APS 文档中心
 
+## TASK-P6-02 duration machine contract
+
+TASK-P6-02从P6-01 provider-verified closure `e74099ca24ed59140f6490c84025b7299b5f201d`冻结不可变Diff base，global additive schema set提升到`2.9.0`。[Duration Prediction Machine Contract v1](contracts/duration-prediction-machine-contract.md)与四份strict Simulation Schema形成FeatureRecord/ModelManifest/EvaluationReport/Prediction exact carrier；5份正例、5份negative descriptor和`p6-duration-contract-report.v1`固定canonical identity、as-of leakage、quantile/confidence、stable fallback、标准工时authority与cross-lineage。
+
+Local checker为10/10 PASS、20 schema/7 semantic-lineage/5 tamper rejection、`issues=[]`；70份pre-P6 Schema/sample manifest、dependency projection、`uv.lock`、5份migration及state pairs均未变。CI只新增同一FULL job中的non-skippable离线step并复用既有artifact glob。
+
+Contract formed不等于capability formed：dataset/training/model/evaluation Gate/runtime/Planning/API/Production authority均未实现，OPEN-010/011/014/015继续OPEN，`AI_DURATION_PREDICTION=DEFERRED / CONTRACT_ONLY / NO_RUNTIME`。当前Task仍在implementation provider闭环中；P6-03不会自动启动。
+
 ## TASK-P6-01 governance baseline
 
 用户已独立授权TASK-P6-01，启动门确认TASK-P6-00 implementation/closure双exact provider、三端同步/0/0/clean及required `validate`/app `15368`未漂移，并冻结Diff base `e854c5bbea784f513863ae55d6b872a7a7d1b928`。Registry precheck分配并接受[ADR-0016](adr/ADR-0016-ai-duration-data-model-governance.md)，[Duration Prediction Governance Contract](contracts/duration-prediction-governance.md)成为后继machine contract的唯一人类语义基线。

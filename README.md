@@ -1,5 +1,13 @@
 # PlantNexus APS
 
+## TASK-P6-02 — Duration prediction machine contract and Schema
+
+用户已独立授权TASK-P6-02；fresh启动门确认P6-01双exact provider、required `validate`/app `15368`、四份artifact digest、三端同步/0/0/clean均未漂移，并冻结Diff base `e74099ca24ed59140f6490c84025b7299b5f201d`。Global additive schema set现为`2.9.0`，[Duration Prediction Machine Contract v1](docs/contracts/duration-prediction-machine-contract.md)发布FeatureRecord、ModelManifest、EvaluationReport与Prediction四份strict Simulation carrier，以及5份正例、5份定点negative descriptor和纯合同checker。
+
+`duration-prediction.v1`显式承载p50/p90/confidence、model/feature/evaluation lineage、20项stable fallback与权威standard duration source/version/record/fingerprint；unknown/mixed/additional、future leakage、reversed quantile、tamper和lineage mismatch全部fail closed。Local machine report为10/10、20个Schema rejection、7个semantic/lineage rejection、5个tamper rejection、`issues=[]`，并冻结70份历史Schema/sample、`uv.lock`、5份migration及既有state pairs。
+
+本Task没有dataset、训练model、evaluation Gate、runtime、Planning ingress、API、migration、dependency lock或Production authority；`AI_DURATION_PREDICTION`仍为`DEFERRED / CONTRACT_ONLY / NO_RUNTIME`，OPEN-010/011/014/015继续OPEN。当前实现正在完成HIGH_RISK/双exact provider闭环，TASK-P6-03不会自动启动。
+
 ## TASK-P6-01 — AI duration data/model governance baseline
 
 用户已独立授权TASK-P6-01；TASK-P6-00双exact provider、三端同步/0/0/clean与required `validate`/GitHub Actions app `15368`启动门通过，`e854c5bbea784f513863ae55d6b872a7a7d1b928`冻结为Diff base。Registry precheck分配并接受[`ADR-0016`](docs/adr/ADR-0016-ai-duration-data-model-governance.md)，配套[`Duration Prediction Governance Contract`](docs/contracts/duration-prediction-governance.md)固定label/feature authority、as-of leakage、privacy/retention、immutable model lineage、human promotion/rollback及标准工时fallback。

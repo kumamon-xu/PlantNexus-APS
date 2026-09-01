@@ -1,0 +1,79 @@
+{
+  "duration_evaluation_report_version": "duration-evaluation-report.v1",
+  "schema_set_version": "2.9.0",
+  "canonicalization_version": "canonical-json.v1",
+  "evaluation_report_id": "duration-evaluation-report-31aa940ef1a8390691c07fff4d6ac10af40bdfafb27134bd6681ca9b02203c95",
+  "model_reference": {
+    "duration_model_manifest_version": "duration-model-manifest.v1",
+    "model_manifest_id": "duration-model-manifest-3e844eeefbbac8c48c9fc2e662adc47793fe82c44c3aec55997a78ecea6d689f",
+    "model_manifest_fingerprint": "sha256:3e844eeefbbac8c48c9fc2e662adc47793fe82c44c3aec55997a78ecea6d689f",
+    "model_version": "1.0.0",
+    "model_artifact_digest": "sha256:1111111111111111111111111111111111111111111111111111111111111111"
+  },
+  "dataset_manifest": {
+    "document_version": "duration-dataset-manifest.v1",
+    "artifact_id": "duration-dataset-manifest-synthetic-001",
+    "fingerprint": "sha256:2222222222222222222222222222222222222222222222222222222222222222"
+  },
+  "split_manifest": {
+    "document_version": "duration-split-manifest.v1",
+    "artifact_id": "duration-split-manifest-synthetic-001",
+    "fingerprint": "sha256:6666666666666666666666666666666666666666666666666666666666666666"
+  },
+  "feature_schema_version": "duration-features.v1",
+  "standard_duration_baseline": {
+    "document_version": "standard-duration-authority.v1",
+    "artifact_id": "source-standard-duration-001",
+    "fingerprint": "sha256:aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa"
+  },
+  "evaluation_code": {
+    "code_revision": "e74099ca24ed59140f6490c84025b7299b5f201d",
+    "dependency_lock_digest": "sha256:8b13617f31aa6a933347fc7b8ba010330cbb3f2d764f75c306dd9b6d77387a82",
+    "configuration": {
+      "document_version": "duration-evaluation-config.v1",
+      "artifact_id": "duration-evaluation-config-synthetic-001",
+      "fingerprint": "sha256:7777777777777777777777777777777777777777777777777777777777777777"
+    }
+  },
+  "evaluated_at_utc": "2026-09-01T08:10:00Z",
+  "evaluation_data_cutoff_utc": "2026-09-01T07:30:00Z",
+  "metrics": [
+    {"metric_name": "MAE_SECONDS", "value": 60, "unit": "SECONDS", "direction": "LOWER_IS_BETTER", "sample_count": 8},
+    {"metric_name": "P50_ABSOLUTE_ERROR_SECONDS", "value": 45, "unit": "SECONDS", "direction": "LOWER_IS_BETTER", "sample_count": 8},
+    {"metric_name": "P90_COVERAGE_RATIO", "value": 0.9, "unit": "RATIO", "direction": "HIGHER_IS_BETTER", "sample_count": 8},
+    {"metric_name": "STANDARD_DURATION_MAE_SECONDS", "value": 90, "unit": "SECONDS", "direction": "LOWER_IS_BETTER", "sample_count": 8}
+  ],
+  "slices": [
+    {
+      "slice_key": "FACTORY_ID",
+      "slice_value": "factory-sim-p6-001",
+      "sample_count": 8,
+      "metrics": [
+        {"metric_name": "MAE_SECONDS", "value": 60, "unit": "SECONDS", "direction": "LOWER_IS_BETTER", "sample_count": 8}
+      ]
+    }
+  ],
+  "gate_assessment": {
+    "gate_contract": "duration-evaluation-gate.planned-p6-05",
+    "decision": "NOT_EVALUATED_BY_P6_02",
+    "thresholds_embedded": false
+  },
+  "privacy_review_reference": {
+    "document_version": "duration-privacy-review.v1",
+    "artifact_id": "duration-privacy-review-synthetic-001",
+    "fingerprint": "sha256:8888888888888888888888888888888888888888888888888888888888888888"
+  },
+  "data_plane": "SIMULATION",
+  "environment": "TEST",
+  "synthetic": true,
+  "synthetic_provenance": {
+    "assumption_profile": "SIM-P6-DURATION-CONTRACT-001@1.0.0",
+    "assumption_refs": ["SIM-ASSUMPTION-021"]
+  },
+  "production_binding": false,
+  "governance_boundary": {
+    "production_authorized": false,
+    "open_authority_gaps": ["OPEN-010", "OPEN-011", "OPEN-014", "OPEN-015"]
+  },
+  "evaluation_report_fingerprint": "sha256:31aa940ef1a8390691c07fff4d6ac10af40bdfafb27134bd6681ca9b02203c95"
+}

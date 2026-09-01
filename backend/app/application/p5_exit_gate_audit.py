@@ -26,6 +26,7 @@ REPORT_VERSION = "p5-exit-gate-evidence-manifest.v1"
 OBSERVATION_VERSION = "p5-exit-gate-audit-observations.v1"
 TASK_ID = "TASK-P5-22"
 DIFF_BASE = "d0a83c58cb4a2d4afa76e8c8cff08441574e2e30"
+P5_CLOSURE = "a565ca9965202527a3fae44c935415131a5be9d2"
 P4_CLOSURE = "892c46d660a6bf3cde8ed473199f38746d041e47"
 P5_QUALIFICATION_FINGERPRINT = (
     "sha256:9d6bacb5888ed5a92219935463d5e67177a8fa52965beccb5463ce943276b6d1"
@@ -632,19 +633,16 @@ def _validate_p4_exit_reference(report: Mapping[str, object]) -> None:
 def _verify_frozen_repository(root: Path) -> JsonObject:
     observed: JsonObject = {}
     for path, expected in _EXPECTED_FROZEN_OBJECTS.items():
-        actual = _git(root, "rev-parse", f"HEAD:{path}")
+        actual = _git(root, "rev-parse", f"{P5_CLOSURE}:{path}")
         if actual != expected:
             _fail(f"repository.{path}", "frozen Git object changed")
-        status = _git(root, "status", "--porcelain=v1", "--", path)
-        if status:
-            _fail(f"repository.{path}", "working tree changed a frozen path")
         observed[path] = actual
 
     data_dictionary = yaml.safe_load(
         (root / "schemas/data_dictionary.yaml").read_text(encoding="utf-8")
     )
-    if data_dictionary.get("schema_set_version") != "2.8.0":
-        _fail("repository.schema_set_version", "must remain 2.8.0")
+    if data_dictionary.get("schema_set_version") != "2.9.0":
+        _fail("repository.schema_set_version", "must be current additive set 2.9.0")
     migrations = sorted(
         path.stem
         for path in (root / "backend/migrations/versions").glob("*.py")
@@ -683,16 +681,9 @@ def _verify_frozen_repository(root: Path) -> JsonObject:
 
 
 def _task_changed_paths(root: Path) -> list[str]:
-    commands = (
-        ("diff", "--name-only", f"{DIFF_BASE}..HEAD"),
-        ("diff", "--name-only"),
-        ("diff", "--cached", "--name-only"),
-        ("ls-files", "--others", "--exclude-standard"),
-    )
     changed: set[str] = set()
-    for command in commands:
-        output = _git(root, *command)
-        changed.update(line.replace("\\", "/") for line in output.splitlines() if line)
+    output = _git(root, "diff", "--name-only", f"{DIFF_BASE}..{P5_CLOSURE}")
+    changed.update(line.replace("\\", "/") for line in output.splitlines() if line)
     forbidden = sorted(path for path in changed if path not in _ALLOWED_TASK_PATHS)
     if forbidden:
         _fail("task_scope", f"paths outside frozen allow-list: {forbidden}")

@@ -1,0 +1,111 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "urn:plantnexus:aps:schema:duration-model-manifest:v1",
+  "title": "PlantNexus APS Duration Model Manifest v1",
+  "description": "Immutable Simulation model artifact and lineage manifest. It is not a lifecycle state, promotion decision, runtime deployment, or Production authorization.",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "duration_model_manifest_version", "schema_set_version", "canonicalization_version",
+    "model_manifest_id", "model_version", "model_artifact", "feature_schema_version",
+    "dataset_manifest", "training_provenance", "training_data_cutoff_utc", "scope",
+    "use_authorization", "fallback_contract_version", "created_at_utc", "data_plane",
+    "environment", "synthetic", "synthetic_provenance", "production_binding",
+    "governance_boundary", "model_manifest_fingerprint"
+  ],
+  "properties": {
+    "duration_model_manifest_version": {"const": "duration-model-manifest.v1"},
+    "schema_set_version": {"const": "2.9.0"},
+    "canonicalization_version": {"const": "canonical-json.v1"},
+    "model_manifest_id": {"type": "string", "pattern": "^duration-model-manifest-[0-9a-f]{64}$"},
+    "model_version": {"$ref": "#/$defs/semanticVersion"},
+    "model_artifact": {"$ref": "#/$defs/modelArtifact"},
+    "feature_schema_version": {"const": "duration-features.v1"},
+    "dataset_manifest": {"$ref": "#/$defs/artifactReference"},
+    "training_provenance": {"$ref": "#/$defs/trainingProvenance"},
+    "training_data_cutoff_utc": {"$ref": "#/$defs/utcInstant"},
+    "scope": {"$ref": "#/$defs/modelScope"},
+    "use_authorization": {"$ref": "#/$defs/useAuthorization"},
+    "fallback_contract_version": {"const": "standard-duration-fallback.v1"},
+    "created_at_utc": {"$ref": "#/$defs/utcInstant"},
+    "data_plane": {"const": "SIMULATION"},
+    "environment": {"enum": ["DEVELOPMENT", "TEST", "BENCHMARK"]},
+    "synthetic": {"const": true},
+    "synthetic_provenance": {"$ref": "#/$defs/syntheticProvenance"},
+    "production_binding": {"const": false},
+    "governance_boundary": {"$ref": "#/$defs/governanceBoundary"},
+    "model_manifest_fingerprint": {"$ref": "#/$defs/sha256Fingerprint"}
+  },
+  "$defs": {
+    "canonicalId": {"type": "string", "minLength": 1, "maxLength": 256, "pattern": "^[^\\s\\u0000-\\u001F\\u007F]+$"},
+    "sha256Fingerprint": {"type": "string", "pattern": "^sha256:[0-9a-f]{64}$"},
+    "utcInstant": {"type": "string", "format": "date-time", "pattern": "Z$"},
+    "semanticVersion": {"type": "string", "pattern": "^(0|[1-9][0-9]*)\\.(0|[1-9][0-9]*)\\.(0|[1-9][0-9]*)$"},
+    "artifactReference": {
+      "type": "object", "additionalProperties": false,
+      "required": ["document_version", "artifact_id", "fingerprint"],
+      "properties": {
+        "document_version": {"$ref": "#/$defs/canonicalId"},
+        "artifact_id": {"$ref": "#/$defs/canonicalId"},
+        "fingerprint": {"$ref": "#/$defs/sha256Fingerprint"}
+      }
+    },
+    "modelArtifact": {
+      "type": "object", "additionalProperties": false,
+      "required": ["artifact_digest", "media_type", "serialization_format", "serialization_version"],
+      "properties": {
+        "artifact_digest": {"$ref": "#/$defs/sha256Fingerprint"},
+        "media_type": {"const": "application/octet-stream"},
+        "serialization_format": {"$ref": "#/$defs/canonicalId"},
+        "serialization_version": {"$ref": "#/$defs/semanticVersion"}
+      }
+    },
+    "trainingProvenance": {
+      "type": "object", "additionalProperties": false,
+      "required": ["code_revision", "dependency_lock_digest", "configuration", "algorithm_id", "algorithm_version", "deterministic_replay_reference"],
+      "properties": {
+        "code_revision": {"type": "string", "pattern": "^[0-9a-f]{40}$"},
+        "dependency_lock_digest": {"$ref": "#/$defs/sha256Fingerprint"},
+        "configuration": {"$ref": "#/$defs/artifactReference"},
+        "algorithm_id": {"$ref": "#/$defs/canonicalId"},
+        "algorithm_version": {"$ref": "#/$defs/semanticVersion"},
+        "deterministic_replay_reference": {"$ref": "#/$defs/artifactReference"}
+      }
+    },
+    "modelScope": {
+      "type": "object", "additionalProperties": false,
+      "required": ["factory_ids", "operation_type_ids", "resource_ids"],
+      "properties": {
+        "factory_ids": {"type": "array", "minItems": 1, "uniqueItems": true, "items": {"$ref": "#/$defs/canonicalId"}},
+        "operation_type_ids": {"type": "array", "minItems": 1, "uniqueItems": true, "items": {"$ref": "#/$defs/canonicalId"}},
+        "resource_ids": {"type": "array", "minItems": 1, "uniqueItems": true, "items": {"$ref": "#/$defs/canonicalId"}}
+      }
+    },
+    "useAuthorization": {
+      "type": "object", "additionalProperties": false,
+      "required": ["decision", "decision_reference", "rollback_reference", "production_authorized"],
+      "properties": {
+        "decision": {"const": "SIMULATION_EVALUATION_ONLY"},
+        "decision_reference": {"$ref": "#/$defs/artifactReference"},
+        "rollback_reference": {"$ref": "#/$defs/artifactReference"},
+        "production_authorized": {"const": false}
+      }
+    },
+    "syntheticProvenance": {
+      "type": "object", "additionalProperties": false,
+      "required": ["assumption_profile", "assumption_refs"],
+      "properties": {
+        "assumption_profile": {"const": "SIM-P6-DURATION-CONTRACT-001@1.0.0"},
+        "assumption_refs": {"type": "array", "minItems": 1, "uniqueItems": true, "items": {"type": "string", "pattern": "^SIM-ASSUMPTION-[0-9]{3}$"}, "contains": {"const": "SIM-ASSUMPTION-021"}}
+      }
+    },
+    "governanceBoundary": {
+      "type": "object", "additionalProperties": false,
+      "required": ["production_authorized", "open_authority_gaps"],
+      "properties": {
+        "production_authorized": {"const": false},
+        "open_authority_gaps": {"type": "array", "minItems": 4, "maxItems": 4, "uniqueItems": true, "items": {"enum": ["OPEN-010", "OPEN-011", "OPEN-014", "OPEN-015"]}}
+      }
+    }
+  }
+}

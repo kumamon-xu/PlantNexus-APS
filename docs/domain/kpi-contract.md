@@ -3,13 +3,17 @@ doc_id: DOC-DOM-005
 title: KPI 合同
 status: baseline
 spec_version: 0.3.0
-phase: P0-P4
+phase: P0-P6
 normative: true
 source_sections: [36, 45, 53, 55, 93]
 last_reviewed: 2026-08-28
 ---
 
 # KPI 合同
+
+## TASK-P6-02 checker compatibility only
+
+P6-02没有修改KPI Schema、公式、OBJ-001/002/003、threshold或target。`stability_change_report_check`继续冻结P4 contract、Solver、Validator、state及`uv.lock`，仅允许`pyproject.toml`采用P4原hash或P6 schema-metadata-only精确hash；runtime/dev dependency projection必须保持不变。Duration model evaluation metrics不是计划KPI，也不建立Production KPI、capacity或SLA。
 
 ## TASK-P4-11 KPI lineage in read/export
 

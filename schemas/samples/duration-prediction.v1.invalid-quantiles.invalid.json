@@ -1,0 +1,13 @@
+{
+  "negative_sample_version": "duration-contract-negative.v1",
+  "base_sample": "duration-prediction.v1.candidate.synthetic.json",
+  "mutations": [
+    {"op": "replace", "path": "/p50_seconds", "value": 720},
+    {"op": "replace", "path": "/p90_seconds", "value": 540},
+    {"op": "replace", "path": "/selected_duration_seconds", "value": 720}
+  ],
+  "recompute_identity": true,
+  "expected_rejection": "INVALID_QUANTILE_ORDER",
+  "synthetic": true,
+  "assumption_profile": "SIM-P6-DURATION-CONTRACT-001@1.0.0"
+}

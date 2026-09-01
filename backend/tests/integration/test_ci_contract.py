@@ -409,10 +409,15 @@ def test_ci_profile_routing_is_mutually_exclusive_and_fail_closed() -> None:
     assert "p5_exit_gate_audit.py" in full_text
     assert "test_p5_portfolio_gate_rejections.py" in full_text
     assert "test_p5_exit_gate_rejections.py" in full_text
+    assert "test_p6_duration_contracts.py" in full_text
     assert "test_p5_portfolio_gate.py" in full_text
     assert "test_p5_exit_gate.py" in full_text
     assert f"--source {P5_EXIT_DIFF_BASE}" in full_text
     assert "-- backend/tests/integration/test_ci_contract.py" in full_text
+    assert "backend/app/__init__.py" in full_text
+    assert "schemas/data_dictionary.yaml" in full_text
+    assert "duration-prediction.schema.json" in full_text
+    assert "duration-prediction.v1.unknown-fallback.invalid.json" in full_text
     assert "ci-p4-replanning-api.json" in full_text
     assert "build/playwright/results.json" in full_text
     assert "P3 vertical slice Gate evidence" in full_text

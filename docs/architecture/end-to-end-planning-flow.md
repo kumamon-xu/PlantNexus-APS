@@ -11,17 +11,25 @@ last_reviewed: 2026-09-01
 
 # 端到端计划链路
 
+## TASK-P6-07 default-off Planning ingress
+
+Simulation/development计划链现在可显式选择`verified Snapshot → frozen planning-problem-builder.v2 standard Problem → default-off duration ingress → existing Global CP-SAT Strategy → fresh formal ScheduleValidator`。Adapter始终先形成并保留标准Problem；disabled、低置信度、provider unavailable或invalid quantile等fallback路径返回同一个标准Problem对象、canonical bytes与hash，不创建近似fallback Problem。
+
+只有P6-06 exact carrier、Feature/Model/Evaluation/Policy lineage及同resource-option标准工时authority全部通过时，adapter才为NOT_STARTED option把既有`final_duration_seconds/duration_source/source_version`投影为model p50、`MODEL_CANDIDATE`与model version，并生成新的canonical Problem/hash及独立lineage sidecar。RUNNING remainder、routing、candidate resources、hard facts/locks、operation state、delivery weights与所有其他Problem字段逐字继承标准Problem；三条路径都交给未修改Solver并由fresh C-001～C-011 Validator独立裁决。
+
+该edge没有API/UI、PlanningRun/ScheduleVersion/ExportJob写入、P4 replan改变、Production toggle或外部服务。Default-off rollback直接恢复完整标准链；P6-08 drift monitoring及P6-09+仍是独立、未启动后继。
+
 ## TASK-P6-06 local runtime edge
 
 当前新增且止步于P6边界的链为`explicit Simulation/Test request + authoritative resource-option standard duration + exact FeatureRecord → exact runtime policy + P6-04 safe model + P6-05 READY Gate → pure p50/p90/confidence → P6-02 DurationPrediction candidate or exact standard fallback`。任一missing/timeout/invalid/low-confidence/version/digest/lineage/scope/authority/privacy问题在provider内收敛为稳定fallback；standard authority无效时整条边fail closed。
 
-该edge不读取或写入PlanningSnapshot/Problem/Solution/Run/ScheduleVersion/ExportJob，不调用Solver/Validator/replan/API/UI，也不修改routing、resource compatibility、hard constraint、state或weight。因此prediction carrier当前没有计划消费者；P6-07仍是独立授权的唯一Planning ingress owner，P6-08仍拥有drift monitoring，Production链继续不存在。
+P6-06 edge本身不读取或写入PlanningSnapshot/Problem/Solution/Run/ScheduleVersion/ExportJob，不调用Solver/Validator/replan/API/UI，也不修改routing、resource compatibility、hard constraint、state或weight。P6-07后来只通过上节default-off adapter消费carrier；P6-08仍拥有尚未启动的drift monitoring，Production链继续不存在。
 
 ## TASK-P6-02 duration-prediction machine-contract boundary
 
 P6-02只建立离线、可重放的机器合同证据链：`as-of bounded feature record → immutable model manifest → evaluation evidence → candidate/fallback prediction`。该链由4份`2.9.0` JSON Schema、正反样例和pure checker验证identity、lineage、quantile order、Simulation scope及fallback exactness；它不接入PlanningProblem、Solver、ScheduleVersion、HTTP/UI或任何业务写入路径。
 
-P6-02本身没有改变计划链：authoritative standard duration继续是唯一计划运行时输入。P6-06后来形成的显式local provider可在P6边界生成model-p50 candidate或exact standard fallback，但两者仍不进入计划执行；P6-07继续是独立授权的唯一Planning ingress owner。Production authority、在线推理、模型状态和自动决策均未建立。
+P6-02本身没有改变计划链：authoritative standard duration继续是唯一计划运行时输入。P6-06后来形成显式local provider，P6-07再经独立授权形成上节default-off Planning ingress；这两项均不建立Production authority、在线服务、模型状态或自动业务决策。
 
 ## TASK-P5-22 independent Exit audit edge
 

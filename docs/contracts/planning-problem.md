@@ -11,6 +11,12 @@ last_reviewed: 2026-09-01
 
 # PlanningProblem 合同
 
+## TASK-P6-07 default-off duration selection
+
+`planning-problem.v2` Schema、`planning-problem-builder.v2`、hash projection及core source均保持冻结。P6 adapter必须先调用标准builder并保留其immutable Problem；disabled和任何合法provider fallback直接返回该同一对象、canonical bytes与hash。标准Problem因此仍是完整且可独立重放的权威基线。
+
+Accepted路径只复制标准document中NOT_STARTED resource option既有`final_duration_seconds/duration_source/source_version`三字段为selected p50/`MODEL_CANDIDATE`/model version，然后用既有canonical v2 helper重算、构造并verify新的Problem/hash。所有lineage保存在独立sidecar而不私塞Problem字段；Snapshot identity、builder/version、routing、resources、precedence、locks、horizon、state、delivery demands/weights及RUNNING remainder逐字不变。任何非duration差异、invalid projection或horizon溢出均在Solver前拒绝。
+
 ## TASK-P6-02 checker compatibility only
 
 P6-02没有修改PlanningProblem v1/v2 Schema、builder、hash、active-operation universe或Solver ingress。`freeze_window_check`仍逐字冻结P2/P4 Problem、Validator、state和`uv.lock`；它对`pyproject.toml`只新增一个精确兼容值，用于接受global schema metadata从`2.8.0`到`2.9.0`的单点提升。依赖projection、Problem bytes及所有计划语义保持不变，DurationPrediction在P6-06/P6-07前不得进入Problem。

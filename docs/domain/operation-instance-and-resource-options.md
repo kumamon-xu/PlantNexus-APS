@@ -11,6 +11,12 @@ last_reviewed: 2026-09-01
 
 # OperationInstance 与候选资源语义
 
+## P6-07 Planning selection boundary
+
+Planning adapter只为verified Snapshot中的active option派生独立标准工时authority；该authority同时绑定operation/resource-option/resource、正整数seconds、duration source/version、canonical source record ID及其content fingerprint。启用时必须对所有NOT_STARTED option提供exact FeatureRecord coverage，并逐option重新验证P6-06 carrier；缺失、错配或篡改不能产生selected Problem。
+
+Accepted carrier只在新Problem中把同一NOT_STARTED option的`final_duration_seconds`选为p50、`duration_source=MODEL_CANDIDATE`且`source_version=model_version`，不改写Snapshot或canonical routing option。Default-off与所有合法fallback逐字保留原三字段；RUNNING始终使用权威`remaining_seconds`并登记`RUNNING_REMAINDER_AUTHORITY`，COMPLETED仍由标准builder排除。Resource candidate集合、setup/cycle、capability、state及precedence均不受prediction影响。
+
 ## P6-06 local runtime authority boundary
 
 Runtime request必须把factory/operation/resource option/resource identity与独立的`seconds/duration_source/source_version/source_record_id/source_record_fingerprint`标准工时authority一起传入。Provider验证FeatureRecord中同一option的`standard_duration_seconds`及source引用逐字匹配，但从不把FeatureRecord自身当作标准工时的唯一authority，也不回写`OperationResourceOption.final_duration_seconds`。

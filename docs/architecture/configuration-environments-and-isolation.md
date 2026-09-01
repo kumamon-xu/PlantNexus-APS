@@ -11,6 +11,12 @@ last_reviewed: 2026-09-01
 
 # 配置、环境与数据隔离
 
+## TASK-P6-07 Planning-ingress and frozen-replay isolation
+
+Planning adapter默认disabled，只接受caller显式提供的verified Snapshot、P6-06 in-process provider、UTC prediction time与exact FeatureRecord mapping；它不读取environment default、credential、network、database、queue、registry、cache或Production namespace，也不写任何业务state。Machine report只保留sanitized carrier/Problem fingerprints、aggregate counts与development observation，不包含raw dataset row、label或secret。
+
+首次dependency-free preflight正确发现6个post-P4 Backend/test路径会污染P4-13 frozen replay。Workflow修订只在既有临时checkout `rm`清单精确追加这6条路径，并由`test_ci_contract.py`逐条要求恰好一次；没有新增P6-07 step，Task checker继续由Backend contract test执行。Job拓扑、permission、artifact、required `validate` context、FULL/DOCS_ONLY routing、dependency/lock、Secret及P4 owner全部不变。
+
 ## TASK-P6-06 runtime and evidence isolation
 
 Runtime只接受content-addressed `SIM-P6-DURATION-RUNTIME-001@1.0.0`、`data_plane=SIMULATION`、`environment=TEST`、exact P6-04 artifact/manifest与P6-05 READY Gate。调用必须显式提供UTC prediction time和resource-option authority；不读取环境变量、host wall clock、credential、endpoint、database、queue、registry或Production namespace。Provider无network/external adapter、cache、全局启用或持久化side effect，unknown policy/authority default-deny。

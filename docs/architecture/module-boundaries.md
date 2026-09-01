@@ -11,11 +11,17 @@ last_reviewed: 2026-09-01
 
 # 模块边界与依赖规则
 
+## TASK-P6-07 duration Planning-ingress module boundary
+
+`app.duration_prediction.planning_ingress`是P6 duration与标准Planning ingress之间唯一新增adapter。依赖方向为`verified Snapshot + frozen planning.problem public builder/hash boundary + app.duration_prediction.runtime → immutable standard/selected Problem + lineage`；adapter不导入具体Solver backend、formal Validator、Application、Infrastructure、API、SQLAlchemy、network或Simulation orchestrator，也不写repository或业务state。
+
+Adapter先调用冻结builder并独立比较problem identity、routing、resource compatibility、hard constraints、operation state、business weights及duration-fields-only七项不变量。`scripts/p6_planning_integration_check.py`与test support才作为validation-only composition root调用现有Strategy和fresh Validator；产品adapter不反向依赖这些owner。Core Problem builder/contracts/hash、Solver/Validator/P4/state owner相对Diff base逐字保留。
+
 ## TASK-P6-06 duration runtime module boundary
 
 `app.duration_prediction.runtime`单向消费既有P6-04 safe model loader/pure predictor与P6-05 Gate validator，拥有exact runtime-policy、request/standard-authority precheck、candidate/confidence/fallback决策及P6-02 prediction identity。它不导入Application、PlanningProblem/Solver/Validator、Infrastructure、Simulation orchestrator、API、SQLAlchemy、network client或host configuration；provider实例不可变，无cache、thread、queue、database或业务state write。
 
-Caller仍拥有operation/resource-option与标准工时authority；runtime只返回独立advisory carrier，不改FeatureRecord、model、standard duration或P0～P5对象。`p6_duration_runtime_check.py`是唯一machine composition root，可读取tracked synthetic feature/model与P6-05 aggregate report并生成safe evidence，但不得成为Planning/API入口。P6-07才可拥有后继ingress/invariant adapter。
+Caller仍拥有operation/resource-option与标准工时authority；runtime只返回独立advisory carrier，不改FeatureRecord、model、standard duration或P0～P5对象。`p6_duration_runtime_check.py`是P6-06的machine composition root，可读取tracked synthetic feature/model与P6-05 aggregate report并生成safe evidence，但不得成为Planning/API入口。P6-07后来在上节独立拥有后继ingress/invariant adapter。
 
 ## TASK-P4-12 API module ownership
 

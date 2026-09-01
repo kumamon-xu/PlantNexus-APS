@@ -15,7 +15,15 @@ Contract status: `FORMED_SIMULATION_CONTRACT_V1` in additive schema set `2.9.0`
 
 Human authority: [ADR-0016](../adr/ADR-0016-ai-duration-data-model-governance.md) and [Duration Prediction Governance Contract](duration-prediction-governance.md)
 
-Capability status: `AI_DURATION_PREDICTION = DEFERRED / CONTRACT_V1 + SIMULATION_DATASET_V1 + BASELINE_MODEL_V1 + OFFLINE_GATE_READY + LOCAL_RUNTIME_V1 / NO_PLANNING_INGRESS`
+Capability status: `AI_DURATION_PREDICTION = DEFERRED / CONTRACT_V1 + SIMULATION_DATASET_V1 + BASELINE_MODEL_V1 + OFFLINE_GATE_READY + LOCAL_RUNTIME_V1 + PLANNING_INGRESS_V1 / DEFAULT_OFF_SIMULATION_ONLY`
+
+## TASK-P6-07 default-off Planning ingress and invariant evidence
+
+`planning-duration-ingress.v1` is an internal Python adapter/result boundary, not a fifth JSON Schema or a rewrite of any P6-02 carrier. It always calls the frozen `planning-problem-builder.v2` first. Disabled and valid fallback outcomes reuse that exact immutable standard Problem; an accepted exact P6-06 carrier may change only one NOT_STARTED resource option's existing `final_duration_seconds`, `duration_source`, and `source_version`, then recompute and verify the canonical v2 Problem bytes/hash.
+
+Every option lineage binds the standard source record/fingerprint, standard and selected values, carrier canonical bytes/fingerprint, Feature/Model/Evaluation/Policy references, fallback reason, and both Problem hashes. Exact FeatureRecord coverage is required when enabled; RUNNING remains under remainder authority. Independent projections reject drift in problem identity, routing, resource compatibility, hard constraints, operation state, business weights, or any non-duration field before a Problem is returned.
+
+`p6-planning-integration-report.v1` performs 11 checks over five ingress paths, seven invariants, five authority mutations, three Solver-to-fresh-Validator passes, two formal C-003/C-010 mutations, 16 frozen P2/P4 owner files, module isolation, replay, and an observation-only development comparison. The same checker is executed by a non-skippable Backend contract test. Workflow changes only by adding the six new paths to the existing temporary P4 frozen-replay removal list; no evidence step, Schema, migration, dependency, API/UI or Production capability is added.
 
 ## TASK-P6-06 local prediction runtime and exact fallback
 
@@ -27,7 +35,7 @@ After strict input/model/Gate/policy checks, the fixed P6-04 predictor returns p
 
 Every carrier contains all existing P6-02 fields and exact Feature/Model/Evaluation/Policy lineage, then derives `prediction_id` and fingerprint from canonical content. Same input, explicit time and provider outcome replay byte-exactly; return-value mutation cannot poison later calls. The machine report performs 12 checks across eight tracked synthetic features, all 19 reasons, replay, timeout, tamper/version, privacy/authority, immutability, schema and development performance while reporting zero label semantic reads and no raw rows/features/source IDs.
 
-The 50 ms per-call post-check, 16 KiB FeatureRecord, four features, one source, 32 KiB output, 256 measured/16 warmup, P95 20 ms and 16 MiB peak limits are fixed Simulation/Test safety evidence, not a Production SLA. No PlanningProblem, Solver, Validator, API/UI, state, promotion or monitoring consumer is formed; P6-07 and P6-08 remain separately authorized successors.
+The 50 ms per-call post-check, 16 KiB FeatureRecord, four features, one source, 32 KiB output, 256 measured/16 warmup, P95 20 ms and 16 MiB peak limits are fixed Simulation/Test safety evidence, not a Production SLA. P6-06 itself formed no PlanningProblem, Solver, Validator, API/UI, state, promotion or monitoring consumer; P6-07 later added only the separately authorized adapter above, while P6-08 remains unstarted.
 
 ## TASK-P6-05 offline evaluation, confidence, and fallback Gate
 
@@ -124,6 +132,6 @@ P6-03 and P6-04 add separate non-skippable FULL checks for the exact dataset and
 
 Schema set `2.9.0` is additive. All 70 earlier Schema/sample bytes and every earlier document-level `schema_set_version` remain unchanged; P3/P4 checkers now distinguish their historical carrier version from the current global metadata. A consumer selects these four exact v1 documents explicitly—there is no alias, coercion from `2.8.0`, permissive fallback enum or in-place rewrite.
 
-The separately authorized P6-03/P6-04 packages implement one synthetic contract-correctness dataset and one deterministic baseline model/training replay; those packages do not themselves implement an evaluation Gate or confidence policy. P6-05 adds the separate development-only offline evaluation/fallback Gate but does not itself grant runtime authority. P6-06 subsequently adds the explicit local Simulation/Test provider described above, without Planning ingress, API, migration, business state or Production authority. None can alter routing, resource compatibility, hard constraints, PlanningRun/ScheduleVersion/ExportJob state or weights. `AI_DURATION_PREDICTION` therefore remains DEFERRED with `LOCAL_RUNTIME_V1 / NO_PLANNING_INGRESS`.
+The separately authorized P6-03/P6-04 packages implement one synthetic contract-correctness dataset and one deterministic baseline model/training replay; those packages do not themselves implement an evaluation Gate or confidence policy. P6-05 adds the separate development-only offline evaluation/fallback Gate, and P6-06 adds the explicit local Simulation/Test provider. P6-07 adds only the default-off Planning adapter described above. None can alter routing, resource compatibility, hard constraints, PlanningRun/ScheduleVersion/ExportJob state or weights, and no API, migration, business state or Production authority exists. `AI_DURATION_PREDICTION` therefore remains DEFERRED with `PLANNING_INGRESS_V1 / DEFAULT_OFF_SIMULATION_ONLY`.
 
-The v1 contract bytes consumed by P6-03/P6-04/P6-05/P6-06 are immutable; semantic change requires a new document/set or artifact/policy version. Runtime rollback disables/removes the local provider and keeps authoritative standard duration while preserving dataset/model/evaluation/prediction/decision evidence. TASK-P6-07 and later require separate authorization and a new Diff base.
+The v1 contract bytes consumed by P6-03/P6-04/P6-05/P6-06/P6-07 are immutable; semantic change requires a new document/set or artifact/policy version. Runtime/ingress rollback disables or removes the local provider/adapter and keeps the frozen standard Problem and authoritative standard duration while preserving dataset/model/evaluation/prediction/decision/lineage evidence. TASK-P6-08 and later require separate authorization and a new Diff base.

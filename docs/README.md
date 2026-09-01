@@ -11,11 +11,17 @@ last_reviewed: 2026-09-01
 
 # PlantNexus APS 文档中心
 
+## TASK-P6-07 default-off Planning ingress
+
+P6-07在Simulation/development标准Planning入口增加default-off adapter：先形成冻结标准PlanningProblem v2，只有P6-06 exact carrier、完整Feature/Model/Evaluation/Policy lineage及同resource-option标准工时authority全部通过时，才为NOT_STARTED option选择model p50。Accepted Problem只改变既有duration/source/version三字段并重新计算canonical hash；disabled、低置信度、provider unavailable与invalid quantile等fallback逐字复用标准Problem。
+
+Machine evidence覆盖5条入口路径、7项authority invariant、5项authority mutation、3次Solver→fresh Validator PASS、C-003/C-010 mutation、16个冻结P2/P4 owner及module isolation。Core Problem builder、Solver、Validator、P4/state、Schema/migration/dependency/API/UI均未改变；workflow只把6个新增路径加入既有P4 frozen replay临时隔离清单。能力仍为default-off Simulation-only，OPEN-010/011/014/015与Production/P6-08+继续未授权。详见[Planning flow](architecture/end-to-end-planning-flow.md)、[machine contract](contracts/duration-prediction-machine-contract.md)、[PlanningProblem](contracts/planning-problem.md)与[Validator](planning/schedule-validator.md)。
+
 ## TASK-P6-06 local prediction runtime and fallback
 
 P6-06形成显式调用、in-process、`SIMULATION/TEST`-only的DurationPrediction provider。Content-addressed `runtime-policy.v1.json`精确绑定P6-04 safe model、P6-05 READY Gate、P6-02 carrier、caller-explicit UTC、`9/10` confidence以及development-only input/output/latency/memory边界；没有环境默认、网络、cache、持久化、model registry或外部服务。
 
-Provider只在所有Feature/Model/Evaluation/Policy lineage与同resource-option standard-duration authority完整时选择model p50；19项registered fallback condition全部返回P6-02 strict carrier并精确选择标准工时。Invalid standard authority本身fail closed且无partial carrier。详见[Machine contract](contracts/duration-prediction-machine-contract.md)、[governance](contracts/duration-prediction-governance.md)、[module boundary](architecture/module-boundaries.md)、[isolation](architecture/configuration-environments-and-isolation.md)与[provenance](architecture/provenance-and-versioning.md)。该runtime尚无Planning consumer、API/UI、promotion、drift monitoring或Production authority。
+Provider只在所有Feature/Model/Evaluation/Policy lineage与同resource-option standard-duration authority完整时选择model p50；19项registered fallback condition全部返回P6-02 strict carrier并精确选择标准工时。Invalid standard authority本身fail closed且无partial carrier。详见[Machine contract](contracts/duration-prediction-machine-contract.md)、[governance](contracts/duration-prediction-governance.md)、[module boundary](architecture/module-boundaries.md)、[isolation](architecture/configuration-environments-and-isolation.md)与[provenance](architecture/provenance-and-versioning.md)。P6-06 runtime自身无Planning/API/UI consumer；P6-07后来只形成上节default-off adapter，promotion、drift monitoring与Production authority仍不存在。
 
 ## TASK-P6-05 offline evaluation and fallback Gate
 

@@ -767,6 +767,21 @@ def test_ci_p6_duration_runtime_is_required_and_machine_checkable(
     assert report["issues"] == []
 
 
+def test_ci_p6_planning_ingress_is_isolated_from_frozen_p4_replay() -> None:
+    workflow = (ROOT / ".github" / "workflows" / "ci.yml").read_text(
+        encoding="utf-8"
+    )
+    for relative_path in (
+        "backend/app/duration_prediction/planning_ingress.py",
+        "backend/tests/p6_planning_integration_support.py",
+        "backend/tests/contract/test_p6_planning_ingress_contract.py",
+        "backend/tests/integration/test_p6_planning_ingress_integration.py",
+        "backend/tests/property/test_p6_planning_integration_properties.py",
+        "backend/tests/validation/test_p6_planning_integration_mutations.py",
+    ):
+        assert workflow.count(f'"${{replay_root}}/{relative_path}"') == 1
+
+
 def test_ci_p3_persistence_is_required_and_machine_checkable(tmp_path: Path) -> None:
     workflow = (ROOT / ".github" / "workflows" / "ci.yml").read_text(encoding="utf-8")
     normalized = " ".join(workflow.split())

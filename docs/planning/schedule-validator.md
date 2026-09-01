@@ -3,13 +3,19 @@ doc_id: DOC-PLAN-005
 title: 独立 ScheduleValidator 合同
 status: baseline
 spec_version: 0.3.0
-phase: P0-P5
+phase: P0-P6
 normative: true
 source_sections: [30, 31, 50, 75, 86, 87]
-last_reviewed: 2026-08-28
+last_reviewed: 2026-09-01
 ---
 
 # 独立 ScheduleValidator 合同
+
+## TASK-P6-07 fresh Validator ingress evidence
+
+P6-07没有修改formal Validator源码、C-001～C-011、error mapping、fixture expected或测试断言。Default-off、accepted model candidate与standard fallback三份Problem都先由既有Global CP-SAT Strategy求解，再从Problem与candidate重新调用fresh `validate_problem_schedule`；三条路径均要求`PASS`、`hard_violation_count=0`且fresh report逐字等于Strategy携带报告，Solver status本身不成为acceptance authority。
+
+Mutation evidence把accepted assignment改为非候选resource并把duration改回与selected Problem不符的standard值，分别要求fresh Validator报告C-003与C-010。另有独立Problem projection拒绝routing/resource/hard/state/weight篡改，但该precheck不复制或替代formal Validator公式。P4 replan Validator/ChangeReport/freeze owner继续逐字冻结。
 
 ## TASK-P5-21 fresh Validator aggregation
 

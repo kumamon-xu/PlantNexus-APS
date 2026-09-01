@@ -11,6 +11,14 @@ last_reviewed: 2026-09-01
 
 # 能力矩阵
 
+## P6 activation status
+
+P6 Milestone已按用户明确授权激活，但激活和完整规划不会改变能力状态。`AI_DURATION_PREDICTION`继续为`DEFERRED/NOT_FORMED`，本次没有创建或修改预测Schema、model、dataset、runtime、planning adapter、migration、dependency或workflow；调用方不得因存在TASK-P6-00～10而启用、模拟支持或绕过既有`UNSUPPORTED_CAPABILITY`/default-deny边界。
+
+未来P6合同计划输出`p50_seconds`、`p90_seconds`、`confidence`、`model_version`、`feature_schema_version`与`fallback_reason`。低置信度、invalid、缺失、超时或不兼容必须回退标准duration；AI只可提供候选duration/risk/confidence，不能改变routing、resource compatibility、hard constraints、schedule state或业务权重，也不能替代权威工艺数据。
+
+P6依次规划数据/model governance、machine contract/Schema、dataset、versioned model、offline evaluation/fallback Gate、local runtime、standard ingress integration、drift monitoring、vertical Gate和独立Exit Audit。每张成员卡需要直接依赖双exact provider与新的用户授权。P6 active或未来Gate/Exit PASS都不形成P7 Reality Calibration、Production/UAT、真实data/model authority、external integration/deployment、capacity或SLA。
+
 ## TASK-P5-22 independent Exit audit
 
 Fresh Exit审计没有改变能力状态。P5 qualification仍为九项`DEFERRED`、selected=`[]`，P5-03～20均为证据化`cancelled`；C-012～C-018的七个公开precheck继续逐项返回`UNSUPPORTED_CAPABILITY`，Decomposition与Rolling Horizon没有owner invocation，Global仍是唯一已形成策略。

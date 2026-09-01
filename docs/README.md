@@ -3,13 +3,21 @@ doc_id: DOC-INDEX-001
 title: PlantNexus APS 文档中心
 status: baseline
 spec_version: 0.3.0
-phase: P5
+phase: P6
 normative: false
 source_sections: [2, 6, 70]
 last_reviewed: 2026-09-01
 ---
 
 # PlantNexus APS 文档中心
+
+## P6 activation and planning boundary
+
+用户已明确批准P5→P6；最小承接检查只确认P5 closure `a565ca9965202527a3fae44c935415131a5be9d2`三端一致、0/0、clean、P5无active Task、TASK-P5-22=`done`、Exit 15/15 `READY`/`blocking_gaps=[]`以及required `validate`/GitHub Actions app `15368`未漂移，不构成P5重审或artifact重取。P5现为`completed`，P6现为`active`。
+
+TASK-P6-00从该closure冻结`DOCS_ONLY` Diff base，只建立11卡计划、DAG和治理。直接图为`P6-00→01→02→03→04→05→06`，随后`06→07`/`06→08`并行并在`07+08→09→10`汇合；P6-10是最终独立Audit。P6-01～10全部保持`planned/NOT_STARTED`，不因本次激活自动执行。
+
+本次tracked语义只声明phase/plan与能力边界：`AI_DURATION_PREDICTION`仍为`DEFERRED/NOT_FORMED`，没有业务代码、Schema、migration、dependency、test assertion、fixture或workflow变化。未来输出字段计划为`p50_seconds`、`p90_seconds`、`confidence`、`model_version`、`feature_schema_version`、`fallback_reason`；低置信度必须回退标准duration。AI不得改变routing/resource compatibility/hard constraints/state/weights或替代权威工艺数据。P7、Production/UAT、真实authority/external/deployment/capacity/SLA均未形成。
 
 ## TASK-P5-22 local independent Exit decision
 

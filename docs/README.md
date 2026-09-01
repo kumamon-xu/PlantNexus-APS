@@ -19,6 +19,8 @@ Builder输出existing `duration-feature-record.v1`和content-derived dataset row
 
 这是contract-correctness synthetic dataset，不是真实历史或模型质量证据。没有训练、evaluation Gate、runtime、Planning ingress、P7校准或Production authority；OPEN-010/011/014/015继续OPEN，TASK-P6-04不会自动启动。
 
+Implementation `19c80dac7cf298b423d9e22add2268421520ef75`的exact FULL run `33468228427`现已PASS。Classify/FULL/required jobs为`99732427284`/`99732449853`/`99734830107`，DOCS_ONLY正确skipped，required `validate`来自app `15368`；72个workflow steps、928 tests、P6-03/P6-02各10/10和P4-13 frozen replay均成功。Profile/evidence artifacts `9785603625`/`9785860246`未过期，下载ZIP与Provider digests一致为`sha256:80620dc08b8162027112c66ee49990687ad7919ced6bf1ecbf2757faab932fe2`、`sha256:c85f8fc92abbf58cf3a3533730d13f31ce33c61bc193a163af8595da597f5fc8`；20 paths、FULL、10→8+2、4/2/2、12 rejection、all fingerprints、`issues=[]`及no-raw-artifact边界逐字复现。本提交只作两份README的evidence-only closure，closure exact provider成功前Task保持`in_progress`。
+
 ## TASK-P6-02 duration machine contract
 
 TASK-P6-02从P6-01 provider-verified closure `e74099ca24ed59140f6490c84025b7299b5f201d`冻结不可变Diff base，global additive schema set提升到`2.9.0`。[Duration Prediction Machine Contract v1](contracts/duration-prediction-machine-contract.md)与四份strict Simulation Schema形成FeatureRecord/ModelManifest/EvaluationReport/Prediction exact carrier；5份正例、5份negative descriptor和`p6-duration-contract-report.v1`固定canonical identity、as-of leakage、quantile/confidence、stable fallback、标准工时authority与cross-lineage。

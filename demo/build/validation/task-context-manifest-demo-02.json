@@ -1,0 +1,118 @@
+{
+  "diff_base": "fd9ce328a180a8b1f0baa1a0fe870a8d39e0d200",
+  "estimated_characters": 187004,
+  "files_allowed_to_change": [
+    "demo/**"
+  ],
+  "inputs": [
+    {
+      "characters": 5674,
+      "load_mode": "FULL",
+      "path": "demo/docs/TASK-DEMO-02-durable-runtime-initial-plan-and-baseline.md",
+      "sha256": "74a0bc8df060835b4bb77d343c0d3e3ca44ef2d277c13548cd816c940b31f68b"
+    },
+    {
+      "characters": 10503,
+      "load_mode": "FULL",
+      "path": "demo/docs/03-architecture-and-api.md",
+      "sha256": "43cee6bdac278983e627f5dc027b594cbe81f73bb3e220bb7d1707f96f15a286"
+    },
+    {
+      "characters": 12799,
+      "load_mode": "FULL",
+      "path": "demo/docs/TASKS.md",
+      "sha256": "915ce5b06e0893806b266e6056be8d67ec9cc8032114b62f478c743f41c5cdcc"
+    },
+    {
+      "characters": 20611,
+      "load_mode": "FULL",
+      "path": "docs/contracts/planning-workspace-api.md",
+      "sha256": "f92b51b8a1c923ee5de25c8914e550374d07a88325eae758e7d826e0fd5b12d9"
+    },
+    {
+      "characters": 16025,
+      "load_mode": "FULL",
+      "path": "docs/contracts/planning-solution-and-schedule-version.md",
+      "sha256": "c1975c781aba97e4daebb855f04012b1211ff9e5a4c6a18b897f02a050edecfb"
+    },
+    {
+      "characters": 15620,
+      "load_mode": "FULL",
+      "path": "docs/contracts/authorization-and-audit.md",
+      "sha256": "a1ef22d89a50fb85b7c86d39857a6ce4e7546ae39a91a7198b62fbac43adbe3e"
+    },
+    {
+      "characters": 8400,
+      "load_mode": "FULL",
+      "path": "docs/contracts/execution-events-and-replan-request.md",
+      "sha256": "2361f101ac4fc196da87da9353c1a6c1f39ca774790ea45488f4d5c49e95b909"
+    },
+    {
+      "characters": 1137,
+      "load_mode": "FULL",
+      "path": "docs/adr/ADR-0005-independent-schedule-validator.md",
+      "sha256": "1aa591473bb906385455fb272158dac40cfe812eac5e9a9d423bd12e61268623"
+    },
+    {
+      "characters": 6758,
+      "load_mode": "FULL",
+      "path": "docs/adr/ADR-0010-planning-problem-v2-contract-evolution.md",
+      "sha256": "6a83d5bde325f6f52ddbacccd22ab2af8ae129560542971f748af303753c9923"
+    },
+    {
+      "characters": 8102,
+      "load_mode": "FULL",
+      "path": "docs/adr/ADR-0013-execution-event-authority-fact-projection-replan-lineage.md",
+      "sha256": "4788bfcbb290f859315715b1c51c9a729be69fce2f3b7543f7cdcd053da437c6"
+    },
+    {
+      "characters": 7107,
+      "load_mode": "FULL",
+      "path": "docs/adr/ADR-0014-freeze-window-stability-change-report.md",
+      "sha256": "ef9dad9952886da9615477b33c57ca6c3bfd941278acb2d3f8a6b09bc512ae51"
+    },
+    {
+      "characters": 6321,
+      "load_mode": "FULL",
+      "path": "backend/app/api/app.py",
+      "sha256": "5c1b63afd8e2a418e61c4731076a2ff5c2d6eee004395cf26f968543c23ed994"
+    },
+    {
+      "characters": 9211,
+      "load_mode": "FULL",
+      "path": "backend/app/application/schedule_versions.py",
+      "sha256": "994d270af61751bd0b47fc3fcaf7c811e737c8523e3e57fe20e015eb2f75941f"
+    },
+    {
+      "characters": 15000,
+      "load_mode": "FULL",
+      "path": "backend/app/application/approval.py",
+      "sha256": "e734720a5fcbb3a5d5c6f1bc6a901195cce51bf36ce93978d51a69cf3e77b70a"
+    },
+    {
+      "characters": 22405,
+      "load_mode": "FULL",
+      "path": "backend/app/application/publication.py",
+      "sha256": "f1dc7387298dc09f4ca2ef6b80cb7bc417f74564abd7620c225e8592434f7e55"
+    },
+    {
+      "characters": 21331,
+      "load_mode": "FULL",
+      "path": "backend/app/infrastructure/workspace_persistence.py",
+      "sha256": "71c20742db506793bd503afe9adfb964ee8663d0eb1882c2f319f68eb837b480"
+    }
+  ],
+  "manifest_version": "demo-task-context-manifest.v1",
+  "on_demand_expansion_triggers": [
+    "formal contract or accepted ADR conflict",
+    "root code/schema change becomes necessary",
+    "dynamic replan implementation starts"
+  ],
+  "phase_registration": null,
+  "root_repository_consumption": "READ_ONLY",
+  "selected_input_count": 16,
+  "soft_budget_note": "Selected normative units were read in full; the 30k character budget is soft.",
+  "task_family": "demo-exclusive",
+  "task_id": "TASK-DEMO-02",
+  "validation_profile": "DEMO_HIGH_RISK"
+}

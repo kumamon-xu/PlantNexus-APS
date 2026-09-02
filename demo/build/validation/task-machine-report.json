@@ -1,0 +1,432 @@
+{
+  "artifact_checks": {
+    "contract_probes": {
+      "probe_count": 5,
+      "sha256": "6108e29556474fec9c14292798d0b503ae99964bd7ddbda0c62cde6e5f3041b0",
+      "status": "PASS"
+    },
+    "task_context_manifest": {
+      "selected_input_count": 18,
+      "sha256": "3d31e0665bb8433a6259d191b977b14cc6e7773fd7e8e8512db92d915e295a78",
+      "status": "PASS"
+    },
+    "text_hygiene": {
+      "status": "PASS",
+      "violations": []
+    }
+  },
+  "benchmark_checks": [
+    {
+      "path": "demo/benchmarks/results/smoke.json",
+      "profile_counts": [
+        108,
+        102,
+        12
+      ],
+      "result_classification": "OPTIMAL_FOR_THIS_SYNTHETIC_INSTANCE",
+      "sha256": "2b04257beea4e24137d0535afc579152356fb12bcbbdf72aa6c65287c72d6062",
+      "solve_seconds": 0.0446054,
+      "solver_status": "OPTIMAL",
+      "status": "PASS",
+      "total_solver_seconds": 0.13875840000400785,
+      "validator_status": "PASS"
+    },
+    {
+      "path": "demo/benchmarks/results/showcase.json",
+      "profile_counts": [
+        610,
+        580,
+        24
+      ],
+      "result_classification": "OPTIMAL_FOR_THIS_SYNTHETIC_INSTANCE",
+      "sha256": "87f14fa6ac1729b465d184cf7b2078f364b2449939b13f9d78378e1546e00552",
+      "solve_seconds": 2.4265779000000003,
+      "solver_status": "OPTIMAL",
+      "status": "PASS",
+      "total_solver_seconds": 2.9240759999956936,
+      "validator_status": "PASS"
+    },
+    {
+      "path": "demo/benchmarks/results/upper.json",
+      "profile_counts": [
+        700,
+        665,
+        30
+      ],
+      "result_classification": "OPTIMAL_FOR_THIS_SYNTHETIC_INSTANCE",
+      "sha256": "23faf5b28144e135cc35d264bb454531ca1c2682d3eac25b3500215ef49349de",
+      "solve_seconds": 6.3044092,
+      "solver_status": "OPTIMAL",
+      "status": "PASS",
+      "total_solver_seconds": 6.946835099995951,
+      "validator_status": "PASS"
+    }
+  ],
+  "boundaries": {
+    "p7_registration": "NONE",
+    "production_capacity": "NOT_ESTABLISHED",
+    "provider_evidence": "NOT_APPLICABLE_DEMO_LOCAL",
+    "synthetic_only": true
+  },
+  "command_checks": [
+    {
+      "command": [
+        "uv",
+        "run",
+        "pytest",
+        "demo/tests",
+        "-q"
+      ],
+      "duration_seconds": 8.527197500006878,
+      "exit_code": 0,
+      "output": "..................                                                       [100%]\n18 passed in 7.89s",
+      "status": "PASS"
+    },
+    {
+      "command": [
+        "uv",
+        "run",
+        "ruff",
+        "check",
+        "demo/backend",
+        "demo/scripts",
+        "demo/tests"
+      ],
+      "duration_seconds": 0.0729981000040425,
+      "exit_code": 0,
+      "output": "All checks passed!",
+      "status": "PASS"
+    },
+    {
+      "command": [
+        "uv",
+        "run",
+        "pyright",
+        "-p",
+        "demo/pyrightconfig.json"
+      ],
+      "duration_seconds": 2.256758000003174,
+      "exit_code": 0,
+      "output": "0 errors, 0 warnings, 0 informations",
+      "status": "PASS"
+    },
+    {
+      "command": [
+        "git",
+        "diff",
+        "--check",
+        "--",
+        "demo"
+      ],
+      "duration_seconds": 0.03759729999001138,
+      "exit_code": 0,
+      "output": "",
+      "status": "PASS"
+    }
+  ],
+  "demo_file_count": 41,
+  "demo_files": [
+    {
+      "bytes": 123,
+      "path": "demo/.gitignore",
+      "sha256": "6beaa1d62b0d0ec10e050d9b78c668ab7dee0bb868375d99b8907e4454fe2cb2"
+    },
+    {
+      "bytes": 463,
+      "path": "demo/backend/plantnexus_demo/__init__.py",
+      "sha256": "bb28708819c07ef7be1a64684edbfb3f69f1f9b79b2641040f3db48af4fdb8e4"
+    },
+    {
+      "bytes": 24956,
+      "path": "demo/backend/plantnexus_demo/assets.py",
+      "sha256": "0aef135acd904664f75df11d1597f80ae9197418725652513965e1b660475b28"
+    },
+    {
+      "bytes": 9248,
+      "path": "demo/backend/plantnexus_demo/benchmark.py",
+      "sha256": "86b0d428bcb5ce66944a40922e05af1e45fd117f1458c0fc0a25b0ac5e87410d"
+    },
+    {
+      "bytes": 32809,
+      "path": "demo/backend/plantnexus_demo/generator.py",
+      "sha256": "7408b89db34cba19e504b08a33c1ff9d3ff6eb0f636c0d74e7c2487708b41ae4"
+    },
+    {
+      "bytes": 6934,
+      "path": "demo/backend/plantnexus_demo/ingress.py",
+      "sha256": "0630bde0752db25d848a14eb956b9d0da4f379cd35c3cdabb2f4e38da180330d"
+    },
+    {
+      "bytes": 2280,
+      "path": "demo/benchmarks/profiles.json",
+      "sha256": "d416a7fafd281473c6dcd363b2423cf089c24aa8d9deeefdc6a349b3cc4bbc80"
+    },
+    {
+      "bytes": 4870,
+      "path": "demo/benchmarks/results/showcase.json",
+      "sha256": "87f14fa6ac1729b465d184cf7b2078f364b2449939b13f9d78378e1546e00552"
+    },
+    {
+      "bytes": 4820,
+      "path": "demo/benchmarks/results/smoke.json",
+      "sha256": "2b04257beea4e24137d0535afc579152356fb12bcbbdf72aa6c65287c72d6062"
+    },
+    {
+      "bytes": 4845,
+      "path": "demo/benchmarks/results/upper.json",
+      "sha256": "23faf5b28144e135cc35d264bb454531ca1c2682d3eac25b3500215ef49349de"
+    },
+    {
+      "bytes": 2349,
+      "path": "demo/build/validation/contract-probes.json",
+      "sha256": "6108e29556474fec9c14292798d0b503ae99964bd7ddbda0c62cde6e5f3041b0"
+    },
+    {
+      "bytes": 1217,
+      "path": "demo/build/validation/protected-root-baseline.json",
+      "sha256": "2e8cd29f2896b04cfad5d9a32e5d94691d4467f4b7fc645272e639ab8a0dddf9"
+    },
+    {
+      "bytes": 4735,
+      "path": "demo/build/validation/task-context-manifest.json",
+      "sha256": "3d31e0665bb8433a6259d191b977b14cc6e7773fd7e8e8512db92d915e295a78"
+    },
+    {
+      "bytes": 614,
+      "path": "demo/data/cnc-showcase/duration-parameters.json",
+      "sha256": "6cbb2cc916a3d5b50ea6731d6a4347fe38f0a25d399d57d684a22cacc6ad7b0d"
+    },
+    {
+      "bytes": 1967,
+      "path": "demo/data/cnc-showcase/factory-profile.json",
+      "sha256": "48de2481b20191a8da0ad070ee9220170d32ce8d7e9eb218f525dd1aa3a09869"
+    },
+    {
+      "bytes": 1146,
+      "path": "demo/data/cnc-showcase/maintenance-plan.json",
+      "sha256": "68eb5deef3947b0d35d0d70a76b6c19f04103747dda8c57a7897b49b5935fe27"
+    },
+    {
+      "bytes": 1240,
+      "path": "demo/data/cnc-showcase/manifest.json",
+      "sha256": "0d78b4b1c315d4be30b758e0325d0a080df0608020768f69508cf774207e5e47"
+    },
+    {
+      "bytes": 360,
+      "path": "demo/data/cnc-showcase/priority-policy.json",
+      "sha256": "f9bd5ac9b0eb7afae281e5980f52b68c9246a38342892dc2fe772c179062281f"
+    },
+    {
+      "bytes": 7419,
+      "path": "demo/data/cnc-showcase/resource-catalog.json",
+      "sha256": "02597025dfe1698a40405c5a0c20b511b15f4aca2855ed4945a8499e8f452759"
+    },
+    {
+      "bytes": 3058,
+      "path": "demo/data/cnc-showcase/route-templates.json",
+      "sha256": "3549d806ccb9e29b737b932bbcb4f8f0db7209d1ac562e770555bc0e462f71b4"
+    },
+    {
+      "bytes": 10156,
+      "path": "demo/docs/01-research-and-scope.md",
+      "sha256": "07ad4350ebfdb8a81982f8ce3712c2308dca3dc8b580eeaca547acb0b5eb114c"
+    },
+    {
+      "bytes": 10133,
+      "path": "demo/docs/02-cnc-data-design.md",
+      "sha256": "65de2e2ecafea5878d6e60051446c23db685f5678e75666f443bf15cd53d76c1"
+    },
+    {
+      "bytes": 15627,
+      "path": "demo/docs/03-architecture-and-api.md",
+      "sha256": "43cee6bdac278983e627f5dc027b594cbe81f73bb3e220bb7d1707f96f15a286"
+    },
+    {
+      "bytes": 14353,
+      "path": "demo/docs/04-ux-and-demo-script.md",
+      "sha256": "9227cb8a3b9f691564921b338628054979559fc86097323d6bc1af52f293ac09"
+    },
+    {
+      "bytes": 12045,
+      "path": "demo/docs/05-benchmark-and-acceptance.md",
+      "sha256": "b4d36798a33bacac86a190b5eaae27033b47630ccc6214167300adf9a728e902"
+    },
+    {
+      "bytes": 5789,
+      "path": "demo/docs/IMPLEMENTATION-STATUS.md",
+      "sha256": "0b86f9abe6288532a395260e5b96116a05a76880dea674118d70034e3fda1162"
+    },
+    {
+      "bytes": 5366,
+      "path": "demo/docs/README.md",
+      "sha256": "ff7db1a5263b325cc8f26a39b0cc75dc8965c9b54f73e73453f8786df35d61aa"
+    },
+    {
+      "bytes": 6086,
+      "path": "demo/docs/TASK-DEMO-01-cnc-demo-foundation-and-benchmark-gate.md",
+      "sha256": "6b54288b2c6c1206e859a99f00e98a1dd239553f36294d3a283d0c3c946baf22"
+    },
+    {
+      "bytes": 20092,
+      "path": "demo/docs/TASKS.md",
+      "sha256": "648bf7b424bf3f29379531733bd2bdbf66374967eb83464d47049c8394d3a6ce"
+    },
+    {
+      "bytes": 204,
+      "path": "demo/pyrightconfig.json",
+      "sha256": "9f5232b180157c94c99f09d9edfc7356214e243c9abc5f50b6d8cdc331208355"
+    },
+    {
+      "bytes": 2161,
+      "path": "demo/scripts/generate_cnc_dataset.py",
+      "sha256": "3450a30a870f5241c7e5adafb29ebc0b401fb166736b2bb4d5d91835e8c27e4f"
+    },
+    {
+      "bytes": 1890,
+      "path": "demo/scripts/run_benchmark.py",
+      "sha256": "d5d24bf5241ecd1f02b98e1ee103ad1d35490c5db3925b93af9e28acca689b95"
+    },
+    {
+      "bytes": 6568,
+      "path": "demo/scripts/run_contract_probes.py",
+      "sha256": "759ba1b768778ed7e3319cc8e508c692b4c58d8874bcdbefe5f3000170a471e7"
+    },
+    {
+      "bytes": 3557,
+      "path": "demo/scripts/task_context_manifest.py",
+      "sha256": "d0ad622c779316721e9a5fef060e520fdf3169def9346f92ea1bb117a9e49fc3"
+    },
+    {
+      "bytes": 9689,
+      "path": "demo/scripts/validate_demo.py",
+      "sha256": "89356129bd75f0b69109f976710e0bc7ae569cb6390f96ab116517e2f1fb530d"
+    },
+    {
+      "bytes": 345,
+      "path": "demo/tests/conftest.py",
+      "sha256": "2f7524b2ecc6414f68fa8efc9851138e7aa63ee679724d39c88d8dd4723d2e63"
+    },
+    {
+      "bytes": 3137,
+      "path": "demo/tests/test_assets.py",
+      "sha256": "77a0202c089c70f2e4177ea09794e7b1827b18b33b46f3d9e55c64d90ccc80c7"
+    },
+    {
+      "bytes": 833,
+      "path": "demo/tests/test_benchmark.py",
+      "sha256": "90877f8f0650349e5618cd653aeb4d9e5ce89cdf4e447ee39643c7991a81e6e6"
+    },
+    {
+      "bytes": 2213,
+      "path": "demo/tests/test_contract_probes.py",
+      "sha256": "1e6f512abdccbd74ae011dfd6e2b9dde236c339584db3a818b7afa00fb3379cc"
+    },
+    {
+      "bytes": 2787,
+      "path": "demo/tests/test_generator.py",
+      "sha256": "e1188df41bb1a3b078512c16894850f76100f02f4fe727e7bd836f94cc53bfe4"
+    },
+    {
+      "bytes": 2586,
+      "path": "demo/tests/test_ingress.py",
+      "sha256": "33e59fde442b8a650b91e62d892c7bb9ca2a533ee81bea987587ac32a58b756a"
+    }
+  ],
+  "generated_at_utc": "2026-09-02T05:08:51.231208Z",
+  "machine_report_version": "cnc-demo-task-machine-report.v1",
+  "scope_check": {
+    "allowed": [
+      "demo/**"
+    ],
+    "outside_demo_paths_expected": [
+      ".gitignore",
+      "README.md",
+      "docs/.gitignore",
+      "docs/README.md",
+      "docs/contracts/README.md",
+      "docs/contracts/api-development-checklist.md",
+      "docs/contracts/data-field-dictionary.md",
+      "docs/contracts/schema-index.md",
+      "docs/frontend/README.md",
+      "frontend/.gitignore"
+    ],
+    "outside_demo_paths_observed": [
+      ".gitignore",
+      "README.md",
+      "docs/.gitignore",
+      "docs/README.md",
+      "docs/contracts/README.md",
+      "docs/contracts/api-development-checklist.md",
+      "docs/contracts/data-field-dictionary.md",
+      "docs/contracts/schema-index.md",
+      "docs/frontend/README.md",
+      "frontend/.gitignore"
+    ],
+    "protected_files": [
+      {
+        "expected_sha256": "1c7942da99a47f7f9f6090d7836354871a5d8a593cbf9fe35a5c3754aa1ed6ac",
+        "observed_sha256": "1c7942da99a47f7f9f6090d7836354871a5d8a593cbf9fe35a5c3754aa1ed6ac",
+        "path": ".gitignore",
+        "status": "PASS"
+      },
+      {
+        "expected_sha256": "441331d7f2099085e9c5e2cd18b6a096fbd93fb0ff58b3b8114e148a311298e1",
+        "observed_sha256": "441331d7f2099085e9c5e2cd18b6a096fbd93fb0ff58b3b8114e148a311298e1",
+        "path": "README.md",
+        "status": "PASS"
+      },
+      {
+        "expected_sha256": "0fc4a9c9f22759617eb14e8dba2624873fca2b20d55bc01e5a90f612d975c94e",
+        "observed_sha256": "0fc4a9c9f22759617eb14e8dba2624873fca2b20d55bc01e5a90f612d975c94e",
+        "path": "docs/.gitignore",
+        "status": "PASS"
+      },
+      {
+        "expected_sha256": "94193e940a3c5439e155f5583ea7ddcf4111e29b441f890791c422f6ecae36b1",
+        "observed_sha256": "94193e940a3c5439e155f5583ea7ddcf4111e29b441f890791c422f6ecae36b1",
+        "path": "docs/README.md",
+        "status": "PASS"
+      },
+      {
+        "expected_sha256": "73363fdbe8819f25994eb93731ca77da9f2feb8eb6d6b49f2e388ddfe5e8416e",
+        "observed_sha256": "73363fdbe8819f25994eb93731ca77da9f2feb8eb6d6b49f2e388ddfe5e8416e",
+        "path": "docs/contracts/README.md",
+        "status": "PASS"
+      },
+      {
+        "expected_sha256": "d49302f0f4648fde7cd3e5fb6dbaf0d06f4d715fa7d7fe858feb5d93558362c1",
+        "observed_sha256": "d49302f0f4648fde7cd3e5fb6dbaf0d06f4d715fa7d7fe858feb5d93558362c1",
+        "path": "docs/contracts/schema-index.md",
+        "status": "PASS"
+      },
+      {
+        "expected_sha256": "3935df6ecb82332c6893d31b64cad18d8c92df4173f12f207350114b8213c2a3",
+        "observed_sha256": "3935df6ecb82332c6893d31b64cad18d8c92df4173f12f207350114b8213c2a3",
+        "path": "docs/frontend/README.md",
+        "status": "PASS"
+      },
+      {
+        "expected_sha256": "330f44b3c9596bc2973f8c9b4278f39e17f54dc1a55732f7ad17dda3a04b49cf",
+        "observed_sha256": "330f44b3c9596bc2973f8c9b4278f39e17f54dc1a55732f7ad17dda3a04b49cf",
+        "path": "frontend/.gitignore",
+        "status": "PASS"
+      },
+      {
+        "expected_sha256": "48cd91b917b1114c0353220c7f805f2382e80ee50ae189b3d9e843b0afcddf86",
+        "observed_sha256": "48cd91b917b1114c0353220c7f805f2382e80ee50ae189b3d9e843b0afcddf86",
+        "path": "docs/contracts/api-development-checklist.md",
+        "status": "PASS"
+      },
+      {
+        "expected_sha256": "b9c23bb317148e2369aac5c821d813b12361e9efa1f4b933ed3415da7c22b7c6",
+        "observed_sha256": "b9c23bb317148e2369aac5c821d813b12361e9efa1f4b933ed3415da7c22b7c6",
+        "path": "docs/contracts/data-field-dictionary.md",
+        "status": "PASS"
+      }
+    ],
+    "status": "PASS"
+  },
+  "status": "PASS",
+  "task_family": "demo-exclusive",
+  "task_id": "TASK-DEMO-01"
+}

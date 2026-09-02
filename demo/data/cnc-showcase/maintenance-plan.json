@@ -1,0 +1,12 @@
+{
+  "maintenance_plan_version": "cnc-maintenance-plan.v1",
+  "timezone": "Asia/Shanghai",
+  "events": [
+    {"event_id":"MAINT-001","resource_id":"resource-lathe-02","start_local":"2026-09-08T12:00:00+08:00","end_local":"2026-09-08T15:00:00+08:00","reason":"预防性保养"},
+    {"event_id":"MAINT-002","resource_id":"resource-vmc-03","start_local":"2026-09-09T08:00:00+08:00","end_local":"2026-09-09T11:00:00+08:00","reason":"主轴点检"},
+    {"event_id":"MAINT-003","resource_id":"resource-hmc-01","start_local":"2026-09-11T14:00:00+08:00","end_local":"2026-09-11T18:00:00+08:00","reason":"换刀机构保养"},
+    {"event_id":"MAINT-004","resource_id":"resource-grinder-02","start_local":"2026-09-12T10:00:00+08:00","end_local":"2026-09-12T13:00:00+08:00","reason":"砂轮校准"},
+    {"event_id":"MAINT-005","resource_id":"resource-cmm-01","start_local":"2026-09-14T09:00:00+08:00","end_local":"2026-09-14T12:00:00+08:00","reason":"计量校准"},
+    {"event_id":"MAINT-006","resource_id":"resource-fiveaxis-01","start_local":"2026-09-15T16:00:00+08:00","end_local":"2026-09-15T20:00:00+08:00","reason":"旋转轴精度复检"}
+  ]
+}

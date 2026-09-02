@@ -1,0 +1,18 @@
+{
+  "baseline_version": "demo-protected-root-baseline.v1",
+  "captured_before_implementation": true,
+  "diff_base": "fd9ce328a180a8b1f0baa1a0fe870a8d39e0d200",
+  "owner": "pre-existing non-demo worktree changes",
+  "files": {
+    ".gitignore": "1c7942da99a47f7f9f6090d7836354871a5d8a593cbf9fe35a5c3754aa1ed6ac",
+    "README.md": "441331d7f2099085e9c5e2cd18b6a096fbd93fb0ff58b3b8114e148a311298e1",
+    "docs/.gitignore": "0fc4a9c9f22759617eb14e8dba2624873fca2b20d55bc01e5a90f612d975c94e",
+    "docs/README.md": "94193e940a3c5439e155f5583ea7ddcf4111e29b441f890791c422f6ecae36b1",
+    "docs/contracts/README.md": "73363fdbe8819f25994eb93731ca77da9f2feb8eb6d6b49f2e388ddfe5e8416e",
+    "docs/contracts/schema-index.md": "d49302f0f4648fde7cd3e5fb6dbaf0d06f4d715fa7d7fe858feb5d93558362c1",
+    "docs/frontend/README.md": "3935df6ecb82332c6893d31b64cad18d8c92df4173f12f207350114b8213c2a3",
+    "frontend/.gitignore": "330f44b3c9596bc2973f8c9b4278f39e17f54dc1a55732f7ad17dda3a04b49cf",
+    "docs/contracts/api-development-checklist.md": "48cd91b917b1114c0353220c7f805f2382e80ee50ae189b3d9e843b0afcddf86",
+    "docs/contracts/data-field-dictionary.md": "b9c23bb317148e2369aac5c821d813b12361e9efa1f4b933ed3415da7c22b7c6"
+  }
+}

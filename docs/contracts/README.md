@@ -11,6 +11,15 @@ last_reviewed: 2026-09-01
 
 # 合同文档索引
 
+## 当前开发入口
+
+- [API 接口开发清单](api-development-checklist.md)：按当前 OpenAPI 列出全部健康、Planning Workspace 与动态重排 operation，区分路由完成、运行时适配器缺口和未提供端点。
+- [数据字段中文名称字典](data-field-dictionary.md)：完整覆盖 `canonical-records.v1` 核心业务字段的英文 key、中文名、类型与必填条件。
+- [Schema 索引](schema-index.md)：机器 Schema、stable URN、版本和兼容性权威入口。
+- [Schema 版本规则](schema-versioning.md)：新增、兼容、迁移和 preserved bytes 规则。
+
+API 清单和中文字段名是人类可读索引，不替代 JSON Schema、状态机或语义合同；发现不一致时必须修正索引，不能通过改写机器事实让说明成立。
+
 ## TASK-P6-08 aggregate monitoring contract
 
 [Duration Prediction Governance Contract](duration-prediction-governance.md)和[Machine Contract](duration-prediction-machine-contract.md)现追加default-off Simulation monitoring投影：content-addressed policy、固定8项aggregate window、fallback/feature-distribution/quality/late/version检测、aggregate-only privacy与run-scoped no-persistence retention。全部threshold由`SIM-ASSUMPTION-026`和policy携带，不从环境变量或代码默认值推断。

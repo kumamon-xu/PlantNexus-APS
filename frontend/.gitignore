@@ -1,5 +1,35 @@
+# Dependencies and build output
 node_modules/
 dist/
-coverage/
-*.log
+.vite/
 *.tsbuildinfo
+
+# Unit-test and browser-test output
+coverage/
+test-results/
+playwright-report/
+blob-report/
+.playwright/
+
+# Local environment overrides; the deterministic E2E contract remains tracked
+.env
+.env.local
+.env.development
+.env.production
+.env.test
+.env.*.local
+!.env.example
+!.env.e2e
+
+# Logs, caches and editor files
+*.log
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+pnpm-debug.log*
+.eslintcache
+.cache/
+.DS_Store
+Thumbs.db
+*.swp
+*.tmp

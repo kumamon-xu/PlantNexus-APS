@@ -1,0 +1,7 @@
+{
+  "include": ["backend", "scripts", "tests"],
+  "exclude": ["benchmarks/results", "build", "data"],
+  "extraPaths": ["../backend", "backend"],
+  "pythonVersion": "3.12",
+  "typeCheckingMode": "basic"
+}

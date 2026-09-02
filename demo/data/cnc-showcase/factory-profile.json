@@ -1,0 +1,46 @@
+{
+  "factory_profile_version": "cnc-factory-profile.v1",
+  "factory": {
+    "factory_id": "factory-cnc-001",
+    "factory_code": "PNX-CNC-DEMO",
+    "factory_name_zh": "华东精密机加工演示工厂",
+    "timezone": "Asia/Shanghai"
+  },
+  "workshops": [
+    {
+      "workshop_id": "workshop-ws10",
+      "workshop_code": "WS10",
+      "workshop_name_zh": "下料与车削车间",
+      "production_line_id": "line-ws10",
+      "production_line_code": "WS10-MACHINING"
+    },
+    {
+      "workshop_id": "workshop-ws20",
+      "workshop_code": "WS20",
+      "workshop_name_zh": "铣削加工车间",
+      "production_line_id": "line-ws20",
+      "production_line_code": "WS20-MACHINING"
+    },
+    {
+      "workshop_id": "workshop-ws30",
+      "workshop_code": "WS30",
+      "workshop_name_zh": "精加工与检测车间",
+      "production_line_id": "line-ws30",
+      "production_line_code": "WS30-FINISHING"
+    }
+  ],
+  "resource_groups": [
+    {"resource_group_id": "group-ws10-cut", "resource_group_code": "WS10-CUT", "production_line_id": "line-ws10"},
+    {"resource_group_id": "group-ws10-turn", "resource_group_code": "WS10-TURN", "production_line_id": "line-ws10"},
+    {"resource_group_id": "group-ws20-mill", "resource_group_code": "WS20-MILL", "production_line_id": "line-ws20"},
+    {"resource_group_id": "group-ws20-5ax", "resource_group_code": "WS20-5AX", "production_line_id": "line-ws20"},
+    {"resource_group_id": "group-ws30-grind", "resource_group_code": "WS30-GRIND", "production_line_id": "line-ws30"},
+    {"resource_group_id": "group-ws30-finish", "resource_group_code": "WS30-FINISH", "production_line_id": "line-ws30"},
+    {"resource_group_id": "group-ws30-quality", "resource_group_code": "WS30-QUALITY", "production_line_id": "line-ws30"}
+  ],
+  "working_calendar": {
+    "weekday_shift_local": {"start": "06:00", "end": "22:00"},
+    "saturday_shift_local": {"start": "08:00", "end": "16:00"},
+    "sunday_available": false
+  }
+}

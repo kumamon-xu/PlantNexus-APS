@@ -1,16 +1,70 @@
-# Internal development-process documentation
-#
-# These files remain available in a developer's local workspace, but they are
-# intentionally excluded from the public repository. Public project and
-# technical documentation is kept outside these paths.
-/agents/
-/current_phase.md
-/governance/
-/milestones/
-/quality/
-/runbooks/
-/tasks/
+# Public documentation is allow-listed. Everything else under docs/ is local
+# process material or generated output and stays out of the public repository.
+/*
+!/.gitignore
+!/README.md
 
-# Internal specification and authoring templates
-/core/APS_IMPLEMENTATION_SPEC.md
+# Accepted architecture decisions
+!/adr/
+/adr/*
+!/adr/README.md
+!/adr/ADR-[0-9][0-9][0-9][0-9]-*.md
 /adr/ADR_TEMPLATE.md
+
+# Public technical documentation sections
+!/architecture/
+/architecture/*
+!/architecture/*.md
+
+!/contracts/
+/contracts/*
+!/contracts/*.md
+
+!/core/
+/core/*
+!/core/*.md
+/core/APS_IMPLEMENTATION_SPEC.md
+
+!/domain/
+/domain/*
+!/domain/*.md
+!/domain/state-machines/
+/domain/state-machines/*
+!/domain/state-machines/*.md
+
+!/frontend/
+/frontend/*
+!/frontend/*.md
+
+!/operations/
+/operations/*
+!/operations/*.md
+
+!/planning/
+/planning/*
+!/planning/*.md
+
+!/simulation/
+/simulation/*
+!/simulation/*.md
+
+# Sanitized public phase observations
+!/p4-exit-gate-audit-observations.v1.json
+!/p5-exit-gate-audit-observations.v1.json
+!/p6-exit-gate-audit-observations.v1.json
+
+# Never admit authoring debris even inside a public section
+**/.DS_Store
+**/Thumbs.db
+**/~$*
+**/*.log
+**/*.tmp
+**/*.temp
+**/*.bak
+**/drafts/
+**/_drafts/
+**/generated/
+**/attachments/
+**/reports/
+**/output/
+**/tmp/

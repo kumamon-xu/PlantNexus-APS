@@ -1,0 +1,144 @@
+{
+  "assets_digest": "9bb6676791e62babf0575b3acb25b246d7e460f4a8aca2dbdd757ea164356c45",
+  "benchmark_report_version": "cnc-demo-benchmark-report.v1",
+  "boundaries": {
+    "data_plane": "SIMULATION_ONLY",
+    "production_capacity_claim": "NOT_ESTABLISHED",
+    "production_sla_claim": "NOT_ESTABLISHED",
+    "result_scope": "THIS_PROFILE_AND_CAPTURED_ENVIRONMENT_ONLY",
+    "synthetic_only": true
+  },
+  "environment": {
+    "git": {
+      "demo_worktree_dirty": true,
+      "head": "fd9ce328a180a8b1f0baa1a0fe870a8d39e0d200"
+    },
+    "logical_cpu_count": 32,
+    "machine": "AMD64",
+    "ortools_version": "9.15.6755",
+    "processor": "Intel64 Family 6 Model 183 Stepping 1, GenuineIntel",
+    "python_executable": "D:\\Project\\Python\\plantnexus-aps\\.venv\\Scripts\\python.exe",
+    "python_version": "3.12.13",
+    "release": "11",
+    "system": "Windows"
+  },
+  "generated_at_utc": "2026-09-02T05:02:55.928131Z",
+  "profile": {
+    "active_operation_count": 580,
+    "horizon_days": 10,
+    "name": "showcase",
+    "operation_count": 610,
+    "order_count": 132,
+    "profile_id": "CNC-DEMO-SHOWCASE",
+    "resource_count": 24,
+    "seed": 20260902
+  },
+  "python_tracemalloc_peak_mb": 46.798930168151855,
+  "report_fingerprint": "sha256:51cd354bae42d5bba8eb8e6464e240e47dc178d6e6f21ca483a587400ef1672c",
+  "solver": {
+    "assignment_count": 580,
+    "executed": true,
+    "limits": {
+      "max_wall_time_seconds": 20.0,
+      "max_workers": 1,
+      "random_seed": 20260902
+    },
+    "memory_peak_mb": 0.0,
+    "model_metrics": {
+      "constraints": 4984,
+      "optional_intervals": 1253,
+      "variables": 2678
+    },
+    "objective_stage_results": [
+      {
+        "allocated_wall_time_seconds": 20.0,
+        "best_bound": 0,
+        "metric": "WEIGHTED_TARDINESS",
+        "objective_id": "OBJ-001",
+        "objective_value": 0,
+        "relative_gap": 0.0,
+        "sense": "MINIMIZE",
+        "solve_seconds": 2.4265779000000003,
+        "stage_index": 1,
+        "status": "OPTIMAL",
+        "stop_reason": "OBJ001_OPTIMALITY_PROVEN"
+      }
+    ],
+    "result_classification": "OPTIMAL_FOR_THIS_SYNTHETIC_INSTANCE",
+    "solution_fingerprint": "sha256:5fee41eca7b1b8362f45da4376f307c74bb5267d815795af0112c1e242e2b630",
+    "solver_status": "OPTIMAL",
+    "timings": {
+      "first_feasible_seconds": 0.5653794000000001,
+      "harness_solve_wall_seconds": 3.0860910000046715,
+      "model_build_seconds": 0.22216769999067765,
+      "solve_seconds": 2.4265779000000003,
+      "total_seconds": 2.9240759999956936,
+      "validation_seconds": 0.2179078000044683
+    },
+    "validator": {
+      "hard_violation_count": 0,
+      "independent_formal_validator": true,
+      "status": "PASS"
+    }
+  },
+  "source_batch": {
+    "batch_id": "cnc-demo-batch-35d51f7fc0db5c555bbef387",
+    "record_counts": {
+      "calendars": 24,
+      "demand_orders": 132,
+      "execution_facts": 42,
+      "factories": 1,
+      "operation_locks": 12,
+      "production_lines": 3,
+      "production_lots": 132,
+      "production_orders": 132,
+      "products": 132,
+      "resource_groups": 7,
+      "resources": 24,
+      "routing_operations": 610,
+      "routing_precedence_edges": 478,
+      "routing_resource_options": 1311,
+      "routing_versions": 132,
+      "workshops": 3
+    },
+    "request_fingerprint": "1af2a70e3321b0ddc30f507363b4b569239be43a7bde7071a5e4930f040f7103",
+    "row_count": 3175
+  },
+  "standard_ingress": {
+    "dataset_hash": "sha256:c39fe91826fa14061f957eeba808dfe5189cfc88fa46d02dc0f16745d98ca680",
+    "problem_counts": {
+      "active_operations": 580,
+      "completed_anchors": 18,
+      "hard_locks": 4,
+      "not_started_operations": 568,
+      "orders": 132,
+      "resource_options": 1253,
+      "resources": 24,
+      "running_operations": 12,
+      "soft_locks": 8,
+      "unavailable_intervals": 462
+    },
+    "problem_hash": "sha256:a30196dbcd183cf090b7ec22600a6075de76f26c93d857d97f9a5f44ba428d03",
+    "quality_status": "PASS",
+    "snapshot_id": "planning-snapshot-v2-1a849230a0b6640698c2afb569c49ad48d282b064d877f4c128c079e7c4ab387",
+    "stages": [
+      "RAW_STAGING",
+      "NORMALIZATION",
+      "DATA_VALIDATION",
+      "ORDER_EXPANSION",
+      "IMMUTABLE_SNAPSHOT",
+      "PLANNING_PROBLEM_V2"
+    ]
+  },
+  "status": "PASS",
+  "timings": {
+    "generation_seconds": 0.4042967999994289,
+    "ingress_seconds": 4.906747000000905,
+    "total_harness_seconds": 8.423079799991683
+  },
+  "warnings": [
+    "Synthetic benchmark evidence is not production capacity or SLA evidence.",
+    "OPTIMAL applies only to this synthetic instance and captured configuration.",
+    "Python tracemalloc excludes native allocations and is reported separately from solver telemetry."
+  ]
+}

@@ -1,0 +1,28 @@
+{
+  "asset_pack_version": "cnc-demo-assets.v1",
+  "asset_pack_id": "PLANTNEXUS-CNC-SHOWCASE",
+  "industry": "PRECISION_CNC_MACHINING",
+  "locale": "zh-CN",
+  "factory_timezone": "Asia/Shanghai",
+  "generator_id": "PLANTNEXUS-DEMO-CNC-IMPORT-GENERATOR",
+  "generator_version": "1.0.0",
+  "default_profile": "showcase",
+  "fixed_seed": 20260902,
+  "files": [
+    "factory-profile.json",
+    "resource-catalog.json",
+    "route-templates.json",
+    "duration-parameters.json",
+    "priority-policy.json",
+    "maintenance-plan.json"
+  ],
+  "file_sha256": {
+    "factory-profile.json": "48de2481b20191a8da0ad070ee9220170d32ce8d7e9eb218f525dd1aa3a09869",
+    "resource-catalog.json": "02597025dfe1698a40405c5a0c20b511b15f4aca2855ed4945a8499e8f452759",
+    "route-templates.json": "3549d806ccb9e29b737b932bbcb4f8f0db7209d1ac562e770555bc0e462f71b4",
+    "duration-parameters.json": "6cbb2cc916a3d5b50ea6731d6a4347fe38f0a25d399d57d684a22cacc6ad7b0d",
+    "priority-policy.json": "f9bd5ac9b0eb7afae281e5980f52b68c9246a38342892dc2fe772c179062281f",
+    "maintenance-plan.json": "68eb5deef3947b0d35d0d70a76b6c19f04103747dda8c57a7897b49b5935fe27"
+  },
+  "benchmark_profiles_sha256": "d416a7fafd281473c6dcd363b2423cf089c24aa8d9deeefdc6a349b3cc4bbc80"
+}

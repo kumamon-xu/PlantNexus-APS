@@ -11,6 +11,12 @@ last_reviewed: 2026-08-31
 
 # Frontend 文档形成计划
 
+## 开发入口与本地产物边界
+
+Frontend 当前使用 React、TypeScript、Ant Design、TanStack Query、Vite、Vitest 与 Playwright；Backend route 与缺口以[API 接口开发清单](../contracts/api-development-checklist.md)为准，中文业务展示词以[官方中文术语映射](official-zh-cn-terminology-map.md)为准。UI 只能翻译显示文本，不能翻译 JSON key、operationId、state、command、error code 或 C-ID。
+
+`frontend/.gitignore`排除依赖、构建、coverage、Playwright、日志、缓存和本地环境覆盖。可公开的设计与合同文档保留在本目录；测试截图、trace、video、HTML report、临时 bundle 和运行证据写入 `build/` 或 Frontend 工具输出目录，不提交到 `docs/`。
+
 ## TASK-P4-14 isolated browser Gate
 
 `playwright.p4-gate.config.ts`只选择`dynamic-replanning.spec.ts`和独立项目`chromium-p4-vertical-slice`，两轮各执行5个positive/error/tamper/network-recovery场景，workers固定1、retry仍为0。每轮分别保留JSON/JUnit/HTML及failure-only trace/video/screenshot；`p4-gate-evidence.mjs`严格复验TASK-P4-13 frozen report、两轮5/5 expected PASS和stable `p4-playwright-semantic-projection.v1` fingerprint。

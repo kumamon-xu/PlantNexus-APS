@@ -1,0 +1,214 @@
+{
+  "diff_base": "fd9ce328a180a8b1f0baa1a0fe870a8d39e0d200",
+  "estimated_characters": 664006,
+  "files_allowed_to_change": [
+    "demo/**"
+  ],
+  "inputs": [
+    {
+      "characters": 6968,
+      "load_mode": "FULL",
+      "path": "demo/docs/TASK-DEMO-03-urgent-order-and-dynamic-replan.md",
+      "sha256": "9ded75bfb05c214e26e4b52b56f0da0f7c6777753c50615f2b015cb1ca80dc30"
+    },
+    {
+      "characters": 5884,
+      "load_mode": "FULL",
+      "path": "demo/docs/02-cnc-data-design.md",
+      "sha256": "65de2e2ecafea5878d6e60051446c23db685f5678e75666f443bf15cd53d76c1"
+    },
+    {
+      "characters": 10950,
+      "load_mode": "FULL",
+      "path": "demo/docs/03-architecture-and-api.md",
+      "sha256": "44a00347bc290247183c024340562a482e7aa8929afaf0f6ded2a4a3d2e0664f"
+    },
+    {
+      "characters": 7411,
+      "load_mode": "FULL",
+      "path": "demo/docs/05-benchmark-and-acceptance.md",
+      "sha256": "b4d36798a33bacac86a190b5eaae27033b47630ccc6214167300adf9a728e902"
+    },
+    {
+      "characters": 13652,
+      "load_mode": "FULL",
+      "path": "demo/docs/TASKS.md",
+      "sha256": "67d3ca5abe0b256452607762cb5cf8bc2cbc7a3b840a1c740173c0b722dbe40c"
+    },
+    {
+      "characters": 12547,
+      "load_mode": "FULL",
+      "path": "docs/contracts/import-and-normalization.md",
+      "sha256": "8eefcd5e70684c61a0691b6f067f62bce4c307084b0c2fcaa27bf7f8041b7064"
+    },
+    {
+      "characters": 7198,
+      "load_mode": "FULL",
+      "path": "docs/contracts/planning-snapshot.md",
+      "sha256": "417bc2e9ad34a9536f19047ec85d884396d2edfdfcc6e686c62b30804cabfbd4"
+    },
+    {
+      "characters": 11539,
+      "load_mode": "FULL",
+      "path": "docs/contracts/planning-problem.md",
+      "sha256": "cb832e1d2043ba109946440e53f3460f1196e03659f697767101e67d323e1fb8"
+    },
+    {
+      "characters": 4739,
+      "load_mode": "FULL",
+      "path": "docs/contracts/planning-policy-and-solve-limits.md",
+      "sha256": "4ab4e392c2316d0985bfd77c7959dc010a7502a9cdf22f3556e475bdbd592a6a"
+    },
+    {
+      "characters": 8400,
+      "load_mode": "FULL",
+      "path": "docs/contracts/execution-events-and-replan-request.md",
+      "sha256": "2361f101ac4fc196da87da9353c1a6c1f39ca774790ea45488f4d5c49e95b909"
+    },
+    {
+      "characters": 16025,
+      "load_mode": "FULL",
+      "path": "docs/contracts/planning-solution-and-schedule-version.md",
+      "sha256": "c1975c781aba97e4daebb855f04012b1211ff9e5a4c6a18b897f02a050edecfb"
+    },
+    {
+      "characters": 6758,
+      "load_mode": "FULL",
+      "path": "docs/adr/ADR-0010-planning-problem-v2-contract-evolution.md",
+      "sha256": "6a83d5bde325f6f52ddbacccd22ab2af8ae129560542971f748af303753c9923"
+    },
+    {
+      "characters": 8102,
+      "load_mode": "FULL",
+      "path": "docs/adr/ADR-0013-execution-event-authority-fact-projection-replan-lineage.md",
+      "sha256": "4788bfcbb290f859315715b1c51c9a729be69fce2f3b7543f7cdcd053da437c6"
+    },
+    {
+      "characters": 7107,
+      "load_mode": "FULL",
+      "path": "docs/adr/ADR-0014-freeze-window-stability-change-report.md",
+      "sha256": "ef9dad9952886da9615477b33c57ca6c3bfd941278acb2d3f8a6b09bc512ae51"
+    },
+    {
+      "characters": 12883,
+      "load_mode": "FULL",
+      "path": "schemas/json/execution-event.schema.json",
+      "sha256": "90e62fce67b28baf1ba7f2a5e987702437828affce5d94911d9cc6ac55f73d8e"
+    },
+    {
+      "characters": 6770,
+      "load_mode": "FULL",
+      "path": "schemas/json/replan-request.schema.json",
+      "sha256": "f16b7a22078a8c33495be009b6c934477b625c7aebc97966f4ec7c6b897104f9"
+    },
+    {
+      "characters": 6258,
+      "load_mode": "FULL",
+      "path": "schemas/json/schedule-version.v2.schema.json",
+      "sha256": "853c25f7211e233baa7c275e4de69cc67c070e1a4672afa1fc6b91a260df56d5"
+    },
+    {
+      "characters": 9413,
+      "load_mode": "FULL",
+      "path": "schemas/json/change-report.schema.json",
+      "sha256": "a040b1cc5c5d44e972af2a08c79393966fa72be3a5407145f429efe6c7b66da8"
+    },
+    {
+      "characters": 41434,
+      "load_mode": "FULL",
+      "path": "backend/app/domain/execution_contracts.py",
+      "sha256": "a0eef35b163216a66436ce9326c9fa2e92d7d01f4e0197ed97cca7b5cec5d7f6"
+    },
+    {
+      "characters": 52698,
+      "load_mode": "FULL",
+      "path": "backend/app/domain/execution_fact_projection.py",
+      "sha256": "5d26232558e843434476d85f0ed7463cbce8725b00c48452fce5f685b0aafc68"
+    },
+    {
+      "characters": 28882,
+      "load_mode": "FULL",
+      "path": "backend/app/application/execution_fact_projection.py",
+      "sha256": "f7f3c9aefdf9bb7d2a16c3cb5866b0ae25815bbafb7ffa41f812d777cc6ba995"
+    },
+    {
+      "characters": 47127,
+      "load_mode": "FULL",
+      "path": "backend/app/application/replan_application.py",
+      "sha256": "af01fcaa1bd57baed36f341ffaad402e7be9b99ffe372a6e3351cd21cd126be2"
+    },
+    {
+      "characters": 1538,
+      "load_mode": "FULL",
+      "path": "backend/app/importers/urgent_demand.py",
+      "sha256": "f598e4ff90051405b86d9755381c2796816d345c1dde8de7b9290224ef6ff49d"
+    },
+    {
+      "characters": 38650,
+      "load_mode": "FULL",
+      "path": "backend/app/planning/problem/freeze_projection.py",
+      "sha256": "b17542b4c6f540c175fc99c27e961ede1716430be741026c54185cfc92d63d46"
+    },
+    {
+      "characters": 18850,
+      "load_mode": "FULL",
+      "path": "backend/app/planning/reporting/kpi.py",
+      "sha256": "c19a0c2efb31c26450badb01a29b5660b03fa28b7f2869a8451712bcfb5450b8"
+    },
+    {
+      "characters": 35199,
+      "load_mode": "FULL",
+      "path": "backend/app/planning/reporting/change_report.py",
+      "sha256": "d4fddd9e3f8f90ddf817d1cda0f817e0937786b0858538820599ae56701a04d7"
+    },
+    {
+      "characters": 28808,
+      "load_mode": "FULL",
+      "path": "backend/app/planning/validation/replan_candidate_validator.py",
+      "sha256": "f97cc6030cde7edb6ead70fe1d978110b61ea97046ad729840e92136926ede3c"
+    },
+    {
+      "characters": 18758,
+      "load_mode": "FULL",
+      "path": "backend/app/planning/strategies/lexicographic_replan.py",
+      "sha256": "b50e506f32fe683394513ea827c99722b74d0d3dcfefa3c1046654c22b83e783"
+    },
+    {
+      "characters": 24431,
+      "load_mode": "FULL",
+      "path": "backend/app/planning/backends/cp_sat/replan_backend.py",
+      "sha256": "4c9d0d104b9d6f2df96b255ce5c3254bf9c15e581b473c957d1cefa378420fd4"
+    },
+    {
+      "characters": 13293,
+      "load_mode": "FULL",
+      "path": "backend/app/infrastructure/execution_event_repository.py",
+      "sha256": "c6ac1ad56199a1579f447746bcc0b4665e9bd4f2f1a7ba6f499906c8ff30832c"
+    },
+    {
+      "characters": 80880,
+      "load_mode": "FULL",
+      "path": "backend/app/infrastructure/replan_repository.py",
+      "sha256": "3742aa770ec6963c4a66e00407271ef7ad6586dd06fa8fa6e2ef0bb6668186eb"
+    },
+    {
+      "characters": 70854,
+      "load_mode": "FULL",
+      "path": "backend/app/simulation/scenarios/disruption_replay_check.py",
+      "sha256": "ef1c422a165cdb47de0101a8395919acf979f9b53b3201d4668689fa2bf7635a"
+    }
+  ],
+  "manifest_version": "demo-task-context-manifest.v1",
+  "on_demand_expansion_triggers": [
+    "formal contract or accepted ADR conflict",
+    "root code/schema change becomes necessary",
+    "dynamic replan implementation starts"
+  ],
+  "phase_registration": null,
+  "root_repository_consumption": "READ_ONLY",
+  "selected_input_count": 32,
+  "soft_budget_note": "Selected normative units were read in full; the 30k character budget is soft.",
+  "task_family": "demo-exclusive",
+  "task_id": "TASK-DEMO-03",
+  "validation_profile": "DEMO_HIGH_RISK"
+}

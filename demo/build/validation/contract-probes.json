@@ -1,0 +1,73 @@
+{
+  "contract_probe_report_version": "cnc-demo-contract-probes.v1",
+  "demo_exclusive": true,
+  "probe_count": 5,
+  "probes": [
+    {
+      "evidence": {
+        "boundary": "P3 workspace carrier remains v1-only",
+        "implementation_implication": "Demo needs an adapter/read model before reusing the P3 workspace UI.",
+        "problem_version": "planning-problem.v2",
+        "rejection": "$: exactly one supported workspace document version is required"
+      },
+      "probe_id": "DEMO-CONTRACT-001",
+      "status": "PASS"
+    },
+    {
+      "evidence": {
+        "implementation_implication": "route_template_id stays in the Demo command/import layer, not ExecutionEvent payload.",
+        "urgent_event_with_route_template_errors": 2,
+        "urgent_event_without_route_errors": 0
+      },
+      "probe_id": "DEMO-CONTRACT-002",
+      "status": "PASS"
+    },
+    {
+      "evidence": {
+        "added_operation_universe": "active_ids - base_ids",
+        "change_classification": "ADDED",
+        "implementation_implication": "Urgent routing additions can be represented after Standard Import and projection.",
+        "validator_function": "validate_replan_candidate"
+      },
+      "probe_id": "DEMO-CONTRACT-003",
+      "status": "PASS"
+    },
+    {
+      "evidence": {
+        "existing_kpi_capture_adapter": true,
+        "implementation_implication": "Demo orchestration must calculate and inject real before/after KPI documents.",
+        "replan_input_fields": [
+          "after_kpi",
+          "before_kpi",
+          "horizon_end_utc",
+          "horizon_start_utc",
+          "limits",
+          "policy",
+          "priority_facts",
+          "problem_builder_version",
+          "request",
+          "tick_seconds"
+        ]
+      },
+      "probe_id": "DEMO-CONTRACT-004",
+      "status": "PASS"
+    },
+    {
+      "evidence": {
+        "problem_hash": "sha256:26020170523d7e5f067d85873dd32b1168399ef426d904373b80c7a621c8fe97",
+        "problem_version": "planning-problem.v2",
+        "route_template_lengths": [
+          3,
+          4,
+          5,
+          6
+        ],
+        "standard_import_quality": "PASS"
+      },
+      "probe_id": "DEMO-CONTRACT-005",
+      "status": "PASS"
+    }
+  ],
+  "status": "PASS",
+  "task_id": "TASK-DEMO-01"
+}

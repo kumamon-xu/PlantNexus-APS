@@ -1,0 +1,15 @@
+{
+  "duration_parameter_version": "cnc-duration-parameters.v1",
+  "quantity_unit": "piece",
+  "tick_seconds": 300,
+  "parameters": {
+    "CUT": {"setup_seconds":300,"cycle_seconds_per_unit":300},
+    "TURN": {"setup_seconds":600,"cycle_seconds_per_unit":600},
+    "MILL": {"setup_seconds":600,"cycle_seconds_per_unit":900},
+    "FIVE_AXIS": {"setup_seconds":900,"cycle_seconds_per_unit":1200},
+    "GRIND": {"setup_seconds":600,"cycle_seconds_per_unit":600},
+    "INSPECT": {"setup_seconds":300,"cycle_seconds_per_unit":300}
+  },
+  "resource_variation_steps": [-1, 0, 1],
+  "minimum_final_duration_seconds": 300
+}

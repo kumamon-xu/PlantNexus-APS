@@ -1,0 +1,47 @@
+{
+  "route_template_version": "cnc-route-templates.v1",
+  "templates": [
+    {
+      "template_id": "CNC-ROUTE-3",
+      "product_family_zh": "短轴类",
+      "steps": [
+        {"step_index":1,"operation_code":"CUT","operation_name_zh":"锯切下料","required_capability":"CUTTING","duration_key":"CUT"},
+        {"step_index":2,"operation_code":"TURN","operation_name_zh":"数控车削","required_capability":"TURNING","duration_key":"TURN"},
+        {"step_index":3,"operation_code":"INSPECT","operation_name_zh":"终检","required_capability":"INSPECTION","duration_key":"INSPECT"}
+      ]
+    },
+    {
+      "template_id": "CNC-ROUTE-4",
+      "product_family_zh": "法兰类",
+      "steps": [
+        {"step_index":1,"operation_code":"CUT","operation_name_zh":"锯切下料","required_capability":"CUTTING","duration_key":"CUT"},
+        {"step_index":2,"operation_code":"TURN","operation_name_zh":"数控车削","required_capability":"TURNING","duration_key":"TURN"},
+        {"step_index":3,"operation_code":"MILL","operation_name_zh":"铣削加工","required_capability":"MILLING","duration_key":"MILL"},
+        {"step_index":4,"operation_code":"INSPECT","operation_name_zh":"终检","required_capability":"INSPECTION","duration_key":"INSPECT"}
+      ]
+    },
+    {
+      "template_id": "CNC-ROUTE-5",
+      "product_family_zh": "精密套筒类",
+      "steps": [
+        {"step_index":1,"operation_code":"CUT","operation_name_zh":"锯切下料","required_capability":"CUTTING","duration_key":"CUT"},
+        {"step_index":2,"operation_code":"TURN","operation_name_zh":"数控车削","required_capability":"TURNING","duration_key":"TURN"},
+        {"step_index":3,"operation_code":"MILL","operation_name_zh":"铣削加工","required_capability":"MILLING","duration_key":"MILL"},
+        {"step_index":4,"operation_code":"GRIND","operation_name_zh":"精密磨削","required_capability":"GRINDING","duration_key":"GRIND"},
+        {"step_index":5,"operation_code":"INSPECT","operation_name_zh":"终检","required_capability":"INSPECTION","duration_key":"INSPECT"}
+      ]
+    },
+    {
+      "template_id": "CNC-ROUTE-6",
+      "product_family_zh": "复杂壳体类",
+      "steps": [
+        {"step_index":1,"operation_code":"CUT","operation_name_zh":"锯切下料","required_capability":"CUTTING","duration_key":"CUT"},
+        {"step_index":2,"operation_code":"TURN","operation_name_zh":"数控车削","required_capability":"TURNING","duration_key":"TURN"},
+        {"step_index":3,"operation_code":"MILL","operation_name_zh":"粗铣","required_capability":"MILLING","duration_key":"MILL"},
+        {"step_index":4,"operation_code":"FIVE_AXIS","operation_name_zh":"五轴精铣","required_capability":"MILLING","duration_key":"FIVE_AXIS"},
+        {"step_index":5,"operation_code":"GRIND","operation_name_zh":"精密磨削","required_capability":"GRINDING","duration_key":"GRIND"},
+        {"step_index":6,"operation_code":"INSPECT","operation_name_zh":"终检","required_capability":"INSPECTION","duration_key":"INSPECT"}
+      ]
+    }
+  ]
+}

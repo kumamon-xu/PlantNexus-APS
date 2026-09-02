@@ -1,0 +1,130 @@
+{
+  "diff_base": "fd9ce328a180a8b1f0baa1a0fe870a8d39e0d200",
+  "estimated_characters": 111798,
+  "files_allowed_to_change": [
+    "demo/**"
+  ],
+  "inputs": [
+    {
+      "characters": 4444,
+      "load_mode": "FULL",
+      "path": "demo/docs/TASK-DEMO-01-cnc-demo-foundation-and-benchmark-gate.md",
+      "sha256": "6b54288b2c6c1206e859a99f00e98a1dd239553f36294d3a283d0c3c946baf22"
+    },
+    {
+      "characters": 5884,
+      "load_mode": "FULL",
+      "path": "demo/docs/02-cnc-data-design.md",
+      "sha256": "65de2e2ecafea5878d6e60051446c23db685f5678e75666f443bf15cd53d76c1"
+    },
+    {
+      "characters": 7411,
+      "load_mode": "FULL",
+      "path": "demo/docs/05-benchmark-and-acceptance.md",
+      "sha256": "b4d36798a33bacac86a190b5eaae27033b47630ccc6214167300adf9a728e902"
+    },
+    {
+      "characters": 12547,
+      "load_mode": "FULL",
+      "path": "docs/contracts/import-and-normalization.md",
+      "sha256": "8eefcd5e70684c61a0691b6f067f62bce4c307084b0c2fcaa27bf7f8041b7064"
+    },
+    {
+      "characters": 7198,
+      "load_mode": "FULL",
+      "path": "docs/contracts/planning-snapshot.md",
+      "sha256": "417bc2e9ad34a9536f19047ec85d884396d2edfdfcc6e686c62b30804cabfbd4"
+    },
+    {
+      "characters": 11539,
+      "load_mode": "FULL",
+      "path": "docs/contracts/planning-problem.md",
+      "sha256": "cb832e1d2043ba109946440e53f3460f1196e03659f697767101e67d323e1fb8"
+    },
+    {
+      "characters": 4739,
+      "load_mode": "FULL",
+      "path": "docs/contracts/planning-policy-and-solve-limits.md",
+      "sha256": "4ab4e392c2316d0985bfd77c7959dc010a7502a9cdf22f3556e475bdbd592a6a"
+    },
+    {
+      "characters": 8400,
+      "load_mode": "FULL",
+      "path": "docs/contracts/execution-events-and-replan-request.md",
+      "sha256": "2361f101ac4fc196da87da9353c1a6c1f39ca774790ea45488f4d5c49e95b909"
+    },
+    {
+      "characters": 630,
+      "load_mode": "FULL",
+      "path": "docs/adr/ADR-0001-simulation-first-common-ingress.md",
+      "sha256": "cdd24bb36729df227d3be2355c3375f8b6f2258a4098df5487366bab96428c08"
+    },
+    {
+      "characters": 1137,
+      "load_mode": "FULL",
+      "path": "docs/adr/ADR-0005-independent-schedule-validator.md",
+      "sha256": "1aa591473bb906385455fb272158dac40cfe812eac5e9a9d423bd12e61268623"
+    },
+    {
+      "characters": 494,
+      "load_mode": "FULL",
+      "path": "docs/adr/ADR-0008-utc-seconds-and-solver-ticks.md",
+      "sha256": "8a6f2594cdaa471ec000d50bb00e148613a7b52fc1792fd9b0deccdc15b12d8d"
+    },
+    {
+      "characters": 6758,
+      "load_mode": "FULL",
+      "path": "docs/adr/ADR-0010-planning-problem-v2-contract-evolution.md",
+      "sha256": "6a83d5bde325f6f52ddbacccd22ab2af8ae129560542971f748af303753c9923"
+    },
+    {
+      "characters": 4188,
+      "load_mode": "FULL",
+      "path": "docs/adr/ADR-0011-ortools-9-15-cp-sat-backend-version-policy.md",
+      "sha256": "aa5c6d1a27eed218f29a8dac7cb75ff6e990aa95d5b44b07b9377e105767b2a8"
+    },
+    {
+      "characters": 8102,
+      "load_mode": "FULL",
+      "path": "docs/adr/ADR-0013-execution-event-authority-fact-projection-replan-lineage.md",
+      "sha256": "4788bfcbb290f859315715b1c51c9a729be69fce2f3b7543f7cdcd053da437c6"
+    },
+    {
+      "characters": 7107,
+      "load_mode": "FULL",
+      "path": "docs/adr/ADR-0014-freeze-window-stability-change-report.md",
+      "sha256": "ef9dad9952886da9615477b33c57ca6c3bfd941278acb2d3f8a6b09bc512ae51"
+    },
+    {
+      "characters": 4823,
+      "load_mode": "FULL",
+      "path": "docs/simulation/synthetic-generator-and-determinism.md",
+      "sha256": "cd5ada6a3a828b20d075e42ae2503597741db887700e85da3a080c171fc75700"
+    },
+    {
+      "characters": 8028,
+      "load_mode": "FULL",
+      "path": "docs/simulation/benchmark-harness.md",
+      "sha256": "ea653e97b207b24ae5c3d88796ff2406f5939bd62cc9a959426ef789a68eed25"
+    },
+    {
+      "characters": 8369,
+      "load_mode": "FULL",
+      "path": "docs/simulation/performance-gates.md",
+      "sha256": "8e07ec9eb4ca00db7559a7fa83642089febfdae76f8ac33bd4a582253ad4718d"
+    }
+  ],
+  "manifest_version": "demo-task-context-manifest.v1",
+  "on_demand_expansion_triggers": [
+    "formal contract or accepted ADR conflict",
+    "root code/schema change becomes necessary",
+    "dynamic replan implementation starts"
+  ],
+  "phase_registration": null,
+  "root_repository_consumption": "READ_ONLY",
+  "selected_input_count": 18,
+  "soft_budget_note": "Selected normative units were read in full; the 30k character budget is soft.",
+  "task_family": "demo-exclusive",
+  "task_id": "TASK-DEMO-01",
+  "validation_profile": "DEMO_HIGH_RISK"
+}

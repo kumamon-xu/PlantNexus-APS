@@ -1,26 +1,80 @@
-# Python / uv
+# Python environments, bytecode and packaging
 .venv/
+venv/
 __pycache__/
 *.py[cod]
+*.pyd
+*.so
+*.egg
 *.egg-info/
+.eggs/
 
-# Build and test outputs
-build/
-dist/
-.coverage
-htmlcov/
+# Python quality and test caches
 .pytest_cache/
+.hypothesis/
 .ruff_cache/
 .mypy_cache/
 .pyright/
+.tox/
+.nox/
+.coverage
+.coverage.*
+coverage.xml
+htmlcov/
 
-# Local configuration and secrets
+# Build, validation and generated evidence
+/build/
+/dist/
+*.whl
+
+# Node.js, Vite and browser-test outputs
+node_modules/
+.npm/
+.pnpm-store/
+.yarn/
+.vite/
+.playwright-cli/
+playwright-report/
+test-results/
+blob-report/
+coverage/
+*.tsbuildinfo
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+pnpm-debug.log*
+
+# Local runtime state
+*.db
+*.sqlite
+*.sqlite3
+*.pid
+celerybeat-schedule*
+
+# Local configuration, credentials and secrets
 .env
 .env.*
 !.env.example
+!frontend/.env.e2e
+*.pem
+*.key
+*.p12
+
+# Logs and temporary files
+*.log
+*.tmp
+*.temp
+*.bak
+*.swp
+*.swo
+~$*
+tmp/
+temp/
 
 # Editors and operating systems
 .idea/
 .vscode/
+*.code-workspace
 .DS_Store
 Thumbs.db
+Desktop.ini

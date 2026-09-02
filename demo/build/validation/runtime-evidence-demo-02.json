@@ -1,0 +1,176 @@
+{
+  "activation": {
+    "content_fingerprint": "sha256:69bdcff428cd944db4c1ee6e26f094dd5f2649397345ae76eb5d13c10d6cb722",
+    "current_reference_revision": 0,
+    "exact_replay": true,
+    "publication_id": "publication-461fd415bd1b71458fa664aa909642bb3ee442138ea2d5e56d6ad6305946cc43",
+    "replayed": false,
+    "result_version": "cnc-demo-baseline-activation-result.v1",
+    "run_id": "run-f2c33c8df65dc39eb009c54aefdfc626",
+    "schedule_version_id": "schedule-version-validated-fd15bdfe6ec93328436b7c6d654723c4b9335cfd19818a9f16e47d6c3211fd40",
+    "state": "PUBLISHED",
+    "state_revision": 3
+  },
+  "artifacts": [
+    {
+      "artifact_id": "import-quality-0b288b29a7d5e3afb6962005834c474289ee9e5164246842a652d8f96f736dfc",
+      "artifact_kind": "IMPORT_QUALITY",
+      "created_at_utc": "2026-09-02T05:42:56Z",
+      "document_version": "import-quality-report.v1",
+      "fingerprint": "sha256:15adaf844a7622cefe765cec8771bb9b399bd878b5ef88f2f3e0d94ad2da5379"
+    },
+    {
+      "artifact_id": "kpi-2aadf84d62f1641d928da72491b13c29e0b57330a9d453356f06027ad773a5c0",
+      "artifact_kind": "KPI",
+      "created_at_utc": "2026-09-02T05:43:03Z",
+      "document_version": "kpi.v2",
+      "fingerprint": "sha256:6f43c48cf8ad3b62433169a2942ac5dc5c236c2f6ef86f4eedbcdac4b957b78c"
+    },
+    {
+      "artifact_id": "planning_problem-fc947806a44cc08db78ce7502a7f5a437e9990eb7d2d4a87213882893c0fc8c8",
+      "artifact_kind": "PLANNING_PROBLEM",
+      "created_at_utc": "2026-09-02T05:42:56Z",
+      "document_version": "planning-problem-builder.v2",
+      "fingerprint": "sha256:fc947806a44cc08db78ce7502a7f5a437e9990eb7d2d4a87213882893c0fc8c8"
+    },
+    {
+      "artifact_id": "planning-solution-core-7f24f9a74b178d595aaf86eaadfe2b307fde6a71c6346447d4f9e01d73f03448",
+      "artifact_kind": "PLANNING_SOLUTION",
+      "created_at_utc": "2026-09-02T05:43:03Z",
+      "document_version": "planning-solution.v1",
+      "fingerprint": "sha256:845301f364ee827106767ddbee0dfbc2618023f8aa6e81c70731d07e65030291"
+    },
+    {
+      "artifact_id": "planning-snapshot-v2-1a849230a0b6640698c2afb569c49ad48d282b064d877f4c128c079e7c4ab387",
+      "artifact_kind": "SNAPSHOT",
+      "created_at_utc": "2026-09-02T05:42:56Z",
+      "document_version": "order-expansion.v1",
+      "fingerprint": "sha256:d98aaba26f2242a1ac48780d6feb085f7bfc9804688447e2a2a8ebbf4e72186c"
+    },
+    {
+      "artifact_id": "solver-report-global-0b70cc30eec2ba6ff00426ace50c48e4e31bbfaa42dd0a972f05b79884d3646f",
+      "artifact_kind": "SOLVER_REPORT",
+      "created_at_utc": "2026-09-02T05:43:03Z",
+      "document_version": "solver-report.v1",
+      "fingerprint": "sha256:aafbf06b43559b30a8372fc375b1c8a0787b53538d1d15c4511b50b577bfbbe0"
+    },
+    {
+      "artifact_id": "validation_report-79065b3cafe1ed2c83ed7987de32381ed4a4c02263581f7003ce3b3fc8f35544",
+      "artifact_kind": "VALIDATION_REPORT",
+      "created_at_utc": "2026-09-02T05:43:03Z",
+      "document_version": "validation-report.v2",
+      "fingerprint": "sha256:79065b3cafe1ed2c83ed7987de32381ed4a4c02263581f7003ce3b3fc8f35544"
+    }
+  ],
+  "boundaries": {
+    "data_plane": "SIMULATION",
+    "p7_registration": "NONE",
+    "production_authority": false,
+    "production_capacity_claim": "NOT_ESTABLISHED"
+  },
+  "current_publication": {
+    "content_fingerprint": "sha256:69bdcff428cd944db4c1ee6e26f094dd5f2649397345ae76eb5d13c10d6cb722",
+    "publication_id": "publication-461fd415bd1b71458fa664aa909642bb3ee442138ea2d5e56d6ad6305946cc43",
+    "reference_revision": 0,
+    "schedule_version_id": "schedule-version-validated-fd15bdfe6ec93328436b7c6d654723c4b9335cfd19818a9f16e47d6c3211fd40"
+  },
+  "database_self_check": {
+    "core_table_count": 12,
+    "demo_table_count": 4,
+    "schema_version": "cnc-demo-run.v1",
+    "status": "PASS"
+  },
+  "generated_at_utc": "2026-09-02T05:43:03Z",
+  "initial_plan": {
+    "content_fingerprint": "sha256:69bdcff428cd944db4c1ee6e26f094dd5f2649397345ae76eb5d13c10d6cb722",
+    "exact_replay": false,
+    "planning_run_id": "planning-run-demo-aa433443c181d2720bddf27df02e36fd24bcce255897ea433f0094e3197e256d",
+    "result_version": "cnc-demo-initial-planning-result.v1",
+    "run_id": "run-f2c33c8df65dc39eb009c54aefdfc626",
+    "schedule_state": "READY_FOR_REVIEW",
+    "schedule_version_id": "schedule-version-validated-fd15bdfe6ec93328436b7c6d654723c4b9335cfd19818a9f16e47d6c3211fd40",
+    "solver_status": "OPTIMAL",
+    "state_revision": 1,
+    "validation_status": "PASS"
+  },
+  "jobs": {
+    "initial_plan": {
+      "attempt": 1,
+      "exact_replay": true,
+      "job_id": "job-88d07805682bb213d0cbba2de34fb9fe9aba0a3a5b7a557aed03ffae1f775b31",
+      "stage_count": 10,
+      "status": "SUCCEEDED"
+    },
+    "reset": {
+      "attempt": 1,
+      "exact_replay": true,
+      "job_id": "job-a4d3cd5ccb0bb9420e9de2ca902ef3278fb0cbd8bca370e1484f1ee72c989309",
+      "stage_count": 10,
+      "status": "SUCCEEDED"
+    }
+  },
+  "profile": "showcase",
+  "report_fingerprint": "sha256:d042d1b113a164e9afdee034fcd8576d2e671245da474da99f7371d3d091efdb",
+  "run_id": "run-f2c33c8df65dc39eb009c54aefdfc626",
+  "runtime_evidence_version": "cnc-demo-runtime-evidence.v1",
+  "scenario_manifest": {
+    "assets_digest": "9bb6676791e62babf0575b3acb25b246d7e460f4a8aca2dbdd757ea164356c45",
+    "batch_id": "cnc-demo-batch-35d51f7fc0db5c555bbef387",
+    "batch_request_fingerprint": "1af2a70e3321b0ddc30f507363b4b569239be43a7bde7071a5e4930f040f7103",
+    "created_at_utc": "2026-09-02T05:42:54Z",
+    "dataset_hash": "sha256:c39fe91826fa14061f957eeba808dfe5189cfc88fa46d02dc0f16745d98ca680",
+    "horizon_end_utc": "2026-09-16T22:00:00Z",
+    "horizon_start_utc": "2026-09-06T22:00:00Z",
+    "initial_solve_seconds": 20,
+    "manifest_version": "cnc-demo-scenario-manifest.v1",
+    "problem_counts": {
+      "active_operations": 580,
+      "completed_anchors": 18,
+      "hard_locks": 4,
+      "not_started_operations": 568,
+      "orders": 132,
+      "resource_options": 1253,
+      "resources": 24,
+      "running_operations": 12,
+      "soft_locks": 8,
+      "unavailable_intervals": 462
+    },
+    "problem_hash": "sha256:a30196dbcd183cf090b7ec22600a6075de76f26c93d857d97f9a5f44ba428d03",
+    "profile_name": "showcase",
+    "replan_solve_seconds": 30,
+    "run_id": "run-f2c33c8df65dc39eb009c54aefdfc626",
+    "scenario_id": "CNC-DEMO-SHOWCASE",
+    "scenario_version": "1.0.0",
+    "seed": 20260902,
+    "snapshot_hash": "sha256:1a849230a0b6640698c2afb569c49ad48d282b064d877f4c128c079e7c4ab387",
+    "snapshot_id": "planning-snapshot-v2-1a849230a0b6640698c2afb569c49ad48d282b064d877f4c128c079e7c4ab387",
+    "source_counts": {
+      "calendars": 24,
+      "demand_orders": 132,
+      "execution_facts": 42,
+      "factories": 1,
+      "operation_locks": 12,
+      "production_lines": 3,
+      "production_lots": 132,
+      "production_orders": 132,
+      "products": 132,
+      "resource_groups": 7,
+      "resources": 24,
+      "routing_operations": 610,
+      "routing_precedence_edges": 478,
+      "routing_resource_options": 1311,
+      "routing_versions": 132,
+      "workshops": 3
+    },
+    "tick_seconds": 300
+  },
+  "status": "PASS",
+  "story_state": "BASELINE_PUBLISHED",
+  "task_family": "demo-exclusive",
+  "task_id": "TASK-DEMO-02",
+  "timings": {
+    "activation_seconds": 0.19074980000732467,
+    "initial_plan_seconds": 6.223156200008816,
+    "reset_seconds": 2.7380505000037374
+  }
+}

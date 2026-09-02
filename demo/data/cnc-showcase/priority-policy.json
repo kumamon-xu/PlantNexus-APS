@@ -1,0 +1,10 @@
+{
+  "priority_policy_version": "cnc-demo-priority-policy.v1",
+  "classes": [
+    {"class_id":"NORMAL","label_zh":"普通","priority_weight":1},
+    {"class_id":"KEY","label_zh":"重点","priority_weight":4},
+    {"class_id":"URGENT","label_zh":"加急","priority_weight":12}
+  ],
+  "source_system": "plantnexus-synthetic-policy",
+  "source_version": "1.0.0"
+}

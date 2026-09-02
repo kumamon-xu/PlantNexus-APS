@@ -11,6 +11,12 @@ last_reviewed: 2026-09-01
 
 # Schema 计划索引
 
+## 人类可读字段入口
+
+[数据字段中文名称字典](data-field-dictionary.md)完整列出 `canonical-records.v1` 的根集合、16 类核心记录与共享嵌套字段；它只提供中文阅读/展示名，不改变英文 JSON key、类型、必填条件、enum 或 fingerprint。机器权威仍是 [`canonical-records.v1.schema.json`](../../schemas/json/canonical-records.v1.schema.json)和 [`data_dictionary.yaml`](../../schemas/data_dictionary.yaml)。
+
+[API 接口开发清单](api-development-checklist.md)把当前 29 个 OpenAPI operation 映射到本索引中的 workspace、event、replan、schedule 和 export carrier，并明确尚无公开端点的能力。
+
 ## TASK-P6-02 additive `2.9.0` release
 
 Global current schema metadata现为`2.9.0`。TASK-P6-02只增加DurationFeatureRecord v1、DurationModelManifest v1、DurationEvaluationReport v1与DurationPrediction v1，以及5份正例和5份定点negative descriptor；每份carrier均为strict/no-default/self-offline-ref、`SIMULATION`/`production_binding=false`和content-derived identity。对应人类语义见[Duration Prediction Machine Contract v1](duration-prediction-machine-contract.md)。

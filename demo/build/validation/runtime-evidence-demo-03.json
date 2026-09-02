@@ -1,0 +1,1619 @@
+{
+  "artifact_count": 15,
+  "base_schedule": {
+    "content_fingerprint": "sha256:69bdcff428cd944db4c1ee6e26f094dd5f2649397345ae76eb5d13c10d6cb722",
+    "schedule_version_id": "schedule-version-validated-d899e34413c0635383d638bddf9da7a849a63a3c30b4dcf16b10fbf252c1bdf2",
+    "state": "PUBLISHED"
+  },
+  "boundaries": {
+    "data_plane": "SIMULATION",
+    "p7_registration": "NONE",
+    "production_authority": false,
+    "production_capacity_claim": "NOT_ESTABLISHED",
+    "single_showcase_run_not_p95": true
+  },
+  "change_report": {
+    "classifications": {
+      "ADDED": 5,
+      "CHANGED": 23,
+      "UNCHANGED": 557
+    },
+    "operation_universe_count": 585,
+    "report_id": "change-report-1b047c7f1ac9e80a1fff2b9dfd0d1909987da0e14e985ca856117697441c8f08",
+    "stability": {
+      "absolute_start_shift_seconds": 3031500,
+      "changed_existing_operations": 23,
+      "comparable_existing": 580,
+      "resource_changes": 2,
+      "soft_lock_violations": 3,
+      "unchanged_existing": 557,
+      "unchanged_ratio": {
+        "denominator": 580,
+        "numerator": 557,
+        "status": "APPLICABLE"
+      }
+    }
+  },
+  "current_publication": {
+    "content_fingerprint": "sha256:69bdcff428cd944db4c1ee6e26f094dd5f2649397345ae76eb5d13c10d6cb722",
+    "schedule_version_id": "schedule-version-validated-d899e34413c0635383d638bddf9da7a849a63a3c30b4dcf16b10fbf252c1bdf2",
+    "unchanged": true
+  },
+  "draft": {
+    "content_fingerprint": "sha256:7a492773e1d096b0a2931caf286ba8b8e78e8380785f8757bd9c2a810dd60025",
+    "schedule_version_id": "schedule-version-replan-047f0467bcf512b72d64beba2e4533bc1a186409976919d6a82caca77d03ffba",
+    "schedule_version_version": "schedule-version.v2",
+    "state": "DRAFT"
+  },
+  "event": {
+    "event_id": "execution-event-a6cee1e5555112c7084e7fadbbcb85397a049d64466600d8de677039a92b23f7",
+    "event_type": "URGENT_DEMAND_RECEIVED",
+    "formal_payload_exact": true,
+    "payload_fields": [
+      "demand_order_id",
+      "due_at_utc",
+      "kind",
+      "priority_source",
+      "priority_weight",
+      "quantity"
+    ],
+    "route_template_in_formal_event": false,
+    "source_position": 1
+  },
+  "formal_replay": {
+    "attempt_id": "replan-attempt-768115abc638cd469263eb3f52c0672de76b1275aea778524a021219df4a7920",
+    "change_report_id": "change-report-1b047c7f1ac9e80a1fff2b9dfd0d1909987da0e14e985ca856117697441c8f08",
+    "current_published_version_id": "schedule-version-validated-d899e34413c0635383d638bddf9da7a849a63a3c30b4dcf16b10fbf252c1bdf2",
+    "demand_order_id": "demand-order-6f7e2a82f061e66794c4def59af551dc6985e1509a9194f5012204c5a41e7279",
+    "event_id": "execution-event-a6cee1e5555112c7084e7fadbbcb85397a049d64466600d8de677039a92b23f7",
+    "exact_replay": true,
+    "operation_changes": {
+      "ADDED": 5,
+      "CHANGED": 23,
+      "UNCHANGED": 557
+    },
+    "problem_hash": "sha256:7843868f318cf84de3f515bd020b56c24e3b37db40b3ad3d6395c911dd3be40b",
+    "request_id": "replan-request-386cadb10c97931fedbc69bc98b757470ccb42d3309206716eba98f0008c6db7",
+    "result_version": "cnc-demo-urgent-replan-result.v1",
+    "run_id": "run-07b318c00d1345c2d4ba3b3c4c7449a5",
+    "schedule_state": "DRAFT",
+    "schedule_version_id": "schedule-version-replan-047f0467bcf512b72d64beba2e4533bc1a186409976919d6a82caca77d03ffba",
+    "snapshot_id": "planning-snapshot-v2-8909b7fa5017189cdd4777aa05c643173f011c386675156a7bddbd2eb25f0f6e",
+    "solver_status": "FEASIBLE",
+    "validation_status": "PASS"
+  },
+  "generated_at_utc": "2026-09-02T07:07:59Z",
+  "kpi": {
+    "after": {
+      "artifact_id": "kpi-9a41abce49d73c70f264dcc6ce930a78e04f3479d0b3e837c9b3aef8cea8c709",
+      "document_version": "kpi.v2",
+      "fingerprint": "sha256:8c9cb8cec2a53ebb67b0d6cb748954c6bd5e1ef3aeb7767d150afa9a3c7e9ad4"
+    },
+    "before": {
+      "artifact_id": "kpi-7fc441b30d19758d16542c944987798ecf746b2069876c2c624625d2796b9927",
+      "document_version": "kpi.v2",
+      "fingerprint": "sha256:cfe65b68d0a56c681409a0bf6716f61c58ce9e4130dfde65ee3426e1eb660af6"
+    },
+    "delivery": {
+      "demands": [
+        {
+          "completion_at_utc": "2026-09-07T13:30:00Z",
+          "completion_tick": 186,
+          "demand_order_id": "demand-order-00c7f28ade08338284b08e35662fb24c32acb81ad8157710e9510c6fce613510",
+          "due_at_utc": "2026-09-13T00:00:00Z",
+          "on_time": true,
+          "priority_weight": 1,
+          "priority_weighted_tardiness_seconds": 0,
+          "tardiness_seconds": 0
+        },
+        {
+          "completion_at_utc": "2026-09-08T05:25:00Z",
+          "completion_tick": 377,
+          "demand_order_id": "demand-order-095ace087a7f1862fbf45a9f92ba454b16efc4b7fdd8cf58f0b899930e574cec",
+          "due_at_utc": "2026-09-12T22:00:00Z",
+          "on_time": true,
+          "priority_weight": 1,
+          "priority_weighted_tardiness_seconds": 0,
+          "tardiness_seconds": 0
+        },
+        {
+          "completion_at_utc": "2026-09-09T22:20:00Z",
+          "completion_tick": 868,
+          "demand_order_id": "demand-order-0b0c9868489b8ff1cf388cd9d0415b9a62d5e2b0cd0b73a272d40ba7f93daf40",
+          "due_at_utc": "2026-09-13T00:00:00Z",
+          "on_time": true,
+          "priority_weight": 1,
+          "priority_weighted_tardiness_seconds": 0,
+          "tardiness_seconds": 0
+        },
+        {
+          "completion_at_utc": "2026-09-07T11:35:00Z",
+          "completion_tick": 163,
+          "demand_order_id": "demand-order-0d59eb81e50f1703412e049541bec29f1b8de35f7a2584f5fab7a71d4a85484b",
+          "due_at_utc": "2026-09-13T02:00:00Z",
+          "on_time": true,
+          "priority_weight": 1,
+          "priority_weighted_tardiness_seconds": 0,
+          "tardiness_seconds": 0
+        },
+        {
+          "completion_at_utc": "2026-09-08T06:05:00Z",
+          "completion_tick": 385,
+          "demand_order_id": "demand-order-0faa006ef2e0ceb2643ae770204cf7ef86a4abc62b63c32102f4a6ccc38d502c",
+          "due_at_utc": "2026-09-12T22:00:00Z",
+          "on_time": true,
+          "priority_weight": 1,
+          "priority_weighted_tardiness_seconds": 0,
+          "tardiness_seconds": 0
+        },
+        {
+          "completion_at_utc": "2026-09-10T00:50:00Z",
+          "completion_tick": 898,
+          "demand_order_id": "demand-order-0fe6370721ab11f7f9bf3091ef84e505e4d4eccfcedb5e352d327dbdcd5838b1",
+          "due_at_utc": "2026-09-11T06:00:00Z",
+          "on_time": true,
+          "priority_weight": 4,
+          "priority_weighted_tardiness_seconds": 0,
+          "tardiness_seconds": 0
+        },
+        {
+          "completion_at_utc": "2026-09-09T13:05:00Z",
+          "completion_tick": 757,
+          "demand_order_id": "demand-order-1304485289d5a7d9512a23909adaf059078212edf12837e21311d09a2f30f3fb",
+          "due_at_utc": "2026-09-13T06:00:00Z",
+          "on_time": true,
+          "priority_weight": 1,
+          "priority_weighted_tardiness_seconds": 0,
+          "tardiness_seconds": 0
+        },
+        {
+          "completion_at_utc": "2026-09-08T00:30:00Z",
+          "completion_tick": 318,
+          "demand_order_id": "demand-order-14f6a04f350bbea71b66d2d56dd3c227896e559ea5d6ce098245851255a8c3c6",
+          "due_at_utc": "2026-09-13T04:00:00Z",
+          "on_time": true,
+          "priority_weight": 1,
+          "priority_weighted_tardiness_seconds": 0,
+          "tardiness_seconds": 0
+        },
+        {
+          "completion_at_utc": "2026-09-10T01:35:00Z",
+          "completion_tick": 907,
+          "demand_order_id": "demand-order-1906e39c64bfe8582c06c96a646bd5ded24d2e3986cb6e79b3acc291f4a08f1b",
+          "due_at_utc": "2026-09-13T00:00:00Z",
+          "on_time": true,
+          "priority_weight": 1,
+          "priority_weighted_tardiness_seconds": 0,
+          "tardiness_seconds": 0
+        },
+        {
+          "completion_at_utc": "2026-09-07T02:15:00Z",
+          "completion_tick": 51,
+          "demand_order_id": "demand-order-1963e5eb62fd59315a6b7bca97497790e73190d5e4ebad139f770402e85ae8e5",
+          "due_at_utc": "2026-09-13T00:00:00Z",
+          "on_time": true,
+          "priority_weight": 1,
+          "priority_weighted_tardiness_seconds": 0,
+          "tardiness_seconds": 0
+        },
+        {
+          "completion_at_utc": "2026-09-07T13:00:00Z",
+          "completion_tick": 180,
+          "demand_order_id": "demand-order-1c1b372f9fd33f2110b443bf8f5d1a361bb54db0dbaf4ee2a7cf098598dcc202",
+          "due_at_utc": "2026-09-13T00:00:00Z",
+          "on_time": true,
+          "priority_weight": 1,
+          "priority_weighted_tardiness_seconds": 0,
+          "tardiness_seconds": 0
+        },
+        {
+          "completion_at_utc": "2026-09-09T00:15:00Z",
+          "completion_tick": 603,
+          "demand_order_id": "demand-order-1d51bdf952d989235671db59f15a899b2f5695b47db9b892ac92bfbce0202552",
+          "due_at_utc": "2026-09-13T04:00:00Z",
+          "on_time": true,
+          "priority_weight": 1,
+          "priority_weighted_tardiness_seconds": 0,
+          "tardiness_seconds": 0
+        },
+        {
+          "completion_at_utc": "2026-09-08T13:00:00Z",
+          "completion_tick": 468,
+          "demand_order_id": "demand-order-21a03598d5cb4dfdaa897a3b1070ee0dffc1090ed875c3864dff5a243ac927bc",
+          "due_at_utc": "2026-09-11T00:00:00Z",
+          "on_time": true,
+          "priority_weight": 4,
+          "priority_weighted_tardiness_seconds": 0,
+          "tardiness_seconds": 0
+        },
+        {
+          "completion_at_utc": "2026-09-09T12:25:00Z",
+          "completion_tick": 749,
+          "demand_order_id": "demand-order-22ebc14c1aa702dfd9b3763664235bbc782859dfa3bf3bc1a64abd6febb1d791",
+          "due_at_utc": "2026-09-11T00:00:00Z",
+          "on_time": true,
+          "priority_weight": 4,
+          "priority_weighted_tardiness_seconds": 0,
+          "tardiness_seconds": 0
+        },
+        {
+          "completion_at_utc": "2026-09-10T09:30:00Z",
+          "completion_tick": 1002,
+          "demand_order_id": "demand-order-236efc49237d66ab992becc5fa49fac47b2fb6defa948d19c2d4a040ef8b5644",
+          "due_at_utc": "2026-09-13T06:00:00Z",
+          "on_time": true,
+          "priority_weight": 1,
+          "priority_weighted_tardiness_seconds": 0,
+          "tardiness_seconds": 0
+        },
+        {
+          "completion_at_utc": "2026-09-08T22:55:00Z",
+          "completion_tick": 587,
+          "demand_order_id": "demand-order-239616ff7e4dde351e454e8508b9d4c5cb481d2a6a84470112f34c693ced76c3",
+          "due_at_utc": "2026-09-13T02:00:00Z",
+          "on_time": true,
+          "priority_weight": 1,
+          "priority_weighted_tardiness_seconds": 0,
+          "tardiness_seconds": 0
+        },
+        {
+          "completion_at_utc": "2026-09-08T04:00:00Z",
+          "completion_tick": 360,
+          "demand_order_id": "demand-order-23a433b536b8655375318b1994e5269f47ce11ff2847c29392ddfa98a617382f",
+          "due_at_utc": "2026-09-13T04:00:00Z",
+          "on_time": true,
+          "priority_weight": 1,
+          "priority_weighted_tardiness_seconds": 0,
+          "tardiness_seconds": 0
+        },
+        {
+          "completion_at_utc": "2026-09-09T00:50:00Z",
+          "completion_tick": 610,
+          "demand_order_id": "demand-order-23e9eb0897c30caa51a15dbfcb5879dbf8ed420a1378687bc1cee01c8a67a6b5",
+          "due_at_utc": "2026-09-13T06:00:00Z",
+          "on_time": true,
+          "priority_weight": 1,
+          "priority_weighted_tardiness_seconds": 0,
+          "tardiness_seconds": 0
+        },
+        {
+          "completion_at_utc": "2026-09-08T12:05:00Z",
+          "completion_tick": 457,
+          "demand_order_id": "demand-order-2434b17c60e567dfd39422f22b3643c1cc8fbe14034475080fc7f0b5a45159e2",
+          "due_at_utc": "2026-09-08T22:00:00Z",
+          "on_time": true,
+          "priority_weight": 12,
+          "priority_weighted_tardiness_seconds": 0,
+          "tardiness_seconds": 0
+        },
+        {
+          "completion_at_utc": "2026-09-07T11:25:00Z",
+          "completion_tick": 161,
+          "demand_order_id": "demand-order-248ded607e57a59b78beca8abfdd3ad3be3533910f032313672f6f3aeb349e6a",
+          "due_at_utc": "2026-09-13T00:00:00Z",
+          "on_time": true,
+          "priority_weight": 1,
+          "priority_weighted_tardiness_seconds": 0,
+          "tardiness_seconds": 0
+        },
+        {
+          "completion_at_utc": "2026-09-09T11:35:00Z",
+          "completion_tick": 739,
+          "demand_order_id": "demand-order-296e231dedd935f25a5fbeb102baee573703fd5fc791439be1e66d6cbea6c2a2",
+          "due_at_utc": "2026-09-13T02:00:00Z",
+          "on_time": true,
+          "priority_weight": 1,
+          "priority_weighted_tardiness_seconds": 0,
+          "tardiness_seconds": 0
+        },
+        {
+          "completion_at_utc": "2026-09-09T04:10:00Z",
+          "completion_tick": 650,
+          "demand_order_id": "demand-order-297019f00b4aaf2a02ddfc7c5db5a7b8c23d8717179e9d146fa901973e72ba9c",
+          "due_at_utc": "2026-09-12T22:00:00Z",
+          "on_time": true,
+          "priority_weight": 1,
+          "priority_weighted_tardiness_seconds": 0,
+          "tardiness_seconds": 0
+        },
+        {
+          "completion_at_utc": "2026-09-09T11:55:00Z",
+          "completion_tick": 743,
+          "demand_order_id": "demand-order-2d2c6f0fddfd9c83c45c571430f672b727f888c77356533ad32e12450367cb1f",
+          "due_at_utc": "2026-09-13T02:00:00Z",
+          "on_time": true,
+          "priority_weight": 1,
+          "priority_weighted_tardiness_seconds": 0,
+          "tardiness_seconds": 0
+        },
+        {
+          "completion_at_utc": "2026-09-10T00:00:00Z",
+          "completion_tick": 888,
+          "demand_order_id": "demand-order-2e2801e106706d3fa880cfc339419663acdc69a0ae08feed93e317fe0ae8f3f0",
+          "due_at_utc": "2026-09-13T00:00:00Z",
+          "on_time": true,
+          "priority_weight": 1,
+          "priority_weighted_tardiness_seconds": 0,
+          "tardiness_seconds": 0
+        },
+        {
+          "completion_at_utc": "2026-09-10T04:45:00Z",
+          "completion_tick": 945,
+          "demand_order_id": "demand-order-329dd1845ba83d75949af7e79502f743379532c4d48926e7c01ab7af29fe8bc4",
+          "due_at_utc": "2026-09-13T00:00:00Z",
+          "on_time": true,
+          "priority_weight": 1,
+          "priority_weighted_tardiness_seconds": 0,
+          "tardiness_seconds": 0
+        },
+        {
+          "completion_at_utc": "2026-09-07T06:15:00Z",
+          "completion_tick": 99,
+          "demand_order_id": "demand-order-3576d068476733d6fbad27b9a246b1a5ccca4aad59c1bee27bd0ef0755ecde6b",
+          "due_at_utc": "2026-09-13T04:00:00Z",
+          "on_time": true,
+          "priority_weight": 1,
+          "priority_weighted_tardiness_seconds": 0,
+          "tardiness_seconds": 0
+        },
+        {
+          "completion_at_utc": "2026-09-10T10:20:00Z",
+          "completion_tick": 1012,
+          "demand_order_id": "demand-order-37411e14eef63eb4c872fb6dca2e3b87a8dcc29a869eda5b1f187c88d35685ce",
+          "due_at_utc": "2026-09-13T00:00:00Z",
+          "on_time": true,
+          "priority_weight": 1,
+          "priority_weighted_tardiness_seconds": 0,
+          "tardiness_seconds": 0
+        },
+        {
+          "completion_at_utc": "2026-09-07T22:35:00Z",
+          "completion_tick": 295,
+          "demand_order_id": "demand-order-3fffb2d5d9e4ae10efb1acfea0be50f1038098973f267f93dd9adf38eee0b94f",
+          "due_at_utc": "2026-09-13T06:00:00Z",
+          "on_time": true,
+          "priority_weight": 1,
+          "priority_weighted_tardiness_seconds": 0,
+          "tardiness_seconds": 0
+        },
+        {
+          "completion_at_utc": "2026-09-07T12:10:00Z",
+          "completion_tick": 170,
+          "demand_order_id": "demand-order-42d833a101c58f388a9757da9144cea6825576515007b02af687f14f15ad9815",
+          "due_at_utc": "2026-09-11T02:00:00Z",
+          "on_time": true,
+          "priority_weight": 4,
+          "priority_weighted_tardiness_seconds": 0,
+          "tardiness_seconds": 0
+        },
+        {
+          "completion_at_utc": "2026-09-07T10:40:00Z",
+          "completion_tick": 152,
+          "demand_order_id": "demand-order-43d8f6f14a7b099d5015215df604b2a695f579c301da9dc46c899848e0c6e3b5",
+          "due_at_utc": "2026-09-11T02:00:00Z",
+          "on_time": true,
+          "priority_weight": 4,
+          "priority_weighted_tardiness_seconds": 0,
+          "tardiness_seconds": 0
+        },
+        {
+          "completion_at_utc": "2026-09-10T02:10:00Z",
+          "completion_tick": 914,
+          "demand_order_id": "demand-order-4729a76486ef100463e73f4501dbbd91a1678c2dc1ebdda3ef425f044438eb53",
+          "due_at_utc": "2026-09-13T00:00:00Z",
+          "on_time": true,
+          "priority_weight": 1,
+          "priority_weighted_tardiness_seconds": 0,
+          "tardiness_seconds": 0
+        },
+        {
+          "completion_at_utc": "2026-09-07T12:40:00Z",
+          "completion_tick": 176,
+          "demand_order_id": "demand-order-4a39ec4cb08e030cb6a36b19226d3c1a15f13c21cc21ea6b9107039c6dc6f718",
+          "due_at_utc": "2026-09-13T04:00:00Z",
+          "on_time": true,
+          "priority_weight": 1,
+          "priority_weighted_tardiness_seconds": 0,
+          "tardiness_seconds": 0
+        },
+        {
+          "completion_at_utc": "2026-09-08T10:35:00Z",
+          "completion_tick": 439,
+          "demand_order_id": "demand-order-4d9c41d7876c56a672fc37247eb06885fe8e9f902c73ab3409a8157f631fa474",
+          "due_at_utc": "2026-09-13T02:00:00Z",
+          "on_time": true,
+          "priority_weight": 1,
+          "priority_weighted_tardiness_seconds": 0,
+          "tardiness_seconds": 0
+        },
+        {
+          "completion_at_utc": "2026-09-10T02:40:00Z",
+          "completion_tick": 920,
+          "demand_order_id": "demand-order-51af4404eba5282230574433d67d1eff505fadbe0fe678b792ee32d959d87438",
+          "due_at_utc": "2026-09-12T22:00:00Z",
+          "on_time": true,
+          "priority_weight": 1,
+          "priority_weighted_tardiness_seconds": 0,
+          "tardiness_seconds": 0
+        },
+        {
+          "completion_at_utc": "2026-09-07T05:10:00Z",
+          "completion_tick": 86,
+          "demand_order_id": "demand-order-55ab30bdadd6972abc2746be8072985bf48cfd4392984217326a359dd3d34d2b",
+          "due_at_utc": "2026-09-13T04:00:00Z",
+          "on_time": true,
+          "priority_weight": 1,
+          "priority_weighted_tardiness_seconds": 0,
+          "tardiness_seconds": 0
+        },
+        {
+          "completion_at_utc": "2026-09-08T22:30:00Z",
+          "completion_tick": 582,
+          "demand_order_id": "demand-order-56ecb2329b6a376b76170d33496aa601847bce14b605060150d96b002e507111",
+          "due_at_utc": "2026-09-13T06:00:00Z",
+          "on_time": true,
+          "priority_weight": 1,
+          "priority_weighted_tardiness_seconds": 0,
+          "tardiness_seconds": 0
+        },
+        {
+          "completion_at_utc": "2026-09-07T00:10:00Z",
+          "completion_tick": 26,
+          "demand_order_id": "demand-order-57d7270fa67d492bc2d664410ffd897cc4c7d4568abade1ed647d60c2b7cfd5d",
+          "due_at_utc": "2026-09-11T06:00:00Z",
+          "on_time": true,
+          "priority_weight": 4,
+          "priority_weighted_tardiness_seconds": 0,
+          "tardiness_seconds": 0
+        },
+        {
+          "completion_at_utc": "2026-09-10T03:10:00Z",
+          "completion_tick": 926,
+          "demand_order_id": "demand-order-57e682838e189f3630d7189fb41e04bc05d056e150bfdcef2cf20280b89fec8a",
+          "due_at_utc": "2026-09-13T02:00:00Z",
+          "on_time": true,
+          "priority_weight": 1,
+          "priority_weighted_tardiness_seconds": 0,
+          "tardiness_seconds": 0
+        },
+        {
+          "completion_at_utc": "2026-09-08T10:05:00Z",
+          "completion_tick": 433,
+          "demand_order_id": "demand-order-583dc90e5b20a7399bc971303cab7f496a7d0315dd81d294143e478bcce6c36a",
+          "due_at_utc": "2026-09-11T00:00:00Z",
+          "on_time": true,
+          "priority_weight": 4,
+          "priority_weighted_tardiness_seconds": 0,
+          "tardiness_seconds": 0
+        },
+        {
+          "completion_at_utc": "2026-09-07T23:45:00Z",
+          "completion_tick": 309,
+          "demand_order_id": "demand-order-5aa37498994d775ce30e08f1fd2b99513d69bffda3d70f56bb3f659531db5da3",
+          "due_at_utc": "2026-09-12T22:00:00Z",
+          "on_time": true,
+          "priority_weight": 1,
+          "priority_weighted_tardiness_seconds": 0,
+          "tardiness_seconds": 0
+        },
+        {
+          "completion_at_utc": "2026-09-07T00:25:00Z",
+          "completion_tick": 29,
+          "demand_order_id": "demand-order-5f81f163e750b524050eaed6dffc0cbc07fa30a290cca69911aab7d62ae5c0d6",
+          "due_at_utc": "2026-09-13T00:00:00Z",
+          "on_time": true,
+          "priority_weight": 1,
+          "priority_weighted_tardiness_seconds": 0,
+          "tardiness_seconds": 0
+        },
+        {
+          "completion_at_utc": "2026-09-08T02:55:00Z",
+          "completion_tick": 347,
+          "demand_order_id": "demand-order-5fb3768a8303ee5f92342a2822ab9a765a39a8c1c9c0bdd9834a0701983a9887",
+          "due_at_utc": "2026-09-13T00:00:00Z",
+          "on_time": true,
+          "priority_weight": 1,
+          "priority_weighted_tardiness_seconds": 0,
+          "tardiness_seconds": 0
+        },
+        {
+          "completion_at_utc": "2026-09-08T08:35:00Z",
+          "completion_tick": 415,
+          "demand_order_id": "demand-order-609221b915ca16927568fed09ea042a7b5b524723e8928565f136219cabfd7e0",
+          "due_at_utc": "2026-09-13T06:00:00Z",
+          "on_time": true,
+          "priority_weight": 1,
+          "priority_weighted_tardiness_seconds": 0,
+          "tardiness_seconds": 0
+        },
+        {
+          "completion_at_utc": "2026-09-09T05:00:00Z",
+          "completion_tick": 660,
+          "demand_order_id": "demand-order-65c0d7fd318ece0ff0e1043e4d9f6d5254f815ced43d9e2e9314757c75798bb3",
+          "due_at_utc": "2026-09-11T04:00:00Z",
+          "on_time": true,
+          "priority_weight": 4,
+          "priority_weighted_tardiness_seconds": 0,
+          "tardiness_seconds": 0
+        },
+        {
+          "completion_at_utc": "2026-09-07T07:00:00Z",
+          "completion_tick": 108,
+          "demand_order_id": "demand-order-695f08b3e703bccf82d5516223f19430fa578f3529b73905e52307d35bff13cd",
+          "due_at_utc": "2026-09-10T22:00:00Z",
+          "on_time": true,
+          "priority_weight": 4,
+          "priority_weighted_tardiness_seconds": 0,
+          "tardiness_seconds": 0
+        },
+        {
+          "completion_at_utc": "2026-09-09T03:30:00Z",
+          "completion_tick": 642,
+          "demand_order_id": "demand-order-6b2c37ba6a28ca54f946fddb76882dc5c85e2cf185300f54a1c4f1f9240fb421",
+          "due_at_utc": "2026-09-13T06:00:00Z",
+          "on_time": true,
+          "priority_weight": 1,
+          "priority_weighted_tardiness_seconds": 0,
+          "tardiness_seconds": 0
+        },
+        {
+          "completion_at_utc": "2026-09-09T23:20:00Z",
+          "completion_tick": 880,
+          "demand_order_id": "demand-order-6ba19c15b4e1930e62851fc7be6973eaaeb7081a9ade2cc1f8a124cc3d0095c4",
+          "due_at_utc": "2026-09-12T22:00:00Z",
+          "on_time": true,
+          "priority_weight": 1,
+          "priority_weighted_tardiness_seconds": 0,
+          "tardiness_seconds": 0
+        },
+        {
+          "completion_at_utc": "2026-09-07T04:00:00Z",
+          "completion_tick": 72,
+          "demand_order_id": "demand-order-6c2da06abedacce93d39f66139f74b89d33659380d7133c9715eeda3a5c0bc24",
+          "due_at_utc": "2026-09-13T06:00:00Z",
+          "on_time": true,
+          "priority_weight": 1,
+          "priority_weighted_tardiness_seconds": 0,
+          "tardiness_seconds": 0
+        },
+        {
+          "completion_at_utc": "2026-09-10T07:25:00Z",
+          "completion_tick": 977,
+          "demand_order_id": "demand-order-6cd717b18e53f216f0076c344c1dbccbbeb956a9788ef9ccad22a2e6982b7c73",
+          "due_at_utc": "2026-09-11T00:00:00Z",
+          "on_time": true,
+          "priority_weight": 4,
+          "priority_weighted_tardiness_seconds": 0,
+          "tardiness_seconds": 0
+        },
+        {
+          "completion_at_utc": "2026-09-07T04:55:00Z",
+          "completion_tick": 83,
+          "demand_order_id": "demand-order-6d4b1f57aa75111d75aa7029cb9f0ed2da1efa53f09847178ca2f316f3c3f59e",
+          "due_at_utc": "2026-09-13T04:00:00Z",
+          "on_time": true,
+          "priority_weight": 1,
+          "priority_weighted_tardiness_seconds": 0,
+          "tardiness_seconds": 0
+        },
+        {
+          "completion_at_utc": "2026-09-08T11:50:00Z",
+          "completion_tick": 454,
+          "demand_order_id": "demand-order-6d5534927ba1f5031b27955cf70fb5fc711c3beef7326e910a7a29cdd046579a",
+          "due_at_utc": "2026-09-13T00:00:00Z",
+          "on_time": true,
+          "priority_weight": 1,
+          "priority_weighted_tardiness_seconds": 0,
+          "tardiness_seconds": 0
+        },
+        {
+          "completion_at_utc": "2026-09-09T03:25:00Z",
+          "completion_tick": 641,
+          "demand_order_id": "demand-order-6f7e2a82f061e66794c4def59af551dc6985e1509a9194f5012204c5a41e7279",
+          "due_at_utc": "2026-09-09T10:00:00Z",
+          "on_time": true,
+          "priority_weight": 12,
+          "priority_weighted_tardiness_seconds": 0,
+          "tardiness_seconds": 0
+        },
+        {
+          "completion_at_utc": "2026-09-09T04:00:00Z",
+          "completion_tick": 648,
+          "demand_order_id": "demand-order-6fba26ef87583ddf49e97fb0c5375ca5767c0bda28047cca7b05d876ba63dd3e",
+          "due_at_utc": "2026-09-13T06:00:00Z",
+          "on_time": true,
+          "priority_weight": 1,
+          "priority_weighted_tardiness_seconds": 0,
+          "tardiness_seconds": 0
+        },
+        {
+          "completion_at_utc": "2026-09-07T09:10:00Z",
+          "completion_tick": 134,
+          "demand_order_id": "demand-order-71cfc92776b86669550947ad51f3730ddb93fa7ab7da3a5ebcfd06b052894600",
+          "due_at_utc": "2026-09-13T06:00:00Z",
+          "on_time": true,
+          "priority_weight": 1,
+          "priority_weighted_tardiness_seconds": 0,
+          "tardiness_seconds": 0
+        },
+        {
+          "completion_at_utc": "2026-09-08T13:50:00Z",
+          "completion_tick": 478,
+          "demand_order_id": "demand-order-727633f35d518c7ed71fb4922411eff1d202d11349c4bb81df049b405eec4e57",
+          "due_at_utc": "2026-09-13T04:00:00Z",
+          "on_time": true,
+          "priority_weight": 1,
+          "priority_weighted_tardiness_seconds": 0,
+          "tardiness_seconds": 0
+        },
+        {
+          "completion_at_utc": "2026-09-09T01:40:00Z",
+          "completion_tick": 620,
+          "demand_order_id": "demand-order-72dfa40b7cd1d325869e08d3aad64e314889aa2aff5ab3e0b31fac352e8f054c",
+          "due_at_utc": "2026-09-09T04:00:00Z",
+          "on_time": true,
+          "priority_weight": 12,
+          "priority_weighted_tardiness_seconds": 0,
+          "tardiness_seconds": 0
+        },
+        {
+          "completion_at_utc": "2026-09-08T11:20:00Z",
+          "completion_tick": 448,
+          "demand_order_id": "demand-order-72f5327b3a5f6090513389613128d9ba4d414f6f1debffe586c2e0b6f85b8320",
+          "due_at_utc": "2026-09-12T22:00:00Z",
+          "on_time": true,
+          "priority_weight": 1,
+          "priority_weighted_tardiness_seconds": 0,
+          "tardiness_seconds": 0
+        },
+        {
+          "completion_at_utc": "2026-09-08T23:40:00Z",
+          "completion_tick": 596,
+          "demand_order_id": "demand-order-7339cfa8ad111ad5be19dfa51f9b15e488571426f194b6ea3f0230baf9e23b73",
+          "due_at_utc": "2026-09-11T04:00:00Z",
+          "on_time": true,
+          "priority_weight": 4,
+          "priority_weighted_tardiness_seconds": 0,
+          "tardiness_seconds": 0
+        },
+        {
+          "completion_at_utc": "2026-09-07T05:25:00Z",
+          "completion_tick": 89,
+          "demand_order_id": "demand-order-790ae8e588b8a3bbac78272905b8c7a14fb9eedcd5df3cae1d40f64f4d162977",
+          "due_at_utc": "2026-09-09T02:00:00Z",
+          "on_time": true,
+          "priority_weight": 12,
+          "priority_weighted_tardiness_seconds": 0,
+          "tardiness_seconds": 0
+        },
+        {
+          "completion_at_utc": "2026-09-06T23:00:00Z",
+          "completion_tick": 12,
+          "demand_order_id": "demand-order-7ad70663d423ed230da019f08678ba7e976453abe26535d8f58e98b110791132",
+          "due_at_utc": "2026-09-13T00:00:00Z",
+          "on_time": true,
+          "priority_weight": 1,
+          "priority_weighted_tardiness_seconds": 0,
+          "tardiness_seconds": 0
+        },
+        {
+          "completion_at_utc": "2026-09-08T00:15:00Z",
+          "completion_tick": 315,
+          "demand_order_id": "demand-order-7bc3c58a8d71e154054300a62f7bedbbbcd5d443a5e5d360a30fc9153d535bbc",
+          "due_at_utc": "2026-09-11T04:00:00Z",
+          "on_time": true,
+          "priority_weight": 4,
+          "priority_weighted_tardiness_seconds": 0,
+          "tardiness_seconds": 0
+        },
+        {
+          "completion_at_utc": "2026-09-08T00:50:00Z",
+          "completion_tick": 322,
+          "demand_order_id": "demand-order-7d5e510a607fa6c4636491b104e07ad484ae8cff934efa8dc04115c3de353ed8",
+          "due_at_utc": "2026-09-10T22:00:00Z",
+          "on_time": true,
+          "priority_weight": 4,
+          "priority_weighted_tardiness_seconds": 0,
+          "tardiness_seconds": 0
+        },
+        {
+          "completion_at_utc": "2026-09-07T03:05:00Z",
+          "completion_tick": 61,
+          "demand_order_id": "demand-order-7f0534dafa4861ec1d882b9a2eab78b40a4981ab5c3add89088460b9c3849488",
+          "due_at_utc": "2026-09-13T02:00:00Z",
+          "on_time": true,
+          "priority_weight": 1,
+          "priority_weighted_tardiness_seconds": 0,
+          "tardiness_seconds": 0
+        },
+        {
+          "completion_at_utc": "2026-09-08T01:50:00Z",
+          "completion_tick": 334,
+          "demand_order_id": "demand-order-8275dcba2b11e17c7938a252b188aae0a593f693a684ce7d2da76e0f819309a6",
+          "due_at_utc": "2026-09-11T06:00:00Z",
+          "on_time": true,
+          "priority_weight": 4,
+          "priority_weighted_tardiness_seconds": 0,
+          "tardiness_seconds": 0
+        },
+        {
+          "completion_at_utc": "2026-09-10T04:10:00Z",
+          "completion_tick": 938,
+          "demand_order_id": "demand-order-843081307fd814797a5f5aad77f315f4a3729b0be105df99664b9d7b4fa43227",
+          "due_at_utc": "2026-09-11T06:00:00Z",
+          "on_time": true,
+          "priority_weight": 4,
+          "priority_weighted_tardiness_seconds": 0,
+          "tardiness_seconds": 0
+        },
+        {
+          "completion_at_utc": "2026-09-08T08:10:00Z",
+          "completion_tick": 410,
+          "demand_order_id": "demand-order-8559669eb06e5f78b3522d5f0b5e56aee22dae3245c53559163885581ae213d0",
+          "due_at_utc": "2026-09-11T06:00:00Z",
+          "on_time": true,
+          "priority_weight": 4,
+          "priority_weighted_tardiness_seconds": 0,
+          "tardiness_seconds": 0
+        },
+        {
+          "completion_at_utc": "2026-09-09T02:55:00Z",
+          "completion_tick": 635,
+          "demand_order_id": "demand-order-8a43cc9fb26576fef7221c137ab333b5dfd55d09e57487bbc25f2aa8253f21b9",
+          "due_at_utc": "2026-09-11T00:00:00Z",
+          "on_time": true,
+          "priority_weight": 4,
+          "priority_weighted_tardiness_seconds": 0,
+          "tardiness_seconds": 0
+        },
+        {
+          "completion_at_utc": "2026-09-07T09:45:00Z",
+          "completion_tick": 141,
+          "demand_order_id": "demand-order-8adbf3c54d1736e15b1c3a1d3ebaadb83c50d406416670fcd963eed57b3dcab6",
+          "due_at_utc": "2026-09-12T22:00:00Z",
+          "on_time": true,
+          "priority_weight": 1,
+          "priority_weighted_tardiness_seconds": 0,
+          "tardiness_seconds": 0
+        },
+        {
+          "completion_at_utc": "2026-09-09T08:55:00Z",
+          "completion_tick": 707,
+          "demand_order_id": "demand-order-8b7974904494b792adff99f9d73f1e40f429bd668ee522f517f4498bed7e9a42",
+          "due_at_utc": "2026-09-13T04:00:00Z",
+          "on_time": true,
+          "priority_weight": 1,
+          "priority_weighted_tardiness_seconds": 0,
+          "tardiness_seconds": 0
+        },
+        {
+          "completion_at_utc": "2026-09-07T11:10:00Z",
+          "completion_tick": 158,
+          "demand_order_id": "demand-order-8ec15f400635737d139d3b963223cee55f04263ff2e100e8622cc189d263aa4c",
+          "due_at_utc": "2026-09-13T04:00:00Z",
+          "on_time": true,
+          "priority_weight": 1,
+          "priority_weighted_tardiness_seconds": 0,
+          "tardiness_seconds": 0
+        },
+        {
+          "completion_at_utc": "2026-09-10T05:50:00Z",
+          "completion_tick": 958,
+          "demand_order_id": "demand-order-8fa7056be61b4026c4ea53262ce5c808004ecf1a79ce6d8871d0b8641dfe2022",
+          "due_at_utc": "2026-09-13T00:00:00Z",
+          "on_time": true,
+          "priority_weight": 1,
+          "priority_weighted_tardiness_seconds": 0,
+          "tardiness_seconds": 0
+        },
+        {
+          "completion_at_utc": "2026-09-07T13:35:00Z",
+          "completion_tick": 187,
+          "demand_order_id": "demand-order-90bc9f3dbaff3030c23d4e2a41ac5b0ad6413ea80da6444eb8afe3c4a59268af",
+          "due_at_utc": "2026-09-11T02:00:00Z",
+          "on_time": true,
+          "priority_weight": 4,
+          "priority_weighted_tardiness_seconds": 0,
+          "tardiness_seconds": 0
+        },
+        {
+          "completion_at_utc": "2026-09-08T10:50:00Z",
+          "completion_tick": 442,
+          "demand_order_id": "demand-order-948dc9035966530c6ff838ba46a31d520debd46087f9430b779afb205c8c26a2",
+          "due_at_utc": "2026-09-13T00:00:00Z",
+          "on_time": true,
+          "priority_weight": 1,
+          "priority_weighted_tardiness_seconds": 0,
+          "tardiness_seconds": 0
+        },
+        {
+          "completion_at_utc": "2026-09-07T02:30:00Z",
+          "completion_tick": 54,
+          "demand_order_id": "demand-order-949985050fd9efa4d4836ecba6ab422a032957b7083824c4efc85d82f74db349",
+          "due_at_utc": "2026-09-13T04:00:00Z",
+          "on_time": true,
+          "priority_weight": 1,
+          "priority_weighted_tardiness_seconds": 0,
+          "tardiness_seconds": 0
+        },
+        {
+          "completion_at_utc": "2026-09-09T12:45:00Z",
+          "completion_tick": 753,
+          "demand_order_id": "demand-order-973e76de52631adefd30a703691d989dd1c7ad1cb0fee7120300f99218dc7bfe",
+          "due_at_utc": "2026-09-11T02:00:00Z",
+          "on_time": true,
+          "priority_weight": 4,
+          "priority_weighted_tardiness_seconds": 0,
+          "tardiness_seconds": 0
+        },
+        {
+          "completion_at_utc": "2026-09-06T23:40:00Z",
+          "completion_tick": 20,
+          "demand_order_id": "demand-order-98f8af63e0dca3270adaab6f61a697bfd53fa8a51d892e3c72f9452ef78be241",
+          "due_at_utc": "2026-09-12T22:00:00Z",
+          "on_time": true,
+          "priority_weight": 1,
+          "priority_weighted_tardiness_seconds": 0,
+          "tardiness_seconds": 0
+        },
+        {
+          "completion_at_utc": "2026-09-07T06:05:00Z",
+          "completion_tick": 97,
+          "demand_order_id": "demand-order-9a3063e6c6c1f6c2858c543d90ea61e5a3317397e191cfc5439095e7a6892fa0",
+          "due_at_utc": "2026-09-13T00:00:00Z",
+          "on_time": true,
+          "priority_weight": 1,
+          "priority_weighted_tardiness_seconds": 0,
+          "tardiness_seconds": 0
+        },
+        {
+          "completion_at_utc": "2026-09-09T08:25:00Z",
+          "completion_tick": 701,
+          "demand_order_id": "demand-order-9a8b017e0376ddc6fde8ff4f785d574f9acb53bfd593b4dee796fc686d6e0924",
+          "due_at_utc": "2026-09-13T02:00:00Z",
+          "on_time": true,
+          "priority_weight": 1,
+          "priority_weighted_tardiness_seconds": 0,
+          "tardiness_seconds": 0
+        },
+        {
+          "completion_at_utc": "2026-09-07T10:15:00Z",
+          "completion_tick": 147,
+          "demand_order_id": "demand-order-9b764f90e5bd9628d183b35c3d46242128c45000dde3a70cef428c988de7bcd4",
+          "due_at_utc": "2026-09-13T02:00:00Z",
+          "on_time": true,
+          "priority_weight": 1,
+          "priority_weighted_tardiness_seconds": 0,
+          "tardiness_seconds": 0
+        },
+        {
+          "completion_at_utc": "2026-09-08T04:20:00Z",
+          "completion_tick": 364,
+          "demand_order_id": "demand-order-a04af38bf7849dee5302df90bc0109091e0941d9dd21e1491d97b4938dd9199a",
+          "due_at_utc": "2026-09-13T00:00:00Z",
+          "on_time": true,
+          "priority_weight": 1,
+          "priority_weighted_tardiness_seconds": 0,
+          "tardiness_seconds": 0
+        },
+        {
+          "completion_at_utc": "2026-09-09T01:50:00Z",
+          "completion_tick": 622,
+          "demand_order_id": "demand-order-a37fad841f58a392407569a27209c06137728c68d131d0f16d5165e6c1c46de4",
+          "due_at_utc": "2026-09-09T02:00:00Z",
+          "on_time": true,
+          "priority_weight": 12,
+          "priority_weighted_tardiness_seconds": 0,
+          "tardiness_seconds": 0
+        },
+        {
+          "completion_at_utc": "2026-09-06T23:15:00Z",
+          "completion_tick": 15,
+          "demand_order_id": "demand-order-a3843fa9478c1d6f908b13d3671e76e87f493da28d30f3e5fa84a4b5f8dd5135",
+          "due_at_utc": "2026-09-13T02:00:00Z",
+          "on_time": true,
+          "priority_weight": 1,
+          "priority_weighted_tardiness_seconds": 0,
+          "tardiness_seconds": 0
+        },
+        {
+          "completion_at_utc": "2026-09-09T05:25:00Z",
+          "completion_tick": 665,
+          "demand_order_id": "demand-order-a66dec89b074caf8919708228a94b26129eb10ee83f51ac7485ca619d507c50c",
+          "due_at_utc": "2026-09-13T04:00:00Z",
+          "on_time": true,
+          "priority_weight": 1,
+          "priority_weighted_tardiness_seconds": 0,
+          "tardiness_seconds": 0
+        },
+        {
+          "completion_at_utc": "2026-09-07T08:00:00Z",
+          "completion_tick": 120,
+          "demand_order_id": "demand-order-aa63bef642098baf97578709d3b200a6c386bfea88ee4bdb91442dbc05ff8e43",
+          "due_at_utc": "2026-09-13T04:00:00Z",
+          "on_time": true,
+          "priority_weight": 1,
+          "priority_weighted_tardiness_seconds": 0,
+          "tardiness_seconds": 0
+        },
+        {
+          "completion_at_utc": "2026-09-09T07:10:00Z",
+          "completion_tick": 686,
+          "demand_order_id": "demand-order-ab7e19c4a4d1e66b4242ac33a650446afcea3bf51ba64e2f69ec43a8de59f2bb",
+          "due_at_utc": "2026-09-13T02:00:00Z",
+          "on_time": true,
+          "priority_weight": 1,
+          "priority_weighted_tardiness_seconds": 0,
+          "tardiness_seconds": 0
+        },
+        {
+          "completion_at_utc": "2026-09-06T22:10:00Z",
+          "completion_tick": 2,
+          "demand_order_id": "demand-order-ad2dd57723ce16af13acc802645291972f13d75793e84211820d403735928496",
+          "due_at_utc": "2026-09-12T22:00:00Z",
+          "on_time": true,
+          "priority_weight": 1,
+          "priority_weighted_tardiness_seconds": 0,
+          "tardiness_seconds": 0
+        },
+        {
+          "completion_at_utc": "2026-09-09T14:00:00Z",
+          "completion_tick": 768,
+          "demand_order_id": "demand-order-aded3292d812158b9db7e3b435bd5df31f2286815eaa1641002399083c0c570f",
+          "due_at_utc": "2026-09-12T22:00:00Z",
+          "on_time": true,
+          "priority_weight": 1,
+          "priority_weighted_tardiness_seconds": 0,
+          "tardiness_seconds": 0
+        },
+        {
+          "completion_at_utc": "2026-09-09T22:40:00Z",
+          "completion_tick": 872,
+          "demand_order_id": "demand-order-aef5024d73db3fd8b8f7de8e21f4f83d8cfac077752a407376a64d6363187f38",
+          "due_at_utc": "2026-09-13T06:00:00Z",
+          "on_time": true,
+          "priority_weight": 1,
+          "priority_weighted_tardiness_seconds": 0,
+          "tardiness_seconds": 0
+        },
+        {
+          "completion_at_utc": "2026-09-07T08:30:00Z",
+          "completion_tick": 126,
+          "demand_order_id": "demand-order-b33418ac7878cc28d0af1b073b751a8bf4ec562cafba88fe1d8ee37f91daba5b",
+          "due_at_utc": "2026-09-11T02:00:00Z",
+          "on_time": true,
+          "priority_weight": 4,
+          "priority_weighted_tardiness_seconds": 0,
+          "tardiness_seconds": 0
+        },
+        {
+          "completion_at_utc": "2026-09-09T04:30:00Z",
+          "completion_tick": 654,
+          "demand_order_id": "demand-order-b3e4551db4c009df77689e470b2f90b429cc2915f4a17d4e539567eca59556e7",
+          "due_at_utc": "2026-09-13T04:00:00Z",
+          "on_time": true,
+          "priority_weight": 1,
+          "priority_weighted_tardiness_seconds": 0,
+          "tardiness_seconds": 0
+        },
+        {
+          "completion_at_utc": "2026-09-07T09:00:00Z",
+          "completion_tick": 132,
+          "demand_order_id": "demand-order-b729dd6c94dc7098c9233832f5050ac6ce79ee36dd40c48383b9a379904d23a6",
+          "due_at_utc": "2026-09-13T02:00:00Z",
+          "on_time": true,
+          "priority_weight": 1,
+          "priority_weighted_tardiness_seconds": 0,
+          "tardiness_seconds": 0
+        },
+        {
+          "completion_at_utc": "2026-09-09T01:20:00Z",
+          "completion_tick": 616,
+          "demand_order_id": "demand-order-b872b1a987c51f2a7963d76071ef14efd6d4b8122f3e819e3c552da12ff89308",
+          "due_at_utc": "2026-09-13T00:00:00Z",
+          "on_time": true,
+          "priority_weight": 1,
+          "priority_weighted_tardiness_seconds": 0,
+          "tardiness_seconds": 0
+        },
+        {
+          "completion_at_utc": "2026-09-10T08:30:00Z",
+          "completion_tick": 990,
+          "demand_order_id": "demand-order-b8e340c78b5aef0edbc0cb110cbd2b68d73a311cd66af318b0e1b16cf154fa57",
+          "due_at_utc": "2026-09-13T06:00:00Z",
+          "on_time": true,
+          "priority_weight": 1,
+          "priority_weighted_tardiness_seconds": 0,
+          "tardiness_seconds": 0
+        },
+        {
+          "completion_at_utc": "2026-09-08T13:25:00Z",
+          "completion_tick": 473,
+          "demand_order_id": "demand-order-b993e0b025cae049ea83ea8b084a3345f2c7a248aea47a57d3753fb5742d7d5a",
+          "due_at_utc": "2026-09-08T22:00:00Z",
+          "on_time": true,
+          "priority_weight": 12,
+          "priority_weighted_tardiness_seconds": 0,
+          "tardiness_seconds": 0
+        },
+        {
+          "completion_at_utc": "2026-09-08T03:30:00Z",
+          "completion_tick": 354,
+          "demand_order_id": "demand-order-b99e75443b4b649bb2d27a28de02589a9ae2ad30a1950f32c33d425a3fe6d29c",
+          "due_at_utc": "2026-09-13T06:00:00Z",
+          "on_time": true,
+          "priority_weight": 1,
+          "priority_weighted_tardiness_seconds": 0,
+          "tardiness_seconds": 0
+        },
+        {
+          "completion_at_utc": "2026-09-09T05:50:00Z",
+          "completion_tick": 670,
+          "demand_order_id": "demand-order-b9a494fcd42fe7a847127195b40f18f9b50f594f1e5423cf8d538d938acfcab9",
+          "due_at_utc": "2026-09-12T22:00:00Z",
+          "on_time": true,
+          "priority_weight": 1,
+          "priority_weighted_tardiness_seconds": 0,
+          "tardiness_seconds": 0
+        },
+        {
+          "completion_at_utc": "2026-09-08T05:45:00Z",
+          "completion_tick": 381,
+          "demand_order_id": "demand-order-bb00cb6b12a88520963328b01982d6c75a1bf48fb1d75fbe8e58621167dd5290",
+          "due_at_utc": "2026-09-12T22:00:00Z",
+          "on_time": true,
+          "priority_weight": 1,
+          "priority_weighted_tardiness_seconds": 0,
+          "tardiness_seconds": 0
+        },
+        {
+          "completion_at_utc": "2026-09-07T06:35:00Z",
+          "completion_tick": 103,
+          "demand_order_id": "demand-order-bb0a437e7c61f18145fe7e4ac800449335fd004088bc35339ed892d46ee993ef",
+          "due_at_utc": "2026-09-10T22:00:00Z",
+          "on_time": true,
+          "priority_weight": 4,
+          "priority_weighted_tardiness_seconds": 0,
+          "tardiness_seconds": 0
+        },
+        {
+          "completion_at_utc": "2026-09-08T07:40:00Z",
+          "completion_tick": 404,
+          "demand_order_id": "demand-order-be059030ba9b8e6d081b1ea8e5bb83142b70fb8e9415c4b1c3e9e7ac97bbcf55",
+          "due_at_utc": "2026-09-13T04:00:00Z",
+          "on_time": true,
+          "priority_weight": 1,
+          "priority_weighted_tardiness_seconds": 0,
+          "tardiness_seconds": 0
+        },
+        {
+          "completion_at_utc": "2026-09-09T10:20:00Z",
+          "completion_tick": 724,
+          "demand_order_id": "demand-order-bf1c1e65730a1d930641b736b2badcf0e43320bf6e4bc06c2e9690eb8d522b1c",
+          "due_at_utc": "2026-09-13T04:00:00Z",
+          "on_time": true,
+          "priority_weight": 1,
+          "priority_weighted_tardiness_seconds": 0,
+          "tardiness_seconds": 0
+        },
+        {
+          "completion_at_utc": "2026-09-07T01:15:00Z",
+          "completion_tick": 39,
+          "demand_order_id": "demand-order-c196577bfecf5e9ec6c546e75ee68b1e36df590228b0f915b94025b8d95f294f",
+          "due_at_utc": "2026-09-13T02:00:00Z",
+          "on_time": true,
+          "priority_weight": 1,
+          "priority_weighted_tardiness_seconds": 0,
+          "tardiness_seconds": 0
+        },
+        {
+          "completion_at_utc": "2026-09-07T05:55:00Z",
+          "completion_tick": 95,
+          "demand_order_id": "demand-order-c1b849faa9804b10f9a0cb4928482d04a2f632b766fcf87d4c3af634a958989e",
+          "due_at_utc": "2026-09-11T04:00:00Z",
+          "on_time": true,
+          "priority_weight": 4,
+          "priority_weighted_tardiness_seconds": 0,
+          "tardiness_seconds": 0
+        },
+        {
+          "completion_at_utc": "2026-09-07T00:35:00Z",
+          "completion_tick": 31,
+          "demand_order_id": "demand-order-c42137d2ed9fa3aebca9e9f55c5290e691b72be09ddcaeeb29df7a5ce365cbc1",
+          "due_at_utc": "2026-09-10T22:00:00Z",
+          "on_time": true,
+          "priority_weight": 4,
+          "priority_weighted_tardiness_seconds": 0,
+          "tardiness_seconds": 0
+        },
+        {
+          "completion_at_utc": "2026-09-07T03:30:00Z",
+          "completion_tick": 66,
+          "demand_order_id": "demand-order-c4c6d3684aefb66a9e4bf02d3e9c8dd3da32a1463d3903c30063b82a2d8a9195",
+          "due_at_utc": "2026-09-13T02:00:00Z",
+          "on_time": true,
+          "priority_weight": 1,
+          "priority_weighted_tardiness_seconds": 0,
+          "tardiness_seconds": 0
+        },
+        {
+          "completion_at_utc": "2026-09-09T08:00:00Z",
+          "completion_tick": 696,
+          "demand_order_id": "demand-order-c533599cb7562b80a2e06b33bd84138af3acf550a37ec7827e921e5021832aa0",
+          "due_at_utc": "2026-09-13T04:00:00Z",
+          "on_time": true,
+          "priority_weight": 1,
+          "priority_weighted_tardiness_seconds": 0,
+          "tardiness_seconds": 0
+        },
+        {
+          "completion_at_utc": "2026-09-09T10:45:00Z",
+          "completion_tick": 729,
+          "demand_order_id": "demand-order-c8bdbd29a419a92ce63f367d0b4ae49214026fd2e46293ec3bf148c75dc46bc3",
+          "due_at_utc": "2026-09-12T22:00:00Z",
+          "on_time": true,
+          "priority_weight": 1,
+          "priority_weighted_tardiness_seconds": 0,
+          "tardiness_seconds": 0
+        },
+        {
+          "completion_at_utc": "2026-09-07T01:55:00Z",
+          "completion_tick": 47,
+          "demand_order_id": "demand-order-cb8443ff6b522157e1d60526deb9f92852682237381f073e4e47e6b734d794a2",
+          "due_at_utc": "2026-09-09T04:00:00Z",
+          "on_time": true,
+          "priority_weight": 12,
+          "priority_weighted_tardiness_seconds": 0,
+          "tardiness_seconds": 0
+        },
+        {
+          "completion_at_utc": "2026-09-09T13:25:00Z",
+          "completion_tick": 761,
+          "demand_order_id": "demand-order-cc56dfce6fb1569fc6b679efd28328f4488daf2cce925157ffc1171887d43377",
+          "due_at_utc": "2026-09-12T22:00:00Z",
+          "on_time": true,
+          "priority_weight": 1,
+          "priority_weighted_tardiness_seconds": 0,
+          "tardiness_seconds": 0
+        },
+        {
+          "completion_at_utc": "2026-09-09T23:35:00Z",
+          "completion_tick": 883,
+          "demand_order_id": "demand-order-cc8fd831af3aedef4363c1eaf1fe77836de883af25161dbb539a2ee3381706ca",
+          "due_at_utc": "2026-09-13T06:00:00Z",
+          "on_time": true,
+          "priority_weight": 1,
+          "priority_weighted_tardiness_seconds": 0,
+          "tardiness_seconds": 0
+        },
+        {
+          "completion_at_utc": "2026-09-06T22:35:00Z",
+          "completion_tick": 7,
+          "demand_order_id": "demand-order-d3175679fee76f5595f1212119727f1e1798a98f314319d2e61c484a32deeb8b",
+          "due_at_utc": "2026-09-13T02:00:00Z",
+          "on_time": true,
+          "priority_weight": 1,
+          "priority_weighted_tardiness_seconds": 0,
+          "tardiness_seconds": 0
+        },
+        {
+          "completion_at_utc": "2026-09-07T02:55:00Z",
+          "completion_tick": 59,
+          "demand_order_id": "demand-order-d3654a3651254c85c767ce4ed2c9a1943b3701a773071641ba05a7af6e93fa23",
+          "due_at_utc": "2026-09-11T04:00:00Z",
+          "on_time": true,
+          "priority_weight": 4,
+          "priority_weighted_tardiness_seconds": 0,
+          "tardiness_seconds": 0
+        },
+        {
+          "completion_at_utc": "2026-09-09T11:15:00Z",
+          "completion_tick": 735,
+          "demand_order_id": "demand-order-d7d8292bab02d18960c8cb64676ab88fba570ba54010b0c61f73a75dda9c8f16",
+          "due_at_utc": "2026-09-12T22:00:00Z",
+          "on_time": true,
+          "priority_weight": 1,
+          "priority_weighted_tardiness_seconds": 0,
+          "tardiness_seconds": 0
+        },
+        {
+          "completion_at_utc": "2026-09-09T09:20:00Z",
+          "completion_tick": 712,
+          "demand_order_id": "demand-order-da5411d725204aacdf0c3f59f9551471aa6c55593486f924a33fab65f782d5da",
+          "due_at_utc": "2026-09-13T06:00:00Z",
+          "on_time": true,
+          "priority_weight": 1,
+          "priority_weighted_tardiness_seconds": 0,
+          "tardiness_seconds": 0
+        },
+        {
+          "completion_at_utc": "2026-09-10T05:20:00Z",
+          "completion_tick": 952,
+          "demand_order_id": "demand-order-db6db9858ae11208720563e0ffb10a38ecad565435881f47d8842d21095e65a6",
+          "due_at_utc": "2026-09-11T02:00:00Z",
+          "on_time": true,
+          "priority_weight": 4,
+          "priority_weighted_tardiness_seconds": 0,
+          "tardiness_seconds": 0
+        },
+        {
+          "completion_at_utc": "2026-09-07T02:10:00Z",
+          "completion_tick": 50,
+          "demand_order_id": "demand-order-dd76552d3625cf5821af66ccaa77c8ae7ee67dedeaa77da6b9ee71b2f9d19467",
+          "due_at_utc": "2026-09-12T22:00:00Z",
+          "on_time": true,
+          "priority_weight": 1,
+          "priority_weighted_tardiness_seconds": 0,
+          "tardiness_seconds": 0
+        },
+        {
+          "completion_at_utc": "2026-09-07T12:20:00Z",
+          "completion_tick": 172,
+          "demand_order_id": "demand-order-ddd0bf28537be760236375ac9e4153045fd844692f02dbf52163f7ad4a3a3b92",
+          "due_at_utc": "2026-09-13T00:00:00Z",
+          "on_time": true,
+          "priority_weight": 1,
+          "priority_weighted_tardiness_seconds": 0,
+          "tardiness_seconds": 0
+        },
+        {
+          "completion_at_utc": "2026-09-07T01:35:00Z",
+          "completion_tick": 43,
+          "demand_order_id": "demand-order-ddd12a0e6207bd3c64353004dc8d0f2a9094e782ad7ee954974095b8a25629bd",
+          "due_at_utc": "2026-09-12T22:00:00Z",
+          "on_time": true,
+          "priority_weight": 1,
+          "priority_weighted_tardiness_seconds": 0,
+          "tardiness_seconds": 0
+        },
+        {
+          "completion_at_utc": "2026-09-08T09:00:00Z",
+          "completion_tick": 420,
+          "demand_order_id": "demand-order-de32168b988d0ae6874934f52dfeb152b7099f985451610fc7f7a6e352408b14",
+          "due_at_utc": "2026-09-10T22:00:00Z",
+          "on_time": true,
+          "priority_weight": 4,
+          "priority_weighted_tardiness_seconds": 0,
+          "tardiness_seconds": 0
+        },
+        {
+          "completion_at_utc": "2026-09-09T13:45:00Z",
+          "completion_tick": 765,
+          "demand_order_id": "demand-order-e09fc91c98df81fe1a4b9d0c1fe09ff3ff2d42ddc4e3f50988bbf43250bcde33",
+          "due_at_utc": "2026-09-13T06:00:00Z",
+          "on_time": true,
+          "priority_weight": 1,
+          "priority_weighted_tardiness_seconds": 0,
+          "tardiness_seconds": 0
+        },
+        {
+          "completion_at_utc": "2026-09-07T07:30:00Z",
+          "completion_tick": 114,
+          "demand_order_id": "demand-order-e1553c1e925586e76d25463e3e15edcf92681ec415501420b48ce97a71ca7d24",
+          "due_at_utc": "2026-09-11T00:00:00Z",
+          "on_time": true,
+          "priority_weight": 4,
+          "priority_weighted_tardiness_seconds": 0,
+          "tardiness_seconds": 0
+        },
+        {
+          "completion_at_utc": "2026-09-08T12:15:00Z",
+          "completion_tick": 459,
+          "demand_order_id": "demand-order-e1797d2e7c4ec6024e0c8bbd64197429b78e9ab41e989c14bca797d467e75dc6",
+          "due_at_utc": "2026-09-13T02:00:00Z",
+          "on_time": true,
+          "priority_weight": 1,
+          "priority_weighted_tardiness_seconds": 0,
+          "tardiness_seconds": 0
+        },
+        {
+          "completion_at_utc": "2026-09-09T07:35:00Z",
+          "completion_tick": 691,
+          "demand_order_id": "demand-order-e4953cc230d1574e2e4d2afb6ac05ee7b301a90f515fb9a70a4b9cecfa9300b6",
+          "due_at_utc": "2026-09-13T06:00:00Z",
+          "on_time": true,
+          "priority_weight": 1,
+          "priority_weighted_tardiness_seconds": 0,
+          "tardiness_seconds": 0
+        },
+        {
+          "completion_at_utc": "2026-09-09T06:45:00Z",
+          "completion_tick": 681,
+          "demand_order_id": "demand-order-eae111907d2edba92fe60e7b7e90abb468d56b24c90abb5a505e292bcbacbcdd",
+          "due_at_utc": "2026-09-13T06:00:00Z",
+          "on_time": true,
+          "priority_weight": 1,
+          "priority_weighted_tardiness_seconds": 0,
+          "tardiness_seconds": 0
+        },
+        {
+          "completion_at_utc": "2026-09-08T09:30:00Z",
+          "completion_tick": 426,
+          "demand_order_id": "demand-order-eb97a6f6bf2de1fe1675e42bb35699b9f8afaf12981ed904416ea5b05cc0d98f",
+          "due_at_utc": "2026-09-08T22:00:00Z",
+          "on_time": true,
+          "priority_weight": 12,
+          "priority_weighted_tardiness_seconds": 0,
+          "tardiness_seconds": 0
+        },
+        {
+          "completion_at_utc": "2026-09-10T03:40:00Z",
+          "completion_tick": 932,
+          "demand_order_id": "demand-order-ee5411c4a8fdd52f3dcf92d32e4cfec1beb3a6627a847e8314e150c934359727",
+          "due_at_utc": "2026-09-10T22:00:00Z",
+          "on_time": true,
+          "priority_weight": 4,
+          "priority_weighted_tardiness_seconds": 0,
+          "tardiness_seconds": 0
+        },
+        {
+          "completion_at_utc": "2026-09-07T00:50:00Z",
+          "completion_tick": 34,
+          "demand_order_id": "demand-order-f5f00109c905bd051e9dc4b6517fff6549bdeaaa0fbd526fd1471637202488f1",
+          "due_at_utc": "2026-09-13T00:00:00Z",
+          "on_time": true,
+          "priority_weight": 1,
+          "priority_weighted_tardiness_seconds": 0,
+          "tardiness_seconds": 0
+        },
+        {
+          "completion_at_utc": "2026-09-09T09:50:00Z",
+          "completion_tick": 718,
+          "demand_order_id": "demand-order-f612b59a2f46a447df5e63c86a7e4708071dc34fb36e465d06f0c4e5d04e639e",
+          "due_at_utc": "2026-09-13T02:00:00Z",
+          "on_time": true,
+          "priority_weight": 1,
+          "priority_weighted_tardiness_seconds": 0,
+          "tardiness_seconds": 0
+        },
+        {
+          "completion_at_utc": "2026-09-09T02:25:00Z",
+          "completion_tick": 629,
+          "demand_order_id": "demand-order-f6d129dcaa78457700f0d907309af96ee1093a76ac4f81eca69336827c2a41c9",
+          "due_at_utc": "2026-09-13T06:00:00Z",
+          "on_time": true,
+          "priority_weight": 1,
+          "priority_weighted_tardiness_seconds": 0,
+          "tardiness_seconds": 0
+        },
+        {
+          "completion_at_utc": "2026-09-08T05:05:00Z",
+          "completion_tick": 373,
+          "demand_order_id": "demand-order-f72cedb5e1fa14a6906c92186730d2b95ae61d40e9486040bda1152655827e56",
+          "due_at_utc": "2026-09-13T02:00:00Z",
+          "on_time": true,
+          "priority_weight": 1,
+          "priority_weighted_tardiness_seconds": 0,
+          "tardiness_seconds": 0
+        },
+        {
+          "completion_at_utc": "2026-09-10T02:15:00Z",
+          "completion_tick": 915,
+          "demand_order_id": "demand-order-f95346b6aec32a33a09e4f9440283230f01af59446388d2015a031f0436ce96f",
+          "due_at_utc": "2026-09-11T04:00:00Z",
+          "on_time": true,
+          "priority_weight": 4,
+          "priority_weighted_tardiness_seconds": 0,
+          "tardiness_seconds": 0
+        },
+        {
+          "completion_at_utc": "2026-09-08T07:05:00Z",
+          "completion_tick": 397,
+          "demand_order_id": "demand-order-fa30dcc32f1f7de77ce5d32cbf8a28d043f72174d280091448c7cdcb409e43b9",
+          "due_at_utc": "2026-09-13T06:00:00Z",
+          "on_time": true,
+          "priority_weight": 1,
+          "priority_weighted_tardiness_seconds": 0,
+          "tardiness_seconds": 0
+        },
+        {
+          "completion_at_utc": "2026-09-07T04:30:00Z",
+          "completion_tick": 78,
+          "demand_order_id": "demand-order-febb6a446fd2d080c6bf3fce6e8de21b53146c6f642b7a340f739bdb9d19384e",
+          "due_at_utc": "2026-09-13T04:00:00Z",
+          "on_time": true,
+          "priority_weight": 1,
+          "priority_weighted_tardiness_seconds": 0,
+          "tardiness_seconds": 0
+        },
+        {
+          "completion_at_utc": "2026-09-09T23:00:00Z",
+          "completion_tick": 876,
+          "demand_order_id": "demand-order-ff53f103abcfe7ba187899292a63cb1bd73c1fea8fb93370dd2fc27ca560f59b",
+          "due_at_utc": "2026-09-13T06:00:00Z",
+          "on_time": true,
+          "priority_weight": 1,
+          "priority_weighted_tardiness_seconds": 0,
+          "tardiness_seconds": 0
+        }
+      ],
+      "late_order_count": 0,
+      "on_time_order_count": 133,
+      "on_time_order_ratio": 1.0,
+      "order_count": 133,
+      "priority_weighted_tardiness_seconds": 0,
+      "total_tardiness_seconds": 0
+    },
+    "planning": {
+      "makespan_seconds": 303600,
+      "scheduled_operation_count": 585,
+      "unscheduled_operation_count": 0
+    }
+  },
+  "profile": "showcase",
+  "projection": {
+    "completed_operation_count": 30,
+    "completed_prebaseline_preserved": true,
+    "fact_lock_evidence": {
+      "completed_fact_count": 0,
+      "explicit_hard_lock_count": 4,
+      "freeze_derived_hard_lock_count": 8,
+      "running_fact_count": 12,
+      "soft_lock_count": 8
+    }
+  },
+  "report_fingerprint": "sha256:f042dba5b5f88d1f2230e65c9845e30bd51b4dedc497490daa57ac05e41889a4",
+  "row_counts": {
+    "demo_command_audit": 2,
+    "execution_event_ledger": 1,
+    "replan_attempts": 1,
+    "replan_audit_records": 5,
+    "replan_projection_checkpoints": 1,
+    "replan_request_events": 1,
+    "replan_requests": 1,
+    "replan_results": 1,
+    "schedule_versions": 2
+  },
+  "run_id": "run-07b318c00d1345c2d4ba3b3c4c7449a5",
+  "runtime_evidence_version": "cnc-demo-replan-runtime-evidence.v1",
+  "status": "PASS",
+  "story_state": "DRAFT_COMPARISON_READY",
+  "task_family": "demo-exclusive",
+  "task_id": "TASK-DEMO-03",
+  "timings": {
+    "activation_seconds": 0.17814000000362284,
+    "formal_exact_replay_seconds": 7.010192699992331,
+    "initial_plan_seconds": 7.299689199993736,
+    "reset_seconds": 2.8726743000006536,
+    "urgent_replan_seconds": 24.15502839999681
+  },
+  "urgent_command": {
+    "command_version": "cnc-demo-urgent-order-command.v1",
+    "due_at_local": "2026-09-09T18:00:00",
+    "expected_base_version_id": "schedule-version-validated-d899e34413c0635383d638bddf9da7a849a63a3c30b4dcf16b10fbf252c1bdf2",
+    "expected_run_id": "run-07b318c00d1345c2d4ba3b3c4c7449a5",
+    "note": "Showcase 固定加急精密套筒",
+    "priority_class": "URGENT",
+    "quantity": 5,
+    "route_template_id": "CNC-ROUTE-5"
+  },
+  "urgent_job": {
+    "attempt": 1,
+    "job_id": "job-b4a6969d9ed7ee693a4673c65405d4a3d285457510b20e3b5040f0d4ec68eb67",
+    "result": {
+      "attempt_id": "replan-attempt-768115abc638cd469263eb3f52c0672de76b1275aea778524a021219df4a7920",
+      "change_report_id": "change-report-1b047c7f1ac9e80a1fff2b9dfd0d1909987da0e14e985ca856117697441c8f08",
+      "current_published_version_id": "schedule-version-validated-d899e34413c0635383d638bddf9da7a849a63a3c30b4dcf16b10fbf252c1bdf2",
+      "demand_order_id": "demand-order-6f7e2a82f061e66794c4def59af551dc6985e1509a9194f5012204c5a41e7279",
+      "event_id": "execution-event-a6cee1e5555112c7084e7fadbbcb85397a049d64466600d8de677039a92b23f7",
+      "exact_replay": false,
+      "operation_changes": {
+        "ADDED": 5,
+        "CHANGED": 23,
+        "UNCHANGED": 557
+      },
+      "problem_hash": "sha256:7843868f318cf84de3f515bd020b56c24e3b37db40b3ad3d6395c911dd3be40b",
+      "request_id": "replan-request-386cadb10c97931fedbc69bc98b757470ccb42d3309206716eba98f0008c6db7",
+      "result_version": "cnc-demo-urgent-replan-result.v1",
+      "run_id": "run-07b318c00d1345c2d4ba3b3c4c7449a5",
+      "schedule_state": "DRAFT",
+      "schedule_version_id": "schedule-version-replan-047f0467bcf512b72d64beba2e4533bc1a186409976919d6a82caca77d03ffba",
+      "snapshot_id": "planning-snapshot-v2-8909b7fa5017189cdd4777aa05c643173f011c386675156a7bddbd2eb25f0f6e",
+      "solver_status": "FEASIBLE",
+      "validation_status": "PASS"
+    },
+    "stages": [
+      {
+        "attempt": 1,
+        "elapsed_seconds": 4.219568,
+        "evidence_ref": null,
+        "finished_at_utc": "2026-09-02T07:07:34.219568Z",
+        "sequence": 1,
+        "stage": "PREPARING_IMPORT",
+        "started_at_utc": "2026-09-02T07:07:30Z",
+        "status": "SUCCEEDED"
+      },
+      {
+        "attempt": 1,
+        "elapsed_seconds": 0.293092,
+        "evidence_ref": null,
+        "finished_at_utc": "2026-09-02T07:07:34.293092Z",
+        "sequence": 2,
+        "stage": "IMPORTING_URGENT_DEMAND",
+        "started_at_utc": "2026-09-02T07:07:34Z",
+        "status": "SUCCEEDED"
+      },
+      {
+        "attempt": 1,
+        "elapsed_seconds": 0.324484,
+        "evidence_ref": null,
+        "finished_at_utc": "2026-09-02T07:07:34.324484Z",
+        "sequence": 3,
+        "stage": "APPENDING_EVENT",
+        "started_at_utc": "2026-09-02T07:07:34Z",
+        "status": "SUCCEEDED"
+      },
+      {
+        "attempt": 1,
+        "elapsed_seconds": 2.914951,
+        "evidence_ref": null,
+        "finished_at_utc": "2026-09-02T07:07:36.914951Z",
+        "sequence": 4,
+        "stage": "PROJECTING_FACTS",
+        "started_at_utc": "2026-09-02T07:07:34Z",
+        "status": "SUCCEEDED"
+      },
+      {
+        "attempt": 1,
+        "elapsed_seconds": 0.898974,
+        "evidence_ref": null,
+        "finished_at_utc": "2026-09-02T07:07:37.898974Z",
+        "sequence": 5,
+        "stage": "CREATING_REQUEST",
+        "started_at_utc": "2026-09-02T07:07:37Z",
+        "status": "SUCCEEDED"
+      },
+      {
+        "attempt": 1,
+        "elapsed_seconds": 14.679967,
+        "evidence_ref": null,
+        "finished_at_utc": "2026-09-02T07:07:51.679967Z",
+        "sequence": 6,
+        "stage": "SOLVING",
+        "started_at_utc": "2026-09-02T07:07:37Z",
+        "status": "SUCCEEDED"
+      },
+      {
+        "attempt": 1,
+        "elapsed_seconds": 0.699151,
+        "evidence_ref": null,
+        "finished_at_utc": "2026-09-02T07:07:51.699151Z",
+        "sequence": 7,
+        "stage": "VERIFYING_SOLUTION",
+        "started_at_utc": "2026-09-02T07:07:51Z",
+        "status": "SUCCEEDED"
+      },
+      {
+        "attempt": 1,
+        "elapsed_seconds": 0.84268,
+        "evidence_ref": null,
+        "finished_at_utc": "2026-09-02T07:07:51.842680Z",
+        "sequence": 8,
+        "stage": "COMMITTING_RESULT",
+        "started_at_utc": "2026-09-02T07:07:51Z",
+        "status": "SUCCEEDED"
+      },
+      {
+        "attempt": 1,
+        "elapsed_seconds": 0.886106,
+        "evidence_ref": null,
+        "finished_at_utc": "2026-09-02T07:07:51.886106Z",
+        "sequence": 9,
+        "stage": "BUILDING_PRESENTATION",
+        "started_at_utc": "2026-09-02T07:07:51Z",
+        "status": "SUCCEEDED"
+      },
+      {
+        "attempt": 1,
+        "elapsed_seconds": 0.903765,
+        "evidence_ref": null,
+        "finished_at_utc": "2026-09-02T07:07:51.903765Z",
+        "sequence": 10,
+        "stage": "COMPLETE",
+        "started_at_utc": "2026-09-02T07:07:51Z",
+        "status": "SUCCEEDED"
+      }
+    ],
+    "status": "SUCCEEDED"
+  }
+}

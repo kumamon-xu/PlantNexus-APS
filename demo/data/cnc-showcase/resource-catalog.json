@@ -1,0 +1,65 @@
+{
+  "resource_catalog_version": "cnc-resource-catalog.v1",
+  "profile_resource_ids": {
+    "smoke": [
+      "resource-saw-01", "resource-saw-02", "resource-lathe-01", "resource-lathe-02",
+      "resource-vmc-01", "resource-vmc-02", "resource-hmc-01",
+      "resource-grinder-01", "resource-grinder-02", "resource-finish-01",
+      "resource-cmm-01", "resource-cmm-02"
+    ],
+    "showcase": [
+      "resource-saw-01", "resource-saw-02",
+      "resource-lathe-01", "resource-lathe-02", "resource-lathe-03", "resource-lathe-04",
+      "resource-turnmill-01", "resource-turnmill-02",
+      "resource-vmc-01", "resource-vmc-02", "resource-vmc-03", "resource-vmc-04",
+      "resource-hmc-01", "resource-hmc-02", "resource-hmc-03", "resource-hmc-04",
+      "resource-fiveaxis-01", "resource-fiveaxis-02",
+      "resource-grinder-01", "resource-grinder-02",
+      "resource-finish-01", "resource-finish-02",
+      "resource-cmm-01", "resource-cmm-02"
+    ],
+    "upper": [
+      "resource-saw-01", "resource-saw-02",
+      "resource-lathe-01", "resource-lathe-02", "resource-lathe-03", "resource-lathe-04", "resource-lathe-05",
+      "resource-turnmill-01", "resource-turnmill-02",
+      "resource-vmc-01", "resource-vmc-02", "resource-vmc-03", "resource-vmc-04", "resource-vmc-05",
+      "resource-hmc-01", "resource-hmc-02", "resource-hmc-03", "resource-hmc-04", "resource-hmc-05",
+      "resource-fiveaxis-01", "resource-fiveaxis-02",
+      "resource-grinder-01", "resource-grinder-02", "resource-grinder-03",
+      "resource-finish-01", "resource-finish-02", "resource-finish-03",
+      "resource-cmm-01", "resource-cmm-02", "resource-cmm-03"
+    ]
+  },
+  "resources": [
+    {"resource_id":"resource-saw-01","resource_code":"SAW-01","resource_name_zh":"带锯床 01","family":"SAW","resource_group_id":"group-ws10-cut","capabilities":["CUTTING"]},
+    {"resource_id":"resource-saw-02","resource_code":"SAW-02","resource_name_zh":"带锯床 02","family":"SAW","resource_group_id":"group-ws10-cut","capabilities":["CUTTING"]},
+    {"resource_id":"resource-lathe-01","resource_code":"LATHE-01","resource_name_zh":"数控车床 01","family":"LATHE","resource_group_id":"group-ws10-turn","capabilities":["TURNING"]},
+    {"resource_id":"resource-lathe-02","resource_code":"LATHE-02","resource_name_zh":"数控车床 02","family":"LATHE","resource_group_id":"group-ws10-turn","capabilities":["TURNING"]},
+    {"resource_id":"resource-lathe-03","resource_code":"LATHE-03","resource_name_zh":"数控车床 03","family":"LATHE","resource_group_id":"group-ws10-turn","capabilities":["TURNING"]},
+    {"resource_id":"resource-lathe-04","resource_code":"LATHE-04","resource_name_zh":"数控车床 04","family":"LATHE","resource_group_id":"group-ws10-turn","capabilities":["TURNING"]},
+    {"resource_id":"resource-lathe-05","resource_code":"LATHE-05","resource_name_zh":"数控车床 05","family":"LATHE","resource_group_id":"group-ws10-turn","capabilities":["TURNING"]},
+    {"resource_id":"resource-turnmill-01","resource_code":"TURNMILL-01","resource_name_zh":"车铣复合中心 01","family":"TURN_MILL","resource_group_id":"group-ws10-turn","capabilities":["MILLING","TURNING"]},
+    {"resource_id":"resource-turnmill-02","resource_code":"TURNMILL-02","resource_name_zh":"车铣复合中心 02","family":"TURN_MILL","resource_group_id":"group-ws10-turn","capabilities":["MILLING","TURNING"]},
+    {"resource_id":"resource-vmc-01","resource_code":"VMC-01","resource_name_zh":"立式加工中心 01","family":"VMC","resource_group_id":"group-ws20-mill","capabilities":["MILLING"]},
+    {"resource_id":"resource-vmc-02","resource_code":"VMC-02","resource_name_zh":"立式加工中心 02","family":"VMC","resource_group_id":"group-ws20-mill","capabilities":["MILLING"]},
+    {"resource_id":"resource-vmc-03","resource_code":"VMC-03","resource_name_zh":"立式加工中心 03","family":"VMC","resource_group_id":"group-ws20-mill","capabilities":["MILLING"]},
+    {"resource_id":"resource-vmc-04","resource_code":"VMC-04","resource_name_zh":"立式加工中心 04","family":"VMC","resource_group_id":"group-ws20-mill","capabilities":["MILLING"]},
+    {"resource_id":"resource-vmc-05","resource_code":"VMC-05","resource_name_zh":"立式加工中心 05","family":"VMC","resource_group_id":"group-ws20-mill","capabilities":["MILLING"]},
+    {"resource_id":"resource-hmc-01","resource_code":"HMC-01","resource_name_zh":"卧式加工中心 01","family":"HMC","resource_group_id":"group-ws20-mill","capabilities":["MILLING"]},
+    {"resource_id":"resource-hmc-02","resource_code":"HMC-02","resource_name_zh":"卧式加工中心 02","family":"HMC","resource_group_id":"group-ws20-mill","capabilities":["MILLING"]},
+    {"resource_id":"resource-hmc-03","resource_code":"HMC-03","resource_name_zh":"卧式加工中心 03","family":"HMC","resource_group_id":"group-ws20-mill","capabilities":["MILLING"]},
+    {"resource_id":"resource-hmc-04","resource_code":"HMC-04","resource_name_zh":"卧式加工中心 04","family":"HMC","resource_group_id":"group-ws20-mill","capabilities":["MILLING"]},
+    {"resource_id":"resource-hmc-05","resource_code":"HMC-05","resource_name_zh":"卧式加工中心 05","family":"HMC","resource_group_id":"group-ws20-mill","capabilities":["MILLING"]},
+    {"resource_id":"resource-fiveaxis-01","resource_code":"5AX-01","resource_name_zh":"五轴加工中心 01","family":"FIVE_AXIS","resource_group_id":"group-ws20-5ax","capabilities":["FIVE_AXIS","MILLING"]},
+    {"resource_id":"resource-fiveaxis-02","resource_code":"5AX-02","resource_name_zh":"五轴加工中心 02","family":"FIVE_AXIS","resource_group_id":"group-ws20-5ax","capabilities":["FIVE_AXIS","MILLING"]},
+    {"resource_id":"resource-grinder-01","resource_code":"GRD-01","resource_name_zh":"数控磨床 01","family":"GRINDER","resource_group_id":"group-ws30-grind","capabilities":["GRINDING"]},
+    {"resource_id":"resource-grinder-02","resource_code":"GRD-02","resource_name_zh":"数控磨床 02","family":"GRINDER","resource_group_id":"group-ws30-grind","capabilities":["GRINDING"]},
+    {"resource_id":"resource-grinder-03","resource_code":"GRD-03","resource_name_zh":"数控磨床 03","family":"GRINDER","resource_group_id":"group-ws30-grind","capabilities":["GRINDING"]},
+    {"resource_id":"resource-finish-01","resource_code":"FIN-01","resource_name_zh":"去毛刺精整台 01","family":"FINISH","resource_group_id":"group-ws30-finish","capabilities":["FINISHING"]},
+    {"resource_id":"resource-finish-02","resource_code":"FIN-02","resource_name_zh":"去毛刺精整台 02","family":"FINISH","resource_group_id":"group-ws30-finish","capabilities":["FINISHING"]},
+    {"resource_id":"resource-finish-03","resource_code":"FIN-03","resource_name_zh":"去毛刺精整台 03","family":"FINISH","resource_group_id":"group-ws30-finish","capabilities":["FINISHING"]},
+    {"resource_id":"resource-cmm-01","resource_code":"CMM-01","resource_name_zh":"三坐标测量机 01","family":"CMM","resource_group_id":"group-ws30-quality","capabilities":["INSPECTION"]},
+    {"resource_id":"resource-cmm-02","resource_code":"CMM-02","resource_name_zh":"三坐标测量机 02","family":"CMM","resource_group_id":"group-ws30-quality","capabilities":["INSPECTION"]},
+    {"resource_id":"resource-cmm-03","resource_code":"CMM-03","resource_name_zh":"三坐标测量机 03","family":"CMM","resource_group_id":"group-ws30-quality","capabilities":["INSPECTION"]}
+  ]
+}

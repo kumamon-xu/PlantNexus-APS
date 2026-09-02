@@ -1,0 +1,11 @@
+__pycache__/
+*.py[cod]
+.pytest_cache/
+.ruff_cache/
+.pyright/
+
+runtime/*
+!runtime/.gitkeep
+
+benchmarks/tmp/
+data/generated/

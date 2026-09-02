@@ -1,12 +1,12 @@
 # PlantNexus APS
 
-## P7 activation and complete Task plan
+## P7 deferred — awaiting real data and environment
 
-用户已明确批准P6→P7。最小承接检查只确认`HEAD=main=origin/main=remote main=c2191cf571688c596d335be7a8b0ef0cb0a0cc44`、ahead/behind=`0/0`、working tree clean、P6无active Task、TASK-P6-10=`done/PROVIDER_VERIFIED_DONE`、P6 Exit 17/17 `READY`/`blocking_gaps=[]`以及required `validate`/GitHub Actions app `15368`未漂移；没有重新查询全部P6 checks、下载/解析artifact、运行P6 Gate或任何业务测试。P6 Milestone现为`completed`，P7 Milestone现为`active`，P6 Exit report/manifest/公开observation/corrective/provider evidence按原历史保留。
+P6→P7 transition及完整计划已经完成，P6 Milestone保持`completed`。用户现确认项目仍处研发阶段，没有可介入测试的真实数据、真实环境或相应现实authority；P7输入启动门因此fail closed为`BLOCKED_INPUT`，P7 Milestone执行状态设为`deferred`。P6 Exit report/manifest/公开observation/corrective/provider evidence按原历史保留，本次不重审P6。
 
 P7规划为12张卡：P7-00 phase/plan治理；P7-01输入authority；P7-02 machine contract；P7-03真实匿名Historical Snapshot；P7-04 Historical Replay；P7-05 Synthetic Comparison/Reality Gap；P7-06 FactoryProfile Calibration；P7-07 Solver Benchmark/performance boundary；P7-08 Planner Baseline；P7-09 Production Capacity Decision/PROD_OPEN adjudication；P7-10 Gate C；P7-11最终独立Exit Audit。DAG为`00→01→02→03→04`、`04→05→06→07`、`04→08`、`05+07+08→09`、`06+09→10→11`。
 
-本次只激活Milestone和计划，P7-01～11均`planned/NOT_STARTED`。`REALITY_CALIBRATION`继续`DEFERRED/NOT_FORMED`；P6 AI duration保持default-off及标准工时fallback，PlanningProblem/Solver/formal Validator和P4 ExecutionEvent/ReplanRequest/freeze/OBJ-002/ChangeReport/Execution Simulator边界不变。OPEN-001～015、SIM-ASSUMPTION-001～026、RISK-001～019原状态承接；P8+、Production/UAT、真实approval authority、external integration/deployment、capacity execution与SLA均未形成。
+TASK-P7-01仅完成启动门核验并保持`blocked/BLOCKED_INPUT`；P7-02～11仍为`planned/NOT_STARTED`，计划与DAG不取消，待真实输入和新的恢复授权。`REALITY_CALIBRATION`继续`DEFERRED/NOT_FORMED`；P6 AI duration保持default-off及标准工时fallback，PlanningProblem/Solver/formal Validator和P4 ExecutionEvent/ReplanRequest/freeze/OBJ-002/ChangeReport/Execution Simulator边界不变。OPEN-001～015、SIM-ASSUMPTION-001～026、RISK-001～019原状态承接；P8+、Production/UAT、真实approval authority、external integration/deployment、capacity execution与SLA均未形成。
 
 ## Historical TASK-P6-10 — independent P6 Exit Gate audit
 

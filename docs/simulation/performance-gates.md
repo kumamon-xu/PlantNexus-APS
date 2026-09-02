@@ -11,9 +11,9 @@ last_reviewed: 2026-09-02
 
 # 性能与现实校准门
 
-## P7 activation planning boundary
+## P7 deferred planning boundary
 
-P7现已激活，但TASK-P7-00只规划Gate C，不运行Historical Replay、Synthetic Comparison、Calibration、Solver Benchmark或Planner comparison，也不创建Reality Gap/Capacity evidence。未来直接链为P7-03/04真实匿名Snapshot/Replay、P7-05五维Reality Gap、P7-06新版本FactoryProfile、P7-07 exact-environment Benchmark、P7-08 Planner Baseline、P7-09 bounded Capacity Decision、P7-10 Gate C和P7-11独立Exit。
+P7已完成计划治理，但用户确认当前没有真实数据、真实环境或现实authority，TASK-P7-01因此为`BLOCKED_INPUT`且Milestone为`deferred`。不运行Historical Replay、Synthetic Comparison、Calibration、Solver Benchmark或Planner comparison，也不创建Reality Gap/Capacity evidence。冻结的未来链仍为P7-03/04真实匿名Snapshot/Replay、P7-05五维Reality Gap、P7-06新版本FactoryProfile、P7-07 exact-environment Benchmark、P7-08 Planner Baseline、P7-09 bounded Capacity Decision、P7-10 Gate C和P7-11独立Exit。
 
 P7不能成为第一次性能测试；P2 XS/S/M、P4 dynamic和P6 development observations继续作为冻结前序而非Production baseline。OPEN-011/012或其他关键authority未以独立closure record关闭时，任何P7结果都不得外推为Production readiness、deployment、capacity execution或SLA；历史数据缺失必须`NOT_READY`。
 

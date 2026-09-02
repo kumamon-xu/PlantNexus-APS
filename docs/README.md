@@ -11,13 +11,13 @@ last_reviewed: 2026-09-02
 
 # PlantNexus APS 文档中心
 
-## P7 activation and planning boundary
+## P7 deferred execution boundary
 
-用户已明确批准P6→P7；承接检查只确认既有P6 Exit已验证基线没有漂移，没有重做P6审核或业务验收。P6现为`completed`，P7现为`active`。
+P6→P7 transition和完整计划已经完成，P6保持`completed`。用户现确认研发阶段没有可介入测试的真实数据、真实环境或相应现实authority；P7输入启动门因此为`BLOCKED_INPUT`，Milestone执行状态为`deferred`，没有重做P6审核或业务验收。
 
-内部P7 Task索引建立12卡无环计划：输入authority→machine contract→Historical Snapshot→Historical Replay，随后Reality Gap→FactoryProfile Calibration→Solver Benchmark，并行Planner Baseline，在Capacity Decision汇合后进入Gate C和最终独立Exit Audit。TASK-P7-00只做治理；P7-01～11均`planned/NOT_STARTED`且需要另行授权和新Diff base。
+内部P7 Task索引保留12卡无环计划：输入authority→machine contract→Historical Snapshot→Historical Replay，随后Reality Gap→FactoryProfile Calibration→Solver Benchmark，并行Planner Baseline，在Capacity Decision汇合后进入Gate C和最终独立Exit Audit。TASK-P7-00已完成治理；TASK-P7-01保持`blocked/BLOCKED_INPUT`，P7-02～11均`planned/NOT_STARTED`，恢复时需要真实输入、另行授权和新Diff base。
 
-当前没有P7业务能力、Contract、Schema、migration、dependency、fixture、test、baseline或workflow变化。`REALITY_CALIBRATION`仍`DEFERRED/NOT_FORMED`，P6 AI default-off/标准工时fallback与P0～P6合同/state/Simulator边界保持冻结；Production/UAT/真实approval authority/external/deployment/capacity execution/SLA均未形成。Gate C既有口径见[性能与现实校准门](simulation/performance-gates.md)，计划链见[端到端计划链路](architecture/end-to-end-planning-flow.md)，状态见[能力矩阵](core/capability-matrix.md)。
+暂缓不形成P7业务能力，也没有Contract、Schema、migration、dependency、fixture、test、baseline或workflow变化。`REALITY_CALIBRATION`仍`DEFERRED/NOT_FORMED`，P6 AI default-off/标准工时fallback与P0～P6合同/state/Simulator边界保持冻结；Production/UAT/真实approval authority/external/deployment/capacity execution/SLA均未形成。Gate C既有口径见[性能与现实校准门](simulation/performance-gates.md)，冻结计划链见[端到端计划链路](architecture/end-to-end-planning-flow.md)，状态见[能力矩阵](core/capability-matrix.md)。
 
 ## Historical TASK-P6-10 independent P6 Exit Gate audit
 
@@ -319,7 +319,7 @@ TASK-P4-02已获单独授权并以`4026597ab1015b5ea3a89d241f0d12b5b481dee3`为�
 
 ## 当前范围
 
-当前阶段为P7。P0～P6 Milestone均为`completed`，P7为`active`；TASK-P7-00只执行phase/plan治理，P7-01～11全部`planned/NOT_STARTED`。详见`current_phase.md`。
+当前阶段定位仍为P7。P0～P6 Milestone均为`completed`，P7执行状态为`deferred`；TASK-P7-00已完成phase/plan治理，TASK-P7-01为`blocked/BLOCKED_INPUT`，P7-02～11全部`planned/NOT_STARTED`。详见内部`current_phase.md`。
 
 P3已形成的顺序保持合同/ADR→Schema→persistence→validated DRAFT→read models→edit/lock→approval/reject→idempotent publish→ExportJob→API→Frontend/E2E→vertical Gate。批准的末段顺序为TASK-P3-15治理支持→TASK-P3-16本地化→TASK-P3-17独立Exit Audit；P3-16现已完成实现provider复验与文档closure，下一项仍须另行授权。展示术语规范见[`frontend/official-zh-cn-terminology-map.md`](frontend/official-zh-cn-terminology-map.md)，它不改变英文机器合同。
 

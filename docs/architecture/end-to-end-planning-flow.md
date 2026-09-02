@@ -11,9 +11,9 @@ last_reviewed: 2026-09-02
 
 # 端到端计划链路
 
-## P7 planned calibration evidence chain
+## P7 deferred calibration evidence chain
 
-P7激活只登记未来证据链，不增加当前业务edge：
+P7计划只登记下述未来证据链；用户确认当前没有真实数据、真实环境或现实authority后，TASK-P7-01以`BLOCKED_INPUT`停止，Milestone为`deferred`，不增加当前业务edge：
 
 ```text
 authorized anonymized historical source
@@ -29,7 +29,7 @@ authorized anonymized historical source
 → independent P7 Exit Audit
 ```
 
-TASK-P7-00没有实现上述任一箭头。后继必须保留common ingress、Snapshot/Problem identity、Solver-neutral contract和fresh Validator；P6 DurationPrediction继续default-off并回退权威标准工时。ExecutionEvent/ReplanRequest/freeze/OBJ-002/ChangeReport/Execution Simulator和PlanningRun/ScheduleVersion/ExportJob状态机均为冻结边界。
+TASK-P7-00及本次启动门核验都没有实现上述任一箭头。未来恢复后仍必须保留common ingress、Snapshot/Problem identity、Solver-neutral contract和fresh Validator；P6 DurationPrediction继续default-off并回退权威标准工时。ExecutionEvent/ReplanRequest/freeze/OBJ-002/ChangeReport/Execution Simulator和PlanningRun/ScheduleVersion/ExportJob状态机均为冻结边界。
 
 Production Capacity Decision只描述exact workload/environment下的证据边界，不是Production readiness、approval、external integration、deployment、capacity execution或SLA。历史数据缺失时链路必须停止，不能以synthetic捷径替代。
 

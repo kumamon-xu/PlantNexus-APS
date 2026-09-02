@@ -11,11 +11,11 @@ last_reviewed: 2026-09-02
 
 # 能力矩阵
 
-## P7 activation status
+## P7 deferred status
 
-P7 Milestone现已按用户明确授权激活，但`REALITY_CALIBRATION`继续`DEFERRED/NOT_FORMED`。TASK-P7-00只建立12卡计划和DAG，没有真实Historical Snapshot、Replay、Reality Gap、FactoryProfile Calibration、Solver Benchmark、Planner Baseline、Production Capacity Decision、Gate C或Exit evidence，也没有Contract/Schema/migration/dependency/业务代码变化。
+P7 Milestone已完成激活与计划治理，但用户确认当前研发阶段没有真实数据、真实环境或现实authority，故TASK-P7-01启动门为`BLOCKED_INPUT`、Milestone执行状态为`deferred`；`REALITY_CALIBRATION`继续`DEFERRED/NOT_FORMED`。没有真实Historical Snapshot、Replay、Reality Gap、FactoryProfile Calibration、Solver Benchmark、Planner Baseline、Production Capacity Decision、Gate C或Exit evidence，也没有Contract/Schema/migration/dependency/业务代码变化。
 
-P6 `AI_DURATION_PREDICTION`保持`DEFERRED`、default-off、Simulation/development-only及exact standard-duration fallback；P7规划不能把它提升为真实data/model authority。OPEN-001～015全部OPEN，P8+/Production/UAT/真实approval authority/external integration/deployment/capacity execution/SLA全部未形成。后继每张P7成员卡必须另获授权与exact provider，计划存在本身不能启用能力或关闭OPEN。
+P6 `AI_DURATION_PREDICTION`保持`DEFERRED`、default-off、Simulation/development-only及exact standard-duration fallback；P7规划不能把它提升为真实data/model authority。OPEN-001～015全部OPEN，P8+/Production/UAT/真实approval authority/external integration/deployment/capacity execution/SLA全部未形成。P7恢复必须先具备真实输入与环境并另获授权；计划或暂缓状态本身不能启用能力或关闭OPEN。
 
 ## TASK-P6-10 independent Exit audit status
 

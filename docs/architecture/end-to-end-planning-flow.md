@@ -11,6 +11,28 @@ last_reviewed: 2026-09-02
 
 # 端到端计划链路
 
+## P7 planned calibration evidence chain
+
+P7激活只登记未来证据链，不增加当前业务edge：
+
+```text
+authorized anonymized historical source
+→ Standard Import / Normalization / Data Validation
+→ immutable Historical Snapshot
+→ existing PlanningProblem / Global Solver / fresh formal Validator
+→ Historical Replay
+→ real ↔ synthetic five-dimension comparison
+→ versioned FactoryProfile Calibration
+→ exact-environment Solver Benchmark + Planner Baseline Comparison
+→ bounded Production Capacity Decision
+→ Gate C
+→ independent P7 Exit Audit
+```
+
+TASK-P7-00没有实现上述任一箭头。后继必须保留common ingress、Snapshot/Problem identity、Solver-neutral contract和fresh Validator；P6 DurationPrediction继续default-off并回退权威标准工时。ExecutionEvent/ReplanRequest/freeze/OBJ-002/ChangeReport/Execution Simulator和PlanningRun/ScheduleVersion/ExportJob状态机均为冻结边界。
+
+Production Capacity Decision只描述exact workload/environment下的证据边界，不是Production readiness、approval、external integration、deployment、capacity execution或SLA。历史数据缺失时链路必须停止，不能以synthetic捷径替代。
+
 ## TASK-P6-10 independent Exit audit edge
 
 P6-10只增加如下只读审计边，不增加预测或排程业务edge：

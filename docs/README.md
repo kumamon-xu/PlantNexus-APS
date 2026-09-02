@@ -3,7 +3,7 @@ doc_id: DOC-INDEX-001
 title: PlantNexus APS 文档中心
 status: baseline
 spec_version: 0.3.0
-phase: P6
+phase: P7
 normative: false
 source_sections: [2, 6, 70]
 last_reviewed: 2026-09-02
@@ -11,7 +11,15 @@ last_reviewed: 2026-09-02
 
 # PlantNexus APS 文档中心
 
-## TASK-P6-10 independent P6 Exit Gate audit
+## P7 activation and planning boundary
+
+用户已明确批准P6→P7；承接检查只确认既有P6 Exit已验证基线没有漂移，没有重做P6审核或业务验收。P6现为`completed`，P7现为`active`。
+
+内部P7 Task索引建立12卡无环计划：输入authority→machine contract→Historical Snapshot→Historical Replay，随后Reality Gap→FactoryProfile Calibration→Solver Benchmark，并行Planner Baseline，在Capacity Decision汇合后进入Gate C和最终独立Exit Audit。TASK-P7-00只做治理；P7-01～11均`planned/NOT_STARTED`且需要另行授权和新Diff base。
+
+当前没有P7业务能力、Contract、Schema、migration、dependency、fixture、test、baseline或workflow变化。`REALITY_CALIBRATION`仍`DEFERRED/NOT_FORMED`，P6 AI default-off/标准工时fallback与P0～P6合同/state/Simulator边界保持冻结；Production/UAT/真实approval authority/external/deployment/capacity execution/SLA均未形成。Gate C既有口径见[性能与现实校准门](simulation/performance-gates.md)，计划链见[端到端计划链路](architecture/end-to-end-planning-flow.md)，状态见[能力矩阵](core/capability-matrix.md)。
+
+## Historical TASK-P6-10 independent P6 Exit Gate audit
 
 P6-10从不可变Diff base `dc38f0156b154652b192a671c959b0da71aab08f`执行独立Exit审计，不复用P6-09 PASS作为Exit结论。审计重新查询完整P6 Task/DAG和18次精确Provider执行，下载48份未过期制品并逐份比对Provider/download digest、ZIP与JSON语义；17次成功执行和P6-02保留失败→新SHA纠偏链均保存在公开[`p6-exit-gate-audit-observations.v1.json`](p6-exit-gate-audit-observations.v1.json)。
 
@@ -311,7 +319,7 @@ TASK-P4-02已获单独授权并以`4026597ab1015b5ea3a89d241f0d12b5b481dee3`为�
 
 ## 当前范围
 
-当前阶段为P4。P0～P3 Milestone均为`completed`；TASK-P3-00～17全部`done`且P3 Exit双提交provider已闭环。TASK-P4-00～08与P4-16现为`done`，P4-09～15为`planned`成员且未自动启动；P4-15最终独立审计也不自动进入P5或Production。详见`current_phase.md`。
+当前阶段为P7。P0～P6 Milestone均为`completed`，P7为`active`；TASK-P7-00只执行phase/plan治理，P7-01～11全部`planned/NOT_STARTED`。详见`current_phase.md`。
 
 P3已形成的顺序保持合同/ADR→Schema→persistence→validated DRAFT→read models→edit/lock→approval/reject→idempotent publish→ExportJob→API→Frontend/E2E→vertical Gate。批准的末段顺序为TASK-P3-15治理支持→TASK-P3-16本地化→TASK-P3-17独立Exit Audit；P3-16现已完成实现provider复验与文档closure，下一项仍须另行授权。展示术语规范见[`frontend/official-zh-cn-terminology-map.md`](frontend/official-zh-cn-terminology-map.md)，它不改变英文机器合同。
 

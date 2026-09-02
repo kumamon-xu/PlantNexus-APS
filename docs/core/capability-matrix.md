@@ -11,6 +11,12 @@ last_reviewed: 2026-09-02
 
 # 能力矩阵
 
+## P7 activation status
+
+P7 Milestone现已按用户明确授权激活，但`REALITY_CALIBRATION`继续`DEFERRED/NOT_FORMED`。TASK-P7-00只建立12卡计划和DAG，没有真实Historical Snapshot、Replay、Reality Gap、FactoryProfile Calibration、Solver Benchmark、Planner Baseline、Production Capacity Decision、Gate C或Exit evidence，也没有Contract/Schema/migration/dependency/业务代码变化。
+
+P6 `AI_DURATION_PREDICTION`保持`DEFERRED`、default-off、Simulation/development-only及exact standard-duration fallback；P7规划不能把它提升为真实data/model authority。OPEN-001～015全部OPEN，P8+/Production/UAT/真实approval authority/external integration/deployment/capacity execution/SLA全部未形成。后继每张P7成员卡必须另获授权与exact provider，计划存在本身不能启用能力或关闭OPEN。
+
 ## TASK-P6-10 independent Exit audit status
 
 `AI_DURATION_PREDICTION`继续`DEFERRED`，当前分项为`CONTRACT_V1 + SIMULATION_DATASET_V1 + BASELINE_MODEL_V1 + OFFLINE_GATE_READY + LOCAL_RUNTIME_V1 + PLANNING_INGRESS_V1 + AGGREGATE_MONITOR_V1 + VERTICAL_GATE_V1 + EXIT_AUDIT_LOCAL_READY / DEFAULT_OFF_SIMULATION_ONLY`。`EXIT_AUDIT_LOCAL_READY`只表示18次精确Provider历史、48份下载制品、完整P6拓扑与两轮fresh owner/P2/P4回归已由独立PHASE_GATE得到17/17、0 issue、0 blocking gap；它不提升能力authority。

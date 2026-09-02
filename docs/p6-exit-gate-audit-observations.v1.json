@@ -1,0 +1,1829 @@
+{
+  "audit_task": "TASK-P6-10",
+  "boundaries": {
+    "automatic_phase_transition": "PROHIBITED",
+    "automatic_retraining_promotion_rollback": "NONE",
+    "capacity_and_sla": "NOT_ESTABLISHED",
+    "current_phase": "P6",
+    "data_plane": "SIMULATION_DEVELOPMENT_ONLY",
+    "default_enabled": false,
+    "external_integration_or_deployment": "NONE",
+    "p6_milestone": "ACTIVE_AWAITING_USER_TRANSITION",
+    "p7_reality_calibration": "NOT_ENTERED",
+    "production_data_model_approval_authority": "NOT_FORMED",
+    "production_readiness": "NOT_CLAIMED",
+    "routing_resource_constraints_state_weights": "UNCHANGED",
+    "standard_duration_authority": "UNCHANGED_EXACT_FALLBACK",
+    "uat": "NOT_PERFORMED"
+  },
+  "contracts": {
+    "accepted_adr": "ADR-0016",
+    "capability": "DEFERRED_DEFAULT_OFF_SIMULATION_ONLY_WITH_AGGREGATE_MONITOR",
+    "duration_schema_count": 4,
+    "fallback_reason_count_excluding_none": 19,
+    "p6_gate_reference_policy": "HISTORICAL_REFERENCE_ONLY_FRESH_REPLAY_REQUIRED",
+    "schema_set_version": "2.9.0",
+    "standard_duration_authority": "UNCHANGED"
+  },
+  "failure_corrective_chain": [
+    {
+      "corrective_run_id": 33464029827,
+      "corrective_sha": "093e6e1057458850eae11334b3015778f35bf273",
+      "failed_run_id": 33462987751,
+      "failed_sha": "969891710add4133f2cf1e52362a360ef6a7fc29",
+      "rerun_used": false,
+      "status": "CORRECTED_BY_NEW_SHA",
+      "task_id": "TASK-P6-02"
+    }
+  ],
+  "immutable_diff_base": "dc38f0156b154652b192a671c959b0da71aab08f",
+  "issues": [],
+  "observation_fingerprint": "sha256:2ce4789f723af7ace0fd438d5bc56b756e5268fedf4563bd0937de651272e80f",
+  "observed_at_utc": "2026-09-02T00:17:11+00:00",
+  "provider_audit": {
+    "artifact_count": 48,
+    "digest_mismatch_count": 0,
+    "expired_artifact_count": 0,
+    "json_entry_count": 663,
+    "provider_inventory_fingerprint": "sha256:c837a9666388b7868795eca51457c7e8c1af7ad29c50603b99a4305b0581cbb7",
+    "retained_failed_run_count": 1,
+    "retained_failure_zip_issue_count": 1,
+    "run_count": 18,
+    "successful_artifact_count": 46,
+    "successful_run_count": 17,
+    "successful_zip_issue_count": 0
+  },
+  "provider_runs": [
+    {
+      "artifact_count": 2,
+      "artifacts": [
+        {
+          "bytes": 576,
+          "digest_match": true,
+          "downloaded_sha256": "sha256:eb49b95cf654d9296ec956966b96b09fd075b346392c39122320ad31391794f1",
+          "entry_count": 1,
+          "entry_inventory_fingerprint": "sha256:3ce0f2a39507d11ee19f12e155a4a67f7c7ca78c62394816361ef2bab3e625c1",
+          "expires_at": "2026-11-30T00:44:59Z",
+          "id": 9781446596,
+          "json_entry_count": 1,
+          "name": "plantnexus-ci-profile-33456013298",
+          "provider_digest": "sha256:eb49b95cf654d9296ec956966b96b09fd075b346392c39122320ad31391794f1",
+          "zip_issue_count": 0
+        },
+        {
+          "bytes": 526,
+          "digest_match": true,
+          "downloaded_sha256": "sha256:c46d694aeb5a2835d219427a3a99f28301e71438ed36c9c7c882b8e800ad9022",
+          "entry_count": 1,
+          "entry_inventory_fingerprint": "sha256:96ef7823a0993aca6d9df9f7c7eaf74d4d8f8068f8f48f996504a39c87d31997",
+          "expires_at": "2026-11-30T00:44:59Z",
+          "id": 9781450874,
+          "json_entry_count": 1,
+          "name": "plantnexus-ci-public-docs-33456013298",
+          "provider_digest": "sha256:c46d694aeb5a2835d219427a3a99f28301e71438ed36c9c7c882b8e800ad9022",
+          "zip_issue_count": 0
+        }
+      ],
+      "commit_sha": "5a58356d8df45c9156223d2b4ca935cc3e5f2f7a",
+      "created_at": "2026-09-01T00:44:59Z",
+      "evidence_kind": "implementation",
+      "expected_conclusion": "success",
+      "issues": [],
+      "jobs": [
+        {
+          "conclusion": "success",
+          "id": 99696008255,
+          "name": "classify",
+          "status": "completed"
+        },
+        {
+          "conclusion": "success",
+          "id": 99696033155,
+          "name": "docs_validation",
+          "status": "completed"
+        },
+        {
+          "conclusion": "skipped",
+          "id": 99696035089,
+          "name": "full_validation",
+          "status": "completed"
+        },
+        {
+          "conclusion": "success",
+          "id": 99696075050,
+          "name": "validate",
+          "status": "completed"
+        }
+      ],
+      "profile": "DOCS_ONLY",
+      "required_check": {
+        "app_id": 15368,
+        "conclusion": "success",
+        "id": 99696075050,
+        "name": "validate",
+        "status": "completed"
+      },
+      "required_job_id": 99696075050,
+      "run_attempt": 1,
+      "run_conclusion": "success",
+      "run_id": 33456013298,
+      "run_status": "completed",
+      "task_id": "TASK-P6-00",
+      "updated_at": "2026-09-01T00:45:25Z"
+    },
+    {
+      "artifact_count": 2,
+      "artifacts": [
+        {
+          "bytes": 557,
+          "digest_match": true,
+          "downloaded_sha256": "sha256:f755adb024d70a7c8257a2c1a5efe7f23accb6ccf9219b3077d1067e2a59bbaa",
+          "entry_count": 1,
+          "entry_inventory_fingerprint": "sha256:e72cf0771fdd2e6379527c0294a7f836e5abb5e22183dec256a723f4d84cde20",
+          "expires_at": "2026-11-30T00:47:39Z",
+          "id": 9781506983,
+          "json_entry_count": 1,
+          "name": "plantnexus-ci-profile-33456198117",
+          "provider_digest": "sha256:f755adb024d70a7c8257a2c1a5efe7f23accb6ccf9219b3077d1067e2a59bbaa",
+          "zip_issue_count": 0
+        },
+        {
+          "bytes": 506,
+          "digest_match": true,
+          "downloaded_sha256": "sha256:8d215a848c8f3a37bb954e69cb1e0d2124ef9492183e3ac9a3c00c7474d49d54",
+          "entry_count": 1,
+          "entry_inventory_fingerprint": "sha256:e3aaa1f0633a6aac51274091e1a752cf8eb70b1eeba5060158b45bc41a54467a",
+          "expires_at": "2026-11-30T00:47:39Z",
+          "id": 9781510961,
+          "json_entry_count": 1,
+          "name": "plantnexus-ci-public-docs-33456198117",
+          "provider_digest": "sha256:8d215a848c8f3a37bb954e69cb1e0d2124ef9492183e3ac9a3c00c7474d49d54",
+          "zip_issue_count": 0
+        }
+      ],
+      "commit_sha": "e854c5bbea784f513863ae55d6b872a7a7d1b928",
+      "created_at": "2026-09-01T00:47:39Z",
+      "evidence_kind": "closure",
+      "expected_conclusion": "success",
+      "issues": [],
+      "jobs": [
+        {
+          "conclusion": "success",
+          "id": 99696551731,
+          "name": "classify",
+          "status": "completed"
+        },
+        {
+          "conclusion": "success",
+          "id": 99696581412,
+          "name": "docs_validation",
+          "status": "completed"
+        },
+        {
+          "conclusion": "skipped",
+          "id": 99696582842,
+          "name": "full_validation",
+          "status": "completed"
+        },
+        {
+          "conclusion": "success",
+          "id": 99696621103,
+          "name": "validate",
+          "status": "completed"
+        }
+      ],
+      "profile": "DOCS_ONLY",
+      "required_check": {
+        "app_id": 15368,
+        "conclusion": "success",
+        "id": 99696621103,
+        "name": "validate",
+        "status": "completed"
+      },
+      "required_job_id": 99696621103,
+      "run_attempt": 1,
+      "run_conclusion": "success",
+      "run_id": 33456198117,
+      "run_status": "completed",
+      "task_id": "TASK-P6-00",
+      "updated_at": "2026-09-01T00:48:07Z"
+    },
+    {
+      "artifact_count": 2,
+      "artifacts": [
+        {
+          "bytes": 733,
+          "digest_match": true,
+          "downloaded_sha256": "sha256:ee500f13f1e01f304e859153486b022460b3a8af2a9d7ce1ac4e94d994fef7c8",
+          "entry_count": 1,
+          "entry_inventory_fingerprint": "sha256:240c16bb1e63690bc148d649bf94fb717088c5a717981aa7d76785b7076fa3d5",
+          "expires_at": "2026-11-30T01:12:12Z",
+          "id": 9782059443,
+          "json_entry_count": 1,
+          "name": "plantnexus-ci-profile-33457799580",
+          "provider_digest": "sha256:ee500f13f1e01f304e859153486b022460b3a8af2a9d7ce1ac4e94d994fef7c8",
+          "zip_issue_count": 0
+        },
+        {
+          "bytes": 687,
+          "digest_match": true,
+          "downloaded_sha256": "sha256:3e59a355c1645a5017f3fda8bef9f8f70b38e06fc41f8994348800afe8e89b9a",
+          "entry_count": 1,
+          "entry_inventory_fingerprint": "sha256:8f062bbe29aaa5a45d83df41a123009daf57a723972598cc4748d7bca101687c",
+          "expires_at": "2026-11-30T01:12:12Z",
+          "id": 9782062454,
+          "json_entry_count": 1,
+          "name": "plantnexus-ci-public-docs-33457799580",
+          "provider_digest": "sha256:3e59a355c1645a5017f3fda8bef9f8f70b38e06fc41f8994348800afe8e89b9a",
+          "zip_issue_count": 0
+        }
+      ],
+      "commit_sha": "856aac53cefa9477eb2b5906958f0a14775a950c",
+      "created_at": "2026-09-01T01:12:12Z",
+      "evidence_kind": "implementation",
+      "expected_conclusion": "success",
+      "issues": [],
+      "jobs": [
+        {
+          "conclusion": "success",
+          "id": 99701388867,
+          "name": "classify",
+          "status": "completed"
+        },
+        {
+          "conclusion": "success",
+          "id": 99701411750,
+          "name": "docs_validation",
+          "status": "completed"
+        },
+        {
+          "conclusion": "skipped",
+          "id": 99701413055,
+          "name": "full_validation",
+          "status": "completed"
+        },
+        {
+          "conclusion": "success",
+          "id": 99701440089,
+          "name": "validate",
+          "status": "completed"
+        }
+      ],
+      "profile": "DOCS_ONLY",
+      "required_check": {
+        "app_id": 15368,
+        "conclusion": "success",
+        "id": 99701440089,
+        "name": "validate",
+        "status": "completed"
+      },
+      "required_job_id": 99701440089,
+      "run_attempt": 1,
+      "run_conclusion": "success",
+      "run_id": 33457799580,
+      "run_status": "completed",
+      "task_id": "TASK-P6-01",
+      "updated_at": "2026-09-01T01:12:36Z"
+    },
+    {
+      "artifact_count": 2,
+      "artifacts": [
+        {
+          "bytes": 558,
+          "digest_match": true,
+          "downloaded_sha256": "sha256:05782dfdf51f0c7f1bf9389ac2ea4a4c60854474ffa0aa2f88d715e71650639f",
+          "entry_count": 1,
+          "entry_inventory_fingerprint": "sha256:ec6a81320b56d42c783115578cc98f73446181529bcd45bf389dc32ee95fef73",
+          "expires_at": "2026-11-30T01:15:49Z",
+          "id": 9782140872,
+          "json_entry_count": 1,
+          "name": "plantnexus-ci-profile-33458046556",
+          "provider_digest": "sha256:05782dfdf51f0c7f1bf9389ac2ea4a4c60854474ffa0aa2f88d715e71650639f",
+          "zip_issue_count": 0
+        },
+        {
+          "bytes": 506,
+          "digest_match": true,
+          "downloaded_sha256": "sha256:72f00e2bd73db2e5006a11225d2f8cff775598e4649733dea0bc39bdabd9b0e6",
+          "entry_count": 1,
+          "entry_inventory_fingerprint": "sha256:c8d70b9a11eb36c930daa32c513782760cba4c93d5df786d5548a594fd9e64d9",
+          "expires_at": "2026-11-30T01:15:49Z",
+          "id": 9782145187,
+          "json_entry_count": 1,
+          "name": "plantnexus-ci-public-docs-33458046556",
+          "provider_digest": "sha256:72f00e2bd73db2e5006a11225d2f8cff775598e4649733dea0bc39bdabd9b0e6",
+          "zip_issue_count": 0
+        }
+      ],
+      "commit_sha": "e74099ca24ed59140f6490c84025b7299b5f201d",
+      "created_at": "2026-09-01T01:15:49Z",
+      "evidence_kind": "closure",
+      "expected_conclusion": "success",
+      "issues": [],
+      "jobs": [
+        {
+          "conclusion": "success",
+          "id": 99702103076,
+          "name": "classify",
+          "status": "completed"
+        },
+        {
+          "conclusion": "success",
+          "id": 99702128894,
+          "name": "docs_validation",
+          "status": "completed"
+        },
+        {
+          "conclusion": "skipped",
+          "id": 99702129964,
+          "name": "full_validation",
+          "status": "completed"
+        },
+        {
+          "conclusion": "success",
+          "id": 99702170559,
+          "name": "validate",
+          "status": "completed"
+        }
+      ],
+      "profile": "DOCS_ONLY",
+      "required_check": {
+        "app_id": 15368,
+        "conclusion": "success",
+        "id": 99702170559,
+        "name": "validate",
+        "status": "completed"
+      },
+      "required_job_id": 99702170559,
+      "run_attempt": 1,
+      "run_conclusion": "success",
+      "run_id": 33458046556,
+      "run_status": "completed",
+      "task_id": "TASK-P6-01",
+      "updated_at": "2026-09-01T01:16:15Z"
+    },
+    {
+      "artifact_count": 2,
+      "artifacts": [
+        {
+          "bytes": 356034,
+          "digest_match": true,
+          "downloaded_sha256": "sha256:9aa4df989b13db1a511c2b209343d0b9df739b2467f8c79439353edf03cf2231",
+          "entry_count": 46,
+          "entry_inventory_fingerprint": "sha256:0104da959f46d4958def7463670687fa61299b2f8ccc7f99d66e96eadbd7ff16",
+          "expires_at": "2026-11-30T02:33:34Z",
+          "id": 9783997445,
+          "json_entry_count": 44,
+          "name": "plantnexus-ci-evidence-33462987751",
+          "provider_digest": "sha256:9aa4df989b13db1a511c2b209343d0b9df739b2467f8c79439353edf03cf2231",
+          "zip_issue_count": 1
+        },
+        {
+          "bytes": 1199,
+          "digest_match": true,
+          "downloaded_sha256": "sha256:a080734fbf6fb7b2dc47b66f1d6b78508b74091dddf1c04ad37c821589dab9e3",
+          "entry_count": 1,
+          "entry_inventory_fingerprint": "sha256:83495b552864da0de60c9cb130f7d1f34f615d2ce1a7214cccce07b43bdd77a2",
+          "expires_at": "2026-11-30T02:33:34Z",
+          "id": 9783828170,
+          "json_entry_count": 1,
+          "name": "plantnexus-ci-profile-33462987751",
+          "provider_digest": "sha256:a080734fbf6fb7b2dc47b66f1d6b78508b74091dddf1c04ad37c821589dab9e3",
+          "zip_issue_count": 0
+        }
+      ],
+      "commit_sha": "969891710add4133f2cf1e52362a360ef6a7fc29",
+      "created_at": "2026-09-01T02:33:34Z",
+      "evidence_kind": "retained_failed_candidate",
+      "expected_conclusion": "failure",
+      "issues": [],
+      "jobs": [
+        {
+          "conclusion": "success",
+          "id": 99716911544,
+          "name": "classify",
+          "status": "completed"
+        },
+        {
+          "conclusion": "failure",
+          "id": 99716936028,
+          "name": "full_validation",
+          "status": "completed"
+        },
+        {
+          "conclusion": "skipped",
+          "id": 99716937085,
+          "name": "docs_validation",
+          "status": "completed"
+        },
+        {
+          "conclusion": "failure",
+          "id": 99718412135,
+          "name": "validate",
+          "status": "completed"
+        }
+      ],
+      "profile": "FULL",
+      "required_check": {
+        "app_id": 15368,
+        "conclusion": "failure",
+        "id": 99718412135,
+        "name": "validate",
+        "status": "completed"
+      },
+      "required_job_id": 99718412135,
+      "run_attempt": 1,
+      "run_conclusion": "failure",
+      "run_id": 33462987751,
+      "run_status": "completed",
+      "task_id": "TASK-P6-02",
+      "updated_at": "2026-09-01T02:41:34Z"
+    },
+    {
+      "artifact_count": 2,
+      "artifacts": [
+        {
+          "bytes": 1603155,
+          "digest_match": true,
+          "downloaded_sha256": "sha256:7ba06bcfdf3851cbcdd241aca5e82fb3cd3fd3e57f143a3499fee3fabb451089",
+          "entry_count": 70,
+          "entry_inventory_fingerprint": "sha256:81eb1142bf68c6041c360caa3c4f63e002c0df221464e9aa7c377fe53a9ab3c2",
+          "expires_at": "2026-11-30T02:50:23Z",
+          "id": 9784437414,
+          "json_entry_count": 60,
+          "name": "plantnexus-ci-evidence-33464029827",
+          "provider_digest": "sha256:7ba06bcfdf3851cbcdd241aca5e82fb3cd3fd3e57f143a3499fee3fabb451089",
+          "zip_issue_count": 0
+        },
+        {
+          "bytes": 562,
+          "digest_match": true,
+          "downloaded_sha256": "sha256:20d7b5504dd71842741ac857cfc7712422602b65c62966709b924c1d0161743f",
+          "entry_count": 1,
+          "entry_inventory_fingerprint": "sha256:8cc8194dd71471e0ce980f76427dca5d6805c7ce5694b032b15de16a145c4bde",
+          "expires_at": "2026-11-30T02:50:23Z",
+          "id": 9784195878,
+          "json_entry_count": 1,
+          "name": "plantnexus-ci-profile-33464029827",
+          "provider_digest": "sha256:20d7b5504dd71842741ac857cfc7712422602b65c62966709b924c1d0161743f",
+          "zip_issue_count": 0
+        }
+      ],
+      "commit_sha": "093e6e1057458850eae11334b3015778f35bf273",
+      "created_at": "2026-09-01T02:50:23Z",
+      "evidence_kind": "corrective_implementation",
+      "expected_conclusion": "success",
+      "issues": [],
+      "jobs": [
+        {
+          "conclusion": "success",
+          "id": 99720044223,
+          "name": "classify",
+          "status": "completed"
+        },
+        {
+          "conclusion": "success",
+          "id": 99720077916,
+          "name": "full_validation",
+          "status": "completed"
+        },
+        {
+          "conclusion": "skipped",
+          "id": 99720079061,
+          "name": "docs_validation",
+          "status": "completed"
+        },
+        {
+          "conclusion": "success",
+          "id": 99722215840,
+          "name": "validate",
+          "status": "completed"
+        }
+      ],
+      "profile": "FULL",
+      "required_check": {
+        "app_id": 15368,
+        "conclusion": "success",
+        "id": 99722215840,
+        "name": "validate",
+        "status": "completed"
+      },
+      "required_job_id": 99722215840,
+      "run_attempt": 1,
+      "run_conclusion": "success",
+      "run_id": 33464029827,
+      "run_status": "completed",
+      "task_id": "TASK-P6-02",
+      "updated_at": "2026-09-01T03:02:47Z"
+    },
+    {
+      "artifact_count": 2,
+      "artifacts": [
+        {
+          "bytes": 559,
+          "digest_match": true,
+          "downloaded_sha256": "sha256:6203e9d15dafa98560be208a39c52fe27b61f37dc40da4837175311427c9b084",
+          "entry_count": 1,
+          "entry_inventory_fingerprint": "sha256:a60e52c2c7bfe610d5f42f7bd83c68a13ba019296a2bb2890ca41055168c23db",
+          "expires_at": "2026-11-30T03:08:49Z",
+          "id": 9784565162,
+          "json_entry_count": 1,
+          "name": "plantnexus-ci-profile-33465136714",
+          "provider_digest": "sha256:6203e9d15dafa98560be208a39c52fe27b61f37dc40da4837175311427c9b084",
+          "zip_issue_count": 0
+        },
+        {
+          "bytes": 507,
+          "digest_match": true,
+          "downloaded_sha256": "sha256:70404f0ffc96f79c8cc7d4b06f9d8dbe79b4ed20af71faf8b551cdba79435f80",
+          "entry_count": 1,
+          "entry_inventory_fingerprint": "sha256:9b2377fa26bc645a6e227e37c49398d24226dc65d83b5d28c4fd349b7d630f06",
+          "expires_at": "2026-11-30T03:08:49Z",
+          "id": 9784568586,
+          "json_entry_count": 1,
+          "name": "plantnexus-ci-public-docs-33465136714",
+          "provider_digest": "sha256:70404f0ffc96f79c8cc7d4b06f9d8dbe79b4ed20af71faf8b551cdba79435f80",
+          "zip_issue_count": 0
+        }
+      ],
+      "commit_sha": "4360746f2712012a0aa4f52a40c189837a2097b3",
+      "created_at": "2026-09-01T03:08:49Z",
+      "evidence_kind": "closure",
+      "expected_conclusion": "success",
+      "issues": [],
+      "jobs": [
+        {
+          "conclusion": "success",
+          "id": 99723322165,
+          "name": "classify",
+          "status": "completed"
+        },
+        {
+          "conclusion": "success",
+          "id": 99723347032,
+          "name": "docs_validation",
+          "status": "completed"
+        },
+        {
+          "conclusion": "skipped",
+          "id": 99723347915,
+          "name": "full_validation",
+          "status": "completed"
+        },
+        {
+          "conclusion": "success",
+          "id": 99723376173,
+          "name": "validate",
+          "status": "completed"
+        }
+      ],
+      "profile": "DOCS_ONLY",
+      "required_check": {
+        "app_id": 15368,
+        "conclusion": "success",
+        "id": 99723376173,
+        "name": "validate",
+        "status": "completed"
+      },
+      "required_job_id": 99723376173,
+      "run_attempt": 1,
+      "run_conclusion": "success",
+      "run_id": 33465136714,
+      "run_status": "completed",
+      "task_id": "TASK-P6-02",
+      "updated_at": "2026-09-01T03:09:13Z"
+    },
+    {
+      "artifact_count": 2,
+      "artifacts": [
+        {
+          "bytes": 1607347,
+          "digest_match": true,
+          "downloaded_sha256": "sha256:c85f8fc92abbf58cf3a3533730d13f31ce33c61bc193a163af8595da597f5fc8",
+          "entry_count": 71,
+          "entry_inventory_fingerprint": "sha256:33601a6c69ee76ff92bdc79847434294ce499a0eb2f560a86cd59e50ecb32335",
+          "expires_at": "2026-11-30T04:00:18Z",
+          "id": 9785860246,
+          "json_entry_count": 61,
+          "name": "plantnexus-ci-evidence-33468228427",
+          "provider_digest": "sha256:c85f8fc92abbf58cf3a3533730d13f31ce33c61bc193a163af8595da597f5fc8",
+          "zip_issue_count": 0
+        },
+        {
+          "bytes": 877,
+          "digest_match": true,
+          "downloaded_sha256": "sha256:80620dc08b8162027112c66ee49990687ad7919ced6bf1ecbf2757faab932fe2",
+          "entry_count": 1,
+          "entry_inventory_fingerprint": "sha256:8f24ca19efd7c67b6b79b5987774401856b91352edd97aa5186a01f964f79c26",
+          "expires_at": "2026-11-30T04:00:18Z",
+          "id": 9785603625,
+          "json_entry_count": 1,
+          "name": "plantnexus-ci-profile-33468228427",
+          "provider_digest": "sha256:80620dc08b8162027112c66ee49990687ad7919ced6bf1ecbf2757faab932fe2",
+          "zip_issue_count": 0
+        }
+      ],
+      "commit_sha": "19c80dac7cf298b423d9e22add2268421520ef75",
+      "created_at": "2026-09-01T04:00:18Z",
+      "evidence_kind": "implementation",
+      "expected_conclusion": "success",
+      "issues": [],
+      "jobs": [
+        {
+          "conclusion": "success",
+          "id": 99732427284,
+          "name": "classify",
+          "status": "completed"
+        },
+        {
+          "conclusion": "success",
+          "id": 99732449853,
+          "name": "full_validation",
+          "status": "completed"
+        },
+        {
+          "conclusion": "skipped",
+          "id": 99732451067,
+          "name": "docs_validation",
+          "status": "completed"
+        },
+        {
+          "conclusion": "success",
+          "id": 99734830107,
+          "name": "validate",
+          "status": "completed"
+        }
+      ],
+      "profile": "FULL",
+      "required_check": {
+        "app_id": 15368,
+        "conclusion": "success",
+        "id": 99734830107,
+        "name": "validate",
+        "status": "completed"
+      },
+      "required_job_id": 99734830107,
+      "run_attempt": 1,
+      "run_conclusion": "success",
+      "run_id": 33468228427,
+      "run_status": "completed",
+      "task_id": "TASK-P6-03",
+      "updated_at": "2026-09-01T04:13:42Z"
+    },
+    {
+      "artifact_count": 2,
+      "artifacts": [
+        {
+          "bytes": 558,
+          "digest_match": true,
+          "downloaded_sha256": "sha256:c5a37dea9c4bf9f7774c496d039dbcdd0f38de73aa47ce9b3dc00657eb0f5d28",
+          "entry_count": 1,
+          "entry_inventory_fingerprint": "sha256:8a9e0bddf6faa90ebc8b7c4522be698f65207b40f7ca0ffa6d080db45928c0d7",
+          "expires_at": "2026-11-30T04:19:13Z",
+          "id": 9785980229,
+          "json_entry_count": 1,
+          "name": "plantnexus-ci-profile-33469395721",
+          "provider_digest": "sha256:c5a37dea9c4bf9f7774c496d039dbcdd0f38de73aa47ce9b3dc00657eb0f5d28",
+          "zip_issue_count": 0
+        },
+        {
+          "bytes": 507,
+          "digest_match": true,
+          "downloaded_sha256": "sha256:7847926743c813a5079e413ead48919d7edbcb27a8c120daaa5a4d0c72332be4",
+          "entry_count": 1,
+          "entry_inventory_fingerprint": "sha256:2bc74a2b1bb0a83a3359881a6746e89be67ea0637e1173886b22c8d4b22cd771",
+          "expires_at": "2026-11-30T04:19:13Z",
+          "id": 9785985595,
+          "json_entry_count": 1,
+          "name": "plantnexus-ci-public-docs-33469395721",
+          "provider_digest": "sha256:7847926743c813a5079e413ead48919d7edbcb27a8c120daaa5a4d0c72332be4",
+          "zip_issue_count": 0
+        }
+      ],
+      "commit_sha": "1d184d082544454436a5558bc39a6a0a38f0fb1b",
+      "created_at": "2026-09-01T04:19:13Z",
+      "evidence_kind": "closure",
+      "expected_conclusion": "success",
+      "issues": [],
+      "jobs": [
+        {
+          "conclusion": "success",
+          "id": 99735867720,
+          "name": "classify",
+          "status": "completed"
+        },
+        {
+          "conclusion": "success",
+          "id": 99735903740,
+          "name": "docs_validation",
+          "status": "completed"
+        },
+        {
+          "conclusion": "skipped",
+          "id": 99735905181,
+          "name": "full_validation",
+          "status": "completed"
+        },
+        {
+          "conclusion": "success",
+          "id": 99735949548,
+          "name": "validate",
+          "status": "completed"
+        }
+      ],
+      "profile": "DOCS_ONLY",
+      "required_check": {
+        "app_id": 15368,
+        "conclusion": "success",
+        "id": 99735949548,
+        "name": "validate",
+        "status": "completed"
+      },
+      "required_job_id": 99735949548,
+      "run_attempt": 1,
+      "run_conclusion": "success",
+      "run_id": 33469395721,
+      "run_status": "completed",
+      "task_id": "TASK-P6-03",
+      "updated_at": "2026-09-01T04:19:47Z"
+    },
+    {
+      "artifact_count": 2,
+      "artifacts": [
+        {
+          "bytes": 1616369,
+          "digest_match": true,
+          "downloaded_sha256": "sha256:3547433403a048bd13e9ce14bf0630649eb57ec7d3db7a09171238dafe123615",
+          "entry_count": 75,
+          "entry_inventory_fingerprint": "sha256:9521a6eee3e415ea7ddccf00c9c0a6b424daa77742f78814356a80267768cd4d",
+          "expires_at": "2026-11-30T05:42:30Z",
+          "id": 9787940077,
+          "json_entry_count": 65,
+          "name": "plantnexus-ci-evidence-33474633364",
+          "provider_digest": "sha256:3547433403a048bd13e9ce14bf0630649eb57ec7d3db7a09171238dafe123615",
+          "zip_issue_count": 0
+        },
+        {
+          "bytes": 843,
+          "digest_match": true,
+          "downloaded_sha256": "sha256:f4d2ff5ec857a0f178d8900ad1b086cb60ff644eed6a9ea14f6fb4352d4479f2",
+          "entry_count": 1,
+          "entry_inventory_fingerprint": "sha256:88be6d428297a158f206d66788f8d08f5604cde2fb32f23343ef423ad5636e24",
+          "expires_at": "2026-11-30T05:42:30Z",
+          "id": 9787709131,
+          "json_entry_count": 1,
+          "name": "plantnexus-ci-profile-33474633364",
+          "provider_digest": "sha256:f4d2ff5ec857a0f178d8900ad1b086cb60ff644eed6a9ea14f6fb4352d4479f2",
+          "zip_issue_count": 0
+        }
+      ],
+      "commit_sha": "bf75f601b0a8138ab80304bee68e9bbe34b124fd",
+      "created_at": "2026-09-01T05:42:29Z",
+      "evidence_kind": "implementation",
+      "expected_conclusion": "success",
+      "issues": [],
+      "jobs": [
+        {
+          "conclusion": "success",
+          "id": 99751230649,
+          "name": "classify",
+          "status": "completed"
+        },
+        {
+          "conclusion": "success",
+          "id": 99751254113,
+          "name": "full_validation",
+          "status": "completed"
+        },
+        {
+          "conclusion": "skipped",
+          "id": 99751254977,
+          "name": "docs_validation",
+          "status": "completed"
+        },
+        {
+          "conclusion": "success",
+          "id": 99753251628,
+          "name": "validate",
+          "status": "completed"
+        }
+      ],
+      "profile": "FULL",
+      "required_check": {
+        "app_id": 15368,
+        "conclusion": "success",
+        "id": 99753251628,
+        "name": "validate",
+        "status": "completed"
+      },
+      "required_job_id": 99753251628,
+      "run_attempt": 1,
+      "run_conclusion": "success",
+      "run_id": 33474633364,
+      "run_status": "completed",
+      "task_id": "TASK-P6-04",
+      "updated_at": "2026-09-01T05:53:19Z"
+    },
+    {
+      "artifact_count": 2,
+      "artifacts": [
+        {
+          "bytes": 559,
+          "digest_match": true,
+          "downloaded_sha256": "sha256:b0f906d191f567f4b461d0003b4c8e766d6dae3adf1e9303af04e120321e4a5a",
+          "entry_count": 1,
+          "entry_inventory_fingerprint": "sha256:7677ed9fd5943b1fd98ca1766ca1d4d8900d94789be3e4f71f4c4f6d2bde4661",
+          "expires_at": "2026-11-30T06:03:02Z",
+          "id": 9788163359,
+          "json_entry_count": 1,
+          "name": "plantnexus-ci-profile-33475962188",
+          "provider_digest": "sha256:b0f906d191f567f4b461d0003b4c8e766d6dae3adf1e9303af04e120321e4a5a",
+          "zip_issue_count": 0
+        },
+        {
+          "bytes": 507,
+          "digest_match": true,
+          "downloaded_sha256": "sha256:8d17dae3576fcf9036dd8bec556b33dcc0f115291a99c5706f8c436ac5a8f4bf",
+          "entry_count": 1,
+          "entry_inventory_fingerprint": "sha256:f3eaae957bba11852421807f20023afd842961f71e2ffb2d78d54e2169403ed7",
+          "expires_at": "2026-11-30T06:03:02Z",
+          "id": 9788167420,
+          "json_entry_count": 1,
+          "name": "plantnexus-ci-public-docs-33475962188",
+          "provider_digest": "sha256:8d17dae3576fcf9036dd8bec556b33dcc0f115291a99c5706f8c436ac5a8f4bf",
+          "zip_issue_count": 0
+        }
+      ],
+      "commit_sha": "73eb8d6fcdf1400994d0c82f20242bef48694519",
+      "created_at": "2026-09-01T06:03:02Z",
+      "evidence_kind": "closure",
+      "expected_conclusion": "success",
+      "issues": [],
+      "jobs": [
+        {
+          "conclusion": "success",
+          "id": 99755165518,
+          "name": "classify",
+          "status": "completed"
+        },
+        {
+          "conclusion": "success",
+          "id": 99755208295,
+          "name": "docs_validation",
+          "status": "completed"
+        },
+        {
+          "conclusion": "skipped",
+          "id": 99755209112,
+          "name": "full_validation",
+          "status": "completed"
+        },
+        {
+          "conclusion": "success",
+          "id": 99755241062,
+          "name": "validate",
+          "status": "completed"
+        }
+      ],
+      "profile": "DOCS_ONLY",
+      "required_check": {
+        "app_id": 15368,
+        "conclusion": "success",
+        "id": 99755241062,
+        "name": "validate",
+        "status": "completed"
+      },
+      "required_job_id": 99755241062,
+      "run_attempt": 1,
+      "run_conclusion": "success",
+      "run_id": 33475962188,
+      "run_status": "completed",
+      "task_id": "TASK-P6-04",
+      "updated_at": "2026-09-01T06:03:31Z"
+    },
+    {
+      "artifact_count": 4,
+      "artifacts": [
+        {
+          "bytes": 29690,
+          "digest_match": true,
+          "downloaded_sha256": "sha256:e84d43dacf5240d8f68ad42748b32cc423dcff27b18a03932ed0749aa5f8983f",
+          "entry_count": 1,
+          "entry_inventory_fingerprint": "sha256:e4eb49b75a77bc0ab869afaf9d699b9f754b0a6a2babadfc544e767349429f6a",
+          "expires_at": "2026-11-30T08:13:04Z",
+          "id": 9792028478,
+          "json_entry_count": 0,
+          "name": "plantnexus-ci-backend-33485901085",
+          "provider_digest": "sha256:e84d43dacf5240d8f68ad42748b32cc423dcff27b18a03932ed0749aa5f8983f",
+          "zip_issue_count": 0
+        },
+        {
+          "bytes": 1616888,
+          "digest_match": true,
+          "downloaded_sha256": "sha256:7af2a36b75b6a7ea6dffeddfd544174c11b11c98e4aec20640bf061bec6864b8",
+          "entry_count": 75,
+          "entry_inventory_fingerprint": "sha256:3dd8d8f2236cb7e32f528a0145fafecbf1aa12819ee635c1d27a22705b2c576f",
+          "expires_at": "2026-11-30T08:13:04Z",
+          "id": 9792034276,
+          "json_entry_count": 65,
+          "name": "plantnexus-ci-evidence-33485901085",
+          "provider_digest": "sha256:7af2a36b75b6a7ea6dffeddfd544174c11b11c98e4aec20640bf061bec6864b8",
+          "zip_issue_count": 0
+        },
+        {
+          "bytes": 550,
+          "digest_match": true,
+          "downloaded_sha256": "sha256:aecc5aa70b513ee999ebe034e7bac9827dd704304aed19c11133c5b6507d71f2",
+          "entry_count": 1,
+          "entry_inventory_fingerprint": "sha256:1440b9e122222b737db0545b478ab2a17c2b53af21bf540e8785d97839e2b21e",
+          "expires_at": "2026-11-30T08:13:04Z",
+          "id": 9791745925,
+          "json_entry_count": 1,
+          "name": "plantnexus-ci-preflight-33485901085",
+          "provider_digest": "sha256:aecc5aa70b513ee999ebe034e7bac9827dd704304aed19c11133c5b6507d71f2",
+          "zip_issue_count": 0
+        },
+        {
+          "bytes": 713,
+          "digest_match": true,
+          "downloaded_sha256": "sha256:00be4482d65c4774419124ba23fe1fa158decf385c2cdbb9077ddf5705cc6472",
+          "entry_count": 1,
+          "entry_inventory_fingerprint": "sha256:dc86326f269d0ce746a5719f52d359870dda68d2d949f4c4284292896dd8571c",
+          "expires_at": "2026-11-30T08:13:04Z",
+          "id": 9791739965,
+          "json_entry_count": 1,
+          "name": "plantnexus-ci-profile-33485901085",
+          "provider_digest": "sha256:00be4482d65c4774419124ba23fe1fa158decf385c2cdbb9077ddf5705cc6472",
+          "zip_issue_count": 0
+        }
+      ],
+      "commit_sha": "03a0b4dd4de9398aa02746b736c3cf6e7fab9b0d",
+      "created_at": "2026-09-01T08:13:04Z",
+      "evidence_kind": "implementation",
+      "expected_conclusion": "success",
+      "issues": [],
+      "jobs": [
+        {
+          "conclusion": "success",
+          "id": 99785783406,
+          "name": "classify",
+          "status": "completed"
+        },
+        {
+          "conclusion": "success",
+          "id": 99785848449,
+          "name": "full_preflight",
+          "status": "completed"
+        },
+        {
+          "conclusion": "skipped",
+          "id": 99785849948,
+          "name": "docs_validation",
+          "status": "completed"
+        },
+        {
+          "conclusion": "success",
+          "id": 99785900366,
+          "name": "full_backend",
+          "status": "completed"
+        },
+        {
+          "conclusion": "success",
+          "id": 99785900370,
+          "name": "full_validation",
+          "status": "completed"
+        },
+        {
+          "conclusion": "success",
+          "id": 99788329852,
+          "name": "validate",
+          "status": "completed"
+        }
+      ],
+      "profile": "FULL",
+      "required_check": {
+        "app_id": 15368,
+        "conclusion": "success",
+        "id": 99788329852,
+        "name": "validate",
+        "status": "completed"
+      },
+      "required_job_id": 99788329852,
+      "run_attempt": 1,
+      "run_conclusion": "success",
+      "run_id": 33485901085,
+      "run_status": "completed",
+      "task_id": "TASK-P6-11",
+      "updated_at": "2026-09-01T08:22:32Z"
+    },
+    {
+      "artifact_count": 4,
+      "artifacts": [
+        {
+          "bytes": 30743,
+          "digest_match": true,
+          "downloaded_sha256": "sha256:d0fd6e46553a47fb6f5b0f4ec97ff7a28ef1389a4878865d34dca37a3d40d71a",
+          "entry_count": 1,
+          "entry_inventory_fingerprint": "sha256:1095916cfa515eee8c295e428c43747fb3533215b64373878ddfa11fe9ec5f6e",
+          "expires_at": "2026-11-30T09:51:42Z",
+          "id": 9795259090,
+          "json_entry_count": 0,
+          "name": "plantnexus-ci-backend-33494418602",
+          "provider_digest": "sha256:d0fd6e46553a47fb6f5b0f4ec97ff7a28ef1389a4878865d34dca37a3d40d71a",
+          "zip_issue_count": 0
+        },
+        {
+          "bytes": 1620346,
+          "digest_match": true,
+          "downloaded_sha256": "sha256:0470f050712d3c536472acfd0aba86640f0499c3812f08130c559dc9ad814c07",
+          "entry_count": 76,
+          "entry_inventory_fingerprint": "sha256:82d3ebdac6b2768965a3fe401e595bd054121430764c696d04bf65bfe885fc31",
+          "expires_at": "2026-11-30T09:51:42Z",
+          "id": 9795381101,
+          "json_entry_count": 66,
+          "name": "plantnexus-ci-evidence-33494418602",
+          "provider_digest": "sha256:0470f050712d3c536472acfd0aba86640f0499c3812f08130c559dc9ad814c07",
+          "zip_issue_count": 0
+        },
+        {
+          "bytes": 548,
+          "digest_match": true,
+          "downloaded_sha256": "sha256:ba12e224c7b8653a1dde06687beaf7eb46daeeb3f550c47acf8b6deefe27b977",
+          "entry_count": 1,
+          "entry_inventory_fingerprint": "sha256:b0a17894344c04686411be51bd47cf8d636b29dd85481f7b6fc7e46ba7ec6855",
+          "expires_at": "2026-11-30T09:51:42Z",
+          "id": 9795099940,
+          "json_entry_count": 1,
+          "name": "plantnexus-ci-preflight-33494418602",
+          "provider_digest": "sha256:ba12e224c7b8653a1dde06687beaf7eb46daeeb3f550c47acf8b6deefe27b977",
+          "zip_issue_count": 0
+        },
+        {
+          "bytes": 819,
+          "digest_match": true,
+          "downloaded_sha256": "sha256:3891870ff4c873d87dc7d2b60a95ecae24f58d43cfb80ad7b714421b47f244d5",
+          "entry_count": 1,
+          "entry_inventory_fingerprint": "sha256:c47b3acfaeec4fa83feb965577ed873120400eea9c4e94fed5ddd9bcd9968a63",
+          "expires_at": "2026-11-30T09:51:42Z",
+          "id": 9795094626,
+          "json_entry_count": 1,
+          "name": "plantnexus-ci-profile-33494418602",
+          "provider_digest": "sha256:3891870ff4c873d87dc7d2b60a95ecae24f58d43cfb80ad7b714421b47f244d5",
+          "zip_issue_count": 0
+        }
+      ],
+      "commit_sha": "aafcfafbd9fdebc2a76620122fe17e1c97473a2f",
+      "created_at": "2026-09-01T09:51:42Z",
+      "evidence_kind": "implementation",
+      "expected_conclusion": "success",
+      "issues": [],
+      "jobs": [
+        {
+          "conclusion": "success",
+          "id": 99813166925,
+          "name": "classify",
+          "status": "completed"
+        },
+        {
+          "conclusion": "success",
+          "id": 99813200636,
+          "name": "full_preflight",
+          "status": "completed"
+        },
+        {
+          "conclusion": "skipped",
+          "id": 99813202290,
+          "name": "docs_validation",
+          "status": "completed"
+        },
+        {
+          "conclusion": "success",
+          "id": 99813244114,
+          "name": "full_backend",
+          "status": "completed"
+        },
+        {
+          "conclusion": "success",
+          "id": 99813244131,
+          "name": "full_validation",
+          "status": "completed"
+        },
+        {
+          "conclusion": "success",
+          "id": 99815480685,
+          "name": "validate",
+          "status": "completed"
+        }
+      ],
+      "profile": "FULL",
+      "required_check": {
+        "app_id": 15368,
+        "conclusion": "success",
+        "id": 99815480685,
+        "name": "validate",
+        "status": "completed"
+      },
+      "required_job_id": 99815480685,
+      "run_attempt": 1,
+      "run_conclusion": "success",
+      "run_id": 33494418602,
+      "run_status": "completed",
+      "task_id": "TASK-P6-05",
+      "updated_at": "2026-09-01T10:00:21Z"
+    },
+    {
+      "artifact_count": 2,
+      "artifacts": [
+        {
+          "bytes": 592,
+          "digest_match": true,
+          "downloaded_sha256": "sha256:89ce64f69356b38fa53721c359b83ed887caf59c307eff2e9836be4d9f1dcc3a",
+          "entry_count": 1,
+          "entry_inventory_fingerprint": "sha256:d6acc45355d4120d8ecd61eb42825be2e285371659abdf74878386e63bb5c6dc",
+          "expires_at": "2026-11-30T10:10:14Z",
+          "id": 9795735762,
+          "json_entry_count": 1,
+          "name": "plantnexus-ci-profile-33496017952",
+          "provider_digest": "sha256:89ce64f69356b38fa53721c359b83ed887caf59c307eff2e9836be4d9f1dcc3a",
+          "zip_issue_count": 0
+        },
+        {
+          "bytes": 561,
+          "digest_match": true,
+          "downloaded_sha256": "sha256:cc9c39f144d8ec9618d36e16ec1112bef4538d68d92d568c2606c6527d8a4cac",
+          "entry_count": 1,
+          "entry_inventory_fingerprint": "sha256:f5eaa3c00a7a08d055001803eff1efde1e79c9328ebe8798944bb6f4339f0984",
+          "expires_at": "2026-11-30T10:10:14Z",
+          "id": 9795742998,
+          "json_entry_count": 1,
+          "name": "plantnexus-ci-public-docs-33496017952",
+          "provider_digest": "sha256:cc9c39f144d8ec9618d36e16ec1112bef4538d68d92d568c2606c6527d8a4cac",
+          "zip_issue_count": 0
+        }
+      ],
+      "commit_sha": "9921e57034defc26c0a08b7b0c27da3398a0fc7e",
+      "created_at": "2026-09-01T10:10:14Z",
+      "evidence_kind": "closure",
+      "expected_conclusion": "success",
+      "issues": [],
+      "jobs": [
+        {
+          "conclusion": "success",
+          "id": 99818278714,
+          "name": "classify",
+          "status": "completed"
+        },
+        {
+          "conclusion": "success",
+          "id": 99818363451,
+          "name": "docs_validation",
+          "status": "completed"
+        },
+        {
+          "conclusion": "skipped",
+          "id": 99818365446,
+          "name": "full_preflight",
+          "status": "completed"
+        },
+        {
+          "conclusion": "skipped",
+          "id": 99818365915,
+          "name": "full_backend",
+          "status": "completed"
+        },
+        {
+          "conclusion": "skipped",
+          "id": 99818366170,
+          "name": "full_validation",
+          "status": "completed"
+        },
+        {
+          "conclusion": "success",
+          "id": 99818420023,
+          "name": "validate",
+          "status": "completed"
+        }
+      ],
+      "profile": "DOCS_ONLY",
+      "required_check": {
+        "app_id": 15368,
+        "conclusion": "success",
+        "id": 99818420023,
+        "name": "validate",
+        "status": "completed"
+      },
+      "required_job_id": 99818420023,
+      "run_attempt": 1,
+      "run_conclusion": "success",
+      "run_id": 33496017952,
+      "run_status": "completed",
+      "task_id": "TASK-P6-05",
+      "updated_at": "2026-09-01T10:10:51Z"
+    },
+    {
+      "artifact_count": 4,
+      "artifacts": [
+        {
+          "bytes": 32249,
+          "digest_match": true,
+          "downloaded_sha256": "sha256:1c0fb27689b183149a9f4a092377eb278d0aec8122ef5ef4665aa2c39e664a1f",
+          "entry_count": 1,
+          "entry_inventory_fingerprint": "sha256:d3190030249e0a774b4633fd18d90db75872592f81f7916ad0d68e2a3610c8b5",
+          "expires_at": "2026-11-30T11:28:20Z",
+          "id": 9798475474,
+          "json_entry_count": 0,
+          "name": "plantnexus-ci-backend-33502648559",
+          "provider_digest": "sha256:1c0fb27689b183149a9f4a092377eb278d0aec8122ef5ef4665aa2c39e664a1f",
+          "zip_issue_count": 0
+        },
+        {
+          "bytes": 1621999,
+          "digest_match": true,
+          "downloaded_sha256": "sha256:85b12d2014f22932fecca701a6c27b7bda8391d0a832401f8fde8ca5cf6d4c3a",
+          "entry_count": 77,
+          "entry_inventory_fingerprint": "sha256:140a25325954c6387aa8ded7c4ce644b24ad5cb8607fd981691498dca132cb80",
+          "expires_at": "2026-11-30T11:28:20Z",
+          "id": 9798563798,
+          "json_entry_count": 67,
+          "name": "plantnexus-ci-evidence-33502648559",
+          "provider_digest": "sha256:85b12d2014f22932fecca701a6c27b7bda8391d0a832401f8fde8ca5cf6d4c3a",
+          "zip_issue_count": 0
+        },
+        {
+          "bytes": 549,
+          "digest_match": true,
+          "downloaded_sha256": "sha256:c6e0c079bab35021d62591e682d47aab9d70f344ff01cbfbb8b35d51aea9e6d2",
+          "entry_count": 1,
+          "entry_inventory_fingerprint": "sha256:2f81c69d3fe488870be2438d67720b0c2be1c9e220db7083f3cb30ed165595ec",
+          "expires_at": "2026-11-30T11:28:20Z",
+          "id": 9798319436,
+          "json_entry_count": 1,
+          "name": "plantnexus-ci-preflight-33502648559",
+          "provider_digest": "sha256:c6e0c079bab35021d62591e682d47aab9d70f344ff01cbfbb8b35d51aea9e6d2",
+          "zip_issue_count": 0
+        },
+        {
+          "bytes": 957,
+          "digest_match": true,
+          "downloaded_sha256": "sha256:5c6cb950dc3bd477c8edbd69a176143da6cbd5a3638a6d814a76c0fa85aed6fd",
+          "entry_count": 1,
+          "entry_inventory_fingerprint": "sha256:e1332469f9cb64f5de66c8c75c4629515fcab1b2cbb3717c9311f1fb7ff2bbe6",
+          "expires_at": "2026-11-30T11:28:20Z",
+          "id": 9798314500,
+          "json_entry_count": 1,
+          "name": "plantnexus-ci-profile-33502648559",
+          "provider_digest": "sha256:5c6cb950dc3bd477c8edbd69a176143da6cbd5a3638a6d814a76c0fa85aed6fd",
+          "zip_issue_count": 0
+        }
+      ],
+      "commit_sha": "e54e103e9c15cf672d8bcefdfcee5b5775757922",
+      "created_at": "2026-09-01T11:28:20Z",
+      "evidence_kind": "implementation",
+      "expected_conclusion": "success",
+      "issues": [],
+      "jobs": [
+        {
+          "conclusion": "success",
+          "id": 99839306089,
+          "name": "classify",
+          "status": "completed"
+        },
+        {
+          "conclusion": "success",
+          "id": 99839340659,
+          "name": "full_preflight",
+          "status": "completed"
+        },
+        {
+          "conclusion": "skipped",
+          "id": 99839342093,
+          "name": "docs_validation",
+          "status": "completed"
+        },
+        {
+          "conclusion": "success",
+          "id": 99839386241,
+          "name": "full_validation",
+          "status": "completed"
+        },
+        {
+          "conclusion": "success",
+          "id": 99839386267,
+          "name": "full_backend",
+          "status": "completed"
+        },
+        {
+          "conclusion": "success",
+          "id": 99841390941,
+          "name": "validate",
+          "status": "completed"
+        }
+      ],
+      "profile": "FULL",
+      "required_check": {
+        "app_id": 15368,
+        "conclusion": "success",
+        "id": 99841390941,
+        "name": "validate",
+        "status": "completed"
+      },
+      "required_job_id": 99841390941,
+      "run_attempt": 1,
+      "run_conclusion": "success",
+      "run_id": 33502648559,
+      "run_status": "completed",
+      "task_id": "TASK-P6-06",
+      "updated_at": "2026-09-01T11:36:07Z"
+    },
+    {
+      "artifact_count": 4,
+      "artifacts": [
+        {
+          "bytes": 32727,
+          "digest_match": true,
+          "downloaded_sha256": "sha256:e50710b5bff26b364865c831a6b70876fd5dfd5f8cad22eca06b471ecaf823c1",
+          "entry_count": 1,
+          "entry_inventory_fingerprint": "sha256:ad222e5b8bc38853aec6f36028c05cad0d2f8686c169d0b0b06937dc80ff1d20",
+          "expires_at": "2026-11-30T13:17:40Z",
+          "id": 9802402997,
+          "json_entry_count": 0,
+          "name": "plantnexus-ci-backend-33512511801",
+          "provider_digest": "sha256:e50710b5bff26b364865c831a6b70876fd5dfd5f8cad22eca06b471ecaf823c1",
+          "zip_issue_count": 0
+        },
+        {
+          "bytes": 1622696,
+          "digest_match": true,
+          "downloaded_sha256": "sha256:8db9b96da70d9be20bf495ba61ef43396c2bd72ad760fa57bfe96815c4fa4cce",
+          "entry_count": 77,
+          "entry_inventory_fingerprint": "sha256:225b210a2ddec6ffb40add2a8a6e4445621709aec53a4c179ef5e2ff8067f26d",
+          "expires_at": "2026-11-30T13:17:40Z",
+          "id": 9802549913,
+          "json_entry_count": 67,
+          "name": "plantnexus-ci-evidence-33512511801",
+          "provider_digest": "sha256:8db9b96da70d9be20bf495ba61ef43396c2bd72ad760fa57bfe96815c4fa4cce",
+          "zip_issue_count": 0
+        },
+        {
+          "bytes": 548,
+          "digest_match": true,
+          "downloaded_sha256": "sha256:6ae30b38bbaa91b3454e29a7a860f0e697e2aec9c3a792f7bc20d5c52357be57",
+          "entry_count": 1,
+          "entry_inventory_fingerprint": "sha256:6cd303c6d3e5156ee4dbba2493cef7c76f3195042129764f697c6ee133b53b10",
+          "expires_at": "2026-11-30T13:17:40Z",
+          "id": 9802216672,
+          "json_entry_count": 1,
+          "name": "plantnexus-ci-preflight-33512511801",
+          "provider_digest": "sha256:6ae30b38bbaa91b3454e29a7a860f0e697e2aec9c3a792f7bc20d5c52357be57",
+          "zip_issue_count": 0
+        },
+        {
+          "bytes": 821,
+          "digest_match": true,
+          "downloaded_sha256": "sha256:c4f460a121a29f89b8fcce985bb58d8038d4103f45e37bcedd0acf2b1d816c6f",
+          "entry_count": 1,
+          "entry_inventory_fingerprint": "sha256:dfa8d03813cf125db82d3866eb150df8af9b4493bf36ed340a24744b914889ce",
+          "expires_at": "2026-11-30T13:17:40Z",
+          "id": 9802210502,
+          "json_entry_count": 1,
+          "name": "plantnexus-ci-profile-33512511801",
+          "provider_digest": "sha256:c4f460a121a29f89b8fcce985bb58d8038d4103f45e37bcedd0acf2b1d816c6f",
+          "zip_issue_count": 0
+        }
+      ],
+      "commit_sha": "e5d63fcf54c841ed93ef7c62084bcdeeda63abd4",
+      "created_at": "2026-09-01T13:17:40Z",
+      "evidence_kind": "implementation",
+      "expected_conclusion": "success",
+      "issues": [],
+      "jobs": [
+        {
+          "conclusion": "success",
+          "id": 99871412321,
+          "name": "classify",
+          "status": "completed"
+        },
+        {
+          "conclusion": "success",
+          "id": 99871470534,
+          "name": "full_preflight",
+          "status": "completed"
+        },
+        {
+          "conclusion": "skipped",
+          "id": 99871472268,
+          "name": "docs_validation",
+          "status": "completed"
+        },
+        {
+          "conclusion": "success",
+          "id": 99871526638,
+          "name": "full_backend",
+          "status": "completed"
+        },
+        {
+          "conclusion": "success",
+          "id": 99871527372,
+          "name": "full_validation",
+          "status": "completed"
+        },
+        {
+          "conclusion": "success",
+          "id": 99874314670,
+          "name": "validate",
+          "status": "completed"
+        }
+      ],
+      "profile": "FULL",
+      "required_check": {
+        "app_id": 15368,
+        "conclusion": "success",
+        "id": 99874314670,
+        "name": "validate",
+        "status": "completed"
+      },
+      "required_job_id": 99874314670,
+      "run_attempt": 1,
+      "run_conclusion": "success",
+      "run_id": 33512511801,
+      "run_status": "completed",
+      "task_id": "TASK-P6-07",
+      "updated_at": "2026-09-01T13:26:40Z"
+    },
+    {
+      "artifact_count": 4,
+      "artifacts": [
+        {
+          "bytes": 33366,
+          "digest_match": true,
+          "downloaded_sha256": "sha256:5c94655086d177fbda633f7a8d8394cdeccd471779722adc68b7a01a88d7e4e3",
+          "entry_count": 1,
+          "entry_inventory_fingerprint": "sha256:b285ff1d89fdeecacb83c31e610c35d5d7b5080fb181541505ade9e76401cc6b",
+          "expires_at": "2026-11-30T14:56:36Z",
+          "id": 9806507757,
+          "json_entry_count": 0,
+          "name": "plantnexus-ci-backend-33522642120",
+          "provider_digest": "sha256:5c94655086d177fbda633f7a8d8394cdeccd471779722adc68b7a01a88d7e4e3",
+          "zip_issue_count": 0
+        },
+        {
+          "bytes": 1625346,
+          "digest_match": true,
+          "downloaded_sha256": "sha256:d2c0862de67d9d09ee7e33e4cad9e4505a011a1726a64a154f0a7b36accfbf59",
+          "entry_count": 78,
+          "entry_inventory_fingerprint": "sha256:bf25a03e9f31a8153137756c1c9f93158a3d21a436fab15fd25aa09304ce7d65",
+          "expires_at": "2026-11-30T14:56:36Z",
+          "id": 9806698308,
+          "json_entry_count": 68,
+          "name": "plantnexus-ci-evidence-33522642120",
+          "provider_digest": "sha256:d2c0862de67d9d09ee7e33e4cad9e4505a011a1726a64a154f0a7b36accfbf59",
+          "zip_issue_count": 0
+        },
+        {
+          "bytes": 549,
+          "digest_match": true,
+          "downloaded_sha256": "sha256:7b58daa018d79abd4e4e41c873bbf1a139bc1dd1d3c300a6e37de5db2ccb7c61",
+          "entry_count": 1,
+          "entry_inventory_fingerprint": "sha256:83a35d964481944f4bb20ecb876c8618c90f4d8ac0df103d8591882cad718ec7",
+          "expires_at": "2026-11-30T14:56:36Z",
+          "id": 9806327925,
+          "json_entry_count": 1,
+          "name": "plantnexus-ci-preflight-33522642120",
+          "provider_digest": "sha256:7b58daa018d79abd4e4e41c873bbf1a139bc1dd1d3c300a6e37de5db2ccb7c61",
+          "zip_issue_count": 0
+        },
+        {
+          "bytes": 887,
+          "digest_match": true,
+          "downloaded_sha256": "sha256:91d0f645614493952cc3090209d3a3813ba0cfb391fabc0e638969b6ea8299af",
+          "entry_count": 1,
+          "entry_inventory_fingerprint": "sha256:f29caa9eff8653801238829d4bbb321b83b6b2d50730d665dd05c54ddd236817",
+          "expires_at": "2026-11-30T14:56:36Z",
+          "id": 9806320723,
+          "json_entry_count": 1,
+          "name": "plantnexus-ci-profile-33522642120",
+          "provider_digest": "sha256:91d0f645614493952cc3090209d3a3813ba0cfb391fabc0e638969b6ea8299af",
+          "zip_issue_count": 0
+        }
+      ],
+      "commit_sha": "a8984dd3e961fe03dad543d9ce6b9b5266c6ab09",
+      "created_at": "2026-09-01T14:56:36Z",
+      "evidence_kind": "implementation",
+      "expected_conclusion": "success",
+      "issues": [],
+      "jobs": [
+        {
+          "conclusion": "success",
+          "id": 99905467740,
+          "name": "classify",
+          "status": "completed"
+        },
+        {
+          "conclusion": "success",
+          "id": 99905513671,
+          "name": "full_preflight",
+          "status": "completed"
+        },
+        {
+          "conclusion": "skipped",
+          "id": 99905515746,
+          "name": "docs_validation",
+          "status": "completed"
+        },
+        {
+          "conclusion": "success",
+          "id": 99905578374,
+          "name": "full_validation",
+          "status": "completed"
+        },
+        {
+          "conclusion": "success",
+          "id": 99905578544,
+          "name": "full_backend",
+          "status": "completed"
+        },
+        {
+          "conclusion": "success",
+          "id": 99908691371,
+          "name": "validate",
+          "status": "completed"
+        }
+      ],
+      "profile": "FULL",
+      "required_check": {
+        "app_id": 15368,
+        "conclusion": "success",
+        "id": 99908691371,
+        "name": "validate",
+        "status": "completed"
+      },
+      "required_job_id": 99908691371,
+      "run_attempt": 1,
+      "run_conclusion": "success",
+      "run_id": 33522642120,
+      "run_status": "completed",
+      "task_id": "TASK-P6-08",
+      "updated_at": "2026-09-01T15:05:44Z"
+    },
+    {
+      "artifact_count": 4,
+      "artifacts": [
+        {
+          "bytes": 34180,
+          "digest_match": true,
+          "downloaded_sha256": "sha256:e87eeb368e8e57479337c4a6b3266e7a2ad97c5f0d42fa6ac756a8f6603d45ce",
+          "entry_count": 1,
+          "entry_inventory_fingerprint": "sha256:1ffc0a2ca711505d1668201ed1f10a384f82a44306ba604d227f1eb2643cf839",
+          "expires_at": "2026-11-30T23:20:19Z",
+          "id": 9824907717,
+          "json_entry_count": 0,
+          "name": "plantnexus-ci-backend-33570562236",
+          "provider_digest": "sha256:e87eeb368e8e57479337c4a6b3266e7a2ad97c5f0d42fa6ac756a8f6603d45ce",
+          "zip_issue_count": 0
+        },
+        {
+          "bytes": 1625626,
+          "digest_match": true,
+          "downloaded_sha256": "sha256:de06f4b96b0ee8533f03940f42886e114d058ec7f340a6b7fa10563e25ebf8c2",
+          "entry_count": 78,
+          "entry_inventory_fingerprint": "sha256:628e38a85df6839bd120c10f32beef37c8ac48b9950986dee170cf1d6a1eeb40",
+          "expires_at": "2026-11-30T23:20:19Z",
+          "id": 9824976849,
+          "json_entry_count": 68,
+          "name": "plantnexus-ci-evidence-33570562236",
+          "provider_digest": "sha256:de06f4b96b0ee8533f03940f42886e114d058ec7f340a6b7fa10563e25ebf8c2",
+          "zip_issue_count": 0
+        },
+        {
+          "bytes": 548,
+          "digest_match": true,
+          "downloaded_sha256": "sha256:82c334d0f56c99fc6cd4696017d36518b8c4f7d935894e7ea8d09a021d101dc2",
+          "entry_count": 1,
+          "entry_inventory_fingerprint": "sha256:27b45b8fb362aaeaf15297337332b6852f951ff27b7995377f960a2c70f29361",
+          "expires_at": "2026-11-30T23:20:19Z",
+          "id": 9824760159,
+          "json_entry_count": 1,
+          "name": "plantnexus-ci-preflight-33570562236",
+          "provider_digest": "sha256:82c334d0f56c99fc6cd4696017d36518b8c4f7d935894e7ea8d09a021d101dc2",
+          "zip_issue_count": 0
+        },
+        {
+          "bytes": 648,
+          "digest_match": true,
+          "downloaded_sha256": "sha256:bac5b58182b70d8d92fa1a8bcf1e736f27387a9306d7170c0cac4e519aee80cc",
+          "entry_count": 1,
+          "entry_inventory_fingerprint": "sha256:b862660dc8b1fbd795677e8320c5bbe88b67231c24358503dfb18998564620d6",
+          "expires_at": "2026-11-30T23:20:19Z",
+          "id": 9824756143,
+          "json_entry_count": 1,
+          "name": "plantnexus-ci-profile-33570562236",
+          "provider_digest": "sha256:bac5b58182b70d8d92fa1a8bcf1e736f27387a9306d7170c0cac4e519aee80cc",
+          "zip_issue_count": 0
+        }
+      ],
+      "commit_sha": "dc38f0156b154652b192a671c959b0da71aab08f",
+      "created_at": "2026-09-01T23:20:19Z",
+      "evidence_kind": "implementation",
+      "expected_conclusion": "success",
+      "issues": [],
+      "jobs": [
+        {
+          "conclusion": "success",
+          "id": 100063379912,
+          "name": "classify",
+          "status": "completed"
+        },
+        {
+          "conclusion": "success",
+          "id": 100063411196,
+          "name": "full_preflight",
+          "status": "completed"
+        },
+        {
+          "conclusion": "skipped",
+          "id": 100063412649,
+          "name": "docs_validation",
+          "status": "completed"
+        },
+        {
+          "conclusion": "success",
+          "id": 100063445794,
+          "name": "full_validation",
+          "status": "completed"
+        },
+        {
+          "conclusion": "success",
+          "id": 100063445847,
+          "name": "full_backend",
+          "status": "completed"
+        },
+        {
+          "conclusion": "success",
+          "id": 100065332717,
+          "name": "validate",
+          "status": "completed"
+        }
+      ],
+      "profile": "FULL",
+      "required_check": {
+        "app_id": 15368,
+        "conclusion": "success",
+        "id": 100065332717,
+        "name": "validate",
+        "status": "completed"
+      },
+      "required_job_id": 100065332717,
+      "run_attempt": 1,
+      "run_conclusion": "success",
+      "run_id": 33570562236,
+      "run_status": "completed",
+      "task_id": "TASK-P6-09",
+      "updated_at": "2026-09-01T23:29:00Z"
+    }
+  ],
+  "registers": {
+    "allocated_requirement_nfr_eng_roots": 30,
+    "closed_by_audit": [],
+    "new_prod_open": [],
+    "new_risks": [],
+    "new_sim_assumptions": [],
+    "prod_open": {
+      "count": 15,
+      "first_id": "OPEN-001",
+      "last_id": "OPEN-015",
+      "status": "ALL_OPEN"
+    },
+    "risks": {
+      "count": 19,
+      "first_id": "RISK-001",
+      "last_id": "RISK-019",
+      "status": "ALL_MONITORED"
+    },
+    "sim_assumptions": {
+      "count": 26,
+      "first_id": "SIM-ASSUMPTION-001",
+      "last_id": "SIM-ASSUMPTION-026",
+      "status": "ALL_ACTIVE"
+    }
+  },
+  "report_version": "p6-exit-provider-observation.v1",
+  "repository": "kumamon-xu/PlantNexus-APS",
+  "required_check": {
+    "app_id": 15368,
+    "name": "validate"
+  },
+  "task_topology": {
+    "active_diff_base": "dc38f0156b154652b192a671c959b0da71aab08f",
+    "active_task": "TASK-P6-10",
+    "cycle_count": 0,
+    "dag_edge_count": 13,
+    "dag_edges": [
+      [
+        "TASK-P6-00",
+        "TASK-P6-01"
+      ],
+      [
+        "TASK-P6-01",
+        "TASK-P6-02"
+      ],
+      [
+        "TASK-P6-02",
+        "TASK-P6-03"
+      ],
+      [
+        "TASK-P6-03",
+        "TASK-P6-04"
+      ],
+      [
+        "TASK-P6-04",
+        "TASK-P6-05"
+      ],
+      [
+        "TASK-P6-04",
+        "TASK-P6-11"
+      ],
+      [
+        "TASK-P6-11",
+        "TASK-P6-05"
+      ],
+      [
+        "TASK-P6-05",
+        "TASK-P6-06"
+      ],
+      [
+        "TASK-P6-06",
+        "TASK-P6-07"
+      ],
+      [
+        "TASK-P6-06",
+        "TASK-P6-08"
+      ],
+      [
+        "TASK-P6-07",
+        "TASK-P6-09"
+      ],
+      [
+        "TASK-P6-08",
+        "TASK-P6-09"
+      ],
+      [
+        "TASK-P6-09",
+        "TASK-P6-10"
+      ]
+    ],
+    "p6_09_direct_dependency": "done/PROVIDER_VERIFIED_DONE",
+    "task_count": 12,
+    "tasks": [
+      {
+        "status": "done",
+        "task_id": "TASK-P6-00"
+      },
+      {
+        "status": "done",
+        "task_id": "TASK-P6-01"
+      },
+      {
+        "status": "done",
+        "task_id": "TASK-P6-02"
+      },
+      {
+        "status": "done",
+        "task_id": "TASK-P6-03"
+      },
+      {
+        "status": "done",
+        "task_id": "TASK-P6-04"
+      },
+      {
+        "status": "done",
+        "task_id": "TASK-P6-05"
+      },
+      {
+        "status": "done",
+        "task_id": "TASK-P6-06"
+      },
+      {
+        "status": "done",
+        "task_id": "TASK-P6-07"
+      },
+      {
+        "status": "done",
+        "task_id": "TASK-P6-08"
+      },
+      {
+        "status": "done",
+        "task_id": "TASK-P6-09"
+      },
+      {
+        "status": "in_progress",
+        "task_id": "TASK-P6-10"
+      },
+      {
+        "status": "done",
+        "task_id": "TASK-P6-11"
+      }
+    ],
+    "terminal_done_count": 11
+  },
+  "workflow": "ci.yml"
+}

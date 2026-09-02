@@ -16,7 +16,11 @@ P6_GATE_TESTS = (
     ROOT / "tests/p6/test_p6_duration_gate.py",
     ROOT / "tests/p6/test_p6_duration_gate_rejections.py",
 )
-REPOSITORY_EVIDENCE_TESTS = P5_TESTS + P6_GATE_TESTS
+P6_EXIT_TESTS = (
+    ROOT / "tests/p6/test_p6_exit_gate_audit.py",
+    ROOT / "tests/p6/test_p6_exit_gate_rejections.py",
+)
+REPOSITORY_EVIDENCE_TESTS = P5_TESTS + P6_GATE_TESTS + P6_EXIT_TESTS
 FULL_BACKEND_SUITES = tuple(
     ROOT / f"backend/tests/{name}"
     for name in (

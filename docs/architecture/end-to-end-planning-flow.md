@@ -11,6 +11,24 @@ last_reviewed: 2026-09-02
 
 # 端到端计划链路
 
+## TASK-P6-10 independent Exit audit edge
+
+P6-10只增加如下只读审计边，不增加预测或排程业务edge：
+
+```text
+immutable P6 Task/DAG + exact Provider run inventory
+→ fresh artifact download / expiry / digest / ZIP+JSON validation
+→ frozen ADR / contracts / Schema / migrations / owners
+→ fresh two-replay P6 owner chain + independent P6-09 Gate validation
+→ fresh P2 formal planning + P4 dynamic replanning regressions
+→ OPEN / SIM assumption / risk carry-forward + exact scope
+→ READY or NOT_READY Exit manifest
+```
+
+审计覆盖18次历史执行和48份制品，明确保留P6-02失败候选到新SHA纠偏的直接链；任何拓扑、required `validate`/app、artifact、lineage、register或边界漂移都在READY前fail closed。它不写PlanningRun、ScheduleVersion、ExportJob、model registry或任何业务状态，不修改Solver/Validator/runtime/monitor，也不关闭OPEN项。
+
+本地READY只证明P6 Simulation/development交付可被独立复验。P6仍保持active，phase transition必须另获授权；P7与Production链未建立，default-off和exact standard-duration fallback继续有效。
+
 ## TASK-P6-09 fresh aggregate Gate edge
 
 P6-09不增加业务edge，而是独立重放并验证现有链：
@@ -30,7 +48,7 @@ P6-01 governance freeze
 
 每轮又从同一仓库fresh执行P4五步dynamic disruption，要求facts、effective HARD/freeze、OBJ-002 Stability、complete ChangeReport、Simulator与5次fresh Validator全部通过；Gate本身不把预测接入P4 replan，也不写PlanningRun/ScheduleVersion/ExportJob。两轮stage projection与cross-lineage必须一致，default-off/fallback继续返回标准Problem，模型candidate仍只允许改变NOT_STARTED option既有duration/source/version三字段。
 
-Gate reporter没有runtime authority、database、network、external alert或自动动作。移除该reporter/测试不会改变标准计划链；Gate失败只产生blocking gap，不能在聚合层修复owner或放宽expected。P6-10 Exit Audit、P7与Production链继续不存在。
+Gate reporter没有runtime authority、database、network、external alert或自动动作。移除该reporter/测试不会改变标准计划链；Gate失败只产生blocking gap，不能在聚合层修复owner或放宽expected。P6-10后来形成上节独立只读Exit审计；P7与Production链继续不存在。
 
 ## TASK-P6-07 default-off Planning ingress
 

@@ -11,6 +11,12 @@ last_reviewed: 2026-09-02
 
 # Benchmark Harness 合同
 
+## TASK-P6-10 fresh Exit observations
+
+Exit审计不复用P6-09保存的PASS：它在独立调用中fresh执行两轮完整P6 owner chain，每轮再次验证model/standard MAE `11/20`秒、coverage `4/4`、runtime/fallback、default-off Planning ingress、aggregate monitor，以及P2正式Problem/Solver/fresh Validator和P4五步dynamic disruption。两轮保留原始development timing/resource observation，同时继续只对排除timestamp、report identity与host timing后的语义投影要求一致。
+
+审计另行下载18次历史Provider执行的48份制品并验证expiry、digest和ZIP/JSON语义；这些数据只证明证据链完整，不构成新的性能样本或基线。P6-10不修改profile、seed、threshold、baseline、runner或expected，也不把synthetic quality/runtime结果解释为现实分布、P7校准、Production capacity或SLA。
+
 ## TASK-P6-09 fresh vertical-Gate observations
 
 P6-09每个完整replay都重新执行P6-05 frozen held-out quality、P6-06 runtime resource profile、P6-07 standard-vs-enabled Planning observation、P6-08 aggregate-monitor overhead，以及P4 dynamic disruption的5步/8 events/5 fresh Validator/5 complete ChangeReport。两轮保留原始development observation，但semantic consistency明确排除timestamp、report identity与host timing；不得用性能噪声制造determinism失败，也不得删除原始观测冒充相同。

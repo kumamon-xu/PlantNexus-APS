@@ -11,6 +11,14 @@ last_reviewed: 2026-09-02
 
 # PlantNexus APS 文档中心
 
+## TASK-P6-10 independent P6 Exit Gate audit
+
+P6-10从不可变Diff base `dc38f0156b154652b192a671c959b0da71aab08f`执行独立Exit审计，不复用P6-09 PASS作为Exit结论。审计重新查询完整P6 Task/DAG和18次精确Provider执行，下载48份未过期制品并逐份比对Provider/download digest、ZIP与JSON语义；17次成功执行和P6-02保留失败→新SHA纠偏链均保存在公开[`p6-exit-gate-audit-observations.v1.json`](p6-exit-gate-audit-observations.v1.json)。
+
+PHASE_GATE再fresh执行两轮P6 owner chain及P2/P4冻结回归，独立验证P6-09 aggregate、ADR/合同/Schema/owner、OPEN/SIM/risk registers、exact scope与phase边界。本地结果为17/17、`READY`、`issues=[]`、`blocking_gaps=[]`；报告与manifest由既有Backend FULL suite不可跳过地生成并把Task/base/decision/checks/gaps/fingerprints写入JUnit。链路、能力与性能解释分别见[端到端计划链路](architecture/end-to-end-planning-flow.md)、[能力矩阵](core/capability-matrix.md)和[Benchmark Harness](simulation/benchmark-harness.md)。
+
+该READY仍待本提交single canonical exact FULL Provider复验，并且不执行phase transition。P6继续active并等待独立P6→P7授权；P7 Reality Calibration与Production/UAT、真实authority、external integration/deployment、capacity/SLA均未进入，AI duration继续default-off并使用原标准工时fallback authority。
+
 ## TASK-P6-09 AI duration vertical-slice integration Gate
 
 P6-09以[端到端计划链路](architecture/end-to-end-planning-flow.md)为边界，新建只聚合证据的`p6-ai-duration-vertical-slice-report.v1`及compact manifest。Gate逐轮fresh执行P6-01治理冻结、P6-02合同、P6-03 dataset、P6-04 model、P6-05 evaluation、P6-06 runtime/fallback、P6-07 Planning ingress与P6-08 monitor，再重放P2 Problem/Solver/formal Validator和P4五步dynamic disruption；两轮稳定投影必须逐stage及combined一致。

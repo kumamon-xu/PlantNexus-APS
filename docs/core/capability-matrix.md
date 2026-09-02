@@ -11,6 +11,12 @@ last_reviewed: 2026-09-02
 
 # 能力矩阵
 
+## TASK-P6-10 independent Exit audit status
+
+`AI_DURATION_PREDICTION`继续`DEFERRED`，当前分项为`CONTRACT_V1 + SIMULATION_DATASET_V1 + BASELINE_MODEL_V1 + OFFLINE_GATE_READY + LOCAL_RUNTIME_V1 + PLANNING_INGRESS_V1 + AGGREGATE_MONITOR_V1 + VERTICAL_GATE_V1 + EXIT_AUDIT_LOCAL_READY / DEFAULT_OFF_SIMULATION_ONLY`。`EXIT_AUDIT_LOCAL_READY`只表示18次精确Provider历史、48份下载制品、完整P6拓扑与两轮fresh owner/P2/P4回归已由独立PHASE_GATE得到17/17、0 issue、0 blocking gap；它不提升能力authority。
+
+Owner、Schema/migration/dependency/lock/workflow、routing/resource compatibility/hard constraints/state/weights和标准工时authority全部保持冻结。OPEN-010/011/014/015继续OPEN；模型不自动promotion/retrain/rollback，monitor不执行自动动作。Exact FULL Provider完成后P6也只会等待单独phase-transition授权，不形成P7 Reality Calibration、Production/UAT、真实data/model/approval authority、external integration/deployment、capacity或SLA。
+
 ## TASK-P6-09 Simulation vertical Gate status
 
 `AI_DURATION_PREDICTION`继续`DEFERRED`，当前分项为`CONTRACT_V1 + SIMULATION_DATASET_V1 + BASELINE_MODEL_V1 + OFFLINE_GATE_READY + LOCAL_RUNTIME_V1 + PLANNING_INGRESS_V1 + AGGREGATE_MONITOR_V1 + VERTICAL_GATE_V1 / DEFAULT_OFF_SIMULATION_ONLY`。`VERTICAL_GATE_V1`只表示两轮P6 owner chain、P2 Problem/Solver/正式Validator与适用P4 dynamic scenarios可fresh聚合并得到相同语义；它不新增prediction、planning或monitor authority。

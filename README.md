@@ -1,5 +1,13 @@
 # PlantNexus APS
 
+## TASK-P6-10 — independent P6 Exit Gate audit
+
+P6-10新增独立的`p6-exit-gate-audit-report.v1`与`p6-exit-gate-evidence-manifest.v1`。审计从不可变Diff base `dc38f0156b154652b192a671c959b0da71aab08f`重新查询P6完整Task/DAG与精确Provider拓扑，下载并检查18次历史执行、48份制品及其expiry、Provider/download digest和ZIP/JSON语义；17次成功链与P6-02保留失败→新SHA纠偏链同时进入公开[机器观察](docs/p6-exit-gate-audit-observations.v1.json)，不得以旧汇总结论替代。
+
+本地PHASE_GATE还会fresh执行两轮完整P6 owner chain，并独立验证P6-09 Gate、P2正式Problem/Solver/Validator、P4五步dynamic disruption、ADR/合同/Schema与owner冻结、OPEN/SIM/risk carry-forward、exact scope和phase边界。运行`uv run python -m tests.p6.p6_exit_gate_audit --root . --report build/validation/p6-exit-gate-audit.json --manifest build/validation/p6-exit-gate-evidence-manifest.json --subreport-dir build/validation/p6-10-subreports`可生成本地Exit证据；任一身份、摘要、过期、语义、范围或边界漂移都会输出`NOT_READY`及blocking gap。
+
+当前本地结论为`READY`、17/17 checks、`issues=[]`、`blocking_gaps=[]`，仍须由本提交的single canonical exact FULL Provider复验。即使Provider完成，P6仍保持active并等待单独的P6→P7授权；本Task不自动进入P7、不声明Production/UAT/真实data/model authority、deployment、capacity或SLA，AI duration继续default-off且标准工时authority不变。
+
 ## TASK-P6-09 — AI duration vertical-slice integration Gate
 
 P6-09新增只聚合证据的`p6-ai-duration-vertical-slice-report.v1`：每次Gate必须独立执行两轮`governance → contract → dataset → model → evaluation → runtime/fallback → Planning ingress → monitoring`完整P6链，并在每轮额外重放P2标准Problem/Global CP-SAT/fresh C-001～C-011 Validator与P4五步dynamic disruption。两轮只比较排除timestamp、commit/report identity与development timing后的versioned semantic projection；raw-safe owner subreport及performance observation仍完整保留并由manifest绑定。

@@ -22,7 +22,7 @@ from .presentation import (
     DemoScheduleView,
     SchedulePresentationQuery,
 )
-from .security import DEMO_SESSION_COOKIE
+from .security import DEMO_SESSION_COOKIE, DemoClientAccessPolicy
 from .urgent import UrgentOrderCommand
 
 if TYPE_CHECKING:
@@ -373,13 +373,18 @@ def _comparison_query(request: Request) -> ComparisonPresentationQuery:
         ) from error
 
 
-def create_demo_router(runtime: DemoRuntime) -> APIRouter:
+def create_demo_router(
+    runtime: DemoRuntime,
+    *,
+    client_access_policy: DemoClientAccessPolicy | None = None,
+) -> APIRouter:
     router = APIRouter(prefix=DEMO_API_PREFIX, tags=["CNC Demo"])
+    access_policy = client_access_policy or DemoClientAccessPolicy.loopback_only()
 
     @router.post("/session", response_model=None)
     def establish_session(request: Request) -> JSONResponse:
         host = request.client.host if request.client is not None else ""
-        if host not in {"127.0.0.1", "::1", "localhost", "testclient"}:
+        if not access_policy.allows(host):
             correlation_id = _correlation(request)
             raise DemoApiError(
                 "AUTHORIZATION_DENIED",

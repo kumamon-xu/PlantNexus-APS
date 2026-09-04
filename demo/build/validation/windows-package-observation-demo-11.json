@@ -1,0 +1,89 @@
+{
+  "checks": {
+    "browser_console_clean": true,
+    "browser_simulation_boundary": true,
+    "browser_zh_cn": true,
+    "custom_lan_port_ready": true,
+    "custom_loopback_port_ready": true,
+    "executable_version": true,
+    "no_residual_process_state": true,
+    "node_absent_from_path": true,
+    "npm_absent_from_path": true,
+    "packaged_cp_sat": true,
+    "packaged_migration": true,
+    "packaged_validator": true,
+    "private_host_allowlist": true,
+    "python_absent_from_path": true,
+    "runtime_recovered_on_lan_restart": true,
+    "safe_stop_lan": true,
+    "safe_stop_loopback": true,
+    "sealed_package_audit": true,
+    "showcase_reset_132_610_24": true,
+    "single_origin_frontend_api": true,
+    "uv_absent_from_path": true,
+    "zip_extract": true
+  },
+  "duration_seconds": 34.516,
+  "environment": {
+    "developer_tools_absent": {
+      "node.exe": true,
+      "npm.cmd": true,
+      "python.exe": true,
+      "uv.exe": true
+    },
+    "lan_route_kind": "LOCAL_PRIVATE_IPV4",
+    "minimal_path": true,
+    "os": "nt",
+    "platform": "win32"
+  },
+  "lan": {
+    "address": "192.168.220.1",
+    "allowed_network": "192.168.220.1/32",
+    "browser": {
+      "console_errors": 0,
+      "console_warnings": 0,
+      "driver_dependency_is_runtime_dependency": false,
+      "locale": "zh-CN",
+      "operations": 610,
+      "orders": 132,
+      "resources": 24,
+      "simulation_boundary_zh": "仿真环境 · 非生产",
+      "story_state_zh": "排程待确认",
+      "title": "PlantNexus APS · CNC 精密机加工演示",
+      "url": "http://192.168.220.1:54174/demo/"
+    },
+    "port": 54174,
+    "start_seconds": 3.204,
+    "story_state": "READY_FOR_REVIEW"
+  },
+  "loopback": {
+    "port": 45174,
+    "start_seconds": 4.766,
+    "story": {
+      "active_operations": 580,
+      "html_zh_cn": true,
+      "initial_plan_seconds": 8.391,
+      "initial_plan_status": "SUCCEEDED",
+      "operations": 610,
+      "orders": 132,
+      "reset_seconds": 3.375,
+      "reset_status": "SUCCEEDED",
+      "resources": 24,
+      "run_id": "run-12847ed6335afe5463555f4b411e85d1",
+      "schedule_state": "READY_FOR_REVIEW",
+      "solver_status": "OPTIMAL",
+      "validation_status": "PASS"
+    }
+  },
+  "observation_version": "cnc-demo-windows-package-observation.v1",
+  "package_version": "0.2.0",
+  "package_zip_sha256": "fc175a2ee9ec856f9adefd3a410092597a0f9b5cd9b52e17ad9a0f6dd33ee2d5",
+  "passed_checks": 22,
+  "production_ready": false,
+  "report_fingerprint": "sha256:bf3323ec92f0196b5d24675ad802780808b0625112ec83ac8ca427cf3fdfc5b2",
+  "simulation_only": true,
+  "status": "PASS",
+  "synthetic_only": true,
+  "target_site_status": "PENDING_FINAL_SITE_REPLAY",
+  "total_checks": 22
+}

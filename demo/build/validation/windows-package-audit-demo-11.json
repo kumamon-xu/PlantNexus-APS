@@ -1,0 +1,31 @@
+{
+  "audit_version": "cnc-demo-windows-package-audit.v1",
+  "checks": {
+    "default_loopback_settings": true,
+    "forbidden_files_absent": true,
+    "inventory_exact": true,
+    "manifest_boundaries": true,
+    "manifest_fingerprint": true,
+    "payload_sha256": true,
+    "required_launchers_present": true,
+    "runtime_dependency_independence": true,
+    "safe_windows_paths": true,
+    "windows_x64_pe": true,
+    "zip_crc": true,
+    "zip_sha256": true
+  },
+  "file_count": 1001,
+  "manifest_fingerprint": "sha256:6d4ada20b3ce9def06d77a4054b80dde35dd8bec1d46693aa7b4f3da58833973",
+  "package_name": "PlantNexus-CNC-Demo-Windows-x64-0.2.0",
+  "package_version": "0.2.0",
+  "passed_checks": 12,
+  "payload_bytes": 237376160,
+  "production_ready": false,
+  "report_fingerprint": "sha256:b15a9c272b12414db59b4b0f5100344b8f73e0fc6762db49211f580a7821dc47",
+  "simulation_only": true,
+  "status": "PASS",
+  "total_checks": 12,
+  "zip_bytes": 87147033,
+  "zip_path": "demo/dist/PlantNexus-CNC-Demo-Windows-x64-0.2.0.zip",
+  "zip_sha256": "fc175a2ee9ec856f9adefd3a410092597a0f9b5cd9b52e17ad9a0f6dd33ee2d5"
+}

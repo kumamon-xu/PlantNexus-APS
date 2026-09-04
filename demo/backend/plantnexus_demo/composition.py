@@ -59,6 +59,8 @@ from .persistence import (
 from .presentation import DemoPresentationService
 from .security import (
     ControlAuthorizationAuditSink,
+    DemoClientAccessMiddleware,
+    DemoClientAccessPolicy,
     SimulationLocalAuthorizationProvider,
     load_or_create_local_token,
 )
@@ -684,6 +686,7 @@ def create_demo_app(
     repository_root: Path | None = None,
     runtime_root: Path | None = None,
     auto_resume_queued: bool = True,
+    client_access_policy: DemoClientAccessPolicy | None = None,
 ) -> FastAPI:
     runtime = create_demo_runtime(
         repository_root=repository_root,
@@ -720,9 +723,14 @@ def create_demo_app(
         authorization_provider=SimulationLocalAuthorizationProvider(runtime.local_token),
         authorization_audit_sink=ControlAuthorizationAuditSink(runtime.control),
     )
+    access_policy = client_access_policy or DemoClientAccessPolicy.loopback_only()
     application.state.demo_runtime = runtime
+    application.state.demo_client_access_policy = access_policy
     application.add_middleware(DemoSessionCookieMiddleware)
-    application.include_router(create_demo_router(runtime))
+    application.add_middleware(DemoClientAccessMiddleware, policy=access_policy)
+    application.include_router(
+        create_demo_router(runtime, client_access_policy=access_policy)
+    )
     application.add_exception_handler(DemoApiError, cast(Any, demo_error_response))
     application.add_event_handler("shutdown", runtime.close)
     return application

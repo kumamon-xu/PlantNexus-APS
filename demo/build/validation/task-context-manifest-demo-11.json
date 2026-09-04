@@ -1,0 +1,179 @@
+{
+  "diff_base": "7f184b764e39c049995f0817f095297651928f88",
+  "estimated_characters": 574171,
+  "files_allowed_to_change": [
+    "demo/**"
+  ],
+  "inputs": [
+    {
+      "characters": 7014,
+      "load_mode": "FULL",
+      "path": "demo/docs/TASK-DEMO-11-windows-standalone-package-and-trusted-lan-access.md",
+      "sha256": "940c2260879e5d754625a3f8f62a02813edcaa3537656b2e7fa1234aa6518ac4"
+    },
+    {
+      "characters": 7306,
+      "load_mode": "LOCAL_CANDIDATE_AND_BOUNDARIES",
+      "path": "demo/docs/TASK-DEMO-10-one-command-delivery-runbook-and-release-audit.md",
+      "sha256": "d833f7374464ccf7f9ceafd28b2d31594adf1d75bdfb631c61dbe65ad55976f2"
+    },
+    {
+      "characters": 15632,
+      "load_mode": "COMPOSITION_SECURITY_AND_RECOVERY",
+      "path": "demo/docs/03-architecture-and-api.md",
+      "sha256": "fe556adf2278832aa7104666b2c7f8ae1d19e62deb4bfeece23344fc83165c9f"
+    },
+    {
+      "characters": 12079,
+      "load_mode": "DEMO_SCRIPT_FAILURE_AND_ENVIRONMENT",
+      "path": "demo/docs/04-ux-and-demo-script.md",
+      "sha256": "bf9b059087dc866de63f4f583f7617ffe3752ea567b6d7099677c2931fd81775"
+    },
+    {
+      "characters": 14174,
+      "load_mode": "GATES_AND_RELEASE_DECISION",
+      "path": "demo/docs/05-benchmark-and-acceptance.md",
+      "sha256": "73e5133d19b20b1d405feb99b96542acf42805b5517934b5ab0207132ca7c049"
+    },
+    {
+      "characters": 20190,
+      "load_mode": "D18_AND_D19",
+      "path": "demo/docs/TASKS.md",
+      "sha256": "4e4c839004f52228754be5c564f5aa8ae9f9364c8c85f72d0f8a8afc78c60f5c"
+    },
+    {
+      "characters": 1240,
+      "load_mode": "FULL",
+      "path": "demo/data/cnc-showcase/manifest.json",
+      "sha256": "fceb0210aa9b730d7e87d866c2a434492c332fd48400c450e2af1b6781db0239"
+    },
+    {
+      "characters": 279,
+      "load_mode": "FULL",
+      "path": "demo/.gitignore",
+      "sha256": "a91b9716bf09d823733c5510663f4bdfa4de45d787fb0a3e23185454ff55d302"
+    },
+    {
+      "characters": 23296,
+      "load_mode": "SESSION_AND_STATIC_BOUNDARY",
+      "path": "demo/backend/plantnexus_demo/api.py",
+      "sha256": "bbb6eb2013455956459dd63fc8ac146957112a3b1c02c1409db55bf4e9c1b8f7"
+    },
+    {
+      "characters": 30996,
+      "load_mode": "RUNTIME_COMPOSITION",
+      "path": "demo/backend/plantnexus_demo/composition.py",
+      "sha256": "23f44da15758a179cdb391518f71fda0a7a24d577ab3735a76f97955cb1950d2"
+    },
+    {
+      "characters": 54775,
+      "load_mode": "RESOURCE_RUNTIME_AND_MIGRATION_PATHS",
+      "path": "demo/backend/plantnexus_demo/persistence.py",
+      "sha256": "602c69f28ddecf41ec727393bde4f048fda75390867e026630e795b5951a05a6"
+    },
+    {
+      "characters": 7361,
+      "load_mode": "FULL",
+      "path": "demo/backend/plantnexus_demo/security.py",
+      "sha256": "b53e4b739b6278e28557cca8a305eede6bfba4ec48a53c02c0c95faba147f5d1"
+    },
+    {
+      "characters": 37103,
+      "load_mode": "WINDOWS_PROCESS_IDENTITY_PATTERN",
+      "path": "demo/backend/plantnexus_demo/delivery.py",
+      "sha256": "f2a480a4fb403be3fc8cbada080eb1668fa4cc678d0f49e64b5374073bcb6c93"
+    },
+    {
+      "characters": 1400,
+      "load_mode": "FULL",
+      "path": "demo/scripts/start_demo.py",
+      "sha256": "7092cedde200147b27c52c1dfd75ff0596f4277661222f45da2d87749e8c96e0"
+    },
+    {
+      "characters": 5938,
+      "load_mode": "DELIVERY_CONTROLLER_PATTERN",
+      "path": "demo/scripts/democtl.py",
+      "sha256": "27b63d7a63cd53640facbb875abc9e4d9f282b5cc29f696fe597e680e92921bc"
+    },
+    {
+      "characters": 17208,
+      "load_mode": "PROCESS_AND_PLAYWRIGHT_PATTERN",
+      "path": "demo/scripts/run_browser_e2e.py",
+      "sha256": "e18c5dc028a550349d93ea82eaff97a8da4ef2b88ac37c2d3321ebb6232dd772"
+    },
+    {
+      "characters": 48753,
+      "load_mode": "FULL",
+      "path": "demo/scripts/validate_demo.py",
+      "sha256": "e2f9f9060128b3a7a04e86f11545f34f46cb5beab94b30878eb33decc6907a4f"
+    },
+    {
+      "characters": 1072,
+      "load_mode": "FULL",
+      "path": "demo/frontend/package.json",
+      "sha256": "31b861ae9b34109d5b8f17751e58f3137df1b63719d598a6501ef0374e4c8e42"
+    },
+    {
+      "characters": 135107,
+      "load_mode": "LOCK_IDENTITY",
+      "path": "demo/frontend/package-lock.json",
+      "sha256": "4c63ef7063c3d2924c06430b7e9f4edcba589df1f628ed54c902d3a3485dea82"
+    },
+    {
+      "characters": 664,
+      "load_mode": "PRODUCTION_BUNDLE",
+      "path": "demo/frontend/vite.config.ts",
+      "sha256": "70ada71f7f0ea885683c18a116a3129b9a0126155cdac7f8a7c29d5c3448af35"
+    },
+    {
+      "characters": 9944,
+      "load_mode": "SAME_ORIGIN_API",
+      "path": "demo/frontend/src/api/client.ts",
+      "sha256": "1e3778a71cd50a89352753ac11ca379b56949169fb0fb9c9a1a1dee33e9a04b5"
+    },
+    {
+      "characters": 15573,
+      "load_mode": "CHINESE_STORY_MARKERS",
+      "path": "demo/frontend/src/DemoApp.tsx",
+      "sha256": "5058cc08cc20be5b898760fede2b25fc7e704a92ba002131e571b8c8425e108b"
+    },
+    {
+      "characters": 1653,
+      "load_mode": "PACKAGED_ALEMBIC_RUNTIME",
+      "path": "backend/migrations/env.py",
+      "sha256": "e274ec224f7b1fb47205bd70722e42e8629536a1b058aad15b4b1c3c88069fe9"
+    },
+    {
+      "characters": 583,
+      "load_mode": "PACKAGED_ALEMBIC_CONFIGURATION",
+      "path": "alembic.ini",
+      "sha256": "02f9dbfff9d0671d7a4cfb91e6bd4118d53db653d38ec15a755dd90726c57926"
+    },
+    {
+      "characters": 944,
+      "load_mode": "PYTHON_RUNTIME_AND_DEPENDENCIES",
+      "path": "pyproject.toml",
+      "sha256": "c39c0ade6061de9a986eb0e5a3e2d8b568ccb37c7f7bf64242698af782b6c937"
+    },
+    {
+      "characters": 103887,
+      "load_mode": "LOCK_IDENTITY",
+      "path": "uv.lock",
+      "sha256": "8b13617f31aa6a933347fc7b8ba010330cbb3f2d764f75c306dd9b6d77387a82"
+    }
+  ],
+  "manifest_version": "demo-task-context-manifest.v1",
+  "on_demand_expansion_triggers": [
+    "formal contract or accepted ADR conflict",
+    "root code/schema change becomes necessary",
+    "dynamic replan implementation starts",
+    "presentation lineage or fingerprint mismatch cannot be resolved read-only"
+  ],
+  "phase_registration": null,
+  "root_repository_consumption": "READ_ONLY",
+  "selected_input_count": 26,
+  "soft_budget_note": "Selected normative units were read in full; the 30k character budget is soft.",
+  "task_family": "demo-exclusive",
+  "task_id": "TASK-DEMO-11",
+  "validation_profile": "DEMO_HIGH_RISK"
+}

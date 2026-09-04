@@ -16,3 +16,9 @@ frontend/coverage/
 frontend/playwright-report/
 frontend/test-results/
 .playwright-cli/
+
+build/windows-package/
+dist/
+
+# Internal design and delivery records are intentionally not published.
+docs/

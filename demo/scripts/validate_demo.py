@@ -28,6 +28,7 @@ IGNORED_DIRECTORY_NAMES = {
     "playwright-report",
     "runtime",
     "test-results",
+    "windows-package",
 }
 
 
@@ -85,6 +86,47 @@ def _outside_demo_paths() -> set[str]:
         if path != "demo" and not path.startswith("demo/"):
             result.add(path)
     return result
+
+
+def _outside_demo_paths_since(diff_base: str) -> set[str]:
+    completed = subprocess.run(
+        ["git", "diff", "--name-only", "-z", diff_base, "--"],
+        cwd=REPOSITORY_ROOT,
+        capture_output=True,
+        check=True,
+    )
+    untracked = subprocess.run(
+        ["git", "ls-files", "--others", "--exclude-standard", "-z"],
+        cwd=REPOSITORY_ROOT,
+        capture_output=True,
+        check=True,
+    )
+    paths = {
+        item.decode("utf-8", errors="replace").replace("\\", "/")
+        for payload in (completed.stdout, untracked.stdout)
+        for item in payload.split(b"\0")
+        if item
+    }
+    return {
+        path for path in paths if path != "demo" and not path.startswith("demo/")
+    }
+
+
+def _context_inputs_are_current(context_report: dict[str, Any]) -> bool:
+    inputs = context_report.get("inputs")
+    if not isinstance(inputs, list):
+        return False
+    for item in inputs:
+        if not isinstance(item, dict):
+            return False
+        relative_path = item.get("path")
+        expected_digest = item.get("sha256")
+        if not isinstance(relative_path, str) or not isinstance(expected_digest, str):
+            return False
+        path = REPOSITORY_ROOT / relative_path
+        if not path.is_file() or _sha256(path) != expected_digest:
+            return False
+    return True
 
 
 def _verify_benchmark(path: Path, expected: tuple[int, int, int]) -> dict[str, Any]:
@@ -692,11 +734,97 @@ def _verify_delivery_release_evidence() -> dict[str, Any]:
     }
 
 
+def _verify_windows_package_evidence() -> dict[str, Any]:
+    evidence_path = (
+        DEMO_ROOT / "build/validation/windows-package-evidence-demo-11.json"
+    )
+    audit_path = DEMO_ROOT / "build/validation/windows-package-audit-demo-11.json"
+    observation_path = (
+        DEMO_ROOT / "build/validation/windows-package-observation-demo-11.json"
+    )
+    browser_path = (
+        DEMO_ROOT
+        / "build/validation/browser-windows-package-observation-demo-11.json"
+    )
+    evidence = _verified_document(evidence_path, "report_fingerprint")
+    audit = _verified_document(audit_path, "report_fingerprint")
+    observation = _verified_document(observation_path, "report_fingerprint")
+    browser = _verified_document(browser_path, "report_fingerprint")
+    package_path = REPOSITORY_ROOT / evidence["package"]["zip_path"]
+    package_digest = _sha256(package_path)
+    evidence_checks = evidence["checks"]
+    audit_checks = audit["checks"]
+    observation_checks = observation["checks"]
+    passed = (
+        evidence["status"] == "PASS"
+        and evidence["task_id"] == "TASK-DEMO-11"
+        and evidence["evidence_version"]
+        == "cnc-demo-windows-package-evidence.v1"
+        and evidence["release_classification"]
+        == "WINDOWS_PACKAGE_CANDIDATE_VERIFIED"
+        and len(evidence_checks) == 16
+        and all(evidence_checks.values())
+        and audit["status"] == "PASS"
+        and audit["audit_version"] == "cnc-demo-windows-package-audit.v1"
+        and len(audit_checks) == 12
+        and all(audit_checks.values())
+        and observation["status"] == "PASS"
+        and observation["observation_version"]
+        == "cnc-demo-windows-package-observation.v1"
+        and len(observation_checks) == 22
+        and all(observation_checks.values())
+        and browser["status"] == "PASS"
+        and browser["task_id"] == "TASK-DEMO-11"
+        and browser["observation_version"]
+        == "cnc-demo-windows-package-browser-observation.v1"
+        and browser["locale"] == "zh-CN"
+        and browser["console_errors"] == 0
+        and browser["console_warnings"] == 0
+        and evidence["package"]["zip_sha256"] == package_digest
+        and audit["zip_sha256"] == package_digest
+        and observation["package_zip_sha256"] == package_digest
+        and browser["package_zip_sha256"] == package_digest
+        and evidence["package"]["version"] == "0.2.0"
+        and evidence["runtime"]["loopback_port"]
+        != evidence["runtime"]["lan_port"]
+        and evidence["runtime"]["validation_status"] == "PASS"
+        and evidence["runtime"]["solver_status"] in {"OPTIMAL", "FEASIBLE"}
+        and observation["loopback"]["story"]["orders"] == 132
+        and observation["loopback"]["story"]["operations"] == 610
+        and observation["loopback"]["story"]["resources"] == 24
+        and observation["environment"]["minimal_path"] is True
+        and all(observation["environment"]["developer_tools_absent"].values())
+        and evidence["target_site_status"] == "PENDING_FINAL_SITE_REPLAY"
+        and evidence["simulation_only"] is True
+        and evidence["synthetic_only"] is True
+        and evidence["production_ready"] is False
+    )
+    return {
+        "status": "PASS" if passed else "FAIL",
+        "evidence_path": evidence_path.relative_to(REPOSITORY_ROOT).as_posix(),
+        "evidence_sha256": _sha256(evidence_path),
+        "evidence_fingerprint": evidence["report_fingerprint"],
+        "evidence_check_count": len(evidence_checks),
+        "audit_path": audit_path.relative_to(REPOSITORY_ROOT).as_posix(),
+        "audit_sha256": _sha256(audit_path),
+        "audit_check_count": len(audit_checks),
+        "observation_path": observation_path.relative_to(REPOSITORY_ROOT).as_posix(),
+        "observation_sha256": _sha256(observation_path),
+        "observation_check_count": len(observation_checks),
+        "browser_path": browser_path.relative_to(REPOSITORY_ROOT).as_posix(),
+        "browser_sha256": _sha256(browser_path),
+        "package_path": package_path.relative_to(REPOSITORY_ROOT).as_posix(),
+        "package_sha256": package_digest,
+        "package_bytes": package_path.stat().st_size,
+        "release_classification": evidence["release_classification"],
+        "target_site_status": evidence["target_site_status"],
+    }
+
+
 def build_report(*, task_id: str, context_path: Path) -> dict[str, Any]:
+    context_report = json.loads(context_path.read_text(encoding="utf-8"))
     baseline_path = DEMO_ROOT / "build/validation/protected-root-baseline.json"
     baseline = json.loads(baseline_path.read_text(encoding="utf-8"))
-    expected_outside = set(baseline["files"])
-    observed_outside = _outside_demo_paths()
     protected_files: list[dict[str, Any]] = []
     for relative_path, expected_digest in baseline["files"].items():
         path = REPOSITORY_ROOT / relative_path
@@ -709,12 +837,21 @@ def build_report(*, task_id: str, context_path: Path) -> dict[str, Any]:
                 "observed_sha256": observed_digest,
             }
         )
-    scope_status = (
-        "PASS"
-        if observed_outside.issubset(expected_outside)
-        and all(item["status"] == "PASS" for item in protected_files)
-        else "FAIL"
-    )
+    if task_id == "TASK-DEMO-11":
+        expected_outside: set[str] = set()
+        observed_outside = _outside_demo_paths_since(context_report["diff_base"])
+        scope_status = "PASS" if not observed_outside else "FAIL"
+        scope_basis = "DIFF_BASE"
+    else:
+        expected_outside = set(baseline["files"])
+        observed_outside = _outside_demo_paths()
+        scope_status = (
+            "PASS"
+            if observed_outside.issubset(expected_outside)
+            and all(item["status"] == "PASS" for item in protected_files)
+            else "FAIL"
+        )
+        scope_basis = "LEGACY_PROTECTED_ROOT_BASELINE"
     unexpected_outside = sorted(observed_outside - expected_outside)
     changed_protected = sorted(
         item["path"] for item in protected_files if item["status"] != "PASS"
@@ -729,7 +866,6 @@ def build_report(*, task_id: str, context_path: Path) -> dict[str, Any]:
     ]
     contract_report_path = DEMO_ROOT / "build/validation/contract-probes.json"
     contract_report = json.loads(contract_report_path.read_text(encoding="utf-8"))
-    context_report = json.loads(context_path.read_text(encoding="utf-8"))
 
     command_checks = [
         _run(["uv", "run", "pytest", "demo/tests", "-q"]),
@@ -746,6 +882,7 @@ def build_report(*, task_id: str, context_path: Path) -> dict[str, Any]:
         "TASK-DEMO-08",
         "TASK-DEMO-09",
         "TASK-DEMO-10",
+        "TASK-DEMO-11",
     }:
         frontend_root = DEMO_ROOT / "frontend"
         command_checks = [
@@ -807,6 +944,49 @@ def build_report(*, task_id: str, context_path: Path) -> dict[str, Any]:
                 _run(["uv", "run", "python", "demo/scripts/democtl.py", "--help"]),
             ]
         )
+    if task_id == "TASK-DEMO-11":
+        command_checks.extend(
+            [
+                _run(
+                    [
+                        "uv",
+                        "run",
+                        "python",
+                        "demo/scripts/run_windows_package_audit.py",
+                        "--report",
+                        "demo/build/validation/windows-package-audit-demo-11.json",
+                    ]
+                ),
+                _run(
+                    [
+                        "uv",
+                        "run",
+                        "python",
+                        "demo/scripts/run_windows_package_evidence.py",
+                        "--report",
+                        "demo/build/validation/windows-package-evidence-demo-11.json",
+                    ]
+                ),
+                _run(
+                    [
+                        "uv",
+                        "run",
+                        "python",
+                        "demo/scripts/build_windows_package.py",
+                        "--help",
+                    ]
+                ),
+                _run(
+                    [
+                        "uv",
+                        "run",
+                        "python",
+                        "demo/scripts/windows_demo_entry.py",
+                        "--help",
+                    ]
+                ),
+            ]
+        )
     hygiene = _text_hygiene()
     artifact_checks: dict[str, dict[str, Any]] = {
         "contract_probes": {
@@ -820,6 +1000,14 @@ def build_report(*, task_id: str, context_path: Path) -> dict[str, Any]:
                 if context_report["task_id"] == task_id
                 and context_report["task_family"] == "demo-exclusive"
                 and context_report["phase_registration"] is None
+                and (
+                    task_id != "TASK-DEMO-11"
+                    or (
+                        context_report["diff_base"]
+                        == "7f184b764e39c049995f0817f095297651928f88"
+                        and _context_inputs_are_current(context_report)
+                    )
+                )
                 else "FAIL"
             ),
             "selected_input_count": context_report["selected_input_count"],
@@ -863,6 +1051,10 @@ def build_report(*, task_id: str, context_path: Path) -> dict[str, Any]:
         artifact_checks["delivery_release_evidence"] = (
             _verify_delivery_release_evidence()
         )
+    elif task_id == "TASK-DEMO-11":
+        artifact_checks["windows_package_evidence"] = (
+            _verify_windows_package_evidence()
+        )
     functional_passed = (
         all(item["status"] == "PASS" for item in benchmark_checks)
         and all(item["status"] == "PASS" for item in command_checks)
@@ -903,6 +1095,8 @@ def build_report(*, task_id: str, context_path: Path) -> dict[str, Any]:
         ),
         "scope_check": {
             "status": scope_status,
+            "basis": scope_basis,
+            "diff_base": context_report.get("diff_base"),
             "allowed": ["demo/**"],
             "outside_demo_paths_expected": sorted(expected_outside),
             "outside_demo_paths_observed": sorted(observed_outside),
@@ -940,6 +1134,7 @@ def main() -> int:
             "TASK-DEMO-08",
             "TASK-DEMO-09",
             "TASK-DEMO-10",
+            "TASK-DEMO-11",
         ),
         default="TASK-DEMO-01",
     )
@@ -962,6 +1157,7 @@ def main() -> int:
             "TASK-DEMO-08": "task-context-manifest-demo-08.json",
             "TASK-DEMO-09": "task-context-manifest-demo-09.json",
             "TASK-DEMO-10": "task-context-manifest-demo-10.json",
+            "TASK-DEMO-11": "task-context-manifest-demo-11.json",
         }[arguments.task_id]
     )
     report = build_report(task_id=arguments.task_id, context_path=context_path)

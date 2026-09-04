@@ -8,6 +8,7 @@ from datetime import datetime, time, timedelta
 from hashlib import sha256
 import json
 from pathlib import Path
+import sys
 from types import MappingProxyType
 from typing import Any
 from zoneinfo import ZoneInfo, ZoneInfoNotFoundError
@@ -306,7 +307,12 @@ def _validate_profiles(
 def load_demo_assets(root: Path | None = None) -> DemoAssets:
     """Load every selected JSON asset and fail closed on unknown fields or drift."""
 
-    demo_root = Path(__file__).resolve().parents[2]
+    bundled_root = getattr(sys, "_MEIPASS", None)
+    demo_root = (
+        Path(bundled_root) / "repository" / "demo"
+        if bundled_root is not None
+        else Path(__file__).resolve().parents[2]
+    )
     asset_root = (demo_root / "data" / "cnc-showcase") if root is None else root
     manifest = _load_json(asset_root / "manifest.json")
     _exact(manifest, _MANIFEST_FIELDS, "manifest")

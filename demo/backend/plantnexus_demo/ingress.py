@@ -7,6 +7,7 @@ from contextlib import nullcontext
 from dataclasses import dataclass
 from datetime import timedelta
 from pathlib import Path
+import sys
 from types import MappingProxyType
 from typing import Any, ContextManager, cast
 
@@ -45,7 +46,14 @@ class DemoIngressArtifacts:
 
 
 def load_unit_registry(repository_root: Path | None = None) -> UnitConversionRegistry:
-    root = Path(__file__).resolve().parents[3] if repository_root is None else repository_root
+    bundled_root = getattr(sys, "_MEIPASS", None)
+    root = (
+        Path(bundled_root) / "repository"
+        if repository_root is None and bundled_root is not None
+        else Path(__file__).resolve().parents[3]
+        if repository_root is None
+        else repository_root
+    )
     registry_path = root / "schemas" / "rules" / "unit-conversion-registry.v1.yaml"
     try:
         raw = yaml.safe_load(registry_path.read_text(encoding="utf-8"))

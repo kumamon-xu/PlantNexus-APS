@@ -1,4 +1,4 @@
-import { useMemo, useRef, useState } from "react";
+import { useEffect, useMemo, useRef, useState } from "react";
 
 import type {
   DemoPresentationConfiguration,
@@ -7,6 +7,7 @@ import type {
   UrgentOrderCommand,
   UrgentOrderInput,
 } from "../api/types";
+import { useModalFocus } from "../app/useModalFocus";
 import { shortId } from "../domain/copy";
 
 interface UrgentOrderPanelProps {
@@ -88,7 +89,14 @@ export function UrgentOrderPanel({
   );
   const [confirming, setConfirming] = useState(false);
   const [errors, setErrors] = useState<Readonly<Record<string, string>>>({});
-  const submitRef = useRef<HTMLButtonElement>(null);
+  const headingRef = useRef<HTMLHeadingElement>(null);
+  const quantityRef = useRef<HTMLInputElement>(null);
+  const dueRef = useRef<HTMLInputElement>(null);
+  const noteRef = useRef<HTMLInputElement>(null);
+  const dialogRef = useModalFocus<HTMLElement>(confirming, {
+    onEscape: () => setConfirming(false),
+    escapeDisabled: busy,
+  });
   const selectedRoute = configuration.route_templates.find(
     (route) => route.template_id === form.route,
   );
@@ -97,6 +105,10 @@ export function UrgentOrderPanel({
   );
   const minDue = localInputValue(manifest.horizon_start_utc);
   const maxDue = localInputValue(manifest.horizon_end_utc);
+
+  useEffect(() => {
+    headingRef.current?.focus();
+  }, []);
 
   const validated = useMemo(() => {
     const next: Record<string, string> = {};
@@ -119,8 +131,13 @@ export function UrgentOrderPanel({
     setErrors(validated.errors);
     if (Object.keys(validated.errors).length === 0) {
       setConfirming(true);
-      window.setTimeout(() => submitRef.current?.focus(), 0);
+      return;
     }
+    window.setTimeout(() => {
+      if (validated.errors.quantity) quantityRef.current?.focus();
+      else if (validated.errors.due) dueRef.current?.focus();
+      else if (validated.errors.note) noteRef.current?.focus();
+    }, 0);
   };
 
   const confirm = async () => {
@@ -140,7 +157,7 @@ export function UrgentOrderPanel({
       <div className="urgent-panel__heading">
         <div>
           <p className="eyebrow">第四步 · 现场事件</p>
-          <h2 id="urgent-title">插入加急订单</h2>
+          <h2 ref={headingRef} id="urgent-title" tabIndex={-1}>插入加急订单</h2>
           <p>填写业务信息即可；运行、基线和事件身份由服务端安全生成。</p>
         </div>
         <button
@@ -169,7 +186,11 @@ export function UrgentOrderPanel({
         <small>只读 · 提交前服务端会再次校验</small>
       </div>
 
-      <fieldset className="route-fieldset" disabled={busy || pending !== null}>
+      <fieldset
+        className="route-fieldset"
+        disabled={busy || pending !== null}
+        aria-describedby={errors.route ? "urgent-route-error" : undefined}
+      >
         <legend>选择产品路线</legend>
         <div className="route-grid">
           {configuration.route_templates.map((route) => (
@@ -192,13 +213,14 @@ export function UrgentOrderPanel({
             </label>
           ))}
         </div>
-        {errors.route && <span className="field-error">{errors.route}</span>}
+        {errors.route && <span id="urgent-route-error" className="field-error">{errors.route}</span>}
       </fieldset>
 
       <div className="urgent-fields">
         <label>
           <span>订单数量</span>
           <input
+            ref={quantityRef}
             type="number"
             min="1"
             max="50"
@@ -209,13 +231,15 @@ export function UrgentOrderPanel({
               setForm((current) => ({ ...current, quantity: event.target.value }))
             }
             aria-invalid={errors.quantity ? "true" : undefined}
+            aria-describedby={`urgent-quantity-help${errors.quantity ? " urgent-quantity-error" : ""}`}
           />
-          <small>1～50 件</small>
-          {errors.quantity && <span className="field-error">{errors.quantity}</span>}
+          <small id="urgent-quantity-help">1～50 件</small>
+          {errors.quantity && <span id="urgent-quantity-error" className="field-error" role="alert">{errors.quantity}</span>}
         </label>
         <label>
           <span>要求交期（北京时间）</span>
           <input
+            ref={dueRef}
             type="datetime-local"
             min={minDue}
             max={maxDue}
@@ -225,15 +249,17 @@ export function UrgentOrderPanel({
               setForm((current) => ({ ...current, due: event.target.value }))
             }
             aria-invalid={errors.due ? "true" : undefined}
+            aria-describedby={`urgent-due-help${errors.due ? " urgent-due-error" : ""}`}
           />
-          <small>必须位于当前排程周期内</small>
-          {errors.due && <span className="field-error">{errors.due}</span>}
+          <small id="urgent-due-help">必须位于当前排程周期内</small>
+          {errors.due && <span id="urgent-due-error" className="field-error" role="alert">{errors.due}</span>}
         </label>
         <label>
           <span>优先级</span>
           <select
             value={form.priority}
             disabled={busy || pending !== null}
+            aria-describedby="urgent-priority-help"
             onChange={(event) =>
               setForm((current) => ({
                 ...current,
@@ -247,11 +273,12 @@ export function UrgentOrderPanel({
               </option>
             ))}
           </select>
-          <small>权重来自批准的仿真策略</small>
+          <small id="urgent-priority-help">权重来自批准的仿真策略</small>
         </label>
         <label className="urgent-note">
           <span>演示备注（可选）</span>
           <input
+            ref={noteRef}
             type="text"
             maxLength={200}
             value={form.note}
@@ -259,8 +286,10 @@ export function UrgentOrderPanel({
             onChange={(event) =>
               setForm((current) => ({ ...current, note: event.target.value }))
             }
+            aria-describedby={`urgent-note-help${errors.note ? " urgent-note-error" : ""}`}
           />
-          <small>{form.note.length}/200</small>
+          <small id="urgent-note-help">{form.note.length}/200</small>
+          {errors.note && <span id="urgent-note-error" className="field-error" role="alert">{errors.note}</span>}
         </label>
       </div>
 
@@ -281,10 +310,13 @@ export function UrgentOrderPanel({
       {confirming && selectedRoute && selectedPriority && (
         <div className="dialog-backdrop" role="presentation">
           <section
+            ref={dialogRef}
             className="confirmation-dialog confirmation-dialog--wide"
             role="dialog"
+            tabIndex={-1}
             aria-modal="true"
             aria-labelledby="urgent-confirm-title"
+            aria-describedby="urgent-confirm-boundary"
           >
             <span className="dialog-icon dialog-icon--urgent" aria-hidden="true">!</span>
             <p className="eyebrow">提交前最后核对</p>
@@ -296,7 +328,7 @@ export function UrgentOrderPanel({
               <div><dt>优先级</dt><dd>{selectedPriority.label_zh} · 权重 {selectedPriority.priority_weight}</dd></div>
               <div><dt>重排基线</dt><dd>{shortId(publication.schedule_version_id)}</dd></div>
             </dl>
-            <div className="dialog-boundary">
+            <div id="urgent-confirm-boundary" className="dialog-boundary">
               <strong>新方案只会保存为草稿</strong>
               <span>不会自动发布，也不会替换当前仿真基线</span>
             </div>
@@ -310,7 +342,7 @@ export function UrgentOrderPanel({
                 返回修改
               </button>
               <button
-                ref={submitRef}
+                data-autofocus
                 className="button button--primary"
                 type="button"
                 onClick={() => void confirm()}

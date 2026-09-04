@@ -138,12 +138,20 @@ def _text_hygiene() -> dict[str, Any]:
         try:
             text = path.read_text(encoding="utf-8")
         except UnicodeError:
-            violations.append(f"{path.relative_to(REPOSITORY_ROOT).as_posix()}: invalid UTF-8")
+            violations.append(
+                f"{path.relative_to(REPOSITORY_ROOT).as_posix()}: invalid UTF-8"
+            )
             continue
         if text and not text.endswith("\n"):
-            violations.append(f"{path.relative_to(REPOSITORY_ROOT).as_posix()}: missing final newline")
+            violations.append(
+                f"{path.relative_to(REPOSITORY_ROOT).as_posix()}: missing final newline"
+            )
         for index, line in enumerate(text.splitlines(), start=1):
-            markdown_hard_break = path.suffix == ".md" and line.endswith("  ") and not line.endswith("   ")
+            markdown_hard_break = (
+                path.suffix == ".md"
+                and line.endswith("  ")
+                and not line.endswith("   ")
+            )
             if line.endswith("\t") or (line.endswith(" ") and not markdown_hard_break):
                 violations.append(
                     f"{path.relative_to(REPOSITORY_ROOT).as_posix()}:{index}: trailing whitespace"
@@ -267,8 +275,7 @@ def _verify_presentation_runtime_evidence(path: Path) -> dict[str, Any]:
         and comparison["operation_universe_count"] == 585
         and comparison["change_counts"]["added"] == 5
         and comparison["change_counts"]["changed"] > 0
-        and comparison["default_observed_classifications"]
-        == ["ADDED", "CHANGED"]
+        and comparison["default_observed_classifications"] == ["ADDED", "CHANGED"]
         and sum(comparison["all_page_counts"]) == 585
         and comparison["deterministic_replay"] is True
         and report["filter_probe"]["all_rows_match"] is True
@@ -377,10 +384,7 @@ def _verify_workspace_evidence(path: Path) -> dict[str, Any]:
         and page["returned"] == gantt["assignment_nodes"]
         and gantt["assignment_nodes"] < summary["scheduled_assignments"]
         and network["mutation_requests_during_workspace_actions"] == 0
-        and all(
-            request["method"] == "GET"
-            for request in network["workspace_requests"]
-        )
+        and all(request["method"] == "GET" for request in network["workspace_requests"])
         and len(report["screenshots"]) == 5
         and all(item["status"] == "PASS" for item in report["screenshots"])
         and report["boundaries"]["d14_schedule_workspace"] == "IMPLEMENTED"
@@ -461,6 +465,76 @@ def _verify_replan_frontend_evidence(path: Path) -> dict[str, Any]:
     }
 
 
+def _verify_e2e_evidence(path: Path) -> dict[str, Any]:
+    report = json.loads(path.read_text(encoding="utf-8"))
+    observed_fingerprint = report.pop("report_fingerprint", None)
+    payload = json.dumps(
+        report,
+        ensure_ascii=False,
+        sort_keys=True,
+        separators=(",", ":"),
+        allow_nan=False,
+    ).encode("utf-8")
+    expected_fingerprint = f"sha256:{sha256(payload).hexdigest()}"
+    assertions = report["assertions"]
+    story = report["story"]
+    accessibility = report["accessibility"]
+    boundaries = report["boundaries"]
+    passed = (
+        report["status"] == "PASS"
+        and report["task_id"] == "TASK-DEMO-08"
+        and report["evidence_version"] == "cnc-demo-e2e-evidence.v1"
+        and len(assertions) == 39
+        and all(assertions.values())
+        and report["inputs"]["api_audit"]["assertion_count"] == 50
+        and report["inputs"]["browser_observation"]["assertion_count"] == 68
+        and story["state"] == "DRAFT_COMPARISON_READY"
+        and story["solver_status"] in {"OPTIMAL", "FEASIBLE"}
+        and story["validation_status"] == "PASS"
+        and story["change_counts"]["added"] == 5
+        and story["change_counts"]["changed"] > 0
+        and story["change_counts"]["unchanged"] > 0
+        and story["business_mutations"]
+        == ["RESET", "INITIAL_PLAN", "ACTIVATE", "URGENT_REPLAN"]
+        and accessibility["unnamed_interactive_count"] == 0
+        and accessibility["broken_aria_references"] == []
+        and accessibility["duplicate_ids"] == []
+        and all(item["pass"] is True for item in report["contrast"].values())
+        and all(
+            item["horizontal_overflow_px"] <= 1 for item in report["layouts"].values()
+        )
+        and len(report["screenshots"]) == 2
+        and all(item["status"] == "PASS" for item in report["screenshots"])
+        and len(report["source_sha256"]) == 24
+        and boundaries
+        == {
+            "draft_auto_published": False,
+            "p7_registration": None,
+            "production_authority": False,
+            "production_capacity_claim": "NOT_ESTABLISHED",
+            "simulation_only": True,
+            "single_runs_not_performance_baseline": True,
+            "synthetic_only": True,
+        }
+        and observed_fingerprint == expected_fingerprint
+    )
+    return {
+        "status": "PASS" if passed else "FAIL",
+        "path": path.relative_to(REPOSITORY_ROOT).as_posix(),
+        "sha256": _sha256(path),
+        "assertion_count": len(assertions),
+        "api_assertion_count": report["inputs"]["api_audit"]["assertion_count"],
+        "browser_assertion_count": report["inputs"]["browser_observation"][
+            "assertion_count"
+        ],
+        "screenshot_count": len(report["screenshots"]),
+        "story_state": story["state"],
+        "solver_status": story["solver_status"],
+        "validation_status": story["validation_status"],
+        "change_counts": story["change_counts"],
+    }
+
+
 def build_report(*, task_id: str, context_path: Path) -> dict[str, Any]:
     baseline_path = DEMO_ROOT / "build/validation/protected-root-baseline.json"
     baseline = json.loads(baseline_path.read_text(encoding="utf-8"))
@@ -487,7 +561,9 @@ def build_report(*, task_id: str, context_path: Path) -> dict[str, Any]:
 
     benchmark_checks = [
         _verify_benchmark(DEMO_ROOT / "benchmarks/results/smoke.json", (108, 102, 12)),
-        _verify_benchmark(DEMO_ROOT / "benchmarks/results/showcase.json", (610, 580, 24)),
+        _verify_benchmark(
+            DEMO_ROOT / "benchmarks/results/showcase.json", (610, 580, 24)
+        ),
         _verify_benchmark(DEMO_ROOT / "benchmarks/results/upper.json", (700, 665, 30)),
     ]
     contract_report_path = DEMO_ROOT / "build/validation/contract-probes.json"
@@ -496,11 +572,18 @@ def build_report(*, task_id: str, context_path: Path) -> dict[str, Any]:
 
     command_checks = [
         _run(["uv", "run", "pytest", "demo/tests", "-q"]),
-        _run(["uv", "run", "ruff", "check", "demo/backend", "demo/scripts", "demo/tests"]),
+        _run(
+            ["uv", "run", "ruff", "check", "demo/backend", "demo/scripts", "demo/tests"]
+        ),
         _run(["uv", "run", "pyright", "-p", "demo/pyrightconfig.json"]),
         _run(["git", "diff", "--check", "--", "demo"]),
     ]
-    if task_id in {"TASK-DEMO-05", "TASK-DEMO-06", "TASK-DEMO-07"}:
+    if task_id in {
+        "TASK-DEMO-05",
+        "TASK-DEMO-06",
+        "TASK-DEMO-07",
+        "TASK-DEMO-08",
+    }:
         frontend_root = DEMO_ROOT / "frontend"
         command_checks = [
             _run([NPM_COMMAND, "ci", "--no-audit", "--no-fund"], cwd=frontend_root),
@@ -539,10 +622,8 @@ def build_report(*, task_id: str, context_path: Path) -> dict[str, Any]:
             DEMO_ROOT / "build/validation/runtime-evidence-demo-03.json"
         )
     elif task_id == "TASK-DEMO-04":
-        artifact_checks["runtime_evidence"] = (
-            _verify_presentation_runtime_evidence(
-                DEMO_ROOT / "build/validation/runtime-evidence-demo-04.json"
-            )
+        artifact_checks["runtime_evidence"] = _verify_presentation_runtime_evidence(
+            DEMO_ROOT / "build/validation/runtime-evidence-demo-04.json"
         )
     elif task_id == "TASK-DEMO-05":
         artifact_checks["frontend_evidence"] = _verify_frontend_evidence(
@@ -555,6 +636,10 @@ def build_report(*, task_id: str, context_path: Path) -> dict[str, Any]:
     elif task_id == "TASK-DEMO-07":
         artifact_checks["frontend_evidence"] = _verify_replan_frontend_evidence(
             DEMO_ROOT / "build/validation/frontend-evidence-demo-07.json"
+        )
+    elif task_id == "TASK-DEMO-08":
+        artifact_checks["e2e_evidence"] = _verify_e2e_evidence(
+            DEMO_ROOT / "build/validation/e2e-evidence-demo-08.json"
         )
     passed = (
         scope_status == "PASS"
@@ -615,6 +700,7 @@ def main() -> int:
             "TASK-DEMO-05",
             "TASK-DEMO-06",
             "TASK-DEMO-07",
+            "TASK-DEMO-08",
         ),
         default="TASK-DEMO-01",
     )
@@ -634,6 +720,7 @@ def main() -> int:
             "TASK-DEMO-05": "task-context-manifest-demo-05.json",
             "TASK-DEMO-06": "task-context-manifest-demo-06.json",
             "TASK-DEMO-07": "task-context-manifest-demo-07.json",
+            "TASK-DEMO-08": "task-context-manifest-demo-08.json",
         }[arguments.task_id]
     )
     report = build_report(task_id=arguments.task_id, context_path=context_path)

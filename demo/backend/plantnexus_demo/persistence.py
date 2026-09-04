@@ -30,6 +30,7 @@ ACTIVE_JOB_STATUSES = ("QUEUED", "RUNNING", "CANCELLING")
 TERMINAL_JOB_STATUSES = ("SUCCEEDED", "FAILED", "INTERRUPTED", "CANCELLED")
 _IDENTIFIER = re.compile(r"[A-Za-z0-9][A-Za-z0-9._-]{0,127}")
 _FINGERPRINT = re.compile(r"sha256:[0-9a-f]{64}")
+_RUNTIME_ID = re.compile(r"[a-z0-9][a-z0-9-]{0,63}")
 
 
 class DemoPersistenceError(RuntimeError):
@@ -95,6 +96,22 @@ def _require_fingerprint(value: str, field: str) -> str:
             message="fingerprint is invalid",
         )
     return value
+
+
+def resolve_named_runtime_root(demo_root: Path, runtime_id: str | None) -> Path:
+    """Resolve a CLI runtime name below demo/runtime without accepting paths."""
+
+    root = (demo_root / "runtime").resolve()
+    if runtime_id is None:
+        return root
+    if _RUNTIME_ID.fullmatch(runtime_id) is None:
+        raise ValueError(
+            "--runtime-id must contain only lowercase letters, digits, and hyphens"
+        )
+    candidate = (root / runtime_id).resolve()
+    if candidate.parent != root:
+        raise ValueError("--runtime-id escaped the Demo runtime directory")
+    return candidate
 
 
 @dataclass(frozen=True, slots=True)
@@ -793,7 +810,7 @@ class ControlStore:
         now = utc_now()
         with self._connection(immediate=True) as connection:
             running = connection.execute(
-                "SELECT job_id, attempt FROM demo_jobs WHERE status = 'RUNNING'"
+                "SELECT job_id, attempt FROM demo_jobs WHERE status IN ('RUNNING','CANCELLING')"
             ).fetchall()
             for row in running:
                 connection.execute(
@@ -806,7 +823,8 @@ class ControlStore:
             changed = connection.execute(
                 """
                 UPDATE demo_jobs SET status = 'INTERRUPTED', error_code = 'PROCESS_INTERRUPTED',
-                    finished_at_utc = ?, updated_at_utc = ? WHERE status = 'RUNNING'
+                    finished_at_utc = ?, updated_at_utc = ?
+                WHERE status IN ('RUNNING','CANCELLING')
                 """,
                 (now, now),
             ).rowcount
@@ -1406,6 +1424,7 @@ __all__ = [
     "fingerprint",
     "key_reference",
     "prune_inactive_runs",
+    "resolve_named_runtime_root",
     "require_artifact_set",
     "utc_now",
 ]

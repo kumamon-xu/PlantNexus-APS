@@ -62,6 +62,11 @@ describe("中文初始排产工作区", () => {
     renderWorkspace(api);
 
     await screen.findByRole("heading", { name: "工厂—车间—设备甘特图" });
+    for (const tab of screen.getAllByRole("tab")) {
+      const controlledId = tab.getAttribute("aria-controls");
+      expect(controlledId).not.toBeNull();
+      expect(document.getElementById(controlledId!)).not.toBeNull();
+    }
     expect(screen.getByText("华东精密制造一厂 · 所有操作仅查询当前仿真版本")).toBeInTheDocument();
     expect(screen.getAllByTestId("gantt-assignment")).toHaveLength(3);
     expect(screen.getByText(/冻结窗口独立标注/)).toBeInTheDocument();

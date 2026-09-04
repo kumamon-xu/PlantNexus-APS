@@ -1,4 +1,4 @@
-import { useCallback, useEffect, useMemo, useState } from "react";
+import { useCallback, useEffect, useMemo, useRef, useState } from "react";
 
 import type { DemoApi } from "../api/client";
 import { DemoContractError } from "../api/contracts";
@@ -94,6 +94,11 @@ export function ComparisonWorkspace({
   const [view, setView] = useState<DemoComparisonView | null>(null);
   const [loading, setLoading] = useState(true);
   const [failure, setFailure] = useState<ReturnType<typeof noticeFor> | null>(null);
+  const headingRef = useRef<HTMLHeadingElement>(null);
+
+  useEffect(() => {
+    headingRef.current?.focus();
+  }, []);
 
   const load = useCallback(async () => {
     setLoading(true);
@@ -178,7 +183,7 @@ export function ComparisonWorkspace({
       <div className="comparison-heading">
         <div>
           <p className="eyebrow">服务端权威比较</p>
-          <h2 id="comparison-title">插单前后版本比较</h2>
+          <h2 ref={headingRef} id="comparison-title" tabIndex={-1}>插单前后版本比较</h2>
           <p>变更分类、交付指标和稳定性均直接读取本次 ChangeReport 与 KPI。</p>
         </div>
         <div className="draft-boundary">

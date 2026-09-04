@@ -56,6 +56,17 @@ function activeJobId(bootstrap: DemoBootstrap): string | null {
   return bootstrap.active_job?.job_id ?? null;
 }
 
+function pendingJobMatches(
+  bootstrap: DemoBootstrap,
+  job: ReturnType<CommandIdentityStore["pendingJob"]>,
+): boolean {
+  if (job === null) return false;
+  if (job.job_kind === "RESET") {
+    return bootstrap.run === null || bootstrap.run.run_id === job.run_id;
+  }
+  return bootstrap.run !== null && bootstrap.run.run_id === job.run_id;
+}
+
 function jobFailure(job: DemoJob): DemoClientError {
   return new DemoClientError(
     job.error_code ?? "JOB_EXECUTION_FAILED",
@@ -74,6 +85,7 @@ export function useDemoStory(
   const commandStoreRef = useRef(
     options.commandStore ?? new CommandIdentityStore(),
   );
+  const mutationInFlightRef = useRef(false);
   const [bootstrap, setBootstrap] = useState<DemoBootstrap | null>(null);
   const [schedule, setSchedule] = useState<DemoScheduleSummary | null>(null);
   const [job, setJob] = useState<DemoJob | null>(null);
@@ -103,9 +115,17 @@ export function useDemoStory(
         throw new DemoContractError("bootstrap.schedule_lineage");
       }
     }
+    const activeId = activeJobId(next);
+    const storedPending = commandStoreRef.current.pendingJob();
+    let recoveredJobId = activeId;
+    if (recoveredJobId === null && pendingJobMatches(next, storedPending)) {
+      recoveredJobId = storedPending?.job_id ?? null;
+    } else if (storedPending !== null && !pendingJobMatches(next, storedPending)) {
+      commandStoreRef.current.clearPendingJob(storedPending.job_id);
+    }
     setBootstrap(next);
     setSchedule(nextSchedule);
-    setPollingJobId(activeJobId(next));
+    setPollingJobId(recoveredJobId);
     if (next.run === null || next.story_state === "DRAFT_COMPARISON_READY") {
       if (next.run !== null) commandStoreRef.current.clearUrgentOrder(next.run.run_id);
       setPendingUrgentOrder(null);
@@ -155,6 +175,7 @@ export function useDemoStory(
         if (cancelled) return;
         setJob(current);
         if (terminalStatuses.has(current.status)) {
+          commandStoreRef.current.clearPendingJob(current.job_id);
           setPollingJobId(null);
           if (current.status !== "SUCCEEDED") {
             setNotice(noticeFor(jobFailure(current)));
@@ -165,7 +186,11 @@ export function useDemoStory(
       } catch (error) {
         if (cancelled) return;
         setNotice(noticeFor(error));
-        if (error instanceof DemoContractError) {
+        if (
+          error instanceof DemoContractError ||
+          (error instanceof DemoClientError && error.code === "JOB_NOT_FOUND")
+        ) {
+          commandStoreRef.current.clearPendingJob(pollingJobId);
           setPollingJobId(null);
           return;
         }
@@ -182,6 +207,8 @@ export function useDemoStory(
 
   const submitJob = useCallback(
     async (operation: "reset" | "initial-plan") => {
+      if (mutationInFlightRef.current) return;
+      mutationInFlightRef.current = true;
       setSubmitting(true);
       setNotice(null);
       try {
@@ -191,10 +218,12 @@ export function useDemoStory(
           operation === "reset"
             ? await api.reset(profile, key)
             : await api.createInitialPlan(runId, key);
+        commandStoreRef.current.savePendingJob(accepted);
         setPollingJobId(accepted.job_id);
       } catch (error) {
         setNotice(noticeFor(error));
       } finally {
+        mutationInFlightRef.current = false;
         setSubmitting(false);
       }
     },
@@ -237,6 +266,7 @@ export function useDemoStory(
   }, [bootstrap, schedule]);
 
   const activate = useCallback(async () => {
+    if (mutationInFlightRef.current) return;
     if (schedule === null || bootstrap?.run === null || bootstrap?.run === undefined) {
       setNotice(noticeFor(new DemoContractError("activation.schedule")));
       return;
@@ -261,6 +291,7 @@ export function useDemoStory(
       };
       commandStoreRef.current.saveActivation(stored);
     }
+    mutationInFlightRef.current = true;
     setSubmitting(true);
     setNotice(null);
     try {
@@ -275,12 +306,14 @@ export function useDemoStory(
         // The original sanitized action error remains the useful UI boundary.
       }
     } finally {
+      mutationInFlightRef.current = false;
       setSubmitting(false);
     }
   }, [api, bootstrap, hydrate, schedule]);
 
   const submitUrgentOrder = useCallback(
     async (input: UrgentOrderInput): Promise<boolean> => {
+      if (mutationInFlightRef.current) return false;
       const run = bootstrap?.run;
       const publication = bootstrap?.current_publication;
       if (
@@ -328,6 +361,7 @@ export function useDemoStory(
         );
         return false;
       }
+      mutationInFlightRef.current = true;
       setSubmitting(true);
       setNotice(null);
       try {
@@ -338,12 +372,14 @@ export function useDemoStory(
         if (accepted.job_kind !== "URGENT_REPLAN" || accepted.run_id !== run.run_id) {
           throw new DemoContractError("urgent.job_accepted.lineage");
         }
+        commandStoreRef.current.savePendingJob(accepted);
         setPollingJobId(accepted.job_id);
         return true;
       } catch (error) {
         setNotice(noticeFor(error));
         return false;
       } finally {
+        mutationInFlightRef.current = false;
         setSubmitting(false);
       }
     },

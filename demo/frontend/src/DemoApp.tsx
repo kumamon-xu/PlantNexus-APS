@@ -42,6 +42,7 @@ export function DemoApp({
 }: DemoAppProps) {
   const story = useDemoStory(api, { profile, pollIntervalMs });
   const [urgentRunId, setUrgentRunId] = useState<string | null>(null);
+  const primaryActionRef = useRef<HTMLButtonElement>(null);
   const urgentAnchor = useRef<HTMLDivElement>(null);
   const comparisonAnchor = useRef<HTMLDivElement>(null);
   const bootstrap = story.bootstrap;
@@ -113,7 +114,7 @@ export function DemoApp({
         </div>
       </header>
 
-      <main id="main-content" className="demo-main">
+      <main id="main-content" className="demo-main" tabIndex={-1}>
         {story.notice && (
           <section className="notice" role="alert" aria-labelledby="notice-title">
             <span className="notice__icon" aria-hidden="true">
@@ -165,6 +166,7 @@ export function DemoApp({
             </div>
             <div className="primary-action-row">
               <button
+                ref={primaryActionRef}
                 className="button button--primary button--hero"
                 type="button"
                 onClick={runAction}
@@ -230,7 +232,10 @@ export function DemoApp({
                 pending={story.pendingUrgentOrder}
                 busy={story.isBusy}
                 onSubmit={story.submitUrgentOrder}
-                onClose={() => setUrgentRunId(null)}
+                onClose={() => {
+                  setUrgentRunId(null);
+                  window.setTimeout(() => primaryActionRef.current?.focus(), 0);
+                }}
               />
             )}
         </div>

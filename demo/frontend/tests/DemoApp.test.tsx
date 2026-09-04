@@ -187,11 +187,47 @@ describe("中文 Demo 故事首页", () => {
     const api = mockApi({ bootstrap: vi.fn().mockResolvedValue(initializedBootstrap()) });
     render(<DemoApp api={api} profile="smoke" />);
 
-    await user.click(await screen.findByRole("button", { name: "重置演示" }));
+    const trigger = await screen.findByRole("button", { name: "重置演示" });
+    await user.click(trigger);
     expect(screen.getByRole("dialog", { name: "重置当前演示运行？" })).toBeInTheDocument();
+    const confirm = screen.getByRole("button", { name: "确认重置" });
+    const cancel = screen.getByRole("button", { name: "取消" });
+    expect(confirm).toHaveFocus();
+    await user.tab();
+    expect(cancel).toHaveFocus();
+    await user.tab({ shift: true });
+    expect(confirm).toHaveFocus();
     await user.keyboard("{Escape}");
     await waitFor(() => expect(screen.queryByRole("dialog")).not.toBeInTheDocument());
+    await waitFor(() => expect(trigger).toHaveFocus());
     expect(api.reset).not.toHaveBeenCalled();
+  });
+
+  it("服务重启后从本地持久任务身份读取 INTERRUPTED 并给出中文恢复边界", async () => {
+    localStorage.setItem(
+      "plantnexus-demo:pending-job",
+      JSON.stringify({
+        job_id: "job-initial-plan-demo-1",
+        job_kind: "INITIAL_PLAN",
+        run_id: initializedBootstrap().run!.run_id,
+      }),
+    );
+    const interrupted: DemoJob = {
+      ...runningPlanJob(),
+      status: "INTERRUPTED",
+      error_code: "PROCESS_INTERRUPTED",
+    };
+    const api = mockApi({
+      bootstrap: vi.fn().mockResolvedValue(initializedBootstrap()),
+      getJob: vi.fn().mockResolvedValue(interrupted),
+    });
+
+    render(<DemoApp api={api} profile="smoke" pollIntervalMs={5} />);
+
+    expect(await screen.findByText("服务重启中断了后台任务")).toBeInTheDocument();
+    expect(screen.getByText(/没有伪装成成功/)).toBeInTheDocument();
+    expect(api.getJob).toHaveBeenCalledWith("job-initial-plan-demo-1");
+    expect(localStorage.getItem("plantnexus-demo:pending-job")).toBeNull();
   });
 
   it("未知原始异常只显示中文安全提示", async () => {
@@ -270,13 +306,31 @@ describe("中文 Demo 故事首页", () => {
     await user.type(quantity, "0");
     await user.click(screen.getByRole("button", { name: "核对并提交插单" }));
     expect(screen.getByText("数量须为 1～50 的整数。")).toBeInTheDocument();
+    expect(quantity).toHaveFocus();
+    expect(quantity).toHaveAttribute(
+      "aria-describedby",
+      "urgent-quantity-help urgent-quantity-error",
+    );
     expect(submitUrgentOrder).not.toHaveBeenCalled();
 
     await user.clear(quantity);
     await user.type(quantity, "5");
     await user.click(screen.getByRole("button", { name: "核对并提交插单" }));
-    const dialog = screen.getByRole("dialog", { name: "确认接收这张加急订单？" });
+    let dialog = screen.getByRole("dialog", { name: "确认接收这张加急订单？" });
     expect(within(dialog).getByText("新方案只会保存为草稿")).toBeInTheDocument();
+    const urgentConfirm = within(dialog).getByRole("button", {
+      name: "确认插单并自动重排",
+    });
+    const returnToForm = within(dialog).getByRole("button", { name: "返回修改" });
+    expect(urgentConfirm).toHaveFocus();
+    await user.tab();
+    expect(returnToForm).toHaveFocus();
+    await user.keyboard("{Escape}");
+    await waitFor(() => expect(screen.queryByRole("dialog")).not.toBeInTheDocument());
+    const review = screen.getByRole("button", { name: "核对并提交插单" });
+    await waitFor(() => expect(review).toHaveFocus());
+    await user.click(review);
+    dialog = screen.getByRole("dialog", { name: "确认接收这张加急订单？" });
     await user.click(
       within(dialog).getByRole("button", { name: "确认插单并自动重排" }),
     );

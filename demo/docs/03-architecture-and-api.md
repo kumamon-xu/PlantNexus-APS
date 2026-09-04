@@ -137,17 +137,21 @@ Demo 只监听 127.0.0.1，默认不允许局域网访问。启动时生成或�
 
 这是一套本地演示身份，不是生产认证方案。
 
+TASK-DEMO-08 实施证据（2026-09-04）：启动入口只接受小写字母、数字和连字符组成的具名 runtime id，并解析为 `demo/runtime` 的直接子目录；任意数据库路径、绝对路径、`..`、分隔符和超长名称均被拒绝。后端/Vite 只监听 loopback。错误 token、缺 capability、错误 scope、非 loopback 会话和 Production binding 全部返回消毒后的拒绝，不产生业务写入；session token 未进入 HTTP 正文、服务日志、control.db、仓库或浏览器证据。
+
 ## 6. Job 模型与进度
 
 采用数据库持久化、进程内执行器、最大并发 1 的 job runner。API 请求只负责校验、幂等登记并返回 202；后台线程执行 CPU/IO 工作，不阻塞事件循环。
 
 重启恢复规则：
 
-- QUEUED 可重新入队；
-- RUNNING 在进程启动时标记为 INTERRUPTED；
-- 只允许从记录的安全边界重试；
+- QUEUED 以原 job identity 重新入队；
+- 遗留 RUNNING 或 CANCELLING 在进程启动时标记为 INTERRUPTED；
+- INTERRUPTED 只允许从记录的安全边界以同一 job/idempotency identity 显式重试，并增加 attempt；
 - 已经提交的 append-only 写操作依赖原幂等键重放，不能生成新 identity；
 - 用户可以查看错误并点击重试，不显示假成功。
+
+TASK-DEMO-08 已用重启 replay 证明遗留执行任务先持久化为 `INTERRUPTED / PROCESS_INTERRUPTED`，随后以同一 job identity 成功完成 attempt 2；不会自动生成新命令或把中断伪装为成功。并发 reset 恰有一个 `ACCEPTED` 和一个 `ACTIVE_JOB_CONFLICT`，数据库只登记一个 durable job；在 active-run 切换前注入的 reset 失败保留旧 active run。
 
 通用 job 状态：
 
@@ -340,7 +344,15 @@ DemoComparisonView v1 包含：
 
 factory、scope、authority、stream、position、request fingerprint 和 attempt identity 全部由服务端当前状态派生，不让演示人员手输。
 
-### 10.4 展示读取查询
+### 10.4 D16 浏览器与服务恢复约束
+
+- 浏览器接受 durable job 后立即保存 job id/kind；刷新优先恢复服务端 active job，否则按本地 pending identity 查询同一 job，不创建新写命令。
+- reset、initial plan、activation 和 urgent mutation 均有同步 in-flight 防重入；真实浏览器双击只观察到一次对应 POST。
+- 对话框以共享 focus trap 管理初始焦点、Tab/Shift+Tab、Escape 和触发控件焦点恢复；表单错误通过 `aria-invalid` 与 `aria-describedby` 关联并聚焦首个无效字段。
+- 当前 tablist 的每个 `aria-controls` 都指向常驻 DOM 的对应 tabpanel；非活动 panel 使用 `hidden`，避免悬空 ARIA 引用。
+- D16 没有开放通用 manual retry/cancel API，也没有改变 `PUBLISHED`/`DRAFT` 生命周期；中断恢复由已有相同命令身份的显式重试路径完成。
+
+### 10.5 展示读取查询
 
 - `/versions/{version_id}`：`resource_id`、`workshop_id`、`demand_order_id`、`state` 可重复或逗号分隔；`start_at_utc`、`end_at_utc`、`sort`、`offset`、`limit` 为标量。排序支持 `START_ASC`、`RESOURCE_START_ASC`、`ORDER_START_ASC`。
 - `/comparisons/{request_id}`：支持 `classification`、resource/workshop/order、UTC window、offset/limit；排序支持 `OPERATION_ASC`、`SHIFT_DESC`、`START_ASC`。未指定分类时只返回 `ADDED + CHANGED`。
@@ -348,7 +360,7 @@ factory、scope、authority、stream、position、request fingerprint 和 attemp
 - 成功读取返回基于 `view_fingerprint` 的强 ETag；匹配 `If-None-Match` 时返回 304 和相同关联 headers。cache policy 为 private revalidation。
 - 版本和 request 不存在返回 `PRESENTATION_NOT_FOUND`；artifact/lineage 不一致返回稳定的 presentation 错误且不泄漏内部路径、token 或原始异常。
 
-### 10.5 错误语义
+### 10.6 错误语义
 
 稳定错误至少包括：
 

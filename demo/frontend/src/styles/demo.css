@@ -53,6 +53,12 @@ pre:focus-visible {
   outline-offset: 3px;
 }
 
+#main-content:focus,
+h2[tabindex="-1"]:focus {
+  outline: 3px solid #f0a458;
+  outline-offset: 5px;
+}
+
 .skip-link {
   position: fixed;
   z-index: 100;

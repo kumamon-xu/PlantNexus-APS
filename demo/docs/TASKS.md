@@ -33,7 +33,7 @@
 
 D04 是架构可行性门。若 610 工序在候选预算内不能稳定返回已验证可行解，先处理场景或模型问题，再投入完整甘特图和视觉打磨。
 
-当前进度（2026-09-02）：
+当前进度（2026-09-04）：
 
 - D00：5 个契约探针 `PASS`；确认 v1 workspace 不直接接受 PlanningProblem v2、`route_template_id` 不进入 ExecutionEvent、现有重排 Validator 具备 `ADDED` universe 和真实 KPI 注入边界。
 - D01：Demo-local Python package、CLI、测试、类型检查和越界保护已完成；当时拆出的 runtime 已由 D05～D12 完成，前端骨架已由 D13 完成。
@@ -47,8 +47,9 @@ D04 是架构可行性门。若 610 工序在候选预算内不能稳定返回�
 - D13：独立中文故事首页、同源 session、strict consumer contract、job polling/刷新恢复、初排与显式基线发布、键盘路径和 1440/1024 Chromium smoke 已完成。
 - D14：中文订单风险表、订单→甘特联动、工厂/车间/设备筛选、72 小时有界甘特、日历/维护/执行/锁定语义、等价表格、计划负荷与校验证据已完成；Showcase 132/580/24 浏览器 smoke 和双宽度页面无溢出通过。
 - D15：资产驱动的四路线中文插单表单、只读 current base、二次确认、durable urgent command 恢复、真实 job 阶段、自动 DRAFT 比较、ChangeReport 分类、交付/稳定性/Validator、120 条分页和刷新恢复已完成；Showcase 单次真实链与双宽度页面无溢出通过。
+- D16：全新隔离 runtime 的中文 Chromium 完整链、四类业务 mutation 单次提交、双击/刷新、重启中断与原身份重试、stale、并发 reset、受控失败、Simulation 授权、scope、Production binding、token/log/path 消毒、键盘/focus/ARIA/对比度/reduced motion 和双宽度布局均已通过。
 
-因此当前结论是 `INITIAL_SOLVE_SCALE_GATE=PASS`、`DYNAMIC_REPLAN_BACKEND_GATE=PASS`、`PRESENTATION_READ_GATE=PASS`、`D13_STORY_SHELL_GATE=PASS`、`D14_WORKSPACE_GATE=PASS` 且 `D15_REPLAN_UI_GATE=PASS`；完整中文业务主线已经闭合，但 D16 完整 E2E/安全/可访问性矩阵与正式 D17 基准仍未完成，所以还不是 Demo ready。详见 [当前实施状态](IMPLEMENTATION-STATUS.md)。
+因此当前结论是 `INITIAL_SOLVE_SCALE_GATE=PASS`、`DYNAMIC_REPLAN_BACKEND_GATE=PASS`、`PRESENTATION_READ_GATE=PASS`、`D13_STORY_SHELL_GATE=PASS`、`D14_WORKSPACE_GATE=PASS`、`D15_REPLAN_UI_GATE=PASS` 且 `D16_E2E_SECURITY_A11Y_GATE=PASS`；M3 的标准演示与失败恢复 E2E 退出条件已满足。D17 正式多样本基准和 D18 打包/目标机审计仍未完成，所以还不是 Demo ready。详见 [当前实施状态](IMPLEMENTATION-STATUS.md)。
 
 ## 2. 总览
 
@@ -450,6 +451,8 @@ D04 是架构可行性门。若 610 工序在候选预算内不能稳定返回�
 - 没有预录 schedule fallback；
 - 截图和测试报告只含合成数据。
 
+完成证据：真实 Playwright CLI/Chromium 从空 Showcase runtime 完成中文 reset→initial plan→activate→urgent→comparison，总计 68/68 浏览器断言，四次业务 mutation 各一次，刷新后 0 次重复 mutation；该次结果为 `FEASIBLE + Validator PASS` 的 v2 `DRAFT`，ChangeReport 为 5 `ADDED` / 23 `CHANGED` / 557 `UNCHANGED`，原 current `PUBLISHED` 不变。独立 API/SQLite Smoke 审计为 50/50，覆盖 concurrent reset 仅一个 durable job、`INTERRUPTED` 原 identity attempt 2 成功、失败 reset 保留 active run、stale/权限/Production/path/token 负向矩阵。汇总证据 39/39、两张截图哈希、控制台 0 error/warning、关键文字对比度和两个宽度 0 页面溢出均 `PASS`；见 `e2e-evidence-demo-08.json`。所有耗时仍只是单次 synthetic 功能证据，不是 D17 p95 或 SLA。
+
 ### D17 — 正式专项基准与调优
 
 目标：冻结可以如实公开的 Demo 参数。
@@ -504,6 +507,8 @@ D04 是架构可行性门。若 610 工序在候选预算内不能稳定返回�
 ### M3：可讲解的现场体验
 
 包含 D13～D16。退出条件是标准演示脚本和失败恢复 E2E 通过。
+
+状态：已满足。D16 已从空 runtime 走通中文业务主线，并完成恢复、安全、可访问性和双宽度证据闭环。
 
 ### M4：可重复交付
 

@@ -1,0 +1,288 @@
+{
+  "accessibility": {
+    "broken_aria_references": [],
+    "change_badge_count": 120,
+    "duplicate_ids": [],
+    "empty_change_badge_count": 0,
+    "heading_jump_count": 0,
+    "heading_levels": [
+      1,
+      2,
+      2,
+      2,
+      3,
+      2,
+      3
+    ],
+    "interactive_count": 28,
+    "main_count": 1,
+    "navigation_landmark_count": 1,
+    "status_count": 1,
+    "status_without_text_count": 0,
+    "unnamed_interactive_count": 0
+  },
+  "assertions": {
+    "accessibility_structure": true,
+    "accessible_non_color_status": true,
+    "all_tab_panels_resolve": true,
+    "api_audit_isolated": true,
+    "api_comparison_boundary": true,
+    "api_full_story_lineage": true,
+    "api_status_and_assertions": true,
+    "api_validator_boundary": true,
+    "browser_business_mutations_exact": true,
+    "browser_change_report": true,
+    "browser_draft_lineage": true,
+    "browser_runner_loopback": true,
+    "browser_scripts_complete": true,
+    "browser_security_hygiene": true,
+    "browser_status_and_assertions": true,
+    "browser_validator_boundary": true,
+    "comparison_focus_managed": true,
+    "concurrent_reset_fail_closed": true,
+    "critical_contrast": true,
+    "failed_reset_preserves_active": true,
+    "interrupted_copy_chinese": true,
+    "interrupted_identity_retry": true,
+    "interrupted_retry_exact": true,
+    "isolated_runtime_cleaned": true,
+    "loopback_and_log_hygiene": true,
+    "loopback_startup_fixed": true,
+    "modal_focus_trap_shared": true,
+    "named_runtime_resolver_used": true,
+    "pending_job_persisted": true,
+    "reduced_motion": true,
+    "response_and_dom_sizes_recorded": true,
+    "responsive_layouts": true,
+    "running_job_interruption_persisted": true,
+    "runtime_id_allowlist": true,
+    "screenshots_valid": true,
+    "security_matrix_passes": true,
+    "session_cookie_boundary": true,
+    "simulation_boundary": true,
+    "urgent_errors_described": true
+  },
+  "boundaries": {
+    "draft_auto_published": false,
+    "p7_registration": null,
+    "production_authority": false,
+    "production_capacity_claim": "NOT_ESTABLISHED",
+    "simulation_only": true,
+    "single_runs_not_performance_baseline": true,
+    "synthetic_only": true
+  },
+  "browser_metrics": {
+    "console_warning_or_error_count": 0,
+    "dom_node_count": 1924,
+    "observed_resource_request_count": 71,
+    "response_sizes_bytes": {
+      "bootstrap": 4325,
+      "comparison": 44476
+    }
+  },
+  "contrast": {
+    "added_badge": {
+      "pass": true,
+      "ratio": 5.6,
+      "rendered": false,
+      "style_available": true,
+      "threshold": 4.5
+    },
+    "changed_badge": {
+      "pass": true,
+      "ratio": 6.37,
+      "rendered": true,
+      "style_available": true,
+      "threshold": 4.5
+    },
+    "draft_boundary": {
+      "pass": true,
+      "ratio": 7.15,
+      "rendered": true,
+      "style_available": true,
+      "threshold": 4.5
+    },
+    "hero_heading": {
+      "pass": true,
+      "ratio": 15.62,
+      "rendered": true,
+      "style_available": true,
+      "threshold": 3
+    },
+    "hero_lead": {
+      "pass": true,
+      "ratio": 9.6,
+      "rendered": true,
+      "style_available": true,
+      "threshold": 4.5
+    },
+    "primary_button": {
+      "pass": true,
+      "ratio": 4.68,
+      "rendered": true,
+      "style_available": true,
+      "threshold": 4.5
+    },
+    "simulation_badge": {
+      "pass": true,
+      "ratio": 12.71,
+      "rendered": true,
+      "style_available": true,
+      "threshold": 4.5
+    },
+    "unchanged_badge": {
+      "pass": true,
+      "ratio": 5.82,
+      "rendered": true,
+      "style_available": true,
+      "threshold": 4.5
+    }
+  },
+  "evidence_version": "cnc-demo-e2e-evidence.v1",
+  "inputs": {
+    "api_audit": {
+      "assertion_count": 50,
+      "path": "demo/build/validation/e2e-audit-demo-08.json",
+      "sha256": "c8d87618fb0e4176b8129e25717708c5e9a3384bfd5774761bc33e37a50dc4e9"
+    },
+    "browser_observation": {
+      "assertion_count": 68,
+      "path": "demo/build/validation/browser-e2e-observation-demo-08.json",
+      "sha256": "7245f61606afb937c902de3541dd1f5f32b2b12740b8408aebd6f63749bc9221"
+    }
+  },
+  "layouts": {
+    "compact": {
+      "body_scroll_width": 1024,
+      "horizontal_overflow_px": 0,
+      "scroll_width": 1024,
+      "viewport_height": 768,
+      "viewport_width": 1024
+    },
+    "wide": {
+      "body_scroll_width": 1440,
+      "horizontal_overflow_px": 0,
+      "scroll_width": 1440,
+      "viewport_height": 900,
+      "viewport_width": 1440
+    }
+  },
+  "reduced_motion": {
+    "animation_duration": "1e-05s",
+    "animation_iteration_count": "1",
+    "media_matches": true,
+    "scroll_behavior": "auto",
+    "transition_duration": "1e-05s"
+  },
+  "report_fingerprint": "sha256:6fe602a56dcb4fe2232979d8640f4156315e1578564f55a21ee7bc2cfbe7cab0",
+  "screenshots": [
+    {
+      "image_height": 8294,
+      "image_width": 1440,
+      "label": "wide",
+      "path": "demo/build/validation/screenshots/demo08-e2e-1440x900.png",
+      "sha256": "9565d0f06c9324d5ab79d5289a3b1fda43c21ea58e2e9e0dea67530b147ef0cd",
+      "status": "PASS",
+      "viewport": [
+        1440,
+        900
+      ]
+    },
+    {
+      "image_height": 8694,
+      "image_width": 1024,
+      "label": "compact",
+      "path": "demo/build/validation/screenshots/demo08-e2e-1024x768.png",
+      "sha256": "e8f144ac69b8bbd284ed9e6347bea492ff0915c56b5342c60f91f16105194d10",
+      "status": "PASS",
+      "viewport": [
+        1024,
+        768
+      ]
+    }
+  ],
+  "security_and_recovery": {
+    "concurrency": {
+      "durable_jobs": 1,
+      "outcomes": [
+        "ACCEPTED",
+        "ACTIVE_JOB_CONFLICT"
+      ]
+    },
+    "path_security": {
+      "broad_delete_target_exposed": false,
+      "database_paths_rejected": 2,
+      "runtime_ids_rejected": 5
+    },
+    "production_binding": {
+      "production_binding_granted": false,
+      "sentinel_exposed": false,
+      "status_code": 403
+    },
+    "recovery": {
+      "attempt": 2,
+      "error_code": "PROCESS_INTERRUPTED",
+      "interrupted_status": "INTERRUPTED",
+      "replayed": true,
+      "retry_status": "SUCCEEDED",
+      "same_job_identity": true
+    },
+    "reset_failure": {
+      "error_code": "RESET_FAILED",
+      "failed_candidate_status": "FAILED",
+      "previous_active_preserved": true
+    },
+    "secret_hygiene": {
+      "control_database_contains_token": false,
+      "repository_matches": [],
+      "token_file_inside_runtime": true
+    }
+  },
+  "source_sha256": {
+    "api_audit": "0ad5fbb103bba6a5b037297af09f04db3f39e489d8980fb9620f06f5b3c72773",
+    "browser_runner": "e18c5dc028a550349d93ea82eaff97a8da4ef2b88ac37c2d3321ebb6232dd772",
+    "browser_stage_1": "a7c5d1d597224f0725afcdcfa784d1f6e2ea0895a401d00a65018fb0e5acca5e",
+    "browser_stage_10": "636791328f2df7f2a17ef8947401426891c0a2425583d93ebb344f3a4244b810",
+    "browser_stage_11": "b2b3de8b3a5d5f8a1136b9c262db720534e4bf62505d7a3425c40f36b9c66678",
+    "browser_stage_12": "22836dfba5fe05f4f3a842dcfc1c71356592fa5942653136da82800dced98090",
+    "browser_stage_2": "b3ef346ad82a85c07f15e78f867e0c5bb4393023b75fe88840fdfaeb72f00afc",
+    "browser_stage_3": "f8608e6302a4ba20d4a0088d192c64f2f975a8ff30dba2362d5697035f318dc1",
+    "browser_stage_4": "245c5e06e9fcb2ccff7b2bf40ec06239ab5fdb37c48b1e05cd78ff21d9c6138d",
+    "browser_stage_5": "54eaac16e258a156ce59549228b7e7e5330e249d802d40e5215262bd1848dc72",
+    "browser_stage_6": "2e84b9805c9f484acbcce0c2a7f2c18abb21937d2382144d5d021ae70ea5b55e",
+    "browser_stage_7": "8e27ae371e2358bf1f47f4a738cbe32c152e18f4c13ae4d9596581bc65eb6cd3",
+    "browser_stage_8": "9dc3dcc5900098fb27df5c10cbcd3b69c7d3bc8f4af71859dfcfb306156ddd6d",
+    "browser_stage_9": "54921ac268983b4a6f9c45a7da0adcf9586c66473c55f38f38215ffdc7ffc2f8",
+    "comparison": "e600a3cffc89d896a27262b3674bbaafa3963df61e92ff7a8c129d5325dfea73",
+    "controller": "ecb5e7cb6d0d28fb801440f2b0fac3f3e18622542f982877757c65d2e415c4a3",
+    "copy": "0fba91d0f7f6b2241796612ea5c53ba2fbddfdfcd76079a9326039b4fa6f242a",
+    "identity": "52053f740e771869c2a398599e55ca93bf2f996a4e52d91033e360cd5c48b1db",
+    "job_runner": "e23d3b28c952dd0a94e2cd5e6aff350ea9b0a96302f06e666cc475d6f47e7733",
+    "modal_focus": "9b344a573e6917c9b8115cf35ab1e56c674d17d2bb95a74581e203deeb2338f8",
+    "persistence": "e1ed39420049d80bbafd4a9296dad1b9aa72b76f1ad4c5c27e2e99b16e97f4f6",
+    "schedule_workspace": "3488c50f3a25b77c327087a77257744e6d25fb70fcab2bc1c2b23dcce32e7bfe",
+    "startup": "7092cedde200147b27c52c1dfd75ff0596f4277661222f45da2d87749e8c96e0",
+    "urgent_form": "fba11776507e5ad3c87da655c652facdc4c1220bf74eabddbef386d57548956f"
+  },
+  "status": "PASS",
+  "story": {
+    "api_wall_seconds": 14.45152760000201,
+    "browser_wall_seconds": 79.88999999998487,
+    "business_mutations": [
+      "RESET",
+      "INITIAL_PLAN",
+      "ACTIVATE",
+      "URGENT_REPLAN"
+    ],
+    "change_counts": {
+      "added": 5,
+      "changed": 23,
+      "removed_by_fact": 0,
+      "unchanged": 557
+    },
+    "solver_status": "FEASIBLE",
+    "state": "DRAFT_COMPARISON_READY",
+    "validation_status": "PASS"
+  },
+  "task_id": "TASK-DEMO-08"
+}

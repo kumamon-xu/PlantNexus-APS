@@ -360,6 +360,22 @@ def test_wrong_token_and_missing_capability_fail_closed(tmp_path: Path) -> None:
         assert runtime.local_token not in denied.text
 
 
+def test_session_establishment_rejects_non_loopback_client(tmp_path: Path) -> None:
+    application = create_demo_app(
+        repository_root=REPOSITORY_ROOT,
+        runtime_root=tmp_path / "runtime",
+        auto_resume_queued=False,
+    )
+    runtime = application.state.demo_runtime
+    with TestClient(application, client=("203.0.113.10", 443)) as client:
+        denied = client.post("/api/demo/v1/session")
+
+    assert denied.status_code == 403
+    assert denied.json()["code"] == "AUTHORIZATION_DENIED"
+    assert denied.json()["field"] == "client"
+    assert runtime.local_token not in denied.text
+
+
 def test_wrong_schedule_scope_and_production_plane_fail_closed(tmp_path: Path) -> None:
     application = create_demo_app(
         repository_root=REPOSITORY_ROOT,

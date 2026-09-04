@@ -156,35 +156,39 @@ export function ScheduleWorkspace({
             ))}
           </div>
 
-          <div
-            id={`workspace-panel-${activeTab}`}
-            className="workspace-panel"
-            role="tabpanel"
-            aria-labelledby={`workspace-tab-${activeTab}`}
-          >
-            {activeTab === "orders" && (
-              <OrdersWorkspaceView
-                orders={schedule.orders}
-                selectedOrderId={selectedOrderId}
-                onFocusOrder={focusOrder}
-              />
-            )}
-            {activeTab === "gantt" && (
-              <GanttWorkspaceView
-                factory={factory}
-                schedule={schedule}
-                selectedOrderId={selectedOrderId}
-                refreshing={workspace.refreshing}
-                onQuery={workspace.loadSchedule}
-              />
-            )}
-            {activeTab === "capacity" && (
-              <CapacityWorkspaceView factory={factory} schedule={schedule} />
-            )}
-            {activeTab === "evidence" && (
-              <EvidenceWorkspaceView schedule={schedule} />
-            )}
-          </div>
+          {tabs.map((tab) => (
+            <div
+              id={`workspace-panel-${tab.id}`}
+              key={tab.id}
+              className="workspace-panel"
+              role="tabpanel"
+              aria-labelledby={`workspace-tab-${tab.id}`}
+              hidden={activeTab !== tab.id}
+            >
+              {tab.id === "orders" && activeTab === tab.id && (
+                <OrdersWorkspaceView
+                  orders={schedule.orders}
+                  selectedOrderId={selectedOrderId}
+                  onFocusOrder={focusOrder}
+                />
+              )}
+              {tab.id === "gantt" && activeTab === tab.id && (
+                <GanttWorkspaceView
+                  factory={factory}
+                  schedule={schedule}
+                  selectedOrderId={selectedOrderId}
+                  refreshing={workspace.refreshing}
+                  onQuery={workspace.loadSchedule}
+                />
+              )}
+              {tab.id === "capacity" && activeTab === tab.id && (
+                <CapacityWorkspaceView factory={factory} schedule={schedule} />
+              )}
+              {tab.id === "evidence" && activeTab === tab.id && (
+                <EvidenceWorkspaceView schedule={schedule} />
+              )}
+            </div>
+          ))}
 
           <footer className="workspace-footnote">
             <span>

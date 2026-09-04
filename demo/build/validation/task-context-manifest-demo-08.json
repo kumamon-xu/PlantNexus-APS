@@ -1,0 +1,167 @@
+{
+  "diff_base": "9a8f2e556b4b0adfdef3f88e1d442f805e9d4628",
+  "estimated_characters": 389424,
+  "files_allowed_to_change": [
+    "demo/**"
+  ],
+  "inputs": [
+    {
+      "characters": 6771,
+      "load_mode": "FULL",
+      "path": "demo/docs/TASK-DEMO-08-e2e-security-recovery-and-accessibility.md",
+      "sha256": "784fbdc6076779ef6cfc437daf888448cb7361c441b1a266ab06c43c8429ad66"
+    },
+    {
+      "characters": 14333,
+      "load_mode": "SECURITY_AND_RECOVERY",
+      "path": "demo/docs/03-architecture-and-api.md",
+      "sha256": "0b0349ae7770a8aa2eecdc78c9384d1878ba6846bbf8602b0097ff0bddf63372"
+    },
+    {
+      "characters": 10243,
+      "load_mode": "E2E_FAILURE_AND_ACCESSIBILITY",
+      "path": "demo/docs/04-ux-and-demo-script.md",
+      "sha256": "2ededc6b39ce7eda3d838ff525f91127251df0ac7ad659f9134f2faae28a32df"
+    },
+    {
+      "characters": 10187,
+      "load_mode": "GATES_E_F_AND_TEST_MATRIX",
+      "path": "demo/docs/05-benchmark-and-acceptance.md",
+      "sha256": "3f8b8ade1cceb73847b98eec3827e2ef44a360ff3fa711b2229d21da1c0e280c"
+    },
+    {
+      "characters": 16908,
+      "load_mode": "D16",
+      "path": "demo/docs/TASKS.md",
+      "sha256": "308bbe968741d66c061e66402b039fb95eb41e1fa3d559bb2675e25b388daab2"
+    },
+    {
+      "characters": 5610,
+      "load_mode": "COMPLETION_SUMMARY",
+      "path": "demo/docs/TASK-DEMO-05-chinese-story-shell-and-job-recovery.md",
+      "sha256": "817e66e09e98164a5452356894527ab195031b0acd223650d84acc49fe720526"
+    },
+    {
+      "characters": 5941,
+      "load_mode": "COMPLETION_SUMMARY",
+      "path": "demo/docs/TASK-DEMO-06-schedule-workspace-and-capacity-view.md",
+      "sha256": "2d0b932a5c28fc0a1e26b7a05a424da2de763d95cc821aeb1c9243059f0833fd"
+    },
+    {
+      "characters": 6950,
+      "load_mode": "COMPLETION_SUMMARY",
+      "path": "demo/docs/TASK-DEMO-07-urgent-replan-and-comparison-workspace.md",
+      "sha256": "49310b6433eda4cd03408ecc6692d915b0916a81503b23ac8233185a44579de1"
+    },
+    {
+      "characters": 15620,
+      "load_mode": "FULL",
+      "path": "docs/contracts/authorization-and-audit.md",
+      "sha256": "a1ef22d89a50fb85b7c86d39857a6ce4e7546ae39a91a7198b62fbac43adbe3e"
+    },
+    {
+      "characters": 23140,
+      "load_mode": "SECURITY_AND_COMMAND_ENDPOINTS",
+      "path": "demo/backend/plantnexus_demo/api.py",
+      "sha256": "3f1e5c4220e2a994e181b525c4000c51bccad33201d5af7397fad9509e688bbf"
+    },
+    {
+      "characters": 30594,
+      "load_mode": "RUNTIME_COMPOSITION",
+      "path": "demo/backend/plantnexus_demo/composition.py",
+      "sha256": "7ad1b556541f26377847597719a6fd8a52c59fc382edf77f760ad6cc949436a6"
+    },
+    {
+      "characters": 12227,
+      "load_mode": "RECOVERY_AND_MUTEX",
+      "path": "demo/backend/plantnexus_demo/jobs.py",
+      "sha256": "e23d3b28c952dd0a94e2cd5e6aff350ea9b0a96302f06e666cc475d6f47e7733"
+    },
+    {
+      "characters": 54517,
+      "load_mode": "PATH_JOB_AND_CAS",
+      "path": "demo/backend/plantnexus_demo/persistence.py",
+      "sha256": "e1ed39420049d80bbafd4a9296dad1b9aa72b76f1ad4c5c27e2e99b16e97f4f6"
+    },
+    {
+      "characters": 4362,
+      "load_mode": "FULL",
+      "path": "demo/backend/plantnexus_demo/security.py",
+      "sha256": "598f379a22ab1ebb2e14d2be167a0306fa82a6b0b04ab68d18cee6eb75087072"
+    },
+    {
+      "characters": 1400,
+      "load_mode": "FULL",
+      "path": "demo/scripts/start_demo.py",
+      "sha256": "7092cedde200147b27c52c1dfd75ff0596f4277661222f45da2d87749e8c96e0"
+    },
+    {
+      "characters": 30139,
+      "load_mode": "FULL",
+      "path": "demo/scripts/validate_demo.py",
+      "sha256": "3212cbdd96a345b3e96a19bb7e66b2b1e9511d229283b2d27d779acb63e63f5b"
+    },
+    {
+      "characters": 15573,
+      "load_mode": "FULL",
+      "path": "demo/frontend/src/DemoApp.tsx",
+      "sha256": "5058cc08cc20be5b898760fede2b25fc7e704a92ba002131e571b8c8425e108b"
+    },
+    {
+      "characters": 13886,
+      "load_mode": "FULL",
+      "path": "demo/frontend/src/app/useDemoStory.ts",
+      "sha256": "ecb5e7cb6d0d28fb801440f2b0fac3f3e18622542f982877757c65d2e415c4a3"
+    },
+    {
+      "characters": 2002,
+      "load_mode": "FULL",
+      "path": "demo/frontend/src/components/ConfirmationDialog.tsx",
+      "sha256": "4cf3b77bae44b6a7ec21cc174057923fe698059b0cb8c8a64fb9b3d5ebb1d393"
+    },
+    {
+      "characters": 12408,
+      "load_mode": "FULL",
+      "path": "demo/frontend/src/components/UrgentOrderPanel.tsx",
+      "sha256": "fba11776507e5ad3c87da655c652facdc4c1220bf74eabddbef386d57548956f"
+    },
+    {
+      "characters": 15311,
+      "load_mode": "FULL",
+      "path": "demo/frontend/src/components/ComparisonWorkspace.tsx",
+      "sha256": "e600a3cffc89d896a27262b3674bbaafa3963df61e92ff7a8c129d5325dfea73"
+    },
+    {
+      "characters": 6640,
+      "load_mode": "FULL",
+      "path": "demo/frontend/src/domain/copy.ts",
+      "sha256": "0fba91d0f7f6b2241796612ea5c53ba2fbddfdfcd76079a9326039b4fa6f242a"
+    },
+    {
+      "characters": 57630,
+      "load_mode": "ACCESSIBILITY_AND_RESPONSIVE",
+      "path": "demo/frontend/src/styles/demo.css",
+      "sha256": "00197036a071b56eb81d67b62a11c4896ecf36d10b7c8e096e233acf115c7237"
+    },
+    {
+      "characters": 17032,
+      "load_mode": "FULL",
+      "path": "demo/frontend/tests/DemoApp.test.tsx",
+      "sha256": "44074eedf7178607e33f7a7b733f57912e4b615e9a9a046866c16365f159dcb3"
+    }
+  ],
+  "manifest_version": "demo-task-context-manifest.v1",
+  "on_demand_expansion_triggers": [
+    "formal contract or accepted ADR conflict",
+    "root code/schema change becomes necessary",
+    "dynamic replan implementation starts",
+    "presentation lineage or fingerprint mismatch cannot be resolved read-only"
+  ],
+  "phase_registration": null,
+  "root_repository_consumption": "READ_ONLY",
+  "selected_input_count": 24,
+  "soft_budget_note": "Selected normative units were read in full; the 30k character budget is soft.",
+  "task_family": "demo-exclusive",
+  "task_id": "TASK-DEMO-08",
+  "validation_profile": "DEMO_HIGH_RISK"
+}

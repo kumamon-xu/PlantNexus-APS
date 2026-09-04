@@ -151,6 +151,10 @@ const errorMessages: Readonly<Record<string, { title: string; detail: string }>>
     title: "后台任务执行失败",
     detail: "错误已被安全记录；不会显示内部异常，也不会自动重复提交命令。",
   },
+  PROCESS_INTERRUPTED: {
+    title: "服务重启中断了后台任务",
+    detail: "系统已明确标记本次任务为中断，没有伪装成成功。请重新执行当前步骤，原幂等身份会被安全复用。",
+  },
   RESET_FAILED: {
     title: "初始化未完成",
     detail: "旧的活动运行未被替换，可以检查证据后重新开始。",

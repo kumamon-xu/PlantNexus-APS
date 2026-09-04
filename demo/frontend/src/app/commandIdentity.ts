@@ -1,5 +1,6 @@
 import type {
   BaselineActivationRequest,
+  JobAccepted,
   UrgentOrderCommand,
 } from "../api/types";
 
@@ -18,6 +19,11 @@ export interface StoredUrgentOrder {
   readonly idempotencyKey: string;
   readonly request: UrgentOrderCommand;
 }
+
+export type StoredPendingJob = Pick<
+  JobAccepted,
+  "job_id" | "job_kind" | "run_id"
+>;
 
 const memory = new Map<string, string>();
 
@@ -96,6 +102,21 @@ function isUrgentOrder(value: unknown): value is StoredUrgentOrder {
   );
 }
 
+function isPendingJob(value: unknown): value is StoredPendingJob {
+  if (typeof value !== "object" || value === null || Array.isArray(value)) {
+    return false;
+  }
+  const item = value as Record<string, unknown>;
+  return (
+    typeof item.job_id === "string" &&
+    item.job_id.length > 0 &&
+    ["RESET", "INITIAL_PLAN", "URGENT_REPLAN"].includes(
+      String(item.job_kind),
+    ) &&
+    (item.run_id === null || typeof item.run_id === "string")
+  );
+}
+
 export class CommandIdentityStore {
   constructor(private readonly storage: StorageLike = browserStorage()) {}
 
@@ -154,6 +175,39 @@ export class CommandIdentityStore {
 
   clearUrgentOrder(runId: string): void {
     this.storage.removeItem(`plantnexus-demo:urgent:${runId}`);
+  }
+
+  pendingJob(): StoredPendingJob | null {
+    const storageKey = "plantnexus-demo:pending-job";
+    const value = this.storage.getItem(storageKey);
+    if (value === null) return null;
+    try {
+      const parsed = JSON.parse(value) as unknown;
+      if (isPendingJob(parsed)) return parsed;
+    } catch {
+      // Invalid browser state is discarded below instead of being trusted.
+    }
+    this.storage.removeItem(storageKey);
+    return null;
+  }
+
+  savePendingJob(value: StoredPendingJob): void {
+    this.storage.setItem(
+      "plantnexus-demo:pending-job",
+      JSON.stringify({
+        job_id: value.job_id,
+        job_kind: value.job_kind,
+        run_id: value.run_id,
+      }),
+    );
+  }
+
+  clearPendingJob(expectedJobId?: string): void {
+    if (expectedJobId !== undefined) {
+      const current = this.pendingJob();
+      if (current !== null && current.job_id !== expectedJobId) return;
+    }
+    this.storage.removeItem("plantnexus-demo:pending-job");
   }
 }
 

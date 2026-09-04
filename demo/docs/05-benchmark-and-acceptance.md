@@ -283,7 +283,7 @@ UPPER 不满足时，不影响已通过的 SHOWCASE 发布，但 README 必须�
 - DRAFT 和 Simulation 标识始终可见；
 - 1440×900 主路径无横向页面滚动。
 
-TASK-DEMO-04 已通过统一展示契约与只读性证据；TASK-DEMO-05 验证了中文故事壳不重算 KPI、Simulation 标识持续可见和双宽度布局；TASK-DEMO-06 进一步验证了初始 580 assignments 通过 160 节点分页/时间窗有界展示、订单联动、日历与锁定语义、计划负荷口径以及 1440×900/1024×768 无页面级横向滚动。TASK-DEMO-07 真实连接 Showcase current `PUBLISHED`，一次业务表单提交形成 5 `ADDED` / 25 `CHANGED` / 555 `UNCHANGED` 的 v2 `DRAFT`；默认变化页、保持不变分页、设备筛选、PUBLISHED→DRAFT lineage、交付/稳定性、Validator 和刷新恢复均通过，两个目标宽度无页面级横向滚动。至此 Gate E 当前清单有单次浏览器 `PASS` 证据；D16 仍需补失败/安全/可访问性矩阵，D17 仍需正式多样本性能证据。
+TASK-DEMO-04 已通过统一展示契约与只读性证据；TASK-DEMO-05 验证了中文故事壳不重算 KPI、Simulation 标识持续可见和双宽度布局；TASK-DEMO-06 进一步验证了初始 580 assignments 通过 160 节点分页/时间窗有界展示、订单联动、日历与锁定语义、计划负荷口径以及 1440×900/1024×768 无页面级横向滚动。TASK-DEMO-07 真实连接 Showcase current `PUBLISHED`，一次业务表单提交形成 v2 `DRAFT`，默认变化页、保持不变分页、设备筛选、PUBLISHED→DRAFT lineage、交付/稳定性、Validator 和刷新恢复均通过。TASK-DEMO-08 又从全新 runtime 重放完整中文链，取得 68/68 浏览器断言、两张已校验截图、八组关键文字 AA 对比度、无悬空 ARIA 引用和双宽度 0 页面溢出；该次独立运行的 ChangeReport 为 5 `ADDED` / 23 `CHANGED` / 557 `UNCHANGED`。Gate E 功能/视觉清单现为 `PASS`；D17 仍需形成正式多样本性能证据。
 
 ### Gate F：恢复与安全
 
@@ -291,10 +291,10 @@ TASK-DEMO-04 已通过统一展示契约与只读性证据；TASK-DEMO-05 验证
 - 无 token 写入日志或仓库；
 - stale run/base、越权 scope、production binding 均 fail closed；
 - reset 失败不切换 active run；
-- 服务重启后活动 job 进入明确 INTERRUPTED；
+- 服务重启后 QUEUED 以原 identity 续跑，遗留 RUNNING/CANCELLING 进入明确 INTERRUPTED；
 - 路径逃逸、任意数据库路径和并发 reset 被拒绝。
 
-TASK-DEMO-05 已在真实 Chromium 验证同源 HttpOnly session、EMPTY 到基线发布、刷新恢复同一 run、响应契约 fail closed、中文安全错误和可见正文不含凭证；TASK-DEMO-07 又验证了 durable urgent 成功后刷新恢复同一 DRAFT comparison 且不重复 POST。完整重启/INTERRUPTED、stale、失败注入、并发与可访问性矩阵仍属于 D16。
+TASK-DEMO-05 已在真实 Chromium 验证同源 HttpOnly session、EMPTY 到基线发布、刷新恢复同一 run、响应契约 fail closed、中文安全错误和可见正文不含凭证；TASK-DEMO-07 又验证了 durable urgent 成功后刷新恢复同一 DRAFT comparison 且不重复 POST。TASK-DEMO-08 的 50/50 API/SQLite 断言和 68/68 浏览器断言已覆盖 exact replay/idempotency conflict、stale run/base、非 loopback、错误 token/capability/scope、Production binding、并发 reset、切换前 reset 失败、路径逃逸、重启 `INTERRUPTED` 与同 identity attempt 2，以及日志/数据库/仓库/页面凭证消毒。Gate F 现为 `PASS`；manual cancel/retry 仍是明确未开放能力，不属于该 Gate 的成功宣称。
 
 ## 10. 测试矩阵
 
@@ -310,6 +310,8 @@ TASK-DEMO-05 已在真实 Chromium 验证同源 HttpOnly session、EMPTY 到基�
 | E2E | 浏览器从重置到比较页、刷新恢复、失败/重试、键盘操作 |
 | Visual | 1440×900、1024 宽、长订单号、580 条数据的有界甘特、比较页与色盲检查 |
 | Benchmark | SMOKE、SHOWCASE、UPPER 的 B1～B6 |
+
+D16 测试矩阵证据汇总于 `demo/build/validation/e2e-evidence-demo-08.json`：API/SQLite 50 项、真实浏览器 68 项、跨报告/截图/源码 39 项全部 `PASS`。浏览器整链约 79.89 秒、API Smoke 审计约 14.45 秒只是本次功能运行 wall time；没有 warmup + 5、p95、独立 RSS 或目标机签名，因此不能写入 D17 性能基线。
 
 ## 11. 发布判定
 

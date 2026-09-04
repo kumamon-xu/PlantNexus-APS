@@ -1,6 +1,5 @@
-import { useEffect, useRef } from "react";
-
 import type { ConfirmationKind } from "../app/useDemoStory";
+import { useModalFocus } from "../app/useModalFocus";
 
 interface ConfirmationDialogProps {
   readonly kind: ConfirmationKind;
@@ -15,28 +14,20 @@ export function ConfirmationDialog({
   onConfirm,
   onCancel,
 }: ConfirmationDialogProps) {
-  const confirmRef = useRef<HTMLButtonElement>(null);
-
-  useEffect(() => {
-    if (kind !== null) confirmRef.current?.focus();
-  }, [kind]);
-
-  useEffect(() => {
-    if (kind === null) return;
-    const onKeyDown = (event: KeyboardEvent) => {
-      if (event.key === "Escape" && !busy) onCancel();
-    };
-    window.addEventListener("keydown", onKeyDown);
-    return () => window.removeEventListener("keydown", onKeyDown);
-  }, [busy, kind, onCancel]);
+  const dialogRef = useModalFocus<HTMLElement>(kind !== null, {
+    onEscape: onCancel,
+    escapeDisabled: busy,
+  });
 
   if (kind === null) return null;
   const isReset = kind === "RESET";
   return (
     <div className="dialog-backdrop" role="presentation">
       <section
+        ref={dialogRef}
         className="confirmation-dialog"
         role="dialog"
+        tabIndex={-1}
         aria-modal="true"
         aria-labelledby="confirmation-title"
         aria-describedby="confirmation-detail"
@@ -62,7 +53,7 @@ export function ConfirmationDialog({
             取消
           </button>
           <button
-            ref={confirmRef}
+            data-autofocus
             className="button button--primary"
             type="button"
             onClick={onConfirm}

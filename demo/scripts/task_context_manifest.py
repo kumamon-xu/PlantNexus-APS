@@ -179,6 +179,32 @@ SELECTED_INPUTS_BY_TASK = {
         ("demo/frontend/tests/fixtures.ts", "FULL"),
         ("demo/frontend/tests/DemoApp.test.tsx", "FULL"),
     ),
+    "TASK-DEMO-08": (
+        ("demo/docs/TASK-DEMO-08-e2e-security-recovery-and-accessibility.md", "FULL"),
+        ("demo/docs/03-architecture-and-api.md", "SECURITY_AND_RECOVERY"),
+        ("demo/docs/04-ux-and-demo-script.md", "E2E_FAILURE_AND_ACCESSIBILITY"),
+        ("demo/docs/05-benchmark-and-acceptance.md", "GATES_E_F_AND_TEST_MATRIX"),
+        ("demo/docs/TASKS.md", "D16"),
+        ("demo/docs/TASK-DEMO-05-chinese-story-shell-and-job-recovery.md", "COMPLETION_SUMMARY"),
+        ("demo/docs/TASK-DEMO-06-schedule-workspace-and-capacity-view.md", "COMPLETION_SUMMARY"),
+        ("demo/docs/TASK-DEMO-07-urgent-replan-and-comparison-workspace.md", "COMPLETION_SUMMARY"),
+        ("docs/contracts/authorization-and-audit.md", "FULL"),
+        ("demo/backend/plantnexus_demo/api.py", "SECURITY_AND_COMMAND_ENDPOINTS"),
+        ("demo/backend/plantnexus_demo/composition.py", "RUNTIME_COMPOSITION"),
+        ("demo/backend/plantnexus_demo/jobs.py", "RECOVERY_AND_MUTEX"),
+        ("demo/backend/plantnexus_demo/persistence.py", "PATH_JOB_AND_CAS"),
+        ("demo/backend/plantnexus_demo/security.py", "FULL"),
+        ("demo/scripts/start_demo.py", "FULL"),
+        ("demo/scripts/validate_demo.py", "FULL"),
+        ("demo/frontend/src/DemoApp.tsx", "FULL"),
+        ("demo/frontend/src/app/useDemoStory.ts", "FULL"),
+        ("demo/frontend/src/components/ConfirmationDialog.tsx", "FULL"),
+        ("demo/frontend/src/components/UrgentOrderPanel.tsx", "FULL"),
+        ("demo/frontend/src/components/ComparisonWorkspace.tsx", "FULL"),
+        ("demo/frontend/src/domain/copy.ts", "FULL"),
+        ("demo/frontend/src/styles/demo.css", "ACCESSIBILITY_AND_RESPONSIVE"),
+        ("demo/frontend/tests/DemoApp.test.tsx", "FULL"),
+    ),
 }
 
 DIFF_BASE_BY_TASK = {
@@ -189,6 +215,7 @@ DIFF_BASE_BY_TASK = {
     "TASK-DEMO-05": "b0cc126522e3916d72b438e7f237851a36b51a3d",
     "TASK-DEMO-06": "b0cc126522e3916d72b438e7f237851a36b51a3d",
     "TASK-DEMO-07": "b0cc126522e3916d72b438e7f237851a36b51a3d",
+    "TASK-DEMO-08": "9a8f2e556b4b0adfdef3f88e1d442f805e9d4628",
 }
 
 

@@ -1,0 +1,30 @@
+async (page) => {
+  const assertions = {};
+  const check = (name, condition) => { assertions[name] = Boolean(condition); };
+  await page.getByRole("button", { name: "插入加急订单" }).click();
+  const heading = page.getByRole("heading", { name: "插入加急订单" });
+  await heading.waitFor();
+  check("urgent_panel_receives_focus", await heading.evaluate((element) => element === document.activeElement));
+  check("four_approved_routes_visible", (await page.getByRole("radio").count()) === 4);
+  check("recommended_route_five_selected", await page.locator('input[value="CNC-ROUTE-5"]').isChecked());
+  const quantity = page.getByRole("spinbutton", { name: /订单数量/ });
+  await quantity.fill("0");
+  await page.getByRole("button", { name: "核对并提交插单" }).click();
+  check("invalid_quantity_focused", await quantity.evaluate((element) => element === document.activeElement));
+  check("invalid_quantity_marked", (await quantity.getAttribute("aria-invalid")) === "true");
+  check("invalid_quantity_described", (await quantity.getAttribute("aria-describedby")) === "urgent-quantity-help urgent-quantity-error");
+  await quantity.fill("5");
+  const trigger = page.getByRole("button", { name: "核对并提交插单" });
+  await trigger.click();
+  const dialog = page.getByRole("dialog", { name: "确认接收这张加急订单？" });
+  await dialog.waitFor();
+  check("urgent_dialog_initial_focus", (await page.evaluate(() => document.activeElement?.textContent?.trim())) === "确认插单并自动重排");
+  await page.keyboard.press("Tab");
+  check("urgent_dialog_tab_wraps", (await page.evaluate(() => document.activeElement?.textContent?.trim())) === "返回修改");
+  await page.keyboard.press("Shift+Tab");
+  check("urgent_dialog_shift_tab_wraps", (await page.evaluate(() => document.activeElement?.textContent?.trim())) === "确认插单并自动重排");
+  await page.keyboard.press("Escape");
+  await dialog.waitFor({ state: "detached" });
+  check("urgent_dialog_restores_focus", await trigger.evaluate((element) => element === document.activeElement));
+  return { assertions };
+}

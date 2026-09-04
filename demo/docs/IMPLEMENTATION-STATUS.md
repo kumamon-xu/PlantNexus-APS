@@ -1,9 +1,9 @@
 # CNC Demo 当前实施状态
 
 状态日期：2026-09-04
-最新完成任务：TASK-DEMO-07
+最新完成任务：TASK-DEMO-08
 任务族：demo-exclusive（不注册 P7，不改变根项目阶段）  
-结论：固定数据、初排规模门、durable runtime、显式 current `PUBLISHED` 基线、加急事实到 v2 `DRAFT`、v1/v2 统一展示 API、中文 D13 故事首页、D14 初始排产工作区和 D15 加急比较均 `PASS`；D16 完整浏览器 E2E/安全/可访问性矩阵和 D17 正式性能基线仍开放
+结论：固定数据、初排规模门、durable runtime、显式 current `PUBLISHED` 基线、加急事实到 v2 `DRAFT`、v1/v2 统一展示 API、中文 D13 故事首页、D14 初始排产工作区、D15 加急比较和 D16 完整浏览器 E2E/安全/恢复/可访问性矩阵均 `PASS`；D17 正式性能基线仍开放
 
 ## 1. 已交付闭环
 
@@ -14,8 +14,9 @@
 - TASK-DEMO-05：独立 Vite/React 中文故事首页、同源 cookie session、strict runtime response guards、服务端故事恢复、真实 job polling、中文 Solver/Validator/KPI、显式仿真基线确认、持久化命令身份、折叠技术证据，以及 1440/1024 Chromium smoke。
 - TASK-DEMO-06：完整 Factory/Schedule 前端 guards、GET-only 查询 client、中文订单风险表、订单→甘特联动、层级与时间窗筛选、日历/维护/执行/锁定/冻结双编码、等价明细、服务端计划负荷排序、中文求解/校验/关键指标证据，以及 Showcase 132/580/24 的有界 Chromium smoke。
 - TASK-DEMO-07：bootstrap 资产配置与 durable comparison 引用、完整 Urgent/Comparison 前端 guards、持久化插单身份、四路线中文业务表单与二次确认、真实重排 Job、自动 PUBLISHED→DRAFT 比较、ChangeReport/交付/稳定性/Validator、120 条服务端分页，以及刷新恢复和双宽度 Chromium 证据。
+- TASK-DEMO-08：隔离具名 runtime、完整 API/SQLite 安全与恢复审计、中文 Chromium 空状态到比较页、同步防重入与 pending job 恢复、`INTERRUPTED` 同 identity 重试、共享模态焦点管理、ARIA 引用闭合、关键对比度、reduced motion、双宽度布局、日志/token 消毒，以及指纹化汇总证据。
 - Reset：新数据库迁移、自检后以 active-run CAS 切换；失败不替换旧 run；仅清理路径验证后的过期非活动 run，默认保留最近 3 个。
-- Job：单 worker、最大并发 1、QUEUED 可恢复、遗留 RUNNING 标记 INTERRUPTED、同 key 精确重放、不同输入冲突、stale run 与 active-job mutex。
+- Job：单 worker、最大并发 1、QUEUED 以原 identity 恢复、遗留 RUNNING/CANCELLING 标记 INTERRUPTED、同 key 精确重放、不同输入冲突、stale run 与 active-job mutex；INTERRUPTED 可在相同 job identity 上显式进入下一 attempt。
 - 授权：本地 HttpOnly cookie session、SimulationLocalAuthorizationProvider、capability/scope 检查和拒绝审计；错 token/capability/scope 与 Production 均 fail closed。
 - 初排：正式 `GlobalCpSatStrategy`、批准的 Simulation policy/limits、再次独立 Validator、KPI，以及 `ValidatedSolutionToScheduleVersionService.create_reviewable`。
 - 基线：显式 `ACTIVATE_SIMULATION_BASELINE` 确认，正式 APPROVE/PUBLISH 服务，APPROVED 后发布失败可沿同一身份恢复，current Publication 精确读回。
@@ -156,6 +157,28 @@
 
 单次重读变化页/保持不变页分别约 1,168.9/808.5 ms，对应 47,686/176,479 bytes。这些数字连同 21 秒 Job 都是当前开发机的单次 synthetic early evidence，不是 warmup + 5/p95、目标演示机、独立 RSS、Production capacity 或 SLA。不同 TASK-DEMO-03/04 证据文件来自各自独立 fixed-seed 求解运行，CP-SAT 在时间预算内可得到不同但均经 Validator 验证的可行排程；不得把各报告的 CHANGED/UNCHANGED 数直接混成同一次运行。
 
+### 5.3 D16 E2E、安全、恢复与可访问性证据
+
+证据：`demo/build/validation/e2e-evidence-demo-08.json`；原始输入为 `e2e-audit-demo-08.json` 与 `browser-e2e-observation-demo-08.json`，截图位于 `demo/build/validation/screenshots/`。
+
+| 项目 | 实测结果 |
+|---|---|
+| 真实中文主线 | 空 runtime → reset → initial plan → activate → route 5 / quantity 5 urgent → comparison |
+| 业务写请求 | `RESET / INITIAL_PLAN / ACTIVATE / URGENT_REPLAN` 各一次；双击与刷新未产生重复 mutation |
+| 浏览器结果 | `FEASIBLE + Validator PASS` / v2 `DRAFT` / current `PUBLISHED` 不变 |
+| ChangeReport | 585 = 5 `ADDED` + 23 `CHANGED` + 557 `UNCHANGED` |
+| API/SQLite 审计 | 50/50；完整 Smoke 主线、stale、授权、Production、并发、重启、失败和路径矩阵 |
+| 并发 reset | 一个 `ACCEPTED`、一个 `ACTIVE_JOB_CONFLICT`；仅一个 durable job |
+| 重启恢复 | 遗留执行任务为 `INTERRUPTED / PROCESS_INTERRUPTED`；同 job identity attempt 2 `SUCCEEDED` |
+| 失败 reset | candidate `FAILED / RESET_FAILED`；旧 active run 保持不变 |
+| 浏览器断言 | 68/68；控制台 0 error/warning；页面不含凭证、本机路径或 Traceback |
+| 可访问性 | 28 个可交互控件均有名称；0 重复 ID；0 悬空 ARIA 引用；标题无跳级；状态均有文字 |
+| 对比度/动效 | 八组关键文字达到 WCAG AA 阈值；reduced motion 为单次 0.01 ms、取消平滑滚动 |
+| 响应式 | 1440×900 与 1024×768 页面级横向溢出均为 0；两张截图哈希通过 |
+| 汇总证据 | 39/39 assertions；24 个实现源文件 SHA-256；跨报告 fingerprint 闭合 |
+
+本次真实浏览器整链约 79.89 秒，独立 API Smoke 审计约 14.45 秒。它们是单次 synthetic 功能/恢复证据；求解状态可能在相同时间预算内为 `OPTIMAL` 或经 Validator 验证的 `FEASIBLE`。这些 wall time 不形成 warmup + 5、p95、目标机性能、Production capacity 或 SLA。
+
 ## 6. 固定数据与早期规模门
 
 Showcase 固定为 132 个订单、610 道工序、30 已完成、12 正在加工、568 未开始、24 台设备、1,311 个 source resource options、96/29/7 普通/重点/加急订单、18 个物料延迟订单、4 个硬锁、8 个软锁、10 天 horizon、300 秒 tick。
@@ -164,7 +187,7 @@ TASK-DEMO-01 当前开发机单次结果仍为：Showcase 20 秒预算下 solve 
 
 ## 7. 验证状态
 
-- `uv run pytest demo/tests -q`：36 passed。
+- `uv run pytest demo/tests -q`：40 passed。
 - `uv run ruff check demo/backend demo/scripts demo/tests`：PASS。
 - `uv run pyright -p demo/pyrightconfig.json`：0 errors。
 - `git diff --check -- demo`：PASS。
@@ -174,11 +197,14 @@ TASK-DEMO-01 当前开发机单次结果仍为：Showcase 20 秒预算下 solve 
 - TASK-DEMO-05 frontend evidence：19/19 assertions、3/3 screenshots PASS。
 - TASK-DEMO-06 workspace evidence：30/30 assertions、5/5 screenshots PASS。
 - TASK-DEMO-07 replan frontend evidence：42/42 assertions、3/3 screenshots PASS。
+- TASK-DEMO-08 API/SQLite audit：50/50 assertions PASS。
+- TASK-DEMO-08 browser E2E：68/68 assertions、2/2 screenshots PASS。
+- TASK-DEMO-08 aggregate evidence：39/39 assertions PASS。
 - `npm --prefix demo/frontend run lint`：PASS。
 - `npm --prefix demo/frontend run typecheck`：PASS。
-- `npm --prefix demo/frontend run test:run`：5 files / 35 tests PASS。
+- `npm --prefix demo/frontend run test:run`：5 files / 36 tests PASS。
 - `npm --prefix demo/frontend run build`：PASS。
-- 根受保护文件 hash 与 Demo-only scope：由 TASK-DEMO-07 machine report 复核。
+- 根受保护文件 hash 与 Demo-only scope：由 TASK-DEMO-08 machine report 复核。
 
 新增 TASK-DEMO-04 测试覆盖 strict schema/unknown fields、Factory 层级与资产计数、v1/v2 时间语义、KPI provenance、负荷公式、稳定筛选/排序/分页/窗口、ChangeReport 精确分类、artifact mutation fail closed、ETag/304、缺权限/越权 scope/not-found、OpenAPI strict response 和读取前后状态不变。
 
@@ -188,16 +214,17 @@ TASK-DEMO-01 当前开发机单次结果仍为：Showcase 20 秒预算下 solve 
 
 新增 TASK-DEMO-07 测试覆盖 bootstrap 资产配置/comparison reference、UrgentOrderCommand/Job result/Comparison strict guards、malformed lineage 与分页、urgent POST/idempotency/query 编码、表单校验与二次确认、持久化 command recovery、成功后自动 DRAFT 比较和刷新恢复。真实 Showcase 浏览器另覆盖四路线表单、十阶段 job、`ADDED`/`CHANGED`/`UNCHANGED`、保持不变翻页、设备筛选、长时长中文化、双宽度溢出、控制台与可见凭证检查。
 
+新增 TASK-DEMO-08 测试覆盖安全具名 runtime、并发 ControlStore 登记、非 loopback session、重启中断/同 identity 重试、reset 切换前失败、同步双击防护、pending job 刷新恢复、模态焦点环绕/还原、错误字段关联和 tabpanel 引用。独立 API/SQLite 审计覆盖完整安全/恢复矩阵；真实浏览器从空 runtime 覆盖四步主线、双击、刷新、键盘、ARIA、非颜色表达、关键对比度、reduced motion、双宽度、console、DOM/响应规模和可见敏感信息检查。
+
 ## 8. 当前边界与后续工作
 
 - 当前批准的数据资产只有 `CNC-ROUTE-3`～`CNC-ROUTE-6` 四个路线模板；前端应据资产生成四张路线卡，不宣称已有六条路线。
 - 当前 D09/D10 切片允许每个 deterministic run 提交一个不同的加急事件，并支持该命令精确重放；第二个不同插单在同一 run 中以 `BASELINE_STATE_CONFLICT` fail closed。多次连续插单需要先明确 DRAFT 取舍或新 current 基线的链式语义。
 - 根 `project_effective_locks` 会把 Snapshot 中基线前的历史 completed 事实带入 projection，而版本比较 universe 只包含基线 active assignments。Demo 不改根实现、不删除历史事实；它保留 Snapshot anchors 原字节，并在单 worker、单次服务调用范围内把 effective-lock 的 completed comparison view 收窄为 base→new 实际移除集合。该兼容 adapter 是显式技术边界，未来应由正式 projector injection 或统一 universe 语义替代。
-- D16：从空 runtime 到比较页的统一自动化 E2E，以及服务重启/INTERRUPTED、stale、失败注入、并发、安全和可访问性审计矩阵。
 - D04/D17 剩余证据：B4/B5 warmup + 5 measured、浏览器首屏、独立进程 RSS、目标演示机和 immutable performance baseline。
 - Demo manual cancel/retry 仍保持 fail closed；本切片没有把它包装为可用功能。
 
-下一实施切片应是 Demo 专属 D16 完整 E2E、安全、恢复与可访问性闭环。D15 新结果仍只能是 DRAFT，不可自动批准、发布或替换 current baseline。
+下一实施切片应是 Demo 专属 D17 正式专项基准、调优与参数冻结。D16 新结果仍只能是 DRAFT，不可自动批准、发布或替换 current baseline。
 
 ## 9. 可复现命令
 
@@ -208,8 +235,11 @@ uv run pyright -p demo/pyrightconfig.json
 uv run python demo/scripts/run_frontend_evidence.py --observation demo/build/validation/browser-smoke-observation-demo-05.json --report demo/build/validation/frontend-evidence-demo-05.json
 uv run python demo/scripts/run_workspace_evidence.py --observation demo/build/validation/browser-workspace-observation-demo-06.json --report demo/build/validation/frontend-evidence-demo-06.json
 uv run python demo/scripts/run_replan_frontend_evidence.py --observation demo/build/validation/browser-replan-observation-demo-07.json --report demo/build/validation/frontend-evidence-demo-07.json
-uv run python demo/scripts/task_context_manifest.py --task-id TASK-DEMO-07 --report demo/build/validation/task-context-manifest-demo-07.json
-uv run python demo/scripts/validate_demo.py --task-id TASK-DEMO-07 --context demo/build/validation/task-context-manifest-demo-07.json --report demo/build/validation/task-machine-report-demo-07.json
+uv run python demo/scripts/run_e2e_audit.py --report demo/build/validation/e2e-audit-demo-08.json
+uv run python demo/scripts/run_browser_e2e.py --headless --report demo/build/validation/browser-e2e-observation-demo-08.json
+uv run python demo/scripts/run_e2e_evidence.py --api-audit demo/build/validation/e2e-audit-demo-08.json --browser-observation demo/build/validation/browser-e2e-observation-demo-08.json --report demo/build/validation/e2e-evidence-demo-08.json
+uv run python demo/scripts/task_context_manifest.py --task-id TASK-DEMO-08 --report demo/build/validation/task-context-manifest-demo-08.json
+uv run python demo/scripts/validate_demo.py --task-id TASK-DEMO-08 --context demo/build/validation/task-context-manifest-demo-08.json --report demo/build/validation/task-machine-report-demo-08.json
 uv run python demo/scripts/start_demo.py
 npm --prefix demo/frontend ci
 npm --prefix demo/frontend run dev

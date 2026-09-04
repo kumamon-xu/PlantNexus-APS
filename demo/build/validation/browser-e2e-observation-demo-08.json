@@ -1,0 +1,295 @@
+{
+  "boundaries": {
+    "draft_auto_published": false,
+    "p7_registration": null,
+    "production_authority": false,
+    "simulation_only": true,
+    "single_browser_run_not_performance_baseline": true,
+    "synthetic_only": true
+  },
+  "browser_result": {
+    "accessibility": {
+      "broken_aria_references": [],
+      "change_badge_count": 120,
+      "duplicate_ids": [],
+      "empty_change_badge_count": 0,
+      "heading_jump_count": 0,
+      "heading_levels": [
+        1,
+        2,
+        2,
+        2,
+        3,
+        2,
+        3
+      ],
+      "interactive_count": 28,
+      "main_count": 1,
+      "navigation_landmark_count": 1,
+      "status_count": 1,
+      "status_without_text_count": 0,
+      "unnamed_interactive_count": 0
+    },
+    "assertions": {
+      "activation_http_succeeded": true,
+      "activation_one_mutation": true,
+      "all_filter_aria_pressed": true,
+      "all_interactive_controls_named": true,
+      "aria_references_resolve": true,
+      "cancelled_reset_has_no_mutation": true,
+      "change_classifications_have_text": true,
+      "changed_filter_aria_pressed": true,
+      "compact_has_no_page_overflow": true,
+      "comparison_added_five": true,
+      "comparison_changed_present": true,
+      "comparison_heading_receives_focus": true,
+      "comparison_page_bounded": true,
+      "comparison_unchanged_present": true,
+      "comparison_validator_pass": true,
+      "console_has_no_warning_or_error": true,
+      "credential_markers_absent_from_visible_text": true,
+      "critical_text_contrast_passes": true,
+      "current_publication_unchanged": true,
+      "document_ids_unique": true,
+      "document_language_zh_cn": true,
+      "dom_count_recorded": true,
+      "draft_boundary_not_color_only": true,
+      "draft_matches_comparison_reference": true,
+      "final_schedule_is_draft": true,
+      "final_story_comparison_ready": true,
+      "four_approved_routes_visible": true,
+      "full_story_business_mutations_exact": true,
+      "heading_hierarchy_has_no_jump": true,
+      "initial_plan_http_accepted": true,
+      "internal_paths_absent_from_visible_text": true,
+      "invalid_quantity_described": true,
+      "invalid_quantity_focused": true,
+      "invalid_quantity_marked": true,
+      "live_statuses_have_text": true,
+      "navigation_landmark_present": true,
+      "one_main_landmark": true,
+      "pending_job_persisted_before_refresh": true,
+      "published_schedule_state": true,
+      "published_story_ready": true,
+      "recommended_route_five_selected": true,
+      "reduced_motion_css_applied": true,
+      "reduced_motion_media_matches": true,
+      "refresh_recovers_same_replan_or_completed_result": true,
+      "reset_dialog_initial_focus": true,
+      "reset_dialog_restores_focus": true,
+      "reset_dialog_shift_tab_wraps": true,
+      "reset_dialog_tab_wraps": true,
+      "reset_double_click_one_mutation": true,
+      "reset_http_accepted": true,
+      "response_sizes_recorded": true,
+      "session_cookie_same_site_strict": true,
+      "single_http_only_session_cookie": true,
+      "skip_link_first_keyboard_target": true,
+      "skip_link_focuses_main": true,
+      "traceback_absent_from_visible_text": true,
+      "unchanged_state_has_text": true,
+      "urgent_dialog_initial_focus": true,
+      "urgent_dialog_restores_focus": true,
+      "urgent_dialog_shift_tab_wraps": true,
+      "urgent_dialog_tab_wraps": true,
+      "urgent_double_click_one_mutation": true,
+      "urgent_http_accepted": true,
+      "urgent_job_has_ten_stages": true,
+      "urgent_job_succeeded": true,
+      "urgent_job_validator_pass": true,
+      "urgent_panel_receives_focus": true,
+      "wide_has_no_page_overflow": true
+    },
+    "browser": {
+      "console_warning_or_error_count": 0,
+      "cookies": [
+        {
+          "domain": "127.0.0.1",
+          "http_only": true,
+          "name": "plantnexus_demo_session",
+          "path": "/",
+          "same_site": "Strict",
+          "secure": false,
+          "value_recorded": false
+        }
+      ],
+      "dom_node_count": 1924,
+      "observed_resource_request_count": 71,
+      "response_sizes_bytes": {
+        "bootstrap": 4325,
+        "comparison": 44476
+      },
+      "visible_text_has_credential_marker": false,
+      "visible_text_has_internal_path": false,
+      "visible_text_has_traceback": false
+    },
+    "contrast": {
+      "added_badge": {
+        "pass": true,
+        "ratio": 5.6,
+        "rendered": false,
+        "style_available": true,
+        "threshold": 4.5
+      },
+      "changed_badge": {
+        "pass": true,
+        "ratio": 6.37,
+        "rendered": true,
+        "style_available": true,
+        "threshold": 4.5
+      },
+      "draft_boundary": {
+        "pass": true,
+        "ratio": 7.15,
+        "rendered": true,
+        "style_available": true,
+        "threshold": 4.5
+      },
+      "hero_heading": {
+        "pass": true,
+        "ratio": 15.62,
+        "rendered": true,
+        "style_available": true,
+        "threshold": 3
+      },
+      "hero_lead": {
+        "pass": true,
+        "ratio": 9.6,
+        "rendered": true,
+        "style_available": true,
+        "threshold": 4.5
+      },
+      "primary_button": {
+        "pass": true,
+        "ratio": 4.68,
+        "rendered": true,
+        "style_available": true,
+        "threshold": 4.5
+      },
+      "simulation_badge": {
+        "pass": true,
+        "ratio": 12.71,
+        "rendered": true,
+        "style_available": true,
+        "threshold": 4.5
+      },
+      "unchanged_badge": {
+        "pass": true,
+        "ratio": 5.82,
+        "rendered": true,
+        "style_available": true,
+        "threshold": 4.5
+      }
+    },
+    "identities": {
+      "initial_plan_job_id": "job-99eff8155f64b94496f8de823566882902f06d487406db3eddef6e717cbe29f5",
+      "published_schedule_version_id": "schedule-version-validated-f342aa0c38c3784d0a050d925f71f483fb65e939b02f5a97e8f191d07978fbf5",
+      "reset_job_id": "job-0fd4f7100f84de66a367167e8e4f751a823878d18830710e43fdb85c74d8f3de",
+      "run_id": "run-3aeb7d8313adebe977c537c17d7f44a4",
+      "urgent_job_id": "job-9d40ff3e1b402f9b7534f01ea577a1d4be01467e597dca39338af9be93a86667"
+    },
+    "layouts": {
+      "compact": {
+        "body_scroll_width": 1024,
+        "horizontal_overflow_px": 0,
+        "scroll_width": 1024,
+        "viewport_height": 768,
+        "viewport_width": 1024
+      },
+      "wide": {
+        "body_scroll_width": 1440,
+        "horizontal_overflow_px": 0,
+        "scroll_width": 1440,
+        "viewport_height": 900,
+        "viewport_width": 1440
+      }
+    },
+    "lifecycle": {
+      "after_schedule_version_id": "schedule-version-replan-a5bef7eeb1fdf64bad68e70898a25f3f2dfdbeedccfbd97c6cc3a5038e10e2be",
+      "before_schedule_version_id": "schedule-version-validated-f342aa0c38c3784d0a050d925f71f483fb65e939b02f5a97e8f191d07978fbf5",
+      "change_report_id": "change-report-810b212f0c106eb2cbc97b3034db1a891fc4aa6565624a9f6d4d22352a175bdd",
+      "comparison_change_counts": {
+        "added": 5,
+        "changed": 23,
+        "removed_by_fact": 0,
+        "unchanged": 557
+      },
+      "current_publication_unchanged": true,
+      "job_stage_count": 10,
+      "request_id": "replan-request-e1439fc9c424c71e879a403174e157c48a349e1bc130f55a9407da69c683ba48",
+      "run_id": "run-3aeb7d8313adebe977c537c17d7f44a4",
+      "solver_status": "FEASIBLE",
+      "story_state": "DRAFT_COMPARISON_READY",
+      "urgent_job_id": "job-9d40ff3e1b402f9b7534f01ea577a1d4be01467e597dca39338af9be93a86667",
+      "validation_status": "PASS"
+    },
+    "network": {
+      "business_mutation_count": 4,
+      "business_mutations": [
+        "RESET",
+        "INITIAL_PLAN",
+        "ACTIVATE",
+        "URGENT_REPLAN"
+      ],
+      "refresh_replayed_business_mutations": 0
+    },
+    "reduced_motion": {
+      "animation_duration": "1e-05s",
+      "animation_iteration_count": "1",
+      "media_matches": true,
+      "scroll_behavior": "auto",
+      "transition_duration": "1e-05s"
+    }
+  },
+  "evidence_version": "cnc-demo-browser-e2e-observation.v1",
+  "report_fingerprint": "sha256:14806060c7c39e6129a23184f5347c37f6f1dff0e9ce3a455bb0b154a1dfb63f",
+  "runtime": {
+    "cleaned_after_run": true,
+    "isolated_named_runtime": true,
+    "runtime_path_recorded": false,
+    "session_token_recorded": false,
+    "started_empty": true
+  },
+  "screenshots": [
+    {
+      "bytes": 1009490,
+      "image_height": 8294,
+      "image_width": 1440,
+      "label": "wide",
+      "path": "demo/build/validation/screenshots/demo08-e2e-1440x900.png",
+      "sha256": "9565d0f06c9324d5ab79d5289a3b1fda43c21ea58e2e9e0dea67530b147ef0cd",
+      "status": "PASS",
+      "viewport": [
+        1440,
+        900
+      ]
+    },
+    {
+      "bytes": 903506,
+      "image_height": 8694,
+      "image_width": 1024,
+      "label": "compact",
+      "path": "demo/build/validation/screenshots/demo08-e2e-1024x768.png",
+      "sha256": "e8f144ac69b8bbd284ed9e6347bea492ff0915c56b5342c60f91f16105194d10",
+      "status": "PASS",
+      "viewport": [
+        1024,
+        768
+      ]
+    }
+  ],
+  "service_processes": {
+    "backend_bind": "127.0.0.1:8765",
+    "backend_log_lines": 11,
+    "backend_loopback_only": true,
+    "frontend_bind": "127.0.0.1:4174",
+    "frontend_log_lines": 6,
+    "frontend_loopback_only": true,
+    "session_token_in_cli_output": false,
+    "session_token_in_logs": false,
+    "traceback_in_logs": false
+  },
+  "status": "PASS",
+  "task_id": "TASK-DEMO-08",
+  "wall_seconds": 79.88999999998487
+}

@@ -1,6 +1,6 @@
 # PlantNexus APS CNC 演示设计文档
 
-状态：实施中（中文主故事链与加急比较已通过；D16 完整 E2E、D17 正式基准待续）
+状态：实施中（中文主故事链与 D16 完整 E2E/安全/恢复/可访问性已通过；D17 正式基准待续）
 适用范围：仅限 Simulation 演示环境  
 目标行业：精密机械零部件 / CNC 机加工车间  
 固定场景：CNC-DEMO-SHOWCASE  
@@ -37,6 +37,8 @@ TASK-DEMO-06 已完成 D14：已发布仿真基线会自动装载中文排产工
 
 TASK-DEMO-07 已完成 D15：第四步提供资产驱动的四条中文路线、数量/交期/优先级/备注和二次确认，自动绑定 current `PUBLISHED` 且隐藏底层 identity。真实 Showcase 插入 5 道工序后约 21 秒得到 `FEASIBLE + Validator PASS` 的 v2 `DRAFT`，页面自动展示 PUBLISHED→DRAFT、5 `ADDED` / 25 `CHANGED` / 555 `UNCHANGED`、设备/时间偏移、交付与稳定性，以及 ChangeReport/Validator lineage；保持不变页按 120 条服务端分页，刷新恢复不会重复提交命令。新草稿不会自动发布或替换 current Publication。
 
+TASK-DEMO-08 已完成 D16：从全新隔离 SQLite runtime 通过真实中文 Chromium 页面依次完成 reset、initial plan、显式 activate、`CNC-ROUTE-5` 数量 5 加急和 comparison，仅产生 `RESET / INITIAL_PLAN / ACTIVATE / URGENT_REPLAN` 四次业务 mutation。刷新恢复原 job，双击不重复写入；重启后的遗留执行任务明确为 `INTERRUPTED` 并以原 identity 重试；stale、并发 reset、受控 reset 失败、越权、Production binding、token/log 和路径逃逸均 fail closed。浏览器 68 项断言、API/SQLite 50 项断言和汇总 39 项断言全部通过，键盘焦点、ARIA 引用、非颜色状态、WCAG AA 关键文字对比度、reduced motion 与 1440×900/1024×768 布局均有机器证据。该浏览器单次结果为 `FEASIBLE + Validator PASS`、5 `ADDED` / 23 `CHANGED` / 557 `UNCHANGED`，仍不是 D17 性能基线。
+
 ## 2. 文档导航
 
 - [调研、边界与设计决策](01-research-and-scope.md)
@@ -52,6 +54,7 @@ TASK-DEMO-07 已完成 D15：第四步提供资产驱动的四条中文路线、
 - [TASK-DEMO-05 中文故事首页与 Job 恢复](TASK-DEMO-05-chinese-story-shell-and-job-recovery.md)
 - [TASK-DEMO-06 中文排产工作区与计划负荷](TASK-DEMO-06-schedule-workspace-and-capacity-view.md)
 - [TASK-DEMO-07 中文加急重排与版本比较](TASK-DEMO-07-urgent-replan-and-comparison-workspace.md)
+- [TASK-DEMO-08 E2E、安全、恢复与可访问性闭环](TASK-DEMO-08-e2e-security-recovery-and-accessibility.md)
 
 ## 3. 设计原则
 
@@ -67,7 +70,7 @@ TASK-DEMO-07 已完成 D15：第四步提供资产驱动的四条中文路线、
 
 | 风险 | 影响 | 设计响应 |
 |---|---|---|
-| 当前最大基准仅 12 单、48 工序 | 无法外推百单耗时 | 在 UI 完成前先跑 610/700 工序专项基准 |
+| 正式重复基准仍只有根项目 12 单、48 工序证据 | 单次 610/700 early evidence 无法外推稳定性能 | D17 按 warmup + 5、RSS 和目标机协议冻结专项基准 |
 | 初始工作台使用 v1，重排产出 v2 | 新版本不能直接接入原甘特图 | 在 demo 内构建统一 presentation DTO，不修改核心契约 |
 | 现有生成器 v1 对所有订单使用同一工序数 | 无法表达 3～6 道工序混合 | 新建 demo 专用分层 CNC 生成器，输出标准 StagedImportBatch |
 | 默认 app/session provider 不可用 | 默认启动不是开箱即用 | 建立 demo 独立组合根并显式注入实际 provider |
@@ -98,4 +101,4 @@ npm --prefix demo/frontend ci
 npm --prefix demo/frontend run dev
 ```
 
-访问 `http://127.0.0.1:4174/demo/`。后端只绑定 `127.0.0.1:8765`，Vite 也只绑定本机并通过同源 `/api` 代理访问后端。`POST /api/demo/v1/session` 建立 HttpOnly、SameSite=Strict 的本地 Simulation 会话；token 只保存在被 Git 忽略的 `demo/runtime/session.token`，不进入响应正文、日志或测试快照。当前中文 UI 覆盖 D13 初始化、初排、基线发布与恢复，D14 订单/甘特/计划负荷/校验证据工作区，以及 D15 一键插单、真实重排、DRAFT 比较与刷新恢复。manual retry/cancel 仍保持显式 fail-closed，不伪装为可用能力。
+访问 `http://127.0.0.1:4174/demo/`。后端只绑定 `127.0.0.1:8765`，Vite 也只绑定本机并通过同源 `/api` 代理访问后端。`POST /api/demo/v1/session` 建立 HttpOnly、SameSite=Strict 的本地 Simulation 会话；token 只保存在被 Git 忽略的 `demo/runtime/session.token`，不进入响应正文、日志或测试快照。当前中文 UI 覆盖 D13 初始化、初排、基线发布与恢复，D14 订单/甘特/计划负荷/校验证据工作区，以及 D15 一键插单、真实重排、DRAFT 比较与刷新恢复；D16 已补齐双击/刷新/重启、安全负向路径、键盘焦点、ARIA、对比度、reduced motion 和双宽度验收。manual retry/cancel 仍保持显式 fail-closed，不伪装为可用能力。

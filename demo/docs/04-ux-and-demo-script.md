@@ -153,6 +153,12 @@ D15 在 current `PUBLISHED` 仿真基线下开放“插入加急订单”，默�
 
 真实 Showcase D15 浏览器样本在 132 单/580 个既有 assignments 的 current `PUBLISHED` 上插入 5 道工序，约 21 秒完成（求解阶段约 14.24 秒），得到 `FEASIBLE + Validator PASS` 的 v2 `DRAFT`。ChangeReport 为 5 `ADDED`、25 `CHANGED`、555 `UNCHANGED`，设备变更 3 道；1440×900 与 1024×768 均无页面级横向滚动。该结果是一个 synthetic early sample，不是 p95、目标机基线或 SLA。
 
+### 2.9 TASK-DEMO-08 已闭合演示操作与可访问性
+
+D16 从全新 SQLite runtime 只通过中文页面完成完整主线。初始化和加急确认的双击都只产生一次写请求；接受加急 job 后立即刷新，页面恢复同一 job 或其已提交比较结果，不再次 POST。页面提供首个键盘目标“跳到主要内容”，主要区域可编程聚焦；重置、基线和加急确认对话框具备初始焦点、Tab/Shift+Tab 环绕、Escape 关闭和触发控件焦点恢复。加急数量错误会聚焦输入框，并通过 `aria-invalid` 和有效的 `aria-describedby` 同时表达。
+
+最终比较页的 28 个可交互控件均有可访问名称，ID 无重复，ARIA 引用无悬空，标题层级无跳级；DRAFT、Validator、变更分类和执行状态均有文字或符号，不依赖颜色。八组关键文字/背景对比度均达到相应 WCAG AA 阈值，reduced-motion 下动画/过渡缩短为 0.01 ms 且只执行一次。1440×900 与 1024×768 都没有页面级横向滚动。证据来自真实 Chromium 和生产 CSS 的计算样式；它不替代人工使用读屏软件的后续体验评审。
+
 ## 3. 甘特图视觉编码
 
 初始排程：
@@ -345,14 +351,17 @@ D15 单次真实浏览器链已证明新增/变化/保持不变、Validator PASS
 | Validator FAIL | 红色阻断，不生成/切换版本 | 查看技术证据，修复实现 |
 | 发布在批准后失败 | 显示 APPROVED 可恢复状态 | 重试发布，不重新求解 |
 | 浏览器刷新 | 从 /bootstrap 恢复 active job 和页面 | 自动继续轮询 |
-| 服务重启 | RUNNING 标记 INTERRUPTED | 从安全边界显式重试 |
+| 服务重启 | QUEUED 以原 identity 续跑；RUNNING/CANCELLING 标记 INTERRUPTED | 以同一 job/idempotency identity 从安全边界显式重试 |
 | stale base | 阻止提交，刷新当前 PUBLISHED | 重新确认加急表单 |
 
 不能使用预录结果冒充本次 live solve 成功。
 
+D16 已实际覆盖浏览器刷新、双击、服务重启、stale run/base、并发 reset 和切换前 reset 失败：中断 job 保留原 identity 并在 attempt 2 成功；受控失败不替换 active run；所有拒绝均显示稳定中文边界，响应和页面不暴露原始异常、token、SQL、堆栈或本机路径。
+
 ## 10. 可访问性与演示环境
 
 - 主要操作支持键盘，焦点顺序与步骤一致。
+- 模态对话框限制焦点范围，支持 Escape，并在关闭后把焦点还给触发控件；错误字段有程序化关联和首错聚焦。
 - 所有图例都有文字，颜色对比达到 WCAG AA 的常规文本要求。
 - 甘特图提供等价表格视图。
 - 时间、秒数和百分比有统一本地化格式。
@@ -360,3 +369,4 @@ D15 单次真实浏览器链已证明新增/变化/保持不变、Validator PASS
 - 1024 像素宽度仍能完成操作；移动端只保证查看，不作为演示主设备。
 - 长 ID 默认截断，但复制时得到完整值。
 - 所有提示明确标识 Simulation。
+- `prefers-reduced-motion: reduce` 时取消平滑滚动，并把动画/过渡压缩到单次 0.01 ms。

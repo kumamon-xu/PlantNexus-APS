@@ -223,6 +223,8 @@ class DemoJobService:
                     field="Idempotency-Key",
                     message="same key is bound to different input",
                 )
+            if existing.status == "INTERRUPTED":
+                self.runner.submit(existing.job_id)
             return self._accepted(JobRegistration(existing, replayed=True))
         active = self.control.active_run()
         expected_active = None if active is None else active.run_id
@@ -268,7 +270,9 @@ class DemoJobService:
             correlation_id=correlation_id,
             request_document=request,
         )
-        if not registration.replayed and registration.job.status == "QUEUED":
+        if registration.job.status == "INTERRUPTED" or (
+            not registration.replayed and registration.job.status == "QUEUED"
+        ):
             self.runner.submit(registration.job.job_id)
         return self._accepted(registration)
 

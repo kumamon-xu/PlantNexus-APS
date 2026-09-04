@@ -643,6 +643,7 @@ def test_ci_p8_canonical_ingress_is_isolated_from_frozen_p4_replay() -> None:
         "backend/app/application/canonical_ingress.py",
         "backend/app/data_validation/canonical_ingress.py",
         "backend/app/infrastructure/canonical_ingress_repository.py",
+        "backend/migrations/versions/0006_canonical_ingress_application.py",
         "backend/tests/contract/p8_canonical_ingress_support.py",
         "backend/tests/contract/test_p8_canonical_ingress_application_contract.py",
         "backend/tests/integration/test_p8_canonical_ingress_repository.py",

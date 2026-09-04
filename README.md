@@ -2,7 +2,7 @@
 
 PlantNexus APS 是一个面向离散制造的高级计划与排程系统。项目采用 Simulation-first 路线，把canonical数据、不可变计划快照、PlanningProblem、OR-Tools CP-SAT 求解、独立排程校验、计划版本审批/发布、内部导出和动态重排串成一条可重放链路。
 
-当前仓库是“已实现的研发基线”，不是生产部署包：P0～P6 能力已经形成，P7 真实数据校准因缺少获授权的真实数据、真实环境和业务责任人而暂缓；P8 已进入Headless产品化规划，尚未实施。最终产品边界只接收宿主平台提交的versioned canonical JSON，第三方系统采集、字段映射和结果展示由宿主平台负责；APS不直接对接ERP、MES、WMS或CAM。P8同时规划APS Extension SDK、Runtime受控Enterprise Extension加载和version-locked Developer Kit，使企业项目无需复制或修改APS Core即可独立二次开发。Extension只在Runtime服务端执行，宿主与可选Frontend仍只调用统一Headless API；Core/Runtime升级不会自动升级企业项目。默认 FastAPI 组合根会对未注入的业务应用与授权适配器 fail closed；健康检查和 OpenAPI 可用，但不能把默认启动等同于开箱即用的生产 APS。
+当前仓库是“已实现的研发基线”，不是生产部署包：P0～P6 能力已经形成，P7 真实数据校准因缺少获授权的真实数据、真实环境和业务责任人而暂缓；P8 已进入Headless产品化实施，并已形成第一版canonical ingress/result与PlanningRun机器合同，但尚未实现对应API、持久化或Runtime消费链。最终产品边界只接收宿主平台提交的versioned canonical JSON，第三方系统采集、字段映射和结果展示由宿主平台负责；APS不直接对接ERP、MES、WMS或CAM。P8同时规划APS Extension SDK、Runtime受控Enterprise Extension加载和version-locked Developer Kit，使企业项目无需复制或修改APS Core即可独立二次开发。Extension只在Runtime服务端执行，宿主与可选Frontend仍只调用统一Headless API；Core/Runtime升级不会自动升级企业项目。默认 FastAPI 组合根会对未注入的业务应用与授权适配器 fail closed；健康检查和 OpenAPI 可用，但不能把默认启动等同于开箱即用的生产 APS。
 
 ## 已有能力
 

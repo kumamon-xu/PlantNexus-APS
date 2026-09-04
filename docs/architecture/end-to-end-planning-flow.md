@@ -11,9 +11,15 @@ last_reviewed: 2026-09-04
 
 # 端到端计划链路
 
+## TASK-P8-02 formed contract edge
+
+P8链路现在形成到machine carrier层：`canonical-ingress-request.v1`把宿主canonical JSON、requested scope、source/mapping authority、idempotency与Policy/Limits引用固定为唯一request；`canonical-ingress-result.v1`区分零副作用拒绝和带server-owned Runtime/Extension-set resolution的接受；`planning-run.v1`固定既有state/transition/terminal/action与阶段artifact lineage。该边只进行纯Schema/semantic验证，不调用Data Validation、Snapshot/Problem builder、Solver、Validator、repository、API或Worker。
+
+TASK-P8-03只能在同一scope/idempotency transaction中消费request/result并建立不可变输入；P8-04/05才能推进PlanningRun与attempt/Worker；P8-07才能将carrier绑定HTTP。请求没有Extension选择字段，Runtime resolution只能由服务端写入，并须由API/Worker在后继实现中逐字一致。当前所有运行时箭头仍未因contract形成而成为可执行P8产品链。
+
 ## P8 planned Headless product chain
 
-P8规划的唯一外部产品链如下；TASK-P8-00只冻结架构和Task DAG，所有运行时箭头目前仍为planned：
+P8规划的唯一外部产品链如下；TASK-P8-00冻结架构和Task DAG，TASK-P8-02形成入口/结果/运行机器carrier，其余运行时箭头目前仍为planned：
 
 ```text
 Host acquisition / mapping / authority

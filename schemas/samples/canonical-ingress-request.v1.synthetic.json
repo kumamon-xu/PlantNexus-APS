@@ -1,0 +1,99 @@
+{
+  "canonical_ingress_request_version": "canonical-ingress-request.v1",
+  "schema_set_version": "2.10.0",
+  "ingress_policy_version": "canonical-ingress-policy.v1",
+  "canonicalization_version": "canonical-json.v1",
+  "operation": "CREATE_PLANNING_RUN",
+  "request_id": "REQUEST-P8-SYNTHETIC-001",
+  "correlation_id": "CORRELATION-P8-SYNTHETIC-001",
+  "idempotency_key": "p8-synthetic-request-0001",
+  "request_fingerprint": "sha256:8a279448706027722b483045571fcdf8948f009902d17a37c4f043bd0a836f05",
+  "requested_scope": {
+    "tenant_id": "TENANT-P8-SYNTHETIC",
+    "factory_id": "FACTORY-P8-SYNTHETIC-001",
+    "planning_scope_id": "PLANNING-P8-SYNTHETIC-001",
+    "data_plane": "SIMULATION",
+    "environment": "TEST"
+  },
+  "source_authority": {
+    "authority_policy_version": "host-authority-policy.p8-sample.v1",
+    "bindings": [
+      {
+        "source_system": "synthetic_host",
+        "source_version": "1.0.0",
+        "authority_reference": "authority:p8-synthetic-host",
+        "canonical_collections": ["factories"]
+      }
+    ],
+    "mapping_provenance": [
+      {
+        "source_system": "synthetic_host",
+        "source_version": "1.0.0",
+        "mapping_profile_id": "MAPPING-P8-SYNTHETIC-001",
+        "mapping_profile_version": "1.0.0",
+        "mapping_profile_fingerprint": "sha256:2222222222222222222222222222222222222222222222222222222222222222"
+      }
+    ]
+  },
+  "planning_inputs": {
+    "planning_policy": {
+      "document_version": "planning-policy.v1",
+      "artifact_id": "POLICY-P8-SYNTHETIC-001",
+      "fingerprint": "sha256:3333333333333333333333333333333333333333333333333333333333333333"
+    },
+    "solve_limits": {
+      "document_version": "solve-limits.v1",
+      "artifact_id": "LIMITS-P8-SYNTHETIC-001",
+      "fingerprint": "sha256:4444444444444444444444444444444444444444444444444444444444444444"
+    }
+  },
+  "payload_fingerprint": "sha256:7dcfcf9542604d429606c7dc6927c7d8f10ceb3b98f2c9ae526632c71835f4f2",
+  "payload": {
+    "import_package_version": "import-package.v2",
+    "schema_set_version": "2.0.0",
+    "package_id": "IMPORT-P8-SYNTHETIC-001",
+    "source_versions": {"synthetic_host": "1.0.0"},
+    "normalization_rule_version": "normalization.p8-contract-sample.v1",
+    "canonicalization_version": "canonical-json.v1",
+    "synthetic": true,
+    "synthetic_provenance": {
+      "scenario_id": "SCENARIO-P8-CONTRACT-001",
+      "scenario_version": "1.0.0",
+      "seed": 20260904,
+      "factory_profile_id": "PROFILE-P8-CONTRACT-001",
+      "profile_version": "1.0.0",
+      "generator_id": "GENERATOR-P8-CONTRACT-001",
+      "generator_version": "1.0.0"
+    },
+    "records": {
+      "canonical_records_version": "canonical-records.v1",
+      "factories": [
+        {
+          "factory_id": "FACTORY-P8-SYNTHETIC-001",
+          "factory_code": "P8-SYNTHETIC",
+          "factory_timezone": "Asia/Hong_Kong",
+          "source": {
+            "source_system": "synthetic_host",
+            "source_version": "1.0.0",
+            "source_record_id": "SRC-P8-FACTORY-001"
+          }
+        }
+      ],
+      "workshops": [],
+      "production_lines": [],
+      "resource_groups": [],
+      "resources": [],
+      "calendars": [],
+      "products": [],
+      "routing_versions": [],
+      "routing_operations": [],
+      "routing_precedence_edges": [],
+      "routing_resource_options": [],
+      "demand_orders": [],
+      "production_orders": [],
+      "production_lots": [],
+      "execution_facts": [],
+      "operation_locks": []
+    }
+  }
+}

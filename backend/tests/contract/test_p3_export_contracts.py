@@ -99,9 +99,9 @@ def test_export_job_v2_pure_precheck_and_versions_fail_closed() -> None:
 def test_global_metadata_dictionary_and_v1_bytes_are_preserved() -> None:
     project = tomllib.loads((ROOT / "pyproject.toml").read_text(encoding="utf-8"))
     dictionary = yaml.safe_load((ROOT / "schemas/data_dictionary.yaml").read_text(encoding="utf-8"))
-    assert SCHEMA_VERSION == "2.9.0"
-    assert project["tool"]["plantnexus-aps"]["versions"]["schema"] == "2.9.0"
-    assert dictionary["schema_set_version"] == "2.9.0"
+    assert SCHEMA_VERSION == "2.10.0"
+    assert project["tool"]["plantnexus-aps"]["versions"]["schema"] == "2.10.0"
+    assert dictionary["schema_set_version"] == "2.10.0"
     assert {"export-manifest.v1", "export-job.v1", "export-manifest.v2", "export-job.v2"}.issubset(dictionary["schemas"])
     for relative, expected in V1_SHA256.items():
         assert hashlib.sha256((ROOT / relative).read_bytes()).hexdigest() == expected

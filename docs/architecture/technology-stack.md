@@ -11,6 +11,12 @@ last_reviewed: 2026-09-04
 
 # 推荐技术栈与锁定规则
 
+## TASK-P8-02 dependency-neutral machine contracts
+
+Schema set从`2.9.0`加法提升到`2.10.0`，但runtime/dev dependency projection仍为`sha256:2b9c344936b57d46b279067300c22c6cf74fc87281a624944a3ce492a6251d2e`，`uv.lock`仍为`sha256:8b13617f31aa6a933347fc7b8ba010330cbb3f2d764f75c306dd9b6d77387a82`。`pyproject.toml`只改schema metadata；新增checker复用Python 3.12标准库、既有PyYAML、jsonschema和referencing，不增加package、service、container、network或插件框架。
+
+本Task没有修改CI workflow：新合同测试进入既有full Backend suite并由既有JUnit/evidence artifact承载。P4/P6纯校验器只识别P8文件为后续additive artifact并继续验证其原始历史摘要；这不是依赖升级、Runtime装载、SDK package或Developer Kit构建决定。
+
 ## P8 Extension SDK and Developer Kit stack boundary
 
 本阶段只确定产品单元与锁定规则，不预选新的插件框架、远程registry、sandbox或打包依赖。Extension SDK应优先使用显式Python protocol/value object和Runtime composition ports；插件发现必须基于本地已批准manifest，禁止floating package、请求级安装、网络下载和隐式entry-point扫描。具体package/build工具只能在TASK-P8-12～15中经exact pin、lock、SCA/license、import-boundary和replay证据批准。

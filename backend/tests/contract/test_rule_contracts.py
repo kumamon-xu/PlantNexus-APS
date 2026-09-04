@@ -268,6 +268,6 @@ def test_rule_contract_cli_writes_a_real_pass_report(tmp_path: Path) -> None:
     assert main(["--root", str(ROOT), "--report", str(report_path)]) == 0
     report = json.loads(report_path.read_text(encoding="utf-8"))
     assert report["result"] == "PASS"
-    assert report["schema_set_version"] == "2.9.0"
+    assert report["schema_set_version"] == "2.10.0"
     assert tuple(report["test_ids"]) == TEST_IDS
     assert report["issues"] == []

@@ -1,0 +1,6 @@
+{
+  "negative_vector_version": "p8-contract-negative.v1",
+  "base_sample": "canonical-ingress-request.v1.synthetic.json",
+  "mutation": {"operation": "IDEMPOTENCY_REUSE", "pointer": "/payload/package_id", "value": "IMPORT-P8-SYNTHETIC-CONFLICT"},
+  "expected_rejection": "IDEMPOTENCY_CONFLICT"
+}

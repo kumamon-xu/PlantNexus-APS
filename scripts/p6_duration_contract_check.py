@@ -22,6 +22,7 @@ REPORT_VERSION = "p6-duration-contract-report.v1"
 TASK_ID = "TASK-P6-02"
 DIFF_BASE = "e74099ca24ed59140f6490c84025b7299b5f201d"
 SCHEMA_SET_VERSION = "2.9.0"
+CURRENT_SCHEMA_SET_VERSION = "2.10.0"
 HISTORICAL_ARTIFACT_COUNT = 70
 HISTORICAL_MANIFEST_SHA256 = (
     "sha256:ada3e2a0498bb5b42ef81aba01693a949cd41deac229ebad8ea6f9334e901c64"
@@ -67,6 +68,26 @@ NEW_ARTIFACT_PATHS = {
     *(f"schemas/json/{name}" for name in SCHEMAS.values()),
     *(f"schemas/samples/{name}" for name in POSITIVE_SAMPLES),
     *(f"schemas/samples/{name}" for name in NEGATIVE_SAMPLES),
+}
+POST_P6_ADDITIVE_ARTIFACT_PATHS = {
+    "schemas/json/canonical-ingress-request.schema.json",
+    "schemas/json/canonical-ingress-result.schema.json",
+    "schemas/json/planning-run.schema.json",
+    "schemas/samples/canonical-ingress-request.v1.synthetic.json",
+    "schemas/samples/canonical-ingress-result.v1.accepted.synthetic.json",
+    "schemas/samples/canonical-ingress-result.v1.rejected.synthetic.json",
+    "schemas/samples/planning-run.v1.created.synthetic.json",
+    "schemas/samples/planning-run.v1.completed.synthetic.json",
+    "schemas/samples/canonical-ingress.v1.invalid-unknown-field.synthetic.json",
+    "schemas/samples/canonical-ingress.v1.invalid-version.synthetic.json",
+    "schemas/samples/canonical-ingress.v1.invalid-type.synthetic.json",
+    "schemas/samples/canonical-ingress.v1.invalid-plane.synthetic.json",
+    "schemas/samples/canonical-ingress.v1.invalid-scope.synthetic.json",
+    "schemas/samples/canonical-ingress.v1.invalid-authority.synthetic.json",
+    "schemas/samples/canonical-ingress.v1.invalid-reference.synthetic.json",
+    "schemas/samples/canonical-ingress.v1.invalid-idempotency.synthetic.json",
+    "schemas/samples/canonical-ingress.v1.invalid-fingerprint.synthetic.json",
+    "schemas/samples/planning-run.v1.invalid-transition.synthetic.json",
 }
 FALLBACK_REASONS: tuple[str, ...] = (
     "NONE",
@@ -524,7 +545,10 @@ def _historical_evidence(root: Path) -> JsonObject:
         key=lambda path: path.relative_to(root).as_posix(),
     )
     historical = [
-        path for path in paths if path.relative_to(root).as_posix() not in NEW_ARTIFACT_PATHS
+        path
+        for path in paths
+        if path.relative_to(root).as_posix()
+        not in NEW_ARTIFACT_PATHS | POST_P6_ADDITIVE_ARTIFACT_PATHS
     ]
     rows = "".join(
         f"{path.relative_to(root).as_posix()}={sha256(path.read_bytes()).hexdigest()}\n"
@@ -776,19 +800,22 @@ def _repository_boundary_evidence(root: Path) -> JsonObject:
     dependency_digest = f"sha256:{sha256(_canonical_bytes(projection)).hexdigest()}"
     if dependency_digest != DEPENDENCY_PROJECTION_SHA256:
         raise P6ContractError("DEPENDENCY_SET_CHANGED", dependency_digest)
-    if project["tool"]["plantnexus-aps"]["versions"]["schema"] != SCHEMA_SET_VERSION:
+    if (
+        project["tool"]["plantnexus-aps"]["versions"]["schema"]
+        != CURRENT_SCHEMA_SET_VERSION
+    ):
         raise P6ContractError("INCOMPATIBLE_SCHEMA_SET", "pyproject.toml")
     if _sha256(root / "uv.lock") != UV_LOCK_SHA256:
         raise P6ContractError("DEPENDENCY_LOCK_CHANGED", "uv.lock")
     app_init = (root / "backend" / "app" / "__init__.py").read_text(encoding="utf-8")
     match = re.search(r'^SCHEMA_VERSION = "([^"]+)"$', app_init, re.MULTILINE)
-    if match is None or match.group(1) != SCHEMA_SET_VERSION:
+    if match is None or match.group(1) != CURRENT_SCHEMA_SET_VERSION:
         raise P6ContractError("INCOMPATIBLE_SCHEMA_SET", "app.SCHEMA_VERSION")
     dictionary = cast(
         Mapping[str, Any],
         yaml.safe_load((root / "schemas" / "data_dictionary.yaml").read_text(encoding="utf-8")),
     )
-    if dictionary.get("schema_set_version") != SCHEMA_SET_VERSION:
+    if dictionary.get("schema_set_version") != CURRENT_SCHEMA_SET_VERSION:
         raise P6ContractError("INCOMPATIBLE_SCHEMA_SET", "data dictionary")
     expected_documents = {version for _, version in _VERSION_FIELDS.values()}
     if not expected_documents.issubset(set(cast(Mapping[str, Any], dictionary["schemas"]))):

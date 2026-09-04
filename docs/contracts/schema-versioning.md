@@ -11,9 +11,21 @@ last_reviewed: 2026-09-04
 
 # Schema 版本与兼容规则
 
+## TASK-P8-02 additive set `2.10.0`
+
+Global current metadata由`2.9.0`提升为additive `2.10.0`，同步写入`pyproject.toml`、`app.SCHEMA_VERSION`和machine data dictionary。本set只增加`canonical-ingress-request.v1`、`canonical-ingress-result.v1`、`planning-run.v1`与独立`headless-error-code-registry.v1`；每个JSON document具有stable URN、exact version、strict/no-default和offline refs，三个document互不替换，也不替换`import-package.v2`、P3 Workspace carrier或product Error v1/v2/v3。
+
+启动时共有98份tracked `schemas/**` artifact，完整清单摘要=`sha256:0936f1e4a19af2aa31f71808a3b56ddda6105a8089a0f6c7c5ce87c30e6543ef`。其中`schemas/data_dictionary.yaml`是本次受控current registry更新；其余97份既有artifact以摘要`sha256:3c5ff508ec857f010c9f1211623cbceb44ec9ab2dcf45424566a921aa9a7f3dd`逐字保留。尤其Import v2、Snapshot v2、Problem v2、Error v3、AuditEvent v1、error registry v2和state registry v1的启动指纹不变；`state-machines.v1`继续唯一拥有16个PlanningRun state和31个transition，P8 carrier没有新增pair或self-transition。
+
+Request fingerprint使用`canonical-json.v1`并排除request/correlation/raw idempotency transport identifiers；payload、result、Runtime resolution与每个PlanningRun revision分别拥有明确projection fingerprint。Unknown version/field、document interchange、mixed plane/scope、authority/mapping缺口、invalid reference、same key/different fingerprint、非法state pair或Runtime/attempt resolution不一致均fail closed。P8错误使用独立`HEADLESS_RUNTIME` namespace，不能原地扩写或重解释`error-code-registry.v2`。
+
+Compatibility是set-level additive、document-level exact。当前没有P8 consumer、DB migration或HTTP binding；因此在TASK-P8-03消费前可删除新增artifact并恢复global metadata/dictionary。P8-03形成consumer后只能新增document/set version并提供显式migration/deprecation，不能覆盖v1 bytes。Runtime、SDK、Extension和Developer Kit版本仍是独立维度；本Task只预留服务端resolution reference，不发布SDK/manifest/Registry实现。
+
+Runtime/dev dependency projection与`uv.lock`摘要`sha256:8b13617f31aa6a933347fc7b8ba010330cbb3f2d764f75c306dd9b6d77387a82`不变；`pyproject.toml`只改变schema metadata。P4/P6纯历史校验器只新增P8 additive排除项并继续核验原摘要，不改变历史carrier或报告的document set。
+
 ## P8 Extension and Developer Kit compatibility plan
 
-Extension SDK API version、Extension manifest version、Enterprise Extension artifact/config version、Runtime version和Developer Kit version均独立于Schema Set。TASK-P8-00只接受架构；TASK-P8-12以后才可发布additive manifest/compatibility carrier，当前Schema set继续`2.9.0`且所有既有bytes不变。
+Extension SDK API version、Extension manifest version、Enterprise Extension artifact/config version、Runtime version和Developer Kit version均独立于Schema Set。TASK-P8-02的set `2.10.0`只预留server-owned Runtime/Extension-set fingerprint carrier；TASK-P8-12以后才可发布additive manifest/compatibility carrier，不能从本次样例推断SDK、Registry或Kit已经形成。
 
 未来carrier必须strict、offline-resolved、无业务default并保存历史bytes；unknown、duplicate、mixed或unsupported组合fail closed。Developer Kit compatibility manifest必须精确绑定Runtime/SDK/Extension/template/tool/Schema/OpenAPI/dependency versions和digests。Runtime/Core升级不得通过`latest`、浮动范围或alias自动改变企业项目；每个新Kit必须单独version、兼容测试、旧Kit重放和显式opt-in迁移。
 

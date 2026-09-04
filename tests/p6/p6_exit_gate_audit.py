@@ -348,6 +348,30 @@ _FROZEN_OWNER_PATHS = (
     "uv.lock",
 )
 
+_POST_P6_ADDITIVE_OWNER_SHA256: Mapping[str, str] = {
+    ".github/workflows/ci.yml": (
+        "10485eca248dbedeb062ea241b2ce758ac79cd2368b9cd03da7a2e8efd3d1860"
+    ),
+    "backend/app/planning/backends/cp_sat/replan_solver_check.py": (
+        "562cda6cde4dc1e22a5321597ecb1d0d0a1a38ed334ad34df79b156d9d203cdc"
+    ),
+    "backend/app/planning/problem/freeze_window_check.py": (
+        "0f11a654836f687e512f6ce2574c954d2f290716ac16edaca61d382edee831bf"
+    ),
+    "backend/app/planning/reporting/stability_change_report_check.py": (
+        "dbe4e346e9ccdf5adc726f58a7a55c9a75fd765a2b85c078a54675bef38fb638"
+    ),
+    "backend/app/simulation/execution/simulator_check.py": (
+        "8d05e552e3e2ff07d4a1d7d8d9da356417bb87dc7b31b5c12879aef760b6f2ce"
+    ),
+    "pyproject.toml": (
+        "4b511b70bae195debce23cd99149af059aaa1ab3694218f553d115ba3ca8bd09"
+    ),
+    "scripts/p6_duration_contract_check.py": (
+        "69de02b4fd3680e6bd8289f414ef6c3d9462f4d5a8c8057b64d1f3183e5d8c2e"
+    ),
+}
+
 _BOUNDARIES: JsonObject = {
     "current_phase": "P6",
     "p6_milestone": "ACTIVE_AWAITING_USER_TRANSITION",
@@ -990,8 +1014,20 @@ def _contract_and_frozen_owner_evidence(root: Path) -> JsonObject:
         "--",
         *_FROZEN_OWNER_PATHS,
     ).splitlines()
-    if changed:
-        _fail("frozen_owner_paths", f"forbidden owner changes: {changed}")
+    forbidden_changes = []
+    for relative in changed:
+        expected_successor_digest = _POST_P6_ADDITIVE_OWNER_SHA256.get(relative)
+        if expected_successor_digest is None:
+            forbidden_changes.append(relative)
+            continue
+        path = root / relative
+        if not path.is_file() or sha256(path.read_bytes()).hexdigest() != expected_successor_digest:
+            forbidden_changes.append(relative)
+    if forbidden_changes:
+        _fail(
+            "frozen_owner_paths",
+            f"forbidden owner changes: {forbidden_changes}",
+        )
     return {
         "status": "PASS",
         "accepted_adr": "ADR-0016",

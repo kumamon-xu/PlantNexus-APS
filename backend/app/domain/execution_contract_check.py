@@ -141,6 +141,24 @@ _POST_P4_ADDITIVE_ARTIFACT_PATHS = {
     "schemas/samples/duration-prediction.v1.invalid-quantiles.invalid.json",
     "schemas/samples/duration-prediction.v1.mixed-version.invalid.json",
     "schemas/samples/duration-prediction.v1.unknown-fallback.invalid.json",
+    "schemas/json/canonical-ingress-request.schema.json",
+    "schemas/json/canonical-ingress-result.schema.json",
+    "schemas/json/planning-run.schema.json",
+    "schemas/samples/canonical-ingress-request.v1.synthetic.json",
+    "schemas/samples/canonical-ingress-result.v1.accepted.synthetic.json",
+    "schemas/samples/canonical-ingress-result.v1.rejected.synthetic.json",
+    "schemas/samples/planning-run.v1.created.synthetic.json",
+    "schemas/samples/planning-run.v1.completed.synthetic.json",
+    "schemas/samples/canonical-ingress.v1.invalid-unknown-field.synthetic.json",
+    "schemas/samples/canonical-ingress.v1.invalid-version.synthetic.json",
+    "schemas/samples/canonical-ingress.v1.invalid-type.synthetic.json",
+    "schemas/samples/canonical-ingress.v1.invalid-plane.synthetic.json",
+    "schemas/samples/canonical-ingress.v1.invalid-scope.synthetic.json",
+    "schemas/samples/canonical-ingress.v1.invalid-authority.synthetic.json",
+    "schemas/samples/canonical-ingress.v1.invalid-reference.synthetic.json",
+    "schemas/samples/canonical-ingress.v1.invalid-idempotency.synthetic.json",
+    "schemas/samples/canonical-ingress.v1.invalid-fingerprint.synthetic.json",
+    "schemas/samples/planning-run.v1.invalid-transition.synthetic.json",
 }
 
 _HISTORICAL_COUNT = 58
@@ -523,16 +541,16 @@ def _dependency_and_boundary_check(root: Path) -> dict[str, object]:
         raise ValueError("runtime dependency set changed")
     if development != _EXPECTED_DEV_DEPENDENCIES:
         raise ValueError("development dependency set changed")
-    if project["tool"]["plantnexus-aps"]["versions"]["schema"] != "2.9.0":
-        raise ValueError("pyproject current schema metadata is not 2.9.0")
-    if SCHEMA_VERSION != "2.9.0":
-        raise ValueError("package current schema metadata is not 2.9.0")
+    if project["tool"]["plantnexus-aps"]["versions"]["schema"] != "2.10.0":
+        raise ValueError("pyproject current schema metadata is not 2.10.0")
+    if SCHEMA_VERSION != "2.10.0":
+        raise ValueError("package current schema metadata is not 2.10.0")
     dictionary = cast(
         dict[str, Any],
         yaml.safe_load((root / "schemas" / "data_dictionary.yaml").read_text("utf-8")),
     )
-    if dictionary.get("schema_set_version") != "2.9.0":
-        raise ValueError("data dictionary current schema metadata is not 2.9.0")
+    if dictionary.get("schema_set_version") != "2.10.0":
+        raise ValueError("data dictionary current schema metadata is not 2.10.0")
     expected_documents = {version for _, _, _, version in _SCHEMA_SAMPLE_PAIRS}
     if not expected_documents.issubset(set(cast(dict[str, Any], dictionary["schemas"]))):
         raise ValueError("data dictionary omits a P4 document version")

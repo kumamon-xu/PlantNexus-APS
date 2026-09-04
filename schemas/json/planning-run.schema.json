@@ -1,0 +1,268 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "urn:plantnexus:aps:schema:planning-run:v1",
+  "title": "PlantNexus APS PlanningRun v1",
+  "description": "Authoritative PlanningRun lifecycle carrier aligned exactly with state-machines.v1. It represents state and evidence but executes no transition.",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "planning_run_version",
+    "schema_set_version",
+    "canonicalization_version",
+    "transition_registry_version",
+    "error_registry_version",
+    "planning_run_id",
+    "revision",
+    "state",
+    "terminal",
+    "allowed_actions",
+    "effective_scope",
+    "ingress",
+    "runtime_resolution",
+    "inputs",
+    "attempt",
+    "artifacts",
+    "cancellation",
+    "error",
+    "last_transition",
+    "audit_references",
+    "created_at_utc",
+    "updated_at_utc",
+    "run_fingerprint"
+  ],
+  "properties": {
+    "planning_run_version": {"const": "planning-run.v1"},
+    "schema_set_version": {"const": "2.10.0"},
+    "canonicalization_version": {"const": "canonical-json.v1"},
+    "transition_registry_version": {"const": "state-machines.v1"},
+    "error_registry_version": {"const": "headless-error-code-registry.v1"},
+    "planning_run_id": {"$ref": "urn:plantnexus:aps:schema:canonical-ingress-result:v1#/$defs/canonicalId"},
+    "revision": {"type": "integer", "minimum": 1},
+    "state": {"$ref": "#/$defs/planningRunState"},
+    "terminal": {"type": "boolean"},
+    "allowed_actions": {
+      "type": "array",
+      "uniqueItems": true,
+      "items": {"enum": ["READ", "CANCEL"]}
+    },
+    "effective_scope": {"$ref": "urn:plantnexus:aps:schema:canonical-ingress-result:v1#/$defs/effectiveScope"},
+    "ingress": {"$ref": "#/$defs/ingressLineage"},
+    "runtime_resolution": {"$ref": "urn:plantnexus:aps:schema:canonical-ingress-result:v1#/$defs/runtimeResolution"},
+    "inputs": {"$ref": "#/$defs/planningInputs"},
+    "attempt": {
+      "oneOf": [
+        {"type": "null"},
+        {"$ref": "#/$defs/attemptEvidence"}
+      ]
+    },
+    "artifacts": {"$ref": "#/$defs/artifacts"},
+    "cancellation": {
+      "oneOf": [
+        {"type": "null"},
+        {"$ref": "#/$defs/cancellationEvidence"}
+      ]
+    },
+    "error": {
+      "oneOf": [
+        {"type": "null"},
+        {"$ref": "urn:plantnexus:aps:schema:canonical-ingress-result:v1#/$defs/headlessError"}
+      ]
+    },
+    "last_transition": {"$ref": "#/$defs/transitionEvidence"},
+    "audit_references": {
+      "type": "array",
+      "minItems": 1,
+      "uniqueItems": true,
+      "items": {"$ref": "#/$defs/auditReference"}
+    },
+    "created_at_utc": {"$ref": "urn:plantnexus:aps:schema:canonical-ingress-result:v1#/$defs/utcInstant"},
+    "updated_at_utc": {"$ref": "urn:plantnexus:aps:schema:canonical-ingress-result:v1#/$defs/utcInstant"},
+    "run_fingerprint": {"$ref": "urn:plantnexus:aps:schema:canonical-ingress-result:v1#/$defs/sha256Fingerprint"}
+  },
+  "allOf": [
+    {
+      "if": {"properties": {"state": {"enum": ["CREATED", "INGESTING", "VALIDATING", "SNAPSHOTTED", "BUILDING", "SOLVING", "SOLVED", "VERIFYING"]}}, "required": ["state"]},
+      "then": {"properties": {"terminal": {"const": false}, "allowed_actions": {"const": ["READ", "CANCEL"]}, "cancellation": {"type": "null"}, "error": {"type": "null"}}}
+    },
+    {
+      "if": {"properties": {"state": {"enum": ["COMPLETED", "DATA_REJECTED", "MODEL_INVALID", "INFEASIBLE", "NO_SOLUTION_WITHIN_LIMIT", "VALIDATION_FAILED", "CANCELLED", "FAILED"]}}, "required": ["state"]},
+      "then": {"properties": {"terminal": {"const": true}, "allowed_actions": {"const": ["READ"]}}}
+    },
+    {
+      "if": {"properties": {"state": {"const": "CREATED"}}, "required": ["state"]},
+      "then": {"properties": {"revision": {"const": 1}, "attempt": {"type": "null"}, "artifacts": {"$ref": "#/$defs/noArtifacts"}, "last_transition": {"allOf": [{"$ref": "#/$defs/transitionEvidence"}, {"properties": {"sequence": {"const": 0}, "from_state": {"type": "null"}, "to_state": {"const": "CREATED"}}}]}}}
+    },
+    {
+      "if": {"properties": {"state": {"const": "INGESTING"}}, "required": ["state"]},
+      "then": {"properties": {"attempt": {"type": "null"}, "artifacts": {"$ref": "#/$defs/noArtifacts"}, "last_transition": {"allOf": [{"$ref": "#/$defs/transitionEvidence"}, {"properties": {"from_state": {"const": "CREATED"}, "to_state": {"const": "INGESTING"}}}]}}}
+    },
+    {
+      "if": {"properties": {"state": {"const": "VALIDATING"}}, "required": ["state"]},
+      "then": {"properties": {"attempt": {"type": "null"}, "artifacts": {"$ref": "#/$defs/noArtifacts"}, "last_transition": {"allOf": [{"$ref": "#/$defs/transitionEvidence"}, {"properties": {"from_state": {"const": "INGESTING"}, "to_state": {"const": "VALIDATING"}}}]}}}
+    },
+    {
+      "if": {"properties": {"state": {"const": "SNAPSHOTTED"}}, "required": ["state"]},
+      "then": {"properties": {"attempt": {"type": "null"}, "artifacts": {"$ref": "#/$defs/snapshottedArtifacts"}, "last_transition": {"allOf": [{"$ref": "#/$defs/transitionEvidence"}, {"properties": {"from_state": {"const": "VALIDATING"}, "to_state": {"const": "SNAPSHOTTED"}}}]}}}
+    },
+    {
+      "if": {"properties": {"state": {"const": "BUILDING"}}, "required": ["state"]},
+      "then": {"properties": {"attempt": {"$ref": "#/$defs/attemptEvidence"}, "artifacts": {"$ref": "#/$defs/buildingArtifacts"}, "last_transition": {"allOf": [{"$ref": "#/$defs/transitionEvidence"}, {"properties": {"from_state": {"const": "SNAPSHOTTED"}, "to_state": {"const": "BUILDING"}}}]}}}
+    },
+    {
+      "if": {"properties": {"state": {"const": "SOLVING"}}, "required": ["state"]},
+      "then": {"properties": {"attempt": {"$ref": "#/$defs/attemptEvidence"}, "artifacts": {"$ref": "#/$defs/solvingArtifacts"}, "last_transition": {"allOf": [{"$ref": "#/$defs/transitionEvidence"}, {"properties": {"from_state": {"const": "BUILDING"}, "to_state": {"const": "SOLVING"}}}]}}}
+    },
+    {
+      "if": {"properties": {"state": {"const": "SOLVED"}}, "required": ["state"]},
+      "then": {"properties": {"attempt": {"$ref": "#/$defs/attemptEvidence"}, "artifacts": {"$ref": "#/$defs/solvedArtifacts"}, "last_transition": {"allOf": [{"$ref": "#/$defs/transitionEvidence"}, {"properties": {"from_state": {"const": "SOLVING"}, "to_state": {"const": "SOLVED"}}}]}}}
+    },
+    {
+      "if": {"properties": {"state": {"const": "VERIFYING"}}, "required": ["state"]},
+      "then": {"properties": {"attempt": {"$ref": "#/$defs/attemptEvidence"}, "artifacts": {"$ref": "#/$defs/solvedArtifacts"}, "last_transition": {"allOf": [{"$ref": "#/$defs/transitionEvidence"}, {"properties": {"from_state": {"const": "SOLVED"}, "to_state": {"const": "VERIFYING"}}}]}}}
+    },
+    {
+      "if": {"properties": {"state": {"const": "COMPLETED"}}, "required": ["state"]},
+      "then": {"properties": {"attempt": {"$ref": "#/$defs/attemptEvidence"}, "artifacts": {"$ref": "#/$defs/completedArtifacts"}, "cancellation": {"type": "null"}, "error": {"type": "null"}, "last_transition": {"allOf": [{"$ref": "#/$defs/transitionEvidence"}, {"properties": {"from_state": {"const": "VERIFYING"}, "to_state": {"const": "COMPLETED"}}}]}}}
+    },
+    {
+      "if": {"properties": {"state": {"const": "DATA_REJECTED"}}, "required": ["state"]},
+      "then": {"properties": {"attempt": {"type": "null"}, "artifacts": {"$ref": "#/$defs/dataRejectedArtifacts"}, "cancellation": {"type": "null"}, "error": {"allOf": [{"$ref": "urn:plantnexus:aps:schema:canonical-ingress-result:v1#/$defs/headlessError"}, {"properties": {"code": {"const": "DATA_VALIDATION_FAILED"}}}]}, "last_transition": {"allOf": [{"$ref": "#/$defs/transitionEvidence"}, {"properties": {"from_state": {"enum": ["INGESTING", "VALIDATING"]}, "to_state": {"const": "DATA_REJECTED"}}}]}}}
+    },
+    {
+      "if": {"properties": {"state": {"const": "MODEL_INVALID"}}, "required": ["state"]},
+      "then": {"properties": {"attempt": {"$ref": "#/$defs/attemptEvidence"}, "cancellation": {"type": "null"}, "error": {"allOf": [{"$ref": "urn:plantnexus:aps:schema:canonical-ingress-result:v1#/$defs/headlessError"}, {"properties": {"code": {"const": "MODEL_INVALID"}}}]}, "last_transition": {"allOf": [{"$ref": "#/$defs/transitionEvidence"}, {"properties": {"from_state": {"enum": ["BUILDING", "SOLVING"]}, "to_state": {"const": "MODEL_INVALID"}}}]}}}
+    },
+    {
+      "if": {"properties": {"state": {"const": "INFEASIBLE"}}, "required": ["state"]},
+      "then": {"properties": {"attempt": {"$ref": "#/$defs/attemptEvidence"}, "artifacts": {"$ref": "#/$defs/solverFailureArtifacts"}, "cancellation": {"type": "null"}, "error": {"allOf": [{"$ref": "urn:plantnexus:aps:schema:canonical-ingress-result:v1#/$defs/headlessError"}, {"properties": {"code": {"const": "INFEASIBLE"}}}]}, "last_transition": {"allOf": [{"$ref": "#/$defs/transitionEvidence"}, {"properties": {"from_state": {"const": "SOLVING"}, "to_state": {"const": "INFEASIBLE"}}}]}}}
+    },
+    {
+      "if": {"properties": {"state": {"const": "NO_SOLUTION_WITHIN_LIMIT"}}, "required": ["state"]},
+      "then": {"properties": {"attempt": {"$ref": "#/$defs/attemptEvidence"}, "artifacts": {"$ref": "#/$defs/solverFailureArtifacts"}, "cancellation": {"type": "null"}, "error": {"allOf": [{"$ref": "urn:plantnexus:aps:schema:canonical-ingress-result:v1#/$defs/headlessError"}, {"properties": {"code": {"const": "NO_SOLUTION_WITHIN_LIMIT"}}}]}, "last_transition": {"allOf": [{"$ref": "#/$defs/transitionEvidence"}, {"properties": {"from_state": {"const": "SOLVING"}, "to_state": {"const": "NO_SOLUTION_WITHIN_LIMIT"}}}]}}}
+    },
+    {
+      "if": {"properties": {"state": {"const": "VALIDATION_FAILED"}}, "required": ["state"]},
+      "then": {"properties": {"attempt": {"$ref": "#/$defs/attemptEvidence"}, "artifacts": {"$ref": "#/$defs/validationFailedArtifacts"}, "cancellation": {"type": "null"}, "error": {"allOf": [{"$ref": "urn:plantnexus:aps:schema:canonical-ingress-result:v1#/$defs/headlessError"}, {"properties": {"code": {"const": "SCHEDULE_VALIDATION_FAILED"}}}]}, "last_transition": {"allOf": [{"$ref": "#/$defs/transitionEvidence"}, {"properties": {"from_state": {"const": "VERIFYING"}, "to_state": {"const": "VALIDATION_FAILED"}}}]}}}
+    },
+    {
+      "if": {"properties": {"state": {"const": "CANCELLED"}}, "required": ["state"]},
+      "then": {"properties": {"cancellation": {"$ref": "#/$defs/cancellationEvidence"}, "error": {"allOf": [{"$ref": "urn:plantnexus:aps:schema:canonical-ingress-result:v1#/$defs/headlessError"}, {"properties": {"code": {"const": "RUN_CANCELLED"}}}]}, "last_transition": {"allOf": [{"$ref": "#/$defs/transitionEvidence"}, {"properties": {"from_state": {"enum": ["CREATED", "INGESTING", "VALIDATING", "SNAPSHOTTED", "BUILDING", "SOLVING", "SOLVED", "VERIFYING"]}, "to_state": {"const": "CANCELLED"}}}]}}}
+    },
+    {
+      "if": {"properties": {"state": {"const": "FAILED"}}, "required": ["state"]},
+      "then": {"properties": {"cancellation": {"type": "null"}, "error": {"allOf": [{"$ref": "urn:plantnexus:aps:schema:canonical-ingress-result:v1#/$defs/headlessError"}, {"properties": {"code": {"const": "SYSTEM_ERROR"}}}]}, "last_transition": {"allOf": [{"$ref": "#/$defs/transitionEvidence"}, {"properties": {"from_state": {"enum": ["CREATED", "INGESTING", "VALIDATING", "SNAPSHOTTED", "BUILDING", "SOLVING", "SOLVED", "VERIFYING"]}, "to_state": {"const": "FAILED"}}}]}}}
+    }
+  ],
+  "$defs": {
+    "planningRunState": {"enum": ["CREATED", "INGESTING", "VALIDATING", "SNAPSHOTTED", "BUILDING", "SOLVING", "SOLVED", "VERIFYING", "COMPLETED", "DATA_REJECTED", "MODEL_INVALID", "INFEASIBLE", "NO_SOLUTION_WITHIN_LIMIT", "VALIDATION_FAILED", "CANCELLED", "FAILED"]},
+    "artifactReference": {"$ref": "urn:plantnexus:aps:schema:canonical-ingress-result:v1#/$defs/artifactReference"},
+    "importQualityReference": {"allOf": [{"$ref": "#/$defs/artifactReference"}, {"properties": {"document_version": {"const": "import-quality-report.v1"}}}]},
+    "snapshotReference": {"allOf": [{"$ref": "#/$defs/artifactReference"}, {"properties": {"document_version": {"const": "planning-snapshot.v2"}}}]},
+    "problemReference": {"allOf": [{"$ref": "#/$defs/artifactReference"}, {"properties": {"document_version": {"const": "planning-problem.v2"}}}]},
+    "planningSolutionReference": {"allOf": [{"$ref": "#/$defs/artifactReference"}, {"properties": {"document_version": {"const": "planning-solution.v1"}}}]},
+    "solverReportReference": {"allOf": [{"$ref": "#/$defs/artifactReference"}, {"properties": {"document_version": {"enum": ["solver-report.v1", "solver-report.v2"]}}}]},
+    "validationReportReference": {"allOf": [{"$ref": "#/$defs/artifactReference"}, {"properties": {"document_version": {"const": "validation-report.v2"}}}]},
+    "scheduleVersionReference": {"allOf": [{"$ref": "#/$defs/artifactReference"}, {"properties": {"document_version": {"enum": ["schedule-version.v1", "schedule-version.v2"]}}}]},
+    "nullableImportQualityReference": {"oneOf": [{"type": "null"}, {"$ref": "#/$defs/importQualityReference"}]},
+    "nullableSnapshotReference": {"oneOf": [{"type": "null"}, {"$ref": "#/$defs/snapshotReference"}]},
+    "nullableProblemReference": {"oneOf": [{"type": "null"}, {"$ref": "#/$defs/problemReference"}]},
+    "nullablePlanningSolutionReference": {"oneOf": [{"type": "null"}, {"$ref": "#/$defs/planningSolutionReference"}]},
+    "nullableSolverReportReference": {"oneOf": [{"type": "null"}, {"$ref": "#/$defs/solverReportReference"}]},
+    "nullableValidationReportReference": {"oneOf": [{"type": "null"}, {"$ref": "#/$defs/validationReportReference"}]},
+    "nullableScheduleVersionReference": {"oneOf": [{"type": "null"}, {"$ref": "#/$defs/scheduleVersionReference"}]},
+    "auditReference": {
+      "allOf": [
+        {"$ref": "#/$defs/artifactReference"},
+        {"properties": {"document_version": {"const": "audit-event.v1"}}}
+      ]
+    },
+    "ingressLineage": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["request_id", "request_fingerprint", "ingress_id", "payload", "idempotency_key_reference", "idempotency_scope_fingerprint"],
+      "properties": {
+        "request_id": {"$ref": "urn:plantnexus:aps:schema:canonical-ingress-result:v1#/$defs/canonicalId"},
+        "request_fingerprint": {"$ref": "urn:plantnexus:aps:schema:canonical-ingress-result:v1#/$defs/sha256Fingerprint"},
+        "ingress_id": {"$ref": "urn:plantnexus:aps:schema:canonical-ingress-result:v1#/$defs/canonicalId"},
+        "payload": {"allOf": [{"$ref": "#/$defs/artifactReference"}, {"properties": {"document_version": {"const": "import-package.v2"}}}]},
+        "idempotency_key_reference": {"$ref": "urn:plantnexus:aps:schema:canonical-ingress-result:v1#/$defs/sha256Fingerprint"},
+        "idempotency_scope_fingerprint": {"$ref": "urn:plantnexus:aps:schema:canonical-ingress-result:v1#/$defs/sha256Fingerprint"}
+      }
+    },
+    "planningInputs": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["planning_policy", "solve_limits"],
+      "properties": {
+        "planning_policy": {"allOf": [{"$ref": "#/$defs/artifactReference"}, {"properties": {"document_version": {"enum": ["planning-policy.v1", "planning-policy.v2"]}}}]},
+        "solve_limits": {"allOf": [{"$ref": "#/$defs/artifactReference"}, {"properties": {"document_version": {"const": "solve-limits.v1"}}}]}
+      }
+    },
+    "attemptEvidence": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["attempt_id", "attempt_number", "runtime_resolution_fingerprint", "started_at_utc", "finished_at_utc"],
+      "properties": {
+        "attempt_id": {"$ref": "urn:plantnexus:aps:schema:canonical-ingress-result:v1#/$defs/canonicalId"},
+        "attempt_number": {"type": "integer", "minimum": 1},
+        "runtime_resolution_fingerprint": {"$ref": "urn:plantnexus:aps:schema:canonical-ingress-result:v1#/$defs/sha256Fingerprint"},
+        "started_at_utc": {"$ref": "urn:plantnexus:aps:schema:canonical-ingress-result:v1#/$defs/utcInstant"},
+        "finished_at_utc": {"oneOf": [{"type": "null"}, {"$ref": "urn:plantnexus:aps:schema:canonical-ingress-result:v1#/$defs/utcInstant"}]}
+      }
+    },
+    "artifacts": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["import_quality_report", "snapshot", "problem", "planning_solution", "solver_report", "validation_report", "schedule_version"],
+      "properties": {
+        "import_quality_report": {"$ref": "#/$defs/nullableImportQualityReference"},
+        "snapshot": {"$ref": "#/$defs/nullableSnapshotReference"},
+        "problem": {"$ref": "#/$defs/nullableProblemReference"},
+        "planning_solution": {"$ref": "#/$defs/nullablePlanningSolutionReference"},
+        "solver_report": {"$ref": "#/$defs/nullableSolverReportReference"},
+        "validation_report": {"$ref": "#/$defs/nullableValidationReportReference"},
+        "schedule_version": {"$ref": "#/$defs/nullableScheduleVersionReference"}
+      }
+    },
+    "noArtifacts": {"allOf": [{"$ref": "#/$defs/artifacts"}, {"properties": {"import_quality_report": {"type": "null"}, "snapshot": {"type": "null"}, "problem": {"type": "null"}, "planning_solution": {"type": "null"}, "solver_report": {"type": "null"}, "validation_report": {"type": "null"}, "schedule_version": {"type": "null"}}}]},
+    "snapshottedArtifacts": {"allOf": [{"$ref": "#/$defs/artifacts"}, {"properties": {"import_quality_report": {"$ref": "#/$defs/artifactReference"}, "snapshot": {"$ref": "#/$defs/artifactReference"}, "problem": {"type": "null"}, "planning_solution": {"type": "null"}, "solver_report": {"type": "null"}, "validation_report": {"type": "null"}, "schedule_version": {"type": "null"}}}]},
+    "buildingArtifacts": {"allOf": [{"$ref": "#/$defs/snapshottedArtifacts"}]},
+    "solvingArtifacts": {"allOf": [{"$ref": "#/$defs/artifacts"}, {"properties": {"import_quality_report": {"$ref": "#/$defs/artifactReference"}, "snapshot": {"$ref": "#/$defs/artifactReference"}, "problem": {"$ref": "#/$defs/artifactReference"}, "planning_solution": {"type": "null"}, "solver_report": {"type": "null"}, "validation_report": {"type": "null"}, "schedule_version": {"type": "null"}}}]},
+    "solvedArtifacts": {"allOf": [{"$ref": "#/$defs/artifacts"}, {"properties": {"import_quality_report": {"$ref": "#/$defs/artifactReference"}, "snapshot": {"$ref": "#/$defs/artifactReference"}, "problem": {"$ref": "#/$defs/artifactReference"}, "planning_solution": {"$ref": "#/$defs/artifactReference"}, "solver_report": {"$ref": "#/$defs/artifactReference"}, "validation_report": {"type": "null"}, "schedule_version": {"type": "null"}}}]},
+    "completedArtifacts": {"allOf": [{"$ref": "#/$defs/artifacts"}, {"properties": {"import_quality_report": {"$ref": "#/$defs/artifactReference"}, "snapshot": {"$ref": "#/$defs/artifactReference"}, "problem": {"$ref": "#/$defs/artifactReference"}, "planning_solution": {"$ref": "#/$defs/artifactReference"}, "solver_report": {"$ref": "#/$defs/artifactReference"}, "validation_report": {"$ref": "#/$defs/artifactReference"}, "schedule_version": {"$ref": "#/$defs/artifactReference"}}}]},
+    "dataRejectedArtifacts": {"allOf": [{"$ref": "#/$defs/artifacts"}, {"properties": {"import_quality_report": {"$ref": "#/$defs/artifactReference"}, "snapshot": {"type": "null"}, "problem": {"type": "null"}, "planning_solution": {"type": "null"}, "solver_report": {"type": "null"}, "validation_report": {"type": "null"}, "schedule_version": {"type": "null"}}}]},
+    "solverFailureArtifacts": {"allOf": [{"$ref": "#/$defs/artifacts"}, {"properties": {"import_quality_report": {"$ref": "#/$defs/artifactReference"}, "snapshot": {"$ref": "#/$defs/artifactReference"}, "problem": {"$ref": "#/$defs/artifactReference"}, "planning_solution": {"type": "null"}, "solver_report": {"$ref": "#/$defs/artifactReference"}, "validation_report": {"type": "null"}, "schedule_version": {"type": "null"}}}]},
+    "validationFailedArtifacts": {"allOf": [{"$ref": "#/$defs/artifacts"}, {"properties": {"import_quality_report": {"$ref": "#/$defs/artifactReference"}, "snapshot": {"$ref": "#/$defs/artifactReference"}, "problem": {"$ref": "#/$defs/artifactReference"}, "planning_solution": {"$ref": "#/$defs/artifactReference"}, "solver_report": {"$ref": "#/$defs/artifactReference"}, "validation_report": {"$ref": "#/$defs/artifactReference"}, "schedule_version": {"type": "null"}}}]},
+    "cancellationEvidence": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["actor_reference", "reason", "cancelled_at_utc", "audit"],
+      "properties": {
+        "actor_reference": {"type": "string", "pattern": "^actor:[A-Za-z0-9._:-]+$"},
+        "reason": {"type": "string", "minLength": 1, "maxLength": 512, "pattern": "^[^\\u0000-\\u001F\\u007F]+$"},
+        "cancelled_at_utc": {"$ref": "urn:plantnexus:aps:schema:canonical-ingress-result:v1#/$defs/utcInstant"},
+        "audit": {"$ref": "#/$defs/auditReference"}
+      }
+    },
+    "transitionEvidence": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["transition_version", "sequence", "from_state", "to_state", "occurred_at_utc", "audit"],
+      "properties": {
+        "transition_version": {"const": "planning-run-transition.v1"},
+        "sequence": {"type": "integer", "minimum": 0},
+        "from_state": {"oneOf": [{"type": "null"}, {"$ref": "#/$defs/planningRunState"}]},
+        "to_state": {"$ref": "#/$defs/planningRunState"},
+        "occurred_at_utc": {"$ref": "urn:plantnexus:aps:schema:canonical-ingress-result:v1#/$defs/utcInstant"},
+        "audit": {"$ref": "#/$defs/auditReference"}
+      },
+      "allOf": [
+        {
+          "if": {"properties": {"sequence": {"const": 0}}, "required": ["sequence"]},
+          "then": {"properties": {"from_state": {"type": "null"}, "to_state": {"const": "CREATED"}}},
+          "else": {"properties": {"sequence": {"minimum": 1}, "from_state": {"$ref": "#/$defs/planningRunState"}}}
+        }
+      ]
+    }
+  }
+}

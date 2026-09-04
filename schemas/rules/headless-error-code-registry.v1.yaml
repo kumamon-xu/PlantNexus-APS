@@ -1,0 +1,46 @@
+error_registry_version: headless-error-code-registry.v1
+schema_set_version: 2.10.0
+namespace: HEADLESS_RUNTIME
+compatibility: additive and independent from error-code-registry.v2
+categories:
+  - CONTRACT_ERROR
+  - SCOPE_ERROR
+  - AUTHORITY_ERROR
+  - CONFLICT
+  - DATA_ERROR
+  - MODEL_INVALID
+  - INFEASIBLE
+  - NO_SOLUTION_WITHIN_LIMIT
+  - VALIDATION_FAILED
+  - CANCELLED
+  - SYSTEM_ERROR
+codes:
+  - {code: MALFORMED_JSON, category: CONTRACT_ERROR, stage: TRANSPORT, retryability: NOT_RETRYABLE, action: FIX_REQUEST}
+  - {code: DUPLICATE_JSON_KEY, category: CONTRACT_ERROR, stage: TRANSPORT, retryability: NOT_RETRYABLE, action: FIX_REQUEST}
+  - {code: NON_FINITE_NUMBER, category: CONTRACT_ERROR, stage: TRANSPORT, retryability: NOT_RETRYABLE, action: FIX_REQUEST}
+  - {code: UNSUPPORTED_MEDIA_TYPE, category: CONTRACT_ERROR, stage: TRANSPORT, retryability: NOT_RETRYABLE, action: FIX_REQUEST}
+  - {code: PAYLOAD_LIMIT_EXCEEDED, category: CONTRACT_ERROR, stage: TRANSPORT, retryability: NOT_RETRYABLE, action: FIX_REQUEST}
+  - {code: UNKNOWN_CONTRACT_VERSION, category: CONTRACT_ERROR, stage: CONTRACT, retryability: NOT_RETRYABLE, action: FIX_REQUEST}
+  - {code: CONTRACT_VIOLATION, category: CONTRACT_ERROR, stage: CONTRACT, retryability: NOT_RETRYABLE, action: FIX_REQUEST}
+  - {code: SCOPE_MISMATCH, category: SCOPE_ERROR, stage: AUTHORIZATION, retryability: NOT_RETRYABLE, action: FIX_REQUEST}
+  - {code: DATA_PLANE_MISMATCH, category: SCOPE_ERROR, stage: AUTHORIZATION, retryability: NOT_RETRYABLE, action: FIX_REQUEST}
+  - {code: AUTHORITY_CONFLICT, category: AUTHORITY_ERROR, stage: CONTRACT, retryability: NOT_RETRYABLE, action: FIX_REQUEST}
+  - {code: LINEAGE_INVALID, category: AUTHORITY_ERROR, stage: CONTRACT, retryability: NOT_RETRYABLE, action: FIX_REQUEST}
+  - {code: IDEMPOTENCY_CONFLICT, category: CONFLICT, stage: IDEMPOTENCY, retryability: NOT_RETRYABLE, action: READ_CURRENT_STATE}
+  - {code: INVALID_REFERENCE, category: DATA_ERROR, stage: CONTRACT, retryability: NOT_RETRYABLE, action: FIX_REQUEST}
+  - {code: INVALID_STATE_TRANSITION, category: DATA_ERROR, stage: STATE, retryability: NOT_RETRYABLE, action: READ_CURRENT_STATE}
+  - {code: RUNTIME_RESOLUTION_FAILED, category: SYSTEM_ERROR, stage: RUNTIME_RESOLUTION, retryability: RETRY_AFTER_OPERATOR_ACTION, action: CONTACT_OPERATOR}
+  - {code: EXTENSION_SET_MISMATCH, category: SYSTEM_ERROR, stage: RUNTIME_RESOLUTION, retryability: RETRY_AFTER_OPERATOR_ACTION, action: CONTACT_OPERATOR}
+  - {code: DATA_VALIDATION_FAILED, category: DATA_ERROR, stage: DATA_VALIDATION, retryability: NOT_RETRYABLE, action: FIX_REQUEST}
+  - {code: MODEL_INVALID, category: MODEL_INVALID, stage: PROBLEM_BUILD, retryability: NOT_RETRYABLE, action: FIX_REQUEST}
+  - {code: INFEASIBLE, category: INFEASIBLE, stage: SOLVER, retryability: NOT_RETRYABLE, action: FIX_REQUEST}
+  - {code: NO_SOLUTION_WITHIN_LIMIT, category: NO_SOLUTION_WITHIN_LIMIT, stage: SOLVER, retryability: RETRY_AFTER_OPERATOR_ACTION, action: CONTACT_OPERATOR}
+  - {code: SCHEDULE_VALIDATION_FAILED, category: VALIDATION_FAILED, stage: VALIDATION, retryability: NOT_RETRYABLE, action: FIX_REQUEST}
+  - {code: RUN_CANCELLED, category: CANCELLED, stage: STATE, retryability: NOT_RETRYABLE, action: READ_CURRENT_STATE}
+  - {code: SYSTEM_ERROR, category: SYSTEM_ERROR, stage: SYSTEM, retryability: RETRY_SAME_REQUEST, action: RETRY_SAME_IDEMPOTENCY_KEY}
+invariants:
+  unknown_code: reject
+  duplicate_code: reject
+  category_code_stage_retryability_action_tuple: exact
+  ingress_rejection_side_effects: NONE
+  http_status_mapping: TASK-P8-07

@@ -108,6 +108,9 @@ _FROZEN_SHA256 = {
 _P6_SCHEMA_METADATA_PYPROJECT_SHA256 = (
     "c39c0ade6061de9a986eb0e5a3e2d8b568ccb37c7f7bf64242698af782b6c937"
 )
+_P8_SCHEMA_METADATA_PYPROJECT_SHA256 = (
+    "4b511b70bae195debce23cd99149af059aaa1ab3694218f553d115ba3ca8bd09"
+)
 _CUTOFF = "2026-08-20T00:00:00Z"
 
 
@@ -1095,6 +1098,7 @@ def _frozen_input_check(root: Path) -> dict[str, object]:
     if frozen_observed != frozen_expected or pyproject_digest not in {
         p4_pyproject_digest,
         _P6_SCHEMA_METADATA_PYPROJECT_SHA256,
+        _P8_SCHEMA_METADATA_PYPROJECT_SHA256,
     }:
         raise ValueError("frozen Schema/migration/dependency input changed")
     return {

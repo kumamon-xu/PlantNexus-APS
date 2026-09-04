@@ -1,0 +1,42 @@
+{
+  "canonical_ingress_result_version": "canonical-ingress-result.v1",
+  "schema_set_version": "2.10.0",
+  "canonicalization_version": "canonical-json.v1",
+  "result_id": "INGRESS-RESULT-P8-REJECTED-001",
+  "request_id": "REQUEST-P8-SYNTHETIC-001",
+  "correlation_id": "CORRELATION-P8-SYNTHETIC-001",
+  "request_fingerprint": "sha256:8a279448706027722b483045571fcdf8948f009902d17a37c4f043bd0a836f05",
+  "disposition": "REJECTED",
+  "side_effects": "NONE",
+  "idempotency": {
+    "outcome": "CONFLICT",
+    "key_reference": "sha256:56154c07a7003affb7fc60f425fef190aa206758a2d00c3a9b04b669587b90c1",
+    "scope_fingerprint": "sha256:09194d9db9d2c7f5f16980301e0477a9471adc8188320a4c9ea57ef05cfe6dd6"
+  },
+  "effective_scope": {
+    "tenant_id": "TENANT-P8-SYNTHETIC",
+    "factory_id": "FACTORY-P8-SYNTHETIC-001",
+    "planning_scope_id": "PLANNING-P8-SYNTHETIC-001",
+    "data_plane": "SIMULATION",
+    "environment": "TEST",
+    "scope_fingerprint": "sha256:2ffa5f1522e4d718fad8c72e4ab269bbe5a31e3990a612c6a6ec3b5fae2b1d9b"
+  },
+  "accepted": null,
+  "rejection": {
+    "error_version": "headless-error.v1",
+    "namespace": "HEADLESS_RUNTIME",
+    "registry_version": "headless-error-code-registry.v1",
+    "category": "CONFLICT",
+    "code": "IDEMPOTENCY_CONFLICT",
+    "stage": "IDEMPOTENCY",
+    "message": "The idempotency key is already bound to a different request fingerprint.",
+    "pointer": "/idempotency_key",
+    "entity_reference": "REQUEST-P8-SYNTHETIC-001",
+    "expected_contract": "same scope and key require the original request fingerprint",
+    "correlation_id": "CORRELATION-P8-SYNTHETIC-001",
+    "retryability": "NOT_RETRYABLE",
+    "action": "READ_CURRENT_STATE"
+  },
+  "occurred_at_utc": "2026-09-04T00:00:01Z",
+  "result_fingerprint": "sha256:018119aa8037cdedfed454e2b6cc1386afb602fd13078ed886127347acd1aedc"
+}

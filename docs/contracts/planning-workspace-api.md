@@ -11,6 +11,16 @@ last_reviewed: 2026-08-31
 
 # P3 Planning Workspace API 语义合同
 
+## TASK-P8-02 Headless PlanningRun machine boundary
+
+TASK-P8-02以additive set `2.10.0`发布`canonical-ingress-request.v1`、`canonical-ingress-result.v1`和`planning-run.v1`，为未来Headless入口与运行查询提供唯一wire truth。它不修改本页既有P3/P4 route、operationId、OpenAPI fingerprint、workspace command/result或HTTP映射，也不表示`POST`入口或新的`GET PlanningRun`响应已经装配；transport绑定仍由TASK-P8-07负责。
+
+Canonical ingress request只表达`CREATE_PLANNING_RUN`、requested scope、source/mapping authority、Policy/Limits references和嵌入的`import-package.v2`。Principal/capability/effective scope及Runtime/Extension-set resolution均由服务端决定。Accepted result只能返回CREATED PlanningRun reference；Rejected result固定`side_effects=NONE`且不得返回accepted resource。Same effective scope/key/same fingerprint重放同一logical result，different fingerprint使用`HEADLESS_RUNTIME/IDEMPOTENCY_CONFLICT`。
+
+`planning-run.v1`严格复用`state-machines.v1`的16个state与31个pair。八个非终态为`terminal=false`且`allowed_actions=[READ,CANCEL]`，八个终态为`terminal=true`且只有`READ`；该projection仅表示state guard可用动作，仍须P8-08 authorization裁剪。最近transition、stage artifact前缀、attempt、error/cancellation、Runtime resolution和audit引用必须一致；重试通过新受控command/attempt表达，不制造self-transition。
+
+P8专用错误采用`headless-error-code-registry.v1`，与本页既有`workspace-control.v1` module-local reason和product `error-code-registry.v2`互不混用。P8-07只有在完整保留category/code/stage/retryability/action及零副作用语义时才可映射HTTP。
+
 ## TASK-P4-13 strict browser consumer
 
 Frontend只通过P4-12已发布的8 path/9 operation消费`dynamic-replanning-http.v1`，以canonical `query`参数读取`execution-event-timeline.v1`、`replan-request-workspace.v1`、`replan-result-workspace.v1`和`change-report-workspace.v1`。每个envelope必须与outbound query fingerprint、operation、resource、planning scope、correlation和projection fingerprint逐字绑定；未知字段、版本、state/type或tamper均显示contract error而不是partial success、缓存值或零值。
@@ -74,7 +84,7 @@ Gate消费P3-10已发布18-operation HTTP边界和P3-13 Frontend evidence，检�
 
 | Method / route | 类型 | application owner | 结果合同 |
 |---|---|---|---|
-| `GET /api/v1/planning-runs/{id}` | read | P2/P3 read service | versioned PlanningRun/Solver/Validation摘要 |
+| `GET /api/v1/planning-runs/{id}` | read | 当前既有P2/P3 read service；P8-07 future binding | 当前既有摘要不自动等同新`planning-run.v1`；P8 consumer必须显式选择2.10.0 carrier |
 | `GET /api/v1/schedule-versions/{id}` | read | P3-05 | `schedule-version.v1` + allowed actions |
 | `POST /api/v1/schedule-versions/{id}/validate` | command | P3-04/06 | fresh validation result；不跳过DRAFT |
 | `POST /api/v1/schedule-versions/{id}/approve` | command | P3-07 | approved decision/audit result |

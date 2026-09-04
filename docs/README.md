@@ -13,7 +13,7 @@ last_reviewed: 2026-09-04
 
 本目录只收录适合随公开 Git 仓库发布的核心项目文档。开发过程记录、Task Card、阶段证据、机器报告、临时草稿、截图、测试输出和下载制品不属于公开文档，应留在被忽略的本地目录或 `build/`。
 
-项目当前已形成 P0～P6 研发能力，P7 真实数据校准暂缓，P8 Headless产品化已进入人类合同阶段。产品边界只接收宿主平台提交的versioned canonical JSON，不在APS内直接建设ERP/MES/WMS/CAM连接器；宿主和未来可选独立Frontend消费同一API。企业适配规划通过Extension SDK和独立Enterprise Extension在Runtime内实现，并由version-locked Developer Kit交付，禁止复制/修改Core或自动升级企业项目。当前只形成[Headless平台集成与数据权威合同](contracts/headless-platform-integration.md)，尚未形成P8机器Schema、API实现、SDK或Kit，也不代表Production readiness、UAT、真实身份/审批authority、部署、容量结论或SLA已经形成。能力声明以[能力矩阵](core/capability-matrix.md)和对应合同为准。
+项目当前已形成 P0～P6 研发能力，P7 真实数据校准暂缓，P8 Headless产品化已从人类合同推进到第一版机器合同。产品边界只接收宿主平台提交的versioned canonical JSON，不在APS内直接建设ERP/MES/WMS/CAM连接器；宿主和未来可选独立Frontend消费同一API。企业适配规划通过Extension SDK和独立Enterprise Extension在Runtime内实现，并由version-locked Developer Kit交付，禁止复制/修改Core或自动升级企业项目。当前已形成[Headless平台集成与数据权威合同](contracts/headless-platform-integration.md)及schema set `2.10.0`中的canonical ingress/result、PlanningRun与Headless错误注册表；尚未形成P8 API、持久化、Worker、SDK、Registry或Kit实现，也不代表Production readiness、UAT、真实身份/审批authority、部署、容量结论或SLA已经形成。能力声明以[能力矩阵](core/capability-matrix.md)和对应合同为准。
 
 ## 核心入口
 

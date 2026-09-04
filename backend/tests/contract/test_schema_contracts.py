@@ -84,6 +84,9 @@ SCHEMA_FILES = (
     "duration-model-manifest.schema.json",
     "duration-evaluation-report.schema.json",
     "duration-prediction.schema.json",
+    "canonical-ingress-request.schema.json",
+    "canonical-ingress-result.schema.json",
+    "planning-run.schema.json",
 )
 
 V1_SCHEMA_SHA256 = {
@@ -186,7 +189,7 @@ def test_schemas_do_not_encode_implicit_defaults() -> None:
 
 def test_published_versions_are_consistent() -> None:
     pyproject = tomllib.loads((ROOT / "pyproject.toml").read_text(encoding="utf-8"))
-    assert SCHEMA_VERSION == "2.9.0"
+    assert SCHEMA_VERSION == "2.10.0"
     assert pyproject["tool"]["plantnexus-aps"]["versions"]["schema"] == SCHEMA_VERSION
 
 
@@ -242,6 +245,26 @@ def test_synthetic_samples_validate_and_round_trip() -> None:
         (
             "duration-prediction.schema.json",
             "duration-prediction.v1.fallback.synthetic.json",
+        ),
+        (
+            "canonical-ingress-request.schema.json",
+            "canonical-ingress-request.v1.synthetic.json",
+        ),
+        (
+            "canonical-ingress-result.schema.json",
+            "canonical-ingress-result.v1.accepted.synthetic.json",
+        ),
+        (
+            "canonical-ingress-result.schema.json",
+            "canonical-ingress-result.v1.rejected.synthetic.json",
+        ),
+        (
+            "planning-run.schema.json",
+            "planning-run.v1.created.synthetic.json",
+        ),
+        (
+            "planning-run.schema.json",
+            "planning-run.v1.completed.synthetic.json",
         ),
     )
     for schema_name, sample_name in samples:
@@ -613,7 +636,7 @@ def test_data_dictionary_covers_every_published_schema() -> None:
     dictionary = yaml.safe_load(
         (ROOT / "schemas" / "data_dictionary.yaml").read_text("utf-8")
     )
-    assert dictionary["schema_set_version"] == "2.9.0"
+    assert dictionary["schema_set_version"] == "2.10.0"
     assert set(dictionary["schemas"]) == {
         "canonical-records.v1",
         "import-package.v1",
@@ -667,6 +690,10 @@ def test_data_dictionary_covers_every_published_schema() -> None:
         "duration-model-manifest.v1",
         "duration-evaluation-report.v1",
         "duration-prediction.v1",
+        "canonical-ingress-request.v1",
+        "canonical-ingress-result.v1",
+        "planning-run.v1",
+        "headless-error-code-registry.v1",
     }
     canonical_schema = load_json(SCHEMA_ROOT / "canonical-records.v1.schema.json")
     assert set(COLLECTION_ID_FIELDS) == (

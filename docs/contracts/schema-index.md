@@ -3,10 +3,10 @@ doc_id: DOC-CONTRACT-008
 title: Schema 计划索引
 status: living
 spec_version: 0.3.0
-phase: P0-P6
+phase: P0-P8
 normative: true
 source_sections: [36, 38, 39, 70, 71, 103]
-last_reviewed: 2026-09-01
+last_reviewed: 2026-09-04
 ---
 
 # Schema 计划索引
@@ -16,6 +16,19 @@ last_reviewed: 2026-09-01
 [数据字段中文名称字典](data-field-dictionary.md)完整列出 `canonical-records.v1` 的根集合、16 类核心记录与共享嵌套字段；它只提供中文阅读/展示名，不改变英文 JSON key、类型、必填条件、enum 或 fingerprint。机器权威仍是 [`canonical-records.v1.schema.json`](../../schemas/json/canonical-records.v1.schema.json)和 [`data_dictionary.yaml`](../../schemas/data_dictionary.yaml)。
 
 [API 接口开发清单](api-development-checklist.md)把当前 29 个 OpenAPI operation 映射到本索引中的 workspace、event、replan、schedule 和 export carrier，并明确尚无公开端点的能力。
+
+## TASK-P8-02 additive `2.10.0` release
+
+Global current schema metadata现为`2.10.0`。TASK-P8-02新增三个互不替换的strict JSON document和一个独立错误注册表，全部只形成carrier/validation evidence，不形成HTTP、数据库、Worker或Extension SDK实现。
+
+| Document | Schema / stable identity | Compatibility and owner boundary |
+|---|---|---|
+| CanonicalIngressRequest v1 | [`canonical-ingress-request.schema.json`](../../schemas/json/canonical-ingress-request.schema.json) / `urn:plantnexus:aps:schema:canonical-ingress-request:v1` | exact `CREATE_PLANNING_RUN` + embedded Import v2；client Extension selection不可表示；consumer属P8-03/07 |
+| CanonicalIngressResult v1 | [`canonical-ingress-result.schema.json`](../../schemas/json/canonical-ingress-result.schema.json) / `urn:plantnexus:aps:schema:canonical-ingress-result:v1` | accepted/rejected discriminated result；Runtime/Extension set仅为server-owned reference；行为属P8-03～07 |
+| PlanningRun v1 | [`planning-run.schema.json`](../../schemas/json/planning-run.schema.json) / `urn:plantnexus:aps:schema:planning-run:v1` | 对齐`state-machines.v1`的16 states/31 pairs、terminal/actions与lineage；orchestration属P8-04/05 |
+| Headless error registry v1 | [`headless-error-code-registry.v1.yaml`](../../schemas/rules/headless-error-code-registry.v1.yaml) / `HEADLESS_RUNTIME` | exact category/code/stage/retryability/action；HTTP mapping属P8-07，product registry v2不变 |
+
+五份positive sample固定canonical request、accepted/rejected result以及CREATED/COMPLETED Run revision；十份negative vector固定unknown/version/type、plane/scope、authority、reference、idempotency、fingerprint和state-pair拒绝。样例均为明确synthetic shape，`0.0.0-p8-contract-sample`不代表Runtime/SDK/Kit release。启动98份schema目录artifact中只有current data dictionary受控更新，其余97份摘要保持`sha256:3c5ff508ec857f010c9f1211623cbceb44ec9ab2dcf45424566a921aa9a7f3dd`。
 
 ## TASK-P6-02 additive `2.9.0` release
 
@@ -62,10 +75,14 @@ ADR-0013～0015现已accepted；TASK-P4-02的启动输入明确为ExecutionEvent
 
 独立Audit确认schema set `2.7.0`、P2 retained bytes、P3 `2.6.0` workspace carriers、P3 export v2 carriers、samples、strict/offline refs与canonical fingerprints全部回归PASS；本Task没有Schema新增、删除、版本或字节变化。
 
-当前 schema set 为additive `2.9.0`。`CONTRACT_V1/V2/V3`表示机器可验证的合同已形成，不表示ScheduleVersion/ExportJob状态持久化、审批、发布或Production业务动作已完成。此前所有set artifact均保留，未被原地覆盖。
+当前 schema set 为additive `2.10.0`。`CONTRACT_V1/V2/V3`表示机器可验证的合同已形成，不表示canonical ingress、PlanningRun、ScheduleVersion/ExportJob状态持久化、审批、发布或Production业务动作已完成。此前所有set artifact均保留，未被原地覆盖。
 
 | Schema | 目标路径 | 首个 Task | 状态 |
 |---|---|---|---|
+| Canonical ingress request v1 | [`/schemas/json/canonical-ingress-request.schema.json`](../../schemas/json/canonical-ingress-request.schema.json) | TASK-P8-02 | CONTRACT_V1；canonical-only request/authority/idempotency carrier；API/persistence NOT_FORMED |
+| Canonical ingress result v1 | [`/schemas/json/canonical-ingress-result.schema.json`](../../schemas/json/canonical-ingress-result.schema.json) | TASK-P8-02 | CONTRACT_V1；accepted/rejected + server resolution carrier；behavior NOT_FORMED |
+| PlanningRun v1 | [`/schemas/json/planning-run.schema.json`](../../schemas/json/planning-run.schema.json) | TASK-P8-02 | CONTRACT_V1；existing lifecycle/evidence projection；orchestration/worker NOT_FORMED |
+| Headless error registry v1 | [`/schemas/rules/headless-error-code-registry.v1.yaml`](../../schemas/rules/headless-error-code-registry.v1.yaml) | TASK-P8-02 | RULE_V1；HEADLESS_RUNTIME tuple形成；HTTP mapping NOT_FORMED |
 | Duration feature record v1 | [`/schemas/json/duration-feature-record.schema.json`](../../schemas/json/duration-feature-record.schema.json) | TASK-P6-02 | CONTRACT_V1；Simulation evidence only；dataset pipeline NOT_FORMED |
 | Duration model manifest v1 | [`/schemas/json/duration-model-manifest.schema.json`](../../schemas/json/duration-model-manifest.schema.json) | TASK-P6-02 | CONTRACT_V1；immutable lineage/no state；model NOT_FORMED |
 | Duration evaluation report v1 | [`/schemas/json/duration-evaluation-report.schema.json`](../../schemas/json/duration-evaluation-report.schema.json) | TASK-P6-02 | CONTRACT_V1；measurements only；Gate NOT_EVALUATED |

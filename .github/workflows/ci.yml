@@ -297,6 +297,12 @@ jobs:
           --root .
           --report build/validation/ci-p4-machine-contracts.json
 
+      - name: P8 canonical ingress and PlanningRun machine contract evidence
+        run: >-
+          uv run python scripts/p8_machine_contract_check.py
+          --root .
+          --report build/validation/ci-p8-machine-contracts.json
+
       - name: P6 duration prediction machine contract evidence
         run: >-
           uv run python scripts/p6_duration_contract_check.py
@@ -532,7 +538,27 @@ jobs:
             "${replay_root}/schemas/samples/duration-prediction.v1.fallback.synthetic.json" \
             "${replay_root}/schemas/samples/duration-prediction.v1.invalid-quantiles.invalid.json" \
             "${replay_root}/schemas/samples/duration-prediction.v1.mixed-version.invalid.json" \
-            "${replay_root}/schemas/samples/duration-prediction.v1.unknown-fallback.invalid.json"
+            "${replay_root}/schemas/samples/duration-prediction.v1.unknown-fallback.invalid.json" \
+            "${replay_root}/backend/tests/contract/test_p8_machine_contracts.py" \
+            "${replay_root}/schemas/json/canonical-ingress-request.schema.json" \
+            "${replay_root}/schemas/json/canonical-ingress-result.schema.json" \
+            "${replay_root}/schemas/json/planning-run.schema.json" \
+            "${replay_root}/schemas/rules/headless-error-code-registry.v1.yaml" \
+            "${replay_root}/schemas/samples/canonical-ingress-request.v1.synthetic.json" \
+            "${replay_root}/schemas/samples/canonical-ingress-result.v1.accepted.synthetic.json" \
+            "${replay_root}/schemas/samples/canonical-ingress-result.v1.rejected.synthetic.json" \
+            "${replay_root}/schemas/samples/canonical-ingress.v1.invalid-authority.synthetic.json" \
+            "${replay_root}/schemas/samples/canonical-ingress.v1.invalid-fingerprint.synthetic.json" \
+            "${replay_root}/schemas/samples/canonical-ingress.v1.invalid-idempotency.synthetic.json" \
+            "${replay_root}/schemas/samples/canonical-ingress.v1.invalid-plane.synthetic.json" \
+            "${replay_root}/schemas/samples/canonical-ingress.v1.invalid-reference.synthetic.json" \
+            "${replay_root}/schemas/samples/canonical-ingress.v1.invalid-scope.synthetic.json" \
+            "${replay_root}/schemas/samples/canonical-ingress.v1.invalid-type.synthetic.json" \
+            "${replay_root}/schemas/samples/canonical-ingress.v1.invalid-unknown-field.synthetic.json" \
+            "${replay_root}/schemas/samples/canonical-ingress.v1.invalid-version.synthetic.json" \
+            "${replay_root}/schemas/samples/planning-run.v1.completed.synthetic.json" \
+            "${replay_root}/schemas/samples/planning-run.v1.created.synthetic.json" \
+            "${replay_root}/schemas/samples/planning-run.v1.invalid-transition.synthetic.json"
           git -C "${replay_root}" restore \
             --source d0a83c58cb4a2d4afa76e8c8cff08441574e2e30 \
             -- backend/tests/integration/test_ci_contract.py

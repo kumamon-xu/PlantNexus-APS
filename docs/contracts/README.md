@@ -13,9 +13,19 @@ last_reviewed: 2026-09-04
 
 ## P8 Headless contract plan
 
-ADR-0017已固定canonical JSON为唯一外部产品输入，宿主负责第三方采集/映射/展示，APS负责验证、计划、异步运行和结果合同；宿主与可选Frontend使用同一API。[APS Headless平台集成与数据权威合同](headless-platform-integration.md)现由TASK-P8-01形成人类语义基线，明确责任矩阵、identity/scope、authority、idempotency、lineage、版本、错误、双交付和default-deny。TASK-P8-02才允许把这些语义发布为additive machine carrier；schema set仍为`2.9.0`且全部既有Schema bytes不变。
+ADR-0017已固定canonical JSON为唯一外部产品输入，宿主负责第三方采集/映射/展示，APS负责验证、计划、异步运行和结果合同；宿主与可选Frontend使用同一API。[APS Headless平台集成与数据权威合同](headless-platform-integration.md)由TASK-P8-01形成人类语义基线。TASK-P8-02现以additive schema set `2.10.0`发布`canonical-ingress-request.v1`、`canonical-ingress-result.v1`、`planning-run.v1`和`headless-error-code-registry.v1`，固定identity/scope、authority/mapping、idempotency、lineage、server-owned Runtime/Extension-set resolution、既有PlanningRun状态及错误tuple；全部历史document/URN继续原义保留。
 
-ADR-0018进一步固定Extension SDK是Runtime内部SPI而非外部API。TASK-P8-12将来形成Constraint、Objective、Planning Rule、Validation Rule、Replan Policy、Plugin Registry及Developer Kit compatibility的人类/机器合同；当前没有SDK package、manifest Schema、Registry或Kit artifact。Enterprise Extension特有数据仍须进入批准的namespaced/versioned canonical carrier，不能接受vendor payload或创建私有route。
+ADR-0018进一步固定Extension SDK是Runtime内部SPI而非外部API。P8-02的Runtime resolution只是服务端identity/fingerprint carrier；`0.0.0-p8-contract-sample`不构成发布。TASK-P8-12将来形成Constraint、Objective、Planning Rule、Validation Rule、Replan Policy、Plugin Registry及Developer Kit compatibility的人类/机器合同；当前没有SDK package、manifest Schema、Registry或Kit artifact。Enterprise Extension特有数据仍须进入批准的namespaced/versioned canonical carrier，不能接受vendor payload或创建私有route。
+
+## TASK-P8-02 machine contracts
+
+- [Headless平台集成与数据权威合同](headless-platform-integration.md)：三份carrier的字段所有权、指纹、scope、authority、Runtime resolution和失败边界。
+- [Schema索引](schema-index.md)：set `2.10.0`的stable URN、兼容分类、样例与历史bytes preservation。
+- [Schema版本规则](schema-versioning.md)：无consumer回滚、未来version/deprecation规则及Runtime/SDK/Kit独立版本维度。
+- [数据字段中文名称字典](data-field-dictionary.md)：P8英文wire key的中文阅读映射，不翻译或重命名机器字段。
+- [Planning Workspace API合同](planning-workspace-api.md)：P8 PlanningRun carrier与既有P3/P4 HTTP surface隔离；P8-07前没有新route绑定。
+
+机器入口为[`canonical-ingress-request.schema.json`](../../schemas/json/canonical-ingress-request.schema.json)、[`canonical-ingress-result.schema.json`](../../schemas/json/canonical-ingress-result.schema.json)、[`planning-run.schema.json`](../../schemas/json/planning-run.schema.json)和[`headless-error-code-registry.v1.yaml`](../../schemas/rules/headless-error-code-registry.v1.yaml)。五份positive/十份negative synthetic sample与`p8-machine-contract-report.v1`只证明strict/offline/round-trip/fingerprint/state/error兼容，不证明API、DB、Worker、Extension SDK或Production readiness。
 
 现阶段请以[Headless平台集成合同](headless-platform-integration.md)、[Headless产品化架构](../architecture/headless-productization-and-platform-integration.md)、[Extension SDK/Runtime/Developer Kit架构](../architecture/extension-sdk-runtime-and-developer-kit.md)、[API清单](api-development-checklist.md)和[Import/Normalization合同](import-and-normalization.md)区分已冻结的人类语义、目标与当前实现事实。不得从合同或P8计划推断canonical submission、PlanningRun创建、Extension装载、Developer Kit或Production identity endpoint已经存在。
 

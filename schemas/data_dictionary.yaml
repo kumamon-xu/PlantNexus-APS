@@ -1,5 +1,5 @@
-schema_set_version: 2.9.0
-status: p4_dynamic_replanning_machine_contracts
+schema_set_version: 2.10.0
+status: p8_headless_machine_contracts
 spec_version: 0.3.0
 rules:
   unknown_root_fields: reject
@@ -12,7 +12,8 @@ rules:
   unit_conversion_registry: schemas/rules/unit-conversion-registry.v1.yaml
   data_quality_rule_version: data-quality-rules.v1
   error_registry: schemas/rules/error-code-registry.v2.yaml
-  schema_set_compatibility: additive_2_8_preserves_all_2_7_and_prior_schema_sample_bytes_urns_and_document_versions_while_adding_strict_p4_simulation_replan_carriers
+  headless_error_registry: schemas/rules/headless-error-code-registry.v1.yaml
+  schema_set_compatibility: additive_2_10_preserves_all_2_9_and_prior_published_schema_sample_rule_bytes_urns_and_document_versions_while_adding_strict_p8_canonical_ingress_and_planning_run_carriers
 schemas:
   canonical-records.v1:
     path: schemas/json/canonical-records.v1.schema.json
@@ -378,6 +379,50 @@ schemas:
     p6_boundary: Simulation-only evidence; no routing, resource compatibility, hard constraint, state, weight, runtime, or Production mutation
     simulation_assumptions: [SIM-ASSUMPTION-021]
     production_open: [OPEN-010, OPEN-011, OPEN-014, OPEN-015]
+  canonical-ingress-request.v1:
+    path: schemas/json/canonical-ingress-request.schema.json
+    schema_set_version: 2.10.0
+    operation: CREATE_PLANNING_RUN
+    payload: exact embedded import-package.v2 canonical JSON only
+    identity: request fingerprint excludes request/correlation/idempotency transport identifiers and binds exact operation, scope, authority, mapping, policy, limits, payload fingerprint, and payload
+    scope: requested tenant/factory/planning scope is not authorization; Runtime derives and returns effective scope
+    authority: every declared source system/version requires an explicit authority binding and mapping provenance
+    extension_boundary: no plugin, module, class, artifact path, executable content, or client-selected Extension set
+    compatibility: additive set-level release; exact v1 consumer only, unknown fields and versions reject
+    p8_boundary: contract carrier only; no parser, API, database, worker, identity provider, or Runtime loader
+    simulation_assumptions: [SIM-ASSUMPTION-001, SIM-ASSUMPTION-004]
+    production_open: [OPEN-002, OPEN-010, OPEN-011, OPEN-012, OPEN-014, OPEN-015]
+  canonical-ingress-result.v1:
+    path: schemas/json/canonical-ingress-result.schema.json
+    schema_set_version: 2.10.0
+    dispositions: [ACCEPTED, REJECTED]
+    accepted: exact payload, effective scope, idempotency, PlanningRun CREATED, audit, and server-owned Runtime/Extension-set resolution references
+    rejected: stable headless error with side_effects NONE and no accepted resource reference
+    runtime_resolution: server-owned Runtime/Core/SDK/Registry/Extension-set/Developer-Kit/Solver/Validator identity and fingerprint carrier
+    compatibility: additive and non-interchangeable with request or PlanningRun documents
+    p8_boundary: response carrier only; HTTP mapping remains TASK-P8-07 and detailed Extension manifest remains TASK-P8-12/13
+    production_open: [OPEN-002, OPEN-010, OPEN-011, OPEN-012, OPEN-014, OPEN-015]
+  planning-run.v1:
+    path: schemas/json/planning-run.schema.json
+    schema_set_version: 2.10.0
+    state_authority: schemas/rules/state-machines.v1.yaml unchanged
+    states: [CREATED, INGESTING, VALIDATING, SNAPSHOTTED, BUILDING, SOLVING, SOLVED, VERIFYING, COMPLETED, DATA_REJECTED, MODEL_INVALID, INFEASIBLE, NO_SOLUTION_WITHIN_LIMIT, VALIDATION_FAILED, CANCELLED, FAILED]
+    terminal_states: [COMPLETED, DATA_REJECTED, MODEL_INVALID, INFEASIBLE, NO_SOLUTION_WITHIN_LIMIT, VALIDATION_FAILED, CANCELLED, FAILED]
+    allowed_actions: non-terminal exact [READ, CANCEL]; terminal exact [READ]
+    lineage: ingress request/payload/idempotency/effective scope, policy/limits, Runtime/Extension-set resolution, attempt, staged immutable artifacts, last transition, and audit references
+    compatibility: additive state carrier; does not add state, pair, retry self-transition, command behavior, or persistence
+    p8_boundary: lifecycle evidence only; orchestration, persistence and worker remain TASK-P8-04/05
+    simulation_assumptions: [SIM-ASSUMPTION-001, SIM-ASSUMPTION-004]
+    production_open: [OPEN-002, OPEN-010, OPEN-011, OPEN-012, OPEN-014, OPEN-015]
+  headless-error-code-registry.v1:
+    path: schemas/rules/headless-error-code-registry.v1.yaml
+    schema_set_version: 2.10.0
+    namespace: HEADLESS_RUNTIME
+    tuple: category, code, stage, retryability, and action are exact and unknown/duplicate values reject
+    compatibility: additive independent namespace; error-code-registry.v2 and error.v1/v2/v3 remain unchanged
+    http_mapping: TASK-P8-07
+    p8_boundary: stable contract/lifecycle rejection taxonomy only; no HTTP status or implementation
+    production_open: [OPEN-002, OPEN-010, OPEN-011, OPEN-012, OPEN-014, OPEN-015]
   error.v1:
     path: schemas/json/error.schema.json
     p0_boundary: category and envelope only; concrete code registry belongs to TASK-P0-04

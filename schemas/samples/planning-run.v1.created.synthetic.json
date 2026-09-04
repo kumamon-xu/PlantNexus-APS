@@ -1,0 +1,98 @@
+{
+  "planning_run_version": "planning-run.v1",
+  "schema_set_version": "2.10.0",
+  "canonicalization_version": "canonical-json.v1",
+  "transition_registry_version": "state-machines.v1",
+  "error_registry_version": "headless-error-code-registry.v1",
+  "planning_run_id": "PLANNING-RUN-P8-SYNTHETIC-001",
+  "revision": 1,
+  "state": "CREATED",
+  "terminal": false,
+  "allowed_actions": ["READ", "CANCEL"],
+  "effective_scope": {
+    "tenant_id": "TENANT-P8-SYNTHETIC",
+    "factory_id": "FACTORY-P8-SYNTHETIC-001",
+    "planning_scope_id": "PLANNING-P8-SYNTHETIC-001",
+    "data_plane": "SIMULATION",
+    "environment": "TEST",
+    "scope_fingerprint": "sha256:2ffa5f1522e4d718fad8c72e4ab269bbe5a31e3990a612c6a6ec3b5fae2b1d9b"
+  },
+  "ingress": {
+    "request_id": "REQUEST-P8-SYNTHETIC-001",
+    "request_fingerprint": "sha256:8a279448706027722b483045571fcdf8948f009902d17a37c4f043bd0a836f05",
+    "ingress_id": "INGRESS-P8-SYNTHETIC-001",
+    "payload": {
+      "document_version": "import-package.v2",
+      "artifact_id": "IMPORT-P8-SYNTHETIC-001",
+      "fingerprint": "sha256:7dcfcf9542604d429606c7dc6927c7d8f10ceb3b98f2c9ae526632c71835f4f2"
+    },
+    "idempotency_key_reference": "sha256:56154c07a7003affb7fc60f425fef190aa206758a2d00c3a9b04b669587b90c1",
+    "idempotency_scope_fingerprint": "sha256:09194d9db9d2c7f5f16980301e0477a9471adc8188320a4c9ea57ef05cfe6dd6"
+  },
+  "runtime_resolution": {
+    "runtime_resolution_version": "runtime-resolution.v1",
+    "runtime_version": "0.0.0-p8-contract-sample",
+    "runtime_artifact_fingerprint": "sha256:7777777777777777777777777777777777777777777777777777777777777777",
+    "core_version": "0.0.0-p8-contract-sample",
+    "core_artifact_fingerprint": "sha256:8888888888888888888888888888888888888888888888888888888888888888",
+    "extension_sdk_version": "0.0.0-p8-contract-sample",
+    "registry_protocol_version": "plugin-registry.v1",
+    "extension_set": {
+      "extension_set_id": "EXTENSION-SET-NONE-P8-SAMPLE",
+      "extension_set_fingerprint": "sha256:9999999999999999999999999999999999999999999999999999999999999999",
+      "configuration_fingerprint": "sha256:aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa"
+    },
+    "developer_kit_version": "0.0.0-p8-contract-sample",
+    "developer_kit_fingerprint": "sha256:bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb",
+    "solver_backend_id": "cp-sat-backend",
+    "solver_backend_version": "0.0.0-p8-contract-sample",
+    "validator_version": "0.0.0-p8-contract-sample",
+    "resolution_fingerprint": "sha256:c7f2418c88e82235e33b38f5199380675a2ab7a8c43324084a41a2ba472bc883"
+  },
+  "inputs": {
+    "planning_policy": {
+      "document_version": "planning-policy.v1",
+      "artifact_id": "POLICY-P8-SYNTHETIC-001",
+      "fingerprint": "sha256:3333333333333333333333333333333333333333333333333333333333333333"
+    },
+    "solve_limits": {
+      "document_version": "solve-limits.v1",
+      "artifact_id": "LIMITS-P8-SYNTHETIC-001",
+      "fingerprint": "sha256:4444444444444444444444444444444444444444444444444444444444444444"
+    }
+  },
+  "attempt": null,
+  "artifacts": {
+    "import_quality_report": null,
+    "snapshot": null,
+    "problem": null,
+    "planning_solution": null,
+    "solver_report": null,
+    "validation_report": null,
+    "schedule_version": null
+  },
+  "cancellation": null,
+  "error": null,
+  "last_transition": {
+    "transition_version": "planning-run-transition.v1",
+    "sequence": 0,
+    "from_state": null,
+    "to_state": "CREATED",
+    "occurred_at_utc": "2026-09-04T00:00:00Z",
+    "audit": {
+      "document_version": "audit-event.v1",
+      "artifact_id": "AUDIT-P8-RUN-CREATED-001",
+      "fingerprint": "sha256:cccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccc"
+    }
+  },
+  "audit_references": [
+    {
+      "document_version": "audit-event.v1",
+      "artifact_id": "AUDIT-P8-RUN-CREATED-001",
+      "fingerprint": "sha256:cccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccc"
+    }
+  ],
+  "created_at_utc": "2026-09-04T00:00:00Z",
+  "updated_at_utc": "2026-09-04T00:00:00Z",
+  "run_fingerprint": "sha256:ec30df6680a7a4d9c7d93eb3d93590591a3767caabb05a78dc3607bac052000b"
+}

@@ -6,10 +6,16 @@ spec_version: 0.3.0
 phase: cross-phase
 normative: true
 source_sections: [16, 38, 49, 62, 64, 95, 96]
-last_reviewed: 2026-09-01
+last_reviewed: 2026-09-04
 ---
 
 # 配置、环境与数据隔离
+
+## TASK-P8-02 machine-contract evidence isolation
+
+P8 contract checker是无网络、无数据库、无queue、无secret、无Runtime/Extension加载的pure offline检查；输入只来自tracked Schema、rule、synthetic sample、版本元数据及冻结的dependency projection。FULL validation在既有`full_validation` job中增加一个不可跳过的step，输出`build/validation/ci-p8-machine-contracts.json`并沿用既有`build/validation/*.json` artifact；不新增job、permission、环境变量、服务、cache、依赖或artifact通道。
+
+该step不运行canonical ingress consumer，也不产生业务state。P4 frozen replay显式移除20个post-frozen P8 Schema/sample/test路径，并由preflight和workflow contract逐条验证恰好一次；旧replay code、expected与恢复base不变。Provider报告仅含版本、计数、指纹、稳定错误码和边界声明，不含真实payload、身份、第三方数据或Extension代码。
 
 ## TASK-P6-08 monitoring and evidence isolation
 

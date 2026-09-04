@@ -1,0 +1,6 @@
+{
+  "negative_vector_version": "p8-contract-negative.v1",
+  "base_sample": "canonical-ingress-request.v1.synthetic.json",
+  "mutation": {"operation": "REPLACE", "pointer": "/canonical_ingress_request_version", "value": "canonical-ingress-request.v999"},
+  "expected_rejection": "UNKNOWN_CONTRACT_VERSION"
+}

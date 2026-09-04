@@ -3,13 +3,19 @@ doc_id: DOC-DOM-001
 title: APS 领域模型
 status: baseline
 spec_version: 0.3.0
-phase: P0-P6
+phase: P0-P8
 normative: true
 source_sections: [17, 18, 19, 20, 21, 22]
-last_reviewed: 2026-09-01
+last_reviewed: 2026-09-04
 ---
 
 # APS 领域模型
+
+## TASK-P8-02 PlanningRun carrier boundary
+
+`canonical-ingress-request.v1`和`canonical-ingress-result.v1`是跨系统value document，不是领域Aggregate、identity provider或repository。Requested scope与host authority只是待服务端验证的输入；accepted result中的effective scope、idempotency result和Runtime/Extension-set resolution才是服务端投影。拒绝结果不得创建PlanningRun或其他业务artifact。
+
+`planning-run.v1`把既有PlanningRun aggregate的read carrier机器化：identity/revision、16个已有state、31个已有transition、terminal、allowed actions、ingress/Policy/Limits、attempt、阶段artifact、error/cancellation和audit lineage。它不新增domain state、transition、entity或service，也不执行CAS/transaction。Task内对`backend/app/domain/**`与`backend/app/application/**`的变化仅同步current schema-set guard和旧历史清单排除项；任何PlanningRun行为仍由P8-04/05拥有。
 
 ## TASK-P6-02 duration evidence value boundary
 

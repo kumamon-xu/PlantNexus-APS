@@ -1,0 +1,6 @@
+{
+  "negative_vector_version": "p8-contract-negative.v1",
+  "base_sample": "canonical-ingress-request.v1.synthetic.json",
+  "mutation": {"operation": "REPLACE", "pointer": "/planning_inputs/planning_policy/fingerprint", "value": "not-a-fingerprint"},
+  "expected_rejection": "INVALID_REFERENCE"
+}

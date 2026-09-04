@@ -99,6 +99,7 @@ from scripts.p6_duration_dataset_check import main as p6_duration_dataset_main
 from scripts.p6_duration_evaluation_check import main as p6_duration_evaluation_main
 from scripts.p6_duration_model_check import main as p6_duration_model_main
 from scripts.p6_duration_runtime_check import main as p6_duration_runtime_main
+from scripts.p8_machine_contract_check import main as p8_machine_contract_main
 
 ROOT = Path(__file__).resolve().parents[3]
 
@@ -459,7 +460,7 @@ def test_ci_profile_routing_is_mutually_exclusive_and_fail_closed() -> None:
     assert "Build package" in full_text
     assert len(preflight["steps"]) == 4
     assert len(backend["steps"]) == 8
-    assert len(full["steps"]) == 70
+    assert len(full["steps"]) == 71
 
     assert 'test "${PLANTNEXUS_CLASSIFY_RESULT}" = "success"' in final_run
     assert 'test "${PLANTNEXUS_PREFLIGHT_RESULT}" = "success"' in final_run
@@ -564,6 +565,65 @@ def test_ci_p6_duration_contract_is_required_and_machine_checkable(
         "schema_rejections": 20,
         "semantic_rejections": 7,
         "tamper_rejections": 5,
+    }
+    assert report["issues"] == []
+
+
+def test_ci_p8_machine_contract_is_required_and_machine_checkable(
+    tmp_path: Path,
+) -> None:
+    workflow = (ROOT / ".github" / "workflows" / "ci.yml").read_text(encoding="utf-8")
+    normalized = " ".join(workflow.split())
+    assert (
+        "name: P8 canonical ingress and PlanningRun machine contract evidence "
+        "run: >- uv run python scripts/p8_machine_contract_check.py --root . "
+        "--report build/validation/ci-p8-machine-contracts.json"
+    ) in normalized
+    assert "continue-on-error" not in workflow
+    for relative_path in (
+        "backend/tests/contract/test_p8_machine_contracts.py",
+        "schemas/json/canonical-ingress-request.schema.json",
+        "schemas/json/canonical-ingress-result.schema.json",
+        "schemas/json/planning-run.schema.json",
+        "schemas/rules/headless-error-code-registry.v1.yaml",
+        "schemas/samples/canonical-ingress-request.v1.synthetic.json",
+        "schemas/samples/canonical-ingress-result.v1.accepted.synthetic.json",
+        "schemas/samples/canonical-ingress-result.v1.rejected.synthetic.json",
+        "schemas/samples/canonical-ingress.v1.invalid-authority.synthetic.json",
+        "schemas/samples/canonical-ingress.v1.invalid-fingerprint.synthetic.json",
+        "schemas/samples/canonical-ingress.v1.invalid-idempotency.synthetic.json",
+        "schemas/samples/canonical-ingress.v1.invalid-plane.synthetic.json",
+        "schemas/samples/canonical-ingress.v1.invalid-reference.synthetic.json",
+        "schemas/samples/canonical-ingress.v1.invalid-scope.synthetic.json",
+        "schemas/samples/canonical-ingress.v1.invalid-type.synthetic.json",
+        "schemas/samples/canonical-ingress.v1.invalid-unknown-field.synthetic.json",
+        "schemas/samples/canonical-ingress.v1.invalid-version.synthetic.json",
+        "schemas/samples/planning-run.v1.completed.synthetic.json",
+        "schemas/samples/planning-run.v1.created.synthetic.json",
+        "schemas/samples/planning-run.v1.invalid-transition.synthetic.json",
+    ):
+        assert workflow.count(f'"${{replay_root}}/{relative_path}"') == 1
+
+    report_path = tmp_path / "p8-machine-contracts.json"
+    assert (
+        p8_machine_contract_main(
+            ["--root", str(ROOT), "--report", str(report_path)]
+        )
+        == 0
+    )
+    report = json.loads(report_path.read_text(encoding="utf-8"))
+    assert report["report_version"] == "p8-machine-contract-report.v1"
+    assert report["status"] == "PASS"
+    assert report["task_id"] == "TASK-P8-02"
+    assert report["diff_base"] == "43ff13429b2bb79854f976c0a1f5a72b1b069607"
+    assert report["schema_set_version"] == "2.10.0"
+    assert report["check_count"] == 6
+    assert report["counts"] == {
+        "immutable_historical_artifacts": 97,
+        "negative_samples": 10,
+        "new_rule_registries": 1,
+        "new_schemas": 3,
+        "positive_samples": 5,
     }
     assert report["issues"] == []
 
@@ -1748,7 +1808,7 @@ def test_ci_planning_problem_contract_report_is_machine_checkable(
     assert report["report_version"] == "planning-problem-contract-report.v1"
     assert report["status"] == "PASS"
     assert report["task_id"] == "TASK-P2-01"
-    assert report["schema_set_version"] == "2.9.0"
+    assert report["schema_set_version"] == "2.10.0"
     assert report["check_count"] == 4
     assert {check["name"] for check in report["checks"]} == {
         "v1-byte-preservation",
@@ -1773,7 +1833,7 @@ def test_ci_planning_machine_contract_report_is_machine_checkable(
     assert report["report_version"] == "planning-machine-contract-report.v1"
     assert report["status"] == "PASS"
     assert report["task_id"] == "TASK-P2-02"
-    assert report["schema_set_version"] == "2.9.0"
+    assert report["schema_set_version"] == "2.10.0"
     assert report["check_count"] == 5
     assert {check["name"] for check in report["checks"]} == {
         "fixed-schema-and-sample-artifacts",

@@ -281,6 +281,62 @@ last_reviewed: 2026-09-02
 | `environment` | 运行环境 | DEVELOPMENT/TEST/BENCHMARK/PRODUCTION 等合同值 |
 | `production_binding` | 生产绑定标志 | Simulation artifact 必须为 `false` |
 
+## P8 Headless machine carrier fields
+
+以下字段由TASK-P8-02的set `2.10.0`新增。中文名称只用于阅读；英文key、required/nullable、enum与条件约束仍以对应Schema为唯一机器权威。
+
+### CanonicalIngressRequest v1 — 标准入口请求
+
+| Field | 中文名称 | 关键约束 |
+|---|---|---|
+| `canonical_ingress_request_version` | 标准入口请求版本 | 固定`canonical-ingress-request.v1` |
+| `ingress_policy_version` | 入口策略版本 | 固定`canonical-ingress-policy.v1`，不代表HTTP实现 |
+| `operation` | 操作意图 | 仅`CREATE_PLANNING_RUN` |
+| `request_id` | 请求标识 | 仅关联，不进入业务request fingerprint |
+| `correlation_id` | 关联追踪标识 | 仅追踪，不是authority |
+| `idempotency_key` | 幂等键 | 16～128安全字符；result/run只扩散raw UTF-8 bytes的SHA-256 reference |
+| `request_fingerprint` | 请求业务指纹 | 排除request/correlation/raw key/self，覆盖全部业务与authority内容 |
+| `requested_scope` | 请求范围 | tenant/factory/planning/data-plane/environment；必须由服务端再求effective scope |
+| `source_authority` | 来源权威与映射证明 | 每个record的collection/source/version须命中唯一binding；每个source/version只有一个mapping provenance，歧义或重复claim拒绝 |
+| `planning_inputs` | 计划策略输入 | exact PlanningPolicy v1/v2及SolveLimits v1 artifact reference |
+| `payload_fingerprint` | 标准载荷指纹 | `canonical-json.v1`下完整Import v2 payload指纹 |
+| `payload` | 标准载荷 | 只能是strict `import-package.v2`，不能是vendor/raw/file envelope |
+
+### CanonicalIngressResult v1 — 标准入口结果
+
+| Field | 中文名称 | 关键约束 |
+|---|---|---|
+| `disposition` | 处理结果 | `ACCEPTED`或`REJECTED` |
+| `side_effects` | 副作用结论 | accepted=`PLANNING_RUN_CREATED_OR_REPLAYED`；rejected=`NONE` |
+| `idempotency` | 幂等结果 | CREATED/REPLAYED/CONFLICT/NOT_RECORDED；key reference可由raw key复核，server-context scope fingerprint对外opaque并与run逐字绑定 |
+| `effective_scope` | 服务端有效范围 | accepted必填object；拒绝时可为null以避免泄漏；指纹为排除自身后的完整strict object SHA-256，业务字段不得扩大requested scope |
+| `accepted` | 接受结果 | ingress/payload、Runtime resolution、CREATED PlanningRun和audit引用；拒绝时null |
+| `rejection` | 拒绝错误 | strict `headless-error.v1`；接受时null |
+| `runtime_resolution` | 运行组合解析 | 仅服务端写入Runtime/Core/SDK/Registry/Extension-set/Kit/Solver/Validator identity与fingerprint |
+| `result_fingerprint` | 结果指纹 | 除自身外的完整result canonical projection |
+
+### PlanningRun v1 — 计划运行生命周期
+
+| Field | 中文名称 | 关键约束 |
+|---|---|---|
+| `planning_run_id` / `revision` | 计划运行标识 / 修订号 | revision从1开始且等于`last_transition.sequence + 1`；carrier是权威revision read model，不是DB row |
+| `state` / `terminal` | 当前状态 / 是否终态 | 精确复用`state-machines.v1`；两者必须一致 |
+| `allowed_actions` | 允许动作投影 | 非终态固定`READ,CANCEL`，终态固定`READ`；仍不替代authorization |
+| `effective_scope` | 有效范围 | 与入口接受结果相同的server-owned scope/fingerprint |
+| `ingress` | 入口lineage | 与request/result逐字绑定request、payload、ingress、idempotency key/scope指纹 |
+| `runtime_resolution` | 运行组合解析 | API进程、Worker和attempt必须绑定同一resolution fingerprint |
+| `inputs` | 不可变计划输入 | 与入口请求逐字一致的PlanningPolicy与SolveLimits引用 |
+| `attempt` | 求解尝试证据 | BUILDING以后按状态需要；绑定同一Runtime resolution |
+| `artifacts` | 阶段产物 | Quality→Snapshot→Problem→Solution/SolverReport→Validation→ScheduleVersion的nullable前缀 |
+| `last_transition` | 最近状态转换 | from/to必须存在于既有31个PlanningRun pair；CREATED使用sequence 0/from null；时间必须等于`updated_at_utc` |
+| `cancellation` / `error` | 取消 / 失败证据 | 仅相应终态允许；error tuple命中P8错误注册表 |
+| `audit_references` | 审计引用集合 | 至少包含最近transition audit；存在cancellation时也必须包含其audit |
+| `run_fingerprint` | 运行修订指纹 | 除自身外的完整revision canonical projection |
+
+### HeadlessError v1 — Headless错误
+
+`namespace`固定为`HEADLESS_RUNTIME`，`registry_version`固定为`headless-error-code-registry.v1`。`category`、`code`、`stage`、`retryability`与`action`是注册表中的不可拆分tuple；`message`、`pointer`、`entity_reference`与`expected_contract`只能保存sanitized诊断，不能包含credential、payload全文、SQL、stack或绝对artifact path。HTTP状态码不在本字段合同中，由TASK-P8-07另行映射。
+
 ## 维护方式
 
 字段变化必须遵循以下顺序：

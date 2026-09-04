@@ -1,0 +1,271 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "urn:plantnexus:aps:schema:canonical-ingress-result:v1",
+  "title": "PlantNexus APS Canonical Ingress Result v1",
+  "description": "Server-owned acceptance or zero-side-effect rejection result. HTTP status mapping is outside this document and belongs to TASK-P8-07.",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "canonical_ingress_result_version",
+    "schema_set_version",
+    "canonicalization_version",
+    "result_id",
+    "request_id",
+    "correlation_id",
+    "request_fingerprint",
+    "disposition",
+    "side_effects",
+    "idempotency",
+    "effective_scope",
+    "accepted",
+    "rejection",
+    "occurred_at_utc",
+    "result_fingerprint"
+  ],
+  "properties": {
+    "canonical_ingress_result_version": {"const": "canonical-ingress-result.v1"},
+    "schema_set_version": {"const": "2.10.0"},
+    "canonicalization_version": {"const": "canonical-json.v1"},
+    "result_id": {"$ref": "#/$defs/canonicalId"},
+    "request_id": {"$ref": "#/$defs/canonicalId"},
+    "correlation_id": {"$ref": "#/$defs/canonicalId"},
+    "request_fingerprint": {"$ref": "#/$defs/sha256Fingerprint"},
+    "disposition": {"enum": ["ACCEPTED", "REJECTED"]},
+    "side_effects": {"enum": ["PLANNING_RUN_CREATED_OR_REPLAYED", "NONE"]},
+    "idempotency": {"$ref": "#/$defs/idempotencyResult"},
+    "effective_scope": {
+      "oneOf": [
+        {"type": "null"},
+        {"$ref": "#/$defs/effectiveScope"}
+      ]
+    },
+    "accepted": {
+      "oneOf": [
+        {"type": "null"},
+        {"$ref": "#/$defs/acceptedResult"}
+      ]
+    },
+    "rejection": {
+      "oneOf": [
+        {"type": "null"},
+        {"$ref": "#/$defs/headlessError"}
+      ]
+    },
+    "occurred_at_utc": {"$ref": "#/$defs/utcInstant"},
+    "result_fingerprint": {"$ref": "#/$defs/sha256Fingerprint"}
+  },
+  "allOf": [
+    {
+      "if": {"properties": {"disposition": {"const": "ACCEPTED"}}, "required": ["disposition"]},
+      "then": {
+        "properties": {
+          "side_effects": {"const": "PLANNING_RUN_CREATED_OR_REPLAYED"},
+          "idempotency": {"properties": {"outcome": {"enum": ["CREATED", "REPLAYED"]}}},
+          "effective_scope": {"$ref": "#/$defs/effectiveScope"},
+          "accepted": {"$ref": "#/$defs/acceptedResult"},
+          "rejection": {"type": "null"}
+        }
+      }
+    },
+    {
+      "if": {"properties": {"disposition": {"const": "REJECTED"}}, "required": ["disposition"]},
+      "then": {
+        "properties": {
+          "side_effects": {"const": "NONE"},
+          "idempotency": {"properties": {"outcome": {"enum": ["CONFLICT", "NOT_RECORDED"]}}},
+          "accepted": {"type": "null"},
+          "rejection": {"$ref": "#/$defs/headlessError"}
+        }
+      }
+    }
+  ],
+  "$defs": {
+    "canonicalId": {
+      "type": "string",
+      "minLength": 1,
+      "maxLength": 256,
+      "pattern": "^[^\\s\\u0000-\\u001F\\u007F]+$"
+    },
+    "semanticVersion": {
+      "type": "string",
+      "pattern": "^(0|[1-9][0-9]*)\\.(0|[1-9][0-9]*)\\.(0|[1-9][0-9]*)(?:-[0-9A-Za-z-]+(?:\\.[0-9A-Za-z-]+)*)?(?:\\+[0-9A-Za-z-]+(?:\\.[0-9A-Za-z-]+)*)?$"
+    },
+    "sha256Fingerprint": {"type": "string", "pattern": "^sha256:[0-9a-f]{64}$"},
+    "utcInstant": {"type": "string", "format": "date-time", "pattern": "Z$"},
+    "effectiveScope": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["tenant_id", "factory_id", "planning_scope_id", "data_plane", "environment", "scope_fingerprint"],
+      "properties": {
+        "tenant_id": {"$ref": "#/$defs/canonicalId"},
+        "factory_id": {"$ref": "#/$defs/canonicalId"},
+        "planning_scope_id": {"$ref": "#/$defs/canonicalId"},
+        "data_plane": {"enum": ["SIMULATION", "PRODUCTION"]},
+        "environment": {"enum": ["DEVELOPMENT", "TEST", "BENCHMARK", "PRODUCTION"]},
+        "scope_fingerprint": {"$ref": "#/$defs/sha256Fingerprint"}
+      },
+      "allOf": [
+        {
+          "if": {"properties": {"data_plane": {"const": "SIMULATION"}}, "required": ["data_plane"]},
+          "then": {"properties": {"environment": {"enum": ["DEVELOPMENT", "TEST", "BENCHMARK"]}}}
+        },
+        {
+          "if": {"properties": {"data_plane": {"const": "PRODUCTION"}}, "required": ["data_plane"]},
+          "then": {"properties": {"environment": {"const": "PRODUCTION"}}}
+        }
+      ]
+    },
+    "idempotencyResult": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["outcome", "key_reference", "scope_fingerprint"],
+      "properties": {
+        "outcome": {"enum": ["CREATED", "REPLAYED", "CONFLICT", "NOT_RECORDED"]},
+        "key_reference": {
+          "oneOf": [
+            {"type": "null"},
+            {"$ref": "#/$defs/sha256Fingerprint"}
+          ]
+        },
+        "scope_fingerprint": {
+          "oneOf": [
+            {"type": "null"},
+            {"$ref": "#/$defs/sha256Fingerprint"}
+          ]
+        }
+      },
+      "allOf": [
+        {
+          "if": {"properties": {"outcome": {"const": "NOT_RECORDED"}}, "required": ["outcome"]},
+          "then": {"properties": {"key_reference": {"type": "null"}, "scope_fingerprint": {"type": "null"}}},
+          "else": {"properties": {"key_reference": {"$ref": "#/$defs/sha256Fingerprint"}, "scope_fingerprint": {"$ref": "#/$defs/sha256Fingerprint"}}}
+        }
+      ]
+    },
+    "artifactReference": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["document_version", "artifact_id", "fingerprint"],
+      "properties": {
+        "document_version": {"type": "string", "minLength": 1, "maxLength": 128, "pattern": "^[A-Za-z0-9._-]+$"},
+        "artifact_id": {"$ref": "#/$defs/canonicalId"},
+        "fingerprint": {"$ref": "#/$defs/sha256Fingerprint"}
+      }
+    },
+    "extensionSetReference": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["extension_set_id", "extension_set_fingerprint", "configuration_fingerprint"],
+      "properties": {
+        "extension_set_id": {"$ref": "#/$defs/canonicalId"},
+        "extension_set_fingerprint": {"$ref": "#/$defs/sha256Fingerprint"},
+        "configuration_fingerprint": {"$ref": "#/$defs/sha256Fingerprint"}
+      }
+    },
+    "runtimeResolution": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "runtime_resolution_version",
+        "runtime_version",
+        "runtime_artifact_fingerprint",
+        "core_version",
+        "core_artifact_fingerprint",
+        "extension_sdk_version",
+        "registry_protocol_version",
+        "extension_set",
+        "developer_kit_version",
+        "developer_kit_fingerprint",
+        "solver_backend_id",
+        "solver_backend_version",
+        "validator_version",
+        "resolution_fingerprint"
+      ],
+      "properties": {
+        "runtime_resolution_version": {"const": "runtime-resolution.v1"},
+        "runtime_version": {"$ref": "#/$defs/semanticVersion"},
+        "runtime_artifact_fingerprint": {"$ref": "#/$defs/sha256Fingerprint"},
+        "core_version": {"$ref": "#/$defs/semanticVersion"},
+        "core_artifact_fingerprint": {"$ref": "#/$defs/sha256Fingerprint"},
+        "extension_sdk_version": {"$ref": "#/$defs/semanticVersion"},
+        "registry_protocol_version": {"type": "string", "pattern": "^plugin-registry\\.v[1-9][0-9]*$"},
+        "extension_set": {"$ref": "#/$defs/extensionSetReference"},
+        "developer_kit_version": {"$ref": "#/$defs/semanticVersion"},
+        "developer_kit_fingerprint": {"$ref": "#/$defs/sha256Fingerprint"},
+        "solver_backend_id": {"$ref": "#/$defs/canonicalId"},
+        "solver_backend_version": {"$ref": "#/$defs/semanticVersion"},
+        "validator_version": {"$ref": "#/$defs/semanticVersion"},
+        "resolution_fingerprint": {"$ref": "#/$defs/sha256Fingerprint"}
+      }
+    },
+    "planningRunReference": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["document_version", "planning_run_id", "revision", "state", "run_fingerprint"],
+      "properties": {
+        "document_version": {"const": "planning-run.v1"},
+        "planning_run_id": {"$ref": "#/$defs/canonicalId"},
+        "revision": {"const": 1},
+        "state": {"const": "CREATED"},
+        "run_fingerprint": {"$ref": "#/$defs/sha256Fingerprint"}
+      }
+    },
+    "acceptedResult": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["ingress_id", "payload", "runtime_resolution", "planning_run", "audit"],
+      "properties": {
+        "ingress_id": {"$ref": "#/$defs/canonicalId"},
+        "payload": {
+          "allOf": [
+            {"$ref": "#/$defs/artifactReference"},
+            {"properties": {"document_version": {"const": "import-package.v2"}}}
+          ]
+        },
+        "runtime_resolution": {"$ref": "#/$defs/runtimeResolution"},
+        "planning_run": {"$ref": "#/$defs/planningRunReference"},
+        "audit": {
+          "allOf": [
+            {"$ref": "#/$defs/artifactReference"},
+            {"properties": {"document_version": {"const": "audit-event.v1"}}}
+          ]
+        }
+      }
+    },
+    "headlessError": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["error_version", "namespace", "registry_version", "category", "code", "stage", "message", "pointer", "entity_reference", "expected_contract", "correlation_id", "retryability", "action"],
+      "properties": {
+        "error_version": {"const": "headless-error.v1"},
+        "namespace": {"const": "HEADLESS_RUNTIME"},
+        "registry_version": {"const": "headless-error-code-registry.v1"},
+        "category": {"enum": ["CONTRACT_ERROR", "SCOPE_ERROR", "AUTHORITY_ERROR", "CONFLICT", "DATA_ERROR", "MODEL_INVALID", "INFEASIBLE", "NO_SOLUTION_WITHIN_LIMIT", "VALIDATION_FAILED", "CANCELLED", "SYSTEM_ERROR"]},
+        "code": {"enum": ["MALFORMED_JSON", "DUPLICATE_JSON_KEY", "NON_FINITE_NUMBER", "UNSUPPORTED_MEDIA_TYPE", "PAYLOAD_LIMIT_EXCEEDED", "UNKNOWN_CONTRACT_VERSION", "CONTRACT_VIOLATION", "SCOPE_MISMATCH", "DATA_PLANE_MISMATCH", "AUTHORITY_CONFLICT", "LINEAGE_INVALID", "IDEMPOTENCY_CONFLICT", "INVALID_REFERENCE", "INVALID_STATE_TRANSITION", "RUNTIME_RESOLUTION_FAILED", "EXTENSION_SET_MISMATCH", "DATA_VALIDATION_FAILED", "MODEL_INVALID", "INFEASIBLE", "NO_SOLUTION_WITHIN_LIMIT", "SCHEDULE_VALIDATION_FAILED", "RUN_CANCELLED", "SYSTEM_ERROR"]},
+        "stage": {"enum": ["TRANSPORT", "CONTRACT", "AUTHORIZATION", "IDEMPOTENCY", "DATA_VALIDATION", "SNAPSHOT", "PROBLEM_BUILD", "RUNTIME_RESOLUTION", "SOLVER", "VALIDATION", "STATE", "SYSTEM"]},
+        "message": {"type": "string", "minLength": 1, "maxLength": 512, "pattern": "^[^\\u0000-\\u001F\\u007F]+$"},
+        "pointer": {"oneOf": [{"type": "null"}, {"type": "string", "maxLength": 512, "pattern": "^/"}]},
+        "entity_reference": {"oneOf": [{"type": "null"}, {"$ref": "#/$defs/canonicalId"}]},
+        "expected_contract": {"type": "string", "minLength": 1, "maxLength": 256},
+        "correlation_id": {"$ref": "#/$defs/canonicalId"},
+        "retryability": {"enum": ["NOT_RETRYABLE", "RETRY_SAME_REQUEST", "RETRY_AFTER_OPERATOR_ACTION"]},
+        "action": {"enum": ["FIX_REQUEST", "RETRY_SAME_IDEMPOTENCY_KEY", "CONTACT_OPERATOR", "READ_CURRENT_STATE", "NONE"]}
+      },
+      "allOf": [
+        {"oneOf": [
+          {"properties": {"category": {"const": "CONTRACT_ERROR"}, "code": {"enum": ["MALFORMED_JSON", "DUPLICATE_JSON_KEY", "NON_FINITE_NUMBER", "UNSUPPORTED_MEDIA_TYPE", "PAYLOAD_LIMIT_EXCEEDED", "UNKNOWN_CONTRACT_VERSION", "CONTRACT_VIOLATION"]}}, "required": ["category", "code"]},
+          {"properties": {"category": {"const": "SCOPE_ERROR"}, "code": {"enum": ["SCOPE_MISMATCH", "DATA_PLANE_MISMATCH"]}}, "required": ["category", "code"]},
+          {"properties": {"category": {"const": "AUTHORITY_ERROR"}, "code": {"enum": ["AUTHORITY_CONFLICT", "LINEAGE_INVALID"]}}, "required": ["category", "code"]},
+          {"properties": {"category": {"const": "CONFLICT"}, "code": {"const": "IDEMPOTENCY_CONFLICT"}}, "required": ["category", "code"]},
+          {"properties": {"category": {"const": "DATA_ERROR"}, "code": {"enum": ["INVALID_REFERENCE", "INVALID_STATE_TRANSITION", "DATA_VALIDATION_FAILED"]}}, "required": ["category", "code"]},
+          {"properties": {"category": {"const": "MODEL_INVALID"}, "code": {"const": "MODEL_INVALID"}}, "required": ["category", "code"]},
+          {"properties": {"category": {"const": "INFEASIBLE"}, "code": {"const": "INFEASIBLE"}}, "required": ["category", "code"]},
+          {"properties": {"category": {"const": "NO_SOLUTION_WITHIN_LIMIT"}, "code": {"const": "NO_SOLUTION_WITHIN_LIMIT"}}, "required": ["category", "code"]},
+          {"properties": {"category": {"const": "VALIDATION_FAILED"}, "code": {"const": "SCHEDULE_VALIDATION_FAILED"}}, "required": ["category", "code"]},
+          {"properties": {"category": {"const": "CANCELLED"}, "code": {"const": "RUN_CANCELLED"}}, "required": ["category", "code"]},
+          {"properties": {"category": {"const": "SYSTEM_ERROR"}, "code": {"enum": ["RUNTIME_RESOLUTION_FAILED", "EXTENSION_SET_MISMATCH", "SYSTEM_ERROR"]}}, "required": ["category", "code"]}
+        ]}
+      ]
+    }
+  }
+}

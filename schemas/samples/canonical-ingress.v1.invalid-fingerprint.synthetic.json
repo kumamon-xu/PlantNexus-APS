@@ -1,0 +1,6 @@
+{
+  "negative_vector_version": "p8-contract-negative.v1",
+  "base_sample": "canonical-ingress-request.v1.synthetic.json",
+  "mutation": {"operation": "REPLACE", "pointer": "/payload/package_id", "value": "IMPORT-P8-TAMPERED"},
+  "expected_rejection": "LINEAGE_INVALID"
+}

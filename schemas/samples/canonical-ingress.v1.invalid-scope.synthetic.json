@@ -1,0 +1,6 @@
+{
+  "negative_vector_version": "p8-contract-negative.v1",
+  "base_sample": "canonical-ingress-request.v1.synthetic.json",
+  "mutation": {"operation": "REPLACE", "pointer": "/requested_scope/factory_id", "value": "FACTORY-OUTSIDE-PAYLOAD"},
+  "expected_rejection": "SCOPE_MISMATCH"
+}

@@ -86,10 +86,10 @@ P8目标边界已经确定，但尚未实现：APS未来只通过Headless API接
 
 | 能力 | 当前状态 | 补齐前置 |
 |---|---|---|
-| 提交versioned canonical JSON | P8规划，当前未提供公开端点 | P8-01/02合同、authority/scope/idempotency、Data Validation和不可变artifact owner |
+| 提交versioned canonical JSON | P8-01/02人类与机器合同已形成，当前未提供公开端点 | P8-03的Data Validation、幂等事务和不可变artifact owner，之后由P8-07暴露HTTP |
 | 上传/提交原始ERP/MES/WMS/CAM、Excel/CSV数据 | 不属于APS公共产品API | 由宿主平台采集/映射为canonical JSON；reference adapter仅内部/研发使用 |
 | 通过 HTTP 创建 PlanningSnapshot / PlanningProblem | P8规划，当前未提供公开端点 | Canonical ingress成功后由APS原子创建，不开放直接数据库写入 |
-| 通过 HTTP 创建并启动新的 PlanningRun | P8规划，当前未提供公开端点 | P8-02/04/05的command、Policy/Limits、排队/取消/超时和结果合同 |
+| 通过 HTTP 创建并启动新的 PlanningRun | P8-02 lifecycle机器合同已形成，当前未提供公开端点 | P8-04/05的持久化、Policy/Limits、排队/取消/超时和Worker行为，之后由P8-07暴露HTTP |
 | 工厂、资源、工艺、订单主数据 CRUD | 不作为Snapshot旁路 | 宿主维护上游主数据并提交新canonical版本；APS不直接修改既有Snapshot |
 | 用户、角色、SSO/RBAC 管理 | 用户生命周期不属于APS；当前只有provider port | P8-08接入宿主identity并由APS强制role/capability/factory scope |
 | 生产MES/ERP事件连接器与外部发布 | 连接器不属于APS；当前无Production发布 | 宿主负责上游/下游连接，APS只提供canonical input与read/export API；authority仍需closure |

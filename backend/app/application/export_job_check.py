@@ -107,8 +107,8 @@ def _boundary_check(root: Path) -> dict[str, object]:
     if any(token in combined for token in forbidden):
         raise ValueError("export implementation crossed publish/network/external boundary")
     project = tomllib.loads((root / "pyproject.toml").read_text(encoding="utf-8"))
-    if project["tool"]["plantnexus-aps"]["versions"]["schema"] != "2.9.0":
-        raise ValueError("global schema metadata is not 2.9.0")
+    if project["tool"]["plantnexus-aps"]["versions"]["schema"] != "2.10.0":
+        raise ValueError("global schema metadata is not 2.10.0")
     dependencies = cast(list[str], project["project"]["dependencies"])
     if dependencies.count("openpyxl==3.1.5") != 1:
         raise ValueError("locked XLSX dependency boundary changed")

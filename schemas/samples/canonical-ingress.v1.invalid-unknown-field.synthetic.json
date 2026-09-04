@@ -1,0 +1,6 @@
+{
+  "negative_vector_version": "p8-contract-negative.v1",
+  "base_sample": "canonical-ingress-request.v1.synthetic.json",
+  "mutation": {"operation": "ADD", "pointer": "/plugin_id", "value": "CLIENT-SELECTED-PLUGIN"},
+  "expected_rejection": "CONTRACT_VIOLATION"
+}

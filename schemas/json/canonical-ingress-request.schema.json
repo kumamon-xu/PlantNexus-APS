@@ -1,0 +1,210 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "urn:plantnexus:aps:schema:canonical-ingress-request:v1",
+  "title": "PlantNexus APS Canonical Ingress Request v1",
+  "description": "Strict canonical-only request for creating a PlanningRun. Authentication, effective authorization and Extension selection are server-owned and intentionally absent.",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "canonical_ingress_request_version",
+    "schema_set_version",
+    "ingress_policy_version",
+    "canonicalization_version",
+    "operation",
+    "request_id",
+    "correlation_id",
+    "idempotency_key",
+    "request_fingerprint",
+    "requested_scope",
+    "source_authority",
+    "planning_inputs",
+    "payload_fingerprint",
+    "payload"
+  ],
+  "properties": {
+    "canonical_ingress_request_version": {"const": "canonical-ingress-request.v1"},
+    "schema_set_version": {"const": "2.10.0"},
+    "ingress_policy_version": {"const": "canonical-ingress-policy.v1"},
+    "canonicalization_version": {"const": "canonical-json.v1"},
+    "operation": {"const": "CREATE_PLANNING_RUN"},
+    "request_id": {"$ref": "#/$defs/canonicalId"},
+    "correlation_id": {"$ref": "#/$defs/canonicalId"},
+    "idempotency_key": {
+      "type": "string",
+      "minLength": 16,
+      "maxLength": 128,
+      "pattern": "^[A-Za-z0-9._:-]+$"
+    },
+    "request_fingerprint": {"$ref": "#/$defs/sha256Fingerprint"},
+    "requested_scope": {"$ref": "#/$defs/requestedScope"},
+    "source_authority": {"$ref": "#/$defs/sourceAuthority"},
+    "planning_inputs": {"$ref": "#/$defs/planningInputs"},
+    "payload_fingerprint": {"$ref": "#/$defs/sha256Fingerprint"},
+    "payload": {"$ref": "urn:plantnexus:aps:schema:import-package:v2"}
+  },
+  "allOf": [
+    {
+      "if": {
+        "properties": {
+          "requested_scope": {
+            "properties": {"data_plane": {"const": "SIMULATION"}},
+            "required": ["data_plane"]
+          }
+        },
+        "required": ["requested_scope"]
+      },
+      "then": {"properties": {"payload": {"properties": {"synthetic": {"const": true}}}}}
+    },
+    {
+      "if": {
+        "properties": {
+          "requested_scope": {
+            "properties": {"data_plane": {"const": "PRODUCTION"}},
+            "required": ["data_plane"]
+          }
+        },
+        "required": ["requested_scope"]
+      },
+      "then": {"properties": {"payload": {"properties": {"synthetic": {"const": false}}}}}
+    }
+  ],
+  "$defs": {
+    "canonicalId": {
+      "type": "string",
+      "minLength": 1,
+      "maxLength": 256,
+      "pattern": "^[^\\s\\u0000-\\u001F\\u007F]+$"
+    },
+    "semanticVersion": {
+      "type": "string",
+      "pattern": "^(0|[1-9][0-9]*)\\.(0|[1-9][0-9]*)\\.(0|[1-9][0-9]*)(?:-[0-9A-Za-z-]+(?:\\.[0-9A-Za-z-]+)*)?(?:\\+[0-9A-Za-z-]+(?:\\.[0-9A-Za-z-]+)*)?$"
+    },
+    "sha256Fingerprint": {"type": "string", "pattern": "^sha256:[0-9a-f]{64}$"},
+    "requestedScope": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["tenant_id", "factory_id", "planning_scope_id", "data_plane", "environment"],
+      "properties": {
+        "tenant_id": {"$ref": "#/$defs/canonicalId"},
+        "factory_id": {"$ref": "#/$defs/canonicalId"},
+        "planning_scope_id": {"$ref": "#/$defs/canonicalId"},
+        "data_plane": {"enum": ["SIMULATION", "PRODUCTION"]},
+        "environment": {"enum": ["DEVELOPMENT", "TEST", "BENCHMARK", "PRODUCTION"]}
+      },
+      "allOf": [
+        {
+          "if": {"properties": {"data_plane": {"const": "SIMULATION"}}, "required": ["data_plane"]},
+          "then": {"properties": {"environment": {"enum": ["DEVELOPMENT", "TEST", "BENCHMARK"]}}}
+        },
+        {
+          "if": {"properties": {"data_plane": {"const": "PRODUCTION"}}, "required": ["data_plane"]},
+          "then": {"properties": {"environment": {"const": "PRODUCTION"}}}
+        }
+      ]
+    },
+    "canonicalCollection": {
+      "enum": [
+        "factories",
+        "workshops",
+        "production_lines",
+        "resource_groups",
+        "resources",
+        "calendars",
+        "products",
+        "routing_versions",
+        "routing_operations",
+        "routing_precedence_edges",
+        "routing_resource_options",
+        "demand_orders",
+        "production_orders",
+        "production_lots",
+        "execution_facts",
+        "operation_locks"
+      ]
+    },
+    "authorityBinding": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["source_system", "source_version", "authority_reference", "canonical_collections"],
+      "properties": {
+        "source_system": {"$ref": "#/$defs/canonicalId"},
+        "source_version": {"$ref": "#/$defs/canonicalId"},
+        "authority_reference": {
+          "type": "string",
+          "minLength": 11,
+          "maxLength": 256,
+          "pattern": "^authority:[A-Za-z0-9._:-]+$"
+        },
+        "canonical_collections": {
+          "type": "array",
+          "minItems": 1,
+          "uniqueItems": true,
+          "items": {"$ref": "#/$defs/canonicalCollection"}
+        }
+      }
+    },
+    "mappingProvenance": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["source_system", "source_version", "mapping_profile_id", "mapping_profile_version", "mapping_profile_fingerprint"],
+      "properties": {
+        "source_system": {"$ref": "#/$defs/canonicalId"},
+        "source_version": {"$ref": "#/$defs/canonicalId"},
+        "mapping_profile_id": {"$ref": "#/$defs/canonicalId"},
+        "mapping_profile_version": {"$ref": "#/$defs/semanticVersion"},
+        "mapping_profile_fingerprint": {"$ref": "#/$defs/sha256Fingerprint"}
+      }
+    },
+    "sourceAuthority": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["authority_policy_version", "bindings", "mapping_provenance"],
+      "properties": {
+        "authority_policy_version": {"$ref": "#/$defs/canonicalId"},
+        "bindings": {
+          "type": "array",
+          "minItems": 1,
+          "maxItems": 256,
+          "uniqueItems": true,
+          "items": {"$ref": "#/$defs/authorityBinding"}
+        },
+        "mapping_provenance": {
+          "type": "array",
+          "minItems": 1,
+          "maxItems": 256,
+          "uniqueItems": true,
+          "items": {"$ref": "#/$defs/mappingProvenance"}
+        }
+      }
+    },
+    "artifactReference": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["document_version", "artifact_id", "fingerprint"],
+      "properties": {
+        "document_version": {"enum": ["planning-policy.v1", "planning-policy.v2", "solve-limits.v1"]},
+        "artifact_id": {"$ref": "#/$defs/canonicalId"},
+        "fingerprint": {"$ref": "#/$defs/sha256Fingerprint"}
+      }
+    },
+    "planningInputs": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["planning_policy", "solve_limits"],
+      "properties": {
+        "planning_policy": {
+          "allOf": [
+            {"$ref": "#/$defs/artifactReference"},
+            {"properties": {"document_version": {"enum": ["planning-policy.v1", "planning-policy.v2"]}}}
+          ]
+        },
+        "solve_limits": {
+          "allOf": [
+            {"$ref": "#/$defs/artifactReference"},
+            {"properties": {"document_version": {"const": "solve-limits.v1"}}}
+          ]
+        }
+      }
+    }
+  }
+}

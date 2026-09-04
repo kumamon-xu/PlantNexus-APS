@@ -1,0 +1,6 @@
+{
+  "negative_vector_version": "p8-contract-negative.v1",
+  "base_sample": "planning-run.v1.completed.synthetic.json",
+  "mutation": {"operation": "REPLACE", "pointer": "/last_transition/from_state", "value": "SOLVING"},
+  "expected_rejection": "INVALID_STATE_TRANSITION"
+}

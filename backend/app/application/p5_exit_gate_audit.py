@@ -641,8 +641,8 @@ def _verify_frozen_repository(root: Path) -> JsonObject:
     data_dictionary = yaml.safe_load(
         (root / "schemas/data_dictionary.yaml").read_text(encoding="utf-8")
     )
-    if data_dictionary.get("schema_set_version") != "2.9.0":
-        _fail("repository.schema_set_version", "must be current additive set 2.9.0")
+    if data_dictionary.get("schema_set_version") != "2.10.0":
+        _fail("repository.schema_set_version", "must be current additive set 2.10.0")
     migrations = sorted(
         path.stem
         for path in (root / "backend/migrations/versions").glob("*.py")

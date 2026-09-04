@@ -9,3 +9,10 @@ runtime/*
 
 benchmarks/tmp/
 data/generated/
+
+frontend/node_modules/
+frontend/dist/
+frontend/coverage/
+frontend/playwright-report/
+frontend/test-results/
+.playwright-cli/

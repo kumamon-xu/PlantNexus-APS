@@ -1,0 +1,125 @@
+{
+  "diff_base": "b0cc126522e3916d72b438e7f237851a36b51a3d",
+  "estimated_characters": 354120,
+  "files_allowed_to_change": [
+    "demo/**"
+  ],
+  "inputs": [
+    {
+      "characters": 5941,
+      "load_mode": "FULL",
+      "path": "demo/docs/TASK-DEMO-06-schedule-workspace-and-capacity-view.md",
+      "sha256": "2d0b932a5c28fc0a1e26b7a05a424da2de763d95cc821aeb1c9243059f0833fd"
+    },
+    {
+      "characters": 8123,
+      "load_mode": "SECTIONS_2_3_4_5_7",
+      "path": "demo/docs/04-ux-and-demo-script.md",
+      "sha256": "b64211a428eadeaf3fb536368473dcb99e455518b06e4b5717f26e17ef352264"
+    },
+    {
+      "characters": 9304,
+      "load_mode": "SECTIONS_5_6_GATE_E_10",
+      "path": "demo/docs/05-benchmark-and-acceptance.md",
+      "sha256": "b6aa6b6ea5413418f1540af245891cdda4db3d4e21cbadc1fc33ddd7fb5582ca"
+    },
+    {
+      "characters": 15272,
+      "load_mode": "D14",
+      "path": "demo/docs/TASKS.md",
+      "sha256": "a269383f442768d17898b031e7dbd93a61f745f487c0d5d3ddafb156681b8c88"
+    },
+    {
+      "characters": 7570,
+      "load_mode": "PRESENTATION_CONTRACT",
+      "path": "demo/docs/TASK-DEMO-04-unified-presentation-and-read-api.md",
+      "sha256": "4397e5d1eb2e38d104e9426e34c7163d418b76ca0df46926b5db6a53918c631b"
+    },
+    {
+      "characters": 5610,
+      "load_mode": "COMPLETION_SUMMARY",
+      "path": "demo/docs/TASK-DEMO-05-chinese-story-shell-and-job-recovery.md",
+      "sha256": "817e66e09e98164a5452356894527ab195031b0acd223650d84acc49fe720526"
+    },
+    {
+      "characters": 111283,
+      "load_mode": "RESPONSE_CONTRACTS",
+      "path": "demo/backend/plantnexus_demo/presentation.py",
+      "sha256": "415a38c8275cd897e597b4e0aca9548ae3ec4949503395ea5c51fe2f51ab3252"
+    },
+    {
+      "characters": 23140,
+      "load_mode": "PRESENTATION_GET_ENDPOINTS",
+      "path": "demo/backend/plantnexus_demo/api.py",
+      "sha256": "3f1e5c4220e2a994e181b525c4000c51bccad33201d5af7397fad9509e688bbf"
+    },
+    {
+      "characters": 15208,
+      "load_mode": "FULL",
+      "path": "demo/frontend/src/api/types.ts",
+      "sha256": "b2af49be14310ba32dab720fe3bcfba9fada9bf5d2036e2b2d381a2870b23648"
+    },
+    {
+      "characters": 45479,
+      "load_mode": "FULL",
+      "path": "demo/frontend/src/api/contracts.ts",
+      "sha256": "bf2d67bba124f30529faa031900a65e1588d790673ac33d889389e6f152578a6"
+    },
+    {
+      "characters": 7137,
+      "load_mode": "FULL",
+      "path": "demo/frontend/src/api/client.ts",
+      "sha256": "4c557ac1b3914801f8616be7b28583f917ace4ccbe5f9ebdc89c48b1e4a006bc"
+    },
+    {
+      "characters": 9475,
+      "load_mode": "FULL",
+      "path": "demo/frontend/src/app/useDemoStory.ts",
+      "sha256": "e179437eb5962719423dccec67a68253de98e5ab3e006e012749f683f41e886b"
+    },
+    {
+      "characters": 13236,
+      "load_mode": "FULL",
+      "path": "demo/frontend/src/DemoApp.tsx",
+      "sha256": "b17f1d4959295bd65ee02a405160b2ae0939f85868c96e80b2aff07318abbd65"
+    },
+    {
+      "characters": 5903,
+      "load_mode": "FULL",
+      "path": "demo/frontend/src/domain/copy.ts",
+      "sha256": "f716f7b3741e0803620130d398612b9437e1a5eeb3a7371f9e175a826d7be6b8"
+    },
+    {
+      "characters": 43855,
+      "load_mode": "FULL",
+      "path": "demo/frontend/src/styles/demo.css",
+      "sha256": "218fc02be110862e280635b3276508666ba9dd73c15f1f7d1ed70ef32791306f"
+    },
+    {
+      "characters": 19730,
+      "load_mode": "FULL",
+      "path": "demo/frontend/tests/fixtures.ts",
+      "sha256": "7e0d7f6886e8fb590562ac07b1a86391bd97b04f1f3d95da0bf90dd89fd0a082"
+    },
+    {
+      "characters": 7854,
+      "load_mode": "FULL",
+      "path": "demo/frontend/tests/DemoApp.test.tsx",
+      "sha256": "ec25bc45770140537ce57d3395752da2cc92c1077a62175818307297195af7d4"
+    }
+  ],
+  "manifest_version": "demo-task-context-manifest.v1",
+  "on_demand_expansion_triggers": [
+    "formal contract or accepted ADR conflict",
+    "root code/schema change becomes necessary",
+    "dynamic replan implementation starts",
+    "presentation lineage or fingerprint mismatch cannot be resolved read-only"
+  ],
+  "phase_registration": null,
+  "root_repository_consumption": "READ_ONLY",
+  "selected_input_count": 17,
+  "soft_budget_note": "Selected normative units were read in full; the 30k character budget is soft.",
+  "task_family": "demo-exclusive",
+  "task_id": "TASK-DEMO-06",
+  "validation_profile": "DEMO_HIGH_RISK"
+}

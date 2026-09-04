@@ -1,6 +1,6 @@
 # CNC Demo 实施任务清单
 
-状态：实施中（TASK-DEMO-03 已完成，D09～D10 后端闭环通过）  
+状态：实施中（TASK-DEMO-07 已完成，D15 中文加急重排与版本比较通过）
 范围约束：所有新增或修改资产必须位于 demo 目录  
 完成定义：通过 [专项基准与验收标准](05-benchmark-and-acceptance.md)的 Gate A～F
 
@@ -36,15 +36,19 @@ D04 是架构可行性门。若 610 工序在候选预算内不能稳定返回�
 当前进度（2026-09-02）：
 
 - D00：5 个契约探针 `PASS`；确认 v1 workspace 不直接接受 PlanningProblem v2、`route_template_id` 不进入 ExecutionEvent、现有重排 Validator 具备 `ADDED` universe 和真实 KPI 注入边界。
-- D01：Demo-local Python package、CLI、测试、类型检查和越界保护已完成；前端骨架、health/runtime 归入 D05/D13，尚未开始。
+- D01：Demo-local Python package、CLI、测试、类型检查和越界保护已完成；当时拆出的 runtime 已由 D05～D12 完成，前端骨架已由 D13 完成。
 - D02：严格 JSON 资产、逐文件 SHA-256、聚合资产指纹和三档 golden profile 已完成。
 - D03：确定性 Raw Staging 生成器与 DemoIngressPipeline 已完成；Showcase 精确生成 132 单、610 工序、24 设备、1,311 options、42 execution facts 和 12 locks。
-- D04：B1/B2 单次 early spike 已完成，610/700 均取得 `OPTIMAL + Validator PASS`；B4 已有一次 Showcase early run，取得 `FEASIBLE + Validator PASS` 和 5 `ADDED` / 23 `CHANGED` / 557 `UNCHANGED`，但 warmup + 5 measured、RSS、目标机与 immutable baseline 仍开放。
+- D04：B1/B2 单次 early spike 已完成，610/700 均取得 `OPTIMAL + Validator PASS`；B4 已有一次 Showcase early run，取得 `FEASIBLE + Validator PASS`；B5 已有 Showcase 服务端与 D14 浏览器单次 early evidence，580/585 assignments 的 v1/v2/比较 DTO 均通过，初排浏览器以 160 节点有界呈现；warmup + 5 measured、RSS、目标机与 immutable baseline 仍开放。
 - D05～D08：独立 SQLite/Simulation 授权、durable job/artifact、初始排产和显式 current `PUBLISHED` 基线均已完成。
 - D09～D10：业务加急命令、additive-only Standard Import、正式事件/checkpoint、Snapshot/ReplanRequest、真实 KPI、动态重排、v2 `DRAFT` 与 ChangeReport 已完成；current `PUBLISHED` 不变。
-- D12：reset、initial-plan、baseline-activation、urgent-orders 与 job 查询命令面已实现；factory/version/comparison 等展示查询仍依赖 D11，D12 尚未整体关闭。
+- D11：strict/immutable 的 Factory、v1/v2 统一 Schedule 与 ChangeReport-authoritative Comparison presentation 已完成；所有视图固定为 Simulation-only、`publishable=false`。
+- D12：reset、initial-plan、baseline-activation、urgent-orders、job 和 factory/version/comparison 已形成完整演示主路径；授权、稳定错误、ETag/304、active-run/correlation headers 均有回归测试。manual retry/cancel 继续显式 fail closed，不属于 TASK-DEMO-04。
+- D13：独立中文故事首页、同源 session、strict consumer contract、job polling/刷新恢复、初排与显式基线发布、键盘路径和 1440/1024 Chromium smoke 已完成。
+- D14：中文订单风险表、订单→甘特联动、工厂/车间/设备筛选、72 小时有界甘特、日历/维护/执行/锁定语义、等价表格、计划负荷与校验证据已完成；Showcase 132/580/24 浏览器 smoke 和双宽度页面无溢出通过。
+- D15：资产驱动的四路线中文插单表单、只读 current base、二次确认、durable urgent command 恢复、真实 job 阶段、自动 DRAFT 比较、ChangeReport 分类、交付/稳定性/Validator、120 条分页和刷新恢复已完成；Showcase 单次真实链与双宽度页面无溢出通过。
 
-因此当前结论是 `INITIAL_SOLVE_SCALE_GATE=PASS` 且 `DYNAMIC_REPLAN_BACKEND_GATE=PASS`，不是完整 D04、完整 M2 或可现场演示的 UI closure。详见 [当前实施状态](IMPLEMENTATION-STATUS.md)。
+因此当前结论是 `INITIAL_SOLVE_SCALE_GATE=PASS`、`DYNAMIC_REPLAN_BACKEND_GATE=PASS`、`PRESENTATION_READ_GATE=PASS`、`D13_STORY_SHELL_GATE=PASS`、`D14_WORKSPACE_GATE=PASS` 且 `D15_REPLAN_UI_GATE=PASS`；完整中文业务主线已经闭合，但 D16 完整 E2E/安全/可访问性矩阵与正式 D17 基准仍未完成，所以还不是 Demo ready。详见 [当前实施状态](IMPLEMENTATION-STATUS.md)。
 
 ## 2. 总览
 
@@ -311,6 +315,8 @@ D04 是架构可行性门。若 610 工序在候选预算内不能稳定返回�
 
 ### D11 — v1/v2 统一 Presentation
 
+状态：已完成（TASK-DEMO-04）。
+
 目标：给前端稳定、不可发布的统一只读模型。
 
 工作：
@@ -333,6 +339,8 @@ D04 是架构可行性门。若 610 工序在候选预算内不能稳定返回�
 
 ### D12 — Demo HTTP API
 
+状态：演示主路径与只读查询已完成；manual retry/cancel 保持 fail closed。
+
 目标：提供业务化、幂等、可恢复的 API。
 
 工作：
@@ -353,6 +361,8 @@ D04 是架构可行性门。若 610 工序在候选预算内不能稳定返回�
 
 ### D13 — 前端故事首页与 Job 恢复
 
+状态：已完成（TASK-DEMO-05）。
+
 目标：建立可单页完成主流程的外壳。
 
 工作：
@@ -370,7 +380,11 @@ D04 是架构可行性门。若 610 工序在候选预算内不能稳定返回�
 - SOLVING 无虚假百分比；
 - APPROVED 发布失败状态可恢复。
 
+完成证据：独立 `demo/frontend` 的 lint、typecheck、12 个 Vitest/Testing Library 测试和 production build 均通过；Chromium 真实连接 Demo backend 完成 EMPTY→INITIALIZED→READY_FOR_REVIEW→BASELINE_PUBLISHED，并在刷新后恢复相同 run。主操作与确认可用键盘完成，1440×900 和 1024×768 页面级无横向滚动，控制台 0 error / 0 warning；证据见 `frontend-evidence-demo-05.json`。
+
 ### D14 — 排产工作区
+
+状态：已完成（TASK-DEMO-06）。
 
 目标：展示初始计划的业务价值与证据。
 
@@ -390,7 +404,11 @@ D04 是架构可行性门。若 610 工序在候选预算内不能稳定返回�
 - 计划负荷文案明确不是 OEE；
 - 大数据视觉测试无明显卡顿或遮挡。
 
+完成证据：`demo/frontend` 的 lint、typecheck、5 个测试文件/26 个测试和 production build 均通过。真实 Chromium 连接固定 Showcase 的 current `PUBLISHED` 基线，读取 132 单、580 assignments、24 设备；默认 72 小时时间窗匹配 546 道、仅挂载 160 个 assignment 节点，观察到 30 个 completed 事实、12 个 running、4 个 hard lock、8 个 soft lock、24 个 freeze 图层、120 个非工作时段块和 2 个当前窗口维护块。订单 `demand-order-cnc-036` 搜索为 1 条并以 GET 聚焦 5 道工序；1440×900 和 1024×768 均无页面级横向滚动，控制台 0 error / 0 warning。证据见 `frontend-evidence-demo-06.json`；性能数字是单次 early evidence，不是 p95 或 SLA。
+
 ### D15 — 加急表单与前后比较
+
+状态：已完成（TASK-DEMO-07）。
 
 目标：完成“一键插单—自动重排—新旧比较”故事。
 
@@ -410,6 +428,8 @@ D04 是架构可行性门。若 610 工序在候选预算内不能稳定返回�
 - CHANGED、UNCHANGED、ADDED 都可筛选；
 - DRAFT 不被表述为已发布；
 - UNKNOWN、INFEASIBLE、Validator FAIL 有正确恢复路径。
+
+完成证据：`demo/frontend` 的 lint、typecheck、5 个测试文件/35 个测试和 production build 均通过。真实 Chromium 连接固定 Showcase current `PUBLISHED`，使用 `CNC-ROUTE-5`、数量 5、北京时间交期 2026-09-09 18:00、URGENT 完成一次业务表单提交；约 21 秒后得到 `FEASIBLE + Validator PASS` 的 v2 `DRAFT`，原 current Publication 不变。比较页展示 5 `ADDED`、25 `CHANGED`、555 `UNCHANGED`、3 次设备变更、3 次软锁偏离和 95.7% 保持比例；保持不变首/次页分别返回 1～120、121～240 / 共 555 道，CMM-01 筛选返回 17 道。刷新恢复同一 run/比较引用且不重复写命令；1440×900 与 1024×768 无页面级横向滚动，控制台 0 error / 0 warning。证据见 `frontend-evidence-demo-07.json`；性能数字是单次 synthetic early evidence，不是 p95、目标机基线或 SLA。
 
 ### D16 — E2E、安全、恢复与可访问性
 
@@ -479,7 +499,7 @@ D04 是架构可行性门。若 610 工序在候选预算内不能稳定返回�
 
 ### M2：无 UI 的完整业务链
 
-包含 D05～D12。退出条件是 API 可完成重置、初排、发布、加急、重排和比较。
+包含 D05～D12。退出条件是 API 可完成重置、初排、发布、加急、重排和比较。TASK-DEMO-04 已满足该主路径退出条件；manual retry/cancel 是保留的显式不可用边界。
 
 ### M3：可讲解的现场体验
 

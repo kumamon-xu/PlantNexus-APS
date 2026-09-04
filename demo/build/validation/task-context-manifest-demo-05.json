@@ -1,0 +1,125 @@
+{
+  "diff_base": "b0cc126522e3916d72b438e7f237851a36b51a3d",
+  "estimated_characters": 246547,
+  "files_allowed_to_change": [
+    "demo/**"
+  ],
+  "inputs": [
+    {
+      "characters": 5610,
+      "load_mode": "FULL",
+      "path": "demo/docs/TASK-DEMO-05-chinese-story-shell-and-job-recovery.md",
+      "sha256": "817e66e09e98164a5452356894527ab195031b0acd223650d84acc49fe720526"
+    },
+    {
+      "characters": 7477,
+      "load_mode": "SECTIONS_1_2_5_7_9_10",
+      "path": "demo/docs/04-ux-and-demo-script.md",
+      "sha256": "f2433ef02625d567b412465237ca83e96976d9a3b637d5402c5b65f1fcc6070e"
+    },
+    {
+      "characters": 12884,
+      "load_mode": "SECTIONS_6_10_11",
+      "path": "demo/docs/03-architecture-and-api.md",
+      "sha256": "d9cef13b681a373b373944a5ee6c5539d4fe567ad2dbdd70631744633071c8c9"
+    },
+    {
+      "characters": 8715,
+      "load_mode": "GATES_E_F",
+      "path": "demo/docs/05-benchmark-and-acceptance.md",
+      "sha256": "4204ecdea4d4dbd9065135a32740f5a896ead5776a1c9a149032dd2681fd3732"
+    },
+    {
+      "characters": 14606,
+      "load_mode": "D13",
+      "path": "demo/docs/TASKS.md",
+      "sha256": "3e2b93e0f5449c7429e4ec48a9c567c80a425601d7a466eed0acc09919d49870"
+    },
+    {
+      "characters": 7570,
+      "load_mode": "COMPLETION_SUMMARY",
+      "path": "demo/docs/TASK-DEMO-04-unified-presentation-and-read-api.md",
+      "sha256": "4397e5d1eb2e38d104e9426e34c7163d418b76ca0df46926b5db6a53918c631b"
+    },
+    {
+      "characters": 23140,
+      "load_mode": "FULL",
+      "path": "demo/backend/plantnexus_demo/api.py",
+      "sha256": "3f1e5c4220e2a994e181b525c4000c51bccad33201d5af7397fad9509e688bbf"
+    },
+    {
+      "characters": 26372,
+      "load_mode": "STORY_STATE",
+      "path": "demo/backend/plantnexus_demo/composition.py",
+      "sha256": "c25c354dc10461b06120ee73849647d5fbc7efa4ce46358bb502b64cbf3cd337"
+    },
+    {
+      "characters": 12058,
+      "load_mode": "FULL",
+      "path": "demo/backend/plantnexus_demo/jobs.py",
+      "sha256": "31b01e2c884a40f5dcddd4b587c39ff60ab1bbe479da95f6fb58fb0d5c35a16e"
+    },
+    {
+      "characters": 111283,
+      "load_mode": "RESPONSE_CONTRACTS",
+      "path": "demo/backend/plantnexus_demo/presentation.py",
+      "sha256": "415a38c8275cd897e597b4e0aca9548ae3ec4949503395ea5c51fe2f51ab3252"
+    },
+    {
+      "characters": 4362,
+      "load_mode": "FULL",
+      "path": "demo/backend/plantnexus_demo/security.py",
+      "sha256": "598f379a22ab1ebb2e14d2be167a0306fa82a6b0b04ab68d18cee6eb75087072"
+    },
+    {
+      "characters": 1410,
+      "load_mode": "FULL",
+      "path": "frontend/package.json",
+      "sha256": "bcf964ae0f799155763882e86b089572a33c4b99b68407485db449b1b995115c"
+    },
+    {
+      "characters": 371,
+      "load_mode": "FULL",
+      "path": "frontend/vite.config.ts",
+      "sha256": "d212b02edd202ac26526a0ec8e9df3294d0ad6736cbfd2668b4b89a961940287"
+    },
+    {
+      "characters": 763,
+      "load_mode": "FULL",
+      "path": "frontend/tsconfig.app.json",
+      "sha256": "8c06fd29dc43cc75b1b0293305eda4b1361bb0827b8e86e64d94ddc53da22069"
+    },
+    {
+      "characters": 2085,
+      "load_mode": "TECHNICAL_BASELINE",
+      "path": "frontend/src/main.tsx",
+      "sha256": "6a5017d80c0c1513cf3b3617cdc2beff9983c74f3a88fbff81713d01b6b829cc"
+    },
+    {
+      "characters": 7116,
+      "load_mode": "RESPONSIVE_BASELINE",
+      "path": "frontend/src/styles/app.css",
+      "sha256": "8d93f3241ed85e80c2dcc47ed16986bfd033627a411b4c3943f47c2ed5fd80e6"
+    },
+    {
+      "characters": 725,
+      "load_mode": "TEST_BASELINE",
+      "path": "frontend/tests/setup.ts",
+      "sha256": "3ec4c7645144e8c738dbefe114831f54bc5130514dfe1580c0e01208e0337df8"
+    }
+  ],
+  "manifest_version": "demo-task-context-manifest.v1",
+  "on_demand_expansion_triggers": [
+    "formal contract or accepted ADR conflict",
+    "root code/schema change becomes necessary",
+    "dynamic replan implementation starts",
+    "presentation lineage or fingerprint mismatch cannot be resolved read-only"
+  ],
+  "phase_registration": null,
+  "root_repository_consumption": "READ_ONLY",
+  "selected_input_count": 17,
+  "soft_budget_note": "Selected normative units were read in full; the 30k character budget is soft.",
+  "task_family": "demo-exclusive",
+  "task_id": "TASK-DEMO-05",
+  "validation_profile": "DEMO_HIGH_RISK"
+}

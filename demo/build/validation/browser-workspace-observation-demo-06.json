@@ -1,0 +1,233 @@
+{
+  "observation_version": "cnc-demo-browser-workspace-observation.v1",
+  "task_id": "TASK-DEMO-06",
+  "observed_at_utc": "2026-09-02T12:55:42Z",
+  "tool": {
+    "name": "@playwright/cli",
+    "version": "0.1.19",
+    "browser": "Chromium 152",
+    "node": "24.19.0",
+    "npm": "12.0.2",
+    "session": "demo06"
+  },
+  "profile": "showcase",
+  "document": {
+    "lang": "zh-CN",
+    "title": "PlantNexus APS · CNC 精密机加工演示",
+    "interface_language": "中文"
+  },
+  "runtime_result": {
+    "run_id": "run-abd715e2a6ddf642986afa3c03901315",
+    "schedule_version_id": "schedule-version-validated-108d0aa2e00629b549944de12cb848a2ae96fb83db3971bc4a8afdb217c7b6c9",
+    "story_state": "BASELINE_PUBLISHED",
+    "schedule_state": "PUBLISHED",
+    "solver_status": "OPTIMAL",
+    "solve_seconds": 2.6639093,
+    "total_seconds": 3.2552783,
+    "solver_limit_seconds": 20.0,
+    "validation_status": "PASS",
+    "hard_violation_count": 0,
+    "simulation_only": true,
+    "production_authority": false,
+    "schedule_publishable": false
+  },
+  "workspace": {
+    "tabs": [
+      "订单与交期",
+      "排程甘特",
+      "计划负荷",
+      "校验与证据"
+    ],
+    "summary": {
+      "orders": 132,
+      "routing_operations": 610,
+      "scheduled_assignments": 580,
+      "window_filtered_assignments": 546,
+      "resources": 24,
+      "workshops": 3
+    },
+    "page": {
+      "limit": 160,
+      "returned": 160,
+      "filtered_total": 546,
+      "unfiltered_total": 580,
+      "sort": "ORDER_START_ASC",
+      "window_hours": 72,
+      "start_at_utc": "2026-09-06T16:00:00.000Z",
+      "end_at_utc": "2026-09-09T16:00:00.000Z"
+    },
+    "gantt": {
+      "assignment_nodes": 160,
+      "planned_nodes": 148,
+      "completed_nodes": 30,
+      "running_nodes": 12,
+      "hard_lock_nodes": 4,
+      "soft_lock_nodes": 8,
+      "freeze_windows": 24,
+      "shift_blocks": 120,
+      "maintenance_blocks": 2,
+      "resource_rows": 24,
+      "dom_nodes": 1173,
+      "hierarchy_filters": true,
+      "text_equivalent_available": true,
+      "legend_uses_color_and_text": true
+    },
+    "order_interaction": {
+      "query": "demand-order-cnc-036",
+      "visible_orders": 1,
+      "focus_status": true,
+      "focus_assignment_nodes": 5,
+      "demand_order_id": "demand-order-eb97a6f6bf2de1fe1675e42bb35699b9f8afaf12981ed904416ea5b05cc0d98f"
+    },
+    "capacity": {
+      "rows": 24,
+      "top_resource_code": "GRD-01",
+      "top_busy_hours": 56.3,
+      "top_available_hours": 136.0,
+      "top_planned_load_ratio": 0.414,
+      "sorted_descending": true,
+      "non_oee_copy": true,
+      "server_evidence_version_visible": true
+    },
+    "evidence": {
+      "solver_copy_chinese": true,
+      "validator_copy_chinese": true,
+      "hard_violation_count": 0,
+      "on_time_order_ratio": 1.0,
+      "late_order_count": 0,
+      "kpi_authority_visible": true,
+      "simulation_boundary_visible": true
+    }
+  },
+  "network": {
+    "workspace_requests": [
+      {
+        "kind": "factory",
+        "method": "GET",
+        "path": "/api/demo/v1/factory",
+        "status": 200,
+        "limit": 0
+      },
+      {
+        "kind": "default-window",
+        "method": "GET",
+        "path": "/api/demo/v1/versions/{version_id}?start_at_utc=...&end_at_utc=...&sort=ORDER_START_ASC&offset=0&limit=160",
+        "status": 200,
+        "limit": 160
+      },
+      {
+        "kind": "order-focus",
+        "method": "GET",
+        "path": "/api/demo/v1/versions/{version_id}?demand_order_id=...&sort=ORDER_START_ASC&offset=0&limit=160",
+        "status": 200,
+        "limit": 160
+      },
+      {
+        "kind": "workspace-refresh",
+        "method": "GET",
+        "path": "/api/demo/v1/factory + /api/demo/v1/versions/{version_id}?...&limit=160",
+        "status": 200,
+        "limit": 160
+      }
+    ],
+    "mutation_requests_during_workspace_actions": 0,
+    "maximum_observed_limit": 160,
+    "credentials_mode": "same-origin",
+    "navigation_session_handshake_excluded": true
+  },
+  "performance": {
+    "sample_count": 1,
+    "profile": "fresh Showcase browser navigation",
+    "session_duration_ms": 3.8,
+    "bootstrap_duration_ms": 20.8,
+    "schedule_summary_duration_ms": 493.6,
+    "factory_duration_ms": 499.8,
+    "workspace_duration_ms": 358.3,
+    "workspace_ready_response_end_ms": 1438.4,
+    "schedule_summary_payload_bytes": 141361,
+    "factory_payload_bytes": 149658,
+    "workspace_payload_bytes": 305326,
+    "classification": "early evidence only; not warmup + 5/p95"
+  },
+  "viewports": [
+    {
+      "width": 1440,
+      "height": 900,
+      "client_width": 1425,
+      "scroll_width": 1425,
+      "document_height": 2931,
+      "gantt_client_width": 1234,
+      "gantt_scroll_width": 1234,
+      "page_horizontal_overflow": false,
+      "gantt_internal_horizontal_scroll": false
+    },
+    {
+      "width": 1024,
+      "height": 768,
+      "client_width": 1024,
+      "scroll_width": 1024,
+      "document_height": 3061,
+      "gantt_client_width": 879,
+      "gantt_scroll_width": 1120,
+      "page_horizontal_overflow": false,
+      "gantt_internal_horizontal_scroll": true
+    }
+  ],
+  "console": {
+    "errors": 0,
+    "warnings": 0
+  },
+  "security": {
+    "visible_bearer": false,
+    "visible_authorization_header": false
+  },
+  "screenshots": [
+    {
+      "view": "gantt",
+      "path": "demo/build/validation/screenshots/demo06-showcase-gantt-1440x900.png",
+      "viewport_width": 1440,
+      "viewport_height": 900,
+      "png_width": 1425,
+      "png_height": 2931
+    },
+    {
+      "view": "gantt",
+      "path": "demo/build/validation/screenshots/demo06-showcase-gantt-1024x768.png",
+      "viewport_width": 1024,
+      "viewport_height": 768,
+      "png_width": 1009,
+      "png_height": 3061
+    },
+    {
+      "view": "orders",
+      "path": "demo/build/validation/screenshots/demo06-showcase-orders-1440x900.png",
+      "viewport_width": 1440,
+      "viewport_height": 900,
+      "png_width": 1425,
+      "png_height": 2681
+    },
+    {
+      "view": "capacity",
+      "path": "demo/build/validation/screenshots/demo06-showcase-capacity-1440x900.png",
+      "viewport_width": 1440,
+      "viewport_height": 900,
+      "png_width": 1425,
+      "png_height": 3569
+    },
+    {
+      "view": "evidence",
+      "path": "demo/build/validation/screenshots/demo06-showcase-evidence-1440x900.png",
+      "viewport_width": 1440,
+      "viewport_height": 900,
+      "png_width": 1425,
+      "png_height": 2422
+    }
+  ],
+  "boundaries": {
+    "synthetic_only": true,
+    "d14_schedule_workspace": "IMPLEMENTED",
+    "d15_urgent_replan_ui": "NOT_IMPLEMENTED",
+    "single_showcase_browser_run_not_p95": true,
+    "production_capacity_claim": "NOT_ESTABLISHED"
+  }
+}

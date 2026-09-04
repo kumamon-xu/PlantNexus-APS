@@ -245,7 +245,9 @@ POST baseline-activations 必须携带当前 READY_FOR_REVIEW 的 version id、c
 
 现有 [disruption_replay_check.py](../../backend/app/simulation/scenarios/disruption_replay_check.py#L400)已经展示了用真实重排 candidate 捕获 after KPI 的测试型适配方式。Demo 需要在 demo/backend 中实现有独立单元与集成测试的等价 adapter，不能提交占位 KPI，也不能修改正式 ReplanApplicationInput 契约。
 
-TASK-DEMO-03 实施注记（2026-09-02）：上述第 1～10 步和 `POST /urgent-orders` 已落地，第 11 步的统一 presentation DTO/比较查询仍属于 D11。根 `project_effective_locks` 会把 Snapshot 中基线前历史 completed 事实带入 projection，但版本比较 universe 只包含基线 active assignments；Demo 保留 Snapshot 历史 tuple 原字节，并在单 worker 的单次正式服务调用范围内把 effective-lock completed comparison view 收窄为 base→new 实际移除集合。该兼容层不修改正式 projector 或 Validator。当前一个 deterministic run 只允许提交一个不同加急事件；同命令可精确重放，连续多次不同插单需在后续设计中明确 DRAFT/基线链式语义。
+TASK-DEMO-03 实施注记（2026-09-02）：上述第 1～10 步和 `POST /urgent-orders` 已落地。根 `project_effective_locks` 会把 Snapshot 中基线前历史 completed 事实带入 projection，但版本比较 universe 只包含基线 active assignments；Demo 保留 Snapshot 历史 tuple 原字节，并在单 worker 的单次正式服务调用范围内把 effective-lock completed comparison view 收窄为 base→new 实际移除集合。该兼容层不修改正式 projector 或 Validator。当前一个 deterministic run 只允许提交一个不同加急事件；同命令可精确重放，连续多次不同插单需在后续设计中明确 DRAFT/基线链式语义。
+
+TASK-DEMO-07 实施注记（2026-09-04）：第 11 步现已闭合。`GET /bootstrap` 从批准资产提供四个路线模板和三类优先级，并在 durable 重排成功后恢复精确的 before/after/ChangeReport 引用；中文前端只提交业务字段，自动绑定 active run 与 current `PUBLISHED`，持久化原命令及幂等键，并复用 job polling。成功后严格解析 `DemoComparisonView v1` 并自动进入 v2 `DRAFT` 比较；刷新只重读同一引用，不重放写命令。比较筛选与 120 条分页均由服务端执行，浏览器不推导 ChangeReport 分类、KPI 或稳定性，也不批准、发布或替换 current Publication。
 
 ## 9. 版本统一展示模型
 
@@ -280,9 +282,21 @@ DemoComparisonView v1 包含：
 
 变更分类由 ChangeReport 决定；浏览器不得按浮点或显示时区自行推导。若 ScheduleVersion、KPI、Validator 或 ChangeReport 指纹不一致，presentation 构建失败并阻止自动跳转。
 
+### 9.3 TASK-DEMO-04 实现约束
+
+三个 Demo-local response contract 已冻结为 `cnc-demo-factory-view.v1`、`cnc-demo-schedule-view.v1` 和 `cnc-demo-comparison-view.v1`。所有对象均采用 strict、frozen、`extra=forbid` 模型，OpenAPI 根 schema 为 `additionalProperties=false`；它们只是已提交事实的只读投影，不是新的排产、验证或发布 authority。
+
+- Factory 从 approved asset pack 和规范 Snapshot 投影工厂、3 个车间、产线、设备组、设备、班次不可用区间与维护事件。
+- Schedule v1/v2 共用一个 DTO；订单交期指标只读规范 KPI，资源负荷按 `planned_busy_seconds / available_seconds` 计算并携带 Problem evidence，浏览器不重算 KPI。
+- Comparison 先通过正式 `ChangeReportQueryService` 校验 lineage，再把报告中的 `UNCHANGED`、`CHANGED`、`ADDED`、`REMOVED_BY_FACT` 原样投影；分类和 operation universe 不在 Demo 层推测。
+- 每个 artifact 都校验 document version、artifact ID、语义 fingerprint 与跨 artifact lineage；缺项或冲突整体 fail closed，不返回“部分可信”页面。
+- authoritative 时间比较统一使用 UTC；`Asia/Shanghai` local time 与 UTC 成对输出。同一工序在 v1/v2 的相同时间与设备保持字节级一致的展示语义。
+- assignments/operations 最大页长为 500；过滤后按稳定复合键排序再分页。时间窗口采用半开区间，任务 `[start,end)` 与查询 `[start_at,end_at)` 相交才返回。
+- `view_fingerprint` 覆盖规范化查询和完整响应语义，但不包含每次请求变化的 correlation ID；HTTP ETag 因而可稳定重验。
+
 ## 10. Demo API
 
-统一前缀：/api/demo/v1。所有写请求必须带 Idempotency-Key；所有响应带 correlation_id 和 active_run_id。
+统一前缀：/api/demo/v1。所有写请求必须带 Idempotency-Key；所有响应通过 `X-Correlation-Id` 和 `X-Demo-Active-Run` headers 关联请求与活动 run。命令/state 响应可同时在正文携带这两个字段；immutable presentation DTO 不混入易变请求元数据。
 
 | 方法与路径 | 用途 | 成功结果 |
 |---|---|---|
@@ -326,7 +340,15 @@ DemoComparisonView v1 包含：
 
 factory、scope、authority、stream、position、request fingerprint 和 attempt identity 全部由服务端当前状态派生，不让演示人员手输。
 
-### 10.4 错误语义
+### 10.4 展示读取查询
+
+- `/versions/{version_id}`：`resource_id`、`workshop_id`、`demand_order_id`、`state` 可重复或逗号分隔；`start_at_utc`、`end_at_utc`、`sort`、`offset`、`limit` 为标量。排序支持 `START_ASC`、`RESOURCE_START_ASC`、`ORDER_START_ASC`。
+- `/comparisons/{request_id}`：支持 `classification`、resource/workshop/order、UTC window、offset/limit；排序支持 `OPERATION_ASC`、`SHIFT_DESC`、`START_ASC`。未指定分类时只返回 `ADDED + CHANGED`。
+- 集合查询在服务端规范化为排序后的唯一值；空值、重复值、未知参数、重复标量、逆序窗口、越界分页和未知枚举统一返回 `INVALID_PRESENTATION_QUERY`。
+- 成功读取返回基于 `view_fingerprint` 的强 ETag；匹配 `If-None-Match` 时返回 304 和相同关联 headers。cache policy 为 private revalidation。
+- 版本和 request 不存在返回 `PRESENTATION_NOT_FOUND`；artifact/lineage 不一致返回稳定的 presentation 错误且不泄漏内部路径、token 或原始异常。
+
+### 10.5 错误语义
 
 稳定错误至少包括：
 
@@ -341,6 +363,9 @@ factory、scope、authority、stream、position、request fingerprint 和 attemp
 - SOLUTION_VALIDATION_FAILED；
 - CHANGE_REPORT_INVALID；
 - BASELINE_STATE_CONFLICT；
+- PRESENTATION_NOT_FOUND；
+- PRESENTATION_LINEAGE_MISMATCH；
+- INVALID_PRESENTATION_QUERY；
 - PERSISTENCE_FAILED。
 
 UNKNOWN 且没有 candidate 映射为 SOLVER_NO_CANDIDATE，不得映射为 INFEASIBLE。

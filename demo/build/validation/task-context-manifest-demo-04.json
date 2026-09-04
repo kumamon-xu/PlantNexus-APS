@@ -1,0 +1,173 @@
+{
+  "diff_base": "b0cc126522e3916d72b438e7f237851a36b51a3d",
+  "estimated_characters": 331003,
+  "files_allowed_to_change": [
+    "demo/**"
+  ],
+  "inputs": [
+    {
+      "characters": 7570,
+      "load_mode": "FULL",
+      "path": "demo/docs/TASK-DEMO-04-unified-presentation-and-read-api.md",
+      "sha256": "4397e5d1eb2e38d104e9426e34c7163d418b76ca0df46926b5db6a53918c631b"
+    },
+    {
+      "characters": 12884,
+      "load_mode": "SECTIONS_9_10",
+      "path": "demo/docs/03-architecture-and-api.md",
+      "sha256": "d9cef13b681a373b373944a5ee6c5539d4fe567ad2dbdd70631744633071c8c9"
+    },
+    {
+      "characters": 8476,
+      "load_mode": "B5_AND_GATE_E",
+      "path": "demo/docs/05-benchmark-and-acceptance.md",
+      "sha256": "7bd80e6c78f419d8d2fce5a606b4b7287d58e37bc65d051047e190be8e995862"
+    },
+    {
+      "characters": 14120,
+      "load_mode": "D11_AND_D12",
+      "path": "demo/docs/TASKS.md",
+      "sha256": "b5fa7a669a44122fdb4af4b4af13a026092bd2b48fa4a1164bd1f09728acee43"
+    },
+    {
+      "characters": 20611,
+      "load_mode": "FULL",
+      "path": "docs/contracts/planning-workspace-api.md",
+      "sha256": "f92b51b8a1c923ee5de25c8914e550374d07a88325eae758e7d826e0fd5b12d9"
+    },
+    {
+      "characters": 16025,
+      "load_mode": "FULL",
+      "path": "docs/contracts/planning-solution-and-schedule-version.md",
+      "sha256": "c1975c781aba97e4daebb855f04012b1211ff9e5a4c6a18b897f02a050edecfb"
+    },
+    {
+      "characters": 494,
+      "load_mode": "FULL",
+      "path": "docs/adr/ADR-0008-utc-seconds-and-solver-ticks.md",
+      "sha256": "8a6f2594cdaa471ec000d50bb00e148613a7b52fc1792fd9b0deccdc15b12d8d"
+    },
+    {
+      "characters": 6758,
+      "load_mode": "FULL",
+      "path": "docs/adr/ADR-0010-planning-problem-v2-contract-evolution.md",
+      "sha256": "6a83d5bde325f6f52ddbacccd22ab2af8ae129560542971f748af303753c9923"
+    },
+    {
+      "characters": 7107,
+      "load_mode": "FULL",
+      "path": "docs/adr/ADR-0014-freeze-window-stability-change-report.md",
+      "sha256": "ef9dad9952886da9615477b33c57ca6c3bfd941278acb2d3f8a6b09bc512ae51"
+    },
+    {
+      "characters": 13350,
+      "load_mode": "FULL",
+      "path": "schemas/json/schedule-version.schema.json",
+      "sha256": "2ed509262106468f0b179d23d53ebb2590bb30b1e9a4c0a904ef21144801ba43"
+    },
+    {
+      "characters": 6258,
+      "load_mode": "FULL",
+      "path": "schemas/json/schedule-version.v2.schema.json",
+      "sha256": "853c25f7211e233baa7c275e4de69cc67c070e1a4672afa1fc6b91a260df56d5"
+    },
+    {
+      "characters": 12276,
+      "load_mode": "FULL",
+      "path": "schemas/json/solver-report.schema.json",
+      "sha256": "64feacd0d1ec0ea1c9d3f62d8e38b473b61f42dab5bc672c5898c5e056257b2a"
+    },
+    {
+      "characters": 7974,
+      "load_mode": "FULL",
+      "path": "schemas/json/solver-report.v2.schema.json",
+      "sha256": "230a123ebfa8c027ab9b7ff0c940618e249b954bc2d0333a8a0dc17c310c4aec"
+    },
+    {
+      "characters": 1600,
+      "load_mode": "FULL",
+      "path": "schemas/json/validation-report.schema.json",
+      "sha256": "e6c2e39762e7fa59d7ec374897ed94963e8fb40d60d937d82e54d979dc57c6ed"
+    },
+    {
+      "characters": 2087,
+      "load_mode": "FULL",
+      "path": "schemas/json/validation-report.v2.schema.json",
+      "sha256": "1da63e931e7ddd90134eb652c857f13eb862787de855165cd230c2d8071fd353"
+    },
+    {
+      "characters": 4484,
+      "load_mode": "FULL",
+      "path": "schemas/json/kpi.schema.json",
+      "sha256": "be3dfbcd06e9fb7887df699c2ba0fc8bb229d603b0d55a75268a72bc2cdc9426"
+    },
+    {
+      "characters": 9499,
+      "load_mode": "FULL",
+      "path": "schemas/json/kpi.v2.schema.json",
+      "sha256": "398377d462373315de130491d6286883940e3f8dd733a205ce5c1dfa032b2631"
+    },
+    {
+      "characters": 9413,
+      "load_mode": "FULL",
+      "path": "schemas/json/change-report.schema.json",
+      "sha256": "a040b1cc5c5d44e972af2a08c79393966fa72be3a5407145f429efe6c7b66da8"
+    },
+    {
+      "characters": 16022,
+      "load_mode": "RELEVANT_SYMBOLS",
+      "path": "backend/app/domain/workspace_contracts.py",
+      "sha256": "e4c1defaac005e1f5350ca964ed3afdc3e895d2929e2cca5737d70b349173c41"
+    },
+    {
+      "characters": 11804,
+      "load_mode": "RELEVANT_SYMBOLS",
+      "path": "backend/app/application/workspace_queries.py",
+      "sha256": "b6bbd7c49c86d657022bbdcd9621c5a36b70ae76aa57310d53a11114ca080e2d"
+    },
+    {
+      "characters": 18313,
+      "load_mode": "FULL",
+      "path": "backend/app/application/change_report_queries.py",
+      "sha256": "23d3a44d5205ac2e33b8daa867d86b7243af9e08955f19c15635e4edd9bbb9a3"
+    },
+    {
+      "characters": 21331,
+      "load_mode": "RELEVANT_SYMBOLS",
+      "path": "backend/app/infrastructure/workspace_persistence.py",
+      "sha256": "71c20742db506793bd503afe9adfb964ee8663d0eb1882c2f319f68eb837b480"
+    },
+    {
+      "characters": 53035,
+      "load_mode": "RELEVANT_SYMBOLS",
+      "path": "demo/backend/plantnexus_demo/persistence.py",
+      "sha256": "ee878dcc487da32136e3405670357336f99fa88db9a13ec7d4149e2ad7f7409e"
+    },
+    {
+      "characters": 26372,
+      "load_mode": "RELEVANT_SYMBOLS",
+      "path": "demo/backend/plantnexus_demo/composition.py",
+      "sha256": "c25c354dc10461b06120ee73849647d5fbc7efa4ce46358bb502b64cbf3cd337"
+    },
+    {
+      "characters": 23140,
+      "load_mode": "FULL",
+      "path": "demo/backend/plantnexus_demo/api.py",
+      "sha256": "3f1e5c4220e2a994e181b525c4000c51bccad33201d5af7397fad9509e688bbf"
+    }
+  ],
+  "manifest_version": "demo-task-context-manifest.v1",
+  "on_demand_expansion_triggers": [
+    "formal contract or accepted ADR conflict",
+    "root code/schema change becomes necessary",
+    "dynamic replan implementation starts",
+    "presentation lineage or fingerprint mismatch cannot be resolved read-only"
+  ],
+  "phase_registration": null,
+  "root_repository_consumption": "READ_ONLY",
+  "selected_input_count": 25,
+  "soft_budget_note": "Selected normative units were read in full; the 30k character budget is soft.",
+  "task_family": "demo-exclusive",
+  "task_id": "TASK-DEMO-04",
+  "validation_profile": "DEMO_HIGH_RISK"
+}

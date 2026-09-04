@@ -87,6 +87,26 @@ SHOWCASE 的 20/30 秒是待验证的现场候选参数；只有基准通过才�
 
 分别构建初始 v1、重排 v2 和比较 presentation DTO，测量服务端处理、JSON 大小与浏览器首屏。
 
+#### TASK-DEMO-04 单次 early evidence
+
+`demo/build/validation/runtime-evidence-demo-04.json` 记录了一次固定 Showcase、当前开发机、同进程的服务端读取。它用于验证 610 总工序规模下的契约、数据量和明显性能断点，不是按第 5 节协议形成的 warmup + 5/p95 baseline，也没有测量浏览器渲染或 RSS。
+
+| 读取 | 返回规模 | 单次构建耗时 | canonical JSON |
+|---|---:|---:|---:|
+| Factory | 3 车间 / 24 设备 / 462 unavailable intervals | 0.317 秒 | 149,658 bytes |
+| v1 PUBLISHED 首页 | 500 / 580 assignments | 0.383 秒 | 653,182 bytes |
+| v2 DRAFT 首页 | 500 / 585 assignments | 0.562 秒 | 656,621 bytes |
+| 默认 Comparison | 27 / 585 operations（5 ADDED + 22 CHANGED） | 0.898 秒 | 42,895 bytes |
+| 全量 Comparison 首页 | 500 / 585 operations | 0.930 秒 | 714,477 bytes |
+
+同一次读取证明 v1/v2 分页分别为 500+80、500+85；ChangeReport universe 为 585 = 558 `UNCHANGED` + 22 `CHANGED` + 5 `ADDED`，默认过滤同时观察到 `ADDED` 与 `CHANGED`；重复比较 fingerprint 一致，资源过滤返回 9 条且全部匹配。读取前后 schedule/replan/artifact/publication 行数、故事状态与 current Publication 完全不变。环境为 Python 3.12.13、OR-Tools 9.15.6755、Windows 11、32 logical CPUs；这些单次数字不得替代第 8 节的 p95 门槛判定。
+
+#### TASK-DEMO-06 浏览器单次 early evidence
+
+`demo/build/validation/frontend-evidence-demo-06.json` 记录固定 Showcase current `PUBLISHED` 基线的真实 Chromium 读取。默认 72 小时时间窗匹配 546/580 assignments，单页返回并挂载 160 个 assignment 节点；同屏还有 30 个 completed 事实、24 个资源行、120 个非工作时段块、2 个维护块和 24 个冻结图层，总 DOM 为 1,173 个节点。一次 fresh navigation 中，Factory/工作区 payload 分别为 149,658/305,326 bytes，工作区响应结束于导航后约 1,438.4 ms。1440×900 和 1024×768 均无页面级横向滚动，1024 宽仅甘特容器内部滚动。
+
+这只有 1 个当前开发机样本，没有 warmup + 5、p95、独立 RSS 或目标演示机环境签名，因此只证明消费路径和节点上限没有明显断点，不建立首屏 SLA。
+
 ### B6：重置恢复
 
 创建新数据库、迁移、初始化、原子切换，并注入中途失败，确认旧 active run 不受损。
@@ -263,6 +283,8 @@ UPPER 不满足时，不影响已通过的 SHOWCASE 发布，但 README 必须�
 - DRAFT 和 Simulation 标识始终可见；
 - 1440×900 主路径无横向页面滚动。
 
+TASK-DEMO-04 已通过统一展示契约与只读性证据；TASK-DEMO-05 验证了中文故事壳不重算 KPI、Simulation 标识持续可见和双宽度布局；TASK-DEMO-06 进一步验证了初始 580 assignments 通过 160 节点分页/时间窗有界展示、订单联动、日历与锁定语义、计划负荷口径以及 1440×900/1024×768 无页面级横向滚动。TASK-DEMO-07 真实连接 Showcase current `PUBLISHED`，一次业务表单提交形成 5 `ADDED` / 25 `CHANGED` / 555 `UNCHANGED` 的 v2 `DRAFT`；默认变化页、保持不变分页、设备筛选、PUBLISHED→DRAFT lineage、交付/稳定性、Validator 和刷新恢复均通过，两个目标宽度无页面级横向滚动。至此 Gate E 当前清单有单次浏览器 `PASS` 证据；D16 仍需补失败/安全/可访问性矩阵，D17 仍需正式多样本性能证据。
+
 ### Gate F：恢复与安全
 
 - 默认只绑定 127.0.0.1；
@@ -271,6 +293,8 @@ UPPER 不满足时，不影响已通过的 SHOWCASE 发布，但 README 必须�
 - reset 失败不切换 active run；
 - 服务重启后活动 job 进入明确 INTERRUPTED；
 - 路径逃逸、任意数据库路径和并发 reset 被拒绝。
+
+TASK-DEMO-05 已在真实 Chromium 验证同源 HttpOnly session、EMPTY 到基线发布、刷新恢复同一 run、响应契约 fail closed、中文安全错误和可见正文不含凭证；TASK-DEMO-07 又验证了 durable urgent 成功后刷新恢复同一 DRAFT comparison 且不重复 POST。完整重启/INTERRUPTED、stale、失败注入、并发与可访问性矩阵仍属于 D16。
 
 ## 10. 测试矩阵
 
@@ -284,7 +308,7 @@ UPPER 不满足时，不影响已通过的 SHOWCASE 发布，但 README 必须�
 | Concurrency | 双击提交、并发重置、stale base、服务重启 |
 | Security | Simulation-only、scope/capability、token 消毒、路径约束 |
 | E2E | 浏览器从重置到比较页、刷新恢复、失败/重试、键盘操作 |
-| Visual | 1440×900、1024 宽、长订单号、500+ 甘特条目、色盲检查 |
+| Visual | 1440×900、1024 宽、长订单号、580 条数据的有界甘特、比较页与色盲检查 |
 | Benchmark | SMOKE、SHOWCASE、UPPER 的 B1～B6 |
 
 ## 11. 发布判定

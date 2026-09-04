@@ -19,7 +19,10 @@ from app.domain.schedule_version import (
     ScheduleVersionCreationContext,
     ValidatedPlanningOutput,
 )
-from app.domain.workspace_contracts import workspace_command_fingerprint
+from app.domain.workspace_contracts import (
+    workspace_command_fingerprint,
+    workspace_fingerprint,
+)
 from app.importers import StagingDataPlane
 from app.infrastructure.audit_repository import SqlAlchemyAuditRepository
 from app.infrastructure.import_staging_repository import (
@@ -109,6 +112,14 @@ class ControlJobStageSink(StageSink):
 
 
 def _artifact_id(kind: str, document: Mapping[str, object]) -> str:
+    if kind == "PLANNING_PROBLEM":
+        problem_hash = document.get("problem_hash")
+        if isinstance(problem_hash, str) and problem_hash.startswith("sha256:"):
+            return "planning-problem-" + problem_hash.removeprefix("sha256:")
+    if kind == "VALIDATION_REPORT":
+        return "validation-report-" + workspace_fingerprint(
+            document
+        ).removeprefix("sha256:")
     preferred_fields = {
         "IMPORT_QUALITY": ("report_id",),
         "SNAPSHOT": ("snapshot_id",),

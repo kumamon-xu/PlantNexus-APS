@@ -1,0 +1,122 @@
+{
+  "assertions": {
+    "chinese_document": true,
+    "clean_console": true,
+    "complete_story": true,
+    "future_features_disabled": true,
+    "honest_result": true,
+    "html_language": true,
+    "keyboard_path": true,
+    "locked_frontend_dependencies": true,
+    "network_contract": true,
+    "no_visible_credentials": true,
+    "observation_contract": true,
+    "post_fix_chain": true,
+    "refresh_same_run": true,
+    "responsive_without_page_overflow": true,
+    "same_origin_credentials": true,
+    "scope_boundary": true,
+    "screenshots_valid": true,
+    "simulation_boundary": true,
+    "task_identity": true
+  },
+  "boundaries": {
+    "d14_schedule_workspace": "NOT_IMPLEMENTED",
+    "d15_urgent_replan_ui": "NOT_IMPLEMENTED",
+    "production_capacity_claim": "NOT_ESTABLISHED",
+    "synthetic_only": true
+  },
+  "evidence_version": "cnc-demo-frontend-evidence.v1",
+  "frontend_sources": {
+    "browser_smoke": "@playwright/cli + Chromium",
+    "package_json_sha256": "5db855f946d60c73d898fcf7bc72d24c17c868fd5cdf4f09091340d97cd8d1bd",
+    "package_lock_sha256": "4c63ef7063c3d2924c06430b7e9f4edcba589df1f628ed54c902d3a3485dea82",
+    "test_framework": "Vitest + Testing Library"
+  },
+  "observation": {
+    "observed_at_utc": "2026-09-02T09:51:30Z",
+    "path": "demo/build/validation/browser-smoke-observation-demo-05.json",
+    "profile": "smoke",
+    "sha256": "97dc31cc9fe643738af2fec87dbbe00db228b3283cd96e455ebf8042357ed2d9",
+    "tool": {
+      "base_url": "http://127.0.0.1:4174/demo/",
+      "browser": "chromium",
+      "name": "@playwright/cli",
+      "session": "demo05"
+    }
+  },
+  "report_fingerprint": "sha256:8702ceeb48e32dff60f898682bb33d94fc693d8ed4bbadbb02333013848dc3b8",
+  "runtime_result": {
+    "hard_violation_count": 0,
+    "production_authority": false,
+    "schedule_publishable": false,
+    "simulation_only": true,
+    "solver_status": "OPTIMAL",
+    "validation_status": "PASS"
+  },
+  "screenshots": [
+    {
+      "path": "demo/build/validation/screenshots/demo05-empty-1440x900.png",
+      "png_height": 1313,
+      "png_width": 1425,
+      "sha256": "193cc3b98b901cc636abeb18e3da74b60013fa6a92293d1c59d967a57262b021",
+      "state": "EMPTY",
+      "status": "PASS",
+      "viewport_height": 900,
+      "viewport_width": 1440
+    },
+    {
+      "path": "demo/build/validation/screenshots/demo05-baseline-1440x900.png",
+      "png_height": 1349,
+      "png_width": 1425,
+      "sha256": "126537283659fcd93f7fce40bd8a487ef5599bc0074e6bcc2fda584df9cef5a2",
+      "state": "BASELINE_PUBLISHED",
+      "status": "PASS",
+      "viewport_height": 900,
+      "viewport_width": 1440
+    },
+    {
+      "path": "demo/build/validation/screenshots/demo05-baseline-1024x768.png",
+      "png_height": 1344,
+      "png_width": 1009,
+      "sha256": "a6044ae3dff6ad70ed0154d6b9bd831012033c100e07f97cf141d1d0838271ef",
+      "state": "BASELINE_PUBLISHED",
+      "status": "PASS",
+      "viewport_height": 768,
+      "viewport_width": 1024
+    }
+  ],
+  "status": "PASS",
+  "task_id": "TASK-DEMO-05",
+  "viewports": [
+    {
+      "client_width": 1425,
+      "height": 900,
+      "scroll_width": 1425,
+      "width": 1440
+    },
+    {
+      "client_width": 1009,
+      "height": 768,
+      "scroll_width": 1009,
+      "width": 1024
+    }
+  ],
+  "workflow": {
+    "activation_confirmation_autofocus": true,
+    "activation_enter_key": true,
+    "initial_plan_enter_key": true,
+    "initialization_enter_key": true,
+    "observed_states": [
+      "EMPTY",
+      "INITIALIZED",
+      "READY_FOR_REVIEW",
+      "BASELINE_PUBLISHED"
+    ],
+    "post_fix_full_chain_completed": true,
+    "refresh_recovered_published_story": true,
+    "run_id_after_refresh": "run-5556d9983fc18505f9553b45cdf1e77c",
+    "run_id_before_refresh": "run-5556d9983fc18505f9553b45cdf1e77c",
+    "schedule_version_id": "schedule-version-validated-7c54314c2d463376e81db87e010dd28f11c7783437f39f0d2b7db8475e594fce"
+  }
+}

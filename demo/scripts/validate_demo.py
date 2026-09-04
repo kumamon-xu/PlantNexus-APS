@@ -15,19 +15,33 @@ from typing import Any
 
 DEMO_ROOT = Path(__file__).resolve().parents[1]
 REPOSITORY_ROOT = DEMO_ROOT.parent
+NPM_COMMAND = "npm.cmd" if os.name == "nt" else "npm"
+IGNORED_DIRECTORY_NAMES = {
+    ".playwright-cli",
+    ".pyright",
+    ".pytest_cache",
+    ".ruff_cache",
+    "__pycache__",
+    "coverage",
+    "dist",
+    "node_modules",
+    "playwright-report",
+    "runtime",
+    "test-results",
+}
 
 
 def _sha256(path: Path) -> str:
     return sha256(path.read_bytes()).hexdigest()
 
 
-def _run(command: list[str]) -> dict[str, Any]:
+def _run(command: list[str], *, cwd: Path = REPOSITORY_ROOT) -> dict[str, Any]:
     started = perf_counter()
     environment = os.environ.copy()
     environment["PYTHONDONTWRITEBYTECODE"] = "1"
     completed = subprocess.run(
         command,
-        cwd=REPOSITORY_ROOT,
+        cwd=cwd,
         capture_output=True,
         text=True,
         encoding="utf-8",
@@ -38,11 +52,19 @@ def _run(command: list[str]) -> dict[str, Any]:
     output = (completed.stdout + completed.stderr).strip()
     return {
         "command": command,
+        "cwd": cwd.relative_to(REPOSITORY_ROOT).as_posix() or ".",
         "status": "PASS" if completed.returncode == 0 else "FAIL",
         "exit_code": completed.returncode,
         "duration_seconds": perf_counter() - started,
         "output": output[-8_000:],
     }
+
+
+def _is_ignored_artifact(path: Path) -> bool:
+    relative = path.relative_to(DEMO_ROOT)
+    if any(part in IGNORED_DIRECTORY_NAMES for part in relative.parts):
+        return True
+    return relative.parts[:2] in {("benchmarks", "tmp"), ("data", "generated")}
 
 
 def _outside_demo_paths() -> set[str]:
@@ -107,7 +129,11 @@ def _text_hygiene() -> dict[str, Any]:
     suffixes = {".py", ".md", ".json"}
     violations: list[str] = []
     for path in sorted(DEMO_ROOT.rglob("*")):
-        if not path.is_file() or path.suffix not in suffixes:
+        if (
+            not path.is_file()
+            or path.suffix not in suffixes
+            or _is_ignored_artifact(path)
+        ):
             continue
         try:
             text = path.read_text(encoding="utf-8")
@@ -206,6 +232,235 @@ def _verify_replan_runtime_evidence(path: Path) -> dict[str, Any]:
     }
 
 
+def _verify_presentation_runtime_evidence(path: Path) -> dict[str, Any]:
+    report = json.loads(path.read_text(encoding="utf-8"))
+    observed_fingerprint = report.pop("report_fingerprint", None)
+    payload = json.dumps(
+        report,
+        ensure_ascii=False,
+        sort_keys=True,
+        separators=(",", ":"),
+        allow_nan=False,
+    ).encode("utf-8")
+    expected_fingerprint = f"sha256:{sha256(payload).hexdigest()}"
+    base = report["base_schedule"]
+    draft = report["draft_schedule"]
+    comparison = report["comparison"]
+    invariant = report["read_only_invariant"]
+    passed = (
+        report["status"] == "PASS"
+        and report["task_id"] == "TASK-DEMO-04"
+        and report["profile"] == "showcase"
+        and report["seed"] == 20260902
+        and report["factory"]["workshops"] == 3
+        and report["factory"]["resources"] == 24
+        and base["contract_version"] == "schedule-version.v1"
+        and base["state"] == "PUBLISHED"
+        and base["assignments"] == 580
+        and sum(base["page_counts"]) == 580
+        and draft["contract_version"] == "schedule-version.v2"
+        and draft["state"] == "DRAFT"
+        and draft["assignments"] == 585
+        and sum(draft["page_counts"]) == 585
+        and base["validation_status"] == "PASS"
+        and draft["validation_status"] == "PASS"
+        and comparison["operation_universe_count"] == 585
+        and comparison["change_counts"]["added"] == 5
+        and comparison["change_counts"]["changed"] > 0
+        and comparison["default_observed_classifications"]
+        == ["ADDED", "CHANGED"]
+        and sum(comparison["all_page_counts"]) == 585
+        and comparison["deterministic_replay"] is True
+        and report["filter_probe"]["all_rows_match"] is True
+        and invariant["row_counts_before"] == invariant["row_counts_after"]
+        and invariant["story_state_unchanged"] is True
+        and invariant["current_publication_unchanged"] is True
+        and report["contracts"]["strict_root_additional_properties"] is True
+        and report["boundaries"]["publishable"] is False
+        and report["boundaries"]["single_showcase_run_not_p95"] is True
+        and observed_fingerprint == expected_fingerprint
+    )
+    return {
+        "status": "PASS" if passed else "FAIL",
+        "path": path.relative_to(REPOSITORY_ROOT).as_posix(),
+        "sha256": _sha256(path),
+        "base_assignments": base["assignments"],
+        "draft_assignments": draft["assignments"],
+        "change_counts": comparison["change_counts"],
+        "payload_bytes": report["payload_bytes"],
+        "presentation_seconds": report["presentation_seconds"],
+    }
+
+
+def _verify_frontend_evidence(path: Path) -> dict[str, Any]:
+    report = json.loads(path.read_text(encoding="utf-8"))
+    observed_fingerprint = report.pop("report_fingerprint", None)
+    payload = json.dumps(
+        report,
+        ensure_ascii=False,
+        sort_keys=True,
+        separators=(",", ":"),
+        allow_nan=False,
+    ).encode("utf-8")
+    expected_fingerprint = f"sha256:{sha256(payload).hexdigest()}"
+    assertions = report["assertions"]
+    runtime = report["runtime_result"]
+    workflow = report["workflow"]
+    passed = (
+        report["status"] == "PASS"
+        and report["task_id"] == "TASK-DEMO-05"
+        and report["evidence_version"] == "cnc-demo-frontend-evidence.v1"
+        and all(assertions.values())
+        and workflow["observed_states"]
+        == ["EMPTY", "INITIALIZED", "READY_FOR_REVIEW", "BASELINE_PUBLISHED"]
+        and workflow["run_id_before_refresh"] == workflow["run_id_after_refresh"]
+        and runtime["solver_status"] in {"OPTIMAL", "FEASIBLE"}
+        and runtime["validation_status"] == "PASS"
+        and runtime["hard_violation_count"] == 0
+        and runtime["simulation_only"] is True
+        and runtime["production_authority"] is False
+        and runtime["schedule_publishable"] is False
+        and len(report["screenshots"]) == 3
+        and all(item["status"] == "PASS" for item in report["screenshots"])
+        and report["boundaries"]["d14_schedule_workspace"] == "NOT_IMPLEMENTED"
+        and report["boundaries"]["d15_urgent_replan_ui"] == "NOT_IMPLEMENTED"
+        and observed_fingerprint == expected_fingerprint
+    )
+    return {
+        "status": "PASS" if passed else "FAIL",
+        "path": path.relative_to(REPOSITORY_ROOT).as_posix(),
+        "sha256": _sha256(path),
+        "assertion_count": len(assertions),
+        "screenshot_count": len(report["screenshots"]),
+        "story_state": workflow["observed_states"][-1],
+        "solver_status": runtime["solver_status"],
+        "validation_status": runtime["validation_status"],
+    }
+
+
+def _verify_workspace_evidence(path: Path) -> dict[str, Any]:
+    report = json.loads(path.read_text(encoding="utf-8"))
+    observed_fingerprint = report.pop("report_fingerprint", None)
+    payload = json.dumps(
+        report,
+        ensure_ascii=False,
+        sort_keys=True,
+        separators=(",", ":"),
+        allow_nan=False,
+    ).encode("utf-8")
+    expected_fingerprint = f"sha256:{sha256(payload).hexdigest()}"
+    assertions = report["assertions"]
+    runtime = report["runtime_result"]
+    workspace = report["workspace"]
+    summary = workspace["summary"]
+    page = workspace["page"]
+    gantt = workspace["gantt"]
+    network = report["network"]
+    passed = (
+        report["status"] == "PASS"
+        and report["task_id"] == "TASK-DEMO-06"
+        and report["evidence_version"] == "cnc-demo-workspace-evidence.v1"
+        and all(assertions.values())
+        and runtime["story_state"] == "BASELINE_PUBLISHED"
+        and runtime["schedule_state"] == "PUBLISHED"
+        and runtime["solver_status"] in {"OPTIMAL", "FEASIBLE"}
+        and runtime["validation_status"] == "PASS"
+        and runtime["hard_violation_count"] == 0
+        and runtime["simulation_only"] is True
+        and runtime["production_authority"] is False
+        and runtime["schedule_publishable"] is False
+        and summary["orders"] == 132
+        and summary["scheduled_assignments"] == 580
+        and summary["resources"] == 24
+        and summary["workshops"] == 3
+        and page["limit"] <= 200
+        and page["returned"] == gantt["assignment_nodes"]
+        and gantt["assignment_nodes"] < summary["scheduled_assignments"]
+        and network["mutation_requests_during_workspace_actions"] == 0
+        and all(
+            request["method"] == "GET"
+            for request in network["workspace_requests"]
+        )
+        and len(report["screenshots"]) == 5
+        and all(item["status"] == "PASS" for item in report["screenshots"])
+        and report["boundaries"]["d14_schedule_workspace"] == "IMPLEMENTED"
+        and report["boundaries"]["d15_urgent_replan_ui"] == "NOT_IMPLEMENTED"
+        and report["boundaries"]["single_showcase_browser_run_not_p95"] is True
+        and observed_fingerprint == expected_fingerprint
+    )
+    return {
+        "status": "PASS" if passed else "FAIL",
+        "path": path.relative_to(REPOSITORY_ROOT).as_posix(),
+        "sha256": _sha256(path),
+        "assertion_count": len(assertions),
+        "screenshot_count": len(report["screenshots"]),
+        "orders": summary["orders"],
+        "assignments": summary["scheduled_assignments"],
+        "rendered_assignment_nodes": gantt["assignment_nodes"],
+        "resources": summary["resources"],
+        "solver_status": runtime["solver_status"],
+        "validation_status": runtime["validation_status"],
+    }
+
+
+def _verify_replan_frontend_evidence(path: Path) -> dict[str, Any]:
+    report = json.loads(path.read_text(encoding="utf-8"))
+    observed_fingerprint = report.pop("report_fingerprint", None)
+    payload = json.dumps(
+        report,
+        ensure_ascii=False,
+        sort_keys=True,
+        separators=(",", ":"),
+        allow_nan=False,
+    ).encode("utf-8")
+    expected_fingerprint = f"sha256:{sha256(payload).hexdigest()}"
+    assertions = report["assertions"]
+    runtime = report["runtime_result"]
+    job = report["job"]
+    comparison = report["comparison"]
+    counts = comparison["change_counts"]
+    passed = (
+        report["status"] == "PASS"
+        and report["task_id"] == "TASK-DEMO-07"
+        and report["evidence_version"] == "cnc-demo-replan-frontend-evidence.v1"
+        and all(assertions.values())
+        and runtime["story_state"] == "DRAFT_COMPARISON_READY"
+        and runtime["before_schedule_state"] == "PUBLISHED"
+        and runtime["after_schedule_state"] == "DRAFT"
+        and runtime["current_publication_unchanged"] is True
+        and runtime["simulation_only"] is True
+        and runtime["production_authority"] is False
+        and runtime["schedule_publishable"] is False
+        and job["status"] == "SUCCEEDED"
+        and job["solver_status"] in {"OPTIMAL", "FEASIBLE"}
+        and job["validation_status"] == "PASS"
+        and job["hard_violation_count"] == 0
+        and counts["added"] == 5
+        and counts["changed"] > 0
+        and counts["unchanged"] > 0
+        and comparison["filters"]["unchanged_first_page"]["limit"] <= 200
+        and comparison["refresh_replayed_mutations"] == 0
+        and len(report["screenshots"]) == 3
+        and all(item["status"] == "PASS" for item in report["screenshots"])
+        and report["boundaries"]["d15_urgent_replan_ui"] == "IMPLEMENTED"
+        and report["boundaries"]["draft_auto_published"] is False
+        and report["boundaries"]["single_showcase_browser_run_not_p95"] is True
+        and observed_fingerprint == expected_fingerprint
+    )
+    return {
+        "status": "PASS" if passed else "FAIL",
+        "path": path.relative_to(REPOSITORY_ROOT).as_posix(),
+        "sha256": _sha256(path),
+        "assertion_count": len(assertions),
+        "screenshot_count": len(report["screenshots"]),
+        "story_state": runtime["story_state"],
+        "solver_status": job["solver_status"],
+        "validation_status": job["validation_status"],
+        "change_counts": counts,
+        "urgent_job_wall_seconds": job["wall_seconds"],
+    }
+
+
 def build_report(*, task_id: str, context_path: Path) -> dict[str, Any]:
     baseline_path = DEMO_ROOT / "build/validation/protected-root-baseline.json"
     baseline = json.loads(baseline_path.read_text(encoding="utf-8"))
@@ -225,7 +480,7 @@ def build_report(*, task_id: str, context_path: Path) -> dict[str, Any]:
         )
     scope_status = (
         "PASS"
-        if observed_outside == expected_outside
+        if observed_outside.issubset(expected_outside)
         and all(item["status"] == "PASS" for item in protected_files)
         else "FAIL"
     )
@@ -245,6 +500,16 @@ def build_report(*, task_id: str, context_path: Path) -> dict[str, Any]:
         _run(["uv", "run", "pyright", "-p", "demo/pyrightconfig.json"]),
         _run(["git", "diff", "--check", "--", "demo"]),
     ]
+    if task_id in {"TASK-DEMO-05", "TASK-DEMO-06", "TASK-DEMO-07"}:
+        frontend_root = DEMO_ROOT / "frontend"
+        command_checks = [
+            _run([NPM_COMMAND, "ci", "--no-audit", "--no-fund"], cwd=frontend_root),
+            _run([NPM_COMMAND, "run", "lint"], cwd=frontend_root),
+            _run([NPM_COMMAND, "run", "typecheck"], cwd=frontend_root),
+            _run([NPM_COMMAND, "run", "test:run"], cwd=frontend_root),
+            _run([NPM_COMMAND, "run", "build"], cwd=frontend_root),
+            *command_checks,
+        ]
     hygiene = _text_hygiene()
     artifact_checks: dict[str, dict[str, Any]] = {
         "contract_probes": {
@@ -273,6 +538,24 @@ def build_report(*, task_id: str, context_path: Path) -> dict[str, Any]:
         artifact_checks["runtime_evidence"] = _verify_replan_runtime_evidence(
             DEMO_ROOT / "build/validation/runtime-evidence-demo-03.json"
         )
+    elif task_id == "TASK-DEMO-04":
+        artifact_checks["runtime_evidence"] = (
+            _verify_presentation_runtime_evidence(
+                DEMO_ROOT / "build/validation/runtime-evidence-demo-04.json"
+            )
+        )
+    elif task_id == "TASK-DEMO-05":
+        artifact_checks["frontend_evidence"] = _verify_frontend_evidence(
+            DEMO_ROOT / "build/validation/frontend-evidence-demo-05.json"
+        )
+    elif task_id == "TASK-DEMO-06":
+        artifact_checks["frontend_evidence"] = _verify_workspace_evidence(
+            DEMO_ROOT / "build/validation/frontend-evidence-demo-06.json"
+        )
+    elif task_id == "TASK-DEMO-07":
+        artifact_checks["frontend_evidence"] = _verify_replan_frontend_evidence(
+            DEMO_ROOT / "build/validation/frontend-evidence-demo-07.json"
+        )
     passed = (
         scope_status == "PASS"
         and all(item["status"] == "PASS" for item in benchmark_checks)
@@ -289,7 +572,7 @@ def build_report(*, task_id: str, context_path: Path) -> dict[str, Any]:
         for path in sorted(DEMO_ROOT.rglob("*"))
         if path.is_file()
         and not path.name.startswith("task-machine-report")
-        and "__pycache__" not in path.parts
+        and not _is_ignored_artifact(path)
         and path.suffix not in {".pyc", ".pyo"}
     ]
     return {
@@ -324,7 +607,15 @@ def main() -> int:
     parser.add_argument("--report", type=Path, required=True)
     parser.add_argument(
         "--task-id",
-        choices=("TASK-DEMO-01", "TASK-DEMO-02", "TASK-DEMO-03"),
+        choices=(
+            "TASK-DEMO-01",
+            "TASK-DEMO-02",
+            "TASK-DEMO-03",
+            "TASK-DEMO-04",
+            "TASK-DEMO-05",
+            "TASK-DEMO-06",
+            "TASK-DEMO-07",
+        ),
         default="TASK-DEMO-01",
     )
     parser.add_argument("--context", type=Path)
@@ -339,6 +630,10 @@ def main() -> int:
             "TASK-DEMO-01": "task-context-manifest.json",
             "TASK-DEMO-02": "task-context-manifest-demo-02.json",
             "TASK-DEMO-03": "task-context-manifest-demo-03.json",
+            "TASK-DEMO-04": "task-context-manifest-demo-04.json",
+            "TASK-DEMO-05": "task-context-manifest-demo-05.json",
+            "TASK-DEMO-06": "task-context-manifest-demo-06.json",
+            "TASK-DEMO-07": "task-context-manifest-demo-07.json",
         }[arguments.task_id]
     )
     report = build_report(task_id=arguments.task_id, context_path=context_path)

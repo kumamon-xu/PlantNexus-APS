@@ -1,0 +1,102 @@
+{
+  "observation_version": "cnc-demo-browser-smoke-observation.v1",
+  "task_id": "TASK-DEMO-05",
+  "observed_at_utc": "2026-09-02T09:51:30Z",
+  "tool": {
+    "name": "@playwright/cli",
+    "session": "demo05",
+    "browser": "chromium",
+    "base_url": "http://127.0.0.1:4174/demo/"
+  },
+  "profile": "smoke",
+  "document": {
+    "lang": "zh-CN",
+    "title": "PlantNexus APS · CNC 精密机加工演示"
+  },
+  "workflow": {
+    "observed_states": [
+      "EMPTY",
+      "INITIALIZED",
+      "READY_FOR_REVIEW",
+      "BASELINE_PUBLISHED"
+    ],
+    "run_id_before_refresh": "run-5556d9983fc18505f9553b45cdf1e77c",
+    "run_id_after_refresh": "run-5556d9983fc18505f9553b45cdf1e77c",
+    "schedule_version_id": "schedule-version-validated-7c54314c2d463376e81db87e010dd28f11c7783437f39f0d2b7db8475e594fce",
+    "initialization_enter_key": true,
+    "initial_plan_enter_key": true,
+    "activation_enter_key": true,
+    "activation_confirmation_autofocus": true,
+    "refresh_recovered_published_story": true,
+    "post_fix_full_chain_completed": true
+  },
+  "runtime_result": {
+    "solver_status": "OPTIMAL",
+    "validation_status": "PASS",
+    "hard_violation_count": 0,
+    "simulation_only": true,
+    "production_authority": false,
+    "schedule_publishable": false
+  },
+  "network": {
+    "session_status": 200,
+    "bootstrap_status": 200,
+    "reset_status": 202,
+    "initial_plan_status": 202,
+    "job_status": 200,
+    "schedule_view_status": 200,
+    "baseline_activation_status": 200
+  },
+  "console": {
+    "errors": 0,
+    "warnings": 0
+  },
+  "security": {
+    "visible_bearer": false,
+    "visible_authorization_header": false,
+    "technical_evidence_expanded": true
+  },
+  "viewports": [
+    {
+      "width": 1440,
+      "height": 900,
+      "client_width": 1425,
+      "scroll_width": 1425
+    },
+    {
+      "width": 1024,
+      "height": 768,
+      "client_width": 1009,
+      "scroll_width": 1009
+    }
+  ],
+  "screenshots": [
+    {
+      "state": "EMPTY",
+      "viewport_width": 1440,
+      "viewport_height": 900,
+      "client_width": 1425,
+      "path": "demo/build/validation/screenshots/demo05-empty-1440x900.png"
+    },
+    {
+      "state": "BASELINE_PUBLISHED",
+      "viewport_width": 1440,
+      "viewport_height": 900,
+      "client_width": 1425,
+      "path": "demo/build/validation/screenshots/demo05-baseline-1440x900.png"
+    },
+    {
+      "state": "BASELINE_PUBLISHED",
+      "viewport_width": 1024,
+      "viewport_height": 768,
+      "client_width": 1009,
+      "path": "demo/build/validation/screenshots/demo05-baseline-1024x768.png"
+    }
+  ],
+  "boundaries": {
+    "synthetic_only": true,
+    "d14_schedule_workspace": "NOT_IMPLEMENTED",
+    "d15_urgent_replan_ui": "NOT_IMPLEMENTED",
+    "production_capacity_claim": "NOT_ESTABLISHED"
+  }
+}

@@ -5,6 +5,14 @@ from .composition import create_demo_app, create_demo_runtime
 from .generator import DemoGeneratedBatch, DemoPackageGenerator
 from .ingress import DemoIngressArtifacts, DemoIngressPipeline
 from .replanning import UrgentReplanOrchestrator, UrgentReplanResult
+from .presentation import (
+    ComparisonPresentationQuery,
+    DemoComparisonView,
+    DemoFactoryView,
+    DemoPresentationService,
+    DemoScheduleView,
+    SchedulePresentationQuery,
+)
 from .urgent import UrgentOrderCommand
 
 __all__ = [
@@ -14,6 +22,12 @@ __all__ = [
     "DemoIngressArtifacts",
     "DemoIngressPipeline",
     "DemoPackageGenerator",
+    "DemoComparisonView",
+    "DemoFactoryView",
+    "DemoPresentationService",
+    "DemoScheduleView",
+    "ComparisonPresentationQuery",
+    "SchedulePresentationQuery",
     "UrgentOrderCommand",
     "UrgentReplanOrchestrator",
     "UrgentReplanResult",

@@ -1,0 +1,155 @@
+{
+  "base_schedule": {
+    "assignments": 580,
+    "contract_version": "schedule-version.v1",
+    "orders": 132,
+    "page_counts": [
+      500,
+      80
+    ],
+    "resources": 24,
+    "schedule_version_id": "schedule-version-validated-ad407cdd1780769546ee800e14fc12c5ea55248c557ce7227c107c63e9a6ae97",
+    "solver_status": "OPTIMAL",
+    "state": "PUBLISHED",
+    "validation_status": "PASS",
+    "view_fingerprint": "sha256:dd844249bf73a9ffeff5b668a5a4909345dd62e2b170cbebb5cd8daf7653ec1e"
+  },
+  "boundaries": {
+    "browser_rendering_measured": false,
+    "data_plane": "SIMULATION",
+    "p7_registration": "NONE",
+    "production_authority": false,
+    "publishable": false,
+    "single_showcase_run_not_p95": true
+  },
+  "comparison": {
+    "affected_orders": 8,
+    "all_page_counts": [
+      500,
+      85
+    ],
+    "change_counts": {
+      "added": 5,
+      "changed": 22,
+      "removed_by_fact": 0,
+      "unchanged": 558
+    },
+    "default_classifications": [
+      "ADDED",
+      "CHANGED"
+    ],
+    "default_observed_classifications": [
+      "ADDED",
+      "CHANGED"
+    ],
+    "deterministic_replay": true,
+    "operation_universe_count": 585,
+    "request_id": "replan-request-c8622715148bbbf908cf4973953beaec6a54932d35ef5eb35dc9c2297612fcab",
+    "stability": {
+      "absolute_start_shift_seconds": 2940600,
+      "changed_existing_operations": 22,
+      "comparable_existing": 580,
+      "resource_changes": 1,
+      "soft_lock_violations": 3,
+      "unchanged_existing": 558,
+      "unchanged_ratio": 0.9620689655172414
+    },
+    "view_fingerprint": "sha256:fe1956ac5e3dbd001dabb11c0e9d649addfa54ccc338c1b8e665528837524c57"
+  },
+  "contracts": {
+    "schema_count": 3,
+    "strict_root_additional_properties": true
+  },
+  "draft_schedule": {
+    "assignments": 585,
+    "contract_version": "schedule-version.v2",
+    "orders": 133,
+    "page_counts": [
+      500,
+      85
+    ],
+    "resources": 24,
+    "schedule_version_id": "schedule-version-replan-6773458de22043debb093ea727f0ad14b2784a17d87fcb9af83eb388ea03e5cb",
+    "solver_status": "OPTIMAL",
+    "state": "DRAFT",
+    "validation_status": "PASS",
+    "view_fingerprint": "sha256:2cf5a9e4f1efae0773c9e9c97bc8f0ba2b72405935cf1bf0c81919482bd18a4a"
+  },
+  "environment": {
+    "cpu_count": 32,
+    "ortools": "9.15.6755",
+    "os": "Windows-11-10.0.26200-SP0",
+    "python": "3.12.13"
+  },
+  "factory": {
+    "maintenance_events": 6,
+    "resource_groups": 7,
+    "resources": 24,
+    "timezone": "Asia/Shanghai",
+    "unavailable_intervals": 462,
+    "view_fingerprint": "sha256:feaf8bfbefcd7b550af5b41ce8ca893d9ba27047501634b397e7df74314a71ea",
+    "workshops": 3
+  },
+  "filter_probe": {
+    "all_rows_match": true,
+    "filtered_total": 9,
+    "resource_id": "resource-fa5ba6feff8e13b5f882aefa086935e2e37716312c6d68b61e28a29a722b7513"
+  },
+  "generated_at_utc": "2026-09-02T08:42:23Z",
+  "orchestration_seconds": {
+    "plan_accept": 0.009334499991382472,
+    "plan_wait": 6.4702891999913845,
+    "reset_accept": 0.01040689999354072,
+    "reset_wait": 2.806956500004162,
+    "urgent_accept": 3.286189499995089,
+    "urgent_wait": 20.804154800003744
+  },
+  "payload_bytes": {
+    "base_first_500": 653182,
+    "comparison_all_first_500": 714477,
+    "comparison_default": 42895,
+    "draft_first_500": 656621,
+    "factory": 149658
+  },
+  "presentation_seconds": {
+    "base_first_500": 0.38252850000571925,
+    "base_tail": 0.357386099989526,
+    "comparison_all_first_500": 0.930262900001253,
+    "comparison_default": 0.897994099999778,
+    "comparison_tail": 0.9217317000002367,
+    "draft_first_500": 0.5622833999950672,
+    "draft_tail": 0.5196317999943858,
+    "factory": 0.3168112999992445,
+    "resource_filter": 0.47912109999742825
+  },
+  "profile": "showcase",
+  "read_only_invariant": {
+    "current_publication_unchanged": true,
+    "row_counts_after": {
+      "demo_artifacts": 15,
+      "demo_command_audit": 2,
+      "publication_current_references": 1,
+      "replan_attempts": 1,
+      "replan_requests": 1,
+      "replan_results": 1,
+      "schedule_versions": 2
+    },
+    "row_counts_before": {
+      "demo_artifacts": 15,
+      "demo_command_audit": 2,
+      "publication_current_references": 1,
+      "replan_attempts": 1,
+      "replan_requests": 1,
+      "replan_results": 1,
+      "schedule_versions": 2
+    },
+    "story_state_unchanged": true
+  },
+  "report_fingerprint": "sha256:70645607f01800d81637f92fa40fbb52928346376ca354cb01d5c6761951de25",
+  "run_id": "run-29be660f1477f2e30018bb780f3a5da4",
+  "runtime_evidence_version": "cnc-demo-presentation-runtime-evidence.v1",
+  "seed": 20260902,
+  "status": "PASS",
+  "task_family": "demo-exclusive",
+  "task_id": "TASK-DEMO-04"
+}

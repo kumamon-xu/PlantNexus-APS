@@ -1,0 +1,167 @@
+{
+  "diff_base": "b0cc126522e3916d72b438e7f237851a36b51a3d",
+  "estimated_characters": 503566,
+  "files_allowed_to_change": [
+    "demo/**"
+  ],
+  "inputs": [
+    {
+      "characters": 6950,
+      "load_mode": "FULL",
+      "path": "demo/docs/TASK-DEMO-07-urgent-replan-and-comparison-workspace.md",
+      "sha256": "49310b6433eda4cd03408ecc6692d915b0916a81503b23ac8233185a44579de1"
+    },
+    {
+      "characters": 5865,
+      "load_mode": "SECTION_4",
+      "path": "demo/docs/02-cnc-data-design.md",
+      "sha256": "3f808d231b09589f73752baac30f12f4643f3bc44e625d913e0457c90a0af25f"
+    },
+    {
+      "characters": 13206,
+      "load_mode": "SECTIONS_8_9_10",
+      "path": "demo/docs/03-architecture-and-api.md",
+      "sha256": "bfea90bd8e6fdfb32eee95d23f0d26d49a253f648db21cf65828504f23e03fea"
+    },
+    {
+      "characters": 9370,
+      "load_mode": "SECTIONS_2_4_2_5_3_TO_8_10",
+      "path": "demo/docs/04-ux-and-demo-script.md",
+      "sha256": "794eaa493b979de76344aa51fab841e7ceb2716e1cdff442f4bd867403224857"
+    },
+    {
+      "characters": 9595,
+      "load_mode": "B4_B5_GATES_D_E_F_TEST_MATRIX",
+      "path": "demo/docs/05-benchmark-and-acceptance.md",
+      "sha256": "d60c4a6745fb54bf1f8fd0617e9dc6e07a62ce5c8f8b8e1b7a85900b431578e9"
+    },
+    {
+      "characters": 16030,
+      "load_mode": "D15",
+      "path": "demo/docs/TASKS.md",
+      "sha256": "6205c7f9be16f9dc18c4e1f9ccd7f1b3b57d2ff69646665c02bd72c2ee7b520a"
+    },
+    {
+      "characters": 6968,
+      "load_mode": "COMPLETION_SUMMARY",
+      "path": "demo/docs/TASK-DEMO-03-urgent-order-and-dynamic-replan.md",
+      "sha256": "9ded75bfb05c214e26e4b52b56f0da0f7c6777753c50615f2b015cb1ca80dc30"
+    },
+    {
+      "characters": 7570,
+      "load_mode": "COMPARISON_CONTRACT",
+      "path": "demo/docs/TASK-DEMO-04-unified-presentation-and-read-api.md",
+      "sha256": "4397e5d1eb2e38d104e9426e34c7163d418b76ca0df46926b5db6a53918c631b"
+    },
+    {
+      "characters": 5941,
+      "load_mode": "COMPLETION_SUMMARY",
+      "path": "demo/docs/TASK-DEMO-06-schedule-workspace-and-capacity-view.md",
+      "sha256": "2d0b932a5c28fc0a1e26b7a05a424da2de763d95cc821aeb1c9243059f0833fd"
+    },
+    {
+      "characters": 2902,
+      "load_mode": "FULL",
+      "path": "demo/data/cnc-showcase/route-templates.json",
+      "sha256": "3549d806ccb9e29b737b932bbcb4f8f0db7209d1ac562e770555bc0e462f71b4"
+    },
+    {
+      "characters": 348,
+      "load_mode": "FULL",
+      "path": "demo/data/cnc-showcase/priority-policy.json",
+      "sha256": "f9bd5ac9b0eb7afae281e5980f52b68c9246a38342892dc2fe772c179062281f"
+    },
+    {
+      "characters": 40268,
+      "load_mode": "URGENT_COMMAND_AND_JOB",
+      "path": "demo/backend/plantnexus_demo/orchestration.py",
+      "sha256": "1a70f846ec9eacb4485ee163bc6edf0dd448fa0a8cda43ee052781e79e120ede"
+    },
+    {
+      "characters": 111283,
+      "load_mode": "COMPARISON_RESPONSE_CONTRACT",
+      "path": "demo/backend/plantnexus_demo/presentation.py",
+      "sha256": "415a38c8275cd897e597b4e0aca9548ae3ec4949503395ea5c51fe2f51ab3252"
+    },
+    {
+      "characters": 23140,
+      "load_mode": "URGENT_AND_COMPARISON_ENDPOINTS",
+      "path": "demo/backend/plantnexus_demo/api.py",
+      "sha256": "3f1e5c4220e2a994e181b525c4000c51bccad33201d5af7397fad9509e688bbf"
+    },
+    {
+      "characters": 22880,
+      "load_mode": "FULL",
+      "path": "demo/frontend/src/api/types.ts",
+      "sha256": "3be36852f3a15c3c9e7603f209fd8879489452a42317faabf0bc2068d5dbb2c5"
+    },
+    {
+      "characters": 72249,
+      "load_mode": "FULL",
+      "path": "demo/frontend/src/api/contracts.ts",
+      "sha256": "372f1219e1318273101489f6401b94686fc2dfce3c423a0bd0e2982725af6cb5"
+    },
+    {
+      "characters": 9944,
+      "load_mode": "FULL",
+      "path": "demo/frontend/src/api/client.ts",
+      "sha256": "1e3778a71cd50a89352753ac11ca379b56949169fb0fb9c9a1a1dee33e9a04b5"
+    },
+    {
+      "characters": 5151,
+      "load_mode": "FULL",
+      "path": "demo/frontend/src/app/commandIdentity.ts",
+      "sha256": "ba2e65127a40db397fdb9bf29fd3c5f34028770f3d04c1ae50444b4a766a6b22"
+    },
+    {
+      "characters": 12318,
+      "load_mode": "FULL",
+      "path": "demo/frontend/src/app/useDemoStory.ts",
+      "sha256": "2ae43e86c9ad4073e30acefee7aa5f0aeb158f28c866355320c1097ccf4fa9fc"
+    },
+    {
+      "characters": 15340,
+      "load_mode": "FULL",
+      "path": "demo/frontend/src/DemoApp.tsx",
+      "sha256": "7531c1b3a49b26dc85de3c84eb30b4f2bab4baceec360db2ca9436376c609e3e"
+    },
+    {
+      "characters": 4407,
+      "load_mode": "FULL",
+      "path": "demo/frontend/src/components/JobPanel.tsx",
+      "sha256": "25972af57aedc1c35d795713dba566d7add9c47483772abfd0133d80412e5315"
+    },
+    {
+      "characters": 57527,
+      "load_mode": "FULL",
+      "path": "demo/frontend/src/styles/demo.css",
+      "sha256": "304133e245a29cb333e0e30480d9097ecbb3690b3ae727e07fe1bfa6e80ab525"
+    },
+    {
+      "characters": 29385,
+      "load_mode": "FULL",
+      "path": "demo/frontend/tests/fixtures.ts",
+      "sha256": "050f65540ff1c9f8d76566212a3560d8a63621182cb4283272c5b8d08abea2cb"
+    },
+    {
+      "characters": 14929,
+      "load_mode": "FULL",
+      "path": "demo/frontend/tests/DemoApp.test.tsx",
+      "sha256": "35c5142481bd19acf39b4273dfe6049fab993f57a75f1fb22635befd60e7c4c6"
+    }
+  ],
+  "manifest_version": "demo-task-context-manifest.v1",
+  "on_demand_expansion_triggers": [
+    "formal contract or accepted ADR conflict",
+    "root code/schema change becomes necessary",
+    "dynamic replan implementation starts",
+    "presentation lineage or fingerprint mismatch cannot be resolved read-only"
+  ],
+  "phase_registration": null,
+  "root_repository_consumption": "READ_ONLY",
+  "selected_input_count": 24,
+  "soft_budget_note": "Selected normative units were read in full; the 30k character budget is soft.",
+  "task_family": "demo-exclusive",
+  "task_id": "TASK-DEMO-07",
+  "validation_profile": "DEMO_HIGH_RISK"
+}

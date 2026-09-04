@@ -41,6 +41,7 @@ from app.infrastructure.schedule_version_repository import (
 )
 from app.infrastructure.workspace_persistence import WorkspaceDataPlane
 
+from .assets import load_demo_assets
 from .api import (
     DemoApiError,
     DemoSessionCookieMiddleware,
@@ -49,7 +50,13 @@ from .api import (
 )
 from .jobs import DemoJobRunner, DemoJobService
 from .orchestration import BaselineActivationService
-from .persistence import ControlStore, DemoRuntimePaths, RunDatabase
+from .persistence import (
+    ControlStore,
+    DemoPersistenceError,
+    DemoRuntimePaths,
+    RunDatabase,
+)
+from .presentation import DemoPresentationService
 from .security import (
     ControlAuthorizationAuditSink,
     SimulationLocalAuthorizationProvider,
@@ -428,15 +435,103 @@ class DemoRuntime:
     runner: DemoJobRunner
     jobs: DemoJobService
     baseline: BaselineActivationService
+    presentation: DemoPresentationService
     local_token: str
 
     def active_run_id(self) -> str | None:
         active = self.control.active_run()
         return None if active is None else active.run_id
 
+    def _presentation_configuration(self) -> dict[str, object]:
+        assets = load_demo_assets(
+            self.repository_root / "demo" / "data" / "cnc-showcase"
+        )
+        templates = cast(list[Mapping[str, object]], assets.route_templates["templates"])
+        classes = cast(list[Mapping[str, object]], assets.priority_policy["classes"])
+        return {
+            "configuration_version": "cnc-demo-presentation-configuration.v1",
+            "factory_timezone": assets.manifest["factory_timezone"],
+            "route_template_version": assets.route_templates["route_template_version"],
+            "route_templates": [
+                {
+                    "template_id": template["template_id"],
+                    "product_family_zh": template["product_family_zh"],
+                    "operation_count": len(cast(list[object], template["steps"])),
+                    "operation_names_zh": [
+                        cast(Mapping[str, object], step)["operation_name_zh"]
+                        for step in cast(list[object], template["steps"])
+                    ],
+                }
+                for template in templates
+            ],
+            "priority_policy_version": assets.priority_policy[
+                "priority_policy_version"
+            ],
+            "priority_classes": [
+                {
+                    "class_id": item["class_id"],
+                    "label_zh": item["label_zh"],
+                    "priority_weight": item["priority_weight"],
+                }
+                for item in classes
+            ],
+        }
+
+    def _comparison_reference(
+        self,
+        *,
+        run_id: str,
+        schedule: Mapping[str, object] | None,
+        current_schedule_version_id: str | None,
+    ) -> dict[str, object] | None:
+        if (
+            schedule is None
+            or schedule.get("schedule_version_version") != "schedule-version.v2"
+            or schedule.get("state") != "DRAFT"
+        ):
+            return None
+        job = self.control.latest_succeeded_job(
+            job_kind="URGENT_REPLAN", run_id=run_id
+        )
+        result = None if job is None else job.result
+        required = (
+            "request_id",
+            "schedule_version_id",
+            "current_published_version_id",
+            "change_report_id",
+            "demand_order_id",
+        )
+        if result is None or any(
+            not isinstance(result.get(field), str) or not result[field]
+            for field in required
+        ):
+            raise DemoPersistenceError(
+                "PERSISTENCE_FAILED",
+                field="comparison_reference",
+                message="DRAFT comparison lineage is not recoverable",
+            )
+        if (
+            result["schedule_version_id"] != schedule["schedule_version_id"]
+            or result["current_published_version_id"]
+            != current_schedule_version_id
+        ):
+            raise DemoPersistenceError(
+                "PERSISTENCE_FAILED",
+                field="comparison_reference.lineage",
+                message="DRAFT comparison lineage differs from current state",
+            )
+        return {
+            "request_id": result["request_id"],
+            "before_schedule_version_id": result["current_published_version_id"],
+            "after_schedule_version_id": result["schedule_version_id"],
+            "change_report_id": result["change_report_id"],
+            "demand_order_id": result["demand_order_id"],
+        }
+
     def story_state(self) -> dict[str, object]:
         active = self.control.active_run()
         active_job = self.control.active_job()
+        configuration = self._presentation_configuration()
         if active is None:
             return {
                 "story_state": "EMPTY",
@@ -445,6 +540,8 @@ class DemoRuntime:
                 "schedule_version": None,
                 "current_publication": None,
                 "scenario_manifest": None,
+                "comparison_reference": None,
+                "configuration": configuration,
             }
         database = RunDatabase(
             repository_root=self.repository_root,
@@ -469,6 +566,14 @@ class DemoRuntime:
                 ).first()
             schedule = None if row is None else schedules.get(cast(str, row[0]))
             current = publications.get_current(target="SIMULATION_INTERNAL")
+            current_schedule_version_id = (
+                None if current is None else current.schedule_version_id
+            )
+            comparison_reference = self._comparison_reference(
+                run_id=active.run_id,
+                schedule=cast(Mapping[str, object] | None, schedule),
+                current_schedule_version_id=current_schedule_version_id,
+            )
             if active_job is not None and active_job.job_kind == "URGENT_REPLAN":
                 story = "REPLAN_RUNNING"
             elif active_job is not None and active_job.job_kind == "INITIAL_PLAN":
@@ -524,6 +629,8 @@ class DemoRuntime:
                     }
                 ),
                 "scenario_manifest": database.get_manifest(),
+                "comparison_reference": comparison_reference,
+                "configuration": configuration,
             }
         finally:
             database.close()
@@ -562,6 +669,9 @@ def create_demo_runtime(
         runner=runner,
         jobs=DemoJobService(control=control, runner=runner),
         baseline=BaselineActivationService(
+            repository_root=root, paths=paths, control=control
+        ),
+        presentation=DemoPresentationService(
             repository_root=root, paths=paths, control=control
         ),
         local_token=token,

@@ -1,0 +1,277 @@
+{
+  "assertions": {
+    "bounded_default_page": true,
+    "bounded_gantt_dom": true,
+    "bounded_page": true,
+    "capacity_not_oee": true,
+    "capacity_view": true,
+    "chinese_document": true,
+    "chinese_evidence_copy": true,
+    "clean_console": true,
+    "consumer_page_cap": true,
+    "early_performance_only": true,
+    "evidence_view": true,
+    "four_tabs_observed": true,
+    "four_workspace_tabs": true,
+    "gantt_semantic_attributes": true,
+    "gantt_semantics": true,
+    "honest_solver_result": true,
+    "html_language": true,
+    "no_visible_credentials": true,
+    "observation_contract": true,
+    "order_to_gantt": true,
+    "published_showcase": true,
+    "read_only_workspace": true,
+    "responsive_without_page_overflow": true,
+    "same_origin_credentials": true,
+    "scope_boundary": true,
+    "screenshots_valid": true,
+    "showcase_counts": true,
+    "simulation_boundary": true,
+    "task_identity": true,
+    "workspace_get_only": true
+  },
+  "boundaries": {
+    "d14_schedule_workspace": "IMPLEMENTED",
+    "d15_urgent_replan_ui": "NOT_IMPLEMENTED",
+    "production_capacity_claim": "NOT_ESTABLISHED",
+    "single_showcase_browser_run_not_p95": true,
+    "synthetic_only": true
+  },
+  "evidence_version": "cnc-demo-workspace-evidence.v1",
+  "frontend_source_sha256": {
+    "capacity": "0c4d2df0e1dc8f57c2b593db2ee6836f59af6fdf280135b947996fc5a629ce08",
+    "client": "4c557ac1b3914801f8616be7b28583f917ace4ccbe5f9ebdc89c48b1e4a006bc",
+    "controller": "1819457cb34d54113031c470d9e404ae60b96d8fe225d73cc7c97da92d4574ae",
+    "evidence": "7078addb5d8b9e6336aa3ee6860d5ed76159f331a4735c814147c8e02d0d284a",
+    "gantt": "68b3e0483277370b46a42def4f317f674f4b29611529e497f520091e04dc8d4b",
+    "html": "931f4229ab465cb390604089211f659405b7fae037904f0cea7db8f8dc8aaa2c",
+    "workspace": "58784460ac4fc56e9ec4a26924b40e52c52d928295d366dc60ac3eb59caf90ad"
+  },
+  "network": {
+    "credentials_mode": "same-origin",
+    "maximum_observed_limit": 160,
+    "mutation_requests_during_workspace_actions": 0,
+    "navigation_session_handshake_excluded": true,
+    "workspace_requests": [
+      {
+        "kind": "factory",
+        "limit": 0,
+        "method": "GET",
+        "path": "/api/demo/v1/factory",
+        "status": 200
+      },
+      {
+        "kind": "default-window",
+        "limit": 160,
+        "method": "GET",
+        "path": "/api/demo/v1/versions/{version_id}?start_at_utc=...&end_at_utc=...&sort=ORDER_START_ASC&offset=0&limit=160",
+        "status": 200
+      },
+      {
+        "kind": "order-focus",
+        "limit": 160,
+        "method": "GET",
+        "path": "/api/demo/v1/versions/{version_id}?demand_order_id=...&sort=ORDER_START_ASC&offset=0&limit=160",
+        "status": 200
+      },
+      {
+        "kind": "workspace-refresh",
+        "limit": 160,
+        "method": "GET",
+        "path": "/api/demo/v1/factory + /api/demo/v1/versions/{version_id}?...&limit=160",
+        "status": 200
+      }
+    ]
+  },
+  "observation": {
+    "observed_at_utc": "2026-09-02T12:55:42Z",
+    "path": "demo/build/validation/browser-workspace-observation-demo-06.json",
+    "profile": "showcase",
+    "sha256": "3666885d837c67becb0fb3f33fc8d4fa858da1a7428a997955c2647affb60bb9",
+    "tool": {
+      "browser": "Chromium 152",
+      "name": "@playwright/cli",
+      "node": "24.19.0",
+      "npm": "12.0.2",
+      "session": "demo06",
+      "version": "0.1.19"
+    }
+  },
+  "performance": {
+    "bootstrap_duration_ms": 20.8,
+    "classification": "early evidence only; not warmup + 5/p95",
+    "factory_duration_ms": 499.8,
+    "factory_payload_bytes": 149658,
+    "profile": "fresh Showcase browser navigation",
+    "sample_count": 1,
+    "schedule_summary_duration_ms": 493.6,
+    "schedule_summary_payload_bytes": 141361,
+    "session_duration_ms": 3.8,
+    "workspace_duration_ms": 358.3,
+    "workspace_payload_bytes": 305326,
+    "workspace_ready_response_end_ms": 1438.4
+  },
+  "report_fingerprint": "sha256:aded041b24f44f1eabf4c1f271b75b94f9af7f1f055bbd414700e4823c2c4ca9",
+  "runtime_result": {
+    "hard_violation_count": 0,
+    "production_authority": false,
+    "run_id": "run-abd715e2a6ddf642986afa3c03901315",
+    "schedule_publishable": false,
+    "schedule_state": "PUBLISHED",
+    "schedule_version_id": "schedule-version-validated-108d0aa2e00629b549944de12cb848a2ae96fb83db3971bc4a8afdb217c7b6c9",
+    "simulation_only": true,
+    "solve_seconds": 2.6639093,
+    "solver_limit_seconds": 20.0,
+    "solver_status": "OPTIMAL",
+    "story_state": "BASELINE_PUBLISHED",
+    "total_seconds": 3.2552783,
+    "validation_status": "PASS"
+  },
+  "screenshots": [
+    {
+      "path": "demo/build/validation/screenshots/demo06-showcase-gantt-1440x900.png",
+      "png_height": 2931,
+      "png_width": 1425,
+      "sha256": "e84cfcfea6e6becab2c07a36328e579ce732f8df1783358d5991a322e603df0a",
+      "status": "PASS",
+      "view": "gantt",
+      "viewport_height": 900,
+      "viewport_width": 1440
+    },
+    {
+      "path": "demo/build/validation/screenshots/demo06-showcase-gantt-1024x768.png",
+      "png_height": 3061,
+      "png_width": 1009,
+      "sha256": "7d9340697314e75197682142f53587f80112026ad56a1d7aedd6f890008d4cff",
+      "status": "PASS",
+      "view": "gantt",
+      "viewport_height": 768,
+      "viewport_width": 1024
+    },
+    {
+      "path": "demo/build/validation/screenshots/demo06-showcase-orders-1440x900.png",
+      "png_height": 2681,
+      "png_width": 1425,
+      "sha256": "f1a90fe72550464d648359ac91ca7d5ec9646743f5db423d26211bb5e49d0ad6",
+      "status": "PASS",
+      "view": "orders",
+      "viewport_height": 900,
+      "viewport_width": 1440
+    },
+    {
+      "path": "demo/build/validation/screenshots/demo06-showcase-capacity-1440x900.png",
+      "png_height": 3569,
+      "png_width": 1425,
+      "sha256": "b239fb242b98865bf7ff9181b09137bd844cade6732cdfe5bc868c4d96b27146",
+      "status": "PASS",
+      "view": "capacity",
+      "viewport_height": 900,
+      "viewport_width": 1440
+    },
+    {
+      "path": "demo/build/validation/screenshots/demo06-showcase-evidence-1440x900.png",
+      "png_height": 2422,
+      "png_width": 1425,
+      "sha256": "105a1205969f633c3da2bddda641400ef7e9117b4f7468629f641b5d55ac2f00",
+      "status": "PASS",
+      "view": "evidence",
+      "viewport_height": 900,
+      "viewport_width": 1440
+    }
+  ],
+  "status": "PASS",
+  "task_id": "TASK-DEMO-06",
+  "viewports": [
+    {
+      "client_width": 1425,
+      "document_height": 2931,
+      "gantt_client_width": 1234,
+      "gantt_internal_horizontal_scroll": false,
+      "gantt_scroll_width": 1234,
+      "height": 900,
+      "page_horizontal_overflow": false,
+      "scroll_width": 1425,
+      "width": 1440
+    },
+    {
+      "client_width": 1024,
+      "document_height": 3061,
+      "gantt_client_width": 879,
+      "gantt_internal_horizontal_scroll": true,
+      "gantt_scroll_width": 1120,
+      "height": 768,
+      "page_horizontal_overflow": false,
+      "scroll_width": 1024,
+      "width": 1024
+    }
+  ],
+  "workspace": {
+    "capacity": {
+      "non_oee_copy": true,
+      "rows": 24,
+      "server_evidence_version_visible": true,
+      "sorted_descending": true,
+      "top_available_hours": 136.0,
+      "top_busy_hours": 56.3,
+      "top_planned_load_ratio": 0.414,
+      "top_resource_code": "GRD-01"
+    },
+    "evidence": {
+      "hard_violation_count": 0,
+      "kpi_authority_visible": true,
+      "late_order_count": 0,
+      "on_time_order_ratio": 1.0,
+      "simulation_boundary_visible": true,
+      "solver_copy_chinese": true,
+      "validator_copy_chinese": true
+    },
+    "gantt": {
+      "assignment_nodes": 160,
+      "completed_nodes": 30,
+      "dom_nodes": 1173,
+      "freeze_windows": 24,
+      "hard_lock_nodes": 4,
+      "hierarchy_filters": true,
+      "legend_uses_color_and_text": true,
+      "maintenance_blocks": 2,
+      "planned_nodes": 148,
+      "resource_rows": 24,
+      "running_nodes": 12,
+      "shift_blocks": 120,
+      "soft_lock_nodes": 8,
+      "text_equivalent_available": true
+    },
+    "order_interaction": {
+      "demand_order_id": "demand-order-eb97a6f6bf2de1fe1675e42bb35699b9f8afaf12981ed904416ea5b05cc0d98f",
+      "focus_assignment_nodes": 5,
+      "focus_status": true,
+      "query": "demand-order-cnc-036",
+      "visible_orders": 1
+    },
+    "page": {
+      "end_at_utc": "2026-09-09T16:00:00.000Z",
+      "filtered_total": 546,
+      "limit": 160,
+      "returned": 160,
+      "sort": "ORDER_START_ASC",
+      "start_at_utc": "2026-09-06T16:00:00.000Z",
+      "unfiltered_total": 580,
+      "window_hours": 72
+    },
+    "summary": {
+      "orders": 132,
+      "resources": 24,
+      "routing_operations": 610,
+      "scheduled_assignments": 580,
+      "window_filtered_assignments": 546,
+      "workshops": 3
+    },
+    "tabs": [
+      "订单与交期",
+      "排程甘特",
+      "计划负荷",
+      "校验与证据"
+    ]
+  }
+}

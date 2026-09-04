@@ -1,0 +1,279 @@
+{
+  "assertions": {
+    "approved_route_configuration": true,
+    "asset_driven_routes": true,
+    "automatic_comparison": true,
+    "bounded_changed_page": true,
+    "bounded_comparison_dom": true,
+    "business_only_form": true,
+    "change_report_counts": true,
+    "chinese_business_form": true,
+    "chinese_change_modes": true,
+    "chinese_document": true,
+    "classification_modes": true,
+    "clean_console": true,
+    "comparison_consumer_cap": true,
+    "comparison_lineage": true,
+    "confirmation_boundary": true,
+    "delivery_evidence": true,
+    "draft_recovery": true,
+    "draft_workspace_copy_observed": true,
+    "durable_job_completed": true,
+    "dynamic_replan_workspace_copy": true,
+    "early_performance_only": true,
+    "html_language": true,
+    "network_boundary": true,
+    "no_visible_credentials": true,
+    "observation_contract": true,
+    "persistent_urgent_identity": true,
+    "published_baseline_preserved": true,
+    "refresh_recovery": true,
+    "resource_filter": true,
+    "responsive_without_page_overflow": true,
+    "same_origin_credentials": true,
+    "scope_boundary": true,
+    "screenshots_valid": true,
+    "scripted_urgent_payload": true,
+    "server_authoritative_comparison": true,
+    "showcase_draft_ready": true,
+    "simulation_boundary": true,
+    "stability_consistency": true,
+    "task_identity": true,
+    "unchanged_server_pagination": true,
+    "urgent_command_endpoint": true,
+    "validator_and_stability_copy": true
+  },
+  "boundaries": {
+    "current_publication_replaced": false,
+    "d15_urgent_replan_ui": "IMPLEMENTED",
+    "d16_full_failure_security_accessibility_matrix": "NOT_IMPLEMENTED",
+    "draft_auto_published": false,
+    "production_capacity_claim": "NOT_ESTABLISHED",
+    "single_showcase_browser_run_not_p95": true,
+    "synthetic_only": true
+  },
+  "comparison": {
+    "change_counts": {
+      "added": 5,
+      "changed": 25,
+      "removed_by_fact": 0,
+      "unchanged": 555
+    },
+    "change_report_id": "change-report-377a45b7833ccb2cea046b7046092bcc53f9e65e3fdd9bfd26cbf3f04588b665",
+    "comparison_dom_nodes": 728,
+    "delivery": {
+      "after_late_order_count": 0,
+      "after_on_time_order_ratio": 1.0,
+      "after_order_count": 133,
+      "before_late_order_count": 0,
+      "before_on_time_order_ratio": 1.0,
+      "before_order_count": 132,
+      "makespan_delta_seconds": 3000
+    },
+    "draft_workspace_copy": {
+      "comparison_stability_handoff_visible": true,
+      "replan_workspace_label_visible": true,
+      "urgent_replan_source_label_visible": true
+    },
+    "filters": {
+      "changed_page": {
+        "filtered_total": 30,
+        "limit": 120,
+        "offset": 0,
+        "returned": 30
+      },
+      "cmm_01_unchanged": {
+        "filtered_total": 17,
+        "offset": 0,
+        "resource_code": "CMM-01",
+        "resource_id": "resource-9a8d9aebb60c33a09e8a66ee1b3c0f8de0619b5c22610c988bd336843898657f",
+        "returned": 17
+      },
+      "observed_classifications": [
+        "ADDED",
+        "CHANGED",
+        "UNCHANGED"
+      ],
+      "unchanged_first_page": {
+        "filtered_total": 555,
+        "has_more": true,
+        "limit": 120,
+        "offset": 0,
+        "returned": 120
+      },
+      "unchanged_second_page": {
+        "filtered_total": 555,
+        "has_more": true,
+        "limit": 120,
+        "offset": 120,
+        "returned": 120
+      }
+    },
+    "refresh_recovered_same_reference": true,
+    "refresh_recovered_same_run": true,
+    "refresh_replayed_mutations": 0,
+    "request_id": "replan-request-6855434d740d0fffadb918dc070203d979c0ebd31117affbfe20f907789622e0",
+    "stability": {
+      "absolute_start_shift_seconds": 3027000,
+      "changed_existing_operations": 25,
+      "comparable_existing": 580,
+      "resource_changes": 3,
+      "soft_lock_violations": 3,
+      "unchanged_existing": 555,
+      "unchanged_ratio": 0.9568965517241379
+    },
+    "validation_status": "PASS",
+    "visible_operation_cards": 30
+  },
+  "evidence_version": "cnc-demo-replan-frontend-evidence.v1",
+  "frontend_source_sha256": {
+    "app": "7531c1b3a49b26dc85de3c84eb30b4f2bab4baceec360db2ca9436376c609e3e",
+    "client": "1e3778a71cd50a89352753ac11ca379b56949169fb0fb9c9a1a1dee33e9a04b5",
+    "comparison": "2f1978bd457892f940ecf5965b4ef006ad4bd1aa6efcf9d8fa478763f24ce1c4",
+    "contracts": "372f1219e1318273101489f6401b94686fc2dfce3c423a0bd0e2982725af6cb5",
+    "controller": "2ae43e86c9ad4073e30acefee7aa5f0aeb158f28c866355320c1097ccf4fa9fc",
+    "html": "931f4229ab465cb390604089211f659405b7fae037904f0cea7db8f8dc8aaa2c",
+    "identity": "ba2e65127a40db397fdb9bf29fd3c5f34028770f3d04c1ae50444b4a766a6b22",
+    "schedule_evidence": "bcf5472c198912d45a9a57a357a6afc348379df852909afe1ca49c484750580a",
+    "schedule_workspace": "ff4fab68d8d5e5c3cdb7b5d747daf0cfd5bc14437816d0814925c796a196faf4",
+    "urgent_form": "cfb5d171d85465d255e0fa6646f7664e4cb368430cd02de6a606da80f384cbf8"
+  },
+  "job": {
+    "attempt": 1,
+    "change_report_id": "change-report-377a45b7833ccb2cea046b7046092bcc53f9e65e3fdd9bfd26cbf3f04588b665",
+    "created_at_utc": "2026-09-04T01:14:13Z",
+    "event_type": "URGENT_DEMAND_RECEIVED",
+    "hard_violation_count": 0,
+    "job_id": "job-8a3e6410c697996f62e65ca9b640b0874fe33890013d1294725acfd3c6dea22f",
+    "job_kind": "URGENT_REPLAN",
+    "request_id": "replan-request-6855434d740d0fffadb918dc070203d979c0ebd31117affbfe20f907789622e0",
+    "solve_stage_seconds": 14.235439,
+    "solver_limit_seconds": 30,
+    "solver_status": "FEASIBLE",
+    "stage": "COMPLETE",
+    "stage_count": 10,
+    "status": "SUCCEEDED",
+    "updated_at_utc": "2026-09-04T01:14:34Z",
+    "validation_status": "PASS",
+    "wall_seconds": 21
+  },
+  "network": {
+    "comparison_request_method": "GET",
+    "comparison_request_status": 200,
+    "credentials_mode": "same-origin",
+    "job_poll_method": "GET",
+    "job_poll_status": 200,
+    "maximum_comparison_limit": 120,
+    "navigation_session_handshake_excluded": true,
+    "urgent_mutation_requests": 1,
+    "urgent_request_method": "POST",
+    "urgent_request_status": 202
+  },
+  "observation": {
+    "observed_at_utc": "2026-09-04T01:22:01Z",
+    "path": "demo/build/validation/browser-replan-observation-demo-07.json",
+    "profile": "showcase",
+    "sha256": "5b6847c33076c456beee2583878f606190e3f3e245837f9495a7e9ddea1e5387",
+    "tool": {
+      "browser": "Chromium 152",
+      "name": "@playwright/cli",
+      "session": "cnc-demo-07"
+    }
+  },
+  "performance": {
+    "changed_comparison_duration_ms": 1168.9,
+    "changed_comparison_payload_bytes": 47686,
+    "classification": "early evidence only; not warmup + 5/p95",
+    "profile": "single fixed Showcase browser run",
+    "sample_count": 1,
+    "solve_stage_seconds": 14.235439,
+    "unchanged_comparison_duration_ms": 808.5,
+    "unchanged_comparison_payload_bytes": 176479,
+    "urgent_job_wall_seconds": 21
+  },
+  "report_fingerprint": "sha256:eda229e694eaee7953d91ad36caa08c2be23f5866145aa864148e2e93a6f0e11",
+  "runtime_result": {
+    "active_job_after_refresh": null,
+    "after_parent_schedule_version_id": "schedule-version-validated-108d0aa2e00629b549944de12cb848a2ae96fb83db3971bc4a8afdb217c7b6c9",
+    "after_schedule_state": "DRAFT",
+    "after_schedule_version_id": "schedule-version-replan-f66ceded4073fb2f2806c4ea228919a4440863e6fcd7375e18394df4c539d76c",
+    "before_schedule_state": "PUBLISHED",
+    "before_schedule_version_id": "schedule-version-validated-108d0aa2e00629b549944de12cb848a2ae96fb83db3971bc4a8afdb217c7b6c9",
+    "current_publication_schedule_version_id": "schedule-version-validated-108d0aa2e00629b549944de12cb848a2ae96fb83db3971bc4a8afdb217c7b6c9",
+    "current_publication_unchanged": true,
+    "production_authority": false,
+    "run_id": "run-abd715e2a6ddf642986afa3c03901315",
+    "schedule_publishable": false,
+    "simulation_only": true,
+    "story_state": "DRAFT_COMPARISON_READY"
+  },
+  "screenshots": [
+    {
+      "path": "demo/build/validation/screenshots/demo07-urgent-form-1440x900.png",
+      "png_height": 900,
+      "png_width": 1440,
+      "sha256": "3a5347dfc22816825e8184fbc3d2115af73c736c5a16ccce8fc932616b257712",
+      "status": "PASS",
+      "view": "urgent-form",
+      "viewport_height": 900,
+      "viewport_width": 1440
+    },
+    {
+      "path": "demo/build/validation/screenshots/demo07-comparison-1440x900.png",
+      "png_height": 5548,
+      "png_width": 1313,
+      "sha256": "0e5eb331f6c9a7167fbddc13a2c5baceafbfe85911a68d2f2d979e057896a906",
+      "status": "PASS",
+      "view": "comparison",
+      "viewport_height": 900,
+      "viewport_width": 1440
+    },
+    {
+      "path": "demo/build/validation/screenshots/demo07-comparison-1024x768.png",
+      "png_height": 5815,
+      "png_width": 928,
+      "sha256": "0f7a1ef75f7ab4a82b432c26c5a1a177fd008891df79f77794309d0a7ff2dcca",
+      "status": "PASS",
+      "view": "comparison",
+      "viewport_height": 768,
+      "viewport_width": 1024
+    }
+  ],
+  "status": "PASS",
+  "task_id": "TASK-DEMO-07",
+  "urgent_order": {
+    "accepted_status": 202,
+    "available_route_templates": [
+      "CNC-ROUTE-3",
+      "CNC-ROUTE-4",
+      "CNC-ROUTE-5",
+      "CNC-ROUTE-6"
+    ],
+    "base_version_read_only": true,
+    "command_version": "cnc-demo-urgent-order-command.v1",
+    "confirmation_boundary_visible": true,
+    "due_at_local": "2026-09-09T18:00:00",
+    "idempotency_header_present": true,
+    "note": "Showcase 固定加急精密套筒",
+    "priority_class": "URGENT",
+    "quantity": 5,
+    "route_template_id": "CNC-ROUTE-5",
+    "technical_identity_fields_hidden": true
+  },
+  "viewports": [
+    {
+      "client_width": 1425,
+      "height": 900,
+      "page_horizontal_overflow": false,
+      "scroll_width": 1425,
+      "width": 1440
+    },
+    {
+      "client_width": 1009,
+      "height": 768,
+      "page_horizontal_overflow": false,
+      "scroll_width": 1009,
+      "width": 1024
+    }
+  ]
+}

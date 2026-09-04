@@ -1,0 +1,224 @@
+{
+  "observation_version": "cnc-demo-browser-replan-observation.v1",
+  "task_id": "TASK-DEMO-07",
+  "observed_at_utc": "2026-09-04T01:22:01Z",
+  "tool": {
+    "name": "@playwright/cli",
+    "browser": "Chromium 152",
+    "session": "cnc-demo-07"
+  },
+  "profile": "showcase",
+  "document": {
+    "lang": "zh-CN",
+    "title": "PlantNexus APS · CNC 精密机加工演示",
+    "interface_language": "中文"
+  },
+  "runtime_result": {
+    "run_id": "run-abd715e2a6ddf642986afa3c03901315",
+    "story_state": "DRAFT_COMPARISON_READY",
+    "active_job_after_refresh": null,
+    "before_schedule_version_id": "schedule-version-validated-108d0aa2e00629b549944de12cb848a2ae96fb83db3971bc4a8afdb217c7b6c9",
+    "before_schedule_state": "PUBLISHED",
+    "after_schedule_version_id": "schedule-version-replan-f66ceded4073fb2f2806c4ea228919a4440863e6fcd7375e18394df4c539d76c",
+    "after_schedule_state": "DRAFT",
+    "after_parent_schedule_version_id": "schedule-version-validated-108d0aa2e00629b549944de12cb848a2ae96fb83db3971bc4a8afdb217c7b6c9",
+    "current_publication_schedule_version_id": "schedule-version-validated-108d0aa2e00629b549944de12cb848a2ae96fb83db3971bc4a8afdb217c7b6c9",
+    "current_publication_unchanged": true,
+    "simulation_only": true,
+    "production_authority": false,
+    "schedule_publishable": false
+  },
+  "urgent_order": {
+    "command_version": "cnc-demo-urgent-order-command.v1",
+    "route_template_id": "CNC-ROUTE-5",
+    "quantity": 5,
+    "due_at_local": "2026-09-09T18:00:00",
+    "priority_class": "URGENT",
+    "note": "Showcase 固定加急精密套筒",
+    "available_route_templates": [
+      "CNC-ROUTE-3",
+      "CNC-ROUTE-4",
+      "CNC-ROUTE-5",
+      "CNC-ROUTE-6"
+    ],
+    "base_version_read_only": true,
+    "confirmation_boundary_visible": true,
+    "technical_identity_fields_hidden": true,
+    "idempotency_header_present": true,
+    "accepted_status": 202
+  },
+  "job": {
+    "job_id": "job-8a3e6410c697996f62e65ca9b640b0874fe33890013d1294725acfd3c6dea22f",
+    "job_kind": "URGENT_REPLAN",
+    "status": "SUCCEEDED",
+    "stage": "COMPLETE",
+    "attempt": 1,
+    "stage_count": 10,
+    "created_at_utc": "2026-09-04T01:14:13Z",
+    "updated_at_utc": "2026-09-04T01:14:34Z",
+    "wall_seconds": 21,
+    "solve_stage_seconds": 14.235439,
+    "solver_limit_seconds": 30,
+    "solver_status": "FEASIBLE",
+    "validation_status": "PASS",
+    "hard_violation_count": 0,
+    "event_type": "URGENT_DEMAND_RECEIVED",
+    "request_id": "replan-request-6855434d740d0fffadb918dc070203d979c0ebd31117affbfe20f907789622e0",
+    "change_report_id": "change-report-377a45b7833ccb2cea046b7046092bcc53f9e65e3fdd9bfd26cbf3f04588b665"
+  },
+  "comparison": {
+    "request_id": "replan-request-6855434d740d0fffadb918dc070203d979c0ebd31117affbfe20f907789622e0",
+    "change_report_id": "change-report-377a45b7833ccb2cea046b7046092bcc53f9e65e3fdd9bfd26cbf3f04588b665",
+    "validation_status": "PASS",
+    "change_counts": {
+      "unchanged": 555,
+      "changed": 25,
+      "added": 5,
+      "removed_by_fact": 0
+    },
+    "stability": {
+      "soft_lock_violations": 3,
+      "changed_existing_operations": 25,
+      "resource_changes": 3,
+      "absolute_start_shift_seconds": 3027000,
+      "unchanged_existing": 555,
+      "comparable_existing": 580,
+      "unchanged_ratio": 0.9568965517241379
+    },
+    "delivery": {
+      "before_order_count": 132,
+      "after_order_count": 133,
+      "before_on_time_order_ratio": 1.0,
+      "after_on_time_order_ratio": 1.0,
+      "before_late_order_count": 0,
+      "after_late_order_count": 0,
+      "makespan_delta_seconds": 3000
+    },
+    "filters": {
+      "observed_classifications": [
+        "ADDED",
+        "CHANGED",
+        "UNCHANGED"
+      ],
+      "changed_page": {
+        "limit": 120,
+        "returned": 30,
+        "filtered_total": 30,
+        "offset": 0
+      },
+      "unchanged_first_page": {
+        "limit": 120,
+        "returned": 120,
+        "filtered_total": 555,
+        "offset": 0,
+        "has_more": true
+      },
+      "unchanged_second_page": {
+        "limit": 120,
+        "returned": 120,
+        "filtered_total": 555,
+        "offset": 120,
+        "has_more": true
+      },
+      "cmm_01_unchanged": {
+        "resource_id": "resource-9a8d9aebb60c33a09e8a66ee1b3c0f8de0619b5c22610c988bd336843898657f",
+        "resource_code": "CMM-01",
+        "returned": 17,
+        "filtered_total": 17,
+        "offset": 0
+      }
+    },
+    "visible_operation_cards": 30,
+    "comparison_dom_nodes": 728,
+    "draft_workspace_copy": {
+      "replan_workspace_label_visible": true,
+      "comparison_stability_handoff_visible": true,
+      "urgent_replan_source_label_visible": true
+    },
+    "refresh_recovered_same_run": true,
+    "refresh_recovered_same_reference": true,
+    "refresh_replayed_mutations": 0
+  },
+  "network": {
+    "urgent_mutation_requests": 1,
+    "urgent_request_method": "POST",
+    "urgent_request_status": 202,
+    "job_poll_method": "GET",
+    "job_poll_status": 200,
+    "comparison_request_method": "GET",
+    "comparison_request_status": 200,
+    "maximum_comparison_limit": 120,
+    "credentials_mode": "same-origin",
+    "navigation_session_handshake_excluded": true
+  },
+  "performance": {
+    "sample_count": 1,
+    "profile": "single fixed Showcase browser run",
+    "urgent_job_wall_seconds": 21,
+    "solve_stage_seconds": 14.235439,
+    "changed_comparison_duration_ms": 1168.9,
+    "changed_comparison_payload_bytes": 47686,
+    "unchanged_comparison_duration_ms": 808.5,
+    "unchanged_comparison_payload_bytes": 176479,
+    "classification": "early evidence only; not warmup + 5/p95"
+  },
+  "viewports": [
+    {
+      "width": 1440,
+      "height": 900,
+      "client_width": 1425,
+      "scroll_width": 1425,
+      "page_horizontal_overflow": false
+    },
+    {
+      "width": 1024,
+      "height": 768,
+      "client_width": 1009,
+      "scroll_width": 1009,
+      "page_horizontal_overflow": false
+    }
+  ],
+  "console": {
+    "errors": 0,
+    "warnings": 0
+  },
+  "security": {
+    "visible_bearer": false,
+    "visible_authorization_header": false
+  },
+  "screenshots": [
+    {
+      "view": "urgent-form",
+      "path": "demo/build/validation/screenshots/demo07-urgent-form-1440x900.png",
+      "viewport_width": 1440,
+      "viewport_height": 900,
+      "png_width": 1440,
+      "png_height": 900
+    },
+    {
+      "view": "comparison",
+      "path": "demo/build/validation/screenshots/demo07-comparison-1440x900.png",
+      "viewport_width": 1440,
+      "viewport_height": 900,
+      "png_width": 1313,
+      "png_height": 5548
+    },
+    {
+      "view": "comparison",
+      "path": "demo/build/validation/screenshots/demo07-comparison-1024x768.png",
+      "viewport_width": 1024,
+      "viewport_height": 768,
+      "png_width": 928,
+      "png_height": 5815
+    }
+  ],
+  "boundaries": {
+    "synthetic_only": true,
+    "d15_urgent_replan_ui": "IMPLEMENTED",
+    "draft_auto_published": false,
+    "current_publication_replaced": false,
+    "single_showcase_browser_run_not_p95": true,
+    "production_capacity_claim": "NOT_ESTABLISHED",
+    "d16_full_failure_security_accessibility_matrix": "NOT_IMPLEMENTED"
+  }
+}

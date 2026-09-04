@@ -830,6 +830,25 @@ class ControlStore:
             ).fetchone()
             return None if row is None else self._job(row)
 
+    def latest_succeeded_job(
+        self, *, job_kind: str, run_id: str
+    ) -> JobRecord | None:
+        """Return the newest durable successful job for one active Demo run."""
+
+        _require_identifier(job_kind, "job_kind")
+        _require_identifier(run_id, "run_id")
+        with self._connection() as connection:
+            row = connection.execute(
+                """
+                SELECT * FROM demo_jobs
+                WHERE job_kind = ? AND run_id = ? AND status = 'SUCCEEDED'
+                ORDER BY finished_at_utc DESC, created_at_utc DESC, job_id DESC
+                LIMIT 1
+                """,
+                (job_kind, run_id),
+            ).fetchone()
+            return None if row is None else self._job(row)
+
     def job_stages(self, job_id: str) -> tuple[dict[str, object], ...]:
         with self._connection() as connection:
             rows = connection.execute(
@@ -1325,9 +1344,16 @@ def prune_inactive_runs(
 
 
 def artifact_version(document: Mapping[str, object]) -> str:
+    formal_validation = document.get("formal_validation")
+    if isinstance(formal_validation, Mapping):
+        nested_version = formal_validation.get("validation_report_version")
+        if isinstance(nested_version, str):
+            return nested_version
     semantic_version_fields = (
         "import_quality_report_version",
+        "snapshot_version",
         "planning_snapshot_version",
+        "problem_version",
         "planning_problem_version",
         "planning_solution_version",
         "solver_report_version",

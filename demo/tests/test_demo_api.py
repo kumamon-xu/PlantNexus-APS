@@ -31,6 +31,20 @@ def test_demo_http_flow_is_cookie_authenticated_and_token_safe(tmp_path: Path) -
         auto_resume_queued=False,
     )
     runtime = application.state.demo_runtime
+    openapi = application.openapi()
+    assert {
+        "/api/demo/v1/factory",
+        "/api/demo/v1/versions/{version_id}",
+        "/api/demo/v1/comparisons/{request_id}",
+    }.issubset(openapi["paths"])
+    for schema_name in (
+        "DemoFactoryView",
+        "DemoScheduleView",
+        "DemoComparisonView",
+    ):
+        assert openapi["components"]["schemas"][schema_name][
+            "additionalProperties"
+        ] is False
     with TestClient(application) as client:
         unauthenticated = client.get("/api/demo/v1/bootstrap")
         assert unauthenticated.status_code == 401
@@ -41,6 +55,15 @@ def test_demo_http_flow_is_cookie_authenticated_and_token_safe(tmp_path: Path) -
         empty = client.get("/api/demo/v1/bootstrap")
         assert empty.status_code == 200
         assert empty.json()["story_state"] == "EMPTY"
+        assert [
+            item["template_id"]
+            for item in empty.json()["configuration"]["route_templates"]
+        ] == ["CNC-ROUTE-3", "CNC-ROUTE-4", "CNC-ROUTE-5", "CNC-ROUTE-6"]
+        assert empty.json()["configuration"]["priority_classes"][2] == {
+            "class_id": "URGENT",
+            "label_zh": "加急",
+            "priority_weight": 12,
+        }
 
         reset = client.post(
             "/api/demo/v1/resets",
@@ -54,6 +77,38 @@ def test_demo_http_flow_is_cookie_authenticated_and_token_safe(tmp_path: Path) -
         reset_job = runtime.runner.wait(reset.json()["job_id"], timeout=30)
         assert reset_job.status == "SUCCEEDED"
         run_id = reset_job.result["run_id"]
+        factory = client.get(
+            "/api/demo/v1/factory",
+            headers={"X-Correlation-Id": "correlation-demo-factory-read"},
+        )
+        assert factory.status_code == 200, factory.text
+        assert factory.json()["view_version"] == "cnc-demo-factory-view.v1"
+        assert factory.json()["counts"]["resources"] == 12
+        assert factory.json()["boundary"]["publishable"] is False
+        assert factory.headers["x-demo-active-run"] == run_id
+        assert factory.headers["x-correlation-id"] == (
+            "correlation-demo-factory-read"
+        )
+        factory_not_modified = client.get(
+            "/api/demo/v1/factory",
+            headers={"If-None-Match": factory.headers["etag"]},
+        )
+        assert factory_not_modified.status_code == 304
+        assert factory_not_modified.content == b""
+        assert factory_not_modified.headers["etag"] == factory.headers["etag"]
+        invalid_factory_query = client.get("/api/demo/v1/factory?unknown=value")
+        assert invalid_factory_query.status_code == 422
+        assert invalid_factory_query.json()["code"] == "INVALID_PRESENTATION_QUERY"
+        missing_version = client.get(
+            "/api/demo/v1/versions/schedule-version-does-not-exist"
+        )
+        assert missing_version.status_code == 404
+        assert missing_version.json()["code"] == "PRESENTATION_NOT_FOUND"
+        missing_comparison = client.get(
+            "/api/demo/v1/comparisons/replan-request-does-not-exist"
+        )
+        assert missing_comparison.status_code == 404
+        assert missing_comparison.json()["code"] == "PRESENTATION_NOT_FOUND"
         with pytest.raises(DynamicReplanningApplicationError) as missing_event:
             application.state.dynamic_replanning_application.execute(
                 DynamicReplanningApplicationRequest(
@@ -103,6 +158,22 @@ def test_demo_http_flow_is_cookie_authenticated_and_token_safe(tmp_path: Path) -
         assert plan_job.result is not None
         version_id = plan_job.result["schedule_version_id"]
         content_fingerprint = plan_job.result["content_fingerprint"]
+        version_view = client.get(
+            f"/api/demo/v1/versions/{version_id}?limit=7&sort=RESOURCE_START_ASC"
+        )
+        assert version_view.status_code == 200, version_view.text
+        assert version_view.json()["version"]["contract_version"] == (
+            "schedule-version.v1"
+        )
+        assert version_view.json()["page"]["returned"] == 7
+        assert version_view.json()["page"]["unfiltered_total"] == 102
+        assert version_view.json()["validation"]["status"] == "PASS"
+        assert version_view.json()["boundary"]["publishable"] is False
+        version_not_modified = client.get(
+            f"/api/demo/v1/versions/{version_id}?limit=7&sort=RESOURCE_START_ASC",
+            headers={"If-None-Match": version_view.headers["etag"]},
+        )
+        assert version_not_modified.status_code == 304
         plan_replay = client.post(
             "/api/demo/v1/initial-plans",
             headers={"Idempotency-Key": "demo-api-plan-idempotency-0001"},
@@ -174,6 +245,57 @@ def test_demo_http_flow_is_cookie_authenticated_and_token_safe(tmp_path: Path) -
         assert comparison_state.json()["current_publication"][
             "schedule_version_id"
         ] == version_id
+        assert comparison_state.json()["comparison_reference"] == {
+            "request_id": urgent_job.result["request_id"],
+            "before_schedule_version_id": version_id,
+            "after_schedule_version_id": urgent_job.result[
+                "schedule_version_id"
+            ],
+            "change_report_id": urgent_job.result["change_report_id"],
+            "demand_order_id": urgent_job.result["demand_order_id"],
+        }
+        draft_view = client.get(
+            "/api/demo/v1/versions/"
+            + urgent_job.result["schedule_version_id"]
+            + "?limit=9"
+        )
+        assert draft_view.status_code == 200, draft_view.text
+        assert draft_view.json()["version"]["contract_version"] == (
+            "schedule-version.v2"
+        )
+        assert draft_view.json()["version"]["state"] == "DRAFT"
+        assert draft_view.json()["page"]["unfiltered_total"] == 106
+        comparison = client.get(
+            "/api/demo/v1/comparisons/" + urgent_job.result["request_id"]
+        )
+        assert comparison.status_code == 200, comparison.text
+        comparison_document = comparison.json()
+        assert comparison_document["view_version"] == (
+            "cnc-demo-comparison-view.v1"
+        )
+        assert comparison_document["before"]["schedule_version_id"] == version_id
+        assert comparison_document["after"]["state"] == "DRAFT"
+        assert comparison_document["change_counts"]["added"] == 4
+        assert comparison_document["query"]["classifications"] == [
+            "ADDED",
+            "CHANGED",
+        ]
+        assert {
+            item["classification"] for item in comparison_document["operations"]
+        }.issubset({"ADDED", "CHANGED"})
+        comparison_not_modified = client.get(
+            "/api/demo/v1/comparisons/" + urgent_job.result["request_id"],
+            headers={"If-None-Match": comparison.headers["etag"]},
+        )
+        assert comparison_not_modified.status_code == 304
+        invalid_window = client.get(
+            "/api/demo/v1/versions/"
+            + urgent_job.result["schedule_version_id"]
+            + "?start_at_utc=2026-09-10T00:00:00Z"
+            + "&end_at_utc=2026-09-09T00:00:00Z"
+        )
+        assert invalid_window.status_code == 422
+        assert invalid_window.json()["code"] == "INVALID_PRESENTATION_QUERY"
         urgent_replay = client.post(
             "/api/demo/v1/urgent-orders",
             headers={"Idempotency-Key": "demo-api-urgent-idempotency-0001"},
@@ -210,6 +332,17 @@ def test_wrong_token_and_missing_capability_fail_closed(tmp_path: Path) -> None:
 
         application.state.authorization_provider = SimulationLocalAuthorizationProvider(
             runtime.local_token,
+            capabilities=frozenset({"demo_reset"}),
+        )
+        denied_read = client.get(
+            "/api/demo/v1/factory",
+            headers={"Authorization": f"Bearer {runtime.local_token}"},
+        )
+        assert denied_read.status_code == 403
+        assert runtime.local_token not in denied_read.text
+
+        application.state.authorization_provider = SimulationLocalAuthorizationProvider(
+            runtime.local_token,
             capabilities=frozenset({"view"}),
         )
         denied = client.post(
@@ -240,10 +373,16 @@ def test_wrong_schedule_scope_and_production_plane_fail_closed(tmp_path: Path) -
         schedule_version_scope=frozenset({"schedule-version-in-scope"}),
     )
     with TestClient(application) as client:
+        denied_demo_scope = client.get(
+            "/api/demo/v1/versions/schedule-version-out-of-scope",
+            headers={"Authorization": f"Bearer {runtime.local_token}"},
+        )
         denied_scope = client.get(
             "/api/v1/schedule-versions/schedule-version-out-of-scope",
             headers={"Authorization": f"Bearer {runtime.local_token}"},
         )
+    assert denied_demo_scope.status_code == 403
+    assert runtime.local_token not in denied_demo_scope.text
     assert denied_scope.status_code == 403
     assert runtime.local_token not in denied_scope.text
 

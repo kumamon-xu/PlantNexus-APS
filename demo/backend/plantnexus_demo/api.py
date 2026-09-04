@@ -3,18 +3,25 @@
 from __future__ import annotations
 
 from collections.abc import Mapping
-from typing import Literal, NoReturn, TYPE_CHECKING
+from typing import Any, cast, Literal, NoReturn, TYPE_CHECKING
 from uuid import uuid4
 
-from fastapi import APIRouter, Header, Request
+from fastapi import APIRouter, Header, Request, Response
 from fastapi.responses import JSONResponse
-from pydantic import BaseModel, ConfigDict, Field
+from pydantic import BaseModel, ConfigDict, Field, ValidationError
 from starlette.types import ASGIApp, Receive, Scope, Send
 
 from app.api.dependencies.authorization import authorize_request
 
 from .orchestration import DemoOperationError
 from .persistence import DemoPersistenceError, key_reference, utc_now
+from .presentation import (
+    ComparisonPresentationQuery,
+    DemoComparisonView,
+    DemoFactoryView,
+    DemoScheduleView,
+    SchedulePresentationQuery,
+)
 from .security import DEMO_SESSION_COOKIE
 from .urgent import UrgentOrderCommand
 
@@ -105,7 +112,11 @@ def _correlation(request: Request) -> str:
 
 
 def _status_for(code: str) -> int:
-    if code in {"DEMO_NOT_INITIALIZED", "JOB_NOT_FOUND"}:
+    if code in {
+        "DEMO_NOT_INITIALIZED",
+        "JOB_NOT_FOUND",
+        "PRESENTATION_NOT_FOUND",
+    }:
         return 404
     if code in {
         "ACTIVE_JOB_CONFLICT",
@@ -114,6 +125,7 @@ def _status_for(code: str) -> int:
         "BASELINE_STATE_CONFLICT",
         "STALE_BASE_VERSION",
         "JOB_STATE_CONFLICT",
+        "PRESENTATION_LINEAGE_MISMATCH",
     }:
         return 409
     if code in {
@@ -124,6 +136,7 @@ def _status_for(code: str) -> int:
         "INVALID_FINGERPRINT",
         "INVALID_URGENT_ORDER",
         "IMPORT_VALIDATION_FAILED",
+        "INVALID_PRESENTATION_QUERY",
     }:
         return 422
     return 500
@@ -204,6 +217,162 @@ def _response(
     return JSONResponse(status_code=status_code, content=document, headers=headers)
 
 
+def _immutable_response(
+    view: DemoFactoryView | DemoScheduleView | DemoComparisonView,
+    *,
+    request: Request,
+    correlation_id: str,
+) -> Response:
+    payload = view.model_dump(mode="json")
+    view_fingerprint = cast(str, payload["view_fingerprint"])
+    etag = f'"{view_fingerprint}"'
+    headers = {
+        "X-Correlation-Id": correlation_id,
+        "X-Demo-Active-Run": view.run_id,
+        "Cache-Control": "private, max-age=0, must-revalidate",
+        "ETag": etag,
+    }
+    requested = request.headers.get("If-None-Match")
+    if requested is not None:
+        candidates = {value.strip() for value in requested.split(",")}
+        if "*" in candidates or etag in candidates or f"W/{etag}" in candidates:
+            return Response(status_code=304, headers=headers)
+    return JSONResponse(status_code=200, content=payload, headers=headers)
+
+
+def _query_values(request: Request, key: str) -> tuple[str, ...]:
+    values = tuple(
+        part.strip()
+        for raw in request.query_params.getlist(key)
+        for part in raw.split(",")
+    )
+    if any(not value for value in values) or len(values) != len(set(values)):
+        raise DemoOperationError(
+            "INVALID_PRESENTATION_QUERY",
+            field=key,
+            message="query values must be non-empty and unique",
+        )
+    return tuple(sorted(values))
+
+
+def _query_scalar(request: Request, key: str) -> str | None:
+    values = request.query_params.getlist(key)
+    if not values:
+        return None
+    if len(values) != 1 or not values[0]:
+        raise DemoOperationError(
+            "INVALID_PRESENTATION_QUERY",
+            field=key,
+            message="query value must be a single non-empty scalar",
+        )
+    return values[0]
+
+
+def _query_integer(request: Request, key: str, default: int) -> int:
+    value = _query_scalar(request, key)
+    if value is None:
+        return default
+    try:
+        return int(value)
+    except ValueError as error:
+        raise DemoOperationError(
+            "INVALID_PRESENTATION_QUERY",
+            field=key,
+            message="query value must be an integer",
+        ) from error
+
+
+def _require_query_keys(request: Request, allowed: frozenset[str]) -> None:
+    unknown = set(request.query_params).difference(allowed)
+    if unknown:
+        raise DemoOperationError(
+            "INVALID_PRESENTATION_QUERY",
+            field=sorted(unknown)[0],
+            message="unknown query parameter",
+        )
+
+
+def _schedule_query(request: Request) -> SchedulePresentationQuery:
+    _require_query_keys(
+        request,
+        frozenset(
+            {
+                "resource_id",
+                "workshop_id",
+                "demand_order_id",
+                "state",
+                "start_at_utc",
+                "end_at_utc",
+                "sort",
+                "offset",
+                "limit",
+            }
+        ),
+    )
+    try:
+        return SchedulePresentationQuery(
+            resource_ids=_query_values(request, "resource_id"),
+            workshop_ids=_query_values(request, "workshop_id"),
+            demand_order_ids=_query_values(request, "demand_order_id"),
+            states=cast(Any, _query_values(request, "state")),
+            start_at_utc=_query_scalar(request, "start_at_utc"),
+            end_at_utc=_query_scalar(request, "end_at_utc"),
+            sort=cast(Any, _query_scalar(request, "sort") or "START_ASC"),
+            offset=_query_integer(request, "offset", 0),
+            limit=_query_integer(request, "limit", 200),
+        )
+    except ValidationError as error:
+        location = error.errors()[0].get("loc", ())
+        field = str(location[0]) if location else "query"
+        raise DemoOperationError(
+            "INVALID_PRESENTATION_QUERY",
+            field=field,
+            message="schedule presentation query is invalid",
+        ) from error
+
+
+def _comparison_query(request: Request) -> ComparisonPresentationQuery:
+    _require_query_keys(
+        request,
+        frozenset(
+            {
+                "classification",
+                "resource_id",
+                "workshop_id",
+                "demand_order_id",
+                "start_at_utc",
+                "end_at_utc",
+                "sort",
+                "offset",
+                "limit",
+            }
+        ),
+    )
+    classifications = _query_values(request, "classification")
+    try:
+        return ComparisonPresentationQuery(
+            classifications=cast(
+                Any, classifications or ("ADDED", "CHANGED")
+            ),
+            resource_ids=_query_values(request, "resource_id"),
+            workshop_ids=_query_values(request, "workshop_id"),
+            demand_order_ids=_query_values(request, "demand_order_id"),
+            start_at_utc=_query_scalar(request, "start_at_utc"),
+            end_at_utc=_query_scalar(request, "end_at_utc"),
+            sort=cast(Any, _query_scalar(request, "sort") or "OPERATION_ASC"),
+            offset=_query_integer(request, "offset", 0),
+            limit=_query_integer(request, "limit", 200),
+        )
+    except ValidationError as error:
+        location = error.errors()[0].get("loc", ())
+        field = str(location[0]) if location else "query"
+        raise DemoOperationError(
+            "INVALID_PRESENTATION_QUERY",
+            field=field,
+            message="comparison presentation query is invalid",
+        ) from error
+
+
 def create_demo_router(runtime: DemoRuntime) -> APIRouter:
     router = APIRouter(prefix=DEMO_API_PREFIX, tags=["CNC Demo"])
 
@@ -279,6 +448,67 @@ def create_demo_router(runtime: DemoRuntime) -> APIRouter:
             {"state_version": "cnc-demo-state.v1", **state_document},
             correlation_id=correlation_id,
             active_run_id=runtime.active_run_id(),
+        )
+
+    @router.get("/factory", response_model=DemoFactoryView)
+    def factory(request: Request) -> Response:
+        correlation_id = _correlation(request)
+        _authorize(
+            request,
+            correlation_id=correlation_id,
+            capability="view",
+            resource_type="PLANNING_SCOPE",
+        )
+        try:
+            _require_query_keys(request, frozenset())
+            view = runtime.presentation.factory()
+        except BaseException as error:
+            _raise_demo(error, correlation_id=correlation_id)
+        return _immutable_response(
+            view, request=request, correlation_id=correlation_id
+        )
+
+    @router.get(
+        "/versions/{version_id}",
+        response_model=DemoScheduleView,
+    )
+    def schedule_version(version_id: str, request: Request) -> Response:
+        correlation_id = _correlation(request)
+        _authorize(
+            request,
+            correlation_id=correlation_id,
+            capability="view",
+            resource_type="SCHEDULE_VERSION",
+            resource_id=version_id,
+        )
+        try:
+            query = _schedule_query(request)
+            view = runtime.presentation.schedule(version_id, query)
+        except BaseException as error:
+            _raise_demo(error, correlation_id=correlation_id)
+        return _immutable_response(
+            view, request=request, correlation_id=correlation_id
+        )
+
+    @router.get(
+        "/comparisons/{request_id}",
+        response_model=DemoComparisonView,
+    )
+    def comparison(request_id: str, request: Request) -> Response:
+        correlation_id = _correlation(request)
+        _authorize(
+            request,
+            correlation_id=correlation_id,
+            capability="view",
+            resource_type="PLANNING_SCOPE",
+        )
+        try:
+            query = _comparison_query(request)
+            view = runtime.presentation.comparison(request_id, query)
+        except BaseException as error:
+            _raise_demo(error, correlation_id=correlation_id)
+        return _immutable_response(
+            view, request=request, correlation_id=correlation_id
         )
 
     @router.post("/resets", response_model=None, status_code=202)

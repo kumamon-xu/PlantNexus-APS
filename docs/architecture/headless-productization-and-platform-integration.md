@@ -6,7 +6,7 @@ spec_version: 0.3.0
 phase: P8
 normative: true
 source_sections: [3, 4, 5, 9, 10, 12, 15, 30, 63, 65, 66, 67, 68, 84, 85, 93, 95, 97, 101, 103, 105, 106, 107, 109, 112, 113, 114]
-last_reviewed: 2026-09-04
+last_reviewed: 2026-09-05
 ---
 
 # Headless Productization and Platform Integration
@@ -95,4 +95,4 @@ Unimplemented advanced scheduling capabilities remain explicit `UNSUPPORTED_CAPA
 
 ## 8. Current-state disclaimer
 
-At P8 planning activation the repository still exposes the previously documented 29-operation API surface and unavailable default application adapters. Canonical submission, durable orchestration, host identity, Extension SDK/Registry, Enterprise Extension template, Developer Kit, packaging and runbooks are planned, not implemented. This architecture is a normative target and must never be described as current runtime capability before its owning Task and evidence are done.
+At P8 planning activation the repository exposed the previously documented 29-operation API surface and unavailable default application adapters. P8-03 has since formed the internal strict canonical consumer and durable Snapshot/PlanningProblem transaction, but it adds no public operation and does not make the default composition usable. Canonical HTTP submission, durable PlanningRun orchestration, host identity, Extension SDK/Registry, Enterprise Extension template, Developer Kit, packaging and runbooks remain planned. This architecture is a normative target; only capabilities whose owning Task and evidence are done may be described as current runtime behavior.

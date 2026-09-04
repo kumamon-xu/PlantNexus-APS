@@ -6,7 +6,7 @@ spec_version: 0.3.0
 phase: cross-phase
 normative: true
 source_sections: [23, 24, 40, 95, 101, 103, 104, 114]
-last_reviewed: 2026-09-04
+last_reviewed: 2026-09-05
 ---
 
 # Schema 版本与兼容规则
@@ -19,7 +19,7 @@ Global current metadata由`2.9.0`提升为additive `2.10.0`，同步写入`pypro
 
 Request fingerprint使用`canonical-json.v1`并排除request/correlation/raw idempotency transport identifiers；payload、result、Runtime resolution与每个PlanningRun revision分别拥有明确projection fingerprint。Unknown version/field、document interchange、mixed plane/scope、authority/mapping缺口、invalid reference、same key/different fingerprint、非法state pair或Runtime/attempt resolution不一致均fail closed。P8错误使用独立`HEADLESS_RUNTIME` namespace，不能原地扩写或重解释`error-code-registry.v2`。
 
-Compatibility是set-level additive、document-level exact。当前没有P8 consumer、DB migration或HTTP binding；因此在TASK-P8-03消费前可删除新增artifact并恢复global metadata/dictionary。P8-03形成consumer后只能新增document/set version并提供显式migration/deprecation，不能覆盖v1 bytes。Runtime、SDK、Extension和Developer Kit版本仍是独立维度；本Task只预留服务端resolution reference，不发布SDK/manifest/Registry实现。
+Compatibility是set-level additive、document-level exact。P8-03已形成v1 consumer和additive `0006`持久化，因此这些artifact不再允许按“无consumer”直接删除或原地覆盖；后续修正只能新增document/set version并提供显式migration/deprecation，`0006` downgrade的数据损失边界也必须保留。当前仍没有P8 HTTP binding。Runtime、SDK、Extension和Developer Kit版本继续是独立维度；现有carrier只保存服务端resolution reference，尚未发布SDK/manifest/Registry实现。
 
 Runtime/dev dependency projection与`uv.lock`摘要`sha256:8b13617f31aa6a933347fc7b8ba010330cbb3f2d764f75c306dd9b6d77387a82`不变；`pyproject.toml`只改变schema metadata。P4/P6纯历史校验器只新增P8 additive排除项并继续核验原摘要，不改变历史carrier或报告的document set。
 

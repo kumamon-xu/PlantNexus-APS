@@ -6,7 +6,7 @@ spec_version: 0.3.0
 phase: cross-phase
 normative: true
 source_sections: [0, 3, 4, 5, 9, 12, 15, 30, 62, 63, 64, 65, 67, 68, 95, 101, 113, 114]
-last_reviewed: 2026-09-04
+last_reviewed: 2026-09-05
 ---
 
 # 系统上下文
@@ -15,7 +15,7 @@ last_reviewed: 2026-09-04
 
 P8固定APS的外部产品边界为宿主平台提交的versioned canonical JSON。ERP、MES、WMS、CAM、文件和人工录入均先由宿主平台采集、映射与治理；APS不持有其连接器、数据库或凭证。宿主平台和后续可选独立Frontend都只消费同一Headless HTTP API。企业业务适配由独立Enterprise Extension通过Extension SDK实现并只在APS Runtime内运行；它不是外部系统连接器，也不改变客户端边界。
 
-该边界目前已有accepted架构、人类治理合同和schema set `2.10.0`的canonical ingress/result、PlanningRun机器合同，但还不是可调用的Headless能力。当前仍只有29项既有HTTP operation，默认业务application/authorization adapter unavailable；P8 durable ingress、持久化、Worker、Runtime组合、Extension SDK、Registry和Developer Kit也尚未形成，P8-03～17必须逐项实施并验证。
+该边界目前已有accepted架构、人类治理合同和schema set `2.10.0`的canonical ingress/result、PlanningRun机器合同；P8-03已在Runtime内部形成strict consumer、durable idempotency及Snapshot/PlanningProblem原子持久化，但还不是可调用的Headless产品能力。当前仍只有29项既有HTTP operation，默认业务application/authorization adapter unavailable；PlanningRun编排、Worker、完整Runtime组合、Extension SDK、Registry和Developer Kit尚未形成，P8-04～17仍须逐项实施并验证。
 
 ## TASK-P3-17 audit conclusion
 

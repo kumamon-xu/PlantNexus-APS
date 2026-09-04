@@ -6,18 +6,18 @@ spec_version: 0.3.0
 phase: cross-phase
 normative: true
 source_sections: [7, 8, 27, 43, 81, 82, 107, 113, 114]
-last_reviewed: 2026-09-04
+last_reviewed: 2026-09-05
 ---
 
 # 能力矩阵
 
 ## P8 machine-contract status
 
-P8 Headless Productization已形成ADR-0017/0018、人类数据authority合同，以及schema set `2.10.0`的canonical ingress request/result、PlanningRun lifecycle与Headless错误机器合同。该进展只把`HEADLESS_MACHINE_CONTRACT_V1`标为`FORMED`；它没有consumer、端点、存储或执行权。durable ingress、PlanningRun orchestration、Solver Worker业务task、Production-shaped Runtime、host identity、完整Headless API、Extension SDK、Plugin Registry、Enterprise Extension template、Developer Kit、release/deployment/backup/runbook和optional Frontend distribution仍为`PLANNED_NOT_FORMED`。
+P8 Headless Productization已形成ADR-0017/0018、人类数据authority合同，以及schema set `2.10.0`的canonical ingress request/result、PlanningRun lifecycle与Headless错误机器合同；P8-03进一步形成Runtime内部的strict consumer、Data Validation、durable idempotency和原子immutable Snapshot/PlanningProblem应用切片。因此`HEADLESS_MACHINE_CONTRACT_V1`与`DURABLE_CANONICAL_INGRESS_V1`均为`FORMED`。公开端点、PlanningRun orchestration、Solver Worker业务task、Production-shaped Runtime、host identity、完整Headless API、Extension SDK、Plugin Registry、Enterprise Extension template、Developer Kit、release/deployment/backup/runbook和optional Frontend distribution仍为`PLANNED_NOT_FORMED`。
 
 现有CSV/XLSX/reference adapter是内部研发/参考能力，不是公共Production接口；ERP/MES/WMS/CAM连接器明确由宿主平台承担，不列为APS待实现capability。P7继续`deferred`，其当前P7-01～11执行卡已`cancelled/NOT_EXECUTED`且未来须以successor计划恢复。Production必须等待未来P7 Reality Calibration与P8工程Exit双门，不能因P8规划或未来synthetic Gate提升为ready。
 
-P8工程能力状态单独为：`HEADLESS_MACHINE_CONTRACT_V1=FORMED`、`APS_RUNTIME=PLANNED_NOT_FORMED`、`EXTENSION_SDK=PLANNED_NOT_FORMED`、`ENTERPRISE_EXTENSION_TEMPLATE=PLANNED_NOT_FORMED`、`DEVELOPER_KIT=PLANNED_NOT_FORMED`。这些不是20项排程Capability Registry的新枚举，也不会使C-012～C-018变为supported；未来具体业务能力仍需SDK合同允许、独立Validation Rule和自己的Task/Test/Gate。
+P8工程能力状态单独为：`HEADLESS_MACHINE_CONTRACT_V1=FORMED`、`DURABLE_CANONICAL_INGRESS_V1=FORMED_INTERNAL_ONLY`、`APS_RUNTIME=PLANNED_NOT_FORMED`、`EXTENSION_SDK=PLANNED_NOT_FORMED`、`ENTERPRISE_EXTENSION_TEMPLATE=PLANNED_NOT_FORMED`、`DEVELOPER_KIT=PLANNED_NOT_FORMED`。这些不是20项排程Capability Registry的新枚举，也不会使C-012～C-018变为supported；未来具体业务能力仍需SDK合同允许、独立Validation Rule和自己的Task/Test/Gate。
 
 ## P7 deferred status
 

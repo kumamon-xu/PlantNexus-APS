@@ -6,7 +6,7 @@ spec_version: 0.3.0
 phase: P0-P8
 normative: true
 source_sections: [36, 38, 39, 70, 71, 103]
-last_reviewed: 2026-09-04
+last_reviewed: 2026-09-05
 ---
 
 # Schema 计划索引
@@ -75,12 +75,12 @@ ADR-0013～0015现已accepted；TASK-P4-02的启动输入明确为ExecutionEvent
 
 独立Audit确认schema set `2.7.0`、P2 retained bytes、P3 `2.6.0` workspace carriers、P3 export v2 carriers、samples、strict/offline refs与canonical fingerprints全部回归PASS；本Task没有Schema新增、删除、版本或字节变化。
 
-当前 schema set 为additive `2.10.0`。`CONTRACT_V1/V2/V3`表示机器可验证的合同已形成，不表示canonical ingress、PlanningRun、ScheduleVersion/ExportJob状态持久化、审批、发布或Production业务动作已完成。此前所有set artifact均保留，未被原地覆盖。
+当前 schema set 为additive `2.10.0`。`CONTRACT_V1/V2/V3`只表示机器合同形成；P8-03另以应用与migration证据形成canonical ingress到prepared Snapshot/PlanningProblem的内部持久化，不表示公开HTTP、durable PlanningRun编排、ScheduleVersion/ExportJob状态推进、审批、发布或Production业务动作已完成。此前所有set artifact均保留，未被原地覆盖。
 
 | Schema | 目标路径 | 首个 Task | 状态 |
 |---|---|---|---|
-| Canonical ingress request v1 | [`/schemas/json/canonical-ingress-request.schema.json`](../../schemas/json/canonical-ingress-request.schema.json) | TASK-P8-02 | CONTRACT_V1；canonical-only request/authority/idempotency carrier；API/persistence NOT_FORMED |
-| Canonical ingress result v1 | [`/schemas/json/canonical-ingress-result.schema.json`](../../schemas/json/canonical-ingress-result.schema.json) | TASK-P8-02 | CONTRACT_V1；accepted/rejected + server resolution carrier；behavior NOT_FORMED |
+| Canonical ingress request v1 | [`/schemas/json/canonical-ingress-request.schema.json`](../../schemas/json/canonical-ingress-request.schema.json) | TASK-P8-02 | CONTRACT_V1；P8-03 internal consumer/persistence FORMED；HTTP API NOT_FORMED |
+| Canonical ingress result v1 | [`/schemas/json/canonical-ingress-result.schema.json`](../../schemas/json/canonical-ingress-result.schema.json) | TASK-P8-02 | CONTRACT_V1；P8-03 accepted/rejected application behavior FORMED；HTTP mapping NOT_FORMED |
 | PlanningRun v1 | [`/schemas/json/planning-run.schema.json`](../../schemas/json/planning-run.schema.json) | TASK-P8-02 | CONTRACT_V1；existing lifecycle/evidence projection；orchestration/worker NOT_FORMED |
 | Headless error registry v1 | [`/schemas/rules/headless-error-code-registry.v1.yaml`](../../schemas/rules/headless-error-code-registry.v1.yaml) | TASK-P8-02 | RULE_V1；HEADLESS_RUNTIME tuple形成；HTTP mapping NOT_FORMED |
 | Duration feature record v1 | [`/schemas/json/duration-feature-record.schema.json`](../../schemas/json/duration-feature-record.schema.json) | TASK-P6-02 | CONTRACT_V1；Simulation evidence only；dataset pipeline NOT_FORMED |

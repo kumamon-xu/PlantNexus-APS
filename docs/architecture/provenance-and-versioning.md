@@ -5,11 +5,17 @@ status: baseline
 spec_version: 0.3.0
 phase: cross-phase
 normative: true
-source_sections: [4, 23, 24, 40, 67, 93, 101, 102, 103, 104]
-last_reviewed: 2026-09-01
+source_sections: [4, 23, 24, 40, 67, 93, 95, 101, 102, 103, 104, 114]
+last_reviewed: 2026-09-04
 ---
 
 # Provenance 与版本规则
+
+## P8 Extension and Developer Kit lineage
+
+Core、Runtime、Extension SDK、Enterprise Extension artifact、Extension config和Developer Kit是六个独立版本/identity维度；Schema/OpenAPI、rule、Solver、Validator、code commit和dependency lock继续独立，任何一个都不能替代另一个。PlanningRun、SolverReport、ValidationReport、ScheduleVersion和Gate evidence必须绑定Runtime实际解析后的完整Extension集合、稳定Registry order及各artifact/config digest。
+
+Developer Kit release manifest精确绑定Runtime artifact/digest、SDK API version、template/tool/example versions、compatibility matrix、lockfiles、SBOM/license和文档版本。已发布Kit和Extension artifact不可原地覆盖；同一Kit必须可从clean inputs重建并重放。Core/Runtime新版本只产生新Kit候选，不改写既有企业project lock；升级必须显式opt in并产生新的兼容/迁移证据。Unknown、duplicate、mixed或unsupported组合没有有效provenance，必须fail closed。
 
 ## TASK-P6-08 monitoring policy, window and report lineage
 

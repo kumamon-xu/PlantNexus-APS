@@ -5,7 +5,7 @@ status: baseline
 spec_version: 0.3.0
 phase: cross-phase
 normative: true
-source_sections: [0, 9, 10, 23, 24, 30, 32, 33, 35, 57, 67, 113]
+source_sections: [0, 9, 10, 12, 23, 24, 30, 32, 33, 35, 57, 65, 67, 93, 95, 101, 113, 114]
 last_reviewed: 2026-09-04
 ---
 
@@ -19,15 +19,17 @@ P8规划的唯一外部产品链如下；TASK-P8-00只冻结架构和Task DAG，
 Host acquisition / mapping / authority
 → versioned canonical JSON over Headless API
 → contract + scope + idempotency + Data Validation
+→ APS Runtime resolves pinned Enterprise Extension through Extension SDK
 → durable immutable Snapshot / PlanningProblem
 → durable PlanningRun command
 → independent Solver Worker
-→ existing Strategy / Solver → fresh formal Validator
+→ existing Strategy / Solver + approved extension contributions
+→ fresh formal Validator + independent extension Validation Rules
 → immutable ScheduleVersion / read models / export representation / audit
 → same API → Host display or Optional APS Frontend
 ```
 
-第三方连接器、raw vendor payload与宿主显示不属于APS。CSV/XLSX/reference adapter仅可在内部先产出canonical数据，然后回到同一contract/validation链；不得成为旁路。P8-12将用versioned synthetic输入验证工程链，P7则独立使用获授权真实输入形成Reality Calibration。Production必须等待两条Exit Gate汇合。
+第三方连接器、raw vendor payload与宿主显示不属于APS。CSV/XLSX/reference adapter仅可在内部先产出canonical数据，然后回到同一contract/validation链；不得成为旁路。Extension只运行在Runtime内，只能消费SDK暴露的immutable数据和ports；Extension-specific数据也必须是namespaced/versioned canonical字段。P8-16将用versioned synthetic输入和两个独立Enterprise Extension验证工程链，P7则独立使用获授权真实输入形成Reality Calibration。Production必须等待两条Exit Gate汇合。
 
 ## P7 deferred calibration evidence chain
 

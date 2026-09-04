@@ -5,7 +5,7 @@ status: baseline
 spec_version: 0.3.0
 phase: cross-phase
 normative: true
-source_sections: [97, 113]
+source_sections: [97, 113, 114]
 last_reviewed: 2026-09-04
 ---
 
@@ -16,6 +16,10 @@ last_reviewed: 2026-09-04
 TASK-P8-00在任何P8机器合同或实现前接受[ADR-0017](ADR-0017-headless-canonical-json-and-dual-delivery.md)。该决定固定versioned canonical JSON为唯一外部产品输入，宿主平台拥有第三方采集/映射/展示，APS拥有验证、不可变计划输入、异步运行、Solver/Validator、版本与审计；宿主和可选独立Frontend消费同一Headless API，API/worker分进程且APS持久化不可被直接共享。
 
 ADR-0017同时规定P7 Reality Calibration与P8工程产品化从P6后分叉，并在Production Gate汇合。它不发布Schema/OpenAPI、不实现代码或测试，也不以P8 synthetic证据替代P7。OPEN-002只被收窄而未关闭。
+
+同一TASK-P8-00计划修订接受[ADR-0018](ADR-0018-extension-sdk-runtime-and-developer-kit.md)，固定APS Core、Extension SDK、Enterprise Extension、Runtime和Developer Kit的职责与依赖方向。企业项目只依赖指定SDK并由Runtime受控装载，不复制/修改Core；Extension只在服务端运行且不创建第二外部API。Constraint、Objective、Planning Rule、Validation Rule、Replan Policy和Plugin Registry进入P8-12～15的后续合同/实现/兼容Gate。
+
+ADR-0018还规定Core、Runtime、SDK、Extension和Developer Kit分别版本化，已发布Kit不可覆盖，Core/Runtime升级不自动升级企业项目；新Kit必须通过兼容、旧Kit重放和供应链验证。该ADR只形成架构计划，Extension trust/compatibility继续受`OPEN-002/010/012/015`约束，SDK/Registry/Kit能力仍为`PLANNED_NOT_FORMED`。
 
 ## TASK-P6-01 ADR decision
 

@@ -5,8 +5,8 @@ status: living
 spec_version: 0.3.0
 phase: cross-phase
 normative: true
-source_sections: [1, 13, 14, 19, 23, 24, 29, 32, 33, 34, 37, 38, 39]
-last_reviewed: 2026-08-25
+source_sections: [1, 13, 14, 19, 23, 24, 29, 30, 32, 33, 34, 37, 38, 39, 114]
+last_reviewed: 2026-09-04
 ---
 
 # 术语表
@@ -29,6 +29,12 @@ last_reviewed: 2026-08-25
 | 术语 | 项目语义 |
 |---|---|
 | APS | Advanced Planning and Scheduling；本项目的计划排程模块 |
+| APS Core | 通用领域、Problem、Solver、Validator、状态与不变量实现；不得包含企业项目分支或反向依赖Extension |
+| APS Runtime | 装配Core、Headless API、Solver Worker、Validator、持久化与受控Extension loader的实际服务端运行载体 |
+| APS Extension SDK | 面向可信Enterprise Extension的versioned内部SPI；不是外部HTTP API或安全沙箱 |
+| Enterprise Extension | 单个企业独立维护、只依赖指定SDK并由Runtime加载的Constraint/Objective/Rule/Policy artifact与配置 |
+| Plugin Registry | 按stable ID/version/capability确定性校验、排序、解析并fingerprint Extension贡献的Runtime registry |
+| APS Developer Kit | 经共同兼容验证并锁定Runtime、SDK、模板、工具、示例、文档和供应链证据的不可变开发交付组合 |
 | PlanningSnapshot | 截止某一时点形成的不可变、确定性、可重放计划输入快照 |
 | PlanningProblem | 由 Snapshot 构建的可序列化、Solver-neutral 求解问题 |
 | PlanningPolicy | 业务目标层级、锁定/稳定性等计划策略输入，不包含 Solver 对象 |

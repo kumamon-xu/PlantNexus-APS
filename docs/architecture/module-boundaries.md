@@ -5,7 +5,7 @@ status: baseline
 spec_version: 0.3.0
 phase: cross-phase
 normative: true
-source_sections: [12, 13, 14, 30, 41, 47, 51, 65, 70, 113]
+source_sections: [12, 13, 14, 30, 41, 47, 51, 65, 70, 95, 101, 113, 114]
 last_reviewed: 2026-09-04
 ---
 
@@ -13,9 +13,9 @@ last_reviewed: 2026-09-04
 
 ## P8 planned Headless dependency edge
 
-P8目标依赖方向为`Host/Optional Frontend → versioned HTTP API → application ports → APS-owned repositories/outbox → independent Solver Worker → existing Strategy/Solver + formal Validator → immutable publication/read/export`。宿主只提交canonical JSON并消费公开结果；禁止宿主或Frontend共享APS数据库、导入Backend模块、直接投递内部worker消息或调用Solver旁路。
+P8目标依赖方向为`Host/Optional Frontend → versioned HTTP API → APS Runtime application ports → APS-owned repositories/outbox → independent Solver Worker → existing Strategy/Solver + formal Validator → immutable publication/read/export`。企业扩展方向为`Enterprise Extension → Extension SDK ← Runtime adapters → APS Core`；Core不得反向导入SDK实现或企业代码。宿主只提交canonical JSON并消费公开结果；禁止宿主、Frontend或Extension共享APS数据库、导入Core internal、直接投递内部worker消息或调用Solver旁路。
 
-API进程只拥有transport/auth/validation/delegation，不能执行长时求解；worker与API消费同一application/domain语义并使用各自进程入口。Reference adapter/Normalization可作为内部canonical producer，但不得注册为Production public endpoint。P8-00只接受该边界，尚未新增源码依赖；P8-03～11分别形成可验证实现。
+API进程只拥有transport/auth/validation/delegation，不能执行长时求解；worker与API消费同一application/domain语义、同一resolved Extension fingerprint并使用各自进程入口。Runtime composition root是唯一可把SDK贡献接到Core ports的位置；Extension不得覆盖state/authorization/publication/audit或用Solver侧逻辑实现Validation Rule。Reference adapter/Normalization可作为内部canonical producer，但不得注册为Production public endpoint。P8-00只接受该边界，尚未新增源码依赖；P8-03～15分别形成可验证实现。
 
 ## TASK-P6-07 duration Planning-ingress module boundary
 

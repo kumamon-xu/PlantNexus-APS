@@ -5,11 +5,17 @@ status: baseline
 spec_version: 0.3.0
 phase: cross-phase
 normative: false
-source_sections: [11, 12, 65, 95, 100, 102]
-last_reviewed: 2026-09-01
+source_sections: [11, 12, 65, 95, 100, 101, 102, 114]
+last_reviewed: 2026-09-04
 ---
 
 # 推荐技术栈与锁定规则
+
+## P8 Extension SDK and Developer Kit stack boundary
+
+本阶段只确定产品单元与锁定规则，不预选新的插件框架、远程registry、sandbox或打包依赖。Extension SDK应优先使用显式Python protocol/value object和Runtime composition ports；插件发现必须基于本地已批准manifest，禁止floating package、请求级安装、网络下载和隐式entry-point扫描。具体package/build工具只能在TASK-P8-12～15中经exact pin、lock、SCA/license、import-boundary和replay证据批准。
+
+Developer Kit必须锁定Python/runtime、Core、SDK、Enterprise Extension template、tools及全部transitive dependencies，并发布SBOM/checksum/compatibility manifest。Runtime或Core依赖升级不会自动传播到企业项目；每个新Kit是独立验证和显式采用的版本。Python同进程插件按trusted code管理，不得以技术栈选择宣称安全隔离。
 
 ## TASK-P6-04 dependency-neutral baseline model
 

@@ -5,7 +5,7 @@ status: baseline
 spec_version: 0.3.0
 phase: P3-P8
 normative: false
-source_sections: [68, 69, 77, 78, 113]
+source_sections: [68, 69, 77, 78, 95, 113, 114]
 last_reviewed: 2026-09-04
 ---
 
@@ -14,6 +14,8 @@ last_reviewed: 2026-09-04
 ## P8 optional delivery boundary
 
 P8把Frontend定义为Headless APS的可选client，而不是Backend的必要组成或第二套业务后端。宿主平台可以完全在自有UI展示APS结果；若后续独立封装行业Frontend，它必须与宿主消费同一versioned HTTP API，不得直连APS数据库、导入Backend模块、复制Solver/Validator或自行推进状态机。
+
+Enterprise Extension也不是Frontend插件。它只通过Extension SDK在APS Runtime服务端执行，Frontend不得加载Extension代码、读取Registry内部配置或依据插件自行计算约束/目标/校验结果。Extension相关状态和诊断只能通过标准Headless read/error合同展示。
 
 TASK-P8-11将来只在P8-07 API完成后验证独立Frontend distribution与backend-only运行。本次没有修改`frontend/**`，现有P3/P4工作台仍是研发基线，不能被解释为P8产品封装、行业定制或Production UI。
 

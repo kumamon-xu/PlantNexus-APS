@@ -89,6 +89,10 @@ P8的synthetic端到端Gate只能证明工程链路，不关闭P7现实输入缺
 
 `OPEN-002`被收窄为宿主canonical API、identity、scope和authority的Production闭环；直接第三方Adapter不再是APS责任，但该OPEN项不会因此自动关闭。既有REQ/NFR/ENG root数量和spec version保持不变，本ADR为0.3.0内的加法式产品化决定。
 
+## Relationship to ADR-0018
+
+[ADR-0018](ADR-0018-extension-sdk-runtime-and-developer-kit.md)在不改变本ADR外部边界的前提下增加服务端企业扩展机制。Enterprise Extension只由APS Runtime通过versioned SDK加载；宿主平台和可选Frontend仍只使用这里定义的同一Headless HTTP API。SDK不是新的远程API，插件不得引入vendor payload入口、共享数据库或第二套后端。两个ADR共同要求P8-16/17验证Headless与Extension组合，而不是允许企业项目fork Core。
+
 ## Rollback / Revisit gate
 
 Accepted ADR不得删除或原地改写；语义变化必须新增superseding ADR。若P8尚无consumer，回滚可移除未实施的P8计划并把current phase恢复为P7 deferred；一旦公开API或持久化consumer形成，必须通过兼容版本、deprecation和migration回退，不能恢复共享数据库或内部旁路。

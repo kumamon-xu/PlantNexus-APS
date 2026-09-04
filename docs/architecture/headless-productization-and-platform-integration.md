@@ -5,7 +5,7 @@ status: active
 spec_version: 0.3.0
 phase: P8
 normative: true
-source_sections: [3, 4, 9, 10, 12, 15, 63, 65, 66, 67, 68, 84, 85, 97, 105, 106, 107, 109, 112, 113]
+source_sections: [3, 4, 5, 9, 10, 12, 15, 30, 63, 65, 66, 67, 68, 84, 85, 93, 95, 97, 101, 103, 105, 106, 107, 109, 112, 113, 114]
 last_reviewed: 2026-09-04
 ---
 
@@ -24,12 +24,14 @@ ERP / MES / WMS / CAM / files / human input
           versioned canonical JSON
                     |
                     v
- APS API -> contract/data validation -> immutable Snapshot/Problem
-                    |                         |
-                    |                         v
-                    +-> durable PlanningRun -> Solver Worker
-                                              |
-                                  Formal Validator + publication
+ APS Runtime: API -> contract/data validation -> immutable Snapshot/Problem
+       |                         |                         |
+       |                         |                         v
+       |                         +-> durable PlanningRun -> Solver Worker
+       |                                                   |
+       +-> Extension Registry -> Enterprise Extension      |
+                 through versioned SDK                     |
+                                              Formal Validator + publication
                                               |
                                 read models / export representation
                                               |
@@ -59,7 +61,7 @@ CSV/XLSX/reference adapters and synthetic generators remain allowed only as inte
 
 ## 3. Runtime ownership
 
-The API process owns transport, authentication hooks, request validation and application-port invocation. The application layer owns use-case orchestration and transaction boundaries. Repositories own APS persistence behind ports. The worker owns durable asynchronous execution and may call the same domain/application capabilities without changing their semantics. The formal Validator remains independent from the solver.
+APS Runtime is the deployable execution boundary. The API process owns transport, authentication hooks, request validation and application-port invocation. The application layer owns use-case orchestration and transaction boundaries. Repositories own APS persistence behind ports. The worker owns durable asynchronous execution and may call the same domain/application capabilities without changing their semantics. Runtime may load an approved Enterprise Extension through the versioned Extension SDK; API and worker must resolve the same extension fingerprint. The formal Validator and every extension Validation Rule remain independent from solver constraint construction.
 
 APS persistence is private to APS and migrated by APS release artifacts. Host systems receive stable identifiers, statuses, errors and read models through the API. A database connection, shared ORM entity or direct queue message is not an integration contract.
 
@@ -77,14 +79,20 @@ The owning platform may render every APS result in its own UI. An optional indus
 
 Frontend release cadence may differ from backend cadence if the API compatibility window is honored. Deployment may omit the optional frontend entirely; headless API, worker, database/migrations and operations controls remain a complete backend distribution.
 
-## 6. P8 delivery slices
+## 6. Enterprise extension without Core forks
 
-P8 proceeds through contract baseline, machine contracts, durable ingress, PlanningRun orchestration, worker reliability, runtime composition, complete API, host authorization, release packaging, operations, optional frontend isolation, a synthetic vertical Gate and an independent exit audit. Exact ownership and dependencies live in `MILESTONE-P8` and TASK-P8-00～13.
+Enterprise-specific Constraint, Objective, Planning Rule, Validation Rule and Replan Policy contributions are server-side Runtime components registered through a deterministic Plugin Registry. The SDK is an internal SPI, not another network API. Extensions cannot be loaded by the host or browser, copy/modify APS Core, write the APS database, bypass canonical validation or introduce a private scheduling endpoint.
 
-P8-12 synthetic evidence proves contract-to-publication engineering behavior only. P7 independently proves reality gap, Planner usefulness and capacity on authorized real inputs. Production release requires both exit gates plus the total-specification Production Gate; no document in P8 closes that requirement early.
+Core, Runtime, SDK, Extension artifact/config and Developer Kit have separate version identities. Each enterprise project locks a verified combination. A new Core or Runtime release produces a new Developer Kit candidate only after compatibility and old-Kit replay; it never mutates or automatically upgrades an enterprise project. Detailed trust, interface and delivery rules are in [APS Extension SDK、Runtime 与 Developer Kit 架构](extension-sdk-runtime-and-developer-kit.md) and ADR-0018.
 
-Unimplemented advanced scheduling capabilities remain explicit `UNSUPPORTED_CAPABILITY` responses and are not prerequisites for packaging this stable Headless baseline. Each later capability must arrive through its own compatible contract/implementation/test Task without forking the API or core state semantics.
+## 7. P8 delivery slices
 
-## 7. Current-state disclaimer
+P8 proceeds through contract baseline, machine contracts, durable ingress, PlanningRun orchestration, worker reliability, runtime composition, complete API, host authorization, release packaging, operations, optional frontend isolation, Extension SDK contract, Runtime SPI/Registry, Enterprise Extension template/conformance, Developer Kit assembly, a synthetic vertical Gate and an independent exit audit. Exact ownership and dependencies live in `MILESTONE-P8` and TASK-P8-00～17.
 
-At P8 planning activation the repository still exposes the previously documented 29-operation API surface and unavailable default application adapters. Canonical submission, durable orchestration, host identity, packaging and runbooks are planned, not implemented. This architecture is a normative target and must never be described as current runtime capability before its owning Task and evidence are done.
+P8-16 synthetic evidence proves Headless+Extension contract-to-publication engineering behavior only. P7 independently proves reality gap, Planner usefulness and capacity on authorized real inputs. Production release requires both exit gates plus the total-specification Production Gate; no document in P8 closes that requirement early.
+
+Unimplemented advanced scheduling capabilities remain explicit `UNSUPPORTED_CAPABILITY` responses and are not prerequisites for packaging this stable Headless baseline. A capability may use the SDK only when the exposed extension point is sufficient and it supplies independent validation; otherwise it requires a normal Core ADR/Task. Neither path may fork the API or core state semantics.
+
+## 8. Current-state disclaimer
+
+At P8 planning activation the repository still exposes the previously documented 29-operation API surface and unavailable default application adapters. Canonical submission, durable orchestration, host identity, Extension SDK/Registry, Enterprise Extension template, Developer Kit, packaging and runbooks are planned, not implemented. This architecture is a normative target and must never be described as current runtime capability before its owning Task and evidence are done.

@@ -5,7 +5,7 @@ status: living
 spec_version: 0.3.0
 phase: P3-P8
 normative: false
-source_sections: [63, 65, 66, 68, 69, 77, 78, 79, 80, 113]
+source_sections: [63, 65, 66, 68, 69, 77, 78, 79, 80, 95, 113, 114]
 last_reviewed: 2026-09-04
 ---
 
@@ -13,7 +13,7 @@ last_reviewed: 2026-09-04
 
 本清单以当前 FastAPI OpenAPI、router、application port 和自动化测试为事实来源，用于回答“接口是否存在、实现到哪一层、还缺什么”。具体 wire 语义仍以 [Planning Workspace API 合同](planning-workspace-api.md)、[ExecutionEvent / ReplanRequest 合同](execution-events-and-replan-request.md)和[错误模型](../domain/error-model.md)为准。
 
-P8目标边界已经确定，但尚未实现：APS未来只通过Headless API接收宿主平台提交的versioned canonical JSON；不提供ERP/MES/WMS/CAM专用连接器或raw文件产品端点。宿主和可选独立Frontend使用同一API。下述29项仍是当前真实OpenAPI，P8计划不能被解释为现有operation。
+P8目标边界已经确定，但尚未实现：APS未来只通过Headless API接收宿主平台提交的versioned canonical JSON；不提供ERP/MES/WMS/CAM专用连接器或raw文件产品端点。宿主和可选独立Frontend使用同一API。Extension SDK和Plugin Registry只在APS Runtime内部使用，不提供插件上传、下载、安装或企业私有业务route；企业特有数据仍须使用批准的namespaced/versioned canonical字段。下述29项仍是当前真实OpenAPI，P8计划不能被解释为现有operation。
 
 ## 状态说明
 

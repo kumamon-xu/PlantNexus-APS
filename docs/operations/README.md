@@ -5,7 +5,7 @@ status: baseline
 spec_version: 0.3.0
 phase: P0-P8
 normative: false
-source_sections: [65, 66, 93, 94, 95, 101, 106, 113]
+source_sections: [65, 66, 93, 94, 95, 101, 106, 113, 114]
 last_reviewed: 2026-09-04
 ---
 
@@ -13,9 +13,9 @@ last_reviewed: 2026-09-04
 
 ## P8 planned operations outcome
 
-P8-09/10将来负责可复现Headless distribution、版本/SBOM/checksum、migration bundle、非Production部署、readiness、metrics/logs/traces/alerts、backup/restore、rollback和operator runbook；P8-12/13再分别形成synthetic集成Gate与独立审计。当前这些能力全部是planned，不存在Production package、deployment、on-call或SLA。
+P8-09/10将来负责可复现Headless Runtime distribution、版本/SBOM/checksum、migration bundle、非Production部署、readiness、metrics/logs/traces/alerts、backup/restore、rollback和operator runbook；P8-12～15形成Extension SDK/Registry、企业模板和Developer Kit兼容发布，P8-16/17再分别形成synthetic集成Gate与独立审计。当前这些能力全部是planned，不存在Runtime/SDK/Kit release、Production package、deployment、on-call或SLA。
 
-运行拓扑固定为API、独立Solver Worker、APS自有数据库及broker；可选Frontend可以缺席。宿主不共享数据库或直接投递内部queue，第三方连接器和结果展示仍由宿主负责。本次没有修改部署配置、代码、测试、依赖或环境。
+运行拓扑固定为APS Runtime中的API、独立Solver Worker、formal Validator、受控Extension loader、APS自有数据库及broker；可选Frontend可以缺席。API/Worker必须加载同一Extension fingerprint。宿主和Extension不共享数据库或直接投递内部queue，第三方连接器和结果展示仍由宿主负责。Plugin artifact只可在build/deploy/startup经allow-list、digest/signature、compatibility和SBOM/license校验装载，禁止请求级上传/下载/安装。本次没有修改部署配置、代码、测试、依赖或环境。
 
 ## TASK-P4-12 local API operations boundary
 

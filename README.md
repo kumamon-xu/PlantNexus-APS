@@ -2,7 +2,7 @@
 
 PlantNexus APS 是一个面向离散制造的高级计划与排程系统。项目采用 Simulation-first 路线，把canonical数据、不可变计划快照、PlanningProblem、OR-Tools CP-SAT 求解、独立排程校验、计划版本审批/发布、内部导出和动态重排串成一条可重放链路。
 
-当前仓库是“已实现的研发基线”，不是生产部署包：P0～P6 能力已经形成，P7 真实数据校准因缺少获授权的真实数据、真实环境和业务责任人而暂缓；P8 已进入Headless产品化规划，尚未实施。最终产品边界只接收宿主平台提交的versioned canonical JSON，第三方系统采集、字段映射和结果展示由宿主平台负责；APS不直接对接ERP、MES、WMS或CAM。默认 FastAPI 组合根会对未注入的业务应用与授权适配器 fail closed；健康检查和 OpenAPI 可用，但不能把默认启动等同于开箱即用的生产 APS。
+当前仓库是“已实现的研发基线”，不是生产部署包：P0～P6 能力已经形成，P7 真实数据校准因缺少获授权的真实数据、真实环境和业务责任人而暂缓；P8 已进入Headless产品化规划，尚未实施。最终产品边界只接收宿主平台提交的versioned canonical JSON，第三方系统采集、字段映射和结果展示由宿主平台负责；APS不直接对接ERP、MES、WMS或CAM。P8同时规划APS Extension SDK、Runtime受控Enterprise Extension加载和version-locked Developer Kit，使企业项目无需复制或修改APS Core即可独立二次开发。Extension只在Runtime服务端执行，宿主与可选Frontend仍只调用统一Headless API；Core/Runtime升级不会自动升级企业项目。默认 FastAPI 组合根会对未注入的业务应用与授权适配器 fail closed；健康检查和 OpenAPI 可用，但不能把默认启动等同于开箱即用的生产 APS。
 
 ## 已有能力
 
@@ -45,7 +45,7 @@ uv run uvicorn app.api.app:app --host 127.0.0.1 --port 8000
 
 Swagger UI 和 ReDoc 默认关闭。默认组合根没有注入业务 application port 与身份授权 provider，因此 `/api/v1/**` 业务请求会安全拒绝；完整接口状态和待接入项见 [API 接口开发清单](docs/contracts/api-development-checklist.md)。
 
-当前尚未实现P8规划中的canonical JSON提交、持久化PlanningRun启动和生产形态组合根；CSV/XLSX/reference adapter仅是研发/参考能力，不是未来公共产品接口。
+当前尚未实现P8规划中的canonical JSON提交、持久化PlanningRun启动、生产形态组合根、Extension SDK/Registry或Developer Kit；CSV/XLSX/reference adapter仅是研发/参考能力，不是未来公共产品接口。
 
 ### 2. 本地依赖服务
 
@@ -97,6 +97,7 @@ npm --prefix frontend run build
 - [Schema 索引](docs/contracts/schema-index.md)
 - [端到端计划流程](docs/architecture/end-to-end-planning-flow.md)
 - [Headless 产品化与平台集成](docs/architecture/headless-productization-and-platform-integration.md)
+- [Extension SDK、Runtime 与 Developer Kit 架构](docs/architecture/extension-sdk-runtime-and-developer-kit.md)
 - [领域模型](docs/domain/domain-model.md)
 - [约束目录](docs/planning/constraint-catalog.md)
 - [独立排程校验器](docs/planning/schedule-validator.md)

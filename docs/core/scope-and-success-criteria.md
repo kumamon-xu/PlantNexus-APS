@@ -5,7 +5,7 @@ status: baseline
 spec_version: 0.3.0
 phase: cross-phase
 normative: true
-source_sections: [0, 3, 4, 7, 8, 105, 106, 107, 112, 113]
+source_sections: [0, 3, 4, 5, 7, 8, 30, 95, 101, 105, 106, 107, 112, 113, 114]
 last_reviewed: 2026-09-04
 ---
 
@@ -13,7 +13,7 @@ last_reviewed: 2026-09-04
 
 ## 产品目标
 
-PlantNexus APS V1 是面向单工厂、多车间、多产线、多设备的统一计划排程底座。最终Headless产品只接收宿主平台提交的versioned canonical JSON，并完成从合同/数据校验、不可变快照、统一问题构建、求解、独立验证、计划版本、人工审批到发布和异常重排的闭环。第三方采集、vendor字段映射与结果展示归宿主平台，APS不直接对接ERP、MES、WMS或CAM。
+PlantNexus APS V1 是面向单工厂、多车间、多产线、多设备的统一计划排程底座。最终Headless产品只接收宿主平台提交的versioned canonical JSON，并完成从合同/数据校验、不可变快照、统一问题构建、求解、独立验证、计划版本、人工审批到发布和异常重排的闭环。第三方采集、vendor字段映射与结果展示归宿主平台，APS不直接对接ERP、MES、WMS或CAM。不同企业通过versioned Extension SDK和独立Enterprise Extension适配业务，由APS Runtime受控加载；企业项目不得复制或修改APS Core。
 
 V1 的交付单位不是一个 OR-Tools 脚本，而是一组可以持续吸收制造约束、独立证明结果正确并可追溯重放的产品能力。
 
@@ -26,6 +26,8 @@ V1 的交付单位不是一个 OR-Tools 脚本，而是一组可以持续吸收�
 | Traceability | 结果可追溯到 Snapshot、规则、PlanningProblem、Solver、参数、Scenario/Generator、代码提交 |
 | Human Control | 计划员可以查看、比较、锁定、驳回、批准、发布和引用历史版本 |
 | Interoperability | Canonical JSON是唯一外部输入；宿主与可选独立Frontend使用同一版本化API和标准结果/read model |
+| Extensibility | 企业规则只通过受控SDK/Registry进入Runtime；Core无企业分支，影响可行性的扩展有独立Validator覆盖 |
+| Compatibility | Runtime、SDK、Extension和Developer Kit分别版本化；旧Kit可重放且企业升级必须显式选择 |
 
 `FEASIBLE` 不等于全局最优，`UNKNOWN` 不等于无解。没有真实历史数据前，不承诺秒级排程、固定运行时间、全局最优比例或任意规模工厂。
 
@@ -42,6 +44,7 @@ V1 的交付单位不是一个 OR-Tools 脚本，而是一组可以持续吸收�
 - ScheduleVersion、审批、发布、导出和 Replan；
 - Simulation、Scenario Library、Reference Scheduler、Benchmark Harness 和 Execution Simulator。
 - Headless API、独立Solver Worker与APS自有持久化的产品化目标；可选独立Frontend只作为同一API consumer。
+- APS Extension SDK、Runtime Plugin Registry、独立Enterprise Extension模板和version-locked Developer Kit的产品化目标。
 
 ## V1 明确不支持
 
@@ -52,11 +55,13 @@ V1 的交付单位不是一个 OR-Tools 脚本，而是一组可以持续吸收�
 - LLM 自动修改硬约束、工艺、资源兼容性或业务权重。
 - APS内置ERP/MES/WMS/CAM专用连接器、vendor payload API或共享宿主数据库；
 - 为宿主平台与独立Frontend维护两套业务后端。
+- 复制/fork APS Core进行企业定制、宿主或浏览器侧执行Extension、请求级插件上传/远程下载、自动升级企业项目；
+- 把同进程Python Extension描述为不可信代码安全沙箱。
 
 高级能力如 Secondary Capacity、Sequence-dependent Setup、Batch、Split/Merge、Material Competition、Preemption、Buffer Capacity、Alternative Material 和 Multi-factory 必须显式返回 `UNSUPPORTED_CAPABILITY`，禁止静默近似。
 
-这些尚未实现的高级能力不作为P8基础封装与Headless工程Exit的阻塞项；后续只能通过独立Task、兼容API/Schema扩展和对应验证逐项增加，不能改变已封装核心的默认语义。
+这些尚未实现的高级能力不作为P8基础封装与Headless工程Exit的阻塞项；后续可在SDK已暴露且独立Validation Rule完整时作为Enterprise Extension交付，否则必须通过独立Core Task/ADR演进。两条路径都要有兼容合同和对应验证，不能改变已封装核心的默认语义。
 
 ## 生产就绪边界
 
-生产上线至少需要P7真实匿名历史快照、Historical Replay、计划员评审、Reality Gap Report与性能边界，同时需要P8 canonical API、可靠worker、host identity、安全、发布封装、备份恢复、监控与Runbook Exit通过，并关闭关键`PROD_OPEN`、完成UAT。P7和P8任一未通过都必须`NOT_READY`；Synthetic Benchmark只能证明当前测试场景与当前硬件下的行为。
+生产上线至少需要P7真实匿名历史快照、Historical Replay、计划员评审、Reality Gap Report与性能边界，同时需要P8 canonical API、可靠worker、host identity、安全、发布封装、Extension/Developer Kit兼容（使用时）、备份恢复、监控与Runbook Exit通过，并关闭关键`PROD_OPEN`、完成UAT。P7和P8任一未通过都必须`NOT_READY`；Synthetic Benchmark和示例Extension只能证明当前测试场景与当前硬件下的行为。

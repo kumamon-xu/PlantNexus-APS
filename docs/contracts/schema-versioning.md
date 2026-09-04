@@ -5,11 +5,17 @@ status: baseline
 spec_version: 0.3.0
 phase: cross-phase
 normative: true
-source_sections: [23, 24, 40, 101, 103, 104]
-last_reviewed: 2026-09-01
+source_sections: [23, 24, 40, 95, 101, 103, 104, 114]
+last_reviewed: 2026-09-04
 ---
 
 # Schema 版本与兼容规则
+
+## P8 Extension and Developer Kit compatibility plan
+
+Extension SDK API version、Extension manifest version、Enterprise Extension artifact/config version、Runtime version和Developer Kit version均独立于Schema Set。TASK-P8-00只接受架构；TASK-P8-12以后才可发布additive manifest/compatibility carrier，当前Schema set继续`2.9.0`且所有既有bytes不变。
+
+未来carrier必须strict、offline-resolved、无业务default并保存历史bytes；unknown、duplicate、mixed或unsupported组合fail closed。Developer Kit compatibility manifest必须精确绑定Runtime/SDK/Extension/template/tool/Schema/OpenAPI/dependency versions和digests。Runtime/Core升级不得通过`latest`、浮动范围或alias自动改变企业项目；每个新Kit必须单独version、兼容测试、旧Kit重放和显式opt-in迁移。
 
 ## TASK-P6-02 additive set `2.9.0`
 

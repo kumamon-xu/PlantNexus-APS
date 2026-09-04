@@ -5,7 +5,7 @@ status: baseline
 spec_version: 0.3.0
 phase: cross-phase
 normative: true
-source_sections: [15, 22, 59, 61, 90, 113]
+source_sections: [15, 22, 59, 61, 90, 95, 113, 114]
 last_reviewed: 2026-09-04
 ---
 
@@ -15,7 +15,7 @@ last_reviewed: 2026-09-04
 
 宿主平台负责从ERP/MES/WMS/CAM或人工流程采集、映射、脱敏并提交versioned canonical JSON，也负责结果展示；APS不直接连接这些系统。宿主必须保留并提交可验证的source system/version/record、factory scope和authority reference，但“由宿主发送”不自动使任意值成为权威事实。
 
-APS在入口独立执行contract、scope、authority、idempotency、lineage和Data Validation，并只从通过的canonical输入构建不可变Snapshot/Problem。来源冲突、缺失authority和未知版本必须拒绝，不能由last-write-wins、AI、Frontend或通用默认补猜。真实provider、字段级决策、retention和identity仍由OPEN-002/010/011/014/015控制。
+APS在入口独立执行contract、scope、authority、idempotency、lineage和Data Validation，并只从通过的canonical输入构建不可变Snapshot/Problem。来源冲突、缺失authority和未知版本必须拒绝，不能由last-write-wins、AI、Frontend、Enterprise Extension或通用默认补猜。Extension只消费已验证authority facts；额外字段必须namespaced、versioned并显式携带来源，插件配置或代码默认不能创造业务authority。真实provider、字段级决策、retention、identity和Extension责任仍由OPEN-002/010/011/012/014/015控制。
 
 ## TASK-P6-03 executable dataset authority
 

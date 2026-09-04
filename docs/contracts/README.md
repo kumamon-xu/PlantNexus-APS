@@ -5,7 +5,7 @@ status: living
 spec_version: 0.3.0
 phase: P8
 normative: false
-source_sections: [24, 36, 38, 39, 63, 64, 67, 103, 113]
+source_sections: [24, 36, 38, 39, 63, 64, 67, 95, 101, 103, 113, 114]
 last_reviewed: 2026-09-04
 ---
 
@@ -15,7 +15,9 @@ last_reviewed: 2026-09-04
 
 ADR-0017已固定canonical JSON为唯一外部产品输入，宿主负责第三方采集/映射/展示，APS负责验证、计划、异步运行和结果合同；宿主与可选Frontend使用同一API。TASK-P8-01将形成详细人类集成合同，TASK-P8-02才允许发布additive machine carrier；当前两者均未开始，schema set仍为`2.9.0`且全部既有bytes不变。
 
-现阶段请以[Headless产品化架构](../architecture/headless-productization-and-platform-integration.md)、[API清单](api-development-checklist.md)和[Import/Normalization合同](import-and-normalization.md)区分目标与当前事实。不得从P8计划推断canonical submission、PlanningRun创建或Production identity endpoint已经存在。
+ADR-0018进一步固定Extension SDK是Runtime内部SPI而非外部API。TASK-P8-12将来形成Constraint、Objective、Planning Rule、Validation Rule、Replan Policy、Plugin Registry及Developer Kit compatibility的人类/机器合同；当前没有SDK package、manifest Schema、Registry或Kit artifact。Enterprise Extension特有数据仍须进入批准的namespaced/versioned canonical carrier，不能接受vendor payload或创建私有route。
+
+现阶段请以[Headless产品化架构](../architecture/headless-productization-and-platform-integration.md)、[Extension SDK/Runtime/Developer Kit架构](../architecture/extension-sdk-runtime-and-developer-kit.md)、[API清单](api-development-checklist.md)和[Import/Normalization合同](import-and-normalization.md)区分目标与当前事实。不得从P8计划推断canonical submission、PlanningRun创建、Extension装载、Developer Kit或Production identity endpoint已经存在。
 
 ## 当前开发入口
 

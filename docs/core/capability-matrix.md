@@ -5,7 +5,7 @@ status: baseline
 spec_version: 0.3.0
 phase: cross-phase
 normative: true
-source_sections: [7, 8, 27, 43, 81, 82, 107, 113]
+source_sections: [7, 8, 27, 43, 81, 82, 107, 113, 114]
 last_reviewed: 2026-09-04
 ---
 
@@ -13,15 +13,17 @@ last_reviewed: 2026-09-04
 
 ## P8 planning status
 
-P8 Headless Productization已激活planning，但没有新增当前能力状态。TASK-P8-00只建立ADR-0017、canonical JSON唯一外部输入边界、P8 Milestone/DAG和治理映射；P8-01～13均为`planned/NOT_STARTED`。因此canonical ingress、durable PlanningRun、Solver Worker业务task、Production-shaped composition root、host identity、完整Headless API、release/deployment/backup/runbook和optional Frontend distribution仍为`NOT_FORMED`。
+P8 Headless Productization已激活planning，但没有新增当前能力状态。TASK-P8-00只建立ADR-0017/0018、canonical JSON唯一外部输入边界、Extension/Developer Kit架构、P8 Milestone/DAG和治理映射；P8-01～17均为`planned/NOT_STARTED`。因此canonical ingress、durable PlanningRun、Solver Worker业务task、Production-shaped Runtime、host identity、完整Headless API、Extension SDK、Plugin Registry、Enterprise Extension template、Developer Kit、release/deployment/backup/runbook和optional Frontend distribution仍为`NOT_FORMED`。
 
 现有CSV/XLSX/reference adapter是内部研发/参考能力，不是公共Production接口；ERP/MES/WMS/CAM连接器明确由宿主平台承担，不列为APS待实现capability。P7继续`deferred`，其当前P7-01～11执行卡已`cancelled/NOT_EXECUTED`且未来须以successor计划恢复。Production必须等待未来P7 Reality Calibration与P8工程Exit双门，不能因P8规划或未来synthetic Gate提升为ready。
+
+P8工程能力状态单独为：`APS_RUNTIME=PLANNED_NOT_FORMED`、`EXTENSION_SDK=PLANNED_NOT_FORMED`、`ENTERPRISE_EXTENSION_TEMPLATE=PLANNED_NOT_FORMED`、`DEVELOPER_KIT=PLANNED_NOT_FORMED`。这些不是20项排程Capability Registry的新枚举，也不会使C-012～C-018变为supported；未来具体业务能力仍需SDK合同允许、独立Validation Rule和自己的Task/Test/Gate。
 
 ## P7 deferred status
 
 P7 Milestone已完成激活与计划治理，但用户确认当前研发阶段没有真实数据、真实环境或现实authority，故Milestone执行状态为`deferred`；TASK-P7-01曾以`BLOCKED_INPUT`停止，TASK-P7-13随后将P7-01～11当前执行卡终结为`cancelled/NOT_EXECUTED`。`REALITY_CALIBRATION`继续`DEFERRED/NOT_FORMED`；没有真实Historical Snapshot、Replay、Reality Gap、FactoryProfile Calibration、Solver Benchmark、Planner Baseline、Production Capacity Decision、Gate C或Exit evidence，也没有Contract/Schema/migration/dependency/业务代码变化。
 
-P6 `AI_DURATION_PREDICTION`保持`DEFERRED`、default-off、Simulation/development-only及exact standard-duration fallback；P7规划不能把它提升为真实data/model authority。OPEN-001～015全部OPEN，P8运行能力、Production/UAT、真实approval authority、host integration/deployment、capacity execution/SLA全部未形成。P7恢复必须先具备真实输入与环境、另获授权并创建新的successor Task/DAG；不得把已终结卡原地恢复，计划、取消或暂缓状态本身都不能启用能力或关闭OPEN。
+P6 `AI_DURATION_PREDICTION`保持`DEFERRED`、default-off、Simulation/development-only及exact standard-duration fallback；P7规划不能把它提升为真实data/model authority。OPEN-001～015全部OPEN，P8运行/Extension/Kit能力、Production/UAT、真实approval authority、host integration/deployment、capacity execution/SLA全部未形成。P7恢复必须先具备真实输入与环境、另获授权并创建新的successor Task/DAG；不得把已终结卡原地恢复，计划、取消或暂缓状态本身都不能启用能力或关闭OPEN。
 
 ## TASK-P6-10 independent Exit audit status
 

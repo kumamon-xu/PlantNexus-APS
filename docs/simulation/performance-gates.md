@@ -5,7 +5,7 @@ status: baseline
 spec_version: 0.3.0
 phase: P2-P8
 normative: true
-source_sections: [57, 58, 76, 80, 84, 85, 89, 105, 106, 113]
+source_sections: [57, 58, 76, 80, 84, 85, 89, 105, 106, 113, 114]
 last_reviewed: 2026-09-04
 ---
 
@@ -13,9 +13,9 @@ last_reviewed: 2026-09-04
 
 ## P8 planned engineering Gate D
 
-P8-12将使用versioned synthetic profile从外部host client重放canonical API、持久化、PlanningRun、Worker、Solver、formal Validator、read/export、failure recovery及可选Frontend隔离，并记录API/queue/solve/validation/publication/restore的工程观察值。具体profile、seed、环境和threshold必须在该Task启动时冻结；P8-00不创建数值或运行测试。
+P8-16将使用versioned synthetic profile和两个独立Enterprise Extension，从外部host client重放canonical API、Runtime Registry、持久化、PlanningRun、Worker、Solver、fresh formal Validator、read/export、failure recovery、Developer Kit兼容及可选Frontend隔离，并记录API/queue/extension/solve/validation/publication/restore的工程观察值。具体profile、seed、Extension/Kit digests、环境和threshold必须在该Task启动时冻结；P8-00不创建数值或运行测试。
 
-Gate D只回答Headless产品链是否可复现、可靠且在批准的非Production工程边界内运行，不回答真实工厂分布、Planner usefulness、Production capacity或SLA。后者仍由P7 Gate C负责；Production结论需要Gate C、Gate D和各自独立Exit Audit全部通过。
+Gate D只回答Headless+Extension产品链是否可复现、可靠且在批准的非Production工程边界内运行，不回答真实工厂分布、企业规则业务正确性、Planner usefulness、Production capacity或SLA。后者仍由企业UAT和P7 Gate C负责；Production结论需要Gate C、Gate D和各自独立Exit Audit全部通过。
 
 ## P7 deferred planning boundary
 

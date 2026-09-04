@@ -13,14 +13,15 @@ last_reviewed: 2026-09-04
 
 ## P8 Headless contract plan
 
-ADR-0017已固定canonical JSON为唯一外部产品输入，宿主负责第三方采集/映射/展示，APS负责验证、计划、异步运行和结果合同；宿主与可选Frontend使用同一API。TASK-P8-01将形成详细人类集成合同，TASK-P8-02才允许发布additive machine carrier；当前两者均未开始，schema set仍为`2.9.0`且全部既有bytes不变。
+ADR-0017已固定canonical JSON为唯一外部产品输入，宿主负责第三方采集/映射/展示，APS负责验证、计划、异步运行和结果合同；宿主与可选Frontend使用同一API。[APS Headless平台集成与数据权威合同](headless-platform-integration.md)现由TASK-P8-01形成人类语义基线，明确责任矩阵、identity/scope、authority、idempotency、lineage、版本、错误、双交付和default-deny。TASK-P8-02才允许把这些语义发布为additive machine carrier；schema set仍为`2.9.0`且全部既有Schema bytes不变。
 
 ADR-0018进一步固定Extension SDK是Runtime内部SPI而非外部API。TASK-P8-12将来形成Constraint、Objective、Planning Rule、Validation Rule、Replan Policy、Plugin Registry及Developer Kit compatibility的人类/机器合同；当前没有SDK package、manifest Schema、Registry或Kit artifact。Enterprise Extension特有数据仍须进入批准的namespaced/versioned canonical carrier，不能接受vendor payload或创建私有route。
 
-现阶段请以[Headless产品化架构](../architecture/headless-productization-and-platform-integration.md)、[Extension SDK/Runtime/Developer Kit架构](../architecture/extension-sdk-runtime-and-developer-kit.md)、[API清单](api-development-checklist.md)和[Import/Normalization合同](import-and-normalization.md)区分目标与当前事实。不得从P8计划推断canonical submission、PlanningRun创建、Extension装载、Developer Kit或Production identity endpoint已经存在。
+现阶段请以[Headless平台集成合同](headless-platform-integration.md)、[Headless产品化架构](../architecture/headless-productization-and-platform-integration.md)、[Extension SDK/Runtime/Developer Kit架构](../architecture/extension-sdk-runtime-and-developer-kit.md)、[API清单](api-development-checklist.md)和[Import/Normalization合同](import-and-normalization.md)区分已冻结的人类语义、目标与当前实现事实。不得从合同或P8计划推断canonical submission、PlanningRun创建、Extension装载、Developer Kit或Production identity endpoint已经存在。
 
 ## 当前开发入口
 
+- [APS Headless 平台集成与数据权威合同](headless-platform-integration.md)：P8公共边界、参与方责任、authority/scope/idempotency/lineage、错误和Extension数据治理的人类规范基线。
 - [API 接口开发清单](api-development-checklist.md)：按当前 OpenAPI 列出全部健康、Planning Workspace 与动态重排 operation，区分路由完成、运行时适配器缺口和未提供端点。
 - [数据字段中文名称字典](data-field-dictionary.md)：完整覆盖 `canonical-records.v1` 核心业务字段的英文 key、中文名、类型与必填条件。
 - [Schema 索引](schema-index.md)：机器 Schema、stable URN、版本和兼容性权威入口。
@@ -113,6 +114,7 @@ P3 Exit独立重放确认P2 frozen contracts、P3 workspace `2.6.0`、export `2.
 
 ## 当前基线
 
+- `headless-platform-integration.md`
 - `import-and-normalization.md`
 - `planning-snapshot.md`
 - `planning-problem.md`

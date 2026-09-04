@@ -15,13 +15,23 @@ from .validator import (
     validate_import_package,
     validate_quality_report_contract,
 )
+from .canonical_ingress import (
+    CanonicalIngressContract,
+    CanonicalIngressContractCode,
+    CanonicalIngressContractError,
+    FrozenSchemaCatalog,
+)
 
 __all__ = [
     "DATA_QUALITY_RULE_VERSION",
     "DataValidationResult",
+    "CanonicalIngressContract",
+    "CanonicalIngressContractCode",
+    "CanonicalIngressContractError",
     "ERROR_DOCUMENT_VERSION",
     "ERROR_REGISTRY_VERSION",
     "IMPORT_QUALITY_REPORT_VERSION",
+    "FrozenSchemaCatalog",
     "QualityReportContractError",
     "REPORT_CANONICALIZATION_VERSION",
     "SCHEMA_SET_VERSION",

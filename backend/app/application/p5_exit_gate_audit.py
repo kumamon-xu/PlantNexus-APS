@@ -648,8 +648,8 @@ def _verify_frozen_repository(root: Path) -> JsonObject:
         for path in (root / "backend/migrations/versions").glob("*.py")
         if not path.name.startswith("__")
     )
-    if not migrations or migrations[-1] != "0005_replan_event_persistence":
-        _fail("repository.latest_migration", "migration head changed")
+    if "0005_replan_event_persistence" not in migrations:
+        _fail("repository.latest_migration", "frozen migration is missing")
     state_registry = yaml.safe_load(
         (root / "schemas/rules/state-machines.v1.yaml").read_text(encoding="utf-8")
     )

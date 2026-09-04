@@ -350,7 +350,7 @@ _FROZEN_OWNER_PATHS = (
 
 _POST_P6_ADDITIVE_OWNER_SHA256: Mapping[str, str] = {
     ".github/workflows/ci.yml": (
-        "10485eca248dbedeb062ea241b2ce758ac79cd2368b9cd03da7a2e8efd3d1860"
+        "ce5f6cecd57f4ac7cc2320eedd6c08e7179037d47ccce9ed40441927a4bbefd0"
     ),
     "backend/app/planning/backends/cp_sat/replan_solver_check.py": (
         "562cda6cde4dc1e22a5321597ecb1d0d0a1a38ed334ad34df79b156d9d203cdc"
@@ -368,7 +368,10 @@ _POST_P6_ADDITIVE_OWNER_SHA256: Mapping[str, str] = {
         "4b511b70bae195debce23cd99149af059aaa1ab3694218f553d115ba3ca8bd09"
     ),
     "scripts/p6_duration_contract_check.py": (
-        "69de02b4fd3680e6bd8289f414ef6c3d9462f4d5a8c8057b64d1f3183e5d8c2e"
+        "372d78725477838a33a75330202c26465059f33259eb9fc65b0f2eb9c23fc341"
+    ),
+    "backend/migrations/versions/0006_canonical_ingress_application.py": (
+        "2262edeedb93557a9b01e3d790aaea76463c81f02df417b4dae04858fccc5bac"
     ),
 }
 

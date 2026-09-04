@@ -19,6 +19,14 @@ APS在入口独立执行contract、server-derived identity/scope、authority、i
 
 Extension只消费Runtime已验证且按scope裁剪的authority facts；额外字段必须由未来机器合同登记namespace/version/strict shape并显式携带source、authority和mapping lineage。Extension artifact、配置、返回值或Registry注册默认不能创造业务authority、扩大scope或授予批准/发布权。发现历史事实错误时只能由权威上游产生新canonical输入和新Snapshot/Version，禁止就地修补不可变artifact。真实provider、字段级决策、retention、identity、runtime阈值和Extension责任仍由OPEN-002/010/011/012/014/015控制。
 
+## TASK-P8-03 executable authority boundary
+
+P8-03把上述入口边界落实为application而不改变authority owner：请求中的requested scope、authority binding和mapping provenance只是待核验声明；Runtime通过`TrustedCanonicalIngressContext`独立提供principal reference、auth policy、resolved capability、effective tenant/factory/planning scope、plane/environment以及允许的authority/mapping fingerprints。五个business scope字段必须精确相等，authority与mapping集合必须精确命中；缺失、跨scope/plane、歧义或Production未绑定均在任何artifact写入前拒绝。
+
+Runtime resolution、Extension-set reference和Snapshot/Problem build plan完全由服务端提供。客户端不能以plugin/module/class/path、artifact、Extension配置、priority、cutoff或horizon创造执行authority；Extension set reference只证明本次Runtime解析身份，不赋予source、scope、approval或publication权。Production代码路径仅在显式`production_binding=true`时机械可达，OPEN-002/010/015尚未关闭，因此没有真实identity、host authority或字段冲突决策可用于Production。
+
+成功事务原子保存去除raw key后的canonical request、source/authority/mapping、quality、Runtime resolution、CREATED PlanningRun、prepared immutable Snapshot/Problem和创建audit。数据库行、hash、PASS或replay均不把宿主声明升级为原始事实权威；事实更正仍需新的权威canonical request和新content identity，append-only记录禁止就地修改。
+
 ## TASK-P6-03 executable dataset authority
 
 P6-03 builder的唯一allow-listed输入是`SIM-P6-DURATION-HISTORY@1.0.0`，并同时要求`data_plane=SIMULATION`、`environment=TEST`、`synthetic=true`、`production_binding=false`、Simulation scenario owner、Simulation execution fact label owner与`LOCAL_TEST_ONLY` purpose/access。Source整体及每条record都以canonical content fingerprint绑定；声明版本、authority、purpose、retention/deletion或内容identity任一漂移即拒绝。OPEN-011/015仍OPEN，因而不存在Production history入口。

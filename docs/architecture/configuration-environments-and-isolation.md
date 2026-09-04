@@ -11,6 +11,14 @@ last_reviewed: 2026-09-04
 
 # 配置、环境与数据隔离
 
+## TASK-P8-03 canonical-ingress persistence isolation
+
+P8-03应用服务只接受调用方显式注入的`TrustedCanonicalIngressContext`、server-owned build plan与repository port；Production-shaped请求还必须显式声明production binding。它不从payload、环境变量、artifact path或Extension选择字段推导Runtime/Extension-set，也不连接第三方系统、网络、queue、Solver、Worker或Frontend。宿主仍须在APS边界外完成采集与映射，只提交schema set `2.10.0`的canonical JSON。
+
+持久化以`tenant_id + factory_id + planning_scope_id + environment + data_plane`形成有效业务scope，并把repository实例永久绑定到单一data plane；同一数据库事务内完成idempotency claim、immutable Snapshot、PlanningProblem和sanitized audit写入。相同scope、key reference与request fingerprint只返回原结果，不产生第二份对象；不同内容冲突、跨平面查询、原始幂等键泄露、校验失败或任一写入异常均fail closed并整体回滚。新增revision `0006_canonical_ingress_application`只追加P8-03表和append-only guard；降级会删除这三类P8-03入口/Problem/audit数据，既有Snapshot表保持不变，因此执行前必须按运行环境的retention和引用策略处置。
+
+既有FULL job、required `validate`、权限、依赖与artifact通道不变。P4临时frozen replay的已有删除/恢复清单只追加P8-03的9个新模块/测试和3个包导出文件，确保P4重放仍看到其冻结checkout；CI contract逐路径要求恰好一次，preflight对遗漏继续fail closed。该隔离不跳过当前checkout中的P8-03 Backend测试，也不把新增migration隐藏于当前Alembic验证。
+
 ## TASK-P8-02 machine-contract evidence isolation
 
 P8 contract checker是无网络、无数据库、无queue、无secret、无Runtime/Extension加载的pure offline检查；输入只来自tracked Schema、rule、synthetic sample、版本元数据及冻结的dependency projection。FULL validation在既有`full_validation` job中增加一个不可跳过的step，输出`build/validation/ci-p8-machine-contracts.json`并沿用既有`build/validation/*.json` artifact；不新增job、permission、环境变量、服务、cache、依赖或artifact通道。

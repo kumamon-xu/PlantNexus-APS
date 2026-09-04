@@ -28,10 +28,27 @@ from .change_report_queries import (
     ChangeReportReadContext,
     ChangeReportReadResult,
 )
+from .canonical_ingress import (
+    CanonicalIngressApplicationService,
+    CanonicalIngressBuildPlan,
+    CanonicalIngressOutcome,
+    CanonicalIngressPersistenceCode,
+    CanonicalIngressPersistenceError,
+    CanonicalIngressRecord,
+    CanonicalIngressWriteResult,
+    TrustedCanonicalIngressContext,
+)
 
 __all__ = [
     "ApprovalDecisionResult",
     "ApprovalDecisionService",
+    "CanonicalIngressApplicationService",
+    "CanonicalIngressBuildPlan",
+    "CanonicalIngressOutcome",
+    "CanonicalIngressPersistenceCode",
+    "CanonicalIngressPersistenceError",
+    "CanonicalIngressRecord",
+    "CanonicalIngressWriteResult",
     "CommonIngressArtifacts",
     "CommonIngressPipeline",
     "DataQualityGateRejected",
@@ -45,6 +62,7 @@ __all__ = [
     "ChangeReportReadContext",
     "ChangeReportReadResult",
     "ScheduleVersionLifecycleResult",
+    "TrustedCanonicalIngressContext",
     "ScheduleCommandResult",
     "ScheduleCommandService",
     "ScheduleComparisonResult",

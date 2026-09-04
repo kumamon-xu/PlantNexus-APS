@@ -36,6 +36,13 @@ DEPENDENCY_PROJECTION_SHA256 = (
 MIGRATION_MANIFEST_SHA256 = (
     "sha256:37a43d34e7db40456c314e428e985f86a62a051d1a36c0d2d5570aaa46bb3425"
 )
+FROZEN_MIGRATION_FILES = (
+    "0001_engineering_job_metadata.py",
+    "0002_raw_import_staging.py",
+    "0003_planning_snapshots.py",
+    "0004_schedule_versions_audit_export_jobs.py",
+    "0005_replan_event_persistence.py",
+)
 OPEN_AUTHORITY_GAPS = {"OPEN-010", "OPEN-011", "OPEN-014", "OPEN-015"}
 
 SCHEMAS: Mapping[str, str] = {
@@ -821,13 +828,26 @@ def _repository_boundary_evidence(root: Path) -> JsonObject:
     if not expected_documents.issubset(set(cast(Mapping[str, Any], dictionary["schemas"]))):
         raise P6ContractError("DATA_DICTIONARY_INCOMPLETE", "P6 v1 documents")
 
-    migrations = sorted(root.joinpath("backend", "migrations", "versions").glob("*.py"))
+    migration_root = root / "backend" / "migrations" / "versions"
+    all_migrations = sorted(migration_root.glob("*.py"))
+    frozen_names = set(FROZEN_MIGRATION_FILES)
+    unexpected_predecessors = [
+        path.name
+        for path in all_migrations
+        if path.name <= FROZEN_MIGRATION_FILES[-1] and path.name not in frozen_names
+    ]
+    migrations = [migration_root / name for name in FROZEN_MIGRATION_FILES]
+    if unexpected_predecessors or any(not path.is_file() for path in migrations):
+        raise P6ContractError(
+            "MIGRATION_HISTORY_CHANGED",
+            ",".join(unexpected_predecessors) or "frozen migration missing",
+        )
     rows = "".join(
         f"{path.relative_to(root).as_posix()}={sha256(path.read_bytes()).hexdigest()}\n"
         for path in migrations
     )
     migration_digest = f"sha256:{sha256(rows.encode('utf-8')).hexdigest()}"
-    if len(migrations) != 5 or migration_digest != MIGRATION_MANIFEST_SHA256:
+    if migration_digest != MIGRATION_MANIFEST_SHA256:
         raise P6ContractError("MIGRATION_HISTORY_CHANGED", migration_digest)
     if migrations[-1].stem != "0005_replan_event_persistence":
         raise P6ContractError("MIGRATION_HEAD_CHANGED", migrations[-1].stem)

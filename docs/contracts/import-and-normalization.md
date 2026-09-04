@@ -15,7 +15,15 @@ last_reviewed: 2026-09-04
 
 P8的外部产品入口只接收宿主平台提交的versioned canonical JSON，不接收ERP/MES/WMS/CAM私有payload，也不把CSV/XLSX上传或第三方SDK定义为公共API。宿主拥有采集、vendor字段映射、必要脱敏和展示；APS从canonical machine contract、authority/scope、idempotency、Data Validation和不可变Snapshot/Problem开始负责。
 
-本文件记录的Raw Staging、ReferenceFileAdapter和Normalization继续可用于开发、测试、迁移辅助或为宿主mapping提供参考。其结果在进入P8运行链前仍须穿过同一canonical contract和Data Validation；它们不能被绑定为Production默认、直接创建Snapshot/Problem或绕过Headless API。详细machine envelope由TASK-P8-02后续发布，本次不修改任何Schema。
+本文件记录的Raw Staging、ReferenceFileAdapter和Normalization继续可用于开发、测试、迁移辅助或为宿主mapping提供参考。其结果在进入P8运行链前仍须穿过同一canonical contract和Data Validation；它们不能被绑定为Production默认、直接创建Snapshot/Problem或绕过Headless API。详细machine envelope已由TASK-P8-02发布，TASK-P8-03严格消费既有Schema bytes且没有增加第二种输入格式。
+
+## TASK-P8-03 canonical ingress handoff
+
+Headless application从strict UTF-8 `canonical-ingress-request.v1`直接取得exact `import-package.v2`，拒绝duplicate key、non-finite number、unknown version/field、payload/request fingerprint漂移、source/authority/mapping集合不闭合及客户端代码/路径选择。它不会调用Raw Staging、ReferenceFileAdapter或Normalizer，也不会接受vendor DTO、文件或第三方SDK；这些内部/reference producer若被使用，仍必须先生成同一canonical envelope。
+
+请求通过server-derived scope、authority和scoped idempotency后，application复用`validate_import_package → expand_orders → build_planning_snapshot → build_planning_problem_v2`唯一链。Data Validation FAIL返回完整但不持久化的quality report evidence和`DATA_VALIDATION_FAILED/NONE`，不会写Snapshot、Problem或audit；content-derived Import identity或Snapshot lineage错误与Problem model错误保持不同错误码/阶段。成功事务在durable ingress record中保留去除raw idempotency key后的完整canonical request、quality report、source/authority/mapping和prepared artifact references，不能由后续consumer重新解释或补字段。
+
+Build plan中的cutoff/horizon/tick/priority facts来自Runtime内部，不是Import或公共请求默认。当前synthetic测试使用显式versioned priority source；它不建立Production due/priority policy、真实mapping或字段authority。`0006` downgrade删除P8 ingress/Problem/audit记录但不删除既有Snapshot表中的不可变内容，属于需提前留存引用的有损回滚。
 
 ## TASK-P4-04 Urgent Demand standard ingress
 

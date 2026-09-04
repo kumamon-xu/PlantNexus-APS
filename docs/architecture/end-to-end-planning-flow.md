@@ -11,6 +11,12 @@ last_reviewed: 2026-09-04
 
 # 端到端计划链路
 
+## TASK-P8-03 executable canonical-ingress edge
+
+P8链路现在可在Runtime内部执行到持久化输入边界：`strict UTF-8 canonical-ingress-request.v1 → trusted scope/authority + idempotency → server-owned Runtime/Extension-set resolution → existing Data Validation → deterministic expansion → immutable Snapshot → planning-problem-builder.v2 → atomic ingress/Snapshot/Problem/audit commit → CREATED PlanningRun/result`。相同请求精确重放既有结果；内容冲突、零有效数据、contract/lineage/authority错误或任一持久化失败均停止且不得留下部分Snapshot、Problem或audit。
+
+该edge不是公开产品API：它没有HTTP路由、Solver启动、Worker调度、Validator执行、ScheduleVersion或外部副作用。Extension仍不能由客户端选择或上传，P8-03只保存服务端解析出的version-locked reference；P8-04/05负责后续PlanningRun编排与Worker，P8-06形成Runtime facade/composition root，P8-07才暴露统一Headless HTTP API。
+
 ## TASK-P8-02 formed contract edge
 
 P8链路现在形成到machine carrier层：`canonical-ingress-request.v1`把宿主canonical JSON、requested scope、source/mapping authority、idempotency与Policy/Limits引用固定为唯一request；`canonical-ingress-result.v1`区分零副作用拒绝和带server-owned Runtime/Extension-set resolution的接受；`planning-run.v1`固定既有state/transition/terminal/action与阶段artifact lineage。该边只进行纯Schema/semantic验证，不调用Data Validation、Snapshot/Problem builder、Solver、Validator、repository、API或Worker。

@@ -434,7 +434,14 @@ def test_ci_profile_routing_is_mutually_exclusive_and_fail_closed() -> None:
     assert "mkdir -p build/validation" in backend_text
     assert "plantnexus-ci-backend-${{ github.run_id }}" in backend_text
     assert "uv sync --locked" in full_text
-    assert "backend/tests/security" not in full_text
+    full_pytest_commands = [
+        str(step.get("run", ""))
+        for step in cast(list[dict[str, Any]], full["steps"])
+        if "uv run pytest" in str(step.get("run", ""))
+    ]
+    assert all(
+        "backend/tests/security" not in command for command in full_pytest_commands
+    )
     assert "TASK-P4-13 Dynamic replanning frontend machine evidence" in full_text
     assert "p4-replanning-replay.XXXXXX" in full_text
     assert "git worktree add --detach" in full_text
@@ -626,6 +633,30 @@ def test_ci_p8_machine_contract_is_required_and_machine_checkable(
         "positive_samples": 5,
     }
     assert report["issues"] == []
+
+
+def test_ci_p8_canonical_ingress_is_isolated_from_frozen_p4_replay() -> None:
+    workflow = (ROOT / ".github" / "workflows" / "ci.yml").read_text(
+        encoding="utf-8"
+    )
+    for relative_path in (
+        "backend/app/application/canonical_ingress.py",
+        "backend/app/data_validation/canonical_ingress.py",
+        "backend/app/infrastructure/canonical_ingress_repository.py",
+        "backend/tests/contract/p8_canonical_ingress_support.py",
+        "backend/tests/contract/test_p8_canonical_ingress_application_contract.py",
+        "backend/tests/integration/test_p8_canonical_ingress_repository.py",
+        "backend/tests/property/test_p8_canonical_ingress_properties.py",
+        "backend/tests/security/test_p8_canonical_ingress_security.py",
+        "backend/tests/unit/test_p8_canonical_ingress_application.py",
+    ):
+        assert workflow.count(f'"${{replay_root}}/{relative_path}"') == 1
+    for relative_path in (
+        "backend/app/application/__init__.py",
+        "backend/app/data_validation/__init__.py",
+        "backend/app/infrastructure/__init__.py",
+    ):
+        assert workflow.count(relative_path) == 1
 
 
 def test_ci_p6_duration_dataset_is_required_and_machine_checkable(

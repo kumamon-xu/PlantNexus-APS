@@ -6,10 +6,18 @@ spec_version: 0.3.0
 phase: P0-P1
 normative: true
 source_sections: [23, 40, 62, 74, 101, 103]
-last_reviewed: 2026-08-20
+last_reviewed: 2026-09-04
 ---
 
 # PlanningSnapshot 合同
+
+## TASK-P8-03 durable canonical ingress consumer
+
+P8 application只在strict canonical request、server-derived scope/authority、exact idempotency和既有Data Validation获得PASS后调用原`Order Expansion → build_planning_snapshot → build_planning_problem_v2`链。Snapshot v2的Schema、canonicalization、hash projection、content-derived ID和既有`0003_planning_snapshots`字节均未修改；Runtime内部build plan只提供显式cutoff/horizon/tick/priority facts，不能回写canonical事实。
+
+同一idempotency scope/key/request fingerprint并发或重试时，`0006`事务复用同一Snapshot/Problem bytes与identity，只创建一个ingress/Problem/audit集合；different fingerprint冲突、cross-plane、authority、Data Validation、Snapshot/Problem或持久化失败均不得留下partial Snapshot/Problem/audit。初始`planning-run.v1`仍为CREATED且公开artifact slots全空，prepared Snapshot/Problem只由durable ingress record引用，直至P8-04+执行合法状态转换。
+
+P8新增`planning_problems` append-only表保存Problem v2 canonical bytes、SHA、Snapshot lineage和data plane；Snapshot继续由原plane-scoped repository写入同一transaction。三张P8-03表的update/delete由SQLite/PostgreSQL trigger拒绝；`0006` downgrade会删除P8 ingress/Problem/audit但保留既有Snapshot，故属于有损回滚且不能用于改写历史Snapshot。P8专项39项本地测试覆盖exact replay、mutation、JSON Schema数值等价与Data Validation分层、concurrency、rollback、migration replay和Production binding机械边界；真实authority、retention、PostgreSQL容量和Production readiness仍未形成。
 
 ## TASK-P4-04 projected Snapshot consumer
 

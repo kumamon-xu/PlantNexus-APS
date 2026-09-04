@@ -558,7 +558,16 @@ jobs:
             "${replay_root}/schemas/samples/canonical-ingress.v1.invalid-version.synthetic.json" \
             "${replay_root}/schemas/samples/planning-run.v1.completed.synthetic.json" \
             "${replay_root}/schemas/samples/planning-run.v1.created.synthetic.json" \
-            "${replay_root}/schemas/samples/planning-run.v1.invalid-transition.synthetic.json"
+            "${replay_root}/schemas/samples/planning-run.v1.invalid-transition.synthetic.json" \
+            "${replay_root}/backend/app/application/canonical_ingress.py" \
+            "${replay_root}/backend/app/data_validation/canonical_ingress.py" \
+            "${replay_root}/backend/app/infrastructure/canonical_ingress_repository.py" \
+            "${replay_root}/backend/tests/contract/p8_canonical_ingress_support.py" \
+            "${replay_root}/backend/tests/contract/test_p8_canonical_ingress_application_contract.py" \
+            "${replay_root}/backend/tests/integration/test_p8_canonical_ingress_repository.py" \
+            "${replay_root}/backend/tests/property/test_p8_canonical_ingress_properties.py" \
+            "${replay_root}/backend/tests/security/test_p8_canonical_ingress_security.py" \
+            "${replay_root}/backend/tests/unit/test_p8_canonical_ingress_application.py"
           git -C "${replay_root}" restore \
             --source d0a83c58cb4a2d4afa76e8c8cff08441574e2e30 \
             -- backend/tests/integration/test_ci_contract.py
@@ -574,6 +583,9 @@ jobs:
             backend/app/planning/problem/freeze_window_check.py \
             backend/app/planning/reporting/stability_change_report_check.py \
             backend/app/simulation/execution/simulator_check.py \
+            backend/app/application/__init__.py \
+            backend/app/data_validation/__init__.py \
+            backend/app/infrastructure/__init__.py \
             backend/tests/contract/test_import_validation.py \
             backend/tests/contract/test_p3_export_contracts.py \
             backend/tests/contract/test_rule_contracts.py \

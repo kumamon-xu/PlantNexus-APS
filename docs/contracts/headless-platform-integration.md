@@ -15,11 +15,11 @@ last_reviewed: 2026-09-04
 
 本合同是宿主平台、APS Runtime、APS Core、Enterprise Extension、可选APS Frontend、安全和运维之间的人类可读集成基线。它执行ADR-0017和ADR-0018，并与TASK-P8-02发布的机器合同共同冻结责任、信任与失败语义。
 
-本文件中的“必须”“禁止”“仅”是规范要求。TASK-P8-02已把其中可机器表达的入口、结果、PlanningRun与错误语义发布为strict、versioned carrier；TASK-P8-03+才可以实现。因而本合同与机器文件目前仍然：
+本文件中的“必须”“禁止”“仅”是规范要求。TASK-P8-02已把其中可机器表达的入口、结果、PlanningRun与错误语义发布为strict、versioned carrier；TASK-P8-03现已实现不含HTTP的durable application slice。因而本合同与机器文件目前仍然：
 
 - 不声明任何新HTTP path、HTTP状态码或可运行API已经可用；
 - 只把现有`import-package.v2`作为`canonical-ingress-request.v1`内唯一允许的canonical payload，不把它或旧Adapter自动提升为已实现公共入口；
-- 不实现identity provider、repository、worker、Extension SDK或Plugin Registry；
+- 已实现canonical ingress repository、原子Snapshot/PlanningProblem落库和CREATED PlanningRun carrier，但不实现host identity provider、公开run repository/状态转换、worker、Extension SDK或Plugin Registry；
 - 不关闭任何PROD_OPEN，也不证明真实宿主、UAT、容量或Production readiness。
 
 实现若不能表达本合同的必需语义，必须先修订合同或发布新版本；不得在代码、数据库、Extension或宿主中创建未登记的私有语义。
@@ -110,11 +110,23 @@ requested scope只是客户端请求范围，不是授权证明；服务端必�
 
 所有payload record的`canonical collection + source system + source version`都必须命中唯一binding；同一collection在单个请求中不能由多个source/version或重复authority claim竞争。每个声明的source system/version必须在`source_authority.bindings`中存在，且只能有一个mapping provenance；requested factory必须存在于canonical records。未登记record、重复/歧义binding或mapping、scope和source集合不一致分别以稳定scope/authority/lineage错误拒绝。
 
-接受结果必须与CREATED PlanningRun逐字绑定request/correlation、effective scope、ingress/payload、idempotency key/scope、Runtime resolution和transition audit；PlanningRun还必须与请求的Policy/Limits引用一致。每个run revision满足`revision = last_transition.sequence + 1`，`updated_at_utc`等于最近transition时间，最近transition及cancellation audit都必须出现在audit references中。以上都是carrier一致性，不表示P8-03+持久化或编排已经实现。
+接受结果必须与CREATED PlanningRun逐字绑定request/correlation、effective scope、ingress/payload、idempotency key/scope、Runtime resolution和transition audit；PlanningRun还必须与请求的Policy/Limits引用一致。每个run revision满足`revision = last_transition.sequence + 1`，`updated_at_utc`等于最近transition时间，最近transition及cancellation audit都必须出现在audit references中。TASK-P8-03只形成初始CREATED carrier和prepared Snapshot/Problem；P8-04+的公开run读取、状态转换、attempt和worker编排尚未实现。
 
 Runtime resolution只在result/PlanningRun的服务端字段中承载Runtime、Core、SDK、Registry protocol、Extension set/config、Developer Kit、Solver和Validator版本/指纹。请求Schema没有plugin/module/class/entry-point/artifact-path或Extension-set选择字段，任何此类添加都会因`additionalProperties=false`在副作用前拒绝。这里的`0.0.0-p8-contract-sample`仅是synthetic shape值，不表示SDK、Registry或Kit已经发布。
 
 Schema层固定strict JSON object、已登记URN、UTC `Z`、有限JSON number与拒绝unknown字段；raw UTF-8解析还必须拒绝duplicate key和non-finite number。HTTP `Content-Type`、编码、byte/depth/record部署上限和状态码仍由TASK-P8-07在不放宽本合同的前提下版本化；在该配置形成前不得猜Production默认。
+
+### 4.2 TASK-P8-03 durable application slice
+
+`CanonicalIngressApplicationService`只接收`bytes`并通过服务端固定Schema目录严格解析`canonical-ingress-request.v1`；实现不依赖运行时`jsonschema`包，也不接受请求指定Schema、module、class、entry point、plugin、Extension set或artifact path。客户端requested scope先与`TrustedCanonicalIngressContext`中的principal reference、auth policy、`edit` capability、tenant/factory/planning scope、plane/environment求交；authority reference与mapping fingerprint也必须与服务端allow-list精确一致。Production carrier只有在服务端显式`production_binding=true`时机械可用，该能力不等于真实identity/authority或Production readiness。
+
+新请求按唯一顺序执行strict contract→scope/authority→scoped idempotency lookup→pinned Runtime/build-plan resolution→既有Data Validation→Order Expansion→immutable Snapshot v2→PlanningProblem v2。Build plan由Runtime内部提供exact Policy/Limits引用、cutoff、horizon、tick、builder version和有来源的priority facts；请求只能引用Policy/Limits，不能注入这些执行参数。Data Validation FAIL、Snapshot lineage错误、Problem build错误与Runtime/persistence错误分别产生注册表中的稳定sanitized rejection，且`side_effects=NONE`。
+
+`0006_canonical_ingress_application`新增append-only ingress、PlanningProblem和ingress audit表；它们与既有`planning_snapshots`在单一SQLAlchemy transaction中提交。事务先占用`idempotency_scope_fingerprint + key_reference`，任一步失败整批回滚；same scope/key/fingerprint返回原ingress、PlanningRun、Snapshot、Problem与audit reference，响应明确为`REPLAYED`且不新增记录；different fingerprint返回`IDEMPOTENCY_CONFLICT`。持久化记录保留canonical payload/source/authority/mapping、Runtime/Extension-set reference、build plan、quality report和prepared artifact lineage，但只保存raw idempotency key的SHA-256 reference。
+
+初始PlanningRun仍严格处于`CREATED/revision=1/sequence=0`，其公开`artifacts`全部为`null`；P8-03内部准备的Snapshot/Problem只记录在durable ingress record中，不能冒充后续`SNAPSHOTTED/BUILDING/SOLVING`状态。创建audit复用现有`audit-event.v1`的`EDIT_SCHEDULE + PLANNING_RUN + COMMAND`合法carrier并原子append；这是初始创建证据，不扩展P3 Schema或状态机。migration downgrade会删除三张P8-03新表及其记录，但保留既有append-only Snapshot表；因此downgrade具有明确P8 ingress/Problem/audit数据损失，执行前必须保留已被下游引用的不可变证据，重新upgrade后只能按原canonical请求重建，不能手工修表。
+
+专项unit/contract/integration/property/security/concurrency/migration测试登记为`TEST-P8-CANONICAL-INGRESS-001`。它证明synthetic请求的确定性、精确重放、冲突、跨scope/plane隔离、append-only与失败回滚；不证明公开HTTP、真实host authorization、retention/backup、PostgreSQL并发容量、Solver运行、Extension装载或企业Production数据已形成。
 
 ## 5. Identity、scope与授权
 

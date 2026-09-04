@@ -40,6 +40,7 @@ from .workspace_persistence import (
     WorkspaceDataPlane,
     WorkspacePersistenceError,
 )
+from .canonical_ingress_repository import SqlAlchemyCanonicalIngressRepository
 
 __all__ = [
     "ArtifactReference",
@@ -56,6 +57,7 @@ __all__ = [
     "RuntimeEnvironment",
     "Settings",
     "SqlAlchemyAuditRepository",
+    "SqlAlchemyCanonicalIngressRepository",
     "SqlAlchemyExportJobRepository",
     "SqlAlchemyExecutionEventRepository",
     "SqlAlchemyProjectionCheckpointRepository",

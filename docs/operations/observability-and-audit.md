@@ -3,13 +3,21 @@ doc_id: DOC-OPS-002
 title: P0 Observability 与 Audit 边界
 status: baseline
 spec_version: 0.3.0
-phase: P0-P7
+phase: P0-P8
 normative: true
 source_sections: [29, 42, 65, 93, 95]
-last_reviewed: 2026-08-31
+last_reviewed: 2026-09-04
 ---
 
 # P0 Observability 与 Audit 边界
+
+## TASK-P8-03 ingress observability and durable audit
+
+每次application结果提供sanitized `canonical_ingress.completed` projection：request/correlation/result IDs及fingerprints、disposition、idempotency outcome和可选PlanningRun ID，不含raw idempotency key、完整payload、SQL/DSN、stack或存储path。`CREATED`成功原子append一份`audit-event.v1`，以现有合法`EDIT_SCHEDULE + PLANNING_RUN + COMMAND`表示初始run创建，并绑定actor reference、resolved `edit` capability、auth policy、plane/environment、request/key/scope fingerprints、correlation和code commit。
+
+Exact replay返回原ingress、CREATED PlanningRun、Runtime/Extension-set、Snapshot、Problem和创建audit reference，响应idempotency outcome变为`REPLAYED`但不追加第二份业务audit；same key/different fingerprint返回`IDEMPOTENCY_CONFLICT`且无artifact/audit。Data Validation、Snapshot/Problem或事务失败也只产生sanitized result和可选内存quality evidence，不伪造成功audit。Durable record额外保留canonical source/authority/mapping、build plan、quality与prepared artifact lineage，使后续P8-04可从单一证据边界接管状态，而不能跳过CREATED。
+
+当前证据是synthetic、进程内projection与SQLite/PostgreSQL兼容的repository/migration合同测试；尚无Production metric/trace backend、SIEM、retention/redaction批准、alert/SLO、clock-skew策略或真实host correlation。migration downgrade会删除P8 ingress/Problem/audit证据，执行前必须按未来retention/backup政策留存引用；已有Snapshot表不随`0006`回滚删除。
 
 ## TASK-P6-08 aggregate drift/fallback monitoring
 

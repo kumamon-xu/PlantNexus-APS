@@ -3,13 +3,21 @@ doc_id: DOC-OPS-001
 title: P0 工程安全边界
 status: baseline
 spec_version: 0.3.0
-phase: P0-P7
+phase: P0-P8
 normative: true
 source_sections: [58, 62, 93, 95, 100]
-last_reviewed: 2026-08-31
+last_reviewed: 2026-09-04
 ---
 
 # P0 工程安全边界
+
+## TASK-P8-03 canonical ingress controls
+
+应用入口只解析strict UTF-8 JSON bytes，并从服务端固定Schema目录消费冻结的P8合同；duplicate key、NaN/Infinity、unknown version/field、invalid fingerprint、client plugin/module/class/entry-point/artifact path在持久化前fail closed。请求不能选择Schema文件或可执行代码，production module不依赖动态下载或运行时`jsonschema`包。HTTP media type、payload/depth/count限制属于P8-07，当前不得把application byte入口误报为公开网络防护已经形成。
+
+认证、capability、effective scope、Production binding、authority/mapping allow-list、Runtime/Extension-set resolution和build plan均来自trusted Runtime composition，不从body提权。任何tenant/factory/planning scope或plane不一致返回sanitized零副作用结果；Production只有在server context显式绑定时机械可用，真实host identity/RBAC/source authority未形成且继续default-deny。Extension-set只作为server-owned版本/指纹证据保存，请求中的代码或配置选择一律拒绝。
+
+Raw idempotency key只用于内存SHA-256 reference计算，不进入durable ingress、PlanningRun、audit、result或observability；错误不回显payload值、authority原值、SQL、DSN、stack或私有path。plane-scoped repository在单一transaction提交ingress/Snapshot/Problem/audit，故障注入证明后段audit失败会回滚前段claim和artifacts；append-only trigger同时拒绝UPDATE/DELETE。当前没有retention/encryption/key rotation/backup restore、PostgreSQL Production topology、WAF/rate limit或penetration evidence，不能据此关闭OPEN或Production风险。
 
 ## TASK-P4-13 browser security controls
 

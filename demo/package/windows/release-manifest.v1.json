@@ -1,12 +1,12 @@
 {
-  "artifact_name": "PlantNexus-CNC-Demo-Windows-x64-0.2.0.zip",
+  "artifact_name": "PlantNexus-CNC-Demo-Windows-x64-0.2.3.zip",
   "build_command": "uv run --with pyinstaller==6.22.2 python demo/scripts/build_windows_package.py",
   "default_access": "LOOPBACK_ONLY",
-  "default_settings_sha256": "99fa328a7e4af6b6788fb8e3159f65e99fa8cf8f60da7b6a00e6239af857771d",
+  "default_settings_sha256": "29790932db4280ff55283035467a982a007cd3639b3ce9691971cefb66f41f0f",
   "frontend_api_topology": "SAME_ORIGIN_SINGLE_PORT",
   "frontend_lock_sha256": "4c63ef7063c3d2924c06430b7e9f4edcba589df1f628ed54c902d3a3485dea82",
-  "lan_access": "EXPLICIT_PRIVATE_CIDR_ALLOWLIST",
-  "package_version": "0.2.0",
+  "lan_access": "EXPLICIT_CIDR_ALLOWLIST_WITH_PUBLIC_OPT_IN",
+  "package_version": "0.2.3",
   "pyinstaller_version": "6.22.2",
   "release_manifest_version": "cnc-demo-windows-release.v1",
   "runtime_dependencies": {
@@ -17,6 +17,9 @@
     "uv": false
   },
   "simulation_only": true,
+  "startup_behavior": "SERVICE_ONLY_NO_BROWSER",
   "synthetic_only": true,
+  "windows_command_encoding": "UTF-8_CRLF",
+  "windows_powershell_encoding": "UTF-8-BOM_CRLF",
   "windows_architecture": "x64"
 }

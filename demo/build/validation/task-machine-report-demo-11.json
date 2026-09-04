@@ -6,8 +6,8 @@
       "status": "PASS"
     },
     "task_context_manifest": {
-      "selected_input_count": 26,
-      "sha256": "9a919d16adf32e9f76b81613561e2f5ca1f0aa57519aedb03e8613965bce53c8",
+      "selected_input_count": 27,
+      "sha256": "5caefa2b8ec7e17a65582457f180cb7308766ff652df2c30b9a217d474d21b70",
       "status": "PASS"
     },
     "text_hygiene": {
@@ -15,24 +15,32 @@
       "violations": []
     },
     "windows_package_evidence": {
-      "audit_check_count": 12,
+      "audit_check_count": 15,
       "audit_path": "demo/build/validation/windows-package-audit-demo-11.json",
-      "audit_sha256": "835f4d5e474fe5fb9ed906e34d655667d48d97bdce2db094a0615b674b4e1c21",
+      "audit_sha256": "b18f64f71ea41f68057b400a5b7d29f9e7284f850cfda03e7edd54906fb651a8",
       "browser_path": "demo/build/validation/browser-windows-package-observation-demo-11.json",
-      "browser_sha256": "c0bd6e4d9cf63ab9300ecfb3b5d03aa3117c1c8aedb3aefd61882341328f7d6a",
-      "evidence_check_count": 16,
-      "evidence_fingerprint": "sha256:865fe3b11d1764ecfcdaeff28c8335807b9e2f00e0cbd945106dd7f520567268",
+      "browser_sha256": "f33588603d5179a6985472adadf7b27abb3f28f3aec66ac5418579880b2fcafc",
+      "evidence_check_count": 17,
+      "evidence_fingerprint": "sha256:90b9023c3838892a6649bc61efdb3249d6c050f7c17b2986778fff97786be048",
       "evidence_path": "demo/build/validation/windows-package-evidence-demo-11.json",
-      "evidence_sha256": "2211b0d109f6235dcbd16652c29045dcb5bf981dd81326827d410c3a59ea03ef",
-      "observation_check_count": 22,
+      "evidence_sha256": "f518f41c9155c63949028f98026a00c11bc41c012bdd59aef21f362aa3a661e4",
+      "observation_check_count": 24,
       "observation_path": "demo/build/validation/windows-package-observation-demo-11.json",
-      "observation_sha256": "fe85f2737ccc0d5a69b26380ee3d265e70e36b53e6b289b42e4aa394ca26a596",
-      "package_bytes": 87147033,
-      "package_path": "demo/dist/PlantNexus-CNC-Demo-Windows-x64-0.2.0.zip",
-      "package_sha256": "fc175a2ee9ec856f9adefd3a410092597a0f9b5cd9b52e17ad9a0f6dd33ee2d5",
+      "observation_sha256": "5972b932444e217d6932ff778666f59e0c79c8844018a64a988e7d999831b0a2",
+      "package_bytes": 87149446,
+      "package_path": "demo/dist/PlantNexus-CNC-Demo-Windows-x64-0.2.2.zip",
+      "package_sha256": "c2cf612071bc38ce8e84925243b60f35b19011a3cba36e09f09bed336f1ed629",
       "release_classification": "WINDOWS_PACKAGE_CANDIDATE_VERIFIED",
       "status": "PASS",
       "target_site_status": "PENDING_FINAL_SITE_REPLAY"
+    },
+    "windows_package_target_site": {
+      "check_count": 12,
+      "path": "demo/build/validation/windows-package-target-site-demo-11.json",
+      "server_address": "192.168.1.249",
+      "sha256": "1759f6eda46496ca71b749b77c6a4d3ee24035e7421fe735d21bc554080733e1",
+      "status": "PASS",
+      "target_site_status": "VERIFIED_LAN_SERVICE"
     }
   },
   "benchmark_checks": [
@@ -98,9 +106,9 @@
         "--no-fund"
       ],
       "cwd": "demo/frontend",
-      "duration_seconds": 4.266740799997933,
+      "duration_seconds": 3.7018718000035733,
       "exit_code": 0,
-      "output": "added 236 packages in 4s",
+      "output": "added 236 packages in 3s",
       "status": "PASS"
     },
     {
@@ -110,7 +118,7 @@
         "lint"
       ],
       "cwd": "demo/frontend",
-      "duration_seconds": 2.853312899998855,
+      "duration_seconds": 2.8978572000050917,
       "exit_code": 0,
       "output": "npm notice run @plantnexus/aps-cnc-demo@0.1.0 lint\nnpm notice run eslint . --max-warnings 0",
       "status": "PASS"
@@ -122,7 +130,7 @@
         "typecheck"
       ],
       "cwd": "demo/frontend",
-      "duration_seconds": 1.6555929000023752,
+      "duration_seconds": 1.6463448999566026,
       "exit_code": 0,
       "output": "npm notice run @plantnexus/aps-cnc-demo@0.1.0 typecheck\nnpm notice run tsc -b --pretty false",
       "status": "PASS"
@@ -134,9 +142,9 @@
         "test:run"
       ],
       "cwd": "demo/frontend",
-      "duration_seconds": 4.681606099999044,
+      "duration_seconds": 4.586095199978445,
       "exit_code": 0,
-      "output": "RUN  v4.1.11 D:/Project/Python/plantnexus-aps/demo/frontend\n\n\n Test Files  5 passed (5)\n      Tests  36 passed (36)\n   Start at  14:34:07\n   Duration  4.02s (transform 393ms, setup 1.71s, import 608ms, tests 3.00s, environment 5.92s)\n\nnpm notice run @plantnexus/aps-cnc-demo@0.1.0 test:run\nnpm notice run vitest run",
+      "output": "RUN  v4.1.11 D:/Project/Python/plantnexus-aps/demo/frontend\n\n\n Test Files  5 passed (5)\n      Tests  36 passed (36)\n   Start at  15:53:36\n   Duration  3.96s (transform 409ms, setup 1.68s, import 651ms, tests 3.02s, environment 5.79s)\n\nnpm notice run @plantnexus/aps-cnc-demo@0.1.0 test:run\nnpm notice run vitest run",
       "status": "PASS"
     },
     {
@@ -146,9 +154,9 @@
         "build"
       ],
       "cwd": "demo/frontend",
-      "duration_seconds": 1.9396784999989904,
+      "duration_seconds": 1.9496810999698937,
       "exit_code": 0,
-      "output": "vite v8.2.2 building client environment for production...\ntransforming...\n✓ 36 modules transformed.\nrendering chunks...\ncomputing gzip size...\ndist/index.html                   0.73 kB │ gzip:  0.46 kB\ndist/assets/index-WyGtINbl.css   46.62 kB │ gzip: 10.25 kB\ndist/assets/index-GSiDrFxy.js   327.94 kB │ gzip: 96.08 kB │ map: 1,234.53 kB\n\n✓ built in 107ms\nnpm notice run @plantnexus/aps-cnc-demo@0.1.0 build\nnpm notice run tsc -b && vite build",
+      "output": "vite v8.2.2 building client environment for production...\ntransforming...\n✓ 36 modules transformed.\nrendering chunks...\ncomputing gzip size...\ndist/index.html                   0.73 kB │ gzip:  0.46 kB\ndist/assets/index-WyGtINbl.css   46.62 kB │ gzip: 10.25 kB\ndist/assets/index-GSiDrFxy.js   327.94 kB │ gzip: 96.08 kB │ map: 1,234.53 kB\n\n✓ built in 114ms\nnpm notice run @plantnexus/aps-cnc-demo@0.1.0 build\nnpm notice run tsc -b && vite build",
       "status": "PASS"
     },
     {
@@ -160,9 +168,9 @@
         "-q"
       ],
       "cwd": ".",
-      "duration_seconds": 59.56651899998542,
+      "duration_seconds": 45.718425400031265,
       "exit_code": 0,
-      "output": "........................................................................ [ 98%]\n.                                                                        [100%]\n73 passed in 58.63s",
+      "output": "........................................................................ [ 94%]\n....                                                                     [100%]\n76 passed in 44.83s",
       "status": "PASS"
     },
     {
@@ -176,7 +184,7 @@
         "demo/tests"
       ],
       "cwd": ".",
-      "duration_seconds": 0.06800910001038574,
+      "duration_seconds": 0.06588369997916743,
       "exit_code": 0,
       "output": "All checks passed!",
       "status": "PASS"
@@ -190,7 +198,7 @@
         "demo/pyrightconfig.json"
       ],
       "cwd": ".",
-      "duration_seconds": 4.577521300001536,
+      "duration_seconds": 4.542345500027295,
       "exit_code": 0,
       "output": "0 errors, 0 warnings, 0 informations",
       "status": "PASS"
@@ -204,9 +212,9 @@
         "demo"
       ],
       "cwd": ".",
-      "duration_seconds": 0.0340950999816414,
+      "duration_seconds": 0.041835400043055415,
       "exit_code": 0,
-      "output": "warning: in the working copy of 'demo/.gitignore', LF will be replaced by CRLF the next time Git touches it\nwarning: in the working copy of 'demo/backend/plantnexus_demo/api.py', LF will be replaced by CRLF the next time Git touches it\nwarning: in the working copy of 'demo/backend/plantnexus_demo/assets.py', LF will be replaced by CRLF the next time Git touches it\nwarning: in the working copy of 'demo/backend/plantnexus_demo/composition.py', LF will be replaced by CRLF the next time Git touches it\nwarning: in the working copy of 'demo/backend/plantnexus_demo/ingress.py', LF will be replaced by CRLF the next time Git touches it\nwarning: in the working copy of 'demo/backend/plantnexus_demo/security.py', LF will be replaced by CRLF the next time Git touches it\nwarning: in the working copy of 'demo/docs/03-architecture-and-api.md', LF will be replaced by CRLF the next time Git touches it\nwarning: in the working copy of 'demo/docs/04-ux-and-demo-script.md', LF will be replaced by CRLF the next time Git touches it\nwarning: in the working copy of 'demo/docs/05-benchmark-and-acceptance.md', LF will be replaced by CRLF the next time Git touches it\nwarning: in the working copy of 'demo/docs/IMPLEMENTATION-STATUS.md', LF will be replaced by CRLF the next time Git touches it\nwarning: in the working copy of 'demo/docs/README.md', LF will be replaced by CRLF the next time Git touches it\nwarning: in the working copy of 'demo/docs/TASKS.md', LF will be replaced by CRLF the next time Git touches it\nwarning: in the working copy of 'demo/scripts/task_context_manifest.py', LF will be replaced by CRLF the next time Git touches it\nwarning: in the working copy of 'demo/scripts/validate_demo.py', LF will be replaced by CRLF the next time Git touches it",
+      "output": "warning: in the working copy of 'demo/README.md', LF will be replaced by CRLF the next time Git touches it\nwarning: in the working copy of 'demo/backend/plantnexus_demo/standalone_settings.py', LF will be replaced by CRLF the next time Git touches it\nwarning: in the working copy of 'demo/backend/plantnexus_demo/windows_launcher.py', LF will be replaced by CRLF the next time Git touches it\nwarning: in the working copy of 'demo/package/windows/README-启动说明.txt', LF will be replaced by CRLF the next time Git touches it\nwarning: in the working copy of 'demo/package/windows/config/demo-settings.json', LF will be replaced by CRLF the next time Git touches it\nwarning: in the working copy of 'demo/package/windows/release-manifest.v1.json', LF will be replaced by CRLF the next time Git touches it\nwarning: in the working copy of 'demo/scripts/build_windows_package.py', LF will be replaced by CRLF the next time Git touches it\nwarning: in the working copy of 'demo/scripts/run_windows_package_audit.py', LF will be replaced by CRLF the next time Git touches it\nwarning: in the working copy of 'demo/scripts/run_windows_package_evidence.py', LF will be replaced by CRLF the next time Git touches it\nwarning: in the working copy of 'demo/scripts/run_windows_package_rehearsal.py', LF will be replaced by CRLF the next time Git touches it\nwarning: in the working copy of 'demo/scripts/task_context_manifest.py', LF will be replaced by CRLF the next time Git touches it\nwarning: in the working copy of 'demo/scripts/validate_demo.py', LF will be replaced by CRLF the next time Git touches it\nwarning: in the working copy of 'demo/tests/test_windows_package.py', LF will be replaced by CRLF the next time Git touches it",
       "status": "PASS"
     },
     {
@@ -219,9 +227,9 @@
         "demo/build/validation/windows-package-audit-demo-11.json"
       ],
       "cwd": ".",
-      "duration_seconds": 3.2582485000020824,
+      "duration_seconds": 3.1353379000211135,
       "exit_code": 0,
-      "output": "{\"audit_version\": \"cnc-demo-windows-package-audit.v1\", \"status\": \"PASS\", \"package_name\": \"PlantNexus-CNC-Demo-Windows-x64-0.2.0\", \"package_version\": \"0.2.0\", \"zip_path\": \"demo/dist/PlantNexus-CNC-Demo-Windows-x64-0.2.0.zip\", \"zip_bytes\": 87147033, \"zip_sha256\": \"fc175a2ee9ec856f9adefd3a410092597a0f9b5cd9b52e17ad9a0f6dd33ee2d5\", \"manifest_fingerprint\": \"sha256:6d4ada20b3ce9def06d77a4054b80dde35dd8bec1d46693aa7b4f3da58833973\", \"file_count\": 1001, \"payload_bytes\": 237376160, \"checks\": {\"zip_sha256\": true, \"zip_crc\": true, \"safe_windows_paths\": true, \"manifest_fingerprint\": true, \"manifest_boundaries\": true, \"runtime_dependency_independence\": true, \"inventory_exact\": true, \"payload_sha256\": true, \"forbidden_files_absent\": true, \"required_launchers_present\": true, \"windows_x64_pe\": true, \"default_loopback_settings\": true}, \"passed_checks\": 12, \"total_checks\": 12, \"simulation_only\": true, \"production_ready\": false}",
+      "output": "{\"audit_version\": \"cnc-demo-windows-package-audit.v1\", \"status\": \"PASS\", \"package_name\": \"PlantNexus-CNC-Demo-Windows-x64-0.2.2\", \"package_version\": \"0.2.2\", \"zip_path\": \"demo/dist/PlantNexus-CNC-Demo-Windows-x64-0.2.2.zip\", \"zip_bytes\": 87149446, \"zip_sha256\": \"c2cf612071bc38ce8e84925243b60f35b19011a3cba36e09f09bed336f1ed629\", \"manifest_fingerprint\": \"sha256:b154507942daeb9fd7b2faa4c2519caca500b398969da626816fe22724919b79\", \"file_count\": 1001, \"payload_bytes\": 237377471, \"checks\": {\"zip_sha256\": true, \"zip_crc\": true, \"safe_windows_paths\": true, \"manifest_fingerprint\": true, \"manifest_boundaries\": true, \"runtime_dependency_independence\": true, \"inventory_exact\": true, \"payload_sha256\": true, \"forbidden_files_absent\": true, \"required_launchers_present\": true, \"windows_x64_pe\": true, \"default_loopback_settings\": true, \"windows_command_crlf\": true, \"windows_powershell_utf8_bom_crlf\": true, \"service_only_startup\": true}, \"passed_checks\": 15, \"total_checks\": 15, \"simulation_only\": true, \"production_ready\": false}",
       "status": "PASS"
     },
     {
@@ -234,9 +242,9 @@
         "demo/build/validation/windows-package-evidence-demo-11.json"
       ],
       "cwd": ".",
-      "duration_seconds": 0.1389426999958232,
+      "duration_seconds": 0.1331606999738142,
       "exit_code": 0,
-      "output": "{\"evidence_version\": \"cnc-demo-windows-package-evidence.v1\", \"task_id\": \"TASK-DEMO-11\", \"status\": \"PASS\", \"package\": {\"version\": \"0.2.0\", \"zip_path\": \"demo/dist/PlantNexus-CNC-Demo-Windows-x64-0.2.0.zip\", \"zip_bytes\": 87147033, \"zip_sha256\": \"fc175a2ee9ec856f9adefd3a410092597a0f9b5cd9b52e17ad9a0f6dd33ee2d5\", \"payload_bytes\": 237376160, \"file_count\": 1001}, \"runtime\": {\"loopback_port\": 45174, \"lan_address\": \"192.168.220.1\", \"lan_port\": 54174, \"start_seconds\": 4.766, \"reset_seconds\": 3.375, \"initial_plan_seconds\": 8.391, \"solver_status\": \"OPTIMAL\", \"validation_status\": \"PASS\", \"schedule_state\": \"READY_FOR_REVIEW\"}, \"browser_report\": {\"path\": \"demo/build/validation/browser-windows-package-observation-demo-11.json\", \"report_fingerprint\": \"sha256:333abe2b6a74221f76c775d287a9445c70998e095e68b011fe6d9665b8afc44b\"}, \"checks\": {\"audit_fingerprint\": true, \"observation_fingerprint\": true, \"zip_identity_matches\": true, \"package_version_matches\": true, \"audit_checks_12_of_12\": true, \"runtime_checks_22_of_22\": true, \"minimal_path_no_python_node_uv_npm\": true, \"two_custom_ports\": true, \"single_origin\": true, \"showcase_132_610_24\": true, \"packaged_cp_sat_validator\": true, \"trusted_lan_route\": true, \"browser_zh_cn\": true, \"browser_console_clean\": true, \"safe_stop_no_residual_state\": true, \"simulation_only_non_production\": true}, \"passed_checks\": 16, \"total_checks\": 16, \"target_site_status\": \"PENDING_FINAL_SITE_REPLAY\", \"release_classification\": \"WINDOWS_PACKAGE_CANDIDATE_VERIFIED\", \"simulation_only\": true, \"synthetic_only\": true, \"production_ready\": false, \"report_fingerprint\": \"sha256:865fe3b11d1764ecfcdaeff28c8335807b9e2f00e0cbd945106dd7f520567268\"}",
+      "output": "{\"evidence_version\": \"cnc-demo-windows-package-evidence.v1\", \"task_id\": \"TASK-DEMO-11\", \"status\": \"PASS\", \"package\": {\"version\": \"0.2.2\", \"zip_path\": \"demo/dist/PlantNexus-CNC-Demo-Windows-x64-0.2.2.zip\", \"zip_bytes\": 87149446, \"zip_sha256\": \"c2cf612071bc38ce8e84925243b60f35b19011a3cba36e09f09bed336f1ed629\", \"payload_bytes\": 237377471, \"file_count\": 1001}, \"runtime\": {\"loopback_port\": 45174, \"lan_address\": \"192.168.220.1\", \"lan_port\": 54174, \"start_seconds\": 4.75, \"reset_seconds\": 3.11, \"initial_plan_seconds\": 6.938, \"solver_status\": \"OPTIMAL\", \"validation_status\": \"PASS\", \"schedule_state\": \"READY_FOR_REVIEW\"}, \"browser_report\": {\"path\": \"demo/build/validation/browser-windows-package-observation-demo-11.json\", \"report_fingerprint\": \"sha256:6da7d9644539d13d4a4054e447a83aa3874b538b73cd1ad61a9c43f42a001afe\"}, \"checks\": {\"audit_fingerprint\": true, \"observation_fingerprint\": true, \"zip_identity_matches\": true, \"package_version_matches\": true, \"audit_checks_15_of_15\": true, \"runtime_checks_24_of_24\": true, \"minimal_path_no_python_node_uv_npm\": true, \"two_custom_ports\": true, \"single_origin\": true, \"showcase_132_610_24\": true, \"packaged_cp_sat_validator\": true, \"trusted_lan_route\": true, \"browser_zh_cn\": true, \"browser_console_clean\": true, \"safe_stop_no_residual_state\": true, \"service_only_no_browser\": true, \"simulation_only_non_production\": true}, \"passed_checks\": 17, \"total_checks\": 17, \"target_site_status\": \"PENDING_FINAL_SITE_REPLAY\", \"release_classification\": \"WINDOWS_PACKAGE_CANDIDATE_VERIFIED\", \"simulation_only\": true, \"synthetic_only\": true, \"production_ready\": false, \"report_fingerprint\": \"sha256:90b9023c3838892a6649bc61efdb3249d6c050f7c17b2986778fff97786be048\"}",
       "status": "PASS"
     },
     {
@@ -248,7 +256,7 @@
         "--help"
       ],
       "cwd": ".",
-      "duration_seconds": 0.1597679000115022,
+      "duration_seconds": 0.14444230002118275,
       "exit_code": 0,
       "output": "usage: build_windows_package.py [-h] [--skip-frontend]\n\nBuild and seal the Windows x64 standalone Demo package.\n\noptions:\n  -h, --help       show this help message and exit\n  --skip-frontend  reuse an existing production frontend bundle",
       "status": "PASS"
@@ -262,18 +270,18 @@
         "--help"
       ],
       "cwd": ".",
-      "duration_seconds": 1.7560011000023223,
+      "duration_seconds": 1.6978606999618933,
       "exit_code": 0,
-      "output": "usage: windows_demo_entry.py [-h] [--no-browser]\n                             [{start,serve,stop,status,version}]\n\nPlantNexus CNC 中文演示独立版\n\npositional arguments:\n  {start,serve,stop,status,version}\n\noptions:\n  -h, --help            show this help message and exit\n  --no-browser          启动后不自动打开本机浏览器",
+      "output": "usage: windows_demo_entry.py [-h] [{start,serve,stop,status,version}]\n\nPlantNexus CNC 中文演示独立版\n\npositional arguments:\n  {start,serve,stop,status,version}\n\noptions:\n  -h, --help            show this help message and exit",
       "status": "PASS"
     }
   ],
-  "demo_file_count": 241,
+  "demo_file_count": 244,
   "demo_files": [
     {
-      "bytes": 279,
+      "bytes": 358,
       "path": "demo/.gitignore",
-      "sha256": "a91b9716bf09d823733c5510663f4bdfa4de45d787fb0a3e23185454ff55d302"
+      "sha256": "4fa9c13e3f533933b0b2d5136cd044aa7ff5d4f47c57b7121081a17ed59a327e"
     },
     {
       "bytes": 1129,
@@ -361,9 +369,9 @@
       "sha256": "0e7088e6fa20d132dbbb31484d943d6edb66853af0685518241f781e36de761d"
     },
     {
-      "bytes": 7730,
+      "bytes": 7882,
       "path": "demo/backend/plantnexus_demo/standalone_settings.py",
-      "sha256": "8436183b883cb5d7a0cd7c85b8de56d6024e095b729b5c5e08beb6b9165c35b9"
+      "sha256": "36a81263231800442a1bf0bd7ddc546faa0ccbb3765af4c8522d42652fc5fa2e"
     },
     {
       "bytes": 14009,
@@ -371,9 +379,9 @@
       "sha256": "bea249bcf0d4695a44eedd1e877a29e82814d083efe55c2b9e04209af0c4bcf9"
     },
     {
-      "bytes": 17002,
+      "bytes": 16844,
       "path": "demo/backend/plantnexus_demo/windows_launcher.py",
-      "sha256": "54ce1b07346e7e9759a56d6e99466f85d478b17da8af7b65f042495ecff07de3"
+      "sha256": "1f4e92d2cb8f6b402b8f25ea01dcb7e7576afa83644d618a6ab6d4282fcc4ba0"
     },
     {
       "bytes": 36510,
@@ -521,6 +529,11 @@
       "sha256": "23faf5b28144e135cc35d264bb454531ca1c2682d3eac25b3500215ef49349de"
     },
     {
+      "bytes": 3944,
+      "path": "demo/build/remote-deploy-0.2.2.ps1",
+      "sha256": "c27c268bb40b6815c615aff288fc54ed65eb2ed33182b5a9bc8743d1a5c614fe"
+    },
+    {
       "bytes": 1894,
       "path": "demo/build/validation/benchmark-evidence-demo-09.json",
       "sha256": "625703163f856b7330e5af8905438ebf32afcfe04942844710221b6096e7c595"
@@ -548,7 +561,7 @@
     {
       "bytes": 909,
       "path": "demo/build/validation/browser-windows-package-observation-demo-11.json",
-      "sha256": "c0bd6e4d9cf63ab9300ecfb3b5d03aa3117c1c8aedb3aefd61882341328f7d6a"
+      "sha256": "f33588603d5179a6985472adadf7b27abb3f28f3aec66ac5418579880b2fcafc"
     },
     {
       "bytes": 6735,
@@ -736,9 +749,9 @@
       "sha256": "e2a03191a754f82c3342db25d129e89d2f5e2880fe5218c78e7cb5a4684167c8"
     },
     {
-      "bytes": 6560,
+      "bytes": 6765,
       "path": "demo/build/validation/task-context-manifest-demo-11.json",
-      "sha256": "9a919d16adf32e9f76b81613561e2f5ca1f0aa57519aedb03e8613965bce53c8"
+      "sha256": "5caefa2b8ec7e17a65582457f180cb7308766ff652df2c30b9a217d474d21b70"
     },
     {
       "bytes": 4735,
@@ -746,19 +759,24 @@
       "sha256": "3d31e0665bb8433a6259d191b977b14cc6e7773fd7e8e8512db92d915e295a78"
     },
     {
-      "bytes": 1137,
+      "bytes": 1254,
       "path": "demo/build/validation/windows-package-audit-demo-11.json",
-      "sha256": "835f4d5e474fe5fb9ed906e34d655667d48d97bdce2db094a0615b674b4e1c21"
+      "sha256": "b18f64f71ea41f68057b400a5b7d29f9e7284f850cfda03e7edd54906fb651a8"
     },
     {
-      "bytes": 1897,
+      "bytes": 1933,
       "path": "demo/build/validation/windows-package-evidence-demo-11.json",
-      "sha256": "2211b0d109f6235dcbd16652c29045dcb5bf981dd81326827d410c3a59ea03ef"
+      "sha256": "f518f41c9155c63949028f98026a00c11bc41c012bdd59aef21f362aa3a661e4"
     },
     {
-      "bytes": 2804,
+      "bytes": 2885,
       "path": "demo/build/validation/windows-package-observation-demo-11.json",
-      "sha256": "fe85f2737ccc0d5a69b26380ee3d265e70e36b53e6b289b42e4aa394ca26a596"
+      "sha256": "5972b932444e217d6932ff778666f59e0c79c8844018a64a988e7d999831b0a2"
+    },
+    {
+      "bytes": 1550,
+      "path": "demo/build/validation/windows-package-target-site-demo-11.json",
+      "sha256": "1759f6eda46496ca71b749b77c6a4d3ee24035e7421fe735d21bc554080733e1"
     },
     {
       "bytes": 614,
@@ -816,19 +834,19 @@
       "sha256": "3f808d231b09589f73752baac30f12f4643f3bc44e625d913e0457c90a0af25f"
     },
     {
-      "bytes": 24224,
+      "bytes": 24696,
       "path": "demo/docs/03-architecture-and-api.md",
-      "sha256": "fe556adf2278832aa7104666b2c7f8ae1d19e62deb4bfeece23344fc83165c9f"
+      "sha256": "c59714b162bbd7fbb511cc5c0501723af9e5c4087f4e631c4f008d16602b44ab"
     },
     {
-      "bytes": 24894,
+      "bytes": 25013,
       "path": "demo/docs/04-ux-and-demo-script.md",
-      "sha256": "bf9b059087dc866de63f4f583f7617ffe3752ea567b6d7099677c2931fd81775"
+      "sha256": "12d54ee7d3aa25f5f3acb383e61d29c1404d2dba0735e39cef3c228b13ab923e"
     },
     {
-      "bytes": 22848,
+      "bytes": 23016,
       "path": "demo/docs/05-benchmark-and-acceptance.md",
-      "sha256": "73e5133d19b20b1d405feb99b96542acf42805b5517934b5ab0207132ca7c049"
+      "sha256": "ad7a29d03cf4b5071fc7f273fcf05046ae83081ed16a77b3e1630edcb79a6f32"
     },
     {
       "bytes": 10396,
@@ -841,19 +859,19 @@
       "sha256": "d9e20915c4bf241c2c590a72ad738b984e421262740524c1dab78a9e3df38099"
     },
     {
-      "bytes": 7130,
+      "bytes": 8786,
       "path": "demo/docs/D19-WINDOWS-STANDALONE-AND-LAN-RUNBOOK.md",
-      "sha256": "e2af51cccf9bdde93ec0a59ba2d3498a1b184bc9631f6dd23c5da23556b747ff"
+      "sha256": "bd6a2f85845216db231ca0917c4de45669ae1a8326845a384b118c5b158c6b9b"
     },
     {
-      "bytes": 34452,
+      "bytes": 35193,
       "path": "demo/docs/IMPLEMENTATION-STATUS.md",
-      "sha256": "0ba342c9bba92b53e0fca0c057d797239d3ab2c69b74d56026efc239e39b1d71"
+      "sha256": "fe5aebba0e7ed9cfaba3787e23cd19c3849a03c14ba326c5480d21526c9f700c"
     },
     {
-      "bytes": 15405,
+      "bytes": 15596,
       "path": "demo/docs/README.md",
-      "sha256": "07162762a11f6326056c9565a4d8b1eda3434c77629aa2db8d9296e735e18451"
+      "sha256": "caf30d4f110525e2840d692e59d99728023f34003a493a028fae029798d689dd"
     },
     {
       "bytes": 6086,
@@ -906,14 +924,14 @@
       "sha256": "d833f7374464ccf7f9ceafd28b2d31594adf1d75bdfb631c61dbe65ad55976f2"
     },
     {
-      "bytes": 10424,
+      "bytes": 11460,
       "path": "demo/docs/TASK-DEMO-11-windows-standalone-package-and-trusted-lan-access.md",
-      "sha256": "940c2260879e5d754625a3f8f62a02813edcaa3537656b2e7fa1234aa6518ac4"
+      "sha256": "b10d15e433d6eaaaf78ac26dc74e22894dcb49a9b6189359509c9a9f49e52042"
     },
     {
-      "bytes": 32874,
+      "bytes": 33195,
       "path": "demo/docs/TASKS.md",
-      "sha256": "4e4c839004f52228754be5c564f5aa8ae9f9364c8c85f72d0f8a8afc78c60f5c"
+      "sha256": "dfed5df787a3d21874a85a5346e0c56c5cf298bd27adfaabc404bf885beb9add"
     },
     {
       "bytes": 814,
@@ -1126,9 +1144,9 @@
       "sha256": "70ada71f7f0ea885683c18a116a3129b9a0126155cdac7f8a7c29d5c3448af35"
     },
     {
-      "bytes": 181,
+      "bytes": 182,
       "path": "demo/package/windows/config/demo-settings.json",
-      "sha256": "99fa328a7e4af6b6788fb8e3159f65e99fa8cf8f60da7b6a00e6239af857771d"
+      "sha256": "29790932db4280ff55283035467a982a007cd3639b3ce9691971cefb66f41f0f"
     },
     {
       "bytes": 2652,
@@ -1136,39 +1154,44 @@
       "sha256": "6d95ffdf6a65fdd07141fcfe91c648ab5cc0938523e0ea826a4bc85ae5c66816"
     },
     {
-      "bytes": 2127,
+      "bytes": 2794,
       "path": "demo/package/windows/README-启动说明.txt",
-      "sha256": "8b23fa2de7e30b26030b50657a9895388180b357a9ae7a18d08aeb451252f51d"
+      "sha256": "5aef4f7244afa3c0af9298f8e8c8bca9e45793ed5877698df173639c0e284b15"
     },
     {
-      "bytes": 842,
+      "bytes": 986,
       "path": "demo/package/windows/release-manifest.v1.json",
-      "sha256": "64b3edf848afb78f2420ffda100ea506db2a7d8f61252a02624feef29a428e16"
+      "sha256": "a8659b8867ac341f90e661fb68a6cb15a30b4cfe1b9244972d030f61aa13695e"
     },
     {
-      "bytes": 96,
+      "bytes": 101,
       "path": "demo/package/windows/停止演示.cmd",
-      "sha256": "08ccba50dc7a3b2de410c494ab6beaa48801b284203e819357c97414ff6d96ae"
+      "sha256": "41afb1598be4087b37a069bc429b61fce164e4e3b4dbc56fb6cf3122e1cdb0e5"
     },
     {
-      "bytes": 97,
+      "bytes": 601,
       "path": "demo/package/windows/启动演示.cmd",
-      "sha256": "05d83378bad3baae19e22fe34ec77c38f7281674623dc330757a8c8f87a05256"
+      "sha256": "1b03734e1c9da34bdfdaf03ad3c55f7a55519915cc2c29daf7dfa7cbf3248981"
     },
     {
-      "bytes": 82,
+      "bytes": 87,
       "path": "demo/package/windows/查看状态.cmd",
-      "sha256": "468506152eea03397fc0f3e82734f644ec5e178d696fa617453d1c5ebf683a38"
+      "sha256": "24c06fd7c3cb9cdcd0212553b86797db0df17cfdc528448f44f5dcd602dddd42"
     },
     {
-      "bytes": 1630,
+      "bytes": 1708,
       "path": "demo/package/windows/配置演示.ps1",
-      "sha256": "0f085248d2e4ed6f7ae97daad6f7cd5f8d20711b687354732466da67ca1e88f0"
+      "sha256": "8057092d1db359d8f8a8233ca0cf785f59fdbdff65b3e25919265653a9dcc126"
     },
     {
       "bytes": 204,
       "path": "demo/pyrightconfig.json",
       "sha256": "9f5232b180157c94c99f09d9edfc7356214e243c9abc5f50b6d8cdc331208355"
+    },
+    {
+      "bytes": 6100,
+      "path": "demo/README.md",
+      "sha256": "4990656899ef5e366c130aea17c88fec7f47fdee54e131dc67f10175b3649642"
     },
     {
       "bytes": 42738,
@@ -1281,9 +1304,9 @@
       "sha256": "54921ac268983b4a6f9c45a7da0adcf9586c66473c55f38f38215ffdc7ffc2f8"
     },
     {
-      "bytes": 8729,
+      "bytes": 9726,
       "path": "demo/scripts/build_windows_package.py",
-      "sha256": "8a35ee4f1c2c2d16e9ae1b9a1f6e3ea5e518e5306d6c34c332dcebb5a1284dc3"
+      "sha256": "7526865451cd6d1603cf56c50dd20ff29b9a7ed67bc675045a647ab2836f20a9"
     },
     {
       "bytes": 7100,
@@ -1371,19 +1394,19 @@
       "sha256": "d08343b2ce96a4d6212c25318f76bf03daaef651ec17be48e76c788a5f39802f"
     },
     {
-      "bytes": 11089,
+      "bytes": 13794,
       "path": "demo/scripts/run_windows_package_audit.py",
-      "sha256": "79520fca8ea8264f6e234b4889c7bc12b7ec0ecf6a1e7e1ef888b7809dac810a"
+      "sha256": "a04e44dfcd9803844b252509efd4043f1fa839837ed3aecc2741ffc595c378bf"
     },
     {
-      "bytes": 8487,
+      "bytes": 8793,
       "path": "demo/scripts/run_windows_package_evidence.py",
-      "sha256": "4e6864966da1463bc235ccc6c0e3952047ccede3adaa7002ae117bb7b5dc63ed"
+      "sha256": "66210887c06755aa7c2066033a8254353e2bbe7110441a98dd76dc44532f6a25"
     },
     {
-      "bytes": 19334,
+      "bytes": 20646,
       "path": "demo/scripts/run_windows_package_rehearsal.py",
-      "sha256": "e02eb2aaf67a6bc9ee4be9a119824bff6cc0d93db01af77fba3348ce84a720c0"
+      "sha256": "aaccb6343c67a0e47396bc1ff55495289c20446b9718cc3bdec9693c994857b5"
     },
     {
       "bytes": 11607,
@@ -1396,14 +1419,14 @@
       "sha256": "7092cedde200147b27c52c1dfd75ff0596f4277661222f45da2d87749e8c96e0"
     },
     {
-      "bytes": 22608,
+      "bytes": 22662,
       "path": "demo/scripts/task_context_manifest.py",
-      "sha256": "b033bc18703b22c8948d4f7731657ff202efef7b3116ed8873bd24d144c7d699"
+      "sha256": "3d8b623f25eb0654ce2f3b239a8098c1575d57185c918ea599db5d31861a69c6"
     },
     {
-      "bytes": 48753,
+      "bytes": 51425,
       "path": "demo/scripts/validate_demo.py",
-      "sha256": "e2f9f9060128b3a7a04e86f11545f34f46cb5beab94b30878eb33decc6907a4f"
+      "sha256": "1ae6e56a5e1cc72f6ea4e8b96936d64abeee2d5cdc435258a7445039970ac506"
     },
     {
       "bytes": 506,
@@ -1471,13 +1494,13 @@
       "sha256": "22584354976c338a75a4b737da71b58ecca30bad994dd0289e0a0fc37eb01242"
     },
     {
-      "bytes": 7074,
+      "bytes": 9505,
       "path": "demo/tests/test_windows_package.py",
-      "sha256": "80c5f9e2ec2232018796aaeb168ccc61a18140720b9737172908bd6af7422c32"
+      "sha256": "657855801670b84db609dde4c6c9ffc986334221abb36663f25bbeb5566b0e34"
     }
   ],
   "functional_status": "PASS",
-  "generated_at_utc": "2026-09-04T06:34:21.330192Z",
+  "generated_at_utc": "2026-09-04T07:53:50.461431Z",
   "machine_report_version": "cnc-demo-task-machine-report.v1",
   "scope_check": {
     "allowed": [
@@ -1491,7 +1514,7 @@
       "docs/contracts/api-development-checklist.md",
       "docs/frontend/README.md"
     ],
-    "diff_base": "7f184b764e39c049995f0817f095297651928f88",
+    "diff_base": "c08c2c7096c8ac4e5de3694d4c5e6204690fe3de",
     "outside_demo_paths_expected": [],
     "outside_demo_paths_observed": [],
     "protected_files": [

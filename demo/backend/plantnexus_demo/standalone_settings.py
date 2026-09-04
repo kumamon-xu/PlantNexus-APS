@@ -25,7 +25,7 @@ DEFAULT_SETTINGS_DOCUMENT: dict[str, object] = {
     "access_port": DEFAULT_ACCESS_PORT,
     "lan_mode": False,
     "allowed_networks": [],
-    "open_browser": True,
+    "open_browser": False,
 }
 DEFAULT_TRUSTED_LAN_NETWORKS = (
     "10.0.0.0/8",
@@ -33,11 +33,6 @@ DEFAULT_TRUSTED_LAN_NETWORKS = (
     "192.168.0.0/16",
 )
 _REQUIRED_FIELDS = frozenset(DEFAULT_SETTINGS_DOCUMENT)
-_RFC1918_NETWORKS = tuple(
-    cast(IPv4Network, ip_network(value)) for value in DEFAULT_TRUSTED_LAN_NETWORKS
-)
-_ULA_NETWORK = cast(IPv6Network, ip_network("fc00::/7"))
-
 IPAddress = IPv4Address | IPv6Address
 IPNetwork = IPv4Network | IPv6Network
 
@@ -60,13 +55,8 @@ def _parse_ip(value: object, *, field: str) -> IPAddress:
         raise StandaloneConfigurationError("CONFIG_VALUE_INVALID", field=field) from error
 
 
-def _is_trusted_lan_network(network: IPNetwork) -> bool:
-    if isinstance(network, IPv4Network):
-        return any(network.subnet_of(parent) for parent in _RFC1918_NETWORKS)
-    return network.subnet_of(_ULA_NETWORK)
-
-
 def parse_trusted_networks(value: object) -> tuple[IPNetwork, ...]:
+    """Parse an explicit peer CIDR allowlist, including deliberate public ranges."""
     if not isinstance(value, list) or len(value) > 16:
         raise StandaloneConfigurationError(
             "CONFIG_VALUE_INVALID", field="allowed_networks"
@@ -83,7 +73,9 @@ def parse_trusted_networks(value: object) -> tuple[IPNetwork, ...]:
             raise StandaloneConfigurationError(
                 "CONFIG_VALUE_INVALID", field=field
             ) from error
-        if raw != str(network) or raw in raw_values or not _is_trusted_lan_network(network):
+        if raw != str(network):
+            raise StandaloneConfigurationError("CONFIG_VALUE_INVALID", field=field)
+        if raw in raw_values:
             raise StandaloneConfigurationError("CONFIG_NETWORK_NOT_PRIVATE", field=field)
         raw_values.add(raw)
         networks.append(network)
@@ -121,6 +113,10 @@ class StandaloneSettings:
         if not isinstance(open_browser, bool):
             raise StandaloneConfigurationError(
                 "CONFIG_VALUE_INVALID", field="open_browser"
+            )
+        if open_browser:
+            raise StandaloneConfigurationError(
+                "CONFIG_BROWSER_DISABLED", field="open_browser"
             )
         networks = parse_trusted_networks(document.get("allowed_networks"))
         if lan_mode:

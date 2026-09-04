@@ -22,7 +22,7 @@ BUILD_ROOT = DEMO_ROOT / "build" / "windows-package"
 OUTPUT_ROOT = DEMO_ROOT / "dist"
 TEMPLATE_ROOT = DEMO_ROOT / "package" / "windows"
 SPEC_PATH = TEMPLATE_ROOT / "PlantNexusCncDemo.spec"
-PACKAGE_VERSION = "0.2.0"
+PACKAGE_VERSION = "0.2.3"
 PYINSTALLER_VERSION = "6.22.2"
 PACKAGE_NAME = f"PlantNexus-CNC-Demo-Windows-x64-{PACKAGE_VERSION}"
 MANIFEST_VERSION = "cnc-demo-windows-package-manifest.v1"
@@ -71,6 +71,22 @@ def _git_head() -> str:
     return completed.stdout.strip() if completed.returncode == 0 else "unavailable"
 
 
+def _windows_script_text(source: Path) -> str:
+    content = source.read_text(encoding="utf-8-sig")
+    normalized = content.replace("\r\n", "\n").replace("\r", "\n")
+    return normalized.replace("\n", "\r\n")
+
+
+def _windows_batch_payload(source: Path) -> bytes:
+    """Encode a cmd.exe script with Windows-native CRLF line endings."""
+    return _windows_script_text(source).encode("utf-8")
+
+
+def _windows_powershell_payload(source: Path) -> bytes:
+    """Encode a Windows PowerShell 5.1 script with an explicit UTF-8 BOM."""
+    return _windows_script_text(source).encode("utf-8-sig")
+
+
 def _copy_templates(package_root: Path) -> None:
     for source in sorted(TEMPLATE_ROOT.rglob("*")):
         if not source.is_file() or source.suffix == ".spec":
@@ -78,7 +94,12 @@ def _copy_templates(package_root: Path) -> None:
         relative = source.relative_to(TEMPLATE_ROOT)
         target = package_root / relative
         target.parent.mkdir(parents=True, exist_ok=True)
-        shutil.copy2(source, target)
+        if source.suffix.casefold() == ".cmd":
+            target.write_bytes(_windows_batch_payload(source))
+        elif source.suffix.casefold() == ".ps1":
+            target.write_bytes(_windows_powershell_payload(source))
+        else:
+            shutil.copy2(source, target)
 
 
 def _payload_inventory(package_root: Path) -> list[dict[str, Any]]:
@@ -126,7 +147,10 @@ def _write_manifest(package_root: Path, pyinstaller_version: str) -> dict[str, A
         "settings_path": "config/demo-settings.json",
         "frontend_api_topology": "SAME_ORIGIN_SINGLE_PORT",
         "default_access": "LOOPBACK_ONLY",
-        "lan_access": "EXPLICIT_PRIVATE_CIDR_ALLOWLIST",
+        "lan_access": "EXPLICIT_CIDR_ALLOWLIST_WITH_PUBLIC_OPT_IN",
+        "startup_behavior": "SERVICE_ONLY_NO_BROWSER",
+        "windows_command_encoding": "UTF-8_CRLF",
+        "windows_powershell_encoding": "UTF-8-BOM_CRLF",
         "simulation_only": True,
         "synthetic_only": True,
         "inventory_scope": "PAYLOAD_EXCLUDING_MANIFEST",

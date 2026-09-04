@@ -3,6 +3,6 @@
   "allowed_networks": [],
   "lan_mode": false,
   "listen_host": "127.0.0.1",
-  "open_browser": true,
+  "open_browser": false,
   "settings_version": "cnc-demo-windows-settings.v1"
 }

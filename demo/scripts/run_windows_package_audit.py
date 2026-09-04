@@ -23,6 +23,7 @@ from plantnexus_demo.standalone_settings import (  # noqa: E402
     StandaloneSettings,
 )
 from plantnexus_demo.windows_launcher import WINDOWS_PACKAGE_VERSION  # noqa: E402
+from plantnexus_demo.windows_launcher import WINDOWS_STARTUP_BEHAVIOR  # noqa: E402
 
 
 AUDIT_VERSION = "cnc-demo-windows-package-audit.v1"
@@ -77,6 +78,13 @@ def _verify_pe_x64(payload: bytes) -> None:
         raise PackageAuditError("entrypoint is not Windows x64")
 
 
+def _uses_windows_crlf(payload: bytes) -> bool:
+    if not payload or not payload.endswith(b"\r\n"):
+        return False
+    remainder = payload.replace(b"\r\n", b"")
+    return b"\r" not in remainder and b"\n" not in remainder
+
+
 def audit(zip_path: Path) -> dict[str, Any]:
     resolved_zip = zip_path.resolve()
     digest_path = resolved_zip.with_suffix(".zip.sha256")
@@ -121,7 +129,10 @@ def audit(zip_path: Path) -> dict[str, Any]:
             or manifest.get("synthetic_only") is not True
             or manifest.get("frontend_api_topology") != "SAME_ORIGIN_SINGLE_PORT"
             or manifest.get("default_access") != "LOOPBACK_ONLY"
-            or manifest.get("lan_access") != "EXPLICIT_PRIVATE_CIDR_ALLOWLIST"
+            or manifest.get("lan_access") != "EXPLICIT_CIDR_ALLOWLIST_WITH_PUBLIC_OPT_IN"
+            or manifest.get("startup_behavior") != WINDOWS_STARTUP_BEHAVIOR
+            or manifest.get("windows_command_encoding") != "UTF-8_CRLF"
+            or manifest.get("windows_powershell_encoding") != "UTF-8-BOM_CRLF"
         ):
             raise PackageAuditError("package manifest boundary is invalid")
         runtime_dependencies = manifest.get("runtime_dependencies")
@@ -188,6 +199,7 @@ def audit(zip_path: Path) -> dict[str, Any]:
             "配置演示.ps1",
             "README-启动说明.txt",
             "config/demo-settings.json",
+            "release-manifest.v1.json",
         }
         if not required.issubset(declared):
             raise PackageAuditError("required package entry is missing")
@@ -198,6 +210,42 @@ def audit(zip_path: Path) -> dict[str, Any]:
         settings = StandaloneSettings.from_document(settings_document)
         if settings.to_document() != DEFAULT_SETTINGS_DOCUMENT:
             raise PackageAuditError("sealed package must default to loopback-only settings")
+        settings_payload = archive.read(prefix + "config/demo-settings.json")
+        release = _json_object(
+            archive.read(prefix + "release-manifest.v1.json"),
+            field="release-manifest",
+        )
+        command_payloads = {
+            name: archive.read(prefix + name)
+            for name in ("启动演示.cmd", "停止演示.cmd", "查看状态.cmd")
+        }
+        if not all(_uses_windows_crlf(payload) for payload in command_payloads.values()):
+            raise PackageAuditError("Windows command entry must use CRLF line endings")
+        start_command = command_payloads["启动演示.cmd"].decode("utf-8-sig")
+        powershell_payload = archive.read(prefix + "配置演示.ps1")
+        if not powershell_payload.startswith(b"\xef\xbb\xbf") or not _uses_windows_crlf(
+            powershell_payload
+        ):
+            raise PackageAuditError(
+                "Windows PowerShell entry must use UTF-8 BOM and CRLF"
+            )
+        config_command = powershell_payload.decode("utf-8-sig")
+        readme = archive.read(prefix + "README-启动说明.txt").decode("utf-8-sig")
+        if (
+            settings.open_browser is not False
+            or release.get("package_version") != WINDOWS_PACKAGE_VERSION
+            or release.get("artifact_name") != resolved_zip.name
+            or release.get("startup_behavior") != WINDOWS_STARTUP_BEHAVIOR
+            or release.get("windows_command_encoding") != "UTF-8_CRLF"
+            or release.get("windows_powershell_encoding") != "UTF-8-BOM_CRLF"
+            or release.get("default_settings_sha256")
+            != sha256(settings_payload).hexdigest()
+            or '"%~dp0PlantNexusCncDemo.exe" start' not in start_command
+            or "http://" in start_command.casefold()
+            or "$config.open_browser = $false" not in config_command
+            or "不会自动打开浏览器" not in readme
+        ):
+            raise PackageAuditError("service-only startup boundary is invalid")
         if (
             manifest.get("file_count") != len(declared)
             or manifest.get("payload_bytes")
@@ -218,6 +266,9 @@ def audit(zip_path: Path) -> dict[str, Any]:
         "required_launchers_present": True,
         "windows_x64_pe": True,
         "default_loopback_settings": True,
+        "windows_command_crlf": True,
+        "windows_powershell_utf8_bom_crlf": True,
+        "service_only_startup": True,
     }
     return {
         "audit_version": AUDIT_VERSION,

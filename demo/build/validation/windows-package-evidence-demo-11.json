@@ -1,10 +1,10 @@
 {
   "browser_report": {
     "path": "demo/build/validation/browser-windows-package-observation-demo-11.json",
-    "report_fingerprint": "sha256:333abe2b6a74221f76c775d287a9445c70998e095e68b011fe6d9665b8afc44b"
+    "report_fingerprint": "sha256:6da7d9644539d13d4a4054e447a83aa3874b538b73cd1ad61a9c43f42a001afe"
   },
   "checks": {
-    "audit_checks_12_of_12": true,
+    "audit_checks_15_of_15": true,
     "audit_fingerprint": true,
     "browser_console_clean": true,
     "browser_zh_cn": true,
@@ -12,8 +12,9 @@
     "observation_fingerprint": true,
     "package_version_matches": true,
     "packaged_cp_sat_validator": true,
-    "runtime_checks_22_of_22": true,
+    "runtime_checks_24_of_24": true,
     "safe_stop_no_residual_state": true,
+    "service_only_no_browser": true,
     "showcase_132_610_24": true,
     "simulation_only_non_production": true,
     "single_origin": true,
@@ -24,25 +25,25 @@
   "evidence_version": "cnc-demo-windows-package-evidence.v1",
   "package": {
     "file_count": 1001,
-    "payload_bytes": 237376160,
-    "version": "0.2.0",
-    "zip_bytes": 87147033,
-    "zip_path": "demo/dist/PlantNexus-CNC-Demo-Windows-x64-0.2.0.zip",
-    "zip_sha256": "fc175a2ee9ec856f9adefd3a410092597a0f9b5cd9b52e17ad9a0f6dd33ee2d5"
+    "payload_bytes": 237377471,
+    "version": "0.2.2",
+    "zip_bytes": 87149446,
+    "zip_path": "demo/dist/PlantNexus-CNC-Demo-Windows-x64-0.2.2.zip",
+    "zip_sha256": "c2cf612071bc38ce8e84925243b60f35b19011a3cba36e09f09bed336f1ed629"
   },
-  "passed_checks": 16,
+  "passed_checks": 17,
   "production_ready": false,
   "release_classification": "WINDOWS_PACKAGE_CANDIDATE_VERIFIED",
-  "report_fingerprint": "sha256:865fe3b11d1764ecfcdaeff28c8335807b9e2f00e0cbd945106dd7f520567268",
+  "report_fingerprint": "sha256:90b9023c3838892a6649bc61efdb3249d6c050f7c17b2986778fff97786be048",
   "runtime": {
-    "initial_plan_seconds": 8.391,
+    "initial_plan_seconds": 6.938,
     "lan_address": "192.168.220.1",
     "lan_port": 54174,
     "loopback_port": 45174,
-    "reset_seconds": 3.375,
+    "reset_seconds": 3.11,
     "schedule_state": "READY_FOR_REVIEW",
     "solver_status": "OPTIMAL",
-    "start_seconds": 4.766,
+    "start_seconds": 4.75,
     "validation_status": "PASS"
   },
   "simulation_only": true,
@@ -50,5 +51,5 @@
   "synthetic_only": true,
   "target_site_status": "PENDING_FINAL_SITE_REPLAY",
   "task_id": "TASK-DEMO-11",
-  "total_checks": 16
+  "total_checks": 17
 }

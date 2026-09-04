@@ -1,0 +1,50 @@
+{
+  "checks": {
+    "cmd_entries_crlf": true,
+    "cross_host_health_up": true,
+    "cross_host_zh_cn_html": true,
+    "firewall_private_cidr_only": true,
+    "lan_allowlist_exact": true,
+    "listener_all_ipv4_interfaces": true,
+    "package_sha256_verified": true,
+    "package_version_0_2_2": true,
+    "powershell_5_1_parse_clean": true,
+    "powershell_utf8_bom_crlf": true,
+    "service_only_no_browser": true,
+    "windows_cmd_start_ready": true
+  },
+  "client": {
+    "address": "192.168.1.208",
+    "role": "SECOND_LAN_HOST"
+  },
+  "deployment": {
+    "backup_root": "W:\\PlantNexus-CNC-Demo-backup-20260904-154117",
+    "package_sha256": "c2cf612071bc38ce8e84925243b60f35b19011a3cba36e09f09bed336f1ed629",
+    "package_version": "0.2.2",
+    "root": "W:\\PlantNexus-CNC-Demo"
+  },
+  "network": {
+    "allowed_network": "192.168.1.0/24",
+    "firewall_profile": "Private",
+    "listen_host": "0.0.0.0",
+    "port": 4174,
+    "server_address": "192.168.1.249",
+    "url": "http://192.168.1.249:4174/demo/"
+  },
+  "observed_at_utc": "2026-09-04T07:44:40.877Z",
+  "passed_checks": 12,
+  "production_ready": false,
+  "simulation_only": true,
+  "status": "PASS",
+  "target_site_status": "VERIFIED_LAN_SERVICE",
+  "task_id": "TASK-DEMO-11",
+  "total_checks": 12,
+  "verification": {
+    "health_contract": "health-report.v1",
+    "health_status": "UP",
+    "html_lang": "zh-CN",
+    "page_title": "PlantNexus APS · CNC 精密机加工演示",
+    "remote_service_health": "READY"
+  },
+  "version": "cnc-demo-windows-target-site-observation.v1"
+}

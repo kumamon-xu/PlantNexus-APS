@@ -1,15 +1,21 @@
 {
-  "diff_base": "7f184b764e39c049995f0817f095297651928f88",
-  "estimated_characters": 574171,
+  "diff_base": "c08c2c7096c8ac4e5de3694d4c5e6204690fe3de",
+  "estimated_characters": 581102,
   "files_allowed_to_change": [
     "demo/**"
   ],
   "inputs": [
     {
-      "characters": 7014,
+      "characters": 3032,
+      "load_mode": "PUBLISHED_DEMO_RUNBOOK",
+      "path": "demo/README.md",
+      "sha256": "4990656899ef5e366c130aea17c88fec7f47fdee54e131dc67f10175b3649642"
+    },
+    {
+      "characters": 7546,
       "load_mode": "FULL",
       "path": "demo/docs/TASK-DEMO-11-windows-standalone-package-and-trusted-lan-access.md",
-      "sha256": "940c2260879e5d754625a3f8f62a02813edcaa3537656b2e7fa1234aa6518ac4"
+      "sha256": "b10d15e433d6eaaaf78ac26dc74e22894dcb49a9b6189359509c9a9f49e52042"
     },
     {
       "characters": 7306,
@@ -18,28 +24,28 @@
       "sha256": "d833f7374464ccf7f9ceafd28b2d31594adf1d75bdfb631c61dbe65ad55976f2"
     },
     {
-      "characters": 15632,
+      "characters": 15880,
       "load_mode": "COMPOSITION_SECURITY_AND_RECOVERY",
       "path": "demo/docs/03-architecture-and-api.md",
-      "sha256": "fe556adf2278832aa7104666b2c7f8ae1d19e62deb4bfeece23344fc83165c9f"
+      "sha256": "c59714b162bbd7fbb511cc5c0501723af9e5c4087f4e631c4f008d16602b44ab"
     },
     {
-      "characters": 12079,
+      "characters": 12128,
       "load_mode": "DEMO_SCRIPT_FAILURE_AND_ENVIRONMENT",
       "path": "demo/docs/04-ux-and-demo-script.md",
-      "sha256": "bf9b059087dc866de63f4f583f7617ffe3752ea567b6d7099677c2931fd81775"
+      "sha256": "12d54ee7d3aa25f5f3acb383e61d29c1404d2dba0735e39cef3c228b13ab923e"
     },
     {
-      "characters": 14174,
+      "characters": 14282,
       "load_mode": "GATES_AND_RELEASE_DECISION",
       "path": "demo/docs/05-benchmark-and-acceptance.md",
-      "sha256": "73e5133d19b20b1d405feb99b96542acf42805b5517934b5ab0207132ca7c049"
+      "sha256": "ad7a29d03cf4b5071fc7f273fcf05046ae83081ed16a77b3e1630edcb79a6f32"
     },
     {
-      "characters": 20190,
+      "characters": 20401,
       "load_mode": "D18_AND_D19",
       "path": "demo/docs/TASKS.md",
-      "sha256": "4e4c839004f52228754be5c564f5aa8ae9f9364c8c85f72d0f8a8afc78c60f5c"
+      "sha256": "dfed5df787a3d21874a85a5346e0c56c5cf298bd27adfaabc404bf885beb9add"
     },
     {
       "characters": 1240,
@@ -48,10 +54,10 @@
       "sha256": "fceb0210aa9b730d7e87d866c2a434492c332fd48400c450e2af1b6781db0239"
     },
     {
-      "characters": 279,
+      "characters": 358,
       "load_mode": "FULL",
       "path": "demo/.gitignore",
-      "sha256": "a91b9716bf09d823733c5510663f4bdfa4de45d787fb0a3e23185454ff55d302"
+      "sha256": "4fa9c13e3f533933b0b2d5136cd044aa7ff5d4f47c57b7121081a17ed59a327e"
     },
     {
       "characters": 23296,
@@ -102,10 +108,10 @@
       "sha256": "e18c5dc028a550349d93ea82eaff97a8da4ef2b88ac37c2d3321ebb6232dd772"
     },
     {
-      "characters": 48753,
+      "characters": 51425,
       "load_mode": "FULL",
       "path": "demo/scripts/validate_demo.py",
-      "sha256": "e2f9f9060128b3a7a04e86f11545f34f46cb5beab94b30878eb33decc6907a4f"
+      "sha256": "1ae6e56a5e1cc72f6ea4e8b96936d64abeee2d5cdc435258a7445039970ac506"
     },
     {
       "characters": 1072,
@@ -171,7 +177,7 @@
   ],
   "phase_registration": null,
   "root_repository_consumption": "READ_ONLY",
-  "selected_input_count": 26,
+  "selected_input_count": 27,
   "soft_budget_note": "Selected normative units were read in full; the 30k character budget is soft.",
   "task_family": "demo-exclusive",
   "task_id": "TASK-DEMO-11",

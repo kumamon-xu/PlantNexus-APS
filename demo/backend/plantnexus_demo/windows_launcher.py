@@ -5,7 +5,7 @@ from __future__ import annotations
 import argparse
 import ctypes
 from ctypes import wintypes
-from dataclasses import asdict, dataclass, replace
+from dataclasses import asdict, dataclass
 from datetime import UTC, datetime
 import json
 import os
@@ -19,7 +19,6 @@ from typing import Any, cast
 from urllib.error import URLError
 from urllib.request import urlopen
 from uuid import uuid4
-import webbrowser
 
 import uvicorn
 
@@ -27,7 +26,8 @@ from .standalone import StandaloneLayout, StandaloneResourceError, create_standa
 from .standalone_settings import StandaloneConfigurationError, StandaloneSettings
 
 
-WINDOWS_PACKAGE_VERSION = "0.2.0"
+WINDOWS_PACKAGE_VERSION = "0.2.3"
+WINDOWS_STARTUP_BEHAVIOR = "SERVICE_ONLY_NO_BROWSER"
 LAUNCHER_STATE_VERSION = "cnc-demo-windows-launcher-state.v1"
 _START_TIMEOUT_SECONDS = 60.0
 
@@ -319,8 +319,6 @@ def start(layout: StandaloneLayout, settings: StandaloneSettings) -> dict[str, o
                     except WindowsLauncherError:
                         pass
             raise
-    if settings.open_browser:
-        webbrowser.open(settings.local_url)
     return {
         "status": "RUNNING",
         "message_zh": "精密机加工排产演示已启动",
@@ -376,11 +374,12 @@ _ERROR_MESSAGES_ZH = {
     "CONFIG_FIELDS_INVALID": "配置字段不完整或包含未知字段",
     "CONFIG_VERSION_UNSUPPORTED": "配置版本不受支持",
     "CONFIG_VALUE_INVALID": "配置值无效",
-    "CONFIG_NETWORK_NOT_PRIVATE": "允许网段必须是规范的私有局域网 CIDR",
-    "CONFIG_LAN_BIND_INVALID": "局域网模式必须监听 0.0.0.0、:: 或本机私有地址",
-    "CONFIG_LAN_NETWORKS_REQUIRED": "局域网模式至少需要一个允许网段",
+    "CONFIG_NETWORK_NOT_PRIVATE": "允许网段必须是规范且不重复的 CIDR",
+    "CONFIG_LAN_BIND_INVALID": "网络访问模式必须监听 0.0.0.0、:: 或允许网段内的本机地址",
+    "CONFIG_LAN_NETWORKS_REQUIRED": "网络访问模式至少需要一个允许网段",
     "CONFIG_LOOPBACK_REQUIRED": "本机模式只能监听回环地址",
     "CONFIG_LAN_DISABLED": "本机模式不得配置远端允许网段",
+    "CONFIG_BROWSER_DISABLED": "独立包只启动服务，不允许自动打开浏览器",
     "PACKAGE_RESOURCE_MISSING": "发布包资源不完整",
     "PACKAGE_RUNTIME_NOT_WRITABLE": "发布包 runtime 目录不可写",
     "LAUNCHER_STATE_INVALID": "启动状态文件损坏，请勿手工结束未知进程",
@@ -405,11 +404,6 @@ def main(argv: list[str] | None = None) -> int:
             reconfigure(encoding="utf-8", errors="replace")
     parser = argparse.ArgumentParser(description="PlantNexus CNC 中文演示独立版")
     parser.add_argument("command", choices=("start", "serve", "stop", "status", "version"), nargs="?", default="start")
-    parser.add_argument(
-        "--no-browser",
-        action="store_true",
-        help="启动后不自动打开本机浏览器",
-    )
     arguments = parser.parse_args(argv)
     layout = StandaloneLayout.discover()
     try:
@@ -436,8 +430,6 @@ def main(argv: list[str] | None = None) -> int:
                 server_header=False,
             )
             return 0
-        if arguments.no_browser:
-            settings = replace(settings, open_browser=False)
         _print_result(start(layout, settings))
         return 0
     except (StandaloneConfigurationError, StandaloneResourceError, WindowsLauncherError) as error:
@@ -456,6 +448,7 @@ def main(argv: list[str] | None = None) -> int:
 __all__ = [
     "LAUNCHER_STATE_VERSION",
     "WINDOWS_PACKAGE_VERSION",
+    "WINDOWS_STARTUP_BEHAVIOR",
     "WindowsLauncherError",
     "WindowsLauncherState",
     "load_launcher_state",

@@ -762,16 +762,16 @@ def _verify_windows_package_evidence() -> dict[str, Any]:
         == "cnc-demo-windows-package-evidence.v1"
         and evidence["release_classification"]
         == "WINDOWS_PACKAGE_CANDIDATE_VERIFIED"
-        and len(evidence_checks) == 16
+        and len(evidence_checks) == 17
         and all(evidence_checks.values())
         and audit["status"] == "PASS"
         and audit["audit_version"] == "cnc-demo-windows-package-audit.v1"
-        and len(audit_checks) == 12
+        and len(audit_checks) == 15
         and all(audit_checks.values())
         and observation["status"] == "PASS"
         and observation["observation_version"]
         == "cnc-demo-windows-package-observation.v1"
-        and len(observation_checks) == 22
+        and len(observation_checks) == 24
         and all(observation_checks.values())
         and browser["status"] == "PASS"
         and browser["task_id"] == "TASK-DEMO-11"
@@ -784,7 +784,7 @@ def _verify_windows_package_evidence() -> dict[str, Any]:
         and audit["zip_sha256"] == package_digest
         and observation["package_zip_sha256"] == package_digest
         and browser["package_zip_sha256"] == package_digest
-        and evidence["package"]["version"] == "0.2.0"
+        and evidence["package"]["version"] == "0.2.3"
         and evidence["runtime"]["loopback_port"]
         != evidence["runtime"]["lan_port"]
         and evidence["runtime"]["validation_status"] == "PASS"
@@ -794,6 +794,12 @@ def _verify_windows_package_evidence() -> dict[str, Any]:
         and observation["loopback"]["story"]["resources"] == 24
         and observation["environment"]["minimal_path"] is True
         and all(observation["environment"]["developer_tools_absent"].values())
+        and evidence_checks["service_only_no_browser"] is True
+        and audit_checks["service_only_startup"] is True
+        and audit_checks["windows_command_crlf"] is True
+        and audit_checks["windows_powershell_utf8_bom_crlf"] is True
+        and observation_checks["windows_cmd_double_click_start"] is True
+        and observation_checks["service_only_no_browser"] is True
         and evidence["target_site_status"] == "PENDING_FINAL_SITE_REPLAY"
         and evidence["simulation_only"] is True
         and evidence["synthetic_only"] is True
@@ -818,6 +824,57 @@ def _verify_windows_package_evidence() -> dict[str, Any]:
         "package_bytes": package_path.stat().st_size,
         "release_classification": evidence["release_classification"],
         "target_site_status": evidence["target_site_status"],
+    }
+
+
+def _verify_windows_package_target_site() -> dict[str, Any]:
+    site_path = (
+        DEMO_ROOT / "build/validation/windows-package-target-site-demo-11.json"
+    )
+    evidence_path = (
+        DEMO_ROOT / "build/validation/windows-package-evidence-demo-11.json"
+    )
+    site = json.loads(site_path.read_text(encoding="utf-8"))
+    evidence = _verified_document(evidence_path, "report_fingerprint")
+    checks = site.get("checks")
+    deployment = site.get("deployment")
+    network = site.get("network")
+    verification = site.get("verification")
+    passed = (
+        isinstance(checks, dict)
+        and len(checks) == 12
+        and all(value is True for value in checks.values())
+        and isinstance(deployment, dict)
+        and isinstance(network, dict)
+        and isinstance(verification, dict)
+        and site.get("version")
+        == "cnc-demo-windows-target-site-observation.v1"
+        and site.get("task_id") == "TASK-DEMO-11"
+        and site.get("status") == "PASS"
+        and site.get("target_site_status") == "VERIFIED_LAN_SERVICE"
+        and site.get("passed_checks") == 12
+        and site.get("total_checks") == 12
+        and site.get("simulation_only") is True
+        and site.get("production_ready") is False
+        and deployment.get("package_version") == evidence["package"]["version"]
+        and deployment.get("package_sha256")
+        == evidence["package"]["zip_sha256"]
+        and network.get("listen_host") == "0.0.0.0"
+        and network.get("port") == 4174
+        and network.get("allowed_network") == "192.168.1.0/24"
+        and verification.get("health_status") == "UP"
+        and verification.get("html_lang") == "zh-CN"
+        and verification.get("remote_service_health") == "READY"
+    )
+    return {
+        "status": "PASS" if passed else "FAIL",
+        "path": site_path.relative_to(REPOSITORY_ROOT).as_posix(),
+        "sha256": _sha256(site_path),
+        "check_count": len(checks) if isinstance(checks, dict) else 0,
+        "target_site_status": site.get("target_site_status"),
+        "server_address": network.get("server_address")
+        if isinstance(network, dict)
+        else None,
     }
 
 
@@ -1004,7 +1061,7 @@ def build_report(*, task_id: str, context_path: Path) -> dict[str, Any]:
                     task_id != "TASK-DEMO-11"
                     or (
                         context_report["diff_base"]
-                        == "7f184b764e39c049995f0817f095297651928f88"
+                        == "c08c2c7096c8ac4e5de3694d4c5e6204690fe3de"
                         and _context_inputs_are_current(context_report)
                     )
                 )
@@ -1054,6 +1111,9 @@ def build_report(*, task_id: str, context_path: Path) -> dict[str, Any]:
     elif task_id == "TASK-DEMO-11":
         artifact_checks["windows_package_evidence"] = (
             _verify_windows_package_evidence()
+        )
+        artifact_checks["windows_package_target_site"] = (
+            _verify_windows_package_target_site()
         )
     functional_passed = (
         all(item["status"] == "PASS" for item in benchmark_checks)

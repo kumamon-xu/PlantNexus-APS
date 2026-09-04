@@ -7,6 +7,10 @@ from fastapi import FastAPI
 from fastapi.testclient import TestClient
 import pytest
 
+from demo.scripts.build_windows_package import (  # pyright: ignore[reportMissingImports]
+    _windows_batch_payload,
+    _windows_powershell_payload,
+)
 from plantnexus_demo.composition import create_demo_app
 from plantnexus_demo.security import DemoClientAccessPolicy
 from plantnexus_demo.standalone import DemoSpaStaticFiles
@@ -17,6 +21,8 @@ from plantnexus_demo.standalone_settings import (
     StandaloneSettings,
 )
 from plantnexus_demo.windows_launcher import (
+    WINDOWS_PACKAGE_VERSION,
+    WINDOWS_STARTUP_BEHAVIOR,
     WindowsLauncherError,
     load_launcher_state,
     process_creation_marker,
@@ -39,11 +45,12 @@ def _lan_document(**changes: object) -> dict[str, object]:
     return document
 
 
-def test_settings_default_and_private_lan_contract() -> None:
+def test_settings_default_and_explicit_network_contract() -> None:
     local = StandaloneSettings.from_document(dict(DEFAULT_SETTINGS_DOCUMENT))
     assert local.local_url == "http://127.0.0.1:4174/demo/"
     assert local.lan_mode is False
     assert local.allowed_networks == ()
+    assert local.open_browser is False
     assert local.fingerprint.startswith("sha256:")
 
     lan = StandaloneSettings.from_document(_lan_document())
@@ -53,6 +60,11 @@ def test_settings_default_and_private_lan_contract() -> None:
         "fd12:3456::/48",
     ]
     assert lan.to_document() == _lan_document()
+
+    public = StandaloneSettings.from_document(
+        _lan_document(allowed_networks=["0.0.0.0/0"])
+    )
+    assert [str(network) for network in public.allowed_networks] == ["0.0.0.0/0"]
 
 
 @pytest.mark.parametrize(
@@ -64,6 +76,7 @@ def test_settings_default_and_private_lan_contract() -> None:
         ({"access_port": 0}, "CONFIG_VALUE_INVALID", "access_port"),
         ({"listen_host": "0.0.0.0"}, "CONFIG_LOOPBACK_REQUIRED", "listen_host"),
         ({"allowed_networks": ["192.168.1.0/24"]}, "CONFIG_LAN_DISABLED", "allowed_networks"),
+        ({"open_browser": True}, "CONFIG_BROWSER_DISABLED", "open_browser"),
     ],
 )
 def test_local_settings_fail_closed(
@@ -83,7 +96,6 @@ def test_local_settings_fail_closed(
         ({"listen_host": "127.0.0.1"}, "CONFIG_LAN_BIND_INVALID"),
         ({"listen_host": "198.18.0.1"}, "CONFIG_LAN_BIND_INVALID"),
         ({"allowed_networks": []}, "CONFIG_LAN_NETWORKS_REQUIRED"),
-        ({"allowed_networks": ["8.8.8.0/24"]}, "CONFIG_NETWORK_NOT_PRIVATE"),
         ({"allowed_networks": ["192.168.40.1/24"]}, "CONFIG_VALUE_INVALID"),
         ({"allowed_networks": ["192.168.40.0/24", "192.168.40.0/24"]}, "CONFIG_NETWORK_NOT_PRIVATE"),
     ],
@@ -168,6 +180,51 @@ def test_package_settings_template_is_strict_and_chinese_launchers_exist() -> No
     assert "可信局域网" in (template_root / "README-启动说明.txt").read_text(
         encoding="utf-8"
     )
+
+
+def test_windows_package_startup_is_service_only() -> None:
+    template_root = REPOSITORY_ROOT / "demo" / "package" / "windows"
+    start_command = (template_root / "启动演示.cmd").read_text(encoding="utf-8")
+    config_command = (template_root / "配置演示.ps1").read_text(encoding="utf-8")
+    readme = (template_root / "README-启动说明.txt").read_text(encoding="utf-8")
+    release = json.loads(
+        (template_root / "release-manifest.v1.json").read_text(encoding="utf-8")
+    )
+    launcher_source = (
+        REPOSITORY_ROOT
+        / "demo"
+        / "backend"
+        / "plantnexus_demo"
+        / "windows_launcher.py"
+    ).read_text(encoding="utf-8")
+
+    assert '"%~dp0PlantNexusCncDemo.exe" start' in start_command
+    assert "http://" not in start_command.casefold()
+    assert start_command.index("DEMO_EXIT_CODE") < start_command.index("服务已启动")
+    assert "PLANTNEXUS_DEMO_NO_PAUSE" in start_command
+    assert "$config.open_browser = $false" in config_command
+    assert "不会自动打开浏览器" in readme
+    assert release["package_version"] == WINDOWS_PACKAGE_VERSION
+    assert release["startup_behavior"] == WINDOWS_STARTUP_BEHAVIOR
+    assert "import webbrowser" not in launcher_source
+    assert "webbrowser.open" not in launcher_source
+
+
+def test_windows_package_builder_normalizes_command_files_to_crlf() -> None:
+    template_root = REPOSITORY_ROOT / "demo" / "package" / "windows"
+    for name in ("启动演示.cmd", "停止演示.cmd", "查看状态.cmd"):
+        payload = _windows_batch_payload(template_root / name)
+        assert payload.endswith(b"\r\n")
+        remainder = payload.replace(b"\r\n", b"")
+        assert b"\r" not in remainder
+        assert b"\n" not in remainder
+
+    powershell_payload = _windows_powershell_payload(template_root / "配置演示.ps1")
+    assert powershell_payload.startswith(b"\xef\xbb\xbf")
+    assert powershell_payload.endswith(b"\r\n")
+    powershell_remainder = powershell_payload.replace(b"\r\n", b"")
+    assert b"\r" not in powershell_remainder
+    assert b"\n" not in powershell_remainder
 
 
 def test_launcher_state_rejects_unknown_fields_and_current_pid_has_marker(

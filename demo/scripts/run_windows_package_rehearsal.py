@@ -148,7 +148,7 @@ def _run_executable(
     timeout: int = 90,
 ) -> dict[str, Any]:
     completed = subprocess.run(  # noqa: S603 - sealed package executable
-        [str(executable), command, "--no-browser"],
+        [str(executable), command],
         cwd=executable.parent,
         env=environment,
         capture_output=True,
@@ -169,6 +169,36 @@ def _run_executable(
         code = payload.get("code", "LAUNCHER_FAILED")
         raise PackageRehearsalError(f"{command} failed: {code}")
     return cast(dict[str, Any], payload)
+
+
+def _run_start_command(
+    package_root: Path,
+    *,
+    environment: dict[str, str],
+    timeout: int = 90,
+) -> str:
+    command_processor = Path(
+        environment.get("ComSpec", r"C:\Windows\System32\cmd.exe")
+    )
+    command_environment = dict(environment)
+    command_environment["PLANTNEXUS_DEMO_NO_PAUSE"] = "1"
+    completed = subprocess.run(  # noqa: S603 - sealed package command entry
+        [str(command_processor), "/d", "/c", "call", "启动演示.cmd"],
+        cwd=package_root,
+        env=command_environment,
+        capture_output=True,
+        text=True,
+        encoding="utf-8",
+        errors="replace",
+        timeout=timeout,
+        check=False,
+    )
+    output = completed.stdout + completed.stderr
+    if completed.returncode != 0:
+        raise PackageRehearsalError("Windows CMD start entry failed")
+    if '"status": "RUNNING"' not in output or "服务已启动" not in output:
+        raise PackageRehearsalError("Windows CMD start confirmation is missing")
+    return output
 
 
 def _opener() -> Any:
@@ -380,9 +410,12 @@ def rehearse(zip_path: Path) -> dict[str, Any]:
     first_start_seconds: float | None = None
     local_story: dict[str, Any] | None = None
     local_stop: dict[str, Any] | None = None
+    command_start_output = ""
     try:
         _run_executable(executable, "version", environment=environment)
-        _run_executable(executable, "start", environment=environment)
+        command_start_output = _run_start_command(
+            package_root, environment=environment
+        )
         first_start_seconds = monotonic() - started_at
         status_result = _run_executable(executable, "status", environment=environment)
         if status_result.get("health") != "READY":
@@ -435,6 +468,7 @@ def rehearse(zip_path: Path) -> dict[str, Any]:
         "npm_absent_from_path": absent_from_path["npm.cmd"],
         "uv_absent_from_path": absent_from_path["uv.exe"],
         "executable_version": True,
+        "windows_cmd_double_click_start": bool(command_start_output),
         "custom_loopback_port_ready": True,
         "single_origin_frontend_api": True,
         "packaged_migration": True,
@@ -450,6 +484,10 @@ def rehearse(zip_path: Path) -> dict[str, Any]:
         "browser_console_clean": True,
         "safe_stop_lan": lan_stop.get("status") == "STOPPED",
         "no_residual_process_state": True,
+        "service_only_no_browser": package_audit["checks"][
+            "service_only_startup"
+        ]
+        and package_audit["checks"]["windows_command_crlf"],
     }
     if not all(checks.values()):
         raise PackageRehearsalError("one or more package rehearsal checks failed")

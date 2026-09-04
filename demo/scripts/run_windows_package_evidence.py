@@ -125,8 +125,8 @@ def build_evidence(
         "observation_fingerprint": True,
         "zip_identity_matches": True,
         "package_version_matches": True,
-        "audit_checks_12_of_12": len(audit_checks) == 12,
-        "runtime_checks_22_of_22": len(observation_checks) == 22,
+        "audit_checks_15_of_15": len(audit_checks) == 15,
+        "runtime_checks_24_of_24": len(observation_checks) == 24,
         "minimal_path_no_python_node_uv_npm": True,
         "two_custom_ports": cast(dict[str, Any], observation["loopback"])["port"]
         != lan["port"],
@@ -139,6 +139,11 @@ def build_evidence(
         "safe_stop_no_residual_state": observation_checks[
             "no_residual_process_state"
         ],
+        "service_only_no_browser": audit_checks["service_only_startup"]
+        and audit_checks["windows_command_crlf"]
+        and audit_checks["windows_powershell_utf8_bom_crlf"]
+        and observation_checks["windows_cmd_double_click_start"]
+        and observation_checks["service_only_no_browser"],
         "simulation_only_non_production": True,
     }
     if not all(checks.values()):

@@ -283,6 +283,7 @@ SELECTED_INPUTS_BY_TASK = {
         ("uv.lock", "LOCK_IDENTITY"),
     ),
     "TASK-DEMO-11": (
+        ("demo/README.md", "PUBLISHED_DEMO_RUNBOOK"),
         ("demo/docs/TASK-DEMO-11-windows-standalone-package-and-trusted-lan-access.md", "FULL"),
         ("demo/docs/TASK-DEMO-10-one-command-delivery-runbook-and-release-audit.md", "LOCAL_CANDIDATE_AND_BOUNDARIES"),
         ("demo/docs/03-architecture-and-api.md", "COMPOSITION_SECURITY_AND_RECOVERY"),
@@ -323,7 +324,7 @@ DIFF_BASE_BY_TASK = {
     "TASK-DEMO-08": "9a8f2e556b4b0adfdef3f88e1d442f805e9d4628",
     "TASK-DEMO-09": "a9109e905fbc051666fcd3bc43322ae2c53e619d",
     "TASK-DEMO-10": "a9109e905fbc051666fcd3bc43322ae2c53e619d",
-    "TASK-DEMO-11": "7f184b764e39c049995f0817f095297651928f88",
+    "TASK-DEMO-11": "c08c2c7096c8ac4e5de3694d4c5e6204690fe3de",
 }
 
 

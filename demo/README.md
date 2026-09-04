@@ -36,12 +36,13 @@ PlantNexus APS CNC 排产演示是一套面向精密机械零部件与 CNC 机�
 
 系统要求：Windows 10/11 x64，以及可用的现代浏览器。
 
-1. 获取 `PlantNexus-CNC-Demo-Windows-x64-0.2.0.zip`。
+1. 获取 `PlantNexus-CNC-Demo-Windows-x64-0.2.3.zip`。
 2. 校验随包提供的 `.zip.sha256` 文件。
 3. 完整解压 ZIP 到当前用户具有写权限的目录。
-4. 双击 `启动演示.cmd`。
-5. 浏览器默认打开 `http://127.0.0.1:4174/demo/`。
-6. 演示结束后双击 `停止演示.cmd`。
+4. 需要远端查看时，先运行 `配置演示.ps1`，设置端口及允许访问的网段。
+5. 双击 `启动演示.cmd`。它只启动服务，不会自动打开本机浏览器；看到成功提示后可按任意键关闭命令窗口，服务会继续运行。
+6. 双击 `查看状态.cmd` 确认服务就绪，在远端终端手工打开 `http://演示机可达IP:端口/demo/`。
+7. 演示结束后双击 `停止演示.cmd`。
 
 独立发布包已包含前端、服务端、数据库迁移、演示数据、排产求解器和校验器，运行时无需安装 Python、Node.js、npm 或 uv。
 
@@ -73,7 +74,7 @@ config\demo-settings.json
   "allowed_networks": [],
   "lan_mode": false,
   "listen_host": "127.0.0.1",
-  "open_browser": true,
+  "open_browser": false,
   "settings_version": "cnc-demo-windows-settings.v1"
 }
 ```
@@ -92,12 +93,12 @@ config\demo-settings.json
   ],
   "lan_mode": true,
   "listen_host": "0.0.0.0",
-  "open_browser": true,
+  "open_browser": false,
   "settings_version": "cnc-demo-windows-settings.v1"
 }
 ```
 
-重新启动后，其他终端访问：
+重新启动后不会自动打开浏览器，其他终端手工访问：
 
 ```text
 http://演示机局域网IP:18080/demo/
@@ -105,10 +106,14 @@ http://演示机局域网IP:18080/demo/
 
 程序不会自动修改 Windows 防火墙。若需要跨终端访问，请由管理员仅为所选 TCP 端口和可信专用网络配置入站规则。
 
+## 公网访问（显式启用）
+
+`0.2.3` 起可在 `配置演示.ps1` 中选择“公网开放”，对应 `allowed_networks=["0.0.0.0/0"]`。该设置仅放开应用的 IPv4 来源限制；仍需由管理员配置 Windows 防火墙、云安全组以及路由器/NAT 端口映射。公网模式没有 TLS，也不是生产认证方案，仅应在明确受控的临时演示窗口使用，结束后应立即恢复为指定网段或仅本机模式。
+
 ## 发布包结构
 
 ```text
-PlantNexus-CNC-Demo-Windows-x64-0.2.0/
+PlantNexus-CNC-Demo-Windows-x64-0.2.3/
 ├── PlantNexusCncDemo.exe
 ├── 启动演示.cmd
 ├── 停止演示.cmd
@@ -139,11 +144,14 @@ PlantNexus-CNC-Demo-Windows-x64-0.2.0/
 
 查看 `runtime\logs\` 中的最新日志。请确保发布包已完整解压，所在目录可写，并且没有只复制可执行文件而遗漏 `_internal/`。
 
+### 启动后没有浏览器窗口
+
+这是预期行为。`0.2.1` 起启动入口固定为纯服务模式；`0.2.2` 修复了 Windows `cmd.exe` 对非 CRLF 启动脚本的兼容问题，同时兼容 Windows PowerShell 5.1 的中文脚本编码；`0.2.3` 增加了显式公网网段选项。请运行 `查看状态.cmd` 确认端口，再从远端终端手工访问。配置中的 `open_browser` 必须保持 `false`。
+
 ## 使用边界
 
 - 本项目是 Simulation 演示，不是生产系统；
 - 只能使用包内提供的合成数据；
-- 局域网模式使用未加密 HTTP，仅适用于隔离、可信的演示网络；
-- 不得直接暴露到互联网或进行公网端口映射；
+- 远端访问使用未加密 HTTP；公网模式仅适用于经明确授权、受边界保护的临时演示；
+- 公网开放时必须另行承担 TLS、访问控制、路由/NAT 和暴露面的安全风险；
 - 不提供生产身份、TLS、Windows Service、自动更新或真实数据接入能力。
-

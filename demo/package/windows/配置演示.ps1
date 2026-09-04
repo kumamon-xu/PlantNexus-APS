@@ -1,4 +1,4 @@
-[CmdletBinding()]
+﻿[CmdletBinding()]
 param()
 
 $ErrorActionPreference = 'Stop'
@@ -15,7 +15,7 @@ if ($portText) {
     $config.access_port = $port
 }
 
-$mode = Read-Host '访问模式：输入 1 仅本机，输入 2 可信局域网（直接回车保持）'
+$mode = Read-Host '访问模式：输入 1 仅本机，输入 2 指定网段，输入 3 公网开放（直接回车保持）'
 if ($mode -eq '1') {
     $config.lan_mode = $false
     $config.listen_host = '127.0.0.1'
@@ -32,9 +32,17 @@ elseif ($mode -eq '2') {
         $config.allowed_networks = @('10.0.0.0/8', '172.16.0.0/12', '192.168.0.0/16')
     }
 }
-elseif ($mode) {
-    throw '访问模式只能输入 1 或 2。'
+elseif ($mode -eq '3') {
+    $config.lan_mode = $true
+    $config.listen_host = '0.0.0.0'
+    $config.allowed_networks = @('0.0.0.0/0')
+    Write-Warning '已允许任意 IPv4 来源。请仅在已配置边界防护、强访问控制或临时演示窗口时使用。'
 }
+elseif ($mode) {
+    throw '访问模式只能输入 1、2 或 3。'
+}
+
+$config.open_browser = $false
 
 $json = $config | ConvertTo-Json -Depth 4
 [System.IO.File]::WriteAllText($configPath, $json + [Environment]::NewLine, [System.Text.UTF8Encoding]::new($false))

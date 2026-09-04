@@ -5,11 +5,17 @@ status: baseline
 spec_version: 0.3.0
 phase: cross-phase
 normative: true
-source_sections: [12, 13, 14, 30, 41, 47, 51, 65, 70]
-last_reviewed: 2026-09-01
+source_sections: [12, 13, 14, 30, 41, 47, 51, 65, 70, 113]
+last_reviewed: 2026-09-04
 ---
 
 # 模块边界与依赖规则
+
+## P8 planned Headless dependency edge
+
+P8目标依赖方向为`Host/Optional Frontend → versioned HTTP API → application ports → APS-owned repositories/outbox → independent Solver Worker → existing Strategy/Solver + formal Validator → immutable publication/read/export`。宿主只提交canonical JSON并消费公开结果；禁止宿主或Frontend共享APS数据库、导入Backend模块、直接投递内部worker消息或调用Solver旁路。
+
+API进程只拥有transport/auth/validation/delegation，不能执行长时求解；worker与API消费同一application/domain语义并使用各自进程入口。Reference adapter/Normalization可作为内部canonical producer，但不得注册为Production public endpoint。P8-00只接受该边界，尚未新增源码依赖；P8-03～11分别形成可验证实现。
 
 ## TASK-P6-07 duration Planning-ingress module boundary
 
@@ -94,7 +100,7 @@ Frontend依赖方向固定为`api canonical/contracts/client → useHumanControl
 
 无Frontend→domain/backend import、无router→repository/Solver/Validator shortcut、无package store→external network。Schema、migration、dependency/lock、P3-06～09 domain/application语义与P4目录均不变；若以后加入object storage、streaming gateway或Production identity，必须另立Task/ADR。
 
-V1 使用 Modular Monolith：一个 FastAPI 应用、PostgreSQL、Redis、独立 Solver Worker 和 React Frontend。Solver 计算不得运行在 API Process 中。
+V1/P8 使用 Modular Monolith：一个 FastAPI 应用、PostgreSQL、Redis、独立 Solver Worker，以及可选的React Frontend。Solver 计算不得运行在 API Process 中；不部署Frontend时Backend仍须完整运行。
 
 ## 后端模块职责
 

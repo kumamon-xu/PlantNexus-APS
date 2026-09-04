@@ -531,7 +531,7 @@ def load_demo_assets(root: Path | None = None) -> DemoAssets:
         raise DemoAssetError("benchmark profile digest differs from the asset manifest")
     profile_document = _load_json(profile_path)
     _exact(profile_document, {"benchmark_profile_set_version", "profiles"}, "benchmark profiles")
-    if profile_document["benchmark_profile_set_version"] != "cnc-demo-benchmark-profiles.v1":
+    if profile_document["benchmark_profile_set_version"] != "cnc-demo-benchmark-profiles.v2":
         raise DemoAssetError("unsupported CNC demo benchmark profile version")
     raw_profiles = _mapping(profile_document["profiles"], "profiles")
     profiles = MappingProxyType(
@@ -550,7 +550,7 @@ def load_demo_assets(root: Path | None = None) -> DemoAssets:
     if manifest["default_profile"] not in profiles:
         raise DemoAssetError("manifest.default_profile is unknown")
     if any(profile.seed != manifest["fixed_seed"] for profile in profiles.values()):
-        raise DemoAssetError("every v1 profile must preserve the fixed manifest seed")
+        raise DemoAssetError("every v2 profile must preserve the fixed manifest seed")
 
     digest = sha256()
     for path in [asset_root / "manifest.json", *(asset_root / name for name in declared_files), profile_path]:

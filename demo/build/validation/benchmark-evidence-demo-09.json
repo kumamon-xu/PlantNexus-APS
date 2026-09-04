@@ -1,0 +1,47 @@
+{
+  "baseline": {
+    "fingerprint": "sha256:cf388a58bf6461e432e6b7f4132fcd6d617a66a5707fdfbf0abe2dc1af4830ce",
+    "path": "demo/benchmarks/baselines/cnc-demo-formal-benchmark.v1/baseline.json"
+  },
+  "boundaries": {
+    "browser_first_screen_has_numeric_gate": false,
+    "current_environment_only": true,
+    "data_plane": "SIMULATION_ONLY",
+    "first_feasible_metric": "NOT_REPORTED_NO_RELIABLE_CALLBACK",
+    "p7_registration": null,
+    "production_capacity_claim": "NOT_ESTABLISHED",
+    "production_sla_claim": "NOT_ESTABLISHED",
+    "synthetic_only": true,
+    "target_machine_replay": "PENDING_D18_SITE_REPLAY"
+  },
+  "checks": {
+    "all_profile_summaries_recomputed": true,
+    "all_sample_fingerprints_match": true,
+    "backend_raw_samples_21_of_21": true,
+    "browser_raw_samples_12_of_12": true,
+    "environment_signature_refingerprinted": true,
+    "fixed_urgent_fixture_matches": true,
+    "parameter_set_frozen": true,
+    "protocol_and_profile_set_pinned": true,
+    "published_baseline_unchanged_after_replan": true,
+    "showcase_thresholds_pass": true,
+    "source_digests_match": true,
+    "upper_700_operation_characterization_pass": true,
+    "validator_and_change_report_5_of_5": true
+  },
+  "evidence_version": "cnc-demo-benchmark-evidence.v1",
+  "generated_at_utc": "2026-09-04T04:13:09Z",
+  "inputs": {
+    "backend_suite": {
+      "path": "demo/benchmarks/baselines/cnc-demo-formal-benchmark.v1/backend-suite.json",
+      "sha256": "70274c48d5294900f9c5b2f956be389f6ffc8f41d690cbc7bd1603d591dd699c"
+    },
+    "browser_observation": {
+      "path": "demo/build/validation/browser-benchmark-observation-demo-09.json",
+      "sha256": "5133b6ed0b36e36c189c9fcdc0bcdc700121c683cd20117f6732440897efb548"
+    }
+  },
+  "report_fingerprint": "sha256:4c7b3e6d062fc6847b24605a6414f81d37dd219d8f91611e315ddcf059f7c6f0",
+  "status": "PASS",
+  "task_id": "TASK-DEMO-09"
+}

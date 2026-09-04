@@ -5,11 +5,17 @@ status: baseline
 spec_version: 0.3.0
 phase: cross-phase
 normative: true
-source_sections: [97]
-last_reviewed: 2026-09-01
+source_sections: [97, 113]
+last_reviewed: 2026-09-04
 ---
 
 # Architecture Decision Records
+
+## TASK-P8-00 ADR decision
+
+TASK-P8-00在任何P8机器合同或实现前接受[ADR-0017](ADR-0017-headless-canonical-json-and-dual-delivery.md)。该决定固定versioned canonical JSON为唯一外部产品输入，宿主平台拥有第三方采集/映射/展示，APS拥有验证、不可变计划输入、异步运行、Solver/Validator、版本与审计；宿主和可选独立Frontend消费同一Headless API，API/worker分进程且APS持久化不可被直接共享。
+
+ADR-0017同时规定P7 Reality Calibration与P8工程产品化从P6后分叉，并在Production Gate汇合。它不发布Schema/OpenAPI、不实现代码或测试，也不以P8 synthetic证据替代P7。OPEN-002只被收窄而未关闭。
 
 ## TASK-P6-01 ADR decision
 

@@ -3,15 +3,17 @@ doc_id: DOC-CONTRACT-012
 title: API 接口开发清单
 status: living
 spec_version: 0.3.0
-phase: P3-P7
+phase: P3-P8
 normative: false
-source_sections: [63, 65, 66, 68, 69, 77, 78, 79, 80]
-last_reviewed: 2026-09-02
+source_sections: [63, 65, 66, 68, 69, 77, 78, 79, 80, 113]
+last_reviewed: 2026-09-04
 ---
 
 # API 接口开发清单
 
 本清单以当前 FastAPI OpenAPI、router、application port 和自动化测试为事实来源，用于回答“接口是否存在、实现到哪一层、还缺什么”。具体 wire 语义仍以 [Planning Workspace API 合同](planning-workspace-api.md)、[ExecutionEvent / ReplanRequest 合同](execution-events-and-replan-request.md)和[错误模型](../domain/error-model.md)为准。
+
+P8目标边界已经确定，但尚未实现：APS未来只通过Headless API接收宿主平台提交的versioned canonical JSON；不提供ERP/MES/WMS/CAM专用连接器或raw文件产品端点。宿主和可选独立Frontend使用同一API。下述29项仍是当前真实OpenAPI，P8计划不能被解释为现有operation。
 
 ## 状态说明
 
@@ -84,12 +86,13 @@ last_reviewed: 2026-09-02
 
 | 能力 | 当前状态 | 补齐前置 |
 |---|---|---|
-| 上传/提交原始 ERP、MES、WMS、Excel/CSV 数据 | 未提供公开端点 | 数据 authority、来源映射、文件安全、幂等和审计合同 |
-| 通过 HTTP 创建 PlanningSnapshot / PlanningProblem | 未提供公开端点 | 明确标准导入完成条件和不可变 artifact owner |
-| 通过 HTTP 创建并启动新的 PlanningRun | 未提供公开端点 | solve command、Policy/Limits、排队/取消/超时和结果查询合同 |
-| 工厂、资源、工艺、订单主数据 CRUD | 未提供公开端点 | authority、版本化、审计、迁移和冲突策略；不能直接修改 canonical snapshot |
-| 用户、角色、SSO/RBAC 管理 | 未提供；只有 provider port | 真实 identity provider、role-to-capability policy 和安全审查 |
-| 生产 MES/ERP 事件连接器与外部发布 | 未提供 | Production authority、网络/安全、重试、对账和回滚合同 |
+| 提交versioned canonical JSON | P8规划，当前未提供公开端点 | P8-01/02合同、authority/scope/idempotency、Data Validation和不可变artifact owner |
+| 上传/提交原始ERP/MES/WMS/CAM、Excel/CSV数据 | 不属于APS公共产品API | 由宿主平台采集/映射为canonical JSON；reference adapter仅内部/研发使用 |
+| 通过 HTTP 创建 PlanningSnapshot / PlanningProblem | P8规划，当前未提供公开端点 | Canonical ingress成功后由APS原子创建，不开放直接数据库写入 |
+| 通过 HTTP 创建并启动新的 PlanningRun | P8规划，当前未提供公开端点 | P8-02/04/05的command、Policy/Limits、排队/取消/超时和结果合同 |
+| 工厂、资源、工艺、订单主数据 CRUD | 不作为Snapshot旁路 | 宿主维护上游主数据并提交新canonical版本；APS不直接修改既有Snapshot |
+| 用户、角色、SSO/RBAC 管理 | 用户生命周期不属于APS；当前只有provider port | P8-08接入宿主identity并由APS强制role/capability/factory scope |
+| 生产MES/ERP事件连接器与外部发布 | 连接器不属于APS；当前无Production发布 | 宿主负责上游/下游连接，APS只提供canonical input与read/export API；authority仍需closure |
 | readiness 失败响应的 OpenAPI 声明 | 运行时会返回 503，但当前 OpenAPI 只声明 200 | 显式声明 503 response/schema，并增加 OpenAPI 合同断言 |
 | Swagger/ReDoc UI 与提交版 OpenAPI 快照 | UI 关闭、快照未提交 | 决定公开范围、敏感信息审查和版本漂移 Gate |
 

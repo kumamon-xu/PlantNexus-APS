@@ -3,13 +3,19 @@ doc_id: DOC-CONTRACT-001
 title: Import 与 Normalization 合同
 status: baseline
 spec_version: 0.3.0
-phase: P0-P1
+phase: P0-P8
 normative: true
-source_sections: [0, 2, 10, 15, 16, 62, 63, 73, 74, 91, 95]
-last_reviewed: 2026-08-20
+source_sections: [0, 2, 10, 15, 16, 62, 63, 73, 74, 91, 95, 113]
+last_reviewed: 2026-09-04
 ---
 
 # Import 与 Normalization 合同
+
+## P8 external product boundary
+
+P8的外部产品入口只接收宿主平台提交的versioned canonical JSON，不接收ERP/MES/WMS/CAM私有payload，也不把CSV/XLSX上传或第三方SDK定义为公共API。宿主拥有采集、vendor字段映射、必要脱敏和展示；APS从canonical machine contract、authority/scope、idempotency、Data Validation和不可变Snapshot/Problem开始负责。
+
+本文件记录的Raw Staging、ReferenceFileAdapter和Normalization继续可用于开发、测试、迁移辅助或为宿主mapping提供参考。其结果在进入P8运行链前仍须穿过同一canonical contract和Data Validation；它们不能被绑定为Production默认、直接创建Snapshot/Problem或绕过Headless API。详细machine envelope由TASK-P8-02后续发布，本次不修改任何Schema。
 
 ## TASK-P4-04 Urgent Demand standard ingress
 
@@ -19,16 +25,17 @@ Urgent Demand没有私有canonical入口。应用只接受绑定exact event ID�
 ## 管道
 
 ```text
-Versioned Source Package
-→ Raw Staging
-→ Parse
-→ Normalize fields/units/time
+External product: Host versioned canonical JSON
+→ Contract / authority / scope / idempotency validation
 → Validate references and capabilities
-→ Canonical Dataset
-→ PlanningSnapshot
+→ Canonical Dataset → PlanningSnapshot
+
+Internal/reference producer only:
+Versioned Source Package → Raw Staging → Parse
+→ Normalize fields/units/time → canonical JSON boundary above
 ```
 
-Production Adapter、CSV、Excel 和 Synthetic Generator 必须输出同一 Standard Import Contract。禁止 Synthetic 输入绕过 staging、unit conversion 或 data validation。
+Reference CSV/Excel adapter和Synthetic Generator必须最终产生同一canonical语义。禁止Synthetic输入绕过适用的source conversion、canonical contract或data validation；Production产品接口不直接暴露这些adapter。
 
 ## 原始数据保留
 

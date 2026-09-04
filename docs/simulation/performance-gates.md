@@ -3,17 +3,23 @@ doc_id: DOC-SIM-007
 title: 性能与现实校准门
 status: baseline
 spec_version: 0.3.0
-phase: P2-P7
+phase: P2-P8
 normative: true
-source_sections: [57, 58, 76, 80, 84, 85, 89, 105, 106]
-last_reviewed: 2026-09-02
+source_sections: [57, 58, 76, 80, 84, 85, 89, 105, 106, 113]
+last_reviewed: 2026-09-04
 ---
 
 # 性能与现实校准门
 
+## P8 planned engineering Gate D
+
+P8-12将使用versioned synthetic profile从外部host client重放canonical API、持久化、PlanningRun、Worker、Solver、formal Validator、read/export、failure recovery及可选Frontend隔离，并记录API/queue/solve/validation/publication/restore的工程观察值。具体profile、seed、环境和threshold必须在该Task启动时冻结；P8-00不创建数值或运行测试。
+
+Gate D只回答Headless产品链是否可复现、可靠且在批准的非Production工程边界内运行，不回答真实工厂分布、Planner usefulness、Production capacity或SLA。后者仍由P7 Gate C负责；Production结论需要Gate C、Gate D和各自独立Exit Audit全部通过。
+
 ## P7 deferred planning boundary
 
-P7已完成计划治理，但用户确认当前没有真实数据、真实环境或现实authority，TASK-P7-01因此为`BLOCKED_INPUT`且Milestone为`deferred`。不运行Historical Replay、Synthetic Comparison、Calibration、Solver Benchmark或Planner comparison，也不创建Reality Gap/Capacity evidence。冻结的未来链仍为P7-03/04真实匿名Snapshot/Replay、P7-05五维Reality Gap、P7-06新版本FactoryProfile、P7-07 exact-environment Benchmark、P7-08 Planner Baseline、P7-09 bounded Capacity Decision、P7-10 Gate C和P7-11独立Exit。
+P7已完成计划治理，但用户确认当前没有真实数据、真实环境或现实authority，TASK-P7-01曾以`BLOCKED_INPUT`停止且Milestone保持`deferred`。TASK-P7-13现将P7-01～11当前执行卡终结为`cancelled/NOT_EXECUTED`；不运行Historical Replay、Synthetic Comparison、Calibration、Solver Benchmark或Planner comparison，也不创建Reality Gap/Capacity evidence。原链的真实匿名Snapshot/Replay、五维Reality Gap、新版本FactoryProfile、exact-environment Benchmark、Planner Baseline、bounded Capacity Decision、Gate C和独立Exit职责全部保留，未来必须用新的successor Task/DAG恢复。
 
 P7不能成为第一次性能测试；P2 XS/S/M、P4 dynamic和P6 development observations继续作为冻结前序而非Production baseline。OPEN-011/012或其他关键authority未以独立closure record关闭时，任何P7结果都不得外推为Production readiness、deployment、capacity execution或SLA；历史数据缺失必须`NOT_READY`。
 
@@ -78,6 +84,17 @@ Historical Snapshot
 ```
 
 Reality Gap Report 比较 routing depth、candidate density、calendar fragmentation、bottleneck 和 solver runtime 等真实/合成分布。
+
+## Gate D — P8 Headless Engineering Integration
+
+```text
+Synthetic canonical JSON
+→ Headless API / durable run / independent worker
+→ Solver / formal Validator / publication / read-export
+→ failure recovery / restore / optional frontend isolation
+```
+
+Gate D不得使用Demo或被描述为Production性能Gate。
 
 ## 禁止承诺
 

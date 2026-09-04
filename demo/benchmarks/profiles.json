@@ -1,5 +1,5 @@
 {
-  "benchmark_profile_set_version": "cnc-demo-benchmark-profiles.v1",
+  "benchmark_profile_set_version": "cnc-demo-benchmark-profiles.v2",
   "profiles": {
     "smoke": {
       "profile_id": "CNC-DEMO-SMOKE",
@@ -20,7 +20,7 @@
       "hard_lock_count": 1,
       "soft_lock_count": 2,
       "initial_solve_seconds": 5,
-      "replan_solve_seconds": 8
+      "replan_solve_seconds": 10
     },
     "showcase": {
       "profile_id": "CNC-DEMO-SHOWCASE",
@@ -61,8 +61,8 @@
       "running_operation_count": 15,
       "hard_lock_count": 5,
       "soft_lock_count": 10,
-      "initial_solve_seconds": 30,
-      "replan_solve_seconds": 30
+      "initial_solve_seconds": 60,
+      "replan_solve_seconds": 90
     }
   }
 }

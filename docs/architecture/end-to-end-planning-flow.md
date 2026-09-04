@@ -5,15 +5,33 @@ status: baseline
 spec_version: 0.3.0
 phase: cross-phase
 normative: true
-source_sections: [0, 9, 10, 23, 24, 30, 32, 33, 35, 57, 67]
-last_reviewed: 2026-09-02
+source_sections: [0, 9, 10, 23, 24, 30, 32, 33, 35, 57, 67, 113]
+last_reviewed: 2026-09-04
 ---
 
 # 端到端计划链路
 
+## P8 planned Headless product chain
+
+P8规划的唯一外部产品链如下；TASK-P8-00只冻结架构和Task DAG，所有运行时箭头目前仍为planned：
+
+```text
+Host acquisition / mapping / authority
+→ versioned canonical JSON over Headless API
+→ contract + scope + idempotency + Data Validation
+→ durable immutable Snapshot / PlanningProblem
+→ durable PlanningRun command
+→ independent Solver Worker
+→ existing Strategy / Solver → fresh formal Validator
+→ immutable ScheduleVersion / read models / export representation / audit
+→ same API → Host display or Optional APS Frontend
+```
+
+第三方连接器、raw vendor payload与宿主显示不属于APS。CSV/XLSX/reference adapter仅可在内部先产出canonical数据，然后回到同一contract/validation链；不得成为旁路。P8-12将用versioned synthetic输入验证工程链，P7则独立使用获授权真实输入形成Reality Calibration。Production必须等待两条Exit Gate汇合。
+
 ## P7 deferred calibration evidence chain
 
-P7计划只登记下述未来证据链；用户确认当前没有真实数据、真实环境或现实authority后，TASK-P7-01以`BLOCKED_INPUT`停止，Milestone为`deferred`，不增加当前业务edge：
+P7计划只登记下述未来证据链；用户确认当前没有真实数据、真实环境或现实authority后，TASK-P7-01曾以`BLOCKED_INPUT`停止，TASK-P7-13现将P7-01～11当前执行卡终结为`cancelled/NOT_EXECUTED`且Milestone保持`deferred`，不增加当前业务edge。下述链只能由未来新建successor Task/DAG恢复：
 
 ```text
 authorized anonymized historical source

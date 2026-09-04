@@ -5,11 +5,17 @@ status: baseline
 spec_version: 0.3.0
 phase: cross-phase
 normative: true
-source_sections: [15, 22, 59, 61, 90]
-last_reviewed: 2026-09-01
+source_sections: [15, 22, 59, 61, 90, 113]
+last_reviewed: 2026-09-04
 ---
 
 # 数据权威边界
+
+## P8 host transport and authority boundary
+
+宿主平台负责从ERP/MES/WMS/CAM或人工流程采集、映射、脱敏并提交versioned canonical JSON，也负责结果展示；APS不直接连接这些系统。宿主必须保留并提交可验证的source system/version/record、factory scope和authority reference，但“由宿主发送”不自动使任意值成为权威事实。
+
+APS在入口独立执行contract、scope、authority、idempotency、lineage和Data Validation，并只从通过的canonical输入构建不可变Snapshot/Problem。来源冲突、缺失authority和未知版本必须拒绝，不能由last-write-wins、AI、Frontend或通用默认补猜。真实provider、字段级决策、retention和identity仍由OPEN-002/010/011/014/015控制。
 
 ## TASK-P6-03 executable dataset authority
 
@@ -80,13 +86,13 @@ Test actor与synthetic fixture只属于SIM-ASSUMPTION-015。真实Production ide
 
 | 数据 | 权威来源 | 当前注意事项 |
 |---|---|---|
-| Order | ERP | 字段级权威仍受 OPEN-015 约束 |
-| BOM | ERP | V1 不负责自动 MRP |
-| Purchase Promise | ERP | 与 material readiness 的关系待确认 |
-| Execution | MES | 已完成/运行中事实不可被计划覆盖 |
-| Machine Runtime State | MES | 故障/恢复成为执行事实或事件 |
-| Physical Inventory | WMS | V1 不做完整库存平衡 |
-| CAM Processing Feature | CAM | V1 不做联合优化 |
+| Order | ERP，经宿主canonical映射 | 字段级权威仍受 OPEN-015 约束 |
+| BOM | ERP，经宿主canonical映射 | V1 不负责自动 MRP |
+| Purchase Promise | ERP，经宿主canonical映射 | 与 material readiness 的关系待确认 |
+| Execution | MES，经宿主canonical映射 | 已完成/运行中事实不可被计划覆盖 |
+| Machine Runtime State | MES，经宿主canonical映射 | 故障/恢复成为执行事实或事件 |
+| Physical Inventory | WMS，经宿主canonical映射 | V1 不做完整库存平衡 |
+| CAM Processing Feature | CAM，经宿主canonical映射 | V1 不做联合优化 |
 | Planning Decision | APS | 必须经过 Validator 和人工审批 |
 
 ## AI 边界

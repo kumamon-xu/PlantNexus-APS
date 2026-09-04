@@ -3,13 +3,19 @@ doc_id: DOC-CONTRACT-INDEX
 title: 合同文档索引
 status: living
 spec_version: 0.3.0
-phase: P6
+phase: P8
 normative: false
-source_sections: [24, 36, 38, 39, 63, 64, 67, 103]
-last_reviewed: 2026-09-01
+source_sections: [24, 36, 38, 39, 63, 64, 67, 103, 113]
+last_reviewed: 2026-09-04
 ---
 
 # 合同文档索引
+
+## P8 Headless contract plan
+
+ADR-0017已固定canonical JSON为唯一外部产品输入，宿主负责第三方采集/映射/展示，APS负责验证、计划、异步运行和结果合同；宿主与可选Frontend使用同一API。TASK-P8-01将形成详细人类集成合同，TASK-P8-02才允许发布additive machine carrier；当前两者均未开始，schema set仍为`2.9.0`且全部既有bytes不变。
+
+现阶段请以[Headless产品化架构](../architecture/headless-productization-and-platform-integration.md)、[API清单](api-development-checklist.md)和[Import/Normalization合同](import-and-normalization.md)区分目标与当前事实。不得从P8计划推断canonical submission、PlanningRun创建或Production identity endpoint已经存在。
 
 ## 当前开发入口
 

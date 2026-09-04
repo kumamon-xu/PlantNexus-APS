@@ -1,0 +1,1635 @@
+{
+  "boundaries": {
+    "browser_first_screen_has_numeric_gate": false,
+    "environment_role": "LOCAL_DEMO_REFERENCE_MACHINE",
+    "p7_registration": null,
+    "production_capacity_claim": "NOT_ESTABLISHED",
+    "production_sla_claim": "NOT_ESTABLISHED",
+    "simulation_only": true,
+    "synthetic_only": true,
+    "target_machine_confirmation": "PENDING_D18_SITE_REPLAY"
+  },
+  "browser": {
+    "headless": true,
+    "playwright_cli": "0.1.19",
+    "user_agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) HeadlessChrome/152.0.0.0 Safari/537.36",
+    "version": "152.0.7977.77",
+    "viewport": {
+      "height": 900,
+      "width": 1440
+    }
+  },
+  "build": {
+    "seconds": 1.937999999994645,
+    "status": "PASS"
+  },
+  "business_mutations": [
+    "RESET",
+    "INITIAL_PLAN",
+    "ACTIVATE",
+    "URGENT_REPLAN"
+  ],
+  "fixed_urgent_fixture": {
+    "due_at_local": "2026-09-09T18:00:00",
+    "fixture_id": "CNC-DEMO-URGENT-FIXTURE-001",
+    "fixture_version": "1.0.0",
+    "note": "Showcase 固定加急精密套筒",
+    "priority_class": "URGENT",
+    "quantity": 5,
+    "route_template_id": "CNC-ROUTE-5",
+    "timezone": "Asia/Shanghai"
+  },
+  "lifecycle": {
+    "change_counts": {
+      "added": 5,
+      "changed": 22,
+      "removed_by_fact": 0,
+      "unchanged": 558
+    },
+    "current_publication_unchanged": true,
+    "draft_schedule_version_id": "schedule-version-replan-a9581a7f979675bbf47a4e24c16f8eb6f7abe70c1ef9d5f905e09931733cb699",
+    "published_schedule_version_id": "schedule-version-validated-c80416bdcb189931e41f6cb9cb35ea232720c38f34f8200de42f18e095c18378",
+    "replan_request_id": "replan-request-bf3c6b8f0f2f6fbb047d4f79b4e24fa1242d0606fc83e9ad88ee50c4f8bd4c9a",
+    "run_id": "run-9e039103a32a31c6f92060a47890559b",
+    "solver_status": "OPTIMAL",
+    "urgent_job_id": "job-3aa67e99a5bfa3c169b5f9961c114e00274d120537047cfb232e5f741142a3f4",
+    "validation_status": "PASS"
+  },
+  "measurement_plan": {
+    "frontend_delivery": "VITE_PRODUCTION_BUILD_AND_PREVIEW",
+    "measured_per_state": 5,
+    "percentile_method": "nearest-rank",
+    "states": [
+      "BASELINE_PUBLISHED",
+      "DRAFT_COMPARISON_READY"
+    ],
+    "viewport": [
+      1440,
+      900
+    ],
+    "warmup_per_state": 1
+  },
+  "observation_version": "cnc-demo-browser-benchmark-observation.v1",
+  "observed_urgent_command": {
+    "due_at_local": "2026-09-09T18:00:00",
+    "note": "Showcase 固定加急精密套筒",
+    "priority_class": "URGENT",
+    "quantity": 5,
+    "route_template_id": "CNC-ROUTE-5",
+    "timezone": "Asia/Shanghai"
+  },
+  "protocol": {
+    "fingerprint": "sha256:97a98b8cf2826204d3c032d8c78321d96121c1978e407168a904428cc767b15b",
+    "version": "cnc-demo-formal-benchmark-protocol.v1"
+  },
+  "report_fingerprint": "sha256:77c5eab8e0ba562bfc53dee9feeb6ed71016188b6a5e30b674755d6a0269485e",
+  "runtime": {
+    "cleaned_after_run": true,
+    "isolated_named_runtime": true,
+    "runtime_path_recorded": false,
+    "started_empty": true
+  },
+  "samples": [
+    {
+      "api_encoded_body_bytes_total": 600223,
+      "api_max_milliseconds": 341,
+      "api_resources": [
+        {
+          "decoded_body_bytes": 93,
+          "duration_milliseconds": 3.2,
+          "encoded_body_bytes": 93,
+          "initiator_type": "fetch",
+          "path": "/api/demo/v1/session",
+          "response_end_milliseconds": 31.6,
+          "transfer_bytes": 393
+        },
+        {
+          "decoded_body_bytes": 3803,
+          "duration_milliseconds": 55.3,
+          "encoded_body_bytes": 3803,
+          "initiator_type": "fetch",
+          "path": "/api/demo/v1/bootstrap",
+          "response_end_milliseconds": 87.4,
+          "transfer_bytes": 4103
+        },
+        {
+          "decoded_body_bytes": 141352,
+          "duration_milliseconds": 333.9,
+          "encoded_body_bytes": 141352,
+          "initiator_type": "fetch",
+          "path": "/api/demo/v1/versions/schedule-version-validated-c80416bdcb189931e41f6cb9cb35ea232720c38f34f8200de42f18e095c18378?limit=1",
+          "response_end_milliseconds": 422.1,
+          "transfer_bytes": 300
+        },
+        {
+          "decoded_body_bytes": 149658,
+          "duration_milliseconds": 293.9,
+          "encoded_body_bytes": 149658,
+          "initiator_type": "fetch",
+          "path": "/api/demo/v1/factory",
+          "response_end_milliseconds": 718.8,
+          "transfer_bytes": 300
+        },
+        {
+          "decoded_body_bytes": 305317,
+          "duration_milliseconds": 341,
+          "encoded_body_bytes": 305317,
+          "initiator_type": "fetch",
+          "path": "/api/demo/v1/versions/schedule-version-validated-c80416bdcb189931e41f6cb9cb35ea232720c38f34f8200de42f18e095c18378?start_at_utc=2026-09-06T16%3A00%3A00.000Z&end_at_utc=2026-09-09T16%3A00%3A00.000Z&sort=ORDER_START_ASC&offset=0&limit=160",
+          "response_end_milliseconds": 1061.7,
+          "transfer_bytes": 305617
+        }
+      ],
+      "api_response_count": 5,
+      "dom": {
+        "document_html_bytes": 138129,
+        "document_scroll_height": 2941,
+        "document_scroll_width": 1440,
+        "element_count": 1176,
+        "viewport_height": 900,
+        "viewport_width": 1440
+      },
+      "language": "zh-CN",
+      "navigation_dom_content_loaded_milliseconds": 15.4,
+      "navigation_load_event_milliseconds": 15.6,
+      "ready_milliseconds": 1358.9,
+      "responses": [
+        {
+          "method": "POST",
+          "path": "/api/demo/v1/session",
+          "status": 200
+        },
+        {
+          "method": "GET",
+          "path": "/api/demo/v1/bootstrap",
+          "status": 200
+        },
+        {
+          "method": "GET",
+          "path": "/api/demo/v1/versions/schedule-version-validated-c80416bdcb189931e41f6cb9cb35ea232720c38f34f8200de42f18e095c18378?limit=1",
+          "status": 200
+        },
+        {
+          "method": "GET",
+          "path": "/api/demo/v1/factory",
+          "status": 200
+        },
+        {
+          "method": "GET",
+          "path": "/api/demo/v1/versions/schedule-version-validated-c80416bdcb189931e41f6cb9cb35ea232720c38f34f8200de42f18e095c18378?start_at_utc=2026-09-06T16%3A00%3A00.000Z&end_at_utc=2026-09-09T16%3A00%3A00.000Z&sort=ORDER_START_ASC&offset=0&limit=160",
+          "status": 200
+        }
+      ],
+      "role": "warmup",
+      "sample_fingerprint": "sha256:97f1633fd72ee978b590244d306fa5b7222aeb3030ac75ade9e0d937388b6a6a",
+      "sample_id": "baseline_published-warmup-01",
+      "schedule_workspace_visible": true,
+      "sequence": 1,
+      "state": "BASELINE_PUBLISHED",
+      "status": "PASS"
+    },
+    {
+      "api_encoded_body_bytes_total": 600223,
+      "api_max_milliseconds": 368.8,
+      "api_resources": [
+        {
+          "decoded_body_bytes": 93,
+          "duration_milliseconds": 2.8,
+          "encoded_body_bytes": 93,
+          "initiator_type": "fetch",
+          "path": "/api/demo/v1/session",
+          "response_end_milliseconds": 21.8,
+          "transfer_bytes": 393
+        },
+        {
+          "decoded_body_bytes": 3803,
+          "duration_milliseconds": 21.8,
+          "encoded_body_bytes": 3803,
+          "initiator_type": "fetch",
+          "path": "/api/demo/v1/bootstrap",
+          "response_end_milliseconds": 46.7,
+          "transfer_bytes": 4103
+        },
+        {
+          "decoded_body_bytes": 141352,
+          "duration_milliseconds": 368.8,
+          "encoded_body_bytes": 141352,
+          "initiator_type": "fetch",
+          "path": "/api/demo/v1/versions/schedule-version-validated-c80416bdcb189931e41f6cb9cb35ea232720c38f34f8200de42f18e095c18378?limit=1",
+          "response_end_milliseconds": 416.2,
+          "transfer_bytes": 300
+        },
+        {
+          "decoded_body_bytes": 149658,
+          "duration_milliseconds": 279.1,
+          "encoded_body_bytes": 149658,
+          "initiator_type": "fetch",
+          "path": "/api/demo/v1/factory",
+          "response_end_milliseconds": 698,
+          "transfer_bytes": 300
+        },
+        {
+          "decoded_body_bytes": 305317,
+          "duration_milliseconds": 338.5,
+          "encoded_body_bytes": 305317,
+          "initiator_type": "fetch",
+          "path": "/api/demo/v1/versions/schedule-version-validated-c80416bdcb189931e41f6cb9cb35ea232720c38f34f8200de42f18e095c18378?start_at_utc=2026-09-06T16%3A00%3A00.000Z&end_at_utc=2026-09-09T16%3A00%3A00.000Z&sort=ORDER_START_ASC&offset=0&limit=160",
+          "response_end_milliseconds": 1038.6,
+          "transfer_bytes": 300
+        }
+      ],
+      "api_response_count": 5,
+      "dom": {
+        "document_html_bytes": 138129,
+        "document_scroll_height": 2941,
+        "document_scroll_width": 1440,
+        "element_count": 1176,
+        "viewport_height": 900,
+        "viewport_width": 1440
+      },
+      "language": "zh-CN",
+      "navigation_dom_content_loaded_milliseconds": 14.8,
+      "navigation_load_event_milliseconds": 15.1,
+      "ready_milliseconds": 1348.2,
+      "responses": [
+        {
+          "method": "POST",
+          "path": "/api/demo/v1/session",
+          "status": 200
+        },
+        {
+          "method": "GET",
+          "path": "/api/demo/v1/bootstrap",
+          "status": 200
+        },
+        {
+          "method": "GET",
+          "path": "/api/demo/v1/versions/schedule-version-validated-c80416bdcb189931e41f6cb9cb35ea232720c38f34f8200de42f18e095c18378?limit=1",
+          "status": 200
+        },
+        {
+          "method": "GET",
+          "path": "/api/demo/v1/factory",
+          "status": 200
+        },
+        {
+          "method": "GET",
+          "path": "/api/demo/v1/versions/schedule-version-validated-c80416bdcb189931e41f6cb9cb35ea232720c38f34f8200de42f18e095c18378?start_at_utc=2026-09-06T16%3A00%3A00.000Z&end_at_utc=2026-09-09T16%3A00%3A00.000Z&sort=ORDER_START_ASC&offset=0&limit=160",
+          "status": 200
+        }
+      ],
+      "role": "measured",
+      "sample_fingerprint": "sha256:9310e12f109f4c1cc8a5e2621cc8529bcc23c5b4c6aef467d5fac7f6ee40268f",
+      "sample_id": "baseline_published-measured-01",
+      "schedule_workspace_visible": true,
+      "sequence": 1,
+      "state": "BASELINE_PUBLISHED",
+      "status": "PASS"
+    },
+    {
+      "api_encoded_body_bytes_total": 600223,
+      "api_max_milliseconds": 369.8,
+      "api_resources": [
+        {
+          "decoded_body_bytes": 93,
+          "duration_milliseconds": 3.1,
+          "encoded_body_bytes": 93,
+          "initiator_type": "fetch",
+          "path": "/api/demo/v1/session",
+          "response_end_milliseconds": 22.7,
+          "transfer_bytes": 393
+        },
+        {
+          "decoded_body_bytes": 3803,
+          "duration_milliseconds": 19.9,
+          "encoded_body_bytes": 3803,
+          "initiator_type": "fetch",
+          "path": "/api/demo/v1/bootstrap",
+          "response_end_milliseconds": 45.7,
+          "transfer_bytes": 4103
+        },
+        {
+          "decoded_body_bytes": 141352,
+          "duration_milliseconds": 369.8,
+          "encoded_body_bytes": 141352,
+          "initiator_type": "fetch",
+          "path": "/api/demo/v1/versions/schedule-version-validated-c80416bdcb189931e41f6cb9cb35ea232720c38f34f8200de42f18e095c18378?limit=1",
+          "response_end_milliseconds": 416.3,
+          "transfer_bytes": 300
+        },
+        {
+          "decoded_body_bytes": 149658,
+          "duration_milliseconds": 282,
+          "encoded_body_bytes": 149658,
+          "initiator_type": "fetch",
+          "path": "/api/demo/v1/factory",
+          "response_end_milliseconds": 701.1,
+          "transfer_bytes": 300
+        },
+        {
+          "decoded_body_bytes": 305317,
+          "duration_milliseconds": 324.9,
+          "encoded_body_bytes": 305317,
+          "initiator_type": "fetch",
+          "path": "/api/demo/v1/versions/schedule-version-validated-c80416bdcb189931e41f6cb9cb35ea232720c38f34f8200de42f18e095c18378?start_at_utc=2026-09-06T16%3A00%3A00.000Z&end_at_utc=2026-09-09T16%3A00%3A00.000Z&sort=ORDER_START_ASC&offset=0&limit=160",
+          "response_end_milliseconds": 1028.1,
+          "transfer_bytes": 300
+        }
+      ],
+      "api_response_count": 5,
+      "dom": {
+        "document_html_bytes": 138129,
+        "document_scroll_height": 2941,
+        "document_scroll_width": 1440,
+        "element_count": 1176,
+        "viewport_height": 900,
+        "viewport_width": 1440
+      },
+      "language": "zh-CN",
+      "navigation_dom_content_loaded_milliseconds": 15.4,
+      "navigation_load_event_milliseconds": 15.6,
+      "ready_milliseconds": 1337.7,
+      "responses": [
+        {
+          "method": "POST",
+          "path": "/api/demo/v1/session",
+          "status": 200
+        },
+        {
+          "method": "GET",
+          "path": "/api/demo/v1/bootstrap",
+          "status": 200
+        },
+        {
+          "method": "GET",
+          "path": "/api/demo/v1/versions/schedule-version-validated-c80416bdcb189931e41f6cb9cb35ea232720c38f34f8200de42f18e095c18378?limit=1",
+          "status": 200
+        },
+        {
+          "method": "GET",
+          "path": "/api/demo/v1/factory",
+          "status": 200
+        },
+        {
+          "method": "GET",
+          "path": "/api/demo/v1/versions/schedule-version-validated-c80416bdcb189931e41f6cb9cb35ea232720c38f34f8200de42f18e095c18378?start_at_utc=2026-09-06T16%3A00%3A00.000Z&end_at_utc=2026-09-09T16%3A00%3A00.000Z&sort=ORDER_START_ASC&offset=0&limit=160",
+          "status": 200
+        }
+      ],
+      "role": "measured",
+      "sample_fingerprint": "sha256:fa547fa795d8ccacf9fdfa5a8c0bb3d3684e1758aa6c233254be81b1c51ce639",
+      "sample_id": "baseline_published-measured-02",
+      "schedule_workspace_visible": true,
+      "sequence": 2,
+      "state": "BASELINE_PUBLISHED",
+      "status": "PASS"
+    },
+    {
+      "api_encoded_body_bytes_total": 600223,
+      "api_max_milliseconds": 330.6,
+      "api_resources": [
+        {
+          "decoded_body_bytes": 93,
+          "duration_milliseconds": 2.7,
+          "encoded_body_bytes": 93,
+          "initiator_type": "fetch",
+          "path": "/api/demo/v1/session",
+          "response_end_milliseconds": 25.6,
+          "transfer_bytes": 393
+        },
+        {
+          "decoded_body_bytes": 3803,
+          "duration_milliseconds": 19.5,
+          "encoded_body_bytes": 3803,
+          "initiator_type": "fetch",
+          "path": "/api/demo/v1/bootstrap",
+          "response_end_milliseconds": 45.8,
+          "transfer_bytes": 4103
+        },
+        {
+          "decoded_body_bytes": 141352,
+          "duration_milliseconds": 329.9,
+          "encoded_body_bytes": 141352,
+          "initiator_type": "fetch",
+          "path": "/api/demo/v1/versions/schedule-version-validated-c80416bdcb189931e41f6cb9cb35ea232720c38f34f8200de42f18e095c18378?limit=1",
+          "response_end_milliseconds": 376.4,
+          "transfer_bytes": 300
+        },
+        {
+          "decoded_body_bytes": 149658,
+          "duration_milliseconds": 319.6,
+          "encoded_body_bytes": 149658,
+          "initiator_type": "fetch",
+          "path": "/api/demo/v1/factory",
+          "response_end_milliseconds": 700.1,
+          "transfer_bytes": 300
+        },
+        {
+          "decoded_body_bytes": 305317,
+          "duration_milliseconds": 330.6,
+          "encoded_body_bytes": 305317,
+          "initiator_type": "fetch",
+          "path": "/api/demo/v1/versions/schedule-version-validated-c80416bdcb189931e41f6cb9cb35ea232720c38f34f8200de42f18e095c18378?start_at_utc=2026-09-06T16%3A00%3A00.000Z&end_at_utc=2026-09-09T16%3A00%3A00.000Z&sort=ORDER_START_ASC&offset=0&limit=160",
+          "response_end_milliseconds": 1032.8,
+          "transfer_bytes": 300
+        }
+      ],
+      "api_response_count": 5,
+      "dom": {
+        "document_html_bytes": 138129,
+        "document_scroll_height": 2941,
+        "document_scroll_width": 1440,
+        "element_count": 1176,
+        "viewport_height": 900,
+        "viewport_width": 1440
+      },
+      "language": "zh-CN",
+      "navigation_dom_content_loaded_milliseconds": 14.7,
+      "navigation_load_event_milliseconds": 14.9,
+      "ready_milliseconds": 1359.2,
+      "responses": [
+        {
+          "method": "POST",
+          "path": "/api/demo/v1/session",
+          "status": 200
+        },
+        {
+          "method": "GET",
+          "path": "/api/demo/v1/bootstrap",
+          "status": 200
+        },
+        {
+          "method": "GET",
+          "path": "/api/demo/v1/versions/schedule-version-validated-c80416bdcb189931e41f6cb9cb35ea232720c38f34f8200de42f18e095c18378?limit=1",
+          "status": 200
+        },
+        {
+          "method": "GET",
+          "path": "/api/demo/v1/factory",
+          "status": 200
+        },
+        {
+          "method": "GET",
+          "path": "/api/demo/v1/versions/schedule-version-validated-c80416bdcb189931e41f6cb9cb35ea232720c38f34f8200de42f18e095c18378?start_at_utc=2026-09-06T16%3A00%3A00.000Z&end_at_utc=2026-09-09T16%3A00%3A00.000Z&sort=ORDER_START_ASC&offset=0&limit=160",
+          "status": 200
+        }
+      ],
+      "role": "measured",
+      "sample_fingerprint": "sha256:b6358d104087dc340345a9ce3e75c44c04272a85b21c6453050228ccd27c2aec",
+      "sample_id": "baseline_published-measured-03",
+      "schedule_workspace_visible": true,
+      "sequence": 3,
+      "state": "BASELINE_PUBLISHED",
+      "status": "PASS"
+    },
+    {
+      "api_encoded_body_bytes_total": 600223,
+      "api_max_milliseconds": 335.6,
+      "api_resources": [
+        {
+          "decoded_body_bytes": 93,
+          "duration_milliseconds": 2.9,
+          "encoded_body_bytes": 93,
+          "initiator_type": "fetch",
+          "path": "/api/demo/v1/session",
+          "response_end_milliseconds": 20.6,
+          "transfer_bytes": 393
+        },
+        {
+          "decoded_body_bytes": 3803,
+          "duration_milliseconds": 20.4,
+          "encoded_body_bytes": 3803,
+          "initiator_type": "fetch",
+          "path": "/api/demo/v1/bootstrap",
+          "response_end_milliseconds": 47.3,
+          "transfer_bytes": 4103
+        },
+        {
+          "decoded_body_bytes": 141352,
+          "duration_milliseconds": 332.7,
+          "encoded_body_bytes": 141352,
+          "initiator_type": "fetch",
+          "path": "/api/demo/v1/versions/schedule-version-validated-c80416bdcb189931e41f6cb9cb35ea232720c38f34f8200de42f18e095c18378?limit=1",
+          "response_end_milliseconds": 380.7,
+          "transfer_bytes": 300
+        },
+        {
+          "decoded_body_bytes": 149658,
+          "duration_milliseconds": 318.7,
+          "encoded_body_bytes": 149658,
+          "initiator_type": "fetch",
+          "path": "/api/demo/v1/factory",
+          "response_end_milliseconds": 702.3,
+          "transfer_bytes": 300
+        },
+        {
+          "decoded_body_bytes": 305317,
+          "duration_milliseconds": 335.6,
+          "encoded_body_bytes": 305317,
+          "initiator_type": "fetch",
+          "path": "/api/demo/v1/versions/schedule-version-validated-c80416bdcb189931e41f6cb9cb35ea232720c38f34f8200de42f18e095c18378?start_at_utc=2026-09-06T16%3A00%3A00.000Z&end_at_utc=2026-09-09T16%3A00%3A00.000Z&sort=ORDER_START_ASC&offset=0&limit=160",
+          "response_end_milliseconds": 1040.1,
+          "transfer_bytes": 300
+        }
+      ],
+      "api_response_count": 5,
+      "dom": {
+        "document_html_bytes": 138129,
+        "document_scroll_height": 2941,
+        "document_scroll_width": 1440,
+        "element_count": 1176,
+        "viewport_height": 900,
+        "viewport_width": 1440
+      },
+      "language": "zh-CN",
+      "navigation_dom_content_loaded_milliseconds": 15.5,
+      "navigation_load_event_milliseconds": 15.6,
+      "ready_milliseconds": 1365.5,
+      "responses": [
+        {
+          "method": "POST",
+          "path": "/api/demo/v1/session",
+          "status": 200
+        },
+        {
+          "method": "GET",
+          "path": "/api/demo/v1/bootstrap",
+          "status": 200
+        },
+        {
+          "method": "GET",
+          "path": "/api/demo/v1/versions/schedule-version-validated-c80416bdcb189931e41f6cb9cb35ea232720c38f34f8200de42f18e095c18378?limit=1",
+          "status": 200
+        },
+        {
+          "method": "GET",
+          "path": "/api/demo/v1/factory",
+          "status": 200
+        },
+        {
+          "method": "GET",
+          "path": "/api/demo/v1/versions/schedule-version-validated-c80416bdcb189931e41f6cb9cb35ea232720c38f34f8200de42f18e095c18378?start_at_utc=2026-09-06T16%3A00%3A00.000Z&end_at_utc=2026-09-09T16%3A00%3A00.000Z&sort=ORDER_START_ASC&offset=0&limit=160",
+          "status": 200
+        }
+      ],
+      "role": "measured",
+      "sample_fingerprint": "sha256:c6ea8b0dd69b8c4cab96b83a26498b974b3b23e1bd877a2a008b8fcd1d87833f",
+      "sample_id": "baseline_published-measured-04",
+      "schedule_workspace_visible": true,
+      "sequence": 4,
+      "state": "BASELINE_PUBLISHED",
+      "status": "PASS"
+    },
+    {
+      "api_encoded_body_bytes_total": 600223,
+      "api_max_milliseconds": 331.2,
+      "api_resources": [
+        {
+          "decoded_body_bytes": 93,
+          "duration_milliseconds": 3.1,
+          "encoded_body_bytes": 93,
+          "initiator_type": "fetch",
+          "path": "/api/demo/v1/session",
+          "response_end_milliseconds": 27.1,
+          "transfer_bytes": 393
+        },
+        {
+          "decoded_body_bytes": 3803,
+          "duration_milliseconds": 21.2,
+          "encoded_body_bytes": 3803,
+          "initiator_type": "fetch",
+          "path": "/api/demo/v1/bootstrap",
+          "response_end_milliseconds": 51.7,
+          "transfer_bytes": 4103
+        },
+        {
+          "decoded_body_bytes": 141352,
+          "duration_milliseconds": 331.2,
+          "encoded_body_bytes": 141352,
+          "initiator_type": "fetch",
+          "path": "/api/demo/v1/versions/schedule-version-validated-c80416bdcb189931e41f6cb9cb35ea232720c38f34f8200de42f18e095c18378?limit=1",
+          "response_end_milliseconds": 384,
+          "transfer_bytes": 300
+        },
+        {
+          "decoded_body_bytes": 149658,
+          "duration_milliseconds": 323.1,
+          "encoded_body_bytes": 149658,
+          "initiator_type": "fetch",
+          "path": "/api/demo/v1/factory",
+          "response_end_milliseconds": 709.7,
+          "transfer_bytes": 300
+        },
+        {
+          "decoded_body_bytes": 305317,
+          "duration_milliseconds": 327.6,
+          "encoded_body_bytes": 305317,
+          "initiator_type": "fetch",
+          "path": "/api/demo/v1/versions/schedule-version-validated-c80416bdcb189931e41f6cb9cb35ea232720c38f34f8200de42f18e095c18378?start_at_utc=2026-09-06T16%3A00%3A00.000Z&end_at_utc=2026-09-09T16%3A00%3A00.000Z&sort=ORDER_START_ASC&offset=0&limit=160",
+          "response_end_milliseconds": 1039.3,
+          "transfer_bytes": 300
+        }
+      ],
+      "api_response_count": 5,
+      "dom": {
+        "document_html_bytes": 138129,
+        "document_scroll_height": 2941,
+        "document_scroll_width": 1440,
+        "element_count": 1176,
+        "viewport_height": 900,
+        "viewport_width": 1440
+      },
+      "language": "zh-CN",
+      "navigation_dom_content_loaded_milliseconds": 20.2,
+      "navigation_load_event_milliseconds": 20.2,
+      "ready_milliseconds": 1347.4,
+      "responses": [
+        {
+          "method": "POST",
+          "path": "/api/demo/v1/session",
+          "status": 200
+        },
+        {
+          "method": "GET",
+          "path": "/api/demo/v1/bootstrap",
+          "status": 200
+        },
+        {
+          "method": "GET",
+          "path": "/api/demo/v1/versions/schedule-version-validated-c80416bdcb189931e41f6cb9cb35ea232720c38f34f8200de42f18e095c18378?limit=1",
+          "status": 200
+        },
+        {
+          "method": "GET",
+          "path": "/api/demo/v1/factory",
+          "status": 200
+        },
+        {
+          "method": "GET",
+          "path": "/api/demo/v1/versions/schedule-version-validated-c80416bdcb189931e41f6cb9cb35ea232720c38f34f8200de42f18e095c18378?start_at_utc=2026-09-06T16%3A00%3A00.000Z&end_at_utc=2026-09-09T16%3A00%3A00.000Z&sort=ORDER_START_ASC&offset=0&limit=160",
+          "status": 200
+        }
+      ],
+      "role": "measured",
+      "sample_fingerprint": "sha256:8c50933ed8597be1eaaadf99c11c31418600622805cdea8fcf569ad68d17b3ea",
+      "sample_id": "baseline_published-measured-05",
+      "schedule_workspace_visible": true,
+      "sequence": 5,
+      "state": "BASELINE_PUBLISHED",
+      "status": "PASS"
+    },
+    {
+      "api_encoded_body_bytes_total": 648676,
+      "api_max_milliseconds": 1529.5,
+      "api_resources": [
+        {
+          "decoded_body_bytes": 93,
+          "duration_milliseconds": 2.9,
+          "encoded_body_bytes": 93,
+          "initiator_type": "fetch",
+          "path": "/api/demo/v1/session",
+          "response_end_milliseconds": 28.4,
+          "transfer_bytes": 393
+        },
+        {
+          "decoded_body_bytes": 4332,
+          "duration_milliseconds": 15.8,
+          "encoded_body_bytes": 4332,
+          "initiator_type": "fetch",
+          "path": "/api/demo/v1/bootstrap",
+          "response_end_milliseconds": 50.8,
+          "transfer_bytes": 4632
+        },
+        {
+          "decoded_body_bytes": 143174,
+          "duration_milliseconds": 452,
+          "encoded_body_bytes": 143174,
+          "initiator_type": "fetch",
+          "path": "/api/demo/v1/versions/schedule-version-replan-a9581a7f979675bbf47a4e24c16f8eb6f7abe70c1ef9d5f905e09931733cb699?limit=1",
+          "response_end_milliseconds": 503.5,
+          "transfer_bytes": 300
+        },
+        {
+          "decoded_body_bytes": 42911,
+          "duration_milliseconds": 1529.5,
+          "encoded_body_bytes": 42911,
+          "initiator_type": "fetch",
+          "path": "/api/demo/v1/comparisons/replan-request-bf3c6b8f0f2f6fbb047d4f79b4e24fa1242d0606fc83e9ad88ee50c4f8bd4c9a?classification=ADDED&classification=CHANGED&classification=REMOVED_BY_FACT&sort=SHIFT_DESC&offset=0&limit=120",
+          "response_end_milliseconds": 2037.6,
+          "transfer_bytes": 300
+        },
+        {
+          "decoded_body_bytes": 149658,
+          "duration_milliseconds": 423.9,
+          "encoded_body_bytes": 149658,
+          "initiator_type": "fetch",
+          "path": "/api/demo/v1/factory",
+          "response_end_milliseconds": 932.1,
+          "transfer_bytes": 300
+        },
+        {
+          "decoded_body_bytes": 308508,
+          "duration_milliseconds": 1107.8,
+          "encoded_body_bytes": 308508,
+          "initiator_type": "fetch",
+          "path": "/api/demo/v1/versions/schedule-version-replan-a9581a7f979675bbf47a4e24c16f8eb6f7abe70c1ef9d5f905e09931733cb699?start_at_utc=2026-09-06T16%3A00%3A00.000Z&end_at_utc=2026-09-09T16%3A00%3A00.000Z&sort=ORDER_START_ASC&offset=0&limit=160",
+          "response_end_milliseconds": 2041.7,
+          "transfer_bytes": 300
+        }
+      ],
+      "api_response_count": 6,
+      "comparison_workspace_visible": true,
+      "dom": {
+        "document_html_bytes": 168434,
+        "document_scroll_height": 8081,
+        "document_scroll_width": 1440,
+        "element_count": 1843,
+        "viewport_height": 900,
+        "viewport_width": 1440
+      },
+      "language": "zh-CN",
+      "navigation_dom_content_loaded_milliseconds": 23.6,
+      "navigation_load_event_milliseconds": 23.6,
+      "ready_milliseconds": 2386.9,
+      "responses": [
+        {
+          "method": "POST",
+          "path": "/api/demo/v1/session",
+          "status": 200
+        },
+        {
+          "method": "GET",
+          "path": "/api/demo/v1/bootstrap",
+          "status": 200
+        },
+        {
+          "method": "GET",
+          "path": "/api/demo/v1/versions/schedule-version-replan-a9581a7f979675bbf47a4e24c16f8eb6f7abe70c1ef9d5f905e09931733cb699?limit=1",
+          "status": 200
+        },
+        {
+          "method": "GET",
+          "path": "/api/demo/v1/factory",
+          "status": 200
+        },
+        {
+          "method": "GET",
+          "path": "/api/demo/v1/comparisons/replan-request-bf3c6b8f0f2f6fbb047d4f79b4e24fa1242d0606fc83e9ad88ee50c4f8bd4c9a?classification=ADDED&classification=CHANGED&classification=REMOVED_BY_FACT&sort=SHIFT_DESC&offset=0&limit=120",
+          "status": 200
+        },
+        {
+          "method": "GET",
+          "path": "/api/demo/v1/versions/schedule-version-replan-a9581a7f979675bbf47a4e24c16f8eb6f7abe70c1ef9d5f905e09931733cb699?start_at_utc=2026-09-06T16%3A00%3A00.000Z&end_at_utc=2026-09-09T16%3A00%3A00.000Z&sort=ORDER_START_ASC&offset=0&limit=160",
+          "status": 200
+        }
+      ],
+      "role": "warmup",
+      "sample_fingerprint": "sha256:bb0faeb950cf7ea98673455ef0e65930bbb6350ca07188152631ea9b96aff025",
+      "sample_id": "draft_comparison_ready-warmup-01",
+      "schedule_workspace_visible": true,
+      "sequence": 1,
+      "state": "DRAFT_COMPARISON_READY",
+      "status": "PASS"
+    },
+    {
+      "api_encoded_body_bytes_total": 648676,
+      "api_max_milliseconds": 1494,
+      "api_resources": [
+        {
+          "decoded_body_bytes": 93,
+          "duration_milliseconds": 3.6,
+          "encoded_body_bytes": 93,
+          "initiator_type": "fetch",
+          "path": "/api/demo/v1/session",
+          "response_end_milliseconds": 27.6,
+          "transfer_bytes": 393
+        },
+        {
+          "decoded_body_bytes": 4332,
+          "duration_milliseconds": 17.2,
+          "encoded_body_bytes": 4332,
+          "initiator_type": "fetch",
+          "path": "/api/demo/v1/bootstrap",
+          "response_end_milliseconds": 51.4,
+          "transfer_bytes": 4632
+        },
+        {
+          "decoded_body_bytes": 143174,
+          "duration_milliseconds": 493.6,
+          "encoded_body_bytes": 143174,
+          "initiator_type": "fetch",
+          "path": "/api/demo/v1/versions/schedule-version-replan-a9581a7f979675bbf47a4e24c16f8eb6f7abe70c1ef9d5f905e09931733cb699?limit=1",
+          "response_end_milliseconds": 545.9,
+          "transfer_bytes": 300
+        },
+        {
+          "decoded_body_bytes": 42911,
+          "duration_milliseconds": 1494,
+          "encoded_body_bytes": 42911,
+          "initiator_type": "fetch",
+          "path": "/api/demo/v1/comparisons/replan-request-bf3c6b8f0f2f6fbb047d4f79b4e24fa1242d0606fc83e9ad88ee50c4f8bd4c9a?classification=ADDED&classification=CHANGED&classification=REMOVED_BY_FACT&sort=SHIFT_DESC&offset=0&limit=120",
+          "response_end_milliseconds": 2043.8,
+          "transfer_bytes": 300
+        },
+        {
+          "decoded_body_bytes": 149658,
+          "duration_milliseconds": 396,
+          "encoded_body_bytes": 149658,
+          "initiator_type": "fetch",
+          "path": "/api/demo/v1/factory",
+          "response_end_milliseconds": 945.9,
+          "transfer_bytes": 300
+        },
+        {
+          "decoded_body_bytes": 308508,
+          "duration_milliseconds": 1101.6,
+          "encoded_body_bytes": 308508,
+          "initiator_type": "fetch",
+          "path": "/api/demo/v1/versions/schedule-version-replan-a9581a7f979675bbf47a4e24c16f8eb6f7abe70c1ef9d5f905e09931733cb699?start_at_utc=2026-09-06T16%3A00%3A00.000Z&end_at_utc=2026-09-09T16%3A00%3A00.000Z&sort=ORDER_START_ASC&offset=0&limit=160",
+          "response_end_milliseconds": 2049.4,
+          "transfer_bytes": 300
+        }
+      ],
+      "api_response_count": 6,
+      "comparison_workspace_visible": true,
+      "dom": {
+        "document_html_bytes": 168434,
+        "document_scroll_height": 8081,
+        "document_scroll_width": 1440,
+        "element_count": 1843,
+        "viewport_height": 900,
+        "viewport_width": 1440
+      },
+      "language": "zh-CN",
+      "navigation_dom_content_loaded_milliseconds": 22,
+      "navigation_load_event_milliseconds": 22,
+      "ready_milliseconds": 2391.9,
+      "responses": [
+        {
+          "method": "POST",
+          "path": "/api/demo/v1/session",
+          "status": 200
+        },
+        {
+          "method": "GET",
+          "path": "/api/demo/v1/bootstrap",
+          "status": 200
+        },
+        {
+          "method": "GET",
+          "path": "/api/demo/v1/versions/schedule-version-replan-a9581a7f979675bbf47a4e24c16f8eb6f7abe70c1ef9d5f905e09931733cb699?limit=1",
+          "status": 200
+        },
+        {
+          "method": "GET",
+          "path": "/api/demo/v1/factory",
+          "status": 200
+        },
+        {
+          "method": "GET",
+          "path": "/api/demo/v1/comparisons/replan-request-bf3c6b8f0f2f6fbb047d4f79b4e24fa1242d0606fc83e9ad88ee50c4f8bd4c9a?classification=ADDED&classification=CHANGED&classification=REMOVED_BY_FACT&sort=SHIFT_DESC&offset=0&limit=120",
+          "status": 200
+        },
+        {
+          "method": "GET",
+          "path": "/api/demo/v1/versions/schedule-version-replan-a9581a7f979675bbf47a4e24c16f8eb6f7abe70c1ef9d5f905e09931733cb699?start_at_utc=2026-09-06T16%3A00%3A00.000Z&end_at_utc=2026-09-09T16%3A00%3A00.000Z&sort=ORDER_START_ASC&offset=0&limit=160",
+          "status": 200
+        }
+      ],
+      "role": "measured",
+      "sample_fingerprint": "sha256:85eccab5da3afad285a22de07252b035a1463e2697a114bb243b084e900a1ff4",
+      "sample_id": "draft_comparison_ready-measured-01",
+      "schedule_workspace_visible": true,
+      "sequence": 1,
+      "state": "DRAFT_COMPARISON_READY",
+      "status": "PASS"
+    },
+    {
+      "api_encoded_body_bytes_total": 648676,
+      "api_max_milliseconds": 1502.8,
+      "api_resources": [
+        {
+          "decoded_body_bytes": 93,
+          "duration_milliseconds": 3,
+          "encoded_body_bytes": 93,
+          "initiator_type": "fetch",
+          "path": "/api/demo/v1/session",
+          "response_end_milliseconds": 29.4,
+          "transfer_bytes": 393
+        },
+        {
+          "decoded_body_bytes": 4332,
+          "duration_milliseconds": 17.2,
+          "encoded_body_bytes": 4332,
+          "initiator_type": "fetch",
+          "path": "/api/demo/v1/bootstrap",
+          "response_end_milliseconds": 50,
+          "transfer_bytes": 4632
+        },
+        {
+          "decoded_body_bytes": 143174,
+          "duration_milliseconds": 497.6,
+          "encoded_body_bytes": 143174,
+          "initiator_type": "fetch",
+          "path": "/api/demo/v1/versions/schedule-version-replan-a9581a7f979675bbf47a4e24c16f8eb6f7abe70c1ef9d5f905e09931733cb699?limit=1",
+          "response_end_milliseconds": 548.5,
+          "transfer_bytes": 300
+        },
+        {
+          "decoded_body_bytes": 42911,
+          "duration_milliseconds": 1502.8,
+          "encoded_body_bytes": 42911,
+          "initiator_type": "fetch",
+          "path": "/api/demo/v1/comparisons/replan-request-bf3c6b8f0f2f6fbb047d4f79b4e24fa1242d0606fc83e9ad88ee50c4f8bd4c9a?classification=ADDED&classification=CHANGED&classification=REMOVED_BY_FACT&sort=SHIFT_DESC&offset=0&limit=120",
+          "response_end_milliseconds": 2054.9,
+          "transfer_bytes": 300
+        },
+        {
+          "decoded_body_bytes": 149658,
+          "duration_milliseconds": 396.3,
+          "encoded_body_bytes": 149658,
+          "initiator_type": "fetch",
+          "path": "/api/demo/v1/factory",
+          "response_end_milliseconds": 948.5,
+          "transfer_bytes": 300
+        },
+        {
+          "decoded_body_bytes": 308508,
+          "duration_milliseconds": 1100.6,
+          "encoded_body_bytes": 308508,
+          "initiator_type": "fetch",
+          "path": "/api/demo/v1/versions/schedule-version-replan-a9581a7f979675bbf47a4e24c16f8eb6f7abe70c1ef9d5f905e09931733cb699?start_at_utc=2026-09-06T16%3A00%3A00.000Z&end_at_utc=2026-09-09T16%3A00%3A00.000Z&sort=ORDER_START_ASC&offset=0&limit=160",
+          "response_end_milliseconds": 2051,
+          "transfer_bytes": 300
+        }
+      ],
+      "api_response_count": 6,
+      "comparison_workspace_visible": true,
+      "dom": {
+        "document_html_bytes": 168434,
+        "document_scroll_height": 8081,
+        "document_scroll_width": 1440,
+        "element_count": 1843,
+        "viewport_height": 900,
+        "viewport_width": 1440
+      },
+      "language": "zh-CN",
+      "navigation_dom_content_loaded_milliseconds": 22.5,
+      "navigation_load_event_milliseconds": 22.6,
+      "ready_milliseconds": 2393.5,
+      "responses": [
+        {
+          "method": "POST",
+          "path": "/api/demo/v1/session",
+          "status": 200
+        },
+        {
+          "method": "GET",
+          "path": "/api/demo/v1/bootstrap",
+          "status": 200
+        },
+        {
+          "method": "GET",
+          "path": "/api/demo/v1/versions/schedule-version-replan-a9581a7f979675bbf47a4e24c16f8eb6f7abe70c1ef9d5f905e09931733cb699?limit=1",
+          "status": 200
+        },
+        {
+          "method": "GET",
+          "path": "/api/demo/v1/factory",
+          "status": 200
+        },
+        {
+          "method": "GET",
+          "path": "/api/demo/v1/versions/schedule-version-replan-a9581a7f979675bbf47a4e24c16f8eb6f7abe70c1ef9d5f905e09931733cb699?start_at_utc=2026-09-06T16%3A00%3A00.000Z&end_at_utc=2026-09-09T16%3A00%3A00.000Z&sort=ORDER_START_ASC&offset=0&limit=160",
+          "status": 200
+        },
+        {
+          "method": "GET",
+          "path": "/api/demo/v1/comparisons/replan-request-bf3c6b8f0f2f6fbb047d4f79b4e24fa1242d0606fc83e9ad88ee50c4f8bd4c9a?classification=ADDED&classification=CHANGED&classification=REMOVED_BY_FACT&sort=SHIFT_DESC&offset=0&limit=120",
+          "status": 200
+        }
+      ],
+      "role": "measured",
+      "sample_fingerprint": "sha256:42dca110d65d1177da8dc0b24031ce834576af8dc30c5ed284a37c3c7c573178",
+      "sample_id": "draft_comparison_ready-measured-02",
+      "schedule_workspace_visible": true,
+      "sequence": 2,
+      "state": "DRAFT_COMPARISON_READY",
+      "status": "PASS"
+    },
+    {
+      "api_encoded_body_bytes_total": 648676,
+      "api_max_milliseconds": 1560.1,
+      "api_resources": [
+        {
+          "decoded_body_bytes": 93,
+          "duration_milliseconds": 3.1,
+          "encoded_body_bytes": 93,
+          "initiator_type": "fetch",
+          "path": "/api/demo/v1/session",
+          "response_end_milliseconds": 26,
+          "transfer_bytes": 393
+        },
+        {
+          "decoded_body_bytes": 4332,
+          "duration_milliseconds": 15.5,
+          "encoded_body_bytes": 4332,
+          "initiator_type": "fetch",
+          "path": "/api/demo/v1/bootstrap",
+          "response_end_milliseconds": 48.7,
+          "transfer_bytes": 4632
+        },
+        {
+          "decoded_body_bytes": 143174,
+          "duration_milliseconds": 477.5,
+          "encoded_body_bytes": 143174,
+          "initiator_type": "fetch",
+          "path": "/api/demo/v1/versions/schedule-version-replan-a9581a7f979675bbf47a4e24c16f8eb6f7abe70c1ef9d5f905e09931733cb699?limit=1",
+          "response_end_milliseconds": 527,
+          "transfer_bytes": 300
+        },
+        {
+          "decoded_body_bytes": 42911,
+          "duration_milliseconds": 1560.1,
+          "encoded_body_bytes": 42911,
+          "initiator_type": "fetch",
+          "path": "/api/demo/v1/comparisons/replan-request-bf3c6b8f0f2f6fbb047d4f79b4e24fa1242d0606fc83e9ad88ee50c4f8bd4c9a?classification=ADDED&classification=CHANGED&classification=REMOVED_BY_FACT&sort=SHIFT_DESC&offset=0&limit=120",
+          "response_end_milliseconds": 2091.4,
+          "transfer_bytes": 300
+        },
+        {
+          "decoded_body_bytes": 149658,
+          "duration_milliseconds": 380.6,
+          "encoded_body_bytes": 149658,
+          "initiator_type": "fetch",
+          "path": "/api/demo/v1/factory",
+          "response_end_milliseconds": 912.9,
+          "transfer_bytes": 300
+        },
+        {
+          "decoded_body_bytes": 308508,
+          "duration_milliseconds": 1108.8,
+          "encoded_body_bytes": 308508,
+          "initiator_type": "fetch",
+          "path": "/api/demo/v1/versions/schedule-version-replan-a9581a7f979675bbf47a4e24c16f8eb6f7abe70c1ef9d5f905e09931733cb699?start_at_utc=2026-09-06T16%3A00%3A00.000Z&end_at_utc=2026-09-09T16%3A00%3A00.000Z&sort=ORDER_START_ASC&offset=0&limit=160",
+          "response_end_milliseconds": 2023.4,
+          "transfer_bytes": 300
+        }
+      ],
+      "api_response_count": 6,
+      "comparison_workspace_visible": true,
+      "dom": {
+        "document_html_bytes": 168434,
+        "document_scroll_height": 8081,
+        "document_scroll_width": 1440,
+        "element_count": 1843,
+        "viewport_height": 900,
+        "viewport_width": 1440
+      },
+      "language": "zh-CN",
+      "navigation_dom_content_loaded_milliseconds": 21.3,
+      "navigation_load_event_milliseconds": 21.4,
+      "ready_milliseconds": 2385,
+      "responses": [
+        {
+          "method": "POST",
+          "path": "/api/demo/v1/session",
+          "status": 200
+        },
+        {
+          "method": "GET",
+          "path": "/api/demo/v1/bootstrap",
+          "status": 200
+        },
+        {
+          "method": "GET",
+          "path": "/api/demo/v1/versions/schedule-version-replan-a9581a7f979675bbf47a4e24c16f8eb6f7abe70c1ef9d5f905e09931733cb699?limit=1",
+          "status": 200
+        },
+        {
+          "method": "GET",
+          "path": "/api/demo/v1/factory",
+          "status": 200
+        },
+        {
+          "method": "GET",
+          "path": "/api/demo/v1/versions/schedule-version-replan-a9581a7f979675bbf47a4e24c16f8eb6f7abe70c1ef9d5f905e09931733cb699?start_at_utc=2026-09-06T16%3A00%3A00.000Z&end_at_utc=2026-09-09T16%3A00%3A00.000Z&sort=ORDER_START_ASC&offset=0&limit=160",
+          "status": 200
+        },
+        {
+          "method": "GET",
+          "path": "/api/demo/v1/comparisons/replan-request-bf3c6b8f0f2f6fbb047d4f79b4e24fa1242d0606fc83e9ad88ee50c4f8bd4c9a?classification=ADDED&classification=CHANGED&classification=REMOVED_BY_FACT&sort=SHIFT_DESC&offset=0&limit=120",
+          "status": 200
+        }
+      ],
+      "role": "measured",
+      "sample_fingerprint": "sha256:ecadc47f2e40950fa0a353896ae9ffcad67598d578853491d7be6b25a66e4e78",
+      "sample_id": "draft_comparison_ready-measured-03",
+      "schedule_workspace_visible": true,
+      "sequence": 3,
+      "state": "DRAFT_COMPARISON_READY",
+      "status": "PASS"
+    },
+    {
+      "api_encoded_body_bytes_total": 648676,
+      "api_max_milliseconds": 1546.1,
+      "api_resources": [
+        {
+          "decoded_body_bytes": 93,
+          "duration_milliseconds": 2.8,
+          "encoded_body_bytes": 93,
+          "initiator_type": "fetch",
+          "path": "/api/demo/v1/session",
+          "response_end_milliseconds": 26.1,
+          "transfer_bytes": 393
+        },
+        {
+          "decoded_body_bytes": 4332,
+          "duration_milliseconds": 15.6,
+          "encoded_body_bytes": 4332,
+          "initiator_type": "fetch",
+          "path": "/api/demo/v1/bootstrap",
+          "response_end_milliseconds": 47.7,
+          "transfer_bytes": 4632
+        },
+        {
+          "decoded_body_bytes": 143174,
+          "duration_milliseconds": 441.5,
+          "encoded_body_bytes": 143174,
+          "initiator_type": "fetch",
+          "path": "/api/demo/v1/versions/schedule-version-replan-a9581a7f979675bbf47a4e24c16f8eb6f7abe70c1ef9d5f905e09931733cb699?limit=1",
+          "response_end_milliseconds": 489.8,
+          "transfer_bytes": 300
+        },
+        {
+          "decoded_body_bytes": 42911,
+          "duration_milliseconds": 1546.1,
+          "encoded_body_bytes": 42911,
+          "initiator_type": "fetch",
+          "path": "/api/demo/v1/comparisons/replan-request-bf3c6b8f0f2f6fbb047d4f79b4e24fa1242d0606fc83e9ad88ee50c4f8bd4c9a?classification=ADDED&classification=CHANGED&classification=REMOVED_BY_FACT&sort=SHIFT_DESC&offset=0&limit=120",
+          "response_end_milliseconds": 2040.3,
+          "transfer_bytes": 300
+        },
+        {
+          "decoded_body_bytes": 149658,
+          "duration_milliseconds": 360.9,
+          "encoded_body_bytes": 149658,
+          "initiator_type": "fetch",
+          "path": "/api/demo/v1/factory",
+          "response_end_milliseconds": 855.3,
+          "transfer_bytes": 300
+        },
+        {
+          "decoded_body_bytes": 308508,
+          "duration_milliseconds": 1141.7,
+          "encoded_body_bytes": 308508,
+          "initiator_type": "fetch",
+          "path": "/api/demo/v1/versions/schedule-version-replan-a9581a7f979675bbf47a4e24c16f8eb6f7abe70c1ef9d5f905e09931733cb699?start_at_utc=2026-09-06T16%3A00%3A00.000Z&end_at_utc=2026-09-09T16%3A00%3A00.000Z&sort=ORDER_START_ASC&offset=0&limit=160",
+          "response_end_milliseconds": 1999.3,
+          "transfer_bytes": 300
+        }
+      ],
+      "api_response_count": 6,
+      "comparison_workspace_visible": true,
+      "dom": {
+        "document_html_bytes": 168434,
+        "document_scroll_height": 8081,
+        "document_scroll_width": 1440,
+        "element_count": 1843,
+        "viewport_height": 900,
+        "viewport_width": 1440
+      },
+      "language": "zh-CN",
+      "navigation_dom_content_loaded_milliseconds": 21.2,
+      "navigation_load_event_milliseconds": 21.3,
+      "ready_milliseconds": 2398.5,
+      "responses": [
+        {
+          "method": "POST",
+          "path": "/api/demo/v1/session",
+          "status": 200
+        },
+        {
+          "method": "GET",
+          "path": "/api/demo/v1/bootstrap",
+          "status": 200
+        },
+        {
+          "method": "GET",
+          "path": "/api/demo/v1/versions/schedule-version-replan-a9581a7f979675bbf47a4e24c16f8eb6f7abe70c1ef9d5f905e09931733cb699?limit=1",
+          "status": 200
+        },
+        {
+          "method": "GET",
+          "path": "/api/demo/v1/factory",
+          "status": 200
+        },
+        {
+          "method": "GET",
+          "path": "/api/demo/v1/versions/schedule-version-replan-a9581a7f979675bbf47a4e24c16f8eb6f7abe70c1ef9d5f905e09931733cb699?start_at_utc=2026-09-06T16%3A00%3A00.000Z&end_at_utc=2026-09-09T16%3A00%3A00.000Z&sort=ORDER_START_ASC&offset=0&limit=160",
+          "status": 200
+        },
+        {
+          "method": "GET",
+          "path": "/api/demo/v1/comparisons/replan-request-bf3c6b8f0f2f6fbb047d4f79b4e24fa1242d0606fc83e9ad88ee50c4f8bd4c9a?classification=ADDED&classification=CHANGED&classification=REMOVED_BY_FACT&sort=SHIFT_DESC&offset=0&limit=120",
+          "status": 200
+        }
+      ],
+      "role": "measured",
+      "sample_fingerprint": "sha256:5ea49a6e2c0588e67acc55d017e6b114b5cc620ec99dcf850f83891495e7c54d",
+      "sample_id": "draft_comparison_ready-measured-04",
+      "schedule_workspace_visible": true,
+      "sequence": 4,
+      "state": "DRAFT_COMPARISON_READY",
+      "status": "PASS"
+    },
+    {
+      "api_encoded_body_bytes_total": 648676,
+      "api_max_milliseconds": 1561.3,
+      "api_resources": [
+        {
+          "decoded_body_bytes": 93,
+          "duration_milliseconds": 3.1,
+          "encoded_body_bytes": 93,
+          "initiator_type": "fetch",
+          "path": "/api/demo/v1/session",
+          "response_end_milliseconds": 25,
+          "transfer_bytes": 393
+        },
+        {
+          "decoded_body_bytes": 4332,
+          "duration_milliseconds": 16.1,
+          "encoded_body_bytes": 4332,
+          "initiator_type": "fetch",
+          "path": "/api/demo/v1/bootstrap",
+          "response_end_milliseconds": 46.1,
+          "transfer_bytes": 4632
+        },
+        {
+          "decoded_body_bytes": 143174,
+          "duration_milliseconds": 444,
+          "encoded_body_bytes": 143174,
+          "initiator_type": "fetch",
+          "path": "/api/demo/v1/versions/schedule-version-replan-a9581a7f979675bbf47a4e24c16f8eb6f7abe70c1ef9d5f905e09931733cb699?limit=1",
+          "response_end_milliseconds": 490.9,
+          "transfer_bytes": 300
+        },
+        {
+          "decoded_body_bytes": 42911,
+          "duration_milliseconds": 1561.3,
+          "encoded_body_bytes": 42911,
+          "initiator_type": "fetch",
+          "path": "/api/demo/v1/comparisons/replan-request-bf3c6b8f0f2f6fbb047d4f79b4e24fa1242d0606fc83e9ad88ee50c4f8bd4c9a?classification=ADDED&classification=CHANGED&classification=REMOVED_BY_FACT&sort=SHIFT_DESC&offset=0&limit=120",
+          "response_end_milliseconds": 2056.5,
+          "transfer_bytes": 300
+        },
+        {
+          "decoded_body_bytes": 149658,
+          "duration_milliseconds": 405.2,
+          "encoded_body_bytes": 149658,
+          "initiator_type": "fetch",
+          "path": "/api/demo/v1/factory",
+          "response_end_milliseconds": 900.5,
+          "transfer_bytes": 300
+        },
+        {
+          "decoded_body_bytes": 308508,
+          "duration_milliseconds": 1112.1,
+          "encoded_body_bytes": 308508,
+          "initiator_type": "fetch",
+          "path": "/api/demo/v1/versions/schedule-version-replan-a9581a7f979675bbf47a4e24c16f8eb6f7abe70c1ef9d5f905e09931733cb699?start_at_utc=2026-09-06T16%3A00%3A00.000Z&end_at_utc=2026-09-09T16%3A00%3A00.000Z&sort=ORDER_START_ASC&offset=0&limit=160",
+          "response_end_milliseconds": 2014.6,
+          "transfer_bytes": 300
+        }
+      ],
+      "api_response_count": 6,
+      "comparison_workspace_visible": true,
+      "dom": {
+        "document_html_bytes": 168434,
+        "document_scroll_height": 8081,
+        "document_scroll_width": 1440,
+        "element_count": 1843,
+        "viewport_height": 900,
+        "viewport_width": 1440
+      },
+      "language": "zh-CN",
+      "navigation_dom_content_loaded_milliseconds": 20.1,
+      "navigation_load_event_milliseconds": 20.3,
+      "ready_milliseconds": 2385.2,
+      "responses": [
+        {
+          "method": "POST",
+          "path": "/api/demo/v1/session",
+          "status": 200
+        },
+        {
+          "method": "GET",
+          "path": "/api/demo/v1/bootstrap",
+          "status": 200
+        },
+        {
+          "method": "GET",
+          "path": "/api/demo/v1/versions/schedule-version-replan-a9581a7f979675bbf47a4e24c16f8eb6f7abe70c1ef9d5f905e09931733cb699?limit=1",
+          "status": 200
+        },
+        {
+          "method": "GET",
+          "path": "/api/demo/v1/factory",
+          "status": 200
+        },
+        {
+          "method": "GET",
+          "path": "/api/demo/v1/versions/schedule-version-replan-a9581a7f979675bbf47a4e24c16f8eb6f7abe70c1ef9d5f905e09931733cb699?start_at_utc=2026-09-06T16%3A00%3A00.000Z&end_at_utc=2026-09-09T16%3A00%3A00.000Z&sort=ORDER_START_ASC&offset=0&limit=160",
+          "status": 200
+        },
+        {
+          "method": "GET",
+          "path": "/api/demo/v1/comparisons/replan-request-bf3c6b8f0f2f6fbb047d4f79b4e24fa1242d0606fc83e9ad88ee50c4f8bd4c9a?classification=ADDED&classification=CHANGED&classification=REMOVED_BY_FACT&sort=SHIFT_DESC&offset=0&limit=120",
+          "status": 200
+        }
+      ],
+      "role": "measured",
+      "sample_fingerprint": "sha256:4cc4d5f045dfdc2ce913867c38722c9683f4213639c44916a1f58418082e7c6f",
+      "sample_id": "draft_comparison_ready-measured-05",
+      "schedule_workspace_visible": true,
+      "sequence": 5,
+      "state": "DRAFT_COMPARISON_READY",
+      "status": "PASS"
+    }
+  ],
+  "service_processes": {
+    "backend_bind": "127.0.0.1:8765",
+    "backend_log_lines": 11,
+    "backend_loopback_only": true,
+    "frontend_bind": "127.0.0.1:4174",
+    "frontend_log_lines": 3,
+    "frontend_loopback_only": true,
+    "session_token_in_logs_or_cli_output": false,
+    "session_token_recorded": false,
+    "traceback_in_logs": false
+  },
+  "source_sha256": {
+    "demo/frontend/package-lock.json": "4c63ef7063c3d2924c06430b7e9f4edcba589df1f628ed54c902d3a3485dea82",
+    "demo/frontend/package.json": "31b861ae9b34109d5b8f17751e58f3137df1b63719d598a6501ef0374e4c8e42",
+    "demo/frontend/src/DemoApp.tsx": "5058cc08cc20be5b898760fede2b25fc7e704a92ba002131e571b8c8425e108b",
+    "demo/frontend/src/app/useDemoStory.ts": "ecb5e7cb6d0d28fb801440f2b0fac3f3e18622542f982877757c65d2e415c4a3",
+    "demo/frontend/src/app/useScheduleWorkspace.ts": "1819457cb34d54113031c470d9e404ae60b96d8fe225d73cc7c97da92d4574ae",
+    "demo/frontend/src/components/ComparisonWorkspace.tsx": "e600a3cffc89d896a27262b3674bbaafa3963df61e92ff7a8c129d5325dfea73",
+    "demo/frontend/src/components/ScheduleWorkspace.tsx": "3488c50f3a25b77c327087a77257744e6d25fb70fcab2bc1c2b23dcce32e7bfe",
+    "demo/frontend/src/components/UrgentOrderPanel.tsx": "fba11776507e5ad3c87da655c652facdc4c1220bf74eabddbef386d57548956f",
+    "demo/scripts/browser_benchmark_demo_09.js": "0486fa4a8b3c21c21fee08c23988aa708bf6efa88dd5f2be425fea1a19e6205b",
+    "demo/scripts/browser_benchmark_demo_09_activate.js": "69585fc3f0f31efee333312ec88a07ece5e93e2df29dfd0647e76f4b9a5b8672",
+    "demo/scripts/browser_benchmark_demo_09_initial.js": "c287ea09ee8a4d17775ee1c24a35b96fede947a5fd76c665568b19792af3b974",
+    "demo/scripts/browser_benchmark_demo_09_measure_baseline.js": "62b203172a314fd515dd14f5bd31435c79a3507b8aec72f43f5fbc4f1cbad51c",
+    "demo/scripts/browser_benchmark_demo_09_measure_comparison.js": "4ddbbdf8b6105179a839a09c170005cca74098e64eeb6047200ac8f2e9e73cec",
+    "demo/scripts/browser_benchmark_demo_09_poll.js": "3a169908f93673fb18e2a12d27361f4e871381426b4323ea9f7ff207fe04265b",
+    "demo/scripts/browser_benchmark_demo_09_ready.js": "f76d3d2bb1a8fa29ddfa7970c638b6401f348e8aea6f318b29c18a916d35f12d",
+    "demo/scripts/browser_benchmark_demo_09_stage2.js": "8ce58c9fcc2cddc8a229c8b99872268a5ea20bee8f812fc541198c65288ab005",
+    "demo/scripts/run_browser_benchmark.py": "eff23415be8817ab4dca344a32a2cbb51485ab173edf60b01a292e319972dc9b"
+  },
+  "status": "PASS",
+  "summaries": {
+    "BASELINE_PUBLISHED": {
+      "distributions": {
+        "api_encoded_body_bytes_total": {
+          "count": 5,
+          "max": 600223.0,
+          "p50": 600223.0,
+          "p95": 600223.0,
+          "percentile_method": "nearest-rank",
+          "raw": [
+            600223.0,
+            600223.0,
+            600223.0,
+            600223.0,
+            600223.0
+          ]
+        },
+        "api_max_milliseconds": {
+          "count": 5,
+          "max": 369.8,
+          "p50": 335.6,
+          "p95": 369.8,
+          "percentile_method": "nearest-rank",
+          "raw": [
+            368.8,
+            369.8,
+            330.6,
+            335.6,
+            331.2
+          ]
+        },
+        "api_response_count": {
+          "count": 5,
+          "max": 5.0,
+          "p50": 5.0,
+          "p95": 5.0,
+          "percentile_method": "nearest-rank",
+          "raw": [
+            5.0,
+            5.0,
+            5.0,
+            5.0,
+            5.0
+          ]
+        },
+        "document_html_bytes": {
+          "count": 5,
+          "max": 138129.0,
+          "p50": 138129.0,
+          "p95": 138129.0,
+          "percentile_method": "nearest-rank",
+          "raw": [
+            138129.0,
+            138129.0,
+            138129.0,
+            138129.0,
+            138129.0
+          ]
+        },
+        "dom_element_count": {
+          "count": 5,
+          "max": 1176.0,
+          "p50": 1176.0,
+          "p95": 1176.0,
+          "percentile_method": "nearest-rank",
+          "raw": [
+            1176.0,
+            1176.0,
+            1176.0,
+            1176.0,
+            1176.0
+          ]
+        },
+        "navigation_dom_content_loaded_milliseconds": {
+          "count": 5,
+          "max": 20.2,
+          "p50": 15.4,
+          "p95": 20.2,
+          "percentile_method": "nearest-rank",
+          "raw": [
+            14.8,
+            15.4,
+            14.7,
+            15.5,
+            20.2
+          ]
+        },
+        "navigation_load_event_milliseconds": {
+          "count": 5,
+          "max": 20.2,
+          "p50": 15.6,
+          "p95": 20.2,
+          "percentile_method": "nearest-rank",
+          "raw": [
+            15.1,
+            15.6,
+            14.9,
+            15.6,
+            20.2
+          ]
+        },
+        "ready_milliseconds": {
+          "count": 5,
+          "max": 1365.5,
+          "p50": 1348.2,
+          "p95": 1365.5,
+          "percentile_method": "nearest-rank",
+          "raw": [
+            1348.2,
+            1337.7,
+            1359.2,
+            1365.5,
+            1347.4
+          ]
+        }
+      },
+      "measured_sample_count": 5,
+      "percentile_method": "nearest-rank",
+      "status": "PASS",
+      "warmup_excluded": true
+    },
+    "DRAFT_COMPARISON_READY": {
+      "distributions": {
+        "api_encoded_body_bytes_total": {
+          "count": 5,
+          "max": 648676.0,
+          "p50": 648676.0,
+          "p95": 648676.0,
+          "percentile_method": "nearest-rank",
+          "raw": [
+            648676.0,
+            648676.0,
+            648676.0,
+            648676.0,
+            648676.0
+          ]
+        },
+        "api_max_milliseconds": {
+          "count": 5,
+          "max": 1561.3,
+          "p50": 1546.1,
+          "p95": 1561.3,
+          "percentile_method": "nearest-rank",
+          "raw": [
+            1494.0,
+            1502.8,
+            1560.1,
+            1546.1,
+            1561.3
+          ]
+        },
+        "api_response_count": {
+          "count": 5,
+          "max": 6.0,
+          "p50": 6.0,
+          "p95": 6.0,
+          "percentile_method": "nearest-rank",
+          "raw": [
+            6.0,
+            6.0,
+            6.0,
+            6.0,
+            6.0
+          ]
+        },
+        "document_html_bytes": {
+          "count": 5,
+          "max": 168434.0,
+          "p50": 168434.0,
+          "p95": 168434.0,
+          "percentile_method": "nearest-rank",
+          "raw": [
+            168434.0,
+            168434.0,
+            168434.0,
+            168434.0,
+            168434.0
+          ]
+        },
+        "dom_element_count": {
+          "count": 5,
+          "max": 1843.0,
+          "p50": 1843.0,
+          "p95": 1843.0,
+          "percentile_method": "nearest-rank",
+          "raw": [
+            1843.0,
+            1843.0,
+            1843.0,
+            1843.0,
+            1843.0
+          ]
+        },
+        "navigation_dom_content_loaded_milliseconds": {
+          "count": 5,
+          "max": 22.5,
+          "p50": 21.3,
+          "p95": 22.5,
+          "percentile_method": "nearest-rank",
+          "raw": [
+            22.0,
+            22.5,
+            21.3,
+            21.2,
+            20.1
+          ]
+        },
+        "navigation_load_event_milliseconds": {
+          "count": 5,
+          "max": 22.6,
+          "p50": 21.4,
+          "p95": 22.6,
+          "percentile_method": "nearest-rank",
+          "raw": [
+            22.0,
+            22.6,
+            21.4,
+            21.3,
+            20.3
+          ]
+        },
+        "ready_milliseconds": {
+          "count": 5,
+          "max": 2398.5,
+          "p50": 2391.9,
+          "p95": 2398.5,
+          "percentile_method": "nearest-rank",
+          "raw": [
+            2391.9,
+            2393.5,
+            2385.0,
+            2398.5,
+            2385.2
+          ]
+        }
+      },
+      "measured_sample_count": 5,
+      "percentile_method": "nearest-rank",
+      "status": "PASS",
+      "warmup_excluded": true
+    }
+  },
+  "task_id": "TASK-DEMO-09",
+  "wall_seconds": 98.51600000000326
+}

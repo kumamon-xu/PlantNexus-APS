@@ -1,0 +1,287 @@
+{
+  "diff_base": "a9109e905fbc051666fcd3bc43322ae2c53e619d",
+  "estimated_characters": 654118,
+  "files_allowed_to_change": [
+    "demo/**"
+  ],
+  "inputs": [
+    {
+      "characters": 6971,
+      "load_mode": "FULL",
+      "path": "demo/docs/TASK-DEMO-09-formal-benchmark-and-parameter-freeze.md",
+      "sha256": "ba7ec4e7028f16c86827a689f96d14b55f595bde7c1a0fb649359d30ed50af8d"
+    },
+    {
+      "characters": 6684,
+      "load_mode": "FULL",
+      "path": "demo/docs/D17-FORMAL-BENCHMARK-REPORT.md",
+      "sha256": "45cd3566315341a54215037b13d8fe89e5797c49c1056b1db7b8a90ee6b16a1a"
+    },
+    {
+      "characters": 11567,
+      "load_mode": "FULL",
+      "path": "demo/docs/05-benchmark-and-acceptance.md",
+      "sha256": "de3de4c5ed29ea398c5b29d6fb3de19f2b8e97ec207d1df02728c0602e5133bb"
+    },
+    {
+      "characters": 10462,
+      "load_mode": "SCRIPTED_URGENT_FIXTURE",
+      "path": "demo/docs/04-ux-and-demo-script.md",
+      "sha256": "f209054ef5a0821509954ab59778983a8ce600fa5f97f8c4d76b30565b64ccee"
+    },
+    {
+      "characters": 17975,
+      "load_mode": "D17",
+      "path": "demo/docs/TASKS.md",
+      "sha256": "54ed9a287e9ba514d5c8dff2e6056759589efd5183280634fe56bac738011981"
+    },
+    {
+      "characters": 4444,
+      "load_mode": "COMPLETION_SUMMARY",
+      "path": "demo/docs/TASK-DEMO-01-cnc-demo-foundation-and-benchmark-gate.md",
+      "sha256": "6b54288b2c6c1206e859a99f00e98a1dd239553f36294d3a283d0c3c946baf22"
+    },
+    {
+      "characters": 6771,
+      "load_mode": "COMPLETION_SUMMARY",
+      "path": "demo/docs/TASK-DEMO-08-e2e-security-recovery-and-accessibility.md",
+      "sha256": "784fbdc6076779ef6cfc437daf888448cb7361c441b1a266ab06c43c8429ad66"
+    },
+    {
+      "characters": 4739,
+      "load_mode": "FULL",
+      "path": "docs/contracts/planning-policy-and-solve-limits.md",
+      "sha256": "4ab4e392c2316d0985bfd77c7959dc010a7502a9cdf22f3556e475bdbd592a6a"
+    },
+    {
+      "characters": 16025,
+      "load_mode": "SOLVER_VALIDATOR_STATUS",
+      "path": "docs/contracts/planning-solution-and-schedule-version.md",
+      "sha256": "c1975c781aba97e4daebb855f04012b1211ff9e5a4c6a18b897f02a050edecfb"
+    },
+    {
+      "characters": 1137,
+      "load_mode": "FULL",
+      "path": "docs/adr/ADR-0005-independent-schedule-validator.md",
+      "sha256": "1aa591473bb906385455fb272158dac40cfe812eac5e9a9d423bd12e61268623"
+    },
+    {
+      "characters": 4188,
+      "load_mode": "FULL",
+      "path": "docs/adr/ADR-0011-ortools-9-15-cp-sat-backend-version-policy.md",
+      "sha256": "aa5c6d1a27eed218f29a8dac7cb75ff6e990aa95d5b44b07b9377e105767b2a8"
+    },
+    {
+      "characters": 7107,
+      "load_mode": "FULL",
+      "path": "docs/adr/ADR-0014-freeze-window-stability-change-report.md",
+      "sha256": "ef9dad9952886da9615477b33c57ca6c3bfd941278acb2d3f8a6b09bc512ae51"
+    },
+    {
+      "characters": 4823,
+      "load_mode": "FULL",
+      "path": "docs/simulation/synthetic-generator-and-determinism.md",
+      "sha256": "cd5ada6a3a828b20d075e42ae2503597741db887700e85da3a080c171fc75700"
+    },
+    {
+      "characters": 8028,
+      "load_mode": "FULL",
+      "path": "docs/simulation/benchmark-harness.md",
+      "sha256": "ea653e97b207b24ae5c3d88796ff2406f5939bd62cc9a959426ef789a68eed25"
+    },
+    {
+      "characters": 9174,
+      "load_mode": "FULL",
+      "path": "docs/simulation/performance-gates.md",
+      "sha256": "601d81310048c84693152dc1f49f473f1ed068ef6607a3d24aed16a61ab76936"
+    },
+    {
+      "characters": 1681,
+      "load_mode": "FULL",
+      "path": "demo/benchmarks/formal-protocol.v1.json",
+      "sha256": "504929c12d1d4985d425e95229831c9970c0e63971072e7263cac6229bd925f9"
+    },
+    {
+      "characters": 2281,
+      "load_mode": "FULL",
+      "path": "demo/benchmarks/profiles.json",
+      "sha256": "33d6751b38815b439332b952dd80cf7c83d9c6655c2b2f62ec099bf853f817c4"
+    },
+    {
+      "characters": 9248,
+      "load_mode": "FULL",
+      "path": "demo/backend/plantnexus_demo/benchmark.py",
+      "sha256": "86b0d428bcb5ce66944a40922e05af1e45fd117f1458c0fc0a25b0ac5e87410d"
+    },
+    {
+      "characters": 46466,
+      "load_mode": "FULL",
+      "path": "demo/backend/plantnexus_demo/formal_benchmark.py",
+      "sha256": "bf43e2f0cd7148429fbfc252cafcf7990d5ab3f911c35c61885edbb7be3726f7"
+    },
+    {
+      "characters": 40268,
+      "load_mode": "BENCHMARKED_STORY_CHAIN",
+      "path": "demo/backend/plantnexus_demo/orchestration.py",
+      "sha256": "1a70f846ec9eacb4485ee163bc6edf0dd448fa0a8cda43ee052781e79e120ede"
+    },
+    {
+      "characters": 49896,
+      "load_mode": "BENCHMARKED_REPLAN_CHAIN",
+      "path": "demo/backend/plantnexus_demo/replanning.py",
+      "sha256": "324d7ccb0c714ed6db473da71290663d689d93f8305be29de07341afb105fbb0"
+    },
+    {
+      "characters": 111283,
+      "load_mode": "BENCHMARKED_READS",
+      "path": "demo/backend/plantnexus_demo/presentation.py",
+      "sha256": "415a38c8275cd897e597b4e0aca9548ae3ec4949503395ea5c51fe2f51ab3252"
+    },
+    {
+      "characters": 54775,
+      "load_mode": "BENCHMARK_STAGE_TIMING",
+      "path": "demo/backend/plantnexus_demo/persistence.py",
+      "sha256": "602c69f28ddecf41ec727393bde4f048fda75390867e026630e795b5951a05a6"
+    },
+    {
+      "characters": 1890,
+      "load_mode": "FULL",
+      "path": "demo/scripts/run_benchmark.py",
+      "sha256": "d5d24bf5241ecd1f02b98e1ee103ad1d35490c5db3925b93af9e28acca689b95"
+    },
+    {
+      "characters": 26975,
+      "load_mode": "FULL",
+      "path": "demo/scripts/run_formal_benchmark.py",
+      "sha256": "4f10679aeefc7a76ea0b43c95370634549917eec0f468d102eb39b32c874f755"
+    },
+    {
+      "characters": 22183,
+      "load_mode": "FULL",
+      "path": "demo/scripts/run_benchmark_evidence.py",
+      "sha256": "2d84ff27b5043be349365516653b10ae195e2d2346d520396200b654a187db00"
+    },
+    {
+      "characters": 23559,
+      "load_mode": "FULL",
+      "path": "demo/scripts/run_browser_benchmark.py",
+      "sha256": "eff23415be8817ab4dca344a32a2cbb51485ab173edf60b01a292e319972dc9b"
+    },
+    {
+      "characters": 1044,
+      "load_mode": "FULL",
+      "path": "demo/scripts/browser_benchmark_demo_09.js",
+      "sha256": "0486fa4a8b3c21c21fee08c23988aa708bf6efa88dd5f2be425fea1a19e6205b"
+    },
+    {
+      "characters": 930,
+      "load_mode": "FULL",
+      "path": "demo/scripts/browser_benchmark_demo_09_initial.js",
+      "sha256": "c287ea09ee8a4d17775ee1c24a35b96fede947a5fd76c665568b19792af3b974"
+    },
+    {
+      "characters": 2087,
+      "load_mode": "FULL",
+      "path": "demo/scripts/browser_benchmark_demo_09_activate.js",
+      "sha256": "69585fc3f0f31efee333312ec88a07ece5e93e2df29dfd0647e76f4b9a5b8672"
+    },
+    {
+      "characters": 4030,
+      "load_mode": "FULL",
+      "path": "demo/scripts/browser_benchmark_demo_09_measure_baseline.js",
+      "sha256": "62b203172a314fd515dd14f5bd31435c79a3507b8aec72f43f5fbc4f1cbad51c"
+    },
+    {
+      "characters": 2433,
+      "load_mode": "FULL",
+      "path": "demo/scripts/browser_benchmark_demo_09_stage2.js",
+      "sha256": "8ce58c9fcc2cddc8a229c8b99872268a5ea20bee8f812fc541198c65288ab005"
+    },
+    {
+      "characters": 288,
+      "load_mode": "FULL",
+      "path": "demo/scripts/browser_benchmark_demo_09_poll.js",
+      "sha256": "3a169908f93673fb18e2a12d27361f4e871381426b4323ea9f7ff207fe04265b"
+    },
+    {
+      "characters": 2937,
+      "load_mode": "FULL",
+      "path": "demo/scripts/browser_benchmark_demo_09_ready.js",
+      "sha256": "f76d3d2bb1a8fa29ddfa7970c638b6401f348e8aea6f318b29c18a916d35f12d"
+    },
+    {
+      "characters": 4426,
+      "load_mode": "FULL",
+      "path": "demo/scripts/browser_benchmark_demo_09_measure_comparison.js",
+      "sha256": "4ddbbdf8b6105179a839a09c170005cca74098e64eeb6047200ac8f2e9e73cec"
+    },
+    {
+      "characters": 17208,
+      "load_mode": "PLAYWRIGHT_CLI_PATTERN",
+      "path": "demo/scripts/run_browser_e2e.py",
+      "sha256": "e18c5dc028a550349d93ea82eaff97a8da4ef2b88ac37c2d3321ebb6232dd772"
+    },
+    {
+      "characters": 35743,
+      "load_mode": "FULL",
+      "path": "demo/scripts/validate_demo.py",
+      "sha256": "412218ed6725dcd947c03cd8c41351c2fae592fe3873e07802238bd0f2f5a245"
+    },
+    {
+      "characters": 1072,
+      "load_mode": "PRODUCTION_PREVIEW",
+      "path": "demo/frontend/package.json",
+      "sha256": "31b861ae9b34109d5b8f17751e58f3137df1b63719d598a6501ef0374e4c8e42"
+    },
+    {
+      "characters": 15573,
+      "load_mode": "CHINESE_STORY_SHELL",
+      "path": "demo/frontend/src/DemoApp.tsx",
+      "sha256": "5058cc08cc20be5b898760fede2b25fc7e704a92ba002131e571b8c8425e108b"
+    },
+    {
+      "characters": 13886,
+      "load_mode": "STORY_ORCHESTRATION",
+      "path": "demo/frontend/src/app/useDemoStory.ts",
+      "sha256": "ecb5e7cb6d0d28fb801440f2b0fac3f3e18622542f982877757c65d2e415c4a3"
+    },
+    {
+      "characters": 7305,
+      "load_mode": "BASELINE_READY_MARKER",
+      "path": "demo/frontend/src/components/ScheduleWorkspace.tsx",
+      "sha256": "3488c50f3a25b77c327087a77257744e6d25fb70fcab2bc1c2b23dcce32e7bfe"
+    },
+    {
+      "characters": 15311,
+      "load_mode": "COMPARISON_READY_MARKER",
+      "path": "demo/frontend/src/components/ComparisonWorkspace.tsx",
+      "sha256": "e600a3cffc89d896a27262b3674bbaafa3963df61e92ff7a8c129d5325dfea73"
+    },
+    {
+      "characters": 12408,
+      "load_mode": "FROZEN_FIXTURE_FORM",
+      "path": "demo/frontend/src/components/UrgentOrderPanel.tsx",
+      "sha256": "fba11776507e5ad3c87da655c652facdc4c1220bf74eabddbef386d57548956f"
+    },
+    {
+      "characters": 6837,
+      "load_mode": "FULL",
+      "path": "demo/tests/test_benchmark.py",
+      "sha256": "637332686e00a97fde43ad5494ce6576094425d508d80c1ec35cdcfe6d3f4bbe"
+    }
+  ],
+  "manifest_version": "demo-task-context-manifest.v1",
+  "on_demand_expansion_triggers": [
+    "formal contract or accepted ADR conflict",
+    "root code/schema change becomes necessary",
+    "dynamic replan implementation starts",
+    "presentation lineage or fingerprint mismatch cannot be resolved read-only"
+  ],
+  "phase_registration": null,
+  "root_repository_consumption": "READ_ONLY",
+  "selected_input_count": 44,
+  "soft_budget_note": "Selected normative units were read in full; the 30k character budget is soft.",
+  "task_family": "demo-exclusive",
+  "task_id": "TASK-DEMO-09",
+  "validation_profile": "DEMO_HIGH_RISK"
+}

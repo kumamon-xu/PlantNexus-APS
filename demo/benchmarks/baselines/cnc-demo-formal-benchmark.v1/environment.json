@@ -1,0 +1,60 @@
+{
+  "boundaries": {
+    "portable_across_environment": false,
+    "production_capacity_claim": "NOT_ESTABLISHED",
+    "production_sla_claim": "NOT_ESTABLISHED",
+    "synthetic_only": true
+  },
+  "captured_at_utc": "2026-09-04T03:59:01Z",
+  "cpu": {
+    "logical_cores": 32,
+    "model": "13th Gen Intel(R) Core(TM) i9-13980HX",
+    "physical_cores": 24
+  },
+  "environment_fingerprint": "sha256:f05b7486faa9e79b04d500a7924faa83da65e2d584a939a4652c18dcfa386cd2",
+  "environment_role": "LOCAL_DEMO_REFERENCE_MACHINE",
+  "environment_version": "cnc-demo-benchmark-environment.v1",
+  "git": {
+    "demo_worktree_dirty": true,
+    "head": "a9109e905fbc051666fcd3bc43322ae2c53e619d"
+  },
+  "memory": {
+    "physical_bytes": 68319539200
+  },
+  "os": {
+    "machine": "AMD64",
+    "release": "11",
+    "system": "Windows",
+    "version": "10.0.26200"
+  },
+  "power_mode": "��Դ���� GUID: 6fecc5ae-f350-48a5-b669-b472cb895ccf  (Turbo)",
+  "runtime": {
+    "browser": "RECORDED_BY_PLAYWRIGHT_BROWSER_SUITE",
+    "node": "v24.19.0",
+    "npm": "12.0.2",
+    "ortools": "9.15.6755",
+    "python": "3.12.13"
+  },
+  "source_sha256": {
+    "backend/app/planning/backends/cp_sat/backend.py": "662c5577374faa705472c18ea812942d75c3ce4ed43fe669b31a30213fab8d95",
+    "backend/app/planning/backends/cp_sat/replan_backend.py": "4c9d0d104b9d6f2df96b255ce5c3254bf9c15e581b473c957d1cefa378420fd4",
+    "backend/app/planning/problem/builder.py": "c96a55a8d59da785a0109d83a75fbd2df2e2bfcccf234c07581019033af0f291",
+    "backend/app/planning/reporting/change_report.py": "d4fddd9e3f8f90ddf817d1cda0f817e0937786b0858538820599ae56701a04d7",
+    "backend/app/planning/strategies/global_cp_sat.py": "c3c5f057b7f87fb732fb75bf10bed61a533915f3b0a25724af8b24c1ddc84133",
+    "backend/app/planning/strategies/lexicographic_replan.py": "b50e506f32fe683394513ea827c99722b74d0d3dcfefa3c1046654c22b83e783",
+    "backend/app/planning/validation/problem_schedule_validator.py": "e120cc65c1ea525c23b72b6f4a437fb8dd560ba5fbd8e6febdc6d87e6ca48d9f",
+    "demo/backend/plantnexus_demo/assets.py": "5c6a5dddbdcf9beb4db1b61b575ed9d6665ecaf2e61a109c47ab954e2e2ed92b",
+    "demo/backend/plantnexus_demo/formal_benchmark.py": "bf43e2f0cd7148429fbfc252cafcf7990d5ab3f911c35c61885edbb7be3726f7",
+    "demo/backend/plantnexus_demo/generator.py": "8f98a7b2762fdfb26ced2d7155d4b0719e3375fd428114a8c27c4be9197d457e",
+    "demo/backend/plantnexus_demo/ingress.py": "5d58de46f8e42e61bcff41241e602e44ebfde48de353d91e990280fcf993f917",
+    "demo/backend/plantnexus_demo/orchestration.py": "1a70f846ec9eacb4485ee163bc6edf0dd448fa0a8cda43ee052781e79e120ede",
+    "demo/backend/plantnexus_demo/persistence.py": "602c69f28ddecf41ec727393bde4f048fda75390867e026630e795b5951a05a6",
+    "demo/backend/plantnexus_demo/presentation.py": "415a38c8275cd897e597b4e0aca9548ae3ec4949503395ea5c51fe2f51ab3252",
+    "demo/backend/plantnexus_demo/replanning.py": "324d7ccb0c714ed6db473da71290663d689d93f8305be29de07341afb105fbb0",
+    "demo/benchmarks/formal-protocol.v1.json": "504929c12d1d4985d425e95229831c9970c0e63971072e7263cac6229bd925f9",
+    "demo/benchmarks/profiles.json": "33d6751b38815b439332b952dd80cf7c83d9c6655c2b2f62ec099bf853f817c4",
+    "demo/data/cnc-showcase/manifest.json": "fceb0210aa9b730d7e87d866c2a434492c332fd48400c450e2af1b6781db0239",
+    "demo/scripts/run_formal_benchmark.py": "4f10679aeefc7a76ea0b43c95370634549917eec0f468d102eb39b32c874f755"
+  },
+  "target_machine_confirmation": "PENDING_D18_SITE_REPLAY"
+}

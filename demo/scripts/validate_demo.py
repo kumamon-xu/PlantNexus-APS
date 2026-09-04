@@ -535,6 +535,94 @@ def _verify_e2e_evidence(path: Path) -> dict[str, Any]:
     }
 
 
+def _verified_document(path: Path, fingerprint_field: str) -> dict[str, Any]:
+    report = json.loads(path.read_text(encoding="utf-8"))
+    observed = report.pop(fingerprint_field, None)
+    payload = json.dumps(
+        report,
+        ensure_ascii=False,
+        sort_keys=True,
+        separators=(",", ":"),
+        allow_nan=False,
+    ).encode("utf-8")
+    expected = f"sha256:{sha256(payload).hexdigest()}"
+    report[fingerprint_field] = observed
+    if observed != expected:
+        raise ValueError(f"{fingerprint_field} mismatch")
+    return report
+
+
+def _verify_formal_benchmark_evidence() -> dict[str, Any]:
+    evidence_path = DEMO_ROOT / "build/validation/benchmark-evidence-demo-09.json"
+    browser_path = (
+        DEMO_ROOT / "build/validation/browser-benchmark-observation-demo-09.json"
+    )
+    baseline_path = (
+        DEMO_ROOT
+        / "benchmarks/baselines/cnc-demo-formal-benchmark.v1/baseline.json"
+    )
+    evidence = _verified_document(evidence_path, "report_fingerprint")
+    browser = _verified_document(browser_path, "report_fingerprint")
+    baseline = _verified_document(baseline_path, "baseline_fingerprint")
+    checks = evidence["checks"]
+    backend = baseline["backend"]
+    showcase = backend["profile_summaries"]["showcase"]
+    upper = backend["profile_summaries"]["upper"]
+    changes = browser["lifecycle"]["change_counts"]
+    passed = (
+        evidence["status"] == "PASS"
+        and evidence["task_id"] == "TASK-DEMO-09"
+        and evidence["evidence_version"] == "cnc-demo-benchmark-evidence.v1"
+        and all(checks.values())
+        and baseline["status"] == "PASS"
+        and baseline["baseline_version"]
+        == "cnc-demo-formal-benchmark-baseline.v1"
+        and baseline["parameter_freeze"]["status"] == "FROZEN"
+        and backend["raw_sample_count"] == 21
+        and showcase["status"] == "PASS"
+        and upper["status"] == "PASS"
+        and backend["showcase_thresholds"]["status"] == "PASS"
+        and browser["status"] == "PASS"
+        and browser["observation_version"]
+        == "cnc-demo-browser-benchmark-observation.v1"
+        and len(browser["samples"]) == 12
+        and changes["added"] == 5
+        and changes["changed"] > 0
+        and changes["unchanged"] > 0
+        and browser["lifecycle"]["validation_status"] == "PASS"
+        and browser["lifecycle"]["current_publication_unchanged"] is True
+        and baseline["boundaries"]["synthetic_only"] is True
+        and baseline["boundaries"]["production_capacity_claim"]
+        == "NOT_ESTABLISHED"
+        and baseline["boundaries"]["production_sla_claim"]
+        == "NOT_ESTABLISHED"
+        and baseline["boundaries"]["p7_registration"] is None
+    )
+    distributions = showcase["distributions"]
+    return {
+        "status": "PASS" if passed else "FAIL",
+        "path": evidence_path.relative_to(REPOSITORY_ROOT).as_posix(),
+        "sha256": _sha256(evidence_path),
+        "baseline_path": baseline_path.relative_to(REPOSITORY_ROOT).as_posix(),
+        "baseline_sha256": _sha256(baseline_path),
+        "browser_path": browser_path.relative_to(REPOSITORY_ROOT).as_posix(),
+        "browser_sha256": _sha256(browser_path),
+        "backend_sample_count": backend["raw_sample_count"],
+        "browser_sample_count": len(browser["samples"]),
+        "showcase_initial_p95_seconds": distributions[
+            "initial_end_to_end_seconds"
+        ]["p95"],
+        "showcase_replan_p95_seconds": distributions[
+            "urgent_replan_end_to_end_seconds"
+        ]["p95"],
+        "showcase_rss_p95_bytes": distributions["backend_peak_rss_bytes"][
+            "p95"
+        ],
+        "change_counts": changes,
+        "parameter_freeze": baseline["parameter_freeze"]["status"],
+    }
+
+
 def build_report(*, task_id: str, context_path: Path) -> dict[str, Any]:
     baseline_path = DEMO_ROOT / "build/validation/protected-root-baseline.json"
     baseline = json.loads(baseline_path.read_text(encoding="utf-8"))
@@ -557,6 +645,10 @@ def build_report(*, task_id: str, context_path: Path) -> dict[str, Any]:
         if observed_outside.issubset(expected_outside)
         and all(item["status"] == "PASS" for item in protected_files)
         else "FAIL"
+    )
+    unexpected_outside = sorted(observed_outside - expected_outside)
+    changed_protected = sorted(
+        item["path"] for item in protected_files if item["status"] != "PASS"
     )
 
     benchmark_checks = [
@@ -583,6 +675,7 @@ def build_report(*, task_id: str, context_path: Path) -> dict[str, Any]:
         "TASK-DEMO-06",
         "TASK-DEMO-07",
         "TASK-DEMO-08",
+        "TASK-DEMO-09",
     }:
         frontend_root = DEMO_ROOT / "frontend"
         command_checks = [
@@ -593,6 +686,26 @@ def build_report(*, task_id: str, context_path: Path) -> dict[str, Any]:
             _run([NPM_COMMAND, "run", "build"], cwd=frontend_root),
             *command_checks,
         ]
+    if task_id == "TASK-DEMO-09":
+        command_checks.append(
+            _run(
+                [
+                    "uv",
+                    "run",
+                    "python",
+                    "demo/scripts/run_benchmark_evidence.py",
+                    "--verify-only",
+                    "--backend-suite",
+                    "demo/benchmarks/baselines/cnc-demo-formal-benchmark.v1/backend-suite.json",
+                    "--browser-observation",
+                    "demo/build/validation/browser-benchmark-observation-demo-09.json",
+                    "--baseline",
+                    "demo/benchmarks/baselines/cnc-demo-formal-benchmark.v1/baseline.json",
+                    "--report",
+                    "demo/build/validation/benchmark-evidence-demo-09.json",
+                ]
+            )
+        )
     hygiene = _text_hygiene()
     artifact_checks: dict[str, dict[str, Any]] = {
         "contract_probes": {
@@ -641,12 +754,16 @@ def build_report(*, task_id: str, context_path: Path) -> dict[str, Any]:
         artifact_checks["e2e_evidence"] = _verify_e2e_evidence(
             DEMO_ROOT / "build/validation/e2e-evidence-demo-08.json"
         )
-    passed = (
-        scope_status == "PASS"
-        and all(item["status"] == "PASS" for item in benchmark_checks)
+    elif task_id == "TASK-DEMO-09":
+        artifact_checks["formal_benchmark_evidence"] = (
+            _verify_formal_benchmark_evidence()
+        )
+    functional_passed = (
+        all(item["status"] == "PASS" for item in benchmark_checks)
         and all(item["status"] == "PASS" for item in command_checks)
         and all(item["status"] == "PASS" for item in artifact_checks.values())
     )
+    passed = scope_status == "PASS" and functional_passed
 
     demo_files = [
         {
@@ -666,11 +783,26 @@ def build_report(*, task_id: str, context_path: Path) -> dict[str, Any]:
         "task_id": task_id,
         "task_family": "demo-exclusive",
         "status": "PASS" if passed else "FAIL",
+        "functional_status": "PASS" if functional_passed else "FAIL",
+        "closure_blockers": (
+            []
+            if passed
+            else [
+                blocker
+                for blocker, is_blocked in (
+                    ("SCOPE_CHECK", scope_status != "PASS"),
+                    ("FUNCTIONAL_CHECKS", not functional_passed),
+                )
+                if is_blocked
+            ]
+        ),
         "scope_check": {
             "status": scope_status,
             "allowed": ["demo/**"],
             "outside_demo_paths_expected": sorted(expected_outside),
             "outside_demo_paths_observed": sorted(observed_outside),
+            "unexpected_outside_paths": unexpected_outside,
+            "changed_protected_paths": changed_protected,
             "protected_files": protected_files,
         },
         "benchmark_checks": benchmark_checks,
@@ -701,6 +833,7 @@ def main() -> int:
             "TASK-DEMO-06",
             "TASK-DEMO-07",
             "TASK-DEMO-08",
+            "TASK-DEMO-09",
         ),
         default="TASK-DEMO-01",
     )
@@ -721,6 +854,7 @@ def main() -> int:
             "TASK-DEMO-06": "task-context-manifest-demo-06.json",
             "TASK-DEMO-07": "task-context-manifest-demo-07.json",
             "TASK-DEMO-08": "task-context-manifest-demo-08.json",
+            "TASK-DEMO-09": "task-context-manifest-demo-09.json",
         }[arguments.task_id]
     )
     report = build_report(task_id=arguments.task_id, context_path=context_path)

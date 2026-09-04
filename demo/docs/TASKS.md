@@ -1,6 +1,6 @@
 # CNC Demo 实施任务清单
 
-状态：实施中（TASK-DEMO-07 已完成，D15 中文加急重排与版本比较通过）
+状态：实施中（D17 正式专项基准与参数冻结结果通过；TASK-DEMO-09 范围闭环待共享工作区外部差异处理，D18 待实施）
 范围约束：所有新增或修改资产必须位于 demo 目录  
 完成定义：通过 [专项基准与验收标准](05-benchmark-and-acceptance.md)的 Gate A～F
 
@@ -39,7 +39,7 @@ D04 是架构可行性门。若 610 工序在候选预算内不能稳定返回�
 - D01：Demo-local Python package、CLI、测试、类型检查和越界保护已完成；当时拆出的 runtime 已由 D05～D12 完成，前端骨架已由 D13 完成。
 - D02：严格 JSON 资产、逐文件 SHA-256、聚合资产指纹和三档 golden profile 已完成。
 - D03：确定性 Raw Staging 生成器与 DemoIngressPipeline 已完成；Showcase 精确生成 132 单、610 工序、24 设备、1,311 options、42 execution facts 和 12 locks。
-- D04：B1/B2 单次 early spike 已完成，610/700 均取得 `OPTIMAL + Validator PASS`；B4 已有一次 Showcase early run，取得 `FEASIBLE + Validator PASS`；B5 已有 Showcase 服务端与 D14 浏览器单次 early evidence，580/585 assignments 的 v1/v2/比较 DTO 均通过，初排浏览器以 160 节点有界呈现；warmup + 5 measured、RSS、目标机与 immutable baseline 仍开放。
+- D04：B1/B2 单次 early spike 已完成；其后 D17 已把 B1～B6 扩展为三档各 1 preflight + 1 warmup + 5 measured 的独立进程正式基准，并形成 RSS、浏览器首屏、环境签名与 immutable baseline。最终现场机复跑仍属于 D18。
 - D05～D08：独立 SQLite/Simulation 授权、durable job/artifact、初始排产和显式 current `PUBLISHED` 基线均已完成。
 - D09～D10：业务加急命令、additive-only Standard Import、正式事件/checkpoint、Snapshot/ReplanRequest、真实 KPI、动态重排、v2 `DRAFT` 与 ChangeReport 已完成；current `PUBLISHED` 不变。
 - D11：strict/immutable 的 Factory、v1/v2 统一 Schedule 与 ChangeReport-authoritative Comparison presentation 已完成；所有视图固定为 Simulation-only、`publishable=false`。
@@ -48,8 +48,9 @@ D04 是架构可行性门。若 610 工序在候选预算内不能稳定返回�
 - D14：中文订单风险表、订单→甘特联动、工厂/车间/设备筛选、72 小时有界甘特、日历/维护/执行/锁定语义、等价表格、计划负荷与校验证据已完成；Showcase 132/580/24 浏览器 smoke 和双宽度页面无溢出通过。
 - D15：资产驱动的四路线中文插单表单、只读 current base、二次确认、durable urgent command 恢复、真实 job 阶段、自动 DRAFT 比较、ChangeReport 分类、交付/稳定性/Validator、120 条分页和刷新恢复已完成；Showcase 单次真实链与双宽度页面无溢出通过。
 - D16：全新隔离 runtime 的中文 Chromium 完整链、四类业务 mutation 单次提交、双击/刷新、重启中断与原身份重试、stale、并发 reset、受控失败、Simulation 授权、scope、Production binding、token/log/path 消毒、键盘/focus/ARIA/对比度/reduced motion 和双宽度布局均已通过。
+- D17：实现与正式证据已完成。SMOKE、SHOWCASE、UPPER 共 21 个隔离后端样本和 12 个真实 Chromium 首屏样本已封存；Showcase 7 项阈值、5/5 Validator/ChangeReport、Upper 700 工序 characterization 均 `PASS`，默认 profile、20/30 秒上限和固定加急 fixture 已冻结。共享工作区中另有非本任务产生的 `demo/**` 外文档差异，TASK-DEMO-09 严格范围闭环保持开放。
 
-因此当前结论是 `INITIAL_SOLVE_SCALE_GATE=PASS`、`DYNAMIC_REPLAN_BACKEND_GATE=PASS`、`PRESENTATION_READ_GATE=PASS`、`D13_STORY_SHELL_GATE=PASS`、`D14_WORKSPACE_GATE=PASS`、`D15_REPLAN_UI_GATE=PASS` 且 `D16_E2E_SECURITY_A11Y_GATE=PASS`；M3 的标准演示与失败恢复 E2E 退出条件已满足。D17 正式多样本基准和 D18 打包/目标机审计仍未完成，所以还不是 Demo ready。详见 [当前实施状态](IMPLEMENTATION-STATUS.md)。
+因此当前结论是 `INITIAL_SOLVE_SCALE_GATE=PASS`、`DYNAMIC_REPLAN_BACKEND_GATE=PASS`、`PRESENTATION_READ_GATE=PASS`、`D13_STORY_SHELL_GATE=PASS`、`D14_WORKSPACE_GATE=PASS`、`D15_REPLAN_UI_GATE=PASS`、`D16_E2E_SECURITY_A11Y_GATE=PASS` 且 `D17_FORMAL_BENCHMARK_GATE=PASS`。M3 已满足，M4 的基准子项已有完整证据，但 TASK-DEMO-09 的 strict scope closure、D18 打包、runbook、最终现场机复跑与发布审计仍未完成，所以还不是 Demo ready。详见 [当前实施状态](IMPLEMENTATION-STATUS.md)与 [D17 正式报告](D17-FORMAL-BENCHMARK-REPORT.md)。
 
 ## 2. 总览
 
@@ -455,6 +456,8 @@ D04 是架构可行性门。若 610 工序在候选预算内不能稳定返回�
 
 ### D17 — 正式专项基准与调优
 
+状态：实现与正式证据完成，TASK-DEMO-09 范围闭环待处理。未因结果失败而调整规模或阈值；严格 machine report 仅因共享工作区中非本任务产生的 `demo/**` 外差异保持 `FAIL`。
+
 目标：冻结可以如实公开的 Demo 参数。
 
 工作：
@@ -472,6 +475,8 @@ D04 是架构可行性门。若 610 工序在候选预算内不能稳定返回�
 - 暂定性能门槛明确 PASS 或经评审后版本化调整；
 - 700 工序上界有真实 characterization；
 - 报告明确 synthetic-only、无 SLA。
+
+完成证据：三档各完成 1 次 preflight、1 次 warmup 与 5 次 measured，共 21 个独立后端进程 raw samples；真实 Chromium 对基线/比较状态各完成 1 次 warmup 与 5 次 measured。Showcase 初排/重排端到端 p95 为 7.517/22.601 秒，RSS p95 277.3 MiB，5 次初排均 `OPTIMAL`，重排为 4 `OPTIMAL` + 1 已验证 `FEASIBLE`，Validator/ChangeReport 5/5 `PASS`；Upper 700 工序初排/重排 p95 为 12.181/32.014 秒且 5/5 `OPTIMAL`。默认 Showcase、20/30 秒限制与 fixture `CNC-DEMO-URGENT-FIXTURE-001` 已冻结；证据见 `demo/benchmarks/baselines/cnc-demo-formal-benchmark.v1/`、`benchmark-evidence-demo-09.json` 和 [中文正式报告](D17-FORMAL-BENCHMARK-REPORT.md)。所有结论 synthetic-only、非 SLA，最终现场机仍待 D18。
 
 ### D18 — 一键启动、Runbook 与发布审计
 
@@ -513,6 +518,8 @@ D04 是架构可行性门。若 610 工序在候选预算内不能稳定返回�
 ### M4：可重复交付
 
 包含 D17～D18。退出条件是专项基准、脚本化 fixture、runbook 与目标机 smoke 齐全。
+
+状态：部分满足。D17 的专项基准、脚本化 fixture 和参数冻结已有完整通过证据，但 TASK-DEMO-09 strict scope closure 尚待外部工作区差异处理；D18 的一键交付、runbook、目标机 smoke 与发布审计仍开放。
 
 ## 5. 不得作为“完成”的捷径
 

@@ -3,13 +3,19 @@ doc_id: DOC-OPS-INDEX
 title: Operations 索引与形成边界
 status: baseline
 spec_version: 0.3.0
-phase: P0-P7
+phase: P0-P8
 normative: false
-source_sections: [65, 66, 93, 94, 95, 101, 106]
-last_reviewed: 2026-08-31
+source_sections: [65, 66, 93, 94, 95, 101, 106, 113]
+last_reviewed: 2026-09-04
 ---
 
 # Operations 索引与形成边界
+
+## P8 planned operations outcome
+
+P8-09/10将来负责可复现Headless distribution、版本/SBOM/checksum、migration bundle、非Production部署、readiness、metrics/logs/traces/alerts、backup/restore、rollback和operator runbook；P8-12/13再分别形成synthetic集成Gate与独立审计。当前这些能力全部是planned，不存在Production package、deployment、on-call或SLA。
+
+运行拓扑固定为API、独立Solver Worker、APS自有数据库及broker；可选Frontend可以缺席。宿主不共享数据库或直接投递内部queue，第三方连接器和结果展示仍由宿主负责。本次没有修改部署配置、代码、测试、依赖或环境。
 
 ## TASK-P4-12 local API operations boundary
 

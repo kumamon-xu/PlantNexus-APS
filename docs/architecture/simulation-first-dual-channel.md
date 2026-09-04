@@ -5,11 +5,17 @@ status: baseline
 spec_version: 0.3.0
 phase: cross-phase
 normative: true
-source_sections: [0, 10, 37, 40, 41, 42, 62, 74]
-last_reviewed: 2026-08-28
+source_sections: [0, 10, 37, 40, 41, 42, 62, 74, 113]
+last_reviewed: 2026-09-04
 ---
 
 # Simulation-First 双通道架构
+
+## P8 canonical product boundary
+
+P8把Production外部边界收敛为宿主平台提交的versioned canonical JSON。Simulation也必须生成同版本canonical payload并走同一Headless contract、Data Validation、Snapshot/Problem、PlanningRun、Worker、Solver和formal Validator；差异只允许存在于source authority、data plane和环境隔离。
+
+既有Standard Import/Raw Staging/Normalization/Reference Adapter继续作为开发、测试和迁移辅助producer，但不再代表公共Production入口。它们的输出若要参加P8 Gate，必须重新从canonical API boundary进入，不能直接把内部对象交给application或Solver。
 
 ## TASK-P4-10 continuous replay isolation
 
@@ -33,15 +39,15 @@ Simulator仅允许Development/Test/Benchmark + SIMULATION + synthetic + `product
 
 ## 核心设计
 
-Production 和 Simulation 只在数据来源及环境隔离上不同，从 Standard Import Contract 开始必须使用同一产品链路。
+Production 和 Simulation 只在数据来源、authority及环境隔离上不同，从canonical JSON产品合同开始必须使用同一Headless链路。
 
 ```text
-Production Sources ─┐
-                    ├→ Standard Import Contract
-Scenario Generator ─┘             │
-                                  ▼
-Normalization → Data Validation → Snapshot → Problem
-→ same Strategy → same Solver → same Validator → same Export
+Production Sources → Host mapping ─┐
+                                   ├→ Canonical JSON Contract
+Scenario/Reference producer ───────┘             │
+                                                 ▼
+Data Validation → Snapshot → Problem → PlanningRun → Worker
+→ same Strategy → same Solver → same Validator → same Read/Export API
 ```
 
 ## 禁止捷径

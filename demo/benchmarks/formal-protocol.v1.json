@@ -1,0 +1,55 @@
+{
+  "protocol_version": "cnc-demo-formal-benchmark-protocol.v1",
+  "baseline_version": "cnc-demo-formal-benchmark-baseline.v1",
+  "profile_set_version": "cnc-demo-benchmark-profiles.v2",
+  "default_profile": "showcase",
+  "sample_plan": {
+    "preflight": 1,
+    "warmup": 1,
+    "measured": 5,
+    "percentile_method": "nearest-rank"
+  },
+  "profiles": {
+    "smoke": {
+      "profile_id": "CNC-DEMO-SMOKE",
+      "initial_solve_seconds": 5,
+      "replan_solve_seconds": 10
+    },
+    "showcase": {
+      "profile_id": "CNC-DEMO-SHOWCASE",
+      "initial_solve_seconds": 20,
+      "replan_solve_seconds": 30
+    },
+    "upper": {
+      "profile_id": "CNC-DEMO-UPPER",
+      "initial_solve_seconds": 60,
+      "replan_solve_seconds": 90
+    }
+  },
+  "urgent_fixture": {
+    "fixture_id": "CNC-DEMO-URGENT-FIXTURE-001",
+    "fixture_version": "1.0.0",
+    "route_template_id": "CNC-ROUTE-5",
+    "quantity": 5,
+    "due_at_local": "2026-09-09T18:00:00",
+    "timezone": "Asia/Shanghai",
+    "priority_class": "URGENT",
+    "note": "Showcase 固定加急精密套筒"
+  },
+  "showcase_thresholds": {
+    "initial_end_to_end_p95_seconds_max": 30.0,
+    "urgent_replan_end_to_end_p95_seconds_max": 45.0,
+    "non_solving_stages_p95_seconds_max": 8.0,
+    "presentation_api_p95_seconds_max": 1.5,
+    "job_state_api_p95_seconds_max": 0.25,
+    "backend_peak_rss_p95_bytes_max": 2147483648,
+    "validator_and_change_report_required_passes": 5
+  },
+  "boundaries": {
+    "data_plane": "SIMULATION_ONLY",
+    "synthetic_only": true,
+    "production_capacity_claim": "NOT_ESTABLISHED",
+    "production_sla_claim": "NOT_ESTABLISHED",
+    "first_feasible_metric": "NOT_REPORTED_NO_RELIABLE_CALLBACK"
+  }
+}

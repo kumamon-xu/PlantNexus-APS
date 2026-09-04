@@ -3,17 +3,17 @@ doc_id: DOC-INDEX-001
 title: PlantNexus APS 公开文档中心
 status: living
 spec_version: 0.3.0
-phase: P7
+phase: P8
 normative: false
-source_sections: [2, 6, 24, 90]
-last_reviewed: 2026-09-02
+source_sections: [2, 6, 24, 90, 113]
+last_reviewed: 2026-09-04
 ---
 
 # PlantNexus APS 公开文档中心
 
 本目录只收录适合随公开 Git 仓库发布的核心项目文档。开发过程记录、Task Card、阶段证据、机器报告、临时草稿、截图、测试输出和下载制品不属于公开文档，应留在被忽略的本地目录或 `build/`。
 
-项目当前已形成 P0～P6 研发能力，P7 真实数据校准暂缓；这不代表 Production readiness、UAT、真实身份/审批 authority、外部系统接入、容量结论或 SLA 已形成。能力声明以[能力矩阵](core/capability-matrix.md)和对应合同为准。
+项目当前已形成 P0～P6 研发能力，P7 真实数据校准暂缓，P8 Headless产品化处于planning且尚未实施。产品目标只接收宿主平台提交的versioned canonical JSON，不在APS内直接建设ERP/MES/WMS/CAM连接器；宿主和未来可选独立Frontend消费同一API。以上均不代表Production readiness、UAT、真实身份/审批authority、部署、容量结论或SLA已经形成。能力声明以[能力矩阵](core/capability-matrix.md)和对应合同为准。
 
 ## 核心入口
 
@@ -21,6 +21,7 @@ last_reviewed: 2026-09-02
 |---|---|---|
 | 系统范围 | [范围与成功标准](core/scope-and-success-criteria.md) | 了解目标、非目标和完成边界 |
 | 系统架构 | [系统上下文](architecture/system-context.md) | 了解外部系统、边界和数据流向 |
+| Headless 集成 | [Headless 产品化与平台集成](architecture/headless-productization-and-platform-integration.md) | 了解canonical JSON、宿主责任、API/worker和双交付边界 |
 | 主流程 | [端到端计划流程](architecture/end-to-end-planning-flow.md) | 从导入到排程、校验、版本、导出和重排 |
 | 领域对象 | [领域模型](domain/domain-model.md) | Factory、Routing、Order、Snapshot、Version 等对象关系 |
 | API | [API 接口开发清单](contracts/api-development-checklist.md) | 当前所有 HTTP operation、状态、合同和缺口 |
@@ -44,11 +45,12 @@ last_reviewed: 2026-09-02
 
 ### 数据接入与集成
 
-1. [数据 authority](architecture/data-authority.md)
-2. [导入与归一化](contracts/import-and-normalization.md)
-3. [数据字段中文名称字典](contracts/data-field-dictionary.md)
-4. [Schema 版本规则](contracts/schema-versioning.md)
-5. [Schema 索引](contracts/schema-index.md)
+1. [Headless 产品化与平台集成](architecture/headless-productization-and-platform-integration.md)
+2. [数据 authority](architecture/data-authority.md)
+3. [导入与归一化](contracts/import-and-normalization.md)
+4. [数据字段中文名称字典](contracts/data-field-dictionary.md)
+5. [Schema 版本规则](contracts/schema-versioning.md)
+6. [Schema 索引](contracts/schema-index.md)
 
 ### 排程算法开发
 

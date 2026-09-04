@@ -1,6 +1,6 @@
 # 专项基准与验收标准
 
-实施更新（2026-09-02）：Showcase 610 工序和 Upper 700 工序的 B1/B2 单次 sequential early spike 已取得 `OPTIMAL + Validator PASS`，详见 [实施状态](IMPLEMENTATION-STATUS.md)与 `demo/benchmarks/results`。该结果尚不满足本文件要求的 B4、warmup + 5 measured、RSS、目标机与 immutable baseline，所以下文正式验收标准保持不变。
+实施更新（2026-09-04）：D17 已按本文件协议在具名本地演示参考机完成 SMOKE、SHOWCASE、UPPER 三档 B1～B6 正式基准、独立进程树 RSS 和真实 Chromium 首屏观察。三档各有 1 次 preflight、1 次 warmup、5 次 measured；Showcase 7 项发布目标和 Upper characterization 均 `PASS`。版本化 raw samples、环境签名、不可变 baseline 与复算证据见 [D17 正式专项基准与参数冻结报告](D17-FORMAL-BENCHMARK-REPORT.md)。最终现场机复跑仍属于 D18，本地结果不建立生产容量或 SLA。
 
 ## 1. 现有证据边界
 
@@ -22,7 +22,7 @@
 - synthetic_only：true；
 - production_sla：NOT_ESTABLISHED_OPEN_012。
 
-这份根项目 baseline 只证明 12 单、48 工序的特定合成样本，不能外推到 132 单、610 工序，更不能用来承诺“百单半秒”。Demo 当前已有早期 raw reports，但仍必须完成自己的版本化重复专项基线。
+这份根项目 baseline 只证明 12 单、48 工序的特定合成样本，不能外推到 132 单、610 工序，更不能用来承诺“百单半秒”。Demo 已另行建立 `cnc-demo-formal-benchmark-baseline.v1`；它只适用于该固定合成数据、被测源码和具名本地参考环境，同样不能外推为生产性能。
 
 ## 2. 基准问题
 
@@ -52,7 +52,7 @@ CNC-SMOKE 的路线分布为 4×3 + 8×4 + 8×5 + 4×6 = 108。CNC-UPPER 为 20�
 | CNC-SHOWCASE | 20 秒 | 30 秒 | 1 | 20260902 |
 | CNC-UPPER | 60 秒 | 90 秒 | 1 | 20260902 |
 
-SHOWCASE 的 20/30 秒是待验证的现场候选参数；只有基准通过才进入 scenario manifest。UPPER 的较长预算只用于离线刻画。
+SHOWCASE 的 20/30 秒已由 D17 在本地演示参考机通过并冻结为 Demo 默认参数。UPPER 的 60/90 秒继续只用于离线刻画。最终现场机若环境签名变化，D18 必须先复跑，不得静默沿用本地性能结论。
 
 固定 seed 和单 worker 可减少非确定性，但 wall-time 截止仍可能因机器调度导致 FEASIBLE 方案不同。因此：
 
@@ -202,13 +202,13 @@ SHOWCASE 的 20/30 秒是待验证的现场候选参数；只有基准通过才�
 
 脚本化 SHOWCASE 的 5 次 measured 必须全部得到前两类结果。一次 UNKNOWN、INFEASIBLE 或 Validator FAIL 即阻止发布该数据包。
 
-## 8. 暂定性能门槛
+## 8. 冻结的 Demo 性能门槛
 
-这些是 Demo 发布目标，不是已经取得的结果；第一次基准后必须在报告中明确 PASS/FAIL，不能反向改指标掩盖失败。
+这些是 `formal-protocol.v1` 冻结的 Demo 发布目标，不是生产 SLA。D17 在运行前固定门槛，运行后逐项报告 PASS/FAIL；本次没有反向调整指标或降低场景规模。
 
 ### 8.1 CNC-SHOWCASE
 
-| 指标 | 暂定门槛 |
+| 指标 | 冻结门槛 |
 |---|---:|
 | 初排 solver limit | 20 秒 |
 | 初排端到端 p95 | ≤ 30 秒 |
@@ -241,6 +241,21 @@ UPPER 是 characterization gate：
 - 报告 60/90 秒预算下的实际分布。
 
 UPPER 不满足时，不影响已通过的 SHOWCASE 发布，但 README 必须注明上界未通过及观测原因。
+
+### 8.3 D17 正式判定
+
+| 检查 | D17 实测 | 结果 |
+|---|---:|---|
+| Showcase 初排端到端 p95 | 7.517 秒（门槛 ≤ 30 秒） | PASS |
+| Showcase 加急重排端到端 p95 | 22.601 秒（门槛 ≤ 45 秒） | PASS |
+| Showcase 非求解阶段 p95 最大值 | 5.782 秒（门槛 ≤ 8 秒） | PASS |
+| Showcase presentation API p95 | 0.839 秒（门槛 ≤ 1.5 秒） | PASS |
+| Showcase job/state API p95 | 0.013 秒（门槛 ≤ 0.25 秒） | PASS |
+| Showcase 后端进程树 RSS p95 | 277.3 MiB（门槛 ≤ 2 GiB） | PASS |
+| Showcase Validator + ChangeReport | 5/5 | PASS |
+| Upper 700 工序初排 / 重排 p95 | 12.181 / 32.014 秒 | PASS（characterization） |
+
+Showcase 5 次初排均为 `OPTIMAL + Validator PASS`；5 次重排为 4 次 `OPTIMAL`、1 次 `FEASIBLE`，且全部 `Validator PASS + ChangeReport PASS`。页面必须保留两种中文状态的区别。真实 Chromium 基线/比较页 measured 首屏 p95 分别为 1,365.5/2,398.5 ms；协议未为浏览器首屏设置数值门，因此这两项只作为 D18 对照观察，不追加事后门槛。
 
 ## 9. 功能验收门
 
@@ -283,7 +298,7 @@ UPPER 不满足时，不影响已通过的 SHOWCASE 发布，但 README 必须�
 - DRAFT 和 Simulation 标识始终可见；
 - 1440×900 主路径无横向页面滚动。
 
-TASK-DEMO-04 已通过统一展示契约与只读性证据；TASK-DEMO-05 验证了中文故事壳不重算 KPI、Simulation 标识持续可见和双宽度布局；TASK-DEMO-06 进一步验证了初始 580 assignments 通过 160 节点分页/时间窗有界展示、订单联动、日历与锁定语义、计划负荷口径以及 1440×900/1024×768 无页面级横向滚动。TASK-DEMO-07 真实连接 Showcase current `PUBLISHED`，一次业务表单提交形成 v2 `DRAFT`，默认变化页、保持不变分页、设备筛选、PUBLISHED→DRAFT lineage、交付/稳定性、Validator 和刷新恢复均通过。TASK-DEMO-08 又从全新 runtime 重放完整中文链，取得 68/68 浏览器断言、两张已校验截图、八组关键文字 AA 对比度、无悬空 ARIA 引用和双宽度 0 页面溢出；该次独立运行的 ChangeReport 为 5 `ADDED` / 23 `CHANGED` / 557 `UNCHANGED`。Gate E 功能/视觉清单现为 `PASS`；D17 仍需形成正式多样本性能证据。
+TASK-DEMO-04 已通过统一展示契约与只读性证据；TASK-DEMO-05 验证了中文故事壳不重算 KPI、Simulation 标识持续可见和双宽度布局；TASK-DEMO-06 进一步验证了初始 580 assignments 通过 160 节点分页/时间窗有界展示、订单联动、日历与锁定语义、计划负荷口径以及 1440×900/1024×768 无页面级横向滚动。TASK-DEMO-07 真实连接 Showcase current `PUBLISHED`，一次业务表单提交形成 v2 `DRAFT`，默认变化页、保持不变分页、设备筛选、PUBLISHED→DRAFT lineage、交付/稳定性、Validator 和刷新恢复均通过。TASK-DEMO-08 又从全新 runtime 重放完整中文链，取得 68/68 浏览器断言、两张已校验截图、八组关键文字 AA 对比度、无悬空 ARIA 引用和双宽度 0 页面溢出。TASK-DEMO-09 再以 production build/preview 的真实 Chromium 完成基线与比较状态各 1 warmup + 5 measured，12/12 样本均加载中文页面且关键 API 返回成功。Gate E 功能、视觉与 D17 多样本观察现为 `PASS`。
 
 ### Gate F：恢复与安全
 
@@ -313,6 +328,8 @@ TASK-DEMO-05 已在真实 Chromium 验证同源 HttpOnly session、EMPTY 到基�
 
 D16 测试矩阵证据汇总于 `demo/build/validation/e2e-evidence-demo-08.json`：API/SQLite 50 项、真实浏览器 68 项、跨报告/截图/源码 39 项全部 `PASS`。浏览器整链约 79.89 秒、API Smoke 审计约 14.45 秒只是本次功能运行 wall time；没有 warmup + 5、p95、独立 RSS 或目标机签名，因此不能写入 D17 性能基线。
 
+D17 基准证据汇总于 `demo/build/validation/benchmark-evidence-demo-09.json`：复算 21 个后端 raw samples、12 个浏览器样本、环境/源码 digest、三档分布、Showcase 7 项门槛与参数冻结，结果为 `PASS`。浏览器观察单独保存在 `browser-benchmark-observation-demo-09.json`；版本化 sealed baseline 位于 `demo/benchmarks/baselines/cnc-demo-formal-benchmark.v1/`。
+
 ## 11. 发布判定
 
 只有以下材料齐全才能标记 Demo ready：
@@ -326,3 +343,5 @@ D16 测试矩阵证据汇总于 `demo/build/validation/e2e-evidence-demo-08.json
 - 目标演示机 smoke 结果。
 
 该判定只表示“CNC Simulation Demo 可重复演示”，不改变项目当前 P7 状态，也不建立生产 SLA。
+
+D17 已补齐第二、第四和第五项中的基准/fixture/状态证据，但一键启动与一键重置 runbook、最终现场机 smoke 和完整发布审计仍待 D18，因此当前仍不得标记 Demo ready。

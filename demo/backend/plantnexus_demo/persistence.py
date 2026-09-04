@@ -682,7 +682,10 @@ class ControlStore:
 
     def start_stage(self, job_id: str, *, sequence: int, stage: str) -> None:
         _require_identifier(stage, "stage")
-        now = utc_now()
+        # Performance evidence needs sub-second stage boundaries.  Business
+        # identity timestamps remain whole-second UTC; stage observations are
+        # diagnostic-only and therefore retain microseconds.
+        now = datetime.now(UTC).isoformat().replace("+00:00", "Z")
         with self._connection(immediate=True) as connection:
             row = connection.execute(
                 "SELECT attempt, status FROM demo_jobs WHERE job_id = ?", (job_id,)

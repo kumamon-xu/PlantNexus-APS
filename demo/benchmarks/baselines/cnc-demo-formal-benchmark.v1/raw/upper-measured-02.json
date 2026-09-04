@@ -1,0 +1,371 @@
+{
+  "assertions": {
+    "baseline_published": true,
+    "change_report_and_preservation_pass": true,
+    "database_self_check_pass": true,
+    "initial_candidate_validator_pass": true,
+    "presentation_contract_pass": true,
+    "profile_and_seed_match": true,
+    "replan_candidate_validator_pass": true,
+    "reset_failure_preserves_active": true,
+    "solve_limits_match_frozen_profile": true,
+    "source_counts_match": true
+  },
+  "b1_data_import": {
+    "assets_digest": "122ddabb467f085a86e3d8c110c2d2a6c8f18acc0c52464e2ddf3c9d4f1681b2",
+    "batch_request_fingerprint": "aaf22efeff627986cc434dfb6480d533be3ac5320c02a58436ad046619f396a0",
+    "dataset_hash": "sha256:e1c61b90eb9b01968c72fe8b9a684b7940836a6eec784c6fe7b5ef32679a43fa",
+    "end_to_end_seconds": 4.627902699983679,
+    "problem_counts": {
+      "active_operations": 665,
+      "completed_anchors": 20,
+      "hard_locks": 5,
+      "not_started_operations": 650,
+      "orders": 150,
+      "resource_options": 1435,
+      "resources": 30,
+      "running_operations": 15,
+      "soft_locks": 10,
+      "unavailable_intervals": 786
+    },
+    "problem_hash": "sha256:7bbb0d33acc139282b3d64ec044af8e6391dcf1f7661ce0140400e3cf3f49895",
+    "quality_status": "PASS",
+    "snapshot_hash": "sha256:207626ce4696394d05857400fbe289217227c3f3cf9f0459ec96df0d777796f2",
+    "source_counts": {
+      "calendars": 30,
+      "demand_orders": 150,
+      "execution_facts": 50,
+      "factories": 1,
+      "operation_locks": 15,
+      "production_lines": 3,
+      "production_lots": 150,
+      "production_orders": 150,
+      "products": 150,
+      "resource_groups": 7,
+      "resources": 30,
+      "routing_operations": 700,
+      "routing_precedence_edges": 550,
+      "routing_resource_options": 1500,
+      "routing_versions": 150,
+      "workshops": 3
+    },
+    "stage_seconds": {
+      "BUILDING_PROBLEM": 0.45153,
+      "GENERATING": 0.059684,
+      "MIGRATING": 0.475679,
+      "NORMALIZING": 0.171325,
+      "PERSISTING_IMPORT": 0.530183,
+      "SELF_CHECKING": 0.321395,
+      "SNAPSHOTTING": 0.872502,
+      "STAGING": 0.050467,
+      "SWITCHING_ACTIVE_RUN": 0.019695,
+      "VALIDATING_DATA": 0.22358
+    }
+  },
+  "b2_initial_plan": {
+    "end_to_end_seconds": 12.181271499983268,
+    "non_solving_stages_seconds": 3.240736,
+    "schedule_state": "READY_FOR_REVIEW",
+    "solver": {
+      "assignment_count": 665,
+      "best_bound": 0,
+      "candidate_fingerprint": "sha256:b7d29340bf4840cf48e1ed01ccfd9af50c9ddc23fcca38732e25253dcdefcaac",
+      "limits": {
+        "limits_fingerprint": "sha256:9aa11203b3c7c1b3a0eab4c27433fbfca2beb5c086c634b679384e124c5b2eae",
+        "limits_id": "CNC-DEMO-LIMITS-UPPER",
+        "limits_revision": "1.0.0",
+        "max_wall_time_seconds": 60.0,
+        "max_workers": 1,
+        "random_seed": 20260902,
+        "solve_limits_version": "solve-limits.v1"
+      },
+      "memory_peak_mb_solver_telemetry": 4.230475425720215,
+      "model_metrics": {
+        "constraints": 5738,
+        "optional_intervals": 1435,
+        "variables": 3066
+      },
+      "objective_stage_results": [
+        {
+          "allocated_wall_time_seconds": 60.0,
+          "best_bound": 0,
+          "metric": "WEIGHTED_TARDINESS",
+          "objective_id": "OBJ-001",
+          "objective_value": 0,
+          "relative_gap": 0.0,
+          "sense": "MINIMIZE",
+          "solve_seconds": 6.3765274000000005,
+          "stage_index": 1,
+          "status": "OPTIMAL",
+          "stop_reason": "OBJ001_OPTIMALITY_PROVEN"
+        }
+      ],
+      "objective_value": 0,
+      "planning_run_outcome": {
+        "product_error": null,
+        "state": "SOLVED"
+      },
+      "relative_gap": 0.0,
+      "solver_status": "OPTIMAL",
+      "timings": {
+        "first_feasible_seconds": null,
+        "first_feasible_status": "NOT_REPORTED_NO_RELIABLE_CALLBACK",
+        "model_build_seconds": 0.2827279999910388,
+        "solve_seconds": 6.3765274000000005,
+        "total_seconds": 7.031985199981136,
+        "validation_seconds": 0.2983646999928169
+      }
+    },
+    "stage_seconds": {
+      "BUILDING_PROBLEM": 0.358981,
+      "GENERATING": 0.064446,
+      "NORMALIZING": 0.258815,
+      "PERSISTING_SNAPSHOT": 0.711772,
+      "PERSISTING_VERSION": 0.4549,
+      "SNAPSHOTTING": 0.744019,
+      "SOLVING": 7.07022,
+      "STAGING": 0.068882,
+      "VALIDATING_DATA": 0.21441,
+      "VERIFYING_SOLUTION": 0.364511
+    },
+    "validator": {
+      "hard_violation_count": 0,
+      "independent": true,
+      "status": "PASS"
+    }
+  },
+  "b3_baseline_activation": {
+    "current_publication_read_back": true,
+    "end_to_end_seconds": 0.35413799999514595,
+    "state": "PUBLISHED"
+  },
+  "b4_urgent_replan": {
+    "change_report": {
+      "classifications": {
+        "ADDED": 5,
+        "CHANGED": 29,
+        "REMOVED_BY_FACT": 0,
+        "UNCHANGED": 636
+      },
+      "fingerprint": "sha256:d4b2e83595c04d45d8289394809ca1e22412193a994912ab1aba955a7a7651ef",
+      "operation_universe_count": 670,
+      "stability": {
+        "absolute_start_shift_seconds": 2550600,
+        "changed_existing_operations": 29,
+        "comparable_existing": 665,
+        "resource_changes": 4,
+        "soft_lock_violations": 4,
+        "unchanged_existing": 636,
+        "unchanged_ratio": {
+          "denominator": 665,
+          "numerator": 636,
+          "status": "APPLICABLE"
+        }
+      },
+      "status": "PASS"
+    },
+    "end_to_end_seconds": 28.883858400018653,
+    "fixture_fingerprint": "sha256:eaf47426fa59e902f48587016117672d6402dd34780f46104266cdfc54001954",
+    "fixture_id": "CNC-DEMO-URGENT-FIXTURE-001",
+    "fixture_version": "1.0.0",
+    "non_solving_stages_seconds": 6.665266,
+    "preservation": {
+      "completed_after": 35,
+      "completed_before": 35,
+      "completed_fingerprint_unchanged": true,
+      "current_publication_unchanged": true,
+      "explicit_hard_lock_count": 5,
+      "freeze_derived_hard_lock_count": 5,
+      "running_fact_count": 15
+    },
+    "schedule_state": "DRAFT",
+    "solver": {
+      "assignment_count": 670,
+      "best_bound": 0,
+      "candidate_fingerprint": "sha256:7e80e958aa0c01773106ba78dfd516d10aecd3a84517eca09f27c76d82ab0b0e",
+      "limits": {
+        "limits_fingerprint": "sha256:2ab1f72996c80123e5939a14d118d0b85f8bcf589372c99ddb91361fee2f3a06",
+        "limits_id": "CNC-DEMO-REPLAN-LIMITS-UPPER",
+        "limits_revision": "1.0.0",
+        "max_wall_time_seconds": 90.0,
+        "max_workers": 1,
+        "random_seed": 20260902,
+        "solve_limits_version": "solve-limits.v1"
+      },
+      "memory_peak_mb_solver_telemetry": 5.086939811706543,
+      "model_metrics": {
+        "constraints": 11904,
+        "optional_intervals": 1444,
+        "variables": 7123
+      },
+      "objective_stage_results": [
+        {
+          "allocated_wall_time_seconds": 30.0,
+          "best_bound": 0,
+          "metric": "WEIGHTED_TARDINESS_SECONDS",
+          "objective_id": "OBJ-001",
+          "objective_value": 0,
+          "relative_gap": 0.0,
+          "sense": "MINIMIZE",
+          "solve_seconds": 4.0352259000064805,
+          "stage_index": 1,
+          "status": "OPTIMAL",
+          "stop_reason": "OBJ-001_OPTIMALITY_PROVEN"
+        },
+        {
+          "allocated_wall_time_seconds": 30.0,
+          "best_bound": {
+            "absolute_start_shift_seconds": 2550600,
+            "changed_existing_operations": 29,
+            "resource_changes": 4,
+            "soft_lock_violations": 4
+          },
+          "metric": "STABILITY_VECTOR",
+          "objective_id": "OBJ-002",
+          "objective_value": {
+            "absolute_start_shift_seconds": 2550600,
+            "changed_existing_operations": 29,
+            "resource_changes": 4,
+            "soft_lock_violations": 4
+          },
+          "relative_gap": null,
+          "sense": "LEXICOGRAPHIC_MINIMIZE",
+          "solve_seconds": 7.573404799972195,
+          "stage_index": 2,
+          "status": "OPTIMAL",
+          "stop_reason": "OBJ-002_ALL_COMPONENTS_OPTIMALITY_PROVEN"
+        },
+        {
+          "allocated_wall_time_seconds": 30.0,
+          "best_bound": 271800,
+          "metric": "MAKESPAN_SECONDS",
+          "objective_id": "OBJ-003",
+          "objective_value": 271800,
+          "relative_gap": 0.0,
+          "sense": "MINIMIZE",
+          "solve_seconds": 0.5589985999977216,
+          "stage_index": 3,
+          "status": "OPTIMAL",
+          "stop_reason": "OBJ-003_OPTIMALITY_PROVEN"
+        }
+      ],
+      "objective_value": 0,
+      "planning_run_outcome": {
+        "product_error": null,
+        "state": "SOLVED"
+      },
+      "relative_gap": 0.0,
+      "solver_status": "OPTIMAL",
+      "timings": {
+        "first_feasible_seconds": null,
+        "first_feasible_status": "NOT_REPORTED_NO_RELIABLE_CALLBACK",
+        "model_build_seconds": 0.5143657000153325,
+        "solve_seconds": 12.167629299976397,
+        "total_seconds": 15.081359600008,
+        "validation_seconds": 2.2203314999933355
+      }
+    },
+    "stage_seconds": {
+      "APPENDING_EVENT": 0.023085,
+      "BUILDING_PRESENTATION": 0.039168,
+      "COMMITTING_RESULT": 0.205287,
+      "COMPLETE": 0.009303,
+      "CREATING_REQUEST": 0.035817,
+      "IMPORTING_URGENT_DEMAND": 0.057225,
+      "PREPARING_IMPORT": 3.626272,
+      "PROJECTING_FACTS": 2.659101,
+      "SOLVING": 17.494548,
+      "VERIFYING_SOLUTION": 0.010008
+    },
+    "validator": {
+      "hard_violation_count": 0,
+      "independent": true,
+      "status": "PASS"
+    }
+  },
+  "b5_presentation": {
+    "api_seconds": {
+      "base_schedule": 0.4614648999995552,
+      "comparison": 0.914760000014212,
+      "draft_schedule": 0.6462258999818005,
+      "factory": 0.37359339999966323
+    },
+    "base_returned_assignments": 160,
+    "base_unfiltered_assignments": 665,
+    "browser_first_screen": "MEASURED_BY_SEPARATE_PLAYWRIGHT_SUITE",
+    "comparison_operation_universe": 670,
+    "comparison_returned_operations": 34,
+    "comparison_validation": "PASS",
+    "draft_returned_assignments": 160,
+    "draft_unfiltered_assignments": 670,
+    "factory_counts": {
+      "maintenance_events": 6,
+      "production_lines": 3,
+      "resource_groups": 7,
+      "resources": 30,
+      "unavailable_intervals": 786,
+      "workshops": 3
+    },
+    "job_api_seconds": 0.0004959000216331333,
+    "max_api_seconds": 0.914760000014212,
+    "max_job_state_api_seconds": 0.013343099999474362,
+    "payload_bytes": {
+      "base_schedule": 327226,
+      "comparison": 53118,
+      "draft_schedule": 330587,
+      "factory": 246182
+    },
+    "read_only": true,
+    "state_api_seconds": 0.013343099999474362
+  },
+  "b6_reset_recovery": {
+    "error_code": "RESET_FAILED",
+    "failure_probe_seconds": 3.080585100018652,
+    "fault_point": "BEFORE_SWITCH",
+    "old_active_run_preserved": true
+  },
+  "boundaries": {
+    "data_plane": "SIMULATION_ONLY",
+    "first_feasible_metric": "NOT_REPORTED_NO_RELIABLE_CALLBACK",
+    "p7_registration": null,
+    "production_capacity_claim": "NOT_ESTABLISHED",
+    "production_sla_claim": "NOT_ESTABLISHED",
+    "runtime_path_recorded": false,
+    "session_token_recorded": false,
+    "synthetic_only": true
+  },
+  "generated_at_utc": "2026-09-04T04:08:17Z",
+  "overall_wall_seconds": 51.65394260000903,
+  "profile": {
+    "active_operations": 665,
+    "horizon_days": 14,
+    "initial_solve_seconds": 60,
+    "name": "upper",
+    "operations": 700,
+    "orders": 150,
+    "profile_id": "CNC-DEMO-UPPER",
+    "replan_solve_seconds": 90,
+    "resources": 30,
+    "scenario_version": "1.0.0",
+    "seed": 20260902
+  },
+  "protocol": {
+    "baseline_version": "cnc-demo-formal-benchmark-baseline.v1",
+    "fingerprint": "sha256:97a98b8cf2826204d3c032d8c78321d96121c1978e407168a904428cc767b15b",
+    "version": "cnc-demo-formal-benchmark-protocol.v1"
+  },
+  "resources": {
+    "artifact_canonical_json_bytes": 10999852,
+    "backend_peak_rss_bytes": 304402432,
+    "backend_peak_rss_method": "WINDOWS_PROCESS_TREE_WORKING_SET_20MS_PARENT_SAMPLER",
+    "rss_sample_count": 1564,
+    "rss_sampling_interval_seconds": 0.02,
+    "sqlite_database_bytes": 27774976
+  },
+  "role": "measured",
+  "sample_fingerprint": "sha256:9d22a434a765a4b195c7f2125bd932185212004d6f7d70609b7f1e974ee8ce0f",
+  "sample_id": "upper-measured-02",
+  "sample_version": "cnc-demo-formal-benchmark-sample.v1",
+  "sequence": 2,
+  "status": "PASS"
+}

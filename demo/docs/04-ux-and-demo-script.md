@@ -319,9 +319,9 @@ Job 面板显示：
 
 ## 8. 脚本化加急样本
 
-当前 D15 开发与浏览器演示使用以下固定样本；它还不是 D17 的 immutable 性能基线：
+以下样本已由 D17 作为 `CNC-DEMO-URGENT-FIXTURE-001` / `1.0.0` 冻结。D18 应逐字段重放；任何字段变化都必须升级 fixture、protocol 和 baseline 版本：
 
-| 字段 | 候选值 |
+| 字段 | 冻结值 |
 |---|---|
 | route_template_id | CNC-ROUTE-5（精密套筒类，5 道工序） |
 | quantity | 5 |
@@ -329,7 +329,7 @@ Job 面板显示：
 | priority_class | URGENT（加急，权重 12） |
 | note | Showcase 固定加急精密套筒 |
 
-D15 单次真实浏览器链已证明新增/变化/保持不变、Validator PASS、ChangeReport 自检和 DRAFT/current Publication 边界。冻结为正式 D17 样本前仍须证明：
+D17 在本地演示参考机完成 5 次独立 measured 重排并证明：
 
 - 新增工序数等于模板深度；
 - 至少一条既有工序发生变化；
@@ -337,9 +337,12 @@ D15 单次真实浏览器链已证明新增/变化/保持不变、Validator PASS
 - 已完成、正在加工、硬锁与冻结任务全部得到保留；
 - 新排程 Validator PASS；
 - ChangeReport 自检 PASS；
-- 结果在目标演示机 5 次重复运行中稳定可复现。
+- 5 次均新增 5 道工序、移动 22～23 道既有工序并保持 557～558 道既有工序不变；
+- 5 次均为 `Validator PASS + ChangeReport PASS`，其中 4 次 `OPTIMAL`、1 次已验证的 `FEASIBLE`；
+- 30 个已完成、12 个运行中、4 个显式硬锁和 8 个冻结派生硬锁均保持；
+- 新版本始终为 `DRAFT`，current `PUBLISHED` 未被替换。
 
-如果候选样本不满足上述条件，调整 fixture 参数并重新基准；不能在现场反复试随机交期。
+这些结论仍是 synthetic-only 的本地参考环境证据。D18 必须在最终现场机复跑；若要调整样本，不能在现场反复试随机交期，而应升级版本并重新完成正式基准。
 
 ## 9. 失败演示与恢复
 

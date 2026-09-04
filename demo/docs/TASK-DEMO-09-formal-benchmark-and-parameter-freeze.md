@@ -1,7 +1,7 @@
 ---
 doc_id: TASK-DEMO-09
 title: Formal Benchmark and Demo Parameter Freeze
-status: in_progress
+status: complete
 spec_version: demo-task-card.v1
 phase: demo
 normative: true
@@ -68,9 +68,11 @@ Provider evidence: local Demo-only reference environment。环境身份必须记
 
 Completion conditions: 三档均具备 preflight、warmup 与 5 个 measured 原始样本；Showcase 5/5 初排与加急结果满足 Solver/Validator 强制门，固定 fixture 同时包含 ADDED、CHANGED、UNCHANGED 且保护 completed/running/hard/freeze；B1～B6 指标、independent process-tree RSS、浏览器首屏和环境签名完整；所有统计可从 raw samples 独立复算；暂定阈值逐项 PASS/FAIL 且失败未被掩盖；Upper 700 工序无 OOM/损坏并有状态分布；profile、solve limits 与 fixture 只有在证据通过后冻结；报告明确 synthetic-only、当前参考环境、无生产容量/SLA；全部代码、测试、证据和文档只在 `demo/**`；D18 与 Demo ready 仍开放。
 
-Completion evidence: 实现与正式证据完成，strict scope closure pending。三档各完成 1 次 preflight、1 次 warmup、5 次 measured，共 21 个独立后端进程 raw samples；Showcase 初排/重排端到端 p95 为 7.517/22.601 秒、进程树 RSS p95 277.3 MiB，7 项门槛全部 `PASS`，初排 5/5 `OPTIMAL`，重排 4 `OPTIMAL` + 1 已验证 `FEASIBLE`，Validator/ChangeReport 5/5 `PASS`。Upper 700 工序初排/重排 p95 为 12.181/32.014 秒且 5/5 `OPTIMAL`。真实中文 Chromium 封存 12 个首屏样本；基线/比较页 measured 首屏 p95 为 1,365.5/2,398.5 ms。`benchmark-evidence-demo-09.json` 对 21+12 样本、环境/源码 digest、统计、阈值和冻结参数的复算为 `PASS`；Python 44 tests、前端 5 files/36 tests、Ruff、Pyright、lint、typecheck、build、脚本语法和 diff hygiene 均通过。
+Completion evidence: 实现与正式证据完成；strict scope 机器结论保留 `FAIL / SCOPE_CHECK`，用户已明确接受该审计事实、授权不复跑并正式 closure。三档各完成 1 次 preflight、1 次 warmup、5 次 measured，共 21 个独立后端进程 raw samples；Showcase 初排/重排端到端 p95 为 7.517/22.601 秒、进程树 RSS p95 277.3 MiB，7 项门槛全部 `PASS`，初排 5/5 `OPTIMAL`，重排 4 `OPTIMAL` + 1 已验证 `FEASIBLE`，Validator/ChangeReport 5/5 `PASS`。Upper 700 工序初排/重排 p95 为 12.181/32.014 秒且 5/5 `OPTIMAL`。真实中文 Chromium 封存 12 个首屏样本；基线/比较页 measured 首屏 p95 为 1,365.5/2,398.5 ms。`benchmark-evidence-demo-09.json` 对 21+12 样本、环境/源码 digest、统计、阈值和冻结参数的复算为 `PASS`；Python 44 tests、前端 5 files/36 tests、Ruff、Pyright、lint、typecheck、build、脚本语法和 diff hygiene 均通过。
 
 `task-machine-report-demo-09.json` 当前为 `FAIL`，唯一失败类别是 strict scope：共享工作区中观测到 18 个非 `demo` 文档差异，其中 5 个既有 protected 文件 hash 也已被外部工作改变；3/3 benchmark checks、10/10 commands、task context、formal benchmark evidence 和 text hygiene 全部 `PASS`。本任务未修改或回滚这些外部差异，也未放宽通用范围门；待其所有者处理后必须重新生成 context 并复跑 machine report，只有报告整体 `PASS` 才将本卡改为 `complete`。
+
+Closure authorization（2026-09-04）：用户明确授权“可以正式关闭，不用复跑机器报告，继续 D18”。因此本卡以用户接受共享工作区外部 scope 差异的方式正式关闭；既有 `task-machine-report-demo-09.json` 保持原样，不改写 `FAIL`，不伪造复跑或绿色机器证据。该授权只关闭 TASK-DEMO-09，不把 18 个外部路径纳入 Demo 变更、不放宽 D18 的代码和发布边界，也不改变 synthetic-only、非生产容量和无 SLA 结论。
 
 Failure handling: suite 失败时保留原始 JSON 和原因，将 TASK 保持 `in_progress`；仅根据模型大小、日历碎片、候选密度、六轮预算、查询或渲染证据提出最小优化，并升级 profile/baseline version 后全量重跑。不得删除失败样本、用单次最佳值代替分布、静默降低规模或把 warmup 算入 measured。
 

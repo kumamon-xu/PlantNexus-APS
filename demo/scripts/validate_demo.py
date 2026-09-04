@@ -623,6 +623,75 @@ def _verify_formal_benchmark_evidence() -> dict[str, Any]:
     }
 
 
+def _verify_delivery_release_evidence() -> dict[str, Any]:
+    observation_path = DEMO_ROOT / "build/validation/delivery-observation-demo-10.json"
+    manifest_path = DEMO_ROOT / "release/cnc-demo-release-manifest.v1.json"
+    audit_path = DEMO_ROOT / "build/validation/release-audit-demo-10.json"
+    observation = _verified_document(observation_path, "report_fingerprint")
+    manifest = _verified_document(manifest_path, "manifest_fingerprint")
+    audit = _verified_document(audit_path, "report_fingerprint")
+    observation_checks = observation["checks"]
+    audit_checks = audit["checks"]
+    scenario = manifest["scenario"]
+    passed = (
+        observation["status"] == "PASS"
+        and observation["task_id"] == "TASK-DEMO-10"
+        and observation["observation_version"]
+        == "cnc-demo-delivery-observation.v1"
+        and len(observation_checks) == 17
+        and all(observation_checks.values())
+        and observation["target_site_status"] == "PENDING_FINAL_SITE_REPLAY"
+        and manifest["manifest_version"] == "cnc-demo-release-manifest.v1"
+        and manifest["task_id"] == "TASK-DEMO-10"
+        and manifest["release_class"] == "LOCAL_DELIVERY_CANDIDATE"
+        and manifest["target_site_status"] == "PENDING_FINAL_SITE_REPLAY"
+        and manifest["file_count"] == len(manifest["files"])
+        and all(item["path"].startswith("demo/") for item in manifest["files"])
+        and scenario
+        == {
+            "profile_name": "showcase",
+            "profile_id": "CNC-DEMO-SHOWCASE",
+            "seed": 20260902,
+            "orders": 132,
+            "operations": 610,
+            "resources": 24,
+            "horizon_days": 10,
+            "initial_solve_seconds": 20,
+            "replan_solve_seconds": 30,
+            "profile_set_version": "cnc-demo-benchmark-profiles.v2",
+            "parameter_freeze_status": "FROZEN",
+        }
+        and audit["status"] == "PASS"
+        and audit["task_id"] == "TASK-DEMO-10"
+        and audit["audit_version"] == "cnc-demo-release-audit.v1"
+        and audit["release_decision"] == "LOCAL_CANDIDATE_VERIFIED"
+        and audit["local_candidate_ready"] is True
+        and audit["final_release_ready"] is False
+        and audit["target_site_status"] == "PENDING_FINAL_SITE_REPLAY"
+        and len(audit_checks) == 16
+        and all(audit_checks.values())
+        and audit["manifest"]["fingerprint"] == manifest["manifest_fingerprint"]
+        and audit["manifest"]["sha256"] == _sha256(manifest_path)
+    )
+    return {
+        "status": "PASS" if passed else "FAIL",
+        "observation_path": observation_path.relative_to(REPOSITORY_ROOT).as_posix(),
+        "observation_sha256": _sha256(observation_path),
+        "observation_fingerprint": observation["report_fingerprint"],
+        "observation_check_count": len(observation_checks),
+        "manifest_path": manifest_path.relative_to(REPOSITORY_ROOT).as_posix(),
+        "manifest_sha256": _sha256(manifest_path),
+        "manifest_fingerprint": manifest["manifest_fingerprint"],
+        "release_file_count": manifest["file_count"],
+        "audit_path": audit_path.relative_to(REPOSITORY_ROOT).as_posix(),
+        "audit_sha256": _sha256(audit_path),
+        "audit_fingerprint": audit["report_fingerprint"],
+        "audit_check_count": len(audit_checks),
+        "release_decision": audit["release_decision"],
+        "target_site_status": audit["target_site_status"],
+    }
+
+
 def build_report(*, task_id: str, context_path: Path) -> dict[str, Any]:
     baseline_path = DEMO_ROOT / "build/validation/protected-root-baseline.json"
     baseline = json.loads(baseline_path.read_text(encoding="utf-8"))
@@ -676,6 +745,7 @@ def build_report(*, task_id: str, context_path: Path) -> dict[str, Any]:
         "TASK-DEMO-07",
         "TASK-DEMO-08",
         "TASK-DEMO-09",
+        "TASK-DEMO-10",
     }:
         frontend_root = DEMO_ROOT / "frontend"
         command_checks = [
@@ -705,6 +775,37 @@ def build_report(*, task_id: str, context_path: Path) -> dict[str, Any]:
                     "demo/build/validation/benchmark-evidence-demo-09.json",
                 ]
             )
+        )
+    if task_id == "TASK-DEMO-10":
+        command_checks.extend(
+            [
+                _run(
+                    [
+                        "uv",
+                        "run",
+                        "python",
+                        "demo/scripts/run_delivery_rehearsal.py",
+                        "--verify-only",
+                        "--report",
+                        "demo/build/validation/delivery-observation-demo-10.json",
+                    ]
+                ),
+                _run(
+                    [
+                        "uv",
+                        "run",
+                        "python",
+                        "demo/scripts/run_release_audit.py",
+                        "--verify-only",
+                        "--manifest",
+                        "demo/release/cnc-demo-release-manifest.v1.json",
+                        "--report",
+                        "demo/build/validation/release-audit-demo-10.json",
+                    ]
+                ),
+                _run(["node", "--check", "demo/scripts/browser_delivery_demo_10.js"]),
+                _run(["uv", "run", "python", "demo/scripts/democtl.py", "--help"]),
+            ]
         )
     hygiene = _text_hygiene()
     artifact_checks: dict[str, dict[str, Any]] = {
@@ -757,6 +858,10 @@ def build_report(*, task_id: str, context_path: Path) -> dict[str, Any]:
     elif task_id == "TASK-DEMO-09":
         artifact_checks["formal_benchmark_evidence"] = (
             _verify_formal_benchmark_evidence()
+        )
+    elif task_id == "TASK-DEMO-10":
+        artifact_checks["delivery_release_evidence"] = (
+            _verify_delivery_release_evidence()
         )
     functional_passed = (
         all(item["status"] == "PASS" for item in benchmark_checks)
@@ -834,6 +939,7 @@ def main() -> int:
             "TASK-DEMO-07",
             "TASK-DEMO-08",
             "TASK-DEMO-09",
+            "TASK-DEMO-10",
         ),
         default="TASK-DEMO-01",
     )
@@ -855,6 +961,7 @@ def main() -> int:
             "TASK-DEMO-07": "task-context-manifest-demo-07.json",
             "TASK-DEMO-08": "task-context-manifest-demo-08.json",
             "TASK-DEMO-09": "task-context-manifest-demo-09.json",
+            "TASK-DEMO-10": "task-context-manifest-demo-10.json",
         }[arguments.task_id]
     )
     report = build_report(task_id=arguments.task_id, context_path=context_path)

@@ -1,6 +1,6 @@
 # CNC Demo 实施任务清单
 
-状态：实施中（D17 正式专项基准与参数冻结结果通过；TASK-DEMO-09 范围闭环待共享工作区外部差异处理，D18 待实施）
+状态：本地交付候选已验证（TASK-DEMO-09 已正式关闭；D18 等待最终现场机复放）
 范围约束：所有新增或修改资产必须位于 demo 目录  
 完成定义：通过 [专项基准与验收标准](05-benchmark-and-acceptance.md)的 Gate A～F
 
@@ -48,9 +48,9 @@ D04 是架构可行性门。若 610 工序在候选预算内不能稳定返回�
 - D14：中文订单风险表、订单→甘特联动、工厂/车间/设备筛选、72 小时有界甘特、日历/维护/执行/锁定语义、等价表格、计划负荷与校验证据已完成；Showcase 132/580/24 浏览器 smoke 和双宽度页面无溢出通过。
 - D15：资产驱动的四路线中文插单表单、只读 current base、二次确认、durable urgent command 恢复、真实 job 阶段、自动 DRAFT 比较、ChangeReport 分类、交付/稳定性/Validator、120 条分页和刷新恢复已完成；Showcase 单次真实链与双宽度页面无溢出通过。
 - D16：全新隔离 runtime 的中文 Chromium 完整链、四类业务 mutation 单次提交、双击/刷新、重启中断与原身份重试、stale、并发 reset、受控失败、Simulation 授权、scope、Production binding、token/log/path 消毒、键盘/focus/ARIA/对比度/reduced motion 和双宽度布局均已通过。
-- D17：实现与正式证据已完成。SMOKE、SHOWCASE、UPPER 共 21 个隔离后端样本和 12 个真实 Chromium 首屏样本已封存；Showcase 7 项阈值、5/5 Validator/ChangeReport、Upper 700 工序 characterization 均 `PASS`，默认 profile、20/30 秒上限和固定加急 fixture 已冻结。共享工作区中另有非本任务产生的 `demo/**` 外文档差异，TASK-DEMO-09 严格范围闭环保持开放。
+- D17：已正式关闭。SMOKE、SHOWCASE、UPPER 共 21 个隔离后端样本和 12 个真实 Chromium 首屏样本已封存；Showcase 7 项阈值、5/5 Validator/ChangeReport、Upper 700 工序 characterization 均 `PASS`，默认 profile、20/30 秒上限和固定加急 fixture 已冻结。最终机器报告保留外部 scope 差异导致的 `FAIL`；用户明确授权不复跑并接受该审计事实。
 
-因此当前结论是 `INITIAL_SOLVE_SCALE_GATE=PASS`、`DYNAMIC_REPLAN_BACKEND_GATE=PASS`、`PRESENTATION_READ_GATE=PASS`、`D13_STORY_SHELL_GATE=PASS`、`D14_WORKSPACE_GATE=PASS`、`D15_REPLAN_UI_GATE=PASS`、`D16_E2E_SECURITY_A11Y_GATE=PASS` 且 `D17_FORMAL_BENCHMARK_GATE=PASS`。M3 已满足，M4 的基准子项已有完整证据，但 TASK-DEMO-09 的 strict scope closure、D18 打包、runbook、最终现场机复跑与发布审计仍未完成，所以还不是 Demo ready。详见 [当前实施状态](IMPLEMENTATION-STATUS.md)与 [D17 正式报告](D17-FORMAL-BENCHMARK-REPORT.md)。
+因此当前结论是 `INITIAL_SOLVE_SCALE_GATE=PASS`、`DYNAMIC_REPLAN_BACKEND_GATE=PASS`、`PRESENTATION_READ_GATE=PASS`、`D13_STORY_SHELL_GATE=PASS`、`D14_WORKSPACE_GATE=PASS`、`D15_REPLAN_UI_GATE=PASS`、`D16_E2E_SECURITY_A11Y_GATE=PASS`、`D17_FORMAL_BENCHMARK_GATE=PASS` 且 `D18_LOCAL_DELIVERY_CANDIDATE=PASS`。M3 已满足，D17 已按用户授权关闭；D18 的本地打包、Runbook、release audit 和真实浏览器恢复演练已完成，但最终现场机身份与复放仍待确认，所以还不是最终 Demo ready。详见 [当前实施状态](IMPLEMENTATION-STATUS.md)、[D17 正式报告](D17-FORMAL-BENCHMARK-REPORT.md)与 [D18 Runbook](D18-DEMO-RUNBOOK.md)。
 
 ## 2. 总览
 
@@ -456,7 +456,7 @@ D04 是架构可行性门。若 610 工序在候选预算内不能稳定返回�
 
 ### D17 — 正式专项基准与调优
 
-状态：实现与正式证据完成，TASK-DEMO-09 范围闭环待处理。未因结果失败而调整规模或阈值；严格 machine report 仅因共享工作区中非本任务产生的 `demo/**` 外差异保持 `FAIL`。
+状态：已完成（TASK-DEMO-09）。未因结果失败而调整规模或阈值；严格 machine report 因共享工作区中非本任务产生的 `demo/**` 外差异保持 `FAIL`，用户明确授权不复跑并正式关闭。
 
 目标：冻结可以如实公开的 Demo 参数。
 
@@ -480,6 +480,8 @@ D04 是架构可行性门。若 610 工序在候选预算内不能稳定返回�
 
 ### D18 — 一键启动、Runbook 与发布审计
 
+状态：本地候选已验证、最终现场待复放（TASK-DEMO-10 保持 `in_progress`）。
+
 目标：交付不依赖开发者现场手工拼装的 Demo。
 
 工作：
@@ -491,13 +493,19 @@ D04 是架构可行性门。若 610 工序在候选预算内不能稳定返回�
 - 生成发布清单：commit、profile、baseline、fixture、已知限制。
 - 审计 git diff，确认没有 demo 外改动和运行产物。
 
+本地完成证据：一键 controller/wrappers 已提供七个中文命令；11 项 delivery 单测及全量 Demo 回归通过。当前候选机完成含 `npm ci` / production build 的 cold ready（约 10.735 秒）、固定 Showcase reset（约 4.718 秒）、两次真实 Chromium `zh-CN / INITIALIZED` smoke、同 runtime restart ready（约 3.234 秒）和 D16 `INTERRUPTED → same identity attempt 2 SUCCEEDED` 复核。版本化 manifest 与 release audit 已闭合 Demo-only inventory、locks、D16/D17/D18 evidence、共享工作区外部差异和安全边界；本地结论为 `LOCAL_CANDIDATE_VERIFIED`。
+
+机器门结果：3/3 benchmark checks、13/13 commands 及全部 context/artifact/hygiene 检查通过，`functional_status=PASS`；总状态因 5 个受保护根文档的共享工作区外部变化保持 `FAIL / SCOPE_CHECK`。D18 未获得范围豁免，不把本地候选审计 PASS 改写成任务机器 PASS。
+
 完成条件：
 
 - 新 checkout 按文档一条命令启动；
 - 一键重置恢复固定场景；
-- 目标演示机 smoke PASS；
+- 用户确认的目标演示机 smoke PASS；
 - 文档中的数量、状态和性能数字与最新 baseline 一致；
 - 发布结论仅为 CNC Simulation Demo ready。
+
+当前剩余条件：最终现场机尚未由用户确认，`target_site_status=PENDING_FINAL_SITE_REPLAY`；D18 因此不正式关闭，不把当前本地候选机冒充最终现场，也不把单次交付时延当作 Solver 或 Production SLA。
 
 ## 4. 建议里程碑
 
@@ -519,7 +527,7 @@ D04 是架构可行性门。若 610 工序在候选预算内不能稳定返回�
 
 包含 D17～D18。退出条件是专项基准、脚本化 fixture、runbook 与目标机 smoke 齐全。
 
-状态：部分满足。D17 的专项基准、脚本化 fixture 和参数冻结已有完整通过证据，但 TASK-DEMO-09 strict scope closure 尚待外部工作区差异处理；D18 的一键交付、runbook、目标机 smoke 与发布审计仍开放。
+状态：本地条件已满足、最终现场条件待满足。D17 的专项基准、脚本化 fixture 和参数冻结已完成并正式关闭；D18 的一键交付、Runbook、本地真实 Chromium smoke、重启恢复、manifest 与 release audit 已通过。最终现场机仍待用户确认并复放，故 M4 尚未最终关闭。
 
 ## 5. 不得作为“完成”的捷径
 

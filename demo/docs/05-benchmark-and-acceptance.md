@@ -1,6 +1,6 @@
 # 专项基准与验收标准
 
-实施更新（2026-09-04）：D17 已按本文件协议在具名本地演示参考机完成 SMOKE、SHOWCASE、UPPER 三档 B1～B6 正式基准、独立进程树 RSS 和真实 Chromium 首屏观察。三档各有 1 次 preflight、1 次 warmup、5 次 measured；Showcase 7 项发布目标和 Upper characterization 均 `PASS`。版本化 raw samples、环境签名、不可变 baseline 与复算证据见 [D17 正式专项基准与参数冻结报告](D17-FORMAL-BENCHMARK-REPORT.md)。最终现场机复跑仍属于 D18，本地结果不建立生产容量或 SLA。
+实施更新（2026-09-04）：D17 已按本文件协议在具名本地演示参考机完成 SMOKE、SHOWCASE、UPPER 三档 B1～B6 正式基准、独立进程树 RSS 和真实 Chromium 首屏观察。三档各有 1 次 preflight、1 次 warmup、5 次 measured；Showcase 7 项发布目标和 Upper characterization 均 `PASS`。版本化 raw samples、环境签名、不可变 baseline 与复算证据见 [D17 正式专项基准与参数冻结报告](D17-FORMAL-BENCHMARK-REPORT.md)。D18 已完成本地候选机的一键交付、Runbook、Chromium 和 release audit，最终现场机复放仍 pending；两阶段结果均不建立生产容量或 SLA。
 
 ## 1. 现有证据边界
 
@@ -344,4 +344,23 @@ D17 基准证据汇总于 `demo/build/validation/benchmark-evidence-demo-09.json
 
 该判定只表示“CNC Simulation Demo 可重复演示”，不改变项目当前 P7 状态，也不建立生产 SLA。
 
-D17 已补齐第二、第四和第五项中的基准/fixture/状态证据，但一键启动与一键重置 runbook、最终现场机 smoke 和完整发布审计仍待 D18，因此当前仍不得标记 Demo ready。
+D17 已补齐第二、第四和第五项中的基准/fixture/状态证据。D18 已在当前本地候选机补齐一键控制面、中文 Runbook、冷启动、固定重置、真实 Chromium 首屏、重启恢复和版本化 release manifest/audit；最终现场机仍未由用户确认，所以状态保持 `PENDING_FINAL_SITE_REPLAY`，当前仍不得标记最终 Demo ready。
+
+## 12. D18 发布审计
+
+D18 的交付验收分为本地候选与最终现场两层，不能用本地 PASS 替代现场放行：
+
+| 检查 | 本地候选结果 | 最终现场要求 |
+|---|---|---|
+| doctor | Python 3.12、Node 24.19.0、npm 12.0.2、uv、npx、锁文件、资产、D17 指纹、端口与写权限 PASS | 目标机重新执行并保存环境签名 |
+| production cold start | 含 `npm ci` / build，ready 约 10.735 秒 | 目标 checkout 默认 `start` PASS |
+| fixed reset | Showcase 132 / 610 / 24、seed `20260902`，约 4.718 秒 | 计数与边界逐字段一致 |
+| real Chromium | 两次 `zh-CN` / `INITIALIZED`，page/console/server error 均为 0 | 目标浏览器重新执行 `smoke` |
+| restart | 同 runtime ready 约 3.234 秒，run identity 保留 | 停止、重启、health、smoke 全部 PASS |
+| interrupted job | D16 `INTERRUPTED`、原 identity attempt 2 `SUCCEEDED` | 语义不得因打包改变 |
+| safe stop | PID 与创建标记匹配后才停止，state 清理 | 无遗留监听进程；未知 PID fail closed |
+| release inventory | `demo/**` SHA-256、lock、D16/D17/D18 evidence 闭合 | 提交后重新核对 manifest/audit |
+
+本地发布审计可以给出 `LOCAL_CANDIDATE_VERIFIED`，但 `final_release_ready=false`。D17 TASK-DEMO-09 的原机器报告继续保持 `FAIL / SCOPE_CHECK`、`functional_status=PASS`，其用户 closure 授权不改变机器事实，也不构成 D18 范围或最终发布豁免。
+
+最终现场机只有在 release manifest、默认一键启动、固定 reset、真实 Chromium 中文 smoke、环境差异说明和安全 stop 均通过后，才可标记“CNC Simulation Demo ready”。该结论仍只针对合成数据、Simulation 和本次版本，不建立 Production 能力或 SLA。

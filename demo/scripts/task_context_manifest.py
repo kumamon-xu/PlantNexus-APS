@@ -251,6 +251,37 @@ SELECTED_INPUTS_BY_TASK = {
         ("demo/frontend/src/components/UrgentOrderPanel.tsx", "FROZEN_FIXTURE_FORM"),
         ("demo/tests/test_benchmark.py", "FULL"),
     ),
+    "TASK-DEMO-10": (
+        ("demo/docs/TASK-DEMO-10-one-command-delivery-runbook-and-release-audit.md", "FULL"),
+        ("demo/docs/TASK-DEMO-09-formal-benchmark-and-parameter-freeze.md", "CLOSURE_SUMMARY"),
+        ("demo/docs/D17-FORMAL-BENCHMARK-REPORT.md", "RESULTS_BOUNDARIES_AND_CLOSURE"),
+        ("demo/docs/03-architecture-and-api.md", "COMPOSITION_SECURITY_AND_RECOVERY"),
+        ("demo/docs/04-ux-and-demo-script.md", "DEMO_SCRIPT_FAILURE_AND_ENVIRONMENT"),
+        ("demo/docs/05-benchmark-and-acceptance.md", "GATES_AND_RELEASE_DECISION"),
+        ("demo/docs/TASKS.md", "D18_AND_M4"),
+        ("demo/benchmarks/formal-protocol.v1.json", "FULL"),
+        ("demo/benchmarks/baselines/cnc-demo-formal-benchmark.v1/baseline.json", "FULL"),
+        ("demo/build/validation/benchmark-evidence-demo-09.json", "FULL"),
+        ("demo/build/validation/e2e-evidence-demo-08.json", "FULL"),
+        ("demo/data/cnc-showcase/manifest.json", "FULL"),
+        ("demo/.gitignore", "FULL"),
+        ("demo/backend/plantnexus_demo/assets.py", "ASSET_VALIDATION"),
+        ("demo/backend/plantnexus_demo/composition.py", "RUNTIME_COMPOSITION"),
+        ("demo/backend/plantnexus_demo/jobs.py", "RECOVERY"),
+        ("demo/backend/plantnexus_demo/persistence.py", "NAMED_RUNTIME_AND_STATE"),
+        ("demo/backend/plantnexus_demo/api.py", "SESSION_RESET_JOB_AND_HEALTH"),
+        ("demo/scripts/start_demo.py", "FULL"),
+        ("demo/scripts/run_browser_e2e.py", "PROCESS_AND_PLAYWRIGHT_PATTERN"),
+        ("demo/scripts/run_e2e_audit.py", "RESTART_RECOVERY_PATTERN"),
+        ("demo/scripts/run_benchmark_evidence.py", "SEALED_EVIDENCE_PATTERN"),
+        ("demo/scripts/validate_demo.py", "FULL"),
+        ("demo/frontend/package.json", "FULL"),
+        ("demo/frontend/package-lock.json", "LOCK_IDENTITY"),
+        ("demo/frontend/vite.config.ts", "PRODUCTION_PREVIEW"),
+        ("demo/frontend/src/DemoApp.tsx", "CHINESE_STORY_MARKERS"),
+        ("pyproject.toml", "PYTHON_RUNTIME_AND_DEPENDENCIES"),
+        ("uv.lock", "LOCK_IDENTITY"),
+    ),
 }
 
 DIFF_BASE_BY_TASK = {
@@ -263,6 +294,7 @@ DIFF_BASE_BY_TASK = {
     "TASK-DEMO-07": "b0cc126522e3916d72b438e7f237851a36b51a3d",
     "TASK-DEMO-08": "9a8f2e556b4b0adfdef3f88e1d442f805e9d4628",
     "TASK-DEMO-09": "a9109e905fbc051666fcd3bc43322ae2c53e619d",
+    "TASK-DEMO-10": "a9109e905fbc051666fcd3bc43322ae2c53e619d",
 }
 
 

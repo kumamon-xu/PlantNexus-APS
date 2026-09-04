@@ -1,6 +1,6 @@
 # PlantNexus APS CNC 演示设计文档
 
-状态：实施中（D17 正式专项基准与参数冻结结果已通过；TASK-DEMO-09 范围闭环等待共享工作区外部差异处理，D18 尚未启动）
+状态：本地交付候选已验证（TASK-DEMO-09 已按用户授权正式关闭；TASK-DEMO-10 等待最终现场机复放）
 适用范围：仅限 Simulation 演示环境  
 目标行业：精密机械零部件 / CNC 机加工车间  
 固定场景：CNC-DEMO-SHOWCASE  
@@ -23,7 +23,7 @@
 7. 保留已完成、正在加工、硬锁及冻结窗口约束，运行动态重排。
 8. 形成新的 DRAFT 排程，自动进入前后版本比较页，展示 ChangeReport 和 Validator 结果；不自动批准或发布。
 
-D17 已在具名本地演示参考机完成正式专项基准：SMOKE、SHOWCASE、UPPER 三档各运行 1 次 preflight、1 次 warmup 和 5 次 measured，共封存 21 个独立后端进程样本；真实 Chromium 另封存已发布基线与重排比较页各 1 次 warmup、5 次 measured。默认 Showcase 的初排端到端 p95 为 7.517 秒，重排端到端 p95 为 22.601 秒，后端进程树 RSS p95 为 277.3 MiB；5 次初排均为 `OPTIMAL + Validator PASS`，5 次重排为 4 次 `OPTIMAL`、1 次 `FEASIBLE`，全部 `Validator PASS + ChangeReport PASS`。因此已冻结 132 单/610 工序/24 设备、20/30 秒求解上限和固定加急样本，但这些仍是 synthetic-only 的本机证据，不是生产容量或 SLA；D18 仍须在最终现场机复跑并完成交付审计。
+D17 已在具名本地演示参考机完成正式专项基准：SMOKE、SHOWCASE、UPPER 三档各运行 1 次 preflight、1 次 warmup 和 5 次 measured，共封存 21 个独立后端进程样本；真实 Chromium 另封存已发布基线与重排比较页各 1 次 warmup、5 次 measured。默认 Showcase 的初排端到端 p95 为 7.517 秒，重排端到端 p95 为 22.601 秒，后端进程树 RSS p95 为 277.3 MiB；5 次初排均为 `OPTIMAL + Validator PASS`，5 次重排为 4 次 `OPTIMAL`、1 次 `FEASIBLE`，全部 `Validator PASS + ChangeReport PASS`。因此已冻结 132 单/610 工序/24 设备、20/30 秒求解上限和固定加急样本，但这些仍是 synthetic-only 的本机证据，不是生产容量或 SLA；D18 已完成本地候选审计，最终现场机仍须复放。
 
 TASK-DEMO-02 已把这条能力装配为可运行后端：每次 reset 新建独立 SQLite run、执行现有 Alembic、持久化真实阶段和规范 artifact；Showcase 端到端实测成功形成 `READY_FOR_REVIEW`，再经显式确认和现有批准/发布服务成为 current `PUBLISHED`。默认产品入口未改变，Demo 通过本地 cookie session 和 fail-closed Simulation provider 独立启动。
 
@@ -39,7 +39,9 @@ TASK-DEMO-07 已完成 D15：第四步提供资产驱动的四条中文路线、
 
 TASK-DEMO-08 已完成 D16：从全新隔离 SQLite runtime 通过真实中文 Chromium 页面依次完成 reset、initial plan、显式 activate、`CNC-ROUTE-5` 数量 5 加急和 comparison，仅产生 `RESET / INITIAL_PLAN / ACTIVATE / URGENT_REPLAN` 四次业务 mutation。刷新恢复原 job，双击不重复写入；重启后的遗留执行任务明确为 `INTERRUPTED` 并以原 identity 重试；stale、并发 reset、受控 reset 失败、越权、Production binding、token/log 和路径逃逸均 fail closed。浏览器 68 项断言、API/SQLite 50 项断言和汇总 39 项断言全部通过，键盘焦点、ARIA 引用、非颜色状态、WCAG AA 关键文字对比度、reduced motion 与 1440×900/1024×768 布局均有机器证据。该浏览器单次结果为 `FEASIBLE + Validator PASS`、5 `ADDED` / 23 `CHANGED` / 557 `UNCHANGED`，仍不是 D17 性能基线。
 
-TASK-DEMO-09 已完成 D17 的实现与正式证据：正式链覆盖 reset/import、初排、显式发布、固定加急重排、三类 presentation 读取和受控 reset 失败恢复；raw sample、环境与源码指纹、nearest-rank p50/p95/max、阈值判定及不可变 baseline 均可独立复算。Showcase 的 7 项 Demo 发布目标全部通过且未降低规模或反向调整阈值；Upper 700 工序初排/重排 p95 为 12.181/32.014 秒，5/5 均为 `OPTIMAL + Validator PASS + ChangeReport PASS`。当前 TASK-DEMO-09 machine report 的全部功能项通过，但共享工作区另有非本任务产生的 `demo/**` 外文档差异，严格范围检查按规则保持 `FAIL`；在这些外部差异被其所有者处理并复跑前，任务卡不标记 complete。详见 [D17 正式专项基准与参数冻结报告](D17-FORMAL-BENCHMARK-REPORT.md)。
+TASK-DEMO-09 已完成 D17 的实现与正式证据：正式链覆盖 reset/import、初排、显式发布、固定加急重排、三类 presentation 读取和受控 reset 失败恢复；raw sample、环境与源码指纹、nearest-rank p50/p95/max、阈值判定及不可变 baseline 均可独立复算。Showcase 的 7 项 Demo 发布目标全部通过且未降低规模或反向调整阈值；Upper 700 工序初排/重排 p95 为 12.181/32.014 秒，5/5 均为 `OPTIMAL + Validator PASS + ChangeReport PASS`。TASK-DEMO-09 machine report 的全部功能项通过但严格范围项因共享工作区外部差异为 `FAIL`；用户已明确接受该事实、授权不复跑并正式关闭任务，原始报告继续保留。详见 [D17 正式专项基准与参数冻结报告](D17-FORMAL-BENCHMARK-REPORT.md)。
+
+TASK-DEMO-10 已完成 D18 的本地交付切片：`demo.ps1` / `demo.sh` 提供 doctor、start、status、health、reset、smoke、stop，默认使用 lockfile 安装依赖、production build 和 loopback 服务；PID 与操作系统创建标记共同限定安全停止。当前候选机冷启动、固定 Showcase 重置、两次真实 Chromium 中文 smoke、停止后同 runtime 恢复和 D16 中断 job 恢复均 `PASS`，并已形成版本化 release manifest 与 release audit。由于最终现场机尚未由用户确认，结论仅为 `LOCAL_CANDIDATE_VERIFIED`，状态保持 `PENDING_FINAL_SITE_REPLAY`，不得宣称最终 Demo ready。
 
 ## 2. 文档导航
 
@@ -51,6 +53,7 @@ TASK-DEMO-09 已完成 D17 的实现与正式证据：正式链覆盖 reset/impo
 - [实施任务清单](TASKS.md)
 - [当前实施状态与实测结果](IMPLEMENTATION-STATUS.md)
 - [D17 正式专项基准与参数冻结报告](D17-FORMAL-BENCHMARK-REPORT.md)
+- [D18 交付与现场运行手册](D18-DEMO-RUNBOOK.md)
 - [TASK-DEMO-02 后端运行闭环](TASK-DEMO-02-durable-runtime-initial-plan-and-baseline.md)
 - [TASK-DEMO-03 加急事实与动态重排闭环](TASK-DEMO-03-urgent-order-and-dynamic-replan.md)
 - [TASK-DEMO-04 统一展示与只读 API](TASK-DEMO-04-unified-presentation-and-read-api.md)
@@ -59,6 +62,7 @@ TASK-DEMO-09 已完成 D17 的实现与正式证据：正式链覆盖 reset/impo
 - [TASK-DEMO-07 中文加急重排与版本比较](TASK-DEMO-07-urgent-replan-and-comparison-workspace.md)
 - [TASK-DEMO-08 E2E、安全、恢复与可访问性闭环](TASK-DEMO-08-e2e-security-recovery-and-accessibility.md)
 - [TASK-DEMO-09 正式专项基准与参数冻结](TASK-DEMO-09-formal-benchmark-and-parameter-freeze.md)
+- [TASK-DEMO-10 一键交付、Runbook 与发布审计](TASK-DEMO-10-one-command-delivery-runbook-and-release-audit.md)
 
 ## 3. 设计原则
 
@@ -92,17 +96,20 @@ TASK-DEMO-09 已完成 D17 的实现与正式证据：正式链覆盖 reset/impo
 
 ## 6. 当前启动方式
 
-先启动 Demo 后端：
+在仓库根目录执行一键入口：
 
 ```powershell
-uv run python demo/scripts/start_demo.py
+.\demo\demo.ps1 doctor
+.\demo\demo.ps1 start
+.\demo\demo.ps1 health
+.\demo\demo.ps1 reset
+.\demo\demo.ps1 smoke
 ```
 
-再开一个终端启动中文前端：
+访问 `http://127.0.0.1:4174/demo/`。结束后安全停止：
 
 ```powershell
-npm --prefix demo/frontend ci
-npm --prefix demo/frontend run dev
+.\demo\demo.ps1 stop
 ```
 
-访问 `http://127.0.0.1:4174/demo/`。后端只绑定 `127.0.0.1:8765`，Vite 也只绑定本机并通过同源 `/api` 代理访问后端。`POST /api/demo/v1/session` 建立 HttpOnly、SameSite=Strict 的本地 Simulation 会话；token 只保存在被 Git 忽略的 `demo/runtime/session.token`，不进入响应正文、日志或测试快照。当前中文 UI 覆盖 D13 初始化、初排、基线发布与恢复，D14 订单/甘特/计划负荷/校验证据工作区，以及 D15 一键插单、真实重排、DRAFT 比较与刷新恢复；D16 已补齐双击/刷新/重启、安全负向路径、键盘焦点、ARIA、对比度、reduced motion 和双宽度验收。manual retry/cancel 仍保持显式 fail-closed，不伪装为可用能力。
+`start` 默认运行 `npm ci` 与 production build，并等待后端 ready 和 `zh-CN` 前端后才原子写入启动状态。后端只绑定 `127.0.0.1:8765`，Vite production preview 只绑定 `127.0.0.1:4174` 并通过同源 `/api` 代理访问后端。`POST /api/demo/v1/session` 建立 HttpOnly、SameSite=Strict 的本地 Simulation 会话；token 只保存在被 Git 忽略的具名 `demo/runtime`，不进入响应正文、日志、manifest 或测试快照。详细现场顺序、错误处理、日志、安全停止、恢复和最终现场放行条件见 [D18 交付与现场运行手册](D18-DEMO-RUNBOOK.md)。

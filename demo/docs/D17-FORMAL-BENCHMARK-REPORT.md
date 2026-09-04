@@ -137,4 +137,4 @@ D18 完成前，发布结论只能写为“D17 参数与本地参考基准已冻
 
 ## 9. 任务闭环状态
 
-本报告的基准结论已通过复算；TASK-DEMO-09 的最终 machine report 仍因共享工作区中非本任务产生的 `demo/**` 外文档差异保持 `FAIL`。报告明确给出 `functional_status=PASS`、`closure_blockers=[SCOPE_CHECK]`，不把外部差异吸收到 Demo 允许范围，也不改写既有 protected-root hash。待外部差异所有者处理后，应重新生成 task context 并复跑 machine report；只有整体 `status=PASS` 才把任务卡改为 complete。
+本报告的基准结论已通过复算；TASK-DEMO-09 的最终 machine report 因共享工作区中非本任务产生的 `demo/**` 外文档差异保持 `FAIL`。报告明确给出 `functional_status=PASS`、`closure_blockers=[SCOPE_CHECK]`，没有把外部差异吸收到 Demo 允许范围，也没有改写既有 protected-root hash。用户于 2026-09-04 明确授权“不用复跑机器报告”并正式关闭 TASK-DEMO-09，因此该原始失败报告被保留为审计事实；关闭不等于范围检查曾经通过，也不扩张 D18 边界。

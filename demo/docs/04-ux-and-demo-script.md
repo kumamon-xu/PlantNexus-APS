@@ -373,3 +373,11 @@ D16 已实际覆盖浏览器刷新、双击、服务重启、stale run/base、�
 - 长 ID 默认截断，但复制时得到完整值。
 - 所有提示明确标识 Simulation。
 - `prefers-reduced-motion: reduce` 时取消平滑滚动，并把动画/过渡压缩到单次 0.01 ms。
+
+## 11. D18 现场运行
+
+D18 将开发期的双终端手工拼装收敛为根目录下一套中文控制面。正式演示前依次执行 `doctor → start → health → reset → smoke`；页面讲解完成后执行 `stop`。`start` 默认按 lockfile 安装前端依赖并构建 production bundle，后端与前端仍只监听 `127.0.0.1`。`reset` 必须返回 Showcase 的 `CNC-DEMO-SHOWCASE`、seed `20260902` 和 132 单 / 610 道工序 / 24 台设备；`smoke` 必须由真实 Chromium 观察“工厂已初始化”“CNC 精密机加工演示”“仿真环境 · 非生产”和固定种子，同时核对 API 的 Simulation 边界与 0 个 page/console/server error。
+
+本地候选机已完成一次含 `npm ci` 和 production build 的冷启动、一次停止后同 runtime 恢复和两次真实 Chromium 中文 smoke。run identity 在重启后保持一致；D16 中断审计也再次确认遗留执行任务转为 `INTERRUPTED / PROCESS_INTERRUPTED`，原 job identity 在 attempt 2 成功。详细命令、故障恢复和现场放行项见 [D18 交付与现场运行手册](D18-DEMO-RUNBOOK.md)。
+
+当前角色仍为 `LOCAL_DELIVERY_CANDIDATE`，最终现场状态为 `PENDING_FINAL_SITE_REPLAY`。本地单次交付耗时只能用于安排演示准备时间，不是 Solver p95，也不构成生产容量或 SLA；没有最终现场机真实 smoke 时不得宣称 Demo ready。

@@ -1,9 +1,9 @@
 # CNC Demo 当前实施状态
 
 状态日期：2026-09-04
-最新完成任务：TASK-DEMO-08；TASK-DEMO-09 实现与正式证据完成、严格范围闭环待处理
+最新完成任务：TASK-DEMO-09（用户授权保留 scope `FAIL` 且不复跑）；当前任务：TASK-DEMO-10 / D18（本地候选已验证，最终现场待复放）
 任务族：demo-exclusive（不注册 P7，不改变根项目阶段）  
-结论：固定数据、完整业务链、中文前端、D16 E2E/安全/恢复/可访问性和 D17 正式专项基准结果均 `PASS`；默认 Showcase、20/30 秒求解上限及固定加急 fixture 已冻结。TASK-DEMO-09 的全部功能/证据检查通过，但严格范围检查被共享工作区中非本任务产生的 `demo/**` 外文档差异阻断；D18 最终现场机复跑、一键交付与发布审计仍开放，因此尚不是 Demo ready
+结论：固定数据、完整业务链、中文前端、D16 E2E/安全/恢复/可访问性和 D17 正式专项基准结果均 `PASS`；默认 Showcase、20/30 秒求解上限及固定加急 fixture 已冻结。用户已授权在保留 TASK-DEMO-09 scope `FAIL` 原始报告且不复跑的前提下正式关闭 D17。D18 一键交付、中文 Runbook、本地 production cold start、真实 Chromium smoke、重启恢复和 release audit 已通过；最终现场机未确认，状态仍为 `PENDING_FINAL_SITE_REPLAY`，因此尚不是最终 Demo ready
 
 ## 1. 已交付闭环
 
@@ -200,9 +200,28 @@ TASK-DEMO-01 当前开发机单次结果仍为：Showcase 20 秒预算下 solve 
 
 默认参数已冻结为 `CNC-DEMO-SHOWCASE`、seed `20260902`、单 worker、初排/重排上限 20/30 秒；加急 fixture 冻结为 `CNC-ROUTE-5`、数量 5、北京时间 `2026-09-09 18:00`、`URGENT`。结果仅适用于 synthetic 数据和当前本地参考机，不建立生产容量或 SLA。
 
+## 7.1 D18 本地交付候选
+
+证据：`demo/build/validation/delivery-observation-demo-10.json`、`release-audit-demo-10.json`、`demo/release/cnc-demo-release-manifest.v1.json` 与 [D18 交付与现场运行手册](D18-DEMO-RUNBOOK.md)。
+
+| 项目 | 本地候选结果 |
+|---|---|
+| 一键入口 | PowerShell / portable wrapper；doctor、start、status、health、reset、smoke、stop |
+| 启动边界 | lockfile `npm ci`、production build、后端/前端只监听 127.0.0.1 |
+| 冷启动 | ready 约 10.735 秒，health PASS |
+| 固定重置 | Showcase 132 / 610 / 24、seed 20260902，约 4.718 秒 |
+| 真实浏览器 | 两次 Chromium 均为 zh-CN / INITIALIZED；page/console/server error 为 0 |
+| 重启恢复 | 同 runtime ready 约 3.234 秒，原 run identity 保留 |
+| 中断恢复 | D16 遗留 job 为 INTERRUPTED / PROCESS_INTERRUPTED；same identity attempt 2 SUCCEEDED |
+| 安全停止 | exact PID + process creation marker；两轮均停止且 launcher state 删除 |
+| 发布审计 | Demo-only inventory、locks、冻结参数、D16/D17/D18 evidence、外部共享差异闭合 |
+| 当前结论 | LOCAL_CANDIDATE_VERIFIED；final_release_ready=false |
+
+D18 observation 共 17/17 checks，整次 cold start→reset→browser→stop→restart→browser→stop→D16 recovery 约 59.360 秒。本节数字是一次本地交付可操作性观察，不是 D17 Solver p95，也不构成生产容量或 SLA。最终现场机尚未由用户确认，`target_site_status=PENDING_FINAL_SITE_REPLAY`；TASK-DEMO-10 与 M4 因此保持未最终关闭。
+
 ## 8. 验证状态
 
-- `uv run pytest demo/tests -q`：44 passed。
+- `uv run pytest demo/tests -q`：55 passed（含 D18 delivery 11 项）。
 - `uv run ruff check demo/backend demo/scripts demo/tests`：PASS。
 - `uv run pyright -p demo/pyrightconfig.json`：0 errors。
 - `git diff --check -- demo`：PASS。
@@ -218,7 +237,10 @@ TASK-DEMO-01 当前开发机单次结果仍为：Showcase 20 秒预算下 solve 
 - TASK-DEMO-09 formal backend suite：21/21 raw samples、三档汇总与 Showcase 7/7 thresholds PASS。
 - TASK-DEMO-09 browser benchmark：12/12 中文 Chromium samples PASS。
 - TASK-DEMO-09 evidence recomputation：source/environment/sample fingerprints、统计、thresholds 与 parameter freeze PASS。
-- TASK-DEMO-09 machine report：3/3 benchmark checks、10/10 commands、context/evidence/hygiene 均 PASS；strict scope 因 18 个共享工作区外部文档差异为 FAIL，任务卡保持 in_progress。
+- TASK-DEMO-09 machine report：3/3 benchmark checks、10/10 commands、context/evidence/hygiene 均 PASS；strict scope 因 18 个共享工作区外部文档差异为 FAIL。用户明确授权保留该报告、不复跑并正式关闭任务；这不是机器 PASS。
+- TASK-DEMO-10 delivery observation：17/17 cold-start/reset/browser/restart/safe-stop/recovery checks PASS。
+- TASK-DEMO-10 release audit：16/16 manifest/inventory/locks/evidence/docs/scope/boundary checks PASS；本地候选通过，最终现场机仍 pending。
+- TASK-DEMO-10 machine report：3/3 benchmark checks、13/13 commands、context/delivery/release/hygiene 均 PASS，`functional_status=PASS`；strict scope 因共享工作区 5 个受保护根文档发生外部变化而为 `FAIL / SCOPE_CHECK`。D18 没有范围豁免，且最终现场机待复放，任务保持 `in_progress`。
 - `npm --prefix demo/frontend run lint`：PASS。
 - `npm --prefix demo/frontend run typecheck`：PASS。
 - `npm --prefix demo/frontend run test:run`：5 files / 36 tests PASS。
@@ -237,15 +259,17 @@ TASK-DEMO-01 当前开发机单次结果仍为：Showcase 20 秒预算下 solve 
 
 新增 TASK-DEMO-09 测试覆盖 strict protocol/profile versions、nearest-rank 统计、冻结 threshold 判定、样本/源码/RSS 指纹漂移和 evidence fail-closed。正式 worker 另覆盖 B1～B6 阶段、进程异常、隔离 runtime 清理、三档状态/模型/gap/Validator/ChangeReport/保护项与资源规模；真实浏览器覆盖 production preview、中文 ready marker、固定 fixture、关键 API/DOM/Navigation/Resource timing 和 current Publication 不变。
 
+新增 TASK-DEMO-10 测试覆盖依赖/版本/冻结证据 doctor、指纹篡改、操作系统进程创建标记、strict/atomic launcher state、state path 逃逸、start replay、PID 复用拒绝、partial-start cleanup、中文 CLI/wrappers 和真实浏览器静态契约。独立 delivery rehearsal 另覆盖默认 production cold start、固定 Showcase reset、两次真实 Chromium、同 runtime run identity 恢复、安全 stop 和 D16 中断 job 原 identity 重试；release audit 复核 Demo-only inventory 与 shared-worktree 外部差异隔离。
+
 ## 9. 当前边界与后续工作
 
 - 当前批准的数据资产只有 `CNC-ROUTE-3`～`CNC-ROUTE-6` 四个路线模板；前端应据资产生成四张路线卡，不宣称已有六条路线。
 - 当前 D09/D10 切片允许每个 deterministic run 提交一个不同的加急事件，并支持该命令精确重放；第二个不同插单在同一 run 中以 `BASELINE_STATE_CONFLICT` fail closed。多次连续插单需要先明确 DRAFT 取舍或新 current 基线的链式语义。
 - 根 `project_effective_locks` 会把 Snapshot 中基线前的历史 completed 事实带入 projection，而版本比较 universe 只包含基线 active assignments。Demo 不改根实现、不删除历史事实；它保留 Snapshot anchors 原字节，并在单 worker、单次服务调用范围内把 effective-lock 的 completed comparison view 收窄为 base→new 实际移除集合。该兼容 adapter 是显式技术边界，未来应由正式 projector injection 或统一 universe 语义替代。
-- D17 已补齐 B1～B6 warmup + 5 measured、浏览器首屏、独立进程树 RSS、本地参考机环境签名和 immutable performance baseline；最终现场机复跑仍属于 D18。
+- D17 已补齐 B1～B6 warmup + 5 measured、浏览器首屏、独立进程树 RSS、本地参考机环境签名和 immutable performance baseline；D18 已完成本地候选复放，最终现场机复放仍待用户确认。
 - Demo manual cancel/retry 仍保持 fail closed；本切片没有把它包装为可用功能。
 
-先由外部差异所有者处理共享工作区的非 Demo 文档改动，并复跑 TASK-DEMO-09 machine report 完成 strict scope closure；随后实施 Demo 专属 D18 一键启动、runbook、最终现场机复跑与发布审计。加急重排新结果仍只能是 DRAFT，不可自动批准、发布或替换 current baseline。
+当前 Demo 专属 D18 的本地一键启动、Runbook、冷启动/恢复演练与发布审计已完成；下一步只剩用户确认的最终现场机复放与提交后清单闭合。加急重排新结果仍只能是 DRAFT，不可自动批准、发布或替换 current baseline；D17 的用户授权 closure 不得复用为 D18 发布范围豁免。
 
 ## 10. 可复现命令
 
@@ -262,7 +286,11 @@ uv run python demo/scripts/run_e2e_evidence.py --api-audit demo/build/validation
 uv run python demo/scripts/run_formal_benchmark.py --output-dir demo/benchmarks/tmp/d17-replay
 uv run python demo/scripts/run_browser_benchmark.py --headless --report demo/benchmarks/tmp/browser-benchmark-replay.json
 uv run python demo/scripts/run_benchmark_evidence.py --verify-only --backend-suite demo/benchmarks/baselines/cnc-demo-formal-benchmark.v1/backend-suite.json --browser-observation demo/build/validation/browser-benchmark-observation-demo-09.json --baseline demo/benchmarks/baselines/cnc-demo-formal-benchmark.v1/baseline.json --report demo/build/validation/benchmark-evidence-demo-09.json
+uv run python demo/scripts/run_delivery_rehearsal.py --verify-only --report demo/build/validation/delivery-observation-demo-10.json
+uv run python demo/scripts/run_release_audit.py --verify-only --manifest demo/release/cnc-demo-release-manifest.v1.json --report demo/build/validation/release-audit-demo-10.json
 uv run python demo/scripts/task_context_manifest.py --task-id TASK-DEMO-09 --report demo/build/validation/task-context-manifest-demo-09.json
+uv run python demo/scripts/task_context_manifest.py --task-id TASK-DEMO-10 --report demo/build/validation/task-context-manifest-demo-10.json
+uv run python demo/scripts/validate_demo.py --task-id TASK-DEMO-10 --context demo/build/validation/task-context-manifest-demo-10.json --report demo/build/validation/task-machine-report-demo-10.json
 uv run python demo/scripts/validate_demo.py --task-id TASK-DEMO-09 --context demo/build/validation/task-context-manifest-demo-09.json --report demo/build/validation/task-machine-report-demo-09.json
 uv run python demo/scripts/start_demo.py
 npm --prefix demo/frontend ci

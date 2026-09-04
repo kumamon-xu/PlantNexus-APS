@@ -1,0 +1,165 @@
+{
+  "boundaries": {
+    "delivery_timings_are_solver_sla": false,
+    "draft_auto_published": false,
+    "loopback_only": true,
+    "p7_registration": null,
+    "production_authority": false,
+    "production_capacity_claim": "NOT_ESTABLISHED",
+    "production_sla_claim": "NOT_ESTABLISHED",
+    "simulation_only": true,
+    "synthetic_only": true
+  },
+  "browser": {
+    "cold_start": {
+      "console_error_count": 0,
+      "counts": {
+        "operations": 610,
+        "orders": 132,
+        "resources": 24
+      },
+      "local_session_cookie_policy": "HTTP_ONLY_SAME_SITE_STRICT",
+      "locale": "zh-CN",
+      "message_zh": "真实浏览器中文演示首屏检查通过",
+      "page_error_count": 0,
+      "production_authority": false,
+      "profile_name": "showcase",
+      "run_id": "run-cc01c4a9849bc08a3dd2b044872b5edd",
+      "scenario_id": "CNC-DEMO-SHOWCASE",
+      "seed": 20260902,
+      "server_error_response_count": 0,
+      "simulation_only": true,
+      "smoke_version": "cnc-demo-delivery-smoke.v1",
+      "status": "PASS",
+      "story_state": "INITIALIZED",
+      "wall_seconds": 7.953000000008615
+    },
+    "engine": "Chromium via @playwright/cli",
+    "headed": false,
+    "restart": {
+      "console_error_count": 0,
+      "counts": {
+        "operations": 610,
+        "orders": 132,
+        "resources": 24
+      },
+      "local_session_cookie_policy": "HTTP_ONLY_SAME_SITE_STRICT",
+      "locale": "zh-CN",
+      "message_zh": "真实浏览器中文演示首屏检查通过",
+      "page_error_count": 0,
+      "production_authority": false,
+      "profile_name": "showcase",
+      "run_id": "run-cc01c4a9849bc08a3dd2b044872b5edd",
+      "scenario_id": "CNC-DEMO-SHOWCASE",
+      "seed": 20260902,
+      "server_error_response_count": 0,
+      "simulation_only": true,
+      "smoke_version": "cnc-demo-delivery-smoke.v1",
+      "status": "PASS",
+      "story_state": "INITIALIZED",
+      "wall_seconds": 7.625
+    }
+  },
+  "checks": {
+    "cold_health_pass": true,
+    "cold_start_running": true,
+    "d16_interruption_recovery_pass": true,
+    "doctor_pass": true,
+    "first_browser_chinese": true,
+    "first_browser_pass": true,
+    "first_stop_pass": true,
+    "fresh_runtime": true,
+    "launcher_state_removed": true,
+    "restart_health_pass": true,
+    "restart_preserved_run": true,
+    "restart_running": true,
+    "second_browser_pass": true,
+    "second_stop_pass": true,
+    "showcase_profile_exact": true,
+    "showcase_reset_pass": true,
+    "simulation_boundary_exact": true
+  },
+  "cold_start": {
+    "dependency_install_requested": true,
+    "health_status": "PASS",
+    "production_build_requested": true,
+    "ready_seconds": 10.735000000015134
+  },
+  "environment": {
+    "git": "git version 2.54.0.windows.1",
+    "node": "v24.19.0",
+    "npm": "12.0.2",
+    "python": "3.12.13",
+    "uv": "uv 0.11.32 (3010295ae 2026-07-23 x86_64-pc-windows-msvc)"
+  },
+  "environment_role": "LOCAL_DELIVERY_CANDIDATE",
+  "generated_at_utc": "2026-09-04T05:30:50.158078Z",
+  "interruption_recovery": {
+    "evidence_version": "cnc-demo-e2e-audit.v1",
+    "recovery": {
+      "attempt": 2,
+      "error_code": "PROCESS_INTERRUPTED",
+      "interrupted_status": "INTERRUPTED",
+      "replayed": true,
+      "retry_status": "SUCCEEDED",
+      "same_job_identity": true
+    },
+    "report_fingerprint": "sha256:fbc87920aa3139a6aad0bc8f99b71682f7b25faab918fa9f7bf9d98ad615752b",
+    "status": "PASS"
+  },
+  "observation_version": "cnc-demo-delivery-observation.v1",
+  "observation_wall_seconds": 59.35999999998603,
+  "profile": {
+    "initial_solve_seconds": 20,
+    "name": "showcase",
+    "operations": 610,
+    "orders": 132,
+    "profile_id": "CNC-DEMO-SHOWCASE",
+    "replan_solve_seconds": 30,
+    "resources": 24,
+    "seed": 20260902
+  },
+  "report_fingerprint": "sha256:1463f445c20b4ab7e5118c9bc66466df5df2d421eec1dae1461a4cbde8bfebb1",
+  "reset": {
+    "counts": {
+      "operations": 610,
+      "orders": 132,
+      "resources": 24
+    },
+    "profile_id": "CNC-DEMO-SHOWCASE",
+    "seed": 20260902,
+    "story_state": "INITIALIZED",
+    "wall_seconds": 4.717999999993481
+  },
+  "restart": {
+    "dependency_install_requested": false,
+    "health_status": "PASS",
+    "production_build_requested": false,
+    "ready_seconds": 3.2339999999967404,
+    "run_identity_preserved": true,
+    "same_runtime": true
+  },
+  "safe_stop": {
+    "first": {
+      "backend": "STOPPED",
+      "frontend": "STOPPED"
+    },
+    "second": {
+      "backend": "STOPPED",
+      "frontend": "STOPPED"
+    },
+    "state_removed": true
+  },
+  "source_head": "ab5602901e2ed9fc7c6c05c973f663bbe179a99a",
+  "source_sha256": {
+    "demo/backend/plantnexus_demo/delivery.py": "f2a480a4fb403be3fc8cbada080eb1668fa4cc678d0f49e64b5374073bcb6c93",
+    "demo/demo.ps1": "ba1464e510eda1ef6be41e15ce0de35afa7ff4d78fba2cb088e34a498f42afd5",
+    "demo/demo.sh": "1637d21da4043c3ce763f6ec417c685e47e9af540449a9c6798cac090974aca0",
+    "demo/scripts/browser_delivery_demo_10.js": "cc9f69cacb1405b488a2250e1b6054e9be0a1c377241ee64f05fa7fce00af007",
+    "demo/scripts/democtl.py": "27b63d7a63cd53640facbb875abc9e4d9f282b5cc29f696fe597e680e92921bc",
+    "demo/scripts/run_delivery_rehearsal.py": "cc221d2c719cb24dff382d34a47222d93de9a2977c9149d2795f3b12d82a15b2"
+  },
+  "status": "PASS",
+  "target_site_status": "PENDING_FINAL_SITE_REPLAY",
+  "task_id": "TASK-DEMO-10"
+}

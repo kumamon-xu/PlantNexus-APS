@@ -1,0 +1,197 @@
+{
+  "diff_base": "a9109e905fbc051666fcd3bc43322ae2c53e619d",
+  "estimated_characters": 646057,
+  "files_allowed_to_change": [
+    "demo/**"
+  ],
+  "inputs": [
+    {
+      "characters": 7306,
+      "load_mode": "FULL",
+      "path": "demo/docs/TASK-DEMO-10-one-command-delivery-runbook-and-release-audit.md",
+      "sha256": "d833f7374464ccf7f9ceafd28b2d31594adf1d75bdfb631c61dbe65ad55976f2"
+    },
+    {
+      "characters": 7271,
+      "load_mode": "CLOSURE_SUMMARY",
+      "path": "demo/docs/TASK-DEMO-09-formal-benchmark-and-parameter-freeze.md",
+      "sha256": "1da40fbcac43ba1735c8bda63512f57cabf68ab2536359ad861c79d2446fe08d"
+    },
+    {
+      "characters": 6691,
+      "load_mode": "RESULTS_BOUNDARIES_AND_CLOSURE",
+      "path": "demo/docs/D17-FORMAL-BENCHMARK-REPORT.md",
+      "sha256": "cd0491a95856ed69a435a7e30212736edbf7b8bedab2a751d2d4f406f5fd1a19"
+    },
+    {
+      "characters": 14333,
+      "load_mode": "COMPOSITION_SECURITY_AND_RECOVERY",
+      "path": "demo/docs/03-architecture-and-api.md",
+      "sha256": "0b0349ae7770a8aa2eecdc78c9384d1878ba6846bbf8602b0097ff0bddf63372"
+    },
+    {
+      "characters": 11265,
+      "load_mode": "DEMO_SCRIPT_FAILURE_AND_ENVIRONMENT",
+      "path": "demo/docs/04-ux-and-demo-script.md",
+      "sha256": "630de56214ffb4e75d50cb4e67b164e9beee39fe90c61d731b04cb6ea3019e28"
+    },
+    {
+      "characters": 12875,
+      "load_mode": "GATES_AND_RELEASE_DECISION",
+      "path": "demo/docs/05-benchmark-and-acceptance.md",
+      "sha256": "6df21ba52e7979c4a7a2e4236225d56d1d929964790692d50be11a699bdde082"
+    },
+    {
+      "characters": 18840,
+      "load_mode": "D18_AND_M4",
+      "path": "demo/docs/TASKS.md",
+      "sha256": "67373c4522605b7d6d185adbe6e126cdf377f7dcb86df272a548569a92a545a0"
+    },
+    {
+      "characters": 1681,
+      "load_mode": "FULL",
+      "path": "demo/benchmarks/formal-protocol.v1.json",
+      "sha256": "504929c12d1d4985d425e95229831c9970c0e63971072e7263cac6229bd925f9"
+    },
+    {
+      "characters": 41292,
+      "load_mode": "FULL",
+      "path": "demo/benchmarks/baselines/cnc-demo-formal-benchmark.v1/baseline.json",
+      "sha256": "abcb6443434c229504fbfdac443e8fb9cda258bd440970690149df97cfe95afd"
+    },
+    {
+      "characters": 1894,
+      "load_mode": "FULL",
+      "path": "demo/build/validation/benchmark-evidence-demo-09.json",
+      "sha256": "625703163f856b7330e5af8905438ebf32afcfe04942844710221b6096e7c595"
+    },
+    {
+      "characters": 9399,
+      "load_mode": "FULL",
+      "path": "demo/build/validation/e2e-evidence-demo-08.json",
+      "sha256": "bd32d08875c1da4f9c95f56b0cb00e96819a819e3e23d107c2fba24fd826aabd"
+    },
+    {
+      "characters": 1240,
+      "load_mode": "FULL",
+      "path": "demo/data/cnc-showcase/manifest.json",
+      "sha256": "fceb0210aa9b730d7e87d866c2a434492c332fd48400c450e2af1b6781db0239"
+    },
+    {
+      "characters": 249,
+      "load_mode": "FULL",
+      "path": "demo/.gitignore",
+      "sha256": "8bb78384e0c7950795c538e6600214e665545b945325549358084e6710fa541e"
+    },
+    {
+      "characters": 24956,
+      "load_mode": "ASSET_VALIDATION",
+      "path": "demo/backend/plantnexus_demo/assets.py",
+      "sha256": "5c6a5dddbdcf9beb4db1b61b575ed9d6665ecaf2e61a109c47ab954e2e2ed92b"
+    },
+    {
+      "characters": 30594,
+      "load_mode": "RUNTIME_COMPOSITION",
+      "path": "demo/backend/plantnexus_demo/composition.py",
+      "sha256": "7ad1b556541f26377847597719a6fd8a52c59fc382edf77f760ad6cc949436a6"
+    },
+    {
+      "characters": 12227,
+      "load_mode": "RECOVERY",
+      "path": "demo/backend/plantnexus_demo/jobs.py",
+      "sha256": "e23d3b28c952dd0a94e2cd5e6aff350ea9b0a96302f06e666cc475d6f47e7733"
+    },
+    {
+      "characters": 54775,
+      "load_mode": "NAMED_RUNTIME_AND_STATE",
+      "path": "demo/backend/plantnexus_demo/persistence.py",
+      "sha256": "602c69f28ddecf41ec727393bde4f048fda75390867e026630e795b5951a05a6"
+    },
+    {
+      "characters": 23140,
+      "load_mode": "SESSION_RESET_JOB_AND_HEALTH",
+      "path": "demo/backend/plantnexus_demo/api.py",
+      "sha256": "3f1e5c4220e2a994e181b525c4000c51bccad33201d5af7397fad9509e688bbf"
+    },
+    {
+      "characters": 1400,
+      "load_mode": "FULL",
+      "path": "demo/scripts/start_demo.py",
+      "sha256": "7092cedde200147b27c52c1dfd75ff0596f4277661222f45da2d87749e8c96e0"
+    },
+    {
+      "characters": 17208,
+      "load_mode": "PROCESS_AND_PLAYWRIGHT_PATTERN",
+      "path": "demo/scripts/run_browser_e2e.py",
+      "sha256": "e18c5dc028a550349d93ea82eaff97a8da4ef2b88ac37c2d3321ebb6232dd772"
+    },
+    {
+      "characters": 27359,
+      "load_mode": "RESTART_RECOVERY_PATTERN",
+      "path": "demo/scripts/run_e2e_audit.py",
+      "sha256": "0ad5fbb103bba6a5b037297af09f04db3f39e489d8980fb9620f06f5b3c72773"
+    },
+    {
+      "characters": 22183,
+      "load_mode": "SEALED_EVIDENCE_PATTERN",
+      "path": "demo/scripts/run_benchmark_evidence.py",
+      "sha256": "2d84ff27b5043be349365516653b10ae195e2d2346d520396200b654a187db00"
+    },
+    {
+      "characters": 40632,
+      "load_mode": "FULL",
+      "path": "demo/scripts/validate_demo.py",
+      "sha256": "510014fcd040bb7ee5038ca0d065a74ffcbc25f956f21e9297c835a23acce578"
+    },
+    {
+      "characters": 1072,
+      "load_mode": "FULL",
+      "path": "demo/frontend/package.json",
+      "sha256": "31b861ae9b34109d5b8f17751e58f3137df1b63719d598a6501ef0374e4c8e42"
+    },
+    {
+      "characters": 135107,
+      "load_mode": "LOCK_IDENTITY",
+      "path": "demo/frontend/package-lock.json",
+      "sha256": "4c63ef7063c3d2924c06430b7e9f4edcba589df1f628ed54c902d3a3485dea82"
+    },
+    {
+      "characters": 664,
+      "load_mode": "PRODUCTION_PREVIEW",
+      "path": "demo/frontend/vite.config.ts",
+      "sha256": "70ada71f7f0ea885683c18a116a3129b9a0126155cdac7f8a7c29d5c3448af35"
+    },
+    {
+      "characters": 15573,
+      "load_mode": "CHINESE_STORY_MARKERS",
+      "path": "demo/frontend/src/DemoApp.tsx",
+      "sha256": "5058cc08cc20be5b898760fede2b25fc7e704a92ba002131e571b8c8425e108b"
+    },
+    {
+      "characters": 944,
+      "load_mode": "PYTHON_RUNTIME_AND_DEPENDENCIES",
+      "path": "pyproject.toml",
+      "sha256": "c39c0ade6061de9a986eb0e5a3e2d8b568ccb37c7f7bf64242698af782b6c937"
+    },
+    {
+      "characters": 103887,
+      "load_mode": "LOCK_IDENTITY",
+      "path": "uv.lock",
+      "sha256": "8b13617f31aa6a933347fc7b8ba010330cbb3f2d764f75c306dd9b6d77387a82"
+    }
+  ],
+  "manifest_version": "demo-task-context-manifest.v1",
+  "on_demand_expansion_triggers": [
+    "formal contract or accepted ADR conflict",
+    "root code/schema change becomes necessary",
+    "dynamic replan implementation starts",
+    "presentation lineage or fingerprint mismatch cannot be resolved read-only"
+  ],
+  "phase_registration": null,
+  "root_repository_consumption": "READ_ONLY",
+  "selected_input_count": 29,
+  "soft_budget_note": "Selected normative units were read in full; the 30k character budget is soft.",
+  "task_family": "demo-exclusive",
+  "task_id": "TASK-DEMO-10",
+  "validation_profile": "DEMO_HIGH_RISK"
+}

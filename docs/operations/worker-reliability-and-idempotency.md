@@ -11,6 +11,16 @@ last_reviewed: 2026-09-05
 
 # P0 Worker Reliability 与 Idempotency
 
+## TASK-P8-05 asynchronous Solver Worker
+
+P8-05注册唯一业务task `plantnexus.planning_run.solve.v1`。消息的exact字段为`message_version/planning_run_id/work_item_id/worker_id`；data plane和attempt只能由server-bound repository及immutable work item解析，`worker_id`只是受限operational lease owner reference。Runtime、Extension set、Solver、Validator、Policy、Limits和可执行实现全部由服务端启动组合绑定，消息不能选择module、class、path、plugin或配置。Celery继续使用late ACK、worker-lost reject、JSON serializer和`prefetch=1`；broker redelivery只重放同一attempt/work，业务attempt仍只能由P8-04显式retry追加。
+
+Worker先把通用`engineering_job_records`中的确定性job绑定到immutable work item，再以owner、revision和未过期lease执行claim/heartbeat/complete CAS。默认heartbeat/lease为30/120秒且由服务端配置；Runtime/work/input fingerprint在claim前、求解后及恢复时逐字复核。真实Global CP-SAT候选必须先通过Solver bundle合同，再由独立fresh `ProblemScheduleValidator`复验并重算KPI。结果先写入`planning_run_worker_results`不可变检查点，然后只沿冻结PlanningRun pair推进；`COMPLETED` CAS之后才调用既有ScheduleVersion application，且业务task只有在该应用成功后才ACK。非candidate、Validator失败、取消、业务timeout或fingerprint drift都不得创建成功ScheduleVersion。
+
+`0008_planning_run_solver_worker`新增append-only `planning_run_worker_jobs`和`planning_run_worker_results`，前者固定job/run/attempt/work/plane/runtime lineage，后者保存canonical result bytes、digest、outcome和exact artifact references。重复结果只有bytes完全一致才视为replay，冲突或损坏一律fail closed。崩溃发生在检查点前时，lease到期后把attempt收敛为`TIMED_OUT`，由显式retry创建新attempt；崩溃发生在检查点后且work timeout未到时，恢复器把job置为`STALLED/REQUEUE`并在同一work上完成状态或ScheduleVersion补偿，不再次求解。若已完成run但ScheduleVersion应用失败，redelivery仍只从检查点补齐同一版本；取消/timeout在检查点或发布竞争中获胜时不得补发成功结果。
+
+本切片的可靠性证据覆盖正常、并发重复、进程崩溃前后、结果写入失败、取消/timeout race、Runtime drift、Validator mutation和ScheduleVersion应用恢复。SQLite与单进程Celery task调用只证明development correctness；真实Redis/PostgreSQL故障、网络分区、多host lease、dead-letter/backoff、优雅停机、Production容量/SLA、监控和Runbook仍由P8-06/P8-10及未来部署验证负责，不能据此宣称distributed exactly-once。
+
 ## TASK-P8-04 queue-ready orchestration boundary
 
 P8-04为每个P8-03 CREATED run在一个数据库事务中materialize唯一run、attempt、immutable work item、initial transition、command receipt和audit。Command幂等scope包含operation、run和effective scope；raw key只保存hash reference。Same key/same fingerprint返回首次canonical result且不重复记录，different fingerprint拒绝；run update使用expected revision/state/fingerprint CAS，attempt update使用identity/number/revision CAS，并发exact materialize/transition均只有一个winner。Repository以单一数据库快照组装run/attempt/work read model，避免并发提交产生撕裂视图。
@@ -70,7 +80,7 @@ Worker与download共用root-confined destination函数；manifest-last原子写�
 
 ## Adapter 与 persistence skeleton
 
-Celery 只接受/发送 JSON，启用 late ack、lost-worker reject、prefetch=1、started/event 和 UTC；没有注册业务 task。Alembic revision `0001_engineering_job_metadata` 建立 `engineering_job_records` 与 `engineering_idempotency_records`，并提供 reverse-order downgrade。migration test 在临时空 SQLite DB 验证结构 round trip；Production PostgreSQL migration/repository/locking 没有执行。
+P0基线中的Celery只接受/发送JSON，启用late ack、lost-worker reject、prefetch=1、started/event和UTC，当时没有注册业务task。P8-05现新增上节唯一PlanningRun业务task，但未改变其他队列业务。Alembic revision `0001_engineering_job_metadata`建立通用`engineering_job_records`与`engineering_idempotency_records`；P8-05由additive `0008`复用前者并增加专用binding/checkpoint。migration测试在临时SQLite验证round trip与populated downgrade/re-upgrade；Production PostgreSQL repository/locking和真实broker执行尚未验证。
 
 Local Compose 提供 API/Worker 分进程启动与 Redis/PostgreSQL health dependencies，但 acceptance 只运行 `docker compose config`，不启动容器、不进行故障注入。named volumes 可能包含用户数据；rollback 不得通过删除 volume 代替 migration downgrade/备份策略。
 
@@ -78,7 +88,7 @@ Local Compose 提供 API/Worker 分进程启动与 Redis/PostgreSQL health depen
 
 [`test_job_reliability.py`](../../backend/tests/integration/test_job_reliability.py) 覆盖 owner、expiry、heartbeat、STALLED/retry、attempt、terminal transition、UTC 与并发 idempotency；[`test_migrations_and_infrastructure.py`](../../backend/tests/integration/test_migrations_and_infrastructure.py) 覆盖 migration/lazy clients/Celery/no business task。
 
-真实 durable repository、row/advisory lock、lease scanner、retry/backoff/dead-letter、worker shutdown/cancel、PostgreSQL/Redis outage/partition、Export manifest/storage commit、double publish/event prevention 和 audit trail 全部 `PLANNED`。NFR-REL-001/TEST-IDEMPOTENCY 只形成 P0 primitive slice。
+P8-05已形成PlanningRun专用durable repository、lease recovery、same-work checkpoint replay及cancel/timeout保护；[`test_p8_solver_worker.py`](../../backend/tests/integration/test_p8_solver_worker.py)、[`test_p8_solver_worker_recovery.py`](../../backend/tests/integration/test_p8_solver_worker_recovery.py)和[`solver-worker-engineering-profile.v1.json`](../../benchmarks/p8/solver-worker-engineering-profile.v1.json)是当前直接证据。通用row/advisory lock、持续scanner service、broker backoff/dead-letter、优雅shutdown、真实PostgreSQL/Redis outage/partition、distributed exactly-once与Production SLA仍为开放边界。
 
 ## TASK-P1-03 durable Import staging slice
 

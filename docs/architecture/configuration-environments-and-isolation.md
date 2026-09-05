@@ -11,6 +11,12 @@ last_reviewed: 2026-09-05
 
 # 配置、环境与数据隔离
 
+## TASK-P8-05 Worker configuration and isolation
+
+Solver Worker业务消息的exact字段为`message_version/planning_run_id/work_item_id/worker_id`；data plane和attempt由server-bound repository及immutable work item解析，不能由消息选择。heartbeat、lease、数据库/broker连接、Runtime/Extension set、Solver和Validator实现全部由服务端启动配置提供。默认heartbeat/lease为30/120秒且启动时要求lease严格大于heartbeat；任何请求或消息中的module、class、path、entry point、plugin、runtime/config selector都被strict carrier拒绝。Work item与`planning_run_worker_jobs`逐字绑定server-owned Runtime fingerprint，API/Worker未来组合不一致时必须在claim或publication前fail closed。
+
+`0008_planning_run_solver_worker`只追加两张P8专用append-only表，并复用既有`engineering_job_records`执行lease/CAS；没有修改依赖锁、Secret模板、Compose service或Production配置。CI在临时SQLite执行真实Global CP-SAT、独立Validator、checkpoint/recovery和migration证据，并在P4 frozen replay中精确移除本Task新增路径。该证据不验证真实Redis/PostgreSQL、多host隔离、network policy、secret rotation、资源限额或Production deployment；P8-06必须形成可部署composition root，P8-10必须补齐目标环境运行配置与演练。
+
 ## TASK-P8-04 PlanningRun persistence isolation
 
 PlanningRun application只接受显式`PlanningRunCommandContext`和plane-bound repository；tenant/factory/planning scope、environment、capability、Production binding与P8-03 immutable source必须逐字一致。Run/attempt/work item同时保存data-plane及Runtime/Extension-set fingerprints，跨plane read/write、Production未绑定、stale CAS和source drift均fail closed；raw key、数据库URL、queue地址和可执行Extension selector不进入持久化carrier。

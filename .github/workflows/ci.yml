@@ -303,6 +303,14 @@ jobs:
           --root .
           --report build/validation/ci-p8-machine-contracts.json
 
+      - name: P8 Solver Worker reliability and engineering evidence
+        run: >-
+          uv run python -m app.jobs.planning_run_worker_check
+          --root .
+          --profile benchmarks/p8/solver-worker-engineering-profile.v1.json
+          --report build/validation/ci-p8-solver-worker.json
+          --benchmark-report build/benchmarks/ci-p8-solver-worker.json
+
       - name: P6 duration prediction machine contract evidence
         run: >-
           uv run python scripts/p6_duration_contract_check.py
@@ -580,7 +588,19 @@ jobs:
             "${replay_root}/backend/tests/integration/test_p8_planning_run_repository.py" \
             "${replay_root}/backend/tests/property/test_p8_planning_run_properties.py" \
             "${replay_root}/backend/tests/security/test_p8_planning_run_security.py" \
-            "${replay_root}/backend/tests/unit/test_p8_planning_run_orchestration.py"
+            "${replay_root}/backend/tests/unit/test_p8_planning_run_orchestration.py" \
+            "${replay_root}/backend/app/jobs/planning_run_worker_check.py" \
+            "${replay_root}/backend/app/jobs/planning_run_worker_contracts.py" \
+            "${replay_root}/backend/app/jobs/planning_run_worker_repository.py" \
+            "${replay_root}/backend/app/jobs/planning_run_solver_worker.py" \
+            "${replay_root}/backend/app/jobs/planning_run_task.py" \
+            "${replay_root}/backend/migrations/versions/0008_planning_run_solver_worker.py" \
+            "${replay_root}/backend/tests/p8_solver_worker_support.py" \
+            "${replay_root}/backend/tests/integration/test_p8_solver_worker.py" \
+            "${replay_root}/backend/tests/integration/test_p8_solver_worker_recovery.py" \
+            "${replay_root}/backend/tests/security/test_p8_solver_worker_security.py" \
+            "${replay_root}/backend/tests/unit/test_p8_planning_run_task.py" \
+            "${replay_root}/benchmarks/p8/solver-worker-engineering-profile.v1.json"
           git -C "${replay_root}" restore \
             --source d0a83c58cb4a2d4afa76e8c8cff08441574e2e30 \
             -- backend/tests/integration/test_ci_contract.py
@@ -590,6 +610,7 @@ jobs:
             backend/app/__init__.py \
             backend/app/application/execution_fact_projection_check.py \
             backend/app/application/export_job_check.py \
+            backend/app/application/p3_gate_report.py \
             backend/app/domain/execution_contract_check.py \
             backend/app/domain/workspace_contract_check.py \
             backend/app/planning/backends/cp_sat/replan_solver_check.py \
@@ -597,6 +618,7 @@ jobs:
             backend/app/planning/reporting/stability_change_report_check.py \
             backend/app/simulation/execution/simulator_check.py \
             backend/app/application/__init__.py \
+            backend/app/jobs/celery_app.py \
             backend/app/data_validation/__init__.py \
             backend/app/infrastructure/__init__.py \
             backend/tests/contract/test_import_validation.py \
@@ -606,6 +628,8 @@ jobs:
             backend/tests/contract/test_unit_conversion_registry.py \
             backend/tests/unit/test_check_docs.py \
             backend/tests/unit/test_ci_validation_profile.py \
+            backend/tests/integration/test_migrations_and_infrastructure.py \
+            backend/tests/integration/test_p3_vertical_slice.py \
             pyproject.toml \
             schemas/data_dictionary.yaml
           mkdir -p \

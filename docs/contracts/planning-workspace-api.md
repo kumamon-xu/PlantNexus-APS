@@ -11,6 +11,12 @@ last_reviewed: 2026-09-05
 
 # P3 Planning Workspace API 语义合同
 
+## TASK-P8-05 internal Worker boundary
+
+P8-05只注册内部Celery task，不增加本页HTTP path、operationId、status/error envelope或OpenAPI surface。Task消息只传version、run/work identity和受限worker owner reference；data plane与attempt从server-bound repository/work item解析。它复用P8-04 application/repository CAS，调用既有Global Solver、fresh Validator和ScheduleVersion application，并在ACK前保存exact result checkpoint及`READY_FOR_REVIEW`版本。宿主、Frontend和HTTP caller不得直接投递该内部消息，也不能用消息字段选择Runtime、Extension或代码。
+
+公开创建/查询/取消/重试仍由P8-07 transport与P8-08 host authorization负责。Worker成功不等于审批、发布或导出；connection timeout或task redelivery也不能由客户端推断业务结果，未来HTTP read model必须返回durable PlanningRun/ScheduleVersion authority。
+
 ## TASK-P8-04 internal PlanningRun application boundary
 
 P8-04现在严格消费`planning-run.v1`并提供transport-neutral create/read/cancel/retry/transition ports；所有写入先绑定server-derived capability、tenant/factory/planning scope、data plane、expected revision/state/run fingerprint和hashed idempotency reference，再由plane-scoped repository执行CAS。Run只能沿冻结31个pair前进；terminal不可重开，retry只为`DISPATCH_FAILED`或`TIMED_OUT`追加新attempt/work item，不能被表示成PlanningRun self-transition。

@@ -2,7 +2,7 @@
 
 PlantNexus APS 是一个面向离散制造的高级计划与排程系统。项目采用 Simulation-first 路线，把canonical数据、不可变计划快照、PlanningProblem、OR-Tools CP-SAT 求解、独立排程校验、计划版本审批/发布、内部导出和动态重排串成一条可重放链路。
 
-当前仓库是“已实现的研发基线”，不是生产部署包：P0～P6 能力已经形成，P7 真实数据校准因缺少获授权的真实数据、真实环境和业务责任人而暂缓；P8 已形成第一版canonical ingress/result与PlanningRun机器合同，在Runtime内部严格消费canonical JSON、原子保存不可变Snapshot/PlanningProblem，并把CREATED run、attempt、queue-ready work item、命令、转换和audit以CAS/幂等事务持久化。P8-04的内部application port已支持create/read/cancel、dispatch failure/timeout记录和只新建attempt的retry，但尚未形成公开Headless提交API、真实队列投递、Solver Worker或完整Runtime组合。最终产品边界只接收宿主平台提交的versioned canonical JSON，第三方系统采集、字段映射和结果展示由宿主平台负责；APS不直接对接ERP、MES、WMS或CAM。P8同时规划APS Extension SDK、Runtime受控Enterprise Extension加载和version-locked Developer Kit，使企业项目无需复制或修改APS Core即可独立二次开发。Extension只在Runtime服务端执行，宿主与可选Frontend仍只调用统一Headless API；Core/Runtime升级不会自动升级企业项目。默认 FastAPI 组合根会对未注入的业务应用与授权适配器 fail closed；健康检查和 OpenAPI 可用，但不能把默认启动等同于开箱即用的生产 APS。
+当前仓库是“已实现的研发基线”，不是生产部署包：P0～P6 能力已经形成，P7 真实数据校准因缺少获授权的真实数据、真实环境和业务责任人而暂缓；P8 已形成第一版canonical ingress/result与PlanningRun机器合同，在Runtime内部严格消费canonical JSON、原子保存不可变Snapshot/PlanningProblem，并把CREATED run、attempt、work item、命令、转换和audit以CAS/幂等事务持久化。P8-05进一步形成strict JSON Celery Solver task、durable lease/heartbeat、真实Global CP-SAT、独立Validator、不可变结果检查点、崩溃恢复和一次ScheduleVersion应用；重复投递不会重复求解或创建第二个业务结果。公开Headless提交API和完整Production-shaped Runtime组合仍未形成。最终产品边界只接收宿主平台提交的versioned canonical JSON，第三方系统采集、字段映射和结果展示由宿主平台负责；APS不直接对接ERP、MES、WMS或CAM。P8同时规划APS Extension SDK、Runtime受控Enterprise Extension加载和version-locked Developer Kit，使企业项目无需复制或修改APS Core即可独立二次开发。Extension只在Runtime服务端执行，宿主与可选Frontend仍只调用统一Headless API；Core/Runtime升级不会自动升级企业项目。默认 FastAPI 组合根会对未注入的业务应用与授权适配器 fail closed；健康检查和 OpenAPI 可用，但不能把默认启动等同于开箱即用的生产 APS。
 
 ## 已有能力
 
@@ -45,7 +45,7 @@ uv run uvicorn app.api.app:app --host 127.0.0.1 --port 8000
 
 Swagger UI 和 ReDoc 默认关闭。默认组合根没有注入业务 application port 与身份授权 provider，因此 `/api/v1/**` 业务请求会安全拒绝；完整接口状态和待接入项见 [API 接口开发清单](docs/contracts/api-development-checklist.md)。
 
-当前已实现Runtime内部canonical JSON严格消费、原子Snapshot/PlanningProblem持久化和durable PlanningRun编排；queue-ready只表示不可变工作项已提交，不表示已向broker投递或Solver已启动。对应HTTP提交端点、Solver Worker、生产形态组合根、Extension SDK/Registry和Developer Kit尚未形成；CSV/XLSX/reference adapter仅是研发/参考能力，不是未来公共产品接口。
+当前已实现Runtime内部canonical JSON严格消费、原子Snapshot/PlanningProblem持久化、durable PlanningRun编排，以及可由服务端装配后消费现有work item的异步Solver Worker。Worker以lease/heartbeat和不可变checkpoint保护重复、崩溃、取消与超时边界，候选经fresh Validator后才应用为`READY_FOR_REVIEW` ScheduleVersion。对应HTTP提交端点、生产形态组合根、Extension SDK/Registry和Developer Kit尚未形成；当前SQLite/synthetic证据也不代表真实broker/database拓扑、Production容量或SLA。CSV/XLSX/reference adapter仅是研发/参考能力，不是未来公共产品接口。
 
 ### 2. 本地依赖服务
 

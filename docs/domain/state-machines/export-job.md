@@ -11,6 +11,12 @@ last_reviewed: 2026-09-05
 
 # ExportJob 状态机
 
+## TASK-P8-05 Worker isolation review
+
+P8-05的`engineering_job_records`、`planning_run_worker_jobs`和`planning_run_worker_results`只承载Solver执行lease与结果恢复，不是ExportJob repository，也不复用`CREATED/EXPORTING/EXPORTED/EXPORT_FAILED/CANCELLED`业务状态。Worker成功最多把validated ScheduleVersion送到`READY_FOR_REVIEW`；不会创建导出任务、目录、manifest或外部传输，也不能把PlanningRun `COMPLETED`、通用job `SUCCEEDED`或checkpoint存在解释为Export成功。
+
+ExportJob现有attempt/lease/heartbeat/retry/cancel、manifest-last与显式publication分离语义逐字不变。P8 migration downgrade只删除P8 Worker binding/checkpoint及其通用job rows，不得删除或修正任何ExportJob历史。
+
 ## TASK-P8-04 isolation review
 
 P8-04新增的PlanningRun operational attempt/work item不是ExportJob，也不复用或修改本机的state、attempt、lease、heartbeat、retry、artifact或manifest语义。`planning_run_work_items`仅为P8-05 Solver Worker的queue-ready输入；它不进入`EXPORTING/EXPORTED`，不创建文件包，也不能被文件存在或PlanningRun COMPLETED解释为ExportJob成功。ExportJob既有五状态/六pair和P3/P4 worker边界逐字保持。

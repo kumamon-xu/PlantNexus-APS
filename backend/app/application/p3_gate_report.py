@@ -273,6 +273,10 @@ _APPROVAL_CONCURRENCY_EQUIVALENCE = {
     "loser_failure": ["INVALID_STATE_TRANSITION", "STALE_SOURCE"],
 }
 
+_PUBLICATION_CONCURRENCY_EQUIVALENCE = {
+    "loser_failure": ["CURRENT_REFERENCE_CONFLICT", "STALE_SOURCE"],
+}
+
 _FRONTEND_BOUNDARIES: JsonObject = {
     "browser_runtime": "CHROMIUM",
     "data_plane": "SIMULATION_ONLY",
@@ -388,26 +392,54 @@ def _stable_projection(value: object) -> object:
 
 def _stage_semantic_projection(stage: str, report: Mapping[str, object]) -> object:
     projection = _stable_projection(report)
-    if stage != "approval_decisions":
-        return projection
-    projected_report = _object(projection, "approval_decisions.projection")
-    for index, raw in enumerate(
-        _items(projected_report.get("checks"), "approval_decisions.projection.checks")
-    ):
-        check = _object(raw, f"approval_decisions.projection.checks[{index}]")
-        if check.get("check_id") != "concurrent-decision-single-cas-winner":
-            continue
-        evidence = _evidence(
-            check,
-            f"approval_decisions.projection.checks[{index}].evidence",
+    if stage == "approval_decisions":
+        projected_report = _object(projection, "approval_decisions.projection")
+        for index, raw in enumerate(
+            _items(
+                projected_report.get("checks"),
+                "approval_decisions.projection.checks",
+            )
+        ):
+            check = _object(raw, f"approval_decisions.projection.checks[{index}]")
+            if check.get("check_id") != "concurrent-decision-single-cas-winner":
+                continue
+            evidence = _evidence(
+                check,
+                f"approval_decisions.projection.checks[{index}].evidence",
+            )
+            evidence["winner"] = "ONE_OF_APPROVE_OR_REJECT"
+            evidence["loser_failure"] = (
+                "ONE_OF_INVALID_STATE_TRANSITION_OR_STALE_SOURCE"
+            )
+            return projected_report
+        _fail(
+            "approval_decisions.projection",
+            "concurrent decision check is absent",
         )
-        evidence["winner"] = "ONE_OF_APPROVE_OR_REJECT"
-        evidence["loser_failure"] = "ONE_OF_INVALID_STATE_TRANSITION_OR_STALE_SOURCE"
-        return projected_report
-    _fail(
-        "approval_decisions.projection",
-        "concurrent decision check is absent",
-    )
+    if stage == "publication":
+        projected_report = _object(projection, "publication.projection")
+        for index, raw in enumerate(
+            _items(projected_report.get("checks"), "publication.projection.checks")
+        ):
+            check = _object(raw, f"publication.projection.checks[{index}]")
+            if (
+                check.get("check_id")
+                != "concurrent-publication-single-current-cas-winner"
+            ):
+                continue
+            evidence = _evidence(
+                check,
+                f"publication.projection.checks[{index}].evidence",
+            )
+            evidence["loser_failure"] = (
+                "ONE_OF_CURRENT_REFERENCE_CONFLICT_OR_STALE_SOURCE"
+            )
+            return projected_report
+        _fail(
+            "publication.projection",
+            "concurrent publication check is absent",
+        )
+    return projection
 
 
 def _check_id(check: Mapping[str, object], field: str) -> str:
@@ -587,6 +619,27 @@ def _validate_business_stage(
                 "publication_side_effects": 0,
             },
             f"{contract.key}.negative",
+        )
+        concurrency = _evidence(
+            checks["concurrent-publication-single-current-cas-winner"],
+            f"{contract.key}.concurrent_publication",
+        )
+        if (
+            concurrency.get("loser_failure")
+            not in _PUBLICATION_CONCURRENCY_EQUIVALENCE["loser_failure"]
+        ):
+            _fail(
+                f"{contract.key}.concurrent_publication.loser_failure",
+                "unexpected loser failure",
+            )
+        _expect_values(
+            concurrency,
+            {
+                "candidate_states": ["APPROVED", "PUBLISHED"],
+                "losers": 1,
+                "winners": 1,
+            },
+            f"{contract.key}.concurrent_publication",
         )
         _expect_values(
             boundaries,

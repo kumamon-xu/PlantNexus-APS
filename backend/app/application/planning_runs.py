@@ -169,6 +169,19 @@ class PlanningRunAttemptFailureCommand:
 
 
 @dataclass(frozen=True, slots=True)
+class PlanningRunAttemptStartCommand:
+    planning_run_id: str
+    expected_revision: int
+    expected_state: str
+    expected_run_fingerprint: str
+    attempt_id: str
+    attempt_number: int
+    expected_attempt_revision: int
+    idempotency_key: str
+    reason: str
+
+
+@dataclass(frozen=True, slots=True)
 class PlanningRunInitialization:
     aggregate: PlanningRunAggregate
     attempt: PlanningRunAttempt
@@ -335,6 +348,10 @@ class PlanningRunOrchestrationService:
     ) -> None:
         self._schemas = schemas
         self._repository = repository
+
+    @property
+    def data_plane(self) -> str:
+        return self._repository.data_plane
 
     def _authorize(
         self,
@@ -1201,6 +1218,116 @@ class PlanningRunOrchestrationService:
             write.command, source=aggregate, replayed=write.replayed
         )
 
+    def start_attempt(
+        self,
+        command: PlanningRunAttemptStartCommand,
+        *,
+        context: PlanningRunCommandContext,
+    ) -> PlanningRunActionResult:
+        """Bind Worker ownership by advancing QUEUED to ACTIVE without a run pair."""
+
+        model = self.read(command.planning_run_id, context=context)
+        aggregate = model.aggregate
+        self._authorize(aggregate, context, read_only=False)
+        scope = self._scope("ATTEMPT:ACTIVE", aggregate, context)
+        key_reference = idempotency_key_reference(command.idempotency_key)
+        request_fingerprint = canonical_fingerprint(
+            {
+                "operation": "ATTEMPT_START",
+                "planning_run_id": command.planning_run_id,
+                "expected_revision": command.expected_revision,
+                "expected_state": command.expected_state,
+                "expected_run_fingerprint": command.expected_run_fingerprint,
+                "attempt_id": command.attempt_id,
+                "attempt_number": command.attempt_number,
+                "expected_attempt_revision": command.expected_attempt_revision,
+                "reason": command.reason,
+            }
+        )
+        existing = self._existing_result(
+            scope=scope,
+            key_reference=key_reference,
+            request_fingerprint=request_fingerprint,
+            source=aggregate,
+        )
+        if existing is not None:
+            return existing
+        if aggregate.document["state"] in PLANNING_RUN_TERMINAL_STATES:
+            reject(
+                PlanningRunErrorCode.INVALID_STATE_TRANSITION,
+                field="planning_run.state",
+                message="Terminal PlanningRun cannot start a Worker attempt",
+            )
+        self._require_expected(
+            aggregate,
+            revision=command.expected_revision,
+            state=command.expected_state,
+            fingerprint=command.expected_run_fingerprint,
+        )
+        attempt = self._latest_attempt(model)
+        attempt_document = attempt.document
+        if (
+            attempt_document["attempt_id"] != command.attempt_id
+            or attempt_document["attempt_number"] != command.attempt_number
+            or attempt_document["revision"] != command.expected_attempt_revision
+            or attempt_document["status"] != PlanningRunAttemptStatus.QUEUED.value
+        ):
+            reject(
+                PlanningRunErrorCode.STALE_ATTEMPT,
+                field="attempt",
+                message="Only the latest QUEUED attempt can start",
+            )
+        last_audit = cast(
+            Mapping[str, object],
+            cast(
+                Mapping[str, object], aggregate.document["last_transition"]
+            )["audit"],
+        )
+        audit = self._audit(
+            aggregate=aggregate,
+            context=context,
+            operation="ATTEMPT:ACTIVE",
+            reason=command.reason,
+            request_fingerprint=request_fingerprint,
+            scope=scope,
+            key_reference=key_reference,
+            parent_audit_event_id=cast(str, last_audit["artifact_id"]),
+        )
+        updated = transition_attempt(
+            attempt,
+            aggregate=aggregate,
+            to_status=PlanningRunAttemptStatus.ACTIVE,
+            occurred_at_utc=context.occurred_at_utc,
+            audit_reference=_audit_reference(audit),
+            failure_code=None,
+            result_references=cast(
+                Mapping[str, object], aggregate.document["artifacts"]
+            ),
+        )
+        command_record = self._command_record(
+            operation="ATTEMPT:ACTIVE",
+            aggregate=aggregate,
+            attempt=updated,
+            work_item=None,
+            audit=audit,
+            scope=scope,
+            key_reference=key_reference,
+            request_fingerprint=request_fingerprint,
+            occurred_at_utc=context.occurred_at_utc,
+        )
+        write = self._repository.update_attempt(
+            PlanningRunAttemptMutation(
+                aggregate=aggregate,
+                previous_attempt=attempt,
+                attempt=updated,
+                audit_bytes=canonical_json_bytes(audit),
+                command=command_record,
+            )
+        )
+        return self._result_from_command(
+            write.command, source=aggregate, replayed=write.replayed
+        )
+
     def retry(
         self,
         command: PlanningRunRetryCommand,
@@ -1318,6 +1445,7 @@ class PlanningRunOrchestrationService:
 
 __all__ = [
     "PlanningRunAttemptFailureCommand",
+    "PlanningRunAttemptStartCommand",
     "PlanningRunAttemptMutation",
     "PlanningRunCancelCommand",
     "PlanningRunCommandContext",

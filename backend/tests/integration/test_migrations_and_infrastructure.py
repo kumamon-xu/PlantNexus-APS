@@ -38,6 +38,7 @@ from app.importers import (
     SyntheticImportProvenance,
 )
 from app.jobs.celery_app import create_celery_app
+from app.jobs.planning_run_task import PLANNING_RUN_SOLVER_TASK
 from app.normalization.order_expansion import expand_orders
 from app.snapshots import (
     SnapshotDataPlane,
@@ -418,7 +419,7 @@ def test_redis_client_does_not_connect_during_construction() -> None:
     client.close()
 
 
-def test_celery_adapter_is_json_only_and_registers_no_business_tasks() -> None:
+def test_celery_adapter_is_json_only_and_registers_one_p8_business_task() -> None:
     application = create_celery_app(
         Settings(runtime_environment=RuntimeEnvironment.TEST)
     )
@@ -434,7 +435,7 @@ def test_celery_adapter_is_json_only_and_registers_no_business_tasks() -> None:
         for task_name in application.tasks
         if not task_name.startswith("celery.")
     }
-    assert custom_tasks == set()
+    assert custom_tasks == {PLANNING_RUN_SOLVER_TASK}
 
 
 def test_engineering_contract_check_writes_machine_report(tmp_path: Path) -> None:

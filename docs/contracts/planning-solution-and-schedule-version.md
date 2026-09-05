@@ -11,6 +11,14 @@ last_reviewed: 2026-09-05
 
 # PlanningSolution 与 ScheduleVersion 合同
 
+## TASK-P8-05 Worker result application boundary
+
+Worker只消费P8-04冻结的Snapshot、PlanningProblem、Policy/Limits与Runtime lineage。Solver返回后先验证完整contract bundle和candidate references，再由与Solver构造独立的fresh `ProblemScheduleValidator`重新校验assignment并计算共享KPI；不能把Solver内部可行标志、缓存结果或Extension Constraint当作Validation Rule通过证据。`OPTIMAL/FEASIBLE`只有在独立Validator PASS时才可形成`COMPLETED`候选；`INFEASIBLE/UNKNOWN/MODEL_INVALID/FAILED`及Validation failure都不得携带ScheduleVersion成功引用。
+
+一次Solver/Validator结果先以canonical bytes和SHA-256写入append-only Worker checkpoint。检查点绑定exact job/run/attempt/work、Snapshot/Problem、Policy/Limits、Runtime/Extension set、Solver和Validator references；same work只有完全相同bytes可重放。它不是公共PlanningSolution、已批准版本或publication。Worker随后只沿既有PlanningRun pairs提交artifact references和terminal state；`COMPLETED` CAS成功后才调用既有ScheduleVersion application，最终产生同一validated candidate的immutable `READY_FOR_REVIEW`版本。审批、发布、导出仍需各自既有命令与authority，Worker不得自动执行。
+
+因此可能存在“已提交Worker checkpoint或PlanningRun已COMPLETED、ScheduleVersion尚未应用”的短暂内部恢复窗口。task不会在该窗口ACK；redelivery从exact checkpoint补齐同一版本而不再次求解。若cancel/timeout先获得合法CAS、checkpoint冲突/损坏、fresh Validator失败或版本应用无法保持exact replay，则不得补发成功Version。该恢复边界提供一次业务结果，不宣称broker/数据库分布式exactly-once。
+
 ## TASK-P8-04 PlanningRun output boundary
 
 P8-04只持久化PlanningRun command/attempt/work item和阶段artifact references，不生成或修改`planning-solution.v1`、`solver-report.v1/v2`、`validation-report.v2`或`schedule-version.v1/v2`内容。进入SOLVED/VERIFYING/COMPLETED等状态时，调用方必须提供符合冻结PlanningRun Schema的exact references；repository只保存并验证单调lineage，不能伪造Solver/Validator结果或自动建立ScheduleVersion。

@@ -58,6 +58,7 @@ from app.infrastructure.workspace_persistence_check import (
 from app.infrastructure.replan_persistence_check import (
     main as replan_persistence_main,
 )
+from app.jobs.planning_run_worker_check import main as p8_solver_worker_main
 from app.planning.backends.cp_sat.contract_check import (
     main as backend_contract_main,
 )
@@ -467,7 +468,7 @@ def test_ci_profile_routing_is_mutually_exclusive_and_fail_closed() -> None:
     assert "Build package" in full_text
     assert len(preflight["steps"]) == 4
     assert len(backend["steps"]) == 8
-    assert len(full["steps"]) == 71
+    assert len(full["steps"]) == 72
 
     assert 'test "${PLANTNEXUS_CLASSIFY_RESULT}" = "success"' in final_run
     assert 'test "${PLANTNEXUS_PREFLIGHT_RESULT}" = "success"' in final_run
@@ -679,6 +680,75 @@ def test_ci_p8_planning_run_is_isolated_from_frozen_p4_replay() -> None:
         "backend/tests/unit/test_p8_planning_run_orchestration.py",
     ):
         assert workflow.count(f'"${{replay_root}}/{relative_path}"') == 1
+
+
+def test_ci_p8_solver_worker_is_required_machine_checkable_and_isolated(
+    tmp_path: Path,
+) -> None:
+    workflow = (ROOT / ".github" / "workflows" / "ci.yml").read_text(encoding="utf-8")
+    normalized = " ".join(workflow.split())
+    assert (
+        "name: P8 Solver Worker reliability and engineering evidence run: >- "
+        "uv run python -m app.jobs.planning_run_worker_check --root . --profile "
+        "benchmarks/p8/solver-worker-engineering-profile.v1.json --report "
+        "build/validation/ci-p8-solver-worker.json --benchmark-report "
+        "build/benchmarks/ci-p8-solver-worker.json"
+    ) in normalized
+    assert "continue-on-error" not in workflow
+    for relative_path in (
+        "backend/app/jobs/planning_run_worker_check.py",
+        "backend/app/jobs/planning_run_worker_contracts.py",
+        "backend/app/jobs/planning_run_worker_repository.py",
+        "backend/app/jobs/planning_run_solver_worker.py",
+        "backend/app/jobs/planning_run_task.py",
+        "backend/migrations/versions/0008_planning_run_solver_worker.py",
+        "backend/tests/p8_solver_worker_support.py",
+        "backend/tests/integration/test_p8_solver_worker.py",
+        "backend/tests/integration/test_p8_solver_worker_recovery.py",
+        "backend/tests/security/test_p8_solver_worker_security.py",
+        "backend/tests/unit/test_p8_planning_run_task.py",
+        "benchmarks/p8/solver-worker-engineering-profile.v1.json",
+    ):
+        assert workflow.count(f'"${{replay_root}}/{relative_path}"') == 1
+    for relative_path in (
+        "backend/app/application/p3_gate_report.py",
+        "backend/app/jobs/celery_app.py",
+        "backend/tests/integration/test_migrations_and_infrastructure.py",
+        "backend/tests/integration/test_p3_vertical_slice.py",
+    ):
+        assert workflow.count(relative_path) == 1
+
+    report_path = tmp_path / "p8-solver-worker.json"
+    benchmark_path = tmp_path / "p8-solver-worker-benchmark.json"
+    assert (
+        p8_solver_worker_main(
+            [
+                "--root",
+                str(ROOT),
+                "--report",
+                str(report_path),
+                "--benchmark-report",
+                str(benchmark_path),
+            ]
+        )
+        == 0
+    )
+    report = json.loads(report_path.read_text(encoding="utf-8"))
+    benchmark = json.loads(benchmark_path.read_text(encoding="utf-8"))
+    assert report["report_version"] == "p8-solver-worker-reliability-report.v1"
+    assert report["task_id"] == "TASK-P8-05"
+    assert report["test_id"] == "TEST-P8-SOLVER-WORKER-001"
+    assert report["diff_base"] == "f8c962188295c6e9d3852cc8bb8708caf3203adc"
+    assert report["status"] == "PASS"
+    assert report["check_count"] == 9
+    assert report["counts"]["worker_results"] == 1
+    assert report["counts"]["schedule_versions"] == 1
+    assert report["issues"] == []
+    assert benchmark["report_version"] == ("p8-solver-worker-engineering-benchmark.v1")
+    assert benchmark["status"] == "PASS"
+    assert benchmark["measurement_semantics"] == "DEVELOPMENT_OBSERVATION_NO_SLA"
+    assert benchmark["thresholds"] is None
+    assert benchmark["production_sla_claimed"] is False
 
 
 def test_ci_p6_duration_dataset_is_required_and_machine_checkable(

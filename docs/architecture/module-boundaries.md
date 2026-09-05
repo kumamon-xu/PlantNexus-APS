@@ -17,7 +17,7 @@ P8目标依赖方向为`Host/Optional Frontend → versioned HTTP API → APS Ru
 
 API进程只拥有transport/auth/validation/delegation，不能执行长时求解；worker与API消费同一application/domain语义、同一resolved Extension fingerprint并使用各自进程入口。Runtime composition root是唯一可把SDK贡献接到Core ports的位置；Extension不得覆盖state/authorization/publication/audit或用Solver侧逻辑实现Validation Rule。Reference adapter/Normalization可作为内部canonical producer，但不得注册为Production public endpoint。
 
-P8-03已形成`application → data_validation/snapshot/problem ports → plane-scoped infrastructure`的内部输入事务；P8-04新增`application.planning_runs → domain.planning_run + jobs.planning_run_work_item → infrastructure.planning_run_repository`。Domain只拥有冻结状态/attempt不变量和canonical record验证，不导入SQLAlchemy、API、Solver或wall clock；Application拥有authorization、idempotency、CAS命令编排与audit；Jobs只构建immutable queue-ready carrier，不调用Celery/Redis/Solver；Infrastructure只执行plane-scoped transaction、append-only/CAS和source lineage复核。该切片没有让API/Core反向依赖repository，也没有实现Runtime composition、Extension加载或Worker delivery；P8-05～15继续分别形成其余实现。
+P8-03已形成`application → data_validation/snapshot/problem ports → plane-scoped infrastructure`的内部输入事务；P8-04新增`application.planning_runs → domain.planning_run + jobs.planning_run_work_item → infrastructure.planning_run_repository`；P8-05新增`jobs.planning_run_task → planning_run_solver_worker → existing planning strategy + independent validator → application ScheduleVersion service`。Domain只拥有冻结状态/attempt不变量和canonical record验证，不导入SQLAlchemy、API、Solver或wall clock；Application拥有authorization、idempotency、CAS命令编排与版本应用；Jobs拥有strict task、server-bound execution ports、lease/checkpoint编排，但不复制Solver/Validator规则；Worker repository只执行plane-scoped binding、lease CAS和append-only result checkpoint。API/Core没有反向依赖repository，Runtime composition与Extension加载仍由P8-06/P8-13形成。
 
 ## TASK-P6-07 duration Planning-ingress module boundary
 
@@ -135,8 +135,8 @@ TASK-P0-05 已在 `simulation/profiles`、`simulation/scenarios`、`simulation/g
 
 - `api/app.py` 只装配 `/health/live` 与 `/health/ready`，不接触 Domain、Planning、Import、Export 或发布；OpenAPI/docs UI 在该 health-only app 中禁用。
 - `infrastructure/` 持有环境配置、日志、SQLAlchemy/Redis adapter、health probe 和 machine contract check。构建 client 不连接外部服务；只有 readiness probe 或未来 repository 调用才访问网络。
-- `jobs/` 持有 business-neutral immutable JobRecord、lease/heartbeat/attempt/STALLED 纯转移、idempotency protocol/process-local reference store 与 Celery adapter；不注册任何业务 task，不改变 ExportJob/PlanningRun/ScheduleVersion 状态合同。
-- API Process 与 Worker 使用同一 package/image但不同启动命令；P0-08 没有 Solver Worker task。未来 Solver 必须继续位于独立 Worker process 且不得在 health API 执行。
+- `jobs/` 的P0基线持有business-neutral JobRecord、lease/heartbeat/attempt/STALLED纯转移、idempotency protocol/process-local reference store与Celery adapter；P8-05在不改变ExportJob/PlanningRun/ScheduleVersion状态合同的前提下新增唯一PlanningRun Solver业务task、durable binding/checkpoint和执行编排。
+- API Process与Worker使用同一package/image但不同启动命令；P8-05 Solver task只在显式server composition绑定executor后运行，Solver不得在health API或请求线程执行。
 - `backend/migrations` 的两张表只保存通用工程 job/idempotency metadata，不是 Domain ORM 或业务权威来源；真实 distributed repository/transaction semantics 仍为后续 Task。
 
 ## TASK-P1-03 Raw Staging boundaries

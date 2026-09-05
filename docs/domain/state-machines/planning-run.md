@@ -11,6 +11,14 @@ last_reviewed: 2026-09-05
 
 # PlanningRun 状态机
 
+## TASK-P8-05 Worker state consumer
+
+Worker领取P8-04 `QUEUED` attempt时只把operational attempt改为`ACTIVE`，不会制造PlanningRun self-transition。成功候选按冻结pair依次消费`CREATED → INGESTING → VALIDATING → SNAPSHOTTED → BUILDING → SOLVING → SOLVED → VERIFYING → COMPLETED`；每步继续使用expected revision/state/fingerprint CAS并追加原有transition/audit。Solver无候选和Validator拒绝分别收敛到既有terminal语义，状态集合、31个allowed pairs、terminal guards与Schema bytes均未改变。
+
+通用job的`QUEUED/RUNNING/STALLED/SUCCEEDED/FAILED`和lease attempt只诊断消息执行，不是PlanningRun或operational attempt的新状态。无结果检查点的expired lease把当前业务attempt标记`TIMED_OUT`，run保持最后合法状态，只有P8-04显式retry可追加新attempt/work；同work已有有效检查点且业务timeout未到时，job可`STALLED → RUNNING`恢复并继续terminal CAS/版本应用，但不得再次求解或增加业务attempt。业务timeout已到、取消已生效、Runtime/input drift或checkpoint损坏均fail closed。
+
+Terminal PlanningRun永不重开。Cancel与Worker竞争时，以repository合法CAS顺序为准：取消获胜后Worker不能提交后续成功转换或ScheduleVersion；检查点先提交也不赋予绕过取消/timeout的发布权。`COMPLETED`之后的ScheduleVersion补偿只完成一次业务结果，不增加PlanningRun transition。
+
 ## TASK-P8-04 durable state implementation
 
 P8-04首次把本页冻结状态机作为durable application consumer实现：`planning_runs`保存current canonical carrier，`planning_run_transitions`按run/sequence append-only保存每个pair，写入要求expected revision/state/run fingerprint CAS，且`revision = sequence + 1`。实现与Schema/registry逐项复验16 states、8 terminal和31 pairs，拒绝unknown、自转换、terminal出边、stale revision/fingerprint及已发布artifact reference变化；`planning-run.schema.json`与`state-machines.v1.yaml` bytes未修改。

@@ -11,6 +11,14 @@ last_reviewed: 2026-09-05
 
 # P0 Observability 与 Audit 边界
 
+## TASK-P8-05 Worker evidence and redaction
+
+每次Worker执行都可由稳定的job/run/attempt/work references连接到P8-03 source、P8-04 command/transition/audit、server-owned Runtime/Extension-set和最终Solver/Validation/ScheduleVersion evidence。`planning_run_worker_jobs`保存lease执行绑定，`planning_run_worker_results`保存一次canonical checkpoint及digest；PlanningRun状态仍只通过既有transition/audit追加，job的`RUNNING/STALLED/SUCCEEDED/FAILED`只是内部执行诊断，不能替代业务状态或审计。
+
+Worker只暴露稳定结果类别、sanitized error code、指纹、计数和耗时，不记录canonical payload、原始idempotency key、principal、credential、DSN、SQL、stack、私有path或可执行Extension selector。Runtime/input/result fingerprint mismatch、Validator拒绝、cancel、timeout与基础设施异常分别fail closed；未知异常被归一为受限code，不能把底层异常文本写入task result或machine report。
+
+`p8-solver-worker-reliability-report.v1`记录九项correctness/recovery检查、一次真实Global CP-SAT调用、独立Validator调用次数及最终row counts；`p8-solver-worker-engineering-benchmark.v1`只记录固定synthetic profile下的单worker开发观测。两份报告明确`DEVELOPMENT_OBSERVATION_NO_SLA`且threshold为`null`。当前没有Production metric/trace backend、dashboard、alert、SIEM、retention/redaction审批、broker lag/lease SLO、跨host clock策略或容量结论；P8-10仍须建立运行期可观测与Runbook。
+
 ## TASK-P8-04 PlanningRun transition and attempt audit
 
 每次成功materialize、run transition、attempt dispatch failure/timeout和retry均原子追加一份`audit-event.v1`及一个scoped command receipt；run transition另保存before/after run fingerprint、sequence、from/to state和audit reference。Exact command replay返回首次结果且不追加audit；same-key conflict、stale CAS、非法/terminal pair及事务失败不伪造成功记录。Restart read从canonical run/attempt/work bytes及各自SHA-256重建，并逐项复核P8-03 source、Runtime/Extension-set和artifact lineage。
@@ -92,7 +100,7 @@ PlantNexus application logger 输出单行 JSON，稳定包含 `event`、`level`
 
 TEST-OBS-001 的 P0 slice 位于 [`test_logging.py`](../../backend/tests/integration/test_logging.py)，health/config evidence 位于 [`test_config_and_health.py`](../../backend/tests/integration/test_config_and_health.py)。machine report 固定成功/失败 health 示例与 redacted log 示例。
 
-尚未形成 PlanningRun model size、build/first-feasible/solve/validation duration、objective/bound/gap/memory metrics，也未形成 metric backend、trace exporter、dashboard、alert、SLO、retention/redaction review 或 clock-skew/collector failure behavior。P8-04虽已形成内部PlanningRun audit table/lineage，外部platform logs和Production monitoring仍未运行；因此 NFR-OBS-001不能被解释为完整PlanningRun observability已经形成。
+P8-05工程报告已形成单一synthetic执行的worker/solve/validation/total duration、结果计数和安全lineage观测，但没有形成Production model-size/memory基线，也没有metric backend、trace exporter、dashboard、alert、SLO、retention/redaction review或clock-skew/collector failure behavior。外部platform logs和Production monitoring仍未运行；因此NFR-OBS-001不能被解释为完整PlanningRun observability已经形成。
 
 ## P3 audit allocation
 

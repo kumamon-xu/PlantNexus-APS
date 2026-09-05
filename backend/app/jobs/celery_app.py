@@ -5,6 +5,7 @@ from __future__ import annotations
 from celery import Celery
 
 from app.infrastructure.config import Settings, load_settings
+from app.jobs.planning_run_task import register_planning_run_task
 
 
 def create_celery_app(settings: Settings | None = None) -> Celery:
@@ -30,6 +31,7 @@ def create_celery_app(settings: Settings | None = None) -> Celery:
         worker_prefetch_multiplier=1,
         worker_send_task_events=True,
     )
+    register_planning_run_task(application)
     return application
 
 

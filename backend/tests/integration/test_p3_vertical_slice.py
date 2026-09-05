@@ -233,6 +233,32 @@ def test_gate_stable_projection_excludes_only_runtime_noise_and_keeps_raw(
         "approval_decisions", approval
     ) == _stage_semantic_projection("approval_decisions", alternate)
 
+    publication = first["raw_subreports"]["publication"]
+    publication_concurrency = next(
+        check
+        for check in publication["checks"]
+        if check["check_id"]
+        == "concurrent-publication-single-current-cas-winner"
+    )["evidence"]
+    observed_failure = publication_concurrency["loser_failure"]
+    assert observed_failure in {"CURRENT_REFERENCE_CONFLICT", "STALE_SOURCE"}
+    alternate_publication = deepcopy(publication)
+    alternate_publication_concurrency = next(
+        check
+        for check in alternate_publication["checks"]
+        if check["check_id"]
+        == "concurrent-publication-single-current-cas-winner"
+    )["evidence"]
+    alternate_publication_concurrency["loser_failure"] = (
+        "CURRENT_REFERENCE_CONFLICT"
+        if observed_failure == "STALE_SOURCE"
+        else "STALE_SOURCE"
+    )
+    assert _stage_semantic_projection(
+        "publication", publication
+    ) == _stage_semantic_projection("publication", alternate_publication)
+    assert publication_concurrency["loser_failure"] == observed_failure
+
 
 def test_gate_aggregates_p2_negative_frontend_and_provider_inputs(
     gate_report: dict[str, Any],

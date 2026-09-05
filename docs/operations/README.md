@@ -6,10 +6,14 @@ spec_version: 0.3.0
 phase: P0-P8
 normative: false
 source_sections: [65, 66, 93, 94, 95, 101, 106, 113, 114]
-last_reviewed: 2026-09-04
+last_reviewed: 2026-09-05
 ---
 
 # Operations 索引与形成边界
+
+## TASK-P8-05 internal Worker operations boundary
+
+P8-05形成一个strict JSON PlanningRun Solver task、durable job binding/lease/heartbeat、append-only result checkpoint和same-work crash recovery。Worker调用既有Global CP-SAT与fresh Validator，只有validated `COMPLETED`结果才在ACK前应用为单一`READY_FOR_REVIEW` ScheduleVersion。当前通过SQLite、直接task执行和synthetic工程profile验证；尚无Production service composition、Redis/PostgreSQL outage、多host scanner、dashboard/alert、backup/restore、capacity或SLA结论。
 
 ## P8 planned operations outcome
 
@@ -74,7 +78,7 @@ P0-08 已形成工程骨架可验证的前三份 Operations baseline：
 
 - [`security.md`](security.md)：environment-only config、Secret/log redaction、dependency/SQL/shell 边界；Import/auth/threat-model controls 仍待真实功能。
 - [`observability-and-audit.md`](observability-and-audit.md)：structured log context、OpenTelemetry ID 注入、health/build metadata；PlanningRun metrics/audit persistence/retention 仍待实现。
-- [`worker-reliability-and-idempotency.md`](worker-reliability-and-idempotency.md)：business-neutral heartbeat、lease、attempt、STALLED、idempotency 与 migration；distributed repository/scanner/business retry 仍待实现。
+- [`worker-reliability-and-idempotency.md`](worker-reliability-and-idempotency.md)：business-neutral原语及P8 PlanningRun专用durable binding、heartbeat/lease、checkpoint、duplicate/crash/cancel/timeout恢复；Production distributed scanner/broker/database验证仍待实现。
 
 后续仍只保留计划：
 

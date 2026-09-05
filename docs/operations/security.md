@@ -6,10 +6,18 @@ spec_version: 0.3.0
 phase: P0-P8
 normative: true
 source_sections: [58, 62, 93, 95, 100]
-last_reviewed: 2026-09-04
+last_reviewed: 2026-09-05
 ---
 
 # P0 工程安全边界
+
+## TASK-P8-05 Solver Worker controls
+
+Celery业务消息是`additionalProperties=false`语义的四字段JSON identity carrier，不接受module、class、callable、entry point、filesystem path、plugin、Extension set、Runtime config、Policy/Limits或任意代码选择。Executor只能在进程启动时由可信server composition注入；work item、job binding和result checkpoint逐字复核data plane、run/attempt/work、Snapshot/Problem及Runtime/Extension/Solver/Validator fingerprints，任何漂移在领取或版本应用前fail closed。
+
+Worker异常只映射为受限稳定code；task result、checkpoint和machine report不包含raw canonical payload、idempotency key、credential、principal、DSN、SQL、stack或私有path。Fresh Validator独立于Solver constraint construction，篡改candidate即拒绝且不创建ScheduleVersion。Append-only guards阻止修改/删除job binding和checkpoint；cancel/timeout赢得CAS后，即使结果已计算也不得补发成功版本。
+
+这些控制仅由synthetic/SQLite、消息负例、Runtime mismatch和Validator mutation验证。真实broker ACL/TLS、PostgreSQL角色、secret rotation、sandbox/resource isolation、Extension signature/SBOM、multi-host攻击面、penetration、retention与Production identity仍未形成，不能关闭既有安全OPEN项。
 
 ## TASK-P8-04 PlanningRun orchestration controls
 

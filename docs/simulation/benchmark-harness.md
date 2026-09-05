@@ -3,13 +3,19 @@ doc_id: DOC-SIM-006
 title: Benchmark Harness 合同
 status: baseline
 spec_version: 0.3.0
-phase: P0-P6
+phase: P0-P8
 normative: true
 source_sections: [45, 51, 52, 53, 54, 55, 56, 58, 89]
-last_reviewed: 2026-09-02
+last_reviewed: 2026-09-05
 ---
 
 # Benchmark Harness 合同
+
+## TASK-P8-05 Solver Worker engineering observation
+
+`benchmarks/p8/solver-worker-engineering-profile.v1.json`是独立的P8可靠性/工程观测profile：固定`SIMULATION/TEST`、synthetic canonical ingress、seed `20260905`、单worker、一次measured run、30秒wall budget以及30/120秒heartbeat/lease。Checker从真实P8 canonical ingress开始，经过durable run/work、Global CP-SAT、fresh formal Validator、immutable checkpoint和ScheduleVersion application，并执行一次exact redelivery确认`solver_calls=1`。
+
+输出`p8-solver-worker-engineering-benchmark.v1`保留本机单次worker/solve/validation/total timing和结果计数；所有threshold显式为`null`，解释固定为`DEVELOPMENT_OBSERVATION_NO_SLA`。它不是P2 XS/S/M BenchmarkRunner的新profile或baseline，不改变任何既有threshold/expected，也不证明并发吞吐、Redis/PostgreSQL、多host恢复、真实工厂分布、Production capacity或SLA。P7现实校准和P8-10目标环境运行证据仍独立开放。
 
 ## TASK-P6-10 fresh Exit observations
 

@@ -15,11 +15,11 @@ last_reviewed: 2026-09-05
 
 本合同是宿主平台、APS Runtime、APS Core、Enterprise Extension、可选APS Frontend、安全和运维之间的人类可读集成基线。它执行ADR-0017和ADR-0018，并与TASK-P8-02发布的机器合同共同冻结责任、信任与失败语义。
 
-本文件中的“必须”“禁止”“仅”是规范要求。TASK-P8-02已把其中可机器表达的入口、结果、PlanningRun与错误语义发布为strict、versioned carrier；TASK-P8-03已实现不含HTTP的durable ingress slice，TASK-P8-04已实现不含HTTP/Worker的durable PlanningRun orchestration slice。因而本合同与机器文件目前仍然：
+本文件中的“必须”“禁止”“仅”是规范要求。TASK-P8-02已把其中可机器表达的入口、结果、PlanningRun与错误语义发布为strict、versioned carrier；TASK-P8-03已实现不含HTTP的durable ingress slice，TASK-P8-04已实现不含HTTP的durable PlanningRun orchestration slice，TASK-P8-05已实现内部异步Solver Worker执行与一次业务结果恢复。因而本合同与机器文件目前仍然：
 
 - 不声明任何新HTTP path、HTTP状态码或可运行API已经可用；
 - 只把现有`import-package.v2`作为`canonical-ingress-request.v1`内唯一允许的canonical payload，不把它或旧Adapter自动提升为已实现公共入口；
-- 已实现canonical ingress repository、原子Snapshot/PlanningProblem落库，以及内部run/attempt/work item/command/transition/audit repository与CAS行为；但不实现host identity provider、公开run HTTP、真实queue delivery/worker、Extension SDK或Plugin Registry；
+- 已实现canonical ingress repository、原子Snapshot/PlanningProblem落库、内部run/attempt/work item/command/transition/audit，以及strict task、lease/checkpoint、Global Solver、fresh Validator和ScheduleVersion应用；但不实现host identity provider、公开run HTTP、Production Runtime composition、Extension SDK或Plugin Registry；
 - 不关闭任何PROD_OPEN，也不证明真实宿主、UAT、容量或Production readiness。
 
 实现若不能表达本合同的必需语义，必须先修订合同或发布新版本；不得在代码、数据库、Extension或宿主中创建未登记的私有语义。
@@ -110,7 +110,7 @@ requested scope只是客户端请求范围，不是授权证明；服务端必�
 
 所有payload record的`canonical collection + source system + source version`都必须命中唯一binding；同一collection在单个请求中不能由多个source/version或重复authority claim竞争。每个声明的source system/version必须在`source_authority.bindings`中存在，且只能有一个mapping provenance；requested factory必须存在于canonical records。未登记record、重复/歧义binding或mapping、scope和source集合不一致分别以稳定scope/authority/lineage错误拒绝。
 
-接受结果必须与CREATED PlanningRun逐字绑定request/correlation、effective scope、ingress/payload、idempotency key/scope、Runtime resolution和transition audit；PlanningRun还必须与请求的Policy/Limits引用一致。每个run revision满足`revision = last_transition.sequence + 1`，`updated_at_utc`等于最近transition时间，最近transition及cancellation audit都必须出现在audit references中。TASK-P8-03形成初始CREATED carrier和prepared Snapshot/Problem；TASK-P8-04形成内部run读取、状态转换和attempt编排。公开run transport及Worker执行仍未实现。
+接受结果必须与CREATED PlanningRun逐字绑定request/correlation、effective scope、ingress/payload、idempotency key/scope、Runtime resolution和transition audit；PlanningRun还必须与请求的Policy/Limits引用一致。每个run revision满足`revision = last_transition.sequence + 1`，`updated_at_utc`等于最近transition时间，最近transition及cancellation audit都必须出现在audit references中。TASK-P8-03形成初始CREATED carrier和prepared Snapshot/Problem；TASK-P8-04形成内部run读取、状态转换和attempt编排；TASK-P8-05逐字消费这些引用完成solve/validate/checkpoint/version。公开run transport仍未实现。
 
 Runtime resolution只在result/PlanningRun的服务端字段中承载Runtime、Core、SDK、Registry protocol、Extension set/config、Developer Kit、Solver和Validator版本/指纹。请求Schema没有plugin/module/class/entry-point/artifact-path或Extension-set选择字段，任何此类添加都会因`additionalProperties=false`在副作用前拒绝。这里的`0.0.0-p8-contract-sample`仅是synthetic shape值，不表示SDK、Registry或Kit已经发布。
 
@@ -137,6 +137,12 @@ Run update只接受`state-machines.v1`中16 states/31 pairs，并要求expected 
 Migration `0007_planning_run_orchestration`是`0006`之后的additive head；work item、transition、command和audit为append-only，run/attempt只允许受控CAS更新，downgrade明确删除P8-04六表但保留P8-03 ingress/Snapshot/Problem，以批准的原canonical source重新materialize。事务故障、8-way exact race、restart read、scope/plane/Production binding、raw-key redaction、全部31 pair及downgrade/re-upgrade由`TEST-P8-PLANNING-RUN-001`覆盖。
 
 本slice不调用broker、Celery、Redis、Solver、Validator或HTTP router，也不建立lease/heartbeat/delivery claim。`queue-ready`只表示数据库事务中存在可供P8-05消费的不可变work item；它不是已投递、已启动、已完成、可发布或Production-ready声明。
+
+### 4.4 TASK-P8-05 asynchronous Solver Worker slice
+
+唯一业务task只接受`message_version/planning_run_id/work_item_id/worker_id`四个字段；data plane和attempt从server-bound repository及immutable work item解析，并由启动时绑定的Runtime executor提供Repository、Global Solver、fresh Validator及ScheduleVersion application。Worker在claim前后复核P8-03/P8-04 immutable input和Runtime fingerprints，以通用job lease/heartbeat和P8专用append-only binding/checkpoint保存exact execution/result lineage。客户端、宿主或消息不能选择Extension、module、class、path、Policy、Limits、Solver或Validator。
+
+候选必须通过既有Solver bundle合同与fresh independent Validator；结果checkpoint先于PlanningRun terminal CAS，`COMPLETED`之后才允许创建同一candidate的`READY_FOR_REVIEW` ScheduleVersion，ACK又晚于版本应用。Duplicate、检查点后崩溃及version application failure只恢复同一work/result而不再次solve；检查点前崩溃/lease expiry收敛为attempt timeout并要求P8-04显式retry。Cancel、business timeout、fingerprint mismatch、Validator failure与非candidate均不得发布成功版本。该slice不形成公开HTTP、Production broker/database拓扑、Extension加载或distributed exactly-once。
 
 ## 5. Identity、scope与授权
 

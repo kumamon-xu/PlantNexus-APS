@@ -1,0 +1,16 @@
+{
+  "profile_version": "p8-solver-worker-engineering-profile.v1",
+  "profile_id": "P8-SOLVER-WORKER-SYNTHETIC-XS",
+  "scenario_id": "SIM-P8-SOLVER-WORKER-001",
+  "data_plane": "SIMULATION",
+  "environment": "TEST",
+  "synthetic": true,
+  "random_seed": 20260905,
+  "measured_runs": 1,
+  "heartbeat_seconds": 30,
+  "lease_seconds": 120,
+  "max_wall_time_seconds": 30.0,
+  "max_workers": 1,
+  "thresholds": null,
+  "production_sla": "NOT_DEFINED"
+}

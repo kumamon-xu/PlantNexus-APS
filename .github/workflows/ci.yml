@@ -568,7 +568,19 @@ jobs:
             "${replay_root}/backend/tests/integration/test_p8_canonical_ingress_repository.py" \
             "${replay_root}/backend/tests/property/test_p8_canonical_ingress_properties.py" \
             "${replay_root}/backend/tests/security/test_p8_canonical_ingress_security.py" \
-            "${replay_root}/backend/tests/unit/test_p8_canonical_ingress_application.py"
+            "${replay_root}/backend/tests/unit/test_p8_canonical_ingress_application.py" \
+            "${replay_root}/backend/app/application/planning_runs.py" \
+            "${replay_root}/backend/app/application/planning_run_check.py" \
+            "${replay_root}/backend/app/domain/planning_run.py" \
+            "${replay_root}/backend/app/infrastructure/planning_run_repository.py" \
+            "${replay_root}/backend/app/jobs/planning_run_work_item.py" \
+            "${replay_root}/backend/migrations/versions/0007_planning_run_orchestration.py" \
+            "${replay_root}/backend/tests/contract/p8_planning_run_support.py" \
+            "${replay_root}/backend/tests/contract/test_p8_planning_run_orchestration_contract.py" \
+            "${replay_root}/backend/tests/integration/test_p8_planning_run_repository.py" \
+            "${replay_root}/backend/tests/property/test_p8_planning_run_properties.py" \
+            "${replay_root}/backend/tests/security/test_p8_planning_run_security.py" \
+            "${replay_root}/backend/tests/unit/test_p8_planning_run_orchestration.py"
           git -C "${replay_root}" restore \
             --source d0a83c58cb4a2d4afa76e8c8cff08441574e2e30 \
             -- backend/tests/integration/test_ci_contract.py

@@ -11,11 +11,13 @@ last_reviewed: 2026-09-05
 
 # 模块边界与依赖规则
 
-## P8 planned Headless dependency edge
+## P8 Headless dependency edge
 
 P8目标依赖方向为`Host/Optional Frontend → versioned HTTP API → APS Runtime application ports → APS-owned repositories/outbox → independent Solver Worker → existing Strategy/Solver + formal Validator → immutable publication/read/export`。企业扩展方向为`Enterprise Extension → Extension SDK ← Runtime adapters → APS Core`；Core不得反向导入SDK实现或企业代码。宿主只提交canonical JSON并消费公开结果；禁止宿主、Frontend或Extension共享APS数据库、导入Core internal、直接投递内部worker消息或调用Solver旁路。
 
-API进程只拥有transport/auth/validation/delegation，不能执行长时求解；worker与API消费同一application/domain语义、同一resolved Extension fingerprint并使用各自进程入口。Runtime composition root是唯一可把SDK贡献接到Core ports的位置；Extension不得覆盖state/authorization/publication/audit或用Solver侧逻辑实现Validation Rule。Reference adapter/Normalization可作为内部canonical producer，但不得注册为Production public endpoint。P8-03现已形成`application → data_validation/snapshot/problem ports → plane-scoped infrastructure`的内部单向依赖和原子事务边界；它没有让API或Core反向依赖repository，也没有实现Runtime composition或Extension加载。P8-04～15继续分别形成其余可验证实现。
+API进程只拥有transport/auth/validation/delegation，不能执行长时求解；worker与API消费同一application/domain语义、同一resolved Extension fingerprint并使用各自进程入口。Runtime composition root是唯一可把SDK贡献接到Core ports的位置；Extension不得覆盖state/authorization/publication/audit或用Solver侧逻辑实现Validation Rule。Reference adapter/Normalization可作为内部canonical producer，但不得注册为Production public endpoint。
+
+P8-03已形成`application → data_validation/snapshot/problem ports → plane-scoped infrastructure`的内部输入事务；P8-04新增`application.planning_runs → domain.planning_run + jobs.planning_run_work_item → infrastructure.planning_run_repository`。Domain只拥有冻结状态/attempt不变量和canonical record验证，不导入SQLAlchemy、API、Solver或wall clock；Application拥有authorization、idempotency、CAS命令编排与audit；Jobs只构建immutable queue-ready carrier，不调用Celery/Redis/Solver；Infrastructure只执行plane-scoped transaction、append-only/CAS和source lineage复核。该切片没有让API/Core反向依赖repository，也没有实现Runtime composition、Extension加载或Worker delivery；P8-05～15继续分别形成其余实现。
 
 ## TASK-P6-07 duration Planning-ingress module boundary
 

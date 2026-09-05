@@ -3,13 +3,19 @@ doc_id: DOC-STATE-001
 title: PlanningRun 状态机
 status: baseline
 spec_version: 0.3.0
-phase: P0-P2
+phase: P0-P8
 normative: true
 source_sections: [29, 32, 65]
-last_reviewed: 2026-08-28
+last_reviewed: 2026-09-05
 ---
 
 # PlanningRun 状态机
+
+## TASK-P8-04 durable state implementation
+
+P8-04首次把本页冻结状态机作为durable application consumer实现：`planning_runs`保存current canonical carrier，`planning_run_transitions`按run/sequence append-only保存每个pair，写入要求expected revision/state/run fingerprint CAS，且`revision = sequence + 1`。实现与Schema/registry逐项复验16 states、8 terminal和31 pairs，拒绝unknown、自转换、terminal出边、stale revision/fingerprint及已发布artifact reference变化；`planning-run.schema.json`与`state-machines.v1.yaml` bytes未修改。
+
+Operational attempt使用独立内部诊断状态`QUEUED/ACTIVE/DISPATCH_FAILED/TIMED_OUT/CANCEL_REQUESTED/CANCELLED/SUCCEEDED/FAILED`。它不是新增PlanningRun state：dispatch failure/timeout保持run原state/revision，且terminal attempt只能先retry或显式终结run，不能继续推进非terminal pair；retry只追加新attempt/work item。Cancel终止尚未terminal的attempt，已失败/超时attempt保持原bytes；业务run仍只按本页合法pair推进。Queue-ready不表示Worker已执行，P8-05必须在不增加PlanningRun self-transition的前提下消费该边界。
 
 ## TASK-P4-08 terminal result application review
 

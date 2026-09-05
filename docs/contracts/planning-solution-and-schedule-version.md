@@ -6,10 +6,16 @@ spec_version: 0.3.0
 phase: P0-P4
 normative: true
 source_sections: [29, 30, 32, 33, 67, 78]
-last_reviewed: 2026-08-28
+last_reviewed: 2026-09-05
 ---
 
 # PlanningSolution 与 ScheduleVersion 合同
+
+## TASK-P8-04 PlanningRun output boundary
+
+P8-04只持久化PlanningRun command/attempt/work item和阶段artifact references，不生成或修改`planning-solution.v1`、`solver-report.v1/v2`、`validation-report.v2`或`schedule-version.v1/v2`内容。进入SOLVED/VERIFYING/COMPLETED等状态时，调用方必须提供符合冻结PlanningRun Schema的exact references；repository只保存并验证单调lineage，不能伪造Solver/Validator结果或自动建立ScheduleVersion。
+
+`COMPLETED`仍只代表计算生命周期结束，不等于ScheduleVersion已READY、APPROVED、PUBLISHED或EXPORTED。P8-04的queue-ready work item也不代表worker已投递、求解成功或candidate通过formal Validator；这些行为分别归P8-05及既有输出应用/发布合同。
 
 ## TASK-P4-11 compatibility-package boundary
 

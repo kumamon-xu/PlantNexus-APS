@@ -6,10 +6,16 @@ spec_version: 0.3.0
 phase: cross-phase
 normative: true
 source_sections: [16, 38, 49, 62, 64, 95, 96]
-last_reviewed: 2026-09-04
+last_reviewed: 2026-09-05
 ---
 
 # 配置、环境与数据隔离
+
+## TASK-P8-04 PlanningRun persistence isolation
+
+PlanningRun application只接受显式`PlanningRunCommandContext`和plane-bound repository；tenant/factory/planning scope、environment、capability、Production binding与P8-03 immutable source必须逐字一致。Run/attempt/work item同时保存data-plane及Runtime/Extension-set fingerprints，跨plane read/write、Production未绑定、stale CAS和source drift均fail closed；raw key、数据库URL、queue地址和可执行Extension selector不进入持久化carrier。
+
+新增`0007_planning_run_orchestration`只追加六张P8-04表、索引、FK/unique/check和SQLite/PostgreSQL mutation guards。P4 frozen replay只精确移除12个本Task Backend路径；没有新增workflow job、Secret、service、permission、artifact channel或dependency。当前SQLite测试不证明PostgreSQL Production隔离/锁容量，P8-05 queue配置与P8-06 composition仍未形成。
 
 ## TASK-P8-03 canonical-ingress persistence isolation
 

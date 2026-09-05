@@ -3,13 +3,17 @@ doc_id: DOC-STATE-003
 title: ExportJob 状态机
 status: baseline
 spec_version: 0.3.0
-phase: P0-P3
+phase: P0-P8
 normative: true
 source_sections: [34, 65, 66, 67]
-last_reviewed: 2026-08-27
+last_reviewed: 2026-09-05
 ---
 
 # ExportJob 状态机
+
+## TASK-P8-04 isolation review
+
+P8-04新增的PlanningRun operational attempt/work item不是ExportJob，也不复用或修改本机的state、attempt、lease、heartbeat、retry、artifact或manifest语义。`planning_run_work_items`仅为P8-05 Solver Worker的queue-ready输入；它不进入`EXPORTING/EXPORTED`，不创建文件包，也不能被文件存在或PlanningRun COMPLETED解释为ExportJob成功。ExportJob既有五状态/六pair和P3/P4 worker边界逐字保持。
 
 ## TASK-P4-11 v3 consumer, unchanged pairs
 

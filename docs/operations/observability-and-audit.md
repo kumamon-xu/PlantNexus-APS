@@ -6,10 +6,16 @@ spec_version: 0.3.0
 phase: P0-P8
 normative: true
 source_sections: [29, 42, 65, 93, 95]
-last_reviewed: 2026-09-04
+last_reviewed: 2026-09-05
 ---
 
 # P0 Observability 与 Audit 边界
+
+## TASK-P8-04 PlanningRun transition and attempt audit
+
+每次成功materialize、run transition、attempt dispatch failure/timeout和retry均原子追加一份`audit-event.v1`及一个scoped command receipt；run transition另保存before/after run fingerprint、sequence、from/to state和audit reference。Exact command replay返回首次结果且不追加audit；same-key conflict、stale CAS、非法/terminal pair及事务失败不伪造成功记录。Restart read从canonical run/attempt/work bytes及各自SHA-256重建，并逐项复核P8-03 source、Runtime/Extension-set和artifact lineage。
+
+Machine report记录冻结state/pair、attempt pair、migration/table、未实现边界，并声明JUnit中的materialize/read/transition微秒值只是development observation且threshold为`null`；pytest/JUnit同时负责事务、并发、scope和mutation证据。当前没有PlanningRun model/solve/validation timing、broker delivery/lease指标、trace exporter、dashboard、alert、SLO、retention/SIEM或真实host correlation；工程耗时和durable audit都不等于Production observability完成。
 
 ## TASK-P8-03 ingress observability and durable audit
 
@@ -86,7 +92,7 @@ PlantNexus application logger 输出单行 JSON，稳定包含 `event`、`level`
 
 TEST-OBS-001 的 P0 slice 位于 [`test_logging.py`](../../backend/tests/integration/test_logging.py)，health/config evidence 位于 [`test_config_and_health.py`](../../backend/tests/integration/test_config_and_health.py)。machine report 固定成功/失败 health 示例与 redacted log 示例。
 
-尚未形成 PlanningRun model size、build/first-feasible/solve/validation duration、objective/bound/gap/memory metrics，未形成 metric backend、trace exporter、dashboard、alert、SLO、audit event/table、retention/redaction review 或 clock-skew/collector failure behavior。外部 CI run、platform logs 和 production monitoring 也未运行；因此 NFR-OBS-001 只获得基础日志关联 slice，不能声称 PlanningRun observability 完成。
+尚未形成 PlanningRun model size、build/first-feasible/solve/validation duration、objective/bound/gap/memory metrics，也未形成 metric backend、trace exporter、dashboard、alert、SLO、retention/redaction review 或 clock-skew/collector failure behavior。P8-04虽已形成内部PlanningRun audit table/lineage，外部platform logs和Production monitoring仍未运行；因此 NFR-OBS-001不能被解释为完整PlanningRun observability已经形成。
 
 ## P3 audit allocation
 

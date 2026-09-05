@@ -660,6 +660,27 @@ def test_ci_p8_canonical_ingress_is_isolated_from_frozen_p4_replay() -> None:
         assert workflow.count(relative_path) == 1
 
 
+def test_ci_p8_planning_run_is_isolated_from_frozen_p4_replay() -> None:
+    workflow = (ROOT / ".github" / "workflows" / "ci.yml").read_text(
+        encoding="utf-8"
+    )
+    for relative_path in (
+        "backend/app/application/planning_runs.py",
+        "backend/app/application/planning_run_check.py",
+        "backend/app/domain/planning_run.py",
+        "backend/app/infrastructure/planning_run_repository.py",
+        "backend/app/jobs/planning_run_work_item.py",
+        "backend/migrations/versions/0007_planning_run_orchestration.py",
+        "backend/tests/contract/p8_planning_run_support.py",
+        "backend/tests/contract/test_p8_planning_run_orchestration_contract.py",
+        "backend/tests/integration/test_p8_planning_run_repository.py",
+        "backend/tests/property/test_p8_planning_run_properties.py",
+        "backend/tests/security/test_p8_planning_run_security.py",
+        "backend/tests/unit/test_p8_planning_run_orchestration.py",
+    ):
+        assert workflow.count(f'"${{replay_root}}/{relative_path}"') == 1
+
+
 def test_ci_p6_duration_dataset_is_required_and_machine_checkable(
     tmp_path: Path,
 ) -> None:

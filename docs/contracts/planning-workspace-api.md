@@ -6,10 +6,16 @@ spec_version: 0.3.0
 phase: P3
 normative: true
 source_sections: [33, 34, 63, 65, 66, 68, 69, 77, 78, 91, 94]
-last_reviewed: 2026-08-31
+last_reviewed: 2026-09-05
 ---
 
 # P3 Planning Workspace API 语义合同
+
+## TASK-P8-04 internal PlanningRun application boundary
+
+P8-04现在严格消费`planning-run.v1`并提供transport-neutral create/read/cancel/retry/transition ports；所有写入先绑定server-derived capability、tenant/factory/planning scope、data plane、expected revision/state/run fingerprint和hashed idempotency reference，再由plane-scoped repository执行CAS。Run只能沿冻结31个pair前进；terminal不可重开，retry只为`DISPATCH_FAILED`或`TIMED_OUT`追加新attempt/work item，不能被表示成PlanningRun self-transition。
+
+这些Python ports、内部`planning-run-attempt.v1`和`planning-run-work-item.v1`不是新增HTTP或公共wire contract。本页P3/P4 path、operationId、status/error envelope与OpenAPI fingerprint均未改变；P8-07仍负责公开Headless transport，P8-08仍负责真实host identity/authorization adapter。
 
 ## TASK-P8-02 Headless PlanningRun machine boundary
 

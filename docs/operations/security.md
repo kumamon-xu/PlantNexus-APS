@@ -11,6 +11,12 @@ last_reviewed: 2026-09-04
 
 # P0 工程安全边界
 
+## TASK-P8-04 PlanningRun orchestration controls
+
+PlanningRun所有command/query都先校验repository data plane、server-derived capability、Production binding及exact tenant/factory/planning scope；写命令再绑定expected revision/state/run fingerprint和最新attempt identity。Raw idempotency key只转换为SHA-256 reference，attempt failure只持久化受限的大写稳定code，work item不接受module/class/entry-point/path/plugin/callable选择；Runtime/Extension-set、Policy/Limits和prepared artifacts全部来自P8-03可信source并在读取时复核canonical bytes、row projection与fingerprint。
+
+`0007_planning_run_orchestration`把work item/transition/command/audit设为append-only，run/attempt只允许冻结pair和单revision CAS；同事务任一步失败不留下部分run、attempt、work item或audit。SQLite故障/并发与Production-binding负例已验证，PostgreSQL migration提供同等trigger合同但尚无真实Production topology、credential、load或penetration evidence；因此identity/RBAC、encryption/retention/backup/restore与Production security OPEN项不变。
+
 ## TASK-P8-03 canonical ingress controls
 
 应用入口只解析strict UTF-8 JSON bytes，并从服务端固定Schema目录消费冻结的P8合同；duplicate key、NaN/Infinity、unknown version/field、invalid fingerprint、client plugin/module/class/entry-point/artifact path在持久化前fail closed。请求不能选择Schema文件或可执行代码，production module不依赖动态下载或运行时`jsonschema`包。HTTP media type、payload/depth/count限制属于P8-07，当前不得把application byte入口误报为公开网络防护已经形成。

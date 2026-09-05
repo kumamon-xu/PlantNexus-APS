@@ -13,7 +13,7 @@ last_reviewed: 2026-09-05
 
 本清单以当前 FastAPI OpenAPI、router、application port 和自动化测试为事实来源，用于回答“接口是否存在、实现到哪一层、还缺什么”。具体 wire 语义仍以 [Planning Workspace API 合同](planning-workspace-api.md)、[ExecutionEvent / ReplanRequest 合同](execution-events-and-replan-request.md)和[错误模型](../domain/error-model.md)为准。
 
-P8目标边界已经确定，P8-03已实现无HTTP的内部canonical-ingress application与Snapshot/PlanningProblem原子持久化，但公开Headless提交仍未实现。APS未来只通过Headless API接收宿主平台提交的versioned canonical JSON；不提供ERP/MES/WMS/CAM专用连接器或raw文件产品端点。宿主和可选独立Frontend使用同一API。Extension SDK和Plugin Registry只在APS Runtime内部使用，不提供插件上传、下载、安装或企业私有业务route；企业特有数据仍须使用批准的namespaced/versioned canonical字段。下述29项仍是当前真实OpenAPI，内部Python service不能被解释为现有operation。
+P8目标边界已经确定，P8-03已实现无HTTP的内部canonical-ingress application与Snapshot/PlanningProblem原子持久化，P8-04已实现无HTTP的durable PlanningRun create/read/cancel/retry、CAS transition及queue-ready work item，但公开Headless提交仍未实现。APS未来只通过Headless API接收宿主平台提交的versioned canonical JSON；不提供ERP/MES/WMS/CAM专用连接器或raw文件产品端点。宿主和可选独立Frontend使用同一API。Extension SDK和Plugin Registry只在APS Runtime内部使用，不提供插件上传、下载、安装或企业私有业务route；企业特有数据仍须使用批准的namespaced/versioned canonical字段。下述29项仍是当前真实OpenAPI，内部Python service不能被解释为现有operation。
 
 ## 状态说明
 
@@ -86,10 +86,10 @@ P8目标边界已经确定，P8-03已实现无HTTP的内部canonical-ingress app
 
 | 能力 | 当前状态 | 补齐前置 |
 |---|---|---|
-| 提交versioned canonical JSON | P8-01/02人类与机器合同已形成，当前未提供公开端点 | P8-03的Data Validation、幂等事务和不可变artifact owner，之后由P8-07暴露HTTP |
+| 提交versioned canonical JSON | P8-01/02合同与P8-03内部consumer已形成，当前未提供公开端点 | P8-07绑定现有Data Validation、幂等事务和不可变artifact owner并暴露HTTP |
 | 上传/提交原始ERP/MES/WMS/CAM、Excel/CSV数据 | 不属于APS公共产品API | 由宿主平台采集/映射为canonical JSON；reference adapter仅内部/研发使用 |
 | 通过 HTTP 创建 PlanningSnapshot / PlanningProblem | P8规划，当前未提供公开端点 | Canonical ingress成功后由APS原子创建，不开放直接数据库写入 |
-| 通过 HTTP 创建并启动新的 PlanningRun | P8-02 lifecycle机器合同已形成，当前未提供公开端点 | P8-04/05的持久化、Policy/Limits、排队/取消/超时和Worker行为，之后由P8-07暴露HTTP |
+| 通过 HTTP 创建并启动新的 PlanningRun | P8-02 lifecycle合同与P8-04内部持久化/取消/重试/超时意图已形成，当前未提供公开端点 | P8-05实现真实Worker投递/执行，P8-07再暴露HTTP；不得把queue-ready当HTTP 202或已启动 |
 | 工厂、资源、工艺、订单主数据 CRUD | 不作为Snapshot旁路 | 宿主维护上游主数据并提交新canonical版本；APS不直接修改既有Snapshot |
 | 用户、角色、SSO/RBAC 管理 | 用户生命周期不属于APS；当前只有provider port | P8-08接入宿主identity并由APS强制role/capability/factory scope |
 | 生产MES/ERP事件连接器与外部发布 | 连接器不属于APS；当前无Production发布 | 宿主负责上游/下游连接，APS只提供canonical input与read/export API；authority仍需closure |

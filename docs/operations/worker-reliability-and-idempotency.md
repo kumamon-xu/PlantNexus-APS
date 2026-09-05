@@ -3,13 +3,19 @@ doc_id: DOC-OPS-003
 title: P0 Worker Reliability 与 Idempotency
 status: baseline
 spec_version: 0.3.0
-phase: P0-P7
+phase: P0-P8
 normative: true
 source_sections: [34, 65, 66, 67]
-last_reviewed: 2026-08-28
+last_reviewed: 2026-09-05
 ---
 
 # P0 Worker Reliability 与 Idempotency
+
+## TASK-P8-04 queue-ready orchestration boundary
+
+P8-04为每个P8-03 CREATED run在一个数据库事务中materialize唯一run、attempt、immutable work item、initial transition、command receipt和audit。Command幂等scope包含operation、run和effective scope；raw key只保存hash reference。Same key/same fingerprint返回首次canonical result且不重复记录，different fingerprint拒绝；run update使用expected revision/state/fingerprint CAS，attempt update使用identity/number/revision CAS，并发exact materialize/transition均只有一个winner。Repository以单一数据库快照组装run/attempt/work read model，避免并发提交产生撕裂视图。
+
+Operational attempt状态独立于PlanningRun状态。初始`QUEUED`不表示broker已接收；`DISPATCH_FAILED`/`TIMED_OUT`保留失败attempt并允许追加新attempt/work item，run revision不变，且失败attempt未retry前不得继续推进run。Cancel终结非terminal attempt和run；若attempt已失败/超时则保留其terminal bytes，只终结run。Terminal run永不重开。P8-04没有claim、lease、heartbeat、ack、backoff、dead-letter、Celery/Redis调用、Solver execution或distributed exactly-once；这些仍由P8-05形成并必须消费现有work item/CAS ports。
 
 ## TASK-P4-11 ChangeReport export worker
 

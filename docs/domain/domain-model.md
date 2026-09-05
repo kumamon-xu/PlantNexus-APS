@@ -6,10 +6,16 @@ spec_version: 0.3.0
 phase: P0-P8
 normative: true
 source_sections: [17, 18, 19, 20, 21, 22]
-last_reviewed: 2026-09-04
+last_reviewed: 2026-09-05
 ---
 
 # APS 领域模型
+
+## TASK-P8-04 PlanningRun aggregate and operational values
+
+`PlanningRunAggregate`现以current canonical `planning-run.v1`、immutable initial CREATED bytes、P8-03 prepared artifact bytes、source ingress ID/fingerprint组成durable aggregate boundary。Run identity、scope/ingress/Runtime/Policy/Limits/created time不可变；revision/state/last transition、allowed actions、attempt projection、artifact references、cancellation/error/audits只能经冻结pair和CAS演进。Repository row只是该canonical aggregate的索引投影，不是第二套domain truth。
+
+`PlanningRunAttempt`、`PlanningRunWorkItem`和`PlanningRunCommandRecord`是Runtime内部versioned canonical values，不是新的公共API aggregate。Attempt记录一次operational ownership/outcome；retry创建新identity/number而不改旧attempt或重开run。Work item冻结worker所需引用但不表示delivery；Command record保存scoped idempotent logical result。它们不承载审批、发布、Extension加载或Solver/Validator判断。
 
 ## TASK-P8-02 PlanningRun carrier boundary
 

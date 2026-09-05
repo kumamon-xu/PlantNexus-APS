@@ -6,14 +6,14 @@ spec_version: 0.3.0
 phase: P8
 normative: false
 source_sections: [2, 6, 24, 90, 113, 114]
-last_reviewed: 2026-09-04
+last_reviewed: 2026-09-05
 ---
 
 # PlantNexus APS 公开文档中心
 
 本目录只收录适合随公开 Git 仓库发布的核心项目文档。开发过程记录、Task Card、阶段证据、机器报告、临时草稿、截图、测试输出和下载制品不属于公开文档，应留在被忽略的本地目录或 `build/`。
 
-项目当前已形成 P0～P6 研发能力，P7 真实数据校准暂缓，P8 Headless产品化已从机器合同推进到持久化canonical ingress应用切片。产品边界只接收宿主平台提交的versioned canonical JSON，不在APS内直接建设ERP/MES/WMS/CAM连接器；宿主和未来可选独立Frontend消费同一API。企业适配规划通过Extension SDK和独立Enterprise Extension在Runtime内实现，并由version-locked Developer Kit交付，禁止复制/修改Core或自动升级企业项目。当前已形成[Headless平台集成与数据权威合同](contracts/headless-platform-integration.md)、schema set `2.10.0`中的canonical ingress/result、PlanningRun与Headless错误注册表，以及严格消费这些合同并原子保存immutable Snapshot/PlanningProblem的内部应用服务；公开HTTP、Solver Worker、SDK、Registry和Developer Kit仍未实现，也不代表Production readiness、UAT、真实身份/审批authority、部署、容量结论或SLA已经形成。能力声明以[能力矩阵](core/capability-matrix.md)和对应合同为准。
+项目当前已形成 P0～P6 研发能力，P7 真实数据校准暂缓，P8 Headless产品化已从机器合同推进到durable canonical ingress及PlanningRun编排切片。产品边界只接收宿主平台提交的versioned canonical JSON，不在APS内直接建设ERP/MES/WMS/CAM连接器；宿主和未来可选独立Frontend消费同一API。企业适配规划通过Extension SDK和独立Enterprise Extension在Runtime内实现，并由version-locked Developer Kit交付，禁止复制/修改Core或自动升级企业项目。当前已形成[Headless平台集成与数据权威合同](contracts/headless-platform-integration.md)、schema set `2.10.0`中的canonical ingress/result、PlanningRun与Headless错误注册表，以及严格消费这些合同并原子保存immutable Snapshot/PlanningProblem、CREATED run、attempt、queue-ready work item、命令/转换/audit的内部应用服务；公开HTTP、真实queue delivery、Solver Worker、SDK、Registry和Developer Kit仍未实现，也不代表Production readiness、UAT、真实身份/审批authority、部署、容量结论或SLA已经形成。能力声明以[能力矩阵](core/capability-matrix.md)和对应合同为准。
 
 ## 核心入口
 

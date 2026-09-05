@@ -11,6 +11,10 @@ last_reviewed: 2026-09-05
 
 # ExportJob 状态机
 
+## TASK-P8-06 composition isolation review
+
+P8-06只把PlanningRun facade、Celery dispatch和Solver Worker executor绑定到Runtime进程；没有组合、创建、读取或推进ExportJob，也没有新增export queue、target、artifact、manifest或状态pair。`QUEUE_FAILED/BROKER_DISPATCH_FAILED`只属于PlanningRun dispatch attempt，不能映射为`EXPORT_FAILED`；Runtime readiness或ScheduleVersion存在也不能推断`EXPORTED`。既有ExportJob五状态、六pair、lease/retry/cancel、manifest-last和published-only source规则逐字不变。
+
 ## TASK-P8-05 Worker isolation review
 
 P8-05的`engineering_job_records`、`planning_run_worker_jobs`和`planning_run_worker_results`只承载Solver执行lease与结果恢复，不是ExportJob repository，也不复用`CREATED/EXPORTING/EXPORTED/EXPORT_FAILED/CANCELLED`业务状态。Worker成功最多把validated ScheduleVersion送到`READY_FOR_REVIEW`；不会创建导出任务、目录、manifest或外部传输，也不能把PlanningRun `COMPLETED`、通用job `SUCCEEDED`或checkpoint存在解释为Export成功。

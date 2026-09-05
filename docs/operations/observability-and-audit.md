@@ -11,6 +11,14 @@ last_reviewed: 2026-09-05
 
 # P0 Observability 与 Audit 边界
 
+## TASK-P8-06 Runtime composition evidence
+
+Immutable composition descriptor把API/Worker共同绑定到environment、data plane、schema/core/runtime/Extension-set、Policy/Limits、Solver/Validator及port implementation references；safe manifest只发布这些稳定版本/指纹和process-owned port inventory。API/Worker parity在启动检查和machine report中逐字比较，descriptor漂移必须在业务执行或Solver publication前fail closed。
+
+Facade沿用P8-03 ingress audit和P8-04 run/attempt/command/audit；dispatch成功只返回稳定dispatch/run/work/worker references，broker失败追加既有`DISPATCH_FAILED`证据并隐藏底层异常。Worker继续由P8-05 job binding/checkpoint连接到同一descriptor。`p8-runtime-composition-report.v1`记录8项组合、安全、角色和Production拒绝检查，不保存canonical payload、credential、endpoint、absolute path、SQL或stack。
+
+Liveness只证明进程存在；P8-06的Development readiness/probes和synthetic端到端执行不构成Production readiness、SLO或capacity结论。真实metric/trace backend、broker lag、database pool、dashboard/alert、SIEM、retention/redaction批准、clock-skew和on-call Runbook仍由P8-10及OPEN项负责。
+
 ## TASK-P8-05 Worker evidence and redaction
 
 每次Worker执行都可由稳定的job/run/attempt/work references连接到P8-03 source、P8-04 command/transition/audit、server-owned Runtime/Extension-set和最终Solver/Validation/ScheduleVersion evidence。`planning_run_worker_jobs`保存lease执行绑定，`planning_run_worker_results`保存一次canonical checkpoint及digest；PlanningRun状态仍只通过既有transition/audit追加，job的`RUNNING/STALLED/SUCCEEDED/FAILED`只是内部执行诊断，不能替代业务状态或审计。

@@ -11,6 +11,14 @@ last_reviewed: 2026-09-05
 
 # P0 工程安全边界
 
+## TASK-P8-06 Runtime composition controls
+
+组合根在任何外部client、repository side effect或Worker binding前验证显式environment/data plane、code commit、Runtime fingerprints、server-owned Schema/Policy/Limits和process role；Production因P8-08～10 authority/deployment ports缺失统一fail closed。API只持有facade和publisher而不持有或调用Solver实例，Worker才持有executor；Worker消息仍是四字段strict JSON。伪造Production binding/build identity、descriptor mismatch、跨plane artifact、symlink/超限配置和请求级可执行selector均被拒绝。
+
+Composition descriptor、safe manifest和错误只含稳定code、公开版本与SHA-256 references，不含credential、token、DSN、broker URL、SQL、stack、raw canonical payload、idempotency key或absolute/private path。Broker异常在边界被归一为`QUEUE_FAILED/BROKER_DISPATCH_FAILED`；durable run仍保留可审计失败状态，但底层异常文本不会进入response、task result或manifest。
+
+Extension seam固定为空且不具备loader/discovery/network能力；AST安全检查要求Core不反向导入Runtime adapter、SDK或企业代码。该同进程预留缝隙不是sandbox；签名、SBOM、dependency allow-list、resource isolation和企业Extension threat model仍由P8-12～15负责。当前synthetic/SQLite和recording Celery证据不证明真实RBAC、TLS/ACL、secret rotation、penetration、multi-host隔离或Production安全。
+
 ## TASK-P8-05 Solver Worker controls
 
 Celery业务消息是`additionalProperties=false`语义的四字段JSON identity carrier，不接受module、class、callable、entry point、filesystem path、plugin、Extension set、Runtime config、Policy/Limits或任意代码选择。Executor只能在进程启动时由可信server composition注入；work item、job binding和result checkpoint逐字复核data plane、run/attempt/work、Snapshot/Problem及Runtime/Extension/Solver/Validator fingerprints，任何漂移在领取或版本应用前fail closed。

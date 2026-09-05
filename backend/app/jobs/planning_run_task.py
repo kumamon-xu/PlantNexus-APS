@@ -2,9 +2,11 @@
 
 from __future__ import annotations
 
-from collections.abc import Mapping
+from collections.abc import Callable, Mapping
+from dataclasses import dataclass
 from threading import Lock
 from typing import Any, Protocol, cast
+from uuid import uuid4
 
 from celery import Celery
 
@@ -28,6 +30,67 @@ class PlanningRunTaskExecutor(Protocol):
         work_item_id: str,
         worker_id: str,
     ) -> PlanningRunWorkerExecution: ...
+
+
+class PlanningRunDispatchError(RuntimeError):
+    """Sanitized broker submission failure for the application facade."""
+
+
+@dataclass(frozen=True, slots=True)
+class PlanningRunDispatchReceipt:
+    dispatch_id: str
+    planning_run_id: str
+    work_item_id: str
+    worker_id: str
+
+
+class CeleryPlanningRunDispatcher:
+    """Publish only the frozen JSON identity carrier to the Solver queue."""
+
+    def __init__(
+        self,
+        application: Celery,
+        *,
+        identity_factory: Callable[[], str] | None = None,
+    ) -> None:
+        self._application = application
+        self._identity_factory = identity_factory or (lambda: uuid4().hex)
+
+    def dispatch(
+        self, work_item: Mapping[str, object]
+    ) -> PlanningRunDispatchReceipt:
+        planning_run_id = _text(
+            work_item.get("planning_run_id"), "planning_run_id"
+        )
+        work_item_id = _text(work_item.get("work_item_id"), "work_item_id")
+        raw_identity = self._identity_factory()
+        identity = _text(raw_identity, "dispatch_id")
+        if len(identity) > 200:
+            raise PlanningRunDispatchError("PlanningRun dispatch identity is invalid")
+        dispatch_id = f"planning-run-dispatch-{identity}"
+        worker_id = f"worker:{identity}"
+        message = {
+            "message_version": PLANNING_RUN_SOLVER_MESSAGE_VERSION,
+            "planning_run_id": planning_run_id,
+            "work_item_id": work_item_id,
+            "worker_id": worker_id,
+        }
+        try:
+            self._application.send_task(
+                PLANNING_RUN_SOLVER_TASK,
+                args=(message,),
+                task_id=dispatch_id,
+            )
+        except Exception as error:  # noqa: BLE001 - broker detail is secret-bearing
+            raise PlanningRunDispatchError(
+                "PlanningRun dispatch failed before broker acknowledgement"
+            ) from error
+        return PlanningRunDispatchReceipt(
+            dispatch_id=dispatch_id,
+            planning_run_id=planning_run_id,
+            work_item_id=work_item_id,
+            worker_id=worker_id,
+        )
 
 
 _BINDING_LOCK = Lock()
@@ -132,8 +195,11 @@ def register_planning_run_task(application: Celery) -> None:
 
 
 __all__ = [
+    "CeleryPlanningRunDispatcher",
     "PLANNING_RUN_SOLVER_MESSAGE_VERSION",
     "PLANNING_RUN_SOLVER_TASK",
+    "PlanningRunDispatchError",
+    "PlanningRunDispatchReceipt",
     "bind_planning_run_task_executor",
     "clear_planning_run_task_executor",
     "execute_planning_run_message",

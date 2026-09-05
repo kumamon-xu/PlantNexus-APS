@@ -11,6 +11,12 @@ last_reviewed: 2026-09-05
 
 # 端到端计划链路
 
+## TASK-P8-06 composed internal runtime edge
+
+P8-03～05的可执行链现由唯一`app.runtime_composition`形成两个分进程入口：API root接收内部canonical bytes与trusted context，经`APSRuntimeApplicationFacade`完成ingress、PlanningRun materialize及四字段Celery dispatch；Worker root从durable run/source解析同一Policy/Limits与Runtime descriptor，再执行既有P8-05 Solver/Validator/ScheduleVersion链。API和Worker不共享进程对象或数据库外的隐藏状态，但environment、data plane、schema/core/runtime/Extension-set、Policy/Limits、Solver与Validator fingerprints必须逐字相同。
+
+Exact replay只在最新attempt仍为`QUEUED`时重投同一durable work；broker提交失败通过既有P8-04命令收敛为`DISPATCH_FAILED`并保留sanitized code。请求/消息不能选择artifact path或Extension实现。当前Extension adapter固定为空、无loader，Production因P8-08～10真实authority/deployment ports缺失在任何side effect前拒绝；P8-06也没有新增HTTP operation，因此宿主尚不能调用该内部组合链，P8-07仍负责公开Headless transport。
+
 ## TASK-P8-05 executable asynchronous solve edge
 
 P8内部链现可执行为：
@@ -41,7 +47,7 @@ P8-04交付时该edge仍停在Runtime内部的queue-ready边界；P8-05现由上
 
 P8链路现在可在Runtime内部执行到持久化输入边界：`strict UTF-8 canonical-ingress-request.v1 → trusted scope/authority + idempotency → server-owned Runtime/Extension-set resolution → existing Data Validation → deterministic expansion → immutable Snapshot → planning-problem-builder.v2 → atomic ingress/Snapshot/Problem/audit commit → CREATED PlanningRun/result`。相同请求精确重放既有结果；内容冲突、零有效数据、contract/lineage/authority错误或任一持久化失败均停止且不得留下部分Snapshot、Problem或audit。
 
-该P8-03 edge本身不是公开产品API，也不启动Solver；P8-04已接管durable PlanningRun，P8-05已形成上节Worker执行，P8-06仍须形成Runtime facade/composition root，P8-07才暴露统一Headless HTTP API。Extension仍不能由客户端选择或上传，当前只保存并复核服务端解析出的version-locked reference。
+该P8-03 edge本身不是公开产品API，也不启动Solver；P8-04已接管durable PlanningRun，P8-05已形成上节Worker执行，P8-06已形成内部Runtime facade/composition root，P8-07才暴露统一Headless HTTP API。Extension仍不能由客户端选择或上传，当前只保存并复核服务端解析出的version-locked reference。
 
 ## TASK-P8-02 formed contract edge
 

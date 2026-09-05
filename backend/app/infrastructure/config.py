@@ -4,6 +4,7 @@ from __future__ import annotations
 
 import re
 from enum import StrEnum
+from pathlib import Path
 from typing import Self
 
 from pydantic import Field, SecretStr, ValidationError, field_validator, model_validator
@@ -12,6 +13,7 @@ from pydantic_settings import BaseSettings, SettingsConfigDict, SettingsError
 from app import CODE_VERSION, SCHEMA_VERSION, SPEC_VERSION
 
 _COMMIT_PATTERN = re.compile(r"[0-9a-f]{40}")
+_FINGERPRINT_PATTERN = re.compile(r"sha256:[0-9a-f]{64}")
 
 
 class RuntimeEnvironment(StrEnum):
@@ -54,6 +56,14 @@ class Settings(BaseSettings):
     log_level: str = "INFO"
     otel_trace_context_enabled: bool = True
     simulation_api_enabled: bool = False
+    runtime_composition_enabled: bool = False
+
+    runtime_schema_directory: Path = Path("schemas/json")
+    runtime_planning_policy_path: Path | None = None
+    runtime_solve_limits_path: Path | None = None
+    runtime_artifact_fingerprint: str | None = None
+    core_artifact_fingerprint: str | None = None
+    developer_kit_fingerprint: str | None = None
 
     database_url: SecretStr = SecretStr(
         "postgresql+psycopg://plantnexus@localhost:5432/plantnexus_dev"
@@ -89,6 +99,17 @@ class Settings(BaseSettings):
             raise ValueError("unsupported log level")
         return normalized
 
+    @field_validator(
+        "runtime_artifact_fingerprint",
+        "core_artifact_fingerprint",
+        "developer_kit_fingerprint",
+    )
+    @classmethod
+    def validate_optional_fingerprint(cls, value: str | None) -> str | None:
+        if value is not None and _FINGERPRINT_PATTERN.fullmatch(value) is None:
+            raise ValueError("artifact fingerprint must be a lowercase SHA-256 value")
+        return value
+
     @model_validator(mode="after")
     def enforce_environment_guards(self) -> Self:
         if self.job_lease_seconds <= self.job_heartbeat_seconds:
@@ -108,6 +129,18 @@ class Settings(BaseSettings):
                 raise ValueError("production requires an immutable 40-character code commit")
         elif self.code_commit != "uncommitted" and _COMMIT_PATTERN.fullmatch(self.code_commit) is None:
             raise ValueError("code_commit must be 'uncommitted' or a 40-character commit")
+        if self.runtime_composition_enabled:
+            if self.data_plane is DataPlane.DEVELOPMENT:
+                raise ValueError(
+                    "runtime composition requires an explicit simulation or production data plane"
+                )
+            if (
+                self.runtime_planning_policy_path is None
+                or self.runtime_solve_limits_path is None
+            ):
+                raise ValueError(
+                    "runtime composition requires explicit planning policy and solve limits"
+                )
         return self
 
     def build_metadata(self) -> dict[str, str]:
@@ -128,6 +161,7 @@ class Settings(BaseSettings):
             "runtime_environment": self.runtime_environment.value,
             "data_plane": self.data_plane.value,
             "simulation_api_enabled": self.simulation_api_enabled,
+            "runtime_composition_enabled": self.runtime_composition_enabled,
             "code_commit": self.code_commit,
         }
 

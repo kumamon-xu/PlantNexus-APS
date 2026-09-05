@@ -4,6 +4,7 @@ from __future__ import annotations
 
 from collections.abc import AsyncIterator, Callable, Mapping
 from contextlib import asynccontextmanager
+from typing import TYPE_CHECKING
 from uuid import uuid4
 
 from fastapi import FastAPI, Request
@@ -34,6 +35,10 @@ from app.infrastructure.health import Probe, liveness_report, readiness_report
 from app.infrastructure.logging import configure_logging
 from app.infrastructure.redis_client import create_redis_client
 
+if TYPE_CHECKING:
+    from app.application.runtime_facade import APSRuntimeApplicationFacade
+    from app.runtime_composition import RuntimeCompositionDescriptor
+
 
 def create_app(
     settings: Settings | None = None,
@@ -45,6 +50,9 @@ def create_app(
     planning_workspace_clock: Callable[[], str] | None = None,
     dynamic_replanning_application: DynamicReplanningApplicationPort | None = None,
     dynamic_replanning_clock: Callable[[], str] | None = None,
+    runtime_application: APSRuntimeApplicationFacade | None = None,
+    runtime_descriptor: RuntimeCompositionDescriptor | None = None,
+    runtime_closers: tuple[Callable[[], None], ...] = (),
 ) -> FastAPI:
     resolved_settings = settings or load_settings()
     configure_logging(
@@ -52,7 +60,7 @@ def create_app(
         include_otel_context=resolved_settings.otel_trace_context_enabled,
     )
 
-    closers: list[Callable[[], None]] = []
+    closers: list[Callable[[], None]] = list(runtime_closers)
     if probes is None:
         database = create_database_client(
             resolved_settings.database_url,
@@ -97,6 +105,8 @@ def create_app(
     application.state.authorization_audit_sink = (
         authorization_audit_sink or NullAuthorizationAuditSink()
     )
+    application.state.aps_runtime_application = runtime_application
+    application.state.aps_runtime_descriptor = runtime_descriptor
     if planning_workspace_clock is not None:
         application.state.planning_workspace_clock = planning_workspace_clock
     if dynamic_replanning_clock is not None:
@@ -165,6 +175,41 @@ def create_app(
     return application
 
 
-app = create_app()
+def create_runtime_app(settings: Settings | None = None) -> FastAPI:
+    """Create the deployable API entrypoint from the shared Runtime root."""
 
-__all__ = ["app", "create_app"]
+    from app.runtime_composition import (
+        RuntimeCompositionError,
+        RuntimeProcess,
+        compose_runtime,
+    )
+
+    resolved = settings or load_settings()
+    if not resolved.runtime_composition_enabled:
+        if resolved.runtime_environment.value == "production":
+            raise RuntimeCompositionError(
+                "RUNTIME_COMPOSITION_DISABLED",
+                field="runtime_composition_enabled",
+                message="Production API requires explicit Runtime composition",
+            )
+        return create_app(resolved)
+    composition = compose_runtime(resolved, process=RuntimeProcess.API)
+    if composition.application is None:
+        composition.close()
+        raise RuntimeCompositionError(
+            "RUNTIME_PORT_MISSING",
+            field="application",
+            message="API Runtime application port was not composed",
+        )
+    return create_app(
+        resolved,
+        probes=composition.probes,
+        runtime_application=composition.application,
+        runtime_descriptor=composition.descriptor,
+        runtime_closers=(composition.close,),
+    )
+
+
+app = create_runtime_app()
+
+__all__ = ["app", "create_app", "create_runtime_app"]

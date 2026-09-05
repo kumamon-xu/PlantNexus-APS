@@ -11,13 +11,21 @@ last_reviewed: 2026-09-05
 
 # 模块边界与依赖规则
 
+## TASK-P8-06 Runtime composition boundary
+
+`app.runtime_composition`是P8唯一产品组合根；API进程通过`create_runtime_app`取得`APSRuntimeApplicationFacade`、plane-scoped ingress/PlanningRun repository和Celery dispatcher，Worker进程通过`create_runtime_celery_app`取得同一immutable descriptor下的PlanningRun repository、durable input resolver、Global CP-SAT、fresh formal Validator与ScheduleVersion lifecycle。API只发布四字段identity carrier，Solver仍只在Worker进程执行；两端不共享进程对象，但必须逐字共享Runtime/Schema/Core/Extension-set、Policy/Limits、environment和data-plane identity。
+
+`application.runtime_facade`只编排P8-03 canonical ingress、P8-04 PlanningRun和异步dispatch；broker提交失败通过既有P8-04 transition原子记录`DISPATCH_FAILED`，不创建第二状态机。`jobs.runtime_adapters`只把durable PlanningRun反查到唯一canonical ingress并解析server-owned Policy/Limits；消息和请求均不能提供path、module、class、entry point或插件选择。Infrastructure继续只实现ports，不获得业务authority；API router、本Task的组合根和Worker adapter均不复制Schema、状态、Solver或Validator规则。
+
+`EmptyRuntimeExtensionAdapter`是Runtime-owned、immutable、default-empty的预留缝隙，只声明`DISABLED_UNTIL_P8_13`，不发现、不下载、不导入或执行Extension。Core源码不得导入该adapter、未来SDK或企业包；SDK/Developer Kit在P8-12/P8-15发布前均以`0.0.0-not-published`标识。P8-06没有新增HTTP路由，既有P3/P4 router继续使用原fail-closed adapter；P8-07才可把公开Headless transport接到已组合的facade。
+
 ## P8 Headless dependency edge
 
 P8目标依赖方向为`Host/Optional Frontend → versioned HTTP API → APS Runtime application ports → APS-owned repositories/outbox → independent Solver Worker → existing Strategy/Solver + formal Validator → immutable publication/read/export`。企业扩展方向为`Enterprise Extension → Extension SDK ← Runtime adapters → APS Core`；Core不得反向导入SDK实现或企业代码。宿主只提交canonical JSON并消费公开结果；禁止宿主、Frontend或Extension共享APS数据库、导入Core internal、直接投递内部worker消息或调用Solver旁路。
 
 API进程只拥有transport/auth/validation/delegation，不能执行长时求解；worker与API消费同一application/domain语义、同一resolved Extension fingerprint并使用各自进程入口。Runtime composition root是唯一可把SDK贡献接到Core ports的位置；Extension不得覆盖state/authorization/publication/audit或用Solver侧逻辑实现Validation Rule。Reference adapter/Normalization可作为内部canonical producer，但不得注册为Production public endpoint。
 
-P8-03已形成`application → data_validation/snapshot/problem ports → plane-scoped infrastructure`的内部输入事务；P8-04新增`application.planning_runs → domain.planning_run + jobs.planning_run_work_item → infrastructure.planning_run_repository`；P8-05新增`jobs.planning_run_task → planning_run_solver_worker → existing planning strategy + independent validator → application ScheduleVersion service`。Domain只拥有冻结状态/attempt不变量和canonical record验证，不导入SQLAlchemy、API、Solver或wall clock；Application拥有authorization、idempotency、CAS命令编排与版本应用；Jobs拥有strict task、server-bound execution ports、lease/checkpoint编排，但不复制Solver/Validator规则；Worker repository只执行plane-scoped binding、lease CAS和append-only result checkpoint。API/Core没有反向依赖repository，Runtime composition与Extension加载仍由P8-06/P8-13形成。
+P8-03已形成`application → data_validation/snapshot/problem ports → plane-scoped infrastructure`的内部输入事务；P8-04新增`application.planning_runs → domain.planning_run + jobs.planning_run_work_item → infrastructure.planning_run_repository`；P8-05新增`jobs.planning_run_task → planning_run_solver_worker → existing planning strategy + independent validator → application ScheduleVersion service`；P8-06再由唯一composition root把这些ports分别绑定到API/Worker进程。Domain只拥有冻结状态/attempt不变量和canonical record验证，不导入SQLAlchemy、API、Solver或wall clock；Application拥有authorization、idempotency、CAS命令编排与版本应用；Jobs拥有strict task、server-bound execution ports、lease/checkpoint编排，但不复制Solver/Validator规则；Worker repository只执行plane-scoped binding、lease CAS和append-only result checkpoint。Core没有反向依赖Runtime/SDK/Extension；Extension实际加载仍由P8-13形成。
 
 ## TASK-P6-07 duration Planning-ingress module boundary
 

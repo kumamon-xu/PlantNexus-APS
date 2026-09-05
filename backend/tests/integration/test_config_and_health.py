@@ -85,6 +85,35 @@ def test_environment_and_lease_invariants_reject_ambiguous_values() -> None:
         Settings(job_heartbeat_seconds=30, job_lease_seconds=30)
     with pytest.raises(ValidationError):
         Settings(code_commit="moving-branch")
+    with pytest.raises(ValidationError):
+        Settings(
+            runtime_environment=RuntimeEnvironment.TEST,
+            data_plane=DataPlane.DEVELOPMENT,
+            runtime_composition_enabled=True,
+            runtime_planning_policy_path=Path("policy.json"),
+            runtime_solve_limits_path=Path("limits.json"),
+        )
+    with pytest.raises(ValidationError):
+        Settings(
+            runtime_environment=RuntimeEnvironment.TEST,
+            data_plane=DataPlane.SIMULATION,
+            runtime_composition_enabled=True,
+        )
+
+
+def test_runtime_configuration_summary_excludes_artifact_paths() -> None:
+    settings = Settings(
+        runtime_environment=RuntimeEnvironment.TEST,
+        data_plane=DataPlane.SIMULATION,
+        runtime_composition_enabled=True,
+        runtime_planning_policy_path=Path("private/policy.json"),
+        runtime_solve_limits_path=Path("private/limits.json"),
+    )
+    summary = settings.safe_summary()
+    assert summary["runtime_composition_enabled"] is True
+    assert "runtime_planning_policy_path" not in summary
+    assert "runtime_solve_limits_path" not in summary
+    assert "private" not in repr(summary)
 
 
 def test_malformed_environment_value_is_sanitized(

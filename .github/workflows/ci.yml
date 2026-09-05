@@ -311,6 +311,13 @@ jobs:
           --report build/validation/ci-p8-solver-worker.json
           --benchmark-report build/benchmarks/ci-p8-solver-worker.json
 
+      - name: P8 Runtime application composition evidence
+        run: >-
+          uv run python -m app.application.runtime_composition_check
+          --root .
+          --report build/validation/ci-p8-runtime-composition.json
+          --manifest build/validation/ci-p8-runtime-composition-manifest.json
+
       - name: P6 duration prediction machine contract evidence
         run: >-
           uv run python scripts/p6_duration_contract_check.py
@@ -600,7 +607,15 @@ jobs:
             "${replay_root}/backend/tests/integration/test_p8_solver_worker_recovery.py" \
             "${replay_root}/backend/tests/security/test_p8_solver_worker_security.py" \
             "${replay_root}/backend/tests/unit/test_p8_planning_run_task.py" \
-            "${replay_root}/benchmarks/p8/solver-worker-engineering-profile.v1.json"
+            "${replay_root}/benchmarks/p8/solver-worker-engineering-profile.v1.json" \
+            "${replay_root}/backend/app/application/runtime_composition_check.py" \
+            "${replay_root}/backend/app/application/runtime_facade.py" \
+            "${replay_root}/backend/app/jobs/runtime_adapters.py" \
+            "${replay_root}/backend/app/runtime_composition.py" \
+            "${replay_root}/backend/tests/p8_runtime_support.py" \
+            "${replay_root}/backend/tests/integration/test_p8_runtime_composition.py" \
+            "${replay_root}/backend/tests/security/test_p8_runtime_composition_security.py" \
+            "${replay_root}/backend/tests/unit/test_p8_runtime_facade.py"
           git -C "${replay_root}" restore \
             --source d0a83c58cb4a2d4afa76e8c8cff08441574e2e30 \
             -- backend/tests/integration/test_ci_contract.py
@@ -608,6 +623,7 @@ jobs:
             --source d0a83c58cb4a2d4afa76e8c8cff08441574e2e30 \
             -- \
             backend/app/__init__.py \
+            backend/app/api/app.py \
             backend/app/application/execution_fact_projection_check.py \
             backend/app/application/export_job_check.py \
             backend/app/application/p3_gate_report.py \
@@ -621,6 +637,7 @@ jobs:
             backend/app/jobs/celery_app.py \
             backend/app/data_validation/__init__.py \
             backend/app/infrastructure/__init__.py \
+            backend/app/infrastructure/config.py \
             backend/tests/contract/test_import_validation.py \
             backend/tests/contract/test_p3_export_contracts.py \
             backend/tests/contract/test_rule_contracts.py \
@@ -630,6 +647,7 @@ jobs:
             backend/tests/unit/test_ci_validation_profile.py \
             backend/tests/integration/test_migrations_and_infrastructure.py \
             backend/tests/integration/test_p3_vertical_slice.py \
+            backend/tests/integration/test_config_and_health.py \
             pyproject.toml \
             schemas/data_dictionary.yaml
           mkdir -p \

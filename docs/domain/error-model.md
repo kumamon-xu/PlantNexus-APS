@@ -3,13 +3,19 @@ doc_id: DOC-DOM-006
 title: 错误与求解状态模型
 status: baseline
 spec_version: 0.3.0
-phase: P0-P4
+phase: P0-P8
 normative: true
 source_sections: [29, 32, 34, 60, 65, 91, 92]
-last_reviewed: 2026-09-01
+last_reviewed: 2026-09-05
 ---
 
 # 错误与求解状态模型
+
+## TASK-P8-06 Runtime composition and dispatch errors
+
+Runtime启动失败使用稳定内部code区分`RUNTIME_COMPOSITION_DISABLED`、`DATA_PLANE_UNAVAILABLE`、`UNKNOWN_ENVIRONMENT`、`CONFIGURATION_MISSING`、`CONFIGURATION_INVALID`、`RUNTIME_RESOLUTION_INVALID`、`PRODUCTION_RUNTIME_UNAVAILABLE`和`RUNTIME_PORT_MISSING`；facade context另使用`DATA_PLANE_MISMATCH`、`RUNTIME_RESOLUTION_FAILED`与`PRODUCTION_AUTHORITY_UNAVAILABLE`。错误只指出安全field/category，不回显DSN、broker URL、credential、absolute path、JSON内容、SQL、stack或底层exception。Production缺少P8-08～10真实ports属于启动不可用，不得映射为Solver `INFEASIBLE/UNKNOWN`，也不得通过Simulation fallback掩盖。
+
+Facade dispatch失败对调用方统一为`QUEUE_FAILED`，并使用P8-04既有attempt失败命令持久化`BROKER_DISPATCH_FAILED`；这不是新的PlanningRun状态或公开HTTP映射。若记录失败证据本身失败，返回sanitized persistence category且不伪造broker acknowledgement。P8-07建立HTTP transport时只能把这些内部类别映射到冻结Headless envelope，不能回传broker exception或重新解释Solver/Validator结果。
 
 ## TASK-P6-08 monitoring reasons and sanitized default-disable
 

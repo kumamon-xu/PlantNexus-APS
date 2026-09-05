@@ -556,6 +556,50 @@ class SqlAlchemyCanonicalIngressRepository:
                 message="Canonical ingress lookup failed",
             ) from error
 
+    def get_by_ingress_id(self, ingress_id: str) -> CanonicalIngressRecord | None:
+        """Load one immutable ingress by its server-derived identity."""
+
+        try:
+            with self._engine.connect() as connection:
+                row = connection.execute(
+                    select(_CANONICAL_INGRESS).where(
+                        _CANONICAL_INGRESS.c.ingress_id == ingress_id,
+                        _CANONICAL_INGRESS.c.data_plane == self._data_plane.value,
+                    )
+                ).first()
+                return self._load(connection, row._mapping) if row is not None else None
+        except CanonicalIngressPersistenceError:
+            raise
+        except (SnapshotError, PlanningProblemError, SQLAlchemyError) as error:
+            raise CanonicalIngressPersistenceError(
+                CanonicalIngressPersistenceCode.PERSISTENCE_FAILED,
+                field="repository.get_by_ingress_id",
+                message="Canonical ingress identity lookup failed",
+            ) from error
+
+    def get_by_planning_run_id(
+        self, planning_run_id: str
+    ) -> CanonicalIngressRecord | None:
+        """Resolve Worker input lineage without accepting a database selector."""
+
+        try:
+            with self._engine.connect() as connection:
+                row = connection.execute(
+                    select(_CANONICAL_INGRESS).where(
+                        _CANONICAL_INGRESS.c.planning_run_id == planning_run_id,
+                        _CANONICAL_INGRESS.c.data_plane == self._data_plane.value,
+                    )
+                ).first()
+                return self._load(connection, row._mapping) if row is not None else None
+        except CanonicalIngressPersistenceError:
+            raise
+        except (SnapshotError, PlanningProblemError, SQLAlchemyError) as error:
+            raise CanonicalIngressPersistenceError(
+                CanonicalIngressPersistenceCode.PERSISTENCE_FAILED,
+                field="repository.get_by_planning_run_id",
+                message="Canonical ingress PlanningRun lookup failed",
+            ) from error
+
     def commit(self, record: CanonicalIngressRecord) -> CanonicalIngressWriteResult:
         verify_canonical_ingress_record(record)
         document = record.document

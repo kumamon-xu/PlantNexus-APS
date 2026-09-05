@@ -38,10 +38,18 @@ from .canonical_ingress import (
     CanonicalIngressWriteResult,
     TrustedCanonicalIngressContext,
 )
+from .runtime_facade import (
+    APSRuntimeApplicationFacade,
+    RuntimeApplicationBinding,
+    RuntimeDispatchWindow,
+    RuntimeFacadeError,
+    RuntimePlanningRunSubmission,
+)
 
 __all__ = [
     "ApprovalDecisionResult",
     "ApprovalDecisionService",
+    "APSRuntimeApplicationFacade",
     "CanonicalIngressApplicationService",
     "CanonicalIngressBuildPlan",
     "CanonicalIngressOutcome",
@@ -55,6 +63,10 @@ __all__ = [
     "PlanningBuildConfiguration",
     "PublicationService",
     "PublicationServiceResult",
+    "RuntimeApplicationBinding",
+    "RuntimeDispatchWindow",
+    "RuntimeFacadeError",
+    "RuntimePlanningRunSubmission",
     "ExportJobService",
     "ExportJobServiceResult",
     "ChangeReportQuery",

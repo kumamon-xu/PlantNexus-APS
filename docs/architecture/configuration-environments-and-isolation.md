@@ -11,6 +11,14 @@ last_reviewed: 2026-09-05
 
 # 配置、环境与数据隔离
 
+## TASK-P8-06 Runtime configuration and isolation
+
+产品入口必须显式设置`runtime_composition_enabled=true`才装配业务Runtime；关闭时Development只保留既有health/fail-closed rollback，Production则在建立database/broker client或暴露facade前拒绝启动。组合根要求显式environment/data plane，禁止STAGING冻结载体，并复核Production environment↔PRODUCTION plane、40字符code commit、PostgreSQL与非Simulation等条件；由于P8-08～10真实identity/authorization/deployment ports尚未形成，P8-06对所有Production组合继续返回`UNAVAILABLE_UNTIL_P8_08_TO_P8_10`，绝不回退到SQLite、Simulation或测试对象。
+
+Schema目录、Planning Policy和Solve Limits均是server-owned启动配置。组合根只读取有界regular file，拒绝symlink、缺失/超限/非strict JSON和data-plane漂移；请求与Worker消息只能携带冻结artifact reference，不能选择文件或内容。数据库与broker endpoint继续是`SecretStr`，safe settings summary、composition descriptor、manifest、health probe和错误都不得包含DSN、credential、absolute/private path或底层异常文本。
+
+API与Worker各自创建进程内资源，但其immutable descriptor必须在environment、plane、code commit、schema/core/runtime/Extension-set、Policy/Limits、Solver/Validator和安全策略上完全一致；facade在ingress/read/cancel/retry前复核调用上下文的build identity，Worker在claim、resolve和publication继续逐字复核持久化fingerprint。P8-06本地SQLite/synthetic证据只证明组合与隔离控制，不证明真实Redis/PostgreSQL、多host、TLS/ACL、secret rotation、capacity、backup/restore或Production部署。
+
 ## TASK-P8-05 Worker configuration and isolation
 
 Solver Worker业务消息的exact字段为`message_version/planning_run_id/work_item_id/worker_id`；data plane和attempt由server-bound repository及immutable work item解析，不能由消息选择。heartbeat、lease、数据库/broker连接、Runtime/Extension set、Solver和Validator实现全部由服务端启动配置提供。默认heartbeat/lease为30/120秒且启动时要求lease严格大于heartbeat；任何请求或消息中的module、class、path、entry point、plugin、runtime/config selector都被strict carrier拒绝。Work item与`planning_run_worker_jobs`逐字绑定server-owned Runtime fingerprint，API/Worker未来组合不一致时必须在claim或publication前fail closed。

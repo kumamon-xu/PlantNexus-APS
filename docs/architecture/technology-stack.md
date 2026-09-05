@@ -6,10 +6,16 @@ spec_version: 0.3.0
 phase: cross-phase
 normative: false
 source_sections: [11, 12, 65, 95, 100, 101, 102, 114]
-last_reviewed: 2026-09-04
+last_reviewed: 2026-09-05
 ---
 
 # 推荐技术栈与锁定规则
+
+## TASK-P8-06 dependency-neutral Runtime composition
+
+Runtime facade与composition root复用既有Python 3.12、FastAPI、Pydantic Settings、SQLAlchemy/Alembic、Celery/Redis和OR-Tools；`pyproject.toml`、`uv.lock`、Schema、migration、container与workflow均不变。Policy/Limits加载、descriptor fingerprint和machine manifest只使用既有标准库/合同函数，没有引入DI框架、插件框架、动态import、entry-point discovery、远程registry或网络下载。
+
+本Task只定义default-empty Extension adapter seam，SDK与Developer Kit仍未发布，descriptor明确记录`0.0.0-not-published`而不是伪造release digest。Runtime/Core升级、Extension package discovery、manifest/signature/SBOM及兼容矩阵仍分别由P8-12～15决定；任何后继依赖新增都必须exact pin/lock并重新执行SCA、license、compatibility与Provider验证。
 
 ## TASK-P8-02 dependency-neutral machine contracts
 

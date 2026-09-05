@@ -33,6 +33,9 @@ from app.application.publication_check import main as publication_main
 from app.application.replan_application_check import (
     main as replan_application_main,
 )
+from app.application.runtime_composition_check import (
+    main as p8_runtime_composition_main,
+)
 from app.application.export_job_check import main as export_job_main
 from app.application.execution_fact_projection_check import (
     main as execution_fact_projection_main,
@@ -468,7 +471,7 @@ def test_ci_profile_routing_is_mutually_exclusive_and_fail_closed() -> None:
     assert "Build package" in full_text
     assert len(preflight["steps"]) == 4
     assert len(backend["steps"]) == 8
-    assert len(full["steps"]) == 72
+    assert len(full["steps"]) == 73
 
     assert 'test "${PLANTNEXUS_CLASSIFY_RESULT}" = "success"' in final_run
     assert 'test "${PLANTNEXUS_PREFLIGHT_RESULT}" = "success"' in final_run
@@ -749,6 +752,65 @@ def test_ci_p8_solver_worker_is_required_machine_checkable_and_isolated(
     assert benchmark["measurement_semantics"] == "DEVELOPMENT_OBSERVATION_NO_SLA"
     assert benchmark["thresholds"] is None
     assert benchmark["production_sla_claimed"] is False
+
+
+def test_ci_p8_runtime_composition_is_required_machine_checkable_and_isolated(
+    tmp_path: Path,
+) -> None:
+    workflow = (ROOT / ".github" / "workflows" / "ci.yml").read_text(encoding="utf-8")
+    normalized = " ".join(workflow.split())
+    assert (
+        "name: P8 Runtime application composition evidence run: >- "
+        "uv run python -m app.application.runtime_composition_check --root . "
+        "--report build/validation/ci-p8-runtime-composition.json --manifest "
+        "build/validation/ci-p8-runtime-composition-manifest.json"
+    ) in normalized
+    assert "continue-on-error" not in workflow
+    for relative_path in (
+        "backend/app/application/runtime_composition_check.py",
+        "backend/app/application/runtime_facade.py",
+        "backend/app/jobs/runtime_adapters.py",
+        "backend/app/runtime_composition.py",
+        "backend/tests/p8_runtime_support.py",
+        "backend/tests/integration/test_p8_runtime_composition.py",
+        "backend/tests/security/test_p8_runtime_composition_security.py",
+        "backend/tests/unit/test_p8_runtime_facade.py",
+    ):
+        assert workflow.count(f'"${{replay_root}}/{relative_path}"') == 1
+    for relative_path in (
+        "backend/app/api/app.py",
+        "backend/app/infrastructure/config.py",
+        "backend/tests/integration/test_config_and_health.py",
+    ):
+        assert workflow.count(relative_path) == 1
+
+    report_path = tmp_path / "p8-runtime-composition.json"
+    manifest_path = tmp_path / "p8-runtime-composition-manifest.json"
+    assert (
+        p8_runtime_composition_main(
+            [
+                "--root",
+                str(ROOT),
+                "--report",
+                str(report_path),
+                "--manifest",
+                str(manifest_path),
+            ]
+        )
+        == 0
+    )
+    report = json.loads(report_path.read_text(encoding="utf-8"))
+    manifest = json.loads(manifest_path.read_text(encoding="utf-8"))
+    assert report["report_version"] == "p8-runtime-composition-report.v1"
+    assert report["task_id"] == "TASK-P8-06"
+    assert report["diff_base"] == "c69fbe3b21e0e782a293675b523c41f31898d0da"
+    assert report["validation_profile"] == "HIGH_RISK"
+    assert report["status"] == "PASS"
+    assert report["check_count"] == 8
+    assert report["issues"] == []
+    assert manifest["manifest_version"] == "p8-runtime-composition-manifest.v1"
+    assert manifest["status"] == "PASS"
+    assert manifest["issues"] == []
 
 
 def test_ci_p6_duration_dataset_is_required_and_machine_checkable(

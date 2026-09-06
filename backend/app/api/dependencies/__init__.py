@@ -9,7 +9,6 @@ from app.api.dependencies.authorization import (
     UnavailableAuthorizationProvider,
     authorize_request,
 )
-from app.api.dependencies.host_authorization import authorize_headless_request
 
 __all__ = [
     "AuthorizationAuditRecord",
@@ -19,5 +18,4 @@ __all__ = [
     "PrincipalContext",
     "UnavailableAuthorizationProvider",
     "authorize_request",
-    "authorize_headless_request",
 ]

@@ -661,7 +661,6 @@ jobs:
             -- \
             backend/app/__init__.py \
             backend/app/api/app.py \
-            backend/app/api/dependencies/__init__.py \
             backend/app/application/execution_fact_projection_check.py \
             backend/app/application/export_job_check.py \
             backend/app/application/p3_gate_report.py \

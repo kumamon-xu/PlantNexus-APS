@@ -911,8 +911,6 @@ def test_ci_p8_host_authorization_is_required_and_machine_checkable(
         "backend/tests/security/test_p8_host_authorization_security.py",
     ):
         assert workflow.count(f'"${{replay_root}}/{relative_path}"') == 1
-    assert workflow.count("backend/app/api/dependencies/__init__.py") == 1
-
     report_path = tmp_path / "p8-host-authorization.json"
     audit_path = tmp_path / "p8-host-authorization-audit.json"
     benchmark_path = tmp_path / "p8-host-authorization-benchmark.json"

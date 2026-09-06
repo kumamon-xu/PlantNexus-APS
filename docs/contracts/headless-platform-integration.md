@@ -15,11 +15,11 @@ last_reviewed: 2026-09-06
 
 本合同是宿主平台、APS Runtime、APS Core、Enterprise Extension、可选APS Frontend、安全和运维之间的人类可读集成基线。它执行ADR-0017和ADR-0018，并与TASK-P8-02发布的机器合同共同冻结责任、信任与失败语义。
 
-本文件中的“必须”“禁止”“仅”是规范要求。TASK-P8-02已把其中可机器表达的入口、结果、PlanningRun与错误语义发布为strict、versioned carrier；TASK-P8-03～05已形成durable ingress、PlanningRun orchestration与内部异步Solver Worker，TASK-P8-06形成单一Runtime组合根，TASK-P8-07现以additive方式发布统一Headless HTTP transport。因而本合同与机器文件目前：
+本文件中的“必须”“禁止”“仅”是规范要求。TASK-P8-02已把其中可机器表达的入口、结果、PlanningRun与错误语义发布为strict、versioned carrier；TASK-P8-03～05已形成durable ingress、PlanningRun orchestration与内部异步Solver Worker，TASK-P8-06形成单一Runtime组合根，TASK-P8-07以additive方式发布统一Headless HTTP transport，TASK-P8-08形成provider-neutral test identity、server-owned exact scope authorization与durable decision audit。因而本合同与机器文件目前：
 
 - 只声明P8-07登记的5项`/api/v1` PlanningRun operation；提交前29项operation逐项保持，最终OpenAPI共34项；
 - 只把现有`import-package.v2`作为`canonical-ingress-request.v1`内唯一允许的canonical payload，并通过统一create route接收；旧Adapter、raw/vendor/file输入仍不是公共入口；
-- 已实现canonical ingress、原子Snapshot/PlanningProblem、run/attempt/work item/command/transition/audit、strict Worker、lease/checkpoint、Global Solver、fresh Validator、ScheduleVersion应用和Simulation/Test显式Runtime HTTP绑定；但不实现真实host identity provider、Production授权/部署、Extension SDK或Plugin Registry；
+- 已实现canonical ingress、原子Snapshot/PlanningProblem、run/attempt/work item/command/transition/audit、strict Worker、lease/checkpoint、Global Solver、fresh Validator、ScheduleVersion应用、Simulation/Test显式Runtime HTTP绑定，以及可替换`HostIdentityProvider`合同、测试策略和append-only授权审计；但不实现或选择真实Production host IdP、Production RBAC/授权/部署、Extension SDK或Plugin Registry；
 - 不关闭任何PROD_OPEN，也不证明真实宿主、UAT、容量或Production readiness。
 
 实现若不能表达本合同的必需语义，必须先修订合同或发布新版本；不得在代码、数据库、Extension或宿主中创建未登记的私有语义。
@@ -148,7 +148,7 @@ Migration `0007_planning_run_orchestration`是`0006`之后的additive head；wor
 
 P8-07只增加5项稳定operation：`createHeadlessPlanningRun`（202）、`getHeadlessPlanningRunStatus`（200）、`cancelHeadlessPlanningRun`（200）、`retryHeadlessPlanningRun`（202）和`getHeadlessPlanningRunResult`（terminal 200、nonterminal 409）。原29项path/method/operationId/operation object由冻结canonical hash逐项复验；最终OpenAPI 3.1快照共34项且所有内部`$ref`可离线解析。v1只允许additive演进；deprecation必须先保留旧operation并指向公开successor，删除或breaking carrier另行进入批准的major版本。
 
-Create直接传递`canonical-ingress-request.v1` bytes并返回`canonical-ingress-result.v1`；其requested scope只是待授权坐标。Status/cancel/retry/result的tenant、factory和planning scope由三个`X-APS-*` header提供，同样不是authority。Bearer由既有server-side AuthorizationProvider解析；Runtime HTTP adapter再从server-owned policy生成effective scope、authority/mapping allow-list、Planning Policy/Limits、build plan、dispatch window和Runtime/Extension-set resolution。请求不能创建trusted context、选择代码或覆盖配置。P8-08真实host identity形成前Production仍在side effect前default-deny。
+Create直接传递`canonical-ingress-request.v1` bytes并返回`canonical-ingress-result.v1`；其requested scope只是待授权坐标。Status/cancel/retry/result的tenant、factory和planning scope由三个`X-APS-*` header提供，同样不是authority。Bearer作为opaque值仅在内存中交给P8-08 `HostIdentityProvider`；Runtime重新验证strict identity projection，并从operator-owned `host-authorization-policy.v1`解析subject→actor、逐operation capability和exact composite scope。P8-07 Runtime HTTP adapter随后只从server-owned policy生成authority/mapping allow-list、Planning Policy/Limits、build plan、dispatch window和Runtime/Extension-set resolution。请求不能创建trusted context、选择代码或覆盖配置。真实Production IdP/authority未形成，Production仍在side effect前default-deny。
 
 Create/cancel/retry要求`Idempotency-Key`；exact create replay复用原ingress/run且不再次materialize或dispatch，exact retry replay也不创建或投递第二attempt。Same key + different semantic fingerprint、stale revision/state/fingerprint及非法transition稳定冲突。202只表示durable acceptance/queue attempt，不表示Solver、Validator、ScheduleVersion、审批或发布成功；client须通过status/result对账，result在run非terminal时返回409且零副作用。
 
@@ -179,7 +179,13 @@ authenticated principal reference
 - Extension只能接收Runtime已裁剪的scope context，不能扩大scope或替代authorization provider；
 - Production principal→capability/resource/target映射在OPEN-002/010关闭前保持default-deny。
 
-P8-07已形成Bearer transport、既有provider调用顺序和稳定HTTP错误边界；具体token/assertion格式、challenge、真实host identity映射和Production scope/audit适配仍由P8-08形成，不能由当前Simulation/Test provider反向推断已存在。
+P8-08已在P8-07 Bearer transport与稳定HTTP错误边界内形成可替换provider port、strict verified identity projection、server-owned exact policy和durable allow/deny audit；provider-specific token/assertion格式仍保持opaque。当前只有批准的Simulation/Test provider与policy，不能反向推断真实host identity、challenge、Production subject/scope mapping或Production授权已存在。
+
+### 5.1 TASK-P8-08 identity、operation与audit slice
+
+`verified-host-identity.v1`只允许pseudonymous subject、provider/issuer/audience、canonical issued/expires UTC和assertion reference；Runtime必须重新经factory校验provider输出，不能信任任意dataclass或claim投影。`host-authorization-policy.v1`精确固定非Production environment/plane、issuer/audience、最大assertion lifetime、revocation、subject→actor、五项operation与`tenant/factory/planning`三维scope，禁止wildcard和客户端authority。Operation→capability映射为create/cancel/retry=`edit`、status/result=`view`，并在任何application port或resource lookup前执行。
+
+每次授权尝试都先持久化一个strict `headless-authorization-audit.v1`：ALLOW和DENY均包含policy/scope/fingerprint、pseudonymous actor/subject、token/assertion/resource hash、operation/capability、稳定reason、correlation、UTC与plane/environment，不包含raw token、claim或run ID。`0009_host_authorization_audit`以数据库trigger和repository guard拒绝UPDATE/DELETE，读取时复验canonical bytes与fingerprint；audit失败即500 fail closed且无业务副作用。Missing/malformed/invalid identity为401，权限/subject/revocation/scope为403，provider/config unavailable为503；cross-scope已知/未知resource保持同一sanitized响应，错误继续使用P8-07的`planning-workspace-error.v1`身份边界。
 
 ## 6. 数据authority与冲突处理
 

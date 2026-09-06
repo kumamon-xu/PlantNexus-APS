@@ -11,13 +11,23 @@ last_reviewed: 2026-09-06
 
 # P0 工程安全边界
 
+## TASK-P8-08 Host identity and authorization controls
+
+五项Headless operation现统一在application port、idempotency lookup和resource lookup之前调用provider-neutral host authorization adapter。Opaque Bearer只在内存中交给`HostIdentityProvider`；Runtime重新严格校验provider返回的subject/provider/issuer/audience/issued/expires/assertion投影，拒绝missing、malformed、forged、wrong issuer/audience、expired/not-yet-valid、超期assertion、revoked assertion、unknown subject及provider exception。Production组合没有真实provider/policy时使用Unavailable adapter并在副作用前default-deny。
+
+授权只消费operator-owned immutable policy：subject→pseudonymous actor、create/cancel/retry=`edit`、status/result=`view`及exact tenant/factory/planning scope。Wildcard、客户端header/body、token claim、UI、Extension、resource owner或数据库内容不能授予scope/capability。Cross-scope已知和未知run在lookup前得到相同sanitized 403，不能通过error body枚举资源。Provider output会再次经严格factory重建，避免测试或未来adapter直接构造未经验证的identity对象。
+
+每次ALLOW/DENY都先追加strict `headless-authorization-audit.v1`；只保存pseudonymous actor/subject、provider/assertion/policy reference、token/resource SHA-256、exact scope/fingerprint、operation/capability、outcome/reason、correlation/UTC与plane/environment。Raw Bearer、claim、run ID、email、display identity、credential、SQL/DSN、stack和private path不进入audit或公开错误。`0009`的SQLite/PostgreSQL trigger与repository guard拒绝UPDATE/DELETE，读取时复验carrier/fingerprint；audit不可用时返回sanitized 500且不调用业务port。
+
+本地security matrix覆盖身份、revocation、operation、三个scope维度、no-enumeration、provider/audit failure及Production unavailable；工程checker独立执行10项控制与20个决定，Benchmark阈值为`null`。这些证据只覆盖显式Test provider、synthetic scope和临时SQLite；真实IdP/JWT/OIDC/gateway、TLS/mTLS、Production RBAC/secret/ACL、penetration、retention/SIEM和容量仍未形成。
+
 ## TASK-P8-07 Headless HTTP security controls
 
-新增5项Headless PlanningRun operation均先调用既有server-side AuthorizationProvider，再由Runtime HTTP adapter把authenticated principal与server-configured tenant/factory/planning scope、environment/data plane、authority/mapping allow-list、Policy/Limits及Runtime/Extension-set绑定求交。Create body中的`requested_scope`和status/action的三个`X-APS-*` header只表示请求坐标；它们不能自报actor、capability、effective scope、Production binding或可信Runtime配置。未装配Runtime/context、provider异常和Production-unavailable均在application side effect前fail closed。P8-08仍负责真实host identity/RBAC/scope/audit adapter。
+新增5项Headless PlanningRun operation先由P8-08 host adapter验证identity、逐operation capability和exact composite scope，再由Runtime HTTP adapter把已验证actor/scope与environment/data plane、authority/mapping allow-list、Policy/Limits及Runtime/Extension-set绑定求交。Create body中的`requested_scope`和status/action的三个`X-APS-*` header只表示请求坐标；它们不能自报actor、capability、effective scope、Production binding或可信Runtime配置。未装配Runtime/context、provider异常、audit失败和Production-unavailable均在application side effect前fail closed。真实host IdP/RBAC仍是Production开放项。
 
 Create只接受无Content-Encoding的strict UTF-8 `application/json`，Content-Length和实际stream均限制为8 MiB，JSON深度最多64，`payload.records`聚合最多100000项；cancel/retry strict action最大16 KiB。Parser在授权后的业务application调用前拒绝错误media type/charset、压缩、multipart、archive/base64文件、malformed UTF-8/JSON、duplicate key、NaN/Infinity、unknown field/version和客户端可执行selector。解析拒绝、scope/authority mismatch、idempotency conflict、stale/invalid state均不得留下成功resource、第二attempt或partial publication。
 
-Bearer和raw `Idempotency-Key`不进入application carrier、响应、日志或machine artifact；仅保留server principal reference和SHA-256 key reference。HTTP correlation固定为1～256个无空白可见ASCII字符，防止不可编码值在响应头阶段造成异常；错误pointer/entity/correlation在输出前再次清洗。Headless合同/Runtime错误使用注册表约束的`headless-error.v1`；AuthorizationProvider的401及对应403/503保留既有sanitized `planning-workspace-error.v1`，不伪造未登记身份code。两种envelope均不包含credential、完整canonical payload、SQL/DSN、stack、broker exception或absolute/private path。Exact create/retry replay不重复dispatch，防止网络重试放大业务执行。
+Bearer和raw `Idempotency-Key`不进入application carrier、响应、日志或machine artifact；授权audit只保留token SHA-256 reference，业务链只保留server principal与key reference。HTTP correlation固定为1～256个无空白可见ASCII字符，防止不可编码值在响应头阶段造成异常；错误pointer/entity/correlation在输出前再次清洗。Headless合同/Runtime错误使用注册表约束的`headless-error.v1`；身份401及对应403/500/503保留既有sanitized `planning-workspace-error.v1`，不伪造未登记身份code。两种envelope均不包含credential、完整canonical payload、SQL/DSN、stack、broker exception或absolute/private path。Exact create/retry replay不重复dispatch，防止网络重试放大业务执行。
 
 机器/安全测试覆盖非法content type/encoding/length/depth/count、duplicate/non-finite、unknown字段/版本、scope/authority/Planning inputs、跨scope访问、鉴权禁用/异常、恶意Runtime binding、idempotency冲突、stale/错误状态与strict action。当前仅为TestClient、synthetic、SQLite和显式Simulation/Test Runtime证据；rate limiting/WAF、TLS/mTLS、真实gateway/identity、Production secret/ACL、penetration、容量和SLA仍未形成。
 

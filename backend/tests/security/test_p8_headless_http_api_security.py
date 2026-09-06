@@ -17,11 +17,12 @@ from app.infrastructure.config import DataPlane, RuntimeEnvironment, Settings
 from backend.tests.contract.p8_headless_http_support import (
     FailingAuthorizationProvider,
     StaticAuthorizationProvider,
-    authorized_principal,
     canonical_request,
     compose_headless_api,
     create_headers,
+    host_authorization_adapter,
     run_headers,
+    verified_identity,
 )
 
 
@@ -176,7 +177,11 @@ def test_scope_authority_planning_input_and_idempotency_claims_fail_closed(
             headers=create_headers(scope),
         )
         assert scope_response.status_code == 403
-        assert scope_response.json()["code"] == "SCOPE_MISMATCH"
+        assert scope_response.json()["namespace"] == "WORKSPACE_CONTROL"
+        assert (
+            scope_response.json()["workspace_control_error"]["reason"]
+            == "AUTHORIZATION_DENIED"
+        )
 
         malformed_scope_response = client.post(
             "/api/v1/planning-runs",
@@ -224,7 +229,9 @@ def test_authentication_profiles_and_provider_failures_do_not_leak(tmp_path) -> 
             simulation_api_enabled=False,
         ),
         probes={},
-        authorization_provider=StaticAuthorizationProvider(),
+        host_authorization_adapter=host_authorization_adapter(
+            simulation_api_enabled=False
+        ),
     )
     with TestClient(disabled) as client:
         response = client.post(
@@ -250,19 +257,19 @@ def test_authentication_profiles_and_provider_failures_do_not_leak(tmp_path) -> 
         assert "do-not-leak" not in response.text
         assert "secret" not in response.text.lower()
 
-    bound_api, _, _ = compose_headless_api(
-        tmp_path / "bound",
+    invalid_identity_api, _, _ = compose_headless_api(
+        tmp_path / "invalid-identity",
         authorization_provider=StaticAuthorizationProvider(
-            authorized_principal(production_binding=True)
+            verified_identity(issuer="https://untrusted.test.invalid/plantnexus")
         ),
     )
-    with TestClient(bound_api) as client:
+    with TestClient(invalid_identity_api) as client:
         response = client.post(
             "/api/v1/planning-runs",
             content=canonical_json_bytes(request),
             headers=create_headers(request),
         )
-        assert response.status_code == 403
+        assert response.status_code == 401
 
     clock_api, clock_composition, _ = compose_headless_api(tmp_path / "clock")
     clock_api.state.headless_clock = lambda: "not-a-utc-instant"
@@ -339,7 +346,11 @@ def test_action_unknown_fields_stale_preconditions_and_scope_are_side_effect_fre
             f"/api/v1/planning-runs/{run_id}/status", headers=wrong_scope
         )
         assert response.status_code == 403
-        assert response.json()["code"] == "SCOPE_MISMATCH"
+        assert response.json()["namespace"] == "WORKSPACE_CONTROL"
+        assert (
+            response.json()["workspace_control_error"]["reason"]
+            == "AUTHORIZATION_DENIED"
+        )
         malformed_headers = {**run_headers(), "X-APS-Tenant-Id": "x" * 257}
         response = client.get(
             f"/api/v1/planning-runs/{run_id}/status", headers=malformed_headers

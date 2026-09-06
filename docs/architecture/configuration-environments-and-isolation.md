@@ -11,6 +11,14 @@ last_reviewed: 2026-09-06
 
 # 配置、环境与数据隔离
 
+## TASK-P8-08 host authorization configuration and isolation
+
+P8-08把身份验证与授权配置分为两个server-owned边界：可替换`HostIdentityProvider`只在内存中接收opaque bearer并返回strict identity projection；immutable `host-authorization-policy.v1`固定provider/issuer/audience、非Production environment/plane、最大assertion lifetime、revocation reference、subject→actor、五项operation和exact tenant/factory/planning scope。请求、header、token claim、UI、Extension、数据库行或`runtime-http-policy.v1`都不能创建或扩大这些grant，wildcard scope被拒绝。
+
+`create_runtime_app`只在provider与policy同时显式注入时装配Test adapter，并将授权audit绑定到Runtime数据库；缺一、provider异常、policy/identity漂移或audit不可用均fail closed。Production默认装配Unavailable adapter，不读取客户端后再决定放行，也不从environment variable猜测IdP/JWT/OIDC、principal、secret或factory mapping。P8-07 Runtime HTTP policy仍只负责获准scope内的canonical authority/build/dispatch配置，不能充当身份策略。
+
+`0009_host_authorization_audit`只增加append-only sanitized decision表和索引/trigger，未增加secret配置、网络client、dependency、service、permission或remote config。当前Test provider/synthetic scope/SQLite证据不证明真实IdP/gateway、Production secret rotation、PostgreSQL role/TLS、多host隔离、retention/SIEM或动态reload；这些仍须独立配置与部署Gate。
+
 ## TASK-P8-07 Runtime HTTP policy and isolation
 
 P8-07新增的`runtime_http_policy_path`是server-owned、strict `runtime-http-policy.v1`启动文件。它为每个允许的tenant/factory/planning scope固定authority reference、mapping fingerprint、cutoff/horizon/tick/priority facts和dispatch timeout，并与P8-06 Runtime descriptor及Planning Policy/Solve Limits逐字组合。文件必须是有界regular file并沿用Runtime配置的symlink/path/size/strict JSON拒绝；请求不能指定policy path、内容、Runtime/Extension set或trusted context。Safe descriptor只暴露policy版本、SHA-256和scope计数。

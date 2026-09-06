@@ -11,15 +11,23 @@ last_reviewed: 2026-09-06
 
 # P0 Observability 与 Audit 边界
 
+## TASK-P8-08 authorization decision evidence
+
+P8-08为五项Headless operation的每次授权尝试形成strict、sanitized `headless-authorization-audit.v1`，无论ALLOW还是DENY均在调用application port或resource lookup之前持久化。固定20字段覆盖event/version、operation/capability、outcome/reason、pseudonymous actor/subject、provider/assertion/policy reference、token SHA-256、exact composite scope及fingerprint、resource type/hash、correlation、canonical UTC、plane和environment；raw token、claim、raw resource ID、display identity、payload、SQL/DSN、stack或private path不得出现。授权记录通过correlation与既有ingress/PlanningRun/Worker业务audit相连，但两者职责独立。
+
+`0009_host_authorization_audit`在`0008`之后增加独立表、scope/correlation/occurred-at索引及SQLite/PostgreSQL append-only trigger；repository还拒绝UPDATE/DELETE并在写入、读取和exact replay时重新验证strict carrier、canonical bytes与fingerprint。Audit write/validation失败即授权500且业务调用次数为零；downgrade会显式删除P8-08授权历史，执行前必须由未来retention/backup政策保留所需证据。Structured log、trace或HTTP correlation均不能替代该durable record。
+
+机器证据固定10项checker、5项ALLOW与15项DENY共20个持久化决定，并检查redaction、失败前置与plane/scope隔离；authorization工程Benchmark使用1000次synthetic决定且threshold=`null`，只记录开发观测，不构成SLO。真实metric/trace backend、dashboard/alert、SIEM、legal hold、retention、外部audit sink、clock-skew和Production on-call/runbook继续由P8-10与OPEN-015承接。
+
 ## TASK-P8-07 Headless HTTP evidence
 
 5项Headless PlanningRun response均回传`X-Correlation-Id`与`Cache-Control: no-store`；create成功另回传status资源`Location`，status/cancel/retry/result回传由canonical `run_fingerprint`形成的`ETag`及`X-APS-Planning-Run-State`。请求correlation与create carrier冲突在application side effect前拒绝。客户端必须使用durable status/result对账：202仅是accepted/queued，result在非terminal时返回409，不能从连接成功、timeout或UI缓存推断Solver/Validator/发布结果。
 
-Transport只委托P8-06 facade并复用P8-03 ingress audit、P8-04 run/attempt/command/transition/audit和P8-05 job binding/checkpoint。Exact create/retry replay返回首次logical result且不追加第二dispatch或业务audit；冲突、非法payload、scope/authority拒绝和stale state不伪造成功证据。Authorization denial继续使用既有sanitized provider audit边界，router不创建身份或业务audit。
+Transport只委托P8-06 facade并复用P8-03 ingress audit、P8-04 run/attempt/command/transition/audit和P8-05 job binding/checkpoint。Exact create/retry replay返回首次logical result且不追加第二dispatch或业务audit；冲突、非法payload、scope/authority拒绝和stale state不伪造成功证据。P8-08 adapter现为每次ALLOW/DENY创建独立durable授权audit；router仍不创建身份或伪造业务audit。
 
 `p8-headless-http-api-report.v1`记录34项operation、旧29项hash preservation、5项additive inventory、strict carrier/limit/error/layering/确定性检查；`p8-headless-openapi-diff.v1`记录基线与新增集合；`p8-headless-api-engineering-benchmark.v1`只记录固定synthetic fail-closed HTTP probe和OpenAPI构建耗时，threshold为`null`且不构成SLO。报告、响应和日志不得包含Bearer、raw idempotency key、完整canonical payload、credential、endpoint secret、SQL/DSN、stack或private path。
 
-P8-07没有新增metric/trace exporter、dashboard、alert、SIEM、retention、rate-limit telemetry、broker lag/database pool指标、clock-skew政策或Production SLO。真实host correlation/identity和denial audit由P8-08，部署期observability/backup/runbook由P8-10继续形成。
+P8-07没有新增metric/trace exporter、dashboard、alert、SIEM、retention、rate-limit telemetry、broker lag/database pool指标、clock-skew政策或Production SLO。P8-08已形成Test边界的identity correlation和durable allow/deny audit；真实Production identity/retention/SIEM及部署期observability/backup/runbook仍由OPEN项与P8-10继续形成。
 
 ## TASK-P8-06 Runtime composition evidence
 

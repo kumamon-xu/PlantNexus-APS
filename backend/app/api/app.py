@@ -41,6 +41,11 @@ from app.infrastructure.logging import configure_logging
 from app.infrastructure.redis_client import create_redis_client
 
 if TYPE_CHECKING:
+    from app.application.host_authorization import (
+        HostAuthorizationPolicyCatalog,
+        HostAuthorizationPort,
+        HostIdentityProvider,
+    )
     from app.application.runtime_facade import APSRuntimeApplicationFacade
     from app.application.runtime_http_adapter import RuntimeHttpContextAdapter
     from app.runtime_composition import RuntimeCompositionDescriptor
@@ -59,6 +64,7 @@ def create_app(
     runtime_application: APSRuntimeApplicationFacade | None = None,
     runtime_descriptor: RuntimeCompositionDescriptor | None = None,
     runtime_http_context: RuntimeHttpContextAdapter | None = None,
+    host_authorization_adapter: HostAuthorizationPort | None = None,
     headless_clock: Callable[[], str] | None = None,
     runtime_closers: tuple[Callable[[], None], ...] = (),
 ) -> FastAPI:
@@ -116,6 +122,7 @@ def create_app(
     application.state.aps_runtime_application = runtime_application
     application.state.aps_runtime_descriptor = runtime_descriptor
     application.state.aps_runtime_http_context = runtime_http_context
+    application.state.host_authorization_adapter = host_authorization_adapter
     if planning_workspace_clock is not None:
         application.state.planning_workspace_clock = planning_workspace_clock
     if dynamic_replanning_clock is not None:
@@ -219,7 +226,12 @@ def create_app(
     return application
 
 
-def create_runtime_app(settings: Settings | None = None) -> FastAPI:
+def create_runtime_app(
+    settings: Settings | None = None,
+    *,
+    host_identity_provider: HostIdentityProvider | None = None,
+    host_authorization_policy: HostAuthorizationPolicyCatalog | None = None,
+) -> FastAPI:
     """Create the deployable API entrypoint from the shared Runtime root."""
 
     from app.runtime_composition import (
@@ -245,12 +257,55 @@ def create_runtime_app(settings: Settings | None = None) -> FastAPI:
             field="application",
             message="API Runtime application port was not composed",
         )
+    from app.application.host_authorization import (
+        HostAuthorizationAdapter,
+        UnavailableHostAuthorizationAdapter,
+    )
+    from app.infrastructure.host_authorization_audit_repository import (
+        SqlAlchemyHostAuthorizationAuditRepository,
+    )
+
+    if (host_identity_provider is None) != (host_authorization_policy is None):
+        composition.close()
+        raise RuntimeCompositionError(
+            "CONFIGURATION_INVALID",
+            field="host_authorization",
+            message="Host identity provider and policy must be configured together",
+        )
+    audit_sink = SqlAlchemyHostAuthorizationAuditRepository(
+        composition.database.engine,
+        data_plane=resolved.data_plane.value.upper(),
+    )
+    if host_identity_provider is None or host_authorization_policy is None:
+        host_adapter: HostAuthorizationPort = UnavailableHostAuthorizationAdapter(
+            audit_sink=audit_sink,
+            environment=resolved.runtime_environment.value.upper(),
+            data_plane=resolved.data_plane.value.upper(),
+        )
+    else:
+        try:
+            host_adapter = HostAuthorizationAdapter(
+                provider=host_identity_provider,
+                policy=host_authorization_policy,
+                audit_sink=audit_sink,
+                environment=resolved.runtime_environment.value.upper(),
+                data_plane=resolved.data_plane.value.upper(),
+                simulation_api_enabled=resolved.simulation_api_enabled,
+            )
+        except ValueError as error:
+            composition.close()
+            raise RuntimeCompositionError(
+                "CONFIGURATION_INVALID",
+                field="host_authorization",
+                message="Host authorization policy is incompatible with Runtime",
+            ) from error
     return create_app(
         resolved,
         probes=composition.probes,
         runtime_application=composition.application,
         runtime_descriptor=composition.descriptor,
         runtime_http_context=composition.http_context_adapter,
+        host_authorization_adapter=host_adapter,
         runtime_closers=(composition.close,),
     )
 

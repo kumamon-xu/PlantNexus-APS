@@ -65,7 +65,7 @@ def test_create_status_cancel_result_and_replay_are_one_runtime_chain(
         assert created.headers["cache-control"] == "no-store"
         assert len(publisher.messages) == 1
 
-        api.state.headless_clock = lambda: "2026-09-07T01:00:00Z"
+        api.state.headless_clock = lambda: "2026-09-06T01:00:01Z"
         replayed = client.post(
             "/api/v1/planning-runs",
             content=request_bytes,
@@ -174,7 +174,7 @@ def test_dispatch_failure_is_sanitized_and_retry_dispatches_once(tmp_path) -> No
         assert retried.status_code == 202
         assert len(publisher.messages) == 1
 
-        api.state.headless_clock = lambda: "2026-09-07T01:00:00Z"
+        api.state.headless_clock = lambda: "2026-09-06T01:00:01Z"
         retry_replay = client.post(
             f"/api/v1/planning-runs/{planning_run_id}/retry",
             content=retry_bytes,

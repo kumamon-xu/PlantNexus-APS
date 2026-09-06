@@ -9,7 +9,17 @@ from celery import Celery
 from fastapi import FastAPI
 
 from app.api.app import create_app
-from app.api.dependencies.authorization import AuthorizationProvider, PrincipalContext
+from app.application.host_authorization import (
+    HEADLESS_OPERATION_CAPABILITIES,
+    HostAuthorizationAdapter,
+    HostAuthorizationAuditRecord,
+    HostAuthorizationPolicyCatalog,
+    HostIdentityProvider,
+    VerifiedHostIdentity,
+)
+from app.infrastructure.host_authorization_audit_repository import (
+    SqlAlchemyHostAuthorizationAuditRepository,
+)
 from app.runtime_composition import RuntimeComposition, RuntimeProcess, compose_runtime
 from backend.tests.p8_runtime_support import (
     FixedIdentityFactory,
@@ -23,35 +33,106 @@ HEADLESS_NOW = "2026-09-06T01:00:00Z"
 
 
 class StaticAuthorizationProvider:
-    def __init__(self, principal: PrincipalContext | None = None) -> None:
-        self.principal = principal or authorized_principal()
+    def __init__(self, identity: VerifiedHostIdentity | None = None) -> None:
+        self.identity = identity or verified_identity()
 
-    def resolve(self, bearer_token: str) -> PrincipalContext | None:
-        return self.principal if bearer_token == "p8-headless-token" else None
+    def verify(self, bearer_token: str) -> VerifiedHostIdentity | None:
+        return self.identity if bearer_token == "p8-headless-token" else None
 
 
 class FailingAuthorizationProvider:
-    def resolve(self, bearer_token: str) -> PrincipalContext | None:
+    def verify(self, bearer_token: str) -> VerifiedHostIdentity | None:
         del bearer_token
         raise RuntimeError("Bearer secret-do-not-leak from identity provider")
 
 
-def authorized_principal(
+def verified_identity(
     *,
-    capabilities: frozenset[str] = frozenset({"view", "edit"}),
-    planning_run_scope: frozenset[str] = frozenset({"*"}),
-    planning_scope_scope: frozenset[str] = frozenset({"PLANNING-P8-APPLICATION"}),
-    production_binding: bool = False,
-) -> PrincipalContext:
-    return PrincipalContext(
-        actor_ref="actor:p8-headless-http-test",
-        resolved_capabilities=capabilities,
-        planning_run_scope=planning_run_scope,
-        schedule_version_scope=frozenset(),
-        export_job_scope=frozenset(),
-        auth_policy_version="headless-http-auth-policy.v1",
-        production_binding=production_binding,
-        planning_scope_scope=planning_scope_scope,
+    subject_ref: str = "subject:p8-headless-http-test",
+    identity_provider_reference: str = "identity-provider:p8-test-host",
+    issuer: str = "https://identity.test.invalid/plantnexus",
+    audience: str = "plantnexus-aps-test",
+    issued_at_utc: str = "2026-09-06T00:30:00Z",
+    expires_at_utc: str = "2026-09-06T01:30:00Z",
+) -> VerifiedHostIdentity:
+    return VerifiedHostIdentity.create(
+        subject_ref=subject_ref,
+        identity_provider_reference=identity_provider_reference,
+        issuer=issuer,
+        audience=audience,
+        issued_at_utc=issued_at_utc,
+        expires_at_utc=expires_at_utc,
+    )
+
+
+def authorization_policy(
+    *,
+    operations: tuple[str, ...] = tuple(HEADLESS_OPERATION_CAPABILITIES),
+    scopes: tuple[tuple[str, str, str], ...] = (
+        (
+            "TENANT-P8-APPLICATION",
+            "FACTORY-001",
+            "PLANNING-P8-APPLICATION",
+        ),
+    ),
+    subject_ref: str = "subject:p8-headless-http-test",
+    revoked_subjects: tuple[str, ...] = (),
+    revoked_assertions: tuple[str, ...] = (),
+) -> HostAuthorizationPolicyCatalog:
+    return HostAuthorizationPolicyCatalog.create(
+        {
+            "host_authorization_policy_version": "host-authorization-policy.v1",
+            "policy_id": "p8-host-authorization-test.v1",
+            "identity_provider_reference": "identity-provider:p8-test-host",
+            "issuer": "https://identity.test.invalid/plantnexus",
+            "audience": "plantnexus-aps-test",
+            "environment": "TEST",
+            "data_plane": "SIMULATION",
+            "production_binding": False,
+            "max_assertion_lifetime_seconds": 3_600,
+            "revoked_subject_references": list(revoked_subjects),
+            "revoked_assertion_references": list(revoked_assertions),
+            "principals": [
+                {
+                    "subject_ref": subject_ref,
+                    "actor_ref": "actor:p8-headless-http-test",
+                    "operations": list(operations),
+                    "scopes": [
+                        {
+                            "tenant_id": tenant_id,
+                            "factory_id": factory_id,
+                            "planning_scope_id": planning_scope_id,
+                        }
+                        for tenant_id, factory_id, planning_scope_id in scopes
+                    ],
+                }
+            ],
+        }
+    )
+
+
+class RecordingHostAuthorizationAuditSink:
+    def __init__(self) -> None:
+        self.records: list[HostAuthorizationAuditRecord] = []
+
+    def append(self, record: HostAuthorizationAuditRecord) -> None:
+        self.records.append(record)
+
+
+def host_authorization_adapter(
+    *,
+    provider: HostIdentityProvider | None = None,
+    policy: HostAuthorizationPolicyCatalog | None = None,
+    audit_sink: RecordingHostAuthorizationAuditSink | None = None,
+    simulation_api_enabled: bool = True,
+) -> HostAuthorizationAdapter:
+    return HostAuthorizationAdapter(
+        provider=provider or StaticAuthorizationProvider(),
+        policy=policy or authorization_policy(),
+        audit_sink=audit_sink or RecordingHostAuthorizationAuditSink(),
+        environment="TEST",
+        data_plane="SIMULATION",
+        simulation_api_enabled=simulation_api_enabled,
     )
 
 
@@ -84,7 +165,8 @@ def compose_headless_api(
     tmp_path: Path,
     *,
     publisher: RecordingCelery | None = None,
-    authorization_provider: AuthorizationProvider | None = None,
+    authorization_provider: HostIdentityProvider | None = None,
+    authorization_policy_catalog: HostAuthorizationPolicyCatalog | None = None,
     identities: tuple[str, ...] = (
         "headless-dispatch-001",
         "headless-dispatch-002",
@@ -108,10 +190,19 @@ def compose_headless_api(
     application = create_app(
         settings,
         probes=composition.probes,
-        authorization_provider=authorization_provider or StaticAuthorizationProvider(),
         runtime_application=composition.application,
         runtime_descriptor=composition.descriptor,
         runtime_http_context=composition.http_context_adapter,
+        host_authorization_adapter=HostAuthorizationAdapter(
+            provider=authorization_provider or StaticAuthorizationProvider(),
+            policy=authorization_policy_catalog or authorization_policy(),
+            audit_sink=SqlAlchemyHostAuthorizationAuditRepository(
+                composition.database.engine, data_plane="SIMULATION"
+            ),
+            environment="TEST",
+            data_plane="SIMULATION",
+            simulation_api_enabled=True,
+        ),
         headless_clock=lambda: HEADLESS_NOW,
         runtime_closers=(composition.close,),
     )
@@ -122,9 +213,12 @@ __all__ = [
     "FailingAuthorizationProvider",
     "HEADLESS_NOW",
     "StaticAuthorizationProvider",
-    "authorized_principal",
+    "RecordingHostAuthorizationAuditSink",
+    "authorization_policy",
     "canonical_request",
     "compose_headless_api",
     "create_headers",
+    "host_authorization_adapter",
     "run_headers",
+    "verified_identity",
 ]

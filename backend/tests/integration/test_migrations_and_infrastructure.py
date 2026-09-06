@@ -87,6 +87,7 @@ def test_empty_database_migration_upgrades_and_downgrades(tmp_path: Path) -> Non
             "replan_attempts",
             "replan_results",
             "replan_audit_records",
+            "headless_authorization_audit_records",
         } <= tables
         unique_constraints = inspect(engine).get_unique_constraints(
             "engineering_idempotency_records"

@@ -11,11 +11,17 @@ last_reviewed: 2026-09-06
 
 # 错误与求解状态模型
 
+## TASK-P8-08 host authorization error mapping
+
+Host adapter在任何application/resource lookup前把身份与授权失败映射到P8-07已声明的`planning-workspace-error.v1`：缺失或malformed Bearer、invalid/expired/not-yet-valid/wrong issuer/audience assertion为401；revoked/unmapped subject、operation/capability或exact tenant/factory/planning scope不匹配为403；provider/config unavailable为503；strict audit构造或持久化失败为500。没有为这些结果伪造`headless-error-code-registry.v1` tuple，也不改变既有canonical rejection envelope。
+
+所有公开响应只含稳定status/code/correlation，不回显token、claim、subject映射、policy内容、raw resource ID、provider exception、SQL/DSN、stack或path。Cross-scope已知和未知run均在lookup前返回相同403 body，防止资源枚举；audit失败、provider失败和Production unavailable都保持零业务副作用。授权成功只允许继续执行既有操作，不把202、409、503或任何PlanningRun/Solver状态重新解释为成功、FAILED、UNKNOWN或INFEASIBLE。
+
 ## TASK-P8-07 Headless HTTP error mapping
 
 P8-07对`headless-error-code-registry.v1`中的合同、scope/authority/lineage、idempotency/state、Runtime/persistence/system code形成稳定HTTP映射：malformed/duplicate/non-finite为400，scope denial为403，not found为404，idempotency/state冲突与nonterminal result为409，payload超限为413，media type/encoding为415，合同/业务输入为422，完整性/系统错误为500，Runtime/dispatch unavailable为503。每份`headless-error.v1`必须逐字保留registry的category、stage、retryability和action，并只使用安全pointer/entity reference/correlation。
 
-Canonical acceptance阶段的业务、authority、lineage或idempotency拒绝可保留`canonical-ingress-result.v1`并固定`side_effects=NONE`。Authentication/AuthorizationProvider的401以及相应403/503继续使用既有`planning-workspace-error.v1`，因为Headless registry没有身份code；禁止为了统一外观伪造tuple。OpenAPI逐状态声明三类实际envelope。Unknown provider/Runtime/broker exception只映射sanitized稳定类别，不回显message、credential、canonical payload、SQL/DSN、stack或path。Error status不改变Solver七状态：nonterminal 409不是UNKNOWN，queue 503不是FAILED/INFEASIBLE，Validator failure不能被改写为成功。
+Canonical acceptance阶段的业务、authority、lineage或idempotency拒绝可保留`canonical-ingress-result.v1`并固定`side_effects=NONE`。P8-08 Authentication/Authorization的401以及相应403/500/503继续使用既有`planning-workspace-error.v1`，因为Headless registry没有身份code；禁止为了统一外观伪造tuple。OpenAPI逐状态声明三类实际envelope。Unknown provider/Runtime/broker exception只映射sanitized稳定类别，不回显message、credential、canonical payload、SQL/DSN、stack或path。Error status不改变Solver七状态：nonterminal 409不是UNKNOWN，queue 503不是FAILED/INFEASIBLE，Validator failure不能被改写为成功。
 
 Same key/same semantic fingerprint返回首次logical result；same key/different fingerprint返回409且无新resource/attempt/dispatch。Stale revision/state/fingerprint与非法transition同样无业务副作用。202只表示accepted/queued，客户端必须读取durable status/result；连接timeout或未知网络结果不得自动换key或假定成功。
 

@@ -3,13 +3,25 @@ doc_id: DOC-CONTRACT-011
 title: P3 Authorization Capability 与 Audit 合同
 status: baseline
 spec_version: 0.3.0
-phase: P3
+phase: P3-P8
 normative: true
 source_sections: [33, 34, 60, 66, 78, 94, 95]
-last_reviewed: 2026-08-31
+last_reviewed: 2026-09-06
 ---
 
 # P3 Authorization Capability 与 Audit 合同
+
+## TASK-P8-08 Headless host authorization adapter
+
+P8-08在不选择真实IdP/JWT/OIDC实现的前提下形成provider-neutral授权边界。HTTP层只把opaque Bearer在内存中交给可替换`HostIdentityProvider.verify`；Runtime重新以strict `verified-host-identity.v1`验证provider返回的pseudonymous subject、provider/issuer/audience、issued/expires UTC和assertion reference，防止测试或未来provider绕过合同。Raw bearer、provider claim、显示名、邮箱和credential不得进入canonical业务payload、application context、日志或durable audit。
+
+`host-authorization-policy.v1`是operator/server-owned不可变策略，只允许显式Simulation/Test environment与plane，固定policy version/fingerprint、issuer/audience、最大assertion lifetime、revocation references、subject→actor映射、逐operation capability以及精确`tenant/factory/planning scope`。Wildcard grant、body/header/token claim/UI/Extension提供的capability或scope一律拒绝。五项Headless operation映射固定为：create/cancel/retry=`edit`，status/result=`view`；所有授权在application port、idempotency lookup和resource lookup之前执行。
+
+每个ALLOW或DENY都必须先形成strict `headless-authorization-audit.v1`并成功追加到`0009_host_authorization_audit`。记录包含pseudonymous actor/subject、provider/assertion/policy reference、token SHA-256 reference、operation/capability、精确scope及fingerprint、resource type/hash、outcome/reason、correlation、canonical UTC、plane/environment；禁止保存raw token、raw run ID、claim或secret。表和repository均append-only，读取时重新校验canonical carrier/fingerprint；audit写入失败按500拒绝且业务副作用为零。该授权记录与既有PlanningRun/ingress业务audit通过correlation关联，但不替代后者。
+
+Missing/malformed/invalid/expired identity为通用401；subject、operation、capability、revocation或scope不匹配为通用403；provider/config unavailable为503；audit persistence failure为500。响应沿用P8-07已登记的`planning-workspace-error.v1`身份错误边界，不泄漏provider细节或资源是否存在，已知/未知cross-scope资源返回相同公开响应。Production组合根仍使用Unavailable adapter并在任何application side effect前default-deny。
+
+本Task只以显式test provider、synthetic exact scope、临时SQLite和threshold-null工程Benchmark验证接口与控制；真实宿主IdP、principal lifecycle、Production RBAC/tenant-factory mapping、secret rotation、retention/legal hold、SIEM和外部audit sink继续由OPEN-002/010/015及后续部署任务控制。
 
 ## TASK-P4-12 HTTP authorization adapter
 

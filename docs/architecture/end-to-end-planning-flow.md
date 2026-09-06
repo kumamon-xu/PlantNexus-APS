@@ -11,9 +11,15 @@ last_reviewed: 2026-09-06
 
 # 端到端计划链路
 
+## TASK-P8-08 host authorization edge
+
+五项P8-07 Headless operation现先经过同一P8-08边界：`opaque Bearer → HostIdentityProvider → strict verified-host-identity.v1 → operator-owned policy → exact operation capability + tenant/factory/planning scope → durable ALLOW/DENY audit`，授权成功后才进入P8-07 Runtime HTTP policy与P8-06 facade。Create/cancel/retry固定要求`edit`，status/result固定要求`view`；请求body/header仅提供待求交坐标，不得提供actor、grant、Production binding或Extension选择。
+
+Missing/invalid/expired/revoked/unmapped/cross-scope/provider failure都在application port、idempotency和resource lookup前停止；已知/未知cross-scope run保持相同公开拒绝。每次决定先追加strict sanitized `headless-authorization-audit.v1`，audit失败则业务副作用为零。该edge只形成Test provider和synthetic exact scope，真实Production identity/RBAC/gateway/retention/SIEM仍未形成；成功授权也不改变后续canonical、Solver、Validator、ScheduleVersion、审批或发布语义。
+
 ## TASK-P8-07 public Headless transport edge
 
-P8内部链现由5项additive HTTP operation对宿主开放：`POST /api/v1/planning-runs`接收strict canonical request并以202返回durable ingress/run reference；`GET .../status`返回当前`planning-run.v1`；`POST .../cancel`执行CAS取消；`POST .../retry`只为可重试失败attempt追加并投递新work；`GET .../result`只在terminal时以200返回同一run，非terminal为409。所有command/query均先经过server AuthorizationProvider和Runtime HTTP policy，再委托P8-06 facade；HTTP线程不运行Solver。
+P8内部链现由5项additive HTTP operation对宿主开放：`POST /api/v1/planning-runs`接收strict canonical request并以202返回durable ingress/run reference；`GET .../status`返回当前`planning-run.v1`；`POST .../cancel`执行CAS取消；`POST .../retry`只为可重试失败attempt追加并投递新work；`GET .../result`只在terminal时以200返回同一run，非terminal为409。所有command/query均先经过P8-08 host authorization adapter和P8-07 Runtime HTTP policy，再委托P8-06 facade；HTTP线程不运行Solver。
 
 Create/retry exact replay不重复materialize、attempt或dispatch；202不表示solve、fresh validation、ScheduleVersion、审批或发布成功。客户端通过status/result和correlation/ETag/state headers对账。P8-07只证明显式Simulation/Test Runtime的canonical→durable run→异步dispatch链；真实host identity、Production broker/database、Extension加载、release/deployment、UAT与capacity仍由后继Task负责。
 

@@ -13,6 +13,10 @@ from app.application.planning_runs import (
     PlanningRunOrchestrationError,
     PlanningRunRetryCommand,
 )
+from app.application.host_authorization import (
+    AuthorizedHostPrincipal,
+    HostAuthorizationRequest,
+)
 from app.application.runtime_facade import (
     APSRuntimeApplicationFacade,
     RuntimeFacadeError,
@@ -23,7 +27,8 @@ from app.application.runtime_http_adapter import (
     RuntimeHttpPrincipal,
     RuntimeHttpRequestedScope,
 )
-from app.api.dependencies.authorization import PrincipalContext, authorize_request
+from app.domain.types import format_utc_instant, parse_utc_instant
+from app.api.dependencies.host_authorization import authorize_headless_request
 from app.api.headless_contracts import (
     MAX_ACTION_REQUEST_BYTES,
     MAX_CANONICAL_REQUEST_BYTES,
@@ -180,6 +185,16 @@ def _occurred_at(request: Request) -> str:
         raise public_headless_error(
             "SYSTEM_ERROR", correlation_id=correlation_id(request)
         )
+    try:
+        parsed = parse_utc_instant(value)
+    except (TypeError, ValueError):
+        raise public_headless_error(
+            "SYSTEM_ERROR", correlation_id=correlation_id(request)
+        ) from None
+    if format_utc_instant(parsed) != value:
+        raise public_headless_error(
+            "SYSTEM_ERROR", correlation_id=correlation_id(request)
+        )
     return value
 
 
@@ -199,10 +214,10 @@ def _ports(
     return application, adapter
 
 
-def _principal(value: PrincipalContext) -> RuntimeHttpPrincipal:
+def _principal(value: AuthorizedHostPrincipal) -> RuntimeHttpPrincipal:
     return RuntimeHttpPrincipal(
-        actor_reference=value.actor_ref,
-        capabilities=tuple(sorted(value.resolved_capabilities)),
+        actor_reference=value.actor_reference,
+        capabilities=(value.application_capability,),
         auth_policy_version=value.auth_policy_version,
         production_binding=value.production_binding,
     )
@@ -230,6 +245,9 @@ def _raise_application_error(
     status_override: int | None = None
     if code in {"STALE_RUN", "STALE_ATTEMPT", "ATTEMPT_NOT_RETRYABLE"}:
         code = "INVALID_STATE_TRANSITION"
+    elif code == "SCOPE_MISMATCH" and planning_run_id is not None:
+        code = "INVALID_REFERENCE"
+        status_override = 404
     elif code in {"QUEUE_FAILED", "APPEND_ONLY", "UNKNOWN_OUTCOME"}:
         code = "SYSTEM_ERROR"
         status_override = 503 if raw_code == "QUEUE_FAILED" else 500
@@ -329,19 +347,31 @@ async def create_headless_planning_run(
         )
     except RuntimeHttpAdapterError as error:
         _raise_application_error(error, correlation=correlation, create_operation=True)
-    principal = authorize_request(
-        request,
-        correlation_id=correlation,
-        required_capability="edit",
-        resource_type="PLANNING_SCOPE",
-        resource_id=requested_scope.planning_scope_id,
-    )
+    occurred_at = _occurred_at(request)
+    try:
+        authorization = HostAuthorizationRequest.create(
+            operation_id="createHeadlessPlanningRun",
+            tenant_id=requested_scope.tenant_id,
+            factory_id=requested_scope.factory_id,
+            planning_scope_id=requested_scope.planning_scope_id,
+            resource_type="PLANNING_SCOPE",
+            resource_id=requested_scope.planning_scope_id,
+            correlation_id=correlation,
+            occurred_at_utc=occurred_at,
+        )
+    except ValueError:
+        raise public_headless_error(
+            "CONTRACT_VIOLATION",
+            correlation_id=correlation,
+            pointer="/requested_scope",
+        ) from None
+    principal = authorize_headless_request(request, authorization)
     application, adapter = _ports(request, correlation)
     try:
         trusted = adapter.ingress_context(
             document,
             principal=_principal(principal),
-            occurred_at_utc=_occurred_at(request),
+            occurred_at_utc=occurred_at,
         )
         submission = application.submit_canonical(
             raw,
@@ -392,6 +422,7 @@ def _command_context(
     tenant_id: str,
     factory_id: str,
     planning_scope_id: str,
+    operation_id: str,
     capability: str,
 ) -> tuple[
     APSRuntimeApplicationFacade,
@@ -409,20 +440,34 @@ def _command_context(
         _raise_application_error(
             error, correlation=correlation, planning_run_id=planning_run_id
         )
-    principal = authorize_request(
-        request,
-        correlation_id=correlation,
-        required_capability=capability,
-        resource_type="PLANNING_RUN",
-        resource_id=planning_run_id,
-    )
+    occurred_at = _occurred_at(request)
+    try:
+        authorization = HostAuthorizationRequest.create(
+            operation_id=operation_id,
+            tenant_id=requested.tenant_id,
+            factory_id=requested.factory_id,
+            planning_scope_id=requested.planning_scope_id,
+            resource_type="PLANNING_RUN",
+            resource_id=planning_run_id,
+            correlation_id=correlation,
+            occurred_at_utc=occurred_at,
+        )
+    except ValueError:
+        raise public_headless_error(
+            "CONTRACT_VIOLATION",
+            correlation_id=correlation,
+            pointer="/request",
+        ) from None
+    principal = authorize_headless_request(request, authorization)
+    if principal.application_capability != capability:
+        raise public_headless_error("SYSTEM_ERROR", correlation_id=correlation)
     application, adapter = _ports(request, correlation)
     try:
         context = adapter.command_context(
             requested,
             principal=_principal(principal),
             correlation_id=correlation,
-            occurred_at_utc=_occurred_at(request),
+            occurred_at_utc=occurred_at,
         )
     except RuntimeHttpAdapterError as error:
         _raise_application_error(
@@ -470,6 +515,7 @@ def get_headless_planning_run_status(
         tenant_id=tenant_id,
         factory_id=factory_id,
         planning_scope_id=planning_scope_id,
+        operation_id="getHeadlessPlanningRunStatus",
         capability="view",
     )
     try:
@@ -532,6 +578,7 @@ async def cancel_headless_planning_run(
         tenant_id=tenant_id,
         factory_id=factory_id,
         planning_scope_id=planning_scope_id,
+        operation_id="cancelHeadlessPlanningRun",
         capability="edit",
     )
     try:
@@ -603,6 +650,7 @@ async def retry_headless_planning_run(
         tenant_id=tenant_id,
         factory_id=factory_id,
         planning_scope_id=planning_scope_id,
+        operation_id="retryHeadlessPlanningRun",
         capability="edit",
     )
     occurred_at = cast(Any, context).occurred_at_utc
@@ -679,6 +727,7 @@ def get_headless_planning_run_result(
         tenant_id=tenant_id,
         factory_id=factory_id,
         planning_scope_id=planning_scope_id,
+        operation_id="getHeadlessPlanningRunResult",
         capability="view",
     )
     try:

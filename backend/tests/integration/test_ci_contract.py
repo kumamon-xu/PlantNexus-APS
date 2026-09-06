@@ -49,6 +49,7 @@ from app.application.workspace_read_model_check import (
 )
 from app.api.planning_workspace_check import main as planning_workspace_api_main
 from app.api.headless_api_check import main as p8_headless_api_main
+from app.api.host_authorization_check import main as p8_host_authorization_main
 from app.api.replanning_check import main as replanning_api_main
 from app.domain.workspace_contract_check import main as workspace_contract_main
 from app.domain.execution_contract_check import main as execution_contract_main
@@ -472,7 +473,7 @@ def test_ci_profile_routing_is_mutually_exclusive_and_fail_closed() -> None:
     assert "Build package" in full_text
     assert len(preflight["steps"]) == 4
     assert len(backend["steps"]) == 8
-    assert len(full["steps"]) == 74
+    assert len(full["steps"]) == 75
 
     assert 'test "${PLANTNEXUS_CLASSIFY_RESULT}" = "success"' in final_run
     assert 'test "${PLANTNEXUS_PREFLIGHT_RESULT}" = "success"' in final_run
@@ -883,6 +884,82 @@ def test_ci_p8_headless_http_api_is_required_and_machine_checkable(
     )
     assert benchmark["profile"] == "SYNTHETIC_ENGINEERING_NOT_PRODUCTION_SLA"
     assert benchmark["http_transport_probe"]["all_statuses_expected"] is True
+    assert benchmark["status"] == "PASS"
+
+
+def test_ci_p8_host_authorization_is_required_and_machine_checkable(
+    tmp_path: Path,
+) -> None:
+    workflow = (ROOT / ".github" / "workflows" / "ci.yml").read_text(encoding="utf-8")
+    normalized = " ".join(workflow.split())
+    assert (
+        "name: P8 Host identity scope and audit evidence run: >- "
+        "uv run python -m app.api.host_authorization_check --root . --report "
+        "build/validation/ci-p8-host-authorization.json --audit-report "
+        "build/validation/ci-p8-host-authorization-audit.json --benchmark-report "
+        "build/benchmarks/ci-p8-host-authorization.json"
+    ) in normalized
+    assert "continue-on-error" not in workflow
+    for relative_path in (
+        "backend/app/api/host_authorization_check.py",
+        "backend/app/api/dependencies/host_authorization.py",
+        "backend/app/application/host_authorization.py",
+        "backend/app/infrastructure/host_authorization_audit_repository.py",
+        "backend/migrations/versions/0009_host_authorization_audit.py",
+        "backend/tests/contract/test_p8_host_authorization.py",
+        "backend/tests/integration/test_p8_host_authorization_audit.py",
+        "backend/tests/security/test_p8_host_authorization_security.py",
+    ):
+        assert workflow.count(f'"${{replay_root}}/{relative_path}"') == 1
+    assert workflow.count("backend/app/api/dependencies/__init__.py") == 1
+
+    report_path = tmp_path / "p8-host-authorization.json"
+    audit_path = tmp_path / "p8-host-authorization-audit.json"
+    benchmark_path = tmp_path / "p8-host-authorization-benchmark.json"
+    assert (
+        p8_host_authorization_main(
+            [
+                "--root",
+                str(ROOT),
+                "--report",
+                str(report_path),
+                "--audit-report",
+                str(audit_path),
+                "--benchmark-report",
+                str(benchmark_path),
+            ]
+        )
+        == 0
+    )
+    report = json.loads(report_path.read_text(encoding="utf-8"))
+    audit = json.loads(audit_path.read_text(encoding="utf-8"))
+    benchmark = json.loads(benchmark_path.read_text(encoding="utf-8"))
+    assert report["report_version"] == "p8-host-authorization-report.v1"
+    assert report["task_id"] == "TASK-P8-08"
+    assert report["diff_base"] == "54be7af6efdb78f751b8aa4a66bc080bdd04407f"
+    assert report["validation_profile"] == "HIGH_RISK"
+    assert report["check_count"] == 10
+    assert len(report["operation_matrix"]) == 5
+    assert len(report["denial_matrix"]) == 14
+    assert report["issues"] == []
+    assert report["status"] == "PASS"
+    assert audit["audit_report_version"] == (
+        "p8-host-authorization-audit-report.v1"
+    )
+    assert audit["decision_count"] == 20
+    assert audit["allowed_count"] == 5
+    assert audit["denied_count"] == 15
+    assert all(audit["redaction"].values())
+    assert all(audit["persistence"].values())
+    assert audit["issues"] == []
+    assert audit["status"] == "PASS"
+    assert benchmark["benchmark_version"] == (
+        "p8-host-authorization-engineering-benchmark.v1"
+    )
+    assert benchmark["profile"] == "SYNTHETIC_ENGINEERING_NOT_PRODUCTION_SLA"
+    assert benchmark["threshold_ms"] is None
+    assert benchmark["iterations"] == 1_000
+    assert benchmark["all_decisions_allowed_and_audited"] is True
     assert benchmark["status"] == "PASS"
 
 

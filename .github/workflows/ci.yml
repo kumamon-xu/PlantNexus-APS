@@ -327,6 +327,14 @@ jobs:
           --diff-report build/validation/ci-p8-headless-openapi-diff.json
           --benchmark-report build/benchmarks/ci-p8-headless-api.json
 
+      - name: P8 Host identity scope and audit evidence
+        run: >-
+          uv run python -m app.api.host_authorization_check
+          --root .
+          --report build/validation/ci-p8-host-authorization.json
+          --audit-report build/validation/ci-p8-host-authorization-audit.json
+          --benchmark-report build/benchmarks/ci-p8-host-authorization.json
+
       - name: P6 duration prediction machine contract evidence
         run: >-
           uv run python scripts/p6_duration_contract_check.py
@@ -636,6 +644,15 @@ jobs:
             "${replay_root}/backend/tests/contract/test_p8_headless_http_api.py" \
             "${replay_root}/backend/tests/integration/test_p8_headless_http_api_integration.py" \
             "${replay_root}/backend/tests/security/test_p8_headless_http_api_security.py"
+          rm -- \
+            "${replay_root}/backend/app/api/host_authorization_check.py" \
+            "${replay_root}/backend/app/api/dependencies/host_authorization.py" \
+            "${replay_root}/backend/app/application/host_authorization.py" \
+            "${replay_root}/backend/app/infrastructure/host_authorization_audit_repository.py" \
+            "${replay_root}/backend/migrations/versions/0009_host_authorization_audit.py" \
+            "${replay_root}/backend/tests/contract/test_p8_host_authorization.py" \
+            "${replay_root}/backend/tests/integration/test_p8_host_authorization_audit.py" \
+            "${replay_root}/backend/tests/security/test_p8_host_authorization_security.py"
           git -C "${replay_root}" restore \
             --source d0a83c58cb4a2d4afa76e8c8cff08441574e2e30 \
             -- backend/tests/integration/test_ci_contract.py
@@ -644,6 +661,7 @@ jobs:
             -- \
             backend/app/__init__.py \
             backend/app/api/app.py \
+            backend/app/api/dependencies/__init__.py \
             backend/app/application/execution_fact_projection_check.py \
             backend/app/application/export_job_check.py \
             backend/app/application/p3_gate_report.py \

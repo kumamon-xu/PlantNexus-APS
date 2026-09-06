@@ -20,6 +20,10 @@ from app.application.runtime_facade import (
     APSRuntimeApplicationFacade,
     RuntimeApplicationBinding,
 )
+from app.application.runtime_http_adapter import (
+    RuntimeHttpContextAdapter,
+    RuntimeHttpPolicyCatalog,
+)
 from app.application.schedule_versions import (
     ValidatedSolutionToScheduleVersionService,
 )
@@ -180,6 +184,7 @@ class RuntimeComposition:
     process: RuntimeProcess
     descriptor: RuntimeCompositionDescriptor
     application: APSRuntimeApplicationFacade | None
+    http_context_adapter: RuntimeHttpContextAdapter
     worker: PlanningRunSolverWorker | None
     database: DatabaseClient
     redis: RedisClient | None
@@ -210,6 +215,7 @@ class RuntimeComposition:
                 Mapping[str, object], descriptor["runtime_resolution"]
             )["resolution_fingerprint"],
             "extension_adapter": descriptor["extension_adapter"],
+            "http_context_policy": descriptor["http_context_policy"],
             "port_bindings": descriptor["port_bindings"],
             "secrets_embedded": False,
             "production_ready": False,
@@ -307,6 +313,7 @@ def _descriptor(
     contract: CanonicalIngressContract,
     catalog: FrozenPlanningArtifactCatalog,
     extension_adapter: EmptyRuntimeExtensionAdapter,
+    http_policy: RuntimeHttpPolicyCatalog,
 ) -> RuntimeCompositionDescriptor:
     plane = _workspace_plane(settings).value
     environment = _runtime_environment(settings)
@@ -361,6 +368,7 @@ def _descriptor(
         "code_commit": settings.code_commit,
         "runtime_resolution": runtime_resolution,
         "extension_adapter": extension_adapter.document,
+        "http_context_policy": http_policy.safe_reference,
         "planning_artifacts": {
             "planning_policy": catalog.planning_policy_reference,
             "solve_limits": catalog.solve_limits_reference,
@@ -375,6 +383,7 @@ def _descriptor(
             "solver": f"{STRATEGY_ID}/{STRATEGY_VERSION}",
             "validator": f"problem-schedule-validator/{VALIDATION_REPORT_CONTRACT}",
             "audit": "sqlalchemy-append-only-audit.v1",
+            "http_context": "runtime-http-context-adapter.v1",
         },
         "secret_policy": {
             "source": "EXPLICIT_SETTINGS_OR_PLANTNEXUS_ENV",
@@ -437,6 +446,10 @@ def compose_runtime(
         settings.runtime_solve_limits_path,
         field="runtime_solve_limits_path",
     )
+    http_policy_document = _configured_document(
+        settings.runtime_http_policy_path,
+        field="runtime_http_policy_path",
+    )
     try:
         catalog = FrozenPlanningArtifactCatalog.create(
             planning_policy=policy,
@@ -450,11 +463,26 @@ def compose_runtime(
             message="Runtime planning artifacts are incompatible",
         ) from error
     extension_adapter = EmptyRuntimeExtensionAdapter.create()
+    try:
+        http_policy = RuntimeHttpPolicyCatalog.create(
+            http_policy_document,
+            planning_inputs={
+                "planning_policy": catalog.planning_policy_reference,
+                "solve_limits": catalog.solve_limits_reference,
+            },
+        )
+    except ValueError as error:
+        raise RuntimeCompositionError(
+            "CONFIGURATION_INVALID",
+            field="runtime_http_policy",
+            message="Runtime HTTP context policy is incompatible",
+        ) from error
     descriptor = _descriptor(
         settings=settings,
         contract=contract,
         catalog=catalog,
         extension_adapter=extension_adapter,
+        http_policy=http_policy,
     )
 
     database = create_database_client(
@@ -481,6 +509,10 @@ def compose_runtime(
             code_commit=settings.code_commit,
             runtime_resolution=descriptor.runtime_resolution,
             production_available=False,
+        )
+        http_context_adapter = RuntimeHttpContextAdapter(
+            binding=binding,
+            policy=http_policy,
         )
         if process is RuntimeProcess.API:
             redis = create_redis_client(
@@ -541,6 +573,7 @@ def compose_runtime(
             process=process,
             descriptor=descriptor,
             application=application,
+            http_context_adapter=http_context_adapter,
             worker=worker,
             database=database,
             redis=redis,

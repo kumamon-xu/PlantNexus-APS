@@ -6,10 +6,20 @@ spec_version: 0.3.0
 phase: P0-P8
 normative: true
 source_sections: [29, 42, 65, 93, 95]
-last_reviewed: 2026-09-05
+last_reviewed: 2026-09-06
 ---
 
 # P0 Observability 与 Audit 边界
+
+## TASK-P8-07 Headless HTTP evidence
+
+5项Headless PlanningRun response均回传`X-Correlation-Id`与`Cache-Control: no-store`；create成功另回传status资源`Location`，status/cancel/retry/result回传由canonical `run_fingerprint`形成的`ETag`及`X-APS-Planning-Run-State`。请求correlation与create carrier冲突在application side effect前拒绝。客户端必须使用durable status/result对账：202仅是accepted/queued，result在非terminal时返回409，不能从连接成功、timeout或UI缓存推断Solver/Validator/发布结果。
+
+Transport只委托P8-06 facade并复用P8-03 ingress audit、P8-04 run/attempt/command/transition/audit和P8-05 job binding/checkpoint。Exact create/retry replay返回首次logical result且不追加第二dispatch或业务audit；冲突、非法payload、scope/authority拒绝和stale state不伪造成功证据。Authorization denial继续使用既有sanitized provider audit边界，router不创建身份或业务audit。
+
+`p8-headless-http-api-report.v1`记录34项operation、旧29项hash preservation、5项additive inventory、strict carrier/limit/error/layering/确定性检查；`p8-headless-openapi-diff.v1`记录基线与新增集合；`p8-headless-api-engineering-benchmark.v1`只记录固定synthetic fail-closed HTTP probe和OpenAPI构建耗时，threshold为`null`且不构成SLO。报告、响应和日志不得包含Bearer、raw idempotency key、完整canonical payload、credential、endpoint secret、SQL/DSN、stack或private path。
+
+P8-07没有新增metric/trace exporter、dashboard、alert、SIEM、retention、rate-limit telemetry、broker lag/database pool指标、clock-skew政策或Production SLO。真实host correlation/identity和denial audit由P8-08，部署期observability/backup/runbook由P8-10继续形成。
 
 ## TASK-P8-06 Runtime composition evidence
 

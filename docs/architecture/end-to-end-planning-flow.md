@@ -6,16 +6,22 @@ spec_version: 0.3.0
 phase: cross-phase
 normative: true
 source_sections: [0, 9, 10, 12, 23, 24, 30, 32, 33, 35, 57, 65, 67, 93, 95, 101, 113, 114]
-last_reviewed: 2026-09-05
+last_reviewed: 2026-09-06
 ---
 
 # 端到端计划链路
+
+## TASK-P8-07 public Headless transport edge
+
+P8内部链现由5项additive HTTP operation对宿主开放：`POST /api/v1/planning-runs`接收strict canonical request并以202返回durable ingress/run reference；`GET .../status`返回当前`planning-run.v1`；`POST .../cancel`执行CAS取消；`POST .../retry`只为可重试失败attempt追加并投递新work；`GET .../result`只在terminal时以200返回同一run，非terminal为409。所有command/query均先经过server AuthorizationProvider和Runtime HTTP policy，再委托P8-06 facade；HTTP线程不运行Solver。
+
+Create/retry exact replay不重复materialize、attempt或dispatch；202不表示solve、fresh validation、ScheduleVersion、审批或发布成功。客户端通过status/result和correlation/ETag/state headers对账。P8-07只证明显式Simulation/Test Runtime的canonical→durable run→异步dispatch链；真实host identity、Production broker/database、Extension加载、release/deployment、UAT与capacity仍由后继Task负责。
 
 ## TASK-P8-06 composed internal runtime edge
 
 P8-03～05的可执行链现由唯一`app.runtime_composition`形成两个分进程入口：API root接收内部canonical bytes与trusted context，经`APSRuntimeApplicationFacade`完成ingress、PlanningRun materialize及四字段Celery dispatch；Worker root从durable run/source解析同一Policy/Limits与Runtime descriptor，再执行既有P8-05 Solver/Validator/ScheduleVersion链。API和Worker不共享进程对象或数据库外的隐藏状态，但environment、data plane、schema/core/runtime/Extension-set、Policy/Limits、Solver与Validator fingerprints必须逐字相同。
 
-Exact replay只在最新attempt仍为`QUEUED`时重投同一durable work；broker提交失败通过既有P8-04命令收敛为`DISPATCH_FAILED`并保留sanitized code。请求/消息不能选择artifact path或Extension实现。当前Extension adapter固定为空、无loader，Production因P8-08～10真实authority/deployment ports缺失在任何side effect前拒绝；P8-06也没有新增HTTP operation，因此宿主尚不能调用该内部组合链，P8-07仍负责公开Headless transport。
+首次materialize/retry只在command不是replay时投递durable work；exact replay读取首次结果而不重复dispatch。Broker提交失败通过既有P8-04命令收敛为`DISPATCH_FAILED`并保留sanitized code。请求/消息不能选择artifact path或Extension实现。当前Extension adapter固定为空、无loader，Production因P8-08～10真实authority/deployment ports缺失在任何side effect前拒绝；P8-07只在该组合根之外增加上述HTTP adapter。
 
 ## TASK-P8-05 executable asynchronous solve edge
 
@@ -35,7 +41,7 @@ P8-03 canonical ingress / immutable Snapshot + PlanningProblem
 → task ACK
 ```
 
-Runtime/input fingerprints在领取、求解后和恢复时逐字复核。重复投递只复用同一job/work；检查点前崩溃由lease expiry收敛为业务attempt timeout并要求显式retry，检查点后崩溃则在同一work恢复而不再求解。取消或业务timeout可以阻止后续成功状态与Version；Validator failure及所有非candidate结果不创建ScheduleVersion。该edge仍没有公开HTTP route或Production composition；P8-06负责装配入口，P8-07才把canonical carrier暴露为统一Headless API。
+Runtime/input fingerprints在领取、求解后和恢复时逐字复核。重复投递只复用同一job/work；检查点前崩溃由lease expiry收敛为业务attempt timeout并要求显式retry，检查点后崩溃则在同一work恢复而不再求解。取消或业务timeout可以阻止后续成功状态与Version；Validator failure及所有非candidate结果不创建ScheduleVersion。该Worker edge本身没有HTTP语义；P8-06负责装配入口，P8-07现把canonical carrier暴露为统一Headless API，但Production composition仍不可用。
 
 ## TASK-P8-04 executable PlanningRun orchestration edge
 
@@ -47,17 +53,17 @@ P8-04交付时该edge仍停在Runtime内部的queue-ready边界；P8-05现由上
 
 P8链路现在可在Runtime内部执行到持久化输入边界：`strict UTF-8 canonical-ingress-request.v1 → trusted scope/authority + idempotency → server-owned Runtime/Extension-set resolution → existing Data Validation → deterministic expansion → immutable Snapshot → planning-problem-builder.v2 → atomic ingress/Snapshot/Problem/audit commit → CREATED PlanningRun/result`。相同请求精确重放既有结果；内容冲突、零有效数据、contract/lineage/authority错误或任一持久化失败均停止且不得留下部分Snapshot、Problem或audit。
 
-该P8-03 edge本身不是公开产品API，也不启动Solver；P8-04已接管durable PlanningRun，P8-05已形成上节Worker执行，P8-06已形成内部Runtime facade/composition root，P8-07才暴露统一Headless HTTP API。Extension仍不能由客户端选择或上传，当前只保存并复核服务端解析出的version-locked reference。
+该P8-03 edge本身不是HTTP adapter，也不启动Solver；P8-04已接管durable PlanningRun，P8-05已形成上节Worker执行，P8-06已形成Runtime facade/composition root，P8-07现暴露统一Headless HTTP API。Extension仍不能由客户端选择或上传，当前只保存并复核服务端解析出的version-locked reference。
 
 ## TASK-P8-02 formed contract edge
 
 P8链路现在形成到machine carrier层：`canonical-ingress-request.v1`把宿主canonical JSON、requested scope、source/mapping authority、idempotency与Policy/Limits引用固定为唯一request；`canonical-ingress-result.v1`区分零副作用拒绝和带server-owned Runtime/Extension-set resolution的接受；`planning-run.v1`固定既有state/transition/terminal/action与阶段artifact lineage。该边只进行纯Schema/semantic验证，不调用Data Validation、Snapshot/Problem builder、Solver、Validator、repository、API或Worker。
 
-TASK-P8-03已在同一scope/idempotency transaction中建立不可变输入，P8-04已持久化run/attempt/work item及合法CAS转换，P8-05现已真正执行Worker并形成一次业务结果恢复；P8-07仍须将carrier绑定HTTP。请求没有Extension选择字段，Runtime resolution只能由服务端写入，并已由Worker逐字复核。当前内部链可执行到validated `READY_FOR_REVIEW`版本，但尚未形成外部可调用的端到端P8产品链。
+TASK-P8-03已在同一scope/idempotency transaction中建立不可变输入，P8-04已持久化run/attempt/work item及合法CAS转换，P8-05已执行Worker并形成一次业务结果恢复，P8-06/07已将carrier组合并绑定HTTP。请求没有Extension选择字段，Runtime resolution只能由服务端写入，并由Worker逐字复核。当前外部链可在显式Simulation/Test配置中调用到durable异步边界；真实身份、Extension和Production链仍未形成。
 
 ## P8 planned Headless product chain
 
-P8规划的唯一外部产品链如下；TASK-P8-00冻结架构和Task DAG，TASK-P8-02形成入口/结果/运行机器carrier，TASK-P8-03形成无HTTP的内部持久化输入边，TASK-P8-04形成durable run/attempt/work item边，TASK-P8-05形成异步solve/validate/checkpoint/version edge，其余产品化箭头仍为planned：
+P8的唯一外部产品链如下；TASK-P8-00冻结架构和Task DAG，P8-02～05形成machine/durable/Worker链，P8-06/07已形成Runtime组合与公开HTTP，Extension、真实身份、发布部署和最终Gate箭头仍为planned：
 
 ```text
 Host acquisition / mapping / authority

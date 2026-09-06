@@ -74,11 +74,15 @@ def runtime_settings(
 ) -> Settings:
     policy_path = tmp_path / "planning-policy.runtime.json"
     limits_path = tmp_path / "solve-limits.runtime.json"
+    http_policy_path = tmp_path / "runtime-http-policy.runtime.json"
     policy_path.write_text(
         json.dumps(planning_policy(), ensure_ascii=False), encoding="utf-8"
     )
     limits_path.write_text(
         json.dumps(solve_limits(), ensure_ascii=False), encoding="utf-8"
+    )
+    http_policy_path.write_text(
+        json.dumps(runtime_http_policy(), ensure_ascii=False), encoding="utf-8"
     )
     return Settings(
         runtime_environment=RuntimeEnvironment.TEST,
@@ -89,9 +93,40 @@ def runtime_settings(
         runtime_schema_directory=ROOT / "schemas" / "json",
         runtime_planning_policy_path=policy_path,
         runtime_solve_limits_path=limits_path,
+        runtime_http_policy_path=http_policy_path,
         runtime_artifact_fingerprint=runtime_artifact_fingerprint,
         database_url=SecretStr(database_url),
     )
+
+
+def runtime_http_policy() -> dict[str, object]:
+    return {
+        "runtime_http_policy_version": "runtime-http-policy.v1",
+        "scopes": [
+            {
+                "tenant_id": "TENANT-P8-APPLICATION",
+                "factory_id": "FACTORY-001",
+                "planning_scope_id": "PLANNING-P8-APPLICATION",
+                "authorized_authority_references": [AUTHORITY_REFERENCE],
+                "authorized_mapping_fingerprints": [MAPPING_FINGERPRINT],
+                "build_plan": {
+                    "cutoff_at_utc": "2026-08-20T00:00:00Z",
+                    "tick_seconds": 60,
+                    "horizon_start_utc": "2026-08-20T00:00:00Z",
+                    "horizon_end_utc": "2026-08-21T00:00:00Z",
+                    "priority_facts": {
+                        "DEMAND-001": {
+                            "priority_weight": 2,
+                            "source_system": "plantnexus-synthetic-policy",
+                            "source_version": "1.0.0",
+                            "source_record_id": "P8-RUNTIME-DEMAND-001",
+                        }
+                    },
+                },
+                "dispatch_timeout_seconds": 3600,
+            }
+        ],
+    }
 
 
 def ingress_context(
@@ -178,5 +213,6 @@ __all__ = [
     "dispatch_window",
     "dispatched_message",
     "ingress_context",
+    "runtime_http_policy",
     "runtime_settings",
 ]

@@ -6,14 +6,14 @@ spec_version: 0.3.0
 phase: P8
 normative: false
 source_sections: [2, 6, 24, 90, 113, 114]
-last_reviewed: 2026-09-05
+last_reviewed: 2026-09-06
 ---
 
 # PlantNexus APS 公开文档中心
 
 本目录只收录适合随公开 Git 仓库发布的核心项目文档。开发过程记录、Task Card、阶段证据、机器报告、临时草稿、截图、测试输出和下载制品不属于公开文档，应留在被忽略的本地目录或 `build/`。
 
-项目当前已形成 P0～P6 研发能力，P7 真实数据校准暂缓，P8 Headless产品化已从机器合同推进到durable canonical ingress、PlanningRun编排、异步Solver Worker及Production-shaped Runtime组合切片。产品边界只接收宿主平台提交的versioned canonical JSON，不在APS内直接建设ERP/MES/WMS/CAM连接器；宿主和未来可选独立Frontend消费同一API。企业适配规划通过Extension SDK和独立Enterprise Extension在Runtime内实现，并由version-locked Developer Kit交付，禁止复制/修改Core或自动升级企业项目。当前已形成[Headless平台集成与数据权威合同](contracts/headless-platform-integration.md)、schema set `2.10.0`中的canonical ingress/result、PlanningRun与Headless错误注册表，以及严格消费这些合同并原子保存immutable Snapshot/PlanningProblem、run/attempt/work item、命令/转换/audit的内部应用服务；P8-05以strict JSON task、durable lease/heartbeat、Global CP-SAT、fresh Validator、append-only result checkpoint和ScheduleVersion恢复形成一次业务结果，P8-06再以单一显式composition root把API application facade和Worker真实ports绑定到同一immutable descriptor。P8-06没有新增公开业务路由，default-empty Extension seam也没有loader；公开Headless HTTP、host identity/authorization、SDK、Registry和Developer Kit仍未实现，Production组合主动拒绝启动。Synthetic/SQLite证据不代表Production readiness、UAT、真实身份/审批authority、部署、容量结论或SLA已经形成。能力声明以[能力矩阵](core/capability-matrix.md)和对应合同为准。
+项目当前已形成 P0～P6 研发能力，P7 真实数据校准暂缓，P8 Headless产品化已从机器合同推进到durable canonical ingress、PlanningRun编排、异步Solver Worker、单一Runtime组合以及公开Headless HTTP切片。产品边界只接收宿主平台提交的versioned canonical JSON，不在APS内直接建设ERP/MES/WMS/CAM连接器；宿主和未来可选独立Frontend消费同一API。企业适配规划通过Extension SDK和独立Enterprise Extension在Runtime内实现，并由version-locked Developer Kit交付，禁止复制/修改Core或自动升级企业项目。当前已形成[Headless平台集成与数据权威合同](contracts/headless-platform-integration.md)、schema set `2.10.0`中的canonical ingress/result、PlanningRun与Headless错误注册表，以及严格消费这些合同并保存immutable Snapshot/Problem、run/attempt/work/audit、Worker checkpoint和ScheduleVersion的Runtime链。P8-07在保留原29项operation的基础上只新增create/status/cancel/retry/result五项，提交的OpenAPI 3.1快照共34项，并以server-owned Runtime policy限制canonical JSON、scope/authority、payload与幂等dispatch。该HTTP能力当前只在显式Simulation/Test组合中形成；真实host identity/authorization、SDK、Registry、Developer Kit、发布与部署仍未实现，Production组合主动拒绝启动。Synthetic/TestClient/SQLite证据不代表Production readiness、UAT、真实身份/审批authority、容量结论或SLA已经形成。能力声明以[能力矩阵](core/capability-matrix.md)和对应合同为准。
 
 ## 核心入口
 
@@ -99,7 +99,7 @@ README 不能覆盖 Schema、合同或 ADR。中文字段名只用于阅读和�
 
 - 新文档必须是核心、可公开、可长期维护的 Markdown；敏感信息、真实数据、凭据和内部运行证据不得进入仓库。
 - API 或字段发生变化时，先更新对应 Schema/合同，再同步 API 清单或字段字典。
-- 生成的 OpenAPI、测试报告、coverage、benchmark、截图、视频、HTML、临时导出和下载 artifact 写入 `build/` 或工具输出目录，不写入 `docs/`。
+- 规范性、确定生成的版本化OpenAPI快照可以随其API owner提交；运行期测试报告、coverage、benchmark、截图、视频、HTML、临时导出和下载artifact仍写入`build/`或工具输出目录，不写入`docs/`。
 - 草稿应在仓库外或被忽略目录中完成；进入 `docs/` 前应移除运行编号、绝对路径、个人信息和内部链接。
 - 所有本地链接必须指向公开 Git 管理的文件；不从公开索引链接内部过程文档。
 

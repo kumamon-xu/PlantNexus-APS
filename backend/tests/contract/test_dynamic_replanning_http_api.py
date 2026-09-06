@@ -104,5 +104,14 @@ def test_p3_frozen_operation_subset_remains_present() -> None:
         and method in {"get", "post"}
         and isinstance(operation, dict)
     }
-    assert len(operation_ids - P4_OPERATION_IDS) == 18
+    p8_headless_operation_ids = {
+        "createHeadlessPlanningRun",
+        "getHeadlessPlanningRunStatus",
+        "cancelHeadlessPlanningRun",
+        "retryHeadlessPlanningRun",
+        "getHeadlessPlanningRunResult",
+    }
+    present_headless = operation_ids & p8_headless_operation_ids
+    assert present_headless in (set(), p8_headless_operation_ids)
+    assert len(operation_ids - P4_OPERATION_IDS - p8_headless_operation_ids) == 18
     assert P4_OPERATION_IDS.issubset(operation_ids)

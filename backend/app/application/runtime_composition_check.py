@@ -29,7 +29,7 @@ MANIFEST_VERSION = "p8-runtime-composition-manifest.v1"
 type JsonObject = dict[str, Any]
 
 
-def _settings(root: Path, database_url: str) -> Settings:
+def _settings(root: Path, database_url: str, http_policy_path: Path) -> Settings:
     return Settings(
         runtime_environment=RuntimeEnvironment.TEST,
         data_plane=DataPlane.SIMULATION,
@@ -43,6 +43,7 @@ def _settings(root: Path, database_url: str) -> Settings:
         runtime_solve_limits_path=(
             root / "schemas" / "samples" / "solve-limits.v1.synthetic.json"
         ),
+        runtime_http_policy_path=http_policy_path,
         database_url=SecretStr(database_url),
     )
 
@@ -52,7 +53,36 @@ def run_checks(root: Path) -> tuple[JsonObject, JsonObject]:
     issues: list[str] = []
     with tempfile.TemporaryDirectory(prefix="plantnexus-p8-runtime-") as directory:
         database_path = Path(directory) / "runtime.db"
-        settings = _settings(root, f"sqlite:///{database_path.as_posix()}")
+        http_policy_path = Path(directory) / "runtime-http-policy.json"
+        http_policy_path.write_bytes(
+            canonical_json_bytes(
+                {
+                    "runtime_http_policy_version": "runtime-http-policy.v1",
+                    "scopes": [
+                        {
+                            "tenant_id": "TENANT-P8-RUNTIME-CHECK",
+                            "factory_id": "FACTORY-P8-RUNTIME-CHECK",
+                            "planning_scope_id": "PLANNING-P8-RUNTIME-CHECK",
+                            "authorized_authority_references": [
+                                "authority:p8-runtime-check"
+                            ],
+                            "authorized_mapping_fingerprints": [f"sha256:{'1' * 64}"],
+                            "build_plan": {
+                                "cutoff_at_utc": "2026-09-05T00:00:00Z",
+                                "tick_seconds": 60,
+                                "horizon_start_utc": "2026-09-05T00:00:00Z",
+                                "horizon_end_utc": "2026-09-06T00:00:00Z",
+                                "priority_facts": {},
+                            },
+                            "dispatch_timeout_seconds": 3600,
+                        }
+                    ],
+                }
+            )
+        )
+        settings = _settings(
+            root, f"sqlite:///{database_path.as_posix()}", http_policy_path
+        )
         api = compose_runtime(settings, process=RuntimeProcess.API)
         worker = compose_runtime(settings, process=RuntimeProcess.WORKER)
         try:
@@ -70,6 +100,8 @@ def run_checks(root: Path) -> tuple[JsonObject, JsonObject]:
                         and api.worker is None
                         and worker.application is None
                         and worker.worker is not None
+                        and api.http_context_adapter.safe_reference
+                        == worker.http_context_adapter.safe_reference
                     ),
                 }
             )
@@ -94,6 +126,7 @@ def run_checks(root: Path) -> tuple[JsonObject, JsonObject]:
                 "solver",
                 "validator",
                 "audit",
+                "http_context",
             }
             checks.append(
                 {
@@ -110,9 +143,7 @@ def run_checks(root: Path) -> tuple[JsonObject, JsonObject]:
                 and api_manifest["composition_fingerprint"]
                 == worker_manifest["composition_fingerprint"]
             )
-            checks.append(
-                {"id": "safe-process-manifests", "passed": manifests_safe}
-            )
+            checks.append({"id": "safe-process-manifests", "passed": manifests_safe})
             rendered = canonical_json_bytes(
                 {
                     "descriptor": api.descriptor.document,

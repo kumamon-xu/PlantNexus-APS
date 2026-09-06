@@ -6,32 +6,52 @@ spec_version: 0.3.0
 phase: P3
 normative: true
 source_sections: [33, 34, 63, 65, 66, 68, 69, 77, 78, 91, 94]
-last_reviewed: 2026-09-05
+last_reviewed: 2026-09-06
 ---
 
 # P3 Planning Workspace API 语义合同
+
+## TASK-P8-07 additive Headless HTTP boundary
+
+P8-07在不改变本页既有P3/P4 operation object的前提下新增以下5项`/api/v1` operation；提交前29项以逐operation canonical SHA-256基线复验，最终OpenAPI共34项：
+
+| Method/path | Stable operation ID | 成功/边界状态 | Wire carrier |
+|---|---|---|---|
+| `POST /api/v1/planning-runs` | `createHeadlessPlanningRun` | 202 | `canonical-ingress-request.v1` → `canonical-ingress-result.v1` |
+| `GET /api/v1/planning-runs/{planning_run_id}/status` | `getHeadlessPlanningRunStatus` | 200 | `planning-run.v1` |
+| `POST /api/v1/planning-runs/{planning_run_id}/cancel` | `cancelHeadlessPlanningRun` | 200 | strict cancel action → `planning-run.v1` |
+| `POST /api/v1/planning-runs/{planning_run_id}/retry` | `retryHeadlessPlanningRun` | 202 | strict retry action → `planning-run.v1` |
+| `GET /api/v1/planning-runs/{planning_run_id}/result` | `getHeadlessPlanningRunResult` | terminal 200；nonterminal 409 | `planning-run.v1`或`headless-error.v1` |
+
+`GET /api/v1/planning-runs/{planning_run_id}`仍是P3 Planning Workspace摘要operation `getPlanningRun`；新增`/status`和`/result`是P8 machine carrier的权威Headless read，不替换、重命名或收窄旧route。未来v1 deprecation必须先保留原operation并公开successor；breaking removal只能进入另行批准的major版本。
+
+Create只接受无Content-Encoding的strict UTF-8 `application/json`，最大8 MiB、JSON深度64且`payload.records`聚合不超过100000项；cancel/retry最大16 KiB。Content-Length与实际stream都受限，duplicate key、non-finite number、unknown字段/版本、multipart/archive/base64文件/压缩和可执行selector均在application side effect前拒绝。Create scope由carrier的`requested_scope`提供；status/cancel/retry/result用`X-APS-Tenant-Id`、`X-APS-Factory-Id`、`X-APS-Planning-Scope-Id`提供请求坐标。所有operation要求Bearer，create/cancel/retry还要求`Idempotency-Key`；这些客户端值都不是principal、capability、effective scope、authority、Runtime或Extension选择证明。
+
+Router只解析transport并委托P8-06 Runtime facade。服务端Runtime HTTP policy固定允许scope、authority/mapping、Planning Policy/Limits、build horizon、dispatch timeout和Runtime/Extension-set resolution。Create/retry exact replay返回首次durable结果且不重复dispatch；different fingerprint、stale CAS或非法状态稳定冲突并保持零额外副作用。202只表示accepted/queued语义，不表示Solver、fresh Validator、ScheduleVersion、审批或发布成功。
+
+P8 transport/Runtime错误使用已登记的`headless-error.v1`；canonical acceptance阶段的业务/authority/idempotency拒绝可返回`canonical-ingress-result.v1`且`side_effects=NONE`；AuthorizationProvider的401以及相应403/503继续保持既有`planning-workspace-error.v1`，因为Headless注册表没有伪造的身份code。OpenAPI逐状态声明这些envelope。响应必须保留`X-Correlation-Id`和`Cache-Control: no-store`；PlanningRun read/action另返回`ETag`与`X-APS-Planning-Run-State`，create返回`Location`。当前只证明显式Simulation/Test Runtime绑定；P8-08真实host identity/authorization前Production继续default-deny。
 
 ## TASK-P8-05 internal Worker boundary
 
 P8-05只注册内部Celery task，不增加本页HTTP path、operationId、status/error envelope或OpenAPI surface。Task消息只传version、run/work identity和受限worker owner reference；data plane与attempt从server-bound repository/work item解析。它复用P8-04 application/repository CAS，调用既有Global Solver、fresh Validator和ScheduleVersion application，并在ACK前保存exact result checkpoint及`READY_FOR_REVIEW`版本。宿主、Frontend和HTTP caller不得直接投递该内部消息，也不能用消息字段选择Runtime、Extension或代码。
 
-公开创建/查询/取消/重试仍由P8-07 transport与P8-08 host authorization负责。Worker成功不等于审批、发布或导出；connection timeout或task redelivery也不能由客户端推断业务结果，未来HTTP read model必须返回durable PlanningRun/ScheduleVersion authority。
+公开创建/查询/取消/重试/result已由P8-07 transport绑定；P8-08仍负责真实host authorization。Worker成功不等于审批、发布或导出；connection timeout或task redelivery也不能由客户端推断业务结果，HTTP client必须读取durable PlanningRun/ScheduleVersion authority。
 
 ## TASK-P8-04 internal PlanningRun application boundary
 
 P8-04现在严格消费`planning-run.v1`并提供transport-neutral create/read/cancel/retry/transition ports；所有写入先绑定server-derived capability、tenant/factory/planning scope、data plane、expected revision/state/run fingerprint和hashed idempotency reference，再由plane-scoped repository执行CAS。Run只能沿冻结31个pair前进；terminal不可重开，retry只为`DISPATCH_FAILED`或`TIMED_OUT`追加新attempt/work item，不能被表示成PlanningRun self-transition。
 
-这些Python ports、内部`planning-run-attempt.v1`和`planning-run-work-item.v1`不是新增HTTP或公共wire contract。本页P3/P4 path、operationId、status/error envelope与OpenAPI fingerprint均未改变；P8-07仍负责公开Headless transport，P8-08仍负责真实host identity/authorization adapter。
+这些Python ports、内部`planning-run-attempt.v1`和`planning-run-work-item.v1`本身不是HTTP或公共wire contract。P8-07只通过上述5项route调用它们，且本页P3/P4 path、operationId、status/error envelope与operation bytes均未改变；P8-08仍负责真实host identity/authorization adapter。
 
 ## TASK-P8-02 Headless PlanningRun machine boundary
 
-TASK-P8-02以additive set `2.10.0`发布`canonical-ingress-request.v1`、`canonical-ingress-result.v1`和`planning-run.v1`，为未来Headless入口与运行查询提供唯一wire truth。它不修改本页既有P3/P4 route、operationId、OpenAPI fingerprint、workspace command/result或HTTP映射，也不表示`POST`入口或新的`GET PlanningRun`响应已经装配；transport绑定仍由TASK-P8-07负责。
+TASK-P8-02以additive set `2.10.0`发布`canonical-ingress-request.v1`、`canonical-ingress-result.v1`和`planning-run.v1`，为Headless入口与运行查询提供唯一wire truth。它不修改本页既有P3/P4 route、operationId、workspace command/result或HTTP映射；TASK-P8-07现以additive 5-operation transport逐字引用这些carrier，没有修改Schema bytes。
 
 Canonical ingress request只表达`CREATE_PLANNING_RUN`、requested scope、source/mapping authority、Policy/Limits references和嵌入的`import-package.v2`。Principal/capability/effective scope及Runtime/Extension-set resolution均由服务端决定。Accepted result只能返回CREATED PlanningRun reference；Rejected result固定`side_effects=NONE`且不得返回accepted resource。Same effective scope/key/same fingerprint重放同一logical result，different fingerprint使用`HEADLESS_RUNTIME/IDEMPOTENCY_CONFLICT`。
 
 `planning-run.v1`严格复用`state-machines.v1`的16个state与31个pair。八个非终态为`terminal=false`且`allowed_actions=[READ,CANCEL]`，八个终态为`terminal=true`且只有`READ`；该projection仅表示state guard可用动作，仍须P8-08 authorization裁剪。最近transition、stage artifact前缀、attempt、error/cancellation、Runtime resolution和audit引用必须一致；重试通过新受控command/attempt表达，不制造self-transition。
 
-P8专用错误采用`headless-error-code-registry.v1`，与本页既有`workspace-control.v1` module-local reason和product `error-code-registry.v2`互不混用。P8-07只有在完整保留category/code/stage/retryability/action及零副作用语义时才可映射HTTP。
+P8专用错误采用`headless-error-code-registry.v1`，与本页既有`workspace-control.v1` module-local reason和product `error-code-registry.v2`互不混用。P8-07 HTTP映射完整保留category/code/stage/retryability/action及零副作用语义；身份provider错误仍用既有envelope，不伪造注册表tuple。
 
 ## TASK-P4-13 strict browser consumer
 

@@ -32,7 +32,7 @@ def _settings(tmp_path: Path):
     )
 
 
-def test_facade_exact_replay_reuses_run_and_only_redispatches_queued_work(
+def test_facade_exact_replay_reuses_run_without_duplicate_dispatch(
     tmp_path: Path,
 ) -> None:
     settings = _settings(tmp_path)
@@ -63,9 +63,9 @@ def test_facade_exact_replay_reuses_run_and_only_redispatches_queued_work(
             replay.planning_run.aggregate.canonical_bytes
         )
         assert replay.ingress is not None and replay.ingress.replayed is True
-        assert len(publisher.messages) == 2
-        assert first.dispatch is not None and replay.dispatch is not None
-        assert first.dispatch.worker_id != replay.dispatch.worker_id
+        assert len(publisher.messages) == 1
+        assert first.dispatch is not None
+        assert replay.dispatch is None
     finally:
         composition.close()
 

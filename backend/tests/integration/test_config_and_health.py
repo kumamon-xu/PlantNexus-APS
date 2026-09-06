@@ -167,7 +167,17 @@ def test_health_endpoints_separate_liveness_from_readiness() -> None:
     assert unknown.status_code == 404
     route_paths = {getattr(route, "path", None) for route in application.routes}
     assert {"/health/live", "/health/ready", "/openapi.json"} <= route_paths
-    assert len({path for path in route_paths if str(path).startswith("/api/v1/")}) == 26
+    api_paths = {path for path in route_paths if str(path).startswith("/api/v1/")}
+    p8_headless_paths = {
+        "/api/v1/planning-runs",
+        "/api/v1/planning-runs/{planning_run_id}/status",
+        "/api/v1/planning-runs/{planning_run_id}/cancel",
+        "/api/v1/planning-runs/{planning_run_id}/retry",
+        "/api/v1/planning-runs/{planning_run_id}/result",
+    }
+    present_headless = api_paths & p8_headless_paths
+    assert present_headless in (set(), p8_headless_paths)
+    assert len(api_paths - p8_headless_paths) == 26
 
 
 def test_readiness_is_up_when_all_dependencies_pass() -> None:

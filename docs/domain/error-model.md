@@ -6,16 +6,24 @@ spec_version: 0.3.0
 phase: P0-P8
 normative: true
 source_sections: [29, 32, 34, 60, 65, 91, 92]
-last_reviewed: 2026-09-05
+last_reviewed: 2026-09-06
 ---
 
 # 错误与求解状态模型
+
+## TASK-P8-07 Headless HTTP error mapping
+
+P8-07对`headless-error-code-registry.v1`中的合同、scope/authority/lineage、idempotency/state、Runtime/persistence/system code形成稳定HTTP映射：malformed/duplicate/non-finite为400，scope denial为403，not found为404，idempotency/state冲突与nonterminal result为409，payload超限为413，media type/encoding为415，合同/业务输入为422，完整性/系统错误为500，Runtime/dispatch unavailable为503。每份`headless-error.v1`必须逐字保留registry的category、stage、retryability和action，并只使用安全pointer/entity reference/correlation。
+
+Canonical acceptance阶段的业务、authority、lineage或idempotency拒绝可保留`canonical-ingress-result.v1`并固定`side_effects=NONE`。Authentication/AuthorizationProvider的401以及相应403/503继续使用既有`planning-workspace-error.v1`，因为Headless registry没有身份code；禁止为了统一外观伪造tuple。OpenAPI逐状态声明三类实际envelope。Unknown provider/Runtime/broker exception只映射sanitized稳定类别，不回显message、credential、canonical payload、SQL/DSN、stack或path。Error status不改变Solver七状态：nonterminal 409不是UNKNOWN，queue 503不是FAILED/INFEASIBLE，Validator failure不能被改写为成功。
+
+Same key/same semantic fingerprint返回首次logical result；same key/different fingerprint返回409且无新resource/attempt/dispatch。Stale revision/state/fingerprint与非法transition同样无业务副作用。202只表示accepted/queued，客户端必须读取durable status/result；连接timeout或未知网络结果不得自动换key或假定成功。
 
 ## TASK-P8-06 Runtime composition and dispatch errors
 
 Runtime启动失败使用稳定内部code区分`RUNTIME_COMPOSITION_DISABLED`、`DATA_PLANE_UNAVAILABLE`、`UNKNOWN_ENVIRONMENT`、`CONFIGURATION_MISSING`、`CONFIGURATION_INVALID`、`RUNTIME_RESOLUTION_INVALID`、`PRODUCTION_RUNTIME_UNAVAILABLE`和`RUNTIME_PORT_MISSING`；facade context另使用`DATA_PLANE_MISMATCH`、`RUNTIME_RESOLUTION_FAILED`与`PRODUCTION_AUTHORITY_UNAVAILABLE`。错误只指出安全field/category，不回显DSN、broker URL、credential、absolute path、JSON内容、SQL、stack或底层exception。Production缺少P8-08～10真实ports属于启动不可用，不得映射为Solver `INFEASIBLE/UNKNOWN`，也不得通过Simulation fallback掩盖。
 
-Facade dispatch失败对调用方统一为`QUEUE_FAILED`，并使用P8-04既有attempt失败命令持久化`BROKER_DISPATCH_FAILED`；这不是新的PlanningRun状态或公开HTTP映射。若记录失败证据本身失败，返回sanitized persistence category且不伪造broker acknowledgement。P8-07建立HTTP transport时只能把这些内部类别映射到冻结Headless envelope，不能回传broker exception或重新解释Solver/Validator结果。
+Facade dispatch失败对调用方统一为`QUEUE_FAILED`，并使用P8-04既有attempt失败命令持久化`BROKER_DISPATCH_FAILED`；这不是新的PlanningRun状态。P8-07将其映射为sanitized Headless 503；若记录失败证据本身失败则返回受限system/persistence错误且不伪造broker acknowledgement。任何映射都不能回传broker exception或重新解释Solver/Validator结果。
 
 ## TASK-P6-08 monitoring reasons and sanitized default-disable
 

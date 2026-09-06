@@ -6,10 +6,20 @@ spec_version: 0.3.0
 phase: P0-P8
 normative: true
 source_sections: [58, 62, 93, 95, 100]
-last_reviewed: 2026-09-05
+last_reviewed: 2026-09-06
 ---
 
 # P0 工程安全边界
+
+## TASK-P8-07 Headless HTTP security controls
+
+新增5项Headless PlanningRun operation均先调用既有server-side AuthorizationProvider，再由Runtime HTTP adapter把authenticated principal与server-configured tenant/factory/planning scope、environment/data plane、authority/mapping allow-list、Policy/Limits及Runtime/Extension-set绑定求交。Create body中的`requested_scope`和status/action的三个`X-APS-*` header只表示请求坐标；它们不能自报actor、capability、effective scope、Production binding或可信Runtime配置。未装配Runtime/context、provider异常和Production-unavailable均在application side effect前fail closed。P8-08仍负责真实host identity/RBAC/scope/audit adapter。
+
+Create只接受无Content-Encoding的strict UTF-8 `application/json`，Content-Length和实际stream均限制为8 MiB，JSON深度最多64，`payload.records`聚合最多100000项；cancel/retry strict action最大16 KiB。Parser在授权后的业务application调用前拒绝错误media type/charset、压缩、multipart、archive/base64文件、malformed UTF-8/JSON、duplicate key、NaN/Infinity、unknown field/version和客户端可执行selector。解析拒绝、scope/authority mismatch、idempotency conflict、stale/invalid state均不得留下成功resource、第二attempt或partial publication。
+
+Bearer和raw `Idempotency-Key`不进入application carrier、响应、日志或machine artifact；仅保留server principal reference和SHA-256 key reference。HTTP correlation固定为1～256个无空白可见ASCII字符，防止不可编码值在响应头阶段造成异常；错误pointer/entity/correlation在输出前再次清洗。Headless合同/Runtime错误使用注册表约束的`headless-error.v1`；AuthorizationProvider的401及对应403/503保留既有sanitized `planning-workspace-error.v1`，不伪造未登记身份code。两种envelope均不包含credential、完整canonical payload、SQL/DSN、stack、broker exception或absolute/private path。Exact create/retry replay不重复dispatch，防止网络重试放大业务执行。
+
+机器/安全测试覆盖非法content type/encoding/length/depth/count、duplicate/non-finite、unknown字段/版本、scope/authority/Planning inputs、跨scope访问、鉴权禁用/异常、恶意Runtime binding、idempotency冲突、stale/错误状态与strict action。当前仅为TestClient、synthetic、SQLite和显式Simulation/Test Runtime证据；rate limiting/WAF、TLS/mTLS、真实gateway/identity、Production secret/ACL、penetration、容量和SLA仍未形成。
 
 ## TASK-P8-06 Runtime composition controls
 
@@ -35,7 +45,7 @@ PlanningRun所有command/query都先校验repository data plane、server-derived
 
 ## TASK-P8-03 canonical ingress controls
 
-应用入口只解析strict UTF-8 JSON bytes，并从服务端固定Schema目录消费冻结的P8合同；duplicate key、NaN/Infinity、unknown version/field、invalid fingerprint、client plugin/module/class/entry-point/artifact path在持久化前fail closed。请求不能选择Schema文件或可执行代码，production module不依赖动态下载或运行时`jsonschema`包。HTTP media type、payload/depth/count限制属于P8-07，当前不得把application byte入口误报为公开网络防护已经形成。
+应用入口只解析strict UTF-8 JSON bytes，并从服务端固定Schema目录消费冻结的P8合同；duplicate key、NaN/Infinity、unknown version/field、invalid fingerprint、client plugin/module/class/entry-point/artifact path在持久化前fail closed。请求不能选择Schema文件或可执行代码，production module不依赖动态下载或运行时`jsonschema`包。P8-07现已在外层增加HTTP media type、payload/depth/count限制；P8-03自身仍不能被单独解释为网络防护。
 
 认证、capability、effective scope、Production binding、authority/mapping allow-list、Runtime/Extension-set resolution和build plan均来自trusted Runtime composition，不从body提权。任何tenant/factory/planning scope或plane不一致返回sanitized零副作用结果；Production只有在server context显式绑定时机械可用，真实host identity/RBAC/source authority未形成且继续default-deny。Extension-set只作为server-owned版本/指纹证据保存，请求中的代码或配置选择一律拒绝。
 

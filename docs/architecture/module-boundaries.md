@@ -6,10 +6,18 @@ spec_version: 0.3.0
 phase: cross-phase
 normative: true
 source_sections: [12, 13, 14, 30, 41, 47, 51, 65, 70, 95, 101, 113, 114]
-last_reviewed: 2026-09-05
+last_reviewed: 2026-09-06
 ---
 
 # 模块边界与依赖规则
+
+## TASK-P8-07 Headless transport boundary
+
+`app.api.routers.headless_planning_runs`只拥有FastAPI path/header/body/status绑定、correlation和错误映射；它委托既有AuthorizationProvider、`application.runtime_http_adapter`和P8-06 `APSRuntimeApplicationFacade`，禁止导入Infrastructure、Jobs、具体Solver/Strategy或复制状态转换。`app.api.headless_contracts`拥有strict bounded transport parser/action model；`app.api.headless_openapi`只把既有JSON Schema dependency closure装入OpenAPI 3.1；`app.api.headless_api_check`是validation-only composition root。
+
+`application.runtime_http_adapter`不依赖FastAPI、Infrastructure或Jobs，只把server-owned Runtime binding/policy与已解析principal组合为P8-03 trusted ingress context和P8-04 command context/dispatch window。它不读取请求stream、不执行repository/queue/Solver操作，也不提供动态plugin/module/path加载。请求值始终是待授权坐标，Runtime policy/configuration owner仍在唯一composition root。
+
+有界`runtime_facade`修正保持依赖方向不变：application在exact command replay时读取首次durable result，并只在`replayed=false`时调用publisher。API Process不持有Solver，Worker message仍为四字段，Core不反向导入Runtime/SDK/Extension。新增OpenAPI/HTTP checker可以装配TestClient，但不成为产品application依赖或第二组合根。
 
 ## TASK-P8-06 Runtime composition boundary
 
@@ -17,7 +25,7 @@ last_reviewed: 2026-09-05
 
 `application.runtime_facade`只编排P8-03 canonical ingress、P8-04 PlanningRun和异步dispatch；broker提交失败通过既有P8-04 transition原子记录`DISPATCH_FAILED`，不创建第二状态机。`jobs.runtime_adapters`只把durable PlanningRun反查到唯一canonical ingress并解析server-owned Policy/Limits；消息和请求均不能提供path、module、class、entry point或插件选择。Infrastructure继续只实现ports，不获得业务authority；API router、本Task的组合根和Worker adapter均不复制Schema、状态、Solver或Validator规则。
 
-`EmptyRuntimeExtensionAdapter`是Runtime-owned、immutable、default-empty的预留缝隙，只声明`DISABLED_UNTIL_P8_13`，不发现、不下载、不导入或执行Extension。Core源码不得导入该adapter、未来SDK或企业包；SDK/Developer Kit在P8-12/P8-15发布前均以`0.0.0-not-published`标识。P8-06没有新增HTTP路由，既有P3/P4 router继续使用原fail-closed adapter；P8-07才可把公开Headless transport接到已组合的facade。
+`EmptyRuntimeExtensionAdapter`是Runtime-owned、immutable、default-empty的预留缝隙，只声明`DISABLED_UNTIL_P8_13`，不发现、不下载、不导入或执行Extension。Core源码不得导入该adapter、未来SDK或企业包；SDK/Developer Kit在P8-12/P8-15发布前均以`0.0.0-not-published`标识。P8-07现把5项公开Headless transport接到已组合facade；既有P3/P4 router和29项operation保持原边界，且没有Extension上传/安装/私有route。
 
 ## P8 Headless dependency edge
 
@@ -25,7 +33,7 @@ P8目标依赖方向为`Host/Optional Frontend → versioned HTTP API → APS Ru
 
 API进程只拥有transport/auth/validation/delegation，不能执行长时求解；worker与API消费同一application/domain语义、同一resolved Extension fingerprint并使用各自进程入口。Runtime composition root是唯一可把SDK贡献接到Core ports的位置；Extension不得覆盖state/authorization/publication/audit或用Solver侧逻辑实现Validation Rule。Reference adapter/Normalization可作为内部canonical producer，但不得注册为Production public endpoint。
 
-P8-03已形成`application → data_validation/snapshot/problem ports → plane-scoped infrastructure`的内部输入事务；P8-04新增`application.planning_runs → domain.planning_run + jobs.planning_run_work_item → infrastructure.planning_run_repository`；P8-05新增`jobs.planning_run_task → planning_run_solver_worker → existing planning strategy + independent validator → application ScheduleVersion service`；P8-06再由唯一composition root把这些ports分别绑定到API/Worker进程。Domain只拥有冻结状态/attempt不变量和canonical record验证，不导入SQLAlchemy、API、Solver或wall clock；Application拥有authorization、idempotency、CAS命令编排与版本应用；Jobs拥有strict task、server-bound execution ports、lease/checkpoint编排，但不复制Solver/Validator规则；Worker repository只执行plane-scoped binding、lease CAS和append-only result checkpoint。Core没有反向依赖Runtime/SDK/Extension；Extension实际加载仍由P8-13形成。
+P8-03已形成`application → data_validation/snapshot/problem ports → plane-scoped infrastructure`的内部输入事务；P8-04新增`application.planning_runs → domain.planning_run + jobs.planning_run_work_item → infrastructure.planning_run_repository`；P8-05新增`jobs.planning_run_task → planning_run_solver_worker → existing planning strategy + independent validator → application ScheduleVersion service`；P8-06由唯一composition root把这些ports分别绑定到API/Worker进程；P8-07增加`HTTP adapter → Runtime HTTP context adapter → facade`的单向edge。Domain只拥有冻结状态/attempt不变量和canonical record验证，不导入SQLAlchemy、API、Solver或wall clock；Application拥有authorization、idempotency、CAS命令编排与版本应用；Jobs拥有strict task、server-bound execution ports、lease/checkpoint编排，但不复制Solver/Validator规则；Worker repository只执行plane-scoped binding、lease CAS和append-only result checkpoint。Core没有反向依赖Runtime/SDK/Extension；Extension实际加载仍由P8-13形成。
 
 ## TASK-P6-07 duration Planning-ingress module boundary
 

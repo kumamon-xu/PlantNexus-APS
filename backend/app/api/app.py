@@ -23,6 +23,11 @@ from app.api.dependencies.authorization import (
     NullAuthorizationAuditSink,
     UnavailableAuthorizationProvider,
 )
+from app.api.headless_contracts import HeadlessHttpError, public_headless_error
+from app.api.headless_openapi import install_headless_openapi
+from app.api.routers.headless_planning_runs import (
+    router as headless_planning_runs_router,
+)
 from app.api.routers.planning_workspace import router as planning_workspace_router
 from app.api.replanning_contracts import (
     DynamicReplanningApplicationPort,
@@ -37,6 +42,7 @@ from app.infrastructure.redis_client import create_redis_client
 
 if TYPE_CHECKING:
     from app.application.runtime_facade import APSRuntimeApplicationFacade
+    from app.application.runtime_http_adapter import RuntimeHttpContextAdapter
     from app.runtime_composition import RuntimeCompositionDescriptor
 
 
@@ -52,6 +58,8 @@ def create_app(
     dynamic_replanning_clock: Callable[[], str] | None = None,
     runtime_application: APSRuntimeApplicationFacade | None = None,
     runtime_descriptor: RuntimeCompositionDescriptor | None = None,
+    runtime_http_context: RuntimeHttpContextAdapter | None = None,
+    headless_clock: Callable[[], str] | None = None,
     runtime_closers: tuple[Callable[[], None], ...] = (),
 ) -> FastAPI:
     resolved_settings = settings or load_settings()
@@ -107,10 +115,23 @@ def create_app(
     )
     application.state.aps_runtime_application = runtime_application
     application.state.aps_runtime_descriptor = runtime_descriptor
+    application.state.aps_runtime_http_context = runtime_http_context
     if planning_workspace_clock is not None:
         application.state.planning_workspace_clock = planning_workspace_clock
     if dynamic_replanning_clock is not None:
         application.state.dynamic_replanning_clock = dynamic_replanning_clock
+    if headless_clock is not None:
+        application.state.headless_clock = headless_clock
+
+    @application.exception_handler(HeadlessHttpError)
+    async def headless_error_handler(
+        _: Request, error: HeadlessHttpError
+    ) -> JSONResponse:
+        return JSONResponse(
+            status_code=error.status_code,
+            content=error.document,
+            headers=error.headers,
+        )
 
     @application.exception_handler(PlanningWorkspaceHttpError)
     async def planning_workspace_error_handler(
@@ -137,6 +158,27 @@ def create_app(
             and not any(character.isspace() for character in raw_correlation)
             else f"correlation-http-{uuid4().hex}"
         )
+        path_parts = request.url.path.strip("/").split("/")
+        is_headless_request = (
+            request.method == "POST"
+            and path_parts == ["api", "v1", "planning-runs"]
+        ) or (
+            len(path_parts) == 5
+            and path_parts[:3] == ["api", "v1", "planning-runs"]
+            and path_parts[4] in {"status", "cancel", "retry", "result"}
+        )
+        if is_headless_request:
+            error = public_headless_error(
+                "CONTRACT_VIOLATION",
+                correlation_id=correlation_id,
+                pointer="/request",
+                status_code=422,
+            )
+            return JSONResponse(
+                status_code=error.status_code,
+                content=error.document,
+                headers=error.headers,
+            )
         error = public_http_error(
             "INVALID_REQUEST",
             correlation_id=correlation_id,
@@ -171,6 +213,8 @@ def create_app(
 
     application.include_router(planning_workspace_router)
     application.include_router(dynamic_replanning_router)
+    application.include_router(headless_planning_runs_router)
+    install_headless_openapi(application, resolved_settings.runtime_schema_directory)
 
     return application
 
@@ -206,6 +250,7 @@ def create_runtime_app(settings: Settings | None = None) -> FastAPI:
         probes=composition.probes,
         runtime_application=composition.application,
         runtime_descriptor=composition.descriptor,
+        runtime_http_context=composition.http_context_adapter,
         runtime_closers=(composition.close,),
     )
 

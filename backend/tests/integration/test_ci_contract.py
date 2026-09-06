@@ -48,6 +48,7 @@ from app.application.workspace_read_model_check import (
     main as workspace_read_model_main,
 )
 from app.api.planning_workspace_check import main as planning_workspace_api_main
+from app.api.headless_api_check import main as p8_headless_api_main
 from app.api.replanning_check import main as replanning_api_main
 from app.domain.workspace_contract_check import main as workspace_contract_main
 from app.domain.execution_contract_check import main as execution_contract_main
@@ -471,7 +472,7 @@ def test_ci_profile_routing_is_mutually_exclusive_and_fail_closed() -> None:
     assert "Build package" in full_text
     assert len(preflight["steps"]) == 4
     assert len(backend["steps"]) == 8
-    assert len(full["steps"]) == 73
+    assert len(full["steps"]) == 74
 
     assert 'test "${PLANTNEXUS_CLASSIFY_RESULT}" = "success"' in final_run
     assert 'test "${PLANTNEXUS_PREFLIGHT_RESULT}" = "success"' in final_run
@@ -811,6 +812,78 @@ def test_ci_p8_runtime_composition_is_required_machine_checkable_and_isolated(
     assert manifest["manifest_version"] == "p8-runtime-composition-manifest.v1"
     assert manifest["status"] == "PASS"
     assert manifest["issues"] == []
+
+
+def test_ci_p8_headless_http_api_is_required_and_machine_checkable(
+    tmp_path: Path,
+) -> None:
+    workflow = (ROOT / ".github" / "workflows" / "ci.yml").read_text(encoding="utf-8")
+    normalized = " ".join(workflow.split())
+    assert (
+        "name: P8 Headless HTTP API and OpenAPI compatibility evidence run: >- "
+        "uv run python -m app.api.headless_api_check --root . --snapshot "
+        "backend/app/api/openapi/headless-api.v1.json --report "
+        "build/validation/ci-p8-headless-http-api.json --diff-report "
+        "build/validation/ci-p8-headless-openapi-diff.json --benchmark-report "
+        "build/benchmarks/ci-p8-headless-api.json"
+    ) in normalized
+    assert "continue-on-error" not in workflow
+    for relative_path in (
+        "backend/app/application/runtime_http_adapter.py",
+        "backend/app/api/headless_api_check.py",
+        "backend/app/api/headless_contracts.py",
+        "backend/app/api/headless_openapi.py",
+        "backend/app/api/routers/headless_planning_runs.py",
+        "backend/app/api/openapi/headless-api.v1.json",
+        "backend/app/api/openapi/pre-p8-07-operation-baseline.v1.json",
+        "backend/tests/contract/p8_headless_http_support.py",
+        "backend/tests/contract/test_p8_headless_http_api.py",
+        "backend/tests/integration/test_p8_headless_http_api_integration.py",
+        "backend/tests/security/test_p8_headless_http_api_security.py",
+    ):
+        assert workflow.count(f'"${{replay_root}}/{relative_path}"') == 1
+    assert workflow.count("backend/tests/contract/test_dynamic_replanning_http_api.py") == 1
+    report_path = tmp_path / "p8-headless-http-api.json"
+    diff_path = tmp_path / "p8-headless-openapi-diff.json"
+    benchmark_path = tmp_path / "p8-headless-api-benchmark.json"
+    assert (
+        p8_headless_api_main(
+            [
+                "--root",
+                str(ROOT),
+                "--snapshot",
+                str(ROOT / "backend/app/api/openapi/headless-api.v1.json"),
+                "--report",
+                str(report_path),
+                "--diff-report",
+                str(diff_path),
+                "--benchmark-report",
+                str(benchmark_path),
+            ]
+        )
+        == 0
+    )
+    report = json.loads(report_path.read_text(encoding="utf-8"))
+    diff = json.loads(diff_path.read_text(encoding="utf-8"))
+    benchmark = json.loads(benchmark_path.read_text(encoding="utf-8"))
+    assert report["report_version"] == "p8-headless-http-api-report.v1"
+    assert report["task_id"] == "TASK-P8-07"
+    assert report["diff_base"] == "3a4fa8e972e35fea6464031ac1a6e89027eeec5e"
+    assert report["status"] == "PASS"
+    assert report["check_count"] == 11
+    assert report["operation_count"] == 34
+    assert report["issues"] == []
+    assert diff["diff_report_version"] == "p8-headless-openapi-diff.v1"
+    assert diff["baseline_operation_count"] == 29
+    assert diff["final_operation_count"] == 34
+    assert diff["breaking_changes"] == []
+    assert diff["status"] == "PASS"
+    assert benchmark["benchmark_version"] == (
+        "p8-headless-api-engineering-benchmark.v1"
+    )
+    assert benchmark["profile"] == "SYNTHETIC_ENGINEERING_NOT_PRODUCTION_SLA"
+    assert benchmark["http_transport_probe"]["all_statuses_expected"] is True
+    assert benchmark["status"] == "PASS"
 
 
 def test_ci_p6_duration_dataset_is_required_and_machine_checkable(

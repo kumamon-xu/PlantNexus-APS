@@ -125,7 +125,7 @@ def test_api_and_worker_share_one_descriptor_and_complete_real_chain(
         api.close()
 
 
-def test_deployable_api_entrypoint_attaches_runtime_without_new_routes(
+def test_deployable_api_entrypoint_attaches_runtime_and_headless_routes(
     tmp_path: Path,
 ) -> None:
     settings = _migrated_settings(tmp_path)
@@ -138,9 +138,10 @@ def test_deployable_api_entrypoint_attaches_runtime_without_new_routes(
         assert live.status_code == 200
         assert application.state.aps_runtime_application is not None
         assert application.state.aps_runtime_descriptor is not None
+        assert application.state.aps_runtime_http_context is not None
         assert len(
             {path for path in route_paths if str(path).startswith("/api/v1/")}
-        ) == 26
+        ) == 31
 
 
 def test_deployable_worker_entrypoint_binds_real_executor(tmp_path: Path) -> None:

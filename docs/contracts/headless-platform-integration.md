@@ -6,7 +6,7 @@ spec_version: 0.3.0
 phase: P8
 normative: true
 source_sections: [3, 4, 5, 9, 10, 12, 15, 63, 65, 66, 67, 68, 95, 97, 105, 106, 107, 109, 113, 114]
-last_reviewed: 2026-09-05
+last_reviewed: 2026-09-06
 ---
 
 # APS Headless 平台集成与数据权威合同
@@ -15,11 +15,11 @@ last_reviewed: 2026-09-05
 
 本合同是宿主平台、APS Runtime、APS Core、Enterprise Extension、可选APS Frontend、安全和运维之间的人类可读集成基线。它执行ADR-0017和ADR-0018，并与TASK-P8-02发布的机器合同共同冻结责任、信任与失败语义。
 
-本文件中的“必须”“禁止”“仅”是规范要求。TASK-P8-02已把其中可机器表达的入口、结果、PlanningRun与错误语义发布为strict、versioned carrier；TASK-P8-03已实现不含HTTP的durable ingress slice，TASK-P8-04已实现不含HTTP的durable PlanningRun orchestration slice，TASK-P8-05已实现内部异步Solver Worker执行与一次业务结果恢复。因而本合同与机器文件目前仍然：
+本文件中的“必须”“禁止”“仅”是规范要求。TASK-P8-02已把其中可机器表达的入口、结果、PlanningRun与错误语义发布为strict、versioned carrier；TASK-P8-03～05已形成durable ingress、PlanningRun orchestration与内部异步Solver Worker，TASK-P8-06形成单一Runtime组合根，TASK-P8-07现以additive方式发布统一Headless HTTP transport。因而本合同与机器文件目前：
 
-- 不声明任何新HTTP path、HTTP状态码或可运行API已经可用；
-- 只把现有`import-package.v2`作为`canonical-ingress-request.v1`内唯一允许的canonical payload，不把它或旧Adapter自动提升为已实现公共入口；
-- 已实现canonical ingress repository、原子Snapshot/PlanningProblem落库、内部run/attempt/work item/command/transition/audit，以及strict task、lease/checkpoint、Global Solver、fresh Validator和ScheduleVersion应用；但不实现host identity provider、公开run HTTP、Production Runtime composition、Extension SDK或Plugin Registry；
+- 只声明P8-07登记的5项`/api/v1` PlanningRun operation；提交前29项operation逐项保持，最终OpenAPI共34项；
+- 只把现有`import-package.v2`作为`canonical-ingress-request.v1`内唯一允许的canonical payload，并通过统一create route接收；旧Adapter、raw/vendor/file输入仍不是公共入口；
+- 已实现canonical ingress、原子Snapshot/PlanningProblem、run/attempt/work item/command/transition/audit、strict Worker、lease/checkpoint、Global Solver、fresh Validator、ScheduleVersion应用和Simulation/Test显式Runtime HTTP绑定；但不实现真实host identity provider、Production授权/部署、Extension SDK或Plugin Registry；
 - 不关闭任何PROD_OPEN，也不证明真实宿主、UAT、容量或Production readiness。
 
 实现若不能表达本合同的必需语义，必须先修订合同或发布新版本；不得在代码、数据库、Extension或宿主中创建未登记的私有语义。
@@ -89,7 +89,7 @@ P8公共请求必须由TASK-P8-02以strict JSON Schema表达，至少承载以�
 
 未知顶层字段、未知namespace、缺失版本、含vendor/raw payload、混合data plane、跨scope reference、冲突authority或无法生成稳定fingerprint时必须在创建Snapshot/PlanningRun之前拒绝。宿主不得通过自由文本、metadata或Extension配置绕过strict字段集合。
 
-传输payload必须是strict UTF-8 JSON，并按机器合同明确处理duplicate key、non-finite number、整数/时间/单位、嵌套深度、record count与byte size。未被合同显式允许的multipart、archive、base64文件、内容编码或压缩一律拒绝；具体上限和Content-Type由P8-02/P8-07版本化，不能从ReferenceFileAdapter限制或服务器默认值推断Production策略。
+传输payload必须是strict UTF-8 `application/json`且不得携带`Content-Encoding`。P8-07对create同时约束Content-Length和实际stream为最大8 MiB、JSON最大深度64、`payload.records`聚合最多100000项；cancel/retry action最大16 KiB。Duplicate key、non-finite number、unknown字段/版本、multipart、archive、base64文件和压缩在任何application side effect前拒绝。这些数值是synthetic工程envelope，不是Production capacity/SLA，也不能从ReferenceFileAdapter限制推断其他入口。
 
 APS返回由服务端拥有的稳定resource identity、当前state、immutable artifact references、allowed read/command capability projection、sanitized error和correlation evidence。返回值是公共read model，不是数据库行；宿主必须以服务端state与version为准，不得根据HTTP连接断开、UI缓存或已知旧结果自行推断成功。
 
@@ -110,11 +110,11 @@ requested scope只是客户端请求范围，不是授权证明；服务端必�
 
 所有payload record的`canonical collection + source system + source version`都必须命中唯一binding；同一collection在单个请求中不能由多个source/version或重复authority claim竞争。每个声明的source system/version必须在`source_authority.bindings`中存在，且只能有一个mapping provenance；requested factory必须存在于canonical records。未登记record、重复/歧义binding或mapping、scope和source集合不一致分别以稳定scope/authority/lineage错误拒绝。
 
-接受结果必须与CREATED PlanningRun逐字绑定request/correlation、effective scope、ingress/payload、idempotency key/scope、Runtime resolution和transition audit；PlanningRun还必须与请求的Policy/Limits引用一致。每个run revision满足`revision = last_transition.sequence + 1`，`updated_at_utc`等于最近transition时间，最近transition及cancellation audit都必须出现在audit references中。TASK-P8-03形成初始CREATED carrier和prepared Snapshot/Problem；TASK-P8-04形成内部run读取、状态转换和attempt编排；TASK-P8-05逐字消费这些引用完成solve/validate/checkpoint/version。公开run transport仍未实现。
+接受结果必须与CREATED PlanningRun逐字绑定request/correlation、effective scope、ingress/payload、idempotency key/scope、Runtime resolution和transition audit；PlanningRun还必须与请求的Policy/Limits引用一致。每个run revision满足`revision = last_transition.sequence + 1`，`updated_at_utc`等于最近transition时间，最近transition及cancellation audit都必须出现在audit references中。TASK-P8-03形成初始CREATED carrier和prepared Snapshot/Problem；TASK-P8-04形成内部run读取、状态转换和attempt编排；TASK-P8-05逐字消费这些引用完成solve/validate/checkpoint/version；TASK-P8-07把该同一durable authority暴露为create/status/cancel/retry/result transport。
 
 Runtime resolution只在result/PlanningRun的服务端字段中承载Runtime、Core、SDK、Registry protocol、Extension set/config、Developer Kit、Solver和Validator版本/指纹。请求Schema没有plugin/module/class/entry-point/artifact-path或Extension-set选择字段，任何此类添加都会因`additionalProperties=false`在副作用前拒绝。这里的`0.0.0-p8-contract-sample`仅是synthetic shape值，不表示SDK、Registry或Kit已经发布。
 
-Schema层固定strict JSON object、已登记URN、UTC `Z`、有限JSON number与拒绝unknown字段；raw UTF-8解析还必须拒绝duplicate key和non-finite number。HTTP `Content-Type`、编码、byte/depth/record部署上限和状态码仍由TASK-P8-07在不放宽本合同的前提下版本化；在该配置形成前不得猜Production默认。
+Schema层固定strict JSON object、已登记URN、UTC `Z`、有限JSON number与拒绝unknown字段；raw UTF-8解析还拒绝duplicate key和non-finite number。HTTP `Content-Type`、编码、byte/depth/record上限和状态码由TASK-P8-07冻结并进入OpenAPI/negative tests；它们不构成Production默认、容量承诺或真实宿主批准。
 
 ### 4.2 TASK-P8-03 durable application slice
 
@@ -144,6 +144,16 @@ Migration `0007_planning_run_orchestration`是`0006`之后的additive head；wor
 
 候选必须通过既有Solver bundle合同与fresh independent Validator；结果checkpoint先于PlanningRun terminal CAS，`COMPLETED`之后才允许创建同一candidate的`READY_FOR_REVIEW` ScheduleVersion，ACK又晚于版本应用。Duplicate、检查点后崩溃及version application failure只恢复同一work/result而不再次solve；检查点前崩溃/lease expiry收敛为attempt timeout并要求P8-04显式retry。Cancel、business timeout、fingerprint mismatch、Validator failure与非candidate均不得发布成功版本。该slice不形成公开HTTP、Production broker/database拓扑、Extension加载或distributed exactly-once。
 
+### 4.5 TASK-P8-07 Headless HTTP and OpenAPI slice
+
+P8-07只增加5项稳定operation：`createHeadlessPlanningRun`（202）、`getHeadlessPlanningRunStatus`（200）、`cancelHeadlessPlanningRun`（200）、`retryHeadlessPlanningRun`（202）和`getHeadlessPlanningRunResult`（terminal 200、nonterminal 409）。原29项path/method/operationId/operation object由冻结canonical hash逐项复验；最终OpenAPI 3.1快照共34项且所有内部`$ref`可离线解析。v1只允许additive演进；deprecation必须先保留旧operation并指向公开successor，删除或breaking carrier另行进入批准的major版本。
+
+Create直接传递`canonical-ingress-request.v1` bytes并返回`canonical-ingress-result.v1`；其requested scope只是待授权坐标。Status/cancel/retry/result的tenant、factory和planning scope由三个`X-APS-*` header提供，同样不是authority。Bearer由既有server-side AuthorizationProvider解析；Runtime HTTP adapter再从server-owned policy生成effective scope、authority/mapping allow-list、Planning Policy/Limits、build plan、dispatch window和Runtime/Extension-set resolution。请求不能创建trusted context、选择代码或覆盖配置。P8-08真实host identity形成前Production仍在side effect前default-deny。
+
+Create/cancel/retry要求`Idempotency-Key`；exact create replay复用原ingress/run且不再次materialize或dispatch，exact retry replay也不创建或投递第二attempt。Same key + different semantic fingerprint、stale revision/state/fingerprint及非法transition稳定冲突。202只表示durable acceptance/queue attempt，不表示Solver、Validator、ScheduleVersion、审批或发布成功；client须通过status/result对账，result在run非terminal时返回409且零副作用。
+
+P8 transport/Runtime错误使用`headless-error.v1`和注册表tuple；canonical acceptance阶段的业务/authority/idempotency拒绝保留`canonical-ingress-result.v1`及`side_effects=NONE`；既有AuthorizationProvider的401以及相应403/503保留`planning-workspace-error.v1`，因为Headless注册表没有身份错误code，禁止伪造错误类别。OpenAPI逐状态声明三类可能envelope。所有响应回传correlation/no-store；为保证HTTP header可逆，Header及create carrier中的correlation在HTTP overlay固定为1～256个无空白可见ASCII字符，不收窄其他canonical record的UTF-8内容。错误adapter还会把非法pointer/entity/correlation清洗为`null`或新的安全correlation；PlanningRun read/action另回传ETag与state header，create回传status Location。当前证据是synthetic、SQLite和进程内TestClient；不证明真实gateway、identity、rate limit、Production broker/database、capacity、UAT或SLA。
+
 ## 5. Identity、scope与授权
 
 认证principal、capability、tenant/factory/planning scope、environment、data plane和Production binding只能由服务端可信组合解析。请求body、query、header中的业务值、UI按钮、Extension结果、数据库owner和测试actor均不能自证授权。
@@ -169,7 +179,7 @@ authenticated principal reference
 - Extension只能接收Runtime已裁剪的scope context，不能扩大scope或替代authorization provider；
 - Production principal→capability/resource/target映射在OPEN-002/010关闭前保持default-deny。
 
-具体认证机制、token/assertion格式、challenge、状态码和宿主identity适配由P8-02/P8-07/P8-08在本语义下形成，不能由本合同反向推断已存在。
+P8-07已形成Bearer transport、既有provider调用顺序和稳定HTTP错误边界；具体token/assertion格式、challenge、真实host identity映射和Production scope/audit适配仍由P8-08形成，不能由当前Simulation/Test provider反向推断已存在。
 
 ## 6. 数据authority与冲突处理
 
@@ -273,7 +283,7 @@ APS输出至少按语义区分：请求接收、Data Validation结果、Planning
 
 ## 12. 失败语义与default-deny矩阵
 
-TASK-P8-02已由`headless-error.v1`与`headless-error-code-registry.v1`提供稳定namespace/category/code、stage、安全pointer/entity reference、expected contract、correlation、retryability和action；P8-07再映射HTTP。错误tuple必须精确命中注册表，不能把module-local或product错误强塞进不相符category。
+TASK-P8-02已由`headless-error.v1`与`headless-error-code-registry.v1`提供稳定namespace/category/code、stage、安全pointer/entity reference、expected contract、correlation、retryability和action；P8-07已将其映射到400/403/404/409/413/415/422/500/503。错误tuple必须精确命中注册表，不能把module-local、product或identity-provider错误强塞进不相符category。
 
 | 失败条件 | 必须发生的阶段/结果 | 禁止行为 |
 |---|---|---|
@@ -311,14 +321,14 @@ TASK-P8-02已由`headless-error.v1`与`headless-error-code-registry.v1`提供稳
 |---|---|---|
 | TASK-P8-02 | 已把canonical request/result、PlanningRun、error/version/idempotency/lineage语义形成strict machine carriers和正负例 | 不实现API、DB、worker或Extension SDK |
 | TASK-P8-03～05 | 建立durable ingress、PlanningRun与Worker，保存不可变lineage并执行fresh Validator | 不新增私有input或同步长时求解 |
-| TASK-P8-06～08 | 组合Runtime、统一HTTP API和host identity/scope adapter | 不直连第三方、信任client role或共享数据库 |
+| TASK-P8-06～08 | P8-06已组合Runtime，P8-07已发布统一HTTP API，P8-08继续形成host identity/scope adapter | 不直连第三方、信任client role或共享数据库 |
 | TASK-P8-09～11 | 发布、运维和可选Frontend消费同一API | 不宣称P7/Production readiness，不复制业务authority到Frontend |
 | TASK-P8-12～15 | 形成SDK、Registry、Enterprise Extension模板和Developer Kit兼容链 | 不修改Core、自动升级企业项目或让请求选择任意代码 |
 | TASK-P8-16～17 | 聚合synthetic工程Gate与独立Exit Audit | 不关闭P7现实校准、PROD_OPEN、UAT、capacity或上线授权 |
 
 ## 15. 合同验收清单
 
-本合同只有在以下语义同时保持时才可作为P8-02输入：
+本合同只有在以下语义同时保持时才可作为P8实现与后继Task输入：
 
 - 唯一外部业务输入是versioned canonical JSON；
 - 第三方采集、映射、脱敏、冲突仲裁和展示归宿主；
@@ -333,6 +343,6 @@ TASK-P8-02已由`headless-error.v1`与`headless-error-code-registry.v1`提供稳
 - 宿主与可选Frontend使用同一API/read model；
 - Developer Kit版本锁定，Core/Runtime升级不自动升级企业项目；
 - OPEN-002/010/011/012/014/015只被细化，没有关闭；
-- 不存在由本合同宣称已实现的Schema、API、测试、UAT或Production能力。
+- 只有具名Task及其证据允许声明已实现能力；P8-07的5项HTTP operation不得被扩大解释为UAT、真实身份、Extension或Production能力。
 
-`TEST-P8-HEADLESS-GOVERNANCE-001`只验证上述文档治理、一致性与forbidden scope；它不是产品行为测试。`TEST-P8-CANONICAL-CONTRACT-001`验证三份Schema、五份正例、十份negative vector、offline refs、fingerprint/lineage、state/error registry对齐、97份不可变历史artifact与dependency/lock preservation。它仍不是API、数据库、Worker、Extension SDK或Production行为证据。
+`TEST-P8-HEADLESS-GOVERNANCE-001`只验证上述文档治理、一致性与forbidden scope；`TEST-P8-CANONICAL-CONTRACT-001`验证三份Schema、正反样例、offline refs、fingerprint/lineage、state/error registry对齐及历史artifact preservation。`TEST-P8-HEADLESS-API-001`再验证5项HTTP、旧29项兼容、strict transport/idempotency/security和OpenAPI快照；三者均不形成真实身份、Extension SDK、UAT或Production证据。

@@ -22,8 +22,11 @@ from app.application.planning_runs import (
 from app.data_validation.canonical_ingress import canonical_json_bytes
 from app.domain.planning_run import (
     PlanningRunAttemptStatus,
+    PlanningRunErrorCode,
+    PlanningRunOrchestrationError,
     PlanningRunReadModel,
 )
+from app.domain.types import format_utc_instant, parse_utc_instant
 
 
 class RuntimeFacadeError(RuntimeError):
@@ -128,6 +131,19 @@ class RuntimeDispatchWindow:
             raise ValueError("Runtime dispatch window must contain UTC instants") from error
         if timeout <= available:
             raise ValueError("Runtime dispatch timeout must follow availability")
+
+    def rebased(self, available_at_utc: str) -> RuntimeDispatchWindow:
+        """Preserve the configured duration on a durable ingress timestamp."""
+
+        original_available = parse_utc_instant(self.available_at_utc)
+        original_timeout = parse_utc_instant(self.timeout_at_utc)
+        available = parse_utc_instant(available_at_utc)
+        return RuntimeDispatchWindow(
+            available_at_utc=format_utc_instant(available),
+            timeout_at_utc=format_utc_instant(
+                available + (original_timeout - original_available)
+            ),
+        )
 
 
 @dataclass(frozen=True, slots=True)
@@ -298,17 +314,54 @@ class APSRuntimeApplicationFacade:
         command_context = self._command_context(
             context, correlation_id=correlation_id
         )
+        run_document = record.document.get("planning_run")
+        planning_run_id = (
+            run_document.get("planning_run_id")
+            if isinstance(run_document, Mapping)
+            else None
+        )
+        if not isinstance(planning_run_id, str):
+            raise RuntimeFacadeError(
+                "LINEAGE_INVALID",
+                field="canonical_ingress.planning_run",
+                message="Durable ingress lacks PlanningRun identity",
+            )
+        idempotency = result.get("idempotency")
+        if (
+            isinstance(idempotency, Mapping)
+            and idempotency.get("outcome") == "REPLAYED"
+        ):
+            try:
+                existing = self._planning_runs.read(
+                    planning_run_id, context=command_context
+                )
+            except PlanningRunOrchestrationError as error:
+                if error.code is not PlanningRunErrorCode.INVALID_REFERENCE:
+                    raise
+            else:
+                return RuntimePlanningRunSubmission(
+                    ingress=outcome,
+                    planning_run=existing,
+                    dispatch=None,
+                )
+        stable_window = dispatch_window.rebased(
+            cast(str, record.document["occurred_at_utc"])
+        )
         materialized = self._planning_runs.materialize(
             record,
             context=command_context,
-            available_at_utc=dispatch_window.available_at_utc,
-            timeout_at_utc=dispatch_window.timeout_at_utc,
+            available_at_utc=stable_window.available_at_utc,
+            timeout_at_utc=stable_window.timeout_at_utc,
         )
         model = self._planning_runs.read(
             cast(str, materialized.aggregate.document["planning_run_id"]),
             context=command_context,
         )
-        receipt = self._dispatch_queued(model, context=command_context)
+        receipt = (
+            None
+            if materialized.replayed
+            else self._dispatch_queued(model, context=command_context)
+        )
         return RuntimePlanningRunSubmission(
             ingress=outcome,
             planning_run=self._planning_runs.read(
@@ -348,7 +401,9 @@ class APSRuntimeApplicationFacade:
         self._verify_command_context(context)
         result = self._planning_runs.retry(command, context=context)
         model = self._planning_runs.read(command.planning_run_id, context=context)
-        receipt = self._dispatch_queued(model, context=context)
+        receipt = (
+            None if result.replayed else self._dispatch_queued(model, context=context)
+        )
         return RuntimePlanningRunSubmission(
             ingress=None,
             planning_run=self._planning_runs.read(

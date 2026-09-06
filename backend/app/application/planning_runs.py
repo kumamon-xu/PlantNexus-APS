@@ -1351,8 +1351,6 @@ class PlanningRunOrchestrationService:
                 "failed_attempt_id": command.failed_attempt_id,
                 "failed_attempt_number": command.failed_attempt_number,
                 "reason": command.reason,
-                "available_at_utc": command.available_at_utc,
-                "timeout_at_utc": command.timeout_at_utc,
             }
         )
         existing = self._existing_result(

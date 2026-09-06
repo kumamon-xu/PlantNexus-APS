@@ -6,10 +6,18 @@ spec_version: 0.3.0
 phase: cross-phase
 normative: true
 source_sections: [16, 38, 49, 62, 64, 95, 96]
-last_reviewed: 2026-09-05
+last_reviewed: 2026-09-06
 ---
 
 # 配置、环境与数据隔离
+
+## TASK-P8-07 Runtime HTTP policy and isolation
+
+P8-07新增的`runtime_http_policy_path`是server-owned、strict `runtime-http-policy.v1`启动文件。它为每个允许的tenant/factory/planning scope固定authority reference、mapping fingerprint、cutoff/horizon/tick/priority facts和dispatch timeout，并与P8-06 Runtime descriptor及Planning Policy/Solve Limits逐字组合。文件必须是有界regular file并沿用Runtime配置的symlink/path/size/strict JSON拒绝；请求不能指定policy path、内容、Runtime/Extension set或trusted context。Safe descriptor只暴露policy版本、SHA-256和scope计数。
+
+Create carrier中的requested scope以及status/action的`X-APS-Tenant-Id`、`X-APS-Factory-Id`、`X-APS-Planning-Scope-Id`都只用于查找server policy并与AuthorizationProvider principal求交，不能扩大Runtime绑定。未知scope、authority/mapping/Planning input不一致、plane/environment漂移、forged Production binding或缺失adapter均在repository/application side effect前fail closed。Production仍由组合根统一拒绝，直到P8-08～10真实identity/deployment ports形成。
+
+HTTP envelope固定create 8 MiB/深度64/records 100000与action 16 KiB上限；这些是synthetic工程配置，不是Production容量或可调SLA。API与Worker继续各自持有进程资源但共享immutable Runtime fingerprint；exact create/retry replay不因新的server clock生成第二dispatch。当前无动态config reload、remote config service、tenant自助配置、secret distribution、rate limit或Production多host隔离。
 
 ## TASK-P8-06 Runtime configuration and isolation
 

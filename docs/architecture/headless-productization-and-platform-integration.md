@@ -6,7 +6,7 @@ spec_version: 0.3.0
 phase: P8
 normative: true
 source_sections: [3, 4, 5, 9, 10, 12, 15, 30, 63, 65, 66, 67, 68, 84, 85, 93, 95, 97, 101, 103, 105, 106, 107, 109, 112, 113, 114]
-last_reviewed: 2026-09-05
+last_reviewed: 2026-09-06
 ---
 
 # Headless Productization and Platform Integration
@@ -46,7 +46,7 @@ The left-most systems are outside APS. APS does not own their credentials, SDKs,
 
 Canonical JSON is the only supported external product input. A request must identify its contract version, tenant/factory scope, source/version references, idempotency/correlation context and canonical records required by the selected operation. Exact wire fields and evolution rules are owned by TASK-P8-02; this document does not invent them.
 
-The ingress sequence is fail closed:
+The ingress sequence is fail closed. TASK-P8-07 now binds it to `POST /api/v1/planning-runs` using strict UTF-8 `application/json` with no content encoding, an 8 MiB byte limit, JSON depth 64 and at most 100000 aggregate `payload.records`:
 
 1. authenticate and derive host principal/scope;
 2. validate media type, size, contract name/version and machine schema;
@@ -69,11 +69,15 @@ Long-running planning uses a durable `PlanningRun` request and observable status
 
 TASK-P8-04 now implements the transport-neutral portion of that boundary: a P8-03 CREATED carrier is materialized atomically with a mutable-CAS run row, one operational attempt, one immutable queue-ready work item, its initial transition, command receipt and audit. Legal run updates are limited to the frozen 16 states/31 pairs; published artifact references are monotonic, terminal runs cannot reopen, and dispatch failure/timeout retry appends a new attempt without changing run state. The work item freezes Scope, Policy/Limits, prepared Snapshot/Problem and server-owned Runtime/Extension-set fingerprints, but no broker or Solver consumes it until P8-05.
 
-TASK-P8-05 now consumes that immutable work through one strict JSON Celery task. A durable binding and generic lease/heartbeat CAS protect the exact run/attempt/work identity; the existing Global CP-SAT strategy is followed by an independent fresh Validator, and canonical result bytes are checkpointed before terminal run transitions. Only a validated `COMPLETED` run may invoke the existing ScheduleVersion application, producing one `READY_FOR_REVIEW` version before task acknowledgement. Redelivery resumes the same checkpoint and never selects code or creates an automatic business attempt. This remains an internal, server-composed edge: public HTTP submission, deployable composition, Enterprise Extension loading and Production queue/database evidence are still owned by later tasks.
+TASK-P8-05 now consumes that immutable work through one strict JSON Celery task. A durable binding and generic lease/heartbeat CAS protect the exact run/attempt/work identity; the existing Global CP-SAT strategy is followed by an independent fresh Validator, and canonical result bytes are checkpointed before terminal run transitions. Only a validated `COMPLETED` run may invoke the existing ScheduleVersion application, producing one `READY_FOR_REVIEW` version before task acknowledgement. Redelivery resumes the same checkpoint and never selects code or creates an automatic business attempt. The Worker slice itself remains an internal, server-composed edge; HTTP and composition are supplied only by P8-06/07, while Enterprise Extension loading and Production queue/database evidence remain later work.
+
+TASK-P8-06 now provides the single Runtime composition root and immutable API/Worker descriptor. TASK-P8-07 binds that facade through five additive operations: create (202), status (200), cancel (200), retry (202) and terminal result (200, or 409 while nonterminal). The checked-in OpenAPI 3.1 snapshot contains 34 operations and preserves canonical hashes for all preceding 29 operation objects. Exact create/retry replay does not dispatch twice. The Runtime HTTP adapter derives trusted context, allowed scope, authority/mapping, build plan, Policy/Limits and dispatch windows from server-owned configuration; request headers and JSON remain requested coordinates rather than authority.
+
+This transport is currently executable only with an explicit Simulation/Test Runtime and authorization provider. It does not provide host identity lifecycle, Production authority, extension upload/install endpoints, a second protocol or synchronous solving. TASK-P8-08 remains the owner of real host identity/scope/audit binding, and TASK-P8-09/10 remain the owners of release and deployment evidence.
 
 ## 4. Identity, authority and audit
 
-The host authenticates to the APS boundary using a later approved mechanism and supplies or enables derivation of a stable subject and factory scope. APS maps that context through an adapter and independently enforces authorization at every command/query. Client-supplied scope is never trusted by itself.
+The host authenticates to the APS boundary using a later approved mechanism and supplies or enables derivation of a stable subject and factory scope. P8-07 calls the existing server-side AuthorizationProvider before Runtime/application lookup and preserves its established error envelope; APS then maps that principal through a server-owned Runtime HTTP policy and independently enforces authorization at every command/query. Client-supplied body or `X-APS-*` scope is never trusted by itself. The real host adapter and Production binding remain P8-08 work.
 
 Audit evidence binds subject, action, scope, canonical payload fingerprint, source/version references, correlation/idempotency key, resulting entity/version and outcome. Secrets and raw Production payloads do not belong in logs or CI artifacts. Concrete providers, retention and named Production authorities remain open until their closure records exist.
 
@@ -99,4 +103,4 @@ Unimplemented advanced scheduling capabilities remain explicit `UNSUPPORTED_CAPA
 
 ## 8. Current-state disclaimer
 
-At P8 planning activation the repository exposed the previously documented 29-operation API surface and unavailable default application adapters. P8-03 formed the internal strict canonical consumer and durable Snapshot/PlanningProblem transaction; P8-04 added transport-neutral durable PlanningRun orchestration; P8-05 now adds internal Worker delivery/execution, independent validation, checkpoint recovery and one ScheduleVersion application. These slices still add no public operation and do not make the default composition usable. Canonical HTTP submission, host identity, Production-shaped composition, Extension SDK/Registry, Enterprise Extension template, Developer Kit, packaging and runbooks remain planned. This architecture is a normative target; only capabilities whose owning Task and evidence are done may be described as current runtime behavior.
+The repository now exposes 34 OpenAPI operations: the preceding 29 remain byte-compatible at the operation-object level and P8-07 adds exactly five Headless PlanningRun operations. P8-03 formed the strict canonical consumer and durable Snapshot/PlanningProblem transaction; P8-04 added durable PlanningRun orchestration; P8-05 added Worker execution, independent validation, checkpoint recovery and one ScheduleVersion application; P8-06 formed the single Runtime composition; P8-07 connects these pieces through bounded canonical-only HTTP and a checked-in OpenAPI snapshot. The default/Production identity path remains fail closed. Real host identity, Production deployment, Extension SDK/Registry, Enterprise Extension template, Developer Kit, packaging and runbooks remain planned. Only capabilities whose owning Task and evidence are terminal may be described as production-ready runtime behavior.

@@ -118,6 +118,13 @@ function gitDiffNames(paths) {
   return output.trim().length === 0 ? [] : output.trim().split(/\r?\n/u);
 }
 
+function gitSource(path) {
+  return execFileSync("git", ["show", `${diffBase}:${path}`], {
+    cwd: repositoryRoot,
+    encoding: "utf8",
+  });
+}
+
 function collectPlaywrightSpecs(report) {
   const result = [];
   const visit = (suites) => {
@@ -215,9 +222,38 @@ for (const boundary of ["known: false", "未知（", "Unknown ("]) {
 }
 checks.push(completedCheck("INTL-AND-RAW-AUDITABILITY", "Intl display plus raw UTC/value/code/ID/fingerprint/JSON and visible unknown fallback"));
 
+const P8_HEADLESS_PACKAGE_SCRIPTS = Object.freeze({
+  "build:headless": "npm run client:check && tsc -b && vite build --config vite.headless.config.ts",
+  "client:generate": "node scripts/generate-headless-client.mjs",
+  "client:check": "node scripts/generate-headless-client.mjs --check",
+  "package:headless": "node scripts/package-headless-distribution.mjs",
+  "test:p8:e2e": "playwright test --config playwright.p8-distribution.config.ts",
+});
+const packagePath = "frontend/package.json";
+const frozenPackage = JSON.parse(gitSource(packagePath));
+const currentPackage = JSON.parse(source("package.json"));
+const packageWithoutP8Scripts = JSON.parse(JSON.stringify(currentPackage));
+for (const [name, command] of Object.entries(P8_HEADLESS_PACKAGE_SCRIPTS)) {
+  fail(
+    frozenPackage.scripts?.[name] === undefined,
+    `P8 Headless script unexpectedly exists in frozen P3 package: ${name}`,
+    issues,
+  );
+  fail(
+    currentPackage.scripts?.[name] === command,
+    `P8 Headless package script changed: ${name}`,
+    issues,
+  );
+  delete packageWithoutP8Scripts.scripts?.[name];
+}
+fail(
+  JSON.stringify(packageWithoutP8Scripts) === JSON.stringify(frozenPackage),
+  "frontend/package.json changed outside the exact P8 Headless script allow-list",
+  issues,
+);
+
 const frozenDiffs = gitDiffNames([
   "frontend/src/api",
-  "frontend/package.json",
   "frontend/package-lock.json",
   "backend/app/api/dependencies/__init__.py",
   "backend/app/api/routers/planning_workspace.py",
@@ -238,7 +274,7 @@ const localizedRuntimeText = `${combinedSurfaces}\n${JSON.stringify(enMessages)}
 for (const machineValue of ["APPROVE", "PUBLISH", "REQUEST_EXPORT", "READY_FOR_REVIEW", "SIMULATION_INTERNAL"]) {
   fail(localizedRuntimeText.includes(machineValue), `raw machine value absent from localized surfaces: ${machineValue}`, issues);
 }
-checks.push(completedCheck("ZERO-WIRE-AND-DEPENDENCY-DRIFT", "P3 client/router/schema/migration/dependency inputs unchanged; additive later-phase API composition excluded; English command/state/target values retained"));
+checks.push(completedCheck("ZERO-WIRE-AND-DEPENDENCY-DRIFT", "P3 client/router/schema/migration/dependency inputs and package metadata remain unchanged except five exact P8 Headless scripts; additive later-phase API composition excluded; English command/state/target values retained"));
 
 const playwrightPath = resolve(repositoryRoot, "build/playwright/results.json");
 let playwrightSpecs = [];
@@ -299,6 +335,7 @@ const report = {
     raw_machine_values_retained: true,
     p3_localized_wire_schema_migration_dependency_changed: false,
     additive_later_phase_api_composition_allowed: true,
+    p8_headless_package_scripts_semantically_guarded: true,
     backend_locale_negotiation_formed: false,
     server_chinese_export_formed: false,
     p4_additive_localization_excluded_from_frozen_p3_counts: true,

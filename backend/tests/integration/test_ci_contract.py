@@ -2762,3 +2762,14 @@ def test_p3_i18n_wire_freeze_allows_additive_future_phase_contracts() -> None:
         assert f'"{additive_phase_composition_path}"' not in source
     for stale_broad_path in ('"backend"', '"schemas"', '"pyproject.toml"'):
         assert stale_broad_path not in source
+    assert "P8_HEADLESS_PACKAGE_SCRIPTS" in source
+    for exact_script in (
+        '"build:headless"',
+        '"client:generate"',
+        '"client:check"',
+        '"package:headless"',
+        '"test:p8:e2e"',
+    ):
+        assert exact_script in source
+    assert "packageWithoutP8Scripts" in source
+    assert "changed outside the exact P8 Headless script allow-list" in source

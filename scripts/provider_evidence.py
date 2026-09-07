@@ -32,6 +32,7 @@ IDENTITY_KEYS = frozenset(
         "head_sha",
         "commit_sha",
         "implementation_sha",
+        "evidence_commit",
         "code_commit",
         "code_commit_sha",
     }
@@ -41,6 +42,7 @@ REQUIRED_FULL_ARTIFACT_PREFIXES = (
     "plantnexus-ci-preflight-",
     "plantnexus-ci-backend-",
     "plantnexus-ci-evidence-",
+    "plantnexus-ci-operations-",
 )
 EXPECTED_FULL_JOB_CONCLUSIONS = {
     "classify": "success",
@@ -48,6 +50,7 @@ EXPECTED_FULL_JOB_CONCLUSIONS = {
     "full_preflight": "success",
     "full_backend": "success",
     "full_validation": "success",
+    "full_operations": "success",
     "validate": "success",
 }
 MAX_ARCHIVE_BYTES = 256 * 1024 * 1024
@@ -58,20 +61,17 @@ MAX_UNCOMPRESSED_BYTES = 512 * 1024 * 1024
 class ProviderClient(Protocol):
     """Provider calls required by the collector; fakeable for unit tests."""
 
-    def list_runs(self, repository: str, workflow: str, commit_sha: str) -> list[dict[str, Any]]:
-        ...
+    def list_runs(
+        self, repository: str, workflow: str, commit_sha: str
+    ) -> list[dict[str, Any]]: ...
 
-    def check_runs(self, repository: str, commit_sha: str) -> list[dict[str, Any]]:
-        ...
+    def check_runs(self, repository: str, commit_sha: str) -> list[dict[str, Any]]: ...
 
-    def jobs(self, repository: str, run_id: int) -> list[dict[str, Any]]:
-        ...
+    def jobs(self, repository: str, run_id: int) -> list[dict[str, Any]]: ...
 
-    def artifacts(self, repository: str, run_id: int) -> list[dict[str, Any]]:
-        ...
+    def artifacts(self, repository: str, run_id: int) -> list[dict[str, Any]]: ...
 
-    def download_artifact(self, repository: str, artifact_id: int) -> bytes:
-        ...
+    def download_artifact(self, repository: str, artifact_id: int) -> bytes: ...
 
 
 class GhClient:
@@ -92,7 +92,9 @@ class GhClient:
         except json.JSONDecodeError as error:
             raise RuntimeError(f"gh returned invalid JSON: {error}") from error
 
-    def list_runs(self, repository: str, workflow: str, commit_sha: str) -> list[dict[str, Any]]:
+    def list_runs(
+        self, repository: str, workflow: str, commit_sha: str
+    ) -> list[dict[str, Any]]:
         payload = self._json(
             "run",
             "list",
@@ -109,7 +111,9 @@ class GhClient:
         )
         if not isinstance(payload, list):
             raise RuntimeError("gh run list returned a non-list payload")
-        return [cast(dict[str, Any], item) for item in payload if isinstance(item, dict)]
+        return [
+            cast(dict[str, Any], item) for item in payload if isinstance(item, dict)
+        ]
 
     def check_runs(self, repository: str, commit_sha: str) -> list[dict[str, Any]]:
         payload = self._json(
@@ -118,7 +122,9 @@ class GhClient:
             "Accept: application/vnd.github+json",
             f"repos/{repository}/commits/{commit_sha}/check-runs?per_page=100",
         )
-        if not isinstance(payload, dict) or not isinstance(payload.get("check_runs"), list):
+        if not isinstance(payload, dict) or not isinstance(
+            payload.get("check_runs"), list
+        ):
             raise RuntimeError("GitHub check-runs response is malformed")
         return [
             cast(dict[str, Any], item)
@@ -148,7 +154,9 @@ class GhClient:
             "Accept: application/vnd.github+json",
             f"repos/{repository}/actions/runs/{run_id}/artifacts?per_page=100",
         )
-        if not isinstance(payload, dict) or not isinstance(payload.get("artifacts"), list):
+        if not isinstance(payload, dict) or not isinstance(
+            payload.get("artifacts"), list
+        ):
             raise RuntimeError("GitHub artifacts response is malformed")
         return [
             cast(dict[str, Any], item)
@@ -226,13 +234,19 @@ def parse_timestamp(value: object) -> datetime | None:
     return parsed.astimezone(timezone.utc)
 
 
-def select_exact_run(runs: Sequence[Mapping[str, Any]], commit_sha: str) -> dict[str, Any]:
-    exact = [dict(run) for run in runs if str(run.get("headSha", "")).lower() == commit_sha]
+def select_exact_run(
+    runs: Sequence[Mapping[str, Any]], commit_sha: str
+) -> dict[str, Any]:
+    exact = [
+        dict(run) for run in runs if str(run.get("headSha", "")).lower() == commit_sha
+    ]
     if not exact:
         raise ValueError(f"no workflow run found for exact SHA {commit_sha}")
     if len(exact) != 1:
         identifiers = sorted(str(run.get("databaseId", "unknown")) for run in exact)
-        raise ValueError(f"ambiguous workflow runs for exact SHA {commit_sha}: {identifiers}")
+        raise ValueError(
+            f"ambiguous workflow runs for exact SHA {commit_sha}: {identifiers}"
+        )
     return exact[0]
 
 
@@ -282,7 +296,9 @@ def safe_zip_name(value: str) -> str:
     return path.as_posix()
 
 
-def validate_json_payload(payload: object, commit_sha: str, entry_name: str) -> list[str]:
+def validate_json_payload(
+    payload: object, commit_sha: str, entry_name: str
+) -> list[str]:
     issues: list[str] = []
     if not isinstance(payload, dict):
         return [f"{entry_name}: top-level JSON value must be an object"]
@@ -292,23 +308,35 @@ def validate_json_payload(payload: object, commit_sha: str, entry_name: str) -> 
             issues.append(f"{entry_name}: $.{key} is non-empty")
     if payload.get("result") == "FAIL":
         issues.append(f"{entry_name}: $.result reports FAIL")
+    if payload.get("status") == "FAIL":
+        issues.append(f"{entry_name}: $.status reports FAIL")
     for key in IDENTITY_KEYS:
         value = payload.get(key)
-        if isinstance(value, str) and SHA_RE.fullmatch(value) and value.lower() != commit_sha:
+        if (
+            isinstance(value, str)
+            and SHA_RE.fullmatch(value)
+            and value.lower() != commit_sha
+        ):
             issues.append(
                 f"{entry_name}: $.{key} identity {value.lower()} does not match {commit_sha}"
             )
     git_identity = payload.get("git")
     if isinstance(git_identity, dict):
         value = git_identity.get("head_sha")
-        if isinstance(value, str) and SHA_RE.fullmatch(value) and value.lower() != commit_sha:
+        if (
+            isinstance(value, str)
+            and SHA_RE.fullmatch(value)
+            and value.lower() != commit_sha
+        ):
             issues.append(
                 f"{entry_name}: $.git.head_sha identity {value.lower()} does not match {commit_sha}"
             )
     return issues
 
 
-def inspect_artifact_zip(data: bytes, commit_sha: str) -> tuple[list[dict[str, Any]], list[str]]:
+def inspect_artifact_zip(
+    data: bytes, commit_sha: str
+) -> tuple[list[dict[str, Any]], list[str]]:
     entries: list[dict[str, Any]] = []
     issues: list[str] = []
     seen: set[str] = set()
@@ -325,7 +353,9 @@ def inspect_artifact_zip(data: bytes, commit_sha: str) -> tuple[list[dict[str, A
                 continue
             total_uncompressed += info.file_size
             if info.file_size > MAX_ENTRY_BYTES:
-                issues.append(f"ZIP entry exceeds {MAX_ENTRY_BYTES} bytes: {info.filename}")
+                issues.append(
+                    f"ZIP entry exceeds {MAX_ENTRY_BYTES} bytes: {info.filename}"
+                )
                 continue
             if total_uncompressed > MAX_UNCOMPRESSED_BYTES:
                 issues.append(
@@ -367,7 +397,11 @@ def artifact_filename(artifact_id: int, name: str) -> str:
 
 def ensure_required_artifacts(artifacts: Sequence[Mapping[str, Any]]) -> None:
     names = [str(artifact.get("name", "")) for artifact in artifacts]
-    missing = [prefix for prefix in REQUIRED_FULL_ARTIFACT_PREFIXES if not any(name.startswith(prefix) for name in names)]
+    missing = [
+        prefix
+        for prefix in REQUIRED_FULL_ARTIFACT_PREFIXES
+        if not any(name.startswith(prefix) for name in names)
+    ]
     if missing:
         raise ValueError(f"required FULL artifacts are missing: {missing}")
 
@@ -450,7 +484,9 @@ def wait_for_run(
                 )
             return run
         if time.monotonic() >= deadline:
-            raise TimeoutError(f"timed out waiting for workflow run {run.get('databaseId')}")
+            raise TimeoutError(
+                f"timed out waiting for workflow run {run.get('databaseId')}"
+            )
         time.sleep(max(1, poll_seconds))
 
 
@@ -634,10 +670,15 @@ def main(argv: Sequence[str] | None = None) -> int:
     root = args.root.resolve()
     report_path = args.report if args.report.is_absolute() else root / args.report
     artifacts_dir = (
-        args.artifacts_dir if args.artifacts_dir.is_absolute() else root / args.artifacts_dir
+        args.artifacts_dir
+        if args.artifacts_dir.is_absolute()
+        else root / args.artifacts_dir
     ).resolve()
     if not artifacts_dir.is_relative_to(root):
-        print("FAIL provider evidence: artifacts directory must remain inside repository", file=sys.stderr)
+        print(
+            "FAIL provider evidence: artifacts directory must remain inside repository",
+            file=sys.stderr,
+        )
         return 1
     try:
         commit_sha = resolve_head(root, args.commit)

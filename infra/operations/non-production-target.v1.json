@@ -1,0 +1,99 @@
+{
+  "target_contract_version": "aps-non-production-target.v1",
+  "target_id": "p8-operations-compose-v1",
+  "authorization": {
+    "task_id": "TASK-P8-10",
+    "authorized_on": "2026-09-07",
+    "production_authorized": false,
+    "demo_authorized": false
+  },
+  "release": {
+    "runtime_version": "0.1.0",
+    "implementation_sha": "3af39dbc97128634af729d6cb744b95b96cec18f",
+    "release_archive_sha256": "sha256:78b1f6f68f5edb7b4cf7b744a012761eff5ba639ef8ea3bdd33c5a7f6c76b129",
+    "release_fingerprint": "sha256:02576f523f609831c62756ab851c3c45ab0e5d0ef9b29faddf11729438984c40",
+    "image_build_source": "EXACT_P8_09_RUNTIME_INPUTS",
+    "signing_state": "UNSIGNED_ENGINEERING_CANDIDATE"
+  },
+  "platform": {
+    "runtime": "docker-compose",
+    "runtime_hosts": [
+      "local-docker-engine",
+      "github-hosted-linux-runner"
+    ],
+    "migration_version_table_bootstrap": "CREATE_IF_ABSENT_VARCHAR_128_PRIMARY_KEY",
+    "database_image": "postgres:17.6-alpine3.22@sha256:ef257d85f76e48da1c64832459b59fcaba1a4dac97bf5d7450c77753542eee94",
+    "broker_image": "redis:8.2.1-alpine3.22@sha256:987c376c727652f99625c7d205a1cba3cb2c53b92b0b62aade2bd48ee1593232"
+  },
+  "isolation": {
+    "runtime_environment": "test",
+    "data_plane": "SIMULATION",
+    "synthetic_only": true,
+    "network_scope": "TASK_LOCAL_COMPOSE_NETWORK",
+    "external_ingress": false,
+    "third_party_connectors": false
+  },
+  "operator": {
+    "local_identity": "repository-engineer",
+    "provider_identity": "github-actions:p8-operations",
+    "production_authority": false,
+    "allowed_actions": [
+      "CREATE_DISPOSABLE_TARGET",
+      "RUN_MIGRATIONS",
+      "RUN_SANITIZED_PROBES",
+      "RUN_BACKUP_RESTORE",
+      "RUN_DUAL_SLOT_ROLLBACK",
+      "DESTROY_DISPOSABLE_TARGET"
+    ]
+  },
+  "secret_boundary": {
+    "source": "EPHEMERAL_PROCESS_ENVIRONMENT",
+    "generated_per_run": true,
+    "committed": false,
+    "logged": false,
+    "uploaded": false
+  },
+  "storage_boundary": {
+    "database": "TASK_SCOPED_DISPOSABLE_VOLUME",
+    "broker": "TASK_SCOPED_DISPOSABLE_VOLUME",
+    "raw_backup": "RUNNER_TEMP_ONLY_DELETE_AFTER_DRILL",
+    "evidence": "SANITIZED_JSON_ONLY",
+    "production_storage": false
+  },
+  "services": [
+    "database",
+    "redis",
+    "migrate",
+    "observer",
+    "api",
+    "worker",
+    "validator",
+    "rollback_api",
+    "rollback_worker"
+  ],
+  "extensions": {
+    "registry_protocol": "plugin-registry.v1",
+    "loading": "DISABLED_UNTIL_COMPATIBILITY_VERIFIED",
+    "allowed_extension_ids": [],
+    "invalid_configuration_action": "READINESS_DOWN_NO_PROMOTION"
+  },
+  "recovery": {
+    "backup_consistency": "QUIESCED_API_AND_WORKERS",
+    "engineering_rpo": "ZERO_CONFIRMED_WRITES_AT_FROZEN_BACKUP_POINT",
+    "verification": [
+      "MIGRATION_HEAD_MATCH",
+      "SCHEMA_FINGERPRINT_MATCH",
+      "SYNTHETIC_SENTINEL_FINGERPRINT_MATCH"
+    ],
+    "rto_policy": "MEASURE_ONLY_WITHIN_PROVIDER_JOB_TIMEOUT_NO_SLA",
+    "raw_backup_retained": false,
+    "rollback_mode": "DUAL_SLOT_LAST_KNOWN_GOOD_CONFIGURATION"
+  },
+  "production_boundary": {
+    "production_ready": false,
+    "sla_claimed": false,
+    "capacity_claimed": false,
+    "uat_claimed": false,
+    "cross_version_rollback_claimed": false
+  }
+}

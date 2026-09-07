@@ -6,10 +6,18 @@ spec_version: 0.3.0
 phase: P0-P8
 normative: true
 source_sections: [34, 65, 66, 67]
-last_reviewed: 2026-09-05
+last_reviewed: 2026-09-07
 ---
 
 # P0 Worker Reliability 与 Idempotency
+
+## P8-10真实broker与Worker恢复演练
+
+`p8-operations-compose-v1`首次用Redis 8.2.1容器和独立Celery Worker启动P8-09 Runtime，验证JSON-only task app、Worker ping、API/Worker composition identity及queue depth observation。演练停止Worker后`APSWorkerUnavailable`必须fired，重启相同image/config并恢复`pong`后才resolved；dual-slot rollback同样要求`rollback_worker`先ready再停止candidate。
+
+停止Redis时API liveness保持UP、readiness为DOWN/`REDIS_UNAVAILABLE`，Worker在broker恢复后必须重新可见；停止PostgreSQL时readiness为DOWN/`DATABASE_UNAVAILABLE`。这些操作不创建真实PlanningRun负载，不清queue、不修改attempt/lease/terminal state，因而证明容器和依赖恢复路径，不证明distributed exactly-once、长任务中断重领、network partition、dead-letter/backoff、graceful drain、capacity或Production SLA。
+
+逐步处理见[`../runbooks/stalled-worker-recovery.md`](../runbooks/stalled-worker-recovery.md)和[`../runbooks/dependency-outage-and-readiness.md`](../runbooks/dependency-outage-and-readiness.md)。任何API/Worker Runtime、Core、SDK、Extension-set、Solver或Validator identity不一致仍必须停止领取/发布结果。
 
 ## TASK-P8-05 asynchronous Solver Worker
 

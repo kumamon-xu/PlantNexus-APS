@@ -11,6 +11,16 @@ last_reviewed: 2026-09-07
 
 # Operations 索引与形成边界
 
+## P8 Headless 非生产运维闭环
+
+`p8-operations-compose-v1`是TASK-P8-10批准的唯一靶场：本机Docker或GitHub-hosted Linux runner、Runtime environment=`test`、data plane=`SIMULATION`、synthetic-only、无external ingress、无Demo/第三方/Production连接。它从P8-09 exact Runtime输入构建`0.1.0`镜像，并启动PostgreSQL、Redis、migration、API、Solver Worker、Validator probe、内部observer及last-known-good rollback slot；企业Extension集合仍严格为空。
+
+统一命令见[`../runbooks/README.md`](../runbooks/README.md)。PASS必须同时生成deployment、observability、recovery和runbook dry-run四份sanitized报告，覆盖live/ready、Runtime/Extension composition identity、四类golden signal、10条alert、API/Worker/database/broker故障、invalid Extension配置、quiesced backup/restore三指纹和dual-slot rollback。Raw dump与每次生成的密码随target销毁，不进入artifact。
+
+真实PostgreSQL演练发现Alembic默认32字符version column无法容纳既有`0004_schedule_versions_audit_export_jobs` revision ID；因此该target在空表时先幂等创建`VARCHAR(128) PRIMARY KEY`的`alembic_version`，再运行未修改的`0001`～`0009`链。该bootstrap是明确的部署前置，不是新业务migration，也不能被隐藏为P8-09裸迁移已在PostgreSQL通过。
+
+Runbook现已形成非Production baseline，但Production target、真实identity/on-call、TLS/ACL、外部metrics/trace backend、长期retention、HA、跨版本rollback、capacity/SLA、UAT及签名/promotion authority仍未形成。P8-10 PASS不关闭这些边界，也不自动启动后继Task。
+
 ## TASK-P8-09 Runtime release operations boundary
 
 P8-09形成Runtime `0.1.0`的确定性、内容寻址工程distribution及机器preflight。归档同时携带wheel、hash-locked dependencies、完整migration、Schema/OpenAPI、release/compatibility manifest、CycloneDX SBOM、license/checksum与default-empty Extension边界；两次build必须字节一致。外层`.sha256`、归档内逐文件checksum和canonical manifest fingerprint共同拒绝传输/内容篡改。

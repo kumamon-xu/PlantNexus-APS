@@ -674,6 +674,10 @@ jobs:
             "${replay_root}/backend/tests/contract/test_p8_release_packaging_contract.py" \
             "${replay_root}/backend/tests/integration/test_p8_release_packaging_integration.py" \
             "${replay_root}/backend/tests/security/test_p8_release_packaging_security.py" \
+            "${replay_root}/backend/tests/contract/test_p8_operations_contract.py" \
+            "${replay_root}/backend/tests/integration/test_p8_operations_integration.py" \
+            "${replay_root}/backend/tests/security/test_p8_operations_security.py" \
+            "${replay_root}/backend/tests/unit/test_p8_operations_policy.py" \
             "${replay_root}/infra/release/runtime-release-policy.v1.json" \
             "${replay_root}/infra/release/runtime-vulnerability-policy.v1.json"
           git -C "${replay_root}" restore \
@@ -841,8 +845,43 @@ jobs:
             build/release/**
           if-no-files-found: error
 
+  full_operations:
+    needs: [classify, full_preflight]
+    if: ${{ needs.classify.outputs.profile == 'FULL' }}
+    runs-on: ubuntu-latest
+    timeout-minutes: 35
+    steps:
+      - uses: actions/checkout@v7
+        with:
+          fetch-depth: 0
+
+      - uses: actions/setup-python@v7
+        with:
+          python-version: "3.12"
+
+      - name: P8 non-Production deployment observability and recovery drill
+        run: >-
+          python scripts/p8_operations_check.py
+          --root .
+          --deployment-report build/validation/ci-p8-operations-deployment.json
+          --observability-report build/validation/ci-p8-operations-observability.json
+          --recovery-report build/validation/ci-p8-operations-recovery.json
+          --runbook-report build/validation/ci-p8-operations-runbooks.json
+
+      - name: Upload P8 operations evidence
+        if: always()
+        uses: actions/upload-artifact@v7
+        with:
+          name: plantnexus-ci-operations-${{ github.run_id }}
+          path: |
+            build/validation/ci-p8-operations-deployment.json
+            build/validation/ci-p8-operations-observability.json
+            build/validation/ci-p8-operations-recovery.json
+            build/validation/ci-p8-operations-runbooks.json
+          if-no-files-found: error
+
   validate:
-    needs: [classify, docs_validation, full_preflight, full_backend, full_validation]
+    needs: [classify, docs_validation, full_preflight, full_backend, full_validation, full_operations]
     if: ${{ always() }}
     runs-on: ubuntu-latest
     timeout-minutes: 2
@@ -853,6 +892,7 @@ jobs:
       PLANTNEXUS_PREFLIGHT_RESULT: ${{ needs.full_preflight.result }}
       PLANTNEXUS_BACKEND_RESULT: ${{ needs.full_backend.result }}
       PLANTNEXUS_FULL_RESULT: ${{ needs.full_validation.result }}
+      PLANTNEXUS_OPERATIONS_RESULT: ${{ needs.full_operations.result }}
     steps:
       - name: Enforce fail-closed validation routing
         shell: bash
@@ -863,6 +903,7 @@ jobs:
               test "${PLANTNEXUS_PREFLIGHT_RESULT}" = "success"
               test "${PLANTNEXUS_BACKEND_RESULT}" = "success"
               test "${PLANTNEXUS_FULL_RESULT}" = "success"
+              test "${PLANTNEXUS_OPERATIONS_RESULT}" = "success"
               test "${PLANTNEXUS_DOCS_RESULT}" = "skipped"
               ;;
             DOCS_ONLY)
@@ -870,6 +911,7 @@ jobs:
               test "${PLANTNEXUS_PREFLIGHT_RESULT}" = "skipped"
               test "${PLANTNEXUS_BACKEND_RESULT}" = "skipped"
               test "${PLANTNEXUS_FULL_RESULT}" = "skipped"
+              test "${PLANTNEXUS_OPERATIONS_RESULT}" = "skipped"
               ;;
             *)
               echo "Unknown or missing CI validation profile" >&2

@@ -387,6 +387,7 @@ def test_ci_profile_routing_is_mutually_exclusive_and_fail_closed() -> None:
         "docs_validation",
         "full_preflight",
         "full_backend",
+        "full_operations",
         "full_validation",
         "validate",
     }
@@ -395,6 +396,7 @@ def test_ci_profile_routing_is_mutually_exclusive_and_fail_closed() -> None:
     preflight = cast(dict[str, Any], jobs["full_preflight"])
     backend = cast(dict[str, Any], jobs["full_backend"])
     full = cast(dict[str, Any], jobs["full_validation"])
+    operations = cast(dict[str, Any], jobs["full_operations"])
     final = cast(dict[str, Any], jobs["validate"])
 
     assert classify["outputs"] == {"profile": "${{ steps.profile.outputs.profile }}"}
@@ -406,6 +408,8 @@ def test_ci_profile_routing_is_mutually_exclusive_and_fail_closed() -> None:
     assert backend["if"] == "${{ needs.classify.outputs.profile == 'FULL' }}"
     assert full["needs"] == ["classify", "full_preflight"]
     assert full["if"] == "${{ needs.classify.outputs.profile == 'FULL' }}"
+    assert operations["needs"] == ["classify", "full_preflight"]
+    assert operations["if"] == "${{ needs.classify.outputs.profile == 'FULL' }}"
     assert backend["env"] == full["env"]
     assert final["needs"] == [
         "classify",
@@ -413,6 +417,7 @@ def test_ci_profile_routing_is_mutually_exclusive_and_fail_closed() -> None:
         "full_preflight",
         "full_backend",
         "full_validation",
+        "full_operations",
     ]
     assert final["if"] == "${{ always() }}"
 
@@ -421,6 +426,7 @@ def test_ci_profile_routing_is_mutually_exclusive_and_fail_closed() -> None:
     preflight_text = json.dumps(preflight)
     backend_text = json.dumps(backend)
     full_text = json.dumps(full)
+    operations_text = json.dumps(operations)
     final_run = cast(dict[str, Any], final["steps"][0])["run"]
     assert "scripts/ci_validation_profile.py classify" in classify_text
     assert "--github-output" in classify_text
@@ -440,6 +446,20 @@ def test_ci_profile_routing_is_mutually_exclusive_and_fail_closed() -> None:
     assert "ci-backend-tests.xml" in backend_text
     assert "mkdir -p build/validation" in backend_text
     assert "plantnexus-ci-backend-${{ github.run_id }}" in backend_text
+    assert "scripts/p8_operations_check.py" in operations_text
+    assert "ci-p8-operations-deployment.json" in operations_text
+    assert "ci-p8-operations-observability.json" in operations_text
+    assert "ci-p8-operations-recovery.json" in operations_text
+    assert "ci-p8-operations-runbooks.json" in operations_text
+    assert "plantnexus-ci-operations-${{ github.run_id }}" in operations_text
+    assert len(operations["steps"]) == 4
+    for relative_path in (
+        "backend/tests/contract/test_p8_operations_contract.py",
+        "backend/tests/integration/test_p8_operations_integration.py",
+        "backend/tests/security/test_p8_operations_security.py",
+        "backend/tests/unit/test_p8_operations_policy.py",
+    ):
+        assert workflow_text.count(f'"${{replay_root}}/{relative_path}"') == 1
     assert "uv sync --locked" in full_text
     full_pytest_commands = [
         str(step.get("run", ""))
@@ -480,8 +500,9 @@ def test_ci_profile_routing_is_mutually_exclusive_and_fail_closed() -> None:
     assert 'test "${PLANTNEXUS_PREFLIGHT_RESULT}" = "success"' in final_run
     assert 'test "${PLANTNEXUS_BACKEND_RESULT}" = "success"' in final_run
     assert 'test "${PLANTNEXUS_FULL_RESULT}" = "success"' in final_run
+    assert 'test "${PLANTNEXUS_OPERATIONS_RESULT}" = "success"' in final_run
     assert 'test "${PLANTNEXUS_DOCS_RESULT}" = "success"' in final_run
-    assert final_run.count('= "skipped"') == 4
+    assert final_run.count('= "skipped"') == 5
     assert "Unknown or missing CI validation profile" in final_run
     assert "continue-on-error" not in workflow_text
 
@@ -559,9 +580,7 @@ def test_ci_p6_duration_contract_is_required_and_machine_checkable(
 
     report_path = tmp_path / "p6-duration-contracts.json"
     assert (
-        p6_duration_contract_main(
-            ["--root", str(ROOT), "--report", str(report_path)]
-        )
+        p6_duration_contract_main(["--root", str(ROOT), "--report", str(report_path)])
         == 0
     )
     report = json.loads(report_path.read_text(encoding="utf-8"))
@@ -620,9 +639,7 @@ def test_ci_p8_machine_contract_is_required_and_machine_checkable(
 
     report_path = tmp_path / "p8-machine-contracts.json"
     assert (
-        p8_machine_contract_main(
-            ["--root", str(ROOT), "--report", str(report_path)]
-        )
+        p8_machine_contract_main(["--root", str(ROOT), "--report", str(report_path)])
         == 0
     )
     report = json.loads(report_path.read_text(encoding="utf-8"))
@@ -643,9 +660,7 @@ def test_ci_p8_machine_contract_is_required_and_machine_checkable(
 
 
 def test_ci_p8_canonical_ingress_is_isolated_from_frozen_p4_replay() -> None:
-    workflow = (ROOT / ".github" / "workflows" / "ci.yml").read_text(
-        encoding="utf-8"
-    )
+    workflow = (ROOT / ".github" / "workflows" / "ci.yml").read_text(encoding="utf-8")
     for relative_path in (
         "backend/app/application/canonical_ingress.py",
         "backend/app/data_validation/canonical_ingress.py",
@@ -668,9 +683,7 @@ def test_ci_p8_canonical_ingress_is_isolated_from_frozen_p4_replay() -> None:
 
 
 def test_ci_p8_planning_run_is_isolated_from_frozen_p4_replay() -> None:
-    workflow = (ROOT / ".github" / "workflows" / "ci.yml").read_text(
-        encoding="utf-8"
-    )
+    workflow = (ROOT / ".github" / "workflows" / "ci.yml").read_text(encoding="utf-8")
     for relative_path in (
         "backend/app/application/planning_runs.py",
         "backend/app/application/planning_run_check.py",
@@ -844,7 +857,10 @@ def test_ci_p8_headless_http_api_is_required_and_machine_checkable(
         "backend/tests/security/test_p8_headless_http_api_security.py",
     ):
         assert workflow.count(f'"${{replay_root}}/{relative_path}"') == 1
-    assert workflow.count("backend/tests/contract/test_dynamic_replanning_http_api.py") == 1
+    assert (
+        workflow.count("backend/tests/contract/test_dynamic_replanning_http_api.py")
+        == 1
+    )
     report_path = tmp_path / "p8-headless-http-api.json"
     diff_path = tmp_path / "p8-headless-openapi-diff.json"
     benchmark_path = tmp_path / "p8-headless-api-benchmark.json"
@@ -942,9 +958,7 @@ def test_ci_p8_host_authorization_is_required_and_machine_checkable(
     assert len(report["denial_matrix"]) == 14
     assert report["issues"] == []
     assert report["status"] == "PASS"
-    assert audit["audit_report_version"] == (
-        "p8-host-authorization-audit-report.v1"
-    )
+    assert audit["audit_report_version"] == ("p8-host-authorization-audit-report.v1")
     assert audit["decision_count"] == 20
     assert audit["allowed_count"] == 5
     assert audit["denied_count"] == 15
@@ -965,9 +979,7 @@ def test_ci_p8_host_authorization_is_required_and_machine_checkable(
 def test_ci_p8_runtime_release_is_required_and_machine_checkable(
     tmp_path: Path,
 ) -> None:
-    workflow = (ROOT / ".github" / "workflows" / "ci.yml").read_text(
-        encoding="utf-8"
-    )
+    workflow = (ROOT / ".github" / "workflows" / "ci.yml").read_text(encoding="utf-8")
     normalized = " ".join(workflow.split())
     assert (
         "name: P8 reproducible Runtime release and migration evidence run: >- "
@@ -1066,13 +1078,14 @@ def test_ci_p6_duration_dataset_is_required_and_machine_checkable(
     assert "continue-on-error" not in workflow
     assert '"${replay_root}/backend/app/duration_prediction/__init__.py"' in workflow
     assert '"${replay_root}/backend/app/duration_prediction/dataset.py"' in workflow
-    assert '"${replay_root}/backend/tests/contract/test_p6_duration_dataset.py"' in workflow
+    assert (
+        '"${replay_root}/backend/tests/contract/test_p6_duration_dataset.py"'
+        in workflow
+    )
 
     report_path = tmp_path / "p6-duration-dataset.json"
     assert (
-        p6_duration_dataset_main(
-            ["--root", str(ROOT), "--report", str(report_path)]
-        )
+        p6_duration_dataset_main(["--root", str(ROOT), "--report", str(report_path)])
         == 0
     )
     report = json.loads(report_path.read_text(encoding="utf-8"))
@@ -1094,7 +1107,9 @@ def test_ci_p6_duration_dataset_is_required_and_machine_checkable(
         "mutation_rejections": 12,
     }
     assert report["artifacts"]["source"]["included_in_provider_artifact"] is False
-    assert report["artifacts"]["expected_bundle"]["included_in_provider_artifact"] is False
+    assert (
+        report["artifacts"]["expected_bundle"]["included_in_provider_artifact"] is False
+    )
     assert report["boundaries"]["production_binding"] is False
     assert report["issues"] == []
 
@@ -1114,7 +1129,9 @@ def test_ci_p6_duration_model_is_required_and_machine_checkable(
     ) in normalized
     assert "continue-on-error" not in workflow
     assert '"${replay_root}/backend/app/duration_prediction/model.py"' in workflow
-    assert '"${replay_root}/backend/tests/contract/test_p6_duration_model.py"' in workflow
+    assert (
+        '"${replay_root}/backend/tests/contract/test_p6_duration_model.py"' in workflow
+    )
 
     report_path = tmp_path / "p6-duration-model.json"
     model_path = tmp_path / "p6-duration-baseline-model.json"
@@ -1156,7 +1173,9 @@ def test_ci_p6_duration_model_is_required_and_machine_checkable(
         "training_rows": 4,
         "validation_rows_used_for_training": 0,
     }
-    assert report["artifacts"]["dataset_source"]["included_in_provider_artifact"] is False
+    assert (
+        report["artifacts"]["dataset_source"]["included_in_provider_artifact"] is False
+    )
     assert report["artifacts"]["model_bundle"]["included_in_provider_artifact"] is False
     assert report["artifacts"]["model_artifact"]["safe_for_provider"] is True
     assert report["boundaries"]["production_authorized"] is False
@@ -1166,11 +1185,15 @@ def test_ci_p6_duration_model_is_required_and_machine_checkable(
     model = json.loads(model_path.read_text(encoding="utf-8"))
     manifest = json.loads(manifest_path.read_text(encoding="utf-8"))
     replay = json.loads(replay_path.read_text(encoding="utf-8"))
-    assert model["duration_baseline_artifact_version"] == "duration-baseline-artifact.v1"
+    assert (
+        model["duration_baseline_artifact_version"] == "duration-baseline-artifact.v1"
+    )
     assert model["model_version"] == "1.0.0"
     assert model["governance_boundary"]["production_authorized"] is False
     assert manifest["duration_model_manifest_version"] == "duration-model-manifest.v1"
-    assert manifest["model_artifact"]["artifact_digest"] == replay["model_artifact_digest"]
+    assert (
+        manifest["model_artifact"]["artifact_digest"] == replay["model_artifact_digest"]
+    )
     assert replay["document_version"] == "duration-training-replay.v1"
     assert replay["boundaries"]["labels_in_replay_artifact"] is False
     assert all("label" not in entry for entry in replay["estimates"])
@@ -1179,9 +1202,7 @@ def test_ci_p6_duration_model_is_required_and_machine_checkable(
 def test_ci_p6_duration_runtime_is_required_and_machine_checkable(
     tmp_path: Path,
 ) -> None:
-    workflow = (ROOT / ".github" / "workflows" / "ci.yml").read_text(
-        encoding="utf-8"
-    )
+    workflow = (ROOT / ".github" / "workflows" / "ci.yml").read_text(encoding="utf-8")
     normalized = " ".join(workflow.split())
     assert (
         "uv run python scripts/p6_duration_evaluation_check.py --root . --report "
@@ -1276,9 +1297,7 @@ def test_ci_p6_duration_runtime_is_required_and_machine_checkable(
 
 
 def test_ci_p6_planning_ingress_is_isolated_from_frozen_p4_replay() -> None:
-    workflow = (ROOT / ".github" / "workflows" / "ci.yml").read_text(
-        encoding="utf-8"
-    )
+    workflow = (ROOT / ".github" / "workflows" / "ci.yml").read_text(encoding="utf-8")
     for relative_path in (
         "backend/app/duration_prediction/planning_ingress.py",
         "backend/tests/p6_planning_integration_support.py",
@@ -1688,9 +1707,7 @@ def test_ci_p4_disruption_replay_is_required_and_machine_checkable(
 def test_ci_p4_change_report_output_is_required_and_machine_checkable(
     tmp_path: Path,
 ) -> None:
-    workflow = (ROOT / ".github" / "workflows" / "ci.yml").read_text(
-        encoding="utf-8"
-    )
+    workflow = (ROOT / ".github" / "workflows" / "ci.yml").read_text(encoding="utf-8")
     normalized = " ".join(workflow.split())
     assert (
         "name: P4 ChangeReport read model and export evidence run: >- "
@@ -1701,9 +1718,7 @@ def test_ci_p4_change_report_output_is_required_and_machine_checkable(
 
     report_path = tmp_path / "p4-change-report-output.json"
     assert (
-        change_report_output_main(
-            ["--root", str(ROOT), "--report", str(report_path)]
-        )
+        change_report_output_main(["--root", str(ROOT), "--report", str(report_path)])
         == 0
     )
     report = json.loads(report_path.read_text(encoding="utf-8"))
@@ -1961,9 +1976,7 @@ def test_ci_p3_planning_workspace_api_is_required_and_machine_checkable(
     assert report["counts"]["production_provider_lookups"] == 0
     assert report["counts"]["router_business_state_transitions"] == 0
     assert report["boundaries"]["p4_capabilities"] == "NOT_IMPLEMENTED"
-    assert report["boundaries"]["p4_additive_surface"] == (
-        "OUTSIDE_FROZEN_P3_SUBSET"
-    )
+    assert report["boundaries"]["p4_additive_surface"] == ("OUTSIDE_FROZEN_P3_SUBSET")
     assert report["boundaries"]["p3_10_frozen_operations"] == 17
     assert report["boundaries"]["p3_13_additive_operations"] == 1
     assert report["boundaries"]["internal_simulation_download"] == (
@@ -1986,9 +1999,7 @@ def test_ci_p4_replanning_api_is_required_and_machine_checkable(
     assert "continue-on-error" not in workflow
 
     report_path = tmp_path / "p4-replanning-api.json"
-    assert replanning_api_main(
-        ["--root", str(ROOT), "--report", str(report_path)]
-    ) == 0
+    assert replanning_api_main(["--root", str(ROOT), "--report", str(report_path)]) == 0
     report = json.loads(report_path.read_text(encoding="utf-8"))
     assert report["report_version"] == "p4-replanning-api-report.v1"
     assert report["status"] == "PASS"
@@ -2155,7 +2166,9 @@ def test_ci_p4_vertical_slice_gate_and_double_browser_replay_are_required() -> N
     ).read_text(encoding="utf-8")
 
 
-def test_ci_p5_empty_selected_portfolio_gate_is_required_and_machine_checkable() -> None:
+def test_ci_p5_empty_selected_portfolio_gate_is_required_and_machine_checkable() -> (
+    None
+):
     workflow = (ROOT / ".github" / "workflows" / "ci.yml").read_text(encoding="utf-8")
     normalized = " ".join(workflow.split())
     assert (
@@ -2182,9 +2195,7 @@ def test_ci_p5_empty_selected_portfolio_gate_is_required_and_machine_checkable()
 
 
 def test_ci_p5_exit_gate_is_independent_required_and_machine_checkable() -> None:
-    workflow = (ROOT / ".github" / "workflows" / "ci.yml").read_text(
-        encoding="utf-8"
-    )
+    workflow = (ROOT / ".github" / "workflows" / "ci.yml").read_text(encoding="utf-8")
     normalized = " ".join(workflow.split())
     qualification = (
         "name: P5 capability qualification fresh evidence run: >- uv run python "

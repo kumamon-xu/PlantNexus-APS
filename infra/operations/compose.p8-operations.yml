@@ -1,0 +1,140 @@
+x-runtime-environment: &runtime-environment
+  PLANTNEXUS_CELERY_BROKER_URL: redis://redis:6379/1
+  PLANTNEXUS_CELERY_RESULT_BACKEND_URL: redis://redis:6379/2
+  PLANTNEXUS_CODE_COMMIT: ${PLANTNEXUS_P8_RUNTIME_SHA:?set PLANTNEXUS_P8_RUNTIME_SHA}
+  PLANTNEXUS_DATABASE_URL: postgresql+psycopg://plantnexus:${PLANTNEXUS_POSTGRES_PASSWORD:?set PLANTNEXUS_POSTGRES_PASSWORD}@database:5432/plantnexus_dev
+  PLANTNEXUS_DATA_PLANE: simulation
+  PLANTNEXUS_JOB_HEARTBEAT_SECONDS: "5"
+  PLANTNEXUS_JOB_LEASE_SECONDS: "20"
+  PLANTNEXUS_LOG_LEVEL: INFO
+  PLANTNEXUS_OTEL_TRACE_CONTEXT_ENABLED: "true"
+  PLANTNEXUS_READINESS_TIMEOUT_SECONDS: "2"
+  PLANTNEXUS_REDIS_URL: redis://redis:6379/0
+  PLANTNEXUS_RUNTIME_ARTIFACT_FINGERPRINT: sha256:02576f523f609831c62756ab851c3c45ab0e5d0ef9b29faddf11729438984c40
+  PLANTNEXUS_RUNTIME_COMPOSITION_ENABLED: "true"
+  PLANTNEXUS_RUNTIME_ENVIRONMENT: test
+  PLANTNEXUS_RUNTIME_HTTP_POLICY_PATH: /workspace/operations-config/runtime-http-policy.v1.json
+  PLANTNEXUS_RUNTIME_PLANNING_POLICY_PATH: /workspace/schemas/samples/planning-policy.v1.synthetic.json
+  PLANTNEXUS_RUNTIME_SCHEMA_DIRECTORY: /workspace/schemas/json
+  PLANTNEXUS_RUNTIME_SOLVE_LIMITS_PATH: /workspace/schemas/samples/solve-limits.v1.synthetic.json
+  PLANTNEXUS_SIMULATION_API_ENABLED: "true"
+
+x-runtime-volumes: &runtime-volumes
+  - ./infra/operations:/workspace/operations-config:ro
+
+x-runtime-healthcheck: &runtime-healthcheck
+  test:
+    - CMD
+    - python
+    - -c
+    - import urllib.request; urllib.request.urlopen('http://127.0.0.1:8000/health/ready', timeout=2)
+  interval: 3s
+  timeout: 3s
+  retries: 20
+
+x-worker-healthcheck: &worker-healthcheck
+  test:
+    - CMD-SHELL
+    - celery -A app.jobs.celery_app:celery_app inspect ping --timeout=3 2>/dev/null | grep -q pong
+  interval: 5s
+  timeout: 5s
+  retries: 20
+
+services:
+  database:
+    image: postgres:17.6-alpine3.22@sha256:ef257d85f76e48da1c64832459b59fcaba1a4dac97bf5d7450c77753542eee94
+
+  redis:
+    image: redis:8.2.1-alpine3.22@sha256:987c376c727652f99625c7d205a1cba3cb2c53b92b0b62aade2bd48ee1593232
+
+  migrate:
+    image: ${PLANTNEXUS_RUNTIME_IMAGE:?set PLANTNEXUS_RUNTIME_IMAGE}
+    command:
+      - /bin/sh
+      - -ec
+      - |
+        python -c "from sqlalchemy import create_engine,text; from app.infrastructure.config import load_settings; engine=create_engine(load_settings().database_url.get_secret_value()); connection=engine.connect(); transaction=connection.begin(); connection.execute(text('CREATE TABLE IF NOT EXISTS alembic_version (version_num VARCHAR(128) NOT NULL PRIMARY KEY)')); transaction.commit(); connection.close(); engine.dispose()"
+        alembic upgrade head
+    environment: *runtime-environment
+    volumes: *runtime-volumes
+    depends_on:
+      database:
+        condition: service_healthy
+      redis:
+        condition: service_healthy
+
+  api:
+    image: ${PLANTNEXUS_RUNTIME_IMAGE:?set PLANTNEXUS_RUNTIME_IMAGE}
+    environment: *runtime-environment
+    volumes: *runtime-volumes
+    healthcheck: *runtime-healthcheck
+    depends_on:
+      migrate:
+        condition: service_completed_successfully
+
+  worker:
+    image: ${PLANTNEXUS_RUNTIME_IMAGE:?set PLANTNEXUS_RUNTIME_IMAGE}
+    command:
+      - celery
+      - -A
+      - app.jobs.celery_app:celery_app
+      - worker
+      - --loglevel=INFO
+      - --concurrency=1
+      - --hostname=candidate@p8-operations
+    environment: *runtime-environment
+    volumes: *runtime-volumes
+    healthcheck: *worker-healthcheck
+    depends_on:
+      migrate:
+        condition: service_completed_successfully
+
+  validator:
+    image: ${PLANTNEXUS_RUNTIME_IMAGE:?set PLANTNEXUS_RUNTIME_IMAGE}
+    command:
+      - python
+      - -c
+      - from app.planning.validation.problem_schedule_validator import ProblemScheduleValidator; print('validator-import:PASS')
+    environment: *runtime-environment
+    volumes: *runtime-volumes
+    depends_on:
+      migrate:
+        condition: service_completed_successfully
+
+  observer:
+    image: ${PLANTNEXUS_RUNTIME_IMAGE:?set PLANTNEXUS_RUNTIME_IMAGE}
+    command:
+      - python
+      - -c
+      - import time; time.sleep(3600)
+    depends_on:
+      migrate:
+        condition: service_completed_successfully
+
+  rollback_api:
+    image: ${PLANTNEXUS_RUNTIME_IMAGE:?set PLANTNEXUS_RUNTIME_IMAGE}
+    environment: *runtime-environment
+    volumes: *runtime-volumes
+    healthcheck: *runtime-healthcheck
+    ports:
+      - 127.0.0.1:8001:8000
+    depends_on:
+      migrate:
+        condition: service_completed_successfully
+
+  rollback_worker:
+    image: ${PLANTNEXUS_RUNTIME_IMAGE:?set PLANTNEXUS_RUNTIME_IMAGE}
+    command:
+      - celery
+      - -A
+      - app.jobs.celery_app:celery_app
+      - worker
+      - --loglevel=INFO
+      - --concurrency=1
+      - --hostname=rollback@p8-operations
+    environment: *runtime-environment
+    volumes: *runtime-volumes
+    healthcheck: *worker-healthcheck
+    depends_on:
+      migrate:
+        condition: service_completed_successfully

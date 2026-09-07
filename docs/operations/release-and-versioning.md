@@ -72,4 +72,6 @@ SBOM覆盖锁定runtime graph的51个组件（包含application和`psycopg[binar
 
 ## 支持与Production边界
 
-本候选的支持窗口仅为`P8_ENGINEERING_CANDIDATE`：保证exact artifact可重建和回放，直到P8-15明确接纳或新的Runtime release显式取代。它没有Production部署、UAT、真实PostgreSQL/Redis/broker故障验证、容量、SLA、retention、signing、release authority或Enterprise Extension兼容结论。
+本候选的支持窗口仅为`P8_ENGINEERING_CANDIDATE`：保证exact artifact可重建和回放，直到P8-15明确接纳或新的Runtime release显式取代。
+
+TASK-P8-10在`TEST/SIMULATION`靶场补充了真实PostgreSQL/Redis、API/Worker/Validator、依赖故障、备份恢复及same-artifact dual-slot配置回退证据，同时保持所有Runtime构建输入相对P8-09 SHA零变化。该演练发现并显式处理Alembic version column长度bootstrap；因此不能把P8-09原“裸PostgreSQL迁移”叙述外推为已验证。候选仍没有Production部署、UAT、容量、SLA、retention、signing、release authority、跨版本rollback或Enterprise Extension兼容结论。

@@ -58,7 +58,9 @@ def write(root: Path, relative: str, text: str) -> None:
     path.write_text(text, encoding="utf-8")
 
 
-def context_repository(dependency_status: str = "done") -> tuple[TemporaryDirectory[str], Path, Path]:
+def context_repository(
+    dependency_status: str = "done",
+) -> tuple[TemporaryDirectory[str], Path, Path]:
     temporary = TemporaryDirectory()
     root = Path(temporary.name)
     git(root, "init")
@@ -103,8 +105,7 @@ def context_repository(dependency_status: str = "done") -> tuple[TemporaryDirect
         "Validation profile: HIGH_RISK\n\n"
         "Files allowed to change: `.github/workflows/ci.yml`\n\n"
         "Documents to update: `docs/architecture/configuration-environments-and-isolation.md`\n\n"
-        "## Activation evidence\n\n"
-        + ("historical payload " * 500),
+        "## Activation evidence\n\n" + ("historical payload " * 500),
     )
     return temporary, root, task_path
 
@@ -149,13 +150,13 @@ def replay_workflow(*, remove_added: bool = True, restore_modified: bool = True)
         "        run: |\n"
         "          rm -- \\\n"
         f"{removed}"
-        "            \"${replay_root}/schemas/new.schema.json\"\n"
-        "          git -C \"${replay_root}\" restore \\\n"
+        '            "${replay_root}/schemas/new.schema.json"\n'
+        '          git -C "${replay_root}" restore \\\n'
         f"            --source {P4_FROZEN_BASE} \\\n"
         "            -- \\\n"
         f"{restored}"
         "            pyproject.toml\n"
-        "          mkdir -p \"${replay_root}/build\"\n"
+        '          mkdir -p "${replay_root}/build"\n'
         "      - name: P3 Gate Chromium replay 1\n"
         "        run: echo replay\n"
     )
@@ -167,14 +168,17 @@ def test_preflight_frozen_replay_matches_added_and_modified_paths() -> None:
 
     assert "backend/tests/unit/new_test.py" in removed
     assert "backend/app/service.py" in restored
-    assert validate_frozen_isolation(
-        {
-            "backend/tests/unit/new_test.py": "A",
-            "backend/app/service.py": "M",
-            "docs/README.md": "M",
-        },
-        workflow,
-    ) == []
+    assert (
+        validate_frozen_isolation(
+            {
+                "backend/tests/unit/new_test.py": "A",
+                "backend/app/service.py": "M",
+                "docs/README.md": "M",
+            },
+            workflow,
+        )
+        == []
+    )
 
 
 def test_preflight_name_status_expands_rename_and_copy_for_isolation() -> None:
@@ -231,7 +235,9 @@ class FakeProviderClient:
         self.payload = dict(payload or {"result": "PASS", "issues": []})
         self.downloads = 0
 
-    def list_runs(self, repository: str, workflow: str, commit_sha: str) -> list[dict[str, Any]]:
+    def list_runs(
+        self, repository: str, workflow: str, commit_sha: str
+    ) -> list[dict[str, Any]]:
         assert repository == "example/plantnexus"
         assert workflow == "ci.yml"
         return [
@@ -274,6 +280,7 @@ class FakeProviderClient:
                     "plantnexus-ci-preflight-",
                     "plantnexus-ci-backend-",
                     "plantnexus-ci-evidence-",
+                    "plantnexus-ci-operations-",
                 ),
                 start=1,
             )
@@ -286,6 +293,7 @@ class FakeProviderClient:
             "full_preflight": "success",
             "full_backend": "success",
             "full_validation": "success",
+            "full_operations": "success",
             "validate": "success",
         }
         return [
@@ -305,8 +313,12 @@ class FakeProviderClient:
         return zip_payload(self.payload, f"report-{artifact_id}.json")
 
 
-def test_provider_collector_selects_exact_check_and_verifies_artifacts(tmp_path: Path) -> None:
-    client = FakeProviderClient({"result": "PASS", "issues": [], "head_sha": COMMIT_SHA})
+def test_provider_collector_selects_exact_check_and_verifies_artifacts(
+    tmp_path: Path,
+) -> None:
+    client = FakeProviderClient(
+        {"result": "PASS", "issues": [], "head_sha": COMMIT_SHA}
+    )
 
     report = collect_evidence(
         client,
@@ -324,10 +336,10 @@ def test_provider_collector_selects_exact_check_and_verifies_artifacts(tmp_path:
     assert report["schema_version"] == PROVIDER_REPORT_VERSION
     assert report["result"] == "PASS"
     assert report["run"]["id"] == 42
-    assert len(report["jobs"]) == 6
+    assert len(report["jobs"]) == 7
     assert report["jobs"][0]["duration_seconds"] == 60.0
-    assert len(report["artifacts"]) == 4
-    assert client.downloads == 4
+    assert len(report["artifacts"]) == 5
+    assert client.downloads == 5
     assert all(len(item["sha256"]) == 64 for item in report["artifacts"])
 
 
@@ -385,8 +397,14 @@ def test_provider_json_identity_checks_current_envelope_not_nested_history() -> 
 
     assert validate_json_payload(
         {"head_sha": wrong_sha, "issues": []}, COMMIT_SHA, "current.json"
+    ) == [f"current.json: $.head_sha identity {wrong_sha} does not match {COMMIT_SHA}"]
+    assert validate_json_payload(
+        {"evidence_commit": wrong_sha, "issues": []}, COMMIT_SHA, "operations.json"
     ) == [
-        f"current.json: $.head_sha identity {wrong_sha} does not match {COMMIT_SHA}"
+        f"operations.json: $.evidence_commit identity {wrong_sha} does not match {COMMIT_SHA}"
+    ]
+    assert validate_json_payload({"status": "FAIL"}, COMMIT_SHA, "operations.json") == [
+        "operations.json: $.status reports FAIL"
     ]
     assert (
         validate_json_payload(
@@ -398,7 +416,9 @@ def test_provider_json_identity_checks_current_envelope_not_nested_history() -> 
     )
 
 
-def test_provider_manifest_reuse_requires_matching_archive_digest(tmp_path: Path) -> None:
+def test_provider_manifest_reuse_requires_matching_archive_digest(
+    tmp_path: Path,
+) -> None:
     artifacts_dir = tmp_path / "artifacts"
     artifacts_dir.mkdir()
     archive = zip_payload({"result": "PASS", "issues": []})

@@ -11,6 +11,14 @@ last_reviewed: 2026-09-07
 
 # 配置、环境与数据隔离
 
+## P8非Production运维靶场
+
+TASK-P8-10将唯一批准目标固定为`p8-operations-compose-v1`：`runtime_environment=test`、`data_plane=SIMULATION`、synthetic-only、无external ingress/third-party connector，并使用独立Compose network及一次性PostgreSQL/Redis volume。P8-09 exact Runtime输入由Git diff guard证明未变，数据库/broker镜像以digest固定；operator只有靶场生命周期、migration、sanitized probe、backup/restore和dual-slot rollback权限。
+
+Secret仅由每次运行生成的临时env文件注入，raw dump只在runner temp/内存存在且不上传。API、Worker和rollback slot加载相同planning policy、solve limits、HTTP policy及default-empty Extension set；任何环境、plane、Runtime/Extension fingerprint或未验证Extension配置漂移都在traffic promotion前fail closed。内部observer经Compose DNS探测服务，不要求把API暴露为外部平台入口。
+
+该拓扑不等于Production隔离：没有独立Production account/VPC/database role、TLS、secret manager、Kubernetes/HA、真实host identity、外部observability backend或retention。PostgreSQL迁移还需要显式的Alembic version-table长度bootstrap；未来release必须产品化或替代该前置，不能依赖未记录的手工操作。
+
 ## TASK-P8-09 release preflight配置边界
 
 Runtime `0.1.0`发布物固定`CPython 3.12.13 / linux / amd64`，但不内置任一环境的endpoint、DSN、token、claim、policy document或secret。Release preflight只验证外部平台已经提供八个必需配置名称：database、Redis、Celery broker/result backend、Schema目录、Planning Policy、Solve Limits及Runtime HTTP Policy；报告永不保存配置值。environment/data plane、exact code commit、Runtime composition开关与P8-08 identity/authorization adapter仍由部署环境显式绑定，客户端canonical JSON不能覆盖。

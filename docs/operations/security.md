@@ -11,6 +11,14 @@ last_reviewed: 2026-09-07
 
 # P0 工程安全边界
 
+## P8-10部署与恢复安全边界
+
+运维靶场的operator只可创建/停止/销毁`plantnexus-p8-10`专用容器、网络和volume，不能执行Production、Demo、promotion或业务状态修改。PostgreSQL/Redis镜像以registry digest固定；Runtime镜像先证明P8-09的`backend/app`、migration、Schema、Dockerfile、release policy及lock输入零漂移，再写入exact revision label。所有配置为`TEST/SIMULATION`，外部ingress与第三方connector关闭。
+
+数据库密码每次由演练器生成，只写权限受进程/runner控制的临时env文件；四个报告路径必须互异且解析后位于仓库`build/validation/`内，禁止借CLI覆盖外部文件。报告、stdout摘要和Provider artifact不含secret、连接URL、raw backup或绝对路径。Log probe用sentinel验证password、authorization及URL userinfo redaction；任一泄漏都阻断evidence publication。Raw dump只存在于内存/runner temp并在target-scoped cleanup时销毁。
+
+Extension loading仍为`DISABLED_UNTIL_COMPATIBILITY_VERIFIED`且allowed set为空；非空配置只在部署准入层产生`EXTENSION_CONFIGURATION_REJECTED`与readiness DOWN，不会下载、挂载或执行插件。真实secret manager/rotation、TLS/mTLS、database/broker ACL与独立roles、image签名/attestation、external observability access control、Production incident authority及retention仍未形成，OPEN-002/010/012/015和相关风险不得关闭。
+
 ## TASK-P8-09 supply-chain与artifact安全边界
 
 Release reader对tar+gzip实行单root、regular-file-only、成员/展开大小上限，拒绝绝对路径、`..`、反斜杠、重复member、symlink/hardlink和非UTF-8/duplicate/non-finite JSON。外层sidecar、内层完整checksum inventory、payload size/digest与canonical manifest fingerprint任一不一致都在安装/启动前失败。归档禁止Demo、Frontend、connector、Enterprise Extension、credential和运行数据；报告只含版本、commit、fingerprint、稳定错误code和配置名称。

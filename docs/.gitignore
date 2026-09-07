@@ -48,6 +48,10 @@
 /simulation/*
 !/simulation/*.md
 
+!/runbooks/
+/runbooks/*
+!/runbooks/*.md
+
 # Sanitized public phase observations
 !/p4-exit-gate-audit-observations.v1.json
 !/p5-exit-gate-audit-observations.v1.json

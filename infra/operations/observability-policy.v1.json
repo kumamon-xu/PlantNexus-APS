@@ -1,0 +1,148 @@
+{
+  "observability_policy_version": "aps-runtime-observability-policy.v1",
+  "target_id": "p8-operations-compose-v1",
+  "golden_signals": [
+    {
+      "signal": "TRAFFIC",
+      "source": "active_http_probe_request_count",
+      "unit": "requests"
+    },
+    {
+      "signal": "ERRORS",
+      "source": "active_http_probe_failure_ratio",
+      "unit": "ratio"
+    },
+    {
+      "signal": "LATENCY",
+      "source": "active_http_probe_duration_p95",
+      "unit": "milliseconds"
+    },
+    {
+      "signal": "SATURATION",
+      "source": "docker_container_cpu_and_memory_observation",
+      "unit": "provider_native"
+    }
+  ],
+  "correlation": {
+    "application_field": "correlation_id",
+    "trace_fields": [
+      "trace_id",
+      "span_id"
+    ],
+    "runtime_identity_fields": [
+      "runtime_version",
+      "runtime_artifact_fingerprint",
+      "composition_fingerprint",
+      "extension_set_fingerprint"
+    ],
+    "payload_logging": false
+  },
+  "dashboards": [
+    {
+      "dashboard_id": "aps-runtime-golden-signals-v1",
+      "panels": [
+        "api-traffic-errors-latency",
+        "api-readiness-by-dependency",
+        "worker-heartbeat-and-broker-depth",
+        "database-readiness-and-backup-age",
+        "container-cpu-memory",
+        "runtime-extension-composition"
+      ]
+    }
+  ],
+  "alerts": [
+    {
+      "alert_id": "APSApiUnavailable",
+      "signal": "ERRORS",
+      "condition": "live_probe_success == 0",
+      "severity": "critical",
+      "runbook": "docs/runbooks/dependency-outage-and-readiness.md"
+    },
+    {
+      "alert_id": "APSReadinessDown",
+      "signal": "ERRORS",
+      "condition": "ready_probe_success == 0",
+      "severity": "warning",
+      "runbook": "docs/runbooks/dependency-outage-and-readiness.md"
+    },
+    {
+      "alert_id": "APSWorkerUnavailable",
+      "signal": "TRAFFIC",
+      "condition": "worker_ping_success == 0",
+      "severity": "critical",
+      "runbook": "docs/runbooks/stalled-worker-recovery.md"
+    },
+    {
+      "alert_id": "APSDatabaseUnavailable",
+      "signal": "ERRORS",
+      "condition": "database_probe_success == 0",
+      "severity": "critical",
+      "runbook": "docs/runbooks/dependency-outage-and-readiness.md"
+    },
+    {
+      "alert_id": "APSBrokerUnavailable",
+      "signal": "ERRORS",
+      "condition": "broker_probe_success == 0",
+      "severity": "critical",
+      "runbook": "docs/runbooks/dependency-outage-and-readiness.md"
+    },
+    {
+      "alert_id": "APSExtensionConfigurationRejected",
+      "signal": "ERRORS",
+      "condition": "extension_configuration_ready == 0",
+      "severity": "critical",
+      "runbook": "docs/runbooks/extension-load-and-compatibility-failure.md"
+    },
+    {
+      "alert_id": "APSBackupOrRestoreFailed",
+      "signal": "ERRORS",
+      "condition": "backup_restore_verification_success == 0",
+      "severity": "critical",
+      "runbook": "docs/runbooks/backup-and-restore.md"
+    },
+    {
+      "alert_id": "APSHighErrorRateEngineering",
+      "signal": "ERRORS",
+      "condition": "active_http_probe_failure_ratio > 0.05",
+      "severity": "warning",
+      "runbook": "docs/runbooks/incident-triage-and-escalation.md"
+    },
+    {
+      "alert_id": "APSHighLatencyEngineering",
+      "signal": "LATENCY",
+      "condition": "active_http_probe_duration_p95 > 2000",
+      "severity": "warning",
+      "runbook": "docs/runbooks/incident-triage-and-escalation.md"
+    },
+    {
+      "alert_id": "APSContainerSaturationEngineering",
+      "signal": "SATURATION",
+      "condition": "provider_saturation_observation_requires_review == 1",
+      "severity": "warning",
+      "runbook": "docs/runbooks/incident-triage-and-escalation.md"
+    }
+  ],
+  "redaction": {
+    "forbidden_key_fragments": [
+      "authorization",
+      "credential",
+      "password",
+      "secret",
+      "token",
+      "database_url",
+      "redis_url"
+    ],
+    "forbidden_payloads": [
+      "canonical_json_payload",
+      "business_record",
+      "bearer_bytes"
+    ],
+    "failure_action": "BLOCK_EVIDENCE_PUBLICATION"
+  },
+  "retention": {
+    "provider_reports": "GITHUB_ARTIFACT_POLICY",
+    "raw_logs": "NOT_UPLOADED_BY_P8_10",
+    "raw_backup": "DELETE_AFTER_DRILL",
+    "production_retention_defined": false
+  }
+}

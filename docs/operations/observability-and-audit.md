@@ -6,10 +6,18 @@ spec_version: 0.3.0
 phase: P0-P8
 normative: true
 source_sections: [29, 42, 65, 93, 95]
-last_reviewed: 2026-09-06
+last_reviewed: 2026-09-07
 ---
 
 # P0 Observability 与 Audit 边界
+
+## P8 Runtime golden signals 与告警合同
+
+TASK-P8-10新增的[`observability-policy.v1.json`](../../infra/operations/observability-policy.v1.json)不修改Headless业务API。一次性内部observer主动采集traffic request count、failure ratio、p50/p95 latency；Docker provider采集container CPU/memory/PID saturation observation；Redis读取工程queue depth；health继续给出database/redis readiness。六个dashboard panel把API、依赖、Worker、backup age、container和Runtime/Extension composition串联，但当前只形成source/panel definition与machine report，没有部署外部dashboard服务。
+
+10条alert都必须有runbook并通过fired→resolved：API、readiness、Worker、database、broker、Extension配置、backup/restore，以及工程高error、latency、saturation。前7条由真实停止依赖、未验证Extension配置或损坏backup指纹触发；后三条只执行synthetic threshold evaluator，不是Production阈值。告警不允许携带canonical payload、DSN、token或driver stack。
+
+Runtime log probe绑定`correlation_id`、32字符trace ID、16字符span ID及Runtime/Extension fingerprints，并用secret sentinel验证既有递归redaction；raw log不上传。四份报告只保存allow-listed identity、状态、计数、hash与无阈值工程观察。外部OTel collector/exporter、metrics backend、SIEM、长期retention、clock-skew、真实告警接收人和Production SLO仍未形成。
 
 ## TASK-P8-08 authorization decision evidence
 

@@ -11,7 +11,7 @@ last_reviewed: 2026-09-07
 
 # APS Runtime 安装、预检与启动顺序
 
-本页定义P8-09工程候选的可重复安装与fail-closed启动顺序。它是未来部署Runbook的输入，不授予Production部署、签名或发布权限。
+本页定义P8-09工程候选的可重复安装与fail-closed启动顺序，并记录TASK-P8-10在隔离Compose靶场的真实部署结果。它不授予Production部署、签名或发布权限。
 
 ## 1. 固定输入并验证传输
 
@@ -66,6 +66,16 @@ Windows命令仅用于工程复验时把解释器路径改为`.venv/Scripts/pyth
 
 必须确认数据库head恰好为release manifest声明值，然后才允许启动进程。禁止从其他checkout拼接migration、改写旧revision或在升级失败后继续启动。生产回退优先恢复备份和上一份获批artifact；直接downgrade会删除后继表/数据，只有显式审批、已验证备份和可接受数据损失时才可执行。
 
+P8-10首次在PostgreSQL 17.6空库实际执行时发现：Alembic自动创建的`alembic_version.version_num varchar(32)`无法保存超过32字符的既有revision ID，裸升级在`0003→0004_schedule_versions_audit_export_jobs`处正确失败。P8-10不得改写已经发布的migration或Runtime，因此`p8-operations-compose-v1`在Alembic首次运行前幂等执行：
+
+```sql
+CREATE TABLE IF NOT EXISTS alembic_version (
+  version_num VARCHAR(128) NOT NULL PRIMARY KEY
+);
+```
+
+随后仍运行归档内未修改的线性chain到`0009_host_authorization_audit`。部署平台必须把该bootstrap作为可审计步骤并验证最终column/head；未来Runtime release应决定是否将其正式产品化。不得用手工截断revision、修改version row或忽略失败替代。
+
 ## 4. 启动顺序与健康检查
 
 建议顺序为数据库/Redis/broker可用 → migration exact head → Worker → API → 宿主平台流量。进程入口为：
@@ -81,4 +91,10 @@ Windows命令仅用于工程复验时把解释器路径改为`.venv/Scripts/pyth
 
 失败artifact继续保留在其content address中并标记禁止promotion，不得覆盖、改名冒充或删除报告。preflight失败、migration drift、依赖/VEX变化、secret/config缺失、Runtime fingerprint不一致、Worker/API角色不一致或readiness失败都必须保持服务不接收业务流量。诊断只记录稳定code、版本、fingerprint和配置名称，禁止记录DSN、token、claim、canonical payload、绝对部署路径或stack。
 
-派生OCI镜像必须以同一归档/manifest作为输入并增加不可变image digest；仓库Dockerfile的label和build结果本身不构成Production签名镜像。远程registry、Kubernetes、HA、滚动/蓝绿、on-call、告警和retention仍由P8-10及后续具名工作形成。
+派生OCI镜像必须以同一归档/manifest作为输入并增加不可变image digest；仓库Dockerfile的label和build结果本身不构成Production签名镜像。
+
+## 6. P8-10可执行靶场与证据
+
+[`../../infra/operations/non-production-target.v1.json`](../../infra/operations/non-production-target.v1.json)固定P8-09 SHA、release archive/fingerprint、digest-pinned PostgreSQL/Redis、operator、secret/storage及recovery边界；[`../../infra/operations/compose.p8-operations.yml`](../../infra/operations/compose.p8-operations.yml)只叠加到development Compose，不改变其默认行为。内部`observer`通过Compose DNS执行health探针，无需开放外部ingress。
+
+[`../runbooks/headless-deployment-and-rollback.md`](../runbooks/headless-deployment-and-rollback.md)规定部署与dual-slot顺序。机器演练必须验证8项deployment checks、API/Worker/Validator、Runtime/Extension descriptor及清理；rollback slot先ready后停止candidate，从而证明last-known-good配置切换。当前两个slot使用同一P8-09 exact artifact，所以`cross_version_rollback=false`；Kubernetes、HA、真实流量网关和跨版本回退仍未验证。

@@ -350,7 +350,7 @@ _FROZEN_OWNER_PATHS = (
 
 _POST_P6_ADDITIVE_OWNER_SHA256: Mapping[str, str] = {
     ".github/workflows/ci.yml": (
-        "85321baadce6f4edccc0ae73a443313ba244d54a2143a61e5012cb1c9d9a0f2e"
+        "33b61a90efcb14114c7bbf62d84a21fb98d67b289abd15650d615b251f54a50b"
     ),
     "backend/app/planning/backends/cp_sat/replan_solver_check.py": (
         "8c5e7a1e1103269f7104a883fe2fb977cc49f94167143fd4facc9c8f55496aae"
@@ -465,9 +465,7 @@ def _git(root: Path, *arguments: str, check: bool = True) -> str:
 
 
 def _code_commit(root: Path) -> str:
-    value = os.environ.get("PLANTNEXUS_CODE_COMMIT") or _git(
-        root, "rev-parse", "HEAD"
-    )
+    value = os.environ.get("PLANTNEXUS_CODE_COMMIT") or _git(root, "rev-parse", "HEAD")
     if not (
         len(value) == 40
         and value == value.lower()
@@ -622,7 +620,9 @@ def collect_provider_observation(
             or run.get("conclusion") != expected["expected_conclusion"]
         ):
             _fail("provider.run", f"run identity/status drifted for {commit_sha}")
-        jobs = [dict(item) for item in provider.jobs("kumamon-xu/PlantNexus-APS", run_id)]
+        jobs = [
+            dict(item) for item in provider.jobs("kumamon-xu/PlantNexus-APS", run_id)
+        ]
         validate_jobs = [item for item in jobs if item.get("name") == "validate"]
         if len(validate_jobs) != 1:
             _fail("provider.jobs", f"validate job topology drifted for {run_id}")
@@ -661,16 +661,19 @@ def collect_provider_observation(
             name = artifact.get("name")
             if not isinstance(artifact_id, int) or not isinstance(name, str):
                 _fail("provider.artifacts", "missing artifact identity")
-            data = provider.download_artifact(
-                "kumamon-xu/PlantNexus-APS", artifact_id
-            )
+            data = provider.download_artifact("kumamon-xu/PlantNexus-APS", artifact_id)
             downloaded_digest = _bytes_fingerprint(data)
             provider_digest = artifact.get("digest")
             if provider_digest != downloaded_digest:
-                _fail("provider.artifacts", f"download digest mismatch for {artifact_id}")
+                _fail(
+                    "provider.artifacts", f"download digest mismatch for {artifact_id}"
+                )
             entries, zip_issues = inspect_artifact_zip(data, commit_sha)
             if expected_conclusion == "success" and zip_issues:
-                _fail("provider.artifacts", f"successful artifact issues for {artifact_id}")
+                _fail(
+                    "provider.artifacts",
+                    f"successful artifact issues for {artifact_id}",
+                )
             archive_name = artifact_filename(artifact_id, name)
             (run_dir / archive_name).write_bytes(data)
             artifact_rows.append(
@@ -727,10 +730,14 @@ def collect_provider_observation(
         row for row in provider_runs if row["expected_conclusion"] == "failure"
     ]
     all_artifacts = [
-        artifact for row in provider_runs for artifact in cast(list[JsonObject], row["artifacts"])
+        artifact
+        for row in provider_runs
+        for artifact in cast(list[JsonObject], row["artifacts"])
     ]
     successful_artifacts = [
-        artifact for row in success_rows for artifact in cast(list[JsonObject], row["artifacts"])
+        artifact
+        for row in success_rows
+        for artifact in cast(list[JsonObject], row["artifacts"])
     ]
     observation: JsonObject = {
         "report_version": OBSERVATION_VERSION,
@@ -760,8 +767,7 @@ def collect_provider_observation(
                 for artifact in cast(list[JsonObject], row["artifacts"])
             ),
             "json_entry_count": sum(
-                cast(int, artifact["json_entry_count"])
-                for artifact in all_artifacts
+                cast(int, artifact["json_entry_count"]) for artifact in all_artifacts
             ),
             "provider_inventory_fingerprint": _fingerprint(provider_runs),
         },
@@ -875,7 +881,9 @@ def validate_provider_observation(
             if row.get(key) != value:
                 _fail(f"observation.provider_runs[{index}].{key}", "identity drifted")
         if not _is_ancestor(root, cast(str, expected["commit_sha"])):
-            _fail(f"observation.provider_runs[{index}].commit_sha", "not a HEAD ancestor")
+            _fail(
+                f"observation.provider_runs[{index}].commit_sha", "not a HEAD ancestor"
+            )
         expected_conclusion = expected["expected_conclusion"]
         required = _object(row.get("required_check"), "provider.required_check")
         if (
@@ -901,14 +909,16 @@ def validate_provider_observation(
             if (
                 expiry <= activation
                 or artifact.get("digest_match") is not True
-                or artifact.get("provider_digest")
-                != artifact.get("downloaded_sha256")
+                or artifact.get("provider_digest") != artifact.get("downloaded_sha256")
             ):
                 _fail(
                     f"observation.provider_runs[{index}].artifacts[{artifact_index}]",
                     "expiry or digest drifted",
                 )
-            if expected_conclusion == "success" and artifact.get("zip_issue_count") != 0:
+            if (
+                expected_conclusion == "success"
+                and artifact.get("zip_issue_count") != 0
+            ):
                 _fail("provider.artifact", "successful artifact contains issue")
 
     provider_audit = _object(
@@ -1033,7 +1043,10 @@ def _contract_and_frozen_owner_evidence(root: Path) -> JsonObject:
             forbidden_changes.append(relative)
             continue
         path = root / relative
-        if not path.is_file() or sha256(path.read_bytes()).hexdigest() != expected_successor_digest:
+        if (
+            not path.is_file()
+            or sha256(path.read_bytes()).hexdigest() != expected_successor_digest
+        ):
             forbidden_changes.append(relative)
     if forbidden_changes:
         _fail(
@@ -1183,9 +1196,7 @@ def run_p6_exit_gate_audit(
     provider_summary = {
         "observation_version": provider_observation["report_version"],
         "observation_fingerprint": provider_observation["observation_fingerprint"],
-        "provider_inventory_fingerprint": audit[
-            "provider_inventory_fingerprint"
-        ],
+        "provider_inventory_fingerprint": audit["provider_inventory_fingerprint"],
         "run_count": audit["run_count"],
         "successful_run_count": audit["successful_run_count"],
         "retained_failed_run_count": audit["retained_failed_run_count"],
@@ -1224,9 +1235,7 @@ def run_p6_exit_gate_audit(
                 "successful_artifact_count": audit["successful_artifact_count"],
                 "expired_artifact_count": audit["expired_artifact_count"],
                 "digest_mismatch_count": audit["digest_mismatch_count"],
-                "successful_zip_issue_count": audit[
-                    "successful_zip_issue_count"
-                ],
+                "successful_zip_issue_count": audit["successful_zip_issue_count"],
                 "json_entry_count": audit["json_entry_count"],
             },
         ),
@@ -1246,9 +1255,7 @@ def run_p6_exit_gate_audit(
         _check(
             EXPECTED_CHECK_IDS[5],
             {
-                "changed_frozen_owner_paths": frozen[
-                    "changed_frozen_owner_paths"
-                ],
+                "changed_frozen_owner_paths": frozen["changed_frozen_owner_paths"],
                 "migration_head": frozen["migration_head"],
                 "dependency_lock_changed": frozen["dependency_lock_changed"],
                 "state_machine_changed": frozen["state_machine_changed"],
@@ -1277,9 +1284,7 @@ def run_p6_exit_gate_audit(
             EXPECTED_CHECK_IDS[8],
             {
                 "raw_rows_included": raw_safe["p6_raw_rows_included"],
-                "feature_records_included": raw_safe[
-                    "p6_feature_records_included"
-                ],
+                "feature_records_included": raw_safe["p6_feature_records_included"],
                 "labels_included": raw_safe["p6_labels_included"],
                 "production_authorized": raw_safe["production_authorized"],
             },
@@ -1472,12 +1477,8 @@ def build_p6_exit_gate_manifest(report: Mapping[str, object]) -> JsonObject:
         "report_version": REPORT_VERSION,
         "report_fingerprint": report["report_fingerprint"],
         "report_sha256": _fingerprint(report),
-        "provider_inventory_fingerprint": provider[
-            "provider_inventory_fingerprint"
-        ],
-        "provider_observation_fingerprint": provider[
-            "observation_fingerprint"
-        ],
+        "provider_inventory_fingerprint": provider["provider_inventory_fingerprint"],
+        "provider_observation_fingerprint": provider["observation_fingerprint"],
         "fresh_p6_gate_report_fingerprint": gate["report_fingerprint"],
         "fresh_p6_gate_manifest_fingerprint": gate["manifest_fingerprint"],
         "fresh_p6_gate_semantic_fingerprint": gate["semantic_fingerprint"],
@@ -1679,9 +1680,13 @@ def main(argv: Sequence[str] | None = None) -> int:
         _write_json(observation_path, observation)
         print(json.dumps(observation["provider_audit"], sort_keys=True))
         return 0
-    report_path = arguments.report if arguments.report.is_absolute() else root / arguments.report
+    report_path = (
+        arguments.report if arguments.report.is_absolute() else root / arguments.report
+    )
     manifest_path = (
-        arguments.manifest if arguments.manifest.is_absolute() else root / arguments.manifest
+        arguments.manifest
+        if arguments.manifest.is_absolute()
+        else root / arguments.manifest
     )
     subreport_dir = (
         arguments.subreport_dir

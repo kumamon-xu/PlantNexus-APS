@@ -482,6 +482,13 @@ def test_ci_profile_routing_is_mutually_exclusive_and_fail_closed() -> None:
     assert "test_p5_exit_gate.py" in full_text
     assert f"--source {P5_EXIT_DIFF_BASE}" in full_text
     assert "-- backend/tests/integration/test_ci_contract.py" in full_text
+    p4_frontend_replay = next(
+        cast(dict[str, Any], step)["run"]
+        for step in cast(list[dict[str, Any]], full["steps"])
+        if cast(dict[str, Any], step).get("name")
+        == "TASK-P4-13 Dynamic replanning frontend machine evidence"
+    )
+    assert str(p4_frontend_replay).count("frontend/package.json") == 1
     assert "backend/app/__init__.py" in full_text
     assert "schemas/data_dictionary.yaml" in full_text
     assert "duration-prediction.schema.json" in full_text

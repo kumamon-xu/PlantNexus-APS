@@ -716,6 +716,7 @@ jobs:
             backend/tests/integration/test_migrations_and_infrastructure.py \
             backend/tests/integration/test_p3_vertical_slice.py \
             backend/tests/integration/test_config_and_health.py \
+            frontend/package.json \
             infra/Dockerfile \
             pyproject.toml \
             schemas/data_dictionary.yaml

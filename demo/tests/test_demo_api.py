@@ -3,6 +3,7 @@
 from __future__ import annotations
 
 from pathlib import Path
+import sqlite3
 
 from fastapi.testclient import TestClient
 from pydantic import SecretStr
@@ -228,6 +229,20 @@ def test_demo_http_flow_is_cookie_authenticated_and_token_safe(tmp_path: Path) -
         assert urgent_job.result is not None
         assert urgent_job.result["schedule_state"] == "DRAFT"
         assert urgent_job.result["current_published_version_id"] == version_id
+        active = runtime.control.active_run()
+        assert active is not None
+        with sqlite3.connect(
+            runtime.paths.resolve_relative_database(active.database_relative_path)
+        ) as connection:
+            created_at = dict(
+                connection.execute(
+                    "SELECT schedule_version_id, created_at_utc FROM schedule_versions"
+                ).fetchall()
+            )
+        assert (
+            created_at[urgent_job.result["schedule_version_id"]]
+            < created_at[version_id]
+        )
         assert [stage["stage"] for stage in runtime.control.job_stages(urgent_job.job_id)] == [
             "PREPARING_IMPORT",
             "IMPORTING_URGENT_DEMAND",

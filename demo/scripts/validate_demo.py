@@ -784,7 +784,7 @@ def _verify_windows_package_evidence() -> dict[str, Any]:
         and audit["zip_sha256"] == package_digest
         and observation["package_zip_sha256"] == package_digest
         and browser["package_zip_sha256"] == package_digest
-        and evidence["package"]["version"] == "0.2.3"
+        and evidence["package"]["version"] == "0.2.4"
         and evidence["runtime"]["loopback_port"]
         != evidence["runtime"]["lan_port"]
         and evidence["runtime"]["validation_status"] == "PASS"

@@ -36,7 +36,7 @@ PlantNexus APS CNC 排产演示是一套面向精密机械零部件与 CNC 机�
 
 系统要求：Windows 10/11 x64，以及可用的现代浏览器。
 
-1. 获取 `PlantNexus-CNC-Demo-Windows-x64-0.2.3.zip`。
+1. 获取 `PlantNexus-CNC-Demo-Windows-x64-0.2.4.zip`。
 2. 校验随包提供的 `.zip.sha256` 文件。
 3. 完整解压 ZIP 到当前用户具有写权限的目录。
 4. 需要远端查看时，先运行 `配置演示.ps1`，设置端口及允许访问的网段。
@@ -113,7 +113,7 @@ http://演示机局域网IP:18080/demo/
 ## 发布包结构
 
 ```text
-PlantNexus-CNC-Demo-Windows-x64-0.2.3/
+PlantNexus-CNC-Demo-Windows-x64-0.2.4/
 ├── PlantNexusCncDemo.exe
 ├── 启动演示.cmd
 ├── 停止演示.cmd
@@ -146,7 +146,7 @@ PlantNexus-CNC-Demo-Windows-x64-0.2.3/
 
 ### 启动后没有浏览器窗口
 
-这是预期行为。`0.2.1` 起启动入口固定为纯服务模式；`0.2.2` 修复了 Windows `cmd.exe` 对非 CRLF 启动脚本的兼容问题，同时兼容 Windows PowerShell 5.1 的中文脚本编码；`0.2.3` 增加了显式公网网段选项。请运行 `查看状态.cmd` 确认端口，再从远端终端手工访问。配置中的 `open_browser` 必须保持 `false`。
+这是预期行为。`0.2.1` 起启动入口固定为纯服务模式；`0.2.2` 修复了 Windows `cmd.exe` 对非 CRLF 启动脚本的兼容问题，同时兼容 Windows PowerShell 5.1 的中文脚本编码；`0.2.3` 增加了显式公网网段选项；`0.2.4` 修复了已完成插单因版本业务时间较早而无法自动进入比较页的问题。请运行 `查看状态.cmd` 确认端口，再从远端终端手工访问。配置中的 `open_browser` 必须保持 `false`。
 
 ## 使用边界
 

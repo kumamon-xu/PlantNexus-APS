@@ -532,9 +532,9 @@ class DemoRuntime:
 
     def story_state(self) -> dict[str, object]:
         active = self.control.active_run()
-        active_job = self.control.active_job()
         configuration = self._presentation_configuration()
         if active is None:
+            active_job = self.control.active_job()
             return {
                 "story_state": "EMPTY",
                 "run": None,
@@ -558,24 +558,46 @@ class DemoRuntime:
             publications = SqlAlchemyPublicationRepository(
                 database.engine, data_plane=WorkspaceDataPlane.SIMULATION
             )
-            with database.engine.connect() as connection:
-                row = connection.exec_driver_sql(
-                    """
-                    SELECT schedule_version_id FROM schedule_versions
-                    WHERE data_plane = 'SIMULATION'
-                    ORDER BY created_at_utc DESC, schedule_version_id DESC LIMIT 1
-                    """
-                ).first()
-            schedule = None if row is None else schedules.get(cast(str, row[0]))
             current = publications.get_current(target="SIMULATION_INTERNAL")
             current_schedule_version_id = (
                 None if current is None else current.schedule_version_id
             )
+            schedule_version_id = current_schedule_version_id
+            for job_kind in ("URGENT_REPLAN", "INITIAL_PLAN"):
+                succeeded = self.control.latest_succeeded_job(
+                    job_kind=job_kind, run_id=active.run_id
+                )
+                if succeeded is None:
+                    continue
+                result = succeeded.result
+                candidate = (
+                    None if result is None else result.get("schedule_version_id")
+                )
+                if not isinstance(candidate, str) or not candidate:
+                    raise DemoPersistenceError(
+                        "PERSISTENCE_FAILED",
+                        field="schedule_version",
+                        message="successful planning job has no schedule version",
+                    )
+                schedule_version_id = candidate
+                break
+            schedule = (
+                None
+                if schedule_version_id is None
+                else schedules.get(schedule_version_id)
+            )
+            if schedule_version_id is not None and schedule is None:
+                raise DemoPersistenceError(
+                    "PERSISTENCE_FAILED",
+                    field="schedule_version",
+                    message="successful planning schedule is not recoverable",
+                )
             comparison_reference = self._comparison_reference(
                 run_id=active.run_id,
                 schedule=cast(Mapping[str, object] | None, schedule),
                 current_schedule_version_id=current_schedule_version_id,
             )
+            active_job = self.control.active_job()
             if active_job is not None and active_job.job_kind == "URGENT_REPLAN":
                 story = "REPLAN_RUNNING"
             elif active_job is not None and active_job.job_kind == "INITIAL_PLAN":

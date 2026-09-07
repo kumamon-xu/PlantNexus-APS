@@ -26,7 +26,7 @@ from .standalone import StandaloneLayout, StandaloneResourceError, create_standa
 from .standalone_settings import StandaloneConfigurationError, StandaloneSettings
 
 
-WINDOWS_PACKAGE_VERSION = "0.2.3"
+WINDOWS_PACKAGE_VERSION = "0.2.4"
 WINDOWS_STARTUP_BEHAVIOR = "SERVICE_ONLY_NO_BROWSER"
 LAUNCHER_STATE_VERSION = "cnc-demo-windows-launcher-state.v1"
 _START_TIMEOUT_SECONDS = 60.0

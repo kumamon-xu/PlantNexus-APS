@@ -11,7 +11,7 @@ last_reviewed: 2026-09-07
 
 # APS Runtime 安装、预检与启动顺序
 
-本页定义P8-09工程候选的可重复安装与fail-closed启动顺序，并记录TASK-P8-10在隔离Compose靶场的真实部署结果。它不授予Production部署、签名或发布权限。
+本页定义P8-09 Runtime工程候选的可重复安装与fail-closed启动顺序，记录TASK-P8-10在隔离Compose靶场的真实部署结果，并说明P8-11可选Frontend的独立分发边界。它不授予Production部署、签名或发布权限。
 
 ## 1. 固定输入并验证传输
 
@@ -98,3 +98,21 @@ CREATE TABLE IF NOT EXISTS alembic_version (
 [`../../infra/operations/non-production-target.v1.json`](../../infra/operations/non-production-target.v1.json)固定P8-09 SHA、release archive/fingerprint、digest-pinned PostgreSQL/Redis、operator、secret/storage及recovery边界；[`../../infra/operations/compose.p8-operations.yml`](../../infra/operations/compose.p8-operations.yml)只叠加到development Compose，不改变其默认行为。内部`observer`通过Compose DNS执行health探针，无需开放外部ingress。
 
 [`../runbooks/headless-deployment-and-rollback.md`](../runbooks/headless-deployment-and-rollback.md)规定部署与dual-slot顺序。机器演练必须验证8项deployment checks、API/Worker/Validator、Runtime/Extension descriptor及清理；rollback slot先ready后停止candidate，从而证明last-known-good配置切换。当前两个slot使用同一P8-09 exact artifact，所以`cross_version_rollback=false`；Kubernetes、HA、真实流量网关和跨版本回退仍未验证。
+
+## 7. P8-11可选Frontend独立分发
+
+Frontend与Runtime是两个互不嵌套的工程制品。Runtime继续按第1～6节安装，并由P8-11 backend-only smoke从解出的wheel在隔离解释器内启动`app.api.app`，验证liveness、readiness、OpenAPI和5项Headless route，同时确认release inventory、wheel及HTTP route均不含Frontend。Frontend归档不进入Runtime archive、镜像、migration或进程启动条件。
+
+在仓库固定Node/npm和exact lock下，从`frontend/`执行：
+
+```text
+npm run client:check
+npm run build:headless
+npm run package:headless
+```
+
+输出为`build/frontend/plantnexus-aps-frontend-0.1.0.tar.gz`、旁置`.sha256`和`frontend-distribution-manifest.v1.json`。构建入口为`headless.html`，相对asset base允许静态托管；无source map。打包器以固定tar metadata和gzip时间组装两次并要求byte-identical，manifest逐文件记录size/digest、OpenAPI digest、commit、认证/缓存配置、部署模式和`production_ready=false`。部署前必须核对sidecar与manifest，不得加入Backend/Core/Solver、Demo、Enterprise Extension、credential或运行数据。
+
+首选部署模式是在Runtime/API同一origin提供静态文件，Frontend默认请求`/api/v1`。也可独立发布静态归档，但必须由获批gateway把公开API呈现为同源路径；P8-11未增加CORS，不能把任意cross-origin host视为已支持。宿主bootstrap只可在模块加载前注入内存`window.__PLANTNEXUS_APS_SESSION_PROVIDER__`，不能把token写入静态配置、URL、cookie或browser storage；未注入时保持不可用并fail closed。
+
+Frontend可以晚于或早于兼容Runtime独立回退：停止提供当前静态归档并恢复上一份经同一OpenAPI/Chromium Gate验证的归档即可，不修改Runtime、数据库或业务状态。部署promotion仍需另行批准的TLS、gateway/SSO、CSP/WAF、浏览器矩阵、监控、UAT和支持责任；当前归档只是repository engineering candidate。

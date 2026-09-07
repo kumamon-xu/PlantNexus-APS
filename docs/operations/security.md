@@ -11,6 +11,16 @@ last_reviewed: 2026-09-07
 
 # P0 工程安全边界
 
+## TASK-P8-11可选Frontend安全边界
+
+独立Headless入口只调用P8-07的5项公开operation。它不导入Backend/Core/Solver、访问数据库或内部Worker/Registry，也不加载Enterprise Extension；Runtime/Extension/Solver/Validator identity只从服务端`planning-run.v1.runtime_resolution`显示。生成client固定OpenAPI source、operation inventory与Schema digest，未知成功版本、extra/missing field、scope/resource/correlation不一致均fail closed。
+
+Bearer只从宿主在模块加载前注入的内存Session Provider即时取得；默认provider不可用。请求固定`credentials: omit`、`cache: no-store`，源码与browser evidence拒绝token进入cookie、URL、DOM、`localStorage`、`sessionStorage`或artifact。Create的canonical JSON保持原文本发送且受8 MiB client guard；cancel/retry仅由server `allowed_actions`开放。POST网络异常归类为unknown outcome并要求先查询服务端authority，不以自动重试制造重复命令。401/403/409/503、contract/version和non-JSON失败保持显式且不回显credential。
+
+Frontend archive仅含regular static files与manifest，禁用source map，以固定metadata两次byte-identical组装并带旁置SHA-256；路径穿越、symlink、tamper、OpenAPI/generated-client drift、lock或dependency projection变化都会阻断Gate。独立backend-only smoke同时证明Runtime release和wheel不含Frontend文件/route且不依赖其启动。默认同源`/api/v1`；单独静态托管只允许经批准的同源gateway，本Task不增加CORS或浏览器端跨域credential。
+
+当前Chromium验证只使用显式`TEST/SIMULATION`构建和intercepted synthetic响应。它不形成Production identity/SSO、token刷新/登出、CSP/CSRF/WAF/rate-limit、TLS、完整浏览器矩阵、渗透测试、hosting/operator责任、UAT或支持窗口，不能关闭OPEN-002/010/012/015及相关风险。
+
 ## P8-10部署与恢复安全边界
 
 运维靶场的operator只可创建/停止/销毁`plantnexus-p8-10`专用容器、网络和volume，不能执行Production、Demo、promotion或业务状态修改。PostgreSQL/Redis镜像以registry digest固定；Runtime镜像先证明P8-09的`backend/app`、migration、Schema、Dockerfile、release policy及lock输入零漂移，再写入exact revision label。所有配置为`TEST/SIMULATION`，外部ingress与第三方connector关闭。

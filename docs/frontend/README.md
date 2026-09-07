@@ -6,7 +6,7 @@ spec_version: 0.3.0
 phase: P3-P8
 normative: false
 source_sections: [68, 69, 77, 78, 95, 113, 114]
-last_reviewed: 2026-09-04
+last_reviewed: 2026-09-07
 ---
 
 # Frontend 文档形成计划
@@ -17,7 +17,22 @@ P8把Frontend定义为Headless APS的可选client，而不是Backend的必要组
 
 Enterprise Extension也不是Frontend插件。它只通过Extension SDK在APS Runtime服务端执行，Frontend不得加载Extension代码、读取Registry内部配置或依据插件自行计算约束/目标/校验结果。Extension相关状态和诊断只能通过标准Headless read/error合同展示。
 
-TASK-P8-11将来只在P8-07 API完成后验证独立Frontend distribution与backend-only运行。本次没有修改`frontend/**`，现有P3/P4工作台仍是研发基线，不能被解释为P8产品封装、行业定制或Production UI。
+TASK-P8-11现已增加独立入口`headless.html`及`src/headless/**`，没有修改既有P3/P4主入口或route inventory，也没有复用`demo/**`。该入口只实现canonical JSON提交、PlanningRun status/result、服务端允许的cancel/retry、Runtime/Extension identity展示及`zh-CN/en-US`切换；它不是新的业务后端、行业定制或Production UI。
+
+生成器从受控的P8-07 OpenAPI snapshot生成`src/headless/generated/headless-api.v1.ts`，固定`headless-http.v1`、34项总operation中的5项Headless operation、对应Schema digest及additive-only策略。`client:check`要求生成结果与snapshot逐字一致。Client在发送前严格校验contract/version/scope，create的canonical JSON文本按用户输入原字节字符串发送；响应再次绑定版本、scope、resource、correlation与server-owned `allowed_actions`。Runtime/Extension诊断只读取公开`runtime_resolution`，Frontend不导入或执行其实现。
+
+生产构建默认调用同源`/api/v1`；`VITE_PLANTNEXUS_API_BASE_URL`只允许显式配置公开API base。若静态文件单独托管，必须通过经批准的同源gateway转发API，本Task不增加Backend CORS。宿主可在入口模块加载前注入内存`window.__PLANTNEXUS_APS_SESSION_PROVIDER__`；缺失时使用unavailable provider并fail closed。Bearer不会进入URL、DOM、cookie、`localStorage`或`sessionStorage`，fetch固定`credentials: omit`与`cache: no-store`。401、403、409、503、未知成功版本及POST网络未知结果均明确显示，不用缓存或盲目重试伪造成功。
+
+标准工程命令为：
+
+```text
+npm run client:check
+npm run build:headless
+npm run package:headless
+npm run test:p8:e2e
+```
+
+分发脚本输出`build/frontend/plantnexus-aps-frontend-0.1.0.tar.gz`、旁置SHA-256和`frontend-distribution-manifest.v1.json`，两次组装必须byte-identical；归档只允许regular static files、无source map，并声明不含Backend/Core/Solver、Demo或Enterprise Extension。专用Chromium Gate从打包入口覆盖公开workflow、server action/CAS、401/403/409/503、未知版本、双语、键盘与axe。以上只是repository engineering candidate与synthetic browser证据，不提供Production hosting、SSO、CSP/WAF、完整浏览器矩阵、Planner UAT、支持窗口或UX SLA。
 
 ## 开发入口与本地产物边界
 

@@ -11,6 +11,14 @@ last_reviewed: 2026-09-07
 
 # 配置、环境与数据隔离
 
+## P8-11可选Frontend配置与隔离
+
+P8-11静态入口与Runtime独立构建、版本化和回退。生产构建默认使用同源`/api/v1`，唯一公开API位置覆盖是build-time `VITE_PLANTNEXUS_API_BASE_URL`；它不能指向数据库、Worker、Extension Registry或Backend internal。单独静态托管必须由已批准的gateway提供同源API视图，本Task不增加CORS、跨域credential或新的server配置。
+
+宿主只可在入口模块加载前通过`window.__PLANTNEXUS_APS_SESSION_PROVIDER__`注入内存Session Provider；缺失时默认不可用并fail closed。Token不进入环境文件、静态manifest、URL、cookie、DOM或browser storage。Browser运行时不能选择environment/data plane、Runtime/Extension set、authority、Policy/Limits、Solver或Validator；这些identity只读取服务端公开carrier。
+
+专用E2E构建只有在编译时同时满足`MODE=e2e`、`VITE_PLANTNEXUS_E2E_SIMULATION=true`、`VITE_PLANTNEXUS_DATA_PLANE=SIMULATION`及`VITE_PLANTNEXUS_ENVIRONMENT=TEST`时才可运行intercepted synthetic evidence。普通production build不携带该授权并继续使用既有fail-closed runtime policy；query string、cookie或browser storage不能开启测试面。Runtime release则完全不含Frontend文件和route，二者任一缺失都不应阻止另一方按自身合同启动。
+
 ## P8非Production运维靶场
 
 TASK-P8-10将唯一批准目标固定为`p8-operations-compose-v1`：`runtime_environment=test`、`data_plane=SIMULATION`、synthetic-only、无external ingress/third-party connector，并使用独立Compose network及一次性PostgreSQL/Redis volume。P8-09 exact Runtime输入由Git diff guard证明未变，数据库/broker镜像以digest固定；operator只有靶场生命周期、migration、sanitized probe、backup/restore和dual-slot rollback权限。

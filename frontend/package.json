@@ -11,10 +11,15 @@
   "scripts": {
     "dev": "vite",
     "build": "tsc -b && vite build",
+    "build:headless": "npm run client:check && tsc -b && vite build --config vite.headless.config.ts",
+    "client:generate": "node scripts/generate-headless-client.mjs",
+    "client:check": "node scripts/generate-headless-client.mjs --check",
     "lint": "eslint . --max-warnings 0",
+    "package:headless": "node scripts/package-headless-distribution.mjs",
     "typecheck": "tsc -b --pretty false",
     "test": "vitest --exclude e2e/**",
     "test:e2e": "playwright test",
+    "test:p8:e2e": "playwright test --config playwright.p8-distribution.config.ts",
     "audit:sca": "node scripts/run-audit.mjs",
     "licenses:check": "node scripts/check-licenses.mjs",
     "evidence": "node scripts/frontend-evidence.mjs"

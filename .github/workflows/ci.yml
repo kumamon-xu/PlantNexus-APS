@@ -678,6 +678,9 @@ jobs:
             "${replay_root}/backend/tests/integration/test_p8_operations_integration.py" \
             "${replay_root}/backend/tests/security/test_p8_operations_security.py" \
             "${replay_root}/backend/tests/unit/test_p8_operations_policy.py" \
+            "${replay_root}/backend/tests/integration/test_p8_frontend_distribution_integration.py" \
+            "${replay_root}/backend/tests/security/test_p8_frontend_distribution_security_cases.py" \
+            "${replay_root}/backend/tests/unit/test_p8_frontend_distribution.py" \
             "${replay_root}/infra/release/runtime-release-policy.v1.json" \
             "${replay_root}/infra/release/runtime-vulnerability-policy.v1.json"
           git -C "${replay_root}" restore \
@@ -768,6 +771,29 @@ jobs:
           --replanning-report ../build/validation/ci-p4-replanning-frontend.json
           --report ../build/validation/ci-p4-frontend-gate.json
 
+      - name: P8 optional Headless Frontend Chromium distribution evidence
+        run: npm --prefix frontend run test:p8:e2e -- --workers=1
+
+      - name: P8 optional Headless Frontend production distribution
+        run: |
+          npm --prefix frontend run build:headless
+          npm --prefix frontend run package:headless
+
+      - name: P8 optional Headless Frontend isolation evidence
+        run: >-
+          uv run python scripts/p8_frontend_distribution_check.py
+          --root .
+          --distribution-manifest build/frontend/frontend-distribution-manifest.v1.json
+          --browser-report build/playwright/p8-distribution/results.json
+          --sca-report build/validation/ci-p3-frontend-sca.json
+          --license-report build/validation/ci-p3-frontend-licenses.json
+          --runtime-report build/validation/ci-p8-runtime-release.json
+          --release-output build/release
+          --distribution-report build/validation/ci-p8-frontend-distribution.json
+          --client-report build/validation/ci-p8-frontend-client.json
+          --browser-security-report build/validation/ci-p8-frontend-browser-security.json
+          --backend-only-report build/validation/ci-p8-frontend-backend-only.json
+
       - name: Engineering contract
         run: >-
           uv run python -m app.infrastructure.contract_check
@@ -842,6 +868,7 @@ jobs:
             build/traceability/*.json
             build/benchmarks/*.json
             build/playwright/**
+            build/frontend/**
             build/release/**
           if-no-files-found: error
 

@@ -11,7 +11,7 @@ if (replayIndex !== "1" && replayIndex !== "2") {
 const evidenceRoot = `../build/playwright/p3-gate/replay-${replayIndex}`;
 
 export default defineConfig(baseConfig, {
-  testIgnore: "dynamic-replanning.spec.ts",
+  testIgnore: ["dynamic-replanning.spec.ts", "headless-distribution.spec.ts"],
   outputDir: `${evidenceRoot}/artifacts`,
   reporter: [
     ["line"],

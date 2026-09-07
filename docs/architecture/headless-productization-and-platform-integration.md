@@ -6,7 +6,7 @@ spec_version: 0.3.0
 phase: P8
 normative: true
 source_sections: [3, 4, 5, 9, 10, 12, 15, 30, 63, 65, 66, 67, 68, 84, 85, 93, 95, 97, 101, 103, 105, 106, 107, 109, 112, 113, 114]
-last_reviewed: 2026-09-06
+last_reviewed: 2026-09-07
 ---
 
 # Headless Productization and Platform Integration
@@ -73,7 +73,7 @@ TASK-P8-05 now consumes that immutable work through one strict JSON Celery task.
 
 TASK-P8-06 now provides the single Runtime composition root and immutable API/Worker descriptor. TASK-P8-07 binds that facade through five additive operations: create (202), status (200), cancel (200), retry (202) and terminal result (200, or 409 while nonterminal). The checked-in OpenAPI 3.1 snapshot contains 34 operations and preserves canonical hashes for all preceding 29 operation objects. Exact create/retry replay does not dispatch twice. The Runtime HTTP adapter derives trusted context, allowed scope, authority/mapping, build plan, Policy/Limits and dispatch windows from server-owned configuration; request headers and JSON remain requested coordinates rather than authority.
 
-This transport is currently executable only with an explicit Simulation/Test Runtime and authorization provider. It does not provide host identity lifecycle, Production authority, extension upload/install endpoints, a second protocol or synchronous solving. TASK-P8-08 remains the owner of real host identity/scope/audit binding, and TASK-P8-09/10 remain the owners of release and deployment evidence.
+This transport is currently executable only with an explicit Simulation/Test Runtime and authorization provider. TASK-P8-08 provides the provider-neutral host identity/scope/audit adapter and an immutable Test policy, while a real host IdP/RBAC binding remains open. TASK-P8-09/10 provide the unsigned Runtime engineering release and non-Production operations evidence. None of these slices adds extension upload/install endpoints, a second protocol or synchronous solving.
 
 ## 4. Identity, authority and audit
 
@@ -83,9 +83,11 @@ Audit evidence binds subject, action, scope, canonical payload fingerprint, sour
 
 ## 5. Dual delivery without backend forks
 
-The owning platform may render every APS result in its own UI. An optional industry frontend may later package workflows such as input review, run monitoring, Gantt views, comparison and export, but is only another API consumer. It must not require server behavior unavailable to the host and must use generated/versioned client contracts rather than copy domain logic.
+The owning platform may render every APS result in its own UI. TASK-P8-11 now supplies an optional independently packaged static entrypoint for canonical JSON submission, run monitoring, result retrieval and server-authorized cancel/retry. It is only another API consumer: its generated client is pinned to the five P8-07 Headless operations within the unchanged 34-operation OpenAPI snapshot, and it does not copy domain, Solver, Validator, state-machine or Extension logic.
 
-Frontend release cadence may differ from backend cadence if the API compatibility window is honored. Deployment may omit the optional frontend entirely; headless API, worker, database/migrations and operations controls remain a complete backend distribution.
+Frontend release cadence may differ from backend cadence if the API compatibility window is honored. The static candidate has its own manifest, checksum and deterministic archive; it defaults to same-origin `/api/v1`, or may sit behind an approved same-origin gateway when hosted separately. Authentication is an injected in-memory Session Provider and is unavailable by default. Deployment may omit the optional frontend entirely; the separately verified Runtime wheel/archive starts with no frontend files or routes, so API, worker, Validator, database/migrations and operations controls remain a complete backend distribution.
+
+Browser behavior remains server-authoritative. The create request sends the validated canonical JSON text unchanged, status/result bind strict public carriers, cancel/retry appear only from server `allowed_actions`, and Runtime/Extension identity is rendered only from `runtime_resolution`. The client stores no credential, uses `credentials: omit` and `cache: no-store`, distinguishes authentication, authorization, contract/version, state conflict, unavailable and unknown POST outcome, and never loads an Enterprise Extension. This engineering surface does not establish Production hosting, SSO, CORS/CSP/WAF policy, a browser support matrix, industry UX or UAT.
 
 ## 6. Enterprise extension without Core forks
 
@@ -103,4 +105,4 @@ Unimplemented advanced scheduling capabilities remain explicit `UNSUPPORTED_CAPA
 
 ## 8. Current-state disclaimer
 
-The repository now exposes 34 OpenAPI operations: the preceding 29 remain byte-compatible at the operation-object level and P8-07 adds exactly five Headless PlanningRun operations. P8-03 formed the strict canonical consumer and durable Snapshot/PlanningProblem transaction; P8-04 added durable PlanningRun orchestration; P8-05 added Worker execution, independent validation, checkpoint recovery and one ScheduleVersion application; P8-06 formed the single Runtime composition; P8-07 connects these pieces through bounded canonical-only HTTP and a checked-in OpenAPI snapshot. The default/Production identity path remains fail closed. Real host identity, Production deployment, Extension SDK/Registry, Enterprise Extension template, Developer Kit, packaging and runbooks remain planned. Only capabilities whose owning Task and evidence are terminal may be described as production-ready runtime behavior.
+The repository exposes 34 OpenAPI operations: the preceding 29 remain byte-compatible at the operation-object level and P8-07 adds exactly five Headless PlanningRun operations. P8-03 formed the strict canonical consumer and durable Snapshot/PlanningProblem transaction; P8-04 added durable PlanningRun orchestration; P8-05 added Worker execution, independent validation, checkpoint recovery and one ScheduleVersion application; P8-06 formed the single Runtime composition; P8-07 connects these pieces through bounded canonical-only HTTP and a checked-in OpenAPI snapshot; P8-08 adds provider-neutral host authorization/audit; P8-09/10 add an unsigned Runtime engineering release and non-Production operations evidence; P8-11 adds the independently packaged optional static consumer and backend-only proof. The default/Production identity path remains fail closed. Real host IdP/RBAC, Production deployment/promotion, Extension SDK/Registry, Enterprise Extension template and Developer Kit remain planned. Only capabilities whose owning Task and evidence are terminal may be described as formed engineering behavior; none of these statements is Production readiness.

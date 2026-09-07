@@ -107,6 +107,7 @@ from scripts.p6_duration_evaluation_check import main as p6_duration_evaluation_
 from scripts.p6_duration_model_check import main as p6_duration_model_main
 from scripts.p6_duration_runtime_check import main as p6_duration_runtime_main
 from scripts.p8_machine_contract_check import main as p8_machine_contract_main
+from scripts.p8_frontend_distribution_check import check_generated_client
 
 ROOT = Path(__file__).resolve().parents[3]
 
@@ -494,7 +495,7 @@ def test_ci_profile_routing_is_mutually_exclusive_and_fail_closed() -> None:
     assert "Build package" in full_text
     assert len(preflight["steps"]) == 4
     assert len(backend["steps"]) == 8
-    assert len(full["steps"]) == 76
+    assert len(full["steps"]) == 79
 
     assert 'test "${PLANTNEXUS_CLASSIFY_RESULT}" = "success"' in final_run
     assert 'test "${PLANTNEXUS_PREFLIGHT_RESULT}" = "success"' in final_run
@@ -1063,6 +1064,47 @@ def test_ci_p8_runtime_release_is_required_and_machine_checkable(
     )
     assert benchmark["thresholds"] is None
     assert benchmark["status"] == "PASS"
+
+
+def test_ci_p8_optional_frontend_distribution_is_required_and_isolated() -> None:
+    workflow = (ROOT / ".github/workflows/ci.yml").read_text(encoding="utf-8")
+    normalized = " ".join(workflow.split())
+    for fragment in (
+        "name: P8 optional Headless Frontend Chromium distribution evidence "
+        "run: npm --prefix frontend run test:p8:e2e -- --workers=1",
+        "name: P8 optional Headless Frontend production distribution run: | "
+        "npm --prefix frontend run build:headless "
+        "npm --prefix frontend run package:headless",
+        "uv run python scripts/p8_frontend_distribution_check.py --root . "
+        "--distribution-manifest build/frontend/frontend-distribution-manifest.v1.json "
+        "--browser-report build/playwright/p8-distribution/results.json "
+        "--sca-report build/validation/ci-p3-frontend-sca.json "
+        "--license-report build/validation/ci-p3-frontend-licenses.json "
+        "--runtime-report build/validation/ci-p8-runtime-release.json "
+        "--release-output build/release "
+        "--distribution-report build/validation/ci-p8-frontend-distribution.json "
+        "--client-report build/validation/ci-p8-frontend-client.json "
+        "--browser-security-report build/validation/ci-p8-frontend-browser-security.json "
+        "--backend-only-report build/validation/ci-p8-frontend-backend-only.json",
+    ):
+        assert fragment in normalized
+    assert workflow.index("P4 Gate Frontend semantic evidence") < workflow.index(
+        "P8 optional Headless Frontend Chromium distribution evidence"
+    )
+    assert workflow.index(
+        "P8 optional Headless Frontend isolation evidence"
+    ) < workflow.index("Engineering contract")
+    assert "build/frontend/**" in workflow
+    assert "continue-on-error" not in workflow
+    assert 'testIgnore: "headless-distribution.spec.ts"' in (
+        ROOT / "frontend/playwright.config.ts"
+    ).read_text(encoding="utf-8")
+    assert '"headless-distribution.spec.ts"' in (
+        ROOT / "frontend/playwright.p3-gate.config.ts"
+    ).read_text(encoding="utf-8")
+    result = check_generated_client(ROOT, expected_commit="d" * 40)
+    assert result["operation_count"] == 5
+    assert result["total_openapi_operation_count"] == 34
 
 
 def test_ci_p6_duration_dataset_is_required_and_machine_checkable(

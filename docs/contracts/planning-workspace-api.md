@@ -6,7 +6,7 @@ spec_version: 0.3.0
 phase: P3
 normative: true
 source_sections: [33, 34, 63, 65, 66, 68, 69, 77, 78, 91, 94]
-last_reviewed: 2026-09-06
+last_reviewed: 2026-09-07
 ---
 
 # P3 Planning Workspace API 语义合同
@@ -30,6 +30,14 @@ Create只接受无Content-Encoding的strict UTF-8 `application/json`，最大8 M
 Router只解析transport并委托P8-06 Runtime facade。服务端Runtime HTTP policy固定允许scope、authority/mapping、Planning Policy/Limits、build horizon、dispatch timeout和Runtime/Extension-set resolution。Create/retry exact replay返回首次durable结果且不重复dispatch；different fingerprint、stale CAS或非法状态稳定冲突并保持零额外副作用。202只表示accepted/queued语义，不表示Solver、fresh Validator、ScheduleVersion、审批或发布成功。
 
 P8 transport/Runtime错误使用已登记的`headless-error.v1`；canonical acceptance阶段的业务/authority/idempotency拒绝可返回`canonical-ingress-result.v1`且`side_effects=NONE`；AuthorizationProvider的401以及相应403/503继续保持既有`planning-workspace-error.v1`，因为Headless注册表没有伪造的身份code。OpenAPI逐状态声明这些envelope。响应必须保留`X-Correlation-Id`和`Cache-Control: no-store`；PlanningRun read/action另返回`ETag`与`X-APS-Planning-Run-State`，create返回`Location`。当前只证明显式Simulation/Test Runtime绑定；P8-08真实host identity/authorization前Production继续default-deny。
+
+## TASK-P8-11 generated Frontend consumer boundary
+
+P8-11不增加、替换或重命名任何API。独立Frontend生成器只读取已提交的`headless-api.v1.json`，并冻结`headless-http.v1`、`V1_ADDITIVE_ONLY`、OpenAPI source SHA-256、34项总operation中的上述5项operation及其公开Schema digest；生成结果漂移、缺失operation、额外Headless operation或source变化都会使`client:check`失败。Frontend不得调用既有P3摘要route、内部Worker消息、数据库、Backend/Core module、Extension Registry内部接口或私有endpoint完成该workflow。
+
+Create consumer先以strict contract解析输入，但HTTP body必须仍为用户提供的canonical JSON原文本，不得重新排序、补默认值或转换成第三方格式；8 MiB client guard只提供早期反馈，服务端限制仍是权威。所有调用从内存Session Provider即时取得opaque Bearer，固定`credentials: omit`、`cache: no-store`和correlation；create/cancel/retry另携带exact idempotency，status/result/action携带exact composite scope。默认provider不可用，同源API base默认`/api/v1`；单独托管只能经批准的同源gateway接入，本合同不新增CORS。
+
+成功响应必须通过公开carrier的strict version/field检查，并绑定请求scope、resource identity、correlation和server state；cancel/retry按钮只服从PlanningRun的`allowed_actions`，retry使用该服务端返回的exact current attempt/revision。Runtime、Extension-set、Solver与Validator标识只从`planning-run.v1.runtime_resolution`显示，不能由浏览器配置、Extension代码或缓存生成。401、403、409、503、其他server error、未知成功版本及non-JSON response分别保持可见；POST网络中断视为`outcome_unknown`，必须先读服务端authority而非盲重试。该consumer约束不改变服务端状态机、错误envelope、authorization或idempotency语义。
 
 ## TASK-P8-05 internal Worker boundary
 

@@ -1,4 +1,4 @@
-"""TASK-P0-08 migration, lazy connectivity, Celery, and report evidence."""
+"""Migration, lazy connectivity, Celery, and release evidence."""
 
 from __future__ import annotations
 
@@ -31,6 +31,7 @@ from app.infrastructure.schedule_version_repository import (
 )
 from app.infrastructure.workspace_persistence import WorkspaceDataPlane
 from app.infrastructure.redis_client import create_redis_client
+from app.infrastructure.release.builder import build_migration_manifest
 from app.importers import (
     RawImportRow,
     StagedImportBatch,
@@ -127,6 +128,21 @@ def test_empty_database_migration_upgrades_and_downgrades(tmp_path: Path) -> Non
         assert "planning_snapshots" not in tables_after
     finally:
         engine.dispose()
+
+
+def test_p8_release_manifest_fingerprints_the_exact_linear_migration_chain() -> None:
+    manifest = build_migration_manifest(
+        ROOT, database_head="0009_host_authorization_audit"
+    )
+    chain = manifest["linear_chain"]
+    assert manifest["revision_count"] == len(chain) == 9
+    previous = None
+    for row in chain:
+        assert row["down_revision"] == previous
+        migration = ROOT / row["path"]
+        assert row["sha256"] == f"sha256:{sha256(migration.read_bytes()).hexdigest()}"
+        previous = row["revision"]
+    assert previous == manifest["database_head"]
 
 
 def test_populated_raw_staging_migration_downgrade_is_destructive_and_reversible(

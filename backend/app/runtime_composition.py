@@ -13,7 +13,7 @@ from typing import Any, cast
 
 from celery import Celery
 
-from app import CODE_VERSION
+from app import APPLICATION_VERSION, CORE_VERSION, RUNTIME_VERSION
 from app.application.canonical_ingress import CanonicalIngressApplicationService
 from app.application.planning_runs import PlanningRunOrchestrationService
 from app.application.runtime_facade import (
@@ -301,7 +301,7 @@ def _component_fingerprint(
         {
             "evidence": "DEVELOPMENT_DERIVED_NOT_RELEASE_DIGEST",
             "component": component,
-            "version": CODE_VERSION,
+            "version": APPLICATION_VERSION,
             "code_commit": settings.code_commit,
         }
     )
@@ -319,13 +319,13 @@ def _descriptor(
     environment = _runtime_environment(settings)
     runtime_resolution: JsonObject = {
         "runtime_resolution_version": RUNTIME_RESOLUTION_VERSION,
-        "runtime_version": CODE_VERSION,
+        "runtime_version": RUNTIME_VERSION,
         "runtime_artifact_fingerprint": _component_fingerprint(
             settings.runtime_artifact_fingerprint,
             component="aps-runtime",
             settings=settings,
         ),
-        "core_version": CODE_VERSION,
+        "core_version": CORE_VERSION,
         "core_artifact_fingerprint": _component_fingerprint(
             settings.core_artifact_fingerprint,
             component="aps-core",
@@ -341,8 +341,8 @@ def _descriptor(
             settings=settings,
         ),
         "solver_backend_id": STRATEGY_ID,
-        "solver_backend_version": CODE_VERSION,
-        "validator_version": CODE_VERSION,
+        "solver_backend_version": CORE_VERSION,
+        "validator_version": CORE_VERSION,
         "resolution_fingerprint": "",
     }
     runtime_resolution["resolution_fingerprint"] = canonical_fingerprint(
@@ -390,7 +390,7 @@ def _descriptor(
             "endpoint_values_in_descriptor": False,
             "document_paths_in_descriptor": False,
         },
-        "production_authority": "UNAVAILABLE_UNTIL_P8_08_TO_P8_10",
+        "production_authority": "UNAVAILABLE_UNTIL_P8_10",
     }
     document = {**base, "composition_fingerprint": canonical_fingerprint(base)}
     return RuntimeCompositionDescriptor(canonical_bytes=canonical_json_bytes(document))

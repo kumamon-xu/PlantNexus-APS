@@ -6,10 +6,16 @@ spec_version: 0.3.0
 phase: P0-P8
 normative: false
 source_sections: [65, 66, 93, 94, 95, 101, 106, 113, 114]
-last_reviewed: 2026-09-05
+last_reviewed: 2026-09-07
 ---
 
 # Operations 索引与形成边界
+
+## TASK-P8-09 Runtime release operations boundary
+
+P8-09形成Runtime `0.1.0`的确定性、内容寻址工程distribution及机器preflight。归档同时携带wheel、hash-locked dependencies、完整migration、Schema/OpenAPI、release/compatibility manifest、CycloneDX SBOM、license/checksum与default-empty Extension边界；两次build必须字节一致。外层`.sha256`、归档内逐文件checksum和canonical manifest fingerprint共同拒绝传输/内容篡改。
+
+安装、启动和回退顺序见[`deployment.md`](deployment.md)，版本与artifact合同见[`release-and-versioning.md`](release-and-versioning.md)。当前没有远程registry push、signing key、Production target、rollout、HA、on-call或SLA；`0009 → 0008`工程回放明确删除授权audit数据，因此Production rollback必须优先恢复经验证备份或使用批准的forward fix。
 
 ## TASK-P8-05 internal Worker operations boundary
 

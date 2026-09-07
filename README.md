@@ -2,7 +2,7 @@
 
 PlantNexus APS 是一个面向离散制造的高级计划与排程系统。项目采用 Simulation-first 路线，把canonical数据、不可变计划快照、PlanningProblem、OR-Tools CP-SAT 求解、独立排程校验、计划版本审批/发布、内部导出和动态重排串成一条可重放链路。
 
-当前仓库是“已实现的研发基线”，不是生产部署包：P0～P6 能力已经形成，P7 真实数据校准因缺少获授权的真实数据、真实环境和业务责任人而暂缓；P8 已形成第一版canonical ingress/result与PlanningRun机器合同，在Runtime内部严格消费canonical JSON、原子保存不可变Snapshot/PlanningProblem，并把CREATED run、attempt、work item、命令、转换和audit以CAS/幂等事务持久化。P8-05进一步形成strict JSON Celery Solver task、durable lease/heartbeat、真实Global CP-SAT、独立Validator、不可变结果检查点、崩溃恢复和一次ScheduleVersion应用；重复投递不会重复求解或创建第二个业务结果。公开Headless提交API和完整Production-shaped Runtime组合仍未形成。最终产品边界只接收宿主平台提交的versioned canonical JSON，第三方系统采集、字段映射和结果展示由宿主平台负责；APS不直接对接ERP、MES、WMS或CAM。P8同时规划APS Extension SDK、Runtime受控Enterprise Extension加载和version-locked Developer Kit，使企业项目无需复制或修改APS Core即可独立二次开发。Extension只在Runtime服务端执行，宿主与可选Frontend仍只调用统一Headless API；Core/Runtime升级不会自动升级企业项目。默认 FastAPI 组合根会对未注入的业务应用与授权适配器 fail closed；健康检查和 OpenAPI 可用，但不能把默认启动等同于开箱即用的生产 APS。
+当前仓库是“已实现的研发基线”，不是生产部署包：P0～P6能力已经形成，P7真实数据校准因缺少获授权的真实数据、真实环境和业务责任人而暂缓；P8现已形成canonical ingress/result与PlanningRun机器合同、严格canonical JSON消费、不可变Snapshot/PlanningProblem、durable run/attempt/work/audit、Solver Worker、单一Runtime组合、五项公开Headless HTTP operation以及provider-neutral Test identity/authorization/audit。P8-09进一步形成Runtime `0.1.0`的可重建、内容寻址工程distribution，包含wheel、migration、Schema、OpenAPI、SBOM、license/checksum、兼容矩阵和fail-closed preflight。最终产品边界只接收宿主平台提交的versioned canonical JSON，第三方系统采集、字段映射和结果展示由宿主平台负责；APS不直接对接ERP、MES、WMS或CAM。P8同时规划APS Extension SDK、Runtime受控Enterprise Extension加载和version-locked Developer Kit，使企业项目无需复制或修改APS Core即可独立二次开发。Extension只在Runtime服务端执行，宿主与可选Frontend仍只调用统一Headless API；Core/Runtime升级不会自动升级企业项目。当前distribution固定default-empty Extension且未签名、未部署，不等于Production Runtime、Developer Kit或开箱即用的生产APS。
 
 ## 已有能力
 
@@ -24,7 +24,7 @@ PlantNexus APS 是一个面向离散制造的高级计划与排程系统。项�
 | Storage / queue | PostgreSQL 17、Redis 8 |
 | Frontend | React 19、TypeScript 6、Ant Design 6、TanStack Query、Vite |
 | Test | pytest、Hypothesis、Vitest、Testing Library、Playwright |
-| Contract versions | Spec 0.3.0、Schema set 2.10.0、code 0.0.0（研发占位版本） |
+| Release / contract versions | Runtime 0.1.0、Application/Core 0.0.0、Headless API v1、Schema set 2.10.0、database 0009 |
 
 ## 快速开始
 
@@ -45,7 +45,24 @@ uv run uvicorn app.api.app:app --host 127.0.0.1 --port 8000
 
 Swagger UI 和 ReDoc 默认关闭。默认组合根没有注入业务 application port 与身份授权 provider，因此 `/api/v1/**` 业务请求会安全拒绝；完整接口状态和待接入项见 [API 接口开发清单](docs/contracts/api-development-checklist.md)。
 
-当前已实现Runtime内部canonical JSON严格消费、原子Snapshot/PlanningProblem持久化、durable PlanningRun编排，以及可由服务端装配后消费现有work item的异步Solver Worker。Worker以lease/heartbeat和不可变checkpoint保护重复、崩溃、取消与超时边界，候选经fresh Validator后才应用为`READY_FOR_REVIEW` ScheduleVersion。对应HTTP提交端点、生产形态组合根、Extension SDK/Registry和Developer Kit尚未形成；当前SQLite/synthetic证据也不代表真实broker/database拓扑、Production容量或SLA。CSV/XLSX/reference adapter仅是研发/参考能力，不是未来公共产品接口。
+当前已实现Runtime内部canonical JSON严格消费、原子Snapshot/PlanningProblem持久化、durable PlanningRun编排、服务端Solver Worker、五项Headless HTTP operation和授权前置。Worker以lease/heartbeat和不可变checkpoint保护重复、崩溃、取消与超时边界，候选经fresh Validator后才应用为`READY_FOR_REVIEW` ScheduleVersion。Runtime `0.1.0`工程distribution可用于clean install与迁移回放，但真实host IdP/RBAC、Production target/签名、Extension SDK/Registry和Developer Kit尚未形成；当前Test/SQLite证据也不代表真实broker/database拓扑、Production容量或SLA。CSV/XLSX/reference adapter仅是研发/参考能力，不是公共Headless输入接口。
+
+### Runtime工程distribution
+
+生成并完整验证内容寻址发布物：
+
+```powershell
+uv run python -m app.infrastructure.release.check `
+  --root . `
+  --release-output build/release `
+  --report build/validation/p8-runtime-release.json `
+  --compatibility-report build/validation/p8-runtime-release-compatibility.json `
+  --migration-report build/validation/p8-runtime-release-migration.json `
+  --security-report build/validation/p8-runtime-release-security.json `
+  --benchmark-report build/benchmarks/p8-runtime-release.json
+```
+
+发布身份、内容、安装、preflight与rollback规则见[发布与版本合同](docs/operations/release-and-versioning.md)及[安装与启动顺序](docs/operations/deployment.md)。输出位于已忽略的`build/`，不得提交或视为Production promotion。
 
 ### 2. 本地依赖服务
 
@@ -98,6 +115,8 @@ npm --prefix frontend run build
 - [端到端计划流程](docs/architecture/end-to-end-planning-flow.md)
 - [Headless 产品化与平台集成](docs/architecture/headless-productization-and-platform-integration.md)
 - [Extension SDK、Runtime 与 Developer Kit 架构](docs/architecture/extension-sdk-runtime-and-developer-kit.md)
+- [Runtime 发布、版本与回退合同](docs/operations/release-and-versioning.md)
+- [Runtime 安装、预检与启动顺序](docs/operations/deployment.md)
 - [领域模型](docs/domain/domain-model.md)
 - [约束目录](docs/planning/constraint-catalog.md)
 - [独立排程校验器](docs/planning/schedule-validator.md)

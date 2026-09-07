@@ -103,6 +103,9 @@ _P6_SCHEMA_METADATA_PYPROJECT_SHA256 = (
 _P8_SCHEMA_METADATA_PYPROJECT_SHA256 = (
     "4b511b70bae195debce23cd99149af059aaa1ab3694218f553d115ba3ca8bd09"
 )
+_P8_RELEASE_METADATA_PYPROJECT_SHA256 = (
+    "6ac4cb5d6617e5afe9bff270407e06f3797bf6aa8f800c390042e3b4c2ccbd79"
+)
 
 
 @dataclass(frozen=True, slots=True)
@@ -724,6 +727,7 @@ def _frozen_input_check(root: Path) -> dict[str, object]:
             p4_pyproject_digest,
             _P6_SCHEMA_METADATA_PYPROJECT_SHA256,
             _P8_SCHEMA_METADATA_PYPROJECT_SHA256,
+            _P8_RELEASE_METADATA_PYPROJECT_SHA256,
         },
         "frozen P2/P4 input bytes changed",
     )

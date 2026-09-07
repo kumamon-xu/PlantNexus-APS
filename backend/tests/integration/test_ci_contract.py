@@ -63,6 +63,7 @@ from app.infrastructure.workspace_persistence_check import (
 from app.infrastructure.replan_persistence_check import (
     main as replan_persistence_main,
 )
+from app.infrastructure.release.check import main as p8_runtime_release_main
 from app.jobs.planning_run_worker_check import main as p8_solver_worker_main
 from app.planning.backends.cp_sat.contract_check import (
     main as backend_contract_main,
@@ -473,7 +474,7 @@ def test_ci_profile_routing_is_mutually_exclusive_and_fail_closed() -> None:
     assert "Build package" in full_text
     assert len(preflight["steps"]) == 4
     assert len(backend["steps"]) == 8
-    assert len(full["steps"]) == 75
+    assert len(full["steps"]) == 76
 
     assert 'test "${PLANTNEXUS_CLASSIFY_RESULT}" = "success"' in final_run
     assert 'test "${PLANTNEXUS_PREFLIGHT_RESULT}" = "success"' in final_run
@@ -958,6 +959,97 @@ def test_ci_p8_host_authorization_is_required_and_machine_checkable(
     assert benchmark["threshold_ms"] is None
     assert benchmark["iterations"] == 1_000
     assert benchmark["all_decisions_allowed_and_audited"] is True
+    assert benchmark["status"] == "PASS"
+
+
+def test_ci_p8_runtime_release_is_required_and_machine_checkable(
+    tmp_path: Path,
+) -> None:
+    workflow = (ROOT / ".github" / "workflows" / "ci.yml").read_text(
+        encoding="utf-8"
+    )
+    normalized = " ".join(workflow.split())
+    assert (
+        "name: P8 reproducible Runtime release and migration evidence run: >- "
+        "uv run python -m app.infrastructure.release.check --root . "
+        "--release-output build/release --report "
+        "build/validation/ci-p8-runtime-release.json --compatibility-report "
+        "build/validation/ci-p8-runtime-release-compatibility.json "
+        "--migration-report build/validation/ci-p8-runtime-release-migration.json "
+        "--security-report build/validation/ci-p8-runtime-release-security.json "
+        "--benchmark-report build/benchmarks/ci-p8-runtime-release.json"
+    ) in normalized
+    assert "build/release/**" in workflow
+    assert "continue-on-error" not in workflow
+    for relative_path in (
+        "backend/app/infrastructure/release/__init__.py",
+        "backend/app/infrastructure/release/builder.py",
+        "backend/app/infrastructure/release/check.py",
+        "backend/app/infrastructure/release/contracts.py",
+        "backend/app/infrastructure/release/preflight.py",
+        "backend/tests/p8_release_support.py",
+        "backend/tests/unit/test_p8_release_packaging.py",
+        "backend/tests/contract/test_p8_release_packaging_contract.py",
+        "backend/tests/integration/test_p8_release_packaging_integration.py",
+        "backend/tests/security/test_p8_release_packaging_security.py",
+        "infra/release/runtime-release-policy.v1.json",
+        "infra/release/runtime-vulnerability-policy.v1.json",
+    ):
+        assert workflow.count(f'"${{replay_root}}/{relative_path}"') == 1
+    assert workflow.count("infra/Dockerfile \\") == 1
+
+    report_path = tmp_path / "runtime-release.json"
+    compatibility_path = tmp_path / "runtime-release-compatibility.json"
+    migration_path = tmp_path / "runtime-release-migration.json"
+    security_path = tmp_path / "runtime-release-security.json"
+    benchmark_path = tmp_path / "runtime-release-benchmark.json"
+    assert (
+        p8_runtime_release_main(
+            [
+                "--root",
+                str(ROOT),
+                "--release-output",
+                str(tmp_path / "release"),
+                "--report",
+                str(report_path),
+                "--compatibility-report",
+                str(compatibility_path),
+                "--migration-report",
+                str(migration_path),
+                "--security-report",
+                str(security_path),
+                "--benchmark-report",
+                str(benchmark_path),
+            ]
+        )
+        == 0
+    )
+    report = json.loads(report_path.read_text(encoding="utf-8"))
+    compatibility = json.loads(compatibility_path.read_text(encoding="utf-8"))
+    migration = json.loads(migration_path.read_text(encoding="utf-8"))
+    security = json.loads(security_path.read_text(encoding="utf-8"))
+    benchmark = json.loads(benchmark_path.read_text(encoding="utf-8"))
+    assert report["report_version"] == "p8-runtime-release-report.v1"
+    assert report["task_id"] == "TASK-P8-09"
+    assert report["diff_base"] == "3595f6f7b1ae4a70f68bb3512f3db4bd024dc8a5"
+    assert report["validation_profile"] == "HIGH_RISK"
+    assert report["check_count"] == 12
+    assert report["issues"] == []
+    assert report["status"] == "PASS"
+    assert report["release"]["runtime_version"] == "0.1.0"
+    assert report["release"]["registry"] == "LOCAL_OR_CI_CONTENT_ADDRESSED_ONLY"
+    assert all(report["negative_matrix"].values())
+    assert compatibility["status"] == "PASS"
+    assert compatibility["versions"] == compatibility["expected_versions"]
+    assert migration["status"] == "PASS"
+    assert migration["checks"]["destructive_boundary_observed"] is True
+    assert security["status"] == "PASS"
+    assert security["raw_finding_count"] == 12
+    assert security["unique_assessment_count"] == 6
+    assert benchmark["profile"] == (
+        "LOCAL_OR_CI_ENGINEERING_BASELINE_NOT_PRODUCTION_SLA"
+    )
+    assert benchmark["thresholds"] is None
     assert benchmark["status"] == "PASS"
 
 

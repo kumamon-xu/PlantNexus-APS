@@ -335,6 +335,17 @@ jobs:
           --audit-report build/validation/ci-p8-host-authorization-audit.json
           --benchmark-report build/benchmarks/ci-p8-host-authorization.json
 
+      - name: P8 reproducible Runtime release and migration evidence
+        run: >-
+          uv run python -m app.infrastructure.release.check
+          --root .
+          --release-output build/release
+          --report build/validation/ci-p8-runtime-release.json
+          --compatibility-report build/validation/ci-p8-runtime-release-compatibility.json
+          --migration-report build/validation/ci-p8-runtime-release-migration.json
+          --security-report build/validation/ci-p8-runtime-release-security.json
+          --benchmark-report build/benchmarks/ci-p8-runtime-release.json
+
       - name: P6 duration prediction machine contract evidence
         run: >-
           uv run python scripts/p6_duration_contract_check.py
@@ -652,7 +663,19 @@ jobs:
             "${replay_root}/backend/migrations/versions/0009_host_authorization_audit.py" \
             "${replay_root}/backend/tests/contract/test_p8_host_authorization.py" \
             "${replay_root}/backend/tests/integration/test_p8_host_authorization_audit.py" \
-            "${replay_root}/backend/tests/security/test_p8_host_authorization_security.py"
+            "${replay_root}/backend/tests/security/test_p8_host_authorization_security.py" \
+            "${replay_root}/backend/app/infrastructure/release/__init__.py" \
+            "${replay_root}/backend/app/infrastructure/release/builder.py" \
+            "${replay_root}/backend/app/infrastructure/release/check.py" \
+            "${replay_root}/backend/app/infrastructure/release/contracts.py" \
+            "${replay_root}/backend/app/infrastructure/release/preflight.py" \
+            "${replay_root}/backend/tests/p8_release_support.py" \
+            "${replay_root}/backend/tests/unit/test_p8_release_packaging.py" \
+            "${replay_root}/backend/tests/contract/test_p8_release_packaging_contract.py" \
+            "${replay_root}/backend/tests/integration/test_p8_release_packaging_integration.py" \
+            "${replay_root}/backend/tests/security/test_p8_release_packaging_security.py" \
+            "${replay_root}/infra/release/runtime-release-policy.v1.json" \
+            "${replay_root}/infra/release/runtime-vulnerability-policy.v1.json"
           git -C "${replay_root}" restore \
             --source d0a83c58cb4a2d4afa76e8c8cff08441574e2e30 \
             -- backend/tests/integration/test_ci_contract.py
@@ -686,6 +709,7 @@ jobs:
             backend/tests/integration/test_migrations_and_infrastructure.py \
             backend/tests/integration/test_p3_vertical_slice.py \
             backend/tests/integration/test_config_and_health.py \
+            infra/Dockerfile \
             pyproject.toml \
             schemas/data_dictionary.yaml
           mkdir -p \
@@ -814,6 +838,7 @@ jobs:
             build/traceability/*.json
             build/benchmarks/*.json
             build/playwright/**
+            build/release/**
           if-no-files-found: error
 
   validate:

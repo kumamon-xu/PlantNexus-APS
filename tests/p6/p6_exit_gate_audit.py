@@ -350,22 +350,22 @@ _FROZEN_OWNER_PATHS = (
 
 _POST_P6_ADDITIVE_OWNER_SHA256: Mapping[str, str] = {
     ".github/workflows/ci.yml": (
-        "ca6091bd0aa30d4c553d39883b3528d5a9f2d8ec99237b5b9a0cabc36eb42f8d"
+        "85321baadce6f4edccc0ae73a443313ba244d54a2143a61e5012cb1c9d9a0f2e"
     ),
     "backend/app/planning/backends/cp_sat/replan_solver_check.py": (
-        "562cda6cde4dc1e22a5321597ecb1d0d0a1a38ed334ad34df79b156d9d203cdc"
+        "8c5e7a1e1103269f7104a883fe2fb977cc49f94167143fd4facc9c8f55496aae"
     ),
     "backend/app/planning/problem/freeze_window_check.py": (
-        "0f11a654836f687e512f6ce2574c954d2f290716ac16edaca61d382edee831bf"
+        "51cd74814897f4edf4032cfc20c682ce89818d940f8c14ad9af81ae2a4c1723a"
     ),
     "backend/app/planning/reporting/stability_change_report_check.py": (
-        "dbe4e346e9ccdf5adc726f58a7a55c9a75fd765a2b85c078a54675bef38fb638"
+        "68327767b7b9bccd50ed6289af91158518ab89acbb5e7d61f59275133921be50"
     ),
     "backend/app/simulation/execution/simulator_check.py": (
-        "8d05e552e3e2ff07d4a1d7d8d9da356417bb87dc7b31b5c12879aef760b6f2ce"
+        "303e332df997b8722af60e97e22876745f0a3ad661545f8a261061338e7a4e91"
     ),
     "pyproject.toml": (
-        "4b511b70bae195debce23cd99149af059aaa1ab3694218f553d115ba3ca8bd09"
+        "6ac4cb5d6617e5afe9bff270407e06f3797bf6aa8f800c390042e3b4c2ccbd79"
     ),
     "scripts/p6_duration_contract_check.py": (
         "372d78725477838a33a75330202c26465059f33259eb9fc65b0f2eb9c23fc341"

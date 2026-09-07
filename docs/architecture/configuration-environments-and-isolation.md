@@ -6,10 +6,16 @@ spec_version: 0.3.0
 phase: cross-phase
 normative: true
 source_sections: [16, 38, 49, 62, 64, 95, 96]
-last_reviewed: 2026-09-06
+last_reviewed: 2026-09-07
 ---
 
 # 配置、环境与数据隔离
+
+## TASK-P8-09 release preflight配置边界
+
+Runtime `0.1.0`发布物固定`CPython 3.12.13 / linux / amd64`，但不内置任一环境的endpoint、DSN、token、claim、policy document或secret。Release preflight只验证外部平台已经提供八个必需配置名称：database、Redis、Celery broker/result backend、Schema目录、Planning Policy、Solve Limits及Runtime HTTP Policy；报告永不保存配置值。environment/data plane、exact code commit、Runtime composition开关与P8-08 identity/authorization adapter仍由部署环境显式绑定，客户端canonical JSON不能覆盖。
+
+本工程候选只允许Simulation/Test/Benchmark复验；`--production`无条件以`PRODUCTION_AUTHORITY_UNAVAILABLE`停止。配置齐全也不授予Production authority。归档内default-empty Extension集合不可由环境变量替换；企业Extension必须等待SDK/Registry/compatibility工作形成后，通过独立version lock装载。
 
 ## TASK-P8-08 host authorization configuration and isolation
 

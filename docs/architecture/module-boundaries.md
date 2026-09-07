@@ -6,10 +6,16 @@ spec_version: 0.3.0
 phase: cross-phase
 normative: true
 source_sections: [12, 13, 14, 30, 41, 47, 51, 65, 70, 95, 101, 113, 114]
-last_reviewed: 2026-09-06
+last_reviewed: 2026-09-07
 ---
 
 # 模块边界与依赖规则
+
+## TASK-P8-09 release tooling boundary
+
+`app.infrastructure.release`是离线交付工具层：`contracts`拥有strict archive/manifest/checksum读取，`builder`单向读取版本常量、lock、migration、Schema/OpenAPI和release policy，`preflight`只消费已构建distribution，`check`组合clean build/install、migration与SCA工程证据。API、Application、Domain、Planning、Solver和Validator均不得反向导入release tooling；运行期业务请求也不得调用builder、读取registry或选择Extension。
+
+Runtime wheel仍承载API、Worker和Validator，发布归档在其外封装migration/Schema/OpenAPI/SBOM。`runtime_composition`只把独立`RUNTIME_VERSION=0.1.0`与`CORE_VERSION=0.0.0`写入server-owned resolution；default-empty Extension seam保持禁用动态发现。Dockerfile是归档中的派生输入，不成为第二个release identity。Frontend、Demo、第三方adapter和Enterprise Extension都不在该依赖图或distribution内。
 
 ## TASK-P8-07 Headless transport boundary
 

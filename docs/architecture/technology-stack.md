@@ -6,10 +6,16 @@ spec_version: 0.3.0
 phase: cross-phase
 normative: false
 source_sections: [11, 12, 65, 95, 100, 101, 102, 114]
-last_reviewed: 2026-09-05
+last_reviewed: 2026-09-07
 ---
 
 # 推荐技术栈与锁定规则
+
+## TASK-P8-09 release toolchain pin
+
+权威Runtime工程distribution目标固定为CPython `3.12.13`、Linux、amd64；Application wheel版本`0.0.0`与Runtime distribution版本`0.1.0`独立。构建继续使用exact `uv 0.11.32`与`hatchling 1.27.0`，没有新增Python依赖或修改`uv.lock`。确定性tar/gzip、strict JSON、SHA-256、UUID5、TOML和AST migration inventory全部使用Python标准库；CycloneDX 1.5内容由exact uv lock graph生成。
+
+Dockerfile补充Schema、Alembic及release policy输入和OCI版本label，但仍只是可复现distribution的派生镜像配方；未生成或发布digest-pinned Production image。Runtime requirements带完整hash，clean install先装50个第三方runtime distributions，再以`--no-deps`安装PlantNexus wheel；SBOM同时包含application，因此组件总数为51。
 
 ## TASK-P8-06 dependency-neutral Runtime composition
 

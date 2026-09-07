@@ -6,10 +6,18 @@ spec_version: 0.3.0
 phase: cross-phase
 normative: true
 source_sections: [4, 23, 24, 40, 67, 93, 95, 101, 102, 103, 104, 114]
-last_reviewed: 2026-09-04
+last_reviewed: 2026-09-07
 ---
 
 # Provenance 与版本规则
+
+## TASK-P8-09 Runtime release provenance
+
+P8-09首次把发布身份拆成可机器校验的矩阵：Runtime=`0.1.0`、Application/Core=`0.0.0`、Headless API=`headless-http.v1`、Schema set=`2.10.0`、database=`0009_host_authorization_audit`、Extension SDK/Developer Kit=`0.0.0-not-published`、Registry protocol=`plugin-registry.v1`。这些值不能合并为一个模糊“APS版本”，也不能由Git tag、image tag或客户端输入推断。
+
+Release manifest绑定exact 40字符Git commit、commit-derived `SOURCE_DATE_EPOCH`、target、逐文件digest、wheel/OpenAPI/lock digest、empty Extension集合、support window和signing state；manifest本身以canonical JSON计算fingerprint，外层归档再以SHA-256内容寻址。相同输入必须产生相同wheel和tar+gzip bytes；同一content address出现不同bytes、旧版本被覆盖、迁移重写或版本字段分歧均fail closed。当前`UNSIGNED_ENGINEERING_CANDIDATE`只提供可签名输入，不冒充签名或Production promotion。
+
+企业项目未来按Runtime/SDK/Developer Kit精确组合锁定；Core或Runtime升级不触发自动升级。P8-15只能接纳经过兼容验证的不可变Runtime artifact，不能从工作树或floating registry组装Developer Kit。
 
 ## P8 Extension and Developer Kit lineage
 

@@ -6,14 +6,14 @@ spec_version: 0.3.0
 phase: P8
 normative: false
 source_sections: [2, 6, 24, 90, 113, 114]
-last_reviewed: 2026-09-06
+last_reviewed: 2026-09-07
 ---
 
 # PlantNexus APS 公开文档中心
 
 本目录只收录适合随公开 Git 仓库发布的核心项目文档。开发过程记录、Task Card、阶段证据、机器报告、临时草稿、截图、测试输出和下载制品不属于公开文档，应留在被忽略的本地目录或 `build/`。
 
-项目当前已形成 P0～P6 研发能力，P7 真实数据校准暂缓，P8 Headless产品化已从机器合同推进到durable canonical ingress、PlanningRun编排、异步Solver Worker、单一Runtime组合以及公开Headless HTTP切片。产品边界只接收宿主平台提交的versioned canonical JSON，不在APS内直接建设ERP/MES/WMS/CAM连接器；宿主和未来可选独立Frontend消费同一API。企业适配规划通过Extension SDK和独立Enterprise Extension在Runtime内实现，并由version-locked Developer Kit交付，禁止复制/修改Core或自动升级企业项目。当前已形成[Headless平台集成与数据权威合同](contracts/headless-platform-integration.md)、schema set `2.10.0`中的canonical ingress/result、PlanningRun与Headless错误注册表，以及严格消费这些合同并保存immutable Snapshot/Problem、run/attempt/work/audit、Worker checkpoint和ScheduleVersion的Runtime链。P8-07在保留原29项operation的基础上只新增create/status/cancel/retry/result五项，提交的OpenAPI 3.1快照共34项，并以server-owned Runtime policy限制canonical JSON、scope/authority、payload与幂等dispatch。P8-08进一步形成provider-neutral Test identity、operator-owned exact tenant/factory/planning scope、五项operation授权前置与sanitized append-only allow/deny audit；opaque bearer和客户端坐标都不能成为authority，Production没有真实provider/policy时继续default-deny。该能力当前只在显式Simulation/Test组合中形成；真实host IdP/RBAC/gateway、SDK、Registry、Developer Kit、发布与部署仍未实现。Synthetic/TestClient/SQLite证据不代表Production readiness、UAT、真实身份/审批authority、容量结论或SLA已经形成。能力声明以[能力矩阵](core/capability-matrix.md)和对应合同为准。
+项目当前已形成P0～P6研发能力，P7真实数据校准暂缓，P8 Headless产品化已推进到durable canonical ingress、PlanningRun、Solver Worker、单一Runtime组合、五项公开HTTP operation及Test identity/authorization/audit。产品边界只接收宿主平台提交的versioned canonical JSON，不在APS内直接建设ERP/MES/WMS/CAM连接器；宿主和未来可选独立Frontend消费同一API。企业适配规划通过Extension SDK和独立Enterprise Extension在Runtime内实现，并由version-locked Developer Kit交付，禁止复制/修改Core或自动升级企业项目。P8-09已形成Runtime `0.1.0`的确定性、内容寻址工程distribution：Application/Core仍为`0.0.0`，API=`headless-http.v1`、Schema=`2.10.0`、database head=`0009_host_authorization_audit`；包内含wheel、锁定依赖、migration、Schema、OpenAPI、SBOM、license/checksum和兼容/回退合同。它固定default-empty Extension、`UNSIGNED_ENGINEERING_CANDIDATE`与Linux/amd64 target，不是已签Production部署或Developer Kit。真实host IdP/RBAC/gateway、SDK、Registry、Developer Kit、release authority、容量和SLA仍未形成。能力声明以[能力矩阵](core/capability-matrix.md)和对应合同为准。
 
 ## 核心入口
 
@@ -33,6 +33,7 @@ last_reviewed: 2026-09-06
 | 动态重排 | [重排设计](planning/replanning.md) | ExecutionEvent、freeze、stability 与 ChangeReport |
 | 前端 | [Frontend 文档](frontend/README.md) | 工作台、双语、命令和浏览器边界 |
 | 运维与安全 | [Operations 索引](operations/README.md) | 安全、可观测性、审计和 worker 可靠性 |
+| 发布与安装 | [Runtime 发布、版本与回退合同](operations/release-and-versioning.md) | 版本矩阵、确定性distribution、SBOM、preflight、升级与回退 |
 
 ## 按角色阅读
 

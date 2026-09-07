@@ -78,6 +78,9 @@ _P6_SCHEMA_METADATA_PYPROJECT_SHA256 = (
 _P8_SCHEMA_METADATA_PYPROJECT_SHA256 = (
     "4b511b70bae195debce23cd99149af059aaa1ab3694218f553d115ba3ca8bd09"
 )
+_P8_RELEASE_METADATA_PYPROJECT_SHA256 = (
+    "6ac4cb5d6617e5afe9bff270407e06f3797bf6aa8f800c390042e3b4c2ccbd79"
+)
 
 
 def _ensure(condition: bool, message: str) -> None:
@@ -175,6 +178,7 @@ def _frozen_inputs(root: Path) -> dict[str, object]:
             p4_pyproject_digest,
             _P6_SCHEMA_METADATA_PYPROJECT_SHA256,
             _P8_SCHEMA_METADATA_PYPROJECT_SHA256,
+            _P8_RELEASE_METADATA_PYPROJECT_SHA256,
         },
         "Schema, ADR, P2 objective/validator, state, or dependency bytes drifted",
     )

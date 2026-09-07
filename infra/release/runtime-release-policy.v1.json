@@ -1,0 +1,132 @@
+{
+  "policy_version": "aps-runtime-release-policy.v1",
+  "artifact": {
+    "archive_format": "tar+gzip",
+    "content_address_algorithm": "sha256",
+    "distribution_name": "plantnexus-aps-runtime",
+    "registry_policy": "LOCAL_OR_CI_CONTENT_ADDRESSED_ONLY",
+    "remote_publication": false,
+    "reproducible": true,
+    "signing_state": "UNSIGNED_ENGINEERING_CANDIDATE"
+  },
+  "compatibility": {
+    "api_contract": "headless-http.v1",
+    "application_version": "0.0.0",
+    "core_version": "0.0.0",
+    "database_head": "0009_host_authorization_audit",
+    "developer_kit_version": "0.0.0-not-published",
+    "extension_sdk_version": "0.0.0-not-published",
+    "openapi_artifact": "backend/app/api/openapi/headless-api.v1.json",
+    "plugin_registry_protocol": "plugin-registry.v1",
+    "runtime_version": "0.1.0",
+    "schema_set_version": "2.10.0",
+    "spec_version": "0.3.0"
+  },
+  "extension_boundary": {
+    "bundled_extensions": [],
+    "enterprise_extension_loading": "DISABLED_UNTIL_COMPATIBILITY_VERIFIED",
+    "frontend_bundled": false,
+    "third_party_connectors_bundled": false
+  },
+  "license_policy": {
+    "allowed_identifiers": [
+      "0BSD",
+      "Apache-2.0",
+      "BSD-2-Clause",
+      "BSD-3-Clause",
+      "CC0-1.0",
+      "LGPL-3.0-only",
+      "LicenseRef-PlantNexus-Internal",
+      "MIT",
+      "MPL-2.0",
+      "PSF-2.0",
+      "Zlib"
+    ],
+    "reviewed_expressions": {
+      "absl-py": "Apache-2.0",
+      "alembic": "MIT",
+      "amqp": "BSD-3-Clause",
+      "annotated-types": "MIT",
+      "anyio": "MIT",
+      "billiard": "BSD-3-Clause",
+      "celery": "BSD-3-Clause",
+      "click": "BSD-3-Clause",
+      "click-didyoumean": "MIT",
+      "click-plugins": "BSD-3-Clause",
+      "click-repl": "MIT",
+      "colorama": "BSD-3-Clause",
+      "defusedxml": "PSF-2.0",
+      "et-xmlfile": "MIT",
+      "fastapi": "MIT",
+      "greenlet": "MIT AND PSF-2.0",
+      "h11": "MIT",
+      "idna": "BSD-3-Clause",
+      "immutabledict": "MIT",
+      "importlib-metadata": "Apache-2.0",
+      "kombu": "BSD-3-Clause",
+      "mako": "MIT",
+      "markupsafe": "BSD-3-Clause",
+      "numpy": "BSD-3-Clause AND 0BSD AND MIT AND Zlib AND CC0-1.0",
+      "openpyxl": "MIT",
+      "opentelemetry-api": "Apache-2.0",
+      "ortools": "Apache-2.0",
+      "packaging": "Apache-2.0 OR BSD-2-Clause",
+      "pandas": "BSD-3-Clause",
+      "plantnexus-aps": "LicenseRef-PlantNexus-Internal",
+      "prompt-toolkit": "BSD-3-Clause",
+      "protobuf": "BSD-3-Clause",
+      "psycopg": "LGPL-3.0-only",
+      "psycopg-binary": "LGPL-3.0-only",
+      "pydantic": "MIT",
+      "pydantic-core": "MIT",
+      "pydantic-settings": "MIT",
+      "python-dateutil": "BSD-3-Clause OR Apache-2.0",
+      "python-dotenv": "BSD-3-Clause",
+      "redis": "MIT",
+      "six": "MIT",
+      "sqlalchemy": "MIT",
+      "starlette": "BSD-3-Clause",
+      "structlog": "MIT OR Apache-2.0",
+      "typing-extensions": "PSF-2.0",
+      "typing-inspection": "MIT",
+      "tzdata": "Apache-2.0",
+      "uvicorn": "BSD-3-Clause",
+      "vine": "BSD-3-Clause",
+      "wcwidth": "MIT",
+      "zipp": "MIT"
+    },
+    "unknown_license_action": "FAIL_RELEASE"
+  },
+  "migration_policy": {
+    "downgrade_is_potentially_destructive": true,
+    "production_approval_required": true,
+    "rollback_strategy": "BACKUP_RESTORE_OR_APPROVED_FORWARD_FIX",
+    "validate_empty_upgrade_downgrade_replay": true,
+    "validate_populated_head_downgrade_reupgrade": true
+  },
+  "preflight": {
+    "required_configuration_names": [
+      "PLANTNEXUS_CELERY_BROKER_URL",
+      "PLANTNEXUS_CELERY_RESULT_BACKEND_URL",
+      "PLANTNEXUS_DATABASE_URL",
+      "PLANTNEXUS_REDIS_URL",
+      "PLANTNEXUS_RUNTIME_HTTP_POLICY_PATH",
+      "PLANTNEXUS_RUNTIME_PLANNING_POLICY_PATH",
+      "PLANTNEXUS_RUNTIME_SCHEMA_DIRECTORY",
+      "PLANTNEXUS_RUNTIME_SOLVE_LIMITS_PATH"
+    ],
+    "secret_values_in_report": false
+  },
+  "support_window": {
+    "automatic_upgrade": false,
+    "ends_when": "P8_15_ACCEPTS_OR_EXPLICIT_RUNTIME_SUPERSEDES",
+    "profile": "P8_ENGINEERING_CANDIDATE",
+    "production_sla": false
+  },
+  "target": {
+    "architecture": "amd64",
+    "operating_system": "linux",
+    "python_implementation": "CPython",
+    "python_version": "3.12.13"
+  }
+}

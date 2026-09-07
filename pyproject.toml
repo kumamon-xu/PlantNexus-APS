@@ -45,3 +45,6 @@ pythonpath = ["."]
 spec = "0.3.0"
 schema = "2.10.0"
 code = "0.0.0"
+application = "0.0.0"
+core = "0.0.0"
+runtime = "0.1.0"

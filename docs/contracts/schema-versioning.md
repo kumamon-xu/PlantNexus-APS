@@ -6,10 +6,16 @@ spec_version: 0.3.0
 phase: cross-phase
 normative: true
 source_sections: [23, 24, 40, 95, 101, 103, 104, 114]
-last_reviewed: 2026-09-05
+last_reviewed: 2026-09-07
 ---
 
 # Schema 版本与兼容规则
+
+## TASK-P8-09 distribution binding（Schema不变）
+
+本Task没有修改`schemas/**`、document URN/version、canonicalization、sample或serializer；global schema set继续`2.10.0`。Runtime `0.1.0`发布manifest只逐字打包当前Schema目录并记录每个文件SHA-256，compatibility manifest把Schema `2.10.0`与API `headless-http.v1`、Core/Application `0.0.0`及database head `0009_host_authorization_audit`绑定。Runtime版本提升不能改写旧Schema，也不表示所有document共享同一个版本。
+
+Preflight要求Schema、OpenAPI、migration、manifest和checksum同时存在且相互一致。任何缺失、额外文件、bytes漂移或版本不一致均在启动前失败。`upgrade_from=[]`表示该首个工程候选没有声明自动Runtime升级路径；未来兼容窗口必须以新release/Developer Kit矩阵发布，不能通过修改旧artifact补记。
 
 ## TASK-P8-02 additive set `2.10.0`
 

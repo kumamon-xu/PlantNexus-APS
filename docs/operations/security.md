@@ -6,10 +6,18 @@ spec_version: 0.3.0
 phase: P0-P8
 normative: true
 source_sections: [58, 62, 93, 95, 100]
-last_reviewed: 2026-09-06
+last_reviewed: 2026-09-07
 ---
 
 # P0 工程安全边界
+
+## TASK-P8-09 supply-chain与artifact安全边界
+
+Release reader对tar+gzip实行单root、regular-file-only、成员/展开大小上限，拒绝绝对路径、`..`、反斜杠、重复member、symlink/hardlink和非UTF-8/duplicate/non-finite JSON。外层sidecar、内层完整checksum inventory、payload size/digest与canonical manifest fingerprint任一不一致都在安装/启动前失败。归档禁止Demo、Frontend、connector、Enterprise Extension、credential和运行数据；报告只含版本、commit、fingerprint、稳定错误code和配置名称。
+
+SCA必须以exact `uv.lock`审计且每条finding恰好落入一个versioned VEX assessment。当前Starlette `0.47.3`的12条raw记录归并为6个advisory：FileResponse/StaticFiles、form parser、HTTPEndpoint及URL重构风险均以源码guard和Linux target复核为`NOT_AFFECTED`；唯一`request.url.path`读取只选择sanitized validation-error envelope，routing/identity/authorization/scope/resource lookup不依赖它。该判定随dependency lock、源码使用或advisory集合变化自动失效，且不代表依赖无漏洞或Production安全认证。
+
+许可证policy逐项覆盖51个SBOM组件，unknown、缺项或未允许identifier使release失败。候选保持`UNSIGNED_ENGINEERING_CANDIDATE`，没有signing key、remote registry credential或Production promotion authority；checksum不得冒充数字签名。
 
 ## TASK-P8-08 Host identity and authorization controls
 

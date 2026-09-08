@@ -687,6 +687,17 @@ jobs:
             "${replay_root}/backend/tests/integration/test_p8_frontend_distribution_integration.py" \
             "${replay_root}/backend/tests/security/test_p8_frontend_distribution_security_cases.py" \
             "${replay_root}/backend/tests/unit/test_p8_frontend_distribution.py" \
+            "${replay_root}/backend/aps_extension_sdk/__init__.py" \
+            "${replay_root}/backend/aps_extension_sdk/errors.py" \
+            "${replay_root}/backend/aps_extension_sdk/manifest.py" \
+            "${replay_root}/backend/aps_extension_sdk/protocols.py" \
+            "${replay_root}/backend/aps_extension_sdk/values.py" \
+            "${replay_root}/backend/aps_extension_sdk/contracts/extension-compatibility.v1.schema.json" \
+            "${replay_root}/backend/aps_extension_sdk/contracts/extension-error-code-registry.v1.json" \
+            "${replay_root}/backend/aps_extension_sdk/contracts/extension-manifest.v1.schema.json" \
+            "${replay_root}/backend/aps_extension_sdk/contracts/samples/extension-compatibility.v1.synthetic.json" \
+            "${replay_root}/backend/aps_extension_sdk/contracts/samples/extension-contract-negative-vectors.v1.json" \
+            "${replay_root}/backend/aps_extension_sdk/contracts/samples/extension-manifest.v1.synthetic.json" \
             "${replay_root}/backend/tests/contract/test_p8_extension_sdk_contract.py" \
             "${replay_root}/backend/tests/property/test_p8_extension_sdk_properties.py" \
             "${replay_root}/backend/tests/security/test_p8_extension_sdk_security.py" \

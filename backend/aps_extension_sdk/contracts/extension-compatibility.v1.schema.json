@@ -1,0 +1,159 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "urn:plantnexus:aps:extension-sdk:extension-compatibility:v1",
+  "title": "PlantNexus APS Extension SDK Compatibility Policy v1",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "extension_compatibility_version",
+    "sdk_api_version",
+    "supported_sdk_range",
+    "supported_manifest_versions",
+    "supported_registry_protocol_versions",
+    "supported_extension_points",
+    "objective_policy",
+    "validation_policy",
+    "replan_policy_boundary",
+    "release_policy",
+    "deprecation_policy",
+    "contract_status",
+    "runtime_loader_status",
+    "developer_kit_status",
+    "compatibility_fingerprint"
+  ],
+  "properties": {
+    "extension_compatibility_version": {"const": "extension-compatibility.v1"},
+    "sdk_api_version": {"const": "1.0.0"},
+    "supported_sdk_range": {"$ref": "#/$defs/versionInterval"},
+    "supported_manifest_versions": {
+      "type": "array",
+      "minItems": 1,
+      "uniqueItems": true,
+      "items": {"const": "extension-manifest.v1"}
+    },
+    "supported_registry_protocol_versions": {
+      "type": "array",
+      "minItems": 1,
+      "uniqueItems": true,
+      "items": {"const": "plugin-registry.v1"}
+    },
+    "supported_extension_points": {
+      "type": "array",
+      "minItems": 6,
+      "maxItems": 6,
+      "uniqueItems": true,
+      "items": {
+        "enum": [
+          "CONSTRAINT",
+          "OBJECTIVE",
+          "PLANNING_RULE",
+          "PLUGIN_REGISTRY",
+          "REPLAN_POLICY",
+          "VALIDATION_RULE"
+        ]
+      }
+    },
+    "objective_policy": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["stage", "position", "core_order", "integer_only", "implicit_weight"],
+      "properties": {
+        "stage": {"const": "ENTERPRISE_TIE_BREAK"},
+        "position": {"const": "AFTER_OBJ_003"},
+        "core_order": {
+          "type": "array",
+          "prefixItems": [
+            {"const": "OBJ-001"},
+            {"const": "OBJ-002"},
+            {"const": "OBJ-003"}
+          ],
+          "minItems": 3,
+          "maxItems": 3
+        },
+        "integer_only": {"const": true},
+        "implicit_weight": {"const": false}
+      }
+    },
+    "validation_policy": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["feasibility_pair_required", "independent_entrypoint", "solver_status_authority"],
+      "properties": {
+        "feasibility_pair_required": {"const": true},
+        "independent_entrypoint": {"const": true},
+        "solver_status_authority": {"const": false}
+      }
+    },
+    "replan_policy_boundary": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "preserve_execution_facts",
+        "preserve_hard_locks",
+        "preserve_freeze_window",
+        "preserve_state_machine",
+        "preserve_publication_authority",
+        "direct_schedule_mutation"
+      ],
+      "properties": {
+        "preserve_execution_facts": {"const": true},
+        "preserve_hard_locks": {"const": true},
+        "preserve_freeze_window": {"const": true},
+        "preserve_state_machine": {"const": true},
+        "preserve_publication_authority": {"const": true},
+        "direct_schedule_mutation": {"const": false}
+      }
+    },
+    "release_policy": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["patch", "minor", "major", "exact_lock_required", "automatic_upgrade"],
+      "properties": {
+        "patch": {"const": "NO_BUSINESS_SEMANTIC_CHANGE"},
+        "minor": {"const": "ADDITIVE_OPTIONAL"},
+        "major": {"const": "BREAKING_REQUIRES_NEW_DEVELOPER_KIT"},
+        "exact_lock_required": {"const": true},
+        "automatic_upgrade": {"const": false}
+      }
+    },
+    "deprecation_policy": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "removal_requires_new_sdk_major",
+        "replacement_required",
+        "support_end_requires_explicit_release",
+        "silent_replacement"
+      ],
+      "properties": {
+        "removal_requires_new_sdk_major": {"const": true},
+        "replacement_required": {"const": true},
+        "support_end_requires_explicit_release": {"const": true},
+        "silent_replacement": {"const": false}
+      }
+    },
+    "contract_status": {"const": "SDK_CONTRACT_ONLY"},
+    "runtime_loader_status": {"const": "NOT_IMPLEMENTED_UNTIL_P8_13"},
+    "developer_kit_status": {"const": "NOT_IMPLEMENTED_UNTIL_P8_15"},
+    "compatibility_fingerprint": {"$ref": "#/$defs/fingerprint"}
+  },
+  "$defs": {
+    "semanticVersion": {
+      "type": "string",
+      "pattern": "^(0|[1-9][0-9]*)\\.(0|[1-9][0-9]*)\\.(0|[1-9][0-9]*)$"
+    },
+    "versionInterval": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["minimum_inclusive", "maximum_exclusive"],
+      "properties": {
+        "minimum_inclusive": {"const": "1.0.0"},
+        "maximum_exclusive": {"const": "2.0.0"}
+      }
+    },
+    "fingerprint": {
+      "type": "string",
+      "pattern": "^sha256:[0-9a-f]{64}$"
+    }
+  }
+}

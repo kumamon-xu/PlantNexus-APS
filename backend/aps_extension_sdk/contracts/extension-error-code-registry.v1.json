@@ -1,0 +1,22 @@
+{
+  "registry_version": "extension-error-code-registry.v1",
+  "namespace": "APS_EXTENSION_SDK",
+  "codes": [
+    {"code": "DEPRECATED_UNSUPPORTED", "category": "COMPATIBILITY", "retryable": false},
+    {"code": "DUPLICATE_CONTRIBUTION_ID", "category": "REGISTRY", "retryable": false},
+    {"code": "DUPLICATE_EXTENSION_ID", "category": "REGISTRY", "retryable": false},
+    {"code": "FINGERPRINT_MISMATCH", "category": "INTEGRITY", "retryable": false},
+    {"code": "FORBIDDEN_BOUNDARY_ACCESS", "category": "BOUNDARY", "retryable": false},
+    {"code": "INCOMPATIBLE_SDK_VERSION", "category": "COMPATIBILITY", "retryable": false},
+    {"code": "INVALID_MANIFEST", "category": "CONTRACT", "retryable": false},
+    {"code": "INVALID_OBJECTIVE_STAGE", "category": "CONTRACT", "retryable": false},
+    {"code": "INVALID_VALIDATION_PAIR", "category": "VALIDATION", "retryable": false},
+    {"code": "MISSING_VALIDATION_PAIR", "category": "VALIDATION", "retryable": false},
+    {"code": "MIXED_SDK_VERSION", "category": "COMPATIBILITY", "retryable": false},
+    {"code": "MUTABLE_VALUE", "category": "BOUNDARY", "retryable": false},
+    {"code": "REGISTRY_CONFLICT", "category": "REGISTRY", "retryable": false},
+    {"code": "UNKNOWN_EXTENSION_POINT", "category": "CONTRACT", "retryable": false},
+    {"code": "UNSUPPORTED_MANIFEST_VERSION", "category": "COMPATIBILITY", "retryable": false},
+    {"code": "UNSUPPORTED_REGISTRY_PROTOCOL", "category": "COMPATIBILITY", "retryable": false}
+  ]
+}

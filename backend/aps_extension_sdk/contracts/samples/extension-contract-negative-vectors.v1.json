@@ -1,0 +1,34 @@
+{
+  "negative_vector_version": "extension-contract-negative-vectors.v1",
+  "base_manifest": "extension-manifest.v1.synthetic.json",
+  "vectors": [
+    {
+      "vector_id": "duplicate-contribution-id",
+      "operation": "DUPLICATE_CONTRIBUTION",
+      "target": "com.example.capacity.constraint",
+      "value": null,
+      "expected_code": "DUPLICATE_CONTRIBUTION_ID"
+    },
+    {
+      "vector_id": "invalid-objective-stage",
+      "operation": "REPLACE_OBJECTIVE_STAGE",
+      "target": "com.example.cost.objective",
+      "value": "BEFORE_DELIVERY",
+      "expected_code": "INVALID_OBJECTIVE_STAGE"
+    },
+    {
+      "vector_id": "missing-validation-pair",
+      "operation": "REPLACE_VALIDATION_PAIR",
+      "target": "com.example.capacity.constraint",
+      "value": "com.example.absent.validator",
+      "expected_code": "MISSING_VALIDATION_PAIR"
+    },
+    {
+      "vector_id": "mixed-sdk-version",
+      "operation": "MIX_MANIFEST_SET_SDK_VERSION",
+      "target": "sdk_api_version",
+      "value": "1.1.0",
+      "expected_code": "MIXED_SDK_VERSION"
+    }
+  ]
+}

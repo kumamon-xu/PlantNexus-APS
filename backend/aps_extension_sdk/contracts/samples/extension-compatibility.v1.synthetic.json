@@ -1,0 +1,55 @@
+{
+  "extension_compatibility_version": "extension-compatibility.v1",
+  "sdk_api_version": "1.0.0",
+  "supported_sdk_range": {
+    "minimum_inclusive": "1.0.0",
+    "maximum_exclusive": "2.0.0"
+  },
+  "supported_manifest_versions": ["extension-manifest.v1"],
+  "supported_registry_protocol_versions": ["plugin-registry.v1"],
+  "supported_extension_points": [
+    "CONSTRAINT",
+    "OBJECTIVE",
+    "PLANNING_RULE",
+    "PLUGIN_REGISTRY",
+    "REPLAN_POLICY",
+    "VALIDATION_RULE"
+  ],
+  "objective_policy": {
+    "stage": "ENTERPRISE_TIE_BREAK",
+    "position": "AFTER_OBJ_003",
+    "core_order": ["OBJ-001", "OBJ-002", "OBJ-003"],
+    "integer_only": true,
+    "implicit_weight": false
+  },
+  "validation_policy": {
+    "feasibility_pair_required": true,
+    "independent_entrypoint": true,
+    "solver_status_authority": false
+  },
+  "replan_policy_boundary": {
+    "preserve_execution_facts": true,
+    "preserve_hard_locks": true,
+    "preserve_freeze_window": true,
+    "preserve_state_machine": true,
+    "preserve_publication_authority": true,
+    "direct_schedule_mutation": false
+  },
+  "release_policy": {
+    "patch": "NO_BUSINESS_SEMANTIC_CHANGE",
+    "minor": "ADDITIVE_OPTIONAL",
+    "major": "BREAKING_REQUIRES_NEW_DEVELOPER_KIT",
+    "exact_lock_required": true,
+    "automatic_upgrade": false
+  },
+  "deprecation_policy": {
+    "removal_requires_new_sdk_major": true,
+    "replacement_required": true,
+    "support_end_requires_explicit_release": true,
+    "silent_replacement": false
+  },
+  "contract_status": "SDK_CONTRACT_ONLY",
+  "runtime_loader_status": "NOT_IMPLEMENTED_UNTIL_P8_13",
+  "developer_kit_status": "NOT_IMPLEMENTED_UNTIL_P8_15",
+  "compatibility_fingerprint": "sha256:feef22a022917de241de4194b328f4167da9ad7a8a58eb8e0f963e67c4d064f2"
+}

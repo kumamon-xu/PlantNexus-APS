@@ -6,14 +6,20 @@ spec_version: 0.3.0
 phase: P8
 normative: true
 source_sections: [4, 5, 9, 12, 30, 63, 65, 93, 95, 97, 101, 103, 106, 107, 109, 113, 114]
-last_reviewed: 2026-09-04
+last_reviewed: 2026-09-08
 ---
 
 # APS Extension SDK、Runtime 与 Developer Kit 架构
 
 ## 目标
 
-不同企业可在不复制、不fork、不修改`aps-core`的前提下实现业务适配，同时保留Headless API、canonical JSON、正式Validator、不可变版本、权限和审计的统一语义。当前文档冻结架构与后续P8工作，不表示SDK、loader、模板或Kit已经实现。
+不同企业可在不复制、不fork、不修改`aps-core`的前提下实现业务适配，同时保留Headless API、canonical JSON、正式Validator、不可变版本、权限和审计的统一语义。TASK-P8-12现已形成SDK `1.0.0`合同、Python skeleton及机器carrier；Runtime loader、企业模板和Developer Kit仍未实现。
+
+## TASK-P8-12 formed SDK boundary
+
+公开命名空间为`aps_extension_sdk`，只依赖标准库并暴露六类Protocol、frozen value、strict manifest/compatibility/error parser和code-free resolution。SDK package不得导入`app`或Core；Core/API/Runtime也未在本Task新增对SDK的反向依赖。机器carrier保存在SDK自身目录，不进入global业务Schema Set和既有Runtime `0.1.0`分发。
+
+SDK v1不暴露privileged service；所有输入先由未来Runtime裁剪并深度冻结。Objective唯一插槽为全部Core目标之后的`ENTERPRISE_TIE_BREAK`；Replan返回必须逐字保留fact/HARD lock/freeze/state/publication authority绑定；feasibility贡献与Validation Rule必须在同artifact双向配对且entrypoint/execution domain分离。具体合同以[`extension-sdk-and-developer-kit.md`](../contracts/extension-sdk-and-developer-kit.md)和package carrier为准。
 
 ## 产品分层
 
@@ -56,7 +62,7 @@ APS Developer Kit = verified Runtime + SDK + template +
 | Replan Policy | 事件触发、freeze/stability范围内的策略选择 | 不覆盖事实/HARD lock/state/publication；同输入同配置同决定 |
 | Plugin Registry | 发现、校验、排序、解析和fingerprint贡献 | stable ID/version/capability；duplicate/conflict/unknown/mixed version fail closed |
 
-具体Python protocol、manifest Schema、error registry和兼容规则由TASK-P8-12形成；本页不预判包名或函数签名。
+具体Python protocol、manifest Schema、error registry和兼容规则已由TASK-P8-12形成；Runtime调用/装载语义仍只由P8-13承接。
 
 ## 运行时组合
 
@@ -90,7 +96,7 @@ Extension异常、timeout、非法返回、未声明capability或版本不兼容
 | Extension version | 企业artifact及其配置版本 |
 | Developer Kit version | 一组通过共同兼容Gate的不可变交付组合 |
 
-Compatibility manifest必须列出精确或明确范围的支持关系、禁止组合、artifact digest、schema/OpenAPI versions、Python/dependency lock和支持窗口。破坏性SDK变更提升major；additive接口仍需conformance与旧Extension回放；bugfix不得改变已声明业务语义。
+P8-12 compatibility carrier固定SDK `1.0.0`、manifest v1、Registry v1、六类point、Core目标/Replan/Validator封闭策略和SemVer/deprecation规则。未来Developer Kit compatibility manifest还必须列出精确Runtime/Core/Extension、artifact digest、schema/OpenAPI versions、Python/dependency lock和支持窗口。破坏性SDK变更提升major；additive接口仍需conformance与旧Extension回放；bugfix不得改变已声明业务语义。
 
 ## Developer Kit 交付清单
 

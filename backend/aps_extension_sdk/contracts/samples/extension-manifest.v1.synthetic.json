@@ -1,0 +1,135 @@
+{
+  "extension_manifest_version": "extension-manifest.v1",
+  "sdk_api_version": "1.0.0",
+  "extension_id": "com.example.manufacturing",
+  "extension_version": "1.0.0",
+  "artifact": {
+    "digest": "sha256:1111111111111111111111111111111111111111111111111111111111111111",
+    "media_type": "application/vnd.plantnexus.aps-extension+python",
+    "package": "com.example.enterprise_extension"
+  },
+  "configuration": {
+    "contract_version": "com.example.extension.config.v1",
+    "schema_digest": "sha256:2222222222222222222222222222222222222222222222222222222222222222"
+  },
+  "compatibility": {
+    "sdk": {
+      "minimum_inclusive": "1.0.0",
+      "maximum_exclusive": "2.0.0"
+    },
+    "runtime": {
+      "minimum_inclusive": "0.1.0",
+      "maximum_exclusive": "1.0.0"
+    }
+  },
+  "registry_protocol_version": "plugin-registry.v1",
+  "contributions": [
+    {
+      "contribution_id": "com.example.capacity.constraint",
+      "extension_point": "CONSTRAINT",
+      "spi_version": "constraint.v1",
+      "implementation": "enterprise_extension.constraints:CapacityConstraint",
+      "execution_domain": "SOLVER",
+      "order": 100,
+      "capabilities": ["com.example.capacity"],
+      "affects_feasibility": true,
+      "validation_rule_ids": ["com.example.capacity.validator"],
+      "validates_contribution_ids": [],
+      "objective_stage": null
+    },
+    {
+      "contribution_id": "com.example.sequence.rule",
+      "extension_point": "PLANNING_RULE",
+      "spi_version": "planning-rule.v1",
+      "implementation": "enterprise_extension.rules:SequenceRule",
+      "execution_domain": "PLANNING",
+      "order": 110,
+      "capabilities": ["com.example.sequence"],
+      "affects_feasibility": true,
+      "validation_rule_ids": ["com.example.sequence.validator"],
+      "validates_contribution_ids": [],
+      "objective_stage": null
+    },
+    {
+      "contribution_id": "com.example.capacity.validator",
+      "extension_point": "VALIDATION_RULE",
+      "spi_version": "validation-rule.v1",
+      "implementation": "enterprise_extension.validators:CapacityValidator",
+      "execution_domain": "VALIDATOR",
+      "order": 200,
+      "capabilities": ["com.example.capacity"],
+      "affects_feasibility": false,
+      "validation_rule_ids": [],
+      "validates_contribution_ids": ["com.example.capacity.constraint"],
+      "objective_stage": null
+    },
+    {
+      "contribution_id": "com.example.sequence.validator",
+      "extension_point": "VALIDATION_RULE",
+      "spi_version": "validation-rule.v1",
+      "implementation": "enterprise_extension.validators:SequenceValidator",
+      "execution_domain": "VALIDATOR",
+      "order": 210,
+      "capabilities": ["com.example.sequence"],
+      "affects_feasibility": false,
+      "validation_rule_ids": [],
+      "validates_contribution_ids": ["com.example.sequence.rule"],
+      "objective_stage": null
+    },
+    {
+      "contribution_id": "com.example.cost.objective",
+      "extension_point": "OBJECTIVE",
+      "spi_version": "objective.v1",
+      "implementation": "enterprise_extension.objectives:CostTieBreak",
+      "execution_domain": "SOLVER",
+      "order": 300,
+      "capabilities": ["com.example.cost"],
+      "affects_feasibility": false,
+      "validation_rule_ids": [],
+      "validates_contribution_ids": [],
+      "objective_stage": "ENTERPRISE_TIE_BREAK"
+    },
+    {
+      "contribution_id": "com.example.disruption.replan",
+      "extension_point": "REPLAN_POLICY",
+      "spi_version": "replan-policy.v1",
+      "implementation": "enterprise_extension.replan:DisruptionPolicy",
+      "execution_domain": "REPLAN",
+      "order": 400,
+      "capabilities": ["com.example.disruption"],
+      "affects_feasibility": false,
+      "validation_rule_ids": [],
+      "validates_contribution_ids": [],
+      "objective_stage": null
+    },
+    {
+      "contribution_id": "com.example.registry",
+      "extension_point": "PLUGIN_REGISTRY",
+      "spi_version": "plugin-registry.v1",
+      "implementation": "enterprise_extension.registry:EnterpriseRegistry",
+      "execution_domain": "REGISTRY",
+      "order": 500,
+      "capabilities": [],
+      "affects_feasibility": false,
+      "validation_rule_ids": [],
+      "validates_contribution_ids": [],
+      "objective_stage": null
+    }
+  ],
+  "requested_services": [],
+  "provenance": {
+    "source_commit": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+    "dependency_lock_digest": "sha256:3333333333333333333333333333333333333333333333333333333333333333",
+    "reproducible_build": true
+  },
+  "execution_boundary": {
+    "load_phase": "BUILD_DEPLOY_STARTUP_ONLY",
+    "trusted_in_process": true,
+    "sandboxed": false,
+    "request_code_selection": false,
+    "network_install": false,
+    "external_api": false,
+    "database_access": false
+  },
+  "manifest_fingerprint": "sha256:1f7f5bda17e3bb71bad9d755aac48e275e81023e80d19739754dde1002f243f3"
+}

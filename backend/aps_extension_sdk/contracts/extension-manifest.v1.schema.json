@@ -1,0 +1,274 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "urn:plantnexus:aps:extension-sdk:extension-manifest:v1",
+  "title": "PlantNexus APS Enterprise Extension Manifest v1",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "extension_manifest_version",
+    "sdk_api_version",
+    "extension_id",
+    "extension_version",
+    "artifact",
+    "configuration",
+    "compatibility",
+    "registry_protocol_version",
+    "contributions",
+    "requested_services",
+    "provenance",
+    "execution_boundary",
+    "manifest_fingerprint"
+  ],
+  "properties": {
+    "extension_manifest_version": {"const": "extension-manifest.v1"},
+    "sdk_api_version": {"$ref": "#/$defs/semanticVersion"},
+    "extension_id": {"$ref": "#/$defs/stableId"},
+    "extension_version": {"$ref": "#/$defs/semanticVersion"},
+    "artifact": {"$ref": "#/$defs/artifact"},
+    "configuration": {"$ref": "#/$defs/configuration"},
+    "compatibility": {"$ref": "#/$defs/compatibility"},
+    "registry_protocol_version": {"const": "plugin-registry.v1"},
+    "contributions": {
+      "type": "array",
+      "minItems": 1,
+      "uniqueItems": true,
+      "items": {"$ref": "#/$defs/contribution"}
+    },
+    "requested_services": {"type": "array", "maxItems": 0},
+    "provenance": {"$ref": "#/$defs/provenance"},
+    "execution_boundary": {"$ref": "#/$defs/executionBoundary"},
+    "manifest_fingerprint": {"$ref": "#/$defs/fingerprint"}
+  },
+  "$defs": {
+    "semanticVersion": {
+      "type": "string",
+      "pattern": "^(0|[1-9][0-9]*)\\.(0|[1-9][0-9]*)\\.(0|[1-9][0-9]*)$"
+    },
+    "stableId": {
+      "type": "string",
+      "minLength": 3,
+      "maxLength": 256,
+      "pattern": "^[a-z][a-z0-9]*(?:[._-][a-z0-9]+)+$"
+    },
+    "entrypoint": {
+      "type": "string",
+      "maxLength": 512,
+      "pattern": "^[A-Za-z_][A-Za-z0-9_]*(?:\\.[A-Za-z_][A-Za-z0-9_]*)*:[A-Za-z_][A-Za-z0-9_]*$"
+    },
+    "fingerprint": {
+      "type": "string",
+      "pattern": "^sha256:[0-9a-f]{64}$"
+    },
+    "sortedIds": {
+      "type": "array",
+      "uniqueItems": true,
+      "items": {"$ref": "#/$defs/stableId"}
+    },
+    "versionInterval": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["minimum_inclusive", "maximum_exclusive"],
+      "properties": {
+        "minimum_inclusive": {"$ref": "#/$defs/semanticVersion"},
+        "maximum_exclusive": {"$ref": "#/$defs/semanticVersion"}
+      }
+    },
+    "artifact": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["digest", "media_type", "package"],
+      "properties": {
+        "digest": {"$ref": "#/$defs/fingerprint"},
+        "media_type": {"const": "application/vnd.plantnexus.aps-extension+python"},
+        "package": {"$ref": "#/$defs/stableId"}
+      }
+    },
+    "configuration": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["contract_version", "schema_digest"],
+      "properties": {
+        "contract_version": {"$ref": "#/$defs/stableId"},
+        "schema_digest": {"$ref": "#/$defs/fingerprint"}
+      }
+    },
+    "compatibility": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["sdk", "runtime"],
+      "properties": {
+        "sdk": {"$ref": "#/$defs/versionInterval"},
+        "runtime": {"$ref": "#/$defs/versionInterval"}
+      }
+    },
+    "contribution": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "contribution_id",
+        "extension_point",
+        "spi_version",
+        "implementation",
+        "execution_domain",
+        "order",
+        "capabilities",
+        "affects_feasibility",
+        "validation_rule_ids",
+        "validates_contribution_ids",
+        "objective_stage"
+      ],
+      "properties": {
+        "contribution_id": {"$ref": "#/$defs/stableId"},
+        "extension_point": {
+          "enum": [
+            "CONSTRAINT",
+            "OBJECTIVE",
+            "PLANNING_RULE",
+            "VALIDATION_RULE",
+            "REPLAN_POLICY",
+            "PLUGIN_REGISTRY"
+          ]
+        },
+        "spi_version": {
+          "enum": [
+            "constraint.v1",
+            "objective.v1",
+            "planning-rule.v1",
+            "validation-rule.v1",
+            "replan-policy.v1",
+            "plugin-registry.v1"
+          ]
+        },
+        "implementation": {"$ref": "#/$defs/entrypoint"},
+        "execution_domain": {
+          "enum": ["SOLVER", "PLANNING", "VALIDATOR", "REPLAN", "REGISTRY"]
+        },
+        "order": {"type": "integer", "minimum": 0, "maximum": 10000},
+        "capabilities": {"$ref": "#/$defs/sortedIds"},
+        "affects_feasibility": {"type": "boolean"},
+        "validation_rule_ids": {"$ref": "#/$defs/sortedIds"},
+        "validates_contribution_ids": {"$ref": "#/$defs/sortedIds"},
+        "objective_stage": {
+          "oneOf": [{"const": "ENTERPRISE_TIE_BREAK"}, {"type": "null"}]
+        }
+      },
+      "allOf": [
+        {
+          "if": {"properties": {"extension_point": {"const": "CONSTRAINT"}}},
+          "then": {
+            "properties": {
+              "spi_version": {"const": "constraint.v1"},
+              "execution_domain": {"const": "SOLVER"},
+              "affects_feasibility": {"const": true},
+              "validation_rule_ids": {"minItems": 1},
+              "validates_contribution_ids": {"maxItems": 0},
+              "objective_stage": {"type": "null"}
+            }
+          }
+        },
+        {
+          "if": {"properties": {"extension_point": {"const": "OBJECTIVE"}}},
+          "then": {
+            "properties": {
+              "spi_version": {"const": "objective.v1"},
+              "execution_domain": {"const": "SOLVER"},
+              "affects_feasibility": {"const": false},
+              "validation_rule_ids": {"maxItems": 0},
+              "validates_contribution_ids": {"maxItems": 0},
+              "objective_stage": {"const": "ENTERPRISE_TIE_BREAK"}
+            }
+          }
+        },
+        {
+          "if": {"properties": {"extension_point": {"const": "PLANNING_RULE"}}},
+          "then": {
+            "properties": {
+              "spi_version": {"const": "planning-rule.v1"},
+              "execution_domain": {"const": "PLANNING"},
+              "validates_contribution_ids": {"maxItems": 0},
+              "objective_stage": {"type": "null"}
+            },
+            "allOf": [
+              {
+                "if": {"properties": {"affects_feasibility": {"const": true}}},
+                "then": {"properties": {"validation_rule_ids": {"minItems": 1}}},
+                "else": {"properties": {"validation_rule_ids": {"maxItems": 0}}}
+              }
+            ]
+          }
+        },
+        {
+          "if": {"properties": {"extension_point": {"const": "VALIDATION_RULE"}}},
+          "then": {
+            "properties": {
+              "spi_version": {"const": "validation-rule.v1"},
+              "execution_domain": {"const": "VALIDATOR"},
+              "affects_feasibility": {"const": false},
+              "validation_rule_ids": {"maxItems": 0},
+              "validates_contribution_ids": {"minItems": 1},
+              "objective_stage": {"type": "null"}
+            }
+          }
+        },
+        {
+          "if": {"properties": {"extension_point": {"const": "REPLAN_POLICY"}}},
+          "then": {
+            "properties": {
+              "spi_version": {"const": "replan-policy.v1"},
+              "execution_domain": {"const": "REPLAN"},
+              "affects_feasibility": {"const": false},
+              "validation_rule_ids": {"maxItems": 0},
+              "validates_contribution_ids": {"maxItems": 0},
+              "objective_stage": {"type": "null"}
+            }
+          }
+        },
+        {
+          "if": {"properties": {"extension_point": {"const": "PLUGIN_REGISTRY"}}},
+          "then": {
+            "properties": {
+              "spi_version": {"const": "plugin-registry.v1"},
+              "execution_domain": {"const": "REGISTRY"},
+              "affects_feasibility": {"const": false},
+              "validation_rule_ids": {"maxItems": 0},
+              "validates_contribution_ids": {"maxItems": 0},
+              "objective_stage": {"type": "null"}
+            }
+          }
+        }
+      ]
+    },
+    "provenance": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["source_commit", "dependency_lock_digest", "reproducible_build"],
+      "properties": {
+        "source_commit": {"type": "string", "pattern": "^[0-9a-f]{40}$"},
+        "dependency_lock_digest": {"$ref": "#/$defs/fingerprint"},
+        "reproducible_build": {"const": true}
+      }
+    },
+    "executionBoundary": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "load_phase",
+        "trusted_in_process",
+        "sandboxed",
+        "request_code_selection",
+        "network_install",
+        "external_api",
+        "database_access"
+      ],
+      "properties": {
+        "load_phase": {"const": "BUILD_DEPLOY_STARTUP_ONLY"},
+        "trusted_in_process": {"const": true},
+        "sandboxed": {"const": false},
+        "request_code_selection": {"const": false},
+        "network_install": {"const": false},
+        "external_api": {"const": false},
+        "database_access": {"const": false}
+      }
+    }
+  }
+}

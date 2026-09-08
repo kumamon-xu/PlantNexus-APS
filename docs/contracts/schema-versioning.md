@@ -6,10 +6,18 @@ spec_version: 0.3.0
 phase: cross-phase
 normative: true
 source_sections: [23, 24, 40, 95, 101, 103, 104, 114]
-last_reviewed: 2026-09-07
+last_reviewed: 2026-09-08
 ---
 
 # Schema 版本与兼容规则
+
+## TASK-P8-12 independent Extension SDK contract set
+
+TASK-P8-12在`backend/aps_extension_sdk/contracts/`形成SDK `1.0.0`自身的`extension-manifest.v1`、`extension-compatibility.v1`、`extension-error-code-registry.v1`与synthetic正反样例。它们是独立于业务Schema Set的additive SDK carrier，因此global Schema Set、`pyproject.toml`、`app.SCHEMA_VERSION`和`schemas/data_dictionary.yaml`继续为`2.10.0`，既有117份`schemas/**`文件及全部URN/bytes逐字不变。
+
+SDK document-level compatibility为exact：unknown manifest/Registry、unknown field、非canonical SemVer、mixed SDK、duplicate ID、缺失Validator pair、非法Objective stage或fingerprint mismatch全部fail closed。SDK `1.0.0` policy使用`[1.0.0, 2.0.0)`表达本major的可评估范围，但企业项目和未来Developer Kit必须锁定exact版本；range不授权自动升级。Patch不得改变业务语义，minor只可optional additive，breaking/removal必须新major、新Kit候选和旧Extension replay。Runtime loader尚未形成，因此本次不声明任何Runtime/Extension组合兼容。
+
+在P8-13消费前可整体移除未发布SDK carrier；一旦进入已验证Developer Kit或企业artifact，旧bytes/version不得原地覆盖，只能发布后继版本并给出deprecation、replacement、支持终止和显式升级/拒绝证据。
 
 ## TASK-P8-09 distribution binding（Schema不变）
 
@@ -31,7 +39,7 @@ Runtime/dev dependency projection与`uv.lock`摘要`sha256:8b13617f31aa6a933347f
 
 ## P8 Extension and Developer Kit compatibility plan
 
-Extension SDK API version、Extension manifest version、Enterprise Extension artifact/config version、Runtime version和Developer Kit version均独立于Schema Set。TASK-P8-02的set `2.10.0`只预留server-owned Runtime/Extension-set fingerprint carrier；TASK-P8-12以后才可发布additive manifest/compatibility carrier，不能从本次样例推断SDK、Registry或Kit已经形成。
+Extension SDK API version、Extension manifest version、Enterprise Extension artifact/config version、Runtime version和Developer Kit version均独立于Schema Set。TASK-P8-02的set `2.10.0`只预留server-owned Runtime/Extension-set fingerprint carrier；TASK-P8-12现已发布上述SDK合同层和code-free Registry resolution，但不能从样例推断Runtime Registry/loader、企业Extension或Kit已经形成。
 
 未来carrier必须strict、offline-resolved、无业务default并保存历史bytes；unknown、duplicate、mixed或unsupported组合fail closed。Developer Kit compatibility manifest必须精确绑定Runtime/SDK/Extension/template/tool/Schema/OpenAPI/dependency versions和digests。Runtime/Core升级不得通过`latest`、浮动范围或alias自动改变企业项目；每个新Kit必须单独version、兼容测试、旧Kit重放和显式opt-in迁移。
 

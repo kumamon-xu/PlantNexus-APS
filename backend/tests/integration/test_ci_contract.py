@@ -263,7 +263,7 @@ def test_ci_runs_repository_gates_and_discovers_the_current_task() -> None:
         "name: PlantNexus repository gates",
         "uv sync --locked",
         "uv run ruff check .",
-        "uv run pyright backend/app backend/tests",
+        "uv run pyright backend/app backend/aps_extension_sdk backend/tests",
         "backend/tests/integration",
         "backend/tests/property",
         "app.application.p1_gate_report",
@@ -332,6 +332,9 @@ def test_ci_runs_repository_gates_and_discovers_the_current_task() -> None:
         "name: P2 vertical slice Gate evidence",
         "app.application.p2_gate_report",
         "build/validation/ci-p2-vertical-slice-gate.json",
+        "name: P8 Extension SDK contract and compatibility evidence",
+        "scripts/p8_extension_sdk_contract_check.py",
+        "build/validation/ci-p8-extension-sdk-contract.json",
         "build/benchmarks/*.json",
     )
     for fragment in required_fragments:
@@ -442,7 +445,7 @@ def test_ci_profile_routing_is_mutually_exclusive_and_fail_closed() -> None:
     assert "plantnexus-ci-preflight-${{ github.run_id }}" in preflight_text
     assert "uv sync --locked" in backend_text
     assert "uv run ruff check ." in backend_text
-    assert "uv run pyright backend/app backend/tests" in backend_text
+    assert "uv run pyright backend/app backend/aps_extension_sdk backend/tests" in backend_text
     assert "backend/tests/security" in backend_text
     assert "ci-backend-tests.xml" in backend_text
     assert "mkdir -p build/validation" in backend_text
@@ -459,6 +462,11 @@ def test_ci_profile_routing_is_mutually_exclusive_and_fail_closed() -> None:
         "backend/tests/integration/test_p8_operations_integration.py",
         "backend/tests/security/test_p8_operations_security.py",
         "backend/tests/unit/test_p8_operations_policy.py",
+        "backend/tests/contract/test_p8_extension_sdk_contract.py",
+        "backend/tests/property/test_p8_extension_sdk_properties.py",
+        "backend/tests/security/test_p8_extension_sdk_security.py",
+        "backend/tests/unit/test_p8_extension_sdk.py",
+        "backend/tests/validation/test_p8_extension_sdk_mutations.py",
     ):
         assert workflow_text.count(f'"${{replay_root}}/{relative_path}"') == 1
     assert "uv sync --locked" in full_text
@@ -502,7 +510,7 @@ def test_ci_profile_routing_is_mutually_exclusive_and_fail_closed() -> None:
     assert "Build package" in full_text
     assert len(preflight["steps"]) == 4
     assert len(backend["steps"]) == 8
-    assert len(full["steps"]) == 79
+    assert len(full["steps"]) == 80
 
     assert 'test "${PLANTNEXUS_CLASSIFY_RESULT}" = "success"' in final_run
     assert 'test "${PLANTNEXUS_PREFLIGHT_RESULT}" = "success"' in final_run

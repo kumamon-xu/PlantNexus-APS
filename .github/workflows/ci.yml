@@ -143,7 +143,7 @@ jobs:
         run: uv run ruff check .
 
       - name: Type check
-        run: uv run pyright backend/app backend/tests
+        run: uv run pyright backend/app backend/aps_extension_sdk backend/tests
 
       - name: Repository test suites
         run: |
@@ -302,6 +302,12 @@ jobs:
           uv run python scripts/p8_machine_contract_check.py
           --root .
           --report build/validation/ci-p8-machine-contracts.json
+
+      - name: P8 Extension SDK contract and compatibility evidence
+        run: >-
+          uv run python scripts/p8_extension_sdk_contract_check.py
+          --root .
+          --report build/validation/ci-p8-extension-sdk-contract.json
 
       - name: P8 Solver Worker reliability and engineering evidence
         run: >-
@@ -681,6 +687,11 @@ jobs:
             "${replay_root}/backend/tests/integration/test_p8_frontend_distribution_integration.py" \
             "${replay_root}/backend/tests/security/test_p8_frontend_distribution_security_cases.py" \
             "${replay_root}/backend/tests/unit/test_p8_frontend_distribution.py" \
+            "${replay_root}/backend/tests/contract/test_p8_extension_sdk_contract.py" \
+            "${replay_root}/backend/tests/property/test_p8_extension_sdk_properties.py" \
+            "${replay_root}/backend/tests/security/test_p8_extension_sdk_security.py" \
+            "${replay_root}/backend/tests/unit/test_p8_extension_sdk.py" \
+            "${replay_root}/backend/tests/validation/test_p8_extension_sdk_mutations.py" \
             "${replay_root}/infra/release/runtime-release-policy.v1.json" \
             "${replay_root}/infra/release/runtime-vulnerability-policy.v1.json"
           git -C "${replay_root}" restore \

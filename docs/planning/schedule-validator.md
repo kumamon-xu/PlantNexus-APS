@@ -3,13 +3,21 @@ doc_id: DOC-PLAN-005
 title: 独立 ScheduleValidator 合同
 status: baseline
 spec_version: 0.3.0
-phase: P0-P6
+phase: P0-P8
 normative: true
 source_sections: [30, 31, 50, 75, 86, 87]
-last_reviewed: 2026-09-01
+last_reviewed: 2026-09-08
 ---
 
 # 独立 ScheduleValidator 合同
+
+## TASK-P8-12 Extension Validation Rule contract
+
+SDK `validation-rule.v1`只形成独立企业Validation Rule的Protocol、manifest pair和不可变`ValidationOutput`，不修改formal Core Validator、C-001～C-011、rule sheet、错误映射或现有断言。每个Constraint及影响可行性的Planning Rule必须在同一artifact双向引用Validation Rule；solver/planning entrypoint与validator entrypoint必须不同，execution domain必须分别为`SOLVER|PLANNING`和`VALIDATOR`。
+
+Extension Validation Rule必须从Runtime提供的独立Problem/Solution/authority view重算stable violation code、entity/path、observed/expected和message key；不得导入Solver/backend builder、信任Solver status或降低Core hard constraint。Core fresh Validator先后顺序与组合方式由P8-13固定，但任一Core或Extension validation FAIL都必须阻断candidate，不产生部分可审阅/可发布Version。
+
+Manifest pair只证明声明和entrypoint/domain分离，不证明企业公式已独立。P8-14 conformance必须使用正反fixture、mutation/property及源码import检查；P8-16再聚合真实Runtime调用链。`validate_protocol_output`拒绝mutable类型、伪造contribution/target或PASS/violation不一致，但它不是ScheduleValidator实现。
 
 ## TASK-P6-07 fresh Validator ingress evidence
 

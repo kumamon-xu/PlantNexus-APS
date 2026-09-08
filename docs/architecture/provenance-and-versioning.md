@@ -6,10 +6,18 @@ spec_version: 0.3.0
 phase: cross-phase
 normative: true
 source_sections: [4, 23, 24, 40, 67, 93, 95, 101, 102, 103, 104, 114]
-last_reviewed: 2026-09-07
+last_reviewed: 2026-09-08
 ---
 
 # Provenance 与版本规则
+
+## TASK-P8-12 Extension SDK contract lineage
+
+SDK identity现拆分为`SDK API 1.0.0`、`extension-manifest.v1`、`extension-compatibility.v1`、`plugin-registry.v1`、Extension artifact/config SemVer与各自SHA-256。Manifest fingerprint从排除自身字段后的完整canonical JSON派生，并绑定artifact digest/package、config contract/schema digest、SDK/Runtime half-open range、全部contribution、source commit/dependency lock和closed execution boundary；任何字段变化形成新fingerprint。
+
+Code-free Registry resolution先按extension ID稳定排序manifest，再按`(order, contribution_id)`排序贡献；resolution fingerprint覆盖locked SDK、排序后extension IDs、manifest fingerprints及贡献ID/point/SPI/order。duplicate、mixed、unsupported、pair/stage/boundary或fingerprint错误时没有resolution。P8-13必须让API与Worker复算同一resolution并写入PlanningRun provenance；本Task尚未形成该consumer。
+
+`p8-extension-sdk-contract-report.v1`绑定TASK-P8-12、Test ID、Diff base、SDK/manifest/compatibility/Registry版本、七项检查、历史Core/API/migration/Schema/lock manifest和0 blocking issues。SDK package carrier独立于global Schema Set `2.10.0`及Runtime `0.1.0`；它不改写P8-02既有Extension-set placeholder，也不构成Developer Kit identity。
 
 ## TASK-P8-09 Runtime release provenance
 
@@ -22,6 +30,8 @@ Release manifest绑定exact 40字符Git commit、commit-derived `SOURCE_DATE_EPO
 ## P8 Extension and Developer Kit lineage
 
 Core、Runtime、Extension SDK、Enterprise Extension artifact、Extension config和Developer Kit是六个独立版本/identity维度；Schema/OpenAPI、rule、Solver、Validator、code commit和dependency lock继续独立，任何一个都不能替代另一个。PlanningRun、SolverReport、ValidationReport、ScheduleVersion和Gate evidence必须绑定Runtime实际解析后的完整Extension集合、稳定Registry order及各artifact/config digest。
+
+P8-12只形成SDK identity、manifest/config/artifact引用和code-free resolution算法；PlanningRun/Runtime实际消费仍由P8-13形成。当前不能把sample manifest fingerprint或SDK机器报告解释为Runtime composition fingerprint。
 
 Developer Kit release manifest精确绑定Runtime artifact/digest、SDK API version、template/tool/example versions、compatibility matrix、lockfiles、SBOM/license和文档版本。已发布Kit和Extension artifact不可原地覆盖；同一Kit必须可从clean inputs重建并重放。Core/Runtime新版本只产生新Kit候选，不改写既有企业project lock；升级必须显式opt in并产生新的兼容/迁移证据。Unknown、duplicate、mixed或unsupported组合没有有效provenance，必须fail closed。
 

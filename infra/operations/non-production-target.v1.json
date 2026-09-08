@@ -9,10 +9,10 @@
   },
   "release": {
     "runtime_version": "0.1.0",
-    "implementation_sha": "3af39dbc97128634af729d6cb744b95b96cec18f",
-    "release_archive_sha256": "sha256:78b1f6f68f5edb7b4cf7b744a012761eff5ba639ef8ea3bdd33c5a7f6c76b129",
-    "release_fingerprint": "sha256:02576f523f609831c62756ab851c3c45ab0e5d0ef9b29faddf11729438984c40",
-    "image_build_source": "EXACT_P8_09_RUNTIME_INPUTS",
+    "implementation_sha": "9818d0b6686ff005d0ea48ae81f3a306a5b36172",
+    "release_archive_sha256": "sha256:ee48bdd3245d83f7f87e1205c77aa69639b693120d13b6f80364a7dbecb1013f",
+    "release_fingerprint": "sha256:1a06018df48a7a22cd434d8076c02768b09da4ef3dfed35dd45d1b34474c70cc",
+    "image_build_source": "EXACT_P8_13_RUNTIME_INPUTS",
     "signing_state": "UNSIGNED_ENGINEERING_CANDIDATE"
   },
   "platform": {

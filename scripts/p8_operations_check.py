@@ -1,7 +1,7 @@
 """P8-10 non-Production deployment, observability, and recovery drill.
 
 The executable intentionally lives outside the Runtime wheel.  It deploys the
-exact P8-09 Runtime inputs into a disposable TEST/SIMULATION Docker Compose
+exact declared Runtime inputs into a disposable TEST/SIMULATION Docker Compose
 target and emits sanitized evidence only.  It never accepts a Production
 target, an Extension artifact, or a caller-provided secret.
 """
@@ -208,7 +208,7 @@ def validate_target_contract(document: Mapping[str, object]) -> JsonObject:
         or release.get("signing_state") != "UNSIGNED_ENGINEERING_CANDIDATE"
     ):
         raise OperationsEvidenceError(
-            "RELEASE_IDENTITY_INVALID", "P8-09 release identity is not exact"
+            "RELEASE_IDENTITY_INVALID", "approved Runtime release identity is not exact"
         )
     for field in ("release_archive_sha256", "release_fingerprint"):
         fingerprint = release.get(field)
@@ -543,7 +543,7 @@ def verify_runtime_inputs_unchanged(
     if changed or untracked:
         raise OperationsEvidenceError(
             "RUNTIME_INPUT_DRIFT",
-            "P8-09 Runtime build inputs changed after verification",
+            "declared Runtime build inputs changed after verification",
         )
     return {
         "implementation_sha": implementation_sha,
@@ -1345,7 +1345,7 @@ def run_target_drill(
                     "health": {"live": live, "ready": ready},
                     "check_count": 8,
                     "checks": [
-                        {"name": "exact-p8-09-runtime-inputs", "status": "PASS"},
+                        {"name": "exact-declared-runtime-inputs", "status": "PASS"},
                         {"name": "pinned-compose-config", "status": "PASS"},
                         {"name": "database-and-broker-startup", "status": "PASS"},
                         {

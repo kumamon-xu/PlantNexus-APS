@@ -6,12 +6,12 @@ spec_version: 0.3.0
 phase: P8
 normative: true
 source_sections: [65, 93, 95, 97, 98, 99, 100, 101, 106, 107, 113, 114]
-last_reviewed: 2026-09-07
+last_reviewed: 2026-09-08
 ---
 
 # APS Runtime 安装、预检与启动顺序
 
-本页定义P8-09 Runtime工程候选的可重复安装与fail-closed启动顺序，记录TASK-P8-10在隔离Compose靶场的真实部署结果，并说明P8-11可选Frontend的独立分发边界。它不授予Production部署、签名或发布权限。
+本页定义P8-09起始、P8-13扩展后的Runtime工程候选可重复安装与fail-closed启动顺序，记录TASK-P8-10隔离Compose靶场对当前声明Runtime身份的真实部署结果，并说明P8-11可选Frontend的独立分发边界。它不授予Production部署、签名或发布权限。
 
 ## 1. 固定输入并验证传输
 
@@ -27,6 +27,8 @@ Preflight只接收已配置的环境变量名称，不读取或输出secret valu
 - `PLANTNEXUS_RUNTIME_PLANNING_POLICY_PATH`
 - `PLANTNEXUS_RUNTIME_SOLVE_LIMITS_PATH`
 - `PLANTNEXUS_RUNTIME_HTTP_POLICY_PATH`
+
+当且仅当启用P8-13企业Extension集合时，还必须由部署平台成组提供`PLANTNEXUS_RUNTIME_EXTENSION_CATALOG_PATH`、`PLANTNEXUS_RUNTIME_EXTENSION_VERIFICATION_KEY_ID`和SecretStr承载的`PLANTNEXUS_RUNTIME_EXTENSION_VERIFICATION_KEY`。catalog缺失时保持default-empty；三项不完整、catalog/manifest/config/artifact越界、digest/HMAC/版本/capability不一致均必须在数据库连接和业务调用前fail closed。禁止请求级上传、远程下载、hot load或运行时安装。
 
 此外，运行平台必须显式设置environment/data plane、`PLANTNEXUS_CODE_COMMIT`、`PLANTNEXUS_RUNTIME_COMPOSITION_ENABLED=true`及P8-08身份/授权policy adapter所需的外部配置。值不得写入归档、报告、命令历史或版本库。
 
@@ -85,7 +87,7 @@ CREATE TABLE IF NOT EXISTS alembic_version (
 .venv/bin/uvicorn app.api.app:app --host 0.0.0.0 --port 8000
 ```
 
-先检查`/health/live`，再检查依赖感知的`/health/ready`。只有readiness通过、Runtime resolution fingerprint与release identity一致、identity/authorization/audit adapter可用时，宿主平台才可通过统一Headless HTTP API提交canonical JSON。Extension集合必须保持`EXTENSION-SET-NONE`；当前release不得加载企业代码。
+先检查`/health/live`，再检查依赖感知的`/health/ready`。只有readiness通过、Runtime resolution fingerprint与release identity一致、identity/authorization/audit adapter可用时，宿主平台才可通过统一Headless HTTP API提交canonical JSON。未配置catalog时Extension集合必须为`EXTENSION-SET-NONE`；配置catalog时只能装载服务端启动配置中allow-list且完整性、SDK/Runtime兼容性、capability和Registry逐值复核均通过的trusted in-process Extension。当前P8-10 Compose靶场仍保持空集合，不构成企业Extension认证或恶意代码沙箱。
 
 ## 5. 失败与隔离
 
@@ -95,9 +97,9 @@ CREATE TABLE IF NOT EXISTS alembic_version (
 
 ## 6. P8-10可执行靶场与证据
 
-[`../../infra/operations/non-production-target.v1.json`](../../infra/operations/non-production-target.v1.json)固定P8-09 SHA、release archive/fingerprint、digest-pinned PostgreSQL/Redis、operator、secret/storage及recovery边界；[`../../infra/operations/compose.p8-operations.yml`](../../infra/operations/compose.p8-operations.yml)只叠加到development Compose，不改变其默认行为。内部`observer`通过Compose DNS执行health探针，无需开放外部ingress。
+[`../../infra/operations/non-production-target.v1.json`](../../infra/operations/non-production-target.v1.json)当前固定P8-13 Runtime输入SHA `9818d0b6686ff005d0ea48ae81f3a306a5b36172`、可复现archive digest `sha256:ee48bdd3245d83f7f87e1205c77aa69639b693120d13b6f80364a7dbecb1013f`、release fingerprint `sha256:1a06018df48a7a22cd434d8076c02768b09da4ef3dfed35dd45d1b34474c70cc`、digest-pinned PostgreSQL/Redis、operator、secret/storage及recovery边界；[`../../infra/operations/compose.p8-operations.yml`](../../infra/operations/compose.p8-operations.yml)只叠加到development Compose，不改变其默认行为。operations checker先验证当前checkout相对声明SHA的全部Runtime build inputs零漂移，再构建镜像；不能以新代码冒充旧release。内部`observer`通过Compose DNS执行health探针，无需开放外部ingress。
 
-[`../runbooks/headless-deployment-and-rollback.md`](../runbooks/headless-deployment-and-rollback.md)规定部署与dual-slot顺序。机器演练必须验证8项deployment checks、API/Worker/Validator、Runtime/Extension descriptor及清理；rollback slot先ready后停止candidate，从而证明last-known-good配置切换。当前两个slot使用同一P8-09 exact artifact，所以`cross_version_rollback=false`；Kubernetes、HA、真实流量网关和跨版本回退仍未验证。
+[`../runbooks/headless-deployment-and-rollback.md`](../runbooks/headless-deployment-and-rollback.md)规定部署与dual-slot顺序。机器演练必须验证8项deployment checks、API/Worker/Validator、Runtime/Extension descriptor及清理；rollback slot先ready后停止candidate，从而证明last-known-good配置切换。当前两个slot使用同一P8-13 exact Runtime输入且Extension为空，所以`cross_version_rollback=false`；Kubernetes、HA、真实企业Extension、真实流量网关和跨版本回退仍未验证。
 
 ## 7. P8-11可选Frontend独立分发
 

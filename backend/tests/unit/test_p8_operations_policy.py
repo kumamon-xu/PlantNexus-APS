@@ -23,19 +23,19 @@ def _target() -> dict[str, object]:
     )
 
 
-def test_target_is_exact_p8_09_test_simulation_runtime() -> None:
+def test_target_is_exact_p8_13_test_simulation_runtime() -> None:
     summary = validate_target_contract(_target())
     assert summary == {
         "target_id": "p8-operations-compose-v1",
         "runtime_environment": "test",
         "data_plane": "SIMULATION",
         "runtime_version": "0.1.0",
-        "runtime_implementation_sha": "3af39dbc97128634af729d6cb744b95b96cec18f",
+        "runtime_implementation_sha": "9818d0b6686ff005d0ea48ae81f3a306a5b36172",
         "release_archive_sha256": (
-            "sha256:78b1f6f68f5edb7b4cf7b744a012761eff5ba639ef8ea3bdd33c5a7f6c76b129"
+            "sha256:ee48bdd3245d83f7f87e1205c77aa69639b693120d13b6f80364a7dbecb1013f"
         ),
         "release_fingerprint": (
-            "sha256:02576f523f609831c62756ab851c3c45ab0e5d0ef9b29faddf11729438984c40"
+            "sha256:1a06018df48a7a22cd434d8076c02768b09da4ef3dfed35dd45d1b34474c70cc"
         ),
         "extension_loading": "DISABLED_UNTIL_COMPATIBILITY_VERIFIED",
         "migration_version_table_bootstrap": (

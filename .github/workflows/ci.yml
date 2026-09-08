@@ -309,6 +309,15 @@ jobs:
           --root .
           --report build/validation/ci-p8-extension-sdk-contract.json
 
+      - name: P8 Runtime Extension Registry and SPI evidence
+        run: >-
+          uv run python scripts/p8_runtime_extension_registry_check.py
+          --root .
+          --report build/validation/ci-p8-runtime-extension-registry.json
+          --manifest build/validation/ci-p8-runtime-extension-resolution-manifest.json
+          --security-report build/validation/ci-p8-runtime-extension-security.json
+          --benchmark-report build/benchmarks/ci-p8-runtime-extension.json
+
       - name: P8 Solver Worker reliability and engineering evidence
         run: >-
           uv run python -m app.jobs.planning_run_worker_check
@@ -703,6 +712,19 @@ jobs:
             "${replay_root}/backend/tests/security/test_p8_extension_sdk_security.py" \
             "${replay_root}/backend/tests/unit/test_p8_extension_sdk.py" \
             "${replay_root}/backend/tests/validation/test_p8_extension_sdk_mutations.py" \
+            "${replay_root}/backend/app/extensions/__init__.py" \
+            "${replay_root}/backend/app/extensions/contracts.py" \
+            "${replay_root}/backend/app/extensions/loader.py" \
+            "${replay_root}/backend/app/extensions/registry.py" \
+            "${replay_root}/backend/tests/fixtures/p8_synthetic_extension.py" \
+            "${replay_root}/backend/tests/p8_runtime_extension_support.py" \
+            "${replay_root}/backend/tests/contract/test_p8_runtime_extension_contract.py" \
+            "${replay_root}/backend/tests/unit/test_p8_runtime_extension_registry.py" \
+            "${replay_root}/backend/tests/property/test_p8_runtime_extension_properties.py" \
+            "${replay_root}/backend/tests/integration/test_p8_runtime_extension_integration.py" \
+            "${replay_root}/backend/tests/security/test_p8_runtime_extension_security.py" \
+            "${replay_root}/backend/tests/validation/test_p8_runtime_extension_mutations.py" \
+            "${replay_root}/scripts/p8_runtime_extension_registry_check.py" \
             "${replay_root}/infra/release/runtime-release-policy.v1.json" \
             "${replay_root}/infra/release/runtime-vulnerability-policy.v1.json"
           git -C "${replay_root}" restore \
@@ -727,6 +749,7 @@ jobs:
             backend/app/data_validation/__init__.py \
             backend/app/infrastructure/__init__.py \
             backend/app/infrastructure/config.py \
+            backend/app/infrastructure/health.py \
             backend/tests/contract/test_dynamic_replanning_http_api.py \
             backend/tests/contract/test_import_validation.py \
             backend/tests/contract/test_p3_export_contracts.py \

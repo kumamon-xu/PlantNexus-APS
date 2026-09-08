@@ -6,7 +6,7 @@ spec_version: 0.3.0
 phase: P8
 normative: true
 source_sections: [3, 4, 5, 9, 10, 12, 15, 30, 63, 65, 66, 67, 68, 84, 85, 93, 95, 97, 101, 103, 105, 106, 107, 109, 112, 113, 114]
-last_reviewed: 2026-09-07
+last_reviewed: 2026-09-08
 ---
 
 # Headless Productization and Platform Integration
@@ -105,4 +105,4 @@ Unimplemented advanced scheduling capabilities remain explicit `UNSUPPORTED_CAPA
 
 ## 8. Current-state disclaimer
 
-The repository exposes 34 OpenAPI operations: the preceding 29 remain byte-compatible at the operation-object level and P8-07 adds exactly five Headless PlanningRun operations. P8-03 formed the strict canonical consumer and durable Snapshot/PlanningProblem transaction; P8-04 added durable PlanningRun orchestration; P8-05 added Worker execution, independent validation, checkpoint recovery and one ScheduleVersion application; P8-06 formed the single Runtime composition; P8-07 connects these pieces through bounded canonical-only HTTP and a checked-in OpenAPI snapshot; P8-08 adds provider-neutral host authorization/audit; P8-09/10 add an unsigned Runtime engineering release and non-Production operations evidence; P8-11 adds the independently packaged optional static consumer and backend-only proof. The default/Production identity path remains fail closed. Real host IdP/RBAC, Production deployment/promotion, Extension SDK/Registry, Enterprise Extension template and Developer Kit remain planned. Only capabilities whose owning Task and evidence are terminal may be described as formed engineering behavior; none of these statements is Production readiness.
+The repository exposes 34 OpenAPI operations: the preceding 29 remain byte-compatible at the operation-object level and P8-07 adds exactly five Headless PlanningRun operations. P8-03 formed the strict canonical consumer and durable Snapshot/PlanningProblem transaction; P8-04 added durable PlanningRun orchestration; P8-05 added Worker execution, independent validation, checkpoint recovery and one ScheduleVersion application; P8-06 formed the single Runtime composition; P8-07 connects these pieces through bounded canonical-only HTTP and a checked-in OpenAPI snapshot; P8-08 adds provider-neutral host authorization/audit; P8-09/10 add an unsigned Runtime engineering release and non-Production operations evidence; P8-11 adds the independently packaged optional static consumer and backend-only proof; P8-12/13 add the versioned SDK contract and trusted local Runtime loader/Registry boundary. The default/Production identity path remains fail closed. Real host IdP/RBAC, Production deployment/promotion, Enterprise Extension template, independently verified business integration and Developer Kit remain planned. Only capabilities whose owning Task and evidence are terminal may be described as formed engineering behavior; none of these statements is Production readiness.

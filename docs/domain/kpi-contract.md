@@ -6,10 +6,14 @@ spec_version: 0.3.0
 phase: P0-P6
 normative: true
 source_sections: [36, 45, 53, 55, 93]
-last_reviewed: 2026-08-28
+last_reviewed: 2026-09-08
 ---
 
 # KPI 合同
+
+## TASK-P8-13 Enterprise Objective isolation review
+
+Runtime adapter可校验`ObjectiveOutput`的stable contribution/metric ID、integer value/scale、authority与唯一`ENTERPRISE_TIE_BREAK` stage，但P8-13不修改`OBJ-001 Delivery → OBJ-002 Stability → OBJ-003 Makespan`、KPI Schema、公式、threshold或baseline。Synthetic objective只证明Protocol调用和整批拒绝；P8-14若接入真实企业tie-break，必须仅在三项Core目标完全相等后生效并以独立Validation/lineage证明，不能重权、覆盖或伪装成Core KPI。
 
 ## TASK-P6-02 checker compatibility only
 

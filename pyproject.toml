@@ -36,7 +36,7 @@ dev = [
 ]
 
 [tool.hatch.build.targets.wheel]
-packages = ["backend/app"]
+packages = ["backend/app", "backend/aps_extension_sdk"]
 
 [tool.pytest.ini_options]
 pythonpath = ["."]

@@ -9,6 +9,7 @@ Probe = Callable[[], None]
 
 _DEPENDENCY_CODES = {
     "database": "DATABASE_UNAVAILABLE",
+    "extension_registry": "EXTENSION_REGISTRY_UNAVAILABLE",
     "redis": "REDIS_UNAVAILABLE",
 }
 

@@ -6,10 +6,16 @@ spec_version: 0.3.0
 phase: cross-phase
 normative: true
 source_sections: [16, 38, 49, 62, 64, 95, 96]
-last_reviewed: 2026-09-07
+last_reviewed: 2026-09-08
 ---
 
 # 配置、环境与数据隔离
+
+## TASK-P8-13 Runtime Extension启动配置
+
+非空Extension配置必须原子提供`PLANTNEXUS_RUNTIME_EXTENSION_CATALOG_PATH`、`PLANTNEXUS_RUNTIME_EXTENSION_VERIFICATION_KEY_ID`和`PLANTNEXUS_RUNTIME_EXTENSION_VERIFICATION_KEY`，且只能在启用唯一Runtime composition时使用。catalog路径是服务端启动配置，不来自HTTP、Worker message、Frontend或企业payload；缺任一字段、key少于32或超过4096 bytes、非法key ID都会在组合前拒绝。`safe_summary`只暴露是否配置，不暴露路径、ID或secret。
+
+catalog固定Runtime/SDK/Registry版本、artifact allow-list、manifest/config相对路径、调用/startup预算和canonical fingerprint。默认三字段均缺失时继续使用既有byte-compatible empty adapter；非空API与Worker必须由同一部署配置和artifact provider生成同一descriptor。P8-13不修改`.env.example`或Production target，也不提供runtime download/install/hot reload。
 
 ## P8-11可选Frontend配置与隔离
 

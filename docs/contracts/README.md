@@ -11,17 +11,17 @@ last_reviewed: 2026-09-08
 
 # 合同文档索引
 
-## TASK-P8-12 Extension SDK contract
+## TASK-P8-12/13 Extension SDK and Runtime Registry
 
 [APS Extension SDK与Developer Kit合同](extension-sdk-and-developer-kit.md)现发布SDK `1.0.0`合同层：独立`aps_extension_sdk`公开面、Constraint/Objective/Planning Rule/Validation Rule/Replan Policy/Plugin Registry六类Protocol、递归不可变值、strict manifest/compatibility/error carrier、正反样例和机器报告。该additive carrier位于SDK package内，不改变global Schema Set `2.10.0`或任何既有Schema/OpenAPI/migration/Core/Runtime bytes。
 
-当前状态严格为`CONTRACT_ONLY_NOT_DISTRIBUTED`：没有Runtime loader、企业模板、Developer Kit或Production信任结论。P8-13/14/15须分别形成并验证这些后继能力；宿主与Frontend仍只使用统一Headless HTTP API，不能提交Extension代码或选择插件。
+P8-13现已把SDK合同package收录进Runtime wheel，并形成受控本地loader、确定性Registry、六类调用adapter、API/Worker fingerprint parity与fail-closed readiness；它仍不是独立SDK或Developer Kit发布。企业模板、真实业务映射、Developer Kit及Production信任结论须由P8-14/15及后续Gate分别形成；宿主与Frontend继续只使用统一Headless HTTP API，不能提交Extension代码或选择插件。
 
 ## P8 Headless contract plan
 
 ADR-0017已固定canonical JSON为唯一外部产品输入，宿主负责第三方采集/映射/展示，APS负责验证、计划、异步运行和结果合同；宿主与可选Frontend使用同一API。[APS Headless平台集成与数据权威合同](headless-platform-integration.md)由TASK-P8-01形成人类语义基线。TASK-P8-02现以additive schema set `2.10.0`发布`canonical-ingress-request.v1`、`canonical-ingress-result.v1`、`planning-run.v1`和`headless-error-code-registry.v1`，固定identity/scope、authority/mapping、idempotency、lineage、server-owned Runtime/Extension-set resolution、既有PlanningRun状态及错误tuple；全部历史document/URN继续原义保留。
 
-ADR-0018进一步固定Extension SDK是Runtime内部SPI而非外部API。P8-02的Runtime resolution只是服务端identity/fingerprint carrier；`0.0.0-p8-contract-sample`不构成发布。TASK-P8-12现已形成六类SPI、SDK manifest/compatibility/error carrier及contract-only Python skeleton；Runtime Registry/loader和Developer Kit仍未形成。Enterprise Extension特有数据仍须进入批准的namespaced/versioned canonical carrier，不能接受vendor payload或创建私有route。
+ADR-0018进一步固定Extension SDK是Runtime内部SPI而非外部API。P8-02的Runtime resolution只是服务端identity/fingerprint carrier；`0.0.0-p8-contract-sample`不构成发布。TASK-P8-12已形成六类SPI、SDK manifest/compatibility/error carrier及contract-only Python skeleton；TASK-P8-13形成Runtime Registry/loader消费边界，Developer Kit仍未形成。Enterprise Extension特有数据仍须进入批准的namespaced/versioned canonical carrier，不能接受vendor payload或创建私有route。
 
 ## TASK-P8-02 machine contracts
 
@@ -33,11 +33,11 @@ ADR-0018进一步固定Extension SDK是Runtime内部SPI而非外部API。P8-02�
 
 机器入口为[`canonical-ingress-request.schema.json`](../../schemas/json/canonical-ingress-request.schema.json)、[`canonical-ingress-result.schema.json`](../../schemas/json/canonical-ingress-result.schema.json)、[`planning-run.schema.json`](../../schemas/json/planning-run.schema.json)和[`headless-error-code-registry.v1.yaml`](../../schemas/rules/headless-error-code-registry.v1.yaml)。五份positive/十份negative synthetic sample与`p8-machine-contract-report.v1`只证明strict/offline/round-trip/fingerprint/state/error兼容，不证明API、DB、Worker、Extension SDK或Production readiness。
 
-现阶段请以[Headless平台集成合同](headless-platform-integration.md)、[Headless产品化架构](../architecture/headless-productization-and-platform-integration.md)、[Extension SDK/Runtime/Developer Kit架构](../architecture/extension-sdk-runtime-and-developer-kit.md)、[API清单](api-development-checklist.md)和[Import/Normalization合同](import-and-normalization.md)区分已冻结的人类语义、目标与当前实现事实。不得从合同或P8计划推断canonical submission、PlanningRun创建、Extension装载、Developer Kit或Production identity endpoint已经存在。
+现阶段请以[Headless平台集成合同](headless-platform-integration.md)、[Headless产品化架构](../architecture/headless-productization-and-platform-integration.md)、[Extension SDK/Runtime/Developer Kit架构](../architecture/extension-sdk-runtime-and-developer-kit.md)、[API清单](api-development-checklist.md)和[Import/Normalization合同](import-and-normalization.md)区分已冻结的人类语义、目标与当前实现事实。Canonical submission、PlanningRun和Runtime Extension loader只能按各自具名Task证据声明；仍不得从合同或P8计划推断企业业务整合、Developer Kit或Production identity endpoint已经存在。
 
 ## 当前开发入口
 
-- [APS Extension SDK与Developer Kit合同](extension-sdk-and-developer-kit.md)：SDK `1.0.0`公开SPI、manifest、不可变值、错误、兼容/弃用及closed boundary；Runtime loader/Kit状态仍明确未实现。
+- [APS Extension SDK与Developer Kit合同](extension-sdk-and-developer-kit.md)：SDK `1.0.0`公开SPI、manifest、不可变值、错误、兼容/弃用及closed boundary；Runtime loader已由P8-13形成，Enterprise template/Kit状态仍明确未实现。
 - [APS Headless 平台集成与数据权威合同](headless-platform-integration.md)：P8公共边界、参与方责任、authority/scope/idempotency/lineage、错误和Extension数据治理的人类规范基线。
 - [API 接口开发清单](api-development-checklist.md)：按当前 OpenAPI 列出全部健康、Planning Workspace 与动态重排 operation，区分路由完成、运行时适配器缺口和未提供端点。
 - [数据字段中文名称字典](data-field-dictionary.md)：完整覆盖 `canonical-records.v1` 核心业务字段的英文 key、中文名、类型与必填条件。

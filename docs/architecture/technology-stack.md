@@ -6,10 +6,16 @@ spec_version: 0.3.0
 phase: cross-phase
 normative: false
 source_sections: [11, 12, 65, 95, 100, 101, 102, 114]
-last_reviewed: 2026-09-07
+last_reviewed: 2026-09-08
 ---
 
 # 推荐技术栈与锁定规则
+
+## TASK-P8-13 dependency-neutral Extension Runtime
+
+Runtime loader/Registry只使用Python标准库`pathlib`、`json`、`hashlib`、`hmac`、`threading`与既有canonical helper，没有引入插件框架、签名库或第三方依赖，`uv.lock`逐字不变。Hatch wheel的package集合由`backend/app`扩为同时包含`backend/aps_extension_sdk`，使Runtime内部import在clean install后成立；这不是独立SDK/Developer Kit发布，也不改变Runtime `0.1.0`或Application `0.0.0`版本。
+
+实现绑定来自部署bootstrap显式传入的对象，不使用`importlib`、Python package entry points、pip/git/URL、全局环境扫描或hot reload。HMAC-SHA256只验证本地allow-list元数据，不能替代未来artifact PKI签名、attestation、SBOM/SCA或隔离运行时。
 
 ## TASK-P8-09 release toolchain pin
 

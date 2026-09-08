@@ -6,10 +6,14 @@ spec_version: 0.3.0
 phase: P0-P6
 normative: true
 source_sections: [13, 14, 24, 29, 57, 93, 102]
-last_reviewed: 2026-09-01
+last_reviewed: 2026-09-08
 ---
 
 # SolverBackend 合同
+
+## TASK-P8-13 Runtime adapter isolation review
+
+P8-13不修改CP-SAT model、SolverBackend protocol、objective rounds、limits/seed/workers、candidate或formal Validator。Loaded Runtime只形成按SDK Registry稳定排序的Constraint/Objective/Planning Rule调用缝隙并验证typed output；synthetic output尚未映射成CP-SAT变量、约束或目标。P8-14必须通过独立Enterprise项目的显式Solver-neutral mapping、Constraint↔Validation Rule配对和fresh Validator mutation证明真实集成，Core/backend不得反向import SDK或企业实现。
 
 ## TASK-P6-02 checker compatibility only
 

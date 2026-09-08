@@ -6,10 +6,14 @@ spec_version: 0.3.0
 phase: P0-P6
 normative: true
 source_sections: [47, 48, 49, 50, 79, 80]
-last_reviewed: 2026-09-01
+last_reviewed: 2026-09-08
 ---
 
 # Execution Simulator 与异常模型
+
+## TASK-P8-13 synthetic Extension isolation review
+
+P8-13测试中的`p8_synthetic_extension`只提供固定manifest/config/artifact bytes和受控六类Protocol输出，用于装载、排序、超时、错误与Validator独立性证据；它不进入Simulator event queue、virtual clock、seed、disruption distribution、Scenario或baseline。`simulator_check`仅增加新`pyproject.toml` package摘要的合法后继值，P4 replay仍恢复原阶段bytes；Simulation业务语义与`SIM-ASSUMPTION-001～026`全部不变。
 
 ## TASK-P6-02 checker compatibility only
 

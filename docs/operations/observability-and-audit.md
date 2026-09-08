@@ -6,10 +6,16 @@ spec_version: 0.3.0
 phase: P0-P8
 normative: true
 source_sections: [29, 42, 65, 93, 95]
-last_reviewed: 2026-09-07
+last_reviewed: 2026-09-08
 ---
 
 # P0 Observability 与 Audit 边界
+
+## TASK-P8-13 Runtime Extension可观测边界
+
+每个resolved contribution只记录Extension point、stable contribution ID、success/failure/timeout计数、累计耗时与unhealthy集合；不记录调用scope/facts/provenance、配置、artifact、exception detail、HMAC key或路径。Registry safe document只含adapter/catalog/SDK/Registry版本、Extension/贡献数量及catalog/Extension-set/config/resolution fingerprint，API和Worker descriptor parity可由这些值逐字复算。
+
+Extension在首次crash、invalid output或timeout后进入readiness DOWN，后续probe只返回稳定`EXTENSION_UNHEALTHY`；startup preflight失败则进程不创建数据库client或接受traffic。P8-13 benchmark只标记`SYNTHETIC_ENGINEERING_NOT_PRODUCTION_SLA`且`thresholds=null`，记录startup/total和各扩展点工程耗时，不能解释为容量或SLO。当前没有新增外部metric/trace exporter、durable Extension audit、SIEM、告警阈值或retention，P8-10既有empty-Extension运维证据也未被非空Extension运行证据替代。
 
 ## P8 Runtime golden signals 与告警合同
 

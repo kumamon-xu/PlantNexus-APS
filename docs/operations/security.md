@@ -6,10 +6,18 @@ spec_version: 0.3.0
 phase: P0-P8
 normative: true
 source_sections: [58, 62, 93, 95, 100]
-last_reviewed: 2026-09-07
+last_reviewed: 2026-09-08
 ---
 
 # P0 工程安全边界
+
+## TASK-P8-13 Runtime Extension安全边界
+
+非空Extension只可由服务端启动配置的单一strict本地catalog选择，catalog内逐项固定Extension ID/version、manifest/config相对路径及fingerprint、artifact digest、capability、verification key ID和HMAC-SHA256标签。Runtime在创建数据库client或执行业务操作前验证regular non-symlink路径、目录逃逸、大小/数量、SDK/Runtime compatibility、精确artifact集合、entrypoint/descriptor Protocol及唯一Registry resolution；任一signature/digest/config/version/duplicate/conflict/mixed/unknown失败均阻止启动且不创建业务数据库。
+
+客户端、Host、Frontend和Worker消息不能上传或选择代码；Runtime禁止全局entry-point扫描、动态import、URL/git/pip下载、runtime安装和hot reload。部署bootstrap显式提供artifact bytes与已materialize对象，二者的构建对应关系仍是受信供应链责任；当前HMAC不是PKI签名/attestation。key、配置值、artifact bytes、absolute path、DSN、raw异常与payload不进入descriptor、metrics或machine report。
+
+调用timeout、异常或SDK输出伪造会丢弃完整调用并把贡献readiness置为DOWN。实现运行于daemon thread且受时间预算观测，但Python同进程不能被可靠终止或隔离，因此P8-13明确`trusted_in_process=true`、`sandboxed=false`；不可信或多租户代码必须新建out-of-process/container隔离ADR。真实Extension签名/attestation、SBOM/SCA、恶意代码测试、OS资源隔离和Production secret rotation继续开放。
 
 ## TASK-P8-11可选Frontend安全边界
 

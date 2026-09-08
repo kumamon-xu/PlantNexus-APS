@@ -6,10 +6,16 @@ spec_version: 0.3.0
 phase: cross-phase
 normative: true
 source_sections: [0, 9, 10, 12, 23, 24, 30, 32, 33, 35, 57, 65, 67, 93, 95, 101, 113, 114]
-last_reviewed: 2026-09-06
+last_reviewed: 2026-09-08
 ---
 
 # 端到端计划链路
+
+## TASK-P8-13 Runtime Extension composition edge
+
+API和Worker现在可在唯一composition root启动时消费同一已验证本地Extension集合：`server catalog + explicit artifact provider → digest/HMAC/config/compatibility preflight → SDK authoritative Registry resolution → immutable composition fingerprint → six typed adapters`。该edge不进入HTTP body/header或四字段Worker message，也不增加route、Schema、数据库表或状态转移；指纹不一致时Worker在创建业务结果前拒绝启动。
+
+P8-13专项链证明loaded adapter可与既有canonical ingress、PlanningRun、Global CP-SAT、fresh formal Validator和ScheduleVersion执行共存，但目前synthetic SPI输出只验证受控调用/校验缝隙，不自动改变Core Problem或Solver公式。P8-14负责两个独立Enterprise Extension的具体Solver-neutral映射与独立Validator conformance，P8-16再从外部Host执行完整Extension语义链。
 
 ## TASK-P8-08 host authorization edge
 

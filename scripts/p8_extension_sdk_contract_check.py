@@ -47,6 +47,7 @@ from aps_extension_sdk import (
 TASK_ID = "TASK-P8-12"
 TEST_ID = "TEST-P8-EXTENSION-CONTRACT-001"
 DIFF_BASE = "475e46e6e7e140600b0302a21d594443f91d7853"
+EVIDENCE_SHA = "4d37dba068c86230f6009820d6cbc7ff10a73495"
 REPORT_VERSION = "p8-extension-sdk-contract-report.v1"
 CONTRACT_ROOT = Path("backend/aps_extension_sdk/contracts")
 SAMPLE_ROOT = CONTRACT_ROOT / "samples"
@@ -115,49 +116,70 @@ def _manifest_digest(root: Path, paths: list[Path]) -> tuple[int, str]:
     return len(rows), f"sha256:{sha256(''.join(rows).encode()).hexdigest()}"
 
 
-def _historical_paths(root: Path) -> dict[str, list[Path]]:
+def _git_tree_paths(root: Path, *pathspecs: str) -> list[str]:
+    output = subprocess.run(
+        ["git", "ls-tree", "-r", "--name-only", EVIDENCE_SHA, "--", *pathspecs],
+        cwd=root,
+        check=True,
+        capture_output=True,
+        text=True,
+        encoding="utf-8",
+    ).stdout
+    return [
+        path.replace("\\", "/")
+        for path in output.splitlines()
+        if path
+        and "__pycache__" not in Path(path).parts
+        and not path.endswith(".pyc")
+    ]
+
+
+def _historical_tree_paths(root: Path) -> dict[str, list[str]]:
+    core = _git_tree_paths(
+        root,
+        "backend/app/domain",
+        "backend/app/planning",
+        "backend/app/snapshots",
+    )
     return {
-        "schemas": list((root / "schemas").rglob("*")),
-        "core": [
-            *list((root / "backend/app/domain").rglob("*.py")),
-            *list((root / "backend/app/planning").rglob("*.py")),
-            *list((root / "backend/app/snapshots").rglob("*.py")),
-        ],
-        "api": list((root / "backend/app/api").rglob("*")),
-        "migrations": list((root / "backend/migrations").rglob("*")),
+        "schemas": _git_tree_paths(root, "schemas"),
+        "core": [path for path in core if path.endswith(".py")],
+        "api": _git_tree_paths(root, "backend/app/api"),
+        "migrations": _git_tree_paths(root, "backend/migrations"),
         "runtime_seam": [
-            root / "backend/app/runtime_composition.py",
-            root / "backend/app/application/runtime_facade.py",
-            root / "backend/app/application/runtime_http_adapter.py",
-            root / "backend/app/jobs/runtime_adapters.py",
+            "backend/app/runtime_composition.py",
+            "backend/app/application/runtime_facade.py",
+            "backend/app/application/runtime_http_adapter.py",
+            "backend/app/jobs/runtime_adapters.py",
         ],
-        "dependency": [root / "pyproject.toml", root / "uv.lock"],
+        "dependency": ["pyproject.toml", "uv.lock"],
     }
+
+
+def _historical_manifest_digest(root: Path, paths: list[str]) -> tuple[int, str]:
+    rows: list[str] = []
+    for relative in sorted(set(paths)):
+        content = subprocess.run(
+            ["git", "show", f"{EVIDENCE_SHA}:{relative}"],
+            cwd=root,
+            check=True,
+            capture_output=True,
+        ).stdout
+        rows.append(f"{relative}\0{sha256(content).hexdigest()}\n")
+    return len(rows), f"sha256:{sha256(''.join(rows).encode()).hexdigest()}"
 
 
 def _changed_paths(root: Path) -> tuple[str, ...]:
     committed = subprocess.run(
-        ["git", "diff", "--name-only", f"{DIFF_BASE}...HEAD"],
+        ["git", "diff", "--name-only", f"{DIFF_BASE}...{EVIDENCE_SHA}"],
         cwd=root,
         check=True,
         capture_output=True,
         text=True,
     ).stdout.splitlines()
-    working = subprocess.run(
-        ["git", "diff", "--name-only"],
-        cwd=root,
-        check=True,
-        capture_output=True,
-        text=True,
-    ).stdout.splitlines()
-    untracked = subprocess.run(
-        ["git", "ls-files", "--others", "--exclude-standard"],
-        cwd=root,
-        check=True,
-        capture_output=True,
-        text=True,
-    ).stdout.splitlines()
-    return tuple(sorted({path.replace("\\", "/") for path in committed + working + untracked if path}))
+    return tuple(
+        sorted({path.replace("\\", "/") for path in committed if path})
+    )
 
 
 def _schema_and_positive_samples(root: Path) -> dict[str, object]:
@@ -381,6 +403,14 @@ def _import_boundary(root: Path) -> dict[str, object]:
 
 
 def _scope_and_history(root: Path) -> dict[str, object]:
+    ancestry = subprocess.run(
+        ["git", "merge-base", "--is-ancestor", EVIDENCE_SHA, "HEAD"],
+        cwd=root,
+        check=False,
+        capture_output=True,
+    )
+    if ancestry.returncode != 0:
+        raise ValueError("closed P8-12 evidence SHA is not an ancestor of HEAD")
     changed = _changed_paths(root)
     unexpected = [
         path
@@ -392,8 +422,8 @@ def _scope_and_history(root: Path) -> dict[str, object]:
     if unexpected or forbidden:
         raise ValueError(f"scope violation: unexpected={unexpected} forbidden={forbidden}")
     observed: dict[str, dict[str, object]] = {}
-    for name, paths in _historical_paths(root).items():
-        count, digest = _manifest_digest(root, paths)
+    for name, paths in _historical_tree_paths(root).items():
+        count, digest = _historical_manifest_digest(root, paths)
         expected_count, expected_digest = HISTORICAL_MANIFESTS[name]
         if (count, digest) != (expected_count, expected_digest):
             raise ValueError(f"historical {name} bytes drifted")
@@ -401,6 +431,7 @@ def _scope_and_history(root: Path) -> dict[str, object]:
     return {
         "changed_path_count": len(changed),
         "forbidden_path_count": len(forbidden),
+        "evidence_sha": EVIDENCE_SHA,
         "historical_manifests": observed,
     }
 
@@ -470,6 +501,7 @@ def run_contract_checks(root: Path) -> dict[str, object]:
         "task_id": TASK_ID,
         "test_id": TEST_ID,
         "diff_base": DIFF_BASE,
+        "evidence_sha": EVIDENCE_SHA,
         "code_commit": commit,
         "validation_profile": "HIGH_RISK",
         "sdk_api_version": SDK_API_VERSION,

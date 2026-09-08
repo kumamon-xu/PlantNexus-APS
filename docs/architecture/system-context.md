@@ -6,7 +6,7 @@ spec_version: 0.3.0
 phase: cross-phase
 normative: true
 source_sections: [0, 3, 4, 5, 9, 12, 15, 30, 62, 63, 64, 65, 67, 68, 95, 101, 113, 114]
-last_reviewed: 2026-09-05
+last_reviewed: 2026-09-08
 ---
 
 # 系统上下文
@@ -15,7 +15,7 @@ last_reviewed: 2026-09-05
 
 P8固定APS的外部产品边界为宿主平台提交的versioned canonical JSON。ERP、MES、WMS、CAM、文件和人工录入均先由宿主平台采集、映射与治理；APS不持有其连接器、数据库或凭证。宿主平台和后续可选独立Frontend都只消费同一Headless HTTP API。企业业务适配由独立Enterprise Extension通过Extension SDK实现并只在APS Runtime内运行；它不是外部系统连接器，也不改变客户端边界。
 
-该边界目前已有accepted架构、人类治理合同和schema set `2.10.0`的canonical ingress/result、PlanningRun机器合同；P8-03已在Runtime内部形成strict consumer、durable idempotency及Snapshot/PlanningProblem原子持久化，P8-04形成CREATED run materialization、attempt/work、CAS transition和append-only audit，P8-05进一步形成strict异步task、durable lease/heartbeat、真实Global CP-SAT、fresh Validator、结果checkpoint、崩溃恢复和一次ScheduleVersion应用。当前仍只有29项既有HTTP operation，默认业务application/authorization adapter unavailable；完整Runtime组合、公开Headless入口、Extension SDK、Registry和Developer Kit尚未形成，P8-06～17仍须逐项实施并验证。
+该边界目前已有schema set `2.10.0`的canonical ingress/result、durable PlanningRun与Worker、P8-06单一Runtime组合根、P8-07五项Headless operation、P8-08 Host授权、P8-09～10发布/运维证据、P8-11可选Frontend、P8-12 SDK合同及P8-13 Runtime Extension Registry。P8-13只允许服务端build/deploy/startup选择的本地allow-list artifact，API与Worker共享同一已验证Extension-set fingerprint；外部operation与canonical Schema bytes不增加。真实Enterprise Extension模板与业务整合、Developer Kit及完整平台Gate仍由P8-14～17逐项形成。
 
 ## TASK-P3-17 audit conclusion
 
@@ -66,3 +66,4 @@ ERP / MES / WMS / CAM / Files / Human Input
 - 宿主传输的principal、scope和source reference仍须由APS验证，不能因来自宿主便自动成为authority。
 - Extension是管理员批准并在build/deploy/startup装载的服务端可信代码，不是请求级上传脚本；它只能使用SDK，不能导入Core internal、直写数据库或复用Solver builder充当Validator。
 - Runtime、SDK、Extension和Developer Kit版本必须进入run provenance；版本混用或自动企业升级必须fail closed。
+- P8-13的同进程调用是受信部署代码边界，不是sandbox；artifact bytes到已materialize实现对象的映射由可信bootstrap负责，客户端不能参与选择。

@@ -11,11 +11,19 @@ last_reviewed: 2026-09-08
 
 # 模块边界与依赖规则
 
+## TASK-P8-13 Runtime Extension Registry boundary
+
+`app.extensions`只位于唯一`app.runtime_composition`之下：`contracts`拥有artifact/预算/error port，`loader`拥有strict本地catalog、HMAC/digest/config/compatibility/capability preflight，`registry`拥有SDK frozen view、resolved binding、六类调用、输出复核、安全metrics与readiness。API和Celery Worker入口只能在进程启动时显式注入同一组`RuntimeExtensionArtifact`；HTTP body/header和四字段Worker message均不能选择artifact、module、class或配置。
+
+Runtime只接受部署bootstrap已materialize的实现对象，不进行全局entry-point扫描、动态import、网络下载、runtime安装或hot load。该bootstrap负责证明artifact distribution bytes与对象构建的对应关系；P8-14 conformance/packaging继续补齐独立企业项目证据。SDK现作为Runtime wheel内部package收录，但仍只依赖标准库；`uv.lock`不变，Core/domain/planning/snapshot没有SDK或企业包反向import。
+
+Registry先以SDK `resolve_manifest_set`形成唯一权威顺序，再要求可选Enterprise `PluginRegistry`返回逐值相同结果。Constraint/Objective/Planning Rule/Validation Rule/Replan Policy调用只消费裁剪冻结view并整批校验输出；失败/timeout丢弃完整调用并将贡献标记unhealthy。当前不把synthetic输出自动翻译成Core Solver公式，企业Solver/Validator集成属于P8-14，完整链路验收属于P8-16。
+
 ## TASK-P8-12 Extension SDK contract boundary
 
-`backend/aps_extension_sdk`是独立、标准库-only的contract package：`values`拥有SemVer、半开range、canonical fingerprint及递归不可变JSON view；`manifest`拥有六类point、strict manifest/compatibility、配对与code-free Registry resolution；`protocols`拥有公开context/output和六个Protocol；`errors`拥有单一`APS_EXTENSION_SDK`错误面。package内机器carrier/samples不属于业务`schemas/**`或现有Runtime wheel。
+`backend/aps_extension_sdk`是独立、标准库-only的contract package：`values`拥有SemVer、半开range、canonical fingerprint及递归不可变JSON view；`manifest`拥有六类point、strict manifest/compatibility、配对与code-free Registry resolution；`protocols`拥有公开context/output和六个Protocol；`errors`拥有单一`APS_EXTENSION_SDK`错误面。package内机器carrier/samples不属于业务`schemas/**`；P8-13仅把Python合同package作为Runtime wheel内部依赖收录。
 
-依赖方向固定为`Enterprise Extension -> aps_extension_sdk <- future Runtime adapter -> app/Core`。SDK不得导入`app`、Runtime、Solver/OR-Tools、formal Validator实现、API、Celery、ORM/DB、network/file/dynamic import；`app`/Core在本Task也未新增SDK import。只有P8-13可在唯一Runtime composition root新增受控adapter/loader，且请求/API/Worker message不能提供entrypoint或artifact选择。
+依赖方向固定为`Enterprise Extension -> aps_extension_sdk <- Runtime adapter -> app/Core`。SDK不得导入`app`、Runtime、Solver/OR-Tools、formal Validator实现、API、Celery、ORM/DB、network/file/dynamic import；Core仍不得新增SDK import。P8-13只在唯一Runtime composition root新增受控adapter/loader，且请求/API/Worker message不能提供entrypoint或artifact选择。
 
 SDK输入/输出均为frozen value。Constraint及影响可行性的Planning Rule必须与同artifact、不同entrypoint和`VALIDATOR` execution domain的Validation Rule双向配对；Objective只能处于Core三阶段之后的`ENTERPRISE_TIE_BREAK`；Replan output必须回显事实、HARD lock、freeze、state和publication authority绑定。`validate_protocol_output`只检查SDK边界，不执行Core规则、Solver、正式Validator或状态迁移。
 

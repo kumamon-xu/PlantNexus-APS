@@ -11,11 +11,19 @@ last_reviewed: 2026-09-08
 
 # Provenance 与版本规则
 
+## TASK-P8-13 Runtime Extension resolution lineage
+
+Runtime Extension identity拆为catalog fingerprint、SDK权威Registry resolution fingerprint、每个Extension ID/version/artifact digest/manifest fingerprint/config fingerprint/signature key ID及最终Extension-set fingerprint；HMAC secret、document path、implementation object和payload不进入identity。最终Runtime composition fingerprint同时绑定上述Extension-set与既有Runtime/Core/Schema/Policy/Limits/Solver/Validator，因此相同服务端输入的API和Worker必须产生逐字相同descriptor。
+
+P8-13的四份机器artifact分别保存十项主检查、七项resolved contribution、13项fail-closed负例/边界与threshold-null工程耗时；`code_commit`在clean exact SHA上绑定提交。P8-12历史checker改为只在其固定关闭SHA `4d37dba068c86230f6009820d6cbc7ff10a73495`重算原Task scope和Core/API/migration/Schema/runtime/dependency bytes，从而既不把P8-13合法后继误报为P8-12漂移，也不改写历史证据。
+
+该lineage只证明服务端本地startup resolution和调用边界。Runtime `0.1.0`未因源码能力自动发布新artifact，P8-09发布manifest仍为default-empty；真实Enterprise artifact、PKI/attestation、Developer Kit identity、企业升级和完整PlanningRun消费证据仍分别由P8-14～16形成。
+
 ## TASK-P8-12 Extension SDK contract lineage
 
 SDK identity现拆分为`SDK API 1.0.0`、`extension-manifest.v1`、`extension-compatibility.v1`、`plugin-registry.v1`、Extension artifact/config SemVer与各自SHA-256。Manifest fingerprint从排除自身字段后的完整canonical JSON派生，并绑定artifact digest/package、config contract/schema digest、SDK/Runtime half-open range、全部contribution、source commit/dependency lock和closed execution boundary；任何字段变化形成新fingerprint。
 
-Code-free Registry resolution先按extension ID稳定排序manifest，再按`(order, contribution_id)`排序贡献；resolution fingerprint覆盖locked SDK、排序后extension IDs、manifest fingerprints及贡献ID/point/SPI/order。duplicate、mixed、unsupported、pair/stage/boundary或fingerprint错误时没有resolution。P8-13必须让API与Worker复算同一resolution并写入PlanningRun provenance；本Task尚未形成该consumer。
+Code-free Registry resolution先按extension ID稳定排序manifest，再按`(order, contribution_id)`排序贡献；resolution fingerprint覆盖locked SDK、排序后extension IDs、manifest fingerprints及贡献ID/point/SPI/order。duplicate、mixed、unsupported、pair/stage/boundary或fingerprint错误时没有resolution。P8-13已让API与Worker composition复算同一resolution；完整PlanningRun业务消费和外部链路仍由P8-14/P8-16验证。
 
 `p8-extension-sdk-contract-report.v1`绑定TASK-P8-12、Test ID、Diff base、SDK/manifest/compatibility/Registry版本、七项检查、历史Core/API/migration/Schema/lock manifest和0 blocking issues。SDK package carrier独立于global Schema Set `2.10.0`及Runtime `0.1.0`；它不改写P8-02既有Extension-set placeholder，也不构成Developer Kit identity。
 

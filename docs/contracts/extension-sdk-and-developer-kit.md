@@ -15,9 +15,9 @@ last_reviewed: 2026-09-08
 
 TASK-P8-12发布APS Extension SDK `1.0.0`的合同层：独立Python命名空间`aps_extension_sdk`、六类SPI Protocol、递归不可变输入/输出值、`extension-manifest.v1`、`extension-compatibility.v1`、`extension-error-code-registry.v1`、正反样例、严格checker和分层测试。企业项目必须针对指定SDK版本创建独立Enterprise Extension，不得复制、vendor或修改`app`/APS Core源码。
 
-本Task没有形成Runtime loader、动态发现、Solver/Validator adapter、企业模板、Developer Kit artifact、外部Extension API或Production信任结论。SDK源码状态为`CONTRACT_ONLY_NOT_DISTRIBUTED`；P8-13、P8-14、P8-15分别负责Runtime SPI/Registry实现、Enterprise Extension模板/conformance和Developer Kit组装，均须另行授权。
+TASK-P8-13现已形成Runtime loader、确定性Registry、六类受控调用adapter、API/Worker composition fingerprint和readiness/metrics边界。它不形成动态发现、真实企业Solver/Validator规则、企业模板、Developer Kit artifact、外部Extension API或Production信任结论；P8-14与P8-15仍分别负责Enterprise Extension模板/conformance和Developer Kit组装，均须另行授权。
 
-机器carrier位于`backend/aps_extension_sdk/contracts/`，属于SDK自身的additive contract set，不进入既有业务`schemas/**`集合，也不提升global Schema Set `2.10.0`、Runtime `0.1.0`或Core/Application `0.0.0`。既有Schema、OpenAPI、migration、Core、Runtime seam、`pyproject.toml`与`uv.lock`保持逐字不变。
+机器carrier位于`backend/aps_extension_sdk/contracts/`，属于SDK自身的additive contract set，不进入既有业务`schemas/**`集合，也不提升global Schema Set `2.10.0`、Runtime `0.1.0`或Core/Application `0.0.0`。P8-12关闭SHA上的既有Schema、OpenAPI、migration、Core、Runtime seam、`pyproject.toml`与`uv.lock`历史bytes仍由固定树证据验证；P8-13只把`aps_extension_sdk`加入同一Runtime wheel的内部package集合，未新增依赖且`uv.lock`不变。
 
 ## 2. 独立版本维度
 
@@ -26,9 +26,9 @@ TASK-P8-12发布APS Extension SDK `1.0.0`的合同层：独立Python命名空间
 | SDK API | `1.0.0` | 企业源码只导入本公开面；必须精确锁定 |
 | Extension manifest | `extension-manifest.v1` | document-level exact；unknown version拒绝 |
 | Compatibility carrier | `extension-compatibility.v1` | 固定当前SDK兼容与弃用规则 |
-| Registry protocol | `plugin-registry.v1` | 只定义解析结果；Runtime实现属于P8-13 |
+| Registry protocol | `plugin-registry.v1` | P8-13 Runtime实现必须逐字复核SDK权威resolution |
 | Enterprise Extension artifact/config | 企业独立SemVer/合同 | 不由Core或Runtime版本替代 |
-| Runtime | `0.1.0`既有工程候选 | 本Task未改变、未获得Extension装载能力 |
+| Runtime | `0.1.0`既有工程候选 | P8-13增加受控装载能力但不发布新Runtime/Kit版本 |
 | Developer Kit | `NOT_IMPLEMENTED_UNTIL_P8_15` | 未来精确绑定已验证组合，不存在`latest` |
 
 不存在可代表上述全部维度的单一“APS版本”。Runtime/Core升级不自动升级企业项目；旧项目可继续使用仍受支持的精确组合。
@@ -38,18 +38,18 @@ TASK-P8-12发布APS Extension SDK `1.0.0`的合同层：独立Python命名空间
 允许的依赖方向只有：
 
 ```text
-Enterprise Extension -> aps_extension_sdk <- future Runtime adapter -> APS Core
+Enterprise Extension -> aps_extension_sdk <- Runtime adapter -> APS Core
 ```
 
 `aps_extension_sdk`只依赖Python标准库，不导入`app`、Backend、OR-Tools、FastAPI、Celery、SQLAlchemy、Redis、数据库或Runtime实现。Enterprise Extension只可导入`aps_extension_sdk`公开的`__all__`；不得导入`app.*`、ORM、migration、API router、worker内部消息或具体Solver/Validator builder。SDK不暴露数据库、网络、文件、时钟、authorization、publication或audit service；v1 manifest的`requested_services`必须为空。
 
-Extension只在受信Runtime内部运行。宿主和Frontend仍只调用统一Headless HTTP API；请求不得携带module/class/path、artifact digest、SDK版本选择或代码。manifest中的entrypoint只可由未来Runtime从本地已批准artifact在build/deploy/startup阶段解析。
+Extension只在受信Runtime内部运行。宿主和Frontend仍只调用统一Headless HTTP API；请求不得携带module/class/path、artifact digest、SDK版本选择或代码。manifest中的entrypoint只可由Runtime从部署bootstrap显式提供的本地已批准artifact在build/deploy/startup阶段解析。
 
 ## 4. 不可变输入和返回
 
 Runtime必须先把已授权、已裁剪的scope、facts与provenance复制为`ExtensionInputView`；嵌套object转换为`FrozenJsonObject`，array转换为tuple，非有限数、可变容器引用和非JSON对象拒绝。Extension不能获得Snapshot、PlanningProblem、ScheduleVersion或audit的可写引用。
 
-所有SPI返回SDK frozen dataclass和递归不可变值。返回`dict/list/set`、非有限数、错误Protocol输出类型、伪造contribution ID或与manifest不一致的pair/stage时，未来Runtime必须通过`validate_protocol_output`拒绝整个调用，不产生部分constraint、candidate、version或audit成功结论。
+所有SPI返回SDK frozen dataclass和递归不可变值。返回`dict/list/set`、非有限数、错误Protocol输出类型、伪造contribution ID或与manifest不一致的pair/stage时，Runtime通过`validate_protocol_output`拒绝整个调用，不产生部分constraint、candidate、version或audit成功结论。
 
 ## 5. 六类稳定SPI
 
@@ -62,7 +62,7 @@ Runtime必须先把已授权、已裁剪的scope、facts与provenance复制为`E
 | `REPLAN_POLICY` | `decide(ReplanContext)` | event/fact/lock/freeze/state/authority引用 | `ReplanDecision` | 只能返回`NO_REPLAN`或`REQUEST_REPLAN`，不能直接修改计划/状态/发布 |
 | `PLUGIN_REGISTRY` | `resolve(manifests, compatibility)` | 已批准本地manifest集合 | `RegistryResolution` | duplicate/unknown/conflict/mixed/incompatible全部fail closed；不负责下载或执行 |
 
-Protocol以结构化typing提供稳定签名；descriptor必须是对应`ContributionManifest`。具体Solver/Problem adapter、调用顺序、timeout/隔离执行和Runtime readiness属于P8-13，不得从Protocol存在推断已可运行Extension。
+Protocol以结构化typing提供稳定签名；descriptor必须是对应`ContributionManifest`。P8-13 Runtime按resolved order建立adapter并提供有界调用、输出校验、metrics与readiness；具体企业Solver/Problem语义和独立双实现conformance仍由P8-14验证，不得从synthetic调用PASS推断企业规则已形成。
 
 ## 6. Constraint、Planning Rule与独立Validation
 
@@ -130,12 +130,14 @@ SDK兼容只表示contract层面可测试，不替代Runtime、Enterprise Extens
 
 Enterprise Extension是受信任的in-process部署代码，不是安全沙箱。v1固定`load_phase=BUILD_DEPLOY_STARTUP_ONLY`、`trusted_in_process=true`、`sandboxed=false`、`request_code_selection=false`、`network_install=false`、`external_api=false`、`database_access=false`。禁止请求级上传、URL/git/pip下载、entry-point全局扫描、hot reload、浏览器/宿主执行或插件自授capability。
 
-未来Runtime必须在任何业务副作用前验证artifact digest/signature/allow-list、manifest/config、SDK/Runtime compatibility和resolution fingerprint；API与Worker必须得到同一resolution。Extension异常、timeout或无效输出必须拒绝完整attempt或按另行批准的fail-safe policy处理，不能吞错或产生部分成功。
+Runtime必须在任何业务副作用前验证artifact digest/HMAC allow-list标签、manifest/config、SDK/Runtime compatibility和resolution fingerprint；API与Worker必须得到同一resolution。Extension异常、timeout或无效输出拒绝完整调用并将对应readiness置为DOWN，不能吞错或产生部分成功。当前同进程timeout只丢弃晚到结果，不能强制终止恶意实现。
 
 ## 13. Machine acceptance与回滚
 
 `scripts/p8_extension_sdk_contract_check.py`生成`p8-extension-sdk-contract-report.v1`，绑定TASK、Test ID、Diff base、版本和七项检查：Schema/positive resolution、四项negative vector、错误注册、六SPI/immutability、import boundary、Task scope/历史bytes、SDK artifact manifest。CI的FULL required topology中该步骤不可跳过。
 
+`scripts/p8_runtime_extension_registry_check.py`生成Registry主报告、resolved-extension manifest、安全报告和threshold-null工程benchmark，绑定`TASK-P8-13`、`TEST-P8-PLUGIN-REGISTRY-001`、Diff base、十项检查及signature/digest/config/runtime compatibility/duplicate/conflict/mixed/unknown/crash/timeout/no-side-effect负例。报告只含稳定identity、fingerprint、计数和耗时，不含artifact/config payload、HMAC key、DSN、路径或异常细节；该步骤同样进入FULL required topology。
+
 分层测试覆盖contract、unit、property、security与validation mutation；同时完整相关Backend suite、Ruff、Pyright、SCA/license、docs/diff、CI preflight及exact Provider HIGH_RISK evidence必须通过。样例仅为synthetic contract evidence，不代表真实企业规则、容量、质量或Production授权。
 
-在P8-13形成consumer前，可删除未发布`aps_extension_sdk` package/carrier/checker/tests并恢复索引。任何版本一旦进入已验证Kit或企业artifact，不得覆盖；修复必须发布新版本，保留旧bytes/replay并明确兼容或拒绝路径。
+P8-13形成consumer后，回滚非空Extension应移除服务端catalog/artifact配置并恢复上一已验证default-empty Runtime artifact，而不是在请求中禁用校验或删除Core。任何版本一旦进入已验证Kit或企业artifact，不得覆盖；修复必须发布新版本，保留旧bytes/replay并明确兼容或拒绝路径。

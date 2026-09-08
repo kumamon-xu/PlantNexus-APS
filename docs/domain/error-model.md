@@ -6,10 +6,16 @@ spec_version: 0.3.0
 phase: P0-P8
 normative: true
 source_sections: [29, 32, 34, 60, 65, 91, 92]
-last_reviewed: 2026-09-06
+last_reviewed: 2026-09-08
 ---
 
 # 错误与求解状态模型
+
+## TASK-P8-13 Runtime Extension failure mapping
+
+Runtime内部用稳定`EXTENSION_*` code区分catalog/fingerprint、artifact allow-list/digest/HMAC、config、Runtime compatibility、entrypoint/Protocol、capability、Registry resolution、timeout/execution/output与unhealthy失败；组合根只向现有Runtime错误边界输出sanitized code/field/message，不把异常、路径、secret、artifact/config或payload带到HTTP。P8-13不增加外部错误Schema、HTTP status或route；是否把特定内部code公开映射必须继续由既有Headless error registry治理。
+
+启动preflight失败不创建数据库client，调用失败不产生部分SPI输出并使Extension readiness DOWN。它不会伪造PlanningRun `FAILED`、Solver `UNKNOWN/INFEASIBLE`、ScheduleVersion或ExportJob状态；未来业务attempt映射必须由P8-14/P8-16使用既有状态机和原子审计明确形成。
 
 ## TASK-P8-08 host authorization error mapping
 

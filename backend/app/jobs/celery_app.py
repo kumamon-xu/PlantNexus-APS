@@ -2,8 +2,11 @@
 
 from __future__ import annotations
 
+from collections.abc import Sequence
+
 from celery import Celery
 
+from app.extensions.contracts import RuntimeExtensionArtifact
 from app.infrastructure.config import Settings, load_settings
 from app.jobs.planning_run_task import (
     PlanningRunTaskExecutor,
@@ -45,7 +48,11 @@ def create_celery_app(
     return application
 
 
-def create_runtime_celery_app(settings: Settings | None = None) -> Celery:
+def create_runtime_celery_app(
+    settings: Settings | None = None,
+    *,
+    extension_artifacts: Sequence[RuntimeExtensionArtifact] = (),
+) -> Celery:
     """Create the deployable Worker entrypoint from the shared Runtime root."""
 
     from app.runtime_composition import (
@@ -63,7 +70,11 @@ def create_runtime_celery_app(settings: Settings | None = None) -> Celery:
                 message="Production Worker requires explicit Runtime composition",
             )
         return create_celery_app(resolved)
-    composition = compose_runtime(resolved, process=RuntimeProcess.WORKER)
+    composition = compose_runtime(
+        resolved,
+        process=RuntimeProcess.WORKER,
+        extension_artifacts=extension_artifacts,
+    )
     if composition.worker is None:
         composition.close()
         raise RuntimeCompositionError(

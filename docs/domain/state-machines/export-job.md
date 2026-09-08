@@ -6,10 +6,14 @@ spec_version: 0.3.0
 phase: P0-P8
 normative: true
 source_sections: [34, 65, 66, 67]
-last_reviewed: 2026-09-05
+last_reviewed: 2026-09-08
 ---
 
 # ExportJob 状态机
+
+## TASK-P8-13 Extension isolation review
+
+Runtime Extension loader/Registry不创建、读取或推进ExportJob，也不授予Extension文件、网络、数据库、publication或export service。Catalog/manifest/config失败、SPI crash/timeout及readiness DOWN都不能映射为`EXPORT_FAILED`，Extension成功调用也不能推断`EXPORTED`。既有五状态、六pair、lease/retry/cancel、manifest-last与published-only source规则逐字不变。
 
 ## TASK-P8-06 composition isolation review
 

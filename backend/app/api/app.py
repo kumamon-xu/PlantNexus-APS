@@ -2,7 +2,7 @@
 
 from __future__ import annotations
 
-from collections.abc import AsyncIterator, Callable, Mapping
+from collections.abc import AsyncIterator, Callable, Mapping, Sequence
 from contextlib import asynccontextmanager
 from typing import TYPE_CHECKING
 from uuid import uuid4
@@ -48,6 +48,7 @@ if TYPE_CHECKING:
     )
     from app.application.runtime_facade import APSRuntimeApplicationFacade
     from app.application.runtime_http_adapter import RuntimeHttpContextAdapter
+    from app.extensions.contracts import RuntimeExtensionArtifact
     from app.runtime_composition import RuntimeCompositionDescriptor
 
 
@@ -231,6 +232,7 @@ def create_runtime_app(
     *,
     host_identity_provider: HostIdentityProvider | None = None,
     host_authorization_policy: HostAuthorizationPolicyCatalog | None = None,
+    extension_artifacts: Sequence[RuntimeExtensionArtifact] = (),
 ) -> FastAPI:
     """Create the deployable API entrypoint from the shared Runtime root."""
 
@@ -249,7 +251,11 @@ def create_runtime_app(
                 message="Production API requires explicit Runtime composition",
             )
         return create_app(resolved)
-    composition = compose_runtime(resolved, process=RuntimeProcess.API)
+    composition = compose_runtime(
+        resolved,
+        process=RuntimeProcess.API,
+        extension_artifacts=extension_artifacts,
+    )
     if composition.application is None:
         composition.close()
         raise RuntimeCompositionError(

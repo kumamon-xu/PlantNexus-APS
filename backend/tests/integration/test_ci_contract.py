@@ -335,6 +335,12 @@ def test_ci_runs_repository_gates_and_discovers_the_current_task() -> None:
         "name: P8 Extension SDK contract and compatibility evidence",
         "scripts/p8_extension_sdk_contract_check.py",
         "build/validation/ci-p8-extension-sdk-contract.json",
+        "name: P8 Runtime Extension Registry and SPI evidence",
+        "scripts/p8_runtime_extension_registry_check.py",
+        "build/validation/ci-p8-runtime-extension-registry.json",
+        "build/validation/ci-p8-runtime-extension-resolution-manifest.json",
+        "build/validation/ci-p8-runtime-extension-security.json",
+        "build/benchmarks/ci-p8-runtime-extension.json",
         "build/benchmarks/*.json",
     )
     for fragment in required_fragments:
@@ -467,6 +473,19 @@ def test_ci_profile_routing_is_mutually_exclusive_and_fail_closed() -> None:
         "backend/tests/security/test_p8_extension_sdk_security.py",
         "backend/tests/unit/test_p8_extension_sdk.py",
         "backend/tests/validation/test_p8_extension_sdk_mutations.py",
+        "backend/app/extensions/__init__.py",
+        "backend/app/extensions/contracts.py",
+        "backend/app/extensions/loader.py",
+        "backend/app/extensions/registry.py",
+        "backend/tests/fixtures/p8_synthetic_extension.py",
+        "backend/tests/p8_runtime_extension_support.py",
+        "backend/tests/contract/test_p8_runtime_extension_contract.py",
+        "backend/tests/unit/test_p8_runtime_extension_registry.py",
+        "backend/tests/property/test_p8_runtime_extension_properties.py",
+        "backend/tests/integration/test_p8_runtime_extension_integration.py",
+        "backend/tests/security/test_p8_runtime_extension_security.py",
+        "backend/tests/validation/test_p8_runtime_extension_mutations.py",
+        "scripts/p8_runtime_extension_registry_check.py",
     ):
         assert workflow_text.count(f'"${{replay_root}}/{relative_path}"') == 1
     assert "uv sync --locked" in full_text
@@ -498,6 +517,7 @@ def test_ci_profile_routing_is_mutually_exclusive_and_fail_closed() -> None:
     )
     assert str(p4_frontend_replay).count("frontend/package.json") == 1
     assert "backend/app/__init__.py" in full_text
+    assert full_text.count("backend/app/infrastructure/health.py") == 1
     assert "schemas/data_dictionary.yaml" in full_text
     assert "duration-prediction.schema.json" in full_text
     assert "duration-prediction.v1.unknown-fallback.invalid.json" in full_text
@@ -510,7 +530,7 @@ def test_ci_profile_routing_is_mutually_exclusive_and_fail_closed() -> None:
     assert "Build package" in full_text
     assert len(preflight["steps"]) == 4
     assert len(backend["steps"]) == 8
-    assert len(full["steps"]) == 80
+    assert len(full["steps"]) == 81
 
     assert 'test "${PLANTNEXUS_CLASSIFY_RESULT}" = "success"' in final_run
     assert 'test "${PLANTNEXUS_PREFLIGHT_RESULT}" = "success"' in final_run

@@ -6,7 +6,7 @@ spec_version: 0.3.0
 phase: P8
 normative: true
 source_sections: [3, 4, 5, 9, 10, 12, 15, 63, 65, 66, 67, 68, 95, 97, 105, 106, 107, 109, 113, 114]
-last_reviewed: 2026-09-06
+last_reviewed: 2026-09-08
 ---
 
 # APS Headless 平台集成与数据权威合同
@@ -15,11 +15,11 @@ last_reviewed: 2026-09-06
 
 本合同是宿主平台、APS Runtime、APS Core、Enterprise Extension、可选APS Frontend、安全和运维之间的人类可读集成基线。它执行ADR-0017和ADR-0018，并与TASK-P8-02发布的机器合同共同冻结责任、信任与失败语义。
 
-本文件中的“必须”“禁止”“仅”是规范要求。TASK-P8-02已把其中可机器表达的入口、结果、PlanningRun与错误语义发布为strict、versioned carrier；TASK-P8-03～05已形成durable ingress、PlanningRun orchestration与内部异步Solver Worker，TASK-P8-06形成单一Runtime组合根，TASK-P8-07以additive方式发布统一Headless HTTP transport，TASK-P8-08形成provider-neutral test identity、server-owned exact scope authorization与durable decision audit。因而本合同与机器文件目前：
+本文件中的“必须”“禁止”“仅”是规范要求。TASK-P8-02已把其中可机器表达的入口、结果、PlanningRun与错误语义发布为strict、versioned carrier；TASK-P8-03～05已形成durable ingress、PlanningRun orchestration与内部异步Solver Worker，TASK-P8-06形成单一Runtime组合根，TASK-P8-07以additive方式发布统一Headless HTTP transport，TASK-P8-08形成provider-neutral test identity、server-owned exact scope authorization与durable decision audit，TASK-P8-12/13形成SDK合同及trusted local Runtime loader/Registry边界。因而本合同与机器文件目前：
 
 - 只声明P8-07登记的5项`/api/v1` PlanningRun operation；提交前29项operation逐项保持，最终OpenAPI共34项；
 - 只把现有`import-package.v2`作为`canonical-ingress-request.v1`内唯一允许的canonical payload，并通过统一create route接收；旧Adapter、raw/vendor/file输入仍不是公共入口；
-- 已实现canonical ingress、原子Snapshot/PlanningProblem、run/attempt/work item/command/transition/audit、strict Worker、lease/checkpoint、Global Solver、fresh Validator、ScheduleVersion应用、Simulation/Test显式Runtime HTTP绑定，以及可替换`HostIdentityProvider`合同、测试策略和append-only授权审计；但不实现或选择真实Production host IdP、Production RBAC/授权/部署、Extension SDK或Plugin Registry；
+- 已实现canonical ingress、原子Snapshot/PlanningProblem、run/attempt/work item/command/transition/audit、strict Worker、lease/checkpoint、Global Solver、fresh Validator、ScheduleVersion应用、Simulation/Test显式Runtime HTTP绑定、可替换`HostIdentityProvider`合同、append-only授权审计、SDK合同及受控Registry装载；但不实现或选择真实Production host IdP、Production RBAC/授权/部署、Enterprise Extension业务规则或Developer Kit；
 - 不关闭任何PROD_OPEN，也不证明真实宿主、UAT、容量或Production readiness。
 
 实现若不能表达本合同的必需语义，必须先修订合同或发布新版本；不得在代码、数据库、Extension或宿主中创建未登记的私有语义。
@@ -351,4 +351,4 @@ TASK-P8-02已由`headless-error.v1`与`headless-error-code-registry.v1`提供稳
 - OPEN-002/010/011/012/014/015只被细化，没有关闭；
 - 只有具名Task及其证据允许声明已实现能力；P8-07的5项HTTP operation不得被扩大解释为UAT、真实身份、Extension或Production能力。
 
-`TEST-P8-HEADLESS-GOVERNANCE-001`只验证上述文档治理、一致性与forbidden scope；`TEST-P8-CANONICAL-CONTRACT-001`验证三份Schema、正反样例、offline refs、fingerprint/lineage、state/error registry对齐及历史artifact preservation。`TEST-P8-HEADLESS-API-001`再验证5项HTTP、旧29项兼容、strict transport/idempotency/security和OpenAPI快照；三者均不形成真实身份、Extension SDK、UAT或Production证据。
+`TEST-P8-HEADLESS-GOVERNANCE-001`只验证上述文档治理、一致性与forbidden scope；`TEST-P8-CANONICAL-CONTRACT-001`验证三份Schema、正反样例、offline refs、fingerprint/lineage、state/error registry对齐及历史artifact preservation。`TEST-P8-HEADLESS-API-001`再验证5项HTTP、旧29项兼容、strict transport/idempotency/security和OpenAPI快照；这三项历史测试自身不形成真实身份、Extension SDK/Registry、UAT或Production证据，SDK/Registry结论必须来自P8-12/13的具名证据。

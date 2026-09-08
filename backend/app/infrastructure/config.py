@@ -5,7 +5,7 @@ from __future__ import annotations
 import re
 from enum import StrEnum
 from pathlib import Path
-from typing import Self
+from typing import Self, cast
 
 from pydantic import Field, SecretStr, ValidationError, field_validator, model_validator
 from pydantic_settings import BaseSettings, SettingsConfigDict, SettingsError
@@ -14,6 +14,7 @@ from app import CODE_VERSION, SCHEMA_VERSION, SPEC_VERSION
 
 _COMMIT_PATTERN = re.compile(r"[0-9a-f]{40}")
 _FINGERPRINT_PATTERN = re.compile(r"sha256:[0-9a-f]{64}")
+_SAFE_ID_PATTERN = re.compile(r"[a-z][a-z0-9]*(?:[._-][a-z0-9]+)+")
 
 
 class RuntimeEnvironment(StrEnum):
@@ -65,6 +66,9 @@ class Settings(BaseSettings):
     runtime_artifact_fingerprint: str | None = None
     core_artifact_fingerprint: str | None = None
     developer_kit_fingerprint: str | None = None
+    runtime_extension_catalog_path: Path | None = None
+    runtime_extension_verification_key_id: str | None = None
+    runtime_extension_verification_key: SecretStr | None = None
 
     database_url: SecretStr = SecretStr(
         "postgresql+psycopg://plantnexus@localhost:5432/plantnexus_dev"
@@ -111,6 +115,15 @@ class Settings(BaseSettings):
             raise ValueError("artifact fingerprint must be a lowercase SHA-256 value")
         return value
 
+    @field_validator("runtime_extension_verification_key_id")
+    @classmethod
+    def validate_extension_key_id(cls, value: str | None) -> str | None:
+        if value is not None and (
+            len(value) > 256 or _SAFE_ID_PATTERN.fullmatch(value) is None
+        ):
+            raise ValueError("Extension verification key ID must be a stable safe ID")
+        return value
+
     @model_validator(mode="after")
     def enforce_environment_guards(self) -> Self:
         if self.job_lease_seconds <= self.job_heartbeat_seconds:
@@ -142,6 +155,23 @@ class Settings(BaseSettings):
                 raise ValueError(
                     "runtime composition requires explicit planning policy and solve limits"
                 )
+        extension_configuration = (
+            self.runtime_extension_catalog_path,
+            self.runtime_extension_verification_key_id,
+            self.runtime_extension_verification_key,
+        )
+        if any(value is not None for value in extension_configuration) and not all(
+            value is not None for value in extension_configuration
+        ):
+            raise ValueError(
+                "Extension catalog, verification key ID, and verification key are atomic"
+            )
+        if self.runtime_extension_catalog_path is not None:
+            if not self.runtime_composition_enabled:
+                raise ValueError("Extension loading requires Runtime composition")
+            key = cast(SecretStr, self.runtime_extension_verification_key)
+            if not 32 <= len(key.get_secret_value().encode("utf-8")) <= 4096:
+                raise ValueError("Extension verification key length is invalid")
         return self
 
     def build_metadata(self) -> dict[str, str]:
@@ -163,6 +193,9 @@ class Settings(BaseSettings):
             "data_plane": self.data_plane.value,
             "simulation_api_enabled": self.simulation_api_enabled,
             "runtime_composition_enabled": self.runtime_composition_enabled,
+            "runtime_extension_catalog_configured": (
+                self.runtime_extension_catalog_path is not None
+            ),
             "code_commit": self.code_commit,
         }
 

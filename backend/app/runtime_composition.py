@@ -2,14 +2,14 @@
 
 from __future__ import annotations
 
-from collections.abc import Callable, Mapping
+from collections.abc import Callable, Mapping, Sequence
 from dataclasses import dataclass
 from datetime import datetime
 from enum import StrEnum
 import json
 from pathlib import Path
 from types import MappingProxyType
-from typing import Any, cast
+from typing import TYPE_CHECKING, Any, NoReturn, cast
 
 from celery import Celery
 
@@ -48,6 +48,7 @@ from app.infrastructure.schedule_version_repository import (
     SqlAlchemyScheduleVersionRepository,
 )
 from app.infrastructure.workspace_persistence import WorkspaceDataPlane
+from app.extensions.contracts import RuntimeExtensionArtifact, RuntimeExtensionError
 from app.jobs.planning_run_solver_worker import (
     PlanningRunSolverWorker,
     WorkerReliabilityPolicy,
@@ -71,6 +72,9 @@ from app.planning.validation.problem_schedule_validator import (
     VALIDATION_REPORT_CONTRACT,
     ProblemScheduleValidator,
 )
+
+if TYPE_CHECKING:
+    from app.extensions.registry import LoadedRuntimeExtensionAdapter
 
 
 RUNTIME_COMPOSITION_DESCRIPTOR_VERSION = "aps-runtime-composition.v1"
@@ -101,7 +105,7 @@ class RuntimeCompositionError(RuntimeError):
         super().__init__(f"{code}: {field}: {message}")
 
 
-def _fail(code: str, *, field: str, message: str) -> None:
+def _fail(code: str, *, field: str, message: str) -> NoReturn:
     raise RuntimeCompositionError(code, field=field, message=message)
 
 
@@ -132,6 +136,18 @@ class EmptyRuntimeExtensionAdapter:
     @property
     def contributions(self) -> tuple[object, ...]:
         return ()
+
+    @property
+    def sdk_api_version(self) -> str:
+        return UNPUBLISHED_EXTENSION_SDK_VERSION
+
+    @property
+    def registry_protocol_version(self) -> str:
+        return "plugin-registry.v1"
+
+    @property
+    def readiness_probe(self) -> None:
+        return None
 
     @property
     def extension_set_reference(self) -> JsonObject:
@@ -183,6 +199,7 @@ class RuntimeComposition:
 
     process: RuntimeProcess
     descriptor: RuntimeCompositionDescriptor
+    extension_adapter: EmptyRuntimeExtensionAdapter | LoadedRuntimeExtensionAdapter
     application: APSRuntimeApplicationFacade | None
     http_context_adapter: RuntimeHttpContextAdapter
     worker: PlanningRunSolverWorker | None
@@ -194,6 +211,9 @@ class RuntimeComposition:
         values: dict[str, Callable[[], None]] = {"database": self.database.probe}
         if self.redis is not None:
             values["redis"] = self.redis.probe
+        extension_probe = self.extension_adapter.readiness_probe
+        if extension_probe is not None:
+            values["extension_registry"] = extension_probe
         return MappingProxyType(values)
 
     def close(self) -> None:
@@ -312,7 +332,7 @@ def _descriptor(
     settings: Settings,
     contract: CanonicalIngressContract,
     catalog: FrozenPlanningArtifactCatalog,
-    extension_adapter: EmptyRuntimeExtensionAdapter,
+    extension_adapter: EmptyRuntimeExtensionAdapter | LoadedRuntimeExtensionAdapter,
     http_policy: RuntimeHttpPolicyCatalog,
 ) -> RuntimeCompositionDescriptor:
     plane = _workspace_plane(settings).value
@@ -331,8 +351,8 @@ def _descriptor(
             component="aps-core",
             settings=settings,
         ),
-        "extension_sdk_version": UNPUBLISHED_EXTENSION_SDK_VERSION,
-        "registry_protocol_version": "plugin-registry.v1",
+        "extension_sdk_version": extension_adapter.sdk_api_version,
+        "registry_protocol_version": extension_adapter.registry_protocol_version,
         "extension_set": extension_adapter.extension_set_reference,
         "developer_kit_version": UNPUBLISHED_DEVELOPER_KIT_VERSION,
         "developer_kit_fingerprint": _component_fingerprint(
@@ -361,6 +381,20 @@ def _descriptor(
             message="Runtime identity violates the frozen Headless contract",
         ) from error
 
+    port_bindings = {
+        "canonical_ingress_repository": "sqlalchemy-canonical-ingress.v1",
+        "planning_run_repository": "sqlalchemy-planning-run.v1",
+        "worker_repository": "sqlalchemy-planning-run-worker.v1",
+        "transaction": "sqlalchemy-engine-begin.v1",
+        "clock": "utc-system-clock.v1",
+        "identity": "uuid4-dispatch-identity.v1",
+        "solver": f"{STRATEGY_ID}/{STRATEGY_VERSION}",
+        "validator": f"problem-schedule-validator/{VALIDATION_REPORT_CONTRACT}",
+        "audit": "sqlalchemy-append-only-audit.v1",
+        "http_context": "runtime-http-context-adapter.v1",
+    }
+    if extension_adapter.document["mode"] == "LOADED":
+        port_bindings["extension_registry"] = "runtime-plugin-registry.v1"
     base: JsonObject = {
         "composition_descriptor_version": RUNTIME_COMPOSITION_DESCRIPTOR_VERSION,
         "environment": environment,
@@ -373,18 +407,7 @@ def _descriptor(
             "planning_policy": catalog.planning_policy_reference,
             "solve_limits": catalog.solve_limits_reference,
         },
-        "port_bindings": {
-            "canonical_ingress_repository": "sqlalchemy-canonical-ingress.v1",
-            "planning_run_repository": "sqlalchemy-planning-run.v1",
-            "worker_repository": "sqlalchemy-planning-run-worker.v1",
-            "transaction": "sqlalchemy-engine-begin.v1",
-            "clock": "utc-system-clock.v1",
-            "identity": "uuid4-dispatch-identity.v1",
-            "solver": f"{STRATEGY_ID}/{STRATEGY_VERSION}",
-            "validator": f"problem-schedule-validator/{VALIDATION_REPORT_CONTRACT}",
-            "audit": "sqlalchemy-append-only-audit.v1",
-            "http_context": "runtime-http-context-adapter.v1",
-        },
+        "port_bindings": port_bindings,
         "secret_policy": {
             "source": "EXPLICIT_SETTINGS_OR_PLANTNEXUS_ENV",
             "endpoint_values_in_descriptor": False,
@@ -413,6 +436,51 @@ def _dispatch_client(settings: Settings) -> Celery:
     return application
 
 
+def _runtime_extension_adapter(
+    settings: Settings,
+    artifacts: Sequence[RuntimeExtensionArtifact],
+) -> EmptyRuntimeExtensionAdapter | LoadedRuntimeExtensionAdapter:
+    catalog_path = settings.runtime_extension_catalog_path
+    if catalog_path is None:
+        if artifacts:
+            _fail(
+                "EXTENSION_CATALOG_INVALID",
+                field="runtime_extension_artifacts",
+                message="Extension artifacts require an explicit startup catalog",
+            )
+        return EmptyRuntimeExtensionAdapter.create()
+    key_id = settings.runtime_extension_verification_key_id
+    key = settings.runtime_extension_verification_key
+    if key_id is None or key is None:
+        _fail(
+            "EXTENSION_ARTIFACT_SIGNATURE_INVALID",
+            field="runtime_extension_verification",
+            message="Extension verification configuration is incomplete",
+        )
+    from app.extensions.loader import load_runtime_extensions
+
+    try:
+        return load_runtime_extensions(
+            catalog_path,
+            artifacts=artifacts,
+            runtime_version=RUNTIME_VERSION,
+            verification_key_id=key_id,
+            verification_key=key.get_secret_value().encode("utf-8"),
+        )
+    except RuntimeExtensionError as error:
+        raise RuntimeCompositionError(
+            error.code,
+            field="runtime_extension",
+            message="Runtime Extension startup preflight failed",
+        ) from error
+    except Exception as error:  # noqa: BLE001 - never expose provider internals
+        raise RuntimeCompositionError(
+            "EXTENSION_STARTUP_FAILED",
+            field="runtime_extension",
+            message="Runtime Extension startup preflight failed",
+        ) from error
+
+
 def compose_runtime(
     settings: Settings,
     *,
@@ -420,6 +488,7 @@ def compose_runtime(
     clock: RuntimeClock = utc_now,
     identity_factory: RuntimeIdentityFactory | None = None,
     dispatch_client: Celery | None = None,
+    extension_artifacts: Sequence[RuntimeExtensionArtifact] = (),
 ) -> RuntimeComposition:
     """Build one process graph after all fail-closed checks pass."""
 
@@ -462,7 +531,7 @@ def compose_runtime(
             field="runtime_planning_artifacts",
             message="Runtime planning artifacts are incompatible",
         ) from error
-    extension_adapter = EmptyRuntimeExtensionAdapter.create()
+    extension_adapter = _runtime_extension_adapter(settings, extension_artifacts)
     try:
         http_policy = RuntimeHttpPolicyCatalog.create(
             http_policy_document,
@@ -572,6 +641,7 @@ def compose_runtime(
         return RuntimeComposition(
             process=process,
             descriptor=descriptor,
+            extension_adapter=extension_adapter,
             application=application,
             http_context_adapter=http_context_adapter,
             worker=worker,
@@ -594,6 +664,7 @@ __all__ = [
     "RuntimeCompositionDescriptor",
     "RuntimeCompositionError",
     "RuntimeEnvironment",
+    "RuntimeExtensionArtifact",
     "RuntimeProcess",
     "Settings",
     "compose_runtime",

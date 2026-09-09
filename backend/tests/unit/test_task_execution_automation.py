@@ -230,6 +230,34 @@ def zip_payload(payload: Mapping[str, Any], name: str = "report.json") -> bytes:
     return buffer.getvalue()
 
 
+def negative_gate_payload() -> dict[str, Any]:
+    return {
+        "report_version": "example-platform-gate-report.v1",
+        "task_id": "TASK-P8-16",
+        "code_commit": COMMIT_SHA,
+        "validation_profile": "PHASE_GATE",
+        "audit_status": "PASS",
+        "verdict": "NOT_READY",
+        "issues": [],
+        "blocking_gaps": [
+            {
+                "blocker_id": "EXAMPLE-GATE-BLOCKER-001",
+                "summary": "A product gap requires a bounded corrective task.",
+            }
+        ],
+        "checks": [
+            {"check_id": "evidence-integrity", "status": "PASS"},
+            {"check_id": "product-readiness", "status": "BLOCKED"},
+        ],
+        "check_summary": {
+            "check_count": 2,
+            "pass_count": 1,
+            "blocked_count": 1,
+            "error_count": 0,
+        },
+    }
+
+
 class FakeProviderClient:
     def __init__(self, payload: Mapping[str, Any] | None = None) -> None:
         self.payload = dict(payload or {"result": "PASS", "issues": []})
@@ -313,6 +341,17 @@ class FakeProviderClient:
         return zip_payload(self.payload, f"report-{artifact_id}.json")
 
 
+class SingleNegativeGateProviderClient(FakeProviderClient):
+    def __init__(self, gate_payload: Mapping[str, Any]) -> None:
+        super().__init__()
+        self.gate_payload = dict(gate_payload)
+
+    def download_artifact(self, repository: str, artifact_id: int) -> bytes:
+        self.downloads += 1
+        payload = self.gate_payload if artifact_id == 4 else self.payload
+        return zip_payload(payload, f"report-{artifact_id}.json")
+
+
 def test_provider_collector_selects_exact_check_and_verifies_artifacts(
     tmp_path: Path,
 ) -> None:
@@ -359,6 +398,188 @@ def test_provider_collector_fails_for_reported_artifact_issues(tmp_path: Path) -
             poll_seconds=1,
             now=datetime(2026, 9, 1, tzinfo=timezone.utc),
         )
+
+
+def test_provider_collector_accepts_one_explicit_not_ready_gate(
+    tmp_path: Path,
+) -> None:
+    client = SingleNegativeGateProviderClient(negative_gate_payload())
+
+    report = collect_evidence(
+        client,
+        repository="example/plantnexus",
+        workflow="ci.yml",
+        commit_sha=COMMIT_SHA,
+        required_context="validate",
+        app_id=15368,
+        artifacts_dir=tmp_path,
+        timeout_seconds=0,
+        poll_seconds=1,
+        now=datetime(2026, 9, 1, tzinfo=timezone.utc),
+        expected_gate_task_id="TASK-P8-16",
+        expected_gate_verdict="NOT_READY",
+    )
+
+    assert report["result"] == "PASS"
+    assert report["issues"] == []
+    assert report["gate_expectation"] == {
+        "artifact_name": "plantnexus-ci-evidence-42",
+        "audit_status": "PASS",
+        "blocking_gap_count": 1,
+        "blocking_gap_ids": ["EXAMPLE-GATE-BLOCKER-001"],
+        "entry_path": "report-4.json",
+        "expected_verdict": "NOT_READY",
+        "observed_verdict": "NOT_READY",
+        "report_version": "example-platform-gate-report.v1",
+        "task_id": "TASK-P8-16",
+    }
+
+
+def test_provider_collector_rejects_not_ready_gate_without_explicit_expectation(
+    tmp_path: Path,
+) -> None:
+    client = SingleNegativeGateProviderClient(negative_gate_payload())
+
+    with pytest.raises(ValueError, match=r"\$\.blocking_gaps is non-empty"):
+        collect_evidence(
+            client,
+            repository="example/plantnexus",
+            workflow="ci.yml",
+            commit_sha=COMMIT_SHA,
+            required_context="validate",
+            app_id=15368,
+            artifacts_dir=tmp_path,
+            timeout_seconds=0,
+            poll_seconds=1,
+            now=datetime(2026, 9, 1, tzinfo=timezone.utc),
+        )
+
+
+@pytest.mark.parametrize(
+    ("field", "value", "message"),
+    (
+        ("audit_status", "FAIL", "audit_status"),
+        ("verdict", "READY", "verdict"),
+        ("issues", ["unresolved audit error"], "issues"),
+        ("blocking_gaps", [], "non-empty list"),
+        (
+            "check_summary",
+            {
+                "check_count": 2,
+                "pass_count": 2,
+                "blocked_count": 0,
+                "error_count": 0,
+            },
+            "check_summary",
+        ),
+    ),
+)
+def test_provider_collector_rejects_invalid_expected_negative_gate(
+    tmp_path: Path,
+    field: str,
+    value: object,
+    message: str,
+) -> None:
+    payload = negative_gate_payload()
+    payload[field] = value
+    client = SingleNegativeGateProviderClient(payload)
+
+    with pytest.raises(ValueError, match=message):
+        collect_evidence(
+            client,
+            repository="example/plantnexus",
+            workflow="ci.yml",
+            commit_sha=COMMIT_SHA,
+            required_context="validate",
+            app_id=15368,
+            artifacts_dir=tmp_path,
+            timeout_seconds=0,
+            poll_seconds=1,
+            now=datetime(2026, 9, 1, tzinfo=timezone.utc),
+            expected_gate_task_id="TASK-P8-16",
+            expected_gate_verdict="NOT_READY",
+        )
+
+
+def test_provider_collector_requires_complete_negative_gate_expectation(
+    tmp_path: Path,
+) -> None:
+    with pytest.raises(ValueError, match="provided together"):
+        collect_evidence(
+            FakeProviderClient(),
+            repository="example/plantnexus",
+            workflow="ci.yml",
+            commit_sha=COMMIT_SHA,
+            required_context="validate",
+            app_id=15368,
+            artifacts_dir=tmp_path,
+            timeout_seconds=0,
+            poll_seconds=1,
+            expected_gate_task_id="TASK-P8-16",
+        )
+
+
+def test_provider_negative_gate_manifest_reuse_rechecks_archived_report(
+    tmp_path: Path,
+) -> None:
+    artifacts_dir = tmp_path / "artifacts"
+    report = collect_evidence(
+        SingleNegativeGateProviderClient(negative_gate_payload()),
+        repository="example/plantnexus",
+        workflow="ci.yml",
+        commit_sha=COMMIT_SHA,
+        required_context="validate",
+        app_id=15368,
+        artifacts_dir=artifacts_dir,
+        timeout_seconds=0,
+        poll_seconds=1,
+        now=datetime(2026, 9, 1, tzinfo=timezone.utc),
+        expected_gate_task_id="TASK-P8-16",
+        expected_gate_verdict="NOT_READY",
+    )
+    report_path = tmp_path / "provider.json"
+    report_path.write_text(json.dumps(report), encoding="utf-8")
+
+    reused = load_reusable_manifest(
+        report_path,
+        artifacts_dir,
+        repository="example/plantnexus",
+        workflow="ci.yml",
+        commit_sha=COMMIT_SHA,
+        required_context="validate",
+        app_id=15368,
+        now=datetime(2026, 9, 1, tzinfo=timezone.utc),
+        expected_gate_task_id="TASK-P8-16",
+        expected_gate_verdict="NOT_READY",
+    )
+    default_reuse = load_reusable_manifest(
+        report_path,
+        artifacts_dir,
+        repository="example/plantnexus",
+        workflow="ci.yml",
+        commit_sha=COMMIT_SHA,
+        required_context="validate",
+        app_id=15368,
+        now=datetime(2026, 9, 1, tzinfo=timezone.utc),
+    )
+    report["gate_expectation"]["blocking_gap_ids"] = ["FORGED-BLOCKER-001"]
+    report_path.write_text(json.dumps(report), encoding="utf-8")
+    forged_reuse = load_reusable_manifest(
+        report_path,
+        artifacts_dir,
+        repository="example/plantnexus",
+        workflow="ci.yml",
+        commit_sha=COMMIT_SHA,
+        required_context="validate",
+        app_id=15368,
+        now=datetime(2026, 9, 1, tzinfo=timezone.utc),
+        expected_gate_task_id="TASK-P8-16",
+        expected_gate_verdict="NOT_READY",
+    )
+
+    assert reused is not None
+    assert default_reuse is None
+    assert forged_reuse is None
 
 
 def test_provider_required_check_rejects_wrong_app() -> None:

@@ -20,7 +20,9 @@ REPORT_VERSION = "provider-evidence-manifest.v1"
 DEFAULT_WORKFLOW = "ci.yml"
 DEFAULT_REQUIRED_CONTEXT = "validate"
 DEFAULT_APP_ID = 15368
+EXPECTED_NEGATIVE_GATE_VERDICT = "NOT_READY"
 SHA_RE = re.compile(r"[0-9a-fA-F]{40}")
+BLOCKER_ID_RE = re.compile(r"[A-Z0-9][A-Z0-9_-]+")
 REPOSITORY_RE = re.compile(
     r"^(?:(?:https?://|ssh://git@)[^/]+/|git@[^:]+:)"
     r"(?P<repository>[^/\s]+/[^/\s]+?)(?:\.git)?$",
@@ -297,14 +299,29 @@ def safe_zip_name(value: str) -> str:
 
 
 def validate_json_payload(
-    payload: object, commit_sha: str, entry_name: str
+    payload: object,
+    commit_sha: str,
+    entry_name: str,
+    *,
+    expected_gate_task_id: str | None = None,
+    expected_gate_verdict: str | None = None,
 ) -> list[str]:
     issues: list[str] = []
     if not isinstance(payload, dict):
         return [f"{entry_name}: top-level JSON value must be an object"]
+    gate_observation, gate_issues = inspect_expected_gate_payload(
+        payload,
+        commit_sha,
+        entry_name,
+        expected_gate_task_id=expected_gate_task_id,
+        expected_gate_verdict=expected_gate_verdict,
+    )
+    issues.extend(gate_issues)
     for key in ("issues", "blocking_gaps", "blocking_issues"):
         value = payload.get(key)
         if isinstance(value, list) and value:
+            if key == "blocking_gaps" and gate_observation is not None:
+                continue
             issues.append(f"{entry_name}: $.{key} is non-empty")
     if payload.get("result") == "FAIL":
         issues.append(f"{entry_name}: $.result reports FAIL")
@@ -334,18 +351,174 @@ def validate_json_payload(
     return issues
 
 
+def validate_gate_expectation(
+    expected_gate_task_id: str | None,
+    expected_gate_verdict: str | None,
+) -> None:
+    if (expected_gate_task_id is None) != (expected_gate_verdict is None):
+        raise ValueError("expected gate task id and verdict must be provided together")
+    if expected_gate_verdict not in {None, EXPECTED_NEGATIVE_GATE_VERDICT}:
+        raise ValueError(
+            "only the explicit NOT_READY negative Gate verdict may be expected"
+        )
+    if expected_gate_task_id is not None and not expected_gate_task_id.strip():
+        raise ValueError("expected gate task id must not be empty")
+
+
+def inspect_expected_gate_payload(
+    payload: Mapping[str, Any],
+    commit_sha: str,
+    entry_name: str,
+    *,
+    expected_gate_task_id: str | None,
+    expected_gate_verdict: str | None,
+) -> tuple[dict[str, Any] | None, list[str]]:
+    validate_gate_expectation(expected_gate_task_id, expected_gate_verdict)
+    if expected_gate_task_id is None or payload.get("task_id") != expected_gate_task_id:
+        return None, []
+    report_version = payload.get("report_version")
+    is_gate_candidate = (
+        any(key in payload for key in ("verdict", "audit_status", "blocking_gaps"))
+        or isinstance(report_version, str)
+        and "gate-report" in report_version.lower()
+    )
+    if not is_gate_candidate:
+        return None, []
+
+    issues: list[str] = []
+    if payload.get("verdict") != expected_gate_verdict:
+        issues.append(
+            f"{entry_name}: $.verdict does not match expected {expected_gate_verdict!r}"
+        )
+    if payload.get("audit_status") != "PASS":
+        issues.append(f"{entry_name}: $.audit_status is not 'PASS'")
+    if payload.get("validation_profile") != "PHASE_GATE":
+        issues.append(f"{entry_name}: $.validation_profile is not 'PHASE_GATE'")
+    if payload.get("code_commit") != commit_sha:
+        issues.append(
+            f"{entry_name}: $.code_commit does not match exact implementation SHA"
+        )
+    if not isinstance(report_version, str) or "gate" not in report_version.lower():
+        issues.append(f"{entry_name}: $.report_version is not a Gate report")
+    if payload.get("issues") != []:
+        issues.append(f"{entry_name}: $.issues is not an empty list")
+
+    blocking_gaps = payload.get("blocking_gaps")
+    blocker_ids: list[str] = []
+    if not isinstance(blocking_gaps, list) or not blocking_gaps:
+        issues.append(
+            f"{entry_name}: $.blocking_gaps must be a non-empty list for NOT_READY"
+        )
+    else:
+        for index, blocker in enumerate(blocking_gaps):
+            if not isinstance(blocker, dict):
+                issues.append(
+                    f"{entry_name}: $.blocking_gaps[{index}] must be an object"
+                )
+                continue
+            blocker_id = blocker.get("blocker_id")
+            if not isinstance(blocker_id, str) or not BLOCKER_ID_RE.fullmatch(
+                blocker_id
+            ):
+                issues.append(
+                    f"{entry_name}: $.blocking_gaps[{index}].blocker_id is invalid"
+                )
+            elif blocker_id in blocker_ids:
+                issues.append(
+                    f"{entry_name}: $.blocking_gaps[{index}].blocker_id is duplicated"
+                )
+            else:
+                blocker_ids.append(blocker_id)
+            if (
+                not isinstance(blocker.get("summary"), str)
+                or not blocker["summary"].strip()
+            ):
+                issues.append(
+                    f"{entry_name}: $.blocking_gaps[{index}].summary is invalid"
+                )
+
+    checks = payload.get("checks")
+    check_summary = payload.get("check_summary")
+    if not isinstance(checks, list) or not isinstance(check_summary, dict):
+        issues.append(f"{entry_name}: Gate checks or check summary is missing")
+    else:
+        observed_pass = sum(
+            1
+            for check in checks
+            if isinstance(check, dict) and check.get("status") == "PASS"
+        )
+        observed_blocked = sum(
+            1
+            for check in checks
+            if isinstance(check, dict) and check.get("status") == "BLOCKED"
+        )
+        invalid_checks = [
+            index
+            for index, check in enumerate(checks)
+            if not isinstance(check, dict)
+            or check.get("status") not in {"PASS", "BLOCKED"}
+        ]
+        expected_summary = {
+            "check_count": len(checks),
+            "pass_count": observed_pass,
+            "blocked_count": observed_blocked,
+            "error_count": 0,
+        }
+        if invalid_checks or any(
+            check_summary.get(key) != value for key, value in expected_summary.items()
+        ):
+            issues.append(f"{entry_name}: $.check_summary does not match Gate checks")
+        if isinstance(blocking_gaps, list) and observed_blocked != len(blocking_gaps):
+            issues.append(f"{entry_name}: blocked checks do not match $.blocking_gaps")
+
+    if issues:
+        return None, issues
+    return (
+        {
+            "task_id": expected_gate_task_id,
+            "expected_verdict": expected_gate_verdict,
+            "observed_verdict": payload["verdict"],
+            "audit_status": payload["audit_status"],
+            "report_version": report_version,
+            "entry_path": entry_name,
+            "blocking_gap_count": len(blocker_ids),
+            "blocking_gap_ids": blocker_ids,
+        },
+        [],
+    )
+
+
 def inspect_artifact_zip(
-    data: bytes, commit_sha: str
+    data: bytes,
+    commit_sha: str,
 ) -> tuple[list[dict[str, Any]], list[str]]:
+    entries, issues, _ = _inspect_artifact_zip(
+        data,
+        commit_sha,
+        expected_gate_task_id=None,
+        expected_gate_verdict=None,
+    )
+    return entries, issues
+
+
+def _inspect_artifact_zip(
+    data: bytes,
+    commit_sha: str,
+    *,
+    expected_gate_task_id: str | None = None,
+    expected_gate_verdict: str | None = None,
+) -> tuple[list[dict[str, Any]], list[str], list[dict[str, Any]]]:
+    validate_gate_expectation(expected_gate_task_id, expected_gate_verdict)
     entries: list[dict[str, Any]] = []
     issues: list[str] = []
+    gate_observations: list[dict[str, Any]] = []
     seen: set[str] = set()
     if len(data) > MAX_ARCHIVE_BYTES:
-        return [], [f"artifact archive exceeds {MAX_ARCHIVE_BYTES} bytes"]
+        return [], [f"artifact archive exceeds {MAX_ARCHIVE_BYTES} bytes"], []
     try:
         archive = zipfile.ZipFile(BytesIO(data))
     except zipfile.BadZipFile as error:
-        return [], [f"artifact is not a valid ZIP: {error}"]
+        return [], [f"artifact is not a valid ZIP: {error}"], []
     with archive:
         total_uncompressed = 0
         for info in archive.infolist():
@@ -384,10 +557,32 @@ def inspect_artifact_zip(
                 except (UnicodeDecodeError, json.JSONDecodeError) as error:
                     issues.append(f"{name}: invalid UTF-8 JSON: {error}")
                 else:
-                    issues.extend(validate_json_payload(payload, commit_sha, name))
+                    issues.extend(
+                        validate_json_payload(
+                            payload,
+                            commit_sha,
+                            name,
+                            expected_gate_task_id=expected_gate_task_id,
+                            expected_gate_verdict=expected_gate_verdict,
+                        )
+                    )
+                    if isinstance(payload, dict):
+                        observation, _ = inspect_expected_gate_payload(
+                            payload,
+                            commit_sha,
+                            name,
+                            expected_gate_task_id=expected_gate_task_id,
+                            expected_gate_verdict=expected_gate_verdict,
+                        )
+                        if observation is not None:
+                            gate_observations.append(observation)
     if not entries:
         issues.append("artifact ZIP contains no files")
-    return sorted(entries, key=lambda item: str(item["path"])), issues
+    return (
+        sorted(entries, key=lambda item: str(item["path"])),
+        issues,
+        gate_observations,
+    )
 
 
 def artifact_filename(artifact_id: int, name: str) -> str:
@@ -502,7 +697,10 @@ def collect_evidence(
     timeout_seconds: int,
     poll_seconds: int,
     now: datetime | None = None,
+    expected_gate_task_id: str | None = None,
+    expected_gate_verdict: str | None = None,
 ) -> dict[str, Any]:
+    validate_gate_expectation(expected_gate_task_id, expected_gate_verdict)
     observed_at = now or datetime.now(timezone.utc)
     run = wait_for_run(
         client,
@@ -528,6 +726,7 @@ def collect_evidence(
     artifacts_dir.mkdir(parents=True, exist_ok=True)
     artifact_records: list[dict[str, Any]] = []
     all_issues: list[str] = []
+    gate_observations: list[dict[str, Any]] = []
     for artifact in sorted(artifacts, key=lambda item: str(item.get("name", ""))):
         name = str(artifact.get("name", ""))
         if not name.startswith("plantnexus-ci-"):
@@ -537,8 +736,16 @@ def collect_evidence(
             raise ValueError("artifact metadata is missing integer id or name")
         validate_artifact_metadata(artifact, observed_at)
         data = client.download_artifact(repository, artifact_id)
-        entries, issues = inspect_artifact_zip(data, commit_sha)
+        entries, issues, observations = _inspect_artifact_zip(
+            data,
+            commit_sha,
+            expected_gate_task_id=expected_gate_task_id,
+            expected_gate_verdict=expected_gate_verdict,
+        )
         all_issues.extend(f"{name}: {issue}" for issue in issues)
+        gate_observations.extend(
+            {**observation, "artifact_name": name} for observation in observations
+        )
         filename = artifact_filename(artifact_id, name)
         (artifacts_dir / filename).write_bytes(data)
         artifact_records.append(
@@ -552,9 +759,14 @@ def collect_evidence(
                 "entries": entries,
             }
         )
+    if expected_gate_task_id is not None and len(gate_observations) != 1:
+        all_issues.append(
+            "expected exactly one validated negative Gate report; "
+            f"found {len(gate_observations)}"
+        )
     if all_issues:
         raise ValueError("; ".join(all_issues))
-    return {
+    report: dict[str, Any] = {
         "schema_version": REPORT_VERSION,
         "result": "PASS",
         "generated_at": observed_at.isoformat(),
@@ -580,6 +792,9 @@ def collect_evidence(
         "artifacts": artifact_records,
         "issues": [],
     }
+    if gate_observations:
+        report["gate_expectation"] = gate_observations[0]
+    return report
 
 
 def load_reusable_manifest(
@@ -592,7 +807,10 @@ def load_reusable_manifest(
     required_context: str,
     app_id: int,
     now: datetime | None = None,
+    expected_gate_task_id: str | None = None,
+    expected_gate_verdict: str | None = None,
 ) -> dict[str, Any] | None:
+    validate_gate_expectation(expected_gate_task_id, expected_gate_verdict)
     if not path.is_file():
         return None
     try:
@@ -615,10 +833,27 @@ def load_reusable_manifest(
         or required_check.get("conclusion") != "success"
     ):
         return None
+    gate_expectation = payload.get("gate_expectation")
+    if expected_gate_task_id is None:
+        if gate_expectation is not None:
+            return None
+    elif (
+        not isinstance(gate_expectation, dict)
+        or gate_expectation.get("task_id") != expected_gate_task_id
+        or gate_expectation.get("expected_verdict") != expected_gate_verdict
+        or gate_expectation.get("observed_verdict") != expected_gate_verdict
+        or gate_expectation.get("audit_status") != "PASS"
+        or not isinstance(gate_expectation.get("blocking_gap_ids"), list)
+        or not gate_expectation["blocking_gap_ids"]
+        or gate_expectation.get("blocking_gap_count")
+        != len(gate_expectation["blocking_gap_ids"])
+    ):
+        return None
     artifacts = payload.get("artifacts")
     if not isinstance(artifacts, list) or not artifacts:
         return None
     observed_at = now or datetime.now(timezone.utc)
+    replayed_gate_observations: list[dict[str, Any]] = []
     try:
         for item in artifacts:
             if not isinstance(item, dict):
@@ -631,9 +866,31 @@ def load_reusable_manifest(
             archive_path = artifacts_dir / archive_file
             if not archive_path.is_file():
                 return None
-            if hashlib.sha256(archive_path.read_bytes()).hexdigest() != digest:
+            archive_data = archive_path.read_bytes()
+            if hashlib.sha256(archive_data).hexdigest() != digest:
                 return None
+            if expected_gate_task_id is not None:
+                _, inspection_issues, observations = _inspect_artifact_zip(
+                    archive_data,
+                    commit_sha,
+                    expected_gate_task_id=expected_gate_task_id,
+                    expected_gate_verdict=expected_gate_verdict,
+                )
+                if inspection_issues:
+                    return None
+                artifact_name = item.get("name")
+                if not isinstance(artifact_name, str) or not artifact_name:
+                    return None
+                replayed_gate_observations.extend(
+                    {**observation, "artifact_name": artifact_name}
+                    for observation in observations
+                )
     except (OSError, ValueError):
+        return None
+    if expected_gate_task_id is not None and (
+        len(replayed_gate_observations) != 1
+        or replayed_gate_observations[0] != gate_expectation
+    ):
         return None
     return cast(dict[str, Any], payload)
 
@@ -662,6 +919,15 @@ def build_parser() -> argparse.ArgumentParser:
     parser.add_argument("--timeout-seconds", type=int, default=1_200)
     parser.add_argument("--poll-seconds", type=int, default=20)
     parser.add_argument("--reuse", action="store_true")
+    parser.add_argument("--expected-gate-task-id")
+    parser.add_argument(
+        "--expected-gate-verdict",
+        choices=(EXPECTED_NEGATIVE_GATE_VERDICT,),
+        help=(
+            "accept one structurally valid PHASE_GATE report with the explicit "
+            "NOT_READY verdict while preserving its blockers"
+        ),
+    )
     return parser
 
 
@@ -681,6 +947,9 @@ def main(argv: Sequence[str] | None = None) -> int:
         )
         return 1
     try:
+        validate_gate_expectation(
+            args.expected_gate_task_id, args.expected_gate_verdict
+        )
         commit_sha = resolve_head(root, args.commit)
         repository = args.repository or repository_from_origin(root)
         if args.reuse:
@@ -692,6 +961,8 @@ def main(argv: Sequence[str] | None = None) -> int:
                 commit_sha=commit_sha,
                 required_context=args.required_context,
                 app_id=args.app_id,
+                expected_gate_task_id=args.expected_gate_task_id,
+                expected_gate_verdict=args.expected_gate_verdict,
             )
             if reusable is not None:
                 print(
@@ -709,6 +980,8 @@ def main(argv: Sequence[str] | None = None) -> int:
             artifacts_dir=artifacts_dir,
             timeout_seconds=args.timeout_seconds,
             poll_seconds=args.poll_seconds,
+            expected_gate_task_id=args.expected_gate_task_id,
+            expected_gate_verdict=args.expected_gate_verdict,
         )
         write_manifest(report_path, root, report)
     except (OSError, RuntimeError, TimeoutError, ValueError) as error:

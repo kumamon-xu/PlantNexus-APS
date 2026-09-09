@@ -70,7 +70,8 @@
     "jsonschema-specifications": "2025.9.1",
     "referencing": "0.37.0",
     "attrs": "26.1.0",
-    "rpds-py": "2026.6.3"
+    "rpds-py": "2026.6.3",
+    "typing-extensions": "4.16.0"
   },
   "license_policy": {
     "allowed_identifiers": [
@@ -91,7 +92,8 @@
       "jsonschema-specifications": "MIT",
       "plantnexus-aps-runtime": "LicenseRef-PlantNexus-Internal",
       "referencing": "MIT",
-      "rpds-py": "MIT"
+      "rpds-py": "MIT",
+      "typing-extensions": "PSF-2.0"
     },
     "unknown_license_action": "FAIL_RELEASE",
     "repository_public_license_present": false

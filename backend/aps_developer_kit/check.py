@@ -400,7 +400,7 @@ def _security(root: Path, verified: Any) -> JsonObject:
         ),
         "raw_finding_count": len(findings),
         "approved_vex_assessment_count": len(assessments),
-        "tool_dependency_count": 5,
+        "tool_dependency_count": 6,
         "sbom_component_count": len(
             cast(list[object], strict_json_document(verified.files["metadata/sbom.cdx.json"])["components"])
         ),

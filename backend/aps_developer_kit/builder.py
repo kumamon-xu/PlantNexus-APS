@@ -68,6 +68,7 @@ _TOOL_DEPENDENCIES = (
     "jsonschema-specifications",
     "referencing",
     "rpds-py",
+    "typing-extensions",
 )
 _DOCUMENTS = (
     "docs/contracts/extension-sdk-and-developer-kit.md",

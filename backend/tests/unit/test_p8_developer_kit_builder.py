@@ -60,4 +60,5 @@ def test_policy_locks_tool_dependencies_and_disallows_remote_publication() -> No
         "jsonschema-specifications",
         "referencing",
         "rpds-py",
+        "typing-extensions",
     }

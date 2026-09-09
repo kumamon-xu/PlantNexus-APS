@@ -343,7 +343,7 @@ def _expect_error(code: str, call: Callable[[], object]) -> str:
 
 def _security(root: Path, verified: Any) -> JsonObject:
     audit = _run(
-        ("uv", "audit", "--locked", "--output-format", "json"),
+        ("uv", "audit", "--locked", "--no-dev", "--output-format", "json"),
         cwd=root,
         allowed=frozenset({0, 1}),
     )
@@ -394,7 +394,7 @@ def _security(root: Path, verified: Any) -> JsonObject:
     return {
         "report_version": SECURITY_REPORT_VERSION,
         "status": "PASS" if not issues else "FAIL",
-        "audit_tool": "uv audit --locked",
+        "audit_tool": "uv audit --locked --no-dev",
         "audited_package_count": cast(JsonObject, document.get("summary", {})).get(
             "audited_packages"
         ),

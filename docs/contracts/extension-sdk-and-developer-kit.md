@@ -15,7 +15,7 @@ last_reviewed: 2026-09-09
 
 TASK-P8-12发布APS Extension SDK `1.0.0`的合同层：独立Python命名空间`aps_extension_sdk`、六类SPI Protocol、递归不可变输入/输出值、`extension-manifest.v1`、`extension-compatibility.v1`、`extension-error-code-registry.v1`、正反样例、严格checker和分层测试。企业项目必须针对指定SDK版本创建独立Enterprise Extension，不得复制、vendor或修改`app`/APS Core源码。
 
-TASK-P8-13已形成Runtime loader、确定性Registry、六类受控调用adapter、API/Worker composition fingerprint和readiness/metrics边界。TASK-P8-14在其上形成独立Enterprise Extension项目合同、模板、确定性打包/clean-install/conformance工具、两个互不共享源码的synthetic示例及负例；它不形成动态发现、真实企业Solver/Validator规则、已发布Developer Kit、外部Extension API或Production信任结论。P8-15仍单独负责Developer Kit组合与兼容发布。
+TASK-P8-13已形成Runtime loader、确定性Registry、六类受控调用adapter、API/Worker composition fingerprint和readiness/metrics边界。TASK-P8-14在其上形成独立Enterprise Extension项目合同、模板、确定性打包/clean-install/conformance工具、两个互不共享源码的synthetic示例及负例。TASK-P8-15现把这些输入与exact Runtime artifact组装为Developer Kit `1.0.0`工程候选；它仍不形成动态发现、真实企业Solver/Validator规则、外部Extension API、外部签名或Production信任结论。
 
 机器carrier位于`backend/aps_extension_sdk/contracts/`，属于SDK自身的additive contract set，不进入既有业务`schemas/**`集合，也不提升global Schema Set `2.10.0`、Runtime `0.1.0`或Core/Application `0.0.0`。P8-12关闭SHA上的既有Schema、OpenAPI、migration、Core、Runtime seam、`pyproject.toml`与`uv.lock`历史bytes仍由固定树证据验证；P8-13只把`aps_extension_sdk`加入同一Runtime wheel的内部package集合，未新增依赖且`uv.lock`不变。
 
@@ -30,7 +30,7 @@ TASK-P8-13已形成Runtime loader、确定性Registry、六类受控调用adapte
 | Enterprise Extension artifact/config | 企业独立SemVer/合同 | 不由Core或Runtime版本替代 |
 | Runtime | `0.1.0`既有工程候选 | P8-13增加受控装载能力但不发布新Runtime/Kit版本 |
 | Enterprise project | `enterprise-extension-project.v1` | 精确绑定owner/repository/license/source/SDK/Runtime/Kit及项目内carrier |
-| Developer Kit | `0.0.0-not-published` | P8-15前只表示未发布占位，不存在`latest` |
+| Developer Kit | `1.0.0`工程候选 | 精确绑定Runtime/SDK/Tooling/Template及digest；不存在`latest` |
 
 不存在可代表上述全部维度的单一“APS版本”。Runtime/Core升级不自动升级企业项目；旧项目可继续使用仍受支持的精确组合。
 
@@ -143,4 +143,16 @@ Runtime必须在任何业务副作用前验证artifact digest/HMAC allow-list标
 
 分层测试覆盖contract、unit、property、security与validation mutation；同时完整相关Backend suite、Ruff、Pyright、SCA/license、docs/diff、CI preflight及exact Provider HIGH_RISK evidence必须通过。样例仅为synthetic contract evidence，不代表真实企业规则、容量、质量或Production授权。
 
-P8-13形成consumer后，回滚非空Extension应移除服务端catalog/artifact配置并恢复上一已验证default-empty Runtime artifact，而不是在请求中禁用校验或删除Core。P8-14项目或artifact不合格时应停止交付并保留失败报告；任何版本一旦进入已验证Kit或企业artifact，不得覆盖，修复必须发布新版本并保留旧bytes/replay。P8-14的`0.0.0-not-published`不得包装或命名为正式Developer Kit。
+P8-13形成consumer后，回滚非空Extension应移除服务端catalog/artifact配置并恢复上一已验证default-empty Runtime artifact，而不是在请求中禁用校验或删除Core。P8-14项目或artifact不合格时应停止交付并保留失败报告；任何版本一旦进入已验证Kit或企业artifact，不得覆盖，修复必须发布新版本并保留旧bytes/replay。P8-14的`0.0.0-not-published`只作为synthetic/unpublished predecessor重放，不得包装为历史正式Kit。
+
+## 14. Developer Kit `1.0.0`发布与兼容合同
+
+P8-15的唯一supported engineering组合为：Developer Kit `1.0.0`、Runtime `0.1.0` exact content-addressed archive与code commit、Application/Core `0.0.0`、Extension SDK `1.0.0`、Extension Tooling `1.0.0`、Enterprise Template `1.0.0`、Headless API `headless-http.v1`、Schema Set `2.10.0`、database `0009_host_authorization_audit`及Registry `plugin-registry.v1`。SemVer相同但Runtime digest或commit不同也不是同一组合。
+
+Kit ZIP必须以单一root包含嵌套Runtime release、独立SDK/tooling/Alpha/Beta wheel、可直接使用的模板和示例源码、包内conformance CLI、精确tool dependency hash lock、五份受控文档、compatibility matrix、Kit lock、Core source hash inventory、support/deprecation policy、signing request、CycloneDX SBOM和license report。Manifest列出每个payload的大小与SHA-256，checksum再覆盖manifest和全部payload；Kit外层以SHA-256内容寻址。相同clean input必须产生逐字相同归档，同一Kit版本映射到其他bytes时以`KIT_REGISTRY_CONFLICT`拒绝。
+
+Compatibility只接受matrix中的五项精确组合；unknown、mixed、floating、alias或`latest`以`KIT_COMBINATION_UNSUPPORTED`阻止安装/装载。P8-14原项目继续锁`0.0.0-not-published`且组装过程不得改写；其两Extension可作为unpublished predecessor重放。迁移到`1.0.0`必须由owner explicit opt-in、在独立变更中relock并重新执行单项目和完整Extension-set conformance；缺少opt-in以`KIT_IMPLICIT_UPGRADE_FORBIDDEN`拒绝。Core/Runtime新版本只可生成新Kit候选，不能把兼容range解释为自动升级授权。
+
+Support policy当前只支持Kit `1.0.0`工程候选，没有上一正式supported Kit，也没有Production SLA。后续弃用必须由新不可变Kit版本显式登记且保留旧bytes。失败时停止promotion、保留失败evidence并恢复上一显式项目锁；涉及Runtime migration时仍使用Runtime的backup/restore或获批forward-fix规则，禁止混搭新旧artifact/config或绕过Validator。
+
+当前签名状态固定为`UNSIGNED_ENGINEERING_CANDIDATE`、`signature_present=false`、`approved_external_key=false`。Manifest、checksum与sidecar是可签输入和完整性身份，不得冒充签名；public/Production channel必须在独立release authority提供可验证detached signature前以`KIT_SIGNATURE_REQUIRED`拒绝。详细命令和责任矩阵见[Developer Kit发布、升级与回滚](../operations/developer-kit-release-upgrade-and-rollback.md)。

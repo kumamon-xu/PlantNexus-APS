@@ -143,7 +143,7 @@ jobs:
         run: uv run ruff check .
 
       - name: Type check
-        run: uv run pyright backend/app backend/aps_extension_sdk backend/aps_extension_tooling backend/tests
+        run: uv run pyright backend/app backend/aps_extension_sdk backend/aps_extension_tooling backend/aps_developer_kit backend/tests
 
       - name: Repository test suites
         run: |
@@ -171,7 +171,7 @@ jobs:
     needs: [classify, full_preflight]
     if: ${{ needs.classify.outputs.profile == 'FULL' }}
     runs-on: ubuntu-latest
-    timeout-minutes: 20
+    timeout-minutes: 30
     env:
       PLANTNEXUS_CODE_COMMIT: ${{ github.sha }}
       PLANTNEXUS_POSTGRES_PASSWORD: ci-contract-only-not-a-secret
@@ -370,6 +370,17 @@ jobs:
           --migration-report build/validation/ci-p8-runtime-release-migration.json
           --security-report build/validation/ci-p8-runtime-release-security.json
           --benchmark-report build/benchmarks/ci-p8-runtime-release.json
+
+      - name: P8 Developer Kit assembly compatibility and upgrade evidence
+        run: >-
+          uv run python -m aps_developer_kit.check
+          --root .
+          --release-output build/release
+          --kit-output build/developer-kit
+          --report build/validation/ci-p8-developer-kit.json
+          --security-report build/validation/ci-p8-developer-kit-security.json
+          --upgrade-report build/validation/ci-p8-developer-kit-upgrade-rollback.json
+          --benchmark-report build/benchmarks/ci-p8-developer-kit.json
 
       - name: P6 duration prediction machine contract evidence
         run: >-
@@ -739,6 +750,7 @@ jobs:
             "${replay_root}/infra/release/runtime-vulnerability-policy.v1.json"
           rm -rf -- \
             "${replay_root}/backend/aps_extension_tooling" \
+            "${replay_root}/backend/aps_developer_kit" \
             "${replay_root}/backend/tests/p8_enterprise_extension_support.py" \
             "${replay_root}/backend/tests/contract/test_p8_enterprise_extension_contract.py" \
             "${replay_root}/backend/tests/unit/test_p8_enterprise_extension_tooling.py" \
@@ -749,7 +761,16 @@ jobs:
             "${replay_root}/scripts/aps_extension_conformance.py" \
             "${replay_root}/scripts/p8_enterprise_extension_kit_check.py" \
             "${replay_root}/templates/enterprise-extension" \
-            "${replay_root}/examples/enterprise-extensions"
+            "${replay_root}/examples/enterprise-extensions" \
+            "${replay_root}/backend/tests/p8_developer_kit_support.py" \
+            "${replay_root}/backend/tests/contract/test_p8_developer_kit_contract.py" \
+            "${replay_root}/backend/tests/unit/test_p8_developer_kit_builder.py" \
+            "${replay_root}/backend/tests/property/test_p8_developer_kit_properties.py" \
+            "${replay_root}/backend/tests/integration/test_p8_developer_kit_integration.py" \
+            "${replay_root}/backend/tests/security/test_p8_developer_kit_security.py" \
+            "${replay_root}/backend/tests/validation/test_p8_developer_kit_mutations.py" \
+            "${replay_root}/infra/release/developer-kit-release-policy.v1.json" \
+            "${replay_root}/fixtures/developer-kit/p8-14-unpublished-predecessor.v1.json"
           git -C "${replay_root}" restore \
             --source d0a83c58cb4a2d4afa76e8c8cff08441574e2e30 \
             -- backend/tests/integration/test_ci_contract.py
@@ -940,6 +961,7 @@ jobs:
             build/frontend/**
             build/release/**
             build/enterprise-extensions/**
+            build/developer-kit/**
           if-no-files-found: error
 
   full_operations:

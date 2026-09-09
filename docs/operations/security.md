@@ -11,6 +11,14 @@ last_reviewed: 2026-09-08
 
 # P0 工程安全边界
 
+## TASK-P8-15 Developer Kit供应链与签名边界
+
+Developer Kit ZIP reader强制单root、regular unencrypted member、路径归一化、duplicate/member/展开大小限制；manifest payload inventory、逐文件checksum、Kit lock与外层SHA-256任一漂移均在安装前拒绝。Kit禁止`demo/**`、credential、私钥和真实企业payload；Core source hash inventory使包外Enterprise项目仍可检测byte-equivalent Core复制。嵌套Runtime归档必须再次通过P8-09 verifier并与Kit中的Runtime code commit、release fingerprint和archive digest三重一致。
+
+Kit层CycloneDX 1.5 SBOM覆盖Runtime聚合组件、SDK、tooling、template、两个synthetic Extension和五个exact tool dependency；嵌套Runtime SBOM继续覆盖完整Runtime transitive graph。License policy只接受显式reviewed expression且unknown为0；`uv audit --locked`的所有现行finding仍必须逐项落入既有exact Starlette VEX，tool dependency不得出现未处置finding。该工程检查不是持续漏洞服务或Production安全认证。
+
+当前没有获批外部签名key、PKI或attestation服务。候选必须写`UNSIGNED_ENGINEERING_CANDIDATE`、`signature_present=false`、public/Production promotion false；manifest/checksum/sidecar只是待签subject。Verifier在非engineering channel稳定返回`KIT_SIGNATURE_REQUIRED`，禁止生成自签名材料、把HMAC或SHA-256描述成发布签名，或以CI PASS关闭OPEN-002/010/012/015。Enterprise Extension仍是trusted in-process代码，Kit不提供恶意代码隔离。
+
 ## TASK-P8-13 Runtime Extension安全边界
 
 非空Extension只可由服务端启动配置的单一strict本地catalog选择，catalog内逐项固定Extension ID/version、manifest/config相对路径及fingerprint、artifact digest、capability、verification key ID和HMAC-SHA256标签。Runtime在创建数据库client或执行业务操作前验证regular non-symlink路径、目录逃逸、大小/数量、SDK/Runtime compatibility、精确artifact集合、entrypoint/descriptor Protocol及唯一Registry resolution；任一signature/digest/config/version/duplicate/conflict/mixed/unknown失败均阻止启动且不创建业务数据库。

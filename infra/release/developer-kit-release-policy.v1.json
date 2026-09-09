@@ -1,0 +1,108 @@
+{
+  "policy_version": "aps-developer-kit-release-policy.v1",
+  "artifact": {
+    "archive_format": "zip",
+    "content_address_algorithm": "sha256",
+    "distribution_name": "plantnexus-aps-developer-kit",
+    "registry_policy": "REPOSITORY_CI_APPEND_ONLY_CONTENT_ADDRESSED",
+    "remote_publication": false,
+    "reproducible": true
+  },
+  "versions": {
+    "developer_kit": "1.0.0",
+    "runtime": "0.1.0",
+    "application": "0.0.0",
+    "core": "0.0.0",
+    "extension_sdk": "1.0.0",
+    "extension_tooling": "1.0.0",
+    "enterprise_template": "1.0.0",
+    "headless_api": "headless-http.v1",
+    "schema_set": "2.10.0",
+    "database": "0009_host_authorization_audit",
+    "plugin_registry": "plugin-registry.v1",
+    "spec": "0.3.0",
+    "python": "3.12"
+  },
+  "compatibility": {
+    "automatic_upgrade": false,
+    "selection": "EXACT_MATRIX_ONLY",
+    "supported_combinations": [
+      {
+        "combination_id": "kit-1.0.0-runtime-0.1.0-sdk-1.0.0",
+        "developer_kit": "1.0.0",
+        "runtime": "0.1.0",
+        "extension_sdk": "1.0.0",
+        "extension_tooling": "1.0.0",
+        "enterprise_template": "1.0.0",
+        "status": "SUPPORTED_ENGINEERING"
+      }
+    ],
+    "upgrade_from": [
+      {
+        "developer_kit": "0.0.0-not-published",
+        "runtime": "0.1.0",
+        "extension_sdk": "1.0.0",
+        "status": "SYNTHETIC_UNPUBLISHED_REPLAY_ONLY",
+        "explicit_opt_in_required": true
+      }
+    ]
+  },
+  "support": {
+    "owner": "PlantNexus APS Release Engineering",
+    "channel": "ENGINEERING_CANDIDATE",
+    "current_supported_kit": "1.0.0",
+    "supported_predecessor_count": 0,
+    "deprecated_versions": [],
+    "production_sla": false,
+    "customer_upgrade_authority": false,
+    "retire_only_in_future_version": true
+  },
+  "signing": {
+    "state": "UNSIGNED_ENGINEERING_CANDIDATE",
+    "signature_present": false,
+    "signable_input": "CANONICAL_MANIFEST_AND_SHA256_SIDECAR",
+    "approved_external_key": false,
+    "public_promotion_allowed": false,
+    "production_promotion_allowed": false
+  },
+  "tool_dependencies": {
+    "jsonschema": "4.25.1",
+    "jsonschema-specifications": "2025.9.1",
+    "referencing": "0.37.0",
+    "attrs": "26.1.0",
+    "rpds-py": "2026.6.3"
+  },
+  "license_policy": {
+    "allowed_identifiers": [
+      "BSD-3-Clause",
+      "LicenseRef-PlantNexus-Internal",
+      "LicenseRef-PlantNexus-Synthetic-Reference",
+      "MIT",
+      "PSF-2.0"
+    ],
+    "reviewed_expressions": {
+      "aps-developer-kit-tools": "LicenseRef-PlantNexus-Internal",
+      "aps-extension-sdk": "LicenseRef-PlantNexus-Internal",
+      "attrs": "MIT",
+      "enterprise-extension-template": "LicenseRef-PlantNexus-Internal",
+      "example-alpha-aps-extension": "LicenseRef-PlantNexus-Synthetic-Reference",
+      "example-beta-aps-extension": "LicenseRef-PlantNexus-Synthetic-Reference",
+      "jsonschema": "MIT",
+      "jsonschema-specifications": "MIT",
+      "plantnexus-aps-runtime": "LicenseRef-PlantNexus-Internal",
+      "referencing": "MIT",
+      "rpds-py": "MIT"
+    },
+    "unknown_license_action": "FAIL_RELEASE",
+    "repository_public_license_present": false
+  },
+  "boundaries": {
+    "canonical_json_only": true,
+    "core_source_modified": false,
+    "demo_included": false,
+    "enterprise_extension_runs_in_runtime_only": true,
+    "external_registry": false,
+    "production_authorized": false,
+    "real_enterprise_rule_certified": false
+  }
+}

@@ -11,13 +11,21 @@ last_reviewed: 2026-09-08
 
 # Provenance 与版本规则
 
+## TASK-P8-15 Developer Kit release lineage
+
+Developer Kit `1.0.0`形成独立content identity：release manifest绑定exact code commit、Runtime `0.1.0` archive SHA-256/release fingerprint、SDK `1.0.0` wheel、Tooling `1.0.0` wheel、Template `1.0.0` archive、Alpha/Beta synthetic Extension wheel、compatibility matrix、Kit lock、Core source hash inventory、tool dependency hash lock、文档、support/signing policy、CycloneDX SBOM与license report。每个payload具有大小和SHA-256，checksum覆盖manifest与全部payload，外层ZIP再以SHA-256进入append-only registry；相同输入双构建必须产生逐字相同bytes。
+
+当前唯一支持组合为`Kit 1.0.0 / Runtime 0.1.0 / SDK 1.0.0 / Tooling 1.0.0 / Template 1.0.0`，但Runtime SemVer不能替代其archive digest/code commit。P8-14的`0.0.0-not-published`项目bytes保持不变，只登记为synthetic/unpublished replay predecessor；从该状态迁移必须explicit opt-in、relock并重新conform，不能由Core/Runtime更新自动改变企业项目。Unknown/mixed/floating组合无有效lineage。
+
+工程签名状态是`UNSIGNED_ENGINEERING_CANDIDATE`；manifest/checksum/sidecar仅是可签输入，public/Production因缺失外部PKI authority以`KIT_SIGNATURE_REQUIRED`拒绝。`PlantNexus APS Release Engineering`只拥有repository/CI工程发行责任。首个正式编号Kit没有上一正式版本可回退，当前rollback只保留/撤回候选并恢复P8-14 synthetic项目锁；不得伪造历史支持链。
+
 ## TASK-P8-13 Runtime Extension resolution lineage
 
 Runtime Extension identity拆为catalog fingerprint、SDK权威Registry resolution fingerprint、每个Extension ID/version/artifact digest/manifest fingerprint/config fingerprint/signature key ID及最终Extension-set fingerprint；HMAC secret、document path、implementation object和payload不进入identity。最终Runtime composition fingerprint同时绑定上述Extension-set与既有Runtime/Core/Schema/Policy/Limits/Solver/Validator，因此相同服务端输入的API和Worker必须产生逐字相同descriptor。
 
 P8-13的四份机器artifact分别保存十项主检查、七项resolved contribution、13项fail-closed负例/边界与threshold-null工程耗时；`code_commit`在clean exact SHA上绑定提交。P8-12历史checker改为只在其固定关闭SHA `4d37dba068c86230f6009820d6cbc7ff10a73495`重算原Task scope和Core/API/migration/Schema/runtime/dependency bytes，从而既不把P8-13合法后继误报为P8-12漂移，也不改写历史证据。
 
-该lineage只证明服务端本地startup resolution和调用边界。Runtime `0.1.0`未因源码能力自动发布新artifact，P8-09发布manifest仍为default-empty；真实Enterprise artifact、PKI/attestation、Developer Kit identity、企业升级和完整PlanningRun消费证据仍分别由P8-14～16形成。
+该lineage只证明服务端本地startup resolution和调用边界。Runtime `0.1.0`未因源码能力自动改写SemVer，P8-09发布manifest仍为default-empty；P8-15已在Kit层绑定其exact artifact并验证synthetic Extension组合。真实Enterprise artifact、PKI/attestation、企业升级和完整PlanningRun消费证据仍须另行形成。
 
 ## TASK-P8-12 Extension SDK contract lineage
 

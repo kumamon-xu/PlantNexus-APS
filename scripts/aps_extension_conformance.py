@@ -3,7 +3,9 @@
 from __future__ import annotations
 
 import argparse
+import json
 from pathlib import Path
+import re
 from tempfile import TemporaryDirectory
 from typing import Sequence
 
@@ -15,9 +17,11 @@ from aps_extension_tooling.conformance import (
 )
 from aps_extension_tooling.packaging import write_artifact
 from aps_extension_tooling.project import ConformanceError
+from aps_extension_tooling.project import DEVELOPER_KIT_VERSION, RUNTIME_VERSION
 
 
 ROOT = Path(__file__).resolve().parents[1]
+_DIGEST = re.compile(r"sha256:([0-9a-f]{64})")
 
 
 def _write_report(path: Path | None, report: dict[str, object]) -> None:
@@ -25,11 +29,57 @@ def _write_report(path: Path | None, report: dict[str, object]) -> None:
         write_artifact(path, canonical_json_bytes(report) + b"\n")
 
 
+def _core_digests(path: Path | None) -> frozenset[str]:
+    if path is None:
+        return frozenset()
+    try:
+        document = json.loads(path.read_text(encoding="utf-8"))
+        entries = document["entries"]
+    except (OSError, UnicodeDecodeError, json.JSONDecodeError, KeyError, TypeError) as error:
+        raise ConformanceError(
+            "EXT_PROJECT_INVALID",
+            field="core_source_inventory",
+            message="Core source inventory is unavailable or malformed",
+        ) from error
+    if (
+        not isinstance(document, dict)
+        or document.get("inventory_version") != "aps-core-source-hash-inventory.v1"
+        or not isinstance(entries, list)
+    ):
+        raise ConformanceError(
+            "EXT_PROJECT_INVALID",
+            field="core_source_inventory",
+            message="Core source inventory version or entries are invalid",
+        )
+    result: set[str] = set()
+    for entry in entries:
+        digest = entry.get("sha256") if isinstance(entry, dict) else None
+        match = _DIGEST.fullmatch(digest) if isinstance(digest, str) else None
+        if match is None:
+            raise ConformanceError(
+                "EXT_PROJECT_INVALID",
+                field="core_source_inventory",
+                message="Core source inventory digest is invalid",
+            )
+        result.add(match.group(1))
+    if not result:
+        raise ConformanceError(
+            "EXT_PROJECT_INVALID",
+            field="core_source_inventory",
+            message="Core source inventory is empty",
+        )
+    return frozenset(result)
+
+
 def _parser() -> argparse.ArgumentParser:
     parser = argparse.ArgumentParser(
         description="Scaffold and verify standalone APS Enterprise Extensions"
     )
     parser.add_argument("--root", type=Path, default=ROOT)
+    parser.add_argument("--sdk-wheel", type=Path)
+    parser.add_argument("--core-source-inventory", type=Path)
+    parser.add_argument("--runtime-version", default=RUNTIME_VERSION)
+    parser.add_argument("--developer-kit-version", default=DEVELOPER_KIT_VERSION)
     subparsers = parser.add_subparsers(dest="command", required=True)
 
     scaffold = subparsers.add_parser("scaffold")
@@ -63,6 +113,12 @@ def main(argv: Sequence[str] | None = None) -> int:
     args = _parser().parse_args(argv)
     root = args.root.resolve()
     try:
+        sdk_wheel_path = args.sdk_wheel.resolve() if args.sdk_wheel else None
+        core_digests = _core_digests(
+            args.core_source_inventory.resolve()
+            if args.core_source_inventory
+            else None
+        )
         if args.command == "scaffold":
             template = (
                 args.template.resolve()
@@ -80,12 +136,20 @@ def main(argv: Sequence[str] | None = None) -> int:
                 repository_url=args.repository_url,
                 license_expression=args.license_expression,
                 source_commit=args.source_commit,
+                sdk_wheel_path=sdk_wheel_path,
+                runtime_version=args.runtime_version,
+                developer_kit_version=args.developer_kit_version,
+                forbidden_core_digests=core_digests,
             )
             result = conform_project(
                 project_root,
                 repository_root=root,
                 output_directory=None,
                 clean_install=not args.skip_clean_install,
+                sdk_wheel_path=sdk_wheel_path,
+                expected_runtime_version=args.runtime_version,
+                expected_developer_kit_version=args.developer_kit_version,
+                forbidden_core_digests=core_digests,
             )
             report = {
                 "report_version": "enterprise-extension-scaffold-report.v1",
@@ -102,6 +166,10 @@ def main(argv: Sequence[str] | None = None) -> int:
                 repository_root=root,
                 output_directory=args.output.resolve() if args.output else None,
                 clean_install=not args.skip_clean_install,
+                sdk_wheel_path=sdk_wheel_path,
+                expected_runtime_version=args.runtime_version,
+                expected_developer_kit_version=args.developer_kit_version,
+                forbidden_core_digests=core_digests,
             )
             report = result.report
         else:
@@ -111,6 +179,10 @@ def main(argv: Sequence[str] | None = None) -> int:
                     repository_root=root,
                     output_directory=args.output.resolve() if args.output else None,
                     clean_install=not args.skip_clean_install,
+                    sdk_wheel_path=sdk_wheel_path,
+                    expected_runtime_version=args.runtime_version,
+                    expected_developer_kit_version=args.developer_kit_version,
+                    forbidden_core_digests=core_digests,
                 )
                 for project in args.project
             )

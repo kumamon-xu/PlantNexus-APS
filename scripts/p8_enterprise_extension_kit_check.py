@@ -35,6 +35,7 @@ from aps_extension_tooling.project import (
 TASK_ID = "TASK-P8-14"
 TEST_ID = "TEST-P8-ENTERPRISE-EXTENSION-KIT-001"
 DIFF_BASE = "2682a2235f33d37cc909a1ad8ca3c52a6dffab05"
+EVIDENCE_SHA = "d0bf00da4af0f73befd2e9c833ffd837c63cedca"
 REPORT_VERSION = "p8-enterprise-extension-kit-report.v1"
 TEMPLATE_MANIFEST_VERSION = "enterprise-extension-template-manifest.v1"
 DEPENDENCY_REPORT_VERSION = "enterprise-extension-dependency-scan.v1"
@@ -246,24 +247,24 @@ def _negative_matrix(
 
 def _changed_paths(root: Path) -> tuple[str, ...]:
     completed = subprocess.run(
-        ["git", "diff", "--name-only", DIFF_BASE, "--"],
+        ["git", "diff", "--name-only", DIFF_BASE, EVIDENCE_SHA, "--"],
         cwd=root,
         capture_output=True,
         text=True,
         check=False,
     )
     _expect(completed.returncode == 0, "Task diff could not be inspected")
-    untracked = subprocess.run(
-        ["git", "ls-files", "--others", "--exclude-standard"],
+    ancestry = subprocess.run(
+        ["git", "merge-base", "--is-ancestor", EVIDENCE_SHA, "HEAD"],
         cwd=root,
         capture_output=True,
         text=True,
         check=False,
     )
-    _expect(untracked.returncode == 0, "untracked paths could not be inspected")
+    _expect(ancestry.returncode == 0, "P8-14 evidence SHA is not an ancestor")
     paths = {
         line.strip().replace("\\", "/")
-        for line in (completed.stdout + "\n" + untracked.stdout).splitlines()
+        for line in completed.stdout.splitlines()
         if line.strip()
     }
     return tuple(sorted(paths))
@@ -280,6 +281,7 @@ def _scope_check(root: Path) -> dict[str, Any]:
     _expect(not forbidden, "Task modified a frozen Core/Runtime/Schema/Demo boundary")
     return {
         "diff_base": DIFF_BASE,
+        "evidence_sha": EVIDENCE_SHA,
         "changed_path_count": len(paths),
         "forbidden_changed_path_count": 0,
         "core_source_changed": False,

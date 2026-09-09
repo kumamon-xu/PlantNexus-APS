@@ -11,6 +11,12 @@ last_reviewed: 2026-09-07
 
 # Operations 索引与形成边界
 
+## TASK-P8-15 Developer Kit工程发行
+
+Developer Kit `1.0.0`已通过repository/CI内的append-only content-addressed registry形成未签名工程候选，精确锁定同一code commit的Runtime `0.1.0`归档、SDK/Tooling/Template `1.0.0`、两个synthetic Extension和供应链/兼容文档。CI在P8-09 Runtime步骤之后执行双构建、strict archive/lock/checksum、clean安装和包内CLI、旧项目重放、显式升级/no-auto-upgrade、SBOM/license/SCA与rollback检查，并上传`build/developer-kit/**`。
+
+组装、安装、支持、升级和撤回流程见[`developer-kit-release-upgrade-and-rollback.md`](developer-kit-release-upgrade-and-rollback.md)。当前`UNSIGNED_ENGINEERING_CANDIDATE`只可用于工程验证；外部签名、远端registry、Git tag/release、Production promotion、真实企业Extension、长期SLA/on-call和客户升级authority均未形成。
+
 ## P8 Headless 非生产运维闭环
 
 `p8-operations-compose-v1`是TASK-P8-10批准的唯一靶场：本机Docker或GitHub-hosted Linux runner、Runtime environment=`test`、data plane=`SIMULATION`、synthetic-only、无external ingress、无Demo/第三方/Production连接。它从P8-09 exact Runtime输入构建`0.1.0`镜像，并启动PostgreSQL、Redis、migration、API、Solver Worker、Validator probe、内部observer及last-known-good rollback slot；企业Extension集合仍严格为空。
@@ -31,9 +37,9 @@ P8-09形成Runtime `0.1.0`的确定性、内容寻址工程distribution及机器
 
 P8-05形成一个strict JSON PlanningRun Solver task、durable job binding/lease/heartbeat、append-only result checkpoint和same-work crash recovery。Worker调用既有Global CP-SAT与fresh Validator，只有validated `COMPLETED`结果才在ACK前应用为单一`READY_FOR_REVIEW` ScheduleVersion。当前通过SQLite、直接task执行和synthetic工程profile验证；尚无Production service composition、Redis/PostgreSQL outage、多host scanner、dashboard/alert、backup/restore、capacity或SLA结论。
 
-## P8 planned operations outcome
+## P8 remaining operations outcome
 
-P8-09/10将来负责可复现Headless Runtime distribution、版本/SBOM/checksum、migration bundle、非Production部署、readiness、metrics/logs/traces/alerts、backup/restore、rollback和operator runbook；P8-12～15形成Extension SDK/Registry、企业模板和Developer Kit兼容发布，P8-16/17再分别形成synthetic集成Gate与独立审计。当前这些能力全部是planned，不存在Runtime/SDK/Kit release、Production package、deployment、on-call或SLA。
+P8-09/10已形成可复现Headless Runtime distribution及非Production运维演练，P8-12～15已形成Extension SDK/Registry、企业模板和Developer Kit兼容工程发行；P8-16/17仍分别负责synthetic集成Gate与独立审计。当前不存在已签Production package、Production deployment、真实on-call或SLA。
 
 运行拓扑固定为APS Runtime中的API、独立Solver Worker、formal Validator、受控Extension loader、APS自有数据库及broker；可选Frontend可以缺席。API/Worker必须加载同一Extension fingerprint。宿主和Extension不共享数据库或直接投递内部queue，第三方连接器和结果展示仍由宿主负责。Plugin artifact只可在build/deploy/startup经allow-list、digest/signature、compatibility和SBOM/license校验装载，禁止请求级上传/下载/安装。本次没有修改部署配置、代码、测试、依赖或环境。
 

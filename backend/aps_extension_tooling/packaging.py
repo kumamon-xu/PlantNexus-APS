@@ -60,6 +60,7 @@ def _wheel(
     version: str,
     files: dict[str, bytes],
     metadata: str,
+    generator: str = "plantnexus-aps-extension-tooling-p8-14",
 ) -> tuple[str, bytes]:
     normalized = re.sub(r"[-_.]+", "_", distribution_name)
     dist_info = f"{normalized}-{version}.dist-info"
@@ -67,7 +68,7 @@ def _wheel(
     wheel_files[f"{dist_info}/METADATA"] = metadata.encode("utf-8")
     wheel_files[f"{dist_info}/WHEEL"] = (
         "Wheel-Version: 1.0\n"
-        "Generator: plantnexus-aps-extension-tooling-p8-14\n"
+        f"Generator: {generator}\n"
         "Root-Is-Purelib: true\n"
         "Tag: py3-none-any\n"
     ).encode("utf-8")
@@ -153,6 +154,40 @@ def extension_wheel_for_source(
     )
 
 
+def tooling_wheel(
+    repository_root: Path,
+    *,
+    developer_kit_version: str,
+) -> tuple[str, bytes]:
+    """Build the exact standalone conformance-tooling wheel for one Kit."""
+
+    package_root = repository_root / "backend/aps_extension_tooling"
+    files = {
+        path.relative_to(package_root.parent).as_posix(): path.read_bytes().replace(
+            b"\r\n", b"\n"
+        )
+        for path in sorted(package_root.rglob("*.py"))
+        if path.is_file() and "__pycache__" not in path.parts
+    }
+    metadata = (
+        "Metadata-Version: 2.3\n"
+        "Name: aps-developer-kit-tools\n"
+        f"Version: {developer_kit_version}\n"
+        "Summary: Locked PlantNexus APS Enterprise Extension conformance tools\n"
+        "Requires-Python: >=3.12,<3.13\n"
+        f"Requires-Dist: aps-extension-sdk (=={SDK_API_VERSION})\n"
+        "Requires-Dist: plantnexus-aps (==0.0.0)\n"
+        "Requires-Dist: jsonschema (==4.25.1)\n"
+    )
+    return _wheel(
+        distribution_name="aps-developer-kit-tools",
+        version=developer_kit_version,
+        files=files,
+        metadata=metadata,
+        generator="plantnexus-aps-developer-kit-builder-p8-15",
+    )
+
+
 def project_archive(root: Path) -> bytes:
     files: dict[str, bytes] = {}
     for path in sorted(root.rglob("*")):
@@ -177,5 +212,6 @@ __all__ = [
     "extension_wheel_for_source",
     "project_archive",
     "sdk_wheel",
+    "tooling_wheel",
     "write_artifact",
 ]

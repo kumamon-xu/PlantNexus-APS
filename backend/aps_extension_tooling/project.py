@@ -402,11 +402,16 @@ def _validate_identity(document: dict[str, Any]) -> None:
         )
 
 
-def _validate_versions(document: dict[str, Any]) -> None:
+def _validate_versions(
+    document: dict[str, Any],
+    *,
+    expected_runtime_version: str,
+    expected_developer_kit_version: str,
+) -> None:
     expected = {
         "sdk_api_version": SDK_API_VERSION,
-        "runtime_version": RUNTIME_VERSION,
-        "developer_kit_version": DEVELOPER_KIT_VERSION,
+        "runtime_version": expected_runtime_version,
+        "developer_kit_version": expected_developer_kit_version,
     }
     for field, value in expected.items():
         if document.get(field) != value:
@@ -417,7 +422,13 @@ def _validate_versions(document: dict[str, Any]) -> None:
             )
 
 
-def _validate_pyproject(root: Path, document: dict[str, Any]) -> None:
+def _validate_pyproject(
+    root: Path,
+    document: dict[str, Any],
+    *,
+    expected_runtime_version: str,
+    expected_developer_kit_version: str,
+) -> None:
     path = root / "pyproject.toml"
     try:
         project_file = tomllib.loads(path.read_text(encoding="utf-8"))
@@ -494,8 +505,8 @@ def _validate_pyproject(root: Path, document: dict[str, Any]) -> None:
         "contract-version": PROJECT_CONTRACT_VERSION,
         "project-id": document["project_id"],
         "sdk-api-version": SDK_API_VERSION,
-        "runtime-version": RUNTIME_VERSION,
-        "developer-kit-version": DEVELOPER_KIT_VERSION,
+        "runtime-version": expected_runtime_version,
+        "developer-kit-version": expected_developer_kit_version,
         "manifest": document["manifest_path"],
     }
     if plantnexus != expected_tool:
@@ -572,6 +583,7 @@ def _source_scan(
     tests_root: Path,
     package_name: str,
     core_root: Path,
+    forbidden_core_digests: frozenset[str] = frozenset(),
 ) -> tuple[tuple[Path, ...], tuple[Path, ...], SourceScan]:
     package_root = source_root / package_name
     if not package_root.is_dir() or not (package_root / "__init__.py").is_file():
@@ -592,7 +604,7 @@ def _source_scan(
             field="source_root",
             message="source_root contains Python modules outside the declared package",
         )
-    core_hashes = {
+    core_hashes = set(forbidden_core_digests) | {
         sha256(path.read_bytes().replace(b"\r\n", b"\n")).hexdigest()
         for path in core_root.rglob("*.py")
         if path.is_file() and path.stat().st_size > 100
@@ -806,6 +818,9 @@ def load_project(
     *,
     repository_root: Path,
     expected_sdk_wheel_digest: str | None = None,
+    expected_runtime_version: str = RUNTIME_VERSION,
+    expected_developer_kit_version: str = DEVELOPER_KIT_VERSION,
+    forbidden_core_digests: frozenset[str] = frozenset(),
 ) -> tuple[EnterpriseExtensionProject, SourceScan]:
     """Load and validate a closed Enterprise Extension project contract."""
 
@@ -822,8 +837,17 @@ def load_project(
             message="only enterprise-extension-project.v1 is supported",
         )
     _validate_identity(document)
-    _validate_versions(document)
-    _validate_pyproject(root, document)
+    _validate_versions(
+        document,
+        expected_runtime_version=expected_runtime_version,
+        expected_developer_kit_version=expected_developer_kit_version,
+    )
+    _validate_pyproject(
+        root,
+        document,
+        expected_runtime_version=expected_runtime_version,
+        expected_developer_kit_version=expected_developer_kit_version,
+    )
     manifest_path = _relative(
         root, _text(document, "manifest_path"), field="manifest_path", directory=False
     )
@@ -892,7 +916,7 @@ def load_project(
             message="manifest identity or provenance differs from the project contract",
         )
     if not manifest.runtime_compatibility.contains(
-        SemanticVersion.parse(RUNTIME_VERSION)
+        SemanticVersion.parse(expected_runtime_version)
     ):
         reject(
             ExtensionToolingErrorCode.VERSION_INCOMPATIBLE,
@@ -915,6 +939,7 @@ def load_project(
         tests_root=tests_root,
         package_name=package_name,
         core_root=repository_root / "backend/app",
+        forbidden_core_digests=forbidden_core_digests,
     )
     project = EnterpriseExtensionProject(
         root=root,
@@ -926,8 +951,8 @@ def load_project(
         license_expression=_text(document, "license_expression"),
         source_commit=_text(document, "source_commit"),
         sdk_api_version=SDK_API_VERSION,
-        runtime_version=RUNTIME_VERSION,
-        developer_kit_version=DEVELOPER_KIT_VERSION,
+        runtime_version=expected_runtime_version,
+        developer_kit_version=expected_developer_kit_version,
         manifest_path=manifest_path,
         configuration_path=configuration_path,
         configuration_schema_path=configuration_schema_path,

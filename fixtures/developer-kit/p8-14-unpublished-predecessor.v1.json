@@ -1,0 +1,21 @@
+{
+  "fixture_version": "aps-developer-kit-predecessor-replay.v1",
+  "identity": "p8-14-synthetic-unpublished-predecessor",
+  "published": false,
+  "synthetic": true,
+  "support_status": "REPLAY_ONLY_NOT_A_SUPPORTED_RELEASE",
+  "source_task": "TASK-P8-14",
+  "source_commit": "d0bf00da4af0f73befd2e9c833ffd837c63cedca",
+  "versions": {
+    "developer_kit": "0.0.0-not-published",
+    "runtime": "0.1.0",
+    "extension_sdk": "1.0.0"
+  },
+  "project_paths": [
+    "examples/enterprise-extensions/alpha-resource-tag",
+    "examples/enterprise-extensions/beta-priority-policy"
+  ],
+  "automatic_upgrade": false,
+  "explicit_opt_in_required": true,
+  "production_authorized": false
+}

@@ -13,7 +13,7 @@ last_reviewed: 2026-09-09
 
 本目录只收录适合随公开 Git 仓库发布的核心项目文档。开发过程记录、Task Card、阶段证据、机器报告、临时草稿、截图、测试输出和下载制品不属于公开文档，应留在被忽略的本地目录或 `build/`。
 
-项目当前已形成P0～P6研发能力，P7真实数据校准暂缓，P8 Headless产品化已推进到durable canonical ingress、PlanningRun、Solver Worker、单一Runtime组合、五项公开HTTP operation、Test identity/authorization/audit、Runtime工程分发与非Production运维演练。产品边界只接收宿主平台提交的versioned canonical JSON，不在APS内直接建设ERP/MES/WMS/CAM连接器；宿主与可选独立Frontend消费同一API。P8-11另形成`0.1.0`静态Frontend工程候选；P8-12形成SDK `1.0.0`合同，P8-13形成服务端本地allow-list loader、确定性Registry、六类受控adapter及API/Worker共享fingerprint。P8-14进一步提供不含Core副本的独立项目模板、确定性SDK-only构建/clean-install/conformance工具和两份synthetic Enterprise Extension示例；企业适配必须使用自己的owner/repository/license并锁定SDK/Runtime版本，禁止复制/修改Core或自动升级。P8-09的Runtime `0.1.0`仍是确定性、内容寻址工程distribution：Application/Core=`0.0.0`、API=`headless-http.v1`、Schema=`2.10.0`、database head=`0009_host_authorization_audit`。上述候选都不代表已签Production部署或已发布Developer Kit；真实host IdP/RBAC/gateway、客户Extension、Kit组合、release authority、容量、SLA、行业定制与UAT仍未形成。能力声明以[能力矩阵](core/capability-matrix.md)和对应合同为准。
+项目当前已形成P0～P6研发能力，P7真实数据校准暂缓，P8 Headless产品化已推进到durable canonical ingress、PlanningRun、Solver Worker、单一Runtime组合、五项公开HTTP operation、Test identity/authorization/audit、Runtime工程分发与非Production运维演练。产品边界只接收宿主平台提交的versioned canonical JSON，不在APS内直接建设ERP/MES/WMS/CAM连接器；宿主与可选独立Frontend消费同一API。P8-11形成`0.1.0`静态Frontend工程候选；P8-12～14形成SDK `1.0.0`、服务端Registry/loader、独立项目模板、确定性conformance工具及两份synthetic Enterprise Extension。P8-15进一步组装首个Developer Kit `1.0.0`工程候选，精确锁定Runtime `0.1.0` artifact/digest、SDK/Tooling/Template `1.0.0`、示例、文档、兼容矩阵、SBOM/license和升级/回滚合同；原P8-14项目仍保持`0.0.0-not-published`，证明Runtime/Core发布不会自动改写企业锁。该Kit明确为`UNSIGNED_ENGINEERING_CANDIDATE`，不代表外部签名、Production部署、真实客户Extension、P7现实校准、容量/SLA或UAT。能力声明以[能力矩阵](core/capability-matrix.md)和对应合同为准。
 
 ## 核心入口
 
@@ -35,6 +35,7 @@ last_reviewed: 2026-09-09
 | 前端 | [Frontend 文档](frontend/README.md) | 工作台、双语、命令和浏览器边界 |
 | 运维与安全 | [Operations 索引](operations/README.md) | 安全、可观测性、审计和 worker 可靠性 |
 | 发布与安装 | [Runtime 发布、版本与回退合同](operations/release-and-versioning.md) | 版本矩阵、确定性distribution、SBOM、preflight、升级与回退 |
+| Developer Kit | [Developer Kit 发布、升级与回滚](operations/developer-kit-release-upgrade-and-rollback.md) | Kit `1.0.0`内容身份、兼容矩阵、显式升级、支持和签名边界 |
 
 ## 按角色阅读
 

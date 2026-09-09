@@ -13,7 +13,7 @@ last_reviewed: 2026-09-09
 
 ## 目标
 
-不同企业可在不复制、不fork、不修改`aps-core`的前提下实现业务适配，同时保留Headless API、canonical JSON、正式Validator、不可变版本、权限和审计的统一语义。TASK-P8-12已形成SDK `1.0.0`合同、Python skeleton及机器carrier；TASK-P8-13形成Runtime loader、确定性Registry和六类受控调用adapter；TASK-P8-14形成独立企业项目模板、确定性打包/clean-install/conformance工具及两个synthetic示例。Developer Kit最终组合和真实企业规则仍未形成。
+不同企业可在不复制、不fork、不修改`aps-core`的前提下实现业务适配，同时保留Headless API、canonical JSON、正式Validator、不可变版本、权限和审计的统一语义。TASK-P8-12已形成SDK `1.0.0`合同，TASK-P8-13形成Runtime loader与Registry，TASK-P8-14形成独立项目模板、conformance工具和两个synthetic示例；TASK-P8-15现将其与exact Runtime release组装为Developer Kit `1.0.0`工程候选。真实企业规则、外部签名和Production批准仍未形成。
 
 ## TASK-P8-12 formed SDK boundary
 
@@ -39,7 +39,15 @@ SDK v1不暴露privileged service；所有输入先由Runtime裁剪并深度冻�
 
 Alpha和Beta示例是两个独立项目：Alpha只提供resource-tag Constraint及不同模块中的Validation Rule；Beta提供Planning Rule、Core目标后的integer tie-break Objective、保持五类受保护绑定的Replan Policy和Plugin Registry。conformance对每个SPI执行两次、验证独立Validation正反输入和Registry一致性，并验证两个项目可组成确定性Extension set。示例事实、标签和数值只属synthetic工程证据。
 
-使用方式、项目布局、拒绝条件、调试、交付和升级见[Enterprise Extension开发指南](enterprise-extension-development-guide.md)。P8-14产物仍不是Developer Kit：它使用`0.0.0-not-published`占位，P8-15必须另行把精确Runtime、SDK、模板、工具、示例、文档和供应链证据共同锁定后才能发布Kit版本。
+使用方式、项目布局、拒绝条件、调试、交付和升级见[Enterprise Extension开发指南](enterprise-extension-development-guide.md)。P8-14源项目继续使用`0.0.0-not-published`占位且不得被自动改写；P8-15只在临时组装输入中显式relock副本，从而保留历史重放与no-auto-upgrade证据。
+
+## TASK-P8-15 Developer Kit发布边界
+
+Developer Kit `1.0.0`将Runtime `0.1.0`的exact archive digest/release fingerprint/code commit、SDK `1.0.0`、Tooling `1.0.0`、Template `1.0.0`、两个synthetic Extension、五份开发/运维文档和供应链metadata组合成单一确定性ZIP。包内compatibility matrix和Kit lock同时绑定Application/Core、Headless API、Schema、database、Registry、Python与tool dependency hashes；逐文件checksum、Core source hash inventory、嵌套Runtime SBOM、Kit SBOM和license report使组合可离线核对。
+
+工程registry按`version -> archive SHA-256 -> path`追加且不可覆盖。同一输入双构建必须逐字一致；同一版本的不同bytes、缺失artifact、lock/checksum/SBOM/license/signing状态漂移或unsupported组合均在安装/Runtime装载前fail closed。包内CLI可用随包SDK wheel和Core source inventory执行scaffold/check/check-set，不依赖APS源码checkout；Extension仍只在已安装Runtime内执行。
+
+支持矩阵目前只有`Kit 1.0.0 + Runtime 0.1.0 + SDK 1.0.0 + Tooling 1.0.0 + Template 1.0.0`。P8-14只作为`SYNTHETIC_UNPUBLISHED_REPLAY_ONLY`前代，不构成历史支持承诺。从它迁移需要企业owner显式relock和重新验证；新Core/Runtime只产生新Kit候选，不推送或改写企业仓库。当前release owner只负责repository/CI工程channel，签名状态为`UNSIGNED_ENGINEERING_CANDIDATE`；public/Production仍因没有外部PKI authority而default-deny。
 
 ## 产品分层
 
@@ -116,19 +124,19 @@ Extension异常、timeout、非法返回、未声明capability或版本不兼容
 | Extension version | 企业artifact及其配置版本 |
 | Developer Kit version | 一组通过共同兼容Gate的不可变交付组合 |
 
-P8-12 compatibility carrier固定SDK `1.0.0`、manifest v1、Registry v1、六类point、Core目标/Replan/Validator封闭策略和SemVer/deprecation规则。未来Developer Kit compatibility manifest还必须列出精确Runtime/Core/Extension、artifact digest、schema/OpenAPI versions、Python/dependency lock和支持窗口。破坏性SDK变更提升major；additive接口仍需conformance与旧Extension回放；bugfix不得改变已声明业务语义。
+P8-12 compatibility carrier固定SDK `1.0.0`、manifest v1、Registry v1、六类point、Core目标/Replan/Validator封闭策略和SemVer/deprecation规则。P8-15 compatibility manifest现列出精确Runtime/Core/SDK/Tooling/Template、artifact digest、Schema/API、Python/dependency lock和支持窗口。破坏性SDK变更提升major；additive接口仍需conformance与旧Extension回放；bugfix不得改变已声明业务语义。
 
 ## Developer Kit 交付清单
 
-- 可复现Runtime artifact/image、checksum与SBOM；
+- 可复现Runtime artifact、checksum与嵌套SBOM；
 - Extension SDK包、API参考和compatibility manifest；
 - 独立Enterprise Extension项目模板，不包含Core源码副本；
 - conformance CLI、unit/integration harness和determinism/import-boundary checks；
 - 至少两个相互独立的示例Extension及duplicate/incompatible/invalid负例；
 - 本地开发、调试、打包、发布、升级、回滚和弃用文档；
-- exact lockfiles、license/SCA结果和Developer Kit release manifest。
+- exact lockfiles、license/SCA结果、Core source inventory和Developer Kit release manifest。
 
-发布新Core或Runtime不触发企业项目升级。平台发布新的Developer Kit候选并运行兼容Gate；企业项目在自己的分支和发布窗口显式选择是否迁移。旧Kit在声明的支持窗口内继续可重建和维护，支持终止或安全例外必须可审计。
+P8-15已把上述清单组装为`1.0.0`工程候选并在clean环境验证包内CLI。发布新Core或Runtime不触发企业项目升级；平台只能发布新的Developer Kit候选并运行兼容Gate，企业项目在自己的变更和发布窗口显式选择是否迁移。旧Kit在声明的支持窗口内继续可重建和维护，支持终止或安全例外必须可审计。
 
 ## 治理与就绪边界
 

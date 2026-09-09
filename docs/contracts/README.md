@@ -11,17 +11,23 @@ last_reviewed: 2026-09-08
 
 # 合同文档索引
 
+## TASK-P8-15 Developer Kit release contract
+
+[APS Extension SDK与Developer Kit合同](extension-sdk-and-developer-kit.md)现增加首个Developer Kit `1.0.0`工程发行合同：精确组合为Runtime `0.1.0` exact artifact/code commit、SDK `1.0.0`、Extension Tooling `1.0.0`和Enterprise Template `1.0.0`。`aps-developer-kit-release-manifest.v1`、compatibility matrix、Kit lock、逐文件checksum、Core source hash inventory、CycloneDX SBOM、license report、support/deprecation与signing request共同形成不可变identity；unknown/mixed/floating组合在安装或Runtime装载前拒绝。
+
+P8-14的`0.0.0-not-published`仍是synthetic/unpublished predecessor而不是历史正式Kit；原项目bytes不被组装器修改。迁移到`1.0.0`只能显式relock并重跑conformance，Runtime/Core新候选不得自动升级企业项目。当前channel为repository/CI内`UNSIGNED_ENGINEERING_CANDIDATE`，没有外部PKI key、GitHub Release、远端registry或Production promotion；操作顺序见[Developer Kit发布、升级与回滚](../operations/developer-kit-release-upgrade-and-rollback.md)。
+
 ## TASK-P8-12/13 Extension SDK and Runtime Registry
 
 [APS Extension SDK与Developer Kit合同](extension-sdk-and-developer-kit.md)现发布SDK `1.0.0`合同层：独立`aps_extension_sdk`公开面、Constraint/Objective/Planning Rule/Validation Rule/Replan Policy/Plugin Registry六类Protocol、递归不可变值、strict manifest/compatibility/error carrier、正反样例和机器报告。该additive carrier位于SDK package内，不改变global Schema Set `2.10.0`或任何既有Schema/OpenAPI/migration/Core/Runtime bytes。
 
-P8-13现已把SDK合同package收录进Runtime wheel，并形成受控本地loader、确定性Registry、六类调用adapter、API/Worker fingerprint parity与fail-closed readiness；它仍不是独立SDK或Developer Kit发布。企业模板、真实业务映射、Developer Kit及Production信任结论须由P8-14/15及后续Gate分别形成；宿主与Frontend继续只使用统一Headless HTTP API，不能提交Extension代码或选择插件。
+P8-13现已把SDK合同package收录进Runtime wheel，并形成受控本地loader、确定性Registry、六类调用adapter、API/Worker fingerprint parity与fail-closed readiness。P8-14形成企业模板与conformance，P8-15现形成上述精确Developer Kit工程候选；真实业务映射、签名和Production信任结论仍须由企业及后续Gate分别形成。宿主与Frontend继续只使用统一Headless HTTP API，不能提交Extension代码或选择插件。
 
 ## P8 Headless contract plan
 
 ADR-0017已固定canonical JSON为唯一外部产品输入，宿主负责第三方采集/映射/展示，APS负责验证、计划、异步运行和结果合同；宿主与可选Frontend使用同一API。[APS Headless平台集成与数据权威合同](headless-platform-integration.md)由TASK-P8-01形成人类语义基线。TASK-P8-02现以additive schema set `2.10.0`发布`canonical-ingress-request.v1`、`canonical-ingress-result.v1`、`planning-run.v1`和`headless-error-code-registry.v1`，固定identity/scope、authority/mapping、idempotency、lineage、server-owned Runtime/Extension-set resolution、既有PlanningRun状态及错误tuple；全部历史document/URN继续原义保留。
 
-ADR-0018进一步固定Extension SDK是Runtime内部SPI而非外部API。P8-02的Runtime resolution只是服务端identity/fingerprint carrier；`0.0.0-p8-contract-sample`不构成发布。TASK-P8-12已形成六类SPI、SDK manifest/compatibility/error carrier及contract-only Python skeleton；TASK-P8-13形成Runtime Registry/loader消费边界，Developer Kit仍未形成。Enterprise Extension特有数据仍须进入批准的namespaced/versioned canonical carrier，不能接受vendor payload或创建私有route。
+ADR-0018进一步固定Extension SDK是Runtime内部SPI而非外部API。P8-02的Runtime resolution只是服务端identity/fingerprint carrier；`0.0.0-p8-contract-sample`不构成发布。TASK-P8-12形成六类SPI与SDK carrier，P8-13形成Runtime Registry/loader，P8-14形成独立项目工具，P8-15形成Developer Kit `1.0.0`工程候选。Enterprise Extension特有数据仍须进入批准的namespaced/versioned canonical carrier，不能接受vendor payload或创建私有route。
 
 ## TASK-P8-02 machine contracts
 
@@ -37,7 +43,7 @@ ADR-0018进一步固定Extension SDK是Runtime内部SPI而非外部API。P8-02�
 
 ## 当前开发入口
 
-- [APS Extension SDK与Developer Kit合同](extension-sdk-and-developer-kit.md)：SDK `1.0.0`公开SPI、manifest、不可变值、错误、兼容/弃用及closed boundary；Runtime loader已由P8-13形成，Enterprise template/Kit状态仍明确未实现。
+- [APS Extension SDK与Developer Kit合同](extension-sdk-and-developer-kit.md)：SDK `1.0.0`公开SPI、manifest、不可变值、错误及closed boundary，并记录P8-15 Kit `1.0.0`精确组合、支持/弃用和显式升级合同。
 - [APS Headless 平台集成与数据权威合同](headless-platform-integration.md)：P8公共边界、参与方责任、authority/scope/idempotency/lineage、错误和Extension数据治理的人类规范基线。
 - [API 接口开发清单](api-development-checklist.md)：按当前 OpenAPI 列出全部健康、Planning Workspace 与动态重排 operation，区分路由完成、运行时适配器缺口和未提供端点。
 - [数据字段中文名称字典](data-field-dictionary.md)：完整覆盖 `canonical-records.v1` 核心业务字段的英文 key、中文名、类型与必填条件。

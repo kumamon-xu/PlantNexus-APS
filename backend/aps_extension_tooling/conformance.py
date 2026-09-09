@@ -412,6 +412,7 @@ def _write_runtime_bundle(
     results: tuple[ConformanceResult, ...],
     directory: Path,
 ) -> Path:
+    runtime_version = results[0].project.runtime_version
     compatibility = _json(
         Path(__file__).resolve().parents[1]
         / "aps_extension_sdk/contracts/samples/extension-compatibility.v1.synthetic.json",
@@ -456,7 +457,7 @@ def _write_runtime_bundle(
         entries.append(entry)
     catalog: dict[str, Any] = {
         "catalog_version": "aps-runtime-extension-catalog.v1",
-        "runtime_version": RUNTIME_VERSION,
+        "runtime_version": runtime_version,
         "sdk_api_version": SDK_API_VERSION,
         "registry_protocol_version": "plugin-registry.v1",
         "compatibility": compatibility,
@@ -601,15 +602,39 @@ def conform_project(
     repository_root: Path,
     output_directory: Path | None = None,
     clean_install: bool = True,
+    sdk_wheel_path: Path | None = None,
+    expected_runtime_version: str = RUNTIME_VERSION,
+    expected_developer_kit_version: str = DEVELOPER_KIT_VERSION,
+    forbidden_core_digests: frozenset[str] = frozenset(),
 ) -> ConformanceResult:
     """Validate, reproducibly package, clean-install, and Runtime-load one project."""
 
-    sdk_name, sdk_bytes = sdk_wheel(repository_root)
+    if sdk_wheel_path is None:
+        sdk_name, sdk_bytes = sdk_wheel(repository_root)
+    else:
+        if sdk_wheel_path.is_symlink() or not sdk_wheel_path.is_file():
+            reject(
+                ExtensionToolingErrorCode.DEPENDENCY_LOCK_INVALID,
+                field="sdk_wheel",
+                message="locked SDK wheel is unavailable",
+            )
+        sdk_name = sdk_wheel_path.name
+        sdk_bytes = sdk_wheel_path.read_bytes()
+        expected_name = f"aps_extension_sdk-{SDK_API_VERSION}-py3-none-any.whl"
+        if sdk_name != expected_name:
+            reject(
+                ExtensionToolingErrorCode.DEPENDENCY_LOCK_INVALID,
+                field="sdk_wheel",
+                message="SDK wheel name differs from the locked SDK API version",
+            )
     sdk_digest = digest_bytes(sdk_bytes)
     project, scan = load_project(
         project_root,
         repository_root=repository_root,
         expected_sdk_wheel_digest=sdk_digest,
+        expected_runtime_version=expected_runtime_version,
+        expected_developer_kit_version=expected_developer_kit_version,
+        forbidden_core_digests=forbidden_core_digests,
     )
     configuration = _configuration(project)
     fixture = _fixture(project)
@@ -646,8 +671,8 @@ def conform_project(
         "extension_version": "1.0.0",
         "sdk_api_version": SDK_API_VERSION,
         "sdk_wheel_digest": sdk_digest,
-        "runtime_version": RUNTIME_VERSION,
-        "developer_kit_version": DEVELOPER_KIT_VERSION,
+        "runtime_version": project.runtime_version,
+        "developer_kit_version": project.developer_kit_version,
         "artifact_digest": artifact_digest,
         "manifest_fingerprint": project.manifest.manifest_fingerprint,
         "dependency_lock_digest": project.dependency_lock_digest,
@@ -672,7 +697,11 @@ def conform_project(
             "trusted_in_process": True,
             "sandboxed": False,
             "production_readiness": "NOT_CLAIMED",
-            "developer_kit_release": "NOT_IMPLEMENTED_UNTIL_P8_15",
+            "developer_kit_release": (
+                "NOT_IMPLEMENTED_UNTIL_P8_15"
+                if project.developer_kit_version == DEVELOPER_KIT_VERSION
+                else "LOCKED_ENGINEERING_KIT"
+            ),
         },
         "issues": [],
     }
@@ -719,6 +748,20 @@ def conform_extension_set(
             field="extensions.extension_id",
             message="Extension set contains a duplicate identity",
         )
+    version_sets = {
+        (
+            result.project.sdk_api_version,
+            result.project.runtime_version,
+            result.project.developer_kit_version,
+        )
+        for result in results
+    }
+    if len(version_sets) != 1:
+        reject(
+            ExtensionToolingErrorCode.VERSION_INCOMPATIBLE,
+            field="extensions.versions",
+            message="Extension set mixes SDK, Runtime, or Developer Kit locks",
+        )
     if runtime_directory.exists() and any(runtime_directory.iterdir()):
         reject(
             ExtensionToolingErrorCode.PROJECT_INVALID,
@@ -731,7 +774,7 @@ def conform_extension_set(
         adapter = load_runtime_extensions(
             catalog_path,
             artifacts=tuple(result.artifact for result in results),
-            runtime_version=RUNTIME_VERSION,
+            runtime_version=results[0].project.runtime_version,
             verification_key_id=CONFORMANCE_KEY_ID,
             verification_key=_CONFORMANCE_KEY,
         )
@@ -753,7 +796,8 @@ def conform_extension_set(
         "report_version": CONFORMANCE_SET_REPORT_VERSION,
         "status": "PASS",
         "sdk_api_version": SDK_API_VERSION,
-        "runtime_version": RUNTIME_VERSION,
+        "runtime_version": results[0].project.runtime_version,
+        "developer_kit_version": results[0].project.developer_kit_version,
         "extension_ids": sorted(ids),
         "extension_count": len(results),
         "contribution_count": len(adapter.contributions),
@@ -802,6 +846,10 @@ def scaffold_project(
     repository_url: str,
     license_expression: str,
     source_commit: str,
+    sdk_wheel_path: Path | None = None,
+    runtime_version: str = RUNTIME_VERSION,
+    developer_kit_version: str = DEVELOPER_KIT_VERSION,
+    forbidden_core_digests: frozenset[str] = frozenset(),
 ) -> Path:
     """Materialize one local project without creating Git or remote repository state."""
 
@@ -822,8 +870,16 @@ def scaffold_project(
         "__LICENSE_EXPRESSION__": license_expression,
         "__SOURCE_COMMIT__": source_commit,
     }
-    sdk_name, sdk_bytes = sdk_wheel(repository_root)
-    del sdk_name
+    if sdk_wheel_path is None:
+        _, sdk_bytes = sdk_wheel(repository_root)
+    else:
+        if sdk_wheel_path.is_symlink() or not sdk_wheel_path.is_file():
+            reject(
+                ExtensionToolingErrorCode.DEPENDENCY_LOCK_INVALID,
+                field="sdk_wheel",
+                message="locked SDK wheel is unavailable",
+            )
+        sdk_bytes = sdk_wheel_path.read_bytes()
     base_values["__SDK_WHEEL_SHA256__"] = digest_bytes(sdk_bytes).removeprefix(
         "sha256:"
     )
@@ -856,6 +912,25 @@ def scaffold_project(
         for token, value in base_values.items():
             text = text.replace(token, value)
         destination.write_text(text, encoding="utf-8", newline="\n")
+    if runtime_version != RUNTIME_VERSION or developer_kit_version != DEVELOPER_KIT_VERSION:
+        _replace_tokens(
+            output_root,
+            {
+                f'"runtime_version": "{RUNTIME_VERSION}"': (
+                    f'"runtime_version": "{runtime_version}"'
+                ),
+                f'runtime-version = "{RUNTIME_VERSION}"': (
+                    f'runtime-version = "{runtime_version}"'
+                ),
+                f'"developer_kit_version": "{DEVELOPER_KIT_VERSION}"': (
+                    f'"developer_kit_version": "{developer_kit_version}"'
+                ),
+                f'developer-kit-version = "{DEVELOPER_KIT_VERSION}"': (
+                    f'developer-kit-version = "{developer_kit_version}"'
+                ),
+                f'`{DEVELOPER_KIT_VERSION}`': f'`{developer_kit_version}`',
+            },
+        )
     schema_path = output_root / "extension/configuration-contract.v1.json"
     lock_path = output_root / "requirements.lock"
     _replace_tokens(
@@ -919,6 +994,9 @@ def scaffold_project(
         output_root,
         repository_root=repository_root,
         expected_sdk_wheel_digest=digest_bytes(sdk_bytes),
+        expected_runtime_version=runtime_version,
+        expected_developer_kit_version=developer_kit_version,
+        forbidden_core_digests=forbidden_core_digests,
     )
     return output_root
 

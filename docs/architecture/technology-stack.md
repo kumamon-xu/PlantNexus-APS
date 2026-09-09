@@ -11,6 +11,14 @@ last_reviewed: 2026-09-08
 
 # 推荐技术栈与锁定规则
 
+## TASK-P8-15 Developer Kit toolchain
+
+Developer Kit `1.0.0`组装器、strict verifier、compatibility/upgrade planner和content-addressed registry只增加repository-local Python package `aps_developer_kit`，不进入Runtime wheel且不改变`pyproject.toml`或`uv.lock`。确定性ZIP、canonical JSON、SHA-256、UUID5、TOML与安全路径检查均使用Python 3.12标准库；Extension tooling wheel继续复用P8-14代码并显式依赖Runtime `0.0.0` distribution、SDK `1.0.0`和`jsonschema==4.25.1`。
+
+Kit从既有`uv.lock`提取`jsonschema 4.25.1`、`jsonschema-specifications 2025.9.1`、`referencing 0.37.0`、`attrs 26.1.0`、`rpds-py 2026.6.3`的exact版本与全部artifact SHA-256，形成包内tool requirements lock；没有新增依赖解析结果。Clean安装先使用嵌套Runtime的hash lock，再安装tool lock及exact Runtime/SDK/tooling/Extension wheels，并调用包内CLI。CycloneDX SBOM和license report覆盖Kit层11个直接/工具组件，Runtime完整transitive graph仍由嵌套P8-09 SBOM覆盖。
+
+当前release channel只写repository/CI `build/developer-kit`的append-only content address，不访问外部registry、GitHub Release或签名服务。签名状态明确未签，SHA-256不冒充PKI。CI在Runtime release步骤后运行P8-15 checker并上传Kit registry；full validation timeout扩至30分钟以容纳clean安装和双构建，不改变required topology或权限。
+
 ## TASK-P8-13 dependency-neutral Extension Runtime
 
 Runtime loader/Registry只使用Python标准库`pathlib`、`json`、`hashlib`、`hmac`、`threading`与既有canonical helper，没有引入插件框架、签名库或第三方依赖，`uv.lock`逐字不变。Hatch wheel的package集合由`backend/app`扩为同时包含`backend/aps_extension_sdk`，使Runtime内部import在clean install后成立；这不是独立SDK/Developer Kit发布，也不改变Runtime `0.1.0`或Application `0.0.0`版本。

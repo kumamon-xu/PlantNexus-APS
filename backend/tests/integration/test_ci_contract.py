@@ -263,7 +263,7 @@ def test_ci_runs_repository_gates_and_discovers_the_current_task() -> None:
         "name: PlantNexus repository gates",
         "uv sync --locked",
         "uv run ruff check .",
-        "uv run pyright backend/app backend/aps_extension_sdk backend/aps_extension_tooling backend/tests",
+        "uv run pyright backend/app backend/aps_extension_sdk backend/aps_extension_tooling backend/aps_developer_kit backend/tests",
         "backend/tests/integration",
         "backend/tests/property",
         "app.application.p1_gate_report",
@@ -348,6 +348,13 @@ def test_ci_runs_repository_gates_and_discovers_the_current_task() -> None:
         "build/validation/ci-p8-enterprise-extension-dependencies.json",
         "build/benchmarks/ci-p8-enterprise-extension-tooling.json",
         "build/enterprise-extensions",
+        "name: P8 Developer Kit assembly compatibility and upgrade evidence",
+        "aps_developer_kit.check",
+        "build/validation/ci-p8-developer-kit.json",
+        "build/validation/ci-p8-developer-kit-security.json",
+        "build/validation/ci-p8-developer-kit-upgrade-rollback.json",
+        "build/benchmarks/ci-p8-developer-kit.json",
+        "build/developer-kit",
         "build/benchmarks/*.json",
     )
     for fragment in required_fragments:
@@ -460,7 +467,7 @@ def test_ci_profile_routing_is_mutually_exclusive_and_fail_closed() -> None:
     assert "uv run ruff check ." in backend_text
     assert (
         "uv run pyright backend/app backend/aps_extension_sdk "
-        "backend/aps_extension_tooling backend/tests"
+        "backend/aps_extension_tooling backend/aps_developer_kit backend/tests"
     ) in backend_text
     assert "backend/tests/security" in backend_text
     assert "ci-backend-tests.xml" in backend_text
@@ -508,6 +515,16 @@ def test_ci_profile_routing_is_mutually_exclusive_and_fail_closed() -> None:
         "scripts/p8_enterprise_extension_kit_check.py",
         "templates/enterprise-extension",
         "examples/enterprise-extensions",
+        "backend/aps_developer_kit",
+        "backend/tests/p8_developer_kit_support.py",
+        "backend/tests/contract/test_p8_developer_kit_contract.py",
+        "backend/tests/unit/test_p8_developer_kit_builder.py",
+        "backend/tests/property/test_p8_developer_kit_properties.py",
+        "backend/tests/integration/test_p8_developer_kit_integration.py",
+        "backend/tests/security/test_p8_developer_kit_security.py",
+        "backend/tests/validation/test_p8_developer_kit_mutations.py",
+        "infra/release/developer-kit-release-policy.v1.json",
+        "fixtures/developer-kit/p8-14-unpublished-predecessor.v1.json",
     ):
         assert workflow_text.count(f'"${{replay_root}}/{relative_path}"') == 1
     assert "uv sync --locked" in full_text
@@ -552,7 +569,7 @@ def test_ci_profile_routing_is_mutually_exclusive_and_fail_closed() -> None:
     assert "Build package" in full_text
     assert len(preflight["steps"]) == 4
     assert len(backend["steps"]) == 8
-    assert len(full["steps"]) == 82
+    assert len(full["steps"]) == 83
 
     assert 'test "${PLANTNEXUS_CLASSIFY_RESULT}" = "success"' in final_run
     assert 'test "${PLANTNEXUS_PREFLIGHT_RESULT}" = "success"' in final_run
@@ -1121,6 +1138,28 @@ def test_ci_p8_runtime_release_is_required_and_machine_checkable(
     )
     assert benchmark["thresholds"] is None
     assert benchmark["status"] == "PASS"
+
+
+def test_ci_p8_developer_kit_consumes_exact_runtime_and_uploads_registry() -> None:
+    workflow = (ROOT / ".github" / "workflows" / "ci.yml").read_text(
+        encoding="utf-8"
+    )
+    normalized = " ".join(workflow.split())
+    expected = (
+        "name: P8 Developer Kit assembly compatibility and upgrade evidence run: >- "
+        "uv run python -m aps_developer_kit.check --root . "
+        "--release-output build/release --kit-output build/developer-kit "
+        "--report build/validation/ci-p8-developer-kit.json "
+        "--security-report build/validation/ci-p8-developer-kit-security.json "
+        "--upgrade-report build/validation/ci-p8-developer-kit-upgrade-rollback.json "
+        "--benchmark-report build/benchmarks/ci-p8-developer-kit.json"
+    )
+    assert expected in normalized
+    assert workflow.index("P8 reproducible Runtime release") < workflow.index(
+        "P8 Developer Kit assembly"
+    )
+    assert "build/developer-kit/**" in workflow
+    assert "continue-on-error" not in workflow
 
 
 def test_ci_p8_optional_frontend_distribution_is_required_and_isolated() -> None:

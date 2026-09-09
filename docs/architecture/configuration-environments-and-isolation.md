@@ -11,6 +11,12 @@ last_reviewed: 2026-09-08
 
 # 配置、环境与数据隔离
 
+## TASK-P8-15 Developer Kit发布隔离
+
+Developer Kit组装只读取已验证且与当前代码提交完全绑定的Runtime归档、仓库内Extension SDK/tooling/template/examples及版本化release policy；输出写入本地或CI的content-addressed目录。Kit不读取环境DSN、token、Secret或企业业务数据，不启动API/Worker/Solver，不连接外部registry，也不改变Runtime启动配置。企业平台仍只通过统一Headless HTTP API调用Runtime，Extension仅由Runtime内部加载。
+
+CI在既有FULL job的P8-09 Runtime发布步骤之后执行Kit检查，复用同一`${{ github.sha }}`，并只上传`build/developer-kit/**`工程证据。发布目录采用append-only identity；同名内容不一致、Runtime commit/digest不一致、SDK/Tooling/Template版本不在兼容矩阵、路径逃逸或重复成员均fail closed。当前`1.0.0`是`UNSIGNED_ENGINEERING_CANDIDATE`，Production验证必须因缺少受信签名而拒绝；该流程不创建Production deployment、凭证、远端tag/release或支持承诺。
+
 ## TASK-P8-13 Runtime Extension启动配置
 
 非空Extension配置必须原子提供`PLANTNEXUS_RUNTIME_EXTENSION_CATALOG_PATH`、`PLANTNEXUS_RUNTIME_EXTENSION_VERIFICATION_KEY_ID`和`PLANTNEXUS_RUNTIME_EXTENSION_VERIFICATION_KEY`，且只能在启用唯一Runtime composition时使用。catalog路径是服务端启动配置，不来自HTTP、Worker message、Frontend或企业payload；缺任一字段、key少于32或超过4096 bytes、非法key ID都会在组合前拒绝。`safe_summary`只暴露是否配置，不暴露路径、ID或secret。

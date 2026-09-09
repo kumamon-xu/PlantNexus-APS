@@ -1,0 +1,58 @@
+{
+  "profile_version": "p8-headless-extension-platform-gate-profile.v1",
+  "task_id": "TASK-P8-16",
+  "test_id": "TEST-P8-VERTICAL-SLICE-001",
+  "validation_profile": "PHASE_GATE",
+  "source_kind": "SYNTHETIC",
+  "seed": 81620260909,
+  "environment": "TEST",
+  "data_plane": "SIMULATION",
+  "canonical_fixture": "backend.tests.p8_solver_worker_support.worker_request.v1",
+  "frozen_p8_15": {
+    "code_commit": "87e2f1e814c75fbc25e82a89288f14b80831209b",
+    "provider_run_id": 34320622291,
+    "required_validate_job_id": 102368573448,
+    "developer_kit_archive_sha256": "sha256:483550d240522af41175e29e4cd5847f32423643fc1763175ccbb77d52f732cb",
+    "developer_kit_release_fingerprint": "sha256:ee2a3a407337e595ca724ed2a92540e911c5fad7272e472f2d3ef3297a14a361",
+    "runtime_archive_sha256": "sha256:76d1dc72d376ab8972620eb2d65dbb92160ff4516f770d9720bdaf3cb2f2ffd7",
+    "runtime_release_fingerprint": "sha256:3e9a70c415bf94c5ba8ae9ffdb426005b756f560c439c1222df56862189f687c"
+  },
+  "versions": {
+    "runtime": "0.1.0",
+    "core": "0.0.0",
+    "extension_sdk": "1.0.0",
+    "developer_kit": "1.0.0",
+    "plugin_registry": "plugin-registry.v1",
+    "headless_api": "headless-http.v1",
+    "database": "0009_host_authorization_audit"
+  },
+  "extensions": [
+    {
+      "extension_id": "com.example.aps.alpha",
+      "kit_project_path": "examples/alpha-resource-tag",
+      "manifest_fingerprint": "sha256:778ec6c56d08814f8c3d924061a71fdcf6ed306322abc09f0406e704c5b59754",
+      "artifact_digest": "sha256:b436aeabfe97943a69d73fe8238439641e72a8300503e5fb02aac7591c0fddea"
+    },
+    {
+      "extension_id": "com.example.aps.beta",
+      "kit_project_path": "examples/beta-priority-policy",
+      "manifest_fingerprint": "sha256:0051184d253afca8313b1964cf3c1c42aadebcf399c39af56f6b48cb5e7aac12",
+      "artifact_digest": "sha256:b9b286befe1a3e0076fb96500172605b2c3259c5735d04239927219804674ae4"
+    }
+  ],
+  "engineering_thresholds": {
+    "maximum_gate_runtime_ms": 120000,
+    "maximum_single_chain_ms": 30000,
+    "minimum_targeted_p8_tests": 283
+  },
+  "boundaries": {
+    "canonical_json_only": true,
+    "real_data": false,
+    "production_authorized": false,
+    "p7_reality_calibration": false,
+    "demo_included": false,
+    "third_party_connector": false,
+    "capacity_or_sla": false
+  },
+  "profile_fingerprint": "sha256:da5ee7830e37f86569897a80685d25e59414f05153499b3effed37b483503043"
+}

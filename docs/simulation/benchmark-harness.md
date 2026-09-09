@@ -11,6 +11,12 @@ last_reviewed: 2026-09-05
 
 # Benchmark Harness 合同
 
+## TASK-P8-16 Headless + Extension engineering profile
+
+`benchmarks/p8/headless-extension-platform-gate-profile.v1.json`冻结seed `81620260909`、`TEST/SIMULATION`、Developer Kit/Runtime与Alpha/Beta content identity。Gate以真实HTTP create/replay/result、API/Worker、持久化、Solver、fresh formal Validator、ScheduleVersion及恢复/安全路径采集单链和总时长，同时记录Extension invocation、publication和export计数。Profile fingerprint为`sha256:da5ee7830e37f86569897a80685d25e59414f05153499b3effed37b483503043`。
+
+工程门槛为Gate总时长≤120000 ms、每个Extension链≤30000 ms、目标P8 suite≥283且零failure/error/skip。本地运行时间均在门槛内且283项通过，但调用/输出计数暴露四项功能缺口，所以verdict仍为`NOT_READY`。性能通过不能覆盖Extension invocation=0或publication/export=0；该profile不构成真实workload、concurrency、capacity、availability或Production SLA。P8-19应复用这一版本，任何门槛变化必须新增profile版本并保留旧结果。
+
 ## TASK-P8-05 Solver Worker engineering observation
 
 `benchmarks/p8/solver-worker-engineering-profile.v1.json`是独立的P8可靠性/工程观测profile：固定`SIMULATION/TEST`、synthetic canonical ingress、seed `20260905`、单worker、一次measured run、30秒wall budget以及30/120秒heartbeat/lease。Checker从真实P8 canonical ingress开始，经过durable run/work、Global CP-SAT、fresh formal Validator、immutable checkpoint和ScheduleVersion application，并执行一次exact redelivery确认`solver_calls=1`。

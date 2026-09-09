@@ -11,6 +11,12 @@ last_reviewed: 2026-09-08
 
 # 配置、环境与数据隔离
 
+## TASK-P8-16 Gate隔离结论
+
+P8-16在fresh临时目录中提取exact Runtime/Developer Kit，并以独立SQLite、`TEST/SIMULATION`、固定seed和Alpha/Beta两套服务端Extension配置逐次运行；客户端请求不能选择Extension、Kit、environment或data plane。混合API/Worker Extension fingerprint与duplicate set均在worker结果前fail closed，报告只保存sanitized identity/count/fingerprint，不保存canonical payload、secret或本机绝对路径。
+
+隔离检查同时确认目标P8-10 Compose配置仍是`DISABLED_UNTIL_COMPATIBILITY_VERIFIED`/default-empty Extension，不能作为选定Enterprise Extension部署或恢复证据。因此Gate为`NOT_READY`，且P8-18必须把Extension artifact/config/Kit identity作为server-owned原子部署输入，在backup/restore和same-artifact rollback后逐字保持；P8-19再从fresh环境独立复验。该纠正不得开放请求级选择、runtime下载、hot reload或Production配置。
+
 ## TASK-P8-15 Developer Kit发布隔离
 
 Developer Kit组装只读取已验证且与当前代码提交完全绑定的Runtime归档、仓库内Extension SDK/tooling/template/examples及版本化release policy；输出写入本地或CI的content-addressed目录。Kit不读取环境DSN、token、Secret或企业业务数据，不启动API/Worker/Solver，不连接外部registry，也不改变Runtime启动配置。企业平台仍只通过统一Headless HTTP API调用Runtime，Extension仅由Runtime内部加载。

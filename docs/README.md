@@ -13,7 +13,7 @@ last_reviewed: 2026-09-09
 
 本目录只收录适合随公开 Git 仓库发布的核心项目文档。开发过程记录、Task Card、阶段证据、机器报告、临时草稿、截图、测试输出和下载制品不属于公开文档，应留在被忽略的本地目录或 `build/`。
 
-项目当前已形成P0～P6研发能力，P7真实数据校准暂缓，P8 Headless产品化已推进到durable canonical ingress、PlanningRun、Solver Worker、单一Runtime组合、五项公开HTTP operation、Test identity/authorization/audit、Runtime工程分发与非Production运维演练。产品边界只接收宿主平台提交的versioned canonical JSON，不在APS内直接建设ERP/MES/WMS/CAM连接器；宿主与可选独立Frontend消费同一API。P8-11形成`0.1.0`静态Frontend工程候选；P8-12～14形成SDK `1.0.0`、服务端Registry/loader、独立项目模板、确定性conformance工具及两份synthetic Enterprise Extension。P8-15进一步组装首个Developer Kit `1.0.0`工程候选，精确锁定Runtime `0.1.0` artifact/digest、SDK/Tooling/Template `1.0.0`、示例、文档、兼容矩阵、SBOM/license和升级/回滚合同；原P8-14项目仍保持`0.0.0-not-published`，证明Runtime/Core发布不会自动改写企业锁。该Kit明确为`UNSIGNED_ENGINEERING_CANDIDATE`，不代表外部签名、Production部署、真实客户Extension、P7现实校准、容量/SLA或UAT。能力声明以[能力矩阵](core/capability-matrix.md)和对应合同为准。
+项目当前已形成P0～P6研发能力，P7真实数据校准暂缓，P8 Headless产品化已推进到durable canonical ingress、PlanningRun、Solver Worker、单一Runtime组合、五项公开HTTP operation、Test identity/authorization/audit、Runtime工程分发与非Production运维演练。产品边界只接收宿主平台提交的versioned canonical JSON，不在APS内直接建设ERP/MES/WMS/CAM连接器；宿主与可选独立Frontend消费同一API。P8-11形成`0.1.0`静态Frontend工程候选；P8-12～14形成SDK `1.0.0`、服务端Registry/loader、独立项目模板、确定性conformance工具及两份synthetic Enterprise Extension。P8-15进一步组装首个Developer Kit `1.0.0`工程候选，精确锁定Runtime `0.1.0` artifact/digest、SDK/Tooling/Template `1.0.0`、示例、文档、兼容矩阵、SBOM/license和升级/回滚合同。P8-16独立平台Gate的结论为`NOT_READY`：当前产品链尚未实际调用Extension贡献，Runtime尚未绑定Kit `1.0.0`身份，deployable publication/read/export及选定Extension部署/恢复也未闭环；这四项将由P8-18纠正、P8-19独立重资格。该Kit明确为`UNSIGNED_ENGINEERING_CANDIDATE`，不代表外部签名、Production部署、真实客户Extension、P7现实校准、容量/SLA或UAT。能力声明以[能力矩阵](core/capability-matrix.md)和对应合同为准。
 
 ## 核心入口
 

@@ -171,7 +171,7 @@ jobs:
     needs: [classify, full_preflight]
     if: ${{ needs.classify.outputs.profile == 'FULL' }}
     runs-on: ubuntu-latest
-    timeout-minutes: 30
+    timeout-minutes: 40
     env:
       PLANTNEXUS_CODE_COMMIT: ${{ github.sha }}
       PLANTNEXUS_POSTGRES_PASSWORD: ci-contract-only-not-a-secret
@@ -884,6 +884,12 @@ jobs:
           --browser-security-report build/validation/ci-p8-frontend-browser-security.json
           --backend-only-report build/validation/ci-p8-frontend-backend-only.json
 
+      - name: P8 Headless Extension platform integration Gate evidence
+        run: |
+          uv run pytest -q backend/tests/*/test_p8_*.py tests/p8 --junitxml=build/validation/ci-p8-platform-gate-tests.xml
+          uv run python scripts/p8_operations_check.py --root . --deployment-report build/validation/ci-p8-16-operations-deployment.json --observability-report build/validation/ci-p8-16-operations-observability.json --recovery-report build/validation/ci-p8-16-operations-recovery.json --runbook-report build/validation/ci-p8-16-operations-runbooks.json
+          uv run python -m scripts.p8_headless_extension_platform_gate --root . --profile benchmarks/p8/headless-extension-platform-gate-profile.v1.json --junit build/validation/ci-p8-platform-gate-tests.xml --runtime-release build/validation/ci-p8-runtime-release.json --runtime-security build/validation/ci-p8-runtime-release-security.json --runtime-migration build/validation/ci-p8-runtime-release-migration.json --developer-kit build/validation/ci-p8-developer-kit.json --developer-kit-security build/validation/ci-p8-developer-kit-security.json --developer-kit-upgrade build/validation/ci-p8-developer-kit-upgrade-rollback.json --formal-validator build/validation/ci-formal-schedule-validator.json --validator-mutations build/validation/ci-validator-mutations.json --frontend-distribution build/validation/ci-p8-frontend-distribution.json --frontend-client build/validation/ci-p8-frontend-client.json --frontend-security build/validation/ci-p8-frontend-browser-security.json --frontend-backend-only build/validation/ci-p8-frontend-backend-only.json --operations-deployment build/validation/ci-p8-16-operations-deployment.json --operations-observability build/validation/ci-p8-16-operations-observability.json --operations-recovery build/validation/ci-p8-16-operations-recovery.json --operations-runbooks build/validation/ci-p8-16-operations-runbooks.json --report build/validation/ci-p8-headless-extension-platform-gate.json --provenance-report build/validation/ci-p8-headless-extension-provenance.json --compatibility-report build/validation/ci-p8-headless-extension-compatibility.json --security-report build/validation/ci-p8-headless-extension-security.json --recovery-report build/validation/ci-p8-headless-extension-recovery.json --benchmark-report build/benchmarks/ci-p8-headless-extension-platform-gate.json
+
       - name: Engineering contract
         run: >-
           uv run python -m app.infrastructure.contract_check
@@ -955,6 +961,7 @@ jobs:
           name: plantnexus-ci-evidence-${{ github.run_id }}
           path: |
             build/validation/*.json
+            build/validation/ci-p8-platform-gate-tests.xml
             build/traceability/*.json
             build/benchmarks/*.json
             build/playwright/**

@@ -11,9 +11,11 @@ last_reviewed: 2026-09-04
 
 # 性能与现实校准门
 
-## P8 planned engineering Gate D
+## P8 engineering Gate D
 
-P8-16将使用versioned synthetic profile和两个独立Enterprise Extension，从外部host client重放canonical API、Runtime Registry、持久化、PlanningRun、Worker、Solver、fresh formal Validator、read/export、failure recovery、Developer Kit兼容及可选Frontend隔离，并记录API/queue/extension/solve/validation/publication/restore的工程观察值。具体profile、seed、Extension/Kit digests、环境和threshold必须在该Task启动时冻结；P8-00不创建数值或运行测试。
+P8-16已冻结`headless-extension-platform-gate-profile.v1`、seed `81620260909`、`TEST/SIMULATION` plane、Developer Kit/Runtime及Alpha/Beta artifact identity，并从外部host client重放canonical API、Runtime Registry、持久化、PlanningRun、Worker、Solver、fresh formal Validator、read/export、failure recovery、Developer Kit兼容及可选Frontend隔离。Profile fingerprint为`sha256:da5ee7830e37f86569897a80685d25e59414f05153499b3effed37b483503043`；门槛固定为Gate总时长不超过120000 ms、单Extension链不超过30000 ms、目标P8 suite不少于283项且零failure/error/skip。
+
+本地fresh审计在门槛内完成，283项目标测试全部通过，但Extension invocation delta为0、publication/export count为0，因此18项Gate中14项PASS、4项BLOCKED，最终为`NOT_READY`。时长通过不能覆盖功能缺口；这些观测只证明bounded engineering replay未明显超界，不是Production latency、throughput、availability、capacity或SLA。纠正后的TASK-P8-19必须沿用冻结边界或显式发布新profile版本，不得原地放宽门槛。
 
 Gate D只回答Headless+Extension产品链是否可复现、可靠且在批准的非Production工程边界内运行，不回答真实工厂分布、企业规则业务正确性、Planner usefulness、Production capacity或SLA。后者仍由企业UAT和P7 Gate C负责；Production结论需要Gate C、Gate D和各自独立Exit Audit全部通过。
 

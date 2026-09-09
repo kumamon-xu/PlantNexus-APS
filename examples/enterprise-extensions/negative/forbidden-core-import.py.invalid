@@ -1,0 +1,3 @@
+from app.planning.validation import schedule_validator
+
+FORBIDDEN_REFERENCE = schedule_validator

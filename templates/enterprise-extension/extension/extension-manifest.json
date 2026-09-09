@@ -1,0 +1,70 @@
+{
+  "extension_manifest_version": "extension-manifest.v1",
+  "sdk_api_version": "1.0.0",
+  "extension_id": "__EXTENSION_ID__",
+  "extension_version": "1.0.0",
+  "artifact": {
+    "digest": "__ARTIFACT_DIGEST__",
+    "media_type": "application/vnd.plantnexus.aps-extension+python",
+    "package": "__DISTRIBUTION_NAME__"
+  },
+  "configuration": {
+    "contract_version": "__EXTENSION_ID__.configuration.v1",
+    "schema_digest": "__CONFIG_SCHEMA_DIGEST__"
+  },
+  "compatibility": {
+    "sdk": {
+      "minimum_inclusive": "1.0.0",
+      "maximum_exclusive": "2.0.0"
+    },
+    "runtime": {
+      "minimum_inclusive": "0.1.0",
+      "maximum_exclusive": "1.0.0"
+    }
+  },
+  "registry_protocol_version": "plugin-registry.v1",
+  "contributions": [
+    {
+      "contribution_id": "__EXTENSION_ID__.resource_tag.constraint",
+      "extension_point": "CONSTRAINT",
+      "spi_version": "constraint.v1",
+      "implementation": "__PACKAGE_NAME__.constraint:ResourceTagConstraint",
+      "execution_domain": "SOLVER",
+      "order": 100,
+      "capabilities": ["__EXTENSION_ID__.resource_tag"],
+      "affects_feasibility": true,
+      "validation_rule_ids": ["__EXTENSION_ID__.resource_tag.validation"],
+      "validates_contribution_ids": [],
+      "objective_stage": null
+    },
+    {
+      "contribution_id": "__EXTENSION_ID__.resource_tag.validation",
+      "extension_point": "VALIDATION_RULE",
+      "spi_version": "validation-rule.v1",
+      "implementation": "__PACKAGE_NAME__.validation:ResourceTagValidationRule",
+      "execution_domain": "VALIDATOR",
+      "order": 200,
+      "capabilities": ["__EXTENSION_ID__.resource_tag"],
+      "affects_feasibility": false,
+      "validation_rule_ids": [],
+      "validates_contribution_ids": ["__EXTENSION_ID__.resource_tag.constraint"],
+      "objective_stage": null
+    }
+  ],
+  "requested_services": [],
+  "provenance": {
+    "source_commit": "__SOURCE_COMMIT__",
+    "dependency_lock_digest": "__DEPENDENCY_LOCK_DIGEST__",
+    "reproducible_build": true
+  },
+  "execution_boundary": {
+    "load_phase": "BUILD_DEPLOY_STARTUP_ONLY",
+    "trusted_in_process": true,
+    "sandboxed": false,
+    "request_code_selection": false,
+    "network_install": false,
+    "external_api": false,
+    "database_access": false
+  },
+  "manifest_fingerprint": "__MANIFEST_FINGERPRINT__"
+}

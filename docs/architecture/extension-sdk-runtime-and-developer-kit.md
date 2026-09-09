@@ -6,14 +6,14 @@ spec_version: 0.3.0
 phase: P8
 normative: true
 source_sections: [4, 5, 9, 12, 30, 63, 65, 93, 95, 97, 101, 103, 106, 107, 109, 113, 114]
-last_reviewed: 2026-09-08
+last_reviewed: 2026-09-09
 ---
 
 # APS Extension SDK、Runtime 与 Developer Kit 架构
 
 ## 目标
 
-不同企业可在不复制、不fork、不修改`aps-core`的前提下实现业务适配，同时保留Headless API、canonical JSON、正式Validator、不可变版本、权限和审计的统一语义。TASK-P8-12已形成SDK `1.0.0`合同、Python skeleton及机器carrier；TASK-P8-13进一步形成Runtime loader、确定性Registry和六类受控调用adapter。企业模板、Developer Kit及真实企业规则仍未实现。
+不同企业可在不复制、不fork、不修改`aps-core`的前提下实现业务适配，同时保留Headless API、canonical JSON、正式Validator、不可变版本、权限和审计的统一语义。TASK-P8-12已形成SDK `1.0.0`合同、Python skeleton及机器carrier；TASK-P8-13形成Runtime loader、确定性Registry和六类受控调用adapter；TASK-P8-14形成独立企业项目模板、确定性打包/clean-install/conformance工具及两个synthetic示例。Developer Kit最终组合和真实企业规则仍未形成。
 
 ## TASK-P8-12 formed SDK boundary
 
@@ -30,6 +30,16 @@ SDK v1不暴露privileged service；所有输入先由Runtime裁剪并深度冻�
 单catalog/manifest/config/artifact分别受1 MiB、256 KiB、256 KiB、16 MiB上限约束，最多16个artifact/256项贡献；单次SPI和startup预算均进入catalog fingerprint。调用在有界daemon thread中执行，timeout后丢弃整个返回并把该贡献标记为unhealthy；这只能提供fail-closed调用边界，不能中止或隔离恶意Python代码，因此信任模型仍为`trusted_in_process=true`、`sandboxed=false`。
 
 当前adapter证明六类SPI可被裁剪、冻结、校验和观测，并证明Validation Rule entrypoint/domain与Solver侧贡献分离；它没有把synthetic Constraint/Objective/Planning Rule解释为Core Solver的真实企业公式，也没有替代fresh formal Validator。企业实现、独立双实现conformance及Solver/Validator业务整合由P8-14形成，完整外部链路由P8-16审计。
+
+## TASK-P8-14 Enterprise Extension开发边界
+
+`templates/enterprise-extension`是一个不含Core源码、只声明`aps-extension-sdk==1.0.0`运行依赖的独立Python项目模板。`enterprise-extension-project.v1`把项目ID、distribution/package、企业owner、无凭据HTTPS repository、license表达式、source commit、SDK `1.0.0`、Runtime `0.1.0`、未发布Kit占位及项目内manifest/config/schema/lock/fixture路径组成封闭合同。scaffold只写入指定本地目录，不初始化Git或创建远程仓库。
+
+`aps_extension_tooling`先静态拒绝Core/internal/第三方import、I/O和非确定性引用、符号链接、源码副本及浮动lock，再两次生成固定时间戳的pure-Python SDK/Extension wheel和项目归档。默认在临时clean venv中以`--no-index --no-deps`安装本地wheel并运行项目自带测试，然后把显式materialize的对象交给P8-13 Runtime；它不扫描ambient entry point、不下载代码，也不改变Runtime loader语义。
+
+Alpha和Beta示例是两个独立项目：Alpha只提供resource-tag Constraint及不同模块中的Validation Rule；Beta提供Planning Rule、Core目标后的integer tie-break Objective、保持五类受保护绑定的Replan Policy和Plugin Registry。conformance对每个SPI执行两次、验证独立Validation正反输入和Registry一致性，并验证两个项目可组成确定性Extension set。示例事实、标签和数值只属synthetic工程证据。
+
+使用方式、项目布局、拒绝条件、调试、交付和升级见[Enterprise Extension开发指南](enterprise-extension-development-guide.md)。P8-14产物仍不是Developer Kit：它使用`0.0.0-not-published`占位，P8-15必须另行把精确Runtime、SDK、模板、工具、示例、文档和供应链证据共同锁定后才能发布Kit版本。
 
 ## 产品分层
 
@@ -72,7 +82,7 @@ APS Developer Kit = verified Runtime + SDK + template +
 | Replan Policy | 事件触发、freeze/stability范围内的策略选择 | 不覆盖事实/HARD lock/state/publication；同输入同配置同决定 |
 | Plugin Registry | 发现、校验、排序、解析和fingerprint贡献 | stable ID/version/capability；duplicate/conflict/unknown/mixed version fail closed |
 
-具体Python protocol、manifest Schema、error registry和兼容规则已由TASK-P8-12形成；Runtime调用、装载、确定性Registry与readiness语义已由P8-13形成。
+具体Python protocol、manifest Schema、error registry和兼容规则已由TASK-P8-12形成；Runtime调用、装载、确定性Registry与readiness语义已由P8-13形成；独立项目、打包和conformance开发入口已由P8-14形成。
 
 ## 运行时组合
 
@@ -80,8 +90,8 @@ APS Developer Kit = verified Runtime + SDK + template +
 2. Runtime启动时读取本地受控manifest，验证allow-list、完整性、SDK compatibility和唯一Registry resolution。
 3. API与Worker分别从同一已签/已固定配置生成composition fingerprint；fingerprint不同则readiness失败或work item拒绝。
 4. API只接收标准canonical request，生成不可变Snapshot/Problem/PlanningRun并记录Extension resolution。
-5. Worker进程持有同一resolved adapter；P8-13提供受控调用缝隙，P8-14再把经conformance批准的企业输出接到Solver-neutral映射。
-6. 既有fresh formal Validator保持独立；Extension Validation Rule可通过独立adapter重算，P8-14/P8-16必须证明任一失败candidate不形成可审阅版本。
+5. Worker进程持有同一resolved adapter；P8-13提供受控调用缝隙，P8-14证明独立项目可通过conformance向该Runtime提供solver-neutral输出。
+6. 既有fresh formal Validator保持独立；P8-14证明Extension Validation Rule可通过不同模块的独立adapter重算，P8-16仍须验证完整链路中任一失败candidate不形成可审阅版本。
 7. 标准read/export API返回结果、violation和版本fingerprint；企业特有字段必须位于批准的canonical namespace。
 
 Extension异常、timeout、非法返回、未声明capability或版本不兼容必须映射为稳定的config/compatibility/system错误并无部分业务副作用。Extension日志、metrics和trace必须带plugin ID/version/correlation，但不得泄漏canonical业务payload或secret。

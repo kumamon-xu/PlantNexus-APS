@@ -60,6 +60,7 @@ from backend.tests.p8_runtime_extension_support import (  # noqa: E402
 TASK_ID = "TASK-P8-13"
 TEST_ID = "TEST-P8-PLUGIN-REGISTRY-001"
 DIFF_BASE = "4d37dba068c86230f6009820d6cbc7ff10a73495"
+EVIDENCE_SHA = "2682a2235f33d37cc909a1ad8ca3c52a6dffab05"
 REPORT_VERSION = "p8-runtime-extension-registry-report.v1"
 MANIFEST_VERSION = "p8-runtime-extension-resolution-manifest.v1"
 SECURITY_REPORT_VERSION = "p8-runtime-extension-security-report.v1"
@@ -153,18 +154,15 @@ def _git(root: Path, *arguments: str) -> str:
 
 
 def _changed_paths(root: Path) -> tuple[str, ...]:
-    values: set[str] = set()
-    for arguments in (
-        ("diff", "--name-only", f"{DIFF_BASE}...HEAD"),
-        ("diff", "--name-only"),
-        ("ls-files", "--others", "--exclude-standard"),
-    ):
-        values.update(
+    return tuple(
+        sorted(
             line.replace("\\", "/")
-            for line in _git(root, *arguments).splitlines()
+            for line in _git(
+                root, "diff", "--name-only", f"{DIFF_BASE}...{EVIDENCE_SHA}"
+            ).splitlines()
             if line
         )
-    return tuple(sorted(values))
+    )
 
 
 def _expect_code(operation: Callable[[], object], expected: str) -> bool:
@@ -406,6 +404,14 @@ def _core_boundary(root: Path) -> JsonObject:
 
 
 def _scope_and_history(root: Path) -> JsonObject:
+    ancestry = subprocess.run(
+        ["git", "merge-base", "--is-ancestor", EVIDENCE_SHA, "HEAD"],
+        cwd=root,
+        check=False,
+        capture_output=True,
+    )
+    if ancestry.returncode != 0:
+        raise ValueError("closed P8-13 evidence SHA is not an ancestor of HEAD")
     changed = _changed_paths(root)
     unexpected = [
         path
@@ -419,22 +425,19 @@ def _scope_and_history(root: Path) -> JsonObject:
         if path.startswith(_FROZEN_PREFIXES)
         and path not in _SUCCESSOR_METADATA_CHECKERS
     ]
-    base_lock = subprocess.run(
-        ["git", "show", f"{DIFF_BASE}:uv.lock"],
-        cwd=root,
-        check=True,
-        capture_output=True,
-    ).stdout
-    current_project = tomllib.loads((root / "pyproject.toml").read_text(encoding="utf-8"))
+    base_lock = _git(root, "show", f"{DIFF_BASE}:uv.lock")
+    evidence_lock = _git(root, "show", f"{EVIDENCE_SHA}:uv.lock")
+    current_project = tomllib.loads(_git(root, "show", f"{EVIDENCE_SHA}:pyproject.toml"))
     packages = cast(
         list[str],
         current_project["tool"]["hatch"]["build"]["targets"]["wheel"]["packages"],
     )
     return {
         "changed_paths": list(changed),
+        "evidence_sha": EVIDENCE_SHA,
         "unexpected_paths": unexpected,
         "frozen_owner_changes": frozen,
-        "dependency_lock_unchanged": base_lock == (root / "uv.lock").read_bytes(),
+        "dependency_lock_unchanged": base_lock == evidence_lock,
         "runtime_wheel_packages": packages,
         "sdk_internal_runtime_package_included": packages
         == ["backend/app", "backend/aps_extension_sdk"],
@@ -680,6 +683,7 @@ if __name__ == "__main__":
 __all__ = [
     "BENCHMARK_REPORT_VERSION",
     "DIFF_BASE",
+    "EVIDENCE_SHA",
     "MANIFEST_VERSION",
     "REPORT_VERSION",
     "SECURITY_REPORT_VERSION",

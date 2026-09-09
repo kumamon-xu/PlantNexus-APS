@@ -1,0 +1,7 @@
+{
+  "negative_fixture_version": "enterprise-extension-negative.v1",
+  "case_id": "missing-validation-pair",
+  "base_project": "alpha-resource-tag",
+  "mutation": {"operation": "REMOVE_VALIDATION_CONTRIBUTION"},
+  "expected_error_code": "MISSING_VALIDATION_PAIR"
+}

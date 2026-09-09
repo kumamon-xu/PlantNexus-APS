@@ -1,0 +1,28 @@
+{
+  "conformance_fixture_version": "enterprise-extension-conformance-fixture.v1",
+  "scope": {
+    "tenant_id": "TENANT-BETA-SYNTHETIC",
+    "factory_id": "FACTORY-BETA-SYNTHETIC",
+    "planning_scope_id": "PLANNING-BETA-SYNTHETIC"
+  },
+  "facts": {
+    "resources": [{"resource_id": "resource-a", "tags": ["alpha-qualified"]}],
+    "assignments": [{"operation_id": "operation-a", "resource_id": "resource-a"}],
+    "operations": [
+      {"operation_id": "operation-b", "enterprise_priority": 1},
+      {"operation_id": "operation-a", "enterprise_priority": 3}
+    ],
+    "events": ["synthetic.disruption"]
+  },
+  "provenance": {"planning_run_id": "planning-run-beta-synthetic"},
+  "negative_validation_facts": null,
+  "expect_validation_rejection": false,
+  "replan_bindings": {
+    "execution_fact_fingerprint": "sha256:4444444444444444444444444444444444444444444444444444444444444444",
+    "hard_lock_fingerprint": "sha256:5555555555555555555555555555555555555555555555555555555555555555",
+    "freeze_window_fingerprint": "sha256:6666666666666666666666666666666666666666666666666666666666666666",
+    "state_machine_version": "planning.run.state.v1",
+    "publication_authority_reference": "authority.synthetic"
+  },
+  "fixture_fingerprint": "sha256:c0c69255570cedf7b802f78ee2459d29affab7322770c2d234985c2e722c07b0"
+}

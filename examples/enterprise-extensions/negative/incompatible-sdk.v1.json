@@ -1,0 +1,7 @@
+{
+  "negative_fixture_version": "enterprise-extension-negative.v1",
+  "case_id": "incompatible-sdk-lock",
+  "base_project": "alpha-resource-tag",
+  "mutation": {"operation": "REPLACE_PROJECT_SDK_VERSION", "value": "1.1.0"},
+  "expected_error_code": "EXT_VERSION_INCOMPATIBLE"
+}

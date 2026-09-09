@@ -1,0 +1,44 @@
+{
+  "conformance_fixture_version": "enterprise-extension-conformance-fixture.v1",
+  "scope": {
+    "tenant_id": "TENANT-SYNTHETIC",
+    "factory_id": "FACTORY-SYNTHETIC",
+    "planning_scope_id": "PLANNING-SYNTHETIC"
+  },
+  "facts": {
+    "resources": [
+      {"resource_id": "resource-001", "tags": ["qualified"]}
+    ],
+    "assignments": [
+      {"operation_id": "operation-001", "resource_id": "resource-001"}
+    ],
+    "operations": [
+      {"operation_id": "operation-001", "enterprise_priority": 1}
+    ],
+    "events": []
+  },
+  "provenance": {
+    "planning_run_id": "planning-run-synthetic"
+  },
+  "negative_validation_facts": {
+    "resources": [
+      {"resource_id": "resource-001", "tags": []}
+    ],
+    "assignments": [
+      {"operation_id": "operation-001", "resource_id": "resource-001"}
+    ],
+    "operations": [
+      {"operation_id": "operation-001", "enterprise_priority": 1}
+    ],
+    "events": []
+  },
+  "expect_validation_rejection": true,
+  "replan_bindings": {
+    "execution_fact_fingerprint": "sha256:1111111111111111111111111111111111111111111111111111111111111111",
+    "hard_lock_fingerprint": "sha256:2222222222222222222222222222222222222222222222222222222222222222",
+    "freeze_window_fingerprint": "sha256:3333333333333333333333333333333333333333333333333333333333333333",
+    "state_machine_version": "planning.run.state.v1",
+    "publication_authority_reference": "authority.synthetic"
+  },
+  "fixture_fingerprint": "__FIXTURE_FINGERPRINT__"
+}

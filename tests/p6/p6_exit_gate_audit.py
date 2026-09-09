@@ -350,7 +350,7 @@ _FROZEN_OWNER_PATHS = (
 
 _POST_P6_ADDITIVE_OWNER_SHA256: Mapping[str, str] = {
     ".github/workflows/ci.yml": (
-        "c6985f88cc17924fa03cdc008c8a30f440b2b0cb1b06184380c065621c7ba0f7"
+        "12c0dc9576b5a2459fc8b92ac6c29ca40c720e48649a0537fc06fba7942178be"
     ),
     "backend/app/planning/backends/cp_sat/replan_solver_check.py": (
         "07aa8bf64a6972bd54349721e55aa5432c1745c3e4a78a85cfe0884dfd0ab594"

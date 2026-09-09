@@ -1,0 +1,26 @@
+[build-system]
+requires = ["hatchling==1.27.0"]
+build-backend = "hatchling.build"
+
+[project]
+name = "example-alpha-aps-extension"
+version = "1.0.0"
+description = "Synthetic Alpha APS Enterprise Extension"
+requires-python = ">=3.12,<3.13"
+dependencies = ["aps-extension-sdk==1.0.0"]
+authors = [{ name = "PlantNexus Synthetic Reference Alpha" }]
+license = { text = "LicenseRef-PlantNexus-Synthetic-Reference" }
+
+[project.urls]
+Repository = "https://example.invalid/plantnexus/alpha-aps-extension"
+
+[tool.hatch.build.targets.wheel]
+packages = ["src/example_alpha_extension"]
+
+[tool.plantnexus-enterprise-extension]
+contract-version = "enterprise-extension-project.v1"
+project-id = "com.example.aps.alpha"
+sdk-api-version = "1.0.0"
+runtime-version = "0.1.0"
+developer-kit-version = "0.0.0-not-published"
+manifest = "extension/extension-manifest.json"

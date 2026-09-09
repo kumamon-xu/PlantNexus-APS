@@ -1,0 +1,3 @@
+import random
+
+NONDETERMINISTIC_VALUE = random.random()

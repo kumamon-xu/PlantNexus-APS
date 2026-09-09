@@ -1,0 +1,7 @@
+{
+  "negative_fixture_version": "enterprise-extension-negative.v1",
+  "case_id": "duplicate-extension-set",
+  "base_project": "alpha-resource-tag",
+  "mutation": {"operation": "LOAD_SAME_ARTIFACT_TWICE"},
+  "expected_error_code": "EXT_SET_CONFLICT"
+}

@@ -1,0 +1,43 @@
+{
+  "conformance_fixture_version": "enterprise-extension-conformance-fixture.v1",
+  "scope": {
+    "tenant_id": "TENANT-ALPHA-SYNTHETIC",
+    "factory_id": "FACTORY-ALPHA-SYNTHETIC",
+    "planning_scope_id": "PLANNING-ALPHA-SYNTHETIC"
+  },
+  "facts": {
+    "resources": [
+      {"resource_id": "resource-a", "tags": ["alpha-qualified"]},
+      {"resource_id": "resource-b", "tags": []}
+    ],
+    "assignments": [
+      {"operation_id": "operation-a", "resource_id": "resource-a"}
+    ],
+    "operations": [
+      {"operation_id": "operation-a", "enterprise_priority": 2}
+    ],
+    "events": ["synthetic.disruption"]
+  },
+  "provenance": {"planning_run_id": "planning-run-alpha-synthetic"},
+  "negative_validation_facts": {
+    "resources": [
+      {"resource_id": "resource-a", "tags": []}
+    ],
+    "assignments": [
+      {"operation_id": "operation-a", "resource_id": "resource-a"}
+    ],
+    "operations": [
+      {"operation_id": "operation-a", "enterprise_priority": 2}
+    ],
+    "events": ["synthetic.disruption"]
+  },
+  "expect_validation_rejection": true,
+  "replan_bindings": {
+    "execution_fact_fingerprint": "sha256:1111111111111111111111111111111111111111111111111111111111111111",
+    "hard_lock_fingerprint": "sha256:2222222222222222222222222222222222222222222222222222222222222222",
+    "freeze_window_fingerprint": "sha256:3333333333333333333333333333333333333333333333333333333333333333",
+    "state_machine_version": "planning.run.state.v1",
+    "publication_authority_reference": "authority.synthetic"
+  },
+  "fixture_fingerprint": "sha256:af486568789bbb7eaf219ed34329e07c4860e05a151614570b88f8fc606c881b"
+}

@@ -1,0 +1,6 @@
+{
+  "configuration_contract_version": "com.example.aps.beta.configuration.v1",
+  "extension_id": "com.example.aps.beta",
+  "values": {"replan_event": "synthetic.disruption"},
+  "configuration_fingerprint": "sha256:23f476e47b02c5561e43423e97ea11e1c3cca30041611170c5efd602e655b3d7"
+}

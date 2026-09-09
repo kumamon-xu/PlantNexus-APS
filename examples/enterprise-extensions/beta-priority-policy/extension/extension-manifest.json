@@ -1,0 +1,90 @@
+{
+  "extension_manifest_version": "extension-manifest.v1",
+  "sdk_api_version": "1.0.0",
+  "extension_id": "com.example.aps.beta",
+  "extension_version": "1.0.0",
+  "artifact": {
+    "digest": "sha256:b9b286befe1a3e0076fb96500172605b2c3259c5735d04239927219804674ae4",
+    "media_type": "application/vnd.plantnexus.aps-extension+python",
+    "package": "example-beta-aps-extension"
+  },
+  "configuration": {
+    "contract_version": "com.example.aps.beta.configuration.v1",
+    "schema_digest": "sha256:9987d918c3901083792f7652ab5498aaff59e4f1014cdf74caa048d472060103"
+  },
+  "compatibility": {
+    "sdk": {"minimum_inclusive": "1.0.0", "maximum_exclusive": "2.0.0"},
+    "runtime": {"minimum_inclusive": "0.1.0", "maximum_exclusive": "1.0.0"}
+  },
+  "registry_protocol_version": "plugin-registry.v1",
+  "contributions": [
+    {
+      "contribution_id": "com.example.aps.beta.priority.rule",
+      "extension_point": "PLANNING_RULE",
+      "spi_version": "planning-rule.v1",
+      "implementation": "example_beta_extension.planning_rule:BetaPriorityRule",
+      "execution_domain": "PLANNING",
+      "order": 100,
+      "capabilities": ["com.example.aps.beta.priority"],
+      "affects_feasibility": false,
+      "validation_rule_ids": [],
+      "validates_contribution_ids": [],
+      "objective_stage": null
+    },
+    {
+      "contribution_id": "com.example.aps.beta.priority.objective",
+      "extension_point": "OBJECTIVE",
+      "spi_version": "objective.v1",
+      "implementation": "example_beta_extension.objective:BetaPriorityObjective",
+      "execution_domain": "SOLVER",
+      "order": 200,
+      "capabilities": ["com.example.aps.beta.priority"],
+      "affects_feasibility": false,
+      "validation_rule_ids": [],
+      "validates_contribution_ids": [],
+      "objective_stage": "ENTERPRISE_TIE_BREAK"
+    },
+    {
+      "contribution_id": "com.example.aps.beta.disruption.replan",
+      "extension_point": "REPLAN_POLICY",
+      "spi_version": "replan-policy.v1",
+      "implementation": "example_beta_extension.replan:BetaReplanPolicy",
+      "execution_domain": "REPLAN",
+      "order": 300,
+      "capabilities": ["com.example.aps.beta.disruption"],
+      "affects_feasibility": false,
+      "validation_rule_ids": [],
+      "validates_contribution_ids": [],
+      "objective_stage": null
+    },
+    {
+      "contribution_id": "com.example.aps.beta.registry",
+      "extension_point": "PLUGIN_REGISTRY",
+      "spi_version": "plugin-registry.v1",
+      "implementation": "example_beta_extension.registry:BetaRegistry",
+      "execution_domain": "REGISTRY",
+      "order": 400,
+      "capabilities": [],
+      "affects_feasibility": false,
+      "validation_rule_ids": [],
+      "validates_contribution_ids": [],
+      "objective_stage": null
+    }
+  ],
+  "requested_services": [],
+  "provenance": {
+    "source_commit": "2682a2235f33d37cc909a1ad8ca3c52a6dffab05",
+    "dependency_lock_digest": "sha256:440e663e557aa6424a1c5d1baa479243b6b03f44f9a3810e77d977b7677525d7",
+    "reproducible_build": true
+  },
+  "execution_boundary": {
+    "load_phase": "BUILD_DEPLOY_STARTUP_ONLY",
+    "trusted_in_process": true,
+    "sandboxed": false,
+    "request_code_selection": false,
+    "network_install": false,
+    "external_api": false,
+    "database_access": false
+  },
+  "manifest_fingerprint": "sha256:0051184d253afca8313b1964cf3c1c42aadebcf399c39af56f6b48cb5e7aac12"
+}

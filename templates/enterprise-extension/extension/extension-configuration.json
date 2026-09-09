@@ -1,0 +1,8 @@
+{
+  "configuration_contract_version": "__EXTENSION_ID__.configuration.v1",
+  "extension_id": "__EXTENSION_ID__",
+  "values": {
+    "required_tag": "qualified"
+  },
+  "configuration_fingerprint": "__CONFIG_FINGERPRINT__"
+}

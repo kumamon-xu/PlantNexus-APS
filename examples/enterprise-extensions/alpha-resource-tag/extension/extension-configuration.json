@@ -1,0 +1,6 @@
+{
+  "configuration_contract_version": "com.example.aps.alpha.configuration.v1",
+  "extension_id": "com.example.aps.alpha",
+  "values": {"required_tag": "alpha-qualified"},
+  "configuration_fingerprint": "sha256:efaf24ac7882f4b13b0c005fc48e50f8f2df64b6620be9a3b74fe3328daed41e"
+}

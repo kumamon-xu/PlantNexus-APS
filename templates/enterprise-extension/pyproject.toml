@@ -1,0 +1,26 @@
+[build-system]
+requires = ["hatchling==1.27.0"]
+build-backend = "hatchling.build"
+
+[project]
+name = "__DISTRIBUTION_NAME__"
+version = "1.0.0"
+description = "Standalone APS Enterprise Extension owned by __OWNER__"
+requires-python = ">=3.12,<3.13"
+dependencies = ["aps-extension-sdk==1.0.0"]
+authors = [{ name = "__OWNER__" }]
+license = { text = "__LICENSE_EXPRESSION__" }
+
+[project.urls]
+Repository = "__REPOSITORY_URL__"
+
+[tool.hatch.build.targets.wheel]
+packages = ["src/__PACKAGE_NAME__"]
+
+[tool.plantnexus-enterprise-extension]
+contract-version = "enterprise-extension-project.v1"
+project-id = "__PROJECT_ID__"
+sdk-api-version = "1.0.0"
+runtime-version = "0.1.0"
+developer-kit-version = "0.0.0-not-published"
+manifest = "extension/extension-manifest.json"

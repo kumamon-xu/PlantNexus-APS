@@ -6,14 +6,14 @@ spec_version: 0.3.0
 phase: P8
 normative: false
 source_sections: [2, 6, 24, 90, 113, 114]
-last_reviewed: 2026-09-07
+last_reviewed: 2026-09-09
 ---
 
 # PlantNexus APS 公开文档中心
 
 本目录只收录适合随公开 Git 仓库发布的核心项目文档。开发过程记录、Task Card、阶段证据、机器报告、临时草稿、截图、测试输出和下载制品不属于公开文档，应留在被忽略的本地目录或 `build/`。
 
-项目当前已形成P0～P6研发能力，P7真实数据校准暂缓，P8 Headless产品化已推进到durable canonical ingress、PlanningRun、Solver Worker、单一Runtime组合、五项公开HTTP operation、Test identity/authorization/audit、Runtime工程分发与非Production运维演练。产品边界只接收宿主平台提交的versioned canonical JSON，不在APS内直接建设ERP/MES/WMS/CAM连接器；宿主与可选独立Frontend消费同一API。P8-11另形成`0.1.0`静态Frontend工程候选：它从P8-07 OpenAPI生成并锁定仅5项Headless operation，可独立于Backend打包，使用同源`/api/v1`或经批准的同源网关，并以默认不可用的内存Session Provider fail closed；Runtime分发仍不携带Frontend、Demo或企业Extension。P8-12已形成SDK `1.0.0`合同，P8-13形成服务端本地allow-list loader、确定性Registry、六类受控adapter及API/Worker共享fingerprint；企业适配必须通过独立Enterprise Extension，禁止复制/修改Core或自动升级企业项目。P8-09的Runtime `0.1.0`是确定性、内容寻址工程distribution：Application/Core仍为`0.0.0`，API=`headless-http.v1`、Schema=`2.10.0`、database head=`0009_host_authorization_audit`；包内含wheel、锁定依赖、migration、Schema、OpenAPI、SBOM、license/checksum和兼容/回退合同。Runtime和Frontend候选都不代表已签Production部署或Developer Kit；真实host IdP/RBAC/gateway、Enterprise Extension、Developer Kit、release authority、容量、SLA、行业定制与UAT仍未形成。能力声明以[能力矩阵](core/capability-matrix.md)和对应合同为准。
+项目当前已形成P0～P6研发能力，P7真实数据校准暂缓，P8 Headless产品化已推进到durable canonical ingress、PlanningRun、Solver Worker、单一Runtime组合、五项公开HTTP operation、Test identity/authorization/audit、Runtime工程分发与非Production运维演练。产品边界只接收宿主平台提交的versioned canonical JSON，不在APS内直接建设ERP/MES/WMS/CAM连接器；宿主与可选独立Frontend消费同一API。P8-11另形成`0.1.0`静态Frontend工程候选；P8-12形成SDK `1.0.0`合同，P8-13形成服务端本地allow-list loader、确定性Registry、六类受控adapter及API/Worker共享fingerprint。P8-14进一步提供不含Core副本的独立项目模板、确定性SDK-only构建/clean-install/conformance工具和两份synthetic Enterprise Extension示例；企业适配必须使用自己的owner/repository/license并锁定SDK/Runtime版本，禁止复制/修改Core或自动升级。P8-09的Runtime `0.1.0`仍是确定性、内容寻址工程distribution：Application/Core=`0.0.0`、API=`headless-http.v1`、Schema=`2.10.0`、database head=`0009_host_authorization_audit`。上述候选都不代表已签Production部署或已发布Developer Kit；真实host IdP/RBAC/gateway、客户Extension、Kit组合、release authority、容量、SLA、行业定制与UAT仍未形成。能力声明以[能力矩阵](core/capability-matrix.md)和对应合同为准。
 
 ## 核心入口
 
@@ -23,6 +23,7 @@ last_reviewed: 2026-09-07
 | 系统架构 | [系统上下文](architecture/system-context.md) | 了解外部系统、边界和数据流向 |
 | Headless 集成 | [Headless 平台集成与数据权威合同](contracts/headless-platform-integration.md) | 了解canonical JSON、责任矩阵、authority/scope/idempotency/lineage和失败边界 |
 | 企业扩展 | [Extension SDK、Runtime 与 Developer Kit](architecture/extension-sdk-runtime-and-developer-kit.md) | 了解Core不变、服务端Extension、Plugin Registry、版本锁定和兼容发布 |
+| 扩展开发 | [Enterprise Extension 开发指南](architecture/enterprise-extension-development-guide.md) | 创建独立项目，执行SDK-only构建、clean测试、conformance与升级回放 |
 | 主流程 | [端到端计划流程](architecture/end-to-end-planning-flow.md) | 从导入到排程、校验、版本、导出和重排 |
 | 领域对象 | [领域模型](domain/domain-model.md) | Factory、Routing、Order、Snapshot、Version 等对象关系 |
 | API | [API 接口开发清单](contracts/api-development-checklist.md) | 当前所有 HTTP operation、状态、合同和缺口 |
@@ -50,11 +51,12 @@ last_reviewed: 2026-09-07
 1. [Headless 平台集成与数据权威合同](contracts/headless-platform-integration.md)
 2. [Headless 产品化与平台集成](architecture/headless-productization-and-platform-integration.md)
 3. [Extension SDK、Runtime 与 Developer Kit](architecture/extension-sdk-runtime-and-developer-kit.md)
-4. [数据 authority](architecture/data-authority.md)
-5. [导入与归一化](contracts/import-and-normalization.md)
-6. [数据字段中文名称字典](contracts/data-field-dictionary.md)
-7. [Schema 版本规则](contracts/schema-versioning.md)
-8. [Schema 索引](contracts/schema-index.md)
+4. [Enterprise Extension 开发指南](architecture/enterprise-extension-development-guide.md)
+5. [数据 authority](architecture/data-authority.md)
+6. [导入与归一化](contracts/import-and-normalization.md)
+7. [数据字段中文名称字典](contracts/data-field-dictionary.md)
+8. [Schema 版本规则](contracts/schema-versioning.md)
+9. [Schema 索引](contracts/schema-index.md)
 
 ### 排程算法开发
 

@@ -1,0 +1,64 @@
+{
+  "extension_manifest_version": "extension-manifest.v1",
+  "sdk_api_version": "1.0.0",
+  "extension_id": "com.example.aps.alpha",
+  "extension_version": "1.0.0",
+  "artifact": {
+    "digest": "sha256:b436aeabfe97943a69d73fe8238439641e72a8300503e5fb02aac7591c0fddea",
+    "media_type": "application/vnd.plantnexus.aps-extension+python",
+    "package": "example-alpha-aps-extension"
+  },
+  "configuration": {
+    "contract_version": "com.example.aps.alpha.configuration.v1",
+    "schema_digest": "sha256:8734f6cf467c4bb9f266a9ad2e1fd1472d6bb83c1060f9dfc4058866a02b45cd"
+  },
+  "compatibility": {
+    "sdk": {"minimum_inclusive": "1.0.0", "maximum_exclusive": "2.0.0"},
+    "runtime": {"minimum_inclusive": "0.1.0", "maximum_exclusive": "1.0.0"}
+  },
+  "registry_protocol_version": "plugin-registry.v1",
+  "contributions": [
+    {
+      "contribution_id": "com.example.aps.alpha.resource_tag.constraint",
+      "extension_point": "CONSTRAINT",
+      "spi_version": "constraint.v1",
+      "implementation": "example_alpha_extension.constraint:AlphaResourceTagConstraint",
+      "execution_domain": "SOLVER",
+      "order": 100,
+      "capabilities": ["com.example.aps.alpha.resource_tag"],
+      "affects_feasibility": true,
+      "validation_rule_ids": ["com.example.aps.alpha.resource_tag.validation"],
+      "validates_contribution_ids": [],
+      "objective_stage": null
+    },
+    {
+      "contribution_id": "com.example.aps.alpha.resource_tag.validation",
+      "extension_point": "VALIDATION_RULE",
+      "spi_version": "validation-rule.v1",
+      "implementation": "example_alpha_extension.validation:AlphaResourceTagValidator",
+      "execution_domain": "VALIDATOR",
+      "order": 200,
+      "capabilities": ["com.example.aps.alpha.resource_tag"],
+      "affects_feasibility": false,
+      "validation_rule_ids": [],
+      "validates_contribution_ids": ["com.example.aps.alpha.resource_tag.constraint"],
+      "objective_stage": null
+    }
+  ],
+  "requested_services": [],
+  "provenance": {
+    "source_commit": "2682a2235f33d37cc909a1ad8ca3c52a6dffab05",
+    "dependency_lock_digest": "sha256:440e663e557aa6424a1c5d1baa479243b6b03f44f9a3810e77d977b7677525d7",
+    "reproducible_build": true
+  },
+  "execution_boundary": {
+    "load_phase": "BUILD_DEPLOY_STARTUP_ONLY",
+    "trusted_in_process": true,
+    "sandboxed": false,
+    "request_code_selection": false,
+    "network_install": false,
+    "external_api": false,
+    "database_access": false
+  },
+  "manifest_fingerprint": "sha256:778ec6c56d08814f8c3d924061a71fdcf6ed306322abc09f0406e704c5b59754"
+}

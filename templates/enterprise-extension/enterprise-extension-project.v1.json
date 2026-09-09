@@ -1,0 +1,20 @@
+{
+  "project_contract_version": "enterprise-extension-project.v1",
+  "project_id": "__PROJECT_ID__",
+  "distribution_name": "__DISTRIBUTION_NAME__",
+  "package_name": "__PACKAGE_NAME__",
+  "owner": "__OWNER__",
+  "repository_url": "__REPOSITORY_URL__",
+  "license_expression": "__LICENSE_EXPRESSION__",
+  "source_commit": "__SOURCE_COMMIT__",
+  "sdk_api_version": "1.0.0",
+  "runtime_version": "0.1.0",
+  "developer_kit_version": "0.0.0-not-published",
+  "manifest_path": "extension/extension-manifest.json",
+  "configuration_path": "extension/extension-configuration.json",
+  "configuration_schema_path": "extension/configuration-contract.v1.json",
+  "dependency_lock_path": "requirements.lock",
+  "conformance_fixture_path": "conformance/fixture.v1.json",
+  "source_root": "src",
+  "tests_root": "tests"
+}

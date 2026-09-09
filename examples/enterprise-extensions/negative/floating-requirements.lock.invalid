@@ -1,0 +1,2 @@
+# Invalid: floating SDK versions are never accepted.
+aps-extension-sdk>=1.0

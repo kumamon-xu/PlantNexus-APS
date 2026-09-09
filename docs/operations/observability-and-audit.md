@@ -6,10 +6,14 @@ spec_version: 0.3.0
 phase: P0-P8
 normative: true
 source_sections: [29, 42, 65, 93, 95]
-last_reviewed: 2026-09-08
+last_reviewed: 2026-09-09
 ---
 
 # P0 Observability 与 Audit 边界
+
+## TASK-P8-15 Developer Kit evidence边界
+
+Developer Kit只生成sanitized compatibility、security、upgrade/rollback和工程benchmark报告，并复用嵌套Runtime的既有SBOM/VEX身份；不新增运行期metric、trace、business audit、dashboard或alert。P8-10运维观测继续绑定其已验证Runtime输入和两份Runtime policy，新增Kit release policy被精确隔离，不能改变旧靶场的Runtime/Extension状态或把Kit PASS解释为Production observability。
 
 ## TASK-P8-13 Runtime Extension可观测边界
 

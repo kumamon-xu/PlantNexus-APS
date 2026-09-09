@@ -6,12 +6,16 @@ spec_version: 0.3.0
 phase: P8
 normative: true
 source_sections: [65, 93, 95, 97, 98, 99, 100, 101, 106, 107, 113, 114]
-last_reviewed: 2026-09-08
+last_reviewed: 2026-09-09
 ---
 
 # APS Runtime 安装、预检与启动顺序
 
 本页定义P8-09起始、P8-13扩展后的Runtime工程候选可重复安装与fail-closed启动顺序，记录TASK-P8-10隔离Compose靶场对当前声明Runtime身份的真实部署结果，并说明P8-11可选Frontend的独立分发边界。它不授予Production部署、签名或发布权限。
+
+## TASK-P8-15 Developer Kit policy隔离
+
+P8-10保留靶场继续冻结其已验证Runtime代码、Schema、migration、镜像输入和两份既有Runtime release/vulnerability policy。`infra/release/developer-kit-release-policy.v1.json`只控制独立Developer Kit组装，不进入Runtime归档或Compose镜像，因此不属于该历史靶场的Runtime输入；运维checker以两份Runtime policy精确路径替代宽目录匹配。任一Runtime policy或其他既有输入漂移仍返回`RUNTIME_INPUT_DRIFT`，该收窄不更新P8-10 Runtime身份、不启用Extension，也不产生新的部署授权。
 
 ## 1. 固定输入并验证传输
 

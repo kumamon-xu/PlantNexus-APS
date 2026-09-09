@@ -7,6 +7,7 @@ from pathlib import Path
 from typing import cast
 
 from scripts.p8_operations_check import (
+    RUNTIME_INPUTS,
     TARGET_PATH,
     contract_only_reports,
     extension_readiness,
@@ -14,6 +15,17 @@ from scripts.p8_operations_check import (
 )
 
 ROOT = Path(__file__).resolve().parents[3]
+
+
+def test_runtime_input_guard_names_only_runtime_release_policies() -> None:
+    release_inputs = {
+        path for path in RUNTIME_INPUTS if path.startswith("infra/release")
+    }
+    assert release_inputs == {
+        "infra/release/runtime-release-policy.v1.json",
+        "infra/release/runtime-vulnerability-policy.v1.json",
+    }
+    assert "infra/release" not in RUNTIME_INPUTS
 
 
 def _target() -> dict[str, object]:

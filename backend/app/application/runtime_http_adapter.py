@@ -34,6 +34,8 @@ from app.domain.types import canonical_id, format_utc_instant, parse_utc_instant
 type JsonObject = dict[str, Any]
 
 RUNTIME_HTTP_POLICY_VERSION = "runtime-http-policy.v1"
+RUNTIME_HTTP_POLICY_V2 = "runtime-http-policy.v2"
+RUNTIME_EXTENSION_FACTS_VERSION = "runtime-extension-facts.v1"
 RUNTIME_HTTP_CONTEXT_ADAPTER_VERSION = "runtime-http-context-adapter.v1"
 
 _FINGERPRINT = re.compile(r"sha256:[0-9a-f]{64}")
@@ -50,6 +52,7 @@ _SCOPE_FIELDS = frozenset(
         "dispatch_timeout_seconds",
     }
 )
+_SCOPE_FIELDS_V2 = _SCOPE_FIELDS | {"extension_facts"}
 _BUILD_PLAN_FIELDS = frozenset(
     {
         "cutoff_at_utc",
@@ -59,6 +62,16 @@ _BUILD_PLAN_FIELDS = frozenset(
         "priority_facts",
     }
 )
+_EXTENSION_FACT_FIELDS = frozenset(
+    {
+        "extension_facts_version",
+        "resource_attributes",
+        "operation_attributes",
+        "events",
+        "publication_authority_reference",
+    }
+)
+_EXTENSION_IDENTIFIER = re.compile(r"[a-z][a-z0-9]*(?:[._-][a-z0-9]+)+")
 
 
 class RuntimeHttpAdapterError(RuntimeError):
@@ -132,6 +145,7 @@ class _ScopePolicy:
     horizon_end_utc: str
     priority_facts_bytes: bytes
     dispatch_timeout_seconds: int
+    extension_facts_bytes: bytes
 
     @property
     def priority_facts(self) -> Mapping[str, Mapping[str, object]]:
@@ -139,6 +153,10 @@ class _ScopePolicy:
             Mapping[str, Mapping[str, object]],
             json.loads(self.priority_facts_bytes),
         )
+
+    @property
+    def extension_facts(self) -> Mapping[str, object]:
+        return cast(Mapping[str, object], json.loads(self.extension_facts_bytes))
 
 
 def _require_string_list(
@@ -161,8 +179,77 @@ def _require_string_list(
     return tuple(sorted(value))
 
 
-def _scope_policy(value: object) -> _ScopePolicy:
-    if not isinstance(value, Mapping) or set(value) != _SCOPE_FIELDS:
+def _default_extension_facts() -> JsonObject:
+    return {
+        "extension_facts_version": RUNTIME_EXTENSION_FACTS_VERSION,
+        "resource_attributes": {},
+        "operation_attributes": {},
+        "events": [],
+        "publication_authority_reference": "authority.runtime.unconfigured",
+    }
+
+
+def _extension_attributes(value: object, *, field: str) -> Mapping[str, object]:
+    if (
+        not isinstance(value, Mapping)
+        or len(value) > 100_000
+        or any(
+            not isinstance(identifier, str)
+            or len(identifier) > 256
+            or any(character.isspace() for character in identifier)
+            or not isinstance(attributes, Mapping)
+            or len(attributes) > 256
+            for identifier, attributes in value.items()
+        )
+    ):
+        raise ValueError(f"{field} is invalid")
+    return cast(Mapping[str, object], value)
+
+
+def _extension_facts(value: object) -> JsonObject:
+    if not isinstance(value, Mapping) or set(value) != _EXTENSION_FACT_FIELDS:
+        raise ValueError("Runtime Extension facts have an invalid field set")
+    if value.get("extension_facts_version") != RUNTIME_EXTENSION_FACTS_VERSION:
+        raise ValueError("Runtime Extension facts version is unsupported")
+    resources = _extension_attributes(
+        value.get("resource_attributes"), field="resource_attributes"
+    )
+    operations = _extension_attributes(
+        value.get("operation_attributes"), field="operation_attributes"
+    )
+    events = value.get("events")
+    if (
+        not isinstance(events, list)
+        or len(events) > 10_000
+        or any(
+            not isinstance(event, str) or _EXTENSION_IDENTIFIER.fullmatch(event) is None
+            for event in events
+        )
+        or len(events) != len(set(events))
+    ):
+        raise ValueError("Runtime Extension events are invalid")
+    authority = value.get("publication_authority_reference")
+    if (
+        not isinstance(authority, str)
+        or _EXTENSION_IDENTIFIER.fullmatch(authority) is None
+    ):
+        raise ValueError("Runtime Extension publication authority is invalid")
+    document = {
+        "extension_facts_version": RUNTIME_EXTENSION_FACTS_VERSION,
+        "resource_attributes": dict(resources),
+        "operation_attributes": dict(operations),
+        "events": sorted(events),
+        "publication_authority_reference": authority,
+    }
+    canonical_json_bytes(document)
+    return document
+
+
+def _scope_policy(value: object, *, policy_version: str) -> _ScopePolicy:
+    expected_fields = (
+        _SCOPE_FIELDS_V2 if policy_version == RUNTIME_HTTP_POLICY_V2 else _SCOPE_FIELDS
+    )
+    if not isinstance(value, Mapping) or set(value) != expected_fields:
         raise ValueError("Runtime HTTP scope policy has an invalid field set")
     requested_scope = RuntimeHttpRequestedScope.create(
         tenant_id=cast(str, value["tenant_id"]),
@@ -202,6 +289,11 @@ def _scope_policy(value: object) -> _ScopePolicy:
     timeout = value["dispatch_timeout_seconds"]
     if type(timeout) is not int or not 1 <= timeout <= 86_400:
         raise ValueError("Runtime HTTP dispatch timeout is invalid")
+    extension_facts = (
+        _extension_facts(value["extension_facts"])
+        if policy_version == RUNTIME_HTTP_POLICY_V2
+        else _default_extension_facts()
+    )
     return _ScopePolicy(
         requested_scope=requested_scope,
         authorized_authority_references=authorities,
@@ -212,6 +304,7 @@ def _scope_policy(value: object) -> _ScopePolicy:
         horizon_end_utc=horizon_end,
         priority_facts_bytes=canonical_json_bytes(priority_facts),
         dispatch_timeout_seconds=timeout,
+        extension_facts_bytes=canonical_json_bytes(extension_facts),
     )
 
 
@@ -222,6 +315,7 @@ class RuntimeHttpPolicyCatalog:
     canonical_bytes: bytes
     planning_inputs_bytes: bytes
     scopes: tuple[_ScopePolicy, ...]
+    policy_version: str
 
     @classmethod
     def create(
@@ -232,12 +326,16 @@ class RuntimeHttpPolicyCatalog:
     ) -> RuntimeHttpPolicyCatalog:
         if set(document) != _TOP_LEVEL_FIELDS:
             raise ValueError("Runtime HTTP policy has an invalid field set")
-        if document.get("runtime_http_policy_version") != RUNTIME_HTTP_POLICY_VERSION:
+        version = document.get("runtime_http_policy_version")
+        if version not in {RUNTIME_HTTP_POLICY_VERSION, RUNTIME_HTTP_POLICY_V2}:
             raise ValueError("Runtime HTTP policy version is unsupported")
         raw_scopes = document.get("scopes")
         if not isinstance(raw_scopes, list) or not 1 <= len(raw_scopes) <= 1_000:
             raise ValueError("Runtime HTTP policy requires bounded scopes")
-        scopes = tuple(_scope_policy(value) for value in raw_scopes)
+        scopes = tuple(
+            _scope_policy(value, policy_version=cast(str, version))
+            for value in raw_scopes
+        )
         keys = [scope.requested_scope.key for scope in scopes]
         if len(set(keys)) != len(keys):
             raise ValueError("Runtime HTTP policy contains duplicate scopes")
@@ -247,6 +345,7 @@ class RuntimeHttpPolicyCatalog:
             canonical_bytes=canonical_json_bytes(document),
             planning_inputs_bytes=canonical_json_bytes(planning_inputs),
             scopes=scopes,
+            policy_version=cast(str, version),
         )
 
     @property
@@ -256,7 +355,7 @@ class RuntimeHttpPolicyCatalog:
     @property
     def safe_reference(self) -> JsonObject:
         return {
-            "policy_version": RUNTIME_HTTP_POLICY_VERSION,
+            "policy_version": self.policy_version,
             "policy_fingerprint": self.fingerprint,
             "configured_scope_count": len(self.scopes),
         }
@@ -264,6 +363,15 @@ class RuntimeHttpPolicyCatalog:
     @property
     def planning_inputs(self) -> Mapping[str, object]:
         return cast(Mapping[str, object], json.loads(self.planning_inputs_bytes))
+
+    def extension_facts_for(
+        self, *, tenant_id: str, factory_id: str, planning_scope_id: str
+    ) -> Mapping[str, object]:
+        key = (tenant_id, factory_id, planning_scope_id)
+        matches = [scope for scope in self.scopes if scope.requested_scope.key == key]
+        if len(matches) != 1:
+            raise ValueError("Runtime Extension facts scope is unavailable")
+        return matches[0].extension_facts
 
 
 class RuntimeHttpContextAdapter:
@@ -438,6 +546,8 @@ class RuntimeHttpContextAdapter:
 __all__ = [
     "RUNTIME_HTTP_CONTEXT_ADAPTER_VERSION",
     "RUNTIME_HTTP_POLICY_VERSION",
+    "RUNTIME_HTTP_POLICY_V2",
+    "RUNTIME_EXTENSION_FACTS_VERSION",
     "RuntimeHttpAdapterError",
     "RuntimeHttpContextAdapter",
     "RuntimeHttpIngressContext",

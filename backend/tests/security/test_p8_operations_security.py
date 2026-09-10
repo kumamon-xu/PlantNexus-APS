@@ -97,6 +97,8 @@ def test_committed_operations_assets_contain_no_secret_values() -> None:
         ROOT / "infra/operations/non-production-target.v1.json",
         ROOT / "infra/operations/observability-policy.v1.json",
         ROOT / "infra/operations/runtime-http-policy.v1.json",
+        ROOT / "infra/operations/runtime-http-policy.v2.json",
+        ROOT / "infra/operations/runtime_extension_bootstrap.py",
         ROOT / "infra/operations/compose.p8-operations.yml",
     ]
     rendered = "\n".join(path.read_text(encoding="utf-8") for path in paths)

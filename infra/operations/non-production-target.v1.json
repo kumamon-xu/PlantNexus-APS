@@ -4,6 +4,8 @@
   "authorization": {
     "task_id": "TASK-P8-10",
     "authorized_on": "2026-09-07",
+    "corrective_task_id": "TASK-P8-18",
+    "corrective_authorized_on": "2026-09-10",
     "production_authorized": false,
     "demo_authorized": false
   },
@@ -73,8 +75,22 @@
   ],
   "extensions": {
     "registry_protocol": "plugin-registry.v1",
-    "loading": "DISABLED_UNTIL_COMPATIBILITY_VERIFIED",
-    "allowed_extension_ids": [],
+    "loading": "VERIFIED_BUILD_DEPLOY_STARTUP_ALLOW_LIST",
+    "allowed_extension_ids": [
+      "com.example.aps.alpha"
+    ],
+    "artifact_set": [
+      {
+        "extension_id": "com.example.aps.alpha",
+        "extension_version": "1.0.0",
+        "artifact_digest": "sha256:b436aeabfe97943a69d73fe8238439641e72a8300503e5fb02aac7591c0fddea",
+        "manifest_fingerprint": "sha256:778ec6c56d08814f8c3d924061a71fdcf6ed306322abc09f0406e704c5b59754",
+        "configuration_fingerprint": "sha256:efaf24ac7882f4b13b0c005fc48e50f8f2df64b6620be9a3b74fe3328daed41e"
+      }
+    ],
+    "developer_kit_version": "1.0.0",
+    "developer_kit_fingerprint": "sha256:ee2a3a407337e595ca724ed2a92540e911c5fad7272e472f2d3ef3297a14a361",
+    "artifact_provider": "EXPLICIT_TARGET_MODULE_NO_DISCOVERY_OR_NETWORK",
     "invalid_configuration_action": "READINESS_DOWN_NO_PROMOTION"
   },
   "recovery": {
@@ -83,7 +99,9 @@
     "verification": [
       "MIGRATION_HEAD_MATCH",
       "SCHEMA_FINGERPRINT_MATCH",
-      "SYNTHETIC_SENTINEL_FINGERPRINT_MATCH"
+      "SYNTHETIC_SENTINEL_FINGERPRINT_MATCH",
+      "EXTENSION_SET_FINGERPRINT_MATCH",
+      "DEVELOPER_KIT_IDENTITY_MATCH"
     ],
     "rto_policy": "MEASURE_ONLY_WITHIN_PROVIDER_JOB_TIMEOUT_NO_SLA",
     "raw_backup_retained": false,

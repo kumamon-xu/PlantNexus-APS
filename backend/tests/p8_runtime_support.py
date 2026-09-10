@@ -71,6 +71,7 @@ def runtime_settings(
     *,
     database_url: str,
     runtime_artifact_fingerprint: str | None = None,
+    extension_facts: Mapping[str, object] | None = None,
 ) -> Settings:
     policy_path = tmp_path / "planning-policy.runtime.json"
     limits_path = tmp_path / "solve-limits.runtime.json"
@@ -82,7 +83,11 @@ def runtime_settings(
         json.dumps(solve_limits(), ensure_ascii=False), encoding="utf-8"
     )
     http_policy_path.write_text(
-        json.dumps(runtime_http_policy(), ensure_ascii=False), encoding="utf-8"
+        json.dumps(
+            runtime_http_policy(extension_facts=extension_facts),
+            ensure_ascii=False,
+        ),
+        encoding="utf-8",
     )
     return Settings(
         runtime_environment=RuntimeEnvironment.TEST,
@@ -99,33 +104,40 @@ def runtime_settings(
     )
 
 
-def runtime_http_policy() -> dict[str, object]:
+def runtime_http_policy(
+    *, extension_facts: Mapping[str, object] | None = None
+) -> dict[str, object]:
+    scope: dict[str, object] = {
+        "tenant_id": "TENANT-P8-APPLICATION",
+        "factory_id": "FACTORY-001",
+        "planning_scope_id": "PLANNING-P8-APPLICATION",
+        "authorized_authority_references": [AUTHORITY_REFERENCE],
+        "authorized_mapping_fingerprints": [MAPPING_FINGERPRINT],
+        "build_plan": {
+            "cutoff_at_utc": "2026-08-20T00:00:00Z",
+            "tick_seconds": 60,
+            "horizon_start_utc": "2026-08-20T00:00:00Z",
+            "horizon_end_utc": "2026-08-21T00:00:00Z",
+            "priority_facts": {
+                "DEMAND-001": {
+                    "priority_weight": 2,
+                    "source_system": "plantnexus-synthetic-policy",
+                    "source_version": "1.0.0",
+                    "source_record_id": "P8-RUNTIME-DEMAND-001",
+                }
+            },
+        },
+        "dispatch_timeout_seconds": 3600,
+    }
+    if extension_facts is not None:
+        scope["extension_facts"] = dict(extension_facts)
     return {
-        "runtime_http_policy_version": "runtime-http-policy.v1",
-        "scopes": [
-            {
-                "tenant_id": "TENANT-P8-APPLICATION",
-                "factory_id": "FACTORY-001",
-                "planning_scope_id": "PLANNING-P8-APPLICATION",
-                "authorized_authority_references": [AUTHORITY_REFERENCE],
-                "authorized_mapping_fingerprints": [MAPPING_FINGERPRINT],
-                "build_plan": {
-                    "cutoff_at_utc": "2026-08-20T00:00:00Z",
-                    "tick_seconds": 60,
-                    "horizon_start_utc": "2026-08-20T00:00:00Z",
-                    "horizon_end_utc": "2026-08-21T00:00:00Z",
-                    "priority_facts": {
-                        "DEMAND-001": {
-                            "priority_weight": 2,
-                            "source_system": "plantnexus-synthetic-policy",
-                            "source_version": "1.0.0",
-                            "source_record_id": "P8-RUNTIME-DEMAND-001",
-                        }
-                    },
-                },
-                "dispatch_timeout_seconds": 3600,
-            }
-        ],
+        "runtime_http_policy_version": (
+            "runtime-http-policy.v2"
+            if extension_facts is not None
+            else "runtime-http-policy.v1"
+        ),
+        "scopes": [scope],
     }
 
 

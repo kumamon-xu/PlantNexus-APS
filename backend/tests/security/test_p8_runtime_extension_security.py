@@ -3,13 +3,31 @@
 from __future__ import annotations
 
 import ast
+from collections.abc import Callable
 from copy import deepcopy
 from pathlib import Path
+from typing import cast
 
+from celery import Celery
 import pytest
+from sqlalchemy import text
 
-from app.data_validation.canonical_ingress import canonical_fingerprint, canonical_json_bytes
+from aps_extension_sdk import (
+    ContributionManifest,
+    FrozenJsonObject,
+    ValidationContext,
+    ValidationOutput,
+    ValidationViolation,
+    freeze_json,
+)
+
+from app.data_validation.canonical_ingress import (
+    canonical_fingerprint,
+    canonical_json_bytes,
+)
 from app.extensions.contracts import RuntimeExtensionError
+from app.extensions.registry import LoadedRuntimeExtensionAdapter
+from app.jobs.planning_run_worker_contracts import PlanningRunWorkerError
 from app.runtime_composition import (
     RuntimeCompositionError,
     RuntimeProcess,
@@ -19,12 +37,48 @@ from backend.tests.fixtures.p8_synthetic_extension import (
     CrashingObjective,
     ForgedObjective,
     SlowObjective,
+    SyntheticValidationRule,
 )
 from backend.tests.p8_runtime_extension_support import runtime_extension_fixture
+from backend.tests.p8_runtime_support import (
+    FixedIdentityFactory,
+    FixedRuntimeClock,
+    RecordingCelery,
+    command_context,
+    dispatch_window,
+    dispatched_message,
+    ingress_context,
+)
+from backend.tests.p8_solver_worker_support import migrated_engine, worker_request
 
 
 ROOT = Path(__file__).resolve().parents[3]
 OBJECTIVE_ID = "com.example.cost.objective"
+VALIDATION_ID = "com.example.capacity.validator"
+
+
+class _RejectingValidationRule(SyntheticValidationRule):
+    def validate(self, context: ValidationContext) -> ValidationOutput:
+        del context
+        observed = freeze_json({"resource_id": "RESOURCE-001"})
+        expected = freeze_json({"eligible": True})
+        assert isinstance(observed, FrozenJsonObject)
+        assert isinstance(expected, FrozenJsonObject)
+        return ValidationOutput(
+            contribution_id=self.descriptor.contribution_id,
+            validated_contribution_ids=self.descriptor.validates_contribution_ids,
+            passed=False,
+            violations=(
+                ValidationViolation(
+                    violation_code="com.example.product.rejected",
+                    entity_ids=("operation.synthetic",),
+                    path="$.assignments",
+                    observed=observed,
+                    expected=expected,
+                    message_key="com.example.product.rejected",
+                ),
+            ),
+        )
 
 
 def _fixture(tmp_path: Path, **kwargs):
@@ -125,7 +179,9 @@ def test_private_path_and_configuration_values_never_enter_safe_identity(
     assert "customer-secret" not in str(captured.value)
 
 
-def test_rejected_startup_has_no_database_or_business_side_effect(tmp_path: Path) -> None:
+def test_rejected_startup_has_no_database_or_business_side_effect(
+    tmp_path: Path,
+) -> None:
     database_path = tmp_path / "must-not-exist.db"
     fixture = runtime_extension_fixture(
         tmp_path,
@@ -147,6 +203,79 @@ def test_rejected_startup_has_no_database_or_business_side_effect(tmp_path: Path
         )
     assert captured.value.code == "EXTENSION_ARTIFACT_SIGNATURE_INVALID"
     assert not database_path.exists()
+
+
+@pytest.mark.parametrize(
+    ("contribution_id", "implementation", "expected_extension_code"),
+    [
+        (OBJECTIVE_ID, CrashingObjective, "EXTENSION_EXECUTION_FAILED"),
+        (VALIDATION_ID, _RejectingValidationRule, "EXTENSION_VALIDATION_FAILED"),
+    ],
+)
+def test_product_extension_failure_is_terminal_before_schedule_version(
+    tmp_path: Path,
+    contribution_id: str,
+    implementation: Callable[[ContributionManifest], object],
+    expected_extension_code: str,
+) -> None:
+    database_path = tmp_path / "product-failure.db"
+    engine, _ = migrated_engine(database_path)
+    engine.dispose()
+    database_url = f"sqlite:///{database_path.as_posix()}"
+    fixture = runtime_extension_fixture(
+        tmp_path,
+        database_url=database_url,
+        overrides={contribution_id: implementation},
+    )
+    publisher = RecordingCelery()
+    api = compose_runtime(
+        fixture.settings,
+        process=RuntimeProcess.API,
+        dispatch_client=cast(Celery, publisher),
+        identity_factory=FixedIdentityFactory("extension-product-failure-001"),
+        extension_artifacts=(fixture.artifact,),
+    )
+    worker = compose_runtime(
+        fixture.settings,
+        process=RuntimeProcess.WORKER,
+        clock=FixedRuntimeClock(),
+        extension_artifacts=(fixture.artifact,),
+    )
+    try:
+        assert api.application is not None
+        assert worker.worker is not None
+        request = worker_request()
+        api.application.submit_canonical(
+            canonical_json_bytes(request),
+            context=ingress_context(request, api.descriptor),
+            dispatch_window=dispatch_window(),
+        )
+        message = dispatched_message(publisher.messages[0])
+        with pytest.raises(PlanningRunWorkerError) as captured:
+            worker.worker.execute(
+                planning_run_id=cast(str, message["planning_run_id"]),
+                work_item_id=cast(str, message["work_item_id"]),
+                worker_id=cast(str, message["worker_id"]),
+            )
+        assert captured.value.code.value == "EXECUTION_FAILED"
+        assert captured.value.field == "runtime_extension"
+        assert isinstance(captured.value.__cause__, RuntimeExtensionError)
+        assert captured.value.__cause__.code == expected_extension_code
+        final = api.application.read_planning_run(
+            cast(str, message["planning_run_id"]),
+            context=command_context(request),
+        )
+        assert final.aggregate.document["state"] == "FAILED"
+        with api.database.engine.connect() as connection:
+            assert (
+                connection.scalar(text("SELECT count(*) FROM schedule_versions")) == 0
+            )
+        assert isinstance(worker.extension_adapter, LoadedRuntimeExtensionAdapter)
+        rendered = str(captured.value) + str(worker.extension_adapter.safe_metrics())
+        assert "do-not-leak" not in rendered
+    finally:
+        worker.close()
+        api.close()
 
 
 def test_core_and_formal_validator_have_no_extension_reverse_import() -> None:

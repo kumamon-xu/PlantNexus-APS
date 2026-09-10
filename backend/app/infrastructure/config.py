@@ -14,7 +14,13 @@ from app import CODE_VERSION, SCHEMA_VERSION, SPEC_VERSION
 
 _COMMIT_PATTERN = re.compile(r"[0-9a-f]{40}")
 _FINGERPRINT_PATTERN = re.compile(r"sha256:[0-9a-f]{64}")
+_RELEASE_VERSION_PATTERN = re.compile(
+    r"(?:0|[1-9][0-9]*)\.(?:0|[1-9][0-9]*)\.(?:0|[1-9][0-9]*)"
+)
 _SAFE_ID_PATTERN = re.compile(r"[a-z][a-z0-9]*(?:[._-][a-z0-9]+)+")
+_EXTENSION_PROVIDER_PATTERN = re.compile(
+    r"[A-Za-z_][A-Za-z0-9_]*(?:\.[A-Za-z_][A-Za-z0-9_]*)*:[A-Za-z_][A-Za-z0-9_]*"
+)
 
 
 class RuntimeEnvironment(StrEnum):
@@ -65,10 +71,12 @@ class Settings(BaseSettings):
     runtime_http_policy_path: Path | None = None
     runtime_artifact_fingerprint: str | None = None
     core_artifact_fingerprint: str | None = None
+    developer_kit_version: str | None = None
     developer_kit_fingerprint: str | None = None
     runtime_extension_catalog_path: Path | None = None
     runtime_extension_verification_key_id: str | None = None
     runtime_extension_verification_key: SecretStr | None = None
+    runtime_extension_artifact_provider: str | None = None
 
     database_url: SecretStr = SecretStr(
         "postgresql+psycopg://plantnexus@localhost:5432/plantnexus_dev"
@@ -115,6 +123,15 @@ class Settings(BaseSettings):
             raise ValueError("artifact fingerprint must be a lowercase SHA-256 value")
         return value
 
+    @field_validator("developer_kit_version")
+    @classmethod
+    def validate_developer_kit_version(cls, value: str | None) -> str | None:
+        if value is not None and _RELEASE_VERSION_PATTERN.fullmatch(value) is None:
+            raise ValueError(
+                "Developer Kit version must be release-only MAJOR.MINOR.PATCH"
+            )
+        return value
+
     @field_validator("runtime_extension_verification_key_id")
     @classmethod
     def validate_extension_key_id(cls, value: str | None) -> str | None:
@@ -124,12 +141,25 @@ class Settings(BaseSettings):
             raise ValueError("Extension verification key ID must be a stable safe ID")
         return value
 
+    @field_validator("runtime_extension_artifact_provider")
+    @classmethod
+    def validate_extension_artifact_provider(cls, value: str | None) -> str | None:
+        if value is not None and (
+            len(value) > 256 or _EXTENSION_PROVIDER_PATTERN.fullmatch(value) is None
+        ):
+            raise ValueError(
+                "Extension artifact provider must be one explicit module:callable reference"
+            )
+        return value
+
     @model_validator(mode="after")
     def enforce_environment_guards(self) -> Self:
         if self.job_lease_seconds <= self.job_heartbeat_seconds:
             raise ValueError("job lease must be longer than heartbeat interval")
 
-        is_production_runtime = self.runtime_environment is RuntimeEnvironment.PRODUCTION
+        is_production_runtime = (
+            self.runtime_environment is RuntimeEnvironment.PRODUCTION
+        )
         is_production_data = self.data_plane is DataPlane.PRODUCTION
         if is_production_runtime != is_production_data:
             raise ValueError("production runtime and production data plane must match")
@@ -140,9 +170,16 @@ class Settings(BaseSettings):
             if not database_url.startswith("postgresql+psycopg://"):
                 raise ValueError("production requires PostgreSQL")
             if _COMMIT_PATTERN.fullmatch(self.code_commit) is None:
-                raise ValueError("production requires an immutable 40-character code commit")
-        elif self.code_commit != "uncommitted" and _COMMIT_PATTERN.fullmatch(self.code_commit) is None:
-            raise ValueError("code_commit must be 'uncommitted' or a 40-character commit")
+                raise ValueError(
+                    "production requires an immutable 40-character code commit"
+                )
+        elif (
+            self.code_commit != "uncommitted"
+            and _COMMIT_PATTERN.fullmatch(self.code_commit) is None
+        ):
+            raise ValueError(
+                "code_commit must be 'uncommitted' or a 40-character commit"
+            )
         if self.runtime_composition_enabled:
             if self.data_plane is DataPlane.DEVELOPMENT:
                 raise ValueError(
@@ -166,12 +203,30 @@ class Settings(BaseSettings):
             raise ValueError(
                 "Extension catalog, verification key ID, and verification key are atomic"
             )
+        kit_identity = (self.developer_kit_version, self.developer_kit_fingerprint)
+        if any(value is not None for value in kit_identity) and not all(
+            value is not None for value in kit_identity
+        ):
+            raise ValueError(
+                "Developer Kit version and fingerprint are an atomic identity"
+            )
         if self.runtime_extension_catalog_path is not None:
             if not self.runtime_composition_enabled:
                 raise ValueError("Extension loading requires Runtime composition")
             key = cast(SecretStr, self.runtime_extension_verification_key)
             if not 32 <= len(key.get_secret_value().encode("utf-8")) <= 4096:
                 raise ValueError("Extension verification key length is invalid")
+            if not all(value is not None for value in kit_identity):
+                raise ValueError(
+                    "Extension loading requires an exact Developer Kit identity"
+                )
+        if (
+            self.runtime_extension_artifact_provider is not None
+            and self.runtime_extension_catalog_path is None
+        ):
+            raise ValueError(
+                "Extension artifact provider requires an atomic Extension catalog configuration"
+            )
         return self
 
     def build_metadata(self) -> dict[str, str]:
@@ -195,6 +250,9 @@ class Settings(BaseSettings):
             "runtime_composition_enabled": self.runtime_composition_enabled,
             "runtime_extension_catalog_configured": (
                 self.runtime_extension_catalog_path is not None
+            ),
+            "runtime_extension_artifact_provider_configured": (
+                self.runtime_extension_artifact_provider is not None
             ),
             "code_commit": self.code_commit,
         }

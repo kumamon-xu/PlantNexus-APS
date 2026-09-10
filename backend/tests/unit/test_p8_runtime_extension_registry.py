@@ -10,7 +10,10 @@ from typing import cast
 from pydantic import SecretStr, ValidationError
 import pytest
 
-from app.data_validation.canonical_ingress import canonical_fingerprint, canonical_json_bytes
+from app.data_validation.canonical_ingress import (
+    canonical_fingerprint,
+    canonical_json_bytes,
+)
 from app.extensions.contracts import RuntimeExtensionArtifact, RuntimeExtensionError
 from app.extensions.loader import load_runtime_extensions
 from app.infrastructure.config import DataPlane, RuntimeEnvironment, Settings
@@ -105,18 +108,14 @@ def test_incompatible_runtime_and_configuration_tamper_fail_closed(
     tmp_path: Path,
 ) -> None:
     incompatible_manifest = synthetic_manifest_document()
-    incompatible_manifest["compatibility"]["runtime"][
-        "minimum_inclusive"
-    ] = "0.2.0"
+    incompatible_manifest["compatibility"]["runtime"]["minimum_inclusive"] = "0.2.0"
     incompatible_manifest["manifest_fingerprint"] = ""
     manifest_projection = dict(incompatible_manifest)
     manifest_projection.pop("manifest_fingerprint")
     incompatible_manifest["manifest_fingerprint"] = canonical_fingerprint(
         manifest_projection
     )
-    incompatible_configuration = synthetic_configuration_document(
-        incompatible_manifest
-    )
+    incompatible_configuration = synthetic_configuration_document(incompatible_manifest)
     incompatible_catalog_path, _ = write_runtime_extension_bundle(
         tmp_path / "incompatible",
         manifest=incompatible_manifest,
@@ -139,9 +138,7 @@ def test_incompatible_runtime_and_configuration_tamper_fail_closed(
     )
     tampered_configuration = deepcopy(configuration_fixture.configuration)
     tampered_configuration["values"] = {"capacity_mode": "TAMPERED"}
-    configuration_path.write_bytes(
-        canonical_json_bytes(tampered_configuration) + b"\n"
-    )
+    configuration_path.write_bytes(canonical_json_bytes(tampered_configuration) + b"\n")
     with pytest.raises(RuntimeExtensionError) as configuration:
         configuration_fixture.load()
     assert configuration.value.code == "EXTENSION_CONFIGURATION_INVALID"
@@ -171,6 +168,8 @@ def test_settings_require_atomic_secret_free_extension_configuration(
         )
     configured = Settings(
         **common,
+        developer_kit_version="1.0.0",
+        developer_kit_fingerprint="sha256:" + "d" * 64,
         runtime_extension_catalog_path=tmp_path / "catalog.json",
         runtime_extension_verification_key_id=VERIFICATION_KEY_ID,
         runtime_extension_verification_key=SecretStr(VERIFICATION_KEY.decode()),

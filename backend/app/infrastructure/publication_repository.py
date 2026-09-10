@@ -487,6 +487,23 @@ class SqlAlchemyPublicationRepository:
                 message="current publication query failed",
             )
 
+    def get(self, publication_id: str) -> dict[str, object] | None:
+        """Read one integrity-verified immutable PublicationResult by ID."""
+
+        require_text(publication_id, "publication_id")
+        try:
+            with self._engine.connect() as connection:
+                row = self._find_by_id(connection, publication_id)
+                return self._load(row) if row is not None else None
+        except WorkspacePersistenceError:
+            raise
+        except SQLAlchemyError:
+            reject(
+                PersistenceFailure.PERSISTENCE_FAILED,
+                field="repository.get",
+                message="PublicationResult query failed",
+            )
+
     def get_current_in_transaction(
         self,
         connection: Connection,

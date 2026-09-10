@@ -3,7 +3,8 @@
 from __future__ import annotations
 
 from collections.abc import Callable, Mapping
-from dataclasses import dataclass
+from dataclasses import dataclass, fields, is_dataclass
+from enum import Enum
 import json
 from queue import Empty, Queue
 from threading import Lock, Thread
@@ -34,7 +35,10 @@ from aps_extension_sdk import (
     validate_protocol_output,
 )
 
-from app.data_validation.canonical_ingress import canonical_fingerprint, canonical_json_bytes
+from app.data_validation.canonical_ingress import (
+    canonical_fingerprint,
+    canonical_json_bytes,
+)
 from app.extensions.contracts import (
     RUNTIME_EXTENSION_ADAPTER_VERSION,
     RUNTIME_EXTENSION_INPUT_VIEW_VERSION,
@@ -81,7 +85,7 @@ class RuntimeExtensionBinding:
 
 
 class RuntimeExtensionMetrics:
-    """Process-local safe counters; never retains inputs, outputs, or exceptions."""
+    """Process-local safe counters and fingerprints; never retains payloads."""
 
     def __init__(self, extension_set_fingerprint: str) -> None:
         self._extension_set_fingerprint = extension_set_fingerprint
@@ -95,6 +99,9 @@ class RuntimeExtensionMetrics:
         *,
         elapsed_ms: float,
         outcome: str,
+        lifecycle: str | None = None,
+        input_fingerprint: str | None = None,
+        output_fingerprint: str | None = None,
     ) -> None:
         with self._lock:
             row = self._rows.setdefault(
@@ -107,6 +114,9 @@ class RuntimeExtensionMetrics:
                     "timeout_count": 0,
                     "last_elapsed_ms": None,
                     "max_elapsed_ms": 0.0,
+                    "last_lifecycle": None,
+                    "last_input_fingerprint": None,
+                    "last_output_fingerprint": None,
                 },
             )
             row["call_count"] = cast(int, row["call_count"]) + 1
@@ -120,6 +130,9 @@ class RuntimeExtensionMetrics:
             rounded = round(elapsed_ms, 3)
             row["last_elapsed_ms"] = rounded
             row["max_elapsed_ms"] = max(cast(float, row["max_elapsed_ms"]), rounded)
+            row["last_lifecycle"] = lifecycle
+            row["last_input_fingerprint"] = input_fingerprint
+            row["last_output_fingerprint"] = output_fingerprint
 
     def assert_healthy(self) -> None:
         with self._lock:
@@ -147,6 +160,26 @@ class RuntimeExtensionMetrics:
         }
 
 
+def _safe_output_projection(value: object) -> object:
+    if value is None or isinstance(value, (bool, str, int, float)):
+        return value
+    if isinstance(value, Enum):
+        return value.value
+    if isinstance(value, Mapping):
+        return {
+            str(key): _safe_output_projection(item)
+            for key, item in sorted(value.items())
+        }
+    if isinstance(value, (tuple, list)):
+        return [_safe_output_projection(item) for item in value]
+    if is_dataclass(value) and not isinstance(value, type):
+        return {
+            field.name: _safe_output_projection(getattr(value, field.name))
+            for field in fields(value)
+        }
+    raise TypeError("Extension output cannot be fingerprinted")
+
+
 def invoke_trusted_extension(
     binding: RuntimeExtensionBinding,
     operation: Callable[[], OutputT],
@@ -154,6 +187,8 @@ def invoke_trusted_extension(
     timeout_ms: int,
     metrics: RuntimeExtensionMetrics,
     validate: Callable[[OutputT], None] | None = None,
+    lifecycle: str | None = None,
+    input_fingerprint: str | None = None,
 ) -> OutputT:
     """Run trusted code behind a bounded, discard-on-failure daemon call.
 
@@ -182,7 +217,13 @@ def invoke_trusted_extension(
         thread.join(timeout_ms / 1_000)
     except Exception as error:  # noqa: BLE001 - runtime thread detail is private
         elapsed_ms = (monotonic() - started) * 1_000
-        metrics.record(binding.descriptor, elapsed_ms=elapsed_ms, outcome="FAILURE")
+        metrics.record(
+            binding.descriptor,
+            elapsed_ms=elapsed_ms,
+            outcome="FAILURE",
+            lifecycle=lifecycle,
+            input_fingerprint=input_fingerprint,
+        )
         raise RuntimeExtensionError(
             RuntimeExtensionErrorCode.EXTENSION_EXECUTION_FAILED.value,
             field=binding.descriptor.contribution_id,
@@ -190,7 +231,13 @@ def invoke_trusted_extension(
         ) from error
     elapsed_ms = (monotonic() - started) * 1_000
     if thread.is_alive():
-        metrics.record(binding.descriptor, elapsed_ms=elapsed_ms, outcome="TIMEOUT")
+        metrics.record(
+            binding.descriptor,
+            elapsed_ms=elapsed_ms,
+            outcome="TIMEOUT",
+            lifecycle=lifecycle,
+            input_fingerprint=input_fingerprint,
+        )
         reject_extension(
             RuntimeExtensionErrorCode.EXTENSION_TIMEOUT,
             field=binding.descriptor.contribution_id,
@@ -202,7 +249,13 @@ def invoke_trusted_extension(
         succeeded, value = False, None
     if not succeeded:
         elapsed_ms = (monotonic() - started) * 1_000
-        metrics.record(binding.descriptor, elapsed_ms=elapsed_ms, outcome="FAILURE")
+        metrics.record(
+            binding.descriptor,
+            elapsed_ms=elapsed_ms,
+            outcome="FAILURE",
+            lifecycle=lifecycle,
+            input_fingerprint=input_fingerprint,
+        )
         reject_extension(
             RuntimeExtensionErrorCode.EXTENSION_EXECUTION_FAILED,
             field=binding.descriptor.contribution_id,
@@ -214,11 +267,23 @@ def invoke_trusted_extension(
             validate(result)
     except RuntimeExtensionError:
         elapsed_ms = (monotonic() - started) * 1_000
-        metrics.record(binding.descriptor, elapsed_ms=elapsed_ms, outcome="FAILURE")
+        metrics.record(
+            binding.descriptor,
+            elapsed_ms=elapsed_ms,
+            outcome="FAILURE",
+            lifecycle=lifecycle,
+            input_fingerprint=input_fingerprint,
+        )
         raise
     except ExtensionContractError as error:
         elapsed_ms = (monotonic() - started) * 1_000
-        metrics.record(binding.descriptor, elapsed_ms=elapsed_ms, outcome="FAILURE")
+        metrics.record(
+            binding.descriptor,
+            elapsed_ms=elapsed_ms,
+            outcome="FAILURE",
+            lifecycle=lifecycle,
+            input_fingerprint=input_fingerprint,
+        )
         raise RuntimeExtensionError(
             RuntimeExtensionErrorCode.EXTENSION_OUTPUT_INVALID.value,
             field=binding.descriptor.contribution_id,
@@ -226,7 +291,13 @@ def invoke_trusted_extension(
         ) from error
     except Exception as error:  # noqa: BLE001 - validation detail is never rendered
         elapsed_ms = (monotonic() - started) * 1_000
-        metrics.record(binding.descriptor, elapsed_ms=elapsed_ms, outcome="FAILURE")
+        metrics.record(
+            binding.descriptor,
+            elapsed_ms=elapsed_ms,
+            outcome="FAILURE",
+            lifecycle=lifecycle,
+            input_fingerprint=input_fingerprint,
+        )
         raise RuntimeExtensionError(
             RuntimeExtensionErrorCode.EXTENSION_OUTPUT_INVALID.value,
             field=binding.descriptor.contribution_id,
@@ -234,13 +305,41 @@ def invoke_trusted_extension(
         ) from error
     elapsed_ms = (monotonic() - started) * 1_000
     if elapsed_ms > timeout_ms:
-        metrics.record(binding.descriptor, elapsed_ms=elapsed_ms, outcome="TIMEOUT")
+        metrics.record(
+            binding.descriptor,
+            elapsed_ms=elapsed_ms,
+            outcome="TIMEOUT",
+            lifecycle=lifecycle,
+            input_fingerprint=input_fingerprint,
+        )
         reject_extension(
             RuntimeExtensionErrorCode.EXTENSION_TIMEOUT,
             field=binding.descriptor.contribution_id,
             message="Extension invocation exceeded its configured budget",
         )
-    metrics.record(binding.descriptor, elapsed_ms=elapsed_ms, outcome="SUCCESS")
+    try:
+        output_fingerprint = canonical_fingerprint(_safe_output_projection(result))
+    except Exception as error:  # noqa: BLE001 - output detail is never rendered
+        metrics.record(
+            binding.descriptor,
+            elapsed_ms=elapsed_ms,
+            outcome="FAILURE",
+            lifecycle=lifecycle,
+            input_fingerprint=input_fingerprint,
+        )
+        raise RuntimeExtensionError(
+            RuntimeExtensionErrorCode.EXTENSION_OUTPUT_INVALID.value,
+            field=binding.descriptor.contribution_id,
+            message="Extension output violated the SDK contract",
+        ) from error
+    metrics.record(
+        binding.descriptor,
+        elapsed_ms=elapsed_ms,
+        outcome="SUCCESS",
+        lifecycle=lifecycle,
+        input_fingerprint=input_fingerprint,
+        output_fingerprint=output_fingerprint,
+    )
     return result
 
 
@@ -253,7 +352,9 @@ class RuntimeExtensionRegistry:
 
     def __post_init__(self) -> None:
         expected = tuple(item.contribution_id for item in self.resolution.contributions)
-        observed = tuple(binding.descriptor.contribution_id for binding in self.bindings)
+        observed = tuple(
+            binding.descriptor.contribution_id for binding in self.bindings
+        )
         if observed != expected:
             reject_extension(
                 RuntimeExtensionErrorCode.REGISTRY_RESOLUTION_MISMATCH,
@@ -386,10 +487,13 @@ class LoadedRuntimeExtensionAdapter:
         prepared: tuple[tuple[RuntimeExtensionBinding, object], ...],
         *,
         method_name: str,
+        lifecycle: str | None,
     ) -> tuple[object, ...]:
         outputs: list[object] = []
         for binding, context in prepared:
             self.metrics.assert_healthy()
+            input_view = getattr(context, "input_view", None)
+            input_fingerprint = getattr(input_view, "input_fingerprint", None)
             outputs.append(
                 invoke_trusted_extension(
                     binding,
@@ -401,6 +505,12 @@ class LoadedRuntimeExtensionAdapter:
                     metrics=self.metrics,
                     validate=lambda output, binding=binding, context=context: (
                         validate_protocol_output(binding.descriptor, context, output)
+                    ),
+                    lifecycle=lifecycle,
+                    input_fingerprint=(
+                        input_fingerprint
+                        if isinstance(input_fingerprint, str)
+                        else None
                     ),
                 )
             )
@@ -424,6 +534,7 @@ class LoadedRuntimeExtensionAdapter:
                     provenance=provenance,
                 ),
                 method_name="contribute",
+                lifecycle=cast(str | None, provenance.get("lifecycle")),
             ),
         )
 
@@ -445,6 +556,7 @@ class LoadedRuntimeExtensionAdapter:
                     provenance=provenance,
                 ),
                 method_name="evaluate",
+                lifecycle=cast(str | None, provenance.get("lifecycle")),
             ),
         )
 
@@ -466,6 +578,7 @@ class LoadedRuntimeExtensionAdapter:
                     provenance=provenance,
                 ),
                 method_name="apply",
+                lifecycle=cast(str | None, provenance.get("lifecycle")),
             ),
         )
 
@@ -487,6 +600,7 @@ class LoadedRuntimeExtensionAdapter:
                     provenance=provenance,
                 ),
                 method_name="validate",
+                lifecycle=cast(str | None, provenance.get("lifecycle")),
             ),
         )
 
@@ -531,6 +645,8 @@ class LoadedRuntimeExtensionAdapter:
             validate=lambda output: validate_protocol_output(
                 binding.descriptor, context, output
             ),
+            lifecycle=cast(str | None, provenance.get("lifecycle")),
+            input_fingerprint=context.input_view.input_fingerprint,
         )
 
     def invoke_plugin_registry(self) -> RegistryResolution:
@@ -541,6 +657,7 @@ class LoadedRuntimeExtensionAdapter:
         if not bindings:
             return self.registry.resolution
         binding = bindings[0]
+
         def validate_registry(output: object) -> None:
             validate_protocol_output(
                 binding.descriptor, (self.manifests, self.policy), output
@@ -560,6 +677,10 @@ class LoadedRuntimeExtensionAdapter:
             timeout_ms=self.limits.invocation_timeout_ms,
             metrics=self.metrics,
             validate=validate_registry,
+            lifecycle="PRODUCT_REGISTRY_RESOLUTION",
+            input_fingerprint=canonical_fingerprint(
+                _safe_output_projection((self.manifests, self.policy))
+            ),
         )
         return cast(RegistryResolution, result)
 

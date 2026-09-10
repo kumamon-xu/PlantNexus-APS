@@ -19,7 +19,10 @@ from aps_extension_sdk import (
     parse_extension_manifest,
 )
 
-from app.data_validation.canonical_ingress import canonical_fingerprint, canonical_json_bytes
+from app.data_validation.canonical_ingress import (
+    canonical_fingerprint,
+    canonical_json_bytes,
+)
 from app.extensions.contracts import RuntimeExtensionArtifact
 from app.extensions.loader import load_runtime_extensions, runtime_extension_signature
 from app.extensions.registry import LoadedRuntimeExtensionAdapter
@@ -40,6 +43,7 @@ SDK_SAMPLES = ROOT / "backend/aps_extension_sdk/contracts/samples"
 VERIFICATION_KEY_ID = "p8.runtime.extension.key.v1"
 VERIFICATION_KEY = b"p8-13-synthetic-verification-key-material-v1"
 ARTIFACT_BYTES = b"P8-13 deterministic synthetic Enterprise Extension artifact\n"
+TEST_DEVELOPER_KIT_FINGERPRINT = "sha256:" + "d" * 64
 
 
 type JsonObject = dict[str, Any]
@@ -234,6 +238,8 @@ def runtime_extension_fixture(
     base = runtime_settings(tmp_path, database_url=database_url)
     settings = base.model_copy(
         update={
+            "developer_kit_version": "1.0.0",
+            "developer_kit_fingerprint": TEST_DEVELOPER_KIT_FINGERPRINT,
             "runtime_extension_catalog_path": catalog_path,
             "runtime_extension_verification_key_id": VERIFICATION_KEY_ID,
             "runtime_extension_verification_key": SecretStr(
@@ -255,6 +261,7 @@ __all__ = [
     "ARTIFACT_BYTES",
     "ROOT",
     "RuntimeExtensionFixture",
+    "TEST_DEVELOPER_KIT_FINGERPRINT",
     "VERIFICATION_KEY",
     "VERIFICATION_KEY_ID",
     "implementation_for",

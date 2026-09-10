@@ -14,8 +14,11 @@ from typing import TYPE_CHECKING, Any, NoReturn, cast
 from celery import Celery
 
 from app import APPLICATION_VERSION, CORE_VERSION, RUNTIME_VERSION
+from app.application.approval import ApprovalDecisionService
 from app.application.canonical_ingress import CanonicalIngressApplicationService
+from app.application.export_jobs import ExportJobService
 from app.application.planning_runs import PlanningRunOrchestrationService
+from app.application.publication import PublicationService
 from app.application.runtime_facade import (
     APSRuntimeApplicationFacade,
     RuntimeApplicationBinding,
@@ -23,6 +26,9 @@ from app.application.runtime_facade import (
 from app.application.runtime_http_adapter import (
     RuntimeHttpContextAdapter,
     RuntimeHttpPolicyCatalog,
+)
+from app.application.runtime_planning_workspace import (
+    RuntimePlanningWorkspaceApplication,
 )
 from app.application.schedule_versions import (
     ValidatedSolutionToScheduleVersionService,
@@ -43,12 +49,15 @@ from app.infrastructure.database import DatabaseClient, create_database_client
 from app.infrastructure.planning_run_repository import (
     SqlAlchemyPlanningRunRepository,
 )
+from app.infrastructure.export_job_repository import SqlAlchemyExportJobRepository
+from app.infrastructure.publication_repository import SqlAlchemyPublicationRepository
 from app.infrastructure.redis_client import RedisClient, create_redis_client
 from app.infrastructure.schedule_version_repository import (
     SqlAlchemyScheduleVersionRepository,
 )
 from app.infrastructure.workspace_persistence import WorkspaceDataPlane
 from app.extensions.contracts import RuntimeExtensionArtifact, RuntimeExtensionError
+from app.extensions.product_execution import RuntimeExtensionProductExecutor
 from app.jobs.planning_run_solver_worker import (
     PlanningRunSolverWorker,
     WorkerReliabilityPolicy,
@@ -74,6 +83,7 @@ from app.planning.validation.problem_schedule_validator import (
 )
 
 if TYPE_CHECKING:
+    from app.api.contracts import PlanningWorkspaceApplicationPort
     from app.extensions.registry import LoadedRuntimeExtensionAdapter
 
 
@@ -201,7 +211,9 @@ class RuntimeComposition:
     descriptor: RuntimeCompositionDescriptor
     extension_adapter: EmptyRuntimeExtensionAdapter | LoadedRuntimeExtensionAdapter
     application: APSRuntimeApplicationFacade | None
+    planning_workspace_application: PlanningWorkspaceApplicationPort | None
     http_context_adapter: RuntimeHttpContextAdapter
+    extension_product_executor: RuntimeExtensionProductExecutor
     worker: PlanningRunSolverWorker | None
     database: DatabaseClient
     redis: RedisClient | None
@@ -337,6 +349,29 @@ def _descriptor(
 ) -> RuntimeCompositionDescriptor:
     plane = _workspace_plane(settings).value
     environment = _runtime_environment(settings)
+    kit_identity = (
+        settings.developer_kit_version,
+        settings.developer_kit_fingerprint,
+    )
+    if any(value is not None for value in kit_identity) and not all(
+        value is not None for value in kit_identity
+    ):
+        _fail(
+            "CONFIGURATION_INVALID",
+            field="developer_kit_identity",
+            message="Developer Kit version and fingerprint must be configured together",
+        )
+    if extension_adapter.document["mode"] == "LOADED" and not all(
+        value is not None for value in kit_identity
+    ):
+        _fail(
+            "CONFIGURATION_INVALID",
+            field="developer_kit_identity",
+            message="Loaded Extensions require an exact Developer Kit identity",
+        )
+    developer_kit_version = (
+        settings.developer_kit_version or UNPUBLISHED_DEVELOPER_KIT_VERSION
+    )
     runtime_resolution: JsonObject = {
         "runtime_resolution_version": RUNTIME_RESOLUTION_VERSION,
         "runtime_version": RUNTIME_VERSION,
@@ -354,10 +389,10 @@ def _descriptor(
         "extension_sdk_version": extension_adapter.sdk_api_version,
         "registry_protocol_version": extension_adapter.registry_protocol_version,
         "extension_set": extension_adapter.extension_set_reference,
-        "developer_kit_version": UNPUBLISHED_DEVELOPER_KIT_VERSION,
+        "developer_kit_version": developer_kit_version,
         "developer_kit_fingerprint": _component_fingerprint(
             settings.developer_kit_fingerprint,
-            component="aps-developer-kit-unpublished",
+            component=f"aps-developer-kit-{developer_kit_version}",
             settings=settings,
         ),
         "solver_backend_id": STRATEGY_ID,
@@ -413,7 +448,7 @@ def _descriptor(
             "endpoint_values_in_descriptor": False,
             "document_paths_in_descriptor": False,
         },
-        "production_authority": "UNAVAILABLE_UNTIL_P8_10",
+        "production_authority": "UNAVAILABLE_EXPLICIT_PROVIDER_REQUIRED",
     }
     document = {**base, "composition_fingerprint": canonical_fingerprint(base)}
     return RuntimeCompositionDescriptor(canonical_bytes=canonical_json_bytes(document))
@@ -553,6 +588,10 @@ def compose_runtime(
         extension_adapter=extension_adapter,
         http_policy=http_policy,
     )
+    extension_product_executor = RuntimeExtensionProductExecutor(
+        adapter=extension_adapter,
+        policy=http_policy,
+    )
 
     database = create_database_client(
         settings.database_url,
@@ -602,9 +641,47 @@ def compose_runtime(
                     identity_factory=identity_factory,
                 ),
             )
+            schedule_repository = SqlAlchemyScheduleVersionRepository(
+                database.engine, data_plane=plane
+            )
+            audit_repository = SqlAlchemyAuditRepository(
+                database.engine, data_plane=plane
+            )
+            publication_repository = SqlAlchemyPublicationRepository(
+                database.engine, data_plane=plane
+            )
+            export_repository = SqlAlchemyExportJobRepository(
+                database.engine, data_plane=plane
+            )
+            planning_workspace_application = RuntimePlanningWorkspaceApplication(
+                data_plane=plane.value,
+                schedule_repository=schedule_repository,
+                publication_repository=publication_repository,
+                export_job_repository=export_repository,
+                approval_service=ApprovalDecisionService(
+                    data_plane=plane.value,
+                    transaction_factory=database.engine.begin,
+                    schedule_repository=cast(Any, schedule_repository),
+                    audit_repository=cast(Any, audit_repository),
+                ),
+                publication_service=PublicationService(
+                    data_plane=plane.value,
+                    transaction_factory=database.engine.begin,
+                    schedule_repository=cast(Any, schedule_repository),
+                    audit_repository=cast(Any, audit_repository),
+                    publication_repository=cast(Any, publication_repository),
+                ),
+                export_service=ExportJobService(
+                    transaction_factory=database.engine.begin,
+                    schedule_repository=cast(Any, schedule_repository),
+                    export_job_repository=cast(Any, export_repository),
+                    audit_repository=cast(Any, audit_repository),
+                ),
+            )
             worker = None
         else:
             application = None
+            planning_workspace_application = None
             worker = PlanningRunSolverWorker(
                 orchestration=orchestration,
                 worker_repository=SqlAlchemyPlanningRunWorkerRepository(
@@ -632,6 +709,7 @@ def compose_runtime(
                         database.engine, data_plane=plane
                     ),
                 ),
+                extension_executor=extension_product_executor,
                 policy=WorkerReliabilityPolicy(
                     heartbeat_seconds=settings.job_heartbeat_seconds,
                     lease_seconds=settings.job_lease_seconds,
@@ -643,7 +721,9 @@ def compose_runtime(
             descriptor=descriptor,
             extension_adapter=extension_adapter,
             application=application,
+            planning_workspace_application=planning_workspace_application,
             http_context_adapter=http_context_adapter,
+            extension_product_executor=extension_product_executor,
             worker=worker,
             database=database,
             redis=redis,

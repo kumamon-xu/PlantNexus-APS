@@ -4,6 +4,8 @@ x-runtime-environment: &runtime-environment
   PLANTNEXUS_CODE_COMMIT: ${PLANTNEXUS_P8_RUNTIME_SHA:?set PLANTNEXUS_P8_RUNTIME_SHA}
   PLANTNEXUS_DATABASE_URL: postgresql+psycopg://plantnexus:${PLANTNEXUS_POSTGRES_PASSWORD:?set PLANTNEXUS_POSTGRES_PASSWORD}@database:5432/plantnexus_dev
   PLANTNEXUS_DATA_PLANE: simulation
+  PLANTNEXUS_DEVELOPER_KIT_FINGERPRINT: sha256:ee2a3a407337e595ca724ed2a92540e911c5fad7272e472f2d3ef3297a14a361
+  PLANTNEXUS_DEVELOPER_KIT_VERSION: 1.0.0
   PLANTNEXUS_JOB_HEARTBEAT_SECONDS: "5"
   PLANTNEXUS_JOB_LEASE_SECONDS: "20"
   PLANTNEXUS_LOG_LEVEL: INFO
@@ -12,15 +14,21 @@ x-runtime-environment: &runtime-environment
   PLANTNEXUS_REDIS_URL: redis://redis:6379/0
   PLANTNEXUS_RUNTIME_ARTIFACT_FINGERPRINT: sha256:1a06018df48a7a22cd434d8076c02768b09da4ef3dfed35dd45d1b34474c70cc
   PLANTNEXUS_RUNTIME_COMPOSITION_ENABLED: "true"
+  PLANTNEXUS_RUNTIME_EXTENSION_ARTIFACT_PROVIDER: runtime_extension_bootstrap:provide_extension_artifacts
+  PLANTNEXUS_RUNTIME_EXTENSION_CATALOG_PATH: /tmp/plantnexus/runtime-extension-catalog.json
+  PLANTNEXUS_RUNTIME_EXTENSION_VERIFICATION_KEY: ${PLANTNEXUS_EXTENSION_VERIFICATION_KEY:?set PLANTNEXUS_EXTENSION_VERIFICATION_KEY}
+  PLANTNEXUS_RUNTIME_EXTENSION_VERIFICATION_KEY_ID: p8.operations.extension.key.v1
   PLANTNEXUS_RUNTIME_ENVIRONMENT: test
-  PLANTNEXUS_RUNTIME_HTTP_POLICY_PATH: /workspace/operations-config/runtime-http-policy.v1.json
+  PLANTNEXUS_RUNTIME_HTTP_POLICY_PATH: /workspace/operations-config/runtime-http-policy.v2.json
   PLANTNEXUS_RUNTIME_PLANNING_POLICY_PATH: /workspace/schemas/samples/planning-policy.v1.synthetic.json
   PLANTNEXUS_RUNTIME_SCHEMA_DIRECTORY: /workspace/schemas/json
   PLANTNEXUS_RUNTIME_SOLVE_LIMITS_PATH: /workspace/schemas/samples/solve-limits.v1.synthetic.json
   PLANTNEXUS_SIMULATION_API_ENABLED: "true"
+  PYTHONPATH: /workspace/operations-config:/workspace/extension-alpha/src:/workspace/backend
 
 x-runtime-volumes: &runtime-volumes
   - ./infra/operations:/workspace/operations-config:ro
+  - ./examples/enterprise-extensions/alpha-resource-tag:/workspace/extension-alpha:ro
 
 x-runtime-healthcheck: &runtime-healthcheck
   test:

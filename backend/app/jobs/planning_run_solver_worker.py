@@ -7,7 +7,7 @@ from dataclasses import asdict, dataclass
 from datetime import UTC, datetime
 from enum import StrEnum
 from threading import Event, Thread
-from typing import Any, Protocol, cast
+from typing import Any, NoReturn, Protocol, cast
 
 from app.application.planning_runs import (
     PlanningRunAttemptFailureCommand,
@@ -34,6 +34,7 @@ from app.domain.schedule_version import (
     build_reviewable_schedule_documents,
 )
 from app.domain.types import format_utc_instant, parse_utc_instant
+from app.extensions.contracts import RuntimeExtensionError
 from app.jobs.contracts import JobRecord, JobStatus
 from app.jobs.planning_run_worker_contracts import (
     PlanningRunResolvedInputs,
@@ -122,6 +123,25 @@ class ScheduleVersionPublisher(Protocol):
         output: ValidatedPlanningOutput,
         context: ScheduleVersionCreationContext,
     ) -> ScheduleLifecycleResult: ...
+
+
+class ExtensionProductExecutor(Protocol):
+    def before_solve(
+        self,
+        *,
+        scope: Mapping[str, object],
+        planning_run_id: str,
+        problem: Mapping[str, object],
+    ) -> None: ...
+
+    def after_candidate(
+        self,
+        *,
+        scope: Mapping[str, object],
+        planning_run_id: str,
+        problem: Mapping[str, object],
+        solution: Mapping[str, object],
+    ) -> None: ...
 
 
 @dataclass(frozen=True, slots=True)
@@ -274,6 +294,7 @@ class PlanningRunSolverWorker:
         solver: PlanningSolver,
         validator: FormalValidator,
         publisher: ScheduleVersionPublisher,
+        extension_executor: ExtensionProductExecutor | None = None,
         policy: WorkerReliabilityPolicy | None = None,
         clock: Clock = utc_now,
     ) -> None:
@@ -285,6 +306,7 @@ class PlanningRunSolverWorker:
         self._solver = solver
         self._validator = validator
         self._publisher = publisher
+        self._extension_executor = extension_executor
         self._policy = policy or WorkerReliabilityPolicy()
         self._clock = clock
         if orchestration.data_plane != worker_repository.data_plane:
@@ -331,6 +353,70 @@ class PlanningRunSolverWorker:
         return self._orchestration.read(
             planning_run_id, context=self._context(planning_run_id)
         )
+
+    def _extension_scope(self, planning_run_id: str) -> Mapping[str, object]:
+        return self._context(planning_run_id).effective_scope()
+
+    def _invoke_extension_before_solve(
+        self,
+        *,
+        planning_run_id: str,
+        problem: Mapping[str, object],
+    ) -> None:
+        if self._extension_executor is not None:
+            self._extension_executor.before_solve(
+                scope=self._extension_scope(planning_run_id),
+                planning_run_id=planning_run_id,
+                problem=problem,
+            )
+
+    def _invoke_extension_after_candidate(
+        self,
+        *,
+        planning_run_id: str,
+        problem: Mapping[str, object],
+        solution: Mapping[str, object],
+    ) -> None:
+        if self._extension_executor is not None:
+            self._extension_executor.after_candidate(
+                scope=self._extension_scope(planning_run_id),
+                planning_run_id=planning_run_id,
+                problem=problem,
+                solution=solution,
+            )
+
+    def _fail_extension_execution(
+        self,
+        *,
+        job: JobRecord,
+        worker_id: str,
+        work: Mapping[str, object],
+        error: RuntimeExtensionError,
+    ) -> NoReturn:
+        planning_run_id = cast(str, work["planning_run_id"])
+        current = self._read(planning_run_id)
+        if current.aggregate.document["state"] not in PLANNING_RUN_TERMINAL_STATES:
+            self._transition(
+                current,
+                work=work,
+                to_state="FAILED",
+                artifacts=cast(
+                    Mapping[str, object], current.aggregate.document["artifacts"]
+                ),
+                bind_attempt=True,
+            )
+        self._worker_repository.complete(
+            job.job_id,
+            worker_id=worker_id,
+            now=self._now(),
+            succeeded=False,
+            failure_code=error.code,
+        )
+        raise PlanningRunWorkerError(
+            PlanningRunWorkerErrorCode.EXECUTION_FAILED,
+            field="runtime_extension",
+            message="Runtime Extension execution failed closed",
+        ) from error
 
     @staticmethod
     def _select_work(
@@ -1098,6 +1184,12 @@ class PlanningRunSolverWorker:
                     field="worker_result.documents.validation_report",
                     message="Stored validation outcome differs from a fresh validation",
                 )
+            if outcome == "COMPLETED":
+                self._invoke_extension_after_candidate(
+                    planning_run_id=cast(str, work["planning_run_id"]),
+                    problem=resolved.problem,
+                    solution=solution,
+                )
         elif (
             outcome != solver_outcome.planning_run_state.value
             or artifacts["planning_solution"] is not None
@@ -1553,6 +1645,10 @@ class PlanningRunSolverWorker:
                         message="Resumed run has no immutable Solver checkpoint",
                     )
                 try:
+                    self._invoke_extension_before_solve(
+                        planning_run_id=planning_run_id,
+                        problem=resolved.problem,
+                    )
                     solver_result = self._solver.solve(
                         resolved.problem,
                         resolved.planning_policy,
@@ -1567,6 +1663,13 @@ class PlanningRunSolverWorker:
                         resolved.solve_limits,
                         solution,
                         solver_report,
+                    )
+                except RuntimeExtensionError as error:
+                    self._fail_extension_execution(
+                        job=job,
+                        worker_id=worker_id,
+                        work=work,
+                        error=error,
                     )
                 except (PlanningContractError, KeyError, TypeError, ValueError):
                     terminal = self._transition(
@@ -1691,13 +1794,21 @@ class PlanningRunSolverWorker:
                 )
             if self._now() >= timeout:
                 return self._timeout(model, work=work, job=job, worker_id=worker_id)
-            model, publication_replayed = self._apply_checkpoint(
-                model,
-                work=work,
-                checkpoint=checkpoint,
-                resolved=resolved,
-                guard=guard,
-            )
+            try:
+                model, publication_replayed = self._apply_checkpoint(
+                    model,
+                    work=work,
+                    checkpoint=checkpoint,
+                    resolved=resolved,
+                    guard=guard,
+                )
+            except RuntimeExtensionError as error:
+                self._fail_extension_execution(
+                    job=job,
+                    worker_id=worker_id,
+                    work=work,
+                    error=error,
+                )
             guard.check()
 
         state = cast(str, model.aggregate.document["state"])
@@ -1796,6 +1907,7 @@ class PlanningRunSolverWorker:
 
 
 __all__ = [
+    "ExtensionProductExecutor",
     "FormalValidator",
     "PlanningInputResolver",
     "PlanningRunContextProvider",

@@ -168,8 +168,7 @@ def create_app(
         )
         path_parts = request.url.path.strip("/").split("/")
         is_headless_request = (
-            request.method == "POST"
-            and path_parts == ["api", "v1", "planning-runs"]
+            request.method == "POST" and path_parts == ["api", "v1", "planning-runs"]
         ) or (
             len(path_parts) == 5
             and path_parts[:3] == ["api", "v1", "planning-runs"]
@@ -232,7 +231,9 @@ def create_runtime_app(
     *,
     host_identity_provider: HostIdentityProvider | None = None,
     host_authorization_policy: HostAuthorizationPolicyCatalog | None = None,
-    extension_artifacts: Sequence[RuntimeExtensionArtifact] = (),
+    authorization_provider: AuthorizationProvider | None = None,
+    authorization_audit_sink: AuthorizationAuditSink | None = None,
+    extension_artifacts: Sequence[RuntimeExtensionArtifact] | None = None,
 ) -> FastAPI:
     """Create the deployable API entrypoint from the shared Runtime root."""
 
@@ -251,17 +252,28 @@ def create_runtime_app(
                 message="Production API requires explicit Runtime composition",
             )
         return create_app(resolved)
+    from app.extensions.bootstrap import materialize_runtime_extension_artifacts
+
+    resolved_artifacts = materialize_runtime_extension_artifacts(
+        resolved,
+        explicit_artifacts=(
+            tuple(extension_artifacts) if extension_artifacts is not None else None
+        ),
+    )
     composition = compose_runtime(
         resolved,
         process=RuntimeProcess.API,
-        extension_artifacts=extension_artifacts,
+        extension_artifacts=resolved_artifacts,
     )
-    if composition.application is None:
+    if (
+        composition.application is None
+        or composition.planning_workspace_application is None
+    ):
         composition.close()
         raise RuntimeCompositionError(
             "RUNTIME_PORT_MISSING",
             field="application",
-            message="API Runtime application port was not composed",
+            message="API Runtime application ports were not composed",
         )
     from app.application.host_authorization import (
         HostAuthorizationAdapter,
@@ -308,6 +320,9 @@ def create_runtime_app(
     return create_app(
         resolved,
         probes=composition.probes,
+        planning_workspace_application=composition.planning_workspace_application,
+        authorization_provider=authorization_provider,
+        authorization_audit_sink=authorization_audit_sink,
         runtime_application=composition.application,
         runtime_descriptor=composition.descriptor,
         runtime_http_context=composition.http_context_adapter,

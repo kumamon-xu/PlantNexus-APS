@@ -85,6 +85,16 @@ def test_operations_compose_adds_pinned_isolated_services() -> None:
         assert environment["PLANTNEXUS_DATA_PLANE"] == "simulation"
         assert environment["PLANTNEXUS_RUNTIME_COMPOSITION_ENABLED"] == "true"
         assert environment["PLANTNEXUS_SIMULATION_API_ENABLED"] == "true"
+        assert environment["PLANTNEXUS_DEVELOPER_KIT_VERSION"] == "1.0.0"
+        assert environment["PLANTNEXUS_RUNTIME_HTTP_POLICY_PATH"].endswith(
+            "runtime-http-policy.v2.json"
+        )
+        assert environment["PLANTNEXUS_RUNTIME_EXTENSION_ARTIFACT_PROVIDER"] == (
+            "runtime_extension_bootstrap:provide_extension_artifacts"
+        )
+        assert environment["PLANTNEXUS_RUNTIME_EXTENSION_CATALOG_PATH"].startswith(
+            "/tmp/"
+        )
     assert services["api"]["healthcheck"]["test"][-1].endswith(
         "/health/ready', timeout=2)"
     )
@@ -97,3 +107,5 @@ def test_operations_compose_adds_pinned_isolated_services() -> None:
         "--concurrency=1",
         "--hostname=rollback@p8-operations",
     ]
+    runtime_volumes = services["api"]["volumes"]
+    assert any("alpha-resource-tag" in str(volume) for volume in runtime_volumes)

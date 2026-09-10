@@ -12,7 +12,7 @@ from typing import NoReturn, Protocol
 RUNTIME_EXTENSION_CATALOG_VERSION = "aps-runtime-extension-catalog.v1"
 RUNTIME_EXTENSION_ADAPTER_VERSION = "runtime-extension-adapter.v2"
 RUNTIME_EXTENSION_INPUT_VIEW_VERSION = "runtime.extension.input.v1"
-RUNTIME_EXTENSION_METRICS_VERSION = "runtime-extension-metrics.v1"
+RUNTIME_EXTENSION_METRICS_VERSION = "runtime-extension-metrics.v2"
 RUNTIME_EXTENSION_SIGNATURE_VERSION = "runtime-extension-signature.v1"
 
 MAX_EXTENSION_CATALOG_BYTES = 1024 * 1024
@@ -40,6 +40,8 @@ class RuntimeExtensionErrorCode(StrEnum):
     EXTENSION_TIMEOUT = "EXTENSION_TIMEOUT"
     EXTENSION_EXECUTION_FAILED = "EXTENSION_EXECUTION_FAILED"
     EXTENSION_OUTPUT_INVALID = "EXTENSION_OUTPUT_INVALID"
+    EXTENSION_VALIDATION_FAILED = "EXTENSION_VALIDATION_FAILED"
+    EXTENSION_REPLAN_REQUIRED = "EXTENSION_REPLAN_REQUIRED"
     EXTENSION_UNHEALTHY = "EXTENSION_UNHEALTHY"
     STARTUP_BUDGET_EXCEEDED = "EXTENSION_STARTUP_BUDGET_EXCEEDED"
     STARTUP_FAILED = "EXTENSION_STARTUP_FAILED"
@@ -127,9 +129,10 @@ class RuntimeExtensionArtifact:
                 field="artifact.bytes",
                 message="artifact bytes are absent or exceed the Runtime limit",
             )
-        if not isinstance(self.implementations, tuple) or len(
-            self.implementations
-        ) > MAX_EXTENSION_CONTRIBUTIONS:
+        if (
+            not isinstance(self.implementations, tuple)
+            or len(self.implementations) > MAX_EXTENSION_CONTRIBUTIONS
+        ):
             reject_extension(
                 RuntimeExtensionErrorCode.ENTRYPOINT_UNAVAILABLE,
                 field="artifact.implementations",
@@ -150,7 +153,10 @@ class RuntimeExtensionArtifact:
         if (
             names != tuple(sorted(names))
             or len(names) != len(set(names))
-            or any(not name or any(character.isspace() for character in name) for name in names)
+            or any(
+                not name or any(character.isspace() for character in name)
+                for name in names
+            )
         ):
             reject_extension(
                 RuntimeExtensionErrorCode.ENTRYPOINT_UNAVAILABLE,

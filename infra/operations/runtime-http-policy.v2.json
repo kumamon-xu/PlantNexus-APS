@@ -1,0 +1,35 @@
+{
+  "runtime_http_policy_version": "runtime-http-policy.v2",
+  "scopes": [
+    {
+      "tenant_id": "TENANT-P8-OPERATIONS",
+      "factory_id": "FACTORY-P8-OPERATIONS",
+      "planning_scope_id": "PLANNING-P8-OPERATIONS",
+      "authorized_authority_references": [
+        "authority:p8-operations-synthetic-host"
+      ],
+      "authorized_mapping_fingerprints": [
+        "sha256:2222222222222222222222222222222222222222222222222222222222222222"
+      ],
+      "build_plan": {
+        "cutoff_at_utc": "2026-08-20T00:00:00Z",
+        "tick_seconds": 60,
+        "horizon_start_utc": "2026-08-20T00:00:00Z",
+        "horizon_end_utc": "2026-08-21T00:00:00Z",
+        "priority_facts": {}
+      },
+      "dispatch_timeout_seconds": 3600,
+      "extension_facts": {
+        "extension_facts_version": "runtime-extension-facts.v1",
+        "resource_attributes": {
+          "RESOURCE-001": {
+            "tags": ["alpha-qualified"]
+          }
+        },
+        "operation_attributes": {},
+        "events": [],
+        "publication_authority_reference": "authority.p8.operations.synthetic"
+      }
+    }
+  ]
+}

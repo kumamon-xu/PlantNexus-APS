@@ -571,24 +571,26 @@ def test_ci_profile_routing_is_mutually_exclusive_and_fail_closed() -> None:
     assert len(backend["steps"]) == 8
     assert len(full["steps"]) == 84
     assert full["timeout-minutes"] == 40
-    p8_platform_gate = next(
+    p8_corrective = next(
         cast(dict[str, Any], step)
         for step in cast(list[dict[str, Any]], full["steps"])
         if cast(dict[str, Any], step).get("name")
-        == "P8 Headless Extension platform integration Gate evidence"
+        == "P8 Runtime Extension product corrective evidence"
     )
-    p8_platform_gate_run = str(p8_platform_gate["run"])
-    assert "backend/tests/*/test_p8_*.py tests/p8" in p8_platform_gate_run
-    assert "ci-p8-platform-gate-tests.xml" in p8_platform_gate_run
-    assert "scripts/p8_operations_check.py" in p8_platform_gate_run
-    assert "-m scripts.p8_headless_extension_platform_gate" in p8_platform_gate_run
-    assert "headless-extension-platform-gate-profile.v1.json" in p8_platform_gate_run
-    assert p8_platform_gate_run.count("ci-p8-headless-extension-platform-gate.json") == 2
-    assert "ci-p8-headless-extension-provenance.json" in p8_platform_gate_run
-    assert "ci-p8-headless-extension-compatibility.json" in p8_platform_gate_run
-    assert "ci-p8-headless-extension-security.json" in p8_platform_gate_run
-    assert "ci-p8-headless-extension-recovery.json" in p8_platform_gate_run
-    assert "continue-on-error" not in p8_platform_gate
+    p8_corrective_run = str(p8_corrective["run"])
+    assert "backend/tests/*/test_p8_*.py tests/p8" in p8_corrective_run
+    assert "ci-p8-18-tests.xml" in p8_corrective_run
+    assert "scripts/p8_operations_check.py" in p8_corrective_run
+    assert "scripts/p8_runtime_product_integration_check.py" in p8_corrective_run
+    assert "ci-p8-18-runtime-product-corrective.json" in p8_corrective_run
+    assert "ci-p8-18-runtime-extension-invocation.json" in p8_corrective_run
+    assert "ci-p8-18-developer-kit-binding.json" in p8_corrective_run
+    assert "ci-p8-18-headless-output.json" in p8_corrective_run
+    assert "ci-p8-18-extension-deployment-recovery.json" in p8_corrective_run
+    assert "ci-p8-18-security.json" in p8_corrective_run
+    assert "ci-p8-18-runtime-product-corrective.json" in p8_corrective_run
+    assert "scripts.p8_headless_extension_platform_gate" not in p8_corrective_run
+    assert "continue-on-error" not in p8_corrective
 
     assert 'test "${PLANTNEXUS_CLASSIFY_RESULT}" = "success"' in final_run
     assert 'test "${PLANTNEXUS_PREFLIGHT_RESULT}" = "success"' in final_run

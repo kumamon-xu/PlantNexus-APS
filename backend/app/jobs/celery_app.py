@@ -51,7 +51,7 @@ def create_celery_app(
 def create_runtime_celery_app(
     settings: Settings | None = None,
     *,
-    extension_artifacts: Sequence[RuntimeExtensionArtifact] = (),
+    extension_artifacts: Sequence[RuntimeExtensionArtifact] | None = None,
 ) -> Celery:
     """Create the deployable Worker entrypoint from the shared Runtime root."""
 
@@ -70,10 +70,18 @@ def create_runtime_celery_app(
                 message="Production Worker requires explicit Runtime composition",
             )
         return create_celery_app(resolved)
+    from app.extensions.bootstrap import materialize_runtime_extension_artifacts
+
+    resolved_artifacts = materialize_runtime_extension_artifacts(
+        resolved,
+        explicit_artifacts=(
+            tuple(extension_artifacts) if extension_artifacts is not None else None
+        ),
+    )
     composition = compose_runtime(
         resolved,
         process=RuntimeProcess.WORKER,
-        extension_artifacts=extension_artifacts,
+        extension_artifacts=resolved_artifacts,
     )
     if composition.worker is None:
         composition.close()

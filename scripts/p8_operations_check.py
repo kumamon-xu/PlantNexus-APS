@@ -2,8 +2,9 @@
 
 The executable intentionally lives outside the Runtime wheel.  It deploys the
 exact declared Runtime inputs into a disposable TEST/SIMULATION Docker Compose
-target and emits sanitized evidence only.  It never accepts a Production
-target, an Extension artifact, or a caller-provided secret.
+target and emits sanitized evidence only. It never accepts a Production target
+or a caller-provided persistent secret; the target owns one exact verified
+build/deploy/startup-only Extension allow-list.
 """
 
 from __future__ import annotations
@@ -32,6 +33,12 @@ RECOVERY_REPORT = "p8-operations-recovery-report.v1"
 RUNBOOK_REPORT = "p8-operations-runbook-dry-run-report.v1"
 PROJECT_NAME = "plantnexus-p8-10"
 DEFAULT_IMAGE = "plantnexus-aps:p8-09-operations"
+CORRECTIVE_TASK_ID = "TASK-P8-18"
+EXPECTED_EXTENSION_IDS = ("com.example.aps.alpha",)
+EXPECTED_DEVELOPER_KIT_VERSION = "1.0.0"
+EXPECTED_DEVELOPER_KIT_FINGERPRINT = (
+    "sha256:ee2a3a407337e595ca724ed2a92540e911c5fad7272e472f2d3ef3297a14a361"
+)
 
 TARGET_PATH = Path("infra/operations/non-production-target.v1.json")
 OBSERVABILITY_PATH = Path("infra/operations/observability-policy.v1.json")
@@ -175,11 +182,19 @@ def validate_target_contract(document: Mapping[str, object]) -> JsonObject:
     authorization = cast(Mapping[str, object], document.get("authorization"))
     _require_exact_keys(
         authorization,
-        {"demo_authorized", "production_authorized", "task_id", "authorized_on"},
+        {
+            "authorized_on",
+            "corrective_authorized_on",
+            "corrective_task_id",
+            "demo_authorized",
+            "production_authorized",
+            "task_id",
+        },
         label="authorization",
     )
     if (
         authorization.get("task_id") != TASK_ID
+        or authorization.get("corrective_task_id") != CORRECTIVE_TASK_ID
         or authorization.get("production_authorized") is not False
         or authorization.get("demo_authorized") is not False
     ):
@@ -248,14 +263,83 @@ def validate_target_contract(document: Mapping[str, object]) -> JsonObject:
             "SERVICE_SET_INVALID", "target service inventory is incomplete"
         )
     extensions = cast(Mapping[str, object], document.get("extensions"))
+    _require_exact_keys(
+        extensions,
+        {
+            "allowed_extension_ids",
+            "artifact_provider",
+            "artifact_set",
+            "developer_kit_fingerprint",
+            "developer_kit_version",
+            "invalid_configuration_action",
+            "loading",
+            "registry_protocol",
+        },
+        label="extensions",
+    )
+    allowed_extension_ids = extensions.get("allowed_extension_ids")
+    artifact_set = extensions.get("artifact_set")
     if (
-        extensions.get("loading") != "DISABLED_UNTIL_COMPATIBILITY_VERIFIED"
-        or extensions.get("allowed_extension_ids") != []
+        extensions.get("loading") != "VERIFIED_BUILD_DEPLOY_STARTUP_ALLOW_LIST"
+        or allowed_extension_ids != list(EXPECTED_EXTENSION_IDS)
+        or not isinstance(artifact_set, list)
+        or len(artifact_set) != len(EXPECTED_EXTENSION_IDS)
+        or extensions.get("developer_kit_version") != EXPECTED_DEVELOPER_KIT_VERSION
+        or extensions.get("developer_kit_fingerprint")
+        != EXPECTED_DEVELOPER_KIT_FINGERPRINT
+        or extensions.get("artifact_provider")
+        != "EXPLICIT_TARGET_MODULE_NO_DISCOVERY_OR_NETWORK"
+        or extensions.get("registry_protocol") != "plugin-registry.v1"
         or extensions.get("invalid_configuration_action")
         != "READINESS_DOWN_NO_PROMOTION"
     ):
         raise OperationsEvidenceError(
-            "EXTENSION_BOUNDARY_INVALID", "Extension loading must remain disabled"
+            "EXTENSION_BOUNDARY_INVALID",
+            "Extension deployment identity is not the verified exact allow-list",
+        )
+    for index, raw_artifact in enumerate(cast(list[object], artifact_set)):
+        if not isinstance(raw_artifact, Mapping):
+            raise OperationsEvidenceError(
+                "EXTENSION_BOUNDARY_INVALID", "Extension artifact identity is invalid"
+            )
+        artifact = cast(Mapping[str, object], raw_artifact)
+        _require_exact_keys(
+            artifact,
+            {
+                "artifact_digest",
+                "configuration_fingerprint",
+                "extension_id",
+                "extension_version",
+                "manifest_fingerprint",
+            },
+            label="extension artifact",
+        )
+        if (
+            artifact.get("extension_id") != EXPECTED_EXTENSION_IDS[index]
+            or artifact.get("extension_version") != "1.0.0"
+            or any(
+                not isinstance(artifact.get(field), str)
+                or len(cast(str, artifact[field])) != 71
+                or not cast(str, artifact[field]).startswith("sha256:")
+                for field in (
+                    "artifact_digest",
+                    "configuration_fingerprint",
+                    "manifest_fingerprint",
+                )
+            )
+        ):
+            raise OperationsEvidenceError(
+                "EXTENSION_BOUNDARY_INVALID", "Extension artifact identity is invalid"
+            )
+    recovery = cast(Mapping[str, object], document.get("recovery"))
+    verification = recovery.get("verification")
+    if not isinstance(verification, list) or not {
+        "EXTENSION_SET_FINGERPRINT_MATCH",
+        "DEVELOPER_KIT_IDENTITY_MATCH",
+    }.issubset(set(verification)):
+        raise OperationsEvidenceError(
+            "EXTENSION_BOUNDARY_INVALID",
+            "recovery does not preserve Extension and Developer Kit identity",
         )
     production = cast(Mapping[str, object], document.get("production_boundary"))
     if any(value is not False for value in production.values()):
@@ -281,6 +365,9 @@ def validate_target_contract(document: Mapping[str, object]) -> JsonObject:
         "release_archive_sha256": release["release_archive_sha256"],
         "release_fingerprint": release["release_fingerprint"],
         "extension_loading": extensions["loading"],
+        "extension_ids": list(EXPECTED_EXTENSION_IDS),
+        "developer_kit_version": EXPECTED_DEVELOPER_KIT_VERSION,
+        "developer_kit_fingerprint": EXPECTED_DEVELOPER_KIT_FINGERPRINT,
         "migration_version_table_bootstrap": platform[
             "migration_version_table_bootstrap"
         ],
@@ -392,16 +479,21 @@ def extension_readiness(
 ) -> JsonObject:
     extensions = cast(Mapping[str, object], target["extensions"])
     allowed = cast(list[str], extensions["allowed_extension_ids"])
+    configured = tuple(configured_extension_ids)
     accepted = (
-        extensions["loading"] == "DISABLED_UNTIL_COMPATIBILITY_VERIFIED"
-        and not configured_extension_ids
-        and not allowed
+        extensions["loading"] == "VERIFIED_BUILD_DEPLOY_STARTUP_ALLOW_LIST"
+        and tuple(allowed) == EXPECTED_EXTENSION_IDS
+        and configured == EXPECTED_EXTENSION_IDS
+        and extensions["developer_kit_version"] == EXPECTED_DEVELOPER_KIT_VERSION
+        and extensions["developer_kit_fingerprint"]
+        == EXPECTED_DEVELOPER_KIT_FINGERPRINT
     )
     return {
         "status": "UP" if accepted else "DOWN",
         "code": None if accepted else "EXTENSION_CONFIGURATION_REJECTED",
         "promotion_allowed": accepted,
         "configured_extension_count": len(configured_extension_ids),
+        "configured_extension_ids": list(configured),
     }
 
 
@@ -670,14 +762,81 @@ def _safe_json_line(raw: str) -> JsonObject:
 
 
 def _runtime_descriptor(target: ComposeTarget, service: str) -> JsonObject:
+    application_reference = (
+        "from app.jobs.celery_app import celery_app; "
+        "c=getattr(celery_app,'plantnexus_runtime_composition'); d=c.descriptor; "
+        if service in {"worker", "rollback_worker"}
+        else "from app.api.app import app; d=app.state.aps_runtime_descriptor; "
+    )
     code = (
-        "import json; from app.api.app import app; "
-        "d=app.state.aps_runtime_descriptor; "
-        "print(json.dumps({'composition_fingerprint':d.fingerprint,"
-        "'runtime_resolution':d.runtime_resolution},sort_keys=True))"
+        "import json; "
+        + application_reference
+        + "print(json.dumps({'composition_fingerprint':d.fingerprint,"
+        "'runtime_resolution':d.runtime_resolution,"
+        "'extension_adapter':d.document['extension_adapter']},sort_keys=True))"
     )
     result = target.run("exec", "-T", service, "python", "-c", code, timeout=60)
     return _safe_json_line(result.text)
+
+
+def _extension_identity(
+    descriptor: Mapping[str, object], target: Mapping[str, object]
+) -> JsonObject:
+    runtime_resolution = descriptor.get("runtime_resolution")
+    adapter = descriptor.get("extension_adapter")
+    if not isinstance(runtime_resolution, Mapping) or not isinstance(adapter, Mapping):
+        raise OperationsEvidenceError(
+            "EXTENSION_IDENTITY_MISMATCH", "Runtime Extension identity is unavailable"
+        )
+    extensions = cast(Mapping[str, object], target["extensions"])
+    expected_artifacts = cast(list[Mapping[str, object]], extensions["artifact_set"])
+    observed_artifacts = adapter.get("extensions")
+    if not isinstance(observed_artifacts, list):
+        raise OperationsEvidenceError(
+            "EXTENSION_IDENTITY_MISMATCH", "Runtime Extension identity is unavailable"
+        )
+    observed_projection = [
+        {
+            key: item.get(key)
+            for key in (
+                "artifact_digest",
+                "configuration_fingerprint",
+                "extension_id",
+                "extension_version",
+                "manifest_fingerprint",
+            )
+        }
+        for item in observed_artifacts
+        if isinstance(item, Mapping)
+    ]
+    extension_set = runtime_resolution.get("extension_set")
+    if (
+        adapter.get("mode") != "LOADED"
+        or adapter.get("load_policy") != "BUILD_DEPLOY_STARTUP_ONLY"
+        or adapter.get("extension_count") != len(EXPECTED_EXTENSION_IDS)
+        or observed_projection != expected_artifacts
+        or runtime_resolution.get("extension_sdk_version") != "1.0.0"
+        or runtime_resolution.get("developer_kit_version")
+        != EXPECTED_DEVELOPER_KIT_VERSION
+        or runtime_resolution.get("developer_kit_fingerprint")
+        != EXPECTED_DEVELOPER_KIT_FINGERPRINT
+        or not isinstance(extension_set, Mapping)
+        or extension_set.get("extension_set_id") == "EXTENSION-SET-NONE"
+        or not isinstance(extension_set.get("extension_set_fingerprint"), str)
+    ):
+        raise OperationsEvidenceError(
+            "EXTENSION_IDENTITY_MISMATCH",
+            "Runtime Extension or Developer Kit identity is not exact",
+        )
+    return {
+        "developer_kit_version": runtime_resolution["developer_kit_version"],
+        "developer_kit_fingerprint": runtime_resolution["developer_kit_fingerprint"],
+        "extension_ids": list(EXPECTED_EXTENSION_IDS),
+        "extension_set_id": extension_set["extension_set_id"],
+        "extension_set_fingerprint": extension_set["extension_set_fingerprint"],
+        "configuration_fingerprint": extension_set["configuration_fingerprint"],
+        "load_policy": adapter["load_policy"],
+    }
 
 
 def _trace_and_redaction_probe(target: ComposeTarget) -> JsonObject:
@@ -949,7 +1108,7 @@ def contract_only_reports(
     target_summary = validate_target_contract(target)
     observability_summary = validate_observability_contract(observability, root)
     runbooks = validate_runbooks(root)
-    extension_ok = extension_readiness(target, [])
+    extension_ok = extension_readiness(target, EXPECTED_EXTENSION_IDS)
     extension_rejected = extension_readiness(target, ["enterprise.unverified"])
     if extension_ok["status"] != "UP" or extension_rejected["status"] != "DOWN":
         raise OperationsEvidenceError(
@@ -972,7 +1131,7 @@ def contract_only_reports(
                 {"name": "target-contract", "status": "PASS"},
                 {"name": "release-and-isolation-boundary", "status": "PASS"},
                 {"name": "service-topology", "status": "PASS"},
-                {"name": "extension-default-empty", "status": "PASS"},
+                {"name": "verified-extension-startup-set", "status": "PASS"},
             ],
             "production_ready": False,
         }
@@ -1023,6 +1182,7 @@ def run_target_drill(
     unchanged = verify_runtime_inputs_unchanged(runner, implementation_sha)
     head = _git_text(runner, "rev-parse", "HEAD")
     password = f"p8{secrets.token_hex(18)}"
+    extension_verification_key = f"p8{secrets.token_hex(32)}"
     alerts: list[JsonObject] = []
     started = time.perf_counter()
 
@@ -1034,6 +1194,8 @@ def run_target_drill(
                     f"PLANTNEXUS_RUNTIME_IMAGE={image_tag}",
                     f"PLANTNEXUS_P8_RUNTIME_SHA={implementation_sha}",
                     f"PLANTNEXUS_POSTGRES_PASSWORD={password}",
+                    "PLANTNEXUS_EXTENSION_VERIFICATION_KEY="
+                    f"{extension_verification_key}",
                     f"PLANTNEXUS_DATABASE_URL=postgresql+psycopg://plantnexus:{password}@database:5432/plantnexus_dev",
                     "PLANTNEXUS_REDIS_URL=redis://redis:6379/0",
                     "PLANTNEXUS_CELERY_BROKER_URL=redis://redis:6379/1",
@@ -1085,6 +1247,20 @@ def run_target_drill(
             )
             _wait_worker(compose)
             descriptor = _runtime_descriptor(compose, "api")
+            worker_descriptor = _runtime_descriptor(compose, "worker")
+            extension_identity = _extension_identity(descriptor, target_document)
+            worker_extension_identity = _extension_identity(
+                worker_descriptor, target_document
+            )
+            if (
+                worker_descriptor["composition_fingerprint"]
+                != descriptor["composition_fingerprint"]
+                or worker_extension_identity != extension_identity
+            ):
+                raise OperationsEvidenceError(
+                    "EXTENSION_IDENTITY_MISMATCH",
+                    "API and Worker Extension identities differ",
+                )
             image = _image_evidence(runner, compose, "api")
             if (
                 image.get("revision") != implementation_sha
@@ -1239,7 +1415,7 @@ def run_target_drill(
             )
             alerts[-1]["resolved"] = True
 
-            extension_ok = extension_readiness(target_document, [])
+            extension_ok = extension_readiness(target_document, EXPECTED_EXTENSION_IDS)
             extension_bad = extension_readiness(
                 target_document, ["enterprise.unverified"]
             )
@@ -1270,6 +1446,22 @@ def run_target_drill(
                 failure_code="POST_RESTORE_READINESS_FAILED",
             )
             _wait_worker(compose)
+            restored_descriptor = _runtime_descriptor(compose, "api")
+            restored_worker_descriptor = _runtime_descriptor(compose, "worker")
+            restored_extension_identity = _extension_identity(
+                restored_descriptor, target_document
+            )
+            restored_worker_extension_identity = _extension_identity(
+                restored_worker_descriptor, target_document
+            )
+            if (
+                restored_extension_identity != extension_identity
+                or restored_worker_extension_identity != extension_identity
+            ):
+                raise OperationsEvidenceError(
+                    "RESTORE_MISMATCH",
+                    "restored Runtime Extension identity differs from the backup point",
+                )
 
             compose.run("up", "-d", "rollback_api", "rollback_worker", timeout=300)
             rollback_ready = _wait_http(
@@ -1280,6 +1472,13 @@ def run_target_drill(
             )[1]
             _wait_worker(compose, "rollback_worker")
             rollback_descriptor = _runtime_descriptor(compose, "rollback_api")
+            rollback_worker_descriptor = _runtime_descriptor(compose, "rollback_worker")
+            rollback_extension_identity = _extension_identity(
+                rollback_descriptor, target_document
+            )
+            rollback_worker_extension_identity = _extension_identity(
+                rollback_worker_descriptor, target_document
+            )
             rollback_image = _image_evidence(runner, compose, "rollback_api")
             compose.run("stop", "api", "worker", timeout=120)
             selected_ready = _wait_http(
@@ -1299,6 +1498,13 @@ def run_target_drill(
                 "ready_after_switch": selected_ready.get("status") == "UP",
                 "runtime_image_identity_match": rollback_image == image,
                 "composition_identity_match": rollback_descriptor == descriptor,
+                "extension_identity_match": (
+                    rollback_extension_identity
+                    == rollback_worker_extension_identity
+                    == restored_extension_identity
+                    == extension_identity
+                ),
+                "extension_identity": rollback_extension_identity,
                 "cross_version_rollback": False,
                 "status": "PASS",
             }
@@ -1341,6 +1547,8 @@ def run_target_drill(
                     "runtime_input_guard": unchanged,
                     "runtime_image": image,
                     "runtime_descriptor": descriptor,
+                    "worker_runtime_descriptor": worker_descriptor,
+                    "extension_identity": extension_identity,
                     "validator_probe": "PASS",
                     "services": sorted(REQUIRED_SERVICES),
                     "health": {"live": live, "ready": ready},
@@ -1405,6 +1613,8 @@ def run_target_drill(
                     "execution": "DOCKER_COMPOSE_TARGET",
                     "write_state": "QUIESCED_API_AND_WORKERS",
                     "backup_restore": recovery,
+                    "extension_identity_at_backup_point": extension_identity,
+                    "extension_identity_after_restore": restored_extension_identity,
                     "rollback": rollback,
                     "production_recovery_claimed": False,
                     "rto_sla_claimed": False,

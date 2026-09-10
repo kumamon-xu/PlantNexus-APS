@@ -1,4 +1,4 @@
-"""Unit evidence for TASK-P8-10 target and Extension readiness policy."""
+"""Unit evidence for the P8-18-corrected operations target policy."""
 
 from __future__ import annotations
 
@@ -7,6 +7,8 @@ from pathlib import Path
 from typing import cast
 
 from scripts.p8_operations_check import (
+    EXPECTED_DEVELOPER_KIT_FINGERPRINT,
+    EXPECTED_EXTENSION_IDS,
     RUNTIME_INPUTS,
     TARGET_PATH,
     contract_only_reports,
@@ -35,21 +37,22 @@ def _target() -> dict[str, object]:
     )
 
 
-def test_target_is_exact_p8_13_test_simulation_runtime() -> None:
+def test_target_is_exact_p8_18_test_simulation_runtime() -> None:
+    target = _target()
+    release = cast(dict[str, object], target["release"])
     summary = validate_target_contract(_target())
     assert summary == {
         "target_id": "p8-operations-compose-v1",
         "runtime_environment": "test",
         "data_plane": "SIMULATION",
         "runtime_version": "0.1.0",
-        "runtime_implementation_sha": "9818d0b6686ff005d0ea48ae81f3a306a5b36172",
-        "release_archive_sha256": (
-            "sha256:ee48bdd3245d83f7f87e1205c77aa69639b693120d13b6f80364a7dbecb1013f"
-        ),
-        "release_fingerprint": (
-            "sha256:1a06018df48a7a22cd434d8076c02768b09da4ef3dfed35dd45d1b34474c70cc"
-        ),
-        "extension_loading": "DISABLED_UNTIL_COMPATIBILITY_VERIFIED",
+        "runtime_implementation_sha": release["implementation_sha"],
+        "release_archive_sha256": release["release_archive_sha256"],
+        "release_fingerprint": release["release_fingerprint"],
+        "extension_loading": "VERIFIED_BUILD_DEPLOY_STARTUP_ALLOW_LIST",
+        "extension_ids": list(EXPECTED_EXTENSION_IDS),
+        "developer_kit_version": "1.0.0",
+        "developer_kit_fingerprint": EXPECTED_DEVELOPER_KIT_FINGERPRINT,
         "migration_version_table_bootstrap": (
             "CREATE_IF_ABSENT_VARCHAR_128_PRIMARY_KEY"
         ),
@@ -57,21 +60,23 @@ def test_target_is_exact_p8_13_test_simulation_runtime() -> None:
     }
 
 
-def test_extension_configuration_is_default_empty_and_fail_closed() -> None:
+def test_extension_configuration_is_exact_allow_list_and_fail_closed() -> None:
     target = _target()
-    accepted = extension_readiness(target, [])
+    accepted = extension_readiness(target, EXPECTED_EXTENSION_IDS)
     rejected = extension_readiness(target, ["enterprise.unverified"])
     assert accepted == {
         "status": "UP",
         "code": None,
         "promotion_allowed": True,
-        "configured_extension_count": 0,
+        "configured_extension_count": 1,
+        "configured_extension_ids": list(EXPECTED_EXTENSION_IDS),
     }
     assert rejected == {
         "status": "DOWN",
         "code": "EXTENSION_CONFIGURATION_REJECTED",
         "promotion_allowed": False,
         "configured_extension_count": 1,
+        "configured_extension_ids": ["enterprise.unverified"],
     }
 
 

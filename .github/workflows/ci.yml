@@ -894,6 +894,41 @@ jobs:
           uv run python scripts/p8_operations_check.py --root . --deployment-report build/validation/ci-p8-18-operations-deployment.json --observability-report build/validation/ci-p8-18-operations-observability.json --recovery-report build/validation/ci-p8-18-operations-recovery.json --runbook-report build/validation/ci-p8-18-operations-runbooks.json
           uv run python -m scripts.p8_runtime_product_integration_check --root . --junit build/validation/ci-p8-18-tests.xml --operations-deployment build/validation/ci-p8-18-operations-deployment.json --operations-recovery build/validation/ci-p8-18-operations-recovery.json --report build/validation/ci-p8-18-runtime-product-corrective.json --invocation-report build/validation/ci-p8-18-runtime-extension-invocation.json --kit-report build/validation/ci-p8-18-developer-kit-binding.json --output-report build/validation/ci-p8-18-headless-output.json --deployment-report build/validation/ci-p8-18-extension-deployment-recovery.json --security-report build/validation/ci-p8-18-security.json --benchmark-report build/benchmarks/ci-p8-18-runtime-product-corrective.json
 
+      - name: P8 Headless Extension platform requalification Gate evidence
+        run: |
+          uv run pytest -q backend/tests/*/test_p8_*.py tests/p8 --junitxml=build/validation/ci-p8-19-tests.xml
+          uv run python -m scripts.p8_headless_extension_platform_requalification_gate \
+            --root . \
+            --profile benchmarks/p8/headless-extension-platform-gate-profile.v1.json \
+            --junit build/validation/ci-p8-19-tests.xml \
+            --runtime-release build/validation/ci-p8-runtime-release.json \
+            --runtime-security build/validation/ci-p8-runtime-release-security.json \
+            --runtime-migration build/validation/ci-p8-runtime-release-migration.json \
+            --formal-validator build/validation/ci-formal-schedule-validator.json \
+            --validator-mutations build/validation/ci-validator-mutations.json \
+            --frontend-distribution build/validation/ci-p8-frontend-distribution.json \
+            --frontend-client build/validation/ci-p8-frontend-client.json \
+            --frontend-security build/validation/ci-p8-frontend-browser-security.json \
+            --frontend-backend-only build/validation/ci-p8-frontend-backend-only.json \
+            --operations-deployment build/validation/ci-p8-18-operations-deployment.json \
+            --operations-observability build/validation/ci-p8-18-operations-observability.json \
+            --operations-recovery build/validation/ci-p8-18-operations-recovery.json \
+            --operations-runbooks build/validation/ci-p8-18-operations-runbooks.json \
+            --corrective build/validation/ci-p8-18-runtime-product-corrective.json \
+            --corrective-invocation build/validation/ci-p8-18-runtime-extension-invocation.json \
+            --corrective-kit build/validation/ci-p8-18-developer-kit-binding.json \
+            --corrective-output build/validation/ci-p8-18-headless-output.json \
+            --corrective-deployment build/validation/ci-p8-18-extension-deployment-recovery.json \
+            --corrective-security build/validation/ci-p8-18-security.json \
+            --corrective-benchmark build/benchmarks/ci-p8-18-runtime-product-corrective.json \
+            --report build/validation/ci-p8-19-headless-extension-platform-requalification.json \
+            --blocker-disposition-report build/validation/ci-p8-19-blocker-disposition.json \
+            --provenance-report build/validation/ci-p8-19-provenance.json \
+            --compatibility-report build/validation/ci-p8-19-compatibility.json \
+            --security-report build/validation/ci-p8-19-security.json \
+            --recovery-report build/validation/ci-p8-19-recovery.json \
+            --benchmark-report build/benchmarks/ci-p8-19-headless-extension-platform-requalification.json
+
       - name: Engineering contract
         run: >-
           uv run python -m app.infrastructure.contract_check
@@ -966,6 +1001,7 @@ jobs:
           path: |
             build/validation/*.json
             build/validation/ci-p8-18-tests.xml
+            build/validation/ci-p8-19-tests.xml
             build/validation/ci-p8-developer-kit-contract-tests.xml
             build/traceability/*.json
             build/benchmarks/*.json

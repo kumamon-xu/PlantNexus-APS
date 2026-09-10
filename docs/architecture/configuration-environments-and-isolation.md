@@ -11,6 +11,14 @@ last_reviewed: 2026-09-10
 
 # 配置、环境与数据隔离
 
+## TASK-P8-19 重资格执行隔离
+
+P8-19 runner只读取冻结P8-16 profile/runner identity、P8-18 exact closure identity及当前SHA生成的sanitized machine reports，并在fresh临时目录中重放Alpha/Beta产品链和mixed/duplicate负例。环境继续固定为`TEST/SIMULATION`，客户端仍不能选择Extension、Developer Kit、Runtime、environment或data plane；报告只保存版本、计数、稳定错误码和SHA-256，不保存canonical payload、secret、配置值或本机绝对路径。
+
+P8-18之后Runtime要求Developer Kit version与fingerprint原子成对。为使旧P8-16 mixed负例可在当前Runtime上复算，P8-19仅在局部fixture adapter补齐冻结Kit `1.0.0` version，随后调用原runner procedure；原mixed identity、`RUNTIME_MISMATCH`、零Worker result、duplicate `EXT_SET_CONFLICT`及无partial side effect预期保持不变，冻结runner/profile bytes不修改。CI中的独立步骤位于P8-18当前SHA证据之后且不可跳过，输出不改变部署配置、Kit registry或企业项目。
+
+本地READY候选仍不是Production隔离证明。它不启用外部ingress、runtime download、ambient discovery、hot reload、跨版本自动升级、真实IdP/secret/HA或企业数据；exact Provider闭环后也只允许另行申请P8 Exit。
+
 ## TASK-P8-18 Extension-enabled部署隔离
 
 非空Extension部署现在把`catalog + startup artifact provider + artifact/config fingerprint + Developer Kit version/fingerprint + runtime-http-policy.v2`视为服务端原子配置。API与Worker必须解析出逐字相同的Runtime/Kit/Extension descriptor；provider缺失、与显式对象并存、超时/异常、非canonical集合或任一身份漂移都在业务结果前fail closed。请求、Worker message和canonical JSON不能覆盖这些事实。

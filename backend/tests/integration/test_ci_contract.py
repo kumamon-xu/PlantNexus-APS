@@ -356,6 +356,10 @@ def test_ci_runs_repository_gates_and_discovers_the_current_task() -> None:
         "backend/tests/integration/test_p8_developer_kit_integration.py",
         "backend/tests/security/test_p8_developer_kit_security.py",
         "backend/tests/validation/test_p8_developer_kit_mutations.py",
+        "name: P8 Headless Extension platform requalification Gate evidence",
+        "scripts.p8_headless_extension_platform_requalification_gate",
+        "build/validation/ci-p8-19-headless-extension-platform-requalification.json",
+        "build/validation/ci-p8-19-tests.xml",
         "build/benchmarks/*.json",
     )
     for fragment in required_fragments:
@@ -531,7 +535,9 @@ def test_ci_profile_routing_is_mutually_exclusive_and_fail_closed() -> None:
         "fixtures/developer-kit/p8-14-unpublished-predecessor.v1.json",
     ):
         assert workflow_text.count(f'"${{replay_root}}/{relative_path}"') == 1
-    assert workflow_text.count("backend/app/infrastructure/publication_repository.py") == 1
+    assert (
+        workflow_text.count("backend/app/infrastructure/publication_repository.py") == 1
+    )
     assert "uv sync --locked" in full_text
     full_pytest_commands = [
         str(step.get("run", ""))
@@ -586,7 +592,7 @@ def test_ci_profile_routing_is_mutually_exclusive_and_fail_closed() -> None:
     assert "Build package" in full_text
     assert len(preflight["steps"]) == 4
     assert len(backend["steps"]) == 8
-    assert len(full["steps"]) == 84
+    assert len(full["steps"]) == 85
     assert full["timeout-minutes"] == 40
     p8_corrective = next(
         cast(dict[str, Any], step)
@@ -608,6 +614,40 @@ def test_ci_profile_routing_is_mutually_exclusive_and_fail_closed() -> None:
     assert "ci-p8-18-runtime-product-corrective.json" in p8_corrective_run
     assert "scripts.p8_headless_extension_platform_gate" not in p8_corrective_run
     assert "continue-on-error" not in p8_corrective
+
+    p8_requalification = next(
+        cast(dict[str, Any], step)
+        for step in cast(list[dict[str, Any]], full["steps"])
+        if cast(dict[str, Any], step).get("name")
+        == "P8 Headless Extension platform requalification Gate evidence"
+    )
+    p8_requalification_run = str(p8_requalification["run"])
+    for fragment in (
+        "backend/tests/*/test_p8_*.py tests/p8",
+        "ci-p8-19-tests.xml",
+        "-m scripts.p8_headless_extension_platform_requalification_gate",
+        "headless-extension-platform-gate-profile.v1.json",
+        "ci-p8-19-headless-extension-platform-requalification.json",
+        "ci-p8-19-blocker-disposition.json",
+        "ci-p8-19-provenance.json",
+        "ci-p8-19-compatibility.json",
+        "ci-p8-19-security.json",
+        "ci-p8-19-recovery.json",
+        "build/benchmarks/ci-p8-19-headless-extension-platform-requalification.json",
+    ):
+        assert fragment in p8_requalification_run
+    assert "continue-on-error" not in p8_requalification
+    full_step_names = [
+        str(cast(dict[str, Any], step).get("name", ""))
+        for step in cast(list[dict[str, Any]], full["steps"])
+    ]
+    assert (
+        full_step_names.index("P8 Runtime Extension product corrective evidence")
+        < full_step_names.index(
+            "P8 Headless Extension platform requalification Gate evidence"
+        )
+        < full_step_names.index("Engineering contract")
+    )
 
     assert 'test "${PLANTNEXUS_CLASSIFY_RESULT}" = "success"' in final_run
     assert 'test "${PLANTNEXUS_PREFLIGHT_RESULT}" = "success"' in final_run
@@ -1179,9 +1219,7 @@ def test_ci_p8_runtime_release_is_required_and_machine_checkable(
 
 
 def test_ci_p8_developer_kit_baseline_is_not_reassembled_after_runtime_change() -> None:
-    workflow = (ROOT / ".github" / "workflows" / "ci.yml").read_text(
-        encoding="utf-8"
-    )
+    workflow = (ROOT / ".github" / "workflows" / "ci.yml").read_text(encoding="utf-8")
     normalized = " ".join(workflow.split())
     expected = (
         "name: P8 Developer Kit immutable contract and no automatic upgrade evidence "

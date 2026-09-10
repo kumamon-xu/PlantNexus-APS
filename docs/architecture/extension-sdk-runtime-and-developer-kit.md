@@ -11,6 +11,14 @@ last_reviewed: 2026-09-10
 
 # APS Extension SDK、Runtime 与 Developer Kit 架构
 
+## TASK-P8-19 平台独立重资格
+
+P8-19新增独立`PHASE_GATE` consumer，严格复用P8-16冻结profile `sha256:da5ee7830e37f86569897a80685d25e59414f05153499b3effed37b483503043`、18项check inventory、seed和原工程门槛，并校验P8-16 runner/profile原始字节及`NOT_READY` Provider身份。它同时消费P8-18 exact closure lineage和当前SHA重新生成的Runtime、Frontend、Validator、operations及七类corrective报告，再独立重放Alpha/Beta完整产品链。P8-16历史报告不会被覆盖；四个旧blocker通过`historical BLOCKED → P8-18 PASS → P8-19 fresh assertion`逐项建立后继处置记录。
+
+当前本地候选在292项P8测试零失败/零跳过后取得18/18平台检查、4/4 blocker closure和`blocking_gaps=[]`，两条链均证明六类SPI被Runtime实际调用、Developer Kit `1.0.0`身份一致、授权publication/read/export可达且目标部署/恢复装载同一Alpha Extension集合。旧P8-16 mixed/duplicate负例仍由冻结procedure执行；P8-19只在测试fixture边界补齐P8-18后来强制的Developer Kit version+fingerprint成对配置，不修改冻结runner、profile、threshold、expected或负向错误码。
+
+该`READY`只表示synthetic Headless+Extension工程重资格候选，并须由当前exact SHA的non-skippable Provider `PHASE_GATE`再次确认后才能闭环TASK-P8-19。它不等于P8 Exit、P7 reality或Production ready；TASK-P8-17只在闭环后具备另行申请条件，不能自动启动。
+
 ## TASK-P8-18 产品执行纠正
 
 P8-18在不修改Core、SDK `1.0.0`公开合同、Alpha/Beta源码、Schema、migration或依赖的前提下，把startup-resolved adapter接入真实Worker生命周期。`runtime-http-policy.v2`只增加服务端持有的Extension事实carrier；外部请求仍是既有canonical JSON，不能选择Extension、module、class、artifact或配置。Worker在求解前按resolved order调用`Plugin Registry → Planning Rule → Constraint → Replan Policy`，在Core Solver和fresh formal Validator形成候选后、创建ScheduleVersion之前调用`Objective → Validation Rule`。每次成功调用只记录lifecycle及输入/输出SHA-256，不保留payload、返回对象或异常细节。
@@ -34,7 +42,7 @@ P8-16以冻结的`headless-extension-platform-gate-profile.v1`（fingerprint `sh
 - deployable Runtime使用不可用的Planning Workspace application和Authorization provider；Worker只产生`READY_FOR_REVIEW`候选，publication、受权read和export未形成可调用Headless输出链。
 - P8-10目标部署仍以`DISABLED_UNTIL_COMPATIBILITY_VERIFIED`和default-empty Extension运行，没有部署并恢复Gate选定的Enterprise Extension集合。
 
-因此P8-16只证明既有Headless基链、Extension装载/conformance和负例边界可复算，不能声明“Runtime已执行企业扩展”或“Headless输出闭环”。产品修复归TASK-P8-18；TASK-P8-19必须在新SHA上独立重跑同一Gate后，P8-17才可启动。P8-16本身保持审计边界，不修改被审计的Core、Runtime、SDK、Extension、Schema、API、migration或Frontend实现。
+因此P8-16只证明既有Headless基链、Extension装载/conformance和负例边界可复算，不能声明“Runtime已执行企业扩展”或“Headless输出闭环”。产品修复归TASK-P8-18；TASK-P8-19在P8-18后以独立wrapper复用同一冻结profile和check inventory形成新的重资格证据，且不改写P8-16历史结论。P8-16本身保持审计边界，不修改被审计的Core、Runtime、SDK、Extension、Schema、API、migration或Frontend实现。
 
 ## 目标
 
@@ -54,7 +62,7 @@ SDK v1不暴露privileged service；所有输入先由Runtime裁剪并深度冻�
 
 单catalog/manifest/config/artifact分别受1 MiB、256 KiB、256 KiB、16 MiB上限约束，最多16个artifact/256项贡献；单次SPI和startup预算均进入catalog fingerprint。调用在有界daemon thread中执行，timeout后丢弃整个返回并把该贡献标记为unhealthy；这只能提供fail-closed调用边界，不能中止或隔离恶意Python代码，因此信任模型仍为`trusted_in_process=true`、`sandboxed=false`。
 
-当前adapter证明六类SPI可被裁剪、冻结、校验和观测，并证明Validation Rule entrypoint/domain与Solver侧贡献分离；它没有把synthetic Constraint/Objective/Planning Rule解释为Core Solver的真实企业公式，也没有替代fresh formal Validator。企业实现和独立双实现conformance由P8-14形成；P8-16进一步确认这些贡献尚未接入实际API/Worker产品链，Solver/Validator业务整合必须由P8-18纠正后再由P8-19复验。
+当前adapter证明六类SPI可被裁剪、冻结、校验和观测，并证明Validation Rule entrypoint/domain与Solver侧贡献分离；它没有把synthetic Constraint/Objective/Planning Rule解释为Core Solver的真实企业公式，也没有替代fresh formal Validator。企业实现和独立双实现conformance由P8-14形成；P8-16曾确认这些贡献尚未接入实际API/Worker产品链，P8-18完成产品整合，P8-19再以独立fresh replay复验调用、拒绝和输出边界。
 
 ## TASK-P8-14 Enterprise Extension开发边界
 
@@ -123,9 +131,9 @@ APS Developer Kit = verified Runtime + SDK + template +
 2. Runtime启动时读取本地受控manifest，验证allow-list、完整性、SDK compatibility和唯一Registry resolution。
 3. API与Worker分别从同一已签/已固定配置生成composition fingerprint；fingerprint不同则readiness失败或work item拒绝。
 4. API只接收标准canonical request，生成不可变Snapshot/Problem/PlanningRun并记录Extension resolution。
-5. Worker进程应持有同一resolved adapter；P8-13只提供受控调用缝隙，P8-14只证明独立项目可通过conformance产生solver-neutral输出。P8-16已证明当前产品链并未调用该输出，不能把descriptor parity视为执行证据。
-6. 既有fresh formal Validator必须保持独立；Extension Validation Rule还必须在候选进入可审阅状态前被Runtime实际调用，并与formal Validator共同fail closed。该整合仍待P8-18实现和P8-19复验。
-7. 标准publication/read/export API必须返回结果、violation和完整版本fingerprint；当前deployable composition尚未提供该输出链。企业特有字段必须位于批准的canonical namespace。
+5. Worker进程持有同一resolved adapter；P8-18已把六类SPI接入真实产品lifecycle，P8-19要求动态调用计数和输入/输出fingerprint同时存在，不能用descriptor parity替代执行证据。
+6. 既有fresh formal Validator保持独立；Extension Validation Rule在候选进入可审阅状态前由Runtime实际调用，并与formal Validator共同fail closed，P8-19同时重放Validation与Replan拒绝。
+7. 标准publication/read/export API返回结果、violation和完整版本fingerprint；P8-19复验证授权输出和exact replay。企业特有字段仍必须位于批准的canonical namespace。
 
 Extension异常、timeout、非法返回、未声明capability或版本不兼容必须映射为稳定的config/compatibility/system错误并无部分业务副作用。Extension日志、metrics和trace必须带plugin ID/version/correlation，但不得泄漏canonical业务payload或secret。
 

@@ -11,6 +11,12 @@ last_reviewed: 2026-09-10
 
 # APS Headless 平台集成与数据权威合同
 
+## TASK-P8-17 Exit状态
+
+P8-17作为独立`PHASE_GATE`，重核本合同、ADR-0017/0018、P8完整前序Provider lineage及当前SHA的Headless+Extension产品链。只有20项Exit检查、fresh P8-19的18项平台检查与4项blocker closure全部通过且零issue/zero gap，才可声明P8 synthetic工程产品化`READY`；当前实现仍等待自身exact Provider确认。
+
+这一状态不改变集成责任：APS仍只接收宿主提交的versioned canonical JSON，第三方连接、采集、字段映射、数据真实性和结果展示仍归宿主，Extension仅在APS Runtime服务端执行。Exit不授权Demo、第三方直连、真实数据结论、P7关闭、Production身份/容量/SLA或UAT。
+
 ## TASK-P8-18 可部署输出合同
 
 P8-18不增加公共HTTP operation或修改现有Schema/OpenAPI bytes。deployable Simulation Runtime现在为既有`GET schedule → APPROVE → PUBLISH → CREATE/GET export`路由装配P3 application/repository；每个调用仍先由服务器提供的`AuthorizationProvider`解析身份和scope，再由原有state、content precondition、idempotency、publication current-CAS、append-only audit与data-plane规则决定结果。没有显式provider、capability或resource scope时保持401/403/default-deny，Runtime不会自动批准、发布或导出。

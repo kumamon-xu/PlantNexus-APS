@@ -1,0 +1,723 @@
+{
+  "activation_cutoff": "2026-09-10T00:00:00+00:00",
+  "audit_task": "TASK-P8-17",
+  "collected_at_utc": "2026-09-10T06:10:17+00:00",
+  "issues": [],
+  "observation_fingerprint": "sha256:fe7c76fd8ba13d1a267f3e62e0cf44b66ae098814e90089961bf254078565b8e",
+  "provider_inputs": [
+    {
+      "artifact_count": 2,
+      "artifact_set_fingerprint": "sha256:75c8db33f0810ba3ff6b362be54282ccdd307c5ba58b8f47e961e03ff14d3f5a",
+      "artifact_verification_modes": [
+        "DOWNLOADED_JSON_ENTRY_REHASH"
+      ],
+      "earliest_expiry": "2026-12-03T09:29:04Z",
+      "entry_count": 2,
+      "evidence_kind": "implementation",
+      "gate_verdict": null,
+      "implementation_sha": "3916e35922838dfd0e55c7aeebe914ccecc0dfa9",
+      "issues": [],
+      "key": "p8-00-implementation",
+      "provider_result": "PASS",
+      "required_app_id": 15368,
+      "required_validate_job_id": 100977561619,
+      "run_id": 33858563951,
+      "source_manifest_sha256": "sha256:caabaf1c806d9f7259103bde4d266ea7f19ccd99d350409c64e9b8a48c50afd1",
+      "task_id": "TASK-P8-00",
+      "task_profile": "DOCS_ONLY",
+      "workflow_profile": "DOCS_ONLY"
+    },
+    {
+      "artifact_count": 2,
+      "artifact_set_fingerprint": "sha256:14ea0685bf81be2f89868e04b00684afc125ff646d61d26052b1ab5d2f59b9e3",
+      "artifact_verification_modes": [
+        "DOWNLOADED_JSON_ENTRY_REHASH"
+      ],
+      "earliest_expiry": "2026-12-03T09:53:07Z",
+      "entry_count": 2,
+      "evidence_kind": "implementation",
+      "gate_verdict": null,
+      "implementation_sha": "43ff13429b2bb79854f976c0a1f5a72b1b069607",
+      "issues": [],
+      "key": "p8-01-implementation",
+      "provider_result": "PASS",
+      "required_app_id": 15368,
+      "required_validate_job_id": 100983788899,
+      "run_id": 33860531213,
+      "source_manifest_sha256": "sha256:3da390988f0ae7bab77c8ef2399f21ce47f4dbd181f3cc6f4fb6d97d294bb9ab",
+      "task_id": "TASK-P8-01",
+      "task_profile": "DOCS_ONLY",
+      "workflow_profile": "DOCS_ONLY"
+    },
+    {
+      "artifact_count": 4,
+      "artifact_set_fingerprint": "sha256:d2440b488c9e61790eae024cd664519a18e4099b9213f79b273687e40a4e525a",
+      "artifact_verification_modes": [
+        "ARCHIVE_AND_ENTRY_REHASH"
+      ],
+      "earliest_expiry": "2026-12-03T13:06:55Z",
+      "entry_count": 82,
+      "evidence_kind": "implementation",
+      "gate_verdict": null,
+      "implementation_sha": "c9efc2e8d35e29c139b9c819368047625f31724c",
+      "issues": [],
+      "key": "p8-02-implementation",
+      "provider_result": "PASS",
+      "required_app_id": 15368,
+      "required_validate_job_id": 101035958351,
+      "run_id": 33876276068,
+      "source_manifest_sha256": "sha256:f4cceea473ec6b1b17905094617b2b87360efb05de0799a1df8a5240b103eb66",
+      "task_id": "TASK-P8-02",
+      "task_profile": "HIGH_RISK",
+      "workflow_profile": "FULL"
+    },
+    {
+      "artifact_count": 4,
+      "artifact_set_fingerprint": "sha256:3e89316eed03bd6511418f5e7e4fc82546d85c18bbe1205b1e2ed9e489fd6f1d",
+      "artifact_verification_modes": [
+        "ARCHIVE_AND_ENTRY_REHASH"
+      ],
+      "earliest_expiry": "2026-12-03T17:37:00Z",
+      "entry_count": 82,
+      "evidence_kind": "corrective_implementation",
+      "gate_verdict": null,
+      "implementation_sha": "cc846fbb34f5b22bcec027f7c7cb55e1ab8027a3",
+      "issues": [],
+      "key": "p8-03-implementation",
+      "provider_result": "PASS",
+      "required_app_id": 15368,
+      "required_validate_job_id": 101119346329,
+      "run_id": 33901523581,
+      "source_manifest_sha256": "sha256:020323a6531de18674810f59b7bf8148ad0bf0814d6f02668e9dfea39e9a4c0d",
+      "task_id": "TASK-P8-03",
+      "task_profile": "HIGH_RISK",
+      "workflow_profile": "FULL"
+    },
+    {
+      "artifact_count": 2,
+      "artifact_set_fingerprint": "sha256:57c6eaaf3c7fde5f03c0fc5955ca3c234d02e061ba6b1a776d90f5cb4ee11503",
+      "artifact_verification_modes": [
+        "DOWNLOADED_JSON_ENTRY_REHASH"
+      ],
+      "earliest_expiry": "2026-12-03T17:59:04Z",
+      "entry_count": 2,
+      "evidence_kind": "closure",
+      "gate_verdict": null,
+      "implementation_sha": "29000eeaf73fb1306f1bcb6f7cb7ab761283d682",
+      "issues": [],
+      "key": "p8-03-closure",
+      "provider_result": "PASS",
+      "required_app_id": 15368,
+      "required_validate_job_id": 101122774253,
+      "run_id": 33903442112,
+      "source_manifest_sha256": "sha256:67dbf2c680a70be0b80c3ecd504b5029df4a5d1c1c8b234fc83d11c02f7dd5a4",
+      "task_id": "TASK-P8-03",
+      "task_profile": "DOCS_ONLY",
+      "workflow_profile": "DOCS_ONLY"
+    },
+    {
+      "artifact_count": 4,
+      "artifact_set_fingerprint": "sha256:bd30999a130909364ffc43414e5348fa65f383e95577a970a9b074bcd396e69a",
+      "artifact_verification_modes": [
+        "ARCHIVE_AND_ENTRY_REHASH"
+      ],
+      "earliest_expiry": "2026-12-04T03:50:05Z",
+      "entry_count": 82,
+      "evidence_kind": "implementation",
+      "gate_verdict": null,
+      "implementation_sha": "f8c962188295c6e9d3852cc8bb8708caf3203adc",
+      "issues": [],
+      "key": "p8-04-implementation",
+      "provider_result": "PASS",
+      "required_app_id": 15368,
+      "required_validate_job_id": 101244735504,
+      "run_id": 33942941111,
+      "source_manifest_sha256": "sha256:35b79a706d4c84638a5831dc274a508f3ab9e5a4bfc6ca55c00088cb7c5d5862",
+      "task_id": "TASK-P8-04",
+      "task_profile": "HIGH_RISK",
+      "workflow_profile": "FULL"
+    },
+    {
+      "artifact_count": 4,
+      "artifact_set_fingerprint": "sha256:cd2ef263d8663668f8f5dbe7b44a6523ddae15e15cd0cc5f0b8b1fac46b2f17d",
+      "artifact_verification_modes": [
+        "ARCHIVE_AND_ENTRY_REHASH"
+      ],
+      "earliest_expiry": "2026-12-04T07:02:57Z",
+      "entry_count": 84,
+      "evidence_kind": "implementation",
+      "gate_verdict": null,
+      "implementation_sha": "c69fbe3b21e0e782a293675b523c41f31898d0da",
+      "issues": [],
+      "key": "p8-05-implementation",
+      "provider_result": "PASS",
+      "required_app_id": 15368,
+      "required_validate_job_id": 101268372489,
+      "run_id": 33951471792,
+      "source_manifest_sha256": "sha256:a59bdd4a5e8f64e41ec4b08b3de1f4f57b5cb61cbf5827407c75112617c558e7",
+      "task_id": "TASK-P8-05",
+      "task_profile": "HIGH_RISK",
+      "workflow_profile": "FULL"
+    },
+    {
+      "artifact_count": 4,
+      "artifact_set_fingerprint": "sha256:552133fc13ebce562b6b86be8dd7e791a35498084bfe5400b1ae940de8aa0e96",
+      "artifact_verification_modes": [
+        "ARCHIVE_AND_ENTRY_REHASH"
+      ],
+      "earliest_expiry": "2026-12-04T09:33:46Z",
+      "entry_count": 86,
+      "evidence_kind": "implementation",
+      "gate_verdict": null,
+      "implementation_sha": "3a4fa8e972e35fea6464031ac1a6e89027eeec5e",
+      "issues": [],
+      "key": "p8-06-implementation",
+      "provider_result": "PASS",
+      "required_app_id": 15368,
+      "required_validate_job_id": 101286548369,
+      "run_id": 33958321784,
+      "source_manifest_sha256": "sha256:d181e2b7b92f32ec9862717e1f8027a3972ab7093ad0ce432ff1ef892ef77908",
+      "task_id": "TASK-P8-06",
+      "task_profile": "HIGH_RISK",
+      "workflow_profile": "FULL"
+    },
+    {
+      "artifact_count": 4,
+      "artifact_set_fingerprint": "sha256:7669ddb8d180b3a7965ec2af5a074416c922608a606bca3bc7c21fd463b06061",
+      "artifact_verification_modes": [
+        "ARCHIVE_AND_ENTRY_REHASH"
+      ],
+      "earliest_expiry": "2026-12-05T03:48:25Z",
+      "entry_count": 89,
+      "evidence_kind": "implementation",
+      "gate_verdict": null,
+      "implementation_sha": "54be7af6efdb78f751b8aa4a66bc080bdd04407f",
+      "issues": [],
+      "key": "p8-07-implementation",
+      "provider_result": "PASS",
+      "required_app_id": 15368,
+      "required_validate_job_id": 101424801432,
+      "run_id": 34009912309,
+      "source_manifest_sha256": "sha256:5080887a9d38e0d78fc8e61db7f991a05cecbab2d40ba087bef61eceaadc19e3",
+      "task_id": "TASK-P8-07",
+      "task_profile": "HIGH_RISK",
+      "workflow_profile": "FULL"
+    },
+    {
+      "artifact_count": 4,
+      "artifact_set_fingerprint": "sha256:ccc85126263511e01d7c9f04d16c7ef8a62a5dc2089cd621c65a607d83248182",
+      "artifact_verification_modes": [
+        "ARCHIVE_AND_ENTRY_REHASH"
+      ],
+      "earliest_expiry": "2026-12-05T07:03:37Z",
+      "entry_count": 92,
+      "evidence_kind": "corrective_implementation",
+      "gate_verdict": null,
+      "implementation_sha": "3595f6f7b1ae4a70f68bb3512f3db4bd024dc8a5",
+      "issues": [],
+      "key": "p8-08-corrective",
+      "provider_result": "PASS",
+      "required_app_id": 15368,
+      "required_validate_job_id": 101446809915,
+      "run_id": 34018123165,
+      "source_manifest_sha256": "sha256:f43077fec78d549103af0169365fc65466578929048b766cefe1ae17a0290bc5",
+      "task_id": "TASK-P8-08",
+      "task_profile": "HIGH_RISK",
+      "workflow_profile": "FULL"
+    },
+    {
+      "artifact_count": 4,
+      "artifact_set_fingerprint": "sha256:4cd7f56c8ea517c429da022fd80c945c02240859583c175b2dc9d46c48b84da3",
+      "artifact_verification_modes": [
+        "ARCHIVE_AND_ENTRY_REHASH"
+      ],
+      "earliest_expiry": "2026-12-06T03:50:26Z",
+      "entry_count": 99,
+      "evidence_kind": "implementation",
+      "gate_verdict": null,
+      "implementation_sha": "3af39dbc97128634af729d6cb744b95b96cec18f",
+      "issues": [],
+      "key": "p8-09-implementation",
+      "provider_result": "PASS",
+      "required_app_id": 15368,
+      "required_validate_job_id": 101617450539,
+      "run_id": 34080998300,
+      "source_manifest_sha256": "sha256:14fadfb949e24aa5251a31402f12c4234a8f2eb6463f5a5135c9989f2394c23f",
+      "task_id": "TASK-P8-09",
+      "task_profile": "HIGH_RISK",
+      "workflow_profile": "FULL"
+    },
+    {
+      "artifact_count": 5,
+      "artifact_set_fingerprint": "sha256:657f12fabada3524bc9d0f7b7a76a8bcb1cd38ce4bb7c12d4ae61f605d87c37e",
+      "artifact_verification_modes": [
+        "ARCHIVE_AND_ENTRY_REHASH"
+      ],
+      "earliest_expiry": "2026-12-06T06:30:26Z",
+      "entry_count": 103,
+      "evidence_kind": "implementation",
+      "gate_verdict": null,
+      "implementation_sha": "491a5decab217001d4be06f06be9645ef2911269",
+      "issues": [],
+      "key": "p8-10-implementation",
+      "provider_result": "PASS",
+      "required_app_id": 15368,
+      "required_validate_job_id": 101646750337,
+      "run_id": 34091144691,
+      "source_manifest_sha256": "sha256:8b3b51d52779f351884d2ded9fcc41b3af51230bf90716f62ac21acf97283f58",
+      "task_id": "TASK-P8-10",
+      "task_profile": "HIGH_RISK",
+      "workflow_profile": "FULL"
+    },
+    {
+      "artifact_count": 5,
+      "artifact_set_fingerprint": "sha256:72420b29e134a88b7448d3a0ace19b535dd573bcb5d66476236f46dfcc6043cf",
+      "artifact_verification_modes": [
+        "ARCHIVE_AND_ENTRY_REHASH"
+      ],
+      "earliest_expiry": "2026-12-07T02:36:26Z",
+      "entry_count": 113,
+      "evidence_kind": "corrective_implementation",
+      "gate_verdict": null,
+      "implementation_sha": "475e46e6e7e140600b0302a21d594443f91d7853",
+      "issues": [],
+      "key": "p8-11-corrective",
+      "provider_result": "PASS",
+      "required_app_id": 15368,
+      "required_validate_job_id": 101920343916,
+      "run_id": 34180636204,
+      "source_manifest_sha256": "sha256:579193cde28c1d021535253e7154bd9b0141a5bae805c0703139f5536cdccba7",
+      "task_id": "TASK-P8-11",
+      "task_profile": "HIGH_RISK",
+      "workflow_profile": "FULL"
+    },
+    {
+      "artifact_count": 5,
+      "artifact_set_fingerprint": "sha256:7b6948a5c21243ca37775320e198e21018e7aa2b23af84827a7c89b101909c72",
+      "artifact_verification_modes": [
+        "ARCHIVE_AND_ENTRY_REHASH"
+      ],
+      "earliest_expiry": "2026-12-07T06:02:51Z",
+      "entry_count": 114,
+      "evidence_kind": "corrective_implementation",
+      "gate_verdict": null,
+      "implementation_sha": "4d37dba068c86230f6009820d6cbc7ff10a73495",
+      "issues": [],
+      "key": "p8-12-corrective",
+      "provider_result": "PASS",
+      "required_app_id": 15368,
+      "required_validate_job_id": 101956763253,
+      "run_id": 34192999691,
+      "source_manifest_sha256": "sha256:e84628a42e982d638ae12e808639234db8b1552934ac01e93e046dcdccfa8dff",
+      "task_id": "TASK-P8-12",
+      "task_profile": "HIGH_RISK",
+      "workflow_profile": "FULL"
+    },
+    {
+      "artifact_count": 5,
+      "artifact_set_fingerprint": "sha256:e4bc08223b4d396b15473b27d3bc3315fb3b575ac76a930f794f3aaa1255b946",
+      "artifact_verification_modes": [
+        "ARCHIVE_AND_ENTRY_REHASH"
+      ],
+      "earliest_expiry": "2026-12-07T10:07:00Z",
+      "entry_count": 118,
+      "evidence_kind": "corrective_implementation",
+      "gate_verdict": null,
+      "implementation_sha": "2682a2235f33d37cc909a1ad8ca3c52a6dffab05",
+      "issues": [],
+      "key": "p8-13-corrective",
+      "provider_result": "PASS",
+      "required_app_id": 15368,
+      "required_validate_job_id": 102023732906,
+      "run_id": 34213714197,
+      "source_manifest_sha256": "sha256:5e8ffccebcd4a82e7d6698b50d995ed97aab5e846499c0613092bbc92a6d78ab",
+      "task_id": "TASK-P8-13",
+      "task_profile": "HIGH_RISK",
+      "workflow_profile": "FULL"
+    },
+    {
+      "artifact_count": 5,
+      "artifact_set_fingerprint": "sha256:175a36f1028ea0d6f914c2df291b701e50b0120733495d9b3e102151d571af5e",
+      "artifact_verification_modes": [
+        "ARCHIVE_AND_ENTRY_REHASH"
+      ],
+      "earliest_expiry": "2026-12-08T03:25:04Z",
+      "entry_count": 132,
+      "evidence_kind": "implementation",
+      "gate_verdict": null,
+      "implementation_sha": "d0bf00da4af0f73befd2e9c833ffd837c63cedca",
+      "issues": [],
+      "key": "p8-14-implementation",
+      "provider_result": "PASS",
+      "required_app_id": 15368,
+      "required_validate_job_id": 102327664199,
+      "run_id": 34307037409,
+      "source_manifest_sha256": "sha256:a7ffcd8803cbac97f9eebb9a5b111348408575433a630a5a2c3324ace5424d66",
+      "task_id": "TASK-P8-14",
+      "task_profile": "HIGH_RISK",
+      "workflow_profile": "FULL"
+    },
+    {
+      "artifact_count": 5,
+      "artifact_set_fingerprint": "sha256:59aaf25614c5e21bdaa6fc1d3da9086023fcb2d37de59dff6a6635894cef2b63",
+      "artifact_verification_modes": [
+        "ARCHIVE_AND_ENTRY_REHASH"
+      ],
+      "earliest_expiry": "2026-12-08T06:46:46Z",
+      "entry_count": 139,
+      "evidence_kind": "corrective_implementation",
+      "gate_verdict": null,
+      "implementation_sha": "87e2f1e814c75fbc25e82a89288f14b80831209b",
+      "issues": [],
+      "key": "p8-15-corrective",
+      "provider_result": "PASS",
+      "required_app_id": 15368,
+      "required_validate_job_id": 102368573448,
+      "run_id": 34320622291,
+      "source_manifest_sha256": "sha256:bb178ff17a924a3bf38dbc1fbb4155818dd5360ec1d7ababb24cfdbfb1f3fdae",
+      "task_id": "TASK-P8-15",
+      "task_profile": "HIGH_RISK",
+      "workflow_profile": "FULL"
+    },
+    {
+      "artifact_count": 5,
+      "artifact_set_fingerprint": "sha256:66e1d3999c48ff970652cedcc4231631dc56d5d86a684a3b351a850bcda61138",
+      "artifact_verification_modes": [
+        "ARCHIVE_AND_ENTRY_REHASH"
+      ],
+      "earliest_expiry": "2026-12-08T10:24:27Z",
+      "entry_count": 150,
+      "evidence_kind": "provider_verified_gate",
+      "gate_verdict": "NOT_READY",
+      "implementation_sha": "b80f44be094aaf5b673481dde9d81867ef49a11d",
+      "issues": [],
+      "key": "p8-16-gate",
+      "provider_result": "PASS",
+      "required_app_id": 15368,
+      "required_validate_job_id": 102432349847,
+      "run_id": 34340039154,
+      "source_manifest_sha256": "sha256:b7b1a985b05ce4292ad66dac0faac4088c25f52942e78ec22ebafc34bca1a6ae",
+      "task_id": "TASK-P8-16",
+      "task_profile": "PHASE_GATE",
+      "workflow_profile": "FULL"
+    },
+    {
+      "artifact_count": 5,
+      "artifact_set_fingerprint": "sha256:4202a03536d7bc195449212a6c62ba5548d467e48643e1c4b4b3818c35bccda4",
+      "artifact_verification_modes": [
+        "ARCHIVE_AND_ENTRY_REHASH"
+      ],
+      "earliest_expiry": "2026-12-09T02:20:36Z",
+      "entry_count": 145,
+      "evidence_kind": "corrective_closure",
+      "gate_verdict": null,
+      "implementation_sha": "5f67501d9d3cf75313edff250c8a7fdb74c56c30",
+      "issues": [],
+      "key": "p8-18-closure",
+      "provider_result": "PASS",
+      "required_app_id": 15368,
+      "required_validate_job_id": 102723359648,
+      "run_id": 34429068832,
+      "source_manifest_sha256": "sha256:72ef0b54d2357fcfa3d3a30ba5d7d5085cc810e609e2317277c8aae4a51a101b",
+      "task_id": "TASK-P8-18",
+      "task_profile": "HIGH_RISK",
+      "workflow_profile": "FULL"
+    },
+    {
+      "artifact_count": 5,
+      "artifact_set_fingerprint": "sha256:97b07b84287db17bcb16ba2432cb3eab8730765e582266e64043c9663446da77",
+      "artifact_verification_modes": [
+        "ARCHIVE_AND_ENTRY_REHASH"
+      ],
+      "earliest_expiry": "2026-12-09T04:47:12Z",
+      "entry_count": 153,
+      "evidence_kind": "provider_verified_gate",
+      "gate_verdict": "READY",
+      "implementation_sha": "2438870a928b5b5cf79aa9a1b9c528c102c36c31",
+      "issues": [],
+      "key": "p8-19-requalification",
+      "provider_result": "PASS",
+      "required_app_id": 15368,
+      "required_validate_job_id": 102751414544,
+      "run_id": 34438523111,
+      "source_manifest_sha256": "sha256:2ff79ad1d9bbfe7b1c90cca3740e7840b193a25d4b73ce6c0ad58e2353814ba3",
+      "task_id": "TASK-P8-19",
+      "task_profile": "PHASE_GATE",
+      "workflow_profile": "FULL"
+    }
+  ],
+  "registers": {
+    "open_count": 15,
+    "open_status": "OPEN",
+    "production_closure_from_p8": false,
+    "risk_count": 19,
+    "risk_status": "MONITORED",
+    "simulation_assumption_count": 26,
+    "simulation_assumption_status": "ACTIVE"
+  },
+  "repository": "kumamon-xu/PlantNexus-APS",
+  "retained_history": [
+    {
+      "commit_sha": "055042b62f0fb5020a9c3670b739644514cb5adf",
+      "disposition": "FROZEN_P4_REPLAY_REJECTED_NEW_MIGRATION",
+      "provider_conclusion": "failure",
+      "rerun": false,
+      "retained": true,
+      "run_id": 33898015147,
+      "task_id": "TASK-P8-03"
+    },
+    {
+      "commit_sha": "fa8256678c60ba066f06d889cf4c5e014b295472",
+      "disposition": "FROZEN_P3_REPLAY_REJECTED_AGGREGATE_EXPORT",
+      "provider_conclusion": "failure",
+      "rerun": false,
+      "retained": true,
+      "run_id": 34017333487,
+      "task_id": "TASK-P8-08"
+    },
+    {
+      "commit_sha": "f33243f3c89d5b8f24fc6a6ca959cd0c2dcbfa46",
+      "disposition": "FROZEN_P3_PACKAGE_SCRIPT_BOUNDARY",
+      "provider_conclusion": "failure",
+      "rerun": false,
+      "retained": true,
+      "run_id": 34112349881,
+      "task_id": "TASK-P8-11"
+    },
+    {
+      "commit_sha": "e39afa49c2983e5c389407d017273e86f2d30401",
+      "disposition": "FROZEN_P4_PACKAGE_REPLAY_BOUNDARY",
+      "provider_conclusion": "failure",
+      "rerun": false,
+      "retained": true,
+      "run_id": 34114263425,
+      "task_id": "TASK-P8-11"
+    },
+    {
+      "commit_sha": "bf6cd0936a09fb063639307db959ebbae893658b",
+      "disposition": "FROZEN_P4_SDK_PATH_ISOLATION",
+      "provider_conclusion": "failure",
+      "rerun": false,
+      "retained": true,
+      "run_id": 34191436658,
+      "task_id": "TASK-P8-12"
+    },
+    {
+      "commit_sha": "9818d0b6686ff005d0ea48ae81f3a306a5b36172",
+      "disposition": "RUNTIME_INPUT_DRIFT",
+      "provider_conclusion": "failure",
+      "rerun": false,
+      "retained": true,
+      "run_id": 34212046893,
+      "task_id": "TASK-P8-13"
+    },
+    {
+      "commit_sha": "9cc44ba687f4deeb8cb79c714a48ecfea440a005",
+      "disposition": "RUNTIME_INPUT_DRIFT_FALSE_POSITIVE",
+      "provider_conclusion": "failure",
+      "rerun": false,
+      "retained": true,
+      "run_id": 34319621745,
+      "task_id": "TASK-P8-15"
+    },
+    {
+      "commit_sha": "6996fbdcd51d06d2f197ec2ee1fc614146a06555",
+      "disposition": "AUDIT_PASS_GATE_NOT_READY_COLLECTOR_REJECTED",
+      "provider_conclusion": "success",
+      "rerun": false,
+      "retained": true,
+      "run_id": 34334644319,
+      "task_id": "TASK-P8-16"
+    },
+    {
+      "commit_sha": "f9c308cc415299a7686bf55329d2b4b4ab4b9353",
+      "disposition": "KIT_BOUNDARY_VIOLATION",
+      "provider_conclusion": "failure",
+      "rerun": false,
+      "retained": true,
+      "run_id": 34427220042,
+      "task_id": "TASK-P8-18"
+    }
+  ],
+  "schema_version": "p8-exit-provider-observation.v1",
+  "summary": {
+    "artifact_count": 83,
+    "digest_mismatch_count": 0,
+    "entry_count": 1869,
+    "expired_artifact_count": 0,
+    "issue_count": 0,
+    "provider_input_count": 20,
+    "provider_task_count": 19,
+    "retained_history_count": 9,
+    "unsafe_archive_count": 0
+  },
+  "task_topology": {
+    "active_task": "TASK-P8-17",
+    "cycle_count": 0,
+    "dag_edge_count": 34,
+    "dag_edges": [
+      [
+        "TASK-P8-00",
+        "TASK-P8-01"
+      ],
+      [
+        "TASK-P8-01",
+        "TASK-P8-02"
+      ],
+      [
+        "TASK-P8-02",
+        "TASK-P8-03"
+      ],
+      [
+        "TASK-P8-03",
+        "TASK-P8-04"
+      ],
+      [
+        "TASK-P8-04",
+        "TASK-P8-05"
+      ],
+      [
+        "TASK-P8-03",
+        "TASK-P8-06"
+      ],
+      [
+        "TASK-P8-04",
+        "TASK-P8-06"
+      ],
+      [
+        "TASK-P8-05",
+        "TASK-P8-06"
+      ],
+      [
+        "TASK-P8-06",
+        "TASK-P8-07"
+      ],
+      [
+        "TASK-P8-01",
+        "TASK-P8-08"
+      ],
+      [
+        "TASK-P8-02",
+        "TASK-P8-08"
+      ],
+      [
+        "TASK-P8-07",
+        "TASK-P8-08"
+      ],
+      [
+        "TASK-P8-07",
+        "TASK-P8-09"
+      ],
+      [
+        "TASK-P8-08",
+        "TASK-P8-09"
+      ],
+      [
+        "TASK-P8-09",
+        "TASK-P8-10"
+      ],
+      [
+        "TASK-P8-07",
+        "TASK-P8-11"
+      ],
+      [
+        "TASK-P8-01",
+        "TASK-P8-12"
+      ],
+      [
+        "TASK-P8-02",
+        "TASK-P8-12"
+      ],
+      [
+        "TASK-P8-06",
+        "TASK-P8-13"
+      ],
+      [
+        "TASK-P8-12",
+        "TASK-P8-13"
+      ],
+      [
+        "TASK-P8-13",
+        "TASK-P8-14"
+      ],
+      [
+        "TASK-P8-09",
+        "TASK-P8-15"
+      ],
+      [
+        "TASK-P8-13",
+        "TASK-P8-15"
+      ],
+      [
+        "TASK-P8-14",
+        "TASK-P8-15"
+      ],
+      [
+        "TASK-P8-05",
+        "TASK-P8-16"
+      ],
+      [
+        "TASK-P8-07",
+        "TASK-P8-16"
+      ],
+      [
+        "TASK-P8-08",
+        "TASK-P8-16"
+      ],
+      [
+        "TASK-P8-09",
+        "TASK-P8-16"
+      ],
+      [
+        "TASK-P8-10",
+        "TASK-P8-16"
+      ],
+      [
+        "TASK-P8-11",
+        "TASK-P8-16"
+      ],
+      [
+        "TASK-P8-15",
+        "TASK-P8-16"
+      ],
+      [
+        "TASK-P8-16",
+        "TASK-P8-18"
+      ],
+      [
+        "TASK-P8-18",
+        "TASK-P8-19"
+      ],
+      [
+        "TASK-P8-19",
+        "TASK-P8-17"
+      ]
+    ],
+    "phase": "P8",
+    "statuses": {
+      "TASK-P8-00": "done",
+      "TASK-P8-01": "done",
+      "TASK-P8-02": "done",
+      "TASK-P8-03": "done",
+      "TASK-P8-04": "done",
+      "TASK-P8-05": "done",
+      "TASK-P8-06": "done",
+      "TASK-P8-07": "done",
+      "TASK-P8-08": "done",
+      "TASK-P8-09": "done",
+      "TASK-P8-10": "done",
+      "TASK-P8-11": "done",
+      "TASK-P8-12": "done",
+      "TASK-P8-13": "done",
+      "TASK-P8-14": "done",
+      "TASK-P8-15": "done",
+      "TASK-P8-16": "done",
+      "TASK-P8-17": "in_progress",
+      "TASK-P8-18": "done",
+      "TASK-P8-19": "done"
+    },
+    "task_count": 20,
+    "terminal_done_count": 19
+  },
+  "workflow": "ci.yml"
+}

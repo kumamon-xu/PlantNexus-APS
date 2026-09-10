@@ -360,6 +360,13 @@ def test_ci_runs_repository_gates_and_discovers_the_current_task() -> None:
         "scripts.p8_headless_extension_platform_requalification_gate",
         "build/validation/ci-p8-19-headless-extension-platform-requalification.json",
         "build/validation/ci-p8-19-tests.xml",
+        "name: P8 Exit Gate independent audit evidence",
+        "scripts.p8_exit_gate_audit",
+        "docs/p8-exit-gate-audit-observations.v1.json",
+        "build/validation/ci-p8-17-exit-gate-audit.json",
+        "build/validation/ci-p8-17-exit-gate-evidence-manifest.json",
+        "build/validation/ci-p8-17-tests.xml",
+        "build/validation/ci-p8-17-subreports",
         "build/benchmarks/*.json",
     )
     for fragment in required_fragments:
@@ -592,7 +599,7 @@ def test_ci_profile_routing_is_mutually_exclusive_and_fail_closed() -> None:
     assert "Build package" in full_text
     assert len(preflight["steps"]) == 4
     assert len(backend["steps"]) == 8
-    assert len(full["steps"]) == 85
+    assert len(full["steps"]) == 86
     assert full["timeout-minutes"] == 40
     p8_corrective = next(
         cast(dict[str, Any], step)
@@ -637,6 +644,25 @@ def test_ci_profile_routing_is_mutually_exclusive_and_fail_closed() -> None:
     ):
         assert fragment in p8_requalification_run
     assert "continue-on-error" not in p8_requalification
+    p8_exit = next(
+        cast(dict[str, Any], step)
+        for step in cast(list[dict[str, Any]], full["steps"])
+        if cast(dict[str, Any], step).get("name")
+        == "P8 Exit Gate independent audit evidence"
+    )
+    p8_exit_run = str(p8_exit["run"])
+    for fragment in (
+        "backend/tests/*/test_p8_*.py tests/p8",
+        "ci-p8-17-tests.xml",
+        "-m scripts.p8_exit_gate_audit",
+        "docs/p8-exit-gate-audit-observations.v1.json",
+        "headless-extension-platform-gate-profile.v1.json",
+        "ci-p8-17-exit-gate-audit.json",
+        "ci-p8-17-exit-gate-evidence-manifest.json",
+        "ci-p8-17-subreports",
+    ):
+        assert fragment in p8_exit_run
+    assert "continue-on-error" not in p8_exit
     full_step_names = [
         str(cast(dict[str, Any], step).get("name", ""))
         for step in cast(list[dict[str, Any]], full["steps"])
@@ -646,6 +672,7 @@ def test_ci_profile_routing_is_mutually_exclusive_and_fail_closed() -> None:
         < full_step_names.index(
             "P8 Headless Extension platform requalification Gate evidence"
         )
+        < full_step_names.index("P8 Exit Gate independent audit evidence")
         < full_step_names.index("Engineering contract")
     )
 

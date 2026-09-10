@@ -11,6 +11,12 @@ last_reviewed: 2026-09-10
 
 # Headless Productization and Platform Integration
 
+## TASK-P8-17 independent Exit boundary
+
+P8-17只审计并重放已形成的Headless产品化与Extension平台，不新增协议或产品实现。它要求P8 DAG前序终态完整、所有exact Provider lineage和下载artifact仍可核验、公开ADR/合同未越界，并在当前SHA fresh运行P8-19的18项平台检查与4项纠正closure。当前本地候选为20/20 Exit check、零issue/zero gap；只有同一SHA的FULL required `validate`通过后才能形成最终P8工程结论。
+
+该Exit结论仍限定为canonical JSON、Headless API、trusted server-side Extension和synthetic `TEST/SIMULATION`证据。它不增加第三方connector，不纳入Demo，不替代P7真实数据校准、真实host identity/authority、行业UAT、Production容量/SLA或签名批准。
+
 ## TASK-P8-18 corrective product chain
 
 P8-18把已验证Enterprise Extension从“只装载和fingerprint”推进到真实Headless产品链：服务端Runtime policy提供裁剪的Extension facts，Worker在求解前调用Registry/Planning Rule/Constraint/Replan Policy，并在Core Solver与fresh formal Validator之后、ScheduleVersion之前调用Objective/Validation Rule。Extension不能修改canonical payload、PlanningProblem、Core模型或candidate；feasibility由配对独立Validation Rule作为额外candidate admission gate执行。任何Extension失败、拒绝或重排请求均使PlanningRun失败且不产生ScheduleVersion。
@@ -105,7 +111,7 @@ Core, Runtime, SDK, Extension artifact/config and Developer Kit have separate ve
 
 ## 7. P8 delivery slices
 
-P8 proceeds through contract baseline, machine contracts, durable ingress, PlanningRun orchestration, worker reliability, runtime composition, complete API, host authorization, release packaging, operations, optional frontend isolation, Extension SDK contract, Runtime SPI/Registry, Enterprise Extension template/conformance, Developer Kit assembly, a synthetic vertical Gate and an independent exit audit. Exact ownership and dependencies live in `MILESTONE-P8` and TASK-P8-00～17.
+P8 proceeds through contract baseline, machine contracts, durable ingress, PlanningRun orchestration, worker reliability, runtime composition, complete API, host authorization, release packaging, operations, optional frontend isolation, Extension SDK contract, Runtime SPI/Registry, Enterprise Extension template/conformance, Developer Kit assembly, an initial synthetic vertical Gate, bounded corrective/requalification and an independent exit audit. Internal ownership and dependencies are maintained outside the public repository; public status is represented only by durable contracts and sanitized Exit observation.
 
 P8-16 synthetic evidence proves Headless+Extension contract-to-publication engineering behavior only. P7 independently proves reality gap, Planner usefulness and capacity on authorized real inputs. Production release requires both exit gates plus the total-specification Production Gate; no document in P8 closes that requirement early.
 
@@ -113,4 +119,4 @@ Unimplemented advanced scheduling capabilities remain explicit `UNSUPPORTED_CAPA
 
 ## 8. Current-state disclaimer
 
-The repository exposes 34 OpenAPI operations: the preceding 29 remain byte-compatible at the operation-object level and P8-07 adds exactly five Headless PlanningRun operations. P8-03 formed the strict canonical consumer and durable Snapshot/PlanningProblem transaction; P8-04 added durable PlanningRun orchestration; P8-05 added Worker execution, independent validation, checkpoint recovery and one ScheduleVersion application; P8-06 formed the single Runtime composition; P8-07 connects these pieces through bounded canonical-only HTTP and a checked-in OpenAPI snapshot; P8-08 adds provider-neutral host authorization/audit; P8-09/10 add an unsigned Runtime engineering release and non-Production operations evidence; P8-11 adds the independently packaged optional static consumer and backend-only proof; P8-12/13 add the versioned SDK contract and trusted local Runtime loader/Registry boundary. The default/Production identity path remains fail closed. Real host IdP/RBAC, Production deployment/promotion, Enterprise Extension template, independently verified business integration and Developer Kit remain planned. Only capabilities whose owning Task and evidence are terminal may be described as formed engineering behavior; none of these statements is Production readiness.
+The repository exposes 34 OpenAPI operations: the preceding 29 remain byte-compatible at the operation-object level and P8-07 adds exactly five Headless PlanningRun operations. P8-03～10 form the strict canonical consumer, durable orchestration/worker, unified HTTP Runtime, provider-neutral authorization, unsigned release and non-Production operations evidence; P8-11 provides an independently packaged optional static consumer. P8-12～15 form SDK `1.0.0`, trusted Runtime Registry/loader, independent Extension projects/conformance and immutable Kit `1.0.0`; P8-18/19 close and requalify the four product integration gaps found by P8-16. The default/Production identity path remains fail closed. Real host IdP/RBAC, Production deployment/promotion and independently accepted enterprise business rules remain future work; none of these statements is Production readiness.

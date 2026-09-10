@@ -13,6 +13,8 @@ last_reviewed: 2026-09-10
 
 本页定义P8-09起始、P8-13扩展后的Runtime工程候选可重复安装与fail-closed启动顺序，记录TASK-P8-10隔离Compose靶场对当前声明Runtime身份的真实部署结果，并说明P8-11可选Frontend的独立分发边界。它不授予Production部署、签名或发布权限。
 
+P8-17 Exit只把本页既有部署、可观测、备份恢复、Runbook和Extension-enabled target证据作为fresh审计输入，不创建新的部署target或promotion。当前本地Exit候选通过完整工程检查后仍须exact Provider；即使最终为`READY`，内部交付也只能标记为`TEST/SIMULATION`，不能省略真实环境preflight、身份/authority、数据备份责任或Production Gate。
+
 ## TASK-P8-18 Extension-enabled target
 
 P8-18把`p8-operations-compose-v1`前移到纠正Runtime implementation `7369e9c1238bae36f278423edb1977124d07faa9`，归档SHA-256为`6ba13ea22b1032fdd1e67a09e1045dac9307f7597b71c5003fdf9fe680c92cee`，release fingerprint为`sha256:9c67fcfd3991d48acf4d05d3fae54ed7b82edddd4471b2642932c1faf71fac40`。目标锁定Alpha `1.0.0` artifact/config、Developer Kit `1.0.0` fingerprint及`runtime-http-policy.v2`，仍仅用于一次性`TEST/SIMULATION`。

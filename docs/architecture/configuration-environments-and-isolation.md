@@ -11,6 +11,12 @@ last_reviewed: 2026-09-10
 
 # 配置、环境与数据隔离
 
+## TASK-P8-17 Exit审计执行隔离
+
+P8-17在`TEST/SIMULATION`与fresh临时目录中只读消费前序Provider脱敏观察和当前SHA生成的Runtime、Validator、Frontend、operations、corrective及P8-19重资格报告。既有FULL workflow新增一个不可跳过的独立审计步骤，沿用同一required `validate`、`contents: read`权限与现有artifact通道；不新增Secret、service、port、database、broker、Production连接或部署权限。
+
+审计报告只保留版本、计数、稳定错误码、Git/Provider identity与SHA-256，不保留canonical payload、企业规则、token、配置值或本机绝对路径。任何非exact SHA、过期或摘要不一致artifact、跳步、跨plane、Core fork、自动企业升级或前序Gate漂移均fail closed为`NOT_READY`。本地或Provider `READY`只关闭P8工程产品化里程碑，不关闭P7、PROD_OPEN、真实数据、UAT、capacity或SLA。
+
 ## TASK-P8-19 重资格执行隔离
 
 P8-19 runner只读取冻结P8-16 profile/runner identity、P8-18 exact closure identity及当前SHA生成的sanitized machine reports，并在fresh临时目录中重放Alpha/Beta产品链和mixed/duplicate负例。环境继续固定为`TEST/SIMULATION`，客户端仍不能选择Extension、Developer Kit、Runtime、environment或data plane；报告只保存版本、计数、稳定错误码和SHA-256，不保存canonical payload、secret、配置值或本机绝对路径。

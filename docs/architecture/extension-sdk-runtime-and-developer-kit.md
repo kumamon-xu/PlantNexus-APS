@@ -11,6 +11,12 @@ last_reviewed: 2026-09-10
 
 # APS Extension SDK、Runtime 与 Developer Kit 架构
 
+## TASK-P8-17 独立Exit审计
+
+P8-17不修改Core、Runtime、SDK、Extension、Kit或业务合同，只作为独立`PHASE_GATE` consumer。它校验P8全部20个Task的DAG和19个前序终态，重核20组exact Provider输入、83份artifact与1,869个归档条目，保留9项失败/纠正历史，并检查ADR-0017/0018、canonical-only、Core无企业反向依赖、版本锁定和P7/Production边界。随后它从当前SHA重新生成P8 JUnit并fresh执行P8-19完整procedure；只有18/18平台检查、4/4 closure、`issues=[]`和`blocking_gaps=[]`同时成立才输出`READY`。
+
+当前P8-17本地候选为20/20 Exit check、fresh P8-19 18/18与4/4、零gap；最终关闭必须由同一实现SHA的FULL required `validate` / GitHub Actions app `15368`确认。P8 Exit不改写P8-16 `NOT_READY`历史，也不把Runtime变化并入不可变Kit `1.0.0`，更不授权自动升级、真实企业业务适用性、P7现实校准或Production。
+
 ## TASK-P8-19 平台独立重资格
 
 P8-19新增独立`PHASE_GATE` consumer，严格复用P8-16冻结profile `sha256:da5ee7830e37f86569897a80685d25e59414f05153499b3effed37b483503043`、18项check inventory、seed和原工程门槛，并校验P8-16 runner/profile原始字节及`NOT_READY` Provider身份。它同时消费P8-18 exact closure lineage和当前SHA重新生成的Runtime、Frontend、Validator、operations及七类corrective报告，再独立重放Alpha/Beta完整产品链。P8-16历史报告不会被覆盖；四个旧blocker通过`historical BLOCKED → P8-18 PASS → P8-19 fresh assertion`逐项建立后继处置记录。
@@ -180,6 +186,6 @@ P8-15已把上述清单组装为`1.0.0`工程候选并在clean环境验证包内
 | P8-16 `NOT_READY` | Headless基链与Extension装载/conformance可重放，且四项集成缺口已由机器证据定位 | Runtime已执行Extension、Kit已绑定、输出/部署已闭环 |
 | P8-18 corrective完成 | 四项产品缺口已有有界实现与专项证据 | 自动继承P8-16 READY或启动Exit |
 | P8-19 READY | 同一平台Gate已在corrective新SHA独立复验 | P7现实校准或Production ready |
-| P8-17 READY | P8产品化与扩展工程证据完整 | 自动升级企业项目、真实UAT/SLA/authority已完成 |
+| P8-17 READY | P8产品化与扩展synthetic工程证据完整，可形成内部交付选择 | 自动升级企业项目、真实UAT/SLA/authority或Production已完成 |
 
 Extension trust、compatibility、support window和企业责任分别纳入现有`OPEN-002/010/012/015`的P8细分问题，不新增OPEN ID。这些条目关闭前，不得把某个本地插件样例解释为企业级信任、兼容支持或长期维护承诺。高级功能和真实数据验证可在后续独立Task补充；若其语义适合SDK扩展点，可作为Enterprise Extension交付，但仍必须满足capability、Validator、Benchmark和Production Gate要求。

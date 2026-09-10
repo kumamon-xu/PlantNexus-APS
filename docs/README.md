@@ -13,7 +13,9 @@ last_reviewed: 2026-09-10
 
 本目录只收录适合随公开 Git 仓库发布的核心项目文档。开发过程记录、Task Card、阶段证据、机器报告、临时草稿、截图、测试输出和下载制品不属于公开文档，应留在被忽略的本地目录或 `build/`。
 
-项目当前已形成P0～P6研发能力，P7真实数据校准暂缓，P8 Headless产品化已推进到durable canonical ingress、PlanningRun、Solver Worker、单一Runtime组合、五项公开HTTP operation、Test identity/authorization/audit、Runtime工程分发与非Production运维演练。产品边界只接收宿主平台提交的versioned canonical JSON，不在APS内直接建设ERP/MES/WMS/CAM连接器；宿主与可选独立Frontend消费同一API。P8-11形成`0.1.0`静态Frontend工程候选；P8-12～14形成SDK `1.0.0`、服务端Registry/loader、独立项目模板、确定性conformance工具及两份synthetic Enterprise Extension。P8-15进一步组装首个Developer Kit `1.0.0`工程候选，精确锁定Runtime `0.1.0` artifact/digest、SDK/Tooling/Template `1.0.0`、示例、文档、兼容矩阵、SBOM/license和升级/回滚合同。P8-16独立平台Gate的历史结论保持`NOT_READY`；P8-18纠正实际Extension调用、Kit身份绑定、deployable publication/read/export及选定Extension部署/恢复四项缺口；P8-19再以冻结profile和独立fresh procedure重资格该平台结论，当前本地候选为18/18平台检查、4/4历史blocker closure与零gap，最终状态以exact Provider evidence为准。P8-18不会以相同版本重新组装Developer Kit `1.0.0`；该Kit明确为`UNSIGNED_ENGINEERING_CANDIDATE`。P8-19 READY也只代表synthetic工程重资格，不等于P8 Exit、外部签名、Production部署、真实客户Extension、P7现实校准、容量/SLA或UAT。能力声明以[能力矩阵](core/capability-matrix.md)和对应合同为准。
+项目当前已形成P0～P6研发能力，P7真实数据校准暂缓，P8 Headless产品化已推进到durable canonical ingress、PlanningRun、Solver Worker、单一Runtime组合、五项公开HTTP operation、Test identity/authorization/audit、Runtime工程分发与非Production运维演练。产品边界只接收宿主平台提交的versioned canonical JSON，不在APS内直接建设ERP/MES/WMS/CAM连接器；宿主与可选独立Frontend消费同一API。P8-11形成`0.1.0`静态Frontend工程候选；P8-12～14形成SDK `1.0.0`、服务端Registry/loader、独立项目模板、确定性conformance工具及两份synthetic Enterprise Extension。P8-15进一步组装首个不可变Developer Kit `1.0.0`工程候选，精确锁定Runtime/SDK/Tooling/Template、示例、文档、兼容矩阵、SBOM/license和升级/回滚合同。P8-16独立平台Gate的历史结论保持`NOT_READY`；P8-18纠正四项产品集成缺口，P8-19已由exact Provider确认18/18平台检查、4/4历史blocker closure与零gap。
+
+P8-17现以独立`PHASE_GATE`重核20个P8 Task的DAG与终态、20组前序Provider输入、83份artifact/1,869个条目、9项保留失败/纠正历史、公开ADR/合同/版本边界，并fresh重放P8-19；当前为本地`READY`候选，最终关闭仍须自身exact SHA Provider通过。Developer Kit `1.0.0`保持不可变且为`UNSIGNED_ENGINEERING_CANDIDATE`，P8-18后的Runtime兼容证据不把新Runtime伪装成相同Kit bytes。P8 READY只代表synthetic工程产品化，不等于外部签名、Production部署、真实客户Extension、P7现实校准、容量/SLA或UAT。能力声明以[能力矩阵](core/capability-matrix.md)和对应合同为准。
 
 ## 核心入口
 
@@ -104,6 +106,7 @@ README 不能覆盖 Schema、合同或 ADR。中文字段名只用于阅读和�
 - 新文档必须是核心、可公开、可长期维护的 Markdown；敏感信息、真实数据、凭据和内部运行证据不得进入仓库。
 - API 或字段发生变化时，先更新对应 Schema/合同，再同步 API 清单或字段字典。
 - 规范性、确定生成的版本化OpenAPI快照可以随其API owner提交；运行期测试报告、coverage、benchmark、截图、视频、HTML、临时导出和下载artifact仍写入`build/`或工具输出目录，不写入`docs/`。
+- 阶段Exit所需的公开观察文件只能包含脱敏身份、计数和指纹；原始下载包、内部Task Card、过程报告、运行日志与交付组装临时目录必须保持在忽略范围内。
 - 草稿应在仓库外或被忽略目录中完成；进入 `docs/` 前应移除运行编号、绝对路径、个人信息和内部链接。
 - 所有本地链接必须指向公开 Git 管理的文件；不从公开索引链接内部过程文档。
 

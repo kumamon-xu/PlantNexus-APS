@@ -929,6 +929,38 @@ jobs:
             --recovery-report build/validation/ci-p8-19-recovery.json \
             --benchmark-report build/benchmarks/ci-p8-19-headless-extension-platform-requalification.json
 
+      - name: P8 Exit Gate independent audit evidence
+        run: |
+          uv run pytest -q backend/tests/*/test_p8_*.py tests/p8 --junitxml=build/validation/ci-p8-17-tests.xml
+          uv run python -m scripts.p8_exit_gate_audit \
+            --root . \
+            --provider-observation docs/p8-exit-gate-audit-observations.v1.json \
+            --profile benchmarks/p8/headless-extension-platform-gate-profile.v1.json \
+            --junit build/validation/ci-p8-17-tests.xml \
+            --runtime-release build/validation/ci-p8-runtime-release.json \
+            --runtime-security build/validation/ci-p8-runtime-release-security.json \
+            --runtime-migration build/validation/ci-p8-runtime-release-migration.json \
+            --formal-validator build/validation/ci-formal-schedule-validator.json \
+            --validator-mutations build/validation/ci-validator-mutations.json \
+            --frontend-distribution build/validation/ci-p8-frontend-distribution.json \
+            --frontend-client build/validation/ci-p8-frontend-client.json \
+            --frontend-security build/validation/ci-p8-frontend-browser-security.json \
+            --frontend-backend-only build/validation/ci-p8-frontend-backend-only.json \
+            --operations-deployment build/validation/ci-p8-18-operations-deployment.json \
+            --operations-observability build/validation/ci-p8-18-operations-observability.json \
+            --operations-recovery build/validation/ci-p8-18-operations-recovery.json \
+            --operations-runbooks build/validation/ci-p8-18-operations-runbooks.json \
+            --corrective build/validation/ci-p8-18-runtime-product-corrective.json \
+            --corrective-invocation build/validation/ci-p8-18-runtime-extension-invocation.json \
+            --corrective-kit build/validation/ci-p8-18-developer-kit-binding.json \
+            --corrective-output build/validation/ci-p8-18-headless-output.json \
+            --corrective-deployment build/validation/ci-p8-18-extension-deployment-recovery.json \
+            --corrective-security build/validation/ci-p8-18-security.json \
+            --corrective-benchmark build/benchmarks/ci-p8-18-runtime-product-corrective.json \
+            --report build/validation/ci-p8-17-exit-gate-audit.json \
+            --manifest build/validation/ci-p8-17-exit-gate-evidence-manifest.json \
+            --subreport-dir build/validation/ci-p8-17-subreports
+
       - name: Engineering contract
         run: >-
           uv run python -m app.infrastructure.contract_check
@@ -1002,6 +1034,8 @@ jobs:
             build/validation/*.json
             build/validation/ci-p8-18-tests.xml
             build/validation/ci-p8-19-tests.xml
+            build/validation/ci-p8-17-tests.xml
+            build/validation/ci-p8-17-subreports/**
             build/validation/ci-p8-developer-kit-contract-tests.xml
             build/traceability/*.json
             build/benchmarks/*.json

@@ -11,6 +11,12 @@ last_reviewed: 2026-09-10
 
 # APS Extension SDK 与 Developer Kit 合同
 
+## TASK-P8-17 Exit消费规则
+
+P8-17只能消费并核验本合同形成的稳定接口、版本和既有证据，不能借Exit审计修改SDK、Runtime、Extension、Registry或Developer Kit。`READY`要求当前SHA fresh重放两个独立Enterprise Extension、六类SPI、fail-closed负例、Kit身份绑定与旧Kit重放；任何skip、版本/指纹漂移、未处置gap或Core企业反向依赖都必须得到`NOT_READY`。
+
+P8 Exit只确认`TEST/SIMULATION`工程链可交付，不改变Kit `1.0.0`的不可变bytes，也不把P8-18纠正后的Runtime自动写入该Kit。内部交付可以并列提供各自已验证的Runtime、SDK/Kit和兼容证据，但不得宣称它们是一个未经新版本组装验证的Kit；外部签名、企业UAT和Production批准继续由后续责任方决定。
+
 ## TASK-P8-18 Runtime消费合同
 
 非空Extension集合的Runtime实例必须同时配置精确的Developer Kit version和fingerprint；二者缺一、API/Worker不同或与work item绑定不同均在Worker result/ScheduleVersion之前拒绝。该身份说明本次运行采用哪个已验证Kit组合，不允许`latest`、range、自动升级或只按SemVer推断相同bytes。P8-18锁定P8-15 Provider验证的Kit `1.0.0` fingerprint `sha256:ee2a3a407337e595ca724ed2a92540e911c5fad7272e472f2d3ef3297a14a361`；Runtime artifact仍有独立content-addressed fingerprint，两个维度不得互相替代。

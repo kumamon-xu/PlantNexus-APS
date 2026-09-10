@@ -13,7 +13,7 @@ last_reviewed: 2026-09-10
 
 ## TASK-P8-20 broker恢复观测确定性
 
-P8-17候选的同一SHA上，独立operations演练PASS而FULL内第二次演练在broker恢复后的Worker pong超时，证明“等待Celery自行重连”不是确定性工程procedure。TASK-P8-20保持原Redis/API readiness、`APSBrokerUnavailable`和`APSReadinessDown`证据不变，并在依赖恢复后显式restart同一锁定Worker；只有具名pong恢复后才把告警标记resolved。restart失败、pong缺失或Runtime/Extension identity漂移仍fail closed，且不形成Production自动恢复、HA或SLA声明。
+P8-17先前候选的同一SHA上，独立operations演练PASS而FULL内第二次演练在broker恢复后的Worker pong超时，证明“等待Celery自行重连”不是确定性工程procedure。TASK-P8-20保持原Redis/API readiness、`APSBrokerUnavailable`和`APSReadinessDown`证据不变，并在依赖恢复后显式restart同一锁定Worker；只有具名pong恢复后才把告警标记resolved。新SHA的独立operations及FULL内重复演练均已通过。restart失败、pong缺失或Runtime/Extension identity漂移仍fail closed，且不形成Production自动恢复、HA或SLA声明。
 
 ## TASK-P8-18 product invocation evidence
 

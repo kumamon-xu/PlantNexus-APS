@@ -23,7 +23,7 @@ P8-18不增加公共HTTP operation或修改现有Schema/OpenAPI bytes。deployab
 
 统一链现在是`canonical HTTP → durable run → Worker + selected Extension → Core Solver → fresh formal Validator → Extension Validation → immutable ScheduleVersion → explicit approve/publish/export`。Extension只在Worker内部运行，宿主请求不能选择代码；Validation violation、Replan request、Extension crash/timeout/invalid output或API/Worker Runtime/Kit/Extension-set mismatch均不得创建成功ScheduleVersion或部分publication/export。Alpha/Beta synthetic正链均到达`PUBLISHED`并证明ExportJob exact replay，负例均在副作用前收敛。
 
-这些是P8-18非Production纠正事实。P8-16原`NOT_READY`和四个blocker报告保持历史不可变；P8-19尚未执行，所以不得把本节解释为完整平台Gate、P8 Exit、Production integration、真实host authority、UAT、capacity或SLA结论。
+这些是P8-18非Production纠正事实。P8-16原`NOT_READY`和四个blocker报告保持历史不可变；P8-19已经独立重资格并由exact Provider确认`READY`，但仍不得把本节解释为P8 Exit、Production integration、真实host authority、UAT、capacity或SLA结论。
 
 ## 1. 目的与规范级别
 

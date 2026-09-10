@@ -13,7 +13,7 @@ last_reviewed: 2026-09-10
 
 ## TASK-P8-17 independent Exit boundary
 
-P8-17只审计并重放已形成的Headless产品化与Extension平台，不新增协议或产品实现。它要求P8 DAG前序终态完整、所有exact Provider lineage和下载artifact仍可核验、公开ADR/合同未越界，并在当前SHA fresh运行P8-19的18项平台检查与4项纠正closure。当前本地候选为20/20 Exit check、零issue/zero gap；只有同一SHA的FULL required `validate`通过后才能形成最终P8工程结论。
+P8-17只审计并重放已形成的Headless产品化与Extension平台，不新增协议或产品实现。它要求P8 DAG前序终态完整、所有exact Provider lineage和下载artifact仍可核验、公开ADR/合同未越界，并在当前SHA fresh运行P8-19的18项平台检查与4项纠正closure。P8-20已在新SHA证明broker恢复procedure的两次隔离演练稳定；当前P8-17本地候选为304项目标回归、20/20 Exit check、零issue/zero gap。只有同一审计SHA的FULL required `validate`通过后才能形成最终P8工程结论。
 
 该Exit结论仍限定为canonical JSON、Headless API、trusted server-side Extension和synthetic `TEST/SIMULATION`证据。它不增加第三方connector，不纳入Demo，不替代P7真实数据校准、真实host identity/authority、行业UAT、Production容量/SLA或签名批准。
 

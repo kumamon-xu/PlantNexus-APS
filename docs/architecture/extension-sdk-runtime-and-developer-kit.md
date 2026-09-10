@@ -13,9 +13,9 @@ last_reviewed: 2026-09-10
 
 ## TASK-P8-17 独立Exit审计
 
-P8-17不修改Core、Runtime、SDK、Extension、Kit或业务合同，只作为独立`PHASE_GATE` consumer。它校验P8全部20个Task的DAG和19个前序终态，重核20组exact Provider输入、83份artifact与1,869个归档条目，保留9项失败/纠正历史，并检查ADR-0017/0018、canonical-only、Core无企业反向依赖、版本锁定和P7/Production边界。随后它从当前SHA重新生成P8 JUnit并fresh执行P8-19完整procedure；只有18/18平台检查、4/4 closure、`issues=[]`和`blocking_gaps=[]`同时成立才输出`READY`。
+P8-17不修改Core、Runtime、SDK、Extension、Kit或业务合同，只作为独立`PHASE_GATE` consumer。它校验P8全部21个Task的DAG和20个前序终态，重核21组exact Provider输入、88份artifact与2,032个归档条目，保留10项失败/纠正历史，并检查ADR-0017/0018、canonical-only、Core无企业反向依赖、版本锁定和P7/Production边界。随后它从当前SHA重新生成P8 JUnit并fresh执行P8-19完整procedure；只有18/18平台检查、4/4 closure、`issues=[]`和`blocking_gaps=[]`同时成立才输出`READY`。
 
-当前P8-17本地候选为20/20 Exit check、fresh P8-19 18/18与4/4、零gap；最终关闭必须由同一实现SHA的FULL required `validate` / GitHub Actions app `15368`确认。P8 Exit不改写P8-16 `NOT_READY`历史，也不把Runtime变化并入不可变Kit `1.0.0`，更不授权自动升级、真实企业业务适用性、P7现实校准或Production。
+P8-20纠偏SHA已由Provider同时验证独立operations和FULL内重复演练；先前P8-17失败候选继续保留且未rerun。当前P8-17新本地候选为304项目标回归、20/20 Exit check、fresh P8-19 18/18与4/4、零gap；最终关闭必须由同一审计SHA的FULL required `validate` / GitHub Actions app `15368`确认。P8 Exit不改写P8-16 `NOT_READY`历史，也不把Runtime变化并入不可变Kit `1.0.0`，更不授权自动升级、真实企业业务适用性、P7现实校准或Production。
 
 ## TASK-P8-19 平台独立重资格
 
@@ -23,7 +23,7 @@ P8-19新增独立`PHASE_GATE` consumer，严格复用P8-16冻结profile `sha256:
 
 当前本地候选在292项P8测试零失败/零跳过后取得18/18平台检查、4/4 blocker closure和`blocking_gaps=[]`，两条链均证明六类SPI被Runtime实际调用、Developer Kit `1.0.0`身份一致、授权publication/read/export可达且目标部署/恢复装载同一Alpha Extension集合。旧P8-16 mixed/duplicate负例仍由冻结procedure执行；P8-19只在测试fixture边界补齐P8-18后来强制的Developer Kit version+fingerprint成对配置，不修改冻结runner、profile、threshold、expected或负向错误码。
 
-该`READY`只表示synthetic Headless+Extension工程重资格候选，并须由当前exact SHA的non-skippable Provider `PHASE_GATE`再次确认后才能闭环TASK-P8-19。它不等于P8 Exit、P7 reality或Production ready；TASK-P8-17只在闭环后具备另行申请条件，不能自动启动。
+该`READY`只表示synthetic Headless+Extension工程重资格结论；TASK-P8-19已由exact SHA的non-skippable Provider闭环。它不等于P8 Exit、P7 reality或Production ready；TASK-P8-17仍必须完成自身独立审计和exact Provider确认。
 
 ## TASK-P8-18 产品执行纠正
 

@@ -49,4 +49,4 @@ Operator需读取sanitized health/alert报告并能启动/停止`api`、`databas
 
 ## 最近演练记录
 
-2026-09-10由TASK-P8-20根据P8-17候选中保留的Worker probe失败，把broker恢复procedure确定为“Redis/API ready → 显式restart锁定Worker → 具名pong”。这不是产品自动恢复或HA；没有执行真实负载、网络分区、磁盘耗尽、多副本选主或Production failover。
+2026-09-10由TASK-P8-20根据P8-17候选中保留的Worker probe失败，把broker恢复procedure确定为“Redis/API ready → 显式restart锁定Worker → 具名pong”；新SHA的独立operations及FULL内重复演练均已通过。这不是产品自动恢复或HA；没有执行真实负载、网络分区、磁盘耗尽、多副本选主或Production failover。

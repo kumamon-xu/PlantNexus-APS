@@ -13,7 +13,7 @@ last_reviewed: 2026-09-10
 
 本页定义P8-09起始、P8-13扩展后的Runtime工程候选可重复安装与fail-closed启动顺序，记录TASK-P8-10隔离Compose靶场对当前声明Runtime身份的真实部署结果，并说明P8-11可选Frontend的独立分发边界。它不授予Production部署、签名或发布权限。
 
-P8-17 Exit只把本页既有部署、可观测、备份恢复、Runbook和Extension-enabled target证据作为fresh审计输入，不创建新的部署target或promotion。候选SHA的独立operations演练通过，但FULL中的第二次演练在broker恢复后依赖Celery进程自行重连并出现`WORKER_PROBE_FAILED`；TASK-P8-20因此固定为“Redis/API ready后显式restart同一exact image/config Worker，再等待具名pong”。该纠正不改变target或Runtime identity。即使后续Exit为`READY`，内部交付也只能标记为`TEST/SIMULATION`，不能省略真实环境preflight、身份/authority、数据备份责任或Production Gate。
+P8-17 Exit只把本页既有部署、可观测、备份恢复、Runbook和Extension-enabled target证据作为fresh审计输入，不创建新的部署target或promotion。先前候选SHA的独立operations演练通过，但FULL中的第二次演练因依赖Celery自行重连而出现`WORKER_PROBE_FAILED`；TASK-P8-20已固定“Redis/API ready后显式restart同一exact image/config Worker，再等待具名pong”，并在新SHA的独立operations及FULL内重复演练中同时通过。该纠正不改变target或Runtime identity。即使Exit为`READY`，内部交付也只能标记为`TEST/SIMULATION`，不能省略真实环境preflight、身份/authority、数据备份责任或Production Gate。
 
 ## TASK-P8-18 Extension-enabled target
 

@@ -41,12 +41,13 @@ VALIDATION_PROFILE = "PHASE_GATE"
 ACTIVATION_CUTOFF = "2026-09-10T00:00:00+00:00"
 REQUIRED_APP_ID = 15368
 OBSERVATION_FINGERPRINT = (
-    "sha256:fe7c76fd8ba13d1a267f3e62e0cf44b66ae098814e90089961bf254078565b8e"
+    "sha256:f2cb1140a4a6f876180851b6d37d64b3083975963c7330ada620e42e96a6cd3e"
 )
 
 IMPACT_RULES = (
     "IMPACT-DOCS",
     "IMPACT-INFRA",
+    "IMPACT-OPERATIONS-CHECKER",
     "IMPACT-P8-EXIT-GATE-CHECKER",
     "IMPACT-REPOSITORY-HYGIENE",
     "IMPACT-TESTS",
@@ -103,6 +104,7 @@ _ALLOWED_TRACKED_PATHS = frozenset(
         ".gitignore",
         ".github/workflows/ci.yml",
         "backend/tests/integration/test_ci_contract.py",
+        "backend/tests/unit/test_p8_operations_policy.py",
         "docs/.gitignore",
         "docs/README.md",
         "docs/architecture/configuration-environments-and-isolation.md",
@@ -112,8 +114,12 @@ _ALLOWED_TRACKED_PATHS = frozenset(
         "docs/contracts/headless-platform-integration.md",
         "docs/operations/deployment.md",
         "docs/operations/developer-kit-release-upgrade-and-rollback.md",
+        "docs/operations/observability-and-audit.md",
+        "docs/operations/worker-reliability-and-idempotency.md",
         "docs/p8-exit-gate-audit-observations.v1.json",
+        "docs/runbooks/dependency-outage-and-readiness.md",
         "scripts/p8_exit_gate_audit.py",
+        "scripts/p8_operations_check.py",
         "tests/p6/p6_exit_gate_audit.py",
         "tests/p8/test_p8_exit_gate_audit.py",
         "tests/p8/test_p8_exit_gate_audit_rejections.py",
@@ -170,7 +176,8 @@ _EXPECTED_DAG_EDGES = (
     ("TASK-P8-15", "TASK-P8-16"),
     ("TASK-P8-16", "TASK-P8-18"),
     ("TASK-P8-18", "TASK-P8-19"),
-    ("TASK-P8-19", "TASK-P8-17"),
+    ("TASK-P8-19", "TASK-P8-20"),
+    ("TASK-P8-20", "TASK-P8-17"),
 )
 
 
@@ -432,6 +439,18 @@ _PROVIDER_INPUTS = (
         5,
         "READY",
     ),
+    ProviderInputSpec(
+        "p8-20-corrective",
+        "TASK-P8-20",
+        "corrective_implementation",
+        "build/provider/P8-20/provider-manifest.json",
+        "450443ce37f84a7703c78ea0d57e92b2c3d7e501",
+        34457445831,
+        102812020763,
+        "HIGH_RISK",
+        "FULL",
+        5,
+    ),
 )
 
 _RETAINED_HISTORY = (
@@ -497,6 +516,13 @@ _RETAINED_HISTORY = (
         34427220042,
         "failure",
         "KIT_BOUNDARY_VIOLATION",
+    ),
+    (
+        "TASK-P8-17",
+        "c0dcb6771dfba276c932bac76864b8a0e31fb77d",
+        34453204897,
+        "failure",
+        "OPERATIONS_WORKER_RECOVERY_NONDETERMINISM",
     ),
 )
 
@@ -774,7 +800,7 @@ def _artifact_set_fingerprint(artifacts: Sequence[Mapping[str, object]]) -> str:
 def _task_topology_from_internal_cards(root: Path) -> JsonObject:
     task_dir = root / "docs" / "tasks" / "P8"
     cards = sorted(task_dir.glob("TASK-P8-*.md"))
-    if len(cards) != 20:
+    if len(cards) != 21:
         _fail("TASK_TOPOLOGY_INVALID", "task_topology.task_count")
     statuses: dict[str, str] = {}
     for card in cards:
@@ -784,14 +810,14 @@ def _task_topology_from_internal_cards(root: Path) -> JsonObject:
         if task is None or status is None:
             _fail("TASK_TOPOLOGY_INVALID", "task_topology.cards")
         statuses[task.group(1)] = status.group(1)
-    expected = {f"TASK-P8-{index:02d}": "done" for index in range(20)}
+    expected = {f"TASK-P8-{index:02d}": "done" for index in range(21)}
     expected["TASK-P8-17"] = "in_progress"
     if statuses != expected:
         _fail("TASK_TOPOLOGY_INVALID", "task_topology.statuses")
     return {
         "phase": "P8",
-        "task_count": 20,
-        "terminal_done_count": 19,
+        "task_count": 21,
+        "terminal_done_count": 20,
         "active_task": TASK_ID,
         "statuses": statuses,
         "dag_edges": [list(edge) for edge in _EXPECTED_DAG_EDGES],
@@ -966,12 +992,12 @@ def validate_provider_observation(
         _fail("PROVIDER_OBSERVATION_DRIFT", "observation.observation_fingerprint")
 
     topology = _object(observation.get("task_topology"), "task_topology")
-    expected_statuses = {f"TASK-P8-{index:02d}": "done" for index in range(20)}
+    expected_statuses = {f"TASK-P8-{index:02d}": "done" for index in range(21)}
     expected_statuses[TASK_ID] = "in_progress"
     if topology != {
         "phase": "P8",
-        "task_count": 20,
-        "terminal_done_count": 19,
+        "task_count": 21,
+        "terminal_done_count": 20,
         "active_task": TASK_ID,
         "statuses": expected_statuses,
         "dag_edges": [list(edge) for edge in _EXPECTED_DAG_EDGES],
@@ -1565,7 +1591,7 @@ def validate_exit_report(report: Mapping[str, object]) -> None:
     if (
         provider.get("observation_fingerprint") != OBSERVATION_FINGERPRINT
         or provider.get("provider_input_count") != len(_PROVIDER_INPUTS)
-        or provider.get("provider_task_count") != 19
+        or provider.get("provider_task_count") != 20
         or provider.get("artifact_count")
         != sum(row.artifact_count for row in _PROVIDER_INPUTS)
         or provider.get("retained_history_count") != len(_RETAINED_HISTORY)

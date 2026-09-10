@@ -1,9 +1,9 @@
 {
   "activation_cutoff": "2026-09-10T00:00:00+00:00",
   "audit_task": "TASK-P8-17",
-  "collected_at_utc": "2026-09-10T06:10:17+00:00",
+  "collected_at_utc": "2026-09-10T09:12:09+00:00",
   "issues": [],
-  "observation_fingerprint": "sha256:fe7c76fd8ba13d1a267f3e62e0cf44b66ae098814e90089961bf254078565b8e",
+  "observation_fingerprint": "sha256:f2cb1140a4a6f876180851b6d37d64b3083975963c7330ada620e42e96a6cd3e",
   "provider_inputs": [
     {
       "artifact_count": 2,
@@ -444,6 +444,28 @@
       "task_id": "TASK-P8-19",
       "task_profile": "PHASE_GATE",
       "workflow_profile": "FULL"
+    },
+    {
+      "artifact_count": 5,
+      "artifact_set_fingerprint": "sha256:144d55c07068338f00488a29ab314285f8116bcaa0110e5490a37aa088a7e244",
+      "artifact_verification_modes": [
+        "ARCHIVE_AND_ENTRY_REHASH"
+      ],
+      "earliest_expiry": "2026-12-09T08:51:35Z",
+      "entry_count": 163,
+      "evidence_kind": "corrective_implementation",
+      "gate_verdict": null,
+      "implementation_sha": "450443ce37f84a7703c78ea0d57e92b2c3d7e501",
+      "issues": [],
+      "key": "p8-20-corrective",
+      "provider_result": "PASS",
+      "required_app_id": 15368,
+      "required_validate_job_id": 102812020763,
+      "run_id": 34457445831,
+      "source_manifest_sha256": "sha256:0cfd4a941b9b469c6d7940fcd3cae4d38c9a970208c4dfe6b30e8baea1ea6430",
+      "task_id": "TASK-P8-20",
+      "task_profile": "HIGH_RISK",
+      "workflow_profile": "FULL"
     }
   ],
   "registers": {
@@ -537,24 +559,33 @@
       "retained": true,
       "run_id": 34427220042,
       "task_id": "TASK-P8-18"
+    },
+    {
+      "commit_sha": "c0dcb6771dfba276c932bac76864b8a0e31fb77d",
+      "disposition": "OPERATIONS_WORKER_RECOVERY_NONDETERMINISM",
+      "provider_conclusion": "failure",
+      "rerun": false,
+      "retained": true,
+      "run_id": 34453204897,
+      "task_id": "TASK-P8-17"
     }
   ],
   "schema_version": "p8-exit-provider-observation.v1",
   "summary": {
-    "artifact_count": 83,
+    "artifact_count": 88,
     "digest_mismatch_count": 0,
-    "entry_count": 1869,
+    "entry_count": 2032,
     "expired_artifact_count": 0,
     "issue_count": 0,
-    "provider_input_count": 20,
-    "provider_task_count": 19,
-    "retained_history_count": 9,
+    "provider_input_count": 21,
+    "provider_task_count": 20,
+    "retained_history_count": 10,
     "unsafe_archive_count": 0
   },
   "task_topology": {
     "active_task": "TASK-P8-17",
     "cycle_count": 0,
-    "dag_edge_count": 34,
+    "dag_edge_count": 35,
     "dag_edges": [
       [
         "TASK-P8-00",
@@ -690,6 +721,10 @@
       ],
       [
         "TASK-P8-19",
+        "TASK-P8-20"
+      ],
+      [
+        "TASK-P8-20",
         "TASK-P8-17"
       ]
     ],
@@ -714,10 +749,11 @@
       "TASK-P8-16": "done",
       "TASK-P8-17": "in_progress",
       "TASK-P8-18": "done",
-      "TASK-P8-19": "done"
+      "TASK-P8-19": "done",
+      "TASK-P8-20": "done"
     },
-    "task_count": 20,
-    "terminal_done_count": 19
+    "task_count": 21,
+    "terminal_done_count": 20
   },
   "workflow": "ci.yml"
 }

@@ -46,17 +46,17 @@ def test_provider_observation_is_frozen_complete_and_on_current_lineage() -> Non
 
     assert observation["observation_fingerprint"] == gate.OBSERVATION_FINGERPRINT
     assert observation["summary"] == {
-        "provider_input_count": 20,
-        "provider_task_count": 19,
-        "artifact_count": 83,
-        "entry_count": 1869,
-        "retained_history_count": 9,
+        "provider_input_count": 21,
+        "provider_task_count": 20,
+        "artifact_count": 88,
+        "entry_count": 2032,
+        "retained_history_count": 10,
         "expired_artifact_count": 0,
         "digest_mismatch_count": 0,
         "unsafe_archive_count": 0,
         "issue_count": 0,
     }
-    assert observation["task_topology"]["terminal_done_count"] == 19
+    assert observation["task_topology"]["terminal_done_count"] == 20
     assert observation["task_topology"]["active_task"] == gate.TASK_ID
 
 

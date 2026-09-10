@@ -11,6 +11,10 @@ last_reviewed: 2026-09-10
 
 # P0 工程安全边界
 
+## P8最终内部交付的签名边界
+
+P8-17完成后，最终外层成果标记为`UNSIGNED_INTERNAL_ENGINEERING_DELIVERY`。按本次内部开发交付用途，外部PKI、数字签名和第三方申请步骤明确不作为交付阻断项；交付包仍保留SHA-256 sidecar、逐文件checksum、manifest及精确Provider证据用于内容识别。该处置不改变内含Runtime和Developer Kit原始channel/signature字段，也不授予公开发布、外部信任或Production promotion。
+
 ## TASK-P8-18 startup provider与产品调用安全
 
 部署可通过唯一显式`module:callable` startup provider把已批准本地artifact对象交给Runtime；配置与显式对象并存、provider超时/异常、返回非canonical集合、catalog不完整或未批准identity均阻止启动。该seam只用于build/deploy/startup，不允许HTTP、canonical JSON、Worker message或Extension自身选择module/class/path，也不提供ambient scan、网络获取、安装或hot reload。

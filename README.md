@@ -2,7 +2,9 @@
 
 PlantNexus APS 是一个面向离散制造的高级计划与排程系统。项目采用 Simulation-first 路线，把canonical数据、不可变计划快照、PlanningProblem、OR-Tools CP-SAT 求解、独立排程校验、计划版本审批/发布、内部导出和动态重排串成一条可重放链路。
 
-当前仓库是“已实现的研发基线”，不是生产部署包：P0～P6能力已经形成，P7真实数据校准因缺少获授权的真实数据、真实环境和业务责任人而暂缓；P8现已形成canonical ingress/result与PlanningRun机器合同、严格canonical JSON消费、不可变Snapshot/PlanningProblem、durable run/attempt/work/audit、Solver Worker、单一Runtime组合、五项公开Headless HTTP operation以及provider-neutral Test identity/authorization/audit。P8-09进一步形成Runtime `0.1.0`的可重建、内容寻址工程distribution，包含wheel、migration、Schema、OpenAPI、SBOM、license/checksum、兼容矩阵和fail-closed preflight。最终产品边界只接收宿主平台提交的versioned canonical JSON，第三方系统采集、字段映射和结果展示由宿主平台负责；APS不直接对接ERP、MES、WMS或CAM。P8同时规划APS Extension SDK、Runtime受控Enterprise Extension加载和version-locked Developer Kit，使企业项目无需复制或修改APS Core即可独立二次开发。Extension只在Runtime服务端执行，宿主与可选Frontend仍只调用统一Headless API；Core/Runtime升级不会自动升级企业项目。当前distribution固定default-empty Extension且未签名、未部署，不等于Production Runtime、Developer Kit或开箱即用的生产APS。
+当前仓库是“已实现的研发基线”，不是生产部署包：P0～P6能力已经形成，P7真实数据校准因缺少获授权的真实数据、真实环境和业务责任人而暂缓；P8 Headless产品化工程里程碑已完成独立Exit审计。当前形成严格canonical JSON消费、不可变Snapshot/PlanningProblem、durable PlanningRun、Solver Worker、单一Runtime组合、公开Headless HTTP API、provider-neutral身份/授权/审计、Runtime与可选Frontend工程分发，以及非Production部署和恢复基线。最终产品边界只接收宿主平台提交的versioned canonical JSON，第三方系统采集、字段映射和结果展示由宿主平台负责；APS不直接对接ERP、MES、WMS或CAM。
+
+P8同时形成APS Extension SDK `1.0.0`、Runtime受控的Enterprise Extension加载与Plugin Registry，以及版本锁定的Developer Kit `1.0.0`。企业项目应创建独立Extension并依赖指定SDK，不得复制或修改APS Core；Extension只在Runtime服务端执行，宿主与可选Frontend仍只调用统一Headless API。Core或Runtime升级不会自动升级企业项目，必须发布新的兼容组合并由项目显式选择。最终成果以未签名内部工程交付形式保存在本机已忽略的`deliverables/`，不等于Production部署、客户验收、真实数据验证或开箱即用的生产APS。
 
 ## 已有能力
 
@@ -11,6 +13,8 @@ PlantNexus APS 是一个面向离散制造的高级计划与排程系统。项�
 - 计划运行、ScheduleVersion、审批/驳回、内部发布、ExportJob 与可验证导出包；
 - ExecutionEvent、事实投影、冻结窗口、稳定性目标、ChangeReport 和动态重排；
 - React + TypeScript 双语计划工作台、甘特图、资源负荷、版本比较和重排视图；
+- Extension SDK六类稳定SPI、受控Runtime Registry/loader和不含Core副本的Enterprise Extension模板与conformance工具；
+- Runtime `0.1.0`、SDK `1.0.0`、Developer Kit `1.0.0`及其兼容、升级和回滚工程证据；
 - 仅限 Simulation/TEST、默认关闭并可精确回退标准工时的工时预测链路。
 
 能力边界和未支持项以[能力矩阵](docs/core/capability-matrix.md)为准。FEASIBLE 只表示找到可行解，UNKNOWN 不等于无解；任何候选排程必须经独立 Validator 通过后才能进入可评审版本。
@@ -24,7 +28,7 @@ PlantNexus APS 是一个面向离散制造的高级计划与排程系统。项�
 | Storage / queue | PostgreSQL 17、Redis 8 |
 | Frontend | React 19、TypeScript 6、Ant Design 6、TanStack Query、Vite |
 | Test | pytest、Hypothesis、Vitest、Testing Library、Playwright |
-| Release / contract versions | Runtime 0.1.0、Application/Core 0.0.0、Headless API v1、Schema set 2.10.0、database 0009 |
+| Release / contract versions | Runtime 0.1.0、Extension SDK 1.0.0、Developer Kit 1.0.0、Application/Core 0.0.0、Headless API v1、Schema set 2.10.0、database 0009 |
 
 ## 快速开始
 
@@ -45,7 +49,7 @@ uv run uvicorn app.api.app:app --host 127.0.0.1 --port 8000
 
 Swagger UI 和 ReDoc 默认关闭。默认组合根没有注入业务 application port 与身份授权 provider，因此 `/api/v1/**` 业务请求会安全拒绝；完整接口状态和待接入项见 [API 接口开发清单](docs/contracts/api-development-checklist.md)。
 
-当前已实现Runtime内部canonical JSON严格消费、原子Snapshot/PlanningProblem持久化、durable PlanningRun编排、服务端Solver Worker、五项Headless HTTP operation和授权前置。Worker以lease/heartbeat和不可变checkpoint保护重复、崩溃、取消与超时边界，候选经fresh Validator后才应用为`READY_FOR_REVIEW` ScheduleVersion。Runtime `0.1.0`工程distribution可用于clean install与迁移回放，但真实host IdP/RBAC、Production target/签名、Extension SDK/Registry和Developer Kit尚未形成；当前Test/SQLite证据也不代表真实broker/database拓扑、Production容量或SLA。CSV/XLSX/reference adapter仅是研发/参考能力，不是公共Headless输入接口。
+当前已实现Runtime内部canonical JSON严格消费、原子Snapshot/PlanningProblem持久化、durable PlanningRun编排、服务端Solver Worker、五项Headless HTTP operation和授权前置。Worker以lease/heartbeat和不可变checkpoint保护重复、崩溃、取消与超时边界，候选经fresh Validator及已配置Extension Validation Rule后才可应用为`READY_FOR_REVIEW` ScheduleVersion。Runtime `0.1.0`工程distribution、Extension SDK `1.0.0`和Developer Kit `1.0.0`可用于clean install、兼容性测试与迁移回放；真实host IdP/RBAC、Production target/签名、真实企业规则、容量和SLA仍未形成。CSV/XLSX/reference adapter仅是研发/参考能力，不是公共Headless输入接口。
 
 ### Runtime工程distribution
 
@@ -63,6 +67,12 @@ uv run python -m app.infrastructure.release.check `
 ```
 
 发布身份、内容、安装、preflight与rollback规则见[发布与版本合同](docs/operations/release-and-versioning.md)及[安装与启动顺序](docs/operations/deployment.md)。输出位于已忽略的`build/`，不得提交或视为Production promotion。
+
+### Extension与Developer Kit
+
+企业扩展必须在独立项目中使用指定版本的Extension SDK开发，通过Developer Kit内的模板、测试工具和conformance入口验证，再由匹配的Runtime在build/deploy/startup阶段受控装载。Extension不得进入宿主或浏览器运行，不得复制Core、直写APS数据库或创建私有业务API。版本与升级规则见[Extension SDK、Runtime 与 Developer Kit 架构](docs/architecture/extension-sdk-runtime-and-developer-kit.md)和[Developer Kit发布、升级与回滚](docs/operations/developer-kit-release-upgrade-and-rollback.md)。
+
+P8最终内部交付包位于已忽略的`deliverables/`，包含精确Runtime、冻结Developer Kit、可选Frontend、公共合同、使用文档和可重哈希证据。该目录不进入Git；包内状态为`UNSIGNED_INTERNAL_ENGINEERING_DELIVERY`，外部签名、第三方申请与Production promotion不属于本次内部交付。
 
 ### 2. 本地依赖服务
 

@@ -13,9 +13,9 @@ last_reviewed: 2026-09-10
 
 ## P8 Exit与内部交付
 
-TASK-P8-17核验Kit `1.0.0`的Provider lineage、六层不可变合同、两个独立Extension重放、Runtime动态兼容与no-auto-upgrade边界，但不重新运行assembler或改变registry。P8 Exit通过后，内部交付可把冻结Kit `1.0.0`、P8-18后独立Runtime artifact及二者的binding/compatibility evidence并列打包；该外层交付索引不是新的Developer Kit版本，也不得声称纠正Runtime已经嵌入Kit `1.0.0`。
+TASK-P8-17已核验Kit `1.0.0`的Provider lineage、六层不可变合同、两个独立Extension重放、Runtime动态兼容与no-auto-upgrade边界，没有重新运行assembler或改变registry。P8 Exit通过后形成的最终内部交付把冻结Kit `1.0.0`、P8-18后独立Runtime artifact及二者的binding/compatibility evidence并列打包；该外层交付索引不是新的Developer Kit版本，也不声称纠正Runtime已经嵌入Kit `1.0.0`。
 
-内部开发交付允许保持`UNSIGNED_ENGINEERING_CANDIDATE`并明确省略外部PKI步骤；SHA-256、manifest和checksum仍必须保留以识别内容。外部/Production promotion继续要求独立签名authority和发布审批，不能从“内部可交付”反推信任结论。
+冻结Kit内部继续保留`UNSIGNED_ENGINEERING_CANDIDATE`元数据；外层最终成果标记为`UNSIGNED_INTERNAL_ENGINEERING_DELIVERY`并明确省略外部PKI步骤。SHA-256、manifest和checksum仍保留以识别内容。外部/Production promotion继续要求独立签名authority和发布审批，不能从“内部可交付”反推信任结论。
 
 ## 1. 当前工程发行
 

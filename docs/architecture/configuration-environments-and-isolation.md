@@ -23,7 +23,7 @@ P8-19 runner只读取冻结P8-16 profile/runner identity、P8-18 exact closure i
 
 P8-18之后Runtime要求Developer Kit version与fingerprint原子成对。为使旧P8-16 mixed负例可在当前Runtime上复算，P8-19仅在局部fixture adapter补齐冻结Kit `1.0.0` version，随后调用原runner procedure；原mixed identity、`RUNTIME_MISMATCH`、零Worker result、duplicate `EXT_SET_CONFLICT`及无partial side effect预期保持不变，冻结runner/profile bytes不修改。CI中的独立步骤位于P8-18当前SHA证据之后且不可跳过，输出不改变部署配置、Kit registry或企业项目。
 
-本地READY候选仍不是Production隔离证明。它不启用外部ingress、runtime download、ambient discovery、hot reload、跨版本自动升级、真实IdP/secret/HA或企业数据；exact Provider闭环后也只允许另行申请P8 Exit。
+该本地READY候选及其后续exact Provider闭环都不是Production隔离证明。它们不启用外部ingress、runtime download、ambient discovery、hot reload、跨版本自动升级、真实IdP/secret/HA或企业数据；最终只关闭P8工程Exit和内部交付边界。
 
 ## TASK-P8-18 Extension-enabled部署隔离
 

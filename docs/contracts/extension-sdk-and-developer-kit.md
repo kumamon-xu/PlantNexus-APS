@@ -15,7 +15,7 @@ last_reviewed: 2026-09-10
 
 P8-17只能消费并核验本合同形成的稳定接口、版本和既有证据，不能借Exit审计修改SDK、Runtime、Extension、Registry或Developer Kit。`READY`要求当前SHA fresh重放两个独立Enterprise Extension、六类SPI、fail-closed负例、Kit身份绑定与旧Kit重放；任何skip、版本/指纹漂移、未处置gap或Core企业反向依赖都必须得到`NOT_READY`。
 
-P8 Exit只确认`TEST/SIMULATION`工程链可交付，不改变Kit `1.0.0`的不可变bytes，也不把P8-18纠正后的Runtime自动写入该Kit。内部交付可以并列提供各自已验证的Runtime、SDK/Kit和兼容证据，但不得宣称它们是一个未经新版本组装验证的Kit；外部签名、企业UAT和Production批准继续由后续责任方决定。
+P8 Exit现已由同一审计SHA的FULL与required Provider确认，只证明`TEST/SIMULATION`工程链可交付；它不改变Kit `1.0.0`的不可变bytes，也不把P8-18纠正后的Runtime自动写入该Kit。最终内部交付并列提供各自已验证的Runtime、SDK/Kit和兼容证据，但不得宣称它们是一个未经新版本组装验证的Kit；外部签名、企业UAT和Production批准继续由后续责任方决定。
 
 ## TASK-P8-18 Runtime消费合同
 

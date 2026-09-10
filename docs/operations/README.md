@@ -39,7 +39,7 @@ P8-05形成一个strict JSON PlanningRun Solver task、durable job binding/lease
 
 ## P8 remaining operations outcome
 
-P8-09/10已形成可复现Headless Runtime distribution及非Production运维演练，P8-12～15已形成Extension SDK/Registry、企业模板和Developer Kit兼容工程发行；P8-16/17仍分别负责synthetic集成Gate与独立审计。当前不存在已签Production package、Production deployment、真实on-call或SLA。
+P8-09/10已形成可复现Headless Runtime distribution及非Production运维演练，P8-12～15已形成Extension SDK/Registry、企业模板和Developer Kit兼容工程发行；P8-18/19/20关闭产品集成与Worker恢复缺口，P8-17最终独立审计已由exact Provider确认为`READY`，P8工程里程碑完成。当前只形成未签名内部工程交付，不存在已签Production package、Production deployment、真实on-call或SLA。
 
 运行拓扑固定为APS Runtime中的API、独立Solver Worker、formal Validator、受控Extension loader、APS自有数据库及broker；可选Frontend可以缺席。API/Worker必须加载同一Extension fingerprint。宿主和Extension不共享数据库或直接投递内部queue，第三方连接器和结果展示仍由宿主负责。Plugin artifact只可在build/deploy/startup经allow-list、digest/signature、compatibility和SBOM/license校验装载，禁止请求级上传/下载/安装。本次没有修改部署配置、代码、测试、依赖或环境。
 

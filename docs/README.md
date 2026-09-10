@@ -13,9 +13,9 @@ last_reviewed: 2026-09-10
 
 本目录只收录适合随公开 Git 仓库发布的核心项目文档。开发过程记录、Task Card、阶段证据、机器报告、临时草稿、截图、测试输出和下载制品不属于公开文档，应留在被忽略的本地目录或 `build/`。
 
-项目当前已形成P0～P6研发能力，P7真实数据校准暂缓，P8 Headless产品化已推进到durable canonical ingress、PlanningRun、Solver Worker、单一Runtime组合、五项公开HTTP operation、Test identity/authorization/audit、Runtime工程分发与非Production运维演练。产品边界只接收宿主平台提交的versioned canonical JSON，不在APS内直接建设ERP/MES/WMS/CAM连接器；宿主与可选独立Frontend消费同一API。P8-11形成`0.1.0`静态Frontend工程候选；P8-12～14形成SDK `1.0.0`、服务端Registry/loader、独立项目模板、确定性conformance工具及两份synthetic Enterprise Extension。P8-15进一步组装首个不可变Developer Kit `1.0.0`工程候选，精确锁定Runtime/SDK/Tooling/Template、示例、文档、兼容矩阵、SBOM/license和升级/回滚合同。P8-16独立平台Gate的历史结论保持`NOT_READY`；P8-18纠正四项产品集成缺口，P8-19已由exact Provider确认18/18平台检查、4/4历史blocker closure与零gap。P8-20又以新SHA同时通过独立operations和FULL内重复演练，确定了broker恢复后显式重启同一Worker再验证具名pong的procedure；它不改变产品或合同。
+项目当前已形成P0～P6研发能力，P7真实数据校准暂缓；P8 Headless产品化工程里程碑已完成。当前具备durable canonical ingress、PlanningRun、Solver Worker、单一Runtime组合、五项公开HTTP operation、Test identity/authorization/audit、Runtime工程分发与非Production运维演练。产品边界只接收宿主平台提交的versioned canonical JSON，不在APS内直接建设ERP/MES/WMS/CAM连接器；宿主与可选独立Frontend消费同一API。P8还形成`0.1.0`静态Frontend工程分发、Extension SDK `1.0.0`、服务端Registry/loader、独立项目模板、确定性conformance工具、两份synthetic Enterprise Extension及不可变Developer Kit `1.0.0`。企业项目锁定已验证的Runtime、SDK和Kit组合独立维护，Core/Runtime升级不触发自动升级。
 
-P8-17现以独立`PHASE_GATE`重核21个P8 Task、21组前序Provider输入（20个前序Task）、88份artifact/2,032个条目及10项保留失败/纠正历史，并从当前候选fresh重放P8-19。304项P8目标回归、20/20 Exit check、18/18平台检查和4/4 closure均为PASS，零issue/zero gap；当前只等待同一审计SHA的required Provider确认后写回最终结论。失败候选及其artifact仍保留且不rerun。Developer Kit `1.0.0`保持不可变且为`UNSIGNED_ENGINEERING_CANDIDATE`；P8 READY仍只代表synthetic工程产品化，不等于外部签名、Production部署、真实客户Extension、P7现实校准、容量/SLA或UAT。能力声明以[能力矩阵](core/capability-matrix.md)和对应合同为准。
+P8-17独立`PHASE_GATE`已核验21个P8 Task、21组前序Provider输入（20个前序Task）、88份artifact/2,032个条目及10项保留失败/纠正历史，并在精确提交上fresh重放P8-19。304项P8目标回归、20/20 Exit check、18/18平台检查和4/4 closure均为PASS，零issue/zero gap；该提交的FULL与required Provider已成功，P8-17=`done`、P8=`completed`。失败候选及其artifact仍保留且不rerun。冻结Developer Kit `1.0.0`继续保留`UNSIGNED_ENGINEERING_CANDIDATE`元数据；最终外层成果是`UNSIGNED_INTERNAL_ENGINEERING_DELIVERY`，只代表synthetic工程产品化，不等于外部签名、Production部署、真实客户Extension、P7现实校准、容量/SLA或UAT。能力声明以[能力矩阵](core/capability-matrix.md)和对应合同为准。
 
 ## 核心入口
 

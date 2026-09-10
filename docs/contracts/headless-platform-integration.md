@@ -13,7 +13,7 @@ last_reviewed: 2026-09-10
 
 ## TASK-P8-17 Exit状态
 
-P8-17作为独立`PHASE_GATE`，重核本合同、ADR-0017/0018、P8完整前序Provider lineage及当前SHA的Headless+Extension产品链。只有20项Exit检查、fresh P8-19的18项平台检查与4项blocker closure全部通过且零issue/zero gap，才可声明P8 synthetic工程产品化`READY`；当前实现仍等待自身exact Provider确认。
+P8-17作为独立`PHASE_GATE`，重核本合同、ADR-0017/0018、P8完整前序Provider lineage及审计SHA的Headless+Extension产品链。20项Exit检查、fresh P8-19的18项平台检查与4项blocker closure全部通过且零issue/zero gap，并已取得同一提交的exact FULL与required Provider确认；P8 synthetic工程产品化结论为`READY`。
 
 这一状态不改变集成责任：APS仍只接收宿主提交的versioned canonical JSON，第三方连接、采集、字段映射、数据真实性和结果展示仍归宿主，Extension仅在APS Runtime服务端执行。Exit不授权Demo、第三方直连、真实数据结论、P7关闭、Production身份/容量/SLA或UAT。
 
@@ -33,7 +33,7 @@ P8-18不增加公共HTTP operation或修改现有Schema/OpenAPI bytes。deployab
 
 - 只声明P8-07登记的5项`/api/v1` PlanningRun operation；提交前29项operation逐项保持，最终OpenAPI共34项；
 - 只把现有`import-package.v2`作为`canonical-ingress-request.v1`内唯一允许的canonical payload，并通过统一create route接收；旧Adapter、raw/vendor/file输入仍不是公共入口；
-- 已实现canonical ingress、原子Snapshot/PlanningProblem、run/attempt/work item/command/transition/audit、strict Worker、lease/checkpoint、Global Solver、fresh Validator、ScheduleVersion应用、Simulation/Test显式Runtime HTTP绑定、可替换`HostIdentityProvider`合同、append-only授权审计、SDK合同及受控Registry装载；但不实现或选择真实Production host IdP、Production RBAC/授权/部署、Enterprise Extension业务规则或Developer Kit；
+- 已实现canonical ingress、原子Snapshot/PlanningProblem、run/attempt/work item/command/transition/audit、strict Worker、lease/checkpoint、Global Solver、fresh Validator、ScheduleVersion应用、Simulation/Test显式Runtime HTTP绑定、可替换`HostIdentityProvider`合同、append-only授权审计、SDK合同、受控Registry装载与Developer Kit工程交付；但不实现或选择真实Production host IdP、Production RBAC/授权/部署或真实Enterprise Extension业务规则；
 - 不关闭任何PROD_OPEN，也不证明真实宿主、UAT、容量或Production readiness。
 
 实现若不能表达本合同的必需语义，必须先修订合同或发布新版本；不得在代码、数据库、Extension或宿主中创建未登记的私有语义。

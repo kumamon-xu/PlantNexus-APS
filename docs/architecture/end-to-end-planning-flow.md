@@ -6,10 +6,16 @@ spec_version: 0.3.0
 phase: cross-phase
 normative: true
 source_sections: [0, 9, 10, 12, 23, 24, 30, 32, 33, 35, 57, 65, 67, 93, 95, 101, 113, 114]
-last_reviewed: 2026-09-08
+last_reviewed: 2026-09-10
 ---
 
 # 端到端计划链路
+
+## TASK-P8-18 Extension product execution edge
+
+纠正后的非空Extension链为：`canonical HTTP → durable PlanningRun → Worker exact Runtime/Kit/Extension复核 → Registry/Planning Rule/Constraint/Replan Policy → Core Solver → fresh formal Validator → Objective/Validation Rule → ScheduleVersion → authorized read/approve/publish/create/get export`。六类Extension贡献只消费冻结裁剪view；Runtime不允许其改写canonical payload、PlanningProblem、Core模型或candidate。Extension异常、非法输出、超时、重排请求或Validation拒绝均在ScheduleVersion前fail closed。
+
+Constraint与影响可行性的Planning Rule必须由同artifact中独立Validation Rule在candidate admission处执行；Objective只在formal candidate之后求值和校验，不扩大Core三层目标语义，也不声称已实现Production多候选选择。输出阶段复用既有authority、scope、state、idempotency、publication current-CAS、append-only audit和ExportJob服务；Extension不获得这些权限。
 
 ## TASK-P8-13 Runtime Extension composition edge
 

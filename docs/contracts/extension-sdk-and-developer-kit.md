@@ -6,10 +6,20 @@ spec_version: 0.3.0
 phase: P8
 normative: true
 source_sections: [4, 5, 9, 12, 30, 57, 63, 65, 93, 95, 97, 101, 103, 107, 113, 114]
-last_reviewed: 2026-09-09
+last_reviewed: 2026-09-10
 ---
 
 # APS Extension SDK 与 Developer Kit 合同
+
+## TASK-P8-18 Runtime消费合同
+
+非空Extension集合的Runtime实例必须同时配置精确的Developer Kit version和fingerprint；二者缺一、API/Worker不同或与work item绑定不同均在Worker result/ScheduleVersion之前拒绝。该身份说明本次运行采用哪个已验证Kit组合，不允许`latest`、range、自动升级或只按SemVer推断相同bytes。P8-18锁定P8-15 Provider验证的Kit `1.0.0` fingerprint `sha256:ee2a3a407337e595ca724ed2a92540e911c5fad7272e472f2d3ef3297a14a361`；Runtime artifact仍有独立content-addressed fingerprint，两个维度不得互相替代。
+
+Runtime只可在build/deploy/startup阶段通过一个显式provider或显式artifact tuple取得实现对象，二者不能并存。Provider reference是部署配置中的固定`module:callable`，不得来自HTTP请求；provider不能触发global entry-point扫描、网络下载、pip/git安装或hot reload。返回集合必须是有界、唯一、按Extension ID canonical排序的`RuntimeExtensionArtifact` tuple，超时、异常或歧义一律`EXTENSION_STARTUP_*` fail closed且不建立业务Runtime。
+
+真实产品调用顺序固定为pre-solve `PLUGIN_REGISTRY/PLANNING_RULE/CONSTRAINT/REPLAN_POLICY`和post-formal-candidate `OBJECTIVE/VALIDATION_RULE`。所有调用接收Runtime裁剪并冻结的scope/facts/provenance；metrics只允许保存贡献ID、计数、lifecycle、耗时及输入/输出fingerprint。Validation Rule返回`passed=false`映射`EXTENSION_VALIDATION_FAILED`，Replan Policy返回`REQUEST_REPLAN`映射`EXTENSION_REPLAN_REQUIRED`；两者与crash/timeout/invalid output一样必须在ScheduleVersion前拒绝完整candidate。
+
+P8-18没有修改SDK v1返回类型或把企业DSL解释器加入Core。Constraint/feasibility Planning Rule依靠manifest配对的独立Validation Rule执行candidate admission；Objective在批准的`ENTERPRISE_TIE_BREAK`阶段求值和校验，但本Task不扩大Core目标语义。任何真实企业求解影响、多个等价候选选择或行业适用性都需企业Extension自己的合同和验收证据。
 
 ## 1. 当前形成范围
 

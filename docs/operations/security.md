@@ -6,10 +6,16 @@ spec_version: 0.3.0
 phase: P0-P8
 normative: true
 source_sections: [58, 62, 93, 95, 100]
-last_reviewed: 2026-09-08
+last_reviewed: 2026-09-10
 ---
 
 # P0 工程安全边界
+
+## TASK-P8-18 startup provider与产品调用安全
+
+部署可通过唯一显式`module:callable` startup provider把已批准本地artifact对象交给Runtime；配置与显式对象并存、provider超时/异常、返回非canonical集合、catalog不完整或未批准identity均阻止启动。该seam只用于build/deploy/startup，不允许HTTP、canonical JSON、Worker message或Extension自身选择module/class/path，也不提供ambient scan、网络获取、安装或hot reload。
+
+Extension仍是`trusted_in_process=true`且不具备安全沙箱；P8-18没有把daemon timeout宣称为强制终止或恶意代码隔离。product executor冻结输入、整批验证输出、首错fail closed，并只记录fingerprint；payload、配置、secret、artifact bytes、绝对路径、异常文本与堆栈不得进入metric、descriptor、HTTP或machine evidence。Production签名、attestation、资源隔离和secret rotation继续开放。
 
 ## TASK-P8-15 Developer Kit供应链与签名边界
 

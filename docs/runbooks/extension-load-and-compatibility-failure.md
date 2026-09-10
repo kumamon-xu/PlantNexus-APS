@@ -6,12 +6,12 @@ spec_version: 0.3.0
 phase: P8
 normative: false
 source_sections: [6, 12, 65, 95, 97, 98, 99, 100, 101, 103, 113, 114]
-last_reviewed: 2026-09-07
+last_reviewed: 2026-09-10
 ---
 
 # Extension 装载与兼容失败
 
-TASK-P8-10只建立未来Extension故障的运维门：P8-09 Runtime声明loading=`DISABLED_UNTIL_COMPATIBILITY_VERIFIED`、allowed set为空。任何非空Extension配置在启动/traffic promotion前readiness DOWN并告警。真正SDK/Registry/Enterprise Extension由P8-12～15实现，本Runbook当前不能授权加载插件。
+TASK-P8-18把非Production目标更新为`VERIFIED_BUILD_DEPLOY_STARTUP_ALLOW_LIST`，当前唯一允许项是精确Alpha Extension `com.example.aps.alpha@1.0.0`及其冻结artifact/config；Developer Kit固定为`1.0.0`和Provider验证fingerprint。该授权只属于`p8-operations-compose-v1`一次性`TEST/SIMULATION`演练，不能外推到其他Extension、客户环境或Production。
 
 ## 触发条件
 
@@ -21,27 +21,27 @@ TASK-P8-10只建立未来Extension故障的运维门：P8-09 Runtime声明loadin
 
 ## 影响与安全边界
 
-Extension只能在APS Runtime内部运行，宿主和浏览器不得加载。当前允许集合严格为空；不得为通过readiness而下载、复制、修改Core、关闭Validator、创建私有API或直写APS数据库。Production Extension trust与support window保持OPEN。
+Extension只能在APS Runtime内部运行，宿主和浏览器不得加载。允许集合必须与target manifest逐字一致；不得为通过readiness而下载、复制、修改Core、关闭Validator、创建私有API或直写APS数据库。Production Extension trust与support window保持OPEN。
 
 ## 前置权限
 
-当前operator只有读取target manifest和阻止promotion的权限，没有安装Extension、修改Registry或批准企业artifact的权限。未来需要runtime owner、enterprise extension owner与security/release authority共同具名。
+当前operator只能部署target中已批准、content-addressed的Alpha集合并阻止promotion；没有批准新Extension、修改artifact/config/Kit identity或授予Production trust的权限。任何集合变更仍需要runtime owner、enterprise extension owner与security/release authority共同具名。
 
 ## 执行步骤
 
-1. 读取target manifest，确认Registry protocol=`plugin-registry.v1`、loading禁用且allowed IDs为空。
-2. 用空Extension集合执行准入，结果必须`UP/promotion_allowed=true`。
-3. 注入`enterprise.unverified`配置，仅在部署控制器内评估；结果必须`DOWN/EXTENSION_CONFIGURATION_REJECTED`，不得把artifact传入容器或执行代码。
-4. 触发告警并恢复为空集合，重新核对Runtime composition中的Extension-set fingerprint。
-5. API和Worker descriptor不同、配置未知或artifact不可验证时保持隔离，保存sanitized identity evidence。
+1. 读取target manifest，确认Registry protocol、Alpha extension/version/artifact/config、Developer Kit version/fingerprint及Runtime release identity均精确匹配。
+2. 由唯一显式startup provider从read-only本地输入materialize Alpha；禁止与显式artifact tuple并存，禁止ambient entry-point扫描和网络安装。
+3. 启动API/Worker并确认两者descriptor的Extension set/config、Kit和composition fingerprint逐字相同，readiness=`UP`。
+4. 仅在控制器内把configured ID替换为`enterprise.unverified`，结果必须`DOWN/EXTENSION_CONFIGURATION_REJECTED`；触发`APSExtensionConfigurationRejected`后恢复精确Alpha集合。
+5. 对provider失败/超时、artifact或配置digest漂移、Kit mismatch、API/Worker mismatch保持隔离，保存sanitized identity evidence；不得继续旧PlanningRun。
 
 ## 验证
 
-`p8-10-observability.json`必须记录Extension告警fired/resolved；deployment descriptor只暴露版本/指纹/计数，不含路径、secret或企业payload。P8-09 Runtime仍显示SDK/Developer Kit未发布。
+observability报告必须记录Extension告警fired/resolved；deployment descriptor只暴露版本/指纹/计数，不含路径、secret或企业payload。deployment/recovery报告必须证明API、Worker、restore与rollback四处Extension identity相同，并显示精确Developer Kit `1.0.0`身份。
 
 ## 回退
 
-移除未批准配置并切回last-known-good empty set；不能动态卸载后继续同一PlanningRun。未来有Extension时必须停止traffic/Worker、恢复上一套完整Runtime+SDK+Extension+config+Kit组合，再按兼容测试重放。
+停止traffic和Worker，恢复上一套完整且已验证的Runtime+SDK+Extension+config+Kit组合；不能动态卸载、混搭版本或继续同一PlanningRun。只有该组合的API/Worker readiness及descriptor一致后才可切换流量；本目标的双槽回退仍是same-artifact/same-Extension配置回退，不证明跨版本兼容。
 
 ## 升级与责任
 
@@ -49,4 +49,4 @@ P8-12是SDK合同owner，P8-13是Registry/runtime SPI owner，P8-14/15是模板�
 
 ## 最近演练记录
 
-2026-09-07由TASK-P8-10执行empty-set正例和未验证Extension负例；负例没有加载或运行任何插件。真实双Extension、旧Kit重放和升级回退仍待P8-12～15。
+2026-09-10由TASK-P8-18执行精确Alpha装载、API/Worker identity、未验证ID拒绝、备份恢复与rollback identity检查，本地全部PASS。Alpha/Beta双链只在专项产品检查中执行；真实企业Extension、外部签名、跨版本Kit升级和Production回退仍未验证。

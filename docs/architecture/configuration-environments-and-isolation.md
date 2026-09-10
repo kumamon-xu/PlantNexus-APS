@@ -6,10 +6,16 @@ spec_version: 0.3.0
 phase: cross-phase
 normative: true
 source_sections: [16, 38, 49, 62, 64, 95, 96]
-last_reviewed: 2026-09-08
+last_reviewed: 2026-09-10
 ---
 
 # 配置、环境与数据隔离
+
+## TASK-P8-18 Extension-enabled部署隔离
+
+非空Extension部署现在把`catalog + startup artifact provider + artifact/config fingerprint + Developer Kit version/fingerprint + runtime-http-policy.v2`视为服务端原子配置。API与Worker必须解析出逐字相同的Runtime/Kit/Extension descriptor；provider缺失、与显式对象并存、超时/异常、非canonical集合或任一身份漂移都在业务结果前fail closed。请求、Worker message和canonical JSON不能覆盖这些事实。
+
+一次性`p8-operations-compose-v1`只锁定已验证Alpha `com.example.aps.alpha@1.0.0`并验证部署、API/Worker、backup/restore及same-artifact rollback身份一致。该配置仍限定`TEST/SIMULATION`、synthetic-only和无外部ingress；不允许ambient discovery、网络下载、hot reload、跨版本自动升级或Production secret/identity外推。
 
 ## TASK-P8-16 Gate隔离结论
 

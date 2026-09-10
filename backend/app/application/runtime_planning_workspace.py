@@ -9,18 +9,14 @@ from __future__ import annotations
 
 from collections.abc import Mapping
 from dataclasses import asdict
-from typing import Any, NoReturn, cast
+from typing import Any, NoReturn, Protocol, cast
+
 from app.application.approval import ApprovalDecisionService
 from app.application.export_jobs import ExportJobService
 from app.application.publication import PublicationService
 from app.domain.authorization import ApprovalDecisionContext
 from app.domain.export_job import ExportJobContext, ExportJobRequest
 from app.domain.publication import PublicationContext
-from app.infrastructure.export_job_repository import SqlAlchemyExportJobRepository
-from app.infrastructure.publication_repository import SqlAlchemyPublicationRepository
-from app.infrastructure.schedule_version_repository import (
-    SqlAlchemyScheduleVersionRepository,
-)
 
 
 _SUPPORTED_OPERATIONS = frozenset(
@@ -32,6 +28,18 @@ _SUPPORTED_OPERATIONS = frozenset(
         "GET_EXPORT_JOB",
     }
 )
+
+
+class RuntimeScheduleReadRepositoryPort(Protocol):
+    def get(self, schedule_version_id: str) -> dict[str, object] | None: ...
+
+
+class RuntimePublicationReadRepositoryPort(Protocol):
+    def get(self, publication_id: str) -> dict[str, object] | None: ...
+
+
+class RuntimeExportJobReadRepositoryPort(Protocol):
+    def get(self, export_job_id: str) -> object | None: ...
 
 
 class RuntimePlanningWorkspaceError(RuntimeError):
@@ -62,9 +70,9 @@ class RuntimePlanningWorkspaceApplication:
         self,
         *,
         data_plane: str,
-        schedule_repository: SqlAlchemyScheduleVersionRepository,
-        publication_repository: SqlAlchemyPublicationRepository,
-        export_job_repository: SqlAlchemyExportJobRepository,
+        schedule_repository: RuntimeScheduleReadRepositoryPort,
+        publication_repository: RuntimePublicationReadRepositoryPort,
+        export_job_repository: RuntimeExportJobReadRepositoryPort,
         approval_service: ApprovalDecisionService,
         publication_service: PublicationService,
         export_service: ExportJobService,
@@ -243,7 +251,10 @@ class RuntimePlanningWorkspaceApplication:
         record = self._exports.get(export_id)
         if record is None:
             _error("SOURCE_NOT_FOUND", field="resource_id")
-        return record.document
+        document = getattr(record, "document", None)
+        if not isinstance(document, Mapping):
+            _error("SERVICE_UNAVAILABLE", field="export_job_repository")
+        return cast(Mapping[str, object], document)
 
     def execute(self, request: Any) -> Mapping[str, object]:
         self._require_context(request)

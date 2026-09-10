@@ -6,10 +6,16 @@ spec_version: 0.3.0
 phase: cross-phase
 normative: true
 source_sections: [12, 13, 14, 30, 41, 47, 51, 65, 70, 95, 101, 113, 114]
-last_reviewed: 2026-09-08
+last_reviewed: 2026-09-10
 ---
 
 # 模块边界与依赖规则
+
+## TASK-P8-18 product execution boundary
+
+新增依赖方向固定为`runtime_composition/jobs → app.extensions.product_execution → Runtime adapter → aps_extension_sdk Protocol`；product executor只编排六类SPI、冻结view、输出复核和payload-free fingerprint，不导入或修改Core/Solver/formal Validator。Worker在既有Core Solver和fresh Validator两侧调用该executor，Core、domain、planning与snapshot继续零SDK/企业Extension反向依赖。
+
+`application.runtime_planning_workspace`只把已有P3 approval、publication、read和ExportJob服务装配到Headless operation port；API router不复制状态机，Extension也不能调用该facade。目标bootstrap属于部署侧显式startup provider，只能返回已批准的本地artifact对象；它不是通用动态import、plugin discovery、下载或请求级选择机制。
 
 ## TASK-P8-13 Runtime Extension Registry boundary
 

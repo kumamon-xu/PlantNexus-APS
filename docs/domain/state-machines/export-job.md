@@ -6,10 +6,16 @@ spec_version: 0.3.0
 phase: P0-P8
 normative: true
 source_sections: [34, 65, 66, 67]
-last_reviewed: 2026-09-08
+last_reviewed: 2026-09-10
 ---
 
 # ExportJob 状态机
+
+## TASK-P8-18 deployable Headless consumer
+
+Runtime workspace现在可在授权与exact PUBLISHED source检查通过后调用既有`ExportJobService.create`并按scope读取该记录；same idempotency key/same semantic request返回首次逻辑结果，不重复创建。它没有新增状态、pair、隐式执行或传输步骤，创建成功仍只表示既有ExportJob记录已形成，不能解释为`EXPORTED`。
+
+Extension product invocation只决定candidate能否形成ScheduleVersion，不创建或推进ExportJob，也不授予Extension publication/export权限。Validation、Replan、Kit mismatch或Extension异常均发生在ScheduleVersion之前，因此不能映射为`EXPORT_FAILED`；既有五状态、六pair、published-only source和manifest-last规则逐字保持。
 
 ## TASK-P8-13 Extension isolation review
 

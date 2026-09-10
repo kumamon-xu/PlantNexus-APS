@@ -6,10 +6,18 @@ spec_version: 0.3.0
 phase: P8
 normative: true
 source_sections: [3, 4, 5, 9, 10, 12, 15, 63, 65, 66, 67, 68, 95, 97, 105, 106, 107, 109, 113, 114]
-last_reviewed: 2026-09-08
+last_reviewed: 2026-09-10
 ---
 
 # APS Headless 平台集成与数据权威合同
+
+## TASK-P8-18 可部署输出合同
+
+P8-18不增加公共HTTP operation或修改现有Schema/OpenAPI bytes。deployable Simulation Runtime现在为既有`GET schedule → APPROVE → PUBLISH → CREATE/GET export`路由装配P3 application/repository；每个调用仍先由服务器提供的`AuthorizationProvider`解析身份和scope，再由原有state、content precondition、idempotency、publication current-CAS、append-only audit与data-plane规则决定结果。没有显式provider、capability或resource scope时保持401/403/default-deny，Runtime不会自动批准、发布或导出。
+
+统一链现在是`canonical HTTP → durable run → Worker + selected Extension → Core Solver → fresh formal Validator → Extension Validation → immutable ScheduleVersion → explicit approve/publish/export`。Extension只在Worker内部运行，宿主请求不能选择代码；Validation violation、Replan request、Extension crash/timeout/invalid output或API/Worker Runtime/Kit/Extension-set mismatch均不得创建成功ScheduleVersion或部分publication/export。Alpha/Beta synthetic正链均到达`PUBLISHED`并证明ExportJob exact replay，负例均在副作用前收敛。
+
+这些是P8-18非Production纠正事实。P8-16原`NOT_READY`和四个blocker报告保持历史不可变；P8-19尚未执行，所以不得把本节解释为完整平台Gate、P8 Exit、Production integration、真实host authority、UAT、capacity或SLA结论。
 
 ## 1. 目的与规范级别
 

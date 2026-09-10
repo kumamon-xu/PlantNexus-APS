@@ -6,10 +6,16 @@ spec_version: 0.3.0
 phase: P0-P8
 normative: true
 source_sections: [29, 32, 34, 60, 65, 91, 92]
-last_reviewed: 2026-09-08
+last_reviewed: 2026-09-10
 ---
 
 # 错误与求解状态模型
+
+## TASK-P8-18 product invocation failure mapping
+
+Worker把Runtime/Kit/Extension descriptor不一致稳定映射为`RUNTIME_MISMATCH`，把Extension candidate拒绝与重排请求分别保留为`EXTENSION_VALIDATION_FAILED`和`EXTENSION_REPLAN_REQUIRED`；Registry已有crash/timeout/invalid-output错误继续透过sanitized Runtime边界。所有这些结果都在ScheduleVersion前终止并保持零partial success，不能伪装成Core `INFEASIBLE/UNKNOWN`、成功排程或ExportJob状态。
+
+公开Headless输出仍使用既有workspace错误合同：缺失/越权身份在application调用前拒绝，非法state/precondition/idempotency保持原409类语义，repository/audit不可用保持fail closed。响应与报告不得包含canonical payload、Extension返回对象、配置、secret、绝对路径、异常文本或堆栈。
 
 ## TASK-P8-13 Runtime Extension failure mapping
 

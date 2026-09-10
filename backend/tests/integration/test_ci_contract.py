@@ -481,6 +481,7 @@ def test_ci_profile_routing_is_mutually_exclusive_and_fail_closed() -> None:
     assert "plantnexus-ci-operations-${{ github.run_id }}" in operations_text
     assert len(operations["steps"]) == 4
     for relative_path in (
+        "backend/app/application/runtime_planning_workspace.py",
         "backend/tests/contract/test_p8_operations_contract.py",
         "backend/tests/integration/test_p8_operations_integration.py",
         "backend/tests/security/test_p8_operations_security.py",
@@ -491,8 +492,10 @@ def test_ci_profile_routing_is_mutually_exclusive_and_fail_closed() -> None:
         "backend/tests/unit/test_p8_extension_sdk.py",
         "backend/tests/validation/test_p8_extension_sdk_mutations.py",
         "backend/app/extensions/__init__.py",
+        "backend/app/extensions/bootstrap.py",
         "backend/app/extensions/contracts.py",
         "backend/app/extensions/loader.py",
+        "backend/app/extensions/product_execution.py",
         "backend/app/extensions/registry.py",
         "backend/tests/fixtures/p8_synthetic_extension.py",
         "backend/tests/p8_runtime_extension_support.py",
@@ -527,6 +530,7 @@ def test_ci_profile_routing_is_mutually_exclusive_and_fail_closed() -> None:
         "fixtures/developer-kit/p8-14-unpublished-predecessor.v1.json",
     ):
         assert workflow_text.count(f'"${{replay_root}}/{relative_path}"') == 1
+    assert workflow_text.count("backend/app/infrastructure/publication_repository.py") == 1
     assert "uv sync --locked" in full_text
     full_pytest_commands = [
         str(step.get("run", ""))
@@ -581,7 +585,7 @@ def test_ci_profile_routing_is_mutually_exclusive_and_fail_closed() -> None:
     assert "backend/tests/*/test_p8_*.py tests/p8" in p8_corrective_run
     assert "ci-p8-18-tests.xml" in p8_corrective_run
     assert "scripts/p8_operations_check.py" in p8_corrective_run
-    assert "scripts/p8_runtime_product_integration_check.py" in p8_corrective_run
+    assert "-m scripts.p8_runtime_product_integration_check" in p8_corrective_run
     assert "ci-p8-18-runtime-product-corrective.json" in p8_corrective_run
     assert "ci-p8-18-runtime-extension-invocation.json" in p8_corrective_run
     assert "ci-p8-18-developer-kit-binding.json" in p8_corrective_run

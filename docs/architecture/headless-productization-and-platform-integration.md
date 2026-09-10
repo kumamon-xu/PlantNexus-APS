@@ -6,10 +6,18 @@ spec_version: 0.3.0
 phase: P8
 normative: true
 source_sections: [3, 4, 5, 9, 10, 12, 15, 30, 63, 65, 66, 67, 68, 84, 85, 93, 95, 97, 101, 103, 105, 106, 107, 109, 112, 113, 114]
-last_reviewed: 2026-09-08
+last_reviewed: 2026-09-10
 ---
 
 # Headless Productization and Platform Integration
+
+## TASK-P8-18 corrective product chain
+
+P8-18把已验证Enterprise Extension从“只装载和fingerprint”推进到真实Headless产品链：服务端Runtime policy提供裁剪的Extension facts，Worker在求解前调用Registry/Planning Rule/Constraint/Replan Policy，并在Core Solver与fresh formal Validator之后、ScheduleVersion之前调用Objective/Validation Rule。Extension不能修改canonical payload、PlanningProblem、Core模型或candidate；feasibility由配对独立Validation Rule作为额外candidate admission gate执行。任何Extension失败、拒绝或重排请求均使PlanningRun失败且不产生ScheduleVersion。
+
+同一deployable Runtime API现提供受权ScheduleVersion read、approve、publish、ExportJob create/read；它装配既有application/repository而不新增wire operation、Schema或migration。Host authentication与scope仍由平台注入，未配置provider的操作保持default-deny。Runtime descriptor同时绑定Runtime artifact、Extension set/config和Developer Kit `1.0.0`精确fingerprint，API/Worker mismatch在结果写入前失败。
+
+本纠正使用Alpha/Beta synthetic链和一次性Compose目标验证上述能力，不包括Demo、Frontend改造、vendor connector、真实企业代码/数据、Production identity/authorization、UAT、capacity或SLA。P8-16的14 PASS/4 BLOCKED历史报告保持不变；P8-18专项4/4 closure只是P8-19的输入，不等于P8 Gate READY或Exit授权。
 
 ## 1. Stable product boundary
 

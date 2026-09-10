@@ -6,10 +6,16 @@ spec_version: 0.3.0
 phase: P0-P8
 normative: true
 source_sections: [29, 42, 65, 93, 95]
-last_reviewed: 2026-09-09
+last_reviewed: 2026-09-10
 ---
 
 # P0 Observability 与 Audit 边界
+
+## TASK-P8-18 product invocation evidence
+
+实际产品调用为六类SPI分别记录lifecycle位置、contribution identity、成功/失败计数、elapsed及输入/输出SHA-256 fingerprint；fingerprint只证明同一裁剪view与返回carrier可复算，不保存或恢复payload。PlanningRun、ScheduleVersion、publication和ExportJob继续使用既有correlation/audit链，Extension metrics不能替代业务审计，也不能把Extension成功解释为审批、发布或导出成功。
+
+部署报告只保留Runtime release、Developer Kit、Extension set/config及API/Worker/restore/rollback的sanitized identity；raw artifact、配置值、secret、路径和异常均禁止出现。P8-18 benchmark仍是固定synthetic seed下的工程观察，门槛只用于防明显回归，不构成Production capacity、SLO或SLA。
 
 ## TASK-P8-15 Developer Kit evidence边界
 

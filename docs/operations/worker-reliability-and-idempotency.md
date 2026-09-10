@@ -6,10 +6,18 @@ spec_version: 0.3.0
 phase: P0-P8
 normative: true
 source_sections: [34, 65, 66, 67]
-last_reviewed: 2026-09-07
+last_reviewed: 2026-09-10
 ---
 
 # P0 Worker Reliability 与 Idempotency
+
+## TASK-P8-18 Extension execution reliability
+
+Worker现在把resolved Extension adapter作为启动时不可变port。每次执行在Solver前调用Registry/Planning Rule/Constraint/Replan Policy，在Core Solver与fresh formal Validator成功后、不可变worker checkpoint被应用为ScheduleVersion之前调用Objective/Validation Rule。恢复已有`COMPLETED` checkpoint时必须再次执行candidate Extension validation；因此进程崩溃不能绕过企业admission gate。
+
+Extension crash、timeout、invalid output、Validation rejection或Replan request统一使PlanningRun转为`FAILED`，job以稳定Extension failure code完成失败，并从公共Worker边界只暴露`EXECUTION_FAILED/runtime_extension`；不得写ScheduleVersion。API/Worker的Runtime/Kit/Extension composition不一致继续在worker result前返回`RUNTIME_MISMATCH`。Metrics保留计数、lifecycle、耗时和输入/输出fingerprint，不保留payload、配置、secret或异常文本。
+
+该机制保持原late ACK、lease、heartbeat、checkpoint exact replay和ScheduleVersion幂等语义，没有承诺终止恶意in-process Python线程、distributed exactly-once或Production恢复SLA。真实企业代码仍须按对应Developer Kit单独验证和批准。
 
 ## P8-10真实broker与Worker恢复演练
 

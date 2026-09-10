@@ -6,12 +6,20 @@ spec_version: 0.3.0
 phase: P8
 normative: true
 source_sections: [65, 93, 95, 97, 98, 99, 100, 101, 106, 107, 113, 114]
-last_reviewed: 2026-09-09
+last_reviewed: 2026-09-10
 ---
 
 # APS Runtime 安装、预检与启动顺序
 
 本页定义P8-09起始、P8-13扩展后的Runtime工程候选可重复安装与fail-closed启动顺序，记录TASK-P8-10隔离Compose靶场对当前声明Runtime身份的真实部署结果，并说明P8-11可选Frontend的独立分发边界。它不授予Production部署、签名或发布权限。
+
+## TASK-P8-18 Extension-enabled target
+
+P8-18把`p8-operations-compose-v1`前移到纠正Runtime implementation `69edf15de9032f4e22f7beb8b89a1453ebcb088d`，归档SHA-256为`14db5628f90708d882e15f4843d8c9893b60e30e155a7a0410690cd6939d665e`，release fingerprint为`sha256:e7d69abeb1ad2db85e640a4baf62b313c9b4bb1bd17ccf0066cbfbf2814746d9`。目标锁定Alpha `1.0.0` artifact/config、Developer Kit `1.0.0` fingerprint及`runtime-http-policy.v2`，仍仅用于一次性`TEST/SIMULATION`。
+
+非空Extension启动除catalog/key三元组外，还必须成组设置`PLANTNEXUS_DEVELOPER_KIT_VERSION`、`PLANTNEXUS_DEVELOPER_KIT_FINGERPRINT`和固定部署provider `PLANTNEXUS_RUNTIME_EXTENSION_ARTIFACT_PROVIDER=<module>:<callable>`。Provider由发布/部署方拥有，只能从本地read-only批准输入materialize精确artifact tuple；不能扫描entry point、联网、安装包、接受请求选项或hot reload。显式artifact与provider并存、provider超时/异常、集合未排序/重复、artifact/catalog/Kit不一致都必须在Runtime composition前失败。
+
+API与Worker启动后必须读取descriptor并逐字比较Runtime、Kit、Extension set/config和composition fingerprint。备份点、恢复后进程与rollback slot还必须保留同一Extension identity；仅数据库恢复成功不足以promotion。本地完整演练已验证这些检查和10类告警/6份Runbook，仍不代表Production trust、签名、HA、容量或SLA。
 
 ## TASK-P8-15 Developer Kit policy隔离
 
@@ -32,7 +40,7 @@ Preflight只接收已配置的环境变量名称，不读取或输出secret valu
 - `PLANTNEXUS_RUNTIME_SOLVE_LIMITS_PATH`
 - `PLANTNEXUS_RUNTIME_HTTP_POLICY_PATH`
 
-当且仅当启用P8-13企业Extension集合时，还必须由部署平台成组提供`PLANTNEXUS_RUNTIME_EXTENSION_CATALOG_PATH`、`PLANTNEXUS_RUNTIME_EXTENSION_VERIFICATION_KEY_ID`和SecretStr承载的`PLANTNEXUS_RUNTIME_EXTENSION_VERIFICATION_KEY`。catalog缺失时保持default-empty；三项不完整、catalog/manifest/config/artifact越界、digest/HMAC/版本/capability不一致均必须在数据库连接和业务调用前fail closed。禁止请求级上传、远程下载、hot load或运行时安装。
+当且仅当启用企业Extension集合时，还必须由部署平台成组提供`PLANTNEXUS_RUNTIME_EXTENSION_CATALOG_PATH`、`PLANTNEXUS_RUNTIME_EXTENSION_VERIFICATION_KEY_ID`和SecretStr承载的`PLANTNEXUS_RUNTIME_EXTENSION_VERIFICATION_KEY`，并按上节提供精确Kit身份和唯一artifact provider。catalog缺失且无provider时保持default-empty；任一原子组不完整、catalog/manifest/config/artifact越界、digest/HMAC/版本/capability不一致均必须在数据库连接和业务调用前fail closed。禁止请求级上传、远程下载、hot load或运行时安装。
 
 此外，运行平台必须显式设置environment/data plane、`PLANTNEXUS_CODE_COMMIT`、`PLANTNEXUS_RUNTIME_COMPOSITION_ENABLED=true`及P8-08身份/授权policy adapter所需的外部配置。值不得写入归档、报告、命令历史或版本库。
 

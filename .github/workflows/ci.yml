@@ -692,6 +692,7 @@ jobs:
             "${replay_root}/backend/tests/integration/test_p8_headless_http_api_integration.py" \
             "${replay_root}/backend/tests/security/test_p8_headless_http_api_security.py"
           rm -- \
+            "${replay_root}/backend/app/application/runtime_planning_workspace.py" \
             "${replay_root}/backend/app/api/host_authorization_check.py" \
             "${replay_root}/backend/app/api/dependencies/host_authorization.py" \
             "${replay_root}/backend/app/application/host_authorization.py" \
@@ -734,8 +735,10 @@ jobs:
             "${replay_root}/backend/tests/unit/test_p8_extension_sdk.py" \
             "${replay_root}/backend/tests/validation/test_p8_extension_sdk_mutations.py" \
             "${replay_root}/backend/app/extensions/__init__.py" \
+            "${replay_root}/backend/app/extensions/bootstrap.py" \
             "${replay_root}/backend/app/extensions/contracts.py" \
             "${replay_root}/backend/app/extensions/loader.py" \
+            "${replay_root}/backend/app/extensions/product_execution.py" \
             "${replay_root}/backend/app/extensions/registry.py" \
             "${replay_root}/backend/tests/fixtures/p8_synthetic_extension.py" \
             "${replay_root}/backend/tests/p8_runtime_extension_support.py" \
@@ -794,6 +797,7 @@ jobs:
             backend/app/infrastructure/__init__.py \
             backend/app/infrastructure/config.py \
             backend/app/infrastructure/health.py \
+            backend/app/infrastructure/publication_repository.py \
             backend/tests/contract/test_dynamic_replanning_http_api.py \
             backend/tests/contract/test_import_validation.py \
             backend/tests/contract/test_p3_export_contracts.py \
@@ -888,7 +892,7 @@ jobs:
         run: |
           uv run pytest -q backend/tests/*/test_p8_*.py tests/p8 --junitxml=build/validation/ci-p8-18-tests.xml
           uv run python scripts/p8_operations_check.py --root . --deployment-report build/validation/ci-p8-18-operations-deployment.json --observability-report build/validation/ci-p8-18-operations-observability.json --recovery-report build/validation/ci-p8-18-operations-recovery.json --runbook-report build/validation/ci-p8-18-operations-runbooks.json
-          uv run python scripts/p8_runtime_product_integration_check.py --root . --junit build/validation/ci-p8-18-tests.xml --operations-deployment build/validation/ci-p8-18-operations-deployment.json --operations-recovery build/validation/ci-p8-18-operations-recovery.json --report build/validation/ci-p8-18-runtime-product-corrective.json --invocation-report build/validation/ci-p8-18-runtime-extension-invocation.json --kit-report build/validation/ci-p8-18-developer-kit-binding.json --output-report build/validation/ci-p8-18-headless-output.json --deployment-report build/validation/ci-p8-18-extension-deployment-recovery.json --security-report build/validation/ci-p8-18-security.json --benchmark-report build/benchmarks/ci-p8-18-runtime-product-corrective.json
+          uv run python -m scripts.p8_runtime_product_integration_check --root . --junit build/validation/ci-p8-18-tests.xml --operations-deployment build/validation/ci-p8-18-operations-deployment.json --operations-recovery build/validation/ci-p8-18-operations-recovery.json --report build/validation/ci-p8-18-runtime-product-corrective.json --invocation-report build/validation/ci-p8-18-runtime-extension-invocation.json --kit-report build/validation/ci-p8-18-developer-kit-binding.json --output-report build/validation/ci-p8-18-headless-output.json --deployment-report build/validation/ci-p8-18-extension-deployment-recovery.json --security-report build/validation/ci-p8-18-security.json --benchmark-report build/benchmarks/ci-p8-18-runtime-product-corrective.json
 
       - name: Engineering contract
         run: >-

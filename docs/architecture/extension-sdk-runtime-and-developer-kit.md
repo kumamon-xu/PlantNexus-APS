@@ -6,10 +6,20 @@ spec_version: 0.3.0
 phase: P8
 normative: true
 source_sections: [4, 5, 9, 12, 30, 63, 65, 93, 95, 97, 101, 103, 106, 107, 109, 113, 114]
-last_reviewed: 2026-09-09
+last_reviewed: 2026-09-10
 ---
 
 # APS Extension SDK、Runtime 与 Developer Kit 架构
+
+## TASK-P8-18 产品执行纠正
+
+P8-18在不修改Core、SDK `1.0.0`公开合同、Alpha/Beta源码、Schema、migration或依赖的前提下，把startup-resolved adapter接入真实Worker生命周期。`runtime-http-policy.v2`只增加服务端持有的Extension事实carrier；外部请求仍是既有canonical JSON，不能选择Extension、module、class、artifact或配置。Worker在求解前按resolved order调用`Plugin Registry → Planning Rule → Constraint → Replan Policy`，在Core Solver和fresh formal Validator形成候选后、创建ScheduleVersion之前调用`Objective → Validation Rule`。每次成功调用只记录lifecycle及输入/输出SHA-256，不保留payload、返回对象或异常细节。
+
+SDK v1的solver-neutral输出不修改Core对象。Feasibility贡献由同artifact内独立Validation Rule在candidate admission处强制执行；Validation FAIL、Replan `REQUEST_REPLAN`、crash、timeout或非法输出都会终结当前PlanningRun且ScheduleVersion为零。`ENTERPRISE_TIE_BREAK`在本纠正链中被实际求值和验证，但P8-18不宣称它已重写Core目标层级或在多个Core等价候选之间完成Production级选择；真实企业公式与业务验收仍不在范围内。
+
+Runtime配置现把Developer Kit version与fingerprint作为原子身份；非空Extension没有精确Kit身份时拒绝启动，API/Worker组合不一致时在Worker result之前拒绝。deployable API同时装配既有approval、publication、ScheduleVersion read和ExportJob service，继续复用server-derived authorization、state/CAS、idempotency、append-only audit及repository authority，不增加HTTP operation或第二状态机。
+
+部署只通过显式`module:callable` startup provider取得本地已批准artifact对象；显式对象和provider并存、provider失败/超时、非canonical集合或catalog不完整均fail closed。`p8-operations-compose-v1`当前锁定Alpha artifact/config、Developer Kit `1.0.0` fingerprint和P8-18 content-addressed Runtime，在一次性`TEST/SIMULATION`靶场证明API、Worker、恢复后实例与rollback slot保持相同Extension identity。该纠正的本地证据为P8专项287/287、四项blocker 4/4及真实Compose演练PASS；P8-16历史`NOT_READY`不被改写，只有后续独立P8-19可以作平台重资格。
 
 ## TASK-P8-16 平台集成 Gate 结论
 

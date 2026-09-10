@@ -371,16 +371,16 @@ jobs:
           --security-report build/validation/ci-p8-runtime-release-security.json
           --benchmark-report build/benchmarks/ci-p8-runtime-release.json
 
-      - name: P8 Developer Kit assembly compatibility and upgrade evidence
+      - name: P8 Developer Kit immutable contract and no automatic upgrade evidence
         run: >-
-          uv run python -m aps_developer_kit.check
-          --root .
-          --release-output build/release
-          --kit-output build/developer-kit
-          --report build/validation/ci-p8-developer-kit.json
-          --security-report build/validation/ci-p8-developer-kit-security.json
-          --upgrade-report build/validation/ci-p8-developer-kit-upgrade-rollback.json
-          --benchmark-report build/benchmarks/ci-p8-developer-kit.json
+          uv run pytest -q
+          --junitxml=build/validation/ci-p8-developer-kit-contract-tests.xml
+          backend/tests/contract/test_p8_developer_kit_contract.py
+          backend/tests/unit/test_p8_developer_kit_builder.py
+          backend/tests/property/test_p8_developer_kit_properties.py
+          backend/tests/integration/test_p8_developer_kit_integration.py
+          backend/tests/security/test_p8_developer_kit_security.py
+          backend/tests/validation/test_p8_developer_kit_mutations.py
 
       - name: P6 duration prediction machine contract evidence
         run: >-
@@ -966,13 +966,13 @@ jobs:
           path: |
             build/validation/*.json
             build/validation/ci-p8-18-tests.xml
+            build/validation/ci-p8-developer-kit-contract-tests.xml
             build/traceability/*.json
             build/benchmarks/*.json
             build/playwright/**
             build/frontend/**
             build/release/**
             build/enterprise-extensions/**
-            build/developer-kit/**
           if-no-files-found: error
 
   full_operations:

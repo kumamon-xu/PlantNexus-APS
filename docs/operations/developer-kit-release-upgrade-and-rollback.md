@@ -6,7 +6,7 @@ spec_version: 0.3.0
 phase: P8
 normative: true
 source_sections: [4, 5, 9, 12, 93, 95, 97, 98, 101, 103, 106, 107, 113, 114]
-last_reviewed: 2026-09-09
+last_reviewed: 2026-09-10
 ---
 
 # APS Developer Kit 发布、升级与回滚
@@ -19,7 +19,7 @@ last_reviewed: 2026-09-09
 
 ## 2. 组装与验证
 
-CI先生成同一exact SHA的P8-09 Runtime release，再运行：
+P8-15发布候选CI先生成同一exact SHA的P8-09 Runtime release，再运行：
 
 ```powershell
 uv run python -m aps_developer_kit.check `
@@ -35,6 +35,12 @@ uv run python -m aps_developer_kit.check `
 发布前必须满足：tracked input clean；Runtime归档和sidecar绑定当前提交；相同输入双构建逐字相同；manifest、lock、checksum和嵌套Runtime lineage通过；Kit在clean Python环境安装；包内CLI对两个独立Extension完成Runtime conformance；兼容正负例、旧项目重放、显式升级、SBOM/license/SCA和回滚证据全部PASS。
 
 输出位于`build/developer-kit/registry/versions/1.0.0/sha256/<digest>/`，registry index把Kit版本唯一映射到digest、release fingerprint和code commit。同一版本出现不同bytes必须以`KIT_REGISTRY_CONFLICT`拒绝；修复需要新Kit版本，不能覆盖旧目录或index记录。CI artifact只是工程交付面，不创建GitHub Release、tag、外部registry或Production批准。
+
+### P8-18之后的不可变基线
+
+Kit `1.0.0`以P8-15 final `87e2f1e814c75fbc25e82a89288f14b80831209b` / Provider run `34320622291`及fingerprint `sha256:ee2a3a407337e595ca724ed2a92540e911c5fad7272e472f2d3ef3297a14a361`冻结。P8-18修改Runtime执行链，但不发布或重新组装Kit；因此后继CI不得把变化后的Runtime传给`aps_developer_kit.check`并写入相同`1.0.0` registry位置。该操作应以`KIT_BOUNDARY_VIOLATION`或`KIT_REGISTRY_CONFLICT`拒绝，而不是通过放宽assembler范围解决。
+
+P8-18 CI改为重跑Kit的contract、unit、property、integration、security和validation六层不可变合同，并在后续Runtime产品步骤生成Developer Kit binding证据，验证Extension仍锁定上述Kit version/fingerprint且API、Worker和work item一致。这只是当前Runtime消费既有Extension开发基线的兼容证据，不是新的Kit artifact。若需要在Developer Kit中交付纠正后的Runtime，必须创建独立发布Task、分配新Kit版本、追加registry记录并重跑完整组装/clean-install/兼容/安全/升级/回滚流程；既有企业项目可继续使用已验证版本，不自动迁移。
 
 ## 3. 企业项目安装和开发
 

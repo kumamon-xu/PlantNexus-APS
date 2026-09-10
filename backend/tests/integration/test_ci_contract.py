@@ -348,13 +348,14 @@ def test_ci_runs_repository_gates_and_discovers_the_current_task() -> None:
         "build/validation/ci-p8-enterprise-extension-dependencies.json",
         "build/benchmarks/ci-p8-enterprise-extension-tooling.json",
         "build/enterprise-extensions",
-        "name: P8 Developer Kit assembly compatibility and upgrade evidence",
-        "aps_developer_kit.check",
-        "build/validation/ci-p8-developer-kit.json",
-        "build/validation/ci-p8-developer-kit-security.json",
-        "build/validation/ci-p8-developer-kit-upgrade-rollback.json",
-        "build/benchmarks/ci-p8-developer-kit.json",
-        "build/developer-kit",
+        "name: P8 Developer Kit immutable contract and no automatic upgrade evidence",
+        "build/validation/ci-p8-developer-kit-contract-tests.xml",
+        "backend/tests/contract/test_p8_developer_kit_contract.py",
+        "backend/tests/unit/test_p8_developer_kit_builder.py",
+        "backend/tests/property/test_p8_developer_kit_properties.py",
+        "backend/tests/integration/test_p8_developer_kit_integration.py",
+        "backend/tests/security/test_p8_developer_kit_security.py",
+        "backend/tests/validation/test_p8_developer_kit_mutations.py",
         "build/benchmarks/*.json",
     )
     for fragment in required_fragments:
@@ -538,7 +539,19 @@ def test_ci_profile_routing_is_mutually_exclusive_and_fail_closed() -> None:
         if "uv run pytest" in str(step.get("run", ""))
     ]
     assert all(
-        "backend/tests/security" not in command for command in full_pytest_commands
+        "backend/tests/security" not in command
+        for command in full_pytest_commands
+        if "ci-p8-developer-kit-contract-tests.xml" not in command
+    )
+    developer_kit_commands = [
+        command
+        for command in full_pytest_commands
+        if "ci-p8-developer-kit-contract-tests.xml" in command
+    ]
+    assert len(developer_kit_commands) == 1
+    assert (
+        "backend/tests/security/test_p8_developer_kit_security.py"
+        in developer_kit_commands[0]
     )
     assert "TASK-P4-13 Dynamic replanning frontend machine evidence" in full_text
     assert "p4-replanning-replay.XXXXXX" in full_text
@@ -1165,25 +1178,32 @@ def test_ci_p8_runtime_release_is_required_and_machine_checkable(
     assert benchmark["status"] == "PASS"
 
 
-def test_ci_p8_developer_kit_consumes_exact_runtime_and_uploads_registry() -> None:
+def test_ci_p8_developer_kit_baseline_is_not_reassembled_after_runtime_change() -> None:
     workflow = (ROOT / ".github" / "workflows" / "ci.yml").read_text(
         encoding="utf-8"
     )
     normalized = " ".join(workflow.split())
     expected = (
-        "name: P8 Developer Kit assembly compatibility and upgrade evidence run: >- "
-        "uv run python -m aps_developer_kit.check --root . "
-        "--release-output build/release --kit-output build/developer-kit "
-        "--report build/validation/ci-p8-developer-kit.json "
-        "--security-report build/validation/ci-p8-developer-kit-security.json "
-        "--upgrade-report build/validation/ci-p8-developer-kit-upgrade-rollback.json "
-        "--benchmark-report build/benchmarks/ci-p8-developer-kit.json"
+        "name: P8 Developer Kit immutable contract and no automatic upgrade evidence "
+        "run: >- uv run pytest -q "
+        "--junitxml=build/validation/ci-p8-developer-kit-contract-tests.xml "
+        "backend/tests/contract/test_p8_developer_kit_contract.py "
+        "backend/tests/unit/test_p8_developer_kit_builder.py "
+        "backend/tests/property/test_p8_developer_kit_properties.py "
+        "backend/tests/integration/test_p8_developer_kit_integration.py "
+        "backend/tests/security/test_p8_developer_kit_security.py "
+        "backend/tests/validation/test_p8_developer_kit_mutations.py"
     )
     assert expected in normalized
     assert workflow.index("P8 reproducible Runtime release") < workflow.index(
-        "P8 Developer Kit assembly"
+        "P8 Developer Kit immutable contract"
     )
-    assert "build/developer-kit/**" in workflow
+    assert workflow.index("P8 Developer Kit immutable contract") < workflow.index(
+        "P8 Runtime Extension product corrective evidence"
+    )
+    assert "uv run python -m aps_developer_kit.check" not in workflow
+    assert "build/developer-kit/**" not in workflow
+    assert "build/validation/ci-p8-developer-kit-contract-tests.xml" in workflow
     assert "continue-on-error" not in workflow
 
 

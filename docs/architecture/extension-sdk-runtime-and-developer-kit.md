@@ -19,6 +19,8 @@ SDK v1的solver-neutral输出不修改Core对象。Feasibility贡献由同artifa
 
 Runtime配置现把Developer Kit version与fingerprint作为原子身份；非空Extension没有精确Kit身份时拒绝启动，API/Worker组合不一致时在Worker result之前拒绝。deployable API同时装配既有approval、publication、ScheduleVersion read和ExportJob service，继续复用server-derived authorization、state/CAS、idempotency、append-only audit及repository authority，不增加HTTP operation或第二状态机。
 
+Kit identity和Runtime artifact identity是两个独立版本维度。P8-18 Runtime引用P8-15 Kit `1.0.0`只证明所载Extension来自该冻结开发/兼容基线；它不改变Kit archive、registry映射或其中嵌套的Runtime lineage，也不把纠正后的Runtime伪装成Kit `1.0.0`的新内容。当前CI保留六层Kit合同回归，并由P8-18产品Gate验证当前Runtime对该Extension基线的动态兼容；新的组合交付必须使用新的Developer Kit版本和独立发布Task。
+
 部署只通过显式`module:callable` startup provider取得本地已批准artifact对象；显式对象和provider并存、provider失败/超时、非canonical集合或catalog不完整均fail closed。`p8-operations-compose-v1`当前锁定Alpha artifact/config、Developer Kit `1.0.0` fingerprint和P8-18 content-addressed Runtime，在一次性`TEST/SIMULATION`靶场证明API、Worker、恢复后实例与rollback slot保持相同Extension identity。该纠正的本地证据为P8专项287/287、四项blocker 4/4及真实Compose演练PASS；P8-16历史`NOT_READY`不被改写，只有后续独立P8-19可以作平台重资格。
 
 ## TASK-P8-16 平台集成 Gate 结论

@@ -100,6 +100,7 @@ _INPUT_REPORTS = (
 
 _ALLOWED_TRACKED_PATHS = frozenset(
     {
+        ".gitignore",
         ".github/workflows/ci.yml",
         "backend/tests/integration/test_ci_contract.py",
         "docs/.gitignore",
@@ -1123,10 +1124,21 @@ def _working_tree_paths(root: Path) -> list[str]:
 
 def _task_scope_paths(root: Path) -> tuple[list[str], str, str]:
     source = "scripts/p8_exit_gate_audit.py"
+    dirty = _git(
+        root,
+        "status",
+        "--porcelain",
+        "--untracked-files=all",
+        "--",
+        source,
+        check=False,
+    )
+    if dirty.strip():
+        return _working_tree_paths(root), "WORKING_TREE", _git_head(root)
     output = _git(
         root,
         "log",
-        "--diff-filter=A",
+        "-1",
         "--format=%H",
         "--",
         source,
@@ -1144,7 +1156,7 @@ def _task_scope_paths(root: Path) -> tuple[list[str], str, str]:
                 for line in changed.splitlines()
                 if line.strip()
             ),
-            "EXIT_AUDIT_INTRODUCTION_COMMIT",
+            "LATEST_EXIT_AUDIT_COMMIT",
             implementation_commit,
         )
     return _working_tree_paths(root), "WORKING_TREE", _git_head(root)

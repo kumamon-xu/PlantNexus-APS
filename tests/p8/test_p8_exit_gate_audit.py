@@ -125,3 +125,48 @@ def test_public_product_owner_snapshot_preserves_headless_extension_boundaries()
         "Replan Policy",
         "Plugin Registry",
     ]
+
+
+def test_task_scope_uses_working_tree_while_auditor_has_uncommitted_changes(
+    monkeypatch: Any,
+) -> None:
+    monkeypatch.setattr(
+        gate,
+        "_git",
+        lambda root, *args, **kwargs: (
+            " M scripts/p8_exit_gate_audit.py"
+            if args[0] == "status"
+            else "1" * 40
+        ),
+    )
+    monkeypatch.setattr(
+        gate, "_working_tree_paths", lambda root: sorted(gate._ALLOWED_TRACKED_PATHS)
+    )
+
+    paths, source, implementation_commit = gate._task_scope_paths(ROOT)
+
+    assert paths == sorted(gate._ALLOWED_TRACKED_PATHS)
+    assert source == "WORKING_TREE"
+    assert implementation_commit == "1" * 40
+
+
+def test_task_scope_binds_latest_committed_auditor_revision(monkeypatch: Any) -> None:
+    latest = "2" * 40
+
+    def fake_git(root: Path, *args: str, **kwargs: Any) -> str:
+        if args[0] == "status":
+            return ""
+        if args[0] == "log":
+            return latest
+        if args[0] == "diff":
+            assert args[-1] == f"{gate.DIFF_BASE}..{latest}"
+            return "\n".join(sorted(gate._ALLOWED_TRACKED_PATHS))
+        raise AssertionError(args)
+
+    monkeypatch.setattr(gate, "_git", fake_git)
+
+    paths, source, implementation_commit = gate._task_scope_paths(ROOT)
+
+    assert paths == sorted(gate._ALLOWED_TRACKED_PATHS)
+    assert source == "LATEST_EXIT_AUDIT_COMMIT"
+    assert implementation_commit == latest

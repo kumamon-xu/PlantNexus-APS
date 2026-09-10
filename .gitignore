@@ -27,6 +27,9 @@ htmlcov/
 /dist/
 *.whl
 
+# Internal handoff bundles and delivery staging
+/deliverables/
+
 # Node.js, Vite and browser-test outputs
 node_modules/
 .npm/

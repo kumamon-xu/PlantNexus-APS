@@ -15,7 +15,7 @@ last_reviewed: 2026-09-10
 
 ## TASK-P8-18 Extension-enabled target
 
-P8-18把`p8-operations-compose-v1`前移到纠正Runtime implementation `69edf15de9032f4e22f7beb8b89a1453ebcb088d`，归档SHA-256为`14db5628f90708d882e15f4843d8c9893b60e30e155a7a0410690cd6939d665e`，release fingerprint为`sha256:e7d69abeb1ad2db85e640a4baf62b313c9b4bb1bd17ccf0066cbfbf2814746d9`。目标锁定Alpha `1.0.0` artifact/config、Developer Kit `1.0.0` fingerprint及`runtime-http-policy.v2`，仍仅用于一次性`TEST/SIMULATION`。
+P8-18把`p8-operations-compose-v1`前移到纠正Runtime implementation `7369e9c1238bae36f278423edb1977124d07faa9`，归档SHA-256为`6ba13ea22b1032fdd1e67a09e1045dac9307f7597b71c5003fdf9fe680c92cee`，release fingerprint为`sha256:9c67fcfd3991d48acf4d05d3fae54ed7b82edddd4471b2642932c1faf71fac40`。目标锁定Alpha `1.0.0` artifact/config、Developer Kit `1.0.0` fingerprint及`runtime-http-policy.v2`，仍仅用于一次性`TEST/SIMULATION`。
 
 非空Extension启动除catalog/key三元组外，还必须成组设置`PLANTNEXUS_DEVELOPER_KIT_VERSION`、`PLANTNEXUS_DEVELOPER_KIT_FINGERPRINT`和固定部署provider `PLANTNEXUS_RUNTIME_EXTENSION_ARTIFACT_PROVIDER=<module>:<callable>`。Provider由发布/部署方拥有，只能从本地read-only批准输入materialize精确artifact tuple；不能扫描entry point、联网、安装包、接受请求选项或hot reload。显式artifact与provider并存、provider超时/异常、集合未排序/重复、artifact/catalog/Kit不一致都必须在Runtime composition前失败。
 

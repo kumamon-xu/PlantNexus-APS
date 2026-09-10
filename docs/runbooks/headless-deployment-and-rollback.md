@@ -49,4 +49,4 @@ deployment报告必须为PASS且包含8项检查；image revision必须等于tar
 
 ## 最近演练记录
 
-2026-09-10由TASK-P8-18使用implementation `69edf15`、Alpha Extension和Kit `1.0.0`在本地靶场执行，部署/恢复/同组合dual-slot回退PASS；exact-SHA Provider仍在Task Card闭环时登记。当前记录不覆盖未来Runtime或Developer Kit跨版本升级。
+2026-09-10由TASK-P8-18使用implementation `7369e9c`、Alpha Extension和Kit `1.0.0`在本地靶场执行，部署/恢复/同组合dual-slot回退PASS；exact-SHA Provider仍在Task Card闭环时登记。当前记录不覆盖未来Runtime或Developer Kit跨版本升级。

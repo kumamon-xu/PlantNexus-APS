@@ -11,9 +11,9 @@
   },
   "release": {
     "runtime_version": "0.1.0",
-    "implementation_sha": "69edf15de9032f4e22f7beb8b89a1453ebcb088d",
-    "release_archive_sha256": "sha256:14db5628f90708d882e15f4843d8c9893b60e30e155a7a0410690cd6939d665e",
-    "release_fingerprint": "sha256:e7d69abeb1ad2db85e640a4baf62b313c9b4bb1bd17ccf0066cbfbf2814746d9",
+    "implementation_sha": "7369e9c1238bae36f278423edb1977124d07faa9",
+    "release_archive_sha256": "sha256:6ba13ea22b1032fdd1e67a09e1045dac9307f7597b71c5003fdf9fe680c92cee",
+    "release_fingerprint": "sha256:9c67fcfd3991d48acf4d05d3fae54ed7b82edddd4471b2642932c1faf71fac40",
     "image_build_source": "EXACT_P8_18_CORRECTIVE_RUNTIME_INPUTS",
     "signing_state": "UNSIGNED_ENGINEERING_CANDIDATE"
   },

@@ -23,7 +23,7 @@ Extension crash、timeout、invalid output、Validation rejection或Replan reque
 
 `p8-operations-compose-v1`首次用Redis 8.2.1容器和独立Celery Worker启动P8-09 Runtime，验证JSON-only task app、Worker ping、API/Worker composition identity及queue depth observation。演练停止Worker后`APSWorkerUnavailable`必须fired，重启相同image/config并恢复`pong`后才resolved；dual-slot rollback同样要求`rollback_worker`先ready再停止candidate。
 
-停止Redis时API liveness保持UP、readiness为DOWN/`REDIS_UNAVAILABLE`，Worker在broker恢复后必须重新可见；停止PostgreSQL时readiness为DOWN/`DATABASE_UNAVAILABLE`。这些操作不创建真实PlanningRun负载，不清queue、不修改attempt/lease/terminal state，因而证明容器和依赖恢复路径，不证明distributed exactly-once、长任务中断重领、network partition、dead-letter/backoff、graceful drain、capacity或Production SLA。
+停止Redis时API liveness保持UP、readiness为DOWN/`REDIS_UNAVAILABLE`；Redis与API readiness恢复后，TASK-P8-20要求显式restart同一exact image/config Worker并等待具名`pong`，不再依赖Celery进程在broker故障期间是否自行重连。停止PostgreSQL时readiness为DOWN/`DATABASE_UNAVAILABLE`。这些操作不创建真实PlanningRun负载，不清queue、不修改attempt/lease/terminal state，因而只证明确定的容器和依赖恢复procedure，不证明distributed exactly-once、长任务中断重领、network partition、dead-letter/backoff、graceful drain、capacity或Production SLA。
 
 逐步处理见[`../runbooks/stalled-worker-recovery.md`](../runbooks/stalled-worker-recovery.md)和[`../runbooks/dependency-outage-and-readiness.md`](../runbooks/dependency-outage-and-readiness.md)。任何API/Worker Runtime、Core、SDK、Extension-set、Solver或Validator identity不一致仍必须停止领取/发布结果。
 

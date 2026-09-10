@@ -748,6 +748,24 @@ def _wait_worker(
     )
 
 
+def recover_worker_after_broker(
+    target: ComposeTarget, service: str = "worker", *, attempts: int = 30
+) -> None:
+    """Restart the exact Worker after broker recovery, then require a named pong.
+
+    Celery may either keep retrying or exit while Redis is unavailable.  The
+    operations drill must not depend on which of those timing-dependent paths
+    occurred, so recovery always restarts the already pinned Compose service.
+    """
+
+    if service not in {"worker", "rollback_worker"}:
+        raise OperationsEvidenceError(
+            "WORKER_PROBE_TARGET_INVALID", "worker probe target is not allow-listed"
+        )
+    target.run("restart", service, timeout=120)
+    _wait_worker(target, service, attempts=attempts)
+
+
 def _safe_json_line(raw: str) -> JsonObject:
     for line in reversed(raw.splitlines()):
         try:
@@ -1374,7 +1392,7 @@ def run_target_drill(
                 attempts=60,
                 failure_code="BROKER_RECOVERY_READINESS_FAILED",
             )
-            _wait_worker(compose)
+            recover_worker_after_broker(compose)
             alerts[-1]["resolved"] = True
             alerts[-2]["resolved"] = True
 
@@ -1747,6 +1765,7 @@ __all__ = [
     "contract_only_reports",
     "extension_readiness",
     "main",
+    "recover_worker_after_broker",
     "redact_for_report",
     "validate_observability_contract",
     "validate_runbooks",

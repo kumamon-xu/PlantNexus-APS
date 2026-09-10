@@ -6,17 +6,42 @@ import json
 from pathlib import Path
 from typing import cast
 
+import pytest
+
 from scripts.p8_operations_check import (
+    CommandResult,
+    ComposeTarget,
     EXPECTED_DEVELOPER_KIT_FINGERPRINT,
     EXPECTED_EXTENSION_IDS,
+    OperationsEvidenceError,
     RUNTIME_INPUTS,
     TARGET_PATH,
     contract_only_reports,
     extension_readiness,
+    recover_worker_after_broker,
     validate_target_contract,
 )
 
 ROOT = Path(__file__).resolve().parents[3]
+
+
+class _WorkerProbeTarget:
+    def __init__(self, *, pong: bool) -> None:
+        self.pong = pong
+        self.calls: list[tuple[str, ...]] = []
+
+    def run(
+        self,
+        *args: str,
+        input_bytes: bytes | None = None,
+        check: bool = True,
+        timeout: int = 900,
+    ) -> CommandResult:
+        del input_bytes, check, timeout
+        self.calls.append(args)
+        if args[:2] == ("restart", "worker"):
+            return CommandResult(0, b"")
+        return CommandResult(0, b"candidate@p8-operations: pong\n" if self.pong else b"")
 
 
 def test_runtime_input_guard_names_only_runtime_release_policies() -> None:
@@ -92,3 +117,23 @@ def test_contract_only_reports_keep_unexecuted_recovery_explicit() -> None:
     assert runbook["runbook_count"] == 6
     assert deployment["production_ready"] is False
     assert recovery["production_recovery_claimed"] is False
+
+
+def test_broker_recovery_restarts_exact_worker_before_named_ping() -> None:
+    target = _WorkerProbeTarget(pong=True)
+
+    recover_worker_after_broker(cast(ComposeTarget, target), attempts=1)
+
+    assert target.calls[0] == ("restart", "worker")
+    assert target.calls[1][0:3] == ("exec", "-T", "worker")
+    assert "candidate@p8-operations" in target.calls[1]
+
+
+def test_broker_recovery_still_fails_closed_without_worker_pong() -> None:
+    target = _WorkerProbeTarget(pong=False)
+
+    with pytest.raises(OperationsEvidenceError) as error:
+        recover_worker_after_broker(cast(ComposeTarget, target), attempts=1)
+
+    assert target.calls[0] == ("restart", "worker")
+    assert error.value.code == "WORKER_PROBE_FAILED"

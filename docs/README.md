@@ -13,9 +13,9 @@ last_reviewed: 2026-09-10
 
 本目录只收录适合随公开 Git 仓库发布的核心项目文档。开发过程记录、Task Card、阶段证据、机器报告、临时草稿、截图、测试输出和下载制品不属于公开文档，应留在被忽略的本地目录或 `build/`。
 
-项目当前已形成P0～P6研发能力，P7真实数据校准暂缓，P8 Headless产品化已推进到durable canonical ingress、PlanningRun、Solver Worker、单一Runtime组合、五项公开HTTP operation、Test identity/authorization/audit、Runtime工程分发与非Production运维演练。产品边界只接收宿主平台提交的versioned canonical JSON，不在APS内直接建设ERP/MES/WMS/CAM连接器；宿主与可选独立Frontend消费同一API。P8-11形成`0.1.0`静态Frontend工程候选；P8-12～14形成SDK `1.0.0`、服务端Registry/loader、独立项目模板、确定性conformance工具及两份synthetic Enterprise Extension。P8-15进一步组装首个不可变Developer Kit `1.0.0`工程候选，精确锁定Runtime/SDK/Tooling/Template、示例、文档、兼容矩阵、SBOM/license和升级/回滚合同。P8-16独立平台Gate的历史结论保持`NOT_READY`；P8-18纠正四项产品集成缺口，P8-19已由exact Provider确认18/18平台检查、4/4历史blocker closure与零gap。
+项目当前已形成P0～P6研发能力，P7真实数据校准暂缓，P8 Headless产品化已推进到durable canonical ingress、PlanningRun、Solver Worker、单一Runtime组合、五项公开HTTP operation、Test identity/authorization/audit、Runtime工程分发与非Production运维演练。产品边界只接收宿主平台提交的versioned canonical JSON，不在APS内直接建设ERP/MES/WMS/CAM连接器；宿主与可选独立Frontend消费同一API。P8-11形成`0.1.0`静态Frontend工程候选；P8-12～14形成SDK `1.0.0`、服务端Registry/loader、独立项目模板、确定性conformance工具及两份synthetic Enterprise Extension。P8-15进一步组装首个不可变Developer Kit `1.0.0`工程候选，精确锁定Runtime/SDK/Tooling/Template、示例、文档、兼容矩阵、SBOM/license和升级/回滚合同。P8-16独立平台Gate的历史结论保持`NOT_READY`；P8-18纠正四项产品集成缺口，P8-19已由exact Provider确认18/18平台检查、4/4历史blocker closure与零gap。P8-20只纠正broker故障演练后Worker恢复探针的确定性，不改变产品或合同。
 
-P8-17现以独立`PHASE_GATE`重核20个P8 Task的DAG与终态、20组前序Provider输入、83份artifact/1,869个条目、9项保留失败/纠正历史、公开ADR/合同/版本边界，并fresh重放P8-19；当前为本地`READY`候选，最终关闭仍须自身exact SHA Provider通过。Developer Kit `1.0.0`保持不可变且为`UNSIGNED_ENGINEERING_CANDIDATE`，P8-18后的Runtime兼容证据不把新Runtime伪装成相同Kit bytes。P8 READY只代表synthetic工程产品化，不等于外部签名、Production部署、真实客户Extension、P7现实校准、容量/SLA或UAT。能力声明以[能力矩阵](core/capability-matrix.md)和对应合同为准。
+P8-17曾以独立`PHASE_GATE`重核20个P8 Task、20组前序Provider输入、83份artifact/1,869个条目、9项保留失败/纠正历史并fresh重放P8-19；其候选SHA在完整Provider的第二次隔离运维演练中出现Worker probe失败，因此没有形成最终`READY`。失败证据保留且不rerun；P8-20在新SHA显式重启同一锁定Worker后再验证具名pong，完成后P8-17必须从新base fresh恢复。Developer Kit `1.0.0`保持不可变且为`UNSIGNED_ENGINEERING_CANDIDATE`；P8 READY仍只代表synthetic工程产品化，不等于外部签名、Production部署、真实客户Extension、P7现实校准、容量/SLA或UAT。能力声明以[能力矩阵](core/capability-matrix.md)和对应合同为准。
 
 ## 核心入口
 

@@ -31,7 +31,7 @@ Operator需读取sanitized health/alert报告并能启动/停止`api`、`databas
 
 1. 先记录live/ready基线及Runtime revision。
 2. API故障：停止candidate API，确认live连接失败并触发`APSApiUnavailable`；重启后等待ready恢复。
-3. Broker故障：停止Redis，确认live仍UP、ready=503且`redis/REDIS_UNAVAILABLE`，触发broker和readiness告警；重启并等待API/Worker恢复。
+3. Broker故障：停止Redis，确认live仍UP、ready=503且`redis/REDIS_UNAVAILABLE`，触发broker和readiness告警；重启Redis并等待API ready后，显式restart同一exact image/config Worker，再等待具名Celery `pong`和composition identity一致。不得依赖Worker进程是否自行重连。
 4. Database故障：停止PostgreSQL，确认live仍UP、ready=503且`database/DATABASE_UNAVAILABLE`；重启并等待ready恢复。
 5. 每次只注入一个故障，告警必须有fired和resolved两个状态；恢复前禁止切回traffic。
 
@@ -49,4 +49,4 @@ Operator需读取sanitized health/alert报告并能启动/停止`api`、`databas
 
 ## 最近演练记录
 
-2026-09-07由TASK-P8-10逐一执行API、Redis和PostgreSQL停止/恢复。Provider exact-SHA结果闭环时写回Task Card；没有执行网络分区、磁盘耗尽、多副本选主或Production failover。
+2026-09-10由TASK-P8-20根据P8-17候选中保留的Worker probe失败，把broker恢复procedure确定为“Redis/API ready → 显式restart锁定Worker → 具名pong”。这不是产品自动恢复或HA；没有执行真实负载、网络分区、磁盘耗尽、多副本选主或Production failover。

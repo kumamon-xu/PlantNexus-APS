@@ -11,6 +11,10 @@ last_reviewed: 2026-09-10
 
 # P0 Observability 与 Audit 边界
 
+## TASK-P8-20 broker恢复观测确定性
+
+P8-17候选的同一SHA上，独立operations演练PASS而FULL内第二次演练在broker恢复后的Worker pong超时，证明“等待Celery自行重连”不是确定性工程procedure。TASK-P8-20保持原Redis/API readiness、`APSBrokerUnavailable`和`APSReadinessDown`证据不变，并在依赖恢复后显式restart同一锁定Worker；只有具名pong恢复后才把告警标记resolved。restart失败、pong缺失或Runtime/Extension identity漂移仍fail closed，且不形成Production自动恢复、HA或SLA声明。
+
 ## TASK-P8-18 product invocation evidence
 
 实际产品调用为六类SPI分别记录lifecycle位置、contribution identity、成功/失败计数、elapsed及输入/输出SHA-256 fingerprint；fingerprint只证明同一裁剪view与返回carrier可复算，不保存或恢复payload。PlanningRun、ScheduleVersion、publication和ExportJob继续使用既有correlation/audit链，Extension metrics不能替代业务审计，也不能把Extension成功解释为审批、发布或导出成功。

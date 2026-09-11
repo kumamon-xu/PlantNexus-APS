@@ -11,6 +11,8 @@ last_reviewed: 2026-09-11
 
 # PlantNexus APS 公开文档中心
 
+企业Runtime镜像的固定输入、构建与离线tar身份见[部署说明](operations/deployment.md#企业-runtime-oci-镜像)；[安全说明](operations/security.md#企业镜像扫描与未关闭风险)保留未关闭OS漏洞，使用范围为内部TEST/SIMULATION。配置、Compose与最终离线包继续按后续交付任务实现。
+
 本目录只收录适合随公开 Git 仓库发布的核心项目文档。开发过程记录、Task Card、阶段证据、机器报告、临时草稿、截图、测试输出和下载制品不属于公开文档，应留在被忽略的本地目录或 `build/`。
 
 项目当前已形成P0～P6研发能力，P7真实数据校准暂缓；P8 Headless产品化工程里程碑已完成。当前具备durable canonical ingress、PlanningRun、Solver Worker、单一Runtime组合、五项公开HTTP operation、Test identity/authorization/audit、Runtime工程分发与非Production运维演练。产品边界只接收宿主平台提交的versioned canonical JSON，不在APS内直接建设ERP/MES/WMS/CAM连接器；宿主与可选独立Frontend消费同一API。P8还形成`0.1.0`静态Frontend工程分发、Extension SDK `1.0.0`、服务端Registry/loader、独立项目模板、确定性conformance工具、两份synthetic Enterprise Extension及不可变Developer Kit `1.0.0`。企业项目锁定已验证的Runtime、SDK和Kit组合独立维护，Core/Runtime升级不触发自动升级。

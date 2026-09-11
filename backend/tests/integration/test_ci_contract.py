@@ -9,6 +9,7 @@ from typing import Any, cast
 
 import yaml
 
+
 from app.application.p2_gate_report import main as p2_gate_main
 from app.application.p3_gate_report import (
     DIFF_BASE as P3_GATE_DIFF_BASE,
@@ -2738,3 +2739,26 @@ def test_p3_i18n_wire_freeze_allows_additive_future_phase_contracts() -> None:
         assert exact_script in source
     assert "packageWithoutP8Scripts" in source
     assert "changed outside the exact P8 Headless script allow-list" in source
+
+
+def test_enterprise_image_has_required_build_upload_and_sealed_evidence() -> None:
+    workflow = yaml.safe_load((Path(__file__).resolve().parents[3] / ".github/workflows/ci.yml").read_text())
+    assert workflow["permissions"]["actions"] == "read"
+    steps_by_job = []
+    for name in ("solver_validation", "full_validation"):
+        steps = workflow["jobs"][name]["steps"]
+        builds = [s for s in steps if s.get("name") == "Build and verify immutable enterprise Runtime image"]
+        uploads = [s for s in steps if s.get("name") == "Retain exact enterprise Runtime image archive"]
+        assert len(builds) == len(uploads) == 1
+        assert "--candidate" not in builds[0]["run"]
+        assert "--report build/validation/ci-enterprise-image.json" in builds[0]["run"]
+        assert not builds[0].get("continue-on-error") and "if" not in builds[0]
+        assert uploads[0]["with"]["if-no-files-found"] == "error"
+        assert "${{ github.run_id }}" in uploads[0]["with"]["name"]
+        assert uploads[0]["with"]["name"].startswith("plantnexus-enterprise-runtime-image-")
+        assert "*.tar" not in uploads[0]["with"]["path"]
+        seal = next(s for s in steps if s.get("name") == f"Seal {name} evidence")
+        assert ("ci-enterprise-image*.json" in seal["run"] or "build/validation/*.json" in seal["run"])
+        assert steps.index(builds[0]) < steps.index(uploads[0]) < steps.index(seal)
+        steps_by_job.append(builds[0])
+    assert steps_by_job[0] == steps_by_job[1]

@@ -17,6 +17,7 @@ on:
 
 permissions:
   contents: read
+  actions: read
 
 env:
   PYTHONUTF8: "1"
@@ -182,7 +183,7 @@ jobs:
         run: uv run ruff check .
 
       - name: Type check
-        run: uv run pyright backend/app backend/aps_extension_sdk backend/aps_extension_tooling backend/aps_developer_kit backend/tests
+        run: uv run pyright backend/app backend/aps_extension_sdk backend/aps_extension_tooling backend/aps_developer_kit backend/tests scripts/enterprise_image_build.py infra/enterprise/image_probe.py tests/enterprise
 
       - name: Repository test suites
         run: |
@@ -196,7 +197,7 @@ jobs:
             backend/tests/validation \
             backend/tests/integration \
             backend/tests/property \
-            backend/tests/security tests/ci \
+            backend/tests/security tests/ci tests/enterprise \
             ${{ inputs.phase_audit == true && '--phase-audit' || '' }}
 
       - name: Seal full_backend evidence
@@ -1128,8 +1129,29 @@ jobs:
       - name: Build package
         run: uv build
 
+      - &enterprise_runtime_image
+        name: Build and verify immutable enterprise Runtime image
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          python scripts/enterprise_image_build.py \
+            --output build/enterprise-container/staging/ci-${{ github.sha }} \
+            --report build/validation/ci-enterprise-image.json
+          cp build/enterprise-container/staging/ci-${{ github.sha }}/image-scan.json build/validation/ci-enterprise-image-scan.json
+          cp build/enterprise-container/staging/ci-${{ github.sha }}/image-sbom.cdx.json build/validation/ci-enterprise-image-sbom.json
+      - &enterprise_runtime_archive
+        name: Retain exact enterprise Runtime image archive
+        uses: actions/upload-artifact@v7
+        with:
+          name: plantnexus-enterprise-runtime-image-${{ github.run_id }}
+          path: |
+            build/enterprise-container/staging/ci-${{ github.sha }}/plantnexus-aps-runtime-0.1.0-linux-amd64.tar
+            build/enterprise-container/staging/ci-${{ github.sha }}/plantnexus-aps-runtime-0.1.0-linux-amd64.tar.sha256
+          compression-level: 1
+          if-no-files-found: error
+
       - name: Seal full_validation evidence
-        run: python -m scripts.ci_execution seal --job full_validation --files build/validation/ci-p8-tests.xml build/validation/ci-p8-17-exit-gate-audit.json build/validation/ci-p8-17-exit-gate-evidence-manifest.json --report build/validation/ci-seal-full_validation.json
+        run: python -m scripts.ci_execution seal --job full_validation --files build/validation/ci-p8-tests.xml build/validation/ci-p8-17-exit-gate-audit.json build/validation/ci-p8-17-exit-gate-evidence-manifest.json build/validation/ci-enterprise-image*.json --report build/validation/ci-seal-full_validation.json
 
       - name: Upload machine evidence
         if: always()
@@ -1365,6 +1387,8 @@ jobs:
         run: |
           uv run python scripts/run_benchmark.py --profile "${PLANTNEXUS_BENCHMARK_PROFILE}" --report build/benchmarks/ci-current-xs.json
           uv build
+      - *enterprise_runtime_image
+      - *enterprise_runtime_archive
       - name: Seal solver_validation evidence
         run: python -m scripts.ci_execution seal --job solver_validation --files build/benchmarks/*.json build/validation/*.json --report build/validation/ci-seal-solver_validation.json
       - uses: actions/upload-artifact@v7

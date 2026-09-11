@@ -6,10 +6,28 @@ spec_version: 0.3.0
 phase: P8
 normative: true
 source_sections: [65, 93, 95, 97, 98, 99, 100, 101, 106, 107, 113, 114]
-last_reviewed: 2026-09-10
+last_reviewed: 2026-09-11
 ---
 
 # APS Runtime 安装、预检与启动顺序
+
+## 企业 Runtime OCI 镜像
+
+`infra/enterprise/image-inputs.v1.json`固定已验证P8-17 Runtime归档、wheel、requirements、源SHA与基础镜像digest。`scripts/enterprise_image_build.py`验证归档全部payload后，仅以wheel、锁定依赖、Schema、OpenAPI、migration和metadata生成context。原发行Dockerfile因缺少COPY源不能在发行包内独立构建；构建报告保留实际失败摘要，新Dockerfile安装原wheel，不复制仓库应用源码。
+
+在clean实施SHA运行：
+
+```text
+uv run python scripts/enterprise_image_build.py --output build/enterprise-container/staging/<unique-build> --report build/validation/ci-enterprise-image.json
+```
+
+默认只下载清单指定的Provider artifact并核验摘要；过期或缺失立即失败。已保留相同归档可显式传`--archive <path>`，摘要要求不变。构建侧需要Docker、gh及联网依赖安装/漏洞数据库；消费侧使用导出的tar与SHA-256，不需要uv、npm、pip或开发源码。`--candidate`仅用于本地未提交验证，不作为最终镜像。
+
+交付tag为`plantnexus-aps-runtime:0.1.0-<40位封装SHA>`，不使用latest。镜像固定linux/amd64、UID/GID 10001，OCI labels区分封装SHA与Runtime源SHA `39149091859b35b1303002a237a3cf1344572773`；Runtime 0.1.0、Application/Core 0.0.0、Schema 2.10.0不被重新解释。未推registry时RepoDigest为空，以实际image ID及tar SHA-256验收。
+
+同一image ID验证API `uvicorn app.api.app:app`、Worker `celery -A app.jobs.celery_app:celery_app worker`、migration `alembic -c alembic.ini heads`及独立Validator函数入口。验证在禁网、只读、无capabilities容器执行，migration head须为`0009_host_authorization_audit`。这些是入口/import检查；实际配置、数据库升级、readiness及业务闭环归后续部署验收，不能借用旧operations镜像PASS。
+
+镜像仅限未签名内部TEST/SIMULATION。SBOM、许可证及未关闭系统漏洞见[安全说明](security.md#企业镜像扫描与未关闭风险)；构建PASS不等于Production安全批准。
 
 本页定义P8-09起始、P8-13扩展后的Runtime工程候选可重复安装与fail-closed启动顺序，记录TASK-P8-10隔离Compose靶场对当前声明Runtime身份的真实部署结果，并说明P8-11可选Frontend的独立分发边界。它不授予Production部署、签名或发布权限。
 

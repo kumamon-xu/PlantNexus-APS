@@ -1,0 +1,11 @@
+**
+!Dockerfile
+!image_probe.py
+!requirements/
+!requirements/**
+!wheels/
+!wheels/**
+!runtime/
+!runtime/**
+!metadata/
+!metadata/**

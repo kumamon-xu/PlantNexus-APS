@@ -6,10 +6,18 @@ spec_version: 0.3.0
 phase: P0-P8
 normative: true
 source_sections: [58, 62, 93, 95, 100]
-last_reviewed: 2026-09-10
+last_reviewed: 2026-09-11
 ---
 
 # P0 工程安全边界
+
+## 企业镜像扫描与未关闭风险
+
+企业镜像构建使用digest固定的Trivy扫描导出tar，保留原始漏洞/secret/license结果及CycloneDX SBOM。最终文件系统移除pip和ensurepip，安装固定版本ca-certificates与libpcre2修复可用补丁；扫描所有保存层验证合成secret canary未进入镜像，原始secret发现必须为零。构建阶段临时安装工具不作为Runtime依赖。
+
+2026-09-11候选扫描仍有260条未修复OS包发现（118个不同漏洞ID，5条CRITICAL、55条HIGH）。`infra/enterprise/image-security-policy.v1.json`逐项保留包、版本、严重性和上游状态；这些是未解决风险，不是NOT_AFFECTED或安全豁免批准。新发现、已有发现出现可用修复、或包/严重性/状态变化会阻断构建并要求重新评估。镜像只用于未签名内部TEST/SIMULATION，`production_security_approval=false`；不得据构建PASS宣称漏洞清零或Production ready。
+
+原Runtime Python依赖不升级：安装组件逐一匹配不可变发行许可证报告；Linux上50项与原51项清单的差异是Windows条件依赖colorama。starlette 0.47.3的已知发现仅复用原发行6项VEX及其别名，前提为相同wheel摘要、源SHA和Linux目标；其他Python发现失败。OS完整许可证清单及上游copyright notices保留，扫描器对散落文本的分类不等同于法律审批。
 
 ## P8最终内部交付的签名边界
 

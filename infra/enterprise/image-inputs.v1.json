@@ -1,0 +1,28 @@
+{
+  "schema_version": "enterprise-runtime-image-inputs.v1",
+  "platform": "linux/amd64",
+  "runtime_version": "0.1.0",
+  "application_version": "0.0.0",
+  "core_version": "0.0.0",
+  "schema_version_set": "2.10.0",
+  "source_sha": "39149091859b35b1303002a237a3cf1344572773",
+  "archive_sha256": "7c90ba63b0ba950eb256488c5647e9463760eb01c720b69a744bff1a3ce742fc",
+  "release_fingerprint": "sha256:09559ca7f22af19c3f2b5fbb7f802c8d681574007fa31b2b8709ce5754b1083e",
+  "wheel_sha256": "f062a77929a0fda35cd4325a9393d21a8ca3ab99cfc21a3d8bb740a1a9f548bf",
+  "requirements_sha256": "dad8b4f3390b63fca6557b832bfd3a8f936f77eb9697cd746608acc4b977c8c6",
+  "base_image": "python:3.12.13-slim-bookworm@sha256:6e13e65c55e33adf203d77ee371cf8bf5d81bd4902ef07565721f46bf44917af",
+  "scanner_image": "aquasec/trivy:0.74.0@sha256:ee940acbf1f58ebadb42d01434ce4609530bf1b52536afbd1eee66cd7123c5c9",
+  "provider": {
+    "repository": "kumamon-xu/PlantNexus-APS",
+    "run_id": 34461505090,
+    "artifact_id": 10146331428,
+    "artifact_sha256": "da3a51ddf2280336f2cb13741b3c8ae072ec832460d305f42ee1a1f2547e3928",
+    "archive_entry": "release/sha256/7c90ba63b0ba950eb256488c5647e9463760eb01c720b69a744bff1a3ce742fc/plantnexus-aps-runtime-0.1.0-linux-amd64.tar.gz"
+  },
+  "image_name": "plantnexus-aps-runtime",
+  "production_ready": false,
+  "os_patch_packages": {
+    "ca-certificates": "20250419~deb12u1",
+    "libpcre2-8-0": "10.42-1+deb12u1"
+  }
+}

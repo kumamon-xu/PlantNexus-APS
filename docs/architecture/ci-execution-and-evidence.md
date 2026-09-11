@@ -11,6 +11,14 @@ last_reviewed: 2026-09-11
 
 # CI execution and evidence
 
+## Enterprise Runtime image evidence
+
+The selected current solver/runtime job and the explicit phase-audit validation job share one immutable enterprise image build/upload step. Backend checks include `tests/enterprise` and the image builder/probe type checks. `actions: read` permits downloading the exact historical Runtime artifact named in `infra/enterprise/image-inputs.v1.json`; its archive and payload hashes are mandatory. Expired inputs fail closed, with explicit same-hash retained archive support for local builds.
+
+The producer seals `ci-enterprise-image.json`, its raw image scan and CycloneDX SBOM. The image report binds the current packaging commit, distinct Runtime source identity, image ID and exported tar SHA-256. Building an image and probing its entrypoints does not establish live deployment or Production security approval.
+
+The roughly 459 MB image tar exceeds the canonical collector's per-entry limit. It is uploaded separately as `plantnexus-enterprise-runtime-image-<run_id>` with only the exact tar and checksum sidecar, after a successful build and before the producer seal. This required step cannot silently skip missing files. It deliberately uses a separate artifact prefix: the existing JSON/JUnit collector and its size limits remain unchanged. Consumers must first verify the exact run/SHA through the canonical Provider manifest, then verify the separate artifact's run identity and download digest and the tar against the sealed image report before loading it. A separate binary download alone is insufficient evidence. Build contexts, caches and raw build logs are excluded from that upload.
+
 The required GitHub Actions check remains `validate`. Execution selection is global: it applies to every change, independently of the phase that originally introduced a module. The workflow and `scripts/ci_execution.py` define the executable contract.
 
 | Change or request | Selected checks |

@@ -6,10 +6,23 @@ spec_version: 0.3.0
 phase: cross-phase
 normative: false
 source_sections: [11, 12, 65, 95, 100, 101, 102, 114]
-last_reviewed: 2026-09-08
+last_reviewed: 2026-09-11
 ---
 
 # 推荐技术栈与锁定规则
+
+## 企业 OCI 镜像工具链
+
+`infra/enterprise/image-inputs.v1.json`独立固定封装工具链；根Python依赖、uv.lock与原Runtime wheel保持不变。
+
+| 输入 | 固定版本与身份 |
+| --- | --- |
+| linux/amd64 Python基镜像 | `python:3.12.13-slim-bookworm@sha256:6e13e65c55e33adf203d77ee371cf8bf5d81bd4902ef07565721f46bf44917af` |
+| 镜像扫描器 | `aquasec/trivy:0.74.0@sha256:ee940acbf1f58ebadb42d01434ce4609530bf1b52536afbd1eee66cd7123c5c9` |
+| OS补丁 | `ca-certificates=20250419~deb12u1`、`libpcre2-8-0=10.42-1+deb12u1` |
+| 构建器 | Python标准库、Docker、gh；安装采用原requirements的hash与binary-only wheel |
+
+基镜像与扫描器digest固定不表示漏洞数据库冻结；每次构建保留实际扫描结果。发行tag绑定完整封装SHA，交付身份以本次tar摘要/image ID为准，不宣称跨环境重建字节必然相同。未修复OS风险和有限使用范围见[安全说明](../operations/security.md#企业镜像扫描与未关闭风险)。
 
 ## TASK-P8-15 Developer Kit toolchain
 

@@ -731,13 +731,17 @@ def wait_for_run(
     *,
     timeout_seconds: int,
     poll_seconds: int,
+    requested_run_id: int | None = None,
 ) -> dict[str, Any]:
+    if requested_run_id is not None and requested_run_id <= 0:
+        raise ValueError("run ID must be positive")
     deadline = time.monotonic() + timeout_seconds
     while True:
         try:
-            run = select_exact_run(
-                client.list_runs(repository, workflow, commit_sha), commit_sha
-            )
+            runs = client.list_runs(repository, workflow, commit_sha)
+            if requested_run_id is not None:
+                runs = [run for run in runs if run.get("databaseId") == requested_run_id]
+            run = select_exact_run(runs, commit_sha)
         except ValueError as error:
             if not str(error).startswith("no workflow run found"):
                 raise
@@ -774,6 +778,7 @@ def collect_evidence(
     now: datetime | None = None,
     expected_gate_task_id: str | None = None,
     expected_gate_verdict: str | None = None,
+    requested_run_id: int | None = None,
 ) -> dict[str, Any]:
     validate_gate_expectation(expected_gate_task_id, expected_gate_verdict)
     observed_at = now or datetime.now(timezone.utc)
@@ -784,6 +789,7 @@ def collect_evidence(
         commit_sha,
         timeout_seconds=timeout_seconds,
         poll_seconds=poll_seconds,
+        requested_run_id=requested_run_id,
     )
     run_id = run.get("databaseId")
     if not isinstance(run_id, int):
@@ -904,6 +910,7 @@ def load_reusable_manifest(
     now: datetime | None = None,
     expected_gate_task_id: str | None = None,
     expected_gate_verdict: str | None = None,
+    requested_run_id: int | None = None,
 ) -> dict[str, Any] | None:
     validate_gate_expectation(expected_gate_task_id, expected_gate_verdict)
     if not path.is_file():
@@ -914,6 +921,10 @@ def load_reusable_manifest(
         return None
     if not isinstance(payload, dict):
         return None
+    if requested_run_id is not None:
+        run_record = payload.get("run")
+        if not isinstance(run_record, dict) or run_record.get("id") != requested_run_id:
+            return None
     required_check = payload.get("required_check")
     if not isinstance(required_check, dict):
         return None
@@ -1016,6 +1027,7 @@ def build_parser() -> argparse.ArgumentParser:
     parser.add_argument("--root", type=Path, default=Path.cwd())
     parser.add_argument("--repository")
     parser.add_argument("--commit")
+    parser.add_argument("--run-id", type=int, help="Explicitly select one run when the same SHA has multiple execution plans")
     parser.add_argument("--workflow", default=DEFAULT_WORKFLOW)
     parser.add_argument("--required-context", default=DEFAULT_REQUIRED_CONTEXT)
     parser.add_argument("--app-id", type=int, default=DEFAULT_APP_ID)
@@ -1068,6 +1080,7 @@ def main(argv: Sequence[str] | None = None) -> int:
                 app_id=args.app_id,
                 expected_gate_task_id=args.expected_gate_task_id,
                 expected_gate_verdict=args.expected_gate_verdict,
+                requested_run_id=args.run_id,
             )
             if reusable is not None:
                 print(
@@ -1087,6 +1100,7 @@ def main(argv: Sequence[str] | None = None) -> int:
             poll_seconds=args.poll_seconds,
             expected_gate_task_id=args.expected_gate_task_id,
             expected_gate_verdict=args.expected_gate_verdict,
+            requested_run_id=args.run_id,
         )
         write_manifest(report_path, root, report)
     except (OSError, RuntimeError, TimeoutError, ValueError) as error:

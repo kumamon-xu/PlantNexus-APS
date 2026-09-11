@@ -11,6 +11,7 @@ import pytest
 from scripts.ci_execution import ARTIFACTS, CURRENT, JOBS, VERSION, digest
 from scripts.provider_evidence import execution_plan_from_archive, summarize_full_jobs, verify_execution_archives
 from scripts.provider_evidence import GhClient
+from scripts.provider_evidence import wait_for_run
 
 
 SHA = "a" * 40
@@ -123,3 +124,21 @@ def test_provider_resolves_reports_inside_their_producer_archive():
     with pytest.raises(ValueError):
         verify_execution_archives(value, [archive(producer), result,
                                          archive({"benchmarks/same.txt": b"benchmark"})], SHA, 123)
+
+
+def test_explicit_run_selection_does_not_guess_or_change_sha():
+    runs = [{"databaseId": run_id, "headSha": SHA, "status": "completed", "conclusion": "success"}
+            for run_id in (123, 456)]
+    client = SimpleNamespace(list_runs=lambda *args: runs)
+    with pytest.raises(ValueError):
+        wait_for_run(client, "example/project", "ci.yml", SHA, timeout_seconds=0, poll_seconds=1)
+    assert wait_for_run(client, "example/project", "ci.yml", SHA, timeout_seconds=0,
+                        poll_seconds=1, requested_run_id=456)["databaseId"] == 456
+    runs[1]["headSha"] = "b" * 40
+    with pytest.raises(TimeoutError):
+        wait_for_run(client, "example/project", "ci.yml", SHA, timeout_seconds=0,
+                     poll_seconds=1, requested_run_id=456)
+    runs[1].update(headSha=SHA, conclusion="failure")
+    with pytest.raises(ValueError, match="failure"):
+        wait_for_run(client, "example/project", "ci.yml", SHA, timeout_seconds=0,
+                     poll_seconds=1, requested_run_id=456)

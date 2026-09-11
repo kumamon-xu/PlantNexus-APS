@@ -8,6 +8,7 @@ import hashlib
 import json
 import os
 from pathlib import Path
+import re
 import subprocess
 import sys
 import tarfile
@@ -157,14 +158,20 @@ raise SystemExit(result)
                 "PROCESS_CANARY_LEAK"
             )
             expected = 0 if name.startswith("valid-") else 1
-            if result.returncode != expected:
-                raise AssertionError(
-                    f"CONTAINER_CASE_FAILED:{name}:{result.returncode}"
-                )
             try:
                 value = json.loads(result.stdout)
             except ValueError:
                 raise AssertionError(f"CONTAINER_RESULT_INVALID:{name}") from None
+            if result.returncode != expected:
+                code = str(value.get("code", "UNREPORTED"))
+                field = str(value.get("field", "UNREPORTED"))
+                if not re.fullmatch("[A-Z_]+", code) or not re.fullmatch(
+                    "[A-Za-z_]+", field
+                ):
+                    code, field = "UNREPORTED", "UNREPORTED"
+                raise AssertionError(
+                    f"CONTAINER_CASE_FAILED:{name}:{result.returncode}:{code}:{field}"
+                )
             assert value["status"] == ("PASS" if expected == 0 else "FAIL")
             records.append(
                 {

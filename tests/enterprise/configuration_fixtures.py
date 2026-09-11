@@ -10,6 +10,15 @@ ROOT = Path(__file__).resolve().parents[2]
 CANARY = "P8-24-SYNTHETIC-CANARY-NEVER-A-REAL-SECRET-884290"
 
 
+def container_readable_fixture(directory: Path) -> None:
+    # Synthetic data only. CI UID differs from image UID 10001. The container
+    # bind mount stays read-only; this does not change Runtime security checks.
+    directory.chmod(0o755)
+    for path in directory.iterdir():
+        if path.is_file():
+            path.chmod(0o644)
+
+
 def create_fixture(directory: Path, *, container_paths: bool = False) -> dict[str, str]:
     directory.mkdir(parents=True, exist_ok=True)
 
@@ -134,6 +143,7 @@ def create_fixture(directory: Path, *, container_paths: bool = False) -> dict[st
             "synthetic_test" if index is None else str(index)
         )
     write_env(directory, env)
+    container_readable_fixture(directory)
     return env
 
 
@@ -244,3 +254,4 @@ def add_extension(
         }
     )
     write_env(directory, env)
+    container_readable_fixture(directory)

@@ -120,3 +120,5 @@ git diff --check
 ```
 
 功能或合同变更还必须运行对应模块测试；文档检查不能替代 Schema、API、Solver、Validator、Frontend 或 migration 验收。
+
+CI执行、显式阶段审计与机器取证见[CI execution and evidence](architecture/ci-execution-and-evidence.md)。

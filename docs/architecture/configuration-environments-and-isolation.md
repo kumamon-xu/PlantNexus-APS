@@ -11,6 +11,10 @@ last_reviewed: 2026-09-10
 
 # 配置、环境与数据隔离
 
+## 当前CI执行隔离
+
+当前全局路由以[CI execution and evidence](ci-execution-and-evidence.md)为准。下面各Task段落保留引入时的隔离事实；其中旧job拓扑与执行频次不再作为当前路由要求。普通回归与显式阶段审计分流，共享证据必须同SHA/run/attempt、同输入和环境；非Production operations与必要fresh审计保持隔离。本次不修改产品配置、权限、Secret或部署。
+
 ## TASK-P8-17 Exit审计执行隔离
 
 P8-17在`TEST/SIMULATION`与fresh临时目录中只读消费前序Provider脱敏观察和当前SHA生成的Runtime、Validator、Frontend、operations、corrective及P8-19重资格报告。既有FULL workflow新增一个不可跳过的独立审计步骤，沿用同一required `validate`、`contents: read`权限与现有artifact通道；不新增Secret、service、port、database、broker、Production连接或部署权限。

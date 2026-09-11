@@ -359,13 +359,13 @@ def test_ci_runs_repository_gates_and_discovers_the_current_task() -> None:
         "name: P8 Headless Extension platform requalification Gate evidence",
         "scripts.p8_headless_extension_platform_requalification_gate",
         "build/validation/ci-p8-19-headless-extension-platform-requalification.json",
-        "build/validation/ci-p8-19-tests.xml",
+        "build/validation/ci-p8-tests.xml",
         "name: P8 Exit Gate independent audit evidence",
         "scripts.p8_exit_gate_audit",
         "docs/p8-exit-gate-audit-observations.v1.json",
         "build/validation/ci-p8-17-exit-gate-audit.json",
         "build/validation/ci-p8-17-exit-gate-evidence-manifest.json",
-        "build/validation/ci-p8-17-tests.xml",
+        "build/validation/ci-p8-tests.xml",
         "build/validation/ci-p8-17-subreports",
         "build/benchmarks/*.json",
     )
@@ -397,7 +397,9 @@ def test_ci_runs_repository_gates_and_discovers_the_current_task() -> None:
     ):
         assert action in workflow
     assert "name: P1 common ingress gate" in workflow
-    assert workflow.count("uv run python scripts/check_docs.py") == 2
+    jobs = yaml.safe_load(workflow)["jobs"]
+    for owner in ("solver_validation", "full_validation"):
+        assert str(jobs[owner]).count("uv run python scripts/check_docs.py") == 1
     assert (
         "uv run python scripts/check_docs.py --discover-task-from "
         '"${PLANTNEXUS_CI_CHANGE_BASE}" --check-diff '
@@ -413,277 +415,30 @@ def test_ci_runs_repository_gates_and_discovers_the_current_task() -> None:
 
 
 def test_ci_profile_routing_is_mutually_exclusive_and_fail_closed() -> None:
-    workflow_path = ROOT / ".github" / "workflows" / "ci.yml"
-    workflow_text = workflow_path.read_text(encoding="utf-8")
-    workflow = cast(dict[str, Any], yaml.safe_load(workflow_text))
-    jobs = cast(dict[str, Any], workflow["jobs"])
+    from scripts.ci_execution import JOBS
 
-    assert set(jobs) == {
-        "classify",
-        "docs_validation",
-        "full_preflight",
-        "full_backend",
-        "full_operations",
-        "full_validation",
-        "validate",
-    }
-    classify = cast(dict[str, Any], jobs["classify"])
-    docs = cast(dict[str, Any], jobs["docs_validation"])
-    preflight = cast(dict[str, Any], jobs["full_preflight"])
-    backend = cast(dict[str, Any], jobs["full_backend"])
-    full = cast(dict[str, Any], jobs["full_validation"])
-    operations = cast(dict[str, Any], jobs["full_operations"])
-    final = cast(dict[str, Any], jobs["validate"])
-
-    assert classify["outputs"] == {"profile": "${{ steps.profile.outputs.profile }}"}
-    assert docs["needs"] == "classify"
-    assert docs["if"] == "${{ needs.classify.outputs.profile == 'DOCS_ONLY' }}"
-    assert preflight["needs"] == "classify"
-    assert preflight["if"] == "${{ needs.classify.outputs.profile == 'FULL' }}"
-    assert backend["needs"] == ["classify", "full_preflight"]
-    assert backend["if"] == "${{ needs.classify.outputs.profile == 'FULL' }}"
-    assert full["needs"] == ["classify", "full_preflight"]
-    assert full["if"] == "${{ needs.classify.outputs.profile == 'FULL' }}"
-    assert operations["needs"] == ["classify", "full_preflight"]
-    assert operations["if"] == "${{ needs.classify.outputs.profile == 'FULL' }}"
-    assert backend["env"] == full["env"]
-    assert final["needs"] == [
-        "classify",
-        "docs_validation",
-        "full_preflight",
-        "full_backend",
-        "full_validation",
-        "full_operations",
-    ]
-    assert final["if"] == "${{ always() }}"
-
-    classify_text = json.dumps(classify)
-    docs_text = json.dumps(docs)
-    preflight_text = json.dumps(preflight)
-    backend_text = json.dumps(backend)
-    full_text = json.dumps(full)
-    operations_text = json.dumps(operations)
-    final_run = cast(dict[str, Any], final["steps"][0])["run"]
-    assert "scripts/ci_validation_profile.py classify" in classify_text
-    assert "--github-output" in classify_text
-    assert "scripts/ci_validation_profile.py validate-docs" in docs_text
-    assert "setup-uv" not in docs_text
-    assert "setup-node" not in docs_text
-    assert "uv run" not in docs_text
-    assert "npm " not in docs_text
-    assert "scripts/ci_preflight.py" in preflight_text
-    assert "setup-uv" not in preflight_text
-    assert "setup-node" not in preflight_text
-    assert "plantnexus-ci-preflight-${{ github.run_id }}" in preflight_text
-    assert "uv sync --locked" in backend_text
-    assert "uv run ruff check ." in backend_text
-    assert (
-        "uv run pyright backend/app backend/aps_extension_sdk "
-        "backend/aps_extension_tooling backend/aps_developer_kit backend/tests"
-    ) in backend_text
-    assert "backend/tests/security" in backend_text
-    assert "ci-backend-tests.xml" in backend_text
-    assert "mkdir -p build/validation" in backend_text
-    assert "plantnexus-ci-backend-${{ github.run_id }}" in backend_text
-    assert "scripts/p8_operations_check.py" in operations_text
-    assert "ci-p8-operations-deployment.json" in operations_text
-    assert "ci-p8-operations-observability.json" in operations_text
-    assert "ci-p8-operations-recovery.json" in operations_text
-    assert "ci-p8-operations-runbooks.json" in operations_text
-    assert "plantnexus-ci-operations-${{ github.run_id }}" in operations_text
-    assert len(operations["steps"]) == 4
-    for relative_path in (
-        "backend/app/application/runtime_planning_workspace.py",
-        "backend/tests/contract/test_p8_operations_contract.py",
-        "backend/tests/integration/test_p8_operations_integration.py",
-        "backend/tests/security/test_p8_operations_security.py",
-        "backend/tests/unit/test_p8_operations_policy.py",
-        "backend/tests/contract/test_p8_extension_sdk_contract.py",
-        "backend/tests/property/test_p8_extension_sdk_properties.py",
-        "backend/tests/security/test_p8_extension_sdk_security.py",
-        "backend/tests/unit/test_p8_extension_sdk.py",
-        "backend/tests/validation/test_p8_extension_sdk_mutations.py",
-        "backend/app/extensions/__init__.py",
-        "backend/app/extensions/bootstrap.py",
-        "backend/app/extensions/contracts.py",
-        "backend/app/extensions/loader.py",
-        "backend/app/extensions/product_execution.py",
-        "backend/app/extensions/registry.py",
-        "backend/tests/fixtures/p8_synthetic_extension.py",
-        "backend/tests/p8_runtime_extension_support.py",
-        "backend/tests/contract/test_p8_runtime_extension_contract.py",
-        "backend/tests/unit/test_p8_runtime_extension_registry.py",
-        "backend/tests/property/test_p8_runtime_extension_properties.py",
-        "backend/tests/integration/test_p8_runtime_extension_integration.py",
-        "backend/tests/security/test_p8_runtime_extension_security.py",
-        "backend/tests/validation/test_p8_runtime_extension_mutations.py",
-        "scripts/p8_runtime_extension_registry_check.py",
-        "backend/aps_extension_tooling",
-        "backend/tests/p8_enterprise_extension_support.py",
-        "backend/tests/contract/test_p8_enterprise_extension_contract.py",
-        "backend/tests/unit/test_p8_enterprise_extension_tooling.py",
-        "backend/tests/property/test_p8_enterprise_extension_properties.py",
-        "backend/tests/integration/test_p8_enterprise_extension_integration.py",
-        "backend/tests/security/test_p8_enterprise_extension_security.py",
-        "backend/tests/validation/test_p8_enterprise_extension_mutations.py",
-        "scripts/aps_extension_conformance.py",
-        "scripts/p8_enterprise_extension_kit_check.py",
-        "templates/enterprise-extension",
-        "examples/enterprise-extensions",
-        "backend/aps_developer_kit",
-        "backend/tests/p8_developer_kit_support.py",
-        "backend/tests/contract/test_p8_developer_kit_contract.py",
-        "backend/tests/unit/test_p8_developer_kit_builder.py",
-        "backend/tests/property/test_p8_developer_kit_properties.py",
-        "backend/tests/integration/test_p8_developer_kit_integration.py",
-        "backend/tests/security/test_p8_developer_kit_security.py",
-        "backend/tests/validation/test_p8_developer_kit_mutations.py",
-        "infra/release/developer-kit-release-policy.v1.json",
-        "fixtures/developer-kit/p8-14-unpublished-predecessor.v1.json",
-    ):
-        assert workflow_text.count(f'"${{replay_root}}/{relative_path}"') == 1
-    assert (
-        workflow_text.count("backend/app/infrastructure/publication_repository.py") == 1
-    )
-    assert "uv sync --locked" in full_text
-    full_pytest_commands = [
-        str(step.get("run", ""))
-        for step in cast(list[dict[str, Any]], full["steps"])
-        if "uv run pytest" in str(step.get("run", ""))
-    ]
-    assert all(
-        "backend/tests/security" not in command
-        for command in full_pytest_commands
-        if "ci-p8-developer-kit-contract-tests.xml" not in command
-    )
-    developer_kit_commands = [
-        command
-        for command in full_pytest_commands
-        if "ci-p8-developer-kit-contract-tests.xml" in command
-    ]
-    assert len(developer_kit_commands) == 1
-    assert (
-        "backend/tests/security/test_p8_developer_kit_security.py"
-        in developer_kit_commands[0]
-    )
-    assert "TASK-P4-13 Dynamic replanning frontend machine evidence" in full_text
-    assert "p4-replanning-replay.XXXXXX" in full_text
-    assert "git worktree add --detach" in full_text
-    assert "p5_portfolio_gate_report.py" in full_text
-    assert "p5_exit_gate_audit.py" in full_text
-    assert "test_p5_portfolio_gate_rejections.py" in full_text
-    assert "test_p5_exit_gate_rejections.py" in full_text
-    assert "test_p6_duration_contracts.py" in full_text
-    assert "test_p5_portfolio_gate.py" in full_text
-    assert "test_p5_exit_gate.py" in full_text
-    assert f"--source {P5_EXIT_DIFF_BASE}" in full_text
-    assert "-- backend/tests/integration/test_ci_contract.py" in full_text
-    p4_frontend_replay = next(
-        cast(dict[str, Any], step)["run"]
-        for step in cast(list[dict[str, Any]], full["steps"])
-        if cast(dict[str, Any], step).get("name")
-        == "TASK-P4-13 Dynamic replanning frontend machine evidence"
-    )
-    assert str(p4_frontend_replay).count("frontend/package.json") == 1
-    assert "backend/app/__init__.py" in full_text
-    assert full_text.count("backend/app/infrastructure/health.py") == 1
-    assert "schemas/data_dictionary.yaml" in full_text
-    assert "duration-prediction.schema.json" in full_text
-    assert "duration-prediction.v1.unknown-fallback.invalid.json" in full_text
-    assert "ci-p4-replanning-api.json" in full_text
-    assert "build/playwright/results.json" in full_text
-    assert "P3 vertical slice Gate evidence" in full_text
-    assert "P4 vertical slice Gate evidence" in full_text
-    assert "app.application.p5_portfolio_gate_report" in full_text
-    assert "app.application.p5_exit_gate_audit" in full_text
-    assert "Build package" in full_text
-    assert len(preflight["steps"]) == 4
-    assert len(backend["steps"]) == 8
-    assert len(full["steps"]) == 86
-    assert full["timeout-minutes"] == 40
-    p8_corrective = next(
-        cast(dict[str, Any], step)
-        for step in cast(list[dict[str, Any]], full["steps"])
-        if cast(dict[str, Any], step).get("name")
-        == "P8 Runtime Extension product corrective evidence"
-    )
-    p8_corrective_run = str(p8_corrective["run"])
-    assert "backend/tests/*/test_p8_*.py tests/p8" in p8_corrective_run
-    assert "ci-p8-18-tests.xml" in p8_corrective_run
-    assert "scripts/p8_operations_check.py" in p8_corrective_run
-    assert "-m scripts.p8_runtime_product_integration_check" in p8_corrective_run
-    assert "ci-p8-18-runtime-product-corrective.json" in p8_corrective_run
-    assert "ci-p8-18-runtime-extension-invocation.json" in p8_corrective_run
-    assert "ci-p8-18-developer-kit-binding.json" in p8_corrective_run
-    assert "ci-p8-18-headless-output.json" in p8_corrective_run
-    assert "ci-p8-18-extension-deployment-recovery.json" in p8_corrective_run
-    assert "ci-p8-18-security.json" in p8_corrective_run
-    assert "ci-p8-18-runtime-product-corrective.json" in p8_corrective_run
-    assert "scripts.p8_headless_extension_platform_gate" not in p8_corrective_run
-    assert "continue-on-error" not in p8_corrective
-
-    p8_requalification = next(
-        cast(dict[str, Any], step)
-        for step in cast(list[dict[str, Any]], full["steps"])
-        if cast(dict[str, Any], step).get("name")
-        == "P8 Headless Extension platform requalification Gate evidence"
-    )
-    p8_requalification_run = str(p8_requalification["run"])
-    for fragment in (
-        "backend/tests/*/test_p8_*.py tests/p8",
-        "ci-p8-19-tests.xml",
-        "-m scripts.p8_headless_extension_platform_requalification_gate",
-        "headless-extension-platform-gate-profile.v1.json",
-        "ci-p8-19-headless-extension-platform-requalification.json",
-        "ci-p8-19-blocker-disposition.json",
-        "ci-p8-19-provenance.json",
-        "ci-p8-19-compatibility.json",
-        "ci-p8-19-security.json",
-        "ci-p8-19-recovery.json",
-        "build/benchmarks/ci-p8-19-headless-extension-platform-requalification.json",
-    ):
-        assert fragment in p8_requalification_run
-    assert "continue-on-error" not in p8_requalification
-    p8_exit = next(
-        cast(dict[str, Any], step)
-        for step in cast(list[dict[str, Any]], full["steps"])
-        if cast(dict[str, Any], step).get("name")
-        == "P8 Exit Gate independent audit evidence"
-    )
-    p8_exit_run = str(p8_exit["run"])
-    for fragment in (
-        "backend/tests/*/test_p8_*.py tests/p8",
-        "ci-p8-17-tests.xml",
-        "-m scripts.p8_exit_gate_audit",
-        "docs/p8-exit-gate-audit-observations.v1.json",
-        "headless-extension-platform-gate-profile.v1.json",
-        "ci-p8-17-exit-gate-audit.json",
-        "ci-p8-17-exit-gate-evidence-manifest.json",
-        "ci-p8-17-subreports",
-    ):
-        assert fragment in p8_exit_run
-    assert "continue-on-error" not in p8_exit
-    full_step_names = [
-        str(cast(dict[str, Any], step).get("name", ""))
-        for step in cast(list[dict[str, Any]], full["steps"])
-    ]
-    assert (
-        full_step_names.index("P8 Runtime Extension product corrective evidence")
-        < full_step_names.index(
-            "P8 Headless Extension platform requalification Gate evidence"
-        )
-        < full_step_names.index("P8 Exit Gate independent audit evidence")
-        < full_step_names.index("Engineering contract")
-    )
-
-    assert 'test "${PLANTNEXUS_CLASSIFY_RESULT}" = "success"' in final_run
-    assert 'test "${PLANTNEXUS_PREFLIGHT_RESULT}" = "success"' in final_run
-    assert 'test "${PLANTNEXUS_BACKEND_RESULT}" = "success"' in final_run
-    assert 'test "${PLANTNEXUS_FULL_RESULT}" = "success"' in final_run
-    assert 'test "${PLANTNEXUS_OPERATIONS_RESULT}" = "success"' in final_run
-    assert 'test "${PLANTNEXUS_DOCS_RESULT}" = "success"' in final_run
-    assert final_run.count('= "skipped"') == 5
-    assert "Unknown or missing CI validation profile" in final_run
+    workflow_text = (ROOT / ".github/workflows/ci.yml").read_text(encoding="utf-8")
+    jobs = yaml.safe_load(workflow_text)["jobs"]
+    assert set(jobs) == {"classify", "validate", *JOBS}
+    for name in JOBS:
+        assert jobs[name]["if"] == "${{ needs.classify.outputs." + name + " == 'true' }}"
+        assert name in jobs["classify"]["outputs"]
+        assert name in jobs["validate"]["needs"]
+        steps = jobs[name]["steps"]
+        seal_index = next(i for i, step in enumerate(steps) if "ci_execution seal" in step.get("run", ""))
+        assert "if" not in steps[seal_index]
+        assert any("upload-artifact" in step.get("uses", "") for step in steps[seal_index + 1:])
+    assert jobs["validate"]["if"] == "${{ always() }}"
+    assert jobs["validate"]["env"]["CI_NEEDS"] == "${{ toJSON(needs) }}"
+    assert "ci_execution aggregate" in str(jobs["validate"])
+    assert "--phase-audit" in str(jobs["full_backend"])
+    audit = str(jobs["full_validation"])
+    assert audit.count("pytest -q backend/tests/*/test_p8_*.py tests/p8") == 1
+    assert "ci_execution verify-shared --job full_operations" in audit
+    assert "scripts/p8_operations_check.py" not in audit
+    assert "full_operations" in jobs["full_validation"]["needs"]
+    assert "P3 Gate Chromium replay 1" in audit and "P3 Gate Chromium replay 2" in audit
+    assert "P4 Gate Chromium replay 1" in audit and "P4 Gate Chromium replay 2" in audit
     assert "continue-on-error" not in workflow_text
 
 
@@ -2272,7 +2027,10 @@ def test_ci_p4_replanning_api_is_required_and_machine_checkable(
 
 def test_ci_benchmark_contract_is_xs_only_and_baseline_bound() -> None:
     workflow = (ROOT / ".github" / "workflows" / "ci.yml").read_text(encoding="utf-8")
-    assert workflow.count("scripts/run_benchmark.py") == 1
+    jobs = yaml.safe_load(workflow)["jobs"]
+    assert str(jobs["solver_validation"]).count("scripts/run_benchmark.py") == 1
+    assert str(jobs["full_validation"]).count("scripts/run_benchmark.py") == 1
+    # Execution-plan tests prove these owners are mutually exclusive.
     assert '--profile "${PLANTNEXUS_BENCHMARK_PROFILE}"' in workflow
     assert "PLANTNEXUS_BENCHMARK_PROFILE: xs" in workflow
     assert "--profile s" not in workflow

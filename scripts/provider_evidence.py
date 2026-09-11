@@ -15,6 +15,10 @@ from io import BytesIO
 from pathlib import Path, PurePosixPath
 from typing import Any, Mapping, Protocol, Sequence, cast
 
+if not __package__:
+    sys.path.insert(0, str(Path(__file__).resolve().parents[1]))
+
+from scripts.ci_execution import validate_plan
 
 REPORT_VERSION = "provider-evidence-manifest.v1"
 DEFAULT_WORKFLOW = "ci.yml"
@@ -79,18 +83,27 @@ class ProviderClient(Protocol):
 class GhClient:
     """Thin gh CLI adapter that keeps authentication outside report payloads."""
 
+    def __init__(self) -> None:
+        self.read_retries: list[dict[str, Any]] = []
+
+    def _read(self, args: Sequence[str]) -> bytes:
+        for attempt in range(1, 4):
+            result = subprocess.run(["gh", *args], check=False, capture_output=True)
+            if result.returncode == 0:
+                return result.stdout
+            message = result.stderr.decode("utf-8", errors="replace").strip()
+            transient = bool(re.search(r"HTTP (502|503|504)|connection reset|TLS handshake timeout|i/o timeout|unexpected EOF", message, re.IGNORECASE))
+            if not transient or attempt == 3:
+                raise RuntimeError(message or "gh read failed")
+            # Record transport classification, never authentication headers or stderr.
+            self.read_retries.append({"operation": args[0], "attempt": attempt, "reason": "transient-read-transport"})
+            time.sleep(attempt)
+        raise RuntimeError("gh read retry budget exhausted")
+
     def _json(self, *args: str) -> Any:
-        result = subprocess.run(
-            ["gh", *args],
-            check=False,
-            capture_output=True,
-            text=True,
-            encoding="utf-8",
-        )
-        if result.returncode != 0:
-            raise RuntimeError(result.stderr.strip() or "gh command failed")
+        data = self._read(args)
         try:
-            return json.loads(result.stdout)
+            return json.loads(data)
         except json.JSONDecodeError as error:
             raise RuntimeError(f"gh returned invalid JSON: {error}") from error
 
@@ -167,21 +180,14 @@ class GhClient:
         ]
 
     def download_artifact(self, repository: str, artifact_id: int) -> bytes:
-        result = subprocess.run(
+        return self._read(
             [
-                "gh",
                 "api",
                 "-H",
                 "Accept: application/vnd.github+json",
                 f"repos/{repository}/actions/artifacts/{artifact_id}/zip",
-            ],
-            check=False,
-            capture_output=True,
+            ]
         )
-        if result.returncode != 0:
-            message = result.stderr.decode("utf-8", errors="replace").strip()
-            raise RuntimeError(message or "artifact download failed")
-        return result.stdout
 
 
 def run_git(root: Path, *args: str) -> str:
@@ -590,11 +596,14 @@ def artifact_filename(artifact_id: int, name: str) -> str:
     return f"{artifact_id}-{safe_name}.zip"
 
 
-def ensure_required_artifacts(artifacts: Sequence[Mapping[str, Any]]) -> None:
+def ensure_required_artifacts(
+    artifacts: Sequence[Mapping[str, Any]],
+    prefixes: Sequence[str] = REQUIRED_FULL_ARTIFACT_PREFIXES,
+) -> None:
     names = [str(artifact.get("name", "")) for artifact in artifacts]
     missing = [
         prefix
-        for prefix in REQUIRED_FULL_ARTIFACT_PREFIXES
+        for prefix in prefixes
         if not any(name.startswith(prefix) for name in names)
     ]
     if missing:
@@ -611,18 +620,21 @@ def validate_artifact_metadata(artifact: Mapping[str, Any], now: datetime) -> No
         raise ValueError(f"artifact {artifact.get('name')!r} has expired")
 
 
-def summarize_full_jobs(jobs: Sequence[Mapping[str, Any]]) -> list[dict[str, Any]]:
+def summarize_full_jobs(
+    jobs: Sequence[Mapping[str, Any]],
+    expected: Mapping[str, str] = EXPECTED_FULL_JOB_CONCLUSIONS,
+) -> list[dict[str, Any]]:
     by_name: dict[str, Mapping[str, Any]] = {}
     for job in jobs:
         name = str(job.get("name", ""))
         if name in by_name:
             raise ValueError(f"duplicate workflow job name: {name!r}")
         by_name[name] = job
-    missing = sorted(set(EXPECTED_FULL_JOB_CONCLUSIONS) - set(by_name))
+    missing = sorted(set(expected) - set(by_name))
     if missing:
         raise ValueError(f"expected FULL jobs are missing: {missing}")
     records: list[dict[str, Any]] = []
-    for name, expected_conclusion in EXPECTED_FULL_JOB_CONCLUSIONS.items():
+    for name, expected_conclusion in expected.items():
         job = by_name[name]
         conclusion = job.get("conclusion")
         if conclusion != expected_conclusion:
@@ -646,6 +658,62 @@ def summarize_full_jobs(jobs: Sequence[Mapping[str, Any]]) -> list[dict[str, Any
             }
         )
     return records
+
+
+def execution_plan_from_archive(data: bytes, commit_sha: str) -> dict[str, Any] | None:
+    """Old runs retain their frozen FULL contract; new runs declare a strict plan."""
+    _, issues = inspect_artifact_zip(data, commit_sha)
+    if issues:
+        raise ValueError("invalid profile archive: " + "; ".join(issues))
+    with zipfile.ZipFile(BytesIO(data)) as archive:
+        names = [n for n in archive.namelist() if PurePosixPath(n).name == "ci-execution-plan.json"]
+        if not names:
+            return None
+        if len(names) != 1:
+            raise ValueError("duplicate execution plan")
+        value = json.loads(archive.read(names[0]))
+    validate_plan(value, commit_sha)
+    return value
+
+
+def verify_execution_archives(
+    plan: Mapping[str, Any], archives: Sequence[bytes], commit_sha: str, run_id: int,
+) -> None:
+    """Independently check aggregate and sealed bytes after ZIP safety inspection."""
+    contents: dict[str, list[bytes]] = {}
+    for data in archives:
+        with zipfile.ZipFile(BytesIO(data)) as archive:
+            for name in archive.namelist():
+                if not name.endswith("/"):
+                    contents.setdefault(PurePosixPath(name).name, []).append(archive.read(name))
+    aggregates = contents.get("ci-aggregate.json", [])
+    if len(aggregates) != 1:
+        raise ValueError("missing or duplicate CI aggregate")
+    aggregate = json.loads(aggregates[0])
+    if (aggregate.get("schema_version") != "ci-aggregate.v1"
+            or aggregate.get("result") != "PASS"
+            or aggregate.get("head_sha") != commit_sha
+            or aggregate.get("run_id") != str(run_id)
+            or aggregate.get("plan_digest") != plan["plan_digest"]
+            or aggregate.get("selected") != plan["selected"]):
+        raise ValueError("aggregate identity or selection mismatch")
+    seals = []
+    for job in plan["selected"]:
+        matches = contents.get(f"ci-seal-{job}.json", [])
+        if len(matches) != 1:
+            raise ValueError(f"missing or duplicate seal: {job}")
+        seal = json.loads(matches[0])
+        if (seal.get("schema_version") != "ci-evidence-seal.v1" or seal.get("job") != job
+                or any(seal.get(k) != aggregate.get(k) for k in ("head_sha", "run_id", "run_attempt"))
+                or not seal.get("files")):
+            raise ValueError(f"seal identity mismatch: {job}")
+        for record in seal["files"]:
+            matches = contents.get(record["name"], [])
+            if not matches or any(hashlib.sha256(data).hexdigest() != record["sha256"] for data in matches):
+                raise ValueError(f"sealed evidence missing or corrupted: {record['name']}")
+        seals.append(seal)
+    if aggregate.get("seals") != seals:
+        raise ValueError("aggregate seals differ from producer evidence")
 
 
 def wait_for_run(
@@ -720,9 +788,21 @@ def collect_evidence(
         app_id=app_id,
         run_id=run_id,
     )
-    job_records = summarize_full_jobs(client.jobs(repository, run_id))
     artifacts = client.artifacts(repository, run_id)
-    ensure_required_artifacts(artifacts)
+    downloads: dict[int, bytes] = {}
+    plan = None
+    profiles = [a for a in artifacts if str(a.get("name", "")).startswith("plantnexus-ci-profile-")]
+    if len(profiles) != 1:
+        raise ValueError("expected exactly one profile artifact")
+    profile = profiles[0]
+    validate_artifact_metadata(profile, observed_at)
+    downloads[profile["id"]] = client.download_artifact(repository, profile["id"])
+    plan = execution_plan_from_archive(downloads[profile["id"]], commit_sha)
+    job_records = summarize_full_jobs(
+        client.jobs(repository, run_id), plan["expected_jobs"] if plan else EXPECTED_FULL_JOB_CONCLUSIONS,
+    )
+    prefixes = tuple(f"plantnexus-ci-{p}-" for p in plan["artifact_prefixes"]) if plan else REQUIRED_FULL_ARTIFACT_PREFIXES
+    ensure_required_artifacts(artifacts, prefixes)
     artifacts_dir.mkdir(parents=True, exist_ok=True)
     artifact_records: list[dict[str, Any]] = []
     all_issues: list[str] = []
@@ -735,7 +815,9 @@ def collect_evidence(
         if not isinstance(artifact_id, int) or not name:
             raise ValueError("artifact metadata is missing integer id or name")
         validate_artifact_metadata(artifact, observed_at)
-        data = client.download_artifact(repository, artifact_id)
+        if artifact_id not in downloads:
+            downloads[artifact_id] = client.download_artifact(repository, artifact_id)
+        data = downloads[artifact_id]
         entries, issues, observations = _inspect_artifact_zip(
             data,
             commit_sha,
@@ -766,6 +848,8 @@ def collect_evidence(
         )
     if all_issues:
         raise ValueError("; ".join(all_issues))
+    if plan:
+        verify_execution_archives(plan, list(downloads.values()), commit_sha, run_id)
     report: dict[str, Any] = {
         "schema_version": REPORT_VERSION,
         "result": "PASS",
@@ -794,6 +878,10 @@ def collect_evidence(
     }
     if gate_observations:
         report["gate_expectation"] = gate_observations[0]
+    if plan:
+        report["execution_plan"] = plan
+    if isinstance(client, GhClient):
+        report["read_retries"] = client.read_retries
     return report
 
 
@@ -854,6 +942,7 @@ def load_reusable_manifest(
         return None
     observed_at = now or datetime.now(timezone.utc)
     replayed_gate_observations: list[dict[str, Any]] = []
+    execution_archives: list[bytes] = []
     try:
         for item in artifacts:
             if not isinstance(item, dict):
@@ -869,6 +958,11 @@ def load_reusable_manifest(
             archive_data = archive_path.read_bytes()
             if hashlib.sha256(archive_data).hexdigest() != digest:
                 return None
+            if payload.get("execution_plan"):
+                _, inspection_issues = inspect_artifact_zip(archive_data, commit_sha)
+                if inspection_issues:
+                    return None
+                execution_archives.append(archive_data)
             if expected_gate_task_id is not None:
                 _, inspection_issues, observations = _inspect_artifact_zip(
                     archive_data,
@@ -885,7 +979,11 @@ def load_reusable_manifest(
                     {**observation, "artifact_name": artifact_name}
                     for observation in observations
                 )
-    except (OSError, ValueError):
+        if payload.get("execution_plan"):
+            validate_plan(payload["execution_plan"], commit_sha)
+            summarize_full_jobs(payload["jobs"], payload["execution_plan"]["expected_jobs"])
+            verify_execution_archives(payload["execution_plan"], execution_archives, commit_sha, payload["run"]["id"])
+    except (OSError, ValueError, KeyError, TypeError):
         return None
     if expected_gate_task_id is not None and (
         len(replayed_gate_observations) != 1

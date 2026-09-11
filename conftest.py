@@ -40,9 +40,16 @@ def _contains(target: Path, candidate: Path) -> bool:
     return target == candidate or (target.is_dir() and candidate.is_relative_to(target))
 
 
+def pytest_addoption(parser: pytest.Parser) -> None:
+    parser.addoption("--phase-audit", action="store_true", default=False,
+                     help="Explicitly include historical phase evidence suites")
+
+
 def pytest_configure(config: pytest.Config) -> None:
     """Append bounded repository tests only to the complete Backend suite."""
 
+    if not config.getoption("--phase-audit"):
+        return
     targets = [
         (ROOT / value).resolve() if not Path(value).is_absolute() else Path(value).resolve()
         for value in config.args

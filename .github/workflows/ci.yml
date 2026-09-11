@@ -1,6 +1,16 @@
 name: PlantNexus repository gates
 
 on:
+  workflow_dispatch:
+    inputs:
+      phase_audit:
+        description: Run independent historical phase audits
+        type: boolean
+        default: false
+      base_sha:
+        description: Base commit for manual validation (empty means all current checks)
+        type: string
+        default: ""
   pull_request:
   push:
     branches: [main]
@@ -12,6 +22,8 @@ env:
   PYTHONUTF8: "1"
   PYTHONIOENCODING: "utf-8"
   LANG: C.UTF-8
+  PLANTNEXUS_CI_CHANGE_BASE: ${{ github.event.pull_request.base.sha || github.event.before || inputs.base_sha }}
+  PLANTNEXUS_PHASE_AUDIT: ${{ inputs.phase_audit == true }}
 
 concurrency:
   group: plantnexus-ci-${{ github.workflow }}-${{ github.ref }}
@@ -22,7 +34,14 @@ jobs:
     runs-on: ubuntu-latest
     timeout-minutes: 3
     outputs:
-      profile: ${{ steps.profile.outputs.profile }}
+      profile: ${{ steps.plan.outputs.profile }}
+      docs_validation: ${{ steps.plan.outputs.docs_validation }}
+      full_preflight: ${{ steps.plan.outputs.full_preflight }}
+      full_backend: ${{ steps.plan.outputs.full_backend }}
+      frontend_validation: ${{ steps.plan.outputs.frontend_validation }}
+      solver_validation: ${{ steps.plan.outputs.solver_validation }}
+      full_operations: ${{ steps.plan.outputs.full_operations }}
+      full_validation: ${{ steps.plan.outputs.full_validation }}
     steps:
       - uses: actions/checkout@v7
         with:
@@ -35,7 +54,7 @@ jobs:
       - name: Classify validation profile
         id: profile
         env:
-          PLANTNEXUS_CI_CHANGE_BASE: ${{ github.event.pull_request.base.sha || github.event.before }}
+          PLANTNEXUS_CI_CHANGE_BASE: ${{ github.event.pull_request.base.sha || github.event.before || inputs.base_sha }}
           PLANTNEXUS_CI_CHANGE_HEAD: ${{ github.sha }}
         run: >-
           python scripts/ci_validation_profile.py classify
@@ -44,17 +63,27 @@ jobs:
           --report build/validation/ci-validation-profile.json
           --github-output "${GITHUB_OUTPUT}"
 
+      - name: Plan selected checks
+        id: plan
+        shell: bash
+        run: |
+          audit_args=()
+          if [ "${PLANTNEXUS_PHASE_AUDIT}" = "true" ]; then audit_args+=(--audit); fi
+          python -m scripts.ci_execution plan "${audit_args[@]}" --report build/validation/ci-execution-plan.json
+
       - name: Upload validation profile evidence
         if: always()
         uses: actions/upload-artifact@v7
         with:
           name: plantnexus-ci-profile-${{ github.run_id }}
-          path: build/validation/ci-validation-profile.json
+          path: |
+            build/validation/ci-validation-profile.json
+            build/validation/ci-execution-plan.json
           if-no-files-found: error
 
   docs_validation:
     needs: classify
-    if: ${{ needs.classify.outputs.profile == 'DOCS_ONLY' }}
+    if: ${{ needs.classify.outputs.docs_validation == 'true' }}
     runs-on: ubuntu-latest
     timeout-minutes: 5
     steps:
@@ -68,7 +97,7 @@ jobs:
 
       - name: Validate changed public documentation
         env:
-          PLANTNEXUS_CI_CHANGE_BASE: ${{ github.event.pull_request.base.sha || github.event.before }}
+          PLANTNEXUS_CI_CHANGE_BASE: ${{ github.event.pull_request.base.sha || github.event.before || inputs.base_sha }}
           PLANTNEXUS_CI_CHANGE_HEAD: ${{ github.sha }}
         run: >-
           python scripts/ci_validation_profile.py validate-docs
@@ -76,17 +105,22 @@ jobs:
           --head "${PLANTNEXUS_CI_CHANGE_HEAD}"
           --report build/validation/ci-public-docs-validation.json
 
+      - name: Seal docs_validation evidence
+        run: python -m scripts.ci_execution seal --job docs_validation --files build/validation/ci-public-docs-validation.json --report build/validation/ci-seal-docs_validation.json
+
       - name: Upload public documentation evidence
         if: always()
         uses: actions/upload-artifact@v7
         with:
           name: plantnexus-ci-public-docs-${{ github.run_id }}
-          path: build/validation/ci-public-docs-validation.json
+          path: |
+            build/validation/ci-public-docs-validation.json
+            build/validation/ci-seal-docs_validation.json
           if-no-files-found: error
 
   full_preflight:
     needs: classify
-    if: ${{ needs.classify.outputs.profile == 'FULL' }}
+    if: ${{ needs.classify.outputs.full_preflight == 'true' }}
     runs-on: ubuntu-latest
     timeout-minutes: 5
     steps:
@@ -105,23 +139,28 @@ jobs:
           --report build/validation/ci-preflight.json
           --ci-mode
 
+      - name: Seal full_preflight evidence
+        run: python -m scripts.ci_execution seal --job full_preflight --files build/validation/ci-preflight.json --report build/validation/ci-seal-full_preflight.json
+
       - name: Upload CI preflight evidence
         if: always()
         uses: actions/upload-artifact@v7
         with:
           name: plantnexus-ci-preflight-${{ github.run_id }}
-          path: build/validation/ci-preflight.json
+          path: |
+            build/validation/ci-preflight.json
+            build/validation/ci-seal-full_preflight.json
           if-no-files-found: error
 
   full_backend:
     needs: [classify, full_preflight]
-    if: ${{ needs.classify.outputs.profile == 'FULL' }}
+    if: ${{ needs.classify.outputs.full_backend == 'true' }}
     runs-on: ubuntu-latest
     timeout-minutes: 20
     env:
       PLANTNEXUS_CODE_COMMIT: ${{ github.sha }}
       PLANTNEXUS_POSTGRES_PASSWORD: ci-contract-only-not-a-secret
-      PLANTNEXUS_CI_CHANGE_BASE: ${{ github.event.pull_request.base.sha || github.event.before }}
+      PLANTNEXUS_CI_CHANGE_BASE: ${{ github.event.pull_request.base.sha || github.event.before || inputs.base_sha }}
     steps:
       - uses: actions/checkout@v7
         with:
@@ -157,25 +196,31 @@ jobs:
             backend/tests/validation \
             backend/tests/integration \
             backend/tests/property \
-            backend/tests/security
+            backend/tests/security tests/ci \
+            ${{ inputs.phase_audit == true && '--phase-audit' || '' }}
+
+      - name: Seal full_backend evidence
+        run: python -m scripts.ci_execution seal --job full_backend --files build/validation/ci-backend-tests.xml --report build/validation/ci-seal-full_backend.json
 
       - name: Upload Backend validation evidence
         if: always()
         uses: actions/upload-artifact@v7
         with:
           name: plantnexus-ci-backend-${{ github.run_id }}
-          path: build/validation/ci-backend-tests.xml
+          path: |
+            build/validation/ci-backend-tests.xml
+            build/validation/ci-seal-full_backend.json
           if-no-files-found: error
 
   full_validation:
-    needs: [classify, full_preflight]
-    if: ${{ needs.classify.outputs.profile == 'FULL' }}
+    needs: [classify, full_preflight, full_operations]
+    if: ${{ needs.classify.outputs.full_validation == 'true' }}
     runs-on: ubuntu-latest
     timeout-minutes: 40
     env:
       PLANTNEXUS_CODE_COMMIT: ${{ github.sha }}
       PLANTNEXUS_POSTGRES_PASSWORD: ci-contract-only-not-a-secret
-      PLANTNEXUS_CI_CHANGE_BASE: ${{ github.event.pull_request.base.sha || github.event.before }}
+      PLANTNEXUS_CI_CHANGE_BASE: ${{ github.event.pull_request.base.sha || github.event.before || inputs.base_sha }}
     steps:
       - uses: actions/checkout@v7
         with:
@@ -888,19 +933,24 @@ jobs:
           --browser-security-report build/validation/ci-p8-frontend-browser-security.json
           --backend-only-report build/validation/ci-p8-frontend-backend-only.json
 
+      - name: Download same-run operations evidence
+        uses: actions/download-artifact@v8.0.1
+        with:
+          name: plantnexus-ci-operations-${{ github.run_id }}
+          path: build/shared-operations
+
       - name: P8 Runtime Extension product corrective evidence
         run: |
-          uv run pytest -q backend/tests/*/test_p8_*.py tests/p8 --junitxml=build/validation/ci-p8-18-tests.xml
-          uv run python scripts/p8_operations_check.py --root . --deployment-report build/validation/ci-p8-18-operations-deployment.json --observability-report build/validation/ci-p8-18-operations-observability.json --recovery-report build/validation/ci-p8-18-operations-recovery.json --runbook-report build/validation/ci-p8-18-operations-runbooks.json
-          uv run python -m scripts.p8_runtime_product_integration_check --root . --junit build/validation/ci-p8-18-tests.xml --operations-deployment build/validation/ci-p8-18-operations-deployment.json --operations-recovery build/validation/ci-p8-18-operations-recovery.json --report build/validation/ci-p8-18-runtime-product-corrective.json --invocation-report build/validation/ci-p8-18-runtime-extension-invocation.json --kit-report build/validation/ci-p8-18-developer-kit-binding.json --output-report build/validation/ci-p8-18-headless-output.json --deployment-report build/validation/ci-p8-18-extension-deployment-recovery.json --security-report build/validation/ci-p8-18-security.json --benchmark-report build/benchmarks/ci-p8-18-runtime-product-corrective.json
+          uv run pytest -q backend/tests/*/test_p8_*.py tests/p8 --junitxml=build/validation/ci-p8-tests.xml
+          python -m scripts.ci_execution verify-shared --job full_operations --downloads build/shared-operations
+          uv run python -m scripts.p8_runtime_product_integration_check --root . --junit build/validation/ci-p8-tests.xml --operations-deployment build/shared-operations/ci-p8-operations-deployment.json --operations-recovery build/shared-operations/ci-p8-operations-recovery.json --report build/validation/ci-p8-18-runtime-product-corrective.json --invocation-report build/validation/ci-p8-18-runtime-extension-invocation.json --kit-report build/validation/ci-p8-18-developer-kit-binding.json --output-report build/validation/ci-p8-18-headless-output.json --deployment-report build/validation/ci-p8-18-extension-deployment-recovery.json --security-report build/validation/ci-p8-18-security.json --benchmark-report build/benchmarks/ci-p8-18-runtime-product-corrective.json
 
       - name: P8 Headless Extension platform requalification Gate evidence
         run: |
-          uv run pytest -q backend/tests/*/test_p8_*.py tests/p8 --junitxml=build/validation/ci-p8-19-tests.xml
           uv run python -m scripts.p8_headless_extension_platform_requalification_gate \
             --root . \
             --profile benchmarks/p8/headless-extension-platform-gate-profile.v1.json \
-            --junit build/validation/ci-p8-19-tests.xml \
+            --junit build/validation/ci-p8-tests.xml \
             --runtime-release build/validation/ci-p8-runtime-release.json \
             --runtime-security build/validation/ci-p8-runtime-release-security.json \
             --runtime-migration build/validation/ci-p8-runtime-release-migration.json \
@@ -910,10 +960,10 @@ jobs:
             --frontend-client build/validation/ci-p8-frontend-client.json \
             --frontend-security build/validation/ci-p8-frontend-browser-security.json \
             --frontend-backend-only build/validation/ci-p8-frontend-backend-only.json \
-            --operations-deployment build/validation/ci-p8-18-operations-deployment.json \
-            --operations-observability build/validation/ci-p8-18-operations-observability.json \
-            --operations-recovery build/validation/ci-p8-18-operations-recovery.json \
-            --operations-runbooks build/validation/ci-p8-18-operations-runbooks.json \
+            --operations-deployment build/shared-operations/ci-p8-operations-deployment.json \
+            --operations-observability build/shared-operations/ci-p8-operations-observability.json \
+            --operations-recovery build/shared-operations/ci-p8-operations-recovery.json \
+            --operations-runbooks build/shared-operations/ci-p8-operations-runbooks.json \
             --corrective build/validation/ci-p8-18-runtime-product-corrective.json \
             --corrective-invocation build/validation/ci-p8-18-runtime-extension-invocation.json \
             --corrective-kit build/validation/ci-p8-18-developer-kit-binding.json \
@@ -931,12 +981,11 @@ jobs:
 
       - name: P8 Exit Gate independent audit evidence
         run: |
-          uv run pytest -q backend/tests/*/test_p8_*.py tests/p8 --junitxml=build/validation/ci-p8-17-tests.xml
           uv run python -m scripts.p8_exit_gate_audit \
             --root . \
             --provider-observation docs/p8-exit-gate-audit-observations.v1.json \
             --profile benchmarks/p8/headless-extension-platform-gate-profile.v1.json \
-            --junit build/validation/ci-p8-17-tests.xml \
+            --junit build/validation/ci-p8-tests.xml \
             --runtime-release build/validation/ci-p8-runtime-release.json \
             --runtime-security build/validation/ci-p8-runtime-release-security.json \
             --runtime-migration build/validation/ci-p8-runtime-release-migration.json \
@@ -946,10 +995,10 @@ jobs:
             --frontend-client build/validation/ci-p8-frontend-client.json \
             --frontend-security build/validation/ci-p8-frontend-browser-security.json \
             --frontend-backend-only build/validation/ci-p8-frontend-backend-only.json \
-            --operations-deployment build/validation/ci-p8-18-operations-deployment.json \
-            --operations-observability build/validation/ci-p8-18-operations-observability.json \
-            --operations-recovery build/validation/ci-p8-18-operations-recovery.json \
-            --operations-runbooks build/validation/ci-p8-18-operations-runbooks.json \
+            --operations-deployment build/shared-operations/ci-p8-operations-deployment.json \
+            --operations-observability build/shared-operations/ci-p8-operations-observability.json \
+            --operations-recovery build/shared-operations/ci-p8-operations-recovery.json \
+            --operations-runbooks build/shared-operations/ci-p8-operations-runbooks.json \
             --corrective build/validation/ci-p8-18-runtime-product-corrective.json \
             --corrective-invocation build/validation/ci-p8-18-runtime-extension-invocation.json \
             --corrective-kit build/validation/ci-p8-18-developer-kit-binding.json \
@@ -972,7 +1021,6 @@ jobs:
 
       - name: Documentation and task diff
         run: |
-          uv run python scripts/check_docs.py
           uv run python scripts/check_docs.py --discover-task-from "${PLANTNEXUS_CI_CHANGE_BASE}" --check-diff --report build/traceability/ci-current-task-report.json
 
       - name: P2 XS BenchmarkRunner evidence
@@ -1025,6 +1073,9 @@ jobs:
       - name: Build package
         run: uv build
 
+      - name: Seal full_validation evidence
+        run: python -m scripts.ci_execution seal --job full_validation --files build/validation/ci-p8-tests.xml build/validation/ci-p8-17-exit-gate-audit.json build/validation/ci-p8-17-exit-gate-evidence-manifest.json --report build/validation/ci-seal-full_validation.json
+
       - name: Upload machine evidence
         if: always()
         uses: actions/upload-artifact@v7
@@ -1032,9 +1083,7 @@ jobs:
           name: plantnexus-ci-evidence-${{ github.run_id }}
           path: |
             build/validation/*.json
-            build/validation/ci-p8-18-tests.xml
-            build/validation/ci-p8-19-tests.xml
-            build/validation/ci-p8-17-tests.xml
+            build/validation/ci-p8-tests.xml
             build/validation/ci-p8-17-subreports/**
             build/validation/ci-p8-developer-kit-contract-tests.xml
             build/traceability/*.json
@@ -1047,7 +1096,7 @@ jobs:
 
   full_operations:
     needs: [classify, full_preflight]
-    if: ${{ needs.classify.outputs.profile == 'FULL' }}
+    if: ${{ needs.classify.outputs.full_operations == 'true' }}
     runs-on: ubuntu-latest
     timeout-minutes: 35
     steps:
@@ -1068,53 +1117,451 @@ jobs:
           --recovery-report build/validation/ci-p8-operations-recovery.json
           --runbook-report build/validation/ci-p8-operations-runbooks.json
 
+      - name: Seal full_operations evidence
+        run: python -m scripts.ci_execution seal --job full_operations --files build/validation/ci-p8-operations-deployment.json build/validation/ci-p8-operations-observability.json build/validation/ci-p8-operations-recovery.json build/validation/ci-p8-operations-runbooks.json --report build/validation/ci-seal-full_operations.json
+
       - name: Upload P8 operations evidence
         if: always()
         uses: actions/upload-artifact@v7
         with:
           name: plantnexus-ci-operations-${{ github.run_id }}
           path: |
+            build/validation/ci-seal-full_operations.json
             build/validation/ci-p8-operations-deployment.json
             build/validation/ci-p8-operations-observability.json
             build/validation/ci-p8-operations-recovery.json
             build/validation/ci-p8-operations-runbooks.json
           if-no-files-found: error
 
+  frontend_validation:
+    needs: [classify, full_preflight]
+    if: ${{ needs.classify.outputs.frontend_validation == 'true' }}
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    steps:
+      - uses: actions/checkout@v7
+      - uses: actions/setup-python@v7
+        with:
+          python-version: "3.12"
+      - uses: actions/setup-node@v7
+        with:
+          node-version: "24.19.0"
+          cache: npm
+          cache-dependency-path: frontend/package-lock.json
+      - name: Current Frontend regression
+        working-directory: frontend
+        shell: bash
+        run: |
+          test "$(node --version)" = "v24.19.0"
+          test "$(npm --version)" = "11.17.0"
+          npm ci
+          npm run audit:sca
+          npm run licenses:check
+          npm run lint
+          npm run typecheck
+          npm run test
+          npm exec -- playwright install --with-deps chromium
+          npm run test:e2e -- --workers=1
+          npm run test:p8:e2e -- --workers=1
+          npm run build
+          npm run build:headless
+          mkdir -p ../build/validation
+          git rev-parse HEAD > ../build/validation/ci-frontend-completed.txt
+          cp ../build/playwright/results.xml ../build/validation/ci-frontend-browser.xml
+          cp ../build/playwright/p8-distribution/results.xml ../build/validation/ci-frontend-headless.xml
+      - name: Seal frontend_validation evidence
+        run: python -m scripts.ci_execution seal --job frontend_validation --files build/validation/ci-frontend-completed.txt build/validation/ci-frontend-browser.xml build/validation/ci-frontend-headless.xml --report build/validation/ci-seal-frontend_validation.json
+      - uses: actions/upload-artifact@v7
+        if: always()
+        with:
+          name: plantnexus-ci-frontend-${{ github.run_id }}
+          path: |
+            build/validation/ci-frontend-*
+            build/validation/ci-seal-frontend_validation.json
+            build/playwright/**
+          if-no-files-found: error
+
+  solver_validation:
+    needs: [classify, full_preflight]
+    if: ${{ needs.classify.outputs.solver_validation == 'true' }}
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    env:
+      PLANTNEXUS_POSTGRES_PASSWORD: ci-contract-only-not-a-secret
+      PLANTNEXUS_CODE_COMMIT: ${{ github.sha }}
+      PLANTNEXUS_BENCHMARK_PROFILE: xs
+    steps:
+      - uses: actions/checkout@v7
+        with:
+          fetch-depth: 0
+      - uses: actions/setup-python@v7
+        with:
+          python-version: "3.12"
+      - uses: astral-sh/setup-uv@v10.0.1
+        with:
+          version: "0.11.32"
+          enable-cache: true
+      - run: uv sync --locked
+      - name: Existing executable contracts
+        run: |
+          uv run python -m app.planning.validation.rule_sheet --report build/validation/ci-rule-contracts.json
+          uv run python -m app.simulation.generators.contract_check --report build/validation/ci-simulation-contracts.json
+          uv run python -m app.simulation.scenarios.golden_fixture --fixture fixtures/deterministic/SIM-MINIMAL-001 --report build/validation/ci-golden.json
+          uv run python -m app.planning.validation.mutation_check --root . --report build/validation/ci-validator-mutations.json
+
+      - name: P1 common ingress gate
+        run: >-
+          uv run python -m app.application.p1_gate_report
+          --root .
+          --scenario fixtures/synthetic/SIM-P1-INGRESS-001
+          --repeat 2
+          --report build/validation/ci-p1-data-pipeline.json
+
+      - name: PlanningProblem v1 and v2 contract evidence
+        run: >-
+          uv run python -m app.planning.problem.contract_check
+          --root .
+          --report build/validation/ci-planning-problem-contracts.json
+
+      - name: Planning machine contract evidence
+        run: >-
+          uv run python -m app.planning.policy.contract_check
+          --root .
+          --report build/validation/ci-planning-machine-contracts.json
+
+      - name: CP-SAT backend foundation evidence
+        run: >-
+          uv run python -m app.planning.backends.cp_sat.contract_check
+          --root .
+          --report build/validation/ci-solver-backend-foundation.json
+
+      - name: Formal independent schedule validator evidence
+        run: >-
+          uv run python -m app.planning.validation.problem_validator_check
+          --root .
+          --report build/validation/ci-formal-schedule-validator.json
+
+      - name: CP-SAT core model evidence
+        run: >-
+          uv run python -m app.planning.backends.cp_sat.core_model_check
+          --root .
+          --report build/validation/ci-cp-sat-core-model.json
+
+      - name: CP-SAT temporal calendar and material model evidence
+        run: >-
+          uv run python -m app.planning.backends.cp_sat.temporal_model_check
+          --root .
+          --report build/validation/ci-cp-sat-temporal-model.json
+
+      - name: CP-SAT execution fact and hard lock model evidence
+        run: >-
+          uv run python -m app.planning.backends.cp_sat.fact_lock_model_check
+          --root .
+          --report build/validation/ci-cp-sat-fact-lock-model.json
+
+      - name: OBJ-001 and Global CP-SAT strategy evidence
+        run: >-
+          uv run python -m app.planning.backends.cp_sat.objective_strategy_check
+          --root .
+          --report build/validation/ci-objective-strategy.json
+
+      - name: P2 Golden scenario property and mutation correctness evidence
+        run: >-
+          uv run python -m app.simulation.scenarios.p2_correctness
+          --root .
+          --report build/validation/ci-p2-correctness.json
+
+      - name: P2 deterministic reference scheduler evidence
+        run: >-
+          uv run python -m app.simulation.baselines.reference_schedulers
+          --root .
+          --report build/validation/ci-reference-schedulers.json
+
+      - name: P2 KPI SolverReport and internal export evidence
+        run: >-
+          uv run python -m app.exporters.contract_check
+          --root .
+          --report build/validation/ci-p2-output-contracts.json
+
+      - name: P3 workspace schema contract evidence
+        run: >-
+          uv run python -m app.domain.workspace_contract_check
+          --root .
+          --report build/validation/ci-p3-workspace-contracts.json
+
+      - name: P4 dynamic replanning machine contract evidence
+        run: >-
+          uv run python -m app.domain.execution_contract_check
+          --root .
+          --report build/validation/ci-p4-machine-contracts.json
+
+      - name: P8 canonical ingress and PlanningRun machine contract evidence
+        run: >-
+          uv run python scripts/p8_machine_contract_check.py
+          --root .
+          --report build/validation/ci-p8-machine-contracts.json
+
+      - name: P8 Extension SDK contract and compatibility evidence
+        run: >-
+          uv run python scripts/p8_extension_sdk_contract_check.py
+          --root .
+          --report build/validation/ci-p8-extension-sdk-contract.json
+
+      - name: P8 Runtime Extension Registry and SPI evidence
+        run: >-
+          uv run python scripts/p8_runtime_extension_registry_check.py
+          --root .
+          --report build/validation/ci-p8-runtime-extension-registry.json
+          --manifest build/validation/ci-p8-runtime-extension-resolution-manifest.json
+          --security-report build/validation/ci-p8-runtime-extension-security.json
+          --benchmark-report build/benchmarks/ci-p8-runtime-extension.json
+
+      - name: P8 Enterprise Extension template and conformance evidence
+        run: >-
+          uv run python scripts/p8_enterprise_extension_kit_check.py
+          --root .
+          --report build/validation/ci-p8-enterprise-extension-kit.json
+          --template-manifest build/validation/ci-p8-enterprise-extension-template.json
+          --dependency-report build/validation/ci-p8-enterprise-extension-dependencies.json
+          --benchmark-report build/benchmarks/ci-p8-enterprise-extension-tooling.json
+          --artifact-directory build/enterprise-extensions
+
+      - name: P8 Solver Worker reliability and engineering evidence
+        run: >-
+          uv run python -m app.jobs.planning_run_worker_check
+          --root .
+          --profile benchmarks/p8/solver-worker-engineering-profile.v1.json
+          --report build/validation/ci-p8-solver-worker.json
+          --benchmark-report build/benchmarks/ci-p8-solver-worker.json
+
+      - name: P8 Runtime application composition evidence
+        run: >-
+          uv run python -m app.application.runtime_composition_check
+          --root .
+          --report build/validation/ci-p8-runtime-composition.json
+          --manifest build/validation/ci-p8-runtime-composition-manifest.json
+
+      - name: P8 Headless HTTP API and OpenAPI compatibility evidence
+        run: >-
+          uv run python -m app.api.headless_api_check
+          --root .
+          --snapshot backend/app/api/openapi/headless-api.v1.json
+          --report build/validation/ci-p8-headless-http-api.json
+          --diff-report build/validation/ci-p8-headless-openapi-diff.json
+          --benchmark-report build/benchmarks/ci-p8-headless-api.json
+
+      - name: P8 Host identity scope and audit evidence
+        run: >-
+          uv run python -m app.api.host_authorization_check
+          --root .
+          --report build/validation/ci-p8-host-authorization.json
+          --audit-report build/validation/ci-p8-host-authorization-audit.json
+          --benchmark-report build/benchmarks/ci-p8-host-authorization.json
+
+      - name: P8 reproducible Runtime release and migration evidence
+        run: >-
+          uv run python -m app.infrastructure.release.check
+          --root .
+          --release-output build/release
+          --report build/validation/ci-p8-runtime-release.json
+          --compatibility-report build/validation/ci-p8-runtime-release-compatibility.json
+          --migration-report build/validation/ci-p8-runtime-release-migration.json
+          --security-report build/validation/ci-p8-runtime-release-security.json
+          --benchmark-report build/benchmarks/ci-p8-runtime-release.json
+
+      - name: P6 duration prediction machine contract evidence
+        run: >-
+          uv run python scripts/p6_duration_contract_check.py
+          --root .
+          --report build/validation/ci-p6-duration-contracts.json
+
+      - name: P6 feature label dataset evidence
+        run: >-
+          uv run python scripts/p6_duration_dataset_check.py
+          --root .
+          --report build/validation/ci-p6-duration-dataset.json
+
+      - name: P6 versioned baseline model and replay evidence
+        run: >-
+          uv run python scripts/p6_duration_model_check.py
+          --root .
+          --report build/validation/ci-p6-duration-model.json
+          --model-artifact build/validation/ci-p6-duration-baseline-model.json
+          --manifest-artifact build/validation/ci-p6-duration-model-manifest.json
+          --replay-artifact build/validation/ci-p6-duration-model-replay.json
+          &&
+          uv run python scripts/p6_duration_evaluation_check.py
+          --root .
+          --report build/validation/ci-p6-duration-evaluation.json
+          &&
+          uv run python scripts/p6_duration_runtime_check.py
+          --root .
+          --offline-gate-report build/validation/ci-p6-duration-evaluation.json
+          --report build/validation/ci-p6-duration-runtime.json
+
+      - name: P3 workspace persistence evidence
+        run: >-
+          uv run python -m app.infrastructure.workspace_persistence_check
+          --root .
+          --report build/validation/ci-p3-persistence.json
+
+      - name: P4 replan event persistence evidence
+        run: >-
+          uv run python -m app.infrastructure.replan_persistence_check
+          --root .
+          --report build/validation/ci-p4-replan-persistence.json
+
+      - name: P4 ExecutionEvent fact projection evidence
+        run: >-
+          uv run python -m app.application.execution_fact_projection_check
+          --root .
+          --report build/validation/ci-p4-execution-fact-projection.json
+
+      - name: P4 freeze window and effective lock evidence
+        run: >-
+          uv run python -m app.planning.problem.freeze_window_check
+          --root .
+          --report build/validation/ci-p4-freeze-window.json
+
+      - name: P4 OBJ-002 stability and ChangeReport evidence
+        run: >-
+          uv run python -m app.planning.reporting.stability_change_report_check
+          --root .
+          --report build/validation/ci-p4-stability-change-report.json
+
+      - name: P4 lexicographic replan solver and validator evidence
+        run: >-
+          uv run python -m app.planning.backends.cp_sat.replan_solver_check
+          --root .
+          --report build/validation/ci-p4-replan-solver.json
+
+      - name: P4 replan application and ScheduleVersion lineage evidence
+        run: >-
+          uv run python -m app.application.replan_application_check
+          --root .
+          --report build/validation/ci-p4-replan-application.json
+
+      - name: P4 deterministic Execution Simulator core evidence
+        run: >-
+          uv run python -m app.simulation.execution.simulator_check
+          --root .
+          --report build/validation/ci-p4-execution-simulator.json
+
+      - name: P4 five-disruption continuous replay evidence
+        run: >-
+          uv run python -m app.simulation.scenarios.disruption_replay_check
+          --root .
+          --report build/validation/ci-p4-disruption-replay.json
+
+      - name: P4 ChangeReport read model and export evidence
+        run: >-
+          uv run python -m app.exporters.change_report_output_check
+          --root .
+          --report build/validation/ci-p4-change-report-output.json
+
+      - name: P3 reviewable ScheduleVersion lifecycle evidence
+        run: >-
+          uv run python -m app.application.schedule_version_lifecycle_check
+          --root .
+          --report build/validation/ci-p3-schedule-version-lifecycle.json
+
+      - name: P3 workspace read model and comparison evidence
+        run: >-
+          uv run python -m app.application.workspace_read_model_check
+          --root .
+          --report build/validation/ci-p3-workspace-read-models.json
+
+      - name: P3 schedule edit and lock command evidence
+        run: >-
+          uv run python -m app.application.schedule_command_check
+          --root .
+          --report build/validation/ci-p3-schedule-commands.json
+
+      - name: P3 approval rejection and audit evidence
+        run: >-
+          uv run python -m app.application.approval_decision_check
+          --root .
+          --report build/validation/ci-p3-approval-decisions.json
+
+      - name: P3 publication supersession and idempotency evidence
+        run: >-
+          uv run python -m app.application.publication_check
+          --root .
+          --report build/validation/ci-p3-publication.json
+
+      - name: P3 ExportJob and standard package evidence
+        run: >-
+          uv run python -m app.application.export_job_check
+          --root .
+          --report build/validation/ci-p3-export-jobs.json
+
+      - name: P3 planning workspace HTTP API evidence
+        run: >-
+          uv run python -m app.api.planning_workspace_check
+          --root .
+          --report build/validation/ci-p3-planning-workspace-api.json
+
+      - name: P4 dynamic replanning HTTP API evidence
+        run: >-
+          uv run python -m app.api.replanning_check
+          --root .
+          --report build/validation/ci-p4-replanning-api.json
+
+      - name: Engineering contract
+        run: >-
+          uv run python -m app.infrastructure.contract_check
+          --root .
+          --report build/validation/ci-engineering.json
+
+      - name: Container configuration
+        run: docker compose --env-file .env.example config --quiet
+
+      - name: Documentation and task diff
+        run: |
+          uv run python scripts/check_docs.py --discover-task-from "${PLANTNEXUS_CI_CHANGE_BASE}" --check-diff --report build/traceability/ci-current-task-report.json
+
+      - name: Current Solver benchmark and packaging
+        run: |
+          uv run python scripts/run_benchmark.py --profile "${PLANTNEXUS_BENCHMARK_PROFILE}" --report build/benchmarks/ci-current-xs.json
+          uv build
+      - name: Seal solver_validation evidence
+        run: python -m scripts.ci_execution seal --job solver_validation --files build/benchmarks/*.json build/validation/*.json --report build/validation/ci-seal-solver_validation.json
+      - uses: actions/upload-artifact@v7
+        if: always()
+        with:
+          name: plantnexus-ci-solver-${{ github.run_id }}
+          path: |
+            build/benchmarks/*.json
+            build/validation/*.json
+          if-no-files-found: error
+
   validate:
-    needs: [classify, docs_validation, full_preflight, full_backend, full_validation, full_operations]
+    needs: [classify, docs_validation, full_preflight, full_backend, frontend_validation, solver_validation, full_validation, full_operations]
     if: ${{ always() }}
     runs-on: ubuntu-latest
-    timeout-minutes: 2
+    timeout-minutes: 5
     env:
-      PLANTNEXUS_CI_PROFILE: ${{ needs.classify.outputs.profile }}
-      PLANTNEXUS_CLASSIFY_RESULT: ${{ needs.classify.result }}
-      PLANTNEXUS_DOCS_RESULT: ${{ needs.docs_validation.result }}
-      PLANTNEXUS_PREFLIGHT_RESULT: ${{ needs.full_preflight.result }}
-      PLANTNEXUS_BACKEND_RESULT: ${{ needs.full_backend.result }}
-      PLANTNEXUS_FULL_RESULT: ${{ needs.full_validation.result }}
-      PLANTNEXUS_OPERATIONS_RESULT: ${{ needs.full_operations.result }}
+      CI_NEEDS: ${{ toJSON(needs) }}
     steps:
+      - uses: actions/checkout@v7
+        with:
+          fetch-depth: 0
+      - uses: actions/setup-python@v7
+        with:
+          python-version: "3.12"
+      - uses: actions/download-artifact@v8.0.1
+        with:
+          pattern: plantnexus-ci-*
+          path: build/downloads
       - name: Enforce fail-closed validation routing
         shell: bash
         run: |
-          test "${PLANTNEXUS_CLASSIFY_RESULT}" = "success"
-          case "${PLANTNEXUS_CI_PROFILE}" in
-            FULL)
-              test "${PLANTNEXUS_PREFLIGHT_RESULT}" = "success"
-              test "${PLANTNEXUS_BACKEND_RESULT}" = "success"
-              test "${PLANTNEXUS_FULL_RESULT}" = "success"
-              test "${PLANTNEXUS_OPERATIONS_RESULT}" = "success"
-              test "${PLANTNEXUS_DOCS_RESULT}" = "skipped"
-              ;;
-            DOCS_ONLY)
-              test "${PLANTNEXUS_DOCS_RESULT}" = "success"
-              test "${PLANTNEXUS_PREFLIGHT_RESULT}" = "skipped"
-              test "${PLANTNEXUS_BACKEND_RESULT}" = "skipped"
-              test "${PLANTNEXUS_FULL_RESULT}" = "skipped"
-              test "${PLANTNEXUS_OPERATIONS_RESULT}" = "skipped"
-              ;;
-            *)
-              echo "Unknown or missing CI validation profile" >&2
-              exit 1
-              ;;
-          esac
+          audit_args=()
+          if [ "${PLANTNEXUS_PHASE_AUDIT}" = "true" ]; then audit_args+=(--audit); fi
+          python -m scripts.ci_execution aggregate "${audit_args[@]}" --report build/validation/ci-aggregate.json
+      - uses: actions/upload-artifact@v7
+        if: always()
+        with:
+          name: plantnexus-ci-aggregate-${{ github.run_id }}
+          path: build/validation/ci-aggregate.json
+          if-no-files-found: error

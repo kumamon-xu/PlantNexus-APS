@@ -1,0 +1,29 @@
+{
+  "host_authorization_policy_version": "host-authorization-policy.v1",
+  "policy_id": "__REQUIRED__",
+  "identity_provider_reference": "identity-provider:enterprise.local-test.v1",
+  "issuer": "__REQUIRED__",
+  "audience": "__REQUIRED__",
+  "environment": "TEST",
+  "data_plane": "SIMULATION",
+  "production_binding": false,
+  "max_assertion_lifetime_seconds": "__REQUIRED__",
+  "revoked_subject_references": [],
+  "revoked_assertion_references": [],
+  "principals": [
+    {
+      "subject_ref": "__REQUIRED__",
+      "actor_ref": "__REQUIRED__",
+      "operations": [
+        "__REQUIRED__"
+      ],
+      "scopes": [
+        {
+          "tenant_id": "__REQUIRED__",
+          "factory_id": "__REQUIRED__",
+          "planning_scope_id": "__REQUIRED__"
+        }
+      ]
+    }
+  ]
+}

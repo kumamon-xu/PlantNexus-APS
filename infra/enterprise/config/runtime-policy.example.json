@@ -1,0 +1,37 @@
+{
+  "runtime_http_policy_version": "runtime-http-policy.v2",
+  "scopes": [
+    {
+      "tenant_id": "__REQUIRED__",
+      "factory_id": "__REQUIRED__",
+      "planning_scope_id": "__REQUIRED__",
+      "authorized_authority_references": [
+        "__REQUIRED__"
+      ],
+      "authorized_mapping_fingerprints": [
+        "__REQUIRED__"
+      ],
+      "build_plan": {
+        "cutoff_at_utc": "__REQUIRED__",
+        "tick_seconds": "__REQUIRED__",
+        "horizon_start_utc": "__REQUIRED__",
+        "horizon_end_utc": "__REQUIRED__",
+        "priority_facts": {}
+      },
+      "dispatch_timeout_seconds": "__REQUIRED__",
+      "extension_facts": {
+        "extension_facts_version": "runtime-extension-facts.v1",
+        "resource_attributes": {
+          "RESOURCE-001": {
+            "tags": [
+              "__REQUIRED__"
+            ]
+          }
+        },
+        "operation_attributes": {},
+        "events": [],
+        "publication_authority_reference": "__REQUIRED__"
+      }
+    }
+  ]
+}

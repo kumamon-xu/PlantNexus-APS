@@ -1,0 +1,438 @@
+{
+  "schema_version": "enterprise-configuration-matrix.v1",
+  "scope": "TEST/SIMULATION only; LOCAL_TEST_TOKEN is not OIDC",
+  "fields": [
+    {
+      "name": "API_BIND",
+      "required": "always",
+      "source": "non-secret deployment.env",
+      "consumer": "transport",
+      "injection": "uvicorn.run(host=...)",
+      "validation_owner": "bootstrap; resource/TLS deployment enforcement also belongs to Compose/reverse proxy"
+    },
+    {
+      "name": "API_DOMAIN",
+      "required": "always",
+      "source": "non-secret deployment.env",
+      "consumer": "transport",
+      "injection": "reverse-proxy server_name; operator must render reviewed template",
+      "validation_owner": "bootstrap; resource/TLS deployment enforcement also belongs to Compose/reverse proxy"
+    },
+    {
+      "name": "API_PORT",
+      "required": "always",
+      "source": "non-secret deployment.env",
+      "consumer": "transport",
+      "injection": "uvicorn.run(port=...)",
+      "validation_owner": "bootstrap; resource/TLS deployment enforcement also belongs to Compose/reverse proxy"
+    },
+    {
+      "name": "AUTHORIZATION_POLICY_FILE",
+      "required": "always",
+      "source": "non-secret deployment.env",
+      "consumer": "policy",
+      "injection": "create_runtime_app(host_authorization_policy=...)",
+      "validation_owner": "bootstrap preflight plus original Runtime contract"
+    },
+    {
+      "name": "BACKUP_VOLUME",
+      "required": "always",
+      "source": "non-secret deployment.env",
+      "consumer": "operations",
+      "injection": "operator Compose backup bind mount; preflight checks absolute/disjoint paths",
+      "validation_owner": "bootstrap; resource/TLS deployment enforcement also belongs to Compose/reverse proxy"
+    },
+    {
+      "name": "BROKER_HOST",
+      "required": "always",
+      "source": "non-secret deployment.env",
+      "consumer": "broker",
+      "injection": "Settings.celery_broker_url / generated PLANTNEXUS environment in process memory",
+      "validation_owner": "bootstrap; resource/TLS deployment enforcement also belongs to Compose/reverse proxy"
+    },
+    {
+      "name": "BROKER_INDEX",
+      "required": "always",
+      "source": "non-secret deployment.env",
+      "consumer": "broker",
+      "injection": "Settings.celery_broker_url / generated PLANTNEXUS environment in process memory",
+      "validation_owner": "bootstrap; resource/TLS deployment enforcement also belongs to Compose/reverse proxy"
+    },
+    {
+      "name": "BROKER_PASSWORD_FILE",
+      "required": "always",
+      "source": "read-only Secret file path; value never Compose interpolation",
+      "consumer": "broker",
+      "injection": "Settings.celery_broker_url / generated PLANTNEXUS environment in process memory",
+      "validation_owner": "bootstrap; resource/TLS deployment enforcement also belongs to Compose/reverse proxy"
+    },
+    {
+      "name": "BROKER_PORT",
+      "required": "always",
+      "source": "non-secret deployment.env",
+      "consumer": "broker",
+      "injection": "Settings.celery_broker_url / generated PLANTNEXUS environment in process memory",
+      "validation_owner": "bootstrap; resource/TLS deployment enforcement also belongs to Compose/reverse proxy"
+    },
+    {
+      "name": "BROKER_USER_FILE",
+      "required": "always",
+      "source": "read-only Secret file path; value never Compose interpolation",
+      "consumer": "broker",
+      "injection": "Settings.celery_broker_url / generated PLANTNEXUS environment in process memory",
+      "validation_owner": "bootstrap; resource/TLS deployment enforcement also belongs to Compose/reverse proxy"
+    },
+    {
+      "name": "CPU_LIMIT",
+      "required": "always",
+      "source": "non-secret deployment.env",
+      "consumer": "operations",
+      "injection": "Compose cpus",
+      "validation_owner": "bootstrap; resource/TLS deployment enforcement also belongs to Compose/reverse proxy"
+    },
+    {
+      "name": "DATA_PLANE",
+      "required": "always",
+      "source": "non-secret deployment.env",
+      "consumer": "identity",
+      "injection": "Settings.data_plane",
+      "validation_owner": "bootstrap preflight plus original Runtime contract"
+    },
+    {
+      "name": "DATA_VOLUME",
+      "required": "always",
+      "source": "non-secret deployment.env",
+      "consumer": "operations",
+      "injection": "operator Compose data bind mount; preflight checks absolute/disjoint paths",
+      "validation_owner": "bootstrap; resource/TLS deployment enforcement also belongs to Compose/reverse proxy"
+    },
+    {
+      "name": "DB_HOST",
+      "required": "always",
+      "source": "non-secret deployment.env",
+      "consumer": "db",
+      "injection": "Settings.database_url / generated PLANTNEXUS environment in process memory",
+      "validation_owner": "bootstrap; resource/TLS deployment enforcement also belongs to Compose/reverse proxy"
+    },
+    {
+      "name": "DB_NAME",
+      "required": "always",
+      "source": "non-secret deployment.env",
+      "consumer": "db",
+      "injection": "Settings.database_url / generated PLANTNEXUS environment in process memory",
+      "validation_owner": "bootstrap; resource/TLS deployment enforcement also belongs to Compose/reverse proxy"
+    },
+    {
+      "name": "DB_PASSWORD_FILE",
+      "required": "always",
+      "source": "read-only Secret file path; value never Compose interpolation",
+      "consumer": "db",
+      "injection": "Settings.database_url / generated PLANTNEXUS environment in process memory",
+      "validation_owner": "bootstrap; resource/TLS deployment enforcement also belongs to Compose/reverse proxy"
+    },
+    {
+      "name": "DB_PORT",
+      "required": "always",
+      "source": "non-secret deployment.env",
+      "consumer": "db",
+      "injection": "Settings.database_url / generated PLANTNEXUS environment in process memory",
+      "validation_owner": "bootstrap; resource/TLS deployment enforcement also belongs to Compose/reverse proxy"
+    },
+    {
+      "name": "DB_USER_FILE",
+      "required": "always",
+      "source": "read-only Secret file path; value never Compose interpolation",
+      "consumer": "db",
+      "injection": "Settings.database_url / generated PLANTNEXUS environment in process memory",
+      "validation_owner": "bootstrap; resource/TLS deployment enforcement also belongs to Compose/reverse proxy"
+    },
+    {
+      "name": "ENVIRONMENT",
+      "required": "always",
+      "source": "non-secret deployment.env",
+      "consumer": "identity",
+      "injection": "Settings.runtime_environment",
+      "validation_owner": "bootstrap preflight plus original Runtime contract"
+    },
+    {
+      "name": "EXTENSION_CATALOG_FILE",
+      "required": "EXTENSION_MODE=local",
+      "source": "non-secret deployment.env",
+      "consumer": "extension",
+      "injection": "Settings.runtime_extension_catalog_path",
+      "validation_owner": "bootstrap preflight plus original Runtime contract"
+    },
+    {
+      "name": "EXTENSION_KEY_FILE",
+      "required": "EXTENSION_MODE=local",
+      "source": "read-only Secret file path; value never Compose interpolation",
+      "consumer": "extension",
+      "injection": "Settings.runtime_extension_verification_key, memory only",
+      "validation_owner": "bootstrap preflight plus original Runtime contract"
+    },
+    {
+      "name": "EXTENSION_KEY_ID",
+      "required": "EXTENSION_MODE=local",
+      "source": "non-secret deployment.env",
+      "consumer": "extension",
+      "injection": "Settings.runtime_extension_verification_key_id",
+      "validation_owner": "bootstrap preflight plus original Runtime contract"
+    },
+    {
+      "name": "EXTENSION_LOCK_FILE",
+      "required": "EXTENSION_MODE=local",
+      "source": "non-secret deployment.env",
+      "consumer": "extension",
+      "injection": "local immutable wheel allow-list and exact Kit/Runtime binding",
+      "validation_owner": "bootstrap preflight plus original Runtime contract"
+    },
+    {
+      "name": "EXTENSION_MODE",
+      "required": "always",
+      "source": "non-secret deployment.env",
+      "consumer": "extension",
+      "injection": "none or local; no discovery",
+      "validation_owner": "bootstrap preflight plus original Runtime contract"
+    },
+    {
+      "name": "HEARTBEAT_SECONDS",
+      "required": "always",
+      "source": "non-secret deployment.env",
+      "consumer": "operations",
+      "injection": "Settings.job_heartbeat_seconds",
+      "validation_owner": "bootstrap; resource/TLS deployment enforcement also belongs to Compose/reverse proxy"
+    },
+    {
+      "name": "HTTP_POLICY_FILE",
+      "required": "always",
+      "source": "non-secret deployment.env",
+      "consumer": "policy",
+      "injection": "Settings.runtime_http_policy_path",
+      "validation_owner": "bootstrap preflight plus original Runtime contract"
+    },
+    {
+      "name": "IDENTITY_AUDIENCE",
+      "required": "always",
+      "source": "non-secret deployment.env",
+      "consumer": "authorization",
+      "injection": "HostAuthorizationPolicyCatalog.audience / VerifiedHostIdentity.audience",
+      "validation_owner": "bootstrap preflight plus original Runtime contract"
+    },
+    {
+      "name": "IDENTITY_CLIENT_ID",
+      "required": "always",
+      "source": "non-secret deployment.env",
+      "consumer": "authorization",
+      "injection": "Reserved: must be not-applicable-local-test; real OAuth Client ID is unsupported",
+      "validation_owner": "bootstrap preflight plus original Runtime contract"
+    },
+    {
+      "name": "IDENTITY_ISSUER",
+      "required": "always",
+      "source": "non-secret deployment.env",
+      "consumer": "authorization",
+      "injection": "HostAuthorizationPolicyCatalog.issuer / VerifiedHostIdentity.issuer",
+      "validation_owner": "bootstrap preflight plus original Runtime contract"
+    },
+    {
+      "name": "IDENTITY_PROVIDER",
+      "required": "always",
+      "source": "non-secret deployment.env",
+      "consumer": "authorization",
+      "injection": "LocalTestIdentity -> create_runtime_app(host_identity_provider=...)",
+      "validation_owner": "bootstrap preflight plus original Runtime contract"
+    },
+    {
+      "name": "IDENTITY_SUBJECT",
+      "required": "always",
+      "source": "non-secret deployment.env",
+      "consumer": "authorization",
+      "injection": "LocalTestIdentity subject; policy must explicitly grant exact scopes",
+      "validation_owner": "bootstrap preflight plus original Runtime contract"
+    },
+    {
+      "name": "IDENTITY_TOKEN_FILE",
+      "required": "always",
+      "source": "read-only Secret file path; value never Compose interpolation",
+      "consumer": "authorization",
+      "injection": "LocalTestIdentity opaque test bearer, memory only",
+      "validation_owner": "bootstrap preflight plus original Runtime contract"
+    },
+    {
+      "name": "KIT_FINGERPRINT",
+      "required": "always",
+      "source": "non-secret deployment.env",
+      "consumer": "identity",
+      "injection": "Settings.developer_kit_fingerprint",
+      "validation_owner": "bootstrap preflight plus original Runtime contract"
+    },
+    {
+      "name": "KIT_VERSION",
+      "required": "always",
+      "source": "non-secret deployment.env",
+      "consumer": "identity",
+      "injection": "Settings.developer_kit_version",
+      "validation_owner": "bootstrap preflight plus original Runtime contract"
+    },
+    {
+      "name": "LEASE_SECONDS",
+      "required": "always",
+      "source": "non-secret deployment.env",
+      "consumer": "operations",
+      "injection": "Settings.job_lease_seconds",
+      "validation_owner": "bootstrap; resource/TLS deployment enforcement also belongs to Compose/reverse proxy"
+    },
+    {
+      "name": "LOG_LEVEL",
+      "required": "always",
+      "source": "non-secret deployment.env",
+      "consumer": "operations",
+      "injection": "Settings.log_level / process logging",
+      "validation_owner": "bootstrap; resource/TLS deployment enforcement also belongs to Compose/reverse proxy"
+    },
+    {
+      "name": "MEMORY_MIB",
+      "required": "always",
+      "source": "non-secret deployment.env",
+      "consumer": "operations",
+      "injection": "Compose mem_limit in MiB",
+      "validation_owner": "bootstrap; resource/TLS deployment enforcement also belongs to Compose/reverse proxy"
+    },
+    {
+      "name": "PLANNING_POLICY_FILE",
+      "required": "always",
+      "source": "non-secret deployment.env",
+      "consumer": "policy",
+      "injection": "Settings.runtime_planning_policy_path",
+      "validation_owner": "bootstrap preflight plus original Runtime contract"
+    },
+    {
+      "name": "REDIS_HOST",
+      "required": "always",
+      "source": "non-secret deployment.env",
+      "consumer": "redis",
+      "injection": "Settings.redis_url / generated PLANTNEXUS environment in process memory",
+      "validation_owner": "bootstrap; resource/TLS deployment enforcement also belongs to Compose/reverse proxy"
+    },
+    {
+      "name": "REDIS_INDEX",
+      "required": "always",
+      "source": "non-secret deployment.env",
+      "consumer": "redis",
+      "injection": "Settings.redis_url / generated PLANTNEXUS environment in process memory",
+      "validation_owner": "bootstrap; resource/TLS deployment enforcement also belongs to Compose/reverse proxy"
+    },
+    {
+      "name": "REDIS_PASSWORD_FILE",
+      "required": "always",
+      "source": "read-only Secret file path; value never Compose interpolation",
+      "consumer": "redis",
+      "injection": "Settings.redis_url / generated PLANTNEXUS environment in process memory",
+      "validation_owner": "bootstrap; resource/TLS deployment enforcement also belongs to Compose/reverse proxy"
+    },
+    {
+      "name": "REDIS_PORT",
+      "required": "always",
+      "source": "non-secret deployment.env",
+      "consumer": "redis",
+      "injection": "Settings.redis_url / generated PLANTNEXUS environment in process memory",
+      "validation_owner": "bootstrap; resource/TLS deployment enforcement also belongs to Compose/reverse proxy"
+    },
+    {
+      "name": "REDIS_USER_FILE",
+      "required": "always",
+      "source": "read-only Secret file path; value never Compose interpolation",
+      "consumer": "redis",
+      "injection": "Settings.redis_url / generated PLANTNEXUS environment in process memory",
+      "validation_owner": "bootstrap; resource/TLS deployment enforcement also belongs to Compose/reverse proxy"
+    },
+    {
+      "name": "RESULT_HOST",
+      "required": "always",
+      "source": "non-secret deployment.env",
+      "consumer": "result",
+      "injection": "Settings.celery_result_backend_url / generated PLANTNEXUS environment in process memory",
+      "validation_owner": "bootstrap; resource/TLS deployment enforcement also belongs to Compose/reverse proxy"
+    },
+    {
+      "name": "RESULT_INDEX",
+      "required": "always",
+      "source": "non-secret deployment.env",
+      "consumer": "result",
+      "injection": "Settings.celery_result_backend_url / generated PLANTNEXUS environment in process memory",
+      "validation_owner": "bootstrap; resource/TLS deployment enforcement also belongs to Compose/reverse proxy"
+    },
+    {
+      "name": "RESULT_PASSWORD_FILE",
+      "required": "always",
+      "source": "read-only Secret file path; value never Compose interpolation",
+      "consumer": "result",
+      "injection": "Settings.celery_result_backend_url / generated PLANTNEXUS environment in process memory",
+      "validation_owner": "bootstrap; resource/TLS deployment enforcement also belongs to Compose/reverse proxy"
+    },
+    {
+      "name": "RESULT_PORT",
+      "required": "always",
+      "source": "non-secret deployment.env",
+      "consumer": "result",
+      "injection": "Settings.celery_result_backend_url / generated PLANTNEXUS environment in process memory",
+      "validation_owner": "bootstrap; resource/TLS deployment enforcement also belongs to Compose/reverse proxy"
+    },
+    {
+      "name": "RESULT_USER_FILE",
+      "required": "always",
+      "source": "read-only Secret file path; value never Compose interpolation",
+      "consumer": "result",
+      "injection": "Settings.celery_result_backend_url / generated PLANTNEXUS environment in process memory",
+      "validation_owner": "bootstrap; resource/TLS deployment enforcement also belongs to Compose/reverse proxy"
+    },
+    {
+      "name": "RUNTIME_FINGERPRINT",
+      "required": "always",
+      "source": "non-secret deployment.env",
+      "consumer": "identity",
+      "injection": "Settings.runtime_artifact_fingerprint",
+      "validation_owner": "bootstrap preflight plus original Runtime contract"
+    },
+    {
+      "name": "RUNTIME_SOURCE_SHA",
+      "required": "always",
+      "source": "non-secret deployment.env",
+      "consumer": "identity",
+      "injection": "Settings.code_commit",
+      "validation_owner": "bootstrap preflight plus original Runtime contract"
+    },
+    {
+      "name": "SOLVE_LIMITS_FILE",
+      "required": "always",
+      "source": "non-secret deployment.env",
+      "consumer": "policy",
+      "injection": "Settings.runtime_solve_limits_path",
+      "validation_owner": "bootstrap preflight plus original Runtime contract"
+    },
+    {
+      "name": "TLS_CERT_FILE",
+      "required": "always",
+      "source": "non-secret deployment.env",
+      "consumer": "transport",
+      "injection": "SSL pair validation; reverse proxy ssl_certificate",
+      "validation_owner": "bootstrap; resource/TLS deployment enforcement also belongs to Compose/reverse proxy"
+    },
+    {
+      "name": "TLS_KEY_FILE",
+      "required": "always",
+      "source": "read-only Secret file path; value never Compose interpolation",
+      "consumer": "transport",
+      "injection": "SSL pair validation; reverse proxy ssl_certificate_key Secret",
+      "validation_owner": "bootstrap; resource/TLS deployment enforcement also belongs to Compose/reverse proxy"
+    },
+    {
+      "name": "WORKER_CONCURRENCY",
+      "required": "always",
+      "source": "non-secret deployment.env",
+      "consumer": "operations",
+      "injection": "Celery worker --concurrency",
+      "validation_owner": "bootstrap; resource/TLS deployment enforcement also belongs to Compose/reverse proxy"
+    }
+  ]
+}

@@ -11,6 +11,25 @@ last_reviewed: 2026-09-11
 
 # APS Runtime 安装、预检与启动顺序
 
+## 企业配置与 Secret 预检
+
+`infra/enterprise/config/`提供`.env.example`、Planning Policy/Solve Limits、Runtime HTTP policy、authorization policy、Extension catalog/lock、reverse-proxy TLS和Docker Secret/资源接线模板；`configuration-matrix.v1.json`逐项列出必填条件、值的来源、注入位置与验证责任。占位符不构成可运行配置；JSON中的数值占位符须替换为原合同要求的数值类型，不能删除硬约束或猜测业务值。资源值仅为操作者评审的TEST/SIMULATION限额，不代表容量或SLA。
+
+外层bootstrap以只读挂载消费既有镜像，应用wheel与Core不变。把bootstrap目录挂载为`/opt/enterprise/bootstrap:ro`，非敏感配置与policy挂载为只读文件，Secret挂载为独立只读文件；工作目录为`/opt/enterprise`。启动前执行：
+
+```text
+python -m bootstrap.run --config /etc/plantnexus/deployment.env --check
+python -m bootstrap.run --config /etc/plantnexus/deployment.env --role api
+```
+
+`--role`支持api、worker、migration和validator。前两者经既有Runtime factory运行，migration执行已发布Alembic链到head；validator仅验证既有独立函数入口，不新增业务输入协议。全部角色先执行相同预检，错误非零且仅输出稳定code/field；不使用shell source、dotenv隐式加载或请求选择配置。必须使用Linux只读rootfs/挂载，非Linux预检不宣称已验证只读性。`secrets.example.yml`只演示禁网预检接线，不是P8-25完整部署栈。
+
+DB、Redis、broker和result backend的host/port/database非敏感字段与username/password Secret分离；bootstrap在内存中进行URL编码，传入显式Settings与进程环境，不把凭据放入命令行或Compose插值。`DATA_VOLUME/BACKUP_VOLUME`必须为不重叠绝对路径；CPU/内存由Compose实施，Worker并发由Celery参数实施，TLS域名/上游由操作者填写proxy模板。SSL预检验证证书/私钥可加载且匹配，域名、证书信任/有效期与代理部署仍需后续环境验收。
+
+唯一已形成认证适配为`IDENTITY_PROVIDER=LOCAL_TEST_TOKEN`，且`ENVIRONMENT=test`、`DATA_PLANE=simulation`；Issuer/Audience与授权policy必须相同，Subject须有具名exact scope。`IDENTITY_CLIENT_ID`必须是`not-applicable-local-test`，真实OIDC Client ID/认证Provider继续未支持，不能把环境变量当作真实SSO实现。测试Bearer从只读Secret加载，不是JWT；原HostAuthorizationAdapter仍负责严格身份、scope、revocation及append-only audit。
+
+`EXTENSION_MODE=none`时移除其他Extension字段；`local`时lock/catalog/key ID/key Secret须成组提供。lock固定Runtime源SHA、Kit 1.0.0/fingerprint和完整有序wheel集合；只读取已有、只读且摘要匹配的wheel，验证catalog/HMAC后加载批准模块，并调用原Runtime loader再次验证manifest/config/compatibility/resolution。bootstrap不签发catalog、不写配置、不安装或下载、不扫描entry points、不热更新。API与Worker使用同一配置、Secret和已批准集合，变更需重启和重新核验；可信同进程Extension并非安全沙箱。
+
 ## 企业 Runtime OCI 镜像
 
 `infra/enterprise/image-inputs.v1.json`固定已验证P8-17 Runtime归档、wheel、requirements、源SHA与基础镜像digest。`scripts/enterprise_image_build.py`验证归档全部payload后，仅以wheel、锁定依赖、Schema、OpenAPI、migration和metadata生成context。原发行Dockerfile因缺少COPY源不能在发行包内独立构建；构建报告保留实际失败摘要，新Dockerfile安装原wheel，不复制仓库应用源码。

@@ -11,6 +11,16 @@ last_reviewed: 2026-09-11
 
 # P0 工程安全边界
 
+## 企业部署 Secret 与启动边界
+
+`infra/enterprise/bootstrap/`在构建DB client或业务入口前拒绝缺项/空值/未替换占位符、重复或未知配置项、Production、错误Runtime/Kit、非原子Extension身份、坏policy、不可读/非regular/symlink或非只读文件。原Runtime Settings、authorization policy和Extension loader校验继续执行，外层预检没有放宽Core合同。Extension启动预算为30秒，超时或异常阻止启动；同进程迟到代码不构成隔离或恶意代码终止保证。
+
+Secret只由只读文件进入内存；Compose模板仅含文件路径，禁止把password/token/key值放入`.env`、插值、镜像层或命令行。进程日志按完整行缓冲，替换原始及URL编码Secret，多行私钥逐行屏蔽，超长行丢弃；配置/启动异常不输出原异常或路径。非敏感配置fingerprint不包含Secret内容摘要。进程环境中的凭据仍依赖宿主与容器进程权限保护，不宣称对宿主管理员保密。
+
+`LOCAL_TEST_TOKEN`为显式TEST/SIMULATION适配，不是JWT/OIDC/SSO或真实企业身份系统；Client ID保留字段只能声明不适用。对错误token仍由原认证/授权边界拒绝，capability/scope不能由token或请求自授。真实IdP、证书信任、secret rotation及Production责任保持既有OPEN状态。
+
+容器验收使用临时合成canary、禁网和真实只读挂载，覆盖错误配置、可写Secret、symlink、错误Kit/Extension，并证明DB client调用为零；扫描stdout/stderr、Compose渲染、既有镜像保存层及本次模板payload。临时Secret和原始日志不上传，最终离线包泄漏验收仍属于后续打包/独立验收任务。本任务不消除下节记录的基础镜像OS漏洞。
+
 ## 企业镜像扫描与未关闭风险
 
 企业镜像构建使用digest固定的Trivy扫描导出tar，保留原始漏洞/secret/license结果及CycloneDX SBOM。最终文件系统移除pip和ensurepip，安装固定版本ca-certificates与libpcre2修复可用补丁；扫描所有保存层验证合成secret canary未进入镜像，原始secret发现必须为零。构建阶段临时安装工具不作为Runtime依赖。

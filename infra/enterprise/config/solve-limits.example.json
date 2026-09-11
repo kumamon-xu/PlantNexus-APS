@@ -1,0 +1,16 @@
+{
+  "canonicalization_version": "canonical-json.v1",
+  "data_plane": "SIMULATION",
+  "limits_id": "__REQUIRED__",
+  "limits_revision": "__REQUIRED__",
+  "limits_source": {
+    "source_record_id": "__REQUIRED__",
+    "source_system": "__REQUIRED__",
+    "source_version": "1.0.0"
+  },
+  "max_wall_time_seconds": "__REQUIRED__",
+  "max_workers": "__REQUIRED__",
+  "random_seed": "__REQUIRED__",
+  "schema_set_version": "2.4.0",
+  "solve_limits_version": "solve-limits.v1"
+}

@@ -6,10 +6,16 @@ spec_version: 0.3.0
 phase: cross-phase
 normative: true
 source_sections: [16, 38, 49, 62, 64, 95, 96]
-last_reviewed: 2026-09-10
+last_reviewed: 2026-09-11
 ---
 
 # 配置、环境与数据隔离
+
+## 企业 bootstrap 配置层
+
+`infra/enterprise/config/configuration-matrix.v1.json`定义部署输入位置与验证责任，`enterprise-preflight.v1`只报告安全身份/计数/非敏感配置fingerprint。bootstrap显式解析只读deployment.env与原policy carrier，不隐式读取宿主`.env`，不以ambient `PLANTNEXUS_*`覆盖验证后的Settings；Secret只通过只读文件在内存中注入。所有入口共享预检，缺项、占位符、不完整身份原子组和不可读/可写/symlink文件必须在DB或业务入口前失败。
+
+本配置层只支持TEST/SIMULATION、已冻结Runtime源SHA及Kit 1.0.0指纹。LOCAL_TEST_TOKEN与原HostAuthorizationPolicyCatalog配对，真实OAuth/OIDC Client ID不被忽略接受而是显式拒绝。Extension none/local模式互斥；local lock精确绑定已批准只读wheel集合，调用原Runtime loader，不能下载、安装、自动升级或热更新。配置结构版本独立于业务Schema，P8/P7/Production边界不变。详细模板、命令与资源/TLS责任见[部署说明](../operations/deployment.md#企业配置与-secret-预检)。
 
 ## 当前CI执行隔离
 

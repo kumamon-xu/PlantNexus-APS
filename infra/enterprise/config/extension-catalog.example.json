@@ -1,0 +1,26 @@
+{
+  "catalog_version": "aps-runtime-extension-catalog.v1",
+  "runtime_version": "0.1.0",
+  "sdk_api_version": "1.0.0",
+  "registry_protocol_version": "plugin-registry.v1",
+  "compatibility": "__REQUIRED__",
+  "invocation_timeout_ms": "__REQUIRED__",
+  "startup_timeout_ms": "__REQUIRED__",
+  "extensions": [
+    {
+      "extension_id": "__REQUIRED__",
+      "extension_version": "__REQUIRED__",
+      "manifest_path": "__REQUIRED__",
+      "artifact_digest": "__REQUIRED__",
+      "manifest_fingerprint": "__REQUIRED__",
+      "configuration_path": "__REQUIRED__",
+      "configuration_fingerprint": "__REQUIRED__",
+      "allowed_capabilities": [
+        "__REQUIRED__"
+      ],
+      "signature_key_id": "__REQUIRED__",
+      "signature": "__REQUIRED__"
+    }
+  ],
+  "catalog_fingerprint": "__REQUIRED__"
+}

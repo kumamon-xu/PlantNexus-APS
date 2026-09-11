@@ -1,0 +1,15 @@
+{
+  "lock_version": "enterprise-extension-lock.v1",
+  "runtime_source_sha": "__REQUIRED__",
+  "kit_version": "__REQUIRED__",
+  "kit_fingerprint": "__REQUIRED__",
+  "catalog_fingerprint": "__REQUIRED__",
+  "artifacts": [
+    {
+      "extension_id": "__REQUIRED__",
+      "extension_version": "__REQUIRED__",
+      "wheel_file": "__REQUIRED__",
+      "artifact_digest": "__REQUIRED__"
+    }
+  ]
+}

@@ -13,6 +13,8 @@ last_reviewed: 2026-09-11
 
 ## Enterprise Runtime image evidence
 
+The shared image step also runs `infra/enterprise/bootstrap/verify_container.py` against that exact image. Its required `ci-enterprise-image-bootstrap.json` is sealed by both selected routes and binds packaging SHA, image/tar identity, bootstrap template hashes and sanitized container outcomes. Backend suites include configuration/Secret negative tests; type checks include the bootstrap. Synthetic keys and fixtures remain in temporary directories outside uploaded evidence, and only safe result fields are retained. The driver checks real read-only mounts, fail-before-client behavior, local Extension loading, Compose interpolation and saved-layer canaries; it does not claim a complete offline package or live business deployment.
+
 The selected current solver/runtime job and the explicit phase-audit validation job share one immutable enterprise image build/upload step. Backend checks include `tests/enterprise` and the image builder/probe type checks. `actions: read` permits downloading the exact historical Runtime artifact named in `infra/enterprise/image-inputs.v1.json`; its archive and payload hashes are mandatory. Expired inputs fail closed, with explicit same-hash retained archive support for local builds.
 
 The producer seals `ci-enterprise-image.json`, its raw image scan and CycloneDX SBOM. The image report binds the current packaging commit, distinct Runtime source identity, image ID and exported tar SHA-256. Building an image and probing its entrypoints does not establish live deployment or Production security approval.

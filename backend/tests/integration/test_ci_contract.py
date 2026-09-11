@@ -432,6 +432,7 @@ def test_ci_profile_routing_is_mutually_exclusive_and_fail_closed() -> None:
     assert jobs["validate"]["env"]["CI_NEEDS"] == "${{ toJSON(needs) }}"
     assert "ci_execution aggregate" in str(jobs["validate"])
     assert "--phase-audit" in str(jobs["full_backend"])
+    assert "npm exec -- vitest --exclude=e2e/** --run" in str(jobs["frontend_validation"])
     audit = str(jobs["full_validation"])
     assert audit.count("pytest -q backend/tests/*/test_p8_*.py tests/p8") == 1
     assert "ci_execution verify-shared --job full_operations" in audit

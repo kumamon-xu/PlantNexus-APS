@@ -125,6 +125,39 @@ def check_report(path: Path) -> None:
             raise ValueError(f"JUnit records failure: {path}")
 
 
+def prepare_runtime(root: Path) -> dict[str, Any]:
+    """Stage only frozen packaging README in an ephemeral Actions checkout.
+
+    The operations target deliberately describes a historical Runtime build.
+    Current source/Schema/lock drift is still rejected, never restored away.
+    """
+    from scripts.p8_operations_check import RUNTIME_INPUTS, TARGET_PATH
+
+    run_identity = identity()
+    if os.environ.get("GITHUB_ACTIONS") != "true":
+        raise ValueError("runtime preparation is restricted to ephemeral Actions checkouts")
+    repository = GitRepository(root)
+    if repository.run("rev-parse", "HEAD").stdout.strip() != run_identity["head_sha"]:
+        raise ValueError("checkout does not match run identity")
+    target = json.loads((root / TARGET_PATH).read_text(encoding="utf-8"))
+    source = repository.resolve_commit(target["release"]["implementation_sha"])
+    if repository.run("diff", "HEAD", "--", "README.md").stdout:
+        raise ValueError("refusing to overwrite local README changes")
+    changed = repository.run("diff", "--name-only", source, "--", *RUNTIME_INPUTS).stdout.splitlines()
+    untracked = repository.run("ls-files", "--others", "--exclude-standard", "--", *RUNTIME_INPUTS).stdout
+    if set(changed) - {"README.md"} or untracked:
+        raise ValueError("Runtime source drift; only frozen packaging README may be staged")
+    before = hashlib.sha256((root / "README.md").read_bytes()).hexdigest()
+    repository.run("restore", "--source", source, "--worktree", "--", "README.md")
+    if repository.run("diff", "--name-only", source, "--", *RUNTIME_INPUTS).stdout:
+        raise ValueError("frozen Runtime inputs remain inconsistent")
+    return {"schema_version": "ci-runtime-preparation.v1", "result": "PASS", **run_identity,
+            "runtime_source_sha": source, "packaging_metadata": "README.md",
+            "current_readme_sha256": before,
+            "target_readme_sha256": hashlib.sha256((root / "README.md").read_bytes()).hexdigest(),
+            "restored_product_paths": [], "issues": []}
+
+
 def seal(root: Path, job: str, files: list[Path]) -> dict[str, Any]:
     if job not in JOBS or not files:
         raise ValueError("unknown job or empty evidence")
@@ -181,7 +214,7 @@ def aggregate(root: Path, value: dict[str, Any], needs: dict[str, Any], download
 
 def main() -> int:
     parser = argparse.ArgumentParser(description=__doc__)
-    parser.add_argument("command", choices=("plan", "seal", "aggregate", "verify-shared"))
+    parser.add_argument("command", choices=("plan", "seal", "aggregate", "verify-shared", "prepare-runtime"))
     parser.add_argument("--root", type=Path, default=Path.cwd())
     parser.add_argument("--base", default=os.environ.get("PLANTNEXUS_CI_CHANGE_BASE", ""))
     parser.add_argument("--head", default=os.environ.get("GITHUB_SHA", ""))
@@ -199,6 +232,8 @@ def main() -> int:
                 stream.write(f"profile={value['profile']}\n")
                 for job in JOBS:
                     stream.write(f"{job}={str(job in value['selected']).lower()}\n")
+    elif args.command == "prepare-runtime":
+        value = prepare_runtime(args.root)
     elif args.command == "seal":
         value = seal(args.root, args.job, args.files or [])
     elif args.command == "verify-shared":

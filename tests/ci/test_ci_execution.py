@@ -141,3 +141,37 @@ def test_successful_job_cannot_seal_failed_or_empty_tests(repository, suffix, co
     file.write_text(content)
     with pytest.raises(ValueError):
         ci.seal(root, "full_backend", [file])
+
+
+@pytest.mark.parametrize("product_drift", [False, True])
+def test_frozen_runtime_metadata_staging_never_restores_product(repository, monkeypatch, product_drift):
+    root, git, base = repository
+    target = root / "infra/operations/non-production-target.v1.json"
+    ci.write(target, {"release": {"implementation_sha": base}})
+    (root / "README.md").write_text("later delivery prose")
+    product = root / "backend/app/new.py"
+    if product_drift:
+        product.parent.mkdir(parents=True)
+        product.write_text("new product code")
+    git("add", ".")
+    git("commit", "-qm", "later documentation")
+    monkeypatch.setenv("GITHUB_SHA", git("rev-parse", "HEAD"))
+    monkeypatch.setenv("GITHUB_ACTIONS", "true")
+    if product_drift:
+        with pytest.raises(ValueError, match="Runtime source drift"):
+            ci.prepare_runtime(root)
+        assert product.read_text() == "new product code"
+        assert (root / "README.md").read_text() == "later delivery prose"
+    else:
+        report = ci.prepare_runtime(root)
+        assert report["runtime_source_sha"] == base
+        assert (root / "README.md").read_text() == "baseline\n"
+        git("restore", "--source", "HEAD", "--worktree", "--", "README.md")
+        assert (root / "README.md").read_text() == "later delivery prose"
+
+
+def test_frozen_preparation_is_not_a_local_checkout_operation(repository, monkeypatch):
+    root, _, _ = repository
+    monkeypatch.delenv("GITHUB_ACTIONS", raising=False)
+    with pytest.raises(ValueError, match="ephemeral Actions"):
+        ci.prepare_runtime(root)

@@ -250,14 +250,14 @@ jobs:
         run: uv sync --locked
 
       - name: Existing executable contracts
-        run: |
+        run: &current_contract_1 |
           uv run python -m app.planning.validation.rule_sheet --report build/validation/ci-rule-contracts.json
           uv run python -m app.simulation.generators.contract_check --report build/validation/ci-simulation-contracts.json
           uv run python -m app.simulation.scenarios.golden_fixture --fixture fixtures/deterministic/SIM-MINIMAL-001 --report build/validation/ci-golden.json
           uv run python -m app.planning.validation.mutation_check --root . --report build/validation/ci-validator-mutations.json
 
       - name: P1 common ingress gate
-        run: >-
+        run: &current_contract_2 >-
           uv run python -m app.application.p1_gate_report
           --root .
           --scenario fixtures/synthetic/SIM-P1-INGRESS-001
@@ -265,97 +265,97 @@ jobs:
           --report build/validation/ci-p1-data-pipeline.json
 
       - name: PlanningProblem v1 and v2 contract evidence
-        run: >-
+        run: &current_contract_3 >-
           uv run python -m app.planning.problem.contract_check
           --root .
           --report build/validation/ci-planning-problem-contracts.json
 
       - name: Planning machine contract evidence
-        run: >-
+        run: &current_contract_4 >-
           uv run python -m app.planning.policy.contract_check
           --root .
           --report build/validation/ci-planning-machine-contracts.json
 
       - name: CP-SAT backend foundation evidence
-        run: >-
+        run: &current_contract_5 >-
           uv run python -m app.planning.backends.cp_sat.contract_check
           --root .
           --report build/validation/ci-solver-backend-foundation.json
 
       - name: Formal independent schedule validator evidence
-        run: >-
+        run: &current_contract_6 >-
           uv run python -m app.planning.validation.problem_validator_check
           --root .
           --report build/validation/ci-formal-schedule-validator.json
 
       - name: CP-SAT core model evidence
-        run: >-
+        run: &current_contract_7 >-
           uv run python -m app.planning.backends.cp_sat.core_model_check
           --root .
           --report build/validation/ci-cp-sat-core-model.json
 
       - name: CP-SAT temporal calendar and material model evidence
-        run: >-
+        run: &current_contract_8 >-
           uv run python -m app.planning.backends.cp_sat.temporal_model_check
           --root .
           --report build/validation/ci-cp-sat-temporal-model.json
 
       - name: CP-SAT execution fact and hard lock model evidence
-        run: >-
+        run: &current_contract_9 >-
           uv run python -m app.planning.backends.cp_sat.fact_lock_model_check
           --root .
           --report build/validation/ci-cp-sat-fact-lock-model.json
 
       - name: OBJ-001 and Global CP-SAT strategy evidence
-        run: >-
+        run: &current_contract_10 >-
           uv run python -m app.planning.backends.cp_sat.objective_strategy_check
           --root .
           --report build/validation/ci-objective-strategy.json
 
       - name: P2 Golden scenario property and mutation correctness evidence
-        run: >-
+        run: &current_contract_11 >-
           uv run python -m app.simulation.scenarios.p2_correctness
           --root .
           --report build/validation/ci-p2-correctness.json
 
       - name: P2 deterministic reference scheduler evidence
-        run: >-
+        run: &current_contract_12 >-
           uv run python -m app.simulation.baselines.reference_schedulers
           --root .
           --report build/validation/ci-reference-schedulers.json
 
       - name: P2 KPI SolverReport and internal export evidence
-        run: >-
+        run: &current_contract_13 >-
           uv run python -m app.exporters.contract_check
           --root .
           --report build/validation/ci-p2-output-contracts.json
 
       - name: P3 workspace schema contract evidence
-        run: >-
+        run: &current_contract_14 >-
           uv run python -m app.domain.workspace_contract_check
           --root .
           --report build/validation/ci-p3-workspace-contracts.json
 
       - name: P4 dynamic replanning machine contract evidence
-        run: >-
+        run: &current_contract_15 >-
           uv run python -m app.domain.execution_contract_check
           --root .
           --report build/validation/ci-p4-machine-contracts.json
 
       - name: P8 canonical ingress and PlanningRun machine contract evidence
-        run: >-
+        run: &current_contract_16 >-
           uv run python scripts/p8_machine_contract_check.py
           --root .
           --report build/validation/ci-p8-machine-contracts.json
 
       - name: P8 Extension SDK contract and compatibility evidence
-        run: >-
+        run: &current_contract_17 >-
           uv run python scripts/p8_extension_sdk_contract_check.py
           --root .
           --report build/validation/ci-p8-extension-sdk-contract.json
 
       - name: P8 Runtime Extension Registry and SPI evidence
-        run: >-
+        run: &current_contract_18 >-
           uv run python scripts/p8_runtime_extension_registry_check.py
           --root .
           --report build/validation/ci-p8-runtime-extension-registry.json
@@ -364,7 +364,7 @@ jobs:
           --benchmark-report build/benchmarks/ci-p8-runtime-extension.json
 
       - name: P8 Enterprise Extension template and conformance evidence
-        run: >-
+        run: &current_contract_19 >-
           uv run python scripts/p8_enterprise_extension_kit_check.py
           --root .
           --report build/validation/ci-p8-enterprise-extension-kit.json
@@ -374,7 +374,7 @@ jobs:
           --artifact-directory build/enterprise-extensions
 
       - name: P8 Solver Worker reliability and engineering evidence
-        run: >-
+        run: &current_contract_20 >-
           uv run python -m app.jobs.planning_run_worker_check
           --root .
           --profile benchmarks/p8/solver-worker-engineering-profile.v1.json
@@ -382,14 +382,14 @@ jobs:
           --benchmark-report build/benchmarks/ci-p8-solver-worker.json
 
       - name: P8 Runtime application composition evidence
-        run: >-
+        run: &current_contract_21 >-
           uv run python -m app.application.runtime_composition_check
           --root .
           --report build/validation/ci-p8-runtime-composition.json
           --manifest build/validation/ci-p8-runtime-composition-manifest.json
 
       - name: P8 Headless HTTP API and OpenAPI compatibility evidence
-        run: >-
+        run: &current_contract_22 >-
           uv run python -m app.api.headless_api_check
           --root .
           --snapshot backend/app/api/openapi/headless-api.v1.json
@@ -398,7 +398,7 @@ jobs:
           --benchmark-report build/benchmarks/ci-p8-headless-api.json
 
       - name: P8 Host identity scope and audit evidence
-        run: >-
+        run: &current_contract_23 >-
           uv run python -m app.api.host_authorization_check
           --root .
           --report build/validation/ci-p8-host-authorization.json
@@ -406,7 +406,7 @@ jobs:
           --benchmark-report build/benchmarks/ci-p8-host-authorization.json
 
       - name: P8 reproducible Runtime release and migration evidence
-        run: >-
+        run: &current_contract_24 >-
           uv run python -m app.infrastructure.release.check
           --root .
           --release-output build/release
@@ -428,19 +428,19 @@ jobs:
           backend/tests/validation/test_p8_developer_kit_mutations.py
 
       - name: P6 duration prediction machine contract evidence
-        run: >-
+        run: &current_contract_25 >-
           uv run python scripts/p6_duration_contract_check.py
           --root .
           --report build/validation/ci-p6-duration-contracts.json
 
       - name: P6 feature label dataset evidence
-        run: >-
+        run: &current_contract_26 >-
           uv run python scripts/p6_duration_dataset_check.py
           --root .
           --report build/validation/ci-p6-duration-dataset.json
 
       - name: P6 versioned baseline model and replay evidence
-        run: >-
+        run: &current_contract_27 >-
           uv run python scripts/p6_duration_model_check.py
           --root .
           --report build/validation/ci-p6-duration-model.json
@@ -458,109 +458,109 @@ jobs:
           --report build/validation/ci-p6-duration-runtime.json
 
       - name: P3 workspace persistence evidence
-        run: >-
+        run: &current_contract_28 >-
           uv run python -m app.infrastructure.workspace_persistence_check
           --root .
           --report build/validation/ci-p3-persistence.json
 
       - name: P4 replan event persistence evidence
-        run: >-
+        run: &current_contract_29 >-
           uv run python -m app.infrastructure.replan_persistence_check
           --root .
           --report build/validation/ci-p4-replan-persistence.json
 
       - name: P4 ExecutionEvent fact projection evidence
-        run: >-
+        run: &current_contract_30 >-
           uv run python -m app.application.execution_fact_projection_check
           --root .
           --report build/validation/ci-p4-execution-fact-projection.json
 
       - name: P4 freeze window and effective lock evidence
-        run: >-
+        run: &current_contract_31 >-
           uv run python -m app.planning.problem.freeze_window_check
           --root .
           --report build/validation/ci-p4-freeze-window.json
 
       - name: P4 OBJ-002 stability and ChangeReport evidence
-        run: >-
+        run: &current_contract_32 >-
           uv run python -m app.planning.reporting.stability_change_report_check
           --root .
           --report build/validation/ci-p4-stability-change-report.json
 
       - name: P4 lexicographic replan solver and validator evidence
-        run: >-
+        run: &current_contract_33 >-
           uv run python -m app.planning.backends.cp_sat.replan_solver_check
           --root .
           --report build/validation/ci-p4-replan-solver.json
 
       - name: P4 replan application and ScheduleVersion lineage evidence
-        run: >-
+        run: &current_contract_34 >-
           uv run python -m app.application.replan_application_check
           --root .
           --report build/validation/ci-p4-replan-application.json
 
       - name: P4 deterministic Execution Simulator core evidence
-        run: >-
+        run: &current_contract_35 >-
           uv run python -m app.simulation.execution.simulator_check
           --root .
           --report build/validation/ci-p4-execution-simulator.json
 
       - name: P4 five-disruption continuous replay evidence
-        run: >-
+        run: &current_contract_36 >-
           uv run python -m app.simulation.scenarios.disruption_replay_check
           --root .
           --report build/validation/ci-p4-disruption-replay.json
 
       - name: P4 ChangeReport read model and export evidence
-        run: >-
+        run: &current_contract_37 >-
           uv run python -m app.exporters.change_report_output_check
           --root .
           --report build/validation/ci-p4-change-report-output.json
 
       - name: P3 reviewable ScheduleVersion lifecycle evidence
-        run: >-
+        run: &current_contract_38 >-
           uv run python -m app.application.schedule_version_lifecycle_check
           --root .
           --report build/validation/ci-p3-schedule-version-lifecycle.json
 
       - name: P3 workspace read model and comparison evidence
-        run: >-
+        run: &current_contract_39 >-
           uv run python -m app.application.workspace_read_model_check
           --root .
           --report build/validation/ci-p3-workspace-read-models.json
 
       - name: P3 schedule edit and lock command evidence
-        run: >-
+        run: &current_contract_40 >-
           uv run python -m app.application.schedule_command_check
           --root .
           --report build/validation/ci-p3-schedule-commands.json
 
       - name: P3 approval rejection and audit evidence
-        run: >-
+        run: &current_contract_41 >-
           uv run python -m app.application.approval_decision_check
           --root .
           --report build/validation/ci-p3-approval-decisions.json
 
       - name: P3 publication supersession and idempotency evidence
-        run: >-
+        run: &current_contract_42 >-
           uv run python -m app.application.publication_check
           --root .
           --report build/validation/ci-p3-publication.json
 
       - name: P3 ExportJob and standard package evidence
-        run: >-
+        run: &current_contract_43 >-
           uv run python -m app.application.export_job_check
           --root .
           --report build/validation/ci-p3-export-jobs.json
 
       - name: P3 planning workspace HTTP API evidence
-        run: >-
+        run: &current_contract_44 >-
           uv run python -m app.api.planning_workspace_check
           --root .
           --report build/validation/ci-p3-planning-workspace-api.json
 
       - name: P4 dynamic replanning HTTP API evidence
-        run: >-
+        run: &current_contract_45 >-
           uv run python -m app.api.replanning_check
           --root .
           --report build/validation/ci-p4-replanning-api.json
@@ -939,6 +939,9 @@ jobs:
           name: plantnexus-ci-operations-${{ github.run_id }}
           path: build/shared-operations
 
+      - name: Prepare declared Runtime metadata for independent audit
+        run: python -m scripts.ci_execution prepare-runtime --report build/validation/ci-audit-runtime-source.json
+
       - name: P8 Runtime Extension product corrective evidence
         run: |
           uv run pytest -q backend/tests/*/test_p8_*.py tests/p8 --junitxml=build/validation/ci-p8-tests.xml
@@ -1010,17 +1013,21 @@ jobs:
             --manifest build/validation/ci-p8-17-exit-gate-evidence-manifest.json \
             --subreport-dir build/validation/ci-p8-17-subreports
 
+      - name: Restore audit checkout metadata
+        if: always()
+        run: git restore --source HEAD --worktree -- README.md
+
       - name: Engineering contract
-        run: >-
+        run: &current_contract_46 >-
           uv run python -m app.infrastructure.contract_check
           --root .
           --report build/validation/ci-engineering.json
 
       - name: Container configuration
-        run: docker compose --env-file .env.example config --quiet
+        run: &current_contract_47 docker compose --env-file .env.example config --quiet
 
       - name: Documentation and task diff
-        run: |
+        run: &current_contract_48 |
           uv run python scripts/check_docs.py --discover-task-from "${PLANTNEXUS_CI_CHANGE_BASE}" --check-diff --report build/traceability/ci-current-task-report.json
 
       - name: P2 XS BenchmarkRunner evidence
@@ -1108,6 +1115,9 @@ jobs:
         with:
           python-version: "3.12"
 
+      - name: Prepare declared Runtime packaging metadata
+        run: python -m scripts.ci_execution prepare-runtime --report build/validation/ci-operations-runtime-source.json
+
       - name: P8 non-Production deployment observability and recovery drill
         run: >-
           python scripts/p8_operations_check.py
@@ -1117,8 +1127,12 @@ jobs:
           --recovery-report build/validation/ci-p8-operations-recovery.json
           --runbook-report build/validation/ci-p8-operations-runbooks.json
 
+      - name: Restore current checkout metadata
+        if: always()
+        run: git restore --source HEAD --worktree -- README.md
+
       - name: Seal full_operations evidence
-        run: python -m scripts.ci_execution seal --job full_operations --files build/validation/ci-p8-operations-deployment.json build/validation/ci-p8-operations-observability.json build/validation/ci-p8-operations-recovery.json build/validation/ci-p8-operations-runbooks.json --report build/validation/ci-seal-full_operations.json
+        run: python -m scripts.ci_execution seal --job full_operations --files build/validation/ci-operations-runtime-source.json build/validation/ci-p8-operations-deployment.json build/validation/ci-p8-operations-observability.json build/validation/ci-p8-operations-recovery.json build/validation/ci-p8-operations-runbooks.json --report build/validation/ci-seal-full_operations.json
 
       - name: Upload P8 operations evidence
         if: always()
@@ -1126,6 +1140,7 @@ jobs:
         with:
           name: plantnexus-ci-operations-${{ github.run_id }}
           path: |
+            build/validation/ci-operations-runtime-source.json
             build/validation/ci-seal-full_operations.json
             build/validation/ci-p8-operations-deployment.json
             build/validation/ci-p8-operations-observability.json
@@ -1155,8 +1170,8 @@ jobs:
           test "$(node --version)" = "v24.19.0"
           test "$(npm --version)" = "11.17.0"
           npm ci
-          npm run audit:sca
-          npm run licenses:check
+          npm run audit:sca -- --report ../build/validation/ci-frontend-sca.json
+          npm run licenses:check -- --report ../build/validation/ci-frontend-licenses.json
           npm run lint
           npm run typecheck
           npm run test
@@ -1170,7 +1185,7 @@ jobs:
           cp ../build/playwright/results.xml ../build/validation/ci-frontend-browser.xml
           cp ../build/playwright/p8-distribution/results.xml ../build/validation/ci-frontend-headless.xml
       - name: Seal frontend_validation evidence
-        run: python -m scripts.ci_execution seal --job frontend_validation --files build/validation/ci-frontend-completed.txt build/validation/ci-frontend-browser.xml build/validation/ci-frontend-headless.xml --report build/validation/ci-seal-frontend_validation.json
+        run: python -m scripts.ci_execution seal --job frontend_validation --files build/validation/ci-frontend-sca.json build/validation/ci-frontend-licenses.json build/validation/ci-frontend-completed.txt build/validation/ci-frontend-browser.xml build/validation/ci-frontend-headless.xml --report build/validation/ci-seal-frontend_validation.json
       - uses: actions/upload-artifact@v7
         if: always()
         with:
@@ -1203,322 +1218,148 @@ jobs:
           enable-cache: true
       - run: uv sync --locked
       - name: Existing executable contracts
-        run: |
-          uv run python -m app.planning.validation.rule_sheet --report build/validation/ci-rule-contracts.json
-          uv run python -m app.simulation.generators.contract_check --report build/validation/ci-simulation-contracts.json
-          uv run python -m app.simulation.scenarios.golden_fixture --fixture fixtures/deterministic/SIM-MINIMAL-001 --report build/validation/ci-golden.json
-          uv run python -m app.planning.validation.mutation_check --root . --report build/validation/ci-validator-mutations.json
+        run: *current_contract_1
 
       - name: P1 common ingress gate
-        run: >-
-          uv run python -m app.application.p1_gate_report
-          --root .
-          --scenario fixtures/synthetic/SIM-P1-INGRESS-001
-          --repeat 2
-          --report build/validation/ci-p1-data-pipeline.json
+        run: *current_contract_2
 
       - name: PlanningProblem v1 and v2 contract evidence
-        run: >-
-          uv run python -m app.planning.problem.contract_check
-          --root .
-          --report build/validation/ci-planning-problem-contracts.json
+        run: *current_contract_3
 
       - name: Planning machine contract evidence
-        run: >-
-          uv run python -m app.planning.policy.contract_check
-          --root .
-          --report build/validation/ci-planning-machine-contracts.json
+        run: *current_contract_4
 
       - name: CP-SAT backend foundation evidence
-        run: >-
-          uv run python -m app.planning.backends.cp_sat.contract_check
-          --root .
-          --report build/validation/ci-solver-backend-foundation.json
+        run: *current_contract_5
 
       - name: Formal independent schedule validator evidence
-        run: >-
-          uv run python -m app.planning.validation.problem_validator_check
-          --root .
-          --report build/validation/ci-formal-schedule-validator.json
+        run: *current_contract_6
 
       - name: CP-SAT core model evidence
-        run: >-
-          uv run python -m app.planning.backends.cp_sat.core_model_check
-          --root .
-          --report build/validation/ci-cp-sat-core-model.json
+        run: *current_contract_7
 
       - name: CP-SAT temporal calendar and material model evidence
-        run: >-
-          uv run python -m app.planning.backends.cp_sat.temporal_model_check
-          --root .
-          --report build/validation/ci-cp-sat-temporal-model.json
+        run: *current_contract_8
 
       - name: CP-SAT execution fact and hard lock model evidence
-        run: >-
-          uv run python -m app.planning.backends.cp_sat.fact_lock_model_check
-          --root .
-          --report build/validation/ci-cp-sat-fact-lock-model.json
+        run: *current_contract_9
 
       - name: OBJ-001 and Global CP-SAT strategy evidence
-        run: >-
-          uv run python -m app.planning.backends.cp_sat.objective_strategy_check
-          --root .
-          --report build/validation/ci-objective-strategy.json
+        run: *current_contract_10
 
       - name: P2 Golden scenario property and mutation correctness evidence
-        run: >-
-          uv run python -m app.simulation.scenarios.p2_correctness
-          --root .
-          --report build/validation/ci-p2-correctness.json
+        run: *current_contract_11
 
       - name: P2 deterministic reference scheduler evidence
-        run: >-
-          uv run python -m app.simulation.baselines.reference_schedulers
-          --root .
-          --report build/validation/ci-reference-schedulers.json
+        run: *current_contract_12
 
       - name: P2 KPI SolverReport and internal export evidence
-        run: >-
-          uv run python -m app.exporters.contract_check
-          --root .
-          --report build/validation/ci-p2-output-contracts.json
+        run: *current_contract_13
 
       - name: P3 workspace schema contract evidence
-        run: >-
-          uv run python -m app.domain.workspace_contract_check
-          --root .
-          --report build/validation/ci-p3-workspace-contracts.json
+        run: *current_contract_14
 
       - name: P4 dynamic replanning machine contract evidence
-        run: >-
-          uv run python -m app.domain.execution_contract_check
-          --root .
-          --report build/validation/ci-p4-machine-contracts.json
+        run: *current_contract_15
 
       - name: P8 canonical ingress and PlanningRun machine contract evidence
-        run: >-
-          uv run python scripts/p8_machine_contract_check.py
-          --root .
-          --report build/validation/ci-p8-machine-contracts.json
+        run: *current_contract_16
 
       - name: P8 Extension SDK contract and compatibility evidence
-        run: >-
-          uv run python scripts/p8_extension_sdk_contract_check.py
-          --root .
-          --report build/validation/ci-p8-extension-sdk-contract.json
+        run: *current_contract_17
 
       - name: P8 Runtime Extension Registry and SPI evidence
-        run: >-
-          uv run python scripts/p8_runtime_extension_registry_check.py
-          --root .
-          --report build/validation/ci-p8-runtime-extension-registry.json
-          --manifest build/validation/ci-p8-runtime-extension-resolution-manifest.json
-          --security-report build/validation/ci-p8-runtime-extension-security.json
-          --benchmark-report build/benchmarks/ci-p8-runtime-extension.json
+        run: *current_contract_18
 
       - name: P8 Enterprise Extension template and conformance evidence
-        run: >-
-          uv run python scripts/p8_enterprise_extension_kit_check.py
-          --root .
-          --report build/validation/ci-p8-enterprise-extension-kit.json
-          --template-manifest build/validation/ci-p8-enterprise-extension-template.json
-          --dependency-report build/validation/ci-p8-enterprise-extension-dependencies.json
-          --benchmark-report build/benchmarks/ci-p8-enterprise-extension-tooling.json
-          --artifact-directory build/enterprise-extensions
+        run: *current_contract_19
 
       - name: P8 Solver Worker reliability and engineering evidence
-        run: >-
-          uv run python -m app.jobs.planning_run_worker_check
-          --root .
-          --profile benchmarks/p8/solver-worker-engineering-profile.v1.json
-          --report build/validation/ci-p8-solver-worker.json
-          --benchmark-report build/benchmarks/ci-p8-solver-worker.json
+        run: *current_contract_20
 
       - name: P8 Runtime application composition evidence
-        run: >-
-          uv run python -m app.application.runtime_composition_check
-          --root .
-          --report build/validation/ci-p8-runtime-composition.json
-          --manifest build/validation/ci-p8-runtime-composition-manifest.json
+        run: *current_contract_21
 
       - name: P8 Headless HTTP API and OpenAPI compatibility evidence
-        run: >-
-          uv run python -m app.api.headless_api_check
-          --root .
-          --snapshot backend/app/api/openapi/headless-api.v1.json
-          --report build/validation/ci-p8-headless-http-api.json
-          --diff-report build/validation/ci-p8-headless-openapi-diff.json
-          --benchmark-report build/benchmarks/ci-p8-headless-api.json
+        run: *current_contract_22
 
       - name: P8 Host identity scope and audit evidence
-        run: >-
-          uv run python -m app.api.host_authorization_check
-          --root .
-          --report build/validation/ci-p8-host-authorization.json
-          --audit-report build/validation/ci-p8-host-authorization-audit.json
-          --benchmark-report build/benchmarks/ci-p8-host-authorization.json
+        run: *current_contract_23
 
       - name: P8 reproducible Runtime release and migration evidence
-        run: >-
-          uv run python -m app.infrastructure.release.check
-          --root .
-          --release-output build/release
-          --report build/validation/ci-p8-runtime-release.json
-          --compatibility-report build/validation/ci-p8-runtime-release-compatibility.json
-          --migration-report build/validation/ci-p8-runtime-release-migration.json
-          --security-report build/validation/ci-p8-runtime-release-security.json
-          --benchmark-report build/benchmarks/ci-p8-runtime-release.json
+        run: *current_contract_24
 
       - name: P6 duration prediction machine contract evidence
-        run: >-
-          uv run python scripts/p6_duration_contract_check.py
-          --root .
-          --report build/validation/ci-p6-duration-contracts.json
+        run: *current_contract_25
 
       - name: P6 feature label dataset evidence
-        run: >-
-          uv run python scripts/p6_duration_dataset_check.py
-          --root .
-          --report build/validation/ci-p6-duration-dataset.json
+        run: *current_contract_26
 
       - name: P6 versioned baseline model and replay evidence
-        run: >-
-          uv run python scripts/p6_duration_model_check.py
-          --root .
-          --report build/validation/ci-p6-duration-model.json
-          --model-artifact build/validation/ci-p6-duration-baseline-model.json
-          --manifest-artifact build/validation/ci-p6-duration-model-manifest.json
-          --replay-artifact build/validation/ci-p6-duration-model-replay.json
-          &&
-          uv run python scripts/p6_duration_evaluation_check.py
-          --root .
-          --report build/validation/ci-p6-duration-evaluation.json
-          &&
-          uv run python scripts/p6_duration_runtime_check.py
-          --root .
-          --offline-gate-report build/validation/ci-p6-duration-evaluation.json
-          --report build/validation/ci-p6-duration-runtime.json
+        run: *current_contract_27
 
       - name: P3 workspace persistence evidence
-        run: >-
-          uv run python -m app.infrastructure.workspace_persistence_check
-          --root .
-          --report build/validation/ci-p3-persistence.json
+        run: *current_contract_28
 
       - name: P4 replan event persistence evidence
-        run: >-
-          uv run python -m app.infrastructure.replan_persistence_check
-          --root .
-          --report build/validation/ci-p4-replan-persistence.json
+        run: *current_contract_29
 
       - name: P4 ExecutionEvent fact projection evidence
-        run: >-
-          uv run python -m app.application.execution_fact_projection_check
-          --root .
-          --report build/validation/ci-p4-execution-fact-projection.json
+        run: *current_contract_30
 
       - name: P4 freeze window and effective lock evidence
-        run: >-
-          uv run python -m app.planning.problem.freeze_window_check
-          --root .
-          --report build/validation/ci-p4-freeze-window.json
+        run: *current_contract_31
 
       - name: P4 OBJ-002 stability and ChangeReport evidence
-        run: >-
-          uv run python -m app.planning.reporting.stability_change_report_check
-          --root .
-          --report build/validation/ci-p4-stability-change-report.json
+        run: *current_contract_32
 
       - name: P4 lexicographic replan solver and validator evidence
-        run: >-
-          uv run python -m app.planning.backends.cp_sat.replan_solver_check
-          --root .
-          --report build/validation/ci-p4-replan-solver.json
+        run: *current_contract_33
 
       - name: P4 replan application and ScheduleVersion lineage evidence
-        run: >-
-          uv run python -m app.application.replan_application_check
-          --root .
-          --report build/validation/ci-p4-replan-application.json
+        run: *current_contract_34
 
       - name: P4 deterministic Execution Simulator core evidence
-        run: >-
-          uv run python -m app.simulation.execution.simulator_check
-          --root .
-          --report build/validation/ci-p4-execution-simulator.json
+        run: *current_contract_35
 
       - name: P4 five-disruption continuous replay evidence
-        run: >-
-          uv run python -m app.simulation.scenarios.disruption_replay_check
-          --root .
-          --report build/validation/ci-p4-disruption-replay.json
+        run: *current_contract_36
 
       - name: P4 ChangeReport read model and export evidence
-        run: >-
-          uv run python -m app.exporters.change_report_output_check
-          --root .
-          --report build/validation/ci-p4-change-report-output.json
+        run: *current_contract_37
 
       - name: P3 reviewable ScheduleVersion lifecycle evidence
-        run: >-
-          uv run python -m app.application.schedule_version_lifecycle_check
-          --root .
-          --report build/validation/ci-p3-schedule-version-lifecycle.json
+        run: *current_contract_38
 
       - name: P3 workspace read model and comparison evidence
-        run: >-
-          uv run python -m app.application.workspace_read_model_check
-          --root .
-          --report build/validation/ci-p3-workspace-read-models.json
+        run: *current_contract_39
 
       - name: P3 schedule edit and lock command evidence
-        run: >-
-          uv run python -m app.application.schedule_command_check
-          --root .
-          --report build/validation/ci-p3-schedule-commands.json
+        run: *current_contract_40
 
       - name: P3 approval rejection and audit evidence
-        run: >-
-          uv run python -m app.application.approval_decision_check
-          --root .
-          --report build/validation/ci-p3-approval-decisions.json
+        run: *current_contract_41
 
       - name: P3 publication supersession and idempotency evidence
-        run: >-
-          uv run python -m app.application.publication_check
-          --root .
-          --report build/validation/ci-p3-publication.json
+        run: *current_contract_42
 
       - name: P3 ExportJob and standard package evidence
-        run: >-
-          uv run python -m app.application.export_job_check
-          --root .
-          --report build/validation/ci-p3-export-jobs.json
+        run: *current_contract_43
 
       - name: P3 planning workspace HTTP API evidence
-        run: >-
-          uv run python -m app.api.planning_workspace_check
-          --root .
-          --report build/validation/ci-p3-planning-workspace-api.json
+        run: *current_contract_44
 
       - name: P4 dynamic replanning HTTP API evidence
-        run: >-
-          uv run python -m app.api.replanning_check
-          --root .
-          --report build/validation/ci-p4-replanning-api.json
+        run: *current_contract_45
 
       - name: Engineering contract
-        run: >-
-          uv run python -m app.infrastructure.contract_check
-          --root .
-          --report build/validation/ci-engineering.json
+        run: *current_contract_46
 
       - name: Container configuration
-        run: docker compose --env-file .env.example config --quiet
+        run: *current_contract_47
 
       - name: Documentation and task diff
-        run: |
-          uv run python scripts/check_docs.py --discover-task-from "${PLANTNEXUS_CI_CHANGE_BASE}" --check-diff --report build/traceability/ci-current-task-report.json
+        run: *current_contract_48
 
       - name: Current Solver benchmark and packaging
         run: |

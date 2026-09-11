@@ -166,8 +166,9 @@ def seal(root: Path, job: str, files: list[Path]) -> dict[str, Any]:
         if not path.is_file() or path.stat().st_size == 0:
             raise ValueError(f"missing or empty evidence: {path}")
         check_report(path)
-        records.append({"name": path.name, "sha256": hashlib.sha256(path.read_bytes()).hexdigest()})
-    return {"schema_version": "ci-evidence-seal.v1", **identity(), "job": job,
+        relative = path.resolve().relative_to((root / "build").resolve()).as_posix()
+        records.append({"path": relative, "sha256": hashlib.sha256(path.read_bytes()).hexdigest()})
+    return {"schema_version": "ci-evidence-seal.v2", **identity(), "job": job,
             "environment": {"os": platform.system(), "python": platform.python_version()},
             "inputs": {str(p): hashlib.sha256((root / p).read_bytes()).hexdigest()
                        for p in ("uv.lock", "frontend/package-lock.json", ".github/workflows/ci.yml")},
@@ -179,23 +180,29 @@ def verify_seal(root: Path, downloads: Path, job: str) -> dict[str, Any]:
     if len(matches) != 1:
         raise ValueError(f"expected exactly one seal for {job}, found {len(matches)}")
     value = json.loads(matches[0].read_text(encoding="utf-8"))
-    if value.get("schema_version") != "ci-evidence-seal.v1" or value.get("job") != job:
+    if value.get("schema_version") != "ci-evidence-seal.v2" or value.get("job") != job:
         raise ValueError("invalid evidence seal")
     if any(value.get(k) != v for k, v in identity().items()):
         raise ValueError("evidence run/SHA/attempt mismatch")
     if value.get("environment") != {"os": platform.system(), "python": platform.python_version()}:
         raise ValueError("evidence environment mismatch")
-    expected_inputs = seal(root, job, [root / "uv.lock"])["inputs"]
+    expected_inputs = {str(p): hashlib.sha256((root / p).read_bytes()).hexdigest()
+                       for p in ("uv.lock", "frontend/package-lock.json", ".github/workflows/ci.yml")}
     if value.get("inputs") != expected_inputs or not value.get("files"):
         raise ValueError("evidence inputs mismatch or missing records")
     for record in value["files"]:
-        if Path(record["name"]).name != record["name"]:
-            raise ValueError("unsafe evidence name")
-        candidates = list(downloads.rglob(record["name"]))
-        if not candidates or any(hashlib.sha256(p.read_bytes()).hexdigest() != record["sha256"] for p in candidates):
-            raise ValueError(f"missing or corrupted evidence: {record['name']}")
-        for candidate in candidates:
-            check_report(candidate)
+        relative = record["path"]
+        if Path(relative).is_absolute() or ".." in Path(relative).parts or "\\" in relative or ":" in relative:
+            raise ValueError("unsafe evidence path")
+        # All seals originate in build/validation. Artifact upload may strip
+        # their common ancestor, so locate each report relative to that seal.
+        offset = os.path.relpath(root / "build" / relative, root / "build/validation")
+        candidate = (matches[0].parent / offset).resolve()
+        artifact_root = matches[0].parent.parent if matches[0].parent.name == "validation" else matches[0].parent
+        if (not candidate.is_relative_to(artifact_root.resolve()) or not candidate.is_file()
+                or hashlib.sha256(candidate.read_bytes()).hexdigest() != record["sha256"]):
+            raise ValueError(f"missing or corrupted evidence: {relative}")
+        check_report(candidate)
     return value
 
 

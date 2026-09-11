@@ -58,8 +58,8 @@ def test_provider_rejects_forged_plan():
 @pytest.mark.parametrize("failure", [None, "missing", "corrupt", "wrong-attempt", "wrong-plan"])
 def test_provider_checks_sealed_bytes(failure):
     value = plan(["docs_validation"])
-    seal = {"schema_version": "ci-evidence-seal.v1", "job": "docs_validation", "head_sha": SHA,
-            "run_id": "123", "run_attempt": "1", "files": [{"name": "report.txt", "sha256": hashlib.sha256(b"ok").hexdigest()}]}
+    seal = {"schema_version": "ci-evidence-seal.v2", "job": "docs_validation", "head_sha": SHA,
+            "run_id": "123", "run_attempt": "1", "files": [{"path": "validation/report.txt", "sha256": hashlib.sha256(b"ok").hexdigest()}]}
     aggregate = {"schema_version": "ci-aggregate.v1", "result": "PASS", "head_sha": SHA,
                  "run_id": "123", "run_attempt": "1", "plan_digest": value["plan_digest"],
                  "selected": value["selected"], "seals": [seal]}
@@ -103,3 +103,23 @@ def test_transport_recovery_records_attempt_without_rerunning_jobs(monkeypatch):
     client = GhClient()
     assert client._json("api", "repos/example/project/actions/runs") == {}
     assert client.read_retries == [{"operation": "api", "attempt": 1, "reason": "transient-read-transport"}]
+
+
+def test_provider_resolves_reports_inside_their_producer_archive():
+    value = plan(["solver_validation"])
+    seal = {"schema_version": "ci-evidence-seal.v2", "job": "solver_validation", "head_sha": SHA,
+            "run_id": "123", "run_attempt": "1", "files": [
+                {"path": "validation/same.txt", "sha256": hashlib.sha256(b"contract").hexdigest()},
+                {"path": "benchmarks/same.txt", "sha256": hashlib.sha256(b"benchmark").hexdigest()},
+            ]}
+    aggregate = {"schema_version": "ci-aggregate.v1", "result": "PASS", "head_sha": SHA,
+                 "run_id": "123", "run_attempt": "1", "plan_digest": value["plan_digest"],
+                 "selected": value["selected"], "seals": [seal]}
+    producer = {"validation/ci-seal-solver_validation.json": seal,
+                "validation/same.txt": b"contract", "benchmarks/same.txt": b"benchmark"}
+    result = archive({"ci-aggregate.json": aggregate})
+    verify_execution_archives(value, [archive(producer), result], SHA, 123)
+    del producer["benchmarks/same.txt"]
+    with pytest.raises(ValueError):
+        verify_execution_archives(value, [archive(producer), result,
+                                         archive({"benchmarks/same.txt": b"benchmark"})], SHA, 123)

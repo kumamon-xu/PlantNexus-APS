@@ -5,6 +5,7 @@ from __future__ import annotations
 import argparse
 import hashlib
 import json
+import posixpath
 import re
 import subprocess
 import sys
@@ -680,16 +681,18 @@ def verify_execution_archives(
     plan: Mapping[str, Any], archives: Sequence[bytes], commit_sha: str, run_id: int,
 ) -> None:
     """Independently check aggregate and sealed bytes after ZIP safety inspection."""
-    contents: dict[str, list[bytes]] = {}
+    contents: dict[str, list[tuple[dict[str, bytes], str]]] = {}
     for data in archives:
         with zipfile.ZipFile(BytesIO(data)) as archive:
+            members = {safe_zip_name(name): archive.read(name) for name in archive.namelist() if not name.endswith("/")}
             for name in archive.namelist():
                 if not name.endswith("/"):
-                    contents.setdefault(PurePosixPath(name).name, []).append(archive.read(name))
+                    contents.setdefault(PurePosixPath(name).name, []).append((members, name))
     aggregates = contents.get("ci-aggregate.json", [])
     if len(aggregates) != 1:
         raise ValueError("missing or duplicate CI aggregate")
-    aggregate = json.loads(aggregates[0])
+    members, name = aggregates[0]
+    aggregate = json.loads(members[name])
     if (aggregate.get("schema_version") != "ci-aggregate.v1"
             or aggregate.get("result") != "PASS"
             or aggregate.get("head_sha") != commit_sha
@@ -702,15 +705,19 @@ def verify_execution_archives(
         matches = contents.get(f"ci-seal-{job}.json", [])
         if len(matches) != 1:
             raise ValueError(f"missing or duplicate seal: {job}")
-        seal = json.loads(matches[0])
-        if (seal.get("schema_version") != "ci-evidence-seal.v1" or seal.get("job") != job
+        members, seal_name = matches[0]
+        seal = json.loads(members[seal_name])
+        if (seal.get("schema_version") != "ci-evidence-seal.v2" or seal.get("job") != job
                 or any(seal.get(k) != aggregate.get(k) for k in ("head_sha", "run_id", "run_attempt"))
                 or not seal.get("files")):
             raise ValueError(f"seal identity mismatch: {job}")
         for record in seal["files"]:
-            matches = contents.get(record["name"], [])
-            if not matches or any(hashlib.sha256(data).hexdigest() != record["sha256"] for data in matches):
-                raise ValueError(f"sealed evidence missing or corrupted: {record['name']}")
+            path = safe_zip_name(record["path"])
+            offset = posixpath.relpath(path, "validation")
+            entry = safe_zip_name(posixpath.normpath(posixpath.join(posixpath.dirname(seal_name), offset)))
+            data = members.get(entry)
+            if data is None or hashlib.sha256(data).hexdigest() != record["sha256"]:
+                raise ValueError(f"sealed evidence missing or corrupted: {path}")
         seals.append(seal)
     if aggregate.get("seals") != seals:
         raise ValueError("aggregate seals differ from producer evidence")

@@ -74,9 +74,13 @@ def complete_evidence(repository):
     downloads = root / "downloads"
     downloads.mkdir()
     for job in value["selected"]:
-        file = downloads / f"{job}.txt"
+        file = root / "build/validation" / f"{job}.txt"
+        file.parent.mkdir(parents=True, exist_ok=True)
         file.write_text("actual evidence")
-        ci.write(downloads / f"ci-seal-{job}.json", ci.seal(root, job, [file]))
+        destination = downloads / job
+        destination.mkdir()
+        (destination / file.name).write_bytes(file.read_bytes())
+        ci.write(destination / f"ci-seal-{job}.json", ci.seal(root, job, [file]))
     needs = {job: {"result": result} for job, result in value["expected_jobs"].items() if job != "validate"}
     return root, value, needs, downloads
 
@@ -85,11 +89,30 @@ def test_complete_selected_evidence_passes(repository):
     assert ci.aggregate(*complete_evidence(repository))["result"] == "PASS"
 
 
+def test_same_basename_in_different_report_directories_is_unambiguous(repository):
+    root, _, _ = repository
+    files = []
+    downloads = root / "downloads"
+    for directory in ("validation", "benchmarks"):
+        file = root / "build" / directory / "same.json"
+        ci.write(file, {"result": "PASS", "kind": directory})
+        destination = downloads / directory / file.name
+        destination.parent.mkdir(parents=True, exist_ok=True)
+        destination.write_bytes(file.read_bytes())
+        files.append(file)
+    ci.write(downloads / "validation/ci-seal-solver_validation.json", ci.seal(root, "solver_validation", files))
+    assert ci.verify_seal(root, downloads, "solver_validation")["files"][0]["path"] == "validation/same.json"
+    # A valid report with the same name cannot substitute for the missing one.
+    (downloads / "benchmarks/same.json").unlink()
+    with pytest.raises(ValueError, match="benchmarks/same.json"):
+        ci.verify_seal(root, downloads, "solver_validation")
+
+
 @pytest.mark.parametrize("failure", ["skipped", "cancelled", "failure", "missing-job", "missing-seal", "missing-report", "corruption", "wrong-sha", "wrong-run", "wrong-attempt", "wrong-input", "plan-tamper"])
 def test_aggregate_rejects_missing_failed_or_stale_evidence(repository, failure):
     root, value, needs, downloads = complete_evidence(repository)
     job = value["selected"][0]
-    seal_path = downloads / f"ci-seal-{job}.json"
+    seal_path = downloads / job / f"ci-seal-{job}.json"
     seal = json.loads(seal_path.read_text())
     if failure in {"skipped", "cancelled", "failure"}:
         needs[job]["result"] = failure
@@ -98,9 +121,9 @@ def test_aggregate_rejects_missing_failed_or_stale_evidence(repository, failure)
     elif failure == "missing-seal":
         seal_path.unlink()
     elif failure == "missing-report":
-        (downloads / f"{job}.txt").unlink()
+        (downloads / job / f"{job}.txt").unlink()
     elif failure == "corruption":
-        (downloads / f"{job}.txt").write_text("tampered")
+        (downloads / job / f"{job}.txt").write_text("tampered")
     elif failure == "plan-tamper":
         value["selected"].pop()
     else:

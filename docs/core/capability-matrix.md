@@ -6,10 +6,16 @@ spec_version: 0.3.0
 phase: cross-phase
 normative: true
 source_sections: [7, 8, 27, 43, 81, 82, 107, 113, 114]
-last_reviewed: 2026-09-05
+last_reviewed: 2026-09-11
 ---
 
 # 能力矩阵
+
+## P5 custom advanced capability retirement
+
+用户于2026-09-11最终退役历史P5中未实现、未执行的TASK-P5-03～20；十八张卡继续保持`cancelled`，并具有`FINAL_RETIRED/NOT_EXECUTED`治理语义。本轮定制的SECONDARY_CAPACITY、SEQUENCE_DEPENDENT_SETUP、MATERIAL_COMPETITION、BATCH_PROCESSING、SPLIT_MERGE、BUFFER_CAPACITY、PREEMPTIVE_OPERATION、DecomposedStrategy与RollingHorizonStrategy方案全部作废，不得使用原Task继续实现。
+
+C-012～C-018继续为`UNSUPPORTED`并返回`UNSUPPORTED_CAPABILITY`；Decomposition、Rolling Horizon与Hybrid均未形成，Global仍是唯一已形成策略。未来若重新审定同类能力，必须从当时需求重新建立versioned decision、Milestone/plan与全新Task/Test/Gate，不得复活原卡或继承其授权、Diff base、依赖门和Provider身份。本决定不关闭OPEN/SIM/risk，不改变已完成P5/P6/P8的历史Exit，也不形成Production能力。
 
 ## P8 machine-contract status
 
@@ -85,17 +91,17 @@ P6依次规划数据/model governance、machine contract/Schema、dataset、vers
 
 Fresh Exit审计没有改变能力状态。P5 qualification仍为九项`DEFERRED`、selected=`[]`，P5-03～20均为证据化`cancelled`；C-012～C-018的七个公开precheck继续逐项返回`UNSUPPORTED_CAPABILITY`，Decomposition与Rolling Horizon没有owner invocation，Global仍是唯一已形成策略。
 
-本地15/15 READY只证明P5空portfolio与既有Simulation/development边界可独立复验；implementation/closure provider仍待闭环。它不形成advanced capability、P6+或Production能力，也不改变default-deny。
+历史15/15 READY及双exact Provider只证明P5空portfolio与既有Simulation/development边界可独立复验。它不形成advanced capability、P6+或Production能力，也不改变default-deny；2026-09-11后原TASK-P5-03～20进一步按本页顶部决定最终退役。
 
 ## TASK-P5-21 aggregate rejection evidence
 
 Empty-selected P5 Gate没有改变能力矩阵。它在fresh run中对SECONDARY_CAPACITY、SEQUENCE_DEPENDENT_SETUP、MATERIAL_COMPETITION、BATCH_PROCESSING、SPLIT_MERGE、BUFFER_CAPACITY和PREEMPTIVE_OPERATION分别调用公开capability precheck，C-012～C-018全部精确返回`UNSUPPORTED_CAPABILITY`。Decomposition和Rolling Horizon仍为DEFERRED且没有owner invocation；selected-owner evidence manifest的report count为0。
 
-该结果只证明未选能力持续默认关闭，不把DEFERRED解释为已支持或已取消真实需求。TASK-P5-22尚未启动，P6+和Production能力未形成。
+该结果只证明未选能力持续默认关闭，不把DEFERRED解释为已支持或已取消真实需求。P5-22随后完成Exit；2026-09-11治理决定又最终退役原TASK-P5-03～20，但P6+和Production能力仍不能由这些历史事实推导。
 
 ## TASK-P5-01 qualification result
 
-九项候选当前组合决定均为`DEFERRED`：SECONDARY_CAPACITY、SEQUENCE_DEPENDENT_SETUP、MATERIAL_COMPETITION、BATCH_PROCESSING、SPLIT_MERGE、BUFFER_CAPACITY、PREEMPTIVE_OPERATION，以及Decomposition、Rolling Horizon。原因不是已证明不需要，而是本次没有合格真实需求，现有versioned Simulation/XS-S-M Benchmark也没有证明当前显式拒绝或Global策略不可接受。selected portfolio为空；DEFERRED允许未来以新版本证据重新提案，但不授权TASK-P5-02或任何能力实现。
+九项候选在P5-01历史时点的组合决定均为`DEFERRED`：SECONDARY_CAPACITY、SEQUENCE_DEPENDENT_SETUP、MATERIAL_COMPETITION、BATCH_PROCESSING、SPLIT_MERGE、BUFFER_CAPACITY、PREEMPTIVE_OPERATION，以及Decomposition、Rolling Horizon。原因不是已证明不需要，而是当时没有合格真实需求，现有versioned Simulation/XS-S-M Benchmark也没有证明显式拒绝或Global策略不可接受。selected portfolio为空；该历史决定现由2026-09-11最终退役决定补充，未来只能新立项，不得执行或复活原TASK-P5-03～20。
 
 C-012～C-018的registry/precheck继续为`UNSUPPORTED`/`UNSUPPORTED_CAPABILITY`，Global仍是唯一已形成策略。此证据决定不形成partial support、近似支持或Production能力。
 
@@ -103,7 +109,7 @@ C-012～C-018的registry/precheck继续为`UNSUPPORTED`/`UNSUPPORTED_CAPABILITY`
 
 P5 Milestone现已激活，但激活与规划不改变任何能力状态。SECONDARY_CAPACITY、SEQUENCE_DEPENDENT_SETUP、MATERIAL_COMPETITION、BATCH_PROCESSING、SPLIT_MERGE、BUFFER_CAPACITY和PREEMPTIVE_OPERATION继续为`UNSUPPORTED`，DecomposedStrategy与RollingHorizonStrategy也尚未形成。调用方必须继续得到既有fail-closed rejection，不能因存在P5 Task卡而启用或近似能力。
 
-TASK-P5-01只逐项给出必要性证据；TASK-P5-02只修订selected/deferred计划。只有对应合同包与vertical slice均取得双exact provider、feature flag保持default-off且能力registry/合同由该Task明确同步后，单项支持状态才可能改变。所有selected实现还必须保持P4 ExecutionEvent/Replan/freeze/Stability/ChangeReport/Simulator边界。Multi-Factory、alternative routing扩展、tools/fixtures专用语义、Hybrid和P6+不在本P5计划内。
+TASK-P5-01只逐项给出必要性证据；TASK-P5-02只修订selected/deferred计划。历史计划没有形成任何单项支持，原合同包与vertical slice现均已最终退役。未来能力只能通过全新Task明确同步registry/合同并重新满足default-off、P4 ExecutionEvent/Replan/freeze/Stability/ChangeReport/Simulator等边界；不得沿用原P5执行链。Multi-Factory、alternative routing扩展、tools/fixtures专用语义、Hybrid和P6+不因本决定形成。
 
 ## TASK-P4-12 local API capability status
 

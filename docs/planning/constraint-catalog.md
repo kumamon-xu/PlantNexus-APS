@@ -6,10 +6,16 @@ spec_version: 0.3.0
 phase: P0-P5
 normative: true
 source_sections: [21, 22, 25, 26, 27, 30, 31]
-last_reviewed: 2026-08-31
+last_reviewed: 2026-09-11
 ---
 
 # V1 Constraint Catalog
+
+## C-012～C-018 historical Task retirement
+
+用户于2026-09-11最终退役TASK-P5-03～16及同批高级策略TASK-P5-17～20。本轮P5为C-012～C-018设计的合同/implementation双卡全部保持`cancelled`并标记为`FINAL_RETIRED/NOT_EXECUTED`；不得恢复、继续实现或补做Provider。机器rule sheet与capability registry不变，C-012～C-018继续逐项返回`UNSUPPORTED_CAPABILITY`。
+
+未来若重新审定同类约束，必须以新的versioned需求、规则分配、Task ID、Test ID/Gate和独立授权重新开始；不得继承原P5卡的映射、Diff base或Provider身份。退役Task不等于删除C-ID，也不表示能力已支持或真实需求已永久关闭。
 
 ## TASK-P5-01 C-012～C-018 decision
 
@@ -17,11 +23,11 @@ P5-01逐条验证C-012 SECONDARY_CAPACITY、C-013 SEQUENCE_DEPENDENT_SETUP、C-0
 
 每项record保留OPEN依赖、缺口及runtime/memory/model-size/quality的`NOT_MEASURED/NOT_COMPARABLE`理由；这不是以缺失证据推断无需能力，也不能把capacity-1 primary或其他现有规则描述成候选近似实现。
 
-## P5 evidence-gated allocation
+## Historical P5 evidence-gated allocation
 
-P5激活没有修改C-001～C-018规则、YAML或Validator。C-012～C-018继续返回`UNSUPPORTED_CAPABILITY`；只有P5-01证据选择、P5-02计划保留、独立用户授权以及对应合同/实现双卡全部闭环后，能力owner Task才可修改机器规则和状态。
+P5激活没有修改C-001～C-018规则、YAML或Validator。C-012～C-018继续返回`UNSUPPORTED_CAPABILITY`；P5-01没有选择任何能力，原能力owner Task现又被最终退役，因此该历史路径不再能够修改机器规则和状态。
 
-计划映射为C-012→TASK-P5-03/04、C-013→05/06、C-014→07/08、C-015→09/10、C-016→11/12、C-017→13/14、C-018→15/16。每条链必须包含additive Schema/Capability Contract、公式独立Validator、正反Fixture、Benchmark、default-off flag及适用P4 regression；未selected链由TASK-P5-02证据化取消，不得近似实现。P5 Decomposition/Rolling属于strategy Task，不分配新C-ID；Hybrid及Milestone外能力排除。
+历史映射为C-012→TASK-P5-03/04、C-013→05/06、C-014→07/08、C-015→09/10、C-016→11/12、C-017→13/14、C-018→15/16；这些链已证据化取消并最终退役，不得近似实现或原地恢复。未来新方案须重新定义additive Schema/Capability Contract、公式独立Validator、正反Fixture、Benchmark、default-off flag及适用P4 regression，并使用全新Task映射。P5 Decomposition/Rolling历史上属于strategy Task且未形成；Hybrid及Milestone外能力仍未形成。
 
 ## TASK-P4-07 global model reuse
 

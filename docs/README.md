@@ -6,7 +6,7 @@ spec_version: 0.3.0
 phase: P8
 normative: false
 source_sections: [2, 6, 24, 90, 113, 114]
-last_reviewed: 2026-09-10
+last_reviewed: 2026-09-11
 ---
 
 # PlantNexus APS 公开文档中心
@@ -14,6 +14,8 @@ last_reviewed: 2026-09-10
 本目录只收录适合随公开 Git 仓库发布的核心项目文档。开发过程记录、Task Card、阶段证据、机器报告、临时草稿、截图、测试输出和下载制品不属于公开文档，应留在被忽略的本地目录或 `build/`。
 
 项目当前已形成P0～P6研发能力，P7真实数据校准暂缓；P8 Headless产品化工程里程碑已完成。当前具备durable canonical ingress、PlanningRun、Solver Worker、单一Runtime组合、五项公开HTTP operation、Test identity/authorization/audit、Runtime工程分发与非Production运维演练。产品边界只接收宿主平台提交的versioned canonical JSON，不在APS内直接建设ERP/MES/WMS/CAM连接器；宿主与可选独立Frontend消费同一API。P8还形成`0.1.0`静态Frontend工程分发、Extension SDK `1.0.0`、服务端Registry/loader、独立项目模板、确定性conformance工具、两份synthetic Enterprise Extension及不可变Developer Kit `1.0.0`。企业项目锁定已验证的Runtime、SDK和Kit组合独立维护，Core/Runtime升级不触发自动升级。
+
+2026-09-11治理决定已将历史P5中未实现、未执行的TASK-P5-03～20全部最终退役；这些Task不得恢复或继续实现。本轮定制的Secondary Resource、Sequence-dependent Setup、Material Competition、Batch、Split/Merge、Buffer、Preemption、Decomposition与Rolling Horizon方案据此作废，C-012～C-018继续显式`UNSUPPORTED_CAPABILITY`，Global仍是唯一已形成策略。未来如重新审定高级功能，必须基于届时需求建立全新versioned计划与全新Task ID，不能继承或复活原P5卡。
 
 P8-17独立`PHASE_GATE`已核验21个P8 Task、21组前序Provider输入（20个前序Task）、88份artifact/2,032个条目及10项保留失败/纠正历史，并在精确提交上fresh重放P8-19。304项P8目标回归、20/20 Exit check、18/18平台检查和4/4 closure均为PASS，零issue/zero gap；该提交的FULL与required Provider已成功，P8-17=`done`、P8=`completed`。失败候选及其artifact仍保留且不rerun。冻结Developer Kit `1.0.0`继续保留`UNSIGNED_ENGINEERING_CANDIDATE`元数据；最终外层成果是`UNSIGNED_INTERNAL_ENGINEERING_DELIVERY`，只代表synthetic工程产品化，不等于外部签名、Production部署、真实客户Extension、P7现实校准、容量/SLA或UAT。能力声明以[能力矩阵](core/capability-matrix.md)和对应合同为准。
 

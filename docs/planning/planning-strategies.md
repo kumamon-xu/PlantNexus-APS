@@ -6,16 +6,22 @@ spec_version: 0.3.0
 phase: P0-P5
 normative: true
 source_sections: [14, 75, 81, 82]
-last_reviewed: 2026-09-01
+last_reviewed: 2026-09-11
 ---
 
 # PlanningStrategy 规则
+
+## P5 strategy Task final retirement
+
+用户于2026-09-11最终退役TASK-P5-17～20及同批TASK-P5-03～16；这些`cancelled`卡现在为`FINAL_RETIRED/NOT_EXECUTED`，不得恢复或用于形成DecomposedStrategy、RollingHorizonStrategy或任何相关fallback。本轮P5定制高级策略方案作废，Global/`global-lexicographic-replan-cp-sat.v1`继续是唯一已形成策略。
+
+未来可以重新审定Decomposition或Rolling Horizon，但必须从届时的真实需求、Benchmark、quality budget与运行边界重新建立versioned决策和全新Task/Test/Gate；不得继承TASK-P5-17～20的授权、参数、Diff base、依赖或Provider身份。下述P5段落保留为历史证据，不再构成可执行入口。
 
 ## TASK-P5-22 Exit audit strategy boundary
 
 Exit审计fresh重放P5 qualification与portfolio Gate，确认selected strategy owner集合仍为空，Global/`global-lexicographic-replan-cp-sat.v1`仍是唯一已形成策略。Decomposition、Rolling Horizon和Hybrid均未进入执行图；空组合不会生成fallback、参数、registry或Feature Flag变更。
 
-本地READY不授权P6 strategy、Production选策、deployment或capacity/SLA；implementation与closure provider完成前TASK仍为`in_progress`。
+历史READY及双exact Provider不授权P6 strategy、Production选策、deployment或capacity/SLA；TASK-P5-22已完成，但不改变顶部最终退役决定。
 
 ## TASK-P5-21 Global-only aggregate replay
 
@@ -27,11 +33,11 @@ Gate PASS只是Simulation/development重放，不建立Hybrid、P6+、Production
 
 Decomposition与Rolling Horizon均为`DEFERRED`。冻结的XS/S/M replay全部PASS且没有触发§82 scaling/memory/model-explosion必要性；同时没有真实portfolio分布、可接受quality-loss预算、partition/merge政策或rolling window/step/overlap/handoff政策。Global/`global-lexicographic-replan-cp-sat.v1`继续是唯一已形成策略，不能因DEFERRED而推导Decomposed、Rolling或Hybrid实现。
 
-## P5 evidence-gated strategy allocation
+## Historical P5 evidence-gated strategy allocation
 
-P5现为active，但Global/`global-lexicographic-replan-cp-sat.v1`仍是唯一已形成策略。TASK-P5-01只评价Decomposition与Rolling Horizon必要性，TASK-P5-02只保留selected链；不存在因phase激活自动选择新strategy的路径。
+P5历史执行期内，Global/`global-lexicographic-replan-cp-sat.v1`是唯一已形成策略。TASK-P5-01只评价Decomposition与Rolling Horizon必要性，TASK-P5-02只保留selected链；不存在因phase激活自动选择新strategy的路径。
 
-Decomposition仅可由TASK-P5-17/18在§82 scaling/memory/model-explosion trigger成立后形成，且必须提供Global comparison Benchmark、deterministic partition/subproblem provenance、complete-or-discard merge、公式独立merge Validator、quality impact report和default-off flag。Rolling Horizon仅可由TASK-P5-19/20形成，必须冻结window/step/overlap/handoff、完整schedule输出、whole-horizon Validator、Global fallback和P4 freeze/Stability/ChangeReport回归。Hybrid不在已批准P5 Milestone中，不得由两者组合推导。
+该历史计划原把Decomposition分配给TASK-P5-17/18、Rolling Horizon分配给TASK-P5-19/20；四张卡现已最终退役，分配不再可执行。未来全新计划仍须重新评估scaling/memory/model-explosion、Global comparison、partition/merge、whole-horizon validation、quality impact、default-off及P4 regression，但这些条件不能复活原Task。Hybrid未形成且不得由历史组合推导。
 
 ## TASK-P4-07 implemented strategy
 
@@ -51,7 +57,7 @@ GlobalCpSatStrategy
 
 一个 PlanningRun 对 PlanningSnapshot 中全部 V1 OperationInstance 统一建模，覆盖跨车间 precedence、候选资源、日历、release/material gates、execution facts 和 locks。
 
-未来可能提案`DecomposedStrategy`、`RollingHorizonStrategy`；P5只允许上述证据门控Task。`HybridStrategy`不在已批准P5范围，当前不得规划或实现。
+未来可能重新提案`DecomposedStrategy`、`RollingHorizonStrategy`，但只能使用重新审定后的全新计划与Task ID；原P5证据门控Task已最终退役。`HybridStrategy`未形成，不能由历史P5范围推导或实现。
 
 ## Decomposition 进入门
 

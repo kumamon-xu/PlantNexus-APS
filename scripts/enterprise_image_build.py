@@ -231,16 +231,89 @@ def scan_image(archive: Path, inputs: dict[str, Any], output: Path) -> dict[str,
             "secret_finding_count": len(secrets), "production_ready": False}
 
 
-def assess_security(scan: dict[str, Any], policy: dict[str, Any]) -> dict[str, Any]:
+NSCD_INSPECTION = r"""
+import hashlib, json, os, platform, shutil
+from pathlib import Path
+status = Path('/var/lib/dpkg/status').read_bytes()
+packages = {}
+for paragraph in status.decode().split('\n\n'):
+    fields = dict(line.split(': ', 1) for line in paragraph.splitlines() if ': ' in line and not line.startswith(' '))
+    if 'Package' in fields:
+        packages[fields['Package']] = {'version': fields.get('Version'), 'status': fields.get('Status')}
+paths = []
+def onerror(error):
+    raise error
+for folder, dirs, files in os.walk('/', topdown=True, followlinks=False, onerror=onerror):
+    if folder == '/':
+        dirs[:] = [d for d in dirs if d not in ('proc', 'sys', 'dev')]
+    paths.extend(os.path.join(folder, name) for name in dirs + files if 'nscd' in name.lower())
+assert platform.machine() == 'x86_64'
+print(json.dumps({'schema_version': 'enterprise-nscd-absence.v1', 'status': 'PASS',
+    'platform': 'linux/amd64', 'filesystem_scan_complete': True,
+    'excluded_virtual_filesystems': ['/proc', '/sys', '/dev'],
+    'dpkg_status_sha256': hashlib.sha256(status).hexdigest(),
+    'nscd_package': packages.get('nscd'), 'nscd_command': shutil.which('nscd'), 'nscd_paths': paths,
+    'glibc_packages': {name: packages[name] for name in ('libc-bin', 'libc6')}}))
+"""
+
+
+def probe_nscd_absence(image_id: str) -> dict[str, Any]:
+    # Inspection-only root with read/search capability; no network or writable rootfs.
+    raw = run(["docker", "run", "--rm", "--platform", "linux/amd64", "--network=none",
+               "--read-only", "--user=0:0", "--cap-drop=ALL", "--cap-add=DAC_READ_SEARCH",
+               "--security-opt=no-new-privileges", image_id, "python", "-c", NSCD_INSPECTION])
+    return {**json.loads(raw), "image_id": image_id,
+            "inspection_sha256": sha256(NSCD_INSPECTION.encode())}
+
+
+def nscd_not_affected(finding: dict[str, Any], evidence: dict[str, Any] | None,
+                      image_id: str | None, advisory: dict[str, Any] | None) -> bool:
+    if evidence is None or advisory is None or image_id is None:
+        return False
+    expected = {"schema_version": "enterprise-component-advisory.v1",
+                "advisory_id": "CVE-2026-89092", "status": "NOT_AFFECTED",
+                "justification": "component_not_present", "component": "nscd",
+                "installed_version": "2.36-9+deb12u14", "scanner_severity": "UNKNOWN",
+                "vendor_status": "affected", "affected_binary_packages": ["libc-bin", "libc6"],
+                "production_security_approval": False}
+    if any(advisory.get(k) != value for k, value in expected.items()):
+        return False
+    if (finding.get("class") != "os-pkgs" or finding.get("VulnerabilityID") != advisory["advisory_id"]
+            or finding.get("PkgName") not in advisory["affected_binary_packages"]
+            or finding.get("InstalledVersion") != advisory["installed_version"]
+            or finding.get("Severity") != advisory["scanner_severity"]
+            or finding.get("Status") != advisory["vendor_status"] or finding.get("FixedVersion")):
+        return False
+    required = {"schema_version": "enterprise-nscd-absence.v1", "status": "PASS",
+                "platform": "linux/amd64", "filesystem_scan_complete": True,
+                "excluded_virtual_filesystems": ["/proc", "/sys", "/dev"],
+                "image_id": image_id, "inspection_sha256": sha256(NSCD_INSPECTION.encode()),
+                "nscd_package": None, "nscd_command": None, "nscd_paths": [],
+                "glibc_packages": {name: {"version": "2.36-9+deb12u14", "status": "install ok installed"}
+                                   for name in ("libc-bin", "libc6")}}
+    return (bool(re.fullmatch(r"sha256:[0-9a-f]{64}", image_id))
+            and bool(re.fullmatch(r"[0-9a-f]{64}", evidence.get("dpkg_status_sha256", "")))
+            and all(k in evidence and evidence[k] == value for k, value in required.items()))
+
+
+def assess_security(scan: dict[str, Any], policy: dict[str, Any], *,
+                    nscd_evidence: dict[str, Any] | None = None, image_id: str | None = None,
+                    os_advisory: dict[str, Any] | None = None) -> dict[str, Any]:
     """Retain unresolved OS risk; never translate a scan into security approval."""
     known = {(v["id"], v["package"], v["version"], v["severity"], v["vendor_status"])
              for v in policy["unresolved_os_findings"]}
     os_findings = []
+    os_vex_findings = []
     runtime_findings = []
     for finding in scan["vulnerabilities"]:
         if finding["class"] == "os-pkgs":
             identity = (finding["VulnerabilityID"], finding["PkgName"], finding["InstalledVersion"],
                         finding["Severity"], finding["Status"])
+            if nscd_not_affected(finding, nscd_evidence, image_id, os_advisory):
+                os_vex_findings.append({"advisory_id": finding["VulnerabilityID"],
+                                        "package": finding["PkgName"], "status": "NOT_AFFECTED",
+                                        "justification": "component_not_present"})
+                continue
             if finding.get("FixedVersion") or identity not in known:
                 raise ValueError("NEW_OR_FIXABLE_OS_FINDING")
             os_findings.append(finding["VulnerabilityID"])
@@ -255,6 +328,7 @@ def assess_security(scan: dict[str, Any], policy: dict[str, Any]) -> dict[str, A
             "upstream_os_disposition": "UNRESOLVED_INTERNAL_TEST_SIMULATION_ONLY",
             "upstream_os_raw_count": len(os_findings), "upstream_os_unique_count": len(set(os_findings)),
             "runtime_vex_unique_count": len(set(runtime_findings)),
+            "os_component_vex": os_vex_findings,
             "runtime_vex_reuse_basis": "exact original wheel/source hash and Linux target unchanged",
             "unrecognized_or_fixable_finding_count": 0}
 
@@ -334,7 +408,10 @@ def build(args: argparse.Namespace) -> dict[str, Any]:
     policy = json.loads((ROOT/"infra/enterprise/image-security-policy.v1.json").read_text())
     if policy["runtime_wheel_sha256"] != inputs["wheel_sha256"] or policy["runtime_source_sha"] != inputs["source_sha"]:
         raise ValueError("VEX_SOURCE_IDENTITY_MISMATCH")
-    assessment = assess_security(scan, policy)
+    nscd_evidence = probe_nscd_absence(identity["Id"])
+    os_advisory = json.loads((ROOT/"infra/enterprise/nscd-advisory.v1.json").read_text(encoding="utf-8"))
+    assessment = assess_security(scan, policy, nscd_evidence=nscd_evidence,
+                                 image_id=identity["Id"], os_advisory=os_advisory)
     return {"schema_version": "enterprise-runtime-image-report.v1", "task_id": "TASK-P8-23",
             "code_commit": commit, "source_runtime_sha": inputs["source_sha"],
             "source_archive_sha256": inputs["archive_sha256"], "candidate": args.candidate,
@@ -345,6 +422,7 @@ def build(args: argparse.Namespace) -> dict[str, Any]:
             "context_inventory": inventory, "probes": probes,
             "image_archive": str(image_tar.relative_to(ROOT)), "image_archive_sha256": image_hash,
             "security": scan, "security_assessment": assessment, "runtime_licenses": licenses,
+            "nscd_component_evidence": nscd_evidence, "os_component_advisory": os_advisory,
             "production_ready": False,
             "runtime_deployment_tested": False}
 

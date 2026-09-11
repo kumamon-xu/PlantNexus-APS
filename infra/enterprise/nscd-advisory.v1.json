@@ -1,0 +1,23 @@
+{
+  "schema_version": "enterprise-component-advisory.v1",
+  "advisory_id": "CVE-2026-89092",
+  "status": "NOT_AFFECTED",
+  "justification": "component_not_present",
+  "component": "nscd",
+  "source_package": "glibc",
+  "affected_binary_packages": [
+    "libc-bin",
+    "libc6"
+  ],
+  "installed_version": "2.36-9+deb12u14",
+  "scanner_severity": "UNKNOWN",
+  "vendor_status": "affected",
+  "assessment_date": "2026-09-11",
+  "vendor_url": "https://security-tracker.debian.org/tracker/CVE-2026-89092",
+  "upstream_url": "https://sourceware.org/git/?p=glibc.git;a=blob;f=advisories/GLIBC-SA-2026-0016",
+  "retrieved_vendor_document_sha256": "fe8b966b706d6d352b5a3aa514631ee2deb92b01555af912e4697920d097f895",
+  "basis": "The vendor identifies an nscd service stack overflow triggered by an oversized malicious DNS response. This image does not include or run nscd. The presence of glibc source-package sibling binaries alone does not supply that service.",
+  "required_evidence": "fresh exact-image no-network read-only inspection: complete installed dpkg package list and filesystem traversal excluding only proc/sys/dev; no nscd package, command or path",
+  "scope": "only this image without additional nscd mounts or installation; re-evaluate any image/package/finding change",
+  "production_security_approval": false
+}

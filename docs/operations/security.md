@@ -27,6 +27,10 @@ Secret只由只读文件进入内存；Compose模板仅含文件路径，禁止�
 
 2026-09-11候选扫描仍有260条未修复OS包发现（118个不同漏洞ID，5条CRITICAL、55条HIGH）。`infra/enterprise/image-security-policy.v1.json`逐项保留包、版本、严重性和上游状态；这些是未解决风险，不是NOT_AFFECTED或安全豁免批准。新发现、已有发现出现可用修复、或包/严重性/状态变化会阻断构建并要求重新评估。镜像只用于未签名内部TEST/SIMULATION，`production_security_approval=false`；不得据构建PASS宣称漏洞清零或Production ready。
 
+P8-25的fresh扫描新增`CVE-2026-89092`，映射到同版本libc-bin/libc6，但[Debian公告](https://security-tracker.debian.org/tracker/CVE-2026-89092)把触发条件限定在启用的nscd服务。独立`nscd-advisory.v1.json`记录公告来源/检索摘要及`component_not_present`评估；原260项风险清单与Runtime输入不改写。每次构建都对exact image执行只读、禁网的完整dpkg/文件系统检查（仅排除proc/sys/dev虚拟文件系统），必须没有nscd包、命令或路径，libc版本/安装状态必须精确匹配，才能对这两条映射记录组件级NOT_AFFECTED。
+
+该inspection临时使用root与唯一DAC_READ_SEARCH能力读取不同owner的受限目录，不挂载宿主目录或socket、不写rootfs；API/Worker/Validator仍保持UID 10001与cap_drop ALL。遍历错误、组件存在、证据缺失/错image/错probe、CVE或包/版本/状态/严重性变化及可用FixedVersion均继续拒绝。实际presence负例与结构负例需证明该门不能变成一般OS例外。扫描原始发现仍保留，新的组件级判定不代表glibc漏洞已修复、原260项风险关闭或Production安全批准；引入nscd包/挂载/运行条件后此证明立即失效。
+
 原Runtime Python依赖不升级：安装组件逐一匹配不可变发行许可证报告；Linux上50项与原51项清单的差异是Windows条件依赖colorama。starlette 0.47.3的已知发现仅复用原发行6项VEX及其别名，前提为相同wheel摘要、源SHA和Linux目标；其他Python发现失败。OS完整许可证清单及上游copyright notices保留，扫描器对散落文本的分类不等同于法律审批。
 
 ## P8最终内部交付的签名边界

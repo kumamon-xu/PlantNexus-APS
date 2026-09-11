@@ -183,7 +183,7 @@ jobs:
         run: uv run ruff check .
 
       - name: Type check
-        run: uv run pyright backend/app backend/aps_extension_sdk backend/aps_extension_tooling backend/aps_developer_kit backend/tests scripts/enterprise_image_build.py infra/enterprise/image_probe.py infra/enterprise/bootstrap tests/enterprise
+        run: uv run pyright backend/app backend/aps_extension_sdk backend/aps_extension_tooling backend/aps_developer_kit backend/tests scripts/enterprise_image_build.py infra/enterprise/image_probe.py infra/enterprise/bootstrap infra/enterprise/compose tests/enterprise
 
       - name: Repository test suites
         run: |
@@ -1142,6 +1142,10 @@ jobs:
           uv run python infra/enterprise/bootstrap/verify_container.py \
             --image-report build/validation/ci-enterprise-image.json \
             --report build/validation/ci-enterprise-image-bootstrap.json
+          uv run python infra/enterprise/compose/verify_container.py \
+            --image-report build/validation/ci-enterprise-image.json \
+            --acquire-test-dependencies \
+            --report build/validation/ci-enterprise-image-compose.json
       - &enterprise_runtime_archive
         name: Retain exact enterprise Runtime image archive
         uses: actions/upload-artifact@v7

@@ -1,0 +1,9 @@
+{
+  "schema_version": "enterprise-dependencies.v1",
+  "platform": "linux/amd64",
+  "images": {
+    "database": "postgres:17.6-alpine3.22@sha256:ef257d85f76e48da1c64832459b59fcaba1a4dac97bf5d7450c77753542eee94",
+    "redis": "redis:8.2.1-alpine3.22@sha256:987c376c727652f99625c7d205a1cba3cb2c53b92b0b62aade2bd48ee1593232"
+  },
+  "scope": "TEST/SIMULATION only; existing frozen dependencies, no upgrade or Production security approval"
+}

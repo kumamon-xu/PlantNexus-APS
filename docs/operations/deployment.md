@@ -11,6 +11,31 @@ last_reviewed: 2026-09-11
 
 # APS Runtime 安装、预检与启动顺序
 
+## 企业双模式 Compose
+
+`infra/enterprise/compose/docker-compose.enterprise.yml`只定义migrate、API、Worker与按需Validator，连接显式配置的外部PostgreSQL/Redis。`docker-compose.standalone.yml`是覆盖文件，增加`dependencies.v1.json`固定版本/digest的PostgreSQL、Redis和独立具名数据卷，不继承开发或历史operations Compose。两种模式仅用于TEST/SIMULATION。
+
+部署前必须持有经Provider及SHA-256核验的镜像报告与已加载镜像。`control.py`使用宿主Python标准库和Docker/Compose；它检查approved report、local image ID、linux/amd64、UID和封装/Runtime labels，将四角色固定到同一`sha256:<image ID>`并禁止pull。输入可以是报告中的exact tag、本地image ID或已加载且RepoDigest一致的registry digest；tag指向错误镜像立即拒绝。没有registry推送时，不把本地image ID或tar digest称作registry digest。依赖镜像必须提前加载到本地，standalone不会隐式下载；版本未升级，不产生新的Production安全批准。
+
+准备两个显式绝对目录：非敏感配置目录包含`deployment.env`、policy、TLS证书和可选Extension wheel/manifest/config/catalog/lock；独立Secret目录只通过只读挂载成为`/run/secrets`，包含`db_user/db_password`、`redis_user/redis_password`、`broker_user/broker_password`、`result_user/result_password`、`identity_token`、`tls_key`。Extension local模式另提供`extension_key`并在env引用该路径。bootstrap与配置也只读挂载，不传Docker socket、源码或宿主隐式目录。Linux文件权限必须允许容器UID 10001读取，Secret值不得经Compose插值；不要照搬测试fixture的公开合成文件权限处理真实密钥。
+
+所有env路径按容器路径填写：配置根`/etc/plantnexus`、Secret根`/run/secrets`，`API_BIND=0.0.0.0`、`API_PORT=8000`、`DATA_VOLUME=/var/lib/plantnexus`、`BACKUP_VOLUME=/var/backups/plantnexus`。不匹配会被拒绝。资源限额取自同一env并作用于Compose，Worker并发仍由bootstrap传入。standalone要求DB host为`database:5432`，Redis/broker/result为`redis:6379`，三个不同Redis index，共用default用户与相同密码文件内容；enterprise可以显式分配不同既有实例/ACL。PostgreSQL与Redis不发布宿主端口，standalone网络禁止外部出口。
+
+```text
+python infra/enterprise/compose/control.py config --mode standalone --image-report <verified-image-report.json> --reference <exact-image-reference> --config-dir <absolute-config-dir> --secrets-dir <absolute-secret-dir> --project <isolated-project> --port <loopback-tls-port> --output <rendered-compose.json>
+python infra/enterprise/compose/control.py up --mode standalone --image-report <verified-image-report.json> --reference <exact-image-reference> --config-dir <absolute-config-dir> --secrets-dir <absolute-secret-dir> --project <isolated-project> --port <loopback-tls-port>
+```
+
+企业已有依赖模式改为`--mode enterprise`。此控制入口只负责固定镜像与首次/停止后的Compose启动；运行中的API/Worker会拒绝直接重新部署，后续受控启停、安装、备份恢复及离线包分别由相邻运维任务交付。不要绕过身份门直接用可变tag执行up。
+
+启动顺序为只读配置预检→依赖连通→执行已发布migration到`0009_host_authorization_audit`并复核exact head→具名Worker健康→API。新库预先建立VARCHAR(128)的Alembic版本表以容纳已发布长revision，沿用已验证部署方法，不改migration文件或业务Schema。未知revision、迁移异常、DB/Redis/broker/result不可用均非零；API/Worker入口自身再次检查head和依赖。Worker以`aps@aps-worker`运行，探针要求exact具名pong与本进程descriptor；API和Worker记录实际factory生成的相同Runtime/Kit/Extension组合身份。
+
+API直接使用配置的TLS证书/私钥，仅发布宿主loopback端口。健康探针验证证书信任、有效期与`API_DOMAIN`主机名，并访问既有`/health/ready`；内部模板proxy不作为此栈的额外服务。真实入口域名、受信证书、代理、企业网络与SSO仍需环境责任方提供，不由本次合成演练证明。认证仍为显式LOCAL_TEST_TOKEN，不能外推Production。
+
+Validator默认不启动，独立profile使用同一镜像、`network_mode: none`及全只读输入挂载。把既有canonical Problem/Candidate放在配置目录的`validation/problem.json`与`validation/candidate.json`，用经身份门生成的Compose执行`docker compose -p <same-project> -f <rendered-compose.json> run --rm --no-deps validator`。原独立Validator真实判定，失败非零；部署日志只保留状态与违例计数，不输出业务payload。
+
+普通`down`保留PostgreSQL/Redis具名卷，重新up后复核exact head与readiness。只有明确一次性合成靶场才允许`down --volumes`；实际数据卷和备份不得按演练清理。该持久化重建证明不是备份恢复、跨版本回退、完整离线安装或容量/SLA结论。
+
 ## 企业配置与 Secret 预检
 
 `infra/enterprise/config/`提供`.env.example`、Planning Policy/Solve Limits、Runtime HTTP policy、authorization policy、Extension catalog/lock、reverse-proxy TLS和Docker Secret/资源接线模板；`configuration-matrix.v1.json`逐项列出必填条件、值的来源、注入位置与验证责任。占位符不构成可运行配置；JSON中的数值占位符须替换为原合同要求的数值类型，不能删除硬约束或猜测业务值。资源值仅为操作者评审的TEST/SIMULATION限额，不代表容量或SLA。

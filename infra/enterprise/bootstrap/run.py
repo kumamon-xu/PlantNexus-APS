@@ -92,7 +92,7 @@ class LocalTestIdentity:
         )
 
 
-def launch(prepared: Prepared, role: str) -> Any:
+def launch(prepared: Prepared, role: str, *, deployment: bool = False) -> Any:
     # No inherited PLANTNEXUS setting can silently override the checked graph.
     for key in list(os.environ):
         if key.upper().startswith("PLANTNEXUS_"):
@@ -131,12 +131,18 @@ def launch(prepared: Prepared, role: str) -> Any:
             host_authorization_policy=prepared.authorization,
             extension_artifacts=prepared.artifacts,
         )
+        if deployment:
+            from .services import record_descriptor
+
+            record_descriptor(prepared, application.state.aps_runtime_descriptor)
         return uvicorn.run(
             application,
             host=prepared.env["API_BIND"],
             port=int(prepared.env["API_PORT"]),
             log_level=prepared.env["LOG_LEVEL"].lower(),
             access_log=False,
+            ssl_certfile=prepared.env["TLS_CERT_FILE"] if deployment else None,
+            ssl_keyfile=prepared.env["TLS_KEY_FILE"] if deployment else None,
         )
     if role == "worker":
         saved = {
@@ -153,11 +159,19 @@ def launch(prepared: Prepared, role: str) -> Any:
         application = create_runtime_celery_app(
             prepared.settings, extension_artifacts=prepared.artifacts
         )
+        if deployment:
+            from .services import record_descriptor
+
+            record_descriptor(
+                prepared,
+                getattr(application, "plantnexus_runtime_composition").descriptor,
+            )
         return application.worker_main(
             [
                 "worker",
                 "--loglevel=" + prepared.env["LOG_LEVEL"],
                 "--concurrency=" + prepared.env["WORKER_CONCURRENCY"],
+                *(["--hostname=aps@aps-worker"] if deployment else []),
             ]
         )
     if role == "migration":

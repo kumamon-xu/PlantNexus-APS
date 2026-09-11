@@ -1,0 +1,60 @@
+# Overlay only; never inherits development/operations Compose.
+services:
+  database:
+    image: postgres:17.6-alpine3.22@sha256:ef257d85f76e48da1c64832459b59fcaba1a4dac97bf5d7450c77753542eee94
+    platform: linux/amd64
+    pull_policy: never
+    restart: "no"
+    cpus: ${CPU_LIMIT:?}
+    mem_limit: ${MEMORY_MIB:?}m
+    security_opt: [no-new-privileges:true]
+    environment:
+      POSTGRES_USER_FILE: /run/secrets/db_user
+      POSTGRES_PASSWORD_FILE: /run/secrets/db_password
+      POSTGRES_DB: ${DB_NAME:?explicit TEST database name required}
+      POSTGRES_INITDB_ARGS: --auth-host=scram-sha-256
+    secrets: [db_user, db_password]
+    volumes: [postgres_data:/var/lib/postgresql/data]
+    networks: [runtime]
+    healthcheck:
+      test: [CMD-SHELL, 'pg_isready -q -U "$$(cat /run/secrets/db_user)" -d "$$POSTGRES_DB"']
+      interval: 3s
+      timeout: 5s
+      retries: 20
+  redis:
+    image: redis:8.2.1-alpine3.22@sha256:987c376c727652f99625c7d205a1cba3cb2c53b92b0b62aade2bd48ee1593232
+    platform: linux/amd64
+    pull_policy: never
+    restart: "no"
+    user: redis
+    read_only: true
+    cap_drop: [ALL]
+    security_opt: [no-new-privileges:true]
+    cpus: ${CPU_LIMIT:?}
+    mem_limit: ${MEMORY_MIB:?}m
+    tmpfs: ["/tmp:rw,noexec,nosuid,size=16m,mode=1777"]
+    entrypoint: [/bin/sh, /opt/redis-entrypoint.sh]
+    secrets: [redis_password]
+    volumes:
+      - redis_data:/data
+      - type: bind
+        source: ./redis-entrypoint.sh
+        target: /opt/redis-entrypoint.sh
+        read_only: true
+        bind: {create_host_path: false}
+    networks: [runtime]
+    healthcheck:
+      test: [CMD-SHELL, 'REDISCLI_AUTH="$$(cat /run/secrets/redis_password)" redis-cli ping | grep -qx PONG']
+      interval: 3s
+      timeout: 5s
+      retries: 20
+  migrate:
+    depends_on:
+      database: {condition: service_healthy}
+      redis: {condition: service_healthy}
+volumes:
+  postgres_data:
+  redis_data:
+networks:
+  runtime:
+    internal: true

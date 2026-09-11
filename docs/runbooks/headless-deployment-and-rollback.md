@@ -11,6 +11,14 @@ last_reviewed: 2026-09-10
 
 # Headless Runtime 部署与双 slot 回退
 
+## 企业 Compose 使用范围
+
+P8-25的企业部署入口见[企业双模式Compose](../operations/deployment.md#企业双模式-compose)。它消费P8-23镜像与P8-24只读bootstrap，在已停止目标上验证身份、配置、依赖、exact migration head、具名Worker和TLS API；依赖不ready、未知revision或迁移失败不能启动API/Worker。普通down保留具名数据卷，重建后必须重新等待健康门。运行中的目标拒绝直接up，避免迁移失败时旧服务被误认为新部署成功。
+
+该新栈不使用下文历史靶场的source build、target、dual-slot或清理命令。P8-25只验证合成数据的持久化重建，不证明备份恢复或跨版本回退；这些操作必须使用后续具名运维程序和明确备份点。只有本卡runner生成的一次性合成project可以删除其卷，企业数据和备份不属于清理范围。
+
+## 历史双 slot 靶场
+
 本Runbook由TASK-P8-10建立并由TASK-P8-18扩展，只适用于`p8-operations-compose-v1`和target manifest固定的exact Runtime `0.1.0`纠正artifact、Alpha Extension及Developer Kit身份。它验证可重复工程部署及同一不可变组合的last-known-good配置回退，不声称已经验证跨版本downgrade、零停机Production发布或流量网关。
 
 ## 触发条件

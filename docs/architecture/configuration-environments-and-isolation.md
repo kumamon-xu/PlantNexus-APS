@@ -11,6 +11,12 @@ last_reviewed: 2026-09-11
 
 # 配置、环境与数据隔离
 
+## 企业 Compose 部署隔离
+
+企业双模式Compose仅引用已验证预构建镜像：host identity gate将approved tag/registry digest映射到本地exact image ID，四角色共用该ID且pull_policy=never。enterprise消费已有依赖，standalone只追加固定digest、独立PostgreSQL/Redis具名卷与内部网络。运行中的目标不能直接通过首次启动入口更新；配置、bootstrap、Secret与Validator输入只读，原Runtime/Core/SDK/Kit及migration bytes保持冻结。
+
+运行层先验证配置，再连接DB/Redis/broker/result；已发布migration成功到exact head才启动Worker，具名Worker健康才启动TLS API。实际factory的descriptor保留Runtime/Kit/Extension身份；原独立Validator在禁网角色执行。Secret只读文件与非敏感env隔离，不经Compose值插值。TLS API只发布loopback，真实企业依赖、SSO、外部ingress、Production、恢复与容量未获本卡授权或结论。命令、挂载和持久化责任见[企业双模式Compose](../operations/deployment.md#企业双模式-compose)。
+
 ## 企业 bootstrap 配置层
 
 `infra/enterprise/config/configuration-matrix.v1.json`定义部署输入位置与验证责任，`enterprise-preflight.v1`只报告安全身份/计数/非敏感配置fingerprint。bootstrap显式解析只读deployment.env与原policy carrier，不隐式读取宿主`.env`，不以ambient `PLANTNEXUS_*`覆盖验证后的Settings；Secret只通过只读文件在内存中注入。所有入口共享预检，缺项、占位符、不完整身份原子组和不可读/可写/symlink文件必须在DB或业务入口前失败。

@@ -1,0 +1,93 @@
+# Use control.py to verify the approved report/reference and freeze the image ID.
+x-runtime: &runtime
+  image: ${RUNTIME_IMAGE_ID:?verified local sha256 image ID required}
+  platform: linux/amd64
+  pull_policy: never
+  user: "10001:10001"
+  read_only: true
+  cap_drop: [ALL]
+  security_opt: [no-new-privileges:true]
+  working_dir: /opt/enterprise
+  cpus: ${CPU_LIMIT:?reviewed CPU limit required}
+  mem_limit: ${MEMORY_MIB:?reviewed memory limit required}m
+  pids_limit: 256
+  restart: "no"
+  init: true
+  tmpfs: ["/tmp:rw,noexec,nosuid,size=64m,mode=1777"]
+  volumes:
+    - &configuration-volume
+      type: bind
+      source: ${CONFIG_DIR:?absolute nonsecret configuration directory required}
+      target: /etc/plantnexus
+      read_only: true
+      bind: {create_host_path: false}
+    - &bootstrap-volume
+      type: bind
+      source: ../bootstrap
+      target: /opt/enterprise/bootstrap
+      read_only: true
+      bind: {create_host_path: false}
+    - &secrets-volume
+      type: bind
+      source: ${SECRETS_DIR:?absolute Secret directory required}
+      target: /run/secrets
+      read_only: true
+      bind: {create_host_path: false}
+    - runtime_data:/var/lib/plantnexus
+    - backups:/var/backups/plantnexus:ro
+x-health: &health
+  interval: 5s
+  timeout: 15s
+  retries: 12
+  start_period: 20s
+services:
+  migrate:
+    <<: *runtime
+    networks: [runtime]
+    command: [python, -m, bootstrap.services, migrate]
+  worker:
+    <<: *runtime
+    networks: [runtime]
+    hostname: aps-worker
+    command: [python, -m, bootstrap.services, worker]
+    depends_on:
+      migrate: {condition: service_completed_successfully}
+    healthcheck:
+      <<: *health
+      test: [CMD, python, -m, bootstrap.services, health-worker]
+  api:
+    <<: *runtime
+    networks: [runtime]
+    command: [python, -m, bootstrap.services, api]
+    depends_on:
+      migrate: {condition: service_completed_successfully}
+      worker: {condition: service_healthy}
+    ports:
+      - "127.0.0.1:${API_HOST_PORT:?explicit loopback TLS port required}:8000"
+    healthcheck:
+      <<: *health
+      test: [CMD, python, -m, bootstrap.services, health-api]
+  validator:
+    <<: *runtime
+    profiles: [validator]
+    network_mode: none
+    volumes: [*configuration-volume, *bootstrap-volume, *secrets-volume]
+    command: [python, -m, bootstrap.services, validator]
+volumes:
+  runtime_data:
+  backups:
+networks:
+  runtime:
+    name: ${RUNTIME_NETWORK:?explicit isolated project network required}
+    internal: ${ISOLATED_NETWORK:-false}
+secrets:
+  db_user: {file: "${SECRETS_DIR:?absolute Secret directory required}/db_user"}
+  db_password: {file: "${SECRETS_DIR:?}/db_password"}
+  redis_user: {file: "${SECRETS_DIR:?}/redis_user"}
+  redis_password: {file: "${SECRETS_DIR:?}/redis_password"}
+  broker_user: {file: "${SECRETS_DIR:?}/broker_user"}
+  broker_password: {file: "${SECRETS_DIR:?}/broker_password"}
+  result_user: {file: "${SECRETS_DIR:?}/result_user"}
+  result_password: {file: "${SECRETS_DIR:?}/result_password"}
+  identity_token: {file: "${SECRETS_DIR:?}/identity_token"}
+  tls_key: {file: "${SECRETS_DIR:?}/tls_key"}

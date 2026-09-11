@@ -11,9 +11,9 @@ last_reviewed: 2026-09-11
 
 # PlantNexus APS 公开文档中心
 
-企业[配置与Secret预检](operations/deployment.md#企业配置与-secret-预检)提供只读配置/Secret模板和外层bootstrap；当前仅支持TEST/SIMULATION与显式测试认证，真实SSO和完整部署栈不由本预检声明。
+企业[配置与Secret预检](operations/deployment.md#企业配置与-secret-预检)提供只读配置/Secret模板和外层bootstrap；当前仅支持TEST/SIMULATION与显式测试认证，真实SSO不由本预检声明。企业已有依赖与standalone双模式接线、TLS启动门和按需Validator见[企业Compose](operations/deployment.md#企业双模式-compose)。
 
-企业Runtime镜像的固定输入、构建与离线tar身份见[部署说明](operations/deployment.md#企业-runtime-oci-镜像)；[安全说明](operations/security.md#企业镜像扫描与未关闭风险)保留未关闭OS漏洞，使用范围为内部TEST/SIMULATION。配置、Compose与最终离线包继续按后续交付任务实现。
+企业Runtime镜像的固定输入、构建与离线tar身份见[部署说明](operations/deployment.md#企业-runtime-oci-镜像)；[安全说明](operations/security.md#企业镜像扫描与未关闭风险)保留未关闭OS漏洞，使用范围为内部TEST/SIMULATION。完整离线包和服务器独立验收继续按后续交付任务实现。
 
 本目录只收录适合随公开 Git 仓库发布的核心项目文档。开发过程记录、Task Card、阶段证据、机器报告、临时草稿、截图、测试输出和下载制品不属于公开文档，应留在被忽略的本地目录或 `build/`。
 

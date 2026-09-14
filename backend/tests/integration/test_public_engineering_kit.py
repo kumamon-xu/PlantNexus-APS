@@ -7,7 +7,7 @@ from typing import Any, cast
 import pytest
 
 from aps_developer_kit.builder import build_developer_kit
-from aps_developer_kit.contracts import DeveloperKitContractError, verify_kit_archive
+from aps_developer_kit.contracts import DeveloperKitContractError, plan_upgrade, verify_kit_archive
 from app.infrastructure.release.contracts import verify_release_archive
 from backend.tests.p8_developer_kit_support import ROOT, TEST_COMMIT, TEST_EPOCH
 from backend.tests.p8_release_support import build_test_release
@@ -48,6 +48,15 @@ def test_successor_separates_source_identity_and_retains_immutable_predecessor(t
     assert verified.files[cast(Any, verified.lock["artifacts"])["runtime"]["path"]] == runtime.archive_path.read_bytes()
     assert old.archive_path.read_bytes() == old_bytes
     assert len(json.loads(new.registry_path.read_bytes())["entries"]) == 2
+    current = {"developer_kit": "1.0.0", "runtime": "0.1.0", "extension_sdk": "1.0.0"}
+    target = {key: policy["versions"][key] for key in (
+        "developer_kit", "runtime", "extension_sdk", "extension_tooling", "enterprise_template"
+    )}
+    with pytest.raises(DeveloperKitContractError, match="KIT_IMPLICIT_UPGRADE_FORBIDDEN"):
+        plan_upgrade(verified.compatibility, current, target, explicit_opt_in=False)
+    assert plan_upgrade(verified.compatibility, current, target, explicit_opt_in=True)["conformance_required"]
+    with pytest.raises(DeveloperKitContractError, match="KIT_UPGRADE_PATH_UNSUPPORTED"):
+        plan_upgrade(verified.compatibility, {**current, "developer_kit": "9.0.0"}, target, explicit_opt_in=True)
     with pytest.raises(DeveloperKitContractError, match="KIT_REGISTRY_CONFLICT"):
         build_developer_kit(
             ROOT, runtime.archive_path, tmp_path / "registry", **{**options, "epoch": TEST_EPOCH + 1}

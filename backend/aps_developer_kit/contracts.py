@@ -303,7 +303,13 @@ def plan_upgrade(
     if (
         len(matches) != 1
         or matches[0].get("explicit_opt_in_required") is not True
-        or matches[0].get("status") != "SYNTHETIC_UNPUBLISHED_REPLAY_ONLY"
+        or not (
+            matches[0].get("status") == "SYNTHETIC_UNPUBLISHED_REPLAY_ONLY"
+            or (
+                matches[0].get("status") == "SUPPORTED_ENGINEERING"
+                and _SEMVER.fullmatch(current.get("developer_kit", "")) is not None
+            )
+        )
     ):
         _reject("KIT_UPGRADE_PATH_UNSUPPORTED", "upgrade predecessor is not approved")
     return {

@@ -3,13 +3,12 @@
 from pathlib import Path
 import hashlib
 import json
-import shutil
 import subprocess
 import time
 import uuid
 
 from infra.enterprise.acceptance.fixtures import create, write, workspace_command
-from infra.enterprise.bundle.verify import extract, sha
+from infra.enterprise.bundle.verify import extract
 
 from infra.enterprise.acceptance.report import CHECKS
 
@@ -570,17 +569,18 @@ class Consumer:
         # Both source modes use fresh standalone recovery targets with identical
         # synthetic endpoint/configuration bytes and a new DB/Redis each time.
         self.invoke("backup", "/audit/backup", "QUIESCE-" + self.project, timeout=360)
-        digest = sha(self.directory / "backup/SHA256SUMS")
+        # Backup directories are root-owned mode 0700 on Linux. Read through
+        # the consumer without weakening permissions for the build-side user.
+        digest = hashlib.sha256(
+            self.shell("cat", "/audit/backup/SHA256SUMS").stdout
+        ).hexdigest()
         for action, port in [("restore", 18429), ("rollback", 18430)]:
             slot = action
             project = "p828-" + action
-            shutil.copytree(self.directory / "slot", self.directory / slot)
+            self.shell("cp", "-a", "/audit/slot", "/audit/" + slot)
             if action == "rollback":
                 # A prior exact validated slot receipt is required, not invented.
-                require(
-                    (self.directory / slot / "validated.json").is_file(),
-                    "VALIDATED_RECEIPT_MISSING",
-                )
+                self.shell("test", "-f", "/audit/" + slot + "/validated.json")
             self.invoke(
                 action,
                 "/audit/backup",
@@ -604,7 +604,7 @@ class Consumer:
                 == export_id,
                 "RESTORED_EXPORT_MISSING",
             )
-            original = (self.directory / "backup/workspace-audit.jsonl").read_bytes()
+            original = self.shell("cat", "/audit/backup/workspace-audit.jsonl").stdout
             restored = self.python(
                 "from pathlib import Path;import sys;sys.stdout.buffer.write(Path('/home/plantnexus/workspace-authorization.jsonl').read_bytes())",
                 project=project,

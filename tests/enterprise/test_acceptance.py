@@ -153,3 +153,60 @@ def test_ci_requires_actual_clean_consumer_and_no_bypass():
             "--report build/validation/ci-enterprise-image-acceptance.json"
             in steps[0]["run"]
         )
+
+
+def test_recovery_verifies_private_backup_without_host_access(tmp_path, monkeypatch):
+    """Linux root-owned backup directories must not need build-user access."""
+    import hashlib
+    from subprocess import CompletedProcess
+    from infra.enterprise.acceptance.runner import Consumer
+
+    consumer = Consumer.__new__(Consumer)
+    consumer.directory = tmp_path
+    consumer.project = "p828-test"
+    (tmp_path / "slot").mkdir()
+    (tmp_path / "slot/validated.json").write_text("{}", encoding="utf-8")
+    manifest = b"synthetic checksums\n"
+    audit = b'{"reason":"CAPABILITY_DENIED"}\n'
+    calls = []
+
+    def invoke(action, *args, **kwargs):
+        calls.append((action, args))
+
+    def shell(command, *args):
+        if command in {"cp", "test"}:
+            return CompletedProcess([command, *args], 0, stdout=b"")
+        assert command == "cat"
+        (path,) = args
+        payload = {
+            "/audit/backup/SHA256SUMS": manifest,
+            "/audit/backup/workspace-audit.jsonl": audit,
+        }[path]
+        return CompletedProcess([command, path], 0, stdout=payload)
+
+    original = Path.read_bytes
+
+    def private_read(path):
+        if "backup" in path.parts:
+            raise PermissionError("root-owned mode 0700 backup")
+        return original(path)
+
+    monkeypatch.setattr(Path, "read_bytes", private_read)
+    # Slot receipts are also root-owned; recovery must copy them in consumer.
+    import shutil
+
+    def private_copy(*args, **kwargs):
+        raise PermissionError("root-owned validated receipt")
+
+    monkeypatch.setattr(shutil, "copytree", private_copy)
+    monkeypatch.setattr(consumer, "invoke", invoke)
+    monkeypatch.setattr(consumer, "shell", shell)
+    monkeypatch.setattr(consumer, "python", lambda *a, **kw: audit)
+    monkeypatch.setattr(
+        consumer, "http", lambda *a, **kw: {"state": "PUBLISHED", "export_job_id": "e"}
+    )
+    monkeypatch.setattr(consumer, "record", lambda *a, **kw: None)
+    consumer.recovery("/synthetic", "e")
+    for action in ("restore", "rollback"):
+        args = next(args for name, args in calls if name == action)
+        assert args[1] == hashlib.sha256(manifest).hexdigest()

@@ -11,6 +11,17 @@ last_reviewed: 2026-09-14
 
 # APS Runtime 安装、预检与启动顺序
 
+## P8-27 离线候选包
+
+`python scripts/enterprise_bundle.py build --image-report <approved-report> --runtime-archive <verified-tar> --runtime-sbom <verified-cdx> --output build/enterprise-container/staging/<new-directory> --report <report>`只在构建侧组装。输出单root候选及sidecar，目录为images/compose/config/scripts/evidence/SBOM。Runtime tar与SBOM必须匹配approved报告；固定PostgreSQL/Redis通过本地registry digest检查后导出，并记录tar hash、config image ID、平台、SBOM及漏洞/许可证清单。构建侧可联网扫描，企业端不联网下载或构建。
+
+安全校验使用`python scripts/enterprise_bundle.py verify --archive <candidate.tar.gz> --expected-sha256 <trusted-archive-digest> --extract-to <new-directory> --report <report>`，拒绝路径穿越、重复/链接/非regular成员、异常权限、超限展开、缺失、篡改与身份不一致。此命令供交付侧验证；企业机使用可信摘要、GNU sha256sum和已通过安全校验的归档，不要求Python。完整操作流程在包内DEPLOYMENT.md。
+
+包内九脚本位于`scripts/`，bootstrap位于`scripts/bootstrap/`。Compose仅做受记录的相对路径映射和固定registry引用到导出image ID的替换；原部署角色、资源、只读和依赖规则不变。先校验传输并load Runtime，再preflight、install、start；preflight可在依赖尚未加载时验证完整配置，install在配置门后实际load随包的两个依赖，后续动作缺镜像即拒绝。docker save/load不保证保留RepoDigest，因此消费端检查精确image ID，manifest保留导出时RepoDigest映射；所有Compose引用pull_policy=never。
+
+MANIFEST.json逐项列payload，排除自身与SHA256SUMS；SHA256SUMS覆盖manifest及payload，排除自身；归档最后产生包外sidecar。evidence晚到时必须重新封存，payload_fingerprint保持一致才能引用原payload验收；可执行文件改变必须重验。候选只写ignored staging，保持未签名TEST/SIMULATION；P8-28独立clean Linux验收前不得进入final权威输出。无额外proxy容器，TLS API仍只监听loopback；外部ingress由环境提供。
+
+
 ## P8-26 Shell 运维入口
 
 企业机使用`infra/enterprise/scripts/`的九个Shell入口。前提为Linux x86_64、Docker Engine 27+、Compose 2.30+、POSIX sh及GNU coreutils（sha256sum/awk/find/df/mktemp/realpath/cmp/cp/mv/mkdir/chmod/rm/rmdir/dirname/uname）；slot所在文件系统至少1 GiB可用，实际dump空间由操作者另行预留。无需宿主Python、uv、npm或应用源码。Python元数据校验在已加载Runtime容器内执行，禁网、只读、无Docker socket；为读取0600备份，辅助容器仅以root加DAC_READ_SEARCH运行，API/Worker仍固定UID 10001且无capabilities。

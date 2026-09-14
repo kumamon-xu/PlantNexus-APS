@@ -13,6 +13,13 @@ last_reviewed: 2026-09-14
 
 The required shared enterprise-image step additionally runs `infra/enterprise/scripts/verify_container.py` and seals `ci-enterprise-image-operations.json`. It executes the nine POSIX Shell entrypoints with host Python/uv/npm denied, binds exact image/tar and deployment payload fingerprints, and verifies migration idempotence, dependency recovery, PostgreSQL/Redis persistence, quiesced backup, isolated restore, same-image validated-slot rollback and fail-closed negative targets. Backup bytes, secrets and raw logs remain temporary and are never uploaded. This adds no Production, queue replay, final offline bundle or clean-server acceptance claim.
 
+## Offline enterprise candidate evidence
+
+The shared required enterprise-image step runs `scripts/enterprise_bundle.py build` and `infra/enterprise/bundle/verify_container.py`, sealing `ci-enterprise-image-bundle.json` and `ci-enterprise-image-bundle-container.json`. The candidate consumes that run's exact Runtime tar and SBOM, exports the pinned PostgreSQL/Redis images, inventories their scan/license results and verifies the safe archive, payload fingerprint and mapped deployment. A forced dependency lookup miss exercises real docker load without deleting unrelated images; this is explicitly not P8-28 clean-daemon acceptance. Host development tools and build/pull commands are denied during operator replay.
+
+The large candidate and sidecar are uploaded separately as `plantnexus-enterprise-bundle-<run_id>`; canonical JSON/JUnit limits stay unchanged. Consumers bind exact run/commit through the canonical Provider manifest, verify the binary artifact digest, then the archive against the sealed bundle report. Candidate payloads remain in staging; final authority and Production claims are not emitted.
+
+
 ## Enterprise Runtime image evidence
 
 The same required image step runs `infra/enterprise/compose/verify_container.py` and seals `ci-enterprise-image-compose.json`. It binds the exact image/tar and deployment payload hashes to dual-mode config/startup, named Worker and actual API/Worker descriptors, TLS readiness, offline formal Validator, migration/unready/image rejection and PostgreSQL/Redis volume persistence. External dependencies are represented by isolated synthetic fixtures; deployment networks have no egress and preloaded images use `pull_policy: never`. Only the build-side driver may explicitly acquire the already locked dependency images. Raw credentials, payloads, rendered host paths and logs remain outside artifacts. This is deployment engineering evidence, not a final offline bundle, clean-server acceptance or Production approval.

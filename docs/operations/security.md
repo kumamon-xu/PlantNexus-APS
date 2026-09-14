@@ -11,6 +11,13 @@ last_reviewed: 2026-09-14
 
 # P0 工程安全边界
 
+## P8-27 离线包供应链
+
+安全归档校验独立于assembler，要求单root、普通文件、固定LF/执行位、完整成员清单和无循环checksum；拒绝穿越、重复、链接、超限、篡改、缺失镜像、浮动身份与文本Secret模式。构建以白名单选择配置模板和部署辅助代码，不复制运行配置或源码checkout。Runtime复用同tar绑定的已通过镜像扫描和SBOM，PostgreSQL/Redis固定既有digest并对真实导出tar扫描vuln/license/secret；Secret非零或缺扫描即失败，依赖漏洞和许可证以显式未获Production批准的inventory交付，不改变Runtime现有风险门。
+
+包内清单、SHA256SUMS和sidecar提供完整性而非数字签名。导出时registry digest与config image ID映射留在manifest，离线load后以后者验证，不能伪造RepoDigest。候选、晚到证据和最终包分别封存；只有不变payload fingerprint能复用同payload证据。P8-28/29及真实Production安全、许可证使用条件和发布authority继续独立。
+
+
 ## 企业部署 Secret 与启动边界
 
 `infra/enterprise/bootstrap/`在构建DB client或业务入口前拒绝缺项/空值/未替换占位符、重复或未知配置项、Production、错误Runtime/Kit、非原子Extension身份、坏policy、不可读/非regular/symlink或非只读文件。原Runtime Settings、authorization policy和Extension loader校验继续执行，外层预检没有放宽Core合同。Extension启动预算为30秒，超时或异常阻止启动；同进程迟到代码不构成隔离或恶意代码终止保证。

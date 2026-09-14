@@ -45,7 +45,14 @@ def environment(args, observed):
     from bootstrap.services import CONFIG, deployment_layout, prepare
 
     sys.path.insert(0, "/delivery")
-    from infra.enterprise.compose import control
+    offline = Path("/delivery/MANIFEST.json").is_file()
+    if offline:
+        import importlib
+
+        sys.path.insert(0, "/delivery/compose")
+        control = importlib.import_module("control")
+    else:
+        from infra.enterprise.compose import control
 
     bundle, slot, project, port, mode, image = args
     require(mode in {"standalone", "enterprise"}, "MODE_INVALID")
@@ -54,25 +61,75 @@ def environment(args, observed):
     for path in (bundle, slot):
         require(re.fullmatch(r"/[A-Za-z0-9_./-]+", path), "PATH_INVALID")
         require(".." not in Path(path).parts, "PATH_INVALID")
-    report = read(Path("/delivery/image-report.json"))
-    control.inspect_image = lambda _: observed[0]
+    report = read(
+        Path(
+            "/delivery/evidence/image-report.json"
+            if offline
+            else "/delivery/image-report.json"
+        )
+    )
+    setattr(control, "inspect_image", lambda _: observed[0])
     control.image_identity(report, image)
     lines = Path("/delivery/SHA256SUMS").read_text().splitlines()
-    archive = [line.split()[0] for line in lines if line.endswith("  image.tar")]
+    archive_name = "images/runtime.tar" if offline else "image.tar"
+    archive = [line.split()[0] for line in lines if line.endswith("  " + archive_name)]
     require(archive == [report["image_archive_sha256"]], "ARCHIVE_REPORT_MISMATCH")
     p = prepare(CONFIG)
     deployment_layout(p)
-    locked = read(Path("/delivery/infra/enterprise/compose/dependencies.v1.json"))[
-        "images"
-    ]
-    for name, inspect in zip(("database", "redis"), observed[1:], strict=True):
+    if offline:
+        m = read(Path("/delivery/MANIFEST.json"))
         require(
-            control.digest_reference(locked[name]) in inspect.get("RepoDigests", [])
-            and inspect["Os"] == "linux"
-            and inspect["Architecture"] == "amd64",
-            "DEPENDENCY_IDENTITY_MISMATCH",
+            m["schema_version"] == "enterprise-deployment-bundle.v1"
+            and m["production_ready"] is False
+            and m["status"] == "CANDIDATE",
+            "BUNDLE_SCOPE_INVALID",
         )
-    require(len(observed) == 3, "DEPENDENCY_IDENTITY_MISSING")
+        require(
+            len(observed) == 1 and m["images"]["runtime"]["image_id"] == image,
+            "IMAGE_IDENTITY_MISMATCH",
+        )
+        mapping = Path("/delivery/images/identities.tsv").read_text()
+        require(
+            mapping
+            == "".join(
+                n + " " + m["images"][n]["image_id"] + "\n"
+                for n in ("runtime", "database", "redis")
+            ),
+            "IMAGE_MAPPING_INVALID",
+        )
+        locked = read(Path("/delivery/compose/dependencies.v1.json"))["images"]
+        for n in ("database", "redis"):
+            require(
+                m["images"][n]["source_reference"] == locked[n]
+                and control.digest_reference(locked[n])
+                in m["images"][n]["repo_digests_at_export"],
+                "DEPENDENCY_SOURCE_MISMATCH",
+            )
+            require(
+                re.fullmatch(r"sha256:[0-9a-f]{64}", m["images"][n]["image_id"]),
+                "IMAGE_ID_INVALID",
+            )
+            require(
+                [
+                    line.split()[0]
+                    for line in lines
+                    if line.endswith("  images/" + n + ".tar")
+                ]
+                == [m["images"][n]["tar_sha256"]],
+                "DEPENDENCY_ARCHIVE_MISMATCH",
+            )
+    else:
+        locked = read(Path("/delivery/infra/enterprise/compose/dependencies.v1.json"))[
+            "images"
+        ]
+        for name, inspect in zip(("database", "redis"), observed[1:], strict=True):
+            require(
+                control.digest_reference(locked[name]) in inspect.get("RepoDigests", [])
+                and inspect["Os"] == "linux"
+                and inspect["Architecture"] == "amd64",
+                "DEPENDENCY_IDENTITY_MISMATCH",
+            )
+        require(len(observed) == 3, "DEPENDENCY_IDENTITY_MISSING")
     if mode == "standalone":
         require(
             p.env["DB_HOST"] == "database" and p.env["DB_PORT"] == "5432",

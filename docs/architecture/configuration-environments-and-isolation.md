@@ -11,6 +11,11 @@ last_reviewed: 2026-09-14
 
 # 配置、环境与数据隔离
 
+## P8-27 离线包隔离
+
+候选assembler仅从明确的镜像报告/tar/SBOM和允许的部署文件列表复制，禁止源码checkout、客户配置、Secret、备份、日志与企业Extension随包。三个镜像的导出身份、平台、归档hash与Compose引用一致；原源码与Runtime/Kit不可变身份保持独立。运维脚本支持原布局与候选布局，离线布局先通过完整配置门再导入依赖，不能依赖消失的RepoDigest或隐式pull。独立干净服务器验收属于P8-28，当前容器映射重放明确记录通过注入lookup miss触发真实docker load，不冒充新daemon。
+
+
 ## P8-26 运维隔离边界
 
 九个企业Shell入口只消费明确的安装目录、manifest摘要、image ID、config/Secret slot、project、端口与模式。元数据辅助容器使用既有Runtime Python、禁网/只读挂载，不挂Docker socket；只读备份检查可用root与DAC_READ_SEARCH，业务角色保持UID 10001和无capabilities。PostgreSQL客户端使用同一业务UID读取只读Secret，密码仅存在客户端容器进程环境，宿主命令行和Compose插值不含凭据。

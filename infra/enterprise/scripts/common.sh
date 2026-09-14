@@ -49,16 +49,29 @@ safe_directory "$SLOT"
 safe_directory "$SLOT/config"
 safe_directory "$SLOT/secrets"
 verify_files "$BUNDLE" "$PACKAGE_SHA"
-case "$0" in "$BUNDLE/infra/enterprise/scripts/common.sh") ;; *) fail EXECUTABLE_OUTSIDE_BUNDLE;; esac
-# Require every supplied payload to be covered, including any Python cache.
-for required in image.tar image-report.json infra/enterprise/compose/docker-compose.enterprise.yml infra/enterprise/compose/docker-compose.standalone.yml infra/enterprise/compose/dependencies.v1.json infra/enterprise/compose/redis-entrypoint.sh infra/enterprise/compose/control.py infra/enterprise/scripts/metadata.py infra/enterprise/scripts/common.sh; do
+LAYOUT=legacy
+SCRIPTS=infra/enterprise/scripts BOOTSTRAP=infra/enterprise/bootstrap COMPOSE=infra/enterprise/compose
+ARCHIVE=image.tar REPORT=image-report.json
+if [ -f "$BUNDLE/MANIFEST.json" ]; then
+    LAYOUT=offline
+    SCRIPTS=scripts BOOTSTRAP=scripts/bootstrap COMPOSE=compose
+    ARCHIVE=images/runtime.tar REPORT=evidence/image-report.json
+    # This non-executable mapping is already covered by the external checksum.
+    awk 'NF!=2 || $1 !~ /^(runtime|database|redis)$/ || length($2)!=71 || substr($2,1,7)!="sha256:" || substr($2,8) ~ /[^0-9a-f]/ || seen[$1]++ {bad=1} END {exit bad || NR!=3}' "$BUNDLE/images/identities.tsv" || fail IMAGE_MAPPING_INVALID
+    mapped=$(awk '$1=="runtime" {print $2}' "$BUNDLE/images/identities.tsv")
+    [ "$mapped" = "$IMAGE" ] || fail IMAGE_MAPPING_INVALID
+    PG=$(awk '$1=="database" {print $2}' "$BUNDLE/images/identities.tsv")
+    REDIS=$(awk '$1=="redis" {print $2}' "$BUNDLE/images/identities.tsv")
+fi
+case "$0" in "$BUNDLE/$SCRIPTS/common.sh") ;; *) fail EXECUTABLE_OUTSIDE_BUNDLE;; esac
+for required in "$ARCHIVE" "$REPORT" "$COMPOSE/docker-compose.enterprise.yml" "$COMPOSE/docker-compose.standalone.yml" "$COMPOSE/dependencies.v1.json" "$COMPOSE/redis-entrypoint.sh" "$COMPOSE/control.py" "$SCRIPTS/metadata.py" "$SCRIPTS/common.sh"; do
     awk -v p="$required" '$2==p {found=1} END {exit !found}' "$BUNDLE/SHA256SUMS" || fail PAYLOAD_UNBOUND
 done
 find "$BUNDLE" -type f ! -path "$BUNDLE/SHA256SUMS" | while IFS= read -r required; do
     relative=${required#"$BUNDLE"/}
     awk -v p="$relative" '$2==p {found=1} END {exit !found}' "$BUNDLE/SHA256SUMS" || fail PAYLOAD_UNBOUND
 done
-for required in "$BUNDLE"/infra/enterprise/bootstrap/*.py "$BUNDLE"/infra/enterprise/scripts/*.sh; do
+for required in "$BUNDLE"/"$BOOTSTRAP"/*.py "$BUNDLE"/"$SCRIPTS"/*.sh; do
     relative=${required#"$BUNDLE"/}
     awk -v p="$relative" '$2==p {found=1} END {exit !found}' "$BUNDLE/SHA256SUMS" || fail PAYLOAD_UNBOUND
 done
@@ -88,32 +101,49 @@ trap cleanup EXIT
 trap 'exit 1' HUP INT TERM
 if ! docker image inspect "$IMAGE" >/dev/null 2>&1; then
     [ "$ACTION" = install ] || fail LOCAL_IMAGE_UNAVAILABLE
-    docker load --input "$BUNDLE/image.tar" >/dev/null 2>&1 || fail IMAGE_LOAD_FAILED
+    docker load --input "$BUNDLE/$ARCHIVE" >/dev/null 2>&1 || fail IMAGE_LOAD_FAILED
 fi
-docker image inspect "$IMAGE" "$PG" "$REDIS" >"$STATE/images.json" 2>/dev/null || fail LOCAL_IMAGE_UNAVAILABLE
+if [ "$LAYOUT" = offline ]; then
+    docker image inspect "$IMAGE" >"$STATE/images.json" 2>/dev/null || fail LOCAL_IMAGE_UNAVAILABLE
+else
+    docker image inspect "$IMAGE" "$PG" "$REDIS" >"$STATE/images.json" 2>/dev/null || fail LOCAL_IMAGE_UNAVAILABLE
+fi
 helper() {
     docker run --rm -i --pull never --network none --read-only --user 0:0 \
         --cap-drop ALL --cap-add DAC_READ_SEARCH --security-opt no-new-privileges:true \
         --mount "type=bind,src=$BUNDLE,dst=/delivery,readonly" \
-        --mount "type=bind,src=$BUNDLE/infra/enterprise/bootstrap,dst=/opt/enterprise/bootstrap,readonly" \
+        --mount "type=bind,src=$BUNDLE/$BOOTSTRAP,dst=/opt/enterprise/bootstrap,readonly" \
         --mount "type=bind,src=$SLOT/config,dst=/etc/plantnexus,readonly" \
         --mount "type=bind,src=$SLOT/secrets,dst=/run/secrets,readonly" \
         --mount "type=bind,src=$STATE,dst=/state,readonly" \
         --mount "type=bind,src=$BACKUP_MOUNT,dst=/backup,readonly" \
         --workdir /opt/enterprise --entrypoint python "$IMAGE" \
-        /delivery/infra/enterprise/scripts/metadata.py "$@"
+        /delivery/$SCRIPTS/metadata.py "$@"
 }
 BACKUP_MOUNT=$STATE
 helper environment "$BUNDLE" "$SLOT" "$PROJECT" "$PORT" "$MODE" "$IMAGE" <"$STATE/images.json" >"$STATE/compose.env" 2>/dev/null || fail CONFIGURATION_PREFLIGHT_FAILED
+if [ "$LAYOUT" = offline ]; then
+    # Configuration and package identity have passed before importing dependencies.
+    for role in database redis; do
+        expected=$(awk -v r="$role" '$1==r {print $2}' "$BUNDLE/images/identities.tsv")
+        if ! docker image inspect "$expected" >/dev/null 2>&1; then
+            if [ "$ACTION" = preflight ]; then continue; fi
+            [ "$ACTION" = install ] || fail LOCAL_DEPENDENCY_UNAVAILABLE
+            docker load --input "$BUNDLE/images/$role.tar" >/dev/null 2>&1 || fail DEPENDENCY_LOAD_FAILED
+        fi
+        actual=$(docker image inspect --format '{{.Id}} {{.Os}}/{{.Architecture}}' "$expected" 2>/dev/null) || fail LOCAL_DEPENDENCY_UNAVAILABLE
+        [ "$actual" = "$expected linux/amd64" ] || fail DEPENDENCY_IDENTITY_MISMATCH
+    done
+fi
 docker create --name "$PROJECT-operations-lock" --pull never --network none --read-only --cap-drop ALL --entrypoint /bin/true "$IMAGE" >/dev/null 2>&1 || fail PROJECT_OPERATION_LOCKED
 DOCKER_LOCK=1
 # Compose interpolation must use the explicit verified file, not ambient overrides.
 unset RUNTIME_IMAGE_ID CONFIG_DIR SECRETS_DIR CPU_LIMIT MEMORY_MIB DB_NAME API_HOST_PORT RUNTIME_NETWORK ISOLATED_NETWORK COMPOSE_FILE COMPOSE_PROFILES COMPOSE_PROJECT_NAME COMPOSE_ENV_FILES
 compose() {
     if [ "$MODE" = standalone ]; then
-        docker compose --project-name "$PROJECT" --env-file "$STATE/compose.env" -f "$BUNDLE/infra/enterprise/compose/docker-compose.enterprise.yml" -f "$BUNDLE/infra/enterprise/compose/docker-compose.standalone.yml" "$@"
+        docker compose --project-name "$PROJECT" --env-file "$STATE/compose.env" -f "$BUNDLE/$COMPOSE/docker-compose.enterprise.yml" -f "$BUNDLE/$COMPOSE/docker-compose.standalone.yml" "$@"
     else
-        docker compose --project-name "$PROJECT" --env-file "$STATE/compose.env" -f "$BUNDLE/infra/enterprise/compose/docker-compose.enterprise.yml" "$@"
+        docker compose --project-name "$PROJECT" --env-file "$STATE/compose.env" -f "$BUNDLE/$COMPOSE/docker-compose.enterprise.yml" "$@"
     fi
 }
 quiet() { "$@" >/dev/null 2>&1 || fail OPERATION_FAILED; }
@@ -161,7 +191,7 @@ pgclient() {
         --user 10001:10001 --cap-drop ALL --security-opt no-new-privileges:true \
         --mount "type=bind,src=$SLOT/config,dst=/etc/plantnexus,readonly" \
         --mount "type=bind,src=$SLOT/secrets,dst=/run/secrets,readonly" \
-        --mount "type=bind,src=$BUNDLE/infra/enterprise/scripts/pg-client.sh,dst=/pg-client.sh,readonly" \
+        --mount "type=bind,src=$BUNDLE/$SCRIPTS/pg-client.sh,dst=/pg-client.sh,readonly" \
         --entrypoint /bin/sh "$PG" /pg-client.sh "$@"
 }
 check_existing_target

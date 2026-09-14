@@ -81,3 +81,7 @@ temp/
 .DS_Store
 Thumbs.db
 Desktop.ini
+
+# Enterprise delivery: authoritative archives and per-install private state
+/build/enterprise-container/
+/enterprise-local/

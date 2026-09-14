@@ -237,3 +237,47 @@ API 增加独立 ingress bridge，端口仍只发布到 127.0.0.1；standalone �
 工作区拒绝写入独立 workspace_audit 卷中的 `/home/plantnexus/workspace-authorization.jsonl`，使用追加、fsync 和禁止符号链接打开；写入失败由原 HTTP guard 返回 500，阻止 application 调用。成功业务操作仍使用原数据库事务 audit。备份格式升级为 enterprise-backup.v2，同时冻结数据库和工作区拒绝审计；旧 v1 不会被静默当作完整 v2 恢复。详见恢复 Runbook。
 
 `uv run python scripts/enterprise_deployment_check.py --bundle-report <bundle-report.json> --report <acceptance.json>` 在构建侧准备 synthetic fixture，在无源码/宿主 Python/宿主 socket 的 Docker 27.5.1 消费者里完成双模式实际 load/install、loopback TLS、Headless/工作区链、拒绝和恢复。每种模式使用独立空镜像 store。`--development` 只产生本地调试证据；required CI 拒绝此标记、缺少报告、错误候选摘要、skip/BLOCKED 或未通过场景。验收只覆盖现有导出 Job 创建、读取和幂等性，不宣称外部文件交付或新增导出执行器。
+
+## 最终企业离线交接
+
+最终权威目录为 `build/enterprise-container/final/`，仅包含一个 `plantnexus-aps-enterprise-deployment-0.1.0-<packaging-sha>.tar.gz` 和对应 `.sha256`。交付方提供归档SHA-256、包内SHA256SUMS摘要、Runtime image ID及验收/封存工具的exact Provider身份。包名与镜像继续标识P8-28已验收封装SHA；P8-29工具提交不替代Runtime来源或Developer Kit版本。唯一最终包只向 `evidence/` 增补交接索引/说明，更新MANIFEST与SHA256SUMS后重封；所有原有文件字节与payload fingerprint必须一致。
+
+包内 `evidence/handoff-index.json` 与 `evidence/HANDOFF.md`记录当前交接结论，原DEPLOYMENT.md与v1 MANIFEST保留创建时的候选/待验收字段以保持已验收payload；这些历史字段不表示另一次未完成业务验收。外层交付仍为未签名内部TEST/SIMULATION，不能当作Production、UAT或安全批准。
+
+### 服务器准备与四步安装
+
+准备Linux x86_64、Docker Engine 27+、Compose 2.30+、POSIX sh、GNU coreutils、awk、find、tar、gzip。使用可信交接记录中的归档摘要与sidecar进行比对，再运行 `sha256sum -c <归档名>.sha256`；确认归档已由交付方安全校验，在新的空目录用 `tar --no-same-owner -xzf <归档名>`解包，并在包根执行 `sha256sum --strict -c SHA256SUMS`。任何不符均停止。摘要用于完整性校验，不是数字签名。
+
+设置 `BUNDLE` 为解出的包根绝对路径、`SLOT` 为已准备的包外配置slot、`PROJECT` 为独立测试project、`PORT` 为loopback TLS端口、`MODE` 为 `standalone` 或 `enterprise`。目录及父目录禁止符号链接且路径不含空格。设置 `RUNTIME` 为可信交接记录的 `sha256:<image ID>`，`CHECKSUMS` 为包内SHA256SUMS文件的可信摘要；也可在整个归档已校验后用 `awk '$1=="runtime" {print $2}' "$BUNDLE/images/identities.tsv"` 和 `sha256sum "$BUNDLE/SHA256SUMS"`核对两值。
+
+```sh
+docker load --input "$BUNDLE/images/runtime.tar"
+sh "$BUNDLE/scripts/preflight.sh" "$BUNDLE" "$CHECKSUMS" "$RUNTIME" "$SLOT" "$PROJECT" "$PORT" "$MODE"
+sh "$BUNDLE/scripts/install.sh" "$BUNDLE" "$CHECKSUMS" "$RUNTIME" "$SLOT" "$PROJECT" "$PORT" "$MODE"
+sh "$BUNDLE/scripts/status.sh" "$BUNDLE" "$CHECKSUMS" "$RUNTIME" "$SLOT" "$PROJECT" "$PORT" "$MODE"
+```
+
+逐条执行，任一步非零立即停止。install从包内导入依赖镜像，执行exact-head迁移并启动Worker/API；status验证健康、进程身份与配置receipt。无需再构建镜像、安装Python/SDK或下载依赖。enterprise模式需要操作者预先准备专属隔离PostgreSQL及Redis/broker/result，standalone由包内依赖镜像启动。
+
+### 企业必须填写的配置
+
+唯一完整字段/类型/成组约束来自包内 `config/.env.example` 与 `config/configuration-matrix.v1.json`。所有占位符必须替换；deployment.env是数据，禁止作为shell source执行。
+
+| 配置组 | 操作者提供的内容 |
+|---|---|
+| 环境与身份 | ENVIRONMENT=test、DATA_PLANE=simulation、LOCAL_TEST_TOKEN及明确issuer/audience/subject；Client ID仅not-applicable-local-test；Headless token文件及exact-scope授权策略 |
+| 工作区授权 | 独立WORKSPACE_AUTHORIZATION_POLICY_FILE；显式actor、capability和资源范围；每个token文件与Headless身份分离。空principals拒绝全部，P4/Production authority不在此配置内 |
+| DB与队列 | DB_HOST/PORT/NAME及USER/PASSWORD_FILE；REDIS/BROKER/RESULT各自HOST/PORT/INDEX和USER/PASSWORD_FILE。standalone按database:5432/redis:6379及三个不同index填写 |
+| TLS与资源 | API_DOMAIN、TLS_CERT_FILE/TLS_KEY_FILE、CPU_LIMIT、MEMORY_MIB、WORKER_CONCURRENCY、LEASE_SECONDS、HEARTBEAT_SECONDS、LOG_LEVEL |
+| Runtime与业务策略 | 固定RUNTIME_SOURCE_SHA/RUNTIME_FINGERPRINT、KIT_VERSION/KIT_FINGERPRINT；批准的PLANNING_POLICY_FILE、SOLVE_LIMITS_FILE与HTTP_POLICY_FILE，不从示例猜测真实业务默认值 |
+| 路径与Extension | API_BIND=0.0.0.0、API_PORT=8000、DATA_VOLUME=/var/lib/plantnexus、BACKUP_VOLUME=/var/backups/plantnexus；config映射/etc/plantnexus，Secret映射/run/secrets；Extension none/local显式选择，local需只读批准wheel/config/catalog/lock/key整组 |
+
+配置与Secret位于SLOT/config和SLOT/secrets，文件权限须允许UID10001读取，挂载只读；token/密码/私钥不得进入argv、Compose插值或交付包。实际TLS证书、身份、业务策略、Extension项目与密钥不随包提供。Developer Kit身份仅用于兼容锁定，本包不包含Kit归档或企业源码，不能替代[独立扩展开发](../architecture/enterprise-extension-development-guide.md)与[Kit升级回滚](developer-kit-release-upgrade-and-rollback.md)流程。
+
+运行后按[备份恢复](../runbooks/backup-and-restore.md#企业备份-v2-与工作区拒绝审计)使用包内scripts入口；备份v2包括数据库及拒绝审计，配置与Secret另行保全。归档清理不删除数据库、Docker卷或备份，不提供跨版本downgrade和外部流量切换。P8-28验证覆盖两模式离线安装、Headless与显式工作区链、拒绝、重启和同版本恢复；导出仅验证创建/读取/幂等，未验证新增下载执行器、真实企业UAT、HA、容量或SLA。
+
+### 构建侧封存与清理
+
+`scripts/enterprise_finalize.py`为构建侧工具，服务器无需它。`finalize`要求P8-28 completion及其可信SHA、canonical Provider/receipt/逐项验收报告、新工具提交的canonical Provider；保留运行payload并原子发布唯一final目录。`plan-cleanup`先验证final包/sidecar，记录staging的绝对根与全部文件摘要；`apply-cleanup`要求该plan的可信SHA，重新校验文件未变后才执行。
+
+清理仅覆盖`build/enterprise-container/staging`。删除可再生成归档/镜像/锁定扫描缓存前，将其他构建输入与诊断报告按原路径复制到独立P8-29 evidence目录并校验摘要。Provider ZIP、P8审计、失败记录、Git历史、已验证备份及所有Docker资源保持原样。路径越界、链接/Windows reparse、未知数据库/数据目录、plan后内容变化、final不唯一或摘要不符均拒绝；禁止全局build/dist/Docker prune。

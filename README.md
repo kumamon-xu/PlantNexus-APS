@@ -30,6 +30,10 @@ P8同时形成APS Extension SDK `1.0.0`、Runtime受控的Enterprise Extension�
 | Test | pytest、Hypothesis、Vitest、Testing Library、Playwright |
 | Release / contract versions | Runtime 0.1.0、Extension SDK 1.0.0、Developer Kit 1.0.0、Application/Core 0.0.0、Headless API v1、Schema set 2.10.0、database 0009 |
 
+## 企业离线部署
+
+企业容器交付使用独立的 `build/enterprise-container/final/`，该目录只保留一个已封存归档及 SHA-256 sidecar。它与历史 `deliverables/` 的 Runtime/SDK/Kit 成果分别管理。Linux/amd64 服务器无需源码、宿主 Python 或联网构建；使用可信交接记录核对摘要、准备显式 TEST/SIMULATION 配置后，按[四步安装与配置清单](docs/operations/deployment.md#最终企业离线交接)执行。包名保留已验收封装 SHA，封存工具 SHA 单独记录；未签名且不表示 Production Ready。
+
 ## 快速开始
 
 ### 1. Backend 依赖与 API 外壳

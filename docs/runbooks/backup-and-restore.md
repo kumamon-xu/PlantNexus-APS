@@ -76,3 +76,5 @@ Operator需要Task靶场内的`pg_dump`、`pg_restore`、`createdb`、`dropdb`�
 已授权的工作区部署绑定增加独立拒绝审计卷。企业脚本的新备份使用 `enterprise-backup.v2`：在受控停止 API/Worker 后，同时保存 database.dump、api.json、worker.json、metadata.json 和 workspace-audit.jsonl；SHA256SUMS 覆盖全部文件，metadata 另绑定 workspace_audit_sha256。v1 不能满足审计恢复要求，新脚本明确拒绝，不覆盖历史备份。
 
 restore/rollback 仍只接受不同 source project、停止、空数据库/Redis、exact image/configuration/Runtime/Kit/Extension 的隔离目标；审计目标必须为空，恢复已验证快照后比较身份。受控 start 不删除数据；失败保留目标以便诊断，不原地覆盖已有审计、不自动downgrade或删除卷。same-version rollback 的 validated.json 必须来自真实已验证 slot，不能手工伪造。
+
+最终离线包的入口为 `<bundle>/scripts/backup.sh`、`restore.sh`、`rollback.sh`；上文P8-26的`infra/enterprise/scripts`是早期封装布局，不能直接套用到最终包。前七参数及额外QUIESCE/TARGET参数不变，按[最终交接](../operations/deployment.md#最终企业离线交接)确定可信摘要与image ID。备份目录和validated.json可能由部署用户持有私有权限，应在其受权环境内操作，不为构建用户放宽权限。P8-29只清理打包staging，运行卷、备份、原配置与审计保持保全。

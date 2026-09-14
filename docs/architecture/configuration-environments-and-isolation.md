@@ -547,3 +547,5 @@ Comparison POST仍使用`credentials=omit`/`cache=no-store`、Bearer只来自内
 独立消费者只挂载已验证候选和生成的 synthetic 配置/请求数据；外层 network=none，内层使用新 Docker daemon，无外部 socket、checkout 或宿主 Python。依赖镜像从包内导入；enterprise 外部依赖由隔离 synthetic 容器提供。API 使用独立 ingress bridge 完成 loopback TLS 发布，业务依赖保持 runtime 网络。该入口网络不冒充宿主 egress 防火墙。
 
 部署 bootstrap 通过显式 LocalWorkspaceIdentity 消费既有 PrincipalContext/AuthorizationProvider；工作区 token 与 Headless token 必须不同，能力和资源范围由只读独立策略固定。空策略 default-deny，Production 和 P4 authority 保持既有禁止边界。工作区策略摘要进入 nonsecret_configuration_fingerprint，API/Worker descriptor 与受控重启检查一起约束配置漂移。拒绝审计使用独立持久化卷；备份 v2 在静默 API/Worker 后复制并摘要绑定审计，恢复要求目标审计为空，保留原始失败候选。
+
+最终企业封存目录仅放归档和sidecar；实例配置、Secret、数据与备份必须在包外独立目录或卷。evidence增补不改变Runtime/Kit/Extension/config identity，已验收packaging SHA与封存工具SHA分别记录；运行payload变化必须重新取得对应验收。

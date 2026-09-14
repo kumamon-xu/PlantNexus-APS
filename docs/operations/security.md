@@ -277,3 +277,7 @@ Dependency Gate锁定24个direct pins和npm v3 integrity，SCA当前0 advisory�
 新增页面继续依赖React text rendering与strict runtime parser，不使用raw HTML、eval、local/session storage或cookie。Gantt/load只GET；comparison POST严格属于read-query，先校验两个Version exact reference、不带Idempotency-Key，也不装配commands/approve/reject/publish/export carrier。Authorization、stale、contract和server failure均显式可见，不用cached/synthetic empty伪装成功。
 
 Read-only Chromium覆盖authorization denial和no-command/no-idempotency transport；source/machine scan验证client Solver/Validator/KPI/Resource Load/delta authority及P4/control模块不存在。Artifact `9555196470`已精确复验4/4 Chromium、12/12 machine与上述absence flags。该bounded provider evidence不等于CSP/XSS penetration、真实session/OIDC/RBAC、CSRF/CORS、gateway/WAF、browser matrix或Production threat-model approval；OPEN-010/015与RISK-011～013继续保持原状态。
+
+## 最终交付与清理边界
+
+最终封存只增补evidence并保持已验收payload/镜像/SBOM/配置模板字节；未签名内部交接身份不关闭漏洞或Production authority。公开仓库仅保留工具和技术说明，归档、原始Provider日志、客户配置、Secret、数据库与备份均位于独立ignored目录。清理必须先验证唯一final包及sidecar，再对明确staging根生成并锁定逐文件计划，保全非归档报告后执行；禁止链接/reparse、路径越界、未知数据文件及全局Docker/卷清理。

@@ -13,7 +13,7 @@ last_reviewed: 2026-09-14
 
 企业[配置与Secret预检](operations/deployment.md#企业配置与-secret-预检)提供只读配置/Secret模板和外层bootstrap；当前仅支持TEST/SIMULATION与显式测试认证，真实SSO不由本预检声明。企业已有依赖与standalone双模式接线、TLS启动门和按需Validator见[企业Compose](operations/deployment.md#企业双模式-compose)。
 
-企业Runtime镜像的固定输入、构建与离线tar身份见[部署说明](operations/deployment.md#企业-runtime-oci-镜像)；[安全说明](operations/security.md#企业镜像扫描与未关闭风险)保留未关闭OS漏洞，使用范围为内部TEST/SIMULATION。完整离线包和服务器独立验收继续按后续交付任务实现。
+企业Runtime镜像的固定输入、构建与离线tar身份见[部署说明](operations/deployment.md#企业-runtime-oci-镜像)；[安全说明](operations/security.md#企业镜像扫描与未关闭风险)保留未关闭OS漏洞，使用范围为内部TEST/SIMULATION。双模式clean Linux离线验收已通过；封存与四步安装见[最终企业离线交接](operations/deployment.md#最终企业离线交接)。
 
 本目录只收录适合随公开 Git 仓库发布的核心项目文档。开发过程记录、Task Card、阶段证据、机器报告、临时草稿、截图、测试输出和下载制品不属于公开文档，应留在被忽略的本地目录或 `build/`。
 
@@ -23,7 +23,7 @@ last_reviewed: 2026-09-14
 
 P8-17独立`PHASE_GATE`已核验21个P8 Task、21组前序Provider输入（20个前序Task）、88份artifact/2,032个条目及10项保留失败/纠正历史，并在精确提交上fresh重放P8-19。304项P8目标回归、20/20 Exit check、18/18平台检查和4/4 closure均为PASS，零issue/zero gap；该提交的FULL与required Provider已成功，P8-17=`done`、P8=`completed`。失败候选及其artifact仍保留且不rerun。冻结Developer Kit `1.0.0`继续保留`UNSIGNED_ENGINEERING_CANDIDATE`元数据；最终外层成果是`UNSIGNED_INTERNAL_ENGINEERING_DELIVERY`，只代表synthetic工程产品化，不等于外部签名、Production部署、真实客户Extension、P7现实校准、容量/SLA或UAT。能力声明以[能力矩阵](core/capability-matrix.md)和对应合同为准。
 
-企业容器运维提供[九个Shell入口](operations/deployment.md#p8-26-shell-运维入口)和[隔离备份恢复/同版本回滚](runbooks/backup-and-restore.md#p8-26-企业脚本备份与隔离恢复)；最终离线包和clean-server独立验收由后续任务完成，运维脚本的验证状态与证据以任务记录为准。
+企业容器运维提供[九个Shell入口](operations/deployment.md#p8-26-shell-运维入口)和[隔离备份恢复/同版本回滚](runbooks/backup-and-restore.md#p8-26-企业脚本备份与隔离恢复)；clean-server双模式独立验收已通过；唯一最终包通过证据增补封存，运行payload保持原摘要。具体候选及工具SHA以随包交接索引和可信交接报告为准。
 
 ## 核心入口
 

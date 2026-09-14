@@ -73,3 +73,12 @@
 **/reports/
 **/output/
 **/tmp/
+
+# Binary delivery and private installation state are never public documentation
+**/*.tar
+**/*.tar.gz
+**/*.zip
+**/*.sha256
+**/enterprise-local/
+**/secrets/
+**/backups/

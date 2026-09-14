@@ -179,7 +179,7 @@ def backup_metadata(directory, image, project):
     from bootstrap.services import HEAD
 
     return dict(
-        schema_version="enterprise-backup.v1",
+        schema_version="enterprise-backup.v2",
         status="PASS",
         image_id=image,
         source_project=project,
@@ -187,6 +187,7 @@ def backup_metadata(directory, image, project):
         identity=identity(directory),
         configuration_files_sha256=configuration_digest(),
         database_sha256=digest(directory / "database.dump"),
+        workspace_audit_sha256=digest(directory / "workspace-audit.jsonl"),
         redis_recovery="fresh broker; no queued-task replay claim",
         quiescence="API_AND_WORKER_STOPPED",
         production_ready=False,
@@ -198,7 +199,7 @@ def verify_backup(directory, image, project):
 
     m = read(directory / "metadata.json")
     require(
-        m["schema_version"] == "enterprise-backup.v1" and m["status"] == "PASS",
+        m["schema_version"] == "enterprise-backup.v2" and m["status"] == "PASS",
         "BACKUP_INVALID",
     )
     require(
@@ -217,6 +218,10 @@ def verify_backup(directory, image, project):
     require(
         digest(directory / "database.dump") == m["database_sha256"],
         "BACKUP_CHECKSUM_MISMATCH",
+    )
+    require(
+        digest(directory / "workspace-audit.jsonl") == m["workspace_audit_sha256"],
+        "BACKUP_AUDIT_CHECKSUM_MISMATCH",
     )
     require(m["identity"] == identity(directory), "BACKUP_DESCRIPTOR_MISMATCH")
     return m

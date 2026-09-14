@@ -433,6 +433,14 @@
       "consumer": "operations",
       "injection": "Celery worker --concurrency",
       "validation_owner": "bootstrap; resource/TLS deployment enforcement also belongs to Compose/reverse proxy"
+    },
+    {
+      "name": "WORKSPACE_AUTHORIZATION_POLICY_FILE",
+      "required": "always",
+      "source": "non-secret deployment.env",
+      "consumer": "workspace authorization",
+      "injection": "explicit LocalWorkspaceIdentity; no Headless capability inheritance",
+      "validation_owner": "bootstrap strict TEST/SIMULATION policy and readonly token files"
     }
   ]
 }

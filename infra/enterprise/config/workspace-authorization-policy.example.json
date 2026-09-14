@@ -1,0 +1,8 @@
+{
+  "policy_version": "enterprise-workspace-authorization.v1",
+  "policy_id": "enterprise-workspace-test.v1",
+  "environment": "TEST",
+  "data_plane": "SIMULATION",
+  "production_binding": false,
+  "principals": []
+}

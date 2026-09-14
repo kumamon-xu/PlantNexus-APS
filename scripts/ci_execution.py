@@ -158,9 +158,22 @@ def prepare_runtime(root: Path) -> dict[str, Any]:
             "restored_product_paths": [], "issues": []}
 
 
+def require_clean_acceptance(job: str, files: list[Path]) -> None:
+    if job not in {"solver_validation", "full_validation"}:
+        return
+    from infra.enterprise.acceptance.report import validate
+    def one(name):
+        found = [p for p in files if p.name == name]
+        if len(found) != 1:
+            raise ValueError("missing or duplicate clean acceptance evidence: " + name)
+        return json.loads(found[0].read_text(encoding="utf-8"))
+    validate(one("ci-enterprise-image-acceptance.json"), one("ci-enterprise-image-bundle.json"), identity()["head_sha"])
+
+
 def seal(root: Path, job: str, files: list[Path]) -> dict[str, Any]:
     if job not in JOBS or not files:
         raise ValueError("unknown job or empty evidence")
+    require_clean_acceptance(job, files)
     records = []
     for path in files:
         if not path.is_file() or path.stat().st_size == 0:
@@ -190,6 +203,7 @@ def verify_seal(root: Path, downloads: Path, job: str) -> dict[str, Any]:
                        for p in ("uv.lock", "frontend/package-lock.json", ".github/workflows/ci.yml")}
     if value.get("inputs") != expected_inputs or not value.get("files"):
         raise ValueError("evidence inputs mismatch or missing records")
+    checked_files = []
     for record in value["files"]:
         relative = record["path"]
         if Path(relative).is_absolute() or ".." in Path(relative).parts or "\\" in relative or ":" in relative:
@@ -203,6 +217,8 @@ def verify_seal(root: Path, downloads: Path, job: str) -> dict[str, Any]:
                 or hashlib.sha256(candidate.read_bytes()).hexdigest() != record["sha256"]):
             raise ValueError(f"missing or corrupted evidence: {relative}")
         check_report(candidate)
+        checked_files.append(candidate)
+    require_clean_acceptance(job, checked_files)
     return value
 
 

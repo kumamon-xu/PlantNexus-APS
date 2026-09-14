@@ -224,7 +224,14 @@ def assemble(args):
     groups = {
         "bootstrap": (
             "scripts/bootstrap",
-            ["__init__.py", "extensions.py", "preflight.py", "run.py", "services.py"],
+            [
+                "__init__.py",
+                "extensions.py",
+                "preflight.py",
+                "run.py",
+                "services.py",
+                "workspace.py",
+            ],
         ),
         "scripts": (
             "scripts",
@@ -264,6 +271,7 @@ def assemble(args):
                 ".env.example",
                 "configuration-matrix.v1.json",
                 "authorization-policy.example.json",
+                "workspace-authorization-policy.example.json",
                 "extension-catalog.example.json",
                 "extension-lock.example.json",
                 "planning-policy.example.json",

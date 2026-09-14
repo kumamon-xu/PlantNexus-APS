@@ -130,3 +130,5 @@ git diff --check
 功能或合同变更还必须运行对应模块测试；文档检查不能替代 Schema、API、Solver、Validator、Frontend 或 migration 验收。
 
 CI执行、显式阶段审计与机器取证见[CI execution and evidence](architecture/ci-execution-and-evidence.md)。
+
+企业部署现提供[显式 TEST 工作区授权与独立离线验收](operations/deployment.md#显式-test-工作区授权与离线验收)，以及包含拒绝审计的[备份 v2](runbooks/backup-and-restore.md#企业备份-v2-与工作区拒绝审计)。候选通过完整 clean 与 exact Provider 前不形成新的交付就绪结论。

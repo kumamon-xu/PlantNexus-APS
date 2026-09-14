@@ -34,6 +34,7 @@ x-runtime: &runtime
       read_only: true
       bind: {create_host_path: false}
     - runtime_data:/var/lib/plantnexus
+    - workspace_audit:/home/plantnexus
     - backups:/var/backups/plantnexus:ro
 x-health: &health
   interval: 5s
@@ -57,7 +58,7 @@ services:
       test: [CMD, python, -m, bootstrap.services, health-worker]
   api:
     <<: *runtime
-    networks: [runtime]
+    networks: [runtime, ingress]
     command: [python, -m, bootstrap.services, api]
     depends_on:
       migrate: {condition: service_completed_successfully}
@@ -74,9 +75,12 @@ services:
     volumes: [*configuration-volume, *bootstrap-volume, *secrets-volume]
     command: [python, -m, bootstrap.services, validator]
 volumes:
+  workspace_audit:
   runtime_data:
   backups:
 networks:
+  ingress:
+    internal: false
   runtime:
     name: ${RUNTIME_NETWORK:?explicit isolated project network required}
     internal: ${ISOLATED_NETWORK:-false}

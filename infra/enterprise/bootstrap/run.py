@@ -125,11 +125,20 @@ def launch(prepared: Prepared, role: str, *, deployment: bool = False) -> Any:
             asyncio.run(close_default())
         finally:
             os.environ.update(saved)
+        from .workspace import LocalWorkspaceIdentity, DurableDenialAudit
+
         application = create_runtime_app(
             prepared.settings,
             host_identity_provider=LocalTestIdentity(prepared),
             host_authorization_policy=prepared.authorization,
             extension_artifacts=prepared.artifacts,
+            authorization_provider=LocalWorkspaceIdentity(
+                prepared.workspace_policy, prepared.workspace_tokens
+            ),
+            authorization_audit_sink=DurableDenialAudit(
+                policy_id=prepared.workspace_policy["policy_id"],
+                policy_fingerprint=prepared.report()["workspace_policy_fingerprint"],
+            ),
         )
         if deployment:
             from .services import record_descriptor

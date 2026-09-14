@@ -21,7 +21,7 @@ KIT_FP = "sha256:ee2a3a407337e595ca724ed2a92540e911c5fad7272e472f2d3ef3297a14a36
 RUNTIME_ROOT = Path("/opt/plantnexus")
 GROUPS = {
     "identity": "ENVIRONMENT DATA_PLANE RUNTIME_SOURCE_SHA RUNTIME_FINGERPRINT KIT_VERSION KIT_FINGERPRINT",
-    "policy": "PLANNING_POLICY_FILE SOLVE_LIMITS_FILE HTTP_POLICY_FILE AUTHORIZATION_POLICY_FILE",
+    "policy": "PLANNING_POLICY_FILE SOLVE_LIMITS_FILE HTTP_POLICY_FILE AUTHORIZATION_POLICY_FILE WORKSPACE_AUTHORIZATION_POLICY_FILE",
     "authorization": "IDENTITY_PROVIDER IDENTITY_ISSUER IDENTITY_AUDIENCE IDENTITY_CLIENT_ID IDENTITY_SUBJECT IDENTITY_TOKEN_FILE",
     "transport": "API_DOMAIN API_BIND API_PORT TLS_CERT_FILE TLS_KEY_FILE",
     "operations": "DATA_VOLUME BACKUP_VOLUME CPU_LIMIT MEMORY_MIB WORKER_CONCURRENCY LOG_LEVEL HEARTBEAT_SECONDS LEASE_SECONDS",
@@ -173,6 +173,9 @@ class Prepared:
     secrets: tuple[str, ...] = field(repr=False)
     artifacts: tuple[Any, ...] = field(default=(), repr=False)
 
+    workspace_policy: Any = field(default=None, repr=False)
+    workspace_tokens: tuple[str, ...] = field(default=(), repr=False)
+
     def report(self) -> dict[str, Any]:
         return {
             "status": "PASS",
@@ -182,12 +185,24 @@ class Prepared:
             "kit_version": "1.0.0",
             "kit_fingerprint": KIT_FP,
             "extension_count": len(self.artifacts),
+            "workspace_policy_fingerprint": fingerprint(
+                json.dumps(
+                    self.workspace_policy, sort_keys=True, separators=(",", ":")
+                ).encode()
+            ),
             "environment": "TEST",
             "data_plane": "SIMULATION",
             "production_ready": False,
             "secrets_in_report": False,
             "nonsecret_configuration_fingerprint": fingerprint(
-                json.dumps(self.env, sort_keys=True, separators=(",", ":")).encode()
+                json.dumps(
+                    {
+                        "environment": self.env,
+                        "workspace_policy": self.workspace_policy,
+                    },
+                    sort_keys=True,
+                    separators=(",", ":"),
+                ).encode()
             ),
             "issues": [],
         }
@@ -292,6 +307,20 @@ def prepare(path: Path) -> Prepared:
     documents = {
         n: strict_json(read_file(env[n], n), n) for n in GROUPS["policy"].split()
     }
+    from .workspace import validate as validate_workspace
+
+    workspace_policy = validate_workspace(
+        documents["WORKSPACE_AUTHORIZATION_POLICY_FILE"]
+    )
+    workspace_tokens = tuple(
+        secret(
+            {"IDENTITY_TOKEN_FILE": p["token_file"]}, "IDENTITY_TOKEN_FILE", minimum=32
+        )
+        for p in workspace_policy["principals"]
+    )
+    if len(set(workspace_tokens)) != len(workspace_tokens) or token in workspace_tokens:
+        fail("authorization", "WORKSPACE_IDENTITY_COLLISION")
+    secrets.extend(workspace_tokens)
     # Import only pure configuration/contract consumers, never API/Worker modules.
     try:
         from app.infrastructure.config import Settings
@@ -395,6 +424,8 @@ def prepare(path: Path) -> Prepared:
         token,
         tuple(secrets + list(endpoints.values())),
         artifacts,
+        workspace_policy,
+        workspace_tokens,
     )
 
 

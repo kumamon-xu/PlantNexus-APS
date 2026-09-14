@@ -70,3 +70,9 @@ Operator需要Task靶场内的`pg_dump`、`pg_restore`、`createdb`、`dropdb`�
 ## 最近演练记录
 
 2026-09-10由TASK-P8-18对一次性PostgreSQL 17.6、Alpha Extension和Kit-locked Runtime重新执行，数据库与Extension identity恢复检查本地PASS。exact Provider证据在Task Card闭环时登记；不覆盖真实数据量、并发写入、PITR、跨区恢复或Production RPO/RTO。
+
+## 企业备份 v2 与工作区拒绝审计
+
+已授权的工作区部署绑定增加独立拒绝审计卷。企业脚本的新备份使用 `enterprise-backup.v2`：在受控停止 API/Worker 后，同时保存 database.dump、api.json、worker.json、metadata.json 和 workspace-audit.jsonl；SHA256SUMS 覆盖全部文件，metadata 另绑定 workspace_audit_sha256。v1 不能满足审计恢复要求，新脚本明确拒绝，不覆盖历史备份。
+
+restore/rollback 仍只接受不同 source project、停止、空数据库/Redis、exact image/configuration/Runtime/Kit/Extension 的隔离目标；审计目标必须为空，恢复已验证快照后比较身份。受控 start 不删除数据；失败保留目标以便诊断，不原地覆盖已有审计、不自动downgrade或删除卷。same-version rollback 的 validated.json 必须来自真实已验证 slot，不能手工伪造。

@@ -80,7 +80,14 @@ def complete_evidence(repository):
         destination = downloads / job
         destination.mkdir()
         (destination / file.name).write_bytes(file.read_bytes())
-        ci.write(destination / f"ci-seal-{job}.json", ci.seal(root, job, [file]))
+        files = [file]
+        if job in {"solver_validation", "full_validation"}:
+            from tests.enterprise.test_acceptance import write_evidence_pair
+            extra = write_evidence_pair(root / "build/validation", base)
+            for artifact in extra:
+                (destination / artifact.name).write_bytes(artifact.read_bytes())
+            files.extend(extra)
+        ci.write(destination / f"ci-seal-{job}.json", ci.seal(root, job, files))
     needs = {job: {"result": result} for job, result in value["expected_jobs"].items() if job != "validate"}
     return root, value, needs, downloads
 
@@ -100,6 +107,10 @@ def test_same_basename_in_different_report_directories_is_unambiguous(repository
         destination.parent.mkdir(parents=True, exist_ok=True)
         destination.write_bytes(file.read_bytes())
         files.append(file)
+    from tests.enterprise.test_acceptance import write_evidence_pair
+    for artifact in write_evidence_pair(root / "build/validation", ci.identity()["head_sha"]):
+        (downloads / "validation" / artifact.name).write_bytes(artifact.read_bytes())
+        files.append(artifact)
     ci.write(downloads / "validation/ci-seal-solver_validation.json", ci.seal(root, "solver_validation", files))
     assert ci.verify_seal(root, downloads, "solver_validation")["files"][0]["path"] == "validation/same.json"
     # A valid report with the same name cannot substitute for the missing one.
@@ -198,3 +209,12 @@ def test_frozen_preparation_is_not_a_local_checkout_operation(repository, monkey
     monkeypatch.delenv("GITHUB_ACTIONS", raising=False)
     with pytest.raises(ValueError, match="ephemeral Actions"):
         ci.prepare_runtime(root)
+
+
+@pytest.mark.parametrize("job", ["solver_validation", "full_validation"])
+def test_required_clean_acceptance_cannot_be_omitted(repository, job):
+    root, _, _ = repository
+    path = root / "build/validation/other.json"
+    ci.write(path, {"status": "PASS"})
+    with pytest.raises(ValueError, match="clean acceptance"):
+        ci.seal(root, job, [path])

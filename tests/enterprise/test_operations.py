@@ -38,6 +38,7 @@ def backup(tmp_path, monkeypatch):
     for name in ("api", "worker"):
         (tmp_path / (name + ".json")).write_text(json.dumps(identity), encoding="utf-8")
     (tmp_path / "database.dump").write_bytes(b"synthetic database dump")
+    (tmp_path / "workspace-audit.jsonl").write_bytes(b'{"outcome":"DENIED"}\n')
     doc = metadata.backup_metadata(tmp_path, IMAGE, "source-project")
     (tmp_path / "metadata.json").write_text(json.dumps(doc), encoding="utf-8")
     return tmp_path, doc
@@ -54,6 +55,8 @@ def test_backup_round_trip_binds_all_identity(backup):
     "field,value",
     [
         ("schema_version", "other"),
+        ("schema_version", "enterprise-backup.v1"),
+        ("workspace_audit_sha256", "0" * 64),
         ("status", "FAIL"),
         ("image_id", "sha256:" + "0" * 64),
         ("migration_head", "unknown"),
@@ -73,7 +76,14 @@ def test_changed_backup_refused(backup, field, value):
 
 
 @pytest.mark.parametrize(
-    "name", ["database.dump", "metadata.json", "api.json", "worker.json"]
+    "name",
+    [
+        "database.dump",
+        "metadata.json",
+        "api.json",
+        "worker.json",
+        "workspace-audit.jsonl",
+    ],
 )
 def test_missing_backup_component_cannot_default_to_success(backup, name):
     directory, _ = backup

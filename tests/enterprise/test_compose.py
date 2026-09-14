@@ -156,6 +156,9 @@ def test_compose_gates_ports_mounts_and_no_build():
             == "service_healthy"
         )
         assert "ports" not in standalone["services"][service]
+    assert base["services"]["api"]["networks"] == ["runtime", "ingress"]
+    assert base["networks"]["ingress"]["internal"] is False
+    assert base["services"]["worker"]["networks"] == ["runtime"]
     assert standalone["networks"]["runtime"]["internal"] is True
     assert {"postgres_data", "redis_data"} <= standalone["volumes"].keys()
 

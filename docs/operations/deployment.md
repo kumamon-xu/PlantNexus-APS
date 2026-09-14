@@ -225,3 +225,15 @@ npm run package:headless
 首选部署模式是在Runtime/API同一origin提供静态文件，Frontend默认请求`/api/v1`。也可独立发布静态归档，但必须由获批gateway把公开API呈现为同源路径；P8-11未增加CORS，不能把任意cross-origin host视为已支持。宿主bootstrap只可在模块加载前注入内存`window.__PLANTNEXUS_APS_SESSION_PROVIDER__`，不能把token写入静态配置、URL、cookie或browser storage；未注入时保持不可用并fail closed。
 
 Frontend可以晚于或早于兼容Runtime独立回退：停止提供当前静态归档并恢复上一份经同一OpenAPI/Chromium Gate验证的归档即可，不修改Runtime、数据库或业务状态。部署promotion仍需另行批准的TLS、gateway/SSO、CSP/WAF、浏览器矩阵、监控、UAT和支持责任；当前归档只是repository engineering candidate。
+
+## 显式 TEST 工作区授权与离线验收
+
+企业配置新增必填 `WORKSPACE_AUTHORIZATION_POLICY_FILE`，指向只读 `enterprise-workspace-authorization.v1` JSON。包内 `workspace-authorization-policy.example.json` 以 `principals: []` 显式拒绝全部工作区身份；Headless token 不自动获得工作区权限。策略固定 TEST/SIMULATION、production_binding=false，policy_id 必须包含 test；未知字段、角色、重复 actor/token、缺少配置或 Headless/工作区 token 复用均阻止启动。
+
+每个 principal 必须提供 actor_ref、只读 token_file、capabilities、allow_all_synthetic_resources 以及 planning_run_scope、schedule_version_scope、export_job_scope 三组资源 ID。支持既有 view/edit/lock/approve/reject/publish/export/audit，分别显式授予；默认使用精确资源 ID。仅在隔离 synthetic 数据库中显式设置 allow_all_synthetic_resources=true 才允许单独的 `[*]`（JSON 字符串 `"*"`）范围，不接受前缀 glob。P4 scope 和 Production authority 不由此策略授予。策略变化参与进程配置 fingerprint，须受控重启，不能热更新。Token 文件只在进程内读取，值不进入 Compose 插值、命令行、报告或策略 JSON。
+
+API 增加独立 ingress bridge，端口仍只发布到 127.0.0.1；standalone 的 DB/Redis/Worker 保持内部 runtime 网络且不发布端口。ingress bridge 本身可路由，不是宿主出口防火墙；断网验收由独立消费者的外层 network=none 保证。真实部署的出口限制由宿主管理。
+
+工作区拒绝写入独立 workspace_audit 卷中的 `/home/plantnexus/workspace-authorization.jsonl`，使用追加、fsync 和禁止符号链接打开；写入失败由原 HTTP guard 返回 500，阻止 application 调用。成功业务操作仍使用原数据库事务 audit。备份格式升级为 enterprise-backup.v2，同时冻结数据库和工作区拒绝审计；旧 v1 不会被静默当作完整 v2 恢复。详见恢复 Runbook。
+
+`uv run python scripts/enterprise_deployment_check.py --bundle-report <bundle-report.json> --report <acceptance.json>` 在构建侧准备 synthetic fixture，在无源码/宿主 Python/宿主 socket 的 Docker 27.5.1 消费者里完成双模式实际 load/install、loopback TLS、Headless/工作区链、拒绝和恢复。每种模式使用独立空镜像 store。`--development` 只产生本地调试证据；required CI 拒绝此标记、缺少报告、错误候选摘要、skip/BLOCKED 或未通过场景。验收只覆盖现有导出 Job 创建、读取和幂等性，不宣称外部文件交付或新增导出执行器。

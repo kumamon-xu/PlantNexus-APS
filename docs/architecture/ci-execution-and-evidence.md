@@ -60,3 +60,7 @@ The Provider collector uses a new run's plan to select required jobs and artifac
 A manual run may supply `base_sha`; leaving it empty selects all current checks. `phase_audit` defaults to false. No Production deployment, credentials or product settings are introduced by this workflow.
 
 The retained operations target builds its declared historical Runtime. In ephemeral Actions checkouts only, CI stages that target’s packaging README and records both digests, then restores the current README after the drill. All other Runtime source, Schema, migration, lock and build-policy drift is rejected before staging. This preserves the frozen build identity without treating later delivery prose as a product-source change. It does not update the target or certify a changed Runtime.
+
+## 企业 clean acceptance 必需证据
+
+solver_validation/full_validation 的企业镜像共享步骤在封包后执行独立 clean consumer，生成 ci-enterprise-image-acceptance.json。seal 与 aggregate 均要求它与 ci-enterprise-image-bundle.json 成对存在且唯一，核对 exact code SHA、候选 archive/payload/manifest/checksums 摘要、三镜像身份、双模式三十项 PASS 和 READY。development、skip/BLOCKED、入口未验证、非空 store、缺失/重复报告均拒绝；P8-27 Provider 不替代 P8-28 的新证据。

@@ -218,15 +218,18 @@ case "$ACTION" in
         cmp -s "$STATE/identity.json" "$SLOT/validated.json" || fail SLOT_CONFIGURATION_DRIFT
         MUTATING=1
         quiet compose stop api worker
+        cid=$(compose ps -a -q api 2>/dev/null) || fail PROCESS_MISSING
+        docker cp "$cid:/home/plantnexus/workspace-authorization.jsonl" "$STATE/workspace-audit.jsonl" >/dev/null 2>&1 || fail AUDIT_BACKUP_FAILED
         quiet pgclient head
         # Atomic publication; failures leave existing data and backups untouched.
         output=$(mktemp -d "$(dirname "$published")/.p826-backup-XXXXXX") || fail BACKUP_DIRECTORY_FAILED
         pgclient dump >"$output/database.dump" 2>/dev/null || fail BACKUP_FAILED
         cp "$STATE/api.json" "$STATE/worker.json" "$output/"
+        cp "$STATE/workspace-audit.jsonl" "$output/"
         BACKUP_MOUNT=$output
         # Metadata helper reads only this backup, never receives write access.
         helper metadata "$IMAGE" "$PROJECT" >"$output/metadata.json" 2>/dev/null || fail BACKUP_METADATA_FAILED
-        (cd "$output" && sha256sum database.dump api.json worker.json metadata.json >SHA256SUMS)
+        (cd "$output" && sha256sum database.dump api.json worker.json metadata.json workspace-audit.jsonl >SHA256SUMS)
         mv -T -n "$output" "$published" || fail BACKUP_PUBLICATION_FAILED
         [ ! -e "$output" ] || fail BACKUP_ALREADY_EXISTS
         printf 'backup_manifest_sha256=%s\n' "$(sha256sum "$published/SHA256SUMS" | awk '{print $1}')"
@@ -256,6 +259,9 @@ case "$ACTION" in
         quiet compose run --rm --no-deps migrate python -c 'from bootstrap.services import prepare,CONFIG;from redis import Redis;p=prepare(CONFIG);clients=[Redis.from_url(getattr(p.settings,f).get_secret_value(),socket_timeout=3,socket_connect_timeout=3) for f in ("redis_url","celery_broker_url","celery_result_backend_url")];assert all(c.dbsize()==0 for c in clients);[c.close() for c in clients]'
         pgclient restore <"$BACKUP_MOUNT/database.dump" >/dev/null 2>&1 || fail RESTORE_FAILED
         quiet pgclient head
+        # Restore denial evidence before exposing API/Worker. This one-shot role
+        # publishes no ports and refuses any nonempty or symlink audit target.
+        compose run --rm --no-deps -T api python -c 'import os,sys,shutil,stat;fd=os.open("/home/plantnexus/workspace-authorization.jsonl",os.O_WRONLY|os.O_CREAT|os.O_NOFOLLOW,0o600);assert stat.S_ISREG(os.fstat(fd).st_mode) and os.fstat(fd).st_size==0;f=os.fdopen(fd,"wb");shutil.copyfileobj(sys.stdin.buffer,f);f.flush();os.fsync(f.fileno());f.close()' <"$BACKUP_MOUNT/workspace-audit.jsonl" >/dev/null 2>&1 || fail AUDIT_RESTORE_FAILED
         start_runtime
         MUTATING=1
         helper compare-restored "$IMAGE" "$PROJECT" >/dev/null 2>&1 || fail RESTORED_IDENTITY_MISMATCH

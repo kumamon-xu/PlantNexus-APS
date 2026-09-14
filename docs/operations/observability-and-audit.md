@@ -209,3 +209,11 @@ ExportJob append-only audit覆盖create、attempt/retry、failed/recovered、can
 ## TASK-P3-10 transport observability
 
 每个API response回传`X-Correlation-Id`且`Cache-Control: no-store`；client correlation与carrier冲突在委托前以422拒绝。高风险authorization denial通过可注入sink记录operation、actor/resource/policy/reason/correlation/UTC，不写Bearer/raw key。`p3-planning-workspace-api-report.v1`记录17 route/delegation、error/auth/boundary计数与OpenAPI fingerprint；这不形成metrics backend、retention、SIEM、alert或Production SLO。
+
+## 企业部署工作区拒绝审计
+
+`enterprise-workspace-denial.v1` 是部署层的逐行 JSON 拒绝记录，与原成功事务 AuditEvent 分离。它保留 UTC、服务端 capability/resource type/outcome/reason 和 plane/environment；actor、resource ID 与 correlation ID 仅保留 SHA-256，避免请求可控字符串泄漏凭据。空 token 或权限不足不读取业务资源。写入使用锁、append、fsync、regular-file/O_NOFOLLOW；失败向现有 HTTP guard 传播，不降级到 Null sink。它不是 SIEM、外部数字签名或防管理员篡改的声明。
+
+workspace_audit 具名卷覆盖 `/home/plantnexus`，由 Runtime 既有 UID 10001 持有；业务数据库与拒绝审计卷均随 stop 保留。企业 backup v2 在 API/Worker 静默后取得审计快照，清单和 metadata 同时绑定其摘要，restore/rollback 后核对其字节。真实 retention、轮转、SIEM 和 Production 审计责任仍需外部审定。
+
+部署拒绝记录包含显式工作区策略ID与内容指纹，用于区分同名策略的内容修订；该标识不授予额外权限。

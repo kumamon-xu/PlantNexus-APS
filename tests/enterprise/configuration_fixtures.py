@@ -96,6 +96,11 @@ def create_fixture(directory: Path, *, container_paths: bool = False) -> dict[st
     (directory / "authorization.json").write_text(
         json.dumps(authorization), encoding="utf-8"
     )
+    (directory / "workspace-authorization.json").write_bytes(
+        (
+            ROOT / "infra/enterprise/config/workspace-authorization-policy.example.json"
+        ).read_bytes()
+    )
     env = {
         "ENVIRONMENT": "test",
         "DATA_PLANE": "simulation",
@@ -107,6 +112,7 @@ def create_fixture(directory: Path, *, container_paths: bool = False) -> dict[st
         "SOLVE_LIMITS_FILE": path("solve-limits.json"),
         "HTTP_POLICY_FILE": path("http-policy.json"),
         "AUTHORIZATION_POLICY_FILE": path("authorization.json"),
+        "WORKSPACE_AUTHORIZATION_POLICY_FILE": path("workspace-authorization.json"),
         "IDENTITY_PROVIDER": "LOCAL_TEST_TOKEN",
         "IDENTITY_ISSUER": authorization["issuer"],
         "IDENTITY_AUDIENCE": authorization["audience"],

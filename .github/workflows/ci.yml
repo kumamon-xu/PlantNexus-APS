@@ -183,7 +183,7 @@ jobs:
         run: uv run ruff check .
 
       - name: Type check
-        run: uv run pyright backend/app backend/aps_extension_sdk backend/aps_extension_tooling backend/aps_developer_kit backend/tests scripts/enterprise_image_build.py infra/enterprise/image_probe.py infra/enterprise/bootstrap infra/enterprise/compose infra/enterprise/scripts infra/enterprise/bundle scripts/enterprise_bundle.py tests/enterprise
+        run: uv run pyright backend/app backend/aps_extension_sdk backend/aps_extension_tooling backend/aps_developer_kit backend/tests scripts/enterprise_image_build.py infra/enterprise/image_probe.py infra/enterprise/bootstrap infra/enterprise/compose infra/enterprise/scripts infra/enterprise/bundle scripts/enterprise_bundle.py infra/enterprise/acceptance scripts/enterprise_deployment_check.py tests/enterprise
 
       - name: Repository test suites
         run: |
@@ -217,7 +217,7 @@ jobs:
     needs: [classify, full_preflight, full_operations]
     if: ${{ needs.classify.outputs.full_validation == 'true' }}
     runs-on: ubuntu-latest
-    timeout-minutes: 40
+    timeout-minutes: 60
     env:
       PLANTNEXUS_CODE_COMMIT: ${{ github.sha }}
       PLANTNEXUS_POSTGRES_PASSWORD: ci-contract-only-not-a-secret
@@ -1158,6 +1158,9 @@ jobs:
           uv run python infra/enterprise/bundle/verify_container.py \
             --bundle-report build/validation/ci-enterprise-image-bundle.json \
             --report build/validation/ci-enterprise-image-bundle-container.json
+          uv run python scripts/enterprise_deployment_check.py \
+            --bundle-report build/validation/ci-enterprise-image-bundle.json \
+            --report build/validation/ci-enterprise-image-acceptance.json
       - &enterprise_bundle_archive
         name: Retain offline enterprise candidate archive
         uses: actions/upload-artifact@v7
@@ -1299,7 +1302,7 @@ jobs:
     needs: [classify, full_preflight]
     if: ${{ needs.classify.outputs.solver_validation == 'true' }}
     runs-on: ubuntu-latest
-    timeout-minutes: 20
+    timeout-minutes: 40
     env:
       PLANTNEXUS_POSTGRES_PASSWORD: ci-contract-only-not-a-secret
       PLANTNEXUS_CODE_COMMIT: ${{ github.sha }}

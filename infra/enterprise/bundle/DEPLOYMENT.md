@@ -44,3 +44,11 @@ restore.sh/rollback.sh 的七参数后加 `<备份目录> <备份SHA256SUMS的�
 ## 证据与风险
 
 evidence/ 保存镜像报告、原输入映射与依赖安全清单；SBOM/ 分列三个镜像的 CycloneDX 清单。Runtime 的既有漏洞评估保持原结论；固定 PostgreSQL/Redis 的漏洞和许可证枚举是透明的库存记录，不是 Production 安全批准。缺失扫描、Secret 发现、镜像身份或完整性异常均禁止候选通过。无真实配置、备份、日志或客户数据随包分发。
+
+## 工作区身份与审计
+
+必须配置 WORKSPACE_AUTHORIZATION_POLICY_FILE；对应只读 JSON 采用 enterprise-workspace-authorization.v1，固定 TEST/SIMULATION、production_binding=false。示例 principals=[] 拒绝全部工作区身份。每个 principal 显式提供 actor_ref、token_file、capabilities、allow_all_synthetic_resources 和 planning_run_scope/schedule_version_scope/export_job_scope；token 文件与 Headless 身份独立，禁止复用。能力不相互继承，资源范围默认精确 ID；仅隔离 synthetic 库的显式 allow_all_synthetic_resources=true 允许单独的通配字符串。配置变化要求受控重启。
+
+API 的独立 ingress bridge 支持 Docker 27 下的 loopback TLS；内部依赖不发布端口。该 bridge 不提供宿主出口防火墙，应按实际环境配置出口限制。
+
+工作区拒绝审计追加到独立 workspace_audit 卷，标识仅保留散列，写入失败拒绝业务。新备份 enterprise-backup.v2 在 API/Worker 静默后保存数据库与 workspace-audit.jsonl，两者均被摘要绑定。恢复要求目标审计为空；旧 v1 不作为 v2 自动升级。成功业务 audit 仍在数据库事务内。

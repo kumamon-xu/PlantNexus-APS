@@ -11,6 +11,10 @@ last_reviewed: 2026-09-14
 
 # P0 工程安全边界
 
+## 公开工程发行的信任边界
+
+项目允许经明确批准的未签名 GitHub 工程发行，规则见 [ADR-0019](../adr/ADR-0019-public-engineering-release.md)。公开下载不等于签名、Extension allow-list 批准或 Production promotion。核对 SHA-256、来源提交和组件版本；依赖与容器的既有漏洞/处置记录仍随包保留，不能把工程可交付理解为零漏洞。`public-engineering` 与要求外部签名的 `public`/`production` channel 明确区分。
+
 ## P8-27 离线包供应链
 
 安全归档校验独立于assembler，要求单root、普通文件、固定LF/执行位、完整成员清单和无循环checksum；拒绝穿越、重复、链接、超限、篡改、缺失镜像、浮动身份与文本Secret模式。构建以白名单选择配置模板和部署辅助代码，不复制运行配置或源码checkout。Runtime复用同tar绑定的已通过镜像扫描和SBOM，PostgreSQL/Redis固定既有digest并对真实导出tar扫描vuln/license/secret；Secret非零或缺扫描即失败，依赖漏洞和许可证以显式未获Production批准的inventory交付，不改变Runtime现有风险门。

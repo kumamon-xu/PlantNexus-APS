@@ -25,6 +25,10 @@ P8-17独立`PHASE_GATE`已核验21个P8 Task、21组前序Provider输入（20个
 
 企业容器运维提供[九个Shell入口](operations/deployment.md#p8-26-shell-运维入口)和[隔离备份恢复/同版本回滚](runbooks/backup-and-restore.md#p8-26-企业脚本备份与隔离恢复)；clean-server双模式独立验收已通过；唯一最终包通过证据增补封存，运行payload保持原摘要。具体候选及工具SHA以随包交接索引和可信交接报告为准。
 
+## 发行下载
+
+四类发行资产和独立组件版本见[Runtime 发行说明](operations/release-and-versioning.md#github-工程发行)、[Developer Kit 发行说明](operations/developer-kit-release-upgrade-and-rollback.md#当前公开工程发行)与[公开工程发行决策](adr/ADR-0019-public-engineering-release.md)。
+
 ## 核心入口
 
 | 主题 | 首选文档 | 用途 |

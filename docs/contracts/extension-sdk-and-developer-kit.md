@@ -11,6 +11,12 @@ last_reviewed: 2026-09-10
 
 # APS Extension SDK 与 Developer Kit 合同
 
+## 当前发行合同
+
+Kit `1.0.1` 是独立的新组合：保留 Runtime `0.1.0`、SDK/Tooling/Template `1.0.0`，精确嵌入来源 `39149091859b35b1303002a237a3cf1344572773` 的已验证 Runtime。Kit 组装提交与 Runtime 来源分别锁定；Runtime SHA-256/fingerprint 必须与新 policy、Kit lock 和嵌套归档一致。Kit `1.0.0` 仍要求同源且不可覆盖，以下历史章节只描述其冻结合同。
+
+依据 [ADR-0019](../adr/ADR-0019-public-engineering-release.md)，新 Kit 可声明 `UNSIGNED_PUBLIC_ENGINEERING` 并通过显式 `public-engineering` channel 校验供公开下载；`public`/`production` 信任提升路径仍要求外部签名。`public_promotion_allowed=false` 保留其签名信任含义，不禁止已获授权的工程下载。新 policy 的五项精确矩阵、旧 Kit 重放、显式升级/回滚和完整供应链检查是发行前置条件。
+
 ## TASK-P8-17 Exit消费规则
 
 P8-17只能消费并核验本合同形成的稳定接口、版本和既有证据，不能借Exit审计修改SDK、Runtime、Extension、Registry或Developer Kit。`READY`要求当前SHA fresh重放两个独立Enterprise Extension、六类SPI、fail-closed负例、Kit身份绑定与旧Kit重放；任何skip、版本/指纹漂移、未处置gap或Core企业反向依赖都必须得到`NOT_READY`。
@@ -174,3 +180,5 @@ Compatibility只接受matrix中的五项精确组合；unknown、mixed、floatin
 Support policy当前只支持Kit `1.0.0`工程候选，没有上一正式supported Kit，也没有Production SLA。后续弃用必须由新不可变Kit版本显式登记且保留旧bytes。失败时停止promotion、保留失败evidence并恢复上一显式项目锁；涉及Runtime migration时仍使用Runtime的backup/restore或获批forward-fix规则，禁止混搭新旧artifact/config或绕过Validator。
 
 当前签名状态固定为`UNSIGNED_ENGINEERING_CANDIDATE`、`signature_present=false`、`approved_external_key=false`。Manifest、checksum与sidecar是可签输入和完整性身份，不得冒充签名；public/Production channel必须在独立release authority提供可验证detached signature前以`KIT_SIGNATURE_REQUIRED`拒绝。详细命令和责任矩阵见[Developer Kit发布、升级与回滚](../operations/developer-kit-release-upgrade-and-rollback.md)。
+
+新公开 Kit 使用 `aps-developer-kit-release-manifest.v2`，在 v1 字段上增加必需的 distribution 声明。读取器保留 v1 精确字段检查；不允许给旧 v1 清单静默添加字段。业务 Schema Set 不变。

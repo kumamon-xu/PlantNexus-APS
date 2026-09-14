@@ -27,8 +27,10 @@ htmlcov/
 /dist/
 *.whl
 
-# Internal handoff bundles and delivery staging
+# Local release assets and delivery staging
 /deliverables/
+/releases/
+/release-staging/
 
 # Node.js, Vite and browser-test outputs
 node_modules/
@@ -82,6 +84,5 @@ temp/
 Thumbs.db
 Desktop.ini
 
-# Enterprise delivery: authoritative archives and per-install private state
-/build/enterprise-container/
+# Per-install private state (generated release outputs remain under /build/)
 /enterprise-local/

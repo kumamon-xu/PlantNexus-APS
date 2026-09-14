@@ -242,7 +242,7 @@ def _clean_install_and_cli(archive: Path) -> tuple[bool, float]:
             "--runtime-version",
             "0.1.0",
             "--developer-kit-version",
-            KIT_VERSION,
+            cast(str, cast(JsonObject, lock["versions"])["developer_kit"]),
             "check-set",
             "--project",
             str(kit_root / "examples/alpha-resource-tag"),

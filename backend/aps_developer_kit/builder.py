@@ -40,6 +40,7 @@ from aps_developer_kit.contracts import (
     LICENSE_REPORT_VERSION,
     LOCK_PATH,
     MANIFEST_PATH,
+    PUBLIC_KIT_MANIFEST_VERSION,
     SBOM_PATH,
     SIGNING_PATH,
     SIGNING_REQUEST_VERSION,
@@ -93,9 +94,11 @@ class DeveloperKitArtifact:
     payload_file_count: int
 
 
-def load_policy(root: Path) -> JsonObject:
+def load_policy(
+    root: Path, *, kit_version: str = KIT_VERSION, policy_path: Path = DEFAULT_POLICY_PATH
+) -> JsonObject:
     try:
-        policy = strict_json_document((root / DEFAULT_POLICY_PATH).read_bytes())
+        policy = strict_json_document((root / policy_path).read_bytes())
     except OSError as error:
         raise DeveloperKitContractError(
             "KIT_POLICY_INVALID", "Developer Kit policy is unavailable"
@@ -103,7 +106,7 @@ def load_policy(root: Path) -> JsonObject:
     if policy.get("policy_version") != "aps-developer-kit-release-policy.v1":
         raise DeveloperKitContractError("KIT_POLICY_INVALID", "policy version is unsupported")
     expected = {
-        "developer_kit": KIT_VERSION,
+        "developer_kit": kit_version,
         "runtime": RUNTIME_VERSION,
         "application": APPLICATION_VERSION,
         "core": CORE_VERSION,
@@ -138,7 +141,7 @@ def _normalized_tree(root: Path, *, prefix: str) -> dict[str, bytes]:
     return result
 
 
-def _relock_project(source: Path, target: Path) -> Path:
+def _relock_project(source: Path, target: Path, kit_version: str = KIT_VERSION) -> Path:
     shutil.copytree(
         source,
         target,
@@ -152,14 +155,14 @@ def _relock_project(source: Path, target: Path) -> Path:
         path = target / relative
         text = path.read_text(encoding="utf-8")
         path.write_text(
-            text.replace(_P8_14_KIT_VERSION, KIT_VERSION),
+            text.replace(_P8_14_KIT_VERSION, kit_version),
             encoding="utf-8",
             newline="\n",
         )
     return target
 
 
-def _relocked_template(source: Path, target: Path) -> Path:
+def _relocked_template(source: Path, target: Path, kit_version: str = KIT_VERSION) -> Path:
     shutil.copytree(
         source,
         target,
@@ -172,7 +175,7 @@ def _relocked_template(source: Path, target: Path) -> Path:
     ):
         text = path.read_text(encoding="utf-8")
         path.write_text(
-            text.replace(_P8_14_KIT_VERSION, KIT_VERSION),
+            text.replace(_P8_14_KIT_VERSION, kit_version),
             encoding="utf-8",
             newline="\n",
         )
@@ -355,19 +358,31 @@ def build_developer_kit_files(
     *,
     code_commit: str,
     epoch: int,
+    kit_version: str = KIT_VERSION,
+    policy_path: Path = DEFAULT_POLICY_PATH,
+    runtime_code_commit: str | None = None,
 ) -> tuple[str, dict[str, bytes], str]:
     """Build the canonical in-memory Kit file map from exact immutable inputs."""
 
     if _COMMIT.fullmatch(code_commit) is None:
         raise DeveloperKitContractError("KIT_PROVENANCE_INVALID", "code commit is not immutable")
-    policy = load_policy(root)
+    policy = load_policy(root, kit_version=kit_version, policy_path=policy_path)
     versions = cast(JsonObject, policy["versions"])
     runtime = verify_release_archive(
         runtime_archive,
         expected_runtime_version=RUNTIME_VERSION,
-        expected_code_commit=code_commit,
+        expected_code_commit=runtime_code_commit or code_commit,
     )
     runtime_bytes = runtime_archive.read_bytes()
+    if runtime.code_commit != code_commit or "runtime_input" in policy:
+        if (kit_version == KIT_VERSION and runtime.code_commit != code_commit) or policy.get("runtime_input") != {
+            "code_commit": runtime.code_commit,
+            "release_fingerprint": runtime.release_fingerprint,
+            "archive_sha256": sha256_fingerprint(runtime_bytes),
+        }:
+            raise DeveloperKitContractError(
+                "KIT_RUNTIME_IDENTITY_MISMATCH", "independent Runtime source must be exactly pinned"
+            )
     sdk_name, sdk_bytes = sdk_wheel(root)
     tooling_name, tooling_bytes = tooling_wheel(
         root, developer_kit_version=TOOLING_VERSION
@@ -382,22 +397,22 @@ def build_developer_kit_files(
     with TemporaryDirectory(prefix="aps-developer-kit-inputs-") as temporary:
         workspace = Path(temporary)
         template = _relocked_template(
-            root / "templates/enterprise-extension", workspace / "template"
+            root / "templates/enterprise-extension", workspace / "template", kit_version
         )
         alpha_root = _relock_project(
             root / "examples/enterprise-extensions/alpha-resource-tag",
-            workspace / "alpha",
+            workspace / "alpha", kit_version,
         )
         beta_root = _relock_project(
             root / "examples/enterprise-extensions/beta-priority-policy",
-            workspace / "beta",
+            workspace / "beta", kit_version,
         )
         alpha = conform_project(
             alpha_root,
             repository_root=root,
             clean_install=False,
             expected_runtime_version=RUNTIME_VERSION,
-            expected_developer_kit_version=KIT_VERSION,
+            expected_developer_kit_version=kit_version,
             forbidden_core_digests=core_digests,
         )
         beta = conform_project(
@@ -405,7 +420,7 @@ def build_developer_kit_files(
             repository_root=root,
             clean_install=False,
             expected_runtime_version=RUNTIME_VERSION,
-            expected_developer_kit_version=KIT_VERSION,
+            expected_developer_kit_version=kit_version,
             forbidden_core_digests=core_digests,
         )
         with TemporaryDirectory(prefix="aps-developer-kit-runtime-") as runtime_directory:
@@ -449,7 +464,7 @@ def build_developer_kit_files(
             ).read_bytes().replace(b"\r\n", b"\n"),
             "locks/developer-tools-requirements.lock": tool_lock_bytes,
             "policy/developer-kit-release-policy.v1.json": (
-                root / DEFAULT_POLICY_PATH
+                root / policy_path
             ).read_bytes(),
             "policy/p8-14-unpublished-predecessor.v1.json": (
                 root / PREDECESSOR_PATH
@@ -493,7 +508,7 @@ def build_developer_kit_files(
     files[LOCK_PATH] = canonical_json_bytes(lock) + b"\n"
     compatibility: JsonObject = {
         "matrix_version": COMPATIBILITY_MATRIX_VERSION,
-        "kit_version": KIT_VERSION,
+        "kit_version": kit_version,
         "versions": versions,
         "selection": cast(JsonObject, policy["compatibility"])["selection"],
         "automatic_upgrade": False,
@@ -519,14 +534,16 @@ def build_developer_kit_files(
         "support_policy_version": SUPPORT_POLICY_VERSION,
         **support_policy,
         "automatic_upgrade": False,
-        "predecessor_replay": "P8_14_SYNTHETIC_UNPUBLISHED_ONLY",
+        "predecessor_replay": support_policy.get(
+            "predecessor_replay", "P8_14_SYNTHETIC_UNPUBLISHED_ONLY"
+        ),
         "rollback": "RETAIN_IMMUTABLE_BYTES_AND_RESTORE_EXPLICIT_PROJECT_LOCK",
     }
     files[SUPPORT_PATH] = canonical_json_bytes(support) + b"\n"
     signing = cast(JsonObject, policy["signing"])
     signing_request: JsonObject = {
         "request_version": SIGNING_REQUEST_VERSION,
-        "kit_version": KIT_VERSION,
+        "kit_version": kit_version,
         "code_commit": code_commit,
         "state": signing["state"],
         "signature_present": False,
@@ -547,7 +564,7 @@ def build_developer_kit_files(
     files[LICENSE_PATH] = canonical_json_bytes(licenses) + b"\n"
     sbom = _sbom(
         licenses,
-        kit_version=KIT_VERSION,
+        kit_version=kit_version,
         lock_digest=sha256_fingerprint(files[LOCK_PATH]),
         epoch=epoch,
         runtime_sbom_digest=runtime_sbom_digest,
@@ -562,7 +579,7 @@ def build_developer_kit_files(
     manifest_basis: JsonObject = {
         "manifest_version": KIT_MANIFEST_VERSION,
         "distribution_name": artifact_policy["distribution_name"],
-        "kit_version": KIT_VERSION,
+        "kit_version": kit_version,
         "code_commit": code_commit,
         "source_date_epoch": epoch,
         "release_owner": cast(JsonObject, policy["support"])["owner"],
@@ -582,7 +599,7 @@ def build_developer_kit_files(
         "build": {
             "builder_version": BUILDER_VERSION,
             "archive_format": "zip",
-            "policy_sha256": sha256_fingerprint((root / DEFAULT_POLICY_PATH).read_bytes()),
+            "policy_sha256": sha256_fingerprint((root / policy_path).read_bytes()),
             "root_lock_sha256": sha256_fingerprint((root / "uv.lock").read_bytes()),
             "kit_lock_sha256": sha256_fingerprint(files[LOCK_PATH]),
             "core_source_inventory_sha256": sha256_fingerprint(
@@ -593,6 +610,9 @@ def build_developer_kit_files(
         },
         "payload_files": payload,
     }
+    if "distribution" in policy:
+        manifest_basis["manifest_version"] = PUBLIC_KIT_MANIFEST_VERSION
+        manifest_basis["distribution"] = policy["distribution"]
     fingerprint = sha256_fingerprint(canonical_json_bytes(manifest_basis))
     files[MANIFEST_PATH] = canonical_json_bytes(
         {**manifest_basis, "release_fingerprint": fingerprint}
@@ -602,7 +622,7 @@ def build_developer_kit_files(
         for path, raw in sorted(files.items())
         if path != CHECKSUM_PATH
     ).encode("utf-8")
-    return f"plantnexus-aps-developer-kit-{KIT_VERSION}", files, fingerprint
+    return f"plantnexus-aps-developer-kit-{kit_version}", files, fingerprint
 
 
 def deterministic_archive(archive_root: str, files: Mapping[str, bytes]) -> bytes:
@@ -628,6 +648,7 @@ def _publish_registry(
     release_fingerprint: str,
     archive_path: Path,
     code_commit: str,
+    channel: str = "UNSIGNED_ENGINEERING_CANDIDATE",
 ) -> None:
     entries: list[JsonObject] = []
     if path.exists():
@@ -647,7 +668,7 @@ def _publish_registry(
         "release_fingerprint": release_fingerprint,
         "relative_path": archive_path.relative_to(path.parent).as_posix(),
         "code_commit": code_commit,
-        "channel": "UNSIGNED_ENGINEERING_CANDIDATE",
+        "channel": channel,
     }
     if same_version and same_version != [expected]:
         raise DeveloperKitContractError(
@@ -676,18 +697,24 @@ def build_developer_kit(
     *,
     code_commit: str,
     epoch: int,
+    kit_version: str = KIT_VERSION,
+    policy_path: Path = DEFAULT_POLICY_PATH,
+    runtime_code_commit: str | None = None,
 ) -> DeveloperKitArtifact:
     archive_root, files, fingerprint = build_developer_kit_files(
         root,
         runtime_archive,
         code_commit=code_commit,
         epoch=epoch,
+        kit_version=kit_version,
+        policy_path=policy_path,
+        runtime_code_commit=runtime_code_commit,
     )
     archive = deterministic_archive(archive_root, files)
     archive_sha256 = digest_bytes(archive)
     digest_hex = archive_sha256.removeprefix("sha256:")
     filename = f"{archive_root}-{digest_hex[:16]}.zip"
-    destination = output_directory / "registry" / "versions" / KIT_VERSION / "sha256" / digest_hex
+    destination = output_directory / "registry" / "versions" / kit_version / "sha256" / digest_hex
     archive_path = destination / filename
     checksum_path = destination / f"{filename}.sha256"
     _publish_immutable(archive_path, archive)
@@ -697,17 +724,21 @@ def build_developer_kit(
     )
     verified = verify_kit_archive(
         archive_path,
-        expected_kit_version=KIT_VERSION,
+        expected_kit_version=kit_version,
         expected_code_commit=code_commit,
     )
     registry_path = output_directory / "registry" / "developer-kit-registry.v1.json"
     _publish_registry(
         registry_path,
-        kit_version=KIT_VERSION,
+        kit_version=kit_version,
         archive_sha256=archive_sha256,
         release_fingerprint=fingerprint,
         archive_path=archive_path,
         code_commit=code_commit,
+        channel=(
+            "UNSIGNED_PUBLIC_ENGINEERING" if "distribution" in verified.manifest
+            else "UNSIGNED_ENGINEERING_CANDIDATE"
+        ),
     )
     return DeveloperKitArtifact(
         archive_path=archive_path,
@@ -717,7 +748,7 @@ def build_developer_kit(
         archive_bytes=len(archive),
         release_fingerprint=fingerprint,
         archive_root=archive_root,
-        kit_version=KIT_VERSION,
+        kit_version=kit_version,
         code_commit=code_commit,
         payload_file_count=verified.payload_file_count,
     )

@@ -11,6 +11,10 @@ last_reviewed: 2026-09-09
 
 # Enterprise Extension 开发指南
 
+## 新 Kit 使用说明
+
+Developer Kit `1.0.1` 内嵌纠正 Runtime。以下 `1.0.0` 示例命令保留为旧 Kit 用法；使用新 Kit 时将 `--developer-kit-version` 和企业项目中的 Kit 锁显式改为 `1.0.1`，SDK/Runtime 版本保持不变，并采用新 Kit lock 给出的 fingerprint。完整升级与回退见[Kit 发布说明](../operations/developer-kit-release-upgrade-and-rollback.md#当前公开工程发行)。
+
 ## 1. 适用范围
 
 Enterprise Extension是在企业独立仓库中开发、由APS Runtime在服务端受控装载的Python包。企业平台仍只通过统一Headless HTTP API提交versioned canonical JSON和读取结果；Extension不是外部API、浏览器插件或第三方系统Adapter，也不得复制、vendor或修改APS Core。

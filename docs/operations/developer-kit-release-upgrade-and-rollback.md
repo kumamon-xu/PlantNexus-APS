@@ -11,6 +11,16 @@ last_reviewed: 2026-09-10
 
 # APS Developer Kit 发布、升级与回滚
 
+## 当前公开工程发行
+
+Developer Kit `1.0.1` 使用 `infra/release/developer-kit-release-policy-1.0.1.v1.json`，独立于 GitHub tag `v0.1.0`。Runtime 仍为 `0.1.0`，SDK/Tooling/Template 仍为 `1.0.0`。新 Kit 直接包含来源 `39149091859b35b1303002a237a3cf1344572773` 的 Runtime，归档 SHA-256 为 `7c90ba63b0ba950eb256488c5647e9463760eb01c720b69a744bff1a3ce742fc`。Kit 自身 source commit 记录组装代码身份，不能替代上述 Runtime 身份。
+
+[ADR-0019](../adr/ADR-0019-public-engineering-release.md) 允许经所有者授权的 `UNSIGNED_PUBLIC_ENGINEERING` 下载。验证器使用 `channel="public-engineering"`，要求包内明确声明；旧 Kit 不能自动获得此声明。`public` 和 `production` 继续拒绝没有外部签名的信任提升。SHA-256 和清单不是数字签名。
+
+Kit `1.0.0` 是保留的正式前代，不覆盖其 registry/归档。升级到 `1.0.1` 时显式修改项目 Kit 锁，重建 Extension，再用新包 conformance CLI 验证单项目及共同部署集合；API/Worker 必须使用同一新 Kit fingerprint。回滚恢复保留的旧项目锁、旧 Kit/Runtime/Extension/config 原字节，不混搭，不降级数据库。无数据库或 Runtime bytes 变化的 Kit 组装更新不新增 migration。
+
+离线部署包保留其已验收的 Kit `1.0.0` provenance 基线，不包含企业 Extension。新 Kit 的工程 conformance 不自动批准在该离线部署组合中运行新 Extension；企业仍需对自己选定的完整部署集合验证。以下章节中“当前/首个”均指历史 `1.0.0` 发行，旧组装命令不可用于重发该版本。
+
 ## P8 Exit与内部交付
 
 TASK-P8-17已核验Kit `1.0.0`的Provider lineage、六层不可变合同、两个独立Extension重放、Runtime动态兼容与no-auto-upgrade边界，没有重新运行assembler或改变registry。P8 Exit通过后形成的最终内部交付把冻结Kit `1.0.0`、P8-18后独立Runtime artifact及二者的binding/compatibility evidence并列打包；该外层交付索引不是新的Developer Kit版本，也不声称纠正Runtime已经嵌入Kit `1.0.0`。

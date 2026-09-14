@@ -2,9 +2,11 @@
 
 PlantNexus APS 是一个面向离散制造的高级计划与排程系统。项目采用 Simulation-first 路线，把canonical数据、不可变计划快照、PlanningProblem、OR-Tools CP-SAT 求解、独立排程校验、计划版本审批/发布、内部导出和动态重排串成一条可重放链路。
 
-当前仓库是“已实现的研发基线”，不是生产部署包：P0～P6能力已经形成，P7真实数据校准因缺少获授权的真实数据、真实环境和业务责任人而暂缓；P8 Headless产品化工程里程碑已完成独立Exit审计。当前形成严格canonical JSON消费、不可变Snapshot/PlanningProblem、durable PlanningRun、Solver Worker、单一Runtime组合、公开Headless HTTP API、provider-neutral身份/授权/审计、Runtime与可选Frontend工程分发，以及非Production部署和恢复基线。最终产品边界只接收宿主平台提交的versioned canonical JSON，第三方系统采集、字段映射和结果展示由宿主平台负责；APS不直接对接ERP、MES、WMS或CAM。
+APS 接收宿主平台提交的 versioned canonical JSON，负责数据验证、不可变计划输入、异步求解、独立校验、版本管理与受权输出。ERP/MES/WMS/CAM 的采集、字段映射和结果展示由宿主负责；可选 React 工作台使用同一 Headless API。
 
-P8同时形成APS Extension SDK `1.0.0`、Runtime受控的Enterprise Extension加载与Plugin Registry，以及版本锁定的Developer Kit `1.0.0`。企业项目应创建独立Extension并依赖指定SDK，不得复制或修改APS Core；Extension只在Runtime服务端执行，宿主与可选Frontend仍只调用统一Headless API。Core或Runtime升级不会自动升级企业项目，必须发布新的兼容组合并由项目显式选择。最终成果以未签名内部工程交付形式保存在本机已忽略的`deliverables/`，不等于Production部署、客户验收、真实数据验证或开箱即用的生产APS。
+企业通过独立 Enterprise Extension 项目和指定版本的 SDK 扩展业务规则。Extension 由 Runtime 在服务端受控加载，不复制 APS Core。组件分别版本化，升级需要显式选择和兼容验证。
+
+本项目提供 TEST/SIMULATION 工程运行能力。真实业务校准、企业规则验收、容量与 Production 上线需在目标环境单独完成。
 
 ## 已有能力
 
@@ -14,7 +16,7 @@ P8同时形成APS Extension SDK `1.0.0`、Runtime受控的Enterprise Extension�
 - ExecutionEvent、事实投影、冻结窗口、稳定性目标、ChangeReport 和动态重排；
 - React + TypeScript 双语计划工作台、甘特图、资源负荷、版本比较和重排视图；
 - Extension SDK六类稳定SPI、受控Runtime Registry/loader和不含Core副本的Enterprise Extension模板与conformance工具；
-- Runtime `0.1.0`、SDK `1.0.0`、Developer Kit `1.0.0`及其兼容、升级和回滚工程证据；
+- Runtime、Extension SDK 与 Developer Kit 分发，配套精确版本锁、兼容检查和升级/回滚工具；
 - 仅限 Simulation/TEST、默认关闭并可精确回退标准工时的工时预测链路。
 
 能力边界和未支持项以[能力矩阵](docs/core/capability-matrix.md)为准。FEASIBLE 只表示找到可行解，UNKNOWN 不等于无解；任何候选排程必须经独立 Validator 通过后才能进入可评审版本。
@@ -28,11 +30,22 @@ P8同时形成APS Extension SDK `1.0.0`、Runtime受控的Enterprise Extension�
 | Storage / queue | PostgreSQL 17、Redis 8 |
 | Frontend | React 19、TypeScript 6、Ant Design 6、TanStack Query、Vite |
 | Test | pytest、Hypothesis、Vitest、Testing Library、Playwright |
-| Release / contract versions | Runtime 0.1.0、Extension SDK 1.0.0、Developer Kit 1.0.0、Application/Core 0.0.0、Headless API v1、Schema set 2.10.0、database 0009 |
+| Release / contract versions | Runtime 0.1.0、Extension SDK 1.0.0、Application/Core 0.0.0、Headless API v1、Schema set 2.10.0、database 0009 |
 
-## 企业离线部署
+## 下载与部署
 
-企业容器交付使用独立的 `build/enterprise-container/final/`，该目录只保留一个已封存归档及 SHA-256 sidecar。它与历史 `deliverables/` 的 Runtime/SDK/Kit 成果分别管理。Linux/amd64 服务器无需源码、宿主 Python 或联网构建；使用可信交接记录核对摘要、准备显式 TEST/SIMULATION 配置后，按[四步安装与配置清单](docs/operations/deployment.md#最终企业离线交接)执行。包名保留已验收封装 SHA，封存工具 SHA 单独记录；未签名且不表示 Production Ready。
+发行包通过 [GitHub Releases](https://github.com/kumamon-xu/PlantNexus-APS/releases) 提供：
+
+| 发布资产 | 用途 |
+|---|---|
+| 离线部署包 | Linux/amd64 Docker 镜像、Compose、配置模板、安装与恢复脚本 |
+| Runtime 包 | Python Runtime、依赖锁、安装清单和供应链元数据 |
+| Developer Kit | 精确绑定的 Runtime、SDK、扩展模板、示例和 conformance 工具 |
+| 公共接口与文档包 | API、Schema、SDK 接口参考与项目技术文档 |
+
+GitHub tag 表示整组发行，Runtime、SDK、Kit 等内部版本独立管理。以每次发行的资产清单、嵌套版本锁和 SHA-256 为准；相同 Runtime 版本号不代表相同归档内容。
+
+离线部署不需要源码、宿主 Python 或联网构建。先核对摘要并准备显式 TEST/SIMULATION 配置，再按[安装与配置清单](docs/operations/deployment.md#最终企业离线交接)执行。企业扩展代码、密钥和业务配置由部署方提供。
 
 ## 快速开始
 
@@ -53,7 +66,7 @@ uv run uvicorn app.api.app:app --host 127.0.0.1 --port 8000
 
 Swagger UI 和 ReDoc 默认关闭。默认组合根没有注入业务 application port 与身份授权 provider，因此 `/api/v1/**` 业务请求会安全拒绝；完整接口状态和待接入项见 [API 接口开发清单](docs/contracts/api-development-checklist.md)。
 
-当前已实现Runtime内部canonical JSON严格消费、原子Snapshot/PlanningProblem持久化、durable PlanningRun编排、服务端Solver Worker、五项Headless HTTP operation和授权前置。Worker以lease/heartbeat和不可变checkpoint保护重复、崩溃、取消与超时边界，候选经fresh Validator及已配置Extension Validation Rule后才可应用为`READY_FOR_REVIEW` ScheduleVersion。Runtime `0.1.0`工程distribution、Extension SDK `1.0.0`和Developer Kit `1.0.0`可用于clean install、兼容性测试与迁移回放；真实host IdP/RBAC、Production target/签名、真实企业规则、容量和SLA仍未形成。CSV/XLSX/reference adapter仅是研发/参考能力，不是公共Headless输入接口。
+完整业务运行应使用 Runtime 分发中的组合根、持久化存储、Worker 与显式身份授权配置。Worker 使用 lease/heartbeat 和不可变 checkpoint 处理重复、崩溃、取消与超时；候选必须经过独立 Validator 和已配置的 Extension Validation Rule 才能成为可评审版本。CSV/XLSX 参考适配器不是公共 Headless 输入接口。
 
 ### Runtime工程distribution
 
@@ -63,11 +76,11 @@ Swagger UI 和 ReDoc 默认关闭。默认组合根没有注入业务 applicatio
 uv run python -m app.infrastructure.release.check `
   --root . `
   --release-output build/release `
-  --report build/validation/p8-runtime-release.json `
-  --compatibility-report build/validation/p8-runtime-release-compatibility.json `
-  --migration-report build/validation/p8-runtime-release-migration.json `
-  --security-report build/validation/p8-runtime-release-security.json `
-  --benchmark-report build/benchmarks/p8-runtime-release.json
+  --report build/validation/runtime-release.json `
+  --compatibility-report build/validation/runtime-release-compatibility.json `
+  --migration-report build/validation/runtime-release-migration.json `
+  --security-report build/validation/runtime-release-security.json `
+  --benchmark-report build/benchmarks/runtime-release.json
 ```
 
 发布身份、内容、安装、preflight与rollback规则见[发布与版本合同](docs/operations/release-and-versioning.md)及[安装与启动顺序](docs/operations/deployment.md)。输出位于已忽略的`build/`，不得提交或视为Production promotion。
@@ -75,8 +88,6 @@ uv run python -m app.infrastructure.release.check `
 ### Extension与Developer Kit
 
 企业扩展必须在独立项目中使用指定版本的Extension SDK开发，通过Developer Kit内的模板、测试工具和conformance入口验证，再由匹配的Runtime在build/deploy/startup阶段受控装载。Extension不得进入宿主或浏览器运行，不得复制Core、直写APS数据库或创建私有业务API。版本与升级规则见[Extension SDK、Runtime 与 Developer Kit 架构](docs/architecture/extension-sdk-runtime-and-developer-kit.md)和[Developer Kit发布、升级与回滚](docs/operations/developer-kit-release-upgrade-and-rollback.md)。
-
-P8最终内部交付包位于已忽略的`deliverables/`，包含精确Runtime、冻结Developer Kit、可选Frontend、公共合同、使用文档和可重哈希证据。该目录不进入Git；包内状态为`UNSIGNED_INTERNAL_ENGINEERING_DELIVERY`，外部签名、第三方申请与Production promotion不属于本次内部交付。
 
 ### 2. 本地依赖服务
 
@@ -118,7 +129,7 @@ npm --prefix frontend run test -- --run
 npm --prefix frontend run build
 ```
 
-动态场景、基准测试和阶段 Gate 有独立命令；按受影响模块选择对应合同文档和测试，不把历史运行编号复制到 README。
+动态场景和基准测试有独立命令；按受影响模块选择对应合同文档和测试。
 
 ## 文档入口
 

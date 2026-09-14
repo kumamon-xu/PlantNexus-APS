@@ -19,6 +19,7 @@ from app.infrastructure.release.contracts import verify_release_archive
 type JsonObject = dict[str, Any]
 
 KIT_MANIFEST_VERSION = "aps-developer-kit-release-manifest.v1"
+PUBLIC_KIT_MANIFEST_VERSION = "aps-developer-kit-release-manifest.v2"
 COMPATIBILITY_MATRIX_VERSION = "aps-developer-kit-compatibility-matrix.v1"
 KIT_LOCK_VERSION = "aps-developer-kit-lock.v1"
 SUPPORT_POLICY_VERSION = "aps-developer-kit-support-policy.v1"
@@ -36,6 +37,12 @@ LICENSE_PATH = "metadata/license-report.json"
 SBOM_PATH = "metadata/sbom.cdx.json"
 CORE_SOURCE_INVENTORY_PATH = "metadata/core-source-hashes.json"
 CHECKSUM_PATH = "metadata/checksums.sha256"
+PUBLIC_ENGINEERING_DISTRIBUTION = {
+    "channel": "UNSIGNED_PUBLIC_ENGINEERING",
+    "public_download_allowed": True,
+    "signature_present": False,
+    "production_authorized": False,
+}
 
 _SHA256 = re.compile(r"sha256:[0-9a-f]{64}")
 _SHA256_HEX = re.compile(r"[0-9a-f]{64}")
@@ -350,9 +357,11 @@ def verify_kit_files(
         "payload_files",
         "release_fingerprint",
     }
+    if manifest.get("manifest_version") == PUBLIC_KIT_MANIFEST_VERSION:
+        expected_manifest_keys.add("distribution")
     if set(manifest) != expected_manifest_keys:
         _reject("KIT_MANIFEST_INVALID", "release manifest fields are not exact")
-    if manifest.get("manifest_version") != KIT_MANIFEST_VERSION:
+    if manifest.get("manifest_version") not in {KIT_MANIFEST_VERSION, PUBLIC_KIT_MANIFEST_VERSION}:
         _reject("KIT_VERSION_MISMATCH", "release manifest version is unsupported")
     kit_version = manifest.get("kit_version")
     code_commit = manifest.get("code_commit")
@@ -454,7 +463,19 @@ def verify_kit_files(
         }
     ):
         _reject("KIT_SIGNATURE_INVALID", "engineering signing declaration is invalid")
-    if channel != "engineering":
+    distribution = manifest.get("distribution")
+    if manifest.get("manifest_version") == PUBLIC_KIT_MANIFEST_VERSION and (
+        kit_version == "1.0.0" or distribution != PUBLIC_ENGINEERING_DISTRIBUTION
+    ):
+        _reject("KIT_SIGNATURE_INVALID", "public engineering declaration is invalid")
+    if distribution is not None:
+        policy = strict_json_document(files["policy/developer-kit-release-policy.v1.json"])
+        if policy.get("distribution") != distribution:
+            _reject("KIT_SIGNATURE_INVALID", "public engineering policy differs from manifest")
+    if channel == "public-engineering":
+        if distribution != PUBLIC_ENGINEERING_DISTRIBUTION:
+            _reject("KIT_SIGNATURE_REQUIRED", "artifact has no public engineering declaration")
+    elif channel != "engineering":
         _reject("KIT_SIGNATURE_REQUIRED", "public or Production promotion requires external signature")
     if (
         license_report.get("report_version") != LICENSE_REPORT_VERSION
@@ -478,6 +499,12 @@ def verify_kit_files(
     runtime_entry = _artifact(lock, "runtime", files)
     for key in ("sdk", "tooling", "template", "alpha_extension", "beta_extension"):
         _artifact(lock, key, files)
+    runtime_identity = _object(lock, "runtime_identity")
+    runtime_commit = runtime_identity.get("code_commit")
+    if not isinstance(runtime_commit, str) or _COMMIT.fullmatch(runtime_commit) is None:
+        _reject("KIT_RUNTIME_IDENTITY_MISMATCH", "Runtime source commit is not immutable")
+    if kit_version == "1.0.0" and runtime_commit != code_commit:
+        _reject("KIT_RUNTIME_IDENTITY_MISMATCH", "legacy Kit requires same-source Runtime")
     runtime_path = cast(str, runtime_entry["path"])
     with TemporaryDirectory(prefix="aps-kit-runtime-verify-") as temporary:
         path = Path(temporary) / "runtime.tar.gz"
@@ -485,16 +512,23 @@ def verify_kit_files(
         verified_runtime = verify_release_archive(
             path,
             expected_runtime_version=cast(str, versions["runtime"]),
-            expected_code_commit=code_commit,
+            expected_code_commit=runtime_commit,
         )
-    runtime_identity = _object(lock, "runtime_identity")
     if (
         runtime_identity.get("release_fingerprint")
         != verified_runtime.release_fingerprint
         or runtime_identity.get("archive_sha256") != runtime_entry["sha256"]
-        or runtime_identity.get("code_commit") != code_commit
+        or runtime_identity.get("code_commit") != verified_runtime.code_commit
     ):
         _reject("KIT_RUNTIME_IDENTITY_MISMATCH", "Runtime lineage differs from Kit lock")
+    if runtime_commit != code_commit:
+        policy = strict_json_document(files["policy/developer-kit-release-policy.v1.json"])
+        if policy.get("runtime_input") != {
+            "code_commit": runtime_commit,
+            "release_fingerprint": verified_runtime.release_fingerprint,
+            "archive_sha256": runtime_entry["sha256"],
+        }:
+            _reject("KIT_RUNTIME_IDENTITY_MISMATCH", "Runtime lineage differs from release policy")
     return VerifiedDeveloperKit(
         archive_root=archive_root,
         kit_version=kit_version,

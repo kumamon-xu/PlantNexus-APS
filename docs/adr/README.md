@@ -11,6 +11,10 @@ last_reviewed: 2026-09-04
 
 # Architecture Decision Records
 
+## 公开工程发行
+
+[ADR-0019 — Public Engineering Release and Independent Artifact Provenance](ADR-0019-public-engineering-release.md)：接受未签名公开工程 channel，保留 Production 信任边界及独立 Runtime/Kit 来源。
+
 ## TASK-P8-00 ADR decision
 
 TASK-P8-00在任何P8机器合同或实现前接受[ADR-0017](ADR-0017-headless-canonical-json-and-dual-delivery.md)。该决定固定versioned canonical JSON为唯一外部产品输入，宿主平台拥有第三方采集/映射/展示，APS拥有验证、不可变计划输入、异步运行、Solver/Validator、版本与审计；宿主和可选独立Frontend消费同一Headless API，API/worker分进程且APS持久化不可被直接共享。

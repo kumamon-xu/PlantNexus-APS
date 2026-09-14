@@ -11,6 +11,12 @@ last_reviewed: 2026-09-07
 
 # APS Runtime 发布、版本与回退合同
 
+## GitHub 工程发行
+
+GitHub tag 标识一组可下载资产，不替代 Runtime、SDK、Kit、Schema 或数据库版本。发行提供离线部署包、Runtime 包、Developer Kit、公共接口与文档包及 SHA-256 清单。Runtime/离线包复用已验证的不可变原字节；其历史工程元数据保留，外层发行清单记录公开下载授权、来源和当前验证。
+
+依据 [ADR-0019](../adr/ADR-0019-public-engineering-release.md)，`UNSIGNED_PUBLIC_ENGINEERING` 仅授权工程下载，不声明外部签名或 Production 就绪。新 Kit `1.0.1` 精确嵌入纠正后的 Runtime `0.1.0`；SDK 为 `1.0.0`。以下早期 Runtime 章节中的未发布 SDK/Kit 占位描述历史组合，实际使用须以下载资产的 lock/manifest 为准。
+
 ## 发布身份不是单一“APS 版本”
 
 首个Headless Runtime工程候选的兼容矩阵如下。每个维度独立升级和判断，禁止用Runtime版本覆盖Schema、API、Core、Application或数据库版本。

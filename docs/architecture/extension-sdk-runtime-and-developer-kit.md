@@ -11,6 +11,10 @@ last_reviewed: 2026-09-10
 
 # APS Extension SDK、Runtime 与 Developer Kit 架构
 
+## 当前工程分发
+
+[ADR-0019](../adr/ADR-0019-public-engineering-release.md) 允许独立发行标签和明确未签名的公开工程下载。Developer Kit `1.0.1` 内嵌已验证的纠正 Runtime，分别锁定组装提交与 Runtime 来源；Kit `1.0.0` 原字节和历史证据继续保留。Core、SDK、Runtime loader 和业务 API 未因此变化。下面按任务命名的章节是历史实现记录；当前发行以新 Kit lock 与发行资产清单为准。
+
 ## TASK-P8-17 独立Exit审计
 
 P8-17不修改Core、Runtime、SDK、Extension、Kit或业务合同，只作为独立`PHASE_GATE` consumer。它校验P8全部21个Task的DAG和20个前序终态，重核21组exact Provider输入、88份artifact与2,032个归档条目，保留10项失败/纠正历史，并检查ADR-0017/0018、canonical-only、Core无企业反向依赖、版本锁定和P7/Production边界。随后它从当前SHA重新生成P8 JUnit并fresh执行P8-19完整procedure；只有18/18平台检查、4/4 closure、`issues=[]`和`blocking_gaps=[]`同时成立才输出`READY`。

@@ -117,8 +117,8 @@ python tools/aps_extension_conformance.py `
   --core-source-inventory metadata/core-source-hashes.json `
   --runtime-version 0.1.0 --developer-kit-version 1.0.0 `
   check-set `
-  --project examples/enterprise-extensions/alpha-resource-tag `
-  --project examples/enterprise-extensions/beta-priority-policy `
+  --project examples/alpha-resource-tag `
+  --project examples/beta-priority-policy `
   --output build/enterprise-extension `
   --report build/enterprise-extension/example-set-report.json
 ```

@@ -276,6 +276,14 @@ def nscd_not_affected(finding: dict[str, Any], evidence: dict[str, Any] | None,
                 "installed_version": "2.36-9+deb12u14", "scanner_severity": "UNKNOWN",
                 "vendor_status": "affected", "affected_binary_packages": ["libc-bin", "libc6"],
                 "production_security_approval": False}
+    if advisory.get("schema_version") == "enterprise-component-advisory.v2":
+        # Explicit re-assessment of enriched metadata, not a severity wildcard.
+        # The v1 UNKNOWN assessment remains immutable and cannot authorize MEDIUM.
+        expected.update(schema_version="enterprise-component-advisory.v2",
+                        scanner_severity="MEDIUM", previous_scanner_severity="UNKNOWN",
+                        assessment_date="2026-09-14",
+                        supersedes_advisory_sha256="54757d2dae0d39e4784105c0cca6914d2078ffd9708aec595b76cb270511d539",
+                        retrieved_vendor_document_sha256="30ba9f0c04dc7105a07b079a57b30e16cdafa5ebb266e48076266c445a921dec")
     if any(advisory.get(k) != value for k, value in expected.items()):
         return False
     if (finding.get("class") != "os-pkgs" or finding.get("VulnerabilityID") != advisory["advisory_id"]
@@ -409,7 +417,7 @@ def build(args: argparse.Namespace) -> dict[str, Any]:
     if policy["runtime_wheel_sha256"] != inputs["wheel_sha256"] or policy["runtime_source_sha"] != inputs["source_sha"]:
         raise ValueError("VEX_SOURCE_IDENTITY_MISMATCH")
     nscd_evidence = probe_nscd_absence(identity["Id"])
-    os_advisory = json.loads((ROOT/"infra/enterprise/nscd-advisory.v1.json").read_text(encoding="utf-8"))
+    os_advisory = json.loads((ROOT/"infra/enterprise/nscd-advisory.v2.json").read_text(encoding="utf-8"))
     assessment = assess_security(scan, policy, nscd_evidence=nscd_evidence,
                                  image_id=identity["Id"], os_advisory=os_advisory)
     return {"schema_version": "enterprise-runtime-image-report.v1", "task_id": "TASK-P8-23",

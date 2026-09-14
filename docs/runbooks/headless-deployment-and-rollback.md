@@ -6,10 +6,16 @@ spec_version: 0.3.0
 phase: P8
 normative: false
 source_sections: [6, 12, 65, 91, 92, 95, 101, 103, 106, 113, 114]
-last_reviewed: 2026-09-10
+last_reviewed: 2026-09-14
 ---
 
 # Headless Runtime 部署与双 slot 回退
+
+## P8-26 安装与同版本配置 slot 回滚
+
+新的九个Shell入口、安装参数和受控恢复顺序见[部署入口](../operations/deployment.md#p8-26-shell-运维入口)。install/start每次执行原发布migration/exact head并显式重建具名Worker；stop保留所有卷。无需宿主Python、源码或联网下载。
+
+rollback只接受同image ID、已通过验证的配置slot、完整可信备份摘要及显式TARGET确认，恢复至不同project的隔离空数据库，再核对Runtime/Kit/Extension/config、API TLS readiness与Worker pong。不会覆盖原数据库、降级migration、删除卷或自动切换流量；完整命令与失败处理见[备份恢复](backup-and-restore.md#p8-26-企业脚本备份与隔离恢复)。以下历史双slot靶场不替代新脚本验收。
 
 ## 企业 Compose 使用范围
 

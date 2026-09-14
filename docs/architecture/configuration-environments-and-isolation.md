@@ -6,10 +6,16 @@ spec_version: 0.3.0
 phase: cross-phase
 normative: true
 source_sections: [16, 38, 49, 62, 64, 95, 96]
-last_reviewed: 2026-09-11
+last_reviewed: 2026-09-14
 ---
 
 # 配置、环境与数据隔离
+
+## P8-26 运维隔离边界
+
+九个企业Shell入口只消费明确的安装目录、manifest摘要、image ID、config/Secret slot、project、端口与模式。元数据辅助容器使用既有Runtime Python、禁网/只读挂载，不挂Docker socket；只读备份检查可用root与DAC_READ_SEARCH，业务角色保持UID 10001和无capabilities。PostgreSQL客户端使用同一业务UID读取只读Secret，密码仅存在客户端容器进程环境，宿主命令行和Compose插值不含凭据。
+
+project命名锁防并发；启动会受控停止API/Worker、验证依赖与exact migration head、重建Worker并比较API/Worker descriptor。stop保留卷；restore/rollback只接受经过摘要验证的备份与明确确认的新project空数据库，不提供原地覆盖或删除数据的快捷参数。具体命令、工具和权限见[部署入口](../operations/deployment.md#p8-26-shell-运维入口)，备份范围见[恢复Runbook](../runbooks/backup-and-restore.md#p8-26-企业脚本备份与隔离恢复)。
 
 ## 企业 Compose 部署隔离
 

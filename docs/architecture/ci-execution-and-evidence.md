@@ -6,10 +6,12 @@ spec_version: 0.3.0
 phase: cross-phase
 normative: true
 source_sections: [2, 58, 89, 98, 99, 100, 101]
-last_reviewed: 2026-09-11
+last_reviewed: 2026-09-14
 ---
 
 # CI execution and evidence
+
+The required shared enterprise-image step additionally runs `infra/enterprise/scripts/verify_container.py` and seals `ci-enterprise-image-operations.json`. It executes the nine POSIX Shell entrypoints with host Python/uv/npm denied, binds exact image/tar and deployment payload fingerprints, and verifies migration idempotence, dependency recovery, PostgreSQL/Redis persistence, quiesced backup, isolated restore, same-image validated-slot rollback and fail-closed negative targets. Backup bytes, secrets and raw logs remain temporary and are never uploaded. This adds no Production, queue replay, final offline bundle or clean-server acceptance claim.
 
 ## Enterprise Runtime image evidence
 

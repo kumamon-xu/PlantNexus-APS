@@ -6,10 +6,30 @@ spec_version: 0.3.0
 phase: P8
 normative: true
 source_sections: [65, 93, 95, 97, 98, 99, 100, 101, 106, 107, 113, 114]
-last_reviewed: 2026-09-11
+last_reviewed: 2026-09-14
 ---
 
 # APS Runtime 安装、预检与启动顺序
+
+## P8-26 Shell 运维入口
+
+企业机使用`infra/enterprise/scripts/`的九个Shell入口。前提为Linux x86_64、Docker Engine 27+、Compose 2.30+、POSIX sh及GNU coreutils（sha256sum/awk/find/df/mktemp/realpath/cmp/cp/mv/mkdir/chmod/rm/rmdir/dirname/uname）；slot所在文件系统至少1 GiB可用，实际dump空间由操作者另行预留。无需宿主Python、uv、npm或应用源码。Python元数据校验在已加载Runtime容器内执行，禁网、只读、无Docker socket；为读取0600备份，辅助容器仅以root加DAC_READ_SEARCH运行，API/Worker仍固定UID 10001且无capabilities。
+
+P8-26消费的有界安装目录包含`image.tar`、approved `image-report.json`、`SHA256SUMS`与`infra/enterprise/{bootstrap,compose,scripts}`。这是脚本输入合同，最终离线包、依赖镜像闭包与独立clean-server验收由后续任务交付。操作者从可信交付记录取得SHA256SUMS文件的期望SHA-256和image ID；不能在收到未知文件后重算摘要并据此宣称可信。每次操作验证manifest摘要、payload摘要、原Runtime镜像tar与报告对应关系、loaded image ID/labels/platform、固定PostgreSQL/Redis RepoDigest及完整配置。仅install可在Runtime未加载时从已校验tar执行docker load；所有入口禁止隐式pull，两个依赖镜像当前须预先离线加载。
+
+slot是显式绝对目录，含`config/`和`secrets/`，遵守下节配置合同。目录/父级/内容不允许symlink；路径限ASCII字母、数字、下划线、点、斜杠、连字符，拒绝非规范路径。project限2～48字符的小写字母、数字和连字符，以字母开头；TLS loopback端口为1024～65535。每次命令使用同一已审核参数，示例如下（尖括号均须替换）：
+
+```text
+<bundle>/infra/enterprise/scripts/preflight.sh <bundle> <manifest-sha256> <sha256:image-id> <slot> <project> <port> standalone
+<bundle>/infra/enterprise/scripts/install.sh   <bundle> <manifest-sha256> <sha256:image-id> <slot> <project> <port> standalone
+<bundle>/infra/enterprise/scripts/status.sh    <bundle> <manifest-sha256> <sha256:image-id> <slot> <project> <port> standalone
+```
+
+外部依赖使用最后参数`enterprise`，operator须提供明确可达的隔离TEST/SIMULATION数据库和Redis endpoint；脚本不代建或猜测真实企业环境。`start.sh`和`install.sh`均执行受控停止API/Worker→依赖ready→原发布migration幂等upgrade/exact head→强制重建同image/config Worker并等待具名pong→API TLS readiness与descriptor逐字一致。重复调用会受控重启，不是无操作。成功保存slot的`validated.json`（image ID、完整配置文件摘要与安全组合身份），供同版本rollback核验。
+
+`stop.sh`使用相同七参数停止服务，重复停止安全，保留所有容器和具名数据卷，不调用down --volumes。`status.sh`必须实际通过API/Worker探针和进程身份比较；失败不能由liveness替代。`logs.sh`仅汇总白名单稳定错误码计数，不输出原始日志、payload、路径或Secret。失败返回非零；已开始修改的启动/恢复流程失败时再次停止API/Worker。配置或包前置门失败不会修改现有部署，需先修复正确输入再执行受控操作。
+
+每个project使用Docker命名锁及slot目录锁，防止同一目标并发操作；异常杀死后不自动抢占锁。操作者须先确认对应流程已停止，按精确project清理遗留锁，不能全局prune。备份、隔离恢复和同版本配置slot回滚详见[备份与恢复](../runbooks/backup-and-restore.md)。以下P8-25 `control.py`保留为构建侧/历史Compose诊断工具，企业机日常操作以本节Shell入口为准。
 
 ## 企业双模式 Compose
 

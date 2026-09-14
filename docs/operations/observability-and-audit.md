@@ -6,10 +6,16 @@ spec_version: 0.3.0
 phase: P0-P8
 normative: true
 source_sections: [29, 42, 65, 93, 95]
-last_reviewed: 2026-09-10
+last_reviewed: 2026-09-14
 ---
 
 # P0 Observability 与 Audit 边界
+
+## P8-26 Shell 运维观测
+
+status实际执行API TLS readiness、具名Worker pong、image ID与API/Worker组合身份比较；logs只汇总白名单稳定code计数，不回传原始日志。脚本输出固定action/status/code与非Production标志；备份和恢复报告保留Runtime/Kit/Extension/config指纹及数据库head/dump hash，不输出Secret或业务payload。备份本身是敏感本地介质，不能作为Provider附件。
+
+依赖恢复由start显式重建同image/config Worker后验证pong，不把自动重连当作确定性恢复。安装或恢复进入修改阶段后失败会停止API/Worker；摘要、配置和目标确认的前置失败保持原部署数据不变。这里不新增外部监控、告警接收人、durable业务审计或Production SLA；流程见[部署入口](deployment.md#p8-26-shell-运维入口)与[备份恢复](../runbooks/backup-and-restore.md#p8-26-企业脚本备份与隔离恢复)。
 
 ## TASK-P8-20 broker恢复观测确定性
 

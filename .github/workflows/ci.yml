@@ -861,6 +861,7 @@ jobs:
             "${replay_root}/backend/tests/unit/test_p8_developer_kit_builder.py" \
             "${replay_root}/backend/tests/property/test_p8_developer_kit_properties.py" \
             "${replay_root}/backend/tests/integration/test_p8_developer_kit_integration.py" \
+            "${replay_root}/backend/tests/integration/test_public_engineering_kit.py" \
             "${replay_root}/backend/tests/security/test_p8_developer_kit_security.py" \
             "${replay_root}/backend/tests/validation/test_p8_developer_kit_mutations.py" \
             "${replay_root}/infra/release/developer-kit-release-policy.v1.json" \

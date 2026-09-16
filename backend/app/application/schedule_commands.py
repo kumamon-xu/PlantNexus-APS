@@ -7,6 +7,12 @@ from contextlib import AbstractContextManager
 from dataclasses import dataclass
 from typing import Protocol, cast
 
+from app.application.candidate_admission import (
+    CandidateAdmission,
+    CandidateAdmissionError,
+    CandidateAdmissionService,
+)
+
 from app.domain.schedule_commands import (
     ScheduleCommandContext,
     ScheduleCommandError,
@@ -137,12 +143,15 @@ class ScheduleCommandService:
         schedule_repository: ScheduleVersionCommandRepositoryPort,
         audit_repository: AuditCommandRepositoryPort,
         validator_factory: ValidatorFactory,
+        admission: CandidateAdmissionService | None = None,
     ) -> None:
         self._data_plane = data_plane
         self._transaction_factory = transaction_factory
         self._schedule_repository = schedule_repository
         self._audit_repository = audit_repository
-        self._validator_factory = validator_factory
+        self._admission = admission or CandidateAdmissionService(
+            validator_factory=validator_factory
+        )
 
     @property
     def data_plane(self) -> str:
@@ -152,10 +161,11 @@ class ScheduleCommandService:
         self,
         problem: Mapping[str, object],
         candidate: Mapping[str, object],
-    ) -> Mapping[str, object]:
+    ) -> CandidateAdmission:
         try:
-            validator = self._validator_factory()
-            return validator.validate(problem, candidate)
+            return self._admission.evaluate(problem, candidate)
+        except CandidateAdmissionError:
+            raise
         except (
             KeyError,
             TypeError,
@@ -236,13 +246,16 @@ class ScheduleCommandService:
             context,
             data_plane=self._data_plane,
         )
-        report = self._fresh_validate(
+        admitted = self._fresh_validate(
             prepared.problem,
             prepared.validator_candidate,
         )
-        documents = build_review_submission_documents(prepared, report)
+        documents = build_review_submission_documents(prepared, admitted.report)
         try:
             with self._transaction_factory() as connection:
+                self._admission.verify(
+                    admitted, prepared.problem, prepared.validator_candidate
+                )
                 transition = self._schedule_repository.transition_in_transaction(
                     connection,
                     schedule_version_id=prepared.identity.schedule_version_id,
@@ -335,13 +348,16 @@ class ScheduleCommandService:
             context,
             data_plane=self._data_plane,
         )
-        report = self._fresh_validate(
+        admitted = self._fresh_validate(
             prepared.problem,
             prepared.validator_candidate,
         )
-        documents = build_schedule_command_documents(prepared, report)
+        documents = build_schedule_command_documents(prepared, admitted.report)
         try:
             with self._transaction_factory() as connection:
+                self._admission.verify(
+                    admitted, prepared.problem, prepared.validator_candidate
+                )
                 schedule_write = self._schedule_repository.put_in_transaction(
                     connection, documents.draft
                 )

@@ -6,10 +6,16 @@ spec_version: 0.3.0
 phase: cross-phase
 normative: true
 source_sections: [0, 9, 10, 12, 23, 24, 30, 32, 33, 35, 57, 65, 67, 93, 95, 101, 113, 114]
-last_reviewed: 2026-09-10
+last_reviewed: 2026-09-16
 ---
 
 # 端到端计划链路
+
+## P9 candidate admission edge
+
+首次求解、人工修改/submit、动态重排均经过 `CandidateAdmissionService`：冻结输入身份 → fresh Core Validator → 适用独立 Extension Validation Rule → owner 再核对待写内容 → 原有原子写入。内部 receipt 绑定输入和报告，公共 Schema 不增加字段。首次求解保留 checkpoint/恢复顺序，重排保留额外 facts/lock/objective/ChangeReport precheck，人工修改保留 copy-on-write 与第二次 submit validation。
+
+准入不是事务、授权、求解或发布服务。失败不形成新的可评审版本；重排已持久化 intent 可以保留供原流程处理。P9-03 没有增加 HTTP operation，人工与重排的正式 Runtime binding 仍是后续工作。
 
 ## TASK-P8-18 Extension product execution edge
 

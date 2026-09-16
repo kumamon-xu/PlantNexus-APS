@@ -6,10 +6,14 @@ spec_version: 0.3.0
 phase: P0-P8
 normative: true
 source_sections: [29, 42, 65, 93, 95]
-last_reviewed: 2026-09-14
+last_reviewed: 2026-09-16
 ---
 
 # P0 Observability 与 Audit 边界
+
+## P9 准入证据边界
+
+共同准入的内部 immutable receipt 绑定 Problem/candidate/binding fingerprint 与 Core report bytes；它用于 owner 写入前复核，不新增公共 carrier 或 durable Extension audit。持久化 Version/Worker/Replan 继续保存既有 Core ValidationReport references 与业务审计；Extension 继续使用原有 payload-free invocation metrics（lifecycle、contribution、输入/输出 fingerprint、成功/失败/timeout）。不能把内存 receipt 或 metrics 描述为新增持久化 Extension 报告，也不能把 SDK 调用成功解释为审批发布成功。
 
 ## P8-26 Shell 运维观测
 

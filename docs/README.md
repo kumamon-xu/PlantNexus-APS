@@ -13,7 +13,7 @@ last_reviewed: 2026-09-16
 
 ## 当前产品演进
 
-[SME 通用产品演进路线](core/sme-generalization-roadmap.md)规划 P9～P14 六个独立成果阶段；当前仅形成规划。P9 先补已有能力的正式 Runtime 链路，后续依次完善制造数据语义、联合资源/换型、材料/装配、决策控制和拆并批/外协。JSON、字段字典与公开合同随每阶段能力同步交付。
+[SME 通用产品演进路线](core/sme-generalization-roadmap.md)规划 P9～P14 六个独立成果阶段；P9 正按独立任务补齐已有能力。P9 先补已有能力的正式 Runtime 链路，后续依次完善制造数据语义、联合资源/换型、材料/装配、决策控制和拆并批/外协。JSON、字段字典与公开合同随每阶段能力同步交付。
 
 当前没有真实工厂接入条件，[仿真验证与后期校准策略](simulation/generalized-product-validation-and-calibration.md)明确以模拟数据推进工程研发，并保留未来离线接入/回放/校准方式。P7 仍暂缓，不阻塞这些研发阶段；真实项目上线仍需自身数据与验收。下方 P8 过程段落保留原交付时点，最新发行以“发行下载”及相应版本清单为准。
 
@@ -36,6 +36,8 @@ P8-17独立`PHASE_GATE`已核验21个P8 Task、21组前序Provider输入（20个
 四类发行资产和独立组件版本见[Runtime 发行说明](operations/release-and-versioning.md#github-工程发行)、[Developer Kit 发行说明](operations/developer-kit-release-upgrade-and-rollback.md#当前公开工程发行)与[公开工程发行决策](adr/ADR-0019-public-engineering-release.md)。
 
 P9 的逐接口装配、候选准入、版本差异与仿真验收边界见 [Runtime 能力基线](contracts/runtime-capability-baseline.md)。该基线区分已有实现与后续验收，不提升产品支持状态。
+
+P9 源码的[共同候选准入](planning/schedule-validator.md#p9-统一候选准入)复用独立 Core 与适用 Extension Validation Rule；人工/重排内部服务已提供接线入口，正式 HTTP 绑定及新制品验收保持后续任务边界。
 
 ## 核心入口
 

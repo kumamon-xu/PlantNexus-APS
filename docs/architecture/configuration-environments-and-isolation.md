@@ -6,10 +6,16 @@ spec_version: 0.3.0
 phase: cross-phase
 normative: true
 source_sections: [16, 38, 49, 62, 64, 95, 96]
-last_reviewed: 2026-09-14
+last_reviewed: 2026-09-16
 ---
 
 # 配置、环境与数据隔离
+
+## P9 admission 与历史回放隔离
+
+P9 共同准入绑定现有 Runtime/Registry/config/Kit 与服务器 scope，未增加环境变量或部署默认值。适用 Extension 的人工/重排内部服务使用 product executor 工厂注入准入；本卡没有增加其正式 HTTP binding。
+
+CI 的冻结 P4 replay 在原一次性 checkout 中移除新增 admission 和两份 P9 测试，并将 replan/schedule-command/schedule-version application owner 恢复到原冻结 P4 SHA；主 checkout、原 P4 fixture/断言与 required topology 不变。当前实现仍由当前 Backend/Runtime 检查验证，历史 replay 不冒充新 Runtime 部署证据。
 
 ## P8-27 离线包隔离
 

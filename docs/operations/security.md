@@ -6,10 +6,14 @@ spec_version: 0.3.0
 phase: P0-P8
 normative: true
 source_sections: [58, 62, 93, 95, 100]
-last_reviewed: 2026-09-14
+last_reviewed: 2026-09-16
 ---
 
 # P0 工程安全边界
+
+## P9 准入安全复核
+
+准入工厂只接受服务器持有的 Extension adapter、scope 和 Runtime identity provider；Registry/config/Kit 漂移、missing validator、崩溃/超时、非法报告、候选/事实变动均 fail closed。Core 和 Extension 接收分离副本，SDK 输入仍递归冻结；安全错误不输出任意 validator/identity callback 的原始异常信息。SDK 的受信同进程执行和预算限制保持原义，不新增沙箱或强制终止承诺。内部服务默认 Core-only 不构成关闭已配置 Extension 的外部开关。
 
 ## 公开工程发行的信任边界
 

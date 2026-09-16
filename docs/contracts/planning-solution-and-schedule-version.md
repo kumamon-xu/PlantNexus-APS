@@ -6,10 +6,16 @@ spec_version: 0.3.0
 phase: P0-P4
 normative: true
 source_sections: [29, 30, 32, 33, 67, 78]
-last_reviewed: 2026-09-05
+last_reviewed: 2026-09-16
 ---
 
 # PlanningSolution 与 ScheduleVersion 合同
+
+## P9 候选准入消费
+
+首次求解 checkpoint 复核、validated-output→READY、人工 copy-on-write/submit 和 replan result application 共同消费 `CandidateAdmissionService`。只有 fresh Core PASS 与适用 Extension Validation Rule 通过才能继续原有 owner 的写入流程；持久化前校验 actual Problem/candidate 与本次准入 receipt 一致。版本仍引用原 `validation-report.v2`，不把 Extension 判定塞入 Core C-ID 报告。
+
+首次求解仍输出 READY_FOR_REVIEW；人工编辑和重排仍产生新 DRAFT，人工 submit 才执行既有 DRAFT→READY pair。授权、source/current CAS、idempotency、事务及失败回滚留在各 owner。重排失败可以保留原有 request/attempt intent，但不能生成成功 result/new DRAFT；任何路径都不自动审批、发布或导出。旧 Schema、状态 pair、持久化结构与发行字节不变。
 
 ## TASK-P8-05 Worker result application boundary
 

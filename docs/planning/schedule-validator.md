@@ -6,10 +6,18 @@ spec_version: 0.3.0
 phase: P0-P8
 normative: true
 source_sections: [30, 31, 50, 75, 86, 87]
-last_reviewed: 2026-09-08
+last_reviewed: 2026-09-16
 ---
 
 # 独立 ScheduleValidator 合同
+
+## P9 统一候选准入
+
+`application.candidate_admission.CandidateAdmissionService`是首次求解、人工编辑/锁变更/提交评审和重排的共同消费边界。它对独立副本 fresh 调用正式 Core Validator，核对 report version、Problem hash、PASS/FAIL、count/violations 一致性；注入 adapter 返回 PASS 时仍与正式 Validator 独立重算结果比较，不能用空实现或缓存 PASS 绕过规则。Core FAIL 保留原 `validation-report.v2`，不执行 Extension candidate evaluation。
+
+适用 Extension 由服务器装配的 `RuntimeExtensionProductExecutor.candidate_admission` 接入；Core PASS 后，既有 SDK adapter 冻结另一份独立事实 view 并执行 Objective/Validation Rule。Registry/config/Kit/scope identity 在准入前后复核；缺失配对、崩溃、超时、非法输出或 validation FAIL 均拒绝。输入被 validator/adapter 改动、过期 Problem 或绑定漂移同样拒绝；业务 owner 在写入前再次核对准入 receipt 与实际 Problem/candidate 字节。
+
+内部 frozen receipt 只绑定输入、绑定和 Core report，不是新公共 ValidationReport、数据库 carrier 或审批权限。公共报告/Schema/C-001～C-011 字节和公式保持不变。重排继续独立执行 facts/effective-lock/objective/ChangeReport 校验；只在 application 内为 `replan-candidate.v1` 补齐既有正式 Validator 所需 Problem reference。Solver status 不替代准入。
 
 ## TASK-P8-12 Extension Validation Rule contract
 

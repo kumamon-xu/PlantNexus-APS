@@ -15,7 +15,16 @@ from typing import Any, cast
 from aps_extension_sdk import ReplanAction, ValidationOutput
 
 from app.application.runtime_http_adapter import RuntimeHttpPolicyCatalog
-from app.data_validation.canonical_ingress import canonical_fingerprint
+from app.application.candidate_admission import (
+    CandidateAdmissionService,
+    CandidateValidator,
+    IdentityProvider,
+)
+from collections.abc import Callable
+from app.data_validation.canonical_ingress import (
+    canonical_fingerprint,
+    runtime_resolution_fingerprint,
+)
 from app.extensions.contracts import (
     RuntimeExtensionErrorCode,
     reject_extension,
@@ -111,6 +120,70 @@ class RuntimeExtensionProductExecutor:
     @property
     def enabled(self) -> bool:
         return self._adapter is not None
+
+    def candidate_admission(
+        self,
+        *,
+        scope: Mapping[str, object],
+        planning_run_id: str,
+        runtime_identity: IdentityProvider,
+        validator_factory: Callable[[], CandidateValidator] | None = None,
+    ) -> CandidateAdmissionService:
+        """Bind one server-resolved scope and immutable Runtime/Kit identity."""
+        if not self.enabled:
+            return CandidateAdmissionService(validator_factory=validator_factory)
+
+        def identity() -> Mapping[str, object]:
+            assert self._adapter is not None
+            self._adapter.probe()
+            runtime = runtime_identity()
+            if runtime.get("resolution_fingerprint") != runtime_resolution_fingerprint(
+                runtime
+            ):
+                reject_extension(
+                    RuntimeExtensionErrorCode.CONFIGURATION_INVALID,
+                    field="candidate_admission.runtime_resolution",
+                    message="Candidate Runtime identity fingerprint is invalid",
+                )
+            if runtime.get("extension_set") != self._adapter.extension_set_reference:
+                reject_extension(
+                    RuntimeExtensionErrorCode.CONFIGURATION_INVALID,
+                    field="candidate_admission.extension_set",
+                    message="Candidate Registry differs from Runtime authority",
+                )
+            if not runtime.get("developer_kit_version") or not runtime.get(
+                "developer_kit_fingerprint"
+            ):
+                reject_extension(
+                    RuntimeExtensionErrorCode.CONFIGURATION_INVALID,
+                    field="candidate_admission.developer_kit",
+                    message="Candidate admission requires exact Developer Kit identity",
+                )
+            return {
+                "runtime": runtime,
+                "planning_run_id": planning_run_id,
+                "scope": dict(scope),
+                "registry": self._adapter.document,
+                "facts_fingerprint": canonical_fingerprint(
+                    self._configured_facts(scope)
+                ),
+            }
+
+        def validate(
+            problem: Mapping[str, object], candidate: Mapping[str, object]
+        ) -> None:
+            self.after_candidate(
+                scope=scope,
+                planning_run_id=planning_run_id,
+                problem=problem,
+                solution=candidate,
+            )
+
+        return CandidateAdmissionService(
+            validator_factory=validator_factory,
+            extension_validator=validate,
+            identity_provider=identity,
+        )
 
     def _configured_facts(self, scope: Mapping[str, object]) -> Mapping[str, object]:
         try:

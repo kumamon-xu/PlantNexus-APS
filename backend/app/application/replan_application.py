@@ -10,6 +10,7 @@ from typing import Protocol, cast
 from sqlalchemy.engine import Connection
 from sqlalchemy.exc import SQLAlchemyError
 
+from app.application.candidate_admission import CandidateAdmissionService
 from app.domain.execution_contracts import contract_fingerprint
 from app.domain.replan_application import (
     ReplanApplicationContext,
@@ -440,7 +441,9 @@ class ReplanApplicationService:
         lineage_repository: ReplanLineageRepositoryPort,
         audit_repository: ReplanAuditRepositoryPort,
         strategy: ReplanStrategyPort | None = None,
+        admission: CandidateAdmissionService | None = None,
     ) -> None:
+        self._admission = admission or CandidateAdmissionService()
         self._transaction_factory = transaction_factory
         self._schedule_repository = schedule_repository
         self._publication_repository = publication_repository
@@ -883,9 +886,10 @@ class ReplanApplicationService:
             candidate=candidate,
             objective_evidence=declared_objectives,
         )
-        if fresh_validation.get("status") != "PASS" or fresh_validation.get(
-            "hard_violation_count"
-        ) != 0:
+        if (
+            fresh_validation.get("status") != "PASS"
+            or fresh_validation.get("hard_violation_count") != 0
+        ):
             reject_replan_application(
                 ReplanApplicationFailure.VALIDATION_FAILED,
                 field="fresh_validation",
@@ -895,6 +899,29 @@ class ReplanApplicationService:
             fresh_validation.get("formal_validation"),
             "fresh_validation.formal_validation",
         )
+        admission_candidate = {
+            **candidate,
+            "problem": {
+                key: problem.document[key]
+                for key in (
+                    "problem_version",
+                    "problem_builder_version",
+                    "problem_hash_projection_version",
+                    "problem_hash",
+                    "snapshot_id",
+                    "tick_seconds",
+                    "horizon_start_utc",
+                    "horizon_end_utc",
+                )
+            },
+        }
+        admitted = self._admission.evaluate(problem.document, admission_candidate)
+        if admitted.report != formal_validation:
+            reject_replan_application(
+                ReplanApplicationFailure.VALIDATION_FAILED,
+                field="candidate_admission",
+                message="Candidate admission differs from fresh replan validation",
+            )
         after_reference, after_tardiness, after_makespan = kpi_evidence_reference(
             input_.after_kpi, field="after_kpi"
         )
@@ -902,10 +929,9 @@ class ReplanApplicationService:
             fresh_validation.get("objective_values"),
             "fresh_validation.objective_values",
         )
-        if (
-            after_tardiness != measured.get("delivery")
-            or after_makespan != measured.get("makespan")
-        ):
+        if after_tardiness != measured.get(
+            "delivery"
+        ) or after_makespan != measured.get("makespan"):
             reject_replan_application(
                 ReplanApplicationFailure.LINEAGE_MISMATCH,
                 field="after_kpi",
@@ -981,7 +1007,8 @@ class ReplanApplicationService:
             candidate=candidate,
         )
         active_ids = cast(
-            list[str], list(_sequence(projection.get("new_active_operation_ids"), "active_ids"))
+            list[str],
+            list(_sequence(projection.get("new_active_operation_ids"), "active_ids")),
         )
         soft_locks = _sequence(projection.get("soft_locks"), "soft_locks")
         change_value = build_change_report(
@@ -1017,9 +1044,10 @@ class ReplanApplicationService:
             stability["resource_changes"],
             stability["absolute_start_shift_seconds"],
         ]
-        if precheck.get("status") != "PASS" or precheck.get(
-            "objective_vector"
-        ) != expected_vector:
+        if (
+            precheck.get("status") != "PASS"
+            or precheck.get("objective_vector") != expected_vector
+        ):
             reject_replan_application(
                 ReplanApplicationFailure.CHANGE_REPORT_FAILED,
                 field="change_report.precheck",
@@ -1139,6 +1167,7 @@ class ReplanApplicationService:
                         field="new_problem",
                         message="deterministic Problem changed before apply",
                     )
+                self._admission.verify(admitted, problem.document, admission_candidate)
                 schedule_write = self._schedule_repository.put_in_transaction(
                     connection, draft.document
                 )

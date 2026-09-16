@@ -9,6 +9,12 @@ from enum import StrEnum
 from threading import Event, Thread
 from typing import Any, NoReturn, Protocol, cast
 
+from app.application.candidate_admission import (
+    CandidateAdmissionService,
+    CandidateValidator,
+    IdentityProvider,
+)
+
 from app.application.planning_runs import (
     PlanningRunAttemptFailureCommand,
     PlanningRunAttemptStartCommand,
@@ -134,14 +140,14 @@ class ExtensionProductExecutor(Protocol):
         problem: Mapping[str, object],
     ) -> None: ...
 
-    def after_candidate(
+    def candidate_admission(
         self,
         *,
         scope: Mapping[str, object],
         planning_run_id: str,
-        problem: Mapping[str, object],
-        solution: Mapping[str, object],
-    ) -> None: ...
+        runtime_identity: IdentityProvider,
+        validator_factory: Callable[[], CandidateValidator] | None = None,
+    ) -> CandidateAdmissionService: ...
 
 
 @dataclass(frozen=True, slots=True)
@@ -304,6 +310,7 @@ class PlanningRunSolverWorker:
         self._runtime_provider = runtime_provider
         self._context_provider = context_provider
         self._solver = solver
+        self._admission = CandidateAdmissionService(validator_factory=lambda: validator)
         self._validator = validator
         self._publisher = publisher
         self._extension_executor = extension_executor
@@ -377,12 +384,21 @@ class PlanningRunSolverWorker:
         problem: Mapping[str, object],
         solution: Mapping[str, object],
     ) -> None:
-        if self._extension_executor is not None:
-            self._extension_executor.after_candidate(
-                scope=self._extension_scope(planning_run_id),
-                planning_run_id=planning_run_id,
-                problem=problem,
-                solution=solution,
+        executor = self._extension_executor
+        if executor is None:
+            return
+        admission = executor.candidate_admission(
+            scope=self._extension_scope(planning_run_id),
+            planning_run_id=planning_run_id,
+            runtime_identity=lambda: self._current_runtime(planning_run_id),
+            validator_factory=lambda: self._validator,
+        )
+        result = admission.evaluate(problem, solution)
+        if result.report["status"] != "PASS":
+            reject_worker(
+                PlanningRunWorkerErrorCode.RESULT_CONFLICT,
+                field="candidate_admission",
+                message="Fresh candidate admission rejected the stored result",
             )
 
     def _fail_extension_execution(
@@ -849,7 +865,7 @@ class PlanningRunSolverWorker:
                 created_at_utc=format_utc_instant(self._now()),
             )
 
-        fresh_validation = self._validator.validate(resolved.problem, solution)
+        fresh_validation = self._admission.evaluate(resolved.problem, solution).report
         solved = self._solver_artifacts(
             base, solution=solution, solver_report=solver_report
         )
@@ -973,7 +989,7 @@ class PlanningRunSolverWorker:
             "worker_result.documents.validation_report",
         )
         kpi = _mapping(documents["kpi"], "worker_result.documents.kpi")
-        fresh = self._validator.validate(resolved.problem, solution)
+        fresh = self._admission.evaluate(resolved.problem, solution).report
         if dict(fresh) != dict(validation):
             reject_worker(
                 PlanningRunWorkerErrorCode.RESULT_CONFLICT,
@@ -1165,7 +1181,9 @@ class PlanningRunSolverWorker:
                     message="ValidationReport reference is invalid",
                 )
             try:
-                fresh_validation = self._validator.validate(resolved.problem, solution)
+                fresh_validation = self._admission.evaluate(
+                    resolved.problem, solution
+                ).report
             except Exception as error:  # noqa: BLE001 - sanitize Validator failure
                 raise PlanningRunWorkerError(
                     PlanningRunWorkerErrorCode.RESULT_CONFLICT,

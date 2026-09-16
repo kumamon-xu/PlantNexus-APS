@@ -6,10 +6,18 @@ spec_version: 0.3.0
 phase: P8
 normative: true
 source_sections: [4, 5, 9, 12, 30, 57, 63, 65, 93, 95, 97, 101, 103, 107, 113, 114]
-last_reviewed: 2026-09-10
+last_reviewed: 2026-09-16
 ---
 
 # APS Extension SDK 与 Developer Kit 合同
+
+## P9 application 准入接线
+
+`RuntimeExtensionProductExecutor.candidate_admission`为同一服务器 scope/run 创建 application 准入实例：绑定完整 Runtime/Kit identity、loaded Registry safe identity 与 Extension facts fingerprint，并在每次 fresh 校验前后复核。Runtime 的 Extension set 必须与实际 adapter 精确一致；非空 adapter 缺 Kit version/fingerprint 不得返回可用准入实例。
+
+人工修改与重排 application owner 可显式注入此实例，复用首次求解的独立 SDK Validation Rule，不能以内部 Core-only 默认装配推断非空 Extension 已验证。P9-03 未增加这些 owner 的 HTTP/Runtime operation binding；后继装配必须从可信服务器上下文提供适用准入实例，不允许客户端指定、关闭或替换校验器。
+
+SDK 类型、manifest pair、timeout/readiness、Objective 层级与既有 Kit bytes 不变。输入/输出指纹由现有安全 metrics 保留；本卡不新增 durable Extension audit 或外部 carrier。
 
 ## 当前发行合同
 

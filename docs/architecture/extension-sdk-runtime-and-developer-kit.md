@@ -6,10 +6,16 @@ spec_version: 0.3.0
 phase: P8
 normative: true
 source_sections: [4, 5, 9, 12, 30, 63, 65, 93, 95, 97, 101, 103, 106, 107, 109, 113, 114]
-last_reviewed: 2026-09-10
+last_reviewed: 2026-09-16
 ---
 
 # APS Extension SDK、Runtime 与 Developer Kit 架构
+
+## P9 共同准入边界
+
+三类 application owner 共同消费 `application.candidate_admission`；Runtime product executor 负责把既有 SDK adapter 与服务器 scope、Registry/config/Kit identity 接到该 port。Core Validator 与 Extension 分别从独立事实副本校验，SDK view 仍递归冻结；不存在对 Solver builder/企业约束公式的复用。
+
+首次求解已在正式 Worker 使用共同边界；人工修改和重排目前形成可注入的内部服务接线，HTTP 装配仍由后续任务完成。默认 Core-only 内部实例只适用于无 Extension 的显式组合，不能作为非空 Registry 的降级方案。各 owner 继续负责自己的权限、状态、事务、恢复与幂等。
 
 ## 当前工程分发
 

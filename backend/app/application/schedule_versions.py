@@ -7,6 +7,8 @@ from contextlib import AbstractContextManager
 from dataclasses import dataclass
 from typing import Any, Protocol
 
+from app.application.candidate_admission import CandidateAdmissionService
+
 from app.domain.schedule_version import (
     ScheduleVersionCreationContext,
     ScheduleVersionLifecycleError,
@@ -130,7 +132,9 @@ class ValidatedSolutionToScheduleVersionService:
         transaction_factory: TransactionFactory,
         schedule_repository: ScheduleVersionRepositoryPort,
         audit_repository: AuditRepositoryPort,
+        admission: CandidateAdmissionService | None = None,
     ) -> None:
+        self._admission = admission or CandidateAdmissionService()
         self._data_plane = data_plane
         self._transaction_factory = transaction_factory
         self._schedule_repository = schedule_repository
@@ -165,6 +169,14 @@ class ValidatedSolutionToScheduleVersionService:
                 message="supplied KPI differs from the fresh validated calculation",
             )
 
+        admitted = self._admission.evaluate(output.problem, output.solution)
+        if admitted.report != output.validation_report:
+            reject_lifecycle(
+                ScheduleVersionLifecycleFailure.VALIDATION_FAILED,
+                field="candidate_admission",
+                message="Fresh candidate admission differs from supplied validation",
+            )
+
         documents = build_reviewable_schedule_documents(
             output,
             context,
@@ -172,6 +184,7 @@ class ValidatedSolutionToScheduleVersionService:
         )
         try:
             with self._transaction_factory() as connection:
+                self._admission.verify(admitted, output.problem, output.solution)
                 creation = self._schedule_repository.put_in_transaction(
                     connection, documents.draft
                 )

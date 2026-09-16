@@ -6,10 +6,16 @@ spec_version: 0.3.0
 phase: P2-P8
 normative: true
 source_sections: [57, 58, 76, 80, 84, 85, 89, 105, 106, 113, 114]
-last_reviewed: 2026-09-04
+last_reviewed: 2026-09-16
 ---
 
 # 性能与现实校准门
+
+## P9～P14 通用产品研发门（规划）
+
+每阶段以[仿真验证策略](generalized-product-validation-and-calibration.md)的覆盖与预算进行 synthetic 工程 Gate；缺少真实数据不阻塞阶段研发。P9 重点是可安装 Runtime 的人工/事件重排与统一准入；后续逐项增加数量、联合资源、物料、决策和批次/外协组合。
+
+正确性、覆盖、质量/稳健性和性能分项报告。环境、复杂度、seed/保留集、预算及退化门在验收前冻结；无结果时不得编造门限。既有 XS/S/M 不被自动称作 SME 真实规模，L/压力层需后继资产与证据。P7 Gate C 继续 deferred，后期真实校准/产能/UAT 不由这些 synthetic Gate 替代。
 
 ## P8 engineering Gate D
 

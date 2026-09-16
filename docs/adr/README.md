@@ -6,10 +6,14 @@ spec_version: 0.3.0
 phase: cross-phase
 normative: true
 source_sections: [97, 113, 114]
-last_reviewed: 2026-09-04
+last_reviewed: 2026-09-16
 ---
 
 # Architecture Decision Records
+
+## 通用化产品路线
+
+[ADR-0020 — Simulation-first SME Generalization Roadmap](ADR-0020-simulation-first-sme-generalization-roadmap.md)接受 P9～P14 分阶段投入与当前仿真优先研发边界，预留后期真实项目接入/回放/校准。它只接受规划，不提前支持高级约束、不改变现有 Schema，也不撤销旧 P5 退役或 P7 deferred。
 
 ## 公开工程发行
 

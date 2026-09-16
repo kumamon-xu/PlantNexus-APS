@@ -6,10 +6,16 @@ spec_version: 0.3.0
 phase: cross-phase
 normative: true
 source_sections: [0, 3, 4, 5, 7, 8, 30, 95, 101, 105, 106, 107, 112, 113, 114]
-last_reviewed: 2026-09-04
+last_reviewed: 2026-09-16
 ---
 
 # V1 范围与成功标准
+
+## v0.1.0 后续演进边界
+
+[SME 路线图](sme-generalization-roadmap.md)与 [ADR-0020](../adr/ADR-0020-simulation-first-sme-generalization-roadmap.md)接受 P9～P14 分阶段通用化规划。当前支持项仍以机器合同和实际 Runtime 证据为准；以下 V1 列表不表示所有内部服务已在公开分发中装配。P9 先补可达性，P10～P14 才逐项引入新语义与高级约束。
+
+当前以模拟/仿真完成工程校准与验证，真实工厂接入不作为这些阶段的开发前置门；真实来源/离线回放/参数校准方式在后期预留。通用数量、日历、资源和物料语义由 Core 承担，行业画像/显式配置提供可审查默认选择，企业扩展承载批准边界内的差异。高级能力在各自完整合同、Solver、独立 Validator 与 Gate 形成前仍显式 unsupported。
 
 ## 产品目标
 

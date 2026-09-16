@@ -6,10 +6,27 @@ spec_version: 0.3.0
 phase: cross-phase
 normative: true
 source_sections: [7, 8, 27, 43, 81, 82, 107, 113, 114]
-last_reviewed: 2026-09-11
+last_reviewed: 2026-09-16
 ---
 
 # 能力矩阵
+
+## 当前快照与计划（2026-09-16）
+
+公开基线为 v0.1.0，P8 工程 Exit 与 Runtime/SDK/Kit 分发已形成。工程制品已存在不代表每个内部业务能力都在正式 Runtime 中可调用：
+
+| 层次 | 当前事实 | 后续归属 |
+|---|---|---|
+| 基础 Core | C-001～C-011、Global CP-SAT、独立 Validator 及既有 P3/P4 内部服务已形成 | P9 补正式链路；不重新实现全部核心 |
+| 正式 Runtime | Headless PlanningRun 5 项已装配；Workspace adapter 只支持 GET_SCHEDULE_VERSION、APPROVE_SCHEDULE_VERSION、PUBLISH_SCHEDULE_VERSION、CREATE_EXPORT_JOB、GET_EXPORT_JOB | P9 逐 operation 补 binding 和制品证据 |
+| Manual / dynamic replan | 内部 owner/router 存在；当前 Runtime manual 绑定不完整，dynamic application 未在 create_runtime_app 注入 | P9；不以 OpenAPI 存在宣称正式可用 |
+| Extension | SDK/Registry/loader/Kit 已形成，现有候选后校验/评价可调用 | P9 统一校验入口；P11 才交付实际搜索贡献 |
+| 新制造语义 | 精确数量、实例工时/日历/执行/范围增强为规划 | P10，需版本合同和独立验证 |
+| 辅资源/顺序换型/材料竞争/批处理/自动拆并 | 仍 UNSUPPORTED | P11/P12/P14，新任务和新证据 |
+| 计划控制深化 | CTP、滚动窗口、细粒度控制与过期方案采纳为规划 | P13 |
+| Reality calibration | DEFERRED；无真实数据/环境 | 后期独立真实项目计划；不阻塞 P9～P14 仿真研发 |
+
+本表是源码静态核对与已形成工程状态的澄清，不是新测试结果。详细新路线见[SME 路线](sme-generalization-roadmap.md)。下列按任务命名的段落为历史时点快照，不覆盖本节；`V1_SUPPORTED` 仍是范围枚举，不等同特定 Runtime operation 已装配。
 
 ## P5 custom advanced capability retirement
 
@@ -17,7 +34,7 @@ last_reviewed: 2026-09-11
 
 C-012～C-018继续为`UNSUPPORTED`并返回`UNSUPPORTED_CAPABILITY`；Decomposition、Rolling Horizon与Hybrid均未形成，Global仍是唯一已形成策略。未来若重新审定同类能力，必须从当时需求重新建立versioned decision、Milestone/plan与全新Task/Test/Gate，不得复活原卡或继承其授权、Diff base、依赖门和Provider身份。本决定不关闭OPEN/SIM/risk，不改变已完成P5/P6/P8的历史Exit，也不形成Production能力。
 
-## P8 machine-contract status
+## 历史 P8 machine-contract status（P8-05 时点）
 
 P8 Headless Productization已形成ADR-0017/0018、人类数据authority合同，以及schema set `2.10.0`的canonical ingress request/result、PlanningRun lifecycle与Headless错误机器合同；P8-03形成Runtime内部strict consumer、Data Validation、durable idempotency和原子immutable Snapshot/PlanningProblem，P8-04形成durable run/attempt/work item、create/read/cancel/retry、CAS状态和append-only audit，P8-05进一步形成strict Solver task、durable lease/heartbeat、真实Global CP-SAT、fresh Validator、append-only result checkpoint、崩溃恢复和一次ScheduleVersion应用。因此`HEADLESS_MACHINE_CONTRACT_V1`、`DURABLE_CANONICAL_INGRESS_V1`、`DURABLE_PLANNING_RUN_ORCHESTRATION_V1`与`ASYNC_SOLVER_WORKER_V1`均为`FORMED`。公开端点、Production-shaped Runtime、host identity、完整Headless API、Extension SDK、Plugin Registry、Enterprise Extension template、Developer Kit、release/deployment/backup/runbook和optional Frontend distribution仍为`PLANNED_NOT_FORMED`。
 
@@ -25,7 +42,7 @@ P8 Headless Productization已形成ADR-0017/0018、人类数据authority合同�
 
 P8工程能力状态单独为：`HEADLESS_MACHINE_CONTRACT_V1=FORMED`、`DURABLE_CANONICAL_INGRESS_V1=FORMED_INTERNAL_ONLY`、`DURABLE_PLANNING_RUN_ORCHESTRATION_V1=FORMED_INTERNAL`、`ASYNC_SOLVER_WORKER_V1=FORMED_INTERNAL_SERVER_COMPOSITION_REQUIRED`、`APS_RUNTIME=PLANNED_NOT_FORMED`、`EXTENSION_SDK=PLANNED_NOT_FORMED`、`ENTERPRISE_EXTENSION_TEMPLATE=PLANNED_NOT_FORMED`、`DEVELOPER_KIT=PLANNED_NOT_FORMED`。Worker状态只表示synthetic/SQLite correctness与same-work恢复，不表示公开API、Production broker/database、容量或SLA。这些不是20项排程Capability Registry的新枚举，也不会使C-012～C-018变为supported；未来具体业务能力仍需SDK合同允许、独立Validation Rule和自己的Task/Test/Gate。
 
-## P7 deferred status
+## P7 deferred status（历史激活记录）
 
 P7 Milestone已完成激活与计划治理，但用户确认当前研发阶段没有真实数据、真实环境或现实authority，故Milestone执行状态为`deferred`；TASK-P7-01曾以`BLOCKED_INPUT`停止，TASK-P7-13随后将P7-01～11当前执行卡终结为`cancelled/NOT_EXECUTED`。`REALITY_CALIBRATION`继续`DEFERRED/NOT_FORMED`；没有真实Historical Snapshot、Replay、Reality Gap、FactoryProfile Calibration、Solver Benchmark、Planner Baseline、Production Capacity Decision、Gate C或Exit evidence，也没有Contract/Schema/migration/dependency/业务代码变化。
 
@@ -143,13 +160,13 @@ P4 Milestone已激活只表示DYNAMIC_REPLANNING进入已规划阶段，不表�
 | HARD_SOFT_LOCK | V1_SUPPORTED | P2-P4 | HARD 为约束，SOFT 为稳定性目标 |
 | APPROVAL_AND_PUBLICATION | V1_SUPPORTED | P3 | 仅 APPROVED 可发布，发布版本不可变 |
 | DYNAMIC_REPLANNING | V1_SUPPORTED | P4 | 保留事实、锁定并输出 ChangeReport |
-| SECONDARY_CAPACITY | UNSUPPORTED | P5 candidate | 不得忽略或近似 |
-| SEQUENCE_DEPENDENT_SETUP | UNSUPPORTED | P5 candidate | PROFILE-C 用于验证拒绝路径 |
-| BATCH_PROCESSING | UNSUPPORTED | P5 candidate | 需独立能力包 |
-| SPLIT_MERGE | UNSUPPORTED | P5 candidate | lot splitting 仍为 PROD_OPEN |
-| MATERIAL_COMPETITION | UNSUPPORTED | P5 candidate | V1 只接受 material_ready_at |
-| PREEMPTIVE_OPERATION | UNSUPPORTED | P5 candidate | V1 为非抢占 |
-| BUFFER_CAPACITY | UNSUPPORTED | P5 candidate | 不可静默忽略 |
+| SECONDARY_CAPACITY | UNSUPPORTED | P11 规划 | 未形成新能力前不得忽略或近似 |
+| SEQUENCE_DEPENDENT_SETUP | UNSUPPORTED | P11 规划 | 当前 PROFILE-C 仍验证拒绝路径 |
+| BATCH_PROCESSING | UNSUPPORTED | P14 规划 | 需全新独立能力包与证据 |
+| SPLIT_MERGE | UNSUPPORTED | P14 规划 | 通用策略/数量守恒另立合同，真实工厂策略仍待确认 |
+| MATERIAL_COMPETITION | UNSUPPORTED | P12 规划 | 当前 V1 只接受 material_ready_at |
+| PREEMPTIVE_OPERATION | UNSUPPORTED | 本路线排除任意抢占 | P10 日历续作须独立定义，不能混同 |
+| BUFFER_CAPACITY | UNSUPPORTED | 本路线未纳入 | 不可静默忽略 |
 | ALTERNATIVE_MATERIAL | UNSUPPORTED | future | 不做替代料优化 |
 | MULTI_FACTORY | UNSUPPORTED | future | V1 仅单工厂 |
 | AI_DURATION_PREDICTION | DEFERRED | P6 | 低置信度必须回退标准工时 |

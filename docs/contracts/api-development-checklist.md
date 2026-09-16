@@ -6,10 +6,16 @@ spec_version: 0.3.0
 phase: P3-P8
 normative: false
 source_sections: [63, 65, 66, 68, 69, 77, 78, 79, 80, 95, 113, 114]
-last_reviewed: 2026-09-06
+last_reviewed: 2026-09-16
 ---
 
 # API 接口开发清单
+
+## v0.1.0 Runtime 覆盖与 P9 规划
+
+须分别核对默认 API 外壳、显式配置的 Runtime 与可安装制品。当前源码的 Runtime 已装配 5 项 Headless PlanningRun 操作，Workspace adapter 额外支持读版本、审批、发布、创建导出、读导出五类操作；manual/完整工作区与 dynamic replanning 的正式装配仍有缺口。`create_runtime_app` 尚未注入 dynamic replanning application，router/内部 owner 存在不能代替可达性证据。
+
+下方部分“路由完成”描述针对默认外壳；不否认上述五项 Workspace 的显式 Runtime binding。P9 将先冻结 operation→owner→repository→Runtime→制品证据矩阵，再补人工调整/读模型/事件/异步重排并验证统一候选准入。路线见[SME 演进](../core/sme-generalization-roadmap.md)。本次只更新说明，不改 34 项 OpenAPI、wire contract 或能力状态。
 
 本清单以当前 FastAPI OpenAPI、router、application port 和自动化测试为事实来源，用于回答“接口是否存在、实现到哪一层、还缺什么”。具体 wire 语义仍以 [Planning Workspace API 合同](planning-workspace-api.md)、[ExecutionEvent / ReplanRequest 合同](execution-events-and-replan-request.md)和[错误模型](../domain/error-model.md)为准。
 

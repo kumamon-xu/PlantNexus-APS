@@ -1,5 +1,7 @@
 # PlantNexus APS
 
+通用产品后续建设见[演进路线](docs/core/sme-generalization-roadmap.md)与[仿真验证及后期校准策略](docs/simulation/generalized-product-validation-and-calibration.md)。当前通过模拟/仿真推进研发，保留后期真实项目接入方法；路线中的新增能力尚未实现。
+
 PlantNexus APS 是一个面向离散制造的高级计划与排程系统。项目采用 Simulation-first 路线，把canonical数据、不可变计划快照、PlanningProblem、OR-Tools CP-SAT 求解、独立排程校验、计划版本审批/发布、内部导出和动态重排串成一条可重放链路。
 
 APS 接收宿主平台提交的 versioned canonical JSON，负责数据验证、不可变计划输入、异步求解、独立校验、版本管理与受权输出。ERP/MES/WMS/CAM 的采集、字段映射和结果展示由宿主负责；可选 React 工作台使用同一 Headless API。

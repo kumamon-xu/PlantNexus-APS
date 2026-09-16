@@ -6,10 +6,16 @@ spec_version: 0.3.0
 phase: P1-P7
 normative: false
 source_sections: [17, 18, 19, 20, 21, 22, 38, 39]
-last_reviewed: 2026-09-02
+last_reviewed: 2026-09-16
 ---
 
 # 数据字段中文名称字典
+
+## 演进计划与当前合同
+
+本页仍描述现有 `canonical-records.v1`，不能把路线图中的字段提前作为合法输入。P9 先核对当前字段语义、规范 JSON 与跨语言 hash/消费者；P10 再建立字段级机器字典与数量/工时/日历/执行/范围的新版本语义；后续每项能力同步扩展。目标字典补全主外键、单位/精度、必填条件、空值/缺省、authority、跨字段规则、例子、版本与消费者。详见[SME 路线图](../core/sme-generalization-roadmap.md#json字典与合同随能力交付)。
+
+真实来源/回放预留通过独立版本演进，不向现有 Simulation-only carrier 偷加字段，不重算旧 Snapshot/hash。当前不修改机器字典、Schema 或输入接受范围。
 
 本字典完整覆盖当前 `canonical-records.v1` 的根集合、16 类核心业务记录以及两个共享嵌套对象，用于开发、评审和 UI 展示。英文 JSON key、类型、必填条件和取值约束以 [canonical-records.v1 Schema](../../schemas/json/canonical-records.v1.schema.json)为权威；全局文档版本、兼容性和 artifact 路径以[机器数据字典](../../schemas/data_dictionary.yaml)和 [Schema 索引](schema-index.md)为权威。
 

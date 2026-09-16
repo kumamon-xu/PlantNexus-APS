@@ -3,13 +3,19 @@ doc_id: DOC-INDEX-001
 title: PlantNexus APS 公开文档中心
 status: living
 spec_version: 0.3.0
-phase: P8
+phase: P9
 normative: false
 source_sections: [2, 6, 24, 90, 113, 114]
-last_reviewed: 2026-09-14
+last_reviewed: 2026-09-16
 ---
 
 # PlantNexus APS 公开文档中心
+
+## 当前产品演进
+
+[SME 通用产品演进路线](core/sme-generalization-roadmap.md)规划 P9～P14 六个独立成果阶段；当前仅形成规划。P9 先补已有能力的正式 Runtime 链路，后续依次完善制造数据语义、联合资源/换型、材料/装配、决策控制和拆并批/外协。JSON、字段字典与公开合同随每阶段能力同步交付。
+
+当前没有真实工厂接入条件，[仿真验证与后期校准策略](simulation/generalized-product-validation-and-calibration.md)明确以模拟数据推进工程研发，并保留未来离线接入/回放/校准方式。P7 仍暂缓，不阻塞这些研发阶段；真实项目上线仍需自身数据与验收。下方 P8 过程段落保留原交付时点，最新发行以“发行下载”及相应版本清单为准。
 
 企业[配置与Secret预检](operations/deployment.md#企业配置与-secret-预检)提供只读配置/Secret模板和外层bootstrap；当前仅支持TEST/SIMULATION与显式测试认证，真实SSO不由本预检声明。企业已有依赖与standalone双模式接线、TLS启动门和按需Validator见[企业Compose](operations/deployment.md#企业双模式-compose)。
 

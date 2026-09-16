@@ -6,10 +6,16 @@ spec_version: 0.3.0
 phase: P0-P7
 normative: true
 source_sections: [0, 10, 37, 46, 57, 84, 85, 112]
-last_reviewed: 2026-08-28
+last_reviewed: 2026-09-16
 ---
 
 # Simulation 子系统
+
+## 通用产品后续验证
+
+P9～P14 按[通用产品仿真验证与后期校准策略](generalized-product-validation-and-calibration.md)推进：可核验小例、独立负例、分层生成、组合/连续扰动、保留集及实际制品链路。大量随机记录本身不是覆盖证明。
+
+当前缺少真实工厂数据不会阻止这些研发阶段；后期以宿主映射后的 canonical 输入、隔离历史回放和 Reality Gap 校准。新画像/分布/预算在未来任务中版本化冻结；下列历史 fixture/profile 事实不代表新策略已全部实现。
 
 ## TASK-P4-10 continuous disruption library
 

@@ -170,6 +170,8 @@ def test_application_boundary_has_no_solver_validator_persistence_or_api_shortcu
         "sqlalchemy",
     )
     evidence_only_exception = {
+        # P9 admission calls the independent public validator, never solver code.
+        "candidate_admission.py": {"app.planning.validation.problem_schedule_validator"},
         "p2_gate_report.py": {"app.exporters.contract_check"},
         "p3_gate_report.py": {
             "app.api.planning_workspace_check",

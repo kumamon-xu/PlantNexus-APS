@@ -905,6 +905,7 @@ jobs:
             backend/tests/contract/test_unit_conversion_registry.py \
             backend/tests/unit/test_check_docs.py \
             backend/tests/unit/test_ci_validation_profile.py \
+            backend/tests/integration/test_p1_common_ingress.py \
             backend/tests/integration/test_migrations_and_infrastructure.py \
             backend/tests/integration/test_p3_vertical_slice.py \
             backend/tests/integration/test_config_and_health.py \

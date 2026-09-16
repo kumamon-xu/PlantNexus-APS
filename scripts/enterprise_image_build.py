@@ -304,14 +304,37 @@ def nscd_not_affected(finding: dict[str, Any], evidence: dict[str, Any] | None,
             and all(k in evidence and evidence[k] == value for k, value in required.items()))
 
 
+def reassessed_os_finding(finding: dict[str, Any], scan: dict[str, Any],
+                          policy: dict[str, Any], reassessment: dict[str, Any] | None) -> bool:
+    """Recognize one reviewed metadata change; retain the vulnerability as unresolved."""
+    if reassessment is None:
+        return False
+    digest = sha256(json.dumps(reassessment, sort_keys=True, separators=(",", ":")).encode())
+    # Bind the whole reviewed record, including source and diagnostic provenance.
+    if digest != "d13b0204d757ee9733864f11458c15538ad8f2e13eebe83da48ee6bf2ab7fd04":
+        return False
+    policy_digest = sha256(json.dumps(policy, sort_keys=True, separators=(",", ":")).encode())
+    return (policy_digest == reassessment["base_policy_canonical_sha256"]
+            and scan.get("scanner_image") == reassessment["scanner_image"]
+            and finding.get("class") == "os-pkgs"
+            and finding.get("VulnerabilityID") == reassessment["advisory_id"]
+            and finding.get("PkgName") in reassessment["packages"]
+            and finding.get("InstalledVersion") == reassessment["installed_version"]
+            and finding.get("Severity") == reassessment["scanner_severity"]
+            and finding.get("Status") == reassessment["vendor_status"]
+            and not finding.get("FixedVersion"))
+
+
 def assess_security(scan: dict[str, Any], policy: dict[str, Any], *,
                     nscd_evidence: dict[str, Any] | None = None, image_id: str | None = None,
-                    os_advisory: dict[str, Any] | None = None) -> dict[str, Any]:
+                    os_advisory: dict[str, Any] | None = None,
+                    os_reassessment: dict[str, Any] | None = None) -> dict[str, Any]:
     """Retain unresolved OS risk; never translate a scan into security approval."""
     known = {(v["id"], v["package"], v["version"], v["severity"], v["vendor_status"])
              for v in policy["unresolved_os_findings"]}
     os_findings = []
     os_vex_findings = []
+    reassessed_findings = []
     runtime_findings = []
     for finding in scan["vulnerabilities"]:
         if finding["class"] == "os-pkgs":
@@ -322,8 +345,14 @@ def assess_security(scan: dict[str, Any], policy: dict[str, Any], *,
                                         "package": finding["PkgName"], "status": "NOT_AFFECTED",
                                         "justification": "component_not_present"})
                 continue
-            if finding.get("FixedVersion") or identity not in known:
+            reassessed = reassessed_os_finding(finding, scan, policy, os_reassessment)
+            if finding.get("FixedVersion") or (identity not in known and not reassessed):
                 raise ValueError("NEW_OR_FIXABLE_OS_FINDING")
+            if reassessed:
+                reassessed_findings.append({"advisory_id": identity[0], "package": identity[1],
+                                           "version": identity[2], "severity": identity[3],
+                                           "vendor_status": identity[4],
+                                           "status": "UNRESOLVED_INTERNAL_TEST_SIMULATION_ONLY"})
             os_findings.append(finding["VulnerabilityID"])
         else:
             matches = [a for a in policy["runtime_vex_assessments"]
@@ -337,6 +366,7 @@ def assess_security(scan: dict[str, Any], policy: dict[str, Any], *,
             "upstream_os_raw_count": len(os_findings), "upstream_os_unique_count": len(set(os_findings)),
             "runtime_vex_unique_count": len(set(runtime_findings)),
             "os_component_vex": os_vex_findings,
+            "os_reassessed_unresolved_findings": reassessed_findings,
             "runtime_vex_reuse_basis": "exact original wheel/source hash and Linux target unchanged",
             "unrecognized_or_fixable_finding_count": 0}
 
@@ -418,8 +448,11 @@ def build(args: argparse.Namespace) -> dict[str, Any]:
         raise ValueError("VEX_SOURCE_IDENTITY_MISMATCH")
     nscd_evidence = probe_nscd_absence(identity["Id"])
     os_advisory = json.loads((ROOT/"infra/enterprise/nscd-advisory.v2.json").read_text(encoding="utf-8"))
+    os_reassessment = json.loads(
+        (ROOT/"infra/enterprise/image-security-reassessment.v1.json").read_text(encoding="utf-8"))
     assessment = assess_security(scan, policy, nscd_evidence=nscd_evidence,
-                                 image_id=identity["Id"], os_advisory=os_advisory)
+                                 image_id=identity["Id"], os_advisory=os_advisory,
+                                 os_reassessment=os_reassessment)
     return {"schema_version": "enterprise-runtime-image-report.v1", "task_id": "TASK-P8-23",
             "code_commit": commit, "source_runtime_sha": inputs["source_sha"],
             "source_archive_sha256": inputs["archive_sha256"], "candidate": args.candidate,
@@ -431,6 +464,7 @@ def build(args: argparse.Namespace) -> dict[str, Any]:
             "image_archive": str(image_tar.relative_to(ROOT)), "image_archive_sha256": image_hash,
             "security": scan, "security_assessment": assessment, "runtime_licenses": licenses,
             "nscd_component_evidence": nscd_evidence, "os_component_advisory": os_advisory,
+            "os_security_reassessment": os_reassessment,
             "production_ready": False,
             "runtime_deployment_tested": False}
 

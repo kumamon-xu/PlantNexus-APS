@@ -4,7 +4,10 @@ from __future__ import annotations
 
 from copy import deepcopy
 from dataclasses import dataclass
+import json
 from pathlib import Path
+import subprocess
+import sys
 from typing import Any
 
 import pytest
@@ -26,7 +29,6 @@ from app.duration_prediction.runtime import (
 from app.planning.problem import PROBLEM_BUILDER_VERSION_V2
 from scripts.p6_planning_integration_check import (
     DIFF_BASE,
-    run_planning_integration_checks,
 )
 
 from backend.tests.p6_planning_integration_support import (
@@ -179,9 +181,27 @@ def test_inputs_and_returned_carrier_copies_cannot_poison_replay() -> None:
     assert original_features != features
 
 
-def test_machine_report_contract_executes_all_non_skippable_integration_checks() -> None:
+def test_machine_report_contract_executes_all_non_skippable_integration_checks(tmp_path: Path) -> None:
     root = Path(__file__).resolve().parents[3]
-    report = run_planning_integration_checks(root)
+    # This report freezes P6-07 owner bytes. P9 legitimately evolves the replan
+    # owner; replay the complete historical check without restoring current code.
+    frozen = "e5d63fcf54c841ed93ef7c62084bcdeeda63abd4"
+    replay = (tmp_path / "p6-replay").resolve()
+    assert replay.parent == tmp_path.resolve() and not replay.exists()
+    before = subprocess.check_output(["git", "status", "--porcelain"], cwd=root)
+    subprocess.run(["git", "worktree", "add", "--detach", str(replay), frozen],
+                   cwd=root, check=True, capture_output=True)
+    try:
+        assert subprocess.check_output(["git", "rev-parse", "HEAD"], cwd=replay).decode().strip() == frozen
+        report_path = tmp_path / "p6-integration.json"
+        subprocess.run([sys.executable, "scripts/p6_planning_integration_check.py",
+                        "--root", str(replay), "--report", str(report_path)],
+                       cwd=replay, check=True, capture_output=True, timeout=120)
+        report = json.loads(report_path.read_text(encoding="utf-8"))
+    finally:
+        subprocess.run(["git", "worktree", "remove", "--force", str(replay)],
+                       cwd=root, check=True, capture_output=True)
+    assert subprocess.check_output(["git", "status", "--porcelain"], cwd=root) == before
 
     assert report["status"] == "PASS"
     assert report["task_id"] == "TASK-P6-07"

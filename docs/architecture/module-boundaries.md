@@ -384,3 +384,5 @@ Frontend只比较carrier reference和server完整payload item的一致性，保�
 Comparison唯一POST仍属于read operation且明确无Idempotency-Key；feature不得导入command/action模块。Playwright只经mock network验证browser consumer并不连接repository/application service。Dependency方向、P3-10 backend API、state machine和24个pins/lock均不变；P3-13 control不得反向把mutation塞入这些read-only模块，P4与Production adapters仍不存在。
 
 P3-11 artifact `9552386549`先以source boundary scan、GET/client tests和9/9 machine checks复验foundation依赖方向；P3-12 artifact `9555196470`再以strict transport tests、4/4 Chromium及12/12 machine checks复验visualization依赖方向。两项Task均`done`；这仍不形成command/action、external、P4或Production边界。
+
+P9-03 的 application AST 边界仅为 candidate_admission.py 登记既有独立 ProblemScheduleValidator 公共模块，不允许 Solver/ORM/API 依赖。P6-07 机器报告的 preserved-owner 字节属于冻结完成 SHA；其合同测试在临时 checkout 完整重放原报告和断言，当前 duration 功能测试继续覆盖现行源码，二者不混称当前发布证据。

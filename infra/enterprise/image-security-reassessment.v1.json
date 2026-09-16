@@ -1,0 +1,36 @@
+{
+  "schema_version": "enterprise-image-security-reassessment.v1",
+  "assessment_date": "2026-09-16",
+  "base_policy_canonical_sha256": "20e1a279e89da2af66a7054cf3e6a34f634d6dbdd27e3a70999571221f16182f",
+  "advisory_id": "CVE-2026-75803",
+  "packages": [
+    "libssl3",
+    "openssl"
+  ],
+  "installed_version": "3.0.20-1~deb12u2",
+  "previous_scanner_severity": "LOW",
+  "scanner_severity": "MEDIUM",
+  "vendor_status": "affected",
+  "scanner_image": "aquasec/trivy:0.74.0@sha256:ee940acbf1f58ebadb42d01434ce4609530bf1b52536afbd1eee66cd7123c5c9",
+  "disposition": "UNRESOLVED_INTERNAL_TEST_SIMULATION_ONLY",
+  "production_security_approval": false,
+  "sources": [
+    {
+      "url": "https://security-tracker.debian.org/tracker/CVE-2026-75803",
+      "sha256": "ccbc88e4fc8ec5888b3ca7fa6598a22ffbef07829246e36b97845ce87b1b3bfb"
+    },
+    {
+      "url": "https://openssl-library.org/news/secadv/20260825.txt",
+      "sha256": "eb8914d564766f1cbf1e5a77a4262bc07729c2d3dcb22d272041d6db61e5bd4e"
+    }
+  ],
+  "evidence": {
+    "kind": "historical frozen SBOM rescanned with current database; not a new image build",
+    "sbom_sha256": "09689dfffc165007a742d8d9879c1383cade38c235d4ce7c384580a8c524656e",
+    "scan_sha256": "7ad20daa43f66abd2246dfc9f574c6f67e085bd6bf0e0cd24853f8a77b119e64",
+    "database_updated_at": "2026-09-16T07:08:16.324557942Z",
+    "failed_provider_run": "35074491825"
+  },
+  "basis": "Only scanner severity changed for two existing unresolved findings. Debian bookworm still marks the installed version vulnerable without a fixed version. OpenSSL rates the advisory Low and lists upstream 3.0.22 as fixed. No absence, non-exploitability, remediation or Production approval is claimed.",
+  "scope": "Exact old policy, scanner, advisory, packages, installed version, affected status, LOW to MEDIUM only. Any FixedVersion or other changed identity must fail and be reviewed separately."
+}

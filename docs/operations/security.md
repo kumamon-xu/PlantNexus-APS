@@ -54,6 +54,12 @@ P8-26在2026-09-14的fresh扫描中检测到同一CVE两条记录从UNKNOWN更�
 
 P8-17完成后，最终外层成果标记为`UNSIGNED_INTERNAL_ENGINEERING_DELIVERY`。按本次内部开发交付用途，外部PKI、数字签名和第三方申请步骤明确不作为交付阻断项；交付包仍保留SHA-256 sidecar、逐文件checksum、manifest及精确Provider证据用于内容识别。该处置不改变内含Runtime和Developer Kit原始channel/signature字段，也不授予公开发布、外部信任或Production promotion。
 
+## P9-03 镜像扫描评级再评估
+
+2026-09-16，冻结 Runtime 镜像的 CI 扫描因 CVE-2026-75803 两条既有记录由 LOW 更新为 MEDIUM 而阻断。新增 `infra/enterprise/image-security-reassessment.v1.json` 仅识别 `libssl3`/`openssl` 的 `3.0.20-1~deb12u2`、affected、无 FixedVersion 的这次变化；原 v1 policy 保持不变。再评估绑定完整记录、原策略、精确扫描器与官方来源摘要，并记录同一历史 SBOM 的诊断性复扫身份。该复扫不充当新提交的镜像构建证据，新提交仍须通过 Provider 的 fresh 构建扫描。
+
+[Debian 跟踪记录](https://security-tracker.debian.org/tracker/CVE-2026-75803)仍将该 bookworm 版本列为 vulnerable，未列 bookworm 修复版本；[OpenSSL 公告](https://openssl-library.org/news/secadv/20260825.txt)将问题评为 Low，列出上游 3.0.22 修复。两条发现仍以当前 MEDIUM 原值保留在未解决 OS 风险计数及逐项再评估结果中，不进入 NOT_AFFECTED。缺少/篡改再评估、不同 scanner/策略/包/版本/状态/严重性、新 CVE 或任何 FixedVersion 继续失败；Production 安全批准仍为 false。
+
 ## TASK-P8-18 startup provider与产品调用安全
 
 部署可通过唯一显式`module:callable` startup provider把已批准本地artifact对象交给Runtime；配置与显式对象并存、provider超时/异常、返回非canonical集合、catalog不完整或未批准identity均阻止启动。该seam只用于build/deploy/startup，不允许HTTP、canonical JSON、Worker message或Extension自身选择module/class/path，也不提供ambient scan、网络获取、安装或hot reload。

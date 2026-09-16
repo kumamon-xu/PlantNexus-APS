@@ -233,7 +233,7 @@ def parse_strict_json(raw: bytes) -> JsonObject:
             expected_contract="finite JSON numbers",
             message="Non-finite JSON numbers are forbidden",
         ) from error
-    except (UnicodeDecodeError, json.JSONDecodeError, RecursionError) as error:
+    except (UnicodeDecodeError, ValueError, RecursionError) as error:
         raise CanonicalIngressContractError(
             CanonicalIngressContractCode.MALFORMED_JSON,
             pointer="/",

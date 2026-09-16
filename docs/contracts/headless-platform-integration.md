@@ -6,7 +6,7 @@ spec_version: 0.3.0
 phase: P8
 normative: true
 source_sections: [3, 4, 5, 9, 10, 12, 15, 63, 65, 66, 67, 68, 95, 97, 105, 106, 107, 109, 113, 114]
-last_reviewed: 2026-09-10
+last_reviewed: 2026-09-16
 ---
 
 # APS Headless 平台集成与数据权威合同
@@ -28,6 +28,30 @@ P8-18不增加公共HTTP operation或修改现有Schema/OpenAPI bytes。deployab
 ## P9 准入与 Runtime 基线
 
 [Runtime 能力基线](runtime-capability-baseline.md)将本合同既有身份/lineage/fresh Validator 与适用 Extension 规则映射到首排、manual 和重排三来源。当前首排 Worker 有正式 Extension 校验；manual/replan 内部 Core 校验不能替代同一 Runtime/Registry 的扩展准入。此为现状与验收分配，统一入口尚待 P9-03；不改变当前 carrier、checkpoint、状态机或审批发布规则。
+
+## P9 canonical-json.v1 跨语言消费
+
+`canonical-json.v1` 保持既有 Python `json.dumps(sort_keys=True, ensure_ascii=False, allow_nan=False, separators=(",", ":"))` 后 strict UTF-8 的字节定义。它不是 RFC 8785/JCS，也不能由原生 `JSON.stringify(JSON.parse(raw))` 替代。本次是 v1 消费者修复，不发布 canonical v2，不覆盖历史 Snapshot、Schema、Runtime 或 Kit，也不自动提升已发行制品能力。
+
+| 输入/规则 | v1 canonical 字节或处理 |
+|---|---|
+| 整数字面量 `1` / `-0` | `1` / `0`；保留 Python int 语义 |
+| 浮点字面量 `1.0` / `1e0` / `-0.0` | `1.0` / `1.0` / `-0.0`；保留 int/float 与浮点负零区别 |
+| 有限 binary64 | 最短可往返十进制，取最接近精确二进制值者、平局取偶数；科学指数小于 -4 或大于等于 16 时使用指数格式，指数有正负号且至少两位，如 `1e-07` |
+| 非有限数、溢出 | 拒绝；浮点下溢保留 Python 转换结果（包括有符号零），不增加 P10 精确数量语义 |
+| 对象/数组 | key 按 Unicode code point 排序；数组按原次序；不去重、不重新排列业务记录 |
+| 字符串/时间 | 保留 Unicode code point、组合形式、UTC 文本和转义语义；不执行 NFC/NFD 或时区转换；孤立 surrogate 不可编码成合法 UTF-8 |
+| `null` / 缺失 | `null` 显式保留，缺失不补齐；是否必填由 exact document Schema 判断 |
+| duplicate key / malformed UTF-8 | 在消费者读取前拒绝；转义后相同 key 也算重复，不允许后值覆盖前值 |
+| document/algorithm version、未知字段 | 按既有 exact carrier 验证；不把 ScheduleVersion v2 当 v1 或 ExportJob v3 当 v2 |
+
+可选 Frontend 的 `parseCanonicalJson`/`readCanonicalResponse` 返回不可变对象树，并以内部元数据保留每个数值的 v1 表示。`canonicalJson` 对该树产生与 Python 相同的字节；`canonicalProjection` 在选择 fingerprint 字段时保留顶层数值表示。不得先用 `JSON.parse`、spread/`Object.fromEntries` 复制数值叶子、`structuredClone` 或 UI 格式化结果再对历史数据重算 hash；这些操作会丢失 `1`/`1.0` 区别。需要新的数值类型时从显式 JSON 文本创建新树；不得修改解析出的树。
+
+新建 JavaScript 对象的 safe integer 按整数编码，非整数按 binary64 编码，负零按 `-0.0` 编码；要表达 `1.0` 或整值浮点数，必须从带 `.`/`e` 的 JSON 文本解析。整数字面量超出 `[-9007199254740991, 9007199254740991]` 时浏览器明确报合同错误，不能舍入、转为字符串或自动改成 float。Python 旧版任意精度整数的有效域与 hash 保持；需要此域的宿主仍使用 Python/无损整数消费者。这个限制属于可选浏览器能力，不是新数量规则或 Schema 范围收窄。
+
+Workspace、Headless、dynamic replanning 三个客户端统一严格读取响应；Headless create 在验证后仍发送调用方原始文本，不因适配器改写 request bytes。后端仅将超长整数字面量触发的 Python `ValueError` 收敛为既有 `MALFORMED_JSON`，不暴露异常或产生部分业务写入。
+
+共享固定向量位于 `frontend/tests/p9CanonicalVectors.json`，由 Python 旧 serializer 冻结，涵盖边界数值、Unicode、null、排序和既有 Schema 正例；Python 与 TypeScript 分别校验字节/SHA-256。固定 binary64 bit sampling 仅是序列化测试，不是工厂画像或 SIM_ASSUMPTION。新 Runtime binding、ScheduleVersion v2/read/export 消费扩展仍由后继任务分别完成。
 
 ## 1. 目的与规范级别
 

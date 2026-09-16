@@ -6,7 +6,7 @@ spec_version: 0.3.0
 phase: P0-P8
 normative: true
 source_sections: [0, 2, 10, 15, 16, 62, 63, 73, 74, 91, 95, 113]
-last_reviewed: 2026-09-04
+last_reviewed: 2026-09-16
 ---
 
 # Import 与 Normalization 合同
@@ -16,6 +16,10 @@ last_reviewed: 2026-09-04
 P8的外部产品入口只接收宿主平台提交的versioned canonical JSON，不接收ERP/MES/WMS/CAM私有payload，也不把CSV/XLSX上传或第三方SDK定义为公共API。宿主拥有采集、vendor字段映射、必要脱敏和展示；APS从canonical machine contract、authority/scope、idempotency、Data Validation和不可变Snapshot/Problem开始负责。
 
 本文件记录的Raw Staging、ReferenceFileAdapter和Normalization继续可用于开发、测试、迁移辅助或为宿主mapping提供参考。其结果在进入P8运行链前仍须穿过同一canonical contract和Data Validation；它们不能被绑定为Production默认、直接创建Snapshot/Problem或绕过Headless API。详细machine envelope已由TASK-P8-02发布，TASK-P8-03严格消费既有Schema bytes且没有增加第二种输入格式。
+
+## P9-02 strict JSON consumer handoff
+
+[Headless canonical v1 表示规则](headless-platform-integration.md#p9-canonical-jsonv1-跨语言消费)明确 Python/TypeScript 的 int/float、Unicode、null 与严格读取要求。Frontend 不再通过宽松 JSON 读取覆盖重复键或丢失浮点词法；超出浏览器安全整数域明确拒绝，服务端旧整数域保持。服务端超长整数字面量的解析异常使用既有 `MALFORMED_JSON` 收敛，不改变 Import、Normalization、Snapshot 或 fingerprint 的成功字节。
 
 ## TASK-P8-03 canonical ingress handoff
 

@@ -1,4 +1,4 @@
-import { canonicalJson } from "../api/canonical";
+import { canonicalJson, readCanonicalResponse } from "../api/canonical";
 import type { RuntimeConfig } from "../api/runtime";
 import type { SessionProvider } from "../api/session";
 import type { JsonObject } from "../api/types";
@@ -230,7 +230,7 @@ export function createHeadlessPlanningClient(
     }
     let payload: unknown;
     try {
-      payload = await response.json();
+      payload = await readCanonicalResponse(response);
     } catch {
       throw new HeadlessClientError(
         response.ok ? "contract_error" : kindForStatus(response.status),

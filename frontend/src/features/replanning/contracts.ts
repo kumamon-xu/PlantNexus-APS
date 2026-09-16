@@ -1,4 +1,4 @@
-import { sha256Fingerprint } from "../../api/canonical";
+import { canonicalProjection, sha256Fingerprint } from "../../api/canonical";
 import { ContractViolation, isJsonObject } from "../../api/contracts";
 import type { JsonObject } from "../../api/types";
 import {
@@ -153,9 +153,7 @@ function simulationBoundary(raw: JsonObject, query: ReplanningQueryDocument, fie
 
 async function verifyProjectionFingerprint(raw: JsonObject, field: string): Promise<void> {
   const expected = fingerprint(raw.projection_fingerprint, `${field}.projection_fingerprint`);
-  const projection = Object.fromEntries(
-    Object.entries(raw).filter(([key]) => key !== "projection_fingerprint"),
-  ) as JsonObject;
+  const projection = canonicalProjection(raw, Object.keys(raw).filter((key) => key !== "projection_fingerprint"));
   if ((await sha256Fingerprint(projection)) !== expected) {
     throw new ContractViolation(
       `${field}.projection_fingerprint`,

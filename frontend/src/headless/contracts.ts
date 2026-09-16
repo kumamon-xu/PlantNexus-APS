@@ -1,3 +1,4 @@
+import { parseCanonicalJson } from "../api/canonical";
 import type { JsonObject } from "../api/types";
 import {
   planningRunStates,
@@ -364,7 +365,7 @@ export function parseCanonicalIngressRequestText(
   }
   let value: unknown;
   try {
-    value = JSON.parse(raw);
+    value = parseCanonicalJson(raw);
   } catch {
     throw new HeadlessContractError(
       "CONTRACT_VIOLATION",

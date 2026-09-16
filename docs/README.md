@@ -144,3 +144,5 @@ git diff --check
 CI执行、显式阶段审计与机器取证见[CI execution and evidence](architecture/ci-execution-and-evidence.md)。
 
 企业部署现提供[显式 TEST 工作区授权与独立离线验收](operations/deployment.md#显式-test-工作区授权与离线验收)，以及包含拒绝审计的[备份 v2](operations/deployment.md#显式-test-工作区授权与离线验收)。候选通过完整 clean 与 exact Provider 前不形成新的交付就绪结论。
+
+P9-02 的 [canonical-json.v1 跨语言消费规则](contracts/headless-platform-integration.md#p9-canonical-jsonv1-跨语言消费)说明数值表示、严格读取和浏览器整数边界；机器 Schema/旧 hash 保持。

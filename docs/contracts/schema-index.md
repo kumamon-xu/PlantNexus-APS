@@ -6,10 +6,14 @@ spec_version: 0.3.0
 phase: P0-P8
 normative: true
 source_sections: [36, 38, 39, 70, 71, 103]
-last_reviewed: 2026-09-05
+last_reviewed: 2026-09-16
 ---
 
 # Schema 计划索引
+
+## P9-02 consumer-only compatibility
+
+本轮不新增或修改机器 Schema/字典、sample、URN 或版本；全局保持 `2.10.0`。`canonical-json.v1` 的 Python 成功字节及 fingerprint projection 不变，TypeScript 使用显式 v1 适配器，详见 [跨语言消费合同](headless-platform-integration.md#p9-canonical-jsonv1-跨语言消费)。ScheduleVersion v1/v2、ExportJob v2/v3 继续各自 exact，不在序列化修复中作为 alias 合并。
 
 ## 人类可读字段入口
 

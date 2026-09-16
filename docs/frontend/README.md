@@ -6,10 +6,18 @@ spec_version: 0.3.0
 phase: P3-P8
 normative: false
 source_sections: [68, 69, 77, 78, 95, 113, 114]
-last_reviewed: 2026-09-07
+last_reviewed: 2026-09-16
 ---
 
 # Frontend 文档形成计划
+
+## P9 canonical consumer
+
+Workspace、Headless 和 dynamic replanning 的 JSON 响应通过 `readCanonicalResponse` 严格读取 UTF-8、重复键及数值；Headless create 使用 `parseCanonicalJson` 检查后仍发送原始文本。`canonical-json.v1` 的浮点、负零、Unicode 与 hash 规则见 [Headless 跨语言消费合同](../contracts/headless-platform-integration.md#p9-canonical-jsonv1-跨语言消费)。解析树不可变；需选择 fingerprint 字段时使用 `canonicalProjection`，不要从经 `JSON.parse`、UI 格式化或丢失数值元数据的副本重算历史指纹。
+
+浏览器只支持安全范围内的整数字面量；超范围显式 `contract_error`，后端历史整数范围保留。本次没有增加 Runtime operation、UI 业务页面、状态机或 v2/v3 业务消费者。共享 Python/TypeScript 向量与三个客户端拒绝/指纹回归属于 `TEST-P9-CANONICAL-001`。
+
+旧本地化证据检查对 canonical 模块与 Workspace 读取客户端提供有界 P9 例外：客户端去掉读取替换后必须逐字等于旧源码，canonical 模块必须重放共享 Python 字节/hash；其他 P3 API、Schema、依赖与英文机器值仍冻结。历史 P3 报告不重写。
 
 ## P8 optional delivery boundary
 

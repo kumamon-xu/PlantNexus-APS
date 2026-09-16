@@ -6,10 +6,16 @@ spec_version: 0.3.0
 phase: cross-phase
 normative: true
 source_sections: [23, 24, 40, 95, 101, 103, 104, 114]
-last_reviewed: 2026-09-08
+last_reviewed: 2026-09-16
 ---
 
 # Schema 版本与兼容规则
+
+## P9-02 v1 consumer compatibility
+
+P9-02 修复 TypeScript 对既有 `canonical-json.v1` 的解析/序列化；[表示规则与能力边界](headless-platform-integration.md#p9-canonical-jsonv1-跨语言消费)明确保留 int/float、负零、Python 指数和 Unicode 行为。算法/Schema Set 仍为 `canonical-json.v1` / `2.10.0`，所有 `schemas/**`、URN、sample、机器字典和 Python hash projection 保留原字节。本次无需迁移、ADR 或新版本 carrier。
+
+浏览器拒绝超出 safe integer 域的整数字面量，后端旧整数域保留，不将合法历史值舍入后“修复”hash。旧 `JSON.parse/JSON.stringify` 丢失的信息不能可靠逆推；必须重新取得原始响应/存储文本后由 v1 adapter 读取。回退源码只恢复旧 consumer，不重算持久化数据；已发行 Runtime/Kit 不覆盖，交付新版候选由 P9-10 管理。
 
 ## TASK-P8-12 independent Extension SDK contract set
 

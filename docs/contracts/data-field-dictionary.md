@@ -21,7 +21,7 @@ last_reviewed: 2026-09-16
 
 中文名称不是 wire key。API、文件、数据库交换载体、fingerprint projection、enum 和 operationId 继续使用英文机器值，不得发送中文 key 或自行翻译枚举。
 
-P9 已将数值词法、Unicode、strict JSON、时间与 null/缺失、ScheduleVersion/read/export v1/v2/v3 的消费差异集中到 [Runtime 基线](runtime-capability-baseline.md#json-与版本消费差异)。本字典仍以现有机器字段为准；P9-02 完成跨语言向量与兼容决定前，不改旧 canonical-json.v1 指纹或宣称浏览器重新序列化等价。
+P9 已将数值词法、Unicode、strict JSON、时间与 null/缺失、ScheduleVersion/read/export v1/v2/v3 的消费差异集中到 [Runtime 基线](runtime-capability-baseline.md#json-与版本消费差异)。本字典仍以现有机器字段为准；P9-02 的 [v1 消费规则](headless-platform-integration.md#p9-canonical-jsonv1-跨语言消费)保留旧指纹，以严格解析树和数值适配器重放。浏览器超出 safe integer 的整数字面量显式拒绝，Python 旧整数域不变；机器数量/单位/时长字段未修改。
 
 ## 通用规则
 

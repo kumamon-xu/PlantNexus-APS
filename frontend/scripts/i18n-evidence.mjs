@@ -252,7 +252,7 @@ fail(
   issues,
 );
 
-const frozenDiffs = gitDiffNames([
+const allFrozenDiffs = gitDiffNames([
   "frontend/src/api",
   "frontend/package-lock.json",
   "backend/app/api/dependencies/__init__.py",
@@ -269,12 +269,36 @@ const frozenDiffs = gitDiffNames([
   "schemas/rules/state-machines.v1.yaml",
   "uv.lock",
 ]);
+// P9-02 repairs v1 numeric consumption without changing wire projections or
+// localization. Keep the original freeze for every other path. The client must
+// reverse exactly to P3; the adapter must replay the shared Python byte/hash set.
+const p9CanonicalPaths = new Set([
+  "frontend/src/api/canonical.ts",
+  "frontend/src/api/client.ts",
+]);
+const frozenDiffs = allFrozenDiffs.filter((path) => !p9CanonicalPaths.has(path));
+const p9CanonicalDiffs = allFrozenDiffs.filter((path) => p9CanonicalPaths.has(path));
+const originalReadClient = source("src/api/client.ts")
+  .replace("canonicalJson, readCanonicalResponse,", "canonicalJson,")
+  .replaceAll("await readCanonicalResponse(response)", "await response.json()");
+fail(originalReadClient === gitSource("frontend/src/api/client.ts"),
+  "P9 client changed outside strict canonical response reads", issues);
+const canonicalModule = await loadTypeScriptModule("src/api/canonical.ts");
+const canonicalVectors = JSON.parse(source("tests/p9CanonicalVectors.json"));
+fail(canonicalVectors.canonicalization_version === "canonical-json.v1",
+  "P9 conformance version drifted", issues);
+for (const vector of canonicalVectors.vectors) {
+  const parsed = canonicalModule.parseCanonicalJson(vector.raw);
+  fail(canonicalModule.canonicalJson(parsed) === vector.canonical &&
+    await canonicalModule.sha256Fingerprint(parsed) === vector.fingerprint,
+  `P9 canonical conformance failed: ${vector.id}`, issues);
+}
 fail(frozenDiffs.length === 0, `P3 localized wire/dependency/schema paths changed: ${frozenDiffs.join(", ")}`, issues);
 const localizedRuntimeText = `${combinedSurfaces}\n${JSON.stringify(enMessages)}\n${JSON.stringify(zhMessages)}`;
 for (const machineValue of ["APPROVE", "PUBLISH", "REQUEST_EXPORT", "READY_FOR_REVIEW", "SIMULATION_INTERNAL"]) {
   fail(localizedRuntimeText.includes(machineValue), `raw machine value absent from localized surfaces: ${machineValue}`, issues);
 }
-checks.push(completedCheck("ZERO-WIRE-AND-DEPENDENCY-DRIFT", "P3 client/router/schema/migration/dependency inputs and package metadata remain unchanged except five exact P8 Headless scripts; additive later-phase API composition excluded; English command/state/target values retained"));
+checks.push(completedCheck("ZERO-WIRE-AND-DEPENDENCY-DRIFT", "P3 router/schema/dependency and other client files remain unchanged; P9 strict reads are reversibly guarded and Python v1 vectors replayed; five exact P8 Headless scripts allowed; additive later-phase API composition excluded; English command/state/target values retained"));
 
 const playwrightPath = resolve(repositoryRoot, "build/playwright/results.json");
 let playwrightSpecs = [];
@@ -334,6 +358,7 @@ const report = {
     display_only_localization: true,
     raw_machine_values_retained: true,
     p3_localized_wire_schema_migration_dependency_changed: false,
+    p9_canonical_consumer_guarded: true,
     additive_later_phase_api_composition_allowed: true,
     p8_headless_package_scripts_semantically_guarded: true,
     backend_locale_negotiation_formed: false,
@@ -342,6 +367,8 @@ const report = {
     production_identity_formed: false,
     production_readiness: false,
   },
+  approved_p9_canonical_paths: p9CanonicalDiffs,
+  p9_canonical_vector_count: canonicalVectors.vectors.length,
   changed_frozen_paths: frozenDiffs.map((path) => relative(repositoryRoot, resolve(repositoryRoot, path)).replaceAll("\\", "/")),
   checks,
   check_count: checks.length,

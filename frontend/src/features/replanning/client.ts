@@ -1,4 +1,4 @@
-import { canonicalJson, sha256Fingerprint } from "../../api/canonical";
+import { canonicalProjection, canonicalJson, readCanonicalResponse, sha256Fingerprint } from "../../api/canonical";
 import { ContractViolation, isJsonObject } from "../../api/contracts";
 import type { RuntimeConfig } from "../../api/runtime";
 import type { SessionProvider } from "../../api/session";
@@ -115,9 +115,7 @@ async function validateQuery(
   ) {
     throw new ContractViolation("query", "kind or runtime boundary differs");
   }
-  const projection = Object.fromEntries(
-    Object.entries(query).filter(([key]) => key !== "query_fingerprint"),
-  ) as JsonObject;
+  const projection = canonicalProjection(query, Object.keys(query).filter((key) => key !== "query_fingerprint"));
   if ((await sha256Fingerprint(projection)) !== query.query_fingerprint) {
     throw new ContractViolation("query.query_fingerprint", "outbound query was altered");
   }
@@ -174,7 +172,7 @@ export function createDynamicReplanningClient(
     }
     let payload: unknown;
     try {
-      payload = await response.json();
+      payload = await readCanonicalResponse(response);
     } catch {
       throw new ReplanningClientError(
         response.ok ? "contract_error" : failureKind(response.status),
@@ -300,11 +298,9 @@ export function createDynamicReplanningClient(
         ) {
           throw new ContractViolation("replan_action", "runtime boundary differs");
         }
-        const fingerprintProjection = Object.fromEntries(
-          Object.entries(document).filter(
-            ([key]) => key !== "action_id" && key !== "action_fingerprint",
-          ),
-        ) as JsonObject;
+        const fingerprintProjection = canonicalProjection(document, Object.keys(document).filter(
+          (key) => key !== "action_id" && key !== "action_fingerprint",
+        ));
         if (
           (await sha256Fingerprint(fingerprintProjection)) !== document.action_fingerprint ||
           document.action_id !==

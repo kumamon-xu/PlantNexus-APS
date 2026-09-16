@@ -1,5 +1,5 @@
 import {
-  canonicalJson,
+  canonicalJson, readCanonicalResponse,
   sha256BytesFingerprint,
   workspaceQueryFingerprint,
 } from "./canonical";
@@ -222,7 +222,7 @@ export function createPlanningWorkspaceClient(
     }
     let payload: unknown;
     try {
-      payload = await response.json();
+      payload = await readCanonicalResponse(response);
     } catch {
       throw new WorkspaceClientError(
         response.ok ? "contract_error" : kindForStatus(response.status),
@@ -328,7 +328,7 @@ export function createPlanningWorkspaceClient(
       if (!response.ok) {
         let payload: unknown = null;
         try {
-          payload = await response.json();
+          payload = await readCanonicalResponse(response);
         } catch {
           // A failed binary route may still be sanitized without a JSON body.
         }

@@ -11,6 +11,10 @@ last_reviewed: 2026-09-07
 
 # P3 Planning Workspace API 语义合同
 
+## P9 当前消费差异
+
+完整静态覆盖及后继责任见 [Runtime 能力基线](runtime-capability-baseline.md)。当前 Runtime 仅绑定五项 Workspace 操作，getScheduleVersion 返回 repository document，尚不代表完整 read envelope/allowed_actions。人工 source guard 与现有 Frontend Version consumer 只接受 schedule-version.v1，而重排产生 v2；export Job/Manifest v2 与重排 v3 也需显式 consumer。P9-02/04/05/08 处理这些差异，旧 bytes/URN/hash 保留，本次不发布新兼容语义。下方各任务段落保留其历史交付时点。
+
 ## TASK-P8-07 additive Headless HTTP boundary
 
 P8-07在不改变本页既有P3/P4 operation object的前提下新增以下5项`/api/v1` operation；提交前29项以逐operation canonical SHA-256基线复验，最终OpenAPI共34项：

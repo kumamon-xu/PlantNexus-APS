@@ -35,6 +35,8 @@ P8-17独立`PHASE_GATE`已核验21个P8 Task、21组前序Provider输入（20个
 
 四类发行资产和独立组件版本见[Runtime 发行说明](operations/release-and-versioning.md#github-工程发行)、[Developer Kit 发行说明](operations/developer-kit-release-upgrade-and-rollback.md#当前公开工程发行)与[公开工程发行决策](adr/ADR-0019-public-engineering-release.md)。
 
+P9 的逐接口装配、候选准入、版本差异与仿真验收边界见 [Runtime 能力基线](contracts/runtime-capability-baseline.md)。该基线区分已有实现与后续验收，不提升产品支持状态。
+
 ## 核心入口
 
 | 主题 | 首选文档 | 用途 |

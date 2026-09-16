@@ -28,6 +28,8 @@ last_reviewed: 2026-09-16
 
 本表是源码静态核对与已形成工程状态的澄清，不是新测试结果。详细新路线见[SME 路线](sme-generalization-roadmap.md)。下列按任务命名的段落为历史时点快照，不覆盖本节；`V1_SUPPORTED` 仍是范围枚举，不等同特定 Runtime operation 已装配。
 
+逐 operation 的 owner、正式装配与证据缺口见 [P9 Runtime 能力基线](../contracts/runtime-capability-baseline.md)。该静态基线没有提升任何 capability；特别是 manual/replan 的统一扩展准入、v2 消费和完整导出链仍待后继实现。
+
 ## P5 custom advanced capability retirement
 
 用户于2026-09-11最终退役历史P5中未实现、未执行的TASK-P5-03～20；十八张卡继续保持`cancelled`，并具有`FINAL_RETIRED/NOT_EXECUTED`治理语义。本轮定制的SECONDARY_CAPACITY、SEQUENCE_DEPENDENT_SETUP、MATERIAL_COMPETITION、BATCH_PROCESSING、SPLIT_MERGE、BUFFER_CAPACITY、PREEMPTIVE_OPERATION、DecomposedStrategy与RollingHorizonStrategy方案全部作废，不得使用原Task继续实现。

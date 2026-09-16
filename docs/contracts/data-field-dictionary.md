@@ -21,6 +21,8 @@ last_reviewed: 2026-09-16
 
 中文名称不是 wire key。API、文件、数据库交换载体、fingerprint projection、enum 和 operationId 继续使用英文机器值，不得发送中文 key 或自行翻译枚举。
 
+P9 已将数值词法、Unicode、strict JSON、时间与 null/缺失、ScheduleVersion/read/export v1/v2/v3 的消费差异集中到 [Runtime 基线](runtime-capability-baseline.md#json-与版本消费差异)。本字典仍以现有机器字段为准；P9-02 完成跨语言向量与兼容决定前，不改旧 canonical-json.v1 指纹或宣称浏览器重新序列化等价。
+
 ## 通用规则
 
 | 规则 | 约束 |

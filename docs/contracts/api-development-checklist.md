@@ -23,6 +23,10 @@ P8-07已在P8-03～06的durable ingress、PlanningRun、Worker与单一Runtime�
 
 当前OpenAPI共34个operation：原29项operation object由提交前基线逐项SHA-256冻结，P8-07只作additive增加5项。提交版快照为[`headless-api.v1.json`](../../backend/app/api/openapi/headless-api.v1.json)，兼容基线为[`pre-p8-07-operation-baseline.v1.json`](../../backend/app/api/openapi/pre-p8-07-operation-baseline.v1.json)。内部Python service、Celery task或未来Extension SPI均不能被解释为额外HTTP operation。
 
+## P9 静态基线
+
+逐项 owner/repository/binding/制品证据与验收分配见 [Runtime 能力基线](runtime-capability-baseline.md)。34 项中两项健康与十项业务存在正式绑定，另外二十二项业务未绑定；默认身份缺失仍拒绝。导出创建/读取仅到 Job，完整下载链未形成；重排 owner 同步求解，须由后继异步 adapter 接入。下表五项 Workspace 状态已按显式 Runtime 纠正；其他路由存在不等于 Runtime 支持。
+
 ## 状态说明
 
 - **默认可用**：默认组合根可直接执行，不依赖业务 application adapter。
@@ -65,11 +69,11 @@ Create的tenant/factory/planning scope来自machine carrier的`requested_scope`�
 | Method | Path | Operation ID | 用途 | 成功响应 | 状态 |
 |---|---|---|---|---:|---|
 | `GET` | `/api/v1/planning-runs/{planning_run_id}` | `getPlanningRun` | 查询计划运行摘要 | 200 | 路由完成，需运行时适配器 |
-| `GET` | `/api/v1/schedule-versions/{schedule_version_id}` | `getScheduleVersion` | 查询计划版本与允许动作 | 200 | 路由完成，需运行时适配器 |
+| `GET` | `/api/v1/schedule-versions/{schedule_version_id}` | `getScheduleVersion` | 查询计划版本与允许动作 | 200 | 显式 Runtime 已绑定；完整覆盖边界见 P9 基线 |
 | `POST` | `/api/v1/schedule-versions/{schedule_version_id}/validate` | `validateScheduleVersion` | 提交独立校验/评审 | 200 | 路由完成，需运行时适配器 |
-| `POST` | `/api/v1/schedule-versions/{schedule_version_id}/approve` | `approveScheduleVersion` | 审批 READY_FOR_REVIEW 版本 | 200 | 路由完成，需运行时适配器 |
+| `POST` | `/api/v1/schedule-versions/{schedule_version_id}/approve` | `approveScheduleVersion` | 审批 READY_FOR_REVIEW 版本 | 200 | 显式 Runtime 已绑定；完整覆盖边界见 P9 基线 |
 | `POST` | `/api/v1/schedule-versions/{schedule_version_id}/reject` | `rejectScheduleVersion` | 驳回 READY_FOR_REVIEW 版本 | 200 | 路由完成，需运行时适配器 |
-| `POST` | `/api/v1/schedule-versions/{schedule_version_id}/publish` | `publishScheduleVersion` | 发布已审批版本到内部目标 | 200 | 路由完成，需运行时适配器 |
+| `POST` | `/api/v1/schedule-versions/{schedule_version_id}/publish` | `publishScheduleVersion` | 发布已审批版本到内部目标 | 200 | 显式 Runtime 已绑定；完整覆盖边界见 P9 基线 |
 | `GET` | `/api/v1/workspace/data-health` | `getWorkspaceDataHealth` | 查询数据质量与新鲜度投影 | 200 | 路由完成，需运行时适配器 |
 | `GET` | `/api/v1/workspace/import-runs` | `listWorkspaceImportRuns` | 分页查询导入运行 | 200 | 路由完成，需运行时适配器 |
 | `GET` | `/api/v1/workspace/planning-runs` | `listWorkspacePlanningRuns` | 分页查询计划运行 | 200 | 路由完成，需运行时适配器 |
@@ -77,8 +81,8 @@ Create的tenant/factory/planning scope来自machine carrier的`requested_scope`�
 | `POST` | `/api/v1/schedule-version-comparisons` | `compareScheduleVersions` | 比较两个不可变计划版本 | 200 | 路由完成，需运行时适配器 |
 | `POST` | `/api/v1/schedule-versions/{schedule_version_id}/commands` | `executeScheduleVersionCommand` | 移动、改派、设置/删除锁，copy-on-write 生成新 DRAFT | 200 | 路由完成，需运行时适配器 |
 | `GET` | `/api/v1/schedule-versions/{schedule_version_id}/audit-events` | `listScheduleVersionAuditEvents` | 查询计划版本审计事件 | 200 | 路由完成，需运行时适配器 |
-| `POST` | `/api/v1/schedule-versions/{schedule_version_id}/exports` | `createScheduleVersionExport` | 创建内部导出任务 | 202 | 路由完成，需运行时适配器 |
-| `GET` | `/api/v1/export-jobs/{export_job_id}` | `getExportJob` | 查询导出任务状态 | 200 | 路由完成，需运行时适配器 |
+| `POST` | `/api/v1/schedule-versions/{schedule_version_id}/exports` | `createScheduleVersionExport` | 创建内部导出任务 | 202 | 显式 Runtime 已绑定；完整覆盖边界见 P9 基线 |
+| `GET` | `/api/v1/export-jobs/{export_job_id}` | `getExportJob` | 查询导出任务状态 | 200 | 显式 Runtime 已绑定；完整覆盖边界见 P9 基线 |
 | `GET` | `/api/v1/export-jobs/{export_job_id}/download` | `downloadExportPackage` | 下载已验证的内部 ZIP 包 | 200 | 路由完成，需运行时适配器 |
 | `POST` | `/api/v1/export-jobs/{export_job_id}/retry` | `retryExportJob` | 重试失败导出任务 | 202 | 路由完成，需运行时适配器 |
 | `POST` | `/api/v1/export-jobs/{export_job_id}/cancel` | `cancelExportJob` | 取消允许取消的导出任务 | 200 | 路由完成，需运行时适配器 |

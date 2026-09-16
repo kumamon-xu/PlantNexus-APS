@@ -25,6 +25,10 @@ P8-18不增加公共HTTP operation或修改现有Schema/OpenAPI bytes。deployab
 
 这些是P8-18非Production纠正事实。P8-16原`NOT_READY`和四个blocker报告保持历史不可变；P8-19已经独立重资格并由exact Provider确认`READY`，但仍不得把本节解释为P8 Exit、Production integration、真实host authority、UAT、capacity或SLA结论。
 
+## P9 准入与 Runtime 基线
+
+[Runtime 能力基线](runtime-capability-baseline.md)将本合同既有身份/lineage/fresh Validator 与适用 Extension 规则映射到首排、manual 和重排三来源。当前首排 Worker 有正式 Extension 校验；manual/replan 内部 Core 校验不能替代同一 Runtime/Registry 的扩展准入。此为现状与验收分配，统一入口尚待 P9-03；不改变当前 carrier、checkpoint、状态机或审批发布规则。
+
 ## 1. 目的与规范级别
 
 本合同是宿主平台、APS Runtime、APS Core、Enterprise Extension、可选APS Frontend、安全和运维之间的人类可读集成基线。它执行ADR-0017和ADR-0018，并与TASK-P8-02发布的机器合同共同冻结责任、信任与失败语义。

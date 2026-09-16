@@ -3,6 +3,7 @@
 import json
 import subprocess
 from types import SimpleNamespace
+from typing import cast
 
 import pytest
 
@@ -149,10 +150,10 @@ def test_repository_phase_suites_are_explicit():
     import conftest
 
     ordinary = SimpleNamespace(args=[str(p) for p in conftest.FULL_BACKEND_SUITES], getoption=lambda _: False)
-    conftest.pytest_configure(ordinary)
+    conftest.pytest_configure(cast(pytest.Config, ordinary))
     assert len(ordinary.args) == len(conftest.FULL_BACKEND_SUITES)
     audit = SimpleNamespace(args=list(ordinary.args), getoption=lambda _: True)
-    conftest.pytest_configure(audit)
+    conftest.pytest_configure(cast(pytest.Config, audit))
     assert set(audit.args) - set(ordinary.args) == {str(p) for p in conftest.REPOSITORY_EVIDENCE_TESTS}
 
 
@@ -218,3 +219,96 @@ def test_required_clean_acceptance_cannot_be_omitted(repository, job):
     ci.write(path, {"status": "PASS"})
     with pytest.raises(ValueError, match="clean acceptance"):
         ci.seal(root, job, [path])
+
+
+@pytest.mark.parametrize("outcome", ["pass", "missing", "failure", "drift", "exception"])
+def test_historical_operations_replay_isolated_and_fail_closed(repository, monkeypatch, outcome):
+    from scripts import p8_operations_check as operations
+
+    root, git, _ = repository
+    (root / ".gitignore").write_text("build/\n", encoding="utf-8")
+    product = root / "backend/app/core.py"
+    product.parent.mkdir(parents=True)
+    product.write_text("frozen code\n", encoding="utf-8")
+    git("add", ".")
+    git("commit", "-qm", "frozen runtime")
+    source = git("rev-parse", "HEAD")
+    ci.write(root / operations.TARGET_PATH, {"release": {"implementation_sha": source}})
+    product.write_text("current code\n", encoding="utf-8")
+    added = root / "backend/app/new.py"
+    added.write_text("current only\n", encoding="utf-8")
+    (root / "README.md").write_text("current documentation\n", encoding="utf-8")
+    git("add", ".")
+    git("commit", "-qm", "current runtime")
+    current = git("rev-parse", "HEAD")
+    monkeypatch.setenv("GITHUB_SHA", current)
+    monkeypatch.setenv("GITHUB_ACTIONS", "true")
+    observed = []
+
+    def drill(arguments):
+        from pathlib import Path
+
+        replay = Path(arguments[arguments.index("--root") + 1])
+        observed.append(replay)
+        assert replay != root
+        assert (replay / "backend/app/core.py").read_text() == "frozen code\n"
+        assert not (replay / "backend/app/new.py").exists()
+        assert product.read_text() == "current code\n"
+        assert added.read_text() == "current only\n"
+        if outcome == "exception":
+            raise RuntimeError("drill crashed")
+        for name in ("deployment", "observability", "recovery", "runbook"):
+            if outcome == "missing" and name == "runbook":
+                continue
+            path = Path(arguments[arguments.index(f"--{name}-report") + 1])
+            ci.write(path, {"status": "FAIL" if outcome == "failure" else "PASS", "issues": []})
+        if outcome == "drift":
+            (replay / "backend/app/core.py").write_text("tampered")
+        return 0
+
+    monkeypatch.setattr(operations, "main", drill)
+    if outcome == "pass":
+        report = ci.replay_operations(root)
+        assert report["runtime_source_sha"] == source
+        assert report["head_sha"] == report["driver_source_sha"] == current
+        assert report["current_runtime_deployment_validated"] is False
+        assert report["coverage"] == "DECLARED_HISTORICAL_P8_RUNTIME_ONLY"
+        assert len(report["reports"]) == 4
+        assert report["runtime_inputs_digest"] == ci.digest(report["runtime_inputs"])
+    else:
+        with pytest.raises((ValueError, RuntimeError, operations.OperationsEvidenceError)):
+            ci.replay_operations(root)
+    assert len(observed) == 1 and not observed[0].exists()
+    assert product.read_text() == "current code\n"
+    assert added.read_text() == "current only\n"
+    assert (root / "README.md").read_text() == "current documentation\n"
+    assert git("status", "--porcelain") == ""
+    assert git("worktree", "list", "--porcelain").count("worktree ") == 1
+    if outcome == "failure":
+        saved = root / "build/validation/ci-p8-operations-deployment.json"
+        assert json.loads(saved.read_text())["status"] == "FAIL"
+
+
+@pytest.mark.parametrize("boundary", ["local", "identity", "dirty", "missing-target", "missing-source"])
+def test_historical_operations_replay_rejects_before_driver(repository, monkeypatch, boundary):
+    from scripts import p8_operations_check as operations
+
+    root, git, base = repository
+    monkeypatch.setenv("GITHUB_ACTIONS", "true")
+    if boundary != "missing-target":
+        ci.write(root / operations.TARGET_PATH, {"release": {
+            "implementation_sha": "0" * 40 if boundary == "missing-source" else base,
+        }})
+        git("add", ".")
+        git("commit", "-qm", "target")
+    monkeypatch.setenv("GITHUB_SHA", git("rev-parse", "HEAD"))
+    if boundary == "local":
+        monkeypatch.delenv("GITHUB_ACTIONS")
+    elif boundary == "identity":
+        monkeypatch.setenv("GITHUB_SHA", "f" * 40)
+    elif boundary == "dirty":
+        (root / "README.md").write_text("local work")
+    monkeypatch.setattr(operations, "main", lambda _: pytest.fail("driver must not run"))
+    with pytest.raises((ValueError, RuntimeError, FileNotFoundError)):
+        ci.replay_operations(root)
+    assert git("worktree", "list", "--porcelain").count("worktree ") == 1

@@ -6,7 +6,7 @@ spec_version: 0.3.0
 phase: cross-phase
 normative: true
 source_sections: [2, 58, 89, 98, 99, 100, 101]
-last_reviewed: 2026-09-14
+last_reviewed: 2026-09-16
 ---
 
 # CI execution and evidence
@@ -59,7 +59,9 @@ The Provider collector uses a new run's plan to select required jobs and artifac
 
 A manual run may supply `base_sha`; leaving it empty selects all current checks. `phase_audit` defaults to false. No Production deployment, credentials or product settings are introduced by this workflow.
 
-The retained operations target builds its declared historical Runtime. In ephemeral Actions checkouts only, CI stages that target’s packaging README and records both digests, then restores the current README after the drill. All other Runtime source, Schema, migration, lock and build-policy drift is rejected before staging. This preserves the frozen build identity without treating later delivery prose as a product-source change. It does not update the target or certify a changed Runtime.
+The retained operations target builds its declared historical Runtime in an owned, temporary checkout created only by the explicit `replay-operations` Actions command. The primary current checkout must remain clean and untouched. The replay combines the current operations driver/configuration with exactly the Runtime input paths from the target's full historical source SHA; all other files stay at the current CI SHA. Before and after the drill, the existing source/Schema/migration/lock/build-policy comparison rejects any drift inside that isolated Runtime input set. Runtime image identity checks and all existing drill assertions remain mandatory.
+
+The sealed replay manifest binds the exact current SHA/run/attempt and driver, target digest, historical Runtime SHA, per-input hashes and report hashes. Coverage is explicitly `DECLARED_HISTORICAL_P8_RUNTIME_ONLY` and `current_runtime_deployment_validated=false`. Missing or failed reports fail the job; actual failure diagnostics are retained. The temporary checkout is removed on success or failure. This does not overwrite published Runtime/Kit bytes, advance a release target or certify P9 deployment; current backend/frontend/solver checks keep their own current-source identity. The earlier `prepare-runtime` entry point and its refusal to restore product changes in the primary checkout remain unchanged. The user explicitly authorized this P9-02 isolation correction on 2026-09-16.
 
 ## 企业 clean acceptance 必需证据
 

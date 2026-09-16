@@ -36,6 +36,8 @@ project命名锁防并发；启动会受控停止API/Worker、验证依赖与exa
 
 ## 当前CI执行隔离
 
+P9-02 将冻结 P8 运维回放放入 CI 专属一次性 checkout；当前开发/CI 主 checkout 不恢复旧产品源码。回放显式绑定历史 Runtime 输入和当前 driver/configuration 身份，逐字校验仍由原 checker 执行，证据只证明声明的 P8 target。当前 P9 源码继续独立验证，旧 Runtime/Kit 和 Production 配置不修改；成功/失败均清理该隔离目录。详见 [CI evidence](ci-execution-and-evidence.md)。
+
 当前全局路由以[CI execution and evidence](ci-execution-and-evidence.md)为准。下面各Task段落保留引入时的隔离事实；其中旧job拓扑与执行频次不再作为当前路由要求。普通回归与显式阶段审计分流，共享证据必须同SHA/run/attempt、同输入和环境；非Production operations与必要fresh审计保持隔离。本次不修改产品配置、权限、Secret或部署。
 
 ## TASK-P8-17 Exit审计执行隔离

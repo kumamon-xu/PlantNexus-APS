@@ -1219,21 +1219,8 @@ jobs:
         with:
           python-version: "3.12"
 
-      - name: Prepare declared Runtime packaging metadata
-        run: python -m scripts.ci_execution prepare-runtime --report build/validation/ci-operations-runtime-source.json
-
-      - name: P8 non-Production deployment observability and recovery drill
-        run: >-
-          python scripts/p8_operations_check.py
-          --root .
-          --deployment-report build/validation/ci-p8-operations-deployment.json
-          --observability-report build/validation/ci-p8-operations-observability.json
-          --recovery-report build/validation/ci-p8-operations-recovery.json
-          --runbook-report build/validation/ci-p8-operations-runbooks.json
-
-      - name: Restore current checkout metadata
-        if: always()
-        run: git restore --source HEAD --worktree -- README.md
+      - name: Replay declared historical P8 Runtime in an isolated checkout
+        run: python -m scripts.ci_execution replay-operations --report build/validation/ci-operations-runtime-source.json
 
       - name: Seal full_operations evidence
         run: python -m scripts.ci_execution seal --job full_operations --files build/validation/ci-operations-runtime-source.json build/validation/ci-p8-operations-deployment.json build/validation/ci-p8-operations-observability.json build/validation/ci-p8-operations-recovery.json build/validation/ci-p8-operations-runbooks.json --report build/validation/ci-seal-full_operations.json

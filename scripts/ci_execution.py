@@ -14,6 +14,7 @@ import os
 from pathlib import Path
 import platform
 import re
+from tempfile import TemporaryDirectory
 from typing import Any
 import xml.etree.ElementTree as ET
 
@@ -158,6 +159,91 @@ def prepare_runtime(root: Path) -> dict[str, Any]:
             "restored_product_paths": [], "issues": []}
 
 
+def replay_operations(root: Path) -> dict[str, Any]:
+    """Run the declared historical P8 target without mutating the current tree.
+
+    Current driver/configuration and historical Runtime inputs have separate
+    identities. This evidence cannot certify the changed current Runtime.
+    The legacy prepare_runtime guard remains available and unchanged.
+    """
+    from scripts import p8_operations_check as operations
+
+    root = root.resolve()
+    run_identity = identity()
+    if os.environ.get("GITHUB_ACTIONS") != "true":
+        raise ValueError("operations replay is restricted to ephemeral Actions checkouts")
+    repository = GitRepository(root)
+    if repository.run("rev-parse", "HEAD").stdout.strip() != run_identity["head_sha"]:
+        raise ValueError("checkout does not match run identity")
+    if repository.run("status", "--porcelain", "--untracked-files=normal").stdout:
+        raise ValueError("operations replay requires a clean current checkout")
+    target_bytes = (root / operations.TARGET_PATH).read_bytes()
+    target = json.loads(target_bytes)
+    source = repository.resolve_commit(target["release"]["implementation_sha"])
+    current = run_identity["head_sha"]
+    source_paths = repository.run("ls-tree", "-r", "--name-only", source, "--",
+                                  *operations.RUNTIME_INPUTS).stdout.splitlines()
+    current_paths = repository.run("ls-tree", "-r", "--name-only", current, "--",
+                                   *operations.RUNTIME_INPUTS).stdout.splitlines()
+    if not source_paths:
+        raise ValueError("historical Runtime inputs are absent")
+    input_paths = sorted(set(source_paths) | set(current_paths))
+    names = ("deployment", "observability", "recovery", "runbooks")
+    output = root / "build" / "validation"
+    output.mkdir(parents=True, exist_ok=True)
+    report_digests: dict[str, str] = {}
+    with TemporaryDirectory(prefix="plantnexus-p8-replay-") as temporary:
+        parent = Path(temporary).resolve()
+        replay = parent / "checkout"
+        repository.run("worktree", "add", "--detach", str(replay), current)
+        try:
+            # Only this owned temporary checkout receives historical inputs.
+            pathspec = parent / "runtime-paths"
+            pathspec.write_bytes(b"\0".join(path.encode("utf-8") for path in input_paths) + b"\0")
+            isolated = GitRepository(replay)
+            isolated.run("restore", "--source", source, "--worktree",
+                         f"--pathspec-from-file={pathspec}", "--pathspec-file-nul")
+            operations.verify_runtime_inputs_unchanged(operations.CommandRunner(replay), source)
+            inputs = {path: hashlib.sha256((replay / path).read_bytes()).hexdigest()
+                      for path in source_paths}
+            if (replay / operations.TARGET_PATH).read_bytes() != target_bytes:
+                raise ValueError("operations target changed during replay preparation")
+            arguments = ["--root", str(replay)]
+            replay_reports = []
+            for name in names:
+                report = replay / "build" / "validation" / f"ci-p8-operations-{name}.json"
+                replay_reports.append(report)
+                arguments.extend([f"--{name[:-1] if name == 'runbooks' else name}-report", str(report)])
+            try:
+                result = operations.main(arguments)
+            finally:
+                # Keep actual failure diagnostics too, never manufacture PASS.
+                for report in replay_reports:
+                    if report.is_file():
+                        (output / report.name).write_bytes(report.read_bytes())
+            if result != 0:
+                raise ValueError("historical operations drill failed; reports retained")
+            for report in replay_reports:
+                if not report.is_file():
+                    raise ValueError("historical operations report is missing")
+                check_report(report)
+                report_digests[report.name] = hashlib.sha256(report.read_bytes()).hexdigest()
+            operations.verify_runtime_inputs_unchanged(operations.CommandRunner(replay), source)
+        finally:
+            if replay.resolve().parent != parent:
+                raise ValueError("refusing cleanup outside the owned replay directory")
+            repository.run("worktree", "remove", "--force", str(replay))
+    if repository.run("status", "--porcelain", "--untracked-files=normal").stdout:
+        raise ValueError("primary checkout changed during operations replay")
+    return {"schema_version": "ci-historical-operations-replay.v1", "result": "PASS",
+            **run_identity, "driver_source_sha": current, "runtime_source_sha": source,
+            "target_sha256": hashlib.sha256(target_bytes).hexdigest(),
+            "runtime_inputs": inputs, "runtime_inputs_digest": digest(inputs),
+            "reports": report_digests, "primary_checkout_unchanged": True,
+            "coverage": "DECLARED_HISTORICAL_P8_RUNTIME_ONLY",
+            "current_runtime_deployment_validated": False, "issues": []}
+
+
 def require_clean_acceptance(job: str, files: list[Path]) -> None:
     if job not in {"solver_validation", "full_validation"}:
         return
@@ -237,7 +323,7 @@ def aggregate(root: Path, value: dict[str, Any], needs: dict[str, Any], download
 
 def main() -> int:
     parser = argparse.ArgumentParser(description=__doc__)
-    parser.add_argument("command", choices=("plan", "seal", "aggregate", "verify-shared", "prepare-runtime"))
+    parser.add_argument("command", choices=("plan", "seal", "aggregate", "verify-shared", "prepare-runtime", "replay-operations"))
     parser.add_argument("--root", type=Path, default=Path.cwd())
     parser.add_argument("--base", default=os.environ.get("PLANTNEXUS_CI_CHANGE_BASE", ""))
     parser.add_argument("--head", default=os.environ.get("GITHUB_SHA", ""))
@@ -257,6 +343,8 @@ def main() -> int:
                     stream.write(f"{job}={str(job in value['selected']).lower()}\n")
     elif args.command == "prepare-runtime":
         value = prepare_runtime(args.root)
+    elif args.command == "replay-operations":
+        value = replay_operations(args.root)
     elif args.command == "seal":
         value = seal(args.root, args.job, args.files or [])
     elif args.command == "verify-shared":

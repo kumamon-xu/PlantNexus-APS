@@ -36,7 +36,7 @@ Router：H=[app.py](../../backend/app/api/app.py)，R=[headless_planning_runs.py
 | `getExportJob` | `GET /api/v1/export-jobs/{export_job_id}` | W | RuntimePlanningWorkspaceApplication._get_export | ExportJob | BOUND_JOB_ONLY | O | P9-05 |
 | `cancelExportJob` | `POST /api/v1/export-jobs/{export_job_id}/cancel` | W | ExportJobService.cancel | ExportJob + Audit | UNBOUND | X | P9-05 |
 | `downloadExportPackage` | `GET /api/v1/export-jobs/{export_job_id}/download` | W | ExportPackageDownloadService | ExportJob + verified package store | UNBOUND | X | P9-05 |
-| `retryExportJob` | `POST /api/v1/export-jobs/{export_job_id}/retry` | W | ExportJobService.retry | ExportJob + Audit | UNBOUND | X | P9-05 |
+| `retryExportJob` | `POST /api/v1/export-jobs/{export_job_id}/retry` | W | ExportJobService.claim（EXPORT_FAILED 重试；HTTP adapter 待补） | ExportJob + Audit | UNBOUND | X | P9-05 |
 | `createHeadlessPlanningRun` | `POST /api/v1/planning-runs` | R | APSRuntimeApplicationFacade.submit_canonical | Ingress + PlanningRun | BOUND | R | P9-03/10 |
 | `getPlanningRun` | `GET /api/v1/planning-runs/{planning_run_id}` | W | WorkspaceQueryService / PlanningRun projection | WorkspaceSourceDocuments | UNBOUND | W | P9-05 |
 | `cancelHeadlessPlanningRun` | `POST /api/v1/planning-runs/{planning_run_id}/cancel` | R | APSRuntimeApplicationFacade.cancel_planning_run | PlanningRun CAS | BOUND | R | P9-10 |

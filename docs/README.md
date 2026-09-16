@@ -29,7 +29,7 @@ last_reviewed: 2026-09-16
 
 P8-17独立`PHASE_GATE`已核验21个P8 Task、21组前序Provider输入（20个前序Task）、88份artifact/2,032个条目及10项保留失败/纠正历史，并在精确提交上fresh重放P8-19。304项P8目标回归、20/20 Exit check、18/18平台检查和4/4 closure均为PASS，零issue/zero gap；该提交的FULL与required Provider已成功，P8-17=`done`、P8=`completed`。失败候选及其artifact仍保留且不rerun。冻结Developer Kit `1.0.0`继续保留`UNSIGNED_ENGINEERING_CANDIDATE`元数据；最终外层成果是`UNSIGNED_INTERNAL_ENGINEERING_DELIVERY`，只代表synthetic工程产品化，不等于外部签名、Production部署、真实客户Extension、P7现实校准、容量/SLA或UAT。能力声明以[能力矩阵](core/capability-matrix.md)和对应合同为准。
 
-企业容器运维提供[九个Shell入口](operations/deployment.md#p8-26-shell-运维入口)和[隔离备份恢复/同版本回滚](runbooks/backup-and-restore.md#p8-26-企业脚本备份与隔离恢复)；clean-server双模式独立验收已通过；唯一最终包通过证据增补封存，运行payload保持原摘要。具体候选及工具SHA以随包交接索引和可信交接报告为准。
+企业容器运维提供[九个Shell入口](operations/deployment.md#p8-26-shell-运维入口)和[隔离备份恢复/同版本回滚](operations/deployment.md#p8-26-shell-运维入口)；clean-server双模式独立验收已通过；唯一最终包通过证据增补封存，运行payload保持原摘要。具体候选及工具SHA以随包交接索引和可信交接报告为准。
 
 ## 发行下载
 
@@ -141,4 +141,4 @@ git diff --check
 
 CI执行、显式阶段审计与机器取证见[CI execution and evidence](architecture/ci-execution-and-evidence.md)。
 
-企业部署现提供[显式 TEST 工作区授权与独立离线验收](operations/deployment.md#显式-test-工作区授权与离线验收)，以及包含拒绝审计的[备份 v2](runbooks/backup-and-restore.md#企业备份-v2-与工作区拒绝审计)。候选通过完整 clean 与 exact Provider 前不形成新的交付就绪结论。
+企业部署现提供[显式 TEST 工作区授权与独立离线验收](operations/deployment.md#显式-test-工作区授权与离线验收)，以及包含拒绝审计的[备份 v2](operations/deployment.md#显式-test-工作区授权与离线验收)。候选通过完整 clean 与 exact Provider 前不形成新的交付就绪结论。

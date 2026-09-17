@@ -727,6 +727,26 @@ def compose_runtime(
                 else None,
             )
         if process is RuntimeProcess.API:
+
+            def workspace_download(result: Any) -> Any:
+                from app.api.contracts import PlanningWorkspaceDownload
+
+                return PlanningWorkspaceDownload(
+                    **{
+                        field: getattr(result, field)
+                        for field in (
+                            "content",
+                            "filename",
+                            "media_type",
+                            "package_id",
+                            "manifest_fingerprint",
+                            "archive_fingerprint",
+                            "completion_audit_event_id",
+                            "correlation_id",
+                        )
+                    }
+                )
+
             redis = create_redis_client(
                 settings.redis_url,
                 timeout_seconds=settings.readiness_timeout_seconds,
@@ -818,6 +838,7 @@ def compose_runtime(
                 export_job_repository=export_repository,
                 manual_binding=manual_binding,
                 exports=runtime_exports,
+                download_adapter=workspace_download,
                 reads=RuntimeWorkspaceReads(
                     queries=WorkspaceQueryService(
                         data_plane=plane.value,

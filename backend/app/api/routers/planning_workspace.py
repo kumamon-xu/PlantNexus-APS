@@ -379,24 +379,6 @@ def _invoke_download(
                 resource_id=export_job_id,
             )
         )
-        from app.application.export_downloads import ExportPackageDownloadResult
-
-        if isinstance(result, ExportPackageDownloadResult):
-            result = PlanningWorkspaceDownload(
-                **{
-                    field: getattr(result, field)
-                    for field in (
-                        "content",
-                        "filename",
-                        "media_type",
-                        "package_id",
-                        "manifest_fingerprint",
-                        "archive_fingerprint",
-                        "completion_audit_event_id",
-                        "correlation_id",
-                    )
-                }
-            )
         if not isinstance(result, PlanningWorkspaceDownload):
             raise PlanningWorkspaceApplicationError(
                 "PERSISTENCE_FAILED",

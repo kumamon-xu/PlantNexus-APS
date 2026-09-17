@@ -90,6 +90,7 @@ class RuntimePlanningWorkspaceApplication:
         manual_binding: ManualBinding | None = None,
         reads: Any = None,
         exports: Any = None,
+        download_adapter: Callable[[Any], Any] | None = None,
     ) -> None:
         self._data_plane = data_plane
         self._schedules = schedule_repository
@@ -101,6 +102,7 @@ class RuntimePlanningWorkspaceApplication:
         self._manual_binding = manual_binding
         self._reads = reads
         self._runtime_exports = exports
+        self._download_adapter = download_adapter or (lambda result: result)
 
     @property
     def supported_operations(self) -> frozenset[str]:
@@ -386,7 +388,9 @@ class RuntimePlanningWorkspaceApplication:
                 {
                     "RETRY_EXPORT_JOB": self._runtime_exports.control,
                     "CANCEL_EXPORT_JOB": self._runtime_exports.control,
-                    "DOWNLOAD_EXPORT_PACKAGE": self._runtime_exports.download,
+                    "DOWNLOAD_EXPORT_PACKAGE": lambda request: self._download_adapter(
+                        self._runtime_exports.download(request)
+                    ),
                 }
             )
         operation = getattr(request.operation, "value", request.operation)

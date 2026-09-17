@@ -29,7 +29,9 @@ from app.application.runtime_http_adapter import (
 )
 from app.application.runtime_planning_workspace import (
     RuntimePlanningWorkspaceApplication,
+    RuntimePlanningWorkspaceError,
 )
+from app.application.schedule_commands import ScheduleCommandService
 from app.application.schedule_versions import (
     ValidatedSolutionToScheduleVersionService,
 )
@@ -653,11 +655,66 @@ def compose_runtime(
             export_repository = SqlAlchemyExportJobRepository(
                 database.engine, data_plane=plane
             )
+
+            def manual_binding(
+                source: Mapping[str, object],
+            ) -> tuple[Mapping[str, object], ScheduleCommandService]:
+                lineage = source.get("lineage")
+                if not isinstance(lineage, Mapping) or not isinstance(
+                    lineage.get("planning_run_id"), str
+                ):
+                    raise RuntimePlanningWorkspaceError(
+                        "MIXED_LINEAGE", field="source.lineage"
+                    )
+                run_id = lineage["planning_run_id"]
+                record = ingress_repository.get_by_planning_run_id(run_id)
+                reference = lineage.get("problem")
+                if (
+                    record is None
+                    or not isinstance(reference, Mapping)
+                    or reference.get("fingerprint") != record.problem.problem_hash
+                ):
+                    raise RuntimePlanningWorkspaceError(
+                        "MIXED_LINEAGE", field="source.lineage.problem"
+                    )
+                scope = cast(Mapping[str, object], record.document["effective_scope"])
+                if (
+                    record.document.get("runtime_resolution")
+                    != descriptor.runtime_resolution
+                ):
+                    raise RuntimePlanningWorkspaceError(
+                        "STALE_SOURCE", field="source.runtime_resolution"
+                    )
+                try:
+                    http_policy.extension_facts_for(
+                        tenant_id=cast(str, scope["tenant_id"]),
+                        factory_id=cast(str, scope["factory_id"]),
+                        planning_scope_id=cast(str, scope["planning_scope_id"]),
+                    )
+                except (KeyError, ValueError) as error:
+                    raise RuntimePlanningWorkspaceError(
+                        "AUTHORIZATION_DENIED", field="source.scope"
+                    ) from error
+                admission = extension_product_executor.candidate_admission(
+                    scope=scope,
+                    planning_run_id=run_id,
+                    runtime_identity=lambda: descriptor.runtime_resolution,
+                )
+                return record.problem.document, ScheduleCommandService(
+                    data_plane=plane.value,
+                    transaction_factory=database.engine.begin,
+                    schedule_repository=cast(Any, schedule_repository),
+                    audit_repository=cast(Any, audit_repository),
+                    validator_factory=ProblemScheduleValidator,
+                    admission=admission,
+                )
+
             planning_workspace_application = RuntimePlanningWorkspaceApplication(
                 data_plane=plane.value,
                 schedule_repository=schedule_repository,
                 publication_repository=publication_repository,
                 export_job_repository=export_repository,
+                manual_binding=manual_binding,
                 approval_service=ApprovalDecisionService(
                     data_plane=plane.value,
                     transaction_factory=database.engine.begin,

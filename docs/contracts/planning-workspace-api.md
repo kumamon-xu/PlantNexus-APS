@@ -13,7 +13,9 @@ last_reviewed: 2026-09-07
 
 ## P9 当前消费差异
 
-完整静态覆盖及后继责任见 [Runtime 能力基线](runtime-capability-baseline.md)。当前 Runtime 仅绑定五项 Workspace 操作，getScheduleVersion 返回 repository document，尚不代表完整 read envelope/allowed_actions。人工 source guard 与现有 Frontend Version consumer 只接受 schedule-version.v1，而重排产生 v2；export Job/Manifest v2 与重排 v3 也需显式 consumer。P9-02/04/05/08 处理这些差异，旧 bytes/URN/hash 保留，本次不发布新兼容语义。下方各任务段落保留其历史交付时点。
+完整静态覆盖及后继责任见 [Runtime 能力基线](runtime-capability-baseline.md)。P9-04 当前源码 Runtime 绑定八项 Workspace 操作，新增 commands、validate（SUBMIT_FOR_REVIEW）和 reject。move/assign、HARD/SOFT lock 复用既有 v1 owner 和 copy-on-write，每个新候选及 submit 均重新执行 P9-03 Core/适用 Extension 准入。Problem、scope 与 Runtime identity 从已授权 source 的持久化 canonical ingress 解析，缺失或漂移时拒绝。重启后使用同一 durable lineage；旧版本内容不因人工调整改变。
+
+请求沿用 workspace-command.v1 的 expected_state/content_fingerprint、幂等与事务审计，submit 使用仓储 state_revision CAS；不新增 HTTP revision/ETag carrier、Schema 或状态 pair。v2/replan 的人工命令与 submit 明确返回 422 MIXED_LINEAGE，不能降级丢失事实 lineage；后续由 P9-07/05 衔接。getScheduleVersion 仍返回 repository document，完整 read envelope/allowed_actions、export 执行与下载由 P9-05 负责。当前安装测试只证明 TEST/SIMULATION 下构建 wheel 的行为，不改变已发行 bytes。下方各任务段落保留其历史交付时点。
 
 ## TASK-P8-07 additive Headless HTTP boundary
 

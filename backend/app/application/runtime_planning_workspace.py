@@ -1,33 +1,44 @@
-"""Deployable Simulation workspace composition for Headless Runtime output.
+"""Deployable Simulation workspace composition for Headless Runtime control.
 
-This façade binds the existing P3 approval, publication, read, and export
+This façade binds the existing P3 manual, approval, publication, read, and export
 services.  Transport authentication remains server-supplied and the domain
 services retain state, authorization, idempotency, and audit authority.
 """
 
 from __future__ import annotations
 
-from collections.abc import Mapping
+from collections.abc import Callable, Mapping
 from dataclasses import asdict
 from typing import Any, NoReturn, Protocol, cast
 
 from app.application.approval import ApprovalDecisionService
+from app.application.candidate_admission import CandidateAdmissionError
+from app.application.schedule_commands import ScheduleCommandService
 from app.application.export_jobs import ExportJobService
 from app.application.publication import PublicationService
 from app.domain.authorization import ApprovalDecisionContext
 from app.domain.export_job import ExportJobContext, ExportJobRequest
 from app.domain.publication import PublicationContext
+from app.domain.schedule_commands import ScheduleCommandContext
+from app.extensions.contracts import RuntimeExtensionError
 
 
 _SUPPORTED_OPERATIONS = frozenset(
     {
         "GET_SCHEDULE_VERSION",
         "APPROVE_SCHEDULE_VERSION",
+        "REJECT_SCHEDULE_VERSION",
         "PUBLISH_SCHEDULE_VERSION",
         "CREATE_EXPORT_JOB",
         "GET_EXPORT_JOB",
     }
 )
+_MANUAL_OPERATIONS = frozenset(
+    {"EXECUTE_SCHEDULE_COMMAND", "VALIDATE_SCHEDULE_VERSION"}
+)
+type ManualBinding = Callable[
+    [Mapping[str, object]], tuple[Mapping[str, object], ScheduleCommandService]
+]
 
 
 class RuntimeScheduleReadRepositoryPort(Protocol):
@@ -64,7 +75,7 @@ def _in_scope(scope: frozenset[str], resource_id: str) -> bool:
 
 
 class RuntimePlanningWorkspaceApplication:
-    """Narrow output façade; unsupported workspace operations stay unavailable."""
+    """Bounded workspace façade; unsupported operations stay unavailable."""
 
     def __init__(
         self,
@@ -76,6 +87,7 @@ class RuntimePlanningWorkspaceApplication:
         approval_service: ApprovalDecisionService,
         publication_service: PublicationService,
         export_service: ExportJobService,
+        manual_binding: ManualBinding | None = None,
     ) -> None:
         self._data_plane = data_plane
         self._schedules = schedule_repository
@@ -84,10 +96,13 @@ class RuntimePlanningWorkspaceApplication:
         self._approval = approval_service
         self._publication = publication_service
         self._export = export_service
+        self._manual_binding = manual_binding
 
     @property
     def supported_operations(self) -> frozenset[str]:
-        return _SUPPORTED_OPERATIONS
+        return _SUPPORTED_OPERATIONS | (
+            _MANUAL_OPERATIONS if self._manual_binding else frozenset()
+        )
 
     @staticmethod
     def _resource_id(request: Any) -> str:
@@ -183,6 +198,43 @@ class RuntimePlanningWorkspaceApplication:
         )
         return {**asdict(result), "exact_replay": result.exact_replay}
 
+    def _manual(self, request: Any) -> Mapping[str, object]:
+        if self._manual_binding is None:
+            _error("SERVICE_UNAVAILABLE", field="manual_binding")
+        source = self._get_schedule(request)
+        # v2 carries replan/fact lineage that this v1 owner must never discard.
+        if source.get("schedule_version_version") != "schedule-version.v1":
+            _error("MIXED_LINEAGE", field="source.schedule_version_version")
+        context = request.context
+        try:
+            problem, service = self._manual_binding(source)
+            result = service.execute(
+                _document(request),
+                problem,
+                ScheduleCommandContext(
+                    actor_ref=context.actor_ref,
+                    resolved_capabilities=context.resolved_capabilities,
+                    auth_policy_version=context.auth_policy_version,
+                    occurred_at_utc=context.occurred_at_utc,
+                    code_commit=context.code_commit,
+                ),
+            )
+        except RuntimeExtensionError as error:
+            _error(
+                "VALIDATION_FAILED"
+                if error.code == "EXTENSION_VALIDATION_FAILED"
+                else "SERVICE_UNAVAILABLE",
+                field="candidate_admission.extension",
+            )
+        except CandidateAdmissionError as error:
+            _error(
+                "STALE_SOURCE"
+                if error.reason.startswith("STALE_")
+                else "PERSISTENCE_FAILED",
+                field="candidate_admission",
+            )
+        return {**asdict(result), "exact_replay": result.exact_replay}
+
     def _publish(self, request: Any) -> Mapping[str, object]:
         schedule_id = self._resource_id(request)
         result = self._publication.execute(
@@ -261,11 +313,48 @@ class RuntimePlanningWorkspaceApplication:
         handlers = {
             "GET_SCHEDULE_VERSION": self._get_schedule,
             "APPROVE_SCHEDULE_VERSION": self._approve,
+            "REJECT_SCHEDULE_VERSION": self._approve,
+            "EXECUTE_SCHEDULE_COMMAND": self._manual,
+            "VALIDATE_SCHEDULE_VERSION": self._manual,
             "PUBLISH_SCHEDULE_VERSION": self._publish,
             "CREATE_EXPORT_JOB": self._create_export,
             "GET_EXPORT_JOB": self._get_export,
         }
         operation = getattr(request.operation, "value", request.operation)
+        # Recheck server context at the façade, including direct application use.
+        if operation in _MANUAL_OPERATIONS or operation in {
+            "APPROVE_SCHEDULE_VERSION",
+            "REJECT_SCHEDULE_VERSION",
+        }:
+            command = _document(request)
+            required = {
+                "MOVE_OPERATION": "edit",
+                "ASSIGN_RESOURCE": "edit",
+                "SET_LOCK": "lock",
+                "REMOVE_LOCK": "lock",
+                "SUBMIT_FOR_REVIEW": "edit",
+                "APPROVE": "approve",
+                "REJECT": "reject",
+            }.get(cast(str, command.get("command_type")))
+            allowed = {
+                "EXECUTE_SCHEDULE_COMMAND": {
+                    "MOVE_OPERATION",
+                    "ASSIGN_RESOURCE",
+                    "SET_LOCK",
+                    "REMOVE_LOCK",
+                },
+                "VALIDATE_SCHEDULE_VERSION": {"SUBMIT_FOR_REVIEW"},
+                "APPROVE_SCHEDULE_VERSION": {"APPROVE"},
+                "REJECT_SCHEDULE_VERSION": {"REJECT"},
+            }[operation]
+            if command.get("command_type") not in allowed or command.get(
+                "source_id"
+            ) != self._resource_id(request):
+                _error("INVALID_COMMAND", field="command")
+            if required not in request.context.resolved_capabilities or not _in_scope(
+                request.context.schedule_version_scope, self._resource_id(request)
+            ):
+                _error("AUTHORIZATION_DENIED", field="schedule_version_scope")
         handler = handlers.get(operation)
         if handler is None:
             _error("SERVICE_UNAVAILABLE", field="operation")

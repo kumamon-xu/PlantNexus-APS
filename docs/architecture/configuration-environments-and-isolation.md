@@ -13,6 +13,8 @@ last_reviewed: 2026-09-16
 
 ## P9 admission 与历史回放隔离
 
+P9-04 在现有显式 TEST/SIMULATION Runtime 配置中增加 v1 manual/submit/reject binding，无新增环境变量、依赖或迁移。人工请求必须从服务器持久化 lineage 找到同 Runtime/Registry/Kit 的 ingress，跨资源授权、未知 scope、身份漂移均拒绝。安装测试使用临时 DB、固定 synthetic fixture 与 recording broker，app/SDK 来自当前 wheel，第三方依赖复用 exact lock 环境；不宣称网络部署或 Production 可用。冻结 P4 清单另排除两份 P9-04 测试，原冻结实现与断言不变。
+
 P9 共同准入绑定现有 Runtime/Registry/config/Kit 与服务器 scope，未增加环境变量或部署默认值。适用 Extension 的人工/重排内部服务使用 product executor 工厂注入准入；本卡没有增加其正式 HTTP binding。
 
 CI 的冻结 P4 replay 在原一次性 checkout 中移除新增 admission 和两份 P9 测试，并将 replan/schedule-command/schedule-version application owner 恢复到原冻结 P4 SHA；主 checkout、原 P4 fixture/断言与 required topology 不变。当前实现仍由当前 Backend/Runtime 检查验证，历史 replay 不冒充新 Runtime 部署证据。

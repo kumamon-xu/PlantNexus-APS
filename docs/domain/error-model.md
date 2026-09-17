@@ -11,6 +11,10 @@ last_reviewed: 2026-09-10
 
 # 错误与求解状态模型
 
+## P9-04 人工 Runtime 错误映射
+
+沿用 planning-workspace-error.v1：Core/Extension 候选拒绝为 422 VALIDATION_FAILED；Extension crash/timeout/unhealthy 为 503 SERVICE_UNAVAILABLE；原 Runtime identity 漂移为 409 STALE_SOURCE；缺少匹配 Problem 或 v2 人工/submit 为 422 MIXED_LINEAGE。授权、state、idempotency 与 audit persistence 分别保留现有 401/403、409、409、500。全部失败无新增业务版本/成功状态，不映射为 Solver INFEASIBLE/UNKNOWN，不输出 credential、raw exception 或配置内容。
+
 ## TASK-P8-18 product invocation failure mapping
 
 Worker把Runtime/Kit/Extension descriptor不一致稳定映射为`RUNTIME_MISMATCH`，把Extension candidate拒绝与重排请求分别保留为`EXTENSION_VALIDATION_FAILED`和`EXTENSION_REPLAN_REQUIRED`；Registry已有crash/timeout/invalid-output错误继续透过sanitized Runtime边界。所有这些结果都在ScheduleVersion前终止并保持零partial success，不能伪装成Core `INFEASIBLE/UNKNOWN`、成功排程或ExportJob状态。

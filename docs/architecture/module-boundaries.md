@@ -13,6 +13,8 @@ last_reviewed: 2026-09-16
 
 ## P9 admission application port
 
+P9-04 由唯一 `runtime_composition` 注入 server-bound manual factory，解析 durable ingress 的 Problem/scope/Runtime identity 并构造既有 ScheduleCommandService 与 admission。`runtime_planning_workspace` 只负责 operation/context 分派和 sanitized 错误映射，新增 reject 仍委托 ApprovalDecisionService；router、Core、Solver、Validator、数据库结构与状态 owner 不变。
+
 `application.candidate_admission`只消费独立 Core Validator、canonical identity 与服务器注入的 Extension callback/identity provider，不导入 Solver/Strategy/CP-SAT、ORM、API 或企业实现。product executor 通过该 application port 提供绑定工厂，继续只负责 SDK 调用与服务器事实裁剪，不解释 Constraint 或复制 Validator 公式。Core/domain/planning 仍不反向依赖 Runtime/SDK/Enterprise Extension。
 
 `ScheduleCommandService`、`ValidatedSolutionToScheduleVersionService`、`ReplanApplicationService`和 Solver Worker 使用共同准入结果，业务事务与状态仍由原 owner 负责。内部 receipt 不产生新的公共 API/Schema 或数据库表。

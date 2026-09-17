@@ -13,6 +13,8 @@ last_reviewed: 2026-09-16
 
 ## P9 准入安全复核
 
+P9-04 Runtime 人工入口在资源查询前复核 capability/source scope，Problem 与有效工厂 scope 只来自服务端 durable canonical ingress，当前 Runtime/Registry/Kit 必须逐字匹配。客户端无法绕过已配置 Extension；其拒绝/崩溃/超时以及 audit 故障均无部分成功。隔离 wheel 安装复用锁定第三方依赖和明确 synthetic 资产，仅证明 TEST/SIMULATION HTTP 行为；真实 provider、部署隔离、Production 与既有 OPEN 项不因本卡通过关闭。
+
 准入工厂只接受服务器持有的 Extension adapter、scope 和 Runtime identity provider；Registry/config/Kit 漂移、missing validator、崩溃/超时、非法报告、候选/事实变动均 fail closed。Core 和 Extension 接收分离副本，SDK 输入仍递归冻结；安全错误不输出任意 validator/identity callback 的原始异常信息。SDK 的受信同进程执行和预算限制保持原义，不新增沙箱或强制终止承诺。内部服务默认 Core-only 不构成关闭已配置 Extension 的外部开关。
 
 ## 公开工程发行的信任边界

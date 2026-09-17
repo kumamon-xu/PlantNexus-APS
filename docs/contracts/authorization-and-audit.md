@@ -11,6 +11,12 @@ last_reviewed: 2026-09-06
 
 # P3 Authorization Capability 与 Audit 合同
 
+## P9-04 Runtime 人工控制
+
+Workspace 的服务端 AuthorizationProvider 先解析 edit/lock/reject/approve 与版本资源 scope，Runtime façade 再验证 operation、command_type、source_id 和资源授权一致后才查询版本。客户端不能提供 actor、grant、Problem、Registry/Kit 或 executable selector。canonical ingress 的 scope 必须匹配当前服务端 Runtime policy；原 Runtime identity 漂移返回冲突。Workspace 资源授权沿用本合同，不把 Headless scope header 当授权证明。
+
+人工新版本、submit 状态 CAS 和业务 audit 复用原 owner 的原子事务；audit 写入失败回滚且不泄漏原始异常。exact replay 不重复业务版本或 audit；不同 fingerprint 的同 key 请求拒绝。Extension 只参与候选校验，不获得审批、发布或审计写权限。v2 人工/submit 显式拒绝，Production 继续 default-deny。
+
 ## TASK-P8-08 Headless host authorization adapter
 
 P8-08在不选择真实IdP/JWT/OIDC实现的前提下形成provider-neutral授权边界。HTTP层只把opaque Bearer在内存中交给可替换`HostIdentityProvider.verify`；Runtime重新以strict `verified-host-identity.v1`验证provider返回的pseudonymous subject、provider/issuer/audience、issued/expires UTC和assertion reference，防止测试或未来provider绕过合同。Raw bearer、provider claim、显示名、邮箱和credential不得进入canonical业务payload、application context、日志或durable audit。

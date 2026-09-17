@@ -15,6 +15,8 @@ last_reviewed: 2026-09-16
 
 ## 身份、范围与证据等级
 
+P9-04 当前进展（独立于下方 P9-01 冻结矩阵）：新增 executeScheduleVersionCommand、validateScheduleVersion、rejectScheduleVersion 正式委托；Workspace 共八项，连同 Headless 五项为十三项业务绑定、十九项业务未绑定，健康两项另计。人工/submit 仅 v1，v2 明确 422 MIXED_LINEAGE；完整 read envelope、export execution/download 和 dynamic replanning 仍待后续卡。证据是当前 wheel 安装后 HTTP→DB 重放，不改写 v0.1.0/Kit 旧 bytes 或 P9-01 的静态事实。
+
 核对基线为公开 v0.1.0 的 Runtime 0.1.0、Schema set 2.10.0、SDK 1.0.0；公开 Kit 1.0.1 嵌入选定 Runtime，既有离线包保持 Kit 1.0.0。它们分别版本化，不能合并成“最新版本”。本次读取已发布 Runtime 归档内 wheel，组合根、API 入口、Workspace adapter 与 Worker 源文件和开工源码文本一致；这是字节/源码核对，未重新安装或执行制品。具体不可变身份与摘要在本卡机器报告保存。
 
 状态口径：`BOUND` 是显式配置身份/scope/Runtime 后有正式委托；`UNBOUND` 是无正式委托，授权先通过也只能到 unavailable；`BOUND_JOB_ONLY` 不证明导出执行/文件下载；`BOUND_RAW_DOCUMENT` 不证明完整 workspace read envelope/allowed_actions。默认配置缺少身份/provider 时仍拒绝；所有支持声明限 TEST/SIMULATION。健康两项加业务十项有绑定，业务二十二项未绑定；34 项不是 34 项可用业务能力。`/openapi.json` 是内建合同入口，不计入这 34 项。

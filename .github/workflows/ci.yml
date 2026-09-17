@@ -697,6 +697,8 @@ jobs:
             "${replay_root}/backend/app/application/candidate_admission.py" \
             "${replay_root}/backend/tests/unit/test_p9_candidate_admission.py" \
             "${replay_root}/backend/tests/integration/test_p9_admission.py" \
+            "${replay_root}/backend/tests/integration/test_p9_manual.py" \
+            "${replay_root}/backend/tests/integration/test_p9_manual_installed.py" \
             "${replay_root}/backend/tests/integration/test_p5_portfolio_gate.py" \
             "${replay_root}/backend/tests/integration/test_p5_exit_gate.py" \
             "${replay_root}/schemas/json/duration-evaluation-report.schema.json" \

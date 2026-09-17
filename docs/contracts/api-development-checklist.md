@@ -13,7 +13,7 @@ last_reviewed: 2026-09-16
 
 ## v0.1.0 Runtime 覆盖与 P9 规划
 
-须分别核对默认 API 外壳、显式配置的 Runtime 与可安装制品。当前源码的 Runtime 已装配 5 项 Headless PlanningRun 操作，Workspace adapter 额外支持读版本、审批、发布、创建导出、读导出五类操作；manual/完整工作区与 dynamic replanning 的正式装配仍有缺口。`create_runtime_app` 尚未注入 dynamic replanning application，router/内部 owner 存在不能代替可达性证据。
+须分别核对默认 API 外壳、显式配置的 Runtime 与可安装制品。当前源码 Runtime 已装配 5 项 Headless PlanningRun 操作，P9-04 Workspace adapter 支持读版本、人工命令、校验提交、审批、驳回、发布、创建导出、读导出八类操作。人工和 submit 仅支持 v1，v2 明确拒绝；完整工作区与 dynamic replanning 的正式装配仍有缺口。`create_runtime_app` 尚未注入 dynamic replanning application，router/内部 owner 存在不能代替可达性证据。安装验证构建当前 wheel、在独立 interpreter 加载 app/SDK 并重放真实 HTTP→DB 合同；不代表重新发行既有 Runtime。
 
 下方部分“路由完成”描述针对默认外壳；不否认上述五项 Workspace 的显式 Runtime binding。P9 将先冻结 operation→owner→repository→Runtime→制品证据矩阵，再补人工调整/读模型/事件/异步重排并验证统一候选准入。路线见[SME 演进](../core/sme-generalization-roadmap.md)。本次只更新说明，不改 34 项 OpenAPI、wire contract 或能力状态。
 

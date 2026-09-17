@@ -13,6 +13,8 @@ last_reviewed: 2026-09-16
 
 ## P9 candidate admission edge
 
+P9-04 当前正式链路为 authorized HTTP command → source resource scope → durable canonical Problem/Runtime 复核 → 既有人工候选 owner → fresh Core/Extension admission → copy-on-write DRAFT + atomic audit → submit 再校验及 CAS READY_FOR_REVIEW → approve/reject → 既有 publish。已发布版本可产生新 DRAFT，原发布内容不变。该人工链限 v1；v2/replan 仍显式拒绝且不做降级。
+
 首次求解、人工修改/submit、动态重排均经过 `CandidateAdmissionService`：冻结输入身份 → fresh Core Validator → 适用独立 Extension Validation Rule → owner 再核对待写内容 → 原有原子写入。内部 receipt 绑定输入和报告，公共 Schema 不增加字段。首次求解保留 checkpoint/恢复顺序，重排保留额外 facts/lock/objective/ChangeReport precheck，人工修改保留 copy-on-write 与第二次 submit validation。
 
 准入不是事务、授权、求解或发布服务。失败不形成新的可评审版本；重排已持久化 intent 可以保留供原流程处理。P9-03 没有增加 HTTP operation，人工与重排的正式 Runtime binding 仍是后续工作。

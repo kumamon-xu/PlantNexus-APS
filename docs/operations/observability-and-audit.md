@@ -13,6 +13,8 @@ last_reviewed: 2026-09-16
 
 ## P9 准入证据边界
 
+P9-04 手工/submit/reject 沿用 command→source/new version→ValidationReport→AuditEvent 的可追溯引用，业务审计与版本/状态在同一事务提交，exact replay 不追加业务审计。安装重放记录当前 wheel SHA-256 和 app/SDK 安装来源断言；Provider backend JUnit properties 保留该 wheel 身份。没有新增持久化 Extension carrier，也不将构建的 wheel 当已发行 Runtime。
+
 共同准入的内部 immutable receipt 绑定 Problem/candidate/binding fingerprint 与 Core report bytes；它用于 owner 写入前复核，不新增公共 carrier 或 durable Extension audit。持久化 Version/Worker/Replan 继续保存既有 Core ValidationReport references 与业务审计；Extension 继续使用原有 payload-free invocation metrics（lifecycle、contribution、输入/输出 fingerprint、成功/失败/timeout）。不能把内存 receipt 或 metrics 描述为新增持久化 Extension 报告，也不能把 SDK 调用成功解释为审批发布成功。
 
 ## P8-26 Shell 运维观测

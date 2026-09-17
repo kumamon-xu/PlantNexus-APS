@@ -13,7 +13,7 @@ last_reviewed: 2026-09-16
 
 ## P9-06 Runtime event composition
 
-`application.runtime_dynamic_replanning` 只消费事件/快照 ports、服务器绑定与原 `ExecutionFactProjectionService`；API router 和 domain projector 不增加基础设施/求解依赖。唯一组合根负责 SQLAlchemy adapters、配置预检与 canonical urgent resolver。Projection service 的可选 trusted resolver 只允许组合根从 durable canonical ingress 重建输入，旧 Normalization owner 保持兼容；不向 HTTP 暴露 Snapshot 注入。原 Snapshot/checkpoint/audit transaction 与 CAS 仍由原 service 拥有。
+`application.runtime_dynamic_replanning` 只消费事件/快照 ports、服务器绑定与原 `ExecutionFactProjectionService`；API router 和 domain projector 不增加基础设施/求解依赖。唯一组合根负责 SQLAlchemy adapters、配置预检与 canonical urgent resolver。Runtime 专用 projection subclass 只覆盖 urgent 来源解析，组合根从 durable canonical ingress 重建输入，原 service 与 Normalization owner 字节保持兼容；不向 HTTP 暴露 Snapshot 注入。原 Snapshot/checkpoint/audit transaction 与 CAS 仍由原 service 拥有。
 
 ## P9-05 读与导出组合边界
 

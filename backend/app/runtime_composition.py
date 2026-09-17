@@ -16,6 +16,7 @@ from celery import Celery
 from app import APPLICATION_VERSION, CORE_VERSION, RUNTIME_VERSION
 from app.application.runtime_dynamic_replanning import (
     RuntimeDynamicReplanningApplication,
+    RuntimeExecutionFactProjectionService,
     RuntimeEventError,
     event_bindings,
 )
@@ -785,6 +786,7 @@ def compose_runtime(
 
         def event_service(
             event_binding: dict[str, Any],
+            key_reference: str | None,
         ) -> ExecutionFactProjectionService:
             def checkpoint_factory(**values: Any) -> Any:
                 fact = ArtifactReference(
@@ -795,6 +797,25 @@ def compose_runtime(
                 return ProjectionCheckpoint(**values, fact_checkpoint=fact)
 
             def audit_factory(**values: Any) -> Any:
+                if (
+                    values["action"] == "EXECUTION_EVENT_APPENDED"
+                    and key_reference is not None
+                ):
+                    values["idempotency_scope"] = (
+                        "SIMULATION/EXECUTION_EVENT_APPEND/"
+                        + "/".join(
+                            event_binding[k]
+                            for k in (
+                                "factory_id",
+                                "planning_scope_id",
+                                "authority_id",
+                                "stream_id",
+                                "stream_version",
+                            )
+                        )
+                        + "/HTTP"
+                    )
+                    values["idempotency_key_reference"] = key_reference
                 values["action"] = ReplanAuditAction(values["action"])
                 return build_replan_audit_record(**values)
 
@@ -815,7 +836,7 @@ def compose_runtime(
                     cutoff_at_utc=cutoff,
                 )
 
-            return ExecutionFactProjectionService(
+            return RuntimeExecutionFactProjectionService(
                 transaction_factory=database.engine.begin,
                 scope=ProjectionScope(
                     **{
@@ -840,7 +861,7 @@ def compose_runtime(
                     SQLAlchemyError,
                     SnapshotError,
                 ),
-                urgent_snapshot_resolver=urgent_snapshot,
+                urgent_resolver=urgent_snapshot,
             )
 
         dynamic_application = RuntimeDynamicReplanningApplication(

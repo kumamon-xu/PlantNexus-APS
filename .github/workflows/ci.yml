@@ -887,7 +887,6 @@ jobs:
             -- \
             backend/app/__init__.py \
             backend/app/api/app.py \
-            backend/app/application/execution_fact_projection.py \
             backend/app/application/export_jobs.py \
             backend/app/domain/workspace.py \
             backend/app/jobs/export_job.py \

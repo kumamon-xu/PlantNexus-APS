@@ -239,15 +239,12 @@ class ExecutionFactProjectionService:
         audit_factory: AuditFactory,
         persistence_error_types: tuple[type[Exception], ...],
         unit_registry: UnitConversionRegistry | None = None,
-        urgent_snapshot_resolver: Callable[[str, str], ImmutablePlanningSnapshot]
-        | None = None,
     ) -> None:
         if not persistence_error_types:
             raise ValueError("persistence_error_types cannot be empty")
         self._transaction_factory = transaction_factory
         self._scope = scope
         self._unit_registry = unit_registry
-        self._urgent_snapshot_resolver = urgent_snapshot_resolver
         self._events = events
         self._checkpoints = checkpoints
         self._audits = audits
@@ -261,10 +258,7 @@ class ExecutionFactProjectionService:
         return self._scope
 
     def ingest_event(
-        self,
-        document: Mapping[str, object],
-        *,
-        idempotency_key_reference: str | None = None,
+        self, document: Mapping[str, object]
     ) -> ExecutionEventIngressResult:
         """Atomically append one exact ledger event and its durable disposition."""
 
@@ -278,14 +272,9 @@ class ExecutionFactProjectionService:
             correlation_id=cast(str, document["correlation_id"]),
             idempotency_scope=(
                 "SIMULATION/EXECUTION_EVENT_APPEND/"
-                f"{self._scope.factory_id}/{self._scope.planning_scope_id}/"
-                + (
-                    event_id
-                    if idempotency_key_reference is None
-                    else f"{self._scope.authority_id}/{self._scope.stream_id}/{self._scope.stream_version}/HTTP"
-                )
+                f"{self._scope.factory_id}/{self._scope.planning_scope_id}/{event_id}"
             ),
-            idempotency_key_reference=idempotency_key_reference or fingerprint,
+            idempotency_key_reference=fingerprint,
             request_fingerprint=fingerprint,
             occurred_at_utc=cast(str, document["received_at_utc"]),
         )
@@ -476,17 +465,6 @@ class ExecutionFactProjectionService:
                 continue
             event_id = cast(str, event["event_id"])
             urgent = urgent_imports.get(event_id)
-            if urgent is None and self._urgent_snapshot_resolver is not None:
-                resolved = self._urgent_snapshot_resolver(event_id, current_cutoff)
-                verify_snapshot(resolved)
-                if resolved.data_plane is not SnapshotDataPlane.SIMULATION:
-                    raise _projection_error(
-                        ProjectionFailure.AUTHORITY_MISMATCH,
-                        field="urgent_import.data_plane",
-                        message="Simulation required",
-                    )
-                result[event_id] = resolved.document
-                continue
             if urgent is None or urgent.event_id != event_id:
                 raise _projection_error(
                     ProjectionFailure.URGENT_IMPORT_REQUIRED,

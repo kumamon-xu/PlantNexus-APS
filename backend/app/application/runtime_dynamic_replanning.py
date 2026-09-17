@@ -19,12 +19,57 @@ from app.domain.execution_fact_projection import (
     validate_execution_event,
 )
 from app.data_validation.canonical_ingress import canonical_fingerprint
+from app.importers.urgent_demand import UrgentDemandImport
+from app.snapshots import ImmutablePlanningSnapshot, SnapshotDataPlane, verify_snapshot
 
 
 class RuntimeEventError(RuntimeError):
     def __init__(self, reason: str, field: str) -> None:
         self.reason, self.field = reason, field
         super().__init__(f"{reason}: {field}")
+
+
+class RuntimeExecutionFactProjectionService(ExecutionFactProjectionService):
+    """Adapt canonical urgent sources without changing the frozen P4 owner.
+
+    Only source resolution differs. The inherited transaction still performs
+    all fact/domain validation, immutable writes and checkpoint CAS.
+    """
+
+    def __init__(
+        self,
+        *,
+        urgent_resolver: Callable[[str, str], ImmutablePlanningSnapshot],
+        **ports: Any,
+    ) -> None:
+        super().__init__(**ports)
+        self._urgent_resolver = urgent_resolver
+
+    def _urgent_snapshots(
+        self,
+        full_prefix: tuple[dict[str, object], ...],
+        *,
+        after_position: int,
+        base_snapshot: ImmutablePlanningSnapshot,
+        urgent_imports: Mapping[str, UrgentDemandImport],
+    ) -> dict[str, Mapping[str, object]]:
+        if urgent_imports:
+            raise RuntimeEventError("INVALID_INPUT", "urgent_imports")
+        result: dict[str, Mapping[str, object]] = {}
+        cutoff = str(base_snapshot.document["cutoff_at_utc"])
+        for event in full_prefix[after_position:]:
+            cutoff = max(cutoff, str(event["occurred_at_utc"]))
+            if event["event_type"] != "URGENT_DEMAND_RECEIVED":
+                continue
+            event_id = str(event["event_id"])
+            snapshot = self._urgent_resolver(event_id, cutoff)
+            verify_snapshot(snapshot)
+            if snapshot.data_plane is not SnapshotDataPlane.SIMULATION:
+                raise RuntimeEventError(
+                    "AUTHORIZATION_DENIED", "urgent_import.data_plane"
+                )
+            result[event_id] = snapshot.document
+        return result
 
 
 def event_bindings(document: Mapping[str, Any] | None) -> tuple[dict[str, Any], ...]:
@@ -129,7 +174,7 @@ class RuntimeDynamicReplanningApplication:
         checkpoints: Any,
         snapshots: Any,
         source: Callable[[dict[str, Any], str], Any],
-        service: Callable[[dict[str, Any]], ExecutionFactProjectionService],
+        service: Callable[[dict[str, Any], str | None], ExecutionFactProjectionService],
     ) -> None:
         self._bindings = {v["planning_scope_id"]: v for v in bindings}
         self._environment = environment
@@ -233,9 +278,7 @@ class RuntimeDynamicReplanningApplication:
                 or not key.startswith("sha256:")
             ):
                 raise RuntimeEventError("INVALID_REQUEST", "idempotency_key_reference")
-            outcome = self._service(binding).ingest_event(
-                document, idempotency_key_reference=key
-            )
+            outcome = self._service(binding, key).ingest_event(document)
             replayed = outcome.replayed
             result = {
                 **asdict(outcome),
@@ -365,4 +408,4 @@ class RuntimeDynamicReplanningApplication:
             **{k: binding[k] for k in ("authority_id", "stream_id", "stream_version")}
         ):
             self._validate(event, binding)
-        return self._service(binding).project_available(base)
+        return self._service(binding, None).project_available(base)

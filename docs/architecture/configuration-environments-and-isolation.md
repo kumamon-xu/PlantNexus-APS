@@ -11,6 +11,14 @@ last_reviewed: 2026-09-16
 
 # 配置、环境与数据隔离
 
+## P9-06 事件来源配置
+
+新增可选 `PLANTNEXUS_RUNTIME_EVENT_BINDINGS_PATH`，默认无 authority，三个事件 operation fail closed。文件只在启动时读取，沿用 regular-file、symlink、大小与 strict JSON 预检；不能通过请求覆盖。根字段为 `version=runtime-event-bindings.v1` 和非空 `bindings` 数组。
+
+每项精确字段：`tenant_id/factory_id/planning_scope_id/authority_id/stream_id/stream_version/base_planning_run_id/actor_refs/event_types/authority_source/urgent_import_runs`。`authority_source` 精确包含 `source_system/source_version/source_record_id`；`urgent_import_runs` 为 event ID → 已验证 canonical ingress PlanningRun ID 的映射，未使用时显式空对象。actor/type 列表不接受 wildcard，未知 type、重复 scope/stream、未在 Runtime HTTP policy 注册的 tenant/factory/scope 在启动时拒绝。一个 planning scope 只绑定一个 authority stream。
+
+先通过 canonical ingress 建立基线，再配置该 run 和已批准 Simulation event 来源并重启 API/Worker。配置内容摘要进入 composition fingerprint，仅显式非空配置增加 descriptor 字段；不回显路径或 actor 列表。投影为 Runtime Python port 的显式调用，尚无新 HTTP/Celery 自动触发。修改配置须受部署治理控制，不提供在线热加载、source epoch 自动替换或 Production 绑定。
+
 ## P9-05 导出配置
 
 新增可选 PLANTNEXUS_RUNTIME_EXPORT_STORAGE_ROOT 与 PLANTNEXUS_RUNTIME_EXPORT_SCENARIO_DIRECTORY，均为服务端显式本地路径。前者须已存在并在 API/Worker 间共享、可写；后者须由资产 owner 挂载为只读，按 Problem hash 提供原始仿真来源清单。默认不配置时保留既有 Job-only 行为，retry/cancel/download unavailable；不得接受请求覆盖路径。配置不进入 safe manifest 的路径或 secret 输出。只验证 TEST/SIMULATION，未改旧 Compose/Kit、迁移、依赖或 Production 配置。

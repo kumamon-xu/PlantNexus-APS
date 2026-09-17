@@ -11,6 +11,18 @@ last_reviewed: 2026-08-31
 
 # ExecutionEvent 与 ReplanRequest 合同
 
+## P9-06 Runtime consumer
+
+正式 `create_runtime_app` 装配 append/get/list 三个既有 operation，来源须同时通过 server principal/capability/scope 与显式 `runtime-event-bindings.v1` 的 actor、tenant/factory/planning scope、authority/source/stream/version/type 白名单。请求自报 authority 不是授权。缺绑定为 unavailable，Production 不开放。
+
+HTTP append 只提交 ledger 与 durable hashed-key audit；同 key 不同 event 为冲突并回滚，exact replay 保留原 bytes。列表按 source_position 和 fingerprinted window 返回既有 `execution-event-timeline.v1`，cursor 绑定窗口、页大小及来源内容；缺口显式拒绝连续 timeline，单事件仍可查询接收事实。收到 gap event 可以形成 ledger，但不能推进事实 checkpoint。
+
+独立 Runtime Python port `composition.dynamic_replanning_application.project(context=..., planning_scope_id=..., expected_snapshot_id=..., expected_snapshot_hash=...)` 显式提交事实投影，不是新增 HTTP endpoint、自动求解或消息任务。基线来自配置的 `base_planning_run_id` 对应 durable canonical ingress；其后只接受该根的 immutable predecessor lineage，并交给原投影服务执行连续 prefix 与 checkpoint CAS。失败可保留先前接收的 ledger，不留下半个 Snapshot/checkpoint/audit。重启以相同显式输入重放。
+
+急单 `urgent_import_runs` 把 exact event ID 绑定到已成功 canonical ingress 的 PlanningRun ID；完整 package/quality/expansion 由原 owner 在 event cutoff 重建，原 projector 再验证只新增目标 demand/order/lot、来源一致且不覆盖既有事实。未绑定、私有 Snapshot、同 ID 不同内容和跨 scope 均拒绝。保留旧 Raw Staging 测试 owner，不将其开放为产品输入。
+
+11 种既有事件语义、公共 Schema/URN/hash/状态和数据库迁移不变。输出的 immutable Snapshot 已验证可由原 Problem builder 确定性生成新 Problem lineage；新 ReplanRequest、异步 attempt/Problem 持久化与求解归 P9-07，不在事件接收中执行。
+
 ## TASK-P4-13 display/action consumer
 
 工作台按服务端`source_position`原序显示ExecutionEvent并同时保留`event_type`、raw UTC、entity/payload和fingerprint；client只验证位置连续及projection绑定，不排序、推导fact或修改event。五类browser scenario由六个明确Simulation event覆盖Machine Failure/Recovery的两个事实边界，不能外推为Production事件分布。

@@ -11,6 +11,10 @@ last_reviewed: 2026-09-16
 
 # P9 Runtime 能力、准入与验收基线
 
+## P9-06 当前实现增量
+
+相对下方 P9-01 冻结矩阵，appendExecutionEvent/getExecutionEvent/listExecutionEvents 已由显式 Runtime authority 配置绑定；安装 wheel 验证 HTTP ledger/query 与独立 Runtime projection port、11 种既有事件、scope、replay/conflict/gap/CAS/rollback/restart。配置和使用方式见[事件合同](execution-events-and-replan-request.md#p9-06-runtime-consumer)。无新 HTTP operation；P9-07 的六个重排/ChangeReport operation 仍 unavailable，Production 与发行未开放。任务级 exact Provider 与最终状态归 TASK-P9-06 completion manifest。
+
 ## P9-05 当前实现增量
 
 相对 P9-01 冻结矩阵，本卡新增 getWorkspaceDataHealth/listWorkspaceImportRuns/listWorkspacePlanningRuns/getPlanningRun/queryScheduleVersionWorkspace/compareScheduleVersions/listScheduleVersionAuditEvents 读 binding，并在显式共享 store 配置下新增 retryExportJob/cancelExportJob/downloadExportPackage 和 export execution。Workspace 的 15 个内部 operation 分派已接通；HTTP operation 数与内部 enum 不混用。下方冻结矩阵不改写历史。

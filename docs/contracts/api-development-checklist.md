@@ -11,9 +11,13 @@ last_reviewed: 2026-09-16
 
 # API 接口开发清单
 
+## P9-06 当前 Runtime 增量
+
+三个事件 operation 已接入显式配置的 Runtime event authority：append 仅接收，get/list 查询持久化事件，独立 Python projection port 产生新 Snapshot/checkpoint。HTTP operation 与 wire schema 保持原版；P9-07 六个重排/ChangeReport operation 仍未绑定。配置、幂等和投影事务边界见[事件合同](execution-events-and-replan-request.md#p9-06-runtime-consumer)。下方旧版本覆盖描述属于对应阶段历史；当前逐阶段增量以[能力基线](runtime-capability-baseline.md)为准。
+
 ## v0.1.0 Runtime 覆盖与 P9 规划
 
-须分别核对默认 API 外壳、显式配置的 Runtime 与可安装制品。当前源码 Runtime 已装配 5 项 Headless PlanningRun 操作，P9-04 Workspace adapter 支持读版本、人工命令、校验提交、审批、驳回、发布、创建导出、读导出八类操作。人工和 submit 仅支持 v1，v2 明确拒绝；完整工作区与 dynamic replanning 的正式装配仍有缺口。`create_runtime_app` 尚未注入 dynamic replanning application，router/内部 owner 存在不能代替可达性证据。安装验证构建当前 wheel、在独立 interpreter 加载 app/SDK 并重放真实 HTTP→DB 合同；不代表重新发行既有 Runtime。
+须分别核对默认 API 外壳、显式配置的 Runtime 与可安装制品。当前源码 Runtime 已装配 5 项 Headless PlanningRun 操作，P9-04 Workspace adapter 支持读版本、人工命令、校验提交、审批、驳回、发布、创建导出、读导出八类操作。人工和 submit 仅支持 v1，v2 明确拒绝；完整工作区与 dynamic replanning 的正式装配仍有缺口。P9-06 之前的 `create_runtime_app` 尚未注入 dynamic replanning application，router/内部 owner 存在不能代替可达性证据。安装验证构建当前 wheel、在独立 interpreter 加载 app/SDK 并重放真实 HTTP→DB 合同；不代表重新发行既有 Runtime。
 
 下方部分“路由完成”描述针对默认外壳；不否认上述五项 Workspace 的显式 Runtime binding。P9 将先冻结 operation→owner→repository→Runtime→制品证据矩阵，再补人工调整/读模型/事件/异步重排并验证统一候选准入。路线见[SME 演进](../core/sme-generalization-roadmap.md)。本次只更新说明，不改 34 项 OpenAPI、wire contract 或能力状态。
 
@@ -93,9 +97,9 @@ Create的tenant/factory/planning scope来自machine carrier的`requested_scope`�
 
 | Method | Path | Operation ID | 用途 | 成功响应 | 状态 |
 |---|---|---|---|---:|---|
-| `POST` | `/api/v1/execution-events` | `appendExecutionEvent` | 追加版本化 ExecutionEvent | 202 | 路由完成，需运行时适配器 |
-| `GET` | `/api/v1/execution-events` | `listExecutionEvents` | 按 authority/stream/position 查询事件流 | 200 | 路由完成，需运行时适配器 |
-| `GET` | `/api/v1/execution-events/{event_id}` | `getExecutionEvent` | 查询单个执行事件 | 200 | 路由完成，需运行时适配器 |
+| `POST` | `/api/v1/execution-events` | `appendExecutionEvent` | 追加版本化 ExecutionEvent | 202 | 显式 Simulation authority 配置后 Runtime 已绑定 |
+| `GET` | `/api/v1/execution-events` | `listExecutionEvents` | 按 authority/stream/position 查询事件流 | 200 | 显式 Simulation authority 配置后 Runtime 已绑定 |
+| `GET` | `/api/v1/execution-events/{event_id}` | `getExecutionEvent` | 查询单个执行事件 | 200 | 显式 Simulation authority 配置后 Runtime 已绑定 |
 | `POST` | `/api/v1/replan-requests` | `createReplanRequest` | 创建不可变 ReplanRequest 与求解 attempt | 202 | 路由完成，需运行时适配器 |
 | `GET` | `/api/v1/replan-requests/{request_id}` | `getReplanRequest` | 查询请求与当前 attempt | 200 | 路由完成，需运行时适配器 |
 | `POST` | `/api/v1/replan-requests/{request_id}/cancel` | `cancelReplanRequest` | 以 expected attempt state 请求取消 | 202 | 路由完成，需运行时适配器 |

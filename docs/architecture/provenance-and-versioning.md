@@ -11,6 +11,10 @@ last_reviewed: 2026-09-08
 
 # Provenance 与版本规则
 
+## P9-06 Runtime event lineage
+
+事件 Runtime 配置的 canonical fingerprint 纳入 composition identity；配置绑定 canonical ingress root 的 run，投影调用必须提供 exact Snapshot ID/hash 并追溯至该根。新 Snapshot 沿用原 projector version、predecessor hash、authority 与完整 source-position prefix；旧数据字节不变。急单来自同 scope 的已验证 canonical ingress，不能拿另一来源 Snapshot 充当标准输入。事件收到、投影提交、Problem 构建和重排求解保持不同证据阶段。
+
 ## TASK-P8-15 Developer Kit release lineage
 
 Developer Kit `1.0.0`形成独立content identity：release manifest绑定exact code commit、Runtime `0.1.0` archive SHA-256/release fingerprint、SDK `1.0.0` wheel、Tooling `1.0.0` wheel、Template `1.0.0` archive、Alpha/Beta synthetic Extension wheel、compatibility matrix、Kit lock、Core source hash inventory、tool dependency hash lock、文档、support/signing policy、CycloneDX SBOM与license report。每个payload具有大小和SHA-256，checksum覆盖manifest与全部payload，外层ZIP再以SHA-256进入append-only registry；相同输入双构建必须产生逐字相同bytes。

@@ -11,6 +11,10 @@ last_reviewed: 2026-09-16
 
 # 模块边界与依赖规则
 
+## P9-06 Runtime event composition
+
+`application.runtime_dynamic_replanning` 只消费事件/快照 ports、服务器绑定与原 `ExecutionFactProjectionService`；API router 和 domain projector 不增加基础设施/求解依赖。唯一组合根负责 SQLAlchemy adapters、配置预检与 canonical urgent resolver。Projection service 的可选 trusted resolver 只允许组合根从 durable canonical ingress 重建输入，旧 Normalization owner 保持兼容；不向 HTTP 暴露 Snapshot 注入。原 Snapshot/checkpoint/audit transaction 与 CAS 仍由原 service 拥有。
+
 ## P9-05 读与导出组合边界
 
 RuntimeWorkspaceReads 编排 query/comparison owner 与只读 durable ingress/Worker/Version ports；Domain 继续拥有投影与 cursor 校验。RuntimeExports 是独立 Worker/消息及文件适配层，ExportJobService 仍拥有事务、CAS、lease 和审计；组合根将 application download result 适配到 HTTP binary carrier，router 不导入 application/domain。没有 API Solver 调用、前端 KPI 重算或新持久化表。资源负荷读端按实际 UTC 占用秒数对齐既有 tick-rounded KPI，不改原始工时或 KPI 公式。

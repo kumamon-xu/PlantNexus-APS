@@ -11,6 +11,10 @@ last_reviewed: 2026-09-10
 
 # 错误与求解状态模型
 
+## P9-06 事件 Runtime 错误
+
+authority/actor/scope 拒绝保持 403，来源或事件缺失为 404，idempotency/position/fact 冲突为 409，严格输入与 lineage 为 422，持久化/完整性为 500，未配置 authority 或未绑定重排 operation 为 503。应用适配将内部 projection reason 映射到既有公开错误命名空间；原始 SQL、路径和异常不回传。gap 可接收但不能成功投影；投影异常保留原 reason 与失败事实，不称 Solver INFEASIBLE。
+
 ## P9-05 Runtime 读与导出错误
 
 来源缺失/错 lineage/KPI、未知版本保持既有 SOURCE_MISSING/MIXED_LINEAGE/KPI_MISMATCH 映射；state/content/cursor 过期为冲突，未授权仍先拒绝。仿真 manifest 缺失或不匹配不能生成新 Job。broker 或物化失败保存 sanitized EXPORT_FAILED，retired lease 旧消息仅返回 STALE_DELIVERY，重复 claim 不重复执行，过期投递先退休 attempt。下载损坏包为失败，不输出成员内容、绝对路径或原始异常。没有新增全局错误码。

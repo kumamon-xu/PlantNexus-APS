@@ -11,6 +11,10 @@ last_reviewed: 2026-09-16
 
 # 端到端计划链路
 
+## P9-06 事件与事实链路
+
+已配置 Simulation authority + server principal → strict ExecutionEvent → ledger/hashed-key audit；独立 Runtime project port → configured canonical ingress root/predecessor → 连续事件 prefix → 既有 projector → atomic new Snapshot/checkpoint/audit。Urgent event 只引用已验证 canonical ingress 的完整新增订单来源；Snapshot 可确定性进入既有 Problem builder，新重排 attempt 留给 P9-07。HTTP 不同步投影或求解，旧 Snapshot/Problem/Version 不改写。
+
 ## P9-05 读取和成果链路
 
 服务器授权 → durable ingress/历史 exact Worker source → Workspace query/comparison → strict carrier 与投影；published v1 + 同源 Solution/KPI/Validation + 显式仿真清单 → ExportJob/audit → 独立 JSON Worker → manifest-last package → authorized verified download。来源不匹配的人工结果与 v2 不降级、不补造，真实生产与动态重排入口不因这条链路可用。

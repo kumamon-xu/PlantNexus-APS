@@ -699,6 +699,9 @@ jobs:
             "${replay_root}/backend/tests/integration/test_p9_admission.py" \
             "${replay_root}/backend/tests/integration/test_p9_manual.py" \
             "${replay_root}/backend/tests/integration/test_p9_manual_installed.py" \
+            "${replay_root}/backend/app/application/runtime_dynamic_replanning.py" \
+            "${replay_root}/backend/tests/integration/test_p9_events.py" \
+            "${replay_root}/backend/tests/integration/test_p9_events_installed.py" \
             "${replay_root}/backend/app/application/runtime_workspace_reads.py" \
             "${replay_root}/backend/app/jobs/runtime_export_task.py" \
             "${replay_root}/backend/tests/integration/test_p9_readmodel.py" \
@@ -884,6 +887,7 @@ jobs:
             -- \
             backend/app/__init__.py \
             backend/app/api/app.py \
+            backend/app/application/execution_fact_projection.py \
             backend/app/application/export_jobs.py \
             backend/app/domain/workspace.py \
             backend/app/jobs/export_job.py \

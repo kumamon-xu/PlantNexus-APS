@@ -69,6 +69,7 @@ class Settings(BaseSettings):
     runtime_planning_policy_path: Path | None = None
     runtime_solve_limits_path: Path | None = None
     runtime_http_policy_path: Path | None = None
+    runtime_event_bindings_path: Path | None = None
     runtime_export_storage_root: Path | None = None
     runtime_export_scenario_directory: Path | None = None
     runtime_artifact_fingerprint: str | None = None

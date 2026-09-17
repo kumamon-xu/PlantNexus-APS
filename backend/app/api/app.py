@@ -321,6 +321,7 @@ def create_runtime_app(
         resolved,
         probes=composition.probes,
         planning_workspace_application=composition.planning_workspace_application,
+        dynamic_replanning_application=composition.dynamic_replanning_application,
         authorization_provider=authorization_provider,
         authorization_audit_sink=authorization_audit_sink,
         runtime_application=composition.application,

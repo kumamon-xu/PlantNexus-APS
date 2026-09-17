@@ -11,6 +11,10 @@ last_reviewed: 2026-09-04
 
 # PlanningSnapshot 合同
 
+## P9-06 Runtime projection
+
+正式 Runtime 现在可从已授权事件 ledger 投影 new Snapshot，基线由显式配置的 canonical ingress run 绑定；调用方只能提交 expected Snapshot ID/hash，不能传入私有 document。投影失败回滚 Snapshot/checkpoint/audit，原 ledger 接收记录保留。旧 Snapshot/Problem 不变，Schema/hash projection 不变；安装 Runtime 验证同时覆盖新 Snapshot 到原 Problem builder 的确定性 lineage，未新增 Problem HTTP endpoint。
+
 ## TASK-P8-03 durable canonical ingress consumer
 
 P8 application只在strict canonical request、server-derived scope/authority、exact idempotency和既有Data Validation获得PASS后调用原`Order Expansion → build_planning_snapshot → build_planning_problem_v2`链。Snapshot v2的Schema、canonicalization、hash projection、content-derived ID和既有`0003_planning_snapshots`字节均未修改；Runtime内部build plan只提供显式cutoff/horizon/tick/priority facts，不能回写canonical事实。

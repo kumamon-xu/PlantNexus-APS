@@ -14,6 +14,31 @@ from typing import TYPE_CHECKING, Any, NoReturn, cast
 from celery import Celery
 
 from app import APPLICATION_VERSION, CORE_VERSION, RUNTIME_VERSION
+from app.application.runtime_dynamic_replanning import (
+    RuntimeDynamicReplanningApplication,
+    RuntimeEventError,
+    event_bindings,
+)
+from app.application.execution_fact_projection import ExecutionFactProjectionService
+from app.domain.execution_fact_projection import ProjectionScope
+from app.infrastructure.execution_event_repository import (
+    SqlAlchemyExecutionEventRepository,
+)
+from app.infrastructure.replan_repository import (
+    SqlAlchemyProjectionCheckpointRepository,
+    SqlAlchemyReplanAuditRepository,
+)
+from app.infrastructure.replan_persistence import (
+    ProjectionCheckpoint,
+    ArtifactReference,
+    ReplanAuditAction,
+    build_replan_audit_record,
+)
+from app.infrastructure.snapshot_repository import SqlAlchemySnapshotRepository
+from app.infrastructure.workspace_persistence import WorkspacePersistenceError
+from app.snapshots import SnapshotDataPlane, SnapshotError, build_planning_snapshot
+from app.normalization import expand_orders
+from sqlalchemy.exc import SQLAlchemyError
 from app.application.approval import ApprovalDecisionService
 from app.application.canonical_ingress import CanonicalIngressApplicationService
 from app.application.export_jobs import ExportJobService
@@ -225,6 +250,7 @@ class RuntimeComposition:
     database: DatabaseClient
     redis: RedisClient | None
     export_worker: RuntimeExports | None = None
+    dynamic_replanning_application: RuntimeDynamicReplanningApplication | None = None
 
     @property
     def probes(self) -> Mapping[str, Callable[[], None]]:
@@ -354,6 +380,7 @@ def _descriptor(
     catalog: FrozenPlanningArtifactCatalog,
     extension_adapter: EmptyRuntimeExtensionAdapter | LoadedRuntimeExtensionAdapter,
     http_policy: RuntimeHttpPolicyCatalog,
+    configured_events: tuple[dict[str, Any], ...] = (),
 ) -> RuntimeCompositionDescriptor:
     plane = _workspace_plane(settings).value
     environment = _runtime_environment(settings)
@@ -458,6 +485,12 @@ def _descriptor(
         },
         "production_authority": "UNAVAILABLE_EXPLICIT_PROVIDER_REQUIRED",
     }
+    if configured_events:
+        base["execution_event_authority"] = {
+            "configuration_version": "runtime-event-bindings.v1",
+            "configuration_fingerprint": canonical_fingerprint(configured_events),
+            "scope_count": len(configured_events),
+        }
     document = {**base, "composition_fingerprint": canonical_fingerprint(base)}
     return RuntimeCompositionDescriptor(canonical_bytes=canonical_json_bytes(document))
 
@@ -589,12 +622,35 @@ def compose_runtime(
             field="runtime_http_policy",
             message="Runtime HTTP context policy is incompatible",
         ) from error
+    try:
+        configured_events = event_bindings(
+            _configured_document(
+                settings.runtime_event_bindings_path,
+                field="runtime_event_bindings_path",
+            )
+            if settings.runtime_event_bindings_path is not None
+            else None
+        )
+        for event_binding in configured_events:
+            http_policy.extension_facts_for(
+                **{
+                    key: event_binding[key]
+                    for key in ("tenant_id", "factory_id", "planning_scope_id")
+                }
+            )
+    except (KeyError, ValueError) as error:
+        raise RuntimeCompositionError(
+            "CONFIGURATION_INVALID",
+            field="runtime_event_bindings",
+            message="Event authority configuration is invalid",
+        ) from error
     descriptor = _descriptor(
         settings=settings,
         contract=contract,
         catalog=catalog,
         extension_adapter=extension_adapter,
         http_policy=http_policy,
+        configured_events=configured_events,
     )
     extension_product_executor = RuntimeExtensionProductExecutor(
         adapter=extension_adapter,
@@ -694,6 +750,107 @@ def compose_runtime(
         http_context_adapter = RuntimeHttpContextAdapter(
             binding=binding,
             policy=http_policy,
+        )
+        event_repository = SqlAlchemyExecutionEventRepository(
+            database.engine, data_plane=plane
+        )
+        event_checkpoints = SqlAlchemyProjectionCheckpointRepository(
+            database.engine, data_plane=plane
+        )
+        event_audits = SqlAlchemyReplanAuditRepository(
+            database.engine, data_plane=plane
+        )
+        event_snapshots = SqlAlchemySnapshotRepository(
+            database.engine, data_plane=SnapshotDataPlane.SIMULATION
+        )
+
+        def event_source(event_binding: dict[str, Any], run_id: str) -> Any:
+            record = ingress_repository.get_by_planning_run_id(run_id)
+            if record is None:
+                raise RuntimeEventError("NOT_FOUND", "canonical_ingress")
+            expected_scope = {
+                key: event_binding[key]
+                for key in ("tenant_id", "factory_id", "planning_scope_id")
+            }
+            actual = record.document["effective_scope"]
+            if (
+                any(actual.get(k) != v for k, v in expected_scope.items())
+                or actual["environment"] != environment
+            ):
+                raise RuntimeEventError(
+                    "AUTHORIZATION_DENIED", "canonical_ingress.scope"
+                )
+            http_policy.extension_facts_for(**expected_scope)
+            return record
+
+        def event_service(
+            event_binding: dict[str, Any],
+        ) -> ExecutionFactProjectionService:
+            def checkpoint_factory(**values: Any) -> Any:
+                fact = ArtifactReference(
+                    document_version=values.pop("fact_document_version"),
+                    artifact_id=values.pop("fact_artifact_id"),
+                    fingerprint=values.pop("fact_fingerprint"),
+                )
+                return ProjectionCheckpoint(**values, fact_checkpoint=fact)
+
+            def audit_factory(**values: Any) -> Any:
+                values["action"] = ReplanAuditAction(values["action"])
+                return build_replan_audit_record(**values)
+
+            def urgent_snapshot(event_id: str, cutoff: str) -> Any:
+                run_id = event_binding["urgent_import_runs"].get(event_id)
+                if run_id is None:
+                    raise RuntimeEventError("INVALID_REFERENCE", "urgent_import_runs")
+                record = event_source(event_binding, run_id)
+                payload = record.document["canonical_request"]["payload"]
+                quality = record.document["import_quality_report"]
+                # Durable canonical ingress has already validated the complete
+                # package; rebuild through the same expansion/Snapshot owner at
+                # the explicit event cutoff, never accept a private Snapshot.
+                return build_planning_snapshot(
+                    payload,
+                    quality,
+                    expand_orders(payload, quality),
+                    cutoff_at_utc=cutoff,
+                )
+
+            return ExecutionFactProjectionService(
+                transaction_factory=database.engine.begin,
+                scope=ProjectionScope(
+                    **{
+                        k: event_binding[k]
+                        for k in (
+                            "factory_id",
+                            "planning_scope_id",
+                            "authority_id",
+                            "stream_id",
+                            "stream_version",
+                        )
+                    }
+                ),
+                events=cast(Any, event_repository),
+                checkpoints=cast(Any, event_checkpoints),
+                audits=cast(Any, event_audits),
+                snapshots=cast(Any, event_snapshots),
+                checkpoint_factory=checkpoint_factory,
+                audit_factory=audit_factory,
+                persistence_error_types=(
+                    WorkspacePersistenceError,
+                    SQLAlchemyError,
+                    SnapshotError,
+                ),
+                urgent_snapshot_resolver=urgent_snapshot,
+            )
+
+        dynamic_application = RuntimeDynamicReplanningApplication(
+            bindings=configured_events,
+            environment=environment,
+            events=event_repository,
+            checkpoints=event_checkpoints,
+            snapshots=event_snapshots,
+            source=event_source,
+            service=event_service,
         )
         runtime_exports = None
         if settings.runtime_export_storage_root is not None:
@@ -924,6 +1081,7 @@ def compose_runtime(
             database=database,
             redis=redis,
             export_worker=runtime_exports,
+            dynamic_replanning_application=dynamic_application,
         )
     except Exception:
         if redis is not None:

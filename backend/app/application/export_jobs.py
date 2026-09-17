@@ -6,6 +6,7 @@ from collections.abc import Callable, Mapping
 from contextlib import AbstractContextManager
 from dataclasses import dataclass
 from datetime import datetime
+from hashlib import sha256
 from typing import Protocol, cast
 
 from app.domain.export_job import (
@@ -26,6 +27,10 @@ from app.domain.export_job import (
     transition_export_job,
 )
 from app.domain.types import parse_utc_instant
+from app.domain.workspace_contracts import (
+    require_workspace_document,
+    workspace_command_fingerprint,
+)
 
 
 class StoredExportJobPort(Protocol):
@@ -46,7 +51,9 @@ class ExportScheduleRepositoryPort(Protocol):
 class ExportJobRepositoryPort(Protocol):
     def get(self, export_job_id: str) -> StoredExportJobPort | None: ...
 
-    def create_in_transaction(self, connection: object, document: Mapping[str, object]) -> object: ...
+    def create_in_transaction(
+        self, connection: object, document: Mapping[str, object]
+    ) -> object: ...
 
     def transition_in_transaction(
         self,
@@ -78,7 +85,9 @@ class ExportJobRepositoryPort(Protocol):
 class ExportAuditRepositoryPort(Protocol):
     def get(self, audit_event_id: str) -> dict[str, object] | None: ...
     def append(self, document: Mapping[str, object]) -> object: ...
-    def append_in_transaction(self, connection: object, document: Mapping[str, object]) -> object: ...
+    def append_in_transaction(
+        self, connection: object, document: Mapping[str, object]
+    ) -> object: ...
 
 
 type TransactionFactory = Callable[[], AbstractContextManager[object]]
@@ -101,7 +110,10 @@ def _persistence_error(error: Exception) -> ExportJobError:
         "LEASE_CONFLICT": ExportJobFailure.LEASE_CONFLICT,
         "DATA_PLANE_MISMATCH": ExportJobFailure.AUTHORIZATION_DENIED,
     }
-    return ExportJobError(mapping.get(str(raw), ExportJobFailure.PERSISTENCE_FAILED), field=cast(str, getattr(error, "field", "persistence")))
+    return ExportJobError(
+        mapping.get(str(raw), ExportJobFailure.PERSISTENCE_FAILED),
+        field=cast(str, getattr(error, "field", "persistence")),
+    )
 
 
 def _record_document(record: object | None) -> dict[str, object] | None:
@@ -138,7 +150,9 @@ class ExportJobService:
             reject_export_job(ExportJobFailure.SOURCE_NOT_FOUND, "export_job_id")
         return record
 
-    def _transaction(self, action: Callable[[object], ExportJobServiceResult]) -> ExportJobServiceResult:
+    def _transaction(
+        self, action: Callable[[object], ExportJobServiceResult]
+    ) -> ExportJobServiceResult:
         try:
             with self._transaction_factory() as connection:
                 return action(connection)
@@ -176,9 +190,13 @@ class ExportJobService:
         except Exception as error:
             raise _persistence_error(error) from error
         if existing is not None:
-            reference = cast(Mapping[str, object], existing.document["idempotency_reference"])
+            reference = cast(
+                Mapping[str, object], existing.document["idempotency_reference"]
+            )
             if reference.get("request_fingerprint") != identity.request_fingerprint:
-                reject_export_job(ExportJobFailure.IDEMPOTENCY_CONFLICT, "idempotency_key")
+                reject_export_job(
+                    ExportJobFailure.IDEMPOTENCY_CONFLICT, "idempotency_key"
+                )
             return ExportJobServiceResult(
                 document=existing.document,
                 state_revision=existing.state_revision,
@@ -186,13 +204,17 @@ class ExportJobService:
                 exact_replay=True,
             )
         try:
-            source_record = self._schedule_repository.get_record(request.schedule_version_id)
+            source_record = self._schedule_repository.get_record(
+                request.schedule_version_id
+            )
         except Exception as error:
             raise _persistence_error(error) from error
         source = _record_document(source_record)
         if source is None:
             reject_export_job(ExportJobFailure.SOURCE_NOT_FOUND, "schedule_version_id")
-        job = build_created_export_job(request, identity, context, source, publication_result)
+        job = build_created_export_job(
+            request, identity, context, source, publication_result
+        )
         audit = build_export_audit(
             job,
             context,
@@ -211,7 +233,9 @@ class ExportJobService:
             self._audits.append_in_transaction(connection, audit)
             document = cast(dict[str, object], getattr(created, "document", job))
             replayed = bool(getattr(created, "replayed", False))
-            return ExportJobServiceResult(document, 0, identity.create_audit_event_id, replayed)
+            return ExportJobServiceResult(
+                document, 0, identity.create_audit_event_id, replayed
+            )
 
         return self._transaction(persist)
 
@@ -230,12 +254,70 @@ class ExportJobService:
         error_message: str | None = None,
         expected_lease_reference: str | None = None,
         allow_expired_lease_recovery: bool = False,
+        command: Mapping[str, object] | None = None,
     ) -> ExportJobServiceResult:
         require_job_authorization(export_job_id, context)
         stored = self._job(export_job_id)
         current = stored.document
+        receipt = None
+        receipt_id = None
+        scope, key = "", ""
+        if command is not None:
+            require_workspace_document(command)
+            if (
+                command.get("command_type") != action
+                or command.get("source_id") != export_job_id
+                or command.get("request_fingerprint")
+                != workspace_command_fingerprint(command)
+            ):
+                reject_export_job(ExportJobFailure.INVALID_REQUEST, "command")
+            key = sha256(str(command["idempotency_key"]).encode()).hexdigest()
+            scope = str(command["idempotency_scope"])
+            if scope != f"SIMULATION/{action}/{export_job_id}/SIMULATION_INTERNAL":
+                reject_export_job(ExportJobFailure.INVALID_REQUEST, "idempotency_scope")
+            receipt_id = (
+                "audit-export-command-"
+                + sha256((scope + ":" + key).encode()).hexdigest()
+            )
+            previous = self._audits.get(receipt_id)
+            if previous is not None:
+                if previous["request_fingerprint"] != command["request_fingerprint"]:
+                    reject_export_job(
+                        ExportJobFailure.IDEMPOTENCY_CONFLICT, "idempotency_key"
+                    )
+                return ExportJobServiceResult(
+                    current,
+                    stored.state_revision,
+                    str(current["latest_audit_event_id"]),
+                    True,
+                )
+            if action == "RETRY_EXPORT" and current["state"] != "EXPORT_FAILED":
+                reject_export_job(ExportJobFailure.STATE_CONFLICT, "state")
+            payload = cast(Mapping[str, object], command["payload"])
+            if (
+                command["expected_state"] != current["state"]
+                or command["expected_content_fingerprint"]
+                != cast(Mapping[str, object], current["schedule_version"])[
+                    "content_fingerprint"
+                ]
+                or payload.get("expected_attempt") != current["attempt"]
+            ):
+                reject_export_job(ExportJobFailure.STALE_SOURCE, "command.precondition")
+            if any(
+                command.get(field) != current.get(field)
+                for field in (
+                    "environment",
+                    "data_plane",
+                    "target",
+                    "synthetic",
+                    "synthetic_provenance",
+                )
+            ):
+                reject_export_job(ExportJobFailure.INVALID_REQUEST, "command.context")
         source_state = cast(str, current["state"])
-        effective_attempt = cast(int, current["attempt"]) if attempt is None else attempt
+        effective_attempt = (
+            cast(int, current["attempt"]) if attempt is None else attempt
+        )
         event_id = audit_event_id(export_job_id, audit_phase, effective_attempt)
         candidate = transition_export_job(
             current,
@@ -260,6 +342,20 @@ class ExportJobService:
             parent_audit_event_id=cast(str, current["latest_audit_event_id"]),
         )
         observed = parse_utc_instant(context.occurred_at_utc)
+        if command is not None:
+            receipt = dict(audit)
+            receipt.update(
+                audit_event_id=receipt_id,
+                request_fingerprint=command["request_fingerprint"],
+                reason=command["reason"],
+                correlation_id=command["correlation_id"],
+                idempotency_reference={
+                    "scope": scope,
+                    "key_reference": "sha256:" + key,
+                    "request_fingerprint": command["request_fingerprint"],
+                },
+            )
+            require_workspace_document(receipt)
 
         def persist(connection: object) -> ExportJobServiceResult:
             state = self._jobs.transition_in_transaction(
@@ -274,7 +370,11 @@ class ExportJobService:
                 allow_expired_lease_recovery=allow_expired_lease_recovery,
             )
             self._audits.append_in_transaction(connection, audit)
-            return ExportJobServiceResult(state.document, state.state_revision, event_id, False)
+            if receipt is not None:
+                self._audits.append_in_transaction(connection, receipt)
+            return ExportJobServiceResult(
+                state.document, state.state_revision, event_id, False
+            )
 
         return self._transaction(persist)
 
@@ -285,10 +385,14 @@ class ExportJobService:
         *,
         owner_reference: str,
         lease_expires_at_utc: datetime,
+        command: Mapping[str, object] | None = None,
     ) -> ExportJobServiceResult:
         require_job_authorization(export_job_id, context)
         current = self._job(export_job_id)
-        if current.document["state"] not in {"CREATED", "EXPORT_FAILED"}:
+        if command is None and current.document["state"] not in {
+            "CREATED",
+            "EXPORT_FAILED",
+        }:
             reject_export_job(ExportJobFailure.STATE_CONFLICT, "state")
         attempt = cast(int, current.document["attempt"]) + 1
         lease = lease_reference_for(export_job_id, attempt, owner_reference)
@@ -301,6 +405,7 @@ class ExportJobService:
             attempt=attempt,
             lease_reference=lease,
             lease_expires_at_utc=lease_expires_at_utc,
+            command=command,
         )
 
     def heartbeat(
@@ -313,7 +418,9 @@ class ExportJobService:
     ) -> ExportJobServiceResult:
         require_job_authorization(export_job_id, context)
         stored = self._job(export_job_id)
-        candidate = heartbeat_export_job(stored.document, occurred_at_utc=context.occurred_at_utc)
+        candidate = heartbeat_export_job(
+            stored.document, occurred_at_utc=context.occurred_at_utc
+        )
         observed = parse_utc_instant(context.occurred_at_utc)
 
         def persist(connection: object) -> ExportJobServiceResult:
@@ -326,18 +433,72 @@ class ExportJobService:
                 observed_at_utc=observed,
                 lease_expires_at_utc=lease_expires_at_utc,
             )
-            return ExportJobServiceResult(state.document, state.state_revision, cast(str, candidate["latest_audit_event_id"]), False)
+            return ExportJobServiceResult(
+                state.document,
+                state.state_revision,
+                cast(str, candidate["latest_audit_event_id"]),
+                False,
+            )
 
         return self._transaction(persist)
 
-    def complete(self, export_job_id: str, context: ExportJobContext, *, expected_lease_reference: str, artifact_manifest: Mapping[str, object]) -> ExportJobServiceResult:
-        return self._transition(export_job_id, context, target_state="EXPORTED", audit_phase="COMPLETED", action="CREATE_EXPORT", artifact_manifest=artifact_manifest, expected_lease_reference=expected_lease_reference)
+    def complete(
+        self,
+        export_job_id: str,
+        context: ExportJobContext,
+        *,
+        expected_lease_reference: str,
+        artifact_manifest: Mapping[str, object],
+    ) -> ExportJobServiceResult:
+        return self._transition(
+            export_job_id,
+            context,
+            target_state="EXPORTED",
+            audit_phase="COMPLETED",
+            action="CREATE_EXPORT",
+            artifact_manifest=artifact_manifest,
+            expected_lease_reference=expected_lease_reference,
+        )
 
-    def fail(self, export_job_id: str, context: ExportJobContext, *, expected_lease_reference: str, error_message: str = "Export attempt failed.", expired_recovery: bool = False) -> ExportJobServiceResult:
-        return self._transition(export_job_id, context, target_state="EXPORT_FAILED", audit_phase="RECOVERED" if expired_recovery else "FAILED", action="RETRY_EXPORT", error_message=error_message, expected_lease_reference=expected_lease_reference, allow_expired_lease_recovery=expired_recovery)
+    def fail(
+        self,
+        export_job_id: str,
+        context: ExportJobContext,
+        *,
+        expected_lease_reference: str,
+        error_message: str = "Export attempt failed.",
+        expired_recovery: bool = False,
+    ) -> ExportJobServiceResult:
+        return self._transition(
+            export_job_id,
+            context,
+            target_state="EXPORT_FAILED",
+            audit_phase="RECOVERED" if expired_recovery else "FAILED",
+            action="RETRY_EXPORT",
+            error_message=error_message,
+            expected_lease_reference=expected_lease_reference,
+            allow_expired_lease_recovery=expired_recovery,
+        )
 
-    def cancel(self, export_job_id: str, context: ExportJobContext, *, expected_lease_reference: str | None = None, expired_recovery: bool = False) -> ExportJobServiceResult:
-        return self._transition(export_job_id, context, target_state="CANCELLED", audit_phase="CANCELLED", action="CANCEL_EXPORT", expected_lease_reference=expected_lease_reference, allow_expired_lease_recovery=expired_recovery)
+    def cancel(
+        self,
+        export_job_id: str,
+        context: ExportJobContext,
+        *,
+        expected_lease_reference: str | None = None,
+        expired_recovery: bool = False,
+        command: Mapping[str, object] | None = None,
+    ) -> ExportJobServiceResult:
+        return self._transition(
+            export_job_id,
+            context,
+            target_state="CANCELLED",
+            audit_phase="CANCELLED",
+            action="CANCEL_EXPORT",
+            expected_lease_reference=expected_lease_reference,
+            allow_expired_lease_recovery=expired_recovery,
+            command=command,
+        )
 
 
 __all__ = ["ExportJobService", "ExportJobServiceResult"]

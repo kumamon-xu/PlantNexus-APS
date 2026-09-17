@@ -11,6 +11,10 @@ last_reviewed: 2026-09-10
 
 # 错误与求解状态模型
 
+## P9-05 Runtime 读与导出错误
+
+来源缺失/错 lineage/KPI、未知版本保持既有 SOURCE_MISSING/MIXED_LINEAGE/KPI_MISMATCH 映射；state/content/cursor 过期为冲突，未授权仍先拒绝。仿真 manifest 缺失或不匹配不能生成新 Job。broker 或物化失败保存 sanitized EXPORT_FAILED，retired lease 旧消息仅返回 STALE_DELIVERY，重复 claim 不重复执行，过期投递先退休 attempt。下载损坏包为失败，不输出成员内容、绝对路径或原始异常。没有新增全局错误码。
+
 ## P9-04 人工 Runtime 错误映射
 
 沿用 planning-workspace-error.v1：Core/Extension 候选拒绝为 422 VALIDATION_FAILED；Extension crash/timeout/unhealthy 为 503 SERVICE_UNAVAILABLE；原 Runtime identity 漂移为 409 STALE_SOURCE；缺少匹配 Problem 或 v2 人工/submit 为 422 MIXED_LINEAGE。授权、state、idempotency 与 audit persistence 分别保留现有 401/403、409、409、500。全部失败无新增业务版本/成功状态，不映射为 Solver INFEASIBLE/UNKNOWN，不输出 credential、raw exception 或配置内容。

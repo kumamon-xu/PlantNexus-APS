@@ -11,6 +11,12 @@ last_reviewed: 2026-09-16
 
 # P9 Runtime 能力、准入与验收基线
 
+## P9-05 当前实现增量
+
+相对 P9-01 冻结矩阵，本卡新增 getWorkspaceDataHealth/listWorkspaceImportRuns/listWorkspacePlanningRuns/getPlanningRun/queryScheduleVersionWorkspace/compareScheduleVersions/listScheduleVersionAuditEvents 读 binding，并在显式共享 store 配置下新增 retryExportJob/cancelExportJob/downloadExportPackage 和 export execution。Workspace 的 15 个内部 operation 分派已接通；HTTP operation 数与内部 enum 不混用。下方冻结矩阵不改写历史。
+
+证据范围为安装当前 wheel 的真实 HTTP/SQL/Worker/文件回放，正式源自 durable ingress 和 exact Worker checkpoint；任意人工结果或 v2 不宣称兼容。缺 store 维持 Job-only，缺仿真 manifest 不可生成新包。动态事件/重排、P9-06+、Production 仍未启动，完整证据归属 TASK-P9-05 completion manifest。
+
 本页冻结 P9-01 的静态事实与后续验收分配；不发布新 API、Schema、状态、约束、版本迁移或性能结论。业务规范仍由 [Headless 合同](headless-platform-integration.md)、[Workspace 合同](planning-workspace-api.md)、[事件与重排合同](execution-events-and-replan-request.md)、[版本规则](schema-versioning.md)拥有。P9 目标是补齐正式 Runtime 链路，不能把 router、内部服务或测试注入当成可安装产品覆盖。
 
 ## 身份、范围与证据等级

@@ -11,6 +11,10 @@ last_reviewed: 2026-09-08
 
 # KPI 合同
 
+## P9-05 读端占用时间一致性
+
+Workspace resource busy 校验与 resource/load 投影使用 assignment start_at_utc/end_at_utc 的整数占用秒数，与冻结 KPI 的 (end_tick - start_tick) × tick_seconds 一致。duration_seconds 保持原始工时，不能用它替代取整后的资源占用。未更改 KPI Schema、公式或历史 bytes；不匹配人工来源不以旧 KPI 冒充新结果。
+
 ## TASK-P8-13 Enterprise Objective isolation review
 
 Runtime adapter可校验`ObjectiveOutput`的stable contribution/metric ID、integer value/scale、authority与唯一`ENTERPRISE_TIE_BREAK` stage，但P8-13不修改`OBJ-001 Delivery → OBJ-002 Stability → OBJ-003 Makespan`、KPI Schema、公式、threshold或baseline。Synthetic objective只证明Protocol调用和整批拒绝；P8-14若接入真实企业tie-break，必须仅在三项Core目标完全相等后生效并以独立Validation/lineage证明，不能重权、覆盖或伪装成Core KPI。

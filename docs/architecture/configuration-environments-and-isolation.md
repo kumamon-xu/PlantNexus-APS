@@ -11,6 +11,10 @@ last_reviewed: 2026-09-16
 
 # 配置、环境与数据隔离
 
+## P9-05 导出配置
+
+新增可选 PLANTNEXUS_RUNTIME_EXPORT_STORAGE_ROOT 与 PLANTNEXUS_RUNTIME_EXPORT_SCENARIO_DIRECTORY，均为服务端显式本地路径。前者须已存在并在 API/Worker 间共享、可写；后者须由资产 owner 挂载为只读，按 Problem hash 提供原始仿真来源清单。默认不配置时保留既有 Job-only 行为，retry/cancel/download unavailable；不得接受请求覆盖路径。配置不进入 safe manifest 的路径或 secret 输出。只验证 TEST/SIMULATION，未改旧 Compose/Kit、迁移、依赖或 Production 配置。
+
 ## P9 admission 与历史回放隔离
 
 P9-04 在现有显式 TEST/SIMULATION Runtime 配置中增加 v1 manual/submit/reject binding，无新增环境变量、依赖或迁移。人工请求必须从服务器持久化 lineage 找到同 Runtime/Registry/Kit 的 ingress，跨资源授权、未知 scope、身份漂移均拒绝。安装测试使用临时 DB、固定 synthetic fixture 与 recording broker，app/SDK 来自当前 wheel，第三方依赖复用 exact lock 环境；不宣称网络部署或 Production 可用。冻结 P4 清单另排除两份 P9-04 测试，原冻结实现与断言不变。

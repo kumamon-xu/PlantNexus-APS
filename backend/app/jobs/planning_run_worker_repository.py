@@ -695,6 +695,29 @@ class SqlAlchemyPlanningRunWorkerRepository:
                 retryable=True,
             ) from error
 
+    def get_result_for_solution(
+        self, planning_run_id: str, fingerprint: str
+    ) -> PlanningRunWorkerResult | None:
+        """Resolve historical version lineage, never substitute the latest attempt."""
+        with self._engine.connect() as connection:
+            rows = connection.execute(
+                select(_RESULTS)
+                .where(
+                    _RESULTS.c.planning_run_id == planning_run_id,
+                    _RESULTS.c.data_plane == self.data_plane,
+                )
+                .order_by(_RESULTS.c.result_id)
+            ).mappings()
+            for row in rows:
+                result = self._load_result(row)
+                reference = result.document["artifact_references"]["planning_solution"]
+                if (
+                    isinstance(reference, Mapping)
+                    and reference.get("fingerprint") == fingerprint
+                ):
+                    return result
+        return None
+
     def put_result(self, result: PlanningRunWorkerResult) -> WorkerResultWrite:
         verify_worker_result(result, data_plane=self.data_plane)
         document = result.document

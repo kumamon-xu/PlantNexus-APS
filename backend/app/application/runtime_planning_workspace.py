@@ -88,6 +88,8 @@ class RuntimePlanningWorkspaceApplication:
         publication_service: PublicationService,
         export_service: ExportJobService,
         manual_binding: ManualBinding | None = None,
+        reads: Any = None,
+        exports: Any = None,
     ) -> None:
         self._data_plane = data_plane
         self._schedules = schedule_repository
@@ -97,11 +99,33 @@ class RuntimePlanningWorkspaceApplication:
         self._publication = publication_service
         self._export = export_service
         self._manual_binding = manual_binding
+        self._reads = reads
+        self._runtime_exports = exports
 
     @property
     def supported_operations(self) -> frozenset[str]:
-        return _SUPPORTED_OPERATIONS | (
-            _MANUAL_OPERATIONS if self._manual_binding else frozenset()
+        return (
+            _SUPPORTED_OPERATIONS
+            | (
+                frozenset(
+                    {"RETRY_EXPORT_JOB", "CANCEL_EXPORT_JOB", "DOWNLOAD_EXPORT_PACKAGE"}
+                )
+                if self._runtime_exports
+                else frozenset()
+            )
+            | (
+                frozenset(
+                    {
+                        "QUERY_WORKSPACE",
+                        "COMPARE_SCHEDULE_VERSIONS",
+                        "GET_PLANNING_RUN",
+                        "LIST_AUDIT_EVENTS",
+                    }
+                )
+                if self._reads
+                else frozenset()
+            )
+            | (_MANUAL_OPERATIONS if self._manual_binding else frozenset())
         )
 
     @staticmethod
@@ -198,6 +222,21 @@ class RuntimePlanningWorkspaceApplication:
         )
         return {**asdict(result), "exact_replay": result.exact_replay}
 
+    def _read_schedule(self, request: Any) -> Mapping[str, object]:
+        schedule = self._get_schedule(request)
+        return {
+            **schedule,
+            "schedule_version": schedule,
+            "allowed_actions": [
+                action
+                for action in cast(list[str], schedule["allowed_actions"])
+                if action in request.context.resolved_capabilities
+            ],
+            "freshness": "FRESH",
+            "generated_at_utc": request.context.occurred_at_utc,
+            "correlation_id": request.context.correlation_id,
+        }
+
     def _manual(self, request: Any) -> Mapping[str, object]:
         if self._manual_binding is None:
             _error("SERVICE_UNAVAILABLE", field="manual_binding")
@@ -246,9 +285,17 @@ class RuntimePlanningWorkspaceApplication:
     def _create_export(self, request: Any) -> Mapping[str, object]:
         command = _document(request)
         schedule_id = self._resource_id(request)
+        if "export" not in request.context.resolved_capabilities or not _in_scope(
+            request.context.schedule_version_scope, schedule_id
+        ):
+            _error("AUTHORIZATION_DENIED", field="schedule_version_scope")
         schedule = self._schedules.get(schedule_id)
         if schedule is None:
             _error("SOURCE_NOT_FOUND", field="resource_id")
+        if self._reads is not None:
+            self._reads.version_sources(schedule)
+        if self._runtime_exports is not None:
+            self._runtime_exports.package(schedule)
         publication_evidence = schedule.get("publication")
         publication_id = (
             publication_evidence.get("publication_id")
@@ -294,6 +341,11 @@ class RuntimePlanningWorkspaceApplication:
             ),
             publication_result=publication,
         )
+        if self._runtime_exports is not None:
+            return self._runtime_exports.dispatch(
+                result.document,
+                self._runtime_exports.context(result.document, request=request),
+            )
         return result.document
 
     def _get_export(self, request: Any) -> Mapping[str, object]:
@@ -308,10 +360,10 @@ class RuntimePlanningWorkspaceApplication:
             _error("SERVICE_UNAVAILABLE", field="export_job_repository")
         return cast(Mapping[str, object], document)
 
-    def execute(self, request: Any) -> Mapping[str, object]:
+    def execute(self, request: Any) -> Any:
         self._require_context(request)
         handlers = {
-            "GET_SCHEDULE_VERSION": self._get_schedule,
+            "GET_SCHEDULE_VERSION": self._read_schedule,
             "APPROVE_SCHEDULE_VERSION": self._approve,
             "REJECT_SCHEDULE_VERSION": self._approve,
             "EXECUTE_SCHEDULE_COMMAND": self._manual,
@@ -320,7 +372,41 @@ class RuntimePlanningWorkspaceApplication:
             "CREATE_EXPORT_JOB": self._create_export,
             "GET_EXPORT_JOB": self._get_export,
         }
+        if self._reads is not None:
+            handlers.update(
+                {
+                    "QUERY_WORKSPACE": self._reads.query,
+                    "LIST_AUDIT_EVENTS": self._reads.query,
+                    "COMPARE_SCHEDULE_VERSIONS": self._reads.compare,
+                    "GET_PLANNING_RUN": self._reads.planning_run,
+                }
+            )
+        if self._runtime_exports is not None:
+            handlers.update(
+                {
+                    "RETRY_EXPORT_JOB": self._runtime_exports.control,
+                    "CANCEL_EXPORT_JOB": self._runtime_exports.control,
+                    "DOWNLOAD_EXPORT_PACKAGE": self._runtime_exports.download,
+                }
+            )
         operation = getattr(request.operation, "value", request.operation)
+        if (
+            operation
+            in {
+                "QUERY_WORKSPACE",
+                "COMPARE_SCHEDULE_VERSIONS",
+                "GET_PLANNING_RUN",
+                "GET_SCHEDULE_VERSION",
+                "GET_EXPORT_JOB",
+            }
+            and "view" not in request.context.resolved_capabilities
+        ):
+            _error("AUTHORIZATION_DENIED", field="capability")
+        if (
+            operation == "LIST_AUDIT_EVENTS"
+            and "audit" not in request.context.resolved_capabilities
+        ):
+            _error("AUTHORIZATION_DENIED", field="capability")
         # Recheck server context at the façade, including direct application use.
         if operation in _MANUAL_OPERATIONS or operation in {
             "APPROVE_SCHEDULE_VERSION",

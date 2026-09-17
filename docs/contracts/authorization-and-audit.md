@@ -11,6 +11,12 @@ last_reviewed: 2026-09-06
 
 # P3 Authorization Capability 与 Audit 合同
 
+## P9-05 读取与导出授权
+
+Runtime 在载荷读取前复核 server capability/resource scope；总览先过滤 planning-run identities，比较分别授权两版本，审计查询需要 audit capability。allowed_actions 是 state 允许集与实际 capability 的交集；原始 ScheduleVersion 不因角色被改写。scope 只来自服务器 principal 与 durable ingress 的有效工厂绑定。
+
+Export retry/cancel 的命令 receipt 与 Job CAS/lifecycle audit 在同一事务提交，raw key 不持久化，exact replay 不追加审计或 attempt。Worker 只使用服务端 Job/lease 和受限 export context；消息不得携带 actor、权限或路径。下载先授权 Job scope 再查仓储/store，hash、来源和 completion audit 必须一致。读取不增加业务审计写入。
+
 ## P9-04 Runtime 人工控制
 
 Workspace 的服务端 AuthorizationProvider 先解析 edit/lock/reject/approve 与版本资源 scope，Runtime façade 再验证 operation、command_type、source_id 和资源授权一致后才查询版本。客户端不能提供 actor、grant、Problem、Registry/Kit 或 executable selector。canonical ingress 的 scope 必须匹配当前服务端 Runtime policy；原 Runtime identity 漂移返回冲突。Workspace 资源授权沿用本合同，不把 Headless scope header 当授权证明。

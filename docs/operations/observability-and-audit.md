@@ -11,6 +11,10 @@ last_reviewed: 2026-09-16
 
 # P0 Observability 与 Audit 边界
 
+## P9-05 导出可追溯性
+
+查询响应保留 source/collection/payload fingerprint、版本与 correlation。导出可追踪 create → attempt → completion/failure/cancel audit；retry/cancel receipt 与 Job 状态原子持久化。Worker delivery 返回 EXPORTED、EXPORT_FAILED、EXPIRED、STALE_DELIVERY 或 DUPLICATE_DELIVERY，底层异常脱敏。crash marker 与旧 attempt 不删除；过期投递后显式 retry 恢复，不声明自动 sweeper、HA 或 SLA。安装测试记录 wheel hash 与 app/SDK 导入来源。
+
 ## P9 准入证据边界
 
 P9-04 手工/submit/reject 沿用 command→source/new version→ValidationReport→AuditEvent 的可追溯引用，业务审计与版本/状态在同一事务提交，exact replay 不追加业务审计。安装重放记录当前 wheel SHA-256 和 app/SDK 安装来源断言；Provider backend JUnit properties 保留该 wheel 身份。没有新增持久化 Extension carrier，也不将构建的 wheel 当已发行 Runtime。

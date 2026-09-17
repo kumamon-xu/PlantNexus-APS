@@ -699,6 +699,10 @@ jobs:
             "${replay_root}/backend/tests/integration/test_p9_admission.py" \
             "${replay_root}/backend/tests/integration/test_p9_manual.py" \
             "${replay_root}/backend/tests/integration/test_p9_manual_installed.py" \
+            "${replay_root}/backend/app/application/runtime_workspace_reads.py" \
+            "${replay_root}/backend/app/jobs/runtime_export_task.py" \
+            "${replay_root}/backend/tests/integration/test_p9_readmodel.py" \
+            "${replay_root}/backend/tests/integration/test_p9_readmodel_installed.py" \
             "${replay_root}/backend/tests/integration/test_p5_portfolio_gate.py" \
             "${replay_root}/backend/tests/integration/test_p5_exit_gate.py" \
             "${replay_root}/schemas/json/duration-evaluation-report.schema.json" \
@@ -880,6 +884,10 @@ jobs:
             -- \
             backend/app/__init__.py \
             backend/app/api/app.py \
+            backend/app/api/routers/planning_workspace.py \
+            backend/app/application/export_jobs.py \
+            backend/app/domain/workspace.py \
+            backend/app/jobs/export_job.py \
             backend/app/application/execution_fact_projection_check.py \
             backend/app/application/replan_application.py \
             backend/app/application/schedule_commands.py \

@@ -11,6 +11,16 @@ last_reviewed: 2026-09-07
 
 # P3 Planning Workspace API 语义合同
 
+## P9-05 Runtime 读模型与成果闭环
+
+当前 composition 绑定全部 Workspace operation；导出执行、retry/cancel/download 需要显式 package store 配置。版本查询、比较按 Version 的 exact solution fingerprint 找 durable Worker checkpoint，禁止以最新 attempt 替代历史来源。工作区 DATA_HEALTH/IMPORT_RUNS 来自 durable ingress；PLANNING_RUNS 来自实际 aggregate state/revision，未求解或失败不伪造 Solver/KPI。先按服务器 planning-run scope 过滤身份，再加载并核对 factory scope；同一载体无法表达混合 provenance 时显式拒绝。
+
+query 返回 strict RESULT document 与完整 payload items、source/collection fingerprints；权限裁剪 allowed_actions，分页沿用固定 sort/filter/cursor。getScheduleVersion 保留旧顶层字段兼容消费，新增原始不变 schedule_version、权限裁剪 allowed_actions、freshness/generated_at/correlation；顶层是传输 envelope，严格版本文档使用内层。比较独立授权双方，保留双方 state/content 前置条件。
+
+按用户确认，沿用旧协议：v1 人工/锁变更若不再匹配 Solution/KPI/Validation/locks，查询、比较及新导出显式拒绝；v2 不降级。原始版本详情仍可读取。人工结果的新成果载体不在本卡实现。已形成的 v2/v3 export manifest 下载沿用精确分派校验，不表示 Runtime 已能生产任意 v2 重排成果。
+
+导出请求先核对发布版本与全部来源及显式仿真 manifest，随后原子创建 Job/audit、认领 attempt 并投递独立 Worker。broker 失败保存 EXPORT_FAILED；retry/cancel 沿用旧 pair、expected state/source content fingerprint/attempt 与原子 CAS/audit，命令 key 保存 hash 幂等引用。相同命令返回当前 durable Job，不能新建第二 attempt。下载重新验证数据库、manifest、成员 hash 与 ZIP。读取不写业务数据。
+
 ## P9 当前消费差异
 
 完整静态覆盖及后继责任见 [Runtime 能力基线](runtime-capability-baseline.md)。P9-04 当前源码 Runtime 绑定八项 Workspace 操作，新增 commands、validate（SUBMIT_FOR_REVIEW）和 reject。move/assign、HARD/SOFT lock 复用既有 v1 owner 和 copy-on-write，每个新候选及 submit 均重新执行 P9-03 Core/适用 Extension 准入。Problem、scope 与 Runtime identity 从已授权 source 的持久化 canonical ingress 解析，缺失或漂移时拒绝。重启后使用同一 durable lineage；旧版本内容不因人工调整改变。

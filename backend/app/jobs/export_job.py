@@ -54,6 +54,26 @@ class InternalExportJobWorker:
             owner_reference=owner_reference,
             lease_expires_at_utc=lease_expires_at_utc,
         )
+        return self.run_claimed(
+            claimed=claimed,
+            terminal_context=terminal_context,
+            p2_package=p2_package,
+            schedule_version=schedule_version,
+            publication_result=publication_result,
+            correlation_id=correlation_id,
+        )
+
+    def run_claimed(
+        self,
+        *,
+        claimed: ExportJobServiceResult,
+        terminal_context: ExportJobContext,
+        p2_package: InternalExportPackage,
+        schedule_version: Mapping[str, object],
+        publication_result: Mapping[str, object],
+        correlation_id: str,
+    ) -> ExportWorkerResult:
+        export_job_id = str(claimed.document["export_job_id"])
         lease_reference = claimed.document.get("lease_reference")
         attempt = claimed.document.get("attempt")
         if not isinstance(lease_reference, str) or not isinstance(attempt, int):

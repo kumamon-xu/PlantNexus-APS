@@ -11,6 +11,10 @@ last_reviewed: 2026-09-16
 
 # 模块边界与依赖规则
 
+## P9-05 读与导出组合边界
+
+RuntimeWorkspaceReads 编排 query/comparison owner 与只读 durable ingress/Worker/Version ports；Domain 继续拥有投影与 cursor 校验。RuntimeExports 是独立 Worker/消息及文件适配层，ExportJobService 仍拥有事务、CAS、lease 和审计；router 只适配 domain download result 到 HTTP binary carrier。没有 API Solver 调用、前端 KPI 重算或新持久化表。资源负荷读端按实际 UTC 占用秒数对齐既有 tick-rounded KPI，不改原始工时或 KPI 公式。
+
 ## P9 admission application port
 
 P9-04 由唯一 `runtime_composition` 注入 server-bound manual factory，解析 durable ingress 的 Problem/scope/Runtime identity 并构造既有 ScheduleCommandService 与 admission。`runtime_planning_workspace` 只负责 operation/context 分派和 sanitized 错误映射，新增 reject 仍委托 ApprovalDecisionService；router、Core、Solver、Validator、数据库结构与状态 owner 不变。

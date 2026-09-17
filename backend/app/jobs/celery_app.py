@@ -91,6 +91,10 @@ def create_runtime_celery_app(
             message="Solver Worker Runtime port was not composed",
         )
     application = create_celery_app(resolved, executor=composition.worker)
+    if composition.export_worker is not None:
+        from app.jobs.runtime_export_task import register_runtime_export_task
+
+        register_runtime_export_task(application, composition.export_worker)
     setattr(application, "plantnexus_runtime_composition", composition)
     return application
 

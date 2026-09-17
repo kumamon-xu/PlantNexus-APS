@@ -32,6 +32,10 @@ from app.application.runtime_planning_workspace import (
     RuntimePlanningWorkspaceError,
 )
 from app.application.schedule_commands import ScheduleCommandService
+from app.application.runtime_workspace_reads import RuntimeWorkspaceReads
+from app.application.workspace_queries import WorkspaceQueryService
+from app.application.schedule_comparison import ScheduleComparisonService
+from app.domain.workspace import WorkspaceSourceDocuments, bind_workspace_sources
 from app.application.schedule_versions import (
     ValidatedSolutionToScheduleVersionService,
 )
@@ -66,6 +70,7 @@ from app.jobs.planning_run_solver_worker import (
     utc_now,
 )
 from app.jobs.planning_run_task import CeleryPlanningRunDispatcher
+from app.jobs.runtime_export_task import RuntimeExports
 from app.jobs.planning_run_worker_repository import (
     SqlAlchemyPlanningRunWorkerRepository,
 )
@@ -219,6 +224,7 @@ class RuntimeComposition:
     worker: PlanningRunSolverWorker | None
     database: DatabaseClient
     redis: RedisClient | None
+    export_worker: RuntimeExports | None = None
 
     @property
     def probes(self) -> Mapping[str, Callable[[], None]]:
@@ -607,6 +613,71 @@ def compose_runtime(
         planning_run_repository = SqlAlchemyPlanningRunRepository(
             database.engine, data_plane=plane
         )
+        workspace_results = SqlAlchemyPlanningRunWorkerRepository(
+            database.engine, data_plane=plane
+        )
+
+        def workspace_ingress(run_id: str) -> Any:
+            record = ingress_repository.get_by_planning_run_id(run_id)
+            if record is None:
+                raise RuntimePlanningWorkspaceError(
+                    "MIXED_LINEAGE", field="source.ingress"
+                )
+            scope = record.document["effective_scope"]
+            try:
+                http_policy.extension_facts_for(
+                    tenant_id=scope["tenant_id"],
+                    factory_id=scope["factory_id"],
+                    planning_scope_id=scope["planning_scope_id"],
+                )
+            except (KeyError, ValueError) as error:
+                raise RuntimePlanningWorkspaceError(
+                    "AUTHORIZATION_DENIED", field="source.scope"
+                ) from error
+            return record
+
+        def workspace_sources(
+            run_id: str, version: Mapping[str, object] | None
+        ) -> WorkspaceSourceDocuments:
+            record = workspace_ingress(run_id)
+            if version is not None:
+                if version.get("schedule_version_version") != "schedule-version.v1":
+                    raise RuntimePlanningWorkspaceError(
+                        "MIXED_LINEAGE", field="source.schedule_version_version"
+                    )
+                lineage = cast(Any, version["lineage"])
+                result = workspace_results.get_result_for_solution(
+                    run_id, lineage["planning_solution"]["fingerprint"]
+                )
+            else:
+                result = workspace_results.get_latest_result_for_run(run_id)
+            if result is None or result.document["outcome_state"] != "COMPLETED":
+                raise RuntimePlanningWorkspaceError(
+                    "MIXED_LINEAGE", field="source.worker_result"
+                )
+            if (
+                result.document["runtime_resolution_fingerprint"]
+                != record.document["runtime_resolution"]["resolution_fingerprint"]
+            ):
+                raise RuntimePlanningWorkspaceError(
+                    "MIXED_LINEAGE", field="source.runtime_resolution"
+                )
+            documents = result.document["documents"]
+            sources = WorkspaceSourceDocuments(
+                snapshot=record.snapshot.document,
+                problem=record.problem.document,
+                solution=documents["planning_solution"],
+                solver_report=documents["solver_report"],
+                validation_report=documents["validation_report"],
+                kpi=documents["kpi"],
+                import_quality_report=record.document["import_quality_report"],
+            )
+            if version is not None:
+                bind_workspace_sources(
+                    version, sources, expected_data_plane=plane.value
+                )
+            return sources
+
         orchestration = PlanningRunOrchestrationService(
             schemas=FrozenSchemaCatalog.from_directory(
                 settings.runtime_schema_directory.resolve(strict=True)
@@ -624,6 +695,37 @@ def compose_runtime(
             binding=binding,
             policy=http_policy,
         )
+        runtime_exports = None
+        if settings.runtime_export_storage_root is not None:
+            export_schedules = SqlAlchemyScheduleVersionRepository(
+                database.engine, data_plane=plane
+            )
+            export_audits = SqlAlchemyAuditRepository(database.engine, data_plane=plane)
+            export_jobs = SqlAlchemyExportJobRepository(
+                database.engine, data_plane=plane
+            )
+            runtime_exports = RuntimeExports(
+                service=ExportJobService(
+                    transaction_factory=database.engine.begin,
+                    schedule_repository=cast(Any, export_schedules),
+                    export_job_repository=cast(Any, export_jobs),
+                    audit_repository=cast(Any, export_audits),
+                ),
+                jobs=export_jobs,
+                schedules=export_schedules,
+                publications=SqlAlchemyPublicationRepository(
+                    database.engine, data_plane=plane
+                ),
+                sources=workspace_sources,
+                root=settings.runtime_export_storage_root,
+                scenario_directory=settings.runtime_export_scenario_directory,
+                clock=clock,
+                code_commit=settings.code_commit,
+                lease_seconds=settings.job_lease_seconds,
+                publisher=(dispatch_client or _dispatch_client(settings))
+                if process is RuntimeProcess.API
+                else None,
+            )
         if process is RuntimeProcess.API:
             redis = create_redis_client(
                 settings.redis_url,
@@ -715,6 +817,22 @@ def compose_runtime(
                 publication_repository=publication_repository,
                 export_job_repository=export_repository,
                 manual_binding=manual_binding,
+                exports=runtime_exports,
+                reads=RuntimeWorkspaceReads(
+                    queries=WorkspaceQueryService(
+                        data_plane=plane.value,
+                        schedule_repository=schedule_repository,
+                        audit_repository=audit_repository,
+                    ),
+                    comparisons=ScheduleComparisonService(
+                        data_plane=plane.value, schedule_repository=schedule_repository
+                    ),
+                    schedules=schedule_repository,
+                    sources=workspace_sources,
+                    run_ids=ingress_repository.list_planning_run_ids,
+                    read_run=planning_run_repository.get,
+                    read_ingress=workspace_ingress,
+                ),
                 approval_service=ApprovalDecisionService(
                     data_plane=plane.value,
                     transaction_factory=database.engine.begin,
@@ -784,6 +902,7 @@ def compose_runtime(
             worker=worker,
             database=database,
             redis=redis,
+            export_worker=runtime_exports,
         )
     except Exception:
         if redis is not None:

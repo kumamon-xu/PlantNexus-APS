@@ -11,6 +11,10 @@ last_reviewed: 2026-09-16
 
 # P0 工程安全边界
 
+## P9-05 读取和文件边界
+
+先授权资源再加载 payload，下载先授权 Job；两方比较与 catalog grants 各自复核。export 消息只接受固定版本、字段和 Job/attempt/lease identity，拒绝路径或 actor 字段。来源 manifest 位于服务端指定只读目录；包仅位于服务端共享根目录并经既有 verifier 校验。无新外部 connector、网络下载或 Production authority，安装 wheel 证明限 synthetic TEST/SIMULATION。
+
 ## P9 准入安全复核
 
 P9-04 Runtime 人工入口在资源查询前复核 capability/source scope，Problem 与有效工厂 scope 只来自服务端 durable canonical ingress，当前 Runtime/Registry/Kit 必须逐字匹配。客户端无法绕过已配置 Extension；其拒绝/崩溃/超时以及 audit 故障均无部分成功。隔离 wheel 安装复用锁定第三方依赖和明确 synthetic 资产，仅证明 TEST/SIMULATION HTTP 行为；真实 provider、部署隔离、Production 与既有 OPEN 项不因本卡通过关闭。

@@ -600,9 +600,7 @@ def bind_workspace_sources(
                 field="schedule_version.content.assignments",
                 message="assignment references an absent Problem operation or resource",
             )
-        busy_seconds[resource_id] += _integer(
-            assignment.get("duration_seconds"), "assignment.duration_seconds"
-        )
+        busy_seconds[resource_id] += _assignment_busy_seconds(assignment)
     for resource_id, seconds in busy_seconds.items():
         kpi_row = kpi_resources_by_id.get(resource_id)
         if kpi_row is None:
@@ -833,6 +831,23 @@ def _operations(
     return values
 
 
+def _assignment_busy_seconds(assignment: Mapping[str, object]) -> int:
+    start = parse_utc_instant(
+        _text(assignment.get("start_at_utc"), "assignment.start_at_utc")
+    )
+    end = parse_utc_instant(
+        _text(assignment.get("end_at_utc"), "assignment.end_at_utc")
+    )
+    seconds = (end - start).total_seconds()
+    if seconds < 0 or not seconds.is_integer():
+        _reject(
+            WorkspaceReadFailure.MIXED_LINEAGE,
+            field="assignment.interval",
+            message="assignment occupancy must be nonnegative whole seconds",
+        )
+    return int(seconds)
+
+
 def _resource_assignment_stats(
     bound: BoundWorkspaceSources,
 ) -> tuple[dict[str, int], dict[str, int]]:
@@ -841,9 +856,7 @@ def _resource_assignment_stats(
     for assignment in bound.assignments:
         resource_id = _text(assignment.get("resource_id"), "assignment.resource_id")
         counts[resource_id] += 1
-        busy[resource_id] += _integer(
-            assignment.get("duration_seconds"), "assignment.duration_seconds"
-        )
+        busy[resource_id] += _assignment_busy_seconds(assignment)
     return counts, busy
 
 

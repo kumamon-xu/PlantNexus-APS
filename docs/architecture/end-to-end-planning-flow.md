@@ -11,6 +11,10 @@ last_reviewed: 2026-09-16
 
 # 端到端计划链路
 
+## P9-05 读取和成果链路
+
+服务器授权 → durable ingress/历史 exact Worker source → Workspace query/comparison → strict carrier 与投影；published v1 + 同源 Solution/KPI/Validation + 显式仿真清单 → ExportJob/audit → 独立 JSON Worker → manifest-last package → authorized verified download。来源不匹配的人工结果与 v2 不降级、不补造，真实生产与动态重排入口不因这条链路可用。
+
 ## P9 candidate admission edge
 
 P9-04 当前正式链路为 authorized HTTP command → source resource scope → durable canonical Problem/Runtime 复核 → 既有人工候选 owner → fresh Core/Extension admission → copy-on-write DRAFT + atomic audit → submit 再校验及 CAS READY_FOR_REVIEW → approve/reject → 既有 publish。已发布版本可产生新 DRAFT，原发布内容不变。该人工链限 v1；v2/replan 仍显式拒绝且不做降级。

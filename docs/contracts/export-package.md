@@ -11,6 +11,14 @@ last_reviewed: 2026-08-28
 
 # 标准成果包合同
 
+## P9-05 正式 Runtime 成果消费
+
+标准导出复用既有 P2 → P3 builder、InternalExportJobWorker 与 verified package store，无 Schema、KPI、包成员或旧制品变更。来源必须与发布的 schedule-version.v1 完整一致；人工变化造成 Solution/KPI/Validation/locks 不匹配时在新 Job 前拒绝。v2 新成果不可降级；既有 export-manifest.v2/v3 下载仍严格分派。
+
+服务端显式配置共享 runtime_export_storage_root 与只读 runtime_export_scenario_directory。后者按 Problem hash（去掉 sha256:）命名 JSON，保存由仿真资产 owner 提供的 p2-correctness-manifest.v1，核对 scenario/profile/generator/seed 与 import/Snapshot/Problem hashes。文件必须普通、非 symlink、至多 1 MiB；缺失或错源不得补造。客户端不能传入路径。没有 store 时仍只有既有 create/get Job；没有来源 manifest 时不能生成新包。
+
+API 认领 durable attempt 后仅发送 Job ID/attempt/lease 的 JSON 消息。Worker 从仓储重读权威来源，以共享根目录原子 claim marker 阻止重复物化，旧消息不能使用 retired lease。崩溃留下 marker；过期消息回放将 attempt 标为 EXPORT_FAILED，再由显式 retry 创建新 attempt，旧目录保留。可通过原 create 请求 exact replay 重投未完成 Job；本卡不引入定时 sweeper。取消与完成依靠原 CAS 竞争，未完成或取消 Job 不可下载。API/Worker 必须挂载同一受控持久化根目录，不能把各自临时目录当共享 store。
+
 ## TASK-P4-11 implemented P4 internal package
 
 `export-manifest.v3`现在有Simulation-only consumer。Builder先完整验证一个`export-manifest.v2`/`p3-standard-export.v1` compatibility package，再要求其PlanningSolution、三份CSV、ImportQuality和Scenario bytes与待导出的P4 ScheduleVersion content一致；不一致不得拼接。随后加入exact PUBLISHED `schedule_version.json`、publication、complete `change_report.json`、P4 Solver/fresh Validation/after KPI，形成固定13 payload；workbook固定Schedule Operations、Order Summary、Resource Load、Change Report、Metadata五个sheet。

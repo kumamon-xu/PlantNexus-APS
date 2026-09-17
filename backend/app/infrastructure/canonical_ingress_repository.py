@@ -600,6 +600,19 @@ class SqlAlchemyCanonicalIngressRepository:
                 message="Canonical ingress PlanningRun lookup failed",
             ) from error
 
+    def list_planning_run_ids(self) -> tuple[str, ...]:
+        """Enumerate identities only; Runtime authorizes before loading payloads."""
+        with self._engine.connect() as connection:
+            return tuple(
+                connection.scalars(
+                    select(_CANONICAL_INGRESS.c.planning_run_id)
+                    .where(
+                        _CANONICAL_INGRESS.c.data_plane == self._data_plane.value,
+                    )
+                    .order_by(_CANONICAL_INGRESS.c.planning_run_id)
+                )
+            )
+
     def commit(self, record: CanonicalIngressRecord) -> CanonicalIngressWriteResult:
         verify_canonical_ingress_record(record)
         document = record.document

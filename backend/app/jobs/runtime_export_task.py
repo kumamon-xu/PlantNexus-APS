@@ -277,6 +277,11 @@ class RuntimeExports:
 
 
 def register_runtime_export_task(application: Any, executor: RuntimeExports) -> None:
-    @application.task(name=EXPORT_TASK)
-    def materialize(message: Any) -> dict[str, object]:
-        return executor.execute(message)
+    @application.task(name=EXPORT_TASK, bind=True, max_retries=1)
+    def materialize(task: Any, message: Any) -> dict[str, object]:
+        result = executor.execute(message)
+        if result["disposition"] == "DUPLICATE_DELIVERY":
+            # A previous process may have crashed after its durable marker. Do
+            # not acknowledge the only recovery delivery before lease expiry.
+            raise task.retry(countdown=executor.lease_seconds, max_retries=1)
+        return result

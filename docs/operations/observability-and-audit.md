@@ -13,7 +13,7 @@ last_reviewed: 2026-09-16
 
 ## P9-05 导出可追溯性
 
-查询响应保留 source/collection/payload fingerprint、版本与 correlation。导出可追踪 create → attempt → completion/failure/cancel audit；retry/cancel receipt 与 Job 状态原子持久化。Worker delivery 返回 EXPORTED、EXPORT_FAILED、EXPIRED、STALE_DELIVERY 或 DUPLICATE_DELIVERY，底层异常脱敏。crash marker 与旧 attempt 不删除；过期投递后显式 retry 恢复，不声明自动 sweeper、HA 或 SLA。安装测试记录 wheel hash 与 app/SDK 导入来源。
+查询响应保留 source/collection/payload fingerprint、版本与 correlation。导出可追踪 create → attempt → completion/failure/cancel audit；retry/cancel receipt 与 Job 状态原子持久化。Worker delivery 返回 EXPORTED、EXPORT_FAILED、EXPIRED、STALE_DELIVERY 或 DUPLICATE_DELIVERY，底层异常脱敏。crash marker 与旧 attempt 不删除；重复投递先延后重投以检测 lease 过期，记录失败后显式 retry 恢复，不声明自动 sweeper、HA 或 SLA。安装测试记录 wheel hash 与 app/SDK 导入来源。
 
 ## P9 准入证据边界
 

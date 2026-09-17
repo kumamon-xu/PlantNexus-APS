@@ -32,6 +32,36 @@ from backend.tests.integration.test_p9_manual import (
 runtime = manual_support.runtime
 
 
+def test_celery_duplicate_delivery_is_requeued_until_lease_expiry() -> None:
+    from celery import Celery
+    from app.jobs.runtime_export_task import register_runtime_export_task, EXPORT_TASK
+    from types import SimpleNamespace
+    from typing import cast
+    from app.jobs.runtime_export_task import RuntimeExports
+
+    observed: list[Any] = []
+
+    def execute(message: Any) -> dict[str, object]:
+        observed.append(message)
+        return {
+            "disposition": "DUPLICATE_DELIVERY" if len(observed) == 1 else "EXPIRED"
+        }
+
+    application = Celery(
+        "p9-export-delivery", broker="memory://", backend="cache+memory://"
+    )
+    try:
+        register_runtime_export_task(
+            application,
+            cast(RuntimeExports, SimpleNamespace(execute=execute, lease_seconds=120)),
+        )
+        result = application.tasks[EXPORT_TASK].apply(args=({"fixture": "duplicate"},))
+        assert result.get() == {"disposition": "EXPIRED"}
+        assert len(observed) == 2
+    finally:
+        application.close()
+
+
 @pytest.fixture(autouse=True)
 def export_configuration(tmp_path: Path, monkeypatch: pytest.MonkeyPatch) -> None:
     original = manual_support.runtime_settings

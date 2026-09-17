@@ -17,7 +17,7 @@ last_reviewed: 2026-08-28
 
 服务端显式配置共享 runtime_export_storage_root 与只读 runtime_export_scenario_directory。后者按 Problem hash（去掉 sha256:）命名 JSON，保存由仿真资产 owner 提供的 p2-correctness-manifest.v1，核对 scenario/profile/generator/seed 与 import/Snapshot/Problem hashes。文件必须普通、非 symlink、至多 1 MiB；缺失或错源不得补造。客户端不能传入路径。没有 store 时仍只有既有 create/get Job；没有来源 manifest 时不能生成新包。
 
-API 认领 durable attempt 后仅发送 Job ID/attempt/lease 的 JSON 消息。Worker 从仓储重读权威来源，以共享根目录原子 claim marker 阻止重复物化，旧消息不能使用 retired lease。崩溃留下 marker；过期消息回放将 attempt 标为 EXPORT_FAILED，再由显式 retry 创建新 attempt，旧目录保留。可通过原 create 请求 exact replay 重投未完成 Job；本卡不引入定时 sweeper。取消与完成依靠原 CAS 竞争，未完成或取消 Job 不可下载。API/Worker 必须挂载同一受控持久化根目录，不能把各自临时目录当共享 store。
+API 认领 durable attempt 后仅发送 Job ID/attempt/lease 的 JSON 消息。Worker 从仓储重读权威来源，以共享根目录原子 claim marker 阻止重复物化，旧消息不能使用 retired lease。崩溃留下 marker；重复投递在 Celery 适配层按 lease 时长延后重投一次，过期消息回放将 attempt 标为 EXPORT_FAILED，再由显式 retry 创建新 attempt，旧目录保留。可通过原 create 请求 exact replay 重投未完成 Job；本卡不引入定时 sweeper。取消与完成依靠原 CAS 竞争，未完成或取消 Job 不可下载。API/Worker 必须挂载同一受控持久化根目录，不能把各自临时目录当共享 store。
 
 ## TASK-P4-11 implemented P4 internal package
 

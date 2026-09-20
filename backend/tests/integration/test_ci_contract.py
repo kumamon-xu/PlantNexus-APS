@@ -1059,9 +1059,13 @@ def test_ci_p8_optional_frontend_distribution_is_required_and_isolated() -> None
     ) < workflow.index("Engineering contract")
     assert "build/frontend/**" in workflow
     assert "continue-on-error" not in workflow
-    assert 'testIgnore: "headless-distribution.spec.ts"' in (
-        ROOT / "frontend/playwright.config.ts"
-    ).read_text(encoding="utf-8")
+    browser_config = (ROOT / "frontend/playwright.config.ts").read_text(
+        encoding="utf-8"
+    )
+    assert (
+        'testIgnore: ["headless-distribution.spec.ts", "p9-runtime-consumers.spec.ts"]'
+        in " ".join(browser_config.split())
+    )
     assert '"headless-distribution.spec.ts"' in (
         ROOT / "frontend/playwright.p3-gate.config.ts"
     ).read_text(encoding="utf-8")

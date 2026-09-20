@@ -13,7 +13,7 @@ last_reviewed: 2026-09-11
 
 ## 企业 OCI 镜像工具链
 
-`infra/enterprise/image-inputs.v1.json`独立固定封装工具链；根Python依赖、uv.lock与原Runtime wheel保持不变。
+`infra/enterprise/image-inputs.v2.json`独立固定当前封装工具链及精确 OS 补丁，旧 v1 输入保留；根Python依赖、uv.lock与原Runtime wheel保持不变。
 
 | 输入 | 固定版本与身份 |
 | --- | --- |

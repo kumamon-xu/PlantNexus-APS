@@ -88,7 +88,7 @@ DB、Redis、broker和result backend的host/port/database非敏感字段与usern
 
 ## 企业 Runtime OCI 镜像
 
-`infra/enterprise/image-inputs.v1.json`固定已验证P8-17 Runtime归档、wheel、requirements、源SHA与基础镜像digest。`scripts/enterprise_image_build.py`验证归档全部payload后，仅以wheel、锁定依赖、Schema、OpenAPI、migration和metadata生成context。原发行Dockerfile因缺少COPY源不能在发行包内独立构建；构建报告保留实际失败摘要，新Dockerfile安装原wheel，不复制仓库应用源码。
+`infra/enterprise/image-inputs.v2.json`固定当前 OS 补丁并沿用 v1 已验证的 P8-17 Runtime归档、wheel、requirements、源SHA与基础镜像digest。`scripts/enterprise_image_build.py`验证归档全部payload后，仅以wheel、锁定依赖、Schema、OpenAPI、migration和metadata生成context。原发行Dockerfile因缺少COPY源不能在发行包内独立构建；构建报告保留实际失败摘要，新Dockerfile安装原wheel，不复制仓库应用源码。
 
 在clean实施SHA运行：
 

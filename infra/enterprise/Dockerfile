@@ -27,7 +27,7 @@ LABEL org.opencontainers.image.title="PlantNexus APS Runtime" \
     io.plantnexus.aps.release-channel="unsigned-internal"
 
 RUN apt-get update \
-    && apt-get install -y --no-install-recommends ca-certificates=20250419~deb12u1 libpcre2-8-0=10.42-1+deb12u1 \
+    && apt-get install -y --no-install-recommends ca-certificates=20250419~deb12u1 libpcre2-8-0=10.42-1+deb12u1 liblzma5=5.4.1-1+deb12u2 \
     && rm -rf /var/lib/apt/lists/* \
     && useradd --create-home --uid 10001 plantnexus \
     && python -m pip uninstall -y pip \

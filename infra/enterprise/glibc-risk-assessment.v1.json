@@ -1,0 +1,29 @@
+{
+  "schema_version": "enterprise-glibc-risk-assessment.v1",
+  "assessment_date": "2026-09-20",
+  "base_policy_canonical_sha256": "20e1a279e89da2af66a7054cf3e6a34f634d6dbdd27e3a70999571221f16182f",
+  "advisory_id": "CVE-2026-8674",
+  "packages": [
+    "libc-bin",
+    "libc6"
+  ],
+  "installed_version": "2.36-9+deb12u14",
+  "scanner_severity": "MEDIUM",
+  "vendor_status": "fix_deferred",
+  "scanner_image": "aquasec/trivy:0.74.0@sha256:ee940acbf1f58ebadb42d01434ce4609530bf1b52536afbd1eee66cd7123c5c9",
+  "disposition": "UNRESOLVED_INTERNAL_TEST_SIMULATION_ONLY",
+  "production_security_approval": false,
+  "user_authorization": "2026-09-20 explicit approval of bounded image security corrective for P9-07; internal simulation only",
+  "sources": [
+    {
+      "url": "https://security-tracker.debian.org/tracker/CVE-2026-8674",
+      "sha256": "a000922bec14a5656e0ff0c5cff3c8b42c567f1f5c6dd448795fd438a39fa7ad"
+    }
+  ],
+  "evidence": {
+    "failed_provider_run": 35482829614,
+    "scan_sha256": "9f6f1d7597b73b2e72cca743a081d4d25480b2a307814566ebb060bd28004cba"
+  },
+  "basis": "glibc DNS resolver can abort on a long configured search domain. Debian bookworm has no fixed package and postpones the fix. This image is not claimed NOT_AFFECTED. Risk remains visible and accepted only for internal TEST/SIMULATION; no Production promotion.",
+  "scope": "Exact original policy, scanner, CVE, two packages, version, MEDIUM, fix_deferred and no FixedVersion only. Any other or fixable finding fails."
+}

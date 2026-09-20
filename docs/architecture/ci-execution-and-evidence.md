@@ -6,7 +6,7 @@ spec_version: 0.3.0
 phase: cross-phase
 normative: true
 source_sections: [2, 58, 89, 98, 99, 100, 101]
-last_reviewed: 2026-09-16
+last_reviewed: 2026-09-20
 ---
 
 # CI execution and evidence
@@ -26,11 +26,11 @@ The same required image step runs `infra/enterprise/compose/verify_container.py`
 
 The shared image step also runs `infra/enterprise/bootstrap/verify_container.py` against that exact image. Its required `ci-enterprise-image-bootstrap.json` is sealed by both selected routes and binds packaging SHA, image/tar identity, bootstrap template hashes and sanitized container outcomes. Backend suites include configuration/Secret negative tests; type checks include the bootstrap. Synthetic keys and fixtures remain in temporary directories outside uploaded evidence, and only safe result fields are retained. The driver checks real read-only mounts, fail-before-client behavior, local Extension loading, Compose interpolation and saved-layer canaries; it does not claim a complete offline package or live business deployment.
 
-The selected current solver/runtime job and the explicit phase-audit validation job share one immutable enterprise image build/upload step. Backend checks include `tests/enterprise` and the image builder/probe type checks. `actions: read` permits downloading the exact historical Runtime artifact named in `infra/enterprise/image-inputs.v1.json`; its archive and payload hashes are mandatory. Expired inputs fail closed, with explicit same-hash retained archive support for local builds.
+The selected current solver/runtime job and the explicit phase-audit validation job share one immutable enterprise image build/upload step. Backend checks include `tests/enterprise` and the image builder/probe type checks. `actions: read` permits downloading the exact historical Runtime artifact named in `infra/enterprise/image-inputs.v2.json` (the original v1 input remains immutable); its archive and payload hashes are mandatory. Expired inputs fail closed, with explicit same-hash retained archive support for local builds.
 
 A new nscd-specific component assessment is independent of the frozen unresolved OS policy. The producer records a fresh exact-image package/filesystem absence probe and its code hash in the sealed image report. Only CVE-2026-89092 on the exact sibling glibc packages may use that evidence; missing or mismatched proof, an installed nscd component, changed finding identity or a fixable version still fails. The original unresolved OS risks and Production rejection remain visible.
 
-The current image producer records the versioned `nscd-advisory.v2.json` reassessment for CVE-2026-89092 severity enrichment from UNKNOWN to MEDIUM, together with the fresh exact-image component absence proof. The old v1 assessment and unresolved OS risk inventory remain unchanged; missing/changed provenance, other finding changes or available fixes still block the step. Failed SHA evidence is retained and is never rerun to green.
+The P8-26 image producer recorded the versioned `nscd-advisory.v2.json` reassessment for CVE-2026-89092 severity enrichment from UNKNOWN to MEDIUM, together with the fresh exact-image component absence proof. The old v1 assessment and unresolved OS risk inventory remain unchanged; missing/changed provenance, other finding changes or available fixes still block the step. Failed SHA evidence is retained and is never rerun to green.
 
 The producer seals `ci-enterprise-image.json`, its raw image scan and CycloneDX SBOM. The image report binds the current packaging commit, distinct Runtime source identity, image ID and exported tar SHA-256. Building an image and probing its entrypoints does not establish live deployment or Production security approval.
 
@@ -66,3 +66,9 @@ The sealed replay manifest binds the exact current SHA/run/attempt and driver, t
 ## 企业 clean acceptance 必需证据
 
 solver_validation/full_validation 的企业镜像共享步骤在封包后执行独立 clean consumer，生成 ci-enterprise-image-acceptance.json。seal 与 aggregate 均要求它与 ci-enterprise-image-bundle.json 成对存在且唯一，核对 exact code SHA、候选 archive/payload/manifest/checksums 摘要、三镜像身份、双模式三十项 PASS 和 READY。development、skip/BLOCKED、入口未验证、非空 store、缺失/重复报告均拒绝；P8-27 Provider 不替代 P8-28 的新证据。
+
+## P9-07 bounded image security correction
+
+Current builds install and independently read back the exact OS patch versions declared by image-inputs.v2, including liblzma5 5.4.1-1+deb12u2. The original Runtime archive/wheel, base digest and Python lock remain unchanged. nscd-advisory.v3 binds the reviewed fix_deferred status to fresh exact-image absence evidence. glibc-risk-assessment.v1 separately retains the explicitly approved CVE-2026-8674 risk for internal TEST/SIMULATION only; it never reports NOT_AFFECTED or Production approval. Both new records are bound in full; changed identities and available fixes still fail. See the [security owner](../operations/security.md#p9-07-镜像补丁与限定风险处置).
+
+An EXIT handler retains the raw image scan and SBOM even when assessment fails, preserving the original failure status. Diagnostic artifacts do not constitute a successful producer seal or required validate check.

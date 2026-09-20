@@ -22,7 +22,7 @@ import zipfile
 
 
 ROOT = Path(__file__).resolve().parents[1]
-INPUTS = ROOT / "infra/enterprise/image-inputs.v1.json"
+INPUTS = ROOT / "infra/enterprise/image-inputs.v2.json"
 SHA_RE = re.compile(r"[0-9a-f]{40}")
 CANARY = b"PNAPS-IMAGE-CANARY-NOT-A-REAL-SECRET"
 
@@ -284,6 +284,12 @@ def nscd_not_affected(finding: dict[str, Any], evidence: dict[str, Any] | None,
                         assessment_date="2026-09-14",
                         supersedes_advisory_sha256="54757d2dae0d39e4784105c0cca6914d2078ffd9708aec595b76cb270511d539",
                         retrieved_vendor_document_sha256="30ba9f0c04dc7105a07b079a57b30e16cdafa5ebb266e48076266c445a921dec")
+    if advisory.get("schema_version") == "enterprise-component-advisory.v3":
+        digest = sha256(json.dumps(advisory, sort_keys=True, separators=(",", ":")).encode())
+        if digest != "eb365da204c52aa6a031ecfe3e5b5472a5f3c8fd85cc7ae755e94d5c673a6c09":
+            return False
+        expected.update(schema_version="enterprise-component-advisory.v3",
+                        scanner_severity="MEDIUM", vendor_status="fix_deferred")
     if any(advisory.get(k) != value for k, value in expected.items()):
         return False
     if (finding.get("class") != "os-pkgs" or finding.get("VulnerabilityID") != advisory["advisory_id"]
@@ -325,10 +331,31 @@ def reassessed_os_finding(finding: dict[str, Any], scan: dict[str, Any],
             and not finding.get("FixedVersion"))
 
 
+def accepted_glibc_risk(finding: dict[str, Any], scan: dict[str, Any],
+                        policy: dict[str, Any], assessment: dict[str, Any] | None) -> bool:
+    """Record only the explicitly approved unresolved risk, never a remediation claim."""
+    if assessment is None:
+        return False
+    digest = sha256(json.dumps(assessment, sort_keys=True, separators=(",", ":")).encode())
+    if digest != "cb7f1453ad2967b427ccdc3c264733f80182b8015204d1333ead242ef538708a":
+        return False
+    return (sha256(json.dumps(policy, sort_keys=True, separators=(",", ":")).encode())
+            == assessment["base_policy_canonical_sha256"]
+            and scan.get("scanner_image") == assessment["scanner_image"]
+            and finding.get("class") == "os-pkgs"
+            and finding.get("VulnerabilityID") == assessment["advisory_id"]
+            and finding.get("PkgName") in assessment["packages"]
+            and finding.get("InstalledVersion") == assessment["installed_version"]
+            and finding.get("Severity") == assessment["scanner_severity"]
+            and finding.get("Status") == assessment["vendor_status"]
+            and not finding.get("FixedVersion"))
+
+
 def assess_security(scan: dict[str, Any], policy: dict[str, Any], *,
                     nscd_evidence: dict[str, Any] | None = None, image_id: str | None = None,
                     os_advisory: dict[str, Any] | None = None,
-                    os_reassessment: dict[str, Any] | None = None) -> dict[str, Any]:
+                    os_reassessment: dict[str, Any] | None = None,
+                    glibc_risk: dict[str, Any] | None = None) -> dict[str, Any]:
     """Retain unresolved OS risk; never translate a scan into security approval."""
     known = {(v["id"], v["package"], v["version"], v["severity"], v["vendor_status"])
              for v in policy["unresolved_os_findings"]}
@@ -336,6 +363,7 @@ def assess_security(scan: dict[str, Any], policy: dict[str, Any], *,
     os_vex_findings = []
     reassessed_findings = []
     runtime_findings = []
+    accepted_risks = []
     for finding in scan["vulnerabilities"]:
         if finding["class"] == "os-pkgs":
             identity = (finding["VulnerabilityID"], finding["PkgName"], finding["InstalledVersion"],
@@ -346,8 +374,11 @@ def assess_security(scan: dict[str, Any], policy: dict[str, Any], *,
                                         "justification": "component_not_present"})
                 continue
             reassessed = reassessed_os_finding(finding, scan, policy, os_reassessment)
-            if finding.get("FixedVersion") or (identity not in known and not reassessed):
+            accepted = accepted_glibc_risk(finding, scan, policy, glibc_risk)
+            if finding.get("FixedVersion") or (identity not in known and not reassessed and not accepted):
                 raise ValueError("NEW_OR_FIXABLE_OS_FINDING")
+            if accepted:
+                accepted_risks.append({**finding, "disposition": "UNRESOLVED_INTERNAL_TEST_SIMULATION_ONLY"})
             if reassessed:
                 reassessed_findings.append({"advisory_id": identity[0], "package": identity[1],
                                            "version": identity[2], "severity": identity[3],
@@ -367,6 +398,7 @@ def assess_security(scan: dict[str, Any], policy: dict[str, Any], *,
             "runtime_vex_unique_count": len(set(runtime_findings)),
             "os_component_vex": os_vex_findings,
             "os_reassessed_unresolved_findings": reassessed_findings,
+            "explicitly_accepted_unresolved_findings": accepted_risks,
             "runtime_vex_reuse_basis": "exact original wheel/source hash and Linux target unchanged",
             "unrecognized_or_fixable_finding_count": 0}
 
@@ -436,6 +468,14 @@ def build(args: argparse.Namespace) -> dict[str, Any]:
         raise ValueError("ENTERPRISE_IMAGE_BUILD_FAILED")
     identity = inspect_image(tag, inputs, commit)
     probes = probe_image(identity["Id"])
+    installed_patches = {}
+    for package, expected_version in inputs["os_patch_packages"].items():
+        actual = run(["docker", "run", "--rm", "--network=none", "--read-only",
+                      "--cap-drop=ALL", "--security-opt=no-new-privileges", identity["Id"],
+                      "dpkg-query", "--show", "--showformat=${Version}", package]).decode().strip()
+        if actual != expected_version:
+            raise ValueError("OS_PATCH_VERSION_MISMATCH")
+        installed_patches[package] = actual
     licenses = verify_installed_licenses(probes, files)
     image_tar = output/f"plantnexus-aps-runtime-{inputs['runtime_version']}-linux-amd64.tar"
     run(["docker", "save", "-o", str(image_tar), tag])
@@ -447,12 +487,13 @@ def build(args: argparse.Namespace) -> dict[str, Any]:
     if policy["runtime_wheel_sha256"] != inputs["wheel_sha256"] or policy["runtime_source_sha"] != inputs["source_sha"]:
         raise ValueError("VEX_SOURCE_IDENTITY_MISMATCH")
     nscd_evidence = probe_nscd_absence(identity["Id"])
-    os_advisory = json.loads((ROOT/"infra/enterprise/nscd-advisory.v2.json").read_text(encoding="utf-8"))
+    os_advisory = json.loads((ROOT/"infra/enterprise/nscd-advisory.v3.json").read_text(encoding="utf-8"))
     os_reassessment = json.loads(
         (ROOT/"infra/enterprise/image-security-reassessment.v1.json").read_text(encoding="utf-8"))
+    glibc_risk = json.loads((ROOT/"infra/enterprise/glibc-risk-assessment.v1.json").read_text(encoding="utf-8"))
     assessment = assess_security(scan, policy, nscd_evidence=nscd_evidence,
                                  image_id=identity["Id"], os_advisory=os_advisory,
-                                 os_reassessment=os_reassessment)
+                                 os_reassessment=os_reassessment, glibc_risk=glibc_risk)
     return {"schema_version": "enterprise-runtime-image-report.v1", "task_id": "TASK-P8-23",
             "code_commit": commit, "source_runtime_sha": inputs["source_sha"],
             "source_archive_sha256": inputs["archive_sha256"], "candidate": args.candidate,
@@ -465,6 +506,7 @@ def build(args: argparse.Namespace) -> dict[str, Any]:
             "security": scan, "security_assessment": assessment, "runtime_licenses": licenses,
             "nscd_component_evidence": nscd_evidence, "os_component_advisory": os_advisory,
             "os_security_reassessment": os_reassessment,
+            "glibc_risk_assessment": glibc_risk, "verified_os_patch_packages": installed_patches,
             "production_ready": False,
             "runtime_deployment_tested": False}
 

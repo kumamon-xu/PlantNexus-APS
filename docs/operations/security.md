@@ -6,7 +6,7 @@ spec_version: 0.3.0
 phase: P0-P8
 normative: true
 source_sections: [58, 62, 93, 95, 100]
-last_reviewed: 2026-09-16
+last_reviewed: 2026-09-20
 ---
 
 # P0 工程安全边界
@@ -301,3 +301,13 @@ Read-only Chromium覆盖authorization denial和no-command/no-idempotency transpo
 ## 最终交付与清理边界
 
 最终封存只增补evidence并保持已验收payload/镜像/SBOM/配置模板字节；未签名内部交接身份不关闭漏洞或Production authority。公开仓库仅保留工具和技术说明，归档、原始Provider日志、客户配置、Secret、数据库与备份均位于独立ignored目录。清理必须先验证唯一final包及sidecar，再对明确staging根生成并锁定逐文件计划，保全非归档报告后执行；禁止链接/reparse、路径越界、未知数据文件及全局Docker/卷清理。
+
+## P9-07 镜像补丁与限定风险处置
+
+2026-09-20 经用户明确确认，当前构建消费新增 `image-inputs.v2.json`，在相同基础镜像和不可变 Runtime wheel 上精确安装 `liblzma5=5.4.1-1+deb12u2`，并从 exact image 读取 dpkg 版本核对所有固定 OS 补丁。[Debian DLA-4783-1](https://security-tracker.debian.org/tracker/DLA-4783-1)列出该 bookworm 修复版本。旧输入 v1、已发行归档和历史扫描字节保留。
+
+`nscd-advisory.v3.json`仅新增识别 CVE-2026-89092 的 MEDIUM / fix_deferred 元数据，绑定完整新记录、v2 摘要和官方来源。每次仍须证明 exact image 内没有 nscd 包、命令或路径；旧 v1/v2 不原地放宽，缺失/篡改证据、不同 finding 或出现修复版本均拒绝。
+
+新增 `glibc-risk-assessment.v1.json`单独记录 CVE-2026-8674 在 libc-bin/libc6 2.36-9+deb12u14 上的 MEDIUM / fix_deferred 风险。[Debian](https://security-tracker.debian.org/tracker/CVE-2026-8674)仍将 bookworm 标记为 vulnerable，未提供该发行版修复。此项不是 NOT_AFFECTED；只在用户批准的内部 TEST/SIMULATION 用途下保留为未解决风险，并计入原始风险数量及逐条处置结果。完整记录、原策略、固定扫描器、CVE/包/版本/评级/状态必须精确一致，任何 FixedVersion 继续阻断。不得据构建 PASS 宣称修复完成或 Production 安全批准。
+
+失败构建也保留原始扫描；新提交须取得 fresh image、扫描、组件缺失、补丁版本和现有部署工程验收证据。此纠正不发布新 Runtime/Kit，不变更应用依赖或 Production authority。

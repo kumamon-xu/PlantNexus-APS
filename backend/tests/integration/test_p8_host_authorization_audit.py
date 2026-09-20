@@ -172,6 +172,8 @@ def test_audit_repository_is_append_only_integrity_checked_and_migration_reversi
 ) -> None:
     database_path = tmp_path / "host-authorization-audit.db"
     engine, configuration = migrated_engine(database_path)
+    # This contract proves the original 0009 -> 0008 authorization boundary.
+    command.downgrade(configuration, "0009_host_authorization_audit")
     repository = SqlAlchemyHostAuthorizationAuditRepository(
         engine, data_plane="SIMULATION"
     )

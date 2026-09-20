@@ -132,10 +132,10 @@ def test_empty_database_migration_upgrades_and_downgrades(tmp_path: Path) -> Non
 
 def test_p8_release_manifest_fingerprints_the_exact_linear_migration_chain() -> None:
     manifest = build_migration_manifest(
-        ROOT, database_head="0009_host_authorization_audit"
+        ROOT, database_head="0010_runtime_replan"
     )
     chain = manifest["linear_chain"]
-    assert manifest["revision_count"] == len(chain) == 9
+    assert manifest["revision_count"] == len(chain) == 10
     previous = None
     for row in chain:
         assert row["down_revision"] == previous

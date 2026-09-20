@@ -202,6 +202,17 @@ class SqlAlchemyPlanningRunWorkerRepository:
         row = connection.execute(select(_JOBS).where(_JOBS.c.job_id == job_id)).first()
         return None if row is None else row._mapping
 
+    def lock_active_lease(self, connection: Connection, *, job_id: str, worker_id: str, now: datetime) -> JobRecord:
+        """Fence result application and lease recovery in the same transaction."""
+        result = connection.execute(update(_JOBS).where(
+            _JOBS.c.job_id == job_id, _JOBS.c.worker_id == worker_id,
+            _JOBS.c.status == JobStatus.RUNNING.value, _JOBS.c.lease_expires_at > now,
+        ).values(worker_id=worker_id))
+        row = self._job_row(connection, job_id)
+        if result.rowcount != 1 or row is None:
+            reject_worker(PlanningRunWorkerErrorCode.LEASE_LOST, field="worker_job.commit", message="Result application lost its lease")
+        return _job_from_row(row)
+
     def get_job(self, job_id: str) -> JobRecord | None:
         try:
             with self._engine.connect() as connection:

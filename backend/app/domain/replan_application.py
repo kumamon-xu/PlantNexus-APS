@@ -434,7 +434,7 @@ def build_dynamic_schedule_draft(
         fingerprint=validation_fingerprint,
     )
     kpi_reference = _artifact_reference(
-        document_version="kpi.v2",
+        document_version=cast(str, kpi["kpi_version"]),
         artifact_id=_identifier(kpi.get("kpi_id"), "kpi.kpi_id"),
         fingerprint=contract_fingerprint(kpi),
     )

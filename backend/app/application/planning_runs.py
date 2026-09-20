@@ -638,11 +638,28 @@ class PlanningRunOrchestrationService:
             source_ingress_id=cast(str, source["ingress_id"]),
             source_record_fingerprint=cast(str, source["record_fingerprint"]),
         )
+        return self.materialize_prepared(
+            aggregate,
+            context=context,
+            key_reference=cast(str, cast(Mapping[str, object], source["idempotency"])["key_reference"]),
+            available_at_utc=available_at_utc,
+            timeout_at_utc=timeout_at_utc,
+        )
+
+    def materialize_prepared(
+        self,
+        aggregate: PlanningRunAggregate,
+        *,
+        context: PlanningRunCommandContext,
+        key_reference: str,
+        available_at_utc: str,
+        timeout_at_utc: str,
+    ) -> PlanningRunActionResult:
+        """Queue server-prepared inputs; repository verifies the durable source."""
+        initial_run = aggregate.initial_document
         verify_planning_run(aggregate, schemas=self._schemas)
         self._authorize(aggregate, context, read_only=False)
         scope = self._scope("MATERIALIZE", aggregate, context)
-        ingress_identity = cast(Mapping[str, object], source["idempotency"])
-        key_reference = cast(str, ingress_identity["key_reference"])
         request_fingerprint = canonical_fingerprint(
             {
                 "operation": "MATERIALIZE",

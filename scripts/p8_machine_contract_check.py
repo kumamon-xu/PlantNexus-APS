@@ -72,6 +72,8 @@ NEW_SCHEMA_PATHS = {
     *(f"schemas/samples/{name}" for name in POSITIVE_SAMPLES),
     *(f"schemas/samples/{name}" for name in NEGATIVE_SAMPLES),
 }
+POST_P8_ADDITIVE_ARTIFACT_PATHS = {'schemas/samples/kpi.v3.synthetic.json', 'schemas/samples/planning-run.v2.created.synthetic.json', 'schemas/json/kpi.v3.schema.json', 'schemas/json/planning-run.v2.schema.json'}
+CURRENT_SCHEMA_SET_VERSION = "2.11.0"
 MUTABLE_SCHEMA_METADATA_PATHS = {"schemas/data_dictionary.yaml"}
 FORBIDDEN_REQUEST_KEYS = {
     "artifact_path",
@@ -697,7 +699,7 @@ def _immutable_schema_manifest(root: Path) -> tuple[int, str]:
         path
         for path in (root / "schemas").rglob("*")
         if path.is_file()
-        and path.relative_to(root).as_posix() not in NEW_SCHEMA_PATHS
+        and path.relative_to(root).as_posix() not in NEW_SCHEMA_PATHS | POST_P8_ADDITIVE_ARTIFACT_PATHS
         and path.relative_to(root).as_posix() not in MUTABLE_SCHEMA_METADATA_PATHS
     )
     payload = "".join(
@@ -855,7 +857,7 @@ def _check_registries_and_metadata(root: Path) -> JsonObject:
     }:
         raise ValueError("PlanningRun state vocabulary drifted")
     project = tomllib.loads((root / "pyproject.toml").read_text(encoding="utf-8"))
-    if project["tool"]["plantnexus-aps"]["versions"]["schema"] != SCHEMA_SET_VERSION:
+    if project["tool"]["plantnexus-aps"]["versions"]["schema"] != CURRENT_SCHEMA_SET_VERSION:
         raise ValueError("pyproject schema metadata mismatch")
     dictionary = cast(
         JsonObject,
@@ -863,7 +865,7 @@ def _check_registries_and_metadata(root: Path) -> JsonObject:
             (root / "schemas/data_dictionary.yaml").read_text(encoding="utf-8")
         ),
     )
-    if dictionary.get("schema_set_version") != SCHEMA_SET_VERSION:
+    if dictionary.get("schema_set_version") != CURRENT_SCHEMA_SET_VERSION:
         raise ValueError("data dictionary schema metadata mismatch")
     expected = {*SCHEMAS, "headless-error-code-registry.v1"}
     if not expected.issubset(set(cast(Mapping[str, Any], dictionary["schemas"]))):
@@ -935,7 +937,7 @@ def run_contract_checks(root: Path) -> JsonObject:
         "task_id": TASK_ID,
         "test_id": TEST_ID,
         "diff_base": DIFF_BASE,
-        "schema_set_version": SCHEMA_SET_VERSION,
+        "schema_set_version": CURRENT_SCHEMA_SET_VERSION,
         "status": "PASS",
         "result": "PASS",
         "check_count": len(checks),
@@ -987,7 +989,7 @@ def main(argv: Sequence[str] | None = None) -> int:
             "task_id": TASK_ID,
             "test_id": TEST_ID,
             "diff_base": DIFF_BASE,
-            "schema_set_version": SCHEMA_SET_VERSION,
+            "schema_set_version": CURRENT_SCHEMA_SET_VERSION,
             "status": "FAIL",
             "result": "FAIL",
             "check_count": 0,

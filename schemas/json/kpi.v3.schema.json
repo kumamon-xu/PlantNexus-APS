@@ -1,0 +1,404 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "urn:plantnexus:aps:schema:kpi:v3",
+  "title": "Validated Dynamic Replan KPI v3",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "kpi_id",
+    "kpi_version",
+    "schema_set_version",
+    "canonicalization_version",
+    "planning_run_id",
+    "inputs",
+    "delivery",
+    "planning",
+    "resources",
+    "synthetic"
+  ],
+  "properties": {
+    "kpi_id": {
+      "type": "string",
+      "pattern": "^kpi-[0-9a-f]{64}$"
+    },
+    "kpi_version": {
+      "const": "kpi.v3"
+    },
+    "schema_set_version": {
+      "const": "2.11.0"
+    },
+    "canonicalization_version": {
+      "const": "canonical-json.v1"
+    },
+    "planning_run_id": {
+      "$ref": "#/$defs/canonicalId"
+    },
+    "inputs": {
+      "$ref": "#/$defs/inputs"
+    },
+    "delivery": {
+      "$ref": "#/$defs/delivery"
+    },
+    "planning": {
+      "$ref": "#/$defs/planning"
+    },
+    "resources": {
+      "type": "array",
+      "items": {
+        "$ref": "#/$defs/resource"
+      }
+    },
+    "synthetic": {
+      "type": "boolean"
+    },
+    "synthetic_provenance": {
+      "$ref": "#/$defs/syntheticProvenance"
+    }
+  },
+  "allOf": [
+    {
+      "if": {
+        "properties": {
+          "synthetic": {
+            "const": true
+          }
+        },
+        "required": [
+          "synthetic"
+        ]
+      },
+      "then": {
+        "required": [
+          "synthetic_provenance"
+        ]
+      },
+      "else": {
+        "not": {
+          "required": [
+            "synthetic_provenance"
+          ]
+        }
+      }
+    }
+  ],
+  "$defs": {
+    "canonicalId": {
+      "type": "string",
+      "minLength": 1,
+      "maxLength": 256,
+      "pattern": "^[^\\s\\u0000-\\u001F\\u007F]+$"
+    },
+    "fingerprint": {
+      "type": "string",
+      "pattern": "^sha256:[0-9a-f]{64}$"
+    },
+    "utcInstant": {
+      "type": "string",
+      "format": "date-time",
+      "pattern": "Z$"
+    },
+    "inputs": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "snapshot",
+        "problem",
+        "validation_report",
+        "solver_report",
+        "candidate"
+      ],
+      "properties": {
+        "snapshot": {
+          "type": "object",
+          "additionalProperties": false,
+          "required": [
+            "snapshot_version",
+            "snapshot_id",
+            "snapshot_hash"
+          ],
+          "properties": {
+            "snapshot_version": {
+              "const": "planning-snapshot.v2"
+            },
+            "snapshot_id": {
+              "$ref": "#/$defs/canonicalId"
+            },
+            "snapshot_hash": {
+              "$ref": "#/$defs/fingerprint"
+            }
+          }
+        },
+        "problem": {
+          "type": "object",
+          "additionalProperties": false,
+          "required": [
+            "problem_version",
+            "problem_hash"
+          ],
+          "properties": {
+            "problem_version": {
+              "const": "planning-problem.v2"
+            },
+            "problem_hash": {
+              "$ref": "#/$defs/fingerprint"
+            }
+          }
+        },
+        "validation_report": {
+          "type": "object",
+          "additionalProperties": false,
+          "required": [
+            "validation_report_version",
+            "validation_report_fingerprint",
+            "status"
+          ],
+          "properties": {
+            "validation_report_version": {
+              "const": "validation-report.v2"
+            },
+            "validation_report_fingerprint": {
+              "$ref": "#/$defs/fingerprint"
+            },
+            "status": {
+              "const": "PASS"
+            }
+          }
+        },
+        "solver_report": {
+          "type": "object",
+          "additionalProperties": false,
+          "required": [
+            "solver_report_version",
+            "report_id",
+            "solver_report_fingerprint"
+          ],
+          "properties": {
+            "solver_report_version": {
+              "const": "solver-report.v2"
+            },
+            "report_id": {
+              "$ref": "#/$defs/canonicalId"
+            },
+            "solver_report_fingerprint": {
+              "$ref": "#/$defs/fingerprint"
+            }
+          }
+        },
+        "candidate": {
+          "type": "object",
+          "additionalProperties": false,
+          "required": [
+            "document_version",
+            "artifact_id",
+            "fingerprint"
+          ],
+          "properties": {
+            "document_version": {
+              "const": "replan-candidate.v1"
+            },
+            "artifact_id": {
+              "$ref": "#/$defs/canonicalId"
+            },
+            "fingerprint": {
+              "$ref": "#/$defs/fingerprint"
+            }
+          }
+        }
+      }
+    },
+    "demand": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "demand_order_id",
+        "due_at_utc",
+        "priority_weight",
+        "completion_tick",
+        "completion_at_utc",
+        "tardiness_seconds",
+        "priority_weighted_tardiness_seconds",
+        "on_time"
+      ],
+      "properties": {
+        "demand_order_id": {
+          "$ref": "#/$defs/canonicalId"
+        },
+        "due_at_utc": {
+          "$ref": "#/$defs/utcInstant"
+        },
+        "priority_weight": {
+          "type": "integer",
+          "minimum": 1
+        },
+        "completion_tick": {
+          "type": "integer",
+          "minimum": 0
+        },
+        "completion_at_utc": {
+          "$ref": "#/$defs/utcInstant"
+        },
+        "tardiness_seconds": {
+          "type": "integer",
+          "minimum": 0
+        },
+        "priority_weighted_tardiness_seconds": {
+          "type": "integer",
+          "minimum": 0
+        },
+        "on_time": {
+          "type": "boolean"
+        }
+      }
+    },
+    "delivery": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "order_count",
+        "on_time_order_count",
+        "on_time_order_ratio",
+        "late_order_count",
+        "total_tardiness_seconds",
+        "priority_weighted_tardiness_seconds",
+        "demands"
+      ],
+      "properties": {
+        "order_count": {
+          "type": "integer",
+          "minimum": 0
+        },
+        "on_time_order_count": {
+          "type": "integer",
+          "minimum": 0
+        },
+        "on_time_order_ratio": {
+          "type": [
+            "number",
+            "null"
+          ],
+          "minimum": 0,
+          "maximum": 1
+        },
+        "late_order_count": {
+          "type": "integer",
+          "minimum": 0
+        },
+        "total_tardiness_seconds": {
+          "type": "integer",
+          "minimum": 0
+        },
+        "priority_weighted_tardiness_seconds": {
+          "type": "integer",
+          "minimum": 0
+        },
+        "demands": {
+          "type": "array",
+          "items": {
+            "$ref": "#/$defs/demand"
+          }
+        }
+      }
+    },
+    "planning": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "makespan_seconds",
+        "scheduled_operation_count",
+        "unscheduled_operation_count"
+      ],
+      "properties": {
+        "makespan_seconds": {
+          "type": "integer",
+          "minimum": 0
+        },
+        "scheduled_operation_count": {
+          "type": "integer",
+          "minimum": 0
+        },
+        "unscheduled_operation_count": {
+          "const": 0
+        }
+      }
+    },
+    "resource": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "resource_id",
+        "resource_code",
+        "calendar_id",
+        "available_seconds",
+        "planned_busy_seconds",
+        "utilization"
+      ],
+      "properties": {
+        "resource_id": {
+          "$ref": "#/$defs/canonicalId"
+        },
+        "resource_code": {
+          "$ref": "#/$defs/canonicalId"
+        },
+        "calendar_id": {
+          "$ref": "#/$defs/canonicalId"
+        },
+        "available_seconds": {
+          "type": "integer",
+          "minimum": 0
+        },
+        "planned_busy_seconds": {
+          "type": "integer",
+          "minimum": 0
+        },
+        "utilization": {
+          "type": [
+            "number",
+            "null"
+          ],
+          "minimum": 0,
+          "maximum": 1
+        }
+      }
+    },
+    "syntheticProvenance": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "scenario_id",
+        "scenario_version",
+        "seed",
+        "factory_profile_id",
+        "profile_version",
+        "generator_id",
+        "generator_version"
+      ],
+      "properties": {
+        "scenario_id": {
+          "$ref": "#/$defs/canonicalId"
+        },
+        "scenario_version": {
+          "type": "string",
+          "minLength": 1
+        },
+        "seed": {
+          "type": "integer",
+          "minimum": 0
+        },
+        "factory_profile_id": {
+          "$ref": "#/$defs/canonicalId"
+        },
+        "profile_version": {
+          "type": "string",
+          "minLength": 1
+        },
+        "generator_id": {
+          "$ref": "#/$defs/canonicalId"
+        },
+        "generator_version": {
+          "type": "string",
+          "minLength": 1
+        }
+      }
+    }
+  }
+}

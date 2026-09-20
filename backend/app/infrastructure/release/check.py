@@ -123,7 +123,7 @@ def _migration_replay(files: Mapping[str, bytes]) -> JsonObject:
             with engine.connect() as connection:
                 revision = connection.execute(text("SELECT version_num FROM alembic_version")).scalar_one()
             result["empty_upgrade_to_head"] = (
-                revision == "0009_host_authorization_audit"
+                revision == "0010_runtime_replan"
                 and "headless_authorization_audit_records" in head_tables
             )
         finally:
@@ -140,6 +140,8 @@ def _migration_replay(files: Mapping[str, bytes]) -> JsonObject:
             downgraded.dispose()
 
         command.upgrade(configuration, "head")
+        # The populated destructive boundary remains the original 0009 -> 0008.
+        command.downgrade(configuration, "0009_host_authorization_audit")
         populated = create_engine(database_url)
         try:
             with populated.begin() as connection:
@@ -204,7 +206,7 @@ def _migration_replay(files: Mapping[str, bytes]) -> JsonObject:
     issues = [key for key, value in result.items() if value is not True]
     return {
         "report_version": MIGRATION_REPORT_VERSION,
-        "database_head": "0009_host_authorization_audit",
+        "database_head": "0010_runtime_replan",
         "profile": "SQLITE_ENGINEERING_REPLAY_NOT_PRODUCTION_DATABASE_CERTIFICATION",
         "checks": result,
         "rollback_policy": "BACKUP_RESTORE_OR_APPROVED_FORWARD_FIX",
@@ -368,7 +370,7 @@ def _clean_install_smoke(files: Mapping[str, bytes]) -> tuple[bool, float]:
             "from app.jobs.planning_run_solver_worker import PlanningRunSolverWorker;"
             "from app.planning.validation.problem_schedule_validator import ProblemScheduleValidator;"
             "assert (APPLICATION_VERSION,CORE_VERSION,RUNTIME_VERSION,SCHEMA_VERSION)=="
-            "('0.0.0','0.0.0','0.1.0','2.10.0');"
+            "('0.0.0','0.0.0','0.1.0','2.11.0');"
             "assert callable(create_app) and PlanningRunSolverWorker and ProblemScheduleValidator"
         )
         _run((str(python), "-I", "-c", smoke), cwd=runtime, environment=environment)
@@ -502,7 +504,7 @@ def run_checks(root: Path, release_output: Path) -> tuple[JsonObject, JsonObject
         "api": "headless-http.v1",
         "schema": SCHEMA_VERSION,
         "spec": SPEC_VERSION,
-        "database": "0009_host_authorization_audit",
+        "database": "0010_runtime_replan",
         "extension_sdk": "0.0.0-not-published",
         "developer_kit": "0.0.0-not-published",
         "plugin_registry": "plugin-registry.v1",

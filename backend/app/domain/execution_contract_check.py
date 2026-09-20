@@ -127,6 +127,11 @@ _NEW_ARTIFACT_PATHS = {
     *(f"schemas/samples/{sample}" for _, sample, _, _ in _SCHEMA_SAMPLE_PAIRS),
 }
 _POST_P4_ADDITIVE_ARTIFACT_PATHS = {
+    'schemas/json/kpi.v3.schema.json',
+    'schemas/json/planning-run.v2.schema.json',
+    'schemas/samples/kpi.v3.synthetic.json',
+    'schemas/samples/planning-run.v2.created.synthetic.json',
+
     "schemas/json/duration-feature-record.schema.json",
     "schemas/json/duration-model-manifest.schema.json",
     "schemas/json/duration-evaluation-report.schema.json",
@@ -541,16 +546,16 @@ def _dependency_and_boundary_check(root: Path) -> dict[str, object]:
         raise ValueError("runtime dependency set changed")
     if development != _EXPECTED_DEV_DEPENDENCIES:
         raise ValueError("development dependency set changed")
-    if project["tool"]["plantnexus-aps"]["versions"]["schema"] != "2.10.0":
-        raise ValueError("pyproject current schema metadata is not 2.10.0")
-    if SCHEMA_VERSION != "2.10.0":
-        raise ValueError("package current schema metadata is not 2.10.0")
+    if project["tool"]["plantnexus-aps"]["versions"]["schema"] != "2.11.0":
+        raise ValueError("pyproject current schema metadata is not 2.11.0")
+    if SCHEMA_VERSION != "2.11.0":
+        raise ValueError("package current schema metadata is not 2.11.0")
     dictionary = cast(
         dict[str, Any],
         yaml.safe_load((root / "schemas" / "data_dictionary.yaml").read_text("utf-8")),
     )
-    if dictionary.get("schema_set_version") != "2.10.0":
-        raise ValueError("data dictionary current schema metadata is not 2.10.0")
+    if dictionary.get("schema_set_version") != "2.11.0":
+        raise ValueError("data dictionary current schema metadata is not 2.11.0")
     expected_documents = {version for _, _, _, version in _SCHEMA_SAMPLE_PAIRS}
     if not expected_documents.issubset(set(cast(dict[str, Any], dictionary["schemas"]))):
         raise ValueError("data dictionary omits a P4 document version")

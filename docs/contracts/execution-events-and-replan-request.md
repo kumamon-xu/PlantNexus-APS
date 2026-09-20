@@ -6,10 +6,19 @@ spec_version: 0.3.0
 phase: P0-P4
 normative: true
 source_sections: [35, 47, 48, 49, 50, 64, 66, 79, 80]
-last_reviewed: 2026-08-31
+last_reviewed: 2026-09-20
 ---
 
 # ExecutionEvent 与 ReplanRequest 合同
+
+## P9-07 正式异步 Runtime
+
+配置 `PLANTNEXUS_RUNTIME_REPLAN_POLICY_PATH` 为显式批准的 Simulation Policy v2，同时配置事件 authority/stream 绑定后，正式 API 接收、查询、取消、重试 ReplanRequest 并查询结果与完整 ChangeReport。未配置继续拒绝该能力。HTTP 只校验并冻结精确来源，持久化 request/attempt/PlanningRun/work/audit 后派发既有 Worker；求解不在 HTTP 中执行。
+
+Worker 复用原 Delivery→Stability→Makespan 策略、独立 Validator 与 Extension admission。结果原子写入新 DRAFT、完整报告及 lineage，后续需要显式提交审核、批准、发布。新 DRAFT 使用 ScheduleVersion v2，运行载体为 planning-run.v2，KPI 为 kpi.v3；旧版本不作为 alias。重排后已发布 v2 可作为下一轮基准。
+
+人工基准必须仍有匹配实际内容的 KPI；人工锁须已由对应 LOCK_CREATED 事实进入新 Snapshot/Problem，否则以 MIXED_LINEAGE 拒绝，不能默默丢锁或修改事件 authority。旧标准导出和 v2 内容编辑的不兼容拒绝边界保留。急单必须先有与当前事实相符的 canonical 导入，再投影至新 Snapshot；不能用旧导入覆盖设备/工时/进度事实。
+
 
 ## P9-06 Runtime consumer
 

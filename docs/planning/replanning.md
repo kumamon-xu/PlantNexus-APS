@@ -6,10 +6,17 @@ spec_version: 0.3.0
 phase: P0-P5
 normative: true
 source_sections: [21, 28, 35, 47, 48, 49, 50, 79, 80]
-last_reviewed: 2026-09-01
+last_reviewed: 2026-09-20
 ---
 
 # 动态重排设计合同
+
+## P9-07 Runtime 接入边界
+
+正式请求从已投影的精确 Snapshot 重建 Problem/freeze，冻结当前 PUBLISHED 基准、policy、limits、Runtime 和事件配置身份，经 durable Worker 调用既有策略及独立 Validator。支持 v2 已发布结果作为连续重排基准。候选只成为 DRAFT，审批发布保持显式。
+
+人工修改基准的实际 KPI 和锁事实必须可由现有载体证明，否则拒绝；人工锁先经 LOCK_CREATED 投影后可继承。Schema Set 2.11.0 的新 KPI/Run 载体解决真实重排结果引用，不扩展旧标准导出。工时秒数按既有 tick 向上取整；ScheduleVersion v2 的占用秒数与 UTC 区间一致，复审依据 Problem 中的处理工时重新验证。
+
 
 ## TASK-P5-22 fresh frozen P4 audit
 

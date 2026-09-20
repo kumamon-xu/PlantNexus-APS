@@ -9,6 +9,8 @@ C-011 rules.
 
 from __future__ import annotations
 
+from app.domain.schedule_carrier import require_schedule_carrier
+
 from collections.abc import Mapping, Sequence
 from copy import deepcopy
 from dataclasses import dataclass
@@ -445,14 +447,16 @@ def _prepare_command_inputs(
     identity = schedule_command_identity(command, data_plane=data_plane)
     require_schedule_command_authorization(context, identity, data_plane=data_plane)
     try:
-        require_workspace_document(source)
+        require_schedule_carrier(source)
     except (TypeError, ValueError) as error:
         raise ScheduleCommandError(
             ScheduleCommandFailure.MIXED_LINEAGE,
             field=getattr(error, "field", "source"),
             message="source ScheduleVersion failed its immutable carrier contract",
         ) from error
-    if source.get("schedule_version_version") != "schedule-version.v1":
+    if source.get("schedule_version_version") != "schedule-version.v1" and not (
+        source.get("schedule_version_version") == "schedule-version.v2" and identity.command_type == "SUBMIT_FOR_REVIEW"
+    ):
         reject_command(
             ScheduleCommandFailure.MIXED_LINEAGE,
             field="source.schedule_version_version",
@@ -505,7 +509,7 @@ def _problem_views(
             message="must be planning-problem.v2",
         )
     lineage = _mapping(source.get("lineage"), "source.lineage")
-    problem_reference = _mapping(lineage.get("problem"), "source.lineage.problem")
+    problem_reference = _mapping(lineage.get("new_problem" if source.get("schedule_version_version") == "schedule-version.v2" else "problem"), "source.lineage.problem")
     if problem_reference.get("fingerprint") != problem.get("problem_hash"):
         reject_command(
             ScheduleCommandFailure.MIXED_LINEAGE,
@@ -1046,7 +1050,9 @@ def prepare_review_submission(
             field="command.expected_state",
             message="review submission requires an exact DRAFT source",
         )
-    if source_clone.get("source_kind") not in {"MANUAL_EDIT", "LOCK_CHANGE"}:
+    if source_clone.get("source_kind") not in {"MANUAL_EDIT", "LOCK_CHANGE"} and not (
+        source_clone.get("schedule_version_version") == "schedule-version.v2" and source_clone.get("source_kind") == "DYNAMIC_REPLAN"
+    ):
         reject_command(
             ScheduleCommandFailure.INVALID_COMMAND,
             field="source.source_kind",
@@ -1055,6 +1061,21 @@ def prepare_review_submission(
     _problem_views(problem_clone, source_clone)
     content = _mapping(source_clone.get("content"), "source.content")
     assignments = _sequence(content.get("assignments"), "source.content.assignments")
+    if source_clone.get("schedule_version_version") == "schedule-version.v2":
+        # v2 Schedule content records occupied seconds; the Validator consumes
+        # authoritative processing seconds from the bound Problem.
+        operations = {item["operation_id"]: item for item in cast(Sequence[Mapping[str, object]], problem_clone["operation_instances"])}
+        projected = []
+        for raw in assignments:
+            assignment = dict(_mapping(raw, "content.assignments[]"))
+            occupied = int((parse_utc_instant(cast(str, assignment["end_at_utc"])) - parse_utc_instant(cast(str, assignment["start_at_utc"]))).total_seconds())
+            if assignment["duration_seconds"] != occupied:
+                reject_command(ScheduleCommandFailure.MIXED_LINEAGE, field="content.duration_seconds", message="v2 occupied duration differs")
+            operation = operations[assignment["operation_id"]]
+            option = next(item for item in cast(Sequence[Mapping[str, object]], operation["resource_options"]) if item["resource_id"] == assignment["resource_id"])
+            assignment["duration_seconds"] = operation["remaining_seconds"] if operation["status"] == "RUNNING" else option["final_duration_seconds"]
+            projected.append(assignment)
+        assignments = projected
     validator_candidate = {
         "problem": {
             field: problem_clone[field]
@@ -1319,7 +1340,7 @@ def build_review_submission_documents(
             prepared.source["synthetic_provenance"]
         )
     try:
-        require_workspace_document(ready)
+        require_schedule_carrier(ready)
         require_workspace_document(audit_event)
     except (TypeError, ValueError) as error:
         raise ScheduleCommandError(

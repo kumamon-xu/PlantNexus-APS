@@ -1,0 +1,86 @@
+{
+  "canonicalization_version": "canonical-json.v1",
+  "delivery": {
+    "demands": [
+      {
+        "completion_at_utc": "2026-08-20T00:08:00Z",
+        "completion_tick": 8,
+        "demand_order_id": "DEMAND-001",
+        "due_at_utc": "2026-08-20T00:00:00Z",
+        "on_time": false,
+        "priority_weight": 2,
+        "priority_weighted_tardiness_seconds": 960,
+        "tardiness_seconds": 480
+      }
+    ],
+    "late_order_count": 1,
+    "on_time_order_count": 0,
+    "on_time_order_ratio": 0.0,
+    "order_count": 1,
+    "priority_weighted_tardiness_seconds": 960,
+    "total_tardiness_seconds": 480
+  },
+  "inputs": {
+    "candidate": {
+      "artifact_id": "replan-candidate-fca3693a13e6cd18cb76c2e962c5c56e5c7643a452fc5673c7cc78d9e4bfe8a5",
+      "document_version": "replan-candidate.v1",
+      "fingerprint": "sha256:fca3693a13e6cd18cb76c2e962c5c56e5c7643a452fc5673c7cc78d9e4bfe8a5"
+    },
+    "problem": {
+      "problem_hash": "sha256:eeaae52ea20b8a9635201f5daa1b66c0794777427248fce1bf58411e99dabf4a",
+      "problem_version": "planning-problem.v2"
+    },
+    "snapshot": {
+      "snapshot_hash": "sha256:7434ab19df1437831ec2635a9f1d5feb5835778640ebea908ceeb164fe721b4c",
+      "snapshot_id": "planning-snapshot-v2-7434ab19df1437831ec2635a9f1d5feb5835778640ebea908ceeb164fe721b4c",
+      "snapshot_version": "planning-snapshot.v2"
+    },
+    "solver_report": {
+      "report_id": "solver-report-44591c483688b5b3cb33ad5f1f25027ce5547202751c1194c985af2557bf013b",
+      "solver_report_fingerprint": "sha256:44591c483688b5b3cb33ad5f1f25027ce5547202751c1194c985af2557bf013b",
+      "solver_report_version": "solver-report.v2"
+    },
+    "validation_report": {
+      "status": "PASS",
+      "validation_report_fingerprint": "sha256:7a89c685bbc46aa0104815e321a24c734f1c0179c7a4fa20bbc563221d3e0c0a",
+      "validation_report_version": "validation-report.v2"
+    }
+  },
+  "kpi_id": "kpi-43fc92f4c7d477752a51ce9b16dfd21352da1f3d21ce9125f7663b0d8f330c15",
+  "kpi_version": "kpi.v3",
+  "planning": {
+    "makespan_seconds": 480,
+    "scheduled_operation_count": 2,
+    "unscheduled_operation_count": 0
+  },
+  "planning_run_id": "planning-run-replan-c26730ff5ef5c2ea1a7857c7bc860de4b15adaaba625e4e46c9df885cb78e30d",
+  "resources": [
+    {
+      "available_seconds": 82800,
+      "calendar_id": "CALENDAR-001",
+      "planned_busy_seconds": 480,
+      "resource_code": "R001",
+      "resource_id": "RESOURCE-001",
+      "utilization": 0.005797101449
+    },
+    {
+      "available_seconds": 82800,
+      "calendar_id": "CALENDAR-001",
+      "planned_busy_seconds": 0,
+      "resource_code": "R002",
+      "resource_id": "RESOURCE-002",
+      "utilization": 0.0
+    }
+  ],
+  "schema_set_version": "2.11.0",
+  "synthetic": true,
+  "synthetic_provenance": {
+    "factory_profile_id": "SCHEMA-PROFILE-P1-02",
+    "generator_id": "SCHEMA-CONTRACT-GENERATOR",
+    "generator_version": "1.0.0",
+    "profile_version": "1.0.0",
+    "scenario_id": "SCHEMA-SAMPLE-P1-02",
+    "scenario_version": "1.0.0",
+    "seed": 20260819
+  }
+}

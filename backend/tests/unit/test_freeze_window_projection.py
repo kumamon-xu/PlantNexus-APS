@@ -5,7 +5,7 @@ from __future__ import annotations
 from copy import deepcopy
 from datetime import datetime, timedelta
 from pathlib import Path
-from typing import cast
+from typing import Any, cast
 
 import pytest
 
@@ -283,3 +283,18 @@ def test_registered_ids_are_exact() -> None:
     assert TEST_FREEZE_ID == "TEST-FREEZE-WINDOW-001"
     assert TEST_RUNNING_ID == "TEST-RUNNING"
     assert TEST_LOCK_ID == "TEST-INF-LOCK"
+
+
+@pytest.mark.parametrize("delta,accepted", [(-1, True), (0, True), (1, False), (-60, False)])
+def test_base_processing_seconds_round_up_to_occupied_ticks(primary: FreezeWindowFixture, delta: int, accepted: bool) -> None:
+    from app.planning.problem.freeze_projection import _assignment_index
+    base = deepcopy(primary.base_schedule)
+    assignments = cast(Any, base)["content"]["assignments"]
+    item = assignments[-1]
+    tick = primary.problem.document["tick_seconds"]
+    item["duration_seconds"] = item["duration_ticks"] * tick + delta
+    if accepted:
+        assert _assignment_index(base, tick)[item["operation_id"]] == item
+    else:
+        with pytest.raises(FreezeProjectionError):
+            _assignment_index(base, tick)

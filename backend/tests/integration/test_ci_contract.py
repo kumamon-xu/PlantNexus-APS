@@ -584,7 +584,7 @@ def test_ci_p8_machine_contract_is_required_and_machine_checkable(
     assert report["status"] == "PASS"
     assert report["task_id"] == "TASK-P8-02"
     assert report["diff_base"] == "43ff13429b2bb79854f976c0a1f5a72b1b069607"
-    assert report["schema_set_version"] == "2.10.0"
+    assert report["schema_set_version"] == "2.11.0"
     assert report["check_count"] == 6
     assert report["counts"] == {
         "immutable_historical_artifacts": 97,
@@ -2252,7 +2252,7 @@ def test_ci_planning_problem_contract_report_is_machine_checkable(
     assert report["report_version"] == "planning-problem-contract-report.v1"
     assert report["status"] == "PASS"
     assert report["task_id"] == "TASK-P2-01"
-    assert report["schema_set_version"] == "2.10.0"
+    assert report["schema_set_version"] == "2.11.0"
     assert report["check_count"] == 4
     assert {check["name"] for check in report["checks"]} == {
         "v1-byte-preservation",
@@ -2277,7 +2277,7 @@ def test_ci_planning_machine_contract_report_is_machine_checkable(
     assert report["report_version"] == "planning-machine-contract-report.v1"
     assert report["status"] == "PASS"
     assert report["task_id"] == "TASK-P2-02"
-    assert report["schema_set_version"] == "2.10.0"
+    assert report["schema_set_version"] == "2.11.0"
     assert report["check_count"] == 5
     assert {check["name"] for check in report["checks"]} == {
         "fixed-schema-and-sample-artifacts",

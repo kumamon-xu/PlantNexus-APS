@@ -91,6 +91,7 @@ class RuntimePlanningWorkspaceApplication:
         reads: Any = None,
         exports: Any = None,
         download_adapter: Callable[[Any], Any] | None = None,
+        replan_review_enabled: bool = False,
     ) -> None:
         self._data_plane = data_plane
         self._schedules = schedule_repository
@@ -103,6 +104,7 @@ class RuntimePlanningWorkspaceApplication:
         self._reads = reads
         self._runtime_exports = exports
         self._download_adapter = download_adapter or (lambda result: result)
+        self._replan_review_enabled = replan_review_enabled
 
     @property
     def supported_operations(self) -> frozenset[str]:
@@ -244,7 +246,8 @@ class RuntimePlanningWorkspaceApplication:
             _error("SERVICE_UNAVAILABLE", field="manual_binding")
         source = self._get_schedule(request)
         # v2 carries replan/fact lineage that this v1 owner must never discard.
-        if source.get("schedule_version_version") != "schedule-version.v1":
+        if (source.get("schedule_version_version") != "schedule-version.v1"
+                and (not self._replan_review_enabled or _document(request).get("command_type") != "SUBMIT_FOR_REVIEW")):
             _error("MIXED_LINEAGE", field="source.schedule_version_version")
         context = request.context
         try:

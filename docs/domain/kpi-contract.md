@@ -6,10 +6,17 @@ spec_version: 0.3.0
 phase: P0-P6
 normative: true
 source_sections: [36, 45, 53, 55, 93]
-last_reviewed: 2026-09-08
+last_reviewed: 2026-09-20
 ---
 
 # KPI 合同
+
+## P9-07 重排 KPI v3
+
+Schema Set 2.11.0 新增独立 kpi.v3，消费经过完整性校验的 Snapshot/Problem、真实 SolverReport v2 中的 replan-candidate.v1，并 fresh 调用独立 Validator。Delivery/Planning/Resource 沿用既有公式；占用按 tick/UTC 区间计算。输入引用包含 exact candidate、SolverReport 和 fresh ValidationReport 指纹。
+
+v3 不冒用静态 v1 Solver 身份，不复制 KPI v2 的 solver/stability 字段；稳定性由实际 SolverReport v2 和完整 ChangeReport 独立表达。ChangeReport 可精确引用 v2 或 v3 KPI；旧 KPI v2 builder、Schema/sample 和标准导出来源校验不变。人工基准实际内容不匹配其旧 KPI 时拒绝。
+
 
 ## P9-05 读端占用时间一致性
 

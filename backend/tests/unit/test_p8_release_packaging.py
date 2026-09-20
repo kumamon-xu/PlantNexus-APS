@@ -19,7 +19,7 @@ def test_runtime_application_core_and_contract_versions_are_explicit() -> None:
     project = tomllib.loads((ROOT / "pyproject.toml").read_text(encoding="utf-8"))
     versions = project["tool"]["plantnexus-aps"]["versions"]
     assert SPEC_VERSION == "0.3.0"
-    assert SCHEMA_VERSION == "2.10.0"
+    assert SCHEMA_VERSION == "2.11.0"
     assert APPLICATION_VERSION == CORE_VERSION == "0.0.0"
     assert RUNTIME_VERSION == "0.1.0"
     assert versions == {
@@ -88,12 +88,12 @@ def test_license_inventory_and_cyclonedx_are_deterministic() -> None:
 
 def test_migration_manifest_is_one_immutable_linear_chain() -> None:
     manifest = build_migration_manifest(
-        ROOT, database_head="0009_host_authorization_audit"
+        ROOT, database_head="0010_runtime_replan"
     )
     chain = manifest["linear_chain"]
-    assert manifest["revision_count"] == len(chain) == 9
+    assert manifest["revision_count"] == len(chain) == 10
     assert chain[0]["revision"] == "0001_engineering_job_metadata"
-    assert chain[-1]["revision"] == "0009_host_authorization_audit"
+    assert chain[-1]["revision"] == "0010_runtime_replan"
     assert all(
         row["downgrade_data_boundary"]
         == "POTENTIALLY_DESTRUCTIVE_REQUIRES_BACKUP"

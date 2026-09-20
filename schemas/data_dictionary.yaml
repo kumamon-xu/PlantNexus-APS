@@ -1,4 +1,4 @@
-schema_set_version: 2.10.0
+schema_set_version: 2.11.0
 status: p8_headless_machine_contracts
 spec_version: 0.3.0
 rules:
@@ -402,6 +402,16 @@ schemas:
     compatibility: additive and non-interchangeable with request or PlanningRun documents
     p8_boundary: response carrier only; HTTP mapping remains TASK-P8-07 and detailed Extension manifest remains TASK-P8-12/13
     production_open: [OPEN-002, OPEN-010, OPEN-011, OPEN-012, OPEN-014, OPEN-015]
+  kpi.v3:
+    path: schemas/json/kpi.v3.schema.json
+    schema_set_version: 2.11.0
+    lineage: exact Snapshot, Problem, replan-candidate.v1, SolverReport v2 and fresh ValidationReport v2
+    compatibility: distinct from kpi.v2; static export rejects v3; no Solver v1 alias
+  planning-run.v2:
+    path: schemas/json/planning-run.v2.schema.json
+    schema_set_version: 2.11.0
+    state_authority: schemas/rules/state-machines.v1.yaml unchanged
+    compatibility: explicit replan source and candidate reference; old v1 preserved; no new states or pairs
   planning-run.v1:
     path: schemas/json/planning-run.schema.json
     schema_set_version: 2.10.0

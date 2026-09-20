@@ -6,10 +6,17 @@ spec_version: 0.3.0
 phase: P9
 normative: false
 source_sections: [6, 30, 44, 57, 65, 97, 100, 103, 105, 106, 115, 116]
-last_reviewed: 2026-09-16
+last_reviewed: 2026-09-20
 ---
 
 # P9 Runtime 能力、准入与验收基线
+
+## P9-07 当前实现增量
+
+P9-01 下表是启动时冻结的 gap 清单。P9-07 现实现 `createReplanRequest`、`getReplanRequest`、`cancelReplanRequest`、`retryReplanRequest`、`getReplanResult`、`getChangeReport` 的显式配置 Runtime 路径；具体验收以 [P9-07 Task](../tasks/P9/TASK-P9-07-runtime-asynchronous-replanning.md) 的当前状态与 evidence 为准，尚未完成 Provider closure 时不得称 PROVIDER_VERIFIED。
+
+实现使用 Schema Set 2.11.0、迁移0010和原 Worker。候选 DRAFT→审核→批准→发布为独立动作；人工 KPI 不匹配、未投影的人工锁、v2 内容编辑及旧标准导出不支持的来源显式拒绝。P9-08 宿主/前端消费、P9-10 新发行、Production 均未启动。
+
 
 ## P9-06 当前实现增量
 

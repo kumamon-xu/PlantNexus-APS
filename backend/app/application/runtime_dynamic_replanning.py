@@ -184,6 +184,7 @@ class RuntimeDynamicReplanningApplication:
             snapshots,
         )
         self._source, self._service = source, service
+        self.replan: Any = None
 
     def _binding(self, context: Any, scope_id: str, capability: str) -> dict[str, Any]:
         if (
@@ -254,6 +255,8 @@ class RuntimeDynamicReplanningApplication:
             "GET_EXECUTION_EVENT",
             "LIST_EXECUTION_EVENTS",
         }:
+            if self.replan is not None:
+                return self.replan.execute(request)
             raise RuntimeEventError("SERVICE_UNAVAILABLE", "operation")
         append = operation == "APPEND_EXECUTION_EVENT"
         binding = self._binding(

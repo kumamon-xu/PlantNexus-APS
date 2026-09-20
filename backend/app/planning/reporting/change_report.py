@@ -653,8 +653,7 @@ def kpi_evidence_reference(
     if (
         _KPI_ID.fullmatch(kpi_id) is None
         or kpi_id != expected_kpi_id
-        or value.get("kpi_version") != "kpi.v2"
-        or value.get("schema_set_version") != "2.5.0"
+        or (value.get("kpi_version"), value.get("schema_set_version")) not in {("kpi.v2", "2.5.0"), ("kpi.v3", "2.11.0")}
         or value.get("canonicalization_version") != "canonical-json.v1"
         or value.get("synthetic") is not True
     ):
@@ -686,7 +685,7 @@ def kpi_evidence_reference(
     )
     return (
         {
-            "document_version": "kpi.v2",
+            "document_version": cast(str, value["kpi_version"]),
             "artifact_id": kpi_id,
             "fingerprint": contract_fingerprint(value),
         },

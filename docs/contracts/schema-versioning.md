@@ -6,10 +6,17 @@ spec_version: 0.3.0
 phase: cross-phase
 normative: true
 source_sections: [23, 24, 40, 95, 101, 103, 104, 114]
-last_reviewed: 2026-09-16
+last_reviewed: 2026-09-20
 ---
 
 # Schema 版本与兼容规则
+
+## P9-07 当前 additive 版本
+
+当前源码 Schema Set `2.11.0` 增加 KPI v3 和 PlanningRun v2，独立版本消费，禁止转换为旧 Solver/KPI 身份。旧 KPI builder 的 v1 策略身份校验不变。KPI v3 不复制 v1 solver/stability 字段，交付/资源指标从实际候选复算，稳定性由真实 v2 SolverReport 与 ChangeReport 表达。
+
+同步当前 metadata、字典与源码构建 policy，database head 为 `0010_runtime_replan`。旧发行 Runtime/Kit archive、Registry、Schema/sample/hash 不改写；本次不执行发行或升级依赖。下文版本数字是各历史 Task 的原始基线。
+
 
 ## P9-02 v1 consumer compatibility
 

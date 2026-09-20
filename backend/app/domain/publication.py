@@ -9,6 +9,8 @@ publication remains default-denied by governance OPEN-002/010.
 
 from __future__ import annotations
 
+from app.domain.schedule_carrier import require_schedule_carrier
+
 from collections.abc import Mapping
 from copy import deepcopy
 from dataclasses import dataclass
@@ -522,7 +524,7 @@ def _validate_schedule_document(
     document: Mapping[str, object], *, field: str, failure: PublicationFailure
 ) -> None:
     try:
-        require_workspace_document(document)
+        require_schedule_carrier(document)
     except (TypeError, ValueError) as error:
         raise PublicationError(
             failure,
@@ -843,9 +845,9 @@ def build_publication_documents(prepared: PreparedPublication) -> PublicationDoc
         }
     )
     try:
-        require_workspace_document(published)
+        require_schedule_carrier(published)
         if superseded is not None:
-            require_workspace_document(superseded)
+            require_schedule_carrier(superseded)
         require_workspace_document(result)
         require_workspace_document(audit_event)
     except (TypeError, ValueError) as error:

@@ -251,6 +251,7 @@ def _require_base_schedule(document: Mapping[str, object]) -> str:
 
 def _assignment_index(
     base_schedule: Mapping[str, object],
+    tick_seconds: int,
 ) -> dict[str, Mapping[str, object]]:
     schedule_id = cast(str, base_schedule["schedule_version_id"])
     content = _mapping(base_schedule.get("content"), "base_schedule.content", schedule_id)
@@ -298,14 +299,15 @@ def _assignment_index(
         duration_ticks = _integer(
             assignment.get("duration_ticks"), "assignment.duration_ticks", operation_id, minimum=1
         )
-        if end <= start or int((end - start).total_seconds()) != duration_seconds:
+        if end <= start or int((end - start).total_seconds()) != duration_ticks * tick_seconds:
             _reject(
                 FreezeProjectionFailure.INVALID_BASE_SCHEDULE,
                 field="assignment.duration_seconds",
                 entity_id=operation_id,
                 message="UTC assignment interval and duration diverge",
             )
-        if end_tick - start_tick != duration_ticks:
+        if (end_tick - start_tick != duration_ticks
+                or duration_ticks != (duration_seconds + tick_seconds - 1) // tick_seconds):
             _reject(
                 FreezeProjectionFailure.INVALID_BASE_SCHEDULE,
                 field="assignment.duration_ticks",
@@ -712,7 +714,7 @@ def project_effective_locks(
         problem_document["horizon_end_utc"], "problem.horizon_end_utc", problem.problem_hash
     )
     tick_seconds = cast(int, problem_document["tick_seconds"])
-    assignments = _assignment_index(base_schedule)
+    assignments = _assignment_index(base_schedule, tick_seconds)
     operations = {
         cast(str, operation["operation_id"]): operation
         for operation in cast(Sequence[Mapping[str, object]], problem_document["operation_instances"])

@@ -78,7 +78,7 @@ _PLANNING_RUNS = Table(
     "planning_runs",
     _METADATA,
     Column("planning_run_id", String(length=256), primary_key=True),
-    Column("ingress_id", String(length=256), nullable=False, unique=True),
+    Column("ingress_id", String(length=256), nullable=False),
     Column("data_plane", String(length=16), nullable=False),
     Column("environment", String(length=32), nullable=False),
     Column("tenant_id", String(length=256), nullable=False),
@@ -336,6 +336,8 @@ def _verified_bytes(row: RowMapping, field: str, digest_field: str) -> bytes:
 class SqlAlchemyPlanningRunRepository:
     """Durable CAS repository permanently bound to one APS data plane."""
 
+    _run_table = _PLANNING_RUNS
+
     def __init__(self, engine: Engine, *, data_plane: WorkspaceDataPlane) -> None:
         self._engine = engine
         self._data_plane = data_plane
@@ -524,9 +526,9 @@ class SqlAlchemyPlanningRunRepository:
     ) -> RowMapping | None:
         return (
             connection.execute(
-                select(_PLANNING_RUNS).where(
-                    _PLANNING_RUNS.c.planning_run_id == planning_run_id,
-                    _PLANNING_RUNS.c.data_plane == self.data_plane,
+                select(self._run_table).where(
+                    self._run_table.c.planning_run_id == planning_run_id,
+                    self._run_table.c.data_plane == self.data_plane,
                 )
             )
             .mappings()
@@ -924,7 +926,7 @@ class SqlAlchemyPlanningRunRepository:
                 if existing_run is not None:
                     raise _ConcurrentMaterializeRace
                 connection.execute(
-                    insert(_PLANNING_RUNS).values(
+                    insert(self._run_table).values(
                         **self._run_values(initialization.aggregate)
                     )
                 )
@@ -1124,15 +1126,15 @@ class SqlAlchemyPlanningRunRepository:
                 ):
                     values.pop(immutable)
                 result = connection.execute(
-                    update(_PLANNING_RUNS)
+                    update(self._run_table)
                     .where(
-                        _PLANNING_RUNS.c.planning_run_id
+                        self._run_table.c.planning_run_id
                         == mutation.previous.document["planning_run_id"],
-                        _PLANNING_RUNS.c.data_plane == self.data_plane,
-                        _PLANNING_RUNS.c.revision
+                        self._run_table.c.data_plane == self.data_plane,
+                        self._run_table.c.revision
                         == mutation.previous.document["revision"],
-                        _PLANNING_RUNS.c.state == mutation.previous.document["state"],
-                        _PLANNING_RUNS.c.run_fingerprint
+                        self._run_table.c.state == mutation.previous.document["state"],
+                        self._run_table.c.run_fingerprint
                         == mutation.previous.document["run_fingerprint"],
                     )
                     .values(**values)

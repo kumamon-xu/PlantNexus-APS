@@ -35,14 +35,17 @@ def test_release_manifest_binds_every_independent_version(tmp_path) -> None:
         "application": "0.0.0",
         "core": "0.0.0",
         "api": "headless-http.v1",
-        "schema": "2.10.0",
+        "schema": "2.11.0",
         "spec": "0.3.0",
-        "database": "0009_host_authorization_audit",
+        "database": "0010_runtime_replan",
         "extension_sdk": "0.0.0-not-published",
         "developer_kit": "0.0.0-not-published",
         "plugin_registry": "plugin-registry.v1",
     }
-    assert verified.payload_file_count == 144
+    assert verified.payload_file_count == 149
+    for relative in ("json/kpi.v3.schema.json", "json/planning-run.v2.schema.json", "samples/kpi.v3.synthetic.json", "samples/planning-run.v2.created.synthetic.json"):
+        assert files["runtime/schemas/" + relative]
+    assert files["runtime/backend/migrations/versions/0010_runtime_replan.py"]
     assert files["runtime/openapi/headless-api.v1.json"]
 
 
@@ -53,7 +56,7 @@ def test_distribution_contains_required_machine_metadata(tmp_path) -> None:
     licenses = strict_json_document(files[LICENSE_PATH])
     sbom = strict_json_document(files[SBOM_PATH])
     assert compatibility["automatic_upgrade"] is False
-    assert migration["revision_count"] == 9
+    assert migration["revision_count"] == 10
     assert licenses["component_count"] == 51
     assert licenses["issues"] == []
     assert len(sbom["components"]) == 51

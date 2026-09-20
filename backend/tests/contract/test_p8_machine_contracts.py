@@ -326,7 +326,7 @@ def test_machine_report_freezes_history_versions_and_non_implementation_boundary
     assert report["task_id"] == "TASK-P8-02"
     assert report["test_id"] == TEST_ID
     assert report["diff_base"] == DIFF_BASE
-    assert report["schema_set_version"] == SCHEMA_VERSION == "2.10.0"
+    assert report["schema_set_version"] == SCHEMA_VERSION == "2.11.0"
     assert report["status"] == report["result"] == "PASS"
     assert report["check_count"] == 6
     assert report["counts"] == {

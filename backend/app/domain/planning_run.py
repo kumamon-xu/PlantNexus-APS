@@ -411,7 +411,13 @@ def verify_planning_run(
     initial = aggregate.initial_document
     prepared = aggregate.prepared_artifacts
     try:
-        schemas.validate(PLANNING_RUN_SCHEMA_ID, document)
+        version = document.get("planning_run_version")
+        schema_id = PLANNING_RUN_SCHEMA_ID
+        if version == "planning-run.v2":
+            if "runtime_replan" not in prepared:
+                raise ValueError("PlanningRun v2 requires a frozen replan source")
+            schema_id = "urn:plantnexus:aps:schema:planning-run:v2"
+        schemas.validate(schema_id, document)
     except ValueError as error:
         raise PlanningRunOrchestrationError(
             PlanningRunErrorCode.LINEAGE_INVALID,

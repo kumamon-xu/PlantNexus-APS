@@ -700,6 +700,18 @@ jobs:
             "${replay_root}/backend/tests/integration/test_p9_manual.py" \
             "${replay_root}/backend/tests/integration/test_p9_manual_installed.py" \
             "${replay_root}/backend/app/application/runtime_dynamic_replanning.py" \
+            "${replay_root}/backend/app/application/runtime_replan.py" \
+            "${replay_root}/backend/app/domain/schedule_carrier.py" \
+            "${replay_root}/backend/app/infrastructure/runtime_replan_repository.py" \
+            "${replay_root}/backend/app/jobs/runtime_replan_worker.py" \
+            "${replay_root}/backend/app/planning/reporting/replan_kpi.py" \
+            "${replay_root}/backend/migrations/versions/0010_runtime_replan.py" \
+            "${replay_root}/backend/tests/integration/test_p9_replan.py" \
+            "${replay_root}/backend/tests/integration/test_p9_replan_installed.py" \
+            "${replay_root}/schemas/json/kpi.v3.schema.json" \
+            "${replay_root}/schemas/json/planning-run.v2.schema.json" \
+            "${replay_root}/schemas/samples/kpi.v3.synthetic.json" \
+            "${replay_root}/schemas/samples/planning-run.v2.created.synthetic.json" \
             "${replay_root}/backend/tests/integration/test_p9_events.py" \
             "${replay_root}/backend/tests/integration/test_p9_events_installed.py" \
             "${replay_root}/backend/app/application/runtime_workspace_reads.py" \
@@ -898,6 +910,14 @@ jobs:
             backend/app/application/p3_gate_report.py \
             backend/app/domain/execution_contract_check.py \
             backend/app/domain/workspace_contract_check.py \
+            backend/app/domain/authorization.py \
+            backend/app/domain/publication.py \
+            backend/app/domain/replan_application.py \
+            backend/app/domain/schedule_commands.py \
+            backend/app/planning/problem/freeze_projection.py \
+            backend/app/planning/reporting/change_report.py \
+            backend/app/planning/reporting/stability.py \
+            backend/app/planning/validation/change_report_precheck.py \
             backend/app/planning/backends/cp_sat/replan_solver_check.py \
             backend/app/planning/problem/freeze_window_check.py \
             backend/app/planning/reporting/stability_change_report_check.py \
@@ -916,6 +936,7 @@ jobs:
             backend/tests/contract/test_schema_contracts.py \
             backend/tests/contract/test_unit_conversion_registry.py \
             backend/tests/unit/test_check_docs.py \
+            backend/tests/unit/test_freeze_window_projection.py \
             backend/tests/unit/test_ci_validation_profile.py \
             backend/tests/integration/test_p1_common_ingress.py \
             backend/tests/integration/test_migrations_and_infrastructure.py \

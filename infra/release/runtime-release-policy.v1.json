@@ -13,13 +13,13 @@
     "api_contract": "headless-http.v1",
     "application_version": "0.0.0",
     "core_version": "0.0.0",
-    "database_head": "0009_host_authorization_audit",
+    "database_head": "0010_runtime_replan",
     "developer_kit_version": "0.0.0-not-published",
     "extension_sdk_version": "0.0.0-not-published",
     "openapi_artifact": "backend/app/api/openapi/headless-api.v1.json",
     "plugin_registry_protocol": "plugin-registry.v1",
     "runtime_version": "0.1.0",
-    "schema_set_version": "2.10.0",
+    "schema_set_version": "2.11.0",
     "spec_version": "0.3.0"
   },
   "extension_boundary": {

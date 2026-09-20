@@ -320,7 +320,7 @@ def _migration_evidence(root: Path, record: HostAuthorizationAuditRecord) -> Jso
         configuration.set_main_option(
             "sqlalchemy.url", database_url.replace("%", "%%")
         )
-        command.upgrade(configuration, "head")
+        command.upgrade(configuration, "0009_host_authorization_audit")
         engine = create_engine(database_url)
         try:
             tables = set(inspect(engine).get_table_names())
@@ -376,7 +376,7 @@ def _migration_evidence(root: Path, record: HostAuthorizationAuditRecord) -> Jso
                 )
             finally:
                 downgraded.dispose()
-            command.upgrade(configuration, "head")
+            command.upgrade(configuration, "0009_host_authorization_audit")
             upgraded = create_engine(database_url)
             try:
                 repository = SqlAlchemyHostAuthorizationAuditRepository(

@@ -8,6 +8,8 @@ network call, and never selects a real organization role or identity provider.
 
 from __future__ import annotations
 
+from app.domain.schedule_carrier import require_schedule_carrier
+
 from collections.abc import Mapping
 from copy import deepcopy
 from dataclasses import dataclass
@@ -494,7 +496,7 @@ def prepare_approval_decision(
         context, identity, command, data_plane=data_plane
     )
     try:
-        require_workspace_document(source)
+        require_schedule_carrier(source)
     except (TypeError, ValueError) as error:
         raise ApprovalDecisionError(
             ApprovalDecisionFailure.STALE_SOURCE,
@@ -650,7 +652,7 @@ def build_approval_decision_documents(
         }
     )
     try:
-        require_workspace_document(decided)
+        require_schedule_carrier(decided)
         require_workspace_document(audit_event)
     except (TypeError, ValueError) as error:
         raise ApprovalDecisionError(

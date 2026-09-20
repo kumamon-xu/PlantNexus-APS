@@ -6,10 +6,19 @@ spec_version: 0.3.0
 phase: P0-P8
 normative: true
 source_sections: [34, 65, 66, 67]
-last_reviewed: 2026-09-10
+last_reviewed: 2026-09-20
 ---
 
 # P0 Worker Reliability 与 Idempotency
+
+## P9-07 重排工作恢复
+
+重排复用 PlanningRun 的 durable work、工程 job、lease、heartbeat 和合法状态对。0010 新增只追加的 `runtime_replan_checkpoints`，绑定 exact work/input fingerprint、真实 SolverReport v2、round reports、验证与 KPI v3。检查点已提交后的崩溃恢复只复核并应用原结果，不再调用 Solver；结果已提交而 job 未确认时只确认终态。无检查点的过期执行失败关闭，显式 RETRY 创建新 PlanningRun 和递增的 request attempt，旧终态不复活。
+
+结果事务锁定 run 和 active lease，并复验事实 checkpoint；取消抢先完成、lease/时限失效或 checkpoint 不一致均不写候选。取消和请求 exact replay 使用原 audit receipt，并发创建只产生一个 attempt。Broker 派发失败保留可查询的失败结果，后续由调用方显式重试；没有新 outbox、后台持续 scanner 或跨系统 exactly-once 承诺。
+
+0010 保留旧 canonical ingress 外键，将原唯一约束限定于 canonical run，重排 run 另绑定 request。迁移保留旧行和 SQLite 原有触发器；无新重排行时可降级/重升，有新重排行时拒绝降级，避免删除结果与来源。
+
 
 ## TASK-P8-18 Extension execution reliability
 

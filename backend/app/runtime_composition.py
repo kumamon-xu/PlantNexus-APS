@@ -44,6 +44,9 @@ from app.application.approval import ApprovalDecisionService
 from app.application.canonical_ingress import CanonicalIngressApplicationService
 from app.application.export_jobs import ExportJobService
 from app.application.planning_runs import PlanningRunOrchestrationService
+from app.application.runtime_replan import RuntimeReplanApplication
+from app.planning.policy.freeze_window import simulation_replan_policy
+from app.application.runtime_http_adapter import RuntimeHttpPrincipal, RuntimeHttpRequestedScope
 from app.application.publication import PublicationService
 from app.application.runtime_facade import (
     APSRuntimeApplicationFacade,
@@ -645,6 +648,12 @@ def compose_runtime(
             field="runtime_event_bindings",
             message="Event authority configuration is invalid",
         ) from error
+    replan_policy = None
+    if settings.runtime_replan_policy_path is not None:
+        replan_policy = _configured_document(settings.runtime_replan_policy_path, field="runtime_replan_policy_path")
+        if not configured_events or replan_policy != simulation_replan_policy():
+            _fail("CONFIGURATION_INVALID", field="runtime_replan_policy_path",
+                  message="Replan requires explicit supported Simulation policy and event authority")
     descriptor = _descriptor(
         settings=settings,
         contract=contract,
@@ -873,6 +882,45 @@ def compose_runtime(
             source=event_source,
             service=event_service,
         )
+        replan_application = None
+        if replan_policy is not None:
+            def replan_context(context: Any, event_binding: Any) -> Any:
+                requested = RuntimeHttpRequestedScope.create(**{k: event_binding[k] for k in ("tenant_id", "factory_id", "planning_scope_id")})
+                principal = RuntimeHttpPrincipal(actor_reference=context.actor_ref,
+                    capabilities=("view", "edit"), auth_policy_version=context.auth_policy_version,
+                    production_binding=False)
+                return (http_context_adapter.command_context(principal=principal, requested=requested,
+                    correlation_id=context.correlation_id, occurred_at_utc=context.occurred_at_utc),
+                    http_context_adapter.dispatch_window(requested, occurred_at_utc=context.occurred_at_utc))
+
+            def replan_kpi(base: Any) -> Any:
+                run_id = base["lineage"]["planning_run_id"]
+                stored = planning_run_repository.get(run_id)
+                if stored is None:
+                    raise RuntimeEventError("MIXED_LINEAGE", "base.run")
+                frozen = stored.aggregate.prepared_artifacts.get("runtime_replan")
+                if frozen is not None:
+                    from app.infrastructure.replan_repository import SqlAlchemyReplanLineageRepository
+                    applied = SqlAlchemyReplanLineageRepository(database.engine, data_plane=plane).get_applied_result_for_attempt(frozen["attempt"]["attempt_id"])
+                    if applied is None:
+                        raise RuntimeEventError("MIXED_LINEAGE", "base.replan_result")
+                    return applied.kpi, frozen["problem"]
+                record = ingress_repository.get_by_planning_run_id(run_id)
+                result = workspace_results.get_result_for_solution(run_id, base["lineage"]["planning_solution"]["fingerprint"])
+                if record is None or result is None:
+                    raise RuntimeEventError("MIXED_LINEAGE", "base.result")
+                return result.document["documents"]["kpi"], record.problem.document
+
+            replan_application = RuntimeReplanApplication(
+                engine=database.engine, schemas=FrozenSchemaCatalog.from_directory(settings.runtime_schema_directory),
+                events=dynamic_application,
+                schedules=SqlAlchemyScheduleVersionRepository(database.engine, data_plane=plane),
+                publications=SqlAlchemyPublicationRepository(database.engine, data_plane=plane),
+                policy=replan_policy, catalog=catalog, runtime=descriptor.runtime_resolution,
+                context_binding=replan_context,
+                dispatcher=CeleryPlanningRunDispatcher(dispatch_client or _dispatch_client(settings), identity_factory=identity_factory),
+                source_kpi=replan_kpi)
+            dynamic_application.replan = replan_application
         runtime_exports = None
         if settings.runtime_export_storage_root is not None:
             export_schedules = SqlAlchemyScheduleVersionRepository(
@@ -959,6 +1007,25 @@ def compose_runtime(
             def manual_binding(
                 source: Mapping[str, object],
             ) -> tuple[Mapping[str, object], ScheduleCommandService]:
+                if source.get("schedule_version_version") == "schedule-version.v2" and replan_application is not None:
+                    lineage = cast(Any, source["lineage"])
+                    model = replan_application.runs.get(lineage["planning_run_id"])
+                    frozen = None if model is None else model.aggregate.prepared_artifacts.get("runtime_replan")
+                    if model is None or frozen is None or model.aggregate.document["state"] != "COMPLETED":
+                        raise RuntimePlanningWorkspaceError("MIXED_LINEAGE", field="source.replan")
+                    applied = cast(Any, replan_application.lineage.get_applied_result_for_attempt(frozen["attempt"]["attempt_id"]))
+                    if (applied is None or lineage["new_problem"] != frozen["request"]["new_problem"]
+                            or applied.change_report["new_schedule_version"]["content_fingerprint"] != source["content_fingerprint"]
+                            or applied.change_report["new_schedule_version"]["schedule_version_id"] != source["schedule_version_id"]
+                            or model.aggregate.document["runtime_resolution"] != descriptor.runtime_resolution):
+                        raise RuntimePlanningWorkspaceError("MIXED_LINEAGE", field="source.replan_result")
+                    scope = model.aggregate.document["effective_scope"]
+                    admission = extension_product_executor.candidate_admission(scope=scope,
+                        planning_run_id=lineage["planning_run_id"], runtime_identity=lambda: descriptor.runtime_resolution)
+                    return frozen["problem"], ScheduleCommandService(data_plane=plane.value,
+                        transaction_factory=database.engine.begin, schedule_repository=cast(Any, schedule_repository),
+                        audit_repository=cast(Any, audit_repository), validator_factory=ProblemScheduleValidator,
+                        admission=admission)
                 lineage = source.get("lineage")
                 if not isinstance(lineage, Mapping) or not isinstance(
                     lineage.get("planning_run_id"), str
@@ -1015,6 +1082,7 @@ def compose_runtime(
                 publication_repository=publication_repository,
                 export_job_repository=export_repository,
                 manual_binding=manual_binding,
+                replan_review_enabled=replan_application is not None,
                 exports=runtime_exports,
                 download_adapter=workspace_download,
                 reads=RuntimeWorkspaceReads(
@@ -1090,6 +1158,9 @@ def compose_runtime(
                 ),
                 clock=clock,
             )
+        if worker is not None and replan_application is not None:
+            from app.jobs.runtime_replan_worker import RuntimeReplanWorker
+            worker = RuntimeReplanWorker(worker, replan_application)
         return RuntimeComposition(
             process=process,
             descriptor=descriptor,

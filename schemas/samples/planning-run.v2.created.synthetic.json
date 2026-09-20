@@ -1,0 +1,101 @@
+{
+  "allowed_actions": [
+    "READ",
+    "CANCEL"
+  ],
+  "artifacts": {
+    "import_quality_report": null,
+    "planning_solution": null,
+    "problem": null,
+    "schedule_version": null,
+    "snapshot": null,
+    "solver_report": null,
+    "validation_report": null
+  },
+  "attempt": null,
+  "audit_references": [
+    {
+      "artifact_id": "audit-event-3ca35b86f7906514af363c22dfd888d65588cad785b737c720ab3f8ee1d72555",
+      "document_version": "audit-event.v1",
+      "fingerprint": "sha256:1f8c05c4bc9ec4dca7fa4fb7b1c259b3c5ca8d85a3ad7d7ad6e1bedc97cf7784"
+    }
+  ],
+  "cancellation": null,
+  "canonicalization_version": "canonical-json.v1",
+  "created_at_utc": "2026-09-06T01:02:00Z",
+  "effective_scope": {
+    "data_plane": "SIMULATION",
+    "environment": "TEST",
+    "factory_id": "FACTORY-001",
+    "planning_scope_id": "PLANNING-P8-APPLICATION",
+    "scope_fingerprint": "sha256:b52e1fd00b1e8f9ea845ff8690c13ecf9d4fce678073475a242dcfaf87c64451",
+    "tenant_id": "TENANT-P8-APPLICATION"
+  },
+  "error": null,
+  "error_registry_version": "headless-error-code-registry.v1",
+  "ingress": {
+    "idempotency_key_reference": "sha256:f6460835aa6c6cea1936de57d3bf038f86fe1cdf4c586f55ef96271540f802fd",
+    "idempotency_scope_fingerprint": "sha256:6c27e1397446a9449ccfb3b65b8cb3d9f65bcc8903e5810b6a437d48039f49ed",
+    "ingress_id": "canonical-ingress-36bc423bdccd4021ef4d57d5e80a46fe6bf3592570e4e9ae7023b0f30e5145e9",
+    "payload": {
+      "artifact_id": "import-988f67fae693acab3f9c8de6f6974c670a80d341773ff8f4d350f07924c1e960",
+      "document_version": "import-package.v2",
+      "fingerprint": "sha256:f4cef0aa5756b3cc510fbc3ac619a0756e6c56abc0abf297119f28ccfd732825"
+    },
+    "request_fingerprint": "sha256:fcafb9fbc9e6c77e4e28b6c455ef0a72fec0c2f39511e4e2ed1e339fa00edc09",
+    "request_id": "REQUEST-P8-WORKER-001"
+  },
+  "inputs": {
+    "planning_policy": {
+      "artifact_id": "POLICY-P4-SIM-DYNAMIC-FREEZE-001",
+      "document_version": "planning-policy.v2",
+      "fingerprint": "sha256:8b436bebc60b36202bff8ceff543f68b19f8d03053c9894ff83a3b037393e277"
+    },
+    "solve_limits": {
+      "artifact_id": "LIMITS-P8-WORKER-001",
+      "document_version": "solve-limits.v1",
+      "fingerprint": "sha256:a939357356c7ae52cad51649b3c5dfcc040e9bae214f00db29115ab76acaf879"
+    }
+  },
+  "last_transition": {
+    "audit": {
+      "artifact_id": "audit-event-3ca35b86f7906514af363c22dfd888d65588cad785b737c720ab3f8ee1d72555",
+      "document_version": "audit-event.v1",
+      "fingerprint": "sha256:1f8c05c4bc9ec4dca7fa4fb7b1c259b3c5ca8d85a3ad7d7ad6e1bedc97cf7784"
+    },
+    "from_state": null,
+    "occurred_at_utc": "2026-09-06T01:02:00Z",
+    "sequence": 0,
+    "to_state": "CREATED",
+    "transition_version": "planning-run-transition.v1"
+  },
+  "planning_run_id": "planning-run-replan-c26730ff5ef5c2ea1a7857c7bc860de4b15adaaba625e4e46c9df885cb78e30d",
+  "planning_run_version": "planning-run.v2",
+  "revision": 1,
+  "run_fingerprint": "sha256:c376dbf45f6d06ab63d15fb2049c1a92214675ca2df859d27b7bd000211f7417",
+  "runtime_resolution": {
+    "core_artifact_fingerprint": "sha256:b867c6babc8e20260e1c07652c9e4b5569819d24ae2e1a50c1c2f324baaf58a7",
+    "core_version": "0.0.0",
+    "developer_kit_fingerprint": "sha256:1c88c7d14ae206011af0de8c835a5225d4684f7f09d00c7b553f633fc75126d5",
+    "developer_kit_version": "0.0.0-not-published",
+    "extension_sdk_version": "0.0.0-not-published",
+    "extension_set": {
+      "configuration_fingerprint": "sha256:f3c99e2f52e77242056064cb59d922a6ed24b4100fc9c935bc7ddcda8953847d",
+      "extension_set_fingerprint": "sha256:74b98da854584f54776a17262658e786c578ba65ee83b997e28dc53e7fe8e597",
+      "extension_set_id": "EXTENSION-SET-NONE"
+    },
+    "registry_protocol_version": "plugin-registry.v1",
+    "resolution_fingerprint": "sha256:4bf193e2f0ac48dcee29a92db307205f9021cb1be4a14aebd23fa216cab5d044",
+    "runtime_artifact_fingerprint": "sha256:1f1e4c8426435c73c3d6321c856e7935287c4cb0e2970a4dbad570a9ab49d83f",
+    "runtime_resolution_version": "runtime-resolution.v1",
+    "runtime_version": "0.1.0",
+    "solver_backend_id": "global-cp-sat",
+    "solver_backend_version": "0.0.0",
+    "validator_version": "0.0.0"
+  },
+  "schema_set_version": "2.11.0",
+  "state": "CREATED",
+  "terminal": false,
+  "transition_registry_version": "state-machines.v1",
+  "updated_at_utc": "2026-09-06T01:02:00Z"
+}

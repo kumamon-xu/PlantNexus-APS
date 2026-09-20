@@ -242,9 +242,12 @@ def canonical_assignment(
     end = _utc_second(
         assignment.get("end_at_utc"), f"{field}.end_at_utc", operation_id
     )
+    occupied_seconds = int((end - start).total_seconds())
+    tick_seconds = occupied_seconds // duration_ticks
     if (
         end <= start
-        or int((end - start).total_seconds()) != duration_seconds
+        or occupied_seconds % duration_ticks != 0
+        or not (occupied_seconds - tick_seconds < duration_seconds <= occupied_seconds)
         or end_tick - start_tick != duration_ticks
     ):
         reject_change_report(

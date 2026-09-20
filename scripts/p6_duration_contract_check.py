@@ -22,7 +22,7 @@ REPORT_VERSION = "p6-duration-contract-report.v1"
 TASK_ID = "TASK-P6-02"
 DIFF_BASE = "e74099ca24ed59140f6490c84025b7299b5f201d"
 SCHEMA_SET_VERSION = "2.9.0"
-CURRENT_SCHEMA_SET_VERSION = "2.10.0"
+CURRENT_SCHEMA_SET_VERSION = "2.11.0"
 HISTORICAL_ARTIFACT_COUNT = 70
 HISTORICAL_MANIFEST_SHA256 = (
     "sha256:ada3e2a0498bb5b42ef81aba01693a949cd41deac229ebad8ea6f9334e901c64"
@@ -77,6 +77,11 @@ NEW_ARTIFACT_PATHS = {
     *(f"schemas/samples/{name}" for name in NEGATIVE_SAMPLES),
 }
 POST_P6_ADDITIVE_ARTIFACT_PATHS = {
+    'schemas/json/kpi.v3.schema.json',
+    'schemas/json/planning-run.v2.schema.json',
+    'schemas/samples/kpi.v3.synthetic.json',
+    'schemas/samples/planning-run.v2.created.synthetic.json',
+
     "schemas/json/canonical-ingress-request.schema.json",
     "schemas/json/canonical-ingress-result.schema.json",
     "schemas/json/planning-run.schema.json",

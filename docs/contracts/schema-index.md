@@ -6,10 +6,15 @@ spec_version: 0.3.0
 phase: P0-P8
 normative: true
 source_sections: [36, 38, 39, 70, 71, 103]
-last_reviewed: 2026-09-16
+last_reviewed: 2026-09-20
 ---
 
 # Schema 计划索引
+
+## P9-07 additive Schema Set 2.11.0
+
+当前源码 Schema Set 为 `2.11.0`。新增 [`kpi.v3`](../../schemas/json/kpi.v3.schema.json) 与 [`planning-run.v2`](../../schemas/json/planning-run.v2.schema.json)，分别有独立 strict schema、URN、样例和字典项。KPI v3 精确引用真实 replan-candidate.v1、SolverReport v2 和 fresh ValidationReport v2；PlanningRun v2 的 planning_solution 引用重排 candidate，合法状态/转换沿用原合同。v1 Run、v2 KPI 及此前 Schema/sample 字节全部保留。下文各 Task 的版本声明是其历史基线，不覆盖当前值。
+
 
 ## P9-02 consumer-only compatibility
 

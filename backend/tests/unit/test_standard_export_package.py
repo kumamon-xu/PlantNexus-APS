@@ -580,10 +580,13 @@ def test_atomic_commit_retries_only_bounded_windows_access_denial(
     calls = []
     waits = []
 
+    class SimulatedWindowsPermissionError(PermissionError):
+        winerror: int
+
     def contested_replace(source, target):
         calls.append((source, target))
         if len(calls) <= failures:
-            error = PermissionError("controlled directory access failure")
+            error = SimulatedWindowsPermissionError("controlled directory access failure")
             error.winerror = winerror
             raise error
         return original_replace(source, target)

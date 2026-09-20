@@ -2,6 +2,7 @@
 
 from copy import deepcopy
 from datetime import timedelta
+from typing import Any, cast
 
 import pytest
 
@@ -94,14 +95,15 @@ def test_ineligible_or_exhausted_input_gets_no_hint(reason, monkeypatch):
     problem = delivery_problem([2, 2], [3, 4], [1, 1])
     core = build_core_model(problem)
     objective = add_delivery_objective(problem, core)
+    malformed = cast(dict[str, Any], problem)
     if reason == "running":
         problem["operation_instances"][0]["status"] = "RUNNING"
     elif reason == "locks":
-        problem["operation_locks"] = [{}]
+        malformed["operation_locks"] = [{}]
     elif reason == "anchors":
-        problem["historical_completion_anchors"] = [{}]
+        malformed["historical_completion_anchors"] = [{}]
     elif reason == "max_lag":
-        problem["precedence_edges"] = [{"max_lag_seconds": 10}]
+        malformed["precedence_edges"] = [{"max_lag_seconds": 10}]
     elif reason == "size":
         problem["operation_instances"] *= 65
     else:

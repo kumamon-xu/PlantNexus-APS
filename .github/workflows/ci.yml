@@ -1176,6 +1176,17 @@ jobs:
         env:
           GH_TOKEN: ${{ github.token }}
         run: |
+          retain_image_scan() {
+            status=$?
+            for file in image-scan.json image-sbom.cdx.json; do
+              source="build/enterprise-container/staging/ci-${{ github.sha }}/${file}"
+              if [ -f "${source}" ]; then
+                cp "${source}" "build/validation/ci-enterprise-${file}"
+              fi
+            done
+            exit "${status}"
+          }
+          trap retain_image_scan EXIT
           python scripts/enterprise_image_build.py \
             --output build/enterprise-container/staging/ci-${{ github.sha }} \
             --report build/validation/ci-enterprise-image.json

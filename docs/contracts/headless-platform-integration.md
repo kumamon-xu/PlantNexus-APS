@@ -11,6 +11,11 @@ last_reviewed: 2026-09-16
 
 # APS Headless 平台集成与数据权威合同
 
+## P9-08 双消费者样例
+
+[标准库宿主样例](../../examples/p9-headless-client/README.md)与可选工作区消费同一正式 Runtime API，Backend 独立安装/运行。TEST 身份可同时具有 workspace/event/replan 权限，Runtime 按领域裁剪内部 context，不接受客户端声明授权。事实投影与 Request 准备仍为可信服务器责任；不存在 Frontend 私有准备端点。
+
+
 ## TASK-P8-17 Exit状态
 
 P8-17作为独立`PHASE_GATE`，重核本合同、ADR-0017/0018、P8完整前序Provider lineage及审计SHA的Headless+Extension产品链。20项Exit检查、fresh P8-19的18项平台检查与4项blocker closure全部通过且零issue/zero gap，并已取得同一提交的exact FULL与required Provider确认；P8 synthetic工程产品化结论为`READY`。

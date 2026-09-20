@@ -11,6 +11,11 @@ last_reviewed: 2026-08-31
 
 # P3 Planning Workspace 页面与只读视图合同
 
+## P9-08 当前消费边界
+
+新增事件/重排批准 carrier 提交入口以及版本详情人工 assignment 选择表单，沿用原页面和命令。详情支持原始 v1/v2；旧 Gantt/KPI/比较拒绝不匹配来源时不构造替代 DTO。服务器的 allowed_actions、原始版本身份、当前 attempt 及真实错误决定显示。
+
+
 ## TASK-P4-13 additive replanning workspace
 
 P4页面要求用户显式输入planning scope、authority、stream/version/position range、request/fingerprint与attempt ID，没有Production或业务默认值。Ready视图显示六类证据：server-ordered event timeline、immutable Request、PlanningRun attempt/allowed actions、half-open freeze/effective lock、result DRAFT，以及before/after tardiness、四分量OBJ-002 Stability和ChangeReport operations。每个label旁保留raw machine value、ID、fingerprint或UTC。

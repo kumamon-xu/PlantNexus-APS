@@ -17,6 +17,7 @@ import {
   type OperationDelta,
   type ResourceLoad,
   type ScheduleLineage,
+  type ReplanScheduleLineage,
   type ScheduleState,
   type ScheduleVersion,
   type ScheduleVersionComparison,
@@ -194,17 +195,41 @@ function lineage(value: unknown, field: string): ScheduleLineage {
   } as ScheduleLineage;
 }
 
+function replanLineage(value: unknown, field: string): ReplanScheduleLineage {
+  const raw = object(value, field);
+  for (const key of ["base_snapshot", "base_problem", "new_snapshot", "new_problem", "fact_checkpoint", "candidate", "validation_report", "kpi", "solver_report"]) {
+    artifact(raw[key], `${field}.${key}`);
+  }
+  versionReference(raw.base_schedule_version, `${field}.base_schedule_version`);
+  fingerprint(raw.event_stream_fingerprint, `${field}.event_stream_fingerprint`);
+  const request = object(raw.replan_request, `${field}.replan_request`);
+  literal(request.replan_request_version, "replan-request.v1", `${field}.replan_request.replan_request_version`);
+  string(request.request_id, `${field}.replan_request.request_id`);
+  fingerprint(request.request_fingerprint, `${field}.replan_request.request_fingerprint`);
+  const report = object(raw.change_report, `${field}.change_report`);
+  literal(report.change_report_version, "change-report.v1", `${field}.change_report.change_report_version`);
+  string(report.report_id, `${field}.change_report.report_id`);
+  fingerprint(report.report_fingerprint, `${field}.change_report.report_fingerprint`);
+  string(raw.planning_run_id, `${field}.planning_run_id`);
+  string(raw.code_commit, `${field}.code_commit`);
+  return raw as ReplanScheduleLineage;
+}
+
 export function parseScheduleVersion(value: unknown): ScheduleVersion {
   const envelope = object(value, "response");
-  const raw =
-    envelope.schedule_version_version === "schedule-version.v1"
-      ? envelope
-      : object(envelope.schedule_version, "response.schedule_version");
+  const raw = envelope.schedule_version === undefined
+    ? envelope
+    : object(envelope.schedule_version, "response.schedule_version");
+  const version = raw.schedule_version_version;
+  if (version !== "schedule-version.v1" && version !== "schedule-version.v2") {
+    throw new ContractViolation("schedule_version.schedule_version_version", "unsupported version");
+  }
+  const actions = envelope.allowed_actions === undefined ? raw.allowed_actions : envelope.allowed_actions;
   const revision = raw.revision;
   if (!Number.isInteger(revision) || (revision as number) < 1) {
     throw new ContractViolation("schedule_version.revision", "must be a positive integer");
   }
-  if (!Array.isArray(raw.allowed_actions)) {
+  if (!Array.isArray(actions) || actions.some((action) => typeof action !== "string")) {
     throw new ContractViolation(
       "schedule_version.allowed_actions",
       "must be an array",
@@ -233,14 +258,10 @@ export function parseScheduleVersion(value: unknown): ScheduleVersion {
   }
   return {
     ...raw,
-    schedule_version_version: literal(
-      raw.schedule_version_version,
-      "schedule-version.v1",
-      "schedule_version.schedule_version_version",
-    ),
+    schedule_version_version: version,
     schema_set_version: literal(
       raw.schema_set_version,
-      "2.6.0",
+      version === "schedule-version.v1" ? "2.6.0" : "2.8.0",
       "schedule_version.schema_set_version",
     ),
     canonicalization_version: literal(
@@ -261,13 +282,15 @@ export function parseScheduleVersion(value: unknown): ScheduleVersion {
       ? (raw.synthetic_provenance as JsonObject)
       : null,
     parent_schedule_version: parent,
-    lineage: lineage(raw.lineage, "schedule_version.lineage"),
+    lineage: version === "schedule-version.v1"
+      ? lineage(raw.lineage, "schedule_version.lineage")
+      : replanLineage(raw.lineage, "schedule_version.lineage"),
     content_fingerprint: fingerprint(
       raw.content_fingerprint,
       "schedule_version.content_fingerprint",
     ),
     validation: object(raw.validation, "schedule_version.validation"),
-    allowed_actions: raw.allowed_actions as JsonValue[],
+    allowed_actions: actions as JsonValue[],
     created_at_utc: utc(raw.created_at_utc, "schedule_version.created_at_utc"),
     created_by_actor_ref: string(
       raw.created_by_actor_ref,

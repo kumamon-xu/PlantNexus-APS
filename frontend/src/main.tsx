@@ -6,7 +6,7 @@ import { BrowserRouter } from "react-router-dom";
 
 import { createPlanningWorkspaceClient } from "./api/client";
 import { loadRuntimeConfig } from "./api/runtime";
-import { unavailableSessionProvider } from "./api/session";
+import { resolveHeadlessSessionProvider } from "./headless/session";
 import { AppServicesProvider } from "./app/context";
 import { PlanningWorkspaceApp } from "./app/PlanningWorkspaceApp";
 import { createDynamicReplanningClient } from "./features/replanning/client";
@@ -14,10 +14,11 @@ import { LocaleProvider, useLocale } from "./i18n/locale";
 import "./styles/app.css";
 
 const runtime = loadRuntimeConfig();
-const client = createPlanningWorkspaceClient(runtime, unavailableSessionProvider);
+const session = resolveHeadlessSessionProvider();
+const client = createPlanningWorkspaceClient(runtime, session);
 const dynamicReplanningClient = createDynamicReplanningClient(
   runtime,
-  unavailableSessionProvider,
+  session,
 );
 const queryClient = new QueryClient({
   defaultOptions: {

@@ -1,3 +1,4 @@
+import { RuntimeSubmission } from "./RuntimeSubmission";
 import {
   Alert,
   Button,
@@ -172,7 +173,12 @@ export function ReplanningWorkspacePage() {
   const [confirmed, setConfirmed] = useState(false);
   const { runtime } = useAppServices();
   const { t } = useLocale();
-  const replanning = useReplanningWorkspace(identity);
+  const replanning = useReplanningWorkspace(identity, (attemptId) => {
+    const next = { ...draft, attempt_id: attemptId };
+    setDraft(next);
+    setParameters(Object.entries(next));
+    setIdentity(parseIdentity(next));
+  });
 
   const submitIdentity = (event: FormEvent) => {
     event.preventDefault();
@@ -202,6 +208,7 @@ export function ReplanningWorkspacePage() {
     <main className="workspace-page replanning-page">
       <Title level={2}>{t("replanning.title")}</Title>
       <Paragraph>{t("replanning.description")}</Paragraph>
+      <RuntimeSubmission />
       <Alert
         showIcon
         type="warning"

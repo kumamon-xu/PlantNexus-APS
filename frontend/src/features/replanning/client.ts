@@ -9,6 +9,11 @@ import {
   parseRequestResponse,
   parseResultResponse,
   parseTimelineResponse,
+  parseExecutionEvent,
+  parseReplanRequest,
+  parseEnvelope,
+  parseRuntimeActionResponse,
+  parseAttempt,
 } from "./contracts";
 import type {
   ChangeReportWorkspaceProjection,
@@ -36,6 +41,7 @@ export class ReplanningClientError extends Error {
 }
 
 export interface DynamicReplanningClient {
+  submitCanonical(document: JsonObject, idempotencyKey: string): Promise<JsonObject>;
   listExecutionEvents(
     query: ReplanningQueryDocument,
   ): Promise<ExecutionEventTimelineProjection>;
@@ -46,7 +52,7 @@ export interface DynamicReplanningClient {
   ): Promise<ChangeReportWorkspaceProjection>;
   executeAttemptAction(
     request: ReplanActionRequest,
-  ): Promise<DynamicReplanningEnvelope<ReplanActionAcknowledgement>>;
+  ): Promise<DynamicReplanningEnvelope<ReplanActionAcknowledgement | ReplanRequestProjection>>;
 }
 
 function failureKind(status: number): ClientFailureKind {
@@ -232,6 +238,46 @@ export function createDynamicReplanningClient(
   }
 
   return {
+    async submitCanonical(document, idempotencyKey) {
+      return checked(async () => {
+        const event = document.execution_event_version !== undefined;
+        if (event) parseExecutionEvent(document, "event");
+        else parseReplanRequest(document, "request");
+        if (config.dataPlane !== "SIMULATION" || !config.synthetic || document.environment !== config.environment) {
+          throw new ContractViolation("document", "runtime boundary differs");
+        }
+        const excluded = event ? ["event_id", "event_fingerprint", "received_at_utc"] : ["request_id", "request_fingerprint"];
+        const digest = await sha256Fingerprint(canonicalProjection(document, Object.keys(document).filter((key) => !excluded.includes(key))));
+        const id = String(document[event ? "event_id" : "request_id"]);
+        if (document[event ? "event_fingerprint" : "request_fingerprint"] !== digest || id !== `${event ? "execution-event" : "replan-request"}-${digest.slice(7)}`) {
+          throw new ContractViolation("document", "identity or fingerprint differs");
+        }
+        const response = await request(event ? "/execution-events" : "/replan-requests", "POST", String(document.correlation_id), document, { "Idempotency-Key": idempotencyKey });
+        const envelope = parseEnvelope<JsonObject>(response, {
+          operation: event ? "APPEND_EXECUTION_EVENT" : "CREATE_REPLAN_REQUEST",
+          resourceType: event ? "EXECUTION_EVENT" : "REPLAN_REQUEST",
+          resourceId: id,
+          correlationId: String(document.correlation_id),
+        });
+        const result = envelope.result;
+        if (!isJsonObject(result)) throw new ContractViolation("response.result", "must be an object");
+        const returned = event ? result.execution_event : result.request;
+        if (event) parseExecutionEvent(returned, "response.event");
+        else parseReplanRequest(returned, "response.request");
+        if (!isJsonObject(returned)) throw new ContractViolation("response.result", "missing document");
+        const returnedDigest = await sha256Fingerprint(canonicalProjection(returned, Object.keys(returned).filter((key) => !excluded.includes(key))));
+        if (returnedDigest !== digest) throw new ContractViolation("response.result", "submitted content differs");
+        if (!event) {
+          parseAttempt(result.attempt, "response.result.attempt");
+          if (result.result_version !== "replan-request-workspace.v1" || result.data_plane !== "SIMULATION" || result.environment !== config.environment || result.synthetic !== true || result.production_binding !== false || result.query_fingerprint !== await sha256Fingerprint(document)) {
+            throw new ContractViolation("response.result", "submission boundary differs");
+          }
+          const projection = canonicalProjection(result, Object.keys(result).filter((key) => key !== "projection_fingerprint"));
+          if (await sha256Fingerprint(projection) !== result.projection_fingerprint) throw new ContractViolation("response.result", "projection fingerprint differs");
+        }
+        return response as JsonObject;
+      });
+    },
     async listExecutionEvents(query) {
       return checked(async () => {
         await validateQuery(query, "EXECUTION_EVENT_STREAM", config);
@@ -320,6 +366,9 @@ export function createDynamicReplanningClient(
             "X-Planning-Scope-Id": planningScopeId,
           },
         );
+        if (isJsonObject(response) && isJsonObject(response.result) && response.result.result_version === "replan-request-workspace.v1") {
+          return parseRuntimeActionResponse(response, document, planningScopeId);
+        }
         return parseActionResponse(response, document);
       });
     },

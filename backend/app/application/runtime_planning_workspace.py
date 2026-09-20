@@ -23,6 +23,12 @@ from app.domain.schedule_commands import ScheduleCommandContext
 from app.extensions.contracts import RuntimeExtensionError
 
 
+# Remove only registered sibling-domain grants at the legacy workspace boundary.
+# Unexpected capabilities remain visible to the existing domain rejection guard.
+_OTHER_RUNTIME_CAPABILITIES = frozenset(
+    {"event_ingest", "event_view", "replan", "replan_view", "replan_control"}
+)
+
 _SUPPORTED_OPERATIONS = frozenset(
     {
         "GET_SCHEDULE_VERSION",
@@ -156,7 +162,7 @@ class RuntimePlanningWorkspaceApplication:
         return ApprovalDecisionContext(
             actor_ref=context.actor_ref,
             authenticated=context.authenticated,
-            resolved_capabilities=context.resolved_capabilities,
+            resolved_capabilities=context.resolved_capabilities - _OTHER_RUNTIME_CAPABILITIES,
             schedule_version_scope=frozenset({schedule_version_id}),
             auth_policy_version=context.auth_policy_version,
             production_binding=context.production_binding,
@@ -180,7 +186,7 @@ class RuntimePlanningWorkspaceApplication:
         return PublicationContext(
             actor_ref=context.actor_ref,
             authenticated=context.authenticated,
-            resolved_capabilities=context.resolved_capabilities,
+            resolved_capabilities=context.resolved_capabilities - _OTHER_RUNTIME_CAPABILITIES,
             schedule_version_scope=frozenset({schedule_version_id}),
             auth_policy_version=context.auth_policy_version,
             production_binding=context.production_binding,
@@ -200,7 +206,7 @@ class RuntimePlanningWorkspaceApplication:
         return ExportJobContext(
             actor_ref=context.actor_ref,
             authenticated=context.authenticated,
-            resolved_capabilities=context.resolved_capabilities,
+            resolved_capabilities=context.resolved_capabilities - _OTHER_RUNTIME_CAPABILITIES,
             schedule_version_scope=frozenset({schedule_version_id}),
             export_job_scope=context.export_job_scope,
             auth_policy_version=context.auth_policy_version,
@@ -257,7 +263,7 @@ class RuntimePlanningWorkspaceApplication:
                 problem,
                 ScheduleCommandContext(
                     actor_ref=context.actor_ref,
-                    resolved_capabilities=context.resolved_capabilities,
+                    resolved_capabilities=context.resolved_capabilities - _OTHER_RUNTIME_CAPABILITIES,
                     auth_policy_version=context.auth_policy_version,
                     occurred_at_utc=context.occurred_at_utc,
                     code_commit=context.code_commit,

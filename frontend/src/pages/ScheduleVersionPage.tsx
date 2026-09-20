@@ -12,6 +12,7 @@ import { AuditHistoryPanel } from "../features/audit/AuditHistoryPanel";
 import { ExportPanel } from "../features/export/ExportPanel";
 import { PublicationPanel } from "../features/publication/PublicationPanel";
 import { ScheduleActionsPanel } from "../features/schedule-actions/ScheduleActionsPanel";
+import { ManualVersionEditor } from "../features/schedule-actions/ManualVersionEditor";
 import { labelBusinessValue } from "../i18n/business-labels";
 import { useLocale } from "../i18n/locale";
 
@@ -116,6 +117,7 @@ export function ScheduleVersionPage() {
       )}
       {humanControlsEnabled && (
         <div className="control-stack">
+          <ManualVersionEditor version={query.data} refreshAuthority={refreshAuthority} onActionResult={onActionResult} />
           {query.data.state === "DRAFT" && (
             <ScheduleActionsPanel
               version={query.data}

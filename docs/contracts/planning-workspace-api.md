@@ -11,6 +11,11 @@ last_reviewed: 2026-09-07
 
 # P3 Planning Workspace API 语义合同
 
+## P9-08 同合同消费
+
+Frontend 读取 nested schedule_version 原始版本，按钮使用外层按权限裁剪的 allowed_actions；v2 不伪装成 v1 Solution。查询 precondition 只包含 id/state/content fingerprint，provenance 取自所读版本。人工变更旧读模型的不兼容拒绝保持 P9-05 决策；原始版本详情仍可继续人工审核。替换发布显式读取用户指定的当前 PUBLISHED 版本并提交精确前置条件。Runtime workspace adapter 仅移除已登记的事件/重排权限，未知权限仍由旧领域拒绝；原 principal 和其他领域授权不变。
+
+
 ## P9-05 Runtime 读模型与成果闭环
 
 当前 composition 绑定全部 Workspace operation；导出执行、retry/cancel/download 需要显式 package store 配置。版本查询、比较按 Version 的 exact solution fingerprint 找 durable Worker checkpoint，禁止以最新 attempt 替代历史来源。工作区 DATA_HEALTH/IMPORT_RUNS 来自 durable ingress；PLANNING_RUNS 来自实际 aggregate state/revision，未求解或失败不伪造 Solver/KPI。先按服务器 planning-run scope 过滤身份，再加载并核对 factory scope；同一载体无法表达混合 provenance 时显式拒绝。

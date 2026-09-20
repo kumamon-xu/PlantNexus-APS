@@ -24,8 +24,10 @@ export function PublicationPanel({
   refreshAuthority,
   onActionResult,
 }: PublicationPanelProps) {
-  const { runtime } = useAppServices();
-  const { t } = useLocale();
+  const { runtime, client } = useAppServices();
+  const { locale, t } = useLocale();
+  const [previousId, setPreviousId] = useState("");
+  const [preconditionError, setPreconditionError] = useState<string | null>(null);
   const [reason, setReason] = useState("");
   const [confirmed, setConfirmed] = useState(false);
   const [dialogOpen, setDialogOpen] = useState(false);
@@ -42,11 +44,23 @@ export function PublicationPanel({
     serverAllows(version, "publish");
 
   async function publish() {
+    setPreconditionError(null);
+    let previous = null;
+    try {
+      if (previousId.trim()) {
+        const current = await client.getScheduleVersion(previousId.trim());
+        if (current.state !== "PUBLISHED") throw new Error("Previous current version must be PUBLISHED");
+        previous = { schedule_version_id: current.schedule_version_id, state: current.state, content_fingerprint: current.content_fingerprint };
+      }
+    } catch (error) {
+      setPreconditionError(error instanceof Error ? error.message : "CONTRACT_REJECTED");
+      return;
+    }
     const command = await buildScheduleVersionCommand(
       runtime,
       version,
       "PUBLISH",
-      { previous_current_version: null },
+      { previous_current_version: previous },
       reason,
     );
     await action.execute(command);
@@ -90,6 +104,11 @@ export function PublicationPanel({
           title={t("publication.version", { version: version.schedule_version_id })}
           description={t("publication.description")}
         />
+        <label className="control-field">
+          {locale === "zh-CN" ? "当前已发布版本 ID（首次发布留空）" : "Current published version ID (empty for first publication)"}
+          <Input aria-label="Current published version ID" value={previousId} disabled={action.pending} onChange={(event) => { setPreviousId(event.target.value); setConfirmed(false); }} />
+        </label>
+        {preconditionError && <Alert type="error" title={preconditionError} />}
         <label className="control-field">
           {t("publication.reason")}
           <Input.TextArea

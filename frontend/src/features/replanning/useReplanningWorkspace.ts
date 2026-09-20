@@ -17,6 +17,7 @@ import type {
   ReplanAttemptAction,
   ReplanningWorkspaceIdentity,
   ReplanningWorkspaceProjection,
+  ReplanRequestProjection,
 } from "./types";
 
 export type ReplanActionPhase =
@@ -94,7 +95,7 @@ export async function loadReplanningWorkspace(
   return { timeline, request, result, report };
 }
 
-export function useReplanningWorkspace(identity: ReplanningWorkspaceIdentity | null) {
+export function useReplanningWorkspace(identity: ReplanningWorkspaceIdentity | null, onAttempt?: (attemptId: string) => void) {
   const { dynamicReplanningClient, runtime } = useAppServices();
   const [feedback, setFeedback] = useState<ReplanActionFeedback>(idleFeedback);
   const retained = useRef<ReplanActionRequest | null>(null);
@@ -134,9 +135,14 @@ export function useReplanningWorkspace(identity: ReplanningWorkspaceIdentity | n
       correlationId: actionRequest.document.correlation_id,
     });
     try {
-      await dynamicReplanningClient.executeAttemptAction(actionRequest);
+      const response = await dynamicReplanningClient.executeAttemptAction(actionRequest);
       retained.current = null;
-      await query.refetch();
+      if (response.result.result_version === "replan-request-workspace.v1" && actionRequest.document.action === "RETRY") {
+        onAttempt?.((response.result as ReplanRequestProjection).attempt.attempt_id);
+      } else {
+        const refreshed = await query.refetch();
+        if (refreshed.error) throw refreshed.error;
+      }
       setFeedback({
         phase: "confirmed",
         action: actionRequest.document.action,

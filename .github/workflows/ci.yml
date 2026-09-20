@@ -707,6 +707,9 @@ jobs:
             "${replay_root}/backend/app/planning/reporting/replan_kpi.py" \
             "${replay_root}/backend/migrations/versions/0010_runtime_replan.py" \
             "${replay_root}/backend/tests/integration/test_p9_replan.py" \
+            "${replay_root}/backend/tests/integration/p9_consumers_support.py" \
+            "${replay_root}/backend/tests/integration/test_p9_consumers.py" \
+            "${replay_root}/backend/tests/integration/test_p9_consumers_installed.py" \
             "${replay_root}/backend/tests/integration/test_p9_replan_installed.py" \
             "${replay_root}/schemas/json/kpi.v3.schema.json" \
             "${replay_root}/schemas/json/planning-run.v2.schema.json" \
@@ -1326,8 +1329,15 @@ jobs:
           git rev-parse HEAD > ../build/validation/ci-frontend-completed.txt
           cp ../build/playwright/results.xml ../build/validation/ci-frontend-browser.xml
           cp ../build/playwright/p8-distribution/results.xml ../build/validation/ci-frontend-headless.xml
+      - uses: astral-sh/setup-uv@v10.0.1
+      - name: P9 formal Runtime browser consumers
+        env:
+          P9_BROWSER: "1"
+        run: |
+          uv sync --locked --all-groups
+          uv run pytest -q backend/tests/integration/test_p9_consumers.py -k browser --junitxml=build/validation/ci-frontend-p9-runtime-harness.xml
       - name: Seal frontend_validation evidence
-        run: python -m scripts.ci_execution seal --job frontend_validation --files build/validation/ci-frontend-sca.json build/validation/ci-frontend-licenses.json build/validation/ci-frontend-completed.txt build/validation/ci-frontend-browser.xml build/validation/ci-frontend-headless.xml --report build/validation/ci-seal-frontend_validation.json
+        run: python -m scripts.ci_execution seal --job frontend_validation --files build/validation/ci-frontend-p9-runtime.xml build/validation/ci-frontend-p9-runtime-harness.xml build/validation/ci-frontend-sca.json build/validation/ci-frontend-licenses.json build/validation/ci-frontend-completed.txt build/validation/ci-frontend-browser.xml build/validation/ci-frontend-headless.xml --report build/validation/ci-seal-frontend_validation.json
       - uses: actions/upload-artifact@v7
         if: always()
         with:

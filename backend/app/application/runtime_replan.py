@@ -756,7 +756,7 @@ class RuntimeReplanApplication:
                     "failure_reason": None
                     if state not in PLANNING_RUN_TERMINAL_STATES or state == "COMPLETED"
                     else state,
-                    "correlation_id": document["correlation_id"],
+                    "correlation_id": request.context.correlation_id,
                 }
                 if applied is not None and state == "COMPLETED":
                     report = applied.change_report

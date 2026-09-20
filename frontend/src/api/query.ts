@@ -1,4 +1,5 @@
 import { workspaceQueryFingerprint } from "./canonical";
+import { isJsonObject } from "./contracts";
 import type {
   DataPlane,
   JsonObject,
@@ -88,7 +89,9 @@ export async function buildWorkspaceQuery(
   if (authority.dataPlane === "PRODUCTION" && authority.synthetic) {
     throw new Error("Production workspace query cannot be synthetic");
   }
-  if (authority.synthetic && authority.syntheticProvenance === undefined) {
+  const provenance = scheduleVersion && isJsonObject(scheduleVersion.synthetic_provenance)
+    ? scheduleVersion.synthetic_provenance : authority.syntheticProvenance;
+  if (authority.synthetic && provenance === undefined) {
     throw new Error("Synthetic workspace query requires explicit provenance");
   }
   const pageSize = options.pageSize ?? 100;
@@ -110,7 +113,11 @@ export async function buildWorkspaceQuery(
       resource_id: isWorkspace ? null : scheduleVersion.schedule_version_id,
     },
     view,
-    schedule_version_precondition: isWorkspace ? null : scheduleVersion,
+    schedule_version_precondition: isWorkspace ? null : {
+      schedule_version_id: scheduleVersion.schedule_version_id,
+      state: scheduleVersion.state,
+      content_fingerprint: scheduleVersion.content_fingerprint,
+    },
     sort: sortFor(view),
     filters: filtersFor(options) as unknown as JsonObject,
     page: { size: pageSize, cursor: options.cursor ?? null },
@@ -118,8 +125,8 @@ export async function buildWorkspaceQuery(
     correlation_id: options.correlationId ?? globalThis.crypto.randomUUID(),
     result: null,
   };
-  if (authority.syntheticProvenance !== undefined) {
-    document.synthetic_provenance = authority.syntheticProvenance;
+  if (provenance !== undefined) {
+    document.synthetic_provenance = provenance;
   }
   document.query_fingerprint = await workspaceQueryFingerprint(document);
   return document as WorkspaceQueryDocument;

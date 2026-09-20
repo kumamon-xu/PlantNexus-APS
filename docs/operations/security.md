@@ -11,6 +11,11 @@ last_reviewed: 2026-09-20
 
 # P0 工程安全边界
 
+## P9-08 消费者会话边界
+
+工作区会话只来自宿主内存 provider，缺失时 fail closed；不在 URL、localStorage 或日志保存凭据。真实 Runtime 测试只注入隔离 TEST 身份，业务 application 仍由正式组合根装配。混合身份在 workspace adapter 转为旧领域上下文，移除已登记的事件/重排权限且保留未知权限拒绝，事件/重排权限不会变成 workspace grant。
+
+
 ## P9-05 读取和文件边界
 
 先授权资源再加载 payload，下载先授权 Job；两方比较与 catalog grants 各自复核。export 消息只接受固定版本、字段和 Job/attempt/lease identity，拒绝路径或 actor 字段。来源 manifest 位于服务端指定只读目录；包仅位于服务端共享根目录并经既有 verifier 校验。无新外部 connector、网络下载或 Production authority，安装 wheel 证明限 synthetic TEST/SIMULATION。

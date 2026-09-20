@@ -11,6 +11,11 @@ last_reviewed: 2026-08-31
 
 # P3 Approval Publication 与 Export 人工控制流程
 
+## P9-08 当前版本前置条件
+
+发布对话框允许显式填写当前已发布版本 ID，读取其 PUBLISHED/state/content 后再发送 previous_current_version；首次发布明确留空。读取失败阻止命令，最终 current CAS 仍归服务端。重排 v2 按原审核、批准、发布流程执行，不能将 base 自动认定为 current。
+
+
 ## TASK-P4-13 replanning action boundary
 
 P4的`CANCEL/RETRY`只作用于当前Simulation PlanningRun attempt，与P3 ScheduleVersion approve/reject/publish/export控制完全分离。按钮必须由服务端`allowed_actions`挂载，并要求非敏感reason和显式确认；success只接受绑定action/request/attempt/state/fingerprint/correlation的服务端acknowledgement。

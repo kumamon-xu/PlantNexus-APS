@@ -71,9 +71,20 @@ export interface ScheduleLineage extends JsonObject {
   code_commit: string;
 }
 
+export interface ReplanScheduleLineage extends JsonObject {
+  planning_run_id: string;
+  new_snapshot: ArtifactReference;
+  new_problem: ArtifactReference;
+  candidate: ArtifactReference;
+  validation_report: ArtifactReference;
+  kpi: ArtifactReference;
+  solver_report: ArtifactReference;
+  code_commit: string;
+}
+
 export interface ScheduleVersion extends JsonObject {
-  schedule_version_version: "schedule-version.v1";
-  schema_set_version: "2.6.0";
+  schedule_version_version: "schedule-version.v1" | "schedule-version.v2";
+  schema_set_version: "2.6.0" | "2.8.0";
   canonicalization_version: "canonical-json.v1";
   schedule_version_id: string;
   revision: number;
@@ -83,7 +94,7 @@ export interface ScheduleVersion extends JsonObject {
   synthetic: boolean;
   synthetic_provenance: JsonObject | null;
   parent_schedule_version: VersionReference | null;
-  lineage: ScheduleLineage;
+  lineage: ScheduleLineage | ReplanScheduleLineage;
   content_fingerprint: string;
   validation: JsonObject;
   allowed_actions: JsonValue[];

@@ -1,6 +1,6 @@
 import { Descriptions, Tag, Typography } from "antd";
 
-import type { ScheduleVersion } from "../api/types";
+import type { ReplanScheduleLineage, ScheduleLineage, ScheduleVersion } from "../api/types";
 import { labelBusinessValue } from "../i18n/business-labels";
 import { formatInteger, formatUtc } from "../i18n/formatters";
 import { useLocale } from "../i18n/locale";
@@ -13,6 +13,10 @@ export function ScheduleVersionPanel({ version }: { version: ScheduleVersion }) 
   const plane = labelBusinessValue("dataPlane", version.data_plane, locale);
   const environment = labelBusinessValue("environment", version.environment, locale);
   const created = formatUtc(version.created_at_utc, locale);
+  const replan = version.schedule_version_version === "schedule-version.v2";
+  const sources = replan
+    ? { snapshot: (version.lineage as ReplanScheduleLineage).new_snapshot, problem: (version.lineage as ReplanScheduleLineage).new_problem, solution: (version.lineage as ReplanScheduleLineage).candidate }
+    : { snapshot: (version.lineage as ScheduleLineage).snapshot, problem: (version.lineage as ScheduleLineage).problem, solution: (version.lineage as ScheduleLineage).planning_solution };
   return (
     <section aria-label={t("version.section")}>
       <Title level={3}>{t("version.title")}</Title>
@@ -37,13 +41,13 @@ export function ScheduleVersionPanel({ version }: { version: ScheduleVersion }) 
           <Text copyable>{version.content_fingerprint}</Text>
         </Descriptions.Item>
         <Descriptions.Item label={t("version.snapshotFingerprint")}>
-          <Text copyable>{version.lineage.snapshot.fingerprint}</Text>
+          <Text copyable>{sources.snapshot.fingerprint}</Text>
         </Descriptions.Item>
         <Descriptions.Item label={t("version.problemFingerprint")}>
-          <Text copyable>{version.lineage.problem.fingerprint}</Text>
+          <Text copyable>{sources.problem.fingerprint}</Text>
         </Descriptions.Item>
-        <Descriptions.Item label={t("version.solutionFingerprint")}>
-          <Text copyable>{version.lineage.planning_solution.fingerprint}</Text>
+        <Descriptions.Item label={replan ? "replan-candidate.v1" : t("version.solutionFingerprint")}>
+          <Text copyable>{sources.solution.fingerprint}</Text>
         </Descriptions.Item>
         <Descriptions.Item label={t("version.validationFingerprint")}>
           <Text copyable>{version.lineage.validation_report.fingerprint}</Text>

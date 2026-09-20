@@ -2,7 +2,7 @@ import { defineConfig, devices } from "@playwright/test";
 
 export default defineConfig({
   testDir: "./e2e",
-  testIgnore: "headless-distribution.spec.ts",
+  testIgnore: ["headless-distribution.spec.ts", "p9-runtime-consumers.spec.ts"],
   fullyParallel: false,
   forbidOnly: true,
   retries: 0,

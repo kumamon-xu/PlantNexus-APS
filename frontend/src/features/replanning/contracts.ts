@@ -162,7 +162,7 @@ async function verifyProjectionFingerprint(raw: JsonObject, field: string): Prom
   }
 }
 
-function parseEnvelope<T extends JsonObject>(
+export function parseEnvelope<T extends JsonObject>(
   value: unknown,
   expected: {
     operation: string;
@@ -200,7 +200,7 @@ function parseEnvelope<T extends JsonObject>(
   return raw as unknown as DynamicReplanningEnvelope<T>;
 }
 
-function parseExecutionEvent(value: unknown, field: string): ExecutionEventDocument {
+export function parseExecutionEvent(value: unknown, field: string): ExecutionEventDocument {
   const raw = object(value, field);
   exactKeys(
     raw,
@@ -328,7 +328,7 @@ function parseFreeze(value: unknown, field: string): FreezeResolution {
   };
 }
 
-function parseReplanRequest(value: unknown, field: string): ReplanRequestDocument {
+export function parseReplanRequest(value: unknown, field: string): ReplanRequestDocument {
   const raw = object(value, field);
   exactKeys(
     raw,
@@ -414,7 +414,7 @@ function parseReplanRequest(value: unknown, field: string): ReplanRequestDocumen
   } as ReplanRequestDocument;
 }
 
-function parseAttempt(value: unknown, field: string): ReplanAttemptProjection {
+export function parseAttempt(value: unknown, field: string): ReplanAttemptProjection {
   const raw = object(value, field);
   exactKeys(
     raw,
@@ -931,6 +931,34 @@ export async function parseChangeReportResponse(
     next_cursor: nullableString(raw.next_cursor, "response.result.next_cursor"),
     publishable: false,
   } as ChangeReportWorkspaceProjection;
+}
+
+export async function parseRuntimeActionResponse(
+  value: unknown,
+  action: ReplanAttemptActionDocument,
+  planningScopeId: string,
+): Promise<DynamicReplanningEnvelope<ReplanRequestProjection>> {
+  const envelope = parseEnvelope<ReplanRequestProjection>(value, {
+    operation: action.action === "CANCEL" ? "CANCEL_REPLAN_REQUEST" : "RETRY_REPLAN_REQUEST",
+    resourceType: "REPLAN_REQUEST", resourceId: action.request_id, correlationId: action.correlation_id,
+  });
+  const raw = object(envelope.result, "response.result");
+  exactKeys(raw, ["result_version", "query_fingerprint", "data_plane", "environment", "synthetic", "production_binding", "projection_fingerprint", "request", "attempt"], "response.result");
+  literal(raw.result_version, "replan-request-workspace.v1", "response.result.result_version");
+  literal(raw.data_plane, "SIMULATION", "response.result.data_plane");
+  literal(raw.environment, action.environment, "response.result.environment");
+  literal(raw.synthetic, true, "response.result.synthetic");
+  literal(raw.production_binding, false, "response.result.production_binding");
+  const request = parseReplanRequest(raw.request, "response.result.request");
+  const attempt = parseAttempt(raw.attempt, "response.result.attempt");
+  if (request.request_id !== action.request_id || request.request_fingerprint !== action.request_fingerprint || request.planning_scope_id !== planningScopeId || request.environment !== action.environment || raw.query_fingerprint !== await sha256Fingerprint(action)) {
+    throw new ContractViolation("response.result", "action request binding differs");
+  }
+  if (action.action === "CANCEL" ? attempt.attempt_id !== action.expected_attempt_id || attempt.attempt_number !== action.expected_attempt_number || attempt.state !== "CANCELLED" : attempt.attempt_id === action.expected_attempt_id || attempt.attempt_number !== action.expected_attempt_number + 1) {
+    throw new ContractViolation("response.result.attempt", "action successor differs");
+  }
+  await verifyProjectionFingerprint(raw, "response.result");
+  return envelope;
 }
 
 export function parseActionResponse(

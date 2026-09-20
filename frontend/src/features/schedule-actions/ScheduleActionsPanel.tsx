@@ -177,7 +177,7 @@ export function ScheduleActionsPanel({
 }
 
 interface GanttEditControlsProps extends ScheduleActionsPanelProps {
-  segment: GanttSegment;
+  segment: Pick<GanttSegment, "operation_id" | "resource_id" | "start_at_utc" | "end_at_utc">;
   proposedOffsetSeconds?: number;
 }
 
@@ -212,9 +212,9 @@ export function GanttEditControls({
   const simulationControl =
     runtime.dataPlane === "SIMULATION" && runtime.synthetic && version.synthetic;
   const editable =
-    simulationControl && version.state === "DRAFT" && serverAllows(version, "edit");
+    simulationControl && version.schedule_version_version === "schedule-version.v1" && version.state === "DRAFT" && serverAllows(version, "edit");
   const lockable =
-    simulationControl && version.state === "DRAFT" && serverAllows(version, "lock");
+    simulationControl && version.schedule_version_version === "schedule-version.v1" && version.state === "DRAFT" && serverAllows(version, "lock");
 
   async function execute(commandType: WorkspaceCommandType) {
     let payload: Record<string, import("../../api/types").JsonValue>;

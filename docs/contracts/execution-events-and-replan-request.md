@@ -11,6 +11,11 @@ last_reviewed: 2026-09-20
 
 # ExecutionEvent 与 ReplanRequest 合同
 
+## P9-08 消费与关联
+
+宿主与浏览器可提交批准的原版本 Event/Request，追加不自动投影。可信 Runtime Python port 完成事实投影和 Request 准备后再交付消费者提交。查询结果内外 correlation 均绑定本次 HTTP 查询，原始创建关联保留在不可变 Request。取消/重试消费按 result_version 区分旧 replan-attempt-action-result.v1 与 Runtime replan-request-workspace.v1；后者验证请求、动作内容摘要、attempt successor 和 projection fingerprint。Retry 后页面切换到服务端返回的新 attempt，而不是重开旧 attempt。
+
+
 ## P9-07 正式异步 Runtime
 
 配置 `PLANTNEXUS_RUNTIME_REPLAN_POLICY_PATH` 为显式批准的 Simulation Policy v2，同时配置事件 authority/stream 绑定后，正式 API 接收、查询、取消、重试 ReplanRequest 并查询结果与完整 ChangeReport。未配置继续拒绝该能力。HTTP 只校验并冻结精确来源，持久化 request/attempt/PlanningRun/work/audit 后派发既有 Worker；求解不在 HTTP 中执行。

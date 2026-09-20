@@ -11,6 +11,11 @@ last_reviewed: 2026-08-27
 
 # P3 Gantt Command 与新版本合同
 
+## P9-08 原始版本人工入口
+
+原始版本详情可选择服务端 assignment 并复用既有 Move/Assign/Lock 控件，不依赖旧 Gantt DTO 的兼容性。请求仍为 workspace-command.v1，结果遵循新版本与 fresh Validator；v2 内容编辑不提供可提交动作。
+
+
 ## TASK-P3-17 audit conclusion
 
 MOVE/ASSIGN/SET_LOCK/REMOVE_LOCK与SUBMIT流程经Backend、Vitest和Chromium重新验证：UI只生产canonical command，server validation与fresh formal Validator生成新DRAFT/READY版本，unknown outcome必须refresh authority后same-key retry，PUBLISHED不可编辑。P4 replan未形成。

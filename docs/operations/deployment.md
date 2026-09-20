@@ -11,6 +11,11 @@ last_reviewed: 2026-09-14
 
 # APS Runtime 安装、预检与启动顺序
 
+## P9-08 后端独立与消费者
+
+宿主样例只使用 Python 标准库 HTTP；Runtime wheel 的安装回放不依赖 Frontend。可选工作区的 Simulation 操作仍要求显式隔离 TEST 配置和宿主 session；不新增生产身份或默认业务配置。事实投影需要操作者配置既有 Runtime Python port，不存在浏览器自动投影。
+
+
 ## P8-27 离线候选包
 
 `python scripts/enterprise_bundle.py build --image-report <approved-report> --runtime-archive <verified-tar> --runtime-sbom <verified-cdx> --output build/enterprise-container/staging/<new-directory> --report <report>`只在构建侧组装。输出单root候选及sidecar，目录为images/compose/config/scripts/evidence/SBOM。Runtime tar与SBOM必须匹配approved报告；固定PostgreSQL/Redis通过本地registry digest检查后导出，并记录tar hash、config image ID、平台、SBOM及漏洞/许可证清单。构建侧可联网扫描，企业端不联网下载或构建。

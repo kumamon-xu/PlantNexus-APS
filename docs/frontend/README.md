@@ -11,6 +11,11 @@ last_reviewed: 2026-09-16
 
 # Frontend 文档形成计划
 
+## P9-08 Runtime 消费
+
+主工作区与 Headless entry 共用宿主注入的内存 session provider，缺失时仍拒绝认证。工作区按 schedule-version.v1/v2 分派并保留原始 lineage；版本详情的人工表单只读取服务端 assignment 并发送原命令。事件和重排提交接收批准的 canonical JSON，原样保留数字语义、指纹及幂等键，未知结果不自动重试。真实 TCP/Chromium 样例与兼容边界见 [P9 宿主样例](../../examples/p9-headless-client/README.md)。
+
+
 ## P9 canonical consumer
 
 Workspace、Headless 和 dynamic replanning 的 JSON 响应通过 `readCanonicalResponse` 严格读取 UTF-8、重复键及数值；Headless create 使用 `parseCanonicalJson` 检查后仍发送原始文本。`canonical-json.v1` 的浮点、负零、Unicode 与 hash 规则见 [Headless 跨语言消费合同](../contracts/headless-platform-integration.md#p9-canonical-jsonv1-跨语言消费)。解析树不可变；需选择 fingerprint 字段时使用 `canonicalProjection`，不要从经 `JSON.parse`、UI 格式化或丢失数值元数据的副本重算历史指纹。

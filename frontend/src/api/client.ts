@@ -271,11 +271,15 @@ export function createPlanningWorkspaceClient(
       );
     },
     async getScheduleVersion(scheduleVersionId) {
-      return checked(async () =>
-        parseScheduleVersion(
+      return checked(async () => {
+        const version = parseScheduleVersion(
           await get(`/schedule-versions/${pathSegment(scheduleVersionId)}`),
-        ),
-      );
+        );
+        if (version.schedule_version_id !== scheduleVersionId || version.data_plane !== config.dataPlane || version.environment !== config.environment) {
+          throw new ContractViolation("schedule_version", "response differs from requested identity or runtime boundary");
+        }
+        return version;
+      });
     },
     async getExportJob(exportJobId) {
       return checked(async () => {

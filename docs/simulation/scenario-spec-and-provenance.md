@@ -109,3 +109,13 @@ TASK-P1-11又将该固定asset从公开Raw Staging连续重放到Snapshot/Proble
 两份Golden以独立`factory-profile.json`、`scenario-spec.json`、`scenario-blueprint.json`、`correctness-manifest.json`、`expected-outcome.json`和手算说明发布；五例矩阵以共享Profile、catalog和blueprint-set发布。`p2-correctness-manifest.v1`是fixture-local resolved evidence contract，固定asset对象hash、pipeline versions、approved policy、Backend/Solver identity与Import/Snapshot/Problem expected hash；它不取代或修改`scenario-manifest.v1`发布Schema。
 
 Assembler `PLANTNEXUS-P2-CORRECTNESS-ASSEMBLER@1.0.0`只把小型blueprint扩展为source-shaped Raw records，随后使用公开P1/P2链路。Scenario expected只允许OPTIMAL且Validator PASS；任何version/reference/hash/status漂移都会在求解前后hard fail。新数值绑定SIM-ASSUMPTION-011，不构成Benchmark/Production default。
+
+## P9 resolved catalog and evidence
+
+P9 使用 fixture-local `p9-qualification-catalog.v1` 和封存文件，不改变已发布 ScenarioSpec/Manifest Schema。catalog 的完整 bytes SHA 同时进入 seal、生成输入、开发/保留报告与预算。`P9-NAMED-BENCHMARK@1.0.0` 组合既有 P2 blueprint generator、P2 correctness assembler 和 P1 normalization；canonical package 保留 assembler 的原始 provenance，外层输入记录 P9 generator、seed 和 catalog SHA，不能只凭内层 assembler 名称推断完整生成链。
+
+运行目录只允许首次创建。预算写入后才写 `holdout-access.json`，绑定 catalog SHA、baseline bytes SHA 和代码提交，再允许生成保留输入；失败目录不得覆盖。每个样本保留 input/Snapshot/Problem hash、Runtime resolution、Solver/Validator、Reference、复杂度和测量。顶层报告另记录 wheel SHA、源码 SHA、工作区是否有未提交变更及导入路径；本地未提交观测不冒充 exact-commit Provider。后继重放保留独立目录和访问记录，首次保留观测与失败历史必须保留。
+
+## P9-09 corrective qualification v2
+
+The initial v1 qualification failed quality and remains immutable evidence. ADR-0021 adds bounded backend-local dispatch hints without changing the hard model, objective, limits or independent Validator. Catalog/holdout-seal v2 and SIM-ASSUMPTION-029 were recorded before Solver tuning: development seeds and the SHA child formula remain unchanged; independent holdout seeds are 920901/920902/920903. New development observations freeze a versioned v2 budget before holdout access; no threshold is derived from holdout. The runner defaults to v2; `--catalog-version v1` explicitly emits EXPOSED_V1_FAILURE_REGRESSION, never independent qualification. Both old regression and new qualification are required in CI. Original v1 budgets and failed reports remain available; no Production capacity/SLA inference.

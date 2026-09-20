@@ -79,3 +79,13 @@ Application作为下游consumer调用`prepare_batch()`并进入common pipeline�
 P1-12再次运行`synthetic-generator-report.v1`得到7/7 PASS、16个非空collections、49 records和dataset hash `sha256:24a74b4f43b0ba42ed458983e0c4776613911924ae5250d9df8ae9e4f14cb1c4`；随后common-ingress报告以repeat=2确认Import/Snapshot/Problem完整bytes/hash不变。Generator version mismatch、Production target和四类source错误的拒绝路径仍由tests/machine报告覆盖。
 
 审计没有修改Profile、Scenario、Generator、mapping、manifest、seed或SIM-ASSUMPTION-010。该small correctness asset不成为Benchmark baseline、真实工厂distribution或Production capacity evidence。
+
+## P9 named benchmark composition
+
+`simulation/benchmarks/p9_catalog.py` 在冻结 P2 blueprint 上增加有界扰动，再复用 P2 source assembler/P1 normalization 生成 canonical package；不执行 P2 correctness Solver replay，也不产生候选。命名子流取 `SHA256(catalog_version|B01|seed|label)` 前八字节大端整数，对范围宽度取模。交期标签为 `<job>/due`，增加 0～3 tick；工时标签为 `<job>/<operation>/<resource>/duration`，增加 0～2 tick。无全局 RNG，新增无关标签不移动既有子流。
+
+catalog 与 holdout seal 必须匹配；开发和保留 seed 不交叉，未提供冻结预算访问记录拒绝保留生成。分布仅属于 P9 v1，变更须另立版本；旧 P1/P2 generator、seed、bytes、baseline 均不改。实际 Problem 由下游正式 Runtime 从 canonical 输入创建，生成器不反向调用 Solver 获取预期答案。
+
+## P9-09 corrective qualification v2
+
+The initial v1 qualification failed quality and remains immutable evidence. ADR-0021 adds bounded backend-local dispatch hints without changing the hard model, objective, limits or independent Validator. Catalog/holdout-seal v2 and SIM-ASSUMPTION-029 were recorded before Solver tuning: development seeds and the SHA child formula remain unchanged; independent holdout seeds are 920901/920902/920903. New development observations freeze a versioned v2 budget before holdout access; no threshold is derived from holdout. The runner defaults to v2; `--catalog-version v1` explicitly emits EXPOSED_V1_FAILURE_REGRESSION, never independent qualification. Both old regression and new qualification are required in CI. Original v1 budgets and failed reports remain available; no Production capacity/SLA inference.

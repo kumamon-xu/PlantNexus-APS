@@ -23,6 +23,32 @@ from scripts import run_benchmark as benchmark_cli
 ROOT = Path(__file__).resolve().parents[3]
 
 
+def test_baseline_distinguishes_solution_utilization_from_every_input_cardinality(report):
+    from app.simulation.benchmarks.reporting import BenchmarkContractError
+    from app.simulation.benchmarks.runner import _baseline_evaluation
+
+    baseline = json.loads((ROOT / "benchmarks/baselines/p2-xs.v1.json").read_bytes())
+    profile = load_profile_set(ROOT / "benchmarks/profiles.yaml").select("xs")
+
+    def compare(complexity, problem_hash=report["problem"]["problem_hash"]):
+        return _baseline_evaluation(
+            profile=profile, baseline=baseline, environment=report["environment"],
+            problem_hash=problem_hash, complexity=complexity, pipeline_seconds=0.0,
+            global_row=report["global_solver"], reference_rows=report["reference_schedulers"],
+        )
+
+    complexity = deepcopy(report["problem"]["complexity"])
+    complexity["bottleneck_utilization"] = 0.5
+    compare(complexity)
+    for key in complexity.keys() - {"bottleneck_utilization"}:
+        mutated = deepcopy(complexity)
+        mutated[key] += 1
+        with pytest.raises(BenchmarkContractError, match="complexity cardinality drifted"):
+            compare(mutated)
+    with pytest.raises(BenchmarkContractError, match="formal pipeline drifted"):
+        compare(complexity, "sha256:" + "0" * 64)
+
+
 @pytest.fixture(scope="module")
 def report() -> dict[str, Any]:
     return run_benchmark(root=ROOT, profile_name="xs", require_baseline=True)
@@ -47,7 +73,7 @@ def test_xs_runs_formal_ingress_global_five_references_kpi_export_and_baseline(
         "sha256:a70a0549f737b2872185189a010cd891"
         "69d1f473f893947869b42cbf99937b04"
     )
-    assert report["problem"]["complexity"] == {
+    assert {key: value for key, value in report["problem"]["complexity"].items() if key != "bottleneck_utilization"} == {
         "order_count": 4,
         "lot_count": 4,
         "operation_count": 8,
@@ -63,9 +89,13 @@ def test_xs_runs_formal_ingress_global_five_references_kpi_export_and_baseline(
         "material_delay_ratio": 0.25,
         "wip_ratio": 0.0,
         "lock_ratio": 0.0,
-        "bottleneck_utilization": 0.067415730337,
         "horizon_ticks": 180,
     }
+    utilization = report["checks"][-1]["details"]["solution_utilization_comparison"]
+    assert utilization["classification"] == "SOLUTION_DERIVED_NOT_INPUT_CARDINALITY"
+    assert utilization["baseline"] == 0.067415730337
+    assert utilization["current"] == report["problem"]["complexity"]["bottleneck_utilization"]
+    assert 0 < utilization["current"] <= 1
     assert report["global_solver"]["status"] == "OPTIMAL"
     assert report["global_solver"]["validation"] == {
         "status": "PASS",

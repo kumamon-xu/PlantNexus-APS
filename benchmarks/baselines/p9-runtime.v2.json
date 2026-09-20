@@ -1,0 +1,70 @@
+{
+  "baseline_version": "p9-runtime-baseline.v2",
+  "environment": {
+    "os": "Windows-11-10.0.26200-SP0",
+    "machine": "AMD64",
+    "processor": "Intel64 Family 6 Model 183 Stepping 1, GenuineIntel",
+    "logical_cores": 32,
+    "memory_bytes": 68319539200,
+    "python": "3.12.13",
+    "packages": {
+      "ortools": "9.15.6755",
+      "celery": "5.5.3",
+      "redis": "6.4.0",
+      "sqlalchemy": "2.0.43",
+      "plantnexus-aps": "0.0.0"
+    },
+    "uv_lock_sha256": "8b13617f31aa6a933347fc7b8ba010330cbb3f2d764f75c306dd9b6d77387a82",
+    "parallelism": 1,
+    "database": "SQLite isolated file",
+    "worker": "Celery solo, thread-hosted real Redis consumer",
+    "extension_set": "NONE for generated benchmark; configured extensions covered by B09",
+    "kit": "not packaged by P9-09; exact candidate combination owned by P9-10",
+    "redis_server_version": "7.4.11",
+    "redis_image": "redis@sha256:520775a41a63e77e06c73e35d2fd9cc15921a609516818796b4ecbb813078bc7"
+  },
+  "catalog_sha256": "b66f7bbeaefc07c4094ac3026f67c55a0ffb23a8707e6df1883de9429a3d2ceb",
+  "calibration_fingerprint": "sha256:3d8c3ea24f7237cbf019c9df732756fa124f1dbd1ad90e14efb48c2b99e02083",
+  "budget_policy": {
+    "factor": 2.5,
+    "stage_floor_seconds": 1.0,
+    "end_to_end_floor_seconds": 4.0,
+    "same_environment_only": true
+  },
+  "budgets": {
+    "xs": {
+      "model_build_seconds": 1.0,
+      "first_feasible_seconds": 1.0,
+      "solve_seconds": 1.0,
+      "validation_seconds": 1.0,
+      "ingress_seconds": 1.0,
+      "export_seconds": 1.0,
+      "end_to_end_seconds": 4.0,
+      "memory_peak_mb": 1,
+      "process_peak_rss_mb": 484.27734375
+    },
+    "s": {
+      "model_build_seconds": 1.0,
+      "first_feasible_seconds": 1.0,
+      "solve_seconds": 1.8253905000000001,
+      "validation_seconds": 1.0,
+      "ingress_seconds": 1.0,
+      "export_seconds": 1.0,
+      "end_to_end_seconds": 4.212326249980833,
+      "memory_peak_mb": 1,
+      "process_peak_rss_mb": 497.880859375
+    },
+    "m": {
+      "model_build_seconds": 1.0,
+      "first_feasible_seconds": 1.0,
+      "solve_seconds": 10.0,
+      "validation_seconds": 1.0,
+      "ingress_seconds": 1.0,
+      "export_seconds": 1.1255697500018869,
+      "end_to_end_seconds": 13.485786250021192,
+      "memory_peak_mb": 1.112511157989502,
+      "process_peak_rss_mb": 515.087890625
+    }
+  },
+  "synthetic_only": true
+}

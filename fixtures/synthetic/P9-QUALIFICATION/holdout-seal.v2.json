@@ -1,0 +1,14 @@
+{
+  "seal_version": "p9-holdout-seal.v2",
+  "catalog_sha256": "b66f7bbeaefc07c4094ac3026f67c55a0ffb23a8707e6df1883de9429a3d2ceb",
+  "holdout": {
+    "xs": 920901,
+    "s": 920902,
+    "m": 920903
+  },
+  "created_before_generation": true,
+  "created_before_solver_tuning": true,
+  "access_state": "SEALED",
+  "first_result": "NOT_EXECUTED",
+  "predecessor_disposition": "v1 exposed failure retained as regression only"
+}

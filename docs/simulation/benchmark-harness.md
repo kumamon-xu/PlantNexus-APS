@@ -121,3 +121,21 @@ Gate不修改Profile/Report/Baseline、threshold或runner；它用public `run_be
 Aggregate report完整嵌入六份原始报告并另算`p2-gate-semantic-projection.v1`：比较Profile/Problem/environment/candidate/model/quality/Validator/Reference/baseline语义，排除本来就会变化的time/memory和由SolverReport timing派生的KPI/package identity。此投影不替换原Benchmark合同或原始测量；L/XL、Nightly与Production threshold继续不在范围。
 
 Provider artifact `9440650646`精确包含六份nested XS/S/M BenchmarkReport、全部108次Validator PASS及同SHA Gate aggregation；required Gate step success。Profile/Baseline/runner仍无变化，L/XL、Nightly和Production threshold继续未形成。
+
+## P9 installed Runtime qualification
+
+`uv run python scripts/p9_simulation_qualification.py --root . --out <new-directory> --broker <isolated-redis-url> --code-commit <full-sha> --installed --coverage` 构建并安装当前 wheel，验证 app/SDK 从安装目录导入，使用 lock 环境依赖。每个画像使用新解释器、SQLite、loopback Uvicorn 与 Celery solo consumer，经过 canonical HTTP → durable ingress → Redis → 正式 Worker/Solver/Validator → 人工审批发布 → 异步导出下载。Worker 在线程中消费真实 Redis，进程按画像隔离；这不是多主机或高并发部署测试。
+
+每画像 1 warmup + 3 measured；开发共 9、保留共 9，warmup 六次单列。两项负向状态各一次单列，统计总分母 20，不能把 UNKNOWN/无解丢弃。记录建模、首解、求解、校验、入口、导出和端到端耗时、Solver 内存与 OS 进程峰值 RSS；进程 RSS 包括 harness/服务且是该进程累计峰值。Reference 与非法候选诊断在端到端计时结束后执行。三次测量报告 min/median/max，不宣称小样本 P95。
+
+同 Problem 的五个 Reference 必须可行；独立 Validator 拒绝损坏的候选，Global weighted tardiness 劣于最佳 Reference 会阻断。先冻结开发预算，再首次访问保留集；预算与同环境回归规则见 [benchmark regression](../quality/benchmark-regression.md)。CI full_validation/solver_validation 执行 installed qualification 并将嵌套原始样本、覆盖、环境和 wheel identity 密封进 `ci-p9-simulation.json`。可选 Frontend 浏览器仍由独立 CI 门执行；本 runner 的 fresh owner coverage 排除 browser 用例。
+
+纯 harness 纠正后的重放可传 `--frozen-budget <previous/frozen-baseline.json>`，开发与保留都必须通过同一旧预算；报告记录来源和摘要，不重新扩大门限。首次失败/访问目录保留。
+
+## P9-09 corrective qualification v2
+
+The initial v1 qualification failed quality and remains immutable evidence. ADR-0021 adds bounded backend-local dispatch hints without changing the hard model, objective, limits or independent Validator. Catalog/holdout-seal v2 and SIM-ASSUMPTION-029 were recorded before Solver tuning: development seeds and the SHA child formula remain unchanged; independent holdout seeds are 920901/920902/920903. New development observations freeze a versioned v2 budget before holdout access; no threshold is derived from holdout. The runner defaults to v2; `--catalog-version v1` explicitly emits EXPOSED_V1_FAILURE_REGRESSION, never independent qualification. Both old regression and new qualification are required in CI. Original v1 budgets and failed reports remain available; no Production capacity/SLA inference.
+
+### Solution utilization versus input cardinality
+
+The legacy v1 `problem.complexity.bottleneck_utilization` field is computed from a selected validated Solution. P9-09 keeps its wire location and all immutable historical values, but excludes only this outcome from input-cardinality equality. Existing check details retain baseline/current utilization and `SOLUTION_DERIVED_NOT_INPUT_CARDINALITY`; every input field and Problem hash remains exact. OBJ-001/reference quality, correctness, status and runtime/memory checks are unchanged. This correction permits alternative valid schedules without fabricating identical utilization or changing the sealed v2 Solver.

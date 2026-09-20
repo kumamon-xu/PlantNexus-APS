@@ -73,3 +73,13 @@ P9 的 B01～B10 覆盖单元、XS/S/M 复用范围、开发/保留 seed 预留�
 
 预留的最小接缝是“外部映射文件 → versioned canonical consumer → replay runner → 差异报告 → versioned calibration proposal”，不是现在发布未实现的 HTTP endpoint。P9 记录责任边界，P10 设计数据/来源接缝，P14 提供离线接入包和合成演练。实际数据到达后的校准工作独立立项。
 
+
+## P9 executable qualification boundary
+
+P9 catalog、封存 seed、installed runner 和逐格 coverage 使上述方法有可执行入口，见 [Benchmark harness](benchmark-harness.md#p9-installed-runtime-qualification)。生成基准使用真实 HTTP/SQLite/Redis/Worker，业务边界与连续事件由现有 owner suite fresh 回归；报告显式区分这两种证据。任何缺失、失败或跳过的覆盖格阻断 qualification。
+
+预算来自同环境开发观测，先冻结再访问保留，原始失败不覆盖。当前只覆盖 catalog 注册的 XS/S/M 与 P9 现有能力；未注册画像、现实分布、Production authority、发行 Kit 组合和后续能力均不能由本报告推断通过。
+
+## P9-09 corrective qualification v2
+
+The initial v1 qualification failed quality and remains immutable evidence. ADR-0021 adds bounded backend-local dispatch hints without changing the hard model, objective, limits or independent Validator. Catalog/holdout-seal v2 and SIM-ASSUMPTION-029 were recorded before Solver tuning: development seeds and the SHA child formula remain unchanged; independent holdout seeds are 920901/920902/920903. New development observations freeze a versioned v2 budget before holdout access; no threshold is derived from holdout. The runner defaults to v2; `--catalog-version v1` explicitly emits EXPOSED_V1_FAILURE_REGRESSION, never independent qualification. Both old regression and new qualification are required in CI. Original v1 budgets and failed reports remain available; no Production capacity/SLA inference.

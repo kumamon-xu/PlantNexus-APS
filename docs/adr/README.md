@@ -175,3 +175,7 @@ TASK-P3-09落实ADR-0002/0007/0009与accepted ADR-0012：internal-only、determi
 Implementation artifact `9552386549`已复验该实现边界；`typescript-eslint=8.68.0`兼容组仍是Task-local fixed gate，不构成新架构选择。ADR-0012保持`accepted`，P3-12/13或Production拓扑变化仍须按Impact Rule重新审查。
 
 若P3-12/13拟改变stack、安装新的Gantt/E2E/runtime dependency、引入browser authority/session persistence、SSR/microfrontend或Production deployment topology，必须先执行独立dependency/ADR review；不得把本Task的Playwright pin解释为browser E2E已形成。
+
+## P9-09 Global search correction
+
+[ADR-0021](ADR-0021-bounded-global-dispatch-hints.md) accepts bounded deterministic hints for the complete Global delivery model; all hard constraints, objective, status mapping and independent Validator remain authoritative.

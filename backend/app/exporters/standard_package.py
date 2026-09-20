@@ -15,6 +15,7 @@ from pathlib import Path
 import re
 import shutil
 import tempfile
+from time import sleep
 from typing import Any, Never, cast
 from zipfile import ZIP_DEFLATED, ZipFile, ZipInfo
 
@@ -661,7 +662,16 @@ def write_standard_export_package(
             if path != "manifest.json":
                 file_writer(temporary / path, content)
         file_writer(temporary / "manifest.json", package.files["manifest.json"])
-        os.replace(temporary, destination)
+        for attempt in range(4):
+            try:
+                os.replace(temporary, destination)
+                break
+            except PermissionError as error:
+                # Windows directory handles can briefly prevent an atomic rename.
+                # Persistent access denial and all other I/O errors still fail closed.
+                if getattr(error, "winerror", None) != 5 or attempt == 3:
+                    raise
+                sleep(0.05 * (attempt + 1))
         return destination
     except StandardExportError:
         raise

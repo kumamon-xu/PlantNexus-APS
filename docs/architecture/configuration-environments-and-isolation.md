@@ -571,3 +571,7 @@ Comparison POST仍使用`credentials=omit`/`cache=no-store`、Bearer只来自内
 部署 bootstrap 通过显式 LocalWorkspaceIdentity 消费既有 PrincipalContext/AuthorizationProvider；工作区 token 与 Headless token 必须不同，能力和资源范围由只读独立策略固定。空策略 default-deny，Production 和 P4 authority 保持既有禁止边界。工作区策略摘要进入 nonsecret_configuration_fingerprint，API/Worker descriptor 与受控重启检查一起约束配置漂移。拒绝审计使用独立持久化卷；备份 v2 在静默 API/Worker 后复制并摘要绑定审计，恢复要求目标审计为空，保留原始失败候选。
 
 最终企业封存目录仅放归档和sidecar；实例配置、Secret、数据与备份必须在包外独立目录或卷。evidence增补不改变Runtime/Kit/Extension/config identity，已验收packaging SHA与封存工具SHA分别记录；运行payload变化必须重新取得对应验收。
+
+## P9 qualification isolation
+
+P9 工程基准只使用 TEST/SIMULATION、一次性 SQLite 目录、独立 Redis 容器/端口及 loopback API。CI Redis 固定镜像摘要并用 trap 清理；本地使用独立命名容器，不连接既有业务 Redis。每个画像新解释器隔离 Celery task registry，安装 app/SDK wheel 后才启动实际 Runtime role。认证/authority 使用已登记 synthetic test helper，不能据此宣称 Production identity 或企业真实 source 权限已验证。

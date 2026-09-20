@@ -115,3 +115,15 @@ TASK-P1-11只为该既有catalog row增加common-ingress machine evidence，没�
 | `P2-BENCHMARK-M@1.0.0` | `P2-BENCHMARK-M@1.0.0` | `20261203` | 12 / 48 / 8 | local/nightly-ready benchmark |
 
 三例由`benchmark-profile-set.v1`与`PLANTNEXUS-P2-BENCHMARK-GENERATOR@1.0.0`生成、经P2 correctness assembler进入正式pipeline，并以Problem hash和SIM-ASSUMPTION-013固定；它们是运行时可重建的versioned benchmark inputs，不新增或改写P2-09 correctness fixtures。PROFILE-A～E、L/XL、disruption/现实分布与Production catalog仍未形成。
+
+## P9 qualification catalog v1
+
+[`P9-QUALIFICATION/catalog.v1.json`](../../fixtures/synthetic/P9-QUALIFICATION/catalog.v1.json) 固定 B01～B10 的测试来源、三个画像及开发/保留 seed。XS/S/M 分别为 4/8/12 订单、8/24/48 工序、3/6/8 资源、1/2/4 日历碎片，每工序两个候选；开发 seed 为 910101～910103，保留 seed 为 910901～910903。P9 复用 P2 画像形状，新增命名子流的工时/交期扰动，不改旧资产。
+
+B01 使用独立 Golden/非法候选 mutation；B02～B10 映射既有事件、人工调整、查询/比较/导出、连续扰动、重排恢复、准入和 canonical 消费 suite。runner 保存每格的实际 fresh JUnit 用例名、数量与失败，不用空行代表覆盖。生成基准另走真实 TCP/Redis/Worker；两类证据在报告中分开，不能把所有合同测试都称为真实浏览器或负载测试。
+
+[`negative-catalog.v1.json`](../../fixtures/infeasible/P9-QUALIFICATION/negative-catalog.v1.json) 另登记日历全阻塞与极小求解预算，要求分别得到 INFEASIBLE、NO_SOLUTION_WITHIN_LIMIT，均无候选。范围与推导见 [calculation note](../../fixtures/synthetic/P9-QUALIFICATION/calculation-note.md)。PROFILE-A～E、L/XL、真实工厂分布和并发容量仍未建立。
+
+## P9-09 corrective qualification v2
+
+The initial v1 qualification failed quality and remains immutable evidence. ADR-0021 adds bounded backend-local dispatch hints without changing the hard model, objective, limits or independent Validator. Catalog/holdout-seal v2 and SIM-ASSUMPTION-029 were recorded before Solver tuning: development seeds and the SHA child formula remain unchanged; independent holdout seeds are 920901/920902/920903. New development observations freeze a versioned v2 budget before holdout access; no threshold is derived from holdout. The runner defaults to v2; `--catalog-version v1` explicitly emits EXPOSED_V1_FAILURE_REGRESSION, never independent qualification. Both old regression and new qualification are required in CI. Original v1 budgets and failed reports remain available; no Production capacity/SLA inference.

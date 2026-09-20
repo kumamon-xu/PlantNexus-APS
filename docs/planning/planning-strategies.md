@@ -95,3 +95,7 @@ P2-08继续独占Global strategy与OBJ-001搜索接线；P2-07不得被Productio
 `GlobalCpSatStrategy@global-cp-sat-strategy.v1`现为唯一可执行P2策略：先验证完整Problem与approved Simulation Policy/Limits/priority source，再对全部active operations调用一次complete C-001～C-011 Backend+OBJ-001模型，最后要求formal independent Validator PASS并组装SolverReport。不得按order/workshop/resource拆分，不存在rolling、fallback、warm start或Reference Scheduler。
 
 Hard constraints定义可接受域且不能由目标放宽；OBJ-001只在该域内选择候选。当前Strategy是internal Simulation correctness入口，不批准、不发布、不创建ScheduleVersion；OPEN-006/011/012关闭和后续Gate前不得用于Production。任何decomposition/rolling/hybrid仍需新ADR与同口径Benchmark/merge Validator证据。
+
+## P9-09 bounded Global search correction
+
+[ADR-0021](../adr/ADR-0021-bounded-global-dispatch-hints.md) supersedes the historical P2 no-initial-hint restriction only: a bounded backend-local deterministic portfolio provides optional initial values. Global still constructs one complete model and calls one native solve; no Reference scheduler import/fallback or strategy switch. Feasibility-only and replan paths remain unchanged.

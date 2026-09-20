@@ -22,6 +22,7 @@ from app.planning.backends.contracts import (
 from app.planning.backends.cp_sat.fact_lock_constraints import (
     FactLockConstraintMetricsDocument,
 )
+from app.planning.backends.cp_sat.dispatch_hints import add_dispatch_hints
 from app.planning.backends.cp_sat.model import (
     CoreModelMetricsDocument,
     build_core_model,
@@ -337,6 +338,7 @@ class CpSatBackend:
             objective_model: DeliveryObjectiveModel | None = None
             if optimize_delivery:
                 objective_model = add_delivery_objective(problem, core_model)
+                add_dispatch_hints(problem, core_model, objective_model)
             model_build_seconds = max(0.0, perf_counter() - build_started)
             solver = _configured_solver(limits)
             observer = _FirstFeasibleObserver()

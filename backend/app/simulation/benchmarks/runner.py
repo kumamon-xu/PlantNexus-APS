@@ -980,7 +980,12 @@ def _baseline_evaluation(
             field="baseline.problem.problem_hash",
             message="deterministic generator or formal pipeline drifted",
         )
-    if baseline_problem["complexity"] != complexity:
+    # Utilization is measured from a selected Solution, not an input cardinality.
+    # Equal-quality alternative assignments need not have identical resource loads.
+    def input_complexity(value: JsonObject) -> JsonObject:
+        return {key: item for key, item in value.items() if key != "bottleneck_utilization"}
+
+    if input_complexity(cast(JsonObject, baseline_problem["complexity"])) != input_complexity(complexity):
         raise BenchmarkContractError(
             BenchmarkContractErrorCode.BASELINE_DRIFT,
             field="baseline.problem.complexity",
@@ -1236,6 +1241,14 @@ def run_benchmark_profile(
             {
                 "baseline_status": baseline_summary["status"],
                 "warning_count": len(warnings),
+                "solution_utilization_comparison": {
+                    "classification": "SOLUTION_DERIVED_NOT_INPUT_CARDINALITY",
+                    "baseline": (
+                        cast(JsonObject, cast(JsonObject, baseline["problem"])["complexity"])["bottleneck_utilization"]
+                        if baseline is not None else None
+                    ),
+                    "current": complexity["bottleneck_utilization"],
+                },
                 "production_sla": "NOT_ESTABLISHED_OPEN_012",
             },
         ),

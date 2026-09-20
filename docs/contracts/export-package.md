@@ -115,6 +115,8 @@ P2还要求重新验证所有JSON canonical bytes、package/KPI自身份、文�
 
 纯内存package先完整验证；目录materialization只允许在目标同一父目录创建临时目录，先写payload、最后写manifest，再用同文件系统原子rename提交。已存在且exact byte-for-byte等价的目录是幂等replay；任何差异是destination conflict。I/O失败必须映射为稳定错误、清理临时目录且不得留下可解释为成功的目标目录或manifest。该机制不是ExportJob retry/persistence，也不授权外部storage或publish。
 
+P9 工程基准发现 Windows 目录原子提交可能返回 `WinError 5`。P3 writer 仅对这一 PermissionError 最多尝试四次，依次等待 0.05/0.10/0.15 秒；其他错误立即失败，持续拒绝仍映射 IO_ERROR 并清理临时目录。重试不重建或修改 payload、不绕过 destination conflict、不推进 ExportJob，包字节和发布前置条件保持原合同。
+
 ## TASK-P2-12 regression boundary
 
 BenchmarkRunner对每个profile的正式replay构建并验证一次既有`p2-internal-export.v1`，报告package ID、manifest fingerprint、9个payload count和KPI version，用于证明Snapshot→validated Solution→KPI/Export链未回归。Exporter代码、manifest Schema、package bytes规则和state boundary均未修改。

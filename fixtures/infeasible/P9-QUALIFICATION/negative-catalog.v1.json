@@ -1,0 +1,21 @@
+{
+  "version": "p9-negative-catalog.v1",
+  "assumption": "SIM-ASSUMPTION-028",
+  "cases": [
+    {
+      "id": "blocked-calendar",
+      "profile": "xs",
+      "split": "development",
+      "mutation": "all calendar unavailable intervals cover exact planning horizon",
+      "expected": "INFEASIBLE"
+    },
+    {
+      "id": "unknown-budget",
+      "profile": "m",
+      "split": "development",
+      "max_wall_time_seconds": 1e-09,
+      "expected": "NO_SOLUTION_WITHIN_LIMIT"
+    }
+  ],
+  "required_candidate_count": 0
+}

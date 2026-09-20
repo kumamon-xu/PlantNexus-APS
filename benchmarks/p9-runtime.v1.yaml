@@ -1,0 +1,15 @@
+profile_version: p9-runtime-profile.v1
+catalog: fixtures/synthetic/P9-QUALIFICATION/catalog.v1.json
+catalog_sha256: 6dd2f4c09b85276cc0785aa961820fe96d3532a018b6d9db80af04f9a57f68df
+warmup_runs: 1
+measured_runs: 3
+parallelism: 1
+database: SQLite isolated file
+broker: isolated Redis/Celery JSON queue
+hardware: exact environment captured before calibration
+budget_policy:
+  factor: 2.5
+  stage_floor_seconds: 1.0
+  end_to_end_floor_seconds: 4.0
+  same_environment_only: true
+initial_state: PENDING_MEASUREMENT

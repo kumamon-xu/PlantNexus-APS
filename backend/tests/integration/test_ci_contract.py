@@ -1074,6 +1074,28 @@ def test_ci_p8_optional_frontend_distribution_is_required_and_isolated() -> None
     assert result["total_openapi_operation_count"] == 34
 
 
+def test_ci_p9_simulation_uses_installed_runtime_and_required_evidence() -> None:
+    workflow = yaml.safe_load((ROOT / ".github/workflows/ci.yml").read_text(encoding="utf-8"))
+    for job_name in ("solver_validation", "full_validation"):
+        steps = workflow["jobs"][job_name]["steps"]
+        selected = [step for step in steps if step.get("name") == "P9 installed Runtime simulation qualification"]
+        assert len(selected) == 1
+        step = selected[0]
+        assert "continue-on-error" not in step
+        assert "--installed --coverage" in step["run"]
+        assert "--code-commit" in step["run"]
+        assert "redis@sha256:" in step["run"]
+        assert "trap finish_p9_qualification EXIT" in step["run"]
+        assert "docker rm -f p9-qualification-redis" in step["run"]
+        assert "ci-p9-simulation.json" in step["run"]
+        assert "--catalog-version v1" in step["run"]
+        assert "ci-p9-regression.json" in step["run"]
+        assert "test_cp_sat_dispatch_hints.py" in step["run"]
+        seal = next(s for s in steps if s.get("name") == f"Seal {job_name} evidence")
+        assert "build/validation/*.json" in seal["run"] or "build/validation/ci-p9-simulation.json" in seal["run"]
+        assert "build/validation/*.json" in seal["run"] or "build/validation/ci-p9-regression.json" in seal["run"]
+
+
 def test_ci_p6_duration_dataset_is_required_and_machine_checkable(
     tmp_path: Path,
 ) -> None:
@@ -1941,7 +1963,7 @@ def test_ci_p3_export_job_is_required_and_machine_checkable(tmp_path: Path) -> N
     assert report["counts"] == {
         "new_schemas": 2,
         "new_samples": 2,
-        "focused_tests": 18,
+        "focused_tests": 21,
         "package_payloads": 12,
         "xlsx_sheets": 4,
         "export_states": 5,

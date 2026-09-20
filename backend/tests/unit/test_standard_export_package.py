@@ -565,3 +565,41 @@ def test_download_service_requires_authority_exposed_state_and_exact_artifact_li
             correlation_id="correlation-export-audit-mismatch",
         )
     assert audit_mismatch.value.reason.value == "EXPORT_FAILED"
+
+
+@pytest.mark.parametrize("failures,winerror,expected_calls", [(2, 5, 3), (9, 5, 4), (1, 32, 1)])
+def test_atomic_commit_retries_only_bounded_windows_access_denial(
+    package_inputs, tmp_path: Path, monkeypatch, failures: int, winerror: int,
+    expected_calls: int,
+) -> None:  # type: ignore[no-untyped-def]
+    from app.exporters import standard_package as writer
+
+    package = _build(package_inputs)
+    destination = tmp_path / "export-attempt"
+    original_replace = writer.os.replace
+    calls = []
+    waits = []
+
+    def contested_replace(source, target):
+        calls.append((source, target))
+        if len(calls) <= failures:
+            error = PermissionError("controlled directory access failure")
+            error.winerror = winerror
+            raise error
+        return original_replace(source, target)
+
+    monkeypatch.setattr(writer.os, "replace", contested_replace)
+    monkeypatch.setattr(writer, "sleep", waits.append)
+    if failures < expected_calls:
+        assert write_standard_export_package(package, destination) == destination
+        assert load_standard_export_package(destination).files == package.files
+    else:
+        with pytest.raises(StandardExportError) as captured:
+            write_standard_export_package(package, destination)
+        assert captured.value.code is StandardExportErrorCode.IO_ERROR
+        assert isinstance(captured.value.__cause__, PermissionError)
+        assert not destination.exists()
+    assert len(calls) == expected_calls
+    assert waits == [0.05 * (index + 1) for index in range(expected_calls - 1)]
+    assert len({str(source) for source, _ in calls}) == 1
+    assert not list(tmp_path.glob(".export-attempt.tmp-*"))

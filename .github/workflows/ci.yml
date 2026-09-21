@@ -1566,7 +1566,7 @@ jobs:
           trap 'docker rm -f p9-exit-redis' EXIT
           runtime=$(find build/p9-exit-inputs/build-a/runtime -name 'plantnexus-aps-runtime-0.2.1-linux-amd64.tar.gz')
           kit=$(find build/p9-exit-inputs/build-a/kit -name 'plantnexus-aps-developer-kit-1.1.1-*.zip')
-          uv run python scripts/p9_exit_gate_audit.py --root . --out build/p9-exit --code-commit "${PLANTNEXUS_CODE_COMMIT}" --broker redis://127.0.0.1:6402 --runtime "$runtime" --kit "$kit"
+          uv run python -m scripts.p9_exit_gate_audit --root . --out build/p9-exit --code-commit "${PLANTNEXUS_CODE_COMMIT}" --broker redis://127.0.0.1:6402 --runtime "$runtime" --kit "$kit"
           cp build/p9-exit/exit.json build/validation/ci-p9-exit.json
       - name: Retain P9 independent Exit observations
         uses: actions/upload-artifact@v7

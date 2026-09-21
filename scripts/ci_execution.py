@@ -110,6 +110,17 @@ def check_report(path: Path) -> None:
         value = json.loads(path.read_text(encoding="utf-8"))
         if not isinstance(value, dict):
             raise ValueError(f"report is not an object: {path}")
+        if (path.name == "ci-p9-vertical.json" and value.get("task_id") == "TASK-P9-11"
+                and value.get("verdict") == "NOT_READY"):
+            from scripts.provider_evidence import inspect_expected_gate_payload
+            observation, errors = inspect_expected_gate_payload(
+                value, identity()["head_sha"], path.name,
+                expected_gate_task_id="TASK-P9-11", expected_gate_verdict="NOT_READY",
+            )
+            if (errors or observation is None or value.get("blocking_issues")
+                    or value.get("result") == "FAIL" or value.get("status") == "FAIL"):
+                raise ValueError(f"invalid P9 negative audit evidence: {path}")
+            return
         if value.get("result") == "FAIL" or value.get("status") == "FAIL" or any(
             value.get(k) for k in ("issues", "blocking_gaps", "blocking_issues")
         ):

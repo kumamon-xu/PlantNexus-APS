@@ -72,3 +72,9 @@ solver_validation/full_validation 的企业镜像共享步骤在封包后执行�
 Current builds install and independently read back the exact OS patch versions declared by image-inputs.v2, including liblzma5 5.4.1-1+deb12u2. The original Runtime archive/wheel, base digest and Python lock remain unchanged. nscd-advisory.v3 binds the reviewed fix_deferred status to fresh exact-image absence evidence. glibc-risk-assessment.v1 separately retains the explicitly approved CVE-2026-8674 risk for internal TEST/SIMULATION only; it never reports NOT_AFFECTED or Production approval. Both new records are bound in full; changed identities and available fixes still fail. See the [security owner](../operations/security.md#p9-07-镜像补丁与限定风险处置).
 
 An EXIT handler retains the raw image scan and SBOM even when assessment fails, preserving the original failure status. Diagnostic artifacts do not constitute a successful producer seal or required validate check.
+
+## Explicit P9 negative audit evidence
+
+Only `ci-p9-vertical.json` for TASK-P9-11 can seal a completed NOT_READY audit. The existing Provider Gate validator verifies exact current SHA, PHASE_GATE, audit PASS, zero audit issues, unique structured blockers and matching check/count totals. The report is retained without rewriting its verdict or blockers. Other reports and product failures still fail normally. Canonical collection requires `--expected-gate-task-id TASK-P9-11 --expected-gate-verdict NOT_READY` when that verdict is observed; Provider PASS means evidence completeness, never product READY.
+
+The solver job downloads the immutable P9-10 artifact from run 35550065697; the Gate rejects changed Runtime/Kit hashes, source identity or nested bytes. Fresh raw observations are uploaded separately as `plantnexus-p9-vertical-<run_id>` and their hashes are bound by the sealed Gate report. Current-source delivery checks retain their distinct identity.

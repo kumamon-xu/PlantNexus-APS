@@ -141,3 +141,9 @@ Create的tenant/factory/planning scope来自machine carrier的`requested_scope`�
 3. OpenAPI contract/integration/security tests；
 4. 本清单及必要的 Frontend client；
 5. 文档链接与版本兼容说明。
+
+## P9-11 retained-candidate vertical audit
+
+`scripts/p9_runtime_vertical_gate.py` audits the retained P9-10 Runtime 0.2.0 / Kit 1.1.0 by exact archive hashes and source revision. It never substitutes a rebuilt wheel. A clean installation runs fresh B01–B10 owner regressions and the sealed v2 XS/S/M TCP → Redis → Worker → independent Validator → explicit publication → export scenarios. Development calibration precedes holdout access under the existing budget policy; historical budgets and seeds are unchanged.
+
+The audit records each of the 34 operations separately, including observed positive/negative HTTP responses and missing evidence. Owner fault tests use explicit synthetic authority/clock/fault injection; the generated qualification separately proves a real broker path. Missing operation polarity is NOT_RUN and blocks readiness; observed readiness 503 must also appear in the candidate OpenAPI. A completed audit can be NOT_READY. Its blockers remain visible and require a separate corrective; no product repair, Production, external release or P9 Exit is implied.

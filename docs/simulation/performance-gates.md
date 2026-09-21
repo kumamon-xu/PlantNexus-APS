@@ -141,3 +141,9 @@ Required run `32465737712` / artifact `9440650646`已在provider精确复现两�
 ## TASK-P2-14 Exit audit
 
 独立audit已再次执行两次完整Gate及单独XS/S/M，并补充七correctness场景×两轮的逐次model/build/first/objective/bound/gap/memory/Validator观测。所有required case、三档8/8 reports、稳定业务投影与4类exit rejection均PASS，blocking gaps为空，因此P2 Synthetic Solver Gate=`READY`。Audit implementation run `32677741558` / artifact `9503227240`已精确复验Gate 11/11与provider内两轮稳定投影，TASK-P2-14=`done`。Raw timing/memory仍保留且不作跨环境相等声明；OPEN-011/012、L/XL、Nightly provider schedule与Production capacity/SLA继续未形成。
+
+## P9-11 retained-candidate vertical audit
+
+`scripts/p9_runtime_vertical_gate.py` audits the retained P9-10 Runtime 0.2.0 / Kit 1.1.0 by exact archive hashes and source revision. It never substitutes a rebuilt wheel. A clean installation runs fresh B01–B10 owner regressions and the sealed v2 XS/S/M TCP → Redis → Worker → independent Validator → explicit publication → export scenarios. Development calibration precedes holdout access under the existing budget policy; historical budgets and seeds are unchanged.
+
+The audit records each of the 34 operations separately, including observed positive/negative HTTP responses and missing evidence. Owner fault tests use explicit synthetic authority/clock/fault injection; the generated qualification separately proves a real broker path. Missing operation polarity is NOT_RUN and blocks readiness; observed readiness 503 must also appear in the candidate OpenAPI. A completed audit can be NOT_READY. Its blockers remain visible and require a separate corrective; no product repair, Production, external release or P9 Exit is implied.

@@ -79,3 +79,17 @@ P8-14的`0.0.0-not-published`只是一份synthetic/unpublished predecessor fixtu
 ## 6. 支持与责任边界
 
 `PlantNexus APS Release Engineering`只负责repository/CI工程发行、兼容证据和候选撤回。企业Extension owner负责业务语义、代码审查、配置、artifact批准、UAT和升级选择；Production release/operations/security authority、外部PKI、SLA和支持窗口仍须具名形成。后续Kit只能在新版本的support policy中显式deprecate旧版本，且不得删除旧bytes或强制现有项目迁移。
+
+## P9 候选组合与验证命令
+
+内部候选为 Kit `1.1.0` + Runtime `0.2.0` + SDK/Tooling/Template `1.0.0`。支持矩阵精确锁定五项版本，Kit lock 进一步锁定 Runtime source commit、archive digest、fingerprint，以及所有 wheel、模板、文档与依赖摘要。SDK 接口未增加，不能把 Runtime 的 P9 功能称为新 SDK 功能。
+
+```text
+uv run python -m app.infrastructure.release.p9_check --root . --out build/p9-delivery --predecessor <retained-kit-1.0.1.zip>
+```
+
+输出目录必须未存在，输入 checkout 必须 clean committed。前代归档必须匹配已发布 SHA-256 `e45cc42ba4ee0e9ee032a8b7e7eae9c23db7bbbe6012e5f66d6cc46bb3d00a04`，不能在当前源码上重构同名旧版本代替。Gate 保留双构建候选、安装后 JUnit、数据库迁移/恢复、供应链及组合报告；失败目录原样保留，修正后使用新目录。
+
+示例和模板仅在组装临时副本显式 relock；原 P8 源项目不变。对企业项目的升级仍需 owner opt-in、相同新组合上的项目及完整 Extension-set conformance。未知/浮动 Runtime、混搭 SDK/tool/template、来源不符和缺少外部签名的 public/Production promotion 均拒绝。
+
+从 0009 升级至 0010 前先停止写入并保存可恢复数据库。回退必须恢复原数据库备份和旧 Runtime/Kit/Extension/config 整组身份；不能将删除后继数据表的 downgrade 称为无损回退。P9 Gate 用保留的旧 wheel/migrations 建立含 audit 数据的 0009 库，新包升级后核对保留数据，再以旧包恢复备份并复核 head/完整性。此证据限 synthetic SQLite 工程环境。

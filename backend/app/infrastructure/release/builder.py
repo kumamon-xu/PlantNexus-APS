@@ -119,8 +119,8 @@ def source_date_epoch(root: Path, code_commit: str) -> int:
     return max(_MIN_ZIP_EPOCH, observed)
 
 
-def load_release_policy(root: Path) -> JsonObject:
-    policy = strict_json_document((root / DEFAULT_POLICY_PATH).read_bytes())
+def load_release_policy(root: Path, *, policy_path: Path = DEFAULT_POLICY_PATH) -> JsonObject:
+    policy = strict_json_document((root / policy_path).read_bytes())
     expected = {
         "policy_version",
         "artifact",
@@ -461,13 +461,13 @@ def _copy_tree(files: dict[str, bytes], root: Path, source: Path, destination: s
         files[f"{destination}/{relative}"] = path.read_bytes()
 
 
-def _compatibility(policy: Mapping[str, object]) -> tuple[JsonObject, JsonObject]:
+def _compatibility(policy: Mapping[str, object], *, runtime_version: str = RUNTIME_VERSION) -> tuple[JsonObject, JsonObject]:
     raw = policy.get("compatibility")
     if not isinstance(raw, dict):
         raise ReleaseContractError("POLICY_INVALID", "compatibility policy is missing")
     compatibility = cast(JsonObject, raw)
     expected = {
-        "runtime_version": RUNTIME_VERSION,
+        "runtime_version": runtime_version,
         "application_version": APPLICATION_VERSION,
         "core_version": CORE_VERSION,
         "schema_set_version": SCHEMA_VERSION,
@@ -477,7 +477,7 @@ def _compatibility(policy: Mapping[str, object]) -> tuple[JsonObject, JsonObject
         if compatibility.get(key) != value:
             raise ReleaseContractError("VERSION_MISMATCH", f"{key} disagrees with package metadata")
     versions: JsonObject = {
-        "runtime": RUNTIME_VERSION,
+        "runtime": runtime_version,
         "application": APPLICATION_VERSION,
         "core": CORE_VERSION,
         "api": compatibility["api_contract"],
@@ -498,6 +498,9 @@ def _compatibility(policy: Mapping[str, object]) -> tuple[JsonObject, JsonObject
         "enterprise_extension_compatibility": "NOT_PUBLISHED_DEFAULT_EMPTY_ONLY",
         "production_approval": "REQUIRED_AND_NOT_GRANTED",
     }
+    if runtime_version == "0.2.0":
+        document["enterprise_extension_compatibility"] = "EXACT_KIT_MATRIX_AND_STARTUP_ALLOW_LIST"
+        document["upgrade_from"] = ["0.1.0"]
     return versions, document
 
 
@@ -507,12 +510,23 @@ def build_release_files(
     *,
     code_commit: str,
     epoch: int,
+    policy_path: Path = DEFAULT_POLICY_PATH,
+    runtime_version: str = RUNTIME_VERSION,
 ) -> tuple[str, dict[str, bytes], str]:
     if _COMMIT.fullmatch(code_commit) is None:
         raise ReleaseContractError("PROVENANCE_INVALID", "code commit is not immutable")
     if wheel.is_symlink() or not wheel.is_file():
         raise ReleaseContractError("BUILD_INPUT_INVALID", "wheel input is unavailable")
-    policy = load_release_policy(root)
+    policy = load_release_policy(root, policy_path=policy_path)
+    if runtime_version != RUNTIME_VERSION:
+        from app.infrastructure.release.p9 import RUNTIME, verify_candidate_wheel
+
+        if runtime_version != RUNTIME:
+            raise ReleaseContractError("VERSION_MISMATCH", "unknown candidate Runtime version")
+        verify_candidate_wheel(
+            wheel.read_bytes(), code_commit=code_commit,
+            policy_bytes=(root / policy_path).read_bytes(),
+        )
     artifact_policy = cast(JsonObject, policy["artifact"])
     target = cast(JsonObject, policy["target"])
     if (
@@ -535,7 +549,7 @@ def build_release_files(
         licenses=licenses,
         target=target,
     )
-    versions, compatibility = _compatibility(policy)
+    versions, compatibility = _compatibility(policy, runtime_version=runtime_version)
     database_head = cast(str, versions["database"])
     migration = build_migration_manifest(root, database_head=database_head)
     requirements = export_runtime_requirements(root)
@@ -554,7 +568,7 @@ def build_release_files(
         "runtime/openapi/pre-p8-07-operation-baseline.v1.json": (
             root / "backend/app/api/openapi/pre-p8-07-operation-baseline.v1.json"
         ).read_bytes(),
-        "policy/runtime-release-policy.v1.json": (root / DEFAULT_POLICY_PATH).read_bytes(),
+        "policy/runtime-release-policy.v1.json": (root / policy_path).read_bytes(),
         "policy/runtime-vulnerability-policy.v1.json": (
             root / DEFAULT_VULNERABILITY_POLICY_PATH
         ).read_bytes(),
@@ -563,6 +577,13 @@ def build_release_files(
         LICENSE_PATH: canonical_json_bytes(licenses) + b"\n",
         SBOM_PATH: canonical_json_bytes(sbom) + b"\n",
     }
+    if runtime_version == "0.2.0":
+        source_metadata = files["runtime/pyproject.toml"]
+        if source_metadata.count(b'runtime = "0.1.0"') != 1:
+            raise ReleaseContractError("VERSION_MISMATCH", "source project Runtime version differs")
+        files["runtime/pyproject.toml"] = source_metadata.replace(
+            b'runtime = "0.1.0"', b'runtime = "0.2.0"'
+        )
     _copy_tree(files, root, Path("backend/migrations"), "runtime/backend/migrations")
     _copy_tree(files, root, Path("schemas"), "runtime/schemas")
 
@@ -603,7 +624,7 @@ def build_release_files(
         for path, raw in sorted(files.items())
         if path != CHECKSUM_PATH
     ).encode("utf-8")
-    release_root = f"plantnexus-aps-runtime-{RUNTIME_VERSION}-linux-amd64"
+    release_root = f"plantnexus-aps-runtime-{runtime_version}-linux-amd64"
     return release_root, files, release_fingerprint
 
 
@@ -642,6 +663,8 @@ def build_release(
     *,
     code_commit: str | None = None,
     epoch: int | None = None,
+    policy_path: Path = DEFAULT_POLICY_PATH,
+    runtime_version: str = RUNTIME_VERSION,
 ) -> ReleaseArtifact:
     resolved_root = root.resolve(strict=True)
     resolved_commit = code_commit or git_head(resolved_root)
@@ -653,6 +676,8 @@ def build_release(
         wheel,
         code_commit=resolved_commit,
         epoch=resolved_epoch,
+        policy_path=policy_path,
+        runtime_version=runtime_version,
     )
     archive = deterministic_archive(release_root, files, epoch=resolved_epoch)
     digest = sha256_hex(archive)
@@ -664,7 +689,7 @@ def build_release(
     _publish_immutable(checksum_path, f"{digest}  {name}\n".encode("utf-8"))
     verified = verify_release_archive(
         archive_path,
-        expected_runtime_version=RUNTIME_VERSION,
+        expected_runtime_version=runtime_version,
         expected_code_commit=resolved_commit,
     )
     return ReleaseArtifact(
@@ -674,7 +699,7 @@ def build_release(
         archive_bytes=len(archive),
         release_fingerprint=verified.release_fingerprint,
         release_root=release_root,
-        runtime_version=RUNTIME_VERSION,
+        runtime_version=runtime_version,
         code_commit=resolved_commit,
         source_date_epoch=resolved_epoch,
         payload_file_count=verified.payload_file_count,

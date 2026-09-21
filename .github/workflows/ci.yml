@@ -830,6 +830,10 @@ jobs:
             "${replay_root}/backend/app/infrastructure/release/check.py" \
             "${replay_root}/backend/app/infrastructure/release/contracts.py" \
             "${replay_root}/backend/app/infrastructure/release/preflight.py" \
+            "${replay_root}/backend/app/infrastructure/release/p9.py" \
+            "${replay_root}/backend/app/infrastructure/release/p9_check.py" \
+            "${replay_root}/backend/tests/unit/test_p9_delivery.py" \
+            "${replay_root}/backend/tests/integration/test_p9_delivery_install.py" \
             "${replay_root}/backend/tests/p8_release_support.py" \
             "${replay_root}/backend/tests/unit/test_p8_release_packaging.py" \
             "${replay_root}/backend/tests/contract/test_p8_release_packaging_contract.py" \
@@ -1380,7 +1384,7 @@ jobs:
     needs: [classify, full_preflight]
     if: ${{ needs.classify.outputs.solver_validation == 'true' }}
     runs-on: ubuntu-latest
-    timeout-minutes: 40
+    timeout-minutes: 60
     env:
       PLANTNEXUS_POSTGRES_PASSWORD: ci-contract-only-not-a-secret
       PLANTNEXUS_CODE_COMMIT: ${{ github.sha }}
@@ -1494,6 +1498,32 @@ jobs:
       - *current_contract_48
 
       - *p9_simulation_qualification
+
+      - name: P9 installed Runtime and Kit delivery candidate
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          mkdir -p build/p9-delivery-predecessor
+          gh release download v0.1.0 --repo "${GITHUB_REPOSITORY}" --pattern 'plantnexus-aps-developer-kit-1.0.1-e45cc42ba4ee0e9e.zip' --dir build/p9-delivery-predecessor
+          uv run python -m app.infrastructure.release.p9_check --root . --out build/p9-delivery --predecessor build/p9-delivery-predecessor/plantnexus-aps-developer-kit-1.0.1-e45cc42ba4ee0e9e.zip
+          cp build/p9-delivery/delivery.json build/validation/ci-p9-delivery.json
+          cp build/p9-delivery/installed-runtime.json build/validation/ci-p9-delivery-installed.json
+          cp build/p9-delivery/security.json build/validation/ci-p9-delivery-security.json
+          cp build/p9-delivery/operation-artifact-inventory.json build/validation/ci-p9-delivery-operations.json
+          cp build/p9-delivery/database-*.json build/validation/
+      - name: Retain P9 candidate artifacts
+        uses: actions/upload-artifact@v7
+        if: always()
+        with:
+          name: plantnexus-p9-delivery-${{ github.run_id }}
+          path: |
+            build/p9-delivery/**/*.json
+            build/p9-delivery/**/*.xml
+            build/p9-delivery/**/*.log
+            build/p9-delivery/**/*.tar.gz
+            build/p9-delivery/**/*.zip
+            build/p9-delivery/**/*.sha256
+          if-no-files-found: error
 
       - name: Current Solver benchmark and packaging
         run: |

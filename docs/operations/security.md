@@ -316,3 +316,7 @@ Read-only Chromium覆盖authorization denial和no-command/no-idempotency transpo
 新增 `glibc-risk-assessment.v1.json`单独记录 CVE-2026-8674 在 libc-bin/libc6 2.36-9+deb12u14 上的 MEDIUM / fix_deferred 风险。[Debian](https://security-tracker.debian.org/tracker/CVE-2026-8674)仍将 bookworm 标记为 vulnerable，未提供该发行版修复。此项不是 NOT_AFFECTED；只在用户批准的内部 TEST/SIMULATION 用途下保留为未解决风险，并计入原始风险数量及逐条处置结果。完整记录、原策略、固定扫描器、CVE/包/版本/评级/状态必须精确一致，任何 FixedVersion 继续阻断。不得据构建 PASS 宣称修复完成或 Production 安全批准。
 
 失败构建也保留原始扫描；新提交须取得 fresh image、扫描、组件缺失、补丁版本和现有部署工程验收证据。此纠正不发布新 Runtime/Kit，不变更应用依赖或 Production authority。
+
+## P9 候选来源与供应链
+
+P9-10 候选单独选择 engineering channel，不继承 Kit 1.0.1 的公开发行声明。clean input、生成式 Runtime metadata 的输入/输出摘要、wheel RECORD、嵌套 Runtime lineage、Kit lock、SBOM/license 和 exact VEX/SCA 必须一致；缺失生成来源或混用其他 policy/commit 必须拒绝。GitHub required validate 成功只证明 exact SHA 工程验证，不授予外部签名、Production 或真实企业规则认证。

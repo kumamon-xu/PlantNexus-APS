@@ -81,3 +81,11 @@ SBOM覆盖锁定runtime graph的51个组件（包含application和`psycopg[binar
 Runtime归档自身继续保留`P8_ENGINEERING_CANDIDATE`channel元数据；P8最终内部交付保证该exact artifact可重建、重哈希和回放，直到新的Runtime release以独立版本和兼容证据显式取代。该内部支持边界不是Production SLA。
 
 TASK-P8-10在`TEST/SIMULATION`靶场补充了真实PostgreSQL/Redis、API/Worker/Validator、依赖故障、备份恢复及same-artifact dual-slot配置回退证据，同时保持所有Runtime构建输入相对P8-09 SHA零变化。该演练发现并显式处理Alembic version column长度bootstrap；因此不能把P8-09原“裸PostgreSQL迁移”叙述外推为已验证。P8-18/19随后补充了synthetic Enterprise Extension组合兼容与恢复证据；最终成果仍没有Production部署、真实企业UAT、容量、SLA、retention、signing、release authority或跨版本rollback结论。
+
+## P9 内部交付候选
+
+P9-10 使用独立 Runtime `0.2.0`、Developer Kit `1.1.0` 与部署归档 `0.2.0`；Application/Core `0.0.0`、SDK/Tooling/Template `1.0.0`、Schema Set `2.11.0` 和 database `0010_runtime_replan` 分别记录。新组合只属内部未签名工程候选，不继承 v0.1.0 的公开下载授权。
+
+新增 `runtime-release-policy-0.2.0.v1.json` 与 `developer-kit-release-policy-1.1.0.v1.json`。候选 builder 从 clean committed input 构建原 wheel，再按 `p9-runtime-version-materialization.v1` 只生成 wheel 中的 Runtime metadata 常量与归档 pyproject 的 Runtime 版本。`app/p9-build-provenance.json` 保存源 wheel、policy、原/生成 metadata SHA-256 和完整 source commit；其余应用源码不变，wheel RECORD 重新生成。不能把源 wheel 与生成 wheel 混为同一字节身份。历史默认 builder 保持原语义。
+
+交付 Gate 双构建 Runtime/Kit，验证干净安装的实际 Runtime 版本和 P9 人工修改、事件、重排、读取与输出链；回放已发布 Kit 1.0.1 的固定摘要，显式升级并通过停机备份恢复旧组合。新制品与报告随 exact Provider 保留，禁止同版本覆盖、自动升级和未经授权的外部发布。

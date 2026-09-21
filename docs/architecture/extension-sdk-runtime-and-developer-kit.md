@@ -199,3 +199,9 @@ P8-15已把上述清单组装为`1.0.0`工程候选并在clean环境验证包内
 | P8-17 READY | P8产品化与扩展synthetic工程证据完整，可形成内部交付选择 | 自动升级企业项目、真实UAT/SLA/authority或Production已完成 |
 
 Extension trust、compatibility、support window和企业责任分别纳入现有`OPEN-002/010/012/015`的P8细分问题，不新增OPEN ID。这些条目关闭前，不得把某个本地插件样例解释为企业级信任、兼容支持或长期维护承诺。高级功能和真实数据验证可在后续独立Task补充；若其语义适合SDK扩展点，可作为Enterprise Extension交付，但仍必须满足capability、Validator、Benchmark和Production Gate要求。
+
+## P9 交付组合
+
+Runtime 0.2.0 / Kit 1.1.0 将 P9 application/HTTP/Worker 能力纳入独立候选；SDK、Tooling 和 Template 保持 1.0.0。候选生成器只对构建 metadata 显式写入 Runtime 版本，记录原 wheel 与生成结果的摘要；安装后检查避免仅修改外层标签而继续运行旧版本。
+
+P8 各任务章节保留其历史结论。新候选与旧公开 Kit 分别记录 source/Runtime lineage，通过双 Extension conformance、安装后 P9 回放、旧组合保留与显式升级/备份恢复验证兼容，不改变 Runtime loader、Core 或 SDK 信任模型。

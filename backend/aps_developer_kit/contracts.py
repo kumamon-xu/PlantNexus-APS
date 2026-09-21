@@ -299,6 +299,7 @@ def plan_upgrade(
         and row.get("developer_kit") == current.get("developer_kit")
         and row.get("runtime") == current.get("runtime")
         and row.get("extension_sdk") == current.get("extension_sdk")
+        and all(row[key] == current.get(key) for key in ("extension_tooling", "enterprise_template") if key in row)
     ]
     if (
         len(matches) != 1
@@ -317,8 +318,12 @@ def plan_upgrade(
         "explicit_opt_in": True,
         "project_mutated": False,
         "conformance_required": True,
-        "configuration_migration_required": False,
-        "rollback": "RESTORE_RETAINED_PREDECESSOR_PROJECT_BYTES",
+        "configuration_migration_required": current.get("runtime") != target.get("runtime"),
+        "rollback": (
+            "RESTORE_PRE_UPGRADE_DATABASE_AND_RETAINED_PREDECESSOR_COMBINATION"
+            if current.get("runtime") != target.get("runtime")
+            else "RESTORE_RETAINED_PREDECESSOR_PROJECT_BYTES"
+        ),
     }
 
 

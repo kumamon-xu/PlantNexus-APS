@@ -12,6 +12,8 @@ from typing import Any, cast
 
 from pydantic import SecretStr
 
+from app import RUNTIME_VERSION
+
 from aps_extension_sdk import (
     ContributionManifest,
     ExtensionPoint,
@@ -62,7 +64,7 @@ class RuntimeExtensionFixture:
         return load_runtime_extensions(
             self.catalog_path,
             artifacts=(self.artifact,),
-            runtime_version="0.1.0",
+            runtime_version=RUNTIME_VERSION,
             verification_key_id=VERIFICATION_KEY_ID,
             verification_key=VERIFICATION_KEY,
         )
@@ -198,7 +200,7 @@ def write_runtime_extension_bundle(
     )
     catalog: JsonObject = {
         "catalog_version": "aps-runtime-extension-catalog.v1",
-        "runtime_version": "0.1.0",
+        "runtime_version": RUNTIME_VERSION,
         "sdk_api_version": "1.0.0",
         "registry_protocol_version": "plugin-registry.v1",
         "compatibility": _sample("extension-compatibility.v1.synthetic.json"),

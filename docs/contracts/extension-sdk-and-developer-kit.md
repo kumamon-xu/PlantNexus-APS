@@ -190,3 +190,9 @@ Support policy当前只支持Kit `1.0.0`工程候选，没有上一正式support
 当前签名状态固定为`UNSIGNED_ENGINEERING_CANDIDATE`、`signature_present=false`、`approved_external_key=false`。Manifest、checksum与sidecar是可签输入和完整性身份，不得冒充签名；public/Production channel必须在独立release authority提供可验证detached signature前以`KIT_SIGNATURE_REQUIRED`拒绝。详细命令和责任矩阵见[Developer Kit发布、升级与回滚](../operations/developer-kit-release-upgrade-and-rollback.md)。
 
 新公开 Kit 使用 `aps-developer-kit-release-manifest.v2`，在 v1 字段上增加必需的 distribution 声明。读取器保留 v1 精确字段检查；不允许给旧 v1 清单静默添加字段。业务 Schema Set 不变。
+
+## P9 内部候选交付合同
+
+P9-10 新候选的唯一组合是 Kit `1.1.0`、Runtime `0.2.0`、SDK/Tooling/Template `1.0.0`；旧 Kit 1.0.0/1.0.1 及 Runtime 0.1.0 已发布字节不变。P9 能力由安装后的新 Runtime 证明，SDK v1 六类 SPI 保持不变。候选采用 engineering channel，public-engineering 和 Production 不获授权。
+
+候选来源包含生成式 Runtime 版本写入的独立 provenance、全部 artifact/checksum/lock、clean source commit 与 exact Provider。详细组装与回退见 [Kit 操作合同](../operations/developer-kit-release-upgrade-and-rollback.md#p9-候选组合与验证命令)。版本兼容不能替代内容摘要一致；企业升级不能由平台候选生成隐式触发。

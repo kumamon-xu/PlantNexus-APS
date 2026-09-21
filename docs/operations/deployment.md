@@ -286,3 +286,11 @@ sh "$BUNDLE/scripts/status.sh" "$BUNDLE" "$CHECKSUMS" "$RUNTIME" "$SLOT" "$PROJE
 `scripts/enterprise_finalize.py`为构建侧工具，服务器无需它。`finalize`要求P8-28 completion及其可信SHA、canonical Provider/receipt/逐项验收报告、新工具提交的canonical Provider；保留运行payload并原子发布唯一final目录。`plan-cleanup`先验证final包/sidecar，记录staging的绝对根与全部文件摘要；`apply-cleanup`要求该plan的可信SHA，重新校验文件未变后才执行。
 
 清理仅覆盖`build/enterprise-container/staging`。删除可再生成归档/镜像/锁定扫描缓存前，将其他构建输入与诊断报告按原路径复制到独立P8-29 evidence目录并校验摘要。Provider ZIP、P8审计、失败记录、Git历史、已验证备份及所有Docker资源保持原样。路径越界、链接/Windows reparse、未知数据库/数据目录、plan后内容变化、final不唯一或摘要不符均拒绝；禁止全局build/dist/Docker prune。
+
+## P9 Runtime/Kit 部署候选
+
+P9-10 部署归档版本 0.2.0 包含 Runtime 0.2.0、Kit 1.1.0、`deployment-lock.json` 和操作文档。锁保存两个归档摘要、Kit fingerprint、source commit、Schema 2.11.0 与 database 0010。它是内部应用交付候选，不替换现有 v0.1.0 离线 OCI/Compose 发行，也不宣称新离线镜像已经获准生产部署。
+
+沿用上文安全解包、hash-locked clean install 和外部配置规则；新候选 preflight 显式指定 `--expected-runtime-version 0.2.0` 和完整来源提交，migration 使用同包 `upgrade 0010_runtime_replan`。API/Worker 使用同一已验证 wheel、服务器配置和 Kit identity。非空 Extension 仍必须由服务器提供明确 allow-list/provider；Kit 内示例不会自动装入生产服务。
+
+升级前停止写入并验证备份。失败时恢复原数据库备份与旧组件组合，保留新候选和失败证据；禁止拼接旧 Runtime 与新 Schema/migrations 或以旧公开标签指向新候选。

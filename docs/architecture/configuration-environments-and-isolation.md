@@ -575,3 +575,7 @@ Comparison POST仍使用`credentials=omit`/`cache=no-store`、Bearer只来自内
 ## P9 qualification isolation
 
 P9 工程基准只使用 TEST/SIMULATION、一次性 SQLite 目录、独立 Redis 容器/端口及 loopback API。CI Redis 固定镜像摘要并用 trap 清理；本地使用独立命名容器，不连接既有业务 Redis。每个画像新解释器隔离 Celery task registry，安装 app/SDK wheel 后才启动实际 Runtime role。认证/authority 使用已登记 synthetic test helper，不能据此宣称 Production identity 或企业真实 source 权限已验证。
+
+## P9 交付安装隔离
+
+P9-10 在临时 clean venv 中安装候选 Runtime/SDK/Tooling/Extension，使用 `-I` 且核对产品 module 路径归属安装环境。源码 checkout 仅提供 synthetic test driver；输入仍经过正式 Runtime API/application/Worker/Validator。旧 Kit 及数据库备份独立保留，升级与恢复使用各自归档内 migrations，禁止覆盖旧版本或复用业务环境。

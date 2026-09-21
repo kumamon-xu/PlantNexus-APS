@@ -95,7 +95,8 @@ class DeveloperKitArtifact:
 
 
 def load_policy(
-    root: Path, *, kit_version: str = KIT_VERSION, policy_path: Path = DEFAULT_POLICY_PATH
+    root: Path, *, kit_version: str = KIT_VERSION, policy_path: Path = DEFAULT_POLICY_PATH,
+    runtime_version: str = RUNTIME_VERSION
 ) -> JsonObject:
     try:
         policy = strict_json_document((root / policy_path).read_bytes())
@@ -107,7 +108,7 @@ def load_policy(
         raise DeveloperKitContractError("KIT_POLICY_INVALID", "policy version is unsupported")
     expected = {
         "developer_kit": kit_version,
-        "runtime": RUNTIME_VERSION,
+        "runtime": runtime_version,
         "application": APPLICATION_VERSION,
         "core": CORE_VERSION,
         "extension_sdk": SDK_API_VERSION,
@@ -141,7 +142,7 @@ def _normalized_tree(root: Path, *, prefix: str) -> dict[str, bytes]:
     return result
 
 
-def _relock_project(source: Path, target: Path, kit_version: str = KIT_VERSION) -> Path:
+def _relock_project(source: Path, target: Path, kit_version: str = KIT_VERSION, runtime_version: str = RUNTIME_VERSION) -> Path:
     shutil.copytree(
         source,
         target,
@@ -155,14 +156,14 @@ def _relock_project(source: Path, target: Path, kit_version: str = KIT_VERSION) 
         path = target / relative
         text = path.read_text(encoding="utf-8")
         path.write_text(
-            text.replace(_P8_14_KIT_VERSION, kit_version),
+            text.replace(_P8_14_KIT_VERSION, kit_version).replace("0.1.0", runtime_version),
             encoding="utf-8",
             newline="\n",
         )
     return target
 
 
-def _relocked_template(source: Path, target: Path, kit_version: str = KIT_VERSION) -> Path:
+def _relocked_template(source: Path, target: Path, kit_version: str = KIT_VERSION, runtime_version: str = RUNTIME_VERSION) -> Path:
     shutil.copytree(
         source,
         target,
@@ -175,7 +176,7 @@ def _relocked_template(source: Path, target: Path, kit_version: str = KIT_VERSIO
     ):
         text = path.read_text(encoding="utf-8")
         path.write_text(
-            text.replace(_P8_14_KIT_VERSION, kit_version),
+            text.replace(_P8_14_KIT_VERSION, kit_version).replace("0.1.0", runtime_version),
             encoding="utf-8",
             newline="\n",
         )
@@ -361,16 +362,17 @@ def build_developer_kit_files(
     kit_version: str = KIT_VERSION,
     policy_path: Path = DEFAULT_POLICY_PATH,
     runtime_code_commit: str | None = None,
+    runtime_version: str = RUNTIME_VERSION,
 ) -> tuple[str, dict[str, bytes], str]:
     """Build the canonical in-memory Kit file map from exact immutable inputs."""
 
     if _COMMIT.fullmatch(code_commit) is None:
         raise DeveloperKitContractError("KIT_PROVENANCE_INVALID", "code commit is not immutable")
-    policy = load_policy(root, kit_version=kit_version, policy_path=policy_path)
+    policy = load_policy(root, kit_version=kit_version, policy_path=policy_path, runtime_version=runtime_version)
     versions = cast(JsonObject, policy["versions"])
     runtime = verify_release_archive(
         runtime_archive,
-        expected_runtime_version=RUNTIME_VERSION,
+        expected_runtime_version=runtime_version,
         expected_code_commit=runtime_code_commit or code_commit,
     )
     runtime_bytes = runtime_archive.read_bytes()
@@ -397,21 +399,21 @@ def build_developer_kit_files(
     with TemporaryDirectory(prefix="aps-developer-kit-inputs-") as temporary:
         workspace = Path(temporary)
         template = _relocked_template(
-            root / "templates/enterprise-extension", workspace / "template", kit_version
+            root / "templates/enterprise-extension", workspace / "template", kit_version, runtime_version
         )
         alpha_root = _relock_project(
             root / "examples/enterprise-extensions/alpha-resource-tag",
-            workspace / "alpha", kit_version,
+            workspace / "alpha", kit_version, runtime_version,
         )
         beta_root = _relock_project(
             root / "examples/enterprise-extensions/beta-priority-policy",
-            workspace / "beta", kit_version,
+            workspace / "beta", kit_version, runtime_version,
         )
         alpha = conform_project(
             alpha_root,
             repository_root=root,
             clean_install=False,
-            expected_runtime_version=RUNTIME_VERSION,
+            expected_runtime_version=runtime_version,
             expected_developer_kit_version=kit_version,
             forbidden_core_digests=core_digests,
         )
@@ -419,7 +421,7 @@ def build_developer_kit_files(
             beta_root,
             repository_root=root,
             clean_install=False,
-            expected_runtime_version=RUNTIME_VERSION,
+            expected_runtime_version=runtime_version,
             expected_developer_kit_version=kit_version,
             forbidden_core_digests=core_digests,
         )
@@ -700,6 +702,7 @@ def build_developer_kit(
     kit_version: str = KIT_VERSION,
     policy_path: Path = DEFAULT_POLICY_PATH,
     runtime_code_commit: str | None = None,
+    runtime_version: str = RUNTIME_VERSION,
 ) -> DeveloperKitArtifact:
     archive_root, files, fingerprint = build_developer_kit_files(
         root,
@@ -709,6 +712,7 @@ def build_developer_kit(
         kit_version=kit_version,
         policy_path=policy_path,
         runtime_code_commit=runtime_code_commit,
+        runtime_version=runtime_version,
     )
     archive = deterministic_archive(archive_root, files)
     archive_sha256 = digest_bytes(archive)

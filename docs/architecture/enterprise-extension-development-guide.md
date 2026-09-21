@@ -146,3 +146,7 @@ python tools/aps_extension_conformance.py `
 Extension是`trusted_in_process=true`的部署代码，不是安全沙箱。静态扫描和timeout不能隔离恶意代码；企业仍负责代码审查、仓库权限、签名/attestation、密钥、漏洞响应、支持窗口和业务正确性。真实数据、容量、SLA、IdP/RBAC、UAT、行业规则及Production批准均不由模板或synthetic conformance结果证明。
 
 稳定SPI与manifest语义以[APS Extension SDK与Developer Kit合同](../contracts/extension-sdk-and-developer-kit.md)为准；Runtime装载与版本关系以[Extension SDK、Runtime与Developer Kit架构](extension-sdk-runtime-and-developer-kit.md)为准。
+
+## P9 内部候选开发
+
+选择 Kit 1.1.0 时，显式使用 `--runtime-version 0.2.0 --developer-kit-version 1.1.0`，SDK/Tooling/Template 仍为 1.0.0。从解包候选中的模板创建项目，运行项目测试与完整 `check-set`，以本次 Kit lock 的精确摘要为准。仓库中的 P8 原项目仍用于历史回放，不原地改写；旧版命令和公开 Kit 1.0.1 不会自动升级。

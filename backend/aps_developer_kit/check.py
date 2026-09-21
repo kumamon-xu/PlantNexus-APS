@@ -153,7 +153,10 @@ def _venv_python(root: Path) -> Path:
     return root / ("Scripts/python.exe" if os.name == "nt" else "bin/python")
 
 
-def _clean_install_and_cli(archive: Path) -> tuple[bool, float]:
+def _clean_install_and_cli(
+    archive: Path, *, installed_check: Any = None,
+    clean_projects: bool = False, conformance_report: Path | None = None,
+) -> tuple[bool, float]:
     started = perf_counter()
     _, kit_files = read_kit_archive(archive)
     lock = strict_json_document(kit_files["metadata/developer-kit-lock.json"])
@@ -240,7 +243,7 @@ def _clean_install_and_cli(archive: Path) -> tuple[bool, float]:
             "--core-source-inventory",
             str(kit_root / "metadata/core-source-hashes.json"),
             "--runtime-version",
-            "0.1.0",
+            cast(str, cast(JsonObject, lock["versions"])["runtime"]),
             "--developer-kit-version",
             cast(str, cast(JsonObject, lock["versions"])["developer_kit"]),
             "check-set",
@@ -248,14 +251,18 @@ def _clean_install_and_cli(archive: Path) -> tuple[bool, float]:
             str(kit_root / "examples/alpha-resource-tag"),
             "--project",
             str(kit_root / "examples/beta-priority-policy"),
-            "--skip-clean-install",
+            *(("--skip-clean-install",) if not clean_projects else ()),
         )
         result = _run(command, cwd=kit_root, environment=environment)
         document = json.loads(result.stdout)
+        if conformance_report is not None:
+            _write(conformance_report, document)
         if document.get("status") != "PASS" or document.get("extension_count") != 2:
             raise DeveloperKitContractError(
                 "KIT_INSTALL_FAILED", "clean installed Kit conformance failed"
             )
+        if installed_check is not None:
+            installed_check(python, kit_root)
     return True, (perf_counter() - started) * 1_000
 
 

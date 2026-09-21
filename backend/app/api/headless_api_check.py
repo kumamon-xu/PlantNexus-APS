@@ -43,6 +43,22 @@ def _operation_hash(operation: Mapping[str, object]) -> str:
     return _fingerprint(operation)
 
 
+
+def _preserves_operation(operation: Mapping[str, object], row: Mapping[str, object]) -> bool:
+    """Preserve frozen bytes, allowing only the explicit P9 readiness addition."""
+    if _operation_hash(operation) == row["operation_sha256"]:
+        return True
+    if (row["method"], row["path"]) != ("GET", "/health/ready"):
+        return False
+    responses = operation.get("responses")
+    if not isinstance(responses, Mapping) or responses.get("503") != {
+        "description": "Required dependency is not ready"
+    }:
+        return False
+    prior = {**operation, "responses": {k: v for k, v in responses.items() if k != "503"}}
+    return _operation_hash(prior) == row["operation_sha256"]
+
+
 def _git_head(root: Path) -> str:
     result = subprocess.run(
         ["git", "rev-parse", "HEAD"],
@@ -239,7 +255,7 @@ def run_checks(
         if (
             operation is None
             or operation.get("operationId") != row["operation_id"]
-            or _operation_hash(operation) != row["operation_sha256"]
+            or not _preserves_operation(operation, row)
         ):
             preserved = False
     expected_additions = {
@@ -309,7 +325,7 @@ def run_checks(
     )
     checks = [
         {
-            "check_id": "preexisting-29-operation-byte-preservation",
+            "check_id": "preexisting-29-operation-preservation-with-exact-readiness-addition",
             "passed": preserved and len(baseline_keys) == 29,
         },
         {

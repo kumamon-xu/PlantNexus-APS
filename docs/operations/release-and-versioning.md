@@ -89,3 +89,7 @@ P9-10 使用独立 Runtime `0.2.0`、Developer Kit `1.1.0` 与部署归档 `0.2.
 新增 `runtime-release-policy-0.2.0.v1.json` 与 `developer-kit-release-policy-1.1.0.v1.json`。候选 builder 从 clean committed input 构建原 wheel，再按 `p9-runtime-version-materialization.v1` 只生成 wheel 中的 Runtime metadata 常量与归档 pyproject 的 Runtime 版本。`app/p9-build-provenance.json` 保存源 wheel、policy、原/生成 metadata SHA-256 和完整 source commit；其余应用源码不变，wheel RECORD 重新生成。不能把源 wheel 与生成 wheel 混为同一字节身份。历史默认 builder 保持原语义。
 
 交付 Gate 双构建 Runtime/Kit，验证干净安装的实际 Runtime 版本和 P9 人工修改、事件、重排、读取与输出链；回放已发布 Kit 1.0.1 的固定摘要，显式升级并通过停机备份恢复旧组合。新制品与报告随 exact Provider 保留，禁止同版本覆盖、自动升级和未经授权的外部发布。
+
+## P9 readiness 合同 patch 候选
+
+当前 P9 builder 形成 Runtime `0.2.1` / Kit `1.1.1`，使用新增精确版本 policy；仅为已有 readiness 503 补充 OpenAPI 声明。原 `0.2.0` / `1.1.0` policy 与制品字节保留，验证器仍能核对旧版本 provenance。Application/Core、SDK/Tooling/Template、Schema Set、database 和依赖均沿用既有版本。候选仍为内部未签名工程制品；交付后独立安装复审，不构成外部发行或阶段 Exit。

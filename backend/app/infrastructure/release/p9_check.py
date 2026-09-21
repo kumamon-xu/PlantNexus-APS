@@ -98,7 +98,7 @@ phase={phase!r}
 database=Path({str(database)!r})
 backup=Path({str(backup)!r})
 runtime=Path({str(runtime)!r})
-assert app.RUNTIME_VERSION == ('0.2.0' if phase == 'upgrade' else '0.1.0')
+assert app.RUNTIME_VERSION == ({RUNTIME!r} if phase == 'upgrade' else '0.1.0')
 cfg=Config(str(runtime/'alembic.ini'))
 cfg.set_main_option('script_location',str(runtime/'backend/migrations'))
 cfg.set_main_option('sqlalchemy.url','sqlite:///'+database.as_posix())
@@ -232,8 +232,8 @@ def check(root: Path, out: Path, predecessor: Path) -> dict[str, Any]:
         "docs/deployment.md": (root / "docs/operations/deployment.md").read_bytes(),
         "docs/upgrade-and-rollback.md": (root / "docs/operations/developer-kit-release-upgrade-and-rollback.md").read_bytes(),
     }
-    bundle = deterministic_archive("plantnexus-aps-p9-deployment-0.2.0", bundle_files, epoch=epoch)
-    bundle_path = out / "deployment" / sha256(bundle).hexdigest() / "plantnexus-aps-p9-deployment-0.2.0.tar.gz"
+    bundle = deterministic_archive(f"plantnexus-aps-p9-deployment-{RUNTIME}", bundle_files, epoch=epoch)
+    bundle_path = out / "deployment" / sha256(bundle).hexdigest() / f"plantnexus-aps-p9-deployment-{RUNTIME}.tar.gz"
     bundle_path.parent.mkdir(parents=True)
     bundle_path.write_bytes(bundle)
     bundle_path.with_name(bundle_path.name + ".sha256").write_text(
@@ -242,7 +242,7 @@ def check(root: Path, out: Path, predecessor: Path) -> dict[str, Any]:
     write(out / "deployment-lock.json", deployment)
     report = {
         "report_version": "p9-delivery.v1", "status": "PASS", "code_commit": commit,
-        "task_id": "TASK-P9-10", "test_id": "TEST-P9-DELIVERY-001",
+        "task_id": "TASK-P9-13", "test_id": "TEST-P9-DELIVERY-001",
         "runtime": {key: str(value) if isinstance(value, Path) else value for key, value in asdict(runtime).items()},
         "kit": {key: str(value) if isinstance(value, Path) else value for key, value in asdict(kit).items()},
         "deployment_sha256": sha256_fingerprint(bundle), "reproducible": True,
@@ -250,6 +250,12 @@ def check(root: Path, out: Path, predecessor: Path) -> dict[str, Any]:
         "predecessor_replay_before_and_after": "PASS", "upgrade": upgrade,
         "rejections": rejections, "issues": [],
     }
+    write(out / "candidate-identity.json", {
+        "contract": "p9-audit-candidate.v1", "source_revision": commit,
+        "runtime_version": RUNTIME, "kit_version": KIT,
+        "runtime_sha256": runtime.archive_sha256.removeprefix("sha256:"),
+        "kit_sha256": kit.archive_sha256.removeprefix("sha256:"),
+    })
     write(out / "delivery.json", report)
     return report
 

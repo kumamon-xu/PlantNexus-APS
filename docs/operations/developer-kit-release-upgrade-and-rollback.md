@@ -93,3 +93,7 @@ uv run python -m app.infrastructure.release.p9_check --root . --out build/p9-del
 示例和模板仅在组装临时副本显式 relock；原 P8 源项目不变。对企业项目的升级仍需 owner opt-in、相同新组合上的项目及完整 Extension-set conformance。未知/浮动 Runtime、混搭 SDK/tool/template、来源不符和缺少外部签名的 public/Production promotion 均拒绝。
 
 从 0009 升级至 0010 前先停止写入并保存可恢复数据库。回退必须恢复原数据库备份和旧 Runtime/Kit/Extension/config 整组身份；不能将删除后继数据表的 downgrade 称为无损回退。P9 Gate 用保留的旧 wheel/migrations 建立含 audit 数据的 0009 库，新包升级后核对保留数据，再以旧包恢复备份并复核 head/完整性。此证据限 synthetic SQLite 工程环境。
+
+## P9 corrective 候选
+
+当前上述构建命令输出 Kit `1.1.1` / Runtime `0.2.1`；新版本 policy 保持从固定旧 Kit 1.0.1 的显式升级/备份恢复路径。旧 Kit 1.1.0 / Runtime 0.2.0 字节仍保留，本轮不声明从该内部候选的自动或无损数据库升级。SDK/Tooling/Template 1.0.0 不变。`candidate-identity.json` 绑定源 SHA、版本和归档摘要，供独立 fresh 纵向审计消费。

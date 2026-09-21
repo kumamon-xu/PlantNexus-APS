@@ -127,7 +127,7 @@ Create的tenant/factory/planning scope来自machine carrier的`requested_scope`�
 | 工厂、资源、工艺、订单主数据 CRUD | 不作为Snapshot旁路 | 宿主维护上游主数据并提交新canonical版本；APS不直接修改既有Snapshot |
 | 用户、角色、SSO/RBAC 管理 | 用户生命周期不属于APS；当前只有provider port | P8-08接入宿主identity并由APS强制role/capability/factory scope |
 | 生产MES/ERP事件连接器与外部发布 | 连接器不属于APS；当前无Production发布 | 宿主负责上游/下游连接，APS只提供canonical input与read/export API；authority仍需closure |
-| readiness 失败响应的 OpenAPI 声明 | 运行时会返回 503，但当前 OpenAPI 只声明 200 | 显式声明 503 response/schema，并增加 OpenAPI 合同断言 |
+| readiness 失败响应的 OpenAPI 声明 | 旧 0.2.0 声明缺口保留；当前 0.2.1 候选已补 503 声明 | 新候选安装后合同断言与 fresh Gate 核验 |
 | Swagger/ReDoc UI 与提交版 OpenAPI 快照 | UI继续关闭；P8-07已提交OpenAPI 3.1快照和原29项operation hash基线 | 后继只允许v1 additive兼容；deprecation先保留旧operation并指向successor，breaking removal进入另行批准的major版本 |
 
 上述缺口不是隐藏能力。若要新增接口，应先更新语义合同与机器 Schema，再实现 application port、router、授权、错误、正负测试和 OpenAPI 清单。
@@ -147,3 +147,9 @@ Create的tenant/factory/planning scope来自machine carrier的`requested_scope`�
 `scripts/p9_runtime_vertical_gate.py` audits the retained P9-10 Runtime 0.2.0 / Kit 1.1.0 by exact archive hashes and source revision. It never substitutes a rebuilt wheel. A clean installation runs fresh B01–B10 owner regressions and the sealed v2 XS/S/M TCP → Redis → Worker → independent Validator → explicit publication → export scenarios. Development calibration precedes holdout access under the existing budget policy; historical budgets and seeds are unchanged.
 
 The audit records each of the 34 operations separately, including observed positive/negative HTTP responses and missing evidence. Owner fault tests use explicit synthetic authority/clock/fault injection; the generated qualification separately proves a real broker path. Missing operation polarity is NOT_RUN and blocks readiness; observed readiness 503 must also appear in the candidate OpenAPI. A completed audit can be NOT_READY. Its blockers remain visible and require a separate corrective; no product repair, Production, external release or P9 Exit is implied.
+
+## P9 纵向纠正候选
+
+当前源码与 Runtime 0.2.1 / Kit 1.1.1 候选增加 readiness 503 的 OpenAPI 声明。逐操作补充有效 carrier 的权限/scope 拒绝、缺失引用、stale/CAS 与同 key 冲突；拒绝前后比较业务表完整内容，允许独立授权 audit 追加。P9-11 对 0.2.0 / 1.1.0 的原 NOT_READY 仍属历史事实，新候选必须取得 fresh Gate 结果。
+
+兼容 checker 对 readiness 仅允许精确 503 声明增量，移除该项后仍须匹配原 operation hash；其余 28 项与 readiness 原内容保持冻结摘要。旧 baseline 文件不改写。

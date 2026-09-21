@@ -23,10 +23,10 @@ from app.infrastructure.release.contracts import (
 )
 
 
-RUNTIME = "0.2.0"
-KIT = "1.1.0"
-RUNTIME_POLICY = Path("infra/release/runtime-release-policy-0.2.0.v1.json")
-KIT_POLICY = Path("infra/release/developer-kit-release-policy-1.1.0.v1.json")
+RUNTIME = "0.2.1"
+KIT = "1.1.1"
+RUNTIME_POLICY = Path("infra/release/runtime-release-policy-0.2.1.v1.json")
+KIT_POLICY = Path("infra/release/developer-kit-release-policy-1.1.1.v1.json")
 BUILD_METADATA = "app/p9-build-provenance.json"
 
 
@@ -35,7 +35,8 @@ def candidate_wheel(raw: bytes, *, code_commit: str, policy_bytes: bytes) -> byt
     if re.fullmatch(r"[0-9a-f]{40}", code_commit) is None:
         raise ReleaseContractError("PROVENANCE_INVALID", "candidate commit must be exact")
     policy = strict_json_document(policy_bytes)
-    if policy.get("compatibility", {}).get("runtime_version") != RUNTIME:
+    runtime = policy.get("compatibility", {}).get("runtime_version")
+    if runtime not in {"0.2.0", "0.2.1"}:
         raise ReleaseContractError("VERSION_MISMATCH", "candidate policy version differs")
     with ZipFile(BytesIO(raw)) as archive:
         names = archive.namelist()
@@ -46,12 +47,12 @@ def candidate_wheel(raw: bytes, *, code_commit: str, policy_bytes: bytes) -> byt
     old = b'RUNTIME_VERSION = "0.1.0"'
     if before.count(old) != 1:
         raise ReleaseContractError("VERSION_MISMATCH", "source Runtime metadata is not the declared baseline")
-    after = before.replace(old, f'RUNTIME_VERSION = "{RUNTIME}"'.encode())
+    after = before.replace(old, f'RUNTIME_VERSION = "{runtime}"'.encode())
     files["app/__init__.py"] = after
     files[BUILD_METADATA] = canonical_json_bytes({
         "build_contract": "p9-runtime-version-materialization.v1",
         "code_commit": code_commit,
-        "runtime_version": RUNTIME,
+        "runtime_version": runtime,
         "source_wheel_sha256": sha256_fingerprint(raw),
         "policy_sha256": sha256_fingerprint(policy_bytes),
         "generated_source": "app/__init__.py",
@@ -86,15 +87,18 @@ def verify_candidate_wheel(raw: bytes, *, code_commit: str, policy_bytes: bytes)
     except (BadZipFile, OSError, RuntimeError) as error:
         raise ReleaseContractError("PROVENANCE_INVALID", "candidate wheel cannot be decoded") from error
     policy = strict_json_document(policy_bytes)
+    runtime = policy.get("compatibility", {}).get("runtime_version")
+    if runtime not in {"0.2.0", "0.2.1"}:
+        raise ReleaseContractError("PROVENANCE_INVALID", "undeclared candidate version")
     if (
         metadata.get("code_commit") != code_commit
-        or metadata.get("runtime_version") != RUNTIME
+        or metadata.get("runtime_version") != runtime
         or metadata.get("policy_sha256") != sha256_fingerprint(policy_bytes)
         or metadata.get("generated_sha256") != sha256_fingerprint(generated)
-        or generated.count(f'RUNTIME_VERSION = "{RUNTIME}"'.encode()) != 1
+        or generated.count(f'RUNTIME_VERSION = "{runtime}"'.encode()) != 1
         or metadata.get("other_source_changes") != []
         or metadata.get("build_contract") != "p9-runtime-version-materialization.v1"
-        or policy.get("compatibility", {}).get("runtime_version") != RUNTIME
+        or policy.get("compatibility", {}).get("runtime_version") != runtime
     ):
         raise ReleaseContractError("PROVENANCE_INVALID", "generated Runtime identity differs")
 

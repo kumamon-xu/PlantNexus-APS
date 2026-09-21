@@ -271,7 +271,7 @@ def verify_release_files(
         raise ReleaseContractError("VERSION_MISMATCH", "runtime version does not match expectation")
     if expected_code_commit is not None and code_commit != expected_code_commit:
         raise ReleaseContractError("VERSION_MISMATCH", "code commit does not match expectation")
-    if runtime_version == "0.2.0":
+    if runtime_version in {"0.2.0", "0.2.1"}:
         from app.infrastructure.release.p9 import verify_candidate_wheel
 
         wheels = [raw for path, raw in files.items() if path.startswith("runtime/wheels/")]

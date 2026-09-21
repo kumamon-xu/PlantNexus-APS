@@ -61,6 +61,13 @@ def test_openapi_is_exactly_additive_and_preserves_all_29_operations() -> None:
     for expected in baseline["operations"]:
         operation = operations[(expected["method"], expected["path"])]
         assert operation["operationId"] == expected["operation_id"]
+        if (expected["method"], expected["path"]) == ("GET", "/health/ready"):
+            assert operation["responses"]["503"] == {
+                "description": "Required dependency is not ready"
+            }
+            operation = {**operation, "responses": {
+                k: v for k, v in operation["responses"].items() if k != "503"
+            }}
         assert _operation_hash(operation) == expected["operation_sha256"]
     for method, path, operation_id, success_status in HEADLESS_OPERATION_INVENTORY:
         operation = operations[(method, path)]

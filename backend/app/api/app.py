@@ -206,7 +206,11 @@ def create_app(
         )
         return JSONResponse(status_code=200, content=report.to_dict())
 
-    @application.get("/health/ready", response_model=None)
+    @application.get(
+        "/health/ready",
+        response_model=None,
+        responses={503: {"description": "Required dependency is not ready"}},
+    )
     def ready() -> JSONResponse:
         report = readiness_report(
             service=resolved_settings.service_name,

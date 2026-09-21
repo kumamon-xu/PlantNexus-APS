@@ -498,7 +498,7 @@ def _compatibility(policy: Mapping[str, object], *, runtime_version: str = RUNTI
         "enterprise_extension_compatibility": "NOT_PUBLISHED_DEFAULT_EMPTY_ONLY",
         "production_approval": "REQUIRED_AND_NOT_GRANTED",
     }
-    if runtime_version == "0.2.0":
+    if runtime_version in {"0.2.0", "0.2.1"}:
         document["enterprise_extension_compatibility"] = "EXACT_KIT_MATRIX_AND_STARTUP_ALLOW_LIST"
         document["upgrade_from"] = ["0.1.0"]
     return versions, document
@@ -577,12 +577,12 @@ def build_release_files(
         LICENSE_PATH: canonical_json_bytes(licenses) + b"\n",
         SBOM_PATH: canonical_json_bytes(sbom) + b"\n",
     }
-    if runtime_version == "0.2.0":
+    if runtime_version in {"0.2.0", "0.2.1"}:
         source_metadata = files["runtime/pyproject.toml"]
         if source_metadata.count(b'runtime = "0.1.0"') != 1:
             raise ReleaseContractError("VERSION_MISMATCH", "source project Runtime version differs")
         files["runtime/pyproject.toml"] = source_metadata.replace(
-            b'runtime = "0.1.0"', b'runtime = "0.2.0"'
+            b'runtime = "0.1.0"', f'runtime = "{runtime_version}"'.encode()
         )
     _copy_tree(files, root, Path("backend/migrations"), "runtime/backend/migrations")
     _copy_tree(files, root, Path("schemas"), "runtime/schemas")

@@ -834,6 +834,7 @@ jobs:
             "${replay_root}/backend/app/infrastructure/release/p9_check.py" \
             "${replay_root}/backend/tests/unit/test_p9_vertical.py" \
             "${replay_root}/backend/tests/integration/test_p9_vertical_install.py" \
+            "${replay_root}/backend/tests/integration/test_p9_vertical_corrective.py" \
             "${replay_root}/backend/tests/unit/test_p9_delivery.py" \
             "${replay_root}/backend/tests/integration/test_p9_delivery_install.py" \
             "${replay_root}/backend/tests/p8_release_support.py" \
@@ -1531,12 +1532,12 @@ jobs:
         env:
           GH_TOKEN: ${{ github.token }}
         run: |
-          gh run download 35550065697 --repo "${GITHUB_REPOSITORY}" --name plantnexus-p9-delivery-35550065697 --dir build/p9-vertical-input
           docker run -d --name p9-vertical-redis -p 127.0.0.1:6401:6379 redis@sha256:520775a41a63e77e06c73e35d2fd9cc15921a609516818796b4ecbb813078bc7 redis-server --save "" --appendonly no
           trap 'docker rm -f p9-vertical-redis' EXIT
+          runtime=$(find build/p9-delivery/build-a/runtime -name 'plantnexus-aps-runtime-0.2.1-linux-amd64.tar.gz')
+          kit=$(find build/p9-delivery/build-a/kit -name 'plantnexus-aps-developer-kit-1.1.1-*.zip')
           uv run python scripts/p9_runtime_vertical_gate.py --root . --out build/p9-vertical --code-commit "${PLANTNEXUS_CODE_COMMIT}" --broker redis://127.0.0.1:6401 \
-            --runtime build/p9-vertical-input/build-a/runtime/sha256/7ab65e686bd68e8e30fa3588321c278a900c8bc8e4c77d9e71d0934fc4695180/plantnexus-aps-runtime-0.2.0-linux-amd64.tar.gz \
-            --kit build/p9-vertical-input/build-a/kit/registry/versions/1.1.0/sha256/ed74471ab8252e6cf9da5845ba6e5382f7002a661535366f57e595027b1b974d/plantnexus-aps-developer-kit-1.1.0-ed74471ab8252e6c.zip
+            --candidate-identity build/p9-delivery/candidate-identity.json --runtime "$runtime" --kit "$kit"
           cp build/p9-vertical/gate.json build/validation/ci-p9-vertical.json
       - name: Retain independent P9 vertical observations
         uses: actions/upload-artifact@v7

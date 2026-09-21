@@ -19,6 +19,38 @@ KIT_SHA = "ed74471ab8252e6cf9da5845ba6e5382f7002a661535366f57e595027b1b974d"
 RUNTIME_SHA = "7ab65e686bd68e8e30fa3588321c278a900c8bc8e4c77d9e71d0934fc4695180"
 
 
+RETAINED_CANDIDATE = {
+    "contract": "p9-audit-candidate.v1",
+    "source_revision": CANDIDATE_SHA,
+    "runtime_version": "0.2.0",
+    "kit_version": "1.1.0",
+    "runtime_sha256": RUNTIME_SHA,
+    "kit_sha256": KIT_SHA,
+}
+
+
+def candidate_identity(path: Path | None, code: str) -> dict[str, str]:
+    if path is None:
+        return dict(RETAINED_CANDIDATE)
+    value = json.loads(path.read_bytes())
+    if (
+        not isinstance(value, dict)
+        or set(value) != set(RETAINED_CANDIDATE)
+        or value.get("contract") != "p9-audit-candidate.v1"
+        or value.get("source_revision") != code
+        or re.fullmatch(r"[0-9a-f]{40}", code) is None
+        or (value.get("runtime_version"), value.get("kit_version"))
+        != ("0.2.1", "1.1.1")
+        or any(
+            not isinstance(value.get(k), str)
+            or re.fullmatch(r"[0-9a-f]{64}", value[k]) is None
+            for k in ("runtime_sha256", "kit_sha256")
+        )
+    ):
+        raise ValueError("P9_CORRECTIVE_CANDIDATE_IDENTITY_INVALID")
+    return value
+
+
 def write(path: Path, value: Any) -> None:
     path.parent.mkdir(parents=True, exist_ok=True)
     with path.open("x", encoding="utf-8", newline="\n") as stream:
@@ -111,7 +143,9 @@ class TracePlugin:
         httpx.Client.send = self.original
 
 
-def installed(root: Path, out: Path, broker: str, code: str) -> None:
+def installed(
+    root: Path, out: Path, broker: str, code: str, candidate: dict[str, str]
+) -> None:
     import app
     import aps_extension_sdk
     import aps_extension_tooling
@@ -127,14 +161,17 @@ def installed(root: Path, out: Path, broker: str, code: str) -> None:
             .is_relative_to(Path(sys.prefix).resolve())
         ):
             raise ValueError("P9_PRODUCT_IMPORT_ESCAPED_INSTALLED_ENVIRONMENT")
-    if app.RUNTIME_VERSION != "0.2.0" or app.SCHEMA_VERSION != "2.11.0":
+    if (
+        app.RUNTIME_VERSION != candidate["runtime_version"]
+        or app.SCHEMA_VERSION != "2.11.0"
+    ):
         raise ValueError("P9_INSTALLED_IDENTITY_MISMATCH")
     write(
         out / "installed-identity.json",
         {
             "runtime": app.RUNTIME_VERSION,
             "schema": app.SCHEMA_VERSION,
-            "source_revision": CANDIDATE_SHA,
+            "source_revision": candidate["source_revision"],
             "audit_revision": code,
             "prefix": sys.prefix,
             "app_path": app.__file__,
@@ -153,6 +190,8 @@ def installed(root: Path, out: Path, broker: str, code: str) -> None:
             "backend/tests/integration/test_p8_headless_http_api_integration.py",
         }
     )
+    if candidate["runtime_version"] == "0.2.1":
+        paths.append("backend/tests/integration/test_p9_vertical_corrective.py")
     plugin = TracePlugin()
     result = pytest.main(
         [
@@ -178,6 +217,7 @@ def installed(root: Path, out: Path, broker: str, code: str) -> None:
         "test_p9_replan.py",
         "test_p9_consumers.py",
         "test_p9_vertical_install.py",
+        "test_p9_vertical_corrective.py",
         "test_p8_headless_http_api_integration.py",
         "test_p8_runtime_composition.py",
     }
@@ -222,7 +262,12 @@ def installed(root: Path, out: Path, broker: str, code: str) -> None:
     # A new environment calibrates development first under the frozen v2 policy;
     # the sealed holdout never influences that budget. Uses installed product.
     qualify(
-        root, out / "qualification", broker, CANDIDATE_SHA, False, catalog_version="v2"
+        root,
+        out / "qualification",
+        broker,
+        candidate["source_revision"],
+        False,
+        catalog_version="v2",
     )
 
 
@@ -259,12 +304,19 @@ def verdict(checks: list[dict[str, Any]], code: str) -> dict[str, Any]:
 
 
 def audit(
-    root: Path, out: Path, kit: Path, runtime: Path, broker: str, code: str
+    root: Path,
+    out: Path,
+    kit: Path,
+    runtime: Path,
+    broker: str,
+    code: str,
+    identity_path: Path | None = None,
 ) -> dict[str, Any]:
     from aps_developer_kit.check import _clean_install_and_cli
     from aps_developer_kit.contracts import verify_kit_archive
     from app.infrastructure.release.contracts import verify_release_archive
 
+    candidate = candidate_identity(identity_path, code)
     out.mkdir(parents=True, exist_ok=False)
     head = subprocess.check_output(
         ["git", "rev-parse", "HEAD"], cwd=root, text=True
@@ -281,20 +333,25 @@ def audit(
         {
             "audit_revision": code,
             "working_tree_dirty": dirty,
-            "candidate_revision": CANDIDATE_SHA,
+            "candidate_revision": candidate["source_revision"],
+            "candidate_identity": candidate,
             "runner_sha256": sha256(Path(__file__).read_bytes()).hexdigest(),
         },
     )
     if (
-        sha256(kit.read_bytes()).hexdigest() != KIT_SHA
-        or sha256(runtime.read_bytes()).hexdigest() != RUNTIME_SHA
+        sha256(kit.read_bytes()).hexdigest() != candidate["kit_sha256"]
+        or sha256(runtime.read_bytes()).hexdigest() != candidate["runtime_sha256"]
     ):
         raise ValueError("P9_RETAINED_CANDIDATE_DIGEST_MISMATCH")
     k = verify_kit_archive(
-        kit, expected_kit_version="1.1.0", expected_code_commit=CANDIDATE_SHA
+        kit,
+        expected_kit_version=candidate["kit_version"],
+        expected_code_commit=candidate["source_revision"],
     )
     r = verify_release_archive(
-        runtime, expected_runtime_version="0.2.0", expected_code_commit=CANDIDATE_SHA
+        runtime,
+        expected_runtime_version=candidate["runtime_version"],
+        expected_code_commit=candidate["source_revision"],
     )
     if (
         k.runtime_release_fingerprint != r.release_fingerprint
@@ -318,7 +375,7 @@ def audit(
             + "os.environ['PLANTNEXUS_DEVELOPER_KIT_VERSION']=m['kit_version']\n"
             + "os.environ['PLANTNEXUS_DEVELOPER_KIT_FINGERPRINT']=m['release_fingerprint']\n"
             + "from scripts.p9_runtime_vertical_gate import installed\n"
-            + f"installed(pathlib.Path({str(root)!r}),pathlib.Path({str(out)!r}),{broker!r},{code!r})\n",
+            + f"installed(pathlib.Path({str(root)!r}),pathlib.Path({str(out)!r}),{broker!r},{code!r},{candidate!r})\n",
             encoding="utf-8",
             newline="\n",
         )
@@ -355,7 +412,7 @@ def audit(
     check(
         "candidate",
         True,
-        "Exact retained Runtime 0.2.0 / Kit 1.1.0 installed; two independent extensions conform.",
+        f"Exact retained Runtime {candidate['runtime_version']} / Kit {candidate['kit_version']} installed; two independent extensions conform.",
     )
     check(
         "fresh-contracts",
@@ -386,12 +443,16 @@ def audit(
         "Observed readiness 503 must be declared by the candidate OpenAPI contract.",
     )
     report = verdict(checks, code)
+    if identity_path is not None:
+        report["task_id"] = "TASK-P9-13"
     report["audit_working_tree_dirty"] = dirty
     report.update(
         candidate={
-            "source_revision": CANDIDATE_SHA,
-            "runtime_sha256": RUNTIME_SHA,
-            "kit_sha256": KIT_SHA,
+            "source_revision": candidate["source_revision"],
+            "runtime_sha256": candidate["runtime_sha256"],
+            "kit_sha256": candidate["kit_sha256"],
+            "runtime_version": candidate["runtime_version"],
+            "kit_version": candidate["kit_version"],
         },
         fresh={
             "contract_tests": contracts["tests"],
@@ -422,6 +483,7 @@ def main() -> int:
     parser.add_argument("--out", type=Path, required=True)
     parser.add_argument("--kit", type=Path, required=True)
     parser.add_argument("--runtime", type=Path, required=True)
+    parser.add_argument("--candidate-identity", type=Path)
     parser.add_argument("--broker", required=True)
     parser.add_argument("--code-commit", required=True)
     args = parser.parse_args()
@@ -432,6 +494,7 @@ def main() -> int:
         args.runtime.resolve(),
         args.broker,
         args.code_commit,
+        args.candidate_identity,
     )
     print(
         json.dumps(

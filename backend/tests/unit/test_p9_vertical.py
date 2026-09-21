@@ -113,3 +113,70 @@ def test_changed_candidate_and_existing_evidence_fail_before_install(
     with pytest.raises(FileExistsError):
         gate.audit(tmp_path, output, package, package, "redis://127.0.0.1:1", "a" * 40)
     assert (output / "audit-input.json").read_bytes() == before
+
+
+@pytest.mark.parametrize(
+    "fault",
+    [
+        None,
+        "source_revision",
+        "runtime_version",
+        "kit_version",
+        "kit_sha256",
+        "contract",
+    ],
+)
+def test_corrective_identity_rejects_mixed_or_unbound_candidates(
+    tmp_path: Path, fault: str | None
+) -> None:
+    from scripts.p9_runtime_vertical_gate import candidate_identity, RETAINED_CANDIDATE
+
+    value = {
+        **RETAINED_CANDIDATE,
+        "source_revision": "a" * 40,
+        "runtime_version": "0.2.1",
+        "kit_version": "1.1.1",
+    }
+    if fault:
+        value[fault] = "incorrect"
+    path = tmp_path / "candidate.json"
+    path.write_text(json.dumps(value), encoding="utf-8")
+    if fault:
+        with pytest.raises(ValueError, match="CANDIDATE_IDENTITY_INVALID"):
+            candidate_identity(path, "a" * 40)
+    else:
+        assert candidate_identity(path, "a" * 40) == value
+    assert candidate_identity(None, "a" * 40) == RETAINED_CANDIDATE
+
+
+@pytest.mark.parametrize(
+    "fault", [None, "description", "200", "extra", "operation", "route"]
+)
+def test_readiness_addition_preserves_every_old_operation_byte(
+    fault: str | None,
+) -> None:
+    from app.api.headless_api_check import _preserves_operation, _operation_hash
+
+    old: dict[str, Any] = {
+        "operationId": "ready",
+        "responses": {"200": {"description": "OK"}},
+    }
+    row = {
+        "method": "GET",
+        "path": "/health/ready",
+        "operation_sha256": _operation_hash(old),
+    }
+    assert _preserves_operation(old, row)
+    new = deepcopy(old)
+    new["responses"]["503"] = {"description": "Required dependency is not ready"}
+    if fault == "description":
+        new["responses"]["503"]["description"] = "different"
+    if fault == "200":
+        new["responses"]["200"] = {}
+    if fault == "extra":
+        new["responses"]["418"] = {}
+    if fault == "operation":
+        new["operationId"] = "changed"
+    if fault == "route":
+        row["path"] = "/other"
+    assert _preserves_operation(new, row) is (fault is None)

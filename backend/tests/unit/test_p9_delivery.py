@@ -31,8 +31,9 @@ def source_wheel() -> bytes:
     })
 
 
-def test_generated_version_is_reproducible_and_records_all_changed_bytes() -> None:
-    policy = (ROOT / RUNTIME_POLICY).read_bytes()
+@pytest.mark.parametrize("version", ["0.2.0", "0.2.1"])
+def test_generated_version_is_reproducible_and_records_all_changed_bytes(version: str) -> None:
+    policy = (ROOT / f"infra/release/runtime-release-policy-{version}.v1.json").read_bytes()
     original = source_wheel()
     candidate = candidate_wheel(original, code_commit=COMMIT, policy_bytes=policy)
     assert candidate == candidate_wheel(original, code_commit=COMMIT, policy_bytes=policy)
@@ -40,7 +41,7 @@ def test_generated_version_is_reproducible_and_records_all_changed_bytes() -> No
     with ZipFile(BytesIO(candidate)) as archive:
         files = {name: archive.read(name) for name in archive.namelist()}
     assert files["app/unchanged.py"] == b"# unchanged source\n"
-    assert b'RUNTIME_VERSION = "0.2.0"' in files["app/__init__.py"]
+    assert f'RUNTIME_VERSION = "{version}"'.encode() in files["app/__init__.py"]
     provenance = json.loads(files[BUILD_METADATA])
     assert provenance["source_wheel_sha256"] == "sha256:" + sha256(original).hexdigest()
     assert provenance["other_source_changes"] == []

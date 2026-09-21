@@ -351,11 +351,81 @@ def accepted_glibc_risk(finding: dict[str, Any], scan: dict[str, Any],
             and not finding.get("FixedVersion"))
 
 
+POD_TEXT_INSPECTION = r"""
+import hashlib, json, os, pathlib, platform, subprocess
+assert platform.machine() == 'x86_64'
+status = pathlib.Path('/var/lib/dpkg/status').read_bytes()
+packages = {}
+for paragraph in status.decode().split('\n\n'):
+    fields = dict(line.split(': ', 1) for line in paragraph.splitlines() if ': ' in line and not line.startswith(' '))
+    if 'Package' in fields:
+        packages[fields['Package']] = {'version': fields.get('Version'), 'status': fields.get('Status')}
+paths = []
+def fail(error):
+    raise error
+for folder, dirs, files in os.walk('/', onerror=fail):
+    if folder == '/':
+        dirs[:] = [name for name in dirs if name not in ('proc', 'sys', 'dev')]
+    paths.extend(os.path.join(folder, name) for name in files
+                 if os.path.join(folder, name).endswith('/Pod/Text.pm'))
+probe = subprocess.run(['perl', '-MPod::Text', '-e', 'exit 0'], capture_output=True,
+                       text=True, timeout=10, check=False)
+print(json.dumps({'schema_version': 'enterprise-pod-text-absence.v1', 'status': 'PASS',
+    'platform': 'linux/amd64', 'filesystem_scan_complete': True,
+    'excluded_virtual_filesystems': ['/proc', '/sys', '/dev'],
+    'dpkg_status_sha256': hashlib.sha256(status).hexdigest(),
+    'perl_base': packages.get('perl-base'), 'pod_text_paths': paths,
+    'perl_require_returncode': probe.returncode,
+    'perl_require_module_missing': probe.stderr.startswith("Can't locate Pod/Text.pm in @INC"),
+    'perl_environment_overrides': sorted(k for k in ('PERL5LIB', 'PERL5OPT') if k in os.environ)}))
+"""
+
+
+def probe_pod_text_absence(image_id: str) -> dict[str, Any]:
+    raw = run(["docker", "run", "--rm", "--platform", "linux/amd64", "--network=none",
+               "--read-only", "--user=0:0", "--cap-drop=ALL", "--cap-add=DAC_READ_SEARCH",
+               "--security-opt=no-new-privileges", image_id, "python", "-c", POD_TEXT_INSPECTION])
+    return {**json.loads(raw), "image_id": image_id,
+            "inspection_sha256": sha256(POD_TEXT_INSPECTION.encode())}
+
+
+def pod_text_not_affected(finding: dict[str, Any], scan: dict[str, Any], policy: dict[str, Any],
+                          evidence: dict[str, Any] | None, image_id: str | None,
+                          advisory: dict[str, Any] | None) -> bool:
+    if evidence is None or advisory is None or image_id is None:
+        return False
+    if sha256(json.dumps(advisory, sort_keys=True, separators=(",", ":")).encode()) != (
+        "b37f3e291b4159fb5418cfd427dd772872d431fe76dadc38fbc8ea091050da2f"
+    ):
+        return False
+    expected_finding = {"class": "os-pkgs", "VulnerabilityID": advisory["advisory_id"],
+                        "PkgName": advisory["package"], "InstalledVersion": advisory["installed_version"],
+                        "Severity": advisory["scanner_severity"], "Status": advisory["vendor_status"]}
+    required = {"schema_version": "enterprise-pod-text-absence.v1", "status": "PASS",
+                "platform": "linux/amd64", "filesystem_scan_complete": True,
+                "excluded_virtual_filesystems": ["/proc", "/sys", "/dev"],
+                "image_id": image_id, "inspection_sha256": sha256(POD_TEXT_INSPECTION.encode()),
+                "perl_base": {"version": "5.36.0-7+deb12u3", "status": "install ok installed"},
+                "pod_text_paths": [], "perl_require_returncode": 2,
+                "perl_require_module_missing": True, "perl_environment_overrides": []}
+    return (
+        bool(re.fullmatch(r"sha256:[0-9a-f]{64}", image_id))
+        and bool(re.fullmatch(r"[0-9a-f]{64}", evidence.get("dpkg_status_sha256", "")))
+        and sha256(json.dumps(policy, sort_keys=True, separators=(",", ":")).encode()) == advisory["base_policy_canonical_sha256"]
+        and scan.get("scanner_image") == advisory["scanner_image"]
+        and not finding.get("FixedVersion")
+        and all(finding.get(k) == v for k, v in expected_finding.items())
+        and all(evidence.get(k) == v and type(evidence.get(k)) is type(v) for k, v in required.items())
+    )
+
+
 def assess_security(scan: dict[str, Any], policy: dict[str, Any], *,
                     nscd_evidence: dict[str, Any] | None = None, image_id: str | None = None,
                     os_advisory: dict[str, Any] | None = None,
                     os_reassessment: dict[str, Any] | None = None,
-                    glibc_risk: dict[str, Any] | None = None) -> dict[str, Any]:
+                    glibc_risk: dict[str, Any] | None = None,
+                    pod_text_evidence: dict[str, Any] | None = None,
+                    pod_text_advisory: dict[str, Any] | None = None) -> dict[str, Any]:
     """Retain unresolved OS risk; never translate a scan into security approval."""
     known = {(v["id"], v["package"], v["version"], v["severity"], v["vendor_status"])
              for v in policy["unresolved_os_findings"]}
@@ -368,7 +438,8 @@ def assess_security(scan: dict[str, Any], policy: dict[str, Any], *,
         if finding["class"] == "os-pkgs":
             identity = (finding["VulnerabilityID"], finding["PkgName"], finding["InstalledVersion"],
                         finding["Severity"], finding["Status"])
-            if nscd_not_affected(finding, nscd_evidence, image_id, os_advisory):
+            if (nscd_not_affected(finding, nscd_evidence, image_id, os_advisory)
+                    or pod_text_not_affected(finding, scan, policy, pod_text_evidence, image_id, pod_text_advisory)):
                 os_vex_findings.append({"advisory_id": finding["VulnerabilityID"],
                                         "package": finding["PkgName"], "status": "NOT_AFFECTED",
                                         "justification": "component_not_present"})
@@ -491,9 +562,12 @@ def build(args: argparse.Namespace) -> dict[str, Any]:
     os_reassessment = json.loads(
         (ROOT/"infra/enterprise/image-security-reassessment.v1.json").read_text(encoding="utf-8"))
     glibc_risk = json.loads((ROOT/"infra/enterprise/glibc-risk-assessment.v1.json").read_text(encoding="utf-8"))
+    pod_text_evidence = probe_pod_text_absence(identity["Id"])
+    pod_text_advisory = json.loads((ROOT/"infra/enterprise/pod-text-advisory.v1.json").read_text(encoding="utf-8"))
     assessment = assess_security(scan, policy, nscd_evidence=nscd_evidence,
                                  image_id=identity["Id"], os_advisory=os_advisory,
-                                 os_reassessment=os_reassessment, glibc_risk=glibc_risk)
+                                 os_reassessment=os_reassessment, glibc_risk=glibc_risk,
+                                 pod_text_evidence=pod_text_evidence, pod_text_advisory=pod_text_advisory)
     return {"schema_version": "enterprise-runtime-image-report.v1", "task_id": "TASK-P8-23",
             "code_commit": commit, "source_runtime_sha": inputs["source_sha"],
             "source_archive_sha256": inputs["archive_sha256"], "candidate": args.candidate,
@@ -507,6 +581,7 @@ def build(args: argparse.Namespace) -> dict[str, Any]:
             "nscd_component_evidence": nscd_evidence, "os_component_advisory": os_advisory,
             "os_security_reassessment": os_reassessment,
             "glibc_risk_assessment": glibc_risk, "verified_os_patch_packages": installed_patches,
+            "pod_text_component_evidence": pod_text_evidence, "pod_text_advisory": pod_text_advisory,
             "production_ready": False,
             "runtime_deployment_tested": False}
 

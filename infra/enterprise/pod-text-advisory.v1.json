@@ -1,0 +1,25 @@
+{
+  "schema_version": "enterprise-pod-text-advisory.v1",
+  "assessment_date": "2026-09-21",
+  "advisory_id": "CVE-2026-82560",
+  "status": "NOT_AFFECTED",
+  "justification": "component_not_present",
+  "component": "Pod::Text",
+  "package": "perl-base",
+  "installed_version": "5.36.0-7+deb12u3",
+  "scanner_severity": "UNKNOWN",
+  "vendor_status": "affected",
+  "scanner_image": "aquasec/trivy:0.74.0@sha256:ee940acbf1f58ebadb42d01434ce4609530bf1b52536afbd1eee66cd7123c5c9",
+  "base_policy_canonical_sha256": "20e1a279e89da2af66a7054cf3e6a34f634d6dbdd27e3a70999571221f16182f",
+  "production_security_approval": false,
+  "source": {
+    "url": "https://www.openwall.com/lists/oss-security/2026/09/19/6",
+    "sha256": "a7f182e3dd080f5f5c12d5e0f656ac01c786db656ce09a53a0ccb53109c688b1"
+  },
+  "evidence": {
+    "failed_provider_run": 35548854035,
+    "scan_sha256": "1c8d947e00b5312bcd39b69f3e13b3892791d3e3a965108752c9c483f3be02a3"
+  },
+  "basis": "The upstream defect is in Pod::Text formatting. Authorization requires a fresh same-image full filesystem search with no Pod/Text.pm, failed Perl require specifically because the module is absent, and exact installed perl-base metadata. No vulnerability fix or general Perl safety is claimed.",
+  "scope": "Exact original policy, scanner, advisory, package, version, UNKNOWN, affected and no FixedVersion only; component presence, incomplete evidence or identity drift rejects."
+}

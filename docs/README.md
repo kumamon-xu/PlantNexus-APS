@@ -149,4 +149,4 @@ CI执行、显式阶段审计与机器取证见[CI execution and evidence](archi
 
 P9-02 的 [canonical-json.v1 跨语言消费规则](contracts/headless-platform-integration.md#p9-canonical-jsonv1-跨语言消费)说明数值表示、严格读取和浏览器整数边界；机器 Schema/旧 hash 保持。
 
-P9-10 正在形成 Runtime 0.2.0 / Kit 1.1.0 内部候选；交付和升级规则见 [Kit 操作说明](operations/developer-kit-release-upgrade-and-rollback.md#p9-候选组合与验证命令)。
+P9-10 的内部候选组合为 Runtime 0.2.0 / Kit 1.1.0；交付和升级规则见 [Kit 操作说明](operations/developer-kit-release-upgrade-and-rollback.md#p9-候选组合与验证命令)。

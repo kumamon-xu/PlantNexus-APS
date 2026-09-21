@@ -320,3 +320,9 @@ Read-only Chromium覆盖authorization denial和no-command/no-idempotency transpo
 ## P9 候选来源与供应链
 
 P9-10 候选单独选择 engineering channel，不继承 Kit 1.0.1 的公开发行声明。clean input、生成式 Runtime metadata 的输入/输出摘要、wheel RECORD、嵌套 Runtime lineage、Kit lock、SBOM/license 和 exact VEX/SCA 必须一致；缺失生成来源或混用其他 policy/commit 必须拒绝。GitHub required validate 成功只证明 exact SHA 工程验证，不授予外部签名、Production 或真实企业规则认证。
+
+## P9-10 Pod::Text 组件缺失校验
+
+2026-09-21 的 Provider 扫描新增 `CVE-2026-82560`，先前候选按既有规则以 `NEW_OR_FIXABLE_OS_FINDING` 拒绝。[上游 CPAN 公告](https://www.openwall.com/lists/oss-security/2026/09/19/6) 将缺陷定位于 Pod::Text 的 POD 格式化循环。独立 `pod-text-advisory.v1.json` 记录公告摘要、失败 scan 和精确包/版本/severity/status；旧 image policy 与既有 VEX/risk 记录不改写。
+
+每次构建对同一实际 image ID 执行无网络、只读文件系统检查，要求遍历完整、无 `Pod/Text.pm`，并由 Perl require 的特定缺失诊断再次确认；同时固定 perl-base `5.36.0-7+deb12u3`、dpkg 摘要、inspection 摘要与原 scanner/policy。仅此精确 tuple 可记 `NOT_AFFECTED / component_not_present`。组件出现、检查不完整、不同镜像、metadata/provenance 变化或存在 FixedVersion 均阻止放行。此为组件缺失事实，不是漏洞修复、新风险接受或 Production 安全批准。

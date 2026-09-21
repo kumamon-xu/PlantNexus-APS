@@ -311,12 +311,21 @@ def audit(
     broker: str,
     code: str,
     identity_path: Path | None = None,
+    *,
+    retained_exit: bool = False,
 ) -> dict[str, Any]:
     from aps_developer_kit.check import _clean_install_and_cli
     from aps_developer_kit.contracts import verify_kit_archive
     from app.infrastructure.release.contracts import verify_release_archive
 
-    candidate = candidate_identity(identity_path, code)
+    if retained_exit:
+        from scripts.p9_exit_gate_audit import EXIT_CANDIDATE
+
+        if identity_path is not None:
+            raise ValueError("P9_EXIT_IDENTITY_OVERRIDE_FORBIDDEN")
+        candidate = dict(EXIT_CANDIDATE)
+    else:
+        candidate = candidate_identity(identity_path, code)
     out.mkdir(parents=True, exist_ok=False)
     head = subprocess.check_output(
         ["git", "rev-parse", "HEAD"], cwd=root, text=True
@@ -375,7 +384,13 @@ def audit(
             + "os.environ['PLANTNEXUS_DEVELOPER_KIT_VERSION']=m['kit_version']\n"
             + "os.environ['PLANTNEXUS_DEVELOPER_KIT_FINGERPRINT']=m['release_fingerprint']\n"
             + "from scripts.p9_runtime_vertical_gate import installed\n"
-            + f"installed(pathlib.Path({str(root)!r}),pathlib.Path({str(out)!r}),{broker!r},{code!r},{candidate!r})\n",
+            + f"installed(pathlib.Path({str(root)!r}),pathlib.Path({str(out)!r}),{broker!r},{code!r},{candidate!r})\n"
+            + (
+                "from scripts.p9_exit_gate_audit import installed_boundaries\n"
+                + f"installed_boundaries(pathlib.Path({str(out)!r}))\n"
+                if retained_exit
+                else ""
+            ),
             encoding="utf-8",
             newline="\n",
         )

@@ -11,6 +11,12 @@ last_reviewed: 2026-09-16
 
 # 能力矩阵
 
+## P9-12 独立 Exit 审计范围
+
+本次固定 P9-13 的 Runtime 0.2.1 / Kit 1.1.1，候选来源与新审计 SHA 分别记录。34 项 operation 已有正式 binding 和 P9-13 正反证据；本卡重新安装固定制品，fresh 重放 B01～B10、XS/S/M development/holdout、两 Extension conformance 与未来能力拒绝。P9-11 原 NOT_READY 保留。本卡最终结论归 `build/validation/P9-12/completion-manifest.json`，形成前不宣称 Exit READY。
+
+人工结果沿用旧 Solution/KPI 引用，内容不兼容时标准导出显式拒绝；v2 人工内容编辑不支持。Extension 候选校验不等于参与搜索，P10+ 未实现能力继续拒绝；真实校准、Production、外部发行与阶段转换均需另行授权。下方按任务命名的内容为对应时点历史，不覆盖本节。
+
 ## P9 当前制品与验收边界
 
 P9-10 已形成 Runtime 0.2.0 / Kit 1.1.0 内部候选，人工命令、工作区读取、事件与异步重排已接入显式配置的 Runtime。旧公开 Runtime/Kit 不覆盖。P9-11 对确切候选独立重放并逐操作记录正反证据；审计完成与 READY 分开，缺项保留阻断，不以历史快照或路由存在推定通过。

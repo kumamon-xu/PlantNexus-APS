@@ -11,6 +11,12 @@ last_reviewed: 2026-09-16
 
 # API 接口开发清单
 
+## P9-12 独立 Exit 审计范围
+
+本次固定 P9-13 的 Runtime 0.2.1 / Kit 1.1.1，候选来源与新审计 SHA 分别记录。34 项 operation 已有正式 binding 和 P9-13 正反证据；本卡重新安装固定制品，fresh 重放 B01～B10、XS/S/M development/holdout、两 Extension conformance 与未来能力拒绝。P9-11 原 NOT_READY 保留。本卡最终结论归 `build/validation/P9-12/completion-manifest.json`，形成前不宣称 Exit READY。
+
+人工结果沿用旧 Solution/KPI 引用，内容不兼容时标准导出显式拒绝；v2 人工内容编辑不支持。Extension 候选校验不等于参与搜索，P10+ 未实现能力继续拒绝；真实校准、Production、外部发行与阶段转换均需另行授权。下方按任务命名的内容为对应时点历史，不覆盖本节。
+
 ## P9-06 当前 Runtime 增量
 
 三个事件 operation 已接入显式配置的 Runtime event authority：append 仅接收，get/list 查询持久化事件，独立 Python projection port 产生新 Snapshot/checkpoint。HTTP operation 与 wire schema 保持原版；P9-07 六个重排/ChangeReport operation 仍未绑定。配置、幂等和投影事务边界见[事件合同](execution-events-and-replan-request.md#p9-06-runtime-consumer)。下方旧版本覆盖描述属于对应阶段历史；当前逐阶段增量以[能力基线](runtime-capability-baseline.md)为准。
@@ -45,7 +51,7 @@ P8-07已在P8-03～06的durable ingress、PlanningRun、Worker与单一Runtime�
 | Method | Path | Operation ID | 用途 | 响应 | 状态 |
 |---|---|---|---|---:|---|
 | `GET` | `/health/live` | `live_health_live_get` | 进程存活、服务与构建信息 | 200 | 默认可用 |
-| `GET` | `/health/ready` | `ready_health_ready_get` | PostgreSQL/Redis readiness 汇总 | 200；未就绪为 503 | 实现可用，合同待补 |
+| `GET` | `/health/ready` | `ready_health_ready_get` | PostgreSQL/Redis readiness 汇总 | 200；未就绪为 503 | 0.2.1 候选已声明，旧版缺口保留 |
 | `GET` | `/openapi.json` | FastAPI 内建 | 当前 HTTP 合同 | 200 | 默认可用 |
 
 ## Headless PlanningRun

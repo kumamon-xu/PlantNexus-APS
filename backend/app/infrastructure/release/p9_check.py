@@ -21,9 +21,10 @@ from app.infrastructure.release.builder import (
     deterministic_archive, git_head, source_date_epoch,
 )
 from app.infrastructure.release.contracts import (
-    canonical_json_bytes, sha256_fingerprint, verify_release_archive,
+    ReleaseContractError, canonical_json_bytes, sha256_fingerprint, verify_release_archive,
 )
 from app.infrastructure.release.p9 import KIT, RUNTIME, build_candidate
+from app.infrastructure.release.preflight import preflight_release
 
 
 PREDECESSOR_SHA256 = "e45cc42ba4ee0e9ee032a8b7e7eae9c23db7bbbe6012e5f66d6cc46bb3d00a04"
@@ -125,7 +126,7 @@ Path({str(out / ('database-' + phase + '.json'))!r}).write_text(json.dumps({{'st
 def negative(expected: str, call: Any) -> str:
     try:
         call()
-    except DeveloperKitContractError as error:
+    except (DeveloperKitContractError, ReleaseContractError) as error:
         if error.code == expected:
             return error.code
         raise
@@ -158,6 +159,18 @@ def check(root: Path, out: Path, predecessor: Path) -> dict[str, Any]:
     runtime, kit = first["runtime"], first["kit"]
     verified = verify_kit_archive(kit.archive_path, expected_kit_version=KIT, expected_code_commit=commit)
     verified_runtime = verify_release_archive(runtime.archive_path, expected_runtime_version=RUNTIME, expected_code_commit=commit)
+    policy = json.loads(verified_runtime.files["policy/runtime-release-policy.v1.json"])
+    configured = set(policy["preflight"]["required_configuration_names"])
+    preflight = preflight_release(
+        runtime.archive_path, expected_code_commit=commit,
+        expected_runtime_version=RUNTIME, configured_names=configured,
+    )
+    preflight["negative_checks"] = {
+        "wrong_source": negative("VERSION_MISMATCH", lambda: preflight_release(runtime.archive_path, expected_code_commit="0" * 40, expected_runtime_version=RUNTIME, configured_names=configured)),
+        "missing_configuration": negative("CONFIGURATION_MISSING", lambda: preflight_release(runtime.archive_path, expected_code_commit=commit, expected_runtime_version=RUNTIME, configured_names=set())),
+        "production": negative("PRODUCTION_AUTHORITY_UNAVAILABLE", lambda: preflight_release(runtime.archive_path, expected_code_commit=commit, expected_runtime_version=RUNTIME, configured_names=configured, production_requested=True)),
+    }
+    write(out / "runtime-preflight.json", preflight)
     for name in ("sdk", "tooling"):
         old_entry = cast(dict[str, Any], old.lock["artifacts"])[name]
         new_entry = cast(dict[str, Any], verified.lock["artifacts"])[name]
@@ -223,6 +236,9 @@ def check(root: Path, out: Path, predecessor: Path) -> dict[str, Any]:
     bundle_path = out / "deployment" / sha256(bundle).hexdigest() / "plantnexus-aps-p9-deployment-0.2.0.tar.gz"
     bundle_path.parent.mkdir(parents=True)
     bundle_path.write_bytes(bundle)
+    bundle_path.with_name(bundle_path.name + ".sha256").write_text(
+        f"{sha256(bundle).hexdigest()}  {bundle_path.name}\n", encoding="utf-8", newline="\n",
+    )
     write(out / "deployment-lock.json", deployment)
     report = {
         "report_version": "p9-delivery.v1", "status": "PASS", "code_commit": commit,
@@ -244,6 +260,8 @@ def main() -> int:
     parser.add_argument("--out", type=Path, required=True)
     parser.add_argument("--predecessor", type=Path, required=True)
     args = parser.parse_args()
+    if args.out.exists():
+        parser.error("output directory already exists; retained evidence must not be modified")
     try:
         check(args.root.resolve(), args.out.resolve(), args.predecessor.resolve())
     except Exception as error:

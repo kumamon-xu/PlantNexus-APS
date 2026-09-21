@@ -9,11 +9,39 @@ import pytest
 from scripts.p9_exit_gate_audit import (
     BLOCKED_CAPABILITIES,
     EXIT_CANDIDATE,
+    evidence_inventory,
     exit_report,
     frozen_inputs,
     installed_boundaries,
 )
+
 from scripts.p9_runtime_vertical_gate import verdict
+
+
+def test_inventory_matches_retained_observations_not_transient_state(
+    tmp_path: Path,
+) -> None:
+    from hashlib import sha256
+
+    raw = b"synthetic observation"
+    for name in (
+        "gate.json",
+        "tests.xml",
+        "driver.py",
+        "run.log",
+        "runtime.db",
+        "export.csv",
+        "export.xlsx",
+    ):
+        (tmp_path / name).write_bytes(raw)
+    evidence = evidence_inventory(tmp_path)
+    assert set(evidence) == {"gate.json", "tests.xml", "driver.py", "run.log"}
+    assert set(evidence.values()) == {sha256(raw).hexdigest()}
+    workflow = (
+        Path(__file__).resolve().parents[3] / ".github/workflows/ci.yml"
+    ).read_text(encoding="utf-8")
+    for extension in ("json", "xml", "log", "py"):
+        assert f"build/p9-exit/**/*.{extension}" in workflow
 
 
 def inputs() -> tuple[dict[str, Any], dict[str, Any], dict[str, Any]]:

@@ -458,7 +458,9 @@ def audit(
         "Observed readiness 503 must be declared by the candidate OpenAPI contract.",
     )
     report = verdict(checks, code)
-    if identity_path is not None:
+    if retained_exit:
+        report["task_id"] = "TASK-P9-12"
+    elif identity_path is not None:
         report["task_id"] = "TASK-P9-13"
     report["audit_working_tree_dirty"] = dirty
     report.update(
@@ -480,7 +482,9 @@ def audit(
             "product_changes": False,
             "phase_exit": False,
             "frontend": (
-                "Current SHA requires Frontend regression; generated OpenAPI identity updated without UI behavior changes"
+                "Current audit SHA requires Frontend regression; unchanged product inputs"
+                if retained_exit
+                else "Current SHA requires Frontend regression; generated OpenAPI identity updated without UI behavior changes"
                 if identity_path is not None
                 else "P9-10 exact Provider browser evidence reused; no frontend changes"
             ),

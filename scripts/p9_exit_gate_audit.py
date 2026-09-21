@@ -101,6 +101,15 @@ def frozen_inputs(root: Path) -> dict[str, Any]:
     }
 
 
+def evidence_inventory(out: Path) -> dict[str, str]:
+    """Bind retained observations, not transient databases or export workspaces."""
+    return {
+        p.relative_to(out).as_posix(): sha256(p.read_bytes()).hexdigest()
+        for p in sorted(out.rglob("*"))
+        if p.is_file() and p.suffix in {".json", ".xml", ".log", ".py"}
+    }
+
+
 def exit_report(
     vertical: dict[str, Any],
     capabilities: dict[str, Any],
@@ -187,11 +196,7 @@ def run(
     report = exit_report(vertical, capabilities, frozen, code)
     write(out / "frozen-inputs.json", frozen)
     report["runner_sha256"] = sha256(Path(__file__).read_bytes()).hexdigest()
-    report["evidence"] = {
-        p.relative_to(out).as_posix(): sha256(p.read_bytes()).hexdigest()
-        for p in sorted(out.rglob("*"))
-        if p.is_file()
-    }
+    report["evidence"] = evidence_inventory(out)
     write(out / "exit.json", report)
     return report
 

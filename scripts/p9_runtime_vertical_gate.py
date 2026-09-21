@@ -1,4 +1,4 @@
-"""Independent audit of the retained P9-10 candidate; never builds product code."""
+"""Independent audit of exact retained candidates; never builds product code."""
 
 from __future__ import annotations
 
@@ -464,7 +464,11 @@ def audit(
             "production": False,
             "product_changes": False,
             "phase_exit": False,
-            "frontend": "P9-10 exact Provider browser evidence reused; no frontend changes",
+            "frontend": (
+                "Current SHA requires Frontend regression; generated OpenAPI identity updated without UI behavior changes"
+                if identity_path is not None
+                else "P9-10 exact Provider browser evidence reused; no frontend changes"
+            ),
             "owner_fault_tests": "Installed product; explicit identity, clock and controlled fault injection; not all use a real broker",
         },
     )

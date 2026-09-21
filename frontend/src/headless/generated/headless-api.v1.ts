@@ -46,7 +46,7 @@ export const headlessOpenApiContract = {
     "PlanningRunRetryAction": "sha256:aaa6919b78b5aa78c13d24b39bd5490eb6a5bdfb65a58933430614dc245f8269",
     "PlanningWorkspaceErrorEnvelope": "sha256:3efd02e531cfb54bada9c8422ca2d417e1d8ab90c57a348ec45d0ebebe27c9ec"
   },
-  "sourceSha256": "sha256:947ad74e5e01911e6b1490fe475354965ef0e6136e2c179c5c8dcd95159fd1c5",
+  "sourceSha256": "sha256:7d3137205d89bfaa770a465c12d8476f9aeba130e2ddf9bf395a658f82b2e49e",
   "totalOpenApiOperationCount": 34
 } as const;
 
